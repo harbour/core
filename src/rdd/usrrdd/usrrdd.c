@@ -2528,8 +2528,14 @@ static HB_ERRCODE hb_usrDrop( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex, 
       return SUPER_DROP( pRDD, pTable, pIndex, ulConnection );
 
    hb_vmPushInteger( pRDD->rddID );
-   hb_vmPush( pTable );
-   hb_vmPush( pIndex );
+   if( pTable )
+      hb_vmPush( pTable );
+   else
+      hb_vmPushNil();
+   if( pIndex )
+      hb_vmPush( pIndex );
+   else
+      hb_vmPushNil();
    hb_vmPushLong( ulConnection );
    hb_vmDo( 4 );
 
@@ -2544,8 +2550,14 @@ static HB_ERRCODE hb_usrExists( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex
       return SUPER_EXISTS( pRDD, pTable, pIndex, ulConnection );
 
    hb_vmPushInteger( pRDD->rddID );
-   hb_vmPush( pTable );
-   hb_vmPush( pIndex );
+   if( pTable )
+      hb_vmPush( pTable );
+   else
+      hb_vmPushNil();
+   if( pIndex )
+      hb_vmPush( pIndex );
+   else
+      hb_vmPushNil();
    hb_vmPushLong( ulConnection );
    hb_vmDo( 4 );
 
@@ -2560,9 +2572,18 @@ static HB_ERRCODE hb_usrRename( LPRDDNODE pRDD, PHB_ITEM pTable, PHB_ITEM pIndex
       return SUPER_RENAME( pRDD, pTable, pIndex, pNewName, ulConnection );
 
    hb_vmPushInteger( pRDD->rddID );
-   hb_vmPush( pTable );
-   hb_vmPush( pIndex );
-   hb_vmPush( pNewName );
+   if( pTable )
+      hb_vmPush( pTable );
+   else
+      hb_vmPushNil();
+   if( pIndex )
+      hb_vmPush( pIndex );
+   else
+      hb_vmPushNil();
+   if( pNewName )
+      hb_vmPush( pNewName );
+   else
+      hb_vmPushNil();
    hb_vmPushLong( ulConnection );
    hb_vmDo( 5 );
 

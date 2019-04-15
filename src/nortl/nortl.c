@@ -233,6 +233,10 @@ HB_SIZE hb_xquery( int iMode )
       case HB_MEM_USEDMAX:
          nResult = s_nMemoryMaxConsumed;
          break;
+
+      case HB_MEM_STATISTICS:
+         nResult = 1;
+         break;
    }
 #else
    HB_SYMBOL_UNUSED( iMode );
