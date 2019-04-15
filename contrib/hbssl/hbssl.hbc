@@ -16,5 +16,5 @@ skip={dos}
 {!HB_DYNBIND_OPENSSL&!(HB_STATIC_OPENSSL&!hbdyn)&win&!allmingw}libs=ssleay32 libeay32
 {!HB_DYNBIND_OPENSSL& (HB_STATIC_OPENSSL&!hbdyn)&win&!allmingw}libs=ssleay32 libeay32
 {!HB_DYNBIND_OPENSSL&!(HB_STATIC_OPENSSL&!hbdyn)&allmingw}libs=ssl crypto
-{!HB_DYNBIND_OPENSSL& (HB_STATIC_OPENSSL&!hbdyn)&allmingw}libs=ssl crypto
+{!HB_DYNBIND_OPENSSL& (HB_STATIC_OPENSSL&!hbdyn)&allmingw}libs=:libssl.a :libcrypto.a
 {!HB_DYNBIND_OPENSSL& (HB_STATIC_OPENSSL&!hbdyn)&allwin}libs=crypt32

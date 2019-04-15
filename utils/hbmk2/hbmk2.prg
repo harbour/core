@@ -10177,7 +10177,11 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
             ENDIF
             AAdd( aLIB, cLibNameCooked )
          ELSE
-            AAdd( aLIBA, cLibName )
+            IF cDir == ":"
+               AAdd( aLIB, cLibName )
+            ELSE
+               AAdd( aLIBA, cLibName )
+            ENDIF
          ENDIF
       NEXT
    ELSE
