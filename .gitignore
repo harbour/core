@@ -11,6 +11,7 @@ obj
 *.hbd
 *.hbr
 *.hrb
+.vscode/
 
 # 'install'-ed binaries
 *.exe
