@@ -5,6 +5,7 @@ ifneq ($(HB_COMPILER),)
 
 HB_DYN_LIBS := \
    hbcommon \
+   hbcplr \
    hbpp \
    hbrtl \
    hbmacro \
