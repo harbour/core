@@ -17,6 +17,7 @@ else
 
       DYNDIRLIST_BASE := \
          src/common \
+         src/compiler \
          src/pp \
          src/rtl \
          src/macro \

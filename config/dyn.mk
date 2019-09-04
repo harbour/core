@@ -31,6 +31,7 @@ endif
 
 HB_DYN_LIBS := \
    hbcommon \
+   hbcplr \
    hbpp \
    hbrtl \
    hbmacro \
