@@ -7,6 +7,7 @@ C_SOURCES := \
    l_cs.c \
    l_de.c \
    l_de_at.c \
+   l_ee.c \
    l_el.c \
    l_eo.c \
    l_es.c \
@@ -22,6 +23,7 @@ C_SOURCES := \
    l_it.c \
    l_ko.c \
    l_lt.c \
+   l_lv.c \
    l_nl.c \
    l_pl.c \
    l_pt.c \
