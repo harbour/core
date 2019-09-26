@@ -878,7 +878,7 @@ static MXML_STATUS mxml_node_read_name( MXML_REFIL * ref, PHB_ITEM pNode, PHB_IT
       switch( iStatus )
       {
          case 0:
-            if( HB_ISALPHA( chr ) )
+            if( HB_ISALPHA( chr ) || chr == '_' )
             {
                /* cannot cause reallocations */
                buf[ iPos++ ] = ( char ) chr;
@@ -893,7 +893,7 @@ static MXML_STATUS mxml_node_read_name( MXML_REFIL * ref, PHB_ITEM pNode, PHB_IT
             break;
 
          case 1:
-            if( HB_ISALNUM( chr ) || chr == '_' || chr == '-' || chr == ':' )
+            if( HB_ISALNUM( chr ) || chr == '_' || chr == '-' || chr == '.' || chr == ':' )
             {
                /* cannot cause reallocations */
                buf[ iPos++ ] = ( char ) chr;
@@ -1390,7 +1390,7 @@ static int mxml_node_read_closing( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM do
    buf  = ( char * ) MXML_ALLOCATOR( iLen );
 
    chr = mxml_refil_getc( ref );
-   while( chr != MXML_EOF && chr != '>' && iPos < iLen )
+   while( chr != MXML_EOF && chr != '>' && chr != ' ' && iPos < iLen )
    {
       buf[ iPos++ ] = ( char ) chr;
       chr = mxml_refil_getc( ref );
@@ -1403,7 +1403,7 @@ static int mxml_node_read_closing( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM do
       return ref->status;
    }
 
-   if( chr != '>' || iPos == iLen || ( strncmp( hb_parcx( -1 ), buf, iLen - 1 ) != 0 ) )
+   if( ( chr != '>' && chr != ' ' ) || iPos == iLen || ( strncmp( hb_parcx( -1 ), buf, iLen - 1 ) != 0 ) )
    {
       MXML_DELETOR( buf );
       hbxml_set_doc_status( ref, doc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_UNCLOSED );
