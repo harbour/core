@@ -734,7 +734,7 @@
 #define WIN_IDHELP                         9
 #define WIN_IDTRYAGAIN                     10
 #define WIN_IDCONTINUE                     11
-#define WIN_IDTIMEOUT                      32000     /* wapi_MessageBoxTimeout() return value, when time-outed */
+#define WIN_IDTIMEOUT                      WIN_MB_TIMEDOUT /* wapi_MessageBoxTimeout() timeout elapsed */
 
 /* win_SHFileOperation() functions */
 #define WIN_FO_MOVE                        0x0001
