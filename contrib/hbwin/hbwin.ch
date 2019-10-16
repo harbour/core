@@ -722,6 +722,20 @@
 #define WIN_MB_MISCMASK                    0x0000C000
 #define WIN_MB_TIMEDOUT                    0x00007D00
 
+/* wapi_MessageBox() return values */
+#define WIN_IDOK                           1
+#define WIN_IDCANCEL                       2
+#define WIN_IDABORT                        3
+#define WIN_IDRETRY                        4
+#define WIN_IDIGNORE                       5
+#define WIN_IDYES                          6
+#define WIN_IDNO                           7
+#define WIN_IDCLOSE                        8
+#define WIN_IDHELP                         9
+#define WIN_IDTRYAGAIN                     10
+#define WIN_IDCONTINUE                     11
+#define WIN_IDTIMEOUT                      WIN_MB_TIMEDOUT /* wapi_MessageBoxTimeout() timeout elapsed */
+
 /* win_SHFileOperation() functions */
 #define WIN_FO_MOVE                        0x0001
 #define WIN_FO_COPY                        0x0002
