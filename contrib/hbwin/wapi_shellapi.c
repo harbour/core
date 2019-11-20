@@ -75,6 +75,42 @@ HB_FUNC( WAPI_SHELLEXECUTE )
 #endif
 }
 
+/* Code by Antonino Perricone */
+
+HB_FUNC( WAPI_SHELLEXECUTE_WAIT )
+{
+   void * hOperation;
+   void * hFile;
+   void * hParameters;
+   void * hDirectory;
+   BOOL retVal;
+   MSG msg;
+   SHELLEXECUTEINFO ShExecInfo = {0};
+   ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+   ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+   ShExecInfo.hwnd = ( HWND ) hb_parptr( 1 );
+   ShExecInfo.lpVerb = HB_PARSTR( 2, &hOperation, NULL );
+   ShExecInfo.lpFile = HB_PARSTRDEF( 3, &hFile, NULL );
+   ShExecInfo.lpParameters =  HB_PARSTR( 4, &hParameters, NULL );
+   ShExecInfo.lpDirectory = HB_PARSTR( 5, &hDirectory, NULL );
+   ShExecInfo.nShow = hb_parnidef( 6, SW_SHOWNORMAL );
+   ShExecInfo.hInstApp = NULL;
+   retVal = ShellExecuteEx(&ShExecInfo);
+   hb_retl( retVal );
+   while( WaitForSingleObject(ShExecInfo.hProcess,1000) != WAIT_OBJECT_0 )
+   {
+      while( PeekMessage( &msg, ( HWND ) NULL, 0, 0, PM_REMOVE ) )
+      {
+         TranslateMessage( &msg );
+         DispatchMessage( &msg );
+      }
+   }
+   hb_strfree( hOperation  );
+   hb_strfree( hFile       );
+   hb_strfree( hParameters );
+   hb_strfree( hDirectory  );
+}
+
 HB_FUNC( WAPI_ISUSERANADMIN )
 {
    BOOL bResult = FALSE;
