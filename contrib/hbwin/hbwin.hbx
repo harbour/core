@@ -172,6 +172,7 @@ DYNAMIC wapi_SetTextAlign
 DYNAMIC wapi_SetTextColor
 DYNAMIC wapi_SetWindowPos
 DYNAMIC wapi_ShellExecute
+DYNAMIC wapi_ShellExecute_Wait
 DYNAMIC wapi_ShowScrollBar
 DYNAMIC wapi_ShowWindow
 DYNAMIC wapi_Sleep
