@@ -2691,7 +2691,9 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                         iKey = 'T';
                         break;
                      case 21:
-                        iKey = 'Y';
+                        if( iKey != 'Y' && iKey != 'Z' &&
+                            iKey != 'y' && iKey != 'z' )
+                           iKey = 'Y';
                         break;
                      case 22:
                         iKey = 'U';
@@ -2733,7 +2735,9 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                         iKey = 'L';
                         break;
                      case 44:
-                        iKey = 'Z';
+                        if( iKey != 'Y' && iKey != 'Z' &&
+                            iKey != 'y' && iKey != 'z' )
+                           iKey = 'Z';
                         break;
                      case 45:
                         iKey = 'X';
