@@ -261,7 +261,7 @@ void hb_compPrintLogo( HB_COMP_DECL )
 {
    char * szVer = hb_verHarbour();
 
-   #define HB_VER_COMMIT_YEAR  "2019"
+   #define HB_VER_COMMIT_YEAR  "2020"
    #define HB_VER_ORIGIN_URL   "https://harbour.github.io/"
 
    hb_compOutStd( HB_COMP_PARAM, szVer );

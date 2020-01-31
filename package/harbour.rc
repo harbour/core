@@ -11,7 +11,7 @@
 #define HB_VER_FILEVERSION_STR         HB_VER_PRODUCTVERSION_STR
 
 #define HB_NAME                        "Harbour\0"
-#define HB_COPYRIGHT                   "Copyright \xA9 1999-2019 (see application banner)\0"
+#define HB_COPYRIGHT                   "Copyright \xA9 1999-2020 (see application banner)\0"
 
 /* Version info */
 
