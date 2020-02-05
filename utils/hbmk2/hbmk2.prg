@@ -4800,9 +4800,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-wx" ) ; EXIT
          CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w3" ) ; EXIT
          CASE _WARN_LOW
-            AAdd( hbmk[ _HBMK_aOPTC ], "-w1 -wcd201 -wcd367 -wcd368" )
-            IF hbmk[ _HBMK_lCPP ] != NIL .AND. ! hbmk[ _HBMK_lCPP ]
-               AAdd( hbmk[ _HBMK_aOPTC ], "-wcd124 -wcd136" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-w1" )
+            IF hbmk[ _HBMK_lCPP ] != NIL
+               IF hbmk[ _HBMK_lCPP ]
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-wcd124 -wcd136 -wcd201" )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-wcd367 -wcd368" )
+               ENDIF
             ENDIF
             EXIT
          CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w0" ) ; EXIT
