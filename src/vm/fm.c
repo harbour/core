@@ -164,10 +164,12 @@
 #  elif defined( __POCC__ ) && ! defined( InterlockedCompareExchangePointer )
 #     define InterlockedCompareExchangePointer
 #  elif defined( __WATCOMC__ )
-#     pragma warning 13 9
-#     pragma warning 367 9
-#     pragma warning 368 9
-#     pragma warning 887 9
+#     if defined( __cplusplus )
+#        pragma warning 13 9
+#        pragma warning 367 9
+#        pragma warning 368 9
+#        pragma warning 887 9
+#     endif
 #     pragma disable_message ( 201 )
 #     if ! defined( USE_DL_PREFIX ) && ! defined( HB_FM_DLMT_ALLOC )
 #        define USE_DL_PREFIX
@@ -211,11 +213,12 @@
 #     pragma warn +rch
 #     pragma warn +inl
 #  elif defined( __WATCOMC__ )
-#     pragma warning 13 2
-#     pragma warning 367 2
-#     pragma warning 368 2
-#     pragma warning 887 2
-#     pragma warning 887 2
+#     if defined( __cplusplus )
+#        pragma warning 13 2
+#        pragma warning 367 2
+#        pragma warning 368 2
+#        pragma warning 887 2
+#     endif
 #     pragma enable_message ( 201 )
 #  elif defined( _MSC_VER )
 #     pragma warning( pop )
@@ -471,7 +474,7 @@ static void hb_mspace_cleanup( void )
 
 #elif defined( HB_FM_DL_ALLOC ) && defined( USE_DL_PREFIX )
 
-#if defined( __WATCOMC__ )
+#if defined( __WATCOMC__ ) && defined( __cplusplus )
 #  pragma warning 367 9
 #endif
 
@@ -492,7 +495,7 @@ static void dlmalloc_destroy( void )
    }
 }
 
-#if defined( __WATCOMC__ )
+#if defined( __WATCOMC__ ) && defined( __cplusplus )
 #  pragma warning 367 2
 #endif
 

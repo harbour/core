@@ -74,7 +74,7 @@
 #  pragma warn -aus
 #  pragma warn -ccc
 #  pragma warn -rch
-#elif defined( __WATCOMC__ )
+#elif defined( __WATCOMC__ ) && defined( __cplusplus )
 #  pragma warning 13 9
 #  pragma warning 368 9
 #elif defined( _MSC_VER )

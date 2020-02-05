@@ -4803,9 +4803,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTC ], "-w1" )
             IF hbmk[ _HBMK_lCPP ] != NIL
                IF hbmk[ _HBMK_lCPP ]
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-wcd124 -wcd136 -wcd201" )
-               ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-wcd367 -wcd368" )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-wcd124 -wcd136 -wcd201" )
                ENDIF
             ENDIF
             EXIT
