@@ -169,8 +169,9 @@
 #        pragma warning 367 9
 #        pragma warning 368 9
 #        pragma warning 887 9
+#     else
+#        pragma disable_message ( 201 )
 #     endif
-#     pragma disable_message ( 201 )
 #     if ! defined( USE_DL_PREFIX ) && ! defined( HB_FM_DLMT_ALLOC )
 #        define USE_DL_PREFIX
 #     endif
@@ -218,8 +219,9 @@
 #        pragma warning 367 2
 #        pragma warning 368 2
 #        pragma warning 887 2
+#     else
+#        pragma enable_message ( 201 )
 #     endif
-#     pragma enable_message ( 201 )
 #  elif defined( _MSC_VER )
 #     pragma warning( pop )
 #  endif
