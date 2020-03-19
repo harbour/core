@@ -2420,7 +2420,7 @@ static HB_BOOL hb_pp_setCompilerSwitch( PHB_PP_STATE pState, const char * szSwit
       case 'B':
          if( szSwitch[ 1 ] == '\0' )
          {
-            if(iValue)
+            if( iValue )
                hb_pp_addDefine( pState, "_DEBUG", ".T." );
             else
                hb_pp_delDefine( pState, "_DEBUG");
@@ -5760,7 +5760,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs, HB_BOOL fDebu
    hb_pp_addDefine( pState, "__HB_MAIN__", HB_START_PROCEDURE );
 #endif
 
-   if(fDebug)
+   if( fDebug )
       hb_pp_addDefine( pState, "_DEBUG", ".T." );
 
 }
