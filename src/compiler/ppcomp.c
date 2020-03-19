@@ -412,7 +412,7 @@ void hb_compInitPP( HB_COMP_DECL, PHB_PP_OPEN_FUNC pOpenFunc )
       else if( ! HB_COMP_PARAM->fQuiet )
          hb_compOutStd( HB_COMP_PARAM, "Standard command definitions excluded.\n" );
 
-      hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP, ! HB_COMP_PARAM->fNoArchDefs );
+      hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP, ! HB_COMP_PARAM->fNoArchDefs, HB_COMP_PARAM->fDebugInfo );
 
       /* Add /D and /undef: command-line or envvar defines */
       hb_compChkSetDefines( HB_COMP_PARAM );
