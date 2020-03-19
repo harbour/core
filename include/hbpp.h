@@ -653,7 +653,7 @@ extern HB_EXPORT void    hb_pp_init( PHB_PP_STATE pState, HB_BOOL fQuiet,
                    PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC  pDispFunc,
                    PHB_PP_DUMP_FUNC  pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
                    PHB_PP_SWITCH_FUNC pSwitchFunc );
-extern HB_EXPORT void    hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs );
+extern HB_EXPORT void    hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs, HB_BOOL fDebug );
 extern HB_EXPORT void    hb_pp_setIncFunc( PHB_PP_STATE pState, PHB_PP_INC_FUNC pIncFunc );
 extern HB_EXPORT void    hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile );
 extern HB_EXPORT void    hb_pp_setStdRules( PHB_PP_STATE pState );

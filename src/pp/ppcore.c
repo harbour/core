@@ -2415,6 +2415,18 @@ static HB_BOOL hb_pp_setCompilerSwitch( PHB_PP_STATE pState, const char * szSwit
             fError = HB_FALSE;
          }
          break;
+
+      case 'b':
+      case 'B':
+         if( szSwitch[ 1 ] == '\0' )
+         {
+            if(iValue)
+               hb_pp_addDefine( pState, "_DEBUG", ".T." );
+            else
+               hb_pp_delDefine( pState, "_DEBUG");
+         }
+         break;
+
    }
 
    if( pState->pSwitchFunc )
@@ -5667,7 +5679,7 @@ void hb_pp_setStdBase( PHB_PP_STATE pState )
 /*
  * initialize dynamic definitions
  */
-void hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs )
+void hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs, HB_BOOL fDebug )
 {
    char szResult[ 65 ];
    int iYear, iMonth, iDay, i;
@@ -5747,6 +5759,10 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs )
 #ifdef HB_START_PROCEDURE
    hb_pp_addDefine( pState, "__HB_MAIN__", HB_START_PROCEDURE );
 #endif
+
+   if(fDebug)
+      hb_pp_addDefine( pState, "_DEBUG", ".T." );
+
 }
 
 /*
