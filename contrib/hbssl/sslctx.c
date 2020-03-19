@@ -484,7 +484,12 @@ HB_FUNC( SSL_CTX_NEED_TMP_RSA )
       SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
 
       if( ctx )
+#if OPENSSL_VERSION_NUMBER >= 0x10101000L
+         // no more necessary
+         hb_retnl( 0 );
+#else
          hb_retnl( SSL_CTX_need_tmp_RSA( ctx ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
