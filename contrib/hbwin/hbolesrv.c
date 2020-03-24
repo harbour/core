@@ -93,7 +93,7 @@ static DISPID hb_dynsymToDispId( PHB_DYNS pDynSym )
 static PHB_DYNS hb_dispIdToDynsym( DISPID dispid )
 {
    if( ( LONG ) dispid > 0 )
-      return hb_dynsymFromNum( ( int ) dispid );
+      return hb_dynsymFromNum( ( HB_SYMCNT ) dispid );
    else
       return NULL;
 }

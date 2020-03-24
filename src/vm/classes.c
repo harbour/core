@@ -167,10 +167,10 @@ typedef struct
    HB_USHORT   uiFriendSyms;     /* Number of friend function's symbols */
    HB_USHORT   uiFriendModule;   /* Number of friend symbols in pFriendModule */
    HB_USHORT   uiMutexOffset;    /* Offset in instance area to SYNC method mutex */
-   HB_USHORT   uiHashKey;
+   HB_SYMCNT   uiHashKey;
 #ifdef HB_MSG_POOL
-   HB_USHORT * puiMsgIdx;
    HB_USHORT   uiMethodCount;
+   HB_SYMCNT * puiMsgIdx;
 #endif
 } CLASS, * PCLASS;
 
@@ -179,7 +179,7 @@ typedef struct
 #define BUCKETMASK      ( BUCKETSIZE - 1 )
 #define HASHBITS        3
 #define HASH_KEY        ( ( 1 << HASHBITS ) - 1 )
-#define HASH_KEYMAX     ( 1 << ( 16 - BUCKETBITS ) )
+#define HASH_KEYMAX     ( 1 << ( 32 - BUCKETBITS ) )
 #define hb_clsInited(p) ( (p)->pMethods != NULL )
 #define hb_clsBucketPos( p, m )     ( ( (p)->uiSymNum & (m) ) << BUCKETBITS )
 
@@ -374,7 +374,7 @@ static PHB_ITEM s_pClassMtx = NULL;
 /* --- */
 
 #if 0
-static HB_USHORT hb_clsBucketPos( PHB_DYNS pMsg, HB_USHORT uiMask )
+static HB_SYMCNT hb_clsBucketPos( PHB_DYNS pMsg, HB_SYMCNT uiMask )
 {
    /* we can use PHB_DYNS address as base for hash key.
     * This value is perfectly unique and we do not need anything more
@@ -408,7 +408,7 @@ static HB_BOOL hb_clsDictRealloc( PCLASS pClass )
    HB_SIZE nNewHashKey, nLimit, n;
 
 #ifdef HB_MSG_POOL
-   HB_USHORT * puiMsgIdx;
+   HB_SYMCNT * puiMsgIdx;
 #else
    PMETHOD pNewMethods;
 #endif
@@ -425,15 +425,15 @@ static HB_BOOL hb_clsDictRealloc( PCLASS pClass )
          hb_errInternal( 6002, "Could not realloc class message in __clsDictRealloc()", NULL, NULL );
 
 #ifdef HB_MSG_POOL
-      puiMsgIdx = ( HB_USHORT * ) hb_xgrabz( ( nNewHashKey << BUCKETBITS ) * sizeof( HB_USHORT ) );
+      puiMsgIdx = ( HB_SYMCNT * ) hb_xgrabz( ( nNewHashKey << BUCKETBITS ) * sizeof( HB_SYMCNT ) );
 
       for( n = 0; n < nLimit; n++ )
       {
-         HB_USHORT uiMsg = pClass->puiMsgIdx[ n ];
+         HB_SYMCNT uiMsg = pClass->puiMsgIdx[ n ];
          if( pClass->puiMsgIdx[ n ] )
          {
-            HB_USHORT uiBucket = BUCKETSIZE;
-            HB_USHORT * puiIdx = puiMsgIdx + hb_clsBucketPos(
+            HB_SYMCNT uiBucket = BUCKETSIZE;
+            HB_SYMCNT * puiIdx = puiMsgIdx + hb_clsBucketPos(
                         pClass->pMethods[ uiMsg ].pMessage, nNewHashKey - 1 );
             do
             {
@@ -457,7 +457,7 @@ static HB_BOOL hb_clsDictRealloc( PCLASS pClass )
    }
    while( n < nLimit );
 
-   pClass->uiHashKey = ( HB_USHORT ) ( nNewHashKey - 1 );
+   pClass->uiHashKey = ( HB_SYMCNT ) ( nNewHashKey - 1 );
    hb_xfree( pClass->puiMsgIdx );
    pClass->puiMsgIdx = puiMsgIdx;
 
@@ -472,7 +472,7 @@ static HB_BOOL hb_clsDictRealloc( PCLASS pClass )
          if( pMessage )
          {
             PMETHOD pMethod = pNewMethods + hb_clsBucketPos( pMessage, nNewHashKey - 1 );
-            HB_USHORT uiBucket = BUCKETSIZE;
+            HB_SYMCNT uiBucket = BUCKETSIZE;
 
             do
             {
@@ -496,7 +496,7 @@ static HB_BOOL hb_clsDictRealloc( PCLASS pClass )
    }
    while( n < nLimit );
 
-   pClass->uiHashKey = ( HB_USHORT ) ( nNewHashKey - 1 );
+   pClass->uiHashKey = ( HB_SYMCNT ) ( nNewHashKey - 1 );
    hb_xfree( pClass->pMethods );
    pClass->pMethods = pNewMethods;
 #endif
@@ -504,7 +504,7 @@ static HB_BOOL hb_clsDictRealloc( PCLASS pClass )
    return HB_TRUE;
 }
 
-static void hb_clsDictInit( PCLASS pClass, HB_USHORT uiHashKey )
+static void hb_clsDictInit( PCLASS pClass, HB_SYMCNT uiHashKey )
 {
    HB_SIZE nSize;
 
@@ -512,8 +512,8 @@ static void hb_clsDictInit( PCLASS pClass, HB_USHORT uiHashKey )
 
    pClass->uiHashKey = uiHashKey;
 #ifdef HB_MSG_POOL
-   nSize = ( ( ( HB_SIZE ) uiHashKey + 1 ) << BUCKETBITS ) * sizeof( HB_USHORT );
-   pClass->puiMsgIdx = ( HB_USHORT * ) hb_xgrabz( nSize );
+   nSize = ( ( ( HB_SIZE ) uiHashKey + 1 ) << BUCKETBITS ) * sizeof( HB_SYMCNT );
+   pClass->puiMsgIdx = ( HB_SYMCNT * ) hb_xgrabz( nSize );
 
    pClass->uiMethodCount = 1;
    pClass->pMethods = ( PMETHOD ) hb_xgrabz( sizeof( METHOD ) );
@@ -527,7 +527,7 @@ static PMETHOD hb_clsFindMsg( PCLASS pClass, PHB_DYNS pMsg )
 {
 #ifdef HB_MSG_POOL
 
-   HB_USHORT uiBucket, * puiMsgIdx;
+   HB_SYMCNT uiBucket, * puiMsgIdx;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_clsFindMsg(%p,%p)", ( void * ) pClass, ( void * ) pMsg ) );
 
@@ -547,7 +547,7 @@ static PMETHOD hb_clsFindMsg( PCLASS pClass, PHB_DYNS pMsg )
 #else
 
    PMETHOD pMethod;
-   HB_USHORT uiBucket;
+   HB_SYMCNT uiBucket;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_clsFindMsg(%p,%p)", ( void * ) pClass, ( void * ) pMsg ) );
 
@@ -576,7 +576,7 @@ static PMETHOD hb_clsAllocMsg( PCLASS pClass, PHB_DYNS pMsg )
 
 #ifdef HB_MSG_POOL
 
-      HB_USHORT uiBucket = BUCKETSIZE, * puiMsgIdx = pClass->puiMsgIdx +
+      HB_SYMCNT uiBucket = BUCKETSIZE, * puiMsgIdx = pClass->puiMsgIdx +
                                     hb_clsBucketPos( pMsg, pClass->uiHashKey );
 
       do
@@ -598,7 +598,7 @@ static PMETHOD hb_clsAllocMsg( PCLASS pClass, PHB_DYNS pMsg )
 #else
 
       PMETHOD pMethod = pClass->pMethods + hb_clsBucketPos( pMsg, pClass->uiHashKey );
-      HB_USHORT uiBucket = BUCKETSIZE;
+      HB_SYMCNT uiBucket = BUCKETSIZE;
 
       do
       {
@@ -637,7 +637,7 @@ static void hb_clsFreeMsg( PCLASS pClass, PHB_DYNS pMsg )
 {
 #ifdef HB_MSG_POOL
 
-   HB_USHORT uiBucket, * puiMsgIdx;
+   HB_SYMCNT uiBucket, * puiMsgIdx;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_clsFreeMsg(%p,%p)", ( void * ) pClass, ( void * ) pMsg ) );
 
@@ -664,7 +664,7 @@ static void hb_clsFreeMsg( PCLASS pClass, PHB_DYNS pMsg )
 #else
 
    PMETHOD pMethod;
-   HB_USHORT uiBucket;
+   HB_SYMCNT uiBucket;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_clsFreeMsg(%p,%p)", ( void * ) pClass, ( void * ) pMsg ) );
 
@@ -1027,7 +1027,7 @@ static void hb_clsCopyClass( PCLASS pClsDst, PCLASS pClsSrc )
    nLimit = hb_clsMthNum( pClsSrc );
 #ifdef HB_MSG_POOL
    memcpy( pClsDst->puiMsgIdx, pClsSrc->puiMsgIdx,
-      ( ( ( HB_SIZE ) pClsSrc->uiHashKey + 1 ) << BUCKETBITS ) * sizeof( HB_USHORT ) );
+      ( ( ( HB_SIZE ) pClsSrc->uiHashKey + 1 ) << BUCKETBITS ) * sizeof( HB_SYMCNT ) );
    pClsDst->uiMethodCount = pClsSrc->uiMethodCount;
    pClsDst->pMethods = ( PMETHOD ) hb_xrealloc( pClsDst->pMethods,
                                                 nLimit * sizeof( METHOD ) );
@@ -1836,7 +1836,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
             }
 #ifdef HB_MSG_POOL
             {
-               HB_USHORT uiBucket = BUCKETSIZE, * puiMsgIdx =
+               HB_SYMCNT uiBucket = BUCKETSIZE, * puiMsgIdx =
                   pClass->puiMsgIdx + hb_clsBucketPos( pMsg, pClass->uiHashKey );
 
                do

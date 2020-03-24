@@ -466,6 +466,8 @@ typedef HB_UCHAR            HB_U8;
 typedef HB_MAXINT    HB_VMMAXINT;
 typedef HB_MAXUINT   HB_VMMAXUINT;
 
+typedef HB_U32       HB_SYMCNT;
+
 #define HB_DBL_LIM_INT(d)     ( HB_VMINT_MIN <= (d) && (d) <= HB_VMINT_MAX )
 #define HB_DBL_LIM_LONG(d)    ( (HB_MAXDBL) HB_VMLONG_MIN <= (HB_MAXDBL) (d) && (HB_MAXDBL) (d) <= (HB_MAXDBL) HB_VMLONG_MAX )
 #define HB_LIM_INT(l)         ( HB_VMINT_MIN <= (l) && (l) <= HB_VMINT_MAX )
@@ -669,19 +671,22 @@ typedef HB_U32 HB_FATTR;
 
 #     define HB_BIG_ENDIAN
 
-#  elif ( defined( __BYTE_ORDER ) && defined( __LITTLE_ENDIAN ) && __BYTE_ORDER == __LITTLE_ENDIAN ) || \
+#  elif ( defined( __BYTE_ORDER__ ) && defined( __LITTLE_ENDIAN__ ) && __BYTE_ORDER__ == __LITTLE_ENDIAN__ ) || \
+        ( defined( __BYTE_ORDER ) && defined( __LITTLE_ENDIAN ) && __BYTE_ORDER == __LITTLE_ENDIAN ) || \
         ( defined( _BYTE_ORDER ) && defined( _LITTLE_ENDIAN ) && _BYTE_ORDER == _LITTLE_ENDIAN ) || \
         ( defined( BYTE_ORDER ) && defined( LITTLE_ENDIAN ) && BYTE_ORDER == LITTLE_ENDIAN )
 
 #     define HB_LITTLE_ENDIAN
 
-#  elif ( defined( __BYTE_ORDER ) && defined( __BIG_ENDIAN ) && __BYTE_ORDER == __BIG_ENDIAN ) || \
+#  elif ( defined( __BYTE_ORDER__ ) && defined( __BIG_ENDIAN__ ) && __BYTE_ORDER__ == __BIG_ENDIAN__ ) || \
+        ( defined( __BYTE_ORDER ) && defined( __BIG_ENDIAN ) && __BYTE_ORDER == __BIG_ENDIAN ) || \
         ( defined( _BYTE_ORDER ) && defined( _BIG_ENDIAN ) && _BYTE_ORDER == _BIG_ENDIAN ) || \
         ( defined( BYTE_ORDER ) && defined( BIG_ENDIAN ) && BYTE_ORDER == BIG_ENDIAN )
 
 #     define HB_BIG_ENDIAN
 
-#  elif ( defined( __BYTE_ORDER ) && defined( __PDP_ENDIAN ) && __BYTE_ORDER == __PDP_ENDIAN ) || \
+#  elif ( defined( __BYTE_ORDER__ ) && defined( __PDP_ENDIAN__ ) && __BYTE_ORDER__ == __PDP_ENDIAN__ ) || \
+        ( defined( __BYTE_ORDER ) && defined( __PDP_ENDIAN ) && __BYTE_ORDER == __PDP_ENDIAN ) || \
         ( defined( _BYTE_ORDER ) && defined( _PDP_ENDIAN ) && _BYTE_ORDER == _PDP_ENDIAN ) || \
         ( defined( BYTE_ORDER ) && defined( PDP_ENDIAN ) && BYTE_ORDER == PDP_ENDIAN )
 

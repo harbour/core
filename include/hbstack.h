@@ -173,7 +173,7 @@ typedef struct
 #if defined( HB_MT_VM )
    int        iUnlocked;      /* counter for nested hb_vmUnlock() calls */
    PHB_DYN_HANDLES pDynH;     /* dynamic symbol handles */
-   int        iDynH;          /* number of dynamic symbol handles */
+   HB_SYMCNT  uiDynH;         /* number of dynamic symbol handles */
    void *     pStackLst;      /* this stack entry in stack linked list */
    HB_IOERRORS IOErrors;      /* MT safe buffer for IO errors */
    HB_TRACEINFO traceInfo;    /* MT safe buffer for HB_TRACE data */
@@ -359,8 +359,8 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
    extern void             hb_stackListSet( void * pStackLst );
    extern void             hb_stackIdSetActionRequest( void * pStackID, HB_USHORT uiAction );
    extern PHB_DYN_HANDLES  hb_stackGetDynHandle( PHB_DYNS pDynSym );
-   extern int              hb_stackDynHandlesCount( void );
-   extern void             hb_stackClearMemvars( int );
+   extern HB_SYMCNT        hb_stackDynHandlesCount( void );
+   extern void             hb_stackClearMemvars( HB_SYMCNT );
    extern HB_BOOL          hb_stackQuitState( void );
    extern void             hb_stackSetQuitState( HB_USHORT uiState );
    extern int              hb_stackUnlock( void );
@@ -409,7 +409,7 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 #if defined( HB_MT_VM )
 #  define hb_stackList()            ( hb_stack.pStackLst )
 #  define hb_stackListSet( p )      do { hb_stack.pStackLst = ( p ); } while( 0 )
-#  define hb_stackDynHandlesCount() ( hb_stack.iDynH )
+#  define hb_stackDynHandlesCount() ( hb_stack.uiDynH )
 #  define hb_stackQuitState( )      ( hb_stack.uiQuitState != 0 )
 #  define hb_stackSetQuitState( n ) do { hb_stack.uiQuitState = ( n ); } while( 0 )
 #  define hb_stackUnlock()          ( ++hb_stack.iUnlocked )
