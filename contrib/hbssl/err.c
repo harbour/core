@@ -50,7 +50,11 @@
 
 HB_FUNC( ERR_LOAD_CRYPTO_STRINGS )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x10101000L
+   OPENSSL_init_crypto(OPENSSL_INIT_LOAD_CRYPTO_STRINGS, NULL);
+#else
    ERR_load_crypto_strings();
+#endif
 }
 
 HB_FUNC( ERR_PRINT_ERRORS )
@@ -204,5 +208,5 @@ HB_FUNC( ERR_PEEK_LAST_ERROR_LINE_DATA )
 
 HB_FUNC( ERR_FREE_STRINGS )
 {
-   ERR_free_strings();
+   //ERR_free_strings();
 }

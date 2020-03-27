@@ -61,12 +61,18 @@ char * hb_openssl_strdup( const char * pszText )
 
 HB_FUNC( OPENSSL_ADD_ALL_ALGORITHMS )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x10101000L
+   OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS | OPENSSL_INIT_ADD_ALL_DIGESTS, NULL);
+#else
    OpenSSL_add_all_algorithms();
+#endif
 }
 
 HB_FUNC( EVP_CLEANUP )
 {
+#if OPENSSL_VERSION_NUMBER < 0x10101000L
    EVP_cleanup();
+#endif
 }
 
 HB_FUNC( ERR_LOAD_EVP_STRINGS )
