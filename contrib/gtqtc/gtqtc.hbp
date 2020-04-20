@@ -25,6 +25,7 @@
 -depkeyhead=qt5:QtCore/QJsonObject
 -depcontrol=qt5:${HB_WITH_QT}
 -depoptional=qt5:yes
+-depincpath=qt5:/usr/include/x86_64-linux-gnu/qt5{linux}
 -depincpath=qt5:/usr/local/opt/qt5/include{darwin}
 -depincpath=qt5:/usr/local/include/qt5{bsd}
 -depfinish=qt5
