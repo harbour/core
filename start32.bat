@@ -1,0 +1,12 @@
+@echo off
+PUSHD
+:: Cambiare questi set con i valori del proprio PC
+set STARTDRIVE=%CD%
+set HB_INSTALL_PREFIX=%~dp0
+set FWH_INSTALL=%CD%\..\FWH32
+set HB_COMP_VER=32
+set HB_BUILD_PARTS=compiler
+CALL "c:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
+set path=%PATH%;%HB_INSTALL_PREFIX%\bin\win\msvc;"C:\Program Files\7-Zip";"c:\Program Files\Notepad++"
+POPD
+harbour -q

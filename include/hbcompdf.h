@@ -59,7 +59,8 @@ typedef enum
 {
    HB_LANG_C,                      /* C language (by default) <file.c> */
    HB_LANG_PORT_OBJ,               /* Portable objects <file.hrb> */
-   HB_LANG_PORT_OBJ_BUF            /* Portable objects in memory buffer */
+   HB_LANG_PORT_OBJ_BUF,           /* Portable objects in memory buffer */
+   HB_LANG_JS                      /* Javascript <file.js> */
 } HB_LANGUAGES;                    /* supported Harbour output languages */
 
 /* Error message format modes */

@@ -38,3 +38,7 @@ obj
 !lib/3rd
 !config/*.exe
 !/*.exe
+
+# removed unused / not planned to be modified code
+/contrib
+/tests/*.js

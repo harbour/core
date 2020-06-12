@@ -83,6 +83,8 @@
 
           `-gh`          output type: Harbour Portable Object `.hrb`
 
+          `-gj`          output type: Javascript `.js`
+
           `-gd[.<destext>]`  generate dependencies list into `.d` file
 
           `-ge[<mode>]`      error output <mode>: `0`=Clipper (default)

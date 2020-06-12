@@ -65,6 +65,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
       "\n                           <type>: 0=compact (default) 1=normal 2=verbose",
       "\n                                   3=generate real C code",
       "\n          -gh              output type: Harbour Portable Object (.hrb)",
+      "\n          -gj              output type: javascript (.js)",
       "\n          -gd[.<destext>]  generate dependencies list into (.d) file",
       "\n          -ge[<mode>]      error output <mode>: 0=Clipper (default)",
       "\n                                                1=IDE friendly",
