@@ -2300,9 +2300,12 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             /* filename or resource */
             if( HB_IS_STRING( pInfo->pNewVal ) )
             {
-               QString qStr;
-               hb_gt_qtc_itemGetQString( pInfo->pNewVal, &qStr );
-               qImg = QImage( qStr );
+               if( hb_itemGetCLen( pInfo->pNewVal ) > 0 )
+               {
+                  QString qStr;
+                  hb_gt_qtc_itemGetQString( pInfo->pNewVal, &qStr );
+                  qImg = QImage( qStr );
+               }
             }
             else if( hb_arrayLen( pInfo->pNewVal ) == static_cast< HB_SIZE >
                      ( ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ) ? 4 : 3 ) &&
@@ -3067,7 +3070,12 @@ void QTConsole::wheelEvent( QWheelEvent * evt )
          break;
 
       case Qt::Horizontal:
-         /* TODO? add support for horizontal wheels */
+         if( evt->delta() < 0 )
+            iKey = K_MWLEFT;
+         else
+            iKey = K_MWRIGHT;
+         break;
+
       default:
          QWidget::wheelEvent( evt );
          return;
