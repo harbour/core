@@ -2164,7 +2164,7 @@ static InOutBase * create_newXterm( void )
       execlp( "xterm", "xterm", buf, "+sb",
               "-fg", "white",
               "-bg", "black", "-fn", "fixed", "-T", "HB-XTERM Window", NULL );
-      exit( 0 );
+      _exit( EXIT_FAILURE );
    }
    close( masterfd );
    return create_ioBase( "xterm", slavefd, slavefd, slavefd, termpid );
