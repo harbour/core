@@ -319,6 +319,10 @@
    typedef HB_SOCKET    HB_SOCKET_T;
 #endif
 
+#if ! defined( SO_NOSIGPIPE )
+   #define	SO_NOSIGPIPE	0x00000800
+#endif
+
 #endif /* HB_SOCKET_OFF */
 
 #include "hbapi.h"
@@ -646,6 +650,14 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fNoDelay );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
+   return -1;
+}
+
+int hb_socketSetNoSigPipe( HB_SOCKET sd, HB_BOOL fNoSigPipe )
+{
+   HB_SYMBOL_UNUSED( sd );
+   HB_SYMBOL_UNUSED( fNoSigPipe );
    hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
@@ -2846,6 +2858,21 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
    ret = -1;
 #endif
    return ret;
+}
+
+int hb_socketSetNoSigPipe( HB_SOCKET sd, HB_BOOL fNoSigPipe )
+{
+#if defined( SO_NOSIGPIPE )
+   int val = fNoSigPipe ? 1 : 0, ret;
+   ret = setsockopt( sd, SOL_SOCKET, SO_NOSIGPIPE, ( const char * ) &val, sizeof( val ) );
+   hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
+   return ret;
+#else
+   HB_SYMBOL_UNUSED( sd );
+   HB_SYMBOL_UNUSED( fNoSigPipe );
+   hb_socketSetError( HB_SOCKET_ERR_NOSUPPORT );
+   return -1;
+#endif
 }
 
 /* NOTE: For notes on Windows, see:
