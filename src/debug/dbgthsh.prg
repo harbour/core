@@ -70,11 +70,15 @@ ENDCLASS
 
 METHOD New( hHash, cVarName, lEditable ) CLASS HBDbHash
 
-   ::hashName := cVarName
-   ::TheHash := hHash
-   ::lEditable := hb_defaultValue( lEditable, .T. )
+   IF Len( hHash ) == 0
+      __dbgAlert( "Hash is empty" )
+   ELSE
+      ::hashName := cVarName
+      ::TheHash := hHash
+      ::lEditable := hb_defaultValue( lEditable, .T. )
 
-   ::addWindows( ::TheHash )
+      ::addWindows( ::TheHash )
+   ENDIF
 
    RETURN Self
 
@@ -199,22 +203,18 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
 
       IF HB_ISHASH( uValue )
 
-         IF Len( uValue ) == 0
-            __dbgAlert( "Hash is empty" )
+         SetPos( ownd:nBottom, ownd:nLeft )
+         ::aWindows[ ::nCurwindow ]:lFocused := .F.
+
+         ::hashName := ::hashName + "[" + HashKeyString( hHash, nSet ) + "]"
+         ::AddWindows( hb_HValueAt( hHash, nSet ), oBrwSets:RowPos + oBrwSets:nTop )
+         ::hashName := cOldName
+
+         hb_ADel( ::aWindows, ::nCurWindow, .T. )
+         IF ::nCurwindow == 0
+            ::nCurwindow := 1
          ELSE
-            SetPos( ownd:nBottom, ownd:nLeft )
-            ::aWindows[ ::nCurwindow ]:lFocused := .F.
-
-            ::hashName := ::hashName + "[" + HashKeyString( hHash, nSet ) + "]"
-            ::AddWindows( hb_HValueAt( hHash, nSet ), oBrwSets:RowPos + oBrwSets:nTop )
-            ::hashName := cOldName
-
-            hb_ADel( ::aWindows, ::nCurWindow, .T. )
-            IF ::nCurwindow == 0
-               ::nCurwindow := 1
-            ELSE
-               ::nCurwindow--
-            ENDIF
+            ::nCurwindow--
          ENDIF
       ELSEIF HB_ISPOINTER( uValue ) .OR. ! ::lEditable
          __dbgAlert( "Value cannot be edited" )
