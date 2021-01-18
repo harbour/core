@@ -70,11 +70,15 @@ ENDCLASS
 
 METHOD New( aArray, cVarName, lEditable ) CLASS HBDbArray
 
-   ::arrayName := cVarName
-   ::TheArray := aArray
-   ::lEditable := hb_defaultValue( lEditable, .T. )
+   IF Len( aArray ) == 0
+      __dbgAlert( "Array is empty" )
+   ELSE
+      ::arrayName := cVarName
+      ::TheArray := aArray
+      ::lEditable := hb_defaultValue( lEditable, .T. )
 
-   ::addWindows( ::TheArray )
+      ::addWindows( ::TheArray )
+   ENDIF
 
    RETURN Self
 
@@ -191,21 +195,17 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
 
    CASE K_ENTER
       IF HB_ISARRAY( aArray[ nSet ] )
-         IF Len( aArray[ nSet ] ) == 0
-            __dbgAlert( "Array is empty" )
-         ELSE
-            SetPos( oWnd:nBottom, oWnd:nLeft )
-            ::aWindows[ ::nCurWindow ]:lFocused := .F.
-            ::arrayname := ::arrayname + "[" + hb_ntos( nSet ) + "]"
-            ::AddWindows( aArray[ nSet ], oBrwSets:RowPos + oBrwSets:nTop )
-            ::arrayname := cOldName
+         SetPos( oWnd:nBottom, oWnd:nLeft )
+         ::aWindows[ ::nCurWindow ]:lFocused := .F.
+         ::arrayname := ::arrayname + "[" + hb_ntos( nSet ) + "]"
+         ::AddWindows( aArray[ nSet ], oBrwSets:RowPos + oBrwSets:nTop )
+         ::arrayname := cOldName
 
-            hb_ADel( ::aWindows, ::nCurWindow, .T. )
-            IF ::nCurWindow == 0
-               ::nCurWindow := 1
-            ELSE
-               ::nCurWindow--
-            ENDIF
+         hb_ADel( ::aWindows, ::nCurWindow, .T. )
+         IF ::nCurWindow == 0
+            ::nCurWindow := 1
+         ELSE
+            ::nCurWindow--
          ENDIF
       ELSEIF HB_ISPOINTER( aArray[ nSet ] ) .OR. ! ::lEditable
          __dbgAlert( "Value cannot be edited" )
