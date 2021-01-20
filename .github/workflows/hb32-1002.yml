@@ -1,0 +1,80 @@
+name: hb32-1002
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Harbour 3.2 mingw 10.2'
+        default: 'hb32-1002'
+        required: true
+
+jobs:
+
+  Build:
+    runs-on: windows-latest
+    steps:
+
+    - name: Load Mingw
+      uses: JoseQuintas/action-download-artifact@v2
+      with:
+         workflow: mingw-1002.yml
+         workflow_conclusion: success
+         name: mingw-1002
+         path: c:\temp
+
+    - name: Unzip
+      env:
+         PATH: c:\program files\7-zip
+      run: |
+         c:
+         dir c:\temp
+         md c:\temp\harbour
+         md c:\temp\harbour\comp
+         7z x -y c:\temp\mingw-1002.7z -oc:\temp\harbour\comp
+
+    - name: Install Source Code
+      run: |
+         c:
+         git clone https://github.com/harbour/core c:\temp\harbour32 --depth 1
+
+    - name: Build 32 bits
+      env:
+         HB_BUILD_CONTRIB: No
+         HB_BUILD_DYN: no
+         HB_BUILD_SHARED: no
+         HB_BUILD_STRIP: no
+         HB_COMPILER: mingw
+         HB_INSTALL_PREFIX: c:\temp\harbour
+         PATH: c:\temp\harbour\comp\mingw32\bin
+      run: |
+         c:
+         cd c:\temp\harbour32
+         mingw32-make clean install
+
+    - name: Build 64 bits
+      env:
+         HB_BUILD_CONTRIB: No
+         HB_BUILD_DYN: no
+         HB_BUILD_SHARED: no
+         HB_BUILD_STRIP: no
+         HB_COMPILER: mingw64
+         HB_INSTALL_PREFIX: c:\temp\harbour
+         PATH: c:\temp\harbour\comp\mingw64\bin
+      run: |
+         c:
+         cd \temp\harbour32
+         mingw32-make clean install
+
+    - name: Zip
+      env:
+         PATH: c:\program files\7-zip
+      run: |
+         c:
+         cd \temp\harbour
+         7z a -r c:\temp\hb32-1002.7z c:\temp\harbour\*.*
+
+    - name: Save
+      uses: actions/upload-artifact@v2
+      with:
+         name: hb32-1002
+         path: c:\temp\hb32-1002.7z
