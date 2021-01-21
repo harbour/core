@@ -2470,6 +2470,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       DO CASE
       CASE Empty( cParam )
          /* do nothing */
+
+
+      /* trying a workaround, Seems solve problem but do not cancel compression */
+      CASE cParamL == "-skip"
+         EXIT
+
+
       CASE Left( cParamL, 6 )  == "-comp=" .OR. ;
            Left( cParamL, 6 )  == "-plat=" .OR. ;
            Left( cParamL, 10 ) == "-compiler=" .OR. ; /* Compatibility HB_LEGACY_LEVEL4 */
