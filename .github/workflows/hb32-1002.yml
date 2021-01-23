@@ -21,6 +21,7 @@ jobs:
          workflow_conclusion: success
          name: mingw-1002
          path: c:\temp
+         repo: JoseQuintas/hbpack
 
     - name: Unzip
       env:
