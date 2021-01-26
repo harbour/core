@@ -70,15 +70,11 @@ ENDCLASS
 
 METHOD New( hHash, cVarName, lEditable ) CLASS HBDbHash
 
-   IF Len( hHash ) == 0
-      __dbgAlert( "Hash is empty" )
-   ELSE
-      ::hashName := cVarName
-      ::TheHash := hHash
-      ::lEditable := hb_defaultValue( lEditable, .T. )
+   ::hashName := cVarName
+   ::TheHash := hHash
+   ::lEditable := hb_defaultValue( lEditable, .T. )
 
-      ::addWindows( ::TheHash )
-   ENDIF
+   ::addWindows( ::TheHash )
 
    RETURN Self
 
@@ -202,19 +198,22 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
       uValue := hb_HValueAt( hHash, nSet )
 
       IF HB_ISHASH( uValue )
-
-         SetPos( ownd:nBottom, ownd:nLeft )
-         ::aWindows[ ::nCurwindow ]:lFocused := .F.
-
-         ::hashName := ::hashName + "[" + HashKeyString( hHash, nSet ) + "]"
-         ::AddWindows( hb_HValueAt( hHash, nSet ), oBrwSets:RowPos + oBrwSets:nTop )
-         ::hashName := cOldName
-
-         hb_ADel( ::aWindows, ::nCurWindow, .T. )
-         IF ::nCurwindow == 0
-            ::nCurwindow := 1
+         IF Len( uValue ) == 0
+            __dbgAlert( "Hash is empty" )
          ELSE
-            ::nCurwindow--
+            SetPos( ownd:nBottom, ownd:nLeft )
+            ::aWindows[ ::nCurwindow ]:lFocused := .F.
+
+            ::hashName := ::hashName + "[" + HashKeyString( hHash, nSet ) + "]"
+            ::AddWindows( hb_HValueAt( hHash, nSet ), oBrwSets:RowPos + oBrwSets:nTop )
+            ::hashName := cOldName
+
+            hb_ADel( ::aWindows, ::nCurWindow, .T. )
+            IF ::nCurwindow == 0
+               ::nCurwindow := 1
+            ELSE
+               ::nCurwindow--
+            ENDIF
          ENDIF
       ELSEIF HB_ISPOINTER( uValue ) .OR. ! ::lEditable
          __dbgAlert( "Value cannot be edited" )
@@ -224,7 +223,11 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
          CASE HB_ISOBJECT( uValue )
             __dbgObject( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
          CASE HB_ISARRAY( uValue )
-            __dbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
+            IF Len( uValue ) == 0
+               __dbgAlert( "Array is empty" )
+            ELSE
+               __dbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
+            ENDIF
          OTHERWISE
             ::doGet( oBrwSets, hHash, nSet )
          ENDCASE

@@ -70,15 +70,11 @@ ENDCLASS
 
 METHOD New( aArray, cVarName, lEditable ) CLASS HBDbArray
 
-   IF Len( aArray ) == 0
-      __dbgAlert( "Array is empty" )
-   ELSE
-      ::arrayName := cVarName
-      ::TheArray := aArray
-      ::lEditable := hb_defaultValue( lEditable, .T. )
+   ::arrayName := cVarName
+   ::TheArray := aArray
+   ::lEditable := hb_defaultValue( lEditable, .T. )
 
-      ::addWindows( ::TheArray )
-   ENDIF
+   ::addWindows( ::TheArray )
 
    RETURN Self
 
@@ -195,17 +191,21 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
 
    CASE K_ENTER
       IF HB_ISARRAY( aArray[ nSet ] )
-         SetPos( oWnd:nBottom, oWnd:nLeft )
-         ::aWindows[ ::nCurWindow ]:lFocused := .F.
-         ::arrayname := ::arrayname + "[" + hb_ntos( nSet ) + "]"
-         ::AddWindows( aArray[ nSet ], oBrwSets:RowPos + oBrwSets:nTop )
-         ::arrayname := cOldName
-
-         hb_ADel( ::aWindows, ::nCurWindow, .T. )
-         IF ::nCurWindow == 0
-            ::nCurWindow := 1
+         IF Len( aArray[ nSet ] ) == 0
+            __dbgAlert( "Array is empty" )
          ELSE
-            ::nCurWindow--
+            SetPos( oWnd:nBottom, oWnd:nLeft )
+            ::aWindows[ ::nCurWindow ]:lFocused := .F.
+            ::arrayname := ::arrayname + "[" + hb_ntos( nSet ) + "]"
+            ::AddWindows( aArray[ nSet ], oBrwSets:RowPos + oBrwSets:nTop )
+            ::arrayname := cOldName
+
+            hb_ADel( ::aWindows, ::nCurWindow, .T. )
+            IF ::nCurWindow == 0
+               ::nCurWindow := 1
+            ELSE
+               ::nCurWindow--
+            ENDIF
          ENDIF
       ELSEIF HB_ISPOINTER( aArray[ nSet ] ) .OR. ! ::lEditable
          __dbgAlert( "Value cannot be edited" )
@@ -215,7 +215,11 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
          CASE HB_ISOBJECT( aArray[ nSet ] )
             __dbgObject( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
          CASE HB_ISHASH( aArray[ nSet ] )
-            __dbgHashes( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
+            IF Len( aArray[ nSet ] ) == 0
+               __dbgAlert( "Hash is empty" )
+            ELSE
+               __dbgHashes( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
+            ENDIF
          OTHERWISE
             ::doGet( oBrwsets, aArray, nSet )
          ENDCASE
