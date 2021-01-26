@@ -198,7 +198,6 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
       uValue := hb_HValueAt( hHash, nSet )
 
       IF HB_ISHASH( uValue )
-
          IF Len( uValue ) == 0
             __dbgAlert( "Hash is empty" )
          ELSE
@@ -224,7 +223,11 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
          CASE HB_ISOBJECT( uValue )
             __dbgObject( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
          CASE HB_ISARRAY( uValue )
-            __dbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
+            IF Len( uValue ) == 0
+               __dbgAlert( "Array is empty" )
+            ELSE
+               __dbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
+            ENDIF
          OTHERWISE
             ::doGet( oBrwSets, hHash, nSet )
          ENDCASE
