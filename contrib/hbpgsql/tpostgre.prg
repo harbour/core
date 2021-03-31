@@ -889,6 +889,7 @@ METHOD Append( oRow ) CLASS TPQquery
    LOCAL lChanged := .F.
    LOCAL aParams := {}
    LOCAL nParams := 0
+   LOCAL tParam  := ""
 
    ::SetKey()
 
@@ -905,9 +906,14 @@ METHOD Append( oRow ) CLASS TPQquery
 
       FOR i := 1 TO oRow:FCount()
          IF ::lallCols .OR. oRow:Changed( i )
-            nParams++
-            cQuery += "$" + hb_ntos( nParams ) + ","
-            AAdd( aParams, ValueToString( oRow:FieldGet( i ) ) )
+            tParam := ValueToString( oRow:FieldGet( i ) )
+            IF upper(tParam) # 'NULL'
+               nParams++
+               cQuery += "$" + hb_ntos( nParams ) + ","
+               AAdd( aParams, tParam)
+            ELSE
+               cQuery += "NULL,"
+            ENDIF   
          ENDIF
       NEXT
 
@@ -946,6 +952,7 @@ METHOD Update( oRow ) CLASS TPQquery
    LOCAL lChanged := .F.
    LOCAL aParams := {}
    LOCAL nParams := 0
+   LOCAL tParam  := ""
 
    ::SetKey()
 
@@ -967,9 +974,14 @@ METHOD Update( oRow ) CLASS TPQquery
       FOR i := 1 TO oRow:FCount()
          IF ::lallcols .OR. oRow:Changed( i )
             lChanged := .T.
-            nParams++
-            cQuery += oRow:FieldName( i ) + " = $" + hb_ntos( nParams ) + ","
-            AAdd( aParams, ValueToString( oRow:FieldGet( i ) ) )
+            tParam := ValueToString( oRow:FieldGet( i ) )
+            IF upper(tParam) # 'NULL'
+               nParams++
+               cQuery += oRow:FieldName( i ) + " = $" + hb_ntos( nParams ) + ","
+               AAdd( aParams, tParam )
+            ELSE 
+               cQuery += oRow:FieldName( i ) + " = NULL,"
+            ENDIF   
          ENDIF
       NEXT
 
@@ -1337,7 +1349,7 @@ STATIC FUNCTION ValueToString( xField )
 
    SWITCH ValType( xField )
    CASE "D"
-      RETURN DToS( xField )
+      RETURN iif(!empty(xField), DToS( xField ), 'NULL')
    CASE "N"
       RETURN Str( xField )
    CASE "L"
