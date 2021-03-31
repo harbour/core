@@ -194,7 +194,7 @@ METHOD Query( cQuery, lNull ) CLASS TPQserver
       lNull := ::lNull
    ENDIF
 
-   RETURN TPQQuery():New( ::pDB, cQuery, ::lAllCols, ::Schema, lNull )
+   RETURN TPQQuery():New( ::pDB, cQuery, ::lAllCols, ::Schema,, lNull )
 
 METHOD TableExists( cTable ) CLASS TPQserver
 
@@ -882,7 +882,7 @@ METHOD Append( oRow ) CLASS TPQquery
    LOCAL res
    LOCAL lChanged := .F.
    LOCAL aParams := {}
-   LOCAL nParams := 0
+   LOCAL xParam
 
    ::SetKey()
 
@@ -893,21 +893,28 @@ METHOD Append( oRow ) CLASS TPQquery
       FOR i := 1 TO oRow:FCount()
          IF ::lAllCols .OR. oRow:Changed( i )
             lChanged := .T.
-            cQuery += oRow:FieldName( i ) + ","
+            IF ! ( xParam := ValueToString( oRow:FieldGet( i ) ) ) == NIL
+               AAdd( aParams, xParam )
+               cQuery += oRow:FieldName( i ) + ","
+            ENDIF
          ENDIF
       NEXT
 
-      cQuery := hb_StrShrink( cQuery ) + ") VALUES ("
-
-      FOR i := 1 TO oRow:FCount()
-         IF ::lAllCols .OR. oRow:Changed( i )
-            nParams++
-            cQuery += "$" + hb_ntos( nParams ) + ","
-            AAdd( aParams, ValueToString( oRow:FieldGet( i ) ) )
-         ENDIF
-      NEXT
-
-      cQuery := hb_StrShrink( cQuery ) + ")"
+      IF lChanged .AND. Len( aParams ) == 0
+         /*
+          * Edge case here, adding a row filled with NULL values only,
+          * should add at least one field to conform with SQL syntax.
+          * This is possible with no primary key and/or when default
+          * values provided in table schema.
+          */
+         cQuery := cQuery + oRow:FieldName( 1 ) + ") VALUES (NULL)"
+      ELSE
+         cQuery := hb_StrShrink( cQuery ) + ") VALUES ("
+         FOR i := 1 TO Len( aParams )
+            cQuery += "$" + hb_ntos( i ) + ","
+         NEXT
+         cQuery := hb_StrShrink( cQuery ) + ")"
+      ENDIF
 
       IF lChanged
          res := PQexecParams( ::pDB, cQuery, aParams )
@@ -938,6 +945,7 @@ METHOD Update( oRow ) CLASS TPQquery
    LOCAL lChanged := .F.
    LOCAL aParams := {}
    LOCAL nParams := 0
+   LOCAL xParam
 
    ::SetKey()
 
@@ -962,9 +970,13 @@ METHOD Update( oRow ) CLASS TPQquery
       FOR i := 1 TO oRow:FCount()
          IF ::lAllCols .OR. oRow:Changed( i )
             lChanged := .T.
-            nParams++
-            cQuery += oRow:FieldName( i ) + " = $" + hb_ntos( nParams ) + ","
-            AAdd( aParams, ValueToString( oRow:FieldGet( i ) ) )
+            IF ( xParam := ValueToString( oRow:FieldGet( i ) ) ) == NIL
+               cQuery += oRow:FieldName( i ) + " = NULL,"
+            ELSE
+               nParams++
+               cQuery += oRow:FieldName( i ) + " = $" + hb_ntos( nParams ) + ","
+               AAdd( aParams, xParam )
+            ENDIF
          ENDIF
       NEXT
 
@@ -1316,7 +1328,7 @@ STATIC FUNCTION ValueToString( xField )
    SWITCH ValType( xField )
    CASE "C"
    CASE "M" ; RETURN xField
-   CASE "D" ; RETURN DToS( xField )
+   CASE "D" ; RETURN IIF( Empty( xField ), NIL, DToS( xField ) )
    CASE "N" ; RETURN hb_ntos( xField )
    CASE "L" ; RETURN iif( xField, "t", "f" )
    ENDSWITCH
