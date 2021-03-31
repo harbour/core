@@ -47,27 +47,26 @@
 
 #require "hbpgsql"
 
-#include "inkey.ch"
 #include "fileio.ch"
+#include "inkey.ch"
 
 #include "hbextcdp.ch"
 
-PROCEDURE Main( ... )
+PROCEDURE Main()
 
-   LOCAL cTok
-   LOCAL cHostName := "localhost"
-   LOCAL cUser := "postgres"
-   LOCAL cPassWord := ""
-   LOCAL cDataBase, cTable, cFile
-   LOCAL aDbfStruct, i
+   LOCAL cHostName
+   LOCAL cUser
+   LOCAL cPassword
+   LOCAL cDatabase := "postgres", cTable, cFile
+   LOCAL i
    LOCAL lCreateTable := .F.
    LOCAL oServer, oTable, oRecord
    LOCAL cField
-   LOCAL sType
-   LOCAL dType
+   LOCAL cTypeDB
+   LOCAL cTypePG
    LOCAL cValue
    LOCAL nCommit := 100
-   LOCAL nHandle
+   LOCAL hFile
    LOCAL nCount := 0
    LOCAL nRecno := 0
    LOCAL lTruncate := .F.
@@ -75,80 +74,48 @@ PROCEDURE Main( ... )
    LOCAL cPath := "public"
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   SET DELETE ON
+   Set( _SET_DELETED, .T. )
 
-   rddSetDefault( "DBFDBT" )
-
-   IF PCount() < 6
-      help()
-      QUIT
-   ENDIF
-
-   i := 1
    /* Scan parameters and setup workings */
-   DO WHILE i <= PCount()
+   FOR i := 1 TO PCount()
 
-      cTok := hb_PValue( i++ )
-
-      DO CASE
-      CASE cTok == "-h"
-         cHostName := hb_PValue( i++ )
-
-      CASE cTok == "-d"
-         cDataBase := hb_PValue( i++ )
-
-      CASE cTok == "-t"
-         cTable := hb_PValue( i++ )
-
-      CASE cTok == "-f"
-         cFile := hb_PValue( i++ )
-
-      CASE cTok == "-u"
-         cUser := hb_PValue( i++ )
-
-      CASE cTok == "-p"
-         cPassWord := hb_PValue( i++ )
-
-      CASE cTok == "-c"
-         lCreateTable := .T.
-
-      CASE cTok == "-x"
-         lTruncate := .T.
-
-      CASE cTok == "-s"
-         lUseTrans := .T.
-
-      CASE cTok == "-m"
-         nCommit := Val( hb_PValue( i++ ) )
-
-      CASE cTok == "-r"
-         nRecno := Val( hb_PValue( i++ ) )
-
-      CASE cTok == "-e"
-         cPath := hb_PValue( i++ )
-
-      CASE cTok == "-cp"
-         hb_cdpSelect( hb_PValue( i++ ) )
-
+      SWITCH hb_PValue( i )
+      CASE "-h" ; cHostName := hb_PValue( ++i ) ; EXIT
+      CASE "-d" ; cDatabase := hb_PValue( ++i ) ; EXIT
+      CASE "-t" ; cTable := AllTrim( hb_PValue( ++i ) ) ; EXIT
+      CASE "-f" ; cFile := hb_PValue( ++i ) ; EXIT
+      CASE "-u" ; cUser := hb_PValue( ++i ) ; EXIT
+      CASE "-p" ; cPassword := hb_PValue( ++i ) ; EXIT
+      CASE "-c" ; lCreateTable := .T. ; EXIT
+      CASE "-x" ; lTruncate := .T. ; EXIT
+      CASE "-s" ; lUseTrans := .T. ; EXIT
+      CASE "-m" ; nCommit := Val( hb_PValue( ++i ) ) ; EXIT
+      CASE "-r" ; nRecno := Val( hb_PValue( ++i ) ) ; EXIT
+      CASE "-e" ; cPath := hb_PValue( ++i ) ; EXIT
+      CASE "-cp" ; Set( _SET_DBCODEPAGE, hb_PValue( ++i ) ) ; EXIT
       OTHERWISE
          help()
-         QUIT
-      ENDCASE
-   ENDDO
+         RETURN
+      ENDSWITCH
+   NEXT
 
-   // create log file
-   IF ( nHandle := FCreate( RTrim( cTable ) + ".log" ) ) == F_ERROR
-      ? "Cannot create log file"
-      QUIT
+   IF Empty( cTable ) .OR. cFile == ""
+      help()
+      RETURN
    ENDIF
 
-   USE ( cFile ) SHARED
-   aDbfStruct := dbStruct()
+   // create log file
+   IF ( hFile := hb_vfOpen( cTable + ".log", FO_CREAT + FO_TRUNC + FO_WRITE ) ) == NIL
+      ? "Cannot create log file"
+      RETURN
+   ENDIF
 
-   oServer := TPQServer():New( cHostName, cDatabase, cUser, cPassWord, NIL, cPath )
+   USE ( cFile ) SHARED READONLY
+
+   oServer := TPQServer():New( cHostName, cDatabase, cUser, cPassword, , cPath )
    IF oServer:NetErr()
       ? oServer:ErrorMsg()
-      QUIT
+      RETURN
    ENDIF
 
    oServer:lallCols := .F.
@@ -158,18 +125,18 @@ PROCEDURE Main( ... )
          oServer:DeleteTable( cTable )
          IF oServer:NetErr()
             ? oServer:ErrorMsg()
-            FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
-            FClose( nHandle )
-            QUIT
+            hb_vfWrite( hFile, "Error: " + oServer:ErrorMsg() + hb_eol() )
+            hb_vfClose( hFile )
+            RETURN
          ENDIF
       ENDIF
-      oServer:CreateTable( cTable, aDbfStruct )
 
+      oServer:CreateTable( cTable, dbStruct() )
       IF oServer:NetErr()
          ? oServer:ErrorMsg()
-         FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
-         FClose( nHandle )
-         QUIT
+         hb_vfWrite( hFile, "Error: " + oServer:ErrorMsg() + hb_eol() )
+         hb_vfClose( hFile )
+         RETURN
       ENDIF
    ENDIF
 
@@ -177,75 +144,57 @@ PROCEDURE Main( ... )
       oServer:Execute( "truncate table " + cTable )
       IF oServer:NetErr()
          ? oServer:ErrorMsg()
-         FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
-         FClose( nHandle )
-         QUIT
+         hb_vfWrite( hFile, "Error: " + oServer:ErrorMsg() + hb_eol() )
+         hb_vfClose( hFile )
+         RETURN
       ENDIF
    ENDIF
 
    oTable := oServer:Query( "SELECT * FROM " + cTable + " LIMIT 1" )
    IF oTable:NetErr()
-      Alert( oTable:ErrorMsg() )
-      FWrite( nHandle, "Error: " + oTable:ErrorMsg() + hb_eol() )
-      FClose( nHandle )
-      QUIT
+      ? oTable:ErrorMsg()
+      hb_vfWrite( hFile, "Error: " + oTable:ErrorMsg() + hb_eol() )
+      hb_vfClose( hFile )
+      RETURN
    ENDIF
 
    IF lUseTrans
       oServer:StartTransaction()
    ENDIF
 
-   FWrite( nHandle, "Start: " + Time() + hb_eol() )
+   hb_vfWrite( hFile, "Start: " + Time() + hb_eol() )
 
-   ? "Start: ", Time()
+   ? "Start:", Time()
    ?
 
-   IF ! Empty( nRecno )
+   IF nRecno != 0
       dbGoto( nRecno )
    ENDIF
 
-   DO WHILE ! Eof() .AND. Inkey() != K_ESC .AND. ( Empty( nRecno ) .OR. nRecno == RecNo() )
+   DO WHILE ! Eof() .AND. hb_keyStd( Inkey() ) != K_ESC .AND. ( nRecno == 0 .OR. nRecno == RecNo() )
       oRecord := oTable:GetBlankRow()
 
       FOR i := 1 TO oTable:FCount()
          cField := Lower( oTable:FieldName( i ) )
-         sType := FieldType( FieldPos( cField ) )
-         dType := oRecord:FieldType( i )
+         cTypeDB := Left( hb_FieldType( FieldPos( cField ) ), 1 )
+         cTypePG := oRecord:FieldType( i )
          cValue := FieldGet( FieldPos( cField ) )
 
          IF cValue != NIL
-            IF dType != sType
-               IF dType == "C" .AND. sType == "N"
-                  cValue := Str( cValue )
-
-               ELSEIF dType == "C" .AND. sType == "D"
-                  cValue := DToC( cValue )
-
-               ELSEIF dType == "C" .AND. sType == "L"
-                  cValue := iif( cValue, "S", "N" )
-
-               ELSEIF dType == "N" .AND. sType == "C"
-                  cValue := Val( cValue )
-
-               ELSEIF dType == "N" .AND. sType == "D"
-                  cValue := Val( DToS( cValue ) )
-
-               ELSEIF dType == "N" .AND. sType == "L"
-                  cValue := iif( cValue, 1, 0 )
-
-               ELSEIF dType == "D" .AND. sType == "C"
-                  cValue := CToD( cValue )
-
-               ELSEIF dType == "D" .AND. sType == "N"
-                  cValue := hb_SToD( Str( cValue ) )
-
-               ELSEIF dType == "L" .AND. sType == "N"
-                  cValue := ! Empty( cValue )
-
-               ELSEIF dType == "L" .AND. sType == "C"
-                  cValue := iif( AllTrim( cValue ) $ "YySs1", .T., .F. )
-
-               ENDIF
+            IF cTypePG != cTypeDB
+               DO CASE
+               CASE cTypePG == "C" .AND. cTypeDB $ "NIYF8BZ24" ; cValue := hb_ntos( cValue )
+               CASE cTypePG == "C" .AND. cTypeDB == "D" ; cValue := DToC( cValue )
+               CASE cTypePG == "C" .AND. cTypeDB $ "T@" ; cValue := hb_TToC( cValue )
+               CASE cTypePG == "C" .AND. cTypeDB == "L" ; cValue := iif( cValue, "S", "N" )
+               CASE cTypePG == "N" .AND. cTypeDB $ "CQ" ; cValue := Val( cValue )
+               CASE cTypePG == "N" .AND. cTypeDB == "D" ; cValue := Val( DToS( cValue ) )
+               CASE cTypePG == "N" .AND. cTypeDB == "L" ; cValue := iif( cValue, 1, 0 )
+               CASE cTypePG == "D" .AND. cTypeDB $ "CQ" ; cValue := CToD( cValue )
+               CASE cTypePG == "D" .AND. cTypeDB $ "NIYF8BZ24" ; cValue := hb_SToD( hb_ntos( cValue ) )
+               CASE cTypePG == "L" .AND. cTypeDB $ "NIYF8BZ24" ; cValue := ! Empty( cValue )
+               CASE cTypePG == "L" .AND. cTypeDB $ "CQ" ; cValue := AllTrim( cValue ) $ "YySs1"
+               ENDCASE
             ENDIF
 
             IF cValue != NIL
@@ -262,18 +211,18 @@ PROCEDURE Main( ... )
 
       IF oTable:NetErr()
          ?
-         ? "Error Record: ", RecNo(), Left( oTable:ErrorMsg(), 70 )
+         ? "Error Record:", RecNo(), Left( oTable:ErrorMsg(), 70 )
          ?
-         FWrite( nHandle, "Error at record: " + hb_ntos( RecNo() ) + " Description: " + oTable:ErrorMsg() + hb_eol() )
+         hb_vfWrite( hFile, "Error at record: " + hb_ntos( RecNo() ) + " Description: " + oTable:ErrorMsg() + hb_eol() )
       ELSE
          nCount++
       ENDIF
 
       dbSkip()
 
-      IF ( nCount % nCommit ) == 0
+      IF nCount % nCommit == 0
          DevPos( Row(), 1 )
-         DevOut( "imported recs: " + Str( nCount ) )
+         DevOut( "imported recs:", hb_ntos( nCount ) )
 
          IF lUseTrans
             oServer:commit()
@@ -282,41 +231,38 @@ PROCEDURE Main( ... )
       ENDIF
    ENDDO
 
-   IF ( nCount % nCommit ) != 0
-      IF lUseTrans
-         oServer:commit()
-      ENDIF
+   IF nCount % nCommit != 0 .AND. lUseTrans
+      oServer:commit()
    ENDIF
 
-   FWrite( nHandle, "End: " + Time() + ", records in dbf: " + hb_ntos( RecNo() ) + ", imported recs: " + hb_ntos( nCount ) + hb_eol() )
+   hb_vfWrite( hFile, "End: " + Time() + ", records in dbf: " + hb_ntos( RecNo() ) + ", imported recs: " + hb_ntos( nCount ) + hb_eol() )
 
-   ? "End: ", Time()
-   ?
+   ? "End:", Time()
 
-   FClose( nHandle )
+   hb_vfClose( hFile )
 
-   CLOSE ALL
+   dbCloseAll()
+
    oTable:Destroy()
    oServer:Destroy()
 
    RETURN
 
-PROCEDURE Help()
+STATIC PROCEDURE Help()
 
    ? "dbf2pg - dbf file to PostgreSQL table conversion utility"
-   ? "-h hostname (default: localhost)"
-   ? "-u user (default: root)"
-   ? "-p password (default no password)"
-   ? "-d name of database to use"
-   ? "-t name of table to add records to"
+   ? "-h hostname"
+   ? "-u user"
+   ? "-p password"
+   ? "-d name of database to use (default: postgres)"
+   ? "-t name of table to add records to (required)"
    ? "-c delete existing table and create a new one"
-   ? "-f name of .dbf file to import"
+   ? "-f name of .dbf file to import (required)"
    ? "-x truncate table before append records"
    ? "-s use transaction"
    ? "-m commit interval"
    ? "-r insert only record number"
    ? "-e search path"
-
-   ? ""
+   ?
 
    RETURN

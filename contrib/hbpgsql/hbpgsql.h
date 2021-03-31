@@ -1,7 +1,7 @@
 /*
  * PostgreSQL RDBMS wrapper header.
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (GC support)
+ * Copyright 2010 Viktor Szakats (vsz.me/hb) (GC support)
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -84,9 +84,10 @@
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT void hb_PGconn_ret( PGconn * p );
-extern HB_EXPORT PGconn * hb_PGconn_par( int iParam );
-extern HB_EXPORT void hb_PGresult_ret( PGresult * p );
+extern HB_EXPORT void       hb_PGconn_ret( PGconn * p );
+extern HB_EXPORT PGconn *   hb_PGconn_par( int iParam );
+
+extern HB_EXPORT void       hb_PGresult_ret( PGresult * p );
 extern HB_EXPORT PGresult * hb_PGresult_par( int iParam );
 
 HB_EXTERN_END
