@@ -616,6 +616,10 @@ HB_FUNC( PQMETADATA )  /* not a direct wrapper */
                   hb_strncpy( buf, "money", sizeof( buf ) - 1 );
                   break;
 
+               case NAMEOID:
+                  hb_strncpy( buf, "name", sizeof( buf ) - 1 );
+                  break;
+
                default:
                   hb_strncpy( buf, "not supported", sizeof( buf ) - 1 );
                   break;

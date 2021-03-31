@@ -64,6 +64,7 @@ CREATE CLASS TPQServer
    VAR      cError    INIT ""
    VAR      lTrace    INIT .F.
    VAR      pTrace
+   VAR      lNull     INIT .F.
 
    METHOD   New( cHost, cDatabase, cUser, cPass, nPort, Schema )
    METHOD   Destroy()
@@ -74,7 +75,7 @@ CREATE CLASS TPQServer
    METHOD   Commit()
    METHOD   Rollback()
 
-   METHOD   Query( cQuery )
+   METHOD   Query( cQuery, lNull )
    METHOD   Execute( cQuery )    INLINE ::Query( cQuery )
    METHOD   SetSchema( cSchema )
 
@@ -89,6 +90,7 @@ CREATE CLASS TPQServer
    METHOD   TraceOn( cFile )
    METHOD   TraceOff()
    METHOD   SetVerbosity( num )  INLINE PQsetErrorVerbosity( ::pDb, iif( num >= 0 .AND. num <= 2, num, 1 )  )
+   METHOD   SetNull( lNewSet )
 
 ENDCLASS
 
@@ -193,8 +195,11 @@ METHOD Rollback() CLASS TPQserver
 
    RETURN lError
 
-METHOD Query( cQuery ) CLASS TPQserver
-   RETURN TPQQuery():New( ::pDB, cQuery, ::lallCols, ::Schema )
+METHOD Query( cQuery, lNull ) CLASS TPQserver
+   IF !HB_IsLogical( lNull )
+      lNull := ::lNull
+   ENDIF
+   RETURN TPQQuery():New( ::pDB, cQuery, ::lallCols, ::Schema,, lNull )
 
 METHOD TableExists( cTable ) CLASS TPQserver
 
@@ -461,6 +466,14 @@ METHOD TraceOff() CLASS TPQserver
 
    RETURN NIL
 
+METHOD SetNull( lNewSet ) CLASS TPQserver
+   LOCAL lSet := ::lNull
+
+   IF HB_IsLogical( lNewSet )
+      ::lNull := lNewSet
+   ENDIF
+
+   RETURN lSet
 
 CREATE CLASS TPQQuery
 
@@ -487,8 +500,9 @@ CREATE CLASS TPQQuery
    VAR      TableName
    VAR      Schema
    VAR      rows     INIT 0
+   VAR      lNull    INIT .F.
 
-   METHOD   New( pDB, cQuery, lallCols, cSchema, res )
+   METHOD   New( pDB, cQuery, lallCols, cSchema, res, lNull )
    METHOD   Destroy()
    METHOD   Close()            INLINE ::Destroy()
 
@@ -529,7 +543,7 @@ CREATE CLASS TPQQuery
 ENDCLASS
 
 
-METHOD New( pDB, cQuery, lallCols, cSchema, res ) CLASS TPQquery
+METHOD New( pDB, cQuery, lallCols, cSchema, res, lNull ) CLASS TPQquery
 
    ::pDB := pDB
    ::nResultStatus := -1
@@ -539,6 +553,10 @@ METHOD New( pDB, cQuery, lallCols, cSchema, res ) CLASS TPQquery
 
    IF res != NIL
       ::pQuery := res
+   ENDIF
+
+   IF HB_IsLogical( lNull )
+      ::lNull := lNull
    ENDIF
 
    ::Refresh( res == NIL )
@@ -664,6 +682,14 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
                ELSEIF "time" $ cType
                   cType := "C"
                   nSize := 10
+
+               ELSEIF "name" $ cType
+                  cType := "C"
+                  nSize := 64
+
+               ELSEIF "oid" $ cType
+                  cType := "N"
+                  nSize := 19
 
                ELSE
                   /* Unsuported */
@@ -1021,7 +1047,7 @@ METHOD FieldGet( nField, nRow ) CLASS TPQquery
       CASE "M"
          IF result != NIL
             result := result
-         ELSE
+         ELSEIF ! ::lNull
             result := ""
          ENDIF
          EXIT
@@ -1029,7 +1055,7 @@ METHOD FieldGet( nField, nRow ) CLASS TPQquery
       CASE "N"
          IF result != NIL
             result := Val( result )
-         ELSE
+         ELSEIF ! ::lNull
             result := 0
          ENDIF
          EXIT
@@ -1037,7 +1063,7 @@ METHOD FieldGet( nField, nRow ) CLASS TPQquery
       CASE "D"
          IF result != NIL
             result := hb_SToD( StrTran( result, "-" ) )
-         ELSE
+         ELSEIF ! ::lNull
             result := hb_SToD()
          ENDIF
          EXIT
@@ -1045,7 +1071,7 @@ METHOD FieldGet( nField, nRow ) CLASS TPQquery
       CASE "L"
          IF result != NIL
             result := ( result == "t" )
-         ELSE
+         ELSEIF ! ::lNull
             result := .F.
          ENDIF
          EXIT
