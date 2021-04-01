@@ -697,7 +697,7 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
       ENDIF
 
    ELSE
-      IF ( ::lError := ::nResultStatus == PGRES_COMMAND_OK )
+      IF ( ::lError := ::nResultStatus != PGRES_COMMAND_OK )
          ::cError := ""
          ::rows   := Val( PQcmdTuples( res ) )
       ELSE
