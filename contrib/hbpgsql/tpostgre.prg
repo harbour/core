@@ -696,13 +696,11 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
          ::lEof := .F.
       ENDIF
 
+   ELSEIF ( ::lError := PQresultStatus( res ) != PGRES_COMMAND_OK )
+      ::cError := PQresultErrorMessage( res )
    ELSE
-      IF ( ::lError := ::nResultStatus != PGRES_COMMAND_OK )
-         ::cError := ""
-         ::rows   := Val( PQcmdTuples( res ) )
-      ELSE
-         ::cError := PQresultErrorMessage( res )
-      ENDIF
+      ::cError := ""
+      ::rows   := Val( PQcmdTuples( res ) )
    ENDIF
 
    ::pQuery := res
@@ -1328,7 +1326,7 @@ STATIC FUNCTION ValueToString( xField )
    SWITCH ValType( xField )
    CASE "C"
    CASE "M" ; RETURN xField
-   CASE "D" ; RETURN IIF( Empty( xField ), NIL, DToS( xField ) )
+   CASE "D" ; RETURN iif( Empty( xField ), NIL, DToS( xField ) )
    CASE "N" ; RETURN hb_ntos( xField )
    CASE "L" ; RETURN iif( xField, "t", "f" )
    ENDSWITCH
