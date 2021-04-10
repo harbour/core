@@ -156,7 +156,7 @@ METHOD StartTransaction() CLASS TPQserver
 
    LOCAL res := PQexec( ::pDB, "BEGIN" )
 
-   IF ( ::lError := PQresultStatus( res ) != PGRES_COMMAND_OK )
+   IF ::lError := ( PQresultStatus( res ) != PGRES_COMMAND_OK )
       ::cError := PQresultErrorMessage( res )
    ELSE
       ::cError := ""
@@ -168,7 +168,7 @@ METHOD Commit() CLASS TPQserver
 
    LOCAL res := PQexec( ::pDB, "COMMIT" )
 
-   IF ( ::lError := PQresultStatus( res ) != PGRES_COMMAND_OK )
+   IF ::lError := ( PQresultStatus( res ) != PGRES_COMMAND_OK )
       ::cError := PQresultErrorMessage( res )
    ELSE
       ::cError := ""
@@ -180,7 +180,7 @@ METHOD Rollback() CLASS TPQserver
 
    LOCAL res := PQexec( ::pDB, "ROLLBACK" )
 
-   IF ( ::lError := PQresultStatus( res ) != PGRES_COMMAND_OK )
+   IF ::lError := ( PQresultStatus( res ) != PGRES_COMMAND_OK )
       ::cError := PQresultErrorMessage( res )
    ELSE
       ::cError := ""
@@ -205,7 +205,7 @@ METHOD TableExists( cTable ) CLASS TPQserver
       "  FROM information_schema.tables" + ;
       " WHERE table_type = 'BASE TABLE' AND table_schema = " + DataToSql( ::Schema ) + " AND table_name = " + DataToSql( Lower( cTable ) ) )
 
-   IF ( ::lError := PQresultStatus( res ) != PGRES_TUPLES_OK )
+   IF ::lError := ( PQresultStatus( res ) != PGRES_TUPLES_OK )
       ::cError := PQresultErrorMessage( res )
       result := .F.
    ELSE
@@ -225,7 +225,7 @@ METHOD ListTables() CLASS TPQserver
       "  FROM information_schema.tables" + ;
       " WHERE table_schema = " + DataToSql( ::Schema ) + " AND table_type = 'BASE TABLE'" )
 
-   IF ( ::lError := PQresultStatus( res ) != PGRES_TUPLES_OK )
+   IF ::lError := ( PQresultStatus( res ) != PGRES_TUPLES_OK )
       ::cError := PQresultErrorMessage( res )
    ELSE
       FOR i := 1 TO PQlastrec( res )
@@ -251,7 +251,7 @@ METHOD TableStruct( cTable ) CLASS TPQserver
       " WHERE table_schema = " + DataToSql( ::Schema ) + " AND table_name = " + DataToSql( Lower( cTable ) ) + ;
       " ORDER BY ordinal_position" )
 
-   IF ( ::lError := PQresultStatus( res ) != PGRES_TUPLES_OK )
+   IF ::lError := ( PQresultStatus( res ) != PGRES_TUPLES_OK )
       ::cError := PQresultErrorMessage( res )
    ELSE
       ::cError := ""
@@ -400,7 +400,7 @@ METHOD CreateTable( cTable, aStruct ) CLASS TPQserver
 
    res := PQexec( ::pDB, cQuery )
 
-   IF ( ::lError := PQresultStatus( res ) != PGRES_COMMAND_OK )
+   IF ::lError := ( PQresultStatus( res ) != PGRES_COMMAND_OK )
       ::cError := PQresultErrorMessage( res )
    ELSE
       ::cError := ""
@@ -412,7 +412,7 @@ METHOD DeleteTable( cTable ) CLASS TPQserver
 
    LOCAL res := PQexec( ::pDB, "DROP TABLE " + ::Schema + "." + cTable  )
 
-   IF ( ::lError := PQresultStatus( res ) != PGRES_COMMAND_OK )
+   IF ::lError := ( PQresultStatus( res ) != PGRES_COMMAND_OK )
       ::cError := PQresultErrorMessage( res )
    ELSE
       ::cError := ""
@@ -696,7 +696,7 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
          ::lEof := .F.
       ENDIF
 
-   ELSEIF ( ::lError := PQresultStatus( res ) != PGRES_COMMAND_OK )
+   ELSEIF ::lError := ( ::nResultStatus != PGRES_COMMAND_OK )
       ::cError := PQresultErrorMessage( res )
    ELSE
       ::cError := ""
@@ -858,7 +858,7 @@ METHOD Delete( oRow ) CLASS TPQquery
          res := PQexecParams( ::pDB, ;
             "DELETE FROM " + ::Schema + "." + ::Tablename + " WHERE " + cWhere, aParams )
 
-         IF ( ::lError := PQresultStatus( res ) != PGRES_COMMAND_OK )
+         IF ::lError := ( PQresultStatus( res ) != PGRES_COMMAND_OK )
             ::cError := PQresultErrorMessage( res )
             ::rows   := 0
          ELSE
@@ -917,7 +917,7 @@ METHOD Append( oRow ) CLASS TPQquery
       IF lChanged
          res := PQexecParams( ::pDB, cQuery, aParams )
 
-         IF ( ::lError := PQresultStatus( res ) != PGRES_COMMAND_OK )
+         IF ::lError := ( PQresultStatus( res ) != PGRES_COMMAND_OK )
             ::cError := PQresultErrorMessage( res )
             ::rows   := 0
          ELSE
@@ -984,7 +984,7 @@ METHOD Update( oRow ) CLASS TPQquery
 
          res := PQexecParams( ::pDB, cQuery, aParams )
 
-         IF ( ::lError := PQresultStatus( res ) != PGRES_COMMAND_OK )
+         IF ::lError := ( PQresultStatus( res ) != PGRES_COMMAND_OK )
             ::cError := PQresultErrorMessage( res )
             ::rows   := 0
          ELSE
