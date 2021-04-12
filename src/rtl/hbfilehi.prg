@@ -284,6 +284,11 @@ FUNCTION hb_DirBuild( cDir )
          ( tmp := At( hb_osDriveSeparator(), cDir ) ) > 0
          cDirTemp := Left( cDir, tmp )
          cDir := SubStr( cDir, tmp + 1 )
+#ifdef __PLATFORM__WINDOWS
+      ELSEIF Left( cDir, 2 ) == "\\" /* UNC Path, network share */
+         cDirTemp := Left( cDir, hb_At( "\", cDir, 3 ) )
+         cDir := SubStr( cDir, Len( cDirTemp ) + 1 )
+#endif
       ELSEIF Left( cDir, 1 ) == hb_ps()
          cDirTemp := Left( cDir, 1 )
          cDir := SubStr( cDir, 2 )
