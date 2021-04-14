@@ -289,6 +289,7 @@ PRG_SOURCES := \
    ttopbar.prg \
    typefile.prg \
    valtoexp.prg \
+   vfilehi.prg \
    wait.prg \
 
 LIBNAME := hbrtl
