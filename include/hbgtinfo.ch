@@ -69,7 +69,7 @@
                                        Default is disabled. */
 #define HB_GTI_KBDALT           12  /* This will get/set the status of the Alt-NumPad
                                        key handling.
-                                       Default is Enabled. */
+                                       Default is disabled. (supported by: GTWIN) */
 #define HB_GTI_ISSCREENPOS      13  /* Is full screen cursor positioning supported by GT driver? */
 #define HB_GTI_FULLSCREEN       HB_GTI_ISSCREENPOS /* Compatibility. Do not use it. */
 #define HB_GTI_KBDSUPPORT       14  /* Is it keyboard input supported? */
