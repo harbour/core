@@ -274,11 +274,11 @@ HB_FUNC( HPDF_GETFONT )
 
 /* HPDF_AddPageLabel( hDoc, nPageNum, nPgNoStyle, nFirstPageInRange, cPrefixToLabel ) --> hStatus
        nPgNoStyle
-   HPDF_PAGE_NUM_STYLE_DECIMAL         1   Page label is displayed by Arabic numerals.
-   HPDF_PAGE_NUM_STYLE_UPPER_ROMAN     2   Page label is displayed by Uppercase roman numerals.
-   HPDF_PAGE_NUM_STYLE_LOWER_ROMAN     3   Page label is displayed by Lowercase roman numerals.
-   HPDF_PAGE_NUM_STYLE_UPPER_LETTERS   4   Page label is displayed by Uppercase letters (using A to Z).
-   HPDF_PAGE_NUM_STYLE_LOWER_LETTERS   5   Page label is displayed by Lowercase letters (using a to z).
+   HPDF_PAGE_NUM_STYLE_DECIMAL         0   Page label is displayed by Arabic numerals.
+   HPDF_PAGE_NUM_STYLE_UPPER_ROMAN     1   Page label is displayed by Uppercase roman numerals.
+   HPDF_PAGE_NUM_STYLE_LOWER_ROMAN     2   Page label is displayed by Lowercase roman numerals.
+   HPDF_PAGE_NUM_STYLE_UPPER_LETTERS   3   Page label is displayed by Uppercase letters (using A to Z).
+   HPDF_PAGE_NUM_STYLE_LOWER_LETTERS   4   Page label is displayed by Lowercase letters (using a to z).
  */
 HB_FUNC( HPDF_ADDPAGELABEL )
 {
@@ -317,11 +317,12 @@ HB_FUNC( HPDF_SETCURRENTENCODER )
 
 /* HPDF_SetInfoAttr( hDoc, nInfoType, cInfo ) --> hStatus
        nInfoType ==
-   HPDF_INFO_AUTHOR
-   HPDF_INFO_CREATOR
-   HPDF_INFO_TITLE
-   HPDF_INFO_SUBJECT
-   HPDF_INFO_KEYWORDS
+   HPDF_INFO_AUTHOR    2
+   HPDF_INFO_CREATOR   3
+   HPDF_INFO_PRODUCER  4
+   HPDF_INFO_TITLE     5
+   HPDF_INFO_SUBJECT   6
+   HPDF_INFO_KEYWORDS  7
  */
 HB_FUNC( HPDF_SETINFOATTR )
 {
@@ -336,8 +337,8 @@ HB_FUNC( HPDF_GETINFOATTR )
 
 /* HPDF_SetInfoDateAttr( hDoc, nInfoType, aDateValues ) --> hStatus
        nInfoType ==
-   HPDF_INFO_CREATION_DATE
-   HPDF_INFO_MOD_DATE
+   HPDF_INFO_CREATION_DATE  0
+   HPDF_INFO_MOD_DATE       1
  */
 HB_FUNC( HPDF_SETINFODATEATTR )
 {
@@ -364,11 +365,11 @@ HB_FUNC( HPDF_SETPASSWORD )
 
 /* HPDF_SetPermission( hDoc, nPermission ) --> hStatus
        nPermission ==
-   HPDF_ENABLE_READ      1   user can read the document.
-   HPDF_ENABLE_PRINT     2   user can print the document.
-   HPDF_ENABLE_EDIT_ALL  3   user can edit the contents of the document other than annotations, form fields.
-   HPDF_ENABLE_COPY      4   user can copy the text and the graphics of the document.
-   HPDF_ENABLE_EDIT      5   user can add or modify the annotations and form fields of the document.
+   HPDF_ENABLE_READ      0   user can read the document.
+   HPDF_ENABLE_PRINT     4   user can print the document.
+   HPDF_ENABLE_EDIT_ALL  8   user can edit the contents of the document other than annotations, form fields.
+   HPDF_ENABLE_COPY      16  user can copy the text and the graphics of the document.
+   HPDF_ENABLE_EDIT      32  user can add or modify the annotations and form fields of the document.
  */
 HB_FUNC( HPDF_SETPERMISSION )
 {
@@ -377,9 +378,9 @@ HB_FUNC( HPDF_SETPERMISSION )
 
 /* HPDF_SetEncryptionMode( hDoc, nEncMode, nKeyLen ) --> hStatus
        nEncMode ==
-   HPDF_ENCRYPT_R2    1   Use "Revision 2" algorithm.
+   HPDF_ENCRYPT_R2    2   Use "Revision 2" algorithm.
                              The length of key is automatically set to 5(40bit).
-   HPDF_ENCRYPT_R3    2   Use "Revision 3" algorithm.
+   HPDF_ENCRYPT_R3    3   Use "Revision 3" algorithm.
                              Between 5(40bit) and 16(128bit) can be specified for length of the key
  */
 HB_FUNC( HPDF_SETENCRYPTIONMODE )
@@ -389,11 +390,11 @@ HB_FUNC( HPDF_SETENCRYPTIONMODE )
 
 /* HPDF_SetCompressionMode( hDoc, nCompMode ) --> hStatus
        nCompMode ==
-   HPDF_COMP_NONE         1    All contents are not compressed.
-   HPDF_COMP_TEXT         2    Compress the contents stream of the page.
-   HPDF_COMP_IMAGE        3    Compress the streams of the image objects.
-   HPDF_COMP_METADATA     4    Other stream datas (fonts, cmaps and so on) are compressed.
-   HPDF_COMP_ALL          5    All stream datas are compressed. (The same as "HPDF_COMP_TEXT | HPDF_COMP_IMAGE | HPDF_COMP_METADATA")
+   HPDF_COMP_NONE     0x00    All contents are not compressed.
+   HPDF_COMP_TEXT     0x01    Compress the contents stream of the page.
+   HPDF_COMP_IMAGE    0x02    Compress the streams of the image objects.
+   HPDF_COMP_METADATA 0x04    Other stream datas (fonts, cmaps and so on) are compressed.
+   HPDF_COMP_ALL      0x0F    All stream datas are compressed. (The same as "HPDF_COMP_TEXT | HPDF_COMP_IMAGE | HPDF_COMP_METADATA")
  */
 HB_FUNC( HPDF_SETCOMPRESSIONMODE )
 {
@@ -416,18 +417,18 @@ HB_FUNC( HPDF_PAGE_SETHEIGHT )
 
 /* HPDF_Page_SetSize( hPage, nSize, nOrientation = 1 Portrait, 2 Landscape ) --> hStatus
        nSize ==
-   HPDF_PAGE_SIZE_LETTER         1      8.5 x 11 (Inches) 612 x 792
-   HPDF_PAGE_SIZE_LEGAL          2      8.5 x 14 (Inches) 612 x 1008
-   HPDF_PAGE_SIZE_A3             3      297 x 420 (mm) 841.89 x 1199.551
-   HPDF_PAGE_SIZE_A4             4      210 x 297 (mm)  595.276 x 841.89
-   HPDF_PAGE_SIZE_A5             5      148 x 210 (mm) 419.528 x 595.276
-   HPDF_PAGE_SIZE_B4             6      250 x 353 (mm)  708.661 x 1000.63
-   HPDF_PAGE_SIZE_B5             7      176 x 250 (mm) 498.898 x 708.661
-   HPDF_PAGE_SIZE_EXECUTIVE      8      7.5 x 10.5 (Inches) 522 x 756
-   HPDF_PAGE_SIZE_US4x6          9      4 x 6 (Inches) 288 x 432
-   HPDF_PAGE_SIZE_US4x8         10      4 x 8 (Inches) 288 x 576
-   HPDF_PAGE_SIZE_US5x7         11      5 x 7 (Inches) 360 x 504
-   HPDF_PAGE_SIZE_COMM10        12      4.125 x 9.5 (Inches) 297x 684
+   HPDF_PAGE_SIZE_LETTER     0   8.5 x 11 (Inches) 612 x 792
+   HPDF_PAGE_SIZE_LEGAL      1   8.5 x 14 (Inches) 612 x 1008
+   HPDF_PAGE_SIZE_A3         2   297 x 420 (mm) 841.89 x 1199.551
+   HPDF_PAGE_SIZE_A4         3   210 x 297 (mm)  595.276 x 841.89
+   HPDF_PAGE_SIZE_A5         4   148 x 210 (mm) 419.528 x 595.276
+   HPDF_PAGE_SIZE_B4         5   250 x 353 (mm)  708.661 x 1000.63
+   HPDF_PAGE_SIZE_B5         6   176 x 250 (mm) 498.898 x 708.661
+   HPDF_PAGE_SIZE_EXECUTIVE  7   7.5 x 10.5 (Inches) 522 x 756
+   HPDF_PAGE_SIZE_US4x6      8   4 x 6 (Inches) 288 x 432
+   HPDF_PAGE_SIZE_US4x8      9   4 x 8 (Inches) 288 x 576
+   HPDF_PAGE_SIZE_US5x7      10  5 x 7 (Inches) 360 x 504
+   HPDF_PAGE_SIZE_COMM10     11  4.125 x 9.5 (Inches) 297x 684
  */
 HB_FUNC( HPDF_PAGE_SETSIZE )
 {
@@ -509,7 +510,7 @@ HB_FUNC( HPDF_PAGE_MEASURETEXT )
    hb_retnl( ( long ) HPDF_Page_MeasureText( ( HPDF_Page ) hb_parptr( 1 ), hb_parc( 2 ), ( HPDF_REAL ) hb_parnd( 3 ), hb_parl( 4 ) ? HPDF_TRUE : HPDF_FALSE, NULL ) );
 }
 
-/* HPDF_Page_GetMode( hPage ) --> nGraphicMode */
+/* HPDF_Page_GetGMode( hPage ) --> nGraphicMode */
 HB_FUNC( HPDF_PAGE_GETGMODE )
 {
    hb_retnl( ( long ) HPDF_Page_GetGMode( ( HPDF_Page ) hb_parptr( 1 ) ) );
@@ -773,23 +774,23 @@ HB_FUNC( HPDF_PAGE_GETGSTATEDEPTH )
 
 /* HPDF_Page_SetSlideShow( hPage, nType, nDurationPerFrame, nTranstnTime = 1 Second ) --> hStatus
        nType ==
-   HPDF_TS_WIPE_RIGHT
-   HPDF_TS_WIPE_UP
-   HPDF_TS_WIPE_LEFT
-   HPDF_TS_WIPE_DOWN
-   HPDF_TS_BARN_DOORS_HORIZONTAL_OUT
-   HPDF_TS_BARN_DOORS_HORIZONTAL_IN
-   HPDF_TS_BARN_DOORS_VERTICAL_OUT
-   HPDF_TS_BARN_DOORS_VERTICAL_IN
-   HPDF_TS_BOX_OUT
-   HPDF_TS_BOX_IN
-   HPDF_TS_BLINDS_HORIZONTAL
-   HPDF_TS_BLINDS_VERTICAL
-   HPDF_TS_DISSOLVE
-   HPDF_TS_GLITTER_RIGHT
-   HPDF_TS_GLITTER_DOWN
-   HPDF_TS_GLITTER_TOP_LEFT_TO_BOTTOM_RIGHT
-   HPDF_TS_REPLACE
+   HPDF_TS_WIPE_RIGHT                  0
+   HPDF_TS_WIPE_UP                     1
+   HPDF_TS_WIPE_LEFT                   2
+   HPDF_TS_WIPE_DOWN                   3
+   HPDF_TS_BARN_DOORS_HORIZONTAL_OUT   4
+   HPDF_TS_BARN_DOORS_HORIZONTAL_IN    5
+   HPDF_TS_BARN_DOORS_VERTICAL_OUT     6
+   HPDF_TS_BARN_DOORS_VERTICAL_IN      7
+   HPDF_TS_BOX_OUT                     8
+   HPDF_TS_BOX_IN                      9
+   HPDF_TS_BLINDS_HORIZONTAL           10
+   HPDF_TS_BLINDS_VERTICAL             11
+   HPDF_TS_DISSOLVE                    12
+   HPDF_TS_GLITTER_RIGHT               13
+   HPDF_TS_GLITTER_DOWN                14
+   HPDF_TS_GLITTER_TOP_LEFT_TO_BOTTOM_RIGHT 15
+   HPDF_TS_REPLACE                     16
  */
 HB_FUNC( HPDF_PAGE_SETSLIDESHOW )
 {
@@ -1255,10 +1256,10 @@ HB_FUNC( HPDF_FONT_MEASURETEXT )
 
 /* HPDF_Encoder_GetType( hEncoder ) --> nEncoderType
        nEncoderType ==
-   HPDF_ENCODER_TYPE_SINGLE_BYTE      1    This encoder is an encoder for single byte characters.
-   HPDF_ENCODER_TYPE_DOUBLE_BYTE      2    This encoder is an encoder for multi byte characters.
-   HPDF_ENCODER_TYPE_UNINITIALIZED    3    This encoder is uninitialized. (May be it is an encoder for multi byte characters.)
-   HPDF_ENCODER_UNKNOWN               4    Invalid encoder.
+   HPDF_ENCODER_TYPE_SINGLE_BYTE    0 This encoder is an encoder for single byte characters.
+   HPDF_ENCODER_TYPE_DOUBLE_BYTE    1 This encoder is an encoder for multi byte characters.
+   HPDF_ENCODER_TYPE_UNINITIALIZED  2 This encoder is uninitialized. (May be it is an encoder for multi byte characters.)
+   HPDF_ENCODER_UNKNOWN             3 Invalid encoder.
  */
 HB_FUNC( HPDF_ENCODER_GETTYPE )
 {
@@ -1267,10 +1268,10 @@ HB_FUNC( HPDF_ENCODER_GETTYPE )
 
 /* HPDF_Encoder_GetByteType( hEncoder, cText, nIndex ) --> nByteType
        nByteType
-   HPDF_BYTE_TYPE_SINGLE     1     Single byte character.
-   HPDF_BYTE_TYPE_LEAD       2     Lead byte of a double-byte character.
-   HPDF_BYTE_TYPE_TRIAL      3     Trailing byte of a double-byte character.
-   HPDF_BYTE_TYPE_UNKNOWN    4     Invalid encoder or cannot judge the byte type.
+   HPDF_BYTE_TYPE_SINGLE   0 Single byte character.
+   HPDF_BYTE_TYPE_LEAD     1 Lead byte of a double-byte character.
+   HPDF_BYTE_TYPE_TRIAL    2 Trailing byte of a double-byte character.
+   HPDF_BYTE_TYPE_UNKNOWN  3 Invalid encoder or cannot judge the byte type.
  */
 HB_FUNC( HPDF_ENCODER_GETBYTETYPE )
 {
@@ -1285,8 +1286,8 @@ HB_FUNC( HPDF_ENCODER_GETUNICODE )
 
 /* HPDF_Encoder_GetWritingMode( hEncoder ) --> nWriteMode
        nWriteMode ==
-   HPDF_WMODE_HORIZONTAL    1    horizontal writing mode.
-   HPDF_WMODE_VERTICAL      2    vertical writing mode;
+   HPDF_WMODE_HORIZONTAL 0 horizontal writing mode.
+   HPDF_WMODE_VERTICAL   1 vertical writing mode;
  */
 HB_FUNC( HPDF_ENCODER_GETWRITINGMODE )
 {
@@ -1373,18 +1374,18 @@ HB_FUNC( HPDF_EXTGSTATE_SETALPHAFILL )
 
 /* HPDF_ExtGState_SetBlendMode( hGState, nBlendMode ) --> hStatus
       nBlendMode ==
-   HPDF_BM_NORMAL
-   HPDF_BM_MULTIPLY
-   HPDF_BM_SCREEN
-   HPDF_BM_OVERLAY
-   HPDF_BM_DARKEN
-   HPDF_BM_LIGHTEN
-   HPDF_BM_COLOR_DODGE
-   HPDF_BM_COLOR_BUM
-   HPDF_BM_HARD_LIGHT
-   HPDF_BM_SOFT_LIGHT
-   HPDF_BM_DIFFERENCE
-   HPDF_BM_EXCLUSHON
+   HPDF_BM_NORMAL       0
+   HPDF_BM_MULTIPLY     1
+   HPDF_BM_SCREEN       2
+   HPDF_BM_OVERLAY      3
+   HPDF_BM_DARKEN       4
+   HPDF_BM_LIGHTEN      5
+   HPDF_BM_COLOR_DODGE  6
+   HPDF_BM_COLOR_BUM    7
+   HPDF_BM_HARD_LIGHT   8
+   HPDF_BM_SOFT_LIGHT   9
+   HPDF_BM_DIFFERENCE   10
+   HPDF_BM_EXCLUSHON    11
  */
 HB_FUNC( HPDF_EXTGSTATE_SETBLENDMODE )
 {
