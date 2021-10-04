@@ -756,6 +756,7 @@ void hb_taskResume( void * pTaskPtr )
 #if defined( HB_HAS_UCONTEXT )
          case TASK_INIT:
 #endif
+            /* fallthrough */
          case TASK_SUSPEND:
             pTask->state = TASK_RUNNING;
             /* fallthrough */

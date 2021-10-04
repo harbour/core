@@ -477,6 +477,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
             hb_retl( HB_TRUE );
             return;
          }
+         break;
       }
       case -1:
       {

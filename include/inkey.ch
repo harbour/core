@@ -88,6 +88,8 @@
 #define K_MWFORWARD             1014   /* Mouse Wheel Forward */
 #define K_MWBACKWARD            1015   /* Mouse Wheel Backward */
 #define K_NCMOUSEMOVE           1016   /* Non-Client Area Mouse Movement */
+#define K_MWLEFT                1017   /* Mouse Wheel Left */
+#define K_MWRIGHT               1018   /* Mouse Wheel Right */
 
 #define K_MINMOUSE              1001
 #define K_MAXMOUSE              1016

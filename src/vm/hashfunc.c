@@ -379,24 +379,26 @@ HB_FUNC( HB_HCOPY )
 
    if( pSource && pDest )
    {
-      HB_SIZE nLen = hb_hashLen( pSource ), nStart, nCount;
-
-      nStart = hb_parns( 3 );
-      if( ! nStart )
-         ++nStart;
-      nCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : nLen - nStart + 1;
-
-      while( nCount-- )
+      if( pSource != pDest )
       {
-         PHB_ITEM pKey = hb_hashGetKeyAt( pSource, nStart );
-         PHB_ITEM pValue = hb_hashGetValueAt( pSource, nStart );
-         if( pKey && pValue )
-            hb_hashAdd( pDest, pKey, pValue );
-         else
-            break;
-         ++nStart;
-      }
+         HB_SIZE nLen = hb_hashLen( pSource ), nStart, nCount;
 
+         nStart = hb_parns( 3 );
+         if( ! nStart )
+            ++nStart;
+         nCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : nLen - nStart + 1;
+
+         while( nCount-- )
+         {
+            PHB_ITEM pKey = hb_hashGetKeyAt( pSource, nStart );
+            PHB_ITEM pValue = hb_hashGetValueAt( pSource, nStart );
+            if( pKey && pValue )
+               hb_hashAdd( pDest, pKey, pValue );
+            else
+               break;
+            ++nStart;
+         }
+      }
       hb_itemReturn( pDest );
    }
    else
@@ -410,36 +412,38 @@ HB_FUNC( HB_HMERGE )
 
    if( pDest && pSource )
    {
-      PHB_ITEM pAction = hb_param( 3, HB_IT_EVALITEM | HB_IT_NUMERIC );
-
-      if( pAction && HB_IS_EVALITEM( pAction ) )
+      if( pSource != pDest )
       {
-         HB_SIZE nLen = hb_hashLen( pSource ), nPos = 0;
-         while( ++nPos <= nLen )
-         {
-            PHB_ITEM pKey = hb_hashGetKeyAt( pSource, nPos );
-            PHB_ITEM pValue = hb_hashGetValueAt( pSource, nPos );
-            if( pKey && pValue )
-            {
-               hb_vmPushEvalSym();
-               hb_vmPush( pAction );
-               hb_vmPush( pKey );
-               hb_vmPush( pValue );
-               hb_vmPushSize( nPos );
-               hb_vmSend( 3 );
-               {
-                  PHB_ITEM pReturn = hb_stackReturnItem();
-                  if( HB_IS_LOGICAL( pReturn ) && hb_itemGetL( pReturn ) )
-                     hb_hashAdd( pDest, pKey, pValue );
-               }
-            }
-            else
-               break;
-         }
-      }
-      else
-         hb_hashJoin( pDest, pSource, pAction ? hb_itemGetNI( pAction ) : HB_HASH_UNION );
+         PHB_ITEM pAction = hb_param( 3, HB_IT_EVALITEM | HB_IT_NUMERIC );
 
+         if( pAction && HB_IS_EVALITEM( pAction ) )
+         {
+            HB_SIZE nLen = hb_hashLen( pSource ), nPos = 0;
+            while( ++nPos <= nLen )
+            {
+               PHB_ITEM pKey = hb_hashGetKeyAt( pSource, nPos );
+               PHB_ITEM pValue = hb_hashGetValueAt( pSource, nPos );
+               if( pKey && pValue )
+               {
+                  hb_vmPushEvalSym();
+                  hb_vmPush( pAction );
+                  hb_vmPush( pKey );
+                  hb_vmPush( pValue );
+                  hb_vmPushSize( nPos );
+                  hb_vmSend( 3 );
+                  {
+                     PHB_ITEM pReturn = hb_stackReturnItem();
+                     if( HB_IS_LOGICAL( pReturn ) && hb_itemGetL( pReturn ) )
+                        hb_hashAdd( pDest, pKey, pValue );
+                  }
+               }
+               else
+                  break;
+            }
+         }
+         else
+            hb_hashJoin( pDest, pSource, pAction ? hb_itemGetNI( pAction ) : HB_HASH_UNION );
+      }
       hb_itemReturn( pDest );
    }
    else

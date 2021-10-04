@@ -464,7 +464,7 @@ int main( int argc, char ** argv )
    if( hb_gt_chrmapinit( piTransTbl, NULL ) == -1 )
    {
       printf( "cannot init charmap.\n" );
-      exit( 1 );
+      return 1;
    }
 
    for( i = 0; i < 256; ++i )

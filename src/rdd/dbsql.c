@@ -343,6 +343,9 @@ static HB_ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
    return ulRecords;
 }
 
+/* __dbSQL( .T., <cFileName>, <cTable>, [<bFor>], [<bWhile>], ;
+            [<nNext>], [<nRec>], [<lRest>], [<lAppend>], [<lInsert>], ;
+            [<lRecNo>], [<cSep>], [<cDelim>], [<cEsc>] ) -> <nRecords> */
 HB_FUNC( __DBSQL )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();

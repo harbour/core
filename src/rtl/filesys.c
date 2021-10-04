@@ -1137,7 +1137,7 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
                   HB_FAILURE_RETRY( iResult, execv( "/bin/sh", ( char ** ) HB_UNCONST( argv ) ) );
 #endif
                }
-               exit( pid > 0 ? 0 : 1 );
+               _exit( pid > 0 ? EXIT_SUCCESS : EXIT_FAILURE );
             }
          }
          else

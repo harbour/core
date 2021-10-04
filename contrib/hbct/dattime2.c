@@ -62,8 +62,8 @@
 
 static HB_BOOL ct_isleap( int iYear )
 {
-   return iYear != 0 && ( ( ( iYear & 3 ) == 0 && iYear % 100 != 0 ) ||
-                          iYear % 400 == 0 );
+   return iYear != 0 && ( iYear & 3 ) == 0 &&
+          ( iYear % 100 != 0 || iYear % 400 == 0 );
 }
 
 static int ct_daysinmonth( int iMonth, HB_BOOL bLeap )

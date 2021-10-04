@@ -429,7 +429,7 @@ static int hb_fsProcessExec( const char * pszFileName,
 
          /* execute command */
          execvp( argv[ 0 ], argv );
-         exit( -1 );
+         _exit( EXIT_FAILURE );
       }
       else if( pid != -1 )
       {
@@ -857,7 +857,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
 #  else
             execvp( argv[ 0 ], argv );
 #  endif
-            exit( -1 );
+            _exit( EXIT_FAILURE );
          }
       }
       hb_fsSetIOError( ! fError, 0 );

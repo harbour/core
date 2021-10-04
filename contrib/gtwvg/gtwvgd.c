@@ -2013,8 +2013,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                   hb_itemPutNInt( pEvParams, ( HB_MAXINT ) ( HB_PTRUINT ) hWnd );
                   hb_gt_wvt_FireEvent( pWVT, HB_GTE_PAINT, pEvParams );
                }
-               return 0;
             }
+            return 0;
          case WM_HSCROLL:
          {
             PHB_ITEM pEvParams = hb_itemNew( NULL );
@@ -2115,6 +2115,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
          case WM_LBUTTONUP:
             SetFocus( hWnd );
+            /* fallthrough */
          case WM_RBUTTONDOWN:
          case WM_LBUTTONDOWN:
          case WM_MBUTTONDOWN:

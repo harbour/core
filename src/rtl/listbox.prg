@@ -829,6 +829,12 @@ METHOD scrollbarPos() CLASS ListBox
    LOCAL nCount    := ::nItemCount
    LOCAL nLength   := ::oVScroll:barLength
 
+#ifndef HB_CLP_STRICT
+   /* NOTE: Cl*pper will RTE with non default division by zero error handler */
+   IF nCount == nSize
+      RETURN 0
+   ENDIF
+#endif
    RETURN ( ( nCount - nLength ) * ::nTopItem + nLength - nSize ) / ( nCount - nSize )
 
 /* --- */

@@ -1,7 +1,7 @@
 /*
  * High-level portable file functions.
  *
- * Copyright 2009-2011 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2017 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -280,11 +280,16 @@ FUNCTION hb_DirBuild( cDir )
 
       cDir := hb_DirSepAdd( cDir )
 
-      IF ! Empty( hb_osDriveSeparator() ) .AND. ;
+      IF ! hb_osDriveSeparator() == "" .AND. ;
          ( tmp := At( hb_osDriveSeparator(), cDir ) ) > 0
          cDirTemp := Left( cDir, tmp )
          cDir := SubStr( cDir, tmp + 1 )
-      ELSEIF Left( cDir, 1 ) == hb_ps()
+#ifdef __PLATFORM__WINDOWS
+      ELSEIF hb_LeftEq( cDir, "\\" ) /* UNC Path, network share */
+         cDirTemp := Left( cDir, hb_At( "\", cDir, 3 ) )
+         cDir := SubStr( cDir, Len( cDirTemp ) + 1 )
+#endif
+      ELSEIF hb_LeftEq( cDir, hb_ps() )
          cDirTemp := Left( cDir, 1 )
          cDir := SubStr( cDir, 2 )
       ELSE
@@ -292,10 +297,10 @@ FUNCTION hb_DirBuild( cDir )
       ENDIF
 
       FOR EACH cDirItem IN hb_ATokens( cDir, hb_ps() )
-         IF !( Right( cDirTemp, 1 ) == hb_ps() ) .AND. ! Empty( cDirTemp )
+         IF ! Right( cDirTemp, 1 ) == hb_ps() .AND. ! cDirTemp == ""
             cDirTemp += hb_ps()
          ENDIF
-         IF ! Empty( cDirItem )  /* Skip root path, if any */
+         IF ! cDirItem == ""  /* Skip root path, if any */
             cDirTemp += cDirItem
             IF hb_FileExists( cDirTemp )
                RETURN .F.
@@ -312,7 +317,6 @@ FUNCTION hb_DirBuild( cDir )
 
 FUNCTION hb_DirUnbuild( cDir )
 
-   LOCAL cDirTemp
    LOCAL tmp
 
    IF ! HB_ISSTRING( cDir )
@@ -323,19 +327,17 @@ FUNCTION hb_DirUnbuild( cDir )
 
       cDir := hb_DirSepDel( cDir )
 
-      cDirTemp := cDir
-      DO WHILE ! Empty( cDirTemp )
-         IF hb_DirExists( cDirTemp )
-            IF hb_DirDelete( cDirTemp ) != 0
-               RETURN .F.
-            ENDIF
+      DO WHILE ! Empty( cDir )
+         IF hb_DirExists( cDir ) .AND. ;
+            hb_DirDelete( cDir ) != 0
+            RETURN .F.
          ENDIF
-         IF ( tmp := RAt( hb_ps(), cDirTemp ) ) == 0
+         IF ( tmp := RAt( hb_ps(), cDir ) ) == 0  /* FIXME: use hb_URAt() function */
             EXIT
          ENDIF
-         cDirTemp := Left( cDirTemp, tmp - 1 )
-         IF ! Empty( hb_osDriveSeparator() ) .AND. ;
-            Right( cDirTemp, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator()
+         cDir := Left( cDir, tmp - 1 )
+         IF ! hb_osDriveSeparator() == "" .AND. ;
+            Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator()
             EXIT
          ENDIF
       ENDDO

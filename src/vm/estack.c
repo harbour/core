@@ -235,11 +235,11 @@ static void hb_stack_free( PHB_STACK pStack )
       hb_xfree( pStack->pDirBuffer );
       pStack->pDirBuffer = NULL;
    }
-   if( pStack->iDynH )
+   if( pStack->uiDynH )
    {
       hb_xfree( pStack->pDynH );
       pStack->pDynH = NULL;
-      pStack->iDynH = 0;
+      pStack->uiDynH = 0;
    }
 #endif
 }
@@ -396,50 +396,53 @@ void hb_stackIdSetActionRequest( void * pStackId, HB_USHORT uiAction )
 }
 
 #undef hb_stackDynHandlesCount
-int hb_stackDynHandlesCount( void )
+HB_SYMCNT hb_stackDynHandlesCount( void )
 {
    HB_STACK_TLS_PRELOAD
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_stackDynHandlesCount()" ) );
 
-   return hb_stack.iDynH;
+   return hb_stack.uiDynH;
 }
 
 PHB_DYN_HANDLES hb_stackGetDynHandle( PHB_DYNS pDynSym )
 {
    HB_STACK_TLS_PRELOAD
-   int iDynSym;
+   HB_SYMCNT uiDynSym;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_stackGetDynHandle()" ) );
 
-   iDynSym = pDynSym->uiSymNum;
-   if( iDynSym > hb_stack.iDynH )
+   uiDynSym = pDynSym->uiSymNum;
+   if( uiDynSym > hb_stack.uiDynH )
    {
       hb_stack.pDynH = ( PHB_DYN_HANDLES ) hb_xrealloc( hb_stack.pDynH,
-                                          iDynSym * sizeof( HB_DYN_HANDLES ) );
-      memset( &hb_stack.pDynH[ hb_stack.iDynH ], 0,
-              ( iDynSym - hb_stack.iDynH ) * sizeof( HB_DYN_HANDLES ) );
-      hb_stack.iDynH = iDynSym;
+                                          uiDynSym * sizeof( HB_DYN_HANDLES ) );
+      memset( &hb_stack.pDynH[ hb_stack.uiDynH ], 0,
+              ( uiDynSym - hb_stack.uiDynH ) * sizeof( HB_DYN_HANDLES ) );
+      hb_stack.uiDynH = uiDynSym;
    }
 
-   return &hb_stack.pDynH[ iDynSym - 1 ];
+   return &hb_stack.pDynH[ uiDynSym - 1 ];
 }
 
-void hb_stackClearMemvars( int iExcept )
+void hb_stackClearMemvars( HB_SYMCNT uiExcept )
 {
    HB_STACK_TLS_PRELOAD
-   int iDynSym;
+   HB_SYMCNT uiDynSym;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stackClearMemvars(%d)", iExcept ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackClearMemvars(%d)", uiExcept ) );
 
-   iDynSym = hb_stack.iDynH;
-   while( --iDynSym >= 0 )
+   uiDynSym = hb_stack.uiDynH;
+   while( uiDynSym > 0 )
    {
-      if( hb_stack.pDynH[ iDynSym ].pMemvar && iDynSym != iExcept )
+      if( uiDynSym-- != uiExcept )
       {
-         PHB_ITEM pMemvar = ( PHB_ITEM ) hb_stack.pDynH[ iDynSym ].pMemvar;
-         hb_stack.pDynH[ iDynSym ].pMemvar = NULL;
-         hb_memvarValueDecRef( pMemvar );
+         if( hb_stack.pDynH[ uiDynSym ].pMemvar )
+         {
+            PHB_ITEM pMemvar = ( PHB_ITEM ) hb_stack.pDynH[ uiDynSym ].pMemvar;
+            hb_stack.pDynH[ uiDynSym ].pMemvar = NULL;
+            hb_memvarValueDecRef( pMemvar );
+         }
       }
    }
 }
@@ -1320,11 +1323,11 @@ static void hb_stackIsMemvarRef( PHB_STACK pStack )
    /* 2. Mark all visible memvars (PRIVATEs and PUBLICs) */
 #if defined( HB_MT_VM )
    {
-      int iDynSym = pStack->iDynH;
+      HB_SYMCNT uiDynSym = pStack->uiDynH;
 
-      while( --iDynSym >= 0 )
+      while( uiDynSym > 0 )
       {
-         PHB_ITEM pMemvar = ( PHB_ITEM ) pStack->pDynH[ iDynSym ].pMemvar;
+         PHB_ITEM pMemvar = ( PHB_ITEM ) pStack->pDynH[ --uiDynSym ].pMemvar;
          if( pMemvar && HB_IS_GCITEM( pMemvar ) )
             hb_gcItemRef( pMemvar );
       }

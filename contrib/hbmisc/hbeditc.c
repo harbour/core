@@ -123,13 +123,10 @@ static HB_ISIZ Prev( PHB_EDITOR pEd, HB_ISIZ adres )
    {
       HB_ISIZ i;
 
-      for( i = adres; i >= 0; i-- )
+      for( i = adres - 3; i >= 0; i-- )
       {
          if( pEd->begin[ i ] == '\n' )
-         {
-            if( i < adres - 2 )
-               return i + 1;
-         }
+            return i + 1;
       }
       return 0;
    }

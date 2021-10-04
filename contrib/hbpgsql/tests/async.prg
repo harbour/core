@@ -1,18 +1,21 @@
-/*
- * This sample show howto use asynchronous/nonblocking queries
- */
+/* This sample show howto use asynchronous/non-blocking queries */
 
 #require "hbpgsql"
 
 #include "inkey.ch"
 
-PROCEDURE Main( cServer, cDatabase, cUser, cPass )
+PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    LOCAL conn
 
    CLS
 
-   ? "Connect", conn := PQconnectdb( "dbname = " + cDatabase + " host = " + cServer + " user = " + cUser + " password = " + cPass + " port = 5432" )
+   ? "Connect", conn := PQconnectdb( ;
+      "dbname = '" + hb_defaultValue( cDatabase, "postgres" ) + "' " + ;
+      "host = '" + hb_defaultValue( cHost, "localhost" ) + "' " + ;
+      "user = '" + hb_defaultValue( cUser, hb_UserName() ) + "' " + ;
+      "password = '" + hb_defaultValue( cPass, "" ) + "' " + ;
+      "port = 5432" )
 
    ? "Conection status", PQerrorMessage( conn ), PQstatus( conn )
 
@@ -22,9 +25,9 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
 
    RETURN
 
-PROCEDURE Query( conn, cQuery, lCancel )
+STATIC PROCEDURE Query( conn, cQuery, lCancel )
 
-   LOCAL pCancel, cErrMsg := Space( 30 )
+   LOCAL pCancel, cErrMsg := ""
    LOCAL res, x, y, cTime
 
    ? "PQSendQuery", PQsendQuery( conn, cQuery )
@@ -32,20 +35,16 @@ PROCEDURE Query( conn, cQuery, lCancel )
    cTime := Time()
    CLEAR TYPEAHEAD
 
-   DO WHILE Inkey() != K_ESC
+   DO WHILE hb_keyStd( Inkey() ) != K_ESC
       DevPos( Row(), 20 )
-      DevOut( "Processing: " + ElapTime( cTime, Time() ) )
+      DevOut( "Processing:", ElapTime( cTime, Time() ) )
 
       Inkey( 1 )
 
       IF lCancel
-         IF .T.
-            pCancel := PQgetCancel( conn )
-            ? "Canceled: ", PQcancel( pCancel, @cErrMsg ), cErrMsg
-            pCancel := NIL
-         ELSE
-            ? PQrequestCancel( conn ) /* Deprecated */
-         ENDIF
+         pCancel := PQgetCancel( conn )
+         ? "Canceled:", PQcancel( pCancel, @cErrMsg ), cErrMsg
+         pCancel := NIL
       ENDIF
 
       IF PQconsumeInput( conn )
@@ -55,15 +54,17 @@ PROCEDURE Query( conn, cQuery, lCancel )
       ENDIF
    ENDDO
 
-   IF Inkey() != K_ESC
+   IF hb_keyStd( Inkey() ) != K_ESC
       ? "PQgetResult", hb_ValToExp( res := PQgetResult( conn ) )
 
-      FOR x := 1 TO PQlastrec( res )
-         ?
-         FOR y := 1 TO PQfcount( res )
-            ?? PQgetvalue( res, x, y ), " "
+      IF ! Empty( res )
+         FOR x := 1 TO PQlastrec( res )
+            ?
+            FOR y := 1 TO PQfcount( res )
+               ?? PQgetvalue( res, x, y ), " "
+            NEXT
          NEXT
-      NEXT
+      ENDIF
    ELSE
       ? "Canceling Query", PQrequestCancel( conn )
    ENDIF

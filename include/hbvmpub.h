@@ -135,7 +135,7 @@ struct _HB_SYMB;
       void *    pMemvar;          /* memvar pointer ( publics & privates ) */
       HB_USHORT uiArea;           /* Workarea number */
 #  endif /* ! HB_MT_VM */
-      HB_USHORT uiSymNum;         /* dynamic symbol number */
+      HB_SYMCNT uiSymNum;         /* dynamic symbol number */
 #  if ! defined( HB_NO_PROFILER )
       HB_ULONG  ulCalls;          /* profiler support */
       HB_ULONG  ulTime;           /* profiler support */

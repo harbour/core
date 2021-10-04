@@ -48,6 +48,7 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc tcc),)
          ifneq ($(filter $(HB_COMPILER),pocc pocc64 poccarm),)
             HB_CFLAGS += -DPNG_ALLOCATED
          endif
+         HB_CFLAGS += -DPNG_ARM_NEON_OPT=0
 
          include $(TOP)$(ROOT)config/lib.mk
       else

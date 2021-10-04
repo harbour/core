@@ -2679,6 +2679,8 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
                break;
             case K_MWFORWARD:
             case K_MWBACKWARD:
+            case K_MWLEFT:
+            case K_MWRIGHT:
                iMask = INKEY_MWHEEL;
                break;
             default:
@@ -2720,6 +2722,8 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
             break;
          case K_MWFORWARD:
          case K_MWBACKWARD:
+         case K_MWLEFT:
+         case K_MWRIGHT:
             iMask = INKEY_MWHEEL;
             break;
          case HB_K_RESIZE:

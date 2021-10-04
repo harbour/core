@@ -1967,6 +1967,87 @@ static HB_ERRCODE hb_waUnsupported( AREAP pArea )
    return HB_FAILURE;
 }
 
+static HB_ERRCODE hb_waUnsupported_V( AREAP pArea, void * p1 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+
+   return hb_waUnsupported( pArea );
+}
+
+static HB_ERRCODE hb_waUnsupported_L( AREAP pArea, HB_LONG p1 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+
+   return hb_waUnsupported( pArea );
+}
+
+static HB_ERRCODE hb_waUnsupported_SL( AREAP pArea, HB_USHORT p1, HB_LONG p2 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+
+   return hb_waUnsupported( pArea );
+}
+
+static HB_ERRCODE hb_waUnsupported_SV( AREAP pArea, HB_USHORT p1, void * p2 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+
+   return hb_waUnsupported( pArea );
+}
+
+static HB_ERRCODE hb_waUnsupported_LV( AREAP pArea, HB_LONG p1, void * p2 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+
+   return hb_waUnsupported( pArea );
+}
+
+static HB_ERRCODE hb_waUnsupported_VL( AREAP pArea, void * p1, HB_LONG p2 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+
+   return hb_waUnsupported( pArea );
+}
+
+static HB_ERRCODE hb_waUnsupported_VV( AREAP pArea, void * p1, void * p2 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+
+   return hb_waUnsupported( pArea );
+}
+
+static HB_ERRCODE hb_waUnsupported_BVB( AREAP pArea, HB_BOOL p1, void * p2, HB_BOOL p3 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+   HB_SYMBOL_UNUSED( p3 );
+
+   return hb_waUnsupported( pArea );
+}
+
+static HB_ERRCODE hb_waUnsupported_SVS( AREAP pArea, HB_USHORT p1, void * p2, HB_USHORT p3 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+   HB_SYMBOL_UNUSED( p3 );
+
+   return hb_waUnsupported( pArea );
+}
+
+static HB_ERRCODE hb_waUnsupported_VSV( AREAP pArea, void * p1, HB_USHORT p2, void * p3 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+   HB_SYMBOL_UNUSED( p3 );
+
+   return hb_waUnsupported( pArea );
+}
+
 /*
  * Raise a runtime error if an method is not defined.
  */
@@ -1987,6 +2068,26 @@ static HB_ERRCODE hb_waRddUnsupported( LPRDDNODE pRDD )
 
    return HB_FAILURE;
 }
+
+static HB_ERRCODE hb_waRddUnsupported_VVL( LPRDDNODE pRDD, void * p1, void * p2, HB_LONG p3 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+   HB_SYMBOL_UNUSED( p3 );
+
+   return hb_waRddUnsupported( pRDD );
+}
+
+static HB_ERRCODE hb_waRddUnsupported_VVVL( LPRDDNODE pRDD, void * p1, void * p2, void * p3, HB_LONG p4 )
+{
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+   HB_SYMBOL_UNUSED( p3 );
+   HB_SYMBOL_UNUSED( p4 );
+
+   return hb_waRddUnsupported( pRDD );
+}
+
 
 #if 0
 /*
@@ -2012,37 +2113,37 @@ static const RDDFUNCS waTable =
 /* ( DBENTRYP_BP )   */ hb_waEof,               /* Eof        */
 /* ( DBENTRYP_BP )   */ hb_waFound,             /* Found      */
    ( DBENTRYP_V )       hb_waUnsupported,       /* GoBottom   */
-   ( DBENTRYP_UL )      hb_waUnsupported,       /* GoTo       */
-   ( DBENTRYP_I )       hb_waUnsupported,       /* GoToId     */
+   ( DBENTRYP_UL )      hb_waUnsupported_L,     /* GoTo       */
+   ( DBENTRYP_I )       hb_waUnsupported_V,     /* GoToId     */
    ( DBENTRYP_V )       hb_waUnsupported,       /* GoTop      */
-   ( DBENTRYP_BIB )     hb_waUnsupported,       /* Seek       */
+   ( DBENTRYP_BIB )     hb_waUnsupported_BVB,   /* Seek       */
 /* ( DBENTRYP_L )    */ hb_waSkip,              /* Skip       */
 /* ( DBENTRYP_L )    */ hb_waSkipFilter,        /* SkipFilter */
-   ( DBENTRYP_L )       hb_waUnsupported,       /* SkipRaw    */
+   ( DBENTRYP_L )       hb_waUnsupported_L,     /* SkipRaw    */
 
    /* Data management */
 /* ( DBENTRYP_VF )   */ hb_waAddField,          /* AddField       */
-   ( DBENTRYP_B )       hb_waUnsupported,       /* Append         */
+   ( DBENTRYP_B )       hb_waUnsupported_L,     /* Append         */
 /* ( DBENTRYP_I )    */ hb_waCreateFields,      /* CreateFields   */
    ( DBENTRYP_V )       hb_waUnsupported,       /* DeleteRec      */
-   ( DBENTRYP_BP )      hb_waUnsupported,       /* Deleted        */
+   ( DBENTRYP_BP )      hb_waUnsupported_V,     /* Deleted        */
 /* ( DBENTRYP_SP )   */ hb_waFieldCount,        /* FieldCount     */
-   ( DBENTRYP_VF )      hb_waUnsupported,       /* FieldDisplay   */
+   ( DBENTRYP_VF )      hb_waUnsupported_V,     /* FieldDisplay   */
 /* ( DBENTRYP_SSI )  */ hb_waFieldInfo,         /* FieldInfo      */
 /* ( DBENTRYP_SCP )  */ hb_waFieldName,         /* FieldName      */
    ( DBENTRYP_V )       hb_waUnsupported,       /* Flush          */
-   ( DBENTRYP_PP )      hb_waUnsupported,       /* GetRec         */
-   ( DBENTRYP_SI )      hb_waUnsupported,       /* GetValue       */
-   ( DBENTRYP_SVL )     hb_waUnsupported,       /* GetVarLen      */
+   ( DBENTRYP_PP )      hb_waUnsupported_V,     /* GetRec         */
+   ( DBENTRYP_SI )      hb_waUnsupported_SV,    /* GetValue       */
+   ( DBENTRYP_SVL )     hb_waUnsupported_SV,    /* GetVarLen      */
    ( DBENTRYP_V )       hb_waUnsupported,       /* GoCold         */
    ( DBENTRYP_V )       hb_waUnsupported,       /* GoHot          */
-   ( DBENTRYP_P )       hb_waUnsupported,       /* PutRec         */
-   ( DBENTRYP_SI )      hb_waUnsupported,       /* PutValue       */
+   ( DBENTRYP_P )       hb_waUnsupported_V,     /* PutRec         */
+   ( DBENTRYP_SI )      hb_waUnsupported_SV,    /* PutValue       */
    ( DBENTRYP_V )       hb_waUnsupported,       /* Recall         */
-   ( DBENTRYP_ULP )     hb_waUnsupported,       /* RecCount       */
-   ( DBENTRYP_ISI )     hb_waUnsupported,       /* RecInfo        */
-   ( DBENTRYP_ULP )     hb_waUnsupported,       /* RecNo          */
-   ( DBENTRYP_I )       hb_waUnsupported,       /* RecId          */
+   ( DBENTRYP_ULP )     hb_waUnsupported_V,     /* RecCount       */
+   ( DBENTRYP_ISI )     hb_waUnsupported_VSV,   /* RecInfo        */
+   ( DBENTRYP_ULP )     hb_waUnsupported_V,     /* RecNo          */
+   ( DBENTRYP_I )       hb_waUnsupported_V,     /* RecId          */
 /* ( DBENTRYP_S )    */ hb_waSetFieldExtent,    /* SetFieldExtent */
 
    /* WorkArea/Database management */
@@ -2058,8 +2159,8 @@ static const RDDFUNCS waTable =
 /* ( DBENTRYP_CP )   */ hb_waSysName,           /* SysName     */
 /* ( DBENTRYP_VEI )  */ hb_waEval,              /* Eval        */
    ( DBENTRYP_V )       hb_waUnsupported,       /* Pack        */
-   ( DBENTRYP_LSP )     hb_waUnsupported,       /* PackRec     */
-   ( DBENTRYP_VS )      hb_waUnsupported,       /* Sort        */
+   ( DBENTRYP_LSP )     hb_waUnsupported_LV,    /* PackRec     */
+   ( DBENTRYP_VS )      hb_waUnsupported_V,     /* Sort        */
 /* ( DBENTRYP_VT )   */ hb_waTrans,             /* Trans       */
 /* ( DBENTRYP_VT )   */ hb_waTransRec,          /* TransRec    */
    ( DBENTRYP_V )       hb_waUnsupported,       /* Zap         */
@@ -2067,7 +2168,7 @@ static const RDDFUNCS waTable =
    /* Relational Methods */
 /* ( DBENTRYP_VR )   */ hb_waChildEnd,          /* ChildEnd      */
 /* ( DBENTRYP_VR )   */ hb_waChildStart,        /* ChildStart    */
-   ( DBENTRYP_VR )      hb_waUnsupported,       /* ChildSync     */
+   ( DBENTRYP_VR )      hb_waUnsupported_V,     /* ChildSync     */
 /* ( DBENTRYP_V )    */ hb_waSyncChildren,      /* SyncChildren  */
 /* ( DBENTRYP_V )    */ hb_waClearRel,          /* ClearRel      */
    ( DBENTRYP_V )       hb_waUnsupported,       /* ForceRel      */
@@ -2077,27 +2178,27 @@ static const RDDFUNCS waTable =
 /* ( DBENTRYP_VR )   */ hb_waSetRel,            /* SetRel        */
 
    /* Order Management */
-   ( DBENTRYP_VOI )     hb_waUnsupported,       /* OrderListAdd      */
+   ( DBENTRYP_VOI )     hb_waUnsupported_V,     /* OrderListAdd      */
    ( DBENTRYP_V )       hb_waUnsupported,       /* OrderListClear    */
-   ( DBENTRYP_VOI )     hb_waUnsupported,       /* OrderListDelete   */
-   ( DBENTRYP_VOI )     hb_waUnsupported,       /* OrderListFocus    */
+   ( DBENTRYP_VOI )     hb_waUnsupported_V,     /* OrderListDelete   */
+   ( DBENTRYP_VOI )     hb_waUnsupported_V,     /* OrderListFocus    */
    ( DBENTRYP_V )       hb_waUnsupported,       /* OrderListRebuild  */
 /* ( DBENTRYP_VOO )  */ hb_waOrderCondition,    /* OrderCondition    */
-   ( DBENTRYP_VOC )     hb_waUnsupported,       /* OrderCreate       */
-   ( DBENTRYP_VOI )     hb_waUnsupported,       /* OrderDestroy      */
+   ( DBENTRYP_VOC )     hb_waUnsupported_V,     /* OrderCreate       */
+   ( DBENTRYP_VOI )     hb_waUnsupported_V,     /* OrderDestroy      */
 /* ( DBENTRYP_SVOI ) */ hb_waOrderInfo,         /* OrderInfo         */
 
    /* Filters and Scope Settings */
 /* ( DBENTRYP_V )    */ hb_waClearFilter,       /* ClearFilter  */
 /* ( DBENTRYP_V )    */ hb_waClearLocate,       /* ClearLocate  */
    ( DBENTRYP_V )       hb_waUnsupported,       /* ClearScope   */
-   ( DBENTRYP_VPLP )    hb_waUnsupported,       /* CountScope   */
+   ( DBENTRYP_VPLP )    hb_waUnsupported_VV,    /* CountScope   */
 /* ( DBENTRYP_I )    */ hb_waFilterText,        /* FilterText   */
-   ( DBENTRYP_SI )      hb_waUnsupported,       /* ScopeInfo    */
+   ( DBENTRYP_SI )      hb_waUnsupported_SV,    /* ScopeInfo    */
 /* ( DBENTRYP_VFI )  */ hb_waSetFilter,         /* SetFilter    */
 /* ( DBENTRYP_VLO )  */ hb_waSetLocate,         /* SetLocate    */
-   ( DBENTRYP_VOS )     hb_waUnsupported,       /* SetScope     */
-   ( DBENTRYP_VPL )     hb_waUnsupported,       /* SkipScope    */
+   ( DBENTRYP_VOS )     hb_waUnsupported_V,     /* SetScope     */
+   ( DBENTRYP_VPL )     hb_waUnsupported_VL,    /* SkipScope    */
 /* ( DBENTRYP_B )    */ hb_waLocate,            /* Locate       */
 
    /* Miscellaneous */
@@ -2106,31 +2207,31 @@ static const RDDFUNCS waTable =
 /* ( DBENTRYP_I )    */ hb_waEvalBlock,         /* EvalBlock  */
 
    /* Network operations */
-   ( DBENTRYP_VSP )     hb_waUnsupported,       /* RawLock  */
-   ( DBENTRYP_VL )      hb_waUnsupported,       /* Lock     */
-   ( DBENTRYP_I )       hb_waUnsupported,       /* UnLock   */
+   ( DBENTRYP_VSP )     hb_waUnsupported_SL,    /* RawLock  */
+   ( DBENTRYP_VL )      hb_waUnsupported_V,     /* Lock     */
+   ( DBENTRYP_I )       hb_waUnsupported_V,     /* UnLock   */
 
    /* Memofile functions */
    ( DBENTRYP_V )       hb_waUnsupported,       /* CloseMemFile   */
-   ( DBENTRYP_VO )      hb_waUnsupported,       /* CreateMemFile  */
-   ( DBENTRYP_SCCS )    hb_waUnsupported,       /* GetValueFile   */
-   ( DBENTRYP_VO )      hb_waUnsupported,       /* OpenMemFile    */
-   ( DBENTRYP_SCCS )    hb_waUnsupported,       /* PutValueFile   */
+   ( DBENTRYP_VO )      hb_waUnsupported_V,     /* CreateMemFile  */
+   ( DBENTRYP_SCCS )    hb_waUnsupported_SVS,   /* GetValueFile   */
+   ( DBENTRYP_VO )      hb_waUnsupported_V,     /* OpenMemFile    */
+   ( DBENTRYP_SCCS )    hb_waUnsupported_SVS,   /* PutValueFile   */
 
    /* Database file header handling */
    ( DBENTRYP_V )       hb_waUnsupported,       /* ReadDBHeader   */
    ( DBENTRYP_V )       hb_waUnsupported,       /* WriteDBHeader  */
 
    /* non WorkArea functions */
-   ( DBENTRYP_R )       NULL,                   /* Init    */
-   ( DBENTRYP_R )       NULL,                   /* Exit    */
-   ( DBENTRYP_RVVL )    hb_waRddUnsupported,    /* Drop    */
-   ( DBENTRYP_RVVL )    hb_waRddUnsupported,    /* Exists  */
-   ( DBENTRYP_RVVVL )   hb_waRddUnsupported,    /* Rename  */
-/* ( DBENTRYP_RSLV ) */ hb_waRddInfo,           /* RddInfo */
+   ( DBENTRYP_R )       NULL,                      /* Init    */
+   ( DBENTRYP_R )       NULL,                      /* Exit    */
+   ( DBENTRYP_RVVL )    hb_waRddUnsupported_VVL,   /* Drop    */
+   ( DBENTRYP_RVVL )    hb_waRddUnsupported_VVL,   /* Exists  */
+   ( DBENTRYP_RVVVL )   hb_waRddUnsupported_VVVL,  /* Rename  */
+/* ( DBENTRYP_RSLV ) */ hb_waRddInfo,              /* RddInfo */
 
    /* Special and reserved methods */
-   ( DBENTRYP_SVP )   hb_waUnsupported          /* WhoCares */
+   ( DBENTRYP_SVP )   hb_waUnsupported_SV       /* WhoCares */
 };
 
 #define HB_RDD_POOL_ALLOCSIZE  128

@@ -1600,7 +1600,11 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                            iKey = 'T';
                            break;
                         case 21:
-                           iKey = 'Y';
+                           if( iChar != 'Y' && iChar != 'Z' &&
+                               iChar != 'y' && iChar != 'z' )
+                              iKey = 'Y';
+                           else
+                              iKey = iChar;
                            break;
                         case 22:
                            iKey = 'U';
@@ -1642,7 +1646,11 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                            iKey = 'L';
                            break;
                         case 44:
-                           iKey = 'Z';
+                           if( iChar != 'Y' && iChar != 'Z' &&
+                               iChar != 'y' && iChar != 'z' )
+                              iKey = 'Z';
+                           else
+                              iKey = iChar;
                            break;
                         case 45:
                            iKey = 'X';

@@ -17,6 +17,7 @@ C_SOURCES := \
    cpcswin.c \
    cpde850.c \
    cpde850m.c \
+   cpde858.c \
    cpdeiso.c \
    cpdewin.c \
    cpdk865.c \

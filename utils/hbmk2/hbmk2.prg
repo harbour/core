@@ -1857,7 +1857,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
          aCOMPSUP := { "gcc", "sunpro", "pcc" }
       CASE hbmk[ _HBMK_cPLAT ] == "android"
-         aCOMPSUP := { "gcc", "gccarm" }
+         aCOMPSUP := { "gcc", "gccarm", "clang" }
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
          aCOMPSUP := { "gcc", "diab" }
       CASE hbmk[ _HBMK_cPLAT ] == "aix"
@@ -3978,6 +3978,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
            ( hbmk[ _HBMK_cPLAT ] == "darwin"  .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "bsd"     .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "minix"   .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "android" .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "beos"    .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "qnx"     .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "android" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
@@ -4037,8 +4038,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, "icc" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_GNU_SOURCE" )
          CASE hbmk[ _HBMK_cCOMP ] == "clang"
-            cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + "clang" + hbmk[ _HBMK_cCCSUFFIX ]
-            cBin_CompCPP := cBin_CompC
+            IF hbmk[ _HBMK_cPLAT ] == "android"
+               cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "clang++" + hbmk[ _HBMK_cCCSUFFIX ]
+               cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "clang" + hbmk[ _HBMK_cCCSUFFIX ] )
+            ELSE
+               cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + "clang" + hbmk[ _HBMK_cCCSUFFIX ]
+               cBin_CompCPP := cBin_CompC
+            ENDIF
          CASE hbmk[ _HBMK_cCOMP ] == "pcc"
             cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + "pcc" + hbmk[ _HBMK_cCCSUFFIX ]
          CASE hbmk[ _HBMK_cCOMP ] == "open64"
@@ -4800,9 +4806,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-wx" ) ; EXIT
          CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w3" ) ; EXIT
          CASE _WARN_LOW
-            AAdd( hbmk[ _HBMK_aOPTC ], "-w1 -wcd201 -wcd367 -wcd368" )
-            IF hbmk[ _HBMK_lCPP ] != NIL .AND. ! hbmk[ _HBMK_lCPP ]
-               AAdd( hbmk[ _HBMK_aOPTC ], "-wcd124 -wcd136" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-w1" )
+            IF hbmk[ _HBMK_lCPP ] != NIL
+               IF hbmk[ _HBMK_lCPP ]
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-wcd367 -wcd368" )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-wcd124 -wcd136 -wcd201" )
+               ENDIF
             ENDIF
             EXIT
          CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w0" ) ; EXIT
@@ -15797,7 +15807,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "hpux"    , "gcc" }, ;
       { "beos"    , "gcc" }, ;
       { "qnx"     , "gcc" }, ;
-      { "android" , "gcc, gccarm" }, ;
+      { "android" , "gcc, gccarm, clang" }, ;
       { "vxworks" , "gcc, diab" }, ;
       { "symbian" , "gcc" }, ;
       { "cygwin"  , "gcc" }, ;

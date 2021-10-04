@@ -1,6 +1,6 @@
-diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
---- sqlite3.orig/sqlite3.c	2014-02-02 19:05:51.208012486 +0100
-+++ sqlite3/sqlite3.c	2014-02-02 19:05:51.216012487 +0100
+diff --strip-trailing-cr -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
+--- sqlite3.orig/sqlite3.c	2013-12-06 15:05:16.000000000 +0000
++++ sqlite3/sqlite3.c	2019-04-22 18:53:05.000000000 +0000
 @@ -27008,7 +27008,11 @@
        ** is the same technique used by glibc to implement posix_fallocate()
        ** on systems that do not have a real fallocate() system call.
@@ -34,3 +34,13 @@ diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
    uTm.dwLowDateTime = (DWORD)(t64 & 0xFFFFFFFF);
    uTm.dwHighDateTime= (DWORD)(t64 >> 32);
    osFileTimeToLocalFileTime(&uTm,&lTm);
+@@ -73680,7 +73689,8 @@
+ 
+     /* Copy as much data as is available in the buffer into the start of
+     ** p->aAlloc[].  */
+-    memcpy(p->aAlloc, &p->aBuffer[iBuf], nAvail);
++    if( nAvail > 0 )
++      memcpy(p->aAlloc, &p->aBuffer[iBuf], nAvail);
+     p->iReadOff += nAvail;
+     nRem = nByte - nAvail;
+ 

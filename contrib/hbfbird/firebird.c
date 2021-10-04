@@ -114,7 +114,7 @@ static isc_db_handle hb_FB_db_handle_par( int iParam )
 
 HB_FUNC( FBCREATEDB )
 {
-   if( hb_pcount() == 6 )
+   if( hb_pcount() >= 6 )
    {
       isc_db_handle newdb = ( isc_db_handle ) 0;
       isc_tr_handle trans = ( isc_tr_handle ) 0;
@@ -127,10 +127,11 @@ HB_FUNC( FBCREATEDB )
       int            page    = hb_parni( 4 );
       const char *   charset = hb_parcx( 5 );
       unsigned short dialect = ( unsigned short ) hb_parni( 6 );
+      const char *   collate = hb_parcx( 7 );
 
       hb_snprintf( create_db, sizeof( create_db ),
-                   "CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE = %i DEFAULT CHARACTER SET %s",
-                   db_name, user, pass, page, charset );
+                   "CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE = %i DEFAULT CHARACTER SET %s%s%s",
+                   db_name, user, pass, page, charset, ( hb_parclen( 7 ) > 0 ? " COLLATION " : collate ), collate );
 
       if( isc_dsql_execute_immediate( status, &newdb, &trans, 0, create_db, dialect, NULL ) )
          hb_retnl( isc_sqlcode( status ) );

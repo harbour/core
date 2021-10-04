@@ -1040,8 +1040,8 @@ extern HB_EXPORT HB_BOOL   hb_dynsymIsFunction( PHB_DYNS pDynSym );
 extern HB_EXPORT HB_BOOL   hb_dynsymIsMemvar( PHB_DYNS pDynSym );
 extern HB_EXPORT int       hb_dynsymAreaHandle( PHB_DYNS pDynSym ); /* return work area number bound with given dynamic symbol */
 extern HB_EXPORT void      hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea ); /* set work area number for a given dynamic symbol */
-extern HB_EXPORT int       hb_dynsymToNum( PHB_DYNS pDynSym );
-extern HB_EXPORT PHB_DYNS  hb_dynsymFromNum( int iSymNum );
+extern HB_EXPORT HB_SYMCNT hb_dynsymToNum( PHB_DYNS pDynSym );
+extern HB_EXPORT PHB_DYNS  hb_dynsymFromNum( HB_SYMCNT iSymNum );
 #ifdef _HB_API_INTERNAL_
 extern           PHB_ITEM  hb_dynsymGetMemvar( PHB_DYNS pDynSym ); /* return memvar handle number bound with given dynamic symbol */
 extern           void      hb_dynsymSetMemvar( PHB_DYNS pDynSym, PHB_ITEM pMemvar ); /* set memvar handle for a given dynamic symbol */

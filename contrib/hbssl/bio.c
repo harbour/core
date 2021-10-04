@@ -762,7 +762,7 @@ HB_FUNC( BIO_GET_CONN_INT_PORT )
     OPENSSL_VERSION_NUMBER == 0x1000112fL /* 1.0.1r */
       /* Fix for header regression */
       hb_retnl( BIO_ctrl( bio, BIO_C_GET_CONNECT, 3, NULL ) );
-#elif OPENSSL_VERSION_NUMBER >= 0x10101000L
+#elif OPENSSL_VERSION_NUMBER >= 0x1010007fL
       const BIO_ADDR * ba = BIO_get_conn_address( bio );
       hb_retnl( ba ? hb_socketNToHS( BIO_ADDR_rawport( ba ) ) : 0 );
 #else

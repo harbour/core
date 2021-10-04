@@ -834,10 +834,10 @@ void hb_memvarsClear( HB_BOOL fAll )
 #else
    /* this is a little bit hacked but many times faster version
     * of memvars clearing because it scans only given thread stack
-    * not global dynamic symbol table. It noticeable reduce the cost
-    * of HVM thread releasing.
+    * not global dynamic symbol table. It noticeable reduces the cost
+    * of HVM thread releasing [druzus].
     */
-   hb_stackClearMemvars( pGetList ? ( int ) pGetList->uiSymNum : -1 );
+   hb_stackClearMemvars( pGetList ? pGetList->uiSymNum : 0 );
 #endif
 }
 

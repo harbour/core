@@ -558,7 +558,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFormatCode
                      ( "*" + SubStr( cLine, nEnd - 1, 1 ) + SubStr( cLine, i + 1, 1 ) + "*" $ "*{}*()*][*{|*||*!(*" ) .OR. ;
                      ( ( nState == FL_STATE_STRING .OR. nState == FL_STATE_ANY ) .AND. ( SubStr( cLine, i + 1, 1 ) == "[" ) ) .OR. ;
                      ( ( nState == FL_STATE_STRING .OR. nState == FL_STATE_ANY ) .AND. ( ! ::ConvertCmd( @cLine, nBegin, nEnd ) .OR. SubStr( cLine, nBegin, nEnd - nBegin ) == "FIELD" ) .AND. ! SubStr( cLine, nEnd - 1, 1 ) $ "({," .AND. "*" + SubStr( cLine, i + 1, 2 ) + "*" $ "*--*++*->*" ) .OR. ;
-                     ( nState != FL_STATE_STRING .AND. "*" + SubStr( cLine, nEnd - 2, 2 ) + "*" $ "*--*++*->*" ) .OR. ;
+                     ( nState != FL_STATE_STRING .AND. "*" + SubStr( cLine, nEnd - 2, 2 ) + "*" $ "*--*++*->*" .AND. SubStr( cLine, nEnd + 1, 2 ) != "//" ) .OR. ;
                      ( nPrevState != FL_STATE_DIGIT .AND. nPrevState != FL_STATE_STRING .AND. nPrevState != FL_STATE_ANY .AND. ( nState == FL_STATE_ANY .OR. nState == FL_STATE_OP ) .AND. SubStr( cLine, nEnd - 1, 1 ) == "-" .AND. SubStr( cLine, i + 1, 1 ) $ "0123456789." )
                   cLine := Left( cLine, nEnd - 1 ) + SubStr( cLine, i + 1 )
                   nLen  := Len( cLine )

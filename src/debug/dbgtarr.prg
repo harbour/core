@@ -215,7 +215,11 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
          CASE HB_ISOBJECT( aArray[ nSet ] )
             __dbgObject( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
          CASE HB_ISHASH( aArray[ nSet ] )
-            __dbgHashes( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
+            IF Len( aArray[ nSet ] ) == 0
+               __dbgAlert( "Hash is empty" )
+            ELSE
+               __dbgHashes( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
+            ENDIF
          OTHERWISE
             ::doGet( oBrwsets, aArray, nSet )
          ENDCASE
