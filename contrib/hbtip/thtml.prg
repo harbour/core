@@ -2,6 +2,7 @@
  * HTML Classes
  *
  * Copyright 2007 Hannes Ziegler <hz/at/knowleXbase.com>
+ * Copyright 2022 Marinaldo de Jesus <marinaldo.jesus/at/gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,6 +84,7 @@
 
 THREAD STATIC t_aHA                // data for HTML attributes
 THREAD STATIC t_hHT                // data for HTML tags
+THREAD STATIC t_aGlbAttr           // data for Global HTML attributes
 THREAD STATIC t_cHtmlCP := ""
 THREAD STATIC t_aHtmlUnicEntities  // HTML character entities
 THREAD STATIC t_cHtmlUnicChars
@@ -1072,7 +1074,7 @@ METHOD toString( nIndent ) CLASS THtmlNode
 // Builds the attribute string
 METHOD attrToString() CLASS THtmlNode
 
-   LOCAL aAttr, cAttr
+   LOCAL aAttr, cAttr, nAttr
 
    IF ::htmlAttributes == NIL
       cAttr := ""
@@ -1085,6 +1087,16 @@ METHOD attrToString() CLASS THtmlNode
       RECOVER
          aAttr := {}  // Tag has no attributes
       END SEQUENCE
+      //Add Global Attributes
+      //The global attributes below can be used on any HTML element
+      if t_aGlbAttr==NIL
+         t_aGlbAttr:=THtmlAttr_GlobalAttributes()
+      endif
+      for nAttr:=1 to len(t_aGlbAttr)
+         if (aScan(aAttr,{|x|x[1]==t_aGlbAttr[nAttr][1]})==0)
+             aAdd(aAttr,t_aGlbAttr[nAttr])
+         endif
+      next nAttr
       cAttr := ""
       hb_HEval( ::htmlAttributes, {| cKey, cValue | cAttr += __AttrToStr( cKey, cValue, aAttr, Self ) } )
    ENDIF
@@ -1630,128 +1642,140 @@ STATIC PROCEDURE _Init_Html_TagTypes
 
    hb_HCaseMatch( t_hHT, .F. )
 
-   t_hHT[ "_root_"     ] := {                             ,         ( CM_INLINE )                                       }
-   t_hHT[ "_text_"     ] := {                             ,         ( CM_INLINE )                                       }
-   t_hHT[ "!--"        ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
-   t_hHT[ "a"          ] := { @THtmlAttr_A()              ,         ( CM_INLINE )                                       }
-   t_hHT[ "abbr"       ] := { @THtmlAttr_ABBR()           ,         ( CM_INLINE )                                       }
-   t_hHT[ "acronym"    ] := { @THtmlAttr_ACRONYM()        ,         ( CM_INLINE )                                       }
-   t_hHT[ "address"    ] := { @THtmlAttr_ADDRESS()        ,         ( CM_BLOCK )                                        }
-   t_hHT[ "align"      ] := {                             ,         ( CM_BLOCK )                                        }
-   t_hHT[ "applet"     ] := { @THtmlAttr_APPLET()         , hb_bitOr( CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM )          }
-   t_hHT[ "area"       ] := { @THtmlAttr_AREA()           , hb_bitOr( CM_BLOCK, CM_EMPTY )                              }
-   t_hHT[ "b"          ] := { @THtmlAttr_B()              ,         ( CM_INLINE )                                       }
-   t_hHT[ "base"       ] := { @THtmlAttr_BASE()           , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
-   t_hHT[ "basefont"   ] := { @THtmlAttr_BASEFONT()       , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
-   t_hHT[ "bdo"        ] := { @THtmlAttr_BDO()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "bgsound"    ] := {                             , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
-   t_hHT[ "big"        ] := { @THtmlAttr_BIG()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "blink"      ] := {                             ,         ( CM_INLINE )                                       }
-   t_hHT[ "blockquote" ] := { @THtmlAttr_BLOCKQUOTE()     ,         ( CM_BLOCK )                                        }
-   t_hHT[ "body"       ] := { @THtmlAttr_BODY()           , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                      }
-   t_hHT[ "br"         ] := { @THtmlAttr_BR()             , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
-   t_hHT[ "button"     ] := { @THtmlAttr_BUTTON()         ,         ( CM_INLINE )                                       }
-   t_hHT[ "caption"    ] := { @THtmlAttr_CAPTION()        ,         ( CM_TABLE )                                        }
-   t_hHT[ "center"     ] := { @THtmlAttr_CENTER()         ,         ( CM_BLOCK )                                        }
-   t_hHT[ "cite"       ] := { @THtmlAttr_CITE()           ,         ( CM_INLINE )                                       }
-   t_hHT[ "code"       ] := { @THtmlAttr_CODE()           ,         ( CM_INLINE )                                       }
-   t_hHT[ "col"        ] := { @THtmlAttr_COL()            , hb_bitOr( CM_TABLE, CM_EMPTY )                              }
-   t_hHT[ "colgroup"   ] := { @THtmlAttr_COLGROUP()       , hb_bitOr( CM_TABLE, CM_OPT )                                }
-   t_hHT[ "comment"    ] := {                             ,         ( CM_INLINE )                                       }
-   t_hHT[ "dd"         ] := { @THtmlAttr_DD()             , hb_bitOr( CM_DEFLIST, CM_OPT, CM_NO_INDENT )                }
-   t_hHT[ "del"        ] := { @THtmlAttr_DEL()            , hb_bitOr( CM_INLINE, CM_BLOCK, CM_MIXED )                   }
-   t_hHT[ "dfn"        ] := { @THtmlAttr_DFN()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "dir"        ] := { @THtmlAttr_DIR()            , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                           }
-   t_hHT[ "div"        ] := { @THtmlAttr_DIV()            ,         ( CM_BLOCK )                                        }
-   t_hHT[ "dl"         ] := { @THtmlAttr_DL()             ,         ( CM_BLOCK )                                        }
-   t_hHT[ "dt"         ] := { @THtmlAttr_DT()             , hb_bitOr( CM_DEFLIST, CM_OPT, CM_NO_INDENT )                }
-   t_hHT[ "em"         ] := { @THtmlAttr_EM()             ,         ( CM_INLINE )                                       }
-   t_hHT[ "embed"      ] := {                             , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                     }
-   t_hHT[ "fieldset"   ] := { @THtmlAttr_FIELDSET()       ,         ( CM_BLOCK )                                        }
-   t_hHT[ "font"       ] := { @THtmlAttr_FONT()           ,         ( CM_INLINE )                                       }
-   t_hHT[ "form"       ] := { @THtmlAttr_FORM()           ,         ( CM_BLOCK )                                        }
-   t_hHT[ "frame"      ] := { @THtmlAttr_FRAME()          , hb_bitOr( CM_FRAMES, CM_EMPTY )                             }
-   t_hHT[ "frameset"   ] := { @THtmlAttr_FRAMESET()       , hb_bitOr( CM_HTML, CM_FRAMES )                              }
-   t_hHT[ "h1"         ] := { @THtmlAttr_H1()             , hb_bitOr( CM_BLOCK, CM_HEADING )                            }
-   t_hHT[ "h2"         ] := { @THtmlAttr_H2()             , hb_bitOr( CM_BLOCK, CM_HEADING )                            }
-   t_hHT[ "h3"         ] := { @THtmlAttr_H3()             , hb_bitOr( CM_BLOCK, CM_HEADING )                            }
-   t_hHT[ "h4"         ] := { @THtmlAttr_H4()             , hb_bitOr( CM_BLOCK, CM_HEADING )                            }
-   t_hHT[ "h5"         ] := { @THtmlAttr_H5()             , hb_bitOr( CM_BLOCK, CM_HEADING )                            }
-   t_hHT[ "h6"         ] := { @THtmlAttr_H6()             , hb_bitOr( CM_BLOCK, CM_HEADING )                            }
-   t_hHT[ "head"       ] := { @THtmlAttr_HEAD()           , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                      }
-   t_hHT[ "hr"         ] := { @THtmlAttr_HR()             , hb_bitOr( CM_BLOCK, CM_EMPTY )                              }
-   t_hHT[ "html"       ] := { @THtmlAttr_HTML()           , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                      }
-   t_hHT[ "i"          ] := { @THtmlAttr_I()              ,         ( CM_INLINE )                                       }
-   t_hHT[ "iframe"     ] := { @THtmlAttr_IFRAME()         ,         ( CM_INLINE )                                       }
-   t_hHT[ "ilayer"     ] := {                             ,         ( CM_INLINE )                                       }
-   t_hHT[ "img"        ] := { @THtmlAttr_IMG()            , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                     }
-   t_hHT[ "input"      ] := { @THtmlAttr_INPUT()          , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                     }
-   t_hHT[ "ins"        ] := { @THtmlAttr_INS()            , hb_bitOr( CM_INLINE, CM_BLOCK, CM_MIXED )                   }
-   t_hHT[ "isindex"    ] := { @THtmlAttr_ISINDEX()        , hb_bitOr( CM_BLOCK, CM_EMPTY )                              }
-   t_hHT[ "kbd"        ] := { @THtmlAttr_KBD()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "keygen"     ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
-   t_hHT[ "label"      ] := { @THtmlAttr_LABEL()          ,         ( CM_INLINE )                                       }
-   t_hHT[ "layer"      ] := {                             ,         ( CM_BLOCK )                                        }
-   t_hHT[ "legend"     ] := { @THtmlAttr_LEGEND()         ,         ( CM_INLINE )                                       }
-   t_hHT[ "li"         ] := { @THtmlAttr_LI()             , hb_bitOr( CM_LIST, CM_OPT, CM_NO_INDENT )                   }
-   t_hHT[ "link"       ] := { @THtmlAttr_LINK()           , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
-   t_hHT[ "listing"    ] := { @THtmlAttr_LISTING()        , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                           }
-   t_hHT[ "map"        ] := { @THtmlAttr_MAP()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "marquee"    ] := {                             , hb_bitOr( CM_INLINE, CM_OPT )                               }
-   t_hHT[ "menu"       ] := { @THtmlAttr_MENU()           , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                           }
-   t_hHT[ "meta"       ] := { @THtmlAttr_META()           , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
-   t_hHT[ "multicol"   ] := {                             ,         ( CM_BLOCK )                                        }
-   t_hHT[ "nextid"     ] := { @THtmlAttr_NEXTID()         , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
-   t_hHT[ "nobr"       ] := {                             ,         ( CM_INLINE )                                       }
-   t_hHT[ "noembed"    ] := {                             ,         ( CM_INLINE )                                       }
-   t_hHT[ "noframes"   ] := { @THtmlAttr_NOFRAMES()       , hb_bitOr( CM_BLOCK, CM_FRAMES )                             }
-   t_hHT[ "nolayer"    ] := {                             , hb_bitOr( CM_BLOCK, CM_INLINE, CM_MIXED )                   }
-   t_hHT[ "nosave"     ] := {                             ,         ( CM_BLOCK )                                        }
-   t_hHT[ "noscript"   ] := { @THtmlAttr_NOSCRIPT()       , hb_bitOr( CM_BLOCK, CM_INLINE, CM_MIXED )                   }
-   t_hHT[ "object"     ] := { @THtmlAttr_OBJECT()         , hb_bitOr( CM_OBJECT, CM_HEAD, CM_IMG, CM_INLINE, CM_PARAM ) }
-   t_hHT[ "ol"         ] := { @THtmlAttr_OL()             ,         ( CM_BLOCK )                                        }
-   t_hHT[ "optgroup"   ] := { @THtmlAttr_OPTGROUP()       , hb_bitOr( CM_FIELD, CM_OPT )                                }
-   t_hHT[ "option"     ] := { @THtmlAttr_OPTION()         , hb_bitOr( CM_FIELD, CM_OPT )                                }
-   t_hHT[ "p"          ] := { @THtmlAttr_P()              , hb_bitOr( CM_BLOCK, CM_OPT )                                }
-   t_hHT[ "param"      ] := { @THtmlAttr_PARAM()          , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
-   t_hHT[ "plaintext"  ] := { @THtmlAttr_PLAINTEXT()      , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                           }
-   t_hHT[ "pre"        ] := { @THtmlAttr_PRE()            ,         ( CM_BLOCK )                                        }
-   t_hHT[ "q"          ] := { @THtmlAttr_Q()              ,         ( CM_INLINE )                                       }
-   t_hHT[ "rb"         ] := { @THtmlAttr_RB()             ,         ( CM_INLINE )                                       }
-   t_hHT[ "rbc"        ] := { @THtmlAttr_RBC()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "rp"         ] := { @THtmlAttr_RP()             ,         ( CM_INLINE )                                       }
-   t_hHT[ "rt"         ] := { @THtmlAttr_RT()             ,         ( CM_INLINE )                                       }
-   t_hHT[ "rtc"        ] := { @THtmlAttr_RTC()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "ruby"       ] := { @THtmlAttr_RUBY()           ,         ( CM_INLINE )                                       }
-   t_hHT[ "s"          ] := { @THtmlAttr_S()              ,         ( CM_INLINE )                                       }
-   t_hHT[ "samp"       ] := { @THtmlAttr_SAMP()           ,         ( CM_INLINE )                                       }
-   t_hHT[ "script"     ] := { @THtmlAttr_SCRIPT()         , hb_bitOr( CM_HEAD, CM_MIXED, CM_BLOCK, CM_INLINE )          }
-   t_hHT[ "select"     ] := { @THtmlAttr_SELECT()         , hb_bitOr( CM_INLINE, CM_FIELD )                             }
-   t_hHT[ "server"     ] := {                             , hb_bitOr( CM_HEAD, CM_MIXED, CM_BLOCK, CM_INLINE )          }
-   t_hHT[ "servlet"    ] := {                             , hb_bitOr( CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM )          }
-   t_hHT[ "small"      ] := { @THtmlAttr_SMALL()          ,         ( CM_INLINE )                                       }
-   t_hHT[ "spacer"     ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
-   t_hHT[ "span"       ] := { @THtmlAttr_SPAN()           ,         ( CM_INLINE )                                       }
-   t_hHT[ "strike"     ] := { @THtmlAttr_STRIKE()         ,         ( CM_INLINE )                                       }
-   t_hHT[ "strong"     ] := { @THtmlAttr_STRONG()         ,         ( CM_INLINE )                                       }
-   t_hHT[ "style"      ] := { @THtmlAttr_STYLE()          ,         ( CM_HEAD )                                         }
-   t_hHT[ "sub"        ] := { @THtmlAttr_SUB()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "sup"        ] := { @THtmlAttr_SUP()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "table"      ] := { @THtmlAttr_TABLE()          ,         ( CM_BLOCK )                                        }
-   t_hHT[ "tbody"      ] := { @THtmlAttr_TBODY()          , hb_bitOr( CM_TABLE, CM_ROWGRP, CM_OPT )                     }
-   t_hHT[ "td"         ] := { @THtmlAttr_TD()             , hb_bitOr( CM_ROW, CM_OPT, CM_NO_INDENT )                    }
-   t_hHT[ "textarea"   ] := { @THtmlAttr_TEXTAREA()       , hb_bitOr( CM_INLINE, CM_FIELD )                             }
-   t_hHT[ "tfoot"      ] := { @THtmlAttr_TFOOT()          , hb_bitOr( CM_TABLE, CM_ROWGRP, CM_OPT )                     }
-   t_hHT[ "th"         ] := { @THtmlAttr_TH()             , hb_bitOr( CM_ROW, CM_OPT, CM_NO_INDENT )                    }
-   t_hHT[ "thead"      ] := { @THtmlAttr_THEAD()          , hb_bitOr( CM_TABLE, CM_ROWGRP, CM_OPT )                     }
-   t_hHT[ "title"      ] := { @THtmlAttr_TITLE()          ,         ( CM_HEAD )                                         }
-   t_hHT[ "tr"         ] := { @THtmlAttr_TR()             , hb_bitOr( CM_TABLE, CM_OPT )                                }
-   t_hHT[ "tt"         ] := { @THtmlAttr_TT()             ,         ( CM_INLINE )                                       }
-   t_hHT[ "u"          ] := { @THtmlAttr_U()              ,         ( CM_INLINE )                                       }
-   t_hHT[ "ul"         ] := { @THtmlAttr_UL()             ,         ( CM_BLOCK )                                        }
-   t_hHT[ "var"        ] := { @THtmlAttr_VAR()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "wbr"        ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
-   t_hHT[ "xmp"        ] := { @THtmlAttr_XMP()            , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                           }
+   t_hHT[ "_root_"     ] := {                             ,         ( CM_INLINE )                                               }
+   t_hHT[ "_text_"     ] := {                             ,         ( CM_INLINE )                                               }
+   t_hHT[ "!--"        ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "a"          ] := { @THtmlAttr_A()              ,         ( CM_INLINE )                                               }
+   t_hHT[ "abbr"       ] := { @THtmlAttr_ABBR()           ,         ( CM_INLINE )                                               }
+   t_hHT[ "acronym"    ] := { @THtmlAttr_ACRONYM()        , hb_bitOr( CM_INLINE , CM_OBSOLETE )                                 }
+   t_hHT[ "address"    ] := { @THtmlAttr_ADDRESS()        ,         ( CM_BLOCK )                                                }
+   t_hHT[ "align"      ] := {                             ,         ( CM_BLOCK )                                                }
+   t_hHT[ "applet"     ] := { @THtmlAttr_APPLET()         , hb_bitOr( CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM , CM_OBSOLETE )    }
+   t_hHT[ "area"       ] := { @THtmlAttr_AREA()           , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
+   t_hHT[ "article"    ] := { @THtmlAttr_ARTICLE()        , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
+   t_hHT[ "aside"      ] := { @THtmlAttr_ASIDE()          , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
+   t_hHT[ "audio"      ] := { @THtmlAttr_AUDIO()          , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "b"          ] := { @THtmlAttr_B()              ,         ( CM_INLINE )                                               }
+   t_hHT[ "base"       ] := { @THtmlAttr_BASE()           , hb_bitOr( CM_HEAD, CM_EMPTY )                                       }
+   t_hHT[ "basefont"   ] := { @THtmlAttr_BASEFONT()       , hb_bitOr( CM_INLINE, CM_EMPTY , CM_OBSOLETE )                       }
+   t_hHT[ "bdi"        ] := { @THtmlAttr_BDI()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "bdo"        ] := { @THtmlAttr_BDO()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "bgsound"    ] := { @THtmlAttr_BGSOUND()        , hb_bitOr( CM_HEAD, CM_EMPTY , CM_OBSOLETE )                         }
+   t_hHT[ "big"        ] := { @THtmlAttr_BIG()            , hb_bitOr( CM_INLINE , CM_OBSOLETE )                                 }
+   t_hHT[ "blink"      ] := {                             , hb_bitOr( CM_INLINE , CM_OBSOLETE )                                 }
+   t_hHT[ "blockquote" ] := { @THtmlAttr_BLOCKQUOTE()     ,         ( CM_BLOCK )                                                }
+   t_hHT[ "body"       ] := { @THtmlAttr_BODY()           , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                              }
+   t_hHT[ "br"         ] := { @THtmlAttr_BR()             , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "button"     ] := { @THtmlAttr_BUTTON()         ,         ( CM_INLINE )                                               }
+   t_hHT[ "caption"    ] := { @THtmlAttr_CAPTION()        ,         ( CM_TABLE )                                                }
+   t_hHT[ "center"     ] := { @THtmlAttr_CENTER()         , hb_bitOr( CM_BLOCK , CM_OBSOLETE )                                  }
+   t_hHT[ "cite"       ] := { @THtmlAttr_CITE()           ,         ( CM_INLINE )                                               }
+   t_hHT[ "code"       ] := { @THtmlAttr_CODE()           ,         ( CM_INLINE )                                               }
+   t_hHT[ "col"        ] := { @THtmlAttr_COL()            , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
+   t_hHT[ "colgroup"   ] := { @THtmlAttr_COLGROUP()       , hb_bitOr( CM_TABLE, CM_OPT )                                        }
+   t_hHT[ "comment"    ] := {                             ,         ( CM_INLINE )                                               }
+   t_hHT[ "data"       ] := { @THtmlAttr_DATA()           ,         ( CM_INLINE )                                               }
+   t_hHT[ "dd"         ] := { @THtmlAttr_DD()             , hb_bitOr( CM_DEFLIST, CM_OPT, CM_NO_INDENT )                        }
+   t_hHT[ "del"        ] := { @THtmlAttr_DEL()            , hb_bitOr( CM_INLINE, CM_BLOCK, CM_MIXED )                           }
+   t_hHT[ "dfn"        ] := { @THtmlAttr_DFN()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "dir"        ] := { @THtmlAttr_DIR()            , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
+   t_hHT[ "div"        ] := { @THtmlAttr_DIV()            ,         ( CM_BLOCK )                                                }
+   t_hHT[ "dl"         ] := { @THtmlAttr_DL()             ,         ( CM_BLOCK )                                                }
+   t_hHT[ "dt"         ] := { @THtmlAttr_DT()             , hb_bitOr( CM_DEFLIST, CM_OPT, CM_NO_INDENT )                        }
+   t_hHT[ "em"         ] := { @THtmlAttr_EM()             ,         ( CM_INLINE )                                               }
+   t_hHT[ "embed"      ] := {                             , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                             }
+   t_hHT[ "fieldset"   ] := { @THtmlAttr_FIELDSET()       ,         ( CM_BLOCK )                                                }
+   t_hHT[ "figure"     ] := { @THtmlAttr_FIGURE()         , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
+   t_hHT[ "figcaption" ] := { @THtmlAttr_FIGCAPTION()     , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
+   t_hHT[ "font"       ] := { @THtmlAttr_FONT()           ,         ( CM_INLINE )                                               }
+   t_hHT[ "form"       ] := { @THtmlAttr_FORM()           ,         ( CM_BLOCK )                                                }
+   t_hHT[ "frame"      ] := { @THtmlAttr_FRAME()          , hb_bitOr( CM_FRAMES, CM_EMPTY )                                     }
+   t_hHT[ "frameset"   ] := { @THtmlAttr_FRAMESET()       , hb_bitOr( CM_HTML, CM_FRAMES )                                      }
+   t_hHT[ "h1"         ] := { @THtmlAttr_H1()             , hb_bitOr( CM_BLOCK, CM_HEADING )                                    }
+   t_hHT[ "h2"         ] := { @THtmlAttr_H2()             , hb_bitOr( CM_BLOCK, CM_HEADING )                                    }
+   t_hHT[ "h3"         ] := { @THtmlAttr_H3()             , hb_bitOr( CM_BLOCK, CM_HEADING )                                    }
+   t_hHT[ "h4"         ] := { @THtmlAttr_H4()             , hb_bitOr( CM_BLOCK, CM_HEADING )                                    }
+   t_hHT[ "h5"         ] := { @THtmlAttr_H5()             , hb_bitOr( CM_BLOCK, CM_HEADING )                                    }
+   t_hHT[ "h6"         ] := { @THtmlAttr_H6()             , hb_bitOr( CM_BLOCK, CM_HEADING )                                    }
+   t_hHT[ "head"       ] := { @THtmlAttr_HEAD()           , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                              }
+   t_hHT[ "hr"         ] := { @THtmlAttr_HR()             , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
+   t_hHT[ "html"       ] := { @THtmlAttr_HTML()           , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                              }
+   t_hHT[ "i"          ] := { @THtmlAttr_I()              ,         ( CM_INLINE )                                               }
+   t_hHT[ "iframe"     ] := { @THtmlAttr_IFRAME()         ,         ( CM_INLINE )                                               }
+   t_hHT[ "ilayer"     ] := {                             ,         ( CM_INLINE )                                               }
+   t_hHT[ "img"        ] := { @THtmlAttr_IMG()            , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                             }
+   t_hHT[ "input"      ] := { @THtmlAttr_INPUT()          , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                             }
+   t_hHT[ "ins"        ] := { @THtmlAttr_INS()            , hb_bitOr( CM_INLINE, CM_BLOCK, CM_MIXED )                           }
+   t_hHT[ "isindex"    ] := { @THtmlAttr_ISINDEX()        , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
+   t_hHT[ "kbd"        ] := { @THtmlAttr_KBD()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "keygen"     ] := { @THtmlAttr_KEYGEN()         , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "label"      ] := { @THtmlAttr_LABEL()          ,         ( CM_INLINE )                                               }
+   t_hHT[ "layer"      ] := {                             ,         ( CM_BLOCK )                                                }
+   t_hHT[ "legend"     ] := { @THtmlAttr_LEGEND()         ,         ( CM_INLINE )                                               }
+   t_hHT[ "li"         ] := { @THtmlAttr_LI()             , hb_bitOr( CM_LIST, CM_OPT, CM_NO_INDENT )                           }
+   t_hHT[ "link"       ] := { @THtmlAttr_LINK()           , hb_bitOr( CM_HEAD, CM_EMPTY )                                       }
+   t_hHT[ "listing"    ] := { @THtmlAttr_LISTING()        , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
+   t_hHT[ "map"        ] := { @THtmlAttr_MAP()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "marquee"    ] := { @THtmlAttr_MARQUEE()        , hb_bitOr( CM_INLINE, CM_OPT, CM_OBSOLETE )                                       }
+   t_hHT[ "menu"       ] := { @THtmlAttr_MENU()           , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
+   t_hHT[ "menuitem"   ] := { @THtmlAttr_MENUITEM()       , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
+   t_hHT[ "meta"       ] := { @THtmlAttr_META()           , hb_bitOr( CM_HEAD, CM_EMPTY )                                       }
+   t_hHT[ "meter"      ] := { @THtmlAttr_METER()          , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "multicol"   ] := {                             ,         ( CM_BLOCK )                                                }
+   t_hHT[ "nextid"     ] := { @THtmlAttr_NEXTID()         , hb_bitOr( CM_HEAD, CM_EMPTY )                                       }
+   t_hHT[ "nobr"       ] := {                             ,         ( CM_INLINE )                                               }
+   t_hHT[ "noembed"    ] := {                             ,         ( CM_INLINE )                                               }
+   t_hHT[ "noframes"   ] := { @THtmlAttr_NOFRAMES()       , hb_bitOr( CM_BLOCK, CM_FRAMES )                                     }
+   t_hHT[ "nolayer"    ] := {                             , hb_bitOr( CM_BLOCK, CM_INLINE, CM_MIXED )                           }
+   t_hHT[ "nosave"     ] := {                             ,         ( CM_BLOCK )                                                }
+   t_hHT[ "noscript"   ] := { @THtmlAttr_NOSCRIPT()       , hb_bitOr( CM_BLOCK, CM_INLINE, CM_MIXED )                           }
+   t_hHT[ "object"     ] := { @THtmlAttr_OBJECT()         , hb_bitOr( CM_OBJECT, CM_HEAD, CM_IMG, CM_INLINE, CM_PARAM )         }
+   t_hHT[ "ol"         ] := { @THtmlAttr_OL()             ,         ( CM_BLOCK )                                                }
+   t_hHT[ "optgroup"   ] := { @THtmlAttr_OPTGROUP()       , hb_bitOr( CM_FIELD, CM_OPT )                                        }
+   t_hHT[ "option"     ] := { @THtmlAttr_OPTION()         , hb_bitOr( CM_FIELD, CM_OPT )                                        }
+   t_hHT[ "p"          ] := { @THtmlAttr_P()              , hb_bitOr( CM_BLOCK, CM_OPT )                                        }
+   t_hHT[ "param"      ] := { @THtmlAttr_PARAM()          , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "plaintext"  ] := { @THtmlAttr_PLAINTEXT()      , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
+   t_hHT[ "pre"        ] := { @THtmlAttr_PRE()            ,         ( CM_BLOCK )                                                }
+   t_aHA[ "progress"   ] := { @THtmlAttr_PROGRESS()       ,         ( CM_BLOCK )                                                }
+   t_hHT[ "q"          ] := { @THtmlAttr_Q()              ,         ( CM_INLINE )                                               }
+   t_hHT[ "rb"         ] := { @THtmlAttr_RB()             ,         ( CM_INLINE )                                               }
+   t_hHT[ "rbc"        ] := { @THtmlAttr_RBC()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "rp"         ] := { @THtmlAttr_RP()             ,         ( CM_INLINE )                                               }
+   t_hHT[ "rt"         ] := { @THtmlAttr_RT()             ,         ( CM_INLINE )                                               }
+   t_hHT[ "rtc"        ] := { @THtmlAttr_RTC()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "ruby"       ] := { @THtmlAttr_RUBY()           ,         ( CM_INLINE )                                               }
+   t_hHT[ "s"          ] := { @THtmlAttr_S()              ,         ( CM_INLINE )                                               }
+   t_hHT[ "samp"       ] := { @THtmlAttr_SAMP()           ,         ( CM_INLINE )                                               }
+   t_hHT[ "script"     ] := { @THtmlAttr_SCRIPT()         , hb_bitOr( CM_HEAD, CM_MIXED, CM_BLOCK, CM_INLINE )                  }
+   t_hHT[ "select"     ] := { @THtmlAttr_SELECT()         , hb_bitOr( CM_INLINE, CM_FIELD )                                     }
+   t_hHT[ "server"     ] := {                             , hb_bitOr( CM_HEAD, CM_MIXED, CM_BLOCK, CM_INLINE )                  }
+   t_hHT[ "servlet"    ] := {                             , hb_bitOr( CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM )                  }
+   t_hHT[ "small"      ] := { @THtmlAttr_SMALL()          ,         ( CM_INLINE )                                               }
+   t_hHT[ "spacer"     ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "span"       ] := { @THtmlAttr_SPAN()           ,         ( CM_INLINE )                                               }
+   t_hHT[ "strike"     ] := { @THtmlAttr_STRIKE()         ,         ( CM_INLINE )                                               }
+   t_hHT[ "strong"     ] := { @THtmlAttr_STRONG()         ,         ( CM_INLINE )                                               }
+   t_hHT[ "style"      ] := { @THtmlAttr_STYLE()          ,         ( CM_HEAD )                                                 }
+   t_hHT[ "sub"        ] := { @THtmlAttr_SUB()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "sup"        ] := { @THtmlAttr_SUP()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "table"      ] := { @THtmlAttr_TABLE()          ,         ( CM_BLOCK )                                                }
+   t_hHT[ "tbody"      ] := { @THtmlAttr_TBODY()          , hb_bitOr( CM_TABLE, CM_ROWGRP, CM_OPT )                             }
+   t_hHT[ "td"         ] := { @THtmlAttr_TD()             , hb_bitOr( CM_ROW, CM_OPT, CM_NO_INDENT )                            }
+   t_hHT[ "textarea"   ] := { @THtmlAttr_TEXTAREA()       , hb_bitOr( CM_INLINE, CM_FIELD )                                     }
+   t_hHT[ "tfoot"      ] := { @THtmlAttr_TFOOT()          , hb_bitOr( CM_TABLE, CM_ROWGRP, CM_OPT )                             }
+   t_hHT[ "th"         ] := { @THtmlAttr_TH()             , hb_bitOr( CM_ROW, CM_OPT, CM_NO_INDENT )                            }
+   t_hHT[ "thead"      ] := { @THtmlAttr_THEAD()          , hb_bitOr( CM_TABLE, CM_ROWGRP, CM_OPT )                             }
+   t_hHT[ "title"      ] := { @THtmlAttr_TITLE()          ,         ( CM_HEAD )                                                 }
+   t_hHT[ "tr"         ] := { @THtmlAttr_TR()             , hb_bitOr( CM_TABLE, CM_OPT )                                        }
+   t_hHT[ "track"      ] := { @THtmlAttr_TRACK()          , hb_bitOr( CM_MIXED, CM_BLOCK, CM_INLINE )                           }
+   t_hHT[ "tt"         ] := { @THtmlAttr_TT()             ,         ( CM_INLINE )                                               }
+   t_hHT[ "u"          ] := { @THtmlAttr_U()              ,         ( CM_INLINE )                                               }
+   t_hHT[ "ul"         ] := { @THtmlAttr_UL()             ,         ( CM_BLOCK )                                                }
+   t_hHT[ "var"        ] := { @THtmlAttr_VAR()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "video"      ] := { @THtmlAttr_VIDEO()          , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "wbr"        ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "xmp"        ] := { @THtmlAttr_XMP()            , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
 
    RETURN
 
@@ -1768,8 +1792,13 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_ADD_DATE         ] := { "add_date"         , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_ALIGN            ] := { "align"            , HTML_ATTR_TYPE_ALIGN     }
    t_aHA[ HTML_ATTR_ALINK            ] := { "alink"            , HTML_ATTR_TYPE_COLOR     }
+   t_aHA[ HTML_ATTR_ALLOWFULLSCREEN  ] := { "allowfullscreen"  , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_ALT              ] := { "alt"              , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_ARCHIVE          ] := { "archive"          , HTML_ATTR_TYPE_URLS      }
+   t_aHA[ HTML_ATTR_ASYNC            ] := { "async"            , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_AUTOCOMPLETE     ] := { "autocomplete"     , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_AUTOFOCUS        ] := { "autofocus"        , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_AUTOPLAY         ] := { "autoplay"         , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_AXIS             ] := { "axis"             , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_BACKGROUND       ] := { "background"       , HTML_ATTR_TYPE_URL       }
    t_aHA[ HTML_ATTR_BGCOLOR          ] := { "bgcolor"          , HTML_ATTR_TYPE_COLOR     }
@@ -1795,7 +1824,11 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_COLSPAN          ] := { "colspan"          , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_COMPACT          ] := { "compact"          , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_CONTENT          ] := { "content"          , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_CONTENTEDITABLE  ] := { "contenteditable"  , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_CONTEXTMENU      ] := { "contextmenu"      , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_CONTROLS         ] := { "controls"         , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_COORDS           ] := { "coords"           , HTML_ATTR_TYPE_COORDS    }
+   t_aHA[ HTML_ATTR_CROSSORIGIN      ] := { "crossorigin"      , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_DATA             ] := { "data"             , HTML_ATTR_TYPE_URL       }
    t_aHA[ HTML_ATTR_DATAFLD          ] := { "datafld"          , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_DATAFORMATAS     ] := { "dataformatas"     , HTML_ATTR_TYPE_PCDATA    }
@@ -1805,12 +1838,22 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_DECLARE          ] := { "declare"          , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_DEFER            ] := { "defer"            , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_DIR              ] := { "dir"              , HTML_ATTR_TYPE_TEXTDIR   }
+   t_aHA[ HTML_ATTR_DIRNAME          ] := { "dirname"          , HTML_ATTR_TYPE_TEXTDIR   }
    t_aHA[ HTML_ATTR_DISABLED         ] := { "disabled"         , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_DOWNLOAD         ] := { "download"         , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_DRAGGABLE        ] := { "draggable"        , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_DROPZONE         ] := { "dropzone"         , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_ENCODING         ] := { "encoding"         , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_ENCTYPE          ] := { "enctype"          , HTML_ATTR_TYPE_XTYPE     }
    t_aHA[ HTML_ATTR_EVENT            ] := { "event"            , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_FACE             ] := { "face"             , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_FOR              ] := { "for"              , HTML_ATTR_TYPE_IDREF     }
+   t_aHA[ HTML_ATTR_FORM             ] := { "form"             , HTML_ATTR_TYPE_IDREF     }
+   t_aHA[ HTML_ATTR_FORMACTION       ] := { "formaction"       , HTML_ATTR_TYPE_IDREF     }
+   t_aHA[ HTML_ATTR_FORMENCTYPE      ] := { "formenctype"      , HTML_ATTR_TYPE_TYPE      }
+   t_aHA[ HTML_ATTR_FORMMETHOD       ] := { "formmethod"       , HTML_ATTR_TYPE_FSUBMIT   }
+   t_aHA[ HTML_ATTR_FORMNOVALIDATE   ] := { "formnovalidate"   , HTML_ATTR_TYPE_FVALIDATE }
+   t_aHA[ HTML_ATTR_FORMTARGET       ] := { "formtarget"       , HTML_ATTR_TYPE_TARGET    }
    t_aHA[ HTML_ATTR_FRAME            ] := { "frame"            , HTML_ATTR_TYPE_TFRAME    }
    t_aHA[ HTML_ATTR_FRAMEBORDER      ] := { "frameborder"      , HTML_ATTR_TYPE_FBORDER   }
    t_aHA[ HTML_ATTR_FRAMESPACING     ] := { "framespacing"     , HTML_ATTR_TYPE_NUMBER    }
@@ -1818,12 +1861,23 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_GRIDY            ] := { "gridy"            , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_HEADERS          ] := { "headers"          , HTML_ATTR_TYPE_IDREFS    }
    t_aHA[ HTML_ATTR_HEIGHT           ] := { "height"           , HTML_ATTR_TYPE_LENGTH    }
+   t_aHA[ HTML_ATTR_HIDDEN           ] := { "hidden"           , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_HIGH             ] := { "high"             , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_HREF             ] := { "href"             , HTML_ATTR_TYPE_URL       }
    t_aHA[ HTML_ATTR_HREFLANG         ] := { "hreflang"         , HTML_ATTR_TYPE_LANG      }
    t_aHA[ HTML_ATTR_HSPACE           ] := { "hspace"           , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_HTTP_EQUIV       ] := { "http-equiv"       , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ICON             ] := { "icon"             , HTML_ATTR_TYPE_ICON      }
    t_aHA[ HTML_ATTR_ID               ] := { "id"               , HTML_ATTR_TYPE_IDDEF     }
+   t_aHA[ HTML_ATTR_IS               ] := { "is"               , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_ISMAP            ] := { "ismap"            , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_ITEMID           ] := { "itemid"           , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ITEMPROP         ] := { "itemprop"         , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ITEMREF          ] := { "itemref"          , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ITEMSCOPE        ] := { "itemscope"        , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_ITEMTYPE         ] := { "itemtype"         , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_KEYTYPE          ] := { "keytype"          , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_KIND             ] := { "kind"             , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_LABEL            ] := { "label"            , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_LANG             ] := { "lang"             , HTML_ATTR_TYPE_LANG      }
    t_aHA[ HTML_ATTR_LANGUAGE         ] := { "language"         , HTML_ATTR_TYPE_PCDATA    }
@@ -1831,20 +1885,28 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_LAST_VISIT       ] := { "last_visit"       , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_LEFTMARGIN       ] := { "leftmargin"       , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_LINK             ] := { "link"             , HTML_ATTR_TYPE_COLOR     }
+   t_aHA[ HTML_ATTR_LIST             ] := { "list"             , HTML_ATTR_TYPE_LIST      }
    t_aHA[ HTML_ATTR_LONGDESC         ] := { "longdesc"         , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_LOOP             ] := { "loop"             , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_LOW              ] := { "low"              , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_LOWSRC           ] := { "lowsrc"           , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_MANIFEST         ] := { "manifest"         , HTML_ATTR_TYPE_URL       }
    t_aHA[ HTML_ATTR_MARGINHEIGHT     ] := { "marginheight"     , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_MARGINWIDTH      ] := { "marginwidth"      , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_MAX              ] := { "max"              , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_MAXLENGTH        ] := { "maxlength"        , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_MEDIA            ] := { "media"            , HTML_ATTR_TYPE_MEDIA     }
+   t_aHA[ HTML_ATTR_MEDIAGROUP       ] := { "mediagroup"       , HTML_ATTR_TYPE_MEDIA     }
    t_aHA[ HTML_ATTR_METHOD           ] := { "method"           , HTML_ATTR_TYPE_FSUBMIT   }
    t_aHA[ HTML_ATTR_METHODS          ] := { "methods"          , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_MIN              ] := { "min"              , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_MULTIPLE         ] := { "multiple"         , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_N                ] := { "n"                , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_NAME             ] := { "name"             , HTML_ATTR_TYPE_NAME      }
    t_aHA[ HTML_ATTR_NOHREF           ] := { "nohref"           , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_NORESIZE         ] := { "noresize"         , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_NOSHADE          ] := { "noshade"          , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_NOVALIDATE       ] := { "novalidate"       , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_NOWRAP           ] := { "nowrap"           , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_OBJECT           ] := { "object"           , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_ONAFTERUPDATE    ] := { "onafterupdate"    , HTML_ATTR_TYPE_SCRIPT    }
@@ -1881,6 +1943,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_REL              ] := { "rel"              , HTML_ATTR_TYPE_LINKTYPES }
    t_aHA[ HTML_ATTR_REV              ] := { "rev"              , HTML_ATTR_TYPE_LINKTYPES }
    t_aHA[ HTML_ATTR_RIGHTMARGIN      ] := { "rightmargin"      , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_ROLE             ] := { "role"             , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_ROWS             ] := { "rows"             , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_ROWSPAN          ] := { "rowspan"          , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_RULES            ] := { "rules"            , HTML_ATTR_TYPE_TRULES    }
@@ -1898,6 +1961,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_SIZE             ] := { "size"             , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_SPAN             ] := { "span"             , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_SRC              ] := { "src"              , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_SRCSET           ] := { "srcset"           , HTML_ATTR_TYPE_URL       }
    t_aHA[ HTML_ATTR_STANDBY          ] := { "standby"          , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_START            ] := { "start"            , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_STYLE            ] := { "style"            , HTML_ATTR_TYPE_PCDATA    }
@@ -1907,6 +1971,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_TEXT             ] := { "text"             , HTML_ATTR_TYPE_COLOR     }
    t_aHA[ HTML_ATTR_TITLE            ] := { "title"            , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_TOPMARGIN        ] := { "topmargin"        , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_TRANSLATE        ] := { "translate"        , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_TYPE             ] := { "type"             , HTML_ATTR_TYPE_TYPE      }
    t_aHA[ HTML_ATTR_UNKNOWN          ] := { "unknown!"         , HTML_ATTR_TYPE_UNKNOWN   }
    t_aHA[ HTML_ATTR_URN              ] := { "urn"              , HTML_ATTR_TYPE_PCDATA    }
@@ -1925,17 +1990,58 @@ STATIC PROCEDURE _Init_Html_Attributes
 
    RETURN
 
-STATIC FUNCTION THtmlAttr_A()
+/*
+    The global attributes below can be used on any HTML element
+    https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
+    http://www-db.deis.unibo.it/courses/TW/DOCS/w3schools/tags/ref_standardattributes.asp.html
+
+*/
+STATIC FUNCTION THtmlAttr_GlobalAttributes()
    RETURN { ;
       t_aHA[ HTML_ATTR_ACCESSKEY        ], ;
-      t_aHA[ HTML_ATTR_CHARSET          ], ;
+      t_aHA[ HTML_ATTR_AUTOCAPITALIZE   ], ;
+      t_aHA[ HTML_ATTR_AUTOFOCUS        ], ;
       t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_COORDS           ], ;
+      t_aHA[ HTML_ATTR_CONTENTEDITABLE  ], ;
+      t_aHA[ HTML_ATTR_CONTEXTMENU      ], ;
+      t_aHA[ HTML_ATTR_DATA             ], ;
+      t_aHA[ HTML_ATTR_DATAFLD          ], ;
+      t_aHA[ HTML_ATTR_DATAFORMATAS     ], ;
+      t_aHA[ HTML_ATTR_DATAPAGESIZE     ], ;
+      t_aHA[ HTML_ATTR_DATASRC          ], ;
+      t_aHA[ HTML_ATTR_DATATYPE         ], ;
       t_aHA[ HTML_ATTR_DIR              ], ;
+      t_aHA[ HTML_ATTR_DRAGGABLE        ], ;
+      t_aHA[ HTML_ATTR_DROPZONE         ], ;
+      t_aHA[ HTML_ATTR_ENTERKEYHINT     ], ;
+      t_aHA[ HTML_ATTR_EXPORTPARTS      ], ;
+      t_aHA[ HTML_ATTR_HIDDEN           ], ;
+      t_aHA[ HTML_ATTR_ID               ], ;
+      t_aHA[ HTML_ATTR_INPUTMODE        ], ;
+      t_aHA[ HTML_ATTR_IS               ], ;
+      t_aHA[ HTML_ATTR_ITEMID           ], ;
+      t_aHA[ HTML_ATTR_ITEMPROP         ], ;
+      t_aHA[ HTML_ATTR_ITEMREF          ], ;
+      t_aHA[ HTML_ATTR_ITEMSCOPE        ], ;
+      t_aHA[ HTML_ATTR_ITEMTYPE         ], ;
+      t_aHA[ HTML_ATTR_LANG             ], ;
+      t_aHA[ HTML_ATTR_NONCE            ], ;
+      t_aHA[ HTML_ATTR_PART             ], ;
+      t_aHA[ HTML_ATTR_ROLE             ], ;
+      t_aHA[ HTML_ATTR_SLOT             ], ;
+      t_aHA[ HTML_ATTR_SPELLCHECK       ], ;
+      t_aHA[ HTML_ATTR_STYLE            ], ;
+      t_aHA[ HTML_ATTR_TABINDEX         ], ;
+      t_aHA[ HTML_ATTR_TITLE            ], ;
+      t_aHA[ HTML_ATTR_TRANSLATE        ], ;
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+
+STATIC FUNCTION THtmlAttr_A()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_CHARSET          ], ;
+      t_aHA[ HTML_ATTR_COORDS           ], ;
       t_aHA[ HTML_ATTR_HREF             ], ;
       t_aHA[ HTML_ATTR_HREFLANG         ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_METHODS          ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_ONBLUR           ], ;
@@ -1954,22 +2060,15 @@ STATIC FUNCTION THtmlAttr_A()
       t_aHA[ HTML_ATTR_REV              ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
       t_aHA[ HTML_ATTR_SHAPE            ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TABINDEX         ], ;
       t_aHA[ HTML_ATTR_TARGET           ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_URN              ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_DOWNLOAD         ] }
 
 STATIC FUNCTION THtmlAttr_ABBR()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -1980,18 +2079,11 @@ STATIC FUNCTION THtmlAttr_ABBR()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_ACRONYM()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2002,18 +2094,11 @@ STATIC FUNCTION THtmlAttr_ACRONYM()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_ADDRESS()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2026,41 +2111,28 @@ STATIC FUNCTION THtmlAttr_ADDRESS()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_APPLET()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
       t_aHA[ HTML_ATTR_ALT              ], ;
       t_aHA[ HTML_ATTR_ARCHIVE          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_CODE             ], ;
       t_aHA[ HTML_ATTR_CODEBASE         ], ;
       t_aHA[ HTML_ATTR_HEIGHT           ], ;
       t_aHA[ HTML_ATTR_HSPACE           ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_OBJECT           ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VSPACE           ], ;
-      t_aHA[ HTML_ATTR_WIDTH            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_WIDTH            ] }
 
 STATIC FUNCTION THtmlAttr_AREA()
    RETURN { ;
-      t_aHA[ HTML_ATTR_ACCESSKEY        ], ;
       t_aHA[ HTML_ATTR_ALT              ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COORDS           ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_HREF             ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_NOHREF           ], ;
       t_aHA[ HTML_ATTR_ONBLUR           ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
@@ -2075,20 +2147,30 @@ STATIC FUNCTION THtmlAttr_AREA()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SHAPE            ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TABINDEX         ], ;
       t_aHA[ HTML_ATTR_TARGET           ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
+
+STATIC FUNCTION THtmlAttr_ARTICLE()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_NAME             ] }
+
+STATIC FUNCTION THtmlAttr_ASIDE()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_NAME             ] }
+
+STATIC FUNCTION THtmlAttr_AUDIO()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_AUTOPLAY         ], ;
+      t_aHA[ HTML_ATTR_CONTROLS         ], ;
+      t_aHA[ HTML_ATTR_CROSSORIGIN      ], ;
+      t_aHA[ HTML_ATTR_NAME             ], ;
+      t_aHA[ HTML_ATTR_LOOP             ], ;
+      t_aHA[ HTML_ATTR_MEDIAGROUP       ], ;
+      t_aHA[ HTML_ATTR_SRC              ] }
 
 STATIC FUNCTION THtmlAttr_B()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2100,34 +2182,38 @@ STATIC FUNCTION THtmlAttr_B()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_BASE()
    RETURN { ;
       t_aHA[ HTML_ATTR_HREF             ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_TARGET           ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_BASEFONT()
    RETURN { ;
       t_aHA[ HTML_ATTR_COLOR            ], ;
       t_aHA[ HTML_ATTR_FACE             ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_SIZE             ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_SIZE             ] }
+
+STATIC FUNCTION THtmlAttr_BDI()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_ONCLICK          ], ;
+      t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
+      t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
+      t_aHA[ HTML_ATTR_ONKEYPRESS       ], ;
+      t_aHA[ HTML_ATTR_ONKEYUP          ], ;
+      t_aHA[ HTML_ATTR_ONMOUSEDOWN      ], ;
+      t_aHA[ HTML_ATTR_ONMOUSEMOVE      ], ;
+      t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
+      t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
+      t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
+      t_aHA[ HTML_ATTR_XML_LANG         ], ;
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_BDO()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2138,18 +2224,20 @@ STATIC FUNCTION THtmlAttr_BDO()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
+
+STATIC FUNCTION THtmlAttr_BGSOUND()
+/* TODO:
+balance
+volume
+*/
+   RETURN { ;
+      t_aHA[ HTML_ATTR_LOOP             ], ;
+      t_aHA[ HTML_ATTR_SRC              ] }
 
 STATIC FUNCTION THtmlAttr_BIG()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2160,19 +2248,12 @@ STATIC FUNCTION THtmlAttr_BIG()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_BLOCKQUOTE()
    RETURN { ;
       t_aHA[ HTML_ATTR_CITE             ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2184,21 +2265,14 @@ STATIC FUNCTION THtmlAttr_BLOCKQUOTE()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_BODY()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALINK            ], ;
       t_aHA[ HTML_ATTR_BACKGROUND       ], ;
       t_aHA[ HTML_ATTR_BGCOLOR          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_LINK             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
@@ -2212,33 +2286,26 @@ STATIC FUNCTION THtmlAttr_BODY()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_ONUNLOAD         ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TEXT             ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VLINK            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_BR()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_CLEAR            ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_BUTTON()
    RETURN { ;
-      t_aHA[ HTML_ATTR_ACCESSKEY        ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_DISABLED         ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
+      t_aHA[ HTML_ATTR_FORM             ], ;
+      t_aHA[ HTML_ATTR_FORMACTION       ], ;
+      t_aHA[ HTML_ATTR_FORMENCTYPE      ], ;
+      t_aHA[ HTML_ATTR_FORMMETHOD       ], ;
+      t_aHA[ HTML_ATTR_FORMNOVALIDATE   ], ;
+      t_aHA[ HTML_ATTR_FORMTARGET       ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_ONBLUR           ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
@@ -2252,22 +2319,14 @@ STATIC FUNCTION THtmlAttr_BUTTON()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TABINDEX         ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_VALUE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_CAPTION()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2278,18 +2337,11 @@ STATIC FUNCTION THtmlAttr_CAPTION()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_CENTER()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2300,17 +2352,10 @@ STATIC FUNCTION THtmlAttr_CENTER()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XML_LANG         ] }
 
 STATIC FUNCTION THtmlAttr_CITE()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2322,18 +2367,11 @@ STATIC FUNCTION THtmlAttr_CITE()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_CODE()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2345,21 +2383,14 @@ STATIC FUNCTION THtmlAttr_CODE()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_COL()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
       t_aHA[ HTML_ATTR_CHAR             ], ;
       t_aHA[ HTML_ATTR_CHAROFF          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2371,23 +2402,16 @@ STATIC FUNCTION THtmlAttr_COL()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SPAN             ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_COLGROUP()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
       t_aHA[ HTML_ATTR_CHAR             ], ;
       t_aHA[ HTML_ATTR_CHAROFF          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2399,20 +2423,17 @@ STATIC FUNCTION THtmlAttr_COLGROUP()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SPAN             ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
+
+STATIC FUNCTION THtmlAttr_DATA()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_VALUE            ] }
 
 STATIC FUNCTION THtmlAttr_DD()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2424,20 +2445,13 @@ STATIC FUNCTION THtmlAttr_DD()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_DEL()
    RETURN { ;
       t_aHA[ HTML_ATTR_CITE             ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_DATETIME         ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2448,18 +2462,11 @@ STATIC FUNCTION THtmlAttr_DEL()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_DFN()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2470,19 +2477,12 @@ STATIC FUNCTION THtmlAttr_DFN()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_DIR()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COMPACT          ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2495,18 +2495,11 @@ STATIC FUNCTION THtmlAttr_DIR()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XML_LANG         ] }
 
 STATIC FUNCTION THtmlAttr_DIV()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2517,19 +2510,12 @@ STATIC FUNCTION THtmlAttr_DIV()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_DL()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COMPACT          ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2542,18 +2528,11 @@ STATIC FUNCTION THtmlAttr_DL()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_DT()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2565,18 +2544,11 @@ STATIC FUNCTION THtmlAttr_DT()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_EM()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2588,18 +2560,12 @@ STATIC FUNCTION THtmlAttr_EM()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_FIELDSET()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
+      t_aHA[ HTML_ATTR_FORM             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2610,38 +2576,25 @@ STATIC FUNCTION THtmlAttr_FIELDSET()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_FONT()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COLOR            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_FACE             ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_SIZE             ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XML_LANG         ] }
 
 STATIC FUNCTION THtmlAttr_FORM()
    RETURN { ;
       t_aHA[ HTML_ATTR_ACCEPT           ], ;
       t_aHA[ HTML_ATTR_ACCEPT_CHARSET   ], ;
       t_aHA[ HTML_ATTR_ACTION           ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_ENCTYPE          ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_METHOD           ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
+      t_aHA[ HTML_ATTR_NOVALIDATE       ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2656,18 +2609,14 @@ STATIC FUNCTION THtmlAttr_FORM()
       t_aHA[ HTML_ATTR_ONSUBMIT         ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
       t_aHA[ HTML_ATTR_SDASUFF          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TARGET           ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_AUTOCOMPLETE     ] }
 
 STATIC FUNCTION THtmlAttr_FRAME()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_FRAMEBORDER      ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_LONGDESC         ], ;
       t_aHA[ HTML_ATTR_MARGINHEIGHT     ], ;
       t_aHA[ HTML_ATTR_MARGINWIDTH      ], ;
@@ -2675,29 +2624,26 @@ STATIC FUNCTION THtmlAttr_FRAME()
       t_aHA[ HTML_ATTR_NORESIZE         ], ;
       t_aHA[ HTML_ATTR_SCROLLING        ], ;
       t_aHA[ HTML_ATTR_SRC              ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_ASYNC            ] }
+
+STATIC FUNCTION THtmlAttr_FIGURE()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_NAME             ] }
+
+STATIC FUNCTION THtmlAttr_FIGCAPTION()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_NAME             ] }
 
 STATIC FUNCTION THtmlAttr_FRAMESET()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COLS             ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_ONLOAD           ], ;
       t_aHA[ HTML_ATTR_ONUNLOAD         ], ;
-      t_aHA[ HTML_ATTR_ROWS             ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_ROWS             ] }
 
 STATIC FUNCTION THtmlAttr_H1()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2709,19 +2655,12 @@ STATIC FUNCTION THtmlAttr_H1()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_H2()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2733,19 +2672,12 @@ STATIC FUNCTION THtmlAttr_H2()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_H3()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2757,19 +2689,12 @@ STATIC FUNCTION THtmlAttr_H3()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_H4()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2781,19 +2706,12 @@ STATIC FUNCTION THtmlAttr_H4()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_H5()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2805,19 +2723,12 @@ STATIC FUNCTION THtmlAttr_H5()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_H6()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2829,29 +2740,18 @@ STATIC FUNCTION THtmlAttr_H6()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_HEAD()
    RETURN { ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_PROFILE          ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_HR()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_NOSHADE          ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
@@ -2865,30 +2765,20 @@ STATIC FUNCTION THtmlAttr_HR()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
       t_aHA[ HTML_ATTR_SIZE             ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_HTML()
    RETURN { ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
+      t_aHA[ HTML_ATTR_MANIFEST         ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_VERSION          ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_I()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2900,42 +2790,33 @@ STATIC FUNCTION THtmlAttr_I()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_IFRAME()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_FRAMEBORDER      ], ;
       t_aHA[ HTML_ATTR_HEIGHT           ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_LONGDESC         ], ;
       t_aHA[ HTML_ATTR_MARGINHEIGHT     ], ;
       t_aHA[ HTML_ATTR_MARGINWIDTH      ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_SCROLLING        ], ;
       t_aHA[ HTML_ATTR_SRC              ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_ALLOWFULLSCREEN  ], ;
+      t_aHA[ HTML_ATTR_ASYNC            ] }
 
 STATIC FUNCTION THtmlAttr_IMG()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
       t_aHA[ HTML_ATTR_ALT              ], ;
       t_aHA[ HTML_ATTR_BORDER           ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
+      t_aHA[ HTML_ATTR_CROSSORIGIN      ], ;
       t_aHA[ HTML_ATTR_HEIGHT           ], ;
       t_aHA[ HTML_ATTR_HSPACE           ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_ISMAP            ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_LONGDESC         ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
@@ -2950,29 +2831,32 @@ STATIC FUNCTION THtmlAttr_IMG()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
       t_aHA[ HTML_ATTR_SRC              ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_USEMAP           ], ;
       t_aHA[ HTML_ATTR_VSPACE           ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_ASYNC            ] }
 
 STATIC FUNCTION THtmlAttr_INPUT()
    RETURN { ;
       t_aHA[ HTML_ATTR_ACCEPT           ], ;
-      t_aHA[ HTML_ATTR_ACCESSKEY        ], ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
       t_aHA[ HTML_ATTR_ALT              ], ;
       t_aHA[ HTML_ATTR_CHECKED          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_DISABLED         ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
+      t_aHA[ HTML_ATTR_DIRNAME          ], ;
+      t_aHA[ HTML_ATTR_FORM             ], ;
+      t_aHA[ HTML_ATTR_FORMACTION       ], ;
+      t_aHA[ HTML_ATTR_FORMENCTYPE      ], ;
+      t_aHA[ HTML_ATTR_FORMMETHOD       ], ;
+      t_aHA[ HTML_ATTR_FORMNOVALIDATE   ], ;
+      t_aHA[ HTML_ATTR_FORMTARGET       ], ;
       t_aHA[ HTML_ATTR_ISMAP            ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
+      t_aHA[ HTML_ATTR_LIST             ], ;
+      t_aHA[ HTML_ATTR_MAX              ], ;
       t_aHA[ HTML_ATTR_MAXLENGTH        ], ;
+      t_aHA[ HTML_ATTR_MIN              ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_ONBLUR           ], ;
       t_aHA[ HTML_ATTR_ONCHANGE         ], ;
@@ -2992,24 +2876,18 @@ STATIC FUNCTION THtmlAttr_INPUT()
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
       t_aHA[ HTML_ATTR_SIZE             ], ;
       t_aHA[ HTML_ATTR_SRC              ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TABINDEX         ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_USEMAP           ], ;
       t_aHA[ HTML_ATTR_VALUE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_ASYNC            ], ;
+      t_aHA[ HTML_ATTR_AUTOCOMPLETE     ] }
 
 STATIC FUNCTION THtmlAttr_INS()
    RETURN { ;
       t_aHA[ HTML_ATTR_CITE             ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_DATETIME         ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3020,31 +2898,17 @@ STATIC FUNCTION THtmlAttr_INS()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_ISINDEX()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_PROMPT           ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XML_LANG         ] }
 
 STATIC FUNCTION THtmlAttr_KBD()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3056,20 +2920,21 @@ STATIC FUNCTION THtmlAttr_KBD()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
+
+STATIC FUNCTION THtmlAttr_KEYGEN()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_CHALLENGE        ], ;
+      t_aHA[ HTML_ATTR_DISABLED         ], ;
+      t_aHA[ HTML_ATTR_FORM             ], ;
+      t_aHA[ HTML_ATTR_KEYTYPE          ], ;
+      t_aHA[ HTML_ATTR_NAME             ] }
 
 STATIC FUNCTION THtmlAttr_LABEL()
    RETURN { ;
-      t_aHA[ HTML_ATTR_ACCESSKEY        ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_FOR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
+      t_aHA[ HTML_ATTR_FORM             ], ;
       t_aHA[ HTML_ATTR_ONBLUR           ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
@@ -3082,20 +2947,12 @@ STATIC FUNCTION THtmlAttr_LABEL()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_LEGEND()
    RETURN { ;
-      t_aHA[ HTML_ATTR_ACCESSKEY        ], ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3106,18 +2963,11 @@ STATIC FUNCTION THtmlAttr_LEGEND()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_LI()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3129,23 +2979,17 @@ STATIC FUNCTION THtmlAttr_LI()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_VALUE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_LINK()
    RETURN { ;
       t_aHA[ HTML_ATTR_CHARSET          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
+      t_aHA[ HTML_ATTR_CROSSORIGIN      ], ;
       t_aHA[ HTML_ATTR_HREF             ], ;
       t_aHA[ HTML_ATTR_HREFLANG         ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_MEDIA            ], ;
       t_aHA[ HTML_ATTR_METHODS          ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
@@ -3161,27 +3005,20 @@ STATIC FUNCTION THtmlAttr_LINK()
       t_aHA[ HTML_ATTR_REL              ], ;
       t_aHA[ HTML_ATTR_REV              ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TARGET           ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_URN              ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_SRCSET           ] }
 
 STATIC FUNCTION THtmlAttr_LISTING()
    RETURN { ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_SDAPREF          ] }
 
 STATIC FUNCTION THtmlAttr_MAP()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
@@ -3193,19 +3030,31 @@ STATIC FUNCTION THtmlAttr_MAP()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
+
+STATIC FUNCTION THtmlAttr_MARQUEE()
+/* TODO:
+behavior
+direction
+scrollamount
+scrolldelay
+onbounce
+onfinish
+onstart
+*/
+   RETURN { ;
+      t_aHA[ HTML_ATTR_XML_LANG         ], ;
+      t_aHA[ HTML_ATTR_BGCOLOR          ], ;
+      t_aHA[ HTML_ATTR_HEIGHT           ], ;
+      t_aHA[ HTML_ATTR_HSPACE           ], ;
+      t_aHA[ HTML_ATTR_LOOP             ], ;
+      t_aHA[ HTML_ATTR_VSPACE           ], ;
+      t_aHA[ HTML_ATTR_WIDTH            ] }
 
 STATIC FUNCTION THtmlAttr_MENU()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COMPACT          ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3218,35 +3067,43 @@ STATIC FUNCTION THtmlAttr_MENU()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XML_LANG         ] }
+
+STATIC FUNCTION THtmlAttr_MENUITEM()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_CHECKED          ], ;
+      t_aHA[ HTML_ATTR_DEFAULT          ], ;
+      t_aHA[ HTML_ATTR_DISABLED         ], ;
+      t_aHA[ HTML_ATTR_ICON             ], ;
+      t_aHA[ HTML_ATTR_LABEL            ], ;
+      t_aHA[ HTML_ATTR_RADIOGROUP       ], ;
+      t_aHA[ HTML_ATTR_TYPE             ] }
 
 STATIC FUNCTION THtmlAttr_META()
    RETURN { ;
       t_aHA[ HTML_ATTR_CONTENT          ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_HTTP_EQUIV       ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_SCHEME           ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
+
+STATIC FUNCTION THtmlAttr_METER()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_FORM             ], ;
+      t_aHA[ HTML_ATTR_HIGH             ], ;
+      t_aHA[ HTML_ATTR_LOW              ], ;
+      t_aHA[ HTML_ATTR_MAX              ], ;
+      t_aHA[ HTML_ATTR_MIN              ], ;
+      t_aHA[ HTML_ATTR_OPTIMUM          ], ;
+      t_aHA[ HTML_ATTR_VALUE            ] }
 
 STATIC FUNCTION THtmlAttr_NEXTID()
    RETURN { ;
-      t_aHA[ HTML_ATTR_N                ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_N                ] }
 
 STATIC FUNCTION THtmlAttr_NOFRAMES()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3257,17 +3114,10 @@ STATIC FUNCTION THtmlAttr_NOFRAMES()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XML_LANG         ] }
 
 STATIC FUNCTION THtmlAttr_NOSCRIPT()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3278,28 +3128,21 @@ STATIC FUNCTION THtmlAttr_NOSCRIPT()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_OBJECT()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
       t_aHA[ HTML_ATTR_ARCHIVE          ], ;
       t_aHA[ HTML_ATTR_BORDER           ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_CLASSID          ], ;
       t_aHA[ HTML_ATTR_CODEBASE         ], ;
       t_aHA[ HTML_ATTR_CODETYPE         ], ;
-      t_aHA[ HTML_ATTR_DATA             ], ;
       t_aHA[ HTML_ATTR_DECLARE          ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
+      t_aHA[ HTML_ATTR_FORM             ], ;
       t_aHA[ HTML_ATTR_HEIGHT           ], ;
       t_aHA[ HTML_ATTR_HSPACE           ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
@@ -3312,24 +3155,16 @@ STATIC FUNCTION THtmlAttr_OBJECT()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_STANDBY          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TABINDEX         ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_USEMAP           ], ;
       t_aHA[ HTML_ATTR_VSPACE           ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_OL()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COMPACT          ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3342,21 +3177,14 @@ STATIC FUNCTION THtmlAttr_OL()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_START            ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_OPTGROUP()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_DISABLED         ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_LABEL            ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3367,20 +3195,13 @@ STATIC FUNCTION THtmlAttr_OPTGROUP()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_OPTION()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_DISABLED         ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_LABEL            ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3394,20 +3215,13 @@ STATIC FUNCTION THtmlAttr_OPTION()
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
       t_aHA[ HTML_ATTR_SELECTED         ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VALUE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_P()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3419,33 +3233,23 @@ STATIC FUNCTION THtmlAttr_P()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_PARAM()
    RETURN { ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_VALUE            ], ;
       t_aHA[ HTML_ATTR_VALUETYPE        ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_PLAINTEXT()
    RETURN { ;
-      t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_SDAFORM          ] }
 
 STATIC FUNCTION THtmlAttr_PRE()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3457,21 +3261,19 @@ STATIC FUNCTION THtmlAttr_PRE()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XML_SPACE        ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
+
+STATIC FUNCTION THtmlAttr_PROGRESS()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_MAX              ], ;
+      t_aHA[ HTML_ATTR_VALUE            ] }
 
 STATIC FUNCTION THtmlAttr_Q()
    RETURN { ;
       t_aHA[ HTML_ATTR_CITE             ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3482,17 +3284,11 @@ STATIC FUNCTION THtmlAttr_Q()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_RB()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3503,17 +3299,11 @@ STATIC FUNCTION THtmlAttr_RB()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_RBC()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3524,17 +3314,11 @@ STATIC FUNCTION THtmlAttr_RBC()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_RP()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3545,17 +3329,11 @@ STATIC FUNCTION THtmlAttr_RP()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_RT()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3567,17 +3345,11 @@ STATIC FUNCTION THtmlAttr_RT()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_RBSPAN           ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_RTC()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3588,17 +3360,11 @@ STATIC FUNCTION THtmlAttr_RTC()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_RUBY()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3609,18 +3375,11 @@ STATIC FUNCTION THtmlAttr_RUBY()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_S()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3631,17 +3390,10 @@ STATIC FUNCTION THtmlAttr_S()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XML_LANG         ] }
 
 STATIC FUNCTION THtmlAttr_SAMP()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3653,33 +3405,27 @@ STATIC FUNCTION THtmlAttr_SAMP()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_SCRIPT()
    RETURN { ;
       t_aHA[ HTML_ATTR_CHARSET          ], ;
+      t_aHA[ HTML_ATTR_CROSSORIGIN      ], ;
       t_aHA[ HTML_ATTR_DEFER            ], ;
       t_aHA[ HTML_ATTR_EVENT            ], ;
       t_aHA[ HTML_ATTR_FOR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_LANGUAGE         ], ;
       t_aHA[ HTML_ATTR_SRC              ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_XML_SPACE        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_ASYNC            ] }
 
 STATIC FUNCTION THtmlAttr_SELECT()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_DISABLED         ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
+      t_aHA[ HTML_ATTR_FORM             ], ;
       t_aHA[ HTML_ATTR_MULTIPLE         ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_ONBLUR           ], ;
@@ -3698,19 +3444,12 @@ STATIC FUNCTION THtmlAttr_SELECT()
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
       t_aHA[ HTML_ATTR_SIZE             ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TABINDEX         ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_AUTOCOMPLETE     ] }
 
 STATIC FUNCTION THtmlAttr_SMALL()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3721,18 +3460,11 @@ STATIC FUNCTION THtmlAttr_SMALL()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_SPAN()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3743,18 +3475,11 @@ STATIC FUNCTION THtmlAttr_SPAN()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_STRIKE()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3765,17 +3490,10 @@ STATIC FUNCTION THtmlAttr_STRIKE()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XML_LANG         ] }
 
 STATIC FUNCTION THtmlAttr_STRONG()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3787,31 +3505,20 @@ STATIC FUNCTION THtmlAttr_STRONG()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_STYLE()
    RETURN { ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_MEDIA            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XML_SPACE        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_SRCSET           ] }
 
 STATIC FUNCTION THtmlAttr_SUB()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3822,18 +3529,11 @@ STATIC FUNCTION THtmlAttr_SUB()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_SUP()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3844,11 +3544,8 @@ STATIC FUNCTION THtmlAttr_SUP()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_TABLE()
    RETURN { ;
@@ -3857,12 +3554,7 @@ STATIC FUNCTION THtmlAttr_TABLE()
       t_aHA[ HTML_ATTR_BORDER           ], ;
       t_aHA[ HTML_ATTR_CELLPADDING      ], ;
       t_aHA[ HTML_ATTR_CELLSPACING      ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DATAPAGESIZE     ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_FRAME            ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3874,23 +3566,16 @@ STATIC FUNCTION THtmlAttr_TABLE()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_RULES            ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_SUMMARY          ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_TBODY()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
       t_aHA[ HTML_ATTR_CHAR             ], ;
       t_aHA[ HTML_ATTR_CHAROFF          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3901,12 +3586,9 @@ STATIC FUNCTION THtmlAttr_TBODY()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_TD()
    RETURN { ;
@@ -3916,13 +3598,9 @@ STATIC FUNCTION THtmlAttr_TD()
       t_aHA[ HTML_ATTR_BGCOLOR          ], ;
       t_aHA[ HTML_ATTR_CHAR             ], ;
       t_aHA[ HTML_ATTR_CHAROFF          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COLSPAN          ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_HEADERS          ], ;
       t_aHA[ HTML_ATTR_HEIGHT           ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_NOWRAP           ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
@@ -3936,23 +3614,17 @@ STATIC FUNCTION THtmlAttr_TD()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_ROWSPAN          ], ;
       t_aHA[ HTML_ATTR_SCOPE            ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_TEXTAREA()
    RETURN { ;
-      t_aHA[ HTML_ATTR_ACCESSKEY        ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COLS             ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
+      t_aHA[ HTML_ATTR_DIRNAME          ], ;
       t_aHA[ HTML_ATTR_DISABLED         ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
+      t_aHA[ HTML_ATTR_FORM             ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_ONBLUR           ], ;
       t_aHA[ HTML_ATTR_ONCHANGE         ], ;
@@ -3972,22 +3644,15 @@ STATIC FUNCTION THtmlAttr_TEXTAREA()
       t_aHA[ HTML_ATTR_ROWS             ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TABINDEX         ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_AUTOCOMPLETE     ] }
 
 STATIC FUNCTION THtmlAttr_TFOOT()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
       t_aHA[ HTML_ATTR_CHAR             ], ;
       t_aHA[ HTML_ATTR_CHAROFF          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3998,12 +3663,9 @@ STATIC FUNCTION THtmlAttr_TFOOT()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_TH()
    RETURN { ;
@@ -4013,13 +3675,9 @@ STATIC FUNCTION THtmlAttr_TH()
       t_aHA[ HTML_ATTR_BGCOLOR          ], ;
       t_aHA[ HTML_ATTR_CHAR             ], ;
       t_aHA[ HTML_ATTR_CHAROFF          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COLSPAN          ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
       t_aHA[ HTML_ATTR_HEADERS          ], ;
       t_aHA[ HTML_ATTR_HEIGHT           ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_NOWRAP           ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
@@ -4033,23 +3691,16 @@ STATIC FUNCTION THtmlAttr_TH()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_ROWSPAN          ], ;
       t_aHA[ HTML_ATTR_SCOPE            ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_THEAD()
    RETURN { ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
       t_aHA[ HTML_ATTR_CHAR             ], ;
       t_aHA[ HTML_ATTR_CHAROFF          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -4060,22 +3711,15 @@ STATIC FUNCTION THtmlAttr_THEAD()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_TITLE()
    RETURN { ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_TR()
    RETURN { ;
@@ -4083,10 +3727,6 @@ STATIC FUNCTION THtmlAttr_TR()
       t_aHA[ HTML_ATTR_BGCOLOR          ], ;
       t_aHA[ HTML_ATTR_CHAR             ], ;
       t_aHA[ HTML_ATTR_CHAROFF          ], ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -4097,19 +3737,20 @@ STATIC FUNCTION THtmlAttr_TR()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
+
+STATIC FUNCTION THtmlAttr_TRACK()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_DEFAULT          ], ;
+      t_aHA[ HTML_ATTR_KIND             ], ;
+      t_aHA[ HTML_ATTR_LABEL            ], ;
+      t_aHA[ HTML_ATTR_SRC              ], ;
+      t_aHA[ HTML_ATTR_SRCLANG          ] }
 
 STATIC FUNCTION THtmlAttr_TT()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -4121,18 +3762,11 @@ STATIC FUNCTION THtmlAttr_TT()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_U()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -4143,18 +3777,11 @@ STATIC FUNCTION THtmlAttr_U()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XML_LANG         ] }
 
 STATIC FUNCTION THtmlAttr_UL()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
       t_aHA[ HTML_ATTR_COMPACT          ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -4166,19 +3793,12 @@ STATIC FUNCTION THtmlAttr_UL()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_VAR()
    RETURN { ;
-      t_aHA[ HTML_ATTR_CLASS            ], ;
-      t_aHA[ HTML_ATTR_DIR              ], ;
-      t_aHA[ HTML_ATTR_ID               ], ;
-      t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -4190,17 +3810,28 @@ STATIC FUNCTION THtmlAttr_VAR()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_STYLE            ], ;
-      t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_XMLNS            ] }
+
+STATIC FUNCTION THtmlAttr_VIDEO()
+   RETURN { ;
+      t_aHA[ HTML_ATTR_AUTOPLAY         ], ;
+      t_aHA[ HTML_ATTR_CONTROLS         ], ;
+      t_aHA[ HTML_ATTR_HEIGHT           ], ;
+      t_aHA[ HTML_ATTR_LOOP             ], ;
+      t_aHA[ HTML_ATTR_MEDIAGROUP       ], ;
+      t_aHA[ HTML_ATTR_MUTED            ], ;
+      t_aHA[ HTML_ATTR_POSTER           ], ;
+      t_aHA[ HTML_ATTR_PRELOAD          ], ;
+      t_aHA[ HTML_ATTR_SRC              ], ;
+      t_aHA[ HTML_ATTR_WIDTH            ], ;
+      t_aHA[ HTML_ATTR_ONCLICK          ], ;
+      t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_XMP()
    RETURN { ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ] }
+      t_aHA[ HTML_ATTR_SDAPREF          ] }
 
 #ifdef HB_LEGACY_LEVEL4
 
