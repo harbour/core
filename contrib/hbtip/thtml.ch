@@ -289,7 +289,6 @@
 #define HTML_ATTR_OPEN                  207
 #define HTML_ATTR_OPTIMUM               208
 #define HTML_ATTR_ONABORT               209
-//AQUI
 #define HTML_ATTR_ONAFTERPRINT          210
 #define HTML_ATTR_ONBEFOREPRINT         211
 #define HTML_ATTR_ONCANPLAY             212
@@ -299,9 +298,11 @@
 #define HTML_ATTR_ONDRAG                216
 #define HTML_ATTR_ONDRAGEND             217
 #define HTML_ATTR_ONDRAGENTER           218
+//AQUI
 #define HTML_ATTR_ONDRAGLEAVE           219
 #define HTML_ATTR_ONDRAGOVER            220
 #define HTML_ATTR_ONDRAGSTART           221
+
 #define HTML_ATTR_ONDROP                222
 #define HTML_ATTR_ONDURATIONCHANGE      223
 #define HTML_ATTR_ONEMPTIED             224

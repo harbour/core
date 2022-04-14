@@ -1913,14 +1913,26 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_OBJECT           ] := { "object"           , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_ONABORT          ] := { "onabort"          , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONAFTERUPDATE    ] := { "onafterupdate"    , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONAFTERPRINT     ] := { "onafterprint"     , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONBEFOREPRINT    ] := { "onbeforeprint"    , HTML_ATTR_TYPE_SCRIPT    } 
    t_aHA[ HTML_ATTR_ONBEFOREUNLOAD   ] := { "onbeforeunload"   , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONBEFOREUPDATE   ] := { "onbeforeupdate"   , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONBLUR           ] := { "onblur"           , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONCANPLAY        ] := { "oncanplay"        , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONCANPLAYTHROUGH ] := { "oncanplaythrough" , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONCHANGE         ] := { "onchange"         , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONCLICK          ] := { "onclick"          , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONCONTEXTMENU    ] := { "oncontextmenu"    , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONCUECHANGE      ] := { "oncuechange"      , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONDATAAVAILABLE  ] := { "ondataavailable"  , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONDATASETCHANGED ] := { "ondatasetchanged" , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONDATASETCOMPLETE] := { "ondatasetcomplete", HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAG           ] := { "ondrag"           , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAGEND        ] := { "ondragend"        , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAGENTER      ] := { "ondragenter"      , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAGLEAVE      ] := { "ondragleave"      , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAGOVER       ] := { "ondragover"       , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAGSTART      ] := { "ondragstart"      , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONDBLCLICK       ] := { "ondblclick"       , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONERRORUPDATE    ] := { "onerrorupdate"    , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONFOCUS          ] := { "onfocus"          , HTML_ATTR_TYPE_SCRIPT    }
@@ -2031,6 +2043,13 @@ STATIC FUNCTION THtmlAttr_GlobalAttributes()
       t_aHA[ HTML_ATTR_ITEMTYPE         ], ;
       t_aHA[ HTML_ATTR_LANG             ], ;
       t_aHA[ HTML_ATTR_NONCE            ], ;
+      t_aHA[ HTML_ATTR_ONCONTEXTMENU    ], ;
+      t_aHA[ HTML_ATTR_ONDRAG           ], ;
+      t_aHA[ HTML_ATTR_ONDRAGEND        ], ;
+      t_aHA[ HTML_ATTR_ONDRAGENTER      ], ;
+      t_aHA[ HTML_ATTR_ONDRAGLEAVE      ], ;
+      t_aHA[ HTML_ATTR_ONDRAGOVER       ], ;
+      t_aHA[ HTML_ATTR_ONDRAGSTART      ], ;      
       t_aHA[ HTML_ATTR_PART             ], ;
       t_aHA[ HTML_ATTR_ROLE             ], ;
       t_aHA[ HTML_ATTR_SLOT             ], ;
@@ -2167,6 +2186,8 @@ STATIC FUNCTION THtmlAttr_ASIDE()
 STATIC FUNCTION THtmlAttr_AUDIO()
    RETURN { ;
       t_aHA[ HTML_ATTR_AUTOPLAY         ], ;
+      t_aHA[ HTML_ATTR_ONCANPLAY        ], ;
+      t_aHA[ HTML_ATTR_ONCANPLAYTHROUGH ], ;
       t_aHA[ HTML_ATTR_CONTROLS         ], ;
       t_aHA[ HTML_ATTR_CROSSORIGIN      ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
@@ -2280,6 +2301,8 @@ STATIC FUNCTION THtmlAttr_BODY()
       t_aHA[ HTML_ATTR_BACKGROUND       ], ;
       t_aHA[ HTML_ATTR_BGCOLOR          ], ;
       t_aHA[ HTML_ATTR_LINK             ], ;
+      t_aHA[ HTML_ATTR_ONAFTERPRINT     ], ;
+      t_aHA[ HTML_ATTR_ONBEFOREPRINT    ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -2579,6 +2602,7 @@ STATIC FUNCTION THtmlAttr_EMBED()
       t_aHA[ HTML_ATTR_SRC              ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
+      t_aHA[ HTML_ATTR_ONCANPLAY        ], ;
       t_aHA[ HTML_ATTR_ONKEYUP          ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
       t_aHA[ HTML_ATTR_ONABORT          ] }
@@ -3166,6 +3190,7 @@ STATIC FUNCTION THtmlAttr_OBJECT()
       t_aHA[ HTML_ATTR_HSPACE           ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_ONABORT          ], ;
+      t_aHA[ HTML_ATTR_ONCANPLAY        ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3768,6 +3793,7 @@ STATIC FUNCTION THtmlAttr_TRACK()
       t_aHA[ HTML_ATTR_DEFAULT          ], ;
       t_aHA[ HTML_ATTR_KIND             ], ;
       t_aHA[ HTML_ATTR_LABEL            ], ;
+      t_aHA[ HTML_ATTR_ONCUECHANGE      ], ;
       t_aHA[ HTML_ATTR_SRC              ], ;
       t_aHA[ HTML_ATTR_SRCLANG          ] }
 
@@ -3848,6 +3874,8 @@ STATIC FUNCTION THtmlAttr_VIDEO()
       t_aHA[ HTML_ATTR_SRC              ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_ONABORT          ], ;
+      t_aHA[ HTML_ATTR_ONCANPLAY        ], ;
+      t_aHA[ HTML_ATTR_ONCANPLAYTHROUGH ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_XMLNS            ] }
 
