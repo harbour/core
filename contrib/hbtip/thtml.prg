@@ -1677,13 +1677,14 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "data"       ] := { @THtmlAttr_DATA()           ,         ( CM_INLINE )                                               }
    t_hHT[ "dd"         ] := { @THtmlAttr_DD()             , hb_bitOr( CM_DEFLIST, CM_OPT, CM_NO_INDENT )                        }
    t_hHT[ "del"        ] := { @THtmlAttr_DEL()            , hb_bitOr( CM_INLINE, CM_BLOCK, CM_MIXED )                           }
+   t_hHT[ "details"    ] := { @THtmlAttr_DETAILS()        ,         ( CM_BLOCK )                                                }
    t_hHT[ "dfn"        ] := { @THtmlAttr_DFN()            ,         ( CM_INLINE )                                               }
    t_hHT[ "dir"        ] := { @THtmlAttr_DIR()            , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
    t_hHT[ "div"        ] := { @THtmlAttr_DIV()            ,         ( CM_BLOCK )                                                }
    t_hHT[ "dl"         ] := { @THtmlAttr_DL()             ,         ( CM_BLOCK )                                                }
    t_hHT[ "dt"         ] := { @THtmlAttr_DT()             , hb_bitOr( CM_DEFLIST, CM_OPT, CM_NO_INDENT )                        }
    t_hHT[ "em"         ] := { @THtmlAttr_EM()             ,         ( CM_INLINE )                                               }
-   t_hHT[ "embed"      ] := {                             , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                             }
+   t_hHT[ "embed"      ] := { @THtmlAttr_EMBED()          , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                             }
    t_hHT[ "fieldset"   ] := { @THtmlAttr_FIELDSET()       ,         ( CM_BLOCK )                                                }
    t_hHT[ "figure"     ] := { @THtmlAttr_FIGURE()         , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
    t_hHT[ "figcaption" ] := { @THtmlAttr_FIGCAPTION()     , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
@@ -1901,6 +1902,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_METHODS          ] := { "methods"          , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_MIN              ] := { "min"              , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_MULTIPLE         ] := { "multiple"         , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_MUTED            ] := { "muted"            , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_N                ] := { "n"                , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_NAME             ] := { "name"             , HTML_ATTR_TYPE_NAME      }
    t_aHA[ HTML_ATTR_NOHREF           ] := { "nohref"           , HTML_ATTR_TYPE_BOOL      }
@@ -1909,6 +1911,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_NOVALIDATE       ] := { "novalidate"       , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_NOWRAP           ] := { "nowrap"           , HTML_ATTR_TYPE_BOOL      }
    t_aHA[ HTML_ATTR_OBJECT           ] := { "object"           , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ONABORT          ] := { "onabort"          , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONAFTERUPDATE    ] := { "onafterupdate"    , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONBEFOREUNLOAD   ] := { "onbeforeunload"   , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONBEFOREUPDATE   ] := { "onbeforeupdate"   , HTML_ATTR_TYPE_SCRIPT    }
@@ -1936,6 +1939,8 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_ONSELECT         ] := { "onselect"         , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONSUBMIT         ] := { "onsubmit"         , HTML_ATTR_TYPE_SCRIPT    }
    t_aHA[ HTML_ATTR_ONUNLOAD         ] := { "onunload"         , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_OPEN             ] := { "open"             , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_OPTIMUM          ] := { "optimum"          , HTML_ATTR_TYPE_NUMBER    }
    t_aHA[ HTML_ATTR_PROFILE          ] := { "profile"          , HTML_ATTR_TYPE_URL       }
    t_aHA[ HTML_ATTR_PROMPT           ] := { "prompt"           , HTML_ATTR_TYPE_PCDATA    }
    t_aHA[ HTML_ATTR_RBSPAN           ] := { "rbspan"           , HTML_ATTR_TYPE_NUMBER    }
@@ -2167,6 +2172,7 @@ STATIC FUNCTION THtmlAttr_AUDIO()
       t_aHA[ HTML_ATTR_NAME             ], ;
       t_aHA[ HTML_ATTR_LOOP             ], ;
       t_aHA[ HTML_ATTR_MEDIAGROUP       ], ;
+      t_aHA[ HTML_ATTR_ONABORT          ], ;
       t_aHA[ HTML_ATTR_SRC              ] }
 
 STATIC FUNCTION THtmlAttr_B()
@@ -2464,7 +2470,11 @@ STATIC FUNCTION THtmlAttr_DEL()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ] }
-
+      
+STATIC FUNCTION THtmlAttr_DETAILS()      
+   RETURN { ;
+      t_aHA[ HTML_ATTR_OPEN             ] }
+      
 STATIC FUNCTION THtmlAttr_DFN()
    RETURN { ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
@@ -2562,6 +2572,16 @@ STATIC FUNCTION THtmlAttr_EM()
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ] }
+      
+STATIC FUNCTION THtmlAttr_EMBED()      
+   RETURN { ;
+      t_aHA[ HTML_ATTR_HEIGHT          ], ;
+      t_aHA[ HTML_ATTR_SRC              ], ;
+      t_aHA[ HTML_ATTR_TYPE             ], ;
+      t_aHA[ HTML_ATTR_WIDTH            ], ;
+      t_aHA[ HTML_ATTR_ONKEYUP          ], ;
+      t_aHA[ HTML_ATTR_XMLNS            ], ;
+      t_aHA[ HTML_ATTR_ONABORT          ] }
 
 STATIC FUNCTION THtmlAttr_FIELDSET()
    RETURN { ;
@@ -2819,6 +2839,7 @@ STATIC FUNCTION THtmlAttr_IMG()
       t_aHA[ HTML_ATTR_ISMAP            ], ;
       t_aHA[ HTML_ATTR_LONGDESC         ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
+      t_aHA[ HTML_ATTR_ONABORT          ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3144,6 +3165,7 @@ STATIC FUNCTION THtmlAttr_OBJECT()
       t_aHA[ HTML_ATTR_HEIGHT           ], ;
       t_aHA[ HTML_ATTR_HSPACE           ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
+      t_aHA[ HTML_ATTR_ONABORT          ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
       t_aHA[ HTML_ATTR_ONKEYDOWN        ], ;
@@ -3825,6 +3847,7 @@ STATIC FUNCTION THtmlAttr_VIDEO()
       t_aHA[ HTML_ATTR_PRELOAD          ], ;
       t_aHA[ HTML_ATTR_SRC              ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
+      t_aHA[ HTML_ATTR_ONABORT          ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_XMLNS            ] }
 
