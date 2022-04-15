@@ -298,11 +298,9 @@
 #define HTML_ATTR_ONDRAG                216
 #define HTML_ATTR_ONDRAGEND             217
 #define HTML_ATTR_ONDRAGENTER           218
-//AQUI
 #define HTML_ATTR_ONDRAGLEAVE           219
 #define HTML_ATTR_ONDRAGOVER            220
 #define HTML_ATTR_ONDRAGSTART           221
-
 #define HTML_ATTR_ONDROP                222
 #define HTML_ATTR_ONDURATIONCHANGE      223
 #define HTML_ATTR_ONEMPTIED             224
@@ -317,6 +315,7 @@
 #define HTML_ATTR_ONMESSAGE             233
 #define HTML_ATTR_ONMOUSEWHEEL          234
 #define HTML_ATTR_ONOFFLINE             235
+//AQUI
 #define HTML_ATTR_ONONLINE              236
 #define HTML_ATTR_ONPAGEHIDE            237
 #define HTML_ATTR_ONPAGESHOW            238
