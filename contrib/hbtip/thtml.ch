@@ -315,7 +315,6 @@
 #define HTML_ATTR_ONMESSAGE             233
 #define HTML_ATTR_ONMOUSEWHEEL          234
 #define HTML_ATTR_ONOFFLINE             235
-//AQUI
 #define HTML_ATTR_ONONLINE              236
 #define HTML_ATTR_ONPAGEHIDE            237
 #define HTML_ATTR_ONPAGESHOW            238
@@ -390,55 +389,55 @@
 #define HTML_ATTR_ARIA_VALUEMAX         307
 #define HTML_ATTR_ARIA_VALUEMIN         308
 #define HTML_ATTR_ARIA_VALUENOW         309
-#define HTML_ATTR_ARIA_VALUETEXT
+#define HTML_ATTR_ARIA_VALUETEXT        310
 /* SVG attributes (SVG 1.1) */
-#define HTML_ATTR_X                     310
-#define HTML_ATTR_Y                     311
-#define HTML_ATTR_VIEWBOX               312
-#define HTML_ATTR_PRESERVEASPECTRATIO   313
-#define HTML_ATTR_ZOOMANDPAN            314
-#define HTML_ATTR_BASEPROFILE           315
-#define HTML_ATTR_CONTENTSCRIPTTYPE     316
-#define HTML_ATTR_CONTENTSTYLETYPE      317
+#define HTML_ATTR_X                     311
+#define HTML_ATTR_Y                     312
+#define HTML_ATTR_VIEWBOX               313
+#define HTML_ATTR_PRESERVEASPECTRATIO   314
+#define HTML_ATTR_ZOOMANDPAN            315
+#define HTML_ATTR_BASEPROFILE           316
+#define HTML_ATTR_CONTENTSCRIPTTYPE     317
+#define HTML_ATTR_CONTENTSTYLETYPE      318
 /* MathML <math> attributes */
-#define HTML_ATTR_DISPLAY               318
+#define HTML_ATTR_DISPLAY               319
 /* RDFa global attributes */
-#define HTML_ATTR_ABOUT                 319
-#define HTML_ATTR_DATATYPE              320
-#define HTML_ATTR_INLIST                321
-#define HTML_ATTR_PREFIX                322
-#define HTML_ATTR_PROPERTY              323
-#define HTML_ATTR_RESOURCE              324
-#define HTML_ATTR_TYPEOF                325
-#define HTML_ATTR_VOCAB                 326
-#define HTML_ATTR_INTEGRITY             327
-#define HTML_ATTR_AS                    328
-#define HTML_ATTR_XMLNSXLINK            329
-#define HTML_ATTR_SLOT                  330
-#define HTML_ATTR_LOADING               331
+#define HTML_ATTR_ABOUT                 320
+#define HTML_ATTR_DATATYPE              321
+#define HTML_ATTR_INLIST                322
+#define HTML_ATTR_PREFIX                323
+#define HTML_ATTR_PROPERTY              324
+#define HTML_ATTR_RESOURCE              325
+#define HTML_ATTR_TYPEOF                326
+#define HTML_ATTR_VOCAB                 327
+#define HTML_ATTR_INTEGRITY             328
+#define HTML_ATTR_AS                    329
+#define HTML_ATTR_XMLNSXLINK            330
+#define HTML_ATTR_SLOT                  331
+#define HTML_ATTR_LOADING               333
 /* SVG paint attributes (SVG 1.1) */
-#define HTML_ATTR_FILL                  332
-#define HTML_ATTR_FILLRULE              333
-#define HTML_ATTR_STROKE                334
-#define HTML_ATTR_STROKEDASHARRAY       335
-#define HTML_ATTR_STROKEDASHOFFSET      336
-#define HTML_ATTR_STROKELINECAP         337
-#define HTML_ATTR_STROKELINEJOIN        338
-#define HTML_ATTR_STROKEMITERLIMIT      339
-#define HTML_ATTR_STROKEWIDTH           340
-#define HTML_ATTR_COLORINTERPOLATION    341
-#define HTML_ATTR_COLORRENDERING        342
-#define HTML_ATTR_OPACITY               343
-#define HTML_ATTR_STROKEOPACITY         344
-#define HTML_ATTR_FILLOPACITY           345
-#define HTML_ATTR_AUTOCAPITALIZE        346
-#define HTML_ATTR_ENTERKEYHINT          347
-#define HTML_ATTR_EXPORTPARTS           348
-#define HTML_ATTR_INPUTMODE             349
-#define HTML_ATTR_NONCE                 350
-#define HTML_ATTR_PART                  351
+#define HTML_ATTR_FILL                  333
+#define HTML_ATTR_FILLRULE              334
+#define HTML_ATTR_STROKE                335
+#define HTML_ATTR_STROKEDASHARRAY       336
+#define HTML_ATTR_STROKEDASHOFFSET      337
+#define HTML_ATTR_STROKELINECAP         338
+#define HTML_ATTR_STROKELINEJOIN        339
+#define HTML_ATTR_STROKEMITERLIMIT      340
+#define HTML_ATTR_STROKEWIDTH           341
+#define HTML_ATTR_COLORINTERPOLATION    342
+#define HTML_ATTR_COLORRENDERING        343
+#define HTML_ATTR_OPACITY               344
+#define HTML_ATTR_STROKEOPACITY         345
+#define HTML_ATTR_FILLOPACITY           346
+#define HTML_ATTR_AUTOCAPITALIZE        347
+#define HTML_ATTR_ENTERKEYHINT          348
+#define HTML_ATTR_EXPORTPARTS           349
+#define HTML_ATTR_INPUTMODE             350
+#define HTML_ATTR_NONCE                 351
+#define HTML_ATTR_PART                  352
 
-#define HTML_ATTR_COUNT                 351
+#define HTML_ATTR_COUNT                 352
 
 #define HTML_ATTR_TYPE_UNKNOWN          0
 #define HTML_ATTR_TYPE_ACTION           1

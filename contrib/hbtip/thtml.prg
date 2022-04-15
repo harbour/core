@@ -85,6 +85,7 @@
 THREAD STATIC t_aHA                // data for HTML attributes
 THREAD STATIC t_hHT                // data for HTML tags
 THREAD STATIC t_aGlbAttr           // data for Global HTML attributes
+THREAD STATIC t_cHB_EOL
 THREAD STATIC t_cHtmlCP := ""
 THREAD STATIC t_aHtmlUnicEntities  // HTML character entities
 THREAD STATIC t_cHtmlUnicChars
@@ -100,6 +101,10 @@ THREAD STATIC t_lInit := .F.       // initialization flag for HTML data
 
 /* Class for handling an entire HTML document */
 CREATE CLASS THtmlDocument MODULE FRIENDLY
+
+   if t_cHB_EOL==NIL
+      t_cHB_EOL:=hb_eol()
+   endif
 
    HIDDEN:
    VAR oIterator
@@ -129,17 +134,21 @@ ENDCLASS
 METHOD new( cHtmlString ) CLASS THtmlDocument
 
    LOCAL oSubNode, oErrNode, aHead, aBody, nMode := 0
+   LOCAL cEmptyHtmlDoc
 
-   LOCAL cEmptyHtmlDoc := ;
-      "<!DOCTYPE html>" + hb_eol() + ;
-      "<html>" + hb_eol() + ;
-      " <head>" + hb_eol() + ;
-      " </head>" + hb_eol() + ;
-      " <body>" + hb_eol() + ;
-      " </body>" + hb_eol() + ;
-      "</html>"
+#pragma __cstream | cEmptyHtmlDoc:=%s
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+    </body>
+</html>
+#pragma __endtext
 
-   IF ! HB_ISSTRING( cHtmlString )
+   cEmptyHtmlDoc+=t_cHB_EOL
+   
+   IF !HB_ISSTRING( cHtmlString )
       ::root := THtmlNode():new( cEmptyHtmlDoc )
    ELSEIF "<html" $ Lower( Left( cHtmlString, 4096 ) )
       ::root := THtmlNode():new( cHtmlString )
@@ -226,7 +235,7 @@ METHOD readFile( cFileName ) CLASS THtmlDocument
 
    IF hb_vfExists( cFileName )
       ::changed := .T.
-      ::new( MemoRead( cFileName ) )
+      ::new( hb_MemoRead( cFileName ) )
 
       RETURN .T.
    ENDIF
@@ -258,13 +267,15 @@ METHOD collect() CLASS THtmlDocument
 METHOD getNode( cTagName ) CLASS THtmlDocument
 
    LOCAL oNode
+   LOCAL cTagNameToLower
 
    IF ::changed
       ::collect()
    ENDIF
 
+   cTagNameToLower:=Lower( cTagName )
    FOR EACH oNode IN ::nodes
-      IF Lower( oNode:htmlTagName ) == Lower( cTagName )
+      IF Lower( oNode:htmlTagName ) == cTagNameToLower
          RETURN oNode
       ENDIF
    NEXT
@@ -275,13 +286,15 @@ METHOD getNode( cTagName ) CLASS THtmlDocument
 METHOD getNodes( cTagName ) CLASS THtmlDocument
 
    LOCAL oNode, stack := S_STACK()
+   LOCAL cTagNameToLower
 
    IF ::changed
       ::collect()
    ENDIF
 
+   cTagNameToLower:=Lower( cTagName )
    FOR EACH oNode IN ::nodes
-      IF Lower( oNode:htmlTagName ) == Lower( cTagName )
+      IF Lower( oNode:htmlTagName ) == cTagNameToLower
          S_PUSH( stack, oNode )
       ENDIF
    NEXT
@@ -313,7 +326,7 @@ CREATE CLASS THtmlIterator MODULE FRIENDLY
    METHOD Next()
    METHOD Rewind()
    METHOD Find( cName, cAttribute, cValue, cData )
-   METHOD GetNode()                 INLINE   ::oNode
+   METHOD GetNode() INLINE ::oNode
    METHOD SetContext()
    METHOD Clone()
 
@@ -1035,7 +1048,7 @@ METHOD toString( nIndent ) CLASS THtmlNode
       IF ! ::isInline() .OR. ::htmlTagName == "!--"
          cHtml += cIndent
       ELSEIF ::keepFormatting()
-         cHtml += hb_eol()
+         cHtml += t_cHB_EOL
       ENDIF
       cHtml += "<" + ::htmlTagName + ::attrToString()
 
@@ -1048,7 +1061,7 @@ METHOD toString( nIndent ) CLASS THtmlNode
 
       FOR EACH oNode IN ::htmlContent
          IF ! oNode:isInline() .OR. oNode:htmlTagName == "!--"
-            cHtml += hb_eol()
+            cHtml += t_cHB_EOL
          ENDIF
          cHtml += oNode:toString( nIndent + 1 )
       NEXT
@@ -1061,12 +1074,12 @@ METHOD toString( nIndent ) CLASS THtmlNode
       IF ::isInline() .OR. ::keepFormatting() .OR. ::isType( CM_HEADING ) .OR. ::isType( CM_HEAD )
          RETURN cHtml += iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
       ENDIF
-      IF ! Right( cHtml, Len( hb_eol() ) ) == hb_eol()
-         cHtml += hb_eol()
+      IF ! Right( cHtml, Len( t_cHB_EOL ) ) == t_cHB_EOL
+         cHtml += t_cHB_EOL
       ENDIF
       RETURN cHtml += cIndent + iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
    ELSEIF ::htmlTagName $ "!--,br"
-      RETURN cHtml += hb_eol() + cIndent
+      RETURN cHtml += t_cHB_EOL + cIndent
    ENDIF
 
    RETURN cHtml
@@ -1094,11 +1107,15 @@ STATIC FUNCTION __getAttributes( cAttrFunc )
    LOCAL aAttr
    LOCAL nAttr
 
+   HB_DEFAULT(@cAttrFunc,{||Array(0)})
+
    BEGIN SEQUENCE WITH __BreakBlock()
       aAttr := cAttrFunc:exec()
    RECOVER
       aAttr := {}  // Tag has no attributes
    END SEQUENCE
+   
+   HB_DEFAULT(@aAttr,{})
 
    //Add Global Attributes
    //The global attributes below can be used on any HTML element
@@ -1106,8 +1123,10 @@ STATIC FUNCTION __getAttributes( cAttrFunc )
       t_aGlbAttr:=THtmlAttr_GlobalAttributes()
    endif
    for nAttr:=1 to len(t_aGlbAttr)
-      if (aScan(aAttr,{|a|a[1]==t_aGlbAttr[nAttr][1]})==0)
-         aAdd(aAttr,t_aGlbAttr[nAttr])
+      if (len(t_aGlbAttr[nAttr])>=1)
+        if (aScan(aAttr,{|a|if(len(a)>=1,a[1]==t_aGlbAttr[nAttr][1],.F.)})==0)
+            aAdd(aAttr,t_aGlbAttr[nAttr])
+        endif
       endif
    next nAttr
 
@@ -1115,9 +1134,23 @@ STATIC FUNCTION __getAttributes( cAttrFunc )
 
 STATIC FUNCTION __AttrToStr( cName, cValue, aAttr, oTHtmlNode )
 
+   LOCAL cNameToLower
    LOCAL nPos
 
-   IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == Lower( cName ) } ) ) == 0
+   IF ("data-"==Left(cName,5))
+        /*
+        The data-* attribute is used to store custom data private to the page or application.
+        The data-* attribute gives us the ability to embed custom data attributes on all HTML elements.
+        The stored (custom) data can then be used in the page's JavaScript to create a more engaging user experience (without any Ajax calls or server-side database queries).
+        The data-* attribute consist of two parts:
+        The attribute name should not contain any uppercase letters, and must be at least one character long after the prefix "data-"
+        The attribute value can be any string
+        Note: Custom attributes prefixed with "data-" will be completely ignored by the user agent.*/
+      RETURN " " + cName + "=" + '"' + cValue + '"'
+   ENDIF
+   
+   cNameToLower:=Lower( cName )
+   IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == cNameToLower } ) ) == 0
       // Tag doesn't have this attribute
       RETURN oTHtmlNode:error( "Invalid HTML attribute for: <" + oTHtmlNode:htmlTagName + ">", oTHtmlNode:className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
@@ -1167,7 +1200,7 @@ METHOD getText( cEOL ) CLASS THtmlNode
    LOCAL cText := ""
    LOCAL oNode
 
-   hb_default( @cEOL, hb_eol() )
+   hb_default( @cEOL, t_cHB_EOL )
 
    IF ::htmlTagName == "_text_"
       RETURN RTrim( ::htmlContent ) + cEOL
@@ -1328,22 +1361,34 @@ STATIC FUNCTION __ParseAttr( parser )
 METHOD setAttribute( cName, cValue ) CLASS THtmlNode
 
    LOCAL aAttr
+   lOCAL cNameToLower
    LOCAL nPos
-   LOCAL hHash := ::getAttributes()
+   LOCAL hHash
 
-   IF ! HB_ISHASH( hHash )
-      // Tag doesn't have any attribute
-      RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
-   ENDIF
+   IF ("data-"==Left(cName,5))
 
-   aAttr := __getAttributes( ::htmlTagType[ 1 ] )
+      hHash := {=>}  
 
-   IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == Lower( cName ) } ) ) == 0
-      // Tag doesn't have this attribute
-      RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
-   ENDIF
+   ELSE
 
-   IF aAttr[ nPos ][ 2 ] == HTML_ATTR_TYPE_BOOL
+       hHash := ::getAttributes()
+   
+       IF !HB_ISHASH( hHash )
+          // Tag doesn't have any attribute
+          RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
+       ENDIF
+
+       aAttr := __getAttributes( ::htmlTagType[ 1 ] )
+
+       cNameToLower:=Lower( cName )
+       IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == cNameToLower } ) ) == 0
+          // Tag doesn't have this attribute
+          RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
+       ENDIF
+   
+   ENDIF       
+
+   IF !Empty(nPos) .and. aAttr[ nPos ][ 2 ] == HTML_ATTR_TYPE_BOOL
       hHash[ cName ] := ""
    ELSE
       hHash[ cName ] := cValue
@@ -1439,10 +1484,12 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 METHOD findNodeByTagName( cName ) CLASS THtmlNode
 
    LOCAL aNodes := ::collect()
+   LOCAL cNameToLower
    LOCAL oNode
 
+   cNameToLower:=Lower( cName )
    FOR EACH oNode IN aNodes
-      IF Lower( oNode:htmlTagName ) == Lower( cName )
+      IF Lower( oNode:htmlTagName ) == cNameToLower
          RETURN oNode
       ENDIF
    NEXT
@@ -1453,11 +1500,13 @@ METHOD findNodeByTagName( cName ) CLASS THtmlNode
 METHOD findNodesByTagName( cName, nOrdinal ) CLASS THtmlNode
 
    LOCAL aNodes := ::collect()
+   LOCAL cNameToLower
    LOCAL oNode
    LOCAL aRet := {}
 
+   cNameToLower:=Lower( cName )
    FOR EACH oNode IN aNodes
-      IF Lower( oNode:htmlTagName ) == Lower( cName )
+      IF Lower( oNode:htmlTagName ) == cNameToLower
          AAdd( aRet, oNode )
       ENDIF
    NEXT
@@ -1621,6 +1670,7 @@ FUNCTION THtmlTagType( cTagName )
 FUNCTION THtmlIsValid( cTagName, cAttrName )
 
    LOCAL lRet := .T., aValue
+   LOCAL cAttrNameToLower
 
    IF t_hHT == NIL
       THtmlInit()
@@ -1629,8 +1679,9 @@ FUNCTION THtmlIsValid( cTagName, cAttrName )
    BEGIN SEQUENCE WITH __BreakBlock()
       aValue := t_hHT[ cTagName ]
       IF cAttrName != NIL
-         aValue := aValue[ 1 ]:exec()
-         lRet   := AScan( aValue, {| a | Lower( a[ 1 ] ) == Lower( cAttrName ) } ) > 0
+         cAttrNameToLower:=Lower( cAttrName )
+         aValue := __getAttributes( aValue[ 1 ] )
+         lRet   := AScan( aValue, {| a | Lower( a[ 1 ] ) == cAttrNameToLower } ) > 0
       ENDIF
    RECOVER
       lRet := .F.
@@ -1789,240 +1840,361 @@ STATIC PROCEDURE _Init_Html_TagTypes
 
 STATIC PROCEDURE _Init_Html_Attributes
 
-   // attribute    NAME                TYPE
-   t_aHA[ HTML_ATTR_ABBR             ] := { "abbr"             , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ACCEPT           ] := { "accept"           , HTML_ATTR_TYPE_XTYPE     }
-   t_aHA[ HTML_ATTR_ACCEPT_CHARSET   ] := { "accept-charset"   , HTML_ATTR_TYPE_CHARSET   }
-   t_aHA[ HTML_ATTR_ACCESSKEY        ] := { "accesskey"        , HTML_ATTR_TYPE_CHARACTER }
-   t_aHA[ HTML_ATTR_ACTION           ] := { "action"           , HTML_ATTR_TYPE_ACTION    }
-   t_aHA[ HTML_ATTR_ADD_DATE         ] := { "add_date"         , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ALIGN            ] := { "align"            , HTML_ATTR_TYPE_ALIGN     }
-   t_aHA[ HTML_ATTR_ALINK            ] := { "alink"            , HTML_ATTR_TYPE_COLOR     }
-   t_aHA[ HTML_ATTR_ALLOWFULLSCREEN  ] := { "allowfullscreen"  , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_ALT              ] := { "alt"              , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ARCHIVE          ] := { "archive"          , HTML_ATTR_TYPE_URLS      }
-   t_aHA[ HTML_ATTR_ASYNC            ] := { "async"            , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_AUTOCOMPLETE     ] := { "autocomplete"     , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_AUTOFOCUS        ] := { "autofocus"        , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_AUTOPLAY         ] := { "autoplay"         , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_AXIS             ] := { "axis"             , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_BACKGROUND       ] := { "background"       , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_BGCOLOR          ] := { "bgcolor"          , HTML_ATTR_TYPE_COLOR     }
-   t_aHA[ HTML_ATTR_BGPROPERTIES     ] := { "bgproperties"     , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_BORDER           ] := { "border"           , HTML_ATTR_TYPE_BORDER    }
-   t_aHA[ HTML_ATTR_BORDERCOLOR      ] := { "bordercolor"      , HTML_ATTR_TYPE_COLOR     }
-   t_aHA[ HTML_ATTR_BOTTOMMARGIN     ] := { "bottommargin"     , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_CELLPADDING      ] := { "cellpadding"      , HTML_ATTR_TYPE_LENGTH    }
-   t_aHA[ HTML_ATTR_CELLSPACING      ] := { "cellspacing"      , HTML_ATTR_TYPE_LENGTH    }
-   t_aHA[ HTML_ATTR_CHAR             ] := { "char"             , HTML_ATTR_TYPE_CHARACTER }
-   t_aHA[ HTML_ATTR_CHAROFF          ] := { "charoff"          , HTML_ATTR_TYPE_LENGTH    }
-   t_aHA[ HTML_ATTR_CHARSET          ] := { "charset"          , HTML_ATTR_TYPE_CHARSET   }
-   t_aHA[ HTML_ATTR_CHECKED          ] := { "checked"          , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_CITE             ] := { "cite"             , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_CLASS            ] := { "class"            , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_CLASSID          ] := { "classid"          , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_CLEAR            ] := { "clear"            , HTML_ATTR_TYPE_CLEAR     }
-   t_aHA[ HTML_ATTR_CODE             ] := { "code"             , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_CODEBASE         ] := { "codebase"         , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_CODETYPE         ] := { "codetype"         , HTML_ATTR_TYPE_XTYPE     }
-   t_aHA[ HTML_ATTR_COLOR            ] := { "color"            , HTML_ATTR_TYPE_COLOR     }
-   t_aHA[ HTML_ATTR_COLS             ] := { "cols"             , HTML_ATTR_TYPE_COLS      }
-   t_aHA[ HTML_ATTR_COLSPAN          ] := { "colspan"          , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_COMPACT          ] := { "compact"          , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_CONTENT          ] := { "content"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_CONTENTEDITABLE  ] := { "contenteditable"  , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_CONTEXTMENU      ] := { "contextmenu"      , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_CONTROLS         ] := { "controls"         , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_COORDS           ] := { "coords"           , HTML_ATTR_TYPE_COORDS    }
-   t_aHA[ HTML_ATTR_CROSSORIGIN      ] := { "crossorigin"      , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_DATA             ] := { "data"             , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_DATAFLD          ] := { "datafld"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_DATAFORMATAS     ] := { "dataformatas"     , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_DATAPAGESIZE     ] := { "datapagesize"     , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_DATASRC          ] := { "datasrc"          , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_DATETIME         ] := { "datetime"         , HTML_ATTR_TYPE_DATE      }
-   t_aHA[ HTML_ATTR_DECLARE          ] := { "declare"          , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_DEFER            ] := { "defer"            , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_DIR              ] := { "dir"              , HTML_ATTR_TYPE_TEXTDIR   }
-   t_aHA[ HTML_ATTR_DIRNAME          ] := { "dirname"          , HTML_ATTR_TYPE_TEXTDIR   }
-   t_aHA[ HTML_ATTR_DISABLED         ] := { "disabled"         , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_DOWNLOAD         ] := { "download"         , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_DRAGGABLE        ] := { "draggable"        , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_DROPZONE         ] := { "dropzone"         , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ENCODING         ] := { "encoding"         , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ENCTYPE          ] := { "enctype"          , HTML_ATTR_TYPE_XTYPE     }
-   t_aHA[ HTML_ATTR_EVENT            ] := { "event"            , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_FACE             ] := { "face"             , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_FOR              ] := { "for"              , HTML_ATTR_TYPE_IDREF     }
-   t_aHA[ HTML_ATTR_FORM             ] := { "form"             , HTML_ATTR_TYPE_IDREF     }
-   t_aHA[ HTML_ATTR_FORMACTION       ] := { "formaction"       , HTML_ATTR_TYPE_IDREF     }
-   t_aHA[ HTML_ATTR_FORMENCTYPE      ] := { "formenctype"      , HTML_ATTR_TYPE_TYPE      }
-   t_aHA[ HTML_ATTR_FORMMETHOD       ] := { "formmethod"       , HTML_ATTR_TYPE_FSUBMIT   }
-   t_aHA[ HTML_ATTR_FORMNOVALIDATE   ] := { "formnovalidate"   , HTML_ATTR_TYPE_FVALIDATE }
-   t_aHA[ HTML_ATTR_FORMTARGET       ] := { "formtarget"       , HTML_ATTR_TYPE_TARGET    }
-   t_aHA[ HTML_ATTR_FRAME            ] := { "frame"            , HTML_ATTR_TYPE_TFRAME    }
-   t_aHA[ HTML_ATTR_FRAMEBORDER      ] := { "frameborder"      , HTML_ATTR_TYPE_FBORDER   }
-   t_aHA[ HTML_ATTR_FRAMESPACING     ] := { "framespacing"     , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_GRIDX            ] := { "gridx"            , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_GRIDY            ] := { "gridy"            , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_HEADERS          ] := { "headers"          , HTML_ATTR_TYPE_IDREFS    }
-   t_aHA[ HTML_ATTR_HEIGHT           ] := { "height"           , HTML_ATTR_TYPE_LENGTH    }
-   t_aHA[ HTML_ATTR_HIDDEN           ] := { "hidden"           , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_HIGH             ] := { "high"             , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_HREF             ] := { "href"             , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_HREFLANG         ] := { "hreflang"         , HTML_ATTR_TYPE_LANG      }
-   t_aHA[ HTML_ATTR_HSPACE           ] := { "hspace"           , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_HTTP_EQUIV       ] := { "http-equiv"       , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ICON             ] := { "icon"             , HTML_ATTR_TYPE_ICON      }
-   t_aHA[ HTML_ATTR_ID               ] := { "id"               , HTML_ATTR_TYPE_IDDEF     }
-   t_aHA[ HTML_ATTR_IS               ] := { "is"               , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ISMAP            ] := { "ismap"            , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_ITEMID           ] := { "itemid"           , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ITEMPROP         ] := { "itemprop"         , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ITEMREF          ] := { "itemref"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ITEMSCOPE        ] := { "itemscope"        , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_ITEMTYPE         ] := { "itemtype"         , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_KEYTYPE          ] := { "keytype"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_KIND             ] := { "kind"             , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_LABEL            ] := { "label"            , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_LANG             ] := { "lang"             , HTML_ATTR_TYPE_LANG      }
-   t_aHA[ HTML_ATTR_LANGUAGE         ] := { "language"         , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_LAST_MODIFIED    ] := { "last_modified"    , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_LAST_VISIT       ] := { "last_visit"       , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_LEFTMARGIN       ] := { "leftmargin"       , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_LINK             ] := { "link"             , HTML_ATTR_TYPE_COLOR     }
-   t_aHA[ HTML_ATTR_LIST             ] := { "list"             , HTML_ATTR_TYPE_LIST      }
-   t_aHA[ HTML_ATTR_LONGDESC         ] := { "longdesc"         , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_LOOP             ] := { "loop"             , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_LOW              ] := { "low"              , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_LOWSRC           ] := { "lowsrc"           , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_MANIFEST         ] := { "manifest"         , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_MARGINHEIGHT     ] := { "marginheight"     , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_MARGINWIDTH      ] := { "marginwidth"      , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_MAX              ] := { "max"              , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_MAXLENGTH        ] := { "maxlength"        , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_MEDIA            ] := { "media"            , HTML_ATTR_TYPE_MEDIA     }
-   t_aHA[ HTML_ATTR_MEDIAGROUP       ] := { "mediagroup"       , HTML_ATTR_TYPE_MEDIA     }
-   t_aHA[ HTML_ATTR_METHOD           ] := { "method"           , HTML_ATTR_TYPE_FSUBMIT   }
-   t_aHA[ HTML_ATTR_METHODS          ] := { "methods"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_MIN              ] := { "min"              , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_MULTIPLE         ] := { "multiple"         , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_MUTED            ] := { "muted"            , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_N                ] := { "n"                , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_NAME             ] := { "name"             , HTML_ATTR_TYPE_NAME      }
-   t_aHA[ HTML_ATTR_NOHREF           ] := { "nohref"           , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_NORESIZE         ] := { "noresize"         , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_NOSHADE          ] := { "noshade"          , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_NOVALIDATE       ] := { "novalidate"       , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_NOWRAP           ] := { "nowrap"           , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_OBJECT           ] := { "object"           , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ONABORT          ] := { "onabort"          , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONAFTERUPDATE    ] := { "onafterupdate"    , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONAFTERPRINT     ] := { "onafterprint"     , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONBEFOREPRINT    ] := { "onbeforeprint"    , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONBEFOREUNLOAD   ] := { "onbeforeunload"   , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONBEFOREUPDATE   ] := { "onbeforeupdate"   , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONBLUR           ] := { "onblur"           , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONCANPLAY        ] := { "oncanplay"        , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONCANPLAYTHROUGH ] := { "oncanplaythrough" , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONCHANGE         ] := { "onchange"         , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONCLICK          ] := { "onclick"          , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONCONTEXTMENU    ] := { "oncontextmenu"    , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONCUECHANGE      ] := { "oncuechange"      , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDATAAVAILABLE  ] := { "ondataavailable"  , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDATASETCHANGED ] := { "ondatasetchanged" , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDATASETCOMPLETE] := { "ondatasetcomplete", HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDRAG           ] := { "ondrag"           , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDRAGEND        ] := { "ondragend"        , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDRAGENTER      ] := { "ondragenter"      , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDRAGLEAVE      ] := { "ondragleave"      , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDRAGOVER       ] := { "ondragover"       , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDRAGSTART      ] := { "ondragstart"      , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDBLCLICK       ] := { "ondblclick"       , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDROP           ] := { "ondrop"           , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONDURATIONCHANGE ] := { "ondurationchange" , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONEMPTIED        ] := { "onemptied"        , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONENDED          ] := { "onended"          , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONERROR          ] := { "onerror"          , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONERRORUPDATE    ] := { "onerrorupdate"    , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONFOCUS          ] := { "onfocus"          , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONHASHCHANGE     ] := { "onhashchange"     , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONINPUT          ] := { "oninput"          , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONINVALID        ] := { "oninvalid"        , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONKEYDOWN        ] := { "onkeydown"        , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONKEYPRESS       ] := { "onkeypress"       , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONKEYUP          ] := { "onkeyup"          , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONLOAD           ] := { "onload"           , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONLOADEDDATA     ] := { "onloadeddata"     , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONLOADEDMETADATA ] := { "onloadedmetadata" , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONLOADSTART      ] := { "onloadstart"      , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONMESSAGE        ] := { "onmessage"        , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONMOUSEDOWN      ] := { "onmousedown"      , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONMOUSEMOVE      ] := { "onmousemove"      , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONMOUSEOUT       ] := { "onmouseout"       , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONMOUSEOVER      ] := { "onmouseover"      , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONMOUSEUP        ] := { "onmouseup"        , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONMOUSEWHEEL     ] := { "onmousewheel"     , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONOFFLINE        ] := { "onoffline"        , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONRESET          ] := { "onreset"          , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONROWENTER       ] := { "onrowenter"       , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONROWEXIT        ] := { "onrowexit"        , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONSELECT         ] := { "onselect"         , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONSUBMIT         ] := { "onsubmit"         , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_ONUNLOAD         ] := { "onunload"         , HTML_ATTR_TYPE_SCRIPT    }
-   t_aHA[ HTML_ATTR_OPEN             ] := { "open"             , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_OPTIMUM          ] := { "optimum"          , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_PROFILE          ] := { "profile"          , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_PROMPT           ] := { "prompt"           , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_RBSPAN           ] := { "rbspan"           , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_READONLY         ] := { "readonly"         , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_REL              ] := { "rel"              , HTML_ATTR_TYPE_LINKTYPES }
-   t_aHA[ HTML_ATTR_REV              ] := { "rev"              , HTML_ATTR_TYPE_LINKTYPES }
-   t_aHA[ HTML_ATTR_RIGHTMARGIN      ] := { "rightmargin"      , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_ROLE             ] := { "role"             , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_ROWS             ] := { "rows"             , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_ROWSPAN          ] := { "rowspan"          , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_RULES            ] := { "rules"            , HTML_ATTR_TYPE_TRULES    }
-   t_aHA[ HTML_ATTR_SCHEME           ] := { "scheme"           , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_SCOPE            ] := { "scope"            , HTML_ATTR_TYPE_SCOPE     }
-   t_aHA[ HTML_ATTR_SCROLLING        ] := { "scrolling"        , HTML_ATTR_TYPE_SCROLL    }
-   t_aHA[ HTML_ATTR_SDAFORM          ] := { "sdaform"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_SDAPREF          ] := { "sdapref"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_SDASUFF          ] := { "sdasuff"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_SELECTED         ] := { "selected"         , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_SHAPE            ] := { "shape"            , HTML_ATTR_TYPE_SHAPE     }
-   t_aHA[ HTML_ATTR_SHOWGRID         ] := { "showgrid"         , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_SHOWGRIDX        ] := { "showgridx"        , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_SHOWGRIDY        ] := { "showgridy"        , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_SIZE             ] := { "size"             , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_SPAN             ] := { "span"             , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_SRC              ] := { "src"              , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_SRCSET           ] := { "srcset"           , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_STANDBY          ] := { "standby"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_START            ] := { "start"            , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_STYLE            ] := { "style"            , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_SUMMARY          ] := { "summary"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_TABINDEX         ] := { "tabindex"         , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_TARGET           ] := { "target"           , HTML_ATTR_TYPE_TARGET    }
-   t_aHA[ HTML_ATTR_TEXT             ] := { "text"             , HTML_ATTR_TYPE_COLOR     }
-   t_aHA[ HTML_ATTR_TITLE            ] := { "title"            , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_TOPMARGIN        ] := { "topmargin"        , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_TRANSLATE        ] := { "translate"        , HTML_ATTR_TYPE_BOOL      }
-   t_aHA[ HTML_ATTR_TYPE             ] := { "type"             , HTML_ATTR_TYPE_TYPE      }
-   t_aHA[ HTML_ATTR_UNKNOWN          ] := { "unknown!"         , HTML_ATTR_TYPE_UNKNOWN   }
-   t_aHA[ HTML_ATTR_URN              ] := { "urn"              , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_USEMAP           ] := { "usemap"           , HTML_ATTR_TYPE_URL       }
-   t_aHA[ HTML_ATTR_VALIGN           ] := { "valign"           , HTML_ATTR_TYPE_VALIGN    }
-   t_aHA[ HTML_ATTR_VALUE            ] := { "value"            , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_VALUETYPE        ] := { "valuetype"        , HTML_ATTR_TYPE_VTYPE     }
-   t_aHA[ HTML_ATTR_VERSION          ] := { "version"          , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_VLINK            ] := { "vlink"            , HTML_ATTR_TYPE_COLOR     }
-   t_aHA[ HTML_ATTR_VSPACE           ] := { "vspace"           , HTML_ATTR_TYPE_NUMBER    }
-   t_aHA[ HTML_ATTR_WIDTH            ] := { "width"            , HTML_ATTR_TYPE_LENGTH    }
-   t_aHA[ HTML_ATTR_WRAP             ] := { "wrap"             , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_XMLNS            ] := { "xmlns"            , HTML_ATTR_TYPE_PCDATA    }
-   t_aHA[ HTML_ATTR_XML_LANG         ] := { "xml:lang"         , HTML_ATTR_TYPE_LANG      }
-   t_aHA[ HTML_ATTR_XML_SPACE        ] := { "xml:space"        , HTML_ATTR_TYPE_PCDATA    }
+   /*     attribute                             NAME                      TYPE                   */
+   t_aHA[ HTML_ATTR_ABBR                 ] := { "abbr"                  , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ACCEPT               ] := { "accept"                , HTML_ATTR_TYPE_XTYPE     }
+   t_aHA[ HTML_ATTR_ACCEPT_CHARSET       ] := { "accept-charset"        , HTML_ATTR_TYPE_CHARSET   }
+   t_aHA[ HTML_ATTR_ACCESSKEY            ] := { "accesskey"             , HTML_ATTR_TYPE_CHARACTER }
+   t_aHA[ HTML_ATTR_ACTION               ] := { "action"                , HTML_ATTR_TYPE_ACTION    }
+   t_aHA[ HTML_ATTR_ADD_DATE             ] := { "add_date"              , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ALIGN                ] := { "align"                 , HTML_ATTR_TYPE_ALIGN     }
+   t_aHA[ HTML_ATTR_ALINK                ] := { "alink"                 , HTML_ATTR_TYPE_COLOR     }
+   t_aHA[ HTML_ATTR_ALLOWFULLSCREEN      ] := { "allowfullscreen"       , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_ALT                  ] := { "alt"                   , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ARCHIVE              ] := { "archive"               , HTML_ATTR_TYPE_URLS      }
+   t_aHA[ HTML_ATTR_ASYNC                ] := { "async"                 , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_AUTOCAPITALIZE       ] := { "autocapitalize"        , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_AUTOCOMPLETE         ] := { "autocomplete"          , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_AUTOFOCUS            ] := { "autofocus"             , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_AUTOPLAY             ] := { "autoplay"              , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_AXIS                 ] := { "axis"                  , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_BACKGROUND           ] := { "background"            , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_BGCOLOR              ] := { "bgcolor"               , HTML_ATTR_TYPE_COLOR     }
+   t_aHA[ HTML_ATTR_BGPROPERTIES         ] := { "bgproperties"          , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_BORDER               ] := { "border"                , HTML_ATTR_TYPE_BORDER    }
+   t_aHA[ HTML_ATTR_BORDERCOLOR          ] := { "bordercolor"           , HTML_ATTR_TYPE_COLOR     }
+   t_aHA[ HTML_ATTR_BOTTOMMARGIN         ] := { "bottommargin"          , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_CELLPADDING          ] := { "cellpadding"           , HTML_ATTR_TYPE_LENGTH    }
+   t_aHA[ HTML_ATTR_CELLSPACING          ] := { "cellspacing"           , HTML_ATTR_TYPE_LENGTH    }
+   t_aHA[ HTML_ATTR_CHAR                 ] := { "char"                  , HTML_ATTR_TYPE_CHARACTER }
+   t_aHA[ HTML_ATTR_CHAROFF              ] := { "charoff"               , HTML_ATTR_TYPE_LENGTH    }
+   t_aHA[ HTML_ATTR_CHARSET              ] := { "charset"               , HTML_ATTR_TYPE_CHARSET   }
+   t_aHA[ HTML_ATTR_CHECKED              ] := { "checked"               , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_CITE                 ] := { "cite"                  , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_CLASS                ] := { "class"                 , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_CLASSID              ] := { "classid"               , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_CLEAR                ] := { "clear"                 , HTML_ATTR_TYPE_CLEAR     }
+   t_aHA[ HTML_ATTR_CODE                 ] := { "code"                  , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_CODEBASE             ] := { "codebase"              , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_CODETYPE             ] := { "codetype"              , HTML_ATTR_TYPE_XTYPE     }
+   t_aHA[ HTML_ATTR_COLOR                ] := { "color"                 , HTML_ATTR_TYPE_COLOR     }
+   t_aHA[ HTML_ATTR_COLS                 ] := { "cols"                  , HTML_ATTR_TYPE_COLS      }
+   t_aHA[ HTML_ATTR_COLSPAN              ] := { "colspan"               , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_COMPACT              ] := { "compact"               , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_CONTENT              ] := { "content"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_CONTENTEDITABLE      ] := { "contenteditable"       , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_CONTEXTMENU          ] := { "contextmenu"           , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_CONTROLS             ] := { "controls"              , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_COORDS               ] := { "coords"                , HTML_ATTR_TYPE_COORDS    }
+   t_aHA[ HTML_ATTR_CROSSORIGIN          ] := { "crossorigin"           , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_DATA                 ] := { "data"                  , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_DATAFLD              ] := { "datafld"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_DATAFORMATAS         ] := { "dataformatas"          , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_DATAPAGESIZE         ] := { "datapagesize"          , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_DATASRC              ] := { "datasrc"               , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_DATATYPE             ] := { "datatype"              , HTML_ATTR_TYPE_PCDATA    }   
+   t_aHA[ HTML_ATTR_DATETIME             ] := { "datetime"              , HTML_ATTR_TYPE_DATE      }
+   t_aHA[ HTML_ATTR_DECLARE              ] := { "declare"               , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_DEFER                ] := { "defer"                 , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_DIR                  ] := { "dir"                   , HTML_ATTR_TYPE_TEXTDIR   }
+   t_aHA[ HTML_ATTR_DIRNAME              ] := { "dirname"               , HTML_ATTR_TYPE_TEXTDIR   }
+   t_aHA[ HTML_ATTR_DISABLED             ] := { "disabled"              , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_DOWNLOAD             ] := { "download"              , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_DRAGGABLE            ] := { "draggable"             , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_DROPZONE             ] := { "dropzone"              , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ENCODING             ] := { "encoding"              , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ENCTYPE              ] := { "enctype"               , HTML_ATTR_TYPE_XTYPE     }
+   t_aHA[ HTML_ATTR_ENTERKEYHINT         ] := { "enterkeyhint"          , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_EVENT                ] := { "event"                 , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_FACE                 ] := { "face"                  , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_FOR                  ] := { "for"                   , HTML_ATTR_TYPE_IDREF     }
+   t_aHA[ HTML_ATTR_FORM                 ] := { "form"                  , HTML_ATTR_TYPE_IDREF     }
+   t_aHA[ HTML_ATTR_FORMACTION           ] := { "formaction"            , HTML_ATTR_TYPE_IDREF     }
+   t_aHA[ HTML_ATTR_FORMENCTYPE          ] := { "formenctype"           , HTML_ATTR_TYPE_TYPE      }
+   t_aHA[ HTML_ATTR_FORMMETHOD           ] := { "formmethod"            , HTML_ATTR_TYPE_FSUBMIT   }
+   t_aHA[ HTML_ATTR_FORMNOVALIDATE       ] := { "formnovalidate"        , HTML_ATTR_TYPE_FVALIDATE }
+   t_aHA[ HTML_ATTR_FORMTARGET           ] := { "formtarget"            , HTML_ATTR_TYPE_TARGET    }
+   t_aHA[ HTML_ATTR_FRAME                ] := { "frame"                 , HTML_ATTR_TYPE_TFRAME    }
+   t_aHA[ HTML_ATTR_FRAMEBORDER          ] := { "frameborder"           , HTML_ATTR_TYPE_FBORDER   }
+   t_aHA[ HTML_ATTR_FRAMESPACING         ] := { "framespacing"          , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_GRIDX                ] := { "gridx"                 , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_GRIDY                ] := { "gridy"                 , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_HEADERS              ] := { "headers"               , HTML_ATTR_TYPE_IDREFS    }
+   t_aHA[ HTML_ATTR_HEIGHT               ] := { "height"                , HTML_ATTR_TYPE_LENGTH    }
+   t_aHA[ HTML_ATTR_HIDDEN               ] := { "hidden"                , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_HIGH                 ] := { "high"                  , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_HREF                 ] := { "href"                  , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_HREFLANG             ] := { "hreflang"              , HTML_ATTR_TYPE_LANG      }
+   t_aHA[ HTML_ATTR_HSPACE               ] := { "hspace"                , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_HTTP_EQUIV           ] := { "http-equiv"            , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ICON                 ] := { "icon"                  , HTML_ATTR_TYPE_ICON      }
+   t_aHA[ HTML_ATTR_ID                   ] := { "id"                    , HTML_ATTR_TYPE_IDDEF     }
+   t_aHA[ HTML_ATTR_IS                   ] := { "is"                    , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ISMAP                ] := { "ismap"                 , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_ITEMID               ] := { "itemid"                , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ITEMPROP             ] := { "itemprop"              , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ITEMREF              ] := { "itemref"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ITEMSCOPE            ] := { "itemscope"             , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_ITEMTYPE             ] := { "itemtype"              , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_KEYTYPE              ] := { "keytype"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_KIND                 ] := { "kind"                  , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_LABEL                ] := { "label"                 , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_LANG                 ] := { "lang"                  , HTML_ATTR_TYPE_LANG      }
+   t_aHA[ HTML_ATTR_LANGUAGE             ] := { "language"              , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_LAST_MODIFIED        ] := { "last_modified"         , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_LAST_VISIT           ] := { "last_visit"            , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_LEFTMARGIN           ] := { "leftmargin"            , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_LINK                 ] := { "link"                  , HTML_ATTR_TYPE_COLOR     }
+   t_aHA[ HTML_ATTR_LIST                 ] := { "list"                  , HTML_ATTR_TYPE_LIST      }
+   t_aHA[ HTML_ATTR_LONGDESC             ] := { "longdesc"              , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_LOOP                 ] := { "loop"                  , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_LOW                  ] := { "low"                   , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_LOWSRC               ] := { "lowsrc"                , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_MANIFEST             ] := { "manifest"              , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_MARGINHEIGHT         ] := { "marginheight"          , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_MARGINWIDTH          ] := { "marginwidth"           , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_MAX                  ] := { "max"                   , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_MAXLENGTH            ] := { "maxlength"             , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_MEDIA                ] := { "media"                 , HTML_ATTR_TYPE_MEDIA     }
+   t_aHA[ HTML_ATTR_MEDIAGROUP           ] := { "mediagroup"            , HTML_ATTR_TYPE_MEDIA     }
+   t_aHA[ HTML_ATTR_METHOD               ] := { "method"                , HTML_ATTR_TYPE_FSUBMIT   }
+   t_aHA[ HTML_ATTR_METHODS              ] := { "methods"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_MIN                  ] := { "min"                   , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_MULTIPLE             ] := { "multiple"              , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_MUTED                ] := { "muted"                 , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_N                    ] := { "n"                     , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_NAME                 ] := { "name"                  , HTML_ATTR_TYPE_NAME      }
+   t_aHA[ HTML_ATTR_NOHREF               ] := { "nohref"                , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_NORESIZE             ] := { "noresize"              , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_NOSHADE              ] := { "noshade"               , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_NOVALIDATE           ] := { "novalidate"            , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_NOWRAP               ] := { "nowrap"                , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_OBJECT               ] := { "object"                , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ONABORT              ] := { "onabort"               , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONAFTERUPDATE        ] := { "onafterupdate"         , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONAFTERPRINT         ] := { "onafterprint"          , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONBEFOREPRINT        ] := { "onbeforeprint"         , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONBEFOREUNLOAD       ] := { "onbeforeunload"        , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONBEFOREUPDATE       ] := { "onbeforeupdate"        , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONBLUR               ] := { "onblur"                , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONCANPLAY            ] := { "oncanplay"             , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONCANPLAYTHROUGH     ] := { "oncanplaythrough"      , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONCHANGE             ] := { "onchange"              , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONCLICK              ] := { "onclick"               , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONCONTEXTMENU        ] := { "oncontextmenu"         , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONCUECHANGE          ] := { "oncuechange"           , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDATAAVAILABLE      ] := { "ondataavailable"       , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDATASETCHANGED     ] := { "ondatasetchanged"      , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDATASETCOMPLETE    ] := { "ondatasetcomplete"     , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAG               ] := { "ondrag"                , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAGEND            ] := { "ondragend"             , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAGENTER          ] := { "ondragenter"           , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAGLEAVE          ] := { "ondragleave"           , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAGOVER           ] := { "ondragover"            , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDRAGSTART          ] := { "ondragstart"           , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDBLCLICK           ] := { "ondblclick"            , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDROP               ] := { "ondrop"                , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONDURATIONCHANGE     ] := { "ondurationchange"      , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONEMPTIED            ] := { "onemptied"             , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONENDED              ] := { "onended"               , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONERROR              ] := { "onerror"               , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONERRORUPDATE        ] := { "onerrorupdate"         , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONFOCUS              ] := { "onfocus"               , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONHASHCHANGE         ] := { "onhashchange"          , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONINPUT              ] := { "oninput"               , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONINVALID            ] := { "oninvalid"             , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONKEYDOWN            ] := { "onkeydown"             , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONKEYPRESS           ] := { "onkeypress"            , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONKEYUP              ] := { "onkeyup"               , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONLOAD               ] := { "onload"                , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONLOADEDDATA         ] := { "onloadeddata"          , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONLOADEDMETADATA     ] := { "onloadedmetadata"      , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONLOADSTART          ] := { "onloadstart"           , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONMESSAGE            ] := { "onmessage"             , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONMOUSEDOWN          ] := { "onmousedown"           , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONMOUSEMOVE          ] := { "onmousemove"           , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONMOUSEOUT           ] := { "onmouseout"            , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONMOUSEOVER          ] := { "onmouseover"           , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONMOUSEUP            ] := { "onmouseup"             , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONMOUSEWHEEL         ] := { "onmousewheel"          , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONOFFLINE            ] := { "onoffline"             , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONRESET              ] := { "onreset"               , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONROWENTER           ] := { "onrowenter"            , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONROWEXIT            ] := { "onrowexit"             , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONSELECT             ] := { "onselect"              , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONSUBMIT             ] := { "onsubmit"              , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_ONUNLOAD             ] := { "onunload"              , HTML_ATTR_TYPE_SCRIPT    }
+   t_aHA[ HTML_ATTR_OPEN                 ] := { "open"                  , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_OPTIMUM              ] := { "optimum"               , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_PROFILE              ] := { "profile"               , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_PROMPT               ] := { "prompt"                , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_RBSPAN               ] := { "rbspan"                , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_READONLY             ] := { "readonly"              , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_REL                  ] := { "rel"                   , HTML_ATTR_TYPE_LINKTYPES }
+   t_aHA[ HTML_ATTR_REV                  ] := { "rev"                   , HTML_ATTR_TYPE_LINKTYPES }
+   t_aHA[ HTML_ATTR_RIGHTMARGIN          ] := { "rightmargin"           , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_ROLE                 ] := { "role"                  , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_ROWS                 ] := { "rows"                  , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_ROWSPAN              ] := { "rowspan"               , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_RULES                ] := { "rules"                 , HTML_ATTR_TYPE_TRULES    }
+   t_aHA[ HTML_ATTR_SCHEME               ] := { "scheme"                , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_SCOPE                ] := { "scope"                 , HTML_ATTR_TYPE_SCOPE     }
+   t_aHA[ HTML_ATTR_SCROLLING            ] := { "scrolling"             , HTML_ATTR_TYPE_SCROLL    }
+   t_aHA[ HTML_ATTR_SDAFORM              ] := { "sdaform"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_SDAPREF              ] := { "sdapref"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_SDASUFF              ] := { "sdasuff"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_SELECTED             ] := { "selected"              , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_SHAPE                ] := { "shape"                 , HTML_ATTR_TYPE_SHAPE     }
+   t_aHA[ HTML_ATTR_SHOWGRID             ] := { "showgrid"              , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_SHOWGRIDX            ] := { "showgridx"             , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_SHOWGRIDY            ] := { "showgridy"             , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_SIZE                 ] := { "size"                  , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_SPAN                 ] := { "span"                  , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_SRC                  ] := { "src"                   , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_SRCSET               ] := { "srcset"                , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_STANDBY              ] := { "standby"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_START                ] := { "start"                 , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_STYLE                ] := { "style"                 , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_SUMMARY              ] := { "summary"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_TABINDEX             ] := { "tabindex"              , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_TARGET               ] := { "target"                , HTML_ATTR_TYPE_TARGET    }
+   t_aHA[ HTML_ATTR_TEXT                 ] := { "text"                  , HTML_ATTR_TYPE_COLOR     }
+   t_aHA[ HTML_ATTR_TITLE                ] := { "title"                 , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_TOPMARGIN            ] := { "topmargin"             , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_TRANSLATE            ] := { "translate"             , HTML_ATTR_TYPE_BOOL      }
+   t_aHA[ HTML_ATTR_TYPE                 ] := { "type"                  , HTML_ATTR_TYPE_TYPE      }
+   t_aHA[ HTML_ATTR_UNKNOWN              ] := { "unknown!"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_URN                  ] := { "urn"                   , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_USEMAP               ] := { "usemap"                , HTML_ATTR_TYPE_URL       }
+   t_aHA[ HTML_ATTR_VALIGN               ] := { "valign"                , HTML_ATTR_TYPE_VALIGN    }
+   t_aHA[ HTML_ATTR_VALUE                ] := { "value"                 , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_VALUETYPE            ] := { "valuetype"             , HTML_ATTR_TYPE_VTYPE     }
+   t_aHA[ HTML_ATTR_VERSION              ] := { "version"               , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_VLINK                ] := { "vlink"                 , HTML_ATTR_TYPE_COLOR     }
+   t_aHA[ HTML_ATTR_VSPACE               ] := { "vspace"                , HTML_ATTR_TYPE_NUMBER    }
+   t_aHA[ HTML_ATTR_WIDTH                ] := { "width"                 , HTML_ATTR_TYPE_LENGTH    }
+   t_aHA[ HTML_ATTR_WRAP                 ] := { "wrap"                  , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_XMLNS                ] := { "xmlns"                 , HTML_ATTR_TYPE_PCDATA    }
+   t_aHA[ HTML_ATTR_XML_LANG             ] := { "xml:lang"              , HTML_ATTR_TYPE_LANG      }
+   t_aHA[ HTML_ATTR_XML_SPACE            ] := { "xml:space"             , HTML_ATTR_TYPE_PCDATA    }
+   
+   /*TODO:*/
+   t_aHA[ HTML_ATTR_ONONLINE             ] := { "ononline"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONPAGEHIDE           ] := { "onpagehide"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONPAGESHOW           ] := { "onpageshow"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONPAUSE              ] := { "onpause"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONPLAY               ] := { "onplay"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONPLAYING            ] := { "onplaying"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONPOPSTATE           ] := { "onpopstate"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONPROGRESS           ] := { "onprogress"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONRATECHANGE         ] := { "onratechange"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONREADYSTATECHANGE   ] := { "onreadystatechange"    , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONREDO               ] := { "onredo"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONRESIZE             ] := { "onresize"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONSCROLL             ] := { "onscroll"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONSEEKED             ] := { "onseeked"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONSEEKING            ] := { "onseeking"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONSHOW               ] := { "onshow"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONSTALLED            ] := { "onstalled"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONSTORAGE            ] := { "onstorage"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONSUSPEND            ] := { "onsuspend"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONTIMEUPDATE         ] := { "ontimeupdate"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONUNDO               ] := { "onundo"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONVOLUMECHANGE       ] := { "onvolumechange"        , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ONWAITING            ] := { "onwaiting"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PATTERN              ] := { "pattern"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PLACEHOLDER          ] := { "placeholder"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PLAYSINLINE          ] := { "playsinline"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_POSTER               ] := { "poster"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PRELOAD              ] := { "preload"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PUBDATE              ] := { "pubdate"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_RADIOGROUP           ] := { "radiogroup"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_REQUIRED             ] := { "required"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_REVERSED             ] := { "reversed"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SANDBOX              ] := { "sandbox"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SCOPED               ] := { "scoped"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SEAMLESS             ] := { "seamless"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SIZES                ] := { "sizes"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SPELLCHECK           ] := { "spellcheck"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SRCDOC               ] := { "srcdoc"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SRCLANG              ] := { "srclang"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_STEP                 ] := { "step"                  , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_ACTIVEDESCENDANT] := { "aria_activedescendant" , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_ATOMIC          ] := { "aria_atomic"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_AUTOCOMPLETE    ] := { "aria_autocomplete"     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_BUSY            ] := { "aria_busy"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_CHECKED         ] := { "aria_checked"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_CONTROLS        ] := { "aria_controls"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_DESCRIBEDBY     ] := { "aria_describedby"      , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_DISABLED        ] := { "aria_disabled"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_DROPEFFECT      ] := { "aria_dropeffect"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_EXPANDED        ] := { "aria_expanded"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_FLOWTO          ] := { "aria_flowto"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_GRABBED         ] := { "aria_grabbed"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_HASPOPUP        ] := { "aria_haspopup"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_HIDDEN          ] := { "aria_hidden"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_INVALID         ] := { "aria_invalid"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_LABEL           ] := { "aria_label"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_LABELLEDBY      ] := { "aria_labelledby"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_LEVEL           ] := { "aria_level"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_LIVE            ] := { "aria_live"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_MULTILINE       ] := { "aria_multiline"        , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_MULTISELECTABLE ] := { "aria_multiselectable"  , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_ORIENTATION     ] := { "aria_orientation"      , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_OWNS            ] := { "aria_owns"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_POSINSET        ] := { "aria_posinset"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_PRESSED         ] := { "aria_pressed"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_READONLY        ] := { "aria_readonly"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_RELEVANT        ] := { "aria_relevant"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_REQUIRED        ] := { "aria_required"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_SELECTED        ] := { "aria_selected"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_SETSIZE         ] := { "aria_setsize"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_SORT            ] := { "aria_sort"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_VALUEMAX        ] := { "aria_valuemax"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_VALUEMIN        ] := { "aria_valuemin"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_VALUENOW        ] := { "aria_valuenow"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ARIA_VALUETEXT       ] := { "aria_valuetext"        , HTML_ATTR_TYPE_UNKNOWN   } 
+   t_aHA[ HTML_ATTR_X                    ] := { "x"                     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_Y                    ] := { "y"                     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_VIEWBOX              ] := { "viewbox"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PRESERVEASPECTRATIO  ] := { "preserveaspectratio"   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ZOOMANDPAN           ] := { "zoomandpan"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_BASEPROFILE          ] := { "baseprofile"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_CONTENTSCRIPTTYPE    ] := { "contentscripttype"     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_CONTENTSTYLETYPE     ] := { "contentstyletype"      , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_DISPLAY              ] := { "display"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ABOUT                ] := { "about"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_INLIST               ] := { "inlist"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PREFIX               ] := { "prefix"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PROPERTY             ] := { "property"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_RESOURCE             ] := { "resource"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_TYPEOF               ] := { "typeof"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_VOCAB                ] := { "vocab"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_INTEGRITY            ] := { "integrity"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_AS                   ] := { "as"                    , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_XMLNSXLINK           ] := { "xmlnsxlink"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SLOT                 ] := { "slot"                  , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_LOADING              ] := { "loading"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_FILL                 ] := { "fill"                  , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_FILLRULE             ] := { "fillrule"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_STROKE               ] := { "stroke"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_STROKEDASHARRAY      ] := { "strokedasharray"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_STROKEDASHOFFSET     ] := { "strokedashoffset"      , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_STROKELINECAP        ] := { "strokelinecap"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_STROKELINEJOIN       ] := { "strokelinejoin"        , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_STROKEMITERLIMIT     ] := { "strokemiterlimit"      , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_STROKEWIDTH          ] := { "strokewidth"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_COLORINTERPOLATION   ] := { "colorinterpolation"    , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_COLORRENDERING       ] := { "colorrendering"        , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_OPACITY              ] := { "opacity"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_STROKEOPACITY        ] := { "strokeopacity"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_FILLOPACITY          ] := { "fillopacity"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_AUTOCAPITALIZE       ] := { "autocapitalize"        , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_ENTERKEYHINT         ] := { "enterkeyhint"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_EXPORTPARTS          ] := { "exportparts"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_INPUTMODE            ] := { "inputmode"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_NONCE                ] := { "nonce"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PART                 ] := { "part"                  , HTML_ATTR_TYPE_UNKNOWN   }
 
    RETURN
 
