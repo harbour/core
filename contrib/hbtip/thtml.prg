@@ -1074,7 +1074,7 @@ METHOD toString( nIndent ) CLASS THtmlNode
 // Builds the attribute string
 METHOD attrToString() CLASS THtmlNode
 
-   LOCAL aAttr, cAttr, nAttr
+   LOCAL aAttr, cAttr
 
    IF ::htmlAttributes == NIL
       cAttr := ""
@@ -1082,26 +1082,36 @@ METHOD attrToString() CLASS THtmlNode
       cAttr := " " + ::htmlAttributes
    ELSE
       // attributes are parsed into a Hash
-      BEGIN SEQUENCE WITH __BreakBlock()
-         aAttr := ::htmlTagType[ 1 ]:exec()
-      RECOVER
-         aAttr := {}  // Tag has no attributes
-      END SEQUENCE
-      //Add Global Attributes
-      //The global attributes below can be used on any HTML element
-      if t_aGlbAttr==NIL
-         t_aGlbAttr:=THtmlAttr_GlobalAttributes()
-      endif
-      for nAttr:=1 to len(t_aGlbAttr)
-         if (aScan(aAttr,{|x|x[1]==t_aGlbAttr[nAttr][1]})==0)
-             aAdd(aAttr,t_aGlbAttr[nAttr])
-         endif
-      next nAttr
+      aAttr := __getAttributes( ::htmlTagType[ 1 ] )
       cAttr := ""
       hb_HEval( ::htmlAttributes, {| cKey, cValue | cAttr += __AttrToStr( cKey, cValue, aAttr, Self ) } )
    ENDIF
 
    RETURN cAttr
+   
+STATIC FUNCTION __getAttributes( cAttrFunc )   
+
+   LOCAL aAttr
+   LOCAL nAttr
+
+   BEGIN SEQUENCE WITH __BreakBlock()
+      aAttr := cAttrFunc:exec()
+   RECOVER
+      aAttr := {}  // Tag has no attributes
+   END SEQUENCE
+
+   //Add Global Attributes
+   //The global attributes below can be used on any HTML element
+   if t_aGlbAttr==NIL
+      t_aGlbAttr:=THtmlAttr_GlobalAttributes()
+   endif
+   for nAttr:=1 to len(t_aGlbAttr)
+      if (aScan(aAttr,{|a|a[1]==t_aGlbAttr[nAttr][1]})==0)
+         aAdd(aAttr,t_aGlbAttr[nAttr])
+      endif
+   next nAttr
+
+   RETURN(aAttr)
 
 STATIC FUNCTION __AttrToStr( cName, cValue, aAttr, oTHtmlNode )
 
@@ -1326,12 +1336,7 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
 
-   BEGIN SEQUENCE WITH __BreakBlock()
-      aAttr := ::htmlTagType[ 1 ]:exec()
-   RECOVER
-      // Tag has no attributes
-      aAttr := {}
-   END SEQUENCE
+   aAttr := __getAttributes( ::htmlTagType[ 1 ] )
 
    IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == Lower( cName ) } ) ) == 0
       // Tag doesn't have this attribute
@@ -1738,7 +1743,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "param"      ] := { @THtmlAttr_PARAM()          , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
    t_hHT[ "plaintext"  ] := { @THtmlAttr_PLAINTEXT()      , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
    t_hHT[ "pre"        ] := { @THtmlAttr_PRE()            ,         ( CM_BLOCK )                                                }
-   t_aHA[ "progress"   ] := { @THtmlAttr_PROGRESS()       ,         ( CM_BLOCK )                                                }
+   t_hHT[ "progress"   ] := { @THtmlAttr_PROGRESS()       ,         ( CM_BLOCK )                                                }
    t_hHT[ "q"          ] := { @THtmlAttr_Q()              ,         ( CM_INLINE )                                               }
    t_hHT[ "rb"         ] := { @THtmlAttr_RB()             ,         ( CM_INLINE )                                               }
    t_hHT[ "rbc"        ] := { @THtmlAttr_RBC()            ,         ( CM_INLINE )                                               }
