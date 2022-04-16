@@ -1912,6 +1912,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_ENCTYPE              ] := { "enctype"               , HTML_ATTR_TYPE_XTYPE          }
    t_aHA[ HTML_ATTR_ENTERKEYHINT         ] := { "enterkeyhint"          , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_EVENT                ] := { "event"                 , HTML_ATTR_TYPE_PCDATA         }
+   t_aHA[ HTML_ATTR_EXPORTPARTS          ] := { "exportparts"           , HTML_ATTR_TYPE_UNKNOWN        }
    t_aHA[ HTML_ATTR_FACE                 ] := { "face"                  , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_FOR                  ] := { "for"                   , HTML_ATTR_TYPE_IDREF          }
    t_aHA[ HTML_ATTR_FORM                 ] := { "form"                  , HTML_ATTR_TYPE_IDREF          }
@@ -1973,6 +1974,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_N                    ] := { "n"                     , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_NAME                 ] := { "name"                  , HTML_ATTR_TYPE_NAME           }
    t_aHA[ HTML_ATTR_NOHREF               ] := { "nohref"                , HTML_ATTR_TYPE_BOOL           }
+   t_aHA[ HTML_ATTR_NONCE                ] := { "nonce"                 , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_NORESIZE             ] := { "noresize"              , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_NOSHADE              ] := { "noshade"               , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_NOVALIDATE           ] := { "novalidate"            , HTML_ATTR_TYPE_BOOL           }
@@ -2057,6 +2059,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_ONWAITING            ] := { "onwaiting"             , HTML_ATTR_TYPE_SCRIPT         }
    t_aHA[ HTML_ATTR_OPEN                 ] := { "open"                  , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_OPTIMUM              ] := { "optimum"               , HTML_ATTR_TYPE_NUMBER         }
+   t_aHA[ HTML_ATTR_PART                 ] := { "part"                  , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_PATTERN              ] := { "pattern"               , HTML_ATTR_TYPE_PATTERN        }
    t_aHA[ HTML_ATTR_PLACEHOLDER          ] := { "placeholder"           , HTML_ATTR_TYPE_PLACEHOLDER    }
    t_aHA[ HTML_ATTR_PLAYSINLINE          ] := { "playsinline"           , HTML_ATTR_TYPE_BOOL           }
@@ -2138,14 +2141,9 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_TYPEOF               ] := { "typeof"                , HTML_ATTR_TYPE_UNKNOWN   }
    t_aHA[ HTML_ATTR_VOCAB                ] := { "vocab"                 , HTML_ATTR_TYPE_UNKNOWN   }
    t_aHA[ HTML_ATTR_AS                   ] := { "as"                    , HTML_ATTR_TYPE_UNKNOWN   }
-
    t_aHA[ HTML_ATTR_SLOT                 ] := { "slot"                  , HTML_ATTR_TYPE_UNKNOWN   }
    t_aHA[ HTML_ATTR_LOADING              ] := { "loading"               , HTML_ATTR_TYPE_UNKNOWN   }
    t_aHA[ HTML_ATTR_FILL                 ] := { "fill"                  , HTML_ATTR_TYPE_UNKNOWN   }
-   t_aHA[ HTML_ATTR_FILLRULE             ] := { "fillrule"              , HTML_ATTR_TYPE_UNKNOWN   }
-   t_aHA[ HTML_ATTR_EXPORTPARTS          ] := { "exportparts"           , HTML_ATTR_TYPE_UNKNOWN   }
-   t_aHA[ HTML_ATTR_NONCE                ] := { "nonce"                 , HTML_ATTR_TYPE_UNKNOWN   }
-   t_aHA[ HTML_ATTR_PART                 ] := { "part"                  , HTML_ATTR_TYPE_UNKNOWN   }
 
 /*End TODO:*/
 

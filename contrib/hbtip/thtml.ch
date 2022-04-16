@@ -240,8 +240,8 @@
 #define HTML_ATTR_WIDTH                         158
 #define HTML_ATTR_WRAP                          159
 #define HTML_ATTR_XMLNS                         160
-#define HTML_ATTR_XML_LANG                      161
-#define HTML_ATTR_XML_SPACE                     162
+#define HTML_ATTR_XML:LANG                      161
+#define HTML_ATTR_XML:SPACE                     162
 #define HTML_ATTR_ALLOWFULLSCREEN               163
 #define HTML_ATTR_DOWNLOAD                      164
 #define HTML_ATTR_IS                            165
