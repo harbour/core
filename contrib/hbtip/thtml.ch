@@ -355,90 +355,96 @@
 #define HTML_ATTR_SRCDOC                273
 #define HTML_ATTR_SRCLANG               274
 #define HTML_ATTR_STEP                  275
-#define HTML_ATTR_ARIA_ACTIVEDESCENDANT 276
-#define HTML_ATTR_ARIA_ATOMIC           277
-#define HTML_ATTR_ARIA_AUTOCOMPLETE     278
-#define HTML_ATTR_ARIA_BUSY             279
-#define HTML_ATTR_ARIA_CHECKED          280
-#define HTML_ATTR_ARIA_CONTROLS         281
-#define HTML_ATTR_ARIA_DESCRIBEDBY      282
-#define HTML_ATTR_ARIA_DISABLED         283
-#define HTML_ATTR_ARIA_DROPEFFECT       284
-#define HTML_ATTR_ARIA_EXPANDED         285
-#define HTML_ATTR_ARIA_FLOWTO           286
-#define HTML_ATTR_ARIA_GRABBED          287
-#define HTML_ATTR_ARIA_HASPOPUP         288
-#define HTML_ATTR_ARIA_HIDDEN           289
-#define HTML_ATTR_ARIA_INVALID          290
-#define HTML_ATTR_ARIA_LABEL            291
-#define HTML_ATTR_ARIA_LABELLEDBY       292
-#define HTML_ATTR_ARIA_LEVEL            293
-#define HTML_ATTR_ARIA_LIVE             294
-#define HTML_ATTR_ARIA_MULTILINE        295
-#define HTML_ATTR_ARIA_MULTISELECTABLE  296
-#define HTML_ATTR_ARIA_ORIENTATION      297
-#define HTML_ATTR_ARIA_OWNS             298
-#define HTML_ATTR_ARIA_POSINSET         299
-#define HTML_ATTR_ARIA_PRESSED          300
-#define HTML_ATTR_ARIA_READONLY         301
-#define HTML_ATTR_ARIA_RELEVANT         302
-#define HTML_ATTR_ARIA_REQUIRED         303
-#define HTML_ATTR_ARIA_SELECTED         304
-#define HTML_ATTR_ARIA_SETSIZE          305
-#define HTML_ATTR_ARIA_SORT             306
-#define HTML_ATTR_ARIA_VALUEMAX         307
-#define HTML_ATTR_ARIA_VALUEMIN         308
-#define HTML_ATTR_ARIA_VALUENOW         309
-#define HTML_ATTR_ARIA_VALUETEXT        310
-/* SVG attributes (SVG 1.1) */
-#define HTML_ATTR_X                     311
-#define HTML_ATTR_Y                     312
-#define HTML_ATTR_VIEWBOX               313
-#define HTML_ATTR_PRESERVEASPECTRATIO   314
-#define HTML_ATTR_ZOOMANDPAN            315
-#define HTML_ATTR_BASEPROFILE           316
-#define HTML_ATTR_CONTENTSCRIPTTYPE     317
-#define HTML_ATTR_CONTENTSTYLETYPE      318
-/* MathML <math> attributes */
-#define HTML_ATTR_DISPLAY               319
-/* RDFa global attributes */
-#define HTML_ATTR_ABOUT                 320
-#define HTML_ATTR_DATATYPE              321
-#define HTML_ATTR_INLIST                322
-#define HTML_ATTR_PREFIX                323
-#define HTML_ATTR_PROPERTY              324
-#define HTML_ATTR_RESOURCE              325
-#define HTML_ATTR_TYPEOF                326
-#define HTML_ATTR_VOCAB                 327
-#define HTML_ATTR_INTEGRITY             328
-#define HTML_ATTR_AS                    329
-#define HTML_ATTR_XMLNSXLINK            330
-#define HTML_ATTR_SLOT                  331
-#define HTML_ATTR_LOADING               333
-/* SVG paint attributes (SVG 1.1) */
-#define HTML_ATTR_FILL                  333
-#define HTML_ATTR_FILLRULE              334
-#define HTML_ATTR_STROKE                335
-#define HTML_ATTR_STROKEDASHARRAY       336
-#define HTML_ATTR_STROKEDASHOFFSET      337
-#define HTML_ATTR_STROKELINECAP         338
-#define HTML_ATTR_STROKELINEJOIN        339
-#define HTML_ATTR_STROKEMITERLIMIT      340
-#define HTML_ATTR_STROKEWIDTH           341
-#define HTML_ATTR_COLORINTERPOLATION    342
-#define HTML_ATTR_COLORRENDERING        343
-#define HTML_ATTR_OPACITY               344
-#define HTML_ATTR_STROKEOPACITY         345
-#define HTML_ATTR_FILLOPACITY           346
-#define HTML_ATTR_AUTOCAPITALIZE        347
-#define HTML_ATTR_ENTERKEYHINT          348
-#define HTML_ATTR_EXPORTPARTS           349
-#define HTML_ATTR_INPUTMODE             350
-#define HTML_ATTR_NONCE                 351
-#define HTML_ATTR_PART                  352
-#define HTML_ATTR_XML_BASE              353
 
-#define HTML_ATTR_COUNT                 353
+/* SVG attributes (SVG 1.1) */
+#define HTML_ATTR_X                     276
+#define HTML_ATTR_Y                     277
+#define HTML_ATTR_VIEWBOX               278
+#define HTML_ATTR_PRESERVEASPECTRATIO   279
+#define HTML_ATTR_ZOOMANDPAN            280
+#define HTML_ATTR_BASEPROFILE           281
+#define HTML_ATTR_CONTENTSCRIPTTYPE     282
+#define HTML_ATTR_CONTENTSTYLETYPE      283
+/* MathML <math> attributes */
+#define HTML_ATTR_DISPLAY               284
+/* RDFa global attributes */
+#define HTML_ATTR_ABOUT                 285
+#define HTML_ATTR_DATATYPE              286
+#define HTML_ATTR_INLIST                287
+#define HTML_ATTR_PREFIX                288
+#define HTML_ATTR_PROPERTY              289
+#define HTML_ATTR_RESOURCE              290
+#define HTML_ATTR_TYPEOF                291
+#define HTML_ATTR_VOCAB                 292
+#define HTML_ATTR_INTEGRITY             293
+#define HTML_ATTR_AS                    294
+#define HTML_ATTR_XMLNSXLINK            295
+#define HTML_ATTR_SLOT                  296
+#define HTML_ATTR_LOADING               297
+/* SVG paint attributes (SVG 1.1) */
+#define HTML_ATTR_FILL                  298
+#define HTML_ATTR_FILLRULE              299
+#define HTML_ATTR_STROKE                300
+#define HTML_ATTR_STROKEDASHARRAY       301
+#define HTML_ATTR_STROKEDASHOFFSET      302
+#define HTML_ATTR_STROKELINECAP         303
+#define HTML_ATTR_STROKELINEJOIN        304
+#define HTML_ATTR_STROKEMITERLIMIT      305
+#define HTML_ATTR_STROKEWIDTH           306
+#define HTML_ATTR_COLORINTERPOLATION    307
+#define HTML_ATTR_COLORRENDERING        308
+#define HTML_ATTR_OPACITY               309
+#define HTML_ATTR_STROKEOPACITY         310
+#define HTML_ATTR_FILLOPACITY           311
+#define HTML_ATTR_AUTOCAPITALIZE        312
+#define HTML_ATTR_ENTERKEYHINT          313
+#define HTML_ATTR_EXPORTPARTS           314
+#define HTML_ATTR_INPUTMODE             315
+#define HTML_ATTR_NONCE                 316
+#define HTML_ATTR_PART                  317
+#define HTML_ATTR_XML_BASE              318
+
+#define HTML_ATTR_COUNT                 318
+
+/* Constants for HTML ARIA attributes adopted from Tidy library */
+
+#define HTML_ATTR_ARIA_ACTIVEDESCENDANT 1
+#define HTML_ATTR_ARIA_ATOMIC           2
+#define HTML_ATTR_ARIA_AUTOCOMPLETE     3
+#define HTML_ATTR_ARIA_BUSY             4
+#define HTML_ATTR_ARIA_CHECKED          5
+#define HTML_ATTR_ARIA_CONTROLS         6
+#define HTML_ATTR_ARIA_DESCRIBEDBY      7
+#define HTML_ATTR_ARIA_DISABLED         8
+#define HTML_ATTR_ARIA_DROPEFFECT       9
+#define HTML_ATTR_ARIA_EXPANDED         10
+#define HTML_ATTR_ARIA_FLOWTO           11
+#define HTML_ATTR_ARIA_GRABBED          12
+#define HTML_ATTR_ARIA_HASPOPUP         13
+#define HTML_ATTR_ARIA_HIDDEN           14
+#define HTML_ATTR_ARIA_INVALID          15
+#define HTML_ATTR_ARIA_LABEL            16
+#define HTML_ATTR_ARIA_LABELLEDBY       17
+#define HTML_ATTR_ARIA_LEVEL            18
+#define HTML_ATTR_ARIA_LIVE             19
+#define HTML_ATTR_ARIA_MULTILINE        20
+#define HTML_ATTR_ARIA_MULTISELECTABLE  21
+#define HTML_ATTR_ARIA_ORIENTATION      22
+#define HTML_ATTR_ARIA_OWNS             23
+#define HTML_ATTR_ARIA_POSINSET         24
+#define HTML_ATTR_ARIA_PRESSED          25
+#define HTML_ATTR_ARIA_READONLY         26
+#define HTML_ATTR_ARIA_RELEVANT         27
+#define HTML_ATTR_ARIA_REQUIRED         28
+#define HTML_ATTR_ARIA_SELECTED         29
+#define HTML_ATTR_ARIA_SETSIZE          30
+#define HTML_ATTR_ARIA_SORT             31
+#define HTML_ATTR_ARIA_VALUEMAX         32
+#define HTML_ATTR_ARIA_VALUEMIN         33
+#define HTML_ATTR_ARIA_VALUENOW         34
+#define HTML_ATTR_ARIA_VALUETEXT        35
+
+#define HTML_ATTR_ARIA_COUNT            35
 
 #define HTML_ATTR_TYPE_UNKNOWN          0
 #define HTML_ATTR_TYPE_ACTION           1
@@ -486,7 +492,10 @@
 #define HTML_ATTR_TYPE_PLACEHOLDER      43
 #define HTML_ATTR_TYPE_PUBDATE          44
 #define HTML_ATTR_TYPE_RADIOGROUP       45
+#define HTML_ATTR_TYPE_SANDBOX          46
+#define HTML_ATTR_TYPE_SRCDOC           47
+#define HTML_ATTR_TYPE_STEP             48
 
-#define HTML_ATTR_TYPE_COUNT            45
+#define HTML_ATTR_TYPE_COUNT            48
 
 #endif /* _HB_THTML */

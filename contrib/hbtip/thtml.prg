@@ -83,6 +83,7 @@
 
 
 THREAD STATIC t_aHA                // data for HTML attributes
+THREAD STATIC t_aHAAria            // data for HTML Aria attributes
 THREAD STATIC t_hHT                // data for HTML tags
 THREAD STATIC t_aGlbAttr           // data for Global HTML attributes
 THREAD STATIC t_cHB_EOL
@@ -1396,10 +1397,10 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
 
    RETURN hHash[ cName ]
 
-// Sets all attribute and values
-METHOD setAttributes( cHtml ) CLASS THtmlNode
+// Sets all attribute and values ( [ Character: 'cAttr="xAttrValue"' ] ou [ Hash {"cAttr"=>"xAttrValue"} ] )
+METHOD setAttributes( xHtml ) CLASS THtmlNode
 
-   ::htmlAttributes := cHtml
+   ::htmlAttributes := xHtml
 
    RETURN ::getAttributes()
 
@@ -1632,12 +1633,14 @@ FUNCTION THtmlInit( lInit )
    IF ! hb_defaultValue( lInit, .T. )
       t_aHA := NIL
       t_hHT := NIL
+      t_aHAAria := NIL
 #ifdef HB_LEGACY_LEVEL4
       t_aHtmlAnsiEntities := NIL
 #endif
       t_lInit := .F.
    ELSEIF ! t_lInit
       t_aHA := Array( HTML_ATTR_COUNT )
+      t_aHAAria := Array( HTML_ATTR_ARIA_COUNT )
 #ifdef HB_LEGACY_LEVEL4
       _Init_Html_AnsiCharacterEntities()
 #endif
@@ -1837,9 +1840,9 @@ STATIC PROCEDURE _Init_Html_TagTypes
 
    RETURN
 
-/* HTML Tag attribute data are adopted for Harbour from Tidy */
-
 STATIC PROCEDURE _Init_Html_Attributes
+
+   /* HTML Tag attribute data are adopted for Harbour from Tidy */
 
    /*     attribute                             NAME                      TYPE                   */
    t_aHA[ HTML_ATTR_ABBR                 ] := { "abbr"                  , HTML_ATTR_TYPE_PCDATA         }
@@ -2070,23 +2073,31 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_ROWS                 ] := { "rows"                  , HTML_ATTR_TYPE_NUMBER         }
    t_aHA[ HTML_ATTR_ROWSPAN              ] := { "rowspan"               , HTML_ATTR_TYPE_NUMBER         }
    t_aHA[ HTML_ATTR_RULES                ] := { "rules"                 , HTML_ATTR_TYPE_TRULES         }
+   t_aHA[ HTML_ATTR_SANDBOX              ] := { "sandbox"               , HTML_ATTR_TYPE_SANDBOX        }
    t_aHA[ HTML_ATTR_SCHEME               ] := { "scheme"                , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_SCOPE                ] := { "scope"                 , HTML_ATTR_TYPE_SCOPE          }
+   t_aHA[ HTML_ATTR_SCOPED               ] := { "scoped"                , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_SCROLLING            ] := { "scrolling"             , HTML_ATTR_TYPE_SCROLL         }
    t_aHA[ HTML_ATTR_SDAFORM              ] := { "sdaform"               , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_SDAPREF              ] := { "sdapref"               , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_SDASUFF              ] := { "sdasuff"               , HTML_ATTR_TYPE_PCDATA         }
+   t_aHA[ HTML_ATTR_SEAMLESS             ] := { "seamless"              , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_SELECTED             ] := { "selected"              , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_SHAPE                ] := { "shape"                 , HTML_ATTR_TYPE_SHAPE          }
    t_aHA[ HTML_ATTR_SHOWGRID             ] := { "showgrid"              , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_SHOWGRIDX            ] := { "showgridx"             , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_SHOWGRIDY            ] := { "showgridy"             , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_SIZE                 ] := { "size"                  , HTML_ATTR_TYPE_NUMBER         }
+   t_aHA[ HTML_ATTR_SIZES                ] := { "sizes"                 , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_SPAN                 ] := { "span"                  , HTML_ATTR_TYPE_NUMBER         }
+   t_aHA[ HTML_ATTR_SPELLCHECK           ] := { "spellcheck"            , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_SRC                  ] := { "src"                   , HTML_ATTR_TYPE_URL            }
+   t_aHA[ HTML_ATTR_SRCDOC               ] := { "srcdoc"                , HTML_ATTR_TYPE_SRCDOC         }
+   t_aHA[ HTML_ATTR_SRCLANG              ] := { "srclang"               , HTML_ATTR_TYPE_LANG           }
    t_aHA[ HTML_ATTR_SRCSET               ] := { "srcset"                , HTML_ATTR_TYPE_URL            }
    t_aHA[ HTML_ATTR_STANDBY              ] := { "standby"               , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_START                ] := { "start"                 , HTML_ATTR_TYPE_NUMBER         }
+   t_aHA[ HTML_ATTR_STEP                 ] := { "step"                  , HTML_ATTR_TYPE_STEP           }
    t_aHA[ HTML_ATTR_STYLE                ] := { "style"                 , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_SUMMARY              ] := { "summary"               , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_TABINDEX             ] := { "tabindex"              , HTML_ATTR_TYPE_NUMBER         }
@@ -2111,54 +2122,50 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_XML_BASE             ] := { "xml:base"              , HTML_ATTR_TYPE_BASE           }
    t_aHA[ HTML_ATTR_XML_LANG             ] := { "xml:lang"              , HTML_ATTR_TYPE_LANG           }
    t_aHA[ HTML_ATTR_XML_SPACE            ] := { "xml:space"             , HTML_ATTR_TYPE_PCDATA         }
-    
+
+   /* HTML Tag Aria attribute data are adopted for Harbour from Tidy */
+
+   t_aHAAria[ HTML_ATTR_ARIA_ACTIVEDESCENDANT] := { "aria_activedescendant" , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_ATOMIC          ] := { "aria_atomic"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_AUTOCOMPLETE    ] := { "aria_autocomplete"     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_BUSY            ] := { "aria_busy"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_CHECKED         ] := { "aria_checked"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_CONTROLS        ] := { "aria_controls"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_DESCRIBEDBY     ] := { "aria_describedby"      , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_DISABLED        ] := { "aria_disabled"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_DROPEFFECT      ] := { "aria_dropeffect"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_EXPANDED        ] := { "aria_expanded"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_FLOWTO          ] := { "aria_flowto"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_GRABBED         ] := { "aria_grabbed"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_HASPOPUP        ] := { "aria_haspopup"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_HIDDEN          ] := { "aria_hidden"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_INVALID         ] := { "aria_invalid"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_LABEL           ] := { "aria_label"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_LABELLEDBY      ] := { "aria_labelledby"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_LEVEL           ] := { "aria_level"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_LIVE            ] := { "aria_live"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_MULTILINE       ] := { "aria_multiline"        , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_MULTISELECTABLE ] := { "aria_multiselectable"  , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_ORIENTATION     ] := { "aria_orientation"      , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_OWNS            ] := { "aria_owns"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_POSINSET        ] := { "aria_posinset"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_PRESSED         ] := { "aria_pressed"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_READONLY        ] := { "aria_readonly"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_RELEVANT        ] := { "aria_relevant"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_REQUIRED        ] := { "aria_required"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_SELECTED        ] := { "aria_selected"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_SETSIZE         ] := { "aria_setsize"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_SORT            ] := { "aria_sort"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_VALUEMAX        ] := { "aria_valuemax"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_VALUEMIN        ] := { "aria_valuemin"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_VALUENOW        ] := { "aria_valuenow"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHAAria[ HTML_ATTR_ARIA_VALUETEXT       ] := { "aria_valuetext"        , HTML_ATTR_TYPE_UNKNOWN   }
+ 
    /*Begin TODO:*/
        
-       t_aHA[ HTML_ATTR_SANDBOX              ] := { "sandbox"               , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_SCOPED               ] := { "scoped"                , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_SEAMLESS             ] := { "seamless"              , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_SIZES                ] := { "sizes"                 , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_SPELLCHECK           ] := { "spellcheck"            , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_SRCDOC               ] := { "srcdoc"                , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_SRCLANG              ] := { "srclang"               , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_STEP                 ] := { "step"                  , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_ACTIVEDESCENDANT] := { "aria_activedescendant" , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_ATOMIC          ] := { "aria_atomic"           , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_AUTOCOMPLETE    ] := { "aria_autocomplete"     , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_BUSY            ] := { "aria_busy"             , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_CHECKED         ] := { "aria_checked"          , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_CONTROLS        ] := { "aria_controls"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_DESCRIBEDBY     ] := { "aria_describedby"      , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_DISABLED        ] := { "aria_disabled"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_DROPEFFECT      ] := { "aria_dropeffect"       , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_EXPANDED        ] := { "aria_expanded"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_FLOWTO          ] := { "aria_flowto"           , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_GRABBED         ] := { "aria_grabbed"          , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_HASPOPUP        ] := { "aria_haspopup"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_HIDDEN          ] := { "aria_hidden"           , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_INVALID         ] := { "aria_invalid"          , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_LABEL           ] := { "aria_label"            , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_LABELLEDBY      ] := { "aria_labelledby"       , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_LEVEL           ] := { "aria_level"            , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_LIVE            ] := { "aria_live"             , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_MULTILINE       ] := { "aria_multiline"        , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_MULTISELECTABLE ] := { "aria_multiselectable"  , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_ORIENTATION     ] := { "aria_orientation"      , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_OWNS            ] := { "aria_owns"             , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_POSINSET        ] := { "aria_posinset"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_PRESSED         ] := { "aria_pressed"          , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_READONLY        ] := { "aria_readonly"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_RELEVANT        ] := { "aria_relevant"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_REQUIRED        ] := { "aria_required"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_SELECTED        ] := { "aria_selected"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_SETSIZE         ] := { "aria_setsize"          , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_SORT            ] := { "aria_sort"             , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_VALUEMAX        ] := { "aria_valuemax"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_VALUEMIN        ] := { "aria_valuemin"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_VALUENOW        ] := { "aria_valuenow"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ARIA_VALUETEXT       ] := { "aria_valuetext"        , HTML_ATTR_TYPE_UNKNOWN   } 
        t_aHA[ HTML_ATTR_X                    ] := { "x"                     , HTML_ATTR_TYPE_UNKNOWN   }
        t_aHA[ HTML_ATTR_Y                    ] := { "y"                     , HTML_ATTR_TYPE_UNKNOWN   }
+       
        t_aHA[ HTML_ATTR_VIEWBOX              ] := { "viewbox"               , HTML_ATTR_TYPE_UNKNOWN   }
        t_aHA[ HTML_ATTR_PRESERVEASPECTRATIO  ] := { "preserveaspectratio"   , HTML_ATTR_TYPE_UNKNOWN   }
        t_aHA[ HTML_ATTR_ZOOMANDPAN           ] := { "zoomandpan"            , HTML_ATTR_TYPE_UNKNOWN   }
@@ -3040,8 +3047,11 @@ STATIC FUNCTION THtmlAttr_IFRAME()
       t_aHA[ HTML_ATTR_MARGINHEIGHT     ], ;
       t_aHA[ HTML_ATTR_MARGINWIDTH      ], ;
       t_aHA[ HTML_ATTR_NAME             ], ;
+      t_aHA[ HTML_ATTR_SANDBOX          ], ;
       t_aHA[ HTML_ATTR_SCROLLING        ], ;
+      t_aHA[ HTML_ATTR_SEAMLESS         ], ;
       t_aHA[ HTML_ATTR_SRC              ], ;
+      t_aHA[ HTML_ATTR_SRCDOC           ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_ALLOWFULLSCREEN  ], ;
       t_aHA[ HTML_ATTR_ASYNC            ] }
@@ -3120,6 +3130,7 @@ STATIC FUNCTION THtmlAttr_INPUT()
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
       t_aHA[ HTML_ATTR_SIZE             ], ;
       t_aHA[ HTML_ATTR_SRC              ], ;
+      t_aHA[ HTML_ATTR_STEP             ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_USEMAP           ], ;
       t_aHA[ HTML_ATTR_VALUE            ], ;
@@ -3243,6 +3254,7 @@ STATIC FUNCTION THtmlAttr_LINK()
       t_aHA[ HTML_ATTR_REL              ], ;
       t_aHA[ HTML_ATTR_REV              ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
+      t_aHA[ HTML_ATTR_SIZES            ], ;
       t_aHA[ HTML_ATTR_TARGET           ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_URN              ], ;
@@ -3730,6 +3742,7 @@ STATIC FUNCTION THtmlAttr_STRONG()
 STATIC FUNCTION THtmlAttr_STYLE()
    RETURN { ;
       t_aHA[ HTML_ATTR_MEDIA            ], ;
+      t_aHA[ HTML_ATTR_SCOPED           ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_XML_SPACE        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
