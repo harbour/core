@@ -436,8 +436,9 @@
 #define HTML_ATTR_INPUTMODE             350
 #define HTML_ATTR_NONCE                 351
 #define HTML_ATTR_PART                  352
+#define HTML_ATTR_XML_BASE              353
 
-#define HTML_ATTR_COUNT                 352
+#define HTML_ATTR_COUNT                 353
 
 #define HTML_ATTR_TYPE_UNKNOWN          0
 #define HTML_ATTR_TYPE_ACTION           1
@@ -480,7 +481,8 @@
 #define HTML_ATTR_TYPE_FVALIDATE        38
 #define HTML_ATTR_TYPE_ICON             39
 #define HTML_ATTR_TYPE_LIST             40
+#define HTML_ATTR_TYPE_BASE             41
 
-#define HTML_ATTR_TYPE_COUNT            40
+#define HTML_ATTR_TYPE_COUNT            41
 
 #endif /* _HB_THTML */
