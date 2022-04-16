@@ -482,7 +482,11 @@
 #define HTML_ATTR_TYPE_ICON             39
 #define HTML_ATTR_TYPE_LIST             40
 #define HTML_ATTR_TYPE_BASE             41
+#define HTML_ATTR_TYPE_PATTERN          42
+#define HTML_ATTR_TYPE_PLACEHOLDER      43
+#define HTML_ATTR_TYPE_PUBDATE          44
+#define HTML_ATTR_TYPE_RADIOGROUP       45
 
-#define HTML_ATTR_TYPE_COUNT            41
+#define HTML_ATTR_TYPE_COUNT            45
 
 #endif /* _HB_THTML */
