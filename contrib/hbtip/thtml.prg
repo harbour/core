@@ -1819,6 +1819,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "style"      ] := { @THtmlAttr_STYLE()          ,         ( CM_HEAD )                                                 }
    t_hHT[ "sub"        ] := { @THtmlAttr_SUB()            ,         ( CM_INLINE )                                               }
    t_hHT[ "sup"        ] := { @THtmlAttr_SUP()            ,         ( CM_INLINE )                                               }
+   t_hHT[ "svg"        ] := { @THtmlAttr_SVG()            ,         ( CM_BLOCK )                                                }
    t_hHT[ "table"      ] := { @THtmlAttr_TABLE()          ,         ( CM_BLOCK )                                                }
    t_hHT[ "tbody"      ] := { @THtmlAttr_TBODY()          , hb_bitOr( CM_TABLE, CM_ROWGRP, CM_OPT )                             }
    t_hHT[ "td"         ] := { @THtmlAttr_TD()             , hb_bitOr( CM_ROW, CM_OPT, CM_NO_INDENT )                            }
@@ -1903,6 +1904,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_DIR                  ] := { "dir"                   , HTML_ATTR_TYPE_TEXTDIR        }
    t_aHA[ HTML_ATTR_DIRNAME              ] := { "dirname"               , HTML_ATTR_TYPE_TEXTDIR        }
    t_aHA[ HTML_ATTR_DISABLED             ] := { "disabled"              , HTML_ATTR_TYPE_BOOL           }
+   t_aHA[ HTML_ATTR_DISPLAY              ] := { "display"               , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_DOWNLOAD             ] := { "download"              , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_DRAGGABLE            ] := { "draggable"             , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_DROPZONE             ] := { "dropzone"              , HTML_ATTR_TYPE_PCDATA         }
@@ -1933,6 +1935,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_HTTP_EQUIV           ] := { "http-equiv"            , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_ICON                 ] := { "icon"                  , HTML_ATTR_TYPE_ICON           }
    t_aHA[ HTML_ATTR_ID                   ] := { "id"                    , HTML_ATTR_TYPE_IDDEF          }
+   t_aHA[ HTML_ATTR_INTEGRITY            ] := { "integrity"             , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_IS                   ] := { "is"                    , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_ISMAP                ] := { "ismap"                 , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_ITEMID               ] := { "itemid"                , HTML_ATTR_TYPE_PCDATA         }
@@ -1940,6 +1943,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_ITEMREF              ] := { "itemref"               , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_ITEMSCOPE            ] := { "itemscope"             , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_ITEMTYPE             ] := { "itemtype"              , HTML_ATTR_TYPE_PCDATA         }
+   t_aHA[ HTML_ATTR_INPUTMODE            ] := { "inputmode"             , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_KEYTYPE              ] := { "keytype"               , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_KIND                 ] := { "kind"                  , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_LABEL                ] := { "label"                 , HTML_ATTR_TYPE_PCDATA         }
@@ -2057,7 +2061,8 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_PLACEHOLDER          ] := { "placeholder"           , HTML_ATTR_TYPE_PLACEHOLDER    }
    t_aHA[ HTML_ATTR_PLAYSINLINE          ] := { "playsinline"           , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_POSTER               ] := { "poster"                , HTML_ATTR_TYPE_PCDATA         }
-   t_aHA[ HTML_ATTR_PRELOAD              ] := { "preload"               , HTML_ATTR_TYPE_UNKNOWN        }
+   t_aHA[ HTML_ATTR_PRELOAD              ] := { "preload"               , HTML_ATTR_TYPE_PCDATA         }
+   t_aHA[ HTML_ATTR_PREFIX               ] := { "prefix"                , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_PROFILE              ] := { "profile"               , HTML_ATTR_TYPE_URL            }
    t_aHA[ HTML_ATTR_PROMPT               ] := { "prompt"                , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_PUBDATE              ] := { "pubdate"               , HTML_ATTR_TYPE_PUBDATE        }
@@ -2118,10 +2123,140 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_VSPACE               ] := { "vspace"                , HTML_ATTR_TYPE_NUMBER         }
    t_aHA[ HTML_ATTR_WIDTH                ] := { "width"                 , HTML_ATTR_TYPE_LENGTH         }
    t_aHA[ HTML_ATTR_WRAP                 ] := { "wrap"                  , HTML_ATTR_TYPE_PCDATA         }
+   t_aHA[ HTML_ATTR_XML:BASE             ] := { "xml:base"              , HTML_ATTR_TYPE_BASE           }
+   t_aHA[ HTML_ATTR_XML:LANG             ] := { "xml:lang"              , HTML_ATTR_TYPE_LANG           }
+   t_aHA[ HTML_ATTR_XML:SPACE            ] := { "xml:space"             , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_XMLNS                ] := { "xmlns"                 , HTML_ATTR_TYPE_PCDATA         }
-   t_aHA[ HTML_ATTR_XML_BASE             ] := { "xml:base"              , HTML_ATTR_TYPE_BASE           }
-   t_aHA[ HTML_ATTR_XML_LANG             ] := { "xml:lang"              , HTML_ATTR_TYPE_LANG           }
-   t_aHA[ HTML_ATTR_XML_SPACE            ] := { "xml:space"             , HTML_ATTR_TYPE_PCDATA         }
+   t_aHA[ HTML_ATTR_XMLNS:XLINK          ] := { "xmlns:xlink"           , HTML_ATTR_TYPE_URL            }
+
+/*Begin TODO:*/
+
+   t_aHA[ HTML_ATTR_ABOUT                ] := { "about"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_INLIST               ] := { "inlist"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PROPERTY             ] := { "property"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_RESOURCE             ] := { "resource"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_TYPEOF               ] := { "typeof"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_VOCAB                ] := { "vocab"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_AS                   ] := { "as"                    , HTML_ATTR_TYPE_UNKNOWN   }
+
+   t_aHA[ HTML_ATTR_SLOT                 ] := { "slot"                  , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_LOADING              ] := { "loading"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_FILL                 ] := { "fill"                  , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_FILLRULE             ] := { "fillrule"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_EXPORTPARTS          ] := { "exportparts"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_NONCE                ] := { "nonce"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_PART                 ] := { "part"                  , HTML_ATTR_TYPE_UNKNOWN   }
+
+/*End TODO:*/
+
+/*Begin TODO:*/
+
+   /* HTML SVG Tag attribute data are adopted for Harbour from Tidy */
+
+   t_aHA[ HTML_ATTR_SVG_BASEPROFILE           ] := { "baseprofile"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_BY                    ] := { "by"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_COLORINTERPOLATION    ] := { "colorinterpolation"   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_COLORRENDERING        ] := { "colorrendering"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_CONTENTSCRIPTTYPE     ] := { "contentscripttype"    , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_CONTENTSTYLETYPE      ] := { "contentstyletype"     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_CX                    ] := { "cx"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_CY                    ] := { "cy"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_ENTERKEYHINT          ] := { "enterkeyhint"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_EXPORTPARTS           ] := { "exportparts"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FILL                  ] := { "fill"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FILL-RULE             ] := { "fill-rule"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FILL-OPACITY          ] := { "fill-opacity"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FILTER                ] := { "filter"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FLOOD-COLOR           ] := { "flood-color"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FLOOD-OPACITY         ] := { "flood-opacity"        , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FONT-SIZE             ] := { "font-size"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FONT-SIZE-ADJUST      ] := { "font-size-adjust"     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FONT-STYLE            ] := { "font-style"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_VISIBILITY            ] := { "visibility"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FROM                  ] := { "from"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_FR                    ] := { "fr"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_HEIGHT                ] := { "height"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_KEYPOINTS             ] := { "keypoints"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_KEYTIMES              ] := { "keytimes"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_LENGTHADJUST          ] := { "lengthadjust"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_LETTER-SPACING        ] := { "letter-spacing"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_LIGHTING-COLOR        ] := { "lighting-color"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_MARKERHEIGHT          ] := { "markerheight"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_MARKERWIDTH           ] := { "markerwidth"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_MASK                  ] := { "mask"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_MEDIA                 ] := { "media"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_NUMOCTAVES            ] := { "numoctaves"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_NONCE                 ] := { "nonce"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_OPACITY               ] := { "opacity"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_OPERATOR              ] := { "operator"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_ORIENT                ] := { "orient"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_PART                  ] := { "part"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_PATH                  ] := { "path"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_PATHLENGTH            ] := { "pathlength"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_PATTERNCONTENTUNITS   ] := { "patterncontentunits"  , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_PATTERNTRANSFORM      ] := { "patterntransform"     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_PATTERNUNITS          ] := { "patternunits"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_POINTER-EVENTS        ] := { "pointer-events"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_POINTS                ] := { "points"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_POINTSATX             ] := { "pointsatx"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_POINTSATY             ] := { "pointsaty"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_POINTSATZ             ] := { "pointsatz"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_PRESERVEASPECTRATIO   ] := { "preserveaspectratio"  , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_R                     ] := { "r"                    , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_RADIUS                ] := { "radius"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_REPEATCOUNT           ] := { "repeatcount"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_REPEATDUR             ] := { "repeatdur"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_RESTART               ] := { "restart"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_ROTATE                ] := { "rotate"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_RX                    ] := { "rx"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_RY                    ] := { "ry"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_SCALE                 ] := { "scale"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_SEED                  ] := { "seed"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_SHAPE-RENDERING       ] := { "shape-rendering"      , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STARTOFFSET           ] := { "startoffset"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STDDEVIATION          ] := { "stddeviation"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STITCHTILES           ] := { "stitchtiles"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STOP-COLOR            ] := { "stop-color"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STOP-OPACITY          ] := { "stop-opacity"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STROKE                ] := { "stroke"               , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STROKE-DASHARRAY      ] := { "stroke-dasharray"     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STROKE-DASHOFFSET     ] := { "stroke-dashoffset"    , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STROKE-LINECAP        ] := { "stroke-linecap"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STROKE-OPACITY        ] := { "stroke-opacity"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STROKE-WIDTH          ] := { "stroke-width"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STROKE-LINEJOIN       ] := { "stroke-linejoin"      , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STROKE-MITERLIMIT     ] := { "stroke-miterlimit"    , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_STYLE                 ] := { "style"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_SURFACESCALE          ] := { "surfacescale"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_SYSTEMLANGUAGE        ] := { "systemlanguage"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_TABINDEX              ] := { "tabindex"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_TABLEVALUES           ] := { "tablevalues"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_TEXT-ANCHOR           ] := { "text-anchor"          , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_TEXT-DECORATION       ] := { "text-decoration"      , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_TEXT-RENDERING        ] := { "text-rendering"       , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_TEXTLENGTH            ] := { "textlength"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_TO                    ] := { "to"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_TRANSFORM             ] := { "transform"            , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_TYPE                  ] := { "type"                 , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_VECTOR-EFFECT         ] := { "vector-effect"        , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_VIEWBOX               ] := { "viewbox"              , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_VISIBILITY            ] := { "visibility"           , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_WIDTH                 ] := { "width"                , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_WORD-SPACING          ] := { "word-spacing"         , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_X                     ] := { "x"                    , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_X1                    ] := { "x1"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_X2                    ] := { "x2"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_XCHANNELSELECTOR      ] := { "xchannelselector"     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_XML:LANG              ] := { "xml:lang"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_XML:BASE              ] := { "xml:base"             , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_Y                     ] := { "y"                    , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_Y1                    ] := { "y1"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_Y2                    ] := { "y2"                   , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_YCHANNELSELECTOR      ] := { "ychannelselector"     , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_Z                     ] := { "z"                    , HTML_ATTR_TYPE_UNKNOWN   }
+   t_aHA[ HTML_ATTR_SVG_ZOOMANDPAN            ] := { "zoomandpan"           , HTML_ATTR_TYPE_UNKNOWN   }
+
+/*End TODO:*/
 
    /* HTML Tag Aria attribute data are adopted for Harbour from Tidy */
 
@@ -2160,53 +2295,6 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHAAria[ HTML_ATTR_ARIA_VALUEMIN        ] := { "aria_valuemin"         , HTML_ATTR_TYPE_UNKNOWN   }
    t_aHAAria[ HTML_ATTR_ARIA_VALUENOW        ] := { "aria_valuenow"         , HTML_ATTR_TYPE_UNKNOWN   }
    t_aHAAria[ HTML_ATTR_ARIA_VALUETEXT       ] := { "aria_valuetext"        , HTML_ATTR_TYPE_UNKNOWN   }
- 
-   /*Begin TODO:*/
-       
-       t_aHA[ HTML_ATTR_X                    ] := { "x"                     , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_Y                    ] := { "y"                     , HTML_ATTR_TYPE_UNKNOWN   }
-       
-       t_aHA[ HTML_ATTR_VIEWBOX              ] := { "viewbox"               , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_PRESERVEASPECTRATIO  ] := { "preserveaspectratio"   , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ZOOMANDPAN           ] := { "zoomandpan"            , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_BASEPROFILE          ] := { "baseprofile"           , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_CONTENTSCRIPTTYPE    ] := { "contentscripttype"     , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_CONTENTSTYLETYPE     ] := { "contentstyletype"      , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_DISPLAY              ] := { "display"               , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ABOUT                ] := { "about"                 , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_INLIST               ] := { "inlist"                , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_PREFIX               ] := { "prefix"                , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_PROPERTY             ] := { "property"              , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_RESOURCE             ] := { "resource"              , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_TYPEOF               ] := { "typeof"                , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_VOCAB                ] := { "vocab"                 , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_INTEGRITY            ] := { "integrity"             , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_AS                   ] := { "as"                    , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_XMLNSXLINK           ] := { "xmlnsxlink"            , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_SLOT                 ] := { "slot"                  , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_LOADING              ] := { "loading"               , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_FILL                 ] := { "fill"                  , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_FILLRULE             ] := { "fillrule"              , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_STROKE               ] := { "stroke"                , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_STROKEDASHARRAY      ] := { "strokedasharray"       , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_STROKEDASHOFFSET     ] := { "strokedashoffset"      , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_STROKELINECAP        ] := { "strokelinecap"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_STROKELINEJOIN       ] := { "strokelinejoin"        , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_STROKEMITERLIMIT     ] := { "strokemiterlimit"      , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_STROKEWIDTH          ] := { "strokewidth"           , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_COLORINTERPOLATION   ] := { "colorinterpolation"    , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_COLORRENDERING       ] := { "colorrendering"        , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_OPACITY              ] := { "opacity"               , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_STROKEOPACITY        ] := { "strokeopacity"         , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_FILLOPACITY          ] := { "fillopacity"           , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_AUTOCAPITALIZE       ] := { "autocapitalize"        , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_ENTERKEYHINT         ] := { "enterkeyhint"          , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_EXPORTPARTS          ] := { "exportparts"           , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_INPUTMODE            ] := { "inputmode"             , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_NONCE                ] := { "nonce"                 , HTML_ATTR_TYPE_UNKNOWN   }
-       t_aHA[ HTML_ATTR_PART                 ] := { "part"                  , HTML_ATTR_TYPE_UNKNOWN   }
-
-    /*End TODO:*/
 
    RETURN
 
@@ -2231,6 +2319,7 @@ STATIC FUNCTION THtmlAttr_GlobalAttributes()
       t_aHA[ HTML_ATTR_DATASRC          ], ;
       t_aHA[ HTML_ATTR_DATATYPE         ], ;
       t_aHA[ HTML_ATTR_DIR              ], ;
+      t_aHA[ HTML_ATTR_DISPLAY          ], ;
       t_aHA[ HTML_ATTR_DRAGGABLE        ], ;
       t_aHA[ HTML_ATTR_DROPZONE         ], ;
       t_aHA[ HTML_ATTR_ENTERKEYHINT     ], ;
@@ -2257,6 +2346,7 @@ STATIC FUNCTION THtmlAttr_GlobalAttributes()
       t_aHA[ HTML_ATTR_ONMESSAGE        ], ;
       t_aHA[ HTML_ATTR_ONMOUSEWHEEL     ], ;
       t_aHA[ HTML_ATTR_PART             ], ;
+      t_aHA[ HTML_ATTR_PREFIX           ], ;
       t_aHA[ HTML_ATTR_ROLE             ], ;
       t_aHA[ HTML_ATTR_SLOT             ], ;
       t_aHA[ HTML_ATTR_SPELLCHECK       ], ;
@@ -2264,8 +2354,8 @@ STATIC FUNCTION THtmlAttr_GlobalAttributes()
       t_aHA[ HTML_ATTR_TABINDEX         ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_TRANSLATE        ], ;
-      t_aHA[ HTML_ATTR_XML_BASE         ], ;
-      t_aHA[ HTML_ATTR_XML_LANG         ], ;
+      t_aHA[ HTML_ATTR_XML:BASE         ], ;
+      t_aHA[ HTML_ATTR_XML:LANG         ], ;
       t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_A()
@@ -3092,6 +3182,7 @@ STATIC FUNCTION THtmlAttr_INPUT()
       t_aHA[ HTML_ATTR_ACCEPT           ], ;
       t_aHA[ HTML_ATTR_ALIGN            ], ;
       t_aHA[ HTML_ATTR_ALT              ], ;
+      t_aHA[ HTML_ATTR_AUTOCAPITALIZE   ], ;
       t_aHA[ HTML_ATTR_CHECKED          ], ;
       t_aHA[ HTML_ATTR_DISABLED         ], ;
       t_aHA[ HTML_ATTR_DIRNAME          ], ;
@@ -3506,7 +3597,7 @@ STATIC FUNCTION THtmlAttr_PRE()
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
-      t_aHA[ HTML_ATTR_XML_SPACE        ], ;
+      t_aHA[ HTML_ATTR_XML:SPACE        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_PROGRESS()
@@ -3649,11 +3740,12 @@ STATIC FUNCTION THtmlAttr_SCRIPT()
       t_aHA[ HTML_ATTR_DEFER            ], ;
       t_aHA[ HTML_ATTR_EVENT            ], ;
       t_aHA[ HTML_ATTR_FOR              ], ;
+      t_aHA[ HTML_ATTR_INTEGRITY        ], ;
       t_aHA[ HTML_ATTR_LANGUAGE         ], ;
       t_aHA[ HTML_ATTR_ONERROR          ], ;
       t_aHA[ HTML_ATTR_SRC              ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
-      t_aHA[ HTML_ATTR_XML_SPACE        ], ;
+      t_aHA[ HTML_ATTR_XML:SPACE        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
       t_aHA[ HTML_ATTR_ASYNC            ] }
 
@@ -3744,7 +3836,7 @@ STATIC FUNCTION THtmlAttr_STYLE()
       t_aHA[ HTML_ATTR_MEDIA            ], ;
       t_aHA[ HTML_ATTR_SCOPED           ], ;
       t_aHA[ HTML_ATTR_TYPE             ], ;
-      t_aHA[ HTML_ATTR_XML_SPACE        ], ;
+      t_aHA[ HTML_ATTR_XML:SPACE        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
       t_aHA[ HTML_ATTR_SRCSET           ] }
 
@@ -3775,6 +3867,111 @@ STATIC FUNCTION THtmlAttr_SUP()
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ] }
+    
+STATIC FUNCTION THtmlAttr_SVG()
+   RETURN { ;
+   t_aHA[ HTML_ATTR_SVG_BASEPROFILE           ], ;
+   t_aHA[ HTML_ATTR_SVG_BY                    ], ;
+   t_aHA[ HTML_ATTR_SVG_COLORINTERPOLATION    ], ;
+   t_aHA[ HTML_ATTR_SVG_COLORRENDERING        ], ;
+   t_aHA[ HTML_ATTR_SVG_CONTENTSCRIPTTYPE     ], ;
+   t_aHA[ HTML_ATTR_SVG_CONTENTSTYLETYPE      ], ;
+   t_aHA[ HTML_ATTR_SVG_CX                    ], ;
+   t_aHA[ HTML_ATTR_SVG_CY                    ], ;
+   t_aHA[ HTML_ATTR_SVG_ENTERKEYHINT          ], ;
+   t_aHA[ HTML_ATTR_SVG_EXPORTPARTS           ], ;
+   t_aHA[ HTML_ATTR_SVG_FILL                  ], ;
+   t_aHA[ HTML_ATTR_SVG_FILL-RULE             ], ;
+   t_aHA[ HTML_ATTR_SVG_FILL-OPACITY          ], ;
+   t_aHA[ HTML_ATTR_SVG_FILTER                ], ;
+   t_aHA[ HTML_ATTR_SVG_FLOOD-COLOR           ], ;
+   t_aHA[ HTML_ATTR_SVG_FLOOD-OPACITY         ], ;
+   t_aHA[ HTML_ATTR_SVG_FONT-SIZE             ], ;
+   t_aHA[ HTML_ATTR_SVG_FONT-SIZE-ADJUST      ], ;
+   t_aHA[ HTML_ATTR_SVG_FONT-STYLE            ], ;
+   t_aHA[ HTML_ATTR_SVG_VISIBILITY            ], ;
+   t_aHA[ HTML_ATTR_SVG_FROM                  ], ;
+   t_aHA[ HTML_ATTR_SVG_FR                    ], ;
+   t_aHA[ HTML_ATTR_SVG_HEIGHT                ], ;
+   t_aHA[ HTML_ATTR_SVG_KEYPOINTS             ], ;
+   t_aHA[ HTML_ATTR_SVG_KEYTIMES              ], ;
+   t_aHA[ HTML_ATTR_SVG_LENGTHADJUST          ], ;
+   t_aHA[ HTML_ATTR_SVG_LETTER-SPACING        ], ;
+   t_aHA[ HTML_ATTR_SVG_LIGHTING-COLOR        ], ;
+   t_aHA[ HTML_ATTR_SVG_MARKERHEIGHT          ], ;
+   t_aHA[ HTML_ATTR_SVG_MARKERWIDTH           ], ;
+   t_aHA[ HTML_ATTR_SVG_MASK                  ], ;
+   t_aHA[ HTML_ATTR_SVG_MEDIA                 ], ;
+   t_aHA[ HTML_ATTR_SVG_NUMOCTAVES            ], ;
+   t_aHA[ HTML_ATTR_SVG_NONCE                 ], ;
+   t_aHA[ HTML_ATTR_SVG_OPACITY               ], ;
+   t_aHA[ HTML_ATTR_SVG_OPERATOR              ], ;
+   t_aHA[ HTML_ATTR_SVG_ORIENT                ], ;
+   t_aHA[ HTML_ATTR_SVG_PART                  ], ;
+   t_aHA[ HTML_ATTR_SVG_PATH                  ], ;
+   t_aHA[ HTML_ATTR_SVG_PATHLENGTH            ], ;
+   t_aHA[ HTML_ATTR_SVG_PATTERNCONTENTUNITS   ], ;
+   t_aHA[ HTML_ATTR_SVG_PATTERNTRANSFORM      ], ;
+   t_aHA[ HTML_ATTR_SVG_PATTERNUNITS          ], ;
+   t_aHA[ HTML_ATTR_SVG_POINTER-EVENTS        ], ;
+   t_aHA[ HTML_ATTR_SVG_POINTS                ], ;
+   t_aHA[ HTML_ATTR_SVG_POINTSATX             ], ;
+   t_aHA[ HTML_ATTR_SVG_POINTSATY             ], ;
+   t_aHA[ HTML_ATTR_SVG_POINTSATZ             ], ;
+   t_aHA[ HTML_ATTR_SVG_PRESERVEASPECTRATIO   ], ;
+   t_aHA[ HTML_ATTR_SVG_R                     ], ;
+   t_aHA[ HTML_ATTR_SVG_RADIUS                ], ;
+   t_aHA[ HTML_ATTR_SVG_REPEATCOUNT           ], ;
+   t_aHA[ HTML_ATTR_SVG_REPEATDUR             ], ;
+   t_aHA[ HTML_ATTR_SVG_RESTART               ], ;
+   t_aHA[ HTML_ATTR_SVG_ROTATE                ], ;
+   t_aHA[ HTML_ATTR_SVG_RX                    ], ;
+   t_aHA[ HTML_ATTR_SVG_RY                    ], ;
+   t_aHA[ HTML_ATTR_SVG_SCALE                 ], ;
+   t_aHA[ HTML_ATTR_SVG_SEED                  ], ;
+   t_aHA[ HTML_ATTR_SVG_SHAPE-RENDERING       ], ;
+   t_aHA[ HTML_ATTR_SVG_STARTOFFSET           ], ;
+   t_aHA[ HTML_ATTR_SVG_STDDEVIATION          ], ;
+   t_aHA[ HTML_ATTR_SVG_STITCHTILES           ], ;
+   t_aHA[ HTML_ATTR_SVG_STOP-COLOR            ], ;
+   t_aHA[ HTML_ATTR_SVG_STOP-OPACITY          ], ;
+   t_aHA[ HTML_ATTR_SVG_STROKE                ], ;
+   t_aHA[ HTML_ATTR_SVG_STROKE-DASHARRAY      ], ;
+   t_aHA[ HTML_ATTR_SVG_STROKE-DASHOFFSET     ], ;
+   t_aHA[ HTML_ATTR_SVG_STROKE-LINECAP        ], ;
+   t_aHA[ HTML_ATTR_SVG_STROKE-OPACITY        ], ;
+   t_aHA[ HTML_ATTR_SVG_STROKE-WIDTH          ], ;
+   t_aHA[ HTML_ATTR_SVG_STROKE-LINEJOIN       ], ;
+   t_aHA[ HTML_ATTR_SVG_STROKE-MITERLIMIT     ], ;
+   t_aHA[ HTML_ATTR_SVG_STYLE                 ], ;
+   t_aHA[ HTML_ATTR_SVG_SURFACESCALE          ], ;
+   t_aHA[ HTML_ATTR_SVG_SYSTEMLANGUAGE        ], ;
+   t_aHA[ HTML_ATTR_SVG_TABINDEX              ], ;
+   t_aHA[ HTML_ATTR_SVG_TABLEVALUES           ], ;
+   t_aHA[ HTML_ATTR_SVG_TEXT-ANCHOR           ], ;
+   t_aHA[ HTML_ATTR_SVG_TEXT-DECORATION       ], ;
+   t_aHA[ HTML_ATTR_SVG_TEXT-RENDERING        ], ;
+   t_aHA[ HTML_ATTR_SVG_TEXTLENGTH            ], ;
+   t_aHA[ HTML_ATTR_SVG_TO                    ], ;
+   t_aHA[ HTML_ATTR_SVG_TRANSFORM             ], ;
+   t_aHA[ HTML_ATTR_SVG_TYPE                  ], ;
+   t_aHA[ HTML_ATTR_SVG_VECTOR-EFFECT         ], ;
+   t_aHA[ HTML_ATTR_SVG_VIEWBOX               ], ;
+   t_aHA[ HTML_ATTR_SVG_VISIBILITY            ], ;
+   t_aHA[ HTML_ATTR_SVG_WIDTH                 ], ;
+   t_aHA[ HTML_ATTR_SVG_WORD-SPACING          ], ;
+   t_aHA[ HTML_ATTR_SVG_X                     ], ;
+   t_aHA[ HTML_ATTR_SVG_X1                    ], ;
+   t_aHA[ HTML_ATTR_SVG_X2                    ], ;
+   t_aHA[ HTML_ATTR_SVG_XCHANNELSELECTOR      ], ;
+   t_aHA[ HTML_ATTR_SVG_XML:LANG              ], ;
+   t_aHA[ HTML_ATTR_SVG_XML:BASE              ], ;
+   t_aHA[ HTML_ATTR_SVG_Y                     ], ;
+   t_aHA[ HTML_ATTR_SVG_Y1                    ], ;
+   t_aHA[ HTML_ATTR_SVG_Y2                    ], ;
+   t_aHA[ HTML_ATTR_SVG_YCHANNELSELECTOR      ], ;
+   t_aHA[ HTML_ATTR_SVG_Z                     ], ;
+   t_aHA[ HTML_ATTR_SVG_ZOOMANDPAN            ] }
 
 STATIC FUNCTION THtmlAttr_TABLE()
    RETURN { ;
