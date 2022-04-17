@@ -119,7 +119,7 @@ CREATE CLASS THtmlDocument MODULE FRIENDLY
 
    METHOD new( cHtmlString )
    METHOD readFile( cFileName )
-   METHOD writeFile( cFileName )
+   METHOD writeFile( cFileName , nIndent )
 
    METHOD collect()
    METHOD toString( nIndent )
@@ -1769,9 +1769,9 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "dt"         ] := { @THtmlAttr_DT()             , hb_bitOr( CM_DEFLIST, CM_OPT, CM_NO_INDENT )                        }
    t_hHT[ "em"         ] := { @THtmlAttr_EM()             ,         ( CM_INLINE )                                               }
    t_hHT[ "embed"      ] := { @THtmlAttr_EMBED()          , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                             }
-   t_hHT[ "fieldset"   ] := { @THtmlAttr_FIELDSET()       ,         ( CM_BLOCK )                                                }
-   t_hHT[ "figcaption" ] := { @THtmlAttr_FIGCAPTION()     , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
-   t_hHT[ "figure"     ] := { @THtmlAttr_FIGURE()         , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
+   t_hHT[ "fieldset"   ] := { @THtmlAttr_FIELDSET()       ,         ( CM_INLINE )                                               }
+   t_hHT[ "figcaption" ] := { @THtmlAttr_FIGCAPTION()     ,         ( CM_BLOCK )                                                }
+   t_hHT[ "figure"     ] := { @THtmlAttr_FIGURE()         ,         ( CM_BLOCK )                                                }
    t_hHT[ "font"       ] := { @THtmlAttr_FONT()           ,         ( CM_INLINE )                                               }
    t_hHT[ "footer"     ] := {                             , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
    t_hHT[ "form"       ] := { @THtmlAttr_FORM()           ,         ( CM_BLOCK )                                                }

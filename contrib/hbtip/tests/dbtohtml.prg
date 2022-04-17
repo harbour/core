@@ -14,6 +14,7 @@ PROCEDURE Main()
 
     LOCAL nField    AS NUMERIC
     LOCAL nFields   AS NUMERIC
+    LOCAL nOption   AS NUMERIC
     LOCAL nProgress AS NUMERIC
 
     LOCAL oRow      AS OBJECT
@@ -304,7 +305,20 @@ PROCEDURE Main()
 
     hb_run( "address.html" )
 
-*    hb_vfErase( "address.html" )
+    while .T.
+        nOption := Alert( "Do you want to delete the address.html file?", { "YES" , "NO" } )
+        switch nOption
+        case 0
+        case 2
+            exit
+        case 1    
+            hb_vfErase( "address.html" )
+            exit
+        end switch
+        if (nOption>=1)
+            exit                
+        endif
+    end while
 
     RETURN
 
