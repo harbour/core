@@ -291,7 +291,7 @@ PROCEDURE Main()
 
     (cAlias)->(dbCloseArea())
 
-    IF oDoc:writeFile( "address.html" , 4 )
+    IF oDoc:writeFile( "address.html" , -9 , 4 )
         ? "File created:", "address.html"
     ELSE
         ? "Error:", FError()

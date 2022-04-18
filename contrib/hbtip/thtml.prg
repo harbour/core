@@ -119,10 +119,10 @@ CREATE CLASS THtmlDocument MODULE FRIENDLY
 
    METHOD new( cHtmlString )
    METHOD readFile( cFileName )
-   METHOD writeFile( cFileName , nIndent )
+   METHOD writeFile( cFileName , nIndent , nIncIndent )
 
    METHOD collect()
-   METHOD toString( nIndent )
+   METHOD toString( nIndent , nIncIndent )
    METHOD getNode( cTagName )
    METHOD getNodes( cTagName )
    METHOD findFirst( cName, cAttrib, cValue, cData )
@@ -228,8 +228,8 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
    RETURN Self
 
 // Builds a HTML formatted string
-METHOD toString( nIndent ) CLASS THtmlDocument
-   RETURN ::root:toString(nIndent)
+METHOD toString( nIndent , nIncIndent ) CLASS THtmlDocument
+   RETURN ::root:toString( nIndent , nIncIndent )
 
 // reads HTML file and parses it into tree of objects
 METHOD readFile( cFileName ) CLASS THtmlDocument
@@ -244,9 +244,9 @@ METHOD readFile( cFileName ) CLASS THtmlDocument
    RETURN .F.
 
 // writes the entire tree of HTML objects into a file
-METHOD writeFile( cFileName , nIndent ) CLASS THtmlDocument
+METHOD writeFile( cFileName , nIndent , nIncIndent ) CLASS THtmlDocument
 
-   LOCAL lSuccess := hb_MemoWrit( cFileName, ::toString( nIndent ) )
+   LOCAL lSuccess := hb_MemoWrit( cFileName, ::toString( nIndent , nIncIndent ) )
 
    IF lSuccess
       ::changed := .F.
@@ -580,7 +580,7 @@ CREATE CLASS THtmlNode MODULE FRIENDLY
    ACCESS parentNode()    INLINE ::parent
    ACCESS document()      INLINE iif( ::root == NIL, NIL, ::root:_document )
 
-   METHOD toString( nIndent )
+   METHOD toString( nIndent , nIncIndent )
    METHOD attrToString()
 
    METHOD collect( oEndNode )
@@ -1034,7 +1034,7 @@ METHOD prevNode() CLASS THtmlNode
    RETURN iif( nPos == 1, ::parent, aNodes[ nPos - 1 ] )
 
 // creates HTML code for this node
-METHOD toString( nIndent ) CLASS THtmlNode
+METHOD toString( nIndent , nIncIndent ) CLASS THtmlNode
 
    LOCAL cIndent, cHtml := "", oNode
 
@@ -1043,23 +1043,17 @@ METHOD toString( nIndent ) CLASS THtmlNode
       RETURN ::htmlContent
    ENDIF
 
-   hb_default( @nIndent, -1 )
+   hb_default( @nIndent, -4 )
+   hb_default( @nIncIndent, 4 )
 
    cIndent := iif( ::keepFormatting(), "", Space( Max( 0, nIndent ) ) )
 
    IF ! ::htmlTagName == "_root_"
       // all nodes but the root node have a HTML tag
       IF ! ::isInline() .OR. ::htmlTagName == "!--"
-         IF ::htmlTagName == "!--"
-            IF ! Right( cHtml, Len( t_cHB_EOL ) ) == t_cHB_EOL
-               cHtml += t_cHB_EOL
-            ENDIF
-         ENDIF
          cHtml += cIndent
       ELSEIF ::keepFormatting()
-         IF ! Right( cHtml, Len( t_cHB_EOL ) ) == t_cHB_EOL
-            cHtml += t_cHB_EOL
-         ENDIF
+         cHtml += t_cHB_EOL
       ENDIF
       cHtml += "<" + ::htmlTagName + ::attrToString()
 
@@ -1072,11 +1066,9 @@ METHOD toString( nIndent ) CLASS THtmlNode
 
       FOR EACH oNode IN ::htmlContent
          IF ! oNode:isInline() .OR. oNode:htmlTagName == "!--"
-            IF ! Right( cHtml, Len( t_cHB_EOL ) ) == t_cHB_EOL
-               cHtml += t_cHB_EOL
-            ENDIF
+            cHtml += t_cHB_EOL
          ENDIF
-         cHtml += oNode:toString( nIndent + 1 )
+         cHtml += oNode:toString( nIndent + nIncIndent )
       NEXT
 
    ELSEIF HB_ISSTRING( ::htmlContent )
@@ -1085,23 +1077,21 @@ METHOD toString( nIndent ) CLASS THtmlNode
 
    IF ::htmlEndTagName != NIL
       IF ::isInline() .OR. ::keepFormatting() .OR. ::isType( CM_HEADING ) .OR. ::isType( CM_HEAD )
-         cHtml += iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
+         RETURN cHtml += iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
       ENDIF
       IF ! Right( cHtml, Len( t_cHB_EOL ) ) == t_cHB_EOL
          cHtml += t_cHB_EOL
       ENDIF
-      cHtml += cIndent + iif( ::htmlEndTagName == "/", " />", iif( ::htmlEndTagName == "--" , ::htmlEndTagName+">" , "<" + ::htmlEndTagName + ">" ) )
+      RETURN cHtml += cIndent + iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
    ELSEIF ::htmlTagName $ "!--,br"
-      IF ! Right( cHtml, Len( t_cHB_EOL ) ) == t_cHB_EOL
-         cHtml += t_cHB_EOL
-         cHtml += cIndent
-      ENDIF
+      RETURN cHtml += t_cHB_EOL + cIndent
    ENDIF
 
    //TODO: Workaround until reviewing the logic of the <!-- and --> tags
    cHtml:=strTran(cHtml,"<!-->","<!--")
    cHtml:=strTran(cHtml,"<-->","-->")
    cHtml:=strTran(cHtml,"</-->","-->")
+   cHtml:=strTran(cHtml,"-->-->","-->")
 
    RETURN cHtml
 
@@ -1598,6 +1588,8 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
    oNode := THtmlNode():new( Self, cName, cAttr )
    IF ! oNode:isOptional() .AND. ! oNode:isEmpty()
       oNode:htmlEndTagName := "/" + cName
+   ELSEIF cName=="!--"
+      oNode:htmlEndTagName := "--"
    ENDIF
    ::addNode( oNode )
 
@@ -1772,11 +1764,11 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "fieldset"   ] := { @THtmlAttr_FIELDSET()       ,         ( CM_INLINE )                                               }
    t_hHT[ "figcaption" ] := { @THtmlAttr_FIGCAPTION()     ,         ( CM_BLOCK )                                                }
    t_hHT[ "figure"     ] := { @THtmlAttr_FIGURE()         ,         ( CM_BLOCK )                                                }
-   t_hHT[ "font"       ] := { @THtmlAttr_FONT()           ,         ( CM_INLINE )                                               }
+   t_hHT[ "font"       ] := { @THtmlAttr_FONT()           , hb_bitOr( CM_INLINE , CM_OBSOLETE )                                 }
    t_hHT[ "footer"     ] := {                             , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
    t_hHT[ "form"       ] := { @THtmlAttr_FORM()           ,         ( CM_BLOCK )                                                }
-   t_hHT[ "frame"      ] := { @THtmlAttr_FRAME()          , hb_bitOr( CM_FRAMES, CM_EMPTY )                                     }
-   t_hHT[ "frameset"   ] := { @THtmlAttr_FRAMESET()       , hb_bitOr( CM_HTML, CM_FRAMES )                                      }
+   t_hHT[ "frame"      ] := { @THtmlAttr_FRAME()          , hb_bitOr( CM_FRAMES, CM_EMPTY , CM_OBSOLETE  )                      }
+   t_hHT[ "frameset"   ] := { @THtmlAttr_FRAMESET()       , hb_bitOr( CM_HTML, CM_FRAMES , CM_OBSOLETE )                        }
    t_hHT[ "h1"         ] := { @THtmlAttr_H1()             , hb_bitOr( CM_BLOCK, CM_HEADING )                                    }
    t_hHT[ "h2"         ] := { @THtmlAttr_H2()             , hb_bitOr( CM_BLOCK, CM_HEADING )                                    }
    t_hHT[ "h3"         ] := { @THtmlAttr_H3()             , hb_bitOr( CM_BLOCK, CM_HEADING )                                    }
@@ -1785,7 +1777,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "h6"         ] := { @THtmlAttr_H6()             , hb_bitOr( CM_BLOCK, CM_HEADING )                                    }
    t_hHT[ "head"       ] := { @THtmlAttr_HEAD()           , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                              }
    t_hHT[ "header"     ] := { @THtmlAttr_HEADER()         , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
-   t_hHT[ "hgroup"     ] := { @THtmlAttr_HGROUP()         , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
+   t_hHT[ "hgroup"     ] := { @THtmlAttr_HGROUP()         , hb_bitOr( CM_BLOCK, CM_EMPTY, CM_OBSOLETE )                                      }
    t_hHT[ "hr"         ] := { @THtmlAttr_HR()             , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
    t_hHT[ "html"       ] := { @THtmlAttr_HTML()           , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                              }
    t_hHT[ "i"          ] := { @THtmlAttr_I()              ,         ( CM_INLINE )                                               }
@@ -1794,7 +1786,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "img"        ] := { @THtmlAttr_IMG()            , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                             }
    t_hHT[ "input"      ] := { @THtmlAttr_INPUT()          , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                             }
    t_hHT[ "ins"        ] := { @THtmlAttr_INS()            , hb_bitOr( CM_INLINE, CM_BLOCK, CM_MIXED )                           }
-   t_hHT[ "isindex"    ] := { @THtmlAttr_ISINDEX()        , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
+   t_hHT[ "isindex"    ] := { @THtmlAttr_ISINDEX()        , hb_bitOr( CM_BLOCK, CM_EMPTY, CM_OBSOLETE )                         }
    t_hHT[ "kbd"        ] := { @THtmlAttr_KBD()            ,         ( CM_INLINE )                                               }
    t_hHT[ "keygen"     ] := { @THtmlAttr_KEYGEN()         , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
    t_hHT[ "label"      ] := { @THtmlAttr_LABEL()          ,         ( CM_INLINE )                                               }
@@ -1811,12 +1803,12 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "menuitem"   ] := { @THtmlAttr_MENUITEM()       , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
    t_hHT[ "meta"       ] := { @THtmlAttr_META()           , hb_bitOr( CM_HEAD, CM_EMPTY )                                       }
    t_hHT[ "meter"      ] := { @THtmlAttr_METER()          , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
-   t_hHT[ "multicol"   ] := {                             ,         ( CM_BLOCK )                                                }
+   t_hHT[ "multicol"   ] := {                             , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
    t_hHT[ "nav"        ] := {                             ,         ( CM_BLOCK )                                                } 
-   t_hHT[ "nextid"     ] := { @THtmlAttr_NEXTID()         , hb_bitOr( CM_HEAD, CM_EMPTY )                                       }
-   t_hHT[ "nobr"       ] := {                             ,         ( CM_INLINE )                                               }
-   t_hHT[ "noembed"    ] := {                             ,         ( CM_INLINE )                                               }
-   t_hHT[ "noframes"   ] := { @THtmlAttr_NOFRAMES()       , hb_bitOr( CM_BLOCK, CM_FRAMES )                                     }
+   t_hHT[ "nextid"     ] := { @THtmlAttr_NEXTID()         , hb_bitOr( CM_HEAD, CM_EMPTY , CM_OBSOLETE )                         }
+   t_hHT[ "nobr"       ] := {                             , hb_bitOr( CM_INLINE , CM_OBSOLETE )                                 }
+   t_hHT[ "noembed"    ] := {                             , hb_bitOr( CM_INLINE , CM_OBSOLETE )                                 }
+   t_hHT[ "noframes"   ] := { @THtmlAttr_NOFRAMES()       , hb_bitOr( CM_BLOCK, CM_FRAMES , CM_OBSOLETE )                       }
    t_hHT[ "nolayer"    ] := {                             , hb_bitOr( CM_BLOCK, CM_INLINE, CM_MIXED )                           }
    t_hHT[ "nosave"     ] := {                             ,         ( CM_BLOCK )                                                }
    t_hHT[ "noscript"   ] := { @THtmlAttr_NOSCRIPT()       , hb_bitOr( CM_BLOCK, CM_INLINE, CM_MIXED )                           }
@@ -1846,10 +1838,10 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "server"     ] := {                             , hb_bitOr( CM_HEAD, CM_MIXED, CM_BLOCK, CM_INLINE )                  }
    t_hHT[ "servlet"    ] := {                             , hb_bitOr( CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM )                  }
    t_hHT[ "small"      ] := { @THtmlAttr_SMALL()          ,         ( CM_INLINE )                                               }
-   t_hHT[ "spacer"     ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "spacer"     ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY , CM_OBSOLETE )                       }
    t_hHT[ "source"     ] := { @THtmlAttr_SOURCE()         , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
    t_hHT[ "span"       ] := { @THtmlAttr_SPAN()           ,         ( CM_INLINE )                                               }
-   t_hHT[ "strike"     ] := { @THtmlAttr_STRIKE()         ,         ( CM_INLINE )                                               }
+   t_hHT[ "strike"     ] := { @THtmlAttr_STRIKE()         , hb_bitOr( CM_INLINE, CM_OBSOLETE )                                  }
    t_hHT[ "strong"     ] := { @THtmlAttr_STRONG()         ,         ( CM_INLINE )                                               }
    t_hHT[ "style"      ] := { @THtmlAttr_STYLE()          ,         ( CM_HEAD )                                                 }
    t_hHT[ "sub"        ] := { @THtmlAttr_SUB()            ,         ( CM_INLINE )                                               }
@@ -1868,7 +1860,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "title"      ] := { @THtmlAttr_TITLE()          ,         ( CM_HEAD )                                                 }
    t_hHT[ "tr"         ] := { @THtmlAttr_TR()             , hb_bitOr( CM_TABLE, CM_OPT )                                        }
    t_hHT[ "track"      ] := { @THtmlAttr_TRACK()          , hb_bitOr( CM_MIXED, CM_BLOCK, CM_INLINE )                           }
-   t_hHT[ "tt"         ] := { @THtmlAttr_TT()             ,         ( CM_INLINE )                                               }
+   t_hHT[ "tt"         ] := { @THtmlAttr_TT()             , hb_bitOr(  CM_INLINE, CM_OBSOLETE )                                 }
    t_hHT[ "u"          ] := { @THtmlAttr_U()              ,         ( CM_INLINE )                                               }
    t_hHT[ "ul"         ] := { @THtmlAttr_UL()             ,         ( CM_BLOCK )                                                }
    t_hHT[ "var"        ] := { @THtmlAttr_VAR()            ,         ( CM_INLINE )                                               }
