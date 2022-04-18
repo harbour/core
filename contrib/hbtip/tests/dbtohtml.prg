@@ -183,7 +183,7 @@ PROCEDURE Main()
                 "href"=>"https://fonts.googleapis.com/icon?family=Material+Icons";
             }
         end with
-        
+
         oTitle:=:head:title
         oTitle:text="Harbour/dbtohtml.prg"
 
@@ -311,12 +311,12 @@ PROCEDURE Main()
         case 0
         case 2
             exit
-        case 1    
+        case 1
             hb_vfErase( "address.html" )
             exit
         end switch
         if (nOption>=1)
-            exit                
+            exit
         endif
     end while
 

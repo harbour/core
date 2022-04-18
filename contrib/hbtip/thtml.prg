@@ -1804,7 +1804,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "meta"       ] := { @THtmlAttr_META()           , hb_bitOr( CM_HEAD, CM_EMPTY )                                       }
    t_hHT[ "meter"      ] := { @THtmlAttr_METER()          , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
    t_hHT[ "multicol"   ] := {                             , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                                   }
-   t_hHT[ "nav"        ] := {                             ,         ( CM_BLOCK )                                                } 
+   t_hHT[ "nav"        ] := {                             ,         ( CM_BLOCK )                                                }
    t_hHT[ "nextid"     ] := { @THtmlAttr_NEXTID()         , hb_bitOr( CM_HEAD, CM_EMPTY , CM_OBSOLETE )                         }
    t_hHT[ "nobr"       ] := {                             , hb_bitOr( CM_INLINE , CM_OBSOLETE )                                 }
    t_hHT[ "noembed"    ] := {                             , hb_bitOr( CM_INLINE , CM_OBSOLETE )                                 }
@@ -3382,7 +3382,7 @@ STATIC FUNCTION THtmlAttr_LINK()
       t_aHA[ HTML_ATTR_DISABLED         ], ;
       t_aHA[ HTML_ATTR_HREF             ], ;
       t_aHA[ HTML_ATTR_HREFLANG         ], ;
-      t_aHA[ HTML_ATTR_INTEGRITY        ], ;    
+      t_aHA[ HTML_ATTR_INTEGRITY        ], ;
       t_aHA[ HTML_ATTR_MEDIA            ], ;
       t_aHA[ HTML_ATTR_METHODS          ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
