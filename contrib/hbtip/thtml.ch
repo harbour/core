@@ -2,6 +2,7 @@
  * Directives for HTML Classes
  *
  * Copyright 2007 Hannes Ziegler <hz/at/knowleXbase.com>
+ * Copyright 2022 Marinaldo de Jesus <marinaldo.jesus/at/gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
