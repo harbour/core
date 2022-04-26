@@ -1,4 +1,8 @@
-/* Demonstrating operator overloading for creating an HTML document */
+/*
+    Demonstrating operator overloading for creating an HTML document
+    Document checking completed. No errors or warnings to show.
+    https://validator.w3.org/nu/#file
+*/
 
 #include "dbstruct.ch"
 
@@ -44,12 +48,6 @@ PROCEDURE Main()
 
         oLang:=oDoc:root:html
         oLang:attr:={"lang"=>"en"}
-
-        /* Operator "+" creates a new node */
-        oMeta:=:head+"meta"
-        with object oMeta
-            :attr:={"http-equiv"=>"content-type","content"=>"text/html; charset=UTF-8"}
-        end with
 
         /* Operator "+" creates a new node */
         oComment:=:head+"!--"
@@ -189,7 +187,7 @@ PROCEDURE Main()
 
     end with
 
-    with object oDoc:body
+    with object oDoc:body:main
 
         /* Operator ":" returns first "h1" from body (creates if not existent) */
         oNode:=:h1
@@ -198,32 +196,21 @@ PROCEDURE Main()
         end with
 
         /* Operator "+" creates a new <p> node */
-        oNode:=oDoc:body+"p"
+        oNode:=oDoc:body:main+"p"
+        oNode:attr:={"style"=>"font-size: 30px"}
+        oNode:text:="Harbour THtmlDocument "
 
-            /* Operator "+=" creates a new <font> node with attribute */
-            oNode+='font size="5"'
-            oNode:text:="This is a "
+        /* Operator "+" creates a new <b> node */
+        oNode+="b"
+            oNode:attr:={"style"=>"color:blue"}
+            oNode:text:="sample "
+        /* Operator "-=" closes <b> node*/
+        oNode-="b"
 
-                /* Operator "+" creates a new <b> node */
-                oNode+="b"
+        oNode:text:="database!"
 
-                    /* Operator "+" creates a new <font> node with attribute */
-                    oNode:=oNode+'font color="blue"'
-                    oNode:text:="sample "
-
-                    /* Operator "-=" closes 2nd <font>, result is <b> node */
-                    oNode-="font"
-
-                /* Operator "-=" closes <b> node, result is 1st <font> node */
-                oNode-="b"
-
-                oNode:text:="database!"
-
-            /* Operator "-" closes 1st <font> node, result is <p> node */
-            oNode-="font"
-            HB_SYMBOL_UNUSED( oNode )
-
-        oNode:=oDoc:body:AddNode(THtmlNode():New(oDoc:body,"/p"))
+        /* closes <p> node*/
+        oNode:=oDoc:body:main:AddNode(THtmlNode():New(oDoc:body:main,"/p"))
         HB_SYMBOL_UNUSED( oNode )
 
         oNode+="hr"
@@ -233,16 +220,24 @@ PROCEDURE Main()
         oTable:=:table
         with object oTable
 
-            :attr:='class="table"'
+            :attr:='class="table table-striped table-hover"'
 
             aDBStruct:=(cAlias)->(dbStruct())
             nFields:=Len(aDBStruct)
             nProgress:=0
 
-            oRow:=oTable +'tr bgcolor="lightcyan"'
+            oRow:=oTable +'tr'
+
+            oCell:=oRow:AddNode(THtmlNode():New(oRow,"th"))
+            oCell:scope:="row"
+            oCell:text:="#"
+            oCell:=oCell-"th"
+            HB_SYMBOL_UNUSED(oCell)
+
             FOR nField:=1 TO nFields
                 Progress(@nProgress,Row(),Col()+3)
                 oCell:=oRow+"th"
+                oCell:scope:="col"
                 oCell:text:=aDBStruct[nField][DBS_NAME]
                 oCell-="th"
                 HB_SYMBOL_UNUSED(oCell)
@@ -257,7 +252,12 @@ PROCEDURE Main()
                 Progress(@nProgress,Row(),Col()+3)
 
                 oRow:=oTable+"tr"
-                oRow:bgColor:=iif( RecNo() % 2 == 0, "lightgrey", "white" )
+
+                oCell:=oRow:AddNode(THtmlNode():New(oRow,"th"))
+                oCell:scope:="row"
+                oCell:text:=(cAlias)->(RecNo())
+                oCell:=oCell-"th"
+                HB_SYMBOL_UNUSED(oCell)
 
                 FOR nField:=1 TO nFields
                     Progress(@nProgress,Row(),Col()+3)
@@ -278,11 +278,11 @@ PROCEDURE Main()
 
             END WHILE
 
-            oNode:=oDoc:body+"hr"
+            oNode:=oDoc:body:main+"hr"
             HB_SYMBOL_UNUSED( oNode )
-            oNode:=oDoc:body+"p"
+            oNode:=oDoc:body:main+"p"
             oNode:text:=hb_NToS((cAlias)->(RecCount()))+" records from database "+cAlias
-            oNode:=oDoc:body:AddNode(THtmlNode():New(oDoc:body,"/p"))
+            oNode:=oDoc:body:main:AddNode(THtmlNode():New(oDoc:body:main,"/p"))
             HB_SYMBOL_UNUSED( oNode )
 
         end with
@@ -297,7 +297,7 @@ PROCEDURE Main()
         ? "Error:", FError()
     ENDIF
 
-    ctip_HtmlToStr:=tip_HtmlToStr( oDoc:body:getText() )
+    ctip_HtmlToStr:=tip_HtmlToStr( oDoc:body:main:getText() )
 
     WAIT
     ? ctip_HtmlToStr

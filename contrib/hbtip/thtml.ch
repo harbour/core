@@ -49,7 +49,8 @@
 #define _HB_THTML
 
 /* Content model shortcut encoding taken from Tidy library
-   https://github.com/htacg/tidy-html5 */
+   https://github.com/htacg/tidy-html5/blob/next/src/lexer.h
+*/
 
 #define CM_UNKNOWN                  0
 #define CM_EMPTY                    0x000001  /* Elements with no content. Map to HTML specification. */
@@ -62,24 +63,24 @@
 #define CM_TABLE                    0x000080  /* Elements that can appear inside TABLE. */
 #define CM_ROWGRP                   0x000100  /* Used for "thead", "tfoot" or "tbody". */
 #define CM_ROW                      0x000200  /* Used for "td", "th" */
-#define CM_FIELD                    0x000400  /* Elements whose content must be protected against white space movement.
-                                                 Includes some elements that can found in forms. */
-#define CM_OBJECT                   0x000800  /* Used to avoid propagating inline emphasis inside some elements
-                                                 such as OBJECT or APPLET. */
+#define CM_FIELD                    0x000400  /* Elements whose content must be protected against white space movement. Includes some elements that can found in forms. */
+#define CM_OBJECT                   0x000800  /* Used to avoid propagating inline emphasis inside some elements such as OBJECT or APPLET. */
 #define CM_PARAM                    0x001000  /* Elements that allows "PARAM". */
 #define CM_FRAMES                   0x002000  /* "FRAME", "FRAMESET", "NOFRAMES". Used in ParseFrameSet. */
 #define CM_HEADING                  0x004000  /* Heading elements (h1, h2, ...). */
 #define CM_OPT                      0x008000  /* Elements with an optional end tag. */
 #define CM_IMG                      0x010000  /* Elements that use "align" attribute for vertical position. */
 #define CM_MIXED                    0x020000  /* Elements with inline and block model. Used to avoid calling InlineDup. */
-#define CM_NO_INDENT                0x040000  /* Elements whose content needs to be indented only if containing one
-                                                 CM_BLOCK element. */
+#define CM_NO_INDENT                0x040000  /* Elements whose content needs to be indented only if containing one CM_BLOCK element. */
 #define CM_OBSOLETE                 0x080000  /* Elements that are obsolete (such as "dir", "menu"). */
-#define CM_NEW                      0x100000  /* User defined elements. Used to determine how attributes without value
-                                                 should be printed. */
+#define CM_NEW                      0x100000  /* User defined elements. Used to determine how attributes without value should be printed. */
 #define CM_OMITST                   0x200000  /* Elements that cannot be omitted. */
+#define CM_VOID                     0X400000  /* Elements that are void per https://www.w3.org/TR/2011/WD-html-markup-20110113/syntax.html#syntax-elements. */
 
-/* Constants for HTML attributes adopted from Tidy library */
+/* 
+    Constants for HTML attributes adopted from Tidy library 
+    https://github.com/htacg/tidy-html5/blob/next/include/tidyenum.h
+*/
 
 #define HTML_ATTR_ABBR                          1
 #define HTML_ATTR_ACCEPT                        2
@@ -485,8 +486,9 @@
 #define HTML_ATTR_PART                          396
 #define HTML_ATTR_XML_BASE                      397
 #define HTML_ATTR_FILL                          398
+#define HTML_ATTR_REFERRERPOLICY                399
 
-#define HTML_ATTR_COUNT                         398
+#define HTML_ATTR_COUNT                         399
 
 /* Constants for HTML ARIA attributes adopted from Tidy library */
 
@@ -577,7 +579,8 @@
 #define HTML_ATTR_TYPE_SANDBOX                  46
 #define HTML_ATTR_TYPE_SRCDOC                   47
 #define HTML_ATTR_TYPE_STEP                     48
+#define HTML_ATTR_TYPE_REFERRERPOLICY           49    
 
-#define HTML_ATTR_TYPE_COUNT                    48
+#define HTML_ATTR_TYPE_COUNT                    49
 
 #endif /* _HB_THTML */

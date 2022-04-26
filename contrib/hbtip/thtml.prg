@@ -103,10 +103,6 @@ THREAD STATIC t_lInit := .F.       // initialization flag for HTML data
 /* Class for handling an entire HTML document */
 CREATE CLASS THtmlDocument MODULE FRIENDLY
 
-   if t_cHB_EOL==NIL
-      t_cHB_EOL:=hb_eol()
-   endif
-
    HIDDEN:
    VAR oIterator
    VAR nodes
@@ -137,12 +133,20 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
    LOCAL oSubNode, oErrNode, aHead, aBody, nMode := 0
    LOCAL cEmptyHtmlDoc
 
+   if t_cHB_EOL==NIL
+      t_cHB_EOL:=hb_eol()
+   endif
+
 #pragma __cstream | cEmptyHtmlDoc:=%s
 <!DOCTYPE html>
 <html>
     <head>
     </head>
     <body>
+        <main>
+        </main>
+        <footer>
+        </footer>
     </body>
 </html>
 #pragma __endtext
@@ -1113,20 +1117,16 @@ METHOD attrToString() CLASS THtmlNode
 
    RETURN cAttr
 
-STATIC FUNCTION __getAttributes( cAttrFunc )
+STATIC FUNCTION __getAttributes( sAttrFunc )
 
    LOCAL aAttr
    LOCAL nAttr
 
-   HB_DEFAULT(@cAttrFunc,{||Array(0)})
-
    BEGIN SEQUENCE WITH __BreakBlock()
-      aAttr := cAttrFunc:exec()
+      aAttr := sAttrFunc:exec()
    RECOVER
       aAttr := {}  // Tag has no attributes
    END SEQUENCE
-
-   HB_DEFAULT(@aAttr,{})
 
    //Add Global Attributes
    //The global attributes below can be used on any HTML element
@@ -1715,8 +1715,8 @@ STATIC PROCEDURE _Init_Html_TagTypes
 
    t_hHT[ "_root_"     ] := {                             ,         ( CM_INLINE )                                               }
    t_hHT[ "_text_"     ] := {                             ,         ( CM_INLINE )                                               }
-   t_hHT[ "!--"        ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
-   t_hHT[ "!DOCTYPE"   ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "!--"        ] := {                             ,         ( CM_INLINE )                                               }
+   t_hHT[ "!DOCTYPE"   ] := {                             ,         ( CM_INLINE )                                               }
    t_hHT[ "a"          ] := { @THtmlAttr_A()              ,         ( CM_INLINE )                                               }
    t_hHT[ "abbr"       ] := { @THtmlAttr_ABBR()           ,         ( CM_INLINE )                                               }
    t_hHT[ "acronym"    ] := { @THtmlAttr_ACRONYM()        , hb_bitOr( CM_INLINE , CM_OBSOLETE )                                 }
@@ -1724,9 +1724,9 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "align"      ] := {                             ,         ( CM_BLOCK )                                                }
    t_hHT[ "applet"     ] := { @THtmlAttr_APPLET()         , hb_bitOr( CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM , CM_OBSOLETE )    }
    t_hHT[ "area"       ] := { @THtmlAttr_AREA()           , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
-   t_hHT[ "article"    ] := { @THtmlAttr_ARTICLE()        , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
-   t_hHT[ "aside"      ] := { @THtmlAttr_ASIDE()          , hb_bitOr( CM_TABLE, CM_EMPTY )                                      }
-   t_hHT[ "audio"      ] := { @THtmlAttr_AUDIO()          , hb_bitOr( CM_INLINE, CM_EMPTY )                                     }
+   t_hHT[ "article"    ] := { @THtmlAttr_ARTICLE()        ,         ( CM_BLOCK)                                                 }
+   t_hHT[ "aside"      ] := { @THtmlAttr_ASIDE()          ,         ( CM_BLOCK )                                                }
+   t_hHT[ "audio"      ] := { @THtmlAttr_AUDIO()          ,         ( CM_BLOCK )                                                }
    t_hHT[ "b"          ] := { @THtmlAttr_B()              ,         ( CM_INLINE )                                               }
    t_hHT[ "base"       ] := { @THtmlAttr_BASE()           , hb_bitOr( CM_HEAD, CM_EMPTY )                                       }
    t_hHT[ "basefont"   ] := { @THtmlAttr_BASEFONT()       , hb_bitOr( CM_INLINE, CM_EMPTY , CM_OBSOLETE )                       }
@@ -1765,7 +1765,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "figcaption" ] := { @THtmlAttr_FIGCAPTION()     ,         ( CM_BLOCK )                                                }
    t_hHT[ "figure"     ] := { @THtmlAttr_FIGURE()         ,         ( CM_BLOCK )                                                }
    t_hHT[ "font"       ] := { @THtmlAttr_FONT()           , hb_bitOr( CM_INLINE , CM_OBSOLETE )                                 }
-   t_hHT[ "footer"     ] := {                             , hb_bitOr( CM_BLOCK, CM_EMPTY )                                      }
+   t_hHT[ "footer"     ] := {                             , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                              }
    t_hHT[ "form"       ] := { @THtmlAttr_FORM()           ,         ( CM_BLOCK )                                                }
    t_hHT[ "frame"      ] := { @THtmlAttr_FRAME()          , hb_bitOr( CM_FRAMES, CM_EMPTY , CM_OBSOLETE  )                      }
    t_hHT[ "frameset"   ] := { @THtmlAttr_FRAMESET()       , hb_bitOr( CM_HTML, CM_FRAMES , CM_OBSOLETE )                        }
@@ -2099,6 +2099,7 @@ STATIC PROCEDURE _Init_Html_Attributes
    t_aHA[ HTML_ATTR_PROMPT               ] := { "prompt"                , HTML_ATTR_TYPE_PCDATA         }
    t_aHA[ HTML_ATTR_PUBDATE              ] := { "pubdate"               , HTML_ATTR_TYPE_PUBDATE        }
    t_aHA[ HTML_ATTR_RADIOGROUP           ] := { "radiogroup"            , HTML_ATTR_TYPE_RADIOGROUP     }
+   t_aHA[ HTML_ATTR_REFERRERPOLICY       ] := { "referrerpolicy"        , HTML_ATTR_TYPE_REFERRERPOLICY }
    t_aHA[ HTML_ATTR_REQUIRED             ] := { "required"              , HTML_ATTR_TYPE_BOOL           }
    t_aHA[ HTML_ATTR_RBSPAN               ] := { "rbspan"                , HTML_ATTR_TYPE_NUMBER         }
    t_aHA[ HTML_ATTR_READONLY             ] := { "readonly"              , HTML_ATTR_TYPE_BOOL           }
@@ -2478,7 +2479,9 @@ STATIC FUNCTION THtmlAttr_AREA()
       t_aHA[ HTML_ATTR_ALT              ], ;
       t_aHA[ HTML_ATTR_COORDS           ], ;
       t_aHA[ HTML_ATTR_HREF             ], ;
+      t_aHA[ HTML_ATTR_HREFLANG         ], ;
       t_aHA[ HTML_ATTR_NOHREF           ], ;
+      t_aHA[ HTML_ATTR_MEDIA            ], ;
       t_aHA[ HTML_ATTR_ONBLUR           ], ;
       t_aHA[ HTML_ATTR_ONCLICK          ], ;
       t_aHA[ HTML_ATTR_ONDBLCLICK       ], ;
@@ -2491,8 +2494,11 @@ STATIC FUNCTION THtmlAttr_AREA()
       t_aHA[ HTML_ATTR_ONMOUSEOUT       ], ;
       t_aHA[ HTML_ATTR_ONMOUSEOVER      ], ;
       t_aHA[ HTML_ATTR_ONMOUSEUP        ], ;
+      t_aHA[ HTML_ATTR_REFERRERPOLICY   ], ;
+      t_aHA[ HTML_ATTR_REL              ], ;
       t_aHA[ HTML_ATTR_SHAPE            ], ;
       t_aHA[ HTML_ATTR_TARGET           ], ;
+      t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_XMLNS            ] }
 
 STATIC FUNCTION THtmlAttr_ARTICLE()
