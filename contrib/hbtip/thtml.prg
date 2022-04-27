@@ -49,6 +49,8 @@
 #include "hbclass.ch"
 #include "thtml.ch"
 
+#DEFINE THTML_HB_EOL "__THTML_HB_EOL__"
+
 // A Html document can have more than 16 nesting levels.
 // The current implementation of FOR EACH is not suitable for the HTML classes
 
@@ -86,7 +88,6 @@ THREAD STATIC t_aHA                // data for HTML attributes
 THREAD STATIC t_aHAAria            // data for HTML Aria attributes
 THREAD STATIC t_hHT                // data for HTML tags
 THREAD STATIC t_aGlbAttr           // data for Global HTML attributes
-THREAD STATIC t_cHB_EOL
 THREAD STATIC t_cHtmlCP := ""
 THREAD STATIC t_aHtmlUnicEntities  // HTML character entities
 THREAD STATIC t_cHtmlUnicChars
@@ -132,11 +133,7 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
 
    LOCAL oSubNode, oErrNode, aHead, aBody, nMode := 0
    LOCAL cEmptyHtmlDoc
-
-   if t_cHB_EOL==NIL
-      t_cHB_EOL:=hb_eol()
-   endif
-
+   
 #pragma __cstream | cEmptyHtmlDoc:=%s
 <!DOCTYPE html>
 <html>
@@ -151,7 +148,8 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
 </html>
 #pragma __endtext
 
-   cEmptyHtmlDoc+=t_cHB_EOL
+   cEmptyHtmlDoc:=strTran(cEmptyHtmlDoc,CHR(10),"")
+   cEmptyHtmlDoc+=hb_eol()
 
    IF !HB_ISSTRING( cHtmlString )
       ::root := THtmlNode():new( cEmptyHtmlDoc )
@@ -585,6 +583,7 @@ CREATE CLASS THtmlNode MODULE FRIENDLY
    ACCESS document()      INLINE iif( ::root == NIL, NIL, ::root:_document )
 
    METHOD toString( nIndent , nIncIndent )
+   METHOD __toString( nIndent , nIncIndent )
    METHOD attrToString()
 
    METHOD collect( oEndNode )
@@ -1039,12 +1038,41 @@ METHOD prevNode() CLASS THtmlNode
 
 // creates HTML code for this node
 METHOD toString( nIndent , nIncIndent ) CLASS THtmlNode
+   
+   LOCAL cHtml
+
+   hb_default( @nIndent, -4 )
+   hb_default( @nIncIndent, 4 )
+   
+   cHtml := ::__toString( nIndent , nIncIndent )
+
+   //TODO: Workaround until reviewing the logic of the <!-- and --> tags
+   cHtml:=strTran(cHtml,"<!-->","<!--")
+   cHtml:=strTran(cHtml,"<-->","-->")
+   cHtml:=strTran(cHtml,"</-->","-->")
+   cHtml:=strTran(cHtml,"-->-->","-->")
+   cHtml:=strTran(cHtml,"</!-->","-->")
+   
+   //TODO: Workaround until reviewing the logic of the EOL
+   while " "+THTML_HB_EOL$cHtml
+      cHtml:=strTran(cHtml," "+THTML_HB_EOL,THTML_HB_EOL)
+   end while   
+   while THTML_HB_EOL+THTML_HB_EOL$cHtml
+      cHtml:=strTran(cHtml,THTML_HB_EOL+THTML_HB_EOL,THTML_HB_EOL)
+   end while
+   
+   cHtml:=strTran(cHtml,THTML_HB_EOL,hb_eol())
+
+   RETURN(cHtml)
+
+METHOD __toString( nIndent , nIncIndent ) CLASS THtmlNode
 
    LOCAL cIndent, cHtml := "", oNode
 
    IF ::htmlTagName == "_text_"
       // a leaf has no child nodes
-      RETURN ::htmlContent
+      cHtml += ::htmlContent
+      RETURN cHtml
    ENDIF
 
    hb_default( @nIndent, -4 )
@@ -1057,7 +1085,7 @@ METHOD toString( nIndent , nIncIndent ) CLASS THtmlNode
       IF ! ::isInline() .OR. ::htmlTagName == "!--"
          cHtml += cIndent
       ELSEIF ::keepFormatting()
-         cHtml += t_cHB_EOL
+         cHtml += THTML_HB_EOL
       ENDIF
       cHtml += "<" + ::htmlTagName + ::attrToString()
 
@@ -1070,9 +1098,9 @@ METHOD toString( nIndent , nIncIndent ) CLASS THtmlNode
 
       FOR EACH oNode IN ::htmlContent
          IF ! oNode:isInline() .OR. oNode:htmlTagName == "!--"
-            cHtml += t_cHB_EOL
+            cHtml += THTML_HB_EOL
          ENDIF
-         cHtml += oNode:toString( nIndent + nIncIndent )
+         cHtml += oNode:__toString( nIndent + nIncIndent )
       NEXT
 
    ELSEIF HB_ISSTRING( ::htmlContent )
@@ -1083,19 +1111,13 @@ METHOD toString( nIndent , nIncIndent ) CLASS THtmlNode
       IF ::isInline() .OR. ::keepFormatting() .OR. ::isType( CM_HEADING ) .OR. ::isType( CM_HEAD )
          RETURN cHtml += iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
       ENDIF
-      IF ! Right( cHtml, Len( t_cHB_EOL ) ) == t_cHB_EOL
-         cHtml += t_cHB_EOL
+      IF ! Right( cHtml, Len( THTML_HB_EOL ) ) == THTML_HB_EOL
+         cHtml += THTML_HB_EOL
       ENDIF
       RETURN cHtml += cIndent + iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
    ELSEIF ::htmlTagName $ "!--,br"
-      RETURN cHtml += t_cHB_EOL + cIndent
+      RETURN cHtml += THTML_HB_EOL + cIndent
    ENDIF
-
-   //TODO: Workaround until reviewing the logic of the <!-- and --> tags
-   cHtml:=strTran(cHtml,"<!-->","<!--")
-   cHtml:=strTran(cHtml,"<-->","-->")
-   cHtml:=strTran(cHtml,"</-->","-->")
-   cHtml:=strTran(cHtml,"-->-->","-->")
 
    RETURN cHtml
 
@@ -1208,10 +1230,11 @@ STATIC FUNCTION __CollectTags( oTHtmlNode, stack, oEndNode )
 // Retrieves the textual content of a node
 METHOD getText( cEOL ) CLASS THtmlNode
 
+   LOCAL cCHR9 := Chr( 9 )
    LOCAL cText := ""
    LOCAL oNode
 
-   hb_default( @cEOL, t_cHB_EOL )
+   hb_default( @cEOL, hb_eol() )
 
    IF ::htmlTagName == "_text_"
       RETURN RTrim( ::htmlContent ) + cEOL
@@ -1221,7 +1244,7 @@ METHOD getText( cEOL ) CLASS THtmlNode
       cText += oNode:getText( cEOL )
       IF Lower( ::htmlTagName ) $ "td,th" .AND. hb_AScan( ::parent:htmlContent, Self,,, .T. ) < Len( ::parent:htmlContent )
          // leave table rows in one line, cells separated by Tab
-         cText := hb_StrShrink( cText, Len( cEOL ) ) + Chr( 9 )
+         cText := hb_StrShrink( cText, Len( cEOL ) ) + cCHR9
       ENDIF
    NEXT
 

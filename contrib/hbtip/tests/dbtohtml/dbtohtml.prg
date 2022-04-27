@@ -299,20 +299,21 @@ PROCEDURE Main()
 
     ctip_HtmlToStr:=tip_HtmlToStr( oDoc:body:main:getText() )
 
-    WAIT
-    ? ctip_HtmlToStr
-    hb_Memowrit("address.HtmlToStr.txt",ctip_HtmlToStr)
+    IF hb_Memowrit("address.HtmlToStr.txt",ctip_HtmlToStr)
+        ? "File created:", "address.HtmlToStr.txt"
+    ENDIF
 
     hb_run( "address.html" )
 
     while .T.
-        nOption := Alert( "Do you want to delete the address.html file?", { "YES" , "NO" } )
+        nOption := Alert( "Do you want to delete the address.html and address.HtmlToStr.txt files?", { "YES" , "NO" } )
         switch nOption
         case 0
         case 2
             exit
         case 1
             hb_vfErase( "address.html" )
+            hb_vfErase( "address.HtmlToStr.txt" )
             exit
         end switch
         if (nOption>=1)
