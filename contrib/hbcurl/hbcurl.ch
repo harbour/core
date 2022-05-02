@@ -265,6 +265,7 @@
 #define HB_CURLOPT_UL_NULL_SETUP              1010
 #define HB_CURLOPT_UL_FHANDLE_SETUP           1011
 #define HB_CURLOPT_DL_FHANDLE_SETUP           1012
+#define HB_CURLOPT_DEBUGBLOCK                 1013
 /* Compatibility ones. Please don't use these. */
 #define HB_CURLOPT_SETUPLOADFILE              HB_CURLOPT_UL_FILE_SETUP
 #define HB_CURLOPT_CLOSEUPLOADFILE            HB_CURLOPT_UL_FILE_CLOSE
@@ -555,5 +556,16 @@
 #define HB_CURLE_RTSP_SESSION_ERROR           86 /* mismatch of RTSP Session Identifiers */
 #define HB_CURLE_FTP_BAD_FILE_LIST            87 /* unable to parse FTP file list */
 #define HB_CURLE_CHUNK_FAILED                 88 /* chunk callback reported error */
+
+/* curl info . */
+
+#define HB_CURLINFOTYPE_TEXT                  0 /* The data is informational text. */
+#define HB_CURLINFOTYPE_HEADER_IN             1 /* The data is header (or header-like) data received from the peer. */
+#define HB_CURLINFOTYPE_HEADER_OUT            2 /* The data is header (or header-like) data sent to the peer. */
+#define HB_CURLINFOTYPE_DATA_IN               3 /* The data is protocol data received from the peer. */
+#define HB_CURLINFOTYPE_DATA_OUT              4 /* The data is protocol data sent to the peer. */
+#define HB_CURLINFOTYPE_SSL_DATA_IN           5 /* The data is SSL/TLS (binary) data received from the peer. */
+#define HB_CURLINFOTYPE_SSL_DATA_OUT          6 /* The data is SSL/TLS (binary) data sent to the peer. */
+#define HB_CURLINFOTYPE_END                   7 /* */
 
 #endif /* HBCURL_CH_ */
