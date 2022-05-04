@@ -414,16 +414,13 @@ static int hb_curl_debug_callback(CURL *handle, curl_infotype type, char *data, 
    if( Cargo )
    {
       PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
-      if( hb_vmRequestReenter() )
+      if( hb_curl->pDebugCallback && hb_vmRequestReenter() )
       {
          hb_vmPushEvalSym();
          hb_vmPush( hb_curl->pDebugCallback );
          hb_vmPushInteger( type );
-         hb_vmPushString( data, size);
+         hb_vmPushStringPcode( data, size);
          hb_vmSend( 2 );
-
-         //if( hb_parl( -1 ) )
-         //   return 1;  /* Abort */
 
          hb_vmRequestRestore();
       }
@@ -1813,6 +1810,9 @@ HB_FUNC( CURL_EASY_SETOPT )
             }
             break;
 
+            case HB_CURLOPT_MAXLIFETIME_CONN:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAXLIFETIME_CONN, hb_parnl( 3 ) );
+               break;
 
          }
       }
