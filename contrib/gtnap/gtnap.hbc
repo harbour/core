@@ -1,0 +1,8 @@
+{!allwin|!x86}skip=yes
+
+incpaths=.
+libpaths=lib/${hb_plat}/${hb_comp} lib/v110_xp_x86/Release
+libs=gui osgui draw2d geom2d core osbs sewer
+
+gt=${hb_name}
+gui=yes
