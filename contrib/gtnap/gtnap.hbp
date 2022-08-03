@@ -1,3 +1,5 @@
+# https://github.com/frang75/harbour_nappgui/blob/master/utils/hbmk2/doc/hbmk2.en.md
+
 -hblib
 -inc
 
@@ -9,16 +11,19 @@
 -iinc/osbs
 -iinc/sewer
 
--cflag=-D_WINDOWS
+-cflag={allwin}-D_WINDOWS
 -cflag=-DCMAKE_RELEASE
 
 -olib/${hb_plat}/${hb_comp}/${hb_name}
 
+# Fran: Whats that? -w3 == Warning level   -es2???
 -w3 -es2
-# TODO: Disabled UNICODE until this code gets support for it.
--winuni-
 
-"-stop={!allwin}Skipped: '${hb_name}' only supported on win platform."
+# TODO: Disabled UNICODE until this code gets support for it.
+# -winuni- Fran: At the moment I only comment, to remember this option in the future.
+
+# Fran: Perfect, for the moment only Windows. I want to see the error when I compile on Linux/macOS
+"-stop={!allwin}Skipped: '${hb_name}' only supported on win platform. See gtnap.hbp -stop"
 
 gtnapd.c
 napdraw.c
@@ -31,6 +36,7 @@ statbar.c
 toolbar.c
 
 # NOTE: Due to large quantity of unprecise code, it doesn't build in C++ mode.
+# Fran: Perfect, for the moment only ANSI-C
 -cpp=no
 
 -hbx=${hb_name}.hbx
