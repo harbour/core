@@ -306,7 +306,7 @@ PROCEDURE Main()
    SetColor( "N/W,N/GR*,,,N/W*" )
    CLS
    @ 0, 0 SAY "This is line 0"
-   @ 1, 0 SAY "This is line 1"
+   @ 1, 5 SAY "This is line 1 ------>"
    @ MaxRow() - 1, 0 SAY "This is line " + hb_ntos( MaxRow() - 1 )
    @ MaxRow(), 0 SAY "This is line " + hb_ntos( MaxRow() )
 

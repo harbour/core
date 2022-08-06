@@ -13,7 +13,7 @@
 -iinc/sewer
 
 -cflag={allwin}-D_WINDOWS
--cflag=-DCMAKE_RELEASE
+-cflag=-DCMAKE_DEBUG
 
 -olib/${hb_plat}/${hb_comp}/${hb_name}
 

@@ -547,6 +547,16 @@ typedef struct win_data
 
 } WIN_DATA;
 
+typedef struct _nap_win_data_t NapWinData;
+
+struct _nap_win_data_t
+{
+    Window *window;
+    TextView *terminal;
+    Layout *layout;
+};
+
+
 typedef struct wvw_data
 {
    UINT s_uiPaintRefresh;        /* milliseconds between timer check */
@@ -609,7 +619,7 @@ typedef struct wvw_data
    UINT s_usCurWindow;                       /*current window handled by HB_GT_FUNC(...) */
 
    WIN_DATA * s_pWindows[ WVW_MAXWINDOWS ];  /*array of WIN_DATA                         */
-   Window *s_pNappWindows[ WVW_MAXWINDOWS ]; /*array of NAppGUI Windows                         */
+   NapWinData *s_pNappWindows[ WVW_MAXWINDOWS ]; /*array of NAppGUI Windows                         */
 
 
     Window *s_pNappWindowMenu;
@@ -638,6 +648,7 @@ extern APP_DATA * hb_gt_wvwGetAppData( void );
 
 extern WIN_DATA * hb_gt_wvw_GetWindowsData( UINT iWin );
 extern Window *hb_gt_nap_GetWindow( UINT iWin );
+extern NapWinData *hb_gt_nap_GetWindowData( UINT iWin );
 // extern Menu *hb_gt_nap_MainMenu( void );
 extern void hb_gt_nap_set_MainMenu(Window *window, Menu *menu);
 

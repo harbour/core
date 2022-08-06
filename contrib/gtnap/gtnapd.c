@@ -192,7 +192,7 @@ HB_EXTERN_BEGIN
 
 
 // NAppGUI functions
-static Window *hb_gt_napCreateWindow( void );
+static NapWinData *hb_gt_napCreateWindow( void );
 
 
 static void    hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1, USHORT usCol1, USHORT usRow2, USHORT usCol2 );
@@ -636,7 +636,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
 
    if( s_pWvwData->s_pNappWindows[ 0 ] )
-      window_show(s_pWvwData->s_pNappWindows[ 0 ]);
+      window_show(s_pWvwData->s_pNappWindows[ 0 ]->window);
    else
       hb_errRT_TERM( EG_CREATE, 10001, "WINAPI NAPPGUI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
 
@@ -646,7 +646,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
       hb_gt_wvwSetWindowTitle( 0, HB_ITEMGETSTR( pItem, &hWindowTitle, NULL ) );
 
-      window_title(s_pWvwData->s_pNappWindows[ 0 ], (const char_t*)hWindowTitle);
+      window_title(s_pWvwData->s_pNappWindows[ 0 ]->window, (const char_t*)hWindowTitle);
 
 
       hb_strfree( hWindowTitle );
@@ -821,7 +821,8 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
 
       if (s_pWvwData->s_pNappWindows[ j ] != NULL)
       {
-        window_destroy(&s_pWvwData->s_pNappWindows[j]);
+        window_destroy(&s_pWvwData->s_pNappWindows[j]->window);
+        heap_delete(&s_pWvwData->s_pNappWindows[ j ], NapWinData);
       }
    }
 
@@ -1222,10 +1223,15 @@ static BOOL hb_gt_wvw_SetMode( PHB_GT pGT, int iRow, int iCol )
 
 static void hb_gt_wvw_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText, ULONG ulLength )
 {
+    NapWinData *nap_data = NULL;
    HB_GTSELF_PUTTEXT( pGT, iRow, iCol, ( BYTE ) HB_GTSELF_GETCOLOR( pGT ), pText, ulLength );
 
    /* Finally, save the new cursor position, even if off-screen */
    HB_GTSELF_SETPOS( pGT, iRow, iCol + ( int ) ulLength );
+
+//cassert_msg(FALSE, "hb_gt_wvw_WriteAt");
+    nap_data = hb_gt_nap_GetWindowData( 0 );
+    textview_printf(nap_data->terminal, "%s\n", pText);
 }
 
 
@@ -3913,21 +3919,39 @@ static BOOL hb_wvw_Size_Ready( BOOL b_p_SizeIsReady )
    return s_bSizeIsReady;
 }
 
-static Window *hb_gt_napCreateWindow( void )
+static void i_OnDraw(NapWinData *data, Event *e)
 {
+    const EvDraw *p = event_params(e, EvDraw);
+    draw_clear(p->ctx, kCOLOR_RED);
+    draw_text(p->ctx, "Drawing area", 100, 100);
+
+    draw_fill_color(p->ctx, kCOLOR_BLUE);
+    draw_circle(p->ctx, ekFILL, 50, 200, 100);
+    unref(data);
+}
+
+static NapWinData *hb_gt_napCreateWindow( void )
+{
+    NapWinData *data = heap_new(NapWinData);
     Label *label = label_create();
     View *view = view_create();
-    Layout *layout = layout_create(1, 2);
+    TextView *text = textview_create();
+    Layout *layout1 = layout_create(1, 3);
     Panel *panel = panel_create();
     Window *window = window_create(ekWNSTD);
     label_text(label, "Hello. This is a NAppGUI label");
-    layout_label(layout, label, 0, 0);
-    layout_view(layout, view, 0, 1);
-    layout_hsize(layout, 0, 500);
-    layout_vsize(layout, 1, 250);
-    panel_layout(panel, layout);
+    view_OnDraw(view, listener(data, i_OnDraw, NapWinData));
+    layout_label(layout1, label, 0, 0);
+    layout_view(layout1, view, 0, 1);
+    layout_textview(layout1, text, 0, 2);
+    layout_hsize(layout1, 0, 500);
+    layout_vsize(layout1, 1, 250);
+    layout_vsize(layout1, 2, 250);
+    panel_layout(panel, layout1);
     window_panel(window, panel);
-    return window;
+    data->window = window;
+    data->terminal = text;
+    return data;
 }
 
 static HWND hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow )
@@ -7206,6 +7230,11 @@ WIN_DATA * hb_gt_wvw_GetWindowsData( UINT iWin )
 }
 
 Window *hb_gt_nap_GetWindow( UINT iWin )
+{
+    return s_pWvwData->s_pNappWindows[ iWin ]->window;
+}
+
+NapWinData *hb_gt_nap_GetWindowData( UINT iWin )
 {
     return s_pWvwData->s_pNappWindows[ iWin ];
 }
