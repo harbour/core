@@ -3930,13 +3930,66 @@ static void i_OnDraw(NapWinData *data, Event *e)
     unref(data);
 }
 
+// This panel will can be configurable from Harbour app
+// From now, just a demo
+static Layout *i_edits_layout( void )
+{
+    uint32_t n = 4, i = 0;
+    Layout *layout = layout_create(2, n);
+    for (i = 0; i < n; ++i)
+    {
+        Label *label = label_create();
+        Edit *edit = edit_create();
+        char_t text[64];
+        bstd_sprintf(text, sizeof(text), "Label %d", i);
+        label_text(label, text);
+        layout_label(layout, label, 0, i);
+        layout_edit(layout, edit, 1, i);
+
+        if (i < n - 1)
+            layout_vmargin(layout, i, 5);
+    }
+
+    layout_hmargin(layout, 0, 10);
+    return layout;
+}
+
+static Panel *i_configurable_panel( void )
+{
+    Button *button1 = button_push();
+    Button *button2 = button_push();
+    Button *button3 = button_push();
+    Button *button4 = button_push();
+    Layout *layout = layout_create(1, 5);
+    Layout *elayout = i_edits_layout();
+    Panel *panel = panel_create();
+    button_text(button1, "native");
+    button_text(button2, "Tight");
+    button_text(button3, "Disabled");
+    button_text(button4, "Hard");
+    layout_button(layout, button1, 0, 0);
+    layout_button(layout, button2, 0, 1);
+    layout_button(layout, button3, 0, 2);
+    layout_button(layout, button4, 0, 3);
+    layout_layout(layout, elayout, 0, 4);
+    layout_vmargin(layout, 0, 5);
+    layout_vmargin(layout, 1, 5);
+    layout_vmargin(layout, 2, 5);
+    layout_vmargin(layout, 3, 5);
+    layout_margin(layout, 10);
+    panel_layout(panel, layout);
+    return panel;
+}
+
 static NapWinData *hb_gt_napCreateWindow( void )
 {
     NapWinData *data = heap_new(NapWinData);
     Label *label = label_create();
     View *view = view_create();
     TextView *text = textview_create();
+    Layout *layout = layout_create(2, 1);
     Layout *layout1 = layout_create(1, 3);
+    Panel *cpanel = i_configurable_panel();
     Panel *panel = panel_create();
     Window *window = window_create(ekWNSTD);
     label_text(label, "Hello. This is a NAppGUI label");
@@ -3947,10 +4000,14 @@ static NapWinData *hb_gt_napCreateWindow( void )
     layout_hsize(layout1, 0, 500);
     layout_vsize(layout1, 1, 250);
     layout_vsize(layout1, 2, 250);
-    panel_layout(panel, layout1);
+    layout_layout(layout, layout1, 0, 0);
+    layout_panel(layout, cpanel, 1, 0);
+    layout_valign(layout, 1, 0, ekTOP);
+    panel_layout(panel, layout);
     window_panel(window, panel);
     data->window = window;
     data->terminal = text;
+    data->layout = layout;
     return data;
 }
 
