@@ -1,8 +1,22 @@
 {!allwin|!x86}skip=yes
 
-incpaths=.
-libpaths=lib/${hb_plat}/${hb_comp} lib/v110_xp_x86/Release
-libs=gui osgui draw2d geom2d core osbs sewer
+# At the moment, all demos in Debug mode
+debug=yes
+
+incpaths=./inc/sewer ./inc/osbs ./inc/core ./inc/geom2d ./inc/draw2d ./inc/gui ./inc/inet ./inc/osapp
+
+# NAppGUI library paths
+{debug}libpaths=lib/${hb_plat}/${hb_comp} lib/v110_xp_x86/Debug
+{nodebug}libpaths=lib/${hb_plat}/${hb_comp} lib/v110_xp_x86/Release
+
+# NAppGUI uses static-linked 'LIBCMTD.lib' in Debug (sewer.lib)
+# This line avoid conflicts with 'LIBCMT.lib' in Debug mode
+{allwin&debug}ldflags=/NODEFAULTLIB:LIBCMT.lib
+
+libs=osapp gui osgui draw2d geom2d core osbs sewer
 
 gt=${hb_name}
 gui=yes
+
+
+

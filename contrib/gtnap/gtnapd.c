@@ -189,6 +189,12 @@ static int K_Ctrl[] = {
 /*                  private functions declaration                    */
 /*                                                                   */
 HB_EXTERN_BEGIN
+
+
+// NAppGUI functions
+static Window *hb_gt_napCreateWindow( void );
+
+
 static void    hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1, USHORT usCol1, USHORT usRow2, USHORT usCol2 );
 static void    hb_gt_wvwAddCharToInputQueue( int data );
 static HWND    hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow );
@@ -395,6 +401,14 @@ GuiContext *osguictx(void);
 void gui_context_set_current(const GuiContext *context);
 const GuiContext *gui_context_get_current(void);
 void gui_context_destroy(GuiContext **context);
+
+typedef struct _osmenu_t OSMenu;
+typedef struct _oswindow_t OSWindow;
+
+void* _menu_ositem(Menu *menu);
+void* _window_ositem(Window *window);
+void osgui_unset_menubar(OSMenu *menu, OSWindow *window);
+
 //}
 
 static Layout *i_updown_layout(void)
@@ -545,8 +559,8 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    log_file("C:\\Users\\USUARIO\\Desktop\\harbour_log.txt");
    log_printf("gtnap: hb_gt_wvw_Init()");
-   i_WINDOW = i_nappgui_window();
-   window_show(i_WINDOW);
+//    i_WINDOW = i_nappgui_window();
+//    window_show(i_WINDOW);
 
     // TraceLog( NULL, "HELLO WORLD!!! gtnap\n" );
 
@@ -598,8 +612,14 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_iOldCurStyle = s_iCursorStyle = SC_NORMAL;
 
    s_pWvwData->s_usNumWindows = 0;
+    s_pWvwData->s_pNappMainMenu = NULL;
+    s_pWvwData->s_pNappWindowMenu = NULL;
+
    for( i = 0; i < WVW_MAXWINDOWS; i++ )
+   {
       s_pWvwData->s_pWindows[ i ] = NULL;
+      s_pWvwData->s_pNappWindows[ i ] = NULL;
+   }
 
    hb_gt_wvwWindowPrologue();
 
@@ -608,17 +628,27 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_pWvwData->hInstance = ( HINSTANCE ) hInstance;
 
    s_pWvwData->s_pWindows[ 0 ]->hWnd = hb_gt_wvwCreateWindow( ( HINSTANCE ) hInstance, ( HINSTANCE ) hPrevInstance, "", iCmdShow );
+   s_pWvwData->s_pNappWindows[ 0 ]  = hb_gt_napCreateWindow( );
 
    if( ! s_pWvwData->s_pWindows[ 0 ]->hWnd )
       /*  Runtime error
        */
       hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
 
+   if( s_pWvwData->s_pNappWindows[ 0 ] )
+      window_show(s_pWvwData->s_pNappWindows[ 0 ]);
+   else
+      hb_errRT_TERM( EG_CREATE, 10001, "WINAPI NAPPGUI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
+
    {
       PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
       void *   hWindowTitle;
 
       hb_gt_wvwSetWindowTitle( 0, HB_ITEMGETSTR( pItem, &hWindowTitle, NULL ) );
+
+      window_title(s_pWvwData->s_pNappWindows[ 0 ], (const char_t*)hWindowTitle);
+
+
       hb_strfree( hWindowTitle );
       hb_itemRelease( pItem );
    }
@@ -679,8 +709,19 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
       if( s_pWvwData->s_sApp->hDlgModeless[ i ] )
          SendMessage( s_pWvwData->s_sApp->hDlgModeless[ i ], WM_CLOSE, 0, 0 );
 
-   /* destroy all objects from all windows */
+    // In NAppGUI is mandatory detach a menu from its window
+    // This is done automatically in osapp
+    if (s_pWvwData->s_pNappMainMenu != NULL)
+    {
+        OSMenu *osmenu = NULL;
+        OSWindow *oswindow = NULL;
+        cassert_no_null(s_pWvwData->s_pNappWindowMenu);
+        osmenu = (OSMenu*)_menu_ositem(s_pWvwData->s_pNappMainMenu);
+        oswindow = (OSWindow*)_window_ositem(s_pWvwData->s_pNappWindowMenu);
+        osgui_unset_menubar(osmenu, oswindow);
+    }
 
+   /* destroy all objects from all windows */
    for( j = ( int ) ( s_pWvwData->s_usNumWindows - 1 ); j >= 0; j-- )
    {
       pWindowData = ( WIN_DATA * ) s_pWvwData->s_pWindows[ j ];
@@ -777,7 +818,16 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
       }
 
       hb_gt_wvwWindowEpilogue();
+
+      if (s_pWvwData->s_pNappWindows[ j ] != NULL)
+      {
+        window_destroy(&s_pWvwData->s_pNappWindows[j]);
+      }
    }
+
+    if (s_pWvwData->s_pNappMainMenu != NULL)
+        menu_destroy(&s_pWvwData->s_pNappMainMenu);
+
 
    if( s_pWvwData->s_bSWRegistered )
       UnregisterClass( s_pWvwData->szSubWinName, s_pWvwData->hInstance );
@@ -834,7 +884,7 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
 
 
    log_printf("gtnap: hb_gt_wvw_Exit()");
-   window_destroy(&i_WINDOW);
+   //window_destroy(&i_WINDOW);
 
    context = gui_context_get_current();
    gui_context_destroy((GuiContext**)&context);
@@ -3863,6 +3913,22 @@ static BOOL hb_wvw_Size_Ready( BOOL b_p_SizeIsReady )
    return s_bSizeIsReady;
 }
 
+static Window *hb_gt_napCreateWindow( void )
+{
+    Label *label = label_create();
+    View *view = view_create();
+    Layout *layout = layout_create(1, 2);
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWNSTD);
+    label_text(label, "Hello. This is a NAppGUI label");
+    layout_label(layout, label, 0, 0);
+    layout_view(layout, view, 0, 1);
+    layout_hsize(layout, 0, 500);
+    layout_vsize(layout, 1, 250);
+    panel_layout(panel, layout);
+    window_panel(window, panel);
+    return window;
+}
 
 static HWND hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow )
 {
@@ -7137,6 +7203,24 @@ UINT hb_gt_wvw_GetCurWindow( void )
 WIN_DATA * hb_gt_wvw_GetWindowsData( UINT iWin )
 {
    return ( WIN_DATA * ) s_pWvwData->s_pWindows[ iWin ];
+}
+
+Window *hb_gt_nap_GetWindow( UINT iWin )
+{
+    return s_pWvwData->s_pNappWindows[ iWin ];
+}
+
+// Menu *hb_gt_nap_MainMenu( void )
+// {
+//     return s_pWvwData->s_pNappMainMenu;
+// }
+
+void hb_gt_nap_set_MainMenu(Window *window, Menu *menu)
+{
+    cassert(s_pWvwData->s_pNappMainMenu == NULL);
+    cassert(s_pWvwData->s_pNappWindowMenu == NULL);
+    s_pWvwData->s_pNappMainMenu = menu;
+    s_pWvwData->s_pNappWindowMenu = window;
 }
 
 char * hb_gt_wvw_GetAppName( void )

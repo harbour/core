@@ -43,6 +43,10 @@
  */
 
 #include "hbgtnap.h"
+#include "nappgui.h"
+// #include "log.h"
+// #include "menu.h"
+// #include "menuitem.h"
 
 HB_FUNC( WVW_SETMENU )
 {
@@ -52,6 +56,25 @@ HB_FUNC( WVW_SETMENU )
    SetMenu( pWinData->hWnd, ( HMENU ) HB_PARHANDLE( 2 ) );
 
    hb_gt_wvwResetWindow( usWinNum );
+}
+
+HB_FUNC( NAP_SETMENU )
+{
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   Menu *menu = ( Menu* ) HB_PARHANDLE( 2 );
+//    WIN_DATA * pWinData = hb_gt_wvw_GetWindowsData( usWinNum );
+   Window *window = hb_gt_nap_GetWindow( 0 );
+
+    osapp_menubar(menu, window);
+    hb_gt_nap_set_MainMenu(window, menu);
+
+// {
+//     return s_pWvwData->s_pNappWindows[ iWin ];
+// }
+
+//    SetMenu( pWinData->hWnd, ( HMENU ) HB_PARHANDLE( 2 ) );
+
+//    hb_gt_wvwResetWindow( usWinNum );
 }
 
 
@@ -74,12 +97,82 @@ HB_FUNC( WVW_CREATEMENU )
    HB_RETHANDLE( CreateMenu() );
 }
 
+HB_FUNC( NAP_CREATEMENU )
+{
+   HB_RETHANDLE( menu_create() );
+}
+
+
+
 
 HB_FUNC( WVW_CREATEPOPUPMENU )
 {
    HB_RETHANDLE( CreatePopupMenu() );
 }
 
+
+HB_FUNC( NAP_APPENDMENUS )
+{
+    Menu *menu = ( Menu* ) HB_PARHANDLE( 1 );
+    int flags = hb_parni( 2 );
+    const char_t *caption = NULL;
+
+    if ( HB_ISCHAR( 4 ) )
+    {
+        caption = hb_parcx( 4 );
+    }
+
+    if (menu == NULL)
+        log_printf("Menu is NULL");
+
+    // Its a menu option
+    //if (flags & MF_STRING)
+    if (flags == MF_STRING)  // == 0
+    {
+        MenuItem *item = menuitem_create();
+        int id = hb_parni( 3 );  // Fran TODO:  Use it?
+
+        if (caption != NULL)
+        {
+            menuitem_text(item, caption);
+        }
+
+        menuitem_text(item, caption);
+        menu_item(menu, item);
+        hb_retl( TRUE );
+        return;
+    }
+
+    // Its a separator
+    if (flags & MF_SEPARATOR)
+    {
+        MenuItem *item = menuitem_separator();
+        menu_item(menu, item);
+        hb_retl( TRUE );
+        return;
+    }
+
+    // Its a menu submenu
+    if (flags & MF_POPUP)
+    {
+        MenuItem *item = menuitem_create();
+        Menu *submenu = ( Menu* ) HB_PARHANDLE( 3 );
+
+        if (caption != NULL)
+        {
+            menuitem_text(item, caption);
+        }
+
+        menuitem_text(item, caption);
+        menuitem_submenu(item, &submenu);
+        menu_item(menu, item);
+        hb_retl( TRUE );
+        return;
+    }
+
+    hb_retl( FALSE );
+    return;
+}
 
 /* wvw_AppendMenu( hMenu, nFlags, nMenuItemId, cCaption ) */
 

@@ -144,6 +144,12 @@ typedef __int64 LONG_PTR;
 #include <time.h>
 #include <ctype.h>
 
+
+// NAPPGUI
+#include "gui.hxx"
+
+
+
 /* xHarbour compatible definitions */
 #if ! defined( K_SH_LEFT )
 #define K_SH_LEFT                 K_LEFT   /* Shift-Left  == Left  */
@@ -603,6 +609,11 @@ typedef struct wvw_data
    UINT s_usCurWindow;                       /*current window handled by HB_GT_FUNC(...) */
 
    WIN_DATA * s_pWindows[ WVW_MAXWINDOWS ];  /*array of WIN_DATA                         */
+   Window *s_pNappWindows[ WVW_MAXWINDOWS ]; /*array of NAppGUI Windows                         */
+
+
+    Window *s_pNappWindowMenu;
+    Menu *s_pNappMainMenu;
    APP_DATA * s_sApp;                        /*application wide vars                     */
 
 }WVW_DATA;
@@ -622,7 +633,16 @@ extern BOOL hb_gt_wvw_GetMainCoordMode( void );
 extern UINT hb_gt_wvw_GetNumWindows( void );
 extern UINT hb_gt_wvw_GetCurWindow( void );
 extern APP_DATA * hb_gt_wvwGetAppData( void );
+
+
+
 extern WIN_DATA * hb_gt_wvw_GetWindowsData( UINT iWin );
+extern Window *hb_gt_nap_GetWindow( UINT iWin );
+// extern Menu *hb_gt_nap_MainMenu( void );
+extern void hb_gt_nap_set_MainMenu(Window *window, Menu *menu);
+
+
+
 extern WVW_DATA * hb_getWvwData( void );
 extern char * hb_gt_wvw_GetAppName( void );
 extern void hb_gt_wvwResetWindow( UINT usWinNum );
