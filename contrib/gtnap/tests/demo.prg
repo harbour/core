@@ -155,8 +155,7 @@ PROCEDURE Main()
    LOCAL oMouse
    LOCAL ch
 
-   LOCAL hMenu2,hPopupmenu2
-//    LOCAL hMenu2, hPopupmenu2
+   LOCAL hNapMenu
 
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
@@ -233,42 +232,45 @@ PROCEDURE Main()
    // end menu definitions *************************************
 
    // start NAPPGUI menu definitions *************************************
-   hMenu2 := nap_CreateMenu()
-   hPopupMenu2 := nap_CreateMenu()
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_DEMO_GET, "~GET demo"  )
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
-   // wvw_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
-   nap_AppendMenus( hPopupMenu2, MF_SEPARATOR )
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
-   nap_AppendMenus( hMenu2, MF_ENABLED + MF_POPUP, hPopupMenu2, "~Demos",  )
+//    hMenu2 := nap_CreateMenu()
+//    hPopupMenu2 := nap_CreateMenu()
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_DEMO_GET, "~GET demo"  )
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
+//    // wvw_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
+//    nap_AppendMenus( hPopupMenu2, MF_SEPARATOR )
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
+//    nap_AppendMenus( hMenu2, MF_ENABLED + MF_POPUP, hPopupMenu2, "~Demos",  )
 
-   hPopupMenu2 := nap_CreateMenu()
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
-   nap_AppendMenus( hPopupMenu2, MF_SEPARATOR )
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
-   nap_AppendMenus( hMenu2, MF_ENABLED + MF_POPUP, hPopupMenu2, "~Toolbar",  )
+//    hPopupMenu2 := nap_CreateMenu()
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
+//    nap_AppendMenus( hPopupMenu2, MF_SEPARATOR )
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
+//    nap_AppendMenus( hMenu2, MF_ENABLED + MF_POPUP, hPopupMenu2, "~Toolbar",  )
 
-   hPopupMenu2 := nap_CreateMenu()
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
-   nap_AppendMenus( hPopupMenu2, MF_SEPARATOR )
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
-   nap_AppendMenus( hMenu2, MF_ENABLED + MF_POPUP, hPopupMenu2, "~Window",  )
+//    hPopupMenu2 := nap_CreateMenu()
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
+//    nap_AppendMenus( hPopupMenu2, MF_SEPARATOR )
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
+//    nap_AppendMenus( hMenu2, MF_ENABLED + MF_POPUP, hPopupMenu2, "~Window",  )
 
-   hPopupMenu2 := nap_CreateMenu()
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
-   nap_AppendMenus( hPopupMenu2, MF_SEPARATOR )
-   nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
-   nap_AppendMenus( hMenu2, MF_ENABLED + MF_POPUP, hPopupMenu2, "~Help",  )
+//    hPopupMenu2 := nap_CreateMenu()
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
+//    nap_AppendMenus( hPopupMenu2, MF_SEPARATOR )
+//    nap_AppendMenus( hPopupMenu2, MF_ENABLED + MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
+//    nap_AppendMenus( hMenu2, MF_ENABLED + MF_POPUP, hPopupMenu2, "~Help",  )
 
-
-   nap_SetMenu( , hMenu2 )
+    hNapMenu := NAppMenu( )
+    nap_SetMenu( , hNapMenu )
 
    // end NAPPGUI menu definitions *************************************
 
+
+   // Dynamic GUI with NAppGUI
+   CreateGUI()
 
 
 
@@ -345,7 +347,97 @@ PROCEDURE Main()
 
    RETURN  // main()
 
+
+STATIC FUNCTION EditsLayout()
+    LOCAL i, n := 4
+    LOCAL label, edit, text
+    LOCAL layout := NAP_LAYOUTCREATE(2, n)
+
+    FOR i := 0 TO n - 1
+        label := NAP_LABELCREATE()
+        edit := NAP_EDITCREATE()
+        text := "Label " + hb_ntos(i)
+        NAP_LABELTEXT(label, text)
+        NAP_LAYOUTLABEL(layout, label, 0, i)
+        NAP_LAYOUTEDIT(layout, edit, 1, i)
+
+        IF i < n - 1
+            NAP_LAYOUTVMARGIN(layout, i, 5)
+        ENDIF
+
+    NEXT
+
+    NAP_LAYOUTHMARGIN(layout, 0, 10)
+    RETURN layout // EditsLayout
+
 //
+STATIC PROCEDURE CreateGUI( )
+    LOCAL button1 := NAP_BUTTONPUSH()
+    LOCAL button2 := NAP_BUTTONPUSH()
+    LOCAL button3 := NAP_BUTTONPUSH()
+    LOCAL button4 := NAP_BUTTONPUSH()
+    LOCAL layout := NAP_LAYOUTCREATE(1, 5)
+    LOCAL elayout := EditsLayout()
+    LOCAL panel := NAP_PANELCREATE()
+    NAP_BUTTONTEXT(button1, "native")
+    NAP_BUTTONTEXT(button2, "Tight")
+    NAP_BUTTONTEXT(button3, "Disabled")
+    NAP_BUTTONTEXT(button4, "Hard")
+    NAP_LAYOUTBUTTON(layout, button1, 0, 0)
+    NAP_LAYOUTBUTTON(layout, button2, 0, 1)
+    NAP_LAYOUTBUTTON(layout, button3, 0, 2)
+    NAP_LAYOUTBUTTON(layout, button4, 0, 3)
+    NAP_LAYOUTLAYOUT(layout, elayout, 0, 4)
+    NAP_LAYOUTVMARGIN(layout, 0, 5)
+    NAP_LAYOUTVMARGIN(layout, 1, 5)
+    NAP_LAYOUTVMARGIN(layout, 2, 5)
+    NAP_LAYOUTVMARGIN(layout, 3, 5)
+    NAP_LAYOUTMARGIN(layout, 10)
+    NAP_PANELLAYOUT(panel, layout)
+
+    // Set the global panel into NAppGUI Window
+    NAP_GLOBALPANEL(panel)
+
+    RETURN // CreateGUI()
+
+//
+STATIC FUNCTION NAppMenu( )
+
+    LOCAL hMenu, hPopupmenu
+
+    hMenu := nap_CreateMenu()
+    hPopupMenu := nap_CreateMenu()
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_GET, "~GET demo"  )
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
+    // wvw_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
+    nap_AppendMenus( hPopupMenu, MF_SEPARATOR )
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
+    nap_AppendMenus( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Demos",  )
+
+    hPopupMenu := nap_CreateMenu()
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
+    nap_AppendMenus( hPopupMenu, MF_SEPARATOR )
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
+    nap_AppendMenus( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Toolbar",  )
+
+    hPopupMenu := nap_CreateMenu()
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
+    nap_AppendMenus( hPopupMenu, MF_SEPARATOR )
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
+    nap_AppendMenus( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Window",  )
+
+    hPopupMenu := nap_CreateMenu()
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
+    nap_AppendMenus( hPopupMenu, MF_SEPARATOR )
+    nap_AppendMenus( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
+    nap_AppendMenus( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Help",  )
+
+    RETURN hMenu
+
 
 STATIC PROCEDURE xDisableMenus( nWinNum, nNumItem )
 

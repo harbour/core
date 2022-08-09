@@ -652,6 +652,7 @@ extern NapWinData *hb_gt_nap_GetWindowData( UINT iWin );
 // extern Menu *hb_gt_nap_MainMenu( void );
 extern void hb_gt_nap_set_MainMenu(Window *window, Menu *menu);
 
+extern void hb_gt_nap_set_GlobalPanel(Panel *panel);
 
 
 extern WVW_DATA * hb_getWvwData( void );

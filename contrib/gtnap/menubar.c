@@ -77,6 +77,10 @@ HB_FUNC( NAP_SETMENU )
 //    hb_gt_wvwResetWindow( usWinNum );
 }
 
+HB_FUNC( NAP_CACAMENU )
+{
+      HB_RETHANDLE( NULL );
+}
 
 HB_FUNC( WVW_SETPOPUPMENU )
 {

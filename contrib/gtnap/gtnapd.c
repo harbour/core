@@ -3981,6 +3981,18 @@ static Panel *i_configurable_panel( void )
     return panel;
 }
 
+static Panel *i_configurable_panel2( void )
+{
+    Button *button1 = button_push();
+    Layout *layout = layout_create(1, 1);
+    Panel *panel = panel_create();
+    button_text(button1, "native");
+    layout_button(layout, button1, 0, 0);
+    layout_margin(layout, 10);
+    panel_layout(panel, layout);
+    return panel;
+}
+
 static NapWinData *hb_gt_napCreateWindow( void )
 {
     NapWinData *data = heap_new(NapWinData);
@@ -3989,7 +4001,7 @@ static NapWinData *hb_gt_napCreateWindow( void )
     TextView *text = textview_create();
     Layout *layout = layout_create(2, 1);
     Layout *layout1 = layout_create(1, 3);
-    Panel *cpanel = i_configurable_panel();
+    Panel *cpanel = i_configurable_panel2();
     Panel *panel = panel_create();
     Window *window = window_create(ekWNSTD);
     label_text(label, "Hello. This is a NAppGUI label");
@@ -7307,6 +7319,13 @@ void hb_gt_nap_set_MainMenu(Window *window, Menu *menu)
     cassert(s_pWvwData->s_pNappWindowMenu == NULL);
     s_pWvwData->s_pNappMainMenu = menu;
     s_pWvwData->s_pNappWindowMenu = window;
+}
+
+void hb_gt_nap_set_GlobalPanel(Panel *panel)
+{
+    NapWinData *data = s_pWvwData->s_pNappWindows[0];
+    layout_panel(data->layout, panel, 1, 0);
+    layout_update(data->layout);
 }
 
 char * hb_gt_wvw_GetAppName( void )

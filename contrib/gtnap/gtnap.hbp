@@ -27,6 +27,16 @@
 "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform. See gtnap.hbp -stop"
 
 gtnapd.c
+
+nap_button.c
+nap_edit.c
+nap_global.c
+nap_label.c
+nap_layout.c
+nap_panel.c
+
+
+
 napdraw.c
 naputils.c
 checkbox.c
