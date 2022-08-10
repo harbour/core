@@ -11,7 +11,7 @@
 //
 // parts of this program are copyrights of their respective owners
 
-#require "gtwvw"
+#require "gtnap"
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -350,24 +350,24 @@ PROCEDURE Main()
 
 STATIC FUNCTION EditsLayout()
     LOCAL i, n := 4
-    LOCAL label, edit, text
-    LOCAL layout := NAP_LAYOUTCREATE(2, n)
+    LOCAL label, edit
+    LOCAL layout := NAP_LAYOUT_CREATE(2, n)
 
     FOR i := 0 TO n - 1
         label := NAP_LABELCREATE()
         edit := NAP_EDITCREATE()
-        text := "Label " + hb_ntos(i)
-        NAP_LABELTEXT(label, text)
-        NAP_LAYOUTLABEL(layout, label, 0, i)
-        NAP_LAYOUTEDIT(layout, edit, 1, i)
+
+        NAP_LABELTEXT(label, "Label " + hb_ntos(i))
+        NAP_LAYOUT_LABEL(layout, label, 0, i)
+        NAP_LAYOUT_EDIT(layout, edit, 1, i)
 
         IF i < n - 1
-            NAP_LAYOUTVMARGIN(layout, i, 5)
+            NAP_LAYOUT_VMARGIN(layout, i, 5)
         ENDIF
 
     NEXT
 
-    NAP_LAYOUTHMARGIN(layout, 0, 10)
+    NAP_LAYOUT_HMARGIN(layout, 0, 10)
     RETURN layout // EditsLayout
 
 //
@@ -376,23 +376,23 @@ STATIC PROCEDURE CreateGUI( )
     LOCAL button2 := NAP_BUTTONPUSH()
     LOCAL button3 := NAP_BUTTONPUSH()
     LOCAL button4 := NAP_BUTTONPUSH()
-    LOCAL layout := NAP_LAYOUTCREATE(1, 5)
+    LOCAL layout := NAP_LAYOUT_CREATE(1, 5)
     LOCAL elayout := EditsLayout()
     LOCAL panel := NAP_PANELCREATE()
     NAP_BUTTONTEXT(button1, "native")
     NAP_BUTTONTEXT(button2, "Tight")
     NAP_BUTTONTEXT(button3, "Disabled")
     NAP_BUTTONTEXT(button4, "Hard")
-    NAP_LAYOUTBUTTON(layout, button1, 0, 0)
-    NAP_LAYOUTBUTTON(layout, button2, 0, 1)
-    NAP_LAYOUTBUTTON(layout, button3, 0, 2)
-    NAP_LAYOUTBUTTON(layout, button4, 0, 3)
-    NAP_LAYOUTLAYOUT(layout, elayout, 0, 4)
-    NAP_LAYOUTVMARGIN(layout, 0, 5)
-    NAP_LAYOUTVMARGIN(layout, 1, 5)
-    NAP_LAYOUTVMARGIN(layout, 2, 5)
-    NAP_LAYOUTVMARGIN(layout, 3, 5)
-    NAP_LAYOUTMARGIN(layout, 10)
+    NAP_LAYOUT_BUTTON(layout, button1, 0, 0)
+    NAP_LAYOUT_BUTTON(layout, button2, 0, 1)
+    NAP_LAYOUT_BUTTON(layout, button3, 0, 2)
+    NAP_LAYOUT_BUTTON(layout, button4, 0, 3)
+    NAP_LAYOUT_LAYOUT(layout, elayout, 0, 4)
+    NAP_LAYOUT_VMARGIN(layout, 0, 5)
+    NAP_LAYOUT_VMARGIN(layout, 1, 5)
+    NAP_LAYOUT_VMARGIN(layout, 2, 5)
+    NAP_LAYOUT_VMARGIN(layout, 3, 5)
+    NAP_LAYOUT_MARGIN(layout, 10)
     NAP_PANELLAYOUT(panel, layout)
 
     // Set the global panel into NAppGUI Window
