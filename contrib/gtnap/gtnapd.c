@@ -614,6 +614,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_pWvwData->s_usNumWindows = 0;
     s_pWvwData->s_pNappMainMenu = NULL;
     s_pWvwData->s_pNappWindowMenu = NULL;
+    s_pWvwData->s_pNappCallbacks = arrst_create(NapCallback);
 
    for( i = 0; i < WVW_MAXWINDOWS; i++ )
    {
@@ -689,6 +690,13 @@ BOOL hb_gt_wvwDestroyPicture( IPicture * iPicture )
    return bResult;
 }
 
+static void i_remove_napp_callback(NapCallback *callback)
+{
+   if (callback->codeBlock)
+      hb_itemRelease(callback->codeBlock);
+
+
+}
 
 static void hb_gt_wvw_Exit( PHB_GT pGT )
 {
@@ -829,6 +837,7 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
     if (s_pWvwData->s_pNappMainMenu != NULL)
         menu_destroy(&s_pWvwData->s_pNappMainMenu);
 
+    arrst_destroy(&s_pWvwData->s_pNappCallbacks, i_remove_napp_callback, NapCallback);
 
    if( s_pWvwData->s_bSWRegistered )
       UnregisterClass( s_pWvwData->szSubWinName, s_pWvwData->hInstance );
@@ -7326,6 +7335,38 @@ void hb_gt_nap_set_GlobalPanel(Panel *panel)
     NapWinData *data = s_pWvwData->s_pNappWindows[0];
     layout_panel(data->layout, panel, 1, 0);
     layout_update(data->layout);
+}
+
+#define UINT32_TO_PTR(val) ((void*)val)
+
+ArrSt(NapCallback) *hb_gt_nap_listeners(void)
+{
+    return s_pWvwData->s_pNappCallbacks;
+}
+
+const char_t *hb_get_nap_text(const uint32_t textParamId)
+{
+    if (HB_ISCHAR(textParamId))
+        return hb_parcx(textParamId);
+    else
+        return (const char_t*)hb_parni(textParamId);
+}
+
+Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void (*FPtr_CallBack)(void*, Event*))
+{
+    PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
+    //ArrSt(NapCallback) *listeners = hb_gt_nap_listeners();
+    uint32_t id = arrst_size(s_pWvwData->s_pNappCallbacks, NapCallback);
+    NapCallback *lt = arrst_new0(s_pWvwData->s_pNappCallbacks, NapCallback);
+    lt->codeBlock = hb_itemNew(codeBlock);
+    return listener(UINT32_TO_PTR(id), FPtr_CallBack, void);
+}
+
+void hb_gt_nap_callback(void *idp, Event *e)
+{
+    NapCallback *callback = arrst_get(s_pWvwData->s_pNappCallbacks, PTR_TO_UINT32(idp), NapCallback);
+    if (callback->codeBlock != NULL)
+        hb_itemDo(callback->codeBlock, 1, e);
 }
 
 char * hb_gt_wvw_GetAppName( void )

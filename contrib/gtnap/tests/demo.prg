@@ -17,6 +17,8 @@
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
 
+
+#include "gtnap.ch"
 // #define _WINDOWS
 // #define _M_IX86
 // #include "nappgui.h"
@@ -357,7 +359,7 @@ STATIC FUNCTION EditsLayout()
         label := NAP_LABELCREATE()
         edit := NAP_EDITCREATE()
 
-        NAP_LABELTEXT(label, "Label " + hb_ntos(i))
+        NAP_LABELTEXT(label, "Label " + hb_ntos(NAPP_CACA))
         NAP_LAYOUT_LABEL(layout, label, 0, i)
         NAP_LAYOUT_EDIT(layout, edit, 1, i)
 
@@ -371,18 +373,29 @@ STATIC FUNCTION EditsLayout()
     RETURN layout // EditsLayout
 
 //
+STATIC PROCEDURE i_Button1OnClick()
+    lboxmessage( "CallBack from NAppGUI: Button1 Pressed")
+    RETURN
+
+//
 STATIC PROCEDURE CreateGUI( )
-    LOCAL button1 := NAP_BUTTONPUSH()
-    LOCAL button2 := NAP_BUTTONPUSH()
-    LOCAL button3 := NAP_BUTTONPUSH()
-    LOCAL button4 := NAP_BUTTONPUSH()
+    LOCAL button1 := NAP_BUTTON_PUSH()
+    LOCAL button2 := NAP_BUTTON_PUSH()
+    LOCAL button3 := NAP_BUTTON_PUSH()
+    LOCAL button4 := NAP_BUTTON_PUSH()
     LOCAL layout := NAP_LAYOUT_CREATE(1, 5)
     LOCAL elayout := EditsLayout()
     LOCAL panel := NAP_PANELCREATE()
-    NAP_BUTTONTEXT(button1, "native")
-    NAP_BUTTONTEXT(button2, "Tight")
-    NAP_BUTTONTEXT(button3, "Disabled")
-    NAP_BUTTONTEXT(button4, "Hard")
+
+    // oMouse := WVWMouseButton():New( "Tight",   MaxRow() - 2, 67 - 11 - 11 - 11 - 11 - 11, , , {|| lboxmessage( "tight" ) } )
+
+    NAP_BUTTON_TEXT(button1, "native")
+    NAP_BUTTON_TEXT(button2, "Tight")
+    NAP_BUTTON_TEXT(button3, "Disabled")
+    NAP_BUTTON_TEXT(button4, "Hard")
+    NAP_BUTTON_TOOLTIP(button1, "Hey! This a tooltip for button 1")
+    NAP_BUTTON_ONCLICK(button1, {|| i_Button1OnClick() })
+
     NAP_LAYOUT_BUTTON(layout, button1, 0, 0)
     NAP_LAYOUT_BUTTON(layout, button2, 0, 1)
     NAP_LAYOUT_BUTTON(layout, button3, 0, 2)
@@ -1421,3 +1434,4 @@ PROCEDURE pause()
    RETURN
 
 SET PROCEDURE TO "_wvwmous.prg"
+SET PROCEDURE TO "../gtnap.prg"

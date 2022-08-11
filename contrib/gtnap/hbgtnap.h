@@ -548,6 +548,7 @@ typedef struct win_data
 } WIN_DATA;
 
 typedef struct _nap_win_data_t NapWinData;
+typedef struct _nap_callback_t NapCallback;
 
 struct _nap_win_data_t
 {
@@ -556,6 +557,15 @@ struct _nap_win_data_t
     Layout *layout;
 };
 
+struct _nap_callback_t
+{
+    PHB_ITEM codeBlock;
+};
+
+DeclSt(NapCallback);
+
+
+#define PTR_TO_UINT32(ptr) *((uint32_t*)(&ptr))
 
 typedef struct wvw_data
 {
@@ -624,6 +634,8 @@ typedef struct wvw_data
 
     Window *s_pNappWindowMenu;
     Menu *s_pNappMainMenu;
+
+    ArrSt(NapCallback) *s_pNappCallbacks;
    APP_DATA * s_sApp;                        /*application wide vars                     */
 
 }WVW_DATA;
@@ -651,8 +663,12 @@ extern Window *hb_gt_nap_GetWindow( UINT iWin );
 extern NapWinData *hb_gt_nap_GetWindowData( UINT iWin );
 // extern Menu *hb_gt_nap_MainMenu( void );
 extern void hb_gt_nap_set_MainMenu(Window *window, Menu *menu);
-
 extern void hb_gt_nap_set_GlobalPanel(Panel *panel);
+extern ArrSt(NapCallback) *hb_gt_nap_listeners(void);
+
+const char_t *hb_get_nap_text(const uint32_t textParamId);
+extern Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void(*FPtr_CallBack)(void*, Event*));
+extern void hb_gt_nap_callback(void *idp, Event *e);
 
 
 extern WVW_DATA * hb_getWvwData( void );
