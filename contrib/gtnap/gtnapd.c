@@ -7366,7 +7366,13 @@ void hb_gt_nap_callback(void *idp, Event *e)
 {
     NapCallback *callback = arrst_get(s_pWvwData->s_pNappCallbacks, PTR_TO_UINT32(idp), NapCallback);
     if (callback->codeBlock != NULL)
-        hb_itemDo(callback->codeBlock, 1, e);
+    {
+        PHB_ITEM phiEvent = hb_itemNew(NULL);
+        hb_itemPutPtr(phiEvent, e);
+        cassert_msg(e != NULL, "hb_gt_nap_callback: NULL Event");
+        hb_itemDo(callback->codeBlock, 1, phiEvent);
+        hb_itemRelease(phiEvent);
+    }
 }
 
 char * hb_gt_wvw_GetAppName( void )

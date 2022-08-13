@@ -10,24 +10,15 @@
 HB_FUNC( NAP_LABELCREATE )
 {
     Label *label = label_create();
-    HB_RETHANDLE(label);
+    hb_retptr(label);
 }
 
 /*---------------------------------------------------------------------------*/
 
 HB_FUNC( NAP_LABELTEXT )
 {
-    Label *label = (Label*)HB_PARHANDLE(1);
-    const char_t *text = NULL;
-
-    if (HB_ISCHAR(2))
-        text = hb_parcx(2);
-    else
-        text = (const char_t*)hb_parni(2);
-
-    label_text(label, text);
-    hb_retl(TRUE);
-    return;
+    Label *label = (Label*)hb_parptr(1);
+    label_text(label, hb_get_nap_text(2));
 }
 
 /*---------------------------------------------------------------------------*/

@@ -1,7 +1,10 @@
 /*
     This is part of gtnap
+    TODO: More info
 */
 
+// NAppGUI-Button wrapper for Harbour
+// https://nappgui.com/en/gui/button.html
 #include "hbgtnap.h"
 #include "nappgui.h"
 
@@ -10,7 +13,7 @@
 HB_FUNC( NAP_BUTTON_PUSH )
 {
     Button *button = button_push();
-    HB_RETHANDLE(button);
+    hb_retptr(button);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -18,7 +21,7 @@ HB_FUNC( NAP_BUTTON_PUSH )
 HB_FUNC( NAP_BUTTON_CHECK )
 {
     Button *button = button_check();
-    HB_RETHANDLE(button);
+    hb_retptr(button);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -26,7 +29,7 @@ HB_FUNC( NAP_BUTTON_CHECK )
 HB_FUNC( NAP_BUTTON_CHECK3 )
 {
     Button *button = button_check3();
-    HB_RETHANDLE(button);
+    hb_retptr(button);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -34,7 +37,7 @@ HB_FUNC( NAP_BUTTON_CHECK3 )
 HB_FUNC( NAP_BUTTON_RADIO )
 {
     Button *button = button_radio();
-    HB_RETHANDLE(button);
+    hb_retptr(button);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -42,7 +45,7 @@ HB_FUNC( NAP_BUTTON_RADIO )
 HB_FUNC( NAP_BUTTON_FLAT )
 {
     Button *button = button_flat();
-    HB_RETHANDLE(button);
+    hb_retptr(button);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -50,7 +53,7 @@ HB_FUNC( NAP_BUTTON_FLAT )
 HB_FUNC( NAP_BUTTON_FLATGLE )
 {
     Button *button = button_flatgle();
-    HB_RETHANDLE(button);
+    hb_retptr(button);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -64,32 +67,36 @@ static void i_OnButtonClick(void *idp, Event *e)
 
 HB_FUNC( NAP_BUTTON_ONCLICK )
 {
-    Button *button = (Button*)HB_PARHANDLE(1);
-    button_OnClick(button, hb_gt_nap_listener(2, i_OnButtonClick));
+    Button *button = (Button*)hb_parptr(1);
+    Listener *listener = hb_gt_nap_listener(2, i_OnButtonClick);
+    button_OnClick(button, listener);
 }
 
 /*---------------------------------------------------------------------------*/
 
 HB_FUNC( NAP_BUTTON_TEXT )
 {
-    Button *button = (Button*)HB_PARHANDLE(1);
-    button_text(button, hb_get_nap_text(2));
+    Button *button = (Button*)hb_parptr(1);
+    const char_t *text = hb_get_nap_text(2);
+    button_text(button, text);
 }
 
 /*---------------------------------------------------------------------------*/
 
 HB_FUNC( NAP_BUTTON_TEXT_ALT )
 {
-    Button *button = (Button*)HB_PARHANDLE(1);
-    button_text_alt(button, hb_get_nap_text(2));
+    Button *button = (Button*)hb_parptr(1);
+    const char_t *text = hb_get_nap_text(2);
+    button_text_alt(button, text);
 }
 
 /*---------------------------------------------------------------------------*/
 
 HB_FUNC( NAP_BUTTON_TOOLTIP )
 {
-    Button *button = (Button*)HB_PARHANDLE(1);
-    button_tooltip(button, hb_get_nap_text(2));
+    Button *button = (Button*)hb_parptr(1);
+    const char_t *text = hb_get_nap_text(2);
+    button_tooltip(button, text);
 }
 
 // Images & Fonts not supported yet!
@@ -110,7 +117,7 @@ HB_FUNC( NAP_BUTTON_TOOLTIP )
 
 HB_FUNC( NAP_BUTTON_STATE )
 {
-    Button *button = (Button*)HB_PARHANDLE(1);
+    Button *button = (Button*)hb_parptr(1);
     state_t state = (state_t)hb_parni(2);
     button_state(button, state);
 }
@@ -119,7 +126,7 @@ HB_FUNC( NAP_BUTTON_STATE )
 
 HB_FUNC( NAP_BUTTON_GET_STATE )
 {
-    Button *button = (Button*)HB_PARHANDLE(1);
+    Button *button = (Button*)hb_parptr(1);
     state_t state = button_get_state(button);
     hb_retni((int)state);
 }

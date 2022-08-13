@@ -357,9 +357,9 @@ STATIC FUNCTION EditsLayout()
 
     FOR i := 0 TO n - 1
         label := NAP_LABELCREATE()
-        edit := NAP_EDITCREATE()
+        edit := NAP_EDIT_CREATE()
 
-        NAP_LABELTEXT(label, "Label " + hb_ntos(NAPP_CACA))
+        NAP_LABELTEXT(label, "Label " + hb_ntos(i))
         NAP_LAYOUT_LABEL(layout, label, 0, i)
         NAP_LAYOUT_EDIT(layout, edit, 1, i)
 
@@ -373,8 +373,9 @@ STATIC FUNCTION EditsLayout()
     RETURN layout // EditsLayout
 
 //
-STATIC PROCEDURE i_Button1OnClick()
-    lboxmessage( "CallBack from NAppGUI: Button1 Pressed")
+STATIC PROCEDURE i_Button1OnClick( hEv )
+    LOCAL nEvType := NAP_EVENT_TYPE(hEv)
+    lboxmessage( "CallBack from NAppGUI: Button1 Pressed - Event Type: " + hb_ntos(nEvType))
     RETURN
 
 //
@@ -394,7 +395,7 @@ STATIC PROCEDURE CreateGUI( )
     NAP_BUTTON_TEXT(button3, "Disabled")
     NAP_BUTTON_TEXT(button4, "Hard")
     NAP_BUTTON_TOOLTIP(button1, "Hey! This a tooltip for button 1")
-    NAP_BUTTON_ONCLICK(button1, {|| i_Button1OnClick() })
+    NAP_BUTTON_ONCLICK(button1, {| hEv | i_Button1OnClick(hEv) })
 
     NAP_LAYOUT_BUTTON(layout, button1, 0, 0)
     NAP_LAYOUT_BUTTON(layout, button2, 0, 1)

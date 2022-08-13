@@ -28,6 +28,7 @@
 
 gtnapd.c
 
+nap_event.c
 nap_button.c
 nap_edit.c
 nap_global.c
