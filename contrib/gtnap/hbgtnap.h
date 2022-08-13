@@ -634,7 +634,7 @@ typedef struct wvw_data
 
     Window *s_pNappWindowMenu;
     Menu *s_pNappMainMenu;
-
+    Font *s_pNappGlobalFont;
     ArrSt(NapCallback) *s_pNappCallbacks;
    APP_DATA * s_sApp;                        /*application wide vars                     */
 
@@ -665,7 +665,8 @@ extern NapWinData *hb_gt_nap_GetWindowData( UINT iWin );
 extern void hb_gt_nap_set_MainMenu(Window *window, Menu *menu);
 extern void hb_gt_nap_set_GlobalPanel(Panel *panel);
 extern ArrSt(NapCallback) *hb_gt_nap_listeners(void);
-
+extern void hb_gt_nap_set_global_font(Font *font);
+extern Font *hb_gt_global_font(void);
 const char_t *hb_get_nap_text(const uint32_t textParamId);
 extern Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void(*FPtr_CallBack)(void*, Event*));
 extern void hb_gt_nap_callback(void *idp, Event *e);

@@ -29,13 +29,18 @@
 gtnapd.c
 
 nap_event.c
+nap_image.c
+
 nap_button.c
 nap_edit.c
+nap_font.c
 nap_global.c
 nap_label.c
 nap_layout.c
+nap_imageview.c
 nap_panel.c
 
+nap_menuvert.c
 
 
 napdraw.c

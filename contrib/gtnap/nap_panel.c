@@ -7,7 +7,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_PANELCREATE )
+HB_FUNC( NAP_PANEL_CREATE )
 {
     Panel *panel = panel_create();
     hb_retptr(panel);
@@ -15,7 +15,7 @@ HB_FUNC( NAP_PANELCREATE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_PANELLAYOUT )
+HB_FUNC( NAP_PANEL_LAYOUT )
 {
     Panel *panel = (Panel*)hb_parptr(1);
     Layout *layout = (Layout*)hb_parptr(2);

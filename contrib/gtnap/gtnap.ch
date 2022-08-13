@@ -24,6 +24,12 @@
 #define ekNAP_STATE_ON              (ekNAP_STATE_OFF + 1)
 #define ekNAP_STATE_MIXED           (ekNAP_STATE_OFF + 2)
 
+// enum scale_t
+#define ekNAP_SCALE_AUTO            1
+#define ekNAP_SCALE_SNONE           (ekNAP_SCALE_AUTO + 1)
+#define ekNAP_SCALE_ASPECT          (ekNAP_SCALE_AUTO + 2)
+#define ekNAP_SCALE_ASPECTDW        (ekNAP_SCALE_AUTO + 3)
+
 // enum event_t
 #define ekNAP_EVLABEL               0x400
 #define ekNAP_EVBUTTON              (ekNAP_EVLABEL + 1)

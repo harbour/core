@@ -613,6 +613,8 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    s_pWvwData->s_usNumWindows = 0;
     s_pWvwData->s_pNappMainMenu = NULL;
+    s_pWvwData->s_pNappGlobalFont = font_system(font_regular_size(), 0);
+
     s_pWvwData->s_pNappWindowMenu = NULL;
     s_pWvwData->s_pNappCallbacks = arrst_create(NapCallback);
 
@@ -728,6 +730,8 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
         oswindow = (OSWindow*)_window_ositem(s_pWvwData->s_pNappWindowMenu);
         osgui_unset_menubar(osmenu, oswindow);
     }
+
+font_destroy(&s_pWvwData->s_pNappGlobalFont);
 
    /* destroy all objects from all windows */
    for( j = ( int ) ( s_pWvwData->s_usNumWindows - 1 ); j >= 0; j-- )
@@ -4023,7 +4027,7 @@ static NapWinData *hb_gt_napCreateWindow( void )
     layout_vsize(layout1, 2, 250);
     layout_layout(layout, layout1, 0, 0);
     layout_panel(layout, cpanel, 1, 0);
-    layout_valign(layout, 1, 0, ekTOP);
+    //layout_valign(layout, 1, 0, ekTOP);
     panel_layout(panel, layout);
     window_panel(window, panel);
     data->window = window;
@@ -7344,6 +7348,17 @@ ArrSt(NapCallback) *hb_gt_nap_listeners(void)
     return s_pWvwData->s_pNappCallbacks;
 }
 
+void hb_gt_nap_set_global_font(Font *font)
+{
+    font_destroy(&s_pWvwData->s_pNappGlobalFont);
+    s_pWvwData->s_pNappGlobalFont = font;
+}
+
+Font *hb_gt_global_font(void)
+{
+    return s_pWvwData->s_pNappGlobalFont;
+}
+
 const char_t *hb_get_nap_text(const uint32_t textParamId)
 {
     if (HB_ISCHAR(textParamId))
@@ -7355,7 +7370,6 @@ const char_t *hb_get_nap_text(const uint32_t textParamId)
 Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void (*FPtr_CallBack)(void*, Event*))
 {
     PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
-    //ArrSt(NapCallback) *listeners = hb_gt_nap_listeners();
     uint32_t id = arrst_size(s_pWvwData->s_pNappCallbacks, NapCallback);
     NapCallback *lt = arrst_new0(s_pWvwData->s_pNappCallbacks, NapCallback);
     lt->codeBlock = hb_itemNew(codeBlock);

@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.txs": "html",
+        "nappgui.h": "c"
+    }
+}
