@@ -13,8 +13,9 @@ HB_FUNC( NAP_IMAGE_FROM_FILE )
     String *cpath = str_cpath("%s", pathname);
     ferror_t error;
     Image *image = image_from_file(tc(cpath), &error);
-    log_printf("PathName: %s", tc(cpath));
-    log_printf("Image: %p", image);
+    // log_printf("PathName: %s", tc(cpath));
+    // log_printf("Image: %p", image);
     str_destroy(&cpath);
-    hb_retptr(image);
+    hb_retImage(image);
+    //hb_retptr(image);
 }

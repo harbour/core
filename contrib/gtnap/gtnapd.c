@@ -7367,6 +7367,58 @@ const char_t *hb_get_nap_text(const uint32_t textParamId)
         return (const char_t*)hb_parni(textParamId);
 }
 
+
+/*---------------------------------------------------------------------------*/
+
+static HB_GARBAGE_FUNC( s_gc_Image_destroy )
+{
+    Image **ph = (Image**)Cargo;
+    log_printf("Called s_gc_Image_destroy by GC: %p - %p", ph, *ph);
+    if (ph && *ph)
+    {
+        // image_destroy set 'ph' to NULL
+        image_destroy(ph);
+    }
+}
+
+
+/*---------------------------------------------------------------------------*/
+
+static const HB_GC_FUNCS s_gc_Image_funcs =
+{
+    s_gc_Image_destroy,
+    hb_gcDummyMark
+};
+
+/*---------------------------------------------------------------------------*/
+
+void hb_retImage(Image *image)
+{
+    if (image != NULL)
+    {
+        void **ph = (void**)hb_gcAllocate(sizeof(Image*), &s_gc_Image_funcs);
+        *ph = image;
+            log_printf("'hb_retImage': %p - %p", ph, image);
+        hb_retptrGC(ph);
+    }
+    else
+    {
+        hb_retptr(NULL);
+    }
+}
+
+Image *hb_parImage(int iParam)
+{
+   void ** ph = ( void ** ) hb_parptrGC( &s_gc_Image_funcs, iParam );
+    log_printf("'hb_parImage': %p - %p", ph, *ph);
+
+   return *((Image**)ph);
+}
+
+
+
+
+
 Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void (*FPtr_CallBack)(void*, Event*))
 {
     PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);

@@ -668,6 +668,9 @@ extern ArrSt(NapCallback) *hb_gt_nap_listeners(void);
 extern void hb_gt_nap_set_global_font(Font *font);
 extern Font *hb_gt_global_font(void);
 const char_t *hb_get_nap_text(const uint32_t textParamId);
+extern void hb_retImage(Image *image);
+extern Image *hb_parImage(int iParam);
+
 extern Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void(*FPtr_CallBack)(void*, Event*));
 extern void hb_gt_nap_callback(void *idp, Event *e);
 

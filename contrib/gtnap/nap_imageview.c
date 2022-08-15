@@ -19,9 +19,9 @@ HB_FUNC( NAP_IMAGEVIEW_CREATE )
 HB_FUNC( NAP_IMAGEVIEW_IMAGE )
 {
     ImageView *view = (ImageView*)hb_parptr(1);
-    Image *image = (Image*)hb_parptr(2);
+    Image *image = hb_parImage(2);//(Image*)hb_parptr(2);
     imageview_image(view, image);
-    image_destroy(&image);
+    //image_destroy(&image);
 }
 
 /*---------------------------------------------------------------------------*/
