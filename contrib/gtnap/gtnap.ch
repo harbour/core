@@ -5,6 +5,17 @@
 
 // https://nappgui.com/en/draw2d/draw2d.html
 
+// enum fstyle_t
+#define ekNAP_FSTYLE_NORMAL         0
+#define ekNAP_FSTYLE_BOLD           1
+#define ekNAP_FSTYLE_ITALIC         2
+#define ekNAP_FSTYLE_STRIKEOUT      4
+#define ekNAP_FSTYLE_UNDERLINE      8
+#define ekNAP_FSTYLE_SUBSCRIPT      16
+#define ekNAP_FSTYLE_SUPSCRIPT      32
+#define ekNAP_FSTYLE_PIXELS         0
+#define ekNAP_FSTYLE_POINTS         64
+
 // enum align_t
 #define ekNAP_ALIGN_LEFT            1
 #define ekNAP_ALIGN_TOP             (ekNAP_ALIGN_LEFT)
