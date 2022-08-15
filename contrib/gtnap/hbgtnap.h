@@ -671,6 +671,9 @@ const char_t *hb_get_nap_text(const uint32_t textParamId);
 extern void hb_retImage(Image *image);
 extern Image *hb_parImage(int iParam);
 
+extern void hb_retFont(Font *font);
+extern Font *hb_parFont(int iParam);
+
 extern Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void(*FPtr_CallBack)(void*, Event*));
 extern void hb_gt_nap_callback(void *idp, Event *e);
 

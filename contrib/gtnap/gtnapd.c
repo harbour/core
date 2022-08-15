@@ -7418,6 +7418,58 @@ Image *hb_parImage(int iParam)
 
 
 
+/*---------------------------------------------------------------------------*/
+
+static HB_GARBAGE_FUNC( s_gc_Font_destroy )
+{
+    Font **ph = (Font**)Cargo;
+    log_printf("Called s_gc_Font_destroy by GC: %p - %p", ph, *ph);
+    if (ph && *ph)
+    {
+        // font_destroy set 'ph' to NULL
+        font_destroy(ph);
+    }
+}
+
+
+/*---------------------------------------------------------------------------*/
+
+static const HB_GC_FUNCS s_gc_Font_funcs =
+{
+    s_gc_Font_destroy,
+    hb_gcDummyMark
+};
+
+/*---------------------------------------------------------------------------*/
+
+void hb_retFont(Font *font)
+{
+    if (font != NULL)
+    {
+        void **ph = (void**)hb_gcAllocate(sizeof(Font*), &s_gc_Font_funcs);
+        *ph = font;
+            log_printf("'hb_retFont': %p - %p", ph, font);
+        hb_retptrGC(ph);
+    }
+    else
+    {
+        hb_retptr(NULL);
+    }
+}
+
+Font *hb_parFont(int iParam)
+{
+   void ** ph = ( void ** ) hb_parptrGC( &s_gc_Font_funcs, iParam );
+    log_printf("'hb_parFont': %p - %p", ph, *ph);
+
+   return *((Font**)ph);
+}
+
+
+
+
+
+
 
 Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void (*FPtr_CallBack)(void*, Event*))
 {
