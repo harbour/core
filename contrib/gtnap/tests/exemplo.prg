@@ -41,6 +41,8 @@ V_Label1 := NAP_LABEL_WITH_TEXT("Escolha o tipo de janela")
 V_Label2 := NAP_LABEL_WITH_TEXT("Versão 99.9ç(b999) - S99999")
 V_Label3 := NAP_LABEL_WITH_TEXT("www.aspec.com.br    Aspec, 1993-2022. Todos os direitos reservados")
 
+NAP_LABEL_BGCOLOR(V_Label2, NAP_COLOR_CYAN())
+NAP_LABEL_BGCOLOR(V_Label3, NAP_COLOR_CYAN())
 NAP_IMAGEVIEW_IMAGE(V_ImageView, V_Image)
 NAP_MENUVERT_ADD(V_MenuVert, "Menu de opções", {|| EXEMPLO_MENU() })
 NAP_MENUVERT_ADD(V_MenuVert, "Browse de DBF", {|| EXEMPLO_BROWSE_DBF() })

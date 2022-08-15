@@ -38,7 +38,7 @@ HB_FUNC( NAP_FONT_MONOSPACE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_FONT_WITH_STYPE )
+HB_FUNC( NAP_FONT_WITH_STYLE )
 {
     Font *cfont = hb_parFont(1);
     uint32_t style = hb_parni(2);
