@@ -7465,6 +7465,52 @@ Font *hb_parFont(int iParam)
    return *((Font**)ph);
 }
 
+/*---------------------------------------------------------------------------*/
+
+static HB_GARBAGE_FUNC( s_gc_Window_destroy )
+{
+    Window **ph = (Window**)Cargo;
+    log_printf("Called s_gc_Window_destroy by GC: %p - %p", ph, *ph);
+    if (ph && *ph)
+    {
+        // window_destroy set 'ph' to NULL
+        window_destroy(ph);
+    }
+}
+
+
+/*---------------------------------------------------------------------------*/
+
+static const HB_GC_FUNCS s_gc_Window_funcs =
+{
+    s_gc_Window_destroy,
+    hb_gcDummyMark
+};
+
+void hb_retWindow(Window *window)
+{
+    if (window != NULL)
+    {
+        void **ph = (void**)hb_gcAllocate(sizeof(Window*), &s_gc_Window_funcs);
+        *ph = window;
+            log_printf("'hb_retWindow': %p - %p", ph, window);
+        hb_retptrGC(ph);
+    }
+    else
+    {
+        hb_retptr(NULL);
+    }
+
+}
+
+Window *hb_parWindow(int iParam)
+{
+   void ** ph = ( void ** ) hb_parptrGC( &s_gc_Window_funcs, iParam );
+    log_printf("'hb_parWindow': %p - %p", ph, *ph);
+
+   return *((Window**)ph);
+
+}
 
 
 

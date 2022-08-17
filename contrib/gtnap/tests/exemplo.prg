@@ -16,7 +16,7 @@ PROC MAIN
 LOCAL ch        // TO BE REMOVED
 
 
-LOCAL V_Janela, V_Layout1, V_Layout2
+LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2
 LOCAL V_Image, V_ImageView, V_MenuVert
 LOCAL V_Label1, V_Label2, V_Label3
 
@@ -31,7 +31,8 @@ NAP_GLOBAL_FONT(24, 0)
 // GTNAP NOT USE Global Screen/Pixel Coordinates
 // Texts, Buttons and other widget has not the same size in all platorms
 // By using Layouts we ensure that interface compositions will be portable
-V_Janela := NAP_PANEL_CREATE()
+V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD)
+V_Panel := NAP_PANEL_CREATE()
 V_Layout1 := NAP_LAYOUT_CREATE(2, 1)
 V_Layout2 := NAP_LAYOUT_CREATE(1, 5)
 V_Image := NAP_IMAGE_FROM_FILE(DIRET_BMPS() + "logaspec.bmp")
@@ -56,7 +57,7 @@ NAP_LAYOUT_LABEL(V_Layout2, V_Label1, 0, 0)
 NAP_LAYOUT_PANEL(V_Layout2, V_MenuVert, 0, 1)
 NAP_LAYOUT_LABEL(V_Layout2, V_Label2, 0, 3)
 NAP_LAYOUT_LABEL(V_Layout2, V_Label3, 0, 4)
-NAP_LAYOUT_VEXPAND(V_Layout2, 2)
+NAP_LAYOUT_VMARGIN(V_Layout2, 2, 300)
 NAP_LAYOUT_IMAGEVIEW(V_Layout1, V_ImageView, 0, 0)
 NAP_LAYOUT_LAYOUT(V_Layout1, V_Layout2, 1, 0)
 NAP_LAYOUT_VALIGN(V_Layout1, 0, 0, ekNAP_ALIGN_TOP)
@@ -66,10 +67,13 @@ NAP_LAYOUT_HALIGN(V_Layout2, 0, 4, ekNAP_ALIGN_RIGHT)
 NAP_LAYOUT_VMARGIN(V_Layout2, 0, 20)
 NAP_LAYOUT_HMARGIN(V_Layout1, 0, 150)
 NAP_LAYOUT_MARGIN4(V_Layout1, 10, 10, 10, 100)
-NAP_PANEL_LAYOUT(V_Janela, V_Layout1)
+NAP_PANEL_LAYOUT(V_Panel, V_Layout1)
+NAP_WINDOW_PANEL(V_Janela, V_Panel)
+NAP_WINDOW_TITLE(V_Janela, "Porting of ASPEC exemplo.prg to GTNAP")
+NAP_WINDOW_SHOW(V_Janela)
 
 // TO BE REMOVED, JUST A TEMPORAL WAY TO SHOW THE PANEL
-NAP_GLOBALPANEL(V_Janela)
+//NAP_GLOBALPANEL(V_Janela)
 
 
 

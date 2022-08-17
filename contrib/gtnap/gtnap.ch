@@ -41,6 +41,19 @@
 #define ekNAP_SCALE_ASPECT          (ekNAP_SCALE_AUTO + 2)
 #define ekNAP_SCALE_ASPECTDW        (ekNAP_SCALE_AUTO + 3)
 
+// enum window_flag_t
+#define ekNAP_WINDOW_FLAG            0
+#define ekNAP_WINDOW_EDGE            1
+#define ekNAP_WINDOW_TITLE           2
+#define ekNAP_WINDOW_MAX             4
+#define ekNAP_WINDOW_MIN             8
+#define ekNAP_WINDOW_CLOSE           16
+#define ekNAP_WINDOW_RES             32
+#define ekNAP_WINDOW_RETURN          64
+#define ekNAP_WINDOW_ESC             128
+#define ekNAP_WINDOW_STD             26 //(ekNAP_WINDOW_TITLE | ekNAP_WINDOW_MIN | ekNAP_WINDOW_CLOSE)
+#define ekNAP_WINDOW_SRES            (ekNAP_WINDOW_STD | ekNAP_WINDOW_MAX | ekNAP_WINDOW_RES)
+
 // enum event_t
 #define ekNAP_EVLABEL               0x400
 #define ekNAP_EVBUTTON              (ekNAP_EVLABEL + 1)

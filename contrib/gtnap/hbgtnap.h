@@ -674,6 +674,9 @@ extern Image *hb_parImage(int iParam);
 extern void hb_retFont(Font *font);
 extern Font *hb_parFont(int iParam);
 
+extern void hb_retWindow(Window *window);
+extern Window *hb_parWindow(int iParam);
+
 extern Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void(*FPtr_CallBack)(void*, Event*));
 extern void hb_gt_nap_callback(void *idp, Event *e);
 
