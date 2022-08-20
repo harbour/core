@@ -681,6 +681,8 @@ extern Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void(*FPtr_
 extern void hb_gt_nap_callback(void *idp, Event *e);
 
 
+extern void hb_gt_nap_runloop( void );
+
 extern WVW_DATA * hb_getWvwData( void );
 extern char * hb_gt_wvw_GetAppName( void );
 extern void hb_gt_wvwResetWindow( UINT usWinNum );

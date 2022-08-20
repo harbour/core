@@ -542,7 +542,6 @@ static Window *i_nappgui_window(void)
    return window;
 }
 
-
 static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    HANDLE hInstance;
@@ -551,18 +550,26 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    USHORT i;
 
-   GuiContext *context = NULL;
-   osgui_start();
-   gui_start();
-   context = osguictx();
-   gui_context_set_current(context);
 
-   log_file("C:\\Users\\USUARIO\\Desktop\\harbour_log.txt");
+//    GuiContext *context = NULL;
+//    osgui_start();
+//    gui_start();
+//    context = osguictx();
+//    gui_context_set_current(context);
+
+   //log_file("C:\\Users\\USUARIO\\Desktop\\harbour_log.txt");
    log_printf("gtnap: hb_gt_wvw_Init()");
+
+
+
+
+
 //    i_WINDOW = i_nappgui_window();
 //    window_show(i_WINDOW);
 
     // TraceLog( NULL, "HELLO WORLD!!! gtnap\n" );
+
+   // cassert(FALSE);
 
    if( bStartMode )
    {
@@ -630,52 +637,52 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    s_pWvwData->hInstance = ( HINSTANCE ) hInstance;
 
-   s_pWvwData->s_pWindows[ 0 ]->hWnd = hb_gt_wvwCreateWindow( ( HINSTANCE ) hInstance, ( HINSTANCE ) hPrevInstance, "", iCmdShow );
-   s_pWvwData->s_pNappWindows[ 0 ]  = hb_gt_napCreateWindow( );
+   s_pWvwData->s_pWindows[ 0 ]->hWnd = NULL;;// hb_gt_wvwCreateWindow( ( HINSTANCE ) hInstance, ( HINSTANCE ) hPrevInstance, "", iCmdShow );
+   s_pWvwData->s_pNappWindows[ 0 ]  = NULL;// hb_gt_napCreateWindow( );
 
-   if( ! s_pWvwData->s_pWindows[ 0 ]->hWnd )
-      /*  Runtime error
-       */
-      hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
+//    if( ! s_pWvwData->s_pWindows[ 0 ]->hWnd )
+//       /*  Runtime error
+//        */
+//       hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
 
-   if( s_pWvwData->s_pNappWindows[ 0 ] )
-      window_show(s_pWvwData->s_pNappWindows[ 0 ]->window);
-   else
-      hb_errRT_TERM( EG_CREATE, 10001, "WINAPI NAPPGUI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
+//    if( s_pWvwData->s_pNappWindows[ 0 ] )
+//       window_show(s_pWvwData->s_pNappWindows[ 0 ]->window);
+//    else
+//       hb_errRT_TERM( EG_CREATE, 10001, "WINAPI NAPPGUI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
 
    {
-      PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
-      void *   hWindowTitle;
+    //   PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
+    //   void *   hWindowTitle;
 
-      hb_gt_wvwSetWindowTitle( 0, HB_ITEMGETSTR( pItem, &hWindowTitle, NULL ) );
+    //   hb_gt_wvwSetWindowTitle( 0, HB_ITEMGETSTR( pItem, &hWindowTitle, NULL ) );
 
-      window_title(s_pWvwData->s_pNappWindows[ 0 ]->window, (const char_t*)hWindowTitle);
+    //   //window_title(s_pWvwData->s_pNappWindows[ 0 ]->window, (const char_t*)hWindowTitle);
 
 
-      hb_strfree( hWindowTitle );
-      hb_itemRelease( pItem );
+    //   hb_strfree( hWindowTitle );
+    //   hb_itemRelease( pItem );
    }
 
-   hb_gt_wvwCreateObjects( 0 );
-   s_pWvwData->s_pWindows[ 0 ]->hdc     = GetDC( s_pWvwData->s_pWindows[ 0 ]->hWnd );
-   s_pWvwData->s_pWindows[ 0 ]->hCompDC = CreateCompatibleDC( s_pWvwData->s_pWindows[ 0 ]->hdc );
+//    hb_gt_wvwCreateObjects( 0 );
+//    s_pWvwData->s_pWindows[ 0 ]->hdc     = GetDC( s_pWvwData->s_pWindows[ 0 ]->hWnd );
+//    s_pWvwData->s_pWindows[ 0 ]->hCompDC = CreateCompatibleDC( s_pWvwData->s_pWindows[ 0 ]->hdc );
 
    /*
       Apos o Device Context e as PENs e BRUSHes criados, atribuo uma PEN e um BRUSH qualquer apenas para pegar
       o handle original da PEN e BRUSH do Device Context
     */
-   s_pWvwData->s_sApp->OriginalPen   = ( HPEN ) SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HPEN ) s_pWvwData->s_sApp->penWhite );
-   s_pWvwData->s_sApp->OriginalBrush = ( HBRUSH ) SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->s_sApp->currentBrush );
-   /*
-      E, logo apos, restaura aos valores originais mantendo em s_pWvwData->s_sApp os valores salvos para restauracao
-      quando for utilizar DeleteObject()
-    */
-   SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HPEN ) s_pWvwData->s_sApp->OriginalPen );
-   SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->s_sApp->OriginalBrush );
+//    s_pWvwData->s_sApp->OriginalPen   = ( HPEN ) SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HPEN ) s_pWvwData->s_sApp->penWhite );
+//    s_pWvwData->s_sApp->OriginalBrush = ( HBRUSH ) SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->s_sApp->currentBrush );
+//    /*
+//       E, logo apos, restaura aos valores originais mantendo em s_pWvwData->s_sApp os valores salvos para restauracao
+//       quando for utilizar DeleteObject()
+//     */
+//    SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HPEN ) s_pWvwData->s_sApp->OriginalPen );
+//    SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->s_sApp->OriginalBrush );
 
    /* SUPER GT initialization */
-   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSELF_RESIZE( pGT, s_pWvwData->s_pWindows[ 0 ]->ROWS, s_pWvwData->s_pWindows[ 0 ]->COLS );
+//    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+//    HB_GTSELF_RESIZE( pGT, s_pWvwData->s_pWindows[ 0 ]->ROWS, s_pWvwData->s_pWindows[ 0 ]->COLS );
 
 }
 
@@ -900,10 +907,10 @@ font_destroy(&s_pWvwData->s_pNappGlobalFont);
    log_printf("gtnap: hb_gt_wvw_Exit()");
    //window_destroy(&i_WINDOW);
 
-   context = gui_context_get_current();
-   gui_context_destroy((GuiContext**)&context);
-   gui_finish();
-   osgui_finish();
+//    context = gui_context_get_current();
+//    gui_context_destroy((GuiContext**)&context);
+//    gui_finish();
+//    osgui_finish();
 
 }
 
@@ -7350,7 +7357,7 @@ ArrSt(NapCallback) *hb_gt_nap_listeners(void)
 
 void hb_gt_nap_set_global_font(Font *font)
 {
-    font_destroy(&s_pWvwData->s_pNappGlobalFont);
+    //font_destroy(&s_pWvwData->s_pNappGlobalFont);
     s_pWvwData->s_pNappGlobalFont = font;
 }
 
@@ -7474,7 +7481,7 @@ static HB_GARBAGE_FUNC( s_gc_Window_destroy )
     if (ph && *ph)
     {
         // window_destroy set 'ph' to NULL
-        window_destroy(ph);
+        //window_destroy(ph);
     }
 }
 
@@ -7538,6 +7545,58 @@ void hb_gt_nap_callback(void *idp, Event *e)
         hb_itemRelease(phiEvent);
     }
 }
+
+
+
+static PHB_ITEM *INIT_CODEBLOCK = NULL;
+static PHB_ITEM *END_CODEBLOCK = NULL;
+
+
+
+static WVW_DATA *i_nappgui_create(void)
+{
+    WVW_DATA *data = heap_new0(WVW_DATA);
+    log_printf("i_nappgui_create() Begin %p", INIT_CODEBLOCK);
+    hb_itemDo(INIT_CODEBLOCK, 0);
+    hb_itemRelease(INIT_CODEBLOCK);
+    INIT_CODEBLOCK = NULL;
+    //cassert_msg(FALSE, "i_nappgui_create");
+    log_printf("i_nappgui_create() End");
+    return data;
+}
+
+static void i_nappgui_destroy(WVW_DATA **data)
+{
+    log_printf("i_nappgui_destroy() Begin");
+    hb_itemDo(END_CODEBLOCK, 0);
+    hb_itemRelease(END_CODEBLOCK);
+    END_CODEBLOCK = NULL;
+    heap_delete(data, WVW_DATA);
+    unref(data);
+}
+
+#include "osmain.h"
+
+
+
+void hb_gt_nap_runloop( void )
+{
+    HANDLE hInstance = GetModuleHandle( NULL );
+    PHB_ITEM codeBlock_begin = hb_param(1, HB_IT_BLOCK);
+    PHB_ITEM codeBlock_end = hb_param(2, HB_IT_BLOCK);
+    INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
+    END_CODEBLOCK = hb_itemNew(codeBlock_end);
+   //log_file("C:\\Users\\USUARIO\\Desktop\\harbour_log.txt");
+    log_printf("hb_gt_nap_runloop() Begin");
+    osmain_imp(
+                0, NULL, hInstance, 0.,
+                (FPtr_app_create)i_nappgui_create,
+                (FPtr_app_update)NULL,
+                (FPtr_destroy)i_nappgui_destroy,
+                "");
+}
+
+
 
 char * hb_gt_wvw_GetAppName( void )
 {

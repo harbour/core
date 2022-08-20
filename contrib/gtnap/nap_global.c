@@ -24,3 +24,17 @@ HB_FUNC( NAP_GLOBAL_FONT )
     Font *font = font_system(size, style);
     hb_gt_nap_set_global_font(font);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_GLOBAL_RUNLOOP )
+{
+    hb_gt_nap_runloop();
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_GLOBAL_EXIT )
+{
+    osapp_finish();
+}

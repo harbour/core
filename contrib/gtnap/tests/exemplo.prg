@@ -13,17 +13,30 @@
 
 PROC MAIN
 
-LOCAL ch        // TO BE REMOVED
+IF HB_GTVERSION()=="NAP"
+    // TO BE REMOVED
+    lBoxMessage("You are running in GTNAP Mode", "Pause")
+    NAP_GLOBAL_RUNLOOP({|| GTNAP_MAIN() }, {|| GTNAP_END() })
+
+    RETURN
+ ELSE
+    lBoxMessage("You are NOT running in GTNAP Mode", "Pause")
+    RETURN
+ ENDIF
+
+RETURN
+
+
+STATIC PROCEDURE GTNAP_MAIN()
+
+   // LOCAL ch        // TO BE REMOVED
 
 
 LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2
 LOCAL V_Image, V_ImageView, V_MenuVert
 LOCAL V_Label1, V_Label2, V_Label3
 
-
-// TO BE REMOVED
-lBoxMessage("Press to Continue", "Pause")
-
+lBoxMessage("GTNAP_MAIN()!!!!!!!!!!!!!!", "Pause")
 
 DIRET_BMPS(".\bmps\")
 NAP_GLOBAL_FONT(24, 0)
@@ -70,15 +83,27 @@ NAP_LAYOUT_MARGIN4(V_Layout1, 10, 10, 10, 100)
 NAP_PANEL_LAYOUT(V_Panel, V_Layout1)
 NAP_WINDOW_PANEL(V_Janela, V_Panel)
 NAP_WINDOW_TITLE(V_Janela, "Porting of ASPEC exemplo.prg to GTNAP")
+NAP_WINDOW_ONCLOSE(V_Janela, {| hEv | ON_MAIN_WINDOW_CLOSE(hEv) })
 NAP_WINDOW_SHOW(V_Janela)
 
 // TO BE REMOVED, JUST A TEMPORAL WAY TO SHOW THE PANEL
 //NAP_GLOBALPANEL(V_Janela)
 
 
+RETURN
 
+// The user wants to exit the application
+// We can confirm the exit
+STATIC PROCEDURE ON_MAIN_WINDOW_CLOSE( /*hEnv*/ )
+    NAP_GLOBAL_EXIT()
+RETURN
 
-
+// Final actions before exit the application
+// Only Non-graphical
+STATIC PROCEDURE GTNAP_END()
+    lBoxMessage("GTNAP_END()", "Pause")
+    QUIT
+RETURN
 
 
 
@@ -95,26 +120,26 @@ NAP_WINDOW_SHOW(V_Janela)
 // DELETE THIS CODE
 // JUST FOR TEST
 //
- DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
-    // experiment with different paintrefresh interval:
-    DO CASE
-    CASE ch == hb_keyCode( "<" )
-       wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() / 2 ) )
-       Alert( wvw_SetPaintRefresh() )
-    CASE ch == hb_keyCode( ">" )
-       wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() * 2 ) )
-       Alert( wvw_SetPaintRefresh() )
-    CASE ch == hb_keyCode( "0" )
-       wvw_SetPaintRefresh( 0 )
-       Alert( wvw_SetPaintRefresh() )
-    OTHERWISE
-       // do nothing. Inkey() has been handled by nAfterInket()
-    ENDCASE
- ENDDO
+//  DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
+//     // experiment with different paintrefresh interval:
+//     DO CASE
+//     CASE ch == hb_keyCode( "<" )
+//        wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() / 2 ) )
+//        Alert( wvw_SetPaintRefresh() )
+//     CASE ch == hb_keyCode( ">" )
+//        wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() * 2 ) )
+//        Alert( wvw_SetPaintRefresh() )
+//     CASE ch == hb_keyCode( "0" )
+//        wvw_SetPaintRefresh( 0 )
+//        Alert( wvw_SetPaintRefresh() )
+//     OTHERWISE
+//        // do nothing. Inkey() has been handled by nAfterInket()
+//     ENDCASE
+//  ENDDO
 
-//    Setup_wvw("Exemplo das rotinas de janelamento",35,110)
+// //    Setup_wvw("Exemplo das rotinas de janelamento",35,110)
 
-QUIT
+// QUIT
 
 
 // NAP_MENUVERT_ADD(V_MenuVert, "Menu de opções", {|| EXEMPLO_MENU() })
