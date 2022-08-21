@@ -27,6 +27,7 @@ struct _menuvert_t
 {
     View *view;
     Font *font;
+    Layout *layout;
     ArrSt(MenuOpt) *opts;
     uint32_t selected;
 };
@@ -85,6 +86,57 @@ static void i_OnDraw(Panel *panel, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnKeyDown(Panel *panel, Event *e)
+{
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    const EvKey *p = event_params(e, EvKey);
+    uint32_t n = arrst_size(menu->opts, MenuOpt);
+    bool_t update = FALSE;
+
+    if (n > 0)
+    {
+        if (p->key == ekKEY_UP)
+        {
+            if (menu->selected > 0)
+            {
+                menu->selected -= 1;
+                update = TRUE;
+            }
+        }
+        else if (p->key == ekKEY_DOWN)
+        {
+            if (menu->selected < n - 1)
+            {
+                menu->selected += 1;
+                update = TRUE;
+            }
+        }
+        else if (p->key == ekKEY_SPACE)
+        {
+            const MenuOpt *opt = arrst_get_const(menu->opts, menu->selected, MenuOpt);
+            if (opt->codeBlock != NULL)
+            {
+                Cell *cell = layout_cell(menu->layout, 0, 0);
+                hb_itemDo(opt->codeBlock, 0);
+                cell_focus(cell);
+            }
+        }
+    }
+
+    if (update == TRUE)
+        view_update(menu->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnKeyUp(Panel *panel, Event *e)
+{
+    unref(panel);
+    unref(e);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_view_size(MenuVert *menu)
 {
     static real32_t MIN_WIDTH = 500;
@@ -120,12 +172,16 @@ HB_FUNC( NAP_MENUVERT_CREATE )
     View *view = view_create();
     MenuVert *menu = i_create();
     menu->font = hb_gtnap_global_font();
+    menu->layout = layout;
     menu->view = view;
     menu->selected = 0;
     i_view_size(menu);
     view_OnDraw(view, listener(panel, i_OnDraw, Panel));
+    view_OnKeyDown(view, listener(panel, i_OnKeyDown, Panel));
+    view_OnKeyUp(view, listener(panel, i_OnKeyUp, Panel));
     panel_data(panel, &menu, i_destroy, MenuVert);
     layout_view(layout, view, 0, 0);
+    layout_tabstop(layout, 0, 0, TRUE);
     panel_layout(panel, layout);
     hb_retptr(panel);
 }
@@ -143,3 +199,14 @@ HB_FUNC( NAP_MENUVERT_ADD )
     opt->codeBlock = hb_itemNew(codeBlock);
     i_view_size(menu);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_MENUVERT_FOCUS )
+{
+    Panel *panel = (Panel*)hb_parptr(1);
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    Cell *cell = layout_cell(menu->layout, 0, 0);
+    cell_focus(cell);
+}
+

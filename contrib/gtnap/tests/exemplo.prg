@@ -1,7 +1,7 @@
 // Porting of ASPEC exemplo.prg to GTNAP
 
 #require "gtnap"
-#include "gtnap.ch"     // For GTNAP defines
+#include "gtnap.ch"
 
 PROC MAIN
 
@@ -10,13 +10,15 @@ IF HB_GTVERSION()=="NAP"
     RETURN
 
  ELSE
+    // This Application is only for GTNAP
     RETURN
 
  ENDIF
 
 RETURN
 
-
+// GTNAP_MAIN is the real MAIN in a GTNAP Application
+// Here you should create the application Main Window
 STATIC PROCEDURE GTNAP_MAIN()
 
 LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2
@@ -24,6 +26,8 @@ LOCAL V_Image, V_ImageView, V_MenuVert
 LOCAL V_Label1, V_Label2, V_Label3
 
 DIRET_BMPS(".\bmps\")
+
+// We want big font size of main Window
 NAP_GLOBAL_FONT(24, 0)
 
 // GTNAP NOT USE Global Screen/Pixel Coordinates
@@ -43,7 +47,7 @@ V_Label3 := NAP_LABEL_WITH_TEXT("www.aspec.com.br    Aspec, 1993-2022. Todos os 
 NAP_LABEL_BGCOLOR(V_Label2, NAP_COLOR_CYAN())
 NAP_LABEL_BGCOLOR(V_Label3, NAP_COLOR_CYAN())
 NAP_IMAGEVIEW_IMAGE(V_ImageView, V_Image)
-NAP_MENUVERT_ADD(V_MenuVert, "Menu de opções", {|| EXEMPLO_MENU() })
+NAP_MENUVERT_ADD(V_MenuVert, "Menu de opções", {|| EXEMPLO_MENU()  })
 NAP_MENUVERT_ADD(V_MenuVert, "Browse de DBF", {|| EXEMPLO_BROWSE_DBF() })
 NAP_MENUVERT_ADD(V_MenuVert, "Browse de vetor", {|| EXEMPLO_BROWSE_VETOR() })
 NAP_MENUVERT_ADD(V_MenuVert, "Exibição/edição de texto em memória", {|| EXEMPLO_TEXTO_MEMORIA() })
@@ -70,16 +74,19 @@ NAP_WINDOW_PANEL(V_Janela, V_Panel)
 NAP_WINDOW_TITLE(V_Janela, "Portabilidade de ASPEC exemplo.prg para GTNAP")
 NAP_WINDOW_ONCLOSE(V_Janela, {| hEv | ON_MAIN_WINDOW_CLOSE(hEv) })
 NAP_WINDOW_SHOW(V_Janela)
+NAP_MENUVERT_FOCUS(V_MenuVert)
 
+// The rest of application will use the Sytem default font
 NAP_GLOBAL_FONT(NAP_FONT_REGULAR_SIZE(), 0)
 
 RETURN
 
 // The user wants to exit the application
 // We can confirm the exit
+// This Callback function will be called when the user press the "Close" button in Main Window
 STATIC PROCEDURE ON_MAIN_WINDOW_CLOSE( hEnv )
 
-    LOCAL opt := PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "info")
+    LOCAL opt := PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "quest")
 
     IF opt == 1
         NAP_GLOBAL_EXIT()
@@ -97,32 +104,32 @@ STATIC PROCEDURE GTNAP_END()
 RETURN
 
 
-PROC EXEMPLO_MENU
-    // TODO
+PROC EXEMPLO_MENU()
+    PERGUN("'Menu de opções' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
 PROC EXEMPLO_BROWSE_DBF()
-    // TODO
+    PERGUN("'Browse de DBF' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
 PROC EXEMPLO_BROWSE_VETOR()
-    // TODO
+    PERGUN("'Browse de vetor' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
 PROC EXEMPLO_TEXTO_MEMORIA()
-    // TODO
+    PERGUN("'Exibição/edição de texto em memória' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
 PROC EXEMPLO_TEXTO_ARQUIVO()
-    // TODO
+    PERGUN("'Exibição/edição de arquivo texto' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
 PROC EXEMPLO_ENTRADA_DADOS()
-    // TODO
+    PERGUN("'Entrada de dados' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
 PROC EXEMPLO_AUXILIARES()
-    // TODO
+    PERGUN("'Janelas auxiliares' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
 
