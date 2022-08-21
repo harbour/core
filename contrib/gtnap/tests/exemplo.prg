@@ -3,25 +3,15 @@
 #require "gtnap"
 #include "gtnap.ch"     // For GTNAP defines
 
-
-// TO BE REMOVED
-#include "inkey.ch"
-#include "setcurs.ch"
-#include "hbgtinfo.ch"
-// TO BE REMOVED
-
-
 PROC MAIN
 
 IF HB_GTVERSION()=="NAP"
-    // TO BE REMOVED
-    lBoxMessage("You are running in GTNAP Mode", "Pause")
     NAP_GLOBAL_RUNLOOP({|| GTNAP_MAIN() }, {|| GTNAP_END() })
+    RETURN
 
-    RETURN
  ELSE
-    lBoxMessage("You are NOT running in GTNAP Mode", "Pause")
     RETURN
+
  ENDIF
 
 RETURN
@@ -29,14 +19,9 @@ RETURN
 
 STATIC PROCEDURE GTNAP_MAIN()
 
-   // LOCAL ch        // TO BE REMOVED
-
-
 LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2
 LOCAL V_Image, V_ImageView, V_MenuVert
 LOCAL V_Label1, V_Label2, V_Label3
-
-lBoxMessage("GTNAP_MAIN()!!!!!!!!!!!!!!", "Pause")
 
 DIRET_BMPS(".\bmps\")
 NAP_GLOBAL_FONT(24, 0)
@@ -86,75 +71,30 @@ NAP_WINDOW_TITLE(V_Janela, "Portabilidade de ASPEC exemplo.prg para GTNAP")
 NAP_WINDOW_ONCLOSE(V_Janela, {| hEv | ON_MAIN_WINDOW_CLOSE(hEv) })
 NAP_WINDOW_SHOW(V_Janela)
 
-
 NAP_GLOBAL_FONT(NAP_FONT_REGULAR_SIZE(), 0)
-//PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "info", V_Janela)
-
-// TO BE REMOVED, JUST A TEMPORAL WAY TO SHOW THE PANEL
-//NAP_GLOBALPANEL(V_Janela)
-
 
 RETURN
 
 // The user wants to exit the application
 // We can confirm the exit
-STATIC PROCEDURE ON_MAIN_WINDOW_CLOSE( /*hEnv*/ )
-    NAP_GLOBAL_EXIT()
+STATIC PROCEDURE ON_MAIN_WINDOW_CLOSE( hEnv )
+
+    LOCAL opt := PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "info")
+
+    IF opt == 1
+        NAP_GLOBAL_EXIT()
+    ELSE
+        NAP_EVENT_RESULT_FALSE(hEnv)
+    ENDIF
+
 RETURN
 
 // Final actions before exit the application
 // Only Non-graphical operations.
 // Here you can't use NAP_... functions
 STATIC PROCEDURE GTNAP_END()
-    lBoxMessage("GTNAP_END()", "Pause")
     QUIT
 RETURN
-
-
-
-
-
-
-
-
-
-
-
-
-//
-// DELETE THIS CODE
-// JUST FOR TEST
-//
-//  DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
-//     // experiment with different paintrefresh interval:
-//     DO CASE
-//     CASE ch == hb_keyCode( "<" )
-//        wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() / 2 ) )
-//        Alert( wvw_SetPaintRefresh() )
-//     CASE ch == hb_keyCode( ">" )
-//        wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() * 2 ) )
-//        Alert( wvw_SetPaintRefresh() )
-//     CASE ch == hb_keyCode( "0" )
-//        wvw_SetPaintRefresh( 0 )
-//        Alert( wvw_SetPaintRefresh() )
-//     OTHERWISE
-//        // do nothing. Inkey() has been handled by nAfterInket()
-//     ENDCASE
-//  ENDDO
-
-// //    Setup_wvw("Exemplo das rotinas de janelamento",35,110)
-
-// QUIT
-
-
-// NAP_MENUVERT_ADD(V_MenuVert, "Menu de opções", {|| EXEMPLO_MENU() })
-// NAP_MENUVERT_ADD(V_MenuVert, "Browse de DBF", {|| EXEMPLO_BROWSE_DBF() })
-// NAP_MENUVERT_ADD(V_MenuVert, "Browse de vetor", {|| EXEMPLO_BROWSE_VETOR() })
-// NAP_MENUVERT_ADD(V_MenuVert, "Exibição/edição de texto em memória", {|| EXEMPLO_TEXTO_MEMORIA() })
-// NAP_MENUVERT_ADD(V_MenuVert, "Exibição/edição de arquivo texto", {|| EXEMPLO_TEXTO_ARQUIVO() })
-// NAP_MENUVERT_ADD(V_MenuVert, "Entrada de dados", {|| EXEMPLO_ENTRADA_DADOS() })
-// NAP_MENUVERT_ADD(V_MenuVert, "Janelas auxiliares", {|| EXEMPLO_AUXILIARES() })
-
 
 
 PROC EXEMPLO_MENU
@@ -197,21 +137,3 @@ FUNC DIRET_BMPS(C_DIRET_NEW)
         C_DIRET_BMPS := C_DIRET_NEW
     ENDIF
     RETURN C_DIRET_ANT
-
-
-
-
-
-// TO BE REMOVED
-#define MB_ICONASTERISK                      64
-#define MB_ICONINFORMATION          MB_ICONASTERISK
-#define MB_OK                                 0
-#define MB_SYSTEMMODAL                     4096
-// TO BE REMOVED
-
-FUNCTION lBoxMessage( cMsg, cTitle )
-
-    hb_default( @cTitle, "Info" )
-    win_MessageBox( wvw_GetWindowHandle(), cMsg, cTitle, MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
-
-    RETURN .T.

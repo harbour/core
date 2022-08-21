@@ -64,6 +64,15 @@ STATIC FUNC ICON_MESSAGE_LAYOUT( Icon_Type, Message )
 
 /*---------------------------------------------------------------------------*/
 
+STATIC PROCEDURE OPTION_BUTTON_CLICK( hEv )
+
+    LOCAL button := NAP_EVENT_BUTTON(hEv)
+    LOCAL id := NAP_BUTTON_GET_ID(button)
+    NAP_WINDOW_STOP_MODAL(id)
+    RETURN
+
+/*---------------------------------------------------------------------------*/
+
 // Create a horizontal layout with several buttons
 STATIC FUNC BUTTONS_LAYOUT( Window, ButtonList, DefButton )
     LOCAL V_Layout, V_Button
@@ -76,6 +85,10 @@ STATIC FUNC BUTTONS_LAYOUT( Window, ButtonList, DefButton )
         // Create the button, set text and assign to cell
         V_Button := NAP_BUTTON_PUSH()
         NAP_BUTTON_TEXT(V_Button, ButtonList[N_Cont])
+        NAP_BUTTON_ID(V_Button, N_Cont)
+        // Button callback
+        NAP_BUTTON_ONCLICK(V_Button, {| hEv | OPTION_BUTTON_CLICK(hEv) })
+        // Asign button to cell
         NAP_LAYOUT_BUTTON(V_Layout, V_Button, N_Cont - 1, 0)
         // Buttons will be dimensioned with the text
         // But, at least, 60 pixel-width will be forced
@@ -98,9 +111,10 @@ STATIC FUNC BUTTONS_LAYOUT( Window, ButtonList, DefButton )
 
 /*---------------------------------------------------------------------------*/
 
-FUNC PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x, C_IconType, V_ParentWindow )
+FUNC PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x, C_IconType )
 
     LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2, V_Layout3
+    LOCAL N_Select_Option
 
     // Create the window and main panel
     V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_TITLE)
@@ -133,11 +147,11 @@ FUNC PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x, C_IconTyp
     // Window Title
     NAP_WINDOW_TITLE(V_Janela, C_Cabec_x)
 
-    // Launch window
-    NAP_WINDOW_MODAL(V_Janela, V_ParentWindow)
-    //NAP_WINDOW_SHOW(V_Janela)
+    // Launch window as modal
+    // Main Window will be blocked until a modal window will be closed/acepted
+    N_Select_Option := NAP_WINDOW_MODAL(V_Janela)
 
 
-RETURN 0
+    RETURN N_Select_Option
 
 

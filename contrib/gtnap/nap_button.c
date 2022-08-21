@@ -10,6 +10,12 @@
 
 /*---------------------------------------------------------------------------*/
 
+typedef struct _gui_component_t GuiComponent;
+void _component_set_tag(GuiComponent *component, const uint32_t tag);
+uint32_t _component_get_tag(const GuiComponent *component);
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_BUTTON_PUSH )
 {
     Button *button = button_push();
@@ -112,6 +118,24 @@ HB_FUNC( NAP_BUTTON_TOOLTIP )
 /*---------------------------------------------------------------------------*/
 
 // void button_image_alt(Button *button, const Image *image);
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_BUTTON_ID )
+{
+    Button *button = (Button*)hb_parptr(1);
+    uint32_t id = hb_parni(2);
+    _component_set_tag((GuiComponent*)button, id);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_BUTTON_GET_ID )
+{
+    Button *button = (Button*)hb_parptr(1);
+    uint32_t id = _component_get_tag((GuiComponent*)button);
+    hb_retni((int)id);
+}
 
 /*---------------------------------------------------------------------------*/
 
