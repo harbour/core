@@ -82,9 +82,13 @@ NAP_LAYOUT_HMARGIN(V_Layout1, 0, 150)
 NAP_LAYOUT_MARGIN4(V_Layout1, 10, 10, 10, 100)
 NAP_PANEL_LAYOUT(V_Panel, V_Layout1)
 NAP_WINDOW_PANEL(V_Janela, V_Panel)
-NAP_WINDOW_TITLE(V_Janela, "Porting of ASPEC exemplo.prg to GTNAP")
+NAP_WINDOW_TITLE(V_Janela, "Portabilidade de ASPEC exemplo.prg para GTNAP")
 NAP_WINDOW_ONCLOSE(V_Janela, {| hEv | ON_MAIN_WINDOW_CLOSE(hEv) })
 NAP_WINDOW_SHOW(V_Janela)
+
+
+NAP_GLOBAL_FONT(NAP_FONT_REGULAR_SIZE(), 0)
+PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "info", V_Janela)
 
 // TO BE REMOVED, JUST A TEMPORAL WAY TO SHOW THE PANEL
 //NAP_GLOBALPANEL(V_Janela)
@@ -99,7 +103,8 @@ STATIC PROCEDURE ON_MAIN_WINDOW_CLOSE( /*hEnv*/ )
 RETURN
 
 // Final actions before exit the application
-// Only Non-graphical
+// Only Non-graphical operations.
+// Here you can't use NAP_... functions
 STATIC PROCEDURE GTNAP_END()
     lBoxMessage("GTNAP_END()", "Pause")
     QUIT

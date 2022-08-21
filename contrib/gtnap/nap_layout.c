@@ -549,6 +549,18 @@ HB_FUNC( NAP_LAYOUT_MARGIN4 )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_LAYOUT_PADDING )
+{
+    Layout *layout = (Layout*)hb_parptr(1);
+    uint32_t col = hb_parni(2);
+    uint32_t row = hb_parni(3);
+    real32_t pall = (real32_t)hb_parnd(4);
+    Cell *cell = layout_cell(layout, col, row);
+    cell_padding(cell, pall);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_LAYOUT_BGCOLOR )
 {
     Layout *layout = (Layout*)hb_parptr(1);

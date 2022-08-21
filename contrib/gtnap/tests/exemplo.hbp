@@ -1,0 +1,30 @@
+# Beep at the end of the build
+-beep
+
+# Binary type
+-hbexe
+
+# Its a GUI project
+-gui
+
+# GT
+-gtnap
+
+# Output
+-o.\exemplo
+
+# Source files
+exemplo.prg
+outros.prg
+
+# Libraries
+gtnap.hbc
+
+# Harbour compiler options
+-m -a -w -es2 -ql
+-b{DEBUG}
+-d_TESTE{DEBUG}
+-z
+
+# C compiler options
+-debug{DEBUG}
