@@ -185,6 +185,8 @@ static int K_Ctrl[] = {
 };
 
 
+static GtNap *GTNAP_GLOBAL = NULL;
+
 /*                                                                   */
 /*                  private functions declaration                    */
 /*                                                                   */
@@ -7357,7 +7359,7 @@ ArrSt(NapCallback) *hb_gt_nap_listeners(void)
 
 void hb_gt_nap_set_global_font(Font *font)
 {
-    //font_destroy(&s_pWvwData->s_pNappGlobalFont);
+    font_destroy(&s_pWvwData->s_pNappGlobalFont);
     s_pWvwData->s_pNappGlobalFont = font;
 }
 
@@ -7500,7 +7502,10 @@ void hb_retWindow(Window *window)
     {
         void **ph = (void**)hb_gcAllocate(sizeof(Window*), &s_gc_Window_funcs);
         *ph = window;
-            log_printf("'hb_retWindow': %p - %p", ph, window);
+        log_printf("'hb_retWindow': %p - %p", ph, window);
+
+        cassert_no_null(GTNAP_GLOBAL);
+        arrpt_append(GTNAP_GLOBAL->windows, window, Window);
         hb_retptrGC(ph);
     }
     else
@@ -7551,27 +7556,34 @@ void hb_gt_nap_callback(void *idp, Event *e)
 static PHB_ITEM *INIT_CODEBLOCK = NULL;
 static PHB_ITEM *END_CODEBLOCK = NULL;
 
+//static GtNap *GTNAP_GLOBAL = NULL;
 
-
-static WVW_DATA *i_nappgui_create(void)
+static GtNap *i_nappgui_create(void)
 {
-    WVW_DATA *data = heap_new0(WVW_DATA);
+    GTNAP_GLOBAL = heap_new0(GtNap);
+    GTNAP_GLOBAL->windows = arrpt_create(Window);
+    GTNAP_GLOBAL->global_font = font_system(font_regular_size(), 0);
     log_printf("i_nappgui_create() Begin %p", INIT_CODEBLOCK);
     hb_itemDo(INIT_CODEBLOCK, 0);
     hb_itemRelease(INIT_CODEBLOCK);
     INIT_CODEBLOCK = NULL;
     //cassert_msg(FALSE, "i_nappgui_create");
     log_printf("i_nappgui_create() End");
-    return data;
+    return GTNAP_GLOBAL;
 }
 
-static void i_nappgui_destroy(WVW_DATA **data)
+static void i_nappgui_destroy(GtNap **data)
 {
+    cassert_no_null(data);
+    cassert_no_null(data);
+    font_destroy(&(*data)->global_font);
+    arrpt_destopt(&(*data)->windows, window_destroy, Window);
     log_printf("i_nappgui_destroy() Begin");
     hb_itemDo(END_CODEBLOCK, 0);
     hb_itemRelease(END_CODEBLOCK);
     END_CODEBLOCK = NULL;
-    heap_delete(data, WVW_DATA);
+    heap_delete(data, GtNap);
+    GTNAP_GLOBAL = NULL;
     unref(data);
 }
 
@@ -7595,6 +7607,52 @@ void hb_gt_nap_runloop( void )
                 (FPtr_destroy)i_nappgui_destroy,
                 "");
 }
+
+void hb_gtnap_set_global_font(Font *font)
+{
+    cassert_no_null(GTNAP_GLOBAL);
+    font_destroy(&GTNAP_GLOBAL->global_font);
+    GTNAP_GLOBAL->global_font = font;
+}
+
+Font *hb_gtnap_global_font(void)
+{
+    cassert_no_null(GTNAP_GLOBAL);
+    return GTNAP_GLOBAL->global_font;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

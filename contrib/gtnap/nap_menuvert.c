@@ -119,7 +119,7 @@ HB_FUNC( NAP_MENUVERT_CREATE )
     Layout *layout = layout_create(1,1);
     View *view = view_create();
     MenuVert *menu = i_create();
-    menu->font = hb_gt_global_font();
+    menu->font = hb_gtnap_global_font();
     menu->view = view;
     menu->selected = 0;
     i_view_size(menu);

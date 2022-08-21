@@ -650,6 +650,27 @@ typedef struct wvw_data
    #define HB_STOREHANDLE( h, n )  hb_stornl( ( LONG ) ( h ), n )
 HB_EXTERN_BEGIN
 
+
+// Global GTNap data
+typedef struct _gtnap_t GtNap;
+
+struct _gtnap_t
+{
+    Font *global_font;
+    ArrPt(Window) *windows;
+};
+
+DeclPt(Window);
+
+extern void hb_gtnap_set_global_font(Font *font);
+extern Font *hb_gtnap_global_font(void);
+
+
+
+
+
+
+
 /* Get functions for internal Data */
 extern BOOL hb_gt_wvw_GetMainCoordMode( void );
 extern UINT hb_gt_wvw_GetNumWindows( void );

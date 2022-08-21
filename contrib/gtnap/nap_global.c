@@ -22,7 +22,7 @@ HB_FUNC( NAP_GLOBAL_FONT )
     real32_t size = (real32_t)hb_parnd(1);
     uint32_t style = hb_parni(2);
     Font *font = font_system(size, style);
-    hb_gt_nap_set_global_font(font);
+    hb_gtnap_set_global_font(font);
 }
 
 /*---------------------------------------------------------------------------*/

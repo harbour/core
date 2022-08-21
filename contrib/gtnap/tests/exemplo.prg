@@ -88,7 +88,7 @@ NAP_WINDOW_SHOW(V_Janela)
 
 
 NAP_GLOBAL_FONT(NAP_FONT_REGULAR_SIZE(), 0)
-PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "info", V_Janela)
+//PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "info", V_Janela)
 
 // TO BE REMOVED, JUST A TEMPORAL WAY TO SHOW THE PANEL
 //NAP_GLOBALPANEL(V_Janela)
