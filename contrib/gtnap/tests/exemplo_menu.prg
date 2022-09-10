@@ -5,7 +5,7 @@ PROC EXEMPLO_MENU()
     LOCAL V_Janela, V_Panel, V_Layout1
     LOCAL V_MenuVert
     LOCAL V_Label1, V_Label2, V_Label3
-    V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD)
+    V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
     V_Panel := NAP_PANEL_CREATE()
     V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
     V_MenuVert := NAP_MENUVERT_CREATE()
@@ -30,7 +30,7 @@ STATIC PROC TST_MENU_COM_ROLAMENTO()
     LOCAL V_Janela, V_Panel, V_Layout1
     LOCAL V_MenuVert
     LOCAL V_Label1
-    V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD)
+    V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
     V_Panel := NAP_PANEL_CREATE()
     V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
     V_MenuVert := NAP_MENUVERT_CREATE()
@@ -66,7 +66,7 @@ PROC TST_MENU_SEM_BOTAO_ESC()
     LOCAL V_Label1, V_Image, V_ImageView
 
     // Create GUI Elements
-    V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD)
+    V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
     V_Panel := NAP_PANEL_CREATE()
     V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
     V_Layout2 := NAP_LAYOUT_CREATE(2, 1)
@@ -127,7 +127,7 @@ PROC TST_MENU_COM_AUTOCLOSE()
     LOCAL V_Janela, V_Panel, V_Layout1
     LOCAL V_MenuVert
     LOCAL V_Label1
-    V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD)
+    V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
     V_Panel := NAP_PANEL_CREATE()
     V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
     V_MenuVert := NAP_MENUVERT_CREATE()
