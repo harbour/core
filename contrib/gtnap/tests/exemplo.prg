@@ -34,7 +34,7 @@ NAP_GLOBAL_FONT(24, 0)
 // GTNAP NOT USE Global Screen/Pixel Coordinates
 // Texts, Buttons and other widget has not the same size in all platorms
 // By using Layouts we ensure that interface compositions will be portable
-V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD)
+V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
 V_Panel := NAP_PANEL_CREATE()
 V_Layout1 := NAP_LAYOUT_CREATE(2, 1)
 V_Layout2 := NAP_LAYOUT_CREATE(1, 5)
@@ -65,8 +65,10 @@ NAP_LAYOUT_IMAGEVIEW(V_Layout1, V_ImageView, 0, 0)
 NAP_LAYOUT_LAYOUT(V_Layout1, V_Layout2, 1, 0)
 NAP_LAYOUT_VALIGN(V_Layout1, 0, 0, ekNAP_ALIGN_TOP)
 NAP_LAYOUT_HALIGN(V_Layout2, 0, 0, ekNAP_ALIGN_CENTER)
+NAP_LAYOUT_HALIGN(V_Layout2, 0, 1, ekNAP_ALIGN_CENTER)
 NAP_LAYOUT_HALIGN(V_Layout2, 0, 3, ekNAP_ALIGN_RIGHT)
 NAP_LAYOUT_HALIGN(V_Layout2, 0, 4, ekNAP_ALIGN_RIGHT)
+
 NAP_LAYOUT_VMARGIN(V_Layout2, 0, 20)
 NAP_LAYOUT_HMARGIN(V_Layout1, 0, 150)
 NAP_LAYOUT_MARGIN4(V_Layout1, 10, 10, 10, 100)
@@ -75,7 +77,6 @@ NAP_WINDOW_PANEL(V_Janela, V_Panel)
 NAP_WINDOW_TITLE(V_Janela, "Portabilidade de ASPEC exemplo.prg para GTNAP")
 NAP_WINDOW_ONCLOSE(V_Janela, {| hEv | ON_MAIN_WINDOW_CLOSE(hEv) })
 NAP_WINDOW_SHOW(V_Janela)
-NAP_MENUVERT_FOCUS(V_MenuVert)
 
 // The rest of application will use the Sytem default font
 // NAP_GLOBAL_FONT(NAP_FONT_REGULAR_SIZE(), 0)
@@ -87,15 +88,15 @@ RETURN
 // This Callback function will be called when the user press the "Close" button in Main Window
 STATIC PROCEDURE ON_MAIN_WINDOW_CLOSE( hEv )
 
-    // LOCAL opt := PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "quest")
+    LOCAL opt := PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "quest")
 
-    // IF opt == 1
-    //     NAP_GLOBAL_EXIT()
-    // ELSE
-    //     NAP_EVENT_RESULT_FALSE(hEv)
-    // ENDIF
+    IF opt == 1
+        NAP_GLOBAL_EXIT()
+    ELSE
+        NAP_EVENT_RESULT_FALSE(hEv)
+    ENDIF
 
-    NAP_GLOBAL_EXIT()
+    //NAP_GLOBAL_EXIT()
 
 RETURN
 

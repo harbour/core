@@ -51,8 +51,8 @@
 #define ekNAP_WINDOW_RES             32
 #define ekNAP_WINDOW_RETURN          64
 #define ekNAP_WINDOW_ESC             128
-#define ekNAP_WINDOW_STD             26 //(ekNAP_WINDOW_TITLE | ekNAP_WINDOW_MIN | ekNAP_WINDOW_CLOSE)
-#define ekNAP_WINDOW_SRES            (ekNAP_WINDOW_STD | ekNAP_WINDOW_MAX | ekNAP_WINDOW_RES)
+#define ekNAP_WINDOW_STD             (ekNAP_WINDOW_TITLE + ekNAP_WINDOW_MIN + ekNAP_WINDOW_CLOSE)
+#define ekNAP_WINDOW_SRES            (ekNAP_WINDOW_STD + ekNAP_WINDOW_MAX + ekNAP_WINDOW_RES)
 
 // enum event_t
 #define ekNAP_EVLABEL               0x400

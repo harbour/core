@@ -34,3 +34,30 @@ HB_FUNC( NAP_EVENT_RESULT_FALSE )
     bool_t *ret = event_result(ev, bool_t);
     *ret = FALSE;
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_EVENT_WINCLOSE_ESC )
+{
+    Event *ev = (Event*)hb_parptr(1);
+    const EvWinClose *p = event_params(ev, EvWinClose);
+    hb_retl(p->origin == ekCLESC);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_EVENT_WINCLOSE_RETURN )
+{
+    Event *ev = (Event*)hb_parptr(1);
+    const EvWinClose *p = event_params(ev, EvWinClose);
+    hb_retl(p->origin == ekCLINTRO);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_EVENT_WINCLOSE_BUTTON )
+{
+    Event *ev = (Event*)hb_parptr(1);
+    const EvWinClose *p = event_params(ev, EvWinClose);
+    hb_retl(p->origin == ekCLBUTTON);
+}

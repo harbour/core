@@ -6,8 +6,8 @@ debug=yes
 incpaths=. ./inc/sewer ./inc/osbs ./inc/core ./inc/geom2d ./inc/draw2d ./inc/gui ./inc/inet ./inc/osapp
 
 # NAppGUI library paths
-{debug}libpaths=lib/${hb_plat}/${hb_comp} lib/v110_xp_x86/Debug
-{nodebug}libpaths=lib/${hb_plat}/${hb_comp} lib/v110_xp_x86/Release
+{debug}libpaths=lib/${hb_plat}/${hb_comp} libs/v110_xp_x86/Debug
+{nodebug}libpaths=lib/${hb_plat}/${hb_comp} libs/v110_xp_x86/Release
 
 # NAppGUI uses static-linked 'LIBCMTD.lib' in Debug (sewer.lib)
 # This line avoid conflicts with 'LIBCMT.lib' in Debug mode
