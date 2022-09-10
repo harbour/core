@@ -15,6 +15,7 @@
 
 # Source files
 exemplo.prg
+exemplo_menu.prg
 outros.prg
 
 # Libraries

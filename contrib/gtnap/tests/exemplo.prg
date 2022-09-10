@@ -28,6 +28,7 @@ LOCAL V_Label1, V_Label2, V_Label3
 DIRET_BMPS(".\bmps\")
 
 // We want big font size of main Window
+// TODO: The global font size
 NAP_GLOBAL_FONT(24, 0)
 
 // GTNAP NOT USE Global Screen/Pixel Coordinates
@@ -77,22 +78,24 @@ NAP_WINDOW_SHOW(V_Janela)
 NAP_MENUVERT_FOCUS(V_MenuVert)
 
 // The rest of application will use the Sytem default font
-NAP_GLOBAL_FONT(NAP_FONT_REGULAR_SIZE(), 0)
+// NAP_GLOBAL_FONT(NAP_FONT_REGULAR_SIZE(), 0)
 
 RETURN
 
 // The user wants to exit the application
 // We can confirm the exit
 // This Callback function will be called when the user press the "Close" button in Main Window
-STATIC PROCEDURE ON_MAIN_WINDOW_CLOSE( hEnv )
+STATIC PROCEDURE ON_MAIN_WINDOW_CLOSE( hEv )
 
-    LOCAL opt := PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "quest")
+    // LOCAL opt := PERGUN("Tem certeza de que deseja sair do aplicativo?", {"Sim", "Nao"}, 1, .F., "Saindo do ASPEC exemplo.prg", "quest")
 
-    IF opt == 1
-        NAP_GLOBAL_EXIT()
-    ELSE
-        NAP_EVENT_RESULT_FALSE(hEnv)
-    ENDIF
+    // IF opt == 1
+    //     NAP_GLOBAL_EXIT()
+    // ELSE
+    //     NAP_EVENT_RESULT_FALSE(hEv)
+    // ENDIF
+
+    NAP_GLOBAL_EXIT()
 
 RETURN
 
@@ -102,11 +105,6 @@ RETURN
 STATIC PROCEDURE GTNAP_END()
     QUIT
 RETURN
-
-
-PROC EXEMPLO_MENU()
-    PERGUN("'Menu de opções' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
-    RETURN
 
 PROC EXEMPLO_BROWSE_DBF()
     PERGUN("'Browse de DBF' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")

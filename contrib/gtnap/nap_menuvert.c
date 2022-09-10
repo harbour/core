@@ -82,6 +82,10 @@ static void i_OnDraw(Panel *panel, Event *e)
         ypos += opt->size.height;
 
     arrst_end();
+
+    // To be removed, just for debug
+    draw_line_color(p->ctx, kCOLOR_RED);
+    draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -139,8 +143,8 @@ static void i_OnKeyUp(Panel *panel, Event *e)
 
 static void i_view_size(MenuVert *menu)
 {
-    static real32_t MIN_WIDTH = 500;
-    static real32_t MIN_HEIGHT = 250;
+    // static real32_t MIN_WIDTH = 500;
+    // static real32_t MIN_HEIGHT = 250;
     real32_t width = 0, height = 0;
     cassert_no_null(menu);
 
@@ -154,13 +158,13 @@ static void i_view_size(MenuVert *menu)
 
     arrst_end();
 
-    if (width < MIN_WIDTH)
-        width = MIN_WIDTH;
+    // if (width < MIN_WIDTH)
+    //     width = MIN_WIDTH;
 
-    if (height < MIN_HEIGHT)
-        height = MIN_HEIGHT;
+    // if (height < MIN_HEIGHT)
+    //     height = MIN_HEIGHT;
 
-    view_size(menu->view, s2df(width, height));
+    view_size(menu->view, s2df(width + 20, height));
 }
 
 /*---------------------------------------------------------------------------*/

@@ -1,10 +1,10 @@
 #require "gtnap"
-#include "gtnap.ch"     // For GTNAP defines
+#include "gtnap.ch"
 
 /*---------------------------------------------------------------------------*/
 
 // Create a horizontal layout with an Icon in left cell and message in right cell
-STATIC FUNC ICON_MESSAGE_LAYOUT( Icon_Type, Message )
+STATIC FUNCTION ICON_MESSAGE_LAYOUT( Icon_Type, Message )
 
     LOCAL IconFile := ""
     LOCAL V_Layout, V_Image, V_ImageView, V_Label
@@ -74,7 +74,7 @@ STATIC PROCEDURE OPTION_BUTTON_CLICK( hEv )
 /*---------------------------------------------------------------------------*/
 
 // Create a horizontal layout with several buttons
-STATIC FUNC BUTTONS_LAYOUT( Window, ButtonList, DefButton )
+STATIC FUNCTION BUTTONS_LAYOUT( Window, ButtonList, DefButton )
     LOCAL V_Layout, V_Button
     LOCAL N_Cont, N_NumOpts := LEN(ButtonList)
 
@@ -111,7 +111,7 @@ STATIC FUNC BUTTONS_LAYOUT( Window, ButtonList, DefButton )
 
 /*---------------------------------------------------------------------------*/
 
-FUNC PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x, C_IconType )
+FUNCTION PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x, C_IconType )
 
     LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2, V_Layout3
     LOCAL N_Select_Option
@@ -151,7 +151,28 @@ FUNC PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x, C_IconTyp
     // Main Window will be blocked until a modal window will be closed/acepted
     N_Select_Option := NAP_WINDOW_MODAL(V_Janela)
 
-
     RETURN N_Select_Option
 
+/*---------------------------------------------------------------------------*/
 
+FUNCTION MOSTRAR ( C_CdMens, C_SubCabec, C_Cabec_x )
+
+    LOCAL V_Janela, V_Panel, V_Layout1
+    LOCAL V_Label1, V_Label2
+    V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_TITLE + ekNAP_WINDOW_CLOSE)
+    V_Panel := NAP_PANEL_CREATE()
+    V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
+    V_Label1 := NAP_LABEL_WITH_TEXT(C_CdMens)
+    V_Label2 := NAP_LABEL_WITH_TEXT(C_SubCabec)
+    NAP_LAYOUT_LABEL(V_Layout1, V_Label2, 0, 0)
+    NAP_LAYOUT_LABEL(V_Layout1, V_Label1, 0, 1)
+    NAP_LAYOUT_HALIGN(V_Layout1, 0, 0, ekNAP_ALIGN_CENTER)
+    NAP_LAYOUT_HALIGN(V_Layout1, 0, 1, ekNAP_ALIGN_CENTER)
+    NAP_LAYOUT_VMARGIN(V_Layout1, 0, 20)
+    NAP_LAYOUT_MARGIN4(V_Layout1, 0, 50, 20, 50)
+    NAP_PANEL_LAYOUT(V_Panel, V_Layout1)
+    NAP_WINDOW_PANEL(V_Janela, V_Panel)
+    NAP_WINDOW_TITLE(V_Janela, C_Cabec_x)
+    NAP_WINDOW_MODAL(V_Janela)
+
+    RETURN 0
