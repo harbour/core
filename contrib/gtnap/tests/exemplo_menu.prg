@@ -26,14 +26,14 @@ RETURN
 
 /*---------------------------------------------------------------------------*/
 
-STATIC PROC TST_MENU_COM_ROLAMENTO()
+STATIC PROCEDURE TST_MENU_COM_ROLAMENTO()
     LOCAL V_Janela, V_Panel, V_Layout1
     LOCAL V_MenuVert
     LOCAL V_Label1
     V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
     V_Panel := NAP_PANEL_CREATE()
     V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
-    V_MenuVert := NAP_MENUVERT_CREATE()
+    V_MenuVert := NAP_MENUVERT_CREATE(3)  // 3 = Visible options (with vertical scroll)
     V_Label1 := NAP_LABEL_WITH_TEXT("Menu com rolamento")
     NAP_MENUVERT_ADD(V_MenuVert, "Opção 1", { || MOSTRAR_OPCAO("1") })
     NAP_MENUVERT_ADD(V_MenuVert, "Opção 2", { || MOSTRAR_OPCAO("2") })
@@ -60,7 +60,7 @@ STATIC PROCEDURE BUTTON_F9_CLICK()
 
 /*---------------------------------------------------------------------------*/
 
-PROC TST_MENU_SEM_BOTAO_ESC()
+STATIC PROCEDURE TST_MENU_SEM_BOTAO_ESC()
     LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2, V_Layout3
     LOCAL V_MenuVert, V_Button
     LOCAL V_Label1, V_Image, V_ImageView
@@ -123,7 +123,7 @@ PROC TST_MENU_SEM_BOTAO_ESC()
 
 /*---------------------------------------------------------------------------*/
 
-PROC TST_MENU_COM_AUTOCLOSE()
+STATIC PROCEDURE TST_MENU_COM_AUTOCLOSE()
     LOCAL V_Janela, V_Panel, V_Layout1
     LOCAL V_MenuVert
     LOCAL V_Label1
@@ -132,10 +132,11 @@ PROC TST_MENU_COM_AUTOCLOSE()
     V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
     V_MenuVert := NAP_MENUVERT_CREATE()
     V_Label1 := NAP_LABEL_WITH_TEXT("Menu com AutoClose")
-    NAP_MENUVERT_ADD(V_MenuVert, "Procedure sem retorno", { || MOSTRAR_OPCAO("1") })
-    NAP_MENUVERT_ADD(V_MenuVert, "Função que retorna NIL", { || MOSTRAR_OPCAO("2") })
-    NAP_MENUVERT_ADD(V_MenuVert, "Função que retorna .F.", { || MOSTRAR_OPCAO("3") })
-    NAP_MENUVERT_ADD(V_MenuVert, "Função que retorna .T.", { || MOSTRAR_OPCAO("4") })
+    NAP_MENUVERT_ADD(V_MenuVert, "Procedure sem retorno", { || PROCEDURE_SEM_RETORNO() })
+    NAP_MENUVERT_ADD(V_MenuVert, "Função que retorna NIL", { || FUNCAO_RETORNO_NIL() })
+    NAP_MENUVERT_ADD(V_MenuVert, "Função que retorna .F.", { || FUNCAO_RETORNO_F() })
+    NAP_MENUVERT_ADD(V_MenuVert, "Função que retorna .T.", { || FUNCAO_RETORNO_T() })
+    NAP_MENUVERT_AUTOCLOSE(V_MenuVert, { || ON_AUTOCLOSE() })
     NAP_LAYOUT_LABEL(V_Layout1, V_Label1, 0, 0)
     NAP_LAYOUT_PANEL(V_Layout1, V_MenuVert, 0, 1)
     NAP_LAYOUT_VMARGIN(V_Layout1, 0, 20)
@@ -148,7 +149,38 @@ PROC TST_MENU_COM_AUTOCLOSE()
 
 /*---------------------------------------------------------------------------*/
 
-PROC MOSTRAR_OPCAO( optNum )
+STATIC PROCEDURE ON_AUTOCLOSE()
+    NAP_WINDOW_STOP_MODAL()
+    MOSTRAR("M?????", "Menu foi fechado pela cláusula AutoClose", "Informação")
+    RETURN
+
+/*---------------------------------------------------------------------------*/
+
+STATIC PROCEDURE MOSTRAR_OPCAO( optNum )
     MOSTRAR("M?????", "Foi escolhida a opção " + optNum, "Informação")
     RETURN
 
+/*---------------------------------------------------------------------------*/
+
+STATIC PROCEDURE PROCEDURE_SEM_RETORNO
+    MOSTRAR("M?????", "Procedure sem retorno executada", "Informação")
+    RETURN
+
+/*---------------------------------------------------------------------------*/
+
+STATIC FUNCTION FUNCAO_RETORNO_NIL
+    MOSTRAR("M?????", "Função com retorno NIL executada", "Informação")
+    RETURN NIL
+
+/*---------------------------------------------------------------------------*/
+
+STATIC FUNCTION FUNCAO_RETORNO_F
+    MOSTRAR("M?????", "Função com retorno .F. executada", "Informação")
+    RETURN .F.
+
+/*---------------------------------------------------------------------------*/
+
+STATIC FUNCTION FUNCAO_RETORNO_T
+    MOSTRAR("M?????","Função com retorno .T. executada."+;
+                 "(menu será automaticamente fechado)", "Informação")
+    RETURN .T.

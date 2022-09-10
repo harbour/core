@@ -28,8 +28,14 @@ struct _menuvert_t
     View *view;
     Font *font;
     Layout *layout;
+    uint32_t mouse_row;
+    uint32_t row_height;
+    real32_t total_height;
+    uint32_t visible_opts;
     ArrSt(MenuOpt) *opts;
     uint32_t selected;
+    bool_t launch_sel;
+    PHB_ITEM autoclose;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -48,7 +54,10 @@ static void i_remove_opt(MenuOpt *opt)
     str_destroy(&opt->text);
 
     if (opt->codeBlock)
+    {
         hb_itemRelease(opt->codeBlock);
+        opt->codeBlock = NULL;
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -58,6 +67,13 @@ static void i_destroy(MenuVert **menu)
     cassert_no_null(menu);
     cassert_no_null(*menu);
     arrst_destroy(&(*menu)->opts, i_remove_opt, MenuOpt);
+
+    if ((*menu)->autoclose)
+    {
+        hb_itemRelease((*menu)->autoclose);
+        (*menu)->autoclose = NULL;
+    }
+
     heap_delete(menu, MenuVert);
 }
 
@@ -75,17 +91,93 @@ static void i_OnDraw(Panel *panel, Event *e)
         if (opt_i == menu->selected)
         {
             draw_fill_color(p->ctx, kCOLOR_CYAN);
-            draw_rect(p->ctx, ekFILL, xpos, ypos, opt->size.width + 50, opt->size.height);
+            draw_rect(p->ctx, ekFILL, xpos, ypos, opt->size.width + 20, opt->size.height);
+
+            // To be removed, just for debug
+            // draw_line_color(p->ctx, kCOLOR_RED);
+            // draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, menu->total_height - 1);
+        }
+
+        if (opt_i == menu->mouse_row)
+        {
+            draw_line_color(p->ctx, kCOLOR_BLACK);
+            draw_line(p->ctx, xpos, ypos + opt->size.height - 1, xpos + opt->size.width + 20, ypos + opt->size.height - 1);
         }
 
         draw_text(p->ctx, tc(opt->text), xpos, ypos);
         ypos += opt->size.height;
 
     arrst_end();
+}
 
-    // To be removed, just for debug
-    draw_line_color(p->ctx, kCOLOR_RED);
-    draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1);
+/*---------------------------------------------------------------------------*/
+
+static void i_OnMove(Panel *panel, Event *e)
+{
+    const EvMouse *p = event_params(e, EvMouse);
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    menu->mouse_row = (uint32_t)p->y / menu->row_height;
+    view_update(menu->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnDown(Panel *panel, Event *e)
+{
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    const EvMouse *p = event_params(e, EvMouse);
+    uint32_t n = arrst_size(menu->opts, MenuOpt);
+
+    if (n > 0 && p->button == ekMLEFT)
+    {
+        uint32_t y = (uint32_t)p->y;
+        uint32_t sel = y / menu->row_height;
+
+        if (sel >= n)
+            sel = n - 1;
+
+        menu->selected = sel;
+        menu->launch_sel = TRUE;
+        view_update(menu->view);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_run_option(MenuVert *menu)
+{
+    const MenuOpt *opt = arrst_get_const(menu->opts, menu->selected, MenuOpt);
+    if (opt->codeBlock != NULL)
+    {
+        PHB_ITEM pReturn = hb_itemDo(opt->codeBlock, 0);
+
+        if (menu->autoclose != NULL)
+        {
+            if (HB_IS_LOGICAL(pReturn))
+            {
+                if (hb_itemGetL(pReturn))
+                {
+                    PHB_ITEM pAutoReturn = hb_itemDo(menu->autoclose, 0);
+                    hb_itemRelease(pAutoReturn);
+                }
+            }
+        }
+
+        hb_itemRelease(pReturn);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnUp(Panel *panel, Event *e)
+{
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    unref(e);
+    if (menu->launch_sel == TRUE)
+    {
+        i_run_option(menu);
+        menu->launch_sel = FALSE;
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -115,15 +207,9 @@ static void i_OnKeyDown(Panel *panel, Event *e)
                 update = TRUE;
             }
         }
-        else if (p->key == ekKEY_SPACE)
+        else if (p->key == ekKEY_RETURN)
         {
-            const MenuOpt *opt = arrst_get_const(menu->opts, menu->selected, MenuOpt);
-            if (opt->codeBlock != NULL)
-            {
-                Cell *cell = layout_cell(menu->layout, 0, 0);
-                hb_itemDo(opt->codeBlock, 0);
-                cell_focus(cell);
-            }
+            i_run_option(menu);
         }
     }
 
@@ -133,19 +219,9 @@ static void i_OnKeyDown(Panel *panel, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnKeyUp(Panel *panel, Event *e)
-{
-    unref(panel);
-    unref(e);
-}
-
-/*---------------------------------------------------------------------------*/
-
 static void i_view_size(MenuVert *menu)
 {
-    // static real32_t MIN_WIDTH = 500;
-    // static real32_t MIN_HEIGHT = 250;
-    real32_t width = 0, height = 0;
+    real32_t width = 0, height = 0, n = 0;
     cassert_no_null(menu);
 
     arrst_foreach(opt, menu->opts, MenuOpt)
@@ -154,17 +230,19 @@ static void i_view_size(MenuVert *menu)
 
         if (opt->size.width > width)
             width = opt->size.width;
+
         height += opt->size.height;
+        n += 1;
 
     arrst_end();
 
-    // if (width < MIN_WIDTH)
-    //     width = MIN_WIDTH;
+    menu->total_height = height;
+    view_content_size(menu->view, s2df(width + 20, height + 1), s2df(0, (real32_t)menu->row_height));
 
-    // if (height < MIN_HEIGHT)
-    //     height = MIN_HEIGHT;
-
-    view_size(menu->view, s2df(width + 20, height));
+    if (menu->visible_opts == 0 || menu->visible_opts >= n)
+        view_size(menu->view, s2df(width + 20, height + 1));
+    else
+        view_size(menu->view, s2df(width + 20, (real32_t)(menu->visible_opts * menu->row_height) + 1));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -173,16 +251,23 @@ HB_FUNC( NAP_MENUVERT_CREATE )
 {
     Panel *panel = panel_create();
     Layout *layout = layout_create(1,1);
-    View *view = view_create();
+    View *view = view_scroll();
     MenuVert *menu = i_create();
     menu->font = hb_gtnap_global_font();
     menu->layout = layout;
     menu->view = view;
+    menu->row_height = (uint32_t)bmath_ceilf(font_height(menu->font));
+    menu->visible_opts = hb_parni(1);
     menu->selected = 0;
+    menu->mouse_row = 0;
+    menu->launch_sel = FALSE;
+    menu->autoclose = NULL;
     i_view_size(menu);
     view_OnDraw(view, listener(panel, i_OnDraw, Panel));
+    view_OnMove(view, listener(panel, i_OnMove, Panel));
+    view_OnDown(view, listener(panel, i_OnDown, Panel));
+    view_OnUp(view, listener(panel, i_OnUp, Panel));
     view_OnKeyDown(view, listener(panel, i_OnKeyDown, Panel));
-    view_OnKeyUp(view, listener(panel, i_OnKeyUp, Panel));
     panel_data(panel, &menu, i_destroy, MenuVert);
     layout_view(layout, view, 0, 0);
     layout_tabstop(layout, 0, 0, TRUE);
@@ -200,17 +285,34 @@ HB_FUNC( NAP_MENUVERT_ADD )
     MenuVert *menu = panel_get_data(panel, MenuVert);
     MenuOpt *opt = arrst_new0(menu->opts, MenuOpt);
     opt->text = str_c(text);
-    opt->codeBlock = hb_itemNew(codeBlock);
+    opt->codeBlock = codeBlock ? hb_itemNew(codeBlock) : NULL;
     i_view_size(menu);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_MENUVERT_FOCUS )
+HB_FUNC( NAP_MENUVERT_AUTOCLOSE )
 {
     Panel *panel = (Panel*)hb_parptr(1);
+    PHB_ITEM autoclose = hb_param(2, HB_IT_BLOCK);
     MenuVert *menu = panel_get_data(panel, MenuVert);
-    Cell *cell = layout_cell(menu->layout, 0, 0);
-    cell_focus(cell);
+
+    if (menu->autoclose)
+    {
+        hb_itemRelease(menu->autoclose);
+        menu->autoclose = NULL;
+    }
+
+    menu->autoclose = autoclose ? hb_itemNew(autoclose) : NULL;
 }
+
+/*---------------------------------------------------------------------------*/
+
+// HB_FUNC( NAP_MENUVERT_FOCUS )
+// {
+//     Panel *panel = (Panel*)hb_parptr(1);
+//     MenuVert *menu = panel_get_data(panel, MenuVert);
+//     Cell *cell = layout_cell(menu->layout, 0, 0);
+//     cell_focus(cell);
+// }
 
