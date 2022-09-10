@@ -7562,7 +7562,7 @@ static GtNap *i_nappgui_create(void)
 {
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->global_font = font_system(font_regular_size(), 0);
-    GTNAP_GLOBAL->modal_window = NULL;
+    GTNAP_GLOBAL->modals = arrpt_create(Window);
     GTNAP_GLOBAL->windows = arrpt_create(Window);
 
     log_printf("i_nappgui_create() Begin %p", INIT_CODEBLOCK);
@@ -7581,7 +7581,8 @@ static void i_nappgui_destroy(GtNap **data)
     font_destroy(&(*data)->global_font);
     arrpt_destopt(&(*data)->windows, window_destroy, Window);
     // No modal window can be alive here!
-    cassert((*data)->modal_window == NULL);
+    cassert(arrpt_size((*data)->modals, Window) == 0);
+    arrpt_destopt(&(*data)->modals, window_destroy, Window);
     log_printf("i_nappgui_destroy() Begin");
     hb_itemDo(END_CODEBLOCK, 0);
     hb_itemRelease(END_CODEBLOCK);
@@ -7637,24 +7638,24 @@ Window *hb_gtnap_main_window(void)
 void hb_gtnap_set_modal_window(Window *window)
 {
     cassert_no_null(GTNAP_GLOBAL);
-    cassert(GTNAP_GLOBAL->modal_window == NULL);
-    GTNAP_GLOBAL->modal_window = window;
+    arrpt_append(GTNAP_GLOBAL->modals, window, Window);
 }
 
 Window *hb_gtnap_modal_window(void)
 {
     cassert_no_null(GTNAP_GLOBAL);
-    return GTNAP_GLOBAL->modal_window;
+    return arrpt_last(GTNAP_GLOBAL->modals, Window);
 }
 
 void hb_gtnap_destroy_modal()
 {
+    Window *modal = NULL;
     uint32_t i = 0;
     cassert_no_null(GTNAP_GLOBAL);
-    cassert_no_null(GTNAP_GLOBAL->modal_window);
-    i = arrpt_find(GTNAP_GLOBAL->windows, GTNAP_GLOBAL->modal_window, Window);
+    modal = arrpt_last(GTNAP_GLOBAL->modals, Window);
+    i = arrpt_find(GTNAP_GLOBAL->windows, modal, Window);
     arrpt_delete(GTNAP_GLOBAL->windows, i, window_destroy, Window);
-    GTNAP_GLOBAL->modal_window = NULL;
+    arrpt_pop(GTNAP_GLOBAL->modals, NULL, Window);
 }
 
 

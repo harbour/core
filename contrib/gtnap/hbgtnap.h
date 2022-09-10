@@ -657,7 +657,7 @@ typedef struct _gtnap_t GtNap;
 struct _gtnap_t
 {
     Font *global_font;
-    Window *modal_window;
+    ArrPt(Window) *modals;
     ArrPt(Window) *windows;
 };
 
