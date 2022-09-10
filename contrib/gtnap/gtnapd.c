@@ -7635,6 +7635,14 @@ Window *hb_gtnap_main_window(void)
     return window;
 }
 
+Window *hb_gtnap_current_modal(void)
+{
+    cassert_no_null(GTNAP_GLOBAL);
+    if (arrpt_size(GTNAP_GLOBAL->modals, Window) > 0)
+        return arrpt_last(GTNAP_GLOBAL->modals, Window);
+    return NULL;
+}
+
 void hb_gtnap_set_modal_window(Window *window)
 {
     cassert_no_null(GTNAP_GLOBAL);

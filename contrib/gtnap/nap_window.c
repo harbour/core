@@ -101,9 +101,12 @@ HB_FUNC( NAP_WINDOW_HIDE )
 HB_FUNC( NAP_WINDOW_MODAL )
 {
     Window *window = hb_parWindow(1);
-    //Window *parent = hb_parWindow(2);
-    Window *parent = hb_gtnap_main_window();
+    Window *parent = hb_gtnap_current_modal();
     uint32_t ret = UINT32_MAX;
+
+    if (parent == NULL)
+        parent = hb_gtnap_main_window();
+
     hb_gtnap_set_modal_window(window);
     ret = window_modal(window, parent);
     hb_gtnap_destroy_modal();
@@ -114,7 +117,6 @@ HB_FUNC( NAP_WINDOW_MODAL )
 
 HB_FUNC( NAP_WINDOW_STOP_MODAL )
 {
-    //Window *window = hb_parWindow(1);
     Window *window = hb_gtnap_modal_window();
     uint32_t return_value = hb_parni(1);
     window_stop_modal(window, return_value);

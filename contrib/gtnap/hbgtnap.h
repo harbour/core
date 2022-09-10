@@ -666,6 +666,7 @@ DeclPt(Window);
 extern void hb_gtnap_set_global_font(Font *font);
 extern Font *hb_gtnap_global_font(void);
 extern Window *hb_gtnap_main_window(void);
+extern Window *hb_gtnap_current_modal(void);
 
 extern void hb_gtnap_set_modal_window(Window *window);
 extern Window *hb_gtnap_modal_window(void);
