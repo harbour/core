@@ -11,8 +11,10 @@
 #include "hbgtnap.h"
 #include "nappgui.h"
 
+
 typedef struct _menuopt_t MenuOpt;
 typedef struct _menuvert_t MenuVert;
+typedef struct _gui_component_t GuiComponent;
 
 struct _menuopt_t
 {
@@ -35,8 +37,12 @@ struct _menuvert_t
     ArrSt(MenuOpt) *opts;
     uint32_t selected;
     bool_t launch_sel;
-    PHB_ITEM autoclose;
+    bool_t autoclose;
 };
+
+/*---------------------------------------------------------------------------*/
+
+Window *_component_window(const GuiComponent *component);
 
 /*---------------------------------------------------------------------------*/
 
@@ -67,13 +73,6 @@ static void i_destroy(MenuVert **menu)
     cassert_no_null(menu);
     cassert_no_null(*menu);
     arrst_destroy(&(*menu)->opts, i_remove_opt, MenuOpt);
-
-    if ((*menu)->autoclose)
-    {
-        hb_itemRelease((*menu)->autoclose);
-        (*menu)->autoclose = NULL;
-    }
-
     heap_delete(menu, MenuVert);
 }
 
@@ -151,14 +150,14 @@ static void i_run_option(MenuVert *menu)
     {
         PHB_ITEM pReturn = hb_itemDo(opt->codeBlock, 0);
 
-        if (menu->autoclose != NULL)
+        if (menu->autoclose == TRUE)
         {
             if (HB_IS_LOGICAL(pReturn))
             {
                 if (hb_itemGetL(pReturn))
                 {
-                    PHB_ITEM pAutoReturn = hb_itemDo(menu->autoclose, 0);
-                    hb_itemRelease(pAutoReturn);
+                    Window *window = _component_window((const GuiComponent*)menu->view);
+                    window_stop_modal(window, 1000);
                 }
             }
         }
@@ -261,7 +260,7 @@ HB_FUNC( NAP_MENUVERT_CREATE )
     menu->selected = 0;
     menu->mouse_row = 0;
     menu->launch_sel = FALSE;
-    menu->autoclose = NULL;
+    menu->autoclose = FALSE;
     i_view_size(menu);
     view_OnDraw(view, listener(panel, i_OnDraw, Panel));
     view_OnMove(view, listener(panel, i_OnMove, Panel));
@@ -294,16 +293,8 @@ HB_FUNC( NAP_MENUVERT_ADD )
 HB_FUNC( NAP_MENUVERT_AUTOCLOSE )
 {
     Panel *panel = (Panel*)hb_parptr(1);
-    PHB_ITEM autoclose = hb_param(2, HB_IT_BLOCK);
     MenuVert *menu = panel_get_data(panel, MenuVert);
-
-    if (menu->autoclose)
-    {
-        hb_itemRelease(menu->autoclose);
-        menu->autoclose = NULL;
-    }
-
-    menu->autoclose = autoclose ? hb_itemNew(autoclose) : NULL;
+    menu->autoclose = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/

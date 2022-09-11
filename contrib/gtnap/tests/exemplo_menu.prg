@@ -127,6 +127,7 @@ STATIC PROCEDURE TST_MENU_COM_AUTOCLOSE()
     LOCAL V_Janela, V_Panel, V_Layout1
     LOCAL V_MenuVert
     LOCAL V_Label1
+    LOCAL N_Ret
     V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
     V_Panel := NAP_PANEL_CREATE()
     V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
@@ -136,7 +137,7 @@ STATIC PROCEDURE TST_MENU_COM_AUTOCLOSE()
     NAP_MENUVERT_ADD(V_MenuVert, "Função que retorna NIL", { || FUNCAO_RETORNO_NIL() })
     NAP_MENUVERT_ADD(V_MenuVert, "Função que retorna .F.", { || FUNCAO_RETORNO_F() })
     NAP_MENUVERT_ADD(V_MenuVert, "Função que retorna .T.", { || FUNCAO_RETORNO_T() })
-    NAP_MENUVERT_AUTOCLOSE(V_MenuVert, { || ON_AUTOCLOSE() })
+    NAP_MENUVERT_AUTOCLOSE(V_MenuVert)
     NAP_LAYOUT_LABEL(V_Layout1, V_Label1, 0, 0)
     NAP_LAYOUT_PANEL(V_Layout1, V_MenuVert, 0, 1)
     NAP_LAYOUT_VMARGIN(V_Layout1, 0, 20)
@@ -144,14 +145,13 @@ STATIC PROCEDURE TST_MENU_COM_AUTOCLOSE()
     NAP_PANEL_LAYOUT(V_Panel, V_Layout1)
     NAP_WINDOW_PANEL(V_Janela, V_Panel)
     NAP_WINDOW_TITLE(V_Janela, "Menu com AutoClose")
-    NAP_WINDOW_MODAL(V_Janela)
-    RETURN
+    N_Ret := NAP_WINDOW_MODAL(V_Janela)
 
-/*---------------------------------------------------------------------------*/
+    // If closed by AUTOCLOSE, will return 1000 value
+    IF N_Ret == 1000
+        MOSTRAR("M?????", "Menu foi fechado pela cláusula AutoClose", "Informação")
+    ENDIF
 
-STATIC PROCEDURE ON_AUTOCLOSE()
-    NAP_WINDOW_STOP_MODAL()
-    MOSTRAR("M?????", "Menu foi fechado pela cláusula AutoClose", "Informação")
     RETURN
 
 /*---------------------------------------------------------------------------*/
