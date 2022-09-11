@@ -25,7 +25,7 @@ HB_FUNC( NAP_WINDOW_PANEL )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnWindowClose(void *idp, Event *e)
+static void i_OnWindowClose(GtNapCallback *idp, Event *e)
 {
     hb_gt_nap_callback(idp, e);
 }
@@ -41,7 +41,7 @@ HB_FUNC( NAP_WINDOW_ONCLOSE )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnWindowMoved(void *idp, Event *e)
+static void i_OnWindowMoved(GtNapCallback *idp, Event *e)
 {
     hb_gt_nap_callback(idp, e);
 }
@@ -57,7 +57,7 @@ HB_FUNC( NAP_WINDOW_ONMOVED )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnWindowResize(void *idp, Event *e)
+static void i_OnWindowResize(GtNapCallback *idp, Event *e)
 {
     hb_gt_nap_callback(idp, e);
 }
@@ -117,7 +117,7 @@ HB_FUNC( NAP_WINDOW_MODAL )
 
 HB_FUNC( NAP_WINDOW_STOP_MODAL )
 {
-    Window *window = hb_gtnap_modal_window();
+    Window *window = hb_gtnap_current_modal();
     uint32_t return_value = hb_parni(1);
     window_stop_modal(window, return_value);
 }

@@ -548,7 +548,6 @@ typedef struct win_data
 } WIN_DATA;
 
 typedef struct _nap_win_data_t NapWinData;
-typedef struct _nap_callback_t NapCallback;
 
 struct _nap_win_data_t
 {
@@ -556,13 +555,6 @@ struct _nap_win_data_t
     TextView *terminal;
     Layout *layout;
 };
-
-struct _nap_callback_t
-{
-    PHB_ITEM codeBlock;
-};
-
-DeclSt(NapCallback);
 
 
 #define PTR_TO_UINT32(ptr) *((uint32_t*)(&ptr))
@@ -635,7 +627,6 @@ typedef struct wvw_data
     Window *s_pNappWindowMenu;
     Menu *s_pNappMainMenu;
     Font *s_pNappGlobalFont;
-    ArrSt(NapCallback) *s_pNappCallbacks;
    APP_DATA * s_sApp;                        /*application wide vars                     */
 
 }WVW_DATA;
@@ -653,15 +644,24 @@ HB_EXTERN_BEGIN
 
 // Global GTNap data
 typedef struct _gtnap_t GtNap;
+typedef struct _gtnap_callback_t GtNapCallback;
+
+struct _gtnap_callback_t
+{
+    PHB_ITEM codeBlock;
+};
+
+DeclPt(GtNapCallback);
+DeclPt(Window);
 
 struct _gtnap_t
 {
     Font *global_font;
     ArrPt(Window) *modals;
     ArrPt(Window) *windows;
+    ArrPt(GtNapCallback) *callbacks;
 };
 
-DeclPt(Window);
 
 extern void hb_gtnap_set_global_font(Font *font);
 extern Font *hb_gtnap_global_font(void);
@@ -669,7 +669,6 @@ extern Window *hb_gtnap_main_window(void);
 extern Window *hb_gtnap_current_modal(void);
 
 extern void hb_gtnap_set_modal_window(Window *window);
-extern Window *hb_gtnap_modal_window(void);
 extern void hb_gtnap_destroy_modal(void);
 
 
@@ -690,7 +689,6 @@ extern NapWinData *hb_gt_nap_GetWindowData( UINT iWin );
 // extern Menu *hb_gt_nap_MainMenu( void );
 extern void hb_gt_nap_set_MainMenu(Window *window, Menu *menu);
 extern void hb_gt_nap_set_GlobalPanel(Panel *panel);
-extern ArrSt(NapCallback) *hb_gt_nap_listeners(void);
 extern void hb_gt_nap_set_global_font(Font *font);
 extern Font *hb_gt_global_font(void);
 const char_t *hb_get_nap_text(const uint32_t textParamId);
@@ -704,7 +702,7 @@ extern void hb_retWindow(Window *window);
 extern Window *hb_parWindow(int iParam);
 
 extern Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void(*FPtr_CallBack)(void*, Event*));
-extern void hb_gt_nap_callback(void *idp, Event *e);
+extern void hb_gt_nap_callback(GtNapCallback *callback, Event *e);
 
 
 extern void hb_gt_nap_runloop( void );

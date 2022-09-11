@@ -23,7 +23,7 @@ HB_FUNC( NAP_EDIT_MULTILINE )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditFilter(void *idp, Event *e)
+static void i_OnEditFilter(GtNapCallback *idp, Event *e)
 {
     hb_gt_nap_callback(idp, e);
 }
@@ -39,7 +39,7 @@ HB_FUNC( NAP_EDIT_ONFILTER )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditChange(void *idp, Event *e)
+static void i_OnEditChange(GtNapCallback *idp, Event *e)
 {
     hb_gt_nap_callback(idp, e);
 }

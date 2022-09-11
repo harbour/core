@@ -68,7 +68,7 @@ STATIC PROCEDURE OPTION_BUTTON_CLICK( hEv )
 
     LOCAL button := NAP_EVENT_BUTTON(hEv)
     LOCAL id := NAP_BUTTON_GET_ID(button)
-    NAP_WINDOW_STOP_MODAL(id)
+    NAP_WINDOW_STOP_MODAL(id + 100)
     RETURN
 
 /*---------------------------------------------------------------------------*/
@@ -111,32 +111,6 @@ STATIC FUNCTION BUTTONS_LAYOUT( Window, ButtonList, DefButton )
 
 /*---------------------------------------------------------------------------*/
 
-// The user wants to close the PERGUN window without PRESS any button
-// Using the [RETURN] or [ESC] keys or the Window [X] close
-STATIC PROCEDURE ON_PERGUN_CLOSE( hEv, N_DEFAULT )
-
-    // If [ESC] Any button will be selected
-    IF NAP_EVENT_WINCLOSE_ESC(hEv)
-        NAP_WINDOW_STOP_MODAL(0)
-
-    // If [X] Any button will be selected
-    ELSEIF NAP_EVENT_WINCLOSE_BUTTON(hEv)
-        NAP_WINDOW_STOP_MODAL(0)
-
-    // If [RETURN] Default button will be selected
-    ELSEIF NAP_EVENT_WINCLOSE_RETURN(hEv)
-        // Nothing, the default button will be pressed
-
-    // Others, PERGUN will not be closed
-    ELSE
-        NAP_EVENT_RESULT_FALSE(hEv)
-
-    ENDIF
-
-RETURN
-
-/*---------------------------------------------------------------------------*/
-
 FUNCTION PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x, C_IconType )
 
     LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2, V_Layout3
@@ -174,14 +148,27 @@ FUNCTION PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x, C_Ico
     // Window Title
     NAP_WINDOW_TITLE(V_Janela, C_Cabec_x)
 
-    // Window Title
-    NAP_WINDOW_ONCLOSE(V_Janela, {| hEv | ON_PERGUN_CLOSE(hEv, N_DEFAULT) })
-
     // Launch window as modal
     // Main Window will be blocked until a modal window will be closed/acepted
     N_Select_Option := NAP_WINDOW_MODAL(V_Janela)
 
-    RETURN N_Select_Option
+    // A PERGUN button has been pressed
+    IF N_Select_Option > 100
+        RETURN N_Select_Option - 100
+    // [ESC] key has been pressed
+    ELSEIF N_Select_Option == 1
+        RETURN 0
+    // [RETURN] key has been pressed
+    ELSEIF N_Select_Option == 2
+        RETURN N_DEFAULT
+    // [X] button in titlebar has been pressed
+    ELSEIF N_Select_Option == 3
+        RETURN 0
+    ENDIF
+
+    // RETURN 0 means that ANY PERGUN button has been pressed
+    // (the PERGUN dialog has been cancelled)
+    RETURN 0
 
 /*---------------------------------------------------------------------------*/
 

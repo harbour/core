@@ -625,7 +625,6 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
     s_pWvwData->s_pNappGlobalFont = font_system(font_regular_size(), 0);
 
     s_pWvwData->s_pNappWindowMenu = NULL;
-    s_pWvwData->s_pNappCallbacks = arrst_create(NapCallback);
 
    for( i = 0; i < WVW_MAXWINDOWS; i++ )
    {
@@ -699,14 +698,6 @@ BOOL hb_gt_wvwDestroyPicture( IPicture * iPicture )
       bResult = TRUE;
    }
    return bResult;
-}
-
-static void i_remove_napp_callback(NapCallback *callback)
-{
-   if (callback->codeBlock)
-      hb_itemRelease(callback->codeBlock);
-
-
 }
 
 static void hb_gt_wvw_Exit( PHB_GT pGT )
@@ -849,8 +840,6 @@ font_destroy(&s_pWvwData->s_pNappGlobalFont);
 
     if (s_pWvwData->s_pNappMainMenu != NULL)
         menu_destroy(&s_pWvwData->s_pNappMainMenu);
-
-    arrst_destroy(&s_pWvwData->s_pNappCallbacks, i_remove_napp_callback, NapCallback);
 
    if( s_pWvwData->s_bSWRegistered )
       UnregisterClass( s_pWvwData->szSubWinName, s_pWvwData->hInstance );
@@ -7352,11 +7341,6 @@ void hb_gt_nap_set_GlobalPanel(Panel *panel)
 
 #define UINT32_TO_PTR(val) ((void*)val)
 
-ArrSt(NapCallback) *hb_gt_nap_listeners(void)
-{
-    return s_pWvwData->s_pNappCallbacks;
-}
-
 void hb_gt_nap_set_global_font(Font *font)
 {
     font_destroy(&s_pWvwData->s_pNappGlobalFont);
@@ -7506,6 +7490,9 @@ void hb_retWindow(Window *window)
 
         cassert_no_null(GTNAP_GLOBAL);
         arrpt_append(GTNAP_GLOBAL->windows, window, Window);
+        log_printf("Num Windows: %d", arrpt_size(GTNAP_GLOBAL->windows, Window));
+        log_printf("Num Modals: %d", arrpt_size(GTNAP_GLOBAL->modals, Window));
+
         hb_retptrGC(ph);
     }
     else
@@ -7527,27 +7514,28 @@ Window *hb_parWindow(int iParam)
 
 
 
-
-
 Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void (*FPtr_CallBack)(void*, Event*))
 {
     PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
-    uint32_t id = arrst_size(s_pWvwData->s_pNappCallbacks, NapCallback);
-    NapCallback *lt = arrst_new0(s_pWvwData->s_pNappCallbacks, NapCallback);
-    lt->codeBlock = hb_itemNew(codeBlock);
-    return listener(UINT32_TO_PTR(id), FPtr_CallBack, void);
+    GtNapCallback *callback = heap_new0(GtNapCallback);
+    cassert_no_null(codeBlock);
+    callback->codeBlock = hb_itemNew(codeBlock);
+    arrpt_append(GTNAP_GLOBAL->callbacks, callback, GtNapCallback);
+    return listener(callback, FPtr_CallBack, GtNapCallback);
 }
 
-void hb_gt_nap_callback(void *idp, Event *e)
+void hb_gt_nap_callback(GtNapCallback *callback, Event *e)
 {
-    NapCallback *callback = arrst_get(s_pWvwData->s_pNappCallbacks, PTR_TO_UINT32(idp), NapCallback);
+    cassert_no_null(callback);
     if (callback->codeBlock != NULL)
     {
         PHB_ITEM phiEvent = hb_itemNew(NULL);
+        PHB_ITEM retItem = NULL;
         hb_itemPutPtr(phiEvent, e);
         cassert_msg(e != NULL, "hb_gt_nap_callback: NULL Event");
-        hb_itemDo(callback->codeBlock, 1, phiEvent);
+        retItem = hb_itemDo(callback->codeBlock, 1, phiEvent);
         hb_itemRelease(phiEvent);
+        hb_itemRelease(retItem);
     }
 }
 
@@ -7564,6 +7552,7 @@ static GtNap *i_nappgui_create(void)
     GTNAP_GLOBAL->global_font = font_system(font_regular_size(), 0);
     GTNAP_GLOBAL->modals = arrpt_create(Window);
     GTNAP_GLOBAL->windows = arrpt_create(Window);
+    GTNAP_GLOBAL->callbacks = arrpt_create(GtNapCallback);
 
     log_printf("i_nappgui_create() Begin %p", INIT_CODEBLOCK);
     hb_itemDo(INIT_CODEBLOCK, 0);
@@ -7572,6 +7561,16 @@ static GtNap *i_nappgui_create(void)
     //cassert_msg(FALSE, "i_nappgui_create");
     log_printf("i_nappgui_create() End");
     return GTNAP_GLOBAL;
+}
+
+static void i_destroy_callback(GtNapCallback **callback)
+{
+    cassert_no_null(callback);
+    cassert_no_null(*callback);
+    if ((*callback)->codeBlock != NULL)
+        hb_itemRelease((*callback)->codeBlock);
+
+    heap_delete(callback, GtNapCallback);
 }
 
 static void i_nappgui_destroy(GtNap **data)
@@ -7583,6 +7582,7 @@ static void i_nappgui_destroy(GtNap **data)
     // No modal window can be alive here!
     cassert(arrpt_size((*data)->modals, Window) == 0);
     arrpt_destopt(&(*data)->modals, window_destroy, Window);
+    arrpt_destopt(&(*data)->callbacks, i_destroy_callback, GtNapCallback);
     log_printf("i_nappgui_destroy() Begin");
     hb_itemDo(END_CODEBLOCK, 0);
     hb_itemRelease(END_CODEBLOCK);
@@ -7637,22 +7637,20 @@ Window *hb_gtnap_main_window(void)
 
 Window *hb_gtnap_current_modal(void)
 {
+    Window *modal = NULL;
     cassert_no_null(GTNAP_GLOBAL);
     if (arrpt_size(GTNAP_GLOBAL->modals, Window) > 0)
-        return arrpt_last(GTNAP_GLOBAL->modals, Window);
-    return NULL;
+        modal = arrpt_last(GTNAP_GLOBAL->modals, Window);
+
+    log_printf("Get current modal: %p (%d)", modal, arrpt_size(GTNAP_GLOBAL->modals, Window));
+    return modal;
 }
 
 void hb_gtnap_set_modal_window(Window *window)
 {
     cassert_no_null(GTNAP_GLOBAL);
     arrpt_append(GTNAP_GLOBAL->modals, window, Window);
-}
-
-Window *hb_gtnap_modal_window(void)
-{
-    cassert_no_null(GTNAP_GLOBAL);
-    return arrpt_last(GTNAP_GLOBAL->modals, Window);
+    log_printf("Set current modal: %p (%d)", window, arrpt_size(GTNAP_GLOBAL->modals, Window));
 }
 
 void hb_gtnap_destroy_modal()
@@ -7664,6 +7662,7 @@ void hb_gtnap_destroy_modal()
     i = arrpt_find(GTNAP_GLOBAL->windows, modal, Window);
     arrpt_delete(GTNAP_GLOBAL->windows, i, window_destroy, Window);
     arrpt_pop(GTNAP_GLOBAL->modals, NULL, Window);
+    log_printf("Destroy modal: %p (%d)", modal, arrpt_size(GTNAP_GLOBAL->modals, Window));
 }
 
 

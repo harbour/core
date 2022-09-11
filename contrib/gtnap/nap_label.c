@@ -36,7 +36,7 @@ HB_FUNC( NAP_LABEL_MULTILINE )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnLabelClick(void *idp, Event *e)
+static void i_OnLabelClick(GtNapCallback *idp, Event *e)
 {
     hb_gt_nap_callback(idp, e);
 }

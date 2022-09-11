@@ -64,9 +64,9 @@ HB_FUNC( NAP_BUTTON_FLATGLE )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnButtonClick(void *idp, Event *e)
+static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 {
-    hb_gt_nap_callback(idp, e);
+    hb_gt_nap_callback(callback, e);
 }
 
 /*---------------------------------------------------------------------------*/
