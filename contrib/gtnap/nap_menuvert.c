@@ -34,6 +34,7 @@ struct _menuvert_t
     uint32_t row_height;
     real32_t total_height;
     uint32_t visible_opts;
+    uint32_t control_height;
     ArrSt(MenuOpt) *opts;
     uint32_t selected;
     bool_t launch_sel;
@@ -181,6 +182,41 @@ static void i_OnUp(Panel *panel, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_update_sel_top(MenuVert *menu)
+{
+    V2Df scroll_pos;
+
+    view_viewport(menu->view, &scroll_pos, NULL);
+
+    if (scroll_pos.y > 0)
+    {
+        real32_t ypos = (real32_t)(menu->selected * menu->row_height);
+        if (scroll_pos.y > ypos)
+            view_scroll_y(menu->view, ypos);
+    }
+
+    view_update(menu->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_update_sel_bottom(MenuVert *menu)
+{
+    V2Df scroll_pos;
+    uint32_t ypos = (menu->selected + 1) * menu->row_height;
+    real32_t scroll_height = 0;
+
+    view_viewport(menu->view, &scroll_pos, NULL);
+
+    view_scroll_size(menu->view, NULL, &scroll_height);
+    if (scroll_pos.y + menu->control_height - scroll_height < ypos)
+        view_scroll_y(menu->view, (real32_t)ypos - (real32_t)menu->control_height + scroll_height);
+
+    view_update(menu->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnKeyDown(Panel *panel, Event *e)
 {
     MenuVert *menu = panel_get_data(panel, MenuVert);
@@ -197,6 +233,9 @@ static void i_OnKeyDown(Panel *panel, Event *e)
                 menu->selected -= 1;
                 update = TRUE;
             }
+
+            if (update == TRUE)
+                i_update_sel_top(menu);
         }
         else if (p->key == ekKEY_DOWN)
         {
@@ -205,15 +244,15 @@ static void i_OnKeyDown(Panel *panel, Event *e)
                 menu->selected += 1;
                 update = TRUE;
             }
+
+            if (update == TRUE)
+                i_update_sel_bottom(menu);
         }
         else if (p->key == ekKEY_RETURN)
         {
             i_run_option(menu);
         }
     }
-
-    if (update == TRUE)
-        view_update(menu->view);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -246,6 +285,15 @@ static void i_view_size(MenuVert *menu)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnSize(Panel *panel, Event *e)
+{
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    const EvSize *p = event_params(e, EvSize);
+    menu->control_height = (uint32_t)p->height;
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_MENUVERT_CREATE )
 {
     Panel *panel = panel_create();
@@ -263,6 +311,7 @@ HB_FUNC( NAP_MENUVERT_CREATE )
     menu->autoclose = FALSE;
     i_view_size(menu);
     view_OnDraw(view, listener(panel, i_OnDraw, Panel));
+    view_OnSize(view, listener(panel, i_OnSize, Panel));
     view_OnMove(view, listener(panel, i_OnMove, Panel));
     view_OnDown(view, listener(panel, i_OnDown, Panel));
     view_OnUp(view, listener(panel, i_OnUp, Panel));
