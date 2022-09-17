@@ -107,10 +107,6 @@ STATIC PROCEDURE GTNAP_END()
     QUIT
 RETURN
 
-PROC EXEMPLO_BROWSE_DBF()
-    PERGUN("'Browse de DBF' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
-    RETURN
-
 PROC EXEMPLO_BROWSE_VETOR()
     PERGUN("'Browse de vetor' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
