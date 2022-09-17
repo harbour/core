@@ -181,6 +181,5 @@ STATIC FUNCTION FUNCAO_RETORNO_F
 /*---------------------------------------------------------------------------*/
 
 STATIC FUNCTION FUNCAO_RETORNO_T
-    MOSTRAR("M?????","Função com retorno .T. executada."+;
-                 "(menu será automaticamente fechado)", "Informação")
+    MOSTRAR("M?????","Função com retorno .T. executada." + hb_eol() + "(menu será automaticamente fechado)", "Informação")
     RETURN .T.
