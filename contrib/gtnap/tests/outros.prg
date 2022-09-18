@@ -201,3 +201,57 @@ FUNCTION MOSTRAR ( C_CdMens, C_SubCabec, C_Cabec_x )
     NAP_WINDOW_MODAL(V_Janela)
 
     RETURN 0
+
+/*---------------------------------------------------------------------------*/
+
+STATIC FUNCTION TOOLBAR_LAYOUT( ButtonList, TooltipList )
+    LOCAL V_Layout, V_Button, V_Image
+    LOCAL N_Cont, N_NumButtons := LEN(ButtonList)
+
+    V_Layout := NAP_LAYOUT_CREATE(N_NumButtons, 1)
+
+    FOR N_Cont := 1 TO N_NumButtons
+        V_Button := NAP_BUTTON_FLAT()
+        V_Image := NAP_IMAGE_FROM_FILE(DIRET_TOOLBAR() + ButtonList[N_Cont])
+        NAP_BUTTON_IMAGE(V_Button, V_Image)
+        NAP_BUTTON_ID(V_Button, N_Cont)
+        NAP_BUTTON_TOOLTIP(V_Button, TooltipList[N_Cont])
+        //NAP_BUTTON_ONCLICK(V_Button, {| hEv | OPTION_BUTTON_CLICK(hEv) })
+        NAP_LAYOUT_BUTTON(V_Layout, V_Button, N_Cont - 1, 0)
+    NEXT
+
+    RETURN V_Layout
+
+/*---------------------------------------------------------------------------*/
+
+FUNCTION LAYOUT_WITH_TOOLBAR(V_Layout, ButtonList, TooltipList)
+    LOCAL V_Layout1, V_Layout2
+    V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
+    V_Layout2 := TOOLBAR_LAYOUT(ButtonList, TooltipList)
+    NAP_LAYOUT_HALIGN(V_Layout1, 0, 0, ekNAP_ALIGN_LEFT)
+    NAP_LAYOUT_LAYOUT(V_Layout1, V_Layout2, 0, 0)
+    NAP_LAYOUT_LAYOUT(V_Layout1, V_Layout, 0, 1)
+    RETURN V_Layout1
+
+/*---------------------------------------------------------------------------*/
+
+FUNCTION READ_TEXT_FROM_FILE(C_FilePath)
+    // LOCAL N_Handle, C_Text
+    // LOCAL Length
+
+    RETURN hb_MemoRead(C_FilePath)
+    // N_Handle := FOPEN(C_FilePath)
+    // Length := FSEEK(N_Handle, 0, FS_END)
+
+    // FSEEK(N_Handle, 0, FS_SET)
+
+
+    // V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
+    // V_Layout2 := TOOLBAR_LAYOUT(ButtonList, TooltipList)
+    // NAP_LAYOUT_HALIGN(V_Layout1, 0, 0, ekNAP_ALIGN_LEFT)
+    // NAP_LAYOUT_LAYOUT(V_Layout1, V_Layout2, 0, 0)
+    // NAP_LAYOUT_LAYOUT(V_Layout1, V_Layout, 0, 1)
+
+    // FCLOSE(N_Handle)
+
+    // RETURN V_Layout1

@@ -3,6 +3,8 @@
 #require "gtnap"
 #include "gtnap.ch"
 
+/*---------------------------------------------------------------------------*/
+
 PROC MAIN
 
 IF HB_GTVERSION()=="NAP"
@@ -16,6 +18,8 @@ IF HB_GTVERSION()=="NAP"
  ENDIF
 
 RETURN
+
+/*---------------------------------------------------------------------------*/
 
 // GTNAP_MAIN is the real MAIN in a GTNAP Application
 // Here you should create the application Main Window
@@ -84,6 +88,8 @@ NAP_WINDOW_SHOW(V_Janela)
 
 RETURN
 
+/*---------------------------------------------------------------------------*/
+
 // The user wants to exit the application
 // We can confirm the exit
 // This Callback function will be called when the user press the "Close" button in Main Window
@@ -101,6 +107,8 @@ STATIC PROCEDURE ON_MAIN_WINDOW_CLOSE( hEv )
 
 RETURN
 
+/*---------------------------------------------------------------------------*/
+
 // Final actions before exit the application
 // Only Non-graphical operations.
 // Here you can't use NAP_... functions
@@ -108,16 +116,14 @@ STATIC PROCEDURE GTNAP_END()
     QUIT
 RETURN
 
+/*---------------------------------------------------------------------------*/
+
 PROC EXEMPLO_BROWSE_VETOR()
     PERGUN("'Browse de vetor' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
 PROC EXEMPLO_TEXTO_MEMORIA()
     PERGUN("'Exibição/edição de texto em memória' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
-    RETURN
-
-PROC EXEMPLO_TEXTO_ARQUIVO()
-    PERGUN("'Exibição/edição de arquivo texto' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
 PROC EXEMPLO_ENTRADA_DADOS()
@@ -128,6 +134,7 @@ PROC EXEMPLO_AUXILIARES()
     PERGUN("'Janelas auxiliares' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
+/*---------------------------------------------------------------------------*/
 
 //
 // Helper functions
@@ -140,6 +147,8 @@ FUNC DIRET_BMPS(C_DIRET_NEW)
         C_DIRET_BMPS := C_DIRET_NEW
     ENDIF
     RETURN C_DIRET_ANT
+
+/*---------------------------------------------------------------------------*/
 
 FUNC DIRET_TOOLBAR(C_DIRET_NEW)
     STATIC C_DIRET_TOOLBAR := ""

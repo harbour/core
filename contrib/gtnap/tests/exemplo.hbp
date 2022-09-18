@@ -17,6 +17,7 @@
 exemplo.prg
 exemplo_menu.prg
 exemplo_dbf.prg
+exemplo_textoarquivo.prg
 outros.prg
 
 # Libraries

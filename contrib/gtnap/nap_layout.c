@@ -148,6 +148,7 @@ HB_FUNC( NAP_LAYOUT_TEXTVIEW )
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
     layout_textview(layout, view, col, row);
+    layout_tabstop(layout, col, row, TRUE);
 }
 
 /*---------------------------------------------------------------------------*/

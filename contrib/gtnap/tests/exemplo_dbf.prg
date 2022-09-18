@@ -38,37 +38,6 @@ PROC EXEMPLO_BROWSE_DBF()
 
 /*---------------------------------------------------------------------------*/
 
-STATIC FUNCTION TOOLBAR_LAYOUT( ButtonList, TooltipList )
-    LOCAL V_Layout, V_Button, V_Image
-    LOCAL N_Cont, N_NumButtons := LEN(ButtonList)
-
-    V_Layout := NAP_LAYOUT_CREATE(N_NumButtons, 1)
-
-    FOR N_Cont := 1 TO N_NumButtons
-        V_Button := NAP_BUTTON_FLAT()
-        V_Image := NAP_IMAGE_FROM_FILE(DIRET_TOOLBAR() + ButtonList[N_Cont])
-        NAP_BUTTON_IMAGE(V_Button, V_Image)
-        NAP_BUTTON_ID(V_Button, N_Cont)
-        NAP_BUTTON_TOOLTIP(V_Button, TooltipList[N_Cont])
-        //NAP_BUTTON_ONCLICK(V_Button, {| hEv | OPTION_BUTTON_CLICK(hEv) })
-        NAP_LAYOUT_BUTTON(V_Layout, V_Button, N_Cont - 1, 0)
-    NEXT
-
-    RETURN V_Layout
-
-/*---------------------------------------------------------------------------*/
-
-STATIC FUNCTION LAYOUT_WITH_TOOLBAR(V_Layout, ButtonList, TooltipList)
-    LOCAL V_Layout1, V_Layout2
-    V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
-    V_Layout2 := TOOLBAR_LAYOUT(ButtonList, TooltipList)
-    NAP_LAYOUT_HALIGN(V_Layout1, 0, 0, ekNAP_ALIGN_LEFT)
-    NAP_LAYOUT_LAYOUT(V_Layout1, V_Layout2, 0, 0)
-    NAP_LAYOUT_LAYOUT(V_Layout1, V_Layout, 0, 1)
-    RETURN V_Layout1
-
-/*---------------------------------------------------------------------------*/
-
 STATIC PROCEDURE TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR()
     LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2, V_Layout3
     LOCAL V_Label1, V_Table
