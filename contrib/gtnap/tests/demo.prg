@@ -18,7 +18,7 @@
 #include "hbgtinfo.ch"
 
 
-#include "gtnap.ch"
+#include "..\gtnap.ch"
 // #define _WINDOWS
 // #define _M_IX86
 // #include "nappgui.h"
@@ -356,10 +356,10 @@ STATIC FUNCTION EditsLayout()
     LOCAL layout := NAP_LAYOUT_CREATE(2, n)
 
     FOR i := 0 TO n - 1
-        label := NAP_LABELCREATE()
+        label := NAP_LABEL_CREATE()
         edit := NAP_EDIT_CREATE()
 
-        NAP_LABELTEXT(label, "Label " + hb_ntos(i))
+        NAP_LABEL_TEXT(label, "Label " + hb_ntos(i))
         NAP_LAYOUT_LABEL(layout, label, 0, i)
         NAP_LAYOUT_EDIT(layout, edit, 1, i)
 
@@ -386,7 +386,7 @@ STATIC PROCEDURE CreateGUI( )
     LOCAL button4 := NAP_BUTTON_PUSH()
     LOCAL layout := NAP_LAYOUT_CREATE(1, 5)
     LOCAL elayout := EditsLayout()
-    LOCAL panel := NAP_PANELCREATE()
+    LOCAL panel := NAP_PANEL_CREATE()
 
     // oMouse := WVWMouseButton():New( "Tight",   MaxRow() - 2, 67 - 11 - 11 - 11 - 11 - 11, , , {|| lboxmessage( "tight" ) } )
 
@@ -407,7 +407,7 @@ STATIC PROCEDURE CreateGUI( )
     NAP_LAYOUT_VMARGIN(layout, 2, 5)
     NAP_LAYOUT_VMARGIN(layout, 3, 5)
     NAP_LAYOUT_MARGIN(layout, 10)
-    NAP_PANELLAYOUT(panel, layout)
+    NAP_PANEL_LAYOUT(panel, layout)
 
     // Set the global panel into NAppGUI Window
     NAP_GLOBALPANEL(panel)

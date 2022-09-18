@@ -41,6 +41,7 @@ nap_label.c
 nap_layout.c
 nap_imageview.c
 nap_panel.c
+nap_tableview.c
 nap_window.c
 
 nap_menuvert.c
