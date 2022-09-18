@@ -63,7 +63,8 @@ STATIC PROCEDURE BUTTON_F9_CLICK()
 STATIC PROCEDURE TST_MENU_SEM_BOTAO_ESC()
     LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2, V_Layout3
     LOCAL V_MenuVert, V_Button
-    LOCAL V_Label1, V_Image, V_ImageView
+    LOCAL V_Label1
+    LOCAL V_Image, V_ImageView
 
     // Create GUI Elements
     V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)

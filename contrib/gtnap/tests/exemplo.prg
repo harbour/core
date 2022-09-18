@@ -26,6 +26,7 @@ LOCAL V_Image, V_ImageView, V_MenuVert
 LOCAL V_Label1, V_Label2, V_Label3
 
 DIRET_BMPS(".\bmps\")
+DIRET_TOOLBAR(".\imgtbar\")
 
 // We want big font size of main Window
 // TODO: The global font size
@@ -139,3 +140,12 @@ FUNC DIRET_BMPS(C_DIRET_NEW)
         C_DIRET_BMPS := C_DIRET_NEW
     ENDIF
     RETURN C_DIRET_ANT
+
+FUNC DIRET_TOOLBAR(C_DIRET_NEW)
+    STATIC C_DIRET_TOOLBAR := ""
+    LOCAL C_DIRET_ANT := C_DIRET_TOOLBAR
+    IF C_DIRET_NEW # NIL
+        C_DIRET_TOOLBAR := C_DIRET_NEW
+    ENDIF
+    RETURN C_DIRET_ANT
+

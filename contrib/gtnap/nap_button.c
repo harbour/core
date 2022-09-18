@@ -105,19 +105,27 @@ HB_FUNC( NAP_BUTTON_TOOLTIP )
     button_tooltip(button, text);
 }
 
-// Images & Fonts not supported yet!
-
 /*---------------------------------------------------------------------------*/
 
 // void button_font(Button *button, const Font *font);
 
 /*---------------------------------------------------------------------------*/
 
-// void button_image(Button *button, const Image *image);
+HB_FUNC( NAP_BUTTON_IMAGE )
+{
+    Button *button = (Button*)hb_parptr(1);
+    Image *image = hb_parImage(2);
+    button_image(button, image);
+}
 
 /*---------------------------------------------------------------------------*/
 
-// void button_image_alt(Button *button, const Image *image);
+HB_FUNC( NAP_BUTTON_IMAGE_ALT )
+{
+    Button *button = (Button*)hb_parptr(1);
+    Image *image = hb_parImage(2);
+    button_image_alt(button, image);
+}
 
 /*---------------------------------------------------------------------------*/
 

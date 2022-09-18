@@ -170,6 +170,7 @@ HB_FUNC( NAP_LAYOUT_TABLEVIEW )
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
     layout_tableview(layout, view, col, row);
+    layout_tabstop(layout, col, row, TRUE);
 }
 
 /*---------------------------------------------------------------------------*/

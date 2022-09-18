@@ -166,3 +166,16 @@ HB_FUNC( NAP_WINDOW_DEFBUTTON )
     Button *button = (Button*)hb_parptr(2);
     window_defbutton(window, button);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_WINDOW_FOCUS )
+{
+    Window *window = hb_parWindow(1);
+    Layout *layout = (Layout*)hb_parptr(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    Cell *cell = layout_cell(layout, col, row);
+    unref(window);
+    cell_focus(cell);
+}
