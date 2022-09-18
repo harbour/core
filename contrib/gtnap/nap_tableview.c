@@ -147,7 +147,6 @@ static void i_OnTableNotify(void *data, Event *e)
 HB_FUNC( NAP_TABLEVIEW_BIND_DB )
 {
     TableView *view = (TableView*)hb_parptr(1);
-    cassert(pAREA == NULL);
 
     pAREA = hb_rddGetCurrentWorkAreaPointer();
     if (pAREA != NULL)

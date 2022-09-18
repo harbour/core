@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.txs": "html",
-        "nappgui.h": "c"
+        "nappgui.h": "c",
+        "hbapirdd.h": "c"
     }
 }

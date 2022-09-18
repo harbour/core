@@ -26,7 +26,9 @@ void *view_get_data_imp(const View *view);
 void view_size(View *view, const S2Df size);
 
 void view_OnDraw(View *view, Listener *listener);
-    
+
+void view_OnOverlay(View *view, Listener *listener);
+
 void view_OnSize(View *view, Listener *listener);
 
 void view_OnEnter(View *view, Listener *listener);

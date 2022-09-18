@@ -63,21 +63,6 @@ typedef enum _scale_t
     ekASPECTDW
 } scale_t;
 
-typedef enum _table_flag_t
-{
-    ekTBTEXT        = 0x1,
-    ekTBICON16      = 0x2,
-    ekTBEDIT        = 0x4,
-    ekTBCOMBO       = 0x8,
-    ekTBPOPUP       = 0x10,
-    ekTBRADIO       = 0x20,
-    ekTBCHECK       = 0x40,
-    ekTBTOOLTIP     = 0x80,
-    ekTBBGCOLOR     = 0x100,
-    ekTBROWALT      = 0x200,
-    ekTBROWPRESEL   = 0x400
-} table_flag_t;
-
 typedef enum _window_flag_t
 {
     ekWNFLAG            = 0,
@@ -106,6 +91,7 @@ typedef enum _gevent_t
     ekEVFOCUS,
     ekEVMENU,
     ekEVDRAW,
+    ekEVOVERLAY,
     ekEVRESIZE,
     ekEVENTER,
     ekEVEXIT,
@@ -125,12 +111,8 @@ typedef enum _gevent_t
     ekEVTHEME,
     ekEVOBJCHANGE,
 
-    ekEVTBLSIZE,
     ekEVTBLNROWS,
-    ekEVTBLROW,
-    ekEVTBLCELL,
-    ekEVHEADSIZE,
-    ekEVHEADCLICK
+    ekEVTBLCELL
 } event_t;
 
 typedef struct _control_t Control;
@@ -166,10 +148,7 @@ typedef struct _evpos_t EvPos;
 typedef struct _evsize_t EvSize;
 typedef struct _evwinclose_t EvWinClose;
 typedef struct _evmenu_t EvMenu;
-
-typedef struct _evheader_t EvHeader;
 typedef struct _evtbpos_t EvTbPos;
-typedef struct _evtbrow_t EvTbRow;
 typedef struct _evtbcell_t EvTbCell;
 
 typedef ResPack*(*FPtr_respack)(const char_t *locale);
@@ -216,6 +195,8 @@ struct _evmouse_t
 {
     real32_t x;
     real32_t y;
+    real32_t lx;
+    real32_t ly;
     mouse_t button;
     uint32_t count;
 };
@@ -258,29 +239,15 @@ struct _evmenu_t
     const char_t *str;
 };
 
-struct _evheader_t
-{
-    uint32_t index;
-    real32_t width;
-};
-
 struct _evtbpos_t
 {
     uint32_t col;
     uint32_t row;
 };
 
-struct _evtbrow_t
-{
-    color_t bgcolor;
-};
-
 struct _evtbcell_t
 {        
-    uint32_t flags;
     const char_t *text;
-    bool_t checked;
-    color_t bgcolor;
 };
 
 DeclSt(FPtr_respack);
