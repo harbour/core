@@ -148,6 +148,8 @@ typedef __int64 LONG_PTR;
 // NAPPGUI
 #include "gui.hxx"
 
+// For database...
+#include "hbapirdd.h"
 
 
 /* xHarbour compatible definitions */
@@ -646,6 +648,7 @@ HB_EXTERN_BEGIN
 typedef struct _gtnap_t GtNap;
 typedef struct _gui_component_t GuiComponent;
 typedef struct _gtnap_callback_t GtNapCallback;
+typedef struct _gtnap_area_t GtNapArea;
 
 /*---------------------------------------------------------------------------*/
 
@@ -660,7 +663,16 @@ struct _gtnap_callback_t
     PHB_ITEM codeBlock;
 };
 
+struct _gtnap_area_t
+{
+    AREA *area;
+    uint32_t currow;
+    TableView *view;
+    char_t temp[512];   // Temporal buffer between RDD and TableView
+};
+
 DeclPt(GtNapCallback);
+DeclPt(GtNapArea);
 DeclPt(Window);
 
 struct _gtnap_t
@@ -669,6 +681,7 @@ struct _gtnap_t
     ArrPt(Window) *modals;
     ArrPt(Window) *windows;
     ArrPt(GtNapCallback) *callbacks;
+    ArrPt(GtNapArea) *areas;
 };
 
 
@@ -680,7 +693,7 @@ extern Window *hb_gtnap_current_modal(void);
 extern void hb_gtnap_set_modal_window(Window *window);
 extern void hb_gtnap_destroy_modal(void);
 
-
+extern GtNapArea *hb_gtnap_new_area(void);
 
 
 

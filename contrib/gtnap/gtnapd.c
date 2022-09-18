@@ -7564,6 +7564,7 @@ static GtNap *i_nappgui_create(void)
     GTNAP_GLOBAL->modals = arrpt_create(Window);
     GTNAP_GLOBAL->windows = arrpt_create(Window);
     GTNAP_GLOBAL->callbacks = arrpt_create(GtNapCallback);
+    GTNAP_GLOBAL->areas = arrpt_create(GtNapArea);
 
     log_printf("i_nappgui_create() Begin %p", INIT_CODEBLOCK);
     hb_itemDo(INIT_CODEBLOCK, 0);
@@ -7582,6 +7583,11 @@ static void i_destroy_callback(GtNapCallback **callback)
         hb_itemRelease((*callback)->codeBlock);
 
     heap_delete(callback, GtNapCallback);
+}
+
+static void i_destroy_area(GtNapArea **area)
+{
+    heap_delete(area, GtNapArea);
 }
 
 static void i_remove_window_callbacks(Window *window)
@@ -7614,13 +7620,40 @@ static void i_remove_window_callbacks(Window *window)
     }
 }
 
+static void i_remove_window_areas(Window *window)
+{
+    uint32_t i, n = arrpt_size(GTNAP_GLOBAL->areas, GtNapArea);
+    cassert_no_null(window);
+    for(i = 0; i < n;)
+    {
+        bool_t remove = FALSE;
+        GtNapArea *area = arrpt_get(GTNAP_GLOBAL->areas, i, GtNapArea);
+
+        if (_component_window((GuiComponent*)area->view) == window)
+            remove = TRUE;
+
+        if (remove == TRUE)
+        {
+            arrpt_delete(GTNAP_GLOBAL->areas, i, i_destroy_area, GtNapArea);
+            n -= 1;
+        }
+        else
+        {
+            i += 1;
+        }
+    }
+}
+
 static void i_window_destroy(Window **window)
 {
     log_printf("Num callbacks before window_destroy: %d", arrpt_size(GTNAP_GLOBAL->callbacks, GtNapCallback));
+    log_printf("Num areas before window_destroy: %d", arrpt_size(GTNAP_GLOBAL->areas, GtNapArea));
     cassert_no_null(*window);
     i_remove_window_callbacks(*window);
+    i_remove_window_areas(*window);
     window_destroy(window);
     log_printf("Num callbacks after window_destroy: %d", arrpt_size(GTNAP_GLOBAL->callbacks, GtNapCallback));
+    log_printf("Num areas after window_destroy: %d", arrpt_size(GTNAP_GLOBAL->areas, GtNapArea));
 }
 
 static void i_nappgui_destroy(GtNap **data)
@@ -7633,6 +7666,7 @@ static void i_nappgui_destroy(GtNap **data)
     cassert(arrpt_size((*data)->modals, Window) == 0);
     arrpt_destopt(&(*data)->modals, NULL, Window);
     arrpt_destopt(&(*data)->callbacks, i_destroy_callback, GtNapCallback);
+    arrpt_destopt(&(*data)->areas, i_destroy_area, GtNapArea);
     log_printf("i_nappgui_destroy() Begin");
     hb_itemDo(END_CODEBLOCK, 0);
     hb_itemRelease(END_CODEBLOCK);
@@ -7716,6 +7750,12 @@ void hb_gtnap_destroy_modal()
 }
 
 
+GtNapArea *hb_gtnap_new_area(void)
+{
+    GtNapArea *area = heap_new0(GtNapArea);
+    arrpt_append(GTNAP_GLOBAL->areas, area, GtNapArea);
+    return area;
+}
 
 
 

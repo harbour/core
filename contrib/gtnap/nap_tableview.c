@@ -7,7 +7,6 @@
 
 #include "hbapi.h"
 #include "hbdate.h"
-#include "hbapirdd.h"
 
 /*---------------------------------------------------------------------------*/
 
@@ -29,17 +28,14 @@ HB_FUNC( NAP_TABLEVIEW_SIZE )
 
 /*---------------------------------------------------------------------------*/
 
-static AREAP pAREA = NULL;
-static uint32_t pCurRecord = UINT32_MAX;
-
-/*---------------------------------------------------------------------------*/
-
-static void i_create_columns(TableView *view)
+// TODO: Configure columns
+static void i_create_columns(TableView *view, GtNapArea *area)
 {
     HB_USHORT i, uiFields = 0;
     cassert_no_null(view);
-    cassert_no_null(pAREA);
-    SELF_FIELDCOUNT(pAREA, &uiFields);
+    cassert_no_null(area);
+    cassert_no_null(area->area);
+    SELF_FIELDCOUNT(area->area, &uiFields);
     //uiFields = 5;
     for (i = 0; i < uiFields; ++i)
     {
@@ -66,22 +62,21 @@ static void i_create_columns(TableView *view)
 }
 
 /*---------------------------------------------------------------------------*/
-static char_t TEMP[256];
 
-static void i_OnTableNotify(void *data, Event *e)
+static void i_OnTableNotify(GtNapArea *area, Event *e)
 {
     uint32_t etype = event_type(e);
-    unref(data);
+    cassert_no_null(area);
 
     switch(etype) {
     case ekEVTBLNROWS:
     {
         uint32_t *n = event_result(e, uint32_t);
 
-        if (pAREA != NULL)
+        if (area->area != NULL)
         {
             HB_ULONG ulRecCount = 0;
-            SELF_RECCOUNT(pAREA, &ulRecCount);
+            SELF_RECCOUNT(area->area, &ulRecCount);
             *n = (uint32_t)ulRecCount;
         }
         else
@@ -95,39 +90,39 @@ static void i_OnTableNotify(void *data, Event *e)
     {
         EvTbCell *cell = event_result(e, EvTbCell);
 
-        if (pAREA != NULL)
+        if (area->area != NULL)
         {
             const EvTbPos *pos = event_params(e, EvTbPos);
             PHB_ITEM pItem = hb_itemNew( NULL );
             HB_TYPE type = 0;
 
-            if (pCurRecord != pos->row + 1)
+            if (area->currow != pos->row + 1)
             {
-                SELF_GOTO(pAREA, (HB_ULONG)(pos->row + 1));
-                pCurRecord = pos->row + 1;
+                SELF_GOTO(area->area, (HB_ULONG)(pos->row + 1));
+                area->currow = pos->row + 1;
             }
 
-            SELF_GETVALUE(pAREA, (HB_USHORT)(pos->col + 1), pItem);
+            SELF_GETVALUE(area->area, (HB_USHORT)(pos->col + 1), pItem);
             type = HB_ITEM_TYPE(pItem);
-            TEMP[0] = '\0';
+            area->temp[0] = '\0';
 
             if (type == HB_IT_STRING)
             {
-                hb_itemCopyStrUTF8(pItem, TEMP, sizeof(TEMP));
+                hb_itemCopyStrUTF8(pItem, area->temp, sizeof(area->temp));
             }
             else if (type == HB_IT_DATE)
             {
                 char date[16];
                 hb_itemGetDS(pItem, date);
-                hb_dateFormat(date, TEMP, "DD/MM/YYYY");
+                hb_dateFormat(date, area->temp, "DD/MM/YYYY");
             }
             else if (type == HB_IT_DOUBLE)
             {
                 double value = hb_itemGetND(pItem);
-                bstd_sprintf(TEMP, sizeof(TEMP), "%12.4f", value);
+                bstd_sprintf(area->temp, sizeof(area->temp), "%12.4f", value);
             }
 
-            cell->text = TEMP;
+            cell->text = area->temp;
             hb_itemRelease(pItem);
         }
         else
@@ -147,15 +142,18 @@ static void i_OnTableNotify(void *data, Event *e)
 HB_FUNC( NAP_TABLEVIEW_BIND_DB )
 {
     TableView *view = (TableView*)hb_parptr(1);
+    GtNapArea *area = hb_gtnap_new_area();
 
-    pAREA = hb_rddGetCurrentWorkAreaPointer();
-    if (pAREA != NULL)
+    area->area = hb_rddGetCurrentWorkAreaPointer();
+    area->view = view;
+
+    if (area->area != NULL)
     {
-        SELF_GOTO(pAREA, 1);
-        pCurRecord = 1;
+        SELF_GOTO(area->area, 1);
+        area->currow = 1;
     }
 
-    i_create_columns(view);
-    tableview_OnNotify(view, listener(NULL, i_OnTableNotify, void));
+    i_create_columns(view, area);
+    tableview_OnNotify(view, listener(area, i_OnTableNotify, GtNapArea));
     tableview_update(view);
 }
