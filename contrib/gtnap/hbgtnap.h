@@ -644,10 +644,19 @@ HB_EXTERN_BEGIN
 
 // Global GTNap data
 typedef struct _gtnap_t GtNap;
+typedef struct _gui_component_t GuiComponent;
 typedef struct _gtnap_callback_t GtNapCallback;
+
+/*---------------------------------------------------------------------------*/
+
+void _component_set_tag(GuiComponent *component, const uint32_t tag);
+uint32_t _component_get_tag(const GuiComponent *component);
+Window *_component_window(const GuiComponent *component);
 
 struct _gtnap_callback_t
 {
+    GuiComponent *cb_component;
+    Window *cb_window;
     PHB_ITEM codeBlock;
 };
 
@@ -701,7 +710,8 @@ extern Font *hb_parFont(int iParam);
 extern void hb_retWindow(Window *window);
 extern Window *hb_parWindow(int iParam);
 
-extern Listener *hb_gt_nap_listener(const uint32_t codeBlockParamId, void(*FPtr_CallBack)(void*, Event*));
+extern Listener *hb_gt_nap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, void(*FPtr_CallBack)(void*, Event*));
+extern Listener *hb_gt_nap_wind_listener(const uint32_t codeBlockParamId, Window *window, void(*FPtr_CallBack)(void*, Event*));
 extern void hb_gt_nap_callback(GtNapCallback *callback, Event *e);
 
 

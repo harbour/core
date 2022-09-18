@@ -35,7 +35,7 @@ static void i_OnWindowClose(GtNapCallback *idp, Event *e)
 HB_FUNC( NAP_WINDOW_ONCLOSE )
 {
     Window *window = hb_parWindow(1);
-    Listener *listener = hb_gt_nap_listener(2, i_OnWindowClose);
+    Listener *listener = hb_gt_nap_wind_listener(2, window, i_OnWindowClose);
     window_OnClose(window, listener);
 }
 
@@ -51,7 +51,7 @@ static void i_OnWindowMoved(GtNapCallback *idp, Event *e)
 HB_FUNC( NAP_WINDOW_ONMOVED )
 {
     Window *window = hb_parWindow(1);
-    Listener *listener = hb_gt_nap_listener(2, i_OnWindowMoved);
+    Listener *listener = hb_gt_nap_wind_listener(2, window, i_OnWindowMoved);
     window_OnMoved(window, listener);
 }
 
@@ -67,7 +67,7 @@ static void i_OnWindowResize(GtNapCallback *idp, Event *e)
 HB_FUNC( NAP_WINDOW_ONRESIZE )
 {
     Window *window = hb_parWindow(1);
-    Listener *listener = hb_gt_nap_listener(2, i_OnWindowResize);
+    Listener *listener = hb_gt_nap_wind_listener(2, window, i_OnWindowResize);
     window_OnResize(window, listener);
 }
 
