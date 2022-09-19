@@ -7078,67 +7078,6 @@ void hb_gt_wvwDrawOutline( UINT usWinNum, int iTop, int iLeft, int iBottom, int 
 
 /*NOTE: are these workable in MULTI_GT ? */
 /* static void gtFnInit( PHB_GT_FUNCS gt_funcs ) */
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
-{
-   HB_TRACE( HB_TR_ALWAYS, ( "hb_gtFnInit( %p )", pFuncTable ) );
-    log_printf("hb_gt_FuncInit INIT!!!!!!!!!!!!!!!!");
-
-   pFuncTable->Init   = hb_gt_wvw_Init;
-   pFuncTable->Exit   = hb_gt_wvw_Exit;
-   pFuncTable->MaxCol = hb_gt_wvw_MaxCol;
-   pFuncTable->MaxRow = hb_gt_wvw_MaxRow;
-
-   pFuncTable->SetPos         = hb_gt_wvw_SetPos;
-   pFuncTable->IsColor        = hb_gt_wvw_IsColor;
-   pFuncTable->GetCursorStyle = hb_gt_wvw_GetCursorStyle;
-   pFuncTable->SetCursorStyle = hb_gt_wvw_SetCursorStyle;
-   pFuncTable->DispBegin      = hb_gt_wvw_DispBegin;
-   pFuncTable->DispEnd        = hb_gt_wvw_DispEnd;
-   pFuncTable->DispCount      = hb_gt_wvw_DispCount;
-   pFuncTable->Replicate      = hb_gt_wvw_Replicate;
-   pFuncTable->WriteAt        = hb_gt_wvw_WriteAt;
-   pFuncTable->PutText        = hb_gt_wvw_PutText;
-   pFuncTable->SetAttribute   = hb_gt_wvw_SetAttribute;
-/*  pFuncTable->Scroll                = hb_gt_wvw_Scroll; */
-   pFuncTable->SetMode   = hb_gt_wvw_SetMode;
-   pFuncTable->GetBlink  = hb_gt_wvw_GetBlink;
-   pFuncTable->SetBlink  = hb_gt_wvw_SetBlink;
-   pFuncTable->Version   = hb_gt_wvw_Version;
-   pFuncTable->Box       = hb_gt_wvw_Box;
-   pFuncTable->HorizLine = hb_gt_wvw_HorizLine;
-   pFuncTable->VertLine  = hb_gt_wvw_VertLine;
-   pFuncTable->OutStd    = hb_gt_wvw_OutStd;
-   pFuncTable->OutErr    = hb_gt_wvw_OutErr;
-   pFuncTable->Tone      = hb_gt_wvw_Tone;
-   pFuncTable->ReadKey   = hb_gt_wvw_ReadKey;
-   pFuncTable->Info      = hb_gt_wvw_Info;
-
-   pFuncTable->GetChar    = hb_gt_wvw_GetChar;
-   pFuncTable->PutChar    = hb_gt_wvw_PutChar;
-   pFuncTable->CheckPos   = hb_gt_wvw_CheckPos;
-   pFuncTable->GetSize    = hb_gt_wvw_GetSize;
-   pFuncTable->Save       = hb_gt_wvw_Save;
-   pFuncTable->Rest       = hb_gt_wvw_Rest;
-   pFuncTable->ExposeArea = hb_gt_wvw_ExposeArea;
-
-
-   /* Graphics API */
-   pFuncTable->GfxPrimitive = hb_gt_wvw_gfxPrimitive;
-
-   pFuncTable->MouseInit        = hb_gt_wvw_mouse_Init;
-   pFuncTable->MouseExit        = hb_gt_wvw_mouse_Exit;
-   pFuncTable->MouseIsPresent   = hb_gt_wvw_mouse_IsPresent;
-   pFuncTable->MouseCol         = hb_gt_wvw_mouse_Col;
-   pFuncTable->MouseRow         = hb_gt_wvw_mouse_Row;
-   pFuncTable->MouseSetPos      = hb_gt_wvw_mouse_SetPos;
-   pFuncTable->MouseGetPos      = hb_gt_wvw_mouse_GetPos;
-   pFuncTable->MouseCountButton = hb_gt_wvw_mouse_CountButton;
-   pFuncTable->MouseButtonState = hb_gt_wvw_mouse_ButtonState;
-
-   return TRUE;
-}
-
-#include "hbgtreg.h"
 
 /* GetSet Functions for static Variable */
 
@@ -11187,3 +11126,83 @@ LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
  * TODO: should be moved to separate modul. totally independent of GT.
  *
  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
+static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+{
+    HB_TRACE( HB_TR_ALWAYS, ( "hb_gtFnInit( %p )", pFuncTable ) );
+    log_printf("hb_gt_FuncInit INIT!!!!!!!!!!!!!!!!");
+
+   pFuncTable->Init   = hb_gt_wvw_Init;
+   pFuncTable->Exit   = hb_gt_wvw_Exit;
+   pFuncTable->MaxCol = hb_gt_wvw_MaxCol;
+   pFuncTable->MaxRow = hb_gt_wvw_MaxRow;
+
+   pFuncTable->SetPos         = hb_gt_wvw_SetPos;
+   pFuncTable->IsColor        = hb_gt_wvw_IsColor;
+   pFuncTable->GetCursorStyle = hb_gt_wvw_GetCursorStyle;
+   pFuncTable->SetCursorStyle = hb_gt_wvw_SetCursorStyle;
+   pFuncTable->DispBegin      = hb_gt_wvw_DispBegin;
+   pFuncTable->DispEnd        = hb_gt_wvw_DispEnd;
+   pFuncTable->DispCount      = hb_gt_wvw_DispCount;
+   pFuncTable->Replicate      = hb_gt_wvw_Replicate;
+   pFuncTable->WriteAt        = hb_gt_wvw_WriteAt;
+   pFuncTable->PutText        = hb_gt_wvw_PutText;
+   pFuncTable->SetAttribute   = hb_gt_wvw_SetAttribute;
+/*  pFuncTable->Scroll                = hb_gt_wvw_Scroll; */
+   pFuncTable->SetMode   = hb_gt_wvw_SetMode;
+   pFuncTable->GetBlink  = hb_gt_wvw_GetBlink;
+   pFuncTable->SetBlink  = hb_gt_wvw_SetBlink;
+   pFuncTable->Version   = hb_gt_wvw_Version;
+   pFuncTable->Box       = hb_gt_wvw_Box;
+   pFuncTable->HorizLine = hb_gt_wvw_HorizLine;
+   pFuncTable->VertLine  = hb_gt_wvw_VertLine;
+   pFuncTable->OutStd    = hb_gt_wvw_OutStd;
+   pFuncTable->OutErr    = hb_gt_wvw_OutErr;
+   pFuncTable->Tone      = hb_gt_wvw_Tone;
+   pFuncTable->ReadKey   = hb_gt_wvw_ReadKey;
+   pFuncTable->Info      = hb_gt_wvw_Info;
+
+   pFuncTable->GetChar    = hb_gt_wvw_GetChar;
+   pFuncTable->PutChar    = hb_gt_wvw_PutChar;
+   pFuncTable->CheckPos   = hb_gt_wvw_CheckPos;
+   pFuncTable->GetSize    = hb_gt_wvw_GetSize;
+   pFuncTable->Save       = hb_gt_wvw_Save;
+   pFuncTable->Rest       = hb_gt_wvw_Rest;
+   pFuncTable->ExposeArea = hb_gt_wvw_ExposeArea;
+
+
+   /* Graphics API */
+   pFuncTable->GfxPrimitive = hb_gt_wvw_gfxPrimitive;
+
+   pFuncTable->MouseInit        = hb_gt_wvw_mouse_Init;
+   pFuncTable->MouseExit        = hb_gt_wvw_mouse_Exit;
+   pFuncTable->MouseIsPresent   = hb_gt_wvw_mouse_IsPresent;
+   pFuncTable->MouseCol         = hb_gt_wvw_mouse_Col;
+   pFuncTable->MouseRow         = hb_gt_wvw_mouse_Row;
+   pFuncTable->MouseSetPos      = hb_gt_wvw_mouse_SetPos;
+   pFuncTable->MouseGetPos      = hb_gt_wvw_mouse_GetPos;
+   pFuncTable->MouseCountButton = hb_gt_wvw_mouse_CountButton;
+   pFuncTable->MouseButtonState = hb_gt_wvw_mouse_ButtonState;
+
+   return TRUE;
+}
+
+#include "hbgtreg.h"
+
+
+
