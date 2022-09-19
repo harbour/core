@@ -15,7 +15,8 @@
 -cflag={allwin}-D_WINDOWS
 -cflag=-DCMAKE_DEBUG
 
--olib/${hb_plat}/${hb_comp}/${hb_name}
+#-olib/${hb_plat}/${hb_comp}/${hb_name}
+-obuild/${hb_comp}/${hb_name}
 
 # Fran: Whats that? -w3 == Warning level   -es2???
 -w3 -es2
@@ -48,20 +49,14 @@ nap_window.c
 nap_menuvert.c
 
 
-napdraw.c
-naputils.c
-checkbox.c
-editbox.c
-menubar.c
-pushbut.c
-statbar.c
-toolbar.c
 
 # NOTE: Due to large quantity of unprecise code, it doesn't build in C++ mode.
 # Fran: Perfect, for the moment only ANSI-C
 -cpp=no
 
 -hbx=${hb_name}.hbx
-${hb_name}.hbx
-$hb_pkg_dynlib.hbm
-$hb_pkg_install.hbm
+
+
+#${hb_name}.hbx
+#$hb_pkg_dynlib.hbm
+#$hb_pkg_install.hbm
