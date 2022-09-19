@@ -843,158 +843,27 @@ font_destroy(&s_pWvwData->s_pNappGlobalFont);
 }
 
 
-void hb_gt_wvw_SetPos( PHB_GT pGT, int iRow, int iCol )
-{
-   int i_Row = iRow;
-   int i_Col = iCol;
-
-   pGT->iRow = iRow;
-   pGT->iCol = iCol;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_SetPos( %hd, %hd )", iRow, iCol ) );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCPrologue( 2, &i_Row, &i_Col, NULL, NULL );
-
-   hb_gt_wvw_vSetPos( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], i_Row, i_Col );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCEpilogue();
-}
 
 
-static int hb_gt_wvw_MaxCol( PHB_GT pGT )
-{
-   HB_SYMBOL_UNUSED( pGT );
-   return s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->COLS - 1;
-}
 
 
-static int hb_gt_wvw_MaxRow( PHB_GT pGT )
-{
-   HB_SYMBOL_UNUSED( pGT );
-   return s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->ROWS - 1;
-}
 
 
-BOOL hb_gt_wvw_IsColor( PHB_GT pGT )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_IsColor()" ) );
 
-   HB_SYMBOL_UNUSED( pGT );
-
-   return TRUE;
-}
-
-
-static int hb_gt_wvw_GetCursorStyle( PHB_GT pGT  )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_GetCursorStyle()" ) );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   return s_iCursorStyle;
-}
 
 
 /*NOTE: works on TOPMOST window, NOT Current Window!
  *      (caret exists only in TOPMOST window)
  */
 
-static void hb_gt_wvw_SetCursorStyle( PHB_GT pGT, int iStyle )
-{
-   BOOL       bCursorOn = TRUE;
-   WIN_DATA * pWindowData;
-   USHORT     usFullSize;
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_SetCursorStyle( %hu )", iStyle ) );
-
-   pWindowData = ( WIN_DATA * ) s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ];
-   usFullSize  = ( USHORT ) ( s_pWvwData->s_bVertCaret ? pWindowData->PTEXTSIZE.x : pWindowData->PTEXTSIZE.y );
-
-   s_iCursorStyle = iStyle;
-
-   switch( iStyle )
-   {
-      case SC_NONE:
-         pWindowData->CaretSize = 0;
-         bCursorOn = FALSE;
-         break;
-      case SC_INSERT:
-         pWindowData->CaretSize = ( usFullSize / 2 );
-         break;
-      case SC_SPECIAL1:
-         pWindowData->CaretSize = usFullSize;
-         break;
-      case SC_SPECIAL2:
-         pWindowData->CaretSize = -( usFullSize / 2 );
-         break;
-      case SC_NORMAL:
-      default:
-         pWindowData->CaretSize = 2;
-         break;
-   }
-
-   if( bCursorOn )
-   {
-      if( ! s_pWvwData->s_bVertCaret )
-         s_pWvwData->s_sApp->CaretExist = CreateCaret( pWindowData->hWnd, ( HBITMAP ) NULL, pWindowData->PTEXTSIZE.x, pWindowData->CaretSize );
-      else
-         s_pWvwData->s_sApp->CaretExist = CreateCaret( pWindowData->hWnd, ( HBITMAP ) NULL, pWindowData->CaretSize, pWindowData->PTEXTSIZE.y );
-   }
-   hb_gt_wvwSetCaretOn( pWindowData, bCursorOn );
-}
 
 
-static void hb_gt_wvw_DispBegin( PHB_GT pGT )
-{
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_DispBegin()" ) );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   hb_gt_wvw_vDispBegin( s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ] );
-}
 
 
-static void hb_gt_wvw_DispEnd( PHB_GT pGT )
-{
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_DispEnd()" ) );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   hb_gt_wvw_vDispEnd( s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ] );
-}
 
 
-static int hb_gt_wvw_DispCount( PHB_GT pGT )
-{
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_DispCount()" ) );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   return hb_gt_wvw_usDispCount( s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ] );
-}
 
 
-static void hb_gt_wvw_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, BYTE bAttr, USHORT usChar, ULONG ulLen )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Replicate( %hu, %hu, %hu, %i, %lu )", iRow, iCol, bColor, bAttr, usChar, ulLen ) );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCPrologue( 2, &iRow, &iCol, NULL, NULL );
-
-   hb_gt_wvw_vReplicate( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], iRow, iCol, bColor, bAttr, usChar, ulLen );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCEpilogue();
-}
 
 
 static void hb_gt_wvw_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const char * pText, ULONG ulLen )
@@ -11137,8 +11006,105 @@ LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
 
 
+/*---------------------------------------------------------------------------*/
 
+static int hb_gtnap_MaxCol( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_MaxCol()");
+    return 100;
+}
 
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_MaxRow( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_MaxRow()");
+    return 25;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_SetPos(%d, %d)", iRow, iCol);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static BOOL hb_gtnap_IsColor( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_IsColor()");
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_GetCursorStyle( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_GetCursorStyle()");
+    return SC_NORMAL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_SetCursorStyle( PHB_GT pGT, int iStyle )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_GetCursorStyle(%d)", iStyle);
+
+    switch( iStyle )
+    {
+        case SC_NONE:
+            break;
+        case SC_INSERT:
+            break;
+        case SC_SPECIAL1:
+            break;
+        case SC_SPECIAL2:
+            break;
+        case SC_NORMAL:
+        default:
+            break;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_DispBegin( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_DispBegin()");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_DispEnd( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_DispEnd()");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_DispCount( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_DispCount()");
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, BYTE bAttr, USHORT usChar, ULONG ulLen )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_Replicate(%d, %d, %d, %d, %d, %d)", iRow, iCol, bColor, bAttr, usChar, ulLen);
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -11149,17 +11115,19 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
    pFuncTable->Init   = hb_gt_wvw_Init;
    pFuncTable->Exit   = hb_gt_wvw_Exit;
-   pFuncTable->MaxCol = hb_gt_wvw_MaxCol;
-   pFuncTable->MaxRow = hb_gt_wvw_MaxRow;
+   pFuncTable->MaxCol = hb_gtnap_MaxCol;
+   pFuncTable->MaxRow = hb_gtnap_MaxRow;
+   pFuncTable->SetPos = hb_gtnap_SetPos;
+   pFuncTable->IsColor = hb_gtnap_IsColor;
+   pFuncTable->GetCursorStyle = hb_gtnap_GetCursorStyle;
+   pFuncTable->SetCursorStyle = hb_gtnap_SetCursorStyle;
+   pFuncTable->DispBegin = hb_gtnap_DispBegin;
+   pFuncTable->DispEnd = hb_gtnap_DispEnd;
+   pFuncTable->DispCount = hb_gtnap_DispCount;
+   pFuncTable->Replicate = hb_gtnap_Replicate;
 
-   pFuncTable->SetPos         = hb_gt_wvw_SetPos;
-   pFuncTable->IsColor        = hb_gt_wvw_IsColor;
-   pFuncTable->GetCursorStyle = hb_gt_wvw_GetCursorStyle;
-   pFuncTable->SetCursorStyle = hb_gt_wvw_SetCursorStyle;
-   pFuncTable->DispBegin      = hb_gt_wvw_DispBegin;
-   pFuncTable->DispEnd        = hb_gt_wvw_DispEnd;
-   pFuncTable->DispCount      = hb_gt_wvw_DispCount;
-   pFuncTable->Replicate      = hb_gt_wvw_Replicate;
+
+
    pFuncTable->WriteAt        = hb_gt_wvw_WriteAt;
    pFuncTable->PutText        = hb_gt_wvw_PutText;
    pFuncTable->SetAttribute   = hb_gt_wvw_SetAttribute;
