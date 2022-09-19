@@ -2,7 +2,7 @@
     This is part of gtnap
 */
 
-#include "hbgtnap.h"
+#include "gtnap.h"
 #include "nappgui.h"
 
 /*---------------------------------------------------------------------------*/

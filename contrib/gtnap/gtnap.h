@@ -93,7 +93,7 @@
 #include "hbstack.h"
 #include "hbwinuni.h"
 
-#include "hbole.h"
+//#include "hbole.h"
 
 #include <windows.h>
 #include <stdlib.h>
@@ -801,7 +801,6 @@ extern HB_EXPORT void          hb_gt_wvwDoProcessMessages( UINT usWinNum );
 extern HB_EXPORT BOOL          hb_gt_wvwSetMouseMove( UINT usWinNum, BOOL bHandleEvent );
 extern HB_EXPORT BOOL          hb_gt_wvwEnableShortCuts( UINT usWinNum, BOOL bEnable );
 extern HB_EXPORT BOOL          hb_gt_wvwDrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const char * image, BOOL bTransparent );
-extern HB_EXPORT BOOL          hb_gt_wvwRenderPicture( UINT usWinNum, int x1, int y1, int wd, int ht, IPicture * iPicture, BOOL bTransp );
 extern HB_EXPORT WIN_DATA *    hb_gt_wvwGetGlobalData( UINT usWinNum );
 extern HB_EXPORT BOOL          hb_gt_wvwSetColorData( int iIndex, COLORREF ulCr );
 extern HB_EXPORT void          hb_gt_wvwDrawBoxRaised( UINT usWinNum, int iTop, int iLeft, int iBottom, int iRight, BOOL bTight );

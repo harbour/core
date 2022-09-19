@@ -5,7 +5,7 @@
 
 // NAppGUI-Layout wrapper for Harbour
 // https://nappgui.com/en/gui/layout.html
-#include "hbgtnap.h"
+#include "gtnap.h"
 #include "nappgui.h"
 
 /*---------------------------------------------------------------------------*/

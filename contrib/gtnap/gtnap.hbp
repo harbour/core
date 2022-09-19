@@ -27,28 +27,22 @@
 # Fran: Perfect, for the moment only Windows. I want to see the error when I compile on Linux/macOS
 "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform. See gtnap.hbp -stop"
 
-gtnapd.c
-
-nap_event.c
-nap_color.c
-nap_image.c
-nap_font.c
-
-nap_global.c
-
+gtnap.c
 nap_button.c
+nap_color.c
 nap_edit.c
+nap_event.c
+nap_font.c
+nap_global.c
+nap_image.c
+nap_imageview.c
 nap_label.c
 nap_layout.c
-nap_imageview.c
+nap_menuvert.c
 nap_panel.c
 nap_tableview.c
 nap_textview.c
 nap_window.c
-
-nap_menuvert.c
-
-
 
 # NOTE: Due to large quantity of unprecise code, it doesn't build in C++ mode.
 # Fran: Perfect, for the moment only ANSI-C

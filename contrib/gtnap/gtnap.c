@@ -74,12 +74,8 @@
  *
  */
 
-#include "hbgtnap.h"
+#include "gtnap.h"
 #include "nappgui.h"
-
-#if defined( __WATCOMC__ )
-   #include <conio.h>
-#endif
 
 #include "hbgfxdef.ch"
 #define     SubclassWindow( hwnd, lpfn )       \
@@ -88,70 +84,8 @@
 
 /* settable by user: ****************************************************/
 
-#if 0
-static UINT s_uiPaintRefresh = 100;        /* milliseconds between timer check */
 
-static BOOL s_bMainCoordMode = FALSE;      /* in this mode, all HB_GT_FUNC() uses Main Window's coordinate */
 
-static BOOL s_bVertCaret = FALSE;          /* if TRUE, caret is in Vertical style */
-
-static BOOL s_bNOSTARTUPSUBWINDOW = FALSE; /* if TRUE, subwindow will not be displayed during opening */
-/* use wvw_NoStartupSubWindow() to check/set it */
-
-static BOOL s_bDefCentreWindow = FALSE;  /* default CentreWindow setting for subwindows */
-
-static BOOL s_bDefHCentreWindow = FALSE; /* default HCentreWindow setting for subwindows */
-static BOOL s_bDefVCentreWindow = FALSE; /* default VCentreWindow setting for subwindows */
-
-static int s_byDefLineSpacing = 0;       /* default line spacing */
-
-static int s_iDefLSpaceColor = -1;       /* if >= 0 this will be the color index
-                                            for spacing between lines */
-
-static BOOL s_bAllowNonTop = FALSE;      /* allow non-topmost window's control to
-                                            accept input */
-
-static BOOL s_bRecurseCBlock = FALSE;    /* allow control's codeblock
-                                            to recurse */
-
-static LOGFONT s_lfPB = { 0 };           /* default font for pushbuttons */
-
-static LOGFONT s_lfSB = { 0 };           /* default font for statusbar  */
-static LOGFONT s_lfCB = { 0 };           /* default font for comboboxes */
-
-static LOGFONT s_lfEB = { 0 };           /* default font for editboxes */
-
-static LOGFONT s_lfCX = { 0 };           /* font for 'focused'checkbox */
-static LOGFONT s_lfST = { 0 };           /* font for static control    */
-
-static HWND hWndTT = 0;                  /* Window handle Tool Tip     */
-#endif
-
-/* read only by user ***/
-
-/* for GTWVW private use: ***********************************************/
-#if 0
-static BOOL s_bQuickSetMode = FALSE;   /* quick SetMode(), to reset MaxRow() and MaxCol() only */
-
-static BOOL s_bFlashingWindow = FALSE; /* topmost window is flashing
-                                          due to invalid input on other
-                                          window */
-
-static int s_iScrolling        = 0;    /* scrollbar is scrolling */
-static int s_iWrongButtonUp    = 0;    /* number of consecutive scrollbar's WM_LBUTTONUP encountered by gtProcessMessages */
-static int s_iMaxWrongButtonUp = 500;  /* max number of s_iWrongButtonUp. If it goes higher than this number,
-                                          the scrollbar is forced to stop */
-
-static TCHAR szAppName[]     = TEXT( "Harbour WVW" );
-static TCHAR szSubWinName[]  = TEXT( "Harbour WVW subwindows" );
-static BOOL  s_bSWRegistered = FALSE;
-
-static UINT s_usNumWindows;                     /*number of windows                         */
-static UINT s_usCurWindow = 0;                  /*current window handled by HB_GT_FUNC(...) */
-
-static WIN_DATA * s_pWindows[ WVW_MAXWINDOWS ]; /*array of WIN_DATA                         */
-static APP_DATA   s_sApp;                       /*application wide vars                     */
-#endif
 WVW_DATA *      s_pWvwData;
 static BOOL     bStartMode = TRUE;
 static COLORREF _COLORS[]  = {
@@ -711,6 +645,10 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
    CONTROL_DATA *   pcd;
    const GuiContext *context = NULL;
 
+
+   log_printf("gtnap: hb_gt_wvw_Exit()");
+
+
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Exit()" ) );
 
    HB_GTSUPER_EXIT( pGT );
@@ -895,7 +833,6 @@ font_destroy(&s_pWvwData->s_pNappGlobalFont);
 
 
 
-   log_printf("gtnap: hb_gt_wvw_Exit()");
    //window_destroy(&i_WINDOW);
 
 //    context = gui_context_get_current();
@@ -6977,91 +6914,6 @@ IPicture * hb_gt_wvwLoadPicture( const char * image )
 }
 
 
-BOOL hb_gt_wvwRenderPicture( UINT usWinNum, int x1, int y1, int wd, int ht, IPicture * iPicture, BOOL bTransp )
-{
-   LONG       lWidth, lHeight;
-   int        x, y, xe, ye;
-   int        c   = x1;
-   int        r   = y1;
-   int        dc  = wd;
-   int        dr  = ht;
-   int        tor = 0;
-   int        toc = 0;
-   HRGN       hrgn1;
-   POINT      lpp         = { 0 };
-   BOOL       bResult     = FALSE;
-   WIN_DATA * pWindowData = s_pWvwData->s_pWindows[ usWinNum ];
-
-   if( iPicture )
-   {
-      /* if bTransp, we use different method */
-      if( bTransp )
-      {
-         OLE_HANDLE oHtemp;
-         HDC        hdc;
-
-         iPicture->lpVtbl->get_Handle( iPicture, &oHtemp );
-
-         if( oHtemp )
-         {
-            hdc = GetDC( pWindowData->hWnd );
-            DrawTransparentBitmap( hdc,
-                                   ( HBITMAP ) oHtemp,
-                                   ( short ) x1,
-                                   ( short ) y1,
-                                   wd,
-                                   ht );
-            ReleaseDC( pWindowData->hWnd, hdc );
-
-            bResult = TRUE;
-         }
-         else
-            bResult = FALSE;
-         return bResult;
-      }
-      /* endif bTransp, we use different method */
-
-      iPicture->lpVtbl->get_Width( iPicture, &lWidth );
-      iPicture->lpVtbl->get_Height( iPicture, &lHeight );
-
-      if( dc == 0 )
-         dc = ( int ) ( ( float ) dr * lWidth / lHeight );
-      if( dr == 0 )
-         dr = ( int ) ( ( float ) dc * lHeight / lWidth );
-      if( tor == 0 )
-         tor = dr;
-      if( toc == 0 )
-         toc = dc;
-      x  = c;
-      y  = r;
-      xe = c + toc - 1;
-      ye = r + tor - 1;
-
-      GetViewportOrgEx( pWindowData->hdc, &lpp );
-
-      hrgn1 = CreateRectRgn( c + lpp.x, r + lpp.y, xe + lpp.x, ye + lpp.y );
-      SelectClipRgn( pWindowData->hdc, hrgn1 );
-
-      while( x < xe )
-      {
-         while( y < ye )
-         {
-            iPicture->lpVtbl->Render( iPicture, pWindowData->hdc, x, y, dc, dr, 0,
-                                      lHeight, lWidth, -lHeight, NULL );
-            y += dr;
-         }
-         y  = r;
-         x += dc;
-      }
-
-      SelectClipRgn( pWindowData->hdc, NULL );
-      DeleteObject( hrgn1 );
-
-      bResult = TRUE;
-   }
-
-   return bResult;
-}
 
 
 WIN_DATA * hb_gt_wvwGetGlobalData( UINT usWinNum )
@@ -7228,7 +7080,8 @@ void hb_gt_wvwDrawOutline( UINT usWinNum, int iTop, int iLeft, int iBottom, int 
 /* static void gtFnInit( PHB_GT_FUNCS gt_funcs ) */
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gtFnInit( %p )", pFuncTable ) );
+   HB_TRACE( HB_TR_ALWAYS, ( "hb_gtFnInit( %p )", pFuncTable ) );
+    log_printf("hb_gt_FuncInit INIT!!!!!!!!!!!!!!!!");
 
    pFuncTable->Init   = hb_gt_wvw_Init;
    pFuncTable->Exit   = hb_gt_wvw_Exit;

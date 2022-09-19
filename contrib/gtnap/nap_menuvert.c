@@ -8,7 +8,7 @@
 *
 */
 
-#include "hbgtnap.h"
+#include "gtnap.h"
 #include "nappgui.h"
 
 
