@@ -884,32 +884,32 @@ font_destroy(&s_pWvwData->s_pNappGlobalFont);
 
 
 
-static BOOL hb_gt_wvw_GetBlink( PHB_GT pGT )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_GetBlink()" ) );
-   HB_SYMBOL_UNUSED( pGT );
-   return TRUE;
-}
+// static BOOL hb_gt_wvw_GetBlink( PHB_GT pGT )
+// {
+//    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_GetBlink()" ) );
+//    HB_SYMBOL_UNUSED( pGT );
+//    return TRUE;
+// }
 
 
-static void hb_gt_wvw_SetBlink( PHB_GT pGT, BOOL bBlink )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_SetBlink( %d )", ( int ) bBlink ) );
-   HB_SYMBOL_UNUSED( pGT );
-   HB_SYMBOL_UNUSED( bBlink );
-}
+// static void hb_gt_wvw_SetBlink( PHB_GT pGT, BOOL bBlink )
+// {
+//    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_SetBlink( %d )", ( int ) bBlink ) );
+//    HB_SYMBOL_UNUSED( pGT );
+//    HB_SYMBOL_UNUSED( bBlink );
+// }
 
 
-static const char * hb_gt_wvw_Version( PHB_GT pGT, int iType )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Version()" ) );
-   HB_SYMBOL_UNUSED( pGT );
+// static const char * hb_gt_wvw_Version( PHB_GT pGT, int iType )
+// {
+//    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Version()" ) );
+//    HB_SYMBOL_UNUSED( pGT );
 
-   if( iType == 0 )
-      return HB_GT_DRVNAME( HB_GT_NAME );
+//    if( iType == 0 )
+//       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Windows buffered WVW";
-}
+//    return "Harbour Terminal: Windows buffered WVW";
+// }
 
 
 
@@ -962,22 +962,22 @@ static BOOL hb_gt_wvwGetCharFromInputQueue( int * c )
 }
 
 
-static int hb_gt_wvw_ReadKey( PHB_GT pGT, int eventmask )
-{
-   int  c = 0;
-   BOOL bKey;
+// static int hb_gt_wvw_ReadKey( PHB_GT pGT, int eventmask )
+// {
+//    int  c = 0;
+//    BOOL bKey;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_ReadKey( %d )", ( int ) eventmask ) );
+//    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_ReadKey( %d )", ( int ) eventmask ) );
 
-   HB_SYMBOL_UNUSED( pGT );
-   HB_SYMBOL_UNUSED( eventmask );
+//    HB_SYMBOL_UNUSED( pGT );
+//    HB_SYMBOL_UNUSED( eventmask );
 
-   hb_gt_wvwProcessMessages( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ] );
+//    hb_gt_wvwProcessMessages( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ] );
 
-   bKey = hb_gt_wvwGetCharFromInputQueue( &c );
+//    bKey = hb_gt_wvwGetCharFromInputQueue( &c );
 
-   return bKey ? c : 0;
-}
+//    return bKey ? c : 0;
+// }
 
 
 /*                                                                   */
@@ -10843,7 +10843,163 @@ static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, USHO
     HB_SYMBOL_UNUSED( bChar );
 }
 
+/*---------------------------------------------------------------------------*/
 
+static BOOL hb_gtnap_GetBlink( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_GetBlink()");
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_SetBlink( PHB_GT pGT, BOOL bBlink )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_SetBlink(%d)", bBlink);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static const char * hb_gtnap_Version( PHB_GT pGT, int iType )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_Version(%d)", iType);
+    if( iType == 0 )
+        return HB_GT_DRVNAME( HB_GT_NAME );
+
+    return "Harbour Terminal: GTNAP";
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_OutStd(%s (%d))", pbyStr, ulLen);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_OutErr( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_OutErr(%s (%d))", pbyStr, ulLen);
+}
+
+/*---------------------------------------------------------------------------*/
+// dDuration is in 'Ticks' (18.2 per second)
+static void hb_gtnap_Tone( PHB_GT pGT, double dFrequency, double dDuration )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_Tone(%.3f, %.3f)", dFrequency, dDuration);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_Info(%d)", iType);
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_mouse_Init( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_mouse_Init()");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_mouse_Exit( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_mouse_Exit()");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static BOOL hb_gtnap_mouse_IsPresent( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_mouse_IsPresent()");
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_mouse_Col( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_mouse_Col()");
+    return 1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_mouse_Row( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_mouse_Row()");
+    return 1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_mouse_GetPos()");
+    *piRow = 1;
+    *piCol = 1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_mouse_SetPos(%d, %d)", iRow, iCol);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_mouse_CountButton( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_mouse_CountButton()");
+    return 3;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static BOOL hb_gtnap_mouse_ButtonState( PHB_GT pGT, int iButton )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_mouse_ButtonState(%d)", iButton);
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_gfxPrimitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_gfxPrimitive(%d, %d, %d, %d, %d, %d)", iType, iTop, iLeft, iBottom, iRight, iColor);
+    return 1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_gfxText( PHB_GT pGT, int iTop, int iLeft, char * cBuf, int iColor, int iSize, int iWidth )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_gfxText(%d, %d, %s, %d, %d, %d)", iTop, iLeft, cBuf, iColor, iSize, iWidth);
+}
 
 
 
@@ -10860,8 +11016,6 @@ static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, USHO
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
     log_printf("hb_gt_FuncInit()");
-    // log_printf("PHB_GT_FUNCS pFuncTable is zero: %d", bmem_is_zero((const byte_t*)pFuncTable, sizeof(HB_GT_FUNCS)));
-    // cassert(bmem_is_zero((const byte_t*)pFuncTable, sizeof(HB_GT_FUNCS)));
 
     pFuncTable->Lock = hb_gtnap_Lock;
     pFuncTable->Unlock = hb_gtnap_Unlock;
@@ -10934,35 +11088,68 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->BoxS = NULL;
     pFuncTable->HorizLine = hb_gtnap_HorizLine;
     pFuncTable->VertLine  = hb_gtnap_VertLine;
+    pFuncTable->GetBlink = hb_gtnap_GetBlink;
+    pFuncTable->SetBlink = hb_gtnap_SetBlink;
+    // pFuncTable->SetSnowFlag = NULL;
+    pFuncTable->Version = hb_gtnap_Version;
+    // pFuncTable->Suspend = NULL;
+    // pFuncTable->Resume = NULL;
+    // pFuncTable->PreExt = NULL;
+    // pFuncTable->PostExt = NULL;
+    pFuncTable->OutStd = hb_gtnap_OutStd;
+    pFuncTable->OutErr = hb_gtnap_OutErr;
+    pFuncTable->Tone = hb_gtnap_Tone;
+    pFuncTable->Bell = NULL;
+    pFuncTable->Info = hb_gtnap_Info;
+    pFuncTable->Alert = NULL;
+    pFuncTable->SetFlag = NULL;
 
+    /* internationalization */
+    // pFuncTable->SetDispCP = NULL;
+    // pFuncTable->SetKeyCP = NULL;
 
+    /* keyboard */
+    // pFuncTable->ReadKey = NULL;
+    // pFuncTable->InkeyGet = NULL;
+    // pFuncTable->InkeyPut = NULL;
+    // pFuncTable->InkeyIns = NULL;
+    // pFuncTable->InkeyLast = NULL;
+    // pFuncTable->InkeyNext = NULL;
+    // pFuncTable->InkeyPoll = NULL;
+    // pFuncTable->InkeySetText = NULL;
+    // pFuncTable->InkeySetLast = NULL;
+    // pFuncTable->InkeyReset = NULL;
+    // pFuncTable->InkeyExit = NULL;
 
+    /* mouse */
+    pFuncTable->MouseInit = hb_gtnap_mouse_Init;
+    pFuncTable->MouseExit = hb_gtnap_mouse_Exit;
+    pFuncTable->MouseIsPresent = hb_gtnap_mouse_IsPresent;
+    // pFuncTable->MouseShow = NULL;
+    // pFuncTable->MouseHide = NULL;
+    // pFuncTable->MouseGetCursor = NULL;
+    // pFuncTable->MouseSetCursor = NULL;
+    pFuncTable->MouseCol = hb_gtnap_mouse_Col;
+    pFuncTable->MouseRow = hb_gtnap_mouse_Row;
+    // pFuncTable->MouseGetPos = hb_gtnap_mouse_GetPos;
+    // pFuncTable->MouseSetPos = hb_gtnap_mouse_SetPos;
+    // pFuncTable->MouseSetBounds = NULL;
+    // pFuncTable->MouseGetBounds = NULL;
+    // pFuncTable->MouseStorageSize = NULL;
+    // pFuncTable->MouseSaveState = NULL;
+    // pFuncTable->MouseRestoreState = NULL;
+    // pFuncTable->MouseGetDoubleClickSpeed = NULL;
+    // pFuncTable->MouseSetDoubleClickSpeed = NULL;
+    pFuncTable->MouseCountButton = hb_gtnap_mouse_CountButton;
+    pFuncTable->MouseButtonState = hb_gtnap_mouse_ButtonState;
+    // pFuncTable->MouseButtonPressed = NULL;
+    // pFuncTable->MouseButtonReleased = NULL;
+    // pFuncTable->MouseReadKey = NULL;
 
-
-
-   pFuncTable->GetBlink  = hb_gt_wvw_GetBlink;
-   pFuncTable->SetBlink  = hb_gt_wvw_SetBlink;
-   pFuncTable->Version   = hb_gt_wvw_Version;
-   pFuncTable->OutStd    = hb_gt_wvw_OutStd;
-   pFuncTable->OutErr    = hb_gt_wvw_OutErr;
-   pFuncTable->Tone      = hb_gt_wvw_Tone;
-   pFuncTable->ReadKey   = hb_gt_wvw_ReadKey;
-   pFuncTable->Info      = hb_gt_wvw_Info;
-
-
-
-   /* Graphics API */
-   pFuncTable->GfxPrimitive = hb_gt_wvw_gfxPrimitive;
-
-   pFuncTable->MouseInit        = hb_gt_wvw_mouse_Init;
-   pFuncTable->MouseExit        = hb_gt_wvw_mouse_Exit;
-   pFuncTable->MouseIsPresent   = hb_gt_wvw_mouse_IsPresent;
-   pFuncTable->MouseCol         = hb_gt_wvw_mouse_Col;
-   pFuncTable->MouseRow         = hb_gt_wvw_mouse_Row;
-   pFuncTable->MouseSetPos      = hb_gt_wvw_mouse_SetPos;
-   pFuncTable->MouseGetPos      = hb_gt_wvw_mouse_GetPos;
-   pFuncTable->MouseCountButton = hb_gt_wvw_mouse_CountButton;
-   pFuncTable->MouseButtonState = hb_gt_wvw_mouse_ButtonState;
+    /* Graphics API */
+    pFuncTable->GfxPrimitive = hb_gtnap_gfxPrimitive;
+    pFuncTable->GfxText = hb_gtnap_gfxText;
+    pFuncTable->WhoCares = NULL;
 
    return TRUE;
 }
