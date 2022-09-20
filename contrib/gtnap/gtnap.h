@@ -699,7 +699,6 @@ extern Listener *hb_gt_nap_wind_listener(const uint32_t codeBlockParamId, Window
 extern void hb_gt_nap_callback(GtNapCallback *callback, Event *e);
 
 
-extern void hb_gt_nap_runloop( void );
 
 extern WVW_DATA * hb_getWvwData( void );
 extern char * hb_gt_wvw_GetAppName( void );
@@ -779,5 +778,24 @@ extern HB_EXPORT IPicture *    rr_LoadPictureFromResource( const char * resname,
 extern HB_EXPORT IPicture *    rr_LoadPicture( const char * filename, LONG * lwidth, LONG * lheight );
 
 HB_EXTERN_END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+extern void hb_gtnap_runloop( void );
+
+
+
 
 #endif

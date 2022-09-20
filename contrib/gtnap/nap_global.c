@@ -29,7 +29,7 @@ HB_FUNC( NAP_GLOBAL_FONT )
 
 HB_FUNC( NAP_GLOBAL_RUNLOOP )
 {
-    hb_gt_nap_runloop();
+    hb_gtnap_runloop();
 }
 
 /*---------------------------------------------------------------------------*/
