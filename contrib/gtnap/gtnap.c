@@ -866,190 +866,22 @@ font_destroy(&s_pWvwData->s_pNappGlobalFont);
 
 
 
-static void hb_gt_wvw_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const char * pText, ULONG ulLen )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_PutText(%hu, %hu, %p, %lu, %hu)", iRow, iCol, pText, ulLen, bColor ) );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCPrologue( 2, &iRow, &iCol, NULL, NULL );
-
-   hb_gt_wvw_vPutText(  s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], ( USHORT ) iRow, ( USHORT ) iCol, ( USHORT ) iRow, ( USHORT ) ulLen == 0 ? ( USHORT ) 0 : ( USHORT ) iCol + ( ( USHORT ) ( ULONG ) ( ulLen ) ) - 1, pText, bColor );
 
 
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCEpilogue();
-}
-
-
-static void hb_gt_wvw_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_hb_gt_wvw_SetbColoribute( %hu, %hu, %hu, %hu, %hu", iTop, iLeft, iBottom, iRight, bColor ) );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCPrologue( 4, &iTop, &iLeft, &iBottom, &iRight );
-
-   hb_gt_wvw_vSetAttribute( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], iTop, iLeft, iBottom, iRight, bColor );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCEpilogue();
-}
 
 
 /*                                                                   */
 /*    copied from gtwin...                                           */
 /*                                                                   */
 
-static void hb_gt_wvw_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, USHORT bChar, int iRows, int iCols )
-{
-   LONG usSaveRow, usSaveCol;
-
-   BYTE   ucBlank[ WVW_CHAR_BUFFER ], ucBuff[ WVW_CHAR_BUFFER * 2 ];
-   BYTE * fpBlank;
-   BYTE * fpBuff;
-   int    iLength = ( iRight - iLeft ) + 1;
-   int    iCount, iColOld, iColNew, iColSize;
-   BOOL   bMalloc = FALSE;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Scroll( %hu, %hu, %hu, %hu, %hu, %hd, %hd )", iTop, iLeft, iBottom, iRight, bColor, iRows, iCols ) );
-
-   HB_SYMBOL_UNUSED( pGT );
-   HB_SYMBOL_UNUSED( bChar );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCPrologue( 4, &iTop, &iLeft, &iBottom, &iRight );
-
-   if( iLength > WVW_CHAR_BUFFER ) /* Avoid allocating memory if possible */
-   {
-      fpBlank = ( BYTE * ) hb_xgrab( iLength );
-      fpBuff  = ( BYTE * ) hb_xgrab( iLength * 2 );  /* *2 room for attribs */
-      bMalloc = TRUE;
-   }
-   else
-   {
-      fpBlank = ucBlank;
-      fpBuff  = ucBuff;
-   }
-
-   memset( fpBlank, hb_gtGetClearChar(), iLength );
-
-   iColOld  = iColNew = iLeft;
-   iColSize = iLength - 1;
-   if( iCols >= 0 )
-   {
-      iColOld  += iCols;
-      iColSize -= iCols;
-   }
-   else
-   {
-      iColNew  -= iCols;
-      iColSize += iCols;
-   }
-   /* use the ScrollWindowEx() where possible ( Optimised for Terminal Server )
-    * if both iCols & iRows are ZERO then the entire area is to be cleared and
-    * there is no advantage in using ScrollWindowEx()
-    */
-
-   s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->InvalidateWindow = hb_gt_wvw_usDispCount( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ] ) > 0 || ( ! iRows && ! iCols );
-
-   if( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->InvalidateWindow )
-      hb_gt_wvw_vDispBegin( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ] );
-
-   usSaveCol = s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->caretPos.x;
-   usSaveRow = s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->caretPos.y;
-   for( iCount = ( iRows >= 0 ? iTop : iBottom );
-        ( iRows >= 0 ? iCount <= iBottom : iCount >= iTop );
-        ( iRows >= 0 ? iCount++ : iCount-- ) )
-   {
-      int iRowPos = iCount + iRows;
-
-      /* Read the text to be scrolled into the current row */
-      if( ( iRows || iCols ) && iRowPos <= iBottom && iRowPos >= iTop )
-         hb_gt_wvw_vGetText( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], ( USHORT ) iRowPos, ( USHORT ) iColOld, ( USHORT ) iRowPos, ( USHORT ) iColOld + ( USHORT ) iColSize, fpBuff );
-
-      /* Blank the scroll region in the current row */
-      hb_gt_wvw_vPuts( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], iCount, iLeft, bColor, 0, fpBlank, iLength );
-
-      /* Write the scrolled text to the current row */
-      if( ( iRows || iCols ) && iRowPos <= iBottom && iRowPos >= iTop )
-         hb_gt_wvw_vPutText( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], ( USHORT ) iCount, ( USHORT ) iColNew, ( USHORT ) iCount, ( USHORT ) iColNew + ( USHORT ) iColSize, fpBuff, 0 );
-   }
-
-   hb_gt_wvw_vSetPos( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], usSaveRow, usSaveCol );
-
-   if( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->InvalidateWindow )
-      hb_gt_wvw_vDispEnd( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ] );
-
-   else
-   {
-      RECT cr = { 0 }, crInvalid = { 0 };
-
-      cr.left   = iLeft + ( iCols > 0 ? 1 : 0 );
-      cr.top    = iTop + ( iRows > 0 ? 1 : 0 );
-      cr.right  = iRight - ( iCols < 0 ? 1 : 0 );
-      cr.bottom = iBottom - ( iRows < 0 ? 1 : 0 );
-
-      cr = hb_gt_wvwGetXYFromColRowRect( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], cr );
-
-      cr.top -= ( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->byLineSpacing / 2 );
-
-      cr.bottom += ( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->byLineSpacing / 2 );
-
-      ScrollWindowEx( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->hWnd, -iCols * s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->PTEXTSIZE.x, -iRows * hb_wvw_LineHeight( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ] ), &cr, NULL, NULL, &crInvalid, 0 );
-      InvalidateRect( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->hWnd, &crInvalid, FALSE );
-      s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->InvalidateWindow = TRUE;
-
-   }
-   if( bMalloc )
-   {
-      hb_xfree( fpBlank );
-      hb_xfree( fpBuff );
-   }
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCEpilogue();
-
-#ifdef WVW_DEBUG
-   nCountScroll++;
-#endif
-}
 
 
 /*                                                                   */
 /*    resize the ( existing ) window                                 */
 /*                                                                   */
 
-static BOOL hb_gt_wvw_SetMode( PHB_GT pGT, int iRow, int iCol )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_SetMode( %hu, %hu )", iRow, iCol ) );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   if( s_pWvwData->s_bQuickSetMode ) /*this is eg. done when we are closing window
-                                      * we do nothing here, what we need is performed by GTAPI level
-                                      * ie. setting its s_height and s_width (= MaxRow() and MaxCol() )
-                                      */
-      return TRUE;
-
-   return hb_gt_wvw_bSetMode( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], ( USHORT ) iRow, ( USHORT ) iCol );
-}
 
 
-static void hb_gt_wvw_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText, ULONG ulLength )
-{
-    NapWinData *nap_data = NULL;
-   HB_GTSELF_PUTTEXT( pGT, iRow, iCol, ( BYTE ) HB_GTSELF_GETCOLOR( pGT ), pText, ulLength );
-
-   /* Finally, save the new cursor position, even if off-screen */
-   HB_GTSELF_SETPOS( pGT, iRow, iCol + ( int ) ulLength );
-
-//cassert_msg(FALSE, "hb_gt_wvw_WriteAt");
-    nap_data = hb_gt_nap_GetWindowData( 0 );
-    textview_printf(nap_data->terminal, "%s\n", pText);
-}
 
 
 static BOOL hb_gt_wvw_GetBlink( PHB_GT pGT )
@@ -1080,122 +912,6 @@ static const char * hb_gt_wvw_Version( PHB_GT pGT, int iType )
 }
 
 
-static void hb_gt_wvw_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const char * pbyFrame, int bColor )
-{
-   int i_Top    = ( iTop < 0 ? 0 : iTop );
-   int i_Left   = ( iLeft < 0 ? 0 : iLeft );
-   int i_Bottom = ( iBottom < 0 ? 0 : iBottom );
-   int i_Right  = ( iRight < 0 ? 0 : iRight );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCPrologue( 4, &i_Top, &i_Left, &i_Bottom, &i_Right );
-
-   hb_gt_wvw_usBox( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], i_Top, i_Left, i_Bottom, i_Right, pbyFrame, bColor );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCEpilogue();
-}
-
-static void hb_gt_wvw_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight, USHORT bChar, int bColor )
-{
-
-   int iWidth;
-   int i_Row   = ( iRow < 0 ? 0 : iRow );
-   int i_Left  = ( iLeft < 0 ? 0 : iLeft );
-   int i_Right = ( iRight < 0 ? 0 : iRight );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   if( s_pWvwData->s_bMainCoordMode )
-   {
-
-      if( i_Left > i_Right )
-      {
-         int temp;
-         temp    = i_Left;
-         i_Left  = i_Right;
-         i_Right = temp;
-      }
-      hb_gt_wvwFUNCPrologue( 4, &i_Row, &i_Left, NULL, &i_Right );
-   }
-
-   iWidth = s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->COLS;
-
-   if( i_Row < iWidth )
-   {
-
-      if( i_Left >= iWidth )
-         i_Left = iWidth - 1;
-
-      if( i_Right >= iWidth )
-         i_Right = iWidth - 1;
-      if( i_Left < i_Right )
-         hb_gt_wvw_vReplicate( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], i_Row, i_Left, bColor, HB_GT_ATTR_BOX, bChar, i_Right - i_Left + 1 );
-      else
-         hb_gt_wvw_vReplicate( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], i_Row, i_Right, bColor, HB_GT_ATTR_BOX, bChar, i_Left - i_Right + 1 );
-   }
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCEpilogue();
-}
-
-static void hb_gt_wvw_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, USHORT bChar, int bColor )
-{
-   int i_Width;
-   int i_Height;
-   int i_Row;
-   int i_Col    = ( iCol < 0 ? 0 : iCol );
-   int i_Top    = ( iTop < 0 ? 0 : iTop );
-   int i_Bottom = ( iBottom < 0 ? 0 : iBottom );
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   if( s_pWvwData->s_bMainCoordMode )
-   {
-
-      if( i_Top > i_Bottom )
-      {
-         int temp;
-         temp     = i_Top;
-         i_Top    = i_Bottom;
-         i_Bottom = temp;
-      }
-
-      hb_gt_wvwFUNCPrologue( 3, &i_Top, &i_Col, &i_Bottom, NULL );
-   }
-
-   i_Width  = s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->COLS;
-   i_Height = s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->ROWS;
-
-   if( i_Col < i_Width )
-   {
-
-      if( i_Top >= i_Height )
-         i_Top = i_Height - 1;
-
-      if( i_Bottom >= i_Height )
-         i_Bottom = i_Height - 1;
-      if( i_Top <= i_Bottom )
-         i_Row = i_Top;
-      else
-      {
-         i_Row    = i_Bottom;
-         i_Bottom = i_Top;
-      }
-
-      hb_gt_wvw_vDispBegin( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ] );
-
-      while( i_Row <= i_Bottom )
-         hb_gt_wvw_vxPutch( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], ( USHORT ) i_Row++, ( USHORT ) i_Col, bColor, bChar );
-
-      hb_gt_wvw_vDispEnd( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ] );
-   }
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCEpilogue();
-}
 
 
 static void hb_gt_wvw_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
@@ -5824,161 +5540,10 @@ static void  hb_gt_wvw_vReplicate( WIN_DATA * pWindowData, int iRow, int iCol, i
 }
 
 
-static BOOL hb_gt_wvw_GetChar( PHB_GT pGT, int iRow, int iCol,
-                               int * pbColor, BYTE * pbAttr, USHORT * pusChar )
-{
-   WIN_DATA * pWindowData;
-   long       lIndex;
 
-   HB_SYMBOL_UNUSED( pbAttr );
 
-   pWindowData = ( WIN_DATA * ) s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ];
 
-   HB_GTSELF_CHECKPOS( pGT, iRow, iCol, &lIndex );
 
-   if( lIndex < pWindowData->BUFFERSIZE )
-   {
-      *pusChar = pWindowData->pBuffer[ lIndex ];
-      *pbColor = pWindowData->pColors[ lIndex ];
-
-      return TRUE;
-   }
-   return FALSE;
-}
-
-static BOOL hb_gt_wvw_PutChar( PHB_GT pGT, int iRow, int iCol,
-                               int bColor, BYTE bAttr, USHORT usChar )
-{
-   WIN_DATA * pWindowData;
-   long       lIndex;
-
-   HB_SYMBOL_UNUSED( bAttr );
-
-   pWindowData = ( WIN_DATA * ) s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ];
-
-   HB_GTSELF_CHECKPOS( pGT, iRow, iCol, &lIndex );
-
-   if( lIndex < pWindowData->BUFFERSIZE )
-   {
-      pWindowData->pBuffer[ lIndex ] = ( BYTE ) usChar;
-      pWindowData->pColors[ lIndex ] = bColor;
-
-      return TRUE;
-   }
-   return FALSE;
-}
-
-static BOOL hb_gt_wvw_CheckPos( PHB_GT pGT, int iRow, int iCol, long * plIndex )
-{
-   WIN_DATA * pWindowData;
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   pWindowData = ( WIN_DATA * ) s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ];
-   *plIndex    = ( long ) hb_gt_wvwGetIndexForTextBuffer( pWindowData, ( USHORT ) iCol, ( USHORT ) iRow );
-
-   return TRUE;
-}
-
-static void hb_gt_wvw_GetSize( PHB_GT pGT, int * piRows, int  * piCols )
-{
-   WIN_DATA * pWindowData;
-
-   HB_SYMBOL_UNUSED( pGT );
-
-   pWindowData = ( WIN_DATA * ) s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ];
-
-   *piRows = pWindowData->ROWS;
-   *piCols = pWindowData->COLS;
-}
-
-static void hb_gt_wvw_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                            void * pBuffer )
-{
-   BYTE * pbyBuffer = ( BYTE * ) pBuffer;
-
-   int i_Top    = ( iTop < 0 ? 0 : iTop );
-   int i_Left   = ( iLeft < 0 ? 0 : iLeft );
-   int i_Bottom = ( iBottom < 0 ? 0 : iBottom );
-   int i_Right  = ( iRight < 0 ? 0 : iRight );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCPrologue( 4, &i_Top, &i_Left, &i_Bottom, &i_Right );
-
-   while( i_Top <= i_Bottom )
-   {
-      int    iColor;
-      USHORT usChar;
-      int    iCol;
-
-      for( iCol = i_Left; iCol <= i_Right; ++iCol )
-      {
-         if( ! HB_GTSELF_GETCHAR( pGT, i_Top, iCol, &iColor, NULL, &usChar ) )
-         {
-            usChar = ( USHORT ) HB_GTSELF_GETCLEARCHAR( pGT );
-            iColor = HB_GTSELF_GETCLEARCOLOR( pGT );
-         }
-         *pbyBuffer++ = ( BYTE ) usChar;
-         *pbyBuffer++ = ( BYTE ) iColor;   /* TOFIX */
-      }
-      ++i_Top;
-   }
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCEpilogue();
-}
-
-static void hb_gt_wvw_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                            const void * pBuffer )
-{
-   BYTE * pbyBuffer = ( BYTE * ) pBuffer;
-
-   WIN_DATA * pWindowData;
-   int        iSaveTop;
-   int        i_Top    = ( iTop < 0 ? 0 : iTop );
-   int        i_Left   = ( iLeft < 0 ? 0 : iLeft );
-   int        i_Bottom = ( iBottom < 0 ? 0 : iBottom );
-   int        i_Right  = ( iRight < 0 ? 0 : iRight );
-
-   pWindowData = ( WIN_DATA * ) s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ];
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCPrologue( 4, &i_Top, &i_Left, &i_Bottom, &i_Right );
-
-   iSaveTop = i_Top;
-
-   while( iSaveTop <= i_Bottom )
-   {
-      int    bColor;
-      USHORT usChar;
-      int    iCol;
-
-      for( iCol = i_Left; iCol <= i_Right; ++iCol )
-      {
-         usChar = *pbyBuffer++;
-         bColor = *pbyBuffer++;
-
-         HB_GTSELF_PUTCHAR( pGT, iSaveTop, iCol, bColor, 0, usChar );
-
-      }
-      ++iSaveTop;
-   }
-
-   pWindowData->InvalidateWindow = TRUE;
-   hb_gt_wvwSetInvalidRect( pWindowData, ( USHORT ) i_Left, ( USHORT ) i_Top, ( USHORT ) i_Right, ( USHORT ) i_Bottom );
-
-   if( s_pWvwData->s_bMainCoordMode )
-      hb_gt_wvwFUNCEpilogue();
-}
-
-static void hb_gt_wvw_ExposeArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight )
-{
-   HB_SYMBOL_UNUSED( pGT );
-   HB_SYMBOL_UNUSED( iTop );
-   HB_SYMBOL_UNUSED( iLeft );
-   HB_SYMBOL_UNUSED( iBottom );
-   HB_SYMBOL_UNUSED( iRight );
-}
 
 
 static void  hb_gt_wvw_vPutText( WIN_DATA * pWindowData, USHORT top, USHORT left, USHORT bottom, USHORT right, const char * sBuffer, int bColor )
@@ -11004,7 +10569,58 @@ LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
 
 
+/*---------------------------------------------------------------------------*/
 
+static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_Lock()");
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Unlock( PHB_GT pGT )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_Unlock()");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static BOOL hb_gtnap_Resize( PHB_GT pGT, int iRow, int iCol )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_Resize(%d, %d)", iRow, iCol);
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static BOOL hb_gtnap_SetMode( PHB_GT pGT, int iRow, int iCol )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_SetMode(%d, %d)", iRow, iCol);
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_GetSize( PHB_GT pGT, int * piRows, int  * piCols )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_GetSize");
+    *piRows = 500;
+    *piCols = 250;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_ExposeArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight )
+{
+   HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_ExposeArea(%d, %d, %d, %d)", iTop, iLeft, iBottom, iRight);
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -11026,10 +10642,30 @@ static int hb_gtnap_MaxRow( PHB_GT pGT )
 
 /*---------------------------------------------------------------------------*/
 
+static BOOL hb_gtnap_CheckPos( PHB_GT pGT, int iRow, int iCol, long * plIndex )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_CheckPos(%d, %d)"), iRow, iCol;
+    *plIndex = 0;
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_SetPos(%d, %d)", iRow, iCol);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_GetPos( PHB_GT pGT, int * piRow, int * piCol )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_GetPos()");
+    *piRow = 0;
+    *piCol = 0;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -11055,7 +10691,7 @@ static int hb_gtnap_GetCursorStyle( PHB_GT pGT )
 static void hb_gtnap_SetCursorStyle( PHB_GT pGT, int iStyle )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_GetCursorStyle(%d)", iStyle);
+    log_printf("hb_gtnap_SetCursorStyle(%d)", iStyle);
 
     switch( iStyle )
     {
@@ -11100,6 +10736,53 @@ static int hb_gtnap_DispCount( PHB_GT pGT )
 
 /*---------------------------------------------------------------------------*/
 
+static BOOL hb_gtnap_GetChar( PHB_GT pGT, int iRow, int iCol, int * pbColor, BYTE * pbAttr, USHORT * pusChar )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_GetChar(%d, %d)", iRow, iCol);
+    *pbColor = 0;
+    *pbAttr = 0;
+    *pusChar = 65;
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, BYTE bAttr, USHORT usChar )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_PutChar(%d, %d): %d, %d, %d", iRow, iCol, bColor, bAttr, usChar);
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, void * pBuffer )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED( pBuffer );
+    log_printf("hb_gtnap_Save(%d, %d, %d, %d)", iTop, iLeft, iBottom, iRight);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const void * pBuffer )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED( pBuffer );
+    log_printf("hb_gtnap_Rest(%d, %d, %d, %d)", iTop, iLeft, iBottom, iRight);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const char * pText, HB_SIZE ulLen )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_hb_gtnap_PutText(%d, %d, %d): %s (%d)", iRow, iCol, bColor, pText, ulLen);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void hb_gtnap_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, BYTE bAttr, USHORT usChar, ULONG ulLen )
 {
     HB_SYMBOL_UNUSED( pGT );
@@ -11108,50 +10791,164 @@ static void hb_gtnap_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, BYTE
 
 /*---------------------------------------------------------------------------*/
 
+static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText, ULONG ulLength )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_WriteAt(%d, %d): %s (%d)", iRow, iCol, pText, ulLength);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_SetAttribute(%d, %d, %d, %d): (%d)", iTop, iLeft, iBottom, iRight, bColor);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, USHORT bChar, int iRows, int iCols )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gt_wvw_Scroll(%d, %d, %d, %d): (%d)", iTop, iLeft, iBottom, iRight, bColor);
+    HB_SYMBOL_UNUSED( bChar );
+    HB_SYMBOL_UNUSED( iRows );
+    HB_SYMBOL_UNUSED( iCols );
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const char * pbyFrame, int bColor )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_Box(%d, %d, %d, %d): (%d)", iTop, iLeft, iBottom, iRight, bColor);
+    HB_SYMBOL_UNUSED( pbyFrame );
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight, USHORT bChar, int bColor )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_HorizLine(%d, %d, %d): (%d)", iRow, iLeft, iRight, bColor);
+    HB_SYMBOL_UNUSED( bChar );
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, USHORT bChar, int bColor )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_VertLine(%d, %d, %d): (%d)", iCol, iTop, iBottom, bColor);
+    HB_SYMBOL_UNUSED( bChar );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-    HB_TRACE( HB_TR_ALWAYS, ( "hb_gtFnInit( %p )", pFuncTable ) );
-    log_printf("hb_gt_FuncInit INIT!!!!!!!!!!!!!!!!");
+    log_printf("hb_gt_FuncInit()");
+    // log_printf("PHB_GT_FUNCS pFuncTable is zero: %d", bmem_is_zero((const byte_t*)pFuncTable, sizeof(HB_GT_FUNCS)));
+    // cassert(bmem_is_zero((const byte_t*)pFuncTable, sizeof(HB_GT_FUNCS)));
 
-   pFuncTable->Init   = hb_gt_wvw_Init;
-   pFuncTable->Exit   = hb_gt_wvw_Exit;
-   pFuncTable->MaxCol = hb_gtnap_MaxCol;
-   pFuncTable->MaxRow = hb_gtnap_MaxRow;
-   pFuncTable->SetPos = hb_gtnap_SetPos;
-   pFuncTable->IsColor = hb_gtnap_IsColor;
-   pFuncTable->GetCursorStyle = hb_gtnap_GetCursorStyle;
-   pFuncTable->SetCursorStyle = hb_gtnap_SetCursorStyle;
-   pFuncTable->DispBegin = hb_gtnap_DispBegin;
-   pFuncTable->DispEnd = hb_gtnap_DispEnd;
-   pFuncTable->DispCount = hb_gtnap_DispCount;
-   pFuncTable->Replicate = hb_gtnap_Replicate;
+    pFuncTable->Lock = hb_gtnap_Lock;
+    pFuncTable->Unlock = hb_gtnap_Unlock;
+    pFuncTable->Init = hb_gt_wvw_Init;
+    pFuncTable->Exit = hb_gt_wvw_Exit;
+    // pFuncTable->New = NULL;
+    // pFuncTable->Free = NULL;
+    // pFuncTable->Mark = NULL;
+    pFuncTable->Resize = hb_gtnap_Resize;
+    pFuncTable->SetMode = hb_gtnap_SetMode;
+    pFuncTable->GetSize = hb_gtnap_GetSize;
+    // pFuncTable->SemiCold = NULL;
+    // pFuncTable->ColdArea = NULL;
+    pFuncTable->ExposeArea = hb_gtnap_ExposeArea;
+    // pFuncTable->ScrollArea = NULL;
+    // pFuncTable->TouchLine = NULL;
+    // pFuncTable->TouchCell = NULL;
+    // pFuncTable->Redraw = NULL;
+    // pFuncTable->RedrawDiff = NULL;
+    // pFuncTable->Refresh = NULL;
+    // pFuncTable->Flush = NULL;
+    pFuncTable->MaxCol = hb_gtnap_MaxCol;
+    pFuncTable->MaxRow = hb_gtnap_MaxRow;
+    pFuncTable->CheckPos = hb_gtnap_CheckPos;
+    pFuncTable->SetPos = hb_gtnap_SetPos;
+    pFuncTable->GetPos =  hb_gtnap_GetPos;
+    pFuncTable->IsColor = hb_gtnap_IsColor;
+    // pFuncTable->GetColorStr = NULL;
+    // pFuncTable->SetColorStr = NULL;
+    // pFuncTable->ColorSelect = NULL;
+    // pFuncTable->GetColor = NULL;
+    // pFuncTable->ColorNum = NULL;
+    // pFuncTable->ColorsToString = NULL;
+    // pFuncTable->StringToColors = NULL;
+    // pFuncTable->GetColorData = NULL;
+    // pFuncTable->GetClearColor = NULL;
+    // pFuncTable->SetClearColor = NULL;
+    // pFuncTable->GetClearChar = NULL;
+    // pFuncTable->SetClearChar = NULL;
+    pFuncTable->GetCursorStyle = hb_gtnap_GetCursorStyle;
+    pFuncTable->SetCursorStyle = hb_gtnap_SetCursorStyle;
+    // pFuncTable->GetScrCursor = NULL;
+    // pFuncTable->GetScrChar = NULL;
+    // pFuncTable->PutScrChar = NULL;
+    // pFuncTable->GetScrUC = NULL;
+    pFuncTable->DispBegin = hb_gtnap_DispBegin;
+    pFuncTable->DispEnd = hb_gtnap_DispEnd;
+    pFuncTable->DispCount = hb_gtnap_DispCount;
+    pFuncTable->GetChar = hb_gtnap_GetChar;
+    pFuncTable->PutChar = hb_gtnap_PutChar;
+    // pFuncTable->RectSize = NULL;
+    pFuncTable->Save = hb_gtnap_Save;
+    pFuncTable->Rest = hb_gtnap_Rest;
+    pFuncTable->PutText = hb_gtnap_PutText;
+    // pFuncTable->PutTextW = NULL;
+    pFuncTable->Replicate = hb_gtnap_Replicate;
+    pFuncTable->WriteAt = hb_gtnap_WriteAt;
+    // pFuncTable->WriteAtW = NULL;
+    // pFuncTable->Write = NULL;
+    // pFuncTable->WriteW = NULL;
+    // pFuncTable->WriteCon = NULL;
+    // pFuncTable->WriteConW = NULL;
+    pFuncTable->SetAttribute = hb_gtnap_SetAttribute;
+    // pFuncTable->DrawShadow = NULL;
+    pFuncTable->Scroll = hb_gtnap_Scroll;
+    // pFuncTable->ScrollUp = NULL;
+    pFuncTable->Box = hb_gtnap_Box;
+    pFuncTable->BoxW = NULL;
+    pFuncTable->BoxD = NULL;
+    pFuncTable->BoxS = NULL;
+    pFuncTable->HorizLine = hb_gtnap_HorizLine;
+    pFuncTable->VertLine  = hb_gtnap_VertLine;
 
 
 
-   pFuncTable->WriteAt        = hb_gt_wvw_WriteAt;
-   pFuncTable->PutText        = hb_gt_wvw_PutText;
-   pFuncTable->SetAttribute   = hb_gt_wvw_SetAttribute;
-/*  pFuncTable->Scroll                = hb_gt_wvw_Scroll; */
-   pFuncTable->SetMode   = hb_gt_wvw_SetMode;
+
+
+
    pFuncTable->GetBlink  = hb_gt_wvw_GetBlink;
    pFuncTable->SetBlink  = hb_gt_wvw_SetBlink;
    pFuncTable->Version   = hb_gt_wvw_Version;
-   pFuncTable->Box       = hb_gt_wvw_Box;
-   pFuncTable->HorizLine = hb_gt_wvw_HorizLine;
-   pFuncTable->VertLine  = hb_gt_wvw_VertLine;
    pFuncTable->OutStd    = hb_gt_wvw_OutStd;
    pFuncTable->OutErr    = hb_gt_wvw_OutErr;
    pFuncTable->Tone      = hb_gt_wvw_Tone;
    pFuncTable->ReadKey   = hb_gt_wvw_ReadKey;
    pFuncTable->Info      = hb_gt_wvw_Info;
 
-   pFuncTable->GetChar    = hb_gt_wvw_GetChar;
-   pFuncTable->PutChar    = hb_gt_wvw_PutChar;
-   pFuncTable->CheckPos   = hb_gt_wvw_CheckPos;
-   pFuncTable->GetSize    = hb_gt_wvw_GetSize;
-   pFuncTable->Save       = hb_gt_wvw_Save;
-   pFuncTable->Rest       = hb_gt_wvw_Rest;
-   pFuncTable->ExposeArea = hb_gt_wvw_ExposeArea;
 
 
    /* Graphics API */
