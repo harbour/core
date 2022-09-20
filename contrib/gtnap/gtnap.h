@@ -746,7 +746,7 @@ extern UINT ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT usB
                           double dStretch, BOOL bMap3Dcolors,
                           int iStyle );
 extern LRESULT CALLBACK hb_gt_wvwCBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
-extern LONG  GetFontDialogUnits( HWND h, HFONT f );
+//extern LONG  GetFontDialogUnits( HWND h, HFONT f );
 extern HFONT   hb_gt_wvwGetFont( const char * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage );
 extern LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 extern USHORT  hb_gt_wvwGetMouseX( WIN_DATA * pWindowData );
@@ -758,8 +758,6 @@ extern int nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn );
 extern LPWORD lpwAlign( LPWORD lpIn );
 
 extern HB_EXPORT BOOL          hb_gt_wvwDestroyPicture( IPicture * iPicture );
-extern HB_EXPORT BOOL CALLBACK hb_gt_wvwDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
-extern HB_EXPORT BOOL CALLBACK hb_gt_wvwDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 extern HB_EXPORT int           hb_gt_wvwGetLastMenuEvent( UINT usWinNum );
 extern HB_EXPORT int           hb_gt_wvwSetLastMenuEvent( UINT usWinNum, int iLastMenuEvent );
 extern HB_EXPORT int           hb_gt_wvwGetWindowTitle( UINT usWinNum, char * title, int length );
