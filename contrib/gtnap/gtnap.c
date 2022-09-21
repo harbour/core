@@ -1,11 +1,11 @@
-
-
-
+/*
+    This is part of gtnap
+    TODO: More info
+*/
 
 #include "gtnap.h"
 #include "nappgui.h"
 #include "osmain.h"
-
 
 /*---------------------------------------------------------------------------*/
 
