@@ -13,7 +13,7 @@ HB_FUNC( NAP_FONT_CREATE )
     real32_t size = (real32_t)hb_parnd(2);
     uint32_t style = hb_parni(3);
     Font *font = font_create(family, size, style);
-    hb_retFont(font);
+    hb_gtnap_retFontGC(font);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -23,7 +23,7 @@ HB_FUNC( NAP_FONT_SYSTEM )
     real32_t size = (real32_t)hb_parnd(1);
     uint32_t style = hb_parni(2);
     Font *font = font_system(size, style);
-    hb_retFont(font);
+    hb_gtnap_retFontGC(font);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ HB_FUNC( NAP_FONT_MONOSPACE )
     real32_t size = (real32_t)hb_parnd(1);
     uint32_t style = hb_parni(2);
     Font *font = font_monospace(size, style);
-    hb_retFont(font);
+    hb_gtnap_retFontGC(font);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -43,7 +43,7 @@ HB_FUNC( NAP_FONT_WITH_STYLE )
     Font *cfont = hb_gtnap_parFont(1);
     uint32_t style = hb_parni(2);
     Font *font = font_with_style(cfont, style);
-    hb_retFont(font);
+    hb_gtnap_retFontGC(font);
 }
 
 /*---------------------------------------------------------------------------*/

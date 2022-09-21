@@ -119,7 +119,6 @@ static int K_Ctrl[] = {
 };
 
 
-static GtNap *GTNAP_GLOBAL = NULL;
 
 /*                                                                   */
 /*                  private functions declaration                    */
@@ -5404,170 +5403,15 @@ Font *hb_gt_global_font(void)
 
 
 
-/*---------------------------------------------------------------------------*/
-
-static HB_GARBAGE_FUNC( s_gc_Image_destroy )
-{
-    Image **ph = (Image**)Cargo;
-    log_printf("Called s_gc_Image_destroy by GC: %p - %p", ph, *ph);
-    if (ph && *ph)
-    {
-        // image_destroy set 'ph' to NULL
-        image_destroy(ph);
-    }
-}
-
-
-/*---------------------------------------------------------------------------*/
-
-static const HB_GC_FUNCS s_gc_Image_funcs =
-{
-    s_gc_Image_destroy,
-    hb_gcDummyMark
-};
-
-/*---------------------------------------------------------------------------*/
-
-void hb_retImage(Image *image)
-{
-    if (image != NULL)
-    {
-        void **ph = (void**)hb_gcAllocate(sizeof(Image*), &s_gc_Image_funcs);
-        *ph = image;
-            log_printf("'hb_retImage': %p - %p", ph, image);
-        hb_retptrGC(ph);
-    }
-    else
-    {
-        hb_retptr(NULL);
-    }
-}
 
 
 
 
 
-/*---------------------------------------------------------------------------*/
-
-static HB_GARBAGE_FUNC( s_gc_Font_destroy )
-{
-    Font **ph = (Font**)Cargo;
-    log_printf("Called s_gc_Font_destroy by GC: %p - %p", ph, *ph);
-    if (ph && *ph)
-    {
-        // font_destroy set 'ph' to NULL
-        font_destroy(ph);
-    }
-}
-
-
-/*---------------------------------------------------------------------------*/
-
-static const HB_GC_FUNCS s_gc_Font_funcs =
-{
-    s_gc_Font_destroy,
-    hb_gcDummyMark
-};
-
-/*---------------------------------------------------------------------------*/
-
-void hb_retFont(Font *font)
-{
-    if (font != NULL)
-    {
-        void **ph = (void**)hb_gcAllocate(sizeof(Font*), &s_gc_Font_funcs);
-        *ph = font;
-            log_printf("'hb_retFont': %p - %p", ph, font);
-        hb_retptrGC(ph);
-    }
-    else
-    {
-        hb_retptr(NULL);
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static HB_GARBAGE_FUNC( s_gc_Window_destroy )
-{
-    Window **ph = (Window**)Cargo;
-    log_printf("Called s_gc_Window_destroy by GC: %p - %p", ph, *ph);
-    if (ph && *ph)
-    {
-        // window_destroy set 'ph' to NULL
-        //window_destroy(ph);
-    }
-}
-
-
-/*---------------------------------------------------------------------------*/
-
-static const HB_GC_FUNCS s_gc_Window_funcs =
-{
-    s_gc_Window_destroy,
-    hb_gcDummyMark
-};
-
-void hb_retWindow(Window *window)
-{
-    if (window != NULL)
-    {
-        void **ph = (void**)hb_gcAllocate(sizeof(Window*), &s_gc_Window_funcs);
-        *ph = window;
-        log_printf("'hb_retWindow': %p - %p", ph, window);
-
-        cassert_no_null(GTNAP_GLOBAL);
-        arrpt_append(GTNAP_GLOBAL->windows, window, Window);
-        log_printf("Num Windows: %d", arrpt_size(GTNAP_GLOBAL->windows, Window));
-        log_printf("Num Modals: %d", arrpt_size(GTNAP_GLOBAL->modals, Window));
-
-        hb_retptrGC(ph);
-    }
-    else
-    {
-        hb_retptr(NULL);
-    }
-
-}
 
 
 
-Listener *hb_gt_nap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, void(*FPtr_CallBack)(void*, Event*))
-{
-    PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
-    GtNapCallback *callback = heap_new0(GtNapCallback);
-    cassert_no_null(codeBlock);
-    callback->codeBlock = hb_itemNew(codeBlock);
-    callback->cb_component = component;
-    arrpt_append(GTNAP_GLOBAL->callbacks, callback, GtNapCallback);
-    return listener(callback, FPtr_CallBack, GtNapCallback);
-}
 
-Listener *hb_gt_nap_wind_listener(const uint32_t codeBlockParamId, Window *window, void(*FPtr_CallBack)(void*, Event*))
-{
-    PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
-    GtNapCallback *callback = heap_new0(GtNapCallback);
-    cassert_no_null(codeBlock);
-    callback->codeBlock = hb_itemNew(codeBlock);
-    callback->cb_window = window;
-    arrpt_append(GTNAP_GLOBAL->callbacks, callback, GtNapCallback);
-    return listener(callback, FPtr_CallBack, GtNapCallback);
-}
-
-void hb_gt_nap_callback(GtNapCallback *callback, Event *e)
-{
-    cassert_no_null(callback);
-    if (callback->codeBlock != NULL)
-    {
-        PHB_ITEM phiEvent = hb_itemNew(NULL);
-        PHB_ITEM retItem = NULL;
-        hb_itemPutPtr(phiEvent, e);
-        cassert_msg(e != NULL, "hb_gt_nap_callback: NULL Event");
-        retItem = hb_itemDo(callback->codeBlock, 1, phiEvent);
-        hb_itemRelease(phiEvent);
-        hb_itemRelease(retItem);
-    }
-}
 
 
 
@@ -9165,12 +9009,22 @@ LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
+static GtNap *GTNAP_GLOBAL = NULL;
 static PHB_ITEM *INIT_CODEBLOCK = NULL;
 static PHB_ITEM *END_CODEBLOCK = NULL;
-
-
-
-
 
 static GtNap *i_nappgui_create(void)
 {
@@ -9391,6 +9245,62 @@ GtNapArea *hb_gtnap_new_area(void)
 
 /*---------------------------------------------------------------------------*/
 
+static HB_GARBAGE_FUNC( s_gc_Image_destroy )
+{
+    Image **ph = (Image**)Cargo;
+    if (ph && *ph)
+    {
+        // image_destroy set 'ph' to NULL
+        image_destroy(ph);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_GARBAGE_FUNC( s_gc_Font_destroy )
+{
+    Font **ph = (Font**)Cargo;
+    if (ph && *ph)
+    {
+        // font_destroy set 'ph' to NULL
+        font_destroy(ph);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_GARBAGE_FUNC( s_gc_Window_destroy )
+{
+    Window **ph = (Window**)Cargo;
+    if (ph && *ph)
+    {
+        // window_destroy set 'ph' to NULL
+        //window_destroy(ph);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static const HB_GC_FUNCS s_gc_Image_funcs =
+{
+    s_gc_Image_destroy,
+    hb_gcDummyMark
+};
+
+static const HB_GC_FUNCS s_gc_Font_funcs =
+{
+    s_gc_Font_destroy,
+    hb_gcDummyMark
+};
+
+static const HB_GC_FUNCS s_gc_Window_funcs =
+{
+    s_gc_Window_destroy,
+    hb_gcDummyMark
+};
+
+/*---------------------------------------------------------------------------*/
+
 const char_t *hb_gtnap_parText(const uint32_t iParam)
 {
     if (HB_ISCHAR(iParam))
@@ -9421,6 +9331,100 @@ Window *hb_gtnap_parWindow(int iParam)
 {
     void **ph = (void**)hb_parptrGC(&s_gc_Window_funcs, iParam);
     return *((Window**)ph);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_retImageGC(Image *image)
+{
+    if (image != NULL)
+    {
+        void **ph = (void**)hb_gcAllocate(sizeof(Image*), &s_gc_Image_funcs);
+        *ph = image;
+        hb_retptrGC(ph);
+    }
+    else
+    {
+        hb_retptr(NULL);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_retFontGC(Font *font)
+{
+    if (font != NULL)
+    {
+        void **ph = (void**)hb_gcAllocate(sizeof(Font*), &s_gc_Font_funcs);
+        *ph = font;
+            log_printf("'hb_gtnap_retFontGC': %p - %p", ph, font);
+        hb_retptrGC(ph);
+    }
+    else
+    {
+        hb_retptr(NULL);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_retWindowGC(Window *window)
+{
+    if (window != NULL)
+    {
+        void **ph = (void**)hb_gcAllocate(sizeof(Window*), &s_gc_Window_funcs);
+        *ph = window;
+        cassert_no_null(GTNAP_GLOBAL);
+        arrpt_append(GTNAP_GLOBAL->windows, window, Window);
+        hb_retptrGC(ph);
+    }
+    else
+    {
+        hb_retptr(NULL);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, void(*FPtr_CallBack)(void*, Event*))
+{
+    PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
+    GtNapCallback *callback = heap_new0(GtNapCallback);
+    cassert_no_null(codeBlock);
+    callback->codeBlock = hb_itemNew(codeBlock);
+    callback->cb_component = component;
+    arrpt_append(GTNAP_GLOBAL->callbacks, callback, GtNapCallback);
+    return listener(callback, FPtr_CallBack, GtNapCallback);
+}
+
+/*---------------------------------------------------------------------------*/
+
+Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, void(*FPtr_CallBack)(void*, Event*))
+{
+    PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
+    GtNapCallback *callback = heap_new0(GtNapCallback);
+    cassert_no_null(codeBlock);
+    callback->codeBlock = hb_itemNew(codeBlock);
+    callback->cb_window = window;
+    arrpt_append(GTNAP_GLOBAL->callbacks, callback, GtNapCallback);
+    return listener(callback, FPtr_CallBack, GtNapCallback);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_callback(GtNapCallback *callback, Event *e)
+{
+    cassert_no_null(callback);
+    if (callback->codeBlock != NULL)
+    {
+        PHB_ITEM phiEvent = hb_itemNew(NULL);
+        PHB_ITEM retItem = NULL;
+        hb_itemPutPtr(phiEvent, e);
+        cassert_msg(e != NULL, "hb_gtnap_callback: NULL Event");
+        retItem = hb_itemDo(callback->codeBlock, 1, phiEvent);
+        hb_itemRelease(phiEvent);
+        hb_itemRelease(retItem);
+    }
 }
 
 /*---------------------------------------------------------------------------*/

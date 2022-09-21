@@ -25,7 +25,7 @@ HB_FUNC( NAP_EDIT_MULTILINE )
 
 static void i_OnEditFilter(GtNapCallback *idp, Event *e)
 {
-    hb_gt_nap_callback(idp, e);
+    hb_gtnap_callback(idp, e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ static void i_OnEditFilter(GtNapCallback *idp, Event *e)
 HB_FUNC( NAP_EDIT_ONFILTER )
 {
     Edit *edit = (Edit*)hb_parptr(1);
-    Listener *listener = hb_gt_nap_comp_listener(2, edit, i_OnEditFilter);
+    Listener *listener = hb_gtnap_comp_listener(2, edit, i_OnEditFilter);
     edit_OnFilter(edit, listener);
 }
 
@@ -41,7 +41,7 @@ HB_FUNC( NAP_EDIT_ONFILTER )
 
 static void i_OnEditChange(GtNapCallback *idp, Event *e)
 {
-    hb_gt_nap_callback(idp, e);
+    hb_gtnap_callback(idp, e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -49,7 +49,7 @@ static void i_OnEditChange(GtNapCallback *idp, Event *e)
 HB_FUNC( NAP_EDIT_ONCHANGE )
 {
     Edit *edit = (Edit*)hb_parptr(1);
-    Listener *listener = hb_gt_nap_comp_listener(2, edit, i_OnEditChange);
+    Listener *listener = hb_gtnap_comp_listener(2, edit, i_OnEditChange);
     edit_OnChange(edit, listener);
 }
 

@@ -60,7 +60,7 @@ HB_FUNC( NAP_BUTTON_FLATGLE )
 
 static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 {
-    hb_gt_nap_callback(callback, e);
+    hb_gtnap_callback(callback, e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 HB_FUNC( NAP_BUTTON_ONCLICK )
 {
     Button *button = (Button*)hb_parptr(1);
-    Listener *listener = hb_gt_nap_comp_listener(2, button, i_OnButtonClick);
+    Listener *listener = hb_gtnap_comp_listener(2, button, i_OnButtonClick);
     button_OnClick(button, listener);
 }
 

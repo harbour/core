@@ -13,5 +13,5 @@ HB_FUNC( NAP_IMAGE_FROM_FILE )
     String *cpath = str_cpath("%s", pathname);
     Image *image = image_from_file(tc(cpath), NULL);
     str_destroy(&cpath);
-    hb_retImage(image);
+    hb_gtnap_retImageGC(image);
 }

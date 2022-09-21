@@ -11,7 +11,7 @@ HB_FUNC( NAP_WINDOW_CREATE )
 {
     uint32_t flags = hb_parni(1);
     Window *window = window_create(flags);
-    hb_retWindow(window);
+    hb_gtnap_retWindowGC(window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -27,7 +27,7 @@ HB_FUNC( NAP_WINDOW_PANEL )
 
 static void i_OnWindowClose(GtNapCallback *idp, Event *e)
 {
-    hb_gt_nap_callback(idp, e);
+    hb_gtnap_callback(idp, e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ static void i_OnWindowClose(GtNapCallback *idp, Event *e)
 HB_FUNC( NAP_WINDOW_ONCLOSE )
 {
     Window *window = hb_gtnap_parWindow(1);
-    Listener *listener = hb_gt_nap_wind_listener(2, window, i_OnWindowClose);
+    Listener *listener = hb_gtnap_wind_listener(2, window, i_OnWindowClose);
     window_OnClose(window, listener);
 }
 
@@ -43,7 +43,7 @@ HB_FUNC( NAP_WINDOW_ONCLOSE )
 
 static void i_OnWindowMoved(GtNapCallback *idp, Event *e)
 {
-    hb_gt_nap_callback(idp, e);
+    hb_gtnap_callback(idp, e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -51,7 +51,7 @@ static void i_OnWindowMoved(GtNapCallback *idp, Event *e)
 HB_FUNC( NAP_WINDOW_ONMOVED )
 {
     Window *window = hb_gtnap_parWindow(1);
-    Listener *listener = hb_gt_nap_wind_listener(2, window, i_OnWindowMoved);
+    Listener *listener = hb_gtnap_wind_listener(2, window, i_OnWindowMoved);
     window_OnMoved(window, listener);
 }
 
@@ -59,7 +59,7 @@ HB_FUNC( NAP_WINDOW_ONMOVED )
 
 static void i_OnWindowResize(GtNapCallback *idp, Event *e)
 {
-    hb_gt_nap_callback(idp, e);
+    hb_gtnap_callback(idp, e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ static void i_OnWindowResize(GtNapCallback *idp, Event *e)
 HB_FUNC( NAP_WINDOW_ONRESIZE )
 {
     Window *window = hb_gtnap_parWindow(1);
-    Listener *listener = hb_gt_nap_wind_listener(2, window, i_OnWindowResize);
+    Listener *listener = hb_gtnap_wind_listener(2, window, i_OnWindowResize);
     window_OnResize(window, listener);
 }
 

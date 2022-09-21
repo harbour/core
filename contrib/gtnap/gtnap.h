@@ -799,15 +799,16 @@ extern Font *hb_gtnap_parFont(int iParam);
 
 extern Window *hb_gtnap_parWindow(int iParam);
 
+extern void hb_gtnap_retImageGC(Image *image);
 
-extern void hb_retImage(Image *image);
+extern void hb_gtnap_retFontGC(Font *font);
 
-extern void hb_retFont(Font *font);
+extern void hb_gtnap_retWindowGC(Window *window);
 
-extern void hb_retWindow(Window *window);
+extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, void(*FPtr_CallBack)(void*, Event*));
 
-extern Listener *hb_gt_nap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, void(*FPtr_CallBack)(void*, Event*));
-extern Listener *hb_gt_nap_wind_listener(const uint32_t codeBlockParamId, Window *window, void(*FPtr_CallBack)(void*, Event*));
-extern void hb_gt_nap_callback(GtNapCallback *callback, Event *e);
+extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, void(*FPtr_CallBack)(void*, Event*));
+
+extern void hb_gtnap_callback(GtNapCallback *callback, Event *e);
 
 #endif
