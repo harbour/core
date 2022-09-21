@@ -19,7 +19,7 @@ HB_FUNC( NAP_LABEL_CREATE )
 HB_FUNC( NAP_LABEL_WITH_TEXT )
 {
     Label *label = label_create();
-    const char_t *text = hb_get_nap_text(1);
+    const char_t *text = hb_gtnap_parText(1);
     label_text(label, text);
     label_font(label, hb_gtnap_global_font());
     hb_retptr(label);
@@ -55,7 +55,7 @@ HB_FUNC( NAP_LABEL_ONCLICK )
 HB_FUNC( NAP_LABEL_TEXT )
 {
     Label *label = (Label*)hb_parptr(1);
-    const char_t *text = hb_get_nap_text(2);
+    const char_t *text = hb_gtnap_parText(2);
     label_text(label, text);
 }
 
@@ -64,7 +64,7 @@ HB_FUNC( NAP_LABEL_TEXT )
 HB_FUNC( NAP_LABEL_FONT )
 {
     Label *label = (Label*)hb_parptr(1);
-    Font *font = hb_parFont(2);
+    Font *font = hb_gtnap_parFont(2);
     label_font(label, font);
 }
 

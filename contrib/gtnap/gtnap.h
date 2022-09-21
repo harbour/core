@@ -656,15 +656,8 @@ struct _gtnap_t
 };
 
 
-extern void hb_gtnap_set_global_font(Font *font);
-extern Font *hb_gtnap_global_font(void);
-extern Window *hb_gtnap_main_window(void);
-extern Window *hb_gtnap_current_modal(void);
 
-extern void hb_gtnap_set_modal_window(Window *window);
-extern void hb_gtnap_destroy_modal(void);
 
-extern GtNapArea *hb_gtnap_new_area(void);
 
 
 
@@ -684,19 +677,8 @@ extern void hb_gt_nap_set_MainMenu(Window *window, Menu *menu);
 extern void hb_gt_nap_set_GlobalPanel(Panel *panel);
 extern void hb_gt_nap_set_global_font(Font *font);
 extern Font *hb_gt_global_font(void);
-const char_t *hb_get_nap_text(const uint32_t textParamId);
-extern void hb_retImage(Image *image);
-extern Image *hb_parImage(int iParam);
 
-extern void hb_retFont(Font *font);
-extern Font *hb_parFont(int iParam);
 
-extern void hb_retWindow(Window *window);
-extern Window *hb_parWindow(int iParam);
-
-extern Listener *hb_gt_nap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, void(*FPtr_CallBack)(void*, Event*));
-extern Listener *hb_gt_nap_wind_listener(const uint32_t codeBlockParamId, Window *window, void(*FPtr_CallBack)(void*, Event*));
-extern void hb_gt_nap_callback(GtNapCallback *callback, Event *e);
 
 
 
@@ -793,9 +775,39 @@ HB_EXTERN_END
 
 
 
-extern void hb_gtnap_runloop( void );
+extern void hb_gtnap_runloop(void);
+
+extern void hb_gtnap_set_global_font(Font *font);
+
+extern Font *hb_gtnap_global_font(void);
+
+extern Window *hb_gtnap_main_window(void);
+
+extern Window *hb_gtnap_current_modal(void);
+
+extern void hb_gtnap_set_modal_window(Window *window);
+
+extern void hb_gtnap_destroy_modal(void);
+
+extern GtNapArea *hb_gtnap_new_area(void);
+
+const char_t *hb_gtnap_parText(const uint32_t iParam);
+
+extern Image *hb_gtnap_parImage(int iParam);
+
+extern Font *hb_gtnap_parFont(int iParam);
+
+extern Window *hb_gtnap_parWindow(int iParam);
 
 
+extern void hb_retImage(Image *image);
 
+extern void hb_retFont(Font *font);
+
+extern void hb_retWindow(Window *window);
+
+extern Listener *hb_gt_nap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, void(*FPtr_CallBack)(void*, Event*));
+extern Listener *hb_gt_nap_wind_listener(const uint32_t codeBlockParamId, Window *window, void(*FPtr_CallBack)(void*, Event*));
+extern void hb_gt_nap_callback(GtNapCallback *callback, Event *e);
 
 #endif

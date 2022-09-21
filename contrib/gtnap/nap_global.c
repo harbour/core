@@ -7,16 +7,6 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_GLOBALPANEL )
-{
-    Panel *panel = (Panel*)hb_parptr(1);
-    hb_gt_nap_set_GlobalPanel(panel);
-    hb_retl(TRUE);
-    return;
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_GLOBAL_FONT )
 {
     real32_t size = (real32_t)hb_parnd(1);

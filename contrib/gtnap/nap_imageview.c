@@ -38,7 +38,7 @@ HB_FUNC( NAP_IMAGEVIEW_SCALE )
 HB_FUNC( NAP_IMAGEVIEW_IMAGE )
 {
     ImageView *view = (ImageView*)hb_parptr(1);
-    Image *image = hb_parImage(2);
+    Image *image = hb_gtnap_parImage(2);
     imageview_image(view, image);
 }
 

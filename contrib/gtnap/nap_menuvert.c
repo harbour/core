@@ -328,7 +328,7 @@ HB_FUNC( NAP_MENUVERT_CREATE )
 HB_FUNC( NAP_MENUVERT_ADD )
 {
     Panel *panel = (Panel*)hb_parptr(1);
-    const char_t *text = hb_get_nap_text(2);
+    const char_t *text = hb_gtnap_parText(2);
     PHB_ITEM codeBlock = hb_param(3, HB_IT_BLOCK);
     MenuVert *menu = panel_get_data(panel, MenuVert);
     MenuOpt *opt = arrst_new0(menu->opts, MenuOpt);

@@ -5402,13 +5402,6 @@ Font *hb_gt_global_font(void)
     return s_pWvwData->s_pNappGlobalFont;
 }
 
-const char_t *hb_get_nap_text(const uint32_t textParamId)
-{
-    if (HB_ISCHAR(textParamId))
-        return hb_parcx(textParamId);
-    else
-        return (const char_t*)hb_parni(textParamId);
-}
 
 
 /*---------------------------------------------------------------------------*/
@@ -5450,13 +5443,6 @@ void hb_retImage(Image *image)
     }
 }
 
-Image *hb_parImage(int iParam)
-{
-   void ** ph = ( void ** ) hb_parptrGC( &s_gc_Image_funcs, iParam );
-    log_printf("'hb_parImage': %p - %p", ph, *ph);
-
-   return *((Image**)ph);
-}
 
 
 
@@ -5500,14 +5486,6 @@ void hb_retFont(Font *font)
     }
 }
 
-Font *hb_parFont(int iParam)
-{
-   void ** ph = ( void ** ) hb_parptrGC( &s_gc_Font_funcs, iParam );
-    log_printf("'hb_parFont': %p - %p", ph, *ph);
-
-   return *((Font**)ph);
-}
-
 /*---------------------------------------------------------------------------*/
 
 static HB_GARBAGE_FUNC( s_gc_Window_destroy )
@@ -5549,15 +5527,6 @@ void hb_retWindow(Window *window)
     {
         hb_retptr(NULL);
     }
-
-}
-
-Window *hb_parWindow(int iParam)
-{
-   void ** ph = ( void ** ) hb_parptrGC( &s_gc_Window_funcs, iParam );
-    log_printf("'hb_parWindow': %p - %p", ph, *ph);
-
-   return *((Window**)ph);
 
 }
 
@@ -5608,67 +5577,11 @@ void hb_gt_nap_callback(GtNapCallback *callback, Event *e)
 
 
 
-void hb_gtnap_set_global_font(Font *font)
-{
-    cassert_no_null(GTNAP_GLOBAL);
-    font_destroy(&GTNAP_GLOBAL->global_font);
-    GTNAP_GLOBAL->global_font = font;
-}
-
-Font *hb_gtnap_global_font(void)
-{
-    cassert_no_null(GTNAP_GLOBAL);
-    return GTNAP_GLOBAL->global_font;
-}
-
-Window *hb_gtnap_main_window(void)
-{
-    Window *window = NULL;
-    cassert_no_null(GTNAP_GLOBAL);
-    window = arrpt_get(GTNAP_GLOBAL->windows, 0, Window);
-    cassert_no_null(window);
-    return window;
-}
-
-Window *hb_gtnap_current_modal(void)
-{
-    Window *modal = NULL;
-    cassert_no_null(GTNAP_GLOBAL);
-    if (arrpt_size(GTNAP_GLOBAL->modals, Window) > 0)
-        modal = arrpt_last(GTNAP_GLOBAL->modals, Window);
-
-    log_printf("Get current modal: %p (%d)", modal, arrpt_size(GTNAP_GLOBAL->modals, Window));
-    return modal;
-}
-
-void hb_gtnap_set_modal_window(Window *window)
-{
-    cassert_no_null(GTNAP_GLOBAL);
-    arrpt_append(GTNAP_GLOBAL->modals, window, Window);
-    log_printf("Set current modal: %p (%d)", window, arrpt_size(GTNAP_GLOBAL->modals, Window));
-}
-
-static void i_window_destroy(Window **window);
-
-void hb_gtnap_destroy_modal()
-{
-    Window *modal = NULL;
-    uint32_t i = 0;
-    cassert_no_null(GTNAP_GLOBAL);
-    modal = arrpt_last(GTNAP_GLOBAL->modals, Window);
-    i = arrpt_find(GTNAP_GLOBAL->windows, modal, Window);
-    arrpt_delete(GTNAP_GLOBAL->windows, i, i_window_destroy, Window);
-    arrpt_pop(GTNAP_GLOBAL->modals, NULL, Window);
-    log_printf("Destroy modal: %p (%d)", modal, arrpt_size(GTNAP_GLOBAL->modals, Window));
-}
 
 
-GtNapArea *hb_gtnap_new_area(void)
-{
-    GtNapArea *area = heap_new0(GtNapArea);
-    arrpt_append(GTNAP_GLOBAL->areas, area, GtNapArea);
-    return area;
-}
+
+
+
 
 
 
@@ -9404,6 +9317,110 @@ void hb_gtnap_runloop( void )
                 (FPtr_app_update)NULL,
                 (FPtr_destroy)i_nappgui_destroy,
                 "");
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_set_global_font(Font *font)
+{
+    cassert_no_null(GTNAP_GLOBAL);
+    font_destroy(&GTNAP_GLOBAL->global_font);
+    GTNAP_GLOBAL->global_font = font;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Font *hb_gtnap_global_font(void)
+{
+    cassert_no_null(GTNAP_GLOBAL);
+    return GTNAP_GLOBAL->global_font;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Window *hb_gtnap_main_window(void)
+{
+    Window *window = NULL;
+    cassert_no_null(GTNAP_GLOBAL);
+    window = arrpt_get(GTNAP_GLOBAL->windows, 0, Window);
+    cassert_no_null(window);
+    return window;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Window *hb_gtnap_current_modal(void)
+{
+    Window *modal = NULL;
+    cassert_no_null(GTNAP_GLOBAL);
+    if (arrpt_size(GTNAP_GLOBAL->modals, Window) > 0)
+        modal = arrpt_last(GTNAP_GLOBAL->modals, Window);
+
+    return modal;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_set_modal_window(Window *window)
+{
+    cassert_no_null(GTNAP_GLOBAL);
+    arrpt_append(GTNAP_GLOBAL->modals, window, Window);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_destroy_modal()
+{
+    Window *modal = NULL;
+    uint32_t i = 0;
+    cassert_no_null(GTNAP_GLOBAL);
+    modal = arrpt_last(GTNAP_GLOBAL->modals, Window);
+    i = arrpt_find(GTNAP_GLOBAL->windows, modal, Window);
+    arrpt_delete(GTNAP_GLOBAL->windows, i, i_window_destroy, Window);
+    arrpt_pop(GTNAP_GLOBAL->modals, NULL, Window);
+}
+
+/*---------------------------------------------------------------------------*/
+
+GtNapArea *hb_gtnap_new_area(void)
+{
+    GtNapArea *area = heap_new0(GtNapArea);
+    arrpt_append(GTNAP_GLOBAL->areas, area, GtNapArea);
+    return area;
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *hb_gtnap_parText(const uint32_t iParam)
+{
+    if (HB_ISCHAR(iParam))
+        return hb_parcx(iParam);
+    else
+        return (const char_t*)hb_parni(iParam);
+}
+
+/*---------------------------------------------------------------------------*/
+
+Image *hb_gtnap_parImage(int iParam)
+{
+    void **ph = (void**)hb_parptrGC(&s_gc_Image_funcs, iParam);
+    return *((Image**)ph);
+}
+
+/*---------------------------------------------------------------------------*/
+
+Font *hb_gtnap_parFont(int iParam)
+{
+    void **ph = (void**)hb_parptrGC(&s_gc_Font_funcs, iParam);
+    return *((Font**)ph);
+}
+
+/*---------------------------------------------------------------------------*/
+
+Window *hb_gtnap_parWindow(int iParam)
+{
+    void **ph = (void**)hb_parptrGC(&s_gc_Window_funcs, iParam);
+    return *((Window**)ph);
 }
 
 /*---------------------------------------------------------------------------*/

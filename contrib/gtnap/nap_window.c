@@ -18,7 +18,7 @@ HB_FUNC( NAP_WINDOW_CREATE )
 
 HB_FUNC( NAP_WINDOW_PANEL )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     Panel *panel = (Panel*)hb_parptr(2);
     window_panel(window, panel);
 }
@@ -34,7 +34,7 @@ static void i_OnWindowClose(GtNapCallback *idp, Event *e)
 
 HB_FUNC( NAP_WINDOW_ONCLOSE )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     Listener *listener = hb_gt_nap_wind_listener(2, window, i_OnWindowClose);
     window_OnClose(window, listener);
 }
@@ -50,7 +50,7 @@ static void i_OnWindowMoved(GtNapCallback *idp, Event *e)
 
 HB_FUNC( NAP_WINDOW_ONMOVED )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     Listener *listener = hb_gt_nap_wind_listener(2, window, i_OnWindowMoved);
     window_OnMoved(window, listener);
 }
@@ -66,7 +66,7 @@ static void i_OnWindowResize(GtNapCallback *idp, Event *e)
 
 HB_FUNC( NAP_WINDOW_ONRESIZE )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     Listener *listener = hb_gt_nap_wind_listener(2, window, i_OnWindowResize);
     window_OnResize(window, listener);
 }
@@ -75,8 +75,8 @@ HB_FUNC( NAP_WINDOW_ONRESIZE )
 
 HB_FUNC( NAP_WINDOW_TITLE )
 {
-    Window *window = hb_parWindow(1);
-    const char_t *text = hb_get_nap_text(2);
+    Window *window = hb_gtnap_parWindow(1);
+    const char_t *text = hb_gtnap_parText(2);
     window_title(window, text);
 }
 
@@ -84,7 +84,7 @@ HB_FUNC( NAP_WINDOW_TITLE )
 
 HB_FUNC( NAP_WINDOW_SHOW )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     window_show(window);
 }
 
@@ -92,7 +92,7 @@ HB_FUNC( NAP_WINDOW_SHOW )
 
 HB_FUNC( NAP_WINDOW_HIDE )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     window_hide(window);
 }
 
@@ -100,7 +100,7 @@ HB_FUNC( NAP_WINDOW_HIDE )
 
 HB_FUNC( NAP_WINDOW_MODAL )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     Window *parent = hb_gtnap_current_modal();
     uint32_t ret = UINT32_MAX;
 
@@ -126,7 +126,7 @@ HB_FUNC( NAP_WINDOW_STOP_MODAL )
 
 HB_FUNC( NAP_WINDOW_UPDATE )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     window_update(window);
 }
 
@@ -134,7 +134,7 @@ HB_FUNC( NAP_WINDOW_UPDATE )
 
 HB_FUNC( NAP_WINDOW_ORIGIN )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     real32_t x = (real32_t)hb_parnd(2);
     real32_t y = (real32_t)hb_parnd(3);
     window_origin(window, v2df(x, y));
@@ -144,7 +144,7 @@ HB_FUNC( NAP_WINDOW_ORIGIN )
 
 HB_FUNC( NAP_WINDOW_SIZE )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     real32_t width = (real32_t)hb_parnd(2);
     real32_t height = (real32_t)hb_parnd(3);
     window_size(window, s2df(width, height));
@@ -162,7 +162,7 @@ HB_FUNC( NAP_WINDOW_SIZE )
 
 HB_FUNC( NAP_WINDOW_DEFBUTTON )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     Button *button = (Button*)hb_parptr(2);
     window_defbutton(window, button);
 }
@@ -171,7 +171,7 @@ HB_FUNC( NAP_WINDOW_DEFBUTTON )
 
 HB_FUNC( NAP_WINDOW_FOCUS )
 {
-    Window *window = hb_parWindow(1);
+    Window *window = hb_gtnap_parWindow(1);
     Layout *layout = (Layout*)hb_parptr(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);

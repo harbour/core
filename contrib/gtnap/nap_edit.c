@@ -58,7 +58,7 @@ HB_FUNC( NAP_EDIT_ONCHANGE )
 HB_FUNC( NAP_EDIT_TEXT )
 {
     Edit *edit = (Edit*)hb_parptr(1);
-    const char_t *text = hb_get_nap_text(2);
+    const char_t *text = hb_gtnap_parText(2);
     edit_text(edit, text);
 }
 
@@ -109,7 +109,7 @@ HB_FUNC( NAP_EDIT_AUTOSELECT )
 HB_FUNC( NAP_EDIT_TOOLTIP )
 {
     Edit *edit = (Edit*)hb_parptr(1);
-    const char_t *text = hb_get_nap_text(2);
+    const char_t *text = hb_gtnap_parText(2);
     edit_tooltip(edit, text);
 }
 
@@ -154,7 +154,7 @@ HB_FUNC( NAP_EDIT_BGCOLOR_FOCUS )
 HB_FUNC( NAP_EDIT_PHTEXT )
 {
     Edit *edit = (Edit*)hb_parptr(1);
-    const char_t *text = hb_get_nap_text(2);
+    const char_t *text = hb_gtnap_parText(2);
     edit_phtext(edit, text);
 }
 

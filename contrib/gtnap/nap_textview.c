@@ -36,7 +36,7 @@ HB_FUNC( NAP_TEXTVIEW_CLEAR )
 HB_FUNC( NAP_TEXTVIEW_WRITE )
 {
     TextView *view = (TextView*)hb_parptr(1);
-    const char_t *text = hb_get_nap_text(2);
+    const char_t *text = hb_gtnap_parText(2);
     textview_writef(view, text);
 }
 
@@ -54,7 +54,7 @@ HB_FUNC( NAP_TEXTVIEW_UNITS )
 HB_FUNC( NAP_TEXTVIEW_FAMILY )
 {
     TextView *view = (TextView*)hb_parptr(1);
-    const char_t *family = hb_get_nap_text(2);
+    const char_t *family = hb_gtnap_parText(2);
     textview_family(view, family);
 }
 
