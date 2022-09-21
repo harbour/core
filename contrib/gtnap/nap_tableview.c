@@ -7,6 +7,10 @@
 
 #include "hbapi.h"
 #include "hbdate.h"
+#include "hbapistr.h"
+#include "hbapiitm.h"
+#include "hbapigt.h"
+#include "hbapirdd.h"
 
 /*---------------------------------------------------------------------------*/
 
@@ -29,13 +33,13 @@ HB_FUNC( NAP_TABLEVIEW_SIZE )
 /*---------------------------------------------------------------------------*/
 
 // TODO: Configure columns
-static void i_create_columns(TableView *view, GtNapArea *area)
+static void i_create_columns(TableView *view, GtNapArea *gtarea)
 {
+    AREAP area = hb_gtnap_area(gtarea);
     HB_USHORT i, uiFields = 0;
     cassert_no_null(view);
     cassert_no_null(area);
-    cassert_no_null(area->area);
-    SELF_FIELDCOUNT(area->area, &uiFields);
+    SELF_FIELDCOUNT(area, &uiFields);
     //uiFields = 5;
     for (i = 0; i < uiFields; ++i)
     {
@@ -63,20 +67,20 @@ static void i_create_columns(TableView *view, GtNapArea *area)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnTableNotify(GtNapArea *area, Event *e)
+static void i_OnTableNotify(GtNapArea *gtarea, Event *e)
 {
     uint32_t etype = event_type(e);
-    cassert_no_null(area);
+    AREAP area = hb_gtnap_area(gtarea);
 
     switch(etype) {
     case ekEVTBLNROWS:
     {
         uint32_t *n = event_result(e, uint32_t);
 
-        if (area->area != NULL)
+        if (area != NULL)
         {
             HB_ULONG ulRecCount = 0;
-            SELF_RECCOUNT(area->area, &ulRecCount);
+            SELF_RECCOUNT(area, &ulRecCount);
             *n = (uint32_t)ulRecCount;
         }
         else
@@ -90,39 +94,36 @@ static void i_OnTableNotify(GtNapArea *area, Event *e)
     {
         EvTbCell *cell = event_result(e, EvTbCell);
 
-        if (area->area != NULL)
+        if (area != NULL)
         {
             const EvTbPos *pos = event_params(e, EvTbPos);
+            uint32_t temp_size = 0;
+            char_t *temp = hb_gtnap_area_temp(gtarea, &temp_size);
             PHB_ITEM pItem = hb_itemNew( NULL );
             HB_TYPE type = 0;
 
-            if (area->currow != pos->row + 1)
-            {
-                SELF_GOTO(area->area, (HB_ULONG)(pos->row + 1));
-                area->currow = pos->row + 1;
-            }
-
-            SELF_GETVALUE(area->area, (HB_USHORT)(pos->col + 1), pItem);
+            hb_gtnap_area_set_row(gtarea, pos->row + 1);
+            SELF_GETVALUE(area, (HB_USHORT)(pos->col + 1), pItem);
             type = HB_ITEM_TYPE(pItem);
-            area->temp[0] = '\0';
+            temp[0] = '\0';
 
             if (type == HB_IT_STRING)
             {
-                hb_itemCopyStrUTF8(pItem, area->temp, sizeof(area->temp));
+                hb_itemCopyStrUTF8(pItem, temp, temp_size);
             }
             else if (type == HB_IT_DATE)
             {
                 char date[16];
                 hb_itemGetDS(pItem, date);
-                hb_dateFormat(date, area->temp, "DD/MM/YYYY");
+                hb_dateFormat(date, temp, "DD/MM/YYYY");
             }
             else if (type == HB_IT_DOUBLE)
             {
                 double value = hb_itemGetND(pItem);
-                bstd_sprintf(area->temp, sizeof(area->temp), "%12.4f", value);
+                bstd_sprintf(temp, temp_size, "%12.4f", value);
             }
 
-            cell->text = area->temp;
+            cell->text = temp;
             hb_itemRelease(pItem);
         }
         else
@@ -142,18 +143,8 @@ static void i_OnTableNotify(GtNapArea *area, Event *e)
 HB_FUNC( NAP_TABLEVIEW_BIND_DB )
 {
     TableView *view = (TableView*)hb_parptr(1);
-    GtNapArea *area = hb_gtnap_new_area();
-
-    area->area = hb_rddGetCurrentWorkAreaPointer();
-    area->view = view;
-
-    if (area->area != NULL)
-    {
-        SELF_GOTO(area->area, 1);
-        area->currow = 1;
-    }
-
-    i_create_columns(view, area);
-    tableview_OnNotify(view, listener(area, i_OnTableNotify, GtNapArea));
+    GtNapArea *gtarea = hb_gtnap_new_area(view);
+    i_create_columns(view, gtarea);
+    tableview_OnNotify(view, listener(gtarea, i_OnTableNotify, GtNapArea));
     tableview_update(view);
 }

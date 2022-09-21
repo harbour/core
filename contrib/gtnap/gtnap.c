@@ -6,12 +6,50 @@
 #include "gtnap.h"
 #include "nappgui.h"
 #include "osmain.h"
+#include "hbapiitm.h"
+#include "hbapirdd.h"
+
+typedef struct _gtnap_t GtNap;
+
+struct _gtnap_callback_t
+{
+    GuiComponent *cb_component;
+    Window *cb_window;
+    PHB_ITEM codeBlock;
+};
+
+struct _gtnap_area_t
+{
+    AREA *area;
+    uint32_t currow;
+    TableView *view;
+    char_t temp[512];   // Temporal buffer between RDD and TableView
+};
+
+DeclPt(GtNapCallback);
+DeclPt(GtNapArea);
+DeclPt(Window);
+
+struct _gtnap_t
+{
+    Font *global_font;
+    ArrPt(Window) *modals;
+    ArrPt(Window) *windows;
+    ArrPt(GtNapCallback) *callbacks;
+    ArrPt(GtNapArea) *areas;
+};
 
 /*---------------------------------------------------------------------------*/
 
 static GtNap *GTNAP_GLOBAL = NULL;
 static PHB_ITEM *INIT_CODEBLOCK = NULL;
 static PHB_ITEM *END_CODEBLOCK = NULL;
+
+/*---------------------------------------------------------------------------*/
+
+Window *_component_window(const GuiComponent *component);
+
+/*---------------------------------------------------------------------------*/
 
 static GtNap *i_nappgui_create(void)
 {
@@ -223,11 +261,49 @@ void hb_gtnap_destroy_modal(void)
 
 /*---------------------------------------------------------------------------*/
 
-GtNapArea *hb_gtnap_new_area(void)
+GtNapArea *hb_gtnap_new_area(TableView *view)
 {
-    GtNapArea *area = heap_new0(GtNapArea);
-    arrpt_append(GTNAP_GLOBAL->areas, area, GtNapArea);
-    return area;
+    GtNapArea *gtarea = heap_new0(GtNapArea);
+    gtarea->area = hb_rddGetCurrentWorkAreaPointer();
+    gtarea->view = view;
+
+    if (gtarea->area != NULL)
+    {
+        SELF_GOTO(gtarea->area, 1);
+        gtarea->currow = 1;
+    }
+
+    arrpt_append(GTNAP_GLOBAL->areas, gtarea, GtNapArea);
+    return gtarea;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_area_set_row(GtNapArea *area, const uint32_t row)
+{
+    cassert_no_null(area);
+    if (area->currow != row)
+    {
+        SELF_GOTO(area->area, (HB_ULONG)row);
+        area->currow = row;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+extern char_t* hb_gtnap_area_temp(GtNapArea *area, uint32_t *size)
+{
+    cassert_no_null(area);
+    *size = sizeof(area->temp);
+    return area->temp;
+}
+
+/*---------------------------------------------------------------------------*/
+
+extern void* hb_gtnap_area(GtNapArea *area)
+{
+    cassert_no_null(area);
+    return area->area;
 }
 
 /*---------------------------------------------------------------------------*/

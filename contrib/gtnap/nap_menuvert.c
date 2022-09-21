@@ -10,7 +10,7 @@
 
 #include "gtnap.h"
 #include "nappgui.h"
-
+#include "hbapiitm.h"
 
 typedef struct _menuopt_t MenuOpt;
 typedef struct _menuvert_t MenuVert;
