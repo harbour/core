@@ -182,9 +182,10 @@ static void i_nappgui_destroy(GtNap **data)
 
 void hb_gtnap_runloop( void )
 {
-    HANDLE hInstance = GetModuleHandle( NULL );
+    void *hInstance = NULL;
     PHB_ITEM codeBlock_begin = hb_param(1, HB_IT_BLOCK);
     PHB_ITEM codeBlock_end = hb_param(2, HB_IT_BLOCK);
+    hb_winmainArgGet(&hInstance, NULL, NULL);
 
     log_printf("hb_gtnap_runloop()");
     INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
