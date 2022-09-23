@@ -35,7 +35,7 @@ HB_FUNC( NAP_TABLEVIEW_SIZE )
 // TODO: Configure columns
 static void i_create_columns(TableView *view, GtNapArea *gtarea)
 {
-    AREAP area = hb_gtnap_area(gtarea);
+    AREA *area = (AREA*)hb_gtnap_area(gtarea);
     HB_USHORT i, uiFields = 0;
     cassert_no_null(view);
     cassert_no_null(area);
@@ -43,8 +43,8 @@ static void i_create_columns(TableView *view, GtNapArea *gtarea)
     //uiFields = 5;
     for (i = 0; i < uiFields; ++i)
     {
-        char_t name[128];
-        name[0] = '\0';
+        // char_t name[128];
+        // name[0] = '\0';
         //SELF_FIELDNAME(pAREA, 0, name);
         //strcpy(name,)
         tableview_new_column_text(view);
@@ -70,7 +70,7 @@ static void i_create_columns(TableView *view, GtNapArea *gtarea)
 static void i_OnTableNotify(GtNapArea *gtarea, Event *e)
 {
     uint32_t etype = event_type(e);
-    AREAP area = hb_gtnap_area(gtarea);
+    AREA *area = (AREA*)hb_gtnap_area(gtarea);
 
     switch(etype) {
     case ekEVTBLNROWS:

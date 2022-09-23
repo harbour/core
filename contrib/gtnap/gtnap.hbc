@@ -1,19 +1,23 @@
-{!allwin|!x86}skip=yes
-
 # At the moment, all demos in Debug mode
 debug=yes
 
-incpaths=. ./inc/sewer ./inc/osbs ./inc/core ./inc/geom2d ./inc/draw2d ./inc/gui ./inc/inet ./inc/osapp
+incpaths=.
 
 # NAppGUI library paths
-{debug}libpaths=build/${hb_comp} lib/v110_xp_x86/Debug
-{nodebug}libpaths=build/${hb_comp} lib/v110_xp_x86/Release
+{debug & msvc}libpaths=build/${hb_comp} lib/v110_xp_x86/Debug
+{nodebug & msvc}libpaths=build/${hb_comp} lib/v110_xp_x86/Release
+{debug & gcc}libpaths=build/${hb_comp} lib/gcc7_gtk3_x64/Debug
+{nodebug & gcc}libpaths=build/${hb_comp} lib/gcc7_gtk3_x64/Release
 
 # NAppGUI uses static-linked 'LIBCMTD.lib' in Debug (sewer.lib)
 # This line avoid conflicts with 'LIBCMT.lib' in Debug mode
-{allwin&debug}ldflags=/NODEFAULTLIB:LIBCMT.lib
+{msvc & debug}ldflags=/NODEFAULTLIB:LIBCMT.lib
 
-libs=osapp gui osgui draw2d geom2d core osbs sewer
+{msvc}libs=osapp gui osgui draw2d geom2d core osbs sewer
+{gcc}libs=osapp gui osgui draw2d geom2d core osbs sewer pthread gtk-3 gdk-3 pangocairo-1.0 cairo gdk_pixbuf-2.0 pango-1.0 gio-2.0 glib-2.0 gobject-2.0
+
+{gcc}cpp=yes
+{msvc}cpp=no
 
 gt=${hb_name}
 gui=yes

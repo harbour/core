@@ -2,6 +2,7 @@
     "files.associations": {
         "*.txs": "html",
         "nappgui.h": "c",
-        "hbapirdd.h": "c"
+        "hbapirdd.h": "c",
+        "hbapicdp.h": "c"
     }
 }

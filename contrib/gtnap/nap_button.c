@@ -10,8 +10,12 @@
 
 /*---------------------------------------------------------------------------*/
 
+__EXTERN_C
+
 void _component_set_tag(GuiComponent *component, const uint32_t tag);
 uint32_t _component_get_tag(const GuiComponent *component);
+
+__END_C
 
 /*---------------------------------------------------------------------------*/
 

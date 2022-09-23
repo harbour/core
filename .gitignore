@@ -42,4 +42,4 @@ obj
 !lib/3rd
 !config/*.exe
 !/*.exe
-!/contrib/gtnap/libs/**
+!/contrib/gtnap/lib/**

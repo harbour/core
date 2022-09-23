@@ -8,12 +8,15 @@
 
 #define HB_GT_NAME NAP
 
+#include "hbvmint.h"
 #include "hbgtcore.h"
 #include "gui.hxx"
 
 typedef struct _gui_component_t GuiComponent;
 typedef struct _gtnap_callback_t GtNapCallback;
 typedef struct _gtnap_area_t GtNapArea;
+
+typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
 HB_EXTERN_BEGIN
 
@@ -53,9 +56,9 @@ extern void hb_gtnap_retFontGC(Font *font);
 
 extern void hb_gtnap_retWindowGC(Window *window);
 
-extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, void(*FPtr_CallBack)(void*, Event*));
+extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, FPtr_gtnap_callback func_callback);
 
-extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, void(*FPtr_CallBack)(void*, Event*));
+extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback);
 
 extern void hb_gtnap_callback(GtNapCallback *callback, Event *e);
 

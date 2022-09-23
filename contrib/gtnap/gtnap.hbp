@@ -12,7 +12,7 @@
 -iinc/osbs
 -iinc/sewer
 
--cflag={allwin}-D_WINDOWS
+-cflag={msvc}-D_WINDOWS
 -cflag=-DCMAKE_DEBUG
 
 #-olib/${hb_plat}/${hb_comp}/${hb_name}
@@ -25,7 +25,7 @@
 # -winuni- Fran: At the moment I only comment, to remember this option in the future.
 
 # Fran: Perfect, for the moment only Windows. I want to see the error when I compile on Linux/macOS
-"-stop={!allwin}Skipped: '${hb_name}' only supported on win platform. See gtnap.hbp -stop"
+# "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform. See gtnap.hbp -stop"
 
 gtnap.c
 nap_button.c
@@ -44,13 +44,9 @@ nap_tableview.c
 nap_textview.c
 nap_window.c
 
-# NOTE: Due to large quantity of unprecise code, it doesn't build in C++ mode.
-# Fran: Perfect, for the moment only ANSI-C
--cpp=no
+# Avoid linker error '__gxx_personality_v0'
+# GTNAP need to be linked with g++
+-cpp={gcc}yes
+-cpp={msvc}no
 
 -hbx=${hb_name}.hbx
-
-
-#${hb_name}.hbx
-#$hb_pkg_dynlib.hbm
-#$hb_pkg_install.hbm

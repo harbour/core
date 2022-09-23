@@ -42,12 +42,16 @@ struct _gtnap_t
 /*---------------------------------------------------------------------------*/
 
 static GtNap *GTNAP_GLOBAL = NULL;
-static PHB_ITEM *INIT_CODEBLOCK = NULL;
-static PHB_ITEM *END_CODEBLOCK = NULL;
+static PHB_ITEM INIT_CODEBLOCK = NULL;
+static PHB_ITEM END_CODEBLOCK = NULL;
 
 /*---------------------------------------------------------------------------*/
 
+__EXTERN_C
+
 Window *_component_window(const GuiComponent *component);
+
+__END_C
 
 /*---------------------------------------------------------------------------*/
 
@@ -185,7 +189,10 @@ void hb_gtnap_runloop( void )
     void *hInstance = NULL;
     PHB_ITEM codeBlock_begin = hb_param(1, HB_IT_BLOCK);
     PHB_ITEM codeBlock_end = hb_param(2, HB_IT_BLOCK);
+
+#if defined( HB_OS_WIN )
     hb_winmainArgGet(&hInstance, NULL, NULL);
+#endif
 
     log_printf("hb_gtnap_runloop()");
     INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
@@ -196,7 +203,7 @@ void hb_gtnap_runloop( void )
                 (FPtr_app_create)i_nappgui_create,
                 (FPtr_app_update)NULL,
                 (FPtr_destroy)i_nappgui_destroy,
-                "");
+                (char_t*)"");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -265,7 +272,7 @@ void hb_gtnap_destroy_modal(void)
 GtNapArea *hb_gtnap_new_area(TableView *view)
 {
     GtNapArea *gtarea = heap_new0(GtNapArea);
-    gtarea->area = hb_rddGetCurrentWorkAreaPointer();
+    gtarea->area = (AREA*)hb_rddGetCurrentWorkAreaPointer();
     gtarea->view = view;
 
     if (gtarea->area != NULL)
@@ -370,7 +377,7 @@ const char_t *hb_gtnap_parText(const uint32_t iParam)
     if (HB_ISCHAR(iParam))
         return hb_parcx(iParam);
     else
-        return (const char_t*)hb_parni(iParam);
+        return "Unknown text"; // (const char_t*)hb_parni(iParam);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -450,7 +457,7 @@ void hb_gtnap_retWindowGC(Window *window)
 
 /*---------------------------------------------------------------------------*/
 
-Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, void(*FPtr_CallBack)(void*, Event*))
+Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, FPtr_gtnap_callback func_callback)
 {
     PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
     GtNapCallback *callback = heap_new0(GtNapCallback);
@@ -458,12 +465,12 @@ Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *
     callback->codeBlock = hb_itemNew(codeBlock);
     callback->cb_component = component;
     arrpt_append(GTNAP_GLOBAL->callbacks, callback, GtNapCallback);
-    return listener(callback, FPtr_CallBack, GtNapCallback);
+    return listener(callback, func_callback, GtNapCallback);
 }
 
 /*---------------------------------------------------------------------------*/
 
-Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, void(*FPtr_CallBack)(void*, Event*))
+Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback)
 {
     PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
     GtNapCallback *callback = heap_new0(GtNapCallback);
@@ -471,7 +478,7 @@ Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window
     callback->codeBlock = hb_itemNew(codeBlock);
     callback->cb_window = window;
     arrpt_append(GTNAP_GLOBAL->callbacks, callback, GtNapCallback);
-    return listener(callback, FPtr_CallBack, GtNapCallback);
+    return listener(callback, func_callback, GtNapCallback);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -529,7 +536,7 @@ static void hb_gtnap_Exit( PHB_GT pGT )
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gtnap_Resize( PHB_GT pGT, int iRow, int iCol )
+static HB_BOOL hb_gtnap_Resize( PHB_GT pGT, int iRow, int iCol )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_Resize(%d, %d)", iRow, iCol);
@@ -538,7 +545,7 @@ static BOOL hb_gtnap_Resize( PHB_GT pGT, int iRow, int iCol )
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gtnap_SetMode( PHB_GT pGT, int iRow, int iCol )
+static HB_BOOL hb_gtnap_SetMode( PHB_GT pGT, int iRow, int iCol )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_SetMode(%d, %d)", iRow, iCol);
@@ -583,10 +590,10 @@ static int hb_gtnap_MaxRow( PHB_GT pGT )
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gtnap_CheckPos( PHB_GT pGT, int iRow, int iCol, long * plIndex )
+static HB_BOOL hb_gtnap_CheckPos( PHB_GT pGT, int iRow, int iCol, long * plIndex )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_CheckPos(%d, %d)"), iRow, iCol;
+    log_printf("hb_gtnap_CheckPos(%d, %d)", iRow, iCol);
     *plIndex = 0;
     return TRUE;
 }
@@ -611,7 +618,7 @@ static void hb_gtnap_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gtnap_IsColor( PHB_GT pGT )
+static HB_BOOL hb_gtnap_IsColor( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_IsColor()");
@@ -677,7 +684,7 @@ static int hb_gtnap_DispCount( PHB_GT pGT )
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gtnap_GetChar( PHB_GT pGT, int iRow, int iCol, int * pbColor, BYTE * pbAttr, USHORT * pusChar )
+static HB_BOOL hb_gtnap_GetChar( PHB_GT pGT, int iRow, int iCol, int * pbColor, HB_BYTE * pbAttr, HB_USHORT * pusChar )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_GetChar(%d, %d)", iRow, iCol);
@@ -689,7 +696,7 @@ static BOOL hb_gtnap_GetChar( PHB_GT pGT, int iRow, int iCol, int * pbColor, BYT
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, BYTE bAttr, USHORT usChar )
+static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_PutChar(%d, %d): %d, %d, %d", iRow, iCol, bColor, bAttr, usChar);
@@ -719,24 +726,24 @@ static void hb_gtnap_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
 static int hb_gtnap_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const char * pText, HB_SIZE ulLen )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_hb_gtnap_PutText(%d, %d, %d): %s (%d)", iRow, iCol, bColor, pText, ulLen);
+    log_printf("hb_gtnap_hb_gtnap_PutText(%d, %d, %d): %s (%d)", iRow, iCol, bColor, pText, (int)ulLen);
     return 0;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, BYTE bAttr, USHORT usChar, ULONG ulLen )
+static void hb_gtnap_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar, HB_SIZE ulLen )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_Replicate(%d, %d, %d, %d, %d, %d)", iRow, iCol, bColor, bAttr, usChar, ulLen);
+    log_printf("hb_gtnap_Replicate(%d, %d, %d, %d, %d, %d)", iRow, iCol, bColor, bAttr, usChar, (int)ulLen);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText, ULONG ulLength )
+static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText, HB_SIZE ulLength )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_WriteAt(%d, %d): %s (%d)", iRow, iCol, pText, ulLength);
+    log_printf("hb_gtnap_WriteAt(%d, %d): %s (%d)", iRow, iCol, pText, (int)ulLength);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -749,7 +756,7 @@ static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom,
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, USHORT bChar, int iRows, int iCols )
+static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, HB_USHORT bChar, int iRows, int iCols )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gt_wvw_Scroll(%d, %d, %d, %d): (%d)", iTop, iLeft, iBottom, iRight, bColor);
@@ -769,7 +776,7 @@ static void hb_gtnap_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRig
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight, USHORT bChar, int bColor )
+static void hb_gtnap_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight, HB_USHORT bChar, int bColor )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_HorizLine(%d, %d, %d): (%d)", iRow, iLeft, iRight, bColor);
@@ -778,7 +785,7 @@ static void hb_gtnap_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight, USH
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, USHORT bChar, int bColor )
+static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, HB_USHORT bChar, int bColor )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_VertLine(%d, %d, %d): (%d)", iCol, iTop, iBottom, bColor);
@@ -787,7 +794,7 @@ static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, USHO
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gtnap_GetBlink( PHB_GT pGT )
+static HB_BOOL hb_gtnap_GetBlink( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_GetBlink()");
@@ -796,7 +803,7 @@ static BOOL hb_gtnap_GetBlink( PHB_GT pGT )
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_SetBlink( PHB_GT pGT, BOOL bBlink )
+static void hb_gtnap_SetBlink( PHB_GT pGT, HB_BOOL bBlink )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_SetBlink(%d)", bBlink);
@@ -819,7 +826,7 @@ static const char * hb_gtnap_Version( PHB_GT pGT, int iType )
 static void hb_gtnap_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_OutStd(%s (%d))", pbyStr, ulLen);
+    log_printf("hb_gtnap_OutStd(%s (%d))", pbyStr, (int)ulLen);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -827,7 +834,7 @@ static void hb_gtnap_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 static void hb_gtnap_OutErr( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_OutErr(%s (%d))", pbyStr, ulLen);
+    log_printf("hb_gtnap_OutErr(%s (%d))", pbyStr, (int)ulLen);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -840,7 +847,7 @@ static void hb_gtnap_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( pInfo );
@@ -866,7 +873,7 @@ static void hb_gtnap_mouse_Exit( PHB_GT pGT )
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gtnap_mouse_IsPresent( PHB_GT pGT )
+static HB_BOOL hb_gtnap_mouse_IsPresent( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_mouse_IsPresent()");
@@ -893,24 +900,6 @@ static int hb_gtnap_mouse_Row( PHB_GT pGT )
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
-{
-    HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_mouse_GetPos()");
-    *piRow = 1;
-    *piCol = 1;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void hb_gtnap_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
-{
-    HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_mouse_SetPos(%d, %d)", iRow, iCol);
-}
-
-/*---------------------------------------------------------------------------*/
-
 static int hb_gtnap_mouse_CountButton( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
@@ -920,7 +909,7 @@ static int hb_gtnap_mouse_CountButton( PHB_GT pGT )
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gtnap_mouse_ButtonState( PHB_GT pGT, int iButton )
+static HB_BOOL hb_gtnap_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_mouse_ButtonState(%d)", iButton);
@@ -946,7 +935,7 @@ static void hb_gtnap_gfxText( PHB_GT pGT, int iTop, int iLeft, const char * cBuf
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
     log_printf("hb_gt_FuncInit()");
 
@@ -1064,8 +1053,8 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     // pFuncTable->MouseSetCursor = NULL;
     pFuncTable->MouseCol = hb_gtnap_mouse_Col;
     pFuncTable->MouseRow = hb_gtnap_mouse_Row;
-    // pFuncTable->MouseGetPos = hb_gtnap_mouse_GetPos;
-    // pFuncTable->MouseSetPos = hb_gtnap_mouse_SetPos;
+    // pFuncTable->MouseGetPos = NULL;
+    // pFuncTable->MouseSetPos = NULL;
     // pFuncTable->MouseSetBounds = NULL;
     // pFuncTable->MouseGetBounds = NULL;
     // pFuncTable->MouseStorageSize = NULL;
