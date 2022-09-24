@@ -36,33 +36,38 @@ HB_FUNC( NAP_TABLEVIEW_SIZE )
 static void i_create_columns(TableView *view, GtNapArea *gtarea)
 {
     AREA *area = (AREA*)hb_gtnap_area(gtarea);
-    HB_USHORT i, uiFields = 0;
     cassert_no_null(view);
-    cassert_no_null(area);
-    SELF_FIELDCOUNT(area, &uiFields);
-    //uiFields = 5;
-    for (i = 0; i < uiFields; ++i)
+
+    if (area != NULL)
     {
-        // char_t name[128];
-        // name[0] = '\0';
-        //SELF_FIELDNAME(pAREA, 0, name);
-        //strcpy(name,)
-        tableview_new_column_text(view);
-        tableview_column_width(view, i, 100);
-        tableview_header_title(view, i, "TITILE"/*name*/);
+
+        HB_USHORT i, uiFields = 0;
+
+        SELF_FIELDCOUNT(area, &uiFields);
+        //uiFields = 5;
+        for (i = 0; i < uiFields; ++i)
+        {
+            // char_t name[128];
+            // name[0] = '\0';
+            //SELF_FIELDNAME(pAREA, 0, name);
+            //strcpy(name,)
+            tableview_new_column_text(view);
+            tableview_column_width(view, i, 100);
+            tableview_header_title(view, i, "TITILE"/*name*/);
 
 
-        //  char * szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
-        //  szName[ 0 ] = '\0';
-        //  SELF_FIELDNAME( pArea, uiIndex, szName );
-        //  hb_retc_buffer( szName );
-        //  return;
+            //  char * szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
+            //  szName[ 0 ] = '\0';
+            //  SELF_FIELDNAME( pArea, uiIndex, szName );
+            //  hb_retc_buffer( szName );
+            //  return;
 
 
+        }
+
+    //    if( pArea )
+    //    hb_retni( uiFields );
     }
-
-//    if( pArea )
-//    hb_retni( uiFields );
 }
 
 /*---------------------------------------------------------------------------*/
@@ -144,6 +149,7 @@ HB_FUNC( NAP_TABLEVIEW_BIND_DB )
 {
     TableView *view = (TableView*)hb_parptr(1);
     GtNapArea *gtarea = hb_gtnap_new_area(view);
+    bstd_printf("Area: %p\n", gtarea);
     i_create_columns(view, gtarea);
     tableview_OnNotify(view, listener(gtarea, i_OnTableNotify, GtNapArea));
     tableview_update(view);

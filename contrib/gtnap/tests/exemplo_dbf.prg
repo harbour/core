@@ -9,9 +9,10 @@ PROC EXEMPLO_BROWSE_DBF()
     LOCAL V_Label1
 
     // Database index
-    IF FILE("dados\cotacao.dbf") .AND. .NOT. FILE("dados\cotacao.cdx")
-        USE dados\cotacao NEW EXCLUSIVE
-        INDEX ON COTACAO->CDINDX+DTOS(COTACAO->DTCOTA) TAG COTACAO1 TO dados\cotacao.cdx
+    // Use '/' and not '\' (problems in Linux)
+    IF FILE("dados/cotacao.dbf") .AND. .NOT. FILE("dados/cotacao.cdx")
+        USE dados/cotacao NEW EXCLUSIVE
+        INDEX ON COTACAO->CDINDX+DTOS(COTACAO->DTCOTA) TAG COTACAO1 TO dados/cotacao.cdx
         CLOSE COTACAO
     ELSE
        // MOSTRAR("M?????", "COTACAO index up-to-date", "Informação")
@@ -46,8 +47,9 @@ STATIC PROCEDURE TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR()
     LOCAL C_String := "Browse de arquivo DBF" + hb_eol() + "seleção simples," + hb_eol() + "com grid e com toolbar," + hb_eol() + "com opções adicionais"
 
     // DataBase connection
-    USE dados\cotacao NEW SHARED
-    //SET INDEX TO dados\cotacao
+    // Use '/' and not '\' (problems in Linux)
+    USE dados/cotacao NEW SHARED
+    //SET INDEX TO dados/cotacao
     GOTO TOP
 
     V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
@@ -85,7 +87,7 @@ STATIC PROCEDURE TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR()
     NAP_LAYOUT_BUTTON(V_Layout1, V_Button3, 0, 4)
     NAP_LAYOUT_BUTTON(V_Layout1, V_Button4, 0, 5)
     NAP_LAYOUT_BUTTON(V_Layout1, V_Button5, 0, 6)
-    //NAP_LAYOUT_VMARGIN(V_Layout1, 0, 20)
+    NAP_LAYOUT_VMARGIN(V_Layout1, 0, 20)
     NAP_LAYOUT_VMARGIN(V_Layout1, 1, 20)
     NAP_LAYOUT_VMARGIN(V_Layout1, 2, 5)
     NAP_LAYOUT_VMARGIN(V_Layout1, 3, 5)
