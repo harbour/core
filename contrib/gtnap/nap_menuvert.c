@@ -352,6 +352,15 @@ HB_FUNC( NAP_MENUVERT_AUTOCLOSE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_MENUVERT_SELECTED )
+{
+    Panel *panel = (Panel*)hb_parptr(1);
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    hb_retni(menu->selected + 1);
+}
+
+/*---------------------------------------------------------------------------*/
+
 // HB_FUNC( NAP_MENUVERT_FOCUS )
 // {
 //     Panel *panel = (Panel*)hb_parptr(1);
