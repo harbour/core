@@ -13,10 +13,10 @@ PROC EXEMPLO_BROWSE_VETOR()
     V_Layout1 := NAP_LAYOUT_CREATE(1, 2)
     V_MenuVert := NAP_MENUVERT_CREATE()
     V_Label1 := NAP_LABEL_WITH_TEXT("Escolha o tipo de janela de browse de vetor")
-    NAP_MENUVERT_ADD(V_MenuVert, "Janela seleção simples, sem grade, nem toolbar", {|| TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM() })
+    NAP_MENUVERT_ADD(V_MenuVert, "Janela seleção simples, sem grade, nem toolbar", {|| TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM(.F.) })
     NAP_MENUVERT_ADD(V_MenuVert, "Janela seleção múltipla, com grade, com toolbar, e rolagem", {|| TST_BROWSE_VETOR_MULTIPLA_COM_GRADE_COM_TOOLBAR_COM_ROLAGEM() })
     NAP_MENUVERT_ADD(V_MenuVert, "Janela seleção estendida, com grade, sem barra de rolagem", {|| TST_BROWSE_VETOR_ESTENDIDA_COM_GRADE_COM_TOOLBAR_SEM_ROLAGEM() })
-    NAP_MENUVERT_ADD(V_MenuVert, "Janela seleção simples com AUTOCLOSE", {|| TST_BROWSE_VETOR_SIMPLES_COM_AUTOCLOSE() })
+    NAP_MENUVERT_ADD(V_MenuVert, "Janela seleção simples com AUTOCLOSE", {|| TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM(.T.) })
     NAP_LAYOUT_LABEL(V_Layout1, V_Label1, 0, 0)
     NAP_LAYOUT_PANEL(V_Layout1, V_MenuVert, 0, 1)
     NAP_LAYOUT_VMARGIN(V_Layout1, 0, 20)
@@ -29,7 +29,7 @@ PROC EXEMPLO_BROWSE_VETOR()
 
 /*---------------------------------------------------------------------------*/
 
-STATIC PROCEDURE TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM()
+STATIC PROCEDURE TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM(L_AutoClose)
     LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2
     LOCAL V_MenuVert, V_Button
     LOCAL V_Label1
@@ -63,11 +63,11 @@ STATIC PROCEDURE TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM()
     NAP_IMAGEVIEW_SCALE(V_ImageView, ekNAP_SCALE_ASPECTDW)
 
     FOR N_Cont := 1 TO N_NumOpts
-        NAP_MENUVERT_ADD(V_MenuVert, V_Vetor[N_Cont], { || EXIBIR_ITEM_SELECIONADO(V_Vetor, V_MenuVert) })
+        NAP_MENUVERT_ADD(V_MenuVert, V_Vetor[N_Cont], { || EXIBIR_ITEM_SELECIONADO(V_Vetor, V_MenuVert, L_AutoClose) })
     NEXT
 
     NAP_BUTTON_TEXT(V_Button, "F5 = exibir selecionados")
-    NAP_BUTTON_ONCLICK(V_Button, {|| EXIBIR_ITEM_SELECIONADO(V_Vetor, V_MenuVert) })
+    NAP_BUTTON_ONCLICK(V_Button, {|| EXIBIR_ITEM_SELECIONADO(V_Vetor, V_MenuVert, L_AutoClose) })
 
     // Widget disposition in layouts
     NAP_LAYOUT_LABEL(V_Layout1, V_Label1, 0, 0)
@@ -99,10 +99,16 @@ STATIC PROCEDURE TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM()
 
 /*---------------------------------------------------------------------------*/
 
-STATIC PROCEDURE EXIBIR_ITEM_SELECIONADO(V_Vetor, V_MenuVert)
+STATIC PROCEDURE EXIBIR_ITEM_SELECIONADO(V_Vetor, V_MenuVert, L_AutoClose)
     LOCAL N_Pos  := NAP_MENUVERT_SELECTED(V_MenuVert)
     MOSTRAR("M15664", "A posição selecionada foi " + LTRIM(STR(N_Pos)), "Informação")
     MOSTRAR("M15666", "A posição selecionada contém '" + V_Vetor[N_Pos] + "'", "Informação")
+
+    IF L_AutoClose
+        NAP_WINDOW_STOP_MODAL(0)
+    ENDIF
+
+    RETURN
 
 /*---------------------------------------------------------------------------*/
 
@@ -114,11 +120,5 @@ STATIC PROCEDURE TST_BROWSE_VETOR_MULTIPLA_COM_GRADE_COM_TOOLBAR_COM_ROLAGEM()
 
 STATIC PROCEDURE TST_BROWSE_VETOR_ESTENDIDA_COM_GRADE_COM_TOOLBAR_SEM_ROLAGEM()
     MOSTRAR("M?????", "Janela seleção estendida, com grade, sem barra de rolagem", "Informação")
-    RETURN
-
-/*---------------------------------------------------------------------------*/
-
-STATIC PROCEDURE TST_BROWSE_VETOR_SIMPLES_COM_AUTOCLOSE()
-    MOSTRAR("M?????", "Janela seleção simples com AUTOCLOSE", "Informação")
     RETURN
 
