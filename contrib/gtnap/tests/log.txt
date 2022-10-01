@@ -1,7 +1,0 @@
-HELLO WORLD!!! gtnap
-HELLO GTNAPP hb_gt_FuncInit()
-gtnap hb_gt_wvw_Init()
-gtnap hb_gt_wvw_Exit()
-HELLO GTNAPP hb_gt_FuncInit()
-gtnap hb_gt_wvw_Init()
-gtnap hb_gt_wvw_Exit()
