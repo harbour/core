@@ -126,10 +126,6 @@ PROC EXEMPLO_ENTRADA_DADOS()
     PERGUN("'Entrada de dados' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
-PROC EXEMPLO_AUXILIARES()
-    PERGUN("'Janelas auxiliares' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
-    RETURN
-
 /*---------------------------------------------------------------------------*/
 
 //
