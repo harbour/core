@@ -603,3 +603,14 @@ HB_FUNC( NAP_LAYOUT_UPDATE )
 }
 
 /*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_LAYOUT_FOCUS )
+{
+    Layout *layout = (Layout*)hb_parptr(1);
+    uint32_t col = hb_parni(2);
+    uint32_t row = hb_parni(3);
+    Cell *cell = layout_cell(layout, col, row);
+    cell_focus(cell);
+}
+
+/*---------------------------------------------------------------------------*/

@@ -87,7 +87,7 @@ STATIC PROCEDURE TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM(L_Au
     NAP_LAYOUT_VMARGIN(V_Layout1, 1, 50)
     // Button is alignet to left
     NAP_LAYOUT_HALIGN(V_Layout1, 0, 2, ekNAP_ALIGN_LEFT)
-    // Globar border margin
+    // Global border margin
     NAP_LAYOUT_MARGIN4(V_Layout1, 0, 120, 30, 75)
 
     // Configure window and launch
@@ -188,7 +188,7 @@ STATIC PROCEDURE TST_BROWSE_VETOR_MULTIPLA_COM_GRADE_COM_TOOLBAR(L_ComRolagen)
     NAP_LAYOUT_HALIGN(V_Layout1, 0, 2, ekNAP_ALIGN_LEFT)
     NAP_LAYOUT_HALIGN(V_Layout1, 0, 3, ekNAP_ALIGN_LEFT)
     NAP_LAYOUT_HALIGN(V_Layout1, 0, 4, ekNAP_ALIGN_LEFT)
-    // Globar border margin
+    // Global border margin
     NAP_LAYOUT_MARGIN4(V_Layout1, 0, 40, 30, 40)
 
     // Adding toolbar

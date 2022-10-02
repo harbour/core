@@ -112,7 +112,7 @@ STATIC PROCEDURE TST_MENU_SEM_BOTAO_ESC()
     NAP_LAYOUT_PADDING4(V_Layout2, 0, 0, 25, 0, 0, 0)
     // Button horizontal margin
     NAP_LAYOUT_VMARGIN(V_Layout3, 0, 60)
-    // Globar border margin
+    // Global border margin
     NAP_LAYOUT_MARGIN4(V_Layout3, 0, 100, 30, 20)
 
     // Configure window and launch
