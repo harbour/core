@@ -63,8 +63,8 @@ HB_FUNC( NAP_LISTBOX_ADD_ELEM )
 {
     ListBox *listbox = (ListBox*)hb_parptr(1);
     const char_t *text = hb_gtnap_parText(2);
-    Image *image = hb_gtnap_parImage(3);
-    listbox_add_elem(listbox, text, image);
+    //Image *image = hb_gtnap_parImage(3);
+    listbox_add_elem(listbox, text, NULL);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -75,7 +75,7 @@ HB_FUNC( NAP_LISTBOX_SET_ELEM )
     uint32_t index = hb_parni(2);
     const char_t *text = hb_gtnap_parText(3);
     Image *image = hb_gtnap_parImage(4);
-    listbox_set_elem(listbox, index, text, image);
+    listbox_set_elem(listbox, index - 1, text, image);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ HB_FUNC( NAP_LISTBOX_COLOR )
     ListBox *listbox = (ListBox*)hb_parptr(1);
     uint32_t index = hb_parni(2);
     color_t color = (color_t)hb_parni(3);
-    listbox_color(listbox, index, color);
+    listbox_color(listbox, index - 1, color);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -103,7 +103,7 @@ HB_FUNC( NAP_LISTBOX_SELECT )
     ListBox *listbox = (ListBox*)hb_parptr(1);
     uint32_t index = hb_parni(2);
     bool_t select = (bool_t)hb_parl(3);
-    listbox_select(listbox, index, select);
+    listbox_select(listbox, index - 1, select);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -113,7 +113,8 @@ HB_FUNC( NAP_LISTBOX_CHECK )
     ListBox *listbox = (ListBox*)hb_parptr(1);
     uint32_t index = hb_parni(2);
     bool_t check = (bool_t)hb_parl(3);
-    listbox_check(listbox, index, check);
+    listbox_check(listbox, index - 1, check);
+    view_update((View*)listbox);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -131,7 +132,7 @@ HB_FUNC( NAP_LISTBOX_TEXT )
 {
     ListBox *listbox = (ListBox*)hb_parptr(1);
     uint32_t index = hb_parni(2);
-    const char_t *text = listbox_text(listbox, index);
+    const char_t *text = listbox_text(listbox, index - 1);
     hb_retc(text);
 }
 
@@ -141,7 +142,7 @@ HB_FUNC( NAP_LISTBOX_SELECTED )
 {
     ListBox *listbox = (ListBox*)hb_parptr(1);
     uint32_t index = hb_parni(2);
-    bool_t sel = listbox_selected(listbox, index);
+    bool_t sel = listbox_selected(listbox, index - 1);
     hb_retl(sel);
 }
 
@@ -151,6 +152,6 @@ HB_FUNC( NAP_LISTBOX_CHECKED )
 {
     ListBox *listbox = (ListBox*)hb_parptr(1);
     uint32_t index = hb_parni(2);
-    bool_t check = listbox_checked(listbox, index);
+    bool_t check = listbox_checked(listbox, index - 1);
     hb_retl(check);
 }
