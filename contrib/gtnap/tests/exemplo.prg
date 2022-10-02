@@ -122,10 +122,6 @@ PROC EXEMPLO_TEXTO_MEMORIA()
     PERGUN("'Exibição/edição de texto em memória' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
     RETURN
 
-PROC EXEMPLO_ENTRADA_DADOS()
-    PERGUN("'Entrada de dados' option pressed", {"Ok"}, 1, .F., "Opção pressionada no MenuVert", "info")
-    RETURN
-
 /*---------------------------------------------------------------------------*/
 
 //
