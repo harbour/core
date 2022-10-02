@@ -7,6 +7,15 @@
 
 /*---------------------------------------------------------------------------*/
 
+__EXTERN_C
+
+void _component_set_tag(GuiComponent *component, const uint32_t tag);
+uint32_t _component_get_tag(const GuiComponent *component);
+
+__END_C
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_EDIT_CREATE )
 {
     Edit *edit = edit_create();
@@ -186,3 +195,20 @@ HB_FUNC( NAP_EDIT_GET_TEXT )
     hb_retc(text);
 }
 
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_EDIT_ID )
+{
+    Edit *edit = (Edit*)hb_parptr(1);
+    uint32_t id = hb_parni(2);
+    _component_set_tag((GuiComponent*)edit, id);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_EDIT_GET_ID )
+{
+    Edit *edit = (Edit*)hb_parptr(1);
+    uint32_t id = _component_get_tag((GuiComponent*)edit);
+    hb_retni((int)id);
+}

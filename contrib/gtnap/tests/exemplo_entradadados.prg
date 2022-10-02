@@ -305,7 +305,7 @@ STATIC PROCEDURE TST_ENTRADA_DADOS_FILTRO_TECLAS()
     NAP_LABEL_TEXT(V_Label1, C_String)
     NAP_LABEL_ALIGN(V_Label1, ekNAP_ALIGN_CENTER)
     NAP_EDIT_TEXT(V_Edit1, "APENAS ACEITAR MAIÚSCULAS")
-    NAP_EDIT_ONFILTER(V_Edit1, {|| VERIFICAR_MAIUSCULAS(V_Edit1) })
+    NAP_EDIT_ONFILTER(V_Edit1, {| hEv | VERIFICAR_MAIUSCULAS(hEv) })
 
     // Widget disposition in layouts
     NAP_LAYOUT_LABEL(V_Layout1, V_Label1, 0, 0)
@@ -333,9 +333,10 @@ STATIC PROCEDURE TST_ENTRADA_DADOS_FILTRO_TECLAS()
 
 /*---------------------------------------------------------------------------*/
 
-STATIC PROCEDURE VERIFICAR_MAIUSCULAS(V_Edit1)
-    // LOCAL C_Text := NAP_EDIT_GET_TEXT(V_Edit1)
-    // MOSTRAR("M?????", C_Text, "Informação")
+STATIC PROCEDURE VERIFICAR_MAIUSCULAS(hEv)
+    LOCAL C_Text := NAP_EVENT_TEXT(hEv)
+    LOCAL C_Upper := Upper(C_Text)
+    NAP_EVENT_TEXT_FILTER(hEv, C_Upper)
     RETURN
 
 /*---------------------------------------------------------------------------*/
@@ -353,10 +354,14 @@ STATIC FUNCTION DADA_PANEL(N_Fields)
         V_Label2 := NAP_LABEL_CREATE()
         V_Edit1 := NAP_EDIT_CREATE()
         NAP_EDIT_TEXT(V_Edit1, "Valor " + hb_ntos(N_Cont))
+        NAP_EDIT_ID(V_Edit1, N_Cont)
+        NAP_EDIT_ONCHANGE(V_Edit1, {| hEv | GRID_CONCLUIR_ENTRADA(hEv, V_Layout1) })
         NAP_LABEL_TEXT(V_Label2, "Valor " + hb_ntos(N_Cont))
         NAP_LAYOUT_LABEL(V_Layout1, V_Label1, 0, (N_Cont - 1) * 2)
         NAP_LAYOUT_EDIT(V_Layout1, V_Edit1, 1, (N_Cont - 1) * 2)
         NAP_LAYOUT_LABEL(V_Layout1, V_Label2, 1, ((N_Cont - 1) * 2) + 1)
+        // The label width expands all EditBox width (instead the width of first text)
+        NAP_LAYOUT_HALIGN(V_Layout1, 1, ((N_Cont - 1) * 2) + 1, ekNAP_ALIGN_JUSTIFY)
 
         IF N_Cont < N_Fields
             NAP_LAYOUT_VMARGIN(V_Layout1, ((N_Cont - 1) * 2) + 1, 20)
@@ -368,6 +373,16 @@ STATIC FUNCTION DADA_PANEL(N_Fields)
     V_Panel := NAP_PANEL_SCROLL(.F., .T.)
     NAP_PANEL_LAYOUT(V_Panel, V_Layout1)
     RETURN V_Panel
+
+/*---------------------------------------------------------------------------*/
+
+STATIC PROCEDURE GRID_CONCLUIR_ENTRADA(hEv, V_Layout1)
+    LOCAL V_Edit := NAP_EVENT_EDIT(hEv)
+    LOCAL N_Id := NAP_EDIT_GET_ID(V_Edit)
+    LOCAL V_Label := NAP_LAYOUT_GET_LABEL(V_Layout1, 1, ((N_Id - 1) * 2) + 1)
+    LOCAL C_Text := NAP_EVENT_TEXT(hEv)
+    NAP_LABEL_TEXT(V_Label, C_Text)
+    RETURN
 
 /*---------------------------------------------------------------------------*/
 

@@ -28,6 +28,15 @@ HB_FUNC( NAP_EVENT_BUTTON )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_EVENT_EDIT )
+{
+    Event *ev = (Event*)hb_parptr(1);
+    Edit *edit = event_sender(ev, Edit);
+    hb_retptr(edit);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_EVENT_RESULT_FALSE )
 {
     Event *ev = (Event*)hb_parptr(1);
@@ -60,4 +69,24 @@ HB_FUNC( NAP_EVENT_WINCLOSE_BUTTON )
     Event *ev = (Event*)hb_parptr(1);
     const EvWinClose *p = event_params(ev, EvWinClose);
     hb_retl(p->origin == ekCLBUTTON);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_EVENT_TEXT )
+{
+    Event *ev = (Event*)hb_parptr(1);
+    const EvText *p = event_params(ev, EvText);
+    hb_retc(p->text);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_EVENT_TEXT_FILTER )
+{
+    Event *ev = (Event*)hb_parptr(1);
+    const char_t *text = hb_gtnap_parText(2);
+    EvTextFilter *r = event_result(ev, EvTextFilter);
+    str_copy_c(r->text, sizeof(r->text), text);
+    r->apply = TRUE;
 }
