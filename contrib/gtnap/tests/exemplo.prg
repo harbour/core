@@ -31,6 +31,7 @@ LOCAL V_Label1, V_Label2, V_Label3
 
 DIRET_BMPS(".\bmps\")
 DIRET_TOOLBAR(".\imgtbar\")
+Set(_SET_DATEFORMAT, "dd/mm/yyyy")
 
 // We want big font size of main Window
 // TODO: The global font size

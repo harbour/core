@@ -273,7 +273,14 @@ STATIC PROCEDURE TST_ENTRADA_DADOS_DATA_INVALIDA()
 
 STATIC PROCEDURE VERIFICAR_DATA(V_Edit1)
     LOCAL C_Text := NAP_EDIT_GET_TEXT(V_Edit1)
-    MOSTRAR("M?????", C_Text, "Informação")
+    LOCAL C_Date := CToD(C_Text)
+
+    IF .NOT. Empty( C_Date )
+        MOSTRAR("M?????", "Entrada de dados finalizada com sucesso", "Informação")
+    ELSE
+        MOSTRAR("M?????", "Esta data não existe no calendário", "Informação")
+    ENDIF
+
     RETURN
 
 /*---------------------------------------------------------------------------*/
