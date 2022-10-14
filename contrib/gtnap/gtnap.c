@@ -9,8 +9,11 @@
 #include "osmain.h"
 #include "hbapiitm.h"
 #include "hbapirdd.h"
+#include "hbapistr.h"
+#include "hbdate.h"
 
 typedef struct _gtnap_t GtNap;
+typedef struct _gtnap_column_t GtNapColumn;
 
 struct _gtnap_callback_t
 {
@@ -19,12 +22,20 @@ struct _gtnap_callback_t
     PHB_ITEM codeBlock;
 };
 
+struct _gtnap_column_t
+{
+    PHB_ITEM codeBlock;
+};
+
+DeclSt(GtNapColumn);
+
 struct _gtnap_area_t
 {
     AREA *area;
     uint32_t currow;
     TableView *view;
     char_t temp[512];   // Temporal buffer between RDD and TableView
+    ArrSt(GtNapColumn) *columns;
 };
 
 DeclPt(GtNapCallback);
@@ -87,8 +98,20 @@ static void i_destroy_callback(GtNapCallback **callback)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_remove_column(GtNapColumn *column)
+{
+    cassert_no_null(column);
+    if (column->codeBlock != NULL)
+        hb_itemRelease(column->codeBlock);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_destroy_area(GtNapArea **area)
 {
+    cassert_no_null(area);
+    cassert_no_null(*area);
+    arrst_destroy(&(*area)->columns, i_remove_column, GtNapColumn);
     heap_delete(area, GtNapArea);
 }
 
@@ -275,6 +298,7 @@ GtNapArea *hb_gtnap_new_area(TableView *view)
     GtNapArea *gtarea = heap_new0(GtNapArea);
     gtarea->area = (AREA*)hb_rddGetCurrentWorkAreaPointer();
     gtarea->view = view;
+    gtarea->columns = arrst_create(GtNapColumn);
 
     if (gtarea->area != NULL)
     {
@@ -284,6 +308,32 @@ GtNapArea *hb_gtnap_new_area(TableView *view)
 
     arrpt_append(GTNAP_GLOBAL->areas, gtarea, GtNapArea);
     return gtarea;
+}
+
+/*---------------------------------------------------------------------------*/
+
+GtNapArea *hb_gtnap_get_area(TableView *view)
+{
+    arrpt_foreach(gtarea, GTNAP_GLOBAL->areas, GtNapArea)
+        if (gtarea->view == view)
+            return gtarea;
+    arrpt_end();
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, PHB_ITEM codeBlock)
+{
+    uint32_t id = 0;
+    GtNapColumn *column = NULL;
+    cassert_no_null(area);
+    id = tableview_new_column_text(area->view);
+    tableview_header_title(area->view, id, title);
+    tableview_column_width(area->view, id, width);
+    cassert(id == arrst_size(area->columns, GtNapColumn));
+    column = arrst_new(area->columns, GtNapColumn);
+    column->codeBlock = hb_itemNew(codeBlock);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -300,7 +350,61 @@ void hb_gtnap_area_set_row(GtNapArea *area, const uint32_t row)
 
 /*---------------------------------------------------------------------------*/
 
-extern char_t* hb_gtnap_area_temp(GtNapArea *area, uint32_t *size)
+uint32_t hb_gtnap_area_row_count(GtNapArea *area)
+{
+    HB_ULONG ulRecCount = 0;
+    cassert_no_null(area);
+    SELF_RECCOUNT(area->area, &ulRecCount);
+    return (uint32_t)ulRecCount;
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id, const uint32_t row_id)
+{
+    const GtNapColumn *column = NULL;
+    PHB_ITEM pItem = NULL;
+    HB_TYPE type = 0;
+
+    cassert_no_null(area);
+    cassert(field_id > 0);
+    cassert(row_id > 0);
+
+    // First, select the row in area
+    if (area->currow != row_id)
+    {
+        SELF_GOTO(area->area, (HB_ULONG)row_id);
+        area->currow = row_id;
+    }
+
+    column = arrst_get_const(area->columns, field_id - 1, GtNapColumn);
+    pItem = hb_itemDo(column->codeBlock, 0);
+    type = HB_ITEM_TYPE(pItem);
+    area->temp[0] = '\0';
+
+    if (type == HB_IT_STRING)
+    {
+        hb_itemCopyStrUTF8(pItem, area->temp, sizeof(area->temp));
+    }
+    else if (type == HB_IT_DATE)
+    {
+        char date[16];
+        hb_itemGetDS(pItem, date);
+        hb_dateFormat(date, area->temp, "DD/MM/YYYY");
+    }
+    else if (type == HB_IT_DOUBLE)
+    {
+        double value = hb_itemGetND(pItem);
+        bstd_sprintf(area->temp, sizeof(area->temp), "%12.4f", value);
+    }
+
+    hb_itemRelease(pItem);
+    return area->temp;
+}
+
+/*---------------------------------------------------------------------------*/
+
+char_t* hb_gtnap_area_temp(GtNapArea *area, uint32_t *size)
 {
     cassert_no_null(area);
     *size = sizeof(area->temp);
@@ -309,7 +413,7 @@ extern char_t* hb_gtnap_area_temp(GtNapArea *area, uint32_t *size)
 
 /*---------------------------------------------------------------------------*/
 
-extern void* hb_gtnap_area(GtNapArea *area)
+void* hb_gtnap_area(GtNapArea *area)
 {
     cassert_no_null(area);
     return area->area;

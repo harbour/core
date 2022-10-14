@@ -13,6 +13,7 @@
 -iinc/sewer
 
 -cflag={msvc}-D_WINDOWS
+-cflag={gcc}-g
 -cflag=-DCMAKE_DEBUG
 
 #-olib/${hb_plat}/${hb_comp}/${hb_name}

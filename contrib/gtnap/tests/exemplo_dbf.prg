@@ -1,6 +1,8 @@
 #require "gtnap"
 #include "gtnap.ch"
 
+FIELD cdindx, dtcota, vlcota
+
 /*---------------------------------------------------------------------------*/
 
 PROC EXEMPLO_BROWSE_DBF()
@@ -73,6 +75,12 @@ STATIC PROCEDURE TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR()
     NAP_IMAGEVIEW_SCALE(V_ImageView, ekNAP_SCALE_ASPECTDW)
     NAP_TABLEVIEW_SIZE(V_Table, 600, 450)
     NAP_TABLEVIEW_BIND_DB(V_Table)
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Moeda", 60, {|| cdindx})
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Data", 100, {|| dtcota})
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Data+1", 100, {|| dtcota + 1})
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Data+2", 100, {|| dtcota + 2})
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Cotação", 140, {|| TRANSFORM(vlcota, "@E 999,999,999,999.99999999")})
+    NAP_TABLEVIEW_UPDATE_DB(V_Table)
     NAP_BUTTON_TEXT(V_Button1, "Incrementar valor corrente")
     NAP_BUTTON_TEXT(V_Button2, "Incrementar todos os valores")
     NAP_BUTTON_TEXT(V_Button3, "Exclui linha atual")
