@@ -31,6 +31,10 @@ void tableview_header_title(TableView *view, const uint32_t column_id, const cha
 
 void tableview_header_align(TableView *view, const uint32_t column_id, const align_t align);
 
+void tableview_header_visible(TableView *view, const bool_t visible);
+
+void tableview_multisel(TableView *view, const bool_t multisel);
+
 void tableview_update(TableView *view);
 
 __END_C

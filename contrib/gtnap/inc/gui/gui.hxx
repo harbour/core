@@ -112,6 +112,7 @@ typedef enum _gevent_t
     ekEVOBJCHANGE,
 
     ekEVTBLNROWS,
+    ekEVTBLSEL,
     ekEVTBLCELL
 } event_t;
 
@@ -149,6 +150,7 @@ typedef struct _evsize_t EvSize;
 typedef struct _evwinclose_t EvWinClose;
 typedef struct _evmenu_t EvMenu;
 typedef struct _evtbpos_t EvTbPos;
+typedef struct _evtbsel_t EvTbSel;
 typedef struct _evtbcell_t EvTbCell;
 
 typedef ResPack*(*FPtr_respack)(const char_t *locale);
@@ -243,6 +245,11 @@ struct _evtbpos_t
 {
     uint32_t col;
     uint32_t row;
+};
+
+struct _evtbsel_t
+{
+    ArrSt(uint32_t) *sel;
 };
 
 struct _evtbcell_t

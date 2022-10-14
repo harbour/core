@@ -47,13 +47,24 @@ static void i_create_columns(TableView *view, GtNapArea *gtarea)
         //uiFields = 5;
         for (i = 0; i < uiFields; ++i)
         {
-            // char_t name[128];
-            // name[0] = '\0';
-            //SELF_FIELDNAME(pAREA, 0, name);
+            char_t name[128];
+
+            char * szName = ( char * ) hb_xgrab( area->uiMaxFieldNameLength + 1 );
+            name[0] = '\0';
+            szName[ 0 ] = '\0';
+            log_printf("PREV NAME: %s", name);
+            SELF_FIELDNAME( area, i, szName );
+            //  hb_retc_buffer( szName );
+            //  return;
+            log_printf("NAME: %s", "HELLO");
+
+            //log_printf("PREV NAME: %s", name);
+            //SELF_FIELDNAME(area, i, name);
             //strcpy(name,)
+            //log_printf("NAME: %s", name);
             tableview_new_column_text(view);
             tableview_column_width(view, i, 100);
-            tableview_header_title(view, i, "TITILE"/*name*/);
+            tableview_header_title(view, i, "TITLE");
 
 
             //  char * szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
@@ -138,8 +149,6 @@ static void i_OnTableNotify(GtNapArea *gtarea, Event *e)
 
         break;
     }
-
-    cassert_default();
     }
 }
 
