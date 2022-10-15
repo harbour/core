@@ -38,13 +38,13 @@ extern GtNapArea *hb_gtnap_new_area(TableView *view);
 
 extern GtNapArea *hb_gtnap_get_area(TableView *view);
 
-extern void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, PHB_ITEM codeBlock);
+extern void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, const align_t align, PHB_ITEM codeBlock);
 
 extern void hb_gtnap_area_set_row(GtNapArea *area, const uint32_t row);
 
 extern uint32_t hb_gtnap_area_row_count(GtNapArea *area);
 
-extern const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id, const uint32_t row_id);
+extern const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id, const uint32_t row_id, align_t *align);
 
 extern char_t* hb_gtnap_area_temp(GtNapArea *area, uint32_t *size);
 

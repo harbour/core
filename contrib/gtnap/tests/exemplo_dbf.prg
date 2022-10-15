@@ -74,18 +74,22 @@ STATIC PROCEDURE TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR()
     NAP_IMAGEVIEW_SIZE(V_ImageView, 100, 100)
     NAP_IMAGEVIEW_SCALE(V_ImageView, ekNAP_SCALE_ASPECTDW)
     NAP_TABLEVIEW_SIZE(V_Table, 600, 450)
+    NAP_TABLEVIEW_GRID(V_Table, .T., .T.)
     NAP_TABLEVIEW_BIND_DB(V_Table)
-    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Moeda", 60, {|| cdindx})
-    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Data", 100, {|| dtcota})
-    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Data+1", 100, {|| dtcota + 1})
-    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Data+2", 100, {|| dtcota + 2})
-    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Cotação", 140, {|| TRANSFORM(vlcota, "@E 999,999,999,999.99999999")})
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "D.", 40, ekNAP_ALIGN_LEFT, {|| TESTA_DELECAO(.NOT. EOF())})
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Moeda", 60, ekNAP_ALIGN_LEFT, {|| cdindx})
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Data", 100, ekNAP_ALIGN_CENTER, {|| dtcota})
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Data+1", 100, ekNAP_ALIGN_CENTER, {|| dtcota + 1})
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Data+2", 100, ekNAP_ALIGN_CENTER, {|| dtcota + 2})
+    NAP_TABLEVIEW_COLUMN_DB(V_Table, "Cotação", 140, ekNAP_ALIGN_RIGHT, {|| TRANSFORM(vlcota, "@E 999,999,999,999.99999999")})
     NAP_TABLEVIEW_UPDATE_DB(V_Table)
     NAP_BUTTON_TEXT(V_Button1, "Incrementar valor corrente")
     NAP_BUTTON_TEXT(V_Button2, "Incrementar todos os valores")
     NAP_BUTTON_TEXT(V_Button3, "Exclui linha atual")
     NAP_BUTTON_TEXT(V_Button4, "Procura linha atual")
     NAP_BUTTON_TEXT(V_Button5, "Selecionar")
+    NAP_BUTTON_ONCLICK(V_Button1, {| hEv | INCREMENTA_CORRENTE(hEv, V_Table) })
+    NAP_BUTTON_ONCLICK(V_Button2, {| hEv | INCREMENTA_TODOS(hEv, V_Table) })
     NAP_LAYOUT_IMAGEVIEW(V_Layout2, V_ImageView, 0, 0)
     NAP_LAYOUT_LABEL(V_Layout2, V_Label1, 1, 0)
     NAP_LAYOUT_LAYOUT(V_Layout1, V_Layout2, 0, 0)
@@ -120,6 +124,48 @@ STATIC PROCEDURE TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR()
     // DataBase close
     CLOSE COTACAO
     RETURN
+
+/*---------------------------------------------------------------------------*/
+
+STATIC FUNCTION TESTA_DELECAO(L_NAO_EOF)
+    LOCAL C_Str
+    IF L_NAO_EOF
+        IF DELETED()
+            C_Str := "Sim"
+            ALTD()
+        ELSE
+            C_Str := "Não"
+        ENDIF
+    ELSE
+        C_Str := "Eof"
+    ENDIF
+    Return C_Str
+
+/*---------------------------------------------------------------------------*/
+
+STATIC PROCEDURE INCREMENTA_CORRENTE(hEv, V_Table)
+
+    LOCAL N_Selecionado := NAP_TABLEVIEW_SELECTED(V_Table)
+    LOCAL N_Cont, N_NumSel := LEN(N_Selecionado)
+
+    FOR N_Cont := 1 TO N_NumSel
+        dbGoto(N_Selecionado[N_Cont])
+        RLOCK()
+        REPL vlcota WITH vlcota+1
+        UNLOCK
+    NEXT
+
+    DBCOMMIT()
+    NAP_TABLEVIEW_UPDATE_DB(V_Table)
+
+/*---------------------------------------------------------------------------*/
+
+STATIC PROCEDURE INCREMENTA_TODOS(hEv, V_Table)
+    FLOCK()
+    REPL ALL vlcota WITH vlcota+1
+    DBCOMMIT()
+    UNLOCK
+    NAP_TABLEVIEW_UPDATE_DB(V_Table)
 
 /*---------------------------------------------------------------------------*/
 

@@ -24,6 +24,7 @@ struct _gtnap_callback_t
 
 struct _gtnap_column_t
 {
+    align_t align;
     PHB_ITEM codeBlock;
 };
 
@@ -323,16 +324,18 @@ GtNapArea *hb_gtnap_get_area(TableView *view)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, PHB_ITEM codeBlock)
+void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, const align_t align, PHB_ITEM codeBlock)
 {
     uint32_t id = 0;
     GtNapColumn *column = NULL;
     cassert_no_null(area);
     id = tableview_new_column_text(area->view);
     tableview_header_title(area->view, id, title);
+    tableview_header_align(area->view, id, align);
     tableview_column_width(area->view, id, width);
     cassert(id == arrst_size(area->columns, GtNapColumn));
     column = arrst_new(area->columns, GtNapColumn);
+    column->align = align;
     column->codeBlock = hb_itemNew(codeBlock);
 }
 
@@ -360,7 +363,7 @@ uint32_t hb_gtnap_area_row_count(GtNapArea *area)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id, const uint32_t row_id)
+const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id, const uint32_t row_id, align_t *align)
 {
     const GtNapColumn *column = NULL;
     PHB_ITEM pItem = NULL;
@@ -399,6 +402,10 @@ const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id,
     }
 
     hb_itemRelease(pItem);
+
+    if (align != NULL)
+        *align = column->align;
+
     return area->temp;
 }
 
