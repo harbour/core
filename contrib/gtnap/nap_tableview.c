@@ -26,6 +26,15 @@ HB_FUNC( NAP_TABLEVIEW_SIZE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_TABLEVIEW_MULTISEL )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    bool_t multisel = (bool_t)hb_parl(2);
+    tableview_multisel(view, multisel);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TABLEVIEW_GRID )
 {
     TableView *view = (TableView*)hb_parptr(1);
@@ -82,10 +91,70 @@ HB_FUNC( NAP_TABLEVIEW_COLUMN_DB )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_UPDATE_DB )
+HB_FUNC( NAP_TABLEVIEW_UPDATE )
 {
     TableView *view = (TableView*)hb_parptr(1);
     tableview_update(view);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_SELECT )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    ArrSt(uint32_t) *rows = arrst_create(uint32_t);
+
+    if (HB_ISNUM(2))
+    {
+        uint32_t row = hb_parni(2) - 1;
+        arrst_append(rows, row, uint32_t);
+    }
+    else if (HB_ISARRAY(2))
+    {
+        uint32_t i, n = hb_parinfa(2, 0);
+        for (i = 0; i < n; ++i)
+        {
+            uint32_t row = hb_parvni(2, i + 1) - 1;
+            arrst_append(rows, row, uint32_t);
+        }
+    }
+
+    tableview_select(view, arrst_all_const(rows, uint32_t), arrst_size(rows, uint32_t));
+    arrst_destroy(&rows, NULL, uint32_t);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_DESELECT )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    ArrSt(uint32_t) *rows = arrst_create(uint32_t);
+
+    if (HB_ISNUM(2))
+    {
+        uint32_t row = hb_parni(2) - 1;
+        arrst_append(rows, row, uint32_t);
+    }
+    else if (HB_ISARRAY(2))
+    {
+        uint32_t i, n = hb_parinfa(2, 0);
+        for (i = 0; i < n; ++i)
+        {
+            uint32_t row = hb_parvni(2, i + 1) - 1;
+            arrst_append(rows, row, uint32_t);
+        }
+    }
+
+    tableview_deselect(view, arrst_all_const(rows, uint32_t), arrst_size(rows, uint32_t));
+    arrst_destroy(&rows, NULL, uint32_t);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_DESELECT_ALL )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    tableview_deselect_all(view);
 }
 
 /*---------------------------------------------------------------------------*/
