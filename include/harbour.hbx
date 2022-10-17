@@ -437,7 +437,9 @@ DYNAMIC hb_FEof
 DYNAMIC hb_FGetAttr
 DYNAMIC hb_FGetDateTime
 DYNAMIC hb_FieldDec
+DYNAMIC hb_FieldGet
 DYNAMIC hb_FieldLen
+DYNAMIC hb_FieldPut
 DYNAMIC hb_FieldType
 DYNAMIC hb_FileDelete
 DYNAMIC hb_FileExists
