@@ -35,7 +35,17 @@ void tableview_header_visible(TableView *view, const bool_t visible);
 
 void tableview_multisel(TableView *view, const bool_t multisel);
 
+void tableview_grid(TableView *view, const bool_t hlines, const bool_t vlines);
+
 void tableview_update(TableView *view);
+
+void tableview_select(TableView *view, const uint32_t *rows, const uint32_t n);
+
+void tableview_deselect(TableView *view, const uint32_t *rows, const uint32_t n);
+
+void tableview_deselect_all(TableView *view);
+
+const ArrSt(uint32_t) *tableview_selected(const TableView *view);
 
 __END_C
 

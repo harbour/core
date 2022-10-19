@@ -946,7 +946,10 @@ static void hb_gtnap_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 static void hb_gtnap_OutErr( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_OutErr(%s (%d))", pbyStr, (int)ulLen);
+    if (pbyStr != NULL && ulLen > 0)
+        log_printf("hb_gtnap_OutErr(%s (%d))", pbyStr, (int)ulLen);
+    else
+        log_printf("hb_gtnap_OutErr(empty)");
 }
 
 /*---------------------------------------------------------------------------*/

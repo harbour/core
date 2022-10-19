@@ -95,7 +95,7 @@ typedef enum _gevent_t
     ekEVRESIZE,
     ekEVENTER,
     ekEVEXIT,
-    ekEVMOVED,  
+    ekEVMOVED,
     ekEVDOWN,
     ekEVUP,
     ekEVCLICK,
@@ -253,8 +253,9 @@ struct _evtbsel_t
 };
 
 struct _evtbcell_t
-{        
+{
     const char_t *text;
+    align_t align;
 };
 
 DeclSt(FPtr_respack);

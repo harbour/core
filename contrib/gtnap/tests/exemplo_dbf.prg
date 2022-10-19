@@ -17,8 +17,14 @@ PROC EXEMPLO_BROWSE_DBF()
         INDEX ON COTACAO->CDINDX+DTOS(COTACAO->DTCOTA) TAG COTACAO1 TO dados/cotacao.cdx
         CLOSE COTACAO
     ELSE
-       // MOSTRAR("M?????", "COTACAO index up-to-date", "Informação")
+        // MOSTRAR("M?????", "COTACAO index up-to-date", "Informação")
     ENDIF
+
+    // Crash when INDEX is used
+    // USE dados/cotacao NEW SHARED
+    // SET INDEX TO dados/cotacao.cdx
+    // GOTO TOP
+    // MOSTRAR("M?????", "OK!!!", "Informação")
 
     V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
     V_Panel := NAP_PANEL_CREATE()
@@ -51,7 +57,9 @@ STATIC PROCEDURE TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR()
     // DataBase connection
     // Use '/' and not '\' (problems in Linux)
     USE dados/cotacao NEW SHARED
-    //SET INDEX TO dados/cotacao
+    // SORT ON cdindx, dtcota TO dados/cotacao00
+    // CLOSE COTACAO
+    // USE dados/cotacao00 NEW SHARED
     GOTO TOP
 
     V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
@@ -84,7 +92,7 @@ STATIC PROCEDURE TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR()
     NAP_TABLEVIEW_COLUMN_DB(V_Table, "Data+2", 100, ekNAP_ALIGN_CENTER, {|| dtcota + 2})
     NAP_TABLEVIEW_COLUMN_DB(V_Table, "Cotação", 140, ekNAP_ALIGN_RIGHT, {|| TRANSFORM(vlcota, "@E 999,999,999,999.99999999")})
     NAP_TABLEVIEW_UPDATE(V_Table)
-    NAP_BUTTON_TEXT(V_Button1, "Incrementar valor corrente")
+    NAP_BUTTON_TEXT(V_Button1, "Incrementar valor corrente: " + DTOS(COTACAO->DTCOTA))
     NAP_BUTTON_TEXT(V_Button2, "Incrementar todos os valores")
     NAP_BUTTON_TEXT(V_Button3, "Exclui linha atual")
     NAP_BUTTON_TEXT(V_Button4, "Procura linha atual")
