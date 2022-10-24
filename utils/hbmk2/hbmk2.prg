@@ -4123,7 +4123,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          AAddNotEmpty( hbmk[ _HBMK_aOPTCPPX ], gcc_opt_lngcpp_fill( hbmk ) )
          cBin_Dyn := cBin_CompC
          IF hbmk[ _HBMK_cPLAT ] == "darwin"
-            cOpt_Dyn := "-dynamiclib -o {OD} -flat_namespace -undefined dynamic_lookup {FD} {DL} {LO} {LS}" /* NOTE: -single_module is now the default in ld/libtool. */
+            cOpt_Dyn := "-dynamiclib -o {OD} {FD} {DL} {LO} {LS}" /* NOTE: -single_module is now the default in ld/libtool. */
          ELSE
             cOpt_Dyn := "-shared -o {OD} {LO} {FD} {DL} {LS}"
          ENDIF
