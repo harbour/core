@@ -10,6 +10,7 @@
 -depcontrol=curl:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=curl:${HB_WITH_CURL}
 -depincpath=curl:/usr/include
+-depincpath=curl:/usr/include/x86_64-linux-gnu{linux}
 
 hbcurl.hbx
 

@@ -130,6 +130,8 @@ extern HB_EXPORT HB_BOOL   hb_vmTryEval( PHB_ITEM * pResult, PHB_ITEM pItem, HB_
 extern HB_EXPORT HB_BOOL   hb_vmIsActive( void );
 extern HB_EXPORT HB_BOOL   hb_vmIsReady( void );
 
+extern HB_EXPORT HB_BOOL   hb_vmSetKeyPool( HB_BOOL fEnable );
+
 /* Return values of hb_vmRequestQuery() */
 #define HB_QUIT_REQUESTED     1     /* immediately quit the application */
 #define HB_BREAK_REQUESTED    2     /* break to nearest RECOVER/END sequence */

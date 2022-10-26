@@ -254,6 +254,10 @@ static HB_ULONG    s_ulFreeSymbols = 0;/* number of free module symbols */
 static void *      s_hDynLibID = NULL; /* unique identifier to mark symbol tables loaded from dynamic libraries */
 static HB_BOOL     s_fCloneSym = HB_FALSE;/* clone registered symbol tables */
 
+#ifndef HB_GUI
+HB_BOOL s_fKeyPool = HB_TRUE;
+#endif
+
 /* main VM thread stack ID */
 static void * s_main_thread = NULL;
 
@@ -1328,7 +1332,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
    HB_ULONG ulLastOpcode = 0; /* opcodes profiler support */
    HB_ULONG ulPastClock = 0;  /* opcodes profiler support */
 #endif
-#if ! defined( HB_GUI )
+#ifndef HB_GUI
    int * piKeyPolls = hb_stackKeyPolls();
 #endif
 
@@ -1353,10 +1357,11 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
       }
 #endif
 
-#if ! defined( HB_GUI )
+#ifndef HB_GUI
       if( ! --( *piKeyPolls ) )
       {
-         hb_inkeyPoll();
+         if( s_fKeyPool )
+            hb_inkeyPoll();
          *piKeyPolls = 65536;
 
          /* IMHO we should have a _SET_ controlled by user
@@ -5953,8 +5958,9 @@ void hb_vmProc( HB_USHORT uiParams )
 
    /* Poll the console keyboard */
 #if 0
-   #if ! defined( HB_GUI )
-      hb_inkeyPoll();
+   #ifndef HB_GUI
+      if( s_fKeyPool )
+         hb_inkeyPoll();
    #endif
 #endif
 
@@ -6015,8 +6021,9 @@ void hb_vmDo( HB_USHORT uiParams )
 
    /* Poll the console keyboard */
 #if 0
-   #if ! defined( HB_GUI )
-      hb_inkeyPoll();
+   #ifndef HB_GUI
+      if( s_fKeyPool )
+         hb_inkeyPoll();
    #endif
 #endif
 
@@ -6106,8 +6113,9 @@ void hb_vmSend( HB_USHORT uiParams )
 
    /* Poll the console keyboard */
 #if 0
-   #if ! defined( HB_GUI )
-      hb_inkeyPoll();
+   #ifndef HB_GUI
+      if( s_fKeyPool )
+         hb_inkeyPoll();
    #endif
 #endif
 
@@ -12395,6 +12403,31 @@ HB_FUNC( __QUITCANCEL )
          }
       }
    }
+}
+
+HB_BOOL hb_vmSetKeyPool( HB_BOOL fEnable )
+{
+#ifndef HB_GUI
+   HB_BOOL fPrev = s_fKeyPool;
+   s_fKeyPool = fEnable;
+   return fPrev;
+#else
+   HB_SYMBOL_UNUSED( fEnable );
+   return HB_FALSE;
+#endif
+}
+
+HB_FUNC( __VMKEYPOOL )
+{
+   HB_STACK_TLS_PRELOAD
+
+#ifndef HB_GUI
+   hb_retl( s_fKeyPool );
+   if( HB_ISLOG( 1 ) )
+      s_fKeyPool = hb_parl( 1 );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 HB_FUNC( __VMNOINTERNALS )
