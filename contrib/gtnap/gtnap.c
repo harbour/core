@@ -486,10 +486,34 @@ static const HB_GC_FUNCS s_gc_Window_funcs =
 
 const char_t *hb_gtnap_parText(const uint32_t iParam)
 {
+    static char_t TEMP_TEXT[1024 + 1];
+
     if (HB_ISCHAR(iParam))
-        return hb_parcx(iParam);
+    {
+        const char_t *str = hb_parcx(iParam);
+        HB_SIZE i, j, size = hb_parclen(iParam);
+
+        for (i = 0, j = 0; i < size && j < 1024; )
+        {
+            if (str[i] != 13)
+            {
+                TEMP_TEXT[j] = str[i];
+                i += 1;
+                j += 1;
+            }
+            else
+            {
+                i += 1;
+            }
+        }
+
+        TEMP_TEXT[j] = '\0';
+        return TEMP_TEXT;
+    }
     else
+    {
         return "Unknown text"; // (const char_t*)hb_parni(iParam);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
