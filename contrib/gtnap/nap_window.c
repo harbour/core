@@ -124,6 +124,24 @@ HB_FUNC( NAP_WINDOW_STOP_MODAL )
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnWindowHotkey(GtNapCallback *idp, Event *e)
+{
+    hb_gtnap_callback(idp, e);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_WINDOW_HOTKEY )
+{
+    Window *window = hb_gtnap_parWindow(1);
+    vkey_t key = (vkey_t)hb_parni(2);
+    uint32_t modifiers = hb_parni(3);
+    Listener *listener = hb_gtnap_wind_listener(4, window, i_OnWindowHotkey);
+    window_hotkey(window, key, modifiers, listener);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_WINDOW_UPDATE )
 {
     Window *window = hb_gtnap_parWindow(1);

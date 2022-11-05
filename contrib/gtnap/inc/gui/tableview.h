@@ -17,7 +17,11 @@ __EXTERN_C
 
 TableView *tableview_create(void);
 
-void tableview_OnNotify(TableView *view, Listener *listener);
+void tableview_OnData(TableView *view, Listener *listener);
+
+void tableview_OnSelect(TableView *view, Listener *listener);
+
+void tableview_OnHeaderClick(TableView *view, Listener *listener);
 
 void tableview_size(TableView *view, S2Df size);
 
@@ -25,15 +29,27 @@ uint32_t tableview_new_column_text(TableView *view);
 
 void tableview_column_width(TableView *view, const uint32_t column_id, const real32_t width);
 
+void tableview_column_limits(TableView *view, const uint32_t column_id, const real32_t min, const real32_t max);
+
+void tableview_column_resizable(TableView *view, const uint32_t column_id, const bool_t resizable);
+
+void tableview_column_freeze(TableView *view, const uint32_t last_column_id);
+
 void tableview_header_font(TableView *view, const Font *font);
 
 void tableview_header_title(TableView *view, const uint32_t column_id, const char_t *text);
 
 void tableview_header_align(TableView *view, const uint32_t column_id, const align_t align);
 
+void tableview_header_indicator(TableView *view, const uint32_t column_id, const uint32_t indicator);
+
 void tableview_header_visible(TableView *view, const bool_t visible);
 
-void tableview_multisel(TableView *view, const bool_t multisel);
+void tableview_header_clickable(TableView *view, const bool_t clickable);
+
+void tableview_header_resizable(TableView *view, const bool_t resizable);
+
+void tableview_multisel(TableView *view, const bool_t multisel, const bool_t preserve);
 
 void tableview_grid(TableView *view, const bool_t hlines, const bool_t vlines);
 

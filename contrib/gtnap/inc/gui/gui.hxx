@@ -112,8 +112,9 @@ typedef enum _gevent_t
     ekEVOBJCHANGE,
 
     ekEVTBLNROWS,
+    ekEVTBLCELL,
     ekEVTBLSEL,
-    ekEVTBLCELL
+    ekEVTBLHEADCLICK
 } event_t;
 
 typedef struct _control_t Control;
@@ -215,6 +216,7 @@ struct _evwheel_t
 struct _evkey_t
 {
     vkey_t key;
+    uint32_t modifiers;
 };
 
 struct _evpos_t

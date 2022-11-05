@@ -81,6 +81,7 @@ STATIC PROCEDURE TST_MENU_SEM_BOTAO_ESC()
     NAP_MENUVERT_ADD(V_MenuVert, "Opção 2", { || MOSTRAR_OPCAO("2") })
     NAP_BUTTON_TEXT(V_Button, "F9 = botão adicional")
     NAP_BUTTON_ONCLICK(V_Button, {|| BUTTON_F9_CLICK() })
+    NAP_WINDOW_HOTKEY(V_Janela, ekNAP_KEY_F9, 0, {|| BUTTON_F9_CLICK() })
 
     // Configure design (layout disposition)
     NAP_LAYOUT_LABEL(V_Layout1, V_Label1, 0, 0)

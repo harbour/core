@@ -37,6 +37,8 @@ uint32_t window_modal(Window *window, Window *parent);
 
 void window_stop_modal(Window *window, const uint32_t return_value);
 
+void window_hotkey(Window *window, const vkey_t key, const uint32_t modifiers, Listener *listener);
+
 void window_update(Window *window);
 
 void window_origin(Window *window, const V2Df origin);

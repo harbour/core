@@ -99,6 +99,13 @@ typedef enum _ellipsis_t
     ekELLIPMLINE
 } ellipsis_t;
 
+typedef enum _indicator_t
+{
+    ekINONE = 0,
+    ekIUP_ARROW,
+    ekIDOWN_ARROW
+} indicator_t;
+
 typedef uint32_t color_t;
 typedef struct _dctx_t DCtx;
 typedef struct _palette_t Palette;

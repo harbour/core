@@ -26,11 +26,48 @@ HB_FUNC( NAP_TABLEVIEW_SIZE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_TABLEVIEW_COLUMN_FREEZE )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    uint32_t last_column_id = hb_parni(2);
+    tableview_column_freeze(view, last_column_id - 1);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_HEADER_VISIBLE )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    bool_t visible = (bool_t)hb_parl(2);
+    tableview_header_visible(view, visible);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_HEADER_CLICKABLE )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    bool_t clickable = (bool_t)hb_parl(2);
+    tableview_header_clickable(view, clickable);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_HEADER_RESIZABLE )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    bool_t resizable = (bool_t)hb_parl(2);
+    tableview_header_resizable(view, resizable);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TABLEVIEW_MULTISEL )
 {
     TableView *view = (TableView*)hb_parptr(1);
     bool_t multisel = (bool_t)hb_parl(2);
-    tableview_multisel(view, multisel);
+    bool_t preserve = (bool_t)hb_parl(3);
+    tableview_multisel(view, multisel, preserve);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -45,7 +82,7 @@ HB_FUNC( NAP_TABLEVIEW_GRID )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnTableNotify(GtNapArea *gtarea, Event *e)
+static void i_OnTableData(GtNapArea *gtarea, Event *e)
 {
     uint32_t etype = event_type(e);
 
@@ -64,6 +101,8 @@ static void i_OnTableNotify(GtNapArea *gtarea, Event *e)
         cell->text = hb_gtnap_area_eval_field(gtarea, pos->col + 1, pos->row + 1, &cell->align);
         break;
     }
+
+    cassert_default();
     }
 }
 
@@ -73,7 +112,7 @@ HB_FUNC( NAP_TABLEVIEW_BIND_DB )
 {
     TableView *view = (TableView*)hb_parptr(1);
     GtNapArea *gtarea = hb_gtnap_new_area(view);
-    tableview_OnNotify(view, listener(gtarea, i_OnTableNotify, GtNapArea));
+    tableview_OnData(view, listener(gtarea, i_OnTableData, GtNapArea));
 }
 
 /*---------------------------------------------------------------------------*/
