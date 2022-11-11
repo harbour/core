@@ -1189,7 +1189,7 @@ extern HB_EXPORT char *       hb_verHarbour( void );         /* retrieves a newl
 extern HB_EXPORT char *       hb_verPCode( void );           /* retrieves a newly allocated buffer containing PCode version */
 extern HB_EXPORT char *       hb_verBuildDate( void );       /* retrieves a newly allocated buffer containing build date and time */
 extern HB_EXPORT void         hb_verBuildInfo( void );       /* display harbour, compiler, and platform versions to standard console */
-extern HB_EXPORT int          hb_verRevision( void );        /* retrieves source repository revision number */
+extern HB_EXPORT HB_MAXINT    hb_verRevision( void );        /* retrieves source repository revision number */
 extern HB_EXPORT const char * hb_verChangeLogID( void );     /* retrieves a static buffer containing ChangeLog ID string */
 extern HB_EXPORT const char * hb_verChangeLogLastEntry( void ); /* retrieves a static buffer containing ChangeLog last entry string */
 #if defined( HB_LEGACY_LEVEL4 )

@@ -875,7 +875,7 @@ void hb_cmdargProcess( void )
 }
 
 /* Source repository revision number */
-int hb_verRevision( void )
+HB_MAXINT hb_verRevision( void )
 {
    return HB_VER_REVID;
 }
