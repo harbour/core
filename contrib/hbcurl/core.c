@@ -408,9 +408,10 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
    return 0;
 }
 
-static int hb_curl_debug_callback(CURL *handle, curl_infotype type, char *data, size_t size, void *Cargo)
+static int hb_curl_debug_callback( CURL * handle, curl_infotype type, char * data, size_t size, void * Cargo )
 {
    HB_SYMBOL_UNUSED( handle );
+
    if( Cargo )
    {
       PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
@@ -419,7 +420,7 @@ static int hb_curl_debug_callback(CURL *handle, curl_infotype type, char *data, 
          hb_vmPushEvalSym();
          hb_vmPush( hb_curl->pDebugCallback );
          hb_vmPushInteger( type );
-         hb_vmPushStringPcode( data, size);
+         hb_vmPushString( data, size );
          hb_vmSend( 2 );
 
          hb_vmRequestRestore();
