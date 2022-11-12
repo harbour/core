@@ -12,17 +12,17 @@ PROC EXEMPLO_BROWSE_DBF()
 
     // Database index
     // Use '/' and not '\' (problems in Linux)
-    IF FILE("dados/cotacao.dbf") .AND. .NOT. FILE("dados/cotacao.cdx")
-        USE dados/cotacao NEW EXCLUSIVE
-        INDEX ON COTACAO->CDINDX+DTOS(COTACAO->DTCOTA) TAG COTACAO1 TO dados/cotacao.cdx
+    IF FILE("../dados/cotacao.dbf") .AND. .NOT. FILE("../dados/cotacao.cdx")
+        USE ../dados/cotacao NEW EXCLUSIVE
+        INDEX ON COTACAO->CDINDX+DTOS(COTACAO->DTCOTA) TAG COTACAO1 TO ../dados/cotacao.cdx
         CLOSE COTACAO
     ELSE
         // MOSTRAR("M?????", "COTACAO index up-to-date", "Informação")
     ENDIF
 
     // Crash when INDEX is used
-    // USE dados/cotacao NEW SHARED
-    // SET INDEX TO dados/cotacao.cdx
+    // USE ../dados/cotacao NEW SHARED
+    // SET INDEX TO ../dados/cotacao.cdx
     // GOTO TOP
     // MOSTRAR("M?????", "OK!!!", "Informação")
 
@@ -56,10 +56,10 @@ STATIC PROCEDURE TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR()
 
     // DataBase connection
     // Use '/' and not '\' (problems in Linux)
-    USE dados/cotacao NEW SHARED
-    // SORT ON cdindx, dtcota TO dados/cotacao00
+    USE ../dados/cotacao NEW SHARED
+    // SORT ON cdindx, dtcota TO ../dados/cotacao00
     // CLOSE COTACAO
-    // USE dados/cotacao00 NEW SHARED
+    // USE ../dados/cotacao00 NEW SHARED
     GOTO TOP
 
     V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)
@@ -206,8 +206,8 @@ STATIC PROCEDURE TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR()
 
     // DataBase connection
     // Use '/' and not '\' (problems in Linux)
-    USE dados/cotacao NEW SHARED
-    //SET INDEX TO dados/cotacao
+    USE ../dados/cotacao NEW SHARED
+    //SET INDEX TO ../dados/cotacao
     GOTO TOP
 
     V_Janela := NAP_WINDOW_CREATE(ekNAP_WINDOW_STD + ekNAP_WINDOW_ESC)

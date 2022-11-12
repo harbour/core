@@ -29,8 +29,8 @@ LOCAL V_Janela, V_Panel, V_Layout1, V_Layout2
 LOCAL V_Image, V_ImageView, V_MenuVert
 LOCAL V_Label1, V_Label2, V_Label3
 
-DIRET_BMPS(".\bmps\")
-DIRET_TOOLBAR(".\imgtbar\")
+DIRET_BMPS("..\bmps\")
+DIRET_TOOLBAR("..\imgtbar\")
 Set(_SET_DATEFORMAT, "dd/mm/yyyy")
 
 // We want big font size of main Window
