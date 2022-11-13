@@ -32,6 +32,7 @@ gtnap.c
 nap_button.c
 nap_color.c
 nap_combo.c
+nap_cualib.c
 nap_edit.c
 nap_event.c
 nap_font.c

@@ -70,6 +70,14 @@ extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window 
 
 extern void hb_gtnap_callback(GtNapCallback *callback, Event *e);
 
+//
+// GTNAP-CUALIB Specific function
+//
+
+const char_t *hb_gtnap_cualib_parText(const uint32_t iParam);
+
+extern void hb_gtnap_cualib_setup(const char_t *title, const uint32_t qt_lin, const uint32_t qt_col);
+
 HB_EXTERN_END
 
 #endif

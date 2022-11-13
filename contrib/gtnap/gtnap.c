@@ -45,7 +45,15 @@ DeclPt(Window);
 
 struct _gtnap_t
 {
+    bool_t cualib_mode;
     Font *global_font;
+
+    // Only for cualib-gtnap
+    String *title;
+    uint32_t qt_lin;
+    uint32_t qt_col;
+
+    // Only for pure-gtnap
     ArrPt(Window) *modals;
     ArrPt(Window) *windows;
     ArrPt(GtNapCallback) *callbacks;
@@ -636,6 +644,74 @@ void hb_gtnap_callback(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+__EXTERN_C
+
+void osgui_start(void);
+void osgui_finish(void);
+
+__END_C
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *hb_gtnap_cualib_parText(const uint32_t iParam)
+{
+    // TODO: Translate code-page to UTF8
+    if (HB_ISCHAR(iParam))
+    {
+        const char_t *str = hb_parcx(iParam);
+        return str;
+    }
+    else
+    {
+        return "Unknown text"; // (const char_t*)hb_parni(iParam);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_setup(const char_t *title, const uint32_t qt_lin, const uint32_t qt_col)
+{
+    osgui_start();
+    gui_start();
+    GTNAP_GLOBAL = heap_new0(GtNap);
+    GTNAP_GLOBAL->cualib_mode = TRUE;
+    GTNAP_GLOBAL->global_font = font_monospace(20, 0);
+    GTNAP_GLOBAL->title = str_c(title);
+    GTNAP_GLOBAL->qt_lin = qt_lin;
+    GTNAP_GLOBAL->qt_col = qt_col;
+
+    //log_file("C:\\Users\\USUARIO\\Desktop\\gtnap_cualib.txt");
+    log_printf("hb_gtnap_cualib_setup(%s, %d, %d)", title, qt_lin, qt_col);
+    // INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
+    // END_CODEBLOCK = hb_itemNew(codeBlock_end);
+
+
+    // PHB_ITEM pRet = NULL;
+    // log_printf("i_nappgui_create()");
+    // GTNAP_GLOBAL->global_font = font_system(font_regular_size(), 0);
+    // GTNAP_GLOBAL->modals = arrpt_create(Window);
+    // GTNAP_GLOBAL->windows = arrpt_create(Window);
+    // GTNAP_GLOBAL->callbacks = arrpt_create(GtNapCallback);
+    // GTNAP_GLOBAL->areas = arrpt_create(GtNapArea);
+    // pRet = hb_itemDo(INIT_CODEBLOCK, 0);
+    // hb_itemRelease(pRet);
+    // hb_itemRelease(INIT_CODEBLOCK);
+    // INIT_CODEBLOCK = NULL;
+    // return GTNAP_GLOBAL;
+
+
+
+
+}
+
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
 static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
@@ -668,6 +744,16 @@ static void hb_gtnap_Exit( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_Exit()");
+
+    if (GTNAP_GLOBAL->cualib_mode == TRUE)
+    {
+        log_printf("GTNAP exit of CUALIB mode");
+        font_destroy(&GTNAP_GLOBAL->global_font);
+        str_destroy(&GTNAP_GLOBAL->title);
+        heap_delete(&GTNAP_GLOBAL, GtNap);
+        osgui_finish();
+        gui_finish();
+    }
 }
 
 /*---------------------------------------------------------------------------*/
