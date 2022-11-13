@@ -12,15 +12,15 @@
 
 // */
 // *
-// #INCLUDE "xx.ch"
-// #INCLUDE "inkey.ch"
-// #INCLUDE "janela.ch"          // para usar os pseudo mï¿½todos do objeto janela
-// #INCLUDE "setcurs.ch"
-// #INCLUDE "cua.ch"
-// #INCLUDE "common.ch"
-// #INCLUDE "mousecua.ch"
-// #INCLUDE "define_cua.ch"
-// #INCLUDE "hbgtinfo.ch"
+#INCLUDE "xx.ch"
+#INCLUDE "inkey.ch"
+#INCLUDE "janela.ch"          // para usar os pseudo métodos do objeto janela
+#INCLUDE "setcurs.ch"
+#INCLUDE "cua.ch"
+#INCLUDE "common.ch"
+#INCLUDE "mousecua.ch"
+#INCLUDE "define_cua.ch"
+#INCLUDE "hbgtinfo.ch"
 
 // ***********************
 // STAT FUNCTION Perguntar (C_Cabec_x,C_SubCabec,VC_Menu,;
@@ -403,31 +403,34 @@
 // *
 // RETURN VX_Janela
 // *
-// ****************
-// PROCEDURE ALARME (C_CDMENS,C_SubCabec,N_SEGUNDOS)
-// ****************
-// LOCAL C_COR_ANT
-// *
-// TONE(750,0)
-// *
+****************
+PROCEDURE ALARME (C_CDMENS,C_SubCabec,N_SEGUNDOS)
+****************
+LOCAL C_COR_ANT
+*
+TONE(750,0)
+*
 // IF C_SubCabec # NIL
 //    IF .NOT. SOB_MODO_GRAFICO()
 //       C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_ERRO))
 //    ENDIF
 //    *
-//    ALARME_CDMENS_ATIVO(C_CDMENS) // serï¿½ usado pela ajuda ao usuï¿½rio
+//    ALARME_CDMENS_ATIVO(C_CDMENS) // será usado pela ajuda ao usuário
 //    *
 //    MOSTRAR(C_CDMENS,C_SubCabec,{GL_ENTER+"=OK"},,.F.,N_SEGUNDOS,;
 //            "Importante","erro.abm")
 //    *
 //    ALARME_CDMENS_ATIVO("")
 //    *
-//    LOGA_AJMENST(GetCdTelaTopo(),GetCdGET_ou_Menu_Topo(),C_CdMens,C_SubCabec)  // LOGAR conteï¿½do de telas
+//    LOGA_AJMENST(GetCdTelaTopo(),GetCdGET_ou_Menu_Topo(),C_CdMens,C_SubCabec)  // LOGAR conteúdo de telas
 //    *
 //    IF .NOT. SOB_MODO_GRAFICO()
 //       SETCOLOR(C_COR_ANT)
 //    ENDIF
-// ENDIF
+//ENDIF
+
+
+
 // *
 // ************************
 // FUNC ALARME_CDMENS_ATIVO(C_CDMENS_NEW)
@@ -475,7 +478,7 @@
 // ****************
 // LOCAL C_COR_ANT, V_JAN
 // DEFAULT L_MUDA_COR TO .T.
-// DEFAULT C_Cabec_x     TO "Informaï¿½ï¿½o"
+// DEFAULT C_Cabec_x     TO "Informação"
 // DEFAULT C_ArqImagem TO "informac.abm"
 // *
 // ASSUME LEFT(C_CDMENS,1) == "M"

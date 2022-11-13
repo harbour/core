@@ -50,8 +50,9 @@ struct _gtnap_t
 
     // Only for cualib-gtnap
     String *title;
-    uint32_t qt_lin;
-    uint32_t qt_col;
+    uint32_t rows;
+    uint32_t cols;
+    uint32_t linespacing;
 
     // Only for pure-gtnap
     ArrPt(Window) *modals;
@@ -669,7 +670,7 @@ const char_t *hb_gtnap_cualib_parText(const uint32_t iParam)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_setup(const char_t *title, const uint32_t qt_lin, const uint32_t qt_col)
+void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols)
 {
     osgui_start();
     gui_start();
@@ -677,34 +678,25 @@ void hb_gtnap_cualib_setup(const char_t *title, const uint32_t qt_lin, const uin
     GTNAP_GLOBAL->cualib_mode = TRUE;
     GTNAP_GLOBAL->global_font = font_monospace(20, 0);
     GTNAP_GLOBAL->title = str_c(title);
-    GTNAP_GLOBAL->qt_lin = qt_lin;
-    GTNAP_GLOBAL->qt_col = qt_col;
-
-    //log_file("C:\\Users\\USUARIO\\Desktop\\gtnap_cualib.txt");
-    log_printf("hb_gtnap_cualib_setup(%s, %d, %d)", title, qt_lin, qt_col);
-    // INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
-    // END_CODEBLOCK = hb_itemNew(codeBlock_end);
-
-
-    // PHB_ITEM pRet = NULL;
-    // log_printf("i_nappgui_create()");
-    // GTNAP_GLOBAL->global_font = font_system(font_regular_size(), 0);
-    // GTNAP_GLOBAL->modals = arrpt_create(Window);
-    // GTNAP_GLOBAL->windows = arrpt_create(Window);
-    // GTNAP_GLOBAL->callbacks = arrpt_create(GtNapCallback);
-    // GTNAP_GLOBAL->areas = arrpt_create(GtNapArea);
-    // pRet = hb_itemDo(INIT_CODEBLOCK, 0);
-    // hb_itemRelease(pRet);
-    // hb_itemRelease(INIT_CODEBLOCK);
-    // INIT_CODEBLOCK = NULL;
-    // return GTNAP_GLOBAL;
-
-
-
-
+    GTNAP_GLOBAL->rows = rows;
+    GTNAP_GLOBAL->cols = cols;
+    GTNAP_GLOBAL->linespacing = 0;
+    log_printf("hb_gtnap_cualib_setup(%s, %d, %d)", title, rows, cols);
 }
 
+/*---------------------------------------------------------------------------*/
 
+uint32_t hb_gtnap_cualib_linespacing(void)
+{
+    return GTNAP_GLOBAL->linespacing;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_set_linespacing(const uint32_t spacing)
+{
+    GTNAP_GLOBAL->linespacing = spacing;
+}
 
 
 
@@ -788,7 +780,7 @@ static void hb_gtnap_GetSize( PHB_GT pGT, int * piRows, int  * piCols )
 
 static void hb_gtnap_ExposeArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight )
 {
-   HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_ExposeArea(%d, %d, %d, %d)", iTop, iLeft, iBottom, iRight);
 }
 
@@ -798,6 +790,8 @@ static int hb_gtnap_MaxCol( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_MaxCol()");
+    if (GTNAP_GLOBAL->cualib_mode == TRUE)
+        return GTNAP_GLOBAL->cols;
     return 100;
 }
 
@@ -807,6 +801,8 @@ static int hb_gtnap_MaxRow( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_MaxRow()");
+    if (GTNAP_GLOBAL->cualib_mode == TRUE)
+        return GTNAP_GLOBAL->rows;
     return 25;
 }
 

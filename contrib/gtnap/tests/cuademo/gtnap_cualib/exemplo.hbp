@@ -23,6 +23,8 @@ exemplo.prg
 #exemplo_textoarquivo.prg
 #exemplo_textomemoria.prg
 outros.prg
+janela.prg
+stubs.prg
 
 # Libraries
 gtnap.hbc

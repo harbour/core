@@ -76,7 +76,11 @@ extern void hb_gtnap_callback(GtNapCallback *callback, Event *e);
 
 const char_t *hb_gtnap_cualib_parText(const uint32_t iParam);
 
-extern void hb_gtnap_cualib_setup(const char_t *title, const uint32_t qt_lin, const uint32_t qt_col);
+extern void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols);
+
+extern uint32_t hb_gtnap_cualib_linespacing(void);
+
+extern void hb_gtnap_cualib_set_linespacing(const uint32_t spacing);
 
 HB_EXTERN_END
 

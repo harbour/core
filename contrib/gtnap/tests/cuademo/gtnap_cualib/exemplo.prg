@@ -1,7 +1,7 @@
 /* encoding: cp850 */
 #INCLUDE "ord.ch"
 #INCLUDE "inkey.ch"
-//#INCLUDE "cua.ch"
+#INCLUDE "cua.ch"
 
 //Desativar na "cuademo", para página de código ser a padrão Windows/Linux
 //REQUEST HB_CODEPAGE_PT850
@@ -69,8 +69,10 @@ PRIVATE INFO_VERSAO := {"99","9","999","999",;
 
 IF HB_GTVERSION()=="NAP"
    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX)
-      DIRET_BMPS(".\bmps\")
+      DIRET_BMPS("..\bmps\")
       Setup_wvw("Exemplo das rotinas de janelamento",35,110)
+      MAXCOL()
+      MAXROW()
    #else
       #erro "Código não adaptado para esta plataforma"
    #endif
@@ -78,7 +80,9 @@ ELSE
     SETMODE(35,110)
 ENDIF
 
-
+CUA20 @ 00,00,MAXROW(),MAXCOL() JANELA V_Janela ;
+     TITULO "Escolha o tipo de janela" SUBTITULO "%T";
+     AJUDA "T?????"
 
 
 
@@ -102,9 +106,6 @@ QUIT
 
 
 
-// CUA20 @ 00,00,MAXROW(),MAXCOL() JANELA V_Janela ;
-//      TITULO "Escolha o tipo de janela" SUBTITULO "%T";
-//      AJUDA "T?????"
 
 // CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
 //      COORDENADAS 05,05,10,18 AJUDA "B19127"
