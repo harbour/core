@@ -464,55 +464,55 @@ RETURN VX_Janela
 //                    NIL,;              // _IMAGEM_HANDLE_MUDA
 //                    N_Keyboard,;       // _IMAGEM_KEYBOARD
 //                    InKeyCaseAlternativo(N_Keyboard)})  // _IMAGEM_KEYBOARD_CASE
-// *
-// ****************
-// PROC AddImagem20 (VX_Janela,C_ArquivoImagem,;
-//                   N_LinIniImagem,N_ColIniImagem,N_LinFinImagem,N_ColFinImagem,;
-//                   B_AcaoImagem,L_AutoClose,;
-//                   C_CdBotao, L_AliasMuda, L_RecnoMuda, L_FilterMuda, L_OrderMuda, L_EofOk, L_HandleMuda, L_MudaDados)
-// ****************
-// *
-// DEFAULT L_MudaDados TO .F.
-// *
-// IF L_CUA_10
-//    ? MEMVAR->ADDIMAGEM_ESPECIFICA_PARA_A_CUA_20
-// ENDIF
-// *
-// IF .NOT. VX_SubObj==NIL
-//    ? MEMVAR->ADDIMAGEM_EM_JANELA_JA_ESPECIALIZADA
-// ENDIF
-// *
-// IF .NOT. LEFT(C_CdBotao,1) == "B"
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// IF .NOT. LEN(TROCA(C_CdBotao,"B0123456789?",""))==0
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// IF .NOT. LEN(C_CdBotao)==6
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// *
-// IF INABILITA_IMAGEM(L_MudaDados)
-//    B_AcaoImagem := {||.F.}  // Inabilitar a aï¿½ï¿½o da imagem.
-// ENDIF
-// *
-// AADD(V_LstImagens,{C_ArquivoImagem,;  // _IMAGEM_ARQUIVO
-//                    N_LinIniImagem,;   // _IMAGEM_LIN_INICIAL
-//                    N_ColIniImagem,;   // _IMAGEM_COL_INICIAL
-//                    N_LinFinImagem,;   // _IMAGEM_LIN_FINAL
-//                    N_ColFinImagem,;   // _IMAGEM_COL_FINAL
-//                    B_AcaoImagem,;     // _IMAGEM_BLOCO_ACAO
-//                    L_AutoClose,;      // _IMAGEM_AUTOCLOSE
-//                    C_CdBotao,;        // _IMAGEM_CDBOTAO
-//                    L_AliasMuda,;      // _IMAGEM_ALIAS_MUDA
-//                    L_RecnoMuda,;      // _IMAGEM_RECNO_MUDA
-//                    L_FilterMuda,;     // _IMAGEM_FILTER_MUDA
-//                    L_OrderMuda,;      // _IMAGEM_ORDER_MUDA
-//                    L_EofOk,;          // _IMAGEM_EOFOK
-//                    L_HandleMuda,;     // _IMAGEM_HANDLE_MUDA
-//                    NIL,;              // _IMAGEM_KEYBOARD
-//                    NIL,;              // _IMAGEM_KEYBOARD_CASE
-//                    L_MudaDados})      // _IMAGEM_MUDADADOS
+*
+****************
+PROC AddImagem20 (VX_Janela,C_ArquivoImagem,;
+                  N_LinIniImagem,N_ColIniImagem,N_LinFinImagem,N_ColFinImagem,;
+                  B_AcaoImagem,L_AutoClose,;
+                  C_CdBotao, L_AliasMuda, L_RecnoMuda, L_FilterMuda, L_OrderMuda, L_EofOk, L_HandleMuda, L_MudaDados)
+****************
+*
+DEFAULT L_MudaDados TO .F.
+*
+IF L_CUA_10
+   ? MEMVAR->ADDIMAGEM_ESPECIFICA_PARA_A_CUA_20
+ENDIF
+*
+IF .NOT. VX_SubObj==NIL
+   ? MEMVAR->ADDIMAGEM_EM_JANELA_JA_ESPECIALIZADA
+ENDIF
+*
+IF .NOT. LEFT(C_CdBotao,1) == "B"
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+IF .NOT. LEN(TROCA(C_CdBotao,"B0123456789?",""))==0
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+IF .NOT. LEN(C_CdBotao)==6
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+*
+IF INABILITA_IMAGEM(L_MudaDados)
+   B_AcaoImagem := {||.F.}  // Inabilitar a ação da imagem.
+ENDIF
+*
+AADD(V_LstImagens,{C_ArquivoImagem,;  // _IMAGEM_ARQUIVO
+                   N_LinIniImagem,;   // _IMAGEM_LIN_INICIAL
+                   N_ColIniImagem,;   // _IMAGEM_COL_INICIAL
+                   N_LinFinImagem,;   // _IMAGEM_LIN_FINAL
+                   N_ColFinImagem,;   // _IMAGEM_COL_FINAL
+                   B_AcaoImagem,;     // _IMAGEM_BLOCO_ACAO
+                   L_AutoClose,;      // _IMAGEM_AUTOCLOSE
+                   C_CdBotao,;        // _IMAGEM_CDBOTAO
+                   L_AliasMuda,;      // _IMAGEM_ALIAS_MUDA
+                   L_RecnoMuda,;      // _IMAGEM_RECNO_MUDA
+                   L_FilterMuda,;     // _IMAGEM_FILTER_MUDA
+                   L_OrderMuda,;      // _IMAGEM_ORDER_MUDA
+                   L_EofOk,;          // _IMAGEM_EOFOK
+                   L_HandleMuda,;     // _IMAGEM_HANDLE_MUDA
+                   NIL,;              // _IMAGEM_KEYBOARD
+                   NIL,;              // _IMAGEM_KEYBOARD_CASE
+                   L_MudaDados})      // _IMAGEM_MUDADADOS
 // *
 // ************
 // PROC AddAcao (VX_Janela,N_Keyboard,B_AcaoBotao,L_AutoClose,;
@@ -575,10 +575,12 @@ RETURN VX_Janela
 //    ENDIF
 // ENDIF
 // RETURN N_Keyboard_Case
-// *
-// **************
-// FUNCTION Ative ( VX_Janela )
-// **************
+*
+**************
+FUNCTION Ative ( VX_Janela )
+**************
+LOCAL X_Retorno
+
 // LOCAL N_Largura, N_LinImp, X_Retorno
 // LOCAL N_CursorAnt := SET(_SET_CURSOR,SC_NONE)        // salvar modo do cursor
 // LOCAL C_CorAnt    := SETCOLOR(C_CorJan)              // salvar cor anterior
@@ -972,8 +974,15 @@ RETURN VX_Janela
 // IF .NOT. L_CUA_10
 //    DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha apï¿½s ativaï¿½ï¿½o
 // ENDIF
-// *
-// RETURN X_Retorno
+*
+
+NAP_CUALIB_MODAL_WINDOW()
+
+X_Retorno := .F.
+RETURN X_Retorno
+
+
+
 // *
 // *********************
 // STAT FUNC EH_PRODUCAO
@@ -984,6 +993,12 @@ RETURN VX_Janela
 // #ENDIF
 // RETURN L_EH_PRODUCAO
 // *
+
+******************
+PROC AJUSTA_BOTOES(VX_Janela)
+******************
+    RETURN
+
 // ******************
 // PROC AJUSTA_BOTOES(VX_Janela)
 // ******************
@@ -2972,21 +2987,21 @@ STATIC FUNCTION TrataEventos ( VX_Janela )
 //    MUDE SUBTITULO VX_Janela PARA C_NOVO_SUBTITULO     /// Andamento da(s) Barra(s) em modo texto.
 //    VX_Janela[55] := N_OLD_VALOR_55
 // ENDIF
-// *
-// ****************************
-// STATIC FUNC INABILITA_IMAGEM(L_MUDADADOS)
-// ****************************
-// LOCAL L_RET := .F.
-// *
-// IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
-//    IF SELECT("XXPREG") # 0
-//       IF L_MUDADADOS .AND. (.NOT. EHPRINCIPAL(.F.))
-//          L_RET := .T.
-//       ENDIF
-//    ENDIF
-// ENDIF
-// *
-// RETURN L_RET
+*
+****************************
+STATIC FUNC INABILITA_IMAGEM(L_MUDADADOS)
+****************************
+LOCAL L_RET := .F.
+*
+IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
+   IF SELECT("XXPREG") # 0
+      IF L_MUDADADOS .AND. (.NOT. EHPRINCIPAL(.F.))
+         L_RET := .T.
+      ENDIF
+   ENDIF
+ENDIF
+*
+RETURN L_RET
 // *
 // *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
@@ -3056,21 +3071,21 @@ STATIC FUNCTION TrataEventos ( VX_Janela )
 // ENDIF
 // *
 // RETURN L_RET
-// *
-// ************************************************
-// FUNC CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
-// ************************************************
-// * Esta funï¿½ï¿½o tem por objetivo fazer com o teste do parï¿½metro MUDADADOS,
-// * seja desconsiderado quando se tratar dos sistemas ORï¿½AMENTO e PPA
-// LOCAL L_RET := .T.
-// *
-// IF G_SGSIST() # NIL
-//    IF G_SGSIST() $ "OR/PP" // Orï¿½amento ou PPA
-//       L_RET := .F.
-//    ENDIF
-// ENDIF
-// *
-// RETURN L_RET
+*
+************************************************
+FUNC CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
+************************************************
+* Esta função tem por objetivo fazer com o teste do parâmetro MUDADADOS,
+* seja desconsiderado quando se tratar dos sistemas ORÇAMENTO e PPA
+LOCAL L_RET := .T.
+*
+IF G_SGSIST() # NIL
+   IF G_SGSIST() $ "OR/PP" // Orçamento ou PPA
+      L_RET := .F.
+   ENDIF
+ENDIF
+*
+RETURN L_RET
 // *
 // ********************
 // *

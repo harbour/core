@@ -14,6 +14,7 @@
 
 typedef struct _gtnap_t GtNap;
 typedef struct _gtnap_column_t GtNapColumn;
+typedef struct _gui_context_t GuiContext;
 
 struct _gtnap_callback_t
 {
@@ -49,9 +50,13 @@ struct _gtnap_t
     Font *global_font;
 
     // Only for cualib-gtnap
+    GuiContext *native_gui;
     String *title;
     uint32_t rows;
     uint32_t cols;
+    uint32_t num_modals;
+    uint32_t cell_x;
+    uint32_t cell_y;
     uint32_t linespacing;
 
     // Only for pure-gtnap
@@ -649,6 +654,9 @@ __EXTERN_C
 
 void osgui_start(void);
 void osgui_finish(void);
+GuiContext *osguictx(void);
+void gui_context_destroy(GuiContext **context);
+void gui_context_set_current(const GuiContext *context);
 
 __END_C
 
@@ -672,15 +680,22 @@ const char_t *hb_gtnap_cualib_parText(const uint32_t iParam)
 
 void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols)
 {
+    real32_t w, h;
     osgui_start();
     gui_start();
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->cualib_mode = TRUE;
     GTNAP_GLOBAL->global_font = font_monospace(20, 0);
+    GTNAP_GLOBAL->native_gui = osguictx();
     GTNAP_GLOBAL->title = str_c(title);
     GTNAP_GLOBAL->rows = rows;
     GTNAP_GLOBAL->cols = cols;
+    GTNAP_GLOBAL->num_modals = 0;
+    font_extents(GTNAP_GLOBAL->global_font, "O", -1, &w, &h);
+    GTNAP_GLOBAL->cell_x = (uint32_t)w;
+    GTNAP_GLOBAL->cell_y = (uint32_t)h;
     GTNAP_GLOBAL->linespacing = 0;
+    gui_context_set_current(GTNAP_GLOBAL->native_gui);
     log_printf("hb_gtnap_cualib_setup(%s, %d, %d)", title, rows, cols);
 }
 
@@ -698,7 +713,33 @@ void hb_gtnap_cualib_set_linespacing(const uint32_t spacing)
     GTNAP_GLOBAL->linespacing = spacing;
 }
 
+/*---------------------------------------------------------------------------*/
 
+void hb_gtnap_cualib_modal_window(void)
+{
+    Window *window = window_create(ekWNSTD);
+    Panel *panel = panel_create();
+    Layout *layout = layout_create(1, 1);
+    View *view = view_create();
+
+    if (GTNAP_GLOBAL->num_modals == 0)
+    {
+        real32_t width = (real32_t)(GTNAP_GLOBAL->cell_x * GTNAP_GLOBAL->cols);
+        real32_t height = (real32_t)(GTNAP_GLOBAL->cell_y * GTNAP_GLOBAL->rows);
+        view_size(view, s2df(width, height));
+        window_title(window, tc(GTNAP_GLOBAL->title));
+        GTNAP_GLOBAL->num_modals += 1;
+    }
+    else
+    {
+        view_size(view, s2df(500, 250));
+    }
+    layout_view(layout, view, 0, 0);
+    panel_layout(panel, layout);
+    window_panel(window, panel);
+    window_modal(window, NULL);
+    window_destroy(&window);
+}
 
 
 
@@ -742,6 +783,7 @@ static void hb_gtnap_Exit( PHB_GT pGT )
         log_printf("GTNAP exit of CUALIB mode");
         font_destroy(&GTNAP_GLOBAL->global_font);
         str_destroy(&GTNAP_GLOBAL->title);
+        gui_context_destroy(&GTNAP_GLOBAL->native_gui);
         heap_delete(&GTNAP_GLOBAL, GtNap);
         osgui_finish();
         gui_finish();

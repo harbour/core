@@ -24,6 +24,8 @@ exemplo.prg
 #exemplo_textomemoria.prg
 outros.prg
 janela.prg
+selecaov.prg
+menuvert.prg
 stubs.prg
 
 # Libraries

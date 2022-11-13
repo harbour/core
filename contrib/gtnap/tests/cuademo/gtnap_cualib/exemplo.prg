@@ -71,8 +71,6 @@ IF HB_GTVERSION()=="NAP"
    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX)
       DIRET_BMPS("..\bmps\")
       Setup_wvw("Exemplo das rotinas de janelamento",35,110)
-      MAXCOL()
-      MAXROW()
    #else
       #erro "Código não adaptado para esta plataforma"
    #endif
@@ -84,60 +82,64 @@ CUA20 @ 00,00,MAXROW(),MAXCOL() JANELA V_Janela ;
      TITULO "Escolha o tipo de janela" SUBTITULO "%T";
      AJUDA "T?????"
 
+CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
+     COORDENADAS 05,05,10,18 AJUDA "B19127"
 
+ESPECIALIZE V_Janela MENU
 
+ADDOPCAO V_JANELA TEXTO "#menu de opções" ;
+    ACAO EXEMPLO_MENU() AJUDA "P06671"
+ADDOPCAO V_Janela TEXTO "browse de #DBF" ;
+    ACAO EXEMPLO_BROWSE_DBF() AJUDA "P06673"
+ADDOPCAO V_Janela TEXTO "browse de #vetor" ;
+    ACAO EXEMPLO_BROWSE_VETOR() AJUDA "P06675"
+ADDOPCAO V_Janela TEXTO "exibição/edição de #texto em memória" ;
+    ACAO EXEMPLO_TEXTO_MEMORIA() AJUDA "P06677"
+ADDOPCAO V_Janela TEXTO "exibição de #arquivo texto" ;
+    ACAO EXEMPLO_TEXTO_ARQUIVO() AJUDA "P06679"
+ADDOPCAO V_Janela TEXTO "#entrada de dados" ;
+    ACAO EXEMPLO_ENTRADA_DADOS() AJUDA "P06681"
+ADDOPCAO V_Janela TEXTO "#janelas auxiliares" ;
+    ACAO EXEMPLO_AUXILIARES() AJUDA "P06683"
 
-
+*
+L_FechouComAutoclose := ATIVE(V_Janela)
+*
+//!! IF L_FechouComAutoclose
+//!!    ADVERTE("M?????","Exemplo encerrado pela AUTOCLOSE;"+;
+//!!                     "(clicou-se na imagem)")
+//!! ELSE
+//!!    ADVERTE("M?????","Exemplo encerrado com ESC ou [X]")
+//!! ENDIF
+*
 SET CURSOR ON
 QUIT
+*
+
+PROC EXEMPLO_MENU
+    RETURN
+
+PROC EXEMPLO_BROWSE_DBF
+    RETURN
+
+PROC EXEMPLO_BROWSE_VETOR
+    RETURN
+
+PROC EXEMPLO_TEXTO_MEMORIA
+    RETURN
+
+PROC EXEMPLO_TEXTO_ARQUIVO
+    RETURN
+
+PROC EXEMPLO_ENTRADA_DADOS
+    RETURN
+
+PROC EXEMPLO_AUXILIARES
+    RETURN
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
-//      COORDENADAS 05,05,10,18 AJUDA "B19127"
-
-// ESPECIALIZE V_Janela MENU
-// ADDOPCAO V_JANELA TEXTO "#menu de opções" ;
-//     ACAO EXEMPLO_MENU() AJUDA "P06671"
-// ADDOPCAO V_Janela TEXTO "browse de #DBF" ;
-//     ACAO EXEMPLO_BROWSE_DBF() AJUDA "P06673"
-// ADDOPCAO V_Janela TEXTO "browse de #vetor" ;
-//     ACAO EXEMPLO_BROWSE_VETOR() AJUDA "P06675"
-// ADDOPCAO V_Janela TEXTO "exibição/edição de #texto em memória" ;
-//     ACAO EXEMPLO_TEXTO_MEMORIA() AJUDA "P06677"
-// ADDOPCAO V_Janela TEXTO "exibição de #arquivo texto" ;
-//     ACAO EXEMPLO_TEXTO_ARQUIVO() AJUDA "P06679"
-// ADDOPCAO V_Janela TEXTO "#entrada de dados" ;
-//     ACAO EXEMPLO_ENTRADA_DADOS() AJUDA "P06681"
-// ADDOPCAO V_Janela TEXTO "#janelas auxiliares" ;
-//     ACAO EXEMPLO_AUXILIARES() AJUDA "P06683"
-// *
-// L_FechouComAutoclose := ATIVE(V_Janela)
-// *
-// //!! IF L_FechouComAutoclose
-// //!!    ADVERTE("M?????","Exemplo encerrado pela AUTOCLOSE;"+;
-// //!!                     "(clicou-se na imagem)")
-// //!! ELSE
-// //!!    ADVERTE("M?????","Exemplo encerrado com ESC ou [X]")
-// //!! ENDIF
-// *
-// SET CURSOR ON
-// QUIT
-// *
 // *******************
 // FUNC CONFIRMA_DADOS
 // *******************

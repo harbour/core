@@ -27,3 +27,10 @@ HB_FUNC( WVW_SETDEFLINESPACING )
 
    hb_retni( byOldLineSpacing );
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_MODAL_WINDOW )
+{
+    hb_gtnap_cualib_modal_window();
+}
