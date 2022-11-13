@@ -26,6 +26,11 @@ STATIC L_GuiObjectsAtivos := .T.
 #INCLUDE "cua.ch"
 *
 ********************
+// N_LinIni --> Top
+// N_ColIni --> Left
+// N_LinFin --> Bottom
+// N_ColFin --> Right
+// C_Cabec --> Title
 FUNCTION CriarJanela ( N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec, ;
                        VC_TxtBotoes_10, C_CdTela, V_Janela_Pai, C_SubCabec,;
                        N_EspacamentoEmPixels, N_DeslocaCabecalho,;
@@ -314,6 +319,14 @@ RETURN VX_Janela
 #DEFINE N_ColIni       VX_Janela[02]
 #DEFINE N_LinFin       VX_Janela[03]
 #DEFINE N_ColFin       VX_Janela[04]
+#DEFINE C_Cabec        VX_Janela[30]
+
+
+
+
+
+// Still NON Used
+
 #DEFINE C_TelaCoberta  VX_Janela[05]
 #DEFINE N_LinAnt       VX_Janela[06]
 #DEFINE N_ColAnt       VX_Janela[07]
@@ -339,7 +352,6 @@ RETURN VX_Janela
 #DEFINE V_BotoesToolBar    VX_Janela[27]
 #DEFINE L_TemScrollVertical   VX_Janela[28]
 #DEFINE L_TemScrollHorizontal VX_Janela[29]
-#DEFINE C_Cabec            VX_Janela[30]
 #DEFINE L_RolaCima         VX_Janela[31]
 #DEFINE L_RolaBaixo        VX_Janela[32]
 #DEFINE L_RolaEsquerda     VX_Janela[33]
@@ -580,7 +592,6 @@ AADD(V_LstImagens,{C_ArquivoImagem,;  // _IMAGEM_ARQUIVO
 FUNCTION Ative ( VX_Janela )
 **************
 LOCAL X_Retorno
-
 // LOCAL N_Largura, N_LinImp, X_Retorno
 // LOCAL N_CursorAnt := SET(_SET_CURSOR,SC_NONE)        // salvar modo do cursor
 // LOCAL C_CorAnt    := SETCOLOR(C_CorJan)              // salvar cor anterior
@@ -589,12 +600,12 @@ LOCAL X_Retorno
 // LOCAL C_Cabec_Aux
 // LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
 
-// B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
+// //B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
 // *
 // IF N_LinBotoes == NIL
 //    ? MEMVAR->AJUSTA_BOTOES_DEVE_SER_CHAMADA_UMA_VEZ
 // ENDIF
-// *
+*
 
 // IF C_TelaCoberta == NIL    // se janela ainda n�o foi aberta, abr�-la
 //    *
@@ -976,7 +987,7 @@ LOCAL X_Retorno
 // ENDIF
 *
 
-NAP_CUALIB_MODAL_WINDOW()
+NAP_CUALIB_MODAL_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec)
 
 X_Retorno := .F.
 RETURN X_Retorno
@@ -2569,14 +2580,14 @@ STATIC FUNCTION TrataEventos ( VX_Janela )
 //    ****************************
 //    WVW_SetPen(0,0,rgb(210,1210,210))
 //    Wvw_DrawBoxGroup(N_WindowNum,N_LinIni,N_ColIni,N_LinFin,N_ColFin)
-//    *
-//    *****************
-//    PROC AddGuiObject( VX_Janela,bGuiControl,V_Coordenadas,L_Rastrear,bWhenBlock )
-//    *****************
-//    DEFAULT L_Rastrear TO .F.
-//    * DEFAULT bWhenBlock TO {||.T.}  // bWhenBlock sem uso por enquanto
-//    AADD(aGuiObjects,{ bGuiControl, V_Coordenadas, L_Rastrear})  // bWhenBlock})
-//    *
+   *
+   *****************
+   PROC AddGuiObject( VX_Janela,bGuiControl,V_Coordenadas,L_Rastrear,bWhenBlock )
+   *****************
+   DEFAULT L_Rastrear TO .F.
+   * DEFAULT bWhenBlock TO {||.T.}  // bWhenBlock sem uso por enquanto
+   AADD(aGuiObjects,{ bGuiControl, V_Coordenadas, L_Rastrear})  // bWhenBlock})
+   *
 //    **************
 //    PROC WVW_Paint (nWinNum)  // A WVW chama esta rotina de forma autom�tica.
 //    **************            // � uma fun��o de callback. N�o pode ser STATIC.

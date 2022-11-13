@@ -82,7 +82,12 @@ extern uint32_t hb_gtnap_cualib_linespacing(void);
 
 extern void hb_gtnap_cualib_set_linespacing(const uint32_t spacing);
 
-extern void hb_gtnap_cualib_modal_window(void);
+// N_LinIni --> Top
+// N_ColIni --> Left
+// N_LinFin --> Bottom
+// N_ColFin --> Right
+// C_Cabec --> Title
+extern void hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec);
 
 HB_EXTERN_END
 

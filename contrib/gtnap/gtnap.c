@@ -14,6 +14,7 @@
 
 typedef struct _gtnap_t GtNap;
 typedef struct _gtnap_column_t GtNapColumn;
+typedef struct _gtnap_cualib_window_t GtNapCualibWindow;
 typedef struct _gui_context_t GuiContext;
 
 struct _gtnap_callback_t
@@ -43,6 +44,17 @@ struct _gtnap_area_t
 DeclPt(GtNapCallback);
 DeclPt(GtNapArea);
 DeclPt(Window);
+
+struct _gtnap_cualib_window_t
+{
+    uint32_t N_LinIni;
+    uint32_t N_ColIni;
+    uint32_t N_LinFin;
+    uint32_t N_ColFin;
+    String *C_Cabec;
+};
+
+DeclSt(GtNapCualibWindow);
 
 struct _gtnap_t
 {
@@ -715,29 +727,43 @@ void hb_gtnap_cualib_set_linespacing(const uint32_t spacing)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_modal_window(void)
+void hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec)
 {
+    GtNapCualibWindow cuawin;
     Window *window = window_create(ekWNSTD);
     Panel *panel = panel_create();
     Layout *layout = layout_create(1, 1);
-    View *view = view_create();
+    Label *label = label_create();
 
-    if (GTNAP_GLOBAL->num_modals == 0)
+    cuawin.N_LinIni = N_LinIni;
+    cuawin.N_ColIni = N_ColIni;
+    cuawin.N_LinFin = N_LinFin;
+    cuawin.N_ColFin = N_ColFin;
+    cuawin.C_Cabec = str_c(C_Cabec);
+    label_text(label, tc(cuawin.C_Cabec));
+    label_font(label, GTNAP_GLOBAL->global_font);
+    layout_label(layout, label, 0, 0);
+    layout_halign(layout, 0, 0, ekCENTER);
+    layout_valign(layout, 0, 0, ekTOP);
+
+    //if (GTNAP_GLOBAL->num_modals == 0)
     {
-        real32_t width = (real32_t)(GTNAP_GLOBAL->cell_x * GTNAP_GLOBAL->cols);
-        real32_t height = (real32_t)(GTNAP_GLOBAL->cell_y * GTNAP_GLOBAL->rows);
-        view_size(view, s2df(width, height));
+        real32_t width = (real32_t)(GTNAP_GLOBAL->cell_x * (cuawin.N_ColFin - cuawin.N_ColIni + 1));
+        real32_t height = (real32_t)(GTNAP_GLOBAL->cell_y * (cuawin.N_LinFin - cuawin.N_LinIni + 1));
+        panel_size(panel, s2df(width, height));
         window_title(window, tc(GTNAP_GLOBAL->title));
         GTNAP_GLOBAL->num_modals += 1;
     }
-    else
-    {
-        view_size(view, s2df(500, 250));
-    }
-    layout_view(layout, view, 0, 0);
+    // else
+    // {
+    //     view_size(view, s2df(500, 250));
+    // }
+
     panel_layout(panel, layout);
     window_panel(window, panel);
     window_modal(window, NULL);
+
+
     window_destroy(&window);
 }
 

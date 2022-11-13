@@ -32,5 +32,10 @@ HB_FUNC( WVW_SETDEFLINESPACING )
 
 HB_FUNC( NAP_CUALIB_MODAL_WINDOW )
 {
-    hb_gtnap_cualib_modal_window();
+    uint32_t N_LinIni = hb_parni(1);
+    uint32_t N_ColIni = hb_parni(2);
+    uint32_t N_LinFin = hb_parni(3);
+    uint32_t N_ColFin = hb_parni(4);
+    const char_t *C_Cabec = hb_gtnap_cualib_parText(5);
+    hb_gtnap_cualib_modal_window(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec);
 }
