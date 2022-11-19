@@ -95,17 +95,12 @@ ELSE
 ENDIF
 *
 IF SOB_MODO_GRAFICO()
-   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX)
-      DEFAULT N_EspacamentoEmPixels TO WVW_SetDefLineSpacing()
-   #else
-      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-      #    erro "Código não adaptado para esta plataforma"
-   #endif
+    DEFAULT N_EspacamentoEmPixels TO WVW_SetDefLineSpacing()
 ELSE
-   DEFAULT N_EspacamentoEmPixels TO 4   // só usado na GTWVW
+    DEFAULT N_EspacamentoEmPixels TO 4   // só usado na GTWVW
 ENDIF
-IF N_EspacamentoEmPixels # 0 .AND. ; // controles já devidamente adaptados
-   N_EspacamentoEmPixels # 4         // para estes 2 espaçamentos
+IF N_EspacamentoEmPixels # 0 .AND. ;    // controles já devidamente adaptados
+   N_EspacamentoEmPixels # 4            // para estes 2 espaçamentos
    ? MEMVAR->ESPACAMENTO_INVALIDO
 ENDIF
 *
@@ -601,30 +596,238 @@ LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
 
 B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
 *
-// IF N_LinBotoes == NIL
-//    ? MEMVAR->AJUSTA_BOTOES_DEVE_SER_CHAMADA_UMA_VEZ
-// ENDIF
+IF N_LinBotoes == NIL
+// FRAN-TODO Review segmentation fault
+//   ? MEMVAR->AJUSTA_BOTOES_DEVE_SER_CHAMADA_UMA_VEZ
+ENDIF
 *
 
-// IF C_TelaCoberta == NIL    // se janela ainda nï¿½o foi aberta, abrï¿½-la
-//    *
-//    N_LinAnt    := ROW()
-//    N_ColAnt    := COL()
-//    *
-//    IF SOB_MODO_GRAFICO()
-//       *
-//       #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//          * A restauraï¿½ï¿½o do trecho da tela anterior que vai ser coberta
-//          * pela tela atual ï¿½ feita automaticamente pelo Windows.
-//          C_TelaCoberta := ""
-//          IF L_Embutida
-//             #DEFINE N_WindowNum_Pai V_Janela_Pai[22]
-//             N_WindowNum := N_WindowNum_Pai   // vincular com a janela pai
-//             *
-//             * espaï¿½amento da janela filha deve ser idï¿½ntico ï¿½ da janela pai
-//             IF N_EspacamentoEmPixels # WVW_SetLineSpacing(N_WindowNum_Pai)
-//                ? MEMVAR->ERRO_DE_ESPACAMENTO_DE_JANELA_EMBUTIDA
-//             ENDIF
+IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
+    *
+    N_LinAnt    := ROW()
+    N_ColAnt    := COL()
+    *
+    IF SOB_MODO_GRAFICO()
+        * A restauração do trecho da tela anterior que vai ser coberta
+        * pela tela atual é feita automaticamente pelo Windows.
+
+        C_TelaCoberta := ""
+
+        // Window is embedded?
+        IF L_Embutida
+            #DEFINE N_WindowNum_Pai V_Janela_Pai[22]
+            N_WindowNum := N_WindowNum_Pai   // vincular com a janela pai
+            *
+            * espaçamento da janela filha deve ser idêntico à da janela pai
+            IF N_EspacamentoEmPixels # WVW_SetLineSpacing(N_WindowNum_Pai)
+               ? MEMVAR->ERRO_DE_ESPACAMENTO_DE_JANELA_EMBUTIDA
+            ENDIF
+
+        ELSE // L_Embutida  --> Window in not embedded
+            L_MainCoord_Ant := WvW_SetMainCoord()
+            AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
+
+            IF LEN(V_PilhaJanelas)==1
+                * espaçamento da janela principal deve ser idêntico
+                * ao espaçamento default da aplicação
+                IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+                   ? MEMVAR->ERRO_DE_ESPACAMENTO_DE_JANELA_PRINCIPAL
+                ENDIF
+            ELSE // LEN(V_PilhaJanelas) != 1
+
+                IF Version()=="Harbour 3.2.0dev (r1703241902)"
+                    IF CABEC_TESTE_AUTOMATICO()
+                        C_Cabec_Aux := StrTran(C_Cabec," ","_")
+                        C_Cabec_Aux := subs(Tiracen(C_Cabec_Aux),1,15)+"_"+C_CdTela+"_"
+                    ELSE
+                        C_Cabec_Aux := HB_OEMtoANSI(C_Cabec)
+                    ENDIF
+                ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)" .OR. Version()=="Harbour 3.2.0dev (r1704061005)" // PENDENTE_LINUX
+                    IF CABEC_TESTE_AUTOMATICO()
+                        C_Cabec_Aux := StrTran(C_Cabec," ","_")
+                        C_Cabec_Aux := subs(Tiracen(C_Cabec_Aux),1,15)+"_"+C_CdTela+"_"
+                    ELSE
+                        C_Cabec_Aux := C_Cabec
+                    ENDIF
+                ENDIF ERRO // IF Version()
+                *
+                IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+                    *
+                    IF N_EspacamentoEmPixels > WVW_SetDefLineSpacing()
+                        * Código a seguir supõe que o espaçamento default é sempre
+                        * maior que o espaçamento opcional, ou seja, que a
+                        * WVW_AddRows() acrescentará linhas.
+                        ? MEMVAR->ESPACAMENTO_OPCIONAL_EH_SEMPRE_ZERO
+                    ENDIF
+                    *
+                    IF N_LinIni == 1 .AND. N_LinFin == MAXROW()-1 .AND. ;
+                        N_ColIni == 1
+                        * A janela foi criada com parâmetros (00,MAXROW(),00,xx),
+                        * mas, pelo fato de não ser direita MAXCOL(),
+                        * a CriaJanela() acrescentou o espaço do BOX, para ficar
+                        * posicionalmente idêntico à versão texto.
+                        * Como, quando o ESPACOPIXELS for 0, não se quer que seja
+                        * igual à versão texto, desfazer este ajuste automático.
+                        N_LinIni--
+                        N_ColIni--
+                        N_LinFin++
+                        N_ColFin++
+                    ENDIF
+                *
+                ENDIF // N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+            *
+            ENDIF // LEN(V_PilhaJanelas)==1
+
+
+            IF LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
+                //
+                // FRAN REVIEW: GTNAP don't open any window automatically
+                //
+                * A GTWVW já abre a janela 0 automaticamente.
+                * Fazer com que a primeira janela aberta pela CUA
+                * seja a mesma.
+                N_WindowNum := 0
+            ELSE // LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
+                * Define copiados do
+                * \xharbour-0.99.70\contrib\what32\include\winuser.ch
+                * JA DEFINIDO NA WINUSER.CH
+                *#define WS_POPUP             2147483648
+                *#define WS_CAPTION             12582912
+                *#define WS_SYSMENU               524288
+                *#define WS_CLIPCHILDREN        33554432
+                *#define WS_MINIMIZEBOX           131072
+                *
+                * O WS_MINIMIZEBOX não é padrão da GTWVW...
+                *
+    //!!            N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
+    //!!                                           N_LinIni,N_ColIni,N_LinFin,N_ColFin,;
+    //!!                                           WS_POPUP+WS_CAPTION+WS_SYSMENU+;
+    //!!                                           WS_CLIPCHILDREN+WS_MINIMIZEBOX)
+                *
+                IF L_JanTipoMsgAguarde
+                    IF N_ProgressBar == 1
+                        N_LinFin := N_LinFin + 2
+                    ELSEIF N_ProgressBar == 2
+                        N_LinFin := N_LinFin + 4
+                    Endif
+                ENDIF
+
+                //
+                // FRAN REview.... Here is not the moment for open the window
+                //
+                // N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
+                //     N_LinIni,N_ColIni,N_LinFin,N_ColFin)
+                // WvW_SetMainCoord(L_MainCoord_Atu)
+                N_WindowNum := 1
+                //
+
+                // FRAN REview.... Sure that this bloc can be ignored in GTNAP
+                IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+                    *
+                    WVW_SetLineSpacing(N_WindowNum,N_EspacamentoEmPixels)
+                    N_AddRows := 5// FRAN Review!!! WVW_MaxMaxRow()-MAXROW()
+                    N_AddRows -= 1 // evitar que o final da tela fique fora do monitor
+                    IF L_CriarToolBar
+                       * 2 linhas deslocadas da linha inicial, para dar espaço à ToolBar
+                       N_AddRows -= 2
+                    ENDIF
+                    IF N_AddRows < 0
+                       * Como o espaçamento foi diminuído, com certeza é para
+                       * caber mais linhas na tela.
+                       ? MEMVAR->HOUVE_REDUCAO_DE_LINHAS_NA_TELA
+                    ENDIF
+                    *
+                    * Como o espaço entre linhas passou a ser 0, cabe mais linhas
+                    * na tela (mais que 35). Apesar disto, a função MAXROW()
+                    * continuará a retornar 35, pois é baseada na janela principal
+                    * do sistema.
+                    *
+                    * A WVW_AddRows(), quando MainCoord está setado, obedece ao
+                    * limite da MaxRow(). Portanto, o MainCoord deve ser
+                    * temporariamente desabilitado, para que a WVW_AddRows() possa
+                    * acrescentar linhas além do limite de 35 linhas.
+                    *
+                    * A quantidade de linhas possível de ser adicionada não é
+                    * criticada pela WVW_AddRows(), devendo-se passar um valor
+                    * compatível.
+                    *
+                    // WVW_ADDROWS(N_WindowNum,N_AddRows)
+                    *
+                    * Mover os elementos inferiores da janela para as novas
+                    * coordenadas...
+                    *
+                    N_LinFin    := N_LinFin + N_AddRows
+                    N_Lin2Livre := N_Lin2Livre + N_AddRows
+                    N_LinMess   := N_LinMess + N_AddRows
+                    *
+                 ENDIF // N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+            *
+            ENDIF // LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
+
+            * Ativou-se a rotina abaixo, mas não se viu nenhum efeito prático...
+            //WVW_EnableShortCuts(N_WindowNum,.T.)      // FRAN Review HoyKeys in NAPWINDOW
+            * ATENÇÃO: a sintaxe correta é:
+            *    Wvw_SetIcon(janela,"path"+"arquivo de ícone.ico") ou
+            *    Wvw_SetIcon(janela,"número do recurso","arquivo de ícone.ico")
+            *
+            // FRAN Window ICON can be simplified in GTNAP
+            // IF Version()=="Harbour 3.2.0dev (r1703241902)"
+            //     // Wvw_SetIcon(N_WindowNum, _ICONE_ASPEC)  FRAN ---> TODO Window ICON
+            // ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)" .OR. Version()=="Harbour 3.2.0dev (r1704061005)" // PENDENTE_LINUX
+            //     * Nesta versão do compilador, a função Wvw_SetIcon() passa a utilizar a própria imagem.
+            //     // IF FILE(DIREXE()+"aspec.ico")   FRAN ---> TODO Window ICON
+            //     //     Wvw_SetIcon(N_WindowNum, DIREXE()+"aspec.ico")
+            //     // ENDIF
+            // ENDIF ERRO
+        *
+        ENDIF // L_Embutida
+
+        IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)
+            ALARME("M28750","Alguma janela aberta não foi fechada - passo 1...")
+            * ALERT("Alguma janela aberta não foi fechada - passo 1...")
+        ENDIF
+
+    ELSE // SOB_MODO_GRAFICO()
+        C_TelaCoberta := SAVESCREEN(N_LinIni,N_ColIni,N_LinFin,N_ColFin)
+        IF .NOT. L_Embutida
+            AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
+        ENDIF
+
+    ENDIF // SOB_MODO_GRAFICO()
+
+
+
+
+
+ENDIF // C_TelaCoberta == NIL
+
+* executar o método de ativação da janela, conforme a sua especialização
+*
+NAP_CUALIB_MODAL_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec)
+
+X_Retorno := .F.
+RETURN X_Retorno
+
+
+// IF N_TP_Jan == NIL
+//     X_Retorno := EVAL(B_Metodo,VX_Janela)
+//  ELSE
+//     X_Retorno := EVAL(B_Metodo)
+//  ENDIF
+//  *
+//  SETCOLOR(C_CorAnt)                    // restaurar cor anterior
+//  SET(_SET_CURSOR,N_CursorAnt)          // restaurar modo do cursor
+//  SETKEY(K_F1,B_Ajuda_Ant)              // restaurar ajuda anterior
+//  *
+//  IF .NOT. L_CUA_10
+//     DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha após ativação
+//  ENDIF
+//  *
+//  RETURN X_Retorno
+
+
+
+
 //          ELSE
 //             L_MainCoord_Ant := WvW_SetMainCoord()
 //             AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
@@ -774,11 +977,6 @@ B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
 //             ALARME("M28750","Alguma janela aberta nï¿½o foi fechada - passo 1...")
 //             * ALERT("Alguma janela aberta nï¿½o foi fechada - passo 1...")
 //          ENDIF
-//       #elif defined(__PLATFORM__LINUX)
-//          // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//       #else
-//          #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//       #endif
 //    ELSE
 //       C_TelaCoberta := SAVESCREEN(N_LinIni,N_ColIni,N_LinFin,N_ColFin)
 //       IF .NOT. L_Embutida
@@ -986,23 +1184,19 @@ B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
 // ENDIF
 *
 
-NAP_CUALIB_MODAL_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec)
-
-X_Retorno := .F.
-RETURN X_Retorno
 
 
 
-// *
-// *********************
-// STAT FUNC EH_PRODUCAO
-// *********************
-// LOCAL L_EH_PRODUCAO := .T.
-// #IFDEF _TESTE
-//    L_EH_PRODUCAO := .F.
-// #ENDIF
-// RETURN L_EH_PRODUCAO
-// *
+*
+*********************
+STAT FUNC EH_PRODUCAO
+*********************
+LOCAL L_EH_PRODUCAO := .T.
+#IFDEF _TESTE
+   L_EH_PRODUCAO := .F.
+#ENDIF
+RETURN L_EH_PRODUCAO
+*
 
 ******************
 PROC AJUSTA_BOTOES(VX_Janela)
@@ -1668,6 +1862,11 @@ FUNC SOB_MODO_GRAFICO
 *********************
 LOCAL L_ModoGrafico := .F.
 IF HB_GTVERSION()=="NAP"
+    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX)
+        L_ModoGrafico := .T.
+    #else
+       #erro "Código não adaptado para esta plataforma"
+    #endif
    L_ModoGrafico := .T.
 ENDIF
 *
@@ -2108,32 +2307,33 @@ DO WHILE LEN(SUBSTR(C_Titulo,N_InicioLin)) # 0
 ENDDO
 *
 RETURN VC_Resultado
-// *
-// ***************************
-// FUNC CABEC_TESTE_AUTOMATICO  (L_EXIBE_AJUDA_NEW)
-// ***************************
-// //!! CODIGO QUEBRA GALHO
-// LOCAL C_SERIE
-// //!!
+*
+***************************
+FUNC CABEC_TESTE_AUTOMATICO  (L_EXIBE_AJUDA_NEW)
+***************************
+//!! CODIGO QUEBRA GALHO
+LOCAL C_SERIE
+//!!
 
-// STATIC L_EXIBE_AJUDA := .F.
-// IF L_EXIBE_AJUDA_NEW # NIL
-//    L_EXIBE_AJUDA := L_EXIBE_AJUDA_NEW
-// ENDIF
+STATIC L_EXIBE_AJUDA := .F.
+IF L_EXIBE_AJUDA_NEW # NIL
+    L_EXIBE_AJUDA := L_EXIBE_AJUDA_NEW
+ENDIF
 
-// //!! CODIGO QUEBRA GALHO
-// C_SERIE := "XXXXX"
-// IF SELECT("XXCONG") # 0
-//    C_SERIE := XXCONG->SERIE
-// ENDIF
-// IF SERIE_EQUIPE_DE_TESTE() .OR. ;   // Equipe de teste
-//    "/"+TRIM(GS_CDUSUA())+"/" $ "/RICARDO.REGIS/"
-//    L_EXIBE_AJUDA := .T.
-// ENDIF
-// //!! CODIGO QUEBRA GALHO
-// *
-// RETURN L_EXIBE_AJUDA
-// *
+//!! CODIGO QUEBRA GALHO
+C_SERIE := "XXXXX"
+IF SELECT("XXCONG") # 0
+    C_SERIE := XXCONG->SERIE
+ENDIF
+IF SERIE_EQUIPE_DE_TESTE() .OR. ;   // Equipe de teste
+    "/"+TRIM(GS_CDUSUA())+"/" $ "/RICARDO.REGIS/"
+    L_EXIBE_AJUDA := .T.
+ENDIF
+//!! CODIGO QUEBRA GALHO
+*
+RETURN L_EXIBE_AJUDA
+*
+    // *
 // ******************
 // PROC MudeSubtitulo (VX_Janela,C_SubCabec_Novo)
 // ******************

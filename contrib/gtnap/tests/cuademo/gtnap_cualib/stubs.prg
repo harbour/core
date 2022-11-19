@@ -129,11 +129,11 @@ FUNC LOGAINFO_ID_TELA_RELAT_BOTAO (C_STR_ID,C_CDTELA_CDRELA_CDBOTA)
 *********************************
 RETURN .T.
 *
-// **************************
-// FUNC SERIE_EQUIPE_DE_TESTE()
-// **************************
-// RETURN .T.
-// *
+**************************
+FUNC SERIE_EQUIPE_DE_TESTE()
+**************************
+RETURN .T.
+*
 // ***************
 // FUNC XDBSKIPPER (N_AVANCO)  // usada na sele´?¢´?¢o em arquivo
 // ***************
@@ -164,11 +164,11 @@ RETURN .T.
 // PROC XDBSKIP (N_AVANCO)
 // ************
 // DBSKIP(N_AVANCO)
-// *
-// ************
-// FUNC GS_CDUSUA()
-// ************
-// RETURN "xxxxx"
+*
+************
+FUNC GS_CDUSUA()
+************
+RETURN "xxxxx"
 // *
 // *****************
 // PROC LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdGet)  // LOGAR conte´?¢do de telas
@@ -278,8 +278,8 @@ FOR N_Cont := 1 TO N_Len
    ENDIF
 NEXT
 RETURN C_String
-// *
-// #INCLUDE "xx.ch"
+*
+#INCLUDE "xx.ch"
 // ***************
 // FUNCTION XUPPER ( C_String )
 // ***************
@@ -289,11 +289,11 @@ RETURN C_String
 // FUNCTION XLOWER ( C_String )
 // ***************
 // RETURN TROCA(LOWER(C_String), _AC_MAIUS , _AC_MINUS )
-// *
-// ************
-// FUNC TIRACEN (C_String)
-// ************
-// RETURN TROCA(C_String, _AC_UM_SIM , _AC_UM_NAO )
+*
+************
+FUNC TIRACEN (C_String)
+************
+    RETURN TROCA(C_String, _AC_UM_SIM , _AC_UM_NAO )
 // *
 // ****************
 // PROCEDURE ERRCTRL (C_CDMENS,C_TXT_MENSAGEM)
