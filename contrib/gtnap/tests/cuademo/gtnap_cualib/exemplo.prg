@@ -11,6 +11,9 @@ REQUEST HB_LANG_PT_BR
 
 ANNOUNCE HB_GT_SYS
 
+//
+// FRAN: This code is not required for a CUALIB/GTNAP application
+//
 #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    REQUEST HB_GT_WVW_DEFAULT
 //    REQUEST WVW_NOpenWindow, WVW_NSetCurWindow
@@ -20,12 +23,45 @@ ANNOUNCE HB_GT_SYS
 #else
    #erro "Código não adaptado para esta plataforma"
 #endif
+//
+//
+//
+
 *
 *********
 PROC MAIN
 *********
-LOCAL L_FechouComAutoclose, V_Janela
 *
+
+//
+// FRAN:
+// Event-driven applications (especially GTK+3 and macOS-Cocoa) cannot be started directly from main().
+// They need to set up an event execution loop and other internal structures. In GTNAP based applications,
+// we need to move the "main" to another procedure, which will be called from GTNAP when
+// the application is ready to start.
+//
+IF HB_GTVERSION()=="NAP"
+    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX)
+       DIRET_BMPS("..\bmps\")
+       Setup_nap("Exemplo das rotinas de janelamento",35,110, {|| RUN_MAIN() })
+    #else
+       #erro "Código não adaptado para esta plataforma"
+    #endif
+ ELSE
+     SETMODE(35,110)
+     RUN_MAIN()
+ ENDIF
+
+
+//
+// FRAN:
+// This is the "real" main procedure for a GTNAP application.
+// From here, all CUALIB based code will be the same as GTWVW implementation
+//
+PROC RUN_MAIN
+
+LOCAL L_FechouComAutoclose, V_Janela
+
 SET CURSOR OFF
 SET SCOR OFF
 SET EPOCH TO 1940
@@ -67,17 +103,6 @@ SET EVENTMASK TO 128+2+8+64
 PRIVATE INFO_VERSAO := {"99","9","999","999",;
                         "99","9","999","999"}
 
-IF HB_GTVERSION()=="NAP"
-   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX)
-      DIRET_BMPS("..\bmps\")
-      Setup_wvw("Exemplo das rotinas de janelamento",35,110)
-   #else
-      #erro "Código não adaptado para esta plataforma"
-   #endif
-ELSE
-    SETMODE(35,110)
-ENDIF
-
 CUA20 @ 00,00,MAXROW(),MAXCOL() JANELA V_Janela ;
      TITULO "Escolha o tipo de janela" SUBTITULO "%T";
      AJUDA "T?????"
@@ -113,6 +138,16 @@ L_FechouComAutoclose := ATIVE(V_Janela)
 //!! ENDIF
 *
 SET CURSOR ON
+
+//
+// FRAN:
+// Just like initialization, finish an event-driven application needs to properly close
+// the internal message runloop structures.
+//
+IF HB_GTVERSION()=="NAP"
+    NAP_GLOBAL_EXIT()
+ENDIF
+
 QUIT
 *
 

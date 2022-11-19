@@ -670,7 +670,7 @@ RETURN C_DIRET_ANT
     * FRAN: This is an adaptation of Setup_wvw to GTNAP. We mantain the _wvw suffix in all functions for retro-compatibility
     *
    ******************
-   FUNCTION Setup_wvw(C_Title,N_QtLin,N_QtCol)
+   FUNCTION Setup_nap(C_Title,N_QtLin,N_QtCol,InitCodeBlock)
    ******************
    *
    * FRAN: GTNAP doesn't use palettes
@@ -717,7 +717,7 @@ RETURN C_DIRET_ANT
     //   * WVW_SIZE_READY(.T.)
     //   *
 
-    NAP_CUALIB_SETUP(C_Title,N_QtLin,N_QtCol)
+    NAP_CUALIB_SETUP(C_Title,N_QtLin,N_QtCol,InitCodeBlock)
    RETURN (.T.)
 
 //    FUNCTION SetDefaultWindowSize(N_QtLin,N_QtCol)

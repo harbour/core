@@ -76,7 +76,7 @@ extern void hb_gtnap_callback(GtNapCallback *callback, Event *e);
 
 const char_t *hb_gtnap_cualib_parText(const uint32_t iParam);
 
-extern void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols);
+extern void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM codeBlock_begin);
 
 extern uint32_t hb_gtnap_cualib_linespacing(void);
 
