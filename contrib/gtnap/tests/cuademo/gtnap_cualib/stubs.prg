@@ -1,51 +1,51 @@
 /* encoding: cp850 */
 *
-* Contï¿½m rotinas que a CUA cita, mas que estï¿½o em outros PRGs.
-* Servem apenas para nï¿½o dar erro de linkediï¿½ï¿½o,
-* nï¿½o tendo tratamento dentro de cada rotina "stub".
+* Contém rotinas que a CUA cita, mas que estão em outros PRGs.
+* Servem apenas para não dar erro de linkedição,
+* não tendo tratamento dentro de cada rotina "stub".
 *
 #INCLUDE "ord.ch"
 #INCLUDE "inkey.ch"
 #INCLUDE "cua.ch"
 #INCLUDE "common.ch"
 
-// ***********
-// PROC XXHELP(C_CDJANE,C_CABEC,C_CDGET_CDOPCAO,V_LST_CDGET_CDOPCAO)
-// ***********
-// LOCAL C_LST_CDGET_CDOPCAO := "", N_CT
-// IF C_CDJANE==NIL
-//    C_CDJANE := ""
-// ENDIF
-// IF C_CABEC==NIL
-//    C_CABEC := ""
-// ENDIF
-// IF C_CDGET_CDOPCAO==NIL
-//    C_CDGET_CDOPCAO := ""
-// ENDIF
-// IF V_LST_CDGET_CDOPCAO==NIL
-//    V_LST_CDGET_CDOPCAO := {}
-// ENDIF
-// *
-// FOR N_CT := 1 TO LEN (V_LST_CDGET_CDOPCAO)
-//    IF V_LST_CDGET_CDOPCAO[N_CT,1]==NIL    //!! DEPOIS REMOVER O IF E DEIXAR O ELSE
-//       C_LST_CDGET_CDOPCAO += "??????"+" - "+;       //!! QUANDO CDOPCAO FOR OBRIGATï¿½RIO
-//                                ALLTRIM(V_LST_CDGET_CDOPCAO[N_CT,2])+";"
-//    ELSE
-//       C_LST_CDGET_CDOPCAO += V_LST_CDGET_CDOPCAO[N_CT,1]+" - "+;
-//                                ALLTRIM(V_LST_CDGET_CDOPCAO[N_CT,2])+";"
-//    ENDIF
-// NEXT
-// *
-// IF EMPTY(C_CDGET_CDOPCAO)
-//    MOSTRAR("M?????","A clï¿½usula AJUDA contï¿½m ;'"+C_CdJane+"' para a tela,;"+;
-//                      "'"+C_CABEC+"' para tï¿½tulo.")
-// ELSE
-//    MOSTRAR("M15562","A clï¿½usula AJUDA contï¿½m ;'"+C_CdJane+"' para a tela,;"+;
-//                     "'"+C_CABEC+"' para tï¿½tulo,;"+;
-//                     "'"+C_CDGET_CDOPCAO+"' para o campo atual e tem como lista de campos:;;"+;
-//                     C_LST_CDGET_CDOPCAO)
-// ENDIF
-// *
+***********
+PROC XXHELP(C_CDJANE,C_CABEC,C_CDGET_CDOPCAO,V_LST_CDGET_CDOPCAO)
+***********
+LOCAL C_LST_CDGET_CDOPCAO := "", N_CT
+IF C_CDJANE==NIL
+   C_CDJANE := ""
+ENDIF
+IF C_CABEC==NIL
+   C_CABEC := ""
+ENDIF
+IF C_CDGET_CDOPCAO==NIL
+   C_CDGET_CDOPCAO := ""
+ENDIF
+IF V_LST_CDGET_CDOPCAO==NIL
+   V_LST_CDGET_CDOPCAO := {}
+ENDIF
+*
+FOR N_CT := 1 TO LEN (V_LST_CDGET_CDOPCAO)
+   IF V_LST_CDGET_CDOPCAO[N_CT,1]==NIL    //!! DEPOIS REMOVER O IF E DEIXAR O ELSE
+      C_LST_CDGET_CDOPCAO += "??????"+" - "+;       //!! QUANDO CDOPCAO FOR OBRIGAT´?¢RIO
+                               ALLTRIM(V_LST_CDGET_CDOPCAO[N_CT,2])+";"
+   ELSE
+      C_LST_CDGET_CDOPCAO += V_LST_CDGET_CDOPCAO[N_CT,1]+" - "+;
+                               ALLTRIM(V_LST_CDGET_CDOPCAO[N_CT,2])+";"
+   ENDIF
+NEXT
+*
+IF EMPTY(C_CDGET_CDOPCAO)
+    MOSTRAR("M?????","A cláusula AJUDA contém ;'"+C_CdJane+"' para a tela,;"+;
+                      "'"+C_CABEC+"' para título.")
+ELSE
+    MOSTRAR("M15562","A cláusula AJUDA contém ;'"+C_CdJane+"' para a tela,;"+;
+                     "'"+C_CABEC+"' para título,;"+;
+                     "'"+C_CDGET_CDOPCAO+"' para o campo atual e tem como lista de campos:;;"+;
+                     C_LST_CDGET_CDOPCAO)
+ENDIF
+ // *
 // **************
 // FUNC TEM_SCOPE()
 // **************
@@ -114,7 +114,7 @@
 // **************
 // PROC DATAINVA
 // *************
-// ALARME("M?????","Esta data nï¿½o existe no calendï¿½rio")
+// ALARME("M?????","Esta data n´?¢o existe no calend´?¢rio")
 // *
 // **********************
 // PROC LOGAFONT_GENERICO (N_RETROCEDE_CALLSTACK,C_TPLOGAFONT,;
@@ -135,7 +135,7 @@ RETURN .T.
 // RETURN .T.
 // *
 // ***************
-// FUNC XDBSKIPPER (N_AVANCO)  // usada na seleï¿½ï¿½o em arquivo
+// FUNC XDBSKIPPER (N_AVANCO)  // usada na sele´?¢´?¢o em arquivo
 // ***************
 // RETURN __DBSKIPPER(N_AVANCO)
 // *
@@ -171,7 +171,7 @@ RETURN .T.
 // RETURN "xxxxx"
 // *
 // *****************
-// PROC LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdGet)  // LOGAR conteï¿½do de telas
+// PROC LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdGet)  // LOGAR conte´?¢do de telas
 // *****************
 // IF V_Lst_CdGet==NIL
 //    V_Lst_CdGet := {}
@@ -180,7 +180,7 @@ RETURN .T.
 // // ALERT(C_CDTELA+" logada, com "+LTRIM(STR(LEN(V_Lst_CdGet)))+" campos")
 // *
 // *****************
-// PROC LOGA_AJMENST(C_CDTELA,C_CDGet,C_CdMens,C_SubCabec)  // LOGAR conteï¿½do de telas
+// PROC LOGA_AJMENST(C_CDTELA,C_CDGet,C_CdMens,C_SubCabec)  // LOGAR conte´?¢do de telas
 // *****************
 // // ALERT("ALARME() - "+C_CDTELA+", campo "+C_CDGet+", mensagem "+C_CDMENS+;
 // //       " e texto com tamanho "+LTRIM(STR(LEN(C_SUBCABEC))))
@@ -200,17 +200,17 @@ RETURN .T.
 // *******************
 // PROC REFRESH_RECORD
 // *******************
-// * Relï¿½ o registro corrente do arquivo corrente novamente.
+// * Rel´?¢ o registro corrente do arquivo corrente novamente.
 // *
 // * Muito embora nos exemplos fornecidos junto com Clipper conste que o comando
-// * "SKIP 0" tem o mesmo efeito, na prï¿½tica o "GOTO RECNO()" ï¿½ melhor pois:
-// *  - O comando SKIP 0 libera os buffers da estaï¿½ï¿½o para a rede, mas nï¿½o
-// *    atualiza totalmente os buffers da estaï¿½ï¿½o se houver modificaï¿½ï¿½o nos
-// *    arquivos executados por outra estaï¿½ï¿½o.
-// *  - Caso se esteja no EOF() e outra estaï¿½ï¿½o preencha este registro, o SKIP 0
+// * "SKIP 0" tem o mesmo efeito, na pr´?¢tica o "GOTO RECNO()" ´?¢ melhor pois:
+// *  - O comando SKIP 0 libera os buffers da esta´?¢´?¢o para a rede, mas n´?¢o
+// *    atualiza totalmente os buffers da esta´?¢´?¢o se houver modifica´?¢´?¢o nos
+// *    arquivos executados por outra esta´?¢´?¢o.
+// *  - Caso se esteja no EOF() e outra esta´?¢´?¢o preencha este registro, o SKIP 0
 // *    atualiza o LASTREC(), os dados do registro, mas o EOF() e BOF()
 // *    continuam .T.
-// *  - Jï¿½ o GOTO RECNO() atualizou todos os itens acima, da estaï¿½ï¿½o para a
+// *  - J´?¢ o GOTO RECNO() atualizou todos os itens acima, da esta´?¢´?¢o para a
 // *    rede e vice-versa.
 // *
 // GOTO RECNO()
@@ -298,11 +298,11 @@ RETURN C_String
 // ****************
 // PROCEDURE ERRCTRL (C_CDMENS,C_TXT_MENSAGEM)
 // ****************
-// * Estabelecer cï¿½digos genï¿½ricos, se nenhum for especificado no comando "ASSUME"
+// * Estabelecer c´?¢digos gen´?¢ricos, se nenhum for especificado no comando "ASSUME"
 // DEFAULT C_CDMENS       TO "M10694"
-// DEFAULT C_TXT_MENSAGEM TO "Houve uma condiï¿½ï¿½o invalida na execuï¿½ï¿½o do programa;"+;
-//                           "por isso serï¿½ feito um cancelamento para evitar que;"+;
-//                           "possa haver danos ï¿½s informaï¿½ï¿½es armazenadas.       "
+// DEFAULT C_TXT_MENSAGEM TO "Houve uma condi´?¢´?¢o invalida na execu´?¢´?¢o do programa;"+;
+//                           "por isso ser´?¢ feito um cancelamento para evitar que;"+;
+//                           "possa haver danos ´?¢s informa´?¢´?¢es armazenadas.       "
 // *
 // ALARME(C_CDMENS,C_TXT_MENSAGEM)
 // *
@@ -333,7 +333,7 @@ RETURN C_String
 //    * reverso VERDE
 //    C_Cor := "N/G*,G+/N,N,,N/G*"
 // ELSEIF C_TpCor == _COR_PADRAO
-//    * padrao sertï¿½o
+//    * padrao sert´?¢o
 //    C_Cor := "N/W,R/W,N/BG,N,,N/BG"
 // ENDIF ERRO
 // *
@@ -359,12 +359,12 @@ RETURN C_String
 // *
 // IF EMPTY(V_TAB)
 //    V_RETORNO := NIL
-//    ADVERTE("M11254","A tabela de ajuda (F4) nï¿½o serï¿½ exibida,;"+;
-//                     "pois nï¿½o existe nenhum item a sugerir...")
+//    ADVERTE("M11254","A tabela de ajuda (F4) n´?¢o ser´?¢ exibida,;"+;
+//                     "pois n´?¢o existe nenhum item a sugerir...")
 // ELSEIF LEN(V_TAB)==1       // se somente 1 elemento, selecionar automaticamente
 //    V_RETORNO := V_TAB[1,V_POSRETORNO]
 // ELSE
-//    * preencher vetor para mostrar ao usuï¿½rio
+//    * preencher vetor para mostrar ao usu´?¢rio
 //    FOR V_CONT1 := 1 TO LEN(V_TAB)
 //        AADD(V_VET_MOSTRA,"")        // adicionar nova linha
 //        FOR V_CONT2 := 1 TO LEN(V_TAB[V_CONT1])
@@ -399,11 +399,11 @@ RETURN C_String
 //    *
 //    * calcular "largura" e "altura" da tabela
 //    * +4 - margens da janela
-//    * +3 - espaï¿½o para a barra de rolagem vertical, se existir
+//    * +3 - espa´?¢o para a barra de rolagem vertical, se existir
 //    V_LARGURA := MIN(N_MAX_LARGURA_VET_MOSTRA+4+4            ,MAXCOL())
 //    V_ALTURA  := MIN(LEN(V_VET_MOSTRA)+LINHAS_TIT(V_TITULO)+4,MAXROW())
 //    *
-//    * ajustar posiï¿½ï¿½o inicial da tabela em relaï¿½ï¿½o ï¿½ tela
+//    * ajustar posi´?¢´?¢o inicial da tabela em rela´?¢´?¢o ´?¢ tela
 //    * (procurar deixar ao lado do campo)
 //    *
 //    V_LIN_INI := ROW()-2
@@ -417,7 +417,7 @@ RETURN C_String
 //    ENDIF
 //    *
 //    IF ";" $ V_TITULO
-//       C_TITULO_AUX := "Selecione com Enter"  // modifica o tï¿½tulo da janela do Windows
+//       C_TITULO_AUX := "Selecione com Enter"  // modifica o t´?¢tulo da janela do Windows
 //    ELSE
 //       C_TITULO_AUX := V_TITULO
 //    ENDIF
@@ -441,19 +441,19 @@ RETURN C_String
 // *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 // ********************
-// STAT FUNC LINHAS_TIT(V_TITULO)  // Em Windows a rotina ï¿½ chamada de forma ESTï¿½TICA.
+// STAT FUNC LINHAS_TIT(V_TITULO)  // Em Windows a rotina ´?¢ chamada de forma EST´?¢TICA.
 // ********************
 // #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
 // ********************
-// FUNC LINHAS_TIT(V_TITULO) // Em Linux foi necessï¿½rio deixa-la Pï¿½BLICA. (Motivo desconhecido atï¿½ o momento)
+// FUNC LINHAS_TIT(V_TITULO) // Em Linux foi necess´?¢rio deixa-la P´?¢BLICA. (Motivo desconhecido at´?¢ o momento)
 // ********************
 // #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
+//    #erro "C´?¢digo n´?¢o adaptado para esta plataforma"
 // #endif
 // LOCAL N_LINHAS_TIT := IIF(EMPTY(V_TITULO),3,4)
 // DO WHILE ";" $ V_TITULO
 //    N_LINHAS_TIT++      // aumentar uma linha
-//    V_TITULO := STRTRAN(V_TITULO,";","",,1)   // trocar sï¿½ uma ocorrï¿½ncia
+//    V_TITULO := STRTRAN(V_TITULO,";","",,1)   // trocar s´?¢ uma ocorr´?¢ncia
 // ENDDO
 // RETURN N_LINHAS_TIT
 // *
@@ -550,9 +550,9 @@ RETURN C_String
 //    }
 
 //    /* 2013/09/19 Alexandre Alencar
-//     * Funï¿½ï¿½o WVW_MESSAGEBOXTIMEOUT(hwnd, lpText, lpCation, uType, dwSeconds)
-//     * Exibe uma MessageBox padrï¿½o Windows, com timeout, retorna o botï¿½o clicado ou MB_TIMEOUT
-//     * se nenhum botï¿½o for clicado e o tempo expirou
+//     * Fun´?¢´?¢o WVW_MESSAGEBOXTIMEOUT(hwnd, lpText, lpCation, uType, dwSeconds)
+//     * Exibe uma MessageBox padr´?¢o Windows, com timeout, retorna o bot´?¢o clicado ou MB_TIMEOUT
+//     * se nenhum bot´?¢o for clicado e o tempo expirou
 //     */
 
 //    HB_FUNC( WVW_MESSAGEBOXTIMEOUT )
@@ -574,7 +574,7 @@ RETURN C_String
 // #elif defined(__PLATFORM__LINUX)|| defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
 //    //? MEMVAR->NAO_ADAPTADO_PARA_LINUX
 // #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
+//    #erro "C´?¢digo n´?¢o adaptado para esta plataforma"
 // #endif
 // *
 // ***************************************

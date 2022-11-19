@@ -591,17 +591,16 @@ AADD(V_LstImagens,{C_ArquivoImagem,;  // _IMAGEM_ARQUIVO
 **************
 FUNCTION Ative ( VX_Janela )
 **************
-LOCAL X_Retorno
-// LOCAL N_Largura, N_LinImp, X_Retorno
-// LOCAL N_CursorAnt := SET(_SET_CURSOR,SC_NONE)        // salvar modo do cursor
-// LOCAL C_CorAnt    := SETCOLOR(C_CorJan)              // salvar cor anterior
-// LOCAL B_Ajuda_Ant  // salvar help anterior, se existir novo
-// LOCAL N_Cont, N_AddRows
-// LOCAL C_Cabec_Aux
-// LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
+LOCAL N_Largura, N_LinImp, X_Retorno
+LOCAL N_CursorAnt := SET(_SET_CURSOR,SC_NONE)        // salvar modo do cursor
+LOCAL C_CorAnt    := SETCOLOR(C_CorJan)              // salvar cor anterior
+LOCAL B_Ajuda_Ant  // salvar help anterior, se existir novo
+LOCAL N_Cont, N_AddRows
+LOCAL C_Cabec_Aux
+LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
 
-// //B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
-// *
+B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
+*
 // IF N_LinBotoes == NIL
 //    ? MEMVAR->AJUSTA_BOTOES_DEVE_SER_CHAMADA_UMA_VEZ
 // ENDIF

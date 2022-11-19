@@ -15,7 +15,7 @@
 FUNCTION EspMenuVert( VX_Janela, L_RolaVertical, L_AutoClose )
 ********************
 *
-LOCAL VX_SeleGtNap
+LOCAL VX_Sele
 *
 IF L_CUA_10
    ? MEMVAR->JANELA_MENU_EXCLUSIVA_DA_CUA_20
@@ -23,25 +23,22 @@ ENDIF
 *
 DEFAULT L_RolaVertical TO .F.
 DEFAULT L_AutoClose    TO .F.
+IF ASCAN(V_RegiaoBotoes,{|V_Botao|"ENTER=" $ UPPER(V_Botao[_BOTAO_TEXTO_COMANDO])}) # 0
+   ? MEMVAR->MENU_NAO_PODE_TER_BOTAO_ENTER
+ENDIF
+IF ASCAN(V_LstAcoes,{|V_Acao|K_ENTER==V_Acao[_ACAO_KEYBOARD]}) # 0
+   ? MEMVAR->MENU_NAO_PODE_TER_ACAO_ENTER
+ENDIF
+*
+AJUSTA_BOTOES(VX_Janela)  // ajusta Lin2Livre à quantidade de botões de função
+*
 
-
-// IF ASCAN(V_RegiaoBotoes,{|V_Botao|"ENTER=" $ UPPER(V_Botao[_BOTAO_TEXTO_COMANDO])}) # 0
-//    ? MEMVAR->MENU_NAO_PODE_TER_BOTAO_ENTER
-// ENDIF
-// IF ASCAN(V_LstAcoes,{|V_Acao|K_ENTER==V_Acao[_ACAO_KEYBOARD]}) # 0
-//    ? MEMVAR->MENU_NAO_PODE_TER_ACAO_ENTER
-// ENDIF
-// *
-// AJUSTA_BOTOES(VX_Janela)  // ajusta Lin2Livre à quantidade de botões de função
-// *
-
-
-// IF L_RolaVertical
-//    * prever espaço para scroll bar vertical
-//    Col2Livre(VX_Janela)--
-//    Col2Livre(VX_Janela)--
-//    L_ScrollVertical := .T.
-// ENDIF
+IF L_RolaVertical
+   * prever espaço para scroll bar vertical
+   Col2Livre(VX_Janela)--
+   Col2Livre(VX_Janela)--
+   L_ScrollVertical := .T.
+ENDIF
 
 *
 * No Harbour, foi preciso criar uma subclasse da Tbrowse()
@@ -50,14 +47,9 @@ DEFAULT L_AutoClose    TO .F.
 *
 * NOTA: Menu vertical possui uma única coluna, nunca tendo separador de colunas.
 *       Decidiu-se instanciar da subclasse somente para ficar igual à seleção em arquivo e em vetor.
-// VX_Sele := ;
-//    TBROWSESubClass():New(Lin1Livre(VX_Janela) , Col1Livre(VX_Janela),;
-//                          Lin2Livre(VX_Janela) , Col2Livre(VX_Janela))
-
-// TODO!!! Connect here a GtNap MenuVert
-VX_SeleGtNap := .T.
-
-
+VX_Sele := ;
+   TBROWSESubClass():New(Lin1Livre(VX_Janela) , Col1Livre(VX_Janela),;
+                         Lin2Livre(VX_Janela) , Col2Livre(VX_Janela))
 
 *
 * a tabela de cores deverá ter 3 cores :
@@ -66,8 +58,8 @@ VX_SeleGtNap := .T.
 *       apenas os cabeçalhos, conforme método AnexeCol ().
 *   Cor padrão, cor cursor - herda as mesmas cores do objeto JANELA
 *
-// VX_Sele:COLORSPEC := CorJanInten(VX_Janela) + "," + CorJanela(VX_Janela)
-// VX_Sele:AUTOLITE  := .F.          // cursor montado via método COLORRECT()
+VX_Sele:COLORSPEC := CorJanInten(VX_Janela) + "," + CorJanela(VX_Janela)
+VX_Sele:AUTOLITE  := .F.          // cursor montado via método COLORRECT()
 *
 #DEFINE B_2LinCorrente  NIL   // será atribuído mais abaixo
 #DEFINE L_PriFora      .F.    // indica se primeira linha não está na janela
@@ -86,12 +78,12 @@ VX_SeleGtNap := .T.
 #DEFINE L_TemHotKey     .F.   // se alguma opção tem o caractere "#"
 #DEFINE V_Lst_CdOpcao   {}    // lista de opções para rotina de help
 #DEFINE L_TeveRolaHorizontal .F.  // Nunca existe rolamento horizontal em menus (conterá sempre .F.)
-// VX_Sele:CARGO := { B_2LinCorrente , L_PriFora , L_UltFora , ;
-//                    L_ForcaLerTudo , L_PrimAtivacao , L_AtivaGui,;
-//                    L_AutoClose, VN_Selecio, L_MostraGrade,;
-//                    N_Congela , N_TP_Selecao, N_AlturaCabec,;
-//                    N_Selecio , N_ColunaIniVetor,;
-// 		   V_Opcoes, L_TemHotKey, V_Lst_CdOpcao, L_TeveRolaHorizontal }
+VX_Sele:CARGO := { B_2LinCorrente , L_PriFora , L_UltFora , ;
+                   L_ForcaLerTudo , L_PrimAtivacao , L_AtivaGui,;
+                   L_AutoClose, VN_Selecio, L_MostraGrade,;
+                   N_Congela , N_TP_Selecao, N_AlturaCabec,;
+                   N_Selecio , N_ColunaIniVetor,;
+		   V_Opcoes, L_TemHotKey, V_Lst_CdOpcao, L_TeveRolaHorizontal }
 #UNDEF B_2LinCorrente
 #UNDEF L_PriFora
 #UNDEF L_UltFora
@@ -111,34 +103,33 @@ VX_SeleGtNap := .T.
 #UNDEF L_TeveRolaHorizontal
 *
 N_TP_Jan  := _JAN_MENU_VERT       // especializando
-//VX_SubObj := VX_Sele              // a janela
-VX_SubObj := VX_SeleGtNap           // a janela
-//B_Metodo  := {||Selecionar(VX_Janela)}
+VX_SubObj := VX_Sele              // a janela
+B_Metodo  := {||Selecionar(VX_Janela)}
 *
-//SETA_SKIPBLOCK_VETOR(VX_Janela)
+SETA_SKIPBLOCK_VETOR(VX_Janela)
 *
 RETURN NIL
 *
 * DEFINICOES PARA USO GERAL
 *
-// #DEFINE B_LinCorrente        VX_Sele:CARGO[01]      // bloco que retorna o item corrente
-// #DEFINE L_PriFora            VX_Sele:CARGO[02]      // sinaliza se 1º item não está na tela
-// #DEFINE L_UltFora            VX_Sele:CARGO[03]      // idem para o último
-// #DEFINE L_ForcaLerTudo       VX_Sele:CARGO[04]      // sinaliza a remontagem total da tela
-// #DEFINE L_PrimAtivacao       VX_Sele:CARGO[05]      // Se é a primeira ativação da janela
-// #DEFINE L_AtivaGui           VX_Sele:CARGO[06]      //
-// #DEFINE L_AutoClose          VX_Sele:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
-// #DEFINE VN_Selecio           VX_Sele:CARGO[08]      // vetor de seleção múltipla
-// #DEFINE L_MostraGrade        VX_Sele:CARGO[09]      // Se mostra o grid
-// #DEFINE N_Congela            VX_Sele:CARGO[10]      // colunas a congelar
-// #DEFINE N_TP_Selecao         VX_Sele:CARGO[11]      // modalidade de seleção (simp/mult/ext)
-// #DEFINE N_AlturaCabec        VX_Sele:CARGO[12]      // Altura do cabecalho de colunas
-// #DEFINE N_Selecio            VX_Sele:CARGO[13]      // item corrente (só para vetores)
-// #DEFINE N_ColunaIniVetor     VX_Sele:CARGO[14]      // Coluna inicial do vetor
-// #DEFINE V_Opcoes             VX_Sele:CARGO[15]      // Lista de opções do vetor
-// #DEFINE L_TemHotKey          VX_Sele:CARGO[16]      // se alguma opção tem o caractere "#"
-// #DEFINE V_Lst_CdOpcao        VX_Sele:CARGO[17]      // lista de opções para rotina de help
-// #DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Nunca existe rolamento horizontal em menus (conterá sempre .F.)
+#DEFINE B_LinCorrente        VX_Sele:CARGO[01]      // bloco que retorna o item corrente
+#DEFINE L_PriFora            VX_Sele:CARGO[02]      // sinaliza se 1º item não está na tela
+#DEFINE L_UltFora            VX_Sele:CARGO[03]      // idem para o último
+#DEFINE L_ForcaLerTudo       VX_Sele:CARGO[04]      // sinaliza a remontagem total da tela
+#DEFINE L_PrimAtivacao       VX_Sele:CARGO[05]      // Se é a primeira ativação da janela
+#DEFINE L_AtivaGui           VX_Sele:CARGO[06]      //
+#DEFINE L_AutoClose          VX_Sele:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
+#DEFINE VN_Selecio           VX_Sele:CARGO[08]      // vetor de seleção múltipla
+#DEFINE L_MostraGrade        VX_Sele:CARGO[09]      // Se mostra o grid
+#DEFINE N_Congela            VX_Sele:CARGO[10]      // colunas a congelar
+#DEFINE N_TP_Selecao         VX_Sele:CARGO[11]      // modalidade de seleção (simp/mult/ext)
+#DEFINE N_AlturaCabec        VX_Sele:CARGO[12]      // Altura do cabecalho de colunas
+#DEFINE N_Selecio            VX_Sele:CARGO[13]      // item corrente (só para vetores)
+#DEFINE N_ColunaIniVetor     VX_Sele:CARGO[14]      // Coluna inicial do vetor
+#DEFINE V_Opcoes             VX_Sele:CARGO[15]      // Lista de opções do vetor
+#DEFINE L_TemHotKey          VX_Sele:CARGO[16]      // se alguma opção tem o caractere "#"
+#DEFINE V_Lst_CdOpcao        VX_Sele:CARGO[17]      // lista de opções para rotina de help
+#DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Nunca existe rolamento horizontal em menus (conterá sempre .F.)
 *
 
 
@@ -650,30 +641,30 @@ STATIC FUNCTION Selecionar ( VX_Janela )
 // MontarSetas(VX_Janela,L_RolaCima,L_RolaBaixo,_SELE_SIMPLES)   // dos indicativos de rolamento
 // L_AtivaGui := .T.
 // *
-// *************************
-// PROC SETA_SKIPBLOCK_VETOR(VX_Janela)
-// *************************
-// LOCAL VX_Sele := VX_SubObj
-// *
-// VX_Sele:SKIPBLOCK := { | N_Salto | ;
-//                        N_Salto := SkipVetor(N_Salto,N_Selecio,LEN(V_Opcoes)),;
-//                        N_Selecio := N_Selecio + N_Salto ,;
-//                        N_Salto     }
-// VX_Sele:GOTOPBLOCK    := { || N_Selecio := 1  }
-// VX_Sele:GOBOTTOMBLOCK := { || N_Selecio := LEN(V_Opcoes) }
-// *
-// B_LinCorrente :=  {||N_Selecio}        // bloco que retorna a linha corrente
-// *
-// ***********************
-// FUNCTION SkipVetor ( N_Salto , N_Selecio_Aux , N_TamVetor )
-// *
-// DO CASE
-//    CASE N_Selecio_Aux+N_Salto < 1
-//         RETURN -N_Selecio_Aux+1
-//    CASE N_Selecio_Aux+N_Salto > N_TamVetor
-//         RETURN N_TamVetor-N_Selecio_Aux
-// ENDCASE
-// RETURN N_Salto
+*************************
+PROC SETA_SKIPBLOCK_VETOR(VX_Janela)
+*************************
+LOCAL VX_Sele := VX_SubObj
+*
+VX_Sele:SKIPBLOCK := { | N_Salto | ;
+                       N_Salto := SkipVetor(N_Salto,N_Selecio,LEN(V_Opcoes)),;
+                       N_Selecio := N_Selecio + N_Salto ,;
+                       N_Salto     }
+VX_Sele:GOTOPBLOCK    := { || N_Selecio := 1  }
+VX_Sele:GOBOTTOMBLOCK := { || N_Selecio := LEN(V_Opcoes) }
+*
+B_LinCorrente :=  {||N_Selecio}        // bloco que retorna a linha corrente
+*
+***********************
+FUNCTION SkipVetor ( N_Salto , N_Selecio_Aux , N_TamVetor )
+*
+DO CASE
+   CASE N_Selecio_Aux+N_Salto < 1
+        RETURN -N_Selecio_Aux+1
+   CASE N_Selecio_Aux+N_Salto > N_TamVetor
+        RETURN N_TamVetor-N_Selecio_Aux
+ENDCASE
+RETURN N_Salto
 // *
 // ******************************
 // FUNC GetCdOpcao_Atual_Menuvert(VX_Janela)

@@ -472,6 +472,13 @@ TONE(750,0)
 //    ENDIF
 // ENDIF
 // *
+
+****************
+FUNCTION MOSTRAR ( C_CDMENS, C_SubCabec , V_TECLAS , L_PARAR, L_MUDA_COR,;
+                   N_SEGUNDOS, C_Cabec_x, C_ArqImagem )
+****************
+    RETURN NIL
+
 // ****************
 // FUNCTION MOSTRAR ( C_CDMENS, C_SubCabec , V_TECLAS , L_PARAR, L_MUDA_COR,;
 //                    N_SEGUNDOS, C_Cabec_x, C_ArqImagem )
