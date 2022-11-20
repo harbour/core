@@ -627,14 +627,20 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             L_MainCoord_Ant := WvW_SetMainCoord()
             AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
 
-            IF LEN(V_PilhaJanelas)==1
-                * espaçamento da janela principal deve ser idêntico
-                * ao espaçamento default da aplicação
-                IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
-                   ? MEMVAR->ERRO_DE_ESPACAMENTO_DE_JANELA_PRINCIPAL
-                ENDIF
-            ELSE // LEN(V_PilhaJanelas) != 1
+            // FRAN: GTNAP doesn't create any window by default
+            // IF LEN(V_PilhaJanelas)==1
+            //     * espaçamento da janela principal deve ser idêntico
+            //     * ao espaçamento default da aplicação
+            //     IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+            //        ? MEMVAR->ERRO_DE_ESPACAMENTO_DE_JANELA_PRINCIPAL
+            //     ENDIF
+            // ELSE // LEN(V_PilhaJanelas) != 1
 
+            IF LEN(V_PilhaJanelas)==1
+                // The first window takes the title from 'Setup_nap' (compatible with GTWVW/Cualib)
+                C_Cabec_Aux := NIL
+            ELSE
+                OutStd("Version: " + Version())
                 IF Version()=="Harbour 3.2.0dev (r1703241902)"
                     IF CABEC_TESTE_AUTOMATICO()
                         C_Cabec_Aux := StrTran(C_Cabec," ","_")
@@ -649,120 +655,110 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
                     ELSE
                         C_Cabec_Aux := C_Cabec
                     ENDIF
-                ENDIF ERRO // IF Version()
-                *
-                IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
-                    *
-                    IF N_EspacamentoEmPixels > WVW_SetDefLineSpacing()
-                        * Código a seguir supõe que o espaçamento default é sempre
-                        * maior que o espaçamento opcional, ou seja, que a
-                        * WVW_AddRows() acrescentará linhas.
-                        ? MEMVAR->ESPACAMENTO_OPCIONAL_EH_SEMPRE_ZERO
-                    ENDIF
-                    *
-                    IF N_LinIni == 1 .AND. N_LinFin == MAXROW()-1 .AND. ;
-                        N_ColIni == 1
-                        * A janela foi criada com parâmetros (00,MAXROW(),00,xx),
-                        * mas, pelo fato de não ser direita MAXCOL(),
-                        * a CriaJanela() acrescentou o espaço do BOX, para ficar
-                        * posicionalmente idêntico à versão texto.
-                        * Como, quando o ESPACOPIXELS for 0, não se quer que seja
-                        * igual à versão texto, desfazer este ajuste automático.
-                        N_LinIni--
-                        N_ColIni--
-                        N_LinFin++
-                        N_ColFin++
-                    ENDIF
-                *
-                ENDIF // N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+                ELSE
+                    // FRAN: Harbour 3.2.0dev (r2104281802)
+                    C_Cabec_Aux := C_Cabec
+                ENDIF //ERRO // IF Version()
             *
-            ENDIF // LEN(V_PilhaJanelas)==1
+            ENDIF
 
-
-            IF LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
-                //
-                // FRAN REVIEW: GTNAP don't open any window automatically
-                //
-                * A GTWVW já abre a janela 0 automaticamente.
-                * Fazer com que a primeira janela aberta pela CUA
-                * seja a mesma.
-                N_WindowNum := 0
-            ELSE // LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
-                * Define copiados do
-                * \xharbour-0.99.70\contrib\what32\include\winuser.ch
-                * JA DEFINIDO NA WINUSER.CH
-                *#define WS_POPUP             2147483648
-                *#define WS_CAPTION             12582912
-                *#define WS_SYSMENU               524288
-                *#define WS_CLIPCHILDREN        33554432
-                *#define WS_MINIMIZEBOX           131072
+            //
+            // FRAN: Perhaps this block can be avoided
+            //
+            IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
                 *
-                * O WS_MINIMIZEBOX não é padrão da GTWVW...
-                *
-    //!!            N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
-    //!!                                           N_LinIni,N_ColIni,N_LinFin,N_ColFin,;
-    //!!                                           WS_POPUP+WS_CAPTION+WS_SYSMENU+;
-    //!!                                           WS_CLIPCHILDREN+WS_MINIMIZEBOX)
-                *
-                IF L_JanTipoMsgAguarde
-                    IF N_ProgressBar == 1
-                        N_LinFin := N_LinFin + 2
-                    ELSEIF N_ProgressBar == 2
-                        N_LinFin := N_LinFin + 4
-                    Endif
+                IF N_EspacamentoEmPixels > WVW_SetDefLineSpacing()
+                    * Código a seguir supõe que o espaçamento default é sempre
+                    * maior que o espaçamento opcional, ou seja, que a
+                    * WVW_AddRows() acrescentará linhas.
+                    ? MEMVAR->ESPACAMENTO_OPCIONAL_EH_SEMPRE_ZERO
                 ENDIF
-
-                //
-                // FRAN REview.... Here is not the moment for open the window
-                //
-                // N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
-                //     N_LinIni,N_ColIni,N_LinFin,N_ColFin)
-                // WvW_SetMainCoord(L_MainCoord_Atu)
-                N_WindowNum := 1
-                //
-
-                // FRAN REview.... Sure that this bloc can be ignored in GTNAP
-                IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
-                    *
-                    WVW_SetLineSpacing(N_WindowNum,N_EspacamentoEmPixels)
-                    N_AddRows := 5// FRAN Review!!! WVW_MaxMaxRow()-MAXROW()
-                    N_AddRows -= 1 // evitar que o final da tela fique fora do monitor
-                    IF L_CriarToolBar
-                       * 2 linhas deslocadas da linha inicial, para dar espaço à ToolBar
-                       N_AddRows -= 2
-                    ENDIF
-                    IF N_AddRows < 0
-                       * Como o espaçamento foi diminuído, com certeza é para
-                       * caber mais linhas na tela.
-                       ? MEMVAR->HOUVE_REDUCAO_DE_LINHAS_NA_TELA
-                    ENDIF
-                    *
-                    * Como o espaço entre linhas passou a ser 0, cabe mais linhas
-                    * na tela (mais que 35). Apesar disto, a função MAXROW()
-                    * continuará a retornar 35, pois é baseada na janela principal
-                    * do sistema.
-                    *
-                    * A WVW_AddRows(), quando MainCoord está setado, obedece ao
-                    * limite da MaxRow(). Portanto, o MainCoord deve ser
-                    * temporariamente desabilitado, para que a WVW_AddRows() possa
-                    * acrescentar linhas além do limite de 35 linhas.
-                    *
-                    * A quantidade de linhas possível de ser adicionada não é
-                    * criticada pela WVW_AddRows(), devendo-se passar um valor
-                    * compatível.
-                    *
-                    // WVW_ADDROWS(N_WindowNum,N_AddRows)
-                    *
-                    * Mover os elementos inferiores da janela para as novas
-                    * coordenadas...
-                    *
-                    N_LinFin    := N_LinFin + N_AddRows
-                    N_Lin2Livre := N_Lin2Livre + N_AddRows
-                    N_LinMess   := N_LinMess + N_AddRows
-                    *
-                 ENDIF // N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+                *
+                IF N_LinIni == 1 .AND. N_LinFin == MAXROW()-1 .AND. ;
+                    N_ColIni == 1
+                    * A janela foi criada com parâmetros (00,MAXROW(),00,xx),
+                    * mas, pelo fato de não ser direita MAXCOL(),
+                    * a CriaJanela() acrescentou o espaço do BOX, para ficar
+                    * posicionalmente idêntico à versão texto.
+                    * Como, quando o ESPACOPIXELS for 0, não se quer que seja
+                    * igual à versão texto, desfazer este ajuste automático.
+                    N_LinIni--
+                    N_ColIni--
+                    N_LinFin++
+                    N_ColFin++
+                ENDIF
             *
-            ENDIF // LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
+            ENDIF // N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+            //
+            //
+            //
+            *
+            // ENDIF // LEN(V_PilhaJanelas)==1
+
+            //
+            // FRAN: GTNAP don't open any window automatically
+            //
+            // IF LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO() Avoided
+            IF L_JanTipoMsgAguarde
+                IF N_ProgressBar == 1
+                    N_LinFin := N_LinFin + 2
+                ELSEIF N_ProgressBar == 2
+                    N_LinFin := N_LinFin + 4
+                Endif
+            ENDIF
+
+            N_WindowNum := NAP_CUALIB_MODAL_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux)
+            // N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
+            //     N_LinIni,N_ColIni,N_LinFin,N_ColFin)
+            //WvW_SetMainCoord(L_MainCoord_Atu)
+            *
+
+            // FRAN: At the moment this block is avoided
+            // IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+            //     *
+            //     WVW_SetLineSpacing(N_WindowNum,N_EspacamentoEmPixels)
+            //     N_AddRows := WVW_MaxMaxRow()-MAXROW()
+            //     N_AddRows -= 1 // evitar que o final da tela fique fora do monitor
+            //     IF L_CriarToolBar
+            //        * 2 linhas deslocadas da linha inicial, para dar espaço à ToolBar
+            //        N_AddRows -= 2
+            //     ENDIF
+            //     IF N_AddRows < 0
+            //        * Como o espaçamento foi diminuído, com certeza é para
+            //        * caber mais linhas na tela.
+            //        ? MEMVAR->HOUVE_REDUCAO_DE_LINHAS_NA_TELA
+            //     ENDIF
+            //     *
+            //     * Como o espaço entre linhas passou a ser 0, cabe mais linhas
+            //     * na tela (mais que 35). Apesar disto, a função MAXROW()
+            //     * continuará a retornar 35, pois é baseada na janela principal
+            //     * do sistema.
+            //     *
+            //     * A WVW_AddRows(), quando MainCoord está setado, obedece ao
+            //     * limite da MaxRow(). Portanto, o MainCoord deve ser
+            //     * temporariamente desabilitado, para que a WVW_AddRows() possa
+            //     * acrescentar linhas além do limite de 35 linhas.
+            //     *
+            //     * A quantidade de linhas possível de ser adicionada não é
+            //     * criticada pela WVW_AddRows(), devendo-se passar um valor
+            //     * compatível.
+            //     *
+            //     WVW_ADDROWS(N_WindowNum,N_AddRows)
+            //     *
+            //     * Mover os elementos inferiores da janela para as novas
+            //     * coordenadas...
+            //     *
+            //     N_LinFin    := N_LinFin + N_AddRows
+            //     N_Lin2Livre := N_Lin2Livre + N_AddRows
+            //     N_LinMess   := N_LinMess + N_AddRows
+            //     *
+            // ENDIF  // N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+
+
+
+            *
+            // ENDIF // LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
+
 
             * Ativou-se a rotina abaixo, mas não se viu nenhum efeito prático...
             //WVW_EnableShortCuts(N_WindowNum,.T.)      // FRAN Review HoyKeys in NAPWINDOW
@@ -795,15 +791,42 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
 
     ENDIF // SOB_MODO_GRAFICO()
 
+    // FRAN: Here the code is compatible GTNAP/Text terminals GTXXX
+    SCROLL(N_LinIni,N_ColIni,N_LinFin,N_ColFin)      // limpar área
 
-
+    IF L_DesenhaBox
+        IF SOB_MODO_GRAFICO() .AND. L_Embutida
+            // FRAN REview and TODO
+            AddGuiObject(V_Janela_Pai,{||DesenhaBoxEmbutida(VX_Janela)},;
+                           {N_LinIni,N_ColIni,N_LinFin,N_ColFin})
+        ELSE
+           @ N_LinIni,N_ColIni TO N_LinFin,N_ColFin
+        ENDIF
+    ENDIF // L_DesenhaBox
+    *
+    DispBegin()
+    *
+    * montar cabeçalho
+    *
+    N_Largura := N_Col2Livre-N_Col1Livre+1
+    N_LinImp  := N_LinIni+N_MargemSuperior
+    *
+    FOR N_Cont := 1 TO LEN(VC_Titulo)
+        SETPOS(N_LinImp-1+N_Cont,N_Col1Livre+N_DeslocaCabecalho)
+        DISPOUT(PADC(VC_Titulo[N_Cont],N_Largura-N_DeslocaCabecalho))
+    NEXT
+    *
+    * montar área de função
+    *
+    N_LinImp  := N_LinMess
+    *
 
 
 ENDIF // C_TelaCoberta == NIL
 
 * executar o método de ativação da janela, conforme a sua especialização
 *
-NAP_CUALIB_MODAL_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec)
+//NAP_CUALIB_MODAL_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec)
 
 X_Retorno := .F.
 RETURN X_Retorno
@@ -2774,11 +2797,13 @@ STATIC FUNCTION TrataEventos ( VX_Janela )
 //                             .T.,;  // .T.=tight (tamanho da imagem serï¿½ ajustado)
 //                             .T.)}  // .T.=transparente
 //    *
-//    ****************************
-//    STAT PROC DesenhaBoxEmbutida(VX_Janela)
-//    ****************************
+   ****************************
+   STAT PROC DesenhaBoxEmbutida(VX_Janela)
+   ****************************
 //    WVW_SetPen(0,0,rgb(210,1210,210))
 //    Wvw_DrawBoxGroup(N_WindowNum,N_LinIni,N_ColIni,N_LinFin,N_ColFin)
+    RETURN
+
    *
    *****************
    PROC AddGuiObject( VX_Janela,bGuiControl,V_Coordenadas,L_Rastrear,bWhenBlock )

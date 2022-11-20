@@ -74,5 +74,7 @@ HB_FUNC( NAP_CUALIB_MODAL_WINDOW )
     uint32_t N_LinFin = hb_parni(3);
     uint32_t N_ColFin = hb_parni(4);
     const char_t *C_Cabec = hb_gtnap_cualib_parText(5);
-    hb_gtnap_cualib_modal_window(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec);
+    uint32_t id = hb_gtnap_cualib_modal_window(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec);
+    hb_retni(id);
 }
+

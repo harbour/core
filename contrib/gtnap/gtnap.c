@@ -682,15 +682,23 @@ static uint32_t CUALIB_COLS = 0;
 const char_t *hb_gtnap_cualib_parText(const uint32_t iParam)
 {
     // TODO: Translate code-page to UTF8
-    if (HB_ISCHAR(iParam))
+    if (!HB_ISNIL(iParam))
     {
-        const char_t *str = hb_parcx(iParam);
-        return str;
+        if (HB_ISCHAR(iParam))
+        {
+            const char_t *str = hb_parcx(iParam);
+            return str;
+        }
+        else
+        {
+            // const char_t *str = (const char_t*)hb_parni(iParam);
+            // return str;
+
+            return "Unknown text"; // (const char_t*)hb_parni(iParam);
+        }
     }
-    else
-    {
-        return "Unknown text"; // (const char_t*)hb_parni(iParam);
-    }
+
+    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -854,7 +862,7 @@ static void i_remove_cualib_win(GtNapCualibWindow *win)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec)
+uint32_t hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec)
 {
     GtNapCualibWindow cuawin;
     Window *window = window_create(ekWNSTD);
@@ -866,7 +874,7 @@ void hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_ColI
     cuawin.N_ColIni = N_ColIni;
     cuawin.N_LinFin = N_LinFin;
     cuawin.N_ColFin = N_ColFin;
-    cuawin.C_Cabec = str_c(C_Cabec);
+    cuawin.C_Cabec = C_Cabec ? str_c(C_Cabec) : str_c("NULL_TEXT");
     label_text(label, tc(cuawin.C_Cabec));
     label_font(label, GTNAP_GLOBAL->global_font);
     layout_label(layout, label, 0, 0);
@@ -878,7 +886,10 @@ void hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_ColI
         real32_t width = (real32_t)(GTNAP_GLOBAL->cell_x * (cuawin.N_ColFin - cuawin.N_ColIni + 1));
         real32_t height = (real32_t)(GTNAP_GLOBAL->cell_y * (cuawin.N_LinFin - cuawin.N_LinIni + 1));
         panel_size(panel, s2df(width, height));
-        window_title(window, tc(GTNAP_GLOBAL->title));
+        if (C_Cabec != NULL)
+            window_title(window, C_Cabec);
+        else
+            window_title(window, tc(GTNAP_GLOBAL->title));
         GTNAP_GLOBAL->num_modals += 1;
     }
     // else
@@ -893,6 +904,7 @@ void hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_ColI
 
     window_destroy(&window);
     i_remove_cualib_win(&cuawin);
+    return 1;
 }
 
 
