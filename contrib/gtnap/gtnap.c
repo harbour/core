@@ -664,11 +664,22 @@ void hb_gtnap_callback(GtNapCallback *callback, Event *e)
 
 __EXTERN_C
 
+//
+// FRAN: This functions are not used by GTNAP/CUALIB
+//
 void osgui_start(void);
 void osgui_finish(void);
 GuiContext *osguictx(void);
 void gui_context_destroy(GuiContext **context);
 void gui_context_set_current(const GuiContext *context);
+//
+//
+//
+
+void _component_set_frame(GuiComponent *component, const V2Df *origin, const S2Df *size);
+void _component_attach_to_panel(GuiComponent *panel_component, GuiComponent *child_component);
+void _component_detach_from_panel(GuiComponent *panel_component, GuiComponent *child_component);
+void _component_visible(GuiComponent *component, const bool_t visible);
 
 __END_C
 
@@ -862,6 +873,21 @@ static void i_remove_cualib_win(GtNapCualibWindow *win)
 
 /*---------------------------------------------------------------------------*/
 
+static Panel *PANEL = NULL;
+static Label *LABEL = NULL;
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnWindowClose(GtNap *gtnap, Event *e)
+{
+    _component_detach_from_panel((GuiComponent*)PANEL, (GuiComponent*)LABEL);
+    _component_destroy((GuiComponent**)&LABEL);
+    unref(gtnap);
+    unref(e);
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec)
 {
     GtNapCualibWindow cuawin;
@@ -870,6 +896,9 @@ uint32_t hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_
     Layout *layout = layout_create(1, 1);
     Label *label = label_create();
 
+    PANEL = panel;
+    LABEL = label;
+
     cuawin.N_LinIni = N_LinIni;
     cuawin.N_ColIni = N_ColIni;
     cuawin.N_LinFin = N_LinFin;
@@ -877,9 +906,19 @@ uint32_t hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_
     cuawin.C_Cabec = C_Cabec ? str_c(C_Cabec) : str_c("NULL_TEXT");
     label_text(label, tc(cuawin.C_Cabec));
     label_font(label, GTNAP_GLOBAL->global_font);
-    layout_label(layout, label, 0, 0);
-    layout_halign(layout, 0, 0, ekCENTER);
-    layout_valign(layout, 0, 0, ekTOP);
+
+    _component_attach_to_panel((GuiComponent*)panel, (GuiComponent*)label);
+    _component_visible((GuiComponent*)label, TRUE);
+
+    {
+        V2Df pos = v2df(20, 20);
+        S2Df size = s2df(200,20);
+        _component_set_frame((GuiComponent*)label, &pos, &size);
+    }
+
+    // layout_label(layout, label, 0, 0);
+    // layout_halign(layout, 0, 0, ekCENTER);
+    // layout_valign(layout, 0, 0, ekTOP);
 
     //if (GTNAP_GLOBAL->num_modals == 0)
     {
@@ -898,7 +937,9 @@ uint32_t hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_
     // }
 
     panel_layout(panel, layout);
+    window_OnClose(window, listener(GTNAP_GLOBAL, i_OnWindowClose, GtNap));
     window_panel(window, panel);
+
     window_modal(window, NULL);
 
 
