@@ -61,7 +61,8 @@ struct _gtnap_cualib_window_t
     uint32_t N_ColIni;
     uint32_t N_LinFin;
     uint32_t N_ColFin;
-    String *C_Cabec;
+    Window *window;
+    Panel *panel;
     ArrSt(GtNapCualibObject) *gui_objects;
 };
 
@@ -73,14 +74,13 @@ struct _gtnap_t
     Font *global_font;
 
     // Only for cualib-gtnap
-    GuiContext *native_gui;
     String *title;
     uint32_t rows;
     uint32_t cols;
-    uint32_t num_modals;
-    uint32_t cell_x;
-    uint32_t cell_y;
+    uint32_t cell_x_size;
+    uint32_t cell_y_size;
     uint32_t linespacing;
+    ArrSt(GtNapCualibWindow) *cualib_windows;
 
     // Only for pure-gtnap
     ArrPt(Window) *modals;
@@ -681,24 +681,10 @@ void hb_gtnap_callback(GtNapCallback *callback, Event *e)
 }
 
 /*---------------------------------------------------------------------------*/
-
-__EXTERN_C
-
 //
-// FRAN: This functions are not used by GTNAP/CUALIB
+// CUALIB Support in GTNAP
 //
-void osgui_start(void);
-void osgui_finish(void);
-GuiContext *osguictx(void);
-void gui_context_destroy(GuiContext **context);
-void gui_context_set_current(const GuiContext *context);
-//
-//
-//
-
-
-__END_C
-
+/*---------------------------------------------------------------------------*/
 static PHB_ITEM CUALIB_INIT_CODEBLOCK = NULL;
 static const char_t *CUALIB_TITLE = NULL;
 static uint32_t CUALIB_ROWS = 0;
@@ -732,97 +718,56 @@ const char_t *hb_gtnap_cualib_parText(const uint32_t iParam)
 
 static GtNap *i_gtnap_cualib_create(void)
 {
-    // PHB_ITEM pRet = NULL;
-    // log_printf("i_gtnap_cualib_create()");
-    // GTNAP_GLOBAL = heap_new0(GtNap);
-    // GTNAP_GLOBAL->global_font = font_system(font_regular_size(), 0);
-    // GTNAP_GLOBAL->modals = arrpt_create(Window);
-    // GTNAP_GLOBAL->windows = arrpt_create(Window);
-    // GTNAP_GLOBAL->callbacks = arrpt_create(GtNapCallback);
-    // GTNAP_GLOBAL->areas = arrpt_create(GtNapArea);
-    // pRet = hb_itemDo(INIT_CODEBLOCK, 0);
-    // hb_itemRelease(pRet);
-    // hb_itemRelease(INIT_CODEBLOCK);
-    // INIT_CODEBLOCK = NULL;
-    // return GTNAP_GLOBAL;
-
-
-
     real32_t w, h;
     PHB_ITEM pRet = NULL;
-    // osgui_start();
-    // gui_start();
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->cualib_mode = TRUE;
     GTNAP_GLOBAL->global_font = font_monospace(20, 0);
-    //GTNAP_GLOBAL->native_gui = osguictx();
     GTNAP_GLOBAL->title = str_c(CUALIB_TITLE);
     GTNAP_GLOBAL->rows = CUALIB_ROWS;
     GTNAP_GLOBAL->cols = CUALIB_COLS;
-    GTNAP_GLOBAL->num_modals = 0;
     font_extents(GTNAP_GLOBAL->global_font, "O", -1, &w, &h);
-    GTNAP_GLOBAL->cell_x = (uint32_t)w;
-    GTNAP_GLOBAL->cell_y = (uint32_t)h;
+    GTNAP_GLOBAL->cell_x_size = (uint32_t)w;
+    GTNAP_GLOBAL->cell_y_size = (uint32_t)h;
     GTNAP_GLOBAL->linespacing = 0;
-    //gui_context_set_current(GTNAP_GLOBAL->native_gui);
+    GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
     log_printf("i_gtnap_cualib_create(%s, %d, %d)", CUALIB_TITLE, CUALIB_ROWS, CUALIB_COLS);
-
     pRet = hb_itemDo(CUALIB_INIT_CODEBLOCK, 0);
     hb_itemRelease(pRet);
     hb_itemRelease(CUALIB_INIT_CODEBLOCK);
     CUALIB_INIT_CODEBLOCK = NULL;
     return GTNAP_GLOBAL;
-
-
-
-
-
 }
 
+/*---------------------------------------------------------------------------*/
+
+static void i_remove_cualib_win(GtNapCualibWindow *win)
+{
+    cassert_no_null(win);
+    arrst_destroy(&win->gui_objects, NULL, GtNapCualibObject);
+}
 
 /*---------------------------------------------------------------------------*/
 
 static void i_gtnap_cualib_destroy(GtNap **data)
 {
-    //PHB_ITEM pRet = NULL;
     cassert_no_null(data);
     cassert_no_null(*data);
     log_printf("i_gtnap_cualib_destroy()");
+    cassert(*data == GTNAP_GLOBAL);
     cassert(GTNAP_GLOBAL->cualib_mode == TRUE);
+    cassert(arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow) == 0);
+    arrst_destroy(&GTNAP_GLOBAL->cualib_windows, i_remove_cualib_win, GtNapCualibWindow);
     font_destroy(&GTNAP_GLOBAL->global_font);
     str_destroy(&GTNAP_GLOBAL->title);
-    // gui_context_destroy(&GTNAP_GLOBAL->native_gui);
     heap_delete(&GTNAP_GLOBAL, GtNap);
-    // osgui_finish();
-    // gui_finish();
-
-
-
-
-    // font_destroy(&(*data)->global_font);
-    // arrpt_destopt(&(*data)->windows, i_window_destroy, Window);
-    // // No modal window can be alive here!
-    // cassert(arrpt_size((*data)->modals, Window) == 0);
-    // arrpt_destopt(&(*data)->modals, NULL, Window);
-    // arrpt_destopt(&(*data)->callbacks, i_destroy_callback, GtNapCallback);
-    // arrpt_destopt(&(*data)->areas, i_destroy_area, GtNapArea);
-    // pRet = hb_itemDo(END_CODEBLOCK, 0);
-    // hb_itemRelease(pRet);
-    // hb_itemRelease(END_CODEBLOCK);
-    // END_CODEBLOCK = NULL;
-    // heap_delete(data, GtNap);
-    // GTNAP_GLOBAL = NULL;
 }
-
-
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM codeBlock_begin)
 {
     void *hInstance = NULL;
-    // PHB_ITEM codeBlock_begin = hb_param(1, HB_IT_BLOCK);
-    // PHB_ITEM codeBlock_end = hb_param(2, HB_IT_BLOCK);
 
 #if defined( HB_OS_WIN )
     hb_winmainArgGet(&hInstance, NULL, NULL);
@@ -844,29 +789,6 @@ void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint3
 
 /*---------------------------------------------------------------------------*/
 
-// void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols)
-// {
-//     real32_t w, h;
-//     osgui_start();
-//     gui_start();
-//     GTNAP_GLOBAL = heap_new0(GtNap);
-//     GTNAP_GLOBAL->cualib_mode = TRUE;
-//     GTNAP_GLOBAL->global_font = font_monospace(20, 0);
-//     GTNAP_GLOBAL->native_gui = osguictx();
-//     GTNAP_GLOBAL->title = str_c(title);
-//     GTNAP_GLOBAL->rows = rows;
-//     GTNAP_GLOBAL->cols = cols;
-//     GTNAP_GLOBAL->num_modals = 0;
-//     font_extents(GTNAP_GLOBAL->global_font, "O", -1, &w, &h);
-//     GTNAP_GLOBAL->cell_x = (uint32_t)w;
-//     GTNAP_GLOBAL->cell_y = (uint32_t)h;
-//     GTNAP_GLOBAL->linespacing = 0;
-//     gui_context_set_current(GTNAP_GLOBAL->native_gui);
-//     log_printf("hb_gtnap_cualib_setup(%s, %d, %d)", title, rows, cols);
-// }
-
-/*---------------------------------------------------------------------------*/
-
 uint32_t hb_gtnap_cualib_linespacing(void)
 {
     return GTNAP_GLOBAL->linespacing;
@@ -881,105 +803,130 @@ void hb_gtnap_cualib_set_linespacing(const uint32_t spacing)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_remove_cualib_win(GtNapCualibWindow *win)
+static GtNapCualibWindow *i_current_cuawin(GtNap *gtnap)
 {
-    cassert_no_null(win);
-    str_destroy(&win->C_Cabec);
+    uint32_t id = 0;
+    cassert_no_null(gtnap);
+    id = arrst_size(gtnap->cualib_windows, GtNapCualibWindow);
+    cassert(id >= 1);
+    return arrst_get(gtnap->cualib_windows, id - 1, GtNapCualibWindow);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static Window *WINDOW = NULL;
-static Panel *PANEL = NULL;
-static Label *LABEL = NULL;
-static GtNapCualibWindow CUAWIN;
+static GtNapCualibWindow *i_parent_cuawin(GtNap *gtnap)
+{
+    uint32_t id = 0;
+    cassert_no_null(gtnap);
+    id = arrst_size(gtnap->cualib_windows, GtNapCualibWindow);
+    if (id >= 2)
+        return arrst_get(gtnap->cualib_windows, id - 2, GtNapCualibWindow);
+    else
+        return NULL;
+}
 
 /*---------------------------------------------------------------------------*/
 
 static void i_OnWindowClose(GtNap *gtnap, Event *e)
 {
-    _component_detach_from_panel((GuiComponent*)PANEL, (GuiComponent*)LABEL);
-    _component_destroy((GuiComponent**)&LABEL);
-    unref(gtnap);
+    GtNapCualibWindow *cuawin = i_current_cuawin(gtnap);
+    arrst_foreach(object, cuawin->gui_objects, GtNapCualibObject)
+        _component_detach_from_panel((GuiComponent*)cuawin->panel, object->component);
+        _component_destroy(&object->component);
+    arrst_end();
     unref(e);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_add_object(const uint32_t cell_x, const uint32_t cell_y, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, GuiComponent *component, GtNapCualibWindow *cuawin)
+{
+    V2Df pos;
+    GtNapCualibObject *object = NULL;
+    cassert_no_null(cuawin);
+    pos.x = (real32_t)(cell_x * cell_x_size);
+    pos.y = (real32_t)(cell_y * cell_y_size);
+    _component_attach_to_panel((GuiComponent*)cuawin->panel, component);
+    _component_visible(component, TRUE);
+    _component_set_frame(component, &pos, size);
+    object = arrst_new0(cuawin->gui_objects, GtNapCualibObject);
+    object->cell_x = cell_x;
+    object->cell_y = cell_y;
+    object->component = component;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_add_label_object(const uint32_t cell_x, const uint32_t cell_y, const char_t *text, GtNap *gtnap, GtNapCualibWindow *cuawin)
+{
+    Label *label = label_create();
+    uint32_t len = str_len_c(text);
+    S2Df size;
+    cassert_no_null(gtnap);
+    label_text(label, text);
+    label_font(label, gtnap->global_font);
+    size.width = (real32_t)(len * gtnap->cell_x_size);
+    size.height = (real32_t)gtnap->cell_y_size;
+    i_add_object(cell_x, cell_y, gtnap->cell_x_size, gtnap->cell_y_size, &size, (GuiComponent*)label, cuawin);
 }
 
 /*---------------------------------------------------------------------------*/
 
 uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec)
 {
-    GtNapCualibWindow cuawin;
+    uint32_t id = UINT32_MAX;
+    GtNapCualibWindow *cuawin = NULL;
     Window *window = window_create(ekWNSTD);
     Panel *panel = panel_create();
     Layout *layout = layout_create(1, 1);
-    Label *label = label_create();
+    real32_t width, height;
+    id = arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow);
+    cuawin = arrst_new0(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow);
+    cuawin->window = window;
+    cuawin->panel = panel;
+    cuawin->N_LinIni = N_LinIni;
+    cuawin->N_ColIni = N_ColIni;
+    cuawin->N_LinFin = N_LinFin;
+    cuawin->N_ColFin = N_ColFin;
+    cuawin->gui_objects = arrst_create(GtNapCualibObject);
 
-    WINDOW = window;
-    PANEL = panel;
-    LABEL = label;
-
-    cuawin.N_LinIni = N_LinIni;
-    cuawin.N_ColIni = N_ColIni;
-    cuawin.N_LinFin = N_LinFin;
-    cuawin.N_ColFin = N_ColFin;
-    cuawin.C_Cabec = C_Cabec ? str_c(C_Cabec) : str_c("NULL_TEXT");
-    label_text(label, tc(cuawin.C_Cabec));
-    label_font(label, GTNAP_GLOBAL->global_font);
-
-    _component_attach_to_panel((GuiComponent*)panel, (GuiComponent*)label);
-    _component_visible((GuiComponent*)label, TRUE);
-
-    {
-        V2Df pos = v2df(20, 20);
-        S2Df size = s2df(200,20);
-        _component_set_frame((GuiComponent*)label, &pos, &size);
-    }
-
-    // layout_label(layout, label, 0, 0);
-    // layout_halign(layout, 0, 0, ekCENTER);
-    // layout_valign(layout, 0, 0, ekTOP);
-
-    //if (GTNAP_GLOBAL->num_modals == 0)
-    {
-        real32_t width = (real32_t)(GTNAP_GLOBAL->cell_x * (cuawin.N_ColFin - cuawin.N_ColIni + 1));
-        real32_t height = (real32_t)(GTNAP_GLOBAL->cell_y * (cuawin.N_LinFin - cuawin.N_LinIni + 1));
-        panel_size(panel, s2df(width, height));
-        if (C_Cabec != NULL)
-            window_title(window, C_Cabec);
-        else
-            window_title(window, tc(GTNAP_GLOBAL->title));
-        GTNAP_GLOBAL->num_modals += 1;
-    }
-    // else
-    // {
-    //     view_size(view, s2df(500, 250));
-    // }
+    width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni + 1));
+    height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni + 1));
+    panel_size(panel, s2df(width, height));
+    if (C_Cabec != NULL)
+        window_title(window, C_Cabec);
+    else
+        window_title(window, tc(GTNAP_GLOBAL->title));
 
     panel_layout(panel, layout);
     window_OnClose(window, listener(GTNAP_GLOBAL, i_OnWindowClose, GtNap));
     window_panel(window, panel);
-    CUAWIN = cuawin;
-    // window_modal(window, NULL);
 
+    //i_add_label_object(5, 5, "This is a Label Widget", GTNAP_GLOBAL, cuawin);
 
-    // window_destroy(&window);
-    // i_remove_cualib_win(&cuawin);
-    return 0;
+    return id;
 }
 
 /*---------------------------------------------------------------------------*/
 
 uint32_t hb_gtnap_cualib_launch_modal(void)
 {
-    return window_modal(WINDOW, NULL);
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapCualibWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
+    uint32_t ret = window_modal(cuawin->window, parent ? parent->window : NULL);
+    return ret;
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_cualib_destroy_window(void)
 {
-    window_destroy(&WINDOW);
-    i_remove_cualib_win(&CUAWIN);
+    uint32_t id = arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow);
+    GtNapCualibWindow *cuawin = NULL;
+    cassert(id > 0);
+    cuawin = arrst_get(GTNAP_GLOBAL->cualib_windows, id - 1, GtNapCualibWindow);
+    window_destroy(&cuawin->window);
+    arrst_delete(GTNAP_GLOBAL->cualib_windows, id - 1, i_remove_cualib_win, GtNapCualibWindow);
 }
 
 /*---------------------------------------------------------------------------*/
