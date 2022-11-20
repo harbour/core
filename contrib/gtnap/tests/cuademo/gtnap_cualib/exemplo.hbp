@@ -8,6 +8,8 @@
 -gui
 
 # GT
+-gtwin{msvc}
+-gttrm{gcc}
 -gtnap
 
 # Output

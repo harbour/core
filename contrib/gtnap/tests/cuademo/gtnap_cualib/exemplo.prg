@@ -48,8 +48,8 @@ IF HB_GTVERSION()=="NAP"
        #erro "Código não adaptado para esta plataforma"
     #endif
  ELSE
-     SETMODE(35,110)
-     RUN_MAIN()
+    SETMODE(35,110)
+    RUN_MAIN()
  ENDIF
 
 

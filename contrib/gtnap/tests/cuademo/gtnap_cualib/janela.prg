@@ -784,11 +784,11 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
         ENDIF
 
     ELSE // SOB_MODO_GRAFICO()
+
         C_TelaCoberta := SAVESCREEN(N_LinIni,N_ColIni,N_LinFin,N_ColFin)
         IF .NOT. L_Embutida
             AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
         ENDIF
-
     ENDIF // SOB_MODO_GRAFICO()
 
     // FRAN: Here the code is compatible GTNAP/Text terminals GTXXX
@@ -804,7 +804,12 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
         ENDIF
     ENDIF // L_DesenhaBox
     *
-    DispBegin()
+
+    // FRAN In GTWIN the text is not displayed
+    IF SOB_MODO_GRAFICO()
+        DispBegin()
+    ENDIF
+
     *
     * montar cabeçalho
     *
@@ -831,14 +836,27 @@ ENDIF // C_TelaCoberta == NIL
 
 * executar o método de ativação da janela, conforme a sua especialização
 *
+// FRAN: Some testing about standard harbour text
+FOR N_Cont := 0 TO 20
+    @ N_Cont, N_Cont SAY "SAY in " + hb_ntos(N_Cont) + "," + hb_ntos(N_Cont)
+NEXT
+
 
 // FRAN: At the moment, events are managed by GTNAP
-X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
-// IF N_TP_Jan == NIL
-//     X_Retorno := EVAL(B_Metodo,VX_Janela)
-// ELSE
-//     X_Retorno := EVAL(B_Metodo)
-// ENDIF
+IF SOB_MODO_GRAFICO()
+    X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
+ELSE
+
+    // FRAN: Event management for text GT's
+    DO WHILE 1 # 0
+    ENDDO
+
+    IF N_TP_Jan == NIL
+        X_Retorno := EVAL(B_Metodo,VX_Janela)
+    ELSE
+        X_Retorno := EVAL(B_Metodo)
+    ENDIF
+ENDIF
 
 
  *
