@@ -707,7 +707,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
                 Endif
             ENDIF
 
-            N_WindowNum := NAP_CUALIB_MODAL_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux)
+            N_WindowNum := NAP_CUALIB_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux)
             // N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
             //     N_LinIni,N_ColIni,N_LinFin,N_ColFin)
             //WvW_SetMainCoord(L_MainCoord_Atu)
@@ -821,396 +821,40 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
     N_LinImp  := N_LinMess
     *
 
+    //
+    //
+    // FRAN TODO: Add other widgets
+    //
+    //
 
 ENDIF // C_TelaCoberta == NIL
 
 * executar o método de ativação da janela, conforme a sua especialização
 *
-//NAP_CUALIB_MODAL_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec)
 
-X_Retorno := .F.
-RETURN X_Retorno
-
-
+// FRAN: At the moment, events are managed by GTNAP
+X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
 // IF N_TP_Jan == NIL
 //     X_Retorno := EVAL(B_Metodo,VX_Janela)
-//  ELSE
-//     X_Retorno := EVAL(B_Metodo)
-//  ENDIF
-//  *
-//  SETCOLOR(C_CorAnt)                    // restaurar cor anterior
-//  SET(_SET_CURSOR,N_CursorAnt)          // restaurar modo do cursor
-//  SETKEY(K_F1,B_Ajuda_Ant)              // restaurar ajuda anterior
-//  *
-//  IF .NOT. L_CUA_10
-//     DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha após ativação
-//  ENDIF
-//  *
-//  RETURN X_Retorno
-
-
-
-
-//          ELSE
-//             L_MainCoord_Ant := WvW_SetMainCoord()
-//             AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
-//             *
-//             IF LEN(V_PilhaJanelas)==1
-//                * espaï¿½amento da janela principal deve ser idï¿½ntico
-//                * ao espaï¿½amento default da aplicaï¿½ï¿½o
-//                IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
-//                   ? MEMVAR->ERRO_DE_ESPACAMENTO_DE_JANELA_PRINCIPAL
-//                ENDIF
-//             ELSE
-//                IF Version()=="Harbour 3.2.0dev (r1703241902)"
-//                   IF CABEC_TESTE_AUTOMATICO()
-//                      C_Cabec_Aux := StrTran(C_Cabec," ","_")
-//                      C_Cabec_Aux := subs(Tiracen(C_Cabec_Aux),1,15)+"_"+C_CdTela+"_"
-//                   ELSE
-//                      C_Cabec_Aux := HB_OEMtoANSI(C_Cabec)
-//                   ENDIF
-//                 ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)" .OR. Version()=="Harbour 3.2.0dev (r1704061005)" // PENDENTE_LINUX
-//                   IF CABEC_TESTE_AUTOMATICO()
-//                      C_Cabec_Aux := StrTran(C_Cabec," ","_")
-//                      C_Cabec_Aux := subs(Tiracen(C_Cabec_Aux),1,15)+"_"+C_CdTela+"_"
-//                   ELSE
-//                      C_Cabec_Aux := C_Cabec
-//                   ENDIF
-//                 ENDIF ERRO
-//                *
-//                IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
-//                   *
-//                   IF N_EspacamentoEmPixels > WVW_SetDefLineSpacing()
-//                      * Cï¿½digo a seguir supï¿½e que o espaï¿½amento default ï¿½ sempre
-//                      * maior que o espaï¿½amento opcional, ou seja, que a
-//                      * WVW_AddRows() acrescentarï¿½ linhas.
-//                      ? MEMVAR->ESPACAMENTO_OPCIONAL_EH_SEMPRE_ZERO
-//                   ENDIF
-//                   *
-//                   IF N_LinIni == 1 .AND. N_LinFin == MAXROW()-1 .AND. ;
-//                      N_ColIni == 1
-//                      * A janela foi criada com parï¿½metros (00,MAXROW(),00,xx),
-//                      * mas, pelo fato de nï¿½o ser direita MAXCOL(),
-//                      * a CriaJanela() acrescentou o espaï¿½o do BOX, para ficar
-//                      * posicionalmente idï¿½ntico ï¿½ versï¿½o texto.
-//                      * Como, quando o ESPACOPIXELS for 0, nï¿½o se quer que seja
-//                      * igual ï¿½ versï¿½o texto, desfazer este ajuste automï¿½tico.
-//                      N_LinIni--
-//                      N_ColIni--
-//                      N_LinFin++
-//                      N_ColFin++
-//                   ENDIF
-//                   *
-//                ENDIF
-//                *
-//             ENDIF
-//             *
-//             IF LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
-//                * A GTWVW jï¿½ abre a janela 0 automaticamente.
-//                * Fazer com que a primeira janela aberta pela CUA
-//                * seja a mesma.
-//                N_WindowNum := 0
-//             ELSE
-//                * Define copiados do
-//                * \xharbour-0.99.70\contrib\what32\include\winuser.ch
-//                * JA DEFINIDO NA WINUSER.CH
-//                *#define WS_POPUP             2147483648
-//                *#define WS_CAPTION             12582912
-//                *#define WS_SYSMENU               524288
-//                *#define WS_CLIPCHILDREN        33554432
-//                *#define WS_MINIMIZEBOX           131072
-//                *
-//                * O WS_MINIMIZEBOX nï¿½o ï¿½ padrï¿½o da GTWVW...
-//                *
-//    //!!            N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
-//    //!!                                           N_LinIni,N_ColIni,N_LinFin,N_ColFin,;
-//    //!!                                           WS_POPUP+WS_CAPTION+WS_SYSMENU+;
-//    //!!                                           WS_CLIPCHILDREN+WS_MINIMIZEBOX)
-//                *
-//                IF L_JanTipoMsgAguarde
-//                   IF N_ProgressBar == 1
-//                      N_LinFin := N_LinFin + 2
-//                   ELSEIF N_ProgressBar == 2
-//                      N_LinFin := N_LinFin + 4
-//                   Endif
-//                ENDIF
-//                *
-//                N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
-//                               N_LinIni,N_ColIni,N_LinFin,N_ColFin)
-//                WvW_SetMainCoord(L_MainCoord_Atu)
-//                *
-//                IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
-//                   *
-//                   WVW_SetLineSpacing(N_WindowNum,N_EspacamentoEmPixels)
-//                   N_AddRows := WVW_MaxMaxRow()-MAXROW()
-//                   N_AddRows -= 1 // evitar que o final da tela fique fora do monitor
-//                   IF L_CriarToolBar
-//                      * 2 linhas deslocadas da linha inicial, para dar espaï¿½o ï¿½ ToolBar
-//                      N_AddRows -= 2
-//                   ENDIF
-//                   IF N_AddRows < 0
-//                      * Como o espaï¿½amento foi diminuï¿½do, com certeza ï¿½ para
-//                      * caber mais linhas na tela.
-//                      ? MEMVAR->HOUVE_REDUCAO_DE_LINHAS_NA_TELA
-//                   ENDIF
-//                   *
-//                   * Como o espaï¿½o entre linhas passou a ser 0, cabe mais linhas
-//                   * na tela (mais que 35). Apesar disto, a funï¿½ï¿½o MAXROW()
-//                   * continuarï¿½ a retornar 35, pois ï¿½ baseada na janela principal
-//                   * do sistema.
-//                   *
-//                   * A WVW_AddRows(), quando MainCoord estï¿½ setado, obedece ao
-//                   * limite da MaxRow(). Portanto, o MainCoord deve ser
-//                   * temporariamente desabilitado, para que a WVW_AddRows() possa
-//                   * acrescentar linhas alï¿½m do limite de 35 linhas.
-//                   *
-//                   * A quantidade de linhas possï¿½vel de ser adicionada nï¿½o ï¿½
-//                   * criticada pela WVW_AddRows(), devendo-se passar um valor
-//                   * compatï¿½vel.
-//                   *
-//                   WVW_ADDROWS(N_WindowNum,N_AddRows)
-//                   *
-//                   * Mover os elementos inferiores da janela para as novas
-//                   * coordenadas...
-//                   *
-//                   N_LinFin    := N_LinFin + N_AddRows
-//                   N_Lin2Livre := N_Lin2Livre + N_AddRows
-//                   N_LinMess   := N_LinMess + N_AddRows
-//                   *
-//                ENDIF
-//             ENDIF
-//             * Ativou-se a rotina abaixo, mas nï¿½o se viu nenhum efeito prï¿½tico...
-//             WVW_EnableShortCuts(N_WindowNum,.T.)
-//             * ATENï¿½ï¿½O: a sintaxe correta ï¿½:
-//             *    Wvw_SetIcon(janela,"path"+"arquivo de ï¿½cone.ico") ou
-//             *    Wvw_SetIcon(janela,"nï¿½mero do recurso","arquivo de ï¿½cone.ico")
-//             *
-//             IF Version()=="Harbour 3.2.0dev (r1703241902)"
-//                Wvw_SetIcon(N_WindowNum, _ICONE_ASPEC)
-//             ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)" .OR. Version()=="Harbour 3.2.0dev (r1704061005)" // PENDENTE_LINUX
-//                * Nesta versï¿½o do compilador, a funï¿½ï¿½o Wvw_SetIcon() passa a utilizar a prï¿½pria imagem.
-//                IF FILE(DIREXE()+"aspec.ico")
-//                   Wvw_SetIcon(N_WindowNum, DIREXE()+"aspec.ico")
-//                ENDIF
-//             ENDIF ERRO
-//             *
-//          ENDIF
-//          *
-//          IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)
-//             ALARME("M28750","Alguma janela aberta nï¿½o foi fechada - passo 1...")
-//             * ALERT("Alguma janela aberta nï¿½o foi fechada - passo 1...")
-//          ENDIF
-//    ELSE
-//       C_TelaCoberta := SAVESCREEN(N_LinIni,N_ColIni,N_LinFin,N_ColFin)
-//       IF .NOT. L_Embutida
-//          AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
-//       ENDIF
-//    ENDIF
-//    *
-//    SCROLL(N_LinIni,N_ColIni,N_LinFin,N_ColFin)      // limpar ï¿½rea
-//    IF L_DesenhaBox
-//       IF SOB_MODO_GRAFICO() .AND. L_Embutida
-//          #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//             * elementos grï¿½ficos devem ficar vinculados ï¿½ janela pai
-//             AddGuiObject(V_Janela_Pai,{||DesenhaBoxEmbutida(VX_Janela)},;
-//                          {N_LinIni,N_ColIni,N_LinFin,N_ColFin})
-//          #elif defined(__PLATFORM__LINUX)
-//             // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//          #else
-//             #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//          #endif
-//       ELSE
-//          @ N_LinIni,N_ColIni TO N_LinFin,N_ColFin
-//       ENDIF
-//    ENDIF
-//    *
-//    DispBegin()
-//    *
-//    * montar cabeï¿½alho
-//    *
-//    N_Largura := N_Col2Livre-N_Col1Livre+1
-//    N_LinImp  := N_LinIni+N_MargemSuperior
-//    *
-//    FOR N_Cont := 1 TO LEN(VC_Titulo)
-//        SETPOS(N_LinImp-1+N_Cont,N_Col1Livre+N_DeslocaCabecalho)
-//        DISPOUT(PADC(VC_Titulo[N_Cont],N_Largura-N_DeslocaCabecalho))
-//    NEXT
-//    *
-//    * montar ï¿½rea de funï¿½ï¿½o
-//    *
-//    N_LinImp  := N_LinMess
-//    *
-//    IF .NOT. SOB_MODO_GRAFICO()
-//        * imprimir o texto do botao
-//         FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
-//             SETPOS(N_LinImp+V_RegiaoBotoes[N_Cont,_BOTAO_LIN_INICIAL],;
-//                 N_Col1Livre+V_RegiaoBotoes[N_Cont,_BOTAO_COL_INICIAL])
-//             DISPOUT(V_RegiaoBotoes[N_Cont,_BOTAO_TEXTO_TRATADO_2])
-//         NEXT
-//         *
-//         * dar destaque as teclas de funï¿½ï¿½o
-//         FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
-//             SETPOS(N_LinImp+V_RegiaoBotoes[N_Cont,_BOTAO_LIN_INICIAL],;
-//                 N_Col1Livre+V_RegiaoBotoes[N_Cont,_BOTAO_COL_DESTAQUE])
-//             DISPOUT(V_RegiaoBotoes[N_Cont,_BOTAO_TEXTO_DESTAQUE],C_CorInten)
-//         NEXT
-//    ENDIF
-//    *
-//    IF SOB_MODO_GRAFICO()
-//       #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//          IF L_TemScrollVertical
-//               AddGuiObject(VX_Janela,{||DesenhaScrollVertical(VX_Janela)},;
-//                            CoordenadasScrollVertical(VX_Janela))
-//          ENDIF
-//          IF L_TemScrollHorizontal
-//               AddGuiObject(VX_Janela,{||DesenhaScrollHorizontal(VX_Janela)},;
-//                            CoordenadasScrollHorizontal(VX_Janela))
-//          ENDIF
-//          IF N_WindowNum = 0 .AND. EH_PRODUCAO()
-//             AddGuiObject(VX_Janela,DesenhaDrawLabe(VX_Janela),CoordenadasDrawLabel())
-//          ELSEIF N_WindowNum = 1 .AND. .NOT. EH_PRODUCAO()
-//             AddGuiObject(VX_Janela,DesenhaDrawLabe(VX_Janela),CoordenadasDrawLabel())
-//          ENDIF
-//          *
-//          * A funï¿½ï¿½o MSGAGUARDE vai setar a posiï¿½ï¿½o de VX_JANELA[45] (funï¿½ï¿½o SetTemProgressBar(V_JAN,.T.)) --> (OUTROS.PRG).
-//          * Esta funï¿½ï¿½o ï¿½ um #TRANSLATE, que indicarï¿½ se a MSGAGUARDE, terï¿½ ou nï¿½o PROGRESSBAR.
-//          * A posiï¿½ï¿½o de VX_JANELA[45] darï¿½ origem ao define ---> L_TemProgressBar
-//          * O acompanhamento da PROGRESSBAR serï¿½ feito pela MUDA SUBTï¿½TULO.
-
-//          IF L_JanTipoMsgAguarde
-//             IF N_ProgressBar > 0
-//                CRIA_PROGRESSBAR(VX_Janela)
-//             ENDIF
-//          ENDIF
-//          *
-//          * ---->>>>  OBS.:  OS OBJETOS SCROLLBAR E PROGRESSBAR Nï¿½O PRECISARAM SER INCLUï¿½DOS NA AddGuiObject(),
-//          *                  PARA QUE FOSSEM REDESENHADAS.
-//          *                  MARCOS, VOCï¿½ SABERIA O POR QUE?
-//          *
-//       #elif defined(__PLATFORM__LINUX)
-//          // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//       #else
-//          #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//       #endif
-//    ENDIF
-//    *
-//    IF SOB_MODO_GRAFICO() .AND. L_CriarToolBar
-//       * O Windows coloca a ToolBar "acima" da janela do sistema.
-//       * Isto causou o efeito da ToolBar ficar "fora" da tela do
-//       * usuï¿½rio, porque simplemente nï¿½o coube na tela visï¿½vel.
-//       * Para minimizar este problema, sem ter que olhar todas as
-//       * telas do sistema, optou-se para que, quando existir ToolBar:
-//       *   - A janela do sistema serï¿½ "baixada" em 1 posiï¿½ï¿½o
-//       *   - Para que o subtï¿½tulo nï¿½o fique "colado" na ï¿½rea ï¿½til,
-//       *     serï¿½ acrescentado uma linha separadora entre o tï¿½tulo da janela e
-//       *     a ï¿½rea ï¿½til da janela.
-//       *
-//       * Nï¿½o exibir separador, pois a grid jï¿½ serve como separador visual
-//       L_AcrescentarSeparadorSubtitulo := .T.
-//       IF N_TP_Jan == _JAN_SELE_ARQ_20
-//          #DEFINE VX_Sele  VX_SubObj
-//          L_MostraGrade  := VX_Sele:CARGO[09]      // Se mostra o grid
-//          #UNDEF VX_Sele
-//          IF L_MostraGrade
-//             L_AcrescentarSeparadorSubtitulo := .F.
-//          ENDIF
-//       ENDIF
-//       IF N_TP_Jan == _JAN_SELE_VETO_20
-//          #DEFINE VX_Sele  VX_SubObj
-//          L_MostraGrade  := VX_Sele:CARGO[09]      // Se mostra o grid
-//          #UNDEF VX_Sele
-//          IF L_MostraGrade
-//             L_AcrescentarSeparadorSubtitulo := .F.
-//          ENDIF
-//       ENDIF
-//       *
-//       * Nï¿½o exibir saparador, pois o box do texto jï¿½ serve como separador visual
-//       IF N_TP_Jan == _JAN_TEXTO_10 .OR. ;
-//          N_TP_Jan == _JAN_ARQTEXTO_10
-//          L_AcrescentarSeparadorSubtitulo := .F.
-//       ENDIF
-//       *
-//       #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//          IF L_AcrescentarSeparadorSubtitulo
-//             AddGuiObject(VX_Janela,DesenhaSeparadorSubtitulo(VX_Janela),;
-//                          CoordenadasSeparadorSubtitulo(VX_Janela))
-//          ENDIF
-//          *
-//          * Primeiramente definir a toolbar
-//          ADDGUI_TOOLBAR(VX_Janela)
-//          *
-//          * A funï¿½ï¿½o hb_gtInfo(), ao ser ativada com parï¿½metro HB_GTI_INKEYFILTER,
-//          * lï¿½ / seta um bloco de cï¿½digo a ser executado apï¿½s a cada INKEY() ser processado.
-//          * O retorno deste bloco de cï¿½digo substitui a tecla que o usuï¿½rio final digitou.
-//          * Este recurso ï¿½ usado para tratar adequadamente a execuï¿½ï¿½o de aï¿½ï¿½es da ToolBar.
-//          *
-//          * Seja lï¿½ qual for o conteï¿½do anterior deste bloco de cï¿½digo, salvï¿½-lo
-//          * para restaurar o conteï¿½do original, quando a janela for fechada.
-//          #include "hbgtinfo.ch"
-//          B_SetInkeyAfterBlock_Old := ;
-//             hb_gtInfo( HB_GTI_INKEYFILTER, {|nkey| ProcessaBotaoToolbarKey( VX_Janela, nkey ) } )
-//       #elif defined(__PLATFORM__LINUX)
-//          // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//       #else
-//          #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//       #endif
-//    ENDIF
-//    *
-//    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//       IF SOB_MODO_GRAFICO()
-//          *
-//          * ATENï¿½ï¿½O: No xHarbour e no Harbour antigo (compilador 6.3.0),
-//          *          a criaï¿½ï¿½o da PushButton era antes da criaï¿½ï¿½o da ToolBar.
-//          *          Se isto for feito no Harbour novo (compilador 10.1.0), a
-//          *          WVW_TBCREATE() desloca os PushButton para "baixo", ficando
-//          *          fora da janela visï¿½vel.
-//          * "SOLUï¿½ï¿½O" - Inverter a ordem, criado os PushButton depois da ToolBar.
-//          *             Assim o cï¿½digo ficou o mesmo para todos os compiladores.
-//          *
-//          FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
-//              ADICIONA_BOTAO_PUSH(VX_Janela,N_Cont)
-//          NEXT
-//       ENDIF
-//       *
-//       IF SOB_MODO_GRAFICO()
-//          FOR N_Cont := 1 TO LEN(V_LstImagens)
-//             AddGuiObject(VX_Janela,DesenhaImagem(VX_Janela,N_Cont),;
-//                          {N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_INICIAL],;
-//                           N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_INICIAL],;
-//                           N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_FINAL  ],;
-//                           N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_FINAL  ]})
-//          NEXT
-//       ENDIF
-//    #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)  // PENDENTE_LINUX
-//       // ? MEMVAR->NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//    #else
-//       #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//    #endif
-//    *
-//    DispEnd()
-//    *
-// ENDIF
-// * executar o mï¿½todo de ativaï¿½ï¿½o da janela, conforme a sua especializaï¿½ï¿½o
-// *
-// IF N_TP_Jan == NIL
-//    X_Retorno := EVAL(B_Metodo,VX_Janela)
 // ELSE
-//    X_Retorno := EVAL(B_Metodo)
+//     X_Retorno := EVAL(B_Metodo)
 // ENDIF
-// *
-// SETCOLOR(C_CorAnt)                    // restaurar cor anterior
-// SET(_SET_CURSOR,N_CursorAnt)          // restaurar modo do cursor
-// SETKEY(K_F1,B_Ajuda_Ant)              // restaurar ajuda anterior
-// *
-// IF .NOT. L_CUA_10
-//    DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha apï¿½s ativaï¿½ï¿½o
-// ENDIF
+
+
+ *
+ SETCOLOR(C_CorAnt)                    // restaurar cor anterior
+ SET(_SET_CURSOR,N_CursorAnt)          // restaurar modo do cursor
+ SETKEY(K_F1,B_Ajuda_Ant)              // restaurar ajuda anterior
+ *
+ IF .NOT. L_CUA_10
+    DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha após ativação
+ ENDIF
+ *
+ RETURN X_Retorno   // Ative ( VX_Janela )
+*
+*
 *
 
-
-
-
-*
 *********************
 STAT FUNC EH_PRODUCAO
 *********************
@@ -1610,117 +1254,137 @@ PROC AJUSTA_BOTOES(VX_Janela)
 //    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
 // #endif
 // *
-// *
-// *******************
-// FUNCTION DestruaJan ( VX_Janela, L_Permitir_CUA_20 )
-// *******************
-// LOCAL N_CT
-// DEFAULT L_Permitir_CUA_20 TO .F.
+*
+*******************
+FUNCTION DestruaJan ( VX_Janela, L_Permitir_CUA_20 )
+*******************
+LOCAL N_CT
+DEFAULT L_Permitir_CUA_20 TO .F.
 
-// * se janela foi ativada ao menos uma vez, fechï¿½-la
-// *
-// IF .NOT. L_Permitir_CUA_20 .AND. .NOT. L_CUA_10
-//    ? MEMVAR->DESTRUA_JAN_NAO_EXISTE_NA_CUA_20
-// ENDIF
-// *
-// IF L_JanTipoMsgAguarde
-//    ? MEMVAR->ERRO_FECHAMENTO_COM_DESTRUAJAN
-// ENDIF
-// *
-// IF C_TelaCoberta # NIL
-//    *
-//    IF SOB_MODO_GRAFICO()
-//       IF L_Embutida
-//          IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)  // destruir sempre a ï¿½ltima ativada
-//             ALARME("M28752","Alguma janela aberta nï¿½o foi fechada - passo 2...")
-//             *ALERT("Alguma janela aberta nï¿½o foi fechada - passo 2...")
-//          ENDIF
-//       ELSE
-//          #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+* se janela foi ativada ao menos uma vez, fechá-la
+*
+IF .NOT. L_Permitir_CUA_20 .AND. .NOT. L_CUA_10
+   ? MEMVAR->DESTRUA_JAN_NAO_EXISTE_NA_CUA_20
+ENDIF
+*
+IF L_JanTipoMsgAguarde
+   ? MEMVAR->ERRO_FECHAMENTO_COM_DESTRUAJAN
+ENDIF
+*
+IF C_TelaCoberta # NIL
+   *
+   IF SOB_MODO_GRAFICO()
+      IF L_Embutida
+         IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)  // destruir sempre a última ativada
+            ALARME("M28752","Alguma janela aberta nï¿½o foi fechada - passo 2...")
+            *ALERT("Alguma janela aberta nï¿½o foi fechada - passo 2...")
+         ENDIF
+      ELSE
 
-//             //#IFDEF _TESTE
-//             //   IMPRIME_PARA_DEBUGAR(DIRSAIDA()+"destruajan.txt",LEN(V_PilhaJanelas),V_PilhaJanelas[LEN(V_PilhaJanelas),2])
-//             //#ENDIF
+        //#IFDEF _TESTE
+        //   IMPRIME_PARA_DEBUGAR(DIRSAIDA()+"destruajan.txt",LEN(V_PilhaJanelas),V_PilhaJanelas[LEN(V_PilhaJanelas),2])
+        //#ENDIF
 
-//             IF L_CriarToolBar
-//                * Restaurar o conteï¿½do anterior do filtro de Inkeys, seja lï¿½ qual for.
-//                hb_gtInfo( HB_GTI_INKEYFILTER, B_SetInkeyAfterBlock_Old )
-//                *
-//                * A rigor, os exemplo da ToolBar da GTWVW nunca
-//                * incluem a exclusï¿½o prï¿½via dos botï¿½es, e o manual
-//                * informa que a destruiï¿½ï¿½o da ToolBar jï¿½ destroi os botï¿½es.
-//                * Mas fazer a exclusï¿½o manual prï¿½via, para ficar mais
-//                * documentado e se fazer o inverso do que foi feito na
-//                * criaï¿½ï¿½o da janela.
-//                FOR N_CT := WVW_TBButtonCount() TO 1 STEP -1
-//                    * Existe o "-1" porque o primeiro botï¿½o ï¿½ o "0".
-//                    WVW_TBDelButton(N_WindowNum,N_CT-1)
-//                NEXT
-//                *
-//                WVW_TBDESTROY(N_WindowNum)
-//             ENDIF
-//             *
-//             FOR N_CT := 1 TO LEN(V_RegiaoBotoes)
-//                WVW_PBDESTROY(N_WindowNum,V_RegiaoBotoes[N_CT,_BOTAO_HANDLE_PUSHBUTTON])
-//             NEXT
-//             *
-//             *
-//             IF L_JanTipoMsgAguarde
-//                IF N_ProgressBar == 2
-//                   WVW_PGDESTROY(N_WindowNum,N_IdProgressBar1)
-//                   WVW_PGDESTROY(N_WindowNum,N_IdProgressBar2)
-//                   N_ProgressBar := 0
-//                ELSEIF N_ProgressBar == 1
-//                   WVW_PGDESTROY(N_WindowNum,N_IdProgressBar1)
-//                   N_ProgressBar := 0
-//                ENDIF
-//             ENDIF
-//             *
-//             IF LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
-//                * A GTWVW jï¿½ fecha a janela 0 automaticamente.
-//                * Fazer com que a ï¿½ltima janela fechada pela CUA
-//                * seja a mesma.
-//             ELSE
-//                WVW_lCloseWindow()
-//             ENDIF
-//             WvW_SetMainCoord(L_MainCoord_Ant)
-//             *
-//             IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)  // destruir sempre a ï¿½ltima ativada
-//                ALARME("M28754","Alguma janela aberta nï¿½o foi fechada - passo 2...")
-//                *ALERT("Alguma janela aberta nï¿½o foi fechada - passo 2...")
-//             ENDIF
-//             ASIZE(V_PilhaJanelas,LEN(V_PilhaJanelas)-1)
-//          #elif defined(__PLATFORM__LINUX)
-//             // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//          #else
-//             #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//          #endif
-//       ENDIF
-//    ELSE
-//       RESTSCREEN(N_LinIni,N_ColIni,N_LinFin,N_ColFin,C_TelaCoberta)  // restaurar tela
-//       IF .NOT. L_Embutida
-//          ASIZE(V_PilhaJanelas,LEN(V_PilhaJanelas)-1)
-//       ENDIF
-//    ENDIF
-//    *
-//    SETPOS(N_LinAnt,N_ColAnt)            // posiciona o cursor nas coordenadas
-//    *
-//    C_TelaCoberta := NIL
-//    N_LinAnt := N_ColAnt := NIL    // nï¿½o tem conteï¿½do em janelas fechadas
-//    *
-// ENDIF
-// *
-// * destruir as matrizes chamadas diretamente pelo objeto janela,
-// * de modo a facilitar o "garbage collection" automï¿½tico do clipper.
-// *
-// IF VX_SubObj # NIL
-//    ASIZE(VX_SubObj,0)
-// ENDIF
-// ASIZE(VC_Titulo,0)
-// *
-// ASIZE(VX_Janela,0)
-// *
-// RETURN NIL
+        //
+        // FRAN: In GTNAP All widgets are destroyed with the window
+        //
+        // IF L_CriarToolBar
+        //     * Restaurar o conteï¿½do anterior do filtro de Inkeys, seja lï¿½ qual for.
+        //     hb_gtInfo( HB_GTI_INKEYFILTER, B_SetInkeyAfterBlock_Old )
+        //     *
+        //     * A rigor, os exemplo da ToolBar da GTWVW nunca
+        //     * incluem a exclusï¿½o prï¿½via dos botï¿½es, e o manual
+        //     * informa que a destruiï¿½ï¿½o da ToolBar jï¿½ destroi os botï¿½es.
+        //     * Mas fazer a exclusï¿½o manual prï¿½via, para ficar mais
+        //     * documentado e se fazer o inverso do que foi feito na
+        //     * criaï¿½ï¿½o da janela.
+        //     FOR N_CT := WVW_TBButtonCount() TO 1 STEP -1
+        //         * Existe o "-1" porque o primeiro botï¿½o ï¿½ o "0".
+        //         WVW_TBDelButton(N_WindowNum,N_CT-1)
+        //     NEXT
+        //     *
+        //     WVW_TBDESTROY(N_WindowNum)
+        // ENDIF
+        *
+
+        //
+        // FRAN: In GTNAP All widgets are destroyed with the window
+        //
+        // FOR N_CT := 1 TO LEN(V_RegiaoBotoes)
+        //     WVW_PBDESTROY(N_WindowNum,V_RegiaoBotoes[N_CT,_BOTAO_HANDLE_PUSHBUTTON])
+        // NEXT
+        *
+        *
+        //
+        // FRAN: In GTNAP All widgets are destroyed with the window
+        //
+        // IF L_JanTipoMsgAguarde
+        //     IF N_ProgressBar == 2
+        //         WVW_PGDESTROY(N_WindowNum,N_IdProgressBar1)
+        //         WVW_PGDESTROY(N_WindowNum,N_IdProgressBar2)
+        //         N_ProgressBar := 0
+        //     ELSEIF N_ProgressBar == 1
+        //         WVW_PGDESTROY(N_WindowNum,N_IdProgressBar1)
+        //         N_ProgressBar := 0
+        //     ENDIF
+        // ENDIF
+
+        *
+        //
+        // FRAN: GTNAP doesn't create any window by default
+        //
+        // IF LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
+        //     * A GTWVW jï¿½ fecha a janela 0 automaticamente.
+        //     * Fazer com que a ï¿½ltima janela fechada pela CUA
+        //     * seja a mesma.
+        // ELSE
+        //     WVW_lCloseWindow()
+        // ENDIF
+        // WvW_SetMainCoord(L_MainCoord_Ant)
+        *
+        NAP_CUALIB_DESTROY_WINDOW()
+
+
+        IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)  // destruir sempre a ï¿½ltima ativada
+            ALARME("M28754","Alguma janela aberta nï¿½o foi fechada - passo 2...")
+            *ALERT("Alguma janela aberta nï¿½o foi fechada - passo 2...")
+        ENDIF
+        ASIZE(V_PilhaJanelas,LEN(V_PilhaJanelas)-1)
+
+
+
+      ENDIF // L_Embutida
+
+   ELSE // NOT SOB_MODO_GRAFICO()
+      RESTSCREEN(N_LinIni,N_ColIni,N_LinFin,N_ColFin,C_TelaCoberta)  // restaurar tela
+      IF .NOT. L_Embutida
+         ASIZE(V_PilhaJanelas,LEN(V_PilhaJanelas)-1)
+      ENDIF
+
+   ENDIF // SOB_MODO_GRAFICO()
+   *
+   SETPOS(N_LinAnt,N_ColAnt)            // posiciona o cursor nas coordenadas
+   *
+   C_TelaCoberta := NIL
+   N_LinAnt := N_ColAnt := NIL    // não tem conteúdo em janelas fechadas
+   *
+ENDIF // C_TelaCoberta # NIL
+*
+* destruir as matrizes chamadas diretamente pelo objeto janela,
+* de modo a facilitar o "garbage collection" automático do clipper.
+*
+IF VX_SubObj # NIL
+   ASIZE(VX_SubObj,0)
+ENDIF
+ASIZE(VC_Titulo,0)
+*
+ASIZE(VX_Janela,0)
+*
+RETURN NIL
+
+
+
+
 // *
 // *******************
 // FUNCTION Rolamento_ ( VX_Janela , L_Esq , L_Cima , L_Baixo , L_Dir )
@@ -2435,6 +2099,8 @@ RETURN L_EXIBE_AJUDA
 // RETURN C_CdGET_ou_Menu_Atual
 *
 ***********************
+
+// FRAN: At the moment, events are internally managed by GTNAP
 STATIC FUNCTION TrataEventos ( VX_Janela )
     LOCAL L_FechouComAutoClose := .F.
     RETURN L_FechouComAutoClose

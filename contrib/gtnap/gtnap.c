@@ -14,6 +14,7 @@
 
 typedef struct _gtnap_t GtNap;
 typedef struct _gtnap_column_t GtNapColumn;
+typedef struct _gtnap_cualib_object_t GtNapCualibObject;
 typedef struct _gtnap_cualib_window_t GtNapCualibWindow;
 typedef struct _gui_context_t GuiContext;
 
@@ -45,6 +46,15 @@ DeclPt(GtNapCallback);
 DeclPt(GtNapArea);
 DeclPt(Window);
 
+struct _gtnap_cualib_object_t
+{
+    uint32_t cell_x;
+    uint32_t cell_y;
+    GuiComponent *component;
+};
+
+DeclSt(GtNapCualibObject);
+
 struct _gtnap_cualib_window_t
 {
     uint32_t N_LinIni;
@@ -52,6 +62,7 @@ struct _gtnap_cualib_window_t
     uint32_t N_LinFin;
     uint32_t N_ColFin;
     String *C_Cabec;
+    ArrSt(GtNapCualibObject) *gui_objects;
 };
 
 DeclSt(GtNapCualibWindow);
@@ -88,7 +99,16 @@ static PHB_ITEM END_CODEBLOCK = NULL;
 
 __EXTERN_C
 
+// These are internal, non-documented functions of NAppGUI.
+// They are used for direct handling of widgets, avoiding the 'layout' layer.
 Window *_component_window(const GuiComponent *component);
+void _component_attach_to_panel(GuiComponent *panel_component, GuiComponent *child_component);
+void _component_detach_from_panel(GuiComponent *panel_component, GuiComponent *child_component);
+void _component_set_frame(GuiComponent *component, const V2Df *origin, const S2Df *size);
+void _component_get_origin(const GuiComponent *component, V2Df *origin);
+void _component_get_size(const GuiComponent *component, S2Df *size);
+void _component_visible(GuiComponent *component, const bool_t visible);
+void _component_destroy(GuiComponent **component);
 
 __END_C
 
@@ -676,10 +696,6 @@ void gui_context_set_current(const GuiContext *context);
 //
 //
 
-void _component_set_frame(GuiComponent *component, const V2Df *origin, const S2Df *size);
-void _component_attach_to_panel(GuiComponent *panel_component, GuiComponent *child_component);
-void _component_detach_from_panel(GuiComponent *panel_component, GuiComponent *child_component);
-void _component_visible(GuiComponent *component, const bool_t visible);
 
 __END_C
 
@@ -873,8 +889,10 @@ static void i_remove_cualib_win(GtNapCualibWindow *win)
 
 /*---------------------------------------------------------------------------*/
 
+static Window *WINDOW = NULL;
 static Panel *PANEL = NULL;
 static Label *LABEL = NULL;
+static GtNapCualibWindow CUAWIN;
 
 /*---------------------------------------------------------------------------*/
 
@@ -888,7 +906,7 @@ static void i_OnWindowClose(GtNap *gtnap, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec)
+uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec)
 {
     GtNapCualibWindow cuawin;
     Window *window = window_create(ekWNSTD);
@@ -896,6 +914,7 @@ uint32_t hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_
     Layout *layout = layout_create(1, 1);
     Label *label = label_create();
 
+    WINDOW = window;
     PANEL = panel;
     LABEL = label;
 
@@ -939,23 +958,37 @@ uint32_t hb_gtnap_cualib_modal_window(const uint32_t N_LinIni, const uint32_t N_
     panel_layout(panel, layout);
     window_OnClose(window, listener(GTNAP_GLOBAL, i_OnWindowClose, GtNap));
     window_panel(window, panel);
+    CUAWIN = cuawin;
+    // window_modal(window, NULL);
 
-    window_modal(window, NULL);
 
-
-    window_destroy(&window);
-    i_remove_cualib_win(&cuawin);
-    return 1;
+    // window_destroy(&window);
+    // i_remove_cualib_win(&cuawin);
+    return 0;
 }
 
+/*---------------------------------------------------------------------------*/
 
+uint32_t hb_gtnap_cualib_launch_modal(void)
+{
+    return window_modal(WINDOW, NULL);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_destroy_window(void)
+{
+    window_destroy(&WINDOW);
+    i_remove_cualib_win(&CUAWIN);
+}
 
 /*---------------------------------------------------------------------------*/
 
 static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_Lock()");
+    // Lock and Unlock are always called before other operation. Avoid dirtying the log.
+    // log_printf("hb_gtnap_Lock()");
     return TRUE;
 }
 
@@ -964,7 +997,8 @@ static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 static void hb_gtnap_Unlock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_Unlock()");
+    // Lock and Unlock are always called before other operation. Avoid dirtying the log.
+    // log_printf("hb_gtnap_Unlock()");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1226,10 +1260,8 @@ static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom,
 static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, HB_USHORT bChar, int iRows, int iCols )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gt_wvw_Scroll(%d, %d, %d, %d): (%d)", iTop, iLeft, iBottom, iRight, bColor);
+    log_printf("hb_gt_wvw_Scroll(%d, %d, %d, %d): Rows:(%d) Cols:(%d) Color(%d)", iTop, iLeft, iBottom, iRight, iRows, iCols, bColor);
     HB_SYMBOL_UNUSED( bChar );
-    HB_SYMBOL_UNUSED( iRows );
-    HB_SYMBOL_UNUSED( iCols );
 }
 
 /*---------------------------------------------------------------------------*/

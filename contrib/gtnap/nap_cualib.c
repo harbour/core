@@ -67,14 +67,28 @@ HB_FUNC( WVW_SETMAINCOORD )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_MODAL_WINDOW )
+HB_FUNC( NAP_CUALIB_WINDOW )
 {
     uint32_t N_LinIni = hb_parni(1);
     uint32_t N_ColIni = hb_parni(2);
     uint32_t N_LinFin = hb_parni(3);
     uint32_t N_ColFin = hb_parni(4);
     const char_t *C_Cabec = hb_gtnap_cualib_parText(5);
-    uint32_t id = hb_gtnap_cualib_modal_window(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec);
+    uint32_t id = hb_gtnap_cualib_window(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec);
     hb_retni(id);
 }
 
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_LAUNCH_MODAL )
+{
+    uint32_t ret = hb_gtnap_cualib_launch_modal();
+    hb_retni(ret);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_DESTROY_WINDOW )
+{
+    hb_gtnap_cualib_destroy_window();
+}
