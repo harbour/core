@@ -895,7 +895,7 @@ const char * hb_verChangeLogLastEntry( void )
 #if defined( HB_LEGACY_LEVEL4 )
 
 /* Source repository revision number */
-int hb_verSvnID( void )
+HB_MAXINT hb_verSvnID( void )
 {
    return HB_VER_REVID;
 }

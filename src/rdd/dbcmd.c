@@ -2323,7 +2323,7 @@ HB_FUNC( HB_FIELDPUT )
       if( uiField > 0 )
       {
          PHB_ITEM pItem = hb_param( 2, HB_IT_ANY );
-         if( pItem && ! HB_IS_NIL( pItem ) )
+         if( pItem )
          {
             if( SELF_PUTVALUE( pArea, uiField, pItem ) == HB_SUCCESS )
                hb_itemReturn( pItem );
