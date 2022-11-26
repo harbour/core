@@ -116,9 +116,10 @@ ENDIF
 // *************
 // ALARME("M?????","Esta data n´?¢o existe no calend´?¢rio")
 // *
-// **********************
-// PROC LOGAFONT_GENERICO (N_RETROCEDE_CALLSTACK,C_TPLOGAFONT,;
-//                         C_ALIAS_REAL,N_INDEXORD,C_MENSLOGA)
+
+**********************
+PROC LOGAFONT_GENERICO (N_RETROCEDE_CALLSTACK,C_TPLOGAFONT,;
+                        C_ALIAS_REAL,N_INDEXORD,C_MENSLOGA)
 
 
 
@@ -169,16 +170,18 @@ RETURN .T.
 FUNC GS_CDUSUA()
 ************
 RETURN "xxxxx"
-// *
-// *****************
-// PROC LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdGet)  // LOGAR conte´?¢do de telas
-// *****************
-// IF V_Lst_CdGet==NIL
-//    V_Lst_CdGet := {}
-// ENDIF
-// *
-// // ALERT(C_CDTELA+" logada, com "+LTRIM(STR(LEN(V_Lst_CdGet)))+" campos")
-// *
+*
+*****************
+PROC LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdGet)  // LOGAR conte´?¢do de telas
+*****************
+IF V_Lst_CdGet==NIL
+   V_Lst_CdGet := {}
+ENDIF
+*
+// ALERT(C_CDTELA+" logada, com "+LTRIM(STR(LEN(V_Lst_CdGet)))+" campos")
+*
+
+
 // *****************
 // PROC LOGA_AJMENST(C_CDTELA,C_CDGet,C_CdMens,C_SubCabec)  // LOGAR conte´?¢do de telas
 // *****************

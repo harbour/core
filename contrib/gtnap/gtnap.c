@@ -745,11 +745,28 @@ static GtNap *i_gtnap_cualib_create(void)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_remove_cualib_win(GtNapCualibWindow *win)
+static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t index)
 {
-    cassert_no_null(win);
-    cassert(arrst_size(win->gui_objects, GtNapCualibObject) == 0);
-    arrst_destroy(&win->gui_objects, NULL, GtNapCualibObject);
+    GtNapCualibObject *object = NULL;
+    cassert_no_null(cuawin);
+    object = arrst_get(cuawin->gui_objects, index, GtNapCualibObject);
+    _component_detach_from_panel((GuiComponent*)cuawin->panel, object->component);
+    _component_destroy(&object->component);
+    arrst_delete(cuawin->gui_objects, index, NULL, GtNapCualibObject);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_remove_cualib_win(GtNapCualibWindow *cuawin)
+{
+    uint32_t i, n;
+    cassert_no_null(cuawin);
+    n = arrst_size(cuawin->gui_objects, GtNapCualibObject);
+    for (i = 0; i < n; ++i)
+        i_remove_cualib_object(cuawin, 0);
+
+    cassert(arrst_size(cuawin->gui_objects, GtNapCualibObject) == 0);
+    arrst_destroy(&cuawin->gui_objects, NULL, GtNapCualibObject);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -834,28 +851,16 @@ static GtNapCualibWindow *i_parent_cuawin(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t index)
-{
-    GtNapCualibObject *object = NULL;
-    cassert_no_null(cuawin);
-    object = arrst_get(cuawin->gui_objects, index, GtNapCualibObject);
-    _component_detach_from_panel((GuiComponent*)cuawin->panel, object->component);
-    _component_destroy(&object->component);
-    arrst_delete(cuawin->gui_objects, index, NULL, GtNapCualibObject);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_OnWindowClose(GtNap *gtnap, Event *e)
-{
-    GtNapCualibWindow *cuawin = i_current_cuawin(gtnap);
-    uint32_t i, n;
-    cassert_no_null(cuawin);
-    n = arrst_size(cuawin->gui_objects, GtNapCualibObject);
-    for (i = 0; i < n; ++i)
-        i_remove_cualib_object(cuawin, 0);
-    unref(e);
-}
+// static void i_OnWindowClose(GtNap *gtnap, Event *e)
+// {
+//     GtNapCualibWindow *cuawin = i_current_cuawin(gtnap);
+//     uint32_t i, n;
+//     cassert_no_null(cuawin);
+//     n = arrst_size(cuawin->gui_objects, GtNapCualibObject);
+//     for (i = 0; i < n; ++i)
+//         i_remove_cualib_object(cuawin, 0);
+//     unref(e);
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -921,7 +926,7 @@ uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni
         window_title(window, tc(GTNAP_GLOBAL->title));
 
     panel_layout(panel, layout);
-    window_OnClose(window, listener(GTNAP_GLOBAL, i_OnWindowClose, GtNap));
+    //window_OnClose(window, listener(GTNAP_GLOBAL, i_OnWindowClose, GtNap));
     window_panel(window, panel);
     return id;
 }
@@ -946,8 +951,8 @@ void hb_gtnap_cualib_destroy_window(void)
     GtNapCualibWindow *cuawin = NULL;
     cassert(id > 0);
     cuawin = arrst_get(GTNAP_GLOBAL->cualib_windows, id - 1, GtNapCualibWindow);
-    window_destroy(&cuawin->window);
     arrst_delete(GTNAP_GLOBAL->cualib_windows, id - 1, i_remove_cualib_win, GtNapCualibWindow);
+    window_destroy(&cuawin->window);
 }
 
 /*---------------------------------------------------------------------------*/

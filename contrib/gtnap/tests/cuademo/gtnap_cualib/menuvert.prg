@@ -170,56 +170,63 @@ ASSUMIR_NIL_OU_FALSE({L_AliasMuda,;
                       //  L_MudaDados --> Este parâmetro não está sendo passado para esta função, pois seu valor
 		      // poderá ser é TRUE, caso a OPÇÃO seja indicado pelo parâmetro L_MudaDados.
 *
-// #DEFINE VX_Sele   VX_SubObj
-// AADD(V_Lst_CdOpcao,{C_CdOpcao,STRTRAN(C_TxtOpcao,"#","")})
-// #UNDEF  VX_Sele
+#DEFINE VX_Sele   VX_SubObj
+AADD(V_Lst_CdOpcao,{C_CdOpcao,STRTRAN(C_TxtOpcao,"#","")})
+#UNDEF  VX_Sele
 *
 AddOpcaoInterna(VX_Janela,C_TxtOpcao,B_AcaoOpcao,C_CdOpcao,3,;
                 L_AliasMuda, L_RecnoMuda, L_FilterMuda, L_OrderMuda, L_EofOk, L_HandleMuda, L_MudaDados)
 
+*
 **************************
 STATIC FUNCTION Selecionar ( VX_Janela )
-    LOCAL L_Retorno := 1
-    RETURN L_Retorno
+*
+LOCAL VX_Sele := VX_SubObj
+LOCAL L_Retorno
+*
 
-// *
-// **************************
-// STATIC FUNCTION Selecionar ( VX_Janela )
-// *
-// LOCAL VX_Sele := VX_SubObj
-// LOCAL L_Retorno
-// *
-// IF LEN(V_Opcoes)==0
-//    ? MEMVAR->JANELA_DE_MENU_SEM_ADDOPCAO
-// ENDIF
-// *
-// ADICIONAR_COLUNA_VETOR_AO_BROWSE(VX_Janela,_SELE_SIMPLES)
-// *
-// L_Retorno := Selecao(VX_Janela,VX_Sele)
-// *
-// LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdOpcao)  // LOGAR conteúdo de telas
-// *
-// RETURN L_Retorno
-// *
-// ***********************
-// STATIC FUNCTION Selecao ( VX_Janela, VX_Sele)
-// *
-// #INCLUDE "set.ch"
-// *
-// LOCAL L_Mais, N_Tecla, N_Pos, L_RolaCima, L_RolaBaixo
-// LOCAL L_ForcaParada, N_Cont
-// LOCAL N_Row_Inicial_Util
-// LOCAL N_mRow, N_mCol, N_Desloca, N_RegiaoMouse, N_Keyboard
-// LOCAL N_Desloca_Aux, N_RowPos_Ant
+NAP_LOG("MenuVert num opts: " + hb_ntos(LEN(V_Opcoes)))
 
-// LOCAL N_PaintRefresh_Old, X_Retorno_Eval, L_FechouComAutoClose := .F.
-// LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao
-// LOCAL B_Ajuda_Ant
-// *
-// #DEFINE C_CdOpcao VX_Sele:CARGO[17]
-// B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}) // salvar help anterior
-// #UNDEF  C_CdOpcao
-// *
+IF LEN(V_Opcoes)==0
+   ? MEMVAR->JANELA_DE_MENU_SEM_ADDOPCAO
+ENDIF
+*
+ADICIONAR_COLUNA_VETOR_AO_BROWSE(VX_Janela,_SELE_SIMPLES)
+*
+L_Retorno := Selecao(VX_Janela,VX_Sele)
+*
+LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdOpcao)  // LOGAR conteúdo de telas
+*
+RETURN L_Retorno
+
+*
+***********************
+STATIC FUNCTION Selecao ( VX_Janela, VX_Sele)
+*
+#INCLUDE "set.ch"
+*
+LOCAL L_Mais, N_Tecla, N_Pos, L_RolaCima, L_RolaBaixo
+LOCAL L_ForcaParada, N_Cont
+LOCAL N_Row_Inicial_Util
+LOCAL N_mRow, N_mCol, N_Desloca, N_RegiaoMouse, N_Keyboard
+LOCAL N_Desloca_Aux, N_RowPos_Ant
+
+LOCAL N_PaintRefresh_Old, X_Retorno_Eval, L_FechouComAutoClose := .F.
+LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao
+LOCAL B_Ajuda_Ant
+*
+#DEFINE C_CdOpcao VX_Sele:CARGO[17]
+B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}) // salvar help anterior
+#UNDEF  C_CdOpcao
+*
+
+return .T.
+
+
+
+
+
+
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF SOB_MODO_GRAFICO()
 //       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
@@ -632,6 +639,10 @@ STATIC FUNCTION Selecionar ( VX_Janela )
 // *
 // RETURN L_FechouComAutoClose
 // *
+
+
+
+
 // **************************
 // PROC Atualizar_Tela_Browse (VX_Janela,VX_Sele,L_RolaCima,L_RolaBaixo)
 // **************************

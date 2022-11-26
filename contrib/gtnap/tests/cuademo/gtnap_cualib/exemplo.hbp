@@ -33,6 +33,8 @@ stubs.prg
 
 # Libraries
 gtnap.hbc
+hbct.hbc
+
 
 # Harbour compiler options
 -m -a -w -es2 -ql

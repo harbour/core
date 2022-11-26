@@ -844,7 +844,15 @@ NEXT
 
 // FRAN: At the moment, events are managed by GTNAP
 IF SOB_MODO_GRAFICO()
-    X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
+    //X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
+
+    IF N_TP_Jan == NIL
+        X_Retorno := EVAL(B_Metodo,VX_Janela)
+    ELSE
+        X_Retorno := EVAL(B_Metodo)
+    ENDIF
+
+
 ELSE
 
     // FRAN: Event management for text GT's

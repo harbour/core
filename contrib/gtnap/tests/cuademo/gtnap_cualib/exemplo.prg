@@ -38,7 +38,7 @@ PROC MAIN
 // Event-driven applications (especially GTK+3 and macOS-Cocoa) cannot be started directly from main().
 // They need to set up an event execution loop and other internal structures. In GTNAP based applications,
 // we need to move the "main" to another procedure, which will be called from GTNAP when
-// the application is ready to start.
+// the application is ready to start. {|| RUN_MAIN() }
 //
 IF HB_GTVERSION()=="NAP"
     #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX)

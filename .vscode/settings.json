@@ -4,5 +4,6 @@
         "nappgui.h": "c",
         "hbapirdd.h": "c",
         "hbapicdp.h": "c"
-    }
+    },
+    "files.encoding": "windows1252"
 }

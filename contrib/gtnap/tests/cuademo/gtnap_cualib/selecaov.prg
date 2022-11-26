@@ -194,24 +194,24 @@
 // *
 // * DEFINICOES PARA USO GERAL
 // *
-// #DEFINE B_LinCorrente        VX_Sele:CARGO[01]      // bloco que retorna o item corrente
-// #DEFINE L_PriFora            VX_Sele:CARGO[02]      // sinaliza se 1º item não está na tela
-// #DEFINE L_UltFora            VX_Sele:CARGO[03]      // idem para o último
-// #DEFINE L_ForcaLerTudo       VX_Sele:CARGO[04]      // sinaliza a remontagem total da tela
-// #DEFINE L_PrimAtivacao       VX_Sele:CARGO[05]      // Se é a primeira ativação da janela
-// #DEFINE L_AtivaGui           VX_Sele:CARGO[06]      //
-// #DEFINE L_AutoClose          VX_Sele:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
-// #DEFINE VN_Selecio           VX_Sele:CARGO[08]      // vetor de seleção múltipla
-// #DEFINE L_MostraGrade        VX_Sele:CARGO[09]      // Se mostra o grid
-// #DEFINE N_Congela            VX_Sele:CARGO[10]      // colunas a congelar
-// #DEFINE N_TP_Selecao         VX_Sele:CARGO[11]      // modalidade de seleção (simp/mult/ext)
-// #DEFINE N_AlturaCabec        VX_Sele:CARGO[12]      // Altura do cabecalho de colunas
-// #DEFINE N_Selecio            VX_Sele:CARGO[13]      // item corrente (só para vetores)
-// #DEFINE N_ColunaIniVetor     VX_Sele:CARGO[14]      // Coluna inicial do vetor
-// #DEFINE V_Opcoes             VX_Sele:CARGO[15]      // Lista de opções do vetor
-// #DEFINE L_TemHotKey          VX_Sele:CARGO[16]      // se alguma opção tem o caractere "#"
-// #DEFINE V_Lst_CdOpcao        VX_Sele:CARGO[17]      // Manter compatibilidade do vetor CARGO entre os programas: SELECAOA, SELECAOV e MENUVERT
-// #DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Nunca existe rolamento horizontal em vetores (conterá sempre .F.)
+#DEFINE B_LinCorrente        VX_Sele:CARGO[01]      // bloco que retorna o item corrente
+#DEFINE L_PriFora            VX_Sele:CARGO[02]      // sinaliza se 1º item não está na tela
+#DEFINE L_UltFora            VX_Sele:CARGO[03]      // idem para o último
+#DEFINE L_ForcaLerTudo       VX_Sele:CARGO[04]      // sinaliza a remontagem total da tela
+#DEFINE L_PrimAtivacao       VX_Sele:CARGO[05]      // Se é a primeira ativação da janela
+#DEFINE L_AtivaGui           VX_Sele:CARGO[06]      //
+#DEFINE L_AutoClose          VX_Sele:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
+#DEFINE VN_Selecio           VX_Sele:CARGO[08]      // vetor de seleção múltipla
+#DEFINE L_MostraGrade        VX_Sele:CARGO[09]      // Se mostra o grid
+#DEFINE N_Congela            VX_Sele:CARGO[10]      // colunas a congelar
+#DEFINE N_TP_Selecao         VX_Sele:CARGO[11]      // modalidade de seleção (simp/mult/ext)
+#DEFINE N_AlturaCabec        VX_Sele:CARGO[12]      // Altura do cabecalho de colunas
+#DEFINE N_Selecio            VX_Sele:CARGO[13]      // item corrente (só para vetores)
+#DEFINE N_ColunaIniVetor     VX_Sele:CARGO[14]      // Coluna inicial do vetor
+#DEFINE V_Opcoes             VX_Sele:CARGO[15]      // Lista de opções do vetor
+#DEFINE L_TemHotKey          VX_Sele:CARGO[16]      // se alguma opção tem o caractere "#"
+#DEFINE V_Lst_CdOpcao        VX_Sele:CARGO[17]      // Manter compatibilidade do vetor CARGO entre os programas: SELECAOA, SELECAOV e MENUVERT
+#DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Nunca existe rolamento horizontal em vetores (conterá sempre .F.)
 // *
 // **************************
 // STATIC FUNCTION Selecionar ( VX_Janela )
@@ -716,111 +716,111 @@ IF L_MudaDados # NIL
    INABILITA_ADDOPCAO(L_MudaDados, @B_AcaoOpcao)
 ENDIF
 *
-// IF "#" $ C_TxtOpcao  // PENDENTE - Futuramente dar erro se atalho (# / cerquila) for seguido de caractere com ASCII >= 128
-//    L_TemHotKey := .T.
-//    *
-//    C_TxtTratado    := STRTRAN(C_TxtOpcao,"#","")
-//    N_Pos_Destaque  := AT("#",C_TxtOpcao)
-//    C_Destaque      := SUBSTR(C_TxtOpcao,N_Pos_Destaque+1,1)
-//    N_Keyboard      := ASC(C_Destaque)
-//    *
-//    * Tornar o N_Keyboard "case insensitive"
-//    IF C_Destaque >= "a" .AND. C_Destaque <= "z"
-//       N_Keyboard_Case := ASC(UPPER(C_Destaque))
-//    ELSEIF C_Destaque >= "A" .AND. C_Destaque <= "Z"
-//       N_Keyboard_Case := ASC(LOWER(C_Destaque))
-//    ELSE
-//       N_Keyboard_Case := N_Keyboard  // não é letra
-//    ENDIF
-//    *
-//    IF ASCAN(V_Opcoes,{|V_Subv|V_Subv[_OPCAO_INKEY_DESTAQUE]     ==N_Keyboard .OR. ;
-//                               V_Subv[_OPCAO_INKEY_DESTAQUE_CASE]==N_Keyboard}) # 0
-//       LOGAFONT_GENERICO(N_Retrocede_Callstack,"JAN",NIL,NIL,;
-//                         "Erro 3: Opções tem hotkey duplicada - "+C_TxtOpcao)
-//    ENDIF
-// ELSE
-//    C_TxtTratado    := C_TxtOpcao
-//    N_Pos_Destaque  := 0
-//    C_Destaque      := ""
-//    N_Keyboard      := 0
-//    N_Keyboard_Case := 0
-// ENDIF
-// *
-// AADD(V_Opcoes,{C_TxtOpcao,;      // _OPCAO_TEXTO
-//                C_TxtTratado,;    // _OPCAO_TEXTO_TRATADO
-//                N_Pos_Destaque,;  // _OPCAO_COL_DESTAQUE
-//                C_Destaque,;      // _OPCAO_TEXTO_DESTAQUE
-//                B_AcaoOpcao,;     // _OPCAO_BLOCO_ACAO
-//                C_CdOpcao,;       // _OPCAO_CDOPCAO
-//                N_Keyboard,;      // _OPCAO_INKEY_DESTAQUE
-//                N_Keyboard_Case,; // _OPCAO_INKEY_DESTAQUE_CASE
-//                L_AliasMuda,;     // _OPCAO_ALIAS_MUDA
-//                L_RecnoMuda,;     // _OPCAO_RECNO_MUDA
-//                L_FilterMuda,;    // _OPCAO_FILTER_MUDA
-//                L_OrderMuda,;     // _OPCAO_ORDER_MUDA
-//                L_EofOk,;         // _OPCAO_EOFOK
-//                L_HandleMuda,;    // _OPCAO_HANDLE_MUDA
-//                L_MudaDados})     // _OPCAO_MUDADADOS
+IF "#" $ C_TxtOpcao  // PENDENTE - Futuramente dar erro se atalho (# / cerquila) for seguido de caractere com ASCII >= 128
+   L_TemHotKey := .T.
+   *
+   C_TxtTratado    := STRTRAN(C_TxtOpcao,"#","")
+   N_Pos_Destaque  := AT("#",C_TxtOpcao)
+   C_Destaque      := SUBSTR(C_TxtOpcao,N_Pos_Destaque+1,1)
+   N_Keyboard      := ASC(C_Destaque)
+   *
+   * Tornar o N_Keyboard "case insensitive"
+   IF C_Destaque >= "a" .AND. C_Destaque <= "z"
+      N_Keyboard_Case := ASC(UPPER(C_Destaque))
+   ELSEIF C_Destaque >= "A" .AND. C_Destaque <= "Z"
+      N_Keyboard_Case := ASC(LOWER(C_Destaque))
+   ELSE
+      N_Keyboard_Case := N_Keyboard  // não é letra
+   ENDIF
+   *
+   IF ASCAN(V_Opcoes,{|V_Subv|V_Subv[_OPCAO_INKEY_DESTAQUE]     ==N_Keyboard .OR. ;
+                              V_Subv[_OPCAO_INKEY_DESTAQUE_CASE]==N_Keyboard}) # 0
+      LOGAFONT_GENERICO(N_Retrocede_Callstack,"JAN",NIL,NIL,;
+                        "Erro 3: Opções tem hotkey duplicada - "+C_TxtOpcao)
+   ENDIF
+ELSE
+   C_TxtTratado    := C_TxtOpcao
+   N_Pos_Destaque  := 0
+   C_Destaque      := ""
+   N_Keyboard      := 0
+   N_Keyboard_Case := 0
+ENDIF
+*
+AADD(V_Opcoes,{C_TxtOpcao,;      // _OPCAO_TEXTO
+               C_TxtTratado,;    // _OPCAO_TEXTO_TRATADO
+               N_Pos_Destaque,;  // _OPCAO_COL_DESTAQUE
+               C_Destaque,;      // _OPCAO_TEXTO_DESTAQUE
+               B_AcaoOpcao,;     // _OPCAO_BLOCO_ACAO
+               C_CdOpcao,;       // _OPCAO_CDOPCAO
+               N_Keyboard,;      // _OPCAO_INKEY_DESTAQUE
+               N_Keyboard_Case,; // _OPCAO_INKEY_DESTAQUE_CASE
+               L_AliasMuda,;     // _OPCAO_ALIAS_MUDA
+               L_RecnoMuda,;     // _OPCAO_RECNO_MUDA
+               L_FilterMuda,;    // _OPCAO_FILTER_MUDA
+               L_OrderMuda,;     // _OPCAO_ORDER_MUDA
+               L_EofOk,;         // _OPCAO_EOFOK
+               L_HandleMuda,;    // _OPCAO_HANDLE_MUDA
+               L_MudaDados})     // _OPCAO_MUDADADOS
 
 
+*
+*****************
+FUNCTION AnexeCol ( VX_Janela , C_Titulo , B_Bloco , N_Largura )
+*****************
+*
+LOCAL VX_Coluna, VX_Sele         // objeto do tipo coluna
+*
+VX_Sele := VX_SubObj
+*
+IF C_Titulo # NIL
+   DO WHILE LEFT(C_Titulo,1)==";"
+      C_Titulo := SUBSTR(C_Titulo,2)
+   ENDDO
+   *
+   IF .NOT. EMPTY(C_TITULO)
+      N_AlturaCabec := MAX(N_AlturaCabec,NUMAT(";",C_Titulo)+1)
+   ENDIF
+ENDIF
+*
+VX_Coluna := TBCOLUMNNEW(C_Titulo,B_Bloco)
+*
+IF N_Largura # NIL
+   VX_Coluna:WIDTH := N_Largura
+ENDIF
+VX_Coluna:DEFCOLOR   :=     { 1 , 3 }    // fixa Bright para títulos e células
+VX_Coluna:COLORBLOCK := {|| { 2 , 3 } }  // faz com que todas as células (corpo)
+*                                        //   fique em cor normal (tira o Bright)
+VX_Sele:ADDCOLUMN(VX_Coluna)
+*
+RETURN NIL
+*
 
+*************************************
+PROC ADICIONAR_COLUNA_VETOR_AO_BROWSE(VX_Janela,N_2TP_Selecao)
+*************************************
+LOCAL VX_Sele := VX_SubObj
+LOCAL N_MaiorLarg, N_Cont, N_ColunasSobrando
+*
+* adicionar coluna ao browse
+*
+N_MaiorLarg := 0
+FOR N_Cont := 1 TO LEN(V_Opcoes)
+    N_MaiorLarg := MAX(N_MaiorLarg,LEN(V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]))
+NEXT
+AnexeCol(VX_Janela,NIL, {||" "+V_Opcoes[N_Selecio,_OPCAO_TEXTO_TRATADO]+" "},;
+         N_MaiorLarg+2)
+*
+IF N_2TP_Selecao == _SELE_SIMPLES   // só existe uma coluna no browse()
+   * Reduzir a área do browse à área máxima efetivamente necessária,
+   * para que, no modo gráfico, se possa imprimir imagens à esquerda
+   * e à direita da área do browse (área sem uso).
+   * ( só existe uma coluna no browse() )
+   N_ColunasSobrando := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1 ;
+                        -N_MaiorLarg-2
+   VX_Sele:nLeft  := VX_Sele:nLeft  + ROUND(N_ColunasSobrando/2,0)
+   VX_Sele:nRight := VX_Sele:nLeft  + N_MaiorLarg + 1
+ENDIF
 
-// *
-// *****************
-// FUNCTION AnexeCol ( VX_Janela , C_Titulo , B_Bloco , N_Largura )
-// *****************
-// *
-// LOCAL VX_Coluna, VX_Sele         // objeto do tipo coluna
-// *
-// VX_Sele := VX_SubObj
-// *
-// IF C_Titulo # NIL
-//    DO WHILE LEFT(C_Titulo,1)==";"
-//       C_Titulo := SUBSTR(C_Titulo,2)
-//    ENDDO
-//    *
-//    IF .NOT. EMPTY(C_TITULO)
-//       N_AlturaCabec := MAX(N_AlturaCabec,NUMAT(";",C_Titulo)+1)
-//    ENDIF
-// ENDIF
-// *
-// VX_Coluna := TBCOLUMNNEW(C_Titulo,B_Bloco)
-// *
-// IF N_Largura # NIL
-//    VX_Coluna:WIDTH := N_Largura
-// ENDIF
-// VX_Coluna:DEFCOLOR   :=     { 1 , 3 }    // fixa Bright para títulos e células
-// VX_Coluna:COLORBLOCK := {|| { 2 , 3 } }  // faz com que todas as células (corpo)
-// *                                        //   fique em cor normal (tira o Bright)
-// VX_Sele:ADDCOLUMN(VX_Coluna)
-// *
-// RETURN NIL
-// *
-// *************************************
-// PROC ADICIONAR_COLUNA_VETOR_AO_BROWSE(VX_Janela,N_2TP_Selecao)
-// *************************************
-// LOCAL VX_Sele := VX_SubObj
-// LOCAL N_MaiorLarg, N_Cont, N_ColunasSobrando
-// *
-// * adicionar coluna ao browse
-// *
-// N_MaiorLarg := 0
-// FOR N_Cont := 1 TO LEN(V_Opcoes)
-//     N_MaiorLarg := MAX(N_MaiorLarg,LEN(V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]))
-// NEXT
-// AnexeCol(VX_Janela,NIL, {||" "+V_Opcoes[N_Selecio,_OPCAO_TEXTO_TRATADO]+" "},;
-//          N_MaiorLarg+2)
-// *
-// IF N_2TP_Selecao == _SELE_SIMPLES   // só existe uma coluna no browse()
-//    * Reduzir a área do browse à área máxima efetivamente necessária,
-//    * para que, no modo gráfico, se possa imprimir imagens à esquerda
-//    * e à direita da área do browse (área sem uso).
-//    * ( só existe uma coluna no browse() )
-//    N_ColunasSobrando := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1 ;
-//                         -N_MaiorLarg-2
-//    VX_Sele:nLeft  := VX_Sele:nLeft  + ROUND(N_ColunasSobrando/2,0)
-//    VX_Sele:nRight := VX_Sele:nLeft  + N_MaiorLarg + 1
-// ENDIF
 // *
 // ***************************
 // FUNCTION TestaTeclaDestaque ( VX_Sele, N_Tecla )
