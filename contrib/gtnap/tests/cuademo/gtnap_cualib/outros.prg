@@ -1112,3 +1112,14 @@ RETURN C_DIRET_ANT
 // ENDIF
 // *
 // *************** FIM DO outros.prg
+
+PROCEDURE LOG_PRINT(C_Text)
+    IF SOB_MODO_GRAFICO()
+        NAP_LOG(C_Text)
+    ENDIF
+
+    RETURN
+
+
+
+

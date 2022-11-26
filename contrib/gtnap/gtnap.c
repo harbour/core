@@ -112,6 +112,8 @@ void _component_get_size(const GuiComponent *component, S2Df *size);
 void _component_visible(GuiComponent *component, const bool_t visible);
 void _component_destroy(GuiComponent **component);
 const char_t *_component_type(const GuiComponent *component);
+void _panel_compose(Panel *panel, const S2Df *required_size, S2Df *final_size);
+void _panel_detach_components(Panel *panel);
 
 __END_C
 
@@ -748,8 +750,14 @@ static GtNap *i_gtnap_cualib_create(void)
 static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t index)
 {
     GtNapCualibObject *object = NULL;
+    const char_t *type = NULL;
     cassert_no_null(cuawin);
     object = arrst_get(cuawin->gui_objects, index, GtNapCualibObject);
+
+    type = _component_type(object->component);
+    if (str_equ_c(type, "Panel") == TRUE)
+        _panel_detach_components((Panel*)object->component);
+
     _component_detach_from_panel((GuiComponent*)cuawin->panel, object->component);
     _component_destroy(&object->component);
     arrst_delete(cuawin->gui_objects, index, NULL, GtNapCualibObject);
@@ -872,7 +880,7 @@ static void i_add_object(const uint32_t cell_x, const uint32_t cell_y, const uin
     pos.x = (real32_t)(cell_x * cell_x_size);
     pos.y = (real32_t)(cell_y * cell_y_size);
     _component_attach_to_panel((GuiComponent*)cuawin->panel, component);
-    _component_visible(component, TRUE);
+    _component_visible(component, FALSE);
     _component_set_frame(component, &pos, size);
     object = arrst_new0(cuawin->gui_objects, GtNapCualibObject);
     object->cell_x = cell_x;
@@ -933,12 +941,29 @@ uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    S2Df size, final_size;
+    cassert_no_null(cuawin);
+    log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+    _panel_compose(panel, &size, &final_size);
+    i_add_object(nLeft, nTop, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)panel, cuawin);
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_cualib_launch_modal(void)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
     uint32_t ret = 0;
     cassert_no_null(cuawin);
+    arrst_foreach(object, cuawin->gui_objects, GtNapCualibObject)
+        _component_visible(object->component, TRUE);
+    arrst_end();
     ret = window_modal(cuawin->window, parent ? parent->window : NULL);
     return ret;
 }

@@ -132,6 +132,8 @@ RETURN NIL
 #DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Nunca existe rolamento horizontal em menus (conterá sempre .F.)
 *
 
+PROC JAJAJAJ()
+RETURN
 
 *************
 PROC AddOpcao (VX_Janela,C_TxtOpcao,B_AcaoOpcao,;
@@ -185,7 +187,7 @@ LOCAL VX_Sele := VX_SubObj
 LOCAL L_Retorno
 *
 
-NAP_LOG("MenuVert num opts: " + hb_ntos(LEN(V_Opcoes)))
+LOG_PRINT("MenuVert num opts: " + hb_ntos(LEN(V_Opcoes)))
 
 IF LEN(V_Opcoes)==0
    ? MEMVAR->JANELA_DE_MENU_SEM_ADDOPCAO
@@ -214,19 +216,19 @@ LOCAL N_Desloca_Aux, N_RowPos_Ant
 LOCAL N_PaintRefresh_Old, X_Retorno_Eval, L_FechouComAutoClose := .F.
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao
 LOCAL B_Ajuda_Ant
+
+
+LOCAL V_MenuVert, L_Coords
+
 *
 #DEFINE C_CdOpcao VX_Sele:CARGO[17]
 B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}) // salvar help anterior
 #UNDEF  C_CdOpcao
 *
 
-return .T.
-
-
-
-
-
-
+//
+// FRAN - At the moment, this code is not necessary
+//
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF SOB_MODO_GRAFICO()
 //       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
@@ -236,45 +238,68 @@ return .T.
 // #else
 //    #erro "Código não adaptado para esta plataforma"
 // #endif
-// *
-// * antes de tudo, remontar a tela caso usuário tenha solicitado
-// *
-// IF L_ForcaLerTudo
-//    *
-//    IF L_PrimAtivacao
-//       L_PrimAtivacao := .F.
-//       *
-//       #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//          IF SOB_MODO_GRAFICO()
-//             * dar destaque ao item correntemente selecionado
-//             AddGuiObject(VX_Janela,;
-//                          DesenhaBoxItemSelecionado(VX_Janela,VX_Sele),;
-//                          CoordenadasBrowse(VX_Sele))
-//             * colocar sublinhado sob as teclas de atalho
-//             FOR N_Cont := 1 TO LEN(V_Opcoes)
-//                 IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] # 0  // tem tecla hotkey
-//                    AddGuiObject(VX_Janela,DesenhaAtalho(VX_Janela,VX_Sele,N_Cont),;
-//                                 CoordenadasBrowse(VX_Sele))
-//                 ENDIF
-//             NEXT
-//          ENDIF
-//       #elif defined(__PLATFORM__LINUX)
-//          // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//       #else
-//          #erro "Código não adaptado para esta plataforma"
-//       #endif
-//       *
-//    ENDIF
-//    *
-//    L_AtivaGui := .F.
-//    VX_Sele:REFRESHALL()     // forçar a remontagem da tela
-//    DO WHILE .NOT. VX_Sele:STABILIZE()
-//    ENDDO
-//    * não existe forma direta de obter esta coluna...
-//    N_ColunaIniVetor := COL()
-//    L_AtivaGui := .T.
-//    *
-// ENDIF
+
+
+*
+* antes de tudo, remontar a tela caso usuário tenha solicitado
+*
+IF L_ForcaLerTudo
+    *
+    IF L_PrimAtivacao
+        L_PrimAtivacao := .F.
+    *
+        IF SOB_MODO_GRAFICO()
+            L_Coords := CoordenadasBrowse(VX_Sele)
+            LOG_PRINT("Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
+
+            V_MenuVert := NAP_MENUVERT_CREATE()
+
+            FOR N_Cont := 1 TO LEN(V_Opcoes)
+                IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] # 0  // tem tecla hotkey
+                    NAP_MENUVERT_ADD(V_MenuVert, V_Opcoes[N_Cont,_OPCAO_TEXTO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO])
+                ENDIF
+            NEXT
+
+            NAP_MENUVERT_CUALIB(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
+
+            // FRAN MenuVert automatically managed by NAP_MENUVERT
+            // * dar destaque ao item correntemente selecionado
+            // AddGuiObject(VX_Janela,;
+            //                 DesenhaBoxItemSelecionado(VX_Janela,VX_Sele),;
+            //                 CoordenadasBrowse(VX_Sele))
+            // * colocar sublinhado sob as teclas de atalho
+            // FOR N_Cont := 1 TO LEN(V_Opcoes)
+            //     IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] # 0  // tem tecla hotkey
+            //         AddGuiObject(VX_Janela,DesenhaAtalho(VX_Janela,VX_Sele,N_Cont),;
+            //                     CoordenadasBrowse(VX_Sele))
+            //     ENDIF
+            // NEXT
+
+
+        ENDIF   // SOB_MODO_GRAFICO()
+    ENDIF   // L_PrimAtivacao
+    *
+
+    // FRAN: TBrowse management ONLY in text version
+    IF .NOT. SOB_MODO_GRAFICO()
+
+        L_AtivaGui := .F.
+        VX_Sele:REFRESHALL()     // forçar a remontagem da tela
+        DO WHILE .NOT. VX_Sele:STABILIZE()
+        ENDDO
+        * não existe forma direta de obter esta coluna...
+        N_ColunaIniVetor := COL()
+        L_AtivaGui := .T.
+
+    ENDIF
+   *
+ENDIF
+
+
+return .T.
+
+
+
 // *
 // L_RolaCima := L_RolaBaixo := .F.
 // *
