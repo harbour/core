@@ -1012,6 +1012,15 @@ void hb_gtnap_cualib_destroy_window(void)
 
 /*---------------------------------------------------------------------------*/
 
+Window *hb_gtnap_cualib_current_window(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    return cuawin->window;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );

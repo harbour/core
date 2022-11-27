@@ -95,6 +95,8 @@ extern uint32_t hb_gtnap_cualib_launch_modal(void);
 
 extern void hb_gtnap_cualib_destroy_window(void);
 
+extern Window *hb_gtnap_cualib_current_window(void);
+
 HB_EXTERN_END
 
 #endif

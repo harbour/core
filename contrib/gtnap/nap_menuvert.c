@@ -23,6 +23,8 @@ struct _menuopt_t
     PHB_ITEM codeBlock;
     S2Df size;
     uint32_t hoykey_pos;
+    vkey_t hotkey;
+    uint32_t hotmodif;
 };
 
 DeclSt(MenuOpt);
@@ -45,6 +47,17 @@ struct _menuvert_t
     bool_t launch_sel;
     bool_t autoclose;
 };
+
+/*---------------------------------------------------------------------------*/
+
+static const vkey_t KEY_ASCII_TABLE[] = {
+ekKEY_A, ekKEY_B, ekKEY_C, ekKEY_D,
+ekKEY_E, ekKEY_F, ekKEY_G, ekKEY_H,
+ekKEY_I, ekKEY_J, ekKEY_K, ekKEY_L,
+ekKEY_M, ekKEY_N, ekKEY_O, ekKEY_P,
+ekKEY_Q, ekKEY_R, ekKEY_S, ekKEY_T,
+ekKEY_U, ekKEY_V, ekKEY_W, ekKEY_X,
+ekKEY_Y, ekKEY_Z };
 
 /*---------------------------------------------------------------------------*/
 
@@ -388,6 +401,36 @@ HB_FUNC( NAP_MENUVERT_ADD )
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_codepoint(const char_t *str, const uint32_t pos)
+{
+    uint32_t i = 0;
+    const char_t *it = str;
+    while(i != pos)
+    {
+        it = unicode_next(it, ekUTF8);
+        i += 1;
+    }
+    return unicode_to_u32(it, ekUTF8);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnHotKey(MenuVert *menu, Event *e)
+{
+    const EvKey *p = event_params(e, EvKey);
+    arrst_foreach(opt, menu->opts, MenuOpt)
+        if (opt->hotkey == p->key && opt->hotmodif == p->modifiers)
+        {
+            menu->selected = opt_i;
+            view_update(menu->view);
+            i_run_option(menu);
+            break;
+        }
+    arrst_end();
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_MENUVERT_CUALIB_ADD )
 {
     Panel *panel = (Panel*)hb_parptr(1);
@@ -399,7 +442,33 @@ HB_FUNC( NAP_MENUVERT_CUALIB_ADD )
     opt->text = text;
     opt->codeBlock = codeBlock ? hb_itemNew(codeBlock) : NULL;
     opt->hoykey_pos = (hotkey_pos == 0) ? UINT32_MAX : hotkey_pos - 1;
-    log_printf("Hot key pos: %s - %d", tc(text), opt->hoykey_pos);
+    opt->hotkey = ENUM_MAX(vkey_t);
+    opt->hotmodif = UINT32_MAX;
+
+    if (opt->hoykey_pos != UINT32_MAX)
+    {
+        uint32_t cp = i_codepoint(tc(opt->text), opt->hoykey_pos);
+
+        // ASCII uppercase
+        if (cp >= 65 && cp <= 90)
+        {
+            opt->hotkey = KEY_ASCII_TABLE[cp - 65];
+            opt->hotmodif = ekMKEY_SHIFT;
+        }
+
+        // ASCII lowercase
+        if (cp >= 97 && cp <= 122)
+        {
+            opt->hotkey = KEY_ASCII_TABLE[cp - 97];
+            opt->hotmodif = 0;
+        }
+
+        if (opt->hotkey != ENUM_MAX(vkey_t))
+        {
+            Window *window = hb_gtnap_cualib_current_window();
+            window_hotkey(window, opt->hotkey, opt->hotmodif, listener(menu, i_OnHotKey, MenuVert));
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/
