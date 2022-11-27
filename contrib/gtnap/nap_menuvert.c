@@ -184,6 +184,7 @@ static void i_OnExit(Panel *panel, Event *e)
 {
     MenuVert *menu = panel_get_data(panel, MenuVert);
     menu->mouse_row = UINT32_MAX;
+    view_update(menu->view);
     unref(e);
 }
 
@@ -365,7 +366,7 @@ HB_FUNC( NAP_MENUVERT_CREATE )
     menu->row_height = (uint32_t)bmath_ceilf(font_height(menu->font));
     menu->visible_opts = hb_parni(1);
     menu->selected = 0;
-    menu->mouse_row = 0;
+    menu->mouse_row = UINT32_MAX;
     menu->launch_sel = FALSE;
     menu->autoclose = FALSE;
     //i_view_size(menu);
@@ -453,7 +454,9 @@ HB_FUNC( NAP_MENUVERT_CUALIB_ADD )
         if (cp >= 65 && cp <= 90)
         {
             opt->hotkey = KEY_ASCII_TABLE[cp - 65];
-            opt->hotmodif = ekMKEY_SHIFT;
+            //opt->hotmodif = ekMKEY_SHIFT;
+            // Hotkeys doesn't use SHIFT
+            opt->hotmodif = 0;
         }
 
         // ASCII lowercase

@@ -924,7 +924,7 @@ uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni
 {
     uint32_t id = UINT32_MAX;
     GtNapCualibWindow *cuawin = NULL;
-    Window *window = window_create(ekWNSTD);
+    Window *window = window_create(ekWNSTD | ekWNESC);
     Panel *panel = panel_create();
     Layout *layout = layout_create(1, 1);
     real32_t width, height;
