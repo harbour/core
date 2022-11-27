@@ -252,7 +252,7 @@ IF L_ForcaLerTudo
 
             FOR N_Cont := 1 TO LEN(V_Opcoes)
                 IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] # 0  // tem tecla hotkey
-                    NAP_MENUVERT_CUALIB_ADD(V_MenuVert, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO])
+                    NAP_MENUVERT_CUALIB_ADD(V_MenuVert, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
                 ENDIF
             NEXT
 

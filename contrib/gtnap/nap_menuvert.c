@@ -9,6 +9,7 @@
 */
 
 #include "gtnap.h"
+#include "nap_menuvert.h"
 #include "nappgui.h"
 #include "hbapiitm.h"
 
@@ -21,6 +22,7 @@ struct _menuopt_t
     String *text;
     PHB_ITEM codeBlock;
     S2Df size;
+    uint32_t hoykey_pos;
 };
 
 DeclSt(MenuOpt);
@@ -36,6 +38,8 @@ struct _menuvert_t
     uint32_t visible_opts;
     uint32_t control_width;
     uint32_t control_height;
+    real32_t cell_x_size;
+    real32_t cell_y_size;
     ArrSt(MenuOpt) *opts;
     uint32_t selected;
     bool_t launch_sel;
@@ -49,6 +53,8 @@ __EXTERN_C
 Window *_component_window(const GuiComponent *component);
 void _component_visible(GuiComponent *component, const bool_t visible);
 void _component_set_frame(GuiComponent *component, const V2Df *origin, const S2Df *size);
+void _component_taborder(GuiComponent *component, Window *window);
+void drawctrl_text(DCtx *ctx, const char_t *text, const int32_t x, const int32_t y, const enum_t state);
 
 __END_C
 
@@ -92,14 +98,12 @@ static void i_OnDraw(Panel *panel, Event *e)
     MenuVert *menu = panel_get_data(panel, MenuVert);
     real32_t xpos = 0, ypos = 0;
     draw_font(p->ctx, menu->font);
-    draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1);
-    //log_printf("MenuVert:i_OnDraw() (%.2f, %.2f)", p->width, p->height);
     arrst_foreach(opt, menu->opts, MenuOpt)
 
         if (opt_i == menu->selected)
         {
             draw_fill_color(p->ctx, kCOLOR_CYAN);
-            draw_rect(p->ctx, ekFILL, xpos, ypos, opt->size.width + 20, opt->size.height);
+            draw_rect(p->ctx, ekFILL, xpos, ypos, (real32_t)menu->control_width, opt->size.height);
 
             // To be removed, just for debug
             // draw_line_color(p->ctx, kCOLOR_RED);
@@ -108,14 +112,25 @@ static void i_OnDraw(Panel *panel, Event *e)
 
         if (opt_i == menu->mouse_row)
         {
+            real32_t stx = xpos + menu->cell_x_size;
             draw_line_color(p->ctx, kCOLOR_BLACK);
-            draw_line(p->ctx, xpos, ypos + opt->size.height - 1, xpos + opt->size.width + 20, ypos + opt->size.height - 1);
+            draw_line(p->ctx, stx, ypos + opt->size.height - 1, stx + opt->size.width, ypos + opt->size.height - 1);
         }
 
-        draw_text(p->ctx, tc(opt->text), xpos, ypos);
+        drawctrl_text(p->ctx, tc(opt->text), (uint32_t)(xpos + menu->cell_x_size), (uint32_t)ypos, 0);
+
+        if (opt->hoykey_pos != UINT32_MAX)
+        {
+            real32_t stx = xpos + ((opt->hoykey_pos + 1) * menu->cell_x_size);
+            real32_t edx = stx + menu->cell_x_size;
+            draw_line(p->ctx, stx, ypos + opt->size.height - 1, edx, ypos + opt->size.height - 1);
+        }
+
         ypos += opt->size.height;
 
     arrst_end();
+
+    draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -148,6 +163,15 @@ static void i_OnDown(Panel *panel, Event *e)
         menu->launch_sel = TRUE;
         view_update(menu->view);
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnExit(Panel *panel, Event *e)
+{
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    menu->mouse_row = UINT32_MAX;
+    unref(e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -306,6 +330,14 @@ static void i_OnSize(Panel *panel, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+void nap_menuvert_taborder(Panel *panel, Window *window)
+{
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    _component_taborder((GuiComponent*)menu->view, window);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_MENUVERT_CREATE )
 {
     Panel *panel = panel_create();
@@ -313,6 +345,8 @@ HB_FUNC( NAP_MENUVERT_CREATE )
     View *view = view_scroll();
     MenuVert *menu = i_create();
     menu->font = hb_gtnap_global_font();
+    font_extents(menu->font, "OOOOOO", -1, &menu->cell_x_size, &menu->cell_y_size);
+    menu->cell_x_size /= 6;
     menu->layout = layout;
     menu->view = view;
     menu->row_height = (uint32_t)bmath_ceilf(font_height(menu->font));
@@ -326,6 +360,7 @@ HB_FUNC( NAP_MENUVERT_CREATE )
     view_OnSize(view, listener(panel, i_OnSize, Panel));
     view_OnMove(view, listener(panel, i_OnMove, Panel));
     view_OnDown(view, listener(panel, i_OnDown, Panel));
+    view_OnExit(view, listener(panel, i_OnExit, Panel));
     view_OnUp(view, listener(panel, i_OnUp, Panel));
     view_OnKeyDown(view, listener(panel, i_OnKeyDown, Panel));
     _component_visible((GuiComponent*)view, TRUE);
@@ -347,6 +382,7 @@ HB_FUNC( NAP_MENUVERT_ADD )
     MenuOpt *opt = arrst_new0(menu->opts, MenuOpt);
     opt->text = str_c(text);
     opt->codeBlock = codeBlock ? hb_itemNew(codeBlock) : NULL;
+    opt->hoykey_pos = UINT32_MAX;
     i_view_size(menu);
 }
 
@@ -354,16 +390,16 @@ HB_FUNC( NAP_MENUVERT_ADD )
 
 HB_FUNC( NAP_MENUVERT_CUALIB_ADD )
 {
-    log_printf("MENUVERT ADD!!!!!!!!!!!!!");
-    {
-        Panel *panel = (Panel*)hb_parptr(1);
-        String *text = hb_gtnap_cualib_parText(2);
-        PHB_ITEM codeBlock = hb_param(3, HB_IT_BLOCK);
-        MenuVert *menu = panel_get_data(panel, MenuVert);
-        MenuOpt *opt = arrst_new0(menu->opts, MenuOpt);
-        opt->text = text;
-        opt->codeBlock = codeBlock ? hb_itemNew(codeBlock) : NULL;
-    }
+    Panel *panel = (Panel*)hb_parptr(1);
+    String *text = hb_gtnap_cualib_parText(2);
+    PHB_ITEM codeBlock = hb_param(3, HB_IT_BLOCK);
+    uint32_t hotkey_pos = hb_parni(4);
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    MenuOpt *opt = arrst_new0(menu->opts, MenuOpt);
+    opt->text = text;
+    opt->codeBlock = codeBlock ? hb_itemNew(codeBlock) : NULL;
+    opt->hoykey_pos = (hotkey_pos == 0) ? UINT32_MAX : hotkey_pos - 1;
+    log_printf("Hot key pos: %s - %d", tc(text), opt->hoykey_pos);
 }
 
 /*---------------------------------------------------------------------------*/

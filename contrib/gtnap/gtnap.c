@@ -6,6 +6,7 @@
 
 #include "gtnap.h"
 #include "gtconvert.h"
+#include "nap_menuvert.h"
 #include "nappgui.h"
 #include "osmain.h"
 #include "hbapiitm.h"
@@ -47,10 +48,17 @@ DeclPt(GtNapCallback);
 DeclPt(GtNapArea);
 DeclPt(Window);
 
+typedef enum _objtype_t
+{
+    ekOBJ_LABEL,
+    ekOBJ_MENUVERT
+} objtype_t;
+
 struct _gtnap_cualib_object_t
 {
     uint32_t cell_x;
     uint32_t cell_y;
+    objtype_t type;
     GuiComponent *component;
 };
 
@@ -112,10 +120,12 @@ void _component_get_origin(const GuiComponent *component, V2Df *origin);
 void _component_get_size(const GuiComponent *component, S2Df *size);
 void _component_visible(GuiComponent *component, const bool_t visible);
 void _component_destroy(GuiComponent **component);
+void _component_taborder(GuiComponent *component, Window *window);
 const char_t *_component_type(const GuiComponent *component);
 void _panel_compose(Panel *panel, const S2Df *required_size, S2Df *final_size);
 void _panel_locate(Panel *panel);
 void _panel_detach_components(Panel *panel);
+void _window_taborder(Window *window, void *ositem);
 
 __END_C
 
@@ -734,8 +744,8 @@ static GtNap *i_gtnap_cualib_create(void)
     GTNAP_GLOBAL->title = gtconvert_1252_to_UTF8(CUALIB_TITLE);
     GTNAP_GLOBAL->rows = CUALIB_ROWS;
     GTNAP_GLOBAL->cols = CUALIB_COLS;
-    font_extents(GTNAP_GLOBAL->global_font, "O", -1, &w, &h);
-    GTNAP_GLOBAL->cell_x_size = (uint32_t)w;
+    font_extents(GTNAP_GLOBAL->global_font, "OOOOOO", -1, &w, &h);
+    GTNAP_GLOBAL->cell_x_size = (uint32_t)(w / 6.f);
     GTNAP_GLOBAL->cell_y_size = (uint32_t)h;
     GTNAP_GLOBAL->linespacing = 0;
     GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
@@ -874,7 +884,7 @@ static GtNapCualibWindow *i_parent_cuawin(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_add_object(const uint32_t cell_x, const uint32_t cell_y, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, GuiComponent *component, GtNapCualibWindow *cuawin)
+static void i_add_object(const objtype_t type, const uint32_t cell_x, const uint32_t cell_y, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, GuiComponent *component, GtNapCualibWindow *cuawin)
 {
     V2Df pos;
     GtNapCualibObject *object = NULL;
@@ -885,6 +895,7 @@ static void i_add_object(const uint32_t cell_x, const uint32_t cell_y, const uin
     _component_visible(component, FALSE);
     _component_set_frame(component, &pos, size);
     object = arrst_new0(cuawin->gui_objects, GtNapCualibObject);
+    object->type = type;
     object->cell_x = cell_x;
     object->cell_y = cell_y;
     object->component = component;
@@ -903,7 +914,7 @@ static void i_add_label_object(const uint32_t cell_x, const uint32_t cell_y, con
     label_font(label, gtnap->global_font);
     size.width = (real32_t)(len * gtnap->cell_x_size);
     size.height = (real32_t)gtnap->cell_y_size;
-    i_add_object(cell_x, cell_y, gtnap->cell_x_size, gtnap->cell_y_size, &size, (GuiComponent*)label, cuawin);
+    i_add_object(ekOBJ_LABEL, cell_x, cell_y, gtnap->cell_x_size, gtnap->cell_y_size, &size, (GuiComponent*)label, cuawin);
     str_destroy(&ctext);
 }
 
@@ -955,7 +966,7 @@ void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const uint32_t 
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
     _panel_compose(panel, &size, &final_size);
     _panel_locate(panel);
-    i_add_object(nLeft, nTop, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)panel, cuawin);
+    i_add_object(ekOBJ_MENUVERT, nLeft, nTop, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)panel, cuawin);
     log_printf("MenuVert size: %.2f, %.2f, %.2f, %.2f", size.width, size.height, final_size.width, final_size.height);
 }
 
@@ -967,9 +978,22 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
     GtNapCualibWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
     uint32_t ret = 0;
     cassert_no_null(cuawin);
+    _window_taborder(cuawin->window, NULL);
+
     arrst_foreach(object, cuawin->gui_objects, GtNapCualibObject)
         _component_visible(object->component, TRUE);
+
+        switch(object->type) {
+        case ekOBJ_LABEL:
+            break;
+        case ekOBJ_MENUVERT:
+            nap_menuvert_taborder((Panel*)object->component, cuawin->window);
+            break;
+        cassert_default();
+        }
+
     arrst_end();
+
     ret = window_modal(cuawin->window, parent ? parent->window : NULL);
     return ret;
 }
