@@ -821,44 +821,44 @@ IF N_2TP_Selecao == _SELE_SIMPLES   // só existe uma coluna no browse()
    VX_Sele:nRight := VX_Sele:nLeft  + N_MaiorLarg + 1
 ENDIF
 
-// *
-// ***************************
-// FUNCTION TestaTeclaDestaque ( VX_Sele, N_Tecla )
-// ***************************
-// *
-// LOCAL N_Cont , L_Mais , L_TeclaValida , N_Cont2 , N_PosBarraAnt
-// *
-// N_PosBarraAnt := N_Selecio
-// *
-// L_TeclaValida  := .F.
-// N_Cont := 0
-// L_Mais := .T.          // simula um DO UNTIL
-// DO WHILE L_Mais
-//     N_Cont := N_Cont + 1
-//     IF N_Tecla==V_Opcoes[N_Cont,_OPCAO_INKEY_DESTAQUE] .OR. ;
-//        N_Tecla==V_Opcoes[N_Cont,_OPCAO_INKEY_DESTAQUE_CASE]
-//        L_TeclaValida := .T.
-//     ENDIF
-//     IF L_TeclaValida .OR. LEN(V_Opcoes) == N_Cont
-//        L_Mais := .F.
-//     ENDIF
-// ENDDO
-// *
-// IF L_TeclaValida
-//    L_AtivaGui := .F.
-//    FOR N_Cont2 := 1 TO ABS(N_Cont-N_PosBarraAnt)
-//        IF N_Cont > N_PosBarraAnt
-//           VX_Sele:DOWN()
-//        ELSE
-//           VX_Sele:UP()
-//        ENDIF
-//        DO WHILE .NOT. VX_Sele:STABILIZE()
-//        ENDDO
-//    NEXT
-//    L_AtivaGui := .T.
-// ENDIF
-// *
-// RETURN L_TeclaValida
+*
+***************************
+FUNCTION TestaTeclaDestaque ( VX_Sele, N_Tecla )
+***************************
+*
+LOCAL N_Cont , L_Mais , L_TeclaValida , N_Cont2 , N_PosBarraAnt
+*
+N_PosBarraAnt := N_Selecio
+*
+L_TeclaValida  := .F.
+N_Cont := 0
+L_Mais := .T.          // simula um DO UNTIL
+DO WHILE L_Mais
+    N_Cont := N_Cont + 1
+    IF N_Tecla==V_Opcoes[N_Cont,_OPCAO_INKEY_DESTAQUE] .OR. ;
+       N_Tecla==V_Opcoes[N_Cont,_OPCAO_INKEY_DESTAQUE_CASE]
+       L_TeclaValida := .T.
+    ENDIF
+    IF L_TeclaValida .OR. LEN(V_Opcoes) == N_Cont
+       L_Mais := .F.
+    ENDIF
+ENDDO
+*
+IF L_TeclaValida
+   L_AtivaGui := .F.
+   FOR N_Cont2 := 1 TO ABS(N_Cont-N_PosBarraAnt)
+       IF N_Cont > N_PosBarraAnt
+          VX_Sele:DOWN()
+       ELSE
+          VX_Sele:UP()
+       ENDIF
+       DO WHILE .NOT. VX_Sele:STABILIZE()
+       ENDDO
+   NEXT
+   L_AtivaGui := .T.
+ENDIF
+*
+RETURN L_TeclaValida
 *
 ******************************
 STATIC PROC INABILITA_ADDOPCAO(L_MudaDados, B_AcaoOpcao)

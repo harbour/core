@@ -31,6 +31,7 @@ selecaov.prg
 menuvert.prg
 tbrowsesubclass.prg
 stubs.prg
+inkey_.prg
 
 # Libraries
 gtnap.hbc

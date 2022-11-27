@@ -15,11 +15,11 @@
 // *
 // #TRANSLATE XEOF()=>(EOF() .OR. RECNO()==LASTREC()+1)
 // *
-// #INCLUDE "inkey.ch"
-// #INCLUDE "common.ch"
-// #INCLUDE "define_cua.ch"
-// #INCLUDE "janela.ch"       // métodos externos da classe JANELA
-// #INCLUDE "intercep.ch" // interceptar comandos de manipulação de dados
+#INCLUDE "inkey.ch"
+#INCLUDE "common.ch"
+#INCLUDE "define_cua.ch"
+#INCLUDE "janela.ch"       // métodos externos da classe JANELA
+//#INCLUDE "intercep.ch" // interceptar comandos de manipulação de dados
 // *
 // ********************
 // FUNCTION EspSelArq20 ( VX_Janela, N_TP_Selecao, L_SemGrade, ;
@@ -199,28 +199,28 @@
 // RETURN NIL
 // *
 // *
-// **************************************************************************************************************************************************
-// *
-// * DEFINICOES PARA USO GERAL
-// *
-// #DEFINE B_LinCorrente        VX_Sele:CARGO[01]      // bloco que retorna o item corrente
-// #DEFINE L_PriFora            VX_Sele:CARGO[02]      // sinaliza se 1º item não está na tela
-// #DEFINE L_UltFora            VX_Sele:CARGO[03]      // idem para o último
-// #DEFINE L_ForcaLerTudo       VX_Sele:CARGO[04]      // sinaliza a remontagem total da tela
-// #DEFINE L_PrimAtivacao       VX_Sele:CARGO[05]      // Se é a primeira ativação da janela
-// #DEFINE L_AtivaGui           VX_Sele:CARGO[06]      //
-// #DEFINE L_AutoClose          VX_Sele:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
-// #DEFINE VN_Selecio           VX_Sele:CARGO[08]      // vetor de seleção múltipla
-// #DEFINE L_MostraGrade        VX_Sele:CARGO[09]      // Se mostra o grid
-// #DEFINE N_Congela            VX_Sele:CARGO[10]      // colunas a congelar
-// #DEFINE N_TP_Selecao         VX_Sele:CARGO[11]      // modalidade de seleção (simp/mult/ext)
-// #DEFINE N_AlturaCabec        VX_Sele:CARGO[12]      // Altura do cabecalho de colunas
-// #DEFINE N_Selecio            VX_Sele:CARGO[13]      // item corrente (só para vetores)
-// #DEFINE N_ColunaIniVetor     VX_Sele:CARGO[14]      // Coluna inicial do vetor
-// #DEFINE V_Opcoes             VX_Sele:CARGO[15]      // Lista de opções do vetor
-// #DEFINE L_TemHotKey          VX_Sele:CARGO[16]      // se alguma opção tem o caractere "#"
-// #DEFINE V_Lst_CdOpcao        VX_Sele:CARGO[17]      // Manter compatibilidade do vetor CARGO entre os programas: SELECAOA, SELECAOV e MENUVERT
-// #DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Para saber se teve rolamento horizontal desde última estabilização
+**************************************************************************************************************************************************
+*
+* DEFINICOES PARA USO GERAL
+*
+#DEFINE B_LinCorrente        VX_Sele:CARGO[01]      // bloco que retorna o item corrente
+#DEFINE L_PriFora            VX_Sele:CARGO[02]      // sinaliza se 1º item não está na tela
+#DEFINE L_UltFora            VX_Sele:CARGO[03]      // idem para o último
+#DEFINE L_ForcaLerTudo       VX_Sele:CARGO[04]      // sinaliza a remontagem total da tela
+#DEFINE L_PrimAtivacao       VX_Sele:CARGO[05]      // Se é a primeira ativação da janela
+#DEFINE L_AtivaGui           VX_Sele:CARGO[06]      //
+#DEFINE L_AutoClose          VX_Sele:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
+#DEFINE VN_Selecio           VX_Sele:CARGO[08]      // vetor de seleção múltipla
+#DEFINE L_MostraGrade        VX_Sele:CARGO[09]      // Se mostra o grid
+#DEFINE N_Congela            VX_Sele:CARGO[10]      // colunas a congelar
+#DEFINE N_TP_Selecao         VX_Sele:CARGO[11]      // modalidade de seleção (simp/mult/ext)
+#DEFINE N_AlturaCabec        VX_Sele:CARGO[12]      // Altura do cabecalho de colunas
+#DEFINE N_Selecio            VX_Sele:CARGO[13]      // item corrente (só para vetores)
+#DEFINE N_ColunaIniVetor     VX_Sele:CARGO[14]      // Coluna inicial do vetor
+#DEFINE V_Opcoes             VX_Sele:CARGO[15]      // Lista de opções do vetor
+#DEFINE L_TemHotKey          VX_Sele:CARGO[16]      // se alguma opção tem o caractere "#"
+#DEFINE V_Lst_CdOpcao        VX_Sele:CARGO[17]      // Manter compatibilidade do vetor CARGO entre os programas: SELECAOA, SELECAOV e MENUVERT
+#DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Para saber se teve rolamento horizontal desde última estabilização
 // *
 // **************************************************************************************************************************************************
 // *
@@ -899,107 +899,115 @@
 // ENDIF
 // RETURN X_Retorno
 // *
-// ********************
-// FUNCTION MontarSetas (VX_Janela,L_RolaCima,L_RolaBaixo,N_2TP_Selecao)
-// ********************
-// *
-// LOCAL N_UltLinTela , N_Cont , N_IndiceVetor
-// LOCAL N_Salto      , VX_Sele, N_Pos_Destaque
-// *
-// VX_Sele := VX_SubObj
-// *
-// IF L_TemHotKey  // se alguma opção possui hotkey
-//    *
-//    * ********** montar teclas de destaque, pois browse é de vetor de caracteres
-//    *
-//    * as duas linhas abaixo tem por objetivo ter a certeza que o cursor está
-//    * posicionado na célula em destaque, para a correta impressão dos
-//    * caracteres com atributo intensificado.
-//    *
-//    DO WHILE .NOT. VX_Sele:STABILIZE()   // reposiciona o cursor na célula.
-//    ENDDO
-//    *
-//    IF .NOT. SOB_MODO_GRAFICO()
-//       N_UltLinTela := VX_Sele:ROWPOS + (LEN(V_Opcoes)-N_Selecio)
-//       FOR N_Cont := 1 TO VX_Sele:ROWCOUNT
-//           IF N_Cont # VX_Sele:ROWPOS .AND. N_Cont <= N_UltLinTela
-//              N_IndiceVetor := N_Selecio - VX_Sele:ROWPOS + N_Cont
-//              *
-//              N_Pos_Destaque := V_Opcoes[N_IndiceVetor,_OPCAO_COL_DESTAQUE]
-//              IF N_Pos_Destaque # 0   // se esta opção possui hotkey
-//                 SETPOS(VX_Sele:NTOP+N_Cont-1,N_ColunaIniVetor+N_Pos_Destaque)
-//                 *
-//                 #DEFINE C_Char   V_Opcoes[N_IndiceVetor,_OPCAO_TEXTO_DESTAQUE]
-//                 DISPOUT(C_Char,CorJanInten(VX_Janela))
-//                 #UNDEF C_Char
-//              ENDIF
-//           ENDIF
-//       NEXT
-//    ENDIF
-//    *
-// ENDIF
-// *
-// * ********** montar cursor contínuo em toda a linha, para indicar ao usußrio a linha corrente
-// *
-// VX_Sele:COLORRECT({VX_Sele:ROWPOS,IIF(N_2TP_Selecao==_SELE_SIMPLES,1,2),;
-//                   VX_Sele:ROWPOS,VX_Sele:COLCOUNT} ,{3,3})
-// *
 
-// * ********** montar indicativos de rolamento
-// *
-// * a apresentação do indicativo de rolamento P/CIMA e P/BAIXO será otimizada
-// * para reduzir a execução do VX_Sele:SKIPBLOCK, que é lento com registros
-// * de arquivos .dbf .
-// *
-// * atualizar a seta para cima se houve rolamento para cima ou
-// *   se houve rolamento para baixo que possa esconder os primeiros elementos
-// *
-// IF L_RolaCima .OR. ( L_RolaBaixo .AND. .NOT. L_PriFora ) .OR. L_ForcaLerTudo
-//    *
-//    * se rolamento para uma posição antes do topo for passível de atendimento
-//    *    significa que o primeiro elemento está fora do box
-//    *
-//    N_Salto    := EVAL(VX_Sele:SKIPBLOCK,-VX_Sele:ROWPOS)
-//    IF VALTYPE(N_Salto)=="U"   // se DBF vazio, xharbour tem BUG...
-//       N_Salto := 0
-//    ENDIF
-//    L_PriFora  := ( N_Salto == -VX_Sele:ROWPOS )
-//    *
-//    EVAL(VX_Sele:SKIPBLOCK,-N_Salto)            // voltar p/ posição anterior
-//    *
-// ENDIF
-// *
-// * atualizar a seta para baixo se houve rolamento para baixo ou
-// *   se houve rolamento para cima que possa esconder os últimos elementos
-// *
-// IF L_RolaBaixo .OR. ( L_RolaCima .AND. .NOT. L_UltFora ) .OR. L_ForcaLerTudo
-//    *
-//    * se rolamento para uma posição após a última linha do box for passível de
-//    *    atendimento significa que o último elemento está fora do box
-//    *
-//    N_Salto    := EVAL(VX_Sele:SKIPBLOCK,VX_Sele:ROWCOUNT-VX_Sele:ROWPOS+1)
-//    IF VALTYPE(N_Salto)=="U"   // se DBF vazio, xharbour tem BUG...
-//       N_Salto := 0
-//    ENDIF
-//    L_UltFora  := ( N_Salto == VX_Sele:ROWCOUNT-VX_Sele:ROWPOS+1 )
-//    EVAL(VX_Sele:SKIPBLOCK,-N_Salto)            // voltar p/ posição anterior
-//    *
-// ENDIF
-// *
-// #DEFINE L_EsqFora  (VX_Sele:LEFTVISIBLE - VX_Sele:FREEZE > 1)
-// #DEFINE L_DirFora  (VX_Sele:RIGHTVISIBLE # VX_Sele:COLCOUNT)
-// *
-// Rolamento_(VX_Janela,L_EsqFora,L_PriFora,L_UltFora,L_DirFora)
-// *
-// #UNDEF L_EsqFora
-// #UNDEF L_DirFora
-// *
-// DO WHILE .NOT. VX_Sele:STABILIZE()   // reposiciona o cursor na célula.
-// ENDDO
-// *
-// L_ForcaLerTudo := .F.
-// *
-// RETURN NIL
+
+
+
+
+********************
+FUNCTION MontarSetas (VX_Janela,L_RolaCima,L_RolaBaixo,N_2TP_Selecao)
+********************
+*
+LOCAL N_UltLinTela , N_Cont , N_IndiceVetor
+LOCAL N_Salto      , VX_Sele, N_Pos_Destaque
+*
+VX_Sele := VX_SubObj
+*
+IF L_TemHotKey  // se alguma opção possui hotkey
+   *
+   * ********** montar teclas de destaque, pois browse é de vetor de caracteres
+   *
+   * as duas linhas abaixo tem por objetivo ter a certeza que o cursor está
+   * posicionado na célula em destaque, para a correta impressão dos
+   * caracteres com atributo intensificado.
+   *
+   DO WHILE .NOT. VX_Sele:STABILIZE()   // reposiciona o cursor na célula.
+   ENDDO
+   *
+   IF .NOT. SOB_MODO_GRAFICO()
+      N_UltLinTela := VX_Sele:ROWPOS + (LEN(V_Opcoes)-N_Selecio)
+      FOR N_Cont := 1 TO VX_Sele:ROWCOUNT
+          IF N_Cont # VX_Sele:ROWPOS .AND. N_Cont <= N_UltLinTela
+             N_IndiceVetor := N_Selecio - VX_Sele:ROWPOS + N_Cont
+             *
+             N_Pos_Destaque := V_Opcoes[N_IndiceVetor,_OPCAO_COL_DESTAQUE]
+             IF N_Pos_Destaque # 0   // se esta opção possui hotkey
+                SETPOS(VX_Sele:NTOP+N_Cont-1,N_ColunaIniVetor+N_Pos_Destaque)
+                *
+                #DEFINE C_Char   V_Opcoes[N_IndiceVetor,_OPCAO_TEXTO_DESTAQUE]
+                DISPOUT(C_Char,CorJanInten(VX_Janela))
+                #UNDEF C_Char
+             ENDIF
+          ENDIF
+      NEXT
+   ENDIF
+   *
+ENDIF
+*
+* ********** montar cursor contínuo em toda a linha, para indicar ao usußrio a linha corrente
+*
+VX_Sele:COLORRECT({VX_Sele:ROWPOS,IIF(N_2TP_Selecao==_SELE_SIMPLES,1,2),;
+                  VX_Sele:ROWPOS,VX_Sele:COLCOUNT} ,{3,3})
+*
+
+* ********** montar indicativos de rolamento
+*
+* a apresentação do indicativo de rolamento P/CIMA e P/BAIXO será otimizada
+* para reduzir a execução do VX_Sele:SKIPBLOCK, que é lento com registros
+* de arquivos .dbf .
+*
+* atualizar a seta para cima se houve rolamento para cima ou
+*   se houve rolamento para baixo que possa esconder os primeiros elementos
+*
+IF L_RolaCima .OR. ( L_RolaBaixo .AND. .NOT. L_PriFora ) .OR. L_ForcaLerTudo
+   *
+   * se rolamento para uma posição antes do topo for passível de atendimento
+   *    significa que o primeiro elemento está fora do box
+   *
+   N_Salto    := EVAL(VX_Sele:SKIPBLOCK,-VX_Sele:ROWPOS)
+   IF VALTYPE(N_Salto)=="U"   // se DBF vazio, xharbour tem BUG...
+      N_Salto := 0
+   ENDIF
+   L_PriFora  := ( N_Salto == -VX_Sele:ROWPOS )
+   *
+   EVAL(VX_Sele:SKIPBLOCK,-N_Salto)            // voltar p/ posição anterior
+   *
+ENDIF
+*
+* atualizar a seta para baixo se houve rolamento para baixo ou
+*   se houve rolamento para cima que possa esconder os últimos elementos
+*
+IF L_RolaBaixo .OR. ( L_RolaCima .AND. .NOT. L_UltFora ) .OR. L_ForcaLerTudo
+   *
+   * se rolamento para uma posição após a última linha do box for passível de
+   *    atendimento significa que o último elemento está fora do box
+   *
+   N_Salto    := EVAL(VX_Sele:SKIPBLOCK,VX_Sele:ROWCOUNT-VX_Sele:ROWPOS+1)
+   IF VALTYPE(N_Salto)=="U"   // se DBF vazio, xharbour tem BUG...
+      N_Salto := 0
+   ENDIF
+   L_UltFora  := ( N_Salto == VX_Sele:ROWCOUNT-VX_Sele:ROWPOS+1 )
+   EVAL(VX_Sele:SKIPBLOCK,-N_Salto)            // voltar p/ posição anterior
+   *
+ENDIF
+*
+#DEFINE L_EsqFora  (VX_Sele:LEFTVISIBLE - VX_Sele:FREEZE > 1)
+#DEFINE L_DirFora  (VX_Sele:RIGHTVISIBLE # VX_Sele:COLCOUNT)
+*
+Rolamento_(VX_Janela,L_EsqFora,L_PriFora,L_UltFora,L_DirFora)
+*
+#UNDEF L_EsqFora
+#UNDEF L_DirFora
+*
+DO WHILE .NOT. VX_Sele:STABILIZE()   // reposiciona o cursor na célula.
+ENDDO
+*
+L_ForcaLerTudo := .F.
+*
+RETURN NIL
+
+
+
 // *
 // **************************
 // STAT FUNCTION LerTudoEmDBF ( VX_Sele )

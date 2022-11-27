@@ -856,8 +856,8 @@ IF SOB_MODO_GRAFICO()
 ELSE
 
     // FRAN: Event management for text GT's
-    DO WHILE 1 # 0
-    ENDDO
+    // DO WHILE 1 # 0
+    // ENDDO
 
     IF N_TP_Jan == NIL
         X_Retorno := EVAL(B_Metodo,VX_Janela)
@@ -1409,7 +1409,14 @@ ASIZE(VX_Janela,0)
 RETURN NIL
 
 
-
+//
+//  FRAN: TODO
+//
+*
+*******************
+FUNCTION Rolamento_ ( VX_Janela , L_Esq , L_Cima , L_Baixo , L_Dir )
+*
+RETURN NIL
 
 // *
 // *******************
@@ -1587,179 +1594,184 @@ RETURN L_ModoGrafico
 
 
 
-// *
-// **********************
-// FUNCTION RegiaoJanela_ ( VX_Janela, N_MRow, N_MCol, ;
-//                          N_RowTop_Util,  N_ColLeft_Util,;
-//                          N_RowDown_Util, N_ColRight_Util,;
-//                          N_Keyboard, V_Botao, V_Imagem )   // passados por referï¿½ncia
-// *
-// LOCAL N_RegiaoMouse := BUSCANDO_REGIAO
-// LOCAL N_PosBotao, N_PosImagem
-// *
-// N_Keyboard := NIL
-// V_Botao    := NIL
-// V_Imagem   := NIL
-// *
-// IF (N_MCol==N_Col2Livre+1 .OR. ;
-//     N_MCol==N_Col2Livre+2 .OR. ;
-//     N_MCol==N_Col2Livre+3) .AND. ;
-//     N_MRow >= N_Lin1Livre .AND. ;
-//     N_MRow <= N_Lin2Livre
-//    *
-//    * clicou na barra de rolagem vertical
-//    *
-//    IF N_MRow==N_Lin1Livre
-//       N_RegiaoMouse := ACIMA_UMA_LINHA
-//       N_Keyboard := K_UP
-//    ELSEIF N_MRow==N_Lin2Livre
-//       N_RegiaoMouse := ABAIXO_UMA_LINHA
-//       N_Keyboard := K_DOWN
-//    ELSEIF N_MRow==N_Lin1Livre+1
-//       N_RegiaoMouse := ACIMA_TOTAL
-//       IF N_TP_Jan == _JAN_TEXTO_10
-//          N_Keyboard := K_CTRL_PGUP
-//       ELSE
-//          N_Keyboard := K_CTRL_HOME
-//       ENDIF
-//    ELSEIF N_MRow==N_Lin2Livre-1
-//       N_RegiaoMouse := ABAIXO_TOTAL
-//       IF N_TP_Jan == _JAN_TEXTO_10
-//          N_Keyboard := K_CTRL_PGDN
-//       ELSE
-//          N_Keyboard := K_CTRL_END
-//       ENDIF
-//    ELSEIF N_MRow < N_LinMarcadorVertical
-//       N_RegiaoMouse := ACIMA_UMA_PAGINA
-//       N_Keyboard := K_PGUP
-//    ELSEIF N_MRow > N_LinMarcadorVertical
-//       N_RegiaoMouse := ABAIXO_UMA_PAGINA
-//       N_Keyboard := K_PGDN
-//    ELSE
-//       * clicou sobre o marcador.
-//    ENDIF
-//    *
-// ENDIF
-// *
-// IF (N_MRow==N_Lin2Livre+1 .OR. ;
-//     N_MRow==N_Lin2Livre+2 ).AND. ;
-//     N_MCol >= N_Col1Livre .AND. ;
-//     N_MCol <= N_Col2Livre
-//    *
-//    * clicou na barra de rolagem horizontal
-//    *
-//    IF N_MCol==N_Col1Livre .OR. N_MCol==N_Col1Livre+1
-//       N_RegiaoMouse := ESQUERDA_UMA_COLUNA
-//       N_Keyboard := K_LEFT
-//    ELSEIF N_MCol==N_Col2Livre .OR. N_MCol==N_Col2Livre-1
-//       N_RegiaoMouse := DIREITA_UMA_COLUNA
-//       N_Keyboard := K_RIGHT
-//    ELSEIF N_MCol==N_Col1Livre+2
-//       N_RegiaoMouse := ESQUERDA_TOTAL
-//       N_Keyboard := K_HOME
-//    ELSEIF N_MCol==N_Col2Livre-2
-//       N_RegiaoMouse := DIREITA_TOTAL
-//       N_Keyboard := K_END
-//    ELSEIF N_MCol < N_ColMarcadorHorizontal
-//       N_RegiaoMouse := ESQUERDA_UMA_PAGINA
-//       IF N_TP_Jan == _JAN_ARQTEXTO_10
-//          N_Keyboard := K_CTRL_LEFT
-//       ELSE
-//          N_Keyboard := K_LEFT
-//       ENDIF
-//    ELSEIF N_MCol > N_ColMarcadorHorizontal+1   // marcador ocupa 2 bytes
-//       N_RegiaoMouse := DIREITA_UMA_PAGINA
-//       IF N_TP_Jan == _JAN_ARQTEXTO_10
-//          N_Keyboard := K_CTRL_RIGHT
-//       ELSE
-//          N_Keyboard := K_RIGHT
-//       ENDIF
-//    ELSE
-//       * clicou sobre o marcador.
-//    ENDIF
-//    *
-// ENDIF
-// *
-// IF .NOT. SOB_MODO_GRAFICO() .AND. ;
-//    N_MRow >= N_LinMess+1 .AND. N_MRow <= N_LinMess + N_LinBotoes
-//    * Clicou nas linhas da ï¿½rea de botoes
-//    *
-//    N_PosBotao := ASCAN(V_RegiaoBotoes,{|V_Botao| ;
-//                        N_MRow >= N_LinMess+V_Botao[_BOTAO_LIN_INICIAL] .AND. ;
-//                        N_MRow <= N_LinMess+V_Botao[_BOTAO_LIN_FINAL]   .AND. ;
-//                        N_MCol >= N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL] .AND. ;
-//                        N_MCol <= N_Col1Livre+V_Botao[_BOTAO_COL_FINAL] })
-//    *
-//    IF N_PosBotao # 0   // clicou em cima de um botï¿½o
-//       *
-//       N_RegiaoMouse := BOTAO_IDENTIFICADO
-//       V_Botao := V_RegiaoBotoes[N_PosBotao]
-//       *
-//       N_Keyboard := V_Botao[_BOTAO_INKEY_DESTAQUE]  // podia ser o _BOTAO_INKEY_DESTAQUE_CASE
-//       IF N_Keyboard == NIL
-//          N_RegiaoMouse := BOTAO_NAO_IDENTIFICADO
-//       ENDIF
-//       *
-//    ENDIF
-//    *
-// ENDIF
-// *
-// IF N_RegiaoMouse == BUSCANDO_REGIAO
-//    IF N_MRow < N_RowTop_Util
-//       * clicou acima da area ï¿½til
-//    ELSEIF N_MCol < N_ColLeft_Util
-//       * clicou ï¿½ esquerda da area util
-//    ELSEIF N_MRow > N_RowDown_Util
-//       * clicou abaixo da area util
-//    ELSEIF N_MCol > N_ColRight_Util
-//       * clicou ï¿½ direita da area ï¿½til
-//    ELSE
-//       N_RegiaoMouse := AREA_UTIL
-//    ENDIF
-// ENDIF
-// *
-// IF N_RegiaoMouse == BUSCANDO_REGIAO
-//    IF N_MRow < N_LinIni
-//       * clicou acima da janela
-//       N_RegiaoMouse := FORA_DA_JANELA
-//    ELSEIF N_MCol < N_ColIni
-//       * clicou ï¿½ esquerda da janela
-//       N_RegiaoMouse := FORA_DA_JANELA
-//    ELSEIF N_MRow > N_LinFin
-//       * clicou abaixo da janela
-//       N_RegiaoMouse := FORA_DA_JANELA
-//    ELSEIF N_MCol > N_ColFin
-//       * clicou ï¿½ direita da janela
-//       N_RegiaoMouse := FORA_DA_JANELA
-//    ELSE
-//       N_RegiaoMouse := REGIAO_SEM_EVENTO
-//    ENDIF
-// ENDIF
-// *
-// IF SOB_MODO_GRAFICO()
-//    * Imagens adicionadas pelo programador de forma manual (comando IMAGEM)
-//    * tem precedï¿½ncia sobre qualquer outro tipo de regiï¿½o da tela.
-//    * Por exemplo, se uma imagem estiver sobre um browse, o click do mouse nï¿½o
-//    * serï¿½ repassado ï¿½ tbrowse().
-//    N_PosImagem := ASCAN(V_LstImagens,{|V_Imagem| ;
-//                        N_MRow >= N_LinIni+V_Imagem[_IMAGEM_LIN_INICIAL] .AND. ;
-//                        N_MRow <= N_LinIni+V_Imagem[_IMAGEM_LIN_FINAL]   .AND. ;
-//                        N_MCol >= N_ColIni+V_Imagem[_IMAGEM_COL_INICIAL] .AND. ;
-//                        N_MCol <= N_ColIni+V_Imagem[_IMAGEM_COL_FINAL] })
-//    *
-//    IF N_PosImagem # 0   // clicou em cima de uma imagem
-//       * se existir algum evento vinculado ï¿½ imagem
-//       IF V_LstImagens[N_PosImagem,_IMAGEM_BLOCO_ACAO] # NIL .OR. ;
-//          V_LstImagens[N_PosImagem,_IMAGEM_KEYBOARD] # NIL  // podia ser o _IMAGEM_KEYBOARD_CASE
-//          V_Imagem := V_LstImagens[N_PosImagem]
-//          N_Keyboard := V_Imagem[_IMAGEM_KEYBOARD]  // podia ser o _IMAGEM_KEYBOARD_CASE
-//          N_RegiaoMouse := SOBRE_IMAGEM
-//       ENDIF
-//    ENDIF
-// ENDIF
-// *
-// RETURN N_RegiaoMouse
 *
+**********************
+FUNCTION RegiaoJanela_ ( VX_Janela, N_MRow, N_MCol, ;
+                         N_RowTop_Util,  N_ColLeft_Util,;
+                         N_RowDown_Util, N_ColRight_Util,;
+                         N_Keyboard, V_Botao, V_Imagem )   // passados por referência
+*
+LOCAL N_RegiaoMouse := BUSCANDO_REGIAO
+LOCAL N_PosBotao, N_PosImagem
+*
+N_Keyboard := NIL
+V_Botao    := NIL
+V_Imagem   := NIL
+*
+IF (N_MCol==N_Col2Livre+1 .OR. ;
+    N_MCol==N_Col2Livre+2 .OR. ;
+    N_MCol==N_Col2Livre+3) .AND. ;
+    N_MRow >= N_Lin1Livre .AND. ;
+    N_MRow <= N_Lin2Livre
+   *
+   * clicou na barra de rolagem vertical
+   *
+   IF N_MRow==N_Lin1Livre
+      N_RegiaoMouse := ACIMA_UMA_LINHA
+      N_Keyboard := K_UP
+   ELSEIF N_MRow==N_Lin2Livre
+      N_RegiaoMouse := ABAIXO_UMA_LINHA
+      N_Keyboard := K_DOWN
+   ELSEIF N_MRow==N_Lin1Livre+1
+      N_RegiaoMouse := ACIMA_TOTAL
+      IF N_TP_Jan == _JAN_TEXTO_10
+         N_Keyboard := K_CTRL_PGUP
+      ELSE
+         N_Keyboard := K_CTRL_HOME
+      ENDIF
+   ELSEIF N_MRow==N_Lin2Livre-1
+      N_RegiaoMouse := ABAIXO_TOTAL
+      IF N_TP_Jan == _JAN_TEXTO_10
+         N_Keyboard := K_CTRL_PGDN
+      ELSE
+         N_Keyboard := K_CTRL_END
+      ENDIF
+   ELSEIF N_MRow < N_LinMarcadorVertical
+      N_RegiaoMouse := ACIMA_UMA_PAGINA
+      N_Keyboard := K_PGUP
+   ELSEIF N_MRow > N_LinMarcadorVertical
+      N_RegiaoMouse := ABAIXO_UMA_PAGINA
+      N_Keyboard := K_PGDN
+   ELSE
+      * clicou sobre o marcador.
+   ENDIF
+   *
+ENDIF
+*
+IF (N_MRow==N_Lin2Livre+1 .OR. ;
+    N_MRow==N_Lin2Livre+2 ).AND. ;
+    N_MCol >= N_Col1Livre .AND. ;
+    N_MCol <= N_Col2Livre
+   *
+   * clicou na barra de rolagem horizontal
+   *
+   IF N_MCol==N_Col1Livre .OR. N_MCol==N_Col1Livre+1
+      N_RegiaoMouse := ESQUERDA_UMA_COLUNA
+      N_Keyboard := K_LEFT
+   ELSEIF N_MCol==N_Col2Livre .OR. N_MCol==N_Col2Livre-1
+      N_RegiaoMouse := DIREITA_UMA_COLUNA
+      N_Keyboard := K_RIGHT
+   ELSEIF N_MCol==N_Col1Livre+2
+      N_RegiaoMouse := ESQUERDA_TOTAL
+      N_Keyboard := K_HOME
+   ELSEIF N_MCol==N_Col2Livre-2
+      N_RegiaoMouse := DIREITA_TOTAL
+      N_Keyboard := K_END
+   ELSEIF N_MCol < N_ColMarcadorHorizontal
+      N_RegiaoMouse := ESQUERDA_UMA_PAGINA
+      IF N_TP_Jan == _JAN_ARQTEXTO_10
+         N_Keyboard := K_CTRL_LEFT
+      ELSE
+         N_Keyboard := K_LEFT
+      ENDIF
+   ELSEIF N_MCol > N_ColMarcadorHorizontal+1   // marcador ocupa 2 bytes
+      N_RegiaoMouse := DIREITA_UMA_PAGINA
+      IF N_TP_Jan == _JAN_ARQTEXTO_10
+         N_Keyboard := K_CTRL_RIGHT
+      ELSE
+         N_Keyboard := K_RIGHT
+      ENDIF
+   ELSE
+      * clicou sobre o marcador.
+   ENDIF
+   *
+ENDIF
+*
+IF .NOT. SOB_MODO_GRAFICO() .AND. ;
+   N_MRow >= N_LinMess+1 .AND. N_MRow <= N_LinMess + N_LinBotoes
+   * Clicou nas linhas da área de botoes
+   *
+   N_PosBotao := ASCAN(V_RegiaoBotoes,{|V_Botao| ;
+                       N_MRow >= N_LinMess+V_Botao[_BOTAO_LIN_INICIAL] .AND. ;
+                       N_MRow <= N_LinMess+V_Botao[_BOTAO_LIN_FINAL]   .AND. ;
+                       N_MCol >= N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL] .AND. ;
+                       N_MCol <= N_Col1Livre+V_Botao[_BOTAO_COL_FINAL] })
+   *
+   IF N_PosBotao # 0   // clicou em cima de um botão
+      *
+      N_RegiaoMouse := BOTAO_IDENTIFICADO
+      V_Botao := V_RegiaoBotoes[N_PosBotao]
+      *
+      N_Keyboard := V_Botao[_BOTAO_INKEY_DESTAQUE]  // podia ser o _BOTAO_INKEY_DESTAQUE_CASE
+      IF N_Keyboard == NIL
+         N_RegiaoMouse := BOTAO_NAO_IDENTIFICADO
+      ENDIF
+      *
+   ENDIF
+   *
+ENDIF
+*
+IF N_RegiaoMouse == BUSCANDO_REGIAO
+   IF N_MRow < N_RowTop_Util
+      * clicou acima da area útil
+   ELSEIF N_MCol < N_ColLeft_Util
+      * clicou à esquerda da area util
+   ELSEIF N_MRow > N_RowDown_Util
+      * clicou abaixo da area util
+   ELSEIF N_MCol > N_ColRight_Util
+      * clicou à direita da area útil
+   ELSE
+      N_RegiaoMouse := AREA_UTIL
+   ENDIF
+ENDIF
+*
+IF N_RegiaoMouse == BUSCANDO_REGIAO
+   IF N_MRow < N_LinIni
+      * clicou acima da janela
+      N_RegiaoMouse := FORA_DA_JANELA
+   ELSEIF N_MCol < N_ColIni
+      * clicou à esquerda da janela
+      N_RegiaoMouse := FORA_DA_JANELA
+   ELSEIF N_MRow > N_LinFin
+      * clicou abaixo da janela
+      N_RegiaoMouse := FORA_DA_JANELA
+   ELSEIF N_MCol > N_ColFin
+      * clicou à direita da janela
+      N_RegiaoMouse := FORA_DA_JANELA
+   ELSE
+      N_RegiaoMouse := REGIAO_SEM_EVENTO
+   ENDIF
+ENDIF
+*
+IF SOB_MODO_GRAFICO()
+   * Imagens adicionadas pelo programador de forma manual (comando IMAGEM)
+   * tem precedência sobre qualquer outro tipo de região da tela.
+   * Por exemplo, se uma imagem estiver sobre um browse, o click do mouse não
+   * será repassado à tbrowse().
+   N_PosImagem := ASCAN(V_LstImagens,{|V_Imagem| ;
+                       N_MRow >= N_LinIni+V_Imagem[_IMAGEM_LIN_INICIAL] .AND. ;
+                       N_MRow <= N_LinIni+V_Imagem[_IMAGEM_LIN_FINAL]   .AND. ;
+                       N_MCol >= N_ColIni+V_Imagem[_IMAGEM_COL_INICIAL] .AND. ;
+                       N_MCol <= N_ColIni+V_Imagem[_IMAGEM_COL_FINAL] })
+   *
+   IF N_PosImagem # 0   // clicou em cima de uma imagem
+      * se existir algum evento vinculado ï¿½ imagem
+      IF V_LstImagens[N_PosImagem,_IMAGEM_BLOCO_ACAO] # NIL .OR. ;
+         V_LstImagens[N_PosImagem,_IMAGEM_KEYBOARD] # NIL  // podia ser o _IMAGEM_KEYBOARD_CASE
+         V_Imagem := V_LstImagens[N_PosImagem]
+         N_Keyboard := V_Imagem[_IMAGEM_KEYBOARD]  // podia ser o _IMAGEM_KEYBOARD_CASE
+         N_RegiaoMouse := SOBRE_IMAGEM
+      ENDIF
+   ENDIF
+ENDIF
+*
+RETURN N_RegiaoMouse
+*
+
+
+
+
+
 ***************
 FUNC _Pega_Cor_ ( C_CorCompleta, N_Indice, L_Frente )
 *
