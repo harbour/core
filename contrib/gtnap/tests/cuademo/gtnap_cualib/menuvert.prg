@@ -215,7 +215,7 @@ LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao
 LOCAL B_Ajuda_Ant
 
 
-LOCAL V_MenuVert, L_Coords
+LOCAL V_MenuVert, L_Coords, X_Retorno
 
 *
 #DEFINE C_CdOpcao VX_Sele:CARGO[17]
@@ -252,11 +252,13 @@ IF L_ForcaLerTudo
 
             FOR N_Cont := 1 TO LEN(V_Opcoes)
                 IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] # 0  // tem tecla hotkey
-                    NAP_MENUVERT_ADD(V_MenuVert, V_Opcoes[N_Cont,_OPCAO_TEXTO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO])
+                    NAP_MENUVERT_CUALIB_ADD(V_MenuVert, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO])
                 ENDIF
             NEXT
 
             NAP_MENUVERT_CUALIB(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
+
+            X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
 
             //
             // FRAN MenuVert automatically managed by NAP_MENUVERT

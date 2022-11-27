@@ -29,6 +29,7 @@
 # "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform. See gtnap.hbp -stop"
 
 gtnap.c
+gtconvert.c
 nap_button.c
 nap_color.c
 nap_combo.c

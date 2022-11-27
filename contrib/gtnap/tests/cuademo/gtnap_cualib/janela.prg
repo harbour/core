@@ -841,6 +841,8 @@ FOR N_Cont := 0 TO 20
     @ N_Cont, N_Cont SAY "SAY in " + hb_ntos(N_Cont) + "," + hb_ntos(N_Cont)
 NEXT
 
+@ 22, 0 SAY ""
+OutStd( "JAJAJAJAJAJ!!!!!!!!!!!!!!!!!!!!!!!!!!!  Hello" )
 
 // FRAN: At the moment, events are managed by GTNAP
 IF SOB_MODO_GRAFICO()

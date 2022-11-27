@@ -5,6 +5,7 @@
 */
 
 #include "gtnap.h"
+#include "gtconvert.h"
 #include "nappgui.h"
 #include "osmain.h"
 #include "hbapiitm.h"
@@ -113,6 +114,7 @@ void _component_visible(GuiComponent *component, const bool_t visible);
 void _component_destroy(GuiComponent **component);
 const char_t *_component_type(const GuiComponent *component);
 void _panel_compose(Panel *panel, const S2Df *required_size, S2Df *final_size);
+void _panel_locate(Panel *panel);
 void _panel_detach_components(Panel *panel);
 
 __END_C
@@ -692,13 +694,13 @@ void hb_gtnap_callback(GtNapCallback *callback, Event *e)
 /*---------------------------------------------------------------------------*/
 
 static PHB_ITEM CUALIB_INIT_CODEBLOCK = NULL;
-static const char_t *CUALIB_TITLE = NULL;
+static char_t CUALIB_TITLE[128];
 static uint32_t CUALIB_ROWS = 0;
 static uint32_t CUALIB_COLS = 0;
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *hb_gtnap_cualib_parText(const uint32_t iParam)
+String *hb_gtnap_cualib_parText(const uint32_t iParam)
 {
     // TODO: Translate code-page to UTF8
     if (!HB_ISNIL(iParam))
@@ -706,18 +708,18 @@ const char_t *hb_gtnap_cualib_parText(const uint32_t iParam)
         if (HB_ISCHAR(iParam))
         {
             const char_t *str = hb_parcx(iParam);
-            return str;
+            return gtconvert_1252_to_UTF8(str);
         }
         else
         {
             // const char_t *str = (const char_t*)hb_parni(iParam);
             // return str;
 
-            return "Unknown text"; // (const char_t*)hb_parni(iParam);
+            return str_c("Unknown text"); // (const char_t*)hb_parni(iParam);
         }
     }
 
-    return NULL;
+    return str_c("");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -729,7 +731,7 @@ static GtNap *i_gtnap_cualib_create(void)
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->cualib_mode = TRUE;
     GTNAP_GLOBAL->global_font = font_monospace(20, 0);
-    GTNAP_GLOBAL->title = str_c(CUALIB_TITLE);
+    GTNAP_GLOBAL->title = gtconvert_1252_to_UTF8(CUALIB_TITLE);
     GTNAP_GLOBAL->rows = CUALIB_ROWS;
     GTNAP_GLOBAL->cols = CUALIB_COLS;
     font_extents(GTNAP_GLOBAL->global_font, "O", -1, &w, &h);
@@ -805,7 +807,7 @@ void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint3
 
     log_printf("hb_gtnap_cualib_setup()");
     CUALIB_INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
-    CUALIB_TITLE = title;
+    str_copy_c(CUALIB_TITLE, sizeof(CUALIB_TITLE), title);
     CUALIB_ROWS = rows;
     CUALIB_COLS = cols;
 
@@ -894,13 +896,15 @@ static void i_add_label_object(const uint32_t cell_x, const uint32_t cell_y, con
 {
     Label *label = label_create();
     uint32_t len = str_len_c(text);
+    String *ctext = gtconvert_1252_to_UTF8(text);
     S2Df size;
     cassert_no_null(gtnap);
-    label_text(label, text);
+    label_text(label, tc(ctext));
     label_font(label, gtnap->global_font);
     size.width = (real32_t)(len * gtnap->cell_x_size);
     size.height = (real32_t)gtnap->cell_y_size;
     i_add_object(cell_x, cell_y, gtnap->cell_x_size, gtnap->cell_y_size, &size, (GuiComponent*)label, cuawin);
+    str_destroy(&ctext);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -928,7 +932,7 @@ uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni
     width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni + 1));
     height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni + 1));
     panel_size(panel, s2df(width, height));
-    if (C_Cabec != NULL)
+    if (str_empty_c(C_Cabec) == FALSE)
         window_title(window, C_Cabec);
     else
         window_title(window, tc(GTNAP_GLOBAL->title));
@@ -950,7 +954,9 @@ void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const uint32_t 
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
     _panel_compose(panel, &size, &final_size);
+    _panel_locate(panel);
     i_add_object(nLeft, nTop, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)panel, cuawin);
+    log_printf("MenuVert size: %.2f, %.2f, %.2f, %.2f", size.width, size.height, final_size.width, final_size.height);
 }
 
 /*---------------------------------------------------------------------------*/

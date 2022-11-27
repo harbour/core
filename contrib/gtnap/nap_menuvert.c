@@ -34,6 +34,7 @@ struct _menuvert_t
     uint32_t row_height;
     real32_t total_height;
     uint32_t visible_opts;
+    uint32_t control_width;
     uint32_t control_height;
     ArrSt(MenuOpt) *opts;
     uint32_t selected;
@@ -46,6 +47,8 @@ struct _menuvert_t
 __EXTERN_C
 
 Window *_component_window(const GuiComponent *component);
+void _component_visible(GuiComponent *component, const bool_t visible);
+void _component_set_frame(GuiComponent *component, const V2Df *origin, const S2Df *size);
 
 __END_C
 
@@ -89,7 +92,8 @@ static void i_OnDraw(Panel *panel, Event *e)
     MenuVert *menu = panel_get_data(panel, MenuVert);
     real32_t xpos = 0, ypos = 0;
     draw_font(p->ctx, menu->font);
-
+    draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1);
+    //log_printf("MenuVert:i_OnDraw() (%.2f, %.2f)", p->width, p->height);
     arrst_foreach(opt, menu->opts, MenuOpt)
 
         if (opt_i == menu->selected)
@@ -279,12 +283,13 @@ static void i_view_size(MenuVert *menu)
     arrst_end();
 
     menu->total_height = height;
-    view_content_size(menu->view, s2df(width + 20, height + 1), s2df(0, (real32_t)menu->row_height));
+    //view_content_size(menu->view, s2df(width + 20, height + 1), s2df(0, (real32_t)menu->row_height));
+    view_content_size(menu->view, s2df((real32_t)menu->control_width, height + 1), s2df(0, (real32_t)menu->row_height));
 
-    if (menu->visible_opts == 0 || menu->visible_opts >= n)
-        view_size(menu->view, s2df(width + 20, height + 1));
-    else
-        view_size(menu->view, s2df(width + 20, (real32_t)(menu->visible_opts * menu->row_height) + 1));
+    // if (menu->visible_opts == 0 || menu->visible_opts >= n)
+    //     view_size(menu->view, s2df(width + 20, height + 1));
+    // else
+    //     view_size(menu->view, s2df(width + 20, (real32_t)(menu->visible_opts * menu->row_height) + 1));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -293,7 +298,10 @@ static void i_OnSize(Panel *panel, Event *e)
 {
     MenuVert *menu = panel_get_data(panel, MenuVert);
     const EvSize *p = event_params(e, EvSize);
+    log_printf("MenuVert:i_OnSize() (%.2f, %.2f)", p->width, p->height);
+    menu->control_width = (uint32_t)p->width;
     menu->control_height = (uint32_t)p->height;
+    i_view_size(menu);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -313,13 +321,14 @@ HB_FUNC( NAP_MENUVERT_CREATE )
     menu->mouse_row = 0;
     menu->launch_sel = FALSE;
     menu->autoclose = FALSE;
-    i_view_size(menu);
+    //i_view_size(menu);
     view_OnDraw(view, listener(panel, i_OnDraw, Panel));
     view_OnSize(view, listener(panel, i_OnSize, Panel));
     view_OnMove(view, listener(panel, i_OnMove, Panel));
     view_OnDown(view, listener(panel, i_OnDown, Panel));
     view_OnUp(view, listener(panel, i_OnUp, Panel));
     view_OnKeyDown(view, listener(panel, i_OnKeyDown, Panel));
+    _component_visible((GuiComponent*)view, TRUE);
     panel_data(panel, &menu, i_destroy, MenuVert);
     layout_view(layout, view, 0, 0);
     layout_tabstop(layout, 0, 0, TRUE);
@@ -339,6 +348,22 @@ HB_FUNC( NAP_MENUVERT_ADD )
     opt->text = str_c(text);
     opt->codeBlock = codeBlock ? hb_itemNew(codeBlock) : NULL;
     i_view_size(menu);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_MENUVERT_CUALIB_ADD )
+{
+    log_printf("MENUVERT ADD!!!!!!!!!!!!!");
+    {
+        Panel *panel = (Panel*)hb_parptr(1);
+        String *text = hb_gtnap_cualib_parText(2);
+        PHB_ITEM codeBlock = hb_param(3, HB_IT_BLOCK);
+        MenuVert *menu = panel_get_data(panel, MenuVert);
+        MenuOpt *opt = arrst_new0(menu->opts, MenuOpt);
+        opt->text = text;
+        opt->codeBlock = codeBlock ? hb_itemNew(codeBlock) : NULL;
+    }
 }
 
 /*---------------------------------------------------------------------------*/

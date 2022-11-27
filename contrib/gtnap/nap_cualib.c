@@ -9,11 +9,12 @@
 
 HB_FUNC( NAP_CUALIB_SETUP )
 {
-    const char_t *title = hb_gtnap_cualib_parText(1);
+    const char_t *title = hb_gtnap_parText(1);
     uint32_t qt_lin = hb_parni(2);
     uint32_t qt_col = hb_parni(3);
     PHB_ITEM codeBlock_begin = hb_param(4, HB_IT_BLOCK);
     hb_gtnap_cualib_setup(title, qt_lin, qt_col, codeBlock_begin);
+    //str_destroy(&title);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -73,8 +74,9 @@ HB_FUNC( NAP_CUALIB_WINDOW )
     uint32_t N_ColIni = hb_parni(2);
     uint32_t N_LinFin = hb_parni(3);
     uint32_t N_ColFin = hb_parni(4);
-    const char_t *C_Cabec = hb_gtnap_cualib_parText(5);
-    uint32_t id = hb_gtnap_cualib_window(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec);
+    String *C_Cabec = hb_gtnap_cualib_parText(5);
+    uint32_t id = hb_gtnap_cualib_window(N_LinIni, N_ColIni, N_LinFin, N_ColFin, tc(C_Cabec));
+    str_destroy(&C_Cabec);
     hb_retni(id);
 }
 
