@@ -106,3 +106,14 @@ HB_FUNC( NAP_CUALIB_IMAGE )
     uint32_t nRight = hb_parni(5);
     hb_gtnap_cualib_image(pathname, nTop, nLeft, nBottom, nRight);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_LABEL )
+{
+    uint32_t nLin = hb_parni(1);
+    uint32_t nCol = hb_parni(2);
+    const char_t *text = hb_gtnap_parText(3);
+    hb_gtnap_cualib_label(text, nLin, nCol);
+}
+

@@ -827,7 +827,22 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
     N_LinImp  := N_LinMess
     *
 
+    //
+    // Fran: Labels
+    //
+    IF SOB_MODO_GRAFICO()
+        IF N_WindowNum = 0 .AND. EH_PRODUCAO()
+            DesenhaDrawLabe(VX_Janela)
+            //AddGuiObject(VX_Janela,DesenhaDrawLabe(VX_Janela),CoordenadasDrawLabel())
+        ELSEIF N_WindowNum = 1 .AND. .NOT. EH_PRODUCAO()
+            DesenhaDrawLabe(VX_Janela)
+            //AddGuiObject(VX_Janela,DesenhaDrawLabe(VX_Janela),CoordenadasDrawLabel())
+        ENDIF
+    ENDIF
+    *
+    //
     // Fran: Adding images
+    //
     IF SOB_MODO_GRAFICO()
         FOR N_Cont := 1 TO LEN(V_LstImagens)
 
@@ -861,7 +876,7 @@ ENDIF // C_TelaCoberta == NIL
 * executar o método de ativação da janela, conforme a sua especialização
 *
 // FRAN: Some testing about standard harbour text
-// FOR N_Cont := 0 TO 20
+// FOR N_Cont := 0 TO 35
 //     @ N_Cont, N_Cont SAY "SAY in " + hb_ntos(N_Cont) + "," + hb_ntos(N_Cont)
 // NEXT
 
@@ -2512,13 +2527,20 @@ STATIC FUNCTION TrataEventos ( VX_Janela )
 //    * Teve ser ser acrescentado o "+1" abaixo, na linha final.
 //    RETURN { N_Lin2Livre+1,N_Col1Livre,N_Lin2Livre+1+1,N_Col2Livre }
 //    *
-//    ***************************
-//    STATIC FUNC DesenhaDrawLabe(VX_Janela)
-//    ***************************
-//    RETURN {||WVW_DRAWLABEL(N_WindowNum,32,57,space(26-(LEN(INFO_VERSAO[8])+3))+"Versï¿½o "+INFO_VERSAO[5]+"."+INFO_VERSAO[6]+;
-//                                                                                                             CHR(VAL(INFO_VERSAO[7]))+"(b"+;
-//                                                                                                             INFO_VERSAO[8]+") - S"+TRIM(SERIE_ASPEC_INI())),;
-//              WVW_DRAWLABEL(N_WindowNum,33,39,"www.aspec.com.br   Aspec "+chr(184)+"1993-"+STR(YEAR(DATE()),4,0)+". Todos os direitos reservados")}
+
+***************************
+STATIC PROC DesenhaDrawLabe(VX_Janela)
+***************************
+NAP_CUALIB_LABEL(33, 57, space(26-(LEN(INFO_VERSAO[8])+3))+"Versão "+INFO_VERSAO[5]+"."+INFO_VERSAO[6]+;
+                                                                            CHR(VAL(INFO_VERSAO[7]))+"(b"+;
+                                                                            INFO_VERSAO[8]+") - S"+TRIM(SERIE_ASPEC_INI()))
+NAP_CUALIB_LABEL(34, 39, "www.aspec.com.br   Aspec "+chr(184)+"1993-"+STR(YEAR(DATE()),4,0)+". Todos os direitos reservados")
+
+
+// RETURN {||WVW_DRAWLABEL(N_WindowNum,32,57,space(26-(LEN(INFO_VERSAO[8])+3))+"Versão "+INFO_VERSAO[5]+"."+INFO_VERSAO[6]+;
+//                                                                                                         CHR(VAL(INFO_VERSAO[7]))+"(b"+;
+//                                                                                                         INFO_VERSAO[8]+") - S"+TRIM(SERIE_ASPEC_INI())),;
+//             WVW_DRAWLABEL(N_WindowNum,33,39,"www.aspec.com.br   Aspec "+chr(184)+"1993-"+STR(YEAR(DATE()),4,0)+". Todos os direitos reservados")}
 //    *
 //    ***********************
 //    STAT FUNC DesenhaImagem(VX_Janela,N_Cont)

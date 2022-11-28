@@ -905,15 +905,20 @@ static void i_add_object(const objtype_t type, const uint32_t cell_x, const uint
 
 /*---------------------------------------------------------------------------*/
 
-static void i_add_label_object(const uint32_t cell_x, const uint32_t cell_y, const char_t *text, GtNap *gtnap, GtNapCualibWindow *cuawin)
+static void i_add_label_object(const uint32_t cell_x, const uint32_t cell_y, const char_t *text, const color_t background, GtNap *gtnap, GtNapCualibWindow *cuawin)
 {
     Label *label = label_create();
     uint32_t len = str_len_c(text);
     String *ctext = gtconvert_1252_to_UTF8(text);
     S2Df size;
     cassert_no_null(gtnap);
+    log_printf("Added label: %s at %d %d", tc(ctext), cell_x, cell_y);
     label_text(label, tc(ctext));
     label_font(label, gtnap->global_font);
+
+    if (background != 0)
+        label_bgcolor(label, background);
+
     size.width = (real32_t)(len * gtnap->cell_x_size);
     size.height = (real32_t)gtnap->cell_y_size;
     i_add_object(ekOBJ_LABEL, cell_x, cell_y, gtnap->cell_x_size, gtnap->cell_y_size, &size, (GuiComponent*)label, cuawin);
@@ -965,7 +970,7 @@ void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const uint32_t 
     cassert_no_null(cuawin);
     //log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+    size.height = (real32_t)((nBottom - nTop) * GTNAP_GLOBAL->cell_y_size);
     _panel_compose(panel, &size, &final_size);
     _panel_locate(panel);
     i_add_object(ekOBJ_MENUVERT, nLeft, nTop, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)panel, cuawin);
@@ -995,6 +1000,14 @@ void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t nTop, const ui
     {
         log_printf("Cannot load '%s' image", pathname);
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    i_add_label_object(nCol, nLin, text, kCOLOR_CYAN, GTNAP_GLOBAL, cuawin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1332,7 +1345,7 @@ static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText
     HB_SYMBOL_UNUSED( pGT );
     if (cuawin != NULL)
     {
-        i_add_label_object(iCol, iRow, pText, GTNAP_GLOBAL, cuawin);
+        i_add_label_object(iCol, iRow, pText, 0, GTNAP_GLOBAL, cuawin);
         log_printf("hb_gtnap_WriteAt(%d, %d, %d): %s", iRow, iCol, (int)ulLength, pText);
     }
     else

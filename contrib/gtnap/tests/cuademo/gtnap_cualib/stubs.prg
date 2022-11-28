@@ -259,9 +259,9 @@ RETURN .T.
 // RETURN "99999"
 // *
 // ********************
-// FUNC SERIE_ASPEC_INI
-// ********************
-// RETURN "99999"
+FUNC SERIE_ASPEC_INI
+********************
+RETURN "99999"
 *
 **************
 FUNCTION TROCA ( C_String , C_Alfa1 , C_Alfa2 )
