@@ -51,7 +51,8 @@ DeclPt(Window);
 typedef enum _objtype_t
 {
     ekOBJ_LABEL,
-    ekOBJ_MENUVERT
+    ekOBJ_MENUVERT,
+    ekOBJ_IMAGE
 } objtype_t;
 
 struct _gtnap_cualib_object_t
@@ -899,6 +900,7 @@ static void i_add_object(const objtype_t type, const uint32_t cell_x, const uint
     object->cell_x = cell_x;
     object->cell_y = cell_y;
     object->component = component;
+    log_printf("Added object at: %.2f, %.2f w:%.2f h:%.2f", pos.x, pos.y, size->width, size->height);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -961,13 +963,38 @@ void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const uint32_t 
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     S2Df size, final_size;
     cassert_no_null(cuawin);
-    log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+    //log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
     _panel_compose(panel, &size, &final_size);
     _panel_locate(panel);
     i_add_object(ekOBJ_MENUVERT, nLeft, nTop, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)panel, cuawin);
-    log_printf("MenuVert size: %.2f, %.2f, %.2f, %.2f", size.width, size.height, final_size.width, final_size.height);
+    //log_printf("MenuVert size: %.2f, %.2f, %.2f, %.2f", size.width, size.height, final_size.width, final_size.height);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    Image *image = image_from_file(pathname, NULL);
+    cassert_no_null(cuawin);
+    if (image != NULL)
+    {
+        S2Df size;
+        ImageView *view = imageview_create();
+        log_printf("Added IMAGE into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+        imageview_image(view, image);
+        imageview_scale(view, ekAUTO);
+        size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+        size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+        i_add_object(ekOBJ_IMAGE, nLeft, nTop, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)view, cuawin);
+        image_destroy(&image);
+    }
+    else
+    {
+        log_printf("Cannot load '%s' image", pathname);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -985,6 +1012,7 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
 
         switch(object->type) {
         case ekOBJ_LABEL:
+        case ekOBJ_IMAGE:
             break;
         case ekOBJ_MENUVERT:
             nap_menuvert_taborder((Panel*)object->component, cuawin->window);

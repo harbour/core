@@ -94,3 +94,15 @@ HB_FUNC( NAP_CUALIB_DESTROY_WINDOW )
 {
     hb_gtnap_cualib_destroy_window();
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_IMAGE )
+{
+    const char_t *pathname = hb_gtnap_parText(1);
+    uint32_t nTop = hb_parni(2);
+    uint32_t nLeft = hb_parni(3);
+    uint32_t nBottom = hb_parni(4);
+    uint32_t nRight = hb_parni(5);
+    hb_gtnap_cualib_image(pathname, nTop, nLeft, nBottom, nRight);
+}

@@ -14,15 +14,15 @@ ANNOUNCE HB_GT_SYS
 //
 // FRAN: This code is not required for a CUALIB/GTNAP application
 //
-#if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    REQUEST HB_GT_WVW_DEFAULT
 //    REQUEST WVW_NOpenWindow, WVW_NSetCurWindow
 //    REQUEST HB_GT_WIN
-#elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // PENDENTE_LINUX
-   // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-#else
-   #erro "Código não adaptado para esta plataforma"
-#endif
+// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // PENDENTE_LINUX
+//    NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
+// #else
+//    #erro "Código não adaptado para esta plataforma"
+// #endif
 //
 //
 //

@@ -789,6 +789,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
         IF .NOT. L_Embutida
             AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
         ENDIF
+
     ENDIF // SOB_MODO_GRAFICO()
 
     // FRAN: Here the code is compatible GTNAP/Text terminals GTXXX
@@ -826,48 +827,80 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
     N_LinImp  := N_LinMess
     *
 
-    //
-    //
-    // FRAN TODO: Add other widgets
-    //
-    //
+    // Fran: Adding images
+    IF SOB_MODO_GRAFICO()
+        FOR N_Cont := 1 TO LEN(V_LstImagens)
+
+            NAP_CUALIB_IMAGE(V_LstImagens[N_Cont,_IMAGEM_ARQUIVO],;
+                            N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_INICIAL],;
+                            N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_INICIAL],;
+                            N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_FINAL  ],;
+                            N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_FINAL  ])
+
+            // OutStd("Image: " + V_LstImagens[N_Cont,_IMAGEM_ARQUIVO])
+            // OutStd("STLin: " + hb_ntos(N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_INICIAL]))
+            // OutStd("STCol: " + hb_ntos(N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_INICIAL]))
+            // OutStd("EdCol: " + hb_ntos(N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_FINAL  ]))
+            // OutStd("EdLin: " + hb_ntos(N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_FINAL  ]))
+
+            // AddGuiObject(VX_Janela,DesenhaImagem(VX_Janela,N_Cont),;
+            //             {N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_INICIAL],;
+            //                 N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_INICIAL],;
+            //                 N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_FINAL  ],;
+            //                 N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_FINAL  ]})
+        NEXT
+    ENDIF // SOB_MODO_GRAFICO() Images
+
+    // FRAN In GTWIN the text is not displayed
+    IF SOB_MODO_GRAFICO()
+        DispEnd()
+    ENDIF
 
 ENDIF // C_TelaCoberta == NIL
 
 * executar o método de ativação da janela, conforme a sua especialização
 *
 // FRAN: Some testing about standard harbour text
-FOR N_Cont := 0 TO 20
-    @ N_Cont, N_Cont SAY "SAY in " + hb_ntos(N_Cont) + "," + hb_ntos(N_Cont)
-NEXT
+// FOR N_Cont := 0 TO 20
+//     @ N_Cont, N_Cont SAY "SAY in " + hb_ntos(N_Cont) + "," + hb_ntos(N_Cont)
+// NEXT
+
+// FRAN: Testing the image position
+@ 5, 5 SAY "5,5"
+@ 10, 18 SAY "10,18"
 
 // @ 22, 0 SAY ""
 // OutStd( "JAJAJAJAJAJ!!!!!!!!!!!!!!!!!!!!!!!!!!!  Hello" )
 
 // FRAN: At the moment, events are managed by GTNAP
-IF SOB_MODO_GRAFICO()
-    //X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
+// IF SOB_MODO_GRAFICO()
+//     //X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
 
-    IF N_TP_Jan == NIL
-        X_Retorno := EVAL(B_Metodo,VX_Janela)
-    ELSE
-        X_Retorno := EVAL(B_Metodo)
-    ENDIF
+//     IF N_TP_Jan == NIL
+//         X_Retorno := EVAL(B_Metodo,VX_Janela)
+//     ELSE
+//         X_Retorno := EVAL(B_Metodo)
+//     ENDIF
 
 
+// ELSE
+
+//     // FRAN: Event management for text GT's
+//     // DO WHILE 1 # 0
+//     // ENDDO
+
+//     IF N_TP_Jan == NIL
+//         X_Retorno := EVAL(B_Metodo,VX_Janela)
+//     ELSE
+//         X_Retorno := EVAL(B_Metodo)
+//     ENDIF
+// ENDIF
+
+IF N_TP_Jan == NIL
+    X_Retorno := EVAL(B_Metodo,VX_Janela)
 ELSE
-
-    // FRAN: Event management for text GT's
-    // DO WHILE 1 # 0
-    // ENDDO
-
-    IF N_TP_Jan == NIL
-        X_Retorno := EVAL(B_Metodo,VX_Janela)
-    ELSE
-        X_Retorno := EVAL(B_Metodo)
-    ENDIF
+    X_Retorno := EVAL(B_Metodo)
 ENDIF
-
 
  *
  SETCOLOR(C_CorAnt)                    // restaurar cor anterior
