@@ -594,7 +594,12 @@ LOCAL N_Cont, N_AddRows
 LOCAL C_Cabec_Aux
 LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
 
-B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
+// FRAN: A NAppGUI/GTNAP application owns the event cicle.
+// The hotkey should be asigned when Window is created after NAP_CUALIB_WINDOW()
+IF .NOT. SOB_MODO_GRAFICO()
+    B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
+ENDIF
+
 *
 IF N_LinBotoes == NIL
 // FRAN-TODO Review segmentation fault
@@ -708,6 +713,9 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             ENDIF
 
             N_WindowNum := NAP_CUALIB_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux)
+
+            NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
+
             // N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
             //     N_LinIni,N_ColIni,N_LinFin,N_ColFin)
             //WvW_SetMainCoord(L_MainCoord_Atu)
@@ -920,7 +928,11 @@ ENDIF
  *
  SETCOLOR(C_CorAnt)                    // restaurar cor anterior
  SET(_SET_CURSOR,N_CursorAnt)          // restaurar modo do cursor
- SETKEY(K_F1,B_Ajuda_Ant)              // restaurar ajuda anterior
+
+ IF .NOT. SOB_MODO_GRAFICO()
+    SETKEY(K_F1,B_Ajuda_Ant)            // restaurar ajuda anterior
+ ENDIF
+
  *
  IF .NOT. L_CUA_10
     DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha após ativação

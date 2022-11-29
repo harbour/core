@@ -217,11 +217,15 @@ LOCAL B_Ajuda_Ant
 
 LOCAL V_MenuVert, L_Coords, X_Retorno
 
-*
+
 #DEFINE C_CdOpcao VX_Sele:CARGO[17]
-B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}) // salvar help anterior
+// FRAN: A NAppGUI/GTNAP application owns the event cicle.
+IF SOB_MODO_GRAFICO()
+    NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)})
+ELSE
+    B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}) // salvar help anterior
+ENDIF
 #UNDEF  C_CdOpcao
-*
 
 //
 // FRAN - This code is not necessary in GTNAP
@@ -720,9 +724,12 @@ ENDIF // IF .NOT. SOB_MODO_GRAFICO()
 // #endif
 // *
 
-#DEFINE C_CdOpcao VX_Sele:CARGO[17]
-SETKEY(K_F1,B_Ajuda_Ant)   // restaurar help anterior
-#UNDEF  C_CdOpcao
+IF .NOT. SOB_MODO_GRAFICO()
+    #DEFINE C_CdOpcao VX_Sele:CARGO[17]
+    SETKEY(K_F1,B_Ajuda_Ant)   // restaurar help anterior
+    #UNDEF  C_CdOpcao
+ENDIF
+
 *
 RETURN L_FechouComAutoClose
 *

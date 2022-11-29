@@ -117,3 +117,11 @@ HB_FUNC( NAP_CUALIB_LABEL )
     hb_gtnap_cualib_label(text, nLin, nCol);
 }
 
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_HOTKEY )
+{
+    int32_t key = hb_parni(1);
+    hb_gtnap_cualib_hotkey(key, 2);
+}
+

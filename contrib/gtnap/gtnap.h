@@ -95,6 +95,8 @@ extern void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t nTop, c
 
 extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol);
 
+extern void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId);
+
 extern uint32_t hb_gtnap_cualib_launch_modal(void);
 
 extern void hb_gtnap_cualib_destroy_window(void);

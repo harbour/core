@@ -15,6 +15,7 @@
 #include "hbdate.h"
 
 typedef struct _gtnap_t GtNap;
+typedef struct _gtnap_key_t GtNapKey;
 typedef struct _gtnap_column_t GtNapColumn;
 typedef struct _gtnap_cualib_object_t GtNapCualibObject;
 typedef struct _gtnap_cualib_window_t GtNapCualibWindow;
@@ -22,9 +23,18 @@ typedef struct _gui_context_t GuiContext;
 
 struct _gtnap_callback_t
 {
+    GtNapCualibWindow *cuawin;
     GuiComponent *cb_component;
     Window *cb_window;
+    int32_t key;
     PHB_ITEM codeBlock;
+};
+
+struct _gtnap_key_t
+{
+    int32_t hkey;
+    vkey_t key;
+    uint32_t modifiers;
 };
 
 struct _gtnap_column_t
@@ -76,6 +86,7 @@ struct _gtnap_cualib_window_t
     Window *window;
     Panel *panel;
     ArrSt(GtNapCualibObject) *gui_objects;
+    ArrPt(GtNapCallback) *callbacks;
 };
 
 DeclSt(GtNapCualibWindow);
@@ -106,6 +117,21 @@ struct _gtnap_t
 static GtNap *GTNAP_GLOBAL = NULL;
 static PHB_ITEM INIT_CODEBLOCK = NULL;
 static PHB_ITEM END_CODEBLOCK = NULL;
+
+static const GtNapKey KEYMAPS[] = {
+{ K_F1, ekKEY_F1, 0 },
+{ K_F2, ekKEY_F2, 0 },
+{ K_F3, ekKEY_F3, 0 },
+{ K_F4, ekKEY_F4, 0 },
+{ K_F5, ekKEY_F5, 0 },
+{ K_F6, ekKEY_F6, 0 },
+{ K_F7, ekKEY_F7, 0 },
+{ K_F8, ekKEY_F8, 0 },
+{ K_F9, ekKEY_F9, 0 },
+{ K_F10, ekKEY_F10, 0 },
+{ K_F11, ekKEY_F11, 0 },
+{ K_F12, ekKEY_F12, 0 }
+};
 
 /*---------------------------------------------------------------------------*/
 
@@ -664,6 +690,7 @@ Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *
     cassert_no_null(codeBlock);
     callback->codeBlock = hb_itemNew(codeBlock);
     callback->cb_component = component;
+    callback->key = INT32_MAX;
     arrpt_append(GTNAP_GLOBAL->callbacks, callback, GtNapCallback);
     return listener(callback, func_callback, GtNapCallback);
 }
@@ -677,6 +704,7 @@ Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window
     cassert_no_null(codeBlock);
     callback->codeBlock = hb_itemNew(codeBlock);
     callback->cb_window = window;
+    callback->key = INT32_MAX;
     arrpt_append(GTNAP_GLOBAL->callbacks, callback, GtNapCallback);
     return listener(callback, func_callback, GtNapCallback);
 }
@@ -788,6 +816,7 @@ static void i_remove_cualib_win(GtNapCualibWindow *cuawin)
 
     cassert(arrst_size(cuawin->gui_objects, GtNapCualibObject) == 0);
     arrst_destroy(&cuawin->gui_objects, NULL, GtNapCualibObject);
+    arrpt_destroy(&cuawin->callbacks, i_destroy_callback, GtNapCallback);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -946,7 +975,7 @@ uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni
     cuawin->row_pos = 0;
     cuawin->col_pos = 0;
     cuawin->gui_objects = arrst_create(GtNapCualibObject);
-
+    cuawin->callbacks = arrpt_create(GtNapCallback);
     width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni + 1));
     height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni + 1));
     panel_size(panel, s2df(width, height));
@@ -1008,6 +1037,73 @@ void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     i_add_label_object(nCol, nLin, text, kCOLOR_CYAN, GTNAP_GLOBAL, cuawin);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const int32_t key, GtNapCualibWindow *cuawin, FPtr_gtnap_callback func_callback)
+{
+    PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
+    GtNapCallback *callback = heap_new0(GtNapCallback);
+    cassert_no_null(codeBlock);
+    callback->codeBlock = hb_itemNew(codeBlock);
+    callback->cuawin = cuawin;
+    callback->key = key;
+    arrpt_append(cuawin->callbacks, callback, GtNapCallback);
+    return listener(callback, func_callback, GtNapCallback);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static const GtNapKey *i_convert_key(const int32_t key)
+{
+    uint32_t i, n = sizeof(KEYMAPS) / sizeof(GtNapKey);
+    for (i = 0; i < n; ++i)
+    {
+        if (KEYMAPS[i].hkey == key)
+            return &KEYMAPS[i];
+    }
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
+{
+    hb_gtnap_callback(callback, e);
+    log_printf("Pressed hotkey %d", callback->key);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    const GtNapKey *nkey = i_convert_key(key);
+    cassert_no_null(cuawin);
+
+    // Exists a Harbour/NAppGUI key convertion
+    if (nkey != NULL)
+    {
+        uint32_t pos = UINT32_MAX;
+        Listener *listener = NULL;
+
+        // Delete a previous callback on this hotkey
+        arrpt_foreach(callback, cuawin->callbacks, GtNapCallback)
+            if (callback->key == key)
+            {
+                pos = callback_i;
+                break;
+            }
+        arrpt_end();
+
+        if (pos != UINT32_MAX)
+            arrpt_delete(cuawin->callbacks, pos, i_destroy_callback, GtNapCallback);
+
+        listener = i_gtnap_cualib_listener(codeBlockParamId, key, cuawin, i_OnWindowHotKey);
+        window_hotkey(cuawin->window, nkey->key, nkey->modifiers, listener);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
