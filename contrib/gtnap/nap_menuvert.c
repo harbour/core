@@ -130,7 +130,7 @@ static void i_OnDraw(Panel *panel, Event *e)
             draw_line(p->ctx, stx, ypos + opt->size.height - 1, stx + opt->size.width, ypos + opt->size.height - 1);
         }
 
-        drawctrl_text(p->ctx, tc(opt->text), (uint32_t)(xpos + menu->cell_x_size), (uint32_t)ypos, 0);
+        drawctrl_text(p->ctx, tc(opt->text), (uint32_t)(xpos + menu->cell_x_size), (uint32_t)ypos, (enum_t)0);
 
         if (opt->hoykey_pos != UINT32_MAX)
         {

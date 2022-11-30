@@ -42,7 +42,7 @@ PROC MAIN
 //
 IF HB_GTVERSION()=="NAP"
     #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX)
-       DIRET_BMPS("..\bmps\")
+       DIRET_BMPS("../bmps/")
        Setup_nap("Exemplo das rotinas de janelamento",35,110, {|| RUN_MAIN() })
     #else
        #erro "Código não adaptado para esta plataforma"
