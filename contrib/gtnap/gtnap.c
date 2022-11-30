@@ -987,6 +987,7 @@ uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni
     panel_layout(panel, layout);
     //window_OnClose(window, listener(GTNAP_GLOBAL, i_OnWindowClose, GtNap));
     window_panel(window, panel);
+    log_printf("Created new CUALIB Window: %d, %d, %d, %d", N_LinIni, N_ColIni, N_LinFin, N_ColFin);
     return id;
 }
 
@@ -1131,6 +1132,7 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
 
     arrst_end();
 
+    log_printf("Launch CUALIB Modal Window: %d, %d, %d, %d", cuawin->N_LinIni, cuawin->N_ColIni, cuawin->N_LinFin, cuawin->N_ColFin);
     ret = window_modal(cuawin->window, parent ? parent->window : NULL);
     return ret;
 }

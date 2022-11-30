@@ -298,17 +298,17 @@ FUNC TIRACEN (C_String)
 ************
     RETURN TROCA(C_String, _AC_UM_SIM , _AC_UM_NAO )
 // *
-// ****************
-// PROCEDURE ERRCTRL (C_CDMENS,C_TXT_MENSAGEM)
-// ****************
-// * Estabelecer c´?¢digos gen´?¢ricos, se nenhum for especificado no comando "ASSUME"
-// DEFAULT C_CDMENS       TO "M10694"
-// DEFAULT C_TXT_MENSAGEM TO "Houve uma condi´?¢´?¢o invalida na execu´?¢´?¢o do programa;"+;
-//                           "por isso ser´?¢ feito um cancelamento para evitar que;"+;
-//                           "possa haver danos ´?¢s informa´?¢´?¢es armazenadas.       "
-// *
-// ALARME(C_CDMENS,C_TXT_MENSAGEM)
-// *
+****************
+PROCEDURE ERRCTRL (C_CDMENS,C_TXT_MENSAGEM)
+****************
+* Estabelecer códigos genéricos, se nenhum for especificado no comando "ASSUME"
+DEFAULT C_CDMENS       TO "M10694"
+DEFAULT C_TXT_MENSAGEM TO "Houve uma condição invalida na execução do programa;"+;
+                          "por isso será feito um cancelamento para evitar que;"+;
+                          "possa haver danos às informações armazenadas.       "
+*
+ALARME(C_CDMENS,C_TXT_MENSAGEM)
+*
 // ***************
 // FUNC HB_HASH_CI // CI=Case_Insensitive
 // ***************
@@ -319,28 +319,28 @@ FUNC TIRACEN (C_String)
 // *
 // RETURN H_HASH_CI
 // *
-// ********
-// FUNC COR ( C_TpCor )
-// ********
-// LOCAL C_Cor
-// *
-// * Nas cores de frente o "+" indica intenso.
-// * Nas cores de fundo o "*" foi configurado para intenso pelo SETBLINK().
-// IF C_TpCor == _COR_MENSAGEM_ERRO
-//    * reverso vermelho
-//    C_Cor := "W/R,R/W,N,,W/R"
-// ELSEIF C_TpCor == _COR_MENSAGEM_ADVERTENCIA
-//    * reverso amarelo
-//    C_Cor := "N/GR*,GR+/N,N,,N/GR*"
-// ELSEIF C_TpCor == _COR_MENSAGEM_OK
-//    * reverso VERDE
-//    C_Cor := "N/G*,G+/N,N,,N/G*"
-// ELSEIF C_TpCor == _COR_PADRAO
-//    * padrao sert´?¢o
-//    C_Cor := "N/W,R/W,N/BG,N,,N/BG"
-// ENDIF ERRO
-// *
-// RETURN C_Cor
+********
+FUNC COR ( C_TpCor )
+********
+LOCAL C_Cor
+*
+* Nas cores de frente o "+" indica intenso.
+* Nas cores de fundo o "*" foi configurado para intenso pelo SETBLINK().
+IF C_TpCor == _COR_MENSAGEM_ERRO
+   * reverso vermelho
+   C_Cor := "W/R,R/W,N,,W/R"
+ELSEIF C_TpCor == _COR_MENSAGEM_ADVERTENCIA
+   * reverso amarelo
+   C_Cor := "N/GR*,GR+/N,N,,N/GR*"
+ELSEIF C_TpCor == _COR_MENSAGEM_OK
+   * reverso VERDE
+   C_Cor := "N/G*,G+/N,N,,N/G*"
+ELSEIF C_TpCor == _COR_PADRAO
+   * padrao sertão
+   C_Cor := "N/W,R/W,N/BG,N,,N/BG"
+ENDIF ERRO
+*
+RETURN C_Cor
 // *
 // ***********
 // FUNC TABMEM (V_TAB, V_POSMOSTRA, V_POSRETORNO, V_TITULO, L_REMOVER_CERQUILHA)

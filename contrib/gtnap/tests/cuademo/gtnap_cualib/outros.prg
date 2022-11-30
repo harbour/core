@@ -225,17 +225,31 @@
 // NEXT
 // RETURN C_Strret
 // *
+
 // **********************
 // STAT FUNCTION Informar ( C_Cabec_x, C_SubCabec, VC_TxtBotoes ,;
 //                          L_Parar, N_Segundos, C_ArqImagem, L_TipoMsgAguarde, N_ProgressBar )
 // **********************
-// LOCAL N_Tecla, VX_Janela , N_CursorAnt
-// LOCAL N_PaintRefresh_Old
-// *
-// DEFAULT L_Parar TO .T.
-// DEFAULT N_Segundos TO 0
-// DEFAULT L_TipoMsgAguarde TO .F.
-// *
+
+// OutStd("INFORMAR() function called")
+
+// RETURN 0
+
+
+**********************
+STAT FUNCTION Informar ( C_Cabec_x, C_SubCabec, VC_TxtBotoes ,;
+                         L_Parar, N_Segundos, C_ArqImagem, L_TipoMsgAguarde, N_ProgressBar )
+**********************
+LOCAL N_Tecla, VX_Janela , N_CursorAnt
+LOCAL N_PaintRefresh_Old
+*
+DEFAULT L_Parar TO .T.
+DEFAULT N_Segundos TO 0
+DEFAULT L_TipoMsgAguarde TO .F.
+*
+//
+// FRAN: This code is not required
+//
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF SOB_MODO_GRAFICO() .AND. N_Segundos == 0
 //       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
@@ -243,166 +257,178 @@
 // #elif defined(__PLATFORM__LINUX)
 //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
 // #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
+//    #erro "Código não adaptado para esta plataforma"
 // #endif
-// *
-// N_CursorAnt := SET(_SET_CURSOR,SC_NONE)          // salvar modo do cursor
-// *
-// VX_Janela := MontarJanela(C_Cabec_x,C_SubCabec,,VC_TxtBotoes)
-// IF SOB_MODO_GRAFICO()
-//    ADDIMAGEM VX_Janela ARQUIVO DIRET_BMPS()+C_ArqImagem ;
-//        COORDENADAS 00,01,01,04 AJUDA "B19125"
-//    //   ADDIMAGEM VX_Janela ARQUIVO DIRET_BMPS()+C_ArqImagem ;
-//    //    COORDENADAS 00,00,02,04
-// ENDIF
-// *
-// IF L_TipoMsgAguarde
-//    SetJanTipoMsgAguarde(VX_Janela,L_TipoMsgAguarde)
-//    SetProgressBar(VX_Janela,N_ProgressBar)
-// ENDIF
-// *
-// Ative(VX_Janela)
-// *
-// IF L_Parar .AND. N_Segundos == 0
-//    *
-//    * esperar a teclagem de ENTER ou ESC
-//    *
-//    N_Tecla := Inkey_(.T.)             // igual ao INKEY(0) com SET KEY"s
-//    *
-//    DO WHILE N_Tecla # K_ENTER .AND. N_Tecla # K_ESC ;
-//       .AND. .NOT. CLICOU_NA_JANELA(VX_Janela,N_Tecla)
-//       N_Tecla := Inkey_(.T.)
-//    ENDDO
-//    Destrua VX_Janela
-// ELSEIF L_Parar .AND. N_Segundos # 0
-//    * SET KEYs nao funcionam.
-//    * Janela fecha sozinha apï¿½s algum tempo.
-//    *
-//    InkeyX(N_Segundos)
-//    Destrua VX_Janela
-// ELSE
-//    SETPOS(ROW(),COL()-1)       // retroceder cursor em 1 posiï¿½ï¿½o
-// ENDIF
-// *
-// SET(_SET_CURSOR,N_CursorAnt)          // restaurar modo do cursor
-// *
+*
+N_CursorAnt := SET(_SET_CURSOR,SC_NONE)          // salvar modo do cursor
+*
+VX_Janela := MontarJanela(C_Cabec_x,C_SubCabec,,VC_TxtBotoes)
+IF SOB_MODO_GRAFICO()
+   ADDIMAGEM VX_Janela ARQUIVO DIRET_BMPS()+C_ArqImagem ;
+       COORDENADAS 00,01,01,04 AJUDA "B19125"
+   //   ADDIMAGEM VX_Janela ARQUIVO DIRET_BMPS()+C_ArqImagem ;
+   //    COORDENADAS 00,00,02,04
+ENDIF
+*
+IF L_TipoMsgAguarde
+   SetJanTipoMsgAguarde(VX_Janela,L_TipoMsgAguarde)
+   SetProgressBar(VX_Janela,N_ProgressBar)
+ENDIF
+*
+Ative(VX_Janela)
+*
+
+IF SOB_MODO_GRAFICO()
+    NAP_CUALIB_LAUNCH_MODAL()
+    Destrua VX_Janela
+ELSE
+    IF L_Parar .AND. N_Segundos == 0
+    *
+    * esperar a teclagem de ENTER ou ESC
+    *
+    N_Tecla := Inkey_(.T.)             // igual ao INKEY(0) com SET KEY"s
+    *
+    DO WHILE N_Tecla # K_ENTER .AND. N_Tecla # K_ESC ;
+        .AND. .NOT. CLICOU_NA_JANELA(VX_Janela,N_Tecla)
+        N_Tecla := Inkey_(.T.)
+    ENDDO
+    Destrua VX_Janela
+    ELSEIF L_Parar .AND. N_Segundos # 0
+    * SET KEYs nao funcionam.
+    * Janela fecha sozinha após algum tempo.
+    *
+    InkeyX(N_Segundos)
+    Destrua VX_Janela
+    ELSE
+    SETPOS(ROW(),COL()-1)       // retroceder cursor em 1 posiï¿½ï¿½o
+    ENDIF
+ENDIF
+*
+SET(_SET_CURSOR,N_CursorAnt)          // restaurar modo do cursor
+*
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF SOB_MODO_GRAFICO() .AND. N_Segundos == 0
 //       WVW_SetPaintRefresh(N_PaintRefresh_Old)
 //    ENDIF
 // #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
+//     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
 // #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
+//     #erro "Código não adaptado para esta plataforma"
 // #endif
-// *
-// IF L_Parar
-//    RETURN NIL
-// ENDIF
-// RETURN VX_Janela
-// *
-// **************************
-// STAT FUNC CLICOU_NA_JANELA (VX_Janela,N_Tecla)
-// **************************
-// LOCAL L_Clicou := .F.
-// LOCAL N_mRow, N_mCol, N_RegiaoMouse, N_Keyboard
-// *
-// IF N_Tecla == K_LBUTTONDOWN .OR. N_Tecla == K_LDBLCLK
-//    N_mRow := mRow()
-//    N_mCol := mCol()
-//    N_RegiaoMouse := RegiaoJanela_(VX_Janela,N_mRow,N_mCol,;
-//                                   Lin1Livre(VX_Janela),;
-//                                   Col1Livre(VX_Janela),;
-//                                   Lin2Livre(VX_Janela),;
-//                                   Col2Livre(VX_Janela),;
-//                                   @N_Keyboard)
-//   //#INCLUDE "mousecua.ch"
-//   IF N_RegiaoMouse # FORA_DA_JANELA
-//      L_Clicou := .T.
-//   ENDIF
-// ENDIF
-// *                      IF N_RegiaoMouse == AREA_UTIL
-// RETURN L_Clicou
-// *
-// ****************************
-// STATIC FUNCTION MontarJanela (C_Cabec_x, C_SubCabec, VC_Menu , VC_TxtBotoes )
-// ****************************
-// *
-// LOCAL N_Largura , N_LargAux , N_Altura, VC_Subtitulo, VX_Janela
-// LOCAL N_LinIni, N_ColIni
-// LOCAL N_DeslocaCabecalho
-// *
-// DEFAULT VC_Menu      TO {}
-// DEFAULT VC_TxtBotoes TO {}
-// *
-// VC_Subtitulo = StrToVet_(C_SubCabec)
-// *
-// * calcular largura do box
-// *
-// N_Largura := 0                       // procurar maior tï¿½tulo
-// AEVAL(VC_Subtitulo,{|C_Elemento|;
-//                    N_Largura := MAX(N_Largura,LEN(C_Elemento))} )
-// *
-// * + 1 = espaï¿½o ï¿½ esquerda do botao (acrescentado na TecFunc)
-// * + 1 = espaï¿½o ï¿½ direita do botao (acrescentado na TecFunc)
-// * + 2 = espaï¿½o entre botoes
-// *
-// N_LargAux  := 0                      // largura das teclas de funï¿½ï¿½es
-// AEVAL(VC_TxtBotoes,{|C_Elemento|;
-//                     N_LargAux := N_LargAux + LEN(C_Elemento) + 1 + 1 + 2 })
-// N_Largura := MAX(N_LargAux,N_Largura)
-// *
-// * + 2 = espaï¿½o entre opï¿½oes
-// *
-// N_LargAux  := 0                      // largura do menu
-// AEVAL(VC_Menu  ,{|C_Elemento|;
-//                   N_LargAux := N_LargAux + LEN(C_Elemento) + 2 })
-// N_Largura := MAX(N_LargAux,N_Largura)
-// *
-// * + 2 = colunas (do box)
-// * + 2 = espaï¿½amentos laterais (um de cada lado)
-// * + 2 = reservado para a SCROLLBAR VERTICAL
-// *
-// N_Largura := N_Largura + 2 + 2 + 2
-// *
-// IF SOB_MODO_GRAFICO()   // reservar 4 colunas para mostrar a imagem ï¿½ esquerda
-//    N_DeslocaCabecalho := 4
-//    N_Largura := N_Largura + N_DeslocaCabecalho
-// ELSE
-//    N_DeslocaCabecalho := 0
-// ENDIF
-// *
-// * definir altura do box
-// *
-// * + 2 = traï¿½os superior e inferior (do box)
-// * + 1 = espaï¿½amento inferior
-// * Nï¿½O foi reservado espaï¿½o SCROLLBAR HORIZONTAL / AREA DE MENSAGEM
-// *
-// N_Altura := 2+;       // linhas do box
-//             IIF(EMPTY(VC_Menu),0,2)+;
-//             IIF(EMPTY(VC_TxtBotoes),0,2)
-// IF SOB_MODO_GRAFICO()  // reservar um mï¿½nimo de 3 linhas para exibir imagem
-//    N_Altura := N_Altura  + MAX(LEN(VC_Subtitulo),3)
-// ELSE
-//    N_Altura := N_Altura  + LEN(VC_Subtitulo)
-// ENDIF
-// *
-// * testar os limites da janela, jï¿½ que sï¿½o determinados automaticamente
-// *
-// N_Altura  := MIN(N_Altura ,MAXROW()+1)
-// N_Largura := MIN(N_Largura,MAXCOL()+1)
-// *
-// N_LinIni := ROUND((MAXROW()+1-N_Altura)/2,0)
-// N_ColIni := ROUND((MAXCOL()+1-N_Largura)/2,0)
-// *
-// @ N_LinIni,N_ColIni,N_LinIni+N_Altura,N_ColIni+N_Largura ;
-//   Jane VX_Janela TITULO C_Cabec_x SubTitulo C_SubCabec Tecl VC_TxtBotoes ;
-//   DESLOCACAB N_DeslocaCabecalho AJUDA "T05735"
-// *
-// AJUSTA_BOTOES(VX_Janela)  // ajusta Lin2Livre ï¿½ quantidade de botï¿½es de funï¿½ï¿½o
-// *
-// RETURN VX_Janela
-// *
+*
+IF L_Parar
+   RETURN NIL
+ENDIF
+RETURN VX_Janela
+*
+
+
+
+
+
+
+**************************
+STAT FUNC CLICOU_NA_JANELA (VX_Janela,N_Tecla)
+**************************
+LOCAL L_Clicou := .F.
+LOCAL N_mRow, N_mCol, N_RegiaoMouse, N_Keyboard
+*
+IF N_Tecla == K_LBUTTONDOWN .OR. N_Tecla == K_LDBLCLK
+   N_mRow := mRow()
+   N_mCol := mCol()
+   N_RegiaoMouse := RegiaoJanela_(VX_Janela,N_mRow,N_mCol,;
+                                  Lin1Livre(VX_Janela),;
+                                  Col1Livre(VX_Janela),;
+                                  Lin2Livre(VX_Janela),;
+                                  Col2Livre(VX_Janela),;
+                                  @N_Keyboard)
+  //#INCLUDE "mousecua.ch"
+  IF N_RegiaoMouse # FORA_DA_JANELA
+     L_Clicou := .T.
+  ENDIF
+ENDIF
+*                      IF N_RegiaoMouse == AREA_UTIL
+RETURN L_Clicou
+*
+****************************
+STATIC FUNCTION MontarJanela (C_Cabec_x, C_SubCabec, VC_Menu , VC_TxtBotoes )
+****************************
+*
+LOCAL N_Largura , N_LargAux , N_Altura, VC_Subtitulo, VX_Janela
+LOCAL N_LinIni, N_ColIni
+LOCAL N_DeslocaCabecalho
+*
+DEFAULT VC_Menu      TO {}
+DEFAULT VC_TxtBotoes TO {}
+*
+VC_Subtitulo = StrToVet_(C_SubCabec)
+*
+* calcular largura do box
+*
+N_Largura := 0                       // procurar maior título
+AEVAL(VC_Subtitulo,{|C_Elemento|;
+                   N_Largura := MAX(N_Largura,LEN(C_Elemento))} )
+*
+* + 1 = espaço à esquerda do botao (acrescentado na TecFunc)
+* + 1 = espaço à direita do botao (acrescentado na TecFunc)
+* + 2 = espaço entre botoes
+*
+N_LargAux  := 0                      // largura das teclas de funções
+AEVAL(VC_TxtBotoes,{|C_Elemento|;
+                    N_LargAux := N_LargAux + LEN(C_Elemento) + 1 + 1 + 2 })
+N_Largura := MAX(N_LargAux,N_Largura)
+*
+* + 2 = espaço entre opçoes
+*
+N_LargAux  := 0                      // largura do menu
+AEVAL(VC_Menu  ,{|C_Elemento|;
+                  N_LargAux := N_LargAux + LEN(C_Elemento) + 2 })
+N_Largura := MAX(N_LargAux,N_Largura)
+*
+* + 2 = colunas (do box)
+* + 2 = espaçamentos laterais (um de cada lado)
+* + 2 = reservado para a SCROLLBAR VERTICAL
+*
+N_Largura := N_Largura + 2 + 2 + 2
+*
+IF SOB_MODO_GRAFICO()   // reservar 4 colunas para mostrar a imagem à esquerda
+   N_DeslocaCabecalho := 4
+   N_Largura := N_Largura + N_DeslocaCabecalho
+ELSE
+   N_DeslocaCabecalho := 0
+ENDIF
+*
+* definir altura do box
+*
+* + 2 = traços superior e inferior (do box)
+* + 1 = espaçamento inferior
+* NÃO foi reservado espaço SCROLLBAR HORIZONTAL / AREA DE MENSAGEM
+*
+N_Altura := 2+;       // linhas do box
+            IIF(EMPTY(VC_Menu),0,2)+;
+            IIF(EMPTY(VC_TxtBotoes),0,2)
+IF SOB_MODO_GRAFICO()  // reservar um mínimo de 3 linhas para exibir imagem
+   N_Altura := N_Altura  + MAX(LEN(VC_Subtitulo),3)
+ELSE
+   N_Altura := N_Altura  + LEN(VC_Subtitulo)
+ENDIF
+*
+* testar os limites da janela, já que são determinados automaticamente
+*
+N_Altura  := MIN(N_Altura ,MAXROW()+1)
+N_Largura := MIN(N_Largura,MAXCOL()+1)
+*
+N_LinIni := ROUND((MAXROW()+1-N_Altura)/2,0)
+N_ColIni := ROUND((MAXCOL()+1-N_Largura)/2,0)
+*
+@ N_LinIni,N_ColIni,N_LinIni+N_Altura,N_ColIni+N_Largura ;
+  Jane VX_Janela TITULO C_Cabec_x SubTitulo C_SubCabec Tecl VC_TxtBotoes ;
+  DESLOCACAB N_DeslocaCabecalho AJUDA "T05735"
+*
+AJUSTA_BOTOES(VX_Janela)  // ajusta Lin2Livre à quantidade de botões de função
+*
+RETURN VX_Janela
+*
 ****************
 PROCEDURE ALARME (C_CDMENS,C_SubCabec,N_SEGUNDOS)
 ****************
@@ -473,40 +499,44 @@ TONE(750,0)
 // ENDIF
 // *
 
-****************
-FUNCTION MOSTRAR ( C_CDMENS, C_SubCabec , V_TECLAS , L_PARAR, L_MUDA_COR,;
-                   N_SEGUNDOS, C_Cabec_x, C_ArqImagem )
-****************
-    RETURN NIL
-
 // ****************
 // FUNCTION MOSTRAR ( C_CDMENS, C_SubCabec , V_TECLAS , L_PARAR, L_MUDA_COR,;
 //                    N_SEGUNDOS, C_Cabec_x, C_ArqImagem )
 // ****************
-// LOCAL C_COR_ANT, V_JAN
-// DEFAULT L_MUDA_COR TO .T.
-// DEFAULT C_Cabec_x     TO "Informação"
-// DEFAULT C_ArqImagem TO "informac.abm"
-// *
-// ASSUME LEFT(C_CDMENS,1) == "M"
-// ASSUME LEN(TROCA(C_CDMENS,"M0123456789?",""))==0
-// ASSUME LEN(C_CDMENS)==6
-// C_SubCabec := C_SubCabec+";;("+C_CDMENS+")"
-// *
-// IF CABEC_TESTE_AUTOMATICO()
-//    C_Cabec_x +=" ("+C_CDMENS+")"
-// ENDIF
-// *
-// IF L_MUDA_COR .AND. .NOT. SOB_MODO_GRAFICO()
-//    C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_OK))
-// ENDIF
-// V_JAN := INFORMAR(C_Cabec_x,C_SubCabec,V_TECLAS,L_PARAR,N_SEGUNDOS,C_ArqImagem)
-// IF L_MUDA_COR .AND. .NOT. SOB_MODO_GRAFICO()
-//    SETCOLOR(C_COR_ANT)
-// ENDIF
-// *
-// RETURN V_JAN
-// *
+//     @ 22, 0 SAY ""
+//     OutStd("MOSTRAR() function called")
+
+
+//     RETURN NIL
+
+****************
+FUNCTION MOSTRAR ( C_CDMENS, C_SubCabec , V_TECLAS , L_PARAR, L_MUDA_COR,;
+                   N_SEGUNDOS, C_Cabec_x, C_ArqImagem )
+****************
+LOCAL C_COR_ANT, V_JAN
+DEFAULT L_MUDA_COR TO .T.
+DEFAULT C_Cabec_x     TO "Informação"
+DEFAULT C_ArqImagem TO "informac.abm"
+*
+ASSUME LEFT(C_CDMENS,1) == "M"
+ASSUME LEN(TROCA(C_CDMENS,"M0123456789?",""))==0
+ASSUME LEN(C_CDMENS)==6
+C_SubCabec := C_SubCabec+";;("+C_CDMENS+")"
+*
+IF CABEC_TESTE_AUTOMATICO()
+   C_Cabec_x +=" ("+C_CDMENS+")"
+ENDIF
+*
+IF L_MUDA_COR .AND. .NOT. SOB_MODO_GRAFICO()
+   C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_OK))
+ENDIF
+V_JAN := INFORMAR(C_Cabec_x,C_SubCabec,V_TECLAS,L_PARAR,N_SEGUNDOS,C_ArqImagem)
+IF L_MUDA_COR .AND. .NOT. SOB_MODO_GRAFICO()
+   SETCOLOR(C_COR_ANT)
+ENDIF
+*
+RETURN V_JAN
+*
 // *******************
 // FUNCTION MSGAGUARDE ( C_CDMENS, C_Cabec_x, C_SubCabec , L_ComBotaoEsc, N_ProgressBar )
 // *******************

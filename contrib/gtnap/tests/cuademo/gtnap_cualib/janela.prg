@@ -114,7 +114,7 @@ IF N_EspacamentoEmPixels # 4
       *
       * A coluna inicial também tem de ser zero, senão dá problema
       * no refresh da tela. A coluna final não precisa ser MAXCOL().
-      ? MEMVAR->ESPACAMENTO_OPCIONAL_USA_SEMPRE_LIMITES_MAXIMOS
+      //? MEMVAR->ESPACAMENTO_OPCIONAL_USA_SEMPRE_LIMITES_MAXIMOS
    ENDIF
 ENDIF
 *
@@ -203,6 +203,9 @@ IF "++" $ C_CorInten
 ENDIF
 *
 IF L_CUA_10
+    @ 22, 0 SAY ""
+    OutStd("B_Metodo NIL in Janela")
+
    B_Metodo := {||NIL}   // não faz nada
 ELSE
    * trata eventuais botões, ações e imagens, mesmo que janela não tenha especialização
@@ -431,46 +434,46 @@ RETURN VX_Janela
 //                      NIL,;          // _BOTAO_HANDLE_PUSHBUTTON
 //                      L_MudaDados})  // _BOTAO_MUDADADOS
 // *
-// ***************
-// PROC AddImagem (VX_Janela,C_ArquivoImagem,;
-//                 N_LinIniImagem,N_ColIniImagem,N_LinFinImagem,N_ColFinImagem,;
-//                 N_Keyboard,C_CdBotao)
-// ***************
-// *
-// IF .NOT. L_CUA_10
-//    ? MEMVAR->ADDIMAGEM_ESPECIFICA_PARA_A_CUA_10
-// ENDIF
-// *
-// IF .NOT. VX_SubObj==NIL
-//    ? MEMVAR->ADDIMAGEM_EM_JANELA_JA_ESPECIALIZADA
-// ENDIF
-// *
-// IF .NOT. LEFT(C_CdBotao,1) == "B"
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// IF .NOT. LEN(TROCA(C_CdBotao,"B0123456789?",""))==0
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// IF .NOT. LEN(C_CdBotao)==6
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// *
-// AADD(V_LstImagens,{C_ArquivoImagem,;  // _IMAGEM_ARQUIVO
-//                    N_LinIniImagem,;   // _IMAGEM_LIN_INICIAL
-//                    N_ColIniImagem,;   // _IMAGEM_COL_INICIAL
-//                    N_LinFinImagem,;   // _IMAGEM_LIN_FINAL
-//                    N_ColFinImagem,;   // _IMAGEM_COL_FINAL
-//                    NIL,;              // _IMAGEM_BLOCO_ACAO
-//                    .F.,;              // _IMAGEM_AUTOCLOSE
-//                    C_CdBotao,;        // _IMAGEM_CDBOTAO
-//                    NIL,;              // _IMAGEM_ALIAS_MUDA
-//                    NIL,;              // _IMAGEM_RECNO_MUDA
-//                    NIL,;              // _IMAGEM_FILTER_MUDA
-//                    NIL,;              // _IMAGEM_ORDER_MUDA
-//                    NIL,;              // _IMAGEM_EOFOK
-//                    NIL,;              // _IMAGEM_HANDLE_MUDA
-//                    N_Keyboard,;       // _IMAGEM_KEYBOARD
-//                    InKeyCaseAlternativo(N_Keyboard)})  // _IMAGEM_KEYBOARD_CASE
+***************
+PROC AddImagem (VX_Janela,C_ArquivoImagem,;
+                N_LinIniImagem,N_ColIniImagem,N_LinFinImagem,N_ColFinImagem,;
+                N_Keyboard,C_CdBotao)
+***************
+*
+IF .NOT. L_CUA_10
+   ? MEMVAR->ADDIMAGEM_ESPECIFICA_PARA_A_CUA_10
+ENDIF
+*
+IF .NOT. VX_SubObj==NIL
+   ? MEMVAR->ADDIMAGEM_EM_JANELA_JA_ESPECIALIZADA
+ENDIF
+*
+IF .NOT. LEFT(C_CdBotao,1) == "B"
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+IF .NOT. LEN(TROCA(C_CdBotao,"B0123456789?",""))==0
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+IF .NOT. LEN(C_CdBotao)==6
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+*
+AADD(V_LstImagens,{C_ArquivoImagem,;  // _IMAGEM_ARQUIVO
+                   N_LinIniImagem,;   // _IMAGEM_LIN_INICIAL
+                   N_ColIniImagem,;   // _IMAGEM_COL_INICIAL
+                   N_LinFinImagem,;   // _IMAGEM_LIN_FINAL
+                   N_ColFinImagem,;   // _IMAGEM_COL_FINAL
+                   NIL,;              // _IMAGEM_BLOCO_ACAO
+                   .F.,;              // _IMAGEM_AUTOCLOSE
+                   C_CdBotao,;        // _IMAGEM_CDBOTAO
+                   NIL,;              // _IMAGEM_ALIAS_MUDA
+                   NIL,;              // _IMAGEM_RECNO_MUDA
+                   NIL,;              // _IMAGEM_FILTER_MUDA
+                   NIL,;              // _IMAGEM_ORDER_MUDA
+                   NIL,;              // _IMAGEM_EOFOK
+                   NIL,;              // _IMAGEM_HANDLE_MUDA
+                   N_Keyboard,;       // _IMAGEM_KEYBOARD
+                   InKeyCaseAlternativo(N_Keyboard)})  // _IMAGEM_KEYBOARD_CASE
 *
 ****************
 PROC AddImagem20 (VX_Janela,C_ArquivoImagem,;
@@ -565,23 +568,23 @@ AADD(V_LstImagens,{C_ArquivoImagem,;  // _IMAGEM_ARQUIVO
 //                  L_HandleMuda,;     // _ACAO_HANDLE_MUDA
 //                  L_MudaDados})      // _ACAO_MUDADADOS
 // *
-// ******************************
-// STAT FUNC InKeyCaseAlternativo (N_Keyboard)
-// ******************************
-// LOCAL N_Keyboard_Case
-// LOCAL C_Char_Equiv
-// IF N_KeyBoard # NIL
-//    * Tornar o N_Keyboard "case insensitive"
-//    C_Char_Equiv := CHR(N_Keyboard)
-//    IF C_Char_Equiv >= "a" .AND. C_Char_Equiv <= "z"
-//       N_Keyboard_Case := ASC(UPPER(C_Char_Equiv))
-//    ELSEIF C_Char_Equiv >= "A" .AND. C_Char_Equiv <= "Z"
-//       N_Keyboard_Case := ASC(LOWER(C_Char_Equiv))
-//    ELSE
-//       N_Keyboard_Case := N_Keyboard  // nï¿½o ï¿½ letra
-//    ENDIF
-// ENDIF
-// RETURN N_Keyboard_Case
+******************************
+STAT FUNC InKeyCaseAlternativo (N_Keyboard)
+******************************
+LOCAL N_Keyboard_Case
+LOCAL C_Char_Equiv
+IF N_KeyBoard # NIL
+   * Tornar o N_Keyboard "case insensitive"
+   C_Char_Equiv := CHR(N_Keyboard)
+   IF C_Char_Equiv >= "a" .AND. C_Char_Equiv <= "z"
+      N_Keyboard_Case := ASC(UPPER(C_Char_Equiv))
+   ELSEIF C_Char_Equiv >= "A" .AND. C_Char_Equiv <= "Z"
+      N_Keyboard_Case := ASC(LOWER(C_Char_Equiv))
+   ELSE
+      N_Keyboard_Case := N_Keyboard  // não é letra
+   ENDIF
+ENDIF
+RETURN N_Keyboard_Case
 *
 **************
 FUNCTION Ative ( VX_Janela )
@@ -919,9 +922,26 @@ ENDIF // C_TelaCoberta == NIL
 //     ENDIF
 // ENDIF
 
+OutStd("Num Window: " + hb_ntos(N_WindowNum))
+
+// IF N_WindowNum = 1
+//     X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
+// ENDIF
+
+// @ 22, 0 SAY ""
+// IF B_Metodo == NIL
+//     OutStd("ATIVE B_Metodo NIL")
+//     X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
+// ELSE
+//     OutStd("ATIVE B_Metodo VALID")
+// ENDIF
+
+
 IF N_TP_Jan == NIL
+    OutStd("Before EVAL(B_Metodo,VX_Janela)")
     X_Retorno := EVAL(B_Metodo,VX_Janela)
 ELSE
+    OutStd("Before EVAL(B_Metodo)")
     X_Retorno := EVAL(B_Metodo)
 ENDIF
 
@@ -938,7 +958,9 @@ ENDIF
     DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha após ativação
  ENDIF
  *
- RETURN X_Retorno   // Ative ( VX_Janela )
+
+ OutStd("FINISH ATIVE: " + hb_ntos(N_WindowNum))
+RETURN X_Retorno   // Ative ( VX_Janela )
 *
 *
 *
@@ -2203,6 +2225,10 @@ RETURN L_EXIBE_AJUDA
 // FRAN: At the moment, events are internally managed by GTNAP
 STATIC FUNCTION TrataEventos ( VX_Janela )
     LOCAL L_FechouComAutoClose := .F.
+
+    @ 22, 0 SAY ""
+    OutStd("TrataEventos ( VX_Janela ) function called")
+
     RETURN L_FechouComAutoClose
 
 // *
