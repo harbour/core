@@ -203,8 +203,8 @@ IF "++" $ C_CorInten
 ENDIF
 *
 IF L_CUA_10
-    @ 22, 0 SAY ""
-    OutStd("B_Metodo NIL in Janela")
+    // @ 22, 0 SAY ""
+    // OutStd("B_Metodo NIL in Janela")
 
    B_Metodo := {||NIL}   // não faz nada
 ELSE
@@ -595,7 +595,13 @@ LOCAL C_CorAnt    := SETCOLOR(C_CorJan)              // salvar cor anterior
 LOCAL B_Ajuda_Ant  // salvar help anterior, se existir novo
 LOCAL N_Cont, N_AddRows
 LOCAL C_Cabec_Aux
-LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
+//LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
+
+// Window flags
+LOCAL L_CLOSE_WITH_RETURN := .F.
+LOCAL L_CLOSE_WITH_ESC := .F.
+LOCAL L_MINIMIZE_BUTTON := .F.
+
 
 // FRAN: A NAppGUI/GTNAP application owns the event cicle.
 // The hotkey should be asigned when Window is created after NAP_CUALIB_WINDOW()
@@ -648,7 +654,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
                 // The first window takes the title from 'Setup_nap' (compatible with GTWVW/Cualib)
                 C_Cabec_Aux := NIL
             ELSE
-                OutStd("Version: " + Version())
+                //OutStd("Version: " + Version())
                 IF Version()=="Harbour 3.2.0dev (r1703241902)"
                     IF CABEC_TESTE_AUTOMATICO()
                         C_Cabec_Aux := StrTran(C_Cabec," ","_")
@@ -715,7 +721,34 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
                 Endif
             ENDIF
 
-            N_WindowNum := NAP_CUALIB_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux)
+            // Windows flags based on specializations
+            IF N_TP_Jan == NIL
+                L_CLOSE_WITH_ESC := .T.
+                L_CLOSE_WITH_RETURN := .T.
+
+            ELSEIF N_TP_Jan == _JAN_TEXTO_10
+
+            ELSEIF N_TP_Jan == _JAN_ENTRADA_10
+
+            ELSEIF N_TP_Jan == _JAN_ARQTEXTO_10
+
+            ELSEIF N_TP_Jan == _JAN_MENU_VERT
+                L_CLOSE_WITH_ESC := .T.
+                L_CLOSE_WITH_RETURN := .F.
+
+            ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
+
+            ELSEIF N_TP_Jan == _JAN_SELE_ARQ_20
+
+            ENDIF
+
+            IF LEN(V_PilhaJanelas)==1
+                L_MINIMIZE_BUTTON := .T.
+            ELSE
+                L_MINIMIZE_BUTTON := .F.
+            ENDIF
+
+            N_WindowNum := NAP_CUALIB_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux, L_CLOSE_WITH_RETURN, L_CLOSE_WITH_ESC, L_MINIMIZE_BUTTON)
 
             NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
 
@@ -892,8 +925,8 @@ ENDIF // C_TelaCoberta == NIL
 // NEXT
 
 // FRAN: Testing the image position
-@ 5, 5 SAY "5,5"
-@ 10, 18 SAY "10,18"
+// @ 5, 5 SAY "5,5"
+// @ 10, 18 SAY "10,18"
 
 // @ 22, 0 SAY ""
 // OutStd( "JAJAJAJAJAJ!!!!!!!!!!!!!!!!!!!!!!!!!!!  Hello" )
@@ -922,7 +955,7 @@ ENDIF // C_TelaCoberta == NIL
 //     ENDIF
 // ENDIF
 
-OutStd("Num Window: " + hb_ntos(N_WindowNum))
+//OutStd("Num Window: " + hb_ntos(N_WindowNum))
 
 // IF N_WindowNum = 1
 //     X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
@@ -938,10 +971,10 @@ OutStd("Num Window: " + hb_ntos(N_WindowNum))
 
 
 IF N_TP_Jan == NIL
-    OutStd("Before EVAL(B_Metodo,VX_Janela)")
+    //OutStd("Before EVAL(B_Metodo,VX_Janela)")
     X_Retorno := EVAL(B_Metodo,VX_Janela)
 ELSE
-    OutStd("Before EVAL(B_Metodo)")
+    //OutStd("Before EVAL(B_Metodo)")
     X_Retorno := EVAL(B_Metodo)
 ENDIF
 
@@ -955,11 +988,15 @@ ENDIF
 
  *
  IF .NOT. L_CUA_10
+    //NAP_LOG("Antes de DestruaJan:")
+
     DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha após ativação
+    //NAP_LOG("Despues de DestruaJan:")
  ENDIF
  *
 
- OutStd("FINISH ATIVE: " + hb_ntos(N_WindowNum))
+ //NAP_LOG("FINISH ATIVE:")
+ //OutStd("FINISH ATIVE: " + hb_ntos(N_WindowNum))
 RETURN X_Retorno   // Ative ( VX_Janela )
 *
 *
@@ -2226,8 +2263,8 @@ RETURN L_EXIBE_AJUDA
 STATIC FUNCTION TrataEventos ( VX_Janela )
     LOCAL L_FechouComAutoClose := .F.
 
-    @ 22, 0 SAY ""
-    OutStd("TrataEventos ( VX_Janela ) function called")
+    // @ 22, 0 SAY ""
+    // OutStd("TrataEventos ( VX_Janela ) function called")
 
     RETURN L_FechouComAutoClose
 

@@ -956,11 +956,30 @@ static void i_add_label_object(const uint32_t cell_x, const uint32_t cell_y, con
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec)
+static __INLINE uint32_t i_window_flags(const bool_t close_return, const bool_t close_esc, const bool_t minimize_button)
+{
+    uint32_t flags = ekWNTITLE | ekWNCLOSE;
+
+    if (close_return == TRUE)
+        flags |= ekWNRETURN;
+
+    if (close_esc == TRUE)
+        flags |= ekWNESC;
+
+    if (minimize_button == TRUE)
+        flags |= ekWNMIN;
+
+    return flags;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button)
 {
     uint32_t id = UINT32_MAX;
     GtNapCualibWindow *cuawin = NULL;
-    Window *window = window_create(ekWNSTD | ekWNESC);
+    uint32_t flags = i_window_flags(close_return, close_esc, minimize_button);
+    Window *window = window_create(flags);
     Panel *panel = panel_create();
     Layout *layout = layout_create(1, 1);
     real32_t width, height;
@@ -1113,6 +1132,7 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
+    V2Df pos;
     uint32_t ret = 0;
     cassert_no_null(cuawin);
     _window_taborder(cuawin->window, NULL);
@@ -1131,6 +1151,18 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
         }
 
     arrst_end();
+
+    pos.x = cuawin->N_ColIni * GTNAP_GLOBAL->cell_x_size;
+    pos.y = cuawin->N_LinIni * GTNAP_GLOBAL->cell_y_size;
+
+    if (parent != NULL)
+    {
+        V2Df ppos = window_get_origin(parent->window);
+        pos.x += ppos.x;
+        pos.y += ppos.y;
+    }
+
+    window_origin(cuawin->window, pos);
 
     log_printf("Launch CUALIB Modal Window: %d, %d, %d, %d", cuawin->N_LinIni, cuawin->N_ColIni, cuawin->N_LinFin, cuawin->N_ColFin);
     ret = window_modal(cuawin->window, parent ? parent->window : NULL);
@@ -1443,7 +1475,7 @@ static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText
     HB_SYMBOL_UNUSED( pGT );
     if (cuawin != NULL)
     {
-        i_add_label_object(iCol, iRow, pText, 0, GTNAP_GLOBAL, cuawin);
+        i_add_label_object(iCol - cuawin->N_ColIni, iRow - cuawin->N_LinIni, pText, 0, GTNAP_GLOBAL, cuawin);
         log_printf("hb_gtnap_WriteAt(%d, %d, %d): %s", iRow, iCol, (int)ulLength, pText);
     }
     else

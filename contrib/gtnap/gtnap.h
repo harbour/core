@@ -87,7 +87,7 @@ extern void hb_gtnap_cualib_set_linespacing(const uint32_t spacing);
 // N_LinFin --> Bottom
 // N_ColFin --> Right
 // C_Cabec --> Title
-extern uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec);
+extern uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button);
 
 extern void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight);
 
