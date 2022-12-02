@@ -1152,8 +1152,8 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
 
     arrst_end();
 
-    pos.x = cuawin->N_ColIni * GTNAP_GLOBAL->cell_x_size;
-    pos.y = cuawin->N_LinIni * GTNAP_GLOBAL->cell_y_size;
+    pos.x = (real32_t)(cuawin->N_ColIni * GTNAP_GLOBAL->cell_x_size);
+    pos.y = (real32_t)(cuawin->N_LinIni * GTNAP_GLOBAL->cell_y_size);
 
     if (parent != NULL)
     {
