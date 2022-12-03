@@ -143,7 +143,7 @@ static void i_OnDraw(Panel *panel, Event *e)
 
     arrst_end();
 
-    draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1);
+    //draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1);
 }
 
 /*---------------------------------------------------------------------------*/

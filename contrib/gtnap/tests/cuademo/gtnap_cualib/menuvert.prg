@@ -34,10 +34,13 @@ AJUSTA_BOTOES(VX_Janela)  // ajusta Lin2Livre à quantidade de botões de função
 *
 
 IF L_RolaVertical
-   * prever espaço para scroll bar vertical
-   Col2Livre(VX_Janela)--
-   Col2Livre(VX_Janela)--
-   L_ScrollVertical := .T.
+    // Fran: In GTNAP, the scroll bar is in widget (not in window)
+    * prever espaço para scroll bar vertical
+    IF .NOT. SOB_MODO_GRAFICO()
+        Col2Livre(VX_Janela)--
+        Col2Livre(VX_Janela)--
+    ENDIF
+    L_ScrollVertical := .T.
 ENDIF
 
 *
@@ -250,7 +253,13 @@ IF L_ForcaLerTudo
     *
         IF SOB_MODO_GRAFICO()
             L_Coords := CoordenadasBrowse(VX_Sele)
-            LOG_PRINT("Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
+
+            // Add an extra column to scrollbar
+            IF L_ScrollVertical
+                L_Coords[4]++
+            ENDIF
+
+            LOG_PRINT("Menu Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
 
             V_MenuVert := NAP_MENUVERT_CREATE()
 

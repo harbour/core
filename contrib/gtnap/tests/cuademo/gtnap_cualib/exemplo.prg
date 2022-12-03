@@ -151,10 +151,10 @@ ENDIF
 QUIT
 *
 
-PROC EXEMPLO_MENU
-    @ 22, 0 SAY ""
-    OutStd("EXEMPLO_MENU() Option selected")
-    RETURN
+// PROC EXEMPLO_MENU
+//     @ 22, 0 SAY ""
+//     OutStd("EXEMPLO_MENU() Option selected")
+//     RETURN
 
 PROC EXEMPLO_BROWSE_DBF
     @ 22, 0 SAY ""

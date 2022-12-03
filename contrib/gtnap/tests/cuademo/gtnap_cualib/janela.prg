@@ -924,6 +924,25 @@ ENDIF // C_TelaCoberta == NIL
 //     @ N_Cont, N_Cont SAY "SAY in " + hb_ntos(N_Cont) + "," + hb_ntos(N_Cont)
 // NEXT
 
+
+// FRAN
+// Testing about window and widget dimensions
+// FOR N_Cont := 0 TO 35
+//     @ N_Cont, 0 SAY "*" + hb_ntos(N_Cont)
+// NEXT
+
+// @ 11, 0 SAY "***************************************" // + hb_ntos(N_Cont)
+// @ 33, 73 SAY "**" // + hb_ntos(N_Cont)
+
+
+// testing child windows position coherence
+//@ 20, 41 SAY "******************************************************************" // + hb_ntos(N_Cont)
+
+// @ 0, 0 SAY "[" // + hb_ntos(N_Cont)
+// @ 34, 109 SAY "]" // + hb_ntos(N_Cont)
+
+//@ N_Cont, N_Cont SAY "****"
+
 // FRAN: Testing the image position
 // @ 5, 5 SAY "5,5"
 // @ 10, 18 SAY "10,18"
@@ -2606,10 +2625,10 @@ STATIC FUNCTION TrataEventos ( VX_Janela )
 ***************************
 STATIC PROC DesenhaDrawLabe(VX_Janela)
 ***************************
-NAP_CUALIB_LABEL(33, 57, space(26-(LEN(INFO_VERSAO[8])+3))+"Versão "+INFO_VERSAO[5]+"."+INFO_VERSAO[6]+;
+NAP_CUALIB_LABEL(32, 57, space(26-(LEN(INFO_VERSAO[8])+3))+"Versão "+INFO_VERSAO[5]+"."+INFO_VERSAO[6]+;
                                                                             CHR(VAL(INFO_VERSAO[7]))+"(b"+;
                                                                             INFO_VERSAO[8]+") - S"+TRIM(SERIE_ASPEC_INI()))
-NAP_CUALIB_LABEL(34, 39, "www.aspec.com.br   Aspec "+chr(184)+"1993-"+STR(YEAR(DATE()),4,0)+". Todos os direitos reservados")
+NAP_CUALIB_LABEL(33, 39, "www.aspec.com.br   Aspec "+chr(184)+"1993-"+STR(YEAR(DATE()),4,0)+". Todos os direitos reservados")
 
 
 // RETURN {||WVW_DRAWLABEL(N_WindowNum,32,57,space(26-(LEN(INFO_VERSAO[8])+3))+"Versão "+INFO_VERSAO[5]+"."+INFO_VERSAO[6]+;

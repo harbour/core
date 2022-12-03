@@ -19,7 +19,7 @@
 exemplo.prg
 #exemplo_auxiliar.prg
 #exemplo_entradadados.prg
-#exemplo_menu.prg
+exemplomenu.prg
 #exemplo_dbf.prg
 #exemplo_vetor.prg
 #exemplo_textoarquivo.prg
