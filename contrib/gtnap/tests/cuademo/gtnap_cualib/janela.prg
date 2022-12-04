@@ -376,64 +376,57 @@ RETURN VX_Janela
 #DEFINE B_ScrollBarHorizontal   VX_Janela[54]
 #DEFINE N_ProgressBar VX_Janela[55]
 *
-
-
-
-
-
-
-
-// *************
-// PROC AddBotao (VX_Janela,C_TxtBotao,B_AcaoBotao,L_AutoClose,;
-//                C_CdBotao, L_AliasMuda, L_RecnoMuda, L_FilterMuda, L_OrderMuda,L_EofOk, L_HandleMuda,;
-//                L_MudaDados,L_BotaoAutomatico)
-// *************
-// DEFAULT L_AutoClose       TO .F.
-// DEFAULT L_BotaoAutomatico TO .F.
-// DEFAULT L_MudaDados       TO .F.
-// *
-// *
-// IF L_CUA_10
-//    ? MEMVAR->ADDBOTAO_EXCLUSIVO_DA_CUA_20
-// ENDIF
-// *
-// IF .NOT. VX_SubObj==NIL
-//    ? MEMVAR->ADDBOTAO_EM_JANELA_JA_ESPECIALIZADA
-// ENDIF
-// *
-// IF .NOT. LEFT(C_CdBotao,1) == "B"
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// IF .NOT. LEN(TROCA(C_CdBotao,"B0123456789?",""))==0
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// IF .NOT. LEN(C_CdBotao)==6
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// *
-// AADD(V_RegiaoBotoes,{NIL,;          // _BOTAO_LIN_INICIAL
-//                      NIL,;          // _BOTAO_COL_INICIAL
-//                      NIL,;          // _BOTAO_LIN_FINAL
-//                      NIL,;          // _BOTAO_COL_FINAL
-//                      C_TxtBotao,;   // _BOTAO_TEXTO_COMANDO
-//                      NIL,;          // _BOTAO_TEXTO_TRATADO_1
-//                      NIL,;          // _BOTAO_TEXTO_TRATADO_2
-//                      NIL,;          // _BOTAO_COL_DESTAQUE
-//                      NIL,;          // _BOTAO_TEXTO_DESTAQUE
-//                      B_AcaoBotao,;  // _BOTAO_BLOCO_ACAO
-//                      L_AutoClose,;  // _BOTAO_AUTOCLOSE
-//                      C_CdBotao,;    // _BOTAO_CDBOTAO
-//                      L_AliasMuda,;  // _BOTAO_ALIAS_MUDA
-//                      L_RecnoMuda,;  // _BOTAO_RECNO_MUDA
-//                      L_FilterMuda,; // _BOTAO_FILTER_MUDA
-//                      L_OrderMuda,;  // _BOTAO_ORDER_MUDA
-//                      L_EofOk,;      // _BOTAO_EOFOK
-//                      L_HandleMuda,; // _BOTAO_HANDLE_MUDA
-//                      NIL,;          // _BOTAO_INKEY_DESTAQUE
-//                      NIL,;          // _BOTAO_INKEY_DESTAQUE_CASE
-//                      NIL,;          // _BOTAO_HANDLE_PUSHBUTTON
-//                      L_MudaDados})  // _BOTAO_MUDADADOS
-// *
+*************
+PROC AddBotao (VX_Janela,C_TxtBotao,B_AcaoBotao,L_AutoClose,;
+               C_CdBotao, L_AliasMuda, L_RecnoMuda, L_FilterMuda, L_OrderMuda,L_EofOk, L_HandleMuda,;
+               L_MudaDados,L_BotaoAutomatico)
+*************
+DEFAULT L_AutoClose       TO .F.
+DEFAULT L_BotaoAutomatico TO .F.
+DEFAULT L_MudaDados       TO .F.
+*
+*
+IF L_CUA_10
+   ? MEMVAR->ADDBOTAO_EXCLUSIVO_DA_CUA_20
+ENDIF
+*
+IF .NOT. VX_SubObj==NIL
+   ? MEMVAR->ADDBOTAO_EM_JANELA_JA_ESPECIALIZADA
+ENDIF
+*
+IF .NOT. LEFT(C_CdBotao,1) == "B"
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+IF .NOT. LEN(TROCA(C_CdBotao,"B0123456789?",""))==0
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+IF .NOT. LEN(C_CdBotao)==6
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+*
+AADD(V_RegiaoBotoes,{NIL,;          // _BOTAO_LIN_INICIAL
+                     NIL,;          // _BOTAO_COL_INICIAL
+                     NIL,;          // _BOTAO_LIN_FINAL
+                     NIL,;          // _BOTAO_COL_FINAL
+                     C_TxtBotao,;   // _BOTAO_TEXTO_COMANDO
+                     NIL,;          // _BOTAO_TEXTO_TRATADO_1
+                     NIL,;          // _BOTAO_TEXTO_TRATADO_2
+                     NIL,;          // _BOTAO_COL_DESTAQUE
+                     NIL,;          // _BOTAO_TEXTO_DESTAQUE
+                     B_AcaoBotao,;  // _BOTAO_BLOCO_ACAO
+                     L_AutoClose,;  // _BOTAO_AUTOCLOSE
+                     C_CdBotao,;    // _BOTAO_CDBOTAO
+                     L_AliasMuda,;  // _BOTAO_ALIAS_MUDA
+                     L_RecnoMuda,;  // _BOTAO_RECNO_MUDA
+                     L_FilterMuda,; // _BOTAO_FILTER_MUDA
+                     L_OrderMuda,;  // _BOTAO_ORDER_MUDA
+                     L_EofOk,;      // _BOTAO_EOFOK
+                     L_HandleMuda,; // _BOTAO_HANDLE_MUDA
+                     NIL,;          // _BOTAO_INKEY_DESTAQUE
+                     NIL,;          // _BOTAO_INKEY_DESTAQUE_CASE
+                     NIL,;          // _BOTAO_HANDLE_PUSHBUTTON
+                     L_MudaDados})  // _BOTAO_MUDADADOS
+*
 ***************
 PROC AddImagem (VX_Janela,C_ArquivoImagem,;
                 N_LinIniImagem,N_ColIniImagem,N_LinFinImagem,N_ColFinImagem,;
@@ -523,51 +516,51 @@ AADD(V_LstImagens,{C_ArquivoImagem,;  // _IMAGEM_ARQUIVO
                    NIL,;              // _IMAGEM_KEYBOARD
                    NIL,;              // _IMAGEM_KEYBOARD_CASE
                    L_MudaDados})      // _IMAGEM_MUDADADOS
-// *
-// ************
-// PROC AddAcao (VX_Janela,N_Keyboard,B_AcaoBotao,L_AutoClose,;
-//               C_CdBotao, L_AliasMuda, L_RecnoMuda, L_FilterMuda, L_OrderMuda, L_EofOk, L_HandleMuda, L_MudaDados)
-// ************
-// *
-// DEFAULT L_MudaDados TO .F.
-// *
-// * A funï¿½ï¿½o AddAcao sï¿½ chamada pelo COMANDO ADDCAO ou pela funï¿½ï¿½o AJUSTA_BOTOES()
-// *
-// IF L_CUA_10
-//    ? MEMVAR->ADDACAO_ESPECIFICA_PARA_A_CUA_20
-// ENDIF
-// *
-// IF .NOT. VX_SubObj==NIL
-//    ? MEMVAR->ADDACAO_EM_JANELA_JA_ESPECIALIZADA
-// ENDIF
-// *
-// IF .NOT. LEFT(C_CdBotao,1) == "B"
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// IF .NOT. LEN(TROCA(C_CdBotao,"B0123456789?",""))==0
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// IF .NOT. LEN(C_CdBotao)==6
-//    ? MEMVAR->ERRO_ASSUME
-// ENDIF
-// *
-// IF INABILITA_ADDACAO(L_MudaDados)
-//    B_AcaoBotao := {||.F.}  // Inabilitar a aï¿½ï¿½o do comando ADDACAO.
-// ENDIF
-// *
-// AADD(V_LstAcoes,{N_Keyboard,;       // _ACAO_KEYBOARD
-//                  InKeyCaseAlternativo(N_Keyboard),;  // _ACAO_KEYBOARD_CASE
-//                  B_AcaoBotao,;      // _ACAO_BLOCO_ACAO
-//                  L_AutoClose,;      // _ACAO_AUTOCLOSE
-//                  C_CdBotao,;        // _ACAO_CDBOTAO
-//                  L_AliasMuda,;      // _ACAO_ALIAS_MUDA
-//                  L_RecnoMuda,;      // _ACAO_RECNO_MUDA
-//                  L_FilterMuda,;     // _ACAO_FILTER_MUDA
-//                  L_OrderMuda,;      // _ACAO_ORDER_MUDA
-//                  L_EofOk,;          // _ACAO_EOFOK
-//                  L_HandleMuda,;     // _ACAO_HANDLE_MUDA
-//                  L_MudaDados})      // _ACAO_MUDADADOS
-// *
+*
+************
+PROC AddAcao (VX_Janela,N_Keyboard,B_AcaoBotao,L_AutoClose,;
+              C_CdBotao, L_AliasMuda, L_RecnoMuda, L_FilterMuda, L_OrderMuda, L_EofOk, L_HandleMuda, L_MudaDados)
+************
+*
+DEFAULT L_MudaDados TO .F.
+*
+* A função AddAcao sé chamada pelo COMANDO ADDCAO ou pela função AJUSTA_BOTOES()
+*
+IF L_CUA_10
+   ? MEMVAR->ADDACAO_ESPECIFICA_PARA_A_CUA_20
+ENDIF
+*
+IF .NOT. VX_SubObj==NIL
+   ? MEMVAR->ADDACAO_EM_JANELA_JA_ESPECIALIZADA
+ENDIF
+*
+IF .NOT. LEFT(C_CdBotao,1) == "B"
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+IF .NOT. LEN(TROCA(C_CdBotao,"B0123456789?",""))==0
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+IF .NOT. LEN(C_CdBotao)==6
+   ? MEMVAR->ERRO_ASSUME
+ENDIF
+*
+IF INABILITA_ADDACAO(L_MudaDados)
+    B_AcaoBotao := {||.F.}  // Inabilitar a ação do comando ADDACAO.
+ ENDIF
+ *
+AADD(V_LstAcoes,{N_Keyboard,;       // _ACAO_KEYBOARD
+                 InKeyCaseAlternativo(N_Keyboard),;  // _ACAO_KEYBOARD_CASE
+                 B_AcaoBotao,;      // _ACAO_BLOCO_ACAO
+                 L_AutoClose,;      // _ACAO_AUTOCLOSE
+                 C_CdBotao,;        // _ACAO_CDBOTAO
+                 L_AliasMuda,;      // _ACAO_ALIAS_MUDA
+                 L_RecnoMuda,;      // _ACAO_RECNO_MUDA
+                 L_FilterMuda,;     // _ACAO_FILTER_MUDA
+                 L_OrderMuda,;      // _ACAO_ORDER_MUDA
+                 L_EofOk,;          // _ACAO_EOFOK
+                 L_HandleMuda,;     // _ACAO_HANDLE_MUDA
+                 L_MudaDados})      // _ACAO_MUDADADOS
+*
 ******************************
 STAT FUNC InKeyCaseAlternativo (N_Keyboard)
 ******************************
@@ -676,33 +669,47 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             *
             ENDIF
 
-            //
-            // FRAN: Perhaps this block can be avoided
-            //
-            IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
-                *
-                IF N_EspacamentoEmPixels > WVW_SetDefLineSpacing()
-                    * Código a seguir supõe que o espaçamento default é sempre
-                    * maior que o espaçamento opcional, ou seja, que a
-                    * WVW_AddRows() acrescentará linhas.
-                    ? MEMVAR->ESPACAMENTO_OPCIONAL_EH_SEMPRE_ZERO
-                ENDIF
-                *
-                IF N_LinIni == 1 .AND. N_LinFin == MAXROW()-1 .AND. ;
-                    N_ColIni == 1
-                    * A janela foi criada com parâmetros (00,MAXROW(),00,xx),
-                    * mas, pelo fato de não ser direita MAXCOL(),
-                    * a CriaJanela() acrescentou o espaço do BOX, para ficar
-                    * posicionalmente idêntico à versão texto.
-                    * Como, quando o ESPACOPIXELS for 0, não se quer que seja
-                    * igual à versão texto, desfazer este ajuste automático.
-                    N_LinIni--
-                    N_ColIni--
-                    N_LinFin++
-                    N_ColFin++
-                ENDIF
-            *
-            ENDIF // N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+            //NAP_LOG("AQUI ATIVE!!! " + hb_ntos(N_LinIni) + ":" + hb_ntos(N_LinFin) + ":" + hb_ntos(N_ColFin))
+
+            IF .NOT. (N_LinIni == 0 .AND. N_LinFin == MAXROW() .AND. ;
+                N_ColIni == 0)
+                //
+                // FRAN
+                //
+                // The main window ends at MaxRow()-1, MaxCol()-1. Child windows end in N_LinFin, N_ColFin
+                N_LinIni--
+                N_ColIni--
+                N_LinFin++
+                N_ColFin++
+            ENDIF
+
+            // //
+            // // FRAN: Perhaps this block can be avoided
+            // //
+            // IF N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
+            //     *
+            //     IF N_EspacamentoEmPixels > WVW_SetDefLineSpacing()
+            //         * Código a seguir supõe que o espaçamento default é sempre
+            //         * maior que o espaçamento opcional, ou seja, que a
+            //         * WVW_AddRows() acrescentará linhas.
+            //         ? MEMVAR->ESPACAMENTO_OPCIONAL_EH_SEMPRE_ZERO
+            //     ENDIF
+            //     *
+            //     IF N_LinIni == 1 .AND. N_LinFin == MAXROW()-1 .AND. ;
+            //         N_ColIni == 1
+            //         * A janela foi criada com parâmetros (00,MAXROW(),00,xx),
+            //         * mas, pelo fato de não ser direita MAXCOL(),
+            //         * a CriaJanela() acrescentou o espaço do BOX, para ficar
+            //         * posicionalmente idêntico à versão texto.
+            //         * Como, quando o ESPACOPIXELS for 0, não se quer que seja
+            //         * igual à versão texto, desfazer este ajuste automático.
+            //         N_LinIni--
+            //         N_ColIni--
+            //         N_LinFin++
+            //         N_ColFin++
+            //     ENDIF
+            // *
+            // ENDIF // N_EspacamentoEmPixels # WVW_SetDefLineSpacing()
             //
             //
             //
@@ -884,6 +891,44 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
         ENDIF
     ENDIF
     *
+
+    //
+    // Fran: Adding buttons
+    //
+    IF SOB_MODO_GRAFICO()
+        *
+        * ATENÇÃO: No xHarbour e no Harbour antigo (compilador 6.3.0),
+        *          a criação da PushButton era antes da criação da ToolBar.
+        *          Se isto for feito no Harbour novo (compilador 10.1.0), a
+        *          WVW_TBCREATE() desloca os PushButton para "baixo", ficando
+        *          fora da janela visível.
+        * "SOLUÇÃO" - Inverter a ordem, criado os PushButton depois da ToolBar.
+        *             Assim o código ficou o mesmo para todos os compiladores.
+        *
+        NAP_LOG("Adding buttons")
+        FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
+            NAP_LOG("Adding button " + hb_ntos(N_Cont))
+            ADICIONA_BOTAO_PUSH(VX_Janela,N_Cont)
+        NEXT
+
+    ELSE    // Buttons in text mode
+        * imprimir o texto do botao
+        FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
+            SETPOS(N_LinImp+V_RegiaoBotoes[N_Cont,_BOTAO_LIN_INICIAL],;
+            N_Col1Livre+V_RegiaoBotoes[N_Cont,_BOTAO_COL_INICIAL])
+            DISPOUT(V_RegiaoBotoes[N_Cont,_BOTAO_TEXTO_TRATADO_2])
+        NEXT
+        *
+        * dar destaque as teclas de função
+        FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
+            SETPOS(N_LinImp+V_RegiaoBotoes[N_Cont,_BOTAO_LIN_INICIAL],;
+            N_Col1Livre+V_RegiaoBotoes[N_Cont,_BOTAO_COL_DESTAQUE])
+            DISPOUT(V_RegiaoBotoes[N_Cont,_BOTAO_TEXTO_DESTAQUE],C_CorInten)
+        NEXT
+
+    ENDIF   // SOB_MODO_GRAFICO() Buttons
+
+     *
     //
     // Fran: Adding images
     //
@@ -936,7 +981,7 @@ ENDIF // C_TelaCoberta == NIL
 
 
 // testing child windows position coherence
-//@ 20, 41 SAY "******************************************************************" // + hb_ntos(N_Cont)
+//@ 21, 40 SAY "******************************************************************" // + hb_ntos(N_Cont)
 
 // @ 0, 0 SAY "[" // + hb_ntos(N_Cont)
 // @ 34, 109 SAY "]" // + hb_ntos(N_Cont)
@@ -1034,45 +1079,40 @@ RETURN L_EH_PRODUCAO
 ******************
 PROC AJUSTA_BOTOES(VX_Janela)
 ******************
-    RETURN
-
-// ******************
-// PROC AJUSTA_BOTOES(VX_Janela)
-// ******************
-// LOCAL N_Cont
-// * nï¿½o imprime nada, sï¿½ retorna as teclas devidamente formatadas
-// *
-// IF N_LinBotoes # NIL
-//    ? MEMVAR->AJUSTA_BOTOES_SO_PODE_SER_CHAMADA_UMA_VEZ
-// ENDIF
-// *
-// N_LinBotoes := TecFunc(N_Col2Livre-N_Col1Livre+1,@V_RegiaoBotoes)
-// N_Lin2Livre := N_Lin2Livre - N_LinBotoes
-// N_LinMess   := N_Lin2Livre+1 // linha de mensagens
-// *
-// FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
-//    IF V_RegiaoBotoes[N_Cont,_BOTAO_INKEY_DESTAQUE] # NIL .AND. ;  // deu para descobrir o INKEY
-//       .NOT. L_CUA_10
-//       * Permitir disparar o evento tambï¿½m atravï¿½s do teclado
-//       AddAcao(VX_Janela,V_RegiaoBotoes[N_Cont,_BOTAO_INKEY_DESTAQUE],;
-//                         V_RegiaoBotoes[N_Cont,_BOTAO_BLOCO_ACAO],;
-//                         V_RegiaoBotoes[N_Cont,_BOTAO_AUTOCLOSE],;
-//                         V_RegiaoBotoes[N_Cont,_BOTAO_CDBOTAO],;
-//                         V_RegiaoBotoes[N_Cont,_BOTAO_ALIAS_MUDA],;
-//                         V_RegiaoBotoes[N_Cont,_BOTAO_RECNO_MUDA],;
-//                         V_RegiaoBotoes[N_Cont,_BOTAO_FILTER_MUDA],;
-//                         V_RegiaoBotoes[N_Cont,_BOTAO_ORDER_MUDA],;
-//                         V_RegiaoBotoes[N_Cont,_BOTAO_EOFOK],;
-//                         V_RegiaoBotoes[N_Cont,_BOTAO_HANDLE_MUDA],;
-//                         V_RegiaoBotoes[N_Cont,_BOTAO_MUDADADOS])
-//    ENDIF
-// NEXT
-// *
-// IF SOB_MODO_GRAFICO() .AND. N_LinBotoes > 1 .AND. N_EspacamentoEmPixels == 0
-//    * Com espaï¿½amento 0, somente ï¿½ possï¿½vel ter uma ï¿½nica "fileira" de botï¿½es,
-//    * senï¿½o ocorrerï¿½ sobreposiï¿½ï¿½o das bordas.
-//    ? MEMVAR->SOBREPOSICAO_DE_BOTOES
-// ENDIF
+LOCAL N_Cont
+* não imprime nada, só retorna as teclas devidamente formatadas
+*
+IF N_LinBotoes # NIL
+   ? MEMVAR->AJUSTA_BOTOES_SO_PODE_SER_CHAMADA_UMA_VEZ
+ENDIF
+*
+N_LinBotoes := TecFunc(N_Col2Livre-N_Col1Livre+1,@V_RegiaoBotoes)
+N_Lin2Livre := N_Lin2Livre - N_LinBotoes
+N_LinMess   := N_Lin2Livre+1 // linha de mensagens
+*
+FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
+   IF V_RegiaoBotoes[N_Cont,_BOTAO_INKEY_DESTAQUE] # NIL .AND. ;  // deu para descobrir o INKEY
+      .NOT. L_CUA_10
+      * Permitir disparar o evento também através do teclado
+      AddAcao(VX_Janela,V_RegiaoBotoes[N_Cont,_BOTAO_INKEY_DESTAQUE],;
+                        V_RegiaoBotoes[N_Cont,_BOTAO_BLOCO_ACAO],;
+                        V_RegiaoBotoes[N_Cont,_BOTAO_AUTOCLOSE],;
+                        V_RegiaoBotoes[N_Cont,_BOTAO_CDBOTAO],;
+                        V_RegiaoBotoes[N_Cont,_BOTAO_ALIAS_MUDA],;
+                        V_RegiaoBotoes[N_Cont,_BOTAO_RECNO_MUDA],;
+                        V_RegiaoBotoes[N_Cont,_BOTAO_FILTER_MUDA],;
+                        V_RegiaoBotoes[N_Cont,_BOTAO_ORDER_MUDA],;
+                        V_RegiaoBotoes[N_Cont,_BOTAO_EOFOK],;
+                        V_RegiaoBotoes[N_Cont,_BOTAO_HANDLE_MUDA],;
+                        V_RegiaoBotoes[N_Cont,_BOTAO_MUDADADOS])
+   ENDIF
+NEXT
+*
+IF SOB_MODO_GRAFICO() .AND. N_LinBotoes > 1 .AND. N_EspacamentoEmPixels == 0
+   * Com espaçamento 0, somente é possível ter uma única "fileira" de botões,
+   * senão ocorrerá sobreposição das bordas.
+   ? MEMVAR->SOBREPOSICAO_DE_BOTOES
+ENDIF
 // *
 // **************************
 // PROC SETA_PARA_TER_TOOLBAR (VX_Janela)
@@ -1938,222 +1978,222 @@ ELSE
 ENDIF
 *
 RETURN C_Cor
-// *
-// ***********************
-// STATIC FUNCTION TecFunc ( N_Largura, V_2RegiaoBotao )
-// *
-// LOCAL N_Quant, N_Cont, N_Brancos := 2
-// LOCAL C_LinhaTxt, C_LinhaWin, N_2LinBotoes
-// LOCAL C_TxtBotao, L_BotaoNoPadrao
-// *
-// * calcular acumulado do tamanho das mensagens
-// *
-// FOR N_Cont := 1 TO LEN(V_2RegiaoBotao)
-//     C_TxtBotao := V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_COMANDO]
-//     *
-//     L_BotaoNoPadrao := .T.
-//     IF LEFT(UPPER(C_TxtBotao),2) $ "I=/A=/E=/C=/X=/L=/P=/"
-//        IF .NOT. C_TxtBotao == "I=incluir" .AND. ;
-//           .NOT. C_TxtBotao == "A=alterar" .AND. ;
-//           .NOT. C_TxtBotao == "E=excluir" .AND. ;
-//           .NOT. C_TxtBotao == "C=consultar" .AND. ;
-//           .NOT. C_TxtBotao == "X=anexar" .AND. ;
-//           .NOT. C_TxtBotao == "L=listar" .AND. ;
-//           .NOT. C_TxtBotao == "P=procurar"
-//           L_BotaoNoPadrao := .F.
-//        ENDIF
-//     ENDIF
-//     *
-//     IF LEFT(XUPPER(C_TxtBotao),7) $ "ESPAï¿½O=/"
-//        IF LEN(C_TxtBotao) == 13
-//           IF .NOT. C_TxtBotao == "Espaï¿½o=marcar"
-//              L_BotaoNoPadrao := .F.
-//           ENDIF
-//        ELSEIF LEN(C_TxtBotao) == 23
-//           IF .NOT. C_TxtBotao == "Espaï¿½o=marcar/desmarcar"
-//              L_BotaoNoPadrao := .F.
-//           ENDIF
-//        ELSE
-//           L_BotaoNoPadrao := .F.
-//        ENDIF
-//     ENDIF
-//     *
-//     IF LEFT(XUPPER(C_TxtBotao),16) $ "BARRA DE ESPAï¿½O=/"
-//        IF LEN(C_TxtBotao) == 22
-//           IF .NOT. C_TxtBotao == "Barra de espaï¿½o=marcar"
-//              L_BotaoNoPadrao := .F.
-//           ENDIF
-//        ELSEIF LEN(C_TxtBotao) == 32
-//           IF .NOT. C_TxtBotao == "Barra de espaï¿½o=marcar/desmarcar"
-//              L_BotaoNoPadrao := .F.
-//           ENDIF
-//        ELSE
-//           L_BotaoNoPadrao := .F.
-//        ENDIF
-//     ENDIF
-//     *
-//     IF .NOT. L_BotaoNoPadrao
-//        *
-//        // Esta funï¿½ï¿½o GS_SERIE(), foi criada temporariamente com a finalidade de testar
-//        // a serie no janela.prg (testa TEXTO do botï¿½o)
-//        IF GS_SERIE() # NIL
-//           IF GS_SERIE() $ SERIE_TESTE()+;
-//                           SERIE_DESENVOLVIMENTO()+;
-//                           SERIE_SAN()+;
-//                           SERIE_UNIDADE_CONVERSAO()+;
-//                           SERIE_PRODUCAO()
-//              ///? MEMVAR->ERRO_BOTAO_FORA_DO_PADRAO
-//           ELSE
-//              LOGAFONT_GENERICO(4,"JAN",NIL,NIL,"Erro 7: Botï¿½o fora do padrï¿½o: "+C_TxtBotao)
-//           ENDIF
-//        ELSE
-//           LOGAFONT_GENERICO(4,"JAN",NIL,NIL,"Erro 7: Botï¿½o fora do padrï¿½o: "+C_TxtBotao)
-//        ENDIF
-//        *
-//     ENDIF
-//     *
-//     V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_TRATADO_1] := " "+C_TxtBotao+" "
-// NEXT
-// *
-// N_2LinBotoes := 0
-// N_Quant := LEN(V_2RegiaoBotao)
-// N_Cont := 1
-// DO WHILE N_Cont <= N_Quant
-//    N_2LinBotoes++
-//    *
-//    * Acumulado de texto dos botï¿½es para a versï¿½o TEXTO. A quebra de linha
-//    * ï¿½ baseada nesta variï¿½vel, para que os botï¿½es fiquem sempre na mesma linha,
-//    * seja qual for a versï¿½o usada.
-//    C_LinhaTxt := ""
-//    * Acumulado de texto dos botï¿½es para a versï¿½o GRï¿½FICA. Serve para evitar
-//    * espaï¿½amento diferente de botï¿½es na versï¿½o GRï¿½FICA.
-//    C_LinhaWin := ""
-//    CalculaRegiaoBotao(N_2LinBotoes,N_Cont,@V_2RegiaoBotao,@C_LinhaTxt,@C_LinhaWin)
-//    *
-//    N_Cont++
-//    DO WHILE IIF(N_Cont <= N_Quant,  ;
-//       N_Brancos+LEN(C_LinhaTxt+V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_TRATADO_1])+2 <= N_Largura , .F.)
-//       *
-//       C_LinhaTxt += SPACE(N_Brancos)
-//       C_LinhaWin += SPACE(N_Brancos)
-//       CalculaRegiaoBotao(N_2LinBotoes,N_Cont,@V_2RegiaoBotao,@C_LinhaTxt,@C_LinhaWin)
-//       *
-//       N_Cont++
-//    ENDDO
-// ENDDO
-// *
-// RETURN N_2LinBotoes
-// *
-// ****************************
-// STAT PROC CalculaRegiaoBotao(N_Nulin,N_Cont,;
-//                              V_2RegiaoBotao,C_LinhaTxt,C_LinhaWin)   // por referï¿½ncia
-// ****************************
-// LOCAL N_Pos
-// LOCAL C_Destaque, C_TeclaAtalho, N_Pos_Destaque := 1
-// LOCAL C_TxtTratado_2 := V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_TRATADO_1]
-// LOCAL N_Keyboard
-// *
-// IF (N_Pos := AT("=",C_TxtTratado_2)) == 0
-//    IF SOB_MODO_GRAFICO()
-//       ALARME("M28760","Barra de aï¿½ï¿½es invï¿½lida")
-//       ? MEMVAR->ERRO_FALTA_SINAL_DE_IGUAL
-//    ELSE
-//       ALERT("Barra de aï¿½ï¿½es invï¿½lida")
-//       ? MEMVAR->ERRO_FALTA_SINAL_DE_IGUAL
-//    ENDIF
-// ENDIF
-// *
-// C_Destaque := LEFT(C_TxtTratado_2,N_Pos-1)
-// C_Destaque := SUBSTR(C_Destaque,2)  // tirar o espaï¿½o inicial
-// *
-// C_TeclaAtalho := XUPPER(C_Destaque)
-// IF LEN(C_TeclaAtalho)==1 .AND. (ISALPHA(C_TeclaAtalho) .OR. ISDIGIT(C_TeclaAtalho))
-//    * Parte esquerda do comando ï¿½ uma sï¿½ letra ou sï¿½ um nï¿½mero
-//    *
-//    N_Keyboard := ASC(C_TeclaAtalho)
-//    *
-//    * O SUBSTR(,4) ï¿½ para tirar da busca o " I="   (espaï¿½o + letra + igual)
-//    N_Pos := AT(C_TeclaAtalho,XUPPER(SUBSTR(C_TxtTratado_2,4)))
-//    IF N_Pos # 0
-//       IF SOB_MODO_GRAFICO() // reposicionar o sublinhado dentro do botï¿½o
-//          * Remover a letra e o sinal de igual.
-//          * Colocar a primeira letra em maiï¿½sculo.
-//          C_TxtTratado_2 := " "+XUPPER(SUBSTR(C_TxtTratado_2,4,1))+SUBSTR(C_TxtTratado_2,5)
-//          N_Pos := N_Pos+1   // acrescentar o " " tambï¿½m na posiï¿½ï¿½o
-//          *
-//          * Pegar novamente a tecla de destaque, pois pode estar em minï¿½sculo...
-//          C_Destaque := SUBSTR(C_TxtTratado_2,N_Pos,1)
-//          *
-//          N_Pos_Destaque := N_Pos-1
-//       ENDIF
-//    ELSE
-//       #IFDEF _TESTE   //!! DEPOIS PASSAR A DAR ERRO TAMBï¿½M NA VERSï¿½O DE PRODUCAO
-//           ? MEMVAR->HOTKEY_NAO_CONSEGUIU_SER_DEDUZIDA_01
-//       #ENDIF
-//    ENDIF
-//    *
-// ELSEIF C_TeclaAtalho=="ESC"
-//    N_Keyboard := K_ESC
-// ELSEIF C_TeclaAtalho=="ENTER"
-//    N_Keyboard := K_ENTER
-// ELSEIF C_TeclaAtalho=="ESPAï¿½O"   .OR. ;
-//        C_TeclaAtalho=="BARRA DE ESPAï¿½O"
-//    N_Keyboard := ASC(" ")
-// ELSEIF C_TeclaAtalho=="F1"
-//    N_Keyboard := K_F1
-// ELSEIF C_TeclaAtalho=="F2"
-//    N_Keyboard := K_F2
-// ELSEIF C_TeclaAtalho=="F3"
-//    N_Keyboard := K_F3
-// ELSEIF C_TeclaAtalho=="F4"
-//    N_Keyboard := K_F4
-// ELSEIF C_TeclaAtalho=="F5"
-//    N_Keyboard := K_F5
-// ELSEIF C_TeclaAtalho=="F6"
-//    N_Keyboard := K_F6
-// ELSEIF C_TeclaAtalho=="F7"
-//    N_Keyboard := K_F7
-// ELSEIF C_TeclaAtalho=="F8"
-//    N_Keyboard := K_F8
-// ELSEIF C_TeclaAtalho=="F9"
-//    N_Keyboard := K_F9
-// ELSEIF C_TeclaAtalho=="F10"
-//    N_Keyboard := K_F10
-// ELSEIF C_TeclaAtalho=="F11"
-//    N_Keyboard := K_F11
-// ELSEIF C_TeclaAtalho=="F12"
-//    N_Keyboard := K_F12
-// ELSE
-//    #IFDEF _TESTE   //!! DEPOIS PASSAR A DAR ERRO TAMBï¿½M NA VERSï¿½O DE PRODUCAO
-//        ? MEMVAR->HOTKEY_NAO_CONSEGUIU_SER_DEDUZIDA_02
-//    #ENDIF
-// ENDIF
-// *
-// C_LinhaTxt += V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_TRATADO_1]
-// C_LinhaWin += C_TxtTratado_2
-// *
-// V_2RegiaoBotao[N_Cont,_BOTAO_LIN_INICIAL    ] := N_Nulin
-// IF SOB_MODO_GRAFICO()
-//    V_2RegiaoBotao[N_Cont,_BOTAO_COL_INICIAL    ] := LEN(C_LinhaWin)-LEN(C_TxtTratado_2)
-// ELSE
-//    V_2RegiaoBotao[N_Cont,_BOTAO_COL_INICIAL    ] := LEN(C_LinhaTxt)-LEN(C_TxtTratado_2)
-// ENDIF
-// V_2RegiaoBotao[N_Cont,_BOTAO_LIN_FINAL      ] := N_Nulin
-// IF SOB_MODO_GRAFICO()
-//    V_2RegiaoBotao[N_Cont,_BOTAO_COL_FINAL      ] := LEN(C_LinhaWin)-1
-// ELSE
-//    V_2RegiaoBotao[N_Cont,_BOTAO_COL_FINAL      ] := LEN(C_LinhaTxt)-1
-// ENDIF
-// V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_TRATADO_2] := C_TxtTratado_2
-// IF SOB_MODO_GRAFICO()
-//    V_2RegiaoBotao[N_Cont,_BOTAO_COL_DESTAQUE   ] := LEN(C_LinhaWin)-LEN(C_TxtTratado_2)+N_Pos_Destaque
-// ELSE
-//    V_2RegiaoBotao[N_Cont,_BOTAO_COL_DESTAQUE   ] := LEN(C_LinhaTxt)-LEN(C_TxtTratado_2)+N_Pos_Destaque
-// ENDIF
-// V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_DESTAQUE ] := C_Destaque
-// V_2RegiaoBotao[N_Cont,_BOTAO_INKEY_DESTAQUE ] := N_Keyboard
-// V_2RegiaoBotao[N_Cont,_BOTAO_INKEY_DESTAQUE_CASE ] := InKeyCaseAlternativo(N_Keyboard)
-// *
+*
+***********************
+STATIC FUNCTION TecFunc ( N_Largura, V_2RegiaoBotao )
+*
+LOCAL N_Quant, N_Cont, N_Brancos := 2
+LOCAL C_LinhaTxt, C_LinhaWin, N_2LinBotoes
+LOCAL C_TxtBotao, L_BotaoNoPadrao
+*
+* calcular acumulado do tamanho das mensagens
+*
+FOR N_Cont := 1 TO LEN(V_2RegiaoBotao)
+    C_TxtBotao := V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_COMANDO]
+    *
+    L_BotaoNoPadrao := .T.
+    IF LEFT(UPPER(C_TxtBotao),2) $ "I=/A=/E=/C=/X=/L=/P=/"
+       IF .NOT. C_TxtBotao == "I=incluir" .AND. ;
+          .NOT. C_TxtBotao == "A=alterar" .AND. ;
+          .NOT. C_TxtBotao == "E=excluir" .AND. ;
+          .NOT. C_TxtBotao == "C=consultar" .AND. ;
+          .NOT. C_TxtBotao == "X=anexar" .AND. ;
+          .NOT. C_TxtBotao == "L=listar" .AND. ;
+          .NOT. C_TxtBotao == "P=procurar"
+          L_BotaoNoPadrao := .F.
+       ENDIF
+    ENDIF
+    *
+    IF LEFT(XUPPER(C_TxtBotao),7) $ "ESPAÇO=/"
+        IF LEN(C_TxtBotao) == 13
+            IF .NOT. C_TxtBotao == "Espaço=marcar"
+                L_BotaoNoPadrao := .F.
+          ENDIF
+       ELSEIF LEN(C_TxtBotao) == 23
+        IF .NOT. C_TxtBotao == "Espaço=marcar/desmarcar"
+            L_BotaoNoPadrao := .F.
+          ENDIF
+       ELSE
+          L_BotaoNoPadrao := .F.
+       ENDIF
+    ENDIF
+    *
+    IF LEFT(XUPPER(C_TxtBotao),16) $ "BARRA DE ESPAÇO=/"
+        IF LEN(C_TxtBotao) == 22
+           IF .NOT. C_TxtBotao == "Barra de espaço=marcar"
+              L_BotaoNoPadrao := .F.
+           ENDIF
+        ELSEIF LEN(C_TxtBotao) == 32
+           IF .NOT. C_TxtBotao == "Barra de espaço=marcar/desmarcar"
+              L_BotaoNoPadrao := .F.
+           ENDIF
+        ELSE
+           L_BotaoNoPadrao := .F.
+        ENDIF
+     ENDIF
+     *
+    IF .NOT. L_BotaoNoPadrao
+       *
+       // Esta função GS_SERIE(), foi criada temporariamente com a finalidade de testar
+       // a serie no janela.prg (testa TEXTO do botão)
+       IF GS_SERIE() # NIL
+        IF GS_SERIE() $ SERIE_TESTE()+;
+                        SERIE_DESENVOLVIMENTO()+;
+                        SERIE_SAN()+;
+                        SERIE_UNIDADE_CONVERSAO()+;
+                        SERIE_PRODUCAO()
+           ///? MEMVAR->ERRO_BOTAO_FORA_DO_PADRAO
+        ELSE
+           LOGAFONT_GENERICO(4,"JAN",NIL,NIL,"Erro 7: Botão fora do padrão: "+C_TxtBotao)
+        ENDIF
+     ELSE
+        LOGAFONT_GENERICO(4,"JAN",NIL,NIL,"Erro 7: Botão fora do padrão: "+C_TxtBotao)
+     ENDIF
+     *
+    ENDIF
+    *
+    V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_TRATADO_1] := " "+C_TxtBotao+" "
+NEXT
+*
+N_2LinBotoes := 0
+N_Quant := LEN(V_2RegiaoBotao)
+N_Cont := 1
+DO WHILE N_Cont <= N_Quant
+   N_2LinBotoes++
+   *
+   * Acumulado de texto dos botões para a versão TEXTO. A quebra de linha
+   * é baseada nesta variável, para que os botões fiquem sempre na mesma linha,
+   * seja qual for a versão usada.
+   C_LinhaTxt := ""
+   * Acumulado de texto dos botões para a versão GRÁFICA. Serve para evitar
+   * espaçamento diferente de botões na versão GRÁFICA.
+   C_LinhaWin := ""
+   CalculaRegiaoBotao(N_2LinBotoes,N_Cont,@V_2RegiaoBotao,@C_LinhaTxt,@C_LinhaWin)
+   *
+   N_Cont++
+   DO WHILE IIF(N_Cont <= N_Quant,  ;
+      N_Brancos+LEN(C_LinhaTxt+V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_TRATADO_1])+2 <= N_Largura , .F.)
+      *
+      C_LinhaTxt += SPACE(N_Brancos)
+      C_LinhaWin += SPACE(N_Brancos)
+      CalculaRegiaoBotao(N_2LinBotoes,N_Cont,@V_2RegiaoBotao,@C_LinhaTxt,@C_LinhaWin)
+      *
+      N_Cont++
+   ENDDO
+ENDDO
+*
+RETURN N_2LinBotoes
+*
+****************************
+STAT PROC CalculaRegiaoBotao(N_Nulin,N_Cont,;
+                            V_2RegiaoBotao,C_LinhaTxt,C_LinhaWin)   // por referência
+****************************
+LOCAL N_Pos
+LOCAL C_Destaque, C_TeclaAtalho, N_Pos_Destaque := 1
+LOCAL C_TxtTratado_2 := V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_TRATADO_1]
+LOCAL N_Keyboard
+*
+IF (N_Pos := AT("=",C_TxtTratado_2)) == 0
+   IF SOB_MODO_GRAFICO()
+        ALARME("M28760","Barra de ações inválida")
+        ? MEMVAR->ERRO_FALTA_SINAL_DE_IGUAL
+   ELSE
+        ALERT("Barra de ações inválida")
+        ? MEMVAR->ERRO_FALTA_SINAL_DE_IGUAL
+   ENDIF
+ENDIF
+*
+C_Destaque := LEFT(C_TxtTratado_2,N_Pos-1)
+C_Destaque := SUBSTR(C_Destaque,2)  // tirar o espaço inicial
+*
+C_TeclaAtalho := XUPPER(C_Destaque)
+IF LEN(C_TeclaAtalho)==1 .AND. (ISALPHA(C_TeclaAtalho) .OR. ISDIGIT(C_TeclaAtalho))
+   * Parte esquerda do comando é uma só letra ou só um número
+   *
+   N_Keyboard := ASC(C_TeclaAtalho)
+   *
+   * O SUBSTR(,4) é para tirar da busca o " I="   (espaço + letra + igual)
+   N_Pos := AT(C_TeclaAtalho,XUPPER(SUBSTR(C_TxtTratado_2,4)))
+   IF N_Pos # 0
+    IF SOB_MODO_GRAFICO() // reposicionar o sublinhado dentro do botão
+        * Remover a letra e o sinal de igual.
+        * Colocar a primeira letra em maiúsculo.
+        C_TxtTratado_2 := " "+XUPPER(SUBSTR(C_TxtTratado_2,4,1))+SUBSTR(C_TxtTratado_2,5)
+        N_Pos := N_Pos+1   // acrescentar o " " também na posição
+        *
+         * Pegar novamente a tecla de destaque, pois pode estar em minúsculo...
+         C_Destaque := SUBSTR(C_TxtTratado_2,N_Pos,1)
+         *
+         N_Pos_Destaque := N_Pos-1
+      ENDIF
+   ELSE
+      #IFDEF _TESTE   //!! DEPOIS PASSAR A DAR ERRO TAMBï¿½M NA VERSï¿½O DE PRODUCAO
+          ? MEMVAR->HOTKEY_NAO_CONSEGUIU_SER_DEDUZIDA_01
+      #ENDIF
+   ENDIF
+   *
+ELSEIF C_TeclaAtalho=="ESC"
+    N_Keyboard := K_ESC
+ ELSEIF C_TeclaAtalho=="ENTER"
+    N_Keyboard := K_ENTER
+ ELSEIF C_TeclaAtalho=="ESPAÇO"   .OR. ;
+        C_TeclaAtalho=="BARRA DE ESPAÇO"
+   N_Keyboard := ASC(" ")
+ELSEIF C_TeclaAtalho=="F1"
+   N_Keyboard := K_F1
+ELSEIF C_TeclaAtalho=="F2"
+   N_Keyboard := K_F2
+ELSEIF C_TeclaAtalho=="F3"
+   N_Keyboard := K_F3
+ELSEIF C_TeclaAtalho=="F4"
+   N_Keyboard := K_F4
+ELSEIF C_TeclaAtalho=="F5"
+   N_Keyboard := K_F5
+ELSEIF C_TeclaAtalho=="F6"
+   N_Keyboard := K_F6
+ELSEIF C_TeclaAtalho=="F7"
+   N_Keyboard := K_F7
+ELSEIF C_TeclaAtalho=="F8"
+   N_Keyboard := K_F8
+ELSEIF C_TeclaAtalho=="F9"
+   N_Keyboard := K_F9
+ELSEIF C_TeclaAtalho=="F10"
+   N_Keyboard := K_F10
+ELSEIF C_TeclaAtalho=="F11"
+   N_Keyboard := K_F11
+ELSEIF C_TeclaAtalho=="F12"
+   N_Keyboard := K_F12
+ELSE
+   #IFDEF _TESTE   //!! DEPOIS PASSAR A DAR ERRO TAMBï¿½M NA VERSï¿½O DE PRODUCAO
+       ? MEMVAR->HOTKEY_NAO_CONSEGUIU_SER_DEDUZIDA_02
+   #ENDIF
+ENDIF
+*
+C_LinhaTxt += V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_TRATADO_1]
+C_LinhaWin += C_TxtTratado_2
+*
+V_2RegiaoBotao[N_Cont,_BOTAO_LIN_INICIAL    ] := N_Nulin
+IF SOB_MODO_GRAFICO()
+   V_2RegiaoBotao[N_Cont,_BOTAO_COL_INICIAL    ] := LEN(C_LinhaWin)-LEN(C_TxtTratado_2)
+ELSE
+   V_2RegiaoBotao[N_Cont,_BOTAO_COL_INICIAL    ] := LEN(C_LinhaTxt)-LEN(C_TxtTratado_2)
+ENDIF
+V_2RegiaoBotao[N_Cont,_BOTAO_LIN_FINAL      ] := N_Nulin
+IF SOB_MODO_GRAFICO()
+   V_2RegiaoBotao[N_Cont,_BOTAO_COL_FINAL      ] := LEN(C_LinhaWin)-1
+ELSE
+   V_2RegiaoBotao[N_Cont,_BOTAO_COL_FINAL      ] := LEN(C_LinhaTxt)-1
+ENDIF
+V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_TRATADO_2] := C_TxtTratado_2
+IF SOB_MODO_GRAFICO()
+   V_2RegiaoBotao[N_Cont,_BOTAO_COL_DESTAQUE   ] := LEN(C_LinhaWin)-LEN(C_TxtTratado_2)+N_Pos_Destaque
+ELSE
+   V_2RegiaoBotao[N_Cont,_BOTAO_COL_DESTAQUE   ] := LEN(C_LinhaTxt)-LEN(C_TxtTratado_2)+N_Pos_Destaque
+ENDIF
+V_2RegiaoBotao[N_Cont,_BOTAO_TEXTO_DESTAQUE ] := C_Destaque
+V_2RegiaoBotao[N_Cont,_BOTAO_INKEY_DESTAQUE ] := N_Keyboard
+V_2RegiaoBotao[N_Cont,_BOTAO_INKEY_DESTAQUE_CASE ] := InKeyCaseAlternativo(N_Keyboard)
+*
 ******************
 FUNCTION StrToVet_ ( C_Titulo )
 *
@@ -2282,8 +2322,8 @@ RETURN L_EXIBE_AJUDA
 STATIC FUNCTION TrataEventos ( VX_Janela )
     LOCAL L_FechouComAutoClose := .F.
 
-    // @ 22, 0 SAY ""
-    // OutStd("TrataEventos ( VX_Janela ) function called")
+    @ 22, 0 SAY ""
+    OutStd("TrataEventos ( VX_Janela ) function called")
 
     RETURN L_FechouComAutoClose
 
@@ -2844,77 +2884,109 @@ NAP_CUALIB_LABEL(33, 39, "www.aspec.com.br   Aspec "+chr(184)+"1993-"+STR(YEAR(D
 //       win_setfocus(wvw_getwindowhandle(wvw_nnumwindows()-1))
 //    endif
 //    *
-//    *******************************
-//    STATIC FUNC ADICIONA_BOTAO_PUSH(VX_Janela,N_PosBotao)
-//    *******************************
-//    LOCAL V_Botao := V_RegiaoBotoes[N_PosBotao]
-//    LOCAL N_Handle_PushButton
-//    LOCAL N_Keyboard := V_Botao[_BOTAO_INKEY_DESTAQUE]
-//    LOCAL C_TextoDestaque := V_Botao[_BOTAO_TEXTO_DESTAQUE]
-//    LOCAL C_TextoBotaoAux := V_Botao[_BOTAO_TEXTO_TRATADO_2]
-//    LOCAL B_BlocoAux, N_Pos
-//    LOCAL C_TextoBotaoAux_CodigoPagina
-//    *
-//    //!! DEPOIS REMOVER O "IF", DEIXANDO O "ELSE"
-//    //!! (POR ENQUANTO, O N_KEYBOARD PODE CONTER NIL)
-//    IF N_Keyboard == NIL
-//       B_BlocoAux := {||NIL}   // PUSHBUTTON FICARï¿½ SEM FUNCIONAR !!!
-//    ELSE
-//       IF LEN(C_TextoDestaque)==1 .AND. ; // Se aceleradora tiver 1 byte de tamanho
-//          (ISALPHA(C_TextoDestaque) .OR. ISDIGIT(C_TextoDestaque))  // Se for uma letra (sem acentos) ou um nï¿½mero
-//          *
-//          N_Pos := AT(XUPPER(C_TextoDestaque),XUPPER(C_TextoBotaoAux))
+*******************************
+STATIC FUNC ADICIONA_BOTAO_PUSH(VX_Janela,N_PosBotao)
+*******************************
+LOCAL V_Botao
+//LOCAL N_Handle_PushButton
+LOCAL N_Keyboard
+LOCAL C_TextoDestaque
+LOCAL C_TextoBotaoAux
+ //LOCAL B_BlocoAux, N_Pos
+LOCAL N_Pos
+LOCAL C_TextoBotaoAux_CodigoPagina
+*
+NAP_LOG("BEGIN BOTAO:")
+V_Botao := V_RegiaoBotoes[N_PosBotao]
+NAP_LOG("BOTAO GET:")
+//LOCAL N_Handle_PushButton
+N_Keyboard := V_Botao[_BOTAO_INKEY_DESTAQUE]
+NAP_LOG("BOTAO GET2:")
+C_TextoDestaque := V_Botao[_BOTAO_TEXTO_DESTAQUE]
+NAP_LOG("BOTAO GET3:")
+C_TextoBotaoAux := V_Botao[_BOTAO_TEXTO_TRATADO_2]
+NAP_LOG("BOTAO GET4:")
 
-//          //!! Porque o cï¿½digo abaixo nï¿½o funcionou ?????
-//          //N_Pos := AT(XUPPER(C_TextoDestaque),C_TextoBotaoAux)
-//          //IF N_Pos == 0
-//          //   N_Pos := AT(XLOWER(C_TextoDestaque),C_TextoBotaoAux)
-//          //ENDIF
-//          *
-//          IF N_Pos # 0   // Colocar o "&" que torna a caractere um acelerador para o Windows
-//             C_TextoBotaoAux := LEFT(C_TextoBotaoAux,N_Pos-1)+"&"+;
-//                              SUBSTR(C_TextoBotaoAux,N_Pos)
-//          ENDIF
-//       ENDIF
-//       *
-//       * Quando um PushButton fazia uma aï¿½ï¿½o sem abrir nenhuma tela adicional
-//       *   Exemplo: - Ir para uma tela de seleï¿½ï¿½o mï¿½ltipla e
-//       *            - Teclar "barra de espaï¿½o"
-//       * O componente com foco ficava sendo o PushButton. Quando o foco estï¿½ no
-//       * PushButton e nï¿½o na tela "mï¿½e", eventos de teclado
-//       * (teclas pendentes, digitaï¿½ï¿½o de dados, etc) ficam suspensos, dando a
-//       * impressï¿½o que o sistema estï¿½ travado. Se clicar fora do sistema e clicar
-//       * no sistema novamente, o problema se resolve, porque a WVW_SetFocus()
-//       * ï¿½ executada.
-//       *
-//       * A soluï¿½ï¿½o para este problema foi tirar o foco do PushButton "na marra",
-//       * antes de executar a aï¿½ï¿½o dos PushButtons.
-//       B_BlocoAux := {||win_setfocus(wvw_getwindowhandle(wvw_nnumwindows()-1)),;
-//                        HB_KeyPut(N_Keyboard)}
-//    ENDIF
-//    *
-//    IF Version()=="Harbour 3.2.0dev (r1703241902)"
-//       C_TextoBotaoAux_CodigoPagina := HB_OEMtoANSI(C_TextoBotaoAux)
-//    ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)" .OR. Version()=="Harbour 3.2.0dev (r1704061005)" // ADAPTACAO_LINUX
-//       C_TextoBotaoAux_CodigoPagina := C_TextoBotaoAux
-//    ENDIF ERRO
-//    *
-//    IF ( N_Handle_PushButton := WVW_PBCREATE(N_WindowNum,N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
-//                                                         N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
-//                                                         N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
-//                                                         N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ],;
-//                                                         C_TextoBotaoAux_CodigoPagina,NIL,;
-//                                                         B_BlocoAux) ) == 0
-//       ALARME("M28032","Falha ao criar a 'PushButton'")
-//       ? MEMVAR->PUSHBUTTON_NAO_CRIADA
-//    ENDIF
-//    *
-//    V_Botao[_BOTAO_HANDLE_PUSHBUTTON] := N_Handle_PushButton
-//    *
-//    INABILITA_BOTAO_PUSH(VX_Janela, N_PosBotao)
-//    *
-//    RETURN NIL
-//    *
+IF .NOT. C_TextoDestaque == NIL
+NAP_LOG("Button C_TextoDestaque:" + C_TextoDestaque)
+ELSE
+NAP_LOG("Button C_TextoDestaque NIL")
+ENDIF
+
+IF .NOT. C_TextoBotaoAux == NIL
+NAP_LOG("Button C_TextoBotaoAux:" + C_TextoBotaoAux)
+ELSE
+NAP_LOG("Button C_TextoBotaoAux NIL")
+ENDIF
+
+NAP_LOG("N_Keyboard:" + hb_ntos(N_Keyboard))
+//!! DEPOIS REMOVER O "IF", DEIXANDO O "ELSE"
+//!! (POR ENQUANTO, O N_KEYBOARD PODE CONTER NIL)
+IF N_Keyboard == NIL
+    // B_BlocoAux := {||NIL}   // PUSHBUTTON FICARÁ SEM FUNCIONAR !!!
+ELSE
+    // IF LEN(C_TextoDestaque)==1 .AND. ; // Se aceleradora tiver 1 byte de tamanho
+    //     (ISALPHA(C_TextoDestaque) .OR. ISDIGIT(C_TextoDestaque))  // Se for uma letra (sem acentos) ou um número
+    //    *
+    //     N_Pos := AT(XUPPER(C_TextoDestaque),XUPPER(C_TextoBotaoAux))
+
+    //      //!! Porque o código abaixo não funcionou ?????
+    //      //N_Pos := AT(XUPPER(C_TextoDestaque),C_TextoBotaoAux)
+    //      //IF N_Pos == 0
+    //      //   N_Pos := AT(XLOWER(C_TextoDestaque),C_TextoBotaoAux)
+    //      //ENDIF
+    //     *
+    //     IF N_Pos # 0   // Colocar o "&" que torna a caractere um acelerador para o Windows
+    //     C_TextoBotaoAux := LEFT(C_TextoBotaoAux,N_Pos-1)+"&"+;
+    //                         SUBSTR(C_TextoBotaoAux,N_Pos)
+    //     ENDIF
+    // ENDIF
+      *
+      * Quando um PushButton fazia uma ação sem abrir nenhuma tela adicional
+      *   Exemplo: - Ir para uma tela de seleção múltipla e
+      *            - Teclar "barra de espaço"
+      * O componente com foco ficava sendo o PushButton. Quando o foco está no
+      * PushButton e não na tela "mãe", eventos de teclado
+      * (teclas pendentes, digitação de dados, etc) ficam suspensos, dando a
+      * impressão que o sistema está travado. Se clicar fora do sistema e clicar
+      * no sistema novamente, o problema se resolve, porque a WVW_SetFocus()
+      * é executada.
+      *
+      * A solução para este problema foi tirar o foco do PushButton "na marra",
+      * antes de executar a ação dos PushButtons.
+      //B_BlocoAux := {||win_setfocus(wvw_getwindowhandle(wvw_nnumwindows()-1)),;
+       // HB_KeyPut(N_Keyboard)}
+ENDIF
+*
+// IF Version()=="Harbour 3.2.0dev (r1703241902)"
+//     C_TextoBotaoAux_CodigoPagina := HB_OEMtoANSI(C_TextoBotaoAux)
+// ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)" .OR. Version()=="Harbour 3.2.0dev (r1704061005)" // ADAPTACAO_LINUX
+//     C_TextoBotaoAux_CodigoPagina := C_TextoBotaoAux
+// ENDIF ERRO
+*
+
+NAP_LOG("Before NAP_CUALIB_BUTTON")
+NAP_CUALIB_BUTTON("Button1",;// C_TextoBotaoAux_CodigoPagina,;
+                    N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
+                    N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
+                    N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
+                    N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ])
+// IF ( N_Handle_PushButton := WVW_PBCREATE(N_WindowNum,N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
+//                                                     N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
+//                                                     N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
+//                                                     N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ],;
+//                                                     C_TextoBotaoAux_CodigoPagina,NIL,;
+//                                                     B_BlocoAux) ) == 0
+//     ALARME("M28032","Falha ao criar a 'PushButton'")
+//     ? MEMVAR->PUSHBUTTON_NAO_CRIADA
+// ENDIF
+// *
+// V_Botao[_BOTAO_HANDLE_PUSHBUTTON] := N_Handle_PushButton
+*
+INABILITA_BOTAO_PUSH(VX_Janela, N_PosBotao)
+*
+RETURN NIL
+*
 //    ********************************
 //    FUNCTION ProcessaBotaoToolbarKey( VX_Janela, nkey )
 //    ********************************
@@ -3096,31 +3168,34 @@ RETURN L_RET
 // *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    ********************************
-//    STATIC PROC INABILITA_BOTAO_PUSH(VX_Janela, N_PosBotao)
-//    ********************************
-//    LOCAL L_MUDADADOS
-//    LOCAL N_TECLA := V_RegiaoBotoes[N_PosBotao,_BOTAO_INKEY_DESTAQUE]
-//    LOCAL C_TEXTO := UPPER(ALLTRIM(V_RegiaoBotoes[N_PosBotao,_BOTAO_TEXTO_TRATADO_2]))
-//    *
-//    IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
-//       IF V_RegiaoBotoes[N_PosBotao,_BOTAO_MUDADADOS] # NIL
-//          L_MUDADADOS := V_RegiaoBotoes[N_PosBotao,_BOTAO_MUDADADOS]
-//       ELSE
-//          L_MUDADADOS := .F.
-//       ENDIF
-//       *
-//       * Qualquer botao para poder ser inabiltado, precisa usar o parï¿½metro L_MudaDados.
-//       * Perguntar ao Marcos se as teclas F2 e F9 continuam sendo inabilitadas automï¿½ticamente. //!!
-//       IF (N_TECLA == K_F2 .AND. C_TEXTO == "F2=SALVAR") .OR. N_TECLA == K_F9 .OR. L_MUDADADOS
-//          IF SELECT("XXPREG") # 0
-//             IF .NOT. EHPRINCIPAL(.F.)
-//                WVW_PBENABLE(N_WindowNum, V_RegiaoBotoes[N_PosBotao,_BOTAO_HANDLE_PUSHBUTTON], .F.)
-//                V_RegiaoBotoes[N_PosBotao,_BOTAO_BLOCO_ACAO] := {||.F.}
-//             ENDIF
-//          ENDIF
-//       ENDIF
-//    ENDIF
-//    *
+STATIC PROC INABILITA_BOTAO_PUSH(VX_Janela, N_PosBotao)
+********************************
+LOCAL L_MUDADADOS
+LOCAL N_TECLA := V_RegiaoBotoes[N_PosBotao,_BOTAO_INKEY_DESTAQUE]
+LOCAL C_TEXTO := UPPER(ALLTRIM(V_RegiaoBotoes[N_PosBotao,_BOTAO_TEXTO_TRATADO_2]))
+*
+IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
+    IF V_RegiaoBotoes[N_PosBotao,_BOTAO_MUDADADOS] # NIL
+        L_MUDADADOS := V_RegiaoBotoes[N_PosBotao,_BOTAO_MUDADADOS]
+    ELSE
+        L_MUDADADOS := .F.
+    ENDIF
+    *
+    * Qualquer botao para poder ser inabiltado, precisa usar o parâmetro L_MudaDados.
+    * Perguntar ao Marcos se as teclas F2 e F9 continuam sendo inabilitadas automáticamente. //!!
+    IF (N_TECLA == K_F2 .AND. C_TEXTO == "F2=SALVAR") .OR. N_TECLA == K_F9 .OR. L_MUDADADOS
+        IF SELECT("XXPREG") # 0
+            IF .NOT. EHPRINCIPAL(.F.)
+                //
+                // FRAN: Implement Enable in GTNAP
+                //
+                //WVW_PBENABLE(N_WindowNum, V_RegiaoBotoes[N_PosBotao,_BOTAO_HANDLE_PUSHBUTTON], .F.)
+                V_RegiaoBotoes[N_PosBotao,_BOTAO_BLOCO_ACAO] := {||.F.}
+            ENDIF
+        ENDIF
+    ENDIF
+ENDIF
+*
 //    ***********************************
 //    STATIC FUNC INABILITA_BOTAO_TOOLBAR(L_MudaDados)
 //    ***********************************
@@ -3147,20 +3222,20 @@ RETURN L_RET
 // #endif
 // *
 // *
-// *****************************
-// STATIC FUNC INABILITA_ADDACAO(L_MUDADADOS)
-// *****************************
-// LOCAL L_RET := .F.
-// *
-// IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
-//    IF SELECT("XXPREG") # 0
-//       IF L_MUDADADOS .AND. (.NOT. EHPRINCIPAL(.F.))
-//          L_RET := .T.
-//       ENDIF
-//    ENDIF
-// ENDIF
-// *
-// RETURN L_RET
+*****************************
+STATIC FUNC INABILITA_ADDACAO(L_MUDADADOS)
+*****************************
+LOCAL L_RET := .F.
+*
+IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
+   IF SELECT("XXPREG") # 0
+      IF L_MUDADADOS .AND. (.NOT. EHPRINCIPAL(.F.))
+         L_RET := .T.
+      ENDIF
+   ENDIF
+ENDIF
+*
+RETURN L_RET
 *
 ************************************************
 FUNC CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()

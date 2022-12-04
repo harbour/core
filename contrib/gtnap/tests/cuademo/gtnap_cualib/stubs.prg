@@ -218,11 +218,11 @@ ENDIF
 // *
 // GOTO RECNO()
 // *
-// *************
-// FUNC GS_SERIE
-// *************
-// RETURN "99999"
-// *
+*************
+FUNC GS_SERIE
+*************
+RETURN "99999"
+*
 *************
 FUNC G_SGSIST
 *************
@@ -233,31 +233,31 @@ FUNC EHPRINCIPAL
 ****************
 RETURN .T.
 *
-// ****************
-// FUNC SERIE_TESTE
-// ****************
-// RETURN "99999"
-// *
-// **************************
-// FUNC SERIE_DESENVOLVIMENTO
-// **************************
-// RETURN "99999"
-// *
-// **************
-// FUNC SERIE_SAN
-// **************
-// RETURN "99999"
-// *
-// ****************************
-// FUNC SERIE_UNIDADE_CONVERSAO
-// ****************************
-// RETURN "99999"
-// *
-// *******************
-// FUNC SERIE_PRODUCAO
-// *******************
-// RETURN "99999"
-// *
+****************
+FUNC SERIE_TESTE
+****************
+RETURN "99999"
+*
+**************************
+FUNC SERIE_DESENVOLVIMENTO
+**************************
+RETURN "99999"
+*
+**************
+FUNC SERIE_SAN
+**************
+RETURN "99999"
+*
+****************************
+FUNC SERIE_UNIDADE_CONVERSAO
+****************************
+RETURN "99999"
+*
+*******************
+FUNC SERIE_PRODUCAO
+*******************
+RETURN "99999"
+*
 // ********************
 FUNC SERIE_ASPEC_INI
 ********************
@@ -283,11 +283,11 @@ NEXT
 RETURN C_String
 *
 #INCLUDE "xx.ch"
-// ***************
-// FUNCTION XUPPER ( C_String )
-// ***************
-// RETURN TROCA(UPPER(C_String), _AC_MINUS , _AC_MAIUS )
-// *
+***************
+FUNCTION XUPPER ( C_String )
+***************
+RETURN TROCA(UPPER(C_String), _AC_MINUS , _AC_MAIUS )
+*
 // ***************
 // FUNCTION XLOWER ( C_String )
 // ***************

@@ -61,6 +61,7 @@ DeclPt(Window);
 typedef enum _objtype_t
 {
     ekOBJ_LABEL,
+    ekOBJ_BUTTON,
     ekOBJ_MENUVERT,
     ekOBJ_IMAGE
 } objtype_t;
@@ -1043,13 +1044,30 @@ void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t nTop, const ui
         imageview_scale(view, ekAUTO);
         size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
         size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
-        i_add_object(ekOBJ_IMAGE, nLeft, nTop, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)view, cuawin);
+        i_add_object(ekOBJ_IMAGE, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)view, cuawin);
         image_destroy(&image);
     }
     else
     {
         log_printf("Cannot load '%s' image", pathname);
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_button(const char_t *text, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    Button *button = button_push();
+    String *ctext = gtconvert_1252_to_UTF8("JAJAJAJ");
+    S2Df size;
+    cassert_no_null(cuawin);
+    button_text(button, tc(ctext));
+    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+    log_printf("Added BUTTON into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+    i_add_object(ekOBJ_BUTTON, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)button, cuawin);
+    str_destroy(&ctext);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1143,6 +1161,31 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *panel, c
 
 /*---------------------------------------------------------------------------*/
 
+static void i_component_tabstop(ArrSt(GtNapCualibObject) *objects, Window *window, const objtype_t type)
+{
+    arrst_foreach(object, objects, GtNapCualibObject)
+        if (object->type == type)
+        {
+            _component_visible(object->component, TRUE);
+
+            switch(object->type) {
+            case ekOBJ_LABEL:
+            case ekOBJ_IMAGE:
+                break;
+            case ekOBJ_BUTTON:
+                _component_taborder(object->component, window);
+                break;
+            case ekOBJ_MENUVERT:
+                nap_menuvert_taborder((Panel*)object->component, window);
+                break;
+            cassert_default();
+            }
+        }
+    arrst_end();
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_cualib_launch_modal(void)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
@@ -1153,26 +1196,16 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
 
     // Attach gui objects in certain Z-Order (from back to front)
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_MENUVERT);
+    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_BUTTON);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_IMAGE);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_LABEL);
 
     // Tab-stops order
     _window_taborder(cuawin->window, NULL);
-
-    arrst_foreach(object, cuawin->gui_objects, GtNapCualibObject)
-        _component_visible(object->component, TRUE);
-
-        switch(object->type) {
-        case ekOBJ_LABEL:
-        case ekOBJ_IMAGE:
-            break;
-        case ekOBJ_MENUVERT:
-            nap_menuvert_taborder((Panel*)object->component, cuawin->window);
-            break;
-        cassert_default();
-        }
-
-    arrst_end();
+    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_MENUVERT);
+    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_BUTTON);
+    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_IMAGE);
+    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_LABEL);
 
     pos.x = (real32_t)(cuawin->N_ColIni * GTNAP_GLOBAL->cell_x_size);
     pos.y = (real32_t)(cuawin->N_LinIni * GTNAP_GLOBAL->cell_y_size);

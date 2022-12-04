@@ -22,15 +22,11 @@ ADDOPCAO V_JANELA TEXTO "Menu com #AutoClose" ;
 ATIVE(V_JANELA)
 *
 
-// STAT PROC TST_MENU_COM_ROLAMENTO
-//     @ 22, 0 SAY ""
-//     OutStd("TST_MENU_COM_ROLAMENTO() Option selected")
-//     RETURN
 
-STAT PROC TST_MENU_SEM_BOTAO_ESC
-    @ 22, 0 SAY ""
-    OutStd("TST_MENU_SEM_BOTAO_ESC() Option selected")
-    RETURN
+// STAT PROC TST_MENU_SEM_BOTAO_ESC
+//     @ 22, 0 SAY ""
+//     OutStd("TST_MENU_SEM_BOTAO_ESC() Option selected")
+//     RETURN
 
 STAT PROC TST_MENU_COM_AUTOCLOSE
     @ 22, 0 SAY ""
@@ -62,32 +58,33 @@ ADDOPCAO V_JANELA TEXTO "Opção #6" ;
 *
 ATIVE(V_JANELA)
 *
-// ********************************
-// STAT PROC TST_MENU_SEM_BOTAO_ESC
-// ********************************
-// LOCAL V_JANELA
-// *
-// CUA20 @ 17,40,26,90 JANELA V_JANELA ;
-//      TITULO "Menu sem botão ESC" SUBTITULO "%T";
-//      AJUDA "T?????"
-// *
-// ADDBOTAO V_Janela TEXTO "F9=botão adicional" ;
-//    ACAO (MOSTRAR("M?????","Foi selecionado botão F9"),.T.) AUTOCLOSE AJUDA "B19263"
+********************************
+STAT PROC TST_MENU_SEM_BOTAO_ESC
+********************************
+LOCAL V_JANELA
+*
+CUA20 @ 17,40,26,90 JANELA V_JANELA ;
+     TITULO "Menu sem botão ESC" SUBTITULO "%T";
+     AJUDA "T?????"
+*
+ADDBOTAO V_Janela TEXTO "F9=botão adicional" ;
+   ACAO (MOSTRAR("M?????","Foi selecionado botão F9"),.T.) AUTOCLOSE AJUDA "B19263"
 
-// CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
-//   COORDENADAS 01,01,03,06 ;
-//   ACAO (MOSTRAR("M?????","Foi clicado na imagem"),.T.) AUTOCLOSE AJUDA "B19131"
+CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
+  COORDENADAS 01,01,03,06 ;
+  ACAO (MOSTRAR("M?????","Foi clicado na imagem"),.T.) AUTOCLOSE AJUDA "B19131"
 
-// // ADDACAO V_Janela INKEY K_F6 ACAO INCREMENTA_TODOS(V_Janela) AJUDA "B19119"
+// ADDACAO V_Janela INKEY K_F6 ACAO INCREMENTA_TODOS(V_Janela) AJUDA "B19119"
 
-// ESPECIALIZE V_JANELA MENU
-// ADDOPCAO V_JANELA TEXTO "Opção #1" ;
-//     ACAO MOSTRAR("M?????","Foi escolhida a opção 1") AJUDA "P06735"
-// ADDOPCAO V_JANELA TEXTO "Opção #2" ;
-//     ACAO MOSTRAR("M?????","Foi escolhida a opção 2") AJUDA "P06737"
-// *
-// ATIVE(V_JANELA)
-// *
+ESPECIALIZE V_JANELA MENU
+ADDOPCAO V_JANELA TEXTO "Opção #1" ;
+    ACAO MOSTRAR("M?????","Foi escolhida a opção 1") AJUDA "P06735"
+ADDOPCAO V_JANELA TEXTO "Opção #2" ;
+    ACAO MOSTRAR("M?????","Foi escolhida a opção 2") AJUDA "P06737"
+*
+ATIVE(V_JANELA)
+*
+
 // ********************************
 // STAT PROC TST_MENU_COM_AUTOCLOSE
 // ********************************

@@ -59,6 +59,11 @@ ekKEY_Q, ekKEY_R, ekKEY_S, ekKEY_T,
 ekKEY_U, ekKEY_V, ekKEY_W, ekKEY_X,
 ekKEY_Y, ekKEY_Z };
 
+static const vkey_t KEY_ASCII_NUMBERS[] = {
+ekKEY_0, ekKEY_1, ekKEY_2, ekKEY_3,
+ekKEY_4, ekKEY_5, ekKEY_6, ekKEY_7,
+ekKEY_8, ekKEY_9 };
+
 /*---------------------------------------------------------------------------*/
 
 __EXTERN_C
@@ -463,6 +468,13 @@ HB_FUNC( NAP_MENUVERT_CUALIB_ADD )
         if (cp >= 97 && cp <= 122)
         {
             opt->hotkey = KEY_ASCII_TABLE[cp - 97];
+            opt->hotmodif = 0;
+        }
+
+        // ASCII numbers
+        if (cp >= 48 && cp <= 57)
+        {
+            opt->hotkey = KEY_ASCII_NUMBERS[cp - 48];
             opt->hotmodif = 0;
         }
 

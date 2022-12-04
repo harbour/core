@@ -93,6 +93,8 @@ extern void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const ui
 
 extern void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight);
 
+extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight);
+
 extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol);
 
 extern void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId);
