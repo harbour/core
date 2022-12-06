@@ -975,10 +975,13 @@ ENDIF // C_TelaCoberta == NIL
 // FRAN
 // Testing about window and widget dimensions
 // FOR N_Cont := 0 TO 35
-//     @ N_Cont, 0 SAY "*" + hb_ntos(N_Cont)
+//     @ N_Cont, 0 SAY "**********" + hb_ntos(N_Cont)
 // NEXT
 
-// @ 11, 0 SAY "***************************************" // + hb_ntos(N_Cont)
+// @ 12, 0 SAY "***************************************************************************************************" // + hb_ntos(N_Cont)
+// @ 12, 20 SAY "20" // + hb_ntos(N_Cont)
+// @ 12, 70 SAY "70" // + hb_ntos(N_Cont)
+
 // @ 33, 73 SAY "**" // + hb_ntos(N_Cont)
 
 
