@@ -1578,8 +1578,10 @@ static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText
     HB_SYMBOL_UNUSED( pGT );
     if (cuawin != NULL)
     {
+        String *ctext = gtconvert_1252_to_UTF8(pText);
         i_add_label_object(iCol - cuawin->N_ColIni, iRow - cuawin->N_LinIni, pText, 0, GTNAP_GLOBAL, cuawin);
-        log_printf("hb_gtnap_WriteAt(%d, %d, %d): %s", iRow, iCol, (int)ulLength, pText);
+        log_printf("hb_gtnap_WriteAt(%d, %d, %d): %s", iRow, iCol, (int)ulLength, tc(ctext));
+        str_destroy(&ctext);
     }
     else
     {
