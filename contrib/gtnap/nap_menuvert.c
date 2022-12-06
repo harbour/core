@@ -431,6 +431,22 @@ static void i_OnHotKey(MenuVert *menu, Event *e)
     arrst_foreach(opt, menu->opts, MenuOpt)
         if (opt->hotkey == p->key && opt->hotmodif == p->modifiers)
         {
+            // When an option is activated by hotkey, make sure the option
+            // will be visible in menu scrolling up or down
+            V2Df pos;
+            S2Df size;
+            real32_t mtop, mbottom, otop, obottom;
+            view_viewport(menu->view, &pos, &size);
+            mtop = pos.y;
+            mbottom = pos.y + size.height;
+            otop = (real32_t)(opt_i * menu->row_height);
+            obottom = (real32_t)((opt_i + 1) * menu->row_height);
+
+            if (mtop > otop)
+                view_scroll_y(menu->view, otop);
+            else if (mbottom < obottom)
+                view_scroll_y(menu->view, obottom - size.height);
+
             menu->selected = opt_i;
             view_update(menu->view);
             i_run_option(menu);
