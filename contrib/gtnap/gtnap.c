@@ -27,6 +27,7 @@ struct _gtnap_callback_t
     GuiComponent *cb_component;
     Window *cb_window;
     int32_t key;
+    bool_t autoclose;
     PHB_ITEM codeBlock;
 };
 
@@ -1059,11 +1060,13 @@ static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 {
     hb_gtnap_callback(callback, e);
     log_printf("Click button");
+    if (callback->autoclose == TRUE)
+        window_stop_modal(callback->cuawin->window, 1000);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const int32_t key, GtNapCualibWindow *cuawin, FPtr_gtnap_callback func_callback)
+static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const int32_t key, const bool_t autoclose, GtNapCualibWindow *cuawin, FPtr_gtnap_callback func_callback)
 {
     PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
     GtNapCallback *callback = heap_new0(GtNapCallback);
@@ -1071,18 +1074,19 @@ static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const 
     callback->codeBlock = hb_itemNew(codeBlock);
     callback->cuawin = cuawin;
     callback->key = key;
+    callback->autoclose = autoclose;
     arrpt_append(cuawin->callbacks, callback, GtNapCallback);
     return listener(callback, func_callback, GtNapCallback);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight)
+void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     Button *button = button_push();
     String *ctext = gtconvert_1252_to_UTF8(text);
-    Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, cuawin, i_OnButtonClick);
+    Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
     S2Df size;
     cassert_no_null(cuawin);
     button_text(button, tc(ctext));
@@ -1123,11 +1127,13 @@ static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
 {
     hb_gtnap_callback(callback, e);
     log_printf("Pressed hotkey %d", callback->key);
+    if (callback->autoclose == TRUE)
+        window_stop_modal(callback->cuawin->window, 1000);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId)
+void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, const bool_t autoclose)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     const GtNapKey *nkey = i_convert_key(key);
@@ -1151,7 +1157,7 @@ void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId)
         if (pos != UINT32_MAX)
             arrpt_delete(cuawin->callbacks, pos, i_destroy_callback, GtNapCallback);
 
-        listener = i_gtnap_cualib_listener(codeBlockParamId, key, cuawin, i_OnWindowHotKey);
+        listener = i_gtnap_cualib_listener(codeBlockParamId, key, autoclose, cuawin, i_OnWindowHotKey);
         window_hotkey(cuawin->window, nkey->key, nkey->modifiers, listener);
     }
 }

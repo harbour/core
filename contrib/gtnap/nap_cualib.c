@@ -119,7 +119,8 @@ HB_FUNC( NAP_CUALIB_BUTTON )
     uint32_t nLeft = hb_parni(4);
     uint32_t nBottom = hb_parni(5);
     uint32_t nRight = hb_parni(6);
-    hb_gtnap_cualib_button(text, 2, nTop, nLeft, nBottom, nRight);
+    bool_t autoclose = (bool_t)hb_parl(7);
+    hb_gtnap_cualib_button(text, 2, nTop, nLeft, nBottom, nRight, autoclose);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -137,6 +138,7 @@ HB_FUNC( NAP_CUALIB_LABEL )
 HB_FUNC( NAP_CUALIB_HOTKEY )
 {
     int32_t key = hb_parni(1);
-    hb_gtnap_cualib_hotkey(key, 2);
+    bool_t autoclose = (bool_t)hb_parl(3);
+    hb_gtnap_cualib_hotkey(key, 2, autoclose);
 }
 

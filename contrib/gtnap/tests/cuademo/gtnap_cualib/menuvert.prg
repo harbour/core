@@ -224,7 +224,7 @@ LOCAL V_MenuVert, L_Coords, X_Retorno
 #DEFINE C_CdOpcao VX_Sele:CARGO[17]
 // FRAN: A NAppGUI/GTNAP application owns the event cicle.
 IF SOB_MODO_GRAFICO()
-    NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)})
+    NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}, .F.)
 ELSE
     B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}) // salvar help anterior
 ENDIF

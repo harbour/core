@@ -757,7 +757,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
 
             N_WindowNum := NAP_CUALIB_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux, L_CLOSE_WITH_RETURN, L_CLOSE_WITH_ESC, L_MINIMIZE_BUTTON)
 
-            NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
+            NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)}, .F.)
 
             // N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
             //     N_LinIni,N_ColIni,N_LinFin,N_ColFin)
@@ -2974,11 +2974,12 @@ NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;
                     N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
                     N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
                     N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
-                    N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ])
+                    N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ],;
+                    V_Botao[_BOTAO_AUTOCLOSE])
 
 // FRAN: Button HotKey
 IF N_KeyBoard # NIL
-    NAP_CUALIB_HOTKEY(N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO])
+    NAP_CUALIB_HOTKEY(N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
 ENDIF
 
 // IF ( N_Handle_PushButton := WVW_PBCREATE(N_WindowNum,N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
