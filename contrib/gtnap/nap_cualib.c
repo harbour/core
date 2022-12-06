@@ -103,11 +103,12 @@ HB_FUNC( NAP_CUALIB_DESTROY_WINDOW )
 HB_FUNC( NAP_CUALIB_IMAGE )
 {
     const char_t *pathname = hb_gtnap_parText(1);
-    uint32_t nTop = hb_parni(2);
-    uint32_t nLeft = hb_parni(3);
-    uint32_t nBottom = hb_parni(4);
-    uint32_t nRight = hb_parni(5);
-    hb_gtnap_cualib_image(pathname, nTop, nLeft, nBottom, nRight);
+    uint32_t nTop = hb_parni(3);
+    uint32_t nLeft = hb_parni(4);
+    uint32_t nBottom = hb_parni(5);
+    uint32_t nRight = hb_parni(6);
+    bool_t autoclose = (bool_t)hb_parl(7);
+    hb_gtnap_cualib_image(pathname, 2, nTop, nLeft, nBottom, nRight, autoclose);
 }
 
 /*---------------------------------------------------------------------------*/

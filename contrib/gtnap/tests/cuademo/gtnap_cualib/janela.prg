@@ -936,10 +936,12 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
         FOR N_Cont := 1 TO LEN(V_LstImagens)
 
             NAP_CUALIB_IMAGE(V_LstImagens[N_Cont,_IMAGEM_ARQUIVO],;
+                            V_LstImagens[N_Cont,_IMAGEM_BLOCO_ACAO],;
                             N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_INICIAL],;
                             N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_INICIAL],;
                             N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_FINAL  ],;
-                            N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_FINAL  ])
+                            N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_FINAL  ],;
+                            V_LstImagens[N_Cont,_IMAGEM_AUTOCLOSE])
 
             // OutStd("Image: " + V_LstImagens[N_Cont,_IMAGEM_ARQUIVO])
             // OutStd("STLin: " + hb_ntos(N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_INICIAL]))

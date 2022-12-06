@@ -1031,7 +1031,38 @@ void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const uint32_t 
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight)
+static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const int32_t key, const bool_t autoclose, GtNapCualibWindow *cuawin, FPtr_gtnap_callback func_callback)
+{
+    PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
+    if (codeBlock != NULL)
+    {
+        GtNapCallback *callback = heap_new0(GtNapCallback);
+        callback->codeBlock = hb_itemNew(codeBlock);
+        callback->cuawin = cuawin;
+        callback->key = key;
+        callback->autoclose = autoclose;
+        arrpt_append(cuawin->callbacks, callback, GtNapCallback);
+        return listener(callback, func_callback, GtNapCallback);
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnImageClick(GtNapCallback *callback, Event *e)
+{
+    hb_gtnap_callback(callback, e);
+    log_printf("Click image");
+    if (callback->autoclose == TRUE)
+        window_stop_modal(callback->cuawin->window, 1000);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     Image *image = image_from_file(pathname, NULL);
@@ -1040,6 +1071,7 @@ void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t nTop, const ui
     {
         S2Df size;
         ImageView *view = imageview_create();
+        Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT32_MAX, autoclose, cuawin, i_OnImageClick);
         log_printf("Added IMAGE into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
         imageview_image(view, image);
         imageview_scale(view, ekAUTO);
@@ -1047,6 +1079,9 @@ void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t nTop, const ui
         size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
         i_add_object(ekOBJ_IMAGE, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)view, cuawin);
         image_destroy(&image);
+
+        if (listener != NULL)
+            view_OnClick((View*)view, listener);
     }
     else
     {
@@ -1066,21 +1101,6 @@ static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const int32_t key, const bool_t autoclose, GtNapCualibWindow *cuawin, FPtr_gtnap_callback func_callback)
-{
-    PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
-    GtNapCallback *callback = heap_new0(GtNapCallback);
-    cassert_no_null(codeBlock);
-    callback->codeBlock = hb_itemNew(codeBlock);
-    callback->cuawin = cuawin;
-    callback->key = key;
-    callback->autoclose = autoclose;
-    arrpt_append(cuawin->callbacks, callback, GtNapCallback);
-    return listener(callback, func_callback, GtNapCallback);
-}
-
-/*---------------------------------------------------------------------------*/
-
 void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
@@ -1091,12 +1111,14 @@ void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId,
     cassert_no_null(cuawin);
     button_text(button, tc(ctext));
     button_font(button, GTNAP_GLOBAL->global_font);
-    button_OnClick(button, listener);
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
     log_printf("Added BUTTON into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
     i_add_object(ekOBJ_BUTTON, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)button, cuawin);
     str_destroy(&ctext);
+
+    if (listener != NULL)
+        button_OnClick(button, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1158,7 +1180,9 @@ void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, 
             arrpt_delete(cuawin->callbacks, pos, i_destroy_callback, GtNapCallback);
 
         listener = i_gtnap_cualib_listener(codeBlockParamId, key, autoclose, cuawin, i_OnWindowHotKey);
-        window_hotkey(cuawin->window, nkey->key, nkey->modifiers, listener);
+
+        if (listener != NULL)
+            window_hotkey(cuawin->window, nkey->key, nkey->modifiers, listener);
     }
 }
 
