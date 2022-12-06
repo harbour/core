@@ -264,15 +264,22 @@ IF L_ForcaLerTudo
             V_MenuVert := NAP_MENUVERT_CREATE()
 
             FOR N_Cont := 1 TO LEN(V_Opcoes)
-                IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] # 0  // tem tecla hotkey
+                //IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] // # 0  // tem tecla hotkey
                     NAP_MENUVERT_CUALIB_ADD(V_MenuVert, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
-                ENDIF
+                //ENDIF
             NEXT
+
+            IF L_AutoClose
+                NAP_MENUVERT_AUTOCLOSE(V_MenuVert)
+            ENDIF
 
             NAP_MENUVERT_CUALIB(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
 
             X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
 
+            IF X_Retorno == 1000
+                L_FechouComAutoClose = .T.
+            ENDIF
             //
             // FRAN MenuVert automatically managed by NAP_MENUVERT
             //

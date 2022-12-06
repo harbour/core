@@ -22,16 +22,10 @@ ADDOPCAO V_JANELA TEXTO "Menu com #AutoClose" ;
 ATIVE(V_JANELA)
 *
 
-
-// STAT PROC TST_MENU_SEM_BOTAO_ESC
+// STAT PROC TST_MENU_COM_AUTOCLOSE
 //     @ 22, 0 SAY ""
-//     OutStd("TST_MENU_SEM_BOTAO_ESC() Option selected")
+//     OutStd("TST_MENU_COM_AUTOCLOSE() Option selected")
 //     RETURN
-
-STAT PROC TST_MENU_COM_AUTOCLOSE
-    @ 22, 0 SAY ""
-    OutStd("TST_MENU_COM_AUTOCLOSE() Option selected")
-    RETURN
 
 ********************************
 STAT PROC TST_MENU_COM_ROLAMENTO
@@ -85,54 +79,54 @@ ADDOPCAO V_JANELA TEXTO "Opção #2" ;
 ATIVE(V_JANELA)
 *
 
-// ********************************
-// STAT PROC TST_MENU_COM_AUTOCLOSE
-// ********************************
-// LOCAL V_JANELA
-// *
-// CUA20 @ 14,40,26,90 JANELA V_JANELA ;
-//      TITULO "Menu com AutoClose" SUBTITULO "%T";
-//      AJUDA "T?????"
-// *
-// ESPECIALIZE V_JANELA MENU AUTOCLOSE
-// ADDOPCAO V_JANELA TEXTO "Procedure sem retorno" ;
-//     ACAO PROCEDURE_SEM_RETORNO() AJUDA "P06739"
-// ADDOPCAO V_JANELA TEXTO "Função que retorna NIL" ;
-//     ACAO FUNCAO_RETORNO_NIL() AJUDA "P06741"
-// ADDOPCAO V_JANELA TEXTO "Função que retorna .F." ;
-//     ACAO FUNCAO_RETORNO_F() AJUDA "P06743"
-// ADDOPCAO V_JANELA TEXTO "Função que retorna .T." ;
-//     ACAO FUNCAO_RETORNO_T() AJUDA "P06745"
-// *
-// IF ATIVE(V_JANELA)
-//    MOSTRAR("M?????","Menu foi fechado pela cláusula AutoClose")
-// ELSE
-//    MOSTRAR("M?????","Menu foi fechado com ESC ou [X]")
-// ENDIF
-// *
-// *******************************
-// STAT PROC PROCEDURE_SEM_RETORNO
-// *******************************
-// MOSTRAR("M?????","Procedure sem retorno executada")
-// *
-// ****************************
-// STAT FUNC FUNCAO_RETORNO_NIL
-// ****************************
-// MOSTRAR("M?????","Função com retorno NIL executada")
-// RETURN NIL
-// *
-// **************************
-// STAT FUNC FUNCAO_RETORNO_F
-// **************************
-// MOSTRAR("M?????","Função com retorno .F. executada")
-// RETURN .F.
-// *
-// **************************
-// STAT FUNC FUNCAO_RETORNO_T
-// **************************
-// MOSTRAR("M?????","Função com retorno .T. executada.;"+;
-//                  "(menu será automaticamente fechado)")
-// RETURN .T.
-// *
-// ************************
+********************************
+STAT PROC TST_MENU_COM_AUTOCLOSE
+********************************
+LOCAL V_JANELA
+*
+CUA20 @ 14,40,26,90 JANELA V_JANELA ;
+     TITULO "Menu com AutoClose" SUBTITULO "%T";
+     AJUDA "T?????"
+*
+ESPECIALIZE V_JANELA MENU AUTOCLOSE
+ADDOPCAO V_JANELA TEXTO "Procedure sem retorno" ;
+    ACAO PROCEDURE_SEM_RETORNO() AJUDA "P06739"
+ADDOPCAO V_JANELA TEXTO "Função que retorna NIL" ;
+    ACAO FUNCAO_RETORNO_NIL() AJUDA "P06741"
+ADDOPCAO V_JANELA TEXTO "Função que retorna .F." ;
+    ACAO FUNCAO_RETORNO_F() AJUDA "P06743"
+ADDOPCAO V_JANELA TEXTO "Função que retorna .T." ;
+    ACAO FUNCAO_RETORNO_T() AJUDA "P06745"
+*
+IF ATIVE(V_JANELA)
+   MOSTRAR("M?????","Menu foi fechado pela cláusula AutoClose")
+ELSE
+   MOSTRAR("M?????","Menu foi fechado com ESC ou [X]")
+ENDIF
+*
+*******************************
+STAT PROC PROCEDURE_SEM_RETORNO
+*******************************
+MOSTRAR("M?????","Procedure sem retorno executada")
+*
+****************************
+STAT FUNC FUNCAO_RETORNO_NIL
+****************************
+MOSTRAR("M?????","Função com retorno NIL executada")
+RETURN NIL
+*
+**************************
+STAT FUNC FUNCAO_RETORNO_F
+**************************
+MOSTRAR("M?????","Função com retorno .F. executada")
+RETURN .F.
+*
+**************************
+STAT FUNC FUNCAO_RETORNO_T
+**************************
+MOSTRAR("M?????","Função com retorno .T. executada.;"+;
+                 "(menu será automaticamente fechado)")
+RETURN .T.
+*
+************************
 

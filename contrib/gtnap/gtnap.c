@@ -1020,7 +1020,7 @@ void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const uint32_t 
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     S2Df size, final_size;
     cassert_no_null(cuawin);
-    //log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+    log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
     _panel_compose(panel, &size, &final_size);

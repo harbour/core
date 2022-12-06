@@ -31,6 +31,7 @@ DeclSt(MenuOpt);
 
 struct _menuvert_t
 {
+    Window *window;
     View *view;
     Font *font;
     Layout *layout;
@@ -208,7 +209,9 @@ static void i_run_option(MenuVert *menu)
             {
                 if (hb_itemGetL(pReturn))
                 {
-                    Window *window = _component_window((const GuiComponent*)menu->view);
+                    Window *window = menu->window;
+                    if (window == NULL)
+                        window = _component_window((const GuiComponent*)menu->view);
                     window_stop_modal(window, 1000);
                 }
             }
@@ -352,6 +355,7 @@ static void i_OnSize(Panel *panel, Event *e)
 void nap_menuvert_taborder(Panel *panel, Window *window)
 {
     MenuVert *menu = panel_get_data(panel, MenuVert);
+    menu->window = window;
     _component_taborder((GuiComponent*)menu->view, window);
 }
 
@@ -450,7 +454,7 @@ HB_FUNC( NAP_MENUVERT_CUALIB_ADD )
     opt->hoykey_pos = (hotkey_pos == 0) ? UINT32_MAX : hotkey_pos - 1;
     opt->hotkey = ENUM_MAX(vkey_t);
     opt->hotmodif = UINT32_MAX;
-
+    log_printf("Added option '%s' to MenuVert", tc(text));
     if (opt->hoykey_pos != UINT32_MAX)
     {
         uint32_t cp = i_codepoint(tc(opt->text), opt->hoykey_pos);
