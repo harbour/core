@@ -2887,60 +2887,60 @@ NAP_CUALIB_LABEL(33, 39, "www.aspec.com.br   Aspec "+chr(184)+"1993-"+STR(YEAR(D
 *******************************
 STATIC FUNC ADICIONA_BOTAO_PUSH(VX_Janela,N_PosBotao)
 *******************************
-LOCAL V_Botao
+LOCAL V_Botao := V_RegiaoBotoes[N_PosBotao]
 //LOCAL N_Handle_PushButton
-LOCAL N_Keyboard
-LOCAL C_TextoDestaque
-LOCAL C_TextoBotaoAux
+LOCAL N_Keyboard := V_Botao[_BOTAO_INKEY_DESTAQUE]
+LOCAL C_TextoDestaque := V_Botao[_BOTAO_TEXTO_DESTAQUE]
+LOCAL C_TextoBotaoAux := V_Botao[_BOTAO_TEXTO_TRATADO_2]
  //LOCAL B_BlocoAux, N_Pos
 LOCAL N_Pos
 LOCAL C_TextoBotaoAux_CodigoPagina
 *
-NAP_LOG("BEGIN BOTAO:")
-V_Botao := V_RegiaoBotoes[N_PosBotao]
-NAP_LOG("BOTAO GET:")
+// NAP_LOG("BEGIN BOTAO:")
+// V_Botao := V_RegiaoBotoes[N_PosBotao]
+// NAP_LOG("BOTAO GET:")
 //LOCAL N_Handle_PushButton
-N_Keyboard := V_Botao[_BOTAO_INKEY_DESTAQUE]
-NAP_LOG("BOTAO GET2:")
-C_TextoDestaque := V_Botao[_BOTAO_TEXTO_DESTAQUE]
-NAP_LOG("BOTAO GET3:")
-C_TextoBotaoAux := V_Botao[_BOTAO_TEXTO_TRATADO_2]
-NAP_LOG("BOTAO GET4:")
+// N_Keyboard := V_Botao[_BOTAO_INKEY_DESTAQUE]
+// NAP_LOG("BOTAO GET2:")
+// C_TextoDestaque := V_Botao[_BOTAO_TEXTO_DESTAQUE]
+// NAP_LOG("BOTAO GET3:")
+// C_TextoBotaoAux := V_Botao[_BOTAO_TEXTO_TRATADO_2]
+// NAP_LOG("BOTAO GET4:")
 
-IF .NOT. C_TextoDestaque == NIL
-NAP_LOG("Button C_TextoDestaque:" + C_TextoDestaque)
-ELSE
-NAP_LOG("Button C_TextoDestaque NIL")
-ENDIF
+// IF .NOT. C_TextoDestaque == NIL
+// NAP_LOG("Button C_TextoDestaque:" + C_TextoDestaque)
+// ELSE
+// NAP_LOG("Button C_TextoDestaque NIL")
+// ENDIF
 
-IF .NOT. C_TextoBotaoAux == NIL
-NAP_LOG("Button C_TextoBotaoAux:" + C_TextoBotaoAux)
-ELSE
-NAP_LOG("Button C_TextoBotaoAux NIL")
-ENDIF
+// IF .NOT. C_TextoBotaoAux == NIL
+// NAP_LOG("Button C_TextoBotaoAux:" + C_TextoBotaoAux)
+// ELSE
+// NAP_LOG("Button C_TextoBotaoAux NIL")
+// ENDIF
 
-NAP_LOG("N_Keyboard:" + hb_ntos(N_Keyboard))
+// NAP_LOG("N_Keyboard:" + hb_ntos(N_Keyboard))
 //!! DEPOIS REMOVER O "IF", DEIXANDO O "ELSE"
 //!! (POR ENQUANTO, O N_KEYBOARD PODE CONTER NIL)
 IF N_Keyboard == NIL
     // B_BlocoAux := {||NIL}   // PUSHBUTTON FICARÁ SEM FUNCIONAR !!!
 ELSE
-    // IF LEN(C_TextoDestaque)==1 .AND. ; // Se aceleradora tiver 1 byte de tamanho
-    //     (ISALPHA(C_TextoDestaque) .OR. ISDIGIT(C_TextoDestaque))  // Se for uma letra (sem acentos) ou um número
-    //    *
-    //     N_Pos := AT(XUPPER(C_TextoDestaque),XUPPER(C_TextoBotaoAux))
+    IF LEN(C_TextoDestaque)==1 .AND. ; // Se aceleradora tiver 1 byte de tamanho
+        (ISALPHA(C_TextoDestaque) .OR. ISDIGIT(C_TextoDestaque))  // Se for uma letra (sem acentos) ou um número
+       *
+        N_Pos := AT(XUPPER(C_TextoDestaque),XUPPER(C_TextoBotaoAux))
 
-    //      //!! Porque o código abaixo não funcionou ?????
-    //      //N_Pos := AT(XUPPER(C_TextoDestaque),C_TextoBotaoAux)
-    //      //IF N_Pos == 0
-    //      //   N_Pos := AT(XLOWER(C_TextoDestaque),C_TextoBotaoAux)
-    //      //ENDIF
-    //     *
-    //     IF N_Pos # 0   // Colocar o "&" que torna a caractere um acelerador para o Windows
-    //     C_TextoBotaoAux := LEFT(C_TextoBotaoAux,N_Pos-1)+"&"+;
-    //                         SUBSTR(C_TextoBotaoAux,N_Pos)
-    //     ENDIF
-    // ENDIF
+         //!! Porque o código abaixo não funcionou ?????
+         //N_Pos := AT(XUPPER(C_TextoDestaque),C_TextoBotaoAux)
+         //IF N_Pos == 0
+         //   N_Pos := AT(XLOWER(C_TextoDestaque),C_TextoBotaoAux)
+         //ENDIF
+        *
+        IF N_Pos # 0   // Colocar o "&" que torna a caractere um acelerador para o Windows
+        C_TextoBotaoAux := LEFT(C_TextoBotaoAux,N_Pos-1)+"&"+;
+                            SUBSTR(C_TextoBotaoAux,N_Pos)
+        ENDIF
+    ENDIF
       *
       * Quando um PushButton fazia uma ação sem abrir nenhuma tela adicional
       *   Exemplo: - Ir para uma tela de seleção múltipla e
@@ -2958,19 +2958,29 @@ ELSE
        // HB_KeyPut(N_Keyboard)}
 ENDIF
 *
-// IF Version()=="Harbour 3.2.0dev (r1703241902)"
-//     C_TextoBotaoAux_CodigoPagina := HB_OEMtoANSI(C_TextoBotaoAux)
-// ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)" .OR. Version()=="Harbour 3.2.0dev (r1704061005)" // ADAPTACAO_LINUX
-//     C_TextoBotaoAux_CodigoPagina := C_TextoBotaoAux
-// ENDIF ERRO
+IF Version()=="Harbour 3.2.0dev (r1703241902)"
+    C_TextoBotaoAux_CodigoPagina := HB_OEMtoANSI(C_TextoBotaoAux)
+ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)" .OR. Version()=="Harbour 3.2.0dev (r1704061005)" // ADAPTACAO_LINUX
+    C_TextoBotaoAux_CodigoPagina := C_TextoBotaoAux
+ELSE
+    C_TextoBotaoAux_CodigoPagina := C_TextoBotaoAux
+ENDIF
+//ENDIF ERRO
 *
 
-NAP_LOG("Before NAP_CUALIB_BUTTON")
-NAP_CUALIB_BUTTON("Button1",;// C_TextoBotaoAux_CodigoPagina,;
+//NAP_LOG("Before NAP_CUALIB_BUTTON")
+NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;
+                    V_Botao[_BOTAO_BLOCO_ACAO],;
                     N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
                     N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
                     N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
                     N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ])
+
+// FRAN: Button HotKey
+IF N_KeyBoard # NIL
+    NAP_CUALIB_HOTKEY(N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO])
+ENDIF
+
 // IF ( N_Handle_PushButton := WVW_PBCREATE(N_WindowNum,N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
 //                                                     N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
 //                                                     N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;

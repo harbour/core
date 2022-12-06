@@ -1055,27 +1055,10 @@ void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t nTop, const ui
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_button(const char_t *text, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight)
+static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
-    Button *button = button_push();
-    String *ctext = gtconvert_1252_to_UTF8("JAJAJAJ");
-    S2Df size;
-    cassert_no_null(cuawin);
-    button_text(button, tc(ctext));
-    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
-    log_printf("Added BUTTON into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
-    i_add_object(ekOBJ_BUTTON, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)button, cuawin);
-    str_destroy(&ctext);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol)
-{
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
-    i_add_label_object(nCol, nLin, text, kCOLOR_CYAN, GTNAP_GLOBAL, cuawin);
+    hb_gtnap_callback(callback, e);
+    log_printf("Click button");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1090,6 +1073,34 @@ static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const 
     callback->key = key;
     arrpt_append(cuawin->callbacks, callback, GtNapCallback);
     return listener(callback, func_callback, GtNapCallback);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    Button *button = button_push();
+    String *ctext = gtconvert_1252_to_UTF8(text);
+    Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, cuawin, i_OnButtonClick);
+    S2Df size;
+    cassert_no_null(cuawin);
+    button_text(button, tc(ctext));
+    button_font(button, GTNAP_GLOBAL->global_font);
+    button_OnClick(button, listener);
+    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+    log_printf("Added BUTTON into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+    i_add_object(ekOBJ_BUTTON, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)button, cuawin);
+    str_destroy(&ctext);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    i_add_label_object(nCol, nLin, text, kCOLOR_CYAN, GTNAP_GLOBAL, cuawin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1173,7 +1184,8 @@ static void i_component_tabstop(ArrSt(GtNapCualibObject) *objects, Window *windo
             case ekOBJ_IMAGE:
                 break;
             case ekOBJ_BUTTON:
-                _component_taborder(object->component, window);
+                // Buttons don't have tabstop
+                //_component_taborder(object->component, window);
                 break;
             case ekOBJ_MENUVERT:
                 nap_menuvert_taborder((Panel*)object->component, window);
