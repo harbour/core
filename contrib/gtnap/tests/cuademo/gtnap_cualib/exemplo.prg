@@ -156,10 +156,10 @@ QUIT
 //     OutStd("EXEMPLO_MENU() Option selected")
 //     RETURN
 
-PROC EXEMPLO_BROWSE_DBF
-    @ 22, 0 SAY ""
-    OutStd("EXEMPLO_BROWSE_DBF() Option selected")
-    RETURN
+// PROC EXEMPLO_BROWSE_DBF
+//     @ 22, 0 SAY ""
+//     OutStd("EXEMPLO_BROWSE_DBF() Option selected")
+//     RETURN
 
 PROC EXEMPLO_BROWSE_VETOR
     @ 22, 0 SAY ""

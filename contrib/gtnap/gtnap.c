@@ -1244,15 +1244,15 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
     // Attach gui objects in certain Z-Order (from back to front)
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_MENUVERT);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_BUTTON);
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_IMAGE);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_LABEL);
+    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_IMAGE);
 
     // Tab-stops order
     _window_taborder(cuawin->window, NULL);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_MENUVERT);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_BUTTON);
-    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_IMAGE);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_LABEL);
+    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_IMAGE);
 
     pos.x = (real32_t)(cuawin->N_ColIni * GTNAP_GLOBAL->cell_x_size);
     pos.y = (real32_t)(cuawin->N_LinIni * GTNAP_GLOBAL->cell_y_size);

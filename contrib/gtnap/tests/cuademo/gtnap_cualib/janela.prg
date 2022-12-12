@@ -204,11 +204,12 @@ ENDIF
 *
 IF L_CUA_10
     // @ 22, 0 SAY ""
-    // OutStd("B_Metodo NIL in Janela")
+   //OutStd("B_Metodo NIL in Janela")
 
    B_Metodo := {||NIL}   // não faz nada
 ELSE
    * trata eventuais botões, ações e imagens, mesmo que janela não tenha especialização
+   //OutStd("B_Metodo TrataEventos in Janela")
    B_Metodo := {|VX_Janela2| TrataEventos(VX_Janela2) }
 ENDIF
 *
@@ -2323,27 +2324,31 @@ RETURN L_EXIBE_AJUDA
 *
 ***********************
 
-// FRAN: At the moment, events are internally managed by GTNAP
-STATIC FUNCTION TrataEventos ( VX_Janela )
-    LOCAL L_FechouComAutoClose := .F.
-
-    @ 22, 0 SAY ""
-    OutStd("TrataEventos ( VX_Janela ) function called")
-
-    RETURN L_FechouComAutoClose
-
-// *
-// ***********************
+// // FRAN: At the moment, events are internally managed by GTNAP
 // STATIC FUNCTION TrataEventos ( VX_Janela )
-// *
-// // #INCLUDE "set.ch"
-// *
-// LOCAL L_Mais, N_Tecla, N_Pos
-// LOCAL N_mRow, N_mCol, N_RegiaoMouse, N_Keyboard
+//     LOCAL L_FechouComAutoClose := .F.
 
-// LOCAL N_PaintRefresh_Old, X_Retorno_Eval, L_FechouComAutoClose := .F.
-// LOCAL V_Botao, V_Imagem, N_Pos_Acao
-// *
+//     @ 22, 0 SAY ""
+//     OutStd("TrataEventos ( VX_Janela ) function called")
+
+//     RETURN L_FechouComAutoClose
+
+*
+***********************
+STATIC FUNCTION TrataEventos ( VX_Janela )
+*
+// #INCLUDE "set.ch"
+*
+LOCAL L_Mais, N_Tecla, N_Pos
+LOCAL N_mRow, N_mCol, N_RegiaoMouse, N_Keyboard
+
+LOCAL /*N_PaintRefresh_Old, */X_Retorno_Eval, L_FechouComAutoClose := .F.
+LOCAL V_Botao, V_Imagem, N_Pos_Acao
+
+//
+// FRAN: This code is not necesary
+//
+*
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF SOB_MODO_GRAFICO()
 //       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
@@ -2351,143 +2356,181 @@ STATIC FUNCTION TrataEventos ( VX_Janela )
 // #elif defined(__PLATFORM__LINUX)
 //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
 // #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
+//     #erro "Código não adaptado para esta plataforma"
 // #endif
-// *
-// L_Mais := .T.                                    // simula um DO UNTIL
-// *
-// DO WHILE L_Mais
-//    *
-//    * InKey_(.T.) ï¿½ igual ao INKEY(0), mas ativa SET KEY"s
-//    N_Tecla := Inkey_(.T.,4)
-//    *
-//    DO CASE
-//       CASE N_Tecla == K_LBUTTONDOWN .OR. ;
-//            N_Tecla == K_LDBLCLK     .OR. ;
-//            N_Tecla == K_RBUTTONDOWN .OR. ;
-//            N_Tecla == K_RDBLCLK
-//            *
-//            N_mRow := mRow()
-//            N_mCol := mCol()
-//            N_RegiaoMouse := RegiaoJanela_(VX_Janela,N_mRow,N_mCol,;
-//                                           N_Lin1Livre,N_Col1Livre,;
-//                                           N_Lin2Livre,N_Col2Livre,;
-//                                           @N_Keyboard,@V_Botao,@V_Imagem)
-//            *
-//            // #INCLUDE "mousecua.ch"
-//            IF (N_RegiaoMouse == BOTAO_IDENTIFICADO .OR. ;  // N_Keyboard preenchido
-//                N_RegiaoMouse == BOTAO_NAO_IDENTIFICADO)    // N_Keyboard nï¿½o preenchido
-//               IF SOB_MODO_GRAFICO()
-//                  ? MEMVAR->MODO_GRAFICO_NAO_USA_ESTE_TRECHO_DE_CODIGO
-//               ENDIF
+*
 
-//               X_Retorno_Eval := EVAL(V_Botao[_BOTAO_BLOCO_ACAO])
-//               *
-//               * Logar uso de botï¿½es, para ter estatï¿½stica de uso
-//               IF V_Botao[_BOTAO_CDBOTAO] # NIL  // Se for CUA 2.0
-//                  LOGAINFO_ID_TELA_RELAT_BOTAO("botï¿½o/aï¿½ï¿½o",V_Botao[_BOTAO_CDBOTAO],;
-//                                               C_CdTela,"Botï¿½o "+V_Botao[_BOTAO_TEXTO_COMANDO])   // Log de uso de botï¿½o no sistema
-//               ENDIF
+//
+//  FRAN: Events are managed inside a GTNAP/NAppGUI window.
+//
+IF SOB_MODO_GRAFICO()
 
-//               IF V_Botao[_BOTAO_AUTOCLOSE]
-//                  DEFAULT X_Retorno_Eval TO .F. // nï¿½o fechar janela de menu
-//                  IF .NOT. VALTYPE(X_Retorno_Eval)=="L" // tem de ser lï¿½gico
-//                     ? MEMVAR->COM_AUTOCLOSE_RETORNO_TEM_DE_SER_LOGICO_OU_NIL
-//                  ENDIF
-//                  IF X_Retorno_Eval
-//                     L_Mais := .F.
-//                     L_FechouComAutoClose := .T.
-//                  ENDIF
-//               ENDIF
-//            ELSEIF N_RegiaoMouse == SOBRE_IMAGEM
-//               *
-//               #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//                  IF SOB_MODO_GRAFICO()
-//                     WVW_SetPaintRefresh(N_PaintRefresh_Old)
-//                  ENDIF
-//               #elif defined(__PLATFORM__LINUX)
-//                  // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//               #else
-//                  #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//               #endif
+    X_Retorno_Eval := NAP_CUALIB_LAUNCH_MODAL()
 
-//               X_Retorno_Eval := EVAL(V_Imagem[_IMAGEM_BLOCO_ACAO])
+    IF X_Retorno_Eval == 1000
+        L_FechouComAutoClose = .T.
+    ENDIF
 
-//               * Logar uso de imagens, para ter estatï¿½stica de uso
-//               IF V_Imagem[_IMAGEM_CDBOTAO] # NIL  // Se for CUA 2.0
-//                  LOGAINFO_ID_TELA_RELAT_BOTAO("botï¿½o/aï¿½ï¿½o",V_Imagem[_IMAGEM_CDBOTAO],;
-//                                               C_CdTela,"Imagem "+V_Imagem[_IMAGEM_ARQUIVO])   // Log de uso de imagem no sistema
-//               ENDIF
+ELSE
 
-//               #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//                  IF SOB_MODO_GRAFICO()
-//                     WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-//                  ENDIF
-//               #elif defined(__PLATFORM__LINUX)
-//                  // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//               #else
-//                  #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//               #endif
-//               *
-//               IF V_Imagem[_IMAGEM_AUTOCLOSE]
-//                  DEFAULT X_Retorno_Eval TO .F. // nï¿½o fechar janela de menu
-//                  IF .NOT. VALTYPE(X_Retorno_Eval)=="L" // tem de ser lï¿½gico
-//                     ? MEMVAR->COM_AUTOCLOSE_RETORNO_TEM_DE_SER_LOGICO_OU_NIL
-//                  ENDIF
-//                  IF X_Retorno_Eval
-//                     L_Mais := .F.
-//                     L_FechouComAutoClose := .T.
-//                  ENDIF
-//               ENDIF
-//            ELSEIF N_Keyboard # NIL
-//               HB_KeyPut(N_Keyboard)
-//            ENDIF
-//            *
-//       OTHER
-//            IF N_Tecla == K_ESC
-//               L_Mais := .F.
-//            ELSE
-//               N_Pos_Acao := ASCAN(V_LstAcoes,{|V_Acao| ;
-//                                   V_Acao[_ACAO_KEYBOARD]==N_Tecla .OR. ;
-//                                   V_Acao[_ACAO_KEYBOARD_CASE]==N_Tecla})
-//               IF N_Pos_Acao # 0
-//                  #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//                     IF SOB_MODO_GRAFICO()
-//                        WVW_SetPaintRefresh(N_PaintRefresh_Old)
-//                     ENDIF
-//                  #elif defined(__PLATFORM__LINUX)
-//                     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//                  #else
-//                     #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//                  #endif
+//
+// FRAN: Manual event management ONLY in TEXT terminal versions
+//
+L_Mais := .T.                                    // simula um DO UNTIL
+*
+DO WHILE L_Mais
+   *
+   * InKey_(.T.) é igual ao INKEY(0), mas ativa SET KEY"s
+   N_Tecla := Inkey_(.T.,4)
+   *
+   DO CASE
+      CASE N_Tecla == K_LBUTTONDOWN .OR. ;
+           N_Tecla == K_LDBLCLK     .OR. ;
+           N_Tecla == K_RBUTTONDOWN .OR. ;
+           N_Tecla == K_RDBLCLK
+           *
+           N_mRow := mRow()
+           N_mCol := mCol()
+           N_RegiaoMouse := RegiaoJanela_(VX_Janela,N_mRow,N_mCol,;
+                                          N_Lin1Livre,N_Col1Livre,;
+                                          N_Lin2Livre,N_Col2Livre,;
+                                          @N_Keyboard,@V_Botao,@V_Imagem)
+           *
+           // #INCLUDE "mousecua.ch"
+           IF (N_RegiaoMouse == BOTAO_IDENTIFICADO .OR. ;  // N_Keyboard preenchido
+               N_RegiaoMouse == BOTAO_NAO_IDENTIFICADO)    // N_Keyboard não preenchido
+                //
+                // Fran: Only TEXT terminal version enter here
+                //
+                //   IF SOB_MODO_GRAFICO()
+                //      ? MEMVAR->MODO_GRAFICO_NAO_USA_ESTE_TRECHO_DE_CODIGO
+                //   ENDIF
 
-//                  X_Retorno_Eval := EVAL(V_LstAcoes[N_Pos_Acao,_ACAO_BLOCO_ACAO])
-//                  #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//                     IF SOB_MODO_GRAFICO()
-//                        WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-//                     ENDIF
-//                  #elif defined(__PLATFORM__LINUX)
-//                     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//                  #else
-//                     #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//                  #endif
-//                  *
-//                  IF V_LstAcoes[N_Pos_Acao,_ACAO_AUTOCLOSE]
-//                     DEFAULT X_Retorno_Eval TO .F. // nï¿½o fechar janela de menu
-//                     IF .NOT. VALTYPE(X_Retorno_Eval)=="L" // tem de ser lï¿½gico
-//                        ? MEMVAR->COM_AUTOCLOSE_RETORNO_TEM_DE_SER_LOGICO_OU_NIL
-//                     ENDIF
-//                     IF X_Retorno_Eval
-//                        L_Mais := .F.
-//                        L_FechouComAutoClose := .T.
-//                     ENDIF
-//                  ENDIF
-//               ENDIF
-//            ENDIF
-//    ENDCASE
-//    *
-// ENDDO
-// *
+              X_Retorno_Eval := EVAL(V_Botao[_BOTAO_BLOCO_ACAO])
+              *
+              * Logar uso de botões, para ter estatística de uso
+              IF V_Botao[_BOTAO_CDBOTAO] # NIL  // Se for CUA 2.0
+                 LOGAINFO_ID_TELA_RELAT_BOTAO("botão/ação",V_Botao[_BOTAO_CDBOTAO],;
+                                              C_CdTela,"Botão "+V_Botao[_BOTAO_TEXTO_COMANDO])   // Log de uso de botão no sistema
+              ENDIF
+
+              IF V_Botao[_BOTAO_AUTOCLOSE]
+                 DEFAULT X_Retorno_Eval TO .F. // não fechar janela de menu
+                 IF .NOT. VALTYPE(X_Retorno_Eval)=="L" // tem de ser lógico
+                    ? MEMVAR->COM_AUTOCLOSE_RETORNO_TEM_DE_SER_LOGICO_OU_NIL
+                 ENDIF
+                 IF X_Retorno_Eval
+                    L_Mais := .F.
+                    L_FechouComAutoClose := .T.
+                 ENDIF
+              ENDIF
+           ELSEIF N_RegiaoMouse == SOBRE_IMAGEM
+              *
+            //
+            // Fran: Only TEXT terminal version enter here
+            //
+            //   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+            //      IF SOB_MODO_GRAFICO()
+            //         WVW_SetPaintRefresh(N_PaintRefresh_Old)
+            //      ENDIF
+            //   #elif defined(__PLATFORM__LINUX)
+            //      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
+            //   #else
+            //     #erro "Código não adaptado para esta plataforma"
+            //   #endif
+
+              X_Retorno_Eval := EVAL(V_Imagem[_IMAGEM_BLOCO_ACAO])
+
+              * Logar uso de imagens, para ter estatística de uso
+              IF V_Imagem[_IMAGEM_CDBOTAO] # NIL  // Se for CUA 2.0
+                 LOGAINFO_ID_TELA_RELAT_BOTAO("botão/ação",V_Imagem[_IMAGEM_CDBOTAO],;
+                                              C_CdTela,"Imagem "+V_Imagem[_IMAGEM_ARQUIVO])   // Log de uso de imagem no sistema
+              ENDIF
+
+            //
+            // Fran: Only TEXT terminal version enter here
+            //
+            //   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+            //      IF SOB_MODO_GRAFICO()
+            //         WVW_SetPaintRefresh(_REPAINT_DEFAULT)
+            //      ENDIF
+            //   #elif defined(__PLATFORM__LINUX)
+            //      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
+            //   #else
+            //     #erro "Código não adaptado para esta plataforma"
+            //   #endif
+              *
+              IF V_Imagem[_IMAGEM_AUTOCLOSE]
+                 DEFAULT X_Retorno_Eval TO .F. // não fechar janela de menu
+                 IF .NOT. VALTYPE(X_Retorno_Eval)=="L" // tem de ser lógico
+                    ? MEMVAR->COM_AUTOCLOSE_RETORNO_TEM_DE_SER_LOGICO_OU_NIL
+                 ENDIF
+                 IF X_Retorno_Eval
+                    L_Mais := .F.
+                    L_FechouComAutoClose := .T.
+                 ENDIF
+              ENDIF
+           ELSEIF N_Keyboard # NIL
+              HB_KeyPut(N_Keyboard)
+           ENDIF
+           *
+      OTHER
+           IF N_Tecla == K_ESC
+              L_Mais := .F.
+           ELSE
+              N_Pos_Acao := ASCAN(V_LstAcoes,{|V_Acao| ;
+                                  V_Acao[_ACAO_KEYBOARD]==N_Tecla .OR. ;
+                                  V_Acao[_ACAO_KEYBOARD_CASE]==N_Tecla})
+              IF N_Pos_Acao # 0
+
+                //
+                // Fran: Only TEXT terminal version enter here
+                //
+                //  #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+                //     IF SOB_MODO_GRAFICO()
+                //        WVW_SetPaintRefresh(N_PaintRefresh_Old)
+                //     ENDIF
+                //  #elif defined(__PLATFORM__LINUX)
+                //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
+                //  #else
+                //     #erro "Código não adaptado para esta plataforma"
+                //  #endif
+
+                 X_Retorno_Eval := EVAL(V_LstAcoes[N_Pos_Acao,_ACAO_BLOCO_ACAO])
+
+                //
+                // Fran: Only TEXT terminal version enter here
+                //
+                //  #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+                //     IF SOB_MODO_GRAFICO()
+                //        WVW_SetPaintRefresh(_REPAINT_DEFAULT)
+                //     ENDIF
+                //  #elif defined(__PLATFORM__LINUX)
+                //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
+                //  #else
+                //     #erro "Código não adaptado para esta plataforma"
+                //  #endif
+
+                 *
+                 IF V_LstAcoes[N_Pos_Acao,_ACAO_AUTOCLOSE]
+                    DEFAULT X_Retorno_Eval TO .F. // não fechar janela de menu
+                    IF .NOT. VALTYPE(X_Retorno_Eval)=="L" // tem de ser lógico
+                       ? MEMVAR->COM_AUTOCLOSE_RETORNO_TEM_DE_SER_LOGICO_OU_NIL
+                    ENDIF
+                    IF X_Retorno_Eval
+                       L_Mais := .F.
+                       L_FechouComAutoClose := .T.
+                    ENDIF
+                 ENDIF
+              ENDIF
+           ENDIF
+   ENDCASE
+   *
+ENDDO
+*
+//
+// Fran: Only TEXT terminal version enter here
+//
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF SOB_MODO_GRAFICO()
 //       WVW_SetPaintRefresh(N_PaintRefresh_Old)
@@ -2495,10 +2538,13 @@ STATIC FUNCTION TrataEventos ( VX_Janela )
 // #elif defined(__PLATFORM__LINUX)
 //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
 // #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
+// #erro "Código não adaptado para esta plataforma"
 // #endif
-// *
-// RETURN L_FechouComAutoClose
+*
+
+ENDIF  //  SOB_MODO_GRAFICO()
+
+RETURN L_FechouComAutoClose
 // *
 // *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
