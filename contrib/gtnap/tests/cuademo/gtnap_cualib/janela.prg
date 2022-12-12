@@ -590,7 +590,7 @@ LOCAL C_CorAnt    := SETCOLOR(C_CorJan)              // salvar cor anterior
 LOCAL B_Ajuda_Ant  // salvar help anterior, se existir novo
 LOCAL N_Cont, N_AddRows
 LOCAL C_Cabec_Aux
-//LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
+LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
 
 // Window flags
 LOCAL L_CLOSE_WITH_RETURN := .F.
@@ -897,6 +897,76 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
     *
 
     //
+    // Fran: Adding TOOLBAR
+    //
+    IF SOB_MODO_GRAFICO() .AND. L_CriarToolBar
+        * O Windows coloca a ToolBar "acima" da janela do sistema.
+        * Isto causou o efeito da ToolBar ficar "fora" da tela do
+        * usuário, porque simplemente não coube na tela visível.
+        * Para minimizar este problema, sem ter que olhar todas as
+        * telas do sistema, optou-se para que, quando existir ToolBar:
+        *   - A janela do sistema será "baixada" em 1 posição
+        *   - Para que o subtítulo não fique "colado" na área útil,
+        *     será acrescentado uma linha separadora entre o título da janela e
+        *     a área útil da janela.
+        *
+        * Não exibir separador, pois a grid já serve como separador visual
+        L_AcrescentarSeparadorSubtitulo := .T.
+        IF N_TP_Jan == _JAN_SELE_ARQ_20
+            #DEFINE VX_Sele  VX_SubObj
+            L_MostraGrade  := VX_Sele:CARGO[09]      // Se mostra o grid
+            #UNDEF VX_Sele
+            IF L_MostraGrade
+                L_AcrescentarSeparadorSubtitulo := .F.
+            ENDIF
+        ENDIF
+
+        IF N_TP_Jan == _JAN_SELE_VETO_20
+           #DEFINE VX_Sele  VX_SubObj
+           L_MostraGrade  := VX_Sele:CARGO[09]      // Se mostra o grid
+           #UNDEF VX_Sele
+           IF L_MostraGrade
+              L_AcrescentarSeparadorSubtitulo := .F.
+           ENDIF
+        ENDIF
+        *
+        * Não exibir saparador, pois o box do texto já serve como separador visual
+        IF N_TP_Jan == _JAN_TEXTO_10 .OR. ;
+            N_TP_Jan == _JAN_ARQTEXTO_10
+            L_AcrescentarSeparadorSubtitulo := .F.
+        ENDIF
+        *
+        *
+        * Primeiramente definir a toolbar
+        ADDGUI_TOOLBAR(VX_Janela)
+
+        // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+        //    IF L_AcrescentarSeparadorSubtitulo
+        //       AddGuiObject(VX_Janela,DesenhaSeparadorSubtitulo(VX_Janela),;
+        //                    CoordenadasSeparadorSubtitulo(VX_Janela))
+        //    ENDIF
+        //    *
+        //    * Primeiramente definir a toolbar
+        //    ADDGUI_TOOLBAR(VX_Janela)
+        //    *
+        //    * A função hb_gtInfo(), ao ser ativada com parâmetro HB_GTI_INKEYFILTER,
+        //    * lê / seta um bloco de código a ser executado após a cada INKEY() ser processado.
+        //    * O retorno deste bloco de código substitui a tecla que o usuário final digitou.
+        //    * Este recurso é usado para tratar adequadamente a execução de ações da ToolBar.
+        //    *
+        //    * Seja lá qual for o conteúdo anterior deste bloco de código, salvá-lo
+        //    * para restaurar o conteúdo original, quando a janela for fechada.
+        //    #include "hbgtinfo.ch"
+        //    B_SetInkeyAfterBlock_Old := ;
+        //       hb_gtInfo( HB_GTI_INKEYFILTER, {|nkey| ProcessaBotaoToolbarKey( VX_Janela, nkey ) } )
+        // #elif defined(__PLATFORM__LINUX)
+        //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
+        // #else
+        //    #erro "Código não adaptado para esta plataforma"
+        // #endif
+    ENDIF   // SOB_MODO_GRAFICO() .AND. L_CriarToolBar
+
+    //
     // Fran: Adding buttons
     //
     IF SOB_MODO_GRAFICO()
@@ -983,7 +1053,8 @@ ENDIF // C_TelaCoberta == NIL
 //     @ N_Cont, 0 SAY "**********" + hb_ntos(N_Cont)
 // NEXT
 
-// @ 12, 0 SAY "***************************************************************************************************" // + hb_ntos(N_Cont)
+//@ 4, 20 SAY "***************************************************************************************************" // + hb_ntos(N_Cont)
+//@ 3, 41 SAY "*******" // + hb_ntos(N_Cont)
 // @ 12, 20 SAY "20" // + hb_ntos(N_Cont)
 // @ 12, 70 SAY "70" // + hb_ntos(N_Cont)
 
@@ -1160,312 +1231,348 @@ N_Lin1Livre++
 *
 *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    ************************
-//    STAT PROC ADDGUI_TOOLBAR(VX_Janela)
-//    ************************
-//    LOCAL L_PermiteEdicao
-//    LOCAL hWndToolBar
-//    LOCAL L_TOOLBAR_AINDA_SEM_BOTOES := .T.
-//    LOCAL N_TelaHeight := TelaPrincipalHeight()
-//    LOCAL N_PixelsBotao
-//    LOCAL L_MudaDados
-//    *
-//    * Setar o tamanho do botï¿½o de forma proporcional,
-//    * de forma que a altura da ToolBar nï¿½o ultrapasse
-//    * 2 linhas do sistema.
-//    * Isto torna o tamanho da ToolBar mais proporcional,
-//    * quando usado principalmente em resoluï¿½ï¿½es pequenas
-//    * (ex: 800 x 600 de projetores)
-//    *
-//    IF N_TelaHeight >= 960
-//       * A partir deste ponto, a ToolBar jï¿½ ï¿½ menor que 2 linhas
-//       * de texto, mesmo usando o tamanho real do BITMAP.
-//       N_PixelsBotao := 32 // Tamanho real das imagens ï¿½ 32 x 32
-//    ELSEIF N_TelaHeight >=  864
-//       N_PixelsBotao := 30
-//    ELSEIF N_TelaHeight >=  768
-//       N_PixelsBotao := 28
-//    ELSEIF N_TelaHeight >=  720
-//       N_PixelsBotao := 25
-//    ELSEIF N_TelaHeight >= 600
-//       N_PixelsBotao := 20
-//    ELSE
-//       N_PixelsBotao := 18
-//    ENDIF
-//    *
-//    * A criaï¿½ï¿½o da toolbar caso for .T. se nï¿½o apresenta mensagem.
-//    * No Xharbour e no Harbour 3.2.0 (GCC 6.3.0), a WVW_TBCREATE() retorna um nï¿½mero.
-//    * O retorno podia ser testado.
-//    *  IF ( hWndToolBar := WVW_TBCREATE( N_WindowNum, .F., NIL, 0, N_PixelsBotao, N_PixelsBotao ) ) == 0
-//    *     ALARME("M28028","Falha ao criar a 'ToolBar'")
-//    *    ? MEMVAR->TOOLBAR_NAO_CRIADA
-//    *  ENDIF
-//    * Mas, no Harbour 3.2.0 (GCC 10.1.0), a WVW_TBCREATE() retorna um ponteiro.
-//    * O retorno nï¿½o mais serï¿½ testado, portanto.
-//    hWndToolBar := WVW_TBCREATE( N_WindowNum, .F., NIL, 0, N_PixelsBotao, N_PixelsBotao )
-//    *
-//    IF TEM_BOTAO(VX_Janela,{"Incluir","Alterar","Excluir","Consultar"})
-//       *
-//       IF TEM_BOTAO(VX_Janela,{"Incluir"},.T.,@L_MudaDados)
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_INCLUI,_BITMAP_INCLUI_DESAB},"Incluir",{||__Keyboard("I")},0,L_MudaDados)
-//       ENDIF
-//       *
-//       IF TEM_BOTAO(VX_Janela,{"Alterar"},.T.,@L_MudaDados)
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_ALTERA,_BITMAP_ALTERA_DESAB},"Alterar",{||__Keyboard("A")},1,L_MudaDados)
-//       ENDIF
-//       *
-//       IF TEM_BOTAO(VX_Janela,{"Excluir"},.T.,@L_MudaDados)
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_EXCLUI,_BITMAP_EXCLUI_DESAB},"Excluir",{||__Keyboard("E")},2,L_MudaDados)
-//       ENDIF
-//       *
-//       IF TEM_BOTAO(VX_Janela,{"Consultar"})
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_CONSULTA},"Consultar",{||__Keyboard("C")})
-//       ENDIF
-//       *
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//       *
-//    ENDIF
-//    *
-//    IF TEM_BOTAO(VX_JANELA,{"Listar","Procurar"})
-//       *
-//       IF TEM_BOTAO(VX_Janela,{"Listar"})
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_PRINTER} ,"Listar",{||__Keyboard("L")})
-//       ENDIF
-//       *
-//       IF TEM_BOTAO(VX_Janela,{"Procurar"})
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_PESQUISE},"Procurar",{||__Keyboard("P")})
-//       ENDIF
-//       *
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ENDIF
-//    *
-//    IF TEM_BOTAO(VX_Janela,{"F2=ok"})
-//       IF TEM_BOTAO(VX_Janela,{"F2=salvar"})
-//          ? MEMVAR->BOTAO_OK_E_SALVAR_AO_MESMO_TEMPO
-//       ENDIF
-//       *
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_OK},"Ok",{||HB_KeyPut(K_F2)})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ENDIF
-//    *
-//    IF TEM_BOTAO(VX_Janela,{"F2=salvar"},.T.,@L_MudaDados)
-//       IF TEM_BOTAO(VX_Janela,{"F2=ok"})
-//          ? MEMVAR->BOTAO_OK_E_SALVAR_AO_MESMO_TEMPO
-//       ENDIF
-//       *
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_SALVAR,_BITMAP_SALVAR_DESAB},"Salvar",{||HB_KeyPut(K_F2)},,L_MudaDados)
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ENDIF
-//    *
-//    IF N_TP_Jan == _JAN_TEXTO_10
-//       #DEFINE B_Edita   VX_SubObj[10]
-//       L_PermiteEdicao := EVAL(B_Edita)
-//       #UNDEF B_Edita
-//    ENDIF
-//    IF N_TP_Jan == _JAN_ENTRADA_10
-//       #DEFINE VX_Edicao      VX_SubObj
-//       #DEFINE B_EditaGlobal  VX_Edicao[15]
-//       L_PermiteEdicao := EVAL(B_EditaGlobal)
-//       #UNDEF B_EditaGlobal
-//       #UNDEF VX_Edicao
-//    ENDIF
-//    IF N_TP_Jan == _JAN_ARQTEXTO_10
-//       L_PermiteEdicao := .F.
-//    ENDIF
-//    *
-//    IF N_TP_Jan == _JAN_TEXTO_10 .OR. ;
-//       N_TP_Jan == _JAN_ENTRADA_10 .OR. ;
-//       N_TP_Jan == _JAN_ARQTEXTO_10
-//       *
-//       IF L_PermiteEdicao
-//          * No teclado serï¿½ colocado, de fato, a K_CTRL_F11, mas a AjustaTecla() voltarï¿½ o conteï¿½do para K_CTRL_X.
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_RECORTAR},"Recortar",{||HB_KeyPut(K_CTRL_X_TROCADO_POR_K_CTRL_F11)})
-//       ENDIF
-//       *
-//       * No teclado serï¿½ colocado, de fato, a K_CTRL_F9, mas a AjustaTecla() voltarï¿½ o conteï¿½do para K_CTRL_C.
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_COPIA},"Copiar",{||HB_KeyPut(K_CTRL_C_TROCADO_POR_K_CTRL_F9)})
-//       *
-//       IF L_PermiteEdicao
-//          * No teclado serï¿½ colocado, de fato, a K_CTRL_F10, mas a AjustaTecla() voltarï¿½ o conteï¿½do para K_CTRL_V.
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_COLAR},"Colar",{||HB_KeyPut(K_CTRL_V_TROCADO_POR_K_CTRL_F10)})
-//       ENDIF
-//       *
-//       IF L_PermiteEdicao
-//          * No teclado serï¿½ colocado, de fato, a K_CTRL_F12, mas a AjustaTecla() voltarï¿½ o conteï¿½do para K_CTRL_Z.
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_DESFAZER},"Desfazer",{||HB_KeyPut(K_CTRL_Z_TROCADO_POR_K_CTRL_F12)})
-//       ENDIF
-//       *
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//       *
-//    ENDIF
-//    *
-//    IF C_CdTela == "T03221"  // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                 {||EXIBEVIDEO("V","aPfO9X_r63k","Cotacoes_de_Precos")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T01306" .AND. LEN(VC_Titulo) > 1    // DESCONSIDERAR_CHECA_ID
-//       IF VC_Titulo[2] == "PREGï¿½O"
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                   {||EXIBEVIDEO("V","aYae8t-oviM","Corona_Interno")})
-//          ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//          L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//       ELSEIF VC_Titulo[2] == "TOMADA DE PREï¿½OS"
-//          ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                   {||EXIBEVIDEO("V","05Bukz8ymck","Definicao_de_Lotes_de_Licitacao")})
-//          ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//          L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//       ENDIF
-//    ELSEIF C_CdTela == "T00380"    // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","8J_vOoVMeOs","Empenho")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T00452"    // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","6xlfNLDbMP4","Pagamento")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T00757"    // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","txoHEuXjxvk","Receita")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T03240"    // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","RzLdTT7eYPg","Equivalencia_Dotacao")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T06101"    // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","p85Wk3xjlfI","Equivalencia_Dotacao_em_registro_preco")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T18125" // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","XvdCnede-pQ","Cadastro_das_comissoes_de_avaliacao_e_inventario")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T17261" // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T17257" // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T17535" // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T03253" // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","wgDezwHfHFE","Dotacoes_e_controle_de_saldos")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ELSEIF C_CdTela == "T06290" // DESCONSIDERAR_CHECA_ID
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vï¿½deo Aula",;
-//                                {||EXIBEVIDEO("V","wgDezwHfHFE","Dotacoes_e_controle_de_saldos")})
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ENDIF
-//    *
-//    IF N_TP_Jan # NIL   // indica que janela foi especializada
-//       * Colocar em todas as telas ?
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_CALCULA} ,"Calculadora",{||HB_KeyPut(K_F5)})
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_AJUDA} ,"Ajuda",{||HB_KeyPut(K_F1)})
-//       *
-//       ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
-//       *
-//       ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_SAIDA} ,"Saida",{||HB_KeyPut(K_ESC)})
-//       L_TOOLBAR_AINDA_SEM_BOTOES := .F.
-//    ENDIF
-//    *
-//    * A rotina que fecha a janela sempre destroi a ToolBar.
-//    * Portanto, estï¿½ se supondo que nï¿½o exista ToolBar sem botï¿½es.
-//    IF L_TOOLBAR_AINDA_SEM_BOTOES
-//       ? MEMVAR->TOOLBAR_SEM_BOTOES
-//    ENDIF
-//    *
-//    ********************************
-//    STAT PROC ADICIONA_BOTAO_TOOLBAR (VX_Janela,V_TOOLBAR_COD_BITMAP,;
-//                                      C_TOOLBAR_TOOLTIP,B_TOOLBAR_BLOCO_ACAO, N_SEQUENCIA, L_MudaDados)
-//    ********************************
-//    LOCAL N_TOOLBAR_COD_BITMAP
-//    *
-//    * Este nï¿½mero vai de 400 em diante, e ï¿½ necessï¿½rio ao Windows
-//    N_ToolBarCodigoAcao++
-//    *
-//    IF INABILITA_BOTAO_TOOLBAR(L_MudaDados)
-//       N_TOOLBAR_COD_BITMAP := V_TOOLBAR_COD_BITMAP[2] // ï¿½ndice 2, imagem indicando botï¿½o desabilitado
-//       B_TOOLBAR_BLOCO_ACAO := {||.F.}   // Inabilitar a aï¿½ï¿½o do botï¿½o.
-//    ELSE
-//       N_TOOLBAR_COD_BITMAP := V_TOOLBAR_COD_BITMAP[1] // ï¿½ndice 1, imagem indicando botï¿½o habilitado
-//    ENDIF
-//    *
-//    AADD(V_BotoesToolBar,{N_ToolBarCodigoAcao,N_TOOLBAR_COD_BITMAP,;
-//                          C_TOOLBAR_TOOLTIP,B_TOOLBAR_BLOCO_ACAO})
-//    *
-//    WVW_TBAddButton(N_WindowNum,N_ToolBarCodigoAcao,N_TOOLBAR_COD_BITMAP,;
-//                    C_TOOLBAR_TOOLTIP,0,.T.)
-//    *
-//    *
-//    ***************************************
-//    STAT PROC ADICIONA_SEPARADOR_AO_TOOLBAR (VX_Janela)
-//    ***************************************
-//    * Este nï¿½mero vai de 400 em diante, e ï¿½ necessï¿½rio ao Windows
-//    N_ToolBarCodigoAcao++
-//    *
-//    * A chamada no formato WVW_TBAddButton(N_WindowNum)
-//    * coloca uma vertical na ToolBar, para separar grupos
-//    * de botï¿½es. Mas visualmente ï¿½ quase imperceptï¿½vel.
-//    * Por isto se estï¿½ adicionando um botï¿½o sem conteï¿½do, para servir de separador.
-//    * Desabilitï¿½-lo, para que nï¿½o mude a aparï¿½ncia ao cursor passar em cima.
-//    * Existe o "-1" porque o primeiro botï¿½o ï¿½ o "0".
-//    *WVW_TBAddButton(N_WindowNum,N_ToolBarCodigoAcao,_BITMAP_ESPACOVAZIO,"",{||NIL})
-//    *WVW_TBEnableButton(N_WindowNum,WVW_TBButtonCount()-1,.F.)
-//    *
-//    * O separador padrï¿½o da WVW possui uma aparï¿½ncia melhor
-//    WVW_TBAddButton(N_WindowNum)
-//    *
-//    *******************
-//    STAT FUNC TEM_BOTAO(VX_Janela,VC_TeclasBusca, L_ChecaMudaDados, L_MudaDados)
-//    *******************
-//    LOCAL N_Cont
-//    LOCAL L_TemBotao := .F.
-//    LOCAL N_PosBotao
-//    *
-//    DEFAULT L_ChecaMudaDados TO .F.
-//    DEFAULT L_MudaDados      TO .F.
-//    *
-//    FOR N_Cont := 1 TO LEN(VC_TeclasBusca)
 
-//        N_PosBotao :=  ASCAN(V_RegiaoBotoes,;
-//                             {|V_SUBV|XUPPER(VC_TeclasBusca[N_Cont]) == ;
-//                                      TROCA(XUPPER(ALLTRIM(V_SUBV[_BOTAO_TEXTO_TRATADO_2])),"&","")})
+************************
+STAT PROC ADDGUI_TOOLBAR(VX_Janela)
+************************
+LOCAL L_PermiteEdicao
+//LOCAL hWndToolBar
+LOCAL L_TOOLBAR_AINDA_SEM_BOTOES := .T.
+LOCAL N_TelaHeight := TelaPrincipalHeight()
+LOCAL N_PixelsBotao
+LOCAL L_MudaDados
+*
+* Setar o tamanho do botão de forma proporcional,
+* de forma que a altura da ToolBar não ultrapasse
+* 2 linhas do sistema.
+* Isto torna o tamanho da ToolBar mais proporcional,
+* quando usado principalmente em resoluções pequenas
+* (ex: 800 x 600 de projetores)
+*
+IF N_TelaHeight >= 960
+    * A partir deste ponto, a ToolBar já é menor que 2 linhas
+    * de texto, mesmo usando o tamanho real do BITMAP.
+    N_PixelsBotao := 32 // Tamanho real das imagens é 32 x 32
+ELSEIF N_TelaHeight >=  864
+    N_PixelsBotao := 30
+ELSEIF N_TelaHeight >=  768
+    N_PixelsBotao := 28
+ELSEIF N_TelaHeight >=  720
+    N_PixelsBotao := 25
+ELSEIF N_TelaHeight >= 600
+    N_PixelsBotao := 20
+ELSE
+    N_PixelsBotao := 18
+ENDIF
+*
+* A criação da toolbar caso for .T. se não apresenta mensagem.
+* No Xharbour e no Harbour 3.2.0 (GCC 6.3.0), a WVW_TBCREATE() retorna um número.
+* O retorno podia ser testado.
+*  IF ( hWndToolBar := WVW_TBCREATE( N_WindowNum, .F., NIL, 0, N_PixelsBotao, N_PixelsBotao ) ) == 0
+*     ALARME("M28028","Falha ao criar a 'ToolBar'")
+*    ? MEMVAR->TOOLBAR_NAO_CRIADA
+*  ENDIF
+* Mas, no Harbour 3.2.0 (GCC 10.1.0), a WVW_TBCREATE() retorna um ponteiro.
+* O retorno não mais será testado, portanto.
+//
+// FRAN: TODO Create a toolbar in GTNAP
+//
+//hWndToolBar := WVW_TBCREATE( N_WindowNum, .F., NIL, 0, N_PixelsBotao, N_PixelsBotao )
+*
+NAP_LOG("CREATE TOOLBAR!!!!")
 
-//        IF N_PosBotao # 0
-//           L_TemBotao := .T.
-//           IF L_ChecaMudaDados
-//              IF V_RegiaoBotoes[N_PosBotao,_BOTAO_MUDADADOS] # NIL
-//                 L_MudaDados := V_RegiaoBotoes[N_PosBotao,_BOTAO_MUDADADOS]
-//              ENDIF
-//              IF UPPER(VC_TeclasBusca[1]) == "F2=SALVAR"
-//                 L_MudaDados := .T.
-//              ENDIF
-//           ENDIF
-//        ENDIF
-//    NEXT
-//    *
-//    RETURN L_TemBotao
+IF TEM_BOTAO(VX_Janela,{"Incluir","Alterar","Excluir","Consultar"})
+    *
+    IF TEM_BOTAO(VX_Janela,{"Incluir"},.T.,@L_MudaDados)
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_INCLUI,_BITMAP_INCLUI_DESAB},"Incluir",{||__Keyboard("I")},0,L_MudaDados)
+    ENDIF
+    *
+    IF TEM_BOTAO(VX_Janela,{"Alterar"},.T.,@L_MudaDados)
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_ALTERA,_BITMAP_ALTERA_DESAB},"Alterar",{||__Keyboard("A")},1,L_MudaDados)
+    ENDIF
+    *
+    IF TEM_BOTAO(VX_Janela,{"Excluir"},.T.,@L_MudaDados)
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_EXCLUI,_BITMAP_EXCLUI_DESAB},"Excluir",{||__Keyboard("E")},2,L_MudaDados)
+    ENDIF
+    *
+    IF TEM_BOTAO(VX_Janela,{"Consultar"})
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_CONSULTA},"Consultar",{||__Keyboard("C")})
+    ENDIF
+    *
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+    *
+ENDIF
+*
+IF TEM_BOTAO(VX_JANELA,{"Listar","Procurar"})
+    *
+    IF TEM_BOTAO(VX_Janela,{"Listar"})
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_PRINTER} ,"Listar",{||__Keyboard("L")})
+    ENDIF
+    *
+    IF TEM_BOTAO(VX_Janela,{"Procurar"})
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_PESQUISE},"Procurar",{||__Keyboard("P")})
+    ENDIF
+    *
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+ENDIF
+    *
+IF TEM_BOTAO(VX_Janela,{"F2=ok"})
+    IF TEM_BOTAO(VX_Janela,{"F2=salvar"})
+        ? MEMVAR->BOTAO_OK_E_SALVAR_AO_MESMO_TEMPO
+    ENDIF
+    *
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_OK},"Ok",{||HB_KeyPut(K_F2)})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+ENDIF
+*
+IF TEM_BOTAO(VX_Janela,{"F2=salvar"},.T.,@L_MudaDados)
+    IF TEM_BOTAO(VX_Janela,{"F2=ok"})
+        ? MEMVAR->BOTAO_OK_E_SALVAR_AO_MESMO_TEMPO
+    ENDIF
+    *
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_SALVAR,_BITMAP_SALVAR_DESAB},"Salvar",{||HB_KeyPut(K_F2)},,L_MudaDados)
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+ENDIF
+*
+IF N_TP_Jan == _JAN_TEXTO_10
+    #DEFINE B_Edita   VX_SubObj[10]
+    L_PermiteEdicao := EVAL(B_Edita)
+    #UNDEF B_Edita
+ENDIF
+IF N_TP_Jan == _JAN_ENTRADA_10
+    #DEFINE VX_Edicao      VX_SubObj
+    #DEFINE B_EditaGlobal  VX_Edicao[15]
+    L_PermiteEdicao := EVAL(B_EditaGlobal)
+    #UNDEF B_EditaGlobal
+    #UNDEF VX_Edicao
+ENDIF
+IF N_TP_Jan == _JAN_ARQTEXTO_10
+    L_PermiteEdicao := .F.
+ENDIF
+*
+IF N_TP_Jan == _JAN_TEXTO_10 .OR. ;
+    N_TP_Jan == _JAN_ENTRADA_10 .OR. ;
+    N_TP_Jan == _JAN_ARQTEXTO_10
+    *
+    IF L_PermiteEdicao
+        * No teclado será colocado, de fato, a K_CTRL_F11, mas a AjustaTecla() voltará o conteúdo para K_CTRL_X.
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_RECORTAR},"Recortar",{||HB_KeyPut(K_CTRL_X_TROCADO_POR_K_CTRL_F11)})
+    ENDIF
+    *
+    * No teclado será colocado, de fato, a K_CTRL_F9, mas a AjustaTecla() voltará o conteúdo para K_CTRL_C.
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_COPIA},"Copiar",{||HB_KeyPut(K_CTRL_C_TROCADO_POR_K_CTRL_F9)})
+    *
+    IF L_PermiteEdicao
+        * No teclado será colocado, de fato, a K_CTRL_F10, mas a AjustaTecla() voltará o conteúdo para K_CTRL_V.
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_COLAR},"Colar",{||HB_KeyPut(K_CTRL_V_TROCADO_POR_K_CTRL_F10)})
+    ENDIF
+    *
+    IF L_PermiteEdicao
+        * No teclado será colocado, de fato, a K_CTRL_F12, mas a AjustaTecla() voltará o conteúdo para K_CTRL_Z.
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_DESFAZER},"Desfazer",{||HB_KeyPut(K_CTRL_Z_TROCADO_POR_K_CTRL_F12)})
+    ENDIF
+    *
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+    *
+ENDIF
+*
+IF C_CdTela == "T03221"  // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                {||EXIBEVIDEO("V","aPfO9X_r63k","Cotacoes_de_Precos")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T01306" .AND. LEN(VC_Titulo) > 1    // DESCONSIDERAR_CHECA_ID
+    IF VC_Titulo[2] == "PREGÃO"
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                                {||EXIBEVIDEO("V","aYae8t-oviM","Corona_Interno")})
+        ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+        L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+    ELSEIF VC_Titulo[2] == "TOMADA DE PREÇOS"
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                                {||EXIBEVIDEO("V","05Bukz8ymck","Definicao_de_Lotes_de_Licitacao")})
+        ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+        L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+    ENDIF
+
+ELSEIF C_CdTela == "T00380"    // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","8J_vOoVMeOs","Empenho")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T00452"    // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","6xlfNLDbMP4","Pagamento")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T00757"    // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","txoHEuXjxvk","Receita")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T03240"    // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","RzLdTT7eYPg","Equivalencia_Dotacao")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T06101"    // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","p85Wk3xjlfI","Equivalencia_Dotacao_em_registro_preco")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T18125" // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","XvdCnede-pQ","Cadastro_das_comissoes_de_avaliacao_e_inventario")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T17261" // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T17257" // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T17535" // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T03253" // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","wgDezwHfHFE","Dotacoes_e_controle_de_saldos")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ELSEIF C_CdTela == "T06290" // DESCONSIDERAR_CHECA_ID
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
+                            {||EXIBEVIDEO("V","wgDezwHfHFE","Dotacoes_e_controle_de_saldos")})
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+
+ENDIF
+*
+IF N_TP_Jan # NIL   // indica que janela foi especializada
+    * Colocar em todas as telas ?
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_CALCULA} ,"Calculadora",{||HB_KeyPut(K_F5)})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_AJUDA} ,"Ajuda",{||HB_KeyPut(K_F1)})
+    *
+    ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
+    *
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_SAIDA} ,"Saida",{||HB_KeyPut(K_ESC)})
+    L_TOOLBAR_AINDA_SEM_BOTOES := .F.
+ENDIF
+*
+* A rotina que fecha a janela sempre destroi a ToolBar.
+* Portanto, está se supondo que não exista ToolBar sem botões.
+IF L_TOOLBAR_AINDA_SEM_BOTOES
+    ? MEMVAR->TOOLBAR_SEM_BOTOES
+ENDIF
+
+
+
+*
+********************************
+STAT PROC ADICIONA_BOTAO_TOOLBAR (VX_Janela,V_TOOLBAR_COD_BITMAP,;
+                                    C_TOOLBAR_TOOLTIP,B_TOOLBAR_BLOCO_ACAO, N_SEQUENCIA, L_MudaDados)
+********************************
+LOCAL N_TOOLBAR_COD_BITMAP
+*
+* Este número vai de 400 em diante, e é necessário ao Windows
+N_ToolBarCodigoAcao++
+*
+IF INABILITA_BOTAO_TOOLBAR(L_MudaDados)
+    N_TOOLBAR_COD_BITMAP := V_TOOLBAR_COD_BITMAP[2] // Índice 2, imagem indicando botão desabilitado
+    B_TOOLBAR_BLOCO_ACAO := {||.F.}   // Inabilitar a ação do botão.
+ELSE
+    N_TOOLBAR_COD_BITMAP := V_TOOLBAR_COD_BITMAP[1] // Índice 1, imagem indicando botão habilitado
+ENDIF
+*
+AADD(V_BotoesToolBar,{N_ToolBarCodigoAcao,N_TOOLBAR_COD_BITMAP,;
+                        C_TOOLBAR_TOOLTIP,B_TOOLBAR_BLOCO_ACAO})
+
+NAP_LOG("ADD TOOLBAR BUTTON: " + hb_ntos(N_ToolBarCodigoAcao) + ":" + C_TOOLBAR_TOOLTIP + ":" + hb_ntos(N_TOOLBAR_COD_BITMAP))
+
+//
+//  FRAN: TODO Adding button
+//
+*
+// WVW_TBAddButton(N_WindowNum,N_ToolBarCodigoAcao,N_TOOLBAR_COD_BITMAP,;
+//                 C_TOOLBAR_TOOLTIP,0,.T.)
+
+
+*
+*
+***************************************
+STAT PROC ADICIONA_SEPARADOR_AO_TOOLBAR (VX_Janela)
+***************************************
+* Este número vai de 400 em diante, e é necessário ao Windows
+N_ToolBarCodigoAcao++
+*
+* A chamada no formato WVW_TBAddButton(N_WindowNum)
+* coloca uma vertical na ToolBar, para separar grupos
+* de botões. Mas visualmente é quase imperceptível.
+* Por isto se está adicionando um botão sem conteúdo, para servir de separador.
+* Desabilitá-lo, para que não mude a aparência ao cursor passar em cima.
+* Existe o "-1" porque o primeiro botão é o "0".
+*WVW_TBAddButton(N_WindowNum,N_ToolBarCodigoAcao,_BITMAP_ESPACOVAZIO,"",{||NIL})
+*WVW_TBEnableButton(N_WindowNum,WVW_TBButtonCount()-1,.F.)
+*
+* O separador padrão da WVW possui uma aparência melhor
+//
+// FRAN TODO
+//
+NAP_LOG("ADD TOOLBAR SEPARATOR")
+//WVW_TBAddButton(N_WindowNum)
+
+*
+*******************
+STAT FUNC TEM_BOTAO(VX_Janela,VC_TeclasBusca, L_ChecaMudaDados, L_MudaDados)
+*******************
+LOCAL N_Cont
+LOCAL L_TemBotao := .F.
+LOCAL N_PosBotao
+*
+DEFAULT L_ChecaMudaDados TO .F.
+DEFAULT L_MudaDados      TO .F.
+*
+FOR N_Cont := 1 TO LEN(VC_TeclasBusca)
+
+    N_PosBotao :=  ASCAN(V_RegiaoBotoes,;
+                        {|V_SUBV|XUPPER(VC_TeclasBusca[N_Cont]) == ;
+                                    TROCA(XUPPER(ALLTRIM(V_SUBV[_BOTAO_TEXTO_TRATADO_2])),"&","")})
+
+    IF N_PosBotao # 0
+        L_TemBotao := .T.
+        IF L_ChecaMudaDados
+            IF V_RegiaoBotoes[N_PosBotao,_BOTAO_MUDADADOS] # NIL
+            L_MudaDados := V_RegiaoBotoes[N_PosBotao,_BOTAO_MUDADADOS]
+            ENDIF
+            IF UPPER(VC_TeclasBusca[1]) == "F2=SALVAR"
+            L_MudaDados := .T.
+            ENDIF
+        ENDIF
+    ENDIF
+NEXT
+*
+RETURN L_TemBotao
 //    *
 // #elif defined(__PLATFORM__LINUX)
 //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
@@ -3119,6 +3226,12 @@ RETURN NIL
 // #endif
 // *
 // *
+
+//
+// FRAN: TODO
+//
+STAT PROC EXIBEVIDEO(C_TIPO,C_ARQUIVO,C_TITULO)
+    RETURN
 // *************************
 // STAT PROC EXIBEVIDEO(C_TIPO,C_ARQUIVO,C_TITULO)
 // *************************
@@ -3282,24 +3395,24 @@ IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
     ENDIF
 ENDIF
 *
-//    ***********************************
-//    STATIC FUNC INABILITA_BOTAO_TOOLBAR(L_MudaDados)
-//    ***********************************
-//    LOCAL L_RET := .F.
-//    *
-//    DEFAULT L_MudaDados TO .F.
-//    *
-//    IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
-//       IF L_MudaDados
-//          IF SELECT("XXPREG") # 0
-//             IF .NOT. EHPRINCIPAL(.F.)
-//                L_RET := .T.
-//             ENDIF
-//          ENDIF
-//       ENDIF
-//    ENDIF
-//    *
-//    RETURN L_RET
+***********************************
+STATIC FUNC INABILITA_BOTAO_TOOLBAR(L_MudaDados)
+***********************************
+LOCAL L_RET := .F.
+*
+DEFAULT L_MudaDados TO .F.
+*
+IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
+    IF L_MudaDados
+        IF SELECT("XXPREG") # 0
+            IF .NOT. EHPRINCIPAL(.F.)
+                L_RET := .T.
+            ENDIF
+        ENDIF
+    ENDIF
+ENDIF
+*
+RETURN L_RET
 //    *
 // #elif defined(__PLATFORM__LINUX)
 //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA

@@ -995,18 +995,21 @@ RETURN C_DIRET_ANT
 //       *
 //    RETURN L_Mudou
 //    *
-//    ************************
-//    FUNC TelaPrincipalHeight // Altura APROXIMADO, em pixels, da tela principal
-//    ************************
-//    * Proporï¿½ï¿½o entre a quantidade mï¿½xima de linhas que caberia e a efetivamente usada
-//    LOCAL N_Proporcao := MAXROW() / WVW_MAXMAXROW()
-//    LOCAL N_TelaPrincipalHeight := INT(WVW_GetScreenHeight() * N_Proporcao) ;
-//                                  - 21  // quantidade aproximada de pixels do tï¿½tulo da janela
-//    *
-//    // ALERT("H "+STR(MAXROW())+" "+STR(WVW_MAXMAXROW())+" "+STR(WVW_GetScreenHeight())+";;;;")
-//    // ALERT("H "+STR(N_TelaPrincipalHeight)+";;;;")
 
-//    RETURN N_TelaPrincipalHeight
+************************
+FUNC TelaPrincipalHeight // Altura APROXIMADO, em pixels, da tela principal
+************************
+* Proporção entre a quantidade máxima de linhas que caberia e a efetivamente usada
+LOCAL N_TelaPrincipalHeight := 1000
+// LOCAL N_Proporcao := MAXROW() / WVW_MAXMAXROW()
+// LOCAL N_TelaPrincipalHeight := INT(WVW_GetScreenHeight() * N_Proporcao) ;
+//                                 - 21  // quantidade aproximada de pixels do título da janela
+*
+// ALERT("H "+STR(MAXROW())+" "+STR(WVW_MAXMAXROW())+" "+STR(WVW_GetScreenHeight())+";;;;")
+// ALERT("H "+STR(N_TelaPrincipalHeight)+";;;;")
+
+RETURN N_TelaPrincipalHeight
+
 //    *
 //    ***********************
 //    FUNC TelaPrincipalWidth // Largura APROXIMADA, em pixels, da tela principal

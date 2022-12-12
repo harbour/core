@@ -998,8 +998,8 @@ uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni
     cuawin->col_pos = 0;
     cuawin->gui_objects = arrst_create(GtNapCualibObject);
     cuawin->callbacks = arrpt_create(GtNapCallback);
-    width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni + (id > 0 ? 1 : 0)));
-    height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni + (id > 0 ? 1 : 0)));
+    width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni - (id > 0 ? 1 : 0)));
+    height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni/* + (id > 0 ? 1 : 0)*/));
     panel_size(panel, s2df(width, height));
     if (str_empty_c(C_Cabec) == FALSE)
         window_title(window, C_Cabec);
@@ -1030,7 +1030,7 @@ void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const uint32_t 
 
     _panel_compose(panel, &size, &final_size);
     _panel_locate(panel);
-    i_add_object(ekOBJ_MENUVERT, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni - yoffset, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)panel, cuawin);
+    i_add_object(ekOBJ_MENUVERT, nLeft - cuawin->N_ColIni - 1, nTop - cuawin->N_LinIni - yoffset, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)panel, cuawin);
     //log_printf("MenuVert size: %.2f, %.2f, %.2f, %.2f", size.width, size.height, final_size.width, final_size.height);
 }
 
@@ -1118,8 +1118,8 @@ void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId,
     button_font(button, GTNAP_GLOBAL->global_font);
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
-    log_printf("Added BUTTON into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
-    i_add_object(ekOBJ_BUTTON, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)button, cuawin);
+    log_printf("Added BUTTON (%s) into CUALIB Window: %d, %d, %d, %d", tc(ctext), nTop, nLeft, nBottom, nRight);
+    i_add_object(ekOBJ_BUTTON, nLeft - cuawin->N_ColIni - 1, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)button, cuawin);
     str_destroy(&ctext);
 
     if (listener != NULL)
@@ -1579,7 +1579,7 @@ static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText
     if (cuawin != NULL)
     {
         String *ctext = gtconvert_1252_to_UTF8(pText);
-        i_add_label_object(iCol - cuawin->N_ColIni, iRow - cuawin->N_LinIni, pText, 0, GTNAP_GLOBAL, cuawin);
+        i_add_label_object(iCol - cuawin->N_ColIni - 1, iRow - cuawin->N_LinIni, pText, 0, GTNAP_GLOBAL, cuawin);
         log_printf("hb_gtnap_WriteAt(%d, %d, %d): %s", iRow, iCol, (int)ulLength, tc(ctext));
         str_destroy(&ctext);
     }
