@@ -537,82 +537,82 @@ ENDIF
 *
 RETURN V_JAN
 *
-// *******************
-// FUNCTION MSGAGUARDE ( C_CDMENS, C_Cabec_x, C_SubCabec , L_ComBotaoEsc, N_ProgressBar )
-// *******************
-// LOCAL C_COR_ANT, V_JAN
-// LOCAL V_TECLAS
-// LOCAL C_TXT1   := ""
-// LOCAL C_TXT2   := ""
-// LOCAL C_BARRA1 := ""
-// LOCAL C_BARRA2 := ""
-// LOCAL C_TEXTO  := ";"
-// *
-// DEFAULT C_Cabec_x        TO "Aguarde..."
-// DEFAULT C_SubCabec       TO "Aguarde... "
-// DEFAULT L_ComBotaoEsc    TO .T.
-// DEFAULT N_ProgressBar    TO 0
-// *
-// IF N_ProgressBar > 2
-//    ? MEMVAR->A_JANELA_NAO_TEM_MAIS_QUE_2_PROGRESSBAR
-// ENDIF
-// *
-// ASSUME LEFT(C_CDMENS,1) == "M"
-// ASSUME LEN(TROCA(C_CDMENS,"M0123456789?",""))==0
-// ASSUME LEN(C_CDMENS)==6
-// IF N_ProgressBar > 0    ///  So se for ProgressBar n�o aceita Multilinhas no subtitulo
-//    *
-//    C_SubCabec := IF( AT( ";", C_SubCabec ) > 0, LEFT(C_SubCabec, AT( ";", C_SubCabec )-1 ), C_SubCabec )
-//    C_SubCabec := IF( LEN(C_SubCabec) > 53, LEFT(C_SubCabec, 53), C_SubCabec )
-//    *
-//    IF .NOT. SOB_MODO_GRAFICO()
-//       C_BARRA1 := "[" + PADR(CHR(176), 49, CHR(176)) + "]"
-//       C_TXT1   := PADR( " ", 49 ) + STR(0,3)+"%"
-//       IF N_ProgressBar == 2
-//          C_BARRA2 := "[" + PADR(CHR(176), 49, CHR(176)) + "]"
-//          C_TXT2   := PADR( " ", 49 ) + STR(0,3)+"%"
-//       ENDIF
-//       *
-//       C_TEXTO := ";;"+IF(N_ProgressBar == 1, ";", "") + C_BARRA1 + ";" + C_TXT1 + ;
-//                      IF(N_ProgressBar == 2, ";;", ";") + C_BARRA2 + ";" + C_TXT2
-//    ELSE
-//       C_TEXTO := ";"+SPACE(50)
-//    ENDIF
-// ENDIF
-// *
-// C_SubCabec := C_SubCabec + C_TEXTO + ";("+C_CDMENS+")"
-// *
-// IF CABEC_TESTE_AUTOMATICO()
-//    C_Cabec_x +=" ("+C_CDMENS+")"
-// ENDIF
-// *
-// IF L_ComBotaoEsc
-//    V_TECLAS := {"Esc=sair"}
-// ENDIF
-// *
-// IF .NOT. SOB_MODO_GRAFICO()
-//    C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_OK))
-// ENDIF
+*******************
+FUNCTION MSGAGUARDE ( C_CDMENS, C_Cabec_x, C_SubCabec , L_ComBotaoEsc, N_ProgressBar )
+*******************
+LOCAL C_COR_ANT, V_JAN
+LOCAL V_TECLAS
+LOCAL C_TXT1   := ""
+LOCAL C_TXT2   := ""
+LOCAL C_BARRA1 := ""
+LOCAL C_BARRA2 := ""
+LOCAL C_TEXTO  := ";"
+*
+DEFAULT C_Cabec_x        TO "Aguarde..."
+DEFAULT C_SubCabec       TO "Aguarde... "
+DEFAULT L_ComBotaoEsc    TO .T.
+DEFAULT N_ProgressBar    TO 0
+*
+IF N_ProgressBar > 2
+   ? MEMVAR->A_JANELA_NAO_TEM_MAIS_QUE_2_PROGRESSBAR
+ENDIF
+*
+ASSUME LEFT(C_CDMENS,1) == "M"
+ASSUME LEN(TROCA(C_CDMENS,"M0123456789?",""))==0
+ASSUME LEN(C_CDMENS)==6
+IF N_ProgressBar > 0    ///  So se for ProgressBar n�o aceita Multilinhas no subtitulo
+   *
+   C_SubCabec := IF( AT( ";", C_SubCabec ) > 0, LEFT(C_SubCabec, AT( ";", C_SubCabec )-1 ), C_SubCabec )
+   C_SubCabec := IF( LEN(C_SubCabec) > 53, LEFT(C_SubCabec, 53), C_SubCabec )
+   *
+   IF .NOT. SOB_MODO_GRAFICO()
+      C_BARRA1 := "[" + PADR(CHR(176), 49, CHR(176)) + "]"
+      C_TXT1   := PADR( " ", 49 ) + STR(0,3)+"%"
+      IF N_ProgressBar == 2
+         C_BARRA2 := "[" + PADR(CHR(176), 49, CHR(176)) + "]"
+         C_TXT2   := PADR( " ", 49 ) + STR(0,3)+"%"
+      ENDIF
+      *
+      C_TEXTO := ";;"+IF(N_ProgressBar == 1, ";", "") + C_BARRA1 + ";" + C_TXT1 + ;
+                     IF(N_ProgressBar == 2, ";;", ";") + C_BARRA2 + ";" + C_TXT2
+   ELSE
+      C_TEXTO := ";"+SPACE(50)
+   ENDIF
+ENDIF
+*
+C_SubCabec := C_SubCabec + C_TEXTO + ";("+C_CDMENS+")"
+*
+IF CABEC_TESTE_AUTOMATICO()
+   C_Cabec_x +=" ("+C_CDMENS+")"
+ENDIF
+*
+IF L_ComBotaoEsc
+   V_TECLAS := {"Esc=sair"}
+ENDIF
+*
+IF .NOT. SOB_MODO_GRAFICO()
+   C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_OK))
+ENDIF
 
-// V_JAN := INFORMAR(C_Cabec_x,C_SubCabec,V_TECLAS,.F.,NIL,"b99902.abm",.T.,N_ProgressBar)   //"informac.abm"
-// *
-// IF .NOT. SOB_MODO_GRAFICO()
-//    SETCOLOR(C_COR_ANT)
-// ENDIF
-// *
-// RETURN V_JAN
-// *
-// *********************
-// PROC FECHARMSGAGUARDE ( V_JAN )
-// *********************
-// IF .NOT. GetJanTipoMsgAguarde(V_JAN)
-//    ? MEMVAR->ERRO_FECHAMENTO_SEM_DESTRUAJAN
-// ENDIF
-// *
-// SetJanTipoMsgAguarde(V_JAN,.F.)  // tirar o atributo, para n�o gerar log na DESTRUA...
-// SetProgressBar(V_JAN,NIL)  // Ao destruir uma MsgAguarde, setar NIL para o par�metro de N_ProgressBar
-// *
-// DESTRUA V_JAN
+V_JAN := INFORMAR(C_Cabec_x,C_SubCabec,V_TECLAS,.F.,NIL,"b99902.abm",.T.,N_ProgressBar)   //"informac.abm"
+*
+IF .NOT. SOB_MODO_GRAFICO()
+   SETCOLOR(C_COR_ANT)
+ENDIF
+*
+RETURN V_JAN
+*
+*********************
+PROC FECHARMSGAGUARDE ( V_JAN )
+*********************
+IF .NOT. GetJanTipoMsgAguarde(V_JAN)
+   ? MEMVAR->ERRO_FECHAMENTO_SEM_DESTRUAJAN
+ENDIF
+*
+SetJanTipoMsgAguarde(V_JAN,.F.)  // tirar o atributo, para n�o gerar log na DESTRUA...
+SetProgressBar(V_JAN,NIL)  // Ao destruir uma MsgAguarde, setar NIL para o par�metro de N_ProgressBar
+*
+DESTRUA V_JAN
 // *
 // *****************
 // FUNCTION CONFIRME (C_SubCabec,N_DEFAULT)

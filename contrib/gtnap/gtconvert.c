@@ -51,6 +51,8 @@ String *gtconvert_1252_to_UTF8(const char_t *str)
     String *utf8 = NULL;
     char_t *utf8_buf = NULL;
 
+    //log_printf("gtconvert_1252_to_UTF8; %s", str);
+
     for (i = 0; i < n; ++i)
         buf[i] = CP1252_UNICODE_TABLE[(uint8_t)str[i]];
     buf[i] = 0;

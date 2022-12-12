@@ -427,6 +427,7 @@ AADD(V_RegiaoBotoes,{NIL,;          // _BOTAO_LIN_INICIAL
                      NIL,;          // _BOTAO_INKEY_DESTAQUE_CASE
                      NIL,;          // _BOTAO_HANDLE_PUSHBUTTON
                      L_MudaDados})  // _BOTAO_MUDADADOS
+
 *
 ***************
 PROC AddImagem (VX_Janela,C_ArquivoImagem,;
@@ -910,6 +911,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
         FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
             NAP_LOG("Adding button " + hb_ntos(N_Cont))
             ADICIONA_BOTAO_PUSH(VX_Janela,N_Cont)
+            NAP_LOG("Added button " + hb_ntos(N_Cont))
         NEXT
 
     ELSE    // Buttons in text mode
@@ -1088,6 +1090,7 @@ PROC AJUSTA_BOTOES(VX_Janela)
 LOCAL N_Cont
 * não imprime nada, só retorna as teclas devidamente formatadas
 *
+NAP_LOG("AJUSTA_BOTOES!!!!!")
 IF N_LinBotoes # NIL
    ? MEMVAR->AJUSTA_BOTOES_SO_PODE_SER_CHAMADA_UMA_VEZ
 ENDIF
@@ -1119,39 +1122,39 @@ IF SOB_MODO_GRAFICO() .AND. N_LinBotoes > 1 .AND. N_EspacamentoEmPixels == 0
    * senão ocorrerá sobreposição das bordas.
    ? MEMVAR->SOBREPOSICAO_DE_BOTOES
 ENDIF
-// *
-// **************************
-// PROC SETA_PARA_TER_TOOLBAR (VX_Janela)
-// **************************
-// IF L_CriarToolBar
-//    ? MEMVAR->CONFIGURACAO_PARA_TER_TOOLBAR_JA_FEITA
-// ENDIF
-// L_CriarToolBar := .T.
-// *
-// IF SOB_MODO_GRAFICO()
-//    * O Windows posiciona a "ToolBar" "acima" da coordenada
-//    * da janela jï¿½ criada.
-//    *
-//    * Para que a ToolBar inicie "mais ou menos" (tamanho da ToolBar
-//    * nï¿½o ï¿½ sempre proporcional) no local definido pelo programador
-//    * na criaï¿½ï¿½o da janela, baixar a tela em uma linha.
-//    *
-//    * 2 linhas deslocadas da linha inicial, para dar espaï¿½o ï¿½ ToolBar
-//    N_LinIni++
-//    N_LinIni++
-// ELSE
-//    * O modo texto nï¿½o tem ToolBar, mas o cabeï¿½alho serï¿½ acrescentado
-//    * uma linha em branco(no topo), de forma que o programador,
-//    * ao usar o modo texto durante a fase de desenvolvimento,
-//    * jï¿½ nï¿½o veja, APROXIMADAMENTE, o que a ToolBar esconderï¿½ da
-//    * da tela anterior.
-//    ASIZE(VC_Titulo,LEN(VC_Titulo)+1)
-//    AINS(VC_Titulo,1)
-//    VC_Titulo[1] := ""
-// ENDIF
-// N_Lin1Livre++
-// *
-// *
+*
+**************************
+PROC SETA_PARA_TER_TOOLBAR (VX_Janela)
+**************************
+IF L_CriarToolBar
+   ? MEMVAR->CONFIGURACAO_PARA_TER_TOOLBAR_JA_FEITA
+ENDIF
+L_CriarToolBar := .T.
+*
+IF SOB_MODO_GRAFICO()
+   * O Windows posiciona a "ToolBar" "acima" da coordenada
+   * da janela jï¿½ criada.
+   *
+   * Para que a ToolBar inicie "mais ou menos" (tamanho da ToolBar
+   * nï¿½o ï¿½ sempre proporcional) no local definido pelo programador
+   * na criaï¿½ï¿½o da janela, baixar a tela em uma linha.
+   *
+   * 2 linhas deslocadas da linha inicial, para dar espaï¿½o ï¿½ ToolBar
+   N_LinIni++
+   N_LinIni++
+ELSE
+   * O modo texto nï¿½o tem ToolBar, mas o cabeï¿½alho serï¿½ acrescentado
+   * uma linha em branco(no topo), de forma que o programador,
+   * ao usar o modo texto durante a fase de desenvolvimento,
+   * jï¿½ nï¿½o veja, APROXIMADAMENTE, o que a ToolBar esconderï¿½ da
+   * da tela anterior.
+   ASIZE(VC_Titulo,LEN(VC_Titulo)+1)
+   AINS(VC_Titulo,1)
+   VC_Titulo[1] := ""
+ENDIF
+N_Lin1Livre++
+*
+*
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    ************************
 //    STAT PROC ADDGUI_TOOLBAR(VX_Janela)
@@ -2973,9 +2976,15 @@ LOCAL C_TextoBotaoAux_CodigoPagina
 // NAP_LOG("N_Keyboard:" + hb_ntos(N_Keyboard))
 //!! DEPOIS REMOVER O "IF", DEIXANDO O "ELSE"
 //!! (POR ENQUANTO, O N_KEYBOARD PODE CONTER NIL)
+
+NAP_LOG("C_TextoBotaoAux")
+NAP_LOG(C_TextoBotaoAux)
+
 IF N_Keyboard == NIL
+    NAP_LOG("KeyBOARD NULLLLLL")
     // B_BlocoAux := {||NIL}   // PUSHBUTTON FICARÁ SEM FUNCIONAR !!!
 ELSE
+    NAP_LOG("KeyBOARD " + hb_ntos(N_Keyboard))
     IF LEN(C_TextoDestaque)==1 .AND. ; // Se aceleradora tiver 1 byte de tamanho
         (ISALPHA(C_TextoDestaque) .OR. ISDIGIT(C_TextoDestaque))  // Se for uma letra (sem acentos) ou um número
        *
@@ -3007,7 +3016,7 @@ ELSE
       * antes de executar a ação dos PushButtons.
       //B_BlocoAux := {||win_setfocus(wvw_getwindowhandle(wvw_nnumwindows()-1)),;
        // HB_KeyPut(N_Keyboard)}
-ENDIF
+ENDIF  // N_Keyboard == NIL
 *
 IF Version()=="Harbour 3.2.0dev (r1703241902)"
     C_TextoBotaoAux_CodigoPagina := HB_OEMtoANSI(C_TextoBotaoAux)
@@ -3019,14 +3028,24 @@ ENDIF
 //ENDIF ERRO
 *
 
-//NAP_LOG("Before NAP_CUALIB_BUTTON")
-NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;
-                    V_Botao[_BOTAO_BLOCO_ACAO],;
+NAP_LOG("Before NAP_CUALIB_BUTTON")
+NAP_LOG(hb_ntos(V_Botao[_BOTAO_LIN_INICIAL]))
+
+IF V_Botao[_BOTAO_LIN_INICIAL] == NIL
+    NAP_LOG("NIIIILLLLL V_Botao[_BOTAO_LIN_INICIAL]")
+ENDIF
+
+NAP_LOG("Before V_Botao[_BOTAO_LIN_INICIAL]")
+NAP_CUALIB_BUTTON("HELLO",;//C_TextoBotaoAux_CodigoPagina,;
+                    {|| NAP_LOG("BOTAO")},;//V_Botao[_BOTAO_BLOCO_ACAO],;
                     N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
                     N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
                     N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
                     N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ],;
-                    V_Botao[_BOTAO_AUTOCLOSE])
+                    .F.)//V_Botao[_BOTAO_AUTOCLOSE])
+                      //  5, 5, 7, 10,.F.)
+
+NAP_LOG("Before NAP_CUALIB_HOTKEY")
 
 // FRAN: Button HotKey
 IF N_KeyBoard # NIL
@@ -3045,6 +3064,8 @@ ENDIF
 // *
 // V_Botao[_BOTAO_HANDLE_PUSHBUTTON] := N_Handle_PushButton
 *
+NAP_LOG("Before INABILITA_BOTAO_PUSH")
+
 INABILITA_BOTAO_PUSH(VX_Janela, N_PosBotao)
 *
 RETURN NIL

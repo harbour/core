@@ -135,36 +135,35 @@ FUNC SERIE_EQUIPE_DE_TESTE()
 **************************
 RETURN .T.
 *
-// ***************
-// FUNC XDBSKIPPER (N_AVANCO)  // usada na sele´?¢´?¢o em arquivo
-// ***************
-// RETURN __DBSKIPPER(N_AVANCO)
-// *
+***************
+FUNC XDBSKIPPER (N_AVANCO)  // usada na sele´?¢´?¢o em arquivo
+***************
+RETURN __DBSKIPPER(N_AVANCO)
+*
 // ************
 // PROC XDBGOTO (N_RECNO)
 // ************
 // DBGOTO(N_RECNO)
 // *
-// *************
-// PROC XDBGOTOP
-// *************
-// DBGOTOP()
-// *
-// ****************
-// PROC XDBGOBOTTOM
-// ****************
-// DBGOBOTTOM()
-// *
-// *************
-// PROC GOTO_EOF
-// *************
-// DBGOTO(LASTREC()+1)
-// *
-
-// ************
-// PROC XDBSKIP (N_AVANCO)
-// ************
-// DBSKIP(N_AVANCO)
+*************
+PROC XDBGOTOP
+*************
+DBGOTOP()
+*
+****************
+PROC XDBGOBOTTOM
+****************
+DBGOBOTTOM()
+*
+*************
+PROC GOTO_EOF
+*************
+DBGOTO(LASTREC()+1)
+*
+************
+PROC XDBSKIP (N_AVANCO)
+************
+DBSKIP(N_AVANCO)
 *
 ************
 FUNC GS_CDUSUA()
@@ -189,9 +188,9 @@ ENDIF
 // //       " e texto com tamanho "+LTRIM(STR(LEN(C_SUBCABEC))))
 // *
 // **********************
-// PROC LOGAFONT_AMBIENTE (C_TPLOGAFONT,C_ALIAS_REAL,C_CDBOTAO,C_MENSLOGA)
-// **********************
-// // ALERT(C_TPLOGAFONT+" "; "+C_ALIAS_REAL+" ; "+C_CDBOTAO+" ; "+C_MENSLOGA)
+PROC LOGAFONT_AMBIENTE (C_TPLOGAFONT,C_ALIAS_REAL,C_CDBOTAO,C_MENSLOGA)
+**********************
+// ALERT(C_TPLOGAFONT+" "; "+C_ALIAS_REAL+" ; "+C_CDBOTAO+" ; "+C_MENSLOGA)
 // *
 // *******************
 // PROC EXISTENCIA_EXE
@@ -200,24 +199,24 @@ ENDIF
 // ********************
 // FUNC DIREXE
 // RETURN "q:\aspec\veratual\exe\"
-// *******************
-// PROC REFRESH_RECORD
-// *******************
-// * Rel´?¢ o registro corrente do arquivo corrente novamente.
-// *
-// * Muito embora nos exemplos fornecidos junto com Clipper conste que o comando
-// * "SKIP 0" tem o mesmo efeito, na pr´?¢tica o "GOTO RECNO()" ´?¢ melhor pois:
-// *  - O comando SKIP 0 libera os buffers da esta´?¢´?¢o para a rede, mas n´?¢o
-// *    atualiza totalmente os buffers da esta´?¢´?¢o se houver modifica´?¢´?¢o nos
-// *    arquivos executados por outra esta´?¢´?¢o.
-// *  - Caso se esteja no EOF() e outra esta´?¢´?¢o preencha este registro, o SKIP 0
-// *    atualiza o LASTREC(), os dados do registro, mas o EOF() e BOF()
-// *    continuam .T.
-// *  - J´?¢ o GOTO RECNO() atualizou todos os itens acima, da esta´?¢´?¢o para a
-// *    rede e vice-versa.
-// *
-// GOTO RECNO()
-// *
+*******************
+PROC REFRESH_RECORD
+*******************
+* Relê o registro corrente do arquivo corrente novamente.
+*
+* Muito embora nos exemplos fornecidos junto com Clipper conste que o comando
+* "SKIP 0" tem o mesmo efeito, na prática o "GOTO RECNO()" é melhor pois:
+*  - O comando SKIP 0 libera os buffers da estação para a rede, mas não
+*    atualiza totalmente os buffers da estação se houver modificação nos
+*    arquivos executados por outra estação.
+*  - Caso se esteja no EOF() e outra estação preencha este registro, o SKIP 0
+*    atualiza o LASTREC(), os dados do registro, mas o EOF() e BOF()
+*    continuam .T.
+*  - Já o GOTO RECNO() atualizou todos os itens acima, da estação para a
+*    rede e vice-versa.
+*
+GOTO RECNO()
+*
 *************
 FUNC GS_SERIE
 *************

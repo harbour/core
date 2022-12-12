@@ -115,12 +115,15 @@ HB_FUNC( NAP_CUALIB_IMAGE )
 
 HB_FUNC( NAP_CUALIB_BUTTON )
 {
+    //log_printf("Before NAP_CUALIB_BUTTON hb_gtnap_parText");
     const char_t *text = hb_gtnap_parText(1);
+    //log_printf("Before NAP_CUALIB_BUTTON nTop");
     uint32_t nTop = hb_parni(3);
     uint32_t nLeft = hb_parni(4);
     uint32_t nBottom = hb_parni(5);
     uint32_t nRight = hb_parni(6);
     bool_t autoclose = (bool_t)hb_parl(7);
+    //log_printf("Before hb_gtnap_cualib_button");
     hb_gtnap_cualib_button(text, 2, nTop, nLeft, nBottom, nRight, autoclose);
 }
 
