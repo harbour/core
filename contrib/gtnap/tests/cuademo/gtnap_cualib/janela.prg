@@ -748,6 +748,8 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
 
             ELSEIF N_TP_Jan == _JAN_SELE_ARQ_20
+                L_CLOSE_WITH_ESC := .T.
+                L_CLOSE_WITH_RETURN := .F.
 
             ENDIF
 
@@ -1118,9 +1120,11 @@ FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
 NEXT
 *
 IF SOB_MODO_GRAFICO() .AND. N_LinBotoes > 1 .AND. N_EspacamentoEmPixels == 0
+    NAP_LOG("MEMVAR->SOBREPOSICAO_DE_BOTOES AJUSTA_BOTOES!!!!!")
+
    * Com espaçamento 0, somente é possível ter uma única "fileira" de botões,
    * senão ocorrerá sobreposição das bordas.
-   ? MEMVAR->SOBREPOSICAO_DE_BOTOES
+   //? MEMVAR->SOBREPOSICAO_DE_BOTOES
 ENDIF
 *
 **************************
@@ -3036,14 +3040,13 @@ IF V_Botao[_BOTAO_LIN_INICIAL] == NIL
 ENDIF
 
 NAP_LOG("Before V_Botao[_BOTAO_LIN_INICIAL]")
-NAP_CUALIB_BUTTON("HELLO",;//C_TextoBotaoAux_CodigoPagina,;
-                    {|| NAP_LOG("BOTAO")},;//V_Botao[_BOTAO_BLOCO_ACAO],;
+NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;
+                    V_Botao[_BOTAO_BLOCO_ACAO],;
                     N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
                     N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
                     N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
                     N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ],;
-                    .F.)//V_Botao[_BOTAO_AUTOCLOSE])
-                      //  5, 5, 7, 10,.F.)
+                    V_Botao[_BOTAO_AUTOCLOSE])
 
 NAP_LOG("Before NAP_CUALIB_HOTKEY")
 

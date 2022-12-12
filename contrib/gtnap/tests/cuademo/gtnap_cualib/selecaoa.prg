@@ -441,6 +441,7 @@ ENDIF   // L_ForcaLerTudo
 
 IF SOB_MODO_GRAFICO()
 
+    NAP_LOG("SELECAOA::NAP_CUALIB_LAUNCH_MODAL!!!!!!")
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
 
     //X_Retorno := 0

@@ -106,12 +106,12 @@ CUA20 @ 01,41,MAXROW()-2,MAXCOL()-30 JANELA V_Janela ;
 
 ADDBOTAO V_Janela TEXTO "V=incrementar valor corrente" ;
    ACAO INCREMENTA_CORRENTE(V_Janela) AJUDA "B19265"
-// ADDBOTAO V_Janela TEXTO "M=incrementar todos os valores" ;
-//    ACAO INCREMENTA_TODOS(V_Janela) AJUDA "B19267"
-// ADDBOTAO V_Janela TEXTO "N=exclui linha atual" ;
-//    ACAO EXCLUI_LINHA_ATUAL(V_Janela) AJUDA "B?????"
-// ADDBOTAO V_Janela TEXTO "U=procura linha atual" ;
-//    ACAO PROCURAR_REGISTRO(V_Janela) RECNOMUDA AJUDA "B?????"
+ADDBOTAO V_Janela TEXTO "M=incrementar todos os valores" ;
+   ACAO INCREMENTA_TODOS(V_Janela) AJUDA "B19267"
+ADDBOTAO V_Janela TEXTO "N=exclui linha atual" ;
+   ACAO EXCLUI_LINHA_ATUAL(V_Janela) AJUDA "B?????"
+ADDBOTAO V_Janela TEXTO "U=procura linha atual" ;
+   ACAO PROCURAR_REGISTRO(V_Janela) RECNOMUDA AJUDA "B?????"
 
 CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
   COORDENADAS 01,01,03,05 ACAO INCREMENTA_CORRENTE(V_Janela) AJUDA "B19129"
