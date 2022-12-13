@@ -120,35 +120,35 @@ CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
 
 CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES AUTOCLOSE
 
-// ANEXE V_Janela TITULO "Registro;deletado" COLUNA TESTA_DELECAO(.NOT. EOF())
-// ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
-// ANEXE V_Janela TITULO "Data"      COLUNA dtcota
-// ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
-// ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
-// ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
+ANEXE V_Janela TITULO "Registro;deletado" COLUNA TESTA_DELECAO(.NOT. EOF())
+ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
+ANEXE V_Janela TITULO "Data"      COLUNA dtcota
+ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
+ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
+ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
 *
 ATIVE(V_Janela)
 *
 CLOSE COTACAO
 
-// *
-// ***********************
-// STAT FUNC TESTA_DELECAO(L_NAO_EOF)
-// ***********************
-// LOCAL C_Str
-// IF L_NAO_EOF
-//    IF DELETED()
-//       C_Str := "Sim"
-//       // Como o SET DELETED ON está ativo, não era para passar por aqui...
-//       ALTD()
-//    ELSE
-//       C_Str := "Não"
-//    ENDIF
-// ELSE
-//    C_Str := "Eof"
-// ENDIF
-// Return C_Str
-// *
+*
+***********************
+STAT FUNC TESTA_DELECAO(L_NAO_EOF)
+***********************
+LOCAL C_Str
+IF L_NAO_EOF
+   IF DELETED()
+      C_Str := "Sim"
+      // Como o SET DELETED ON está ativo, não era para passar por aqui...
+      ALTD()
+   ELSE
+      C_Str := "Não"
+   ENDIF
+ELSE
+   C_Str := "Eof"
+ENDIF
+Return C_Str
+*
 
 STAT PROC INCREMENTA_CORRENTE(V_Janela)
     RETURN

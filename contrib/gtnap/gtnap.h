@@ -93,6 +93,12 @@ extern void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const ui
 
 extern void hb_gtnap_cualib_tableview(TableView *view, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight);
 
+extern GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view);
+
+//extern GtNapArea *hb_gtnap_cualib_tableview_get_area(TableView *view);
+
+extern void hb_gtnap_cualib_tableview_area_add_column(const char_t *title, const bool_t freeze, const uint32_t width, PHB_ITEM codeBlock);
+
 extern void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose);
 
 extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose);

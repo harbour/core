@@ -117,6 +117,15 @@ HB_FUNC( NAP_TABLEVIEW_BIND_DB )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_TABLEVIEW_CUALIB_BIND_DB )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    GtNapArea *gtarea = hb_gtnap_cualib_tableview_area(view);
+    tableview_OnData(view, listener(gtarea, i_OnTableData, GtNapArea));
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TABLEVIEW_COLUMN_DB )
 {
     TableView *view = (TableView*)hb_parptr(1);
@@ -126,6 +135,19 @@ HB_FUNC( NAP_TABLEVIEW_COLUMN_DB )
     PHB_ITEM codeBlock = hb_param(5, HB_IT_BLOCK);
     GtNapArea *gtarea = hb_gtnap_get_area(view);
     hb_gtnap_area_add_column(gtarea, title, width, align, codeBlock);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_CUALIB_COLUMN_DB )
+{
+    //TableView *view = (TableView*)hb_parptr(1);
+    const char_t *title = hb_gtnap_parText(1);
+    PHB_ITEM codeBlock = hb_param(2, HB_IT_BLOCK);
+    //bool_t freeze = (bool_t)hb_parl(3);
+    uint32_t width = (real32_t)hb_parni(3);
+    //GtNapArea *gtarea = hb_gtnap_cualib_tableview_get_area(view);
+    hb_gtnap_cualib_tableview_area_add_column(title, FALSE, width, codeBlock);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -769,7 +769,14 @@ FUNCTION AnexeCol ( VX_Janela , C_Titulo , B_Bloco , N_Largura )
 *****************
 *
 LOCAL VX_Coluna, VX_Sele         // objeto do tipo coluna
+LOCAL N_ColWidth := 0
 *
+// IF C_Titulo # NIL
+//     NAP_LOG("Adding column: " + C_Titulo + " Bloco:" + hb_ntos(B_Bloco) + " N_Largura:" + hb_ntos(N_Largura))
+// ENDIF
+
+IF B_Bloco == NIL
+ENDIF
 VX_Sele := VX_SubObj
 *
 IF C_Titulo # NIL
@@ -782,6 +789,22 @@ IF C_Titulo # NIL
    ENDIF
 ENDIF
 *
+
+IF SOB_MODO_GRAFICO()
+
+    IF N_Largura # NIL
+        N_ColWidth := N_Largura
+    ENDIF
+
+    // This column is from Table
+    // ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
+    // FRAN: Implement better!
+    IF C_Titulo # NIL
+        NAP_TABLEVIEW_CUALIB_COLUMN_DB(C_Titulo,B_Bloco,N_ColWidth)
+    ENDIF
+
+ELSE
+
 VX_Coluna := TBCOLUMNNEW(C_Titulo,B_Bloco)
 *
 IF N_Largura # NIL
@@ -792,6 +815,8 @@ VX_Coluna:COLORBLOCK := {|| { 2 , 3 } }  // faz com que todas as células (corpo)
 *                                        //   fique em cor normal (tira o Bright)
 VX_Sele:ADDCOLUMN(VX_Coluna)
 *
+ENDIF
+
 RETURN NIL
 *
 

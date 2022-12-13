@@ -102,6 +102,7 @@ struct _gtnap_cualib_window_t
     S2Df panel_size;
     Panel *panel;
     GtNapCualibToolbar *toolbar;
+    GtNapArea *gtarea;
     ArrSt(GtNapCualibObject) *gui_objects;
     ArrPt(GtNapCallback) *callbacks;
 };
@@ -412,6 +413,10 @@ GtNapArea *hb_gtnap_new_area(TableView *view)
     {
         SELF_GOTO(gtarea->area, 1);
         gtarea->currow = 1;
+    }
+    else
+    {
+        log_printf("hb_rddGetCurrentWorkAreaPointer() fails. Not area defined");
     }
 
     arrpt_append(GTNAP_GLOBAL->areas, gtarea, GtNapArea);
@@ -854,6 +859,9 @@ static void i_remove_cualib_win(GtNapCualibWindow *cuawin)
         heap_delete(&cuawin->toolbar, GtNapCualibToolbar);
     }
 
+    if (cuawin->gtarea != NULL)
+        i_destroy_area(&cuawin->gtarea);
+
     cassert(arrst_size(cuawin->gui_objects, GtNapCualibObject) == 0);
     arrst_destroy(&cuawin->gui_objects, NULL, GtNapCualibObject);
     arrpt_destroy(&cuawin->callbacks, i_destroy_callback, GtNapCallback);
@@ -1242,6 +1250,66 @@ void hb_gtnap_cualib_toolbar_separator(void)
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->toolbar);
     arrpt_append(cuawin->toolbar->buttons, NULL, Button);
+}
+
+/*---------------------------------------------------------------------------*/
+
+GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    cassert(cuawin->gtarea == NULL);
+    cuawin->gtarea = heap_new0(GtNapArea);
+    cuawin->gtarea->area = (AREA*)hb_rddGetCurrentWorkAreaPointer();
+    cuawin->gtarea->view = view;
+    cuawin->gtarea->columns = arrst_create(GtNapColumn);
+
+    if (cuawin->gtarea->area != NULL)
+    {
+        SELF_GOTO(cuawin->gtarea->area, 1);
+        cuawin->gtarea->currow = 1;
+        log_printf("hb_gtnap_cualib_area() works!!!");
+    }
+    else
+    {
+        log_printf("hb_rddGetCurrentWorkAreaPointer() fails. Not area defined");
+    }
+
+    return cuawin->gtarea;
+}
+
+/*---------------------------------------------------------------------------*/
+
+// GtNapArea *hb_gtnap_cualib_tableview_get_area(TableView *view)
+// {
+//     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+//     cassert_no_null(cuawin);
+//     cassert_no_null(cuawin->gtarea);
+//     cassert_unref(cuawin->gtarea->view == view, view);
+//     return cuawin->gtarea;
+// }
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_tableview_area_add_column(const char_t *title, const bool_t freeze, const uint32_t width, PHB_ITEM codeBlock)
+{
+    uint32_t id = 0;
+    GtNapColumn *column = NULL;
+    String *text = gtconvert_1252_to_UTF8(title);
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapArea *area = NULL;
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtarea);
+    area = cuawin->gtarea;
+    id = tableview_new_column_text(area->view);
+    tableview_header_title(area->view, id, tc(text));
+    //tableview_header_align(area->view, id, align);
+    tableview_column_width(area->view, id, /*width > 0 ? width : 100*/ 100);
+    cassert(id == arrst_size(area->columns, GtNapColumn));
+    column = arrst_new(area->columns, GtNapColumn);
+    column->align = ekLEFT;
+    column->codeBlock = hb_itemNew(codeBlock);
+    str_destroy(&text);
 }
 
 /*---------------------------------------------------------------------------*/

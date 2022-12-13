@@ -426,6 +426,8 @@ IF L_ForcaLerTudo
 
             V_TableView := NAP_TABLEVIEW_CREATE()
 
+            NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView)
+
             LOG_PRINT("TableView Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
 
             NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
