@@ -97,6 +97,12 @@ extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockP
 
 extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol);
 
+extern void hb_gtnap_cualib_toolbar(const uint32_t nPixelsImage);
+
+extern void hb_gtnap_cualib_toolbar_button(const char_t *pathname, const char_t *tooltip);
+
+extern void hb_gtnap_cualib_toolbar_separator(void);
+
 extern void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, const bool_t autoclose);
 
 extern uint32_t hb_gtnap_cualib_launch_modal(void);

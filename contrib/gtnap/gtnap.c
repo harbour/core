@@ -18,7 +18,9 @@ typedef struct _gtnap_t GtNap;
 typedef struct _gtnap_key_t GtNapKey;
 typedef struct _gtnap_column_t GtNapColumn;
 typedef struct _gtnap_cualib_object_t GtNapCualibObject;
+typedef struct _gtnap_cualib_toolbar_t GtNapCualibToolbar;
 typedef struct _gtnap_cualib_window_t GtNapCualibWindow;
+
 typedef struct _gui_context_t GuiContext;
 
 struct _gtnap_callback_t
@@ -58,6 +60,7 @@ struct _gtnap_area_t
 DeclPt(GtNapCallback);
 DeclPt(GtNapArea);
 DeclPt(Window);
+DeclPt(Button);
 
 typedef enum _objtype_t
 {
@@ -77,6 +80,13 @@ struct _gtnap_cualib_object_t
     GuiComponent *component;
 };
 
+struct _gtnap_cualib_toolbar_t
+{
+    uint32_t pixels_image;
+    uint32_t pixels_button;
+    ArrPt(Button) *buttons;
+};
+
 DeclSt(GtNapCualibObject);
 
 struct _gtnap_cualib_window_t
@@ -88,7 +98,9 @@ struct _gtnap_cualib_window_t
     uint32_t row_pos;
     uint32_t col_pos;
     Window *window;
+    S2Df panel_size;
     Panel *panel;
+    GtNapCualibToolbar *toolbar;
     ArrSt(GtNapCualibObject) *gui_objects;
     ArrPt(GtNapCallback) *callbacks;
 };
@@ -811,6 +823,22 @@ static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t ind
 
 /*---------------------------------------------------------------------------*/
 
+static void i_remove_toolbar(GtNapCualibToolbar *toolbar, Panel *panel)
+{
+    cassert_no_null(toolbar);
+    arrpt_foreach(button, toolbar->buttons, Button)
+        if (button != NULL)
+        {
+            Button *dbutton = button;
+            _component_detach_from_panel((GuiComponent*)panel, (GuiComponent*)button);
+            _component_destroy((GuiComponent**)&dbutton);
+        }
+    arrpt_end();
+    arrpt_destroy(&toolbar->buttons, NULL, Button);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_remove_cualib_win(GtNapCualibWindow *cuawin)
 {
     uint32_t i, n;
@@ -818,6 +846,12 @@ static void i_remove_cualib_win(GtNapCualibWindow *cuawin)
     n = arrst_size(cuawin->gui_objects, GtNapCualibObject);
     for (i = 0; i < n; ++i)
         i_remove_cualib_object(cuawin, 0);
+
+    if (cuawin->toolbar != NULL)
+    {
+        i_remove_toolbar(cuawin->toolbar, cuawin->panel);
+        heap_delete(&cuawin->toolbar, GtNapCualibToolbar);
+    }
 
     cassert(arrst_size(cuawin->gui_objects, GtNapCualibObject) == 0);
     arrst_destroy(&cuawin->gui_objects, NULL, GtNapCualibObject);
@@ -985,7 +1019,6 @@ uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni
     Window *window = window_create(flags);
     Panel *panel = panel_create();
     Layout *layout = layout_create(1, 1);
-    real32_t width, height;
     id = arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow);
     cuawin = arrst_new0(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow);
     cuawin->window = window;
@@ -998,9 +1031,9 @@ uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni
     cuawin->col_pos = 0;
     cuawin->gui_objects = arrst_create(GtNapCualibObject);
     cuawin->callbacks = arrpt_create(GtNapCallback);
-    width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni - (id > 0 ? 1 : 0)));
-    height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni/* + (id > 0 ? 1 : 0)*/));
-    panel_size(panel, s2df(width, height));
+    cuawin->panel_size.width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni - (id > 0 ? 1 : 0)));
+    cuawin->panel_size.height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni/* + (id > 0 ? 1 : 0)*/));
+    panel_size(panel, cuawin->panel_size);
     if (str_empty_c(C_Cabec) == FALSE)
         window_title(window, C_Cabec);
     else
@@ -1136,6 +1169,63 @@ void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_cualib_toolbar(const uint32_t nPixelsImage)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    cassert(cuawin->toolbar == NULL);
+    cuawin->toolbar = heap_new0(GtNapCualibToolbar);
+    cuawin->toolbar->buttons = arrpt_create(Button);
+    cuawin->toolbar->pixels_image = nPixelsImage;
+    cuawin->toolbar->pixels_button = (uint32_t)((real32_t)nPixelsImage * 1.3f);
+    log_printf("Created toolbar with '%d' pixels button", nPixelsImage);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_toolbar_button(const char_t *pathname, const char_t *tooltip)
+{
+    Image *image = image_from_file(pathname, NULL);
+    if (image != NULL)
+    {
+        GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+        Button *button = button_flat();
+        String *text = gtconvert_1252_to_UTF8(tooltip);
+        cassert_no_null(cuawin);
+        cassert_no_null(cuawin->toolbar);
+
+        if (image_width(image) != cuawin->toolbar->pixels_image || image_height(image) != cuawin->toolbar->pixels_image)
+        {
+            Image *scaled = image_scale(image, cuawin->toolbar->pixels_image, cuawin->toolbar->pixels_image);
+            image_destroy(&image);
+            image = scaled;
+        }
+
+        button_image(button, image);
+        button_tooltip(button, tc(text));
+        arrpt_append(cuawin->toolbar->buttons, button, Button);
+        log_printf("Added toolbar button '%s' with tooltip '%s'", pathname, tc(text));
+        str_destroy(&text);
+        image_destroy(&image);
+    }
+    else
+    {
+        log_printf("Cannot load '%s' image", pathname);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_toolbar_separator(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->toolbar);
+    arrpt_append(cuawin->toolbar->buttons, NULL, Button);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static const GtNapKey *i_convert_key(const int32_t key)
 {
     uint32_t i, n = sizeof(KEYMAPS) / sizeof(GtNapKey);
@@ -1193,16 +1283,61 @@ void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, 
 
 /*---------------------------------------------------------------------------*/
 
-static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *panel, const objtype_t type)
+static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *panel, const objtype_t type, const GtNapCualibToolbar *toolbar)
 {
     arrst_foreach(object, objects, GtNapCualibObject)
         if (object->type == type)
         {
+            V2Df pos = object->pos;
             _component_attach_to_panel((GuiComponent*)panel, object->component);
             _component_visible(object->component, FALSE);
-            _component_set_frame(object->component, &object->pos, &object->size);
+
+            if (toolbar != NULL)
+            {
+                switch(type) {
+                case ekOBJ_LABEL:
+                case ekOBJ_IMAGE:
+                case ekOBJ_MENUVERT:
+                    pos.y += (real32_t)toolbar->pixels_button;
+                    break;
+                case ekOBJ_BUTTON:
+                    break;
+                cassert_default();
+                }
+            }
+
+            _component_set_frame(object->component, &pos, &object->size);
         }
     arrst_end();
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_attach_toolbar_to_panel(const GtNapCualibToolbar *toolbar, Panel *panel)
+{
+    if (toolbar != NULL)
+    {
+        V2Df pos;
+        S2Df size;
+        pos.x = 0;
+        pos.y = 0;
+        size.width = (real32_t)toolbar->pixels_button;
+        size.height = (real32_t)toolbar->pixels_button;
+
+        arrpt_foreach(button, toolbar->buttons, Button)
+            if (button != NULL)
+            {
+                _component_attach_to_panel((GuiComponent*)panel, (GuiComponent*)button);
+                _component_visible((GuiComponent*)button, FALSE);
+                _component_set_frame((GuiComponent*)button, &pos, &size);
+                pos.x += (real32_t)toolbar->pixels_button;
+            }
+            else
+            {
+                pos.x += 5.f; // Separator
+            }
+        arrpt_end();
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1233,6 +1368,19 @@ static void i_component_tabstop(ArrSt(GtNapCualibObject) *objects, Window *windo
 
 /*---------------------------------------------------------------------------*/
 
+static void i_toolbar_tabstop(GtNapCualibToolbar *toolbar)
+{
+    if (toolbar != NULL)
+    {
+        arrpt_foreach(button, toolbar->buttons, Button)
+            if (button != NULL)
+                _component_visible((GuiComponent*)button, TRUE);
+        arrpt_end();
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_cualib_launch_modal(void)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
@@ -1242,10 +1390,11 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
     cassert_no_null(cuawin);
 
     // Attach gui objects in certain Z-Order (from back to front)
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_MENUVERT);
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_BUTTON);
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_LABEL);
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_IMAGE);
+    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_MENUVERT, cuawin->toolbar);
+    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_BUTTON, cuawin->toolbar);
+    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_LABEL, cuawin->toolbar);
+    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_IMAGE, cuawin->toolbar);
+    i_attach_toolbar_to_panel(cuawin->toolbar, cuawin->panel);
 
     // Tab-stops order
     _window_taborder(cuawin->window, NULL);
@@ -1253,6 +1402,7 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_BUTTON);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_LABEL);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_IMAGE);
+    i_toolbar_tabstop(cuawin->toolbar);
 
     pos.x = (real32_t)(cuawin->N_ColIni * GTNAP_GLOBAL->cell_x_size);
     pos.y = (real32_t)(cuawin->N_LinIni * GTNAP_GLOBAL->cell_y_size);

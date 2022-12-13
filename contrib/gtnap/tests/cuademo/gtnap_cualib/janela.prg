@@ -1208,20 +1208,20 @@ L_CriarToolBar := .T.
 *
 IF SOB_MODO_GRAFICO()
    * O Windows posiciona a "ToolBar" "acima" da coordenada
-   * da janela jï¿½ criada.
+   * da janela já criada.
    *
    * Para que a ToolBar inicie "mais ou menos" (tamanho da ToolBar
-   * nï¿½o ï¿½ sempre proporcional) no local definido pelo programador
-   * na criaï¿½ï¿½o da janela, baixar a tela em uma linha.
+   * não é sempre proporcional) no local definido pelo programador
+   * na criação da janela, baixar a tela em uma linha.
    *
-   * 2 linhas deslocadas da linha inicial, para dar espaï¿½o ï¿½ ToolBar
+   * 2 linhas deslocadas da linha inicial, para dar espaço à ToolBar
    N_LinIni++
    N_LinIni++
 ELSE
-   * O modo texto nï¿½o tem ToolBar, mas o cabeï¿½alho serï¿½ acrescentado
+   * O modo texto não tem ToolBar, mas o cabeçalho será acrescentado
    * uma linha em branco(no topo), de forma que o programador,
    * ao usar o modo texto durante a fase de desenvolvimento,
-   * jï¿½ nï¿½o veja, APROXIMADAMENTE, o que a ToolBar esconderï¿½ da
+   * já não veja, APROXIMADAMENTE, o que a ToolBar esconderá da
    * da tela anterior.
    ASIZE(VC_Titulo,LEN(VC_Titulo)+1)
    AINS(VC_Titulo,1)
@@ -1279,7 +1279,8 @@ ENDIF
 //
 //hWndToolBar := WVW_TBCREATE( N_WindowNum, .F., NIL, 0, N_PixelsBotao, N_PixelsBotao )
 *
-NAP_LOG("CREATE TOOLBAR!!!!")
+//NAP_LOG("CREATE TOOLBAR!!!!")
+NAP_CUALIB_TOOLBAR(N_PixelsBotao)
 
 IF TEM_BOTAO(VX_Janela,{"Incluir","Alterar","Excluir","Consultar"})
     *
@@ -1494,6 +1495,8 @@ STAT PROC ADICIONA_BOTAO_TOOLBAR (VX_Janela,V_TOOLBAR_COD_BITMAP,;
                                     C_TOOLBAR_TOOLTIP,B_TOOLBAR_BLOCO_ACAO, N_SEQUENCIA, L_MudaDados)
 ********************************
 LOCAL N_TOOLBAR_COD_BITMAP
+LOCAL C_BASE_PATH := "../imgtbar/"
+LOCAL C_ICON_PATHNAME := ""
 *
 * Este número vai de 400 em diante, e é necessário ao Windows
 N_ToolBarCodigoAcao++
@@ -1508,7 +1511,54 @@ ENDIF
 AADD(V_BotoesToolBar,{N_ToolBarCodigoAcao,N_TOOLBAR_COD_BITMAP,;
                         C_TOOLBAR_TOOLTIP,B_TOOLBAR_BLOCO_ACAO})
 
-NAP_LOG("ADD TOOLBAR BUTTON: " + hb_ntos(N_ToolBarCodigoAcao) + ":" + C_TOOLBAR_TOOLTIP + ":" + hb_ntos(N_TOOLBAR_COD_BITMAP))
+IF N_TOOLBAR_COD_BITMAP == _BITMAP_INCLUI
+    C_ICON_PATHNAME := C_BASE_PATH + "inclui.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_ALTERA
+    C_ICON_PATHNAME := C_BASE_PATH + "altera.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_EXCLUI
+    C_ICON_PATHNAME := C_BASE_PATH + "exclui.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_CONSULTA
+    C_ICON_PATHNAME := C_BASE_PATH + "consulta.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_OK
+    C_ICON_PATHNAME := C_BASE_PATH + "ok.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_PESQUISE
+    C_ICON_PATHNAME := C_BASE_PATH + "pesquise.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_PRINTER
+    C_ICON_PATHNAME := C_BASE_PATH + "printer.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_SALVAR
+    C_ICON_PATHNAME := C_BASE_PATH + "salvar.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_RECORTAR
+    C_ICON_PATHNAME := C_BASE_PATH + "recortar.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_COPIA
+    C_ICON_PATHNAME := C_BASE_PATH + "copia.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_COLAR
+    C_ICON_PATHNAME := C_BASE_PATH + "colar.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_DESFAZER
+    C_ICON_PATHNAME := C_BASE_PATH + "desfazer.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_CALCULA
+    C_ICON_PATHNAME := C_BASE_PATH + "calcula.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_AJUDA
+    C_ICON_PATHNAME := C_BASE_PATH + "ajuda.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_SAIDA
+    C_ICON_PATHNAME := C_BASE_PATH + "saida.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_VIDEO
+    C_ICON_PATHNAME := C_BASE_PATH + "video.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_ESPACOVAZIO
+    C_ICON_PATHNAME := C_BASE_PATH + "espacovazio.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_INCLUI_DESAB
+    C_ICON_PATHNAME := C_BASE_PATH + "inclui_i.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_ALTERA_DESAB
+    C_ICON_PATHNAME := C_BASE_PATH + "altera_i.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_EXCLUI_DESAB
+    C_ICON_PATHNAME := C_BASE_PATH + "exclui_i.bmp"
+ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_SALVAR_DESAB
+    C_ICON_PATHNAME := C_BASE_PATH + "salvar_i.bmp"
+ENDIF
+
+//NAP_LOG(C_ICON_PATHNAME + C_TOOLBAR_TOOLTIP)
+NAP_CUALIB_TOOLBAR_BUTTON(C_ICON_PATHNAME, C_TOOLBAR_TOOLTIP)
+
+//NAP_LOG("ADD TOOLBAR BUTTON: " + hb_ntos(N_ToolBarCodigoAcao) + ":" + C_TOOLBAR_TOOLTIP + ":" + hb_ntos(N_TOOLBAR_COD_BITMAP))
 
 //
 //  FRAN: TODO Adding button
@@ -1539,9 +1589,9 @@ N_ToolBarCodigoAcao++
 //
 // FRAN TODO
 //
-NAP_LOG("ADD TOOLBAR SEPARATOR")
+//NAP_LOG("ADD TOOLBAR SEPARATOR")
 //WVW_TBAddButton(N_WindowNum)
-
+NAP_CUALIB_TOOLBAR_SEPARATOR()
 *
 *******************
 STAT FUNC TEM_BOTAO(VX_Janela,VC_TeclasBusca, L_ChecaMudaDados, L_MudaDados)
