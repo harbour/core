@@ -273,7 +273,7 @@ IF L_ForcaLerTudo
                 NAP_MENUVERT_AUTOCLOSE(V_MenuVert)
             ENDIF
 
-            NAP_MENUVERT_CUALIB(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
+            NAP_CUALIB_MENUVERT(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
 
             X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
 

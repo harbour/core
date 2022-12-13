@@ -534,16 +534,4 @@ HB_FUNC( NAP_MENUVERT_SELECTED )
 //     cell_focus(cell);
 // }
 
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_MENUVERT_CUALIB )
-{
-    Panel *panel = (Panel*)hb_parptr(1);
-    uint32_t nTop = hb_parni(2);
-    uint32_t nLeft = hb_parni(3);
-    uint32_t nBottom = hb_parni(4);
-    uint32_t nRight = hb_parni(5);
-    hb_gtnap_cualib_menuvert(panel, nTop, nLeft, nBottom, nRight);
-}
-
 

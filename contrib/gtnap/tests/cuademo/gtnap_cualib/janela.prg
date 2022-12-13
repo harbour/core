@@ -979,11 +979,11 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
         * "SOLUÇÃO" - Inverter a ordem, criado os PushButton depois da ToolBar.
         *             Assim o código ficou o mesmo para todos os compiladores.
         *
-        NAP_LOG("Adding buttons")
+        //NAP_LOG("Adding buttons")
         FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
-            NAP_LOG("Adding button " + hb_ntos(N_Cont))
+            //NAP_LOG("Adding button " + hb_ntos(N_Cont))
             ADICIONA_BOTAO_PUSH(VX_Janela,N_Cont)
-            NAP_LOG("Added button " + hb_ntos(N_Cont))
+            //NAP_LOG("Added button " + hb_ntos(N_Cont))
         NEXT
 
     ELSE    // Buttons in text mode
@@ -1163,7 +1163,7 @@ PROC AJUSTA_BOTOES(VX_Janela)
 LOCAL N_Cont
 * não imprime nada, só retorna as teclas devidamente formatadas
 *
-NAP_LOG("AJUSTA_BOTOES!!!!!")
+//NAP_LOG("AJUSTA_BOTOES!!!!!")
 IF N_LinBotoes # NIL
    ? MEMVAR->AJUSTA_BOTOES_SO_PODE_SER_CHAMADA_UMA_VEZ
 ENDIF
@@ -3138,14 +3138,14 @@ LOCAL C_TextoBotaoAux_CodigoPagina
 //!! DEPOIS REMOVER O "IF", DEIXANDO O "ELSE"
 //!! (POR ENQUANTO, O N_KEYBOARD PODE CONTER NIL)
 
-NAP_LOG("C_TextoBotaoAux")
-NAP_LOG(C_TextoBotaoAux)
+//NAP_LOG("C_TextoBotaoAux")
+//NAP_LOG(C_TextoBotaoAux)
 
 IF N_Keyboard == NIL
-    NAP_LOG("KeyBOARD NULLLLLL")
+    //NAP_LOG("KeyBOARD NULLLLLL")
     // B_BlocoAux := {||NIL}   // PUSHBUTTON FICARÁ SEM FUNCIONAR !!!
 ELSE
-    NAP_LOG("KeyBOARD " + hb_ntos(N_Keyboard))
+    //NAP_LOG("KeyBOARD " + hb_ntos(N_Keyboard))
     IF LEN(C_TextoDestaque)==1 .AND. ; // Se aceleradora tiver 1 byte de tamanho
         (ISALPHA(C_TextoDestaque) .OR. ISDIGIT(C_TextoDestaque))  // Se for uma letra (sem acentos) ou um número
        *
@@ -3189,14 +3189,14 @@ ENDIF
 //ENDIF ERRO
 *
 
-NAP_LOG("Before NAP_CUALIB_BUTTON")
-NAP_LOG(hb_ntos(V_Botao[_BOTAO_LIN_INICIAL]))
+//NAP_LOG("Before NAP_CUALIB_BUTTON")
+//NAP_LOG(hb_ntos(V_Botao[_BOTAO_LIN_INICIAL]))
 
-IF V_Botao[_BOTAO_LIN_INICIAL] == NIL
-    NAP_LOG("NIIIILLLLL V_Botao[_BOTAO_LIN_INICIAL]")
-ENDIF
+//IF V_Botao[_BOTAO_LIN_INICIAL] == NIL
+//    NAP_LOG("NIIIILLLLL V_Botao[_BOTAO_LIN_INICIAL]")
+//ENDIF
 
-NAP_LOG("Before V_Botao[_BOTAO_LIN_INICIAL]")
+//NAP_LOG("Before V_Botao[_BOTAO_LIN_INICIAL]")
 NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;
                     V_Botao[_BOTAO_BLOCO_ACAO],;
                     N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
@@ -3205,7 +3205,7 @@ NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;
                     N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ],;
                     V_Botao[_BOTAO_AUTOCLOSE])
 
-NAP_LOG("Before NAP_CUALIB_HOTKEY")
+//NAP_LOG("Before NAP_CUALIB_HOTKEY")
 
 // FRAN: Button HotKey
 IF N_KeyBoard # NIL
@@ -3224,7 +3224,7 @@ ENDIF
 // *
 // V_Botao[_BOTAO_HANDLE_PUSHBUTTON] := N_Handle_PushButton
 *
-NAP_LOG("Before INABILITA_BOTAO_PUSH")
+//NAP_LOG("Before INABILITA_BOTAO_PUSH")
 
 INABILITA_BOTAO_PUSH(VX_Janela, N_PosBotao)
 *

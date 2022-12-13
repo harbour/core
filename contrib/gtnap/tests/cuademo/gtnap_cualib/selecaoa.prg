@@ -361,6 +361,8 @@ LOCAL X_Retorno
 LOCAL N_PaintRefresh_Old, X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, L_PodeExecutar
 LOCAL V_Ambiente_Alias
+LOCAL V_TableView, L_Coords
+
 *
 //
 // FRAN - This code is not necessary in GTNAP
@@ -411,10 +413,25 @@ IF L_ForcaLerTudo
       *
 
         IF SOB_MODO_GRAFICO()
-
             //
             // FRAN: Here we have to create the TableView
             //
+
+            L_Coords := CoordenadasBrowse(VX_Sele)
+
+            // Add an extra column to scrollbar
+            IF L_ScrollVertical
+                L_Coords[4]++
+            ENDIF
+
+            V_TableView := NAP_TABLEVIEW_CREATE()
+
+            LOG_PRINT("TableView Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
+
+            NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
+
+
+
 
         ENDIF   // SOB_MODO_GRAFICO()
 
@@ -441,7 +458,7 @@ ENDIF   // L_ForcaLerTudo
 
 IF SOB_MODO_GRAFICO()
 
-    NAP_LOG("SELECAOA::NAP_CUALIB_LAUNCH_MODAL!!!!!!")
+    //NAP_LOG("SELECAOA::NAP_CUALIB_LAUNCH_MODAL!!!!!!")
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
 
     //X_Retorno := 0
