@@ -6,7 +6,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "ls",
+            "command": "bash ./.vscode/build.sh",
             "windows": {
                 "command": ".\\.vscode\\build.bat"
             },

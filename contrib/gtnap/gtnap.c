@@ -1383,6 +1383,7 @@ void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *ti
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtarea);
     cassert(view == cuawin->gtarea->view);
+    unref(freeze);
     id = tableview_new_column_text(view);
     cassert(id == arrst_size(cuawin->gtarea->columns, GtNapColumn));
     column = arrst_new(cuawin->gtarea->columns, GtNapColumn);
