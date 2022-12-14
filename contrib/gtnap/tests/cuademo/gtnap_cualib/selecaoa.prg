@@ -457,7 +457,7 @@ IF L_ForcaLerTudo
                     LOG_PRINT("WIDTH IS NULL")
                 ENDIF
 
-                NAP_TABLEVIEW_CUALIB_COLUMN_DB(C_Title,O_Column:BLOCK,,N_Width)
+                NAP_TABLEVIEW_CUALIB_COLUMN_DB(V_TableView, C_Title,O_Column:BLOCK,,N_Width)
 
             NEXT
 
@@ -1328,13 +1328,18 @@ RETURN NIL
 *
 *
 // ***********************
-// FUNCTION ReleiaCorrente ( VX_Janela )
-// *
-// #DEFINE VX_Sele VX_SubObj
-// VX_Sele:REFRESHCURRENT()
-// #UNDEF  VX_Sele
-// *
-// RETURN NIL
+FUNCTION ReleiaCorrente ( VX_Janela )
+*
+IF SOB_MODO_GRAFICO()
+    NAP_TABLEVIEW_CUALIB_REFRESH()
+
+ELSE
+#DEFINE VX_Sele VX_SubObj
+VX_Sele:REFRESHCURRENT()
+#UNDEF  VX_Sele
+ENDIF
+*
+RETURN NIL
 // *
 // *
 // *******************

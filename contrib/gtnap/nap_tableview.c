@@ -228,3 +228,19 @@ HB_FUNC( NAP_TABLEVIEW_SELECTED )
         hb_storvnl((long)(*v + 1), -1, v_i + 1);
     arrst_end();
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_CUALIB_REFRESH )
+{
+    hb_gtnap_cualib_tableview_refresh();
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_CUALIB_SELECT_SINGLE_ROW )
+{
+    uint32_t row = hb_gtnap_cualib_tableview_select_single_row();
+    hb_retni(row);
+}
+

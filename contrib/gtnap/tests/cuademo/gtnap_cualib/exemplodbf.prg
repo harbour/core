@@ -150,23 +150,20 @@ ENDIF
 Return C_Str
 *
 
+*****************************
 STAT PROC INCREMENTA_CORRENTE(V_Janela)
-    RETURN
-
-// *****************************
-// STAT PROC INCREMENTA_CORRENTE(V_Janela)
-// *****************************
-// LOCAL N_Selecionado := ITENSSELECIONADOS(V_Janela)
-// *
-// MOSTRAR("M15634","O registro selecionado foi o RECNO() "+;
-//    LTRIM(STR(N_Selecionado)))
-// *
-// RLOCK()
-// REPL vlcota WITH vlcota+1
-// DBCOMMIT()
-// UNLOCK
-// RELEIA CORRENTE V_Janela
-// *
+*****************************
+LOCAL N_Selecionado := ITENSSELECIONADOS(V_Janela)
+*
+MOSTRAR("M15634","O registro selecionado foi o RECNO() "+;
+   LTRIM(STR(N_Selecionado)))
+*
+RLOCK()
+REPL vlcota WITH vlcota+1
+DBCOMMIT()
+UNLOCK
+RELEIA CORRENTE V_Janela
+*
 
 STAT PROC INCREMENTA_TODOS(V_Janela)
     RETURN

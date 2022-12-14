@@ -151,7 +151,73 @@ static const GtNapKey KEYMAPS[] = {
 { K_F9, ekKEY_F9, 0 },
 { K_F10, ekKEY_F10, 0 },
 { K_F11, ekKEY_F11, 0 },
-{ K_F12, ekKEY_F12, 0 }
+{ K_F12, ekKEY_F12, 0 },
+
+{ 'a', ekKEY_A, 0},
+{ 'b', ekKEY_B, 0},
+{ 'c', ekKEY_C, 0},
+{ 'd', ekKEY_D, 0},
+{ 'e', ekKEY_E, 0},
+{ 'f', ekKEY_F, 0},
+{ 'g', ekKEY_G, 0},
+{ 'h', ekKEY_H, 0},
+{ 'i', ekKEY_I, 0},
+{ 'j', ekKEY_J, 0},
+{ 'k', ekKEY_K, 0},
+{ 'l', ekKEY_L, 0},
+{ 'm', ekKEY_M, 0},
+{ 'n', ekKEY_N, 0},
+{ 'o', ekKEY_O, 0},
+{ 'p', ekKEY_P, 0},
+{ 'q', ekKEY_Q, 0},
+{ 'r', ekKEY_R, 0},
+{ 's', ekKEY_S, 0},
+{ 't', ekKEY_T, 0},
+{ 'u', ekKEY_U, 0},
+{ 'v', ekKEY_V, 0},
+{ 'w', ekKEY_W, 0},
+{ 'x', ekKEY_X, 0},
+{ 'y', ekKEY_Y, 0},
+{ 'z', ekKEY_Z, 0},
+
+{ 'A', ekKEY_A, 0},
+{ 'B', ekKEY_B, 0},
+{ 'C', ekKEY_C, 0},
+{ 'D', ekKEY_D, 0},
+{ 'E', ekKEY_E, 0},
+{ 'F', ekKEY_F, 0},
+{ 'G', ekKEY_G, 0},
+{ 'H', ekKEY_H, 0},
+{ 'I', ekKEY_I, 0},
+{ 'J', ekKEY_J, 0},
+{ 'K', ekKEY_K, 0},
+{ 'L', ekKEY_L, 0},
+{ 'M', ekKEY_M, 0},
+{ 'N', ekKEY_N, 0},
+{ 'O', ekKEY_O, 0},
+{ 'P', ekKEY_P, 0},
+{ 'Q', ekKEY_Q, 0},
+{ 'R', ekKEY_R, 0},
+{ 'S', ekKEY_S, 0},
+{ 'T', ekKEY_T, 0},
+{ 'U', ekKEY_U, 0},
+{ 'V', ekKEY_V, 0},
+{ 'W', ekKEY_W, 0},
+{ 'X', ekKEY_X, 0},
+{ 'Y', ekKEY_Y, 0},
+{ 'Z', ekKEY_Z, 0},
+
+{ '0', ekKEY_0, 0},
+{ '1', ekKEY_1, 0},
+{ '2', ekKEY_2, 0},
+{ '3', ekKEY_3, 0},
+{ '4', ekKEY_4, 0},
+{ '5', ekKEY_5, 0},
+{ '6', ekKEY_6, 0},
+{ '7', ekKEY_7, 0},
+{ '8', ekKEY_8, 0},
+{ '9', ekKEY_9, 0}
+
 };
 
 /*---------------------------------------------------------------------------*/
@@ -494,7 +560,6 @@ const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id,
     if (area->currow != row_id)
     {
         SELF_GOTO(area->area, (HB_ULONG)row_id);
-        area->currow = row_id;
     }
 
     column = arrst_get_const(area->columns, field_id - 1, GtNapColumn);
@@ -522,6 +587,11 @@ const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id,
 
     if (align != NULL)
         *align = column->align;
+
+    if (area->currow != row_id)
+    {
+        SELF_GOTO(area->area, (HB_ULONG)area->currow);
+    }
 
     return area->temp;
 }
@@ -1328,15 +1398,48 @@ void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *ti
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_cualib_tableview_refresh(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtarea);
+    tableview_update(cuawin->gtarea->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_cualib_tableview_select_single_row(void)
+{
+    const ArrSt(uint32_t) *sel = NULL;
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtarea);
+    sel = tableview_selected(cuawin->gtarea->view);
+
+    if (arrst_size(sel, uint32_t) == 1)
+    {
+        const uint32_t *row = arrst_first_const(sel, uint32_t);
+        hb_gtnap_area_set_row(cuawin->gtarea, *row + 1);
+        return *row + 1;
+    }
+
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static const GtNapKey *i_convert_key(const int32_t key)
 {
     uint32_t i, n = sizeof(KEYMAPS) / sizeof(GtNapKey);
+
+    log_printf("Convert key: %d", key);
     for (i = 0; i < n; ++i)
     {
         if (KEYMAPS[i].hkey == key)
             return &KEYMAPS[i];
     }
 
+    log_printf("Convert key: %d IS NULL", key);
     return NULL;
 }
 

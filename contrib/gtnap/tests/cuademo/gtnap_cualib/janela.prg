@@ -3209,6 +3209,7 @@ NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;
 
 // FRAN: Button HotKey
 IF N_KeyBoard # NIL
+    NAP_LOG("BUTTON KEYBOARD " + hb_ntos(N_Keyboard))
     NAP_CUALIB_HOTKEY(N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
 ENDIF
 
