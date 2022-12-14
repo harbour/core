@@ -361,7 +361,7 @@ LOCAL X_Retorno
 LOCAL N_PaintRefresh_Old, X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, L_PodeExecutar
 LOCAL V_Ambiente_Alias
-LOCAL V_TableView, L_Coords
+LOCAL V_TableView, L_Coords, N_Count, O_Column, C_Title, N_Width
 
 *
 //
@@ -432,9 +432,32 @@ IF L_ForcaLerTudo
 
             NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
 
+            LOG_PRINT("Num cols: " + hb_ntos(VX_Sele:COLCOUNT))
+            FOR N_Count := 1 TO VX_Sele:COLCOUNT
+                O_Column := VX_Sele:GetColumn(N_Count)
+                C_Title := O_Column:HEADING
+                N_Width := O_Column:WIDTH
 
+                IF C_Title == NIL
+                    C_Title := ""
+                ENDIF
 
+                IF N_Width == NIL
+                    N_Width := 0
+                ENDIF
 
+                LOG_PRINT(O_Column:HEADING + ":")
+                IF O_Column:WIDTH # NIL
+                    LOG_PRINT("WIDTH " + hb_ntos(O_Column:WIDTH))
+                ELSE
+                    LOG_PRINT("WIDTH IS NULL")
+                ENDIF
+
+                NAP_TABLEVIEW_CUALIB_COLUMN_DB(C_Title,O_Column:BLOCK,,N_Width)
+
+            NEXT
+
+            NAP_TABLEVIEW_UPDATE(V_TableView)
         ENDIF   // SOB_MODO_GRAFICO()
 
    ENDIF  // L_PrimAtivacao
@@ -453,7 +476,16 @@ IF L_ForcaLerTudo
 //       VX_Sele:LimparColunasInicialFinal_do_BugDispBox(L_MostraGrade)
 //    ENDIF
    *
-   LerTudoEmDBF(VX_Sele)
+
+    //
+    // FRAN: The reading of data on demand will be controlled inside the TableView.
+    // This control manages the scroll bars, the keyboard, etc. Calculate the visible
+    // area and request the necessary data according to the area of the database
+    // visible on the screen. Harbour TBrowse is totally dispensed with for browsing the data.
+    //
+    IF .NOT. SOB_MODO_GRAFICO()
+        LerTudoEmDBF(VX_Sele)
+    ENDIF
    *
 ENDIF   // L_ForcaLerTudo
 *
@@ -467,6 +499,15 @@ IF SOB_MODO_GRAFICO()
 
 
 ELSE
+
+//
+// THIS BLOCK ONLY FOR TEXT GTs
+//
+// FRAN: The reading of data on demand will be controlled inside the TableView.
+// This control manages the scroll bars, the keyboard, etc. Calculate the visible
+// area and request the necessary data according to the area of the database
+// visible on the screen. Harbour TBrowse is totally dispensed with for browsing the data.
+//
 
 L_RolaCima := L_RolaBaixo := .F.
 *
