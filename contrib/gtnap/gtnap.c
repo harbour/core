@@ -1305,23 +1305,24 @@ GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_tableview_area_add_column(const char_t *title, const bool_t freeze, const uint32_t width, PHB_ITEM codeBlock)
+void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *title, const bool_t freeze, const uint32_t width, PHB_ITEM codeBlock)
 {
     uint32_t id = UINT32_MAX;
     GtNapColumn *column = NULL;
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtarea);
-    id = tableview_new_column_text(cuawin->gtarea->view);
+    cassert(view == cuawin->gtarea->view);
+    id = tableview_new_column_text(view);
     cassert(id == arrst_size(cuawin->gtarea->columns, GtNapColumn));
     column = arrst_new(cuawin->gtarea->columns, GtNapColumn);
     column->title = gtconvert_1252_to_UTF8(title);
     column->fixed_width = width;
     column->align = ekLEFT;
     column->codeBlock = hb_itemNew(codeBlock);
-    tableview_header_title(cuawin->gtarea->view, id, tc(column->title));
-    tableview_column_width(cuawin->gtarea->view, id, /*width > 0 ? width : 100*/ 100);
-    tableview_header_align(cuawin->gtarea->view, id, column->align);
+    tableview_header_title(view, id, tc(column->title));
+    tableview_column_width(view, id, /*width > 0 ? width : 100*/ 100);
+    tableview_header_align(view, id, column->align);
     log_printf("hb_gtnap_cualib_tableview_area_add_column: '%s'", tc(column->title));
 }
 

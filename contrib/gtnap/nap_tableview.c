@@ -141,13 +141,11 @@ HB_FUNC( NAP_TABLEVIEW_COLUMN_DB )
 
 HB_FUNC( NAP_TABLEVIEW_CUALIB_COLUMN_DB )
 {
-    //TableView *view = (TableView*)hb_parptr(1);
-    const char_t *title = hb_gtnap_parText(1);
-    PHB_ITEM codeBlock = hb_param(2, HB_IT_BLOCK);
-    //bool_t freeze = (bool_t)hb_parl(3);
-    uint32_t width = (real32_t)hb_parni(3);
-    //GtNapArea *gtarea = hb_gtnap_cualib_tableview_get_area(view);
-    hb_gtnap_cualib_tableview_area_add_column(title, FALSE, width, codeBlock);
+    TableView *view = (TableView*)hb_parptr(1);
+    const char_t *title = hb_gtnap_parText(2);
+    PHB_ITEM codeBlock = hb_param(3, HB_IT_BLOCK);
+    uint32_t width = hb_parni(4);
+    hb_gtnap_cualib_tableview_area_add_column(view, title, FALSE, width, codeBlock);
 }
 
 /*---------------------------------------------------------------------------*/
