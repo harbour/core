@@ -14,6 +14,8 @@
 -depincpath=openssl:/usr/local/opt/openssl/include
 -depincpath=openssl:/usr/local/opt/libressl/include
 -depincpath=openssl:/usr/include
+-depincpath=openssl:/usr/include/x86_64-linux-gnu{linux}
+-depincpath=openssl:/usr/include/aarch64-linux-gnu{linux}
 -depincpath=openssl:/usr/local/include
 -depincpath=openssl:/usr/local/ssl/include
 -depincpath=openssl:/boot/common/include
