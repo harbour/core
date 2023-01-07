@@ -196,3 +196,18 @@ HB_FUNC( NAP_CUALIB_HOTKEY )
     hb_gtnap_cualib_hotkey(key, 2, autoclose);
 }
 
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_CURRENT_TABLEVIEW )
+{
+    TableView *view = hb_gtnap_cualib_current_tableview();
+    hb_retptr(view);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_IS_SELECTED )
+{
+    bool_t sel = hb_gtnap_cualib_current_row_selected();
+    hb_retl(sel);
+}

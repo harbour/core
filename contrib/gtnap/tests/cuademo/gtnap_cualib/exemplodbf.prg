@@ -59,10 +59,17 @@ ATIVE(V_Janela)
 //     OutStd("TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR() Option selected")
 //     RETURN
 
-PROC TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR
-    @ 22, 0 SAY ""
-    OutStd("TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR() Option selected")
-    RETURN
+// PROC TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR
+//     @ 22, 0 SAY ""
+//     OutStd("TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR() Option selected")
+//     RETURN
+
+
+
+
+
+
+
 
 PROC TST_BROWSE_DBF_COLUNA_CONGELADA
     @ 22, 0 SAY ""
@@ -130,6 +137,59 @@ ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99
 ATIVE(V_Janela)
 *
 CLOSE COTACAO
+
+
+
+*****************************************************
+STAT PROC TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR
+*****************************************************
+LOCAL V_Janela
+
+//
+//  Fran: This code works on Windows and Linux
+//
+USE ../dados/cotacao NEW SHARED
+SET INDEX TO ../dados/cotacao
+GOTO TOP
+
+// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+//    USE dados\cotacao NEW SHARED
+//    SET INDEX TO dados\cotacao
+// #elif defined(__PLATFORM__LINUX)  || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
+//    USE /opt/cuadados/cotacao NEW SHARED
+//    SET INDEX TO /opt/cuadados/cotacao
+// #else
+//    #erro "Código não adaptado para esta plataforma"
+// #endif
+// GOTO TOP
+*
+CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
+    TITU "Browse de arquivo DBF" ;
+    SUBTITULO "%T;seleção múltipla;sem grid e sem toolbar";
+    AJUDA "T?????"
+ADDBOTAO V_Janela TEXTO "R=incrementar registros selecionados" ;
+   ACAO INCREMENTA_SELECIONADOS(V_Janela) AJUDA "B19269"
+
+ADDBOTAO V_Janela TEXTO "V=voltar seleção para o 'default'" ;
+   ACAO DEFAULT_SELECIONADOS(V_Janela) AJUDA "B19271"
+
+CUA20 ESPECIALIZE V_Janela SELECAO MULTIPLA CONGELAR 1 ;
+   SEMGRADE SEMTOOLBAR
+
+ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
+ANEXE V_Janela TITULO "Data"      COLUNA dtcota
+ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
+ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
+ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
+*
+MUDE SELECAO V_Janela PARA {2,4,6,8}   // registros pré-selecionados
+*
+ATIVE(V_Janela)
+*
+CLOSE COTACAO
+*
+
+
 
 *
 ***********************
@@ -274,6 +334,11 @@ STAT PROC PROCURAR_REGISTRO (V_Janela)
 // *
 // CLOSE COTACAO
 // *
+
+
+STAT PROC INCREMENTA_SELECIONADOS(V_Janela)
+RETURN
+
 // *********************************
 // STAT PROC INCREMENTA_SELECIONADOS(V_Janela)
 // *********************************
@@ -295,6 +360,10 @@ STAT PROC PROCURAR_REGISTRO (V_Janela)
 // *
 // RELEIA TUDO V_Janela
 // *
+
+STAT PROC DEFAULT_SELECIONADOS(V_Janela)
+RETURN
+
 // *********************************
 // STAT PROC DEFAULT_SELECIONADOS(V_Janela)
 // *********************************

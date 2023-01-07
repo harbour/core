@@ -173,14 +173,14 @@ HB_FUNC( NAP_TABLEVIEW_CUALIB_COLUMN_DB )
 HB_FUNC( NAP_TABLEVIEW_UPDATE )
 {
     TableView *view = (TableView*)hb_parptr(1);
-    const ArrSt(uint32_t) *sel = NULL;
+    //const ArrSt(uint32_t) *sel = NULL;
     tableview_update(view);
-    sel = tableview_selected(view);
-    if (arrst_size(sel, uint32_t) == 0)
-    {
-        uint32_t row = 0;
-        tableview_select(view, &row, 1);
-    }
+    // sel = tableview_selected(view);
+    // if (arrst_size(sel, uint32_t) == 0)
+    // {
+    //     uint32_t row = 0;
+    //     tableview_select(view, &row, 1);
+    // }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -201,12 +201,18 @@ HB_FUNC( NAP_TABLEVIEW_SELECT )
         for (i = 0; i < n; ++i)
         {
             uint32_t row = hb_parvni(2, i + 1) - 1;
+            log_printf("Added %d row to selection", row);
             arrst_append(rows, row, uint32_t);
         }
     }
 
     tableview_select(view, arrst_all_const(rows, uint32_t), arrst_size(rows, uint32_t));
     arrst_destroy(&rows, NULL, uint32_t);
+
+    {
+        const ArrSt(uint32_t) *sel = tableview_selected(view);
+        log_printf("There are %d selected rows", arrst_size(sel, uint32_t));
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -271,3 +277,9 @@ HB_FUNC( NAP_TABLEVIEW_CUALIB_SELECT_SINGLE_ROW )
     hb_retni(row);
 }
 
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE )
+{
+    hb_gtnap_cualib_tableview_OnSelect(1);
+}

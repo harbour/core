@@ -1418,9 +1418,11 @@ void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *ti
 void hb_gtnap_cualib_tableview_refresh(void)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtarea);
-    tableview_update(cuawin->gtarea->view);
+    if (cuawin != NULL)
+    {
+        if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+            tableview_update(cuawin->gtarea->view);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1708,6 +1710,66 @@ Window *hb_gtnap_cualib_current_window(void)
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     return cuawin->window;
+}
+
+/*---------------------------------------------------------------------------*/
+
+TableView *hb_gtnap_cualib_current_tableview(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    if (cuawin->gtarea != NULL)
+        return cuawin->gtarea->view;
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnTableViewSelect(GtNapCallback *callback, Event *e)
+{
+    hb_gtnap_callback(callback, e);
+    log_printf("TableView selection changed");
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+    {
+        Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT32_MAX, FALSE, cuawin, i_OnTableViewSelect);
+        tableview_OnSelect(cuawin->gtarea->view, listener);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int i_uint32_cmp(const uint32_t *u1, const uint32_t *u2)
+{
+    return (int)(*u1 - *u2);
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t hb_gtnap_cualib_current_row_selected(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+    {
+        uint32_t currow = cuawin->gtarea->currow - 1;
+        const ArrSt(uint32_t) *sel = tableview_selected(cuawin->gtarea->view);
+
+        if (arrst_bsearch_const(sel, i_uint32_cmp, &currow, NULL, uint32_t, uint32_t) != NULL)
+            return TRUE;
+        else
+            return FALSE;
+    }
+
+    return FALSE;
 }
 
 /*---------------------------------------------------------------------------*/

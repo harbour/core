@@ -129,6 +129,12 @@ extern void hb_gtnap_cualib_destroy_window(void);
 
 extern Window *hb_gtnap_cualib_current_window(void);
 
+extern TableView *hb_gtnap_cualib_current_tableview(void);
+
+extern void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId);
+
+extern bool_t hb_gtnap_cualib_current_row_selected(void);
+
 HB_EXTERN_END
 
 #endif

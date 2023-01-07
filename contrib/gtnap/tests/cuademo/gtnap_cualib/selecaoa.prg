@@ -191,8 +191,15 @@ B_Metodo  := {||Selecionar(VX_Janela)}
 * (VN_Selecio é "detached local")
 #DEFINE VN_Selecio    VX_Sele:CARGO[08]
 IF N_TP_Selecao # _SELE_SIMPLES
-   AnexeCol(VX_Janela, NIL,;
+
+    IF SOB_MODO_GRAFICO()
+        AnexeCol(VX_Janela, NIL,;
+            { || IIF(NAP_CUALIB_IS_SELECTED(B_LinCorrente)==.F.," ","»")})
+
+    ELSE
+    AnexeCol(VX_Janela, NIL,;
               { || IIF(ASCAN(VN_Selecio,EVAL(B_LinCorrente))==0," ","»")})
+    ENDIF
 ENDIF
 #UNDEF VN_Selecio
 *
@@ -346,6 +353,47 @@ LOGA_AJTELAT(C_CdTela,C_Cabec,NIL)  // LOGAR conteúdo de telas
 *
 RETURN X_Retorno
 *
+
+
+//
+// FRAN: A Multi-select TableView control can change the selection using [CTRL+Click] or [SHIFT+UP/DOWN]
+// This funcion syncronizes the TableView with the Janela selection
+//
+STATIC PROC UpdatedSelected()
+
+    NAP_TABLEVIEW_CUALIB_REFRESH()
+    // //         //NAP_TABLEVIEW_UPDATE(V_TableView)
+
+    // LOCAL V_TableView := NIL
+    // LOCAL VN_Selection := NIL
+
+    // LOG_PRINT("UPDATED. Len of VX_Janela: " /*+ hb_ntos(LEN(VX_Janela))*/ )
+    // // IF SOB_MODO_GRAFICO()
+    // //      V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+
+    // //     IF V_TableView # NIL
+    // //         VN_Selection := NAP_TABLEVIEW_SELECTED(V_TableView)
+    // //     ENDIF
+
+    // //     LOG_PRINT("TABLEVIEW SELECTION WITH " + hb_ntos(LEN(VN_Selection)))
+    // //     LOG_PRINT("JANELA VALUE: " + hb_ntos(VX_Janela))
+    // //     IF VN_Selection # NIL
+    // //         IF VX_Janela == NIL
+    // //             LOG_PRINT("VX_Janela == NIL!!!!!!!!!!!!!")
+    // //         ELSE
+
+    // //             #DEFINE VX_Sele  VX_SubObj
+    // //             // VN_Selecio := VN_Selection
+    // //             LOG_PRINT("VN_Selecio Current size: " + hb_ntos(LEN(VN_Selecio)))
+    // //              #UNDEF VX_Sele
+    // //             // MudeLista ( VX_Janela , VN_Selection )
+    // //         ENDIF
+    // //         //NAP_TABLEVIEW_UPDATE(V_TableView)
+    // //     ENDIF
+    // // ENDIF
+
+    RETURN
+
 ***********************
 STATIC FUNCTION Selecao ( VX_Janela, VX_Sele)
 ***********************
@@ -433,6 +481,16 @@ IF L_ForcaLerTudo
                 NAP_TABLEVIEW_GRID(V_TableView, .T., .T.)
             ENDIF
 
+            IF N_TP_Selecao == _SELE_SIMPLES
+                NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
+            ELSEIF N_TP_Selecao == _SELE_MULTIPLA
+                NAP_TABLEVIEW_MULTISEL(V_TableView, .T., .T.)
+                NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
+
+
+
+            ENDIF
+
             LOG_PRINT("TableView Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
 
             NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
@@ -463,6 +521,16 @@ IF L_ForcaLerTudo
             NEXT
 
             NAP_TABLEVIEW_UPDATE(V_TableView)
+
+            IF N_TP_Selecao == _SELE_MULTIPLA
+                NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
+                //NAP_CUALIB_SET_JANELA(VX_Sele)
+                //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
+                NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
+            ENDIF
+            //LOG_PRINT("TableView DEFAULT SEL:" + hb_ntos(LEN(VN_Selecio)) + ", JAJAJAJ")
+
+
         ENDIF   // SOB_MODO_GRAFICO()
 
    ENDIF  // L_PrimAtivacao
@@ -1312,16 +1380,21 @@ IF LEN(VN_Selecio) # 0 .OR. LEN(VN_Default) # 0         // algo a fazer
       * Janela que não foi ainda aberta não tem nenhum aspecto visual
       * a ser atualizado.
    ELSE
-      VX_Sele:REFRESHALL()
-      *
-      * No Harbour, a chamada da REFRESHALL() muda o registro corrente para
-      * topo do Browse(), quando o cursor não está na primeira linha do browse().
-      * Isto causava erro quando a MudeLista() era chamada fora
-      * da CUA (isto é permitido).
-      *
-      * O cursor só volta para o registro correto APÓS a estabilização da janela.
-      DO WHILE .NOT. VX_Sele:STABILIZE()
-      ENDDO
+    IF SOB_MODO_GRAFICO()
+        NAP_TABLEVIEW_CUALIB_REFRESH()
+    ELSE
+
+        VX_Sele:REFRESHALL()
+        *
+        * No Harbour, a chamada da REFRESHALL() muda o registro corrente para
+        * topo do Browse(), quando o cursor não está na primeira linha do browse().
+        * Isto causava erro quando a MudeLista() era chamada fora
+        * da CUA (isto é permitido).
+        *
+        * O cursor só volta para o registro correto APÓS a estabilização da janela.
+        DO WHILE .NOT. VX_Sele:STABILIZE()
+        ENDDO
+    ENDIF
    ENDIF
 ENDIF
 *
