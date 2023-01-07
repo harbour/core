@@ -16,6 +16,14 @@ HB_FUNC( NAP_TABLEVIEW_CREATE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_TABLEVIEW_FONT )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    tableview_font(view, hb_gtnap_global_font());
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TABLEVIEW_SIZE )
 {
     TableView *view = (TableView*)hb_parptr(1);
@@ -154,7 +162,14 @@ HB_FUNC( NAP_TABLEVIEW_CUALIB_COLUMN_DB )
 HB_FUNC( NAP_TABLEVIEW_UPDATE )
 {
     TableView *view = (TableView*)hb_parptr(1);
+    const ArrSt(uint32_t) *sel = NULL;
     tableview_update(view);
+    sel = tableview_selected(view);
+    if (arrst_size(sel, uint32_t) == 0)
+    {
+        uint32_t row = 0;
+        tableview_select(view, &row, 1);
+    }
 }
 
 /*---------------------------------------------------------------------------*/

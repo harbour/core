@@ -426,6 +426,7 @@ IF L_ForcaLerTudo
 
             V_TableView := NAP_TABLEVIEW_CREATE()
 
+            NAP_TABLEVIEW_FONT(V_TableView)
             NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView)
 
             IF L_MostraGrade
