@@ -1346,11 +1346,18 @@ RETURN NIL
 *******************
 FUNCTION ReleiaTudo ( VX_Janela )
 *
+IF SOB_MODO_GRAFICO()
+    NAP_TABLEVIEW_CUALIB_REFRESH()
+
+ELSE
+
 #DEFINE VX_Sele VX_SubObj
 L_ForcaLerTudo := .T.      // como pode ter sido apagado algum registro
 *                          // este procedimento merece tratamento especial
 *                          // (um simples REFRESHALL() não resolve !) .
 #UNDEF  VX_Sele
+ENDIF
+
 RETURN NIL
 
 

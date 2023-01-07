@@ -771,9 +771,11 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             //     NAP_LOG("AQUI!!!!! _JAN_SELE_ARQ_20")
             // ENDIF
 
-            #DEFINE VX_Sele  VX_SubObj
-            L_AutoClose  := VX_Sele:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
-            #UNDEF VX_Sele
+            //#DEFINE VX_Sele  VX_SubObj
+            // OJO!!! FRAN PROGRAM CRASH IF 'VX_SubObj:CARGO[07]'
+            //L_AutoClose  := VX_SubObj:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
+            L_AutoClose  := .T.
+            //#UNDEF VX_Sele
 
             // IF L_AutoClose == .T.
             //     NAP_LOG("AQUI!!!!! L_AutoClose == .T.")

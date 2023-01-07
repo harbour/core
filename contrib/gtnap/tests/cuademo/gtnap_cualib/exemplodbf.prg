@@ -183,7 +183,6 @@ RELEIA TUDO V_Janela
 
 STAT PROC EXCLUI_LINHA_ATUAL(V_Janela)
     RETURN
-
 // ****************************
 // STAT PROC EXCLUI_LINHA_ATUAL(V_Janela)
 // ****************************
