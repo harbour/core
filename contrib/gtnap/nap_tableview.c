@@ -95,6 +95,14 @@ static void i_OnTableData(GtNapArea *gtarea, Event *e)
     uint32_t etype = event_type(e);
 
     switch(etype) {
+    case ekGUI_EVENT_TBL_BEGIN:
+        hb_gtnap_area_cache_cur_db_row(gtarea);
+        break;
+
+    case ekGUI_EVENT_TBL_END:
+        hb_gtnap_area_restore_cur_db_row(gtarea);
+        break;
+
     case ekGUI_EVENT_TBL_NROWS:
     {
         uint32_t *n = event_result(e, uint32_t);
@@ -109,7 +117,7 @@ static void i_OnTableData(GtNapArea *gtarea, Event *e)
         cell->text = hb_gtnap_area_eval_field(gtarea, pos->col + 1, pos->row + 1, &cell->align);
 
         // Table column automatic width based on cell content
-        hb_gtnap_cualib_column_width(pos->col, cell->text);
+        hb_gtnap_cualib_column_width(gtarea, pos->col, cell->text);
         break;
     }
 

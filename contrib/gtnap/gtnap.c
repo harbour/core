@@ -56,8 +56,9 @@ struct _gtnap_area_t
     AREA *area;
     uint32_t currow;
     TableView *view;
-    char_t temp[512];   // Temporal buffer between RDD and TableView
+    char_t temp[512];       // Temporal buffer between RDD and TableView
     ArrSt(GtNapColumn) *columns;
+    uint32_t cacherow;      // Store the DB row while table drawing
 };
 
 DeclPt(GtNapCallback);
@@ -560,6 +561,7 @@ const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id,
     if (area->currow != row_id)
     {
         SELF_GOTO(area->area, (HB_ULONG)row_id);
+        area->currow = row_id;
     }
 
     column = arrst_get_const(area->columns, field_id - 1, GtNapColumn);
@@ -588,10 +590,10 @@ const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id,
     if (align != NULL)
         *align = column->align;
 
-    if (area->currow != row_id)
-    {
-        SELF_GOTO(area->area, (HB_ULONG)area->currow);
-    }
+    // if (area->currow != row_id)
+    // {
+    //     SELF_GOTO(area->area, (HB_ULONG)area->currow);
+    // }
 
     return area->temp;
 }
@@ -1421,13 +1423,11 @@ void hb_gtnap_cualib_tableview_refresh(void)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_column_width(const uint32_t col, const char_t *text)
+void hb_gtnap_cualib_column_width(GtNapArea *area, const uint32_t col, const char_t *text)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapColumn *column = NULL;
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtarea);
-    column = arrst_get(cuawin->gtarea->columns, col, GtNapColumn);
+    cassert_no_null(area);
+    column = arrst_get(area->columns, col, GtNapColumn);
     if (column->fixed_width == 0)
     {
         uint32_t len = str_len_c(text);
@@ -1435,8 +1435,28 @@ void hb_gtnap_cualib_column_width(const uint32_t col, const char_t *text)
         if (width > column->width)
         {
             column->width = width;
-            tableview_column_width(cuawin->gtarea->view, col, (real32_t)column->width);
+            tableview_column_width(area->view, col, (real32_t)column->width);
         }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_area_cache_cur_db_row(GtNapArea *area)
+{
+    cassert_no_null(area);
+    area->cacherow = area->currow;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_area_restore_cur_db_row(GtNapArea *area)
+{
+    cassert_no_null(area);
+    if (area->cacherow != area->currow)
+    {
+        SELF_GOTO(area->area, (HB_ULONG)area->cacherow);
+        area->currow = area->cacherow;
     }
 }
 

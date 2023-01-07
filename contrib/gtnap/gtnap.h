@@ -101,7 +101,11 @@ extern void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const cha
 
 extern void hb_gtnap_cualib_tableview_refresh(void);
 
-extern void hb_gtnap_cualib_column_width(const uint32_t col, const char_t *text);
+extern void hb_gtnap_cualib_column_width(GtNapArea *area, const uint32_t col, const char_t *text);
+
+extern void hb_gtnap_area_cache_cur_db_row(GtNapArea *area);
+
+extern void hb_gtnap_area_restore_cur_db_row(GtNapArea *area);
 
 extern uint32_t hb_gtnap_cualib_tableview_select_single_row(void);
 
