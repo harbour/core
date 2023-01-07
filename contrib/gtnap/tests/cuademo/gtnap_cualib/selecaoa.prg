@@ -451,14 +451,14 @@ IF L_ForcaLerTudo
                     N_Width := 0
                 ENDIF
 
-                LOG_PRINT(O_Column:HEADING + ":")
-                IF O_Column:WIDTH # NIL
-                    LOG_PRINT("WIDTH " + hb_ntos(O_Column:WIDTH))
-                ELSE
-                    LOG_PRINT("WIDTH IS NULL")
-                ENDIF
+                // LOG_PRINT(O_Column:HEADING + ":")
+                // IF O_Column:WIDTH # NIL
+                //     LOG_PRINT("WIDTH " + hb_ntos(O_Column:WIDTH))
+                // ELSE
+                //     LOG_PRINT("WIDTH IS NULL")
+                // ENDIF
 
-                NAP_TABLEVIEW_CUALIB_COLUMN_DB(V_TableView, C_Title,O_Column:BLOCK,,N_Width)
+                NAP_TABLEVIEW_CUALIB_COLUMN_DB(V_TableView, C_Title,O_Column:BLOCK,N_Width)
 
             NEXT
 

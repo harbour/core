@@ -1375,6 +1375,17 @@ GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_column_width(const uint32_t str_len)
+{
+    // Default width
+    if (str_len == 0)
+        return 100;
+
+    return (str_len + 1) * GTNAP_GLOBAL->cell_x_size;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *title, const bool_t freeze, const uint32_t width, PHB_ITEM codeBlock)
 {
     uint32_t id = UINT32_MAX;
@@ -1389,10 +1400,11 @@ void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *ti
     column = arrst_new(cuawin->gtarea->columns, GtNapColumn);
     column->title = gtconvert_1252_to_UTF8(title);
     column->fixed_width = width;
+    column->width = i_column_width(width);
     column->align = ekLEFT;
     column->codeBlock = hb_itemNew(codeBlock);
     tableview_header_title(view, id, tc(column->title));
-    tableview_column_width(view, id, /*width > 0 ? width : 100*/ 100);
+    tableview_column_width(view, id, (real32_t)column->width);
     tableview_header_align(view, id, column->align);
     log_printf("hb_gtnap_cualib_tableview_area_add_column: '%s'", tc(column->title));
 }
@@ -1405,6 +1417,27 @@ void hb_gtnap_cualib_tableview_refresh(void)
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtarea);
     tableview_update(cuawin->gtarea->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_column_width(const uint32_t col, const char_t *text)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapColumn *column = NULL;
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtarea);
+    column = arrst_get(cuawin->gtarea->columns, col, GtNapColumn);
+    if (column->fixed_width == 0)
+    {
+        uint32_t len = str_len_c(text);
+        uint32_t width = i_column_width(len);
+        if (width > column->width)
+        {
+            column->width = width;
+            tableview_column_width(cuawin->gtarea->view, col, (real32_t)column->width);
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/

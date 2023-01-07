@@ -107,6 +107,9 @@ static void i_OnTableData(GtNapArea *gtarea, Event *e)
         EvTbCell *cell = event_result(e, EvTbCell);
         const EvTbPos *pos = event_params(e, EvTbPos);
         cell->text = hb_gtnap_area_eval_field(gtarea, pos->col + 1, pos->row + 1, &cell->align);
+
+        // Table column automatic width based on cell content
+        hb_gtnap_cualib_column_width(pos->col, cell->text);
         break;
     }
 
