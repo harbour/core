@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,21 +15,23 @@
 
 __EXTERN_C
 
-Menu *menu_create(void);
+_gui_api Menu *menu_create(void);
 
-void menu_destroy(Menu **menu);
+_gui_api void menu_destroy(Menu **menu);
 
-void menu_item(Menu *menu, MenuItem *item);
+_gui_api void menu_item(Menu *menu, MenuItem *item);
 
-void menu_launch(Menu *menu, const V2Df position);
+_gui_api void menu_launch(Menu *menu, const V2Df position);
 
-void menu_hide(Menu *menu);
+_gui_api void menu_hide(Menu *menu);
 
-void menu_off_items(Menu *menu);
+_gui_api void menu_off_items(Menu *menu);
 
-MenuItem *menu_get_item(Menu *menu, const uint32_t index);
+_gui_api MenuItem *menu_get_item(Menu *menu, const uint32_t index);
 
-uint32_t menu_size(const Menu *menu);
+_gui_api uint32_t menu_size(const Menu *menu);
+
+_gui_api void *menu_imp(const Menu *menu);
 
 __END_C
 

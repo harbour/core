@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,6 +15,7 @@
 #define __GEOM2D_HXX__
 
 #include "core.hxx"
+#include "geom2d.def"
 
 typedef struct _v2df_t V2Df;
 typedef struct _v2dd_t V2Dd;

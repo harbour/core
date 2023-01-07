@@ -355,7 +355,7 @@ HB_FUNC( NAP_LAYOUT_GET_PANEL )
 HB_FUNC( NAP_LAYOUT_TABORDER )
 {
     Layout *layout = (Layout*)hb_parptr(1);
-    orient_t order = (orient_t)hb_parni(2);
+    gui_orient_t order = (gui_orient_t)hb_parni(2);
     layout_taborder(layout, order);
 }
 

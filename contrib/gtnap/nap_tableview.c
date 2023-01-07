@@ -87,14 +87,14 @@ static void i_OnTableData(GtNapArea *gtarea, Event *e)
     uint32_t etype = event_type(e);
 
     switch(etype) {
-    case ekEVTBLNROWS:
+    case ekGUI_EVENT_TBL_NROWS:
     {
         uint32_t *n = event_result(e, uint32_t);
         *n = hb_gtnap_area_row_count(gtarea);
         break;
     }
 
-    case ekEVTBLCELL:
+    case ekGUI_EVENT_TBL_CELL:
     {
         EvTbCell *cell = event_result(e, EvTbCell);
         const EvTbPos *pos = event_params(e, EvTbPos);
@@ -102,7 +102,8 @@ static void i_OnTableData(GtNapArea *gtarea, Event *e)
         break;
     }
 
-    cassert_default();
+    default:
+        break;
     }
 }
 

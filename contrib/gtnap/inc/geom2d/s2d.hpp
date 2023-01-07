@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -16,11 +16,11 @@
 template<typename real>
 struct S2D
 {
-    S2D() {width = 0, height = 0;}
+    _geom2d_api S2D() {width = 0, height = 0;}
 
-    S2D(const real _width, const real _height) {width = _width, height = _height;}
+    _geom2d_api S2D(const real _width, const real _height) {width = _width, height = _height;}
 
-    static const S2D<real> *kZERO;
+    _geom2d_api static const S2D<real> *kZERO;
 
     real width;
     real height;

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,6 +15,7 @@
 #define __OSAPP_HXX__
 
 #include "gui.hxx"
+#include "osapp.def"
 
 typedef uint32_t(*FPtr_task_main)(void *data);
 #define FUNC_CHECK_TASK_MAIN(func, type)\

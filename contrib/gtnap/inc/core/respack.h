@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,10 +15,10 @@
 
 __EXTERN_C
 
-void respack_destroy(ResPack **pack);
+_core_api void respack_destroy(ResPack **pack);
 
-const char_t *respack_text(const ResPack *pack, const ResId id);
+_core_api const char_t *respack_text(const ResPack *pack, const ResId id);
 
-const byte_t *respack_file(const ResPack *pack, const ResId id, uint32_t *size);
+_core_api const byte_t *respack_file(const ResPack *pack, const ResId id, uint32_t *size);
 
 __END_C

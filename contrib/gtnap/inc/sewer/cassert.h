@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,17 +15,17 @@
 
 __EXTERN_C
 
-void cassert_set_func(void *data, FPtr_assert func_assert);
+_sewer_api void cassert_set_func(void *data, FPtr_assert func_assert);
 
-void cassert_imp(bool_t cond, const char_t *detail, const char_t *file, const uint32_t line);
+_sewer_api void cassert_imp(bool_t cond, const char_t *detail, const char_t *file, const uint32_t line);
 
-void cassert_fatal_imp(bool_t cond, const char_t *detail, const char_t *file, const uint32_t line);
+_sewer_api void cassert_fatal_imp(bool_t cond, const char_t *detail, const char_t *file, const uint32_t line);
 
-void cassert_no_null_imp(void *ptr, const char_t *detail, const char_t *file, const uint32_t line);
+_sewer_api void cassert_no_null_imp(void *ptr, const char_t *detail, const char_t *file, const uint32_t line);
 
-void cassert_no_nullf_imp(void(*ptr)(void), const char_t *detail, const char_t *file, const uint32_t line);
+_sewer_api void cassert_no_nullf_imp(void(*ptr)(void), const char_t *detail, const char_t *file, const uint32_t line);
 
-void cassert_default_imp(const char_t *file, const uint32_t line);
+_sewer_api void cassert_default_imp(const char_t *file, const uint32_t line);
 
 __END_C
 

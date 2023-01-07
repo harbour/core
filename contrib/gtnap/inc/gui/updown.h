@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,10 +15,10 @@
 
 __EXTERN_C
 
-UpDown *updown_create(void);
+_gui_api UpDown *updown_create(void);
 
-void updown_OnClick(UpDown *updown, Listener *listener);
+_gui_api void updown_OnClick(UpDown *updown, Listener *listener);
 
-void updown_tooltip(UpDown *updown, const char_t *text);
+_gui_api void updown_tooltip(UpDown *updown, const char_t *text);
 
 __END_C

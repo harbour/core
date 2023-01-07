@@ -50,7 +50,7 @@ HB_FUNC( NAP_EVENT_WINCLOSE_ESC )
 {
     Event *ev = (Event*)hb_parptr(1);
     const EvWinClose *p = event_params(ev, EvWinClose);
-    hb_retl(p->origin == ekCLESC);
+    hb_retl(p->origin == ekGUI_CLOSE_ESC);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ HB_FUNC( NAP_EVENT_WINCLOSE_RETURN )
 {
     Event *ev = (Event*)hb_parptr(1);
     const EvWinClose *p = event_params(ev, EvWinClose);
-    hb_retl(p->origin == ekCLINTRO);
+    hb_retl(p->origin == ekGUI_CLOSE_INTRO);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ HB_FUNC( NAP_EVENT_WINCLOSE_BUTTON )
 {
     Event *ev = (Event*)hb_parptr(1);
     const EvWinClose *p = event_params(ev, EvWinClose);
-    hb_retl(p->origin == ekCLBUTTON);
+    hb_retl(p->origin == ekGUI_CLOSE_BUTTON);
 }
 
 /*---------------------------------------------------------------------------*/

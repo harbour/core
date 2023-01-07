@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,17 +15,17 @@
 
 __EXTERN_C
 
-Buffer *buffer_create(const uint32_t size);
+_core_api Buffer *buffer_create(const uint32_t size);
 
-Buffer *buffer_with_data(const byte_t *data, const uint32_t size);
+_core_api Buffer *buffer_with_data(const byte_t *data, const uint32_t size);
 
-void buffer_destroy(Buffer **buffer);
+_core_api void buffer_destroy(Buffer **buffer);
 
-uint32_t buffer_size(const Buffer *buffer);
+_core_api uint32_t buffer_size(const Buffer *buffer);
 
-byte_t *buffer_data(Buffer *buffer);
+_core_api byte_t *buffer_data(Buffer *buffer);
 
-const byte_t *buffer_const(const Buffer *buffer);
+_core_api const byte_t *buffer_const(const Buffer *buffer);
 
 __END_C
 

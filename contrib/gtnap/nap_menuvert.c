@@ -170,7 +170,7 @@ static void i_OnDown(Panel *panel, Event *e)
     const EvMouse *p = event_params(e, EvMouse);
     uint32_t n = arrst_size(menu->opts, MenuOpt);
 
-    if (n > 0 && p->button == ekMLEFT)
+    if (n > 0 && p->button == ekGUI_MOUSE_LEFT)
     {
         uint32_t y = (uint32_t)p->y;
         uint32_t sel = y / menu->row_height;

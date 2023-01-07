@@ -10,7 +10,7 @@
 HB_FUNC( NAP_IMAGEVIEW_CREATE )
 {
     ImageView *view = imageview_create();
-    imageview_scale(view, ekAUTO);
+    imageview_scale(view, ekGUI_SCALE_AUTO);
     hb_retptr(view);
 }
 
@@ -29,7 +29,7 @@ HB_FUNC( NAP_IMAGEVIEW_SIZE )
 HB_FUNC( NAP_IMAGEVIEW_SCALE )
 {
     ImageView *view = (ImageView*)hb_parptr(1);
-    scale_t scale = (scale_t)hb_parni(2);
+    gui_scale_t scale = (gui_scale_t)hb_parni(2);
     imageview_scale(view, scale);
 }
 

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,10 +15,10 @@
 
 __EXTERN_C
 
-RegEx *regex_create(const char_t *pattern);
+_core_api RegEx *regex_create(const char_t *pattern);
 
-void regex_destroy(RegEx **regex);
+_core_api void regex_destroy(RegEx **regex);
 
-bool_t regex_match(const RegEx *regex, const char_t *str);
+_core_api bool_t regex_match(const RegEx *regex, const char_t *str);
 
 __END_C

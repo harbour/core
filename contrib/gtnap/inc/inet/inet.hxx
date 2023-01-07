@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,6 +15,7 @@
 #define __INET_HXX__
 
 #include "core.hxx"
+#include "inet.def"
 
 typedef enum _ierror_t
 {

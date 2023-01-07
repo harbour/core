@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,6 +15,7 @@
 #define __DRAW2D_HXX__
 
 #include "geom2d.hxx"
+#include "draw2d.def"
 
 typedef enum _pixformat_t
 {
@@ -101,9 +102,9 @@ typedef enum _ellipsis_t
 
 typedef enum _indicator_t
 {
-    ekINONE = 0,
-    ekIUP_ARROW,
-    ekIDOWN_ARROW
+    ekINDNONE = 0,
+    ekINDUP_ARROW,
+    ekINDDOWN_ARROW
 } indicator_t;
 
 typedef uint32_t color_t;

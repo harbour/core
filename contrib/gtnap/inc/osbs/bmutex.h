@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,13 +15,12 @@
 
 __EXTERN_C
 
-Mutex *bmutex_create(void);
+_osbs_api Mutex *bmutex_create(void);
 
-void bmutex_close(Mutex **mutex);
+_osbs_api void bmutex_close(Mutex **mutex);
 
-void bmutex_lock(Mutex *mutex);
+_osbs_api void bmutex_lock(Mutex *mutex);
 
-void bmutex_unlock(Mutex *mutex);
+_osbs_api void bmutex_unlock(Mutex *mutex);
 
 __END_C
-

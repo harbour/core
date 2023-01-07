@@ -1,0 +1,31 @@
+/*
+ * NAppGUI Cross-platform C SDK
+ * 2015-2023 Francisco Garcia Collado
+ * MIT Licence
+ * https://nappgui.com/en/legal/license.html
+ *
+ * File: gui.def
+ *
+ */
+
+/* Gui library import/export */
+
+#if defined(GUI_IMPORT)
+    #if defined(__GNUC__)
+        #define _gui_api
+    #elif defined(_MSC_VER)
+        #define _gui_api __declspec(dllimport)
+    #else
+        #error Unknown compiler
+    #endif
+#elif defined(NAPPGUI_SHARED_LIB)
+    #if defined(__GNUC__)
+        #define _gui_api __attribute__((visibility("default")))
+    #elif defined(_MSC_VER)
+        #define _gui_api __declspec(dllexport)
+    #else
+        #error Unknown compiler
+    #endif
+#else
+    #define _gui_api
+#endif

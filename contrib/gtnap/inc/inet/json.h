@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,13 +15,13 @@
 
 __EXTERN_C
 
-void *json_read_imp(Stream *stm, const JsonOpts *opts, const char_t *type);
+_inet_api void *json_read_imp(Stream *stm, const JsonOpts *opts, const char_t *type);
 
-void json_write_imp(Stream *stm, const void *data, const JsonOpts *opts, const char_t *type);
+_inet_api void json_write_imp(Stream *stm, const void *data, const JsonOpts *opts, const char_t *type);
 
-void json_destroy_imp(void **data, const char_t *type);
+_inet_api void json_destroy_imp(void **data, const char_t *type);
 
-void json_destopt_imp(void **data, const char_t *type);
+_inet_api void json_destopt_imp(void **data, const char_t *type);
 
 __END_C
 

@@ -1079,16 +1079,16 @@ static void i_add_label_object(const uint32_t cell_x, const uint32_t cell_y, con
 
 static __INLINE uint32_t i_window_flags(const bool_t close_return, const bool_t close_esc, const bool_t minimize_button)
 {
-    uint32_t flags = ekWNTITLE | ekWNCLOSE;
+    uint32_t flags = ekWINDOW_TITLE | ekWINDOW_CLOSE;
 
     if (close_return == TRUE)
-        flags |= ekWNRETURN;
+        flags |= ekWINDOW_RETURN;
 
     if (close_esc == TRUE)
-        flags |= ekWNESC;
+        flags |= ekWINDOW_ESC;
 
     if (minimize_button == TRUE)
-        flags |= ekWNMIN;
+        flags |= ekWINDOW_MIN;
 
     return flags;
 }
@@ -1215,7 +1215,7 @@ void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParam
         Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT32_MAX, autoclose, cuawin, i_OnImageClick);
         log_printf("Added IMAGE into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
         imageview_image(view, image);
-        imageview_scale(view, ekAUTO);
+        imageview_scale(view, ekGUI_SCALE_AUTO);
         size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
         size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
         i_add_object(ekOBJ_IMAGE, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)view, cuawin);

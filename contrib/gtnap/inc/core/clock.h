@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,14 +15,14 @@
 
 __EXTERN_C
 
-Clock *clock_create(const real64_t interval);
+_core_api Clock *clock_create(const real64_t interval);
 
-void clock_destroy(Clock **clk);
+_core_api void clock_destroy(Clock **clk);
 
-bool_t clock_frame(Clock *clk, real64_t *prev_frame, real64_t *curr_frame);
+_core_api bool_t clock_frame(Clock *clk, real64_t *prev_frame, real64_t *curr_frame);
 
-void clock_reset(Clock *clk);
+_core_api void clock_reset(Clock *clk);
 
-real64_t clock_elapsed(const Clock *clk);
+_core_api real64_t clock_elapsed(const Clock *clk);
 
 __END_C

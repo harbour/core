@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2022 Francisco Garcia Collado
+ * 2015-2023 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,8 +15,8 @@
 
 __EXTERN_C
 
-void core_start(void);
+_core_api void core_start(void);
 
-void core_finish(void);
+_core_api void core_finish(void);
 
 __END_C

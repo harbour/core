@@ -153,7 +153,7 @@ HB_FUNC( NAP_BUTTON_GET_ID )
 HB_FUNC( NAP_BUTTON_STATE )
 {
     Button *button = (Button*)hb_parptr(1);
-    state_t state = (state_t)hb_parni(2);
+    gui_state_t state = (gui_state_t)hb_parni(2);
     button_state(button, state);
 }
 
@@ -162,7 +162,7 @@ HB_FUNC( NAP_BUTTON_STATE )
 HB_FUNC( NAP_BUTTON_GET_STATE )
 {
     Button *button = (Button*)hb_parptr(1);
-    state_t state = button_get_state(button);
+    gui_state_t state = button_get_state(button);
     hb_retni((int)state);
 }
 
