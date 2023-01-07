@@ -164,26 +164,22 @@ DBCOMMIT()
 UNLOCK
 RELEIA CORRENTE V_Janela
 *
-
+*************************
 STAT PROC INCREMENTA_TODOS(V_Janela)
-    RETURN
-
-// *************************
-// STAT PROC INCREMENTA_TODOS(V_Janela)
-// **************************
-// LOCAL N_Selecionado := ITENSSELECIONADOS(V_Janela)
-// *
-// MOSTRAR("M15636","O registro atual é o RECNO() "+;
-//    LTRIM(STR(N_Selecionado)))
-// *
-// FLOCK()
-// REPL ALL vlcota WITH vlcota+1
-// DBCOMMIT()
-// UNLOCK
-// GOTO N_Selecionado
-// *
-// RELEIA TUDO V_Janela
-// *
+**************************
+LOCAL N_Selecionado := ITENSSELECIONADOS(V_Janela)
+*
+MOSTRAR("M15636","O registro atual é o RECNO() "+;
+   LTRIM(STR(N_Selecionado)))
+*
+FLOCK()
+REPL ALL vlcota WITH vlcota+1
+DBCOMMIT()
+UNLOCK
+GOTO N_Selecionado
+*
+RELEIA TUDO V_Janela
+*
 
 STAT PROC EXCLUI_LINHA_ATUAL(V_Janela)
     RETURN

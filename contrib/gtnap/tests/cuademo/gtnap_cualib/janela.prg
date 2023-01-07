@@ -376,6 +376,7 @@ RETURN VX_Janela
 #DEFINE B_ScrollBarVertical     VX_Janela[53]
 #DEFINE B_ScrollBarHorizontal   VX_Janela[54]
 #DEFINE N_ProgressBar VX_Janela[55]
+
 *
 *************
 PROC AddBotao (VX_Janela,C_TxtBotao,B_AcaoBotao,L_AutoClose,;
@@ -591,11 +592,13 @@ LOCAL B_Ajuda_Ant  // salvar help anterior, se existir novo
 LOCAL N_Cont, N_AddRows
 LOCAL C_Cabec_Aux
 LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
+LOCAL L_AutoClose := .F.
 
 // Window flags
 LOCAL L_CLOSE_WITH_RETURN := .F.
 LOCAL L_CLOSE_WITH_ESC := .F.
 LOCAL L_MINIMIZE_BUTTON := .F.
+
 
 
 // FRAN: A NAppGUI/GTNAP application owns the event cicle.
@@ -762,6 +765,23 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             N_WindowNum := NAP_CUALIB_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux, L_CLOSE_WITH_RETURN, L_CLOSE_WITH_ESC, L_MINIMIZE_BUTTON)
 
             NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)}, .F.)
+
+
+            // IF N_TP_Jan == _JAN_SELE_ARQ_20
+            //     NAP_LOG("AQUI!!!!! _JAN_SELE_ARQ_20")
+            // ENDIF
+
+            #DEFINE VX_Sele  VX_SubObj
+            L_AutoClose  := VX_Sele:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
+            #UNDEF VX_Sele
+
+            // IF L_AutoClose == .T.
+            //     NAP_LOG("AQUI!!!!! L_AutoClose == .T.")
+            // ENDIF
+
+            IF N_TP_Jan == _JAN_SELE_ARQ_20 .AND. L_AutoClose == .T.
+                NAP_CUALIB_HOTKEY(K_ENTER,{||.T.}, .T.)
+            ENDIF
 
             // N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
             //     N_LinIni,N_ColIni,N_LinFin,N_ColFin)

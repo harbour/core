@@ -154,6 +154,8 @@ static const GtNapKey KEYMAPS[] = {
 { K_F11, ekKEY_F11, 0 },
 { K_F12, ekKEY_F12, 0 },
 
+{ K_ENTER, ekKEY_RETURN, 0 },
+
 { 'a', ekKEY_A, 0},
 { 'b', ekKEY_B, 0},
 { 'c', ekKEY_C, 0},

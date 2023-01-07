@@ -1341,17 +1341,19 @@ VX_Sele:REFRESHCURRENT()
 ENDIF
 *
 RETURN NIL
-// *
-// *
-// *******************
-// FUNCTION ReleiaTudo ( VX_Janela )
-// *
-// #DEFINE VX_Sele VX_SubObj
-// L_ForcaLerTudo := .T.      // como pode ter sido apagado algum registro
-// *                          // este procedimento merece tratamento especial
-// *                          // (um simples REFRESHALL() não resolve !) .
-// #UNDEF  VX_Sele
-// RETURN NIL
+*
+*
+*******************
+FUNCTION ReleiaTudo ( VX_Janela )
+*
+#DEFINE VX_Sele VX_SubObj
+L_ForcaLerTudo := .T.      // como pode ter sido apagado algum registro
+*                          // este procedimento merece tratamento especial
+*                          // (um simples REFRESHALL() não resolve !) .
+#UNDEF  VX_Sele
+RETURN NIL
+
+
 // *
 // *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)

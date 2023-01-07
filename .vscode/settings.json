@@ -3,7 +3,8 @@
         "*.txs": "html",
         "nappgui.h": "c",
         "hbapirdd.h": "c",
-        "hbapicdp.h": "c"
+        "hbapicdp.h": "c",
+        "*.ch": "c"
     },
     "files.encoding": "windows1252"
 }
