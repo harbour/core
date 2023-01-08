@@ -1115,7 +1115,6 @@ uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, 
     uint32_t flags = i_window_flags(close_return, close_esc, minimize_button);
     Window *window = window_create(flags);
     Panel *panel = panel_create();
-    Layout *layout = layout_create(1, 1);
     id = arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow);
     cuawin = arrst_new0(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow);
     cuawin->window = window;
@@ -1130,15 +1129,12 @@ uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, 
     cuawin->callbacks = arrpt_create(GtNapCallback);
     cuawin->panel_size.width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni + 1));
     cuawin->panel_size.height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni + 1));
-    panel_size(panel, cuawin->panel_size);
+
     if (str_empty_c(C_Cabec) == FALSE)
         window_title(window, C_Cabec);
     else
         window_title(window, tc(GTNAP_GLOBAL->title));
 
-    panel_layout(panel, layout);
-    //window_OnClose(window, listener(GTNAP_GLOBAL, i_OnWindowClose, GtNap));
-    window_panel(window, panel);
     log_printf("Created new CUALIB Window: %d, %d, %d, %d", N_LinIni, N_ColIni, N_LinFin, N_ColFin);
     return id;
 }
@@ -1569,6 +1565,7 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *panel, c
                     pos.y += (real32_t)toolbar->pixels_button;
                     break;
                 case ekOBJ_BUTTON:
+                    pos.y += (real32_t)GTNAP_GLOBAL->cell_y_size;
                     break;
                 cassert_default();
                 }
@@ -1656,9 +1653,17 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
+    Layout *layout = layout_create(1, 1);
     V2Df pos;
     uint32_t ret = 0;
     cassert_no_null(cuawin);
+
+    if (cuawin->toolbar != NULL)
+        cuawin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size;
+
+    panel_size(cuawin->panel, cuawin->panel_size);
+    panel_layout(cuawin->panel, layout);
+    window_panel(cuawin->window, cuawin->panel);
 
     // Attach gui objects in certain Z-Order (from back to front)
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_MENUVERT, cuawin->toolbar);
@@ -1686,6 +1691,9 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
         V2Df ppos = window_get_origin(rootwin->window);
         pos.x += ppos.x /*- 2 * GTNAP_GLOBAL->cell_x_size*/;
         pos.y += ppos.y;
+
+        if (cuawin->toolbar != NULL)
+            pos.y -= (real32_t)GTNAP_GLOBAL->cell_y_size;
     }
 
     window_origin(cuawin->window, pos);

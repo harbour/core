@@ -1255,9 +1255,15 @@ IF SOB_MODO_GRAFICO()
    * na criação da janela, baixar a tela em uma linha.
    *
    * 2 linhas deslocadas da linha inicial, para dar espaço à ToolBar
-   LOG_PRINT("JAJAJA! TOOLBAR")
-   N_LinIni++
-   N_LinIni++
+
+   //
+   //  FRAN: The toolbar extra height will be managed by GTNAP
+   //  It's not a real equivalence between lines and toolbar buttons
+   //
+
+//    LOG_PRINT("JAJAJA! TOOLBAR")
+//    N_LinIni++
+//    N_LinIni++
 ELSE
    * O modo texto não tem ToolBar, mas o cabeçalho será acrescentado
    * uma linha em branco(no topo), de forma que o programador,
