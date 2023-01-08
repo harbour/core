@@ -49,6 +49,10 @@ IF HB_GTVERSION()=="NAP"
     #endif
  ELSE
     SETMODE(35,110)
+    //
+    // FRAN USE THE NAPPGUI LOG in TEXT VERSION
+    //
+    NAP_CUALIB_INIT_LOG()
     RUN_MAIN()
  ENDIF
 

@@ -50,6 +50,8 @@ DEFAULT L_Embutida    TO .F.
 DEFAULT C_SubCabec    TO ""
 DEFAULT L_CUA_10      TO .T.
 *
+
+LOG_PRINT("CRIAR JANELA N_LinIni:" + hb_ntos(N_LinIni))
 IF .NOT. LEFT(C_CdTela,1) == "T"
    ? MEMVAR->ERRO_ASSUME
 ENDIF
@@ -172,10 +174,10 @@ IF SOB_MODO_GRAFICO() .AND. .NOT. L_Embutida
       * Deduzir da janela o espaço não utilizado pelo box,
       * para que a aparência fique idêntica entre a GTWIN e a GTWVW.
       *
-      N_LinIni++
-      N_ColIni++
-      N_LinFin--
-      N_ColFin--
+        N_LinIni++
+        N_ColIni++
+        N_LinFin--
+        N_ColFin--
       *
       N_MargemSuperior--
       N_MargemDemais--
@@ -676,17 +678,17 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
 
             //NAP_LOG("AQUI ATIVE!!! " + hb_ntos(N_LinIni) + ":" + hb_ntos(N_LinFin) + ":" + hb_ntos(N_ColFin))
 
-            IF .NOT. (N_LinIni == 0 .AND. N_LinFin == MAXROW() .AND. ;
-                N_ColIni == 0)
-                //
-                // FRAN
-                //
-                // The main window ends at MaxRow()-1, MaxCol()-1. Child windows end in N_LinFin, N_ColFin
-                N_LinIni--
-                N_ColIni--
-                N_LinFin++
-                N_ColFin++
-            ENDIF
+            // IF .NOT. (N_LinIni == 0 .AND. N_LinFin == MAXROW() .AND. ;
+            //     N_ColIni == 0)
+            //     //
+            //     // FRAN
+            //     //
+            //     // The main window ends at MaxRow()-1, MaxCol()-1. Child windows end in N_LinFin, N_ColFin
+            //     N_LinIni--
+            //     N_ColIni--
+            //     N_LinFin++
+            //     N_ColFin++
+            // ENDIF
 
             // //
             // // FRAN: Perhaps this block can be avoided
@@ -863,6 +865,8 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
     ELSE // SOB_MODO_GRAFICO()
 
         C_TelaCoberta := SAVESCREEN(N_LinIni,N_ColIni,N_LinFin,N_ColFin)
+        N_WindowNum := LEN(V_PilhaJanelas)
+
         IF .NOT. L_Embutida
             AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
         ENDIF
@@ -1071,9 +1075,23 @@ ENDIF // C_TelaCoberta == NIL
 
 // FRAN
 // Testing about window and widget dimensions
-// FOR N_Cont := 0 TO 35
-//     @ N_Cont, 0 SAY "**********" + hb_ntos(N_Cont)
-// NEXT
+LOG_PRINT("HELLLO FRAN!!!!. Window_NUM: " + hb_ntos(N_WindowNum))
+LOG_PRINT("Window LOCATION: " + hb_ntos(N_LinIni) + ", " + hb_ntos(N_ColIni) + ", " + hb_ntos(N_LinFin) + ", " + hb_ntos(N_ColFin))
+//SCROLL(N_LinIni,N_ColIni,N_LinFin,N_ColFin)      // limpar área
+
+IF N_WindowNum = 0
+    FOR N_Cont := 0 TO 35
+    @ N_Cont, 0 SAY "**" + hb_ntos(N_Cont)
+    @ N_Cont, 107 SAY "*" + hb_ntos(N_Cont)
+    NEXT
+
+    @ 1, 4 SAY "****** ********* ********* ********* ********* ********* ********* ********* ********* ********* *******"
+    @ 34, 4 SAY "****** ********* ********* ********* ********* ********* ********* ********* ********* ********* *******"
+    @ 0, 107 SAY "109"
+
+    @ 26, 87 SAY "@ [26,87]"
+
+ENDIF
 
 //@ 4, 20 SAY "***************************************************************************************************" // + hb_ntos(N_Cont)
 //@ 3, 41 SAY "*******" // + hb_ntos(N_Cont)
@@ -1237,6 +1255,7 @@ IF SOB_MODO_GRAFICO()
    * na criação da janela, baixar a tela em uma linha.
    *
    * 2 linhas deslocadas da linha inicial, para dar espaço à ToolBar
+   LOG_PRINT("JAJAJA! TOOLBAR")
    N_LinIni++
    N_LinIni++
 ELSE

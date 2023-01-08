@@ -76,6 +76,8 @@ extern void hb_gtnap_callback(GtNapCallback *callback, Event *e);
 
 String *hb_gtnap_cualib_parText(const uint32_t iParam);
 
+extern void hb_gtnap_cualib_init_log(void);
+
 extern void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM codeBlock_begin);
 
 extern uint32_t hb_gtnap_cualib_linespacing(void);
@@ -87,11 +89,11 @@ extern void hb_gtnap_cualib_set_linespacing(const uint32_t spacing);
 // N_LinFin --> Bottom
 // N_ColFin --> Right
 // C_Cabec --> Title
-extern uint32_t hb_gtnap_cualib_window(const uint32_t N_LinIni, const uint32_t N_ColIni, const uint32_t N_LinFin, const uint32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button);
+extern uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button);
 
-extern void hb_gtnap_cualib_menuvert(Panel *panel, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight);
+extern void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);
 
-extern void hb_gtnap_cualib_tableview(TableView *view, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight);
+extern void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);
 
 extern GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view);
 
@@ -111,7 +113,7 @@ extern uint32_t hb_gtnap_cualib_tableview_select_single_row(void);
 
 extern void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose);
 
-extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose);
+extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose);
 
 extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol);
 

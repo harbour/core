@@ -391,12 +391,17 @@ N_Largura := MAX(N_LargAux,N_Largura)
 *
 N_Largura := N_Largura + 2 + 2 + 2
 *
-IF SOB_MODO_GRAFICO()   // reservar 4 colunas para mostrar a imagem à esquerda
-   N_DeslocaCabecalho := 4
-   N_Largura := N_Largura + N_DeslocaCabecalho
-ELSE
-   N_DeslocaCabecalho := 0
-ENDIF
+N_DeslocaCabecalho := 0
+
+//
+// FRAN!!! At the moment, measure synchro in TEXT and GTNAP versions
+//
+// IF SOB_MODO_GRAFICO()   // reservar 4 colunas para mostrar a imagem à esquerda
+//    N_DeslocaCabecalho := 4
+//    N_Largura := N_Largura + N_DeslocaCabecalho
+// ELSE
+//    N_DeslocaCabecalho := 0
+// ENDIF
 *
 * definir altura do box
 *
@@ -421,6 +426,8 @@ N_Largura := MIN(N_Largura,MAXCOL()+1)
 N_LinIni := ROUND((MAXROW()+1-N_Altura)/2,0)
 N_ColIni := ROUND((MAXCOL()+1-N_Largura)/2,0)
 *
+
+LOG_PRINT("MontarJanela N_LinIni: " + hb_ntos(N_LinIni) + " N_Altura: " + hb_ntos(N_Altura) + " MAXROW: " + hb_ntos(MAXROW()) + " MAXCOL: " + hb_ntos(MAXCOL()))
 @ N_LinIni,N_ColIni,N_LinIni+N_Altura,N_ColIni+N_Largura ;
   Jane VX_Janela TITULO C_Cabec_x SubTitulo C_SubCabec Tecl VC_TxtBotoes ;
   DESLOCACAB N_DeslocaCabecalho AJUDA "T05735"
@@ -1148,6 +1155,8 @@ RETURN N_TelaPrincipalHeight
 
 PROCEDURE LOG_PRINT(C_Text)
     IF SOB_MODO_GRAFICO()
+        NAP_LOG(C_Text)
+    ELSE
         NAP_LOG(C_Text)
     ENDIF
 

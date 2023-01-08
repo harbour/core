@@ -19,6 +19,13 @@ HB_FUNC( NAP_CUALIB_SETUP )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CUALIB_INIT_LOG )
+{
+    hb_gtnap_cualib_init_log();
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( WVW_SETLINESPACING )
 {
     // FRAN TODO
@@ -70,10 +77,10 @@ HB_FUNC( WVW_SETMAINCOORD )
 
 HB_FUNC( NAP_CUALIB_WINDOW )
 {
-    uint32_t N_LinIni = hb_parni(1);
-    uint32_t N_ColIni = hb_parni(2);
-    uint32_t N_LinFin = hb_parni(3);
-    uint32_t N_ColFin = hb_parni(4);
+    int32_t N_LinIni = hb_parni(1);
+    int32_t N_ColIni = hb_parni(2);
+    int32_t N_LinFin = hb_parni(3);
+    int32_t N_ColFin = hb_parni(4);
     String *C_Cabec = hb_gtnap_cualib_parText(5);
     bool_t close_return = (bool_t)hb_parl(6);
     bool_t close_esc = (bool_t)hb_parl(7);
@@ -103,10 +110,10 @@ HB_FUNC( NAP_CUALIB_DESTROY_WINDOW )
 HB_FUNC( NAP_CUALIB_MENUVERT )
 {
     Panel *panel = (Panel*)hb_parptr(1);
-    uint32_t nTop = hb_parni(2);
-    uint32_t nLeft = hb_parni(3);
-    uint32_t nBottom = hb_parni(4);
-    uint32_t nRight = hb_parni(5);
+    int32_t nTop = hb_parni(2);
+    int32_t nLeft = hb_parni(3);
+    int32_t nBottom = hb_parni(4);
+    int32_t nRight = hb_parni(5);
     hb_gtnap_cualib_menuvert(panel, nTop, nLeft, nBottom, nRight);
 }
 
@@ -139,15 +146,12 @@ HB_FUNC( NAP_CUALIB_IMAGE )
 
 HB_FUNC( NAP_CUALIB_BUTTON )
 {
-    //log_printf("Before NAP_CUALIB_BUTTON hb_gtnap_parText");
     const char_t *text = hb_gtnap_parText(1);
-    //log_printf("Before NAP_CUALIB_BUTTON nTop");
-    uint32_t nTop = hb_parni(3);
-    uint32_t nLeft = hb_parni(4);
-    uint32_t nBottom = hb_parni(5);
-    uint32_t nRight = hb_parni(6);
+    int32_t nTop = hb_parni(3);
+    int32_t nLeft = hb_parni(4);
+    int32_t nBottom = hb_parni(5);
+    int32_t nRight = hb_parni(6);
     bool_t autoclose = (bool_t)hb_parl(7);
-    //log_printf("Before hb_gtnap_cualib_button");
     hb_gtnap_cualib_button(text, 2, nTop, nLeft, nBottom, nRight, autoclose);
 }
 
