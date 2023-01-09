@@ -698,7 +698,7 @@ IF SOB_MODO_GRAFICO()
 IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
     X_Retorno := NAP_TABLEVIEW_CUALIB_SELECT_SINGLE_ROW()
 
-ELSEIF N_TP_Selecao == _SELE_MULTIPLA
+ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
     V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
     X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
 

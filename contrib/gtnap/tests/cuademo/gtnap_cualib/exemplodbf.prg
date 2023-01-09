@@ -71,10 +71,10 @@ ATIVE(V_Janela)
 
 
 
-PROC TST_BROWSE_DBF_COLUNA_CONGELADA
-    @ 22, 0 SAY ""
-    OutStd("TST_BROWSE_DBF_COLUNA_CONGELADA() Option selected")
-    RETURN
+// PROC TST_BROWSE_DBF_COLUNA_CONGELADA
+//     @ 22, 0 SAY ""
+//     OutStd("TST_BROWSE_DBF_COLUNA_CONGELADA() Option selected")
+//     RETURN
 
 PROC TST_BROWSE_DBF_WHILE
     @ 22, 0 SAY ""
@@ -368,10 +368,17 @@ STAT PROC DEFAULT_SELECIONADOS(V_Janela)
 MUDE SELECAO V_Janela PARA {2,4,6,8}   // registros pré-selecionados
 
 *
-// *****************************************
-// STAT PROC TST_BROWSE_DBF_COLUNA_CONGELADA
-// *****************************************
-// LOCAL V_Janela
+*****************************************
+STAT PROC TST_BROWSE_DBF_COLUNA_CONGELADA
+*****************************************
+LOCAL V_Janela
+
+//
+//  Fran: This code works on Windows and Linux
+//
+USE ../dados/cotacao NEW SHARED
+SET INDEX TO ../dados/cotacao
+GOTO TOP
 
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    USE dados\cotacao NEW SHARED
@@ -383,33 +390,37 @@ MUDE SELECAO V_Janela PARA {2,4,6,8}   // registros pré-selecionados
 //    #erro "Código não adaptado para esta plataforma"
 // #endif
 // GOTO TOP
-// *
-// CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
-//     TITU "Browse de arquivo DBF" ;
-//     SUBTITULO "%T;seleção estendida;com coluna congelada" ;
-//     AJUDA "T?????"
-// ADDBOTAO V_Janela TEXTO "Enter=contar selecionados e fechar janela" ;
-//    ACAO (CONTAR_SELECIONADOS(V_Janela),.T.) AUTOCLOSE AJUDA "B19273"
-// CUA20 ESPECIALIZE V_Janela SELECAO ESTENDIDA CONGELAR 1
 
-// ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
-// ANEXE V_Janela TITULO "Data"      COLUNA dtcota
-// ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
-// ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
-// ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
-// *
-// ATIVE(V_Janela)
-// *
-// CLOSE COTACAO
-// *
-// *****************************
-// STAT PROC CONTAR_SELECIONADOS(V_Janela)
-// *****************************
-// LOCAL V_Selecionados := ITENSSELECIONADOS(V_Janela)
-// *
-// MOSTRAR("M15640","Foram selecionados "+;
-//         LTRIM(STR(LEN(V_Selecionados)))+" registros")
-// *
+
+
+*
+CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
+    TITU "Browse de arquivo DBF" ;
+    SUBTITULO "%T;seleção estendida;com coluna congelada" ;
+    AJUDA "T?????"
+ADDBOTAO V_Janela TEXTO "Enter=contar selecionados e fechar janela" ;
+   ACAO (CONTAR_SELECIONADOS(V_Janela),.T.) AUTOCLOSE AJUDA "B19273"
+CUA20 ESPECIALIZE V_Janela SELECAO ESTENDIDA CONGELAR 1
+
+ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
+ANEXE V_Janela TITULO "Data"      COLUNA dtcota
+ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
+ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
+ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
+*
+ATIVE(V_Janela)
+*
+CLOSE COTACAO
+*
+
+*****************************
+STAT PROC CONTAR_SELECIONADOS(V_Janela)
+*****************************
+LOCAL V_Selecionados := ITENSSELECIONADOS(V_Janela)
+*
+MOSTRAR("M15640","Foram selecionados "+;
+        LTRIM(STR(LEN(V_Selecionados)))+" registros")
+*
 // ******************************
 // STAT PROC TST_BROWSE_DBF_WHILE
 // ******************************
