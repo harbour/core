@@ -336,39 +336,38 @@ STAT PROC PROCURAR_REGISTRO (V_Janela)
 // *
 
 
+*********************************
 STAT PROC INCREMENTA_SELECIONADOS(V_Janela)
-RETURN
+*********************************
+LOCAL V_Selecionados := ITENSSELECIONADOS(V_Janela)
+LOCAL N_Ct, N_Recno_Ant
+*
+MOSTRAR("M15638","Foram selecionados "+;
+        LTRIM(STR(LEN(V_Selecionados)))+" registros")
+*
+N_Recno_Ant := RECNO()
+FOR N_Ct := 1 TO LEN(V_Selecionados)
+   GOTO V_Selecionados[N_Ct]
+   RLOCK()
+   REPL vlcota WITH vlcota+1
+   UNLOCK
+NEXT
+DBCOMMIT()
+GOTO N_Recno_Ant
+*
+RELEIA TUDO V_Janela
+*
 
-// *********************************
-// STAT PROC INCREMENTA_SELECIONADOS(V_Janela)
-// *********************************
-// LOCAL V_Selecionados := ITENSSELECIONADOS(V_Janela)
-// LOCAL N_Ct, N_Recno_Ant
-// *
-// MOSTRAR("M15638","Foram selecionados "+;
-//         LTRIM(STR(LEN(V_Selecionados)))+" registros")
-// *
-// N_Recno_Ant := RECNO()
-// FOR N_Ct := 1 TO LEN(V_Selecionados)
-//    GOTO V_Selecionados[N_Ct]
-//    RLOCK()
-//    REPL vlcota WITH vlcota+1
-//    UNLOCK
-// NEXT
-// DBCOMMIT()
-// GOTO N_Recno_Ant
-// *
-// RELEIA TUDO V_Janela
-// *
-
-STAT PROC DEFAULT_SELECIONADOS(V_Janela)
-RETURN
-
-// *********************************
 // STAT PROC DEFAULT_SELECIONADOS(V_Janela)
-// *********************************
-// MUDE SELECAO V_Janela PARA {2,4,6,8}   // registros pré-selecionados
-// *
+// RETURN
+// NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
+
+*********************************
+STAT PROC DEFAULT_SELECIONADOS(V_Janela)
+*********************************
+MUDE SELECAO V_Janela PARA {2,4,6,8}   // registros pré-selecionados
+
+*
 // *****************************************
 // STAT PROC TST_BROWSE_DBF_COLUNA_CONGELADA
 // *****************************************

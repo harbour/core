@@ -522,7 +522,14 @@ IF L_ForcaLerTudo
 
             NAP_TABLEVIEW_UPDATE(V_TableView)
 
-            IF N_TP_Selecao == _SELE_MULTIPLA
+            LOG_PRINT("Current VN_Selecio" + hb_ntos(LEN(VN_Selecio)))
+
+            //
+            // FRAN: Automatic first selection and change selection event
+            //
+            IF N_TP_Selecao == _SELE_SIMPLES
+                NAP_TABLEVIEW_SELECT(V_TableView, 1)
+            ELSEIF N_TP_Selecao == _SELE_MULTIPLA
                 NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
                 //NAP_CUALIB_SET_JANELA(VX_Sele)
                 //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
@@ -1367,6 +1374,7 @@ RETURN NIL
 FUNCTION MudeLista ( VX_Janela , VN_Default )
 *
 LOCAL VX_Sele
+LOCAL V_TableView := NIL
 *
 VX_Sele := VX_SubObj
 *
@@ -1381,7 +1389,11 @@ IF LEN(VN_Selecio) # 0 .OR. LEN(VN_Default) # 0         // algo a fazer
       * a ser atualizado.
    ELSE
     IF SOB_MODO_GRAFICO()
-        NAP_TABLEVIEW_CUALIB_REFRESH()
+        V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+        IF V_TableView # NIL
+            NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
+            NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
+        ENDIF
     ELSE
 
         VX_Sele:REFRESHALL()

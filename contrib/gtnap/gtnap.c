@@ -1161,17 +1161,11 @@ void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     S2Df size;
-    uint32_t yoffset = 0;
     cassert_no_null(cuawin);
     log_printf("Added TableView into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
-
-    if (i_parent_cuawin(GTNAP_GLOBAL) != NULL)
-        yoffset = 1;
-
-    i_add_object(ekOBJ_TABLEVIEW, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni - yoffset, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)view, cuawin);
-    //log_printf("MenuVert size: %.2f, %.2f, %.2f, %.2f", size.width, size.height, final_size.width, final_size.height);
+    i_add_object(ekOBJ_TABLEVIEW, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)view, cuawin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1561,8 +1555,10 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *panel, c
                 case ekOBJ_LABEL:
                 case ekOBJ_IMAGE:
                 case ekOBJ_MENUVERT:
-                case ekOBJ_TABLEVIEW:
                     pos.y += (real32_t)toolbar->pixels_button;
+                    break;
+                case ekOBJ_TABLEVIEW:
+                    pos.y += (real32_t)(toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size);
                     break;
                 case ekOBJ_BUTTON:
                     pos.y += (real32_t)GTNAP_GLOBAL->cell_y_size;

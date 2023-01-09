@@ -691,29 +691,34 @@ FUNC ItensSelecionados (VX_Janela)
 **********************
 LOCAL X_Retorno
 LOCAL VX_Sele := VX_SubObj
+LOCAL V_TableView := NIL
 
 IF SOB_MODO_GRAFICO()
 
 IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
     X_Retorno := NAP_TABLEVIEW_CUALIB_SELECT_SINGLE_ROW()
+
+ELSEIF N_TP_Selecao == _SELE_MULTIPLA
+    V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+    X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
+
 ELSE
-    //
-    // FRAN: TODO
-    //
+
     X_Retorno := 0
  ENDIF
 
 ELSE
 
-IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
-   X_Retorno := EVAL(B_LinCorrente)
-ELSE
-   IF N_TP_Selecao == _SELE_EXTENDIDA .AND. LEN(VN_Selecio)==0    // se extendida com seleçao implicita
-      X_Retorno := {EVAL(B_LinCorrente)}
-   ELSE
-      X_Retorno := VN_Selecio      // se selecao multipla ou extendida com selecao explicita
-   ENDIF
-ENDIF
+    // Text version
+    IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
+    X_Retorno := EVAL(B_LinCorrente)
+    ELSE
+    IF N_TP_Selecao == _SELE_EXTENDIDA .AND. LEN(VN_Selecio)==0    // se extendida com seleçao implicita
+        X_Retorno := {EVAL(B_LinCorrente)}
+    ELSE
+        X_Retorno := VN_Selecio      // se selecao multipla ou extendida com selecao explicita
+    ENDIF
+    ENDIF
 
 ENDIF
 
