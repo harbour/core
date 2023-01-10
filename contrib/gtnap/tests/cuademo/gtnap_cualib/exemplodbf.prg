@@ -76,10 +76,10 @@ ATIVE(V_Janela)
 //     OutStd("TST_BROWSE_DBF_COLUNA_CONGELADA() Option selected")
 //     RETURN
 
-PROC TST_BROWSE_DBF_WHILE
-    @ 22, 0 SAY ""
-    OutStd("TST_BROWSE_DBF_WHILE() Option selected")
-    RETURN
+// PROC TST_BROWSE_DBF_WHILE
+//     @ 22, 0 SAY ""
+//     OutStd("TST_BROWSE_DBF_WHILE() Option selected")
+//     RETURN
 
 *****************************************************
 STAT PROC TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR
@@ -421,10 +421,17 @@ LOCAL V_Selecionados := ITENSSELECIONADOS(V_Janela)
 MOSTRAR("M15640","Foram selecionados "+;
         LTRIM(STR(LEN(V_Selecionados)))+" registros")
 *
-// ******************************
-// STAT PROC TST_BROWSE_DBF_WHILE
-// ******************************
-// LOCAL V_Janela
+******************************
+STAT PROC TST_BROWSE_DBF_WHILE
+******************************
+LOCAL V_Janela
+
+//
+//  Fran: This code works on Windows and Linux
+//
+USE ../dados/cotacao NEW SHARED
+SET INDEX TO ../dados/cotacao
+GOTO TOP
 
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    USE dados\cotacao NEW SHARED
@@ -436,34 +443,34 @@ MOSTRAR("M15640","Foram selecionados "+;
 //    #erro "Código não adaptado para esta plataforma"
 // #endif
 // GOTO TOP
-// *
-// CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
-//     TITU "Browse de arquivo DBF" ;
-//     SUBTITULO "%T;cláusula WHILE;sem barras de rolagem" ;
-//     AJUDA "T?????"
-// ADDBOTAO V_Janela TEXTO "Enter=exibir selecionado" ;
-//    ACAO EXIBIR_SELECIONADO(V_Janela) AJUDA "B19275"
+*
+CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
+    TITU "Browse de arquivo DBF" ;
+    SUBTITULO "%T;cláusula WHILE;sem barras de rolagem" ;
+    AJUDA "T?????"
+ADDBOTAO V_Janela TEXTO "Enter=exibir selecionado" ;
+   ACAO EXIBIR_SELECIONADO(V_Janela) AJUDA "B19275"
 
-// SEEK "99"
-// CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES ;
-//     WHILE cdindx=="99" NAOROLAVERTICAL NAOROLAHORIZONTAL
+SEEK "99"
+CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES ;
+    WHILE cdindx=="99" NAOROLAVERTICAL NAOROLAHORIZONTAL
 
-// ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
-// ANEXE V_Janela TITULO "Data"      COLUNA dtcota
-// ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
-// *
-// ATIVE(V_Janela)
-// *
-// CLOSE COTACAO
-// *
-// ****************************
-// STAT PROC EXIBIR_SELECIONADO(V_Janela)
-// ****************************
-// LOCAL N_Selecionado := ITENSSELECIONADOS(V_Janela)
-// *
-// MOSTRAR("M15642","O registro selecionado foi o RECNO() "+;
-//         LTRIM(STR(N_Selecionado)))
-// *
+ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
+ANEXE V_Janela TITULO "Data"      COLUNA dtcota
+ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
+*
+ATIVE(V_Janela)
+*
+CLOSE COTACAO
+*
+****************************
+STAT PROC EXIBIR_SELECIONADO(V_Janela)
+****************************
+LOCAL N_Selecionado := ITENSSELECIONADOS(V_Janela)
+*
+MOSTRAR("M15642","O registro selecionado foi o RECNO() "+;
+        LTRIM(STR(N_Selecionado)))
+*
 
 // **********************************************
 // STAT PROC TST_BROWSE_ERRO_ROLAMENTO_HORIZONTAL()
