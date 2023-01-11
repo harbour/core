@@ -165,10 +165,10 @@ QUIT
 //     OutStd("EXEMPLO_BROWSE_DBF() Option selected")
 //     RETURN
 
-PROC EXEMPLO_BROWSE_VETOR
-    @ 22, 0 SAY ""
-    OutStd("EXEMPLO_BROWSE_VETOR() Option selected")
-    RETURN
+// PROC EXEMPLO_BROWSE_VETOR
+//     @ 22, 0 SAY ""
+//     OutStd("EXEMPLO_BROWSE_VETOR() Option selected")
+//     RETURN
 
 PROC EXEMPLO_TEXTO_MEMORIA
     @ 22, 0 SAY ""
