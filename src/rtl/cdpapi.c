@@ -1999,8 +1999,6 @@ HB_SIZE hb_cdpU16ToStr( PHB_CODEPAGE cdp, int iEndian,
 HB_SIZE hb_cdpTransLen( const char * pSrc, HB_SIZE nSrc, HB_SIZE nMax,
                         PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   HB_SIZE nSize;
-
    if( cdpIn && cdpOut && cdpIn != cdpOut &&
        ( cdpIn->uniTable != cdpOut->uniTable ||
          HB_CDP_ISCUSTOM( cdpIn ) || HB_CDP_ISCUSTOM( cdpOut ) ) )
@@ -2011,7 +2009,7 @@ HB_SIZE hb_cdpTransLen( const char * pSrc, HB_SIZE nSrc, HB_SIZE nMax,
          return hb_cdpStrAsUTF8Len( cdpIn, pSrc, nSrc, nMax );
       else if( HB_CDP_ISCUSTOM( cdpIn ) || HB_CDP_ISCUSTOM( cdpOut ) )
       {
-         HB_SIZE nPosS;
+         HB_SIZE nPosS, nSize;
          HB_WCHAR wc;
 
          nPosS = nSize = 0;
@@ -2022,14 +2020,11 @@ HB_SIZE hb_cdpTransLen( const char * pSrc, HB_SIZE nSrc, HB_SIZE nMax,
                break;
             nSize += i;
          }
+         return nSize;
       }
-      else
-         nSize = ( nMax && nSrc > nMax ) ? nMax : nSrc;
    }
-   else
-      nSize = ( nMax && nSrc > nMax ) ? nMax : nSrc;
 
-   return nSize;
+   return ( nMax && nSrc > nMax ) ? nMax : nSrc;
 }
 
 HB_SIZE hb_cdpTransTo( const char * pSrc, HB_SIZE nSrc,

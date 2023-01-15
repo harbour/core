@@ -522,7 +522,7 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
 }
 
 static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm,
-                                      DWORD dwFontType, LPVOID pArray )
+                                      DWORD dwFontType, LPARAM pArray )
 {
    PHB_ITEM pSubItems = hb_itemArrayNew( 4 );
 

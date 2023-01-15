@@ -1226,11 +1226,13 @@ extern HB_EXPORT const char * hb_osDecodeCP( const char * szName, char ** pszFre
 
 extern HB_EXPORT char *       hb_osStrEncode( const char * pszName );
 extern HB_EXPORT char *       hb_osStrEncodeN( const char * pszName, HB_SIZE nLen );
+extern HB_EXPORT char *       hb_osStrEncode2( const char * pszName, char * pszBuffer, HB_SIZE nSize );
 extern HB_EXPORT char *       hb_osStrDecode( const char * pszName );
 extern HB_EXPORT char *       hb_osStrDecode2( const char * pszName, char * pszBuffer, HB_SIZE nSize );
 #if defined( HB_OS_WIN )
 extern HB_EXPORT HB_WCHAR *   hb_osStrU16Encode( const char * pszName );
 extern HB_EXPORT HB_WCHAR *   hb_osStrU16EncodeN( const char * pszName, HB_SIZE nLen );
+extern HB_EXPORT HB_WCHAR *   hb_osStrU16Encode2( const char * pszName, HB_WCHAR * pszBufferW, HB_SIZE nSize );
 extern HB_EXPORT char *       hb_osStrU16Decode( const HB_WCHAR * pszNameW );
 extern HB_EXPORT char *       hb_osStrU16Decode2( const HB_WCHAR * pszNameW, char * pszBuffer, HB_SIZE nSize );
 #endif
