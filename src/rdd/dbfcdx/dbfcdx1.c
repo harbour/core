@@ -54,8 +54,8 @@
 #  define HB_CDX_PACKTRAIL
 #endif
 
-#define HB_CDX_DBGCODE
 /*
+#define HB_CDX_DBGCODE
 #define HB_CDX_DBGCODE_EXT
 #define HB_CDX_DSPDBG_INFO
 #define HB_CDX_DBGTIME
