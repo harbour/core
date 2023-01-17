@@ -3935,7 +3935,8 @@ static HB_BOOL hb_gtTryInit( const char * szGtName, HB_BOOL fFree )
                * pszStr = '\0';
          }
 
-         hb_stackSetGT( hb_gtLoad( szGtName, NULL, NULL ) );
+         if( * szGtName )
+            hb_stackSetGT( hb_gtLoad( szGtName, NULL, NULL ) );
       }
 
       if( fFree )
@@ -3951,9 +3952,13 @@ void hb_gtStartupInit( void )
       return;
    if( hb_gtTryInit( hb_getenv( "HB_GT" ), HB_TRUE ) )
       return;
+   if( s_szNameDefault == s_gtNameBuf &&
+       hb_gtTryInit( s_szNameDefault, HB_FALSE ) )
+      return;
    if( hb_gtTryInit( hb_gt_FindDefault(), HB_FALSE ) )
       return;
-   if( hb_gtTryInit( s_szNameDefault, HB_FALSE ) )
+   if( s_szNameDefault != s_gtNameBuf &&
+       hb_gtTryInit( s_szNameDefault, HB_FALSE ) )
       return;
 
    if( hb_dynsymFind( "HB_GT_NUL" ) ) /* GTNUL was explicitly REQUESTed */
@@ -4067,4 +4072,21 @@ HB_FUNC( HB_GTSELECT )
       *gtHolder = hGT;
       hb_retptrGC( gtHolder );
    }
+}
+
+HB_FUNC( HB_GTEXISTS )
+{
+   const char * pszGtName = hb_parc( 1 );
+
+   hb_retl( pszGtName && hb_gt_FindEntry( pszGtName ) >= -1 );
+}
+
+HB_FUNC( HB_GTLIST )
+{
+   int iPos;
+
+   hb_reta( s_iGtCount + 1 );
+   hb_storvc( "NUL", -1, 1 );
+   for( iPos = 0; iPos < s_iGtCount; ++iPos )
+      hb_storvc( s_gtInit[ iPos ]->id, -1, iPos + 2 );
 }
