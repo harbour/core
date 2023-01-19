@@ -54,8 +54,8 @@
 #  define HB_CDX_PACKTRAIL
 #endif
 
-/*
 #define HB_CDX_DBGCODE
+/*
 #define HB_CDX_DBGCODE_EXT
 #define HB_CDX_DSPDBG_INFO
 #define HB_CDX_DBGTIME
@@ -1494,7 +1494,9 @@ static HB_BYTE * hb_cdxPageGetKeyVal( LPCDXPAGE pPage, int iKey )
 #ifdef HB_CDX_DBGCODE
          else if( iTmp < 0 )
          {
+#if 0
             printf( "\r\npPage->Page=%lx, iLen=%d, iDup=%d, iTrl=%d", pPage->Page, iLen, iDup, iTrl ); fflush( stdout );
+#endif
             hb_cdxErrInternal( "hb_cdxPageGetKeyVal: index corrupted." );
          }
 #endif
@@ -1771,8 +1773,10 @@ static void hb_cdxPageLeafEncode( LPCDXPAGE pPage, HB_BYTE * pKeyBuf, int iKeys 
 #ifdef HB_CDX_DBGCODE
    if( ( pPage->PageType & CDX_NODE_LEAF ) == 0 )
    {
+#if 0
       printf( "\r\npPage->Page=%lx. left=%lx, right=%lx",
               pPage->Page, pPage->Left, pPage->Right ); fflush( stdout );
+#endif
       hb_cdxErrInternal( "hb_cdxPageLeafEncode: page is not a leaf." );
    }
 #endif
@@ -1812,8 +1816,10 @@ static void hb_cdxPageLeafEncode( LPCDXPAGE pPage, HB_BYTE * pKeyBuf, int iKeys 
 #ifdef HB_CDX_DBGCODE
       else if( iTmp < 0 )
       {
+#if 0
          printf( "\r\n[%s][%s]", pSrc - iLen, pSrc );
          printf( "\r\npPage->Page=0x%lx, iKey=%d, iNum=%d, iDup=%d, iTrl=%d", pPage->Page, iKey, iNum, iDup, iTrl ); fflush( stdout );
+#endif
          hb_cdxErrInternal( "hb_cdxPageLeafEncode: index corrupted." );
       }
 #endif
@@ -1823,9 +1829,11 @@ static void hb_cdxPageLeafEncode( LPCDXPAGE pPage, HB_BYTE * pKeyBuf, int iKeys 
 #ifdef HB_CDX_DBGCODE
    if( pKeyPos - pRecPos != pPage->iFree )
    {
+#if 0
       printf( "\r\nPage=0x%lx, calc=%d, iFree=%d, req=%u, keys=%d, keyLen=%d\r\n",
               pPage->Page, ( int ) ( pKeyPos - pRecPos ), pPage->iFree, pPage->ReqByte, iKeys, iNum );
       fflush( stdout );
+#endif
       hb_cdxErrInternal( "hb_cdxPageLeafEncode: FreeSpace calculated wrong!" );
    }
    if( pPage->iFree < 0 )
@@ -1861,7 +1869,9 @@ static void hb_cdxPageLeafDecode( LPCDXPAGE pPage, HB_BYTE * pKeyBuf )
 #ifdef HB_CDX_DBGCODE
    if( ( pPage->PageType & CDX_NODE_LEAF ) == 0 )
    {
+#if 0
       printf( "\r\npPage->Page=%lx", pPage->Page ); fflush( stdout );
+#endif
       hb_cdxErrInternal( "hb_cdxPageLeafDecode: page is not a leaf." );
    }
 #endif
@@ -1895,7 +1905,9 @@ static void hb_cdxPageLeafDecode( LPCDXPAGE pPage, HB_BYTE * pKeyBuf )
 #ifdef HB_CDX_DBGCODE
       else if( iNew < 0 )
       {
+#if 0
          printf( "\r\npPage->Page=%lx, iLen=%d, iDup=%d, iTrl=%d", pPage->Page, iLen, iDup, iTrl ); fflush( stdout );
+#endif
          hb_cdxErrInternal( "hb_cdxPageLeafDecode: index corrupted." );
       }
 #endif
@@ -2613,10 +2625,12 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
       if( i > 0 && ( childs[ i ]->Page != childs[ i - 1 ]->Right ||
                      childs[ i ]->Left != childs[ i - 1 ]->Page ) )
       {
+#if 0
          printf( "\r\nchilds[%d]->Page=%lx, childs[%d]->Right=%lx, childs[%d]->Page=%lx, childs[%d]->Left=%lx",
                  i - 1, childs[ i - 1 ]->Page, i - 1, childs[ i - 1 ]->Right,
                  i, childs[ i ]->Page, i, childs[ i ]->Left );
          fflush( stdout );
+#endif
          hb_cdxErrInternal( "hb_cdxPageKeyLeafBalance: index corrupted." );
       }
 #endif
@@ -3048,10 +3062,12 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
       if( i > 0 && ( childs[ i ]->Page != childs[ i - 1 ]->Right ||
                      childs[ i ]->Left != childs[ i - 1 ]->Page ) )
       {
+#if 0
          printf( "\r\nchilds[%d]->Page=%lx, childs[%d]->Right=%lx, childs[%d]->Page=%lx, childs[%d]->Left=%lx",
                  i - 1, childs[ i - 1 ]->Page, i - 1, childs[ i - 1 ]->Right,
                  i, childs[ i ]->Page, i, childs[ i ]->Left );
          fflush( stdout );
+#endif
          hb_cdxErrInternal( "hb_cdxPageKeyIntBalance: index corrupted." );
       }
 #endif
@@ -3924,12 +3940,14 @@ static int hb_cdxPageSeekKey( LPCDXPAGE pPage, LPCDXKEY pKey, HB_ULONG ulKeyRec 
           hb_cdxPageGetKeyRec( pPage, pPage->iCurKey ) !=
           hb_cdxPageGetKeyRec( pPage->Child, pPage->Child->iKeys - 1 ) )
       {
+#if 0
          printf( "\r\nkeyLen=%u", pPage->TagParent->uiLen );
          printf( "\r\nparent=%lx, iKey=%d, rec=%lu", pPage->Page, pPage->iCurKey, hb_cdxPageGetKeyRec( pPage, pPage->iCurKey ) );
          printf( "\r\n child=%lx, iKey=%d, rec=%lu", pPage->Child->Page, pPage->Child->iKeys - 1, hb_cdxPageGetKeyRec( pPage->Child, pPage->Child->iKeys - 1 ) );
          printf( "\r\nparent val=[%s]", hb_cdxPageGetKeyVal( pPage, pPage->iCurKey ) );
          printf( "\r\n child val=[%s]", hb_cdxPageGetKeyVal( pPage->Child, pPage->Child->iKeys - 1 ) );
          fflush( stdout );
+#endif
          hb_cdxErrInternal( "hb_cdxPageSeekKey: wrong parent key." );
       }
 #endif
