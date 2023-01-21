@@ -43,7 +43,7 @@
          [<com_recnomuda: RECNOMUDA>] ;
          [<com_filtermuda: FILTERMUDA>] ;
          [<com_ordermuda: ORDERMUDA>] ;
-         [<com_eofok: EOFOK>] ;      
+         [<com_eofok: EOFOK>] ;
          [<com_handlemuda: HANDLEMUDA>] ;
          [<com_mudadados: MUDADADOS>] AJUDA <help> => ;
         AddAcao(<objjanela>,<codigoInkey>,;
@@ -73,12 +73,12 @@
 	 CRIA_PROGRESSBAR(<objjanela>,<topo>,<esq>,<baixo>,<dir>,<help>)
 
 * Menu
-                   
+
 // Exclusivo 2.0
 #command ESPECIALIZE <objjanela> MENU ;
          [<rolavert: ROLAVERTICAL>] [<com_autoclose: AUTOCLOSE>] ;
          => EspMenuVert(<objjanela>,<.rolavert.>,;
-                        <.com_autoclose.>)        
+                        <.com_autoclose.>)
 
 // Exclusivo 2.0
 #command ADDOPCAO <objjanela> TEXTO <textoopcao>  ;
@@ -97,7 +97,7 @@
 * selecao em arquivo (Browse)
 // Não tem a opção TERMINAR
 // Tem a opção AUTOCLOSE
-                  
+
 #command CUA20 ESPECIALIZE <objjanela> SELECAO SIMPLES ;
          [WHILE <cond>] [CONGELAR <num>] ;
          [<naorolavert: NAOROLAVERTICAL>] [<naorolahori: NAOROLAHORIZONTAL>] ;
@@ -127,8 +127,8 @@
 // Não tem a opção TECLAS, COMGRADE, ROLAVERTICAL, ROLAHORIZONTAL, COMTOOLBAR
 // Tem a opção SEMGRADE, NAOROLAVERTICAL, NAOROLAHORIZONTAL, SEMTOOLBAR
 // Tem a opção AUTOCLOSE
-         
-#command CUA20 ESPECIALIZE <objjanela> SELECAO SIMPLES   VETOR <lista> ;
+
+#command CUA20 ESPECIALIZE <objjanela> SELECAO SIMPLES VETOR <lista> ;
          [<naorolavert: NAOROLAVERTICAL>] <naorolahori: NAOROLAHORIZONTAL> ;
          [<semgrad: SEMGRADE>] [<sem_toolbar: SEMTOOLBAR>];
          [<com_autoclose: AUTOCLOSE>] => ;

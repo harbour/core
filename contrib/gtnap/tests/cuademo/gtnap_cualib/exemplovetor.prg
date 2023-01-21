@@ -24,44 +24,44 @@ ADDOPCAO V_Janela TEXTO "janela seleção simples com AUTOCLOSE" ;
 ATIVE(V_Janela)
 *
 
-STAT PROC TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM
-RETURN
-
-// *******************************************************************
 // STAT PROC TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM
-// *******************************************************************
-// LOCAL V_Janela, V_Vetor
+// RETURN
 
-// V_Vetor := {"#Leite condensado","A#rroz tipo 1","Ac#arajé","Doc#e de leite",;
-//             "Doce#s diversos","Churrasco de #gado","Rapadura #preta",;
-//             "Amendoim #torrado","Panelada de #bucho"}
-// *
-// CUA20 @ 06,64,MAXROW()-4,MAXCOL()-5 JANELA V_Janela ;
-//     TITU "Browse de vetor" ;
-//     SUBTITULO "%T;sem grade, sem toolbar;sem barra de rolagem" ;
-//     AJUDA "T?????"
+*******************************************************************
+STAT PROC TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM
+*******************************************************************
+LOCAL V_Janela, V_Vetor
 
-// ADDBOTAO V_Janela TEXTO "F5=exibir selecionados" ;
-//    ACAO EXIBIR_ITEM_SELECIONADO(V_Janela,V_Vetor) AJUDA "B19277"
-
-// CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
-//   COORDENADAS 04,04,06,08 ACAO MOSTRAR("M?????","Selecionou a imagem") AJUDA "B19133"
-
-// ADDACAO V_Janela INKEY K_F6 ACAO MOSTRAR("M?????","Teclou F6") AJUDA "B19121"
-
-// CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES VETOR V_Vetor NAOROLAVERTICAL ;
-//    NAOROLAHORIZONTAL SEMGRADE SEMTOOLBAR
-
-// ATIVE(V_Janela)
+V_Vetor := {"#Leite condensado","A#rroz tipo 1","Ac#arajé","Doc#e de leite",;
+            "Doce#s diversos","Churrasco de #gado","Rapadura #preta",;
+            "Amendoim #torrado","Panelada de #bucho"}
 *
-// *********************************
-// STAT PROC EXIBIR_ITEM_SELECIONADO(V_Janela,V_Vetor)
-// *********************************
-// LOCAL N_Posicao := ITENSSELECIONADOS(V_Janela)
-// *
-// MOSTRAR("M15664","A posição selecionada foi "+LTRIM(STR(N_Posicao)))
-// MOSTRAR("M15666","A posição selecionada contém '"+V_Vetor[N_Posicao]+"'")
-// *
+CUA20 @ 06,64,MAXROW()-4,MAXCOL()-5 JANELA V_Janela ;
+    TITU "Browse de vetor" ;
+    SUBTITULO "%T;sem grade, sem toolbar;sem barra de rolagem" ;
+    AJUDA "T?????"
+
+ADDBOTAO V_Janela TEXTO "F5=exibir selecionados" ;
+   ACAO EXIBIR_ITEM_SELECIONADO(V_Janela,V_Vetor) AJUDA "B19277"
+
+CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
+  COORDENADAS 04,04,06,08 ACAO MOSTRAR("M?????","Selecionou a imagem") AJUDA "B19133"
+
+ADDACAO V_Janela INKEY K_F6 ACAO MOSTRAR("M?????","Teclou F6") AJUDA "B19121"
+
+CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES VETOR V_Vetor NAOROLAVERTICAL ;
+   NAOROLAHORIZONTAL SEMGRADE SEMTOOLBAR
+
+ATIVE(V_Janela)
+*
+*********************************
+STAT PROC EXIBIR_ITEM_SELECIONADO(V_Janela,V_Vetor)
+*********************************
+LOCAL N_Posicao := ITENSSELECIONADOS(V_Janela)
+*
+MOSTRAR("M15664","A posição selecionada foi "+LTRIM(STR(N_Posicao)))
+MOSTRAR("M15666","A posição selecionada contém '"+V_Vetor[N_Posicao]+"'")
+*
 
 STAT PROC TST_BROWSE_VETOR_MULTIPLA_COM_GRADE_COM_TOOLBAR_COM_ROLAGEM
     RETURN
