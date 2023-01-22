@@ -170,10 +170,10 @@ QUIT
 //     OutStd("EXEMPLO_BROWSE_VETOR() Option selected")
 //     RETURN
 
-PROC EXEMPLO_TEXTO_MEMORIA
-    @ 22, 0 SAY ""
-    OutStd("EXEMPLO_TEXTO_MEMORIA() Option selected")
-    RETURN
+// PROC EXEMPLO_TEXTO_MEMORIA
+//     @ 22, 0 SAY ""
+//     OutStd("EXEMPLO_TEXTO_MEMORIA() Option selected")
+//     RETURN
 
 PROC EXEMPLO_TEXTO_ARQUIVO
     @ 22, 0 SAY ""
