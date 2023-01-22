@@ -292,6 +292,34 @@ IF L_ForcaLerTudo
 
             NAP_CUALIB_MENUVERT(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
 
+
+            // * Constantes do vetor de ações de teclado (V_LstAcoes) das janelas
+            // #DEFINE _ACAO_KEYBOARD        1
+            // #DEFINE _ACAO_KEYBOARD_CASE   2
+            // #DEFINE _ACAO_BLOCO_ACAO      3
+            // #DEFINE _ACAO_AUTOCLOSE       4
+            // #DEFINE _ACAO_CDBOTAO         5
+            // #DEFINE _ACAO_ALIAS_MUDA      6
+            // #DEFINE _ACAO_RECNO_MUDA      7
+            // #DEFINE _ACAO_FILTER_MUDA     8
+            // #DEFINE _ACAO_ORDER_MUDA      9
+            // #DEFINE _ACAO_EOFOK          10
+            // #DEFINE _ACAO_HANDLE_MUDA    11
+            // #DEFINE _ACAO_MUDADADOS      12
+
+            // FOR N_Cont := 1 TO LEN(V_LstAcoes)
+            //     NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
+            // NEXT
+
+            FOR N_Cont := 1 TO LEN(V_LstAcoes)
+                NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
+
+                IF V_LstAcoes[N_Cont,_ACAO_KEYBOARD] # NIL
+                    NAP_CUALIB_HOTKEY(V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
+                ENDIF
+            NEXT
+
+
             X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
 
             // FRAN: TODO
@@ -784,17 +812,28 @@ LOCAL V_TableView := NIL
 
 IF SOB_MODO_GRAFICO()
 
-IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
-    X_Retorno := NAP_TABLEVIEW_CUALIB_SELECT_SINGLE_ROW()
+IF N_TP_Jan == _JAN_SELE_ARQ_20
 
-ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-    V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
-    X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
 
-ELSE
 
+    // FRAN: Selection in TableView
+    IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
+        X_Retorno := NAP_TABLEVIEW_CUALIB_SELECT_SINGLE_ROW()
+
+    ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+        V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+        X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
+
+    ELSE
+
+        // FRAN: TODO
+        X_Retorno := 1
+    ENDIF
+
+    // Selection in MenuVert
+ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
     X_Retorno := 0
- ENDIF
+ENDIF
 
 ELSE
 

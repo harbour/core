@@ -577,6 +577,34 @@ ENDIF   // L_ForcaLerTudo
 
 IF SOB_MODO_GRAFICO()
 
+            // * Constantes do vetor de ações de teclado (V_LstAcoes) das janelas
+            // #DEFINE _ACAO_KEYBOARD        1
+            // #DEFINE _ACAO_KEYBOARD_CASE   2
+            // #DEFINE _ACAO_BLOCO_ACAO      3
+            // #DEFINE _ACAO_AUTOCLOSE       4
+            // #DEFINE _ACAO_CDBOTAO         5
+            // #DEFINE _ACAO_ALIAS_MUDA      6
+            // #DEFINE _ACAO_RECNO_MUDA      7
+            // #DEFINE _ACAO_FILTER_MUDA     8
+            // #DEFINE _ACAO_ORDER_MUDA      9
+            // #DEFINE _ACAO_EOFOK          10
+            // #DEFINE _ACAO_HANDLE_MUDA    11
+            // #DEFINE _ACAO_MUDADADOS      12
+
+    FOR N_Cont := 1 TO LEN(V_LstAcoes)
+        NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
+
+        IF V_LstAcoes[N_Cont,_ACAO_KEYBOARD] # NIL
+            NAP_CUALIB_HOTKEY(V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
+        ENDIF
+    NEXT
+
+    IF N_KeyBoard # NIL
+        NAP_LOG("BUTTON KEYBOARD " + hb_ntos(N_Keyboard))
+        NAP_CUALIB_HOTKEY(N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
+    ENDIF
+
+
     //NAP_LOG("SELECAOA::NAP_CUALIB_LAUNCH_MODAL!!!!!!")
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
 
