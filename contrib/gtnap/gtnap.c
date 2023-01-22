@@ -1604,7 +1604,7 @@ void hb_gtnap_cualib_tableview_vector_add_column(TableView *view, /*const char_t
         cassert(cuawin->gtvector->codeBlock0 == NULL);
         if (codeBlock != NULL)
             cuawin->gtvector->codeBlock0 = hb_itemNew(codeBlock);
-        cuawin->gtvector->width0 = 5 * GTNAP_GLOBAL->cell_x_size;
+        cuawin->gtvector->width0 = 11 * GTNAP_GLOBAL->cell_x_size;
         tableview_column_width(view, id, (real32_t)cuawin->gtvector->width0);
     }
     else if (id == 1)

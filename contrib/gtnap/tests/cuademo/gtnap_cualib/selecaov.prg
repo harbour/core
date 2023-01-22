@@ -288,6 +288,8 @@ IF L_ForcaLerTudo
                 NAP_TABLEVIEW_HEADER_VISIBLE(V_TableView, .F.)
                 NAP_TABLEVIEW_GRID(V_TableView, .T., .T.)
 
+                //NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
+
                 IF N_TP_Selecao == _SELE_SIMPLES
                     NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
                 ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
@@ -346,6 +348,7 @@ IF L_ForcaLerTudo
             IF N_TP_Selecao == _SELE_SIMPLES
                 NAP_TABLEVIEW_SELECT(V_TableView, 1)
             ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+                //NAP_TABLEVIEW_SELECT(V_TableView, 1)
                 NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
                 NAP_CUALIB_VETOR_SELECT(VN_Selecio)
                 // //NAP_CUALIB_SET_JANELA(VX_Sele)

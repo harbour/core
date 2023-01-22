@@ -113,66 +113,66 @@ STAT PROC DEFAULT_SELECIONADOS(V_Janela)
 MUDE SELECAO V_Janela PARA {2,4}    // registros pré-selecionados
 *
 
-STAT PROC TST_BROWSE_VETOR_ESTENDIDA_COM_GRADE_COM_TOOLBAR_SEM_ROLAGEM
-    RETURN
-
-// ********************************************************************
 // STAT PROC TST_BROWSE_VETOR_ESTENDIDA_COM_GRADE_COM_TOOLBAR_SEM_ROLAGEM
-// ********************************************************************
-// LOCAL V_Janela, V_Vetor
+//     RETURN
 
-// V_Vetor := {"Leite condensado","Arroz tipo 1","Acarajé","Doce de leite",;
-//             "Doces diversos","Churrasco de gado","Rapadura preta",;
-//             "Amendoim torrado","Panelada de bucho"}
-// *
-// CUA20 @ 06,64,MAXROW()-5,MAXCOL()-5 JANELA V_Janela ;
-//     TITU "Browse de vetor" ;
-//     SUBTITULO "%T;com grade, com toolbar;sem barra de rolagem" ;
-//     AJUDA "T?????"
-// *
-// ADDBOTAO V_Janela TEXTO "Enter=exibir itens selecionados" ;
-//     ACAO EXIBIR_ITENS_SELECIONADOS(V_Janela,V_Vetor) AJUDA "B19283"
+********************************************************************
+STAT PROC TST_BROWSE_VETOR_ESTENDIDA_COM_GRADE_COM_TOOLBAR_SEM_ROLAGEM
+********************************************************************
+LOCAL V_Janela, V_Vetor
 
-// CUA20 ESPECIALIZE V_Janela SELECAO ESTENDIDA VETOR V_Vetor ;
-//       NAOROLAVERTICAL NAOROLAHORIZONTAL
-// *
-// ATIVE(V_Janela)
+V_Vetor := {"Leite condensado","Arroz tipo 1","Acarajé","Doce de leite",;
+            "Doces diversos","Churrasco de gado","Rapadura preta",;
+            "Amendoim torrado","Panelada de bucho"}
+*
+CUA20 @ 06,64,MAXROW()-5,MAXCOL()-5 JANELA V_Janela ;
+    TITU "Browse de vetor" ;
+    SUBTITULO "%T;com grade, com toolbar;sem barra de rolagem" ;
+    AJUDA "T?????"
+*
+ADDBOTAO V_Janela TEXTO "Enter=exibir itens selecionados" ;
+    ACAO EXIBIR_ITENS_SELECIONADOS(V_Janela,V_Vetor) AJUDA "B19283"
+
+CUA20 ESPECIALIZE V_Janela SELECAO ESTENDIDA VETOR V_Vetor ;
+      NAOROLAVERTICAL NAOROLAHORIZONTAL
+*
+ATIVE(V_Janela)
 *
 
-STAT PROC TST_BROWSE_VETOR_SIMPLES_COM_AUTOCLOSE
-RETURN
-
-// ************************************************
 // STAT PROC TST_BROWSE_VETOR_SIMPLES_COM_AUTOCLOSE
-// ************************************************
-// LOCAL V_Janela, V_Vetor, N_Posicao
+// RETURN
 
-// V_Vetor := {"Leite condensado","Arroz tipo 1","Acarajé","Doce de leite",;
-//             "Doces diversos","Churrasco de gado","Rapadura preta",;
-//             "Amendoim torrado","Panelada de bucho"}
-// *
-// CUA20 @ 06,64,MAXROW()-5,MAXCOL()-5 JANELA V_Janela ;
-//     TITU "Browse de vetor" ;
-//     SUBTITULO "%T;com 'autoclose'" ;
-//     AJUDA "T?????"
-// *
-// ADDBOTAO V_Janela TEXTO "F5=exibir selecionados" ;
-//    ACAO (EXIBIR_ITEM_SELECIONADO(V_Janela,V_Vetor),.T.) AUTOCLOSE AJUDA "B19285"
+************************************************
+STAT PROC TST_BROWSE_VETOR_SIMPLES_COM_AUTOCLOSE
+************************************************
+LOCAL V_Janela, V_Vetor, N_Posicao
 
-// CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
-//   COORDENADAS 04,04,06,08 ;
-//   ACAO (MOSTRAR("M?????","Selecionou a imagem"),.T.) AUTOCLOSE AJUDA "B19135"
+V_Vetor := {"Leite condensado","Arroz tipo 1","Acarajé","Doce de leite",;
+            "Doces diversos","Churrasco de gado","Rapadura preta",;
+            "Amendoim torrado","Panelada de bucho"}
+*
+CUA20 @ 06,64,MAXROW()-5,MAXCOL()-5 JANELA V_Janela ;
+    TITU "Browse de vetor" ;
+    SUBTITULO "%T;com 'autoclose'" ;
+    AJUDA "T?????"
+*
+ADDBOTAO V_Janela TEXTO "F5=exibir selecionados" ;
+   ACAO (EXIBIR_ITEM_SELECIONADO(V_Janela,V_Vetor),.T.) AUTOCLOSE AJUDA "B19285"
 
-// ADDACAO V_Janela INKEY K_F6 ;
-//   ACAO (MOSTRAR("M?????","Teclou F6"),.T.) AUTOCLOSE AJUDA "B19123"
+CUA20 ADDIMAGEM V_Janela ARQUIVO DIRET_BMPS()+"logaspec.bmp"  ;
+  COORDENADAS 04,04,06,08 ;
+  ACAO (MOSTRAR("M?????","Selecionou a imagem"),.T.) AUTOCLOSE AJUDA "B19135"
 
-// CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES VETOR V_Vetor ;
-//    NAOROLAVERTICAL NAOROLAHORIZONTAL SEMGRADE SEMTOOLBAR AUTOCLOSE
-// *
-// N_Posicao := ATIVE(V_Janela)
-// *
-// MOSTRAR("M15668","Foi selecionada posição "+LTRIM(STR(N_Posicao)))
-// *
-// *********************
+ADDACAO V_Janela INKEY K_F6 ;
+  ACAO (MOSTRAR("M?????","Teclou F6"),.T.) AUTOCLOSE AJUDA "B19123"
+
+CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES VETOR V_Vetor ;
+   NAOROLAVERTICAL NAOROLAHORIZONTAL SEMGRADE SEMTOOLBAR AUTOCLOSE
+*
+N_Posicao := ATIVE(V_Janela)
+*
+MOSTRAR("M15668","Foi selecionada posição "+LTRIM(STR(N_Posicao)))
+*
+*********************
 
 
