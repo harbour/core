@@ -133,6 +133,9 @@ extern Window *hb_gtnap_cualib_current_window(void);
 
 extern TableView *hb_gtnap_cualib_current_tableview(void);
 
+extern Panel *hb_gtnap_cualib_current_menuvert(void);
+
+
 extern void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId);
 
 extern bool_t hb_gtnap_cualib_current_row_selected(void);

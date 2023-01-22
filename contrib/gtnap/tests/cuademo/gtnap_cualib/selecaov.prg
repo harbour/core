@@ -809,6 +809,7 @@ FUNC ItensSelecionados (VX_Janela)
 LOCAL X_Retorno
 LOCAL VX_Sele := VX_SubObj
 LOCAL V_TableView := NIL
+LOCAL V_MenuVert := NIL
 
 IF SOB_MODO_GRAFICO()
 
@@ -826,13 +827,13 @@ IF N_TP_Jan == _JAN_SELE_ARQ_20
 
     ELSE
 
-        // FRAN: TODO
-        X_Retorno := 1
+        X_Retorno := 0
     ENDIF
 
     // Selection in MenuVert
 ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
-    X_Retorno := 0
+    V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
+    X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
 ENDIF
 
 ELSE

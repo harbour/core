@@ -1734,6 +1734,28 @@ TableView *hb_gtnap_cualib_current_tableview(void)
 
 /*---------------------------------------------------------------------------*/
 
+Panel *hb_gtnap_cualib_current_menuvert(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    Panel *menuvert = NULL;
+    cassert_no_null(cuawin);
+
+    arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+        // Only one menuvert is allowed
+        if (obj->type == ekOBJ_MENUVERT)
+        {
+            cassert(menuvert == NULL);
+            menuvert = (Panel*)obj->component;
+        }
+    arrst_end();
+
+    // A MenuVert is required
+    cassert_no_null(menuvert);
+    return menuvert;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnTableViewSelect(GtNapCallback *callback, Event *e)
 {
     hb_gtnap_callback(callback, e);
