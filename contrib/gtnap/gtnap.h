@@ -15,6 +15,7 @@
 typedef struct _gui_component_t GuiComponent;
 typedef struct _gtnap_callback_t GtNapCallback;
 typedef struct _gtnap_area_t GtNapArea;
+typedef struct _gtnap_vector_t GtNapVector;
 
 typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
@@ -45,6 +46,13 @@ extern void hb_gtnap_area_set_row(GtNapArea *area, const uint32_t row);
 extern uint32_t hb_gtnap_area_row_count(GtNapArea *area);
 
 extern const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id, const uint32_t row_id, align_t *align);
+
+extern const char_t *hb_gtnap_vector_eval_field(GtNapVector *vector, const uint32_t field_id, const uint32_t row_id);
+
+extern uint32_t hb_gtnap_vector_items_count(GtNapVector *vector);
+
+//extern void hb_gtnap_vector_add_item()
+
 
 extern char_t* hb_gtnap_area_temp(GtNapArea *area, uint32_t *size);
 
@@ -97,9 +105,17 @@ extern void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const
 
 extern GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view);
 
+extern GtNapVector *hb_gtnap_cualib_tableview_vector(TableView *view);
+
 //extern GtNapArea *hb_gtnap_cualib_tableview_get_area(TableView *view);
 
 extern void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *title, const bool_t freeze, const uint32_t width, PHB_ITEM codeBlock);
+
+extern void hb_gtnap_cualib_tableview_vector_add_column(TableView *view/*, const char_t *title, const bool_t freeze*/, const uint32_t width, PHB_ITEM codeBlock);
+
+extern void hb_gtnap_cualib_tableview_vector_add_item(TableView *view, String *text, PHB_ITEM codeBlock, const uint32_t hotkey_pos);  // /*, const char_t *title, const bool_t freeze*/, const uint32_t width, PHB_ITEM codeBlock);
+
+extern void hb_gtnap_cualib_vector_selection(const ArrSt(uint32_t) *sel);
 
 extern void hb_gtnap_cualib_tableview_refresh(void);
 

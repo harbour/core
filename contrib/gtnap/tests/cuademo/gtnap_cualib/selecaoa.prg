@@ -1426,6 +1426,11 @@ IF LEN(VN_Selecio) # 0 .OR. LEN(VN_Default) # 0         // algo a fazer
         IF V_TableView # NIL
             NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
             NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
+
+            IF N_TP_Jan == _JAN_SELE_VETO_20
+                NAP_CUALIB_VETOR_SELECT(VN_Selecio)
+            ENDIF
+
         ENDIF
     ELSE
 

@@ -146,6 +146,121 @@ HB_FUNC( NAP_TABLEVIEW_CUALIB_BIND_DB )
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnTableDataVector(GtNapVector *gtvect, Event *e)
+{
+    uint32_t etype = event_type(e);
+
+    switch(etype) {
+    case ekGUI_EVENT_TBL_BEGIN:
+        break;
+
+    case ekGUI_EVENT_TBL_END:
+        break;
+
+    case ekGUI_EVENT_TBL_NROWS:
+    {
+        uint32_t *n = event_result(e, uint32_t);
+        *n = hb_gtnap_vector_items_count(gtvect);
+        break;
+    }
+
+    case ekGUI_EVENT_TBL_CELL:
+    {
+        EvTbCell *cell = event_result(e, EvTbCell);
+        const EvTbPos *pos = event_params(e, EvTbPos);
+        cell->text = hb_gtnap_vector_eval_field(gtvect, pos->col, pos->row);
+        // else
+        //     cell->text = "Hello";
+        //cell->text = hb_gtnap_area_eval_field(gtarea, pos->col + 1, pos->row + 1, &cell->align);
+//const char_t *hb_gtnap_vector_eval_field(GtNapVector *vector, const uint32_t field_id, const uint32_t row_id)
+
+        // Table column automatic width based on cell content
+        // hb_gtnap_cualib_column_width(gtarea, pos->col, cell->text);
+        break;
+    }
+
+    default:
+        break;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnVectorSelect(GtNapVector *gtvect, Event *e)
+{
+    const EvTbSel *p = event_params(e, EvTbSel);
+    hb_gtnap_cualib_vector_selection(p->sel);
+    unref(gtvect);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_CUALIB_BIND_VETOR )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    GtNapVector *gtvect = hb_gtnap_cualib_tableview_vector(view);
+    tableview_OnData(view, listener(gtvect, i_OnTableDataVector, GtNapVector));
+    tableview_OnSelect(view, listener(gtvect, i_OnVectorSelect, GtNapVector));
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_CUALIB_VECTOR_ADD )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    String *text = hb_gtnap_cualib_parText(2);
+    PHB_ITEM codeBlock = hb_param(3, HB_IT_BLOCK);
+    uint32_t hotkey_pos = hb_parni(4);
+    hb_gtnap_cualib_tableview_vector_add_item(view, text, codeBlock, hotkey_pos);
+
+    // MenuVert *menu = panel_get_data(panel, MenuVert);
+    // MenuOpt *opt = arrst_new0(menu->opts, MenuOpt);
+    // opt->text = text;
+    // opt->codeBlock = codeBlock ? hb_itemNew(codeBlock) : NULL;
+    // opt->hoykey_pos = (hotkey_pos == 0) ? UINT32_MAX : hotkey_pos - 1;
+    // opt->hotkey = ENUM_MAX(vkey_t);
+    // opt->hotmodif = UINT32_MAX;
+    // log_printf("Added option '%s' to MenuVert", tc(text));
+    // if (opt->hoykey_pos != UINT32_MAX)
+    // {
+    //     uint32_t cp = i_codepoint(tc(opt->text), opt->hoykey_pos);
+
+    //     // ASCII uppercase
+    //     if (cp >= 65 && cp <= 90)
+    //     {
+    //         opt->hotkey = KEY_ASCII_TABLE[cp - 65];
+    //         //opt->hotmodif = ekMKEY_SHIFT;
+    //         // Hotkeys doesn't use SHIFT
+    //         opt->hotmodif = 0;
+    //     }
+
+    //     // ASCII lowercase
+    //     if (cp >= 97 && cp <= 122)
+    //     {
+    //         opt->hotkey = KEY_ASCII_TABLE[cp - 97];
+    //         opt->hotmodif = 0;
+    //     }
+
+    //     // ASCII numbers
+    //     if (cp >= 48 && cp <= 57)
+    //     {
+    //         opt->hotkey = KEY_ASCII_NUMBERS[cp - 48];
+    //         opt->hotmodif = 0;
+    //     }
+
+    //     if (opt->hotkey != ENUM_MAX(vkey_t))
+    //     {
+    //         Window *window = hb_gtnap_cualib_current_window();
+    //         window_hotkey(window, opt->hotkey, opt->hotmodif, listener(menu, i_OnHotKey, MenuVert));
+    //     }
+    // }
+}
+
+//NAP_TABLEVIEW_CUALIB_VECTOR_ADD(V_TableView, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
+
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TABLEVIEW_COLUMN_DB )
 {
     TableView *view = (TableView*)hb_parptr(1);
@@ -166,6 +281,17 @@ HB_FUNC( NAP_TABLEVIEW_CUALIB_COLUMN_DB )
     PHB_ITEM codeBlock = hb_param(3, HB_IT_BLOCK);
     uint32_t width = hb_parni(4);
     hb_gtnap_cualib_tableview_area_add_column(view, title, FALSE, width, codeBlock);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_CUALIB_COLUMN_VECTOR )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    //const char_t *title = hb_gtnap_parText(2);
+    PHB_ITEM codeBlock = hb_param(2, HB_IT_BLOCK);
+    uint32_t width = hb_parni(3);
+    hb_gtnap_cualib_tableview_vector_add_column(view/*, title, FALSE*/, width, codeBlock);
 }
 
 /*---------------------------------------------------------------------------*/

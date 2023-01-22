@@ -63,54 +63,54 @@ MOSTRAR("M15664","A posição selecionada foi "+LTRIM(STR(N_Posicao)))
 MOSTRAR("M15666","A posição selecionada contém '"+V_Vetor[N_Posicao]+"'")
 *
 
-STAT PROC TST_BROWSE_VETOR_MULTIPLA_COM_GRADE_COM_TOOLBAR_COM_ROLAGEM
-    RETURN
-
-// ********************************************************************
 // STAT PROC TST_BROWSE_VETOR_MULTIPLA_COM_GRADE_COM_TOOLBAR_COM_ROLAGEM
-// ********************************************************************
-// LOCAL V_Janela, V_Vetor, V_Posicoes
+//     RETURN
 
-// V_Vetor := {"#Leite condensado","A#rroz tipo 1","Ac#arajé","Doc#e de leite",;
-//             "Doce#s diversos","Churrasco de #gado","Rapadura #preta",;
-//             "Amendoim #torrado","Panelada de #bucho"}
-// *
-// CUA20 @ 15,64,MAXROW()-5,MAXCOL()-5 JANELA V_Janela ;
-//     TITU "Browse de vetor" ;
-//     SUBTITULO "%T;com grade, sem toolbar;com barra de rolagem" ;
-//     AJUDA "T?????"
-// ADDBOTAO V_Janela TEXTO "Enter=exibir itens selecionados" ;
-//     ACAO EXIBIR_ITENS_SELECIONADOS(V_Janela,V_Vetor) AUTOCLOSE AJUDA "B19279"
+********************************************************************
+STAT PROC TST_BROWSE_VETOR_MULTIPLA_COM_GRADE_COM_TOOLBAR_COM_ROLAGEM
+********************************************************************
+LOCAL V_Janela, V_Vetor, V_Posicoes
 
-// ADDBOTAO V_Janela TEXTO "V=voltar seleção para o 'default'" ;
-//    ACAO DEFAULT_SELECIONADOS(V_Janela) AJUDA "B19281"
+V_Vetor := {"#Leite condensado","A#rroz tipo 1","Ac#arajé","Doc#e de leite",;
+            "Doce#s diversos","Churrasco de #gado","Rapadura #preta",;
+            "Amendoim #torrado","Panelada de #bucho"}
+*
+CUA20 @ 15,64,MAXROW()-5,MAXCOL()-5 JANELA V_Janela ;
+    TITU "Browse de vetor" ;
+    SUBTITULO "%T;com grade, sem toolbar;com barra de rolagem" ;
+    AJUDA "T?????"
+ADDBOTAO V_Janela TEXTO "Enter=exibir itens selecionados" ;
+    ACAO EXIBIR_ITENS_SELECIONADOS(V_Janela,V_Vetor) AUTOCLOSE AJUDA "B19279"
 
-// CUA20 ESPECIALIZE V_Janela SELECAO MULTIPLA VETOR V_Vetor NAOROLAHORIZONTAL
+ADDBOTAO V_Janela TEXTO "V=voltar seleção para o 'default'" ;
+   ACAO DEFAULT_SELECIONADOS(V_Janela) AJUDA "B19281"
 
-// MUDE SELECAO V_Janela PARA {2,4}
+CUA20 ESPECIALIZE V_Janela SELECAO MULTIPLA VETOR V_Vetor NAOROLAHORIZONTAL
 
-// V_Posicoes := ATIVE(V_Janela)
-// *
+MUDE SELECAO V_Janela PARA {2,4}
+
+V_Posicoes := ATIVE(V_Janela)
+*
 // IF LEN(V_Posicoes) == 0
 //    MOSTRAR("M15668","Não foi selecionada nenhuma posição")
 // ENDIF
 *
-// ***********************************
-// STAT PROC EXIBIR_ITENS_SELECIONADOS(V_Janela,V_Vetor)
-// ***********************************
-// LOCAL V_Posicoes := ITENSSELECIONADOS(V_Janela)
-// *
-// MOSTRAR("M15670","Foram selecionadas "+LTRIM(STR(LEN(V_Posicoes)))+" posições")
-// *
-// IF LEN(V_Posicoes) > 1
-//    MOSTRAR("M15672","A primeira posição selecionada contém '"+;
-//            V_Vetor[V_Posicoes[1]]+"'")
-// ENDIF
-// *
-// *********************************
-// STAT PROC DEFAULT_SELECIONADOS(V_Janela)
-// *********************************
-// MUDE SELECAO V_Janela PARA {2,4}    // registros pré-selecionados
+***********************************
+STAT PROC EXIBIR_ITENS_SELECIONADOS(V_Janela,V_Vetor)
+***********************************
+LOCAL V_Posicoes := ITENSSELECIONADOS(V_Janela)
+*
+MOSTRAR("M15670","Foram selecionadas "+LTRIM(STR(LEN(V_Posicoes)))+" posições")
+*
+IF LEN(V_Posicoes) > 0
+   MOSTRAR("M15672","A primeira posição selecionada contém '"+;
+           V_Vetor[V_Posicoes[1]]+"'")
+ENDIF
+*
+*********************************
+STAT PROC DEFAULT_SELECIONADOS(V_Janela)
+*********************************
+MUDE SELECAO V_Janela PARA {2,4}    // registros pré-selecionados
 *
 
 STAT PROC TST_BROWSE_VETOR_ESTENDIDA_COM_GRADE_COM_TOOLBAR_SEM_ROLAGEM

@@ -223,3 +223,30 @@ HB_FUNC( NAP_CUALIB_IS_SELECTED )
     bool_t sel = hb_gtnap_cualib_current_row_selected();
     hb_retl(sel);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_VETOR_SELECT )
+{
+    ArrSt(uint32_t) *rows = arrst_create(uint32_t);
+
+    if (HB_ISNUM(1))
+    {
+        uint32_t row = hb_parni(1) - 1;
+        arrst_append(rows, row, uint32_t);
+    }
+    else if (HB_ISARRAY(1))
+    {
+        uint32_t i, n = hb_parinfa(1, 0);
+        for (i = 0; i < n; ++i)
+        {
+            uint32_t row = hb_parvni(1, i + 1) - 1;
+            log_printf("Added %d row to selection", row);
+            arrst_append(rows, row, uint32_t);
+        }
+    }
+
+    hb_gtnap_cualib_vector_selection(rows);
+
+    arrst_destroy(&rows, NULL, uint32_t);
+}

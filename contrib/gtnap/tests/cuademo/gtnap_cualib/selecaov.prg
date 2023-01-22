@@ -238,10 +238,11 @@ LOCAL N_Row_Inicial_Util
 LOCAL N_mRow, N_mCol, N_Desloca, N_RegiaoMouse, N_Keyboard
 LOCAL N_Desloca_Aux, N_RowPos_Ant
 LOCAL X_Retorno
-LOCAL L_Coords, V_MenuVert
+LOCAL L_Coords, V_MenuVert, V_TableView
 LOCAL /*N_PaintRefresh_Old,*/ X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, N_TeclaUpper, L_PodeExecutar
 *
+LOCAL N_Count, O_Column, N_Width, C_Title
 
 //
 //  FRAN: Unused - This code is win32 (GtWvW)
@@ -276,6 +277,87 @@ IF L_ForcaLerTudo
                 L_Coords[4]++
             ENDIF
 
+            // FRAN: Browse de vetor WITH Grade is implemented with a TableView control
+            // Browse de vetor WITHOUT Grade is implemented with a MenuVert control
+            IF L_MostraGrade
+
+
+                V_TableView := NAP_TABLEVIEW_CREATE()
+
+                NAP_TABLEVIEW_FONT(V_TableView)
+                NAP_TABLEVIEW_HEADER_VISIBLE(V_TableView, .F.)
+                NAP_TABLEVIEW_GRID(V_TableView, .T., .T.)
+
+                IF N_TP_Selecao == _SELE_SIMPLES
+                    NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
+                ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+                    NAP_TABLEVIEW_MULTISEL(V_TableView, .T., .T.)
+                ENDIF
+
+
+                // FRAN: NO database connection in Browse de vetor
+                //NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView)
+                NAP_TABLEVIEW_CUALIB_BIND_VETOR(V_TableView)
+
+                LOG_PRINT("TableView Vector Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
+                NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
+
+                LOG_PRINT("Num cols: " + hb_ntos(VX_Sele:COLCOUNT))
+                FOR N_Count := 1 TO VX_Sele:COLCOUNT
+                     O_Column := VX_Sele:GetColumn(N_Count)
+                    C_Title := O_Column:HEADING
+                    N_Width := O_Column:WIDTH
+
+                    IF C_Title == NIL
+                        C_Title := ""
+                    ENDIF
+
+                    IF N_Width == NIL
+                        N_Width := 0
+                    ENDIF
+
+                    LOG_PRINT("Title: " + C_Title)
+                    IF O_Column:WIDTH # NIL
+                        LOG_PRINT("WIDTH " + hb_ntos(O_Column:WIDTH))
+                    ELSE
+                        LOG_PRINT("WIDTH IS NULL")
+                    ENDIF
+
+                    NAP_TABLEVIEW_CUALIB_COLUMN_VECTOR(V_TableView, O_Column:BLOCK,N_Width)
+                    //NAP_TABLEVIEW_CUALIB_COLUMN_DB(V_TableView, C_Title,O_Column:BLOCK,N_Width)
+
+                NEXT
+
+                FOR N_Cont := 1 TO LEN(V_Opcoes)
+                    //IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] // # 0  // tem tecla hotkey
+                        NAP_TABLEVIEW_CUALIB_VECTOR_ADD(V_TableView, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
+                    //ENDIF
+                NEXT
+
+                NAP_TABLEVIEW_UPDATE(V_TableView)
+
+                LOG_PRINT("Current VETOR VN_Selecio" + hb_ntos(LEN(VN_Selecio)))
+
+            //
+            // FRAN: Automatic first selection and change selection event
+            //
+            NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
+
+            IF N_TP_Selecao == _SELE_SIMPLES
+                NAP_TABLEVIEW_SELECT(V_TableView, 1)
+            ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+                NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
+                NAP_CUALIB_VETOR_SELECT(VN_Selecio)
+                // //NAP_CUALIB_SET_JANELA(VX_Sele)
+                // //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
+                // NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
+                // IF N_Congela # 0
+                //     NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
+                // ENDIF
+
+            ENDIF
+
+            ELSE
             LOG_PRINT("Menu Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
 
             V_MenuVert := NAP_MENUVERT_CREATE()
@@ -292,6 +374,7 @@ IF L_ForcaLerTudo
 
             NAP_CUALIB_MENUVERT(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
 
+            ENDIF
 
             // * Constantes do vetor de ações de teclado (V_LstAcoes) das janelas
             // #DEFINE _ACAO_KEYBOARD        1
@@ -750,7 +833,21 @@ ENDIF   // IF .NOT. SOB_MODO_GRAFICO()
 *
 
 
-IF .NOT. SOB_MODO_GRAFICO()
+IF  SOB_MODO_GRAFICO()
+
+    IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
+        V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
+        X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
+    ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+        V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+        X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
+
+    ENDIF
+
+    // // FRAN TODO
+    // X_Retorno := {1}
+
+ELSE // IF .NOT. SOB_MODO_GRAFICO()
 
 
     IF L_Abortado
@@ -832,8 +929,17 @@ IF N_TP_Jan == _JAN_SELE_ARQ_20
 
     // Selection in MenuVert
 ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
-    V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
-    X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
+    IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
+        V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
+        X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
+    ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+        V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+        X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
+
+    ELSE
+
+        X_Retorno := 0
+    ENDIF
 ENDIF
 
 ELSE

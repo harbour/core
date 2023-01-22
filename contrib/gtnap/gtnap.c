@@ -20,7 +20,7 @@ typedef struct _gtnap_column_t GtNapColumn;
 typedef struct _gtnap_cualib_object_t GtNapCualibObject;
 typedef struct _gtnap_cualib_toolbar_t GtNapCualibToolbar;
 typedef struct _gtnap_cualib_window_t GtNapCualibWindow;
-
+typedef struct _vecitem_t VecItem;
 typedef struct _gui_context_t GuiContext;
 
 struct _gtnap_callback_t
@@ -59,6 +59,30 @@ struct _gtnap_area_t
     char_t temp[512];       // Temporal buffer between RDD and TableView
     ArrSt(GtNapColumn) *columns;
     uint32_t cacherow;      // Store the DB row while table drawing
+};
+
+struct _vecitem_t
+{
+    String *text;
+    PHB_ITEM codeBlock;
+    //S2Df size;
+    uint32_t hoykey_pos;
+    vkey_t hotkey;
+    //uint32_t hotmodif;
+    bool_t selected;
+};
+
+DeclSt(VecItem);
+
+struct _gtnap_vector_t
+{
+    TableView *view;
+    ArrSt(VecItem) *items;
+    uint32_t width0;
+    uint32_t width1;
+    PHB_ITEM codeBlock0;
+    PHB_ITEM codeBlock1;
+    char_t temp[512];       // Temporal buffer between RDD and TableView
 };
 
 DeclPt(GtNapCallback);
@@ -107,6 +131,7 @@ struct _gtnap_cualib_window_t
     Panel *panel;
     GtNapCualibToolbar *toolbar;
     GtNapArea *gtarea;
+    GtNapVector *gtvector;
     ArrSt(GtNapCualibObject) *gui_objects;
     ArrPt(GtNapCallback) *callbacks;
 };
@@ -295,6 +320,36 @@ static void i_destroy_area(GtNapArea **area)
     cassert_no_null(*area);
     arrst_destroy(&(*area)->columns, i_remove_column, GtNapColumn);
     heap_delete(area, GtNapArea);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_remove_item(VecItem *item)
+{
+    str_destroy(&item->text);
+
+    if (item->codeBlock)
+    {
+        hb_itemRelease(item->codeBlock);
+        item->codeBlock = NULL;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_destroy_vector(GtNapVector **vector)
+{
+    cassert_no_null(vector);
+    cassert_no_null(*vector);
+    arrst_destroy(&(*vector)->items, i_remove_item, VecItem);
+
+    if ((*vector)->codeBlock0 != NULL)
+        hb_itemRelease((*vector)->codeBlock0);
+
+    if ((*vector)->codeBlock1 != NULL)
+        hb_itemRelease((*vector)->codeBlock1);
+
+    heap_delete(vector, GtNapVector);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -598,6 +653,107 @@ const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id,
     // }
 
     return area->temp;
+}
+
+/*---------------------------------------------------------------------------*/
+
+// const char_t *hb_gtnap_vector_eval_field(GtNapVector *vector, const uint32_t field_id, const uint32_t row_id)
+// {
+//     //const GtNapColumn *column = NULL;
+//     PHB_ITEM pItem = NULL;
+//     HB_TYPE type = 0;
+
+//     cassert_no_null(vector);
+
+//     // // First, select the row in area
+//     // if (area->currow != row_id)
+//     // {
+//     //     SELF_GOTO(area->area, (HB_ULONG)row_id);
+//     //     area->currow = row_id;
+//     // }
+
+//     //column = arrst_get_const(area->columns, field_id - 1, GtNapColumn);
+
+//     log_printf("hb_gtnap_vector_eval_field: codeBlock0: %s codeBlock1: %s", vector->codeBlock0 ? "NO Null" : "NULL", vector->codeBlock1 ? "NO Null" : "NULL");
+//     if (field_id == 0)
+//         pItem = hb_itemDo(vector->codeBlock0, 0);
+//     else
+//         pItem = hb_itemDo(vector->codeBlock1, 0);
+
+//     type = HB_ITEM_TYPE(pItem);
+//     vector->temp[0] = '\0';
+
+//     if (type == HB_IT_STRING)
+//     {
+//         hb_itemCopyStrUTF8(pItem, vector->temp, sizeof(vector->temp));
+//         log_printf("hb_gtnap_vector_eval_field: '%s'", vector->temp);
+//     }
+//     else if (type == HB_IT_DATE)
+//     {
+//         char date[16];
+//         cassert(FALSE);
+//         hb_itemGetDS(pItem, date);
+//         hb_dateFormat(date, vector->temp, "DD/MM/YYYY");
+//     }
+//     else if (type == HB_IT_DOUBLE)
+//     {
+//         double value = hb_itemGetND(pItem);
+//         cassert(FALSE);
+//         bstd_sprintf(vector->temp, sizeof(vector->temp), "%12.4f", value);
+//     }
+
+//     hb_itemRelease(pItem);
+
+//     // if (align != NULL)
+//     //     *align = column->align;
+
+//     // if (area->currow != row_id)
+//     // {
+//     //     SELF_GOTO(area->area, (HB_ULONG)area->currow);
+//     // }
+
+//     return vector->temp;
+// }
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *hb_gtnap_vector_eval_field(GtNapVector *vector, const uint32_t field_id, const uint32_t row_id)
+{
+    const VecItem *item = NULL;
+    cassert_no_null(vector);
+    item = arrst_get_const(vector->items, row_id, VecItem);
+    if (field_id == 0)
+    {
+        if (item->selected == TRUE)
+        {
+            // » in UTF8
+            vector->temp[0] = 194;
+            vector->temp[1] = 187;
+            vector->temp[2] = 0;
+            return vector->temp;
+        }
+        else
+        {
+            return "";
+        }
+    }
+    else if (field_id == 1)
+    {
+        return tc(item->text);
+    }
+    else
+    {
+        cassert(field_id == 0 || field_id == 1);
+        return "";
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_vector_items_count(GtNapVector *vector)
+{
+    cassert_no_null(vector);
+    return arrst_size(vector->items, VecItem);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -940,6 +1096,9 @@ static void i_remove_cualib_win(GtNapCualibWindow *cuawin)
 
     if (cuawin->gtarea != NULL)
         i_destroy_area(&cuawin->gtarea);
+
+    if (cuawin->gtvector != NULL)
+        i_destroy_vector(&cuawin->gtvector);
 
     cassert(arrst_size(cuawin->gui_objects, GtNapCualibObject) == 0);
     arrst_destroy(&cuawin->gui_objects, NULL, GtNapCualibObject);
@@ -1337,6 +1496,15 @@ static GtNapArea *i_create_area(void)
 
 /*---------------------------------------------------------------------------*/
 
+static GtNapVector *i_create_vector(void)
+{
+    GtNapVector *vector = heap_new0(GtNapVector);
+    vector->items = arrst_create(VecItem);
+    return vector;
+}
+
+/*---------------------------------------------------------------------------*/
+
 GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
@@ -1358,6 +1526,18 @@ GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
     }
 
     return cuawin->gtarea;
+}
+
+/*---------------------------------------------------------------------------*/
+
+GtNapVector *hb_gtnap_cualib_tableview_vector(TableView *view)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    cassert(cuawin->gtvector == NULL);
+    cuawin->gtvector = i_create_vector();
+    cuawin->gtvector->view = view;
+    return cuawin->gtvector;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1405,6 +1585,90 @@ void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *ti
     tableview_column_width(view, id, (real32_t)column->width);
     tableview_header_align(view, id, column->align);
     log_printf("hb_gtnap_cualib_tableview_area_add_column: '%s'", tc(column->title));
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_tableview_vector_add_column(TableView *view, /*const char_t *title, const bool_t freeze,*/ const uint32_t width, PHB_ITEM codeBlock)
+{
+    uint32_t id = UINT32_MAX;
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtvector);
+    cassert(view == cuawin->gtvector->view);
+    //unref(freeze);
+    id = tableview_new_column_text(view);
+
+    if (id == 0)
+    {
+        cassert(cuawin->gtvector->codeBlock0 == NULL);
+        if (codeBlock != NULL)
+            cuawin->gtvector->codeBlock0 = hb_itemNew(codeBlock);
+        cuawin->gtvector->width0 = 5 * GTNAP_GLOBAL->cell_x_size;
+        tableview_column_width(view, id, (real32_t)cuawin->gtvector->width0);
+    }
+    else if (id == 1)
+    {
+        cassert(cuawin->gtvector->codeBlock1 == NULL);
+        if (codeBlock != NULL)
+            cuawin->gtvector->codeBlock1 = hb_itemNew(codeBlock);
+        cuawin->gtvector->width1 = i_column_width(width);
+        tableview_column_width(view, id, (real32_t)cuawin->gtvector->width1);
+    }
+    else
+    {
+        // TableView for Vector only one or two columns
+        cassert(id == 0 || id == 1);
+    }
+    // cassert(id == arrst_size(cuawin->gtarea->columns, GtNapColumn));
+    // column = arrst_new(cuawin->gtarea->columns, GtNapColumn);
+    // column->title = gtconvert_1252_to_UTF8(title);
+    // column->fixed_width = width;
+    // column->width = i_column_width(width);
+    // column->align = ekLEFT;
+    // column->codeBlock = hb_itemNew(codeBlock);
+    // tableview_header_title(view, id, tc(column->title));
+    // tableview_header_align(view, id, column->align);
+    // log_printf("hb_gtnap_cualib_tableview_area_add_column: '%s'", tc(column->title));
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_tableview_vector_add_item(TableView *view, String *text, PHB_ITEM codeBlock, const uint32_t hotkey_pos)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    VecItem *item = NULL;
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtvector);
+    cassert(view == cuawin->gtvector->view);
+    item = arrst_new0(cuawin->gtvector->items, VecItem);
+    item->text = text;
+    item->codeBlock = hb_itemNew(codeBlock);
+    item->hoykey_pos = hotkey_pos;
+    item->selected = FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static bool_t i_in_vect(const ArrSt(uint32_t) *sel, const uint32_t i)
+{
+    arrst_foreach_const(id, sel, uint32_t)
+        if (*id == i)
+            return TRUE;
+    arrst_end();
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_vector_selection(const ArrSt(uint32_t) *sel)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtvector);
+    arrst_foreach(item, cuawin->gtvector->items, VecItem)
+        item->selected = i_in_vect(sel, item_i);
+    arrst_end();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1725,11 +1989,21 @@ Window *hb_gtnap_cualib_current_window(void)
 TableView *hb_gtnap_cualib_current_tableview(void)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    TableView *view = NULL;
     cassert_no_null(cuawin);
     if (cuawin->gtarea != NULL)
         return cuawin->gtarea->view;
 
-    return NULL;
+    arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+        // Only one menuvert is allowed
+        if (obj->type == ekOBJ_TABLEVIEW)
+        {
+            cassert(view == NULL);
+            view = (TableView*)obj->component;
+        }
+    arrst_end();
+
+    return view;
 }
 
 /*---------------------------------------------------------------------------*/
