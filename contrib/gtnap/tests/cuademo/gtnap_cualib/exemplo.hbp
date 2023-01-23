@@ -24,6 +24,7 @@ exemplodbf.prg
 exemplovetor.prg
 #exemplo_textoarquivo.prg
 exemplotextomemoria.prg
+acentos.prg
 outros.prg
 janela.prg
 selecaoa.prg
@@ -32,6 +33,7 @@ menuvert.prg
 tbrowsesubclass.prg
 stubs.prg
 inkey_.prg
+texto.prg
 
 # Libraries
 gtnap.hbc

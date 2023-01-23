@@ -1037,14 +1037,18 @@ RETURN N_TelaPrincipalHeight
 //    #erro "C�digo n�o adaptado para esta plataforma"
 // #endif
 // *
-// ***************************
-// FUNCTION GETCLIPBOARD_ASPEC
-// ***************************
-// * NOTA: Os seguintes acentos em c�digo diferente na PC850 e na PC437: "�����������ڧ"
-// *
-// LOCAL C_RETORNO
-// *
-// IF SOB_MODO_GRAFICO()
+***************************
+FUNCTION GETCLIPBOARD_ASPEC
+***************************
+* NOTA: Os seguintes acentos em c�digo diferente na PC850 e na PC437: "�����������ڧ"
+*
+LOCAL C_RETORNO
+*
+IF SOB_MODO_GRAFICO()
+
+    //
+    // FRAN: TODO
+    //
 //    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //       * COMO ESTAVA ANTES:
 //       *   - N�o d� certo usar o comando abaixo para pegar o texto do "clipboard":
@@ -1085,25 +1089,29 @@ RETURN N_TelaPrincipalHeight
 //    #else
 //       #erro "C�digo n�o adaptado para esta plataforma"
 //    #endif
-// ELSE
-//    * Tudo funciona normalmente (acentua��o vem correta do "clipboard")
-//    C_RETORNO := HB_GTINFO(HB_GTI_CLIPBOARDDATA)  // modo texto
-// ENDIF
-// *
-// RETURN C_RETORNO
-// *
+ELSE
+   * Tudo funciona normalmente (acentua��o vem correta do "clipboard")
+   C_RETORNO := HB_GTINFO(HB_GTI_CLIPBOARDDATA)  // modo texto
+ENDIF
+*
+RETURN C_RETORNO
+*
 // ***********************
-// PROC SETCLIPBOARD_ASPEC(C_Texto)
-// ***********************
-// * NOTA: Os seguintes acentos em c�digo diferente na PC850 e na PC437: "�����������ڧ"
-// *
-// * Caso o texto contenha o CHR(141)=="�", desconsiderar esta tecla,
-// * pois a mesma tem significado especial para o Clipper (soft carriage return - junto com o CHR(10)),
-// * sendo comum sua exist�ncia em textos (remover antes de copiar para o "clipboard")
-// *
-// C_Texto := STRTRAN(C_Texto,CHR(141)," ")  // CHR(141)=="�"
-// *
-// IF SOB_MODO_GRAFICO()
+PROC SETCLIPBOARD_ASPEC(C_Texto)
+***********************
+* NOTA: Os seguintes acentos em c�digo diferente na PC850 e na PC437: "�����������ڧ"
+*
+* Caso o texto contenha o CHR(141)=="�", desconsiderar esta tecla,
+* pois a mesma tem significado especial para o Clipper (soft carriage return - junto com o CHR(10)),
+* sendo comum sua exist�ncia em textos (remover antes de copiar para o "clipboard")
+*
+C_Texto := STRTRAN(C_Texto,CHR(141)," ")  // CHR(141)=="�"
+*
+IF SOB_MODO_GRAFICO()
+
+    //
+    // FRAN: TODO
+    //
 //    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //       * COMO ESTAVA ANTES:
 //       *   - N�o d� certo usar o comando abaixo para copiar o texto para o "clipboard":
@@ -1146,10 +1154,10 @@ RETURN N_TelaPrincipalHeight
 //    #else
 //       #erro "C�digo n�o adaptado para esta plataforma"
 //    #endif
-// ELSE
-//    * Tudo funciona normalmente (acentua��o vai correta para o "clipboard")
-//    HB_GTINFO(HB_GTI_CLIPBOARDDATA,C_Texto)  // modo texto
-// ENDIF
+ELSE
+   * Tudo funciona normalmente (acentua��o vai correta para o "clipboard")
+   HB_GTINFO(HB_GTI_CLIPBOARDDATA,C_Texto)  // modo texto
+ENDIF
 // *
 // *************** FIM DO outros.prg
 

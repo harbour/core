@@ -24,18 +24,24 @@ ADDOPCAO V_Janela TEXTO "edição de texto em memó#ria com filtro de tecla" ;
 ATIVE(V_Janela)
 *
 
-STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_ONLY
-    RETURN
-
-// *******************************************
 // STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_ONLY
-// *******************************************
-// LOCAL C_Texto,V_Janela, L_OK
-// *
-// @ 5,15,MAXROW()-4,MAXCOL()-10 JANELA V_Janela ;
-//   TITU "Exibe texto em memória" SUBTITULO "%T;Read-only" ;
-//   TECLAS {"F2=fecha texto"} ;
-//   AJUDA "T?????"
+//     RETURN
+
+*******************************************
+STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_ONLY
+*******************************************
+LOCAL C_Texto,V_Janela, L_OK
+*
+@ 5,15,MAXROW()-4,MAXCOL()-10 JANELA V_Janela ;
+  TITU "Exibe texto em memória" SUBTITULO "%T;Read-only" ;
+  TECLAS {"F2=fecha texto"} ;
+  AJUDA "T?????"
+
+//
+//  Fran: This code works on Windows and Linux
+//
+C_Texto := MEMOREAD("../dados/textotes.txt")
+
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    C_Texto := MEMOREAD("dados\textotes.txt")
 // #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
@@ -43,14 +49,15 @@ STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_ONLY
 // #else
 //    #erro "Código não adaptado para esta plataforma"
 // #endif
-// ESPECIALIZE V_Janela TEXTO C_Texto TERMINAR {K_F2} EDITA .F.
-// *
-// L_OK :=  ATIVE(V_Janela)
-// DO WHILE L_OK
-//    MOSTRAR("M15602","Usuário teclou F2")
-//    L_OK :=  ATIVE(V_Janela)
-// ENDDO
-// DESTRUA V_Janela
+
+ESPECIALIZE V_Janela TEXTO C_Texto TERMINAR {K_F2} EDITA .F.
+*
+L_OK :=  ATIVE(V_Janela)
+DO WHILE L_OK
+   MOSTRAR("M15602","Usuário teclou F2")
+   L_OK :=  ATIVE(V_Janela)
+ENDDO
+DESTRUA V_Janela
 *
 
 
