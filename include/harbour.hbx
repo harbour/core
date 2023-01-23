@@ -849,6 +849,7 @@ DYNAMIC hb_socketSetFilter
 DYNAMIC hb_socketSetKeepAlive
 DYNAMIC hb_socketSetMulticast
 DYNAMIC hb_socketSetNoDelay
+DYNAMIC hb_socketSetNoSigPipe
 DYNAMIC hb_socketSetRcvBufSize
 DYNAMIC hb_socketSetReuseAddr
 DYNAMIC hb_socketSetSndBufSize
