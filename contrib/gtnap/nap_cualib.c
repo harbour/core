@@ -131,6 +131,18 @@ HB_FUNC( NAP_CUALIB_TABLEVIEW )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CUALIB_TEXTVIEW )
+{
+    TextView *view = (TextView*)hb_parptr(1);
+    uint32_t nTop = hb_parni(2);
+    uint32_t nLeft = hb_parni(3);
+    uint32_t nBottom = hb_parni(4);
+    uint32_t nRight = hb_parni(5);
+    hb_gtnap_cualib_textview(view, nTop, nLeft, nBottom, nRight);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_CUALIB_IMAGE )
 {
     const char_t *pathname = hb_gtnap_parText(1);
@@ -249,4 +261,14 @@ HB_FUNC( NAP_CUALIB_VETOR_SELECT )
     hb_gtnap_cualib_vector_selection(rows);
 
     arrst_destroy(&rows, NULL, uint32_t);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_TEXTVIEW_WRITE )
+{
+    TextView *view = (TextView*)hb_parptr(1);
+    String *text = hb_gtnap_cualib_parText(2);
+    textview_writef(view, tc(text));
+    str_destroy(&text);
 }

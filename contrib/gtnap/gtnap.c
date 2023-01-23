@@ -96,6 +96,7 @@ typedef enum _objtype_t
     ekOBJ_BUTTON,
     ekOBJ_MENUVERT,
     ekOBJ_TABLEVIEW,
+    ekOBJ_TEXTVIEW,
     ekOBJ_IMAGE
 } objtype_t;
 
@@ -1329,6 +1330,21 @@ void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_cualib_textview(TextView *view, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    S2Df size;
+    cassert_no_null(cuawin);
+    log_printf("Added TextView into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+    textview_family(view, font_family(GTNAP_GLOBAL->global_font));
+    textview_fsize(view, font_size(GTNAP_GLOBAL->global_font));
+    i_add_object(ekOBJ_TEXTVIEW, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)view, cuawin);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const int32_t key, const bool_t autoclose, GtNapCualibWindow *cuawin, FPtr_gtnap_callback func_callback)
 {
     PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
@@ -1822,6 +1838,7 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *panel, c
                     pos.y += (real32_t)toolbar->pixels_button;
                     break;
                 case ekOBJ_TABLEVIEW:
+                case ekOBJ_TEXTVIEW:
                     pos.y += (real32_t)(toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size);
                     break;
                 case ekOBJ_BUTTON:
@@ -1886,6 +1903,7 @@ static void i_component_tabstop(ArrSt(GtNapCualibObject) *objects, Window *windo
                 nap_menuvert_taborder((Panel*)object->component, window);
                 break;
             case ekOBJ_TABLEVIEW:
+            case ekOBJ_TEXTVIEW:
                 _component_taborder(object->component, window);
                 break;
             cassert_default();
@@ -1928,6 +1946,7 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
     // Attach gui objects in certain Z-Order (from back to front)
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_MENUVERT, cuawin->toolbar);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_TABLEVIEW, cuawin->toolbar);
+    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_TEXTVIEW, cuawin->toolbar);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_BUTTON, cuawin->toolbar);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_LABEL, cuawin->toolbar);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_IMAGE, cuawin->toolbar);
@@ -1937,6 +1956,7 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
     _window_taborder(cuawin->window, NULL);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_MENUVERT);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_TABLEVIEW);
+    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_TEXTVIEW);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_BUTTON);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_LABEL);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_IMAGE);

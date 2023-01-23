@@ -103,6 +103,8 @@ extern void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int
 
 extern void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);
 
+extern void hb_gtnap_cualib_textview(TextView *view, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);
+
 extern GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view);
 
 extern GtNapVector *hb_gtnap_cualib_tableview_vector(TableView *view);

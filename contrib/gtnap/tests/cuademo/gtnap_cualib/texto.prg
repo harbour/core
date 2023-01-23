@@ -96,6 +96,7 @@ LOCAL L_ScorAnt, N_Tab , N_CursorAnt, L_Finaliza
 LOCAL C_CorAnt, N_RowAnt, N_ColAnt
 *
 PARAMETERS VX_Janela
+LOCAL V_TextView
 
 LOCAL X_Retorno
 //LOCAL VX_Sele := VX_SubObj
@@ -165,13 +166,19 @@ IF SOB_MODO_GRAFICO()
     NAP_LOG("STATIC FUNCTION Texto BEFORE CoordenadasBrowse(VX_Sele)")
 
 
+    V_TextView := NAP_TEXTVIEW_CREATE()
+    LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
+
+
+    NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
+    NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
+
     // C_Texto := MEMOEDIT(C_Texto,,;
     //     Col1Livre(MEMVAR->VX_Janela),;
     //     Lin2Livre(MEMVAR->VX_Janela),;
     //     Col2Livre(MEMVAR->VX_Janela),EVAL(B_Edita),;
 
     // L_Coords := CoordenadasBrowse(VX_Sele)
-    LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
 
 
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
