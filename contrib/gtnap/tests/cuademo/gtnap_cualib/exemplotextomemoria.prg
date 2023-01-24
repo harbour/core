@@ -61,18 +61,18 @@ DESTRUA V_Janela
 *
 
 
-STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_CONFIRMACOES
-RETURN
-
-// *************************************************************
 // STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_CONFIRMACOES
-// *************************************************************
-// LOCAL C_Texto,V_Janela, L_OK
-// *
-// @ 5,15,MAXROW()-4,MAXCOL()-10 JANELA V_Janela ;
-//   TITU "Exibe texto em memória" SUBTITULO "%T;com confirmações" ;
-//   TECLAS {"F2=fecha texto"} ;
-//   AJUDA "T?????"
+// RETURN
+
+*************************************************************
+STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_CONFIRMACOES
+*************************************************************
+LOCAL C_Texto,V_Janela, L_OK
+*
+@ 5,15,MAXROW()-4,MAXCOL()-10 JANELA V_Janela ;
+  TITU "Exibe texto em memória" SUBTITULO "%T;com confirmações" ;
+  TECLAS {"F2=fecha texto"} ;
+  AJUDA "T?????"
 
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    C_Texto := MEMOREAD("dados\textotes.txt")
@@ -81,16 +81,22 @@ RETURN
 // #else
 //    #erro "Código não adaptado para esta plataforma"
 // #endif
-// ESPECIALIZE V_Janela TEXTO C_Texto TERMINAR {K_F2} EDITA .T. ;
-//             CONFIRMAR CONFIRMA_DADOS() ;
-//             DESISTIR CONFIRMA_CANCELAMENTO()
-// *
-// L_OK :=  ATIVE(V_Janela)
-// DO WHILE L_OK
-//    MOSTRAR("M15604","Usuário teclou F2")
-//    L_OK :=  ATIVE(V_Janela)
-// ENDDO
-// DESTRUA V_Janela
+
+//
+//  Fran: This code works on Windows and Linux
+//
+C_Texto := MEMOREAD("../dados/textotes.txt")
+
+ESPECIALIZE V_Janela TEXTO C_Texto TERMINAR {K_F2} EDITA .T. ;
+            CONFIRMAR CONFIRMA_DADOS() ;
+            DESISTIR CONFIRMA_CANCELAMENTO()
+*
+L_OK :=  ATIVE(V_Janela)
+DO WHILE L_OK
+   MOSTRAR("M15604","Usuário teclou F2")
+   L_OK :=  ATIVE(V_Janela)
+ENDDO
+DESTRUA V_Janela
 *
 
 

@@ -22,16 +22,19 @@
 #INCLUDE "define_cua.ch"
 #INCLUDE "hbgtinfo.ch"
 
-// ***********************
-// STAT FUNCTION Perguntar (C_Cabec_x,C_SubCabec,VC_Menu,;
-//                          VC_TxtBotoes,N_Default)
-// ***********************
-// *
-// LOCAL VX_Janela , N_CursorAnt , N_Opcao, N_Cont
-// * Tirar cï¿½pia do vetor, pois serï¿½ alterado aqui dentro...
-// LOCAL VC_Menu_Aux := ACLONE(VC_Menu)
-// LOCAL N_PaintRefresh_Old
-// *
+***********************
+STAT FUNCTION Perguntar (C_Cabec_x,C_SubCabec,VC_Menu,;
+                         VC_TxtBotoes,N_Default)
+***********************
+*
+LOCAL VX_Janela , N_CursorAnt , N_Opcao, N_Cont
+* Tirar cópia do vetor, pois será alterado aqui dentro...
+LOCAL VC_Menu_Aux := ACLONE(VC_Menu)
+//LOCAL N_PaintRefresh_Old
+*
+//
+// FRAN: Not required this code
+//
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF SOB_MODO_GRAFICO()
 //       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
@@ -41,29 +44,29 @@
 // #else
 //    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
 // #endif
-// *
-// DEFAULT N_Default TO 1
-// *
-// N_CursorAnt := SET(_SET_CURSOR,SC_NONE)          // salvar modo do cursor
-// *
-// FOR N_Cont := 1 TO LEN(VC_Menu_Aux)
-//     VC_Menu_Aux[N_Cont] := " "+VC_Menu_Aux[N_Cont]+" "
-// NEXT
-// *
-// VX_Janela := MontarJanela(C_Cabec_x,C_SubCabec,VC_Menu_Aux,VC_TxtBotoes)
-// IF SOB_MODO_GRAFICO()
-//    ADDIMAGEM VX_Janela ARQUIVO DIRET_BMPS()+"b99903.abm" ;      //"pergunta.abm"
-//        COORDENADAS 00,00,02,04 AJUDA "B19123"
-// ENDIF
-// *
-// Ative(VX_Janela)
-// *
-// * montar o menu horizontal
-// N_Opcao := MenuHorizontal(VX_Janela,VC_Menu_Aux,N_Default)
-// Destrua VX_Janela
-// *
-// SET(_SET_CURSOR,N_CursorAnt)   // restaurar modo do cursor
-// *
+*
+DEFAULT N_Default TO 1
+*
+N_CursorAnt := SET(_SET_CURSOR,SC_NONE)          // salvar modo do cursor
+*
+FOR N_Cont := 1 TO LEN(VC_Menu_Aux)
+    VC_Menu_Aux[N_Cont] := " "+VC_Menu_Aux[N_Cont]+" "
+NEXT
+*
+VX_Janela := MontarJanela(C_Cabec_x,C_SubCabec,VC_Menu_Aux,VC_TxtBotoes)
+IF SOB_MODO_GRAFICO()
+   ADDIMAGEM VX_Janela ARQUIVO DIRET_BMPS()+"b99903.abm" ;      //"pergunta.abm"
+       COORDENADAS 00,00,02,04 AJUDA "B19123"
+ENDIF
+*
+Ative(VX_Janela)
+*
+* montar o menu horizontal
+N_Opcao := MenuHorizontal(VX_Janela,VC_Menu_Aux,N_Default)
+Destrua VX_Janela
+*
+SET(_SET_CURSOR,N_CursorAnt)   // restaurar modo do cursor
+*
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF SOB_MODO_GRAFICO()
 //       WVW_SetPaintRefresh(N_PaintRefresh_Old)
@@ -73,158 +76,177 @@
 // #else
 //    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
 // #endif
-// *
-// RETURN N_Opcao
-// *
-// ******************************
-// STATIC FUNCTION MenuHorizontal ( VX_Janela , VC_Menu , N_Default )
-// *
-// LOCAL N_Cont, N_Row, N_Col, C_Teclas := ""
-// LOCAL C_TeclaAtalho
-// LOCAL V_RegiaoOpcoes := {}
-// LOCAL N_DeslocaCabecalho
-// IF SOB_MODO_GRAFICO()   // reservar 4 colunas para mostrar a imagem ï¿½ esquerda
-//    N_DeslocaCabecalho := 4
-// ELSE
-//    N_DeslocaCabecalho := 0
-// ENDIF
-// *
-// DispBegin()
-// *
-// * posicionar cursor
-// SETPOS(Lin1Livre(VX_Janela),Col1Livre(VX_Janela)+N_DeslocaCabecalho)
-// *
-// N_Row := ROW()   // supor inicialmente que o "default" o item 1
-// N_Col := COL()
-// *
-// FOR N_Cont := 1 TO LEN(VC_Menu)
-//     *
-//     C_TeclaAtalho := XUpper(Left(Troca(VC_Menu[N_Cont]," [",""),1))
-//     *
-//     AADD(V_RegiaoOpcoes,{C_TeclaAtalho,ROW(),COL(),;
-//                                        ROW(),COL()+LEN(VC_Menu[N_Cont])-1})
-//     *
-//     #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//        IF SOB_MODO_GRAFICO()
-//           * Coordenadas para a WVW_PAINT (3 parï¿½metro da AddGuiObjects)
-//           * - Teve ser ser acrescentado o "-1" abaixo, na coluna inicial.
-//           * - Teve ser ser acrescentado o "+1" abaixo, na coluna final.
-//           AddGuiObject(VX_Janela,;
-//                        DesenhaBotao(VX_Janela,ROW(),COL(),LEN(VC_Menu[N_Cont])),;
-//                        {ROW(),COL()-1,ROW(),COL()+LEN(VC_Menu[N_Cont])-1+1})
-//           AddGuiObject(VX_Janela,;
-//                        DesenhaAtalhoBotao(VX_Janela,ROW(),COL(),LEN(VC_Menu[N_Cont])),;
-//                        {ROW(),COL()-1,ROW(),COL()+LEN(VC_Menu[N_Cont])-1+1})
-//        ENDIF
-//     #elif defined(__PLATFORM__LINUX)
-//        // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//     #else
-//        #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//     #endif
-//     *
-//     IF N_Cont==N_Default
-//        N_Row := ROW()
-//        N_Col := COL()
-//     ENDIF
-//     @ ROW(),COL() SAY VC_Menu[N_Cont]+SPACE(02) // espaï¿½amento entre botoes
-//     *
-//     C_Teclas += C_TeclaAtalho
-// NEXT
-// *
-// DispEnd()
-// *
-// N_Default := MENUTO(VC_Menu,N_Row,N_Col,C_Teclas,N_Default,V_RegiaoOpcoes)
-// *
-// RETURN N_Default
-// *
-// ********************
-// STAT FUNCTION MENUTO( VC_Menu, N_Row, N_Col, C_Teclas, N_Default, V_RegiaoOpcoes )
-// ********************
-// LOCAL N_Tecla
-// LOCAL C_CorInten
-// LOCAL N_mRow, N_mCol, N_PosBotao
-// *
-// IF SOB_MODO_GRAFICO()
-//     C_CorInten := "N/BG*"  // reverso azul
-// ELSE
-//     C_CorInten := SUBSPOS(SetColor(), ",", 2)
-// ENDIF
-// *
-// @ N_Row, N_Col SAY VC_Menu[N_Default] Color C_CorInten
-// WHILE N_Tecla # K_ENTER .AND. N_Tecla # K_ESC
-//    N_Tecla := INKEYX(0)
+*
+RETURN N_Opcao
+*
+******************************
+STATIC FUNCTION MenuHorizontal ( VX_Janela , VC_Menu , N_Default )
+*
+LOCAL N_Cont, N_Row, N_Col, C_Teclas := ""
+LOCAL C_TeclaAtalho
+LOCAL V_RegiaoOpcoes := {}
+LOCAL N_DeslocaCabecalho
+IF SOB_MODO_GRAFICO()   // reservar 4 colunas para mostrar a imagem à esquerda
+    N_DeslocaCabecalho := 4
+ELSE
+   N_DeslocaCabecalho := 0
+ENDIF
+*
+DispBegin()
+*
+* posicionar cursor
+SETPOS(Lin1Livre(VX_Janela),Col1Livre(VX_Janela)+N_DeslocaCabecalho)
+*
+N_Row := ROW()   // supor inicialmente que o "default" o item 1
+N_Col := COL()
+*
+FOR N_Cont := 1 TO LEN(VC_Menu)
+    *
+    C_TeclaAtalho := XUpper(Left(Troca(VC_Menu[N_Cont]," [",""),1))
+    *
+    AADD(V_RegiaoOpcoes,{C_TeclaAtalho,ROW(),COL(),;
+                                       ROW(),COL()+LEN(VC_Menu[N_Cont])-1})
+    *
 
-//    * Em qual pï¿½gina de cï¿½digo vem a tecla
-//    IF Version()=="Harbour 3.2.0dev (r1703241902)"
-//       * Jï¿½ vem na PC850
-//    ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)" .OR. Version()=="Harbour 3.2.0dev (r1704061005)" // PENDENTE_LINUX
-//       IF SOB_MODO_GRAFICO()
-//          * Vem na ANSI.
-//          IF N_Tecla >= 128 .AND. N_Tecla <= 255  // Faixa diferente entre ANSI e OEM
-//             N_Tecla := ASC(HB_ANSItoOEM(CHR(N_Tecla)))  // Converter de ANSI para OEM
-//          ENDIF
-//       ELSE
-//          * Jï¿½ vem na PC850
-//       ENDIF
-//    ENDIF ERRO
-//    *
-//    IF N_Tecla == K_LEFT
-//       IF N_Default # 1
-//          * tirar a cor intensa do botao anterior
-//          @ N_Row, Col()-Len(VC_Menu[N_Default]) SAY VC_Menu[N_Default]
-//          * colocar a cor intensa no novo botao
-//          N_Default--
-//          @ N_Row, Col()-Len(VC_Menu[N_Default+1])-Len(VC_Menu[N_Default])-2 ;
-//            SAY VC_Menu[N_Default] Color C_CorInten
-//       ENDIF
-//    ELSEIF N_Tecla == K_RIGHT
-//       IF N_Default # Len(VC_Menu)
-//          * tirar a cor intensa do botao anterior
-//          @ N_Row, Col()-Len(VC_Menu[N_Default]) ;
-//            SAY VC_Menu[N_Default]+SPACE(02)
-//          * colocar a cor intensa no novo botao
-//          N_Default++
-//          @ N_Row, Col() SAY VC_Menu[N_Default] Color C_CorInten
-//       ENDIF
-//    ELSEIF N_Tecla == K_ESC
-//       N_Default := 0
-//    ELSEIF XUpper(Chr(N_Tecla)) $ C_Teclas
-//       N_Default := At(XUpper(Chr(N_Tecla)),C_Teclas)
-//       N_Tecla   := K_ENTER
-//    ELSEIF N_Tecla == K_LBUTTONDOWN .OR. N_Tecla == K_LDBLCLK
-//       N_mRow := mRow()
-//       N_mCol := mCol()
-//       N_PosBotao := ASCAN(V_RegiaoOpcoes,{|V_Botao| ;
-//                           N_MRow >= V_Botao[2]   .AND. ;
-//                           N_MRow <= V_Botao[4]   .AND. ;
-//                           N_MCol >= V_Botao[3] .AND. ;
-//                           N_MCol <= V_Botao[5] })
-//       IF N_PosBotao # 0
-//          KEYBOARD REPL(CHR(K_LEFT),LEN(VC_Menu)-1)+; // ir para a primeira opcao
-//                   REPL(CHR(K_RIGHT),N_PosBotao-1)+;  // deslocar atï¿½ a selecionada
-//                   CHR(K_ENTER)                       // teclar ENTER
-//       ENDIF
-//    ENDIF
-// ENDDO
-// RETURN N_Default
-// *
-// *********************
-// STAT FUNCTION SUBSPOS( C_String, C_Delim, N_Pos )
-// *********************
-// *
-// * -> Retira numa string a posiï¿½ï¿½o desejada de acordo com os delimitadores
-// *
-// LOCAL I, N_Posatu, C_Strret := ""
-// N_Posatu := 1
-// FOR I := 1 TO LEN(C_String)
-//    IF Substr(C_String,I,1) == C_Delim
-//       N_Posatu++
-//    ELSEIF N_Posatu == N_Pos
-//       C_Strret += Substr(C_String,I,1)
-//    ENDIF
-// NEXT
-// RETURN C_Strret
-// *
+    IF SOB_MODO_GRAFICO()
+
+        //
+        // FRAN: TODO
+        //
+
+    ENDIF
+
+    // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+    //    IF SOB_MODO_GRAFICO()
+    //       * Coordenadas para a WVW_PAINT (3 parï¿½metro da AddGuiObjects)
+    //       * - Teve ser ser acrescentado o "-1" abaixo, na coluna inicial.
+    //       * - Teve ser ser acrescentado o "+1" abaixo, na coluna final.
+    //       AddGuiObject(VX_Janela,;
+    //                    DesenhaBotao(VX_Janela,ROW(),COL(),LEN(VC_Menu[N_Cont])),;
+    //                    {ROW(),COL()-1,ROW(),COL()+LEN(VC_Menu[N_Cont])-1+1})
+    //       AddGuiObject(VX_Janela,;
+    //                    DesenhaAtalhoBotao(VX_Janela,ROW(),COL(),LEN(VC_Menu[N_Cont])),;
+    //                    {ROW(),COL()-1,ROW(),COL()+LEN(VC_Menu[N_Cont])-1+1})
+    //    ENDIF
+    // #elif defined(__PLATFORM__LINUX)
+    //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
+    // #else
+    //    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
+    // #endif
+    *
+    IF N_Cont==N_Default
+       N_Row := ROW()
+       N_Col := COL()
+    ENDIF
+    @ ROW(),COL() SAY VC_Menu[N_Cont]+SPACE(02) // espaçamento entre botoes
+    *
+    C_Teclas += C_TeclaAtalho
+NEXT
+*
+DispEnd()
+*
+N_Default := MENUTO(VC_Menu,N_Row,N_Col,C_Teclas,N_Default,V_RegiaoOpcoes)
+*
+RETURN N_Default
+*
+********************
+STAT FUNCTION MENUTO( VC_Menu, N_Row, N_Col, C_Teclas, N_Default, V_RegiaoOpcoes )
+********************
+LOCAL N_Tecla
+LOCAL C_CorInten
+LOCAL N_mRow, N_mCol, N_PosBotao
+*
+IF SOB_MODO_GRAFICO()
+    C_CorInten := "N/BG*"  // reverso azul
+ELSE
+    C_CorInten := SUBSPOS(SetColor(), ",", 2)
+ENDIF
+*
+
+IF SOB_MODO_GRAFICO()
+
+    //
+    // FRAN: TODO
+    //
+ELSE
+    @ N_Row, N_Col SAY VC_Menu[N_Default] Color C_CorInten
+    WHILE N_Tecla # K_ENTER .AND. N_Tecla # K_ESC
+    N_Tecla := INKEYX(0)
+
+    // * Em qual pï¿½gina de cï¿½digo vem a tecla
+    // IF Version()=="Harbour 3.2.0dev (r1703241902)"
+    //     * Jï¿½ vem na PC850
+    // ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)" .OR. Version()=="Harbour 3.2.0dev (r1704061005)" // PENDENTE_LINUX
+    //     IF SOB_MODO_GRAFICO()
+    //         * Vem na ANSI.
+    //         IF N_Tecla >= 128 .AND. N_Tecla <= 255  // Faixa diferente entre ANSI e OEM
+    //             N_Tecla := ASC(HB_ANSItoOEM(CHR(N_Tecla)))  // Converter de ANSI para OEM
+    //         ENDIF
+    //     ELSE
+    //         * Jï¿½ vem na PC850
+    //     ENDIF
+    // ENDIF ERRO
+    *
+    IF N_Tecla == K_LEFT
+        IF N_Default # 1
+            * tirar a cor intensa do botao anterior
+            @ N_Row, Col()-Len(VC_Menu[N_Default]) SAY VC_Menu[N_Default]
+            * colocar a cor intensa no novo botao
+            N_Default--
+            @ N_Row, Col()-Len(VC_Menu[N_Default+1])-Len(VC_Menu[N_Default])-2 ;
+            SAY VC_Menu[N_Default] Color C_CorInten
+        ENDIF
+    ELSEIF N_Tecla == K_RIGHT
+        IF N_Default # Len(VC_Menu)
+            * tirar a cor intensa do botao anterior
+            @ N_Row, Col()-Len(VC_Menu[N_Default]) ;
+            SAY VC_Menu[N_Default]+SPACE(02)
+            * colocar a cor intensa no novo botao
+            N_Default++
+            @ N_Row, Col() SAY VC_Menu[N_Default] Color C_CorInten
+        ENDIF
+    ELSEIF N_Tecla == K_ESC
+        N_Default := 0
+    ELSEIF XUpper(Chr(N_Tecla)) $ C_Teclas
+        N_Default := At(XUpper(Chr(N_Tecla)),C_Teclas)
+        N_Tecla   := K_ENTER
+    ELSEIF N_Tecla == K_LBUTTONDOWN .OR. N_Tecla == K_LDBLCLK
+        N_mRow := mRow()
+        N_mCol := mCol()
+        N_PosBotao := ASCAN(V_RegiaoOpcoes,{|V_Botao| ;
+                            N_MRow >= V_Botao[2]   .AND. ;
+                            N_MRow <= V_Botao[4]   .AND. ;
+                            N_MCol >= V_Botao[3] .AND. ;
+                            N_MCol <= V_Botao[5] })
+        IF N_PosBotao # 0
+            KEYBOARD REPL(CHR(K_LEFT),LEN(VC_Menu)-1)+; // ir para a primeira opcao
+                    REPL(CHR(K_RIGHT),N_PosBotao-1)+;  // deslocar atï¿½ a selecionada
+                    CHR(K_ENTER)                       // teclar ENTER
+        ENDIF
+    ENDIF
+    ENDDO
+ENDIF   // IF SOB_MODO_GRAFICO()
+
+
+RETURN N_Default
+*
+*********************
+STAT FUNCTION SUBSPOS( C_String, C_Delim, N_Pos )
+*********************
+*
+* -> Retira numa string a posiï¿½ï¿½o desejada de acordo com os delimitadores
+*
+LOCAL I, N_Posatu, C_Strret := ""
+N_Posatu := 1
+FOR I := 1 TO LEN(C_String)
+   IF Substr(C_String,I,1) == C_Delim
+      N_Posatu++
+   ELSEIF N_Posatu == N_Pos
+      C_Strret += Substr(C_String,I,1)
+   ENDIF
+NEXT
+RETURN C_Strret
+*
 
 // **********************
 // STAT FUNCTION Informar ( C_Cabec_x, C_SubCabec, VC_TxtBotoes ,;
@@ -629,32 +651,33 @@ DESTRUA V_JAN
 // N_OPCAO := PERGUN(C_SubCabec,{"Sim","Nï¿½o"},N_DEFAULT,,"Confirmaï¿½ï¿½o")
 // RETURN (N_OPCAO==1)
 // *
-// ***********
-// FUNC PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x )
-// ***********
-// LOCAL N_OPCAO
-// LOCAL C_COR_ANT
-// IF .NOT. SOB_MODO_GRAFICO()
-//    C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_ADVERTENCIA))
-// ENDIF
-// *
-// DEFAULT N_DEFAULT   TO 1
-// DEFAULT L_PODE_ZERO TO .T.
-// DEFAULT C_Cabec_x   TO "Informaï¿½ï¿½o"
-// *
-// * a confirma nï¿½o aceita o ESC
-// *
-// N_OPCAO   := PERGUNTAR(C_Cabec_x,C_SubCabec,V_OPCOES,,N_DEFAULT)
-// DO WHILE N_OPCAO == 0 .AND. .NOT. L_PODE_ZERO
-//    N_OPCAO := PERGUNTAR(C_Cabec_x,C_SubCabec,V_OPCOES,,N_DEFAULT)
-// ENDDO
-// IF .NOT. SOB_MODO_GRAFICO()
-//    SETCOLOR(C_COR_ANT)
-// ENDIF
-// *
-// RETURN N_OPCAO
-// *
-// *
+
+***********
+FUNC PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x )
+***********
+LOCAL N_OPCAO
+LOCAL C_COR_ANT
+IF .NOT. SOB_MODO_GRAFICO()
+   C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_ADVERTENCIA))
+ENDIF
+*
+DEFAULT N_DEFAULT   TO 1
+DEFAULT L_PODE_ZERO TO .T.
+DEFAULT C_Cabec_x   TO "Informação"
+*
+* a confirma não aceita o ESC
+*
+N_OPCAO   := PERGUNTAR(C_Cabec_x,C_SubCabec,V_OPCOES,,N_DEFAULT)
+DO WHILE N_OPCAO == 0 .AND. .NOT. L_PODE_ZERO
+   N_OPCAO := PERGUNTAR(C_Cabec_x,C_SubCabec,V_OPCOES,,N_DEFAULT)
+ENDDO
+IF .NOT. SOB_MODO_GRAFICO()
+   SETCOLOR(C_COR_ANT)
+ENDIF
+*
+RETURN N_OPCAO
+*
+*
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    **********************
 //    STAT FUNC DesenhaBotao(VX_Janela,N_Lin,N_Col,N_Largura)

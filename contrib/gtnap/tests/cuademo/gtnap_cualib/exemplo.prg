@@ -191,27 +191,27 @@ PROC EXEMPLO_AUXILIARES
     RETURN
 
 
-// *******************
-// FUNC CONFIRMA_DADOS
-// *******************
-// LOCAL N_Resposta, L_Confirmacao
-// N_Resposta = PERGUN("Dados estao;corretos ?",{"sim","nao"},1)
-// IF N_Resposta == 1
-//    L_Confirmacao = .T.
-// ELSE
-//    L_Confirmacao = .F.
-// ENDIF
-// RETURN L_Confirmacao
-// *
-// **************************
-// FUNC CONFIRMA_CANCELAMENTO
-// **************************
-// LOCAL N_Resposta, L_Confirmacao
-// N_Resposta = PERGUN("Cancelar digitação dos dados ?",{"sim","nao"},2)
-// IF N_Resposta == 1
-//    L_Confirmacao = .T.
-// ELSE
-//    L_Confirmacao = .F.
-// ENDIF
-// RETURN L_Confirmacao
-// *
+*******************
+FUNC CONFIRMA_DADOS
+*******************
+LOCAL N_Resposta, L_Confirmacao
+N_Resposta = PERGUN("Dados estao;corretos ?",{"sim","nao"},1)
+IF N_Resposta == 1
+   L_Confirmacao = .T.
+ELSE
+   L_Confirmacao = .F.
+ENDIF
+RETURN L_Confirmacao
+*
+**************************
+FUNC CONFIRMA_CANCELAMENTO
+**************************
+LOCAL N_Resposta, L_Confirmacao
+N_Resposta = PERGUN("Cancelar digitação dos dados ?",{"sim","nao"},2)
+IF N_Resposta == 1
+   L_Confirmacao = .T.
+ELSE
+   L_Confirmacao = .F.
+ENDIF
+RETURN L_Confirmacao
+*

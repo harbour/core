@@ -167,8 +167,14 @@ IF SOB_MODO_GRAFICO()
 
 
     V_TextView := NAP_TEXTVIEW_CREATE()
+
     LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
 
+    IF EVAL(B_Edita)
+        NAP_TEXTVIEW_EDITABLE(V_TextView, .T.)
+    ELSE
+        NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
+    ENDIF
 
     NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
     NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
