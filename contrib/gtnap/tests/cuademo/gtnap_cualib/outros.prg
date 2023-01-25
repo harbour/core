@@ -59,11 +59,21 @@ IF SOB_MODO_GRAFICO()
        COORDENADAS 00,00,02,04 AJUDA "B19123"
 ENDIF
 *
+NAP_LOG("PERGUNTAR ANTES ATIVE!!!!!!!!!!!!!!!!!!!!!!!")
+
 Ative(VX_Janela)
 *
-* montar o menu horizontal
-N_Opcao := MenuHorizontal(VX_Janela,VC_Menu_Aux,N_Default)
-Destrua VX_Janela
+NAP_LOG("PERGUNTAR DESPUES ATIVE !!!!!!!!!!!!!!!!!!!!!!!")
+
+IF SOB_MODO_GRAFICO()
+    NAP_CUALIB_LAUNCH_MODAL({||.T.})
+    Destrua VX_Janela
+ELSE
+    * montar o menu horizontal
+    N_Opcao := MenuHorizontal(VX_Janela,VC_Menu_Aux,N_Default)
+    Destrua VX_Janela
+ENDIF
+
 *
 SET(_SET_CURSOR,N_CursorAnt)   // restaurar modo do cursor
 *
@@ -301,7 +311,7 @@ Ative(VX_Janela)
 *
 
 IF SOB_MODO_GRAFICO()
-    NAP_CUALIB_LAUNCH_MODAL()
+    NAP_CUALIB_LAUNCH_MODAL({||.T.})
     Destrua VX_Janela
 ELSE
     IF L_Parar .AND. N_Segundos == 0
@@ -661,6 +671,8 @@ IF .NOT. SOB_MODO_GRAFICO()
    C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_ADVERTENCIA))
 ENDIF
 *
+NAP_LOG("PERGUN!!!!!!!!!!!!!!!!!!!!!!!")
+
 DEFAULT N_DEFAULT   TO 1
 DEFAULT L_PODE_ZERO TO .T.
 DEFAULT C_Cabec_x   TO "Informação"

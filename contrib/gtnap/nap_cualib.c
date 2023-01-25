@@ -94,7 +94,7 @@ HB_FUNC( NAP_CUALIB_WINDOW )
 
 HB_FUNC( NAP_CUALIB_LAUNCH_MODAL )
 {
-    uint32_t ret = hb_gtnap_cualib_launch_modal();
+    uint32_t ret = hb_gtnap_cualib_launch_modal(1);
     hb_retni(ret);
 }
 

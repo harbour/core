@@ -985,6 +985,24 @@ void hb_gtnap_callback(GtNapCallback *callback, Event *e)
 }
 
 /*---------------------------------------------------------------------------*/
+
+bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e)
+{
+    bool_t ret = FALSE;
+    cassert_no_null(callback);
+    if (callback->codeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        cassert(type == HB_IT_LOGICAL);
+        ret = (bool_t)hb_itemGetL(retItem);
+        hb_itemRelease(retItem);
+    }
+
+    return ret;
+}
+
+/*---------------------------------------------------------------------------*/
 //
 // CUALIB Support in GTNAP
 //
@@ -1927,7 +1945,17 @@ static void i_toolbar_tabstop(GtNapCualibToolbar *toolbar)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_cualib_launch_modal(void)
+static void i_OnWindowClose(GtNapCallback *callback, Event *e)
+{
+    bool_t ret = hb_gtnap_callback_bool(callback, e);
+    bool_t *res = event_result(e, bool_t);
+    *res = ret;
+    log_printf("i_OnWindowClose EVENT RESPONSE %d", ret);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_cualib_launch_modal(const uint32_t cancelBlockParamId)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
@@ -1979,6 +2007,12 @@ uint32_t hb_gtnap_cualib_launch_modal(void)
     window_origin(cuawin->window, pos);
 
     log_printf("Launch CUALIB Modal Window: %d, %d, %d, %d", cuawin->N_LinIni, cuawin->N_ColIni, cuawin->N_LinFin, cuawin->N_ColFin);
+
+    {
+        Listener *listener = i_gtnap_cualib_listener(cancelBlockParamId, INT32_MAX, FALSE, cuawin, i_OnWindowClose);
+        window_OnClose(cuawin->window, listener);
+    }
+
     ret = window_modal(cuawin->window, parent ? parent->window : NULL);
     return ret;
 }

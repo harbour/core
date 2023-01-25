@@ -2581,7 +2581,7 @@ LOCAL V_Botao, V_Imagem, N_Pos_Acao
 //
 IF SOB_MODO_GRAFICO()
 
-    X_Retorno_Eval := NAP_CUALIB_LAUNCH_MODAL()
+    X_Retorno_Eval := NAP_CUALIB_LAUNCH_MODAL({||.T.})
 
     IF X_Retorno_Eval == 1000
         L_FechouComAutoClose = .T.

@@ -606,7 +606,7 @@ IF SOB_MODO_GRAFICO()
 
 
     //NAP_LOG("SELECAOA::NAP_CUALIB_LAUNCH_MODAL!!!!!!")
-    X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
+    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.})
 
     //X_Retorno := 0
 

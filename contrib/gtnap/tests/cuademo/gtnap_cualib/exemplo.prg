@@ -207,6 +207,8 @@ RETURN L_Confirmacao
 FUNC CONFIRMA_CANCELAMENTO
 **************************
 LOCAL N_Resposta, L_Confirmacao
+NAP_LOG("CONFIRMA_CANCELAMENTO!!!!!!!!!!!!!!!!!!!!!!!")
+
 N_Resposta = PERGUN("Cancelar digitação dos dados ?",{"sim","nao"},2)
 IF N_Resposta == 1
    L_Confirmacao = .T.

@@ -406,7 +406,7 @@ IF L_ForcaLerTudo
             NEXT
 
 
-            X_Retorno := NAP_CUALIB_LAUNCH_MODAL()
+            X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.})
 
             // FRAN: TODO
             X_Retorno := 1
