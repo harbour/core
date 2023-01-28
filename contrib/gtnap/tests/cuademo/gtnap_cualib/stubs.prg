@@ -287,10 +287,10 @@ FUNCTION XUPPER ( C_String )
 ***************
 RETURN TROCA(UPPER(C_String), _AC_MINUS , _AC_MAIUS )
 *
-// ***************
-// FUNCTION XLOWER ( C_String )
-// ***************
-// RETURN TROCA(LOWER(C_String), _AC_MAIUS , _AC_MINUS )
+***************
+FUNCTION XLOWER ( C_String )
+***************
+RETURN TROCA(LOWER(C_String), _AC_MAIUS , _AC_MINUS )
 *
 ************
 FUNC TIRACEN (C_String)

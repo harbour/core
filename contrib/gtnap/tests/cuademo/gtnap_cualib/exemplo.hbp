@@ -15,16 +15,19 @@
 # Output
 -o.\exemplo
 
-# Source files
+
 exemplo.prg
 #exemplo_auxiliar.prg
 #exemplo_entradadados.prg
 exemplomenu.prg
 exemplodbf.prg
 exemplovetor.prg
-#exemplo_textoarquivo.prg
 exemplotextomemoria.prg
+exemplotextoarquivo.prg
 acentos.prg
+arqtexto.prg
+entrada.prg
+fileio2.prg
 outros.prg
 janela.prg
 selecaoa.prg

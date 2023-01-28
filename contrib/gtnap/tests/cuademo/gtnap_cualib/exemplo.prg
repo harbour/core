@@ -175,10 +175,10 @@ QUIT
 //     OutStd("EXEMPLO_TEXTO_MEMORIA() Option selected")
 //     RETURN
 
-PROC EXEMPLO_TEXTO_ARQUIVO
-    @ 22, 0 SAY ""
-    OutStd("EXEMPLO_TEXTO_ARQUIVO() Option selected")
-    RETURN
+// PROC EXEMPLO_TEXTO_ARQUIVO
+//     @ 22, 0 SAY ""
+//     OutStd("EXEMPLO_TEXTO_ARQUIVO() Option selected")
+//     RETURN
 
 PROC EXEMPLO_ENTRADA_DADOS
     @ 22, 0 SAY ""
