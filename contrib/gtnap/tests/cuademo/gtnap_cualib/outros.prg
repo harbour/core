@@ -78,7 +78,7 @@ IF SOB_MODO_GRAFICO()
     FOR N_Cont := 1 TO LEN(VC_Menu)
         *
         N_OptLen := LEN(VC_Menu[N_Cont])
-        NAP_CUALIB_BUTTON(VC_Menu[N_Cont], {||.T.}, N_Cont, N_Row, N_Col, N_Row, N_Col + N_OptLen, .T.)
+        NAP_CUALIB_BUTTON(VC_Menu[N_Cont], {||.T.}, 1000 + N_Cont, N_Row, N_Col, N_Row, N_Col + N_OptLen, .T.)
         N_Col += N_OptLen + 2
         NAP_LOG(VC_Menu[N_Cont] + " Row:" + hb_ntos(N_Row) + " Col:" + hb_ntos(N_Col))
         //C_TeclaAtalho := XUpper(Left(Troca(VC_Menu[N_Cont]," [",""),1))
@@ -86,6 +86,17 @@ IF SOB_MODO_GRAFICO()
 
     N_Opcao := NAP_CUALIB_LAUNCH_MODAL({||.T.})
     NAP_LOG("OPCAO PERGUNTAR: " + hb_ntos(N_Opcao))
+
+    // N_Opcao == 1 --> window has been closed by [ESC]
+    // N_Opcao == 2 --> window has been closed by [INTRO]
+    // N_Opcao == 3 --> window has been closed by [X]
+    // N_Opcao >= 1000 --> window has been closed by PushButton
+    IF N_Opcao >= 1000
+        N_Opcao -= 1000
+    ELSE
+        N_Opcao := N_Default
+    ENDIF
+
     Destrua VX_Janela
 ELSE
     * montar o menu horizontal
