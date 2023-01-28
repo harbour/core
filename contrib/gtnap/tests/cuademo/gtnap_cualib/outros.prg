@@ -27,7 +27,9 @@ STAT FUNCTION Perguntar (C_Cabec_x,C_SubCabec,VC_Menu,;
                          VC_TxtBotoes,N_Default)
 ***********************
 *
-LOCAL VX_Janela , N_CursorAnt , N_Opcao, N_Cont
+LOCAL VX_Janela , N_CursorAnt , N_Opcao, N_Cont, N_Col, N_Row, N_Ret, N_OptLen
+LOCAL N_DeslocaCabecalho := 4
+
 * Tirar cópia do vetor, pois será alterado aqui dentro...
 LOCAL VC_Menu_Aux := ACLONE(VC_Menu)
 //LOCAL N_PaintRefresh_Old
@@ -66,7 +68,24 @@ Ative(VX_Janela)
 NAP_LOG("PERGUNTAR DESPUES ATIVE !!!!!!!!!!!!!!!!!!!!!!!")
 
 IF SOB_MODO_GRAFICO()
-    NAP_CUALIB_LAUNCH_MODAL({||.T.})
+    NAP_LOG("PERGUNTAR MENU")
+
+    N_Row := Lin1Livre(VX_Janela)
+    N_Col := Col1Livre(VX_Janela)+N_DeslocaCabecalho
+
+//    @ ROW(),COL() SAY VC_Menu[N_Cont]+SPACE(02) // espaçamento entre botoes
+
+    FOR N_Cont := 1 TO LEN(VC_Menu)
+        *
+        N_OptLen := LEN(VC_Menu[N_Cont])
+        NAP_CUALIB_BUTTON(VC_Menu[N_Cont], {||.T.}, N_Cont, N_Row, N_Col, N_Row, N_Col + N_OptLen, .T.)
+        N_Col += N_OptLen + 2
+        NAP_LOG(VC_Menu[N_Cont] + " Row:" + hb_ntos(N_Row) + " Col:" + hb_ntos(N_Col))
+        //C_TeclaAtalho := XUpper(Left(Troca(VC_Menu[N_Cont]," [",""),1))
+    NEXT
+
+    N_Opcao := NAP_CUALIB_LAUNCH_MODAL({||.T.})
+    NAP_LOG("OPCAO PERGUNTAR: " + hb_ntos(N_Opcao))
     Destrua VX_Janela
 ELSE
     * montar o menu horizontal

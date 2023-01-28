@@ -261,6 +261,8 @@ void _component_detach_from_panel(GuiComponent *panel_component, GuiComponent *c
 void _component_set_frame(GuiComponent *component, const V2Df *origin, const S2Df *size);
 void _component_get_origin(const GuiComponent *component, V2Df *origin);
 void _component_get_size(const GuiComponent *component, S2Df *size);
+uint32_t _component_get_tag(const GuiComponent *component);
+void _component_set_tag(GuiComponent *component, const uint32_t tag);
 void _component_visible(GuiComponent *component, const bool_t visible);
 void _component_destroy(GuiComponent **component);
 void _component_taborder(GuiComponent *component, Window *window);
@@ -972,6 +974,7 @@ Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window
 void hb_gtnap_callback(GtNapCallback *callback, Event *e)
 {
     cassert_no_null(callback);
+    unref(e);
     if (callback->codeBlock != NULL)
     {
         PHB_ITEM phiEvent = hb_itemNew(NULL);
@@ -1428,12 +1431,18 @@ static void i_OnButtonClick(GtNapCallback *callback, Event *e)
     hb_gtnap_callback(callback, e);
     log_printf("Click button");
     if (callback->autoclose == TRUE)
-        window_stop_modal(callback->cuawin->window, 1000);
+    {
+        const Button *button = event_sender(e, Button);
+        uint32_t tag = _component_get_tag((const GuiComponent*)button);
+        if (tag == UINT32_MAX)
+            tag = 1000;
+        window_stop_modal(callback->cuawin->window, tag);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose)
+void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     Button *button = button_push();
@@ -1441,6 +1450,7 @@ void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId,
     Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
     S2Df size;
     cassert_no_null(cuawin);
+    _component_set_tag((GuiComponent*)button, nTag);
     button_text(button, tc(ctext));
     button_font(button, GTNAP_GLOBAL->global_font);
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);

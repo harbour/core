@@ -187,7 +187,7 @@ IF SOB_MODO_GRAFICO()
     // L_Coords := CoordenadasBrowse(VX_Sele)
 
 
-    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.F.})
+    X_Retorno := NAP_CUALIB_LAUNCH_MODAL(B_Desiste)
     L_FimOK := .F.
     //LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)))
 ELSE
