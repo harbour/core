@@ -1082,20 +1082,21 @@ LOCAL N_TelaPrincipalHeight := 1000
 
 RETURN N_TelaPrincipalHeight
 
-//    *
-//    ***********************
-//    FUNC TelaPrincipalWidth // Largura APROXIMADA, em pixels, da tela principal
-//    ***********************
-//    * Proporï¿½ï¿½o entre a quantidade mï¿½xima de colunas que caberia e a efetivamente usada
-//    LOCAL N_Proporcao := MAXCOL() / WVW_MAXMAXCOL()
-//    LOCAL N_TelaPrincipalWidth := INT(WVW_GetScreenWidth() * N_Proporcao)
-//    *
-//    // ALERT("W "+STR(MAXCOL())+" "+STR(WVW_MAXMAXCOL())+" "+STR(WVW_GetScreenWidth())+";;;;")
-//    // ALERT("W "+STR(N_TelaPrincipalWidth)+";;;;")
-//    *
-//    RETURN N_TelaPrincipalWidth
-//    *
-//    ****************
+   ***********************
+   FUNC TelaPrincipalWidth // Largura APROXIMADA, em pixels, da tela principal
+    ***********************
+    LOCAL N_TelaPrincipalWidth := 1000
+
+    // * Proporção entre a quantidade máxima de colunas que caberia e a efetivamente usada
+    // LOCAL N_Proporcao := MAXCOL() / WVW_MAXMAXCOL()
+    // LOCAL N_TelaPrincipalWidth := INT(WVW_GetScreenWidth() * N_Proporcao)
+    // *
+    // // ALERT("W "+STR(MAXCOL())+" "+STR(WVW_MAXMAXCOL())+" "+STR(WVW_GetScreenWidth())+";;;;")
+    // // ALERT("W "+STR(N_TelaPrincipalWidth)+";;;;")
+    *
+    RETURN N_TelaPrincipalWidth
+    *
+    ****************
 // #elif defined(__PLATFORM__LINUX)
 //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
 // #else

@@ -199,6 +199,7 @@ IF .NOT. LEN(C_CdGET)==6
 ENDIF
 *
 
+
 //!! Futuramente pode ser removido, se todos recompilarem todos os fontes !
 * O "default" abaixo somente é necessário para evitar a recompilação de todos os ".o".
 * No código não recompilado, estes campos conterão NIL
@@ -493,9 +494,7 @@ IF .NOT. L_SemF4
       * sendo que o símbolo de drop-down ocupará 2 bytes, sendo impresso
       * de forma deslocada. Em resumo, ocupará "metade" do primeiro byte,
       * o segundo byte inteiro e "metade" do terceiro byte.
-      //AnexeSay ( VX_Janela, N_Lin, N_ColSay, {||" "+" "+" "},,,.T.)
-
-
+      AnexeSay ( VX_Janela, N_Lin, N_ColSay, {||" "+" "+" "},,,.T.)
    ELSE
       * O mouse será ativado também se for clicado no espaço em branco...
       * //!! depois decidir se deixa assim mesmo...
@@ -592,7 +591,7 @@ STATIC FUNC Ler( VX_Janela )
 LOCAL N_CursorAnt , C_ReadVarAnt
 LOCAL VX_Get      , VX_Edicao
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
-LOCAL N_Aux_SayGetCor, X_Info
+LOCAL N_Aux_SayGetCor, X_Info, X_Retorno
 //LOCAL N_PaintRefresh_Old
 *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
@@ -607,10 +606,12 @@ LOCAL N_Aux_SayGetCor, X_Info
 *
 VX_Edicao := VX_SubObj
 *
-
 IF SOB_MODO_GRAFICO()
 
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.})
+    L_Aborta      :=  .T.
+
+//     #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF L_PrimAtivacao .AND. SOB_MODO_GRAFICO()
 //       FOR N_Aux_SayGetCor := 1 TO LEN(VX_SayGetList)
 //           X_Info := VX_SayGetList[N_Aux_SayGetCor]
@@ -710,8 +711,6 @@ READVAR( C_ReadVarAnt )
 IF L_PrimAtivacao
    LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdGET)  // LOGAR conteúdo de telas
 ENDIF
-
-ENDIF
 *
 L_PrimAtivacao := .F.
 *
@@ -725,6 +724,8 @@ L_PrimAtivacao := .F.
 //    #erro "Código não adaptado para esta plataforma"
 // #endif
 *
+ENDIF
+
 RETURN .NOT. L_Aborta
 *
 ***********************
@@ -781,7 +782,7 @@ RETURN IIF(L_E_Get,X_Info:CARGO[2],X_Info[2])
 #UNDEF L_E_Get
 #UNDEF X_Info
 #UNDEF VX_Edicao
-// *
+*
 ***********************
 STAT FUNC PreencheDados(VX_Janela,N_SayGetCor2,N_Lin,N_Col)
 ***********************
@@ -801,13 +802,9 @@ ELSEIF N_LinRel >       (Lin2Livre(VX_Janela)-Lin1Livre(VX_Janela))
 ENDIF
 *
 RETURN N_Scroll
-// *
+*
 ***********************
 STATIC FUNC MostrarInfo ( VX_Janela, N_SayGetCor2, N_Sentido )
-
-//
-// FRAN: ONLY for TEXT GTs
-//
 ***********************
 LOCAL X_Info, N_Lin, N_Col, L_Continua := .T.
 LOCAL C_TextoSay
@@ -944,19 +941,19 @@ IF L_NaoSaltou  // GET pode receber foco
             N_Tecla := INKEYX(0)
             *
             * Em qual página de código vem a tecla
-            IF Version()=="Harbour 3.2.0dev (r1703241902)"
-               * Já vem na PC850
-            ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)"  .OR. Version()=="Harbour 3.2.0dev (r1704061005)"  // PENDENTE_LINUX
-               IF SOB_MODO_GRAFICO()
-                  * Vem na ANSI.
-                  IF N_Tecla >= 128 .AND. N_Tecla <= 255  // Faixa diferente entre ANSI e OEM
-                     N_Tecla := ASC(HB_ANSItoOEM(CHR(N_Tecla)))  // Converter de ANSI para OEM
-                     hb_SetLastKey(N_Tecla)
-                  ENDIF
-               ELSE
-                  * Já vem na PC850
-               ENDIF
-            ENDIF ERRO
+            // IF Version()=="Harbour 3.2.0dev (r1703241902)"
+            //    * Já vem na PC850
+            // ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)"  .OR. Version()=="Harbour 3.2.0dev (r1704061005)"  // PENDENTE_LINUX
+            //    IF SOB_MODO_GRAFICO()
+            //       * Vem na ANSI.
+            //       IF N_Tecla >= 128 .AND. N_Tecla <= 255  // Faixa diferente entre ANSI e OEM
+            //          N_Tecla := ASC(HB_ANSItoOEM(CHR(N_Tecla)))  // Converter de ANSI para OEM
+            //          hb_SetLastKey(N_Tecla)
+            //       ENDIF
+            //    ELSE
+            //       * Já vem na PC850
+            //    ENDIF
+            // ENDIF ERRO
             *
             * Teclas combinadas precisam de tratamento especial de "desempate" (ex: CTRL-C).
             N_Tecla := AjustaTecla(N_Tecla)
@@ -1301,7 +1298,7 @@ LOCAL L_Encontrou_Erro
 IF GET_pode_ter_foco(VX_Edicao,VX_Get,@L_Encontrou_Erro)
    * Como o GET vai ter foco, o VALID é executado a posteriori
    IF L_Encontrou_Erro  // Nunca poderá já ter encontrado erro
-      ? MEMVAR->ERRO_ASSUME_ENCONTROU_ERRO_NAO_PODE_ESTAR_T
+        ? MEMVAR->ERRO_ASSUME_ENCONTROU_ERRO_NAO_PODE_ESTAR_T
    ENDIF
    *
    L_Encontrou_Erro := ERRO_EM_VALIDACOES_PRE_VALID(VX_Edicao,VX_Get)
@@ -1588,50 +1585,47 @@ SETPOS(N_LinAnt,N_ColAnt)
 #UNDEF N_DeslocaTela
 #UNDEF N_DeslocaBuffer
 *
-// ***********************************
-// STATIC FUNC GetPreValidate(VX_Get)
-// **********************************
-// LOCAL L_Entrar := .T.
-// *
-// IF VX_Get:PREBLOCK # NIL
-//    L_Entrar := EVAL(VX_Get:PREBLOCK, VX_Get)
-//    VX_Get:UPDATEBUFFER()
-// ENDIF
-// *
-// RETURN L_Entrar
+***********************************
+STATIC FUNC GetPreValidate(VX_Get)
+**********************************
+LOCAL L_Entrar := .T.
+*
+IF VX_Get:PREBLOCK # NIL
+   L_Entrar := EVAL(VX_Get:PREBLOCK, VX_Get)
+   VX_Get:UPDATEBUFFER()
+ENDIF
+*
+RETURN L_Entrar
 
-// ***********************************
-// STATIC FUNC GetPostValidate(VX_Get)
-// ***********************************
-// LOCAL X_Retorno
-// LOCAL L_Sair := .T.
-// *
-// IF VX_Get:POSTBLOCK # NIL
-//    X_Retorno := EVAL(VX_Get:POSTBLOCK, VX_Get)
-//    VX_Get:UPDATEBUFFER()
-//    IF VALTYPE(X_Retorno)=="L"    // o Valid retornou .T. ou .F.
-//       L_Sair := X_Retorno
-//    ELSEIF VALTYPE(X_Retorno)=="C"   // o Valid retornou uma mensagem de erro
-//       IF EMPTY(X_Retorno)
-//          L_Sair := .T.
-//       ELSE
-//          L_Sair := .F.
-//          ALARME("M01196",X_Retorno)
-//       ENDIF
-//    ELSE
-//       ? MEMVAR->TIPO_DE_DADO_NAO_ESPERADO_NA_CLAUSULA_VALID_DO_GET
-//    ENDIF
-// ENDIF
-// *
-// RETURN L_Sair
-// *
-// *
+***********************************
+STATIC FUNC GetPostValidate(VX_Get)
+***********************************
+LOCAL X_Retorno
+LOCAL L_Sair := .T.
+*
+IF VX_Get:POSTBLOCK # NIL
+   X_Retorno := EVAL(VX_Get:POSTBLOCK, VX_Get)
+   VX_Get:UPDATEBUFFER()
+   IF VALTYPE(X_Retorno)=="L"    // o Valid retornou .T. ou .F.
+      L_Sair := X_Retorno
+   ELSEIF VALTYPE(X_Retorno)=="C"   // o Valid retornou uma mensagem de erro
+      IF EMPTY(X_Retorno)
+         L_Sair := .T.
+      ELSE
+         L_Sair := .F.
+         ALARME("M01196",X_Retorno)
+      ENDIF
+   ELSE
+      ? MEMVAR->TIPO_DE_DADO_NAO_ESPERADO_NA_CLAUSULA_VALID_DO_GET
+   ENDIF
+ENDIF
+*
+RETURN L_Sair
+*
+*
 ***********************************
 STATIC FUNC ProximoGet( VX_Janela )
 ***********************************
-//
-// FRAN: ONly for Text GTs
-//
 LOCAL N_NovaLin
 #DEFINE VX_Edicao   VX_SubObj
 *
@@ -1791,16 +1785,17 @@ ELSEIF N_Tecla==174 .OR. N_Tecla==175    // caracteres + e ¦ - usado no LT
 ENDIF
 RETURN L_OK
 *
-// *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    #DEFINE VX_Edicao    VX_SubObj
-//    #DEFINE N_AlturaJanela  (Lin2Livre(VX_Janela) - Lin1Livre(VX_Janela) + 1)
-//    *
-//    ***********************
-//    STAT FUNC DesenhaBoxGet(VX_Janela,N_Aux_SayGetCor,X_Info)
-//    ***********************
-//    * Só desenhar o box para os GETs visíveis.
-//    *
+*
+#if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+   #DEFINE VX_Edicao    VX_SubObj
+   #DEFINE N_AlturaJanela  (Lin2Livre(VX_Janela) - Lin1Livre(VX_Janela) + 1)
+   *
+   ***********************
+   STAT FUNC DesenhaBoxGet(VX_Janela,N_Aux_SayGetCor,X_Info)
+   ***********************
+   * Só desenhar o box para os GETs visíveis.
+   *
+    RETURN {|| .T.}
 //    RETURN {||DesenhaBoxGet2(VX_Janela,N_Aux_SayGetCor,X_Info)}
 //    *
 //    ************************
@@ -1842,51 +1837,52 @@ RETURN L_OK
 //          ENDIF
 //       ENDIF
 //    ENDIF
-//    *
-//    #UNDEF N_LinVirtual
-//    #UNDEF N_LarguraGet
-//    *
-//    ********************************
-//    STAT FUNC DesenhaSimboloDropDown(VX_Janela,N_Aux_SayGetCor,X_Info)
-//    ********************************
-//    * Só desenhar o símbolo do drop-down para os GETs visíveis.
-//    *
-//    LOCAL V_Deslocamento
-//    LOCAL N_TelaHeight := TelaPrincipalHeight()
-//    LOCAL N_TelaWidth  := TelaPrincipalWidth()
-//    *
-//    * O sistema supõe que existam 3 espaços em branco entre o final do GET e o
-//    * SAY correspondente. O botão de drop-down tem 2 bytes de largura, e está
-//    * deslocado à direita, de forma que ficará no "meio" dos 3 espaços em branco.
-//    *
-//    IF N_TelaHeight >= 1024 .AND. ;    // resolução VERTICAL e HORIZONTAL
-//       N_TelaWidth >= 1280
-//       V_Deslocamento := {0,+6,+1,+6}
-//    ELSEIF N_TelaHeight >= 960 .AND. ;
-//       N_TelaWidth >= 1280
-//       V_Deslocamento := {0,+6,+1,+6}
-//    ELSEIF N_TelaHeight >= 864 .AND. ;
-//       N_TelaWidth >= 1152
-//       V_Deslocamento := {0,+6,+1,+6}
-//    ELSEIF N_TelaHeight >= 768 .AND. ;
-//       N_TelaWidth >= 1024
-//       V_Deslocamento := {-1,+5,+2,+6}
-//    ELSEIF N_TelaHeight >= 600 .AND. ;
-//           N_TelaWidth >= 800
-//       V_Deslocamento := {-1,+4,+3,+5}
-//    ELSE
-//       V_Deslocamento := {-1,+3,+1,+4}
-//    ENDIF
-//    *
-//    RETURN {||DesenhaSimboloDropDown2(VX_Janela,N_Aux_SayGetCor,X_Info,V_Deslocamento)}
-//    *
-//    *********************************
-//    STAT PROC DesenhaSimboloDropDown2(VX_Janela,N_Aux_SayGetCor,X_Info,V_Deslocamento)
-//    *********************************
-//    LOCAL N_LI,N_CI,N_LF,N_CF
-//    *
-//    #DEFINE N_LinVirtual X_Info[1]
-//    *
+   *
+   #UNDEF N_LinVirtual
+   #UNDEF N_LarguraGet
+   *
+   ********************************
+   STAT FUNC DesenhaSimboloDropDown(VX_Janela,N_Aux_SayGetCor,X_Info)
+   ********************************
+   * Só desenhar o símbolo do drop-down para os GETs visíveis.
+   *
+   LOCAL V_Deslocamento
+   LOCAL N_TelaHeight := TelaPrincipalHeight()
+   LOCAL N_TelaWidth  := TelaPrincipalWidth()
+   *
+   * O sistema supõe que existam 3 espaços em branco entre o final do GET e o
+   * SAY correspondente. O botão de drop-down tem 2 bytes de largura, e está
+   * deslocado à direita, de forma que ficará no "meio" dos 3 espaços em branco.
+   *
+   IF N_TelaHeight >= 1024 .AND. ;    // resolução VERTICAL e HORIZONTAL
+      N_TelaWidth >= 1280
+      V_Deslocamento := {0,+6,+1,+6}
+   ELSEIF N_TelaHeight >= 960 .AND. ;
+      N_TelaWidth >= 1280
+      V_Deslocamento := {0,+6,+1,+6}
+   ELSEIF N_TelaHeight >= 864 .AND. ;
+      N_TelaWidth >= 1152
+      V_Deslocamento := {0,+6,+1,+6}
+   ELSEIF N_TelaHeight >= 768 .AND. ;
+      N_TelaWidth >= 1024
+      V_Deslocamento := {-1,+5,+2,+6}
+   ELSEIF N_TelaHeight >= 600 .AND. ;
+          N_TelaWidth >= 800
+      V_Deslocamento := {-1,+4,+3,+5}
+   ELSE
+      V_Deslocamento := {-1,+3,+1,+4}
+   ENDIF
+   *
+   RETURN {||DesenhaSimboloDropDown2(VX_Janela,N_Aux_SayGetCor,X_Info,V_Deslocamento)}
+   *
+   *********************************
+   STAT PROC DesenhaSimboloDropDown2(VX_Janela,N_Aux_SayGetCor,X_Info,V_Deslocamento)
+   *********************************
+   LOCAL N_LI,N_CI,N_LF,N_CF
+   *
+   #DEFINE N_LinVirtual X_Info[1]
+   *
+   IF SOB_MODO_GRAFICO()
 //    IF L_AtivaGui
 //       N_LI := LinVirtual(VX_Janela,N_Aux_SayGetCor)-N_LinCobertas+Lin1Livre(VX_Janela)
 //       N_CI := ColVirtual(VX_Janela,N_Aux_SayGetCor)-N_ColCobertas+Col1Livre(VX_Janela)
@@ -1899,93 +1895,94 @@ RETURN L_OK
 //          WVW_DrawScrollButton(N_WindowNum,N_LI,N_CI,N_LF,N_CF,V_Deslocamento,3,.F.)
 //       ENDIF
 //    ENDIF
-//    *
-//    #UNDEF N_LinVirtual
-//    *
-//    #UNDEF N_AlturaJanela
-//    #UNDEF VX_Edicao
-//    *
-//    * *************************
-//    * FUNC SETA_BITMAP_DROPDOWN(C_BITMAP_NEW)
-//    * *************************
-//    * STATIC C_BITMAP2 := ""
-//    * IF C_BITMAP_NEW # NIL
-//    *    C_BITMAP2 := C_BITMAP_NEW
-//    * ENDIF
-//    * RETURN C_BITMAP2
-//    *
+   ENDIF
+   *
+   #UNDEF N_LinVirtual
+   *
+   #UNDEF N_AlturaJanela
+   #UNDEF VX_Edicao
+   *
+   * *************************
+   * FUNC SETA_BITMAP_DROPDOWN(C_BITMAP_NEW)
+   * *************************
+   * STATIC C_BITMAP2 := ""
+   * IF C_BITMAP_NEW # NIL
+   *    C_BITMAP2 := C_BITMAP_NEW
+   * ENDIF
+   * RETURN C_BITMAP2
+   *
 
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-// *
-// ***************************
-// FUNC GetCdGET_Atual_Entrada(VX_Janela)
-// ***************************
-// LOCAL C_CdGET_Atual := ""
-// LOCAL VX_Get
-// *
-// #DEFINE VX_Edicao   VX_SubObj
-// * verificar se ativação da entrada de dados não foi finalizada
-// * (mas ainda com a janela na tela, esperando outra ativação)
-// IF N_SayGetCor <= LEN(VX_SayGetList)
-//    * Se item atual for um GET
-//    * (nada impede que uma função chamada de dentro de um SAY chame a ALARME()...)
-//    IF VALTYPE(VX_SayGetList[N_SayGetCor]) == "O"
-//       * é um GET
-//       VX_Get := VX_SayGetList[N_SayGetCor]
-//       #DEFINE C_CdGET VX_Get:CARGO[9]
-//       C_CdGET_Atual := C_CdGET  // ,V_Lst_CdGET)}) // salvar help anterior
-//       #UNDEF  C_CdGET
-//    ENDIF
-// ENDIF
-// #UNDEF VX_Edicao
-// *
-// RETURN C_CdGET_Atual
+#elif defined(__PLATFORM__LINUX)
+   // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
+#else
+   #erro "Código não adaptado para esta plataforma"
+#endif
+*
+***************************
+FUNC GetCdGET_Atual_Entrada(VX_Janela)
+***************************
+LOCAL C_CdGET_Atual := ""
+LOCAL VX_Get
+*
+#DEFINE VX_Edicao   VX_SubObj
+* verificar se ativação da entrada de dados não foi finalizada
+* (mas ainda com a janela na tela, esperando outra ativação)
+IF N_SayGetCor <= LEN(VX_SayGetList)
+   * Se item atual for um GET
+   * (nada impede que uma função chamada de dentro de um SAY chame a ALARME()...)
+   IF VALTYPE(VX_SayGetList[N_SayGetCor]) == "O"
+      * é um GET
+      VX_Get := VX_SayGetList[N_SayGetCor]
+      #DEFINE C_CdGET VX_Get:CARGO[9]
+      C_CdGET_Atual := C_CdGET  // ,V_Lst_CdGET)}) // salvar help anterior
+      #UNDEF  C_CdGET
+   ENDIF
+ENDIF
+#UNDEF VX_Edicao
+*
+RETURN C_CdGET_Atual
 
 ****************
 Func AjustaTecla (N_Tecla)
 ****************
-//N_Tecla := AjustaTecla_vinda_por_Teclado(N_Tecla)
+N_Tecla := AjustaTecla_vinda_por_Teclado(N_Tecla)
 N_Tecla := AjustaTecla_vinda_por_HB_KeyPut(N_Tecla)
 RETURN N_Tecla
-// *
-// ***************************************
-// STAT Func AjustaTecla_vinda_por_Teclado (N_Tecla)
-// ***************************************
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF CtrlPressed()
-//       * Teclas recebidas via digitação direta no teclado.
-//       *
-//       IF N_Tecla==K_PGDN
-//          N_Tecla := K_CTRL_C_ARBITRADO_TECLADO
-//       ELSEIF N_Tecla==K_INS
-//          N_Tecla := K_CTRL_V_ARBITRADO_TECLADO
-//       ELSEIF N_Tecla==K_DOWN
-//          N_Tecla := K_CTRL_X_ARBITRADO_TECLADO
-//       ELSEIF N_Tecla==K_CTRL_LEFT
-//          N_Tecla := K_CTRL_Z_ARBITRADO_TECLADO
-//       ELSEIF N_Tecla==K_CTRL_END
-//          * Não dá para diferenciar entre o uso da K_CTRL_END e da K_CTRL_W,
-//          * pois ambas exigem que se pressione a tecla "Ctrl".
-//          N_Tecla := K_CTRL_W_ARBITRADO_TECLADO
-//       ELSEIF N_Tecla==K_CTRL_N
-//          N_Tecla := K_CTRL_N_ARBITRADO_TECLADO
-//       ELSEIF N_Tecla==K_CTRL_Y
-//          N_Tecla := K_CTRL_Y_ARBITRADO_TECLADO
-//       ENDIF
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)                // ADAPTACAO_LINUX
-//    // Na plataforma LINUX não há necessidade de tratar "ARBITRADO_TECLADO"?   // ADAPTACAO_LINUX
-//    // É necessário entender onde mais isso precisa ser tratado. //!!          // ADAPTACAO_LINUX
-// #else                                                                         // ADAPTACAO_LINUX
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-// *
-// RETURN N_Tecla
-// *
+*
+***************************************
+STAT Func AjustaTecla_vinda_por_Teclado (N_Tecla)
+***************************************
+#if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+   IF CtrlPressed()
+      * Teclas recebidas via digitação direta no teclado.
+      *
+      IF N_Tecla==K_PGDN
+         N_Tecla := K_CTRL_C_ARBITRADO_TECLADO
+      ELSEIF N_Tecla==K_INS
+         N_Tecla := K_CTRL_V_ARBITRADO_TECLADO
+      ELSEIF N_Tecla==K_DOWN
+         N_Tecla := K_CTRL_X_ARBITRADO_TECLADO
+      ELSEIF N_Tecla==K_CTRL_LEFT
+         N_Tecla := K_CTRL_Z_ARBITRADO_TECLADO
+      ELSEIF N_Tecla==K_CTRL_END
+         * Não dá para diferenciar entre o uso da K_CTRL_END e da K_CTRL_W,
+         * pois ambas exigem que se pressione a tecla "Ctrl".
+         N_Tecla := K_CTRL_W_ARBITRADO_TECLADO
+      ELSEIF N_Tecla==K_CTRL_N
+         N_Tecla := K_CTRL_N_ARBITRADO_TECLADO
+      ELSEIF N_Tecla==K_CTRL_Y
+         N_Tecla := K_CTRL_Y_ARBITRADO_TECLADO
+      ENDIF
+   ENDIF
+#elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)                // ADAPTACAO_LINUX
+   // Na plataforma LINUX não há necessidade de tratar "ARBITRADO_TECLADO"?   // ADAPTACAO_LINUX
+   // É necessário entender onde mais isso precisa ser tratado. //!!          // ADAPTACAO_LINUX
+#else                                                                         // ADAPTACAO_LINUX
+   #erro "Código não adaptado para esta plataforma"
+#endif
+*
+RETURN N_Tecla
+*
 *****************************************
 STAT Func AjustaTecla_vinda_por_HB_KeyPut (N_Tecla)
 *****************************************
@@ -2025,21 +2022,21 @@ ELSEIF N_Tecla==K_CTRL_Y
 ENDIF
 *
 RETURN N_Tecla
-// *
-// ********************
-// function CtrlPressed()
-// ********************
-// * returns state of CONTROL keys
-// // #define VK_CONTROL            17
-// return (GetKeyState(17) < 0)
-// *
-// **************************
-// STAT function ShiftPressed()
-// **************************
-// * returns state of SHIFT keys**
-// // #define VK_SHIFT            16
-// return (GetKeyState(16) < 0)
-// *
+*
+********************
+function CtrlPressed()
+********************
+* returns state of CONTROL keys
+// #define VK_CONTROL            17
+return (GetKeyState(17) < 0)
+*
+**************************
+STAT function ShiftPressed()
+**************************
+* returns state of SHIFT keys**
+// #define VK_SHIFT            16
+return (GetKeyState(16) < 0)
+*
 ******************************
 STATIC FUNC INABILITA_TECLA_F2(N_Tecla, VX_Janela) // A telca F2, na função de SALVAR, só é usada na especialização Entrada.
 ******************************
@@ -2061,23 +2058,23 @@ IF N_Tecla == K_F2
 ENDIF
 *
 RETURN L_RET
-// *
-// #pragma BEGINDUMP
-// #include "hbapi.h"
-// #ifdef __WIN32__
-// #include <windows.h>
+*
+#pragma BEGINDUMP
+#include "hbapi.h"
+#ifdef __WIN32__
+#include <windows.h>
 
-// HB_FUNC( GETKEYSTATE )
-// {
-//    hb_retni( GetKeyState( hb_parni( 1 ) ) ) ;
-// }
-// #else
-// HB_FUNC( GETKEYSTATE )
-// {
-//    hb_retni( -1 );
-// }
-// #endif
+HB_FUNC( GETKEYSTATE )
+{
+   hb_retni( GetKeyState( hb_parni( 1 ) ) ) ;
+}
+#else
+HB_FUNC( GETKEYSTATE )
+{
+   hb_retni( -1 );
+}
+#endif
 
-// #pragma ENDDUMP
+#pragma ENDDUMP
 
 **************************** FIM DO entrada.prg *******************************
