@@ -39,6 +39,9 @@
 #INCLUDE "janela.ch"
 #INCLUDE "define_cua.ch"
 #INCLUDE "def_dados.ch"
+
+
+
 *
 
 * sinalizadores de movimentação (armazenado em N_CodMovi)
@@ -469,6 +472,16 @@ IF VX_Get:TYPE == "C" .AND. VX_Get:PICTURE # NIL
       N_Larguravar := N_LarguraTela := NIL
    ENDIF
    *
+
+   //
+   //  FRAN: ADDED
+   //
+ELSEIF VX_Get:TYPE == "C"
+    *
+    N_LarguraVar  := LEN(VX_Get:VARGET())
+    N_LarguraTela := N_LarguraVar
+
+
 ENDIF
 *
 * //!! depois unificar as variáveis N_LARGURATELA E N_LARGURABOX
@@ -588,10 +601,10 @@ RETURN C_Dado
 STATIC FUNC Ler( VX_Janela )
 ****************************
 *
-LOCAL N_CursorAnt , C_ReadVarAnt
+LOCAL N_CursorAnt , C_ReadVarAnt, N_Col, N_Row
 LOCAL VX_Get      , VX_Edicao
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
-LOCAL N_Aux_SayGetCor, X_Info, X_Retorno
+LOCAL N_Aux_SayGetCor, X_Info, X_Retorno, X_Dado
 //LOCAL N_PaintRefresh_Old
 *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
@@ -607,6 +620,83 @@ LOCAL N_Aux_SayGetCor, X_Info, X_Retorno
 VX_Edicao := VX_SubObj
 *
 IF SOB_MODO_GRAFICO()
+
+    NAP_LOG("ENTRADA LIBRE: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
+
+    FOR N_Aux_SayGetCor := 1 TO LEN(VX_SayGetList)
+
+       X_Info := VX_SayGetList[N_Aux_SayGetCor]
+       N_Col := ColVirtual(VX_Janela,N_Aux_SayGetCor)
+       N_Row := LinVirtual(VX_Janela,N_Aux_SayGetCor)
+       #DEFINE L_E_Get  (VALTYPE(X_Info) == "O")
+       IF L_E_Get
+        #DEFINE N_LarguraVar  X_Info:CARGO[7]
+        #DEFINE N_LarguraTela X_Info:CARGO[8]
+
+        X_Dado := EVAL(X_Info:BLOCK)
+
+        NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
+
+        #UNDEF N_LarguraVar
+        #UNDEF N_LarguraTela
+
+    ELSE
+        #DEFINE B_Expressao X_Info[3]
+        #DEFINE C_Pict      X_Info[4]
+        #DEFINE C_CorSay    X_Info[5]
+
+       X_Dado := EVAL(B_Expressao)
+       NAP_LOG("SAY: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ") '" + X_Dado + "'")
+       #UNDEF B_Expressao
+       #UNDEF C_Pict
+       #UNDEF C_CorSay
+
+       ENDIF
+       #UNDEF L_E_Get
+    NEXT
+
+
+    // DO WHILE PreencheDados(VX_Janela,N_SayGetCor2,@N_Lin,@N_Col) == 0 .AND. L_Continua
+    //     #DEFINE VX_Edicao   VX_SubObj
+    //     X_Info := VX_SayGetList[N_SayGetCor2]
+    //     *
+    //     #DEFINE L_E_Get  (VALTYPE(X_Info) == "O")
+    //     IF L_E_Get
+    //        X_Info:ROW := N_Lin - N_LinCobertas + Lin1Livre(VX_Janela)
+    //        X_Info:COL := N_Col - N_ColCobertas + Col1Livre(VX_Janela)
+    //        X_Info:DISPLAY()
+    //        *
+    //        IF N_Col-N_ColCobertas+LarguraTela(X_Info:BLOCK,X_Info:PICTURE) > ;
+    //           Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1  // largura da janela
+    //           ? MEMVAR->ERRO_LARGURA
+    //        ENDIF
+    //        *
+    //     ELSE
+    //        #DEFINE B_Expressao X_Info[3]
+    //        #DEFINE C_Pict      X_Info[4]
+    //        #DEFINE C_CorSay    X_Info[5]
+    //        *
+    //        SETPOS(N_Lin-N_LinCobertas+Lin1Livre(VX_Janela),;
+    //               N_Col-N_ColCobertas+Col1Livre(VX_Janela))
+    //        IF C_Pict # NIL
+    //           C_TextoSay := TRANSFORM(EVAL(B_Expressao),C_Pict)
+    //        ELSE
+    //           C_TextoSay := EVAL(B_Expressao)
+    //        ENDIF
+    //        DISPOUT(C_TextoSay,C_CorSay)
+    //        *
+    //        IF N_Col-N_ColCobertas+LEN(C_TextoSay) > ;
+    //           Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1  // largura da janela
+    //           ? MEMVAR->ERRO_LARGURA
+    //        ENDIF
+    //        *
+    //        #UNDEF B_Expressao
+    //        #UNDEF C_Pict
+    //        #UNDEF C_CorSay
+    //     ENDIF
+    //     #UNDEF L_E_Get
+
+
 
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.})
     L_Aborta      :=  .T.
