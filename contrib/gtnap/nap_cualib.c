@@ -175,7 +175,20 @@ HB_FUNC( NAP_CUALIB_LABEL )
     uint32_t nLin = hb_parni(1);
     uint32_t nCol = hb_parni(2);
     const char_t *text = hb_gtnap_parText(3);
-    hb_gtnap_cualib_label(text, nLin, nCol);
+    bool_t background = (bool_t)hb_parl(4);
+    hb_gtnap_cualib_label(text, nLin, nCol, background);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_EDIT )
+{
+    uint32_t nLin = hb_parni(1);
+    uint32_t nCol = hb_parni(2);
+    uint32_t nSize = hb_parni(3);
+    const char_t *text = hb_gtnap_parText(4);
+    bool_t editable = (bool_t)hb_parl(5);
+    hb_gtnap_cualib_edit(text, nLin, nCol, nSize, editable);
 }
 
 /*---------------------------------------------------------------------------*/

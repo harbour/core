@@ -93,6 +93,7 @@ DeclPt(Button);
 typedef enum _objtype_t
 {
     ekOBJ_LABEL,
+    ekOBJ_EDIT,
     ekOBJ_BUTTON,
     ekOBJ_MENUVERT,
     ekOBJ_TABLEVIEW,
@@ -1465,10 +1466,35 @@ void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId,
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol)
+void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
-    i_add_label_object(nCol, nLin, text, kCOLOR_CYAN, GTNAP_GLOBAL, cuawin);
+    color_t back = (background == TRUE) ? kCOLOR_CYAN : 0;
+    i_add_label_object(nCol - cuawin->N_ColIni, nLin - cuawin->N_LinIni, text, back, GTNAP_GLOBAL, cuawin);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize, const bool_t editable)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    Edit *edit = edit_create();
+    String *ctext = gtconvert_1252_to_UTF8(text);
+    // //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
+    S2Df size;
+    cassert_no_null(cuawin);
+    // //_component_set_tag((GuiComponent*)button, nTag);
+    edit_text(edit, tc(ctext));
+    edit_font(edit, GTNAP_GLOBAL->global_font);
+    edit_editable(edit, editable);
+    size.width = (real32_t)(nSize * GTNAP_GLOBAL->cell_x_size);
+    size.height = (real32_t)(1 * GTNAP_GLOBAL->cell_y_size);
+    log_printf("Added EDIT (%s) into CUALIB Window: %d, %d, %d", tc(ctext), nLin, nCol, nSize);
+    i_add_object(ekOBJ_EDIT, nCol - cuawin->N_ColIni, nLin - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)edit, cuawin);
+    str_destroy(&ctext);
+
+    // if (listener != NULL)
+    //     button_OnClick(button, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1861,6 +1887,7 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *panel, c
             {
                 switch(type) {
                 case ekOBJ_LABEL:
+                case ekOBJ_EDIT:
                 case ekOBJ_IMAGE:
                 case ekOBJ_MENUVERT:
                     pos.y += (real32_t)toolbar->pixels_button;
@@ -1934,6 +1961,8 @@ static void i_component_tabstop(ArrSt(GtNapCualibObject) *objects, Window *windo
             case ekOBJ_TEXTVIEW:
                 _component_taborder(object->component, window);
                 break;
+            case ekOBJ_EDIT:
+                break;
             cassert_default();
             }
         }
@@ -1987,6 +2016,7 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t cancelBlockParamId)
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_TEXTVIEW, cuawin->toolbar);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_BUTTON, cuawin->toolbar);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_LABEL, cuawin->toolbar);
+    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_EDIT, cuawin->toolbar);
     i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_IMAGE, cuawin->toolbar);
     i_attach_toolbar_to_panel(cuawin->toolbar, cuawin->panel);
 
@@ -1997,6 +2027,7 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t cancelBlockParamId)
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_TEXTVIEW);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_BUTTON);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_LABEL);
+    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_EDIT);
     i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_IMAGE);
     i_toolbar_tabstop(cuawin->toolbar);
 
