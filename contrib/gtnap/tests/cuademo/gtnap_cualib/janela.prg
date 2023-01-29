@@ -749,6 +749,8 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
                 L_CLOSE_WITH_RETURN := .F.
 
             ELSEIF N_TP_Jan == _JAN_ENTRADA_10
+                L_CLOSE_WITH_ESC := .T.
+                L_CLOSE_WITH_RETURN := .F.
 
 
             ELSEIF N_TP_Jan == _JAN_MENU_VERT

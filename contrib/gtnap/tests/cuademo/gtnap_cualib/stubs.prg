@@ -111,11 +111,11 @@ ENDIF
 // ***************
 // RETURN 60*60 // 1 hora
 // *
-// **************
-// PROC DATAINVA
-// *************
-// ALARME("M?????","Esta data n´?¢o existe no calend´?¢rio")
-// *
+**************
+PROC DATAINVA
+*************
+ALARME("M?????","Esta data não existe no calendário")
+    *
 
 **********************
 PROC LOGAFONT_GENERICO (N_RETROCEDE_CALLSTACK,C_TPLOGAFONT,;
@@ -340,125 +340,124 @@ ELSEIF C_TpCor == _COR_PADRAO
 ENDIF ERRO
 *
 RETURN C_Cor
-// *
-// ***********
-// FUNC TABMEM (V_TAB, V_POSMOSTRA, V_POSRETORNO, V_TITULO, L_REMOVER_CERQUILHA)
-// ***********
-// LOCAL V_RETORNO
-// LOCAL V_LARGURA, V_ALTURA, V_CONT1, V_CONT2
-// LOCAL V_JANVET, V_VET_MOSTRA := {}, V_CELULA, V_STRCELULA
-// LOCAL V_OPCAO
-// LOCAL V_LIN_INI, V_COL_INI
-// LOCAL C_TITULO_AUX
-// LOCAL N_MAX_LARGURA_VET_MOSTRA
-// *
-// DEFAULT V_POSMOSTRA         TO {}        // por "default" mostra todas as colunas
-// DEFAULT V_POSRETORNO        TO  1        // por "default" retorna a 1a. coluna
-// DEFAULT V_TITULO            TO "Selecione com Enter"
-// DEFAULT L_REMOVER_CERQUILHA TO .F.
-// *
-// N_MAX_LARGURA_VET_MOSTRA := LEN(V_TITULO)
-// *
-// IF EMPTY(V_TAB)
-//    V_RETORNO := NIL
-//    ADVERTE("M11254","A tabela de ajuda (F4) n´?¢o ser´?¢ exibida,;"+;
-//                     "pois n´?¢o existe nenhum item a sugerir...")
-// ELSEIF LEN(V_TAB)==1       // se somente 1 elemento, selecionar automaticamente
-//    V_RETORNO := V_TAB[1,V_POSRETORNO]
-// ELSE
-//    * preencher vetor para mostrar ao usu´?¢rio
-//    FOR V_CONT1 := 1 TO LEN(V_TAB)
-//        AADD(V_VET_MOSTRA,"")        // adicionar nova linha
-//        FOR V_CONT2 := 1 TO LEN(V_TAB[V_CONT1])
-//            IF LEN(V_POSMOSTRA)==0 .OR. ASCAN(V_POSMOSTRA,V_CONT2) # 0
-//               V_CELULA := V_TAB[V_CONT1,V_CONT2]
-//               IF VALTYPE(V_CELULA) == "C"
-//                  V_STRCELULA := V_CELULA
-//               ELSEIF VALTYPE(V_CELULA) == "N"
-//                  IF V_CELULA < 999
-//                     V_STRCELULA := STR(V_CELULA,03)
-//                  ELSEIF V_CELULA < 999999
-//                     V_STRCELULA := STR(V_CELULA,06)
-//                  ELSEIF V_CELULA < 999999999
-//                     V_STRCELULA := STR(V_CELULA,09)
-//                  ELSE
-//                     V_STRCELULA := STR(V_CELULA,12)
-//                  ENDIF
-//               ELSEIF VALTYPE(V_CELULA) == "D"
-//                  V_STRCELULA := DTOC(V_CELULA)
-//               ENDIF
-//               V_VET_MOSTRA[V_CONT1] := V_VET_MOSTRA[V_CONT1] + " " + V_STRCELULA
-//            ENDIF
-//        NEXT
-//        N_MAX_LARGURA_VET_MOSTRA := MAX(N_MAX_LARGURA_VET_MOSTRA,LEN(V_VET_MOSTRA[V_CONT1]))
-//    NEXT
-//    *
-//    IF L_REMOVER_CERQUILHA
-//       FOR V_CONT1 := 1 TO LEN(V_VET_MOSTRA)
-//           V_VET_MOSTRA[V_CONT1] := STRTRAN(V_VET_MOSTRA[V_CONT1],"#"," ")
-//       NEXT
-//    ENDIF
-//    *
-//    * calcular "largura" e "altura" da tabela
-//    * +4 - margens da janela
-//    * +3 - espa´?¢o para a barra de rolagem vertical, se existir
-//    V_LARGURA := MIN(N_MAX_LARGURA_VET_MOSTRA+4+4            ,MAXCOL())
-//    V_ALTURA  := MIN(LEN(V_VET_MOSTRA)+LINHAS_TIT(V_TITULO)+4,MAXROW())
-//    *
-//    * ajustar posi´?¢´?¢o inicial da tabela em rela´?¢´?¢o ´?¢ tela
-//    * (procurar deixar ao lado do campo)
-//    *
-//    V_LIN_INI := ROW()-2
-//    V_LIN_INI := MAX(0,ROW()-2)  // evitar que fique negativo
-//    IF V_LIN_INI+V_ALTURA  > MAXROW()
-//       V_LIN_INI := MAXROW()-V_ALTURA
-//    ENDIF
-//    V_COL_INI := COL()+3
-//    IF V_COL_INI+V_LARGURA > MAXCOL()
-//       V_COL_INI := MAXCOL()-V_LARGURA
-//    ENDIF
-//    *
-//    IF ";" $ V_TITULO
-//       C_TITULO_AUX := "Selecione com Enter"  // modifica o t´?¢tulo da janela do Windows
-//    ELSE
-//       C_TITULO_AUX := V_TITULO
-//    ENDIF
-//    CUA20 @ V_LIN_INI,V_COL_INI,V_LIN_INI+V_ALTURA,V_COL_INI+V_LARGURA JANELA V_JANVET ;
-//            TITULO C_TITULO_AUX SUBTITULO V_TITULO AJUDA "T02833"
-//    *
-//    CUA20 ESPECIALIZE V_JANVET SELECAO SIMPLES VETOR V_VET_MOSTRA ;
-//          NAOROLAHORIZONTAL SEMGRADE SEMTOOLBAR AUTOCLOSE
-//    *
-//    IF (V_OPCAO := ATIVE(V_JANVET)) # 0
-//       V_RETORNO := V_TAB[V_OPCAO,V_POSRETORNO]
-//    ENDIF
-//    *
-// ENDIF
-// *
-// RETURN V_RETORNO
+*
+***********
+FUNC TABMEM (V_TAB, V_POSMOSTRA, V_POSRETORNO, V_TITULO, L_REMOVER_CERQUILHA)
+***********
+LOCAL V_RETORNO
+LOCAL V_LARGURA, V_ALTURA, V_CONT1, V_CONT2
+LOCAL V_JANVET, V_VET_MOSTRA := {}, V_CELULA, V_STRCELULA
+LOCAL V_OPCAO
+LOCAL V_LIN_INI, V_COL_INI
+LOCAL C_TITULO_AUX
+LOCAL N_MAX_LARGURA_VET_MOSTRA
+*
+DEFAULT V_POSMOSTRA         TO {}        // por "default" mostra todas as colunas
+DEFAULT V_POSRETORNO        TO  1        // por "default" retorna a 1a. coluna
+DEFAULT V_TITULO            TO "Selecione com Enter"
+DEFAULT L_REMOVER_CERQUILHA TO .F.
+*
+N_MAX_LARGURA_VET_MOSTRA := LEN(V_TITULO)
+*
+IF EMPTY(V_TAB)
+   V_RETORNO := NIL
+   ADVERTE("M11254","A tabela de ajuda (F4) não será exibida,;"+;
+    "pois não existe nenhum item a sugerir...")
+ELSEIF LEN(V_TAB)==1       // se somente 1 elemento, selecionar automaticamente
+   V_RETORNO := V_TAB[1,V_POSRETORNO]
+ELSE
+   * preencher vetor para mostrar ao usu´?¢rio
+   FOR V_CONT1 := 1 TO LEN(V_TAB)
+       AADD(V_VET_MOSTRA,"")        // adicionar nova linha
+       FOR V_CONT2 := 1 TO LEN(V_TAB[V_CONT1])
+           IF LEN(V_POSMOSTRA)==0 .OR. ASCAN(V_POSMOSTRA,V_CONT2) # 0
+              V_CELULA := V_TAB[V_CONT1,V_CONT2]
+              IF VALTYPE(V_CELULA) == "C"
+                 V_STRCELULA := V_CELULA
+              ELSEIF VALTYPE(V_CELULA) == "N"
+                 IF V_CELULA < 999
+                    V_STRCELULA := STR(V_CELULA,03)
+                 ELSEIF V_CELULA < 999999
+                    V_STRCELULA := STR(V_CELULA,06)
+                 ELSEIF V_CELULA < 999999999
+                    V_STRCELULA := STR(V_CELULA,09)
+                 ELSE
+                    V_STRCELULA := STR(V_CELULA,12)
+                 ENDIF
+              ELSEIF VALTYPE(V_CELULA) == "D"
+                 V_STRCELULA := DTOC(V_CELULA)
+              ENDIF
+              V_VET_MOSTRA[V_CONT1] := V_VET_MOSTRA[V_CONT1] + " " + V_STRCELULA
+           ENDIF
+       NEXT
+       N_MAX_LARGURA_VET_MOSTRA := MAX(N_MAX_LARGURA_VET_MOSTRA,LEN(V_VET_MOSTRA[V_CONT1]))
+   NEXT
+   *
+   IF L_REMOVER_CERQUILHA
+      FOR V_CONT1 := 1 TO LEN(V_VET_MOSTRA)
+          V_VET_MOSTRA[V_CONT1] := STRTRAN(V_VET_MOSTRA[V_CONT1],"#"," ")
+      NEXT
+   ENDIF
+   *
+   * calcular "largura" e "altura" da tabela
+   * +4 - margens da janela
+   * +3 - espaço para a barra de rolagem vertical, se existir
+   V_LARGURA := MIN(N_MAX_LARGURA_VET_MOSTRA+4+4            ,MAXCOL())
+   V_ALTURA  := MIN(LEN(V_VET_MOSTRA)+LINHAS_TIT(V_TITULO)+4,MAXROW())
+   *
+   * ajustar posição inicial da tabela em relação à tela
+   * (procurar deixar ao lado do campo)
+   *
+   V_LIN_INI := ROW()-2
+   V_LIN_INI := MAX(0,ROW()-2)  // evitar que fique negativo
+   IF V_LIN_INI+V_ALTURA  > MAXROW()
+      V_LIN_INI := MAXROW()-V_ALTURA
+   ENDIF
+   V_COL_INI := COL()+3
+   IF V_COL_INI+V_LARGURA > MAXCOL()
+      V_COL_INI := MAXCOL()-V_LARGURA
+   ENDIF
+   *
+   IF ";" $ V_TITULO
+      C_TITULO_AUX := "Selecione com Enter"  // modifica o título da janela do Windows
+   ELSE
+      C_TITULO_AUX := V_TITULO
+   ENDIF
+   CUA20 @ V_LIN_INI,V_COL_INI,V_LIN_INI+V_ALTURA,V_COL_INI+V_LARGURA JANELA V_JANVET ;
+           TITULO C_TITULO_AUX SUBTITULO V_TITULO AJUDA "T02833"
+   *
+   CUA20 ESPECIALIZE V_JANVET SELECAO SIMPLES VETOR V_VET_MOSTRA ;
+         NAOROLAHORIZONTAL SEMGRADE SEMTOOLBAR AUTOCLOSE
+   *
+   IF (V_OPCAO := ATIVE(V_JANVET)) # 0
+      V_RETORNO := V_TAB[V_OPCAO,V_POSRETORNO]
+   ENDIF
+   *
+ENDIF
+*
+RETURN V_RETORNO
 // *
 // *********************
 // PROC ADDESTRESTEN_DEF
 // *********************
-// *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-// ********************
-// STAT FUNC LINHAS_TIT(V_TITULO)  // Em Windows a rotina ´?¢ chamada de forma EST´?¢TICA.
-// ********************
-// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-// ********************
-// FUNC LINHAS_TIT(V_TITULO) // Em Linux foi necess´?¢rio deixa-la P´?¢BLICA. (Motivo desconhecido at´?¢ o momento)
-// ********************
-// #else
-//    #erro "C´?¢digo n´?¢o adaptado para esta plataforma"
-// #endif
-// LOCAL N_LINHAS_TIT := IIF(EMPTY(V_TITULO),3,4)
-// DO WHILE ";" $ V_TITULO
-//    N_LINHAS_TIT++      // aumentar uma linha
-//    V_TITULO := STRTRAN(V_TITULO,";","",,1)   // trocar s´?¢ uma ocorr´?¢ncia
-// ENDDO
-// RETURN N_LINHAS_TIT
-// *
+#if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+********************
+STAT FUNC LINHAS_TIT(V_TITULO)  // Em Windows a rotina é chamada de forma ESTÁTICA.
+********************
+#elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
+********************
+FUNC LINHAS_TIT(V_TITULO) // Em Linux foi necessário deixa-la PÚBLICA. (Motivo desconhecido até o momento)
+********************
+#else
+   #erro "Código não adaptado para esta plataforma"
+#endif
+LOCAL N_LINHAS_TIT := IIF(EMPTY(V_TITULO),3,4)
+DO WHILE ";" $ V_TITULO
+   N_LINHAS_TIT++      // aumentar uma linha
+   V_TITULO := STRTRAN(V_TITULO,";","",,1)   // trocar só uma ocorrência
+ENDDO
+RETURN N_LINHAS_TIT
+
 
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 

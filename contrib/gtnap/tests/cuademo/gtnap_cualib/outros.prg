@@ -541,32 +541,32 @@ TONE(750,0)
 
 // RETURN C_CDMENS_OLD  // retornar o estado anterior
 // *
-// *****************
-// PROCEDURE ADVERTE (C_CDMENS, C_SubCabec,N_SEGUNDOS)
-// *****************
-// LOCAL C_COR_ANT
-// *
-// TONE(750,0)
-// *
-// IF C_SubCabec # NIL
-//    IF .NOT. SOB_MODO_GRAFICO()
-//       C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_ADVERTENCIA))
-//    ENDIF
-//    *
-// //   ALARME_CDMENS_ATIVO(C_CDMENS) // serï¿½ usado pela ajuda ao usuï¿½rio
-//    *
-//    MOSTRAR(C_CDMENS,C_SubCabec,{GL_ENTER+"=OK"},,.F.,N_SEGUNDOS,;
-//            "Advertï¿½ncia","adverten.abm")
-//    *
-// //   ALARME_CDMENS_ATIVO("")
-//    *
-// //   LOGA_AJMENST(GetCdTelaTopo(),GetCdGET_ou_Menu_Topo(),C_CdMens,C_SubCabec)  // LOGAR conteï¿½do de telas
-//    *
-//    IF .NOT. SOB_MODO_GRAFICO()
-//       SETCOLOR(C_COR_ANT)
-//    ENDIF
-// ENDIF
-// *
+*****************
+PROCEDURE ADVERTE (C_CDMENS, C_SubCabec,N_SEGUNDOS)
+    *****************
+    LOCAL C_COR_ANT
+    *
+    TONE(750,0)
+    *
+    IF C_SubCabec # NIL
+       IF .NOT. SOB_MODO_GRAFICO()
+          C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_ADVERTENCIA))
+       ENDIF
+       *
+    //   ALARME_CDMENS_ATIVO(C_CDMENS) // será usado pela ajuda ao usuário
+       *
+       MOSTRAR(C_CDMENS,C_SubCabec,{GL_ENTER+"=OK"},,.F.,N_SEGUNDOS,;
+               "Advertência","adverten.abm")
+       *
+    //   ALARME_CDMENS_ATIVO("")
+       *
+    //   LOGA_AJMENST(GetCdTelaTopo(),GetCdGET_ou_Menu_Topo(),C_CdMens,C_SubCabec)  // LOGAR conteúdo de telas
+       *
+       IF .NOT. SOB_MODO_GRAFICO()
+          SETCOLOR(C_COR_ANT)
+       ENDIF
+    ENDIF
+    *
 
 // ****************
 // FUNCTION MOSTRAR ( C_CDMENS, C_SubCabec , V_TECLAS , L_PARAR, L_MUDA_COR,;

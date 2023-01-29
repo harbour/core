@@ -44,8 +44,8 @@ ADDOPCAO V_Janela TEXTO "entrada de dados com 'campo' " ;
 ATIVE(V_Janela)
 *
 
-STAT PROC TST_ENTRADA_DADOS_TODA_READ_ONLY()
-RETURN
+// STAT PROC TST_ENTRADA_DADOS_TODA_READ_ONLY()
+// RETURN
 
 STAT PROC TST_ENTRADA_DADOS_COM_CAMPO_READ_ONLY()
 RETURN
@@ -74,29 +74,29 @@ STAT PROC TST_ENTRADA_DADOS_PEDEJAN()
 RETURN
 
 
-// ************************************************
-// STAT PROC TST_ENTRADA_DADOS_TODA_READ_ONLY
-// ************************************************
-// LOCAL L_Ok, V_Janela
-// LOCAL C_Campo1 := "Este campo é read-only."
-// LOCAL C_Campo2 := "Este campo é read-only."
-// *
-// @ 07,43,23,85 JANELA V_Janela  ;
-//    TITULO "Teste de entrada de dados" ;
-//    SUBTITULO "%T;toda read-only" ;
-//    TECLAS {} AJUDA "T?????"
+************************************************
+STAT PROC TST_ENTRADA_DADOS_TODA_READ_ONLY
+************************************************
+LOCAL L_Ok, V_Janela
+LOCAL C_Campo1 := "Este campo é read-only."
+LOCAL C_Campo2 := "Este campo é read-only."
+*
+@ 07,43,23,85 JANELA V_Janela  ;
+   TITULO "Teste de entrada de dados" ;
+   SUBTITULO "%T;toda read-only" ;
+   TECLAS {} AJUDA "T?????"
 
-// ESPECIALIZE V_Janela ENTRADA EDITA .F.
-// *
-// @ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
-// @ V_Janela,01,02 SAY "Campo 2" GET C_Campo2 AJUDA "C?????"
+ESPECIALIZE V_Janela ENTRADA EDITA .F.
+*
+@ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
+@ V_Janela,01,02 SAY "Campo 2" GET C_Campo2 AJUDA "C?????"
 
-// L_Ok := ATIVE(V_Janela)
-// DO WHILE L_Ok
-//    MOSTRAR("M15584","Entrada de dados finalizada com sucesso.")
-//    L_Ok := ATIVE(V_Janela)
-// ENDDO
-// DESTRUA V_Janela
+L_Ok := ATIVE(V_Janela)
+DO WHILE L_Ok
+   MOSTRAR("M15584","Entrada de dados finalizada com sucesso.")
+   L_Ok := ATIVE(V_Janela)
+ENDDO
+DESTRUA V_Janela
 // *
 // *****************************************************
 // STAT PROC TST_ENTRADA_DADOS_COM_CAMPO_READ_ONLY
