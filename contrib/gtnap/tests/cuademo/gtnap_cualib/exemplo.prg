@@ -180,10 +180,10 @@ QUIT
 //     OutStd("EXEMPLO_TEXTO_ARQUIVO() Option selected")
 //     RETURN
 
-PROC EXEMPLO_ENTRADA_DADOS
-    @ 22, 0 SAY ""
-    OutStd("EXEMPLO_ENTRADA_DADOS() Option selected")
-    RETURN
+// PROC EXEMPLO_ENTRADA_DADOS
+//     @ 22, 0 SAY ""
+//     OutStd("EXEMPLO_ENTRADA_DADOS() Option selected")
+//     RETURN
 
 PROC EXEMPLO_AUXILIARES
     @ 22, 0 SAY ""
