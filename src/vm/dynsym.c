@@ -267,7 +267,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )
          if( pDynSym->pSymbol->value.pFunPtr == pSymbol->value.pFunPtr )
          {
             /* The addresses have been updated, f.e. in such way works GCC
-             * in Linux (but not MinGW and DJGPP) if user will allow to create
+             * in Linux (but not MinGW and DJGPP) if user allows to create
              * binaries with multiple symbols by
              *    -Wl,--allow-multiple-definition
              * when whole module cannot be cleanly replaced.
