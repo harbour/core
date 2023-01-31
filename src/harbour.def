@@ -2444,6 +2444,7 @@ hb_errRT_New
 hb_errRT_New_Subst
 hb_errRT_SubstParams
 hb_errRT_TERM
+hb_errReinit
 hb_errRelease
 hb_errorBlock
 hb_errorHandler
