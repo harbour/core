@@ -367,6 +367,7 @@ DYNAMIC SecondsSleep
 DYNAMIC SetCorruptFunc
 DYNAMIC SetDefaultPrinter
 DYNAMIC SetErrorFooter
+DYNAMIC SetErrorMode
 DYNAMIC SetInkeyAfterBlock
 DYNAMIC SetInkeyBeforeBlock
 DYNAMIC SetNetDelay
