@@ -1516,7 +1516,7 @@ void hb_nestedCloneInit( PHB_NESTED_CLONED pClonedList, void * pValue, PHB_ITEM 
    }
    else
    {
-      pClonedList->nCount = pClonedList->nSize  = 0;
+      pClonedList->nCount = pClonedList->nSize = 0;
       pClonedList->pRefs = NULL;
    }
 }
@@ -1556,7 +1556,7 @@ static HB_BOOL hb_nestedCloneFind( PHB_NESTED_CLONED pClonedList, void * pValue,
 
    if( pClonedList->nCount >= pClonedList->nSize )
    {
-      pClonedList->nSize += pClonedList->nSize >> 1;
+      pClonedList->nSize += pClonedList->nSize ? pClonedList->nSize >> 1 : 16;
       pClonedList->pRefs = ( PHB_NESTED_REF )
                   hb_xrealloc( pClonedList->pRefs,
                                pClonedList->nSize * sizeof( HB_NESTED_REF ) );
