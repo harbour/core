@@ -622,89 +622,105 @@ VX_Edicao := VX_SubObj
 *
 IF SOB_MODO_GRAFICO()
 
-    NAP_LOG("ENTRADA N_LinCobertas: " + hb_ntos(N_LinCobertas))
 
-    NAP_LOG("ENTRADA LIBRE: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
+    IF L_PrimAtivacao
+        NAP_LOG("ENTRADA N_LinCobertas: " + hb_ntos(N_LinCobertas))
+        NAP_LOG("ENTRADA LIBRE: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
 
-    FOR N_Aux_SayGetCor := 1 TO LEN(VX_SayGetList)
+        FOR N_Aux_SayGetCor := 1 TO LEN(VX_SayGetList)
 
-       X_Info := VX_SayGetList[N_Aux_SayGetCor]
-       N_Col := ColVirtual(VX_Janela,N_Aux_SayGetCor)
-       N_Row := LinVirtual(VX_Janela,N_Aux_SayGetCor)
-       #DEFINE L_E_Get  (VALTYPE(X_Info) == "O")
-       IF L_E_Get
-        #DEFINE N_LarguraVar  X_Info:CARGO[7]
-        #DEFINE N_LarguraTela X_Info:CARGO[8]
+        X_Info := VX_SayGetList[N_Aux_SayGetCor]
+        N_Col := ColVirtual(VX_Janela,N_Aux_SayGetCor)
+        N_Row := LinVirtual(VX_Janela,N_Aux_SayGetCor)
+        #DEFINE L_E_Get  (VALTYPE(X_Info) == "O")
+        IF L_E_Get
+            #DEFINE N_LarguraVar  X_Info:CARGO[7]
+            #DEFINE N_LarguraTela X_Info:CARGO[8]
 
-        X_Dado := EVAL(X_Info:BLOCK)
+            X_Dado := EVAL(X_Info:BLOCK)
 
-        NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Dado, L_Edita)
-        NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
+            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Dado, L_Edita)
+            NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
 
-        #UNDEF N_LarguraVar
-        #UNDEF N_LarguraTela
+            #UNDEF N_LarguraVar
+            #UNDEF N_LarguraTela
 
-    ELSE
-        #DEFINE B_Expressao X_Info[3]
-        #DEFINE C_Pict      X_Info[4]
-        #DEFINE C_CorSay    X_Info[5]
+        ELSE
+            #DEFINE B_Expressao X_Info[3]
+            #DEFINE C_Pict      X_Info[4]
+            #DEFINE C_CorSay    X_Info[5]
 
-       X_Dado := EVAL(B_Expressao)
-       NAP_CUALIB_LABEL(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), X_Dado, .F.)
-       NAP_LOG("SAY: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ") '" + X_Dado + "'")
-       #UNDEF B_Expressao
-       #UNDEF C_Pict
-       #UNDEF C_CorSay
+        X_Dado := EVAL(B_Expressao)
+        NAP_CUALIB_LABEL(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), X_Dado, .F.)
+        NAP_LOG("SAY: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ") '" + X_Dado + "'")
+        #UNDEF B_Expressao
+        #UNDEF C_Pict
+        #UNDEF C_CorSay
 
-       ENDIF
-       #UNDEF L_E_Get
-    NEXT
+        ENDIF
+        #UNDEF L_E_Get
+        NEXT
 
 
-    // DO WHILE PreencheDados(VX_Janela,N_SayGetCor2,@N_Lin,@N_Col) == 0 .AND. L_Continua
-    //     #DEFINE VX_Edicao   VX_SubObj
-    //     X_Info := VX_SayGetList[N_SayGetCor2]
-    //     *
-    //     #DEFINE L_E_Get  (VALTYPE(X_Info) == "O")
-    //     IF L_E_Get
-    //        X_Info:ROW := N_Lin - N_LinCobertas + Lin1Livre(VX_Janela)
-    //        X_Info:COL := N_Col - N_ColCobertas + Col1Livre(VX_Janela)
-    //        X_Info:DISPLAY()
-    //        *
-    //        IF N_Col-N_ColCobertas+LarguraTela(X_Info:BLOCK,X_Info:PICTURE) > ;
-    //           Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1  // largura da janela
-    //           ? MEMVAR->ERRO_LARGURA
-    //        ENDIF
-    //        *
-    //     ELSE
-    //        #DEFINE B_Expressao X_Info[3]
-    //        #DEFINE C_Pict      X_Info[4]
-    //        #DEFINE C_CorSay    X_Info[5]
-    //        *
-    //        SETPOS(N_Lin-N_LinCobertas+Lin1Livre(VX_Janela),;
-    //               N_Col-N_ColCobertas+Col1Livre(VX_Janela))
-    //        IF C_Pict # NIL
-    //           C_TextoSay := TRANSFORM(EVAL(B_Expressao),C_Pict)
-    //        ELSE
-    //           C_TextoSay := EVAL(B_Expressao)
-    //        ENDIF
-    //        DISPOUT(C_TextoSay,C_CorSay)
-    //        *
-    //        IF N_Col-N_ColCobertas+LEN(C_TextoSay) > ;
-    //           Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1  // largura da janela
-    //           ? MEMVAR->ERRO_LARGURA
-    //        ENDIF
-    //        *
-    //        #UNDEF B_Expressao
-    //        #UNDEF C_Pict
-    //        #UNDEF C_CorSay
-    //     ENDIF
-    //     #UNDEF L_E_Get
+        // DO WHILE PreencheDados(VX_Janela,N_SayGetCor2,@N_Lin,@N_Col) == 0 .AND. L_Continua
+        //     #DEFINE VX_Edicao   VX_SubObj
+        //     X_Info := VX_SayGetList[N_SayGetCor2]
+        //     *
+        //     #DEFINE L_E_Get  (VALTYPE(X_Info) == "O")
+        //     IF L_E_Get
+        //        X_Info:ROW := N_Lin - N_LinCobertas + Lin1Livre(VX_Janela)
+        //        X_Info:COL := N_Col - N_ColCobertas + Col1Livre(VX_Janela)
+        //        X_Info:DISPLAY()
+        //        *
+        //        IF N_Col-N_ColCobertas+LarguraTela(X_Info:BLOCK,X_Info:PICTURE) > ;
+        //           Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1  // largura da janela
+        //           ? MEMVAR->ERRO_LARGURA
+        //        ENDIF
+        //        *
+        //     ELSE
+        //        #DEFINE B_Expressao X_Info[3]
+        //        #DEFINE C_Pict      X_Info[4]
+        //        #DEFINE C_CorSay    X_Info[5]
+        //        *
+        //        SETPOS(N_Lin-N_LinCobertas+Lin1Livre(VX_Janela),;
+        //               N_Col-N_ColCobertas+Col1Livre(VX_Janela))
+        //        IF C_Pict # NIL
+        //           C_TextoSay := TRANSFORM(EVAL(B_Expressao),C_Pict)
+        //        ELSE
+        //           C_TextoSay := EVAL(B_Expressao)
+        //        ENDIF
+        //        DISPOUT(C_TextoSay,C_CorSay)
+        //        *
+        //        IF N_Col-N_ColCobertas+LEN(C_TextoSay) > ;
+        //           Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1  // largura da janela
+        //           ? MEMVAR->ERRO_LARGURA
+        //        ENDIF
+        //        *
+        //        #UNDEF B_Expressao
+        //        #UNDEF C_Pict
+        //        #UNDEF C_CorSay
+        //     ENDIF
+        //     #UNDEF L_E_Get
 
+        NAP_CUALIB_WINDOW_ENTER_TABSTOP()
+        NAP_CUALIB_WINDOW_ARROWS_TABSTOP()
+        NAP_CUALIB_WINDOW_STOPS_LAST_EDIT()
+ENDIF  // L_PrimAtivacao
 
 
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.})
-    L_Aborta      :=  .T.
+    NAP_LOG("ENTRADA RETORNO: " + hb_ntos(X_Retorno))
+
+    // CLOSED BY ESC
+    IF X_Retorno == 1
+        L_Aborta      :=  .T.
+    // CLOSED BY LAST EDIT INPUT
+    ELSEIF X_Retorno == 5000
+        L_Aborta      :=  .F.
+    ELSE
+        NAP_LOG("ENTRADA UNEXPECTED RETORNO: " + hb_ntos(X_Retorno))
+        NAP_CRASH()
+    ENDIF
 
 //     #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF L_PrimAtivacao .AND. SOB_MODO_GRAFICO()
@@ -807,7 +823,6 @@ IF L_PrimAtivacao
    LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdGET)  // LOGAR conteúdo de telas
 ENDIF
 *
-L_PrimAtivacao := .F.
 *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF SOB_MODO_GRAFICO()
@@ -820,6 +835,8 @@ L_PrimAtivacao := .F.
 // #endif
 *
 ENDIF
+
+L_PrimAtivacao := .F.
 
 RETURN .NOT. L_Aborta
 *

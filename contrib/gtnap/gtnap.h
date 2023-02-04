@@ -101,6 +101,12 @@ extern void hb_gtnap_cualib_set_linespacing(const uint32_t spacing);
 // C_Cabec --> Title
 extern uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button);
 
+extern void hb_gtnap_cualib_window_enter_tabstop(void);
+
+extern void hb_gtnap_cualib_window_arrows_tabstop(void);
+
+extern void hb_gtnap_cualib_window_stops_last_edit(void);
+
 extern void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);
 
 extern void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);

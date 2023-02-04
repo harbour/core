@@ -92,6 +92,27 @@ HB_FUNC( NAP_CUALIB_WINDOW )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CUALIB_WINDOW_ENTER_TABSTOP )
+{
+    hb_gtnap_cualib_window_enter_tabstop();
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_WINDOW_ARROWS_TABSTOP )
+{
+    hb_gtnap_cualib_window_arrows_tabstop();
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_WINDOW_STOPS_LAST_EDIT )
+{
+    hb_gtnap_cualib_window_stops_last_edit();
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_CUALIB_LAUNCH_MODAL )
 {
     uint32_t ret = hb_gtnap_cualib_launch_modal(1);

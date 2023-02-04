@@ -108,6 +108,9 @@ struct _gtnap_cualib_object_t
     int32_t cell_y;
     V2Df pos;
     S2Df size;
+    bool_t is_last_edit;
+    bool_t is_editable;
+    String *text;
     GuiComponent *component;
 };
 
@@ -128,6 +131,12 @@ struct _gtnap_cualib_window_t
     int32_t N_ColFin;
     int32_t cursor_row;
     int32_t cursor_col;
+    bool_t enter_tabstop;
+    bool_t arrows_tabstop;
+    bool_t stops_last_edit;
+    bool_t is_configured;
+    bool_t is_closed_by_esc;
+    bool_t focus_by_previous;
     Window *window;
     S2Df panel_size;
     Panel *panel;
@@ -1082,6 +1091,7 @@ static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t ind
 
     _component_detach_from_panel((GuiComponent*)cuawin->panel, object->component);
     _component_destroy(&object->component);
+    str_destopt(&object->text);
     arrst_delete(cuawin->gui_objects, index, NULL, GtNapCualibObject);
 }
 
@@ -1245,6 +1255,9 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->pos.x = (real32_t)(cell_x * (int32_t)cell_x_size);
     object->pos.y = (real32_t)(cell_y * (int32_t)cell_y_size);
     object->size = *size;
+    object->is_last_edit = FALSE;
+    object->is_editable = FALSE;
+    object->text = NULL;
     log_printf("Added object at: %.2f, %.2f w:%.2f h:%.2f", object->pos.x, object->pos.y, object->size.width, object->size.height);
 }
 
@@ -1307,6 +1320,12 @@ uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, 
     cuawin->N_ColFin = N_ColFin;
     cuawin->cursor_row = 0;
     cuawin->cursor_col = 0;
+    cuawin->enter_tabstop = FALSE;
+    cuawin->arrows_tabstop = FALSE;
+    cuawin->stops_last_edit = FALSE;
+    cuawin->is_configured = FALSE;
+    cuawin->is_closed_by_esc = FALSE;
+    cuawin->focus_by_previous = FALSE;
     cuawin->gui_objects = arrst_create(GtNapCualibObject);
     cuawin->callbacks = arrpt_create(GtNapCallback);
     cuawin->panel_size.width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni + 1));
@@ -1319,6 +1338,30 @@ uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, 
 
     log_printf("Created new CUALIB Window: %d, %d, %d, %d", N_LinIni, N_ColIni, N_LinFin, N_ColFin);
     return id;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_window_enter_tabstop(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cuawin->enter_tabstop = TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_window_arrows_tabstop(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cuawin->arrows_tabstop = TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_window_stops_last_edit(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cuawin->stops_last_edit = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1478,6 +1521,7 @@ void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32
 void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize, const bool_t editable)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapCualibObject *obj = NULL;
     Edit *edit = edit_create();
     String *ctext = gtconvert_1252_to_UTF8(text);
     // //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
@@ -1486,12 +1530,20 @@ void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_
     // //_component_set_tag((GuiComponent*)button, nTag);
     edit_text(edit, tc(ctext));
     edit_font(edit, GTNAP_GLOBAL->global_font);
-    edit_editable(edit, editable);
+    edit_bgcolor_focus(edit, kCOLOR_CYAN);
+    //edit_editable(edit, editable);
     size.width = (real32_t)(nSize * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)(1 * GTNAP_GLOBAL->cell_y_size);
     log_printf("Added EDIT (%s) into CUALIB Window: %d, %d, %d", tc(ctext), nLin, nCol, nSize);
     i_add_object(ekOBJ_EDIT, nCol - cuawin->N_ColIni, nLin - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)edit, cuawin);
-    str_destroy(&ctext);
+
+    obj = arrst_last(cuawin->gui_objects, GtNapCualibObject);
+    cassert_no_null(obj);
+    cassert(obj->type = ekOBJ_EDIT);
+    obj->is_editable = editable;
+    obj->text = ctext;
+
+    //str_destroy(&ctext);
 
     // if (listener != NULL)
     //     button_OnClick(button, listener);
@@ -1959,9 +2011,8 @@ static void i_component_tabstop(ArrSt(GtNapCualibObject) *objects, Window *windo
                 break;
             case ekOBJ_TABLEVIEW:
             case ekOBJ_TEXTVIEW:
-                _component_taborder(object->component, window);
-                break;
             case ekOBJ_EDIT:
+                _component_taborder(object->component, window);
                 break;
             cassert_default();
             }
@@ -1987,9 +2038,91 @@ static void i_toolbar_tabstop(GtNapCualibToolbar *toolbar)
 static void i_OnWindowClose(GtNapCallback *callback, Event *e)
 {
     bool_t ret = hb_gtnap_callback_bool(callback, e);
+    const EvWinClose *p = event_params(e, EvWinClose);
     bool_t *res = event_result(e, bool_t);
     *res = ret;
+
+    if (ret == TRUE && p->origin == ekGUI_CLOSE_ESC)
+        callback->cuawin->is_closed_by_esc = TRUE;
+
     log_printf("i_OnWindowClose EVENT RESPONSE %d", ret);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnNextTabstop(GtNapCualibWindow *cuawin, Event *e)
+{
+    unref(e);
+    cassert_no_null(cuawin);
+    cuawin->focus_by_previous = FALSE;
+    window_next_tabstop(cuawin->window);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnPreviousTabstop(GtNapCualibWindow *cuawin, Event *e)
+{
+    unref(e);
+    cassert_no_null(cuawin);
+    cuawin->focus_by_previous = TRUE;
+    window_previous_tabstop(cuawin->window);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
+{
+    /* The window must stop modal when the last input loses the focus */
+    cassert_no_null(cuawin);
+
+    /* If user have pressed the [ESC] key, we left the stop for that event */
+    if (cuawin->is_closed_by_esc == FALSE)
+    {
+        /* If user have navigated with [UP] button, the window must continue open */
+        if (cuawin->focus_by_previous == FALSE)
+        {
+            Edit *edit = event_sender(e, Edit);
+            arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+                if (obj->type == ekOBJ_EDIT && obj->is_last_edit == TRUE)
+                {
+                    /* The last editbox has lost the focus --> Close the window */
+                    if (edit == (Edit*)obj->component)
+                        window_stop_modal(cuawin->window, 5000);
+                }
+            arrst_end();
+        }
+    }
+
+    cuawin->focus_by_previous = FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
+{
+    Edit *edit = event_sender(e, Edit);
+    cassert_no_null(cuawin);
+
+    arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+        if (obj->type == ekOBJ_EDIT)
+        {
+            if (edit == (Edit*)obj->component)
+            {
+                if (obj->is_editable == FALSE)
+                {
+                    /* If editBox is not editable --> Restore the original text */
+                    const EvText *p = event_params(e, EvText);
+                    EvTextFilter *res = event_result(e, EvTextFilter);
+                    str_copy_c(res->text, sizeof(res->text), tc(obj->text));
+                    if (p->cpos > 0)
+                        res->cpos = p->cpos - 1;
+                    else
+                        res->cpos = 0;
+                    res->apply = TRUE;
+                }
+            }
+        }
+    arrst_end();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1997,65 +2130,101 @@ static void i_OnWindowClose(GtNapCallback *callback, Event *e)
 uint32_t hb_gtnap_cualib_launch_modal(const uint32_t cancelBlockParamId)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
-    GtNapCualibWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
-    Layout *layout = layout_create(1, 1);
-    V2Df pos;
-    uint32_t ret = 0;
     cassert_no_null(cuawin);
 
-    if (cuawin->toolbar != NULL)
-        cuawin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size;
-
-    panel_size(cuawin->panel, cuawin->panel_size);
-    panel_layout(cuawin->panel, layout);
-    window_panel(cuawin->window, cuawin->panel);
-
-    // Attach gui objects in certain Z-Order (from back to front)
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_MENUVERT, cuawin->toolbar);
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_TABLEVIEW, cuawin->toolbar);
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_TEXTVIEW, cuawin->toolbar);
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_BUTTON, cuawin->toolbar);
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_LABEL, cuawin->toolbar);
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_EDIT, cuawin->toolbar);
-    i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_IMAGE, cuawin->toolbar);
-    i_attach_toolbar_to_panel(cuawin->toolbar, cuawin->panel);
-
-    // Tab-stops order
-    _window_taborder(cuawin->window, NULL);
-    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_MENUVERT);
-    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_TABLEVIEW);
-    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_TEXTVIEW);
-    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_BUTTON);
-    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_LABEL);
-    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_EDIT);
-    i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_IMAGE);
-    i_toolbar_tabstop(cuawin->toolbar);
-
-    pos.x = (real32_t)(cuawin->N_ColIni * GTNAP_GLOBAL->cell_x_size);
-    pos.y = (real32_t)(cuawin->N_LinIni * GTNAP_GLOBAL->cell_y_size);
-
-    if (parent != NULL)
+    /* Configure the Window before the first launch */
+    if (cuawin->is_configured == FALSE)
     {
-        const GtNapCualibWindow *rootwin = arrst_get_const(GTNAP_GLOBAL->cualib_windows, 0, GtNapCualibWindow);
-        V2Df ppos = window_get_origin(rootwin->window);
-        pos.x += ppos.x /*- 2 * GTNAP_GLOBAL->cell_x_size*/;
-        pos.y += ppos.y;
+        Layout *layout = layout_create(1, 1);
+        Listener *listener = NULL;
 
         if (cuawin->toolbar != NULL)
-            pos.y -= (real32_t)GTNAP_GLOBAL->cell_y_size;
-    }
+            cuawin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size;
 
-    window_origin(cuawin->window, pos);
+        panel_size(cuawin->panel, cuawin->panel_size);
+        panel_layout(cuawin->panel, layout);
+        window_panel(cuawin->window, cuawin->panel);
 
-    log_printf("Launch CUALIB Modal Window: %d, %d, %d, %d", cuawin->N_LinIni, cuawin->N_ColIni, cuawin->N_LinFin, cuawin->N_ColFin);
+        /* Attach gui objects in certain Z-Order (from back to front) */
+        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_MENUVERT, cuawin->toolbar);
+        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_TABLEVIEW, cuawin->toolbar);
+        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_TEXTVIEW, cuawin->toolbar);
+        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_LABEL, cuawin->toolbar);
+        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_BUTTON, cuawin->toolbar);
+        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_EDIT, cuawin->toolbar);
+        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, ekOBJ_IMAGE, cuawin->toolbar);
+        i_attach_toolbar_to_panel(cuawin->toolbar, cuawin->panel);
 
-    {
-        Listener *listener = i_gtnap_cualib_listener(cancelBlockParamId, INT32_MAX, FALSE, cuawin, i_OnWindowClose);
+        /* Tab-stops order */
+        _window_taborder(cuawin->window, NULL);
+        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_MENUVERT);
+        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_TABLEVIEW);
+        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_TEXTVIEW);
+        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_EDIT);
+        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_BUTTON);
+        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_LABEL);
+        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_IMAGE);
+        i_toolbar_tabstop(cuawin->toolbar);
+
+        /* OnClose listener */
+        listener = i_gtnap_cualib_listener(cancelBlockParamId, INT32_MAX, FALSE, cuawin, i_OnWindowClose);
         window_OnClose(cuawin->window, listener);
+
+        if (cuawin->enter_tabstop == TRUE)
+            window_hotkey(cuawin->window, ekKEY_RETURN, 0, listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
+
+        if (cuawin->arrows_tabstop == TRUE)
+        {
+            window_hotkey(cuawin->window, ekKEY_UP, 0, listener(cuawin, i_OnPreviousTabstop, GtNapCualibWindow));
+            window_hotkey(cuawin->window, ekKEY_DOWN, 0, listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
+        }
+
+        if (cuawin->stops_last_edit == TRUE)
+        {
+            GtNapCualibObject *last_edit = NULL;
+            arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+                if (obj->type == ekOBJ_EDIT)
+                {
+                    edit_OnChange((Edit*)obj->component, listener(cuawin, i_OnEditChange, GtNapCualibWindow));
+                    edit_OnFilter((Edit*)obj->component, listener(cuawin, i_OnEditFilter, GtNapCualibWindow));
+                    obj->is_last_edit = FALSE;
+                    last_edit = obj;
+                }
+            arrst_end();
+
+            if (last_edit != NULL)
+                last_edit->is_last_edit = TRUE;
+        }
+
+        cuawin->is_configured = TRUE;
     }
 
-    ret = window_modal(cuawin->window, parent ? parent->window : NULL);
-    return ret;
+    /* Launch the window */
+    {
+        GtNapCualibWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
+        V2Df pos;
+        uint32_t ret = 0;
+
+        pos.x = (real32_t)(cuawin->N_ColIni * GTNAP_GLOBAL->cell_x_size);
+        pos.y = (real32_t)(cuawin->N_LinIni * GTNAP_GLOBAL->cell_y_size);
+
+        if (parent != NULL)
+        {
+            const GtNapCualibWindow *rootwin = arrst_get_const(GTNAP_GLOBAL->cualib_windows, 0, GtNapCualibWindow);
+            V2Df ppos = window_get_origin(rootwin->window);
+            pos.x += ppos.x /*- 2 * GTNAP_GLOBAL->cell_x_size*/;
+            pos.y += ppos.y;
+
+            if (cuawin->toolbar != NULL)
+                pos.y -= (real32_t)GTNAP_GLOBAL->cell_y_size;
+        }
+
+        window_origin(cuawin->window, pos);
+        log_printf("Launch CUALIB Modal Window: %d, %d, %d, %d", cuawin->N_LinIni, cuawin->N_ColIni, cuawin->N_LinFin, cuawin->N_ColFin);
+        cuawin->is_closed_by_esc = FALSE;
+        ret = window_modal(cuawin->window, parent ? parent->window : NULL);
+        return ret;
+    }
 }
 
 /*---------------------------------------------------------------------------*/

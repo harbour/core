@@ -36,3 +36,10 @@ HB_FUNC( NAP_LOG )
     const char_t *text = hb_gtnap_parText(1);
     log_printf("%s", text);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CRASH )
+{
+    cassert_no_null(NULL);
+}
