@@ -2511,35 +2511,35 @@ RETURN L_EXIBE_AJUDA
 // RETURN V_PilhaJanelas     // rotina chamadora n�o pode alterar este vetor...
 // *
 // ******************
-// FUNC GetCdTelaTopo
-// ******************
-// LOCAL C_CdTelaTopo := SPACE(06)   // Tnnnnn
-// LOCAL VX_Janela
-// *
-// * Se ALARME() tiver uma tela anterior a ela
-// IF LEN(V_PilhaJanelas) > 0
-//     VX_Janela := V_PilhaJanelas[LEN(V_PilhaJanelas),2]  // Janela do topo
-//     C_CdTelaTopo := C_CdTela
-// ENDIF
-// *
-// RETURN C_CdTelaTopo
-// *
-// **************************
-// FUNC GetCdGET_ou_Menu_Topo
-// **************************
-// LOCAL C_CdGET_ou_Menu_Atual := SPACE(06)  // formato Tnnnnn ou Mnnnnn ou Cnnnnn
-// LOCAL VX_Janela
-// *
-// * Se ALARME() tiver uma tela anterior a ela
-// IF LEN(V_PilhaJanelas) > 0
-//    VX_Janela := V_PilhaJanelas[LEN(V_PilhaJanelas),2]  // Janela do topo
-//    IF N_TP_Jan == _JAN_ENTRADA_10
-//       C_CdGET_ou_Menu_Atual := GetCdGET_Atual_Entrada(VX_Janela)
-//    ELSEIF N_TP_Jan == _JAN_MENU_VERT
-//       C_CdGET_ou_Menu_Atual := GetCdOpcao_Atual_Menuvert(VX_Janela)
-//    ENDIF
-// ENDIF
-// RETURN C_CdGET_ou_Menu_Atual
+FUNC GetCdTelaTopo
+******************
+LOCAL C_CdTelaTopo := SPACE(06)   // Tnnnnn
+LOCAL VX_Janela
+*
+* Se ALARME() tiver uma tela anterior a ela
+IF LEN(V_PilhaJanelas) > 0
+    VX_Janela := V_PilhaJanelas[LEN(V_PilhaJanelas),2]  // Janela do topo
+    C_CdTelaTopo := C_CdTela
+ENDIF
+*
+RETURN C_CdTelaTopo
+*
+**************************
+FUNC GetCdGET_ou_Menu_Topo
+**************************
+LOCAL C_CdGET_ou_Menu_Atual := SPACE(06)  // formato Tnnnnn ou Mnnnnn ou Cnnnnn
+LOCAL VX_Janela
+*
+* Se ALARME() tiver uma tela anterior a ela
+IF LEN(V_PilhaJanelas) > 0
+   VX_Janela := V_PilhaJanelas[LEN(V_PilhaJanelas),2]  // Janela do topo
+   IF N_TP_Jan == _JAN_ENTRADA_10
+      C_CdGET_ou_Menu_Atual := GetCdGET_Atual_Entrada(VX_Janela)
+   ELSEIF N_TP_Jan == _JAN_MENU_VERT
+      C_CdGET_ou_Menu_Atual := GetCdOpcao_Atual_Menuvert(VX_Janela)
+   ENDIF
+ENDIF
+RETURN C_CdGET_ou_Menu_Atual
 *
 ***********************
 

@@ -33,8 +33,9 @@ HB_FUNC( NAP_GLOBAL_EXIT )
 
 HB_FUNC( NAP_LOG )
 {
-    const char_t *text = hb_gtnap_parText(1);
-    log_printf("%s", text);
+    String *text = hb_gtnap_cualib_parText(1);
+    log_printf("%s", tc(text));
+    str_destroy(&text);
 }
 
 /*---------------------------------------------------------------------------*/

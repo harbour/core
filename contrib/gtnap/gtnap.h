@@ -143,7 +143,7 @@ extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockP
 
 extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background);
 
-extern void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize, const bool_t editable);
+extern void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize, const char_t *type, const bool_t editable);
 
 extern void hb_gtnap_cualib_toolbar(const uint32_t nPixelsImage);
 
@@ -152,6 +152,8 @@ extern void hb_gtnap_cualib_toolbar_button(const char_t *pathname, const char_t 
 extern void hb_gtnap_cualib_toolbar_separator(void);
 
 extern void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, const bool_t autoclose);
+
+extern void hb_gtnap_cualib_error_data(const uint32_t errorDataBlockParamId);
 
 extern uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const uint32_t cancelBlockParamId);
 

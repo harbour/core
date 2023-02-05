@@ -182,10 +182,10 @@ ENDIF
 
 
 // *****************
-// PROC LOGA_AJMENST(C_CDTELA,C_CDGet,C_CdMens,C_SubCabec)  // LOGAR conte´?¢do de telas
-// *****************
-// // ALERT("ALARME() - "+C_CDTELA+", campo "+C_CDGet+", mensagem "+C_CDMENS+;
-// //       " e texto com tamanho "+LTRIM(STR(LEN(C_SUBCABEC))))
+PROC LOGA_AJMENST(C_CDTELA,C_CDGet,C_CdMens,C_SubCabec)  // LOGAR conte´?¢do de telas
+*****************
+// ALERT("ALARME() - "+C_CDTELA+", campo "+C_CDGet+", mensagem "+C_CDMENS+;
+//       " e texto com tamanho "+LTRIM(STR(LEN(C_SUBCABEC))))
 // *
 // **********************
 PROC LOGAFONT_AMBIENTE (C_TPLOGAFONT,C_ALIAS_REAL,C_CDBOTAO,C_MENSLOGA)

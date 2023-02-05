@@ -337,10 +337,14 @@ IF L_TipoMsgAguarde
    SetProgressBar(VX_Janela,N_ProgressBar)
 ENDIF
 *
+
+NAP_LOG("INFORMAR BEFORE ATIVE()")
 Ative(VX_Janela)
+NAP_LOG("INFORMAR AFTER ATIVE()")
 *
 
 IF SOB_MODO_GRAFICO()
+    NAP_LOG("INFORMAR BEFORE NAP_CUALIB_LAUNCH_MODAL")
     NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
     Destrua VX_Janela
 ELSE
@@ -503,44 +507,54 @@ PROCEDURE ALARME (C_CDMENS,C_SubCabec,N_SEGUNDOS)
 ****************
 LOCAL C_COR_ANT
 *
+
+IF C_SubCabec # NIL
+
+IF SOB_MODO_GRAFICO()
+
+    MOSTRAR(C_CDMENS,C_SubCabec,{GL_ENTER+"=OK"},,.F.,N_SEGUNDOS,;
+        "Importante","erro.abm")
+
+ELSE
+
 TONE(750,0)
 *
-// IF C_SubCabec # NIL
-//    IF .NOT. SOB_MODO_GRAFICO()
-//       C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_ERRO))
-//    ENDIF
-//    *
-//    ALARME_CDMENS_ATIVO(C_CDMENS) // será usado pela ajuda ao usuário
-//    *
-//    MOSTRAR(C_CDMENS,C_SubCabec,{GL_ENTER+"=OK"},,.F.,N_SEGUNDOS,;
-//            "Importante","erro.abm")
-//    *
-//    ALARME_CDMENS_ATIVO("")
-//    *
-//    LOGA_AJMENST(GetCdTelaTopo(),GetCdGET_ou_Menu_Topo(),C_CdMens,C_SubCabec)  // LOGAR conteúdo de telas
-//    *
-//    IF .NOT. SOB_MODO_GRAFICO()
-//       SETCOLOR(C_COR_ANT)
-//    ENDIF
-//ENDIF
+   //IF .NOT. SOB_MODO_GRAFICO()
+      C_COR_ANT := SETCOLOR(COR(_COR_MENSAGEM_ERRO))
+   //ENDIF
+   *
+   ALARME_CDMENS_ATIVO(C_CDMENS) // será usado pela ajuda ao usuário
+   *
+   MOSTRAR(C_CDMENS,C_SubCabec,{GL_ENTER+"=OK"},,.F.,N_SEGUNDOS,;
+           "Importante","erro.abm")
+   *
+   ALARME_CDMENS_ATIVO("")
+   *
+   LOGA_AJMENST(GetCdTelaTopo(),GetCdGET_ou_Menu_Topo(),C_CdMens,C_SubCabec)  // LOGAR conteúdo de telas
+   *
+
+   //IF .NOT. SOB_MODO_GRAFICO()
+      SETCOLOR(C_COR_ANT)
+   //ENDIF
+ENDIF
+ENDIF
 
 
+*
+************************
+FUNC ALARME_CDMENS_ATIVO(C_CDMENS_NEW)
+************************
+STAT C_CDMENS_ATIVO := ""
+LOCAL C_CDMENS_OLD
+*
+C_CDMENS_OLD := C_CDMENS_ATIVO
+IF C_CDMENS_NEW # NIL
+   * setar o novo
+   C_CDMENS_ATIVO := C_CDMENS_NEW
+ENDIF
 
-// *
-// ************************
-// FUNC ALARME_CDMENS_ATIVO(C_CDMENS_NEW)
-// ************************
-// STAT C_CDMENS_ATIVO := ""
-// LOCAL C_CDMENS_OLD
-// *
-// C_CDMENS_OLD := C_CDMENS_ATIVO
-// IF C_CDMENS_NEW # NIL
-//    * setar o novo
-//    C_CDMENS_ATIVO := C_CDMENS_NEW
-// ENDIF
-
-// RETURN C_CDMENS_OLD  // retornar o estado anterior
-// *
+RETURN C_CDMENS_OLD  // retornar o estado anterior
+*
 *****************
 PROCEDURE ADVERTE (C_CDMENS, C_SubCabec,N_SEGUNDOS)
     *****************

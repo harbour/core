@@ -53,10 +53,11 @@ ATIVE(V_Janela)
 // STAT PROC TST_ENTRADA_DADOS_COM_CONFIRMACOES()
 // RETURN
 
-STAT PROC TST_ENTRADA_DADOS_DATA_INVALIDA()
-RETURN
+// STAT PROC TST_ENTRADA_DADOS_DATA_INVALIDA()
+// RETURN
 
-STAT PROC TST_ENTRADA_DADOS_FILTRO_TECLAS()
+// STAT PROC TST_ENTRADA_DADOS_FILTRO_TECLAS()
+// RETURN
 
 STAT PROC TST_ENTRADA_DADOS_COM_ROLAMENTO()
 RETURN
@@ -148,59 +149,60 @@ DO WHILE L_Ok
 ENDDO
 DESTRUA V_Janela
 *
-// *****************************************
-// STAT PROC TST_ENTRADA_DADOS_DATA_INVALIDA
-// *****************************************
-// LOCAL L_Ok, V_Janela
-// LOCAL D_Data := CTOD("")
-// *
-// @ 07,43,23,90 JANELA V_Janela  ;
-//    TITULO "Teste de entrada de dados" ;
-//    SUBTITULO "%T;com data inválida" ;
-//    TECLAS {} AJUDA "T?????"
-// ESPECIALIZE V_Janela ENTRADA DATAERRADA DATAINVA()
-// *
-// @ V_Janela,00,02 SAY "Informe a data 29/02/2001" GET D_Data AJUDA "C?????"
+*****************************************
+STAT PROC TST_ENTRADA_DADOS_DATA_INVALIDA
+*****************************************
+LOCAL L_Ok, V_Janela
+LOCAL D_Data := CTOD("")
+*
+@ 07,43,23,90 JANELA V_Janela  ;
+   TITULO "Teste de entrada de dados" ;
+   SUBTITULO "%T;com data inválida" ;
+   TECLAS {} AJUDA "T?????"
+ESPECIALIZE V_Janela ENTRADA DATAERRADA DATAINVA()
+*
+@ V_Janela,00,02 SAY "Informe a data 29/02/2001" GET D_Data AJUDA "C?????"
 
-// L_Ok := ATIVE(V_Janela)
-// DO WHILE L_Ok
-//    MOSTRAR("M15590","Entrada de dados finalizada com sucesso.")
-//    L_Ok := ATIVE(V_Janela)
-// ENDDO
-// DESTRUA V_Janela
-// *
-// *****************************************
-// STAT PROC TST_ENTRADA_DADOS_FILTRO_TECLAS
-// *****************************************
-// LOCAL L_Ok, V_Janela
-// LOCAL C_Campo1 := "APENAS ACEITAR MAIÚSCULAS"
-// *
-// @ 07,43,23,95 JANELA V_Janela  ;
-//    TITULO "Teste de entrada de dados" ;
-//    SUBTITULO "%T;com filtro de teclas" ;
-//    TECLAS {} AJUDA "T?????"
-// ESPECIALIZE V_Janela ENTRADA FILTRO CONVERTE_PARA_UPPER() SEMTOOLBAR
-// *
-// @ V_Janela,00,02 SAY "Só maiúsculo" GET C_Campo1 AJUDA "C?????"
+L_Ok := ATIVE(V_Janela)
+DO WHILE L_Ok
+    NAP_LOG("EHHHH ENTRADA FINISH()")
+   MOSTRAR("M15590","Entrada de dados finalizada com sucesso.")
+   L_Ok := ATIVE(V_Janela)
+ENDDO
+DESTRUA V_Janela
+*
+*****************************************
+STAT PROC TST_ENTRADA_DADOS_FILTRO_TECLAS
+*****************************************
+LOCAL L_Ok, V_Janela
+LOCAL C_Campo1 := "APENAS ACEITAR MAIÚSCULAS"
+*
+@ 07,43,23,95 JANELA V_Janela  ;
+   TITULO "Teste de entrada de dados" ;
+   SUBTITULO "%T;com filtro de teclas" ;
+   TECLAS {} AJUDA "T?????"
+ESPECIALIZE V_Janela ENTRADA FILTRO CONVERTE_PARA_UPPER() SEMTOOLBAR
+*
+@ V_Janela,00,02 SAY "Só maiúsculo" GET C_Campo1 AJUDA "C?????"
 
-// L_Ok := ATIVE(V_Janela)
-// DO WHILE L_Ok
-//    MOSTRAR("M15594","Entrada de dados finalizada com sucesso.")
-//    L_Ok := ATIVE(V_Janela)
-// ENDDO
-// DESTRUA V_Janela
-// *
-// *****************************
-// STAT FUNC CONVERTE_PARA_UPPER()
-// *****************************
-// LOCAL N_Lastkey := LASTKEY()
-// LOCAL C_Retorno
-// IF N_Lastkey >= 97 .AND. N_Lastkey <= 122   // letras minúsculas
-//    C_Retorno := UPPER(CHR(N_Lastkey))
-// ELSE
-//    C_Retorno := NIL
-// ENDIF
-// RETURN C_Retorno
+L_Ok := ATIVE(V_Janela)
+DO WHILE L_Ok
+   MOSTRAR("M15594","Entrada de dados finalizada com sucesso.")
+   L_Ok := ATIVE(V_Janela)
+ENDDO
+DESTRUA V_Janela
+*
+*****************************
+STAT FUNC CONVERTE_PARA_UPPER()
+*****************************
+LOCAL N_Lastkey := LASTKEY()
+LOCAL C_Retorno
+IF N_Lastkey >= 97 .AND. N_Lastkey <= 122   // letras minúsculas
+   C_Retorno := UPPER(CHR(N_Lastkey))
+ELSE
+   C_Retorno := NIL
+ENDIF
+RETURN C_Retorno
 // *
 // *****************************************
 // STAT PROC TST_ENTRADA_DADOS_COM_ROLAMENTO

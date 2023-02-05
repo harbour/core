@@ -113,6 +113,13 @@ HB_FUNC( NAP_CUALIB_WINDOW_STOPS_LAST_EDIT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CUALIB_ERROR_DATA )
+{
+    hb_gtnap_cualib_error_data(1);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_CUALIB_LAUNCH_MODAL )
 {
     uint32_t ret = hb_gtnap_cualib_launch_modal(1, 2);
@@ -207,9 +214,12 @@ HB_FUNC( NAP_CUALIB_EDIT )
     uint32_t nLin = hb_parni(1);
     uint32_t nCol = hb_parni(2);
     uint32_t nSize = hb_parni(3);
-    const char_t *text = hb_gtnap_parText(4);
-    bool_t editable = (bool_t)hb_parl(5);
-    hb_gtnap_cualib_edit(text, nLin, nCol, nSize, editable);
+    // FRAN!!!! Cache of text data
+    String *text = str_c(hb_gtnap_parText(4));
+    const char_t *type = hb_gtnap_parText(5);
+    bool_t editable = (bool_t)hb_parl(6);
+    hb_gtnap_cualib_edit(tc(text), nLin, nCol, nSize, type, editable);
+    str_destroy(&text);
 }
 
 /*---------------------------------------------------------------------------*/

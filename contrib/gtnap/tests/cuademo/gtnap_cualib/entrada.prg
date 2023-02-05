@@ -481,7 +481,13 @@ ELSEIF VX_Get:TYPE == "C"
     N_LarguraVar  := LEN(VX_Get:VARGET())
     N_LarguraTela := N_LarguraVar
 
+// DATA Type variable
+ELSEIF VX_Get:TYPE == "D"
+    N_LarguraVar  := 10 // DD/MM/YYYY
+    N_LarguraTela := N_LarguraVar
 
+ELSE
+    NAP_LOG("TYPE OF DATA: " + VX_Get:TYPE)
 ENDIF
 *
 * //!! depois unificar as variáveis N_LARGURATELA E N_LARGURABOX
@@ -606,7 +612,7 @@ LOCAL VX_Get      , VX_Edicao
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL N_Aux_SayGetCor, X_Info, X_Retorno, X_Dado
 LOCAL B_ConfirmaBlock := NIL, B_DesisteBlock := NIL
-
+//LOCAL L_IsData := .F.
 #DEFINE VX_Edicao   VX_SubObj
 LOCAL L_Edita := EVAL(B_Edita_Global)
 #UNDEF VX_Edicao
@@ -651,7 +657,23 @@ IF SOB_MODO_GRAFICO()
                 L_EditaLocal := EVAL(B_Edita)
             ENDIF
 
-            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Dado, L_EditaLocal)
+            NAP_LOG("TYPE X_Dado: " + X_Info:TYPE)
+
+            IF X_Info:TYPE == "C"
+                //L_IsData := .F.
+            ELSEIF X_Info:TYPE == "D"
+                //L_IsData := .T.
+                //NAP_LOG("BEFORE DtoC")
+                X_Dado := DtoC(X_Dado)
+                //NAP_LOG("After DtoC")
+            ELSE
+                NAP_CRASH()
+            ENDIF
+            *
+
+            //NAP_LOG("BEFORE NAP_CUALIB_EDIT")
+            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Dado, X_Info:TYPE, L_EditaLocal)
+            //NAP_LOG("BEFORE EDIT GET:")
             NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
 
             #UNDEF N_LarguraVar
@@ -731,11 +753,16 @@ ENDIF  // L_PrimAtivacao
         B_DesisteBlock := {||.T.}
     ENDIF
 
+    IF B_ErroData == NIL
+        NAP_CRASH()
+    ENDIF
+
+    NAP_CUALIB_ERROR_DATA(B_ErroData)
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL(B_ConfirmaBlock, B_DesisteBlock)
     NAP_LOG("ENTRADA RETORNO: " + hb_ntos(X_Retorno))
 
-    // CLOSED BY ESC
-    IF X_Retorno == 1
+    // CLOSED BY ESC OR BY [X] Button
+    IF X_Retorno == 1 .OR. X_Retorno == 3
         L_Aborta      :=  .T.
     // CLOSED BY LAST EDIT INPUT
     ELSEIF X_Retorno == 5000

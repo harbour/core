@@ -13,6 +13,7 @@
 #include "hbapirdd.h"
 #include "hbapistr.h"
 #include "hbdate.h"
+#include "hbset.h"
 
 typedef struct _gtnap_t GtNap;
 typedef struct _gtnap_key_t GtNapKey;
@@ -101,9 +102,16 @@ typedef enum _objtype_t
     ekOBJ_IMAGE
 } objtype_t;
 
+typedef enum _datatype_t
+{
+    ekTYPE_CHARACTER,
+    ekTYPE_DATE
+} datatype_t;
+
 struct _gtnap_cualib_object_t
 {
     objtype_t type;
+    datatype_t dtype;
     int32_t cell_x;
     int32_t cell_y;
     V2Df pos;
@@ -137,6 +145,7 @@ struct _gtnap_cualib_window_t
     bool_t is_configured;
     bool_t is_closed_by_esc;
     bool_t focus_by_previous;
+    bool_t processing_invalid_date;
     Window *window;
     S2Df panel_size;
     Panel *panel;
@@ -144,6 +153,7 @@ struct _gtnap_cualib_window_t
     GtNapArea *gtarea;
     GtNapVector *gtvector;
     PHB_ITEM confirmaCodeBlock;
+    PHB_ITEM errorDataCodeBlock;
     ArrSt(GtNapCualibObject) *gui_objects;
     ArrPt(GtNapCallback) *callbacks;
 };
@@ -1137,6 +1147,9 @@ static void i_remove_cualib_win(GtNapCualibWindow *cuawin)
     if (cuawin->confirmaCodeBlock != NULL)
         hb_itemRelease(cuawin->confirmaCodeBlock);
 
+    if (cuawin->errorDataCodeBlock != NULL)
+        hb_itemRelease(cuawin->errorDataCodeBlock);
+
     cassert(arrst_size(cuawin->gui_objects, GtNapCualibObject) == 0);
     arrst_destroy(&cuawin->gui_objects, NULL, GtNapCualibObject);
     arrpt_destroy(&cuawin->callbacks, i_destroy_callback, GtNapCallback);
@@ -1330,11 +1343,13 @@ uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, 
     cuawin->is_configured = FALSE;
     cuawin->is_closed_by_esc = FALSE;
     cuawin->focus_by_previous = FALSE;
+    cuawin->processing_invalid_date = FALSE;
     cuawin->gui_objects = arrst_create(GtNapCualibObject);
     cuawin->callbacks = arrpt_create(GtNapCallback);
     cuawin->panel_size.width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni + 1));
     cuawin->panel_size.height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni + 1));
     cuawin->confirmaCodeBlock = NULL;
+    cuawin->errorDataCodeBlock = NULL;
 
     if (str_empty_c(C_Cabec) == FALSE)
         window_title(window, C_Cabec);
@@ -1523,7 +1538,7 @@ void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize, const bool_t editable)
+void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize,  const char_t *type, const bool_t editable)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibObject *obj = NULL;
@@ -1537,7 +1552,7 @@ void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_
     edit_font(edit, GTNAP_GLOBAL->global_font);
     edit_bgcolor_focus(edit, kCOLOR_CYAN);
     //edit_editable(edit, editable);
-    size.width = (real32_t)(nSize * GTNAP_GLOBAL->cell_x_size);
+    size.width = (real32_t)((nSize + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)(1 * GTNAP_GLOBAL->cell_y_size);
     log_printf("Added EDIT (%s) into CUALIB Window: %d, %d, %d", tc(ctext), nLin, nCol, nSize);
     i_add_object(ekOBJ_EDIT, nCol - cuawin->N_ColIni, nLin - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, (GuiComponent*)edit, cuawin);
@@ -1548,6 +1563,15 @@ void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_
     obj->is_editable = editable;
     obj->text = ctext;
 
+    if (str_equ_c(type, "C") == TRUE)
+        obj->dtype = ekTYPE_CHARACTER;
+    else if (str_equ_c(type, "D") == TRUE)
+        obj->dtype = ekTYPE_DATE;
+    else
+    {
+        obj->dtype = ENUM_MAX(datatype_t);
+        cassert(FALSE);
+    }
     //str_destroy(&ctext);
 
     // if (listener != NULL)
@@ -2106,6 +2130,12 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
                         }
 
                         if (close == TRUE)
+                        {
+                            if (cuawin->processing_invalid_date == TRUE)
+                                close = FALSE;
+                        }
+
+                        if (close == TRUE)
                             window_stop_modal(cuawin->window, 5000);
                     }
                 }
@@ -2118,9 +2148,51 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_filter_date(const EvText *text, EvTextFilter *filter)
+{
+    uint32_t i = 0, j = 0;
+    cassert_no_null(text);
+    cassert_no_null(filter);
+    while(text->text[i] != '\0')
+    {
+        if (text->text[i] >= '0' && text->text[i] <= '9')
+        {
+            filter->text[j] = text->text[i];
+            j += 1;
+
+            if (j == 2 || j == 5)
+            {
+                filter->text[j] = '/';
+                j += 1;
+            }
+
+            if (j == 10)
+                break;
+        }
+
+        i += 1;
+    }
+
+    filter->apply = TRUE;
+    filter->cpos = j;
+
+    for (; j < 10; ++j)
+    {
+        if (j == 2 || j == 5)
+            filter->text[j] = '/';
+        else
+            filter->text[j] = ' ';
+    }
+
+    filter->text[j] = '\0';
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
 {
     Edit *edit = event_sender(e, Edit);
+    GtNapCualibObject *cuaobj = NULL;
     cassert_no_null(cuawin);
 
     arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
@@ -2128,21 +2200,74 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
         {
             if (edit == (Edit*)obj->component)
             {
-                if (obj->is_editable == FALSE)
-                {
-                    /* If editBox is not editable --> Restore the original text */
-                    const EvText *p = event_params(e, EvText);
-                    EvTextFilter *res = event_result(e, EvTextFilter);
-                    str_copy_c(res->text, sizeof(res->text), tc(obj->text));
-                    if (p->cpos > 0)
-                        res->cpos = p->cpos - 1;
-                    else
-                        res->cpos = 0;
-                    res->apply = TRUE;
-                }
+                cuaobj = obj;
+                break;
             }
         }
     arrst_end();
+
+    if (cuaobj != NULL)
+    {
+        const EvText *p = event_params(e, EvText);
+        EvTextFilter *res = event_result(e, EvTextFilter);
+
+        if (cuaobj->is_editable == FALSE)
+        {
+            /* If editBox is not editable --> Restore the original text */
+            str_copy_c(res->text, sizeof(res->text), tc(cuaobj->text));
+            if (p->cpos > 0)
+                res->cpos = p->cpos - 1;
+            else
+                res->cpos = 0;
+            res->apply = TRUE;
+        }
+        else
+        {
+            if (cuaobj->dtype == ekTYPE_DATE)
+            {
+                i_filter_date(p, res);
+                log_printf("Date CPOS: %d", res->cpos);
+
+                if (res->cpos == 10)
+                {
+                    log_printf("END DATE EDITING");
+
+                    if (cuawin->errorDataCodeBlock != NULL)
+                    {
+                        long r = hb_dateUnformat( res->text, hb_setGetDateFormat());
+                        log_printf("DATE processing result: %d", r);
+
+
+                        /* Date invalid */
+                        if (r == 0)
+                        {
+                            PHB_ITEM retItem = NULL;
+                            cuawin->processing_invalid_date = TRUE;
+                            retItem = hb_itemDo(cuawin->errorDataCodeBlock, 0);
+                            hb_itemRelease(retItem);
+                            cuawin->processing_invalid_date = FALSE;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_error_data(const uint32_t errorDataBlockParamId)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+
+    // FRAN: IMPROVE... ADD TO hb_gtnap_cualib_launch_modal
+    if(cuawin->errorDataCodeBlock == NULL)
+    {
+        PHB_ITEM codeBlock = hb_param(errorDataBlockParamId, HB_IT_BLOCK);
+        if (codeBlock != NULL)
+            cuawin->errorDataCodeBlock = hb_itemNew(codeBlock);
+    }
 }
 
 /*---------------------------------------------------------------------------*/

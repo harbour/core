@@ -787,14 +787,14 @@ DO CASE
         RETURN N_TamVetor-N_Selecio_Aux
 ENDCASE
 RETURN N_Salto
-// *
-// ******************************
-// FUNC GetCdOpcao_Atual_Menuvert(VX_Janela)
-// ******************************
-// #DEFINE VX_Sele   VX_SubObj
-// RETURN V_Lst_CdOpcao[N_Selecio,1]
-// #UNDEF  VX_Sele
-// *
+*
+******************************
+FUNC GetCdOpcao_Atual_Menuvert(VX_Janela)
+******************************
+#DEFINE VX_Sele   VX_SubObj
+RETURN V_Lst_CdOpcao[N_Selecio,1]
+#UNDEF  VX_Sele
+*
 
 //!! DEPOIS REMOVER
 **************************
