@@ -115,7 +115,7 @@ HB_FUNC( NAP_CUALIB_WINDOW_STOPS_LAST_EDIT )
 
 HB_FUNC( NAP_CUALIB_LAUNCH_MODAL )
 {
-    uint32_t ret = hb_gtnap_cualib_launch_modal(1);
+    uint32_t ret = hb_gtnap_cualib_launch_modal(1, 2);
     hb_retni(ret);
 }
 

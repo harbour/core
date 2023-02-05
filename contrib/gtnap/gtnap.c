@@ -143,6 +143,7 @@ struct _gtnap_cualib_window_t
     GtNapCualibToolbar *toolbar;
     GtNapArea *gtarea;
     GtNapVector *gtvector;
+    PHB_ITEM confirmaCodeBlock;
     ArrSt(GtNapCualibObject) *gui_objects;
     ArrPt(GtNapCallback) *callbacks;
 };
@@ -1133,6 +1134,9 @@ static void i_remove_cualib_win(GtNapCualibWindow *cuawin)
     if (cuawin->gtvector != NULL)
         i_destroy_vector(&cuawin->gtvector);
 
+    if (cuawin->confirmaCodeBlock != NULL)
+        hb_itemRelease(cuawin->confirmaCodeBlock);
+
     cassert(arrst_size(cuawin->gui_objects, GtNapCualibObject) == 0);
     arrst_destroy(&cuawin->gui_objects, NULL, GtNapCualibObject);
     arrpt_destroy(&cuawin->callbacks, i_destroy_callback, GtNapCallback);
@@ -1330,6 +1334,7 @@ uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, 
     cuawin->callbacks = arrpt_create(GtNapCallback);
     cuawin->panel_size.width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni + 1));
     cuawin->panel_size.height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni + 1));
+    cuawin->confirmaCodeBlock = NULL;
 
     if (str_empty_c(C_Cabec) == FALSE)
         window_title(window, C_Cabec);
@@ -2087,7 +2092,22 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
                 {
                     /* The last editbox has lost the focus --> Close the window */
                     if (edit == (Edit*)obj->component)
-                        window_stop_modal(cuawin->window, 5000);
+                    {
+                        bool_t close = TRUE;
+
+                        /* We have asociated a confirmation block */
+                        if (cuawin->confirmaCodeBlock != NULL)
+                        {
+                            PHB_ITEM retItem = hb_itemDo(cuawin->confirmaCodeBlock, 0);
+                            HB_TYPE type = HB_ITEM_TYPE(retItem);
+                            cassert(type == HB_IT_LOGICAL);
+                            close = (bool_t)hb_itemGetL(retItem);
+                            hb_itemRelease(retItem);
+                        }
+
+                        if (close == TRUE)
+                            window_stop_modal(cuawin->window, 5000);
+                    }
                 }
             arrst_end();
         }
@@ -2127,7 +2147,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_cualib_launch_modal(const uint32_t cancelBlockParamId)
+uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const uint32_t cancelBlockParamId)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
@@ -2165,6 +2185,15 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t cancelBlockParamId)
         i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_LABEL);
         i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_IMAGE);
         i_toolbar_tabstop(cuawin->toolbar);
+
+        /* Confirma Codeblock */
+        {
+            PHB_ITEM codeBlock = NULL;
+            cassert(cuawin->confirmaCodeBlock == NULL);
+            codeBlock = hb_param(confirmaBlockParamId, HB_IT_BLOCK);
+            if (codeBlock != NULL)
+                cuawin->confirmaCodeBlock = hb_itemNew(codeBlock);
+        }
 
         /* OnClose listener */
         listener = i_gtnap_cualib_listener(cancelBlockParamId, INT32_MAX, FALSE, cuawin, i_OnWindowClose);

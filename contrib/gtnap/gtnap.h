@@ -153,7 +153,7 @@ extern void hb_gtnap_cualib_toolbar_separator(void);
 
 extern void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, const bool_t autoclose);
 
-extern uint32_t hb_gtnap_cualib_launch_modal(const uint32_t cancelBlockParamId);
+extern uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const uint32_t cancelBlockParamId);
 
 extern void hb_gtnap_cualib_destroy_window(void);
 

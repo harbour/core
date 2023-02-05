@@ -605,6 +605,7 @@ LOCAL N_CursorAnt , C_ReadVarAnt, N_Col, N_Row
 LOCAL VX_Get      , VX_Edicao
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL N_Aux_SayGetCor, X_Info, X_Retorno, X_Dado
+LOCAL B_ConfirmaBlock := NIL, B_DesisteBlock := NIL
 
 #DEFINE VX_Edicao   VX_SubObj
 LOCAL L_Edita := EVAL(B_Edita_Global)
@@ -718,8 +719,19 @@ IF SOB_MODO_GRAFICO()
         NAP_CUALIB_WINDOW_STOPS_LAST_EDIT()
 ENDIF  // L_PrimAtivacao
 
+    B_ConfirmaBlock := B_Confirma
 
-    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.})
+    IF B_ConfirmaBlock == NIL
+        B_ConfirmaBlock := {||.T.}
+    ENDIF
+
+    B_DesisteBlock := B_Desiste
+
+    IF B_DesisteBlock == NIL
+        B_DesisteBlock := {||.T.}
+    ENDIF
+
+    X_Retorno := NAP_CUALIB_LAUNCH_MODAL(B_ConfirmaBlock, B_DesisteBlock)
     NAP_LOG("ENTRADA RETORNO: " + hb_ntos(X_Retorno))
 
     // CLOSED BY ESC

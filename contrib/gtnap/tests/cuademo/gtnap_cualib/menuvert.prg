@@ -275,7 +275,7 @@ IF L_ForcaLerTudo
 
             NAP_CUALIB_MENUVERT(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
 
-            X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.})
+            X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
 
             IF X_Retorno == 1000
                 L_FechouComAutoClose = .T.

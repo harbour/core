@@ -50,8 +50,8 @@ ATIVE(V_Janela)
 // STAT PROC TST_ENTRADA_DADOS_COM_CAMPO_READ_ONLY()
 // RETURN
 
-STAT PROC TST_ENTRADA_DADOS_COM_CONFIRMACOES()
-RETURN
+// STAT PROC TST_ENTRADA_DADOS_COM_CONFIRMACOES()
+// RETURN
 
 STAT PROC TST_ENTRADA_DADOS_DATA_INVALIDA()
 RETURN
@@ -109,6 +109,7 @@ LOCAL C_Campo2 := "só se o campo 1 estiver vazio"
    TITULO "Teste de entrada de dados" ;
    SUBTITULO "%T;com campo read-only" ;
    TECLAS {} AJUDA "T?????"
+
 ESPECIALIZE V_Janela ENTRADA
 *
 @ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
@@ -121,31 +122,32 @@ DO WHILE L_Ok
 ENDDO
 DESTRUA V_Janela
 *
-// ********************************************
-// STAT PROC TST_ENTRADA_DADOS_COM_CONFIRMACOES
-// ********************************************
-// LOCAL L_Ok, V_Janela
-// LOCAL C_Campo1 := "                                       "
-// LOCAL C_Campo2 := "                                       "
-// *
-// @ 07,33,23,90 JANELA V_Janela  ;
-//    TITULO "Teste de entrada de dados" ;
-//    SUBTITULO "%T;com confirmações" ;
-//    TECLAS {} AJUDA "T?????"
-// ESPECIALIZE V_Janela ENTRADA ;
-//     CONFIRMAR CONFIRMA_DADOS() ;
-//     DESISTIR CONFIRMA_CANCELAMENTO()
-// *
-// @ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
-// @ V_Janela,01,02 SAY "Campo 2" GET C_Campo2 AJUDA "C?????"
+********************************************
+STAT PROC TST_ENTRADA_DADOS_COM_CONFIRMACOES
+********************************************
+LOCAL L_Ok, V_Janela
+LOCAL C_Campo1 := "                                       "
+LOCAL C_Campo2 := "                                       "
+*
+@ 07,33,23,90 JANELA V_Janela  ;
+   TITULO "Teste de entrada de dados" ;
+   SUBTITULO "%T;com confirmações" ;
+   TECLAS {} AJUDA "T?????"
 
-// L_Ok := ATIVE(V_Janela)
-// DO WHILE L_Ok
-//    MOSTRAR("M15588","Entrada de dados finalizada com sucesso.")
-//    L_Ok := ATIVE(V_Janela)
-// ENDDO
-// DESTRUA V_Janela
-// *
+ESPECIALIZE V_Janela ENTRADA ;
+    CONFIRMAR CONFIRMA_DADOS() ;
+    DESISTIR CONFIRMA_CANCELAMENTO()
+*
+@ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
+@ V_Janela,01,02 SAY "Campo 2" GET C_Campo2 AJUDA "C?????"
+
+L_Ok := ATIVE(V_Janela)
+DO WHILE L_Ok
+   MOSTRAR("M15588","Entrada de dados finalizada com sucesso.")
+   L_Ok := ATIVE(V_Janela)
+ENDDO
+DESTRUA V_Janela
+*
 // *****************************************
 // STAT PROC TST_ENTRADA_DADOS_DATA_INVALIDA
 // *****************************************

@@ -166,7 +166,7 @@ IF SOB_MODO_GRAFICO()
 
 
 
-    /*X_Retorno := */NAP_CUALIB_LAUNCH_MODAL({||.T.})
+    /*X_Retorno := */NAP_CUALIB_LAUNCH_MODAL({||.T.},{||.T.})
     L_FimOK := .F.
 
 

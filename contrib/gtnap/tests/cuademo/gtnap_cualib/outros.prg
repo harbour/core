@@ -84,7 +84,7 @@ IF SOB_MODO_GRAFICO()
         //C_TeclaAtalho := XUpper(Left(Troca(VC_Menu[N_Cont]," [",""),1))
     NEXT
 
-    N_Opcao := NAP_CUALIB_LAUNCH_MODAL({||.T.})
+    N_Opcao := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
     NAP_LOG("OPCAO PERGUNTAR: " + hb_ntos(N_Opcao))
 
     // N_Opcao == 1 --> window has been closed by [ESC]
@@ -341,7 +341,7 @@ Ative(VX_Janela)
 *
 
 IF SOB_MODO_GRAFICO()
-    NAP_CUALIB_LAUNCH_MODAL({||.T.})
+    NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
     Destrua VX_Janela
 ELSE
     IF L_Parar .AND. N_Segundos == 0
