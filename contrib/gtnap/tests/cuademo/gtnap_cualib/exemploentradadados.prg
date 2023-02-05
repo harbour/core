@@ -47,8 +47,8 @@ ATIVE(V_Janela)
 // STAT PROC TST_ENTRADA_DADOS_TODA_READ_ONLY()
 // RETURN
 
-STAT PROC TST_ENTRADA_DADOS_COM_CAMPO_READ_ONLY()
-RETURN
+// STAT PROC TST_ENTRADA_DADOS_COM_CAMPO_READ_ONLY()
+// RETURN
 
 STAT PROC TST_ENTRADA_DADOS_COM_CONFIRMACOES()
 RETURN
@@ -97,30 +97,30 @@ DO WHILE L_Ok
    L_Ok := ATIVE(V_Janela)
 ENDDO
 DESTRUA V_Janela
-// *
-// *****************************************************
-// STAT PROC TST_ENTRADA_DADOS_COM_CAMPO_READ_ONLY
-// *****************************************************
-// LOCAL L_Ok, V_Janela
-// LOCAL C_Campo1 := "O campo 2 é read-write       "
-// LOCAL C_Campo2 := "só se o campo 1 estiver vazio"
-// *
-// @ 07,43,23,90 JANELA V_Janela  ;
-//    TITULO "Teste de entrada de dados" ;
-//    SUBTITULO "%T;com campo read-only" ;
-//    TECLAS {} AJUDA "T?????"
-// ESPECIALIZE V_Janela ENTRADA
-// *
-// @ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
-// @ V_Janela,01,02 SAY "Campo 2" GET C_Campo2 EDITA EMPTY(C_Campo1) AJUDA "C?????"
+*
+*****************************************************
+STAT PROC TST_ENTRADA_DADOS_COM_CAMPO_READ_ONLY
+*****************************************************
+LOCAL L_Ok, V_Janela
+LOCAL C_Campo1 := "O campo 2 é read-write       "
+LOCAL C_Campo2 := "só se o campo 1 estiver vazio"
+*
+@ 07,43,23,90 JANELA V_Janela  ;
+   TITULO "Teste de entrada de dados" ;
+   SUBTITULO "%T;com campo read-only" ;
+   TECLAS {} AJUDA "T?????"
+ESPECIALIZE V_Janela ENTRADA
+*
+@ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
+@ V_Janela,01,02 SAY "Campo 2" GET C_Campo2 EDITA EMPTY(C_Campo1) AJUDA "C?????"
 
-// L_Ok := ATIVE(V_Janela)
-// DO WHILE L_Ok
-//    MOSTRAR("M15586","Entrada de dados finalizada com sucesso.")
-//    L_Ok := ATIVE(V_Janela)
-// ENDDO
-// DESTRUA V_Janela
-// *
+L_Ok := ATIVE(V_Janela)
+DO WHILE L_Ok
+   MOSTRAR("M15586","Entrada de dados finalizada com sucesso.")
+   L_Ok := ATIVE(V_Janela)
+ENDDO
+DESTRUA V_Janela
+*
 // ********************************************
 // STAT PROC TST_ENTRADA_DADOS_COM_CONFIRMACOES
 // ********************************************
