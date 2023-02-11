@@ -672,7 +672,7 @@ IF SOB_MODO_GRAFICO()
             *
 
             //NAP_LOG("BEFORE NAP_CUALIB_EDIT")
-            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Dado, X_Info:TYPE, L_EditaLocal)
+            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Dado, X_Info:TYPE, L_EditaLocal, L_ScrollVertical)
             //NAP_LOG("BEFORE EDIT GET:")
             NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
 
@@ -685,7 +685,7 @@ IF SOB_MODO_GRAFICO()
             #DEFINE C_CorSay    X_Info[5]
 
         X_Dado := EVAL(B_Expressao)
-        NAP_CUALIB_LABEL(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), X_Dado, .F.)
+        NAP_CUALIB_LABEL(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), X_Dado, .F., L_ScrollVertical)
         NAP_LOG("SAY: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ") '" + X_Dado + "'")
         #UNDEF B_Expressao
         #UNDEF C_Pict
@@ -739,6 +739,17 @@ IF SOB_MODO_GRAFICO()
         NAP_CUALIB_WINDOW_ENTER_TABSTOP()
         NAP_CUALIB_WINDOW_ARROWS_TABSTOP()
         NAP_CUALIB_WINDOW_STOPS_LAST_EDIT()
+
+        IF L_ScrollVertical
+            NAP_LOG("EDITS WITH SCROLL")
+
+            NAP_LOG("SCROLL-PANEL DIMS: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " +  hb_ntos(Col2Livre(VX_Janela))  )
+
+
+            NAP_CUALIB_WINDOW_SCROLL_PANEL(Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
+
+
+        ENDIF
 ENDIF  // L_PrimAtivacao
 
     B_ConfirmaBlock := B_Confirma

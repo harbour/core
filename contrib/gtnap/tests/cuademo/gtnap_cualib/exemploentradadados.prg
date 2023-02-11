@@ -59,8 +59,8 @@ ATIVE(V_Janela)
 // STAT PROC TST_ENTRADA_DADOS_FILTRO_TECLAS()
 // RETURN
 
-STAT PROC TST_ENTRADA_DADOS_COM_ROLAMENTO()
-RETURN
+// STAT PROC TST_ENTRADA_DADOS_COM_ROLAMENTO()
+// RETURN
 
 STAT PROC TST_ENTRADA_DADOS_CORES_MENSAGENS()
 RETURN
@@ -203,41 +203,41 @@ ELSE
    C_Retorno := NIL
 ENDIF
 RETURN C_Retorno
-// *
-// *****************************************
-// STAT PROC TST_ENTRADA_DADOS_COM_ROLAMENTO
-// *****************************************
-// LOCAL L_Ok, V_Janela
-// LOCAL C_Campo1 := "Valor 1....."
-// LOCAL C_Campo2 := "Valor 2....."
-// LOCAL C_Campo3 := "Valor 3....."
-// LOCAL C_Campo4 := "Valor 4....."
-// LOCAL C_Campo5 := "Valor 5....."
-// *
-// @ 07,53,20,80 JANELA V_Janela  ;
-//    TITULO "Teste de entrada dados" ;
-//    SUBTITULO "%T;com rolamento" ;
-//    TECLAS {} AJUDA "T?????"
-// ESPECIALIZE V_Janela ENTRADA ROLAVERTICAL
+*
+*****************************************
+STAT PROC TST_ENTRADA_DADOS_COM_ROLAMENTO
+*****************************************
+LOCAL L_Ok, V_Janela
+LOCAL C_Campo1 := "Valor 1....."
+LOCAL C_Campo2 := "Valor 2....."
+LOCAL C_Campo3 := "Valor 3....."
+LOCAL C_Campo4 := "Valor 4....."
+LOCAL C_Campo5 := "Valor 5....."
+*
+@ 07,53,20,80 JANELA V_Janela  ;
+   TITULO "Teste de entrada dados" ;
+   SUBTITULO "%T;com rolamento" ;
+   TECLAS {} AJUDA "T?????"
+ESPECIALIZE V_Janela ENTRADA ROLAVERTICAL
 
-// @ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
-// @ V_Janela,01,10 SAY LOWER(C_Campo1)
-// @ V_Janela,02,02 SAY "Campo 2" GET C_Campo2 AJUDA "C?????"
-// @ V_Janela,03,10 SAY LOWER(C_Campo2)
-// @ V_Janela,04,02 SAY "Campo 3" GET C_Campo3 AJUDA "C?????"
-// @ V_Janela,05,10 SAY LOWER(C_Campo3)
-// @ V_Janela,06,02 SAY "Campo 4" GET C_Campo4 AJUDA "C?????"
-// @ V_Janela,07,10 SAY LOWER(C_Campo4)
-// @ V_Janela,08,02 SAY "Campo 5" GET C_Campo5 AJUDA "C?????"
-// @ V_Janela,09,10 SAY LOWER(C_Campo5)
+@ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
+@ V_Janela,01,10 SAY LOWER(C_Campo1)
+@ V_Janela,02,02 SAY "Campo 2" GET C_Campo2 AJUDA "C?????"
+@ V_Janela,03,10 SAY LOWER(C_Campo2)
+@ V_Janela,04,02 SAY "Campo 3" GET C_Campo3 AJUDA "C?????"
+@ V_Janela,05,10 SAY LOWER(C_Campo3)
+@ V_Janela,06,02 SAY "Campo 4" GET C_Campo4 AJUDA "C?????"
+@ V_Janela,07,10 SAY LOWER(C_Campo4)
+@ V_Janela,08,02 SAY "Campo 5" GET C_Campo5 AJUDA "C?????"
+@ V_Janela,09,10 SAY LOWER(C_Campo5)
 
-// L_Ok := ATIVE(V_Janela)
-// DO WHILE L_Ok
-//    MOSTRAR("M15596","Entrada de dados finalizada com sucesso.")
-//    L_Ok := ATIVE(V_Janela)
-// ENDDO
-// DESTRUA V_Janela
-// *
+L_Ok := ATIVE(V_Janela)
+DO WHILE L_Ok
+   MOSTRAR("M15596","Entrada de dados finalizada com sucesso.")
+   L_Ok := ATIVE(V_Janela)
+ENDDO
+DESTRUA V_Janela
+*
 // *******************************************
 // STAT PROC TST_ENTRADA_DADOS_CORES_MENSAGENS
 // *******************************************

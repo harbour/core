@@ -113,6 +113,17 @@ HB_FUNC( NAP_CUALIB_WINDOW_STOPS_LAST_EDIT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CUALIB_WINDOW_SCROLL_PANEL )
+{
+    int32_t N_LinIni = hb_parni(1);
+    int32_t N_ColIni = hb_parni(2);
+    int32_t N_LinFin = hb_parni(3);
+    int32_t N_ColFin = hb_parni(4);
+    hb_gtnap_cualib_window_scroll_panel(N_LinIni, N_ColIni, N_LinFin, N_ColFin);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_CUALIB_ERROR_DATA )
 {
     hb_gtnap_cualib_error_data(1);
@@ -204,7 +215,8 @@ HB_FUNC( NAP_CUALIB_LABEL )
     uint32_t nCol = hb_parni(2);
     const char_t *text = hb_gtnap_parText(3);
     bool_t background = (bool_t)hb_parl(4);
-    hb_gtnap_cualib_label(text, nLin, nCol, background);
+    bool_t in_scroll = (bool_t)hb_parl(5);
+    hb_gtnap_cualib_label(text, nLin, nCol, background, in_scroll);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -218,7 +230,8 @@ HB_FUNC( NAP_CUALIB_EDIT )
     String *text = str_c(hb_gtnap_parText(4));
     const char_t *type = hb_gtnap_parText(5);
     bool_t editable = (bool_t)hb_parl(6);
-    hb_gtnap_cualib_edit(tc(text), nLin, nCol, nSize, type, editable);
+    bool_t in_scroll = (bool_t)hb_parl(7);
+    hb_gtnap_cualib_edit(tc(text), nLin, nCol, nSize, type, editable, in_scroll);
     str_destroy(&text);
 }
 
