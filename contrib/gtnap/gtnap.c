@@ -118,6 +118,7 @@ struct _gtnap_cualib_object_t
     S2Df size;
     bool_t is_last_edit;
     bool_t in_scroll_panel;
+    PHB_ITEM labelCodeBlock;
     PHB_ITEM editCodeBlock;
     PHB_ITEM editableGlobalCodeBlock;
     PHB_ITEM editableLocalCodeBlock;
@@ -1120,6 +1121,9 @@ static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t ind
 
     _component_destroy(&object->component);
 
+    if (object->labelCodeBlock != NULL)
+        hb_itemRelease(object->labelCodeBlock);
+
     if (object->editCodeBlock != NULL)
         hb_itemRelease(object->editCodeBlock);
 
@@ -1307,6 +1311,7 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->size = *size;
     object->is_last_edit = FALSE;
     object->in_scroll_panel = in_scroll_panel;
+    object->labelCodeBlock = NULL;
     object->editCodeBlock = NULL;
     object->editableGlobalCodeBlock = NULL;
     object->editableLocalCodeBlock = NULL;
@@ -1318,21 +1323,30 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
 static void i_add_label_object(const int32_t cell_x, const int32_t cell_y, const char_t *text, const color_t background, const bool_t in_scroll_panel, GtNap *gtnap, GtNapCualibWindow *cuawin)
 {
     Label *label = label_create();
-    uint32_t len = str_len_c(text);
-    String *ctext = gtconvert_1252_to_UTF8(text);
     S2Df size;
     cassert_no_null(gtnap);
-    log_printf("Added label: '%s' at %d %d", tc(ctext), cell_x, cell_y);
-    label_text(label, tc(ctext));
     label_font(label, gtnap->global_font);
 
     if (background != 0)
         label_bgcolor(label, background);
 
-    size.width = (real32_t)(len * gtnap->cell_x_size);
+    if (str_empty_c(text) == FALSE)
+    {
+        uint32_t len = str_len_c(text);
+        String *ctext = gtconvert_1252_to_UTF8(text);
+        label_text(label, tc(ctext));
+        size.width = (real32_t)(len * gtnap->cell_x_size);
+        log_printf("Added label: '%s' at %d %d", tc(ctext), cell_x, cell_y);
+        str_destroy(&ctext);
+    }
+    else
+    {
+        size.width = (real32_t)(1 * gtnap->cell_x_size);
+        log_printf("Added label: 'NO TEXT' at %d %d", cell_x, cell_y);
+    }
+
     size.height = (real32_t)gtnap->cell_y_size;
     i_add_object(ekOBJ_LABEL, cell_x, cell_y, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll_panel, (GuiComponent*)label, cuawin);
-    str_destroy(&ctext);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1577,11 +1591,57 @@ void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId,
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel)
+static void i_set_label_text(GtNapCualibObject *obj)
+{
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_LABEL);
+    if (obj->labelCodeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(obj->labelCodeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+
+        if (type == HB_IT_STRING)
+        {
+            char_t buffer[1024];
+            uint32_t len;
+            hb_itemCopyStrUTF8( retItem, (char*)buffer, (HB_SIZE)sizeof(buffer));
+            len = unicode_nchars(buffer, ekUTF8);
+            obj->size.width = (real32_t)(len * GTNAP_GLOBAL->cell_x_size);
+            _component_set_frame(obj->component, &obj->pos, &obj->size);
+            label_text((Label*)obj->component, buffer);
+        }
+        else
+        {
+            cassert_msg(FALSE, "Unkown type in i_set_label_text");
+        }
+
+        hb_itemRelease(retItem);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapCualibObject *obj = NULL;
+    PHB_ITEM labelCodeBlock = NULL;
     color_t back = (background == TRUE) ? kCOLOR_CYAN : 0;
     i_add_label_object(nCol - cuawin->N_ColIni, nLin - cuawin->N_LinIni, text, back, in_scroll_panel, GTNAP_GLOBAL, cuawin);
+
+    obj = arrst_last(cuawin->gui_objects, GtNapCualibObject);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_LABEL);
+
+    //log_printf("Before LABEL CODE  BLOCK");
+    labelCodeBlock = hb_param(updateBlockParamId, HB_IT_BLOCK);
+    if (labelCodeBlock != NULL)
+        obj->labelCodeBlock = hb_itemNew(labelCodeBlock);
+    else
+        obj->labelCodeBlock = NULL;
+    //log_printf("AFTER LABEL CODE  BLOCK");
+
+    i_set_label_text(obj);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2152,6 +2212,7 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *main_pan
                 pos.y += scroll_offset->y;
             }
 
+            object->pos = pos;
             _component_set_frame(object->component, &pos, &object->size);
         }
     arrst_end();
@@ -2288,6 +2349,13 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
     cassert(cuaobj->type == ekOBJ_EDIT);
 
     i_update_harbour_from_edit_text(cuaobj);
+
+    /* Update possible labels associated with this input */
+    arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+        if (obj->type == ekOBJ_LABEL)
+            i_set_label_text(obj);
+    arrst_end();
+
 
     /* The window must stop modal when the last input loses the focus */
     if (cuawin->stops_last_edit == TRUE)

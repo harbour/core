@@ -678,7 +678,7 @@ IF SOB_MODO_GRAFICO()
             #DEFINE C_CorSay    X_Info[5]
 
         X_Dado := EVAL(B_Expressao)
-        NAP_CUALIB_LABEL(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), X_Dado, .F., L_ScrollVertical)
+        NAP_CUALIB_LABEL(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), "", .F., L_ScrollVertical, B_Expressao)
         NAP_LOG("SAY: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ") '" + X_Dado + "'")
         #UNDEF B_Expressao
         #UNDEF C_Pict
