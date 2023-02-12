@@ -613,11 +613,6 @@ LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL N_Aux_SayGetCor, X_Info, X_Retorno, X_Dado
 LOCAL B_ConfirmaBlock := NIL, B_DesisteBlock := NIL
 //LOCAL L_IsData := .F.
-#DEFINE VX_Edicao   VX_SubObj
-LOCAL L_Edita := EVAL(B_Edita_Global)
-#UNDEF VX_Edicao
-
-LOCAL L_EditaLocal
 //LOCAL N_PaintRefresh_Old
 *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
@@ -649,13 +644,9 @@ IF SOB_MODO_GRAFICO()
             #DEFINE N_LarguraVar  X_Info:CARGO[7]
             #DEFINE N_LarguraTela X_Info:CARGO[8]
             #DEFINE B_Edita X_Info:CARGO[3]
+            #DEFINE VX_Edicao   VX_SubObj
 
             //X_Dado := EVAL(X_Info:BLOCK)
-
-            L_EditaLocal := L_Edita
-            IF L_EditaLocal == .T.
-                L_EditaLocal := EVAL(B_Edita)
-            ENDIF
 
             // NAP_LOG("TYPE X_Dado: " + X_Info:TYPE)
 
@@ -672,13 +663,15 @@ IF SOB_MODO_GRAFICO()
             *
 
             //NAP_LOG("BEFORE NAP_CUALIB_EDIT")
-            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Info:BLOCK, X_Info:TYPE, L_EditaLocal, L_ScrollVertical)
+
+            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Info:BLOCK, X_Info:TYPE, B_Edita_Global, B_Edita, L_ScrollVertical)
             //NAP_LOG("BEFORE EDIT GET:")
             NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
 
             #UNDEF N_LarguraVar
             #UNDEF N_LarguraTela
             #UNDEF B_Edita
+            #UNDEF VX_Edicao
         ELSE
             #DEFINE B_Expressao X_Info[3]
             #DEFINE C_Pict      X_Info[4]

@@ -117,9 +117,10 @@ struct _gtnap_cualib_object_t
     V2Df pos;
     S2Df size;
     bool_t is_last_edit;
-    bool_t is_editable;
     bool_t in_scroll_panel;
     PHB_ITEM editCodeBlock;
+    PHB_ITEM editableGlobalCodeBlock;
+    PHB_ITEM editableLocalCodeBlock;
     GuiComponent *component;
 };
 
@@ -1122,6 +1123,12 @@ static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t ind
     if (object->editCodeBlock != NULL)
         hb_itemRelease(object->editCodeBlock);
 
+    if (object->editableGlobalCodeBlock != NULL)
+        hb_itemRelease(object->editableGlobalCodeBlock);
+
+    if (object->editableLocalCodeBlock != NULL)
+        hb_itemRelease(object->editableLocalCodeBlock);
+
     arrst_delete(cuawin->gui_objects, index, NULL, GtNapCualibObject);
 }
 
@@ -1299,9 +1306,10 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->pos.y = (real32_t)(cell_y * (int32_t)cell_y_size);
     object->size = *size;
     object->is_last_edit = FALSE;
-    object->is_editable = FALSE;
     object->in_scroll_panel = in_scroll_panel;
     object->editCodeBlock = NULL;
+    object->editableGlobalCodeBlock = NULL;
+    object->editableLocalCodeBlock = NULL;
     log_printf("Added object at: %.2f, %.2f w:%.2f h:%.2f", object->pos.x, object->pos.y, object->size.width, object->size.height);
 }
 
@@ -1663,11 +1671,14 @@ static void i_update_harbour_from_edit_text(const GtNapCualibObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize,  const char_t *type, const bool_t editable, const bool_t in_scroll_panel)
+void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t editableGlobalParamId, const uint32_t editableLocalParamId, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize,  const char_t *type, const bool_t in_scroll_panel)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibObject *obj = NULL;
     PHB_ITEM editCodeBlock = NULL;
+    PHB_ITEM editableGlobalCodeBlock = NULL;
+    PHB_ITEM editableLocalCodeBlock = NULL;
+
     Edit *edit = edit_create();
     // //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
     S2Df size;
@@ -1684,14 +1695,23 @@ void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t nLin,
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_EDIT);
 
-    // TODO: With function
-    obj->is_editable = editable;
-
     editCodeBlock = hb_param(editaBlockParamId, HB_IT_BLOCK);
     if (editCodeBlock != NULL)
         obj->editCodeBlock = hb_itemNew(editCodeBlock);
     else
         obj->editCodeBlock = NULL;
+
+    editableGlobalCodeBlock = hb_param(editableGlobalParamId, HB_IT_BLOCK);
+    if (editableGlobalCodeBlock != NULL)
+        obj->editableGlobalCodeBlock = hb_itemNew(editableGlobalCodeBlock);
+    else
+        obj->editableGlobalCodeBlock = NULL;
+
+    editableLocalCodeBlock = hb_param(editableLocalParamId, HB_IT_BLOCK);
+    if (editableLocalCodeBlock != NULL)
+        obj->editableLocalCodeBlock = hb_itemNew(editableLocalCodeBlock);
+    else
+        obj->editableLocalCodeBlock = NULL;
 
     if (str_equ_c(type, "C") == TRUE)
         obj->dtype = ekTYPE_CHARACTER;
@@ -2352,6 +2372,35 @@ static void i_filter_date(const EvText *text, EvTextFilter *filter)
 
 /*---------------------------------------------------------------------------*/
 
+static bool_t i_is_editable(GtNapCualibObject *cuaobj)
+{
+    bool_t editable = TRUE;
+    cassert_no_null(cuaobj);
+    cassert(cuaobj->type == ekOBJ_EDIT);
+
+    if (editable == TRUE && cuaobj->editableGlobalCodeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(cuaobj->editableGlobalCodeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        cassert(type == HB_IT_LOGICAL);
+        editable = (bool_t)hb_itemGetL(retItem);
+        hb_itemRelease(retItem);
+    }
+
+    if (editable == TRUE && cuaobj->editableLocalCodeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(cuaobj->editableLocalCodeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        cassert(type == HB_IT_LOGICAL);
+        editable = (bool_t)hb_itemGetL(retItem);
+        hb_itemRelease(retItem);
+    }
+
+    return editable;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
 {
     Edit *edit = event_sender(e, Edit);
@@ -2374,7 +2423,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
         const EvText *p = event_params(e, EvText);
         EvTextFilter *res = event_result(e, EvTextFilter);
 
-        if (cuaobj->is_editable == FALSE)
+        if (i_is_editable(cuaobj) == FALSE)
         {
             /* If editBox is not editable --> Restore the original text */
             i_get_edit_text(cuaobj, res->text, sizeof(res->text));

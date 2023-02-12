@@ -227,9 +227,8 @@ HB_FUNC( NAP_CUALIB_EDIT )
     uint32_t nCol = hb_parni(2);
     uint32_t nSize = hb_parni(3);
     const char_t *type = hb_gtnap_parText(5);
-    bool_t editable = (bool_t)hb_parl(6);
-    bool_t in_scroll = (bool_t)hb_parl(7);
-    hb_gtnap_cualib_edit(4, nLin, nCol, nSize, type, editable, in_scroll);
+    bool_t in_scroll = (bool_t)hb_parl(8);
+    hb_gtnap_cualib_edit(4, 6, 7, nLin, nCol, nSize, type, in_scroll);
 }
 
 /*---------------------------------------------------------------------------*/
