@@ -696,15 +696,15 @@ SetJanTipoMsgAguarde(V_JAN,.F.)  // tirar o atributo, para nï¿½o gerar log na DE
 SetProgressBar(V_JAN,NIL)  // Ao destruir uma MsgAguarde, setar NIL para o parï¿½metro de N_ProgressBar
 *
 DESTRUA V_JAN
-// *
-// *****************
-// FUNCTION CONFIRME (C_SubCabec,N_DEFAULT)
-// *****************
-// LOCAL N_OPCAO
-// DEFAULT N_DEFAULT TO 1
-// N_OPCAO := PERGUN(C_SubCabec,{"Sim","Nï¿½o"},N_DEFAULT,,"Confirmaï¿½ï¿½o")
-// RETURN (N_OPCAO==1)
-// *
+*
+*****************
+FUNCTION CONFIRME (C_SubCabec,N_DEFAULT)
+*****************
+LOCAL N_OPCAO
+DEFAULT N_DEFAULT TO 1
+N_OPCAO := PERGUN(C_SubCabec,{"Sim","Não"},N_DEFAULT,,"Confirmação")
+RETURN (N_OPCAO==1)
+*
 
 ***********
 FUNC PERGUN ( C_SubCabec, V_OPCOES, N_DEFAULT, L_PODE_ZERO, C_Cabec_x )
