@@ -64,3 +64,38 @@ String *gtconvert_1252_to_UTF8(const char_t *str)
     heap_delete_n(&buf, n + 1, uint16_t);
     return utf8;
 }
+
+
+/*---------------------------------------------------------------------------*/
+
+String *gtconvert_UTF8_to_1252(const char_t *str)
+{
+    uint32_t i = 0, n = unicode_nchars(str, ekUTF8);
+    String *u1252 = str_reserve(n + 1);
+    char_t *u1252_buf = tcc(u1252);
+    uint32_t cp = unicode_to_u32(str, ekUTF8);
+
+    while (cp != 0)
+    {
+        uint32_t j = 0, n2 = sizeof(CP1252_UNICODE_TABLE) / sizeof(uint16_t);
+        uint8_t cp2 = ' ';
+
+        for (j = 0; j < n2; ++j)
+        {
+            if (CP1252_UNICODE_TABLE[j] == cp)
+            {
+                cp2 = (uint8_t)j;
+                break;
+            }
+        }
+
+        u1252_buf[i] = cp2;
+        i += 1;
+
+        str = unicode_next(str, ekUTF8);
+        cp = unicode_to_u32(str, ekUTF8);
+    }
+
+    u1252_buf[i] = 0;
+    return u1252;
+}

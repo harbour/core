@@ -10,5 +10,7 @@
 
 String *gtconvert_1252_to_UTF8(const char_t *str);
 
+String *gtconvert_UTF8_to_1252(const char_t *str);
+
 #endif
 
