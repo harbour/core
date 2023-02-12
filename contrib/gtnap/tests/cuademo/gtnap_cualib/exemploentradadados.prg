@@ -68,8 +68,8 @@ ATIVE(V_Janela)
 // STAT PROC TST_ENTRADA_DADOS_VALID()
 // RETURN
 
-STAT PROC TST_ENTRADA_DADOS_LISTA_AUTO()
-RETURN
+// STAT PROC TST_ENTRADA_DADOS_LISTA_AUTO()
+// RETURN
 
 STAT PROC TST_ENTRADA_DADOS_PEDEJAN()
 RETURN
@@ -312,53 +312,53 @@ IF EMPTY(C_Conteudo_Campo)
    ALARME("M22222","Campo "+C_Titulo_Campo+" vazio")
 ENDIF
 RETURN L_OK
-// *
-// **************************************
-// STAT PROC TST_ENTRADA_DADOS_LISTA_AUTO
-// **************************************
-// LOCAL L_Ok, V_Janela
-// LOCAL C_Campo1 := PADR("Campo 2 só terá 'drop-down'      ",35)
-// LOCAL C_Campo2 := PADR("automático se campo 1 ficar vazio",35)
-// *
-// @ 07,43,23,95 JANELA V_Janela  ;
-//    TITULO "Teste de entrada de dados" ;
-//    SUBTITULO "%T;com 'lista' e 'auto'" ;
-//    TECLAS {} AJUDA "T?????"
-// ESPECIALIZE V_Janela ENTRADA
-// *
-// @ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
-// @ V_Janela,01,02 SAY "Campo 2" GET C_Campo2 ;
-//     LISTA LISTA_CAMPO_2() AUTO EMPTY(C_Campo1) AJUDA "C?????"
+*
+**************************************
+STAT PROC TST_ENTRADA_DADOS_LISTA_AUTO
+**************************************
+LOCAL L_Ok, V_Janela
+LOCAL C_Campo1 := PADR("Campo 2 só terá 'drop-down'      ",35)
+LOCAL C_Campo2 := PADR("automático se campo 1 ficar vazio",35)
+*
+@ 07,43,23,95 JANELA V_Janela  ;
+   TITULO "Teste de entrada de dados" ;
+   SUBTITULO "%T;com 'lista' e 'auto'" ;
+   TECLAS {} AJUDA "T?????"
+ESPECIALIZE V_Janela ENTRADA
+*
+@ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
+@ V_Janela,01,02 SAY "Campo 2" GET C_Campo2 ;
+    LISTA LISTA_CAMPO_2() AUTO EMPTY(C_Campo1) AJUDA "C?????"
 
-// L_Ok := ATIVE(V_Janela)
-// DO WHILE L_Ok
-//    MOSTRAR("M15592","Entrada de dados finalizada com sucesso.")
-//    L_Ok := ATIVE(V_Janela)
-// ENDDO
-// DESTRUA V_Janela
-// *
-// ***********************
-// STAT FUNC LISTA_CAMPO_2
-// ***********************
-// LOCAL V_Janela, N_Opcao, C_Retorno
-// LOCAL V_Vetor := {"Retornar texto A",;
-//                   "Retornar texto B"}
+L_Ok := ATIVE(V_Janela)
+DO WHILE L_Ok
+   MOSTRAR("M15592","Entrada de dados finalizada com sucesso.")
+   L_Ok := ATIVE(V_Janela)
+ENDDO
+DESTRUA V_Janela
+*
+***********************
+STAT FUNC LISTA_CAMPO_2
+***********************
+LOCAL V_Janela, N_Opcao, C_Retorno
+LOCAL V_Vetor := {"Retornar texto A",;
+                  "Retornar texto B"}
 
-// CUA20 @ 15,80,25,105 JANELA V_Janela TITULO "'Drop-down'" SUBTITULO "%T" AJUDA "T?????"
-// *
-// CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES VETOR V_Vetor ;
-//    NAOROLAVERTICAL NAOROLAHORIZONTAL SEMGRADE SEMTOOLBAR AUTOCLOSE
-// *
-// N_Opcao := ATIVE(V_Janela)
-// *
-// IF N_Opcao # 0
-//    C_Retorno := PADR(V_Vetor[N_Opcao],35)
-// ELSE
-//    C_Retorno := NIL
-// ENDIF
-// *
-// RETURN C_Retorno
-// *
+CUA20 @ 15,80,25,105 JANELA V_Janela TITULO "'Drop-down'" SUBTITULO "%T" AJUDA "T?????"
+*
+CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES VETOR V_Vetor ;
+   NAOROLAVERTICAL NAOROLAHORIZONTAL SEMGRADE SEMTOOLBAR AUTOCLOSE
+*
+N_Opcao := ATIVE(V_Janela)
+*
+IF N_Opcao # 0
+   C_Retorno := PADR(V_Vetor[N_Opcao],35)
+ELSE
+   C_Retorno := NIL
+ENDIF
+*
+RETURN C_Retorno
+*
 // **************************************
 // STAT PROC TST_ENTRADA_DADOS_PEDEJAN
 // **************************************

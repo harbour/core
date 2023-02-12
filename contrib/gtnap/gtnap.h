@@ -147,7 +147,20 @@ extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockP
 
 extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId);
 
-extern void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t editableGlobalParamId, const uint32_t editableLocalParamId, const uint32_t mensParamId, const uint32_t validaParamId, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize, const char_t *type, PHB_ITEM getobj, const bool_t in_scroll_panel);
+extern void hb_gtnap_cualib_edit(
+                    const uint32_t editaBlockParamId,
+                    const uint32_t editableGlobalParamId,
+                    const uint32_t editableLocalParamId,
+                    const uint32_t mensParamId,
+                    const uint32_t listaParamId,
+                    const uint32_t autoParamId,
+                    const uint32_t validaParamId,
+                    const uint32_t nLin,
+                    const uint32_t nCol,
+                    const uint32_t nSize,
+                    const char_t *type,
+                    PHB_ITEM getobj,
+                    const bool_t in_scroll_panel);
 
 extern void hb_gtnap_cualib_toolbar(const uint32_t nPixelsImage);
 

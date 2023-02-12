@@ -124,6 +124,8 @@ struct _gtnap_cualib_object_t
     PHB_ITEM editableLocalCodeBlock;
     PHB_ITEM mensCodeBlock;
     PHB_ITEM validaCodeBlock;
+    PHB_ITEM listaCodeBlock;
+    PHB_ITEM autoCodeBlock;
     PHB_ITEM getobjItem;
     GuiComponent *component;
 };
@@ -1143,6 +1145,12 @@ static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t ind
     if (object->validaCodeBlock != NULL)
         hb_itemRelease(object->validaCodeBlock);
 
+    if (object->listaCodeBlock != NULL)
+        hb_itemRelease(object->listaCodeBlock);
+
+    if (object->autoCodeBlock != NULL)
+        hb_itemRelease(object->autoCodeBlock);
+
     if (object->getobjItem != NULL)
         hb_itemRelease(object->getobjItem);
 
@@ -1330,6 +1338,8 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->editableLocalCodeBlock = NULL;
     object->mensCodeBlock = NULL;
     object->validaCodeBlock = NULL;
+    object->listaCodeBlock = NULL;
+    object->autoCodeBlock = NULL;
     object->getobjItem = NULL;
     log_printf("Added object at: %.2f, %.2f w:%.2f h:%.2f", object->pos.x, object->pos.y, object->size.width, object->size.height);
 }
@@ -1791,7 +1801,20 @@ static void i_update_harbour_from_edit_text(const GtNapCualibObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t editableGlobalParamId, const uint32_t editableLocalParamId, const uint32_t mensParamId, const uint32_t validaParamId, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize,  const char_t *type, PHB_ITEM getobj, const bool_t in_scroll_panel)
+extern void hb_gtnap_cualib_edit(
+                    const uint32_t editaBlockParamId,
+                    const uint32_t editableGlobalParamId,
+                    const uint32_t editableLocalParamId,
+                    const uint32_t mensParamId,
+                    const uint32_t listaParamId,
+                    const uint32_t autoParamId,
+                    const uint32_t validaParamId,
+                    const uint32_t nLin,
+                    const uint32_t nCol,
+                    const uint32_t nSize,
+                    const char_t *type,
+                    PHB_ITEM getobj,
+                    const bool_t in_scroll_panel)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibObject *obj = NULL;
@@ -1800,6 +1823,8 @@ void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t edita
     PHB_ITEM editableLocalCodeBlock = NULL;
     PHB_ITEM mensCodeBlock = NULL;
     PHB_ITEM validaCodeBlock = NULL;
+    PHB_ITEM listaCodeBlock = NULL;
+    PHB_ITEM autoCodeBlock = NULL;
 
     Edit *edit = edit_create();
     // //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
@@ -1846,6 +1871,18 @@ void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t edita
         obj->validaCodeBlock = hb_itemNew(validaCodeBlock);
     else
         obj->validaCodeBlock = NULL;
+
+    listaCodeBlock = hb_param(listaParamId, HB_IT_BLOCK);
+    if (listaCodeBlock != NULL)
+        obj->listaCodeBlock = hb_itemNew(listaCodeBlock);
+    else
+        obj->listaCodeBlock = NULL;
+
+    autoCodeBlock = hb_param(autoParamId, HB_IT_BLOCK);
+    if (autoCodeBlock != NULL)
+        obj->autoCodeBlock = hb_itemNew(autoCodeBlock);
+    else
+        obj->autoCodeBlock = NULL;
 
     if (getobj != NULL)
         obj->getobjItem = hb_itemNew(getobj);
@@ -2594,6 +2631,41 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
             GtNapCualibObject *mes_obj = arrst_get(cuawin->gui_objects, cuawin->message_label_id, GtNapCualibObject);
             i_set_edit_message(cuaobj, mes_obj);
         }
+
+        // FRAN: TODO
+        // This block must be move to edit_OnFocus()
+        log_printf("cuaobj->autoCodeBlock: %p", cuaobj->autoCodeBlock);
+        if (cuaobj->autoCodeBlock != NULL)
+        {
+            bool_t lista = FALSE;
+
+            log_printf("BEFORE AUTO Function CALL");
+            {
+                PHB_ITEM retItem = hb_itemDo(cuaobj->autoCodeBlock, 0);
+                HB_TYPE type = HB_ITEM_TYPE(retItem);
+                cassert(type == HB_IT_LOGICAL);
+                lista = (bool_t)hb_itemGetL(retItem);
+                hb_itemRelease(retItem);
+            }
+            log_printf("END AUTO Function CALL: %d", lista);
+
+            cuawin->processing_invalid_date = TRUE;
+
+            if (lista == TRUE  && cuaobj->listaCodeBlock != NULL)
+            {
+                char_t temp[1024];
+                PHB_ITEM retItem2 = hb_itemDo(cuaobj->listaCodeBlock, 0);
+                HB_TYPE type2 = HB_ITEM_TYPE(retItem2);
+                cassert(type2 == HB_IT_STRING);
+                hb_itemCopyStrUTF8(retItem2, temp, sizeof(temp));
+                edit_text((Edit*)cuaobj->component, temp);
+                hb_itemRelease(retItem2);
+            }
+
+            cuawin->processing_invalid_date = FALSE;
+
+        }
+        // --------------------------------
 
         if (i_is_editable(cuaobj) == FALSE)
         {
