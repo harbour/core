@@ -645,6 +645,7 @@ IF SOB_MODO_GRAFICO()
             #DEFINE N_LarguraTela X_Info:CARGO[8]
             #DEFINE B_Edita X_Info:CARGO[3]
             #DEFINE VX_Edicao   VX_SubObj
+            #DEFINE B_Mess X_Info:CARGO[6]
 
             //X_Dado := EVAL(X_Info:BLOCK)
 
@@ -664,7 +665,7 @@ IF SOB_MODO_GRAFICO()
 
             //NAP_LOG("BEFORE NAP_CUALIB_EDIT")
 
-            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Info:BLOCK, X_Info:TYPE, B_Edita_Global, B_Edita, L_ScrollVertical)
+            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Info:BLOCK, X_Info:TYPE, B_Edita_Global, B_Edita, B_Mess, L_ScrollVertical)
             //NAP_LOG("BEFORE EDIT GET:")
             NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
 
@@ -672,6 +673,8 @@ IF SOB_MODO_GRAFICO()
             #UNDEF N_LarguraTela
             #UNDEF B_Edita
             #UNDEF VX_Edicao
+            #UNDEF B_Mess
+
         ELSE
             #DEFINE B_Expressao X_Info[3]
             #DEFINE C_Pict      X_Info[4]
@@ -732,6 +735,13 @@ IF SOB_MODO_GRAFICO()
         NAP_CUALIB_WINDOW_ENTER_TABSTOP()
         NAP_CUALIB_WINDOW_ARROWS_TABSTOP()
         NAP_CUALIB_WINDOW_STOPS_LAST_EDIT()
+
+        NAP_LOG("ENTRADA MESSAGE POS: " + hb_ntos(LinMess(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)))
+
+        NAP_CUALIB_ADD_MESSAGE_LABEL(LinMess(VX_Janela), Col1Livre(VX_Janela))
+        // SETPOS(LinMess(VX_Janela),Col1Livre(VX_Janela))      // mostrar
+        // DISPOUT(PADR(EVAL(B_Mess),N_LargJanela))             // mensagem
+
 
         IF L_ScrollVertical
             NAP_LOG("EDITS WITH SCROLL")

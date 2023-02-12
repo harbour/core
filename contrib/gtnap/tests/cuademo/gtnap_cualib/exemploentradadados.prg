@@ -62,8 +62,8 @@ ATIVE(V_Janela)
 // STAT PROC TST_ENTRADA_DADOS_COM_ROLAMENTO()
 // RETURN
 
-STAT PROC TST_ENTRADA_DADOS_CORES_MENSAGENS()
-RETURN
+// STAT PROC TST_ENTRADA_DADOS_CORES_MENSAGENS()
+// RETURN
 
 STAT PROC TST_ENTRADA_DADOS_VALID()
 RETURN
@@ -238,31 +238,31 @@ DO WHILE L_Ok
 ENDDO
 DESTRUA V_Janela
 *
-// *******************************************
-// STAT PROC TST_ENTRADA_DADOS_CORES_MENSAGENS
-// *******************************************
-// LOCAL L_Ok, V_Janela
-// LOCAL C_Campo1 := "Valor 1....."
-// LOCAL C_Campo2 := "Valor 2....."
-// *
-// @ 07,53,20,80 JANELA V_Janela  ;
-//    TITULO "Teste de entrada dados" ;
-//    SUBTITULO "%T;com rolamento" ;
-//    TECLAS {} AJUDA "T?????"
-// ESPECIALIZE V_Janela ENTRADA ROLAVERTICAL
+*******************************************
+STAT PROC TST_ENTRADA_DADOS_CORES_MENSAGENS
+*******************************************
+LOCAL L_Ok, V_Janela
+LOCAL C_Campo1 := "Valor 1....."
+LOCAL C_Campo2 := "Valor 2....."
+*
+@ 07,53,20,80 JANELA V_Janela  ;
+   TITULO "Teste de entrada dados" ;
+   SUBTITULO "%T;com rolamento" ;
+   TECLAS {} AJUDA "T?????"
+ESPECIALIZE V_Janela ENTRADA ROLAVERTICAL
 
-// @ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 MESSAGE "Estou no campo 1" AJUDA "C?????"
-// @ V_Janela,01,10 SAY C_Campo1
-// @ V_Janela,02,02 SAY "Campo 2" GET C_Campo2 COLOR "+" MESSAGE "Estou no campo 2" AJUDA "C?????"
-// @ V_Janela,03,10 SAY C_Campo2 COLOR "+"
+@ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 MESSAGE "Estou no campo 1" AJUDA "C?????"
+@ V_Janela,01,10 SAY C_Campo1
+@ V_Janela,02,02 SAY "Campo 2" GET C_Campo2 COLOR "+" MESSAGE "Estou no campo 2" AJUDA "C?????"
+@ V_Janela,03,10 SAY C_Campo2 COLOR "+"
 
-// L_Ok := ATIVE(V_Janela)
-// DO WHILE L_Ok
-//    MOSTRAR("M15598","Entrada de dados finalizada com sucesso.")
-//    L_Ok := ATIVE(V_Janela)
-// ENDDO
-// DESTRUA V_Janela
-// *
+L_Ok := ATIVE(V_Janela)
+DO WHILE L_Ok
+   MOSTRAR("M15598","Entrada de dados finalizada com sucesso.")
+   L_Ok := ATIVE(V_Janela)
+ENDDO
+DESTRUA V_Janela
+*
 // *********************************
 // STAT PROC TST_ENTRADA_DADOS_VALID
 // *********************************

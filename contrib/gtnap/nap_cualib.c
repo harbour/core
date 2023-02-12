@@ -113,6 +113,15 @@ HB_FUNC( NAP_CUALIB_WINDOW_STOPS_LAST_EDIT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CUALIB_ADD_MESSAGE_LABEL )
+{
+    int32_t N_LinIni = hb_parni(1);
+    int32_t N_ColIni = hb_parni(2);
+    hb_gtnap_cualib_add_message_label(N_LinIni, N_ColIni);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_CUALIB_WINDOW_SCROLL_PANEL )
 {
     int32_t N_LinIni = hb_parni(1);
@@ -227,8 +236,8 @@ HB_FUNC( NAP_CUALIB_EDIT )
     uint32_t nCol = hb_parni(2);
     uint32_t nSize = hb_parni(3);
     const char_t *type = hb_gtnap_parText(5);
-    bool_t in_scroll = (bool_t)hb_parl(8);
-    hb_gtnap_cualib_edit(4, 6, 7, nLin, nCol, nSize, type, in_scroll);
+    bool_t in_scroll = (bool_t)hb_parl(9);
+    hb_gtnap_cualib_edit(4, 6, 7, 8, nLin, nCol, nSize, type, in_scroll);
 }
 
 /*---------------------------------------------------------------------------*/

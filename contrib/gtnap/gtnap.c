@@ -122,6 +122,7 @@ struct _gtnap_cualib_object_t
     PHB_ITEM editCodeBlock;
     PHB_ITEM editableGlobalCodeBlock;
     PHB_ITEM editableLocalCodeBlock;
+    PHB_ITEM mensCodeBlock;
     GuiComponent *component;
 };
 
@@ -156,6 +157,7 @@ struct _gtnap_cualib_window_t
     bool_t is_closed_by_esc;
     bool_t focus_by_previous;
     bool_t processing_invalid_date;
+    uint32_t message_label_id;
     Window *window;
     S2Df panel_size;
     Panel *panel;
@@ -1133,6 +1135,9 @@ static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t ind
     if (object->editableLocalCodeBlock != NULL)
         hb_itemRelease(object->editableLocalCodeBlock);
 
+    if (object->mensCodeBlock != NULL)
+        hb_itemRelease(object->mensCodeBlock);
+
     arrst_delete(cuawin->gui_objects, index, NULL, GtNapCualibObject);
 }
 
@@ -1315,6 +1320,7 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->editCodeBlock = NULL;
     object->editableGlobalCodeBlock = NULL;
     object->editableLocalCodeBlock = NULL;
+    object->mensCodeBlock = NULL;
     log_printf("Added object at: %.2f, %.2f w:%.2f h:%.2f", object->pos.x, object->pos.y, object->size.width, object->size.height);
 }
 
@@ -1394,6 +1400,7 @@ uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, 
     cuawin->is_closed_by_esc = FALSE;
     cuawin->focus_by_previous = FALSE;
     cuawin->processing_invalid_date = FALSE;
+    cuawin->message_label_id = UINT32_MAX;
     cuawin->gui_objects = arrst_create(GtNapCualibObject);
     cuawin->callbacks = arrpt_create(GtNapCallback);
     cuawin->panel_size.width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni + 1));
@@ -1432,6 +1439,17 @@ void hb_gtnap_cualib_window_stops_last_edit(void)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cuawin->stops_last_edit = TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_ColIni)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    uint32_t id = arrst_size(cuawin->gui_objects, GtNapCualibObject);
+    i_add_label_object(N_ColIni - cuawin->N_ColIni, N_LinIni - cuawin->N_LinIni, "--MENS--", 0, FALSE, GTNAP_GLOBAL, cuawin);
+    cassert(cuawin->message_label_id == UINT32_MAX);
+    cuawin->message_label_id = id;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1621,6 +1639,38 @@ static void i_set_label_text(GtNapCualibObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_set_edit_message(GtNapCualibObject *obj, GtNapCualibObject *mes_obj)
+{
+    cassert_no_null(obj);
+    cassert_no_null(mes_obj);
+    cassert(obj->type == ekOBJ_EDIT);
+    cassert(mes_obj->type == ekOBJ_LABEL);
+    if (obj->mensCodeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(obj->mensCodeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+
+        if (type == HB_IT_STRING)
+        {
+            char_t buffer[1024];
+            uint32_t len;
+            hb_itemCopyStrUTF8( retItem, (char*)buffer, (HB_SIZE)sizeof(buffer));
+            len = unicode_nchars(buffer, ekUTF8);
+            mes_obj->size.width = (real32_t)(len * GTNAP_GLOBAL->cell_x_size);
+            _component_set_frame(mes_obj->component, &mes_obj->pos, &mes_obj->size);
+            label_text((Label*)mes_obj->component, buffer);
+        }
+        else
+        {
+            cassert_msg(FALSE, "Unkown type in i_set_edit_message");
+        }
+
+        hb_itemRelease(retItem);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
@@ -1731,13 +1781,14 @@ static void i_update_harbour_from_edit_text(const GtNapCualibObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t editableGlobalParamId, const uint32_t editableLocalParamId, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize,  const char_t *type, const bool_t in_scroll_panel)
+void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t editableGlobalParamId, const uint32_t editableLocalParamId, const uint32_t mensParamId, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize,  const char_t *type, const bool_t in_scroll_panel)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibObject *obj = NULL;
     PHB_ITEM editCodeBlock = NULL;
     PHB_ITEM editableGlobalCodeBlock = NULL;
     PHB_ITEM editableLocalCodeBlock = NULL;
+    PHB_ITEM mensCodeBlock = NULL;
 
     Edit *edit = edit_create();
     // //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
@@ -1772,6 +1823,12 @@ void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t edita
         obj->editableLocalCodeBlock = hb_itemNew(editableLocalCodeBlock);
     else
         obj->editableLocalCodeBlock = NULL;
+
+    mensCodeBlock = hb_param(mensParamId, HB_IT_BLOCK);
+    if (mensCodeBlock != NULL)
+        obj->mensCodeBlock = hb_itemNew(mensCodeBlock);
+    else
+        obj->mensCodeBlock = NULL;
 
     if (str_equ_c(type, "C") == TRUE)
         obj->dtype = ekTYPE_CHARACTER;
@@ -2490,6 +2547,14 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
     {
         const EvText *p = event_params(e, EvText);
         EvTextFilter *res = event_result(e, EvTextFilter);
+
+        // FRAN: TODO
+        // This block must be move to edit_OnFocus()
+        if (cuawin->message_label_id != UINT32_MAX)
+        {
+            GtNapCualibObject *mes_obj = arrst_get(cuawin->gui_objects, cuawin->message_label_id, GtNapCualibObject);
+            i_set_edit_message(cuaobj, mes_obj);
+        }
 
         if (i_is_editable(cuaobj) == FALSE)
         {
