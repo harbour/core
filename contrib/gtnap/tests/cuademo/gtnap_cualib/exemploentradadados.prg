@@ -65,8 +65,8 @@ ATIVE(V_Janela)
 // STAT PROC TST_ENTRADA_DADOS_CORES_MENSAGENS()
 // RETURN
 
-STAT PROC TST_ENTRADA_DADOS_VALID()
-RETURN
+// STAT PROC TST_ENTRADA_DADOS_VALID()
+// RETURN
 
 STAT PROC TST_ENTRADA_DADOS_LISTA_AUTO()
 RETURN
@@ -263,54 +263,55 @@ DO WHILE L_Ok
 ENDDO
 DESTRUA V_Janela
 *
-// *********************************
-// STAT PROC TST_ENTRADA_DADOS_VALID
-// *********************************
-// LOCAL L_Ok, V_Janela
-// LOCAL C_Campo1 := "            "
-// LOCAL C_Campo2 := "            "
-// LOCAL C_Campo3 := "            "
-// LOCAL C_Memo   := "Texto do memo"
-// *
-// ALARME("M11111","Tela incompleto, pois ainda não tem o campo memo...")
-// *
-// @ 06,53,21,80 JANELA V_Janela  ;
-//    TITULO "Teste de entrada dados" ;
-//    SUBTITULO "%T;com valids e memo" ;
-//    AJUDA "T99999"
-// ESPECIALIZE V_Janela ENTRADA ROLAVERTICAL
+*********************************
+STAT PROC TST_ENTRADA_DADOS_VALID
+*********************************
+LOCAL L_Ok, V_Janela
+LOCAL C_Campo1 := "            "
+LOCAL C_Campo2 := "            "
+LOCAL C_Campo3 := "            "
+LOCAL C_Memo   := "Texto do memo"
+*
+ALARME("M11111","Tela incompleto, pois ainda não tem o campo memo...")
+*
+@ 06,53,21,80 JANELA V_Janela  ;
+   TITULO "Teste de entrada dados" ;
+   SUBTITULO "%T;com valids e memo" ;
+   AJUDA "T99999"
+ESPECIALIZE V_Janela ENTRADA ROLAVERTICAL
 
-// @ V_Janela,00,10 SAY "Texto a"
-// @ V_Janela,01,02 SAY "Campo 1" GET C_Campo1 ;
-//      VALID VALIDA_CAMPO("1",C_Campo1) AJUDA "C77777"
-// @ V_Janela,02,10 SAY "Texto b"
-// @ V_Janela,03,02 SAY "Campo 2" GET C_Campo2 ;
-//      WHEN PREENCHE_CAMPO_02(@C_Campo2) VALID VALIDA_CAMPO("2",C_Campo2)  AJUDA "C88888"
-// @ V_Janela,04,10 SAY "Texto c"
-// @ V_Janela,05,02 SAY "Campo 3" GET C_Campo3 ;
-//      VALID VALIDA_CAMPO("3",C_Campo3)  AJUDA "C99999"
-// @ V_Janela,06,10 SAY "Texto d"
-// *
-// ATIVE(V_Janela)
-// DESTRUA V_Janela
-// *
-// ***************************
-// STAT FUNC PREENCHE_CAMPO_02(C_Campo2)
-// ***************************
-// IF EMPTY(C_Campo2)
-//    C_Campo2 := REPL("2",LEN(C_Campo2))
-// ENDIF
-// RETURN .T.
-// *
-// **********************
-// STAT FUNC VALIDA_CAMPO (C_Titulo_Campo,C_Conteudo_Campo)
-// **********************
-// LOCAL L_OK := .T.
-// IF EMPTY(C_Conteudo_Campo)
-//    L_OK := .F.
-//    ALARME("M22222","Campo "+C_Titulo_Campo+" vazio")
-// ENDIF
-// RETURN L_OK
+@ V_Janela,00,10 SAY "Texto a"
+@ V_Janela,01,02 SAY "Campo 1" GET C_Campo1 ;
+     VALID VALIDA_CAMPO("1",C_Campo1) AJUDA "C77777"
+@ V_Janela,02,10 SAY "Texto b"
+@ V_Janela,03,02 SAY "Campo 2" GET C_Campo2 ;
+     WHEN PREENCHE_CAMPO_02(@C_Campo2) VALID VALIDA_CAMPO("2",C_Campo2)  AJUDA "C88888"
+@ V_Janela,04,10 SAY "Texto c"
+@ V_Janela,05,02 SAY "Campo 3" GET C_Campo3 ;
+     VALID VALIDA_CAMPO("3",C_Campo3)  AJUDA "C99999"
+@ V_Janela,06,10 SAY "Texto d"
+*
+ATIVE(V_Janela)
+DESTRUA V_Janela
+*
+***************************
+STAT FUNC PREENCHE_CAMPO_02(C_Campo2)
+***************************
+IF EMPTY(C_Campo2)
+   C_Campo2 := REPL("2",LEN(C_Campo2))
+ENDIF
+RETURN .T.
+*
+**********************
+STAT FUNC VALIDA_CAMPO (C_Titulo_Campo,C_Conteudo_Campo)
+**********************
+LOCAL L_OK := .T.
+IF EMPTY(C_Conteudo_Campo)
+   L_OK := .F.
+   NAP_LOG("OJO!!!! VALIDA_CAMPO")
+   ALARME("M22222","Campo "+C_Titulo_Campo+" vazio")
+ENDIF
+RETURN L_OK
 // *
 // **************************************
 // STAT PROC TST_ENTRADA_DADOS_LISTA_AUTO

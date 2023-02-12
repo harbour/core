@@ -665,7 +665,7 @@ IF SOB_MODO_GRAFICO()
 
             //NAP_LOG("BEFORE NAP_CUALIB_EDIT")
 
-            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Info:BLOCK, X_Info:TYPE, B_Edita_Global, B_Edita, B_Mess, L_ScrollVertical)
+            NAP_CUALIB_EDIT(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), N_LarguraVar, X_Info:BLOCK, X_Info:TYPE, B_Edita_Global, B_Edita, B_Mess, X_Info:POSTBLOCK, X_Info, L_ScrollVertical)
             //NAP_LOG("BEFORE EDIT GET:")
             NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
 
