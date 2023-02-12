@@ -118,7 +118,7 @@ ESPECIALIZE V_Janela ENTRADA
 
 L_Ok := ATIVE(V_Janela)
 DO WHILE L_Ok
-   MOSTRAR("M15586","Entrada de dados finalizada com sucesso.")
+   MOSTRAR("M15586","Entrada de dados finalizada com sucesso:; C_Campo1: '" + C_Campo1 + "';C_Campo2: '" + C_Campo2 + "'")
    L_Ok := ATIVE(V_Janela)
 ENDDO
 DESTRUA V_Janela

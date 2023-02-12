@@ -119,7 +119,7 @@ struct _gtnap_cualib_object_t
     bool_t is_last_edit;
     bool_t is_editable;
     bool_t in_scroll_panel;
-    String *text;
+    PHB_ITEM editCodeBlock;
     GuiComponent *component;
 };
 
@@ -1023,6 +1023,7 @@ bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e)
 {
     bool_t ret = FALSE;
     cassert_no_null(callback);
+    unref(e);
     if (callback->codeBlock != NULL)
     {
         PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
@@ -1117,7 +1118,10 @@ static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t ind
         _component_detach_from_panel((GuiComponent*)cuawin->panel, object->component);
 
     _component_destroy(&object->component);
-    str_destopt(&object->text);
+
+    if (object->editCodeBlock != NULL)
+        hb_itemRelease(object->editCodeBlock);
+
     arrst_delete(cuawin->gui_objects, index, NULL, GtNapCualibObject);
 }
 
@@ -1297,7 +1301,7 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->is_last_edit = FALSE;
     object->is_editable = FALSE;
     object->in_scroll_panel = in_scroll_panel;
-    object->text = NULL;
+    object->editCodeBlock = NULL;
     log_printf("Added object at: %.2f, %.2f w:%.2f h:%.2f", object->pos.x, object->pos.y, object->size.width, object->size.height);
 }
 
@@ -1574,30 +1578,120 @@ void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize,  const char_t *type, const bool_t editable, const bool_t in_scroll_panel)
+static void i_get_edit_text(const GtNapCualibObject *obj, char_t *buffer, const uint32_t size)
+{
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_EDIT);
+
+    if (obj->editCodeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(obj->editCodeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+
+        if (type == HB_IT_STRING)
+        {
+            cassert(obj->dtype == ekTYPE_CHARACTER);
+            hb_itemCopyStrUTF8( retItem, (char*)buffer, (HB_SIZE)size);
+        }
+        else if (type == HB_IT_DATE)
+        {
+            char date[16];
+            char temp[16];
+            cassert(obj->dtype == ekTYPE_DATE);
+            hb_itemGetDS(retItem, date);
+            hb_dateFormat(date, temp, "DD/MM/YYYY");
+            str_copy_c(buffer, size, temp);
+        }
+        else
+        {
+            cassert_msg(FALSE, "Unknown Type in i_set_edit_text");
+            str_copy_c(buffer, size, "");
+        }
+
+        hb_itemRelease(retItem);
+    }
+    else
+    {
+        str_copy_c(buffer, size, "");
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_set_edit_text(const GtNapCualibObject *obj)
+{
+    char_t buffer[1024];
+    cassert_no_null(obj);
+    i_get_edit_text(obj, buffer, sizeof(buffer));
+    edit_text((Edit*)obj->component, buffer);
+}
+
+/*---------------------------------------------------------------------------*/
+
+/* Run the codeBlock that updates after a text entry in EditBox */
+static void i_update_harbour_from_edit_text(const GtNapCualibObject *obj)
+{
+    cassert_no_null(obj);
+    if (obj->editCodeBlock != NULL)
+    {
+        PHB_ITEM pItem = NULL;
+        const char_t *text = edit_get_text((Edit*)obj->component);
+
+        if (obj->dtype == ekTYPE_CHARACTER)
+        {
+            String *u1252 = gtconvert_UTF8_to_1252(text);
+            pItem = hb_itemPutC(NULL, tc(u1252));
+            str_destroy(&u1252);
+        }
+        else if (obj->dtype == ekTYPE_DATE)
+        {
+            pItem = hb_itemPutDS(NULL, text);
+        }
+        else
+        {
+            cassert_msg(FALSE, "Unknown data type in i_update_harbour_from_edit_text");
+        }
+
+        if (pItem != NULL)
+        {
+            PHB_ITEM retItem = hb_itemDo(obj->editCodeBlock, 1, pItem);
+            hb_itemRelease(pItem);
+            hb_itemRelease(retItem);
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_edit(const uint32_t editaBlockParamId, const uint32_t nLin, const uint32_t nCol, const uint32_t nSize,  const char_t *type, const bool_t editable, const bool_t in_scroll_panel)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibObject *obj = NULL;
+    PHB_ITEM editCodeBlock = NULL;
     Edit *edit = edit_create();
-    String *ctext = gtconvert_1252_to_UTF8(text);
     // //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
     S2Df size;
     cassert_no_null(cuawin);
     // //_component_set_tag((GuiComponent*)button, nTag);
-    edit_text(edit, tc(ctext));
     edit_font(edit, GTNAP_GLOBAL->global_font);
     edit_bgcolor_focus(edit, kCOLOR_CYAN);
     //edit_editable(edit, editable);
     size.width = (real32_t)((nSize + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)(1 * GTNAP_GLOBAL->cell_y_size);
-    log_printf("Added EDIT (%s) into CUALIB Window: %d, %d, %d", tc(ctext), nLin, nCol, nSize);
     i_add_object(ekOBJ_EDIT, nCol - cuawin->N_ColIni, nLin - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)edit, cuawin);
 
     obj = arrst_last(cuawin->gui_objects, GtNapCualibObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_EDIT);
+
+    // TODO: With function
     obj->is_editable = editable;
-    obj->text = ctext;
+
+    editCodeBlock = hb_param(editaBlockParamId, HB_IT_BLOCK);
+    if (editCodeBlock != NULL)
+        obj->editCodeBlock = hb_itemNew(editCodeBlock);
+    else
+        obj->editCodeBlock = NULL;
 
     if (str_equ_c(type, "C") == TRUE)
         obj->dtype = ekTYPE_CHARACTER;
@@ -1608,6 +1702,12 @@ void hb_gtnap_cualib_edit(const char_t *text, const uint32_t nLin, const uint32_
         obj->dtype = ENUM_MAX(datatype_t);
         cassert(FALSE);
     }
+
+    i_set_edit_text(obj);
+
+    log_printf("Added EDIT (%s) into CUALIB Window: %d, %d, %d", edit_get_text((Edit*)obj->component), nLin, nCol, nSize);
+
+
     //str_destroy(&ctext);
 
     // if (listener != NULL)
@@ -2147,47 +2247,62 @@ static void i_OnPreviousTabstop(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static GtNapCualibObject *i_cualib_obj(ArrSt(GtNapCualibObject) *objects, const GuiComponent *component)
+{
+    arrst_foreach(obj, objects, GtNapCualibObject)
+        if (obj->component == component)
+            return obj;
+    arrst_end();
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
 {
-    /* The window must stop modal when the last input loses the focus */
+    GtNapCualibObject *cuaobj = NULL;
     cassert_no_null(cuawin);
 
-    /* If user have pressed the [ESC] key, we left the stop for that event */
-    if (cuawin->is_closed_by_esc == FALSE)
+    /* Update Harbour with the content of the EditBox */
+    cuaobj = i_cualib_obj(cuawin->gui_objects, (GuiComponent*)event_sender(e, Edit));
+    cassert(cuaobj->type == ekOBJ_EDIT);
+
+    i_update_harbour_from_edit_text(cuaobj);
+
+    /* The window must stop modal when the last input loses the focus */
+    if (cuawin->stops_last_edit == TRUE)
     {
-        /* If user have navigated with [UP] button, the window must continue open */
-        if (cuawin->focus_by_previous == FALSE)
+        /* If user have pressed the [ESC] key, we left the stop for that event */
+        if (cuawin->is_closed_by_esc == FALSE)
         {
-            Edit *edit = event_sender(e, Edit);
-            arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
-                if (obj->type == ekOBJ_EDIT && obj->is_last_edit == TRUE)
+            /* If user have navigated with [UP] button, the window must continue open */
+            if (cuawin->focus_by_previous == FALSE)
+            {
+                /* The last editbox has lost the focus --> Close the window */
+                if (cuaobj->is_last_edit == TRUE)
                 {
-                    /* The last editbox has lost the focus --> Close the window */
-                    if (edit == (Edit*)obj->component)
+                    bool_t close = TRUE;
+
+                    /* We have asociated a confirmation block */
+                    if (cuawin->confirmaCodeBlock != NULL)
                     {
-                        bool_t close = TRUE;
-
-                        /* We have asociated a confirmation block */
-                        if (cuawin->confirmaCodeBlock != NULL)
-                        {
-                            PHB_ITEM retItem = hb_itemDo(cuawin->confirmaCodeBlock, 0);
-                            HB_TYPE type = HB_ITEM_TYPE(retItem);
-                            cassert(type == HB_IT_LOGICAL);
-                            close = (bool_t)hb_itemGetL(retItem);
-                            hb_itemRelease(retItem);
-                        }
-
-                        if (close == TRUE)
-                        {
-                            if (cuawin->processing_invalid_date == TRUE)
-                                close = FALSE;
-                        }
-
-                        if (close == TRUE)
-                            window_stop_modal(cuawin->window, 5000);
+                        PHB_ITEM retItem = hb_itemDo(cuawin->confirmaCodeBlock, 0);
+                        HB_TYPE type = HB_ITEM_TYPE(retItem);
+                        cassert(type == HB_IT_LOGICAL);
+                        close = (bool_t)hb_itemGetL(retItem);
+                        hb_itemRelease(retItem);
                     }
+
+                    if (close == TRUE)
+                    {
+                        if (cuawin->processing_invalid_date == TRUE)
+                            close = FALSE;
+                    }
+
+                    if (close == TRUE)
+                        window_stop_modal(cuawin->window, 5000);
                 }
-            arrst_end();
+            }
         }
     }
 
@@ -2262,7 +2377,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
         if (cuaobj->is_editable == FALSE)
         {
             /* If editBox is not editable --> Restore the original text */
-            str_copy_c(res->text, sizeof(res->text), tc(cuaobj->text));
+            i_get_edit_text(cuaobj, res->text, sizeof(res->text));
             if (p->cpos > 0)
                 res->cpos = p->cpos - 1;
             else
@@ -2447,7 +2562,7 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
             window_hotkey(cuawin->window, ekKEY_DOWN, 0, listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
         }
 
-        if (cuawin->stops_last_edit == TRUE)
+        //if (cuawin->stops_last_edit == TRUE)
         {
             GtNapCualibObject *last_edit = NULL;
             arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)

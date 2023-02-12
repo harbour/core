@@ -226,13 +226,10 @@ HB_FUNC( NAP_CUALIB_EDIT )
     uint32_t nLin = hb_parni(1);
     uint32_t nCol = hb_parni(2);
     uint32_t nSize = hb_parni(3);
-    // FRAN!!!! Cache of text data
-    String *text = str_c(hb_gtnap_parText(4));
     const char_t *type = hb_gtnap_parText(5);
     bool_t editable = (bool_t)hb_parl(6);
     bool_t in_scroll = (bool_t)hb_parl(7);
-    hb_gtnap_cualib_edit(tc(text), nLin, nCol, nSize, type, editable, in_scroll);
-    str_destroy(&text);
+    hb_gtnap_cualib_edit(4, nLin, nCol, nSize, type, editable, in_scroll);
 }
 
 /*---------------------------------------------------------------------------*/
