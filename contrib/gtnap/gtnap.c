@@ -767,7 +767,7 @@ const char_t *hb_gtnap_vector_eval_field(GtNapVector *vector, const uint32_t fie
     {
         if (item->selected == TRUE)
         {
-            // » in UTF8
+            // ï¿½ in UTF8
             vector->temp[0] = 194;
             vector->temp[1] = 187;
             vector->temp[2] = 0;
@@ -1711,7 +1711,7 @@ void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32
         obj->labelCodeBlock = NULL;
     //log_printf("AFTER LABEL CODE  BLOCK");
 
-    i_set_label_text(obj);
+    //i_set_label_text(obj);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2330,6 +2330,11 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *main_pan
 
             object->pos = pos;
             _component_set_frame(object->component, &pos, &object->size);
+
+            // FRAN: TODO! IMPROVe
+            if (object->type == ekOBJ_LABEL)
+                i_set_label_text(object);
+
         }
     arrst_end();
 }
