@@ -1,4 +1,14 @@
 /*
+ * NAppGUI Cross-platform C SDK
+ * 2015-2023 Francisco Garcia Collado
+ * MIT Licence
+ * https://nappgui.com/en/legal/license.html
+ *
+ * File: guictx.hxx
+ *
+ */
+
+/*
    The NAppGUI Gui library knows how to compose and manage dynamic graphical
    user interfaces. But it does NOT know how to draw the elements (widgets)
    nor how to get the user events (keyboard, mouse). The drawing and event

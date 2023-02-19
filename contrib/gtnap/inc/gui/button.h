@@ -1,3 +1,14 @@
+/*
+ * NAppGUI Cross-platform C SDK
+ * 2015-2023 Francisco Garcia Collado
+ * MIT Licence
+ * https://nappgui.com/en/legal/license.html
+ *
+ * File: button.h
+ * https://nappgui.com/en/gui/button.html
+ *
+ */
+
 /* Button */
 
 #include "gui.hxx"

@@ -30,4 +30,5 @@
 #include "setst.h"
 #include "stream.h"
 #include "strings.h"
+#include "tfilter.h"
 

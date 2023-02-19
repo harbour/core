@@ -124,6 +124,7 @@ _draw2d_api void guictx_append_button_manager_imp(
                         FPtr_gctx_set_cptr func_button_set_image,
                         FPtr_gctx_set_enum func_button_set_state,
                         FPtr_gctx_get_enum func_button_get_state,
+                        FPtr_gctx_set_real32 func_button_set_vpadding,
                         FPtr_gctx_bounds2 func_button_bounds,
                         FPtr_gctx_set_ptr func_attach_button_to_panel,
                         FPtr_gctx_set_ptr func_detach_button_from_panel,
@@ -144,6 +145,7 @@ _draw2d_api void guictx_append_button_manager_imp(
                         func_button_set_image,\
                         func_button_set_state,\
                         func_button_get_state,\
+                        func_button_set_vpadding,\
                         func_button_bounds,\
                         func_attach_button_to_panel,\
                         func_detach_button_from_panel,\
@@ -164,6 +166,7 @@ _draw2d_api void guictx_append_button_manager_imp(
         FUNC_CHECK_GCTX_SET_CPTR(func_button_set_image, button_type, image_type),\
         FUNC_CHECK_GCTX_SET_ENUM(func_button_set_state, button_type, gui_state_t),\
         FUNC_CHECK_GCTX_GET_ENUM(func_button_get_state, button_type, gui_state_t),\
+        FUNC_CHECK_GCTX_SET_REAL32(func_button_set_vpadding, button_type),\
         FUNC_CHECK_GCTX_BOUNDS2(func_button_bounds, button_type),\
         FUNC_CHECK_GCTX_SET_PTR(func_attach_button_to_panel, button_type, panel_type),\
         FUNC_CHECK_GCTX_SET_PTR(func_detach_button_from_panel, button_type, panel_type),\
@@ -184,6 +187,7 @@ _draw2d_api void guictx_append_button_manager_imp(
                         (FPtr_gctx_set_cptr)func_button_set_image,\
                         (FPtr_gctx_set_enum)func_button_set_state,\
                         (FPtr_gctx_get_enum)func_button_get_state,\
+                        (FPtr_gctx_set_real32)func_button_set_vpadding,\
                         (FPtr_gctx_bounds2)func_button_bounds,\
                         (FPtr_gctx_set_ptr)func_attach_button_to_panel,\
                         (FPtr_gctx_set_ptr)func_detach_button_from_panel,\
@@ -288,6 +292,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
                         FPtr_gctx_set_bool func_edit_set_autoselect,
                         FPtr_gctx_set_uint32 func_edit_set_text_color,
                         FPtr_gctx_set_uint32 func_edit_set_bg_color,
+                        FPtr_gctx_set_real32 func_edit_set_vpadding,
                         FPtr_gctx_bounds4 func_edit_bounds,
                         FPtr_gctx_set_ptr func_attach_edit_to_panel,
                         FPtr_gctx_set_ptr func_detach_edit_from_panel,
@@ -312,6 +317,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
                         func_edit_set_autoselect,\
                         func_edit_set_text_color,\
                         func_edit_set_bg_color,\
+                        func_edit_set_vpadding,\
                         func_edit_bounds,\
                         func_attach_edit_to_panel,\
                         func_detach_edit_from_panel,\
@@ -336,6 +342,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
         FUNC_CHECK_GCTX_SET_BOOL(func_edit_set_autoselect, edit_type),\
         FUNC_CHECK_GCTX_SET_UINT32(func_edit_set_text_color, edit_type),\
         FUNC_CHECK_GCTX_SET_UINT32(func_edit_set_bg_color, edit_type),\
+        FUNC_CHECK_GCTX_SET_REAL32(func_edit_set_vpadding, edit_type),\
         FUNC_CHECK_GCTX_BOUNDS4(func_edit_bounds, edit_type),\
         FUNC_CHECK_GCTX_SET_PTR(func_attach_edit_to_panel, edit_type, panel_type),\
         FUNC_CHECK_GCTX_SET_PTR(func_detach_edit_from_panel, edit_type, panel_type),\
@@ -360,6 +367,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
                         (FPtr_gctx_set_bool)func_edit_set_autoselect,\
                         (FPtr_gctx_set_uint32)func_edit_set_text_color,\
                         (FPtr_gctx_set_uint32)func_edit_set_bg_color,\
+                        (FPtr_gctx_set_real32)func_edit_set_vpadding,\
                         (FPtr_gctx_bounds4)func_edit_bounds,\
                         (FPtr_gctx_set_ptr)func_attach_edit_to_panel,\
                         (FPtr_gctx_set_ptr)func_detach_edit_from_panel,\

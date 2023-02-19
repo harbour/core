@@ -1096,6 +1096,8 @@ static real32_t i_button_vpadding(void)
 /* Change this value to make edits higher */
 static real32_t i_edit_vpadding(void)
 {
+    if (osbs_platform() == ekWINDOWS)
+        return 4;
     return 0;
 }
 

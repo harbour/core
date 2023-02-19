@@ -33,6 +33,10 @@ _core_api bool_t date_between(const Date *date, const Date *from, const Date *to
 
 _core_api bool_t date_is_null(const Date *date);
 
+_core_api bool_t date_is_valid(const Date *date);
+
+_core_api week_day_t date_weekday(const Date *date);
+
 _core_api String *date_DD_MM_YYYY_HH_MM_SS(const Date *date);
 
 _core_api String *date_YYYY_MM_DD_HH_MM_SS(const Date *date);
