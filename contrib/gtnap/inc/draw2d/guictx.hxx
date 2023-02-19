@@ -1,14 +1,4 @@
 /*
- * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
- * MIT Licence
- * https://nappgui.com/en/legal/license.html
- *
- * File: guictx.hxx
- *
- */
-
-/*
    The NAppGUI Gui library knows how to compose and manage dynamic graphical
    user interfaces. But it does NOT know how to draw the elements (widgets)
    nor how to get the user events (keyboard, mouse). The drawing and event
@@ -326,6 +316,7 @@ typedef enum _window_flag_t
     ekWINDOW_RESIZE         = 1 << 5,
     ekWINDOW_RETURN         = 1 << 6,
     ekWINDOW_ESC            = 1 << 7,
+    ekWINDOW_OFFSCREEN      = 1 << 8,
     ekWINDOW_STD            = ekWINDOW_TITLE | ekWINDOW_MIN | ekWINDOW_CLOSE,
     ekWINDOW_STDRES         = ekWINDOW_STD | ekWINDOW_MAX | ekWINDOW_RESIZE
 } window_flag_t;
@@ -611,6 +602,7 @@ struct _guictx_t
     FPtr_gctx_set_cptr func_button_set_image;
     FPtr_gctx_set_enum func_button_set_state;
     FPtr_gctx_get_enum func_button_get_state;
+    FPtr_gctx_set_real32 func_button_set_vpadding;
     FPtr_gctx_bounds2 func_button_bounds;
 
     /*! <PopUp> */
@@ -634,6 +626,7 @@ struct _guictx_t
     FPtr_gctx_set_bool func_edit_set_autoselect;
     FPtr_gctx_set_uint32 func_edit_set_text_color;
     FPtr_gctx_set_uint32 func_edit_set_bg_color;
+    FPtr_gctx_set_real32 func_edit_set_vpadding;
     FPtr_gctx_bounds4 func_edit_bounds;
 
     /*! <Combo> */
@@ -822,6 +815,7 @@ struct _evtext_t
 {
     const char_t *text;
     uint32_t cpos;
+    bool_t deleted;
 };
 
 #define kTEXTFILTER_SIZE    1024

@@ -181,6 +181,7 @@ struct _gtnap_t
 {
     bool_t cualib_mode;
     Font *global_font;
+    Font *button_font;
 
     // Only for cualib-gtnap
     String *title;
@@ -188,6 +189,9 @@ struct _gtnap_t
     uint32_t cols;
     uint32_t cell_x_size;
     uint32_t cell_y_size;
+    uint32_t label_y_size;
+    uint32_t button_y_size;
+    uint32_t edit_y_size;
     uint32_t linespacing;
     ArrSt(GtNapCualibWindow) *cualib_windows;
 
@@ -1081,21 +1085,90 @@ String *hb_gtnap_cualib_parText(const uint32_t iParam)
 
 /*---------------------------------------------------------------------------*/
 
+/* Change this value to make buttons higher */
+static real32_t i_button_vpadding(void)
+{
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+/* Change this value to make edits higher */
+static real32_t i_edit_vpadding(void)
+{
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_compute_cell_size(GtNap *gtnap)
+{
+    uint32_t bh = 0, eh = 0;
+    uint32_t fw = 0, fh = 0;
+
+    cassert_no_null(gtnap);
+
+    /* Create an impostor window, only for measure the real height of buttons and edits */
+    {
+        Panel *panel = panel_create();
+        Button *button = button_push();
+        Edit *edit = edit_create();
+        Window *window = window_create(ekWINDOW_STD | ekWINDOW_OFFSCREEN);
+        Layout *layout = layout_create(1, 2);
+        button_text(button, "DEMO");
+        button_font(button, gtnap->global_font);
+        button_vpadding(button, i_button_vpadding());
+        edit_font(edit, gtnap->global_font);
+        edit_vpadding(edit, i_edit_vpadding());
+        layout_button(layout, button, 0, 0);
+        layout_edit(layout, edit, 0, 1);
+        panel_layout(panel, layout);
+        window_panel(window, panel);
+        window_show(window);
+        bh = (uint32_t)button_get_height(button);
+        eh = (uint32_t)edit_get_height(edit);
+        window_destroy(&window);
+    }
+
+    {
+        real32_t w, h;
+        font_extents(gtnap->global_font, "OOOOOO", -1, &w, &h);
+        fw = (uint32_t)w;
+        fh = (uint32_t)h;
+    }
+
+    gtnap->cell_x_size = fw / 6;
+
+    /* Cell height will be the higher of labels, buttons and edits */
+    gtnap->cell_y_size = fh;
+    gtnap->label_y_size = fh;
+    gtnap->button_y_size = bh;
+    gtnap->edit_y_size = eh;
+
+    if (bh > gtnap->cell_y_size)
+        gtnap->cell_y_size = bh;
+
+    if (eh > gtnap->cell_y_size)
+        gtnap->cell_y_size = eh;
+
+    log_printf("Cell height: %d. Label height: %d Button height: %d Edit height: %d", gtnap->cell_y_size, gtnap->label_y_size, gtnap->button_y_size, gtnap->edit_y_size);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNap *i_gtnap_cualib_create(void)
 {
-    real32_t w, h;
     PHB_ITEM pRet = NULL;
+    uint32_t cheight;
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->cualib_mode = TRUE;
     GTNAP_GLOBAL->global_font = font_monospace(20, 0);
     GTNAP_GLOBAL->title = gtconvert_1252_to_UTF8(CUALIB_TITLE);
     GTNAP_GLOBAL->rows = CUALIB_ROWS;
     GTNAP_GLOBAL->cols = CUALIB_COLS;
-    font_extents(GTNAP_GLOBAL->global_font, "OOOOOO", -1, &w, &h);
-    GTNAP_GLOBAL->cell_x_size = (uint32_t)(w / 6.f);
-    GTNAP_GLOBAL->cell_y_size = (uint32_t)h;
     GTNAP_GLOBAL->linespacing = 0;
     GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
+    i_compute_cell_size(GTNAP_GLOBAL);
     log_printf("i_gtnap_cualib_create(%s, %d, %d)", CUALIB_TITLE, CUALIB_ROWS, CUALIB_COLS);
     log_printf("GTNAP Cell Size(%d, %d)", GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size);
     pRet = hb_itemDo(CUALIB_INIT_CODEBLOCK, 0);
@@ -1371,7 +1444,7 @@ static void i_add_label_object(const int32_t cell_x, const int32_t cell_y, const
         log_printf("Added label: 'NO TEXT' at %d %d", cell_x, cell_y);
     }
 
-    size.height = (real32_t)gtnap->cell_y_size;
+    size.height = (real32_t)gtnap->label_y_size;
     i_add_object(ekOBJ_LABEL, cell_x, cell_y, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll_panel, (GuiComponent*)label, cuawin);
 }
 
@@ -1617,8 +1690,10 @@ void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId,
     _component_set_tag((GuiComponent*)button, nTag);
     button_text(button, tc(ctext));
     button_font(button, GTNAP_GLOBAL->global_font);
+    button_vpadding(button, i_button_vpadding());
+    cassert(nBottom == nTop);
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->button_y_size);
     log_printf("Added BUTTON (%s) into CUALIB Window: %d, %d, %d, %d", tc(ctext), nTop, nLeft, nBottom, nRight);
     i_add_object(ekOBJ_BUTTON, nLeft - cuawin->N_ColIni, nTop - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)button, cuawin);
     str_destroy(&ctext);
@@ -1832,10 +1907,11 @@ extern void hb_gtnap_cualib_edit(
     cassert_no_null(cuawin);
     // //_component_set_tag((GuiComponent*)button, nTag);
     edit_font(edit, GTNAP_GLOBAL->global_font);
+    edit_vpadding(edit, i_edit_vpadding());
     edit_bgcolor_focus(edit, kCOLOR_CYAN);
     //edit_editable(edit, editable);
     size.width = (real32_t)((nSize + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)(1 * GTNAP_GLOBAL->cell_y_size);
+    size.height = (real32_t)GTNAP_GLOBAL->edit_y_size;
     i_add_object(ekOBJ_EDIT, nCol - cuawin->N_ColIni, nLin - cuawin->N_LinIni, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)edit, cuawin);
 
     obj = arrst_last(cuawin->gui_objects, GtNapCualibObject);
@@ -2306,7 +2382,17 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *main_pan
             {
                 switch(type) {
                 case ekOBJ_LABEL:
+                    pos.y += (real32_t)toolbar->pixels_button;
+                    if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->label_y_size)
+                        pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->label_y_size) / 2);
+                    break;
+
                 case ekOBJ_EDIT:
+                    pos.y += (real32_t)toolbar->pixels_button;
+                    if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->edit_y_size)
+                        pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->edit_y_size) / 2);
+                    break;
+
                 case ekOBJ_IMAGE:
                 case ekOBJ_MENUVERT:
                     pos.y += (real32_t)toolbar->pixels_button;
@@ -2317,6 +2403,8 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *main_pan
                     break;
                 case ekOBJ_BUTTON:
                     pos.y += (real32_t)GTNAP_GLOBAL->cell_y_size;
+                    if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->button_y_size)
+                        pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->button_y_size) / 2);
                     break;
                 cassert_default();
                 }
@@ -2334,7 +2422,6 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *main_pan
             // FRAN: TODO! IMPROVe
             if (object->type == ekOBJ_LABEL)
                 i_set_label_text(object);
-
         }
     arrst_end();
 }

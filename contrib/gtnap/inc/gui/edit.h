@@ -1,14 +1,3 @@
-/*
- * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
- * MIT Licence
- * https://nappgui.com/en/legal/license.html
- *
- * File: edit.h
- * https://nappgui.com/en/gui/edit.html
- *
- */
-
 /* Edit Box */
 
 #include "gui.hxx"
@@ -51,6 +40,10 @@ _gui_api void edit_phcolor(Edit *edit, const color_t color);
 
 _gui_api void edit_phstyle(Edit *edit, const uint32_t fstyle);
 
+_gui_api void edit_vpadding(Edit *edit, const real32_t padding);
+
 _gui_api const char_t *edit_get_text(const Edit *edit);
+
+_gui_api real32_t edit_get_height(const Edit *edit);
 
 __END_C
