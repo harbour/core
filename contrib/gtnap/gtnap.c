@@ -3020,6 +3020,11 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
         V2Df pos;
         uint32_t ret = 0;
 
+        if (parent == NULL)
+        {
+            cassert(arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow) == 1);
+        }
+
         pos.x = (real32_t)(cuawin->N_ColIni * GTNAP_GLOBAL->cell_x_size);
         pos.y = (real32_t)(cuawin->N_LinIni * GTNAP_GLOBAL->cell_y_size);
 
