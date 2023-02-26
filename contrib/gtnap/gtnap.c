@@ -3064,6 +3064,13 @@ Panel *hb_gtnap_cualib_current_menuvert(void)
 
 /*---------------------------------------------------------------------------*/
 
+uint32_t hb_gtnap_cell_height(void)
+{
+    return GTNAP_GLOBAL->cell_y_size;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnTableViewSelect(GtNapCallback *callback, Event *e)
 {
     hb_gtnap_callback(callback, e);

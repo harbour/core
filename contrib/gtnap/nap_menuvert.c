@@ -119,10 +119,12 @@ static void i_OnDraw(Panel *panel, Event *e)
     draw_font(p->ctx, menu->font);
     arrst_foreach(opt, menu->opts, MenuOpt)
 
+        real32_t yoffset = ((real32_t)menu->row_height - opt->size.height) / 2.f;
+
         if (opt_i == menu->selected)
         {
             draw_fill_color(p->ctx, kCOLOR_CYAN);
-            draw_rect(p->ctx, ekFILL, xpos, ypos, (real32_t)menu->control_width, opt->size.height);
+            draw_rect(p->ctx, ekFILL, xpos, ypos, (real32_t)menu->control_width, (real32_t)menu->row_height /* opt->size.height*/);
 
             // To be removed, just for debug
             // draw_line_color(p->ctx, kCOLOR_RED);
@@ -136,7 +138,7 @@ static void i_OnDraw(Panel *panel, Event *e)
             draw_line(p->ctx, stx, ypos + opt->size.height - 1, stx + opt->size.width, ypos + opt->size.height - 1);
         }
 
-        drawctrl_text(p->ctx, tc(opt->text), (uint32_t)(xpos + menu->cell_x_size), (uint32_t)ypos, (enum_t)0);
+        drawctrl_text(p->ctx, tc(opt->text), (uint32_t)(xpos + menu->cell_x_size), (uint32_t)(ypos + yoffset), (enum_t)0);
 
         if (opt->hoykey_pos != UINT32_MAX)
         {
@@ -145,7 +147,7 @@ static void i_OnDraw(Panel *panel, Event *e)
             draw_line(p->ctx, stx, ypos + opt->size.height - 1, edx, ypos + opt->size.height - 1);
         }
 
-        ypos += opt->size.height;
+        ypos += menu->row_height; // opt->size.height;
 
     arrst_end();
 
@@ -323,7 +325,7 @@ static void i_view_size(MenuVert *menu)
         if (opt->size.width > width)
             width = opt->size.width;
 
-        height += opt->size.height;
+        height += menu->row_height;// opt->size.height;
         n += 1;
 
     arrst_end();
@@ -367,12 +369,14 @@ HB_FUNC( NAP_MENUVERT_CREATE )
     Layout *layout = layout_create(1,1);
     View *view = view_scroll();
     MenuVert *menu = i_create();
+    uint32_t cell_y_size = hb_gtnap_cell_height();
     menu->font = hb_gtnap_global_font();
     font_extents(menu->font, "OOOOOO", -1, &menu->cell_x_size, &menu->cell_y_size);
     menu->cell_x_size /= 6;
     menu->layout = layout;
     menu->view = view;
-    menu->row_height = (uint32_t)bmath_ceilf(font_height(menu->font));
+    menu->row_height = max_u32((uint32_t)bmath_ceilf(font_height(menu->font)), cell_y_size);
+    log_printf("Cell HEIGHT: %d  ROW: %d", cell_y_size, menu->row_height);
     menu->visible_opts = hb_parni(1);
     menu->selected = 0;
     menu->mouse_row = UINT32_MAX;

@@ -182,6 +182,7 @@ extern TableView *hb_gtnap_cualib_current_tableview(void);
 
 extern Panel *hb_gtnap_cualib_current_menuvert(void);
 
+extern uint32_t hb_gtnap_cell_height(void);
 
 extern void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId);
 
