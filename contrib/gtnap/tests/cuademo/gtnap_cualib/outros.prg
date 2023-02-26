@@ -844,172 +844,172 @@ RETURN C_DIRET_ANT
    RETURN (.T.)
 
 //    FUNCTION SetDefaultWindowSize(N_QtLin,N_QtCol)
-//       LOCAL N_HeightMin   // altura  mï¿½nima que, com certeza, cabe na menor resoluï¿½ï¿½o
-//       LOCAL N_WidthMin    // largura mï¿½nima que, com certeza, cabe na menor resoluï¿½ï¿½o
-//       LOCAL N_HeightMax   // altura  mï¿½xima que ultrapassa a maior resoluï¿½ï¿½o
-//       LOCAL N_WidthMax    // largura mï¿½xima que ultrapassa a maior resoluï¿½ï¿½o
-//       LOCAL N_MaxMaxRow
-//       LOCAL N_MaxMaxCol
-//       LOCAL C_Fonte
-//       *
-//       LOCAL L_Verbose := .F.  // Sï¿½ colocar para .T. se for debugar esta rotina
-//       *
-//       * Resoluï¿½ï¿½es mais comuns:
-//       * N_ScreenHeight   N_ScreenWidth
-//       *    >= 1024         >= 1680
-//       *    >= 1024         >= 1440
-//       *    >= 1024         >= 1280
-//       *    >=  960         >= 1280
-//       *    >=  864         >= 1152
-//       *    >=  768         >= 1024
-//       *    >=  600         >= 1024   (NetBooks)
-//       *    >=  600         >=  800   (SuperVGA)
-//       *
-//       IF WVW_GetScreenHeight() <= 600
-//          * Testes prï¿½ticos mostraram que, em resoluï¿½ï¿½o vertical baixa (altura),
-//          * o fonte "Courier New" apresenta um serrilhado que torna a leitura das letras
-//          * difï¿½cil. Nesta situaï¿½ï¿½o, o "Lucida Console" tem aparï¿½ncia bem melhor.
-//          C_Fonte := "Lucida Console"
-//       ELSE
-//          * Jï¿½ em resoluï¿½ï¿½o vertical alta, o "Courier New" nï¿½o apresenta mais
-//          * o serrilhado, e tem aparï¿½ncia melhor.
-//          * A desvantagem do "Lucida Console", neste caso, ï¿½ que fica muito largo,
-//          * com aparï¿½ncia pesada e feia.
-//          C_Fonte := "Courier New"
-//       ENDIF
-//       *
-//       * - Os valores abaixo foram obtidos por via prï¿½tica, num computador com
-//       *   Windows 7 e resoluï¿½ï¿½o 600 x 800 (SuperVGA)
-//       * - Isto ï¿½ importante, porque a SetMode() sï¿½ consegue funcionar se o
-//       *   fonte escolhido efetivamente couber na resoluï¿½ï¿½o e tamanhos especificados
-//       *
-//       * Usar o valores mï¿½nimos para permitir que a SetMode() mude a quantidade de
-//       * linhas para 35 e colunas para 110, atï¿½ mesmo na resoluï¿½ï¿½o 600 X 800
-//       N_HeightMin := 6
-//       N_WidthMin  := 5
-//       *
-//       Wvw_SetFont(,C_Fonte,N_HeightMin,N_WidthMin)
-//       Wvw_PBSetFont(,C_Fonte,N_HeightMin,N_WidthMin)
-//       WVW_SetDefLineSpacing( 4 )  // todo o sistema (novas janelas)
-//       WVW_SetLineSpacing( 0, 4 )  // tela "default" do GTWVW
-//       SetMode(N_QtLin,N_QtCol)
-//       IF L_Verbose
-//          ALERT("Com height mï¿½nimo "+LTRIM(STR(N_HeightMin))+" e width mï¿½nimo "+;
-//                LTRIM(STR(N_WidthMin))+;
-//                " cabem "+LTRIM(STR(WVW_MAXMAXROW())) +" rows e "+;
-//                LTRIM(STR(WVW_MAXMAXCOL()))+" cols")
-//       ENDIF
-//       ASSUME MAXROW() == N_QtLin-1
-//       ASSUME MAXCOL() == N_QtCol-1
-//       IF L_Verbose
-//          ALERT("Tela mudada para "+LTRIM(STR(N_QtLin))+" linhas "+;
-//                LTRIM(STR(N_QtCol))+" colunas")
-//       ENDIF
-//       *
-//       * Usar os valores mï¿½ximos para ir reduzindo o tamanho atï¿½ que
-//       * caiba na resoluï¿½ï¿½o da tela (a maior tela atï¿½ agora foi a 1024 x 1860)
-//       N_HeightMax := 23+1    // em teste real, sï¿½ coube 23
-//       N_WidthMax  := 15+1    // em teste real, sï¿½ coube 15
-//       *
-//       * Setar a maior altura de fonte possï¿½vel, que ainda caiba 35 linhas.
-//       * Se WVW_MAXMAXROW() continuar com o mesmo valor, ï¿½ porque nï¿½o coube
-//       * na tela, sendo necessï¿½rio reduzir ainda mais a altura do fonte.
-//       *
-//       N_MaxMaxRow := WVW_MAXMAXROW()
-//       Wvw_SetFont(,C_Fonte,N_HeightMax)
-//       Wvw_PBSetFont(,C_Fonte,N_HeightMax)
-//       IF L_Verbose
-//          ALERT("Com height "+LTRIM(STR(N_HeightMax))+;
-//                " cabe "+LTRIM(STR(WVW_MAXMAXROW()))+" rows" )
-//       ENDIF
-//       DO WHILE WVW_MAXMAXROW() == N_MaxMaxRow .AND. ;
-//                N_HeightMax > N_HeightMin
-//          N_HeightMax--
-//          Wvw_SetFont(,C_Fonte,N_HeightMax)
-//          Wvw_PBSetFont(,C_Fonte,N_HeightMax)
-//          IF L_Verbose
-//             ALERT("Com height "+LTRIM(STR(N_HeightMax))+;
-//                   " cabe "+LTRIM(STR(WVW_MAXMAXROW()))+" rows" )
-//          ENDIF
-//       ENDDO
-//       IF L_Verbose
-//          ALERT("O height final foi "+LTRIM(STR(N_HeightMax)))
-//       ENDIF
-//       *
-//       * Setar a maior altura de fonte possï¿½vel, que ainda caiba 110 colunas.
-//       * Se WVW_MAXMAXCOL() continuar com o mesmo valor, ï¿½ porque nï¿½o coube
-//       * na tela, sendo necessï¿½rio reduzir ainda mais a largura do fonte.
-//       *
-//       N_MaxMaxCol := WVW_MAXMAXCOL()
-//       Wvw_SetFont(,C_Fonte,N_HeightMax,N_WidthMax)
-//       Wvw_PBSetFont(,C_Fonte,N_HeightMax,N_WidthMax)
-//       IF L_Verbose
-//          ALERT("Com width "+LTRIM(STR(N_WidthMax))+;
-//                " cabe "+LTRIM(STR(WVW_MAXMAXCOL()))+" cols" )
-//       ENDIF
-//       DO WHILE WVW_MAXMAXCOL() == N_MaxMaxCol .AND. ;
-//                N_WidthMax > N_WidthMin
-//          N_WidthMax--
-//          Wvw_SetFont(,C_Fonte,N_HeightMax,N_WidthMax)
-//          Wvw_PBSetFont(,C_Fonte,N_HeightMax,N_WidthMax)
-//          IF L_Verbose
-//             ALERT("Com width "+LTRIM(STR(N_WidthMax))+;
-//                   " cabe "+LTRIM(STR(WVW_MAXMAXCOL()))+" cols")
-//          ENDIF
-//       ENDDO
-//       IF L_Verbose
-//          ALERT("O width final foi "+LTRIM(STR(N_WidthMax)))
-//       ENDIF
-//       ASSUME WVW_MAXMAXROW() >= N_QtLin-1
-//       ASSUME WVW_MAXMAXCOL() >= N_QtCol-1
-//       *
-//       /*
-//       * USAR ESTE TRECHO DE Cï¿½DIGO Sï¿½ EM AMBIENTE DE TESTE E NO CASO DE
-//       * MUDANï¿½A DE FONTE, OU MUDANï¿½A DE TAMANHO Mï¿½NIMO DE RESULUï¿½ï¿½O.
-//       #INCLUDE "intercep.ch"
-//       *
-//       DBCREATE_T(ASPECTMP()+"testfont.dbf",;
-//                  {{"HEIGHT"   ,"N", 3,0},;
-//                   {"WIDTH"    ,"N", 3,0},;
-//                   {"HEIGHT_OK","L", 1,0},;
-//                   {"WIDTH_OK" ,"L", 1,0},;
-//                   {"MAXMAXROW","N", 3,0},;
-//                   {"MAXMAXCOL","N", 3,0}})
-//       *
-//       USE_T A19276 TABLE (ASPECTMP()+"testfont.dbf") CANINSERT EXCLUSIVE FINALUSE
-//       PRIVATE N_HEIGHT
-//       FOR N_HEIGHT := 5 TO 35
-//          PRIVATE N_WIDTH
-//          PRIVATE N_MaxMaxRow_OLD := WVW_MAXMAXROW()
-//          FOR N_WIDTH := 4 TO 25
-//              PRIVATE N_MaxMaxCol_OLD := WVW_MAXMAXCOL()
-//              *
-//              Wvw_SetFont(,C_Fonte,N_HEIGHT,N_WIDTH)
-//              WVW_SetDefLineSpacing( 4 )  // todo o sistema (novas janelas)
-//              WVW_SetLineSpacing( 0, 4 )  // tela "default" do GTWVW
-//              SetMode(N_QtLin,N_QtCol)
-//              *
-//              ASSUME MAXROW() == N_QtLin-1
-//              ASSUME MAXCOL() == N_QtCol-1
-//              *
-//              TESTFONT->(APP_REG())
-//              ALIAS TESTFONT REPL HEIGHT     WITH N_HEIGHT
-//              ALIAS TESTFONT REPL WIDTH      WITH N_WIDTH
-//              IF WVW_MAXMAXROW() # N_MaxMaxRow_OLD
-//                 ALIAS TESTFONT REPL HEIGHT_OK WITH .T.
-//              ENDIF
-//              IF WVW_MAXMAXCOL() # N_MaxMaxCol_OLD
-//                 ALIAS TESTFONT REPL WIDTH_OK WITH .T.
-//              ENDIF
-//              ALIAS TESTFONT REPL MAXMAXROW  WITH WVW_MAXMAXROW()
-//              ALIAS TESTFONT REPL MAXMAXCOL  WITH WVW_MAXMAXCOL()
-//              UNLOCK
-//          NEXT
-//       NEXT
-//       CLOSE TESTFONT
-//       */
+//     LOCAL N_HeightMin   // altura  mínima que, com certeza, cabe na menor resolução
+//     LOCAL N_WidthMin    // largura mínima que, com certeza, cabe na menor resolução
+//     LOCAL N_HeightMax   // altura  máxima que ultrapassa a maior resolução
+//     LOCAL N_WidthMax    // largura máxima que ultrapassa a maior resolução
+//     LOCAL N_MaxMaxRow
+//     LOCAL N_MaxMaxCol
+//     LOCAL C_Fonte
+//     *
+//     LOCAL L_Verbose := .F.  // Só colocar para .T. se for debugar esta rotina
+//     *
+//     * Resoluções mais comuns:
+//     * N_ScreenHeight   N_ScreenWidth
+//     *    >= 1024         >= 1680
+//     *    >= 1024         >= 1440
+//     *    >= 1024         >= 1280
+//     *    >=  960         >= 1280
+//     *    >=  864         >= 1152
+//     *    >=  768         >= 1024
+//     *    >=  600         >= 1024   (NetBooks)
+//     *    >=  600         >=  800   (SuperVGA)
+//     *
+//     IF WVW_GetScreenHeight() <= 600
+//        * Testes práticos mostraram que, em resolução vertical baixa (altura),
+//        * o fonte "Courier New" apresenta um serrilhado que torna a leitura das letras
+//        * difícil. Nesta situação, o "Lucida Console" tem aparência bem melhor.
+//        C_Fonte := "Lucida Console"
+//     ELSE
+//        * Já em resolução vertical alta, o "Courier New" não apresenta mais
+//        * o serrilhado, e tem aparência melhor.
+//        * A desvantagem do "Lucida Console", neste caso, é que fica muito largo,
+//        * com aparência pesada e feia.
+//        C_Fonte := "Courier New"
+//     ENDIF
+//     *
+//     * - Os valores abaixo foram obtidos por via prática, num computador com
+//     *   Windows 7 e resolução 600 x 800 (SuperVGA)
+//     * - Isto é importante, porque a SetMode() só consegue funcionar se o
+//     *   fonte escolhido efetivamente couber na resolução e tamanhos especificados
+//     *
+//     * Usar o valores mínimos para permitir que a SetMode() mude a quantidade de
+//     * linhas para 35 e colunas para 110, até mesmo na resolução 600 X 800
+//     N_HeightMin := 6
+//     N_WidthMin  := 5
+//     *
+//     Wvw_SetFont(,C_Fonte,N_HeightMin,N_WidthMin)
+//     Wvw_PBSetFont(,C_Fonte,N_HeightMin,N_WidthMin)
+//     WVW_SetDefLineSpacing( 4 )  // todo o sistema (novas janelas)
+//     WVW_SetLineSpacing( 0, 4 )  // tela "default" do GTWVW
+//     SetMode(N_QtLin,N_QtCol)
+//     IF L_Verbose
+//        ALERT("Com height mínimo "+LTRIM(STR(N_HeightMin))+" e width mínimo "+;
+//              LTRIM(STR(N_WidthMin))+;
+//              " cabem "+LTRIM(STR(WVW_MAXMAXROW())) +" rows e "+;
+//              LTRIM(STR(WVW_MAXMAXCOL()))+" cols")
+//     ENDIF
+//     ASSUME MAXROW() == N_QtLin-1
+//     ASSUME MAXCOL() == N_QtCol-1
+//     IF L_Verbose
+//        ALERT("Tela mudada para "+LTRIM(STR(N_QtLin))+" linhas "+;
+//              LTRIM(STR(N_QtCol))+" colunas")
+//     ENDIF
+//     *
+//     * Usar os valores máximos para ir reduzindo o tamanho até que
+//     * caiba na resolução da tela (a maior tela até agora foi a 1024 x 1860)
+//     N_HeightMax := 23+1    // em teste real, só coube 23
+//     N_WidthMax  := 15+1    // em teste real, só coube 15
+//     *
+//     * Setar a maior altura de fonte possível, que ainda caiba 35 linhas.
+//     * Se WVW_MAXMAXROW() continuar com o mesmo valor, é porque não coube
+//     * na tela, sendo necessário reduzir ainda mais a altura do fonte.
+//     *
+//     N_MaxMaxRow := WVW_MAXMAXROW()
+//     Wvw_SetFont(,C_Fonte,N_HeightMax)
+//     Wvw_PBSetFont(,C_Fonte,N_HeightMax)
+//     IF L_Verbose
+//        ALERT("Com height "+LTRIM(STR(N_HeightMax))+;
+//              " cabe "+LTRIM(STR(WVW_MAXMAXROW()))+" rows" )
+//     ENDIF
+//     DO WHILE WVW_MAXMAXROW() == N_MaxMaxRow .AND. ;
+//              N_HeightMax > N_HeightMin
+//        N_HeightMax--
+//        Wvw_SetFont(,C_Fonte,N_HeightMax)
+//        Wvw_PBSetFont(,C_Fonte,N_HeightMax)
+//        IF L_Verbose
+//           ALERT("Com height "+LTRIM(STR(N_HeightMax))+;
+//                 " cabe "+LTRIM(STR(WVW_MAXMAXROW()))+" rows" )
+//        ENDIF
+//     ENDDO
+//     IF L_Verbose
+//        ALERT("O height final foi "+LTRIM(STR(N_HeightMax)))
+//     ENDIF
+//     *
+//     * Setar a maior altura de fonte possível, que ainda caiba 110 colunas.
+//     * Se WVW_MAXMAXCOL() continuar com o mesmo valor, é porque não coube
+//     * na tela, sendo necessário reduzir ainda mais a largura do fonte.
+//     *
+//     N_MaxMaxCol := WVW_MAXMAXCOL()
+//     Wvw_SetFont(,C_Fonte,N_HeightMax,N_WidthMax)
+//     Wvw_PBSetFont(,C_Fonte,N_HeightMax,N_WidthMax)
+//     IF L_Verbose
+//        ALERT("Com width "+LTRIM(STR(N_WidthMax))+;
+//              " cabe "+LTRIM(STR(WVW_MAXMAXCOL()))+" cols" )
+//     ENDIF
+//     DO WHILE WVW_MAXMAXCOL() == N_MaxMaxCol .AND. ;
+//              N_WidthMax > N_WidthMin
+//        N_WidthMax--
+//        Wvw_SetFont(,C_Fonte,N_HeightMax,N_WidthMax)
+//        Wvw_PBSetFont(,C_Fonte,N_HeightMax,N_WidthMax)
+//        IF L_Verbose
+//           ALERT("Com width "+LTRIM(STR(N_WidthMax))+;
+//                 " cabe "+LTRIM(STR(WVW_MAXMAXCOL()))+" cols")
+//        ENDIF
+//     ENDDO
+//     IF L_Verbose
+//        ALERT("O width final foi "+LTRIM(STR(N_WidthMax)))
+//     ENDIF
+//     ASSUME WVW_MAXMAXROW() >= N_QtLin-1
+//     ASSUME WVW_MAXMAXCOL() >= N_QtCol-1
+//     *
+//     /*
+//     * USAR ESTE TRECHO DE CÓDIGO SÓ EM AMBIENTE DE TESTE E NO CASO DE
+//     * MUDANÇA DE FONTE, OU MUDANÇA DE TAMANHO MÍNIMO DE RESULUÇÃO.
+//     #INCLUDE "intercep.ch"
+//     *
+//     DBCREATE_T(ASPECTMP()+"testfont.dbf",;
+//                {{"HEIGHT"   ,"N", 3,0},;
+//                 {"WIDTH"    ,"N", 3,0},;
+//                 {"HEIGHT_OK","L", 1,0},;
+//                 {"WIDTH_OK" ,"L", 1,0},;
+//                 {"MAXMAXROW","N", 3,0},;
+//                 {"MAXMAXCOL","N", 3,0}})
+//     *
+//     USE_T A19276 TABLE (ASPECTMP()+"testfont.dbf") CANINSERT EXCLUSIVE FINALUSE
+//     PRIVATE N_HEIGHT
+//     FOR N_HEIGHT := 5 TO 35
+//        PRIVATE N_WIDTH
+//        PRIVATE N_MaxMaxRow_OLD := WVW_MAXMAXROW()
+//        FOR N_WIDTH := 4 TO 25
+//            PRIVATE N_MaxMaxCol_OLD := WVW_MAXMAXCOL()
+//            *
+//            Wvw_SetFont(,C_Fonte,N_HEIGHT,N_WIDTH)
+//            WVW_SetDefLineSpacing( 4 )  // todo o sistema (novas janelas)
+//            WVW_SetLineSpacing( 0, 4 )  // tela "default" do GTWVW
+//            SetMode(N_QtLin,N_QtCol)
+//            *
+//            ASSUME MAXROW() == N_QtLin-1
+//            ASSUME MAXCOL() == N_QtCol-1
+//            *
+//            TESTFONT->(APP_REG())
+//            ALIAS TESTFONT REPL HEIGHT     WITH N_HEIGHT
+//            ALIAS TESTFONT REPL WIDTH      WITH N_WIDTH
+//            IF WVW_MAXMAXROW() # N_MaxMaxRow_OLD
+//               ALIAS TESTFONT REPL HEIGHT_OK WITH .T.
+//            ENDIF
+//            IF WVW_MAXMAXCOL() # N_MaxMaxCol_OLD
+//               ALIAS TESTFONT REPL WIDTH_OK WITH .T.
+//            ENDIF
+//            ALIAS TESTFONT REPL MAXMAXROW  WITH WVW_MAXMAXROW()
+//            ALIAS TESTFONT REPL MAXMAXCOL  WITH WVW_MAXMAXCOL()
+//            UNLOCK
+//        NEXT
+//     NEXT
+//     CLOSE TESTFONT
+//     */
 
-//    RETURN NIL
+//  RETURN NIL
 
 //    *******************
 //    FUNC ChangeFontSize(N_Way)

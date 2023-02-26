@@ -474,7 +474,7 @@ static void i_nappgui_destroy(GtNap **data)
     cassert_no_null(*data);
     log_printf("i_nappgui_destroy()");
     font_destroy(&(*data)->global_font);
-    font_destroy(&(*data)->reduced_font);
+    cassert((*data)->reduced_font == NULL);
     arrpt_destopt(&(*data)->windows, i_window_destroy, Window);
     // No modal window can be alive here!
     cassert(arrpt_size((*data)->modals, Window) == 0);
@@ -1169,10 +1169,43 @@ static void i_create_fonts(const real32_t size, GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_compute_font_size(const uint32_t max_width, const uint32_t max_height, GtNap *gtnap)
+{
+    real32_t font_size = 10.f;
+    if (max_width >= 800 && max_height >= 600)
+    {
+        for(;;)
+        {
+            real32_t nsize = font_size + 1;
+            i_create_fonts(nsize, gtnap);
+            i_compute_cell_size(gtnap);
+
+            log_printf("Trying font: %.2f: Total width: %d, Total height: %d", nsize, gtnap->cell_x_size * gtnap->cols, gtnap->cell_y_size * gtnap->rows);
+
+            /* The total width exceeds the screen limits */
+            if (gtnap->cell_x_size * gtnap->cols > max_width)
+                break;
+
+            /* The total height exceeds the screen limits */
+            if (gtnap->cell_y_size * gtnap->rows > max_height)
+                break;
+
+            font_size = nsize;
+        }
+    }
+
+    /* The biggest font that fits on the screen */
+    i_create_fonts(font_size, gtnap);
+    i_compute_cell_size(gtnap);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNap *i_gtnap_cualib_create(void)
 {
     PHB_ITEM pRet = NULL;
     uint32_t cheight;
+    S2Df screen;
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->cualib_mode = TRUE;
     GTNAP_GLOBAL->title = gtconvert_1252_to_UTF8(CUALIB_TITLE);
@@ -1180,8 +1213,8 @@ static GtNap *i_gtnap_cualib_create(void)
     GTNAP_GLOBAL->cols = CUALIB_COLS;
     GTNAP_GLOBAL->linespacing = 0;
     GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
-    i_create_fonts(20.f, GTNAP_GLOBAL);
-    i_compute_cell_size(GTNAP_GLOBAL);
+    globals_resolution(&screen);
+    i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
     log_printf("i_gtnap_cualib_create(%s, %d, %d)", CUALIB_TITLE, CUALIB_ROWS, CUALIB_COLS);
     log_printf("GTNAP Cell Size(%d, %d)", GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size);
     pRet = hb_itemDo(CUALIB_INIT_CODEBLOCK, 0);
@@ -1311,6 +1344,7 @@ static void i_gtnap_cualib_destroy(GtNap **data)
     cassert(arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow) == 0);
     arrst_destroy(&GTNAP_GLOBAL->cualib_windows, i_remove_cualib_win, GtNapCualibWindow);
     font_destroy(&GTNAP_GLOBAL->global_font);
+    font_destroy(&(*data)->reduced_font);
     str_destroy(&GTNAP_GLOBAL->title);
     heap_delete(&GTNAP_GLOBAL, GtNap);
 }
