@@ -181,7 +181,7 @@ struct _gtnap_t
 {
     bool_t cualib_mode;
     Font *global_font;
-    Font *button_font;
+    Font *reduced_font;
 
     // Only for cualib-gtnap
     String *title;
@@ -474,6 +474,7 @@ static void i_nappgui_destroy(GtNap **data)
     cassert_no_null(*data);
     log_printf("i_nappgui_destroy()");
     font_destroy(&(*data)->global_font);
+    font_destroy(&(*data)->reduced_font);
     arrpt_destopt(&(*data)->windows, i_window_destroy, Window);
     // No modal window can be alive here!
     cassert(arrpt_size((*data)->modals, Window) == 0);
@@ -1096,8 +1097,6 @@ static real32_t i_button_vpadding(void)
 /* Change this value to make edits higher */
 static real32_t i_edit_vpadding(void)
 {
-    if (osbs_platform() == ekWINDOWS)
-        return 4;
     return 0;
 }
 
@@ -1118,9 +1117,9 @@ static void i_compute_cell_size(GtNap *gtnap)
         Window *window = window_create(ekWINDOW_STD | ekWINDOW_OFFSCREEN);
         Layout *layout = layout_create(1, 2);
         button_text(button, "DEMO");
-        button_font(button, gtnap->global_font);
+        button_font(button, gtnap->reduced_font);
         button_vpadding(button, i_button_vpadding());
-        edit_font(edit, gtnap->global_font);
+        edit_font(edit, gtnap->reduced_font);
         edit_vpadding(edit, i_edit_vpadding());
         layout_button(layout, button, 0, 0);
         layout_edit(layout, edit, 0, 1);
@@ -1158,18 +1157,30 @@ static void i_compute_cell_size(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_create_fonts(const real32_t size, GtNap *gtnap)
+{
+    real32_t rsize = bmath_ceilf(size * .9f);
+    cassert_no_null(gtnap);
+    ptr_destopt(font_destroy, &gtnap->global_font, Font);
+    ptr_destopt(font_destroy, &gtnap->reduced_font, Font);
+    gtnap->global_font = font_monospace(size, 0);
+    gtnap->reduced_font = font_monospace(rsize, 0);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNap *i_gtnap_cualib_create(void)
 {
     PHB_ITEM pRet = NULL;
     uint32_t cheight;
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->cualib_mode = TRUE;
-    GTNAP_GLOBAL->global_font = font_monospace(20, 0);
     GTNAP_GLOBAL->title = gtconvert_1252_to_UTF8(CUALIB_TITLE);
     GTNAP_GLOBAL->rows = CUALIB_ROWS;
     GTNAP_GLOBAL->cols = CUALIB_COLS;
     GTNAP_GLOBAL->linespacing = 0;
     GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
+    i_create_fonts(20.f, GTNAP_GLOBAL);
     i_compute_cell_size(GTNAP_GLOBAL);
     log_printf("i_gtnap_cualib_create(%s, %d, %d)", CUALIB_TITLE, CUALIB_ROWS, CUALIB_COLS);
     log_printf("GTNAP Cell Size(%d, %d)", GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size);
@@ -1691,7 +1702,7 @@ void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId,
     cassert_no_null(cuawin);
     _component_set_tag((GuiComponent*)button, nTag);
     button_text(button, tc(ctext));
-    button_font(button, GTNAP_GLOBAL->global_font);
+    button_font(button, GTNAP_GLOBAL->reduced_font);
     button_vpadding(button, i_button_vpadding());
     cassert(nBottom == nTop);
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
@@ -1908,7 +1919,7 @@ extern void hb_gtnap_cualib_edit(
     S2Df size;
     cassert_no_null(cuawin);
     // //_component_set_tag((GuiComponent*)button, nTag);
-    edit_font(edit, GTNAP_GLOBAL->global_font);
+    edit_font(edit, GTNAP_GLOBAL->reduced_font);
     edit_vpadding(edit, i_edit_vpadding());
     edit_bgcolor_focus(edit, kCOLOR_CYAN);
     //edit_editable(edit, editable);
