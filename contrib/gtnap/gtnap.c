@@ -1171,32 +1171,30 @@ static void i_create_fonts(const real32_t size, GtNap *gtnap)
 
 static void i_compute_font_size(const uint32_t max_width, const uint32_t max_height, GtNap *gtnap)
 {
-    real32_t font_size = 10.f;
-    if (max_width >= 800 && max_height >= 600)
+    real32_t font_size = (real32_t)(max_height / (gtnap->rows + 5));
+
+    for(;;)
     {
-        for(;;)
+        i_create_fonts(font_size, gtnap);
+        i_compute_cell_size(gtnap);
+        log_printf("Computed font: %.2f: Total width: %d, Total height: %d", font_size, gtnap->cell_x_size * gtnap->cols, gtnap->cell_y_size * gtnap->rows);
+
+        /* The total width exceeds the screen limits */
+        if (gtnap->cell_x_size * gtnap->cols > max_width)
         {
-            real32_t nsize = font_size + 1;
-            i_create_fonts(nsize, gtnap);
-            i_compute_cell_size(gtnap);
-
-            log_printf("Trying font: %.2f: Total width: %d, Total height: %d", nsize, gtnap->cell_x_size * gtnap->cols, gtnap->cell_y_size * gtnap->rows);
-
-            /* The total width exceeds the screen limits */
-            if (gtnap->cell_x_size * gtnap->cols > max_width)
-                break;
-
-            /* The total height exceeds the screen limits */
-            if (gtnap->cell_y_size * gtnap->rows > max_height)
-                break;
-
-            font_size = nsize;
+            font_size -= 1;
+            continue;
         }
-    }
 
-    /* The biggest font that fits on the screen */
-    i_create_fonts(font_size, gtnap);
-    i_compute_cell_size(gtnap);
+        /* The total height exceeds the screen limits */
+        if (gtnap->cell_y_size * gtnap->rows > max_height)
+        {
+            font_size -= 1;
+            continue;
+        }
+
+        break;
+    }
 }
 
 /*---------------------------------------------------------------------------*/
