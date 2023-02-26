@@ -1212,7 +1212,9 @@ static GtNap *i_gtnap_cualib_create(void)
     GTNAP_GLOBAL->linespacing = 0;
     GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
     globals_resolution(&screen);
+    screen.height -= 50; // S.O. Dock or Taskbars
     i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
+    //i_compute_font_size(1024, 768, GTNAP_GLOBAL);
     log_printf("i_gtnap_cualib_create(%s, %d, %d)", CUALIB_TITLE, CUALIB_ROWS, CUALIB_COLS);
     log_printf("GTNAP Cell Size(%d, %d)", GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size);
     pRet = hb_itemDo(CUALIB_INIT_CODEBLOCK, 0);
