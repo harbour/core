@@ -105,6 +105,9 @@ GOTO TOP
 // #endif
 // GOTO TOP
 *
+
+NAP_LOG("Number of DB registers: " + hb_ntos(RecCount()))
+
 CUA20 @ 01,41,MAXROW()-2,MAXCOL()-30 JANELA V_Janela ;
     TITU "Browse de arquivo DBF" ;
     SUBTITULO "%T;seleção simples,;com grid e com toolbar,;"+;
@@ -241,21 +244,21 @@ GOTO N_Selecionado
 RELEIA TUDO V_Janela
 *
 
-STAT PROC EXCLUI_LINHA_ATUAL(V_Janela)
-    RETURN
-// ****************************
 // STAT PROC EXCLUI_LINHA_ATUAL(V_Janela)
-// ****************************
-// MOSTRAR("M?????","O registro atual (a ser deletado) é o RECNO() "+;
-//    LTRIM(STR(RECNO())))
-// *
-// RLOCK()
-// DELETE
-// DBCOMMIT()
-// UNLOCK
-// *
-// RELEIA TUDO V_Janela
-// *
+//     RETURN
+****************************
+STAT PROC EXCLUI_LINHA_ATUAL(V_Janela)
+****************************
+MOSTRAR("M?????","O registro atual (a ser deletado) é o RECNO() "+;
+   LTRIM(STR(RECNO())))
+*
+RLOCK()
+DELETE
+DBCOMMIT()
+UNLOCK
+*
+RELEIA TUDO V_Janela
+*
 
 STAT PROC PROCURAR_REGISTRO (V_Janela)
     RETURN
