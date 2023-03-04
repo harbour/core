@@ -2169,11 +2169,28 @@ static uint32_t i_column_width(const uint32_t str_len)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_header_numchars(const char_t *title)
+{
+    uint32_t nchars = 0;
+    ArrPt(String) *strs = str_splits(title, "\n", TRUE);
+    arrpt_foreach_const(str, strs, String)
+        uint32_t n = unicode_nchars(tc(str), ekUTF8);
+        if (n > nchars)
+            nchars = n;
+    arrpt_end();
+
+    arrpt_destroy(&strs, str_destroy, String);
+    return nchars;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *title, const bool_t freeze, const uint32_t width, PHB_ITEM codeBlock)
 {
     uint32_t id = UINT32_MAX;
     GtNapColumn *column = NULL;
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    uint32_t hnchars = 0;
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtarea);
     cassert(view == cuawin->gtarea->view);
@@ -2182,8 +2199,10 @@ void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *ti
     cassert(id == arrst_size(cuawin->gtarea->columns, GtNapColumn));
     column = arrst_new(cuawin->gtarea->columns, GtNapColumn);
     column->title = gtconvert_1252_to_UTF8(title);
+    str_repl_c(tcc(column->title), ";", "\n");
+    hnchars = i_header_numchars(tc(column->title));
     column->fixed_width = width;
-    column->width = i_column_width(width);
+    column->width = i_column_width(hnchars);
     column->align = ekLEFT;
     column->codeBlock = hb_itemNew(codeBlock);
     tableview_header_title(view, id, tc(column->title));
