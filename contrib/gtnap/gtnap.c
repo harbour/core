@@ -2382,11 +2382,15 @@ void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, 
     const GtNapKey *nkey = i_convert_key(key);
     cassert_no_null(cuawin);
 
+    log_printf("Looking for hotkey: %d", key);
+
     // Exists a Harbour/NAppGUI key convertion
     if (nkey != NULL)
     {
         uint32_t pos = UINT32_MAX;
         Listener *listener = NULL;
+
+        log_printf("Found hotkey: %d", nkey->key);
 
         // Delete a previous callback on this hotkey
         arrpt_foreach(callback, cuawin->callbacks, GtNapCallback)
