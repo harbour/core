@@ -119,7 +119,7 @@ extern void hb_gtnap_cualib_textview(TextView *view, const int32_t nTop, const i
 
 extern GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view);
 
-extern void hb_gtnap_cualib_area_refresh(GtNapArea *area, const bool_t set_deleted);
+//extern void hb_gtnap_cualib_area_refresh(GtNapArea *area, const bool_t set_deleted);
 
 extern GtNapVector *hb_gtnap_cualib_tableview_vector(TableView *view);
 

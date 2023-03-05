@@ -527,15 +527,16 @@ IF L_ForcaLerTudo
 
             // NAP_TABLEVIEW_UPDATE(V_TableView)
 
-            LOG_PRINT("Current VN_Selecio" + hb_ntos(LEN(VN_Selecio)))
+            LOG_PRINT("Current VN_Selecio: " + hb_ntos(LEN(VN_Selecio)))
 
             //
             // FRAN: Automatic first selection and change selection event
             //
-            NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
+            //NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
 
             IF N_TP_Selecao == _SELE_SIMPLES
-                NAP_TABLEVIEW_SELECT(V_TableView, 1)
+                // NAP_TABLEVIEW_CUALIB_REFRESH do the select
+                //NAP_TABLEVIEW_SELECT(V_TableView, 1)
                 NAP_TABLEVIEW_CUALIB_ON_SINGLE_SELECT_CHANGE()
 
             ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA

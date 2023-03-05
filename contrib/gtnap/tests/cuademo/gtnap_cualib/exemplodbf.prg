@@ -93,6 +93,7 @@ LOCAL V_Janela
 USE ../dados/cotacao NEW SHARED
 SET INDEX TO ../dados/cotacao
 GOTO TOP
+GOTO 2
 
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    USE dados\cotacao NEW SHARED
@@ -276,41 +277,43 @@ UNLOCK
 RELEIA TUDO V_Janela
 *
 
-STAT PROC PROCURAR_REGISTRO (V_Janela)
-    RETURN
-
-// ***************************
 // STAT PROC PROCURAR_REGISTRO (V_Janela)
-// ***************************
-// LOCAL C_CDINDX, D_DTCOTA
-// LOCAL N_Opcao
-// *
-// N_Opcao := PERGUN("Qual registro pesquisar:",;
-//                {"Primeiro","Terceiro","Antepenultimo","Ultimo"})
-// IF N_Opcao==1
-//    C_CDINDX := "01" // primeiro registro
-//    D_DTCOTA := CTOD("31/01/1993")
-// ELSEIF N_Opcao==2
-//    C_CDINDX := "01" // terceiro registro
-//    D_DTCOTA := CTOD("31/03/1993")
-// ELSEIF N_Opcao==3
-//    C_CDINDX := "99" // antepenúltimo registro
-//    D_DTCOTA := CTOD("28/02/1999")
-// ELSEIF N_Opcao==4
-//    C_CDINDX := "99" // Último registro
-//    D_DTCOTA := CTOD("30/04/1999")
-// ELSE
-//    ? MEMVAR->ALGO_TEM_DE_SER_SELECIONADO
-// ENDIF
-// *
-// ADVERTE("M?????","Busca por:;"+C_CDINDX+" "+DTOC(D_DTCOTA))
-// *
-// SEEK C_CDINDX+DTOS(D_DTCOTA)
-// IF .NOT. FOUND()
-//    ? MEMVAR->REGISTRO_TEM_DE_EXISTIR
-// ENDIF
-// *
-// RELEIA TUDO V_Janela
+//     RETURN
+
+***************************
+STAT PROC PROCURAR_REGISTRO (V_Janela)
+***************************
+LOCAL C_CDINDX, D_DTCOTA
+LOCAL N_Opcao
+*
+N_Opcao := PERGUN("Qual registro pesquisar:",;
+               {"Primeiro","Terceiro","Antepenultimo","Ultimo"})
+IF N_Opcao==1
+   C_CDINDX := "01" // primeiro registro
+   D_DTCOTA := CTOD("31/01/1993")
+ELSEIF N_Opcao==2
+   C_CDINDX := "01" // terceiro registro
+   D_DTCOTA := CTOD("31/03/1993")
+ELSEIF N_Opcao==3
+   C_CDINDX := "99" // antepenúltimo registro
+   D_DTCOTA := CTOD("28/02/1999")
+ELSEIF N_Opcao==4
+   C_CDINDX := "99" // Último registro
+   D_DTCOTA := CTOD("30/04/1999")
+ELSE
+   ? MEMVAR->ALGO_TEM_DE_SER_SELECIONADO
+ENDIF
+*
+ADVERTE("M?????","Busca por:;"+C_CDINDX+" "+DTOC(D_DTCOTA))
+*
+SEEK C_CDINDX+DTOS(D_DTCOTA)
+IF .NOT. FOUND()
+   ? MEMVAR->REGISTRO_TEM_DE_EXISTIR
+ENDIF
+
+NAP_LOG("PROCURAR_REGISTRO RECNO: " + hb_ntos(RECNO()))
+*
+RELEIA TUDO V_Janela
 // *
 // *****************************************************
 // STAT PROC TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR

@@ -2163,10 +2163,52 @@ GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_area_refresh(GtNapArea *area, const bool_t set_deleted)
+static uint32_t i_recno_from_row(GtNapArea *area, const uint32_t row)
 {
-    uint32_t n = 0;
     cassert_no_null(area);
+    if (area->filter_records != NULL)
+    {
+        uint32_t recno = *arrst_get_const(area->filter_records, row, uint32_t);
+        return recno;
+    }
+    else
+    {
+        return row + 1;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_row_from_recno(GtNapArea *area, const uint32_t recno)
+{
+    cassert_no_null(area);
+    cassert(recno > 0);
+
+    if (area->filter_records != NULL)
+    {
+        arrst_foreach_const(rec, area->filter_records, uint32_t)
+            if (*rec == recno)
+                return rec_i;
+        arrst_end();
+
+        return UINT32_MAX;
+    }
+    else
+    {
+        return recno - 1;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_gtnap_cualib_area_refresh(GtNapArea *area, const bool_t set_deleted)
+{
+    HB_ULONG ulCurRec;
+
+    cassert_no_null(area);
+
+    /* Current selected */
+    SELF_RECNO( area->area, &ulCurRec );
 
     /* Some kind of filter exists --> We need a lineal index for visible records */
     if (set_deleted == TRUE /*|| filter != NULL*/)
@@ -2196,19 +2238,47 @@ void hb_gtnap_cualib_area_refresh(GtNapArea *area, const bool_t set_deleted)
         arrst_destopt(&area->filter_records, NULL, uint32_t);
     }
 
-    n = i_dbarea_num_records(area);
-    if (n > 0)
-    {
-        if (area->currow == UINT32_MAX)
-            area->currow = 1;
-        else if (area->currow > n)
-            area->currow = n;
+    SELF_GOTO(area->area, ulCurRec);
+}
 
-        i_dbarea_goto(area, area->currow);
+/*---------------------------------------------------------------------------*/
+
+static void i_gtnap_select_row(GtNapArea *area)
+{
+    HB_ULONG ulCurRec;
+    uint32_t sel_row;
+
+    cassert_no_null(area);
+
+    /* Current selected */
+    SELF_RECNO( area->area, &ulCurRec );
+
+    sel_row = i_row_from_recno(area, (uint32_t)ulCurRec);
+    log_printf("Refresh RECNO: %d  ROW: %d", ulCurRec, sel_row);
+
+    if (sel_row != UINT32_MAX)
+    {
+        tableview_deselect_all(area->view);
+        tableview_select(area->view, &sel_row, 1);
+        area->currow = sel_row + 1;
     }
     else
     {
-        area->currow = UINT32_MAX;
+        uint32_t n = 0;
+        n = i_dbarea_num_records(area);
+        if (n > 0)
+        {
+            if (area->currow == UINT32_MAX)
+                area->currow = 1;
+            else if (area->currow > n)
+                area->currow = n;
+
+            i_dbarea_goto(area, area->currow);
+        }
+        else
+        {
+            area->currow = UINT32_MAX;
+        }
     }
 
     area->cacherow = UINT32_MAX;
@@ -2385,8 +2455,9 @@ void hb_gtnap_cualib_tableview_refresh(bool_t set_deleted)
     {
         if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
         {
-            hb_gtnap_cualib_area_refresh(cuawin->gtarea, set_deleted);
+            i_gtnap_cualib_area_refresh(cuawin->gtarea, set_deleted);
             tableview_update(cuawin->gtarea->view);
+            i_gtnap_select_row(cuawin->gtarea);
         }
     }
 }
@@ -2427,22 +2498,6 @@ void hb_gtnap_area_restore_cur_db_row(GtNapArea *area)
     {
         i_dbarea_goto(area, area->cacherow);
         area->currow = area->cacherow;
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static uint32_t i_recno_from_row(GtNapArea *area, const uint32_t row)
-{
-    cassert_no_null(area);
-    if (area->filter_records != NULL)
-    {
-        uint32_t recno = *arrst_get_const(area->filter_records, row, uint32_t);
-        return recno;
-    }
-    else
-    {
-        return row + 1;
     }
 }
 
