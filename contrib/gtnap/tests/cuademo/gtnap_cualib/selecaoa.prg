@@ -605,8 +605,9 @@ IF SOB_MODO_GRAFICO()
     ENDIF
 
 
-    //NAP_LOG("SELECAOA::NAP_CUALIB_LAUNCH_MODAL!!!!!!")
+    NAP_LOG("SELECAOA::NAP_CUALIB_LAUNCH_MODAL!!!!!!")
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
+    NAP_LOG("SELECAOA::FINISH!!!!  NAP_CUALIB_LAUNCH_MODAL!!!!!!")
 
     //X_Retorno := 0
 
@@ -1122,6 +1123,7 @@ ENDIF
 
 ENDIF // NOT SOB_MODO_GRAFICO()
 
+NAP_LOG("SELECAOA::Selecao finish with: " + hb_ntos(X_Retorno))
 
 RETURN X_Retorno
 *

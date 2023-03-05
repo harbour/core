@@ -137,10 +137,18 @@ ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
 ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
 ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
 *
+
+NAP_LOG("Before ATIVE JANELA: " + hb_ntos(RecCount()))
+
 ATIVE(V_Janela)
 *
+NAP_LOG("After ATIVE JANELA: " + hb_ntos(RecCount()))
+
+NAP_LOG("Before CLOSE COTACAO: " + hb_ntos(RecCount()))
+
 CLOSE COTACAO
 
+NAP_LOG("After CLOSE COTACAO: " + hb_ntos(RecCount()))
 
 
 *****************************************************
@@ -203,7 +211,15 @@ IF L_NAO_EOF
    IF DELETED()
       C_Str := "Sim"
       // Como o SET DELETED ON está ativo, não era para passar por aqui...
-      ALTD()
+
+      //
+      // FRAN: NEVER USE ALTD() with GTNAP!
+      // GTNAP is not ready for the CA-Clipper debugger.
+      // Using ALTD() with GTNAP causes the program to go into an infinite loop of hb_gtnap_mouse_IsPresent()
+      // calls that are very difficult to debug.
+      // ALTD()
+      //
+      //
    ELSE
       C_Str := "Não"
    ENDIF

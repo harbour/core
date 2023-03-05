@@ -1162,14 +1162,15 @@ ENDIF
 //     OutStd("ATIVE B_Metodo VALID")
 // ENDIF
 
-
+NAP_LOG("FRAN Janela ATIVE antes de EVAL()")
 IF N_TP_Jan == NIL
-    //OutStd("Before EVAL(B_Metodo,VX_Janela)")
+    OutStd("Before EVAL(B_Metodo,VX_Janela)")
     X_Retorno := EVAL(B_Metodo,VX_Janela)
 ELSE
-    //OutStd("Before EVAL(B_Metodo)")
+    OutStd("Before EVAL(B_Metodo)")
     X_Retorno := EVAL(B_Metodo)
 ENDIF
+NAP_LOG("FRAN Janela ATIVE despues de EVAL()")
 
  *
  SETCOLOR(C_CorAnt)                    // restaurar cor anterior
@@ -1179,12 +1180,14 @@ ENDIF
     SETKEY(K_F1,B_Ajuda_Ant)            // restaurar ajuda anterior
  ENDIF
 
+ NAP_LOG("FRAN Janela ATIVE IF .NOT. L_CUA_10")
+
  *
  IF .NOT. L_CUA_10
-    //NAP_LOG("Antes de DestruaJan:")
+    NAP_LOG("Antes de DestruaJan:")
 
     DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha após ativação
-    //NAP_LOG("Despues de DestruaJan:")
+    NAP_LOG("Despues de DestruaJan:")
  ENDIF
  *
 
