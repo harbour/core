@@ -1164,10 +1164,10 @@ ENDIF
 
 NAP_LOG("FRAN Janela ATIVE antes de EVAL()")
 IF N_TP_Jan == NIL
-    OutStd("Before EVAL(B_Metodo,VX_Janela)")
+    //OutStd("Before EVAL(B_Metodo,VX_Janela)")
     X_Retorno := EVAL(B_Metodo,VX_Janela)
 ELSE
-    OutStd("Before EVAL(B_Metodo)")
+    //OutStd("Before EVAL(B_Metodo)")
     X_Retorno := EVAL(B_Metodo)
 ENDIF
 NAP_LOG("FRAN Janela ATIVE despues de EVAL()")

@@ -392,7 +392,8 @@ HB_FUNC( NAP_TABLEVIEW_SELECTED )
 
 HB_FUNC( NAP_TABLEVIEW_CUALIB_REFRESH )
 {
-    hb_gtnap_cualib_tableview_refresh();
+    bool_t set_deleted = (bool_t)hb_parl(1);
+    hb_gtnap_cualib_tableview_refresh(set_deleted);
 }
 
 /*---------------------------------------------------------------------------*/

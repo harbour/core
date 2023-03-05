@@ -60,6 +60,7 @@ struct _gtnap_area_t
     char_t temp[512];       // Temporal buffer between RDD and TableView
     ArrSt(GtNapColumn) *columns;
     uint32_t cacherow;      // Store the DB row while table drawing
+    ArrSt(uint32_t) *filter_records;   // The visible record match for table
 };
 
 struct _vecitem_t
@@ -364,6 +365,7 @@ static void i_destroy_area(GtNapArea **area)
     cassert_no_null(area);
     cassert_no_null(*area);
     arrst_destroy(&(*area)->columns, i_remove_column, GtNapColumn);
+    arrst_destopt(&(*area)->filter_records, NULL, uint32_t);
     heap_delete(area, GtNapArea);
 }
 
@@ -576,6 +578,35 @@ void hb_gtnap_destroy_modal(void)
 
 /*---------------------------------------------------------------------------*/
 
+static __INLINE uint32_t i_dbarea_num_records(GtNapArea *gtarea)
+{
+    cassert_no_null(gtarea);
+    if (gtarea->filter_records != NULL)
+    {
+        return arrst_size(gtarea->filter_records, uint32_t);
+    }
+    else
+    {
+        HB_ULONG ulRecCount = 0;
+        SELF_RECCOUNT(gtarea->area, &ulRecCount);
+        return (uint32_t)ulRecCount;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static __INLINE void i_dbarea_goto(GtNapArea *gtarea, const uint32_t recno)
+{
+    uint32_t _recno = recno;
+    cassert_no_null(gtarea);
+    cassert(recno >= 1);
+    if (gtarea->filter_records != NULL)
+        _recno = *arrst_get_const(gtarea->filter_records, recno - 1, uint32_t);
+    SELF_GOTO(gtarea->area, _recno);
+}
+
+/*---------------------------------------------------------------------------*/
+
 GtNapArea *hb_gtnap_new_area(TableView *view)
 {
     GtNapArea *gtarea = heap_new0(GtNapArea);
@@ -585,7 +616,7 @@ GtNapArea *hb_gtnap_new_area(TableView *view)
 
     if (gtarea->area != NULL)
     {
-        SELF_GOTO(gtarea->area, 1);
+        i_dbarea_goto(gtarea, 1);
         gtarea->currow = 1;
     }
     else
@@ -633,7 +664,7 @@ void hb_gtnap_area_set_row(GtNapArea *area, const uint32_t row)
     cassert_no_null(area);
     if (area->currow != row)
     {
-        SELF_GOTO(area->area, (HB_ULONG)row);
+        i_dbarea_goto(area, row);
         area->currow = row;
     }
 }
@@ -642,10 +673,7 @@ void hb_gtnap_area_set_row(GtNapArea *area, const uint32_t row)
 
 uint32_t hb_gtnap_area_row_count(GtNapArea *area)
 {
-    HB_ULONG ulRecCount = 0;
-    cassert_no_null(area);
-    SELF_RECCOUNT(area->area, &ulRecCount);
-    return (uint32_t)ulRecCount;
+    return i_dbarea_num_records(area);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -663,7 +691,7 @@ const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id,
     // First, select the row in area
     if (area->currow != row_id)
     {
-        SELF_GOTO(area->area, (HB_ULONG)row_id);
+        i_dbarea_goto(area, row_id);
         area->currow = row_id;
     }
 
@@ -2096,6 +2124,8 @@ static GtNapArea *i_create_area(void)
     GtNapArea *area = heap_new0(GtNapArea);
     area->currow = UINT32_MAX;
     area->columns = arrst_create(GtNapColumn);
+    area->currow = UINT32_MAX;
+    area->cacherow = UINT32_MAX;
     return area;
 }
 
@@ -2121,8 +2151,6 @@ GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
 
     if (cuawin->gtarea->area != NULL)
     {
-        SELF_GOTO(cuawin->gtarea->area, 1);
-        cuawin->gtarea->currow = 1;
         log_printf("hb_gtnap_cualib_area() works!!!");
     }
     else
@@ -2131,6 +2159,59 @@ GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
     }
 
     return cuawin->gtarea;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_area_refresh(GtNapArea *area, const bool_t set_deleted)
+{
+    uint32_t n = 0;
+    cassert_no_null(area);
+
+    /* Some kind of filter exists --> We need a lineal index for visible records */
+    if (set_deleted == TRUE /*|| filter != NULL*/)
+    {
+        HB_ULONG i, ulRecCount = 0;
+
+        if (area->filter_records == NULL)
+            area->filter_records = arrst_create(uint32_t);
+        else
+            arrst_clear(area->filter_records, NULL, uint32_t);
+
+        SELF_RECCOUNT(area->area, &ulRecCount);
+        for(i = 0; i < ulRecCount; ++i)
+        {
+            HB_BOOL lFilter = HB_FALSE;
+            SELF_GOTO(area->area, i + 1);
+
+            if (set_deleted == TRUE)
+                SELF_DELETED( area->area, &lFilter );
+
+            if (lFilter == HB_FALSE)
+                arrst_append(area->filter_records, i + 1, uint32_t);
+        }
+    }
+    else
+    {
+        arrst_destopt(&area->filter_records, NULL, uint32_t);
+    }
+
+    n = i_dbarea_num_records(area);
+    if (n > 0)
+    {
+        if (area->currow == UINT32_MAX)
+            area->currow = 1;
+        else if (area->currow > n)
+            area->currow = n;
+
+        i_dbarea_goto(area, area->currow);
+    }
+    else
+    {
+        area->currow = UINT32_MAX;
+    }
+
+    area->cacherow = UINT32_MAX;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2297,13 +2378,16 @@ void hb_gtnap_cualib_vector_selection(const ArrSt(uint32_t) *sel)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_tableview_refresh(void)
+void hb_gtnap_cualib_tableview_refresh(bool_t set_deleted)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     if (cuawin != NULL)
     {
         if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+        {
+            hb_gtnap_cualib_area_refresh(cuawin->gtarea, set_deleted);
             tableview_update(cuawin->gtarea->view);
+        }
     }
 }
 
@@ -2341,7 +2425,7 @@ void hb_gtnap_area_restore_cur_db_row(GtNapArea *area)
     cassert_no_null(area);
     if (area->cacherow != area->currow)
     {
-        SELF_GOTO(area->area, (HB_ULONG)area->cacherow);
+        i_dbarea_goto(area, area->cacherow);
         area->currow = area->cacherow;
     }
 }

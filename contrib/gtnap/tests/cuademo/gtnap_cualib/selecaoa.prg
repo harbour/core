@@ -361,7 +361,9 @@ RETURN X_Retorno
 //
 STATIC PROC UpdatedSelected()
 
-    NAP_TABLEVIEW_CUALIB_REFRESH()
+    // NAP_TABLEVIEW_CUALIB_REFRESH(SET(_SET_DELETED))
+
+
     // //         //NAP_TABLEVIEW_UPDATE(V_TableView)
 
     // LOCAL V_TableView := NIL
@@ -474,8 +476,8 @@ IF L_ForcaLerTudo
 
             V_TableView := NAP_TABLEVIEW_CREATE()
 
-            NAP_TABLEVIEW_FONT(V_TableView)
             NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView)
+            NAP_TABLEVIEW_FONT(V_TableView)
 
             IF L_MostraGrade
                 NAP_TABLEVIEW_GRID(V_TableView, .T., .T.)
@@ -519,7 +521,11 @@ IF L_ForcaLerTudo
 
             NEXT
 
-            NAP_TABLEVIEW_UPDATE(V_TableView)
+
+            NAP_TABLEVIEW_CUALIB_REFRESH(SET(_SET_DELETED))
+
+
+            // NAP_TABLEVIEW_UPDATE(V_TableView)
 
             LOG_PRINT("Current VN_Selecio" + hb_ntos(LEN(VN_Selecio)))
 
@@ -1457,7 +1463,7 @@ RETURN NIL
 FUNCTION ReleiaCorrente ( VX_Janela )
 *
 IF SOB_MODO_GRAFICO()
-    NAP_TABLEVIEW_CUALIB_REFRESH()
+    NAP_TABLEVIEW_CUALIB_REFRESH(SET(_SET_DELETED))
 
 ELSE
 #DEFINE VX_Sele VX_SubObj
@@ -1472,7 +1478,7 @@ RETURN NIL
 FUNCTION ReleiaTudo ( VX_Janela )
 *
 IF SOB_MODO_GRAFICO()
-    NAP_TABLEVIEW_CUALIB_REFRESH()
+    NAP_TABLEVIEW_CUALIB_REFRESH(SET(_SET_DELETED))
 
 ELSE
 

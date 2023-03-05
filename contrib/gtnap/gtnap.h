@@ -119,6 +119,8 @@ extern void hb_gtnap_cualib_textview(TextView *view, const int32_t nTop, const i
 
 extern GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view);
 
+extern void hb_gtnap_cualib_area_refresh(GtNapArea *area, const bool_t set_deleted);
+
 extern GtNapVector *hb_gtnap_cualib_tableview_vector(TableView *view);
 
 //extern GtNapArea *hb_gtnap_cualib_tableview_get_area(TableView *view);
@@ -131,7 +133,7 @@ extern void hb_gtnap_cualib_tableview_vector_add_item(TableView *view, String *t
 
 extern void hb_gtnap_cualib_vector_selection(const ArrSt(uint32_t) *sel);
 
-extern void hb_gtnap_cualib_tableview_refresh(void);
+extern void hb_gtnap_cualib_tableview_refresh(bool_t set_deleted);
 
 extern void hb_gtnap_cualib_column_width(GtNapArea *area, const uint32_t col, const char_t *text);
 
