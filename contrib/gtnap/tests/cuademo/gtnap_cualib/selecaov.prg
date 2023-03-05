@@ -919,11 +919,13 @@ IF N_TP_Jan == _JAN_SELE_ARQ_20
 
     // FRAN: Selection in TableView
     IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
-        X_Retorno := NAP_TABLEVIEW_CUALIB_SELECT_SINGLE_ROW()
+        X_Retorno := NAP_TABLEVIEW_CUALIB_SINGLE_ROW_SELECTED()
 
     ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-        V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
-        X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
+        // V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+        // X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
+
+        X_Retorno := NAP_TABLEVIEW_CUALIB_SELECT_MULTIPLE_ROW()
 
     ELSE
 
@@ -945,7 +947,7 @@ ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
     ENDIF
 ENDIF
 
-ELSE
+ELSE // SOB_MODO_GRAFICO()
 
     // Text version
     IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples

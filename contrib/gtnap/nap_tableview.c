@@ -398,10 +398,23 @@ HB_FUNC( NAP_TABLEVIEW_CUALIB_REFRESH )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_CUALIB_SELECT_SINGLE_ROW )
+HB_FUNC( NAP_TABLEVIEW_CUALIB_SINGLE_ROW_SELECTED )
 {
-    uint32_t row = hb_gtnap_cualib_tableview_select_single_row();
-    hb_retni(row);
+    uint32_t recno = hb_gtnap_cualib_tableview_select_single_row();
+    hb_retni(recno);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_CUALIB_SELECT_MULTIPLE_ROW )
+{
+    ArrSt(uint32_t) *recs = hb_gtnap_cualib_tableview_select_multiple_row();
+    uint32_t n = arrst_size(recs, uint32_t);
+    hb_reta(n);
+    arrst_foreach_const(v, recs, uint32_t)
+        hb_storvnl((long)(*v), -1, v_i + 1);
+    arrst_end();
+    arrst_destroy(&recs, NULL, uint32_t);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -409,4 +422,12 @@ HB_FUNC( NAP_TABLEVIEW_CUALIB_SELECT_SINGLE_ROW )
 HB_FUNC( NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE )
 {
     hb_gtnap_cualib_tableview_OnSelect(1);
+}
+
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_CUALIB_ON_SINGLE_SELECT_CHANGE )
+{
+    hb_gtnap_cualib_tableview_On_Single_Select_Change();
 }

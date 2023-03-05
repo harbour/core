@@ -2432,6 +2432,22 @@ void hb_gtnap_area_restore_cur_db_row(GtNapArea *area)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_recno_from_row(GtNapArea *area, const uint32_t row)
+{
+    cassert_no_null(area);
+    if (area->filter_records != NULL)
+    {
+        uint32_t recno = *arrst_get_const(area->filter_records, row, uint32_t);
+        return recno;
+    }
+    else
+    {
+        return row + 1;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_cualib_tableview_select_single_row(void)
 {
     const ArrSt(uint32_t) *sel = NULL;
@@ -2443,11 +2459,29 @@ uint32_t hb_gtnap_cualib_tableview_select_single_row(void)
     if (arrst_size(sel, uint32_t) == 1)
     {
         const uint32_t *row = arrst_first_const(sel, uint32_t);
-        hb_gtnap_area_set_row(cuawin->gtarea, *row + 1);
-        return *row + 1;
+        return i_recno_from_row(cuawin->gtarea, *row);
     }
 
     return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+ArrSt(uint32_t) *hb_gtnap_cualib_tableview_select_multiple_row(void)
+{
+    const ArrSt(uint32_t) *sel = NULL;
+    ArrSt(uint32_t) *recs = arrst_create(uint32_t);
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtarea);
+    sel = tableview_selected(cuawin->gtarea->view);
+
+    arrst_foreach_const(row, sel, uint32_t)
+        uint32_t recno = i_recno_from_row(cuawin->gtarea, *row);
+        arrst_append(recs, recno, uint32_t);
+    arrst_end();
+
+    return recs;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3242,6 +3276,37 @@ void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId)
     if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
     {
         Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT32_MAX, FALSE, cuawin, i_OnTableViewSelect);
+        tableview_OnSelect(cuawin->gtarea->view, listener);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnTableViewSingleSelect(GtNapArea *area, Event *e)
+{
+    const EvTbSel *sel = event_params(e, EvTbSel);
+    uint32_t first = 0;
+    uint32_t recno = 0;
+    cassert(arrst_size(sel->sel, uint32_t) == 1);
+    first = *arrst_first_const(sel->sel, uint32_t);
+    recno = i_recno_from_row(area, first);
+    log_printf("RECNO %d from ROW %d", recno, first);
+
+    SELF_GOTO(area->area, recno);
+
+    //i_dbarea_goto(area, recno);
+    area->currow = first + 1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+    {
+        Listener *listener = listener(cuawin->gtarea, i_OnTableViewSingleSelect, GtNapArea);
         tableview_OnSelect(cuawin->gtarea->view, listener);
     }
 }

@@ -536,6 +536,8 @@ IF L_ForcaLerTudo
 
             IF N_TP_Selecao == _SELE_SIMPLES
                 NAP_TABLEVIEW_SELECT(V_TableView, 1)
+                NAP_TABLEVIEW_CUALIB_ON_SINGLE_SELECT_CHANGE()
+
             ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
                 NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
                 //NAP_CUALIB_SET_JANELA(VX_Sele)
