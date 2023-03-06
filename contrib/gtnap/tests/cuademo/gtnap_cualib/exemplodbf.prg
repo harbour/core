@@ -93,7 +93,8 @@ LOCAL V_Janela
 USE ../dados/cotacao NEW SHARED
 SET INDEX TO ../dados/cotacao
 GOTO TOP
-GOTO 2
+// Fran: We force to start at second register
+//GOTO 2
 
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    USE dados\cotacao NEW SHARED

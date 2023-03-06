@@ -114,7 +114,7 @@ static void i_OnTableData(GtNapArea *gtarea, Event *e)
     {
         EvTbCell *cell = event_result(e, EvTbCell);
         const EvTbPos *pos = event_params(e, EvTbPos);
-        cell->text = hb_gtnap_area_eval_field(gtarea, pos->col + 1, pos->row + 1, &cell->align);
+        cell->text = hb_gtnap_area_eval_field(gtarea, pos->col + 1, pos->row, &cell->align);
 
         // Table column automatic width based on cell content
         hb_gtnap_cualib_column_width(gtarea, pos->col, cell->text);
@@ -169,13 +169,6 @@ static void i_OnTableDataVector(GtNapVector *gtvect, Event *e)
         EvTbCell *cell = event_result(e, EvTbCell);
         const EvTbPos *pos = event_params(e, EvTbPos);
         cell->text = hb_gtnap_vector_eval_field(gtvect, pos->col, pos->row);
-        // else
-        //     cell->text = "Hello";
-        //cell->text = hb_gtnap_area_eval_field(gtarea, pos->col + 1, pos->row + 1, &cell->align);
-//const char_t *hb_gtnap_vector_eval_field(GtNapVector *vector, const uint32_t field_id, const uint32_t row_id)
-
-        // Table column automatic width based on cell content
-        // hb_gtnap_cualib_column_width(gtarea, pos->col, cell->text);
         break;
     }
 
@@ -390,10 +383,16 @@ HB_FUNC( NAP_TABLEVIEW_SELECTED )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_CUALIB_REFRESH )
+HB_FUNC( NAP_TABLEVIEW_CUALIB_REFRESH_ALL )
 {
-    bool_t set_deleted = (bool_t)hb_parl(1);
-    hb_gtnap_cualib_tableview_refresh(set_deleted);
+    hb_gtnap_cualib_tableview_refresh_all();
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_CUALIB_REFRESH_CURRENT )
+{
+    hb_gtnap_cualib_tableview_refresh_current();
 }
 
 /*---------------------------------------------------------------------------*/
