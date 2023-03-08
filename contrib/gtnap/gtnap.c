@@ -2124,10 +2124,24 @@ static void i_gtnap_select_row(GtNapArea *area)
     SELF_RECNO( area->area, &ulCurRec );
 
     sel_row = i_row_from_recno(area, (uint32_t)ulCurRec);
+
     if (sel_row != UINT32_MAX)
     {
         tableview_select(area->view, &sel_row, 1);
         tableview_focus_row(area->view, sel_row, ekTOP);
+    }
+    /* RECNO() doesn't exists in view (perhaps is deleted) */
+    else
+    {
+        uint32_t nrecs = arrst_size(area->records, uint32_t);
+        sel_row = tableview_get_focus_row(area->view);
+        /* We move recno to current focused row */
+        if (sel_row < nrecs)
+        {
+            uint32_t recno = *arrst_get_const(area->records, sel_row, uint32_t);
+            tableview_select(area->view, &sel_row, 1);
+            SELF_GOTO(area->area, recno);
+        }
     }
 }
 

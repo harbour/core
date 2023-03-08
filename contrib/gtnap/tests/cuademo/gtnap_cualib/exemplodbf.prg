@@ -271,7 +271,9 @@ MOSTRAR("M?????","O registro atual (a ser deletado) é o RECNO() "+;
    LTRIM(STR(RECNO())))
 *
 RLOCK()
+NAP_LOG("BEFORE DELETE RECNO: " + hb_ntos(RECNO()))
 DELETE
+NAP_LOG("AFTER DELETE RECNO: " + hb_ntos(RECNO()))
 DBCOMMIT()
 UNLOCK
 *
