@@ -63,5 +63,9 @@ _gui_api void tableview_deselect_all(TableView *view);
 
 _gui_api const ArrSt(uint32_t) *tableview_selected(const TableView *view);
 
+_gui_api void tableview_focus_row(TableView *view, const uint32_t row, const align_t align);
+
+_gui_api uint32_t tableview_get_focus_row(const TableView *view);
+
 __END_C
 

@@ -2125,7 +2125,10 @@ static void i_gtnap_select_row(GtNapArea *area)
 
     sel_row = i_row_from_recno(area, (uint32_t)ulCurRec);
     if (sel_row != UINT32_MAX)
+    {
         tableview_select(area->view, &sel_row, 1);
+        tableview_focus_row(area->view, sel_row, ekTOP);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
