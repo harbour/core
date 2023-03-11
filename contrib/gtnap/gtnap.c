@@ -3103,7 +3103,7 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
             pos.y += ppos.y;
 
             if (cuawin->toolbar != NULL)
-                pos.y -= (real32_t)GTNAP_GLOBAL->cell_y_size;
+                pos.y -= (real32_t)(GTNAP_GLOBAL->cell_y_size - (cuawin->toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size));
         }
 
         window_origin(cuawin->window, pos);
