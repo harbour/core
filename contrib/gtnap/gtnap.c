@@ -1580,6 +1580,7 @@ static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const 
     }
     else
     {
+        log_printf("NULL listener in paramId: %d  Autoclose: %d", codeBlockParamId, autoclose);
         return NULL;
     }
 }

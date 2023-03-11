@@ -67,6 +67,30 @@ LOGAINFO_ID_TELA_RELAT_BOTAO("tela",C_CDTELA,NIL,NIL)   // Log de uso de tela no
 *
 IF L_CUA_10
    FOR N_CT := 1 TO LEN(VC_TxtBotoes_10)
+    IF SOB_MODO_GRAFICO()
+        AADD(V_RegiaoBotoes,{NIL,;                     // _BOTAO_LIN_INICIAL
+        NIL,;                     // _BOTAO_COL_INICIAL
+        NIL,;                     // _BOTAO_LIN_FINAL
+        NIL,;                     // _BOTAO_COL_FINAL
+        VC_TxtBotoes_10[N_CT],;   // _BOTAO_TEXTO_COMANDO
+        NIL,;                     // _BOTAO_TEXTO_TRATADO_1
+        NIL,;                     // _BOTAO_TEXTO_TRATADO_2
+        NIL,;                     // _BOTAO_COL_DESTAQUE
+        NIL,;                     // _BOTAO_TEXTO_DESTAQUE
+        {||.T.},;                 // _BOTAO_BLOCO_ACAO   // FRAN ADVERTE() INFORMAR() BUTTONS MUST CLOSE THE WINDOW AT CLICK
+        .T.,;                     // _BOTAO_AUTOCLOSE    // FRAN ADVERTE() INFORMAR() BUTTONS MUST CLOSE THE WINDOW AT CLICK
+        NIL,;                     // _BOTAO_CDBOTAO
+        NIL,;                     // _BOTAO_ALIAS_MUDA
+        NIL,;                     // _BOTAO_RECNO_MUDA
+        NIL,;                     // _BOTAO_FILTER_MUDA
+        NIL,;                     // _BOTAO_ORDER_MUDA
+        NIL,;                     // _BOTAO_EOFOK
+        NIL,;                     // _BOTAO_HANDLE_MUDA
+        NIL,;                     // _BOTAO_INKEY_DESTAQUE
+        NIL,;                     // _BOTAO_INKEY_DESTAQUE_CASE
+        NIL,;                     // _BOTAO_HANDLE_PUSHBUTTON
+        NIL})                     // _BOTAO_MUDADADOS
+ELSE
        AADD(V_RegiaoBotoes,{NIL,;                     // _BOTAO_LIN_INICIAL
                             NIL,;                     // _BOTAO_COL_INICIAL
                             NIL,;                     // _BOTAO_LIN_FINAL
@@ -89,6 +113,7 @@ IF L_CUA_10
                             NIL,;                     // _BOTAO_INKEY_DESTAQUE_CASE
                             NIL,;                     // _BOTAO_HANDLE_PUSHBUTTON
                             NIL})                     // _BOTAO_MUDADADOS
+    ENDIF
    NEXT
 ELSE
    IF LEN(VC_TxtBotoes_10) # 0
