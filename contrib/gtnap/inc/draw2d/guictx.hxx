@@ -472,6 +472,10 @@ typedef void(*FPtr_gctx_set2_real32)(void *item, const real32_t value1, const re
 #define FUNC_CHECK_GCTX_SET2_REAL32(func, type)\
     (void)((void(*)(type*, const real32_t, const real32_t))func == func)
 
+typedef void(*FPtr_gctx_set2_real64)(void *item, const real64_t value1, const real64_t value2);
+#define FUNC_CHECK_GCTX_SET2_REAL64(func, type)\
+    (void)((void(*)(type*, const real64_t, const real64_t))func == func)
+
 typedef void(*FPtr_gctx_set4_real32)(void *item, const real32_t value1, const real32_t value2, const real32_t value3, const real32_t value4);
 #define FUNC_CHECK_GCTX_SET4_REAL32(func, type)\
     (void)((void(*)(type*, const real32_t, const real32_t, const real32_t, const real32_t))func == func)
@@ -788,6 +792,7 @@ struct _guictx_t
     FPtr_gctx_cursor func_globals_cursor;
     FPtr_gctx_destroy func_globals_cursor_destroy;
     FPtr_gctx_get_indexed func_globals_value;
+    FPtr_gctx_set2_real64 func_globals_transitions;
 
     /*! <Draw Custom Controls> */
     FPtr_gctx_get_ptr func_drawctrl_font;
