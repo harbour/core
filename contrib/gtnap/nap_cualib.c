@@ -85,7 +85,8 @@ HB_FUNC( NAP_CUALIB_WINDOW )
     bool_t close_return = (bool_t)hb_parl(6);
     bool_t close_esc = (bool_t)hb_parl(7);
     bool_t minimize_button = (bool_t)hb_parl(8);
-    uint32_t id = hb_gtnap_cualib_window(N_LinIni, N_ColIni, N_LinFin, N_ColFin, tc(C_Cabec), close_return, close_esc, minimize_button);
+    bool_t buttons_navigation = (bool_t)hb_parl(9);
+    uint32_t id = hb_gtnap_cualib_window(N_LinIni, N_ColIni, N_LinFin, N_ColFin, tc(C_Cabec), close_return, close_esc, minimize_button, buttons_navigation);
     str_destroy(&C_Cabec);
     hb_retni(id);
 }
@@ -214,6 +215,14 @@ HB_FUNC( NAP_CUALIB_BUTTON )
     int32_t nRight = hb_parni(7);
     bool_t autoclose = (bool_t)hb_parl(8);
     hb_gtnap_cualib_button(text, 2, nTag, nTop, nLeft, nBottom, nRight, autoclose);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_DEFAULT_BUTTON )
+{
+    uint32_t nDef = hb_parni(1);
+    hb_gtnap_cualib_default_button(nDef);
 }
 
 /*---------------------------------------------------------------------------*/

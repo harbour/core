@@ -97,7 +97,7 @@ extern void hb_gtnap_cualib_set_linespacing(const uint32_t spacing);
 // N_LinFin --> Bottom
 // N_ColFin --> Right
 // C_Cabec --> Title
-extern uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button);
+extern uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
 extern void hb_gtnap_cualib_window_enter_tabstop(void);
 
@@ -148,6 +148,8 @@ extern ArrSt(uint32_t) *hb_gtnap_cualib_tableview_select_multiple_row(void);
 extern void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose);
 
 extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose);
+
+extern void hb_gtnap_cualib_default_button(const uint32_t nDefault);
 
 extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId);
 

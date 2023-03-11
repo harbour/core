@@ -161,7 +161,9 @@ struct _gtnap_cualib_window_t
     bool_t is_closed_by_esc;
     bool_t focus_by_previous;
     bool_t processing_invalid_date;
+    bool_t buttons_navigation;
     uint32_t message_label_id;
+    uint32_t default_button;
     Window *window;
     S2Df panel_size;
     Panel *panel;
@@ -1426,7 +1428,7 @@ static __INLINE uint32_t i_window_flags(const bool_t close_return, const bool_t 
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button)
+uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation)
 {
     uint32_t id = UINT32_MAX;
     GtNapCualibWindow *cuawin = NULL;
@@ -1452,12 +1454,14 @@ uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, 
     cuawin->focus_by_previous = FALSE;
     cuawin->processing_invalid_date = FALSE;
     cuawin->message_label_id = UINT32_MAX;
+    cuawin->default_button = UINT32_MAX;
     cuawin->gui_objects = arrst_create(GtNapCualibObject);
     cuawin->callbacks = arrpt_create(GtNapCallback);
     cuawin->panel_size.width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (cuawin->N_ColFin - cuawin->N_ColIni + 1));
     cuawin->panel_size.height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (cuawin->N_LinFin - cuawin->N_LinIni + 1));
     cuawin->confirmaCodeBlock = NULL;
     cuawin->errorDataCodeBlock = NULL;
+    cuawin->buttons_navigation = buttons_navigation;
 
     if (str_empty_c(C_Cabec) == FALSE)
         window_title(window, C_Cabec);
@@ -1658,6 +1662,16 @@ void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId,
 
     if (listener != NULL)
         button_OnClick(button, listener);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_default_button(const uint32_t nDefault)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert(cuawin->default_button == UINT32_MAX);
+    cassert(nDefault > 0);
+    cuawin->default_button = nDefault - 1;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2650,6 +2664,72 @@ static void i_OnPreviousTabstop(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_num_buttons(GtNapCualibWindow *cuawin)
+{
+    uint32_t n = 0;
+    cassert_no_null(cuawin);
+    arrst_foreach_const(obj, cuawin->gui_objects, GtNapCualibObject)
+        if (obj->type == ekOBJ_BUTTON)
+            n += 1;
+    arrst_end();
+    return n;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapCualibObject *i_get_button(GtNapCualibWindow *cuawin, const uint32_t index)
+{
+    uint32_t i = 0;
+    cassert_no_null(cuawin);
+    arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+        if (obj->type == ekOBJ_BUTTON)
+        {
+            if (i == index)
+                return obj;
+            i += 1;
+        }
+    arrst_end();
+    cassert(FALSE);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_set_defbutton(GtNapCualibWindow *cuawin)
+{
+    GtNapCualibObject *button = i_get_button(cuawin, cuawin->default_button);
+    if (button != NULL)
+        window_defbutton(cuawin->window, (Button*)button->component);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnLeftButton(GtNapCualibWindow *cuawin, Event *e)
+{
+    unref(e);
+    cassert_no_null(cuawin);
+    if (cuawin->default_button > 0)
+    {
+        cuawin->default_button -= 1;
+        i_set_defbutton(cuawin);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnRightButton(GtNapCualibWindow *cuawin, Event *e)
+{
+    unref(e);
+    cassert_no_null(cuawin);
+    if (cuawin->default_button < i_num_buttons(cuawin) - 1)
+    {
+        cuawin->default_button += 1;
+        i_set_defbutton(cuawin);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNapCualibObject *i_cualib_obj(ArrSt(GtNapCualibObject) *objects, const GuiComponent *component)
 {
     arrst_foreach(obj, objects, GtNapCualibObject)
@@ -3057,9 +3137,19 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
 
         if (cuawin->arrows_tabstop == TRUE)
         {
+            cassert(cuawin->buttons_navigation == FALSE);
             window_hotkey(cuawin->window, ekKEY_UP, 0, listener(cuawin, i_OnPreviousTabstop, GtNapCualibWindow));
             window_hotkey(cuawin->window, ekKEY_DOWN, 0, listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
         }
+        else if (cuawin->buttons_navigation == TRUE)
+        {
+            if (i_num_buttons(cuawin) > 1)
+            {
+                window_hotkey(cuawin->window, ekKEY_LEFT, 0, listener(cuawin, i_OnLeftButton, GtNapCualibWindow));
+                window_hotkey(cuawin->window, ekKEY_RIGHT, 0, listener(cuawin, i_OnRightButton, GtNapCualibWindow));
+            }
+        }
+
 
         //if (cuawin->stops_last_edit == TRUE)
         {
@@ -3079,6 +3169,18 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
         }
 
         cuawin->is_configured = TRUE;
+    }
+
+    if (cuawin->buttons_navigation == TRUE)
+    {
+        uint32_t n = i_num_buttons(cuawin);
+        if (n > 0)
+        {
+            if (cuawin->default_button == UINT32_MAX)
+                cuawin->default_button = 0;
+            cassert(cuawin->default_button < n);
+            i_set_defbutton(cuawin);
+        }
     }
 
     /* Launch the window */

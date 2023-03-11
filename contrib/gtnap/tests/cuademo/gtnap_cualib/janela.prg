@@ -600,6 +600,7 @@ LOCAL L_AutoClose := .F.
 LOCAL L_CLOSE_WITH_RETURN := .F.
 LOCAL L_CLOSE_WITH_ESC := .F.
 LOCAL L_MINIMIZE_BUTTON := .F.
+LOCAL L_BUTTONS_NAVIGATION := .F.
 
 
 
@@ -739,6 +740,9 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             IF N_TP_Jan == NIL
                 L_CLOSE_WITH_ESC := .T.
                 L_CLOSE_WITH_RETURN := .T.
+                // Perguntar can navigate buttons by keyboard
+                L_BUTTONS_NAVIGATION := .T.
+                NAP_LOG("JANELA NO ESPECIALIZED")
 
             ELSEIF N_TP_Jan == _JAN_TEXTO_10
                 L_CLOSE_WITH_ESC := .T.
@@ -772,7 +776,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
                 L_MINIMIZE_BUTTON := .F.
             ENDIF
 
-            N_WindowNum := NAP_CUALIB_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux, L_CLOSE_WITH_RETURN, L_CLOSE_WITH_ESC, L_MINIMIZE_BUTTON)
+            N_WindowNum := NAP_CUALIB_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux, L_CLOSE_WITH_RETURN, L_CLOSE_WITH_ESC, L_MINIMIZE_BUTTON, L_BUTTONS_NAVIGATION)
 
             NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)}, .F.)
 

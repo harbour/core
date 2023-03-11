@@ -289,8 +289,9 @@ STAT PROC PROCURAR_REGISTRO (V_Janela)
 LOCAL C_CDINDX, D_DTCOTA
 LOCAL N_Opcao
 *
+// FRAN: By default the third option (for testing)
 N_Opcao := PERGUN("Qual registro pesquisar:",;
-               {"Primeiro","Terceiro","Antepenultimo","Ultimo"})
+               {"Primeiro","Terceiro","Antepenultimo","Ultimo"}, 3)
 IF N_Opcao==1
    C_CDINDX := "01" // primeiro registro
    D_DTCOTA := CTOD("31/01/1993")

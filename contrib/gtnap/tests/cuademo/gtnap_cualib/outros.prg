@@ -84,6 +84,8 @@ IF SOB_MODO_GRAFICO()
         //C_TeclaAtalho := XUpper(Left(Troca(VC_Menu[N_Cont]," [",""),1))
     NEXT
 
+    NAP_CUALIB_DEFAULT_BUTTON(N_Default)
+
     N_Opcao := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
     NAP_LOG("OPCAO PERGUNTAR: " + hb_ntos(N_Opcao))
 
@@ -94,11 +96,11 @@ IF SOB_MODO_GRAFICO()
     IF N_Opcao >= 1000
         N_Opcao -= 1000
     ELSE
-        N_Opcao := N_Default
+        N_Opcao := 0   // NO OPTION SELECTED
     ENDIF
 
     Destrua VX_Janela
-ELSE
+ELSE // NOT SOB_MODO_GRAFICO
     * montar o menu horizontal
     N_Opcao := MenuHorizontal(VX_Janela,VC_Menu_Aux,N_Default)
     Destrua VX_Janela
