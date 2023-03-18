@@ -21,6 +21,8 @@
 #INCLUDE "janela.ch"       // métodos externos da classe JANELA
 #INCLUDE "intercep.ch"  // interceptar comandos de manipulação de dados
 *
+
+
 ********************
 FUNCTION EspSelArq20 ( VX_Janela, N_TP_Selecao, L_SemGrade, ;
                        L_NaoRolaVertical, L_NaoRolaHorizontal, L_SemToolBar,;
@@ -63,9 +65,18 @@ IF N_TP_Selecao # _SELE_SIMPLES
    IF ASCAN(V_LstAcoes,{|V_Acao|K_SPACE==V_Acao[_ACAO_KEYBOARD]}) # 0
       ? MEMVAR->JANELA_JA_TEM_ACAO_BARRA_DE_ESPACO_AUTOMATICO
    ENDIF
-   ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,;
-            "B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
-            .T.)
+
+   IF SOB_MODO_GRAFICO()
+    ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_CUALIB_SELECT_CURRENT()},.F.,;
+        "B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
+        .T.)
+    NAP_CUALIB_HOTKEY(K_SPACE, ,{||NAP_CUALIB_SELECT_CURRENT()},.F.)
+ELSE
+    ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,;
+                "B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
+                .T.)
+    ENDIF
+
 ENDIF
 *
 IF L_AutoClose

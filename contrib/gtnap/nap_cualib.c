@@ -360,3 +360,10 @@ HB_FUNC( NAP_CUALIB_MULTISEL )
 {
     hb_gtnap_cualib_multisel();
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_SELECT_CURRENT )
+{
+    hb_gtnap_cualib_select_current();
+}

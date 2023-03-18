@@ -198,6 +198,8 @@ extern bool_t hb_gtnap_cualib_current_row_selected(void);
 
 extern void hb_gtnap_cualib_multisel(void);
 
+extern void hb_gtnap_cualib_select_current(void);
+
 HB_EXTERN_END
 
 #endif

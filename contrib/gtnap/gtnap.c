@@ -226,6 +226,7 @@ static const GtNapKey KEYMAPS[] = {
 { K_F12, ekKEY_F12, 0 },
 
 { K_ENTER, ekKEY_RETURN, 0 },
+{ K_SPACE, ekKEY_SPACE, 0},
 
 { 'a', ekKEY_A, 0},
 { 'b', ekKEY_B, 0},
@@ -3373,10 +3374,10 @@ void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
 
 /*---------------------------------------------------------------------------*/
 
-static int i_uint32_cmp(const uint32_t *u1, const uint32_t *u2)
-{
-    return (int)(*u1 - *u2);
-}
+// static int i_uint32_cmp(const uint32_t *u1, const uint32_t *u2)
+// {
+//     return (int)(*u1 - *u2);
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -3407,6 +3408,27 @@ void hb_gtnap_cualib_multisel(void)
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtarea);
     cuawin->gtarea->multisel = TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_select_current(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    uint32_t focused = UINT32_MAX;
+    const ArrSt(uint32_t) *sel = NULL;
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtarea);
+    cassert(cuawin->gtarea->multisel == TRUE);
+    focused = tableview_get_focus_row(cuawin->gtarea->view);
+    sel = tableview_selected(cuawin->gtarea->view);
+
+    if (i_in_vect(sel, focused) == TRUE)
+        tableview_deselect(cuawin->gtarea->view, &focused, 1);
+    else
+        tableview_select(cuawin->gtarea->view, &focused, 1);
+
+    tableview_update(cuawin->gtarea->view);
 }
 
 /*---------------------------------------------------------------------------*/
