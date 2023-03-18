@@ -1214,13 +1214,15 @@ NAP_LOG("FRAN Janela ATIVE despues de EVAL()")
  *
  IF .NOT. L_CUA_10
     NAP_LOG("Antes de DestruaJan:")
-
     DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha após ativação
     NAP_LOG("Despues de DestruaJan:")
+ELSE
+    NAP_LOG("L_CUA_10 JANELA NOT DESTROY")
+
  ENDIF
  *
 
- //NAP_LOG("FINISH ATIVE:")
+ NAP_LOG("FINISH ATIVE X_Retorno: " + hb_ntos(X_Retorno) )
  //OutStd("FINISH ATIVE: " + hb_ntos(N_WindowNum))
 RETURN X_Retorno   // Ative ( VX_Janela )
 *
@@ -3286,7 +3288,7 @@ ENDIF
 //NAP_LOG("Before V_Botao[_BOTAO_LIN_INICIAL]")
 NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;
                     V_Botao[_BOTAO_BLOCO_ACAO],;
-                    0,; // BUTTON_ID
+                    1000,; // BUTTON_ID
                     N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
                     N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
                     N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;

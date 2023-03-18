@@ -1158,6 +1158,7 @@ static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t ind
     object = arrst_get(cuawin->gui_objects, index, GtNapCualibObject);
 
     type = _component_type(object->component);
+    log_printf("Remove cualib object: %s", type);
     if (str_equ_c(type, "Panel") == TRUE)
         _panel_detach_components((Panel*)object->component);
 
@@ -2537,7 +2538,7 @@ static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
     hb_gtnap_callback(callback, e);
     log_printf("Pressed hotkey %d", callback->key);
     if (callback->autoclose == TRUE)
-        window_stop_modal(callback->cuawin->window, 1000);
+        window_stop_modal(callback->cuawin->window, 1001);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3297,8 +3298,11 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
         }
 
         window_origin(cuawin->window, pos);
-        log_printf("Launch CUALIB Modal Window: %d, %d, %d, %d", cuawin->N_LinIni, cuawin->N_ColIni, cuawin->N_LinFin, cuawin->N_ColFin);
+        log_printf("Launch CUALIB Modal Window: %p, Parent %p (%d, %d, %d, %d)", cuawin->window, parent ? parent->window : NULL, cuawin->N_LinIni, cuawin->N_ColIni, cuawin->N_LinFin, cuawin->N_ColFin);
         cuawin->is_closed_by_esc = FALSE;
+
+
+
         ret = window_modal(cuawin->window, parent ? parent->window : NULL);
         return ret;
     }

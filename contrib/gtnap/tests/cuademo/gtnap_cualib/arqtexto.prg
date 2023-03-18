@@ -90,6 +90,7 @@ LOCAL N_LinhasALer,  L_Remontar , N_Cont, V_Buffer
 LOCAL N_AlturaJan  := Lin2Livre(VX_Janela)-Lin1Livre(VX_Janela)+1
 LOCAL N_LarguraJan := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL L_RolaCima, L_RolaBaixo     // variáveis para evitar o teste
+LOCAL X_Retorno
 *                                 // quando for movimentação horizontal
 
 LOCAL N_Fsize := 0
@@ -149,6 +150,9 @@ IF SOB_MODO_GRAFICO()
 
     NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
 
+    FOR N_Cont := 1 TO LEN(VN_TeclaFim) STEP +1
+        NAP_CUALIB_HOTKEY(VN_TeclaFim[N_Cont], {||.T.}, .T.)
+    NEXT
     // IF EVAL(B_Edita)
     //     NAP_TEXTVIEW_EDITABLE(V_TextView, .T.)
     // ELSE
@@ -166,7 +170,9 @@ IF SOB_MODO_GRAFICO()
 
 
 
-    /*X_Retorno := */NAP_CUALIB_LAUNCH_MODAL({||.T.},{||.T.})
+    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.},{||.T.})
+
+    NAP_LOG("RETORNO ARQUIVO TEXT: " + hb_ntos(X_Retorno))
     L_FimOK := .F.
 
 

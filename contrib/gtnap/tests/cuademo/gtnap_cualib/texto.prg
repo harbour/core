@@ -96,7 +96,7 @@ LOCAL L_ScorAnt, N_Tab , N_CursorAnt, L_Finaliza
 LOCAL C_CorAnt, N_RowAnt, N_ColAnt
 *
 PARAMETERS VX_Janela
-LOCAL V_TextView
+LOCAL V_TextView, N_Cont
 
 LOCAL X_Retorno
 //LOCAL VX_Sele := VX_SubObj
@@ -163,21 +163,31 @@ C_Texto_Original := C_Texto
 *
 
 IF SOB_MODO_GRAFICO()
-    NAP_LOG("STATIC FUNCTION Texto BEFORE CoordenadasBrowse(VX_Sele)")
+
+    IF L_PrimAtivacao
+
+        NAP_LOG("STATIC FUNCTION Texto BEFORE CoordenadasBrowse(VX_Sele)")
 
 
-    V_TextView := NAP_TEXTVIEW_CREATE()
+        V_TextView := NAP_TEXTVIEW_CREATE()
 
-    LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
+        LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
 
-    IF EVAL(B_Edita)
-        NAP_TEXTVIEW_EDITABLE(V_TextView, .T.)
-    ELSE
-        NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
+        IF EVAL(B_Edita)
+            NAP_TEXTVIEW_EDITABLE(V_TextView, .T.)
+        ELSE
+            NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
+        ENDIF
+
+        FOR N_Cont := 1 TO LEN(VN_TeclaGravar) STEP +1
+            NAP_CUALIB_HOTKEY(VN_TeclaGravar[N_Cont], {||.T.}, .T.)
+        NEXT
+
+        NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
+        NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
+        L_PrimAtivacao := .F.
     ENDIF
 
-    NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
-    NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
 
     // C_Texto := MEMOEDIT(C_Texto,,;
     //     Col1Livre(MEMVAR->VX_Janela),;
@@ -188,7 +198,16 @@ IF SOB_MODO_GRAFICO()
 
 
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, B_Desiste)
-    L_FimOK := .F.
+    NAP_LOG("Texto en Memoria X_Retorno: " + hb_ntos(X_Retorno))
+    // X_Retorno == 1 --> window has been closed by [ESC]
+    // X_Retorno == 2 --> window has been closed by [INTRO]
+    // X_Retorno == 3 --> window has been closed by [X]
+    // X_Retorno >= 1000 --> window has been closed by PushButton
+    IF X_Retorno >= 1000
+        L_FimOK := .T.
+    ELSE
+        L_FimOK := .F.
+    ENDIF
     //LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)))
 ELSE
 
