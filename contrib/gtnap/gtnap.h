@@ -149,6 +149,8 @@ extern void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlo
 
 extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose);
 
+extern void hb_gtnap_cualib_change_button_block(const uint32_t button_id, const uint32_t codeBlockParamId, const bool_t autoclose);
+
 extern void hb_gtnap_cualib_default_button(const uint32_t nDefault);
 
 extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId);

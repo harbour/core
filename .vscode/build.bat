@@ -9,5 +9,5 @@ echo %cd%
 cd .\\contrib\\gtnap\\tests\\cuademo\\gtnap_cualib
 echo %cd%
 ..\\..\\..\\..\\..\\bin\\win\\msvc\\hbmk2.exe exemplo.hbp
-::START /B exemplo --hb:gtnap
+START /B exemplo --hb:gtnap
 START /B exemplo --hb:gtwin

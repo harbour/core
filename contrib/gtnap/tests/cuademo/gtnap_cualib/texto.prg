@@ -179,8 +179,19 @@ IF SOB_MODO_GRAFICO()
             NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
         ENDIF
 
+        //#DEFINE V_RegiaoBotoes VX_Janela[21]        // dados sobre os botões de função
+        NAP_LOG("TEXTO V_RegiaoBotoes: " + hb_ntos(LEN(V_RegiaoBotoes)) )
+        FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
+            NAP_CUALIB_CHANGE_BUTTON_BLOCK(N_Cont, B_Confirma, .F.)
+            //V_RegiaoBotoes[N_Cont,_BOTAO_BLOCO_ACAO] := B_Confirma
+            //V_RegiaoBotoes[N_Cont,_BOTAO_AUTOCLOSE] := .F.
+        NEXT
+
+        //#UNDEF V_RegiaoBotoes
+
+
         FOR N_Cont := 1 TO LEN(VN_TeclaGravar) STEP +1
-            NAP_CUALIB_HOTKEY(VN_TeclaGravar[N_Cont], {||.T.}, .T.)
+            NAP_CUALIB_HOTKEY(VN_TeclaGravar[N_Cont], B_Confirma, .F.)
         NEXT
 
         NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))

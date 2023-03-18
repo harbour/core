@@ -1640,9 +1640,21 @@ void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParam
 
 static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 {
-    hb_gtnap_callback(callback, e);
+    bool_t ret = TRUE;
+    cassert_no_null(callback);
+    if (callback->codeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        if (type == HB_IT_LOGICAL)
+            ret = (bool_t)hb_itemGetL(retItem);
+        hb_itemRelease(retItem);
+    }
+
+
+
     log_printf("Click button");
-    if (callback->autoclose == TRUE)
+    if (ret == TRUE || callback->autoclose == TRUE)
     {
         const Button *button = event_sender(e, Button);
         uint32_t tag = _component_get_tag((const GuiComponent*)button);
@@ -1675,6 +1687,34 @@ void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId,
 
     if (listener != NULL)
         button_OnClick(button, listener);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapCualibObject *i_get_button_id(ArrSt(GtNapCualibObject) *objects, const uint32_t button_id)
+{
+    uint32_t button = 0;
+    arrst_foreach(obj, objects, GtNapCualibObject)
+        if (obj->type == ekOBJ_BUTTON)
+        {
+            if (button_id == button)
+                return obj;
+            button += 1;
+        }
+    arrst_end();
+    cassert(FALSE);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_change_button_block(const uint32_t button_id, const uint32_t codeBlockParamId, const bool_t autoclose)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapCualibObject *obj = i_get_button_id(cuawin->gui_objects, button_id - 1);
+    Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
+    if (listener != NULL)
+        button_OnClick((Button*)obj->component, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2535,9 +2575,19 @@ static const GtNapKey *i_convert_key(const int32_t key)
 
 static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
 {
-    hb_gtnap_callback(callback, e);
+    bool_t ret = TRUE;
+    cassert_no_null(callback);
+    if (callback->codeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        if (type == HB_IT_LOGICAL)
+            ret = (bool_t)hb_itemGetL(retItem);
+        hb_itemRelease(retItem);
+    }
+
     log_printf("Pressed hotkey %d", callback->key);
-    if (callback->autoclose == TRUE)
+    if (ret == TRUE || callback->autoclose == TRUE)
         window_stop_modal(callback->cuawin->window, 1001);
 }
 

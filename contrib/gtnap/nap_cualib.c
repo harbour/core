@@ -219,6 +219,15 @@ HB_FUNC( NAP_CUALIB_BUTTON )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CUALIB_CHANGE_BUTTON_BLOCK )
+{
+    uint32_t nID = hb_parni(1);
+    bool_t autoclose = (bool_t)hb_parl(3);
+    hb_gtnap_cualib_change_button_block(nID, 2, autoclose);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_CUALIB_DEFAULT_BUTTON )
 {
     uint32_t nDef = hb_parni(1);
