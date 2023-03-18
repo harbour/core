@@ -115,7 +115,7 @@ extern void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const
 
 extern void hb_gtnap_cualib_textview(TextView *view, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);
 
-extern GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view);
+extern GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view, const uint32_t whileBlockParamId);
 
 //extern void hb_gtnap_cualib_area_refresh(GtNapArea *area, const bool_t set_deleted);
 

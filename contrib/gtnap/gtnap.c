@@ -61,6 +61,8 @@ struct _gtnap_area_t
     bool_t multisel;
     ArrSt(GtNapColumn) *columns;
     ArrSt(uint32_t) *records;       // Records visible in table (index, deleted, filters)
+    PHB_ITEM whileCodeBlock;
+
 };
 
 struct _vecitem_t
@@ -369,6 +371,13 @@ static void i_destroy_area(GtNapArea **area)
     cassert_no_null(*area);
     arrst_destroy(&(*area)->columns, i_remove_column, GtNapColumn);
     arrst_destroy(&(*area)->records, NULL, uint32_t);
+
+    if ((*area)->whileCodeBlock)
+    {
+        hb_itemRelease((*area)->whileCodeBlock);
+        (*area)->whileCodeBlock = NULL;
+    }
+
     heap_delete(area, GtNapArea);
 }
 
@@ -2027,6 +2036,7 @@ static GtNapArea *i_create_area(void)
     area->records = arrst_create(uint32_t);
     area->cache_recno = UINT32_MAX;
     area->multisel = FALSE;
+    area->whileCodeBlock = NULL;
     return area;
 }
 
@@ -2041,7 +2051,7 @@ static GtNapVector *i_create_vector(void)
 
 /*---------------------------------------------------------------------------*/
 
-GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
+GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view, const uint32_t whileBlockParamId)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
@@ -2049,6 +2059,20 @@ GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
     cuawin->gtarea = i_create_area();
     cuawin->gtarea->area = (AREA*)hb_rddGetCurrentWorkAreaPointer();
     cuawin->gtarea->view = view;
+
+    {
+        PHB_ITEM codeBlock = hb_param(whileBlockParamId, HB_IT_BLOCK);
+        if (codeBlock != NULL)
+        {
+            log_printf("WHILE BLOCK IS NOT NULL");
+            cuawin->gtarea->whileCodeBlock = hb_itemNew(codeBlock);
+        }
+        else
+        {
+            log_printf("WHILE BLOCK IS NULL");
+            cuawin->gtarea->whileCodeBlock = NULL;
+        }
+    }
 
     if (cuawin->gtarea->area != NULL)
     {
@@ -2098,6 +2122,7 @@ static void i_gtnap_cualib_area_refresh(GtNapArea *area)
     arrst_clear(area->records, NULL, uint32_t);
 
     /* Generate the record index for TableView */
+    if (area->whileCodeBlock == NULL)
     {
         HB_BOOL fEof;
         SELF_GOTOP(area->area);
@@ -2107,6 +2132,32 @@ static void i_gtnap_cualib_area_refresh(GtNapArea *area)
             HB_ULONG uiRecNo = 0;
             SELF_RECNO(area->area, &uiRecNo);
             arrst_append(area->records, (uint32_t)uiRecNo, uint32_t);
+            SELF_SKIP(area->area, 1);
+            SELF_EOF(area->area, &fEof);
+        }
+    }
+    else
+    {
+        HB_BOOL fEof;
+        SELF_GOTOP(area->area);
+        SELF_EOF(area->area, &fEof);
+        while (fEof == HB_FALSE)
+        {
+            HB_ULONG uiRecNo = 0;
+            SELF_RECNO(area->area, &uiRecNo);
+
+            {
+                PHB_ITEM retItem = hb_itemDo(area->whileCodeBlock, 0);
+                HB_TYPE type = HB_ITEM_TYPE(retItem);
+                bool_t add = FALSE;
+                cassert(type == HB_IT_LOGICAL);
+                add = (bool_t)hb_itemGetL(retItem);
+                hb_itemRelease(retItem);
+
+                if (add == TRUE)
+                    arrst_append(area->records, (uint32_t)uiRecNo, uint32_t);
+            }
+
             SELF_SKIP(area->area, 1);
             SELF_EOF(area->area, &fEof);
         }

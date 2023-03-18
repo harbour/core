@@ -140,7 +140,7 @@ HB_FUNC( NAP_TABLEVIEW_BIND_DB )
 HB_FUNC( NAP_TABLEVIEW_CUALIB_BIND_DB )
 {
     TableView *view = (TableView*)hb_parptr(1);
-    GtNapArea *gtarea = hb_gtnap_cualib_tableview_area(view);
+    GtNapArea *gtarea = hb_gtnap_cualib_tableview_area(view, 2);
     tableview_OnData(view, listener(gtarea, i_OnTableData, GtNapArea));
 }
 

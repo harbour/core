@@ -178,7 +178,8 @@ VX_Sele:CARGO := { B_LinCorrente , L_PriFora , L_UltFora , ;
                    N_Congela , N_TP_Selecao, N_AlturaCabec,;
                    N_Selecio , N_ColunaIniVetor,;
 		   V_Opcoes, L_TemHotKey, V_Lst_CdOpcao, L_TeveRolaHorizontal,;
-            L_NaoRolaVertical, L_NaoRolaHorizontal }
+            L_NaoRolaVertical, L_NaoRolaHorizontal,;
+                B_While }
 #UNDEF L_PriFora
 #UNDEF L_UltFora
 #UNDEF L_ForcaLerTudo
@@ -242,6 +243,7 @@ RETURN NIL
 #DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Para saber se teve rolamento horizontal desde última estabilização
 #DEFINE L_NaoRolaVertical    VX_Sele:CARGO[19]      // FRAN: With vertical scroll bar
 #DEFINE L_NaoRolaHorizontal  VX_Sele:CARGO[20]      // FRAN: With horizontal scroll bar
+
 // *
 // **************************************************************************************************************************************************
 // *
@@ -504,7 +506,11 @@ IF L_ForcaLerTudo
 
             // LOG_PRINT("With VERTICAL ScrollBar: " + L_NaoRolaVertical)
 
-            NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView)
+            #DEFINE B_While              VX_Sele:CARGO[21]      // FRAN: Condition
+            NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView, B_While)
+            #UNDEF B_While
+
+
             NAP_TABLEVIEW_FONT(V_TableView)
 
             IF L_MostraGrade
