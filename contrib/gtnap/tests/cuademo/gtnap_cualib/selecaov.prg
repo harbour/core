@@ -156,7 +156,9 @@ VX_Sele:CARGO := { B_2LinCorrente , L_PriFora , L_UltFora , ;
                    L_AutoClose, VN_Selecio, L_MostraGrade,;
                    N_Congela , N_TP_Selecao, N_AlturaCabec,;
                    N_Selecio , N_ColunaIniVetor,;
-		   V_Opcoes, L_TemHotKey, V_Lst_CdOpcao, L_TeveRolaHorizontal }
+		   V_Opcoes, L_TemHotKey, V_Lst_CdOpcao, L_TeveRolaHorizontal,;
+            L_NaoRolaVertical, L_NaoRolaHorizontal  }
+
 #UNDEF B_2LinCorrente
 #UNDEF L_PriFora
 #UNDEF L_UltFora
@@ -222,6 +224,9 @@ RETURN NIL
 #DEFINE L_TemHotKey          VX_Sele:CARGO[16]      // se alguma opção tem o caractere "#"
 #DEFINE V_Lst_CdOpcao        VX_Sele:CARGO[17]      // Manter compatibilidade do vetor CARGO entre os programas: SELECAOA, SELECAOV e MENUVERT
 #DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Nunca existe rolamento horizontal em vetores (conterá sempre .F.)
+#DEFINE L_NaoRolaVertical    VX_Sele:CARGO[19]      // FRAN: With vertical scroll bar
+#DEFINE L_NaoRolaHorizontal  VX_Sele:CARGO[20]      // FRAN: With horizontal scroll bar
+
 *
 **************************
 STATIC FUNCTION Selecionar ( VX_Janela )
@@ -293,6 +298,18 @@ IF L_ForcaLerTudo
 
 
                 V_TableView := NAP_TABLEVIEW_CREATE()
+
+                IF L_NaoRolaHorizontal == .F.
+                    LOG_PRINT("BROWSE VETOR With HORIZONTAL ScrollBar!!")
+                ELSE
+                    LOG_PRINT("BROWSE VETOR WITHOUT HORIZONTAL ScrollBar!!")
+                ENDIF
+
+                IF L_NaoRolaVertical == .F.
+                    LOG_PRINT("BROWSE VETOR With VERTICAL ScrollBar!!")
+                ELSE
+                    LOG_PRINT("BROWSE VETOR WITHOUT VERTICAL ScrollBar!!")
+                ENDIF
 
                 NAP_TABLEVIEW_FONT(V_TableView)
                 NAP_TABLEVIEW_HEADER_VISIBLE(V_TableView, .F.)
