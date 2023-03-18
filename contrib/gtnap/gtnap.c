@@ -2145,26 +2145,29 @@ static void i_gtnap_select_row(GtNapArea *area)
     if (area->multisel == TRUE)
     {
         log_printf("MULTISELECTION TABLE!!!!");
-        /* We use RECNO for focused row */
-        if (sel_row != UINT32_MAX)
+        if (tableview_get_focus_row(area->view) == UINT32_MAX)
         {
-            tableview_focus_row(area->view, sel_row, ekTOP);
-        }
-        else
-        {
-            uint32_t nrecs = arrst_size(area->records, uint32_t);
-            sel_row = tableview_get_focus_row(area->view);
-            /* We move recno to current focused row */
-            if (sel_row >= nrecs)
+            /* We use RECNO for focused row */
+            if (sel_row != UINT32_MAX)
             {
-                sel_row = 0;
+                tableview_focus_row(area->view, sel_row, ekTOP);
             }
-
-            if (sel_row < nrecs)
+            else
             {
-                uint32_t recno = *arrst_get_const(area->records, sel_row, uint32_t);
-                tableview_select(area->view, &sel_row, 1);
-                SELF_GOTO(area->area, recno);
+                uint32_t nrecs = arrst_size(area->records, uint32_t);
+                sel_row = tableview_get_focus_row(area->view);
+                /* We move recno to current focused row */
+                if (sel_row >= nrecs)
+                {
+                    sel_row = 0;
+                }
+
+                if (sel_row < nrecs)
+                {
+                    uint32_t recno = *arrst_get_const(area->records, sel_row, uint32_t);
+                    tableview_select(area->view, &sel_row, 1);
+                    SELF_GOTO(area->area, recno);
+                }
             }
         }
     }
