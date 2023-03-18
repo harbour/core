@@ -142,39 +142,45 @@ L_Remontar   := .T.
 
 
 IF SOB_MODO_GRAFICO()
-    NAP_LOG("STATIC FUNCTION ArqTexto ( VX_Janela )")
 
-    V_TextView := NAP_TEXTVIEW_CREATE()
+    IF L_PrimAtivacao
 
-    LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
+        NAP_LOG("STATIC FUNCTION ArqTexto ( VX_Janela )")
 
-    NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
+        V_TextView := NAP_TEXTVIEW_CREATE()
 
-    FOR N_Cont := 1 TO LEN(VN_TeclaFim) STEP +1
-        NAP_CUALIB_HOTKEY(VN_TeclaFim[N_Cont], {||.T.}, .T.)
-    NEXT
-    // IF EVAL(B_Edita)
-    //     NAP_TEXTVIEW_EDITABLE(V_TextView, .T.)
-    // ELSE
-    //     NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
-    // ENDIF
+        LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
 
-    NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
+        NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
 
-    FileTop2( N_Handle )
-    N_Fsize := FileSize2( N_Handle )
+        FOR N_Cont := 1 TO LEN(VN_TeclaFim) STEP +1
+            NAP_CUALIB_HOTKEY(VN_TeclaFim[N_Cont], {||.T.}, .T.)
+        NEXT
 
-    V_Buffer := FReadStr( N_Handle, N_Fsize )
+        NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
+
+        FileTop2( N_Handle )
+        N_Fsize := FileSize2( N_Handle )
+
+        V_Buffer := FReadStr( N_Handle, N_Fsize )
 
         NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, V_Buffer)
+        L_PrimAtivacao := .F.
+    ENDIF
 
 
 
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.},{||.T.})
-
     NAP_LOG("RETORNO ARQUIVO TEXT: " + hb_ntos(X_Retorno))
-    L_FimOK := .F.
-
+    // X_Retorno == 1 --> window has been closed by [ESC]
+    // X_Retorno == 2 --> window has been closed by [INTRO]
+    // X_Retorno == 3 --> window has been closed by [X]
+    // X_Retorno >= 1000 --> window has been closed by PushButton
+    IF X_Retorno >= 1000
+        L_FimOK := .T.
+    ELSE
+        L_FimOK := .F.
+    ENDIF
 
 ELSE
 
