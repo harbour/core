@@ -196,8 +196,11 @@ ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
 ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
 *
 MUDE SELECAO V_Janela PARA {2,4,6,8}   // registros pré-selecionados
+
 *
 ATIVE(V_Janela)
+
+
 *
 CLOSE COTACAO
 *
@@ -383,6 +386,7 @@ GOTO N_Recno_Ant
 *
 RELEIA TUDO V_Janela
 *
+
 
 // STAT PROC DEFAULT_SELECIONADOS(V_Janela)
 // RETURN

@@ -58,6 +58,7 @@ struct _gtnap_area_t
     TableView *view;
     char_t temp[512];               // Temporal buffer between RDD and TableView
     uint32_t cache_recno;           // Store the DB recno while table drawing
+    bool_t multisel;
     ArrSt(GtNapColumn) *columns;
     ArrSt(uint32_t) *records;       // Records visible in table (index, deleted, filters)
 };
@@ -2024,6 +2025,7 @@ static GtNapArea *i_create_area(void)
     area->columns = arrst_create(GtNapColumn);
     area->records = arrst_create(uint32_t);
     area->cache_recno = UINT32_MAX;
+    area->multisel = FALSE;
     return area;
 }
 
@@ -2061,24 +2063,24 @@ GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_db_loop(GtNapArea *area)
-{
-    HB_BOOL fEof;
-    uint32_t i = 0;
+// static void i_db_loop(GtNapArea *area)
+// {
+//     HB_BOOL fEof;
+//     uint32_t i = 0;
 
-    cassert_no_null(area);
-    SELF_GOTOP(area->area);
-    SELF_EOF(area->area, &fEof);
-    while (fEof == HB_FALSE)
-    {
-        HB_ULONG uiRecNo = 0;
-        SELF_RECNO(area->area, &uiRecNo);
-        log_printf("Position: %d: Recno: %d", i, uiRecNo);
-        i += 1;
-        SELF_SKIP(area->area, 1);
-        SELF_EOF(area->area, &fEof);
-    }
-}
+//     cassert_no_null(area);
+//     SELF_GOTOP(area->area);
+//     SELF_EOF(area->area, &fEof);
+//     while (fEof == HB_FALSE)
+//     {
+//         HB_ULONG uiRecNo = 0;
+//         SELF_RECNO(area->area, &uiRecNo);
+//         log_printf("Position: %d: Recno: %d", i, uiRecNo);
+//         i += 1;
+//         SELF_SKIP(area->area, 1);
+//         SELF_EOF(area->area, &fEof);
+//     }
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -2133,29 +2135,59 @@ static void i_gtnap_select_row(GtNapArea *area)
 
     cassert_no_null(area);
 
-    tableview_deselect_all(area->view);
-
     /* Current selected */
     SELF_RECNO( area->area, &ulCurRec );
 
     sel_row = i_row_from_recno(area, (uint32_t)ulCurRec);
 
-    if (sel_row != UINT32_MAX)
+    /* In multisel table, the selected rows comes from  VN_Selecio */
+    if (area->multisel == TRUE)
     {
-        tableview_select(area->view, &sel_row, 1);
-        tableview_focus_row(area->view, sel_row, ekTOP);
+        log_printf("MULTISELECTION TABLE!!!!");
+        /* We use RECNO for focused row */
+        if (sel_row != UINT32_MAX)
+        {
+            tableview_focus_row(area->view, sel_row, ekTOP);
+        }
+        else
+        {
+            uint32_t nrecs = arrst_size(area->records, uint32_t);
+            sel_row = tableview_get_focus_row(area->view);
+            /* We move recno to current focused row */
+            if (sel_row >= nrecs)
+            {
+                sel_row = 0;
+            }
+
+            if (sel_row < nrecs)
+            {
+                uint32_t recno = *arrst_get_const(area->records, sel_row, uint32_t);
+                tableview_select(area->view, &sel_row, 1);
+                SELF_GOTO(area->area, recno);
+            }
+        }
     }
-    /* RECNO() doesn't exists in view (perhaps is deleted) */
     else
     {
-        uint32_t nrecs = arrst_size(area->records, uint32_t);
-        sel_row = tableview_get_focus_row(area->view);
-        /* We move recno to current focused row */
-        if (sel_row < nrecs)
+        tableview_deselect_all(area->view);
+
+        if (sel_row != UINT32_MAX)
         {
-            uint32_t recno = *arrst_get_const(area->records, sel_row, uint32_t);
             tableview_select(area->view, &sel_row, 1);
-            SELF_GOTO(area->area, recno);
+            tableview_focus_row(area->view, sel_row, ekTOP);
+        }
+        /* RECNO() doesn't exists in view (perhaps is deleted) */
+        else
+        {
+            uint32_t nrecs = arrst_size(area->records, uint32_t);
+            sel_row = tableview_get_focus_row(area->view);
+            /* We move recno to current focused row */
+            if (sel_row < nrecs)
+            {
+                uint32_t recno = *arrst_get_const(area->records, sel_row, uint32_t);
+                tableview_select(area->view, &sel_row, 1);
+                SELF_GOTO(area->area, recno);
+            }
         }
     }
 }
@@ -3350,21 +3382,31 @@ static int i_uint32_cmp(const uint32_t *u1, const uint32_t *u2)
 
 bool_t hb_gtnap_cualib_current_row_selected(void)
 {
-    // FRAN: TODO
-    // GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
-    // cassert_no_null(cuawin);
-    // if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
-    // {
-    //     uint32_t currow = cuawin->gtarea->currow - 1;
-    //     const ArrSt(uint32_t) *sel = tableview_selected(cuawin->gtarea->view);
-
-    //     if (arrst_bsearch_const(sel, i_uint32_cmp, &currow, NULL, uint32_t, uint32_t) != NULL)
-    //         return TRUE;
-    //     else
-    //         return FALSE;
-    // }
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+    {
+        HB_ULONG uiRecNo = 0;
+        const ArrSt(uint32_t) *sel = tableview_selected(cuawin->gtarea->view);
+        SELF_RECNO(cuawin->gtarea->area, &uiRecNo);
+        arrst_foreach_const(row, sel, uint32_t)
+            const uint32_t recno = *arrst_get_const(cuawin->gtarea->records, *row, uint32_t);
+            if (recno == uiRecNo)
+                return TRUE;
+        arrst_end();
+    }
 
     return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_multisel(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtarea);
+    cuawin->gtarea->multisel = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/

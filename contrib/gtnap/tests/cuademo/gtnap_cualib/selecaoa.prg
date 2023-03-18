@@ -486,6 +486,7 @@ IF L_ForcaLerTudo
             IF N_TP_Selecao == _SELE_SIMPLES
                 NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
             ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+                NAP_CUALIB_MULTISEL()
                 NAP_TABLEVIEW_MULTISEL(V_TableView, .T., .T.)
 
 
@@ -522,12 +523,10 @@ IF L_ForcaLerTudo
             NEXT
 
 
-            NAP_TABLEVIEW_CUALIB_REFRESH_ALL()
-
-
             // NAP_TABLEVIEW_UPDATE(V_TableView)
 
             LOG_PRINT("Current VN_Selecio: " + hb_ntos(LEN(VN_Selecio)))
+            NAP_TABLEVIEW_CUALIB_REFRESH_ALL()
 
             //
             // FRAN: Automatic first selection and change selection event
@@ -549,6 +548,8 @@ IF L_ForcaLerTudo
                 ENDIF
 
             ENDIF
+
+
             //LOG_PRINT("TableView DEFAULT SEL:" + hb_ntos(LEN(VN_Selecio)) + ", JAJAJAJ")
 
 

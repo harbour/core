@@ -353,3 +353,10 @@ HB_FUNC( NAP_CUALIB_TEXTVIEW_WRITE )
     textview_writef(view, tc(text));
     str_destroy(&text);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_MULTISEL )
+{
+    hb_gtnap_cualib_multisel();
+}

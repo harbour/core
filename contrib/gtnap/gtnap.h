@@ -196,6 +196,8 @@ extern void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId);
 
 extern bool_t hb_gtnap_cualib_current_row_selected(void);
 
+extern void hb_gtnap_cualib_multisel(void);
+
 HB_EXTERN_END
 
 #endif
