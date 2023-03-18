@@ -3487,6 +3487,30 @@ void hb_gtnap_cualib_select_current(void)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_cualib_select_current_vector(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    uint32_t focused = UINT32_MAX;
+    VecItem *item = NULL;
+    const ArrSt(uint32_t) *sel = NULL;
+    cassert_no_null(cuawin);
+    cassert_no_null(cuawin->gtvector);
+    focused = tableview_get_focus_row(cuawin->gtvector->view);
+    sel = tableview_selected(cuawin->gtvector->view);
+
+    if (i_in_vect(sel, focused) == TRUE)
+        tableview_deselect(cuawin->gtvector->view, &focused, 1);
+    else
+        tableview_select(cuawin->gtvector->view, &focused, 1);
+
+    item = arrst_get(cuawin->gtvector->items, focused, VecItem);
+    item->selected = !item->selected;
+
+    tableview_update(cuawin->gtvector->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );

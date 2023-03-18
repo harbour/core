@@ -54,9 +54,19 @@ IF N_TP_Selecao # _SELE_SIMPLES
    IF ASCAN(V_LstAcoes,{|V_Acao|K_SPACE==V_Acao[_ACAO_KEYBOARD]}) # 0
       ? MEMVAR->JANELA_JA_TEM_ACAO_BARRA_DE_ESPACO_AUTOMATICO
    ENDIF
+
+   IF SOB_MODO_GRAFICO()
+    ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_CUALIB_SELECT_CURRENT_VECTOR()},.F.,;
+        "B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
+        .T.)
+    NAP_CUALIB_HOTKEY(K_SPACE, ,{||NAP_CUALIB_SELECT_CURRENT_VECTOR()},.F.)
+ELSE
+
    ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,;
             "B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
             .T.)
+ENDIF
+
 ENDIF
 *
 IF L_AutoClose

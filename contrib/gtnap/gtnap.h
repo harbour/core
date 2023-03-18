@@ -200,6 +200,8 @@ extern void hb_gtnap_cualib_multisel(void);
 
 extern void hb_gtnap_cualib_select_current(void);
 
+extern void hb_gtnap_cualib_select_current_vector(void);
+
 HB_EXTERN_END
 
 #endif

@@ -367,3 +367,10 @@ HB_FUNC( NAP_CUALIB_SELECT_CURRENT )
 {
     hb_gtnap_cualib_select_current();
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_SELECT_CURRENT_VECTOR )
+{
+    hb_gtnap_cualib_select_current_vector();
+}
