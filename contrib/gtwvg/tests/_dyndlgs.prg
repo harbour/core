@@ -2,6 +2,7 @@
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "gtwvg.ch"
 
 #define ID_BTN_OK                  1
 #define ID_MLE                     10

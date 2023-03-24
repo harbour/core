@@ -53,9 +53,7 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-#include "hbgtwvg.ch"
-#include "wvtwin.ch"
-#include "wvgparts.ch"
+#include "gtwvg.ch"
 
 #define evBeforeNavigate                          100
 #define evNavigateComplete                        101
