@@ -44,8 +44,7 @@
  *
  */
 
-#include "wvtwin.ch"
-
+#include "gtwvg.ch"
 #include "hbgtinfo.ch"
 
 THREAD STATIC t_paint_ := { { "", {} } }

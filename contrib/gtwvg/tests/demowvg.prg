@@ -21,7 +21,7 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 #include "hbver.ch"
-#include "wvgparts.ch"
+#include "gtwvg.ch"
 
 REQUEST DBFCDX
 REQUEST DBFNTX

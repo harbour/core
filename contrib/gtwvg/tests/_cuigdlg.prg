@@ -4,6 +4,7 @@
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "gtwvg.ch"
 
 // Simplified Console with GUI Look
 
