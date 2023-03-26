@@ -504,6 +504,8 @@ IF L_ForcaLerTudo
                 LOG_PRINT("WITHOUT VERTICAL ScrollBar!!")
             ENDIF
 
+            NAP_TABLEVIEW_SCROLL(V_TableView, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
+
             // LOG_PRINT("With VERTICAL ScrollBar: " + L_NaoRolaVertical)
 
             #DEFINE B_While              VX_Sele:CARGO[21]      // FRAN: Condition

@@ -77,7 +77,8 @@ ENDIF
 N_TP_Jan  := _JAN_TEXTO_10
 VX_SubObj := { B_Texto, VN_TeclaGravar, N_TamLinha, N_Tab, N_Linha, N_Coluna,;
                N_LinhaRel, N_ColunaRel, B_Valid, B_Edita,;
-               B_Confirma, B_Desiste, B_FiltroTec, L_PrimAtivacao }
+               B_Confirma, B_Desiste, B_FiltroTec, L_PrimAtivacao,;
+                L_NaoRolaVertical, L_RolaHorizontal }
 B_Metodo  := {||Texto(VX_Janela)}
 *
 #UNDEF   N_Linha
@@ -125,6 +126,9 @@ NAP_LOG("STATIC FUNCTION Texto")
 #DEFINE B_Desiste      MEMVAR->VX_SubObj[12]
 #DEFINE B_FiltroTec    MEMVAR->VX_SubObj[13]
 #DEFINE L_PrimAtivacao MEMVAR->VX_SubObj[14]
+#DEFINE L_NaoRolaVertical MEMVAR->VX_SubObj[15]
+#DEFINE L_RolaHorizontal MEMVAR->VX_SubObj[16]
+
 *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF SOB_MODO_GRAFICO()
@@ -178,6 +182,21 @@ IF SOB_MODO_GRAFICO()
         ELSE
             NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
         ENDIF
+
+        IF L_RolaHorizontal == .T.
+            LOG_PRINT("TEXTVIEW With HORIZONTAL ScrollBar!!")
+        ELSE
+            LOG_PRINT("TEXTVIEW  WITHOUT HORIZONTAL ScrollBar!!")
+        ENDIF
+
+        IF L_NaoRolaVertical == .F.
+            LOG_PRINT("TEXTIVEW With VERTICAL ScrollBar!!")
+        ELSE
+            LOG_PRINT("TEXTIVEW  WITHOUT VERTICAL ScrollBar!!")
+        ENDIF
+
+        NAP_TEXTVIEW_SCROLL(V_TextView, L_RolaHorizontal, IIF(L_NaoRolaVertical==.F.,.T.,.F.))
+
 
         //#DEFINE V_RegiaoBotoes VX_Janela[21]        // dados sobre os botões de função
         NAP_LOG("TEXTO V_RegiaoBotoes: " + hb_ntos(LEN(V_RegiaoBotoes)) )

@@ -256,6 +256,7 @@ LOCAL X_Retorno
 LOCAL L_Coords, V_MenuVert, V_TableView
 LOCAL /*N_PaintRefresh_Old,*/ X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, N_TeclaUpper, L_PodeExecutar
+
 *
 LOCAL N_Count, O_Column, N_Width, C_Title
 
@@ -311,6 +312,7 @@ IF L_ForcaLerTudo
                     LOG_PRINT("BROWSE VETOR WITHOUT VERTICAL ScrollBar!!")
                 ENDIF
 
+                NAP_TABLEVIEW_SCROLL(V_TableView, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
                 NAP_TABLEVIEW_FONT(V_TableView)
                 NAP_TABLEVIEW_HEADER_VISIBLE(V_TableView, .F.)
                 NAP_TABLEVIEW_GRID(V_TableView, .T., .T.)

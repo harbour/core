@@ -72,7 +72,7 @@ ENDIF
 N_TP_Jan  := _JAN_ARQTEXTO_10
 VX_SubObj := { N_Handle, N_TamLinha, VN_TeclaFim, V_Linhas,;
                L_InicioTela, N_ColCobertas, C_PalDestaque,;
-               L_PrimAtivacao }
+               L_PrimAtivacao, L_NaoRolaVertical, L_NaoRolaHorizontal }
 B_Metodo  := {||ArqTexto(VX_Janela)}
 *
 #UNDEF V_Linhas
@@ -118,6 +118,9 @@ LOCAL N_Keyboard, N_mRow, N_mCol, N_RegiaoMouse, V_TextView
 #DEFINE N_ColCobertas  VX_SubObj[06]
 #DEFINE C_PalDestaque  VX_SubObj[07]
 #DEFINE L_PrimAtivacao VX_SubObj[08]
+#DEFINE L_NaoRolaVertical VX_SubObj[09]
+#DEFINE L_NaoRolaHorizontal VX_SubObj[10]
+
 *
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    IF L_PrimAtivacao .AND. SOB_MODO_GRAFICO()
@@ -152,6 +155,20 @@ IF SOB_MODO_GRAFICO()
         LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
 
         NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
+
+        IF L_NaoRolaHorizontal == .F.
+            LOG_PRINT("TEXTVIEW With HORIZONTAL ScrollBar!!")
+        ELSE
+            LOG_PRINT("TEXTVIEW  WITHOUT HORIZONTAL ScrollBar!!")
+        ENDIF
+
+        IF L_NaoRolaVertical == .F.
+            LOG_PRINT("TEXTIVEW With VERTICAL ScrollBar!!")
+        ELSE
+            LOG_PRINT("TEXTIVEW  WITHOUT VERTICAL ScrollBar!!")
+        ENDIF
+
+        NAP_TEXTVIEW_SCROLL(V_TextView, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
 
         FOR N_Cont := 1 TO LEN(VN_TeclaFim) STEP +1
             NAP_CUALIB_HOTKEY(VN_TeclaFim[N_Cont], {||.T.}, .T.)
