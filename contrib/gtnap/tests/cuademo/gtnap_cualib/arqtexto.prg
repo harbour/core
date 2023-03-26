@@ -182,6 +182,7 @@ IF SOB_MODO_GRAFICO()
         V_Buffer := FReadStr( N_Handle, N_Fsize )
 
         NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, V_Buffer)
+        NAP_CUALIB_TEXTVIEW_CARET(V_TextView, 0)
         L_PrimAtivacao := .F.
     ENDIF
 

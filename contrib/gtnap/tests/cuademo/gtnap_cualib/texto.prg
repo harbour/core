@@ -215,6 +215,7 @@ IF SOB_MODO_GRAFICO()
 
         NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
         NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
+        NAP_CUALIB_TEXTVIEW_CARET(V_TextView, 0)
         L_PrimAtivacao := .F.
     ENDIF
 
