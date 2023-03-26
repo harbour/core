@@ -1424,7 +1424,7 @@ static void i_add_label_object(const int32_t cell_x, const int32_t cell_y, const
 
 static __INLINE uint32_t i_window_flags(const bool_t close_return, const bool_t close_esc, const bool_t minimize_button)
 {
-    uint32_t flags = ekWINDOW_TITLE | ekWINDOW_CLOSE;
+    uint32_t flags = ekWINDOW_TITLE | ekWINDOW_CLOSE | ekWINDOW_MODAL_ONTOP;
 
     if (close_return == TRUE)
         flags |= ekWINDOW_RETURN;
