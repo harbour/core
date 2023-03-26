@@ -46,17 +46,12 @@ __END_C
 #define cassert_no_null(ptr)\
 	cassert_no_null_imp((void*)ptr, #ptr, __FILE__, __LINE__)
 
-#ifdef  __cplusplus
 #if defined (__WINDOWS__)
 #define cassert_no_nullf(fptr)\
     cassert_no_null_imp((void*)fptr, #fptr, __FILE__, __LINE__)
 #else
 #define cassert_no_nullf(fptr)\
     cassert_no_nullf_imp((void(*)(void))fptr, #fptr, __FILE__, __LINE__)
-#endif
-#else
-#define cassert_no_nullf(fptr)\
-	cassert_no_nullf_imp((void(*)(void))fptr, #fptr, __FILE__, __LINE__)
 #endif
 
 #define cassert_default()\

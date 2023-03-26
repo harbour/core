@@ -49,9 +49,13 @@ _gui_api void textview_bfspace(TextView *view, const real32_t space);
 
 _gui_api void textview_afspace(TextView *view, const real32_t space);
 
-_gui_api void textview_scroll_down(TextView *view);
+_gui_api void textview_scroll_visible(TextView *view, const bool_t horizontal, const bool_t vertical);
+
+_gui_api void textview_move_caret(TextView *view, const int64_t pos);
 
 _gui_api void textview_editable(TextView *view, const bool_t is_editable);
+
+_gui_api const char_t *textview_get_text(const TextView *view);
 
 __END_C
 

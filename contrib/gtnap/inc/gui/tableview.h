@@ -67,5 +67,7 @@ _gui_api void tableview_focus_row(TableView *view, const uint32_t row, const ali
 
 _gui_api uint32_t tableview_get_focus_row(const TableView *view);
 
+_gui_api void tableview_scroll_visible(TableView *view, const bool_t horizontal, const bool_t vertical);
+
 __END_C
 

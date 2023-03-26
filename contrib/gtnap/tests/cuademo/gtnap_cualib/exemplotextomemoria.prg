@@ -86,6 +86,7 @@ LOCAL C_Texto,V_Janela, L_OK
 //  Fran: This code works on Windows and Linux
 //
 C_Texto := MEMOREAD("../dados/textotes.txt")
+C_Texto := "Confirmar initial text"
 
 ESPECIALIZE V_Janela TEXTO C_Texto TERMINAR {K_F2} EDITA .T. ;
             CONFIRMAR CONFIRMA_DADOS() ;
@@ -96,6 +97,9 @@ DO WHILE L_OK
    MOSTRAR("M15604","Usuário teclou F2")
    L_OK :=  ATIVE(V_Janela)
 ENDDO
+
+NAP_LOG("Final texto in 'C_Texto': " + C_Texto)
+
 DESTRUA V_Janela
 *
 

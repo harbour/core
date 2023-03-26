@@ -673,6 +673,7 @@ _draw2d_api void guictx_append_text_manager_imp(
                         FPtr_gctx_set_property func_text_set_prop,
                         FPtr_gctx_set_bool func_text_set_editable,
                         FPtr_gctx_get_text func_text_get_text,
+                        FPtr_gctx_set2_bool func_text_scroller_visible,
                         FPtr_gctx_call func_text_set_need_display,
                         FPtr_gctx_set_ptr func_attach_text_to_panel,
                         FPtr_gctx_set_ptr func_detach_text_from_panel,
@@ -692,6 +693,7 @@ _draw2d_api void guictx_append_text_manager_imp(
                         func_text_set_prop,\
                         func_text_set_editable,\
                         func_text_get_text,\
+                        func_text_scroller_visible,\
                         func_text_set_need_display,\
                         func_attach_text_to_panel,\
                         func_detach_text_from_panel,\
@@ -711,6 +713,7 @@ _draw2d_api void guictx_append_text_manager_imp(
         FUNC_CHECK_GCTX_SET_PROPERTY(func_text_set_prop, text_type),\
         FUNC_CHECK_GCTX_SET_BOOL(func_text_set_editable, text_type),\
         FUNC_CHECK_GCTX_GET_TEXT(func_text_get_text, text_type),\
+        FUNC_CHECK_GCTX_SET2_BOOL(func_text_scroller_visible, text_type),\
         FUNC_CHECK_GCTX_CALL(func_text_set_need_display, text_type),\
         FUNC_CHECK_GCTX_SET_PTR(func_attach_text_to_panel, text_type, panel_type),\
         FUNC_CHECK_GCTX_SET_PTR(func_detach_text_from_panel, text_type, panel_type),\
@@ -730,6 +733,7 @@ _draw2d_api void guictx_append_text_manager_imp(
                         (FPtr_gctx_set_property)func_text_set_prop,\
                         (FPtr_gctx_set_bool)func_text_set_editable,\
                         (FPtr_gctx_get_text)func_text_get_text,\
+                        (FPtr_gctx_set2_bool)func_text_scroller_visible,\
                         (FPtr_gctx_call)func_text_set_need_display,\
                         (FPtr_gctx_set_ptr)func_attach_text_to_panel,\
                         (FPtr_gctx_set_ptr)func_detach_text_from_panel,\
@@ -830,6 +834,7 @@ _draw2d_api void guictx_append_view_manager_imp(
                         FPtr_gctx_set2_real32 func_view_scroll,
                         FPtr_gctx_get2_real32 func_view_scroll_get,
                         FPtr_gctx_get2_real32 func_view_scroller_size,
+                        FPtr_gctx_set2_bool func_view_scroller_visible,
                         FPtr_gctx_set4_real32 func_view_content_size,
                         FPtr_gctx_get_real32 func_view_scale_factor,
                         FPtr_gctx_call func_view_set_need_display,
@@ -870,6 +875,7 @@ _draw2d_api void guictx_append_view_manager_imp(
                         func_view_scroll,\
                         func_view_scroll_get,\
                         func_view_scroller_size,\
+                        func_view_scroller_visible,\
                         func_view_content_size,\
                         func_view_scale_factor,\
                         func_view_set_need_display,\
@@ -910,6 +916,7 @@ _draw2d_api void guictx_append_view_manager_imp(
         FUNC_CHECK_GCTX_SET2_REAL32(func_view_scroll, view_type),\
         FUNC_CHECK_GCTX_GET2_REAL32(func_view_scroll_get, view_type),\
         FUNC_CHECK_GCTX_GET2_REAL32(func_view_scroller_size, view_type),\
+        FUNC_CHECK_GCTX_SET2_BOOL(func_view_scroller_visible, view_type),\
         FUNC_CHECK_GCTX_SET4_REAL32(func_view_content_size, view_type),\
         FUNC_CHECK_GCTX_GET_REAL32(func_view_scale_factor, view_type),\
         FUNC_CHECK_GCTX_CALL(func_view_set_need_display, view_type),\
@@ -950,6 +957,7 @@ _draw2d_api void guictx_append_view_manager_imp(
                         (FPtr_gctx_set2_real32)func_view_scroll,\
                         (FPtr_gctx_get2_real32)func_view_scroll_get,\
                         (FPtr_gctx_get2_real32)func_view_scroller_size,\
+                        (FPtr_gctx_set2_bool)func_view_scroller_visible,\
                         (FPtr_gctx_set4_real32)func_view_content_size,\
                         (FPtr_gctx_get_real32)func_view_scale_factor,\
                         (FPtr_gctx_call)func_view_set_need_display,\

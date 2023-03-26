@@ -65,6 +65,8 @@ _gui_api void view_scroll_y(View *view, const real32_t pos);
 
 _gui_api void view_scroll_size(const View *view, real32_t *width, real32_t *height);
 
+_gui_api void view_scroll_visible(View *view, const bool_t horizontal, const bool_t vertical);
+
 _gui_api void view_viewport(const View *view, V2Df *pos, S2Df *size);
 
 _gui_api void view_point_scale(const View *view, real32_t *scale);

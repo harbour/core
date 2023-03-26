@@ -327,6 +327,7 @@ typedef enum _window_flag_t
     ekWINDOW_RETURN         = 1 << 6,
     ekWINDOW_ESC            = 1 << 7,
     ekWINDOW_OFFSCREEN      = 1 << 8,
+    ekWINDOW_MODAL_ONTOP    = 1 << 9,
     ekWINDOW_STD            = ekWINDOW_TITLE | ekWINDOW_MIN | ekWINDOW_CLOSE,
     ekWINDOW_STDRES         = ekWINDOW_STD | ekWINDOW_MAX | ekWINDOW_RESIZE
 } window_flag_t;
@@ -467,6 +468,10 @@ typedef void(*FPtr_gctx_set_hotkey)(void *item, const vkey_t, const uint32_t, Li
 typedef void(*FPtr_gctx_set_area)(void *item, void *obj, const color_t bgcolor, const color_t skcolor, const real32_t x, const real32_t y, const real32_t width, const real32_t height);
 #define FUNC_CHECK_GCTX_SET_AREA(func, type)\
     (void)((void(*)(type*, void*, const color_t, const color_t, const real32_t, const real32_t, const real32_t, const real32_t))func == func)
+
+typedef void(*FPtr_gctx_set2_bool)(void *item, const bool_t value1, const bool_t value2);
+#define FUNC_CHECK_GCTX_SET2_BOOL(func, type)\
+    (void)((void(*)(type*, const bool_t, const bool_t))func == func)
 
 typedef void(*FPtr_gctx_set2_real32)(void *item, const real32_t value1, const real32_t value2);
 #define FUNC_CHECK_GCTX_SET2_REAL32(func, type)\
@@ -681,6 +686,7 @@ struct _guictx_t
     FPtr_gctx_set_property func_text_set_prop;
     FPtr_gctx_set_bool func_text_set_editable;
     FPtr_gctx_get_text func_text_get_text;
+    FPtr_gctx_set2_bool func_text_scroller_visible;
     FPtr_gctx_call func_text_set_need_display;
 
     /*! <Split view> */
@@ -714,6 +720,7 @@ struct _guictx_t
     FPtr_gctx_set2_real32 func_view_scroll;
     FPtr_gctx_get2_real32 func_view_scroll_get;
     FPtr_gctx_get2_real32 func_view_scroller_size;
+    FPtr_gctx_set2_bool func_view_scroller_visible;
     FPtr_gctx_set4_real32 func_view_content_size;
     FPtr_gctx_get_real32 func_view_scale_factor;
     FPtr_gctx_call func_view_set_need_display;

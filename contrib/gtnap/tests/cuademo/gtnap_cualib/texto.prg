@@ -172,8 +172,8 @@ IF SOB_MODO_GRAFICO()
 
         NAP_LOG("STATIC FUNCTION Texto BEFORE CoordenadasBrowse(VX_Sele)")
 
-
         V_TextView := NAP_TEXTVIEW_CREATE()
+
 
         LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
 
