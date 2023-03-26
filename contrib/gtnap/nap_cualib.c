@@ -365,6 +365,15 @@ HB_FUNC( NAP_CUALIB_TEXTVIEW_WRITE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CUALIB_TEXTVIEW_CARET )
+{
+    TextView *view = (TextView*)hb_parptr(1);
+    int64_t pos = hb_parni(2);
+    textview_move_caret(view, pos);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_CUALIB_MULTISEL )
 {
     hb_gtnap_cualib_multisel();

@@ -15,6 +15,16 @@ HB_FUNC( NAP_TEXTVIEW_CREATE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_TEXTVIEW_SCROLL )
+{
+    TextView *view = textview_create();
+    bool_t hor = (bool_t)hb_parl(2);
+    bool_t ver = (bool_t)hb_parl(3);
+    textview_scroll_visible(view, hor, ver);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TEXTVIEW_SIZE )
 {
     TextView *view = (TextView*)hb_parptr(1);
@@ -137,14 +147,6 @@ HB_FUNC( NAP_TEXTVIEW_AFSPACE )
     TextView *view = (TextView*)hb_parptr(1);
     real32_t space = (real32_t)hb_parnd(2);
     textview_afspace(view, space);
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_TEXTVIEW_SCROLL_DOWN )
-{
-    TextView *view = (TextView*)hb_parptr(1);
-    textview_scroll_down(view);
 }
 
 /*---------------------------------------------------------------------------*/

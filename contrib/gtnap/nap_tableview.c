@@ -16,6 +16,16 @@ HB_FUNC( NAP_TABLEVIEW_CREATE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_TABLEVIEW_SCROLL )
+{
+    TableView *view = (TableView*)hb_parptr(1);
+    bool_t hor = (bool_t)hb_parl(2);
+    bool_t ver = (bool_t)hb_parl(3);
+    tableview_scroll_visible(view, hor, ver);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TABLEVIEW_FONT )
 {
     TableView *view = (TableView*)hb_parptr(1);

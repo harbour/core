@@ -1654,7 +1654,7 @@ static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 
 
     log_printf("Click button");
-    if (ret == TRUE || callback->autoclose == TRUE)
+    if (/*ret == TRUE ||*/ callback->autoclose == TRUE)
     {
         const Button *button = event_sender(e, Button);
         uint32_t tag = _component_get_tag((const GuiComponent*)button);
@@ -2587,7 +2587,7 @@ static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
     }
 
     log_printf("Pressed hotkey %d", callback->key);
-    if (ret == TRUE || callback->autoclose == TRUE)
+    if (/*ret == TRUE ||*/ callback->autoclose == TRUE)
         window_stop_modal(callback->cuawin->window, 1001);
 }
 
