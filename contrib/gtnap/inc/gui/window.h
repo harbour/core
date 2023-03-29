@@ -43,6 +43,8 @@ _gui_api void window_next_tabstop(Window *window);
 
 _gui_api void window_previous_tabstop(Window *window);
 
+_gui_api void window_cycle_tabstop(Window *window, const bool_t cycle);
+
 _gui_api void window_update(Window *window);
 
 _gui_api void window_origin(Window *window, const V2Df origin);

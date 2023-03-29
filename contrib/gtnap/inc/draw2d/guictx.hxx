@@ -327,7 +327,7 @@ typedef enum _window_flag_t
     ekWINDOW_RETURN         = 1 << 6,
     ekWINDOW_ESC            = 1 << 7,
     ekWINDOW_OFFSCREEN      = 1 << 8,
-    ekWINDOW_MODAL_ONTOP    = 1 << 9,
+    ekWINDOW_MODAL_NOHIDE    = 1 << 9,
     ekWINDOW_STD            = ekWINDOW_TITLE | ekWINDOW_MIN | ekWINDOW_CLOSE,
     ekWINDOW_STDRES         = ekWINDOW_STD | ekWINDOW_MAX | ekWINDOW_RESIZE
 } window_flag_t;
@@ -770,6 +770,7 @@ struct _guictx_t
     FPtr_gctx_set_hotkey func_window_hotkey;
     FPtr_gctx_set_ptr func_window_set_taborder;
     FPtr_gctx_set_bool func_window_tabstop;
+    FPtr_gctx_set_bool func_window_tabcycle;
     FPtr_gctx_set_ptr func_window_set_focus;
     FPtr_gctx_set_ptr func_attach_main_panel_to_window;
     FPtr_gctx_set_ptr func_detach_main_panel_from_window;
