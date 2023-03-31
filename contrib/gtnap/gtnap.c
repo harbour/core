@@ -1125,9 +1125,19 @@ static void i_compute_font_size(const uint32_t max_width, const uint32_t max_hei
 
 /*---------------------------------------------------------------------------*/
 
-static GtNap *i_gtnap_cualib_create(void)
+static void i_launch_app(GtNap *app, Event *e)
 {
     PHB_ITEM pRet = NULL;
+    pRet = hb_itemDo(CUALIB_INIT_CODEBLOCK, 0);
+    hb_itemRelease(pRet);
+    hb_itemRelease(CUALIB_INIT_CODEBLOCK);
+    CUALIB_INIT_CODEBLOCK = NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNap *i_gtnap_cualib_create(void)
+{
     S2Df screen;
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->cualib_mode = TRUE;
@@ -1141,10 +1151,7 @@ static GtNap *i_gtnap_cualib_create(void)
     i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
     log_printf("i_gtnap_cualib_create(%s, %d, %d)", CUALIB_TITLE, CUALIB_ROWS, CUALIB_COLS);
     log_printf("GTNAP Cell Size(%d, %d)", GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size);
-    pRet = hb_itemDo(CUALIB_INIT_CODEBLOCK, 0);
-    hb_itemRelease(pRet);
-    hb_itemRelease(CUALIB_INIT_CODEBLOCK);
-    CUALIB_INIT_CODEBLOCK = NULL;
+    gui_OnIdle(10, listener(GTNAP_GLOBAL, i_launch_app, GtNap));
     return GTNAP_GLOBAL;
 }
 
@@ -1600,12 +1607,23 @@ static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const 
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnImageClick(GtNapCallback *callback, Event *e)
+static void i_OnImageClickProcess(GtNapCallback *callback, Event *e)
 {
     hb_gtnap_callback(callback, e);
-    log_printf("Click image");
+    log_printf("Click image OnIdle process");
     if (callback->autoclose == TRUE)
+    {
+        log_printf("--> STOP CUALIB Modal Window: %p 'i_OnImageClick'", callback->cuawin->window);
         window_stop_modal(callback->cuawin->window, 1000);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnImageClick(GtNapCallback *callback, Event *e)
+{
+    gui_OnIdle(10, listener(callback, i_OnImageClickProcess, GtNapCallback));
+    unref(e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1639,7 +1657,7 @@ void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParam
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnButtonClick(GtNapCallback *callback, Event *e)
+static void i_OnButtonClickProcess(GtNapCallback *callback, Event *e)
 {
     bool_t ret = FALSE;
     cassert_no_null(callback);
@@ -1659,8 +1677,18 @@ static void i_OnButtonClick(GtNapCallback *callback, Event *e)
         uint32_t tag = _component_get_tag((const GuiComponent*)button);
         if (tag == UINT32_MAX)
             tag = 1000;
+        log_printf("--> STOP CUALIB Modal Window: %p 'i_OnButtonClick'", callback->cuawin->window);
         window_stop_modal(callback->cuawin->window, tag);
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnButtonClick(GtNapCallback *callback, Event *e)
+{
+    //i_OnButtonClickProcess(callback, e);
+    gui_OnIdle(10, listener(callback, i_OnButtonClickProcess, GtNapCallback));
+    unref(e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2587,7 +2615,10 @@ static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
 
     log_printf("Pressed hotkey %d", callback->key);
     if (ret == TRUE || callback->autoclose == TRUE)
+    {
+        log_printf("--> STOP CUALIB Modal Window: %p 'i_OnWindowHotKey'", callback->cuawin->window);
         window_stop_modal(callback->cuawin->window, 1001);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2944,7 +2975,10 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
                         }
 
                         if (close == TRUE)
+                        {
+                            log_printf("--> STOP CUALIB Modal Window: %p 'i_OnEditChange'", cuawin->window);
                             window_stop_modal(cuawin->window, 5000);
+                        }
                     }
                 }
             }
@@ -3347,11 +3381,8 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
         }
 
         window_origin(cuawin->window, pos);
-        log_printf("Launch CUALIB Modal Window: %p, Parent %p (%d, %d, %d, %d)", cuawin->window, parent ? parent->window : NULL, cuawin->N_LinIni, cuawin->N_ColIni, cuawin->N_LinFin, cuawin->N_ColFin);
+        log_printf("--> Launch CUALIB Modal Window: %p, Parent %p (%d, %d, %d, %d)", cuawin->window, parent ? parent->window : NULL, cuawin->N_LinIni, cuawin->N_ColIni, cuawin->N_LinFin, cuawin->N_ColFin);
         cuawin->is_closed_by_esc = FALSE;
-
-
-
         ret = window_modal(cuawin->window, parent ? parent->window : NULL);
         return ret;
     }
