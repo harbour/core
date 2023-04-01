@@ -144,7 +144,9 @@ typedef enum _gui_event_t
     ekGUI_EVENT_TBL_END,
     ekGUI_EVENT_TBL_CELL,
     ekGUI_EVENT_TBL_SEL,
-    ekGUI_EVENT_TBL_HEADCLICK
+    ekGUI_EVENT_TBL_HEADCLICK,
+
+    ekGUI_EVENT_IDLE
 } gui_event_t;
 
 typedef enum _gui_type_t
