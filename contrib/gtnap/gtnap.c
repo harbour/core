@@ -2914,12 +2914,6 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
         return;
     }
 
-    if (cuawin->tabstop_by_return_or_arrow == FALSE)
-    {
-            log_printf("Modal Window: %p  tabstop_by_return_or_arrow FALSE", cuawin);
-        return;
-
-    }
 
     /* Update Harbour with the content of the EditBox */
     cuaobj = i_cualib_obj(cuawin->gui_objects, (GuiComponent*)event_sender(e, Edit));
@@ -2929,6 +2923,13 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
     {
         log_printf("Object: %p  is_on_edit_change", cuaobj);
         return;
+    }
+
+    if (cuaobj->is_last_edit == TRUE && cuawin->tabstop_by_return_or_arrow == FALSE)
+    {
+            log_printf("Modal Window: %p  tabstop_by_return_or_arrow FALSE", cuawin);
+        return;
+
     }
 
     cuaobj->is_on_edit_change = TRUE;
