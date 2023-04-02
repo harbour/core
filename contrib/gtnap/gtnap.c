@@ -3152,9 +3152,16 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
             /* If editBox is not editable --> Restore the original text */
             i_get_edit_text(cuaobj, res->text, sizeof(res->text));
             if (p->cpos > 0)
-                res->cpos = p->cpos - 1;
+            {
+                if (p->len > 0)
+                    res->cpos = p->cpos - p->len;
+                else
+                    res->cpos = p->cpos;
+            }
             else
+            {
                 res->cpos = 0;
+            }
             res->apply = TRUE;
         }
         else
