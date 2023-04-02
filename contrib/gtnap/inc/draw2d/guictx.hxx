@@ -475,6 +475,10 @@ typedef void(*FPtr_gctx_set2_bool)(void *item, const bool_t value1, const bool_t
 #define FUNC_CHECK_GCTX_SET2_BOOL(func, type)\
     (void)((void(*)(type*, const bool_t, const bool_t))func == func)
 
+typedef void(*FPtr_gctx_set2_int32)(void *item, const int32_t value1, const int32_t value2);
+#define FUNC_CHECK_GCTX_SET2_INT32(func, type)\
+    (void)((void(*)(type*, const int32_t, const int32_t))func == func)
+
 typedef void(*FPtr_gctx_set2_real32)(void *item, const real32_t value1, const real32_t value2);
 #define FUNC_CHECK_GCTX_SET2_REAL32(func, type)\
     (void)((void(*)(type*, const real32_t, const real32_t))func == func)
@@ -645,6 +649,7 @@ struct _guictx_t
     FPtr_gctx_set_bool func_edit_set_passmode;
     FPtr_gctx_set_bool func_edit_set_editable;
     FPtr_gctx_set_bool func_edit_set_autoselect;
+    FPtr_gctx_set2_int32 func_edit_set_select;
     FPtr_gctx_set_uint32 func_edit_set_text_color;
     FPtr_gctx_set_uint32 func_edit_set_bg_color;
     FPtr_gctx_set_real32 func_edit_set_vpadding;
@@ -840,7 +845,7 @@ struct _evtext_t
 {
     const char_t *text;
     uint32_t cpos;
-    bool_t deleted;
+    int32_t len;
 };
 
 #define kTEXTFILTER_SIZE    1024

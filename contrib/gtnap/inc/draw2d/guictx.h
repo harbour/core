@@ -290,6 +290,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
                         FPtr_gctx_set_bool func_edit_set_passmode,
                         FPtr_gctx_set_bool func_edit_set_editable,
                         FPtr_gctx_set_bool func_edit_set_autoselect,
+                        FPtr_gctx_set2_int32 func_edit_set_select,
                         FPtr_gctx_set_uint32 func_edit_set_text_color,
                         FPtr_gctx_set_uint32 func_edit_set_bg_color,
                         FPtr_gctx_set_real32 func_edit_set_vpadding,
@@ -315,6 +316,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
                         func_edit_set_passmode,\
                         func_edit_set_editable,\
                         func_edit_set_autoselect,\
+                        func_edit_set_select,\
                         func_edit_set_text_color,\
                         func_edit_set_bg_color,\
                         func_edit_set_vpadding,\
@@ -340,6 +342,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
         FUNC_CHECK_GCTX_SET_BOOL(func_edit_set_passmode, edit_type),\
         FUNC_CHECK_GCTX_SET_BOOL(func_edit_set_editable, edit_type),\
         FUNC_CHECK_GCTX_SET_BOOL(func_edit_set_autoselect, edit_type),\
+        FUNC_CHECK_GCTX_SET2_INT32(func_edit_set_select, edit_type),\
         FUNC_CHECK_GCTX_SET_UINT32(func_edit_set_text_color, edit_type),\
         FUNC_CHECK_GCTX_SET_UINT32(func_edit_set_bg_color, edit_type),\
         FUNC_CHECK_GCTX_SET_REAL32(func_edit_set_vpadding, edit_type),\
@@ -365,6 +368,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
                         (FPtr_gctx_set_bool)func_edit_set_passmode,\
                         (FPtr_gctx_set_bool)func_edit_set_editable,\
                         (FPtr_gctx_set_bool)func_edit_set_autoselect,\
+                        (FPtr_gctx_set2_int32)func_edit_set_select,\
                         (FPtr_gctx_set_uint32)func_edit_set_text_color,\
                         (FPtr_gctx_set_uint32)func_edit_set_bg_color,\
                         (FPtr_gctx_set_real32)func_edit_set_vpadding,\

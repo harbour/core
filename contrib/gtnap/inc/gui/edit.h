@@ -23,6 +23,8 @@ _gui_api void edit_OnFilter(Edit *edit, Listener *listener);
 
 _gui_api void edit_OnChange(Edit *edit, Listener *listener);
 
+_gui_api void edit_OnFocus(Edit *edit, Listener *listener);
+
 _gui_api void edit_text(Edit *edit, const char_t *text);
 
 _gui_api void edit_font(Edit *edit, const Font *font);
@@ -34,6 +36,8 @@ _gui_api void edit_passmode(Edit *edit, const bool_t passmode);
 _gui_api void edit_editable(Edit *edit, const bool_t is_editable);
 
 _gui_api void edit_autoselect(Edit *edit, const bool_t autoselect);
+
+_gui_api void edit_select(Edit *edit, const int32_t start, const int32_t end);
 
 _gui_api void edit_tooltip(Edit *edit, const char_t *text);
 
