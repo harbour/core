@@ -3012,6 +3012,71 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_filter_overwrite(const EvText *text, EvTextFilter *filter)
+{
+    /* Text has been inserted */
+    cassert_no_null(text);
+    cassert_no_null(filter);
+    if (text->len > 0)
+    {
+        const char_t *src = text->text;
+        char_t *dest = filter->text;
+        uint32_t i = 0, n = text->cpos;
+        /* Copy all characters from init to caret position */
+        for (i = 0; i < n; ++i)
+        {
+            uint32_t c = unicode_to_u32(src, ekUTF8);
+            if (c != 0)
+            {
+                uint32_t nb = unicode_to_char(c, dest, ekUTF8);
+                src += nb;
+                dest += nb;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        /* Jump 'len' chars in src */
+        for (i = 0; i < text->len; ++i)
+        {
+            uint32_t nb;
+            uint32_t c = unicode_to_u32b(src, ekUTF8, &nb);
+            if (c != 0)
+            {
+                src += nb;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        /* Copy the rest of chars */
+        for (; ; )
+        {
+            uint32_t c = unicode_to_u32(src, ekUTF8);
+            if (c != 0)
+            {
+                uint32_t nb = unicode_to_char(c, dest, ekUTF8);
+                src += nb;
+                dest += nb;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        *dest = '\0';
+        filter->apply = TRUE;
+        filter->cpos = text->cpos;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_filter_date(const EvText *text, EvTextFilter *filter)
 {
     uint32_t i = 0, j = 0;
@@ -3192,6 +3257,10 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                         }
                     }
                 }
+            }
+            else
+            {
+                i_filter_overwrite(p, res);
             }
         }
     }
