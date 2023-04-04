@@ -264,7 +264,7 @@ HB_FUNC( NAP_CUALIB_EDIT )
         9 /* Lista */,
         10 /* Auto */,
         11 /* Valida */,
-        nLin, nCol, nSize, type, getobj, in_scroll);
+        nLin, nCol, nSize, type, getobj, in_scroll, 14);
 }
 
 /*---------------------------------------------------------------------------*/

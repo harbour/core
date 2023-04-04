@@ -3,6 +3,7 @@
 #include "heap.h"
 #include "strings.h"
 #include "log.h"
+#include "cassert.h"
 
 // https://gist.github.com/ArthurSonzogni/8ebe69e005981bed6f0a44750f7812df
 
@@ -43,6 +44,29 @@ static const uint16_t CP1252_UNICODE_TABLE[] = {
 
 /*---------------------------------------------------------------------------*/
 
+uint8_t gtconvert_UTF8_to_1252_char(const uint32_t cp)
+{
+    uint32_t i = 0, n = sizeof(CP1252_UNICODE_TABLE) / sizeof(uint16_t);
+    cassert(n == UINT8_MAX + 1);
+    for (i = 0; i < n; ++i)
+    {
+        if (CP1252_UNICODE_TABLE[i] == cp)
+            return (uint8_t)i;
+    }
+
+    cassert(FALSE);
+    return UINT8_MAX;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t gtconvert_1252_to_UTF8_char(const uint8_t cp)
+{
+    return (uint32_t)CP1252_UNICODE_TABLE[cp];
+}
+
+/*---------------------------------------------------------------------------*/
+
 String *gtconvert_1252_to_UTF8(const char_t *str)
 {
     uint32_t i, n = str_len_c(str);
@@ -65,7 +89,6 @@ String *gtconvert_1252_to_UTF8(const char_t *str)
     return utf8;
 }
 
-
 /*---------------------------------------------------------------------------*/
 
 String *gtconvert_UTF8_to_1252(const char_t *str)
@@ -77,21 +100,9 @@ String *gtconvert_UTF8_to_1252(const char_t *str)
 
     while (cp != 0)
     {
-        uint32_t j = 0, n2 = sizeof(CP1252_UNICODE_TABLE) / sizeof(uint16_t);
-        uint8_t cp2 = ' ';
-
-        for (j = 0; j < n2; ++j)
-        {
-            if (CP1252_UNICODE_TABLE[j] == cp)
-            {
-                cp2 = (uint8_t)j;
-                break;
-            }
-        }
-
+        uint8_t cp2 = gtconvert_UTF8_to_1252_char(cp);
         u1252_buf[i] = cp2;
         i += 1;
-
         str = unicode_next(str, ekUTF8);
         cp = unicode_to_u32(str, ekUTF8);
     }

@@ -197,6 +197,7 @@ STAT FUNC CONVERTE_PARA_UPPER()
 *****************************
 LOCAL N_Lastkey := LASTKEY()
 LOCAL C_Retorno
+//NAP_LOG("HEY!!!! CONVERTE_PARA_UPPER(): " + hb_ntos(N_Lastkey))
 IF N_Lastkey >= 97 .AND. N_Lastkey <= 122   // letras minúsculas
    C_Retorno := UPPER(CHR(N_Lastkey))
 ELSE

@@ -130,6 +130,7 @@ struct _gtnap_cualib_object_t
     PHB_ITEM validaCodeBlock;
     PHB_ITEM listaCodeBlock;
     PHB_ITEM autoCodeBlock;
+    PHB_ITEM filtroTecBlock;
     PHB_ITEM getobjItem;
     GuiComponent *component;
 };
@@ -1202,6 +1203,9 @@ static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t ind
     if (object->autoCodeBlock != NULL)
         hb_itemRelease(object->autoCodeBlock);
 
+    if (object->filtroTecBlock != NULL)
+        hb_itemRelease(object->filtroTecBlock);
+
     if (object->getobjItem != NULL)
         hb_itemRelease(object->getobjItem);
 
@@ -1393,6 +1397,7 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->validaCodeBlock = NULL;
     object->listaCodeBlock = NULL;
     object->autoCodeBlock = NULL;
+    object->filtroTecBlock = NULL;
     object->getobjItem = NULL;
     log_printf("Added object at: %.2f, %.2f w:%.2f h:%.2f", object->pos.x, object->pos.y, object->size.width, object->size.height);
 }
@@ -1929,7 +1934,8 @@ extern void hb_gtnap_cualib_edit(
                     const uint32_t nSize,
                     const char_t *type,
                     PHB_ITEM getobj,
-                    const bool_t in_scroll_panel)
+                    const bool_t in_scroll_panel,
+                    const uint32_t filtroTecParamId)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibObject *obj = NULL;
@@ -1940,6 +1946,7 @@ extern void hb_gtnap_cualib_edit(
     PHB_ITEM validaCodeBlock = NULL;
     PHB_ITEM listaCodeBlock = NULL;
     PHB_ITEM autoCodeBlock = NULL;
+    PHB_ITEM filtroTecBlock = NULL;
 
     Edit *edit = edit_create();
     // //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
@@ -1999,6 +2006,12 @@ extern void hb_gtnap_cualib_edit(
         obj->autoCodeBlock = hb_itemNew(autoCodeBlock);
     else
         obj->autoCodeBlock = NULL;
+
+    filtroTecBlock = hb_param(filtroTecParamId, HB_IT_BLOCK);
+    if (filtroTecBlock != NULL)
+        obj->filtroTecBlock = hb_itemNew(filtroTecBlock);
+    else
+        obj->filtroTecBlock = NULL;
 
     if (getobj != NULL)
         obj->getobjItem = hb_itemNew(getobj);
@@ -3012,6 +3025,115 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_filter_tecla(const GtNapCualibObject *obj, const EvText *text, EvTextFilter *filter)
+{
+    cassert_no_null(obj);
+    cassert_no_null(text);
+    cassert_no_null(filter);
+    cassert(obj->type == ekOBJ_EDIT);
+    /* Inserted text in EditBox */
+    if (text->len > 0)
+    {
+        /* We have a filter */
+        if (obj->filtroTecBlock != NULL)
+        {
+            const char_t *src = text->text;
+            char_t *dest = filter->text;
+            bool_t changed = FALSE;
+            int32_t i, n = (int32_t)text->cpos - text->len;
+
+            /* Copy all characters from init to first inserted char */
+            for (i = 0; i < n; ++i)
+            {
+                uint32_t c = unicode_to_u32(src, ekUTF8);
+                if (c != 0)
+                {
+                    uint32_t nb = unicode_to_char(c, dest, ekUTF8);
+                    src += nb;
+                    dest += nb;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            /* Filter all characters inserted */
+            for (i = 0; i < text->len; ++i)
+            {
+                uint32_t nb;
+                uint32_t c = unicode_to_u32b(src, ekUTF8, &nb);
+                if (c != 0)
+                {
+                    // From Unicode (NappGUI) to 1252 (Cualib)
+                    uint8_t cp2 = gtconvert_UTF8_to_1252_char(c);
+                    uint32_t nb2, ncp;
+
+                    // Set character as lastKey
+                    hb_inkeySetLast(cp2);
+
+                    // Call to filter
+                    {
+                        PHB_ITEM retItem = hb_itemDo(obj->filtroTecBlock, 0);
+                        HB_TYPE type = HB_ITEM_TYPE(retItem);
+                        if (type == HB_IT_NIL)
+                        {
+                            ncp = c;
+                        }
+                        else
+                        {
+                            char_t temp[1024];
+                            cassert(type == HB_IT_STRING);
+                            hb_itemCopyStrUTF8(retItem, temp, sizeof(temp));
+                            cassert(unicode_nchars(temp, ekUTF8) == 1);
+                            ncp = unicode_to_u32(temp, ekUTF8);
+                            if (ncp != c)
+                                changed = TRUE;
+                            //log_printf("HB_TYPE: %d Converted: %d", type, ncp);
+                        }
+
+                        hb_itemRelease(retItem);
+                    }
+
+                    nb2 = unicode_to_char(ncp, dest, ekUTF8);
+                    src += nb;
+                    dest += nb2;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            /* Copy the rest of chars */
+            for (; ; )
+            {
+                uint32_t c = unicode_to_u32(src, ekUTF8);
+                if (c != 0)
+                {
+                    uint32_t nb = unicode_to_char(c, dest, ekUTF8);
+                    src += nb;
+                    dest += nb;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            *dest = '\0';
+            filter->apply = changed;
+            filter->cpos = text->cpos;
+            return;
+        }
+    }
+
+    /* No filter applied */
+    filter->apply = FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_filter_overwrite(const EvText *text, EvTextFilter *filter)
 {
     /* Text has been inserted */
@@ -3260,7 +3382,23 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
             }
             else
             {
-                i_filter_overwrite(p, res);
+                EvTextFilter filTec;
+                filTec.apply = FALSE;
+                i_filter_tecla(cuaobj, p, &filTec);
+
+                if (filTec.apply == TRUE)
+                {
+                    EvText tf;
+                    cassert(filTec.cpos == p->cpos);
+                    tf.text = filTec.text;
+                    tf.cpos = filTec.cpos;
+                    tf.len = p->len;
+                    i_filter_overwrite(&tf, res);
+                }
+                else
+                {
+                    i_filter_overwrite(p, res);
+                }
             }
         }
     }
@@ -3435,7 +3573,14 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
             arrst_end();
 
             if (last_edit != NULL)
+            {
+                // GtNapCualibObject *obj = NULL;
                 last_edit->is_last_edit = TRUE;
+                // cassert(cuawin->message_label_id != UINT32_MAX);
+                // obj = arrst_get(cuawin->gui_objects, cuawin->message_label_id, GtNapCualibObject);
+                // cassert(obj->type == ekOBJ_LABEL);
+                // _component_taborder(obj->component, cuawin->window);
+            }
         }
 
         cuawin->is_configured = TRUE;
