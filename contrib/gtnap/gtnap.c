@@ -3205,11 +3205,11 @@ static void i_filter_overwrite(const EvText *text, EvTextFilter *filter, const u
             //log_printf("Edit size: %d nc %d", size, nc);
             if (nc > size)
             {
-                char_t *d = filter->text;
+                const char_t *d = filter->text;
                 uint32_t i = 0;
                 for (i = 0; i < size; ++i)
                     d = unicode_next(d, ekUTF8);
-                *d = '\0';
+                *((char_t*)d) = '\0';
 
                 if (filter->cpos > size)
                     filter->cpos = size;
