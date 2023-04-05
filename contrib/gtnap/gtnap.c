@@ -3199,9 +3199,10 @@ static void i_filter_overwrite(const EvText *text, EvTextFilter *filter, const u
         filter->cpos = text->cpos;
 
         /* Trim to size*/
+        /* IMPROVE: DOIT in previous steps */
         {
             uint32_t nc = unicode_nchars(filter->text, ekUTF8);
-            log_printf("Edit size: %d nc %d", size, nc);
+            //log_printf("Edit size: %d nc %d", size, nc);
             if (nc > size)
             {
                 char_t *d = filter->text;
@@ -3285,6 +3286,14 @@ static bool_t i_is_editable(GtNapCualibObject *cuaobj)
     }
 
     return editable;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
+{
+    Edit *edit = event_sender(e, Edit);
+    edit_select(edit, 0, 0);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3601,6 +3610,7 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
                 {
                     edit_OnChange((Edit*)obj->component, listener(cuawin, i_OnEditChange, GtNapCualibWindow));
                     edit_OnFilter((Edit*)obj->component, listener(cuawin, i_OnEditFilter, GtNapCualibWindow));
+                    edit_OnFocus((Edit*)obj->component, listener(cuawin, i_OnEditFocus, GtNapCualibWindow));
                     obj->is_last_edit = FALSE;
                     last_edit = obj;
                 }
