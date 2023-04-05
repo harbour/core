@@ -122,6 +122,7 @@ struct _gtnap_cualib_object_t
     bool_t is_last_edit;
     bool_t is_on_edit_change;
     bool_t in_scroll_panel;
+    uint32_t editSize;
     PHB_ITEM labelCodeBlock;
     PHB_ITEM editCodeBlock;
     PHB_ITEM editableGlobalCodeBlock;
@@ -1965,6 +1966,8 @@ extern void hb_gtnap_cualib_edit(
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_EDIT);
 
+    obj->editSize = nSize;
+
     editCodeBlock = hb_param(editaBlockParamId, HB_IT_BLOCK);
     if (editCodeBlock != NULL)
         obj->editCodeBlock = hb_itemNew(editCodeBlock);
@@ -3134,7 +3137,7 @@ static void i_filter_tecla(const GtNapCualibObject *obj, const EvText *text, EvT
 
 /*---------------------------------------------------------------------------*/
 
-static void i_filter_overwrite(const EvText *text, EvTextFilter *filter)
+static void i_filter_overwrite(const EvText *text, EvTextFilter *filter, const uint32_t size)
 {
     /* Text has been inserted */
     cassert_no_null(text);
@@ -3194,6 +3197,23 @@ static void i_filter_overwrite(const EvText *text, EvTextFilter *filter)
         *dest = '\0';
         filter->apply = TRUE;
         filter->cpos = text->cpos;
+
+        /* Trim to size*/
+        {
+            uint32_t nc = unicode_nchars(filter->text, ekUTF8);
+            log_printf("Edit size: %d nc %d", size, nc);
+            if (nc > size)
+            {
+                char_t *d = filter->text;
+                uint32_t i = 0;
+                for (i = 0; i < size; ++i)
+                    d = unicode_next(d, ekUTF8);
+                *d = '\0';
+
+                if (filter->cpos > size)
+                    filter->cpos = size;
+            }
+        }
     }
 }
 
@@ -3383,6 +3403,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
             else
             {
                 EvTextFilter filTec;
+                uint32_t cpos = 0;
                 filTec.apply = FALSE;
                 i_filter_tecla(cuaobj, p, &filTec);
 
@@ -3393,11 +3414,24 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                     tf.text = filTec.text;
                     tf.cpos = filTec.cpos;
                     tf.len = p->len;
-                    i_filter_overwrite(&tf, res);
+                    i_filter_overwrite(&tf, res, cuaobj->editSize);
                 }
                 else
                 {
-                    i_filter_overwrite(p, res);
+                    i_filter_overwrite(p, res, cuaobj->editSize);
+                }
+
+                if (res->apply == TRUE)
+                    cpos = res->cpos;
+                else
+                    cpos = p->cpos;
+
+                /* End of editable string reached. */
+                if (cpos >= cuaobj->editSize)
+                {
+                    cuawin->focus_by_previous = FALSE;
+                    cuawin->tabstop_by_return_or_arrow = TRUE;
+                    window_next_tabstop(cuawin->window);
                 }
             }
         }
