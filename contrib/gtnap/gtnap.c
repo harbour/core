@@ -676,7 +676,7 @@ const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id,
     {
         char date[16];
         hb_itemGetDS(pItem, date);
-        hb_dateFormat(date, area->temp, "DD/MM/YYYY");
+        hb_dateFormat(date, area->temp, hb_setGetDateFormat());
     }
     else if (type == HB_IT_DOUBLE)
     {
@@ -1147,12 +1147,19 @@ static GtNap *i_gtnap_cualib_create(void)
     log_printf("GTNAP Cell Size(%d, %d)", GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size);
 
     {
+        char format[64];
+        hb_dateStrPut(format, 3333, 11, 22 );
+        log_printf("Date Format: %s", hb_setGetDateFormat());
+    }
+
+    {
         PHB_ITEM pRet = NULL;
         pRet = hb_itemDo(CUALIB_INIT_CODEBLOCK, 0);
         hb_itemRelease(pRet);
         hb_itemRelease(CUALIB_INIT_CODEBLOCK);
         CUALIB_INIT_CODEBLOCK = NULL;
     }
+
 
     return GTNAP_GLOBAL;
 }
@@ -1300,12 +1307,12 @@ void hb_gtnap_cualib_init_log(void)
 void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM codeBlock_begin)
 {
     void *hInstance = NULL;
-
 #if defined( HB_OS_WIN )
     hb_winmainArgGet(&hInstance, NULL, NULL);
 #endif
 
     log_printf("hb_gtnap_cualib_setup()");
+
     CUALIB_INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
     str_copy_c(CUALIB_TITLE, sizeof(CUALIB_TITLE), title);
     CUALIB_ROWS = rows;
@@ -1858,7 +1865,7 @@ static void i_get_edit_text(const GtNapCualibObject *obj, char_t *buffer, const 
             char temp[16];
             cassert(obj->dtype == ekTYPE_DATE);
             hb_itemGetDS(retItem, date);
-            hb_dateFormat(date, temp, "DD/MM/YYYY");
+            hb_dateFormat(date, temp, hb_setGetDateFormat());
             str_copy_c(buffer, size, temp);
         }
         else
@@ -3028,13 +3035,65 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_copy_nchars(const char_t **src, char_t **dest, uint32_t *dsize, const uint32_t nchars)
+{
+    uint32_t i = 0;
+    cassert_no_null(src);
+    cassert_no_null(*src);
+    cassert_no_null(dest);
+    cassert_no_null(*dest);
+    cassert_no_null(dsize);
+    for (i = 0; i < nchars; ++i)
+    {
+        uint32_t nb = 0;
+        uint32_t c = unicode_to_u32b(*src, ekUTF8, &nb);
+        if (c != 0 && *dsize > nb)
+        {
+            /* There is space in dest */
+            unicode_to_char(c, *dest, ekUTF8);
+            *src += nb;
+            *dest += nb;
+            *dsize -= nb;
+        }
+        else
+        {
+            break;
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_jump_nchars(const char_t **src, const uint32_t nchars)
+{
+    uint32_t i = 0;
+    cassert_no_null(src);
+    cassert_no_null(*src);
+    for (i = 0; i < nchars; ++i)
+    {
+        uint32_t nb;
+        uint32_t c = unicode_to_u32b(*src, ekUTF8, &nb);
+        if (c != 0)
+        {
+            *src += nb;
+        }
+        else
+        {
+            break;
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_filter_tecla(const GtNapCualibObject *obj, const EvText *text, EvTextFilter *filter)
 {
+    bool_t updated = FALSE;
     cassert_no_null(obj);
     cassert_no_null(text);
     cassert_no_null(filter);
     cassert(obj->type == ekOBJ_EDIT);
-    /* Inserted text in EditBox */
+    /* Some text has been inserted */
     if (text->len > 0)
     {
         /* We have a filter */
@@ -3042,24 +3101,12 @@ static void i_filter_tecla(const GtNapCualibObject *obj, const EvText *text, EvT
         {
             const char_t *src = text->text;
             char_t *dest = filter->text;
-            bool_t changed = FALSE;
+            uint32_t dsize = sizeof(filter->text);
             int32_t i, n = (int32_t)text->cpos - text->len;
+            cassert(n >= 0);
 
-            /* Copy all characters from init to first inserted char */
-            for (i = 0; i < n; ++i)
-            {
-                uint32_t c = unicode_to_u32(src, ekUTF8);
-                if (c != 0)
-                {
-                    uint32_t nb = unicode_to_char(c, dest, ekUTF8);
-                    src += nb;
-                    dest += nb;
-                }
-                else
-                {
-                    break;
-                }
-            }
+            /* Copy the string prefix (old string init until new insertions) */
+            i_copy_nchars(&src, &dest, &dsize, (uint32_t)n);
 
             /* Filter all characters inserted */
             for (i = 0; i < text->len; ++i)
@@ -3082,6 +3129,7 @@ static void i_filter_tecla(const GtNapCualibObject *obj, const EvText *text, EvT
                         if (type == HB_IT_NIL)
                         {
                             ncp = c;
+                            nb2 = nb;
                         }
                         else
                         {
@@ -3089,18 +3137,21 @@ static void i_filter_tecla(const GtNapCualibObject *obj, const EvText *text, EvT
                             cassert(type == HB_IT_STRING);
                             hb_itemCopyStrUTF8(retItem, temp, sizeof(temp));
                             cassert(unicode_nchars(temp, ekUTF8) == 1);
-                            ncp = unicode_to_u32(temp, ekUTF8);
-                            if (ncp != c)
-                                changed = TRUE;
-                            //log_printf("HB_TYPE: %d Converted: %d", type, ncp);
+                            ncp = unicode_to_u32b(temp, ekUTF8, &nb2);
                         }
 
                         hb_itemRelease(retItem);
                     }
 
-                    nb2 = unicode_to_char(ncp, dest, ekUTF8);
+                    /* There is space in dest */
+                    if (dsize > nb2)
+                    {
+                        unicode_to_char(ncp, dest, ekUTF8);
+                        dest += nb2;
+                        dsize -= nb2;
+                    }
+
                     src += nb;
-                    dest += nb2;
                 }
                 else
                 {
@@ -3108,37 +3159,28 @@ static void i_filter_tecla(const GtNapCualibObject *obj, const EvText *text, EvT
                 }
             }
 
-            /* Copy the rest of chars */
-            for (; ; )
-            {
-                uint32_t c = unicode_to_u32(src, ekUTF8);
-                if (c != 0)
-                {
-                    uint32_t nb = unicode_to_char(c, dest, ekUTF8);
-                    src += nb;
-                    dest += nb;
-                }
-                else
-                {
-                    break;
-                }
-            }
+            /* Copy the rest of the string */
+            i_copy_nchars(&src, &dest, &dsize, UINT32_MAX);
+            cassert(dsize > 0);
 
             *dest = '\0';
-            filter->apply = changed;
-            filter->cpos = text->cpos;
-            return;
+            updated = TRUE;
         }
     }
 
-    /* No filter applied */
-    filter->apply = FALSE;
+    /* No filter applied, just copy the input string */
+    if (updated == FALSE)
+        str_copy_c(filter->text, sizeof(filter->text), text->text);
+
+    filter->apply = TRUE;
+    filter->cpos = text->cpos;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_filter_overwrite(const EvText *text, EvTextFilter *filter, const uint32_t size)
+static void i_filter_overwrite(const EvText *text, EvTextFilter *filter, const uint32_t max_chars)
 {
+    bool_t updated = FALSE;
     /* Text has been inserted */
     cassert_no_null(text);
     cassert_no_null(filter);
@@ -3146,77 +3188,162 @@ static void i_filter_overwrite(const EvText *text, EvTextFilter *filter, const u
     {
         const char_t *src = text->text;
         char_t *dest = filter->text;
-        uint32_t i = 0, n = text->cpos;
+        uint32_t dsize = sizeof(filter->text);
+
         /* Copy all characters from init to caret position */
-        for (i = 0; i < n; ++i)
-        {
-            uint32_t c = unicode_to_u32(src, ekUTF8);
-            if (c != 0)
-            {
-                uint32_t nb = unicode_to_char(c, dest, ekUTF8);
-                src += nb;
-                dest += nb;
-            }
-            else
-            {
-                break;
-            }
-        }
+        i_copy_nchars(&src, &dest, &dsize, text->cpos);
 
         /* Jump 'len' chars in src */
-        for (i = 0; i < text->len; ++i)
-        {
-            uint32_t nb;
-            uint32_t c = unicode_to_u32b(src, ekUTF8, &nb);
-            if (c != 0)
-            {
-                src += nb;
-            }
-            else
-            {
-                break;
-            }
-        }
+        i_jump_nchars(&src, text->len);
 
         /* Copy the rest of chars */
-        for (; ; )
-        {
-            uint32_t c = unicode_to_u32(src, ekUTF8);
-            if (c != 0)
-            {
-                uint32_t nb = unicode_to_char(c, dest, ekUTF8);
-                src += nb;
-                dest += nb;
-            }
-            else
-            {
-                break;
-            }
-        }
-
+        i_copy_nchars(&src, &dest, &dsize, UINT32_MAX);
+        cassert(dsize > 0);
         *dest = '\0';
-        filter->apply = TRUE;
-        filter->cpos = text->cpos;
+        updated = TRUE;
+    }
 
-        /* Trim to size*/
-        /* IMPROVE: DOIT in previous steps */
+    if (updated == FALSE)
+        str_copy_c(filter->text, sizeof(filter->text), text->text);
+
+    filter->apply = TRUE;
+    filter->cpos = text->cpos;
+
+    /* Trim to size*/
+    {
+        uint32_t nc = unicode_nchars(filter->text, ekUTF8);
+        if (nc > max_chars)
         {
-            uint32_t nc = unicode_nchars(filter->text, ekUTF8);
-            //log_printf("Edit size: %d nc %d", size, nc);
-            if (nc > size)
-            {
-                const char_t *d = filter->text;
-                uint32_t i = 0;
-                for (i = 0; i < size; ++i)
-                    d = unicode_next(d, ekUTF8);
-                *((char_t*)d) = '\0';
+            const char_t *d = filter->text;
+            i_jump_nchars(&d, max_chars);
+            *((char_t*)d) = '\0';
 
-                if (filter->cpos > size)
-                    filter->cpos = size;
-            }
+            if (filter->cpos > max_chars)
+                filter->cpos = max_chars;
         }
     }
 }
+
+/*---------------------------------------------------------------------------*/
+
+// static void i_filter_number(const EvText *text, EvTextFilter *filter)
+// {
+//     //uint32_t i = 0, j = 0;
+//     cassert_no_null(text);
+//     cassert_no_null(filter);
+
+//     /* Characters inserted */
+//     if (text->len > 0)
+//     {
+//         const char_t *src = text->text;
+//         char_t *dest = filter->text;
+//         uint32_t i = 0, n = text->cpos - text->len;
+//         int32_t num_valids = 0;
+
+//         for (i = 0; i < n; ++i)
+//         {
+//             uint32_t c = unicode_to_u32(src, ekUTF8);
+//             if (c != 0)
+//             {
+//                 uint32_t nb = unicode_to_char(c, dest, ekUTF8);
+//                 src += nb;
+//                 dest += nb;
+//             }
+//             else
+//             {
+//                 break;
+//             }
+//         }
+
+//         /* Check if all chars are numbers */
+//         for (i = 0; i < text->len; ++i)
+//         {
+//             uint32_t nb;
+//             uint32_t c = unicode_to_u32b(src, ekUTF8, &nb);
+//             if (c != 0)
+//             {
+//                 if (c >= '0' && c <= '9')
+//                 {
+//                     uint32_t nb2 = unicode_to_char(c, dest, ekUTF8);
+//                     dest += nb2;
+//                     num_valids += 1;
+//                 }
+//                 else if (c == '/')
+//                 {
+//                     // Ignore the date '/'
+//                 }
+//                 else
+//                 {
+//                     // Invalid input
+//                     num_valids = -1;
+//                     break;
+//                 }
+
+//                 src += nb;
+//             }
+//             else
+//             {
+//                 break;
+//             }
+//         }
+
+//         /* Copy the rest of chars */
+//         for (; ; )
+//         {
+//             uint32_t c = unicode_to_u32(src, ekUTF8);
+//             if (c != 0)
+//             {
+//                 uint32_t nb = unicode_to_char(c, dest, ekUTF8);
+//                 src += nb;
+//                 dest += nb;
+//             }
+//             else
+//             {
+//                 break;
+//             }
+//         }
+
+//         *dest = '\0';
+//         filter->apply = TRUE;
+//         filter->cpos = text->cpos;
+
+//     }
+
+
+
+//     while(text->text[i] != '\0')
+//     {
+//         if (text->text[i] >= '0' && text->text[i] <= '9')
+//         {
+//             filter->text[j] = text->text[i];
+//             j += 1;
+
+//             if (j == 2 || j == 5)
+//             {
+//                 filter->text[j] = '/';
+//                 j += 1;
+//             }
+
+//             if (j == 10)
+//                 break;
+//         }
+
+//         i += 1;
+//     }
+
+//     filter->apply = TRUE;
+//     filter->cpos = j;
+
+//     for (; j < 10; ++j)
+//     {
+//         if (j == 2 || j == 5)
+//             filter->text[j] = '/';
+//         else
+//             filter->text[j] = ' ';
+//     }
+
+//     filter->text[j] = '\0';
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -3396,7 +3523,6 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                         long r = hb_dateUnformat( res->text, hb_setGetDateFormat());
                         log_printf("DATE processing result: %d", r);
 
-
                         /* Date invalid */
                         if (r == 0)
                         {
@@ -3412,11 +3538,10 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
             else
             {
                 EvTextFilter filTec;
-                uint32_t cpos = 0;
                 filTec.apply = FALSE;
                 i_filter_tecla(cuaobj, p, &filTec);
+                cassert(filTec.apply == TRUE);
 
-                if (filTec.apply == TRUE)
                 {
                     EvText tf;
                     cassert(filTec.cpos == p->cpos);
@@ -3425,18 +3550,11 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                     tf.len = p->len;
                     i_filter_overwrite(&tf, res, cuaobj->editSize);
                 }
-                else
-                {
-                    i_filter_overwrite(p, res, cuaobj->editSize);
-                }
 
-                if (res->apply == TRUE)
-                    cpos = res->cpos;
-                else
-                    cpos = p->cpos;
+                cassert(res->apply == TRUE);
 
                 /* End of editable string reached. */
-                if (cpos >= cuaobj->editSize)
+                if (res->cpos >= cuaobj->editSize)
                 {
                     cuawin->focus_by_previous = FALSE;
                     cuawin->tabstop_by_return_or_arrow = TRUE;
