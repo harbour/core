@@ -326,6 +326,7 @@ void _panel_compose(Panel *panel, const S2Df *required_size, S2Df *final_size);
 void _panel_locate(Panel *panel);
 void _panel_detach_components(Panel *panel);
 void _window_taborder(Window *window, void *ositem);
+void _panel_content_size(Panel *panel, const real32_t width, const real32_t height);
 
 __END_C
 
@@ -2699,6 +2700,11 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *main_pan
                     pos.y += (real32_t)toolbar->pixels_button;
                     if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->edit_y_size)
                         pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->edit_y_size) / 2);
+
+                    if (object->in_scroll_panel == TRUE)
+                    {
+                        object->size.width -= GTNAP_GLOBAL->cell_x_size;
+                    }
                     break;
 
                 case ekOBJ_IMAGE:
@@ -3635,21 +3641,24 @@ static S2Df i_scroll_content_size(const ArrSt(GtNapCualibObject) *objects)
     real32_t max_y = -1e10f;
 
     arrst_foreach_const(object, objects, GtNapCualibObject)
-        real32_t x1 = object->pos.x;
-        real32_t x2 = object->pos.x + object->size.width;
-        real32_t y1 = object->pos.y;
-        real32_t y2 = object->pos.y + object->size.height;
-        if (x1 < min_x)
-            min_x = x1;
-        if (x2 > max_x)
-            max_x = x2;
-        if (y1 < min_y)
-            min_y = y1;
-        if (y2 > max_y)
-            max_y = y2;
+        if (object->in_scroll_panel == TRUE)
+        {
+            real32_t x1 = object->pos.x;
+            real32_t x2 = object->pos.x + object->size.width;
+            real32_t y1 = object->pos.y;
+            real32_t y2 = object->pos.y + object->size.height;
+            if (x1 < min_x)
+                min_x = x1;
+            if (x2 > max_x)
+                max_x = x2;
+            if (y1 < min_y)
+                min_y = y1;
+            if (y2 > max_y)
+                max_y = y2;
+        }
     arrst_end();
 
-    return s2df(max_x - min_x, max_y - min_y);
+    return s2df((max_x - min_x) + GTNAP_GLOBAL->cell_x_size, (max_y - min_y) + GTNAP_GLOBAL->cell_y_size);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3682,13 +3691,13 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
             // Panel *panel = panel_scroll(FALSE, TRUE);
             // ------------------------------------------------
 
-            Panel *panel = panel_create();
+            Panel *panel = panel_scroll(FALSE, TRUE);
             S2Df csize = i_scroll_content_size(cuawin->gui_objects);
             int32_t cell_x = cuawin->scroll_N_ColIni - cuawin->N_ColIni;
             int32_t cell_y = cuawin->scroll_N_LinIni - cuawin->N_LinIni;
             real32_t pos_x = (real32_t)(cell_x * GTNAP_GLOBAL->cell_x_size);
             real32_t pos_y = (real32_t)(cell_y * GTNAP_GLOBAL->cell_y_size);
-            real32_t width = (real32_t)((cuawin->scroll_N_ColFin - cuawin->scroll_N_ColIni + 1) * GTNAP_GLOBAL->cell_x_size);
+            real32_t width = (real32_t)((cuawin->scroll_N_ColFin - cuawin->scroll_N_ColIni + 3) * GTNAP_GLOBAL->cell_x_size);
             real32_t height = (real32_t)((cuawin->scroll_N_LinFin - cuawin->scroll_N_LinIni + 1) * GTNAP_GLOBAL->cell_y_size);
             V2Df pos = v2df(pos_x, pos_y);
             S2Df size = s2df(width, height);
@@ -3699,6 +3708,7 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
 
             // NAppGUI support for direct setting the panel_scroll content size
             log_printf("Panel scroll content size: %.2f, %.2f", csize.width, csize.height);
+            _panel_content_size(panel, csize.width, csize.height);
             // -------------------------------------------------
 
             offset.x = -pos.x;
