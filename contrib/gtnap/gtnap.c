@@ -3206,12 +3206,12 @@ static void i_filter_overwrite(const EvText *text, EvTextFilter *filter, const u
         cassert(dsize > 0);
         *dest = '\0';
         updated = TRUE;
-        filter->cpos = text->cpos;
     }
 
     if (updated == FALSE)
         str_copy_c(filter->text, sizeof(filter->text), text->text);
 
+    filter->cpos = text->cpos;
     filter->apply = TRUE;
 
     /* Trim to size*/
@@ -3263,7 +3263,7 @@ static int32_t i_filter_number(const EvText *text, EvTextFilter *filter)
         char_t *dest = filter->text;
         uint32_t dsize = sizeof(filter->text);
         uint32_t i = 0, cpos = text->cpos;
-
+        uint32_t back = 0;
         for(;;)
         {
             uint32_t nb;
@@ -3282,7 +3282,7 @@ static int32_t i_filter_number(const EvText *text, EvTextFilter *filter)
                 else
                 {
                     if (cpos > i)
-                        cpos -= 1;
+                        back += 1;
                 }
 
                 i += 1;
@@ -3297,7 +3297,7 @@ static int32_t i_filter_number(const EvText *text, EvTextFilter *filter)
 
         cassert(dsize > 0);
         *dest = '\0';
-        filter->cpos = cpos;
+        filter->cpos = cpos - back;
         filter->apply = TRUE;
     }
 
@@ -3314,7 +3314,7 @@ static void i_filter_date(const EvText *text, EvTextFilter *filter, const char_t
     uint32_t dsize = sizeof(filter->text);
     uint32_t i = 0;
     uint32_t cpos = text->cpos;
-
+    log_printf("Filter Date Cursor pos: %d", cpos);
     for(;;)
     {
         uint32_t nbf;
@@ -3555,6 +3555,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                     tf.text = fil2.text;
                     tf.cpos = fil2.cpos;
                     tf.len = 0;
+                    log_printf("Before filter date cpos: %d", tf.cpos);
                     //i_filter_bypass(&tf, res);
                     i_filter_date(&tf, res, hb_setGetDateFormat(), p->len >= 0);
                 }
@@ -3564,26 +3565,32 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                 //i_filter_date(p, res);
                 //log_printf("Date CPOS: %d", res->cpos);
 
-                // if (res->cpos == 10)
-                // {
-                //     log_printf("END DATE EDITING");
+                if (res->cpos == 10)
+                {
+                    log_printf("END DATE EDITING");
 
-                //     if (cuawin->errorDataCodeBlock != NULL)
-                //     {
-                //         long r = hb_dateUnformat( res->text, hb_setGetDateFormat());
-                //         log_printf("DATE processing result: %d", r);
+                    if (cuawin->errorDataCodeBlock != NULL)
+                    {
+                        long r = hb_dateUnformat( res->text, hb_setGetDateFormat());
+                        log_printf("DATE processing result: %d", r);
 
-                //         /* Date invalid */
-                //         if (r == 0)
-                //         {
-                //             PHB_ITEM retItem = NULL;
-                //             cuawin->processing_invalid_date = TRUE;
-                //             retItem = hb_itemDo(cuawin->errorDataCodeBlock, 0);
-                //             hb_itemRelease(retItem);
-                //             cuawin->processing_invalid_date = FALSE;
-                //         }
-                //     }
-                // }
+                        /* Date invalid */
+                        if (r == 0)
+                        {
+                            PHB_ITEM retItem = NULL;
+                            cuawin->processing_invalid_date = TRUE;
+                            retItem = hb_itemDo(cuawin->errorDataCodeBlock, 0);
+                            hb_itemRelease(retItem);
+                            cuawin->processing_invalid_date = FALSE;
+                        }
+                        else
+                        {
+                            cuawin->focus_by_previous = FALSE;
+                            cuawin->tabstop_by_return_or_arrow = TRUE;
+                            window_next_tabstop(cuawin->window);
+                        }
+                    }
+                }
             }
             else
             {
