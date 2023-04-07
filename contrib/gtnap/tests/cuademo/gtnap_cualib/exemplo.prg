@@ -32,6 +32,37 @@ ANNOUNCE HB_GT_SYS
 PROC MAIN
 *********
 *
+// Application global SETTERS
+SET CURSOR OFF
+SET SCOR OFF
+SET EPOCH TO 1940
+SET CENT ON
+//SET DATE ANSI
+//SET CENT ON
+SET DATE BRIT
+SET DELE ON
+SETBLINK(.F.)    // "*" passa a indicar background intenso
+SET AUTOPEN OFF // tornar a abertura do indice cdx não automatica
+//Desativar na "cuademo", para página de código ser a padrão Windows/Linux
+//hb_cdpSelect("PT850")
+//hb_LangSelect("pt_BR","PT850")
+hb_cdpSelect("PTISO")
+hb_LangSelect("pt_BR","PTISO")
+
+*
+
+REQUEST DBFCDX
+RDDSETDEFAULT("DBFCDX")
+RDDINFO(RDDI_MEMOTYPE,1)
+
+#DEFINE _COR2_PADRAO   "N/W,N/BG*,N,,N/W*"
+SETCOLOR(_COR2_PADRAO)
+
+MSETCURSOR( .T. )
+// SET EVENTMASK TO INKEY_KEYBOARD+INKEY_LDOWN+INKEY_RDOWN+INKEY_MWHEEL  // Não funcionou com estes DEFINES!
+SET EVENTMASK TO 128+2+8+64
+
+
 
 //
 // FRAN:
@@ -64,47 +95,18 @@ IF HB_GTVERSION()=="NAP"
 //
 PROC RUN_MAIN
 
+
 LOCAL L_FechouComAutoclose, V_Janela
 
-SET CURSOR OFF
-SET SCOR OFF
-SET EPOCH TO 1940
-SET CENT ON
-//SET DATE ANSI
-//SET CENT ON
-SET DATE BRIT
-SET DELE ON
-SETBLINK(.F.)    // "*" passa a indicar background intenso
-SET AUTOPEN OFF // tornar a abertura do indice cdx não automatica
-
-#if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-    * Nada a fazer.
-#elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-    SET(_SET_FILECASE, 1)                 // ADAPTACAO_LINUX
-    SET(_SET_DIRCASE , 1)                 // ADAPTACAO_LINUX
-    SET(_SET_DIRSEPARATOR, "\")           // ADAPTACAO_LINUX  // não funcionou...
-#else
-   #erro "Código não adaptado para esta plataforma"
-#endif
-
-//Desativar na "cuademo", para página de código ser a padrão Windows/Linux
-//hb_cdpSelect("PT850")
-//hb_LangSelect("pt_BR","PT850")
-hb_cdpSelect("PTISO")
-hb_LangSelect("pt_BR","PTISO")
-
-*
-
-REQUEST DBFCDX
-RDDSETDEFAULT("DBFCDX")
-RDDINFO(RDDI_MEMOTYPE,1)
-
-#DEFINE _COR2_PADRAO   "N/W,N/BG*,N,,N/W*"
-SETCOLOR(_COR2_PADRAO)
-
-MSETCURSOR( .T. )
-// SET EVENTMASK TO INKEY_KEYBOARD+INKEY_LDOWN+INKEY_RDOWN+INKEY_MWHEEL  // Não funcionou com estes DEFINES!
-SET EVENTMASK TO 128+2+8+64
+// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+//     * Nada a fazer.
+// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
+//     SET(_SET_FILECASE, 1)                 // ADAPTACAO_LINUX
+//     SET(_SET_DIRCASE , 1)                 // ADAPTACAO_LINUX
+//     SET(_SET_DIRSEPARATOR, "\")           // ADAPTACAO_LINUX  // não funcionou...
+// #else
+//    #erro "Código não adaptado para esta plataforma"
+// #endif
 
 PRIVATE INFO_VERSAO := {"99","9","999","999",;
                         "99","9","999","999"}

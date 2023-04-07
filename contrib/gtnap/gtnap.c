@@ -193,6 +193,8 @@ struct _gtnap_t
     Font *global_font;
     Font *reduced_font;
 
+    uint8_t date_digits;
+    uint8_t date_chars;
     // Only for cualib-gtnap
     String *title;
     uint32_t rows;
@@ -1140,17 +1142,14 @@ static GtNap *i_gtnap_cualib_create(void)
     GTNAP_GLOBAL->cols = CUALIB_COLS;
     GTNAP_GLOBAL->linespacing = 0;
     GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
+    GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == HB_TRUE) ? 8 : 6;
+    GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
     globals_resolution(&screen);
     screen.height -= 50; // S.O. Dock or Taskbars
     i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
     log_printf("i_gtnap_cualib_create(%s, %d, %d)", CUALIB_TITLE, CUALIB_ROWS, CUALIB_COLS);
     log_printf("GTNAP Cell Size(%d, %d)", GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size);
-
-    {
-        char format[64];
-        hb_dateStrPut(format, 3333, 11, 22 );
-        log_printf("Date Format: %s", hb_setGetDateFormat());
-    }
+    log_printf("Date Format: %s", hb_setGetDateFormat());
 
     {
         PHB_ITEM pRet = NULL;
@@ -3226,164 +3225,166 @@ static void i_filter_overwrite(const EvText *text, EvTextFilter *filter, const u
 
 /*---------------------------------------------------------------------------*/
 
-// static void i_filter_number(const EvText *text, EvTextFilter *filter)
-// {
-//     //uint32_t i = 0, j = 0;
-//     cassert_no_null(text);
-//     cassert_no_null(filter);
+static int32_t i_filter_number(const EvText *text, EvTextFilter *filter)
+{
+    int32_t len = text->len;
 
-//     /* Characters inserted */
-//     if (text->len > 0)
-//     {
-//         const char_t *src = text->text;
-//         char_t *dest = filter->text;
-//         uint32_t i = 0, n = text->cpos - text->len;
-//         int32_t num_valids = 0;
+    if (len > 0)
+    {
+        const char_t *src2 = text->text;
+        uint32_t i = 0;
+        i_jump_nchars(&src2, text->cpos - text->len);
+        for (i = 0; i < text->len; ++i)
+        {
+            uint32_t nb;
+            uint32_t c = unicode_to_u32b(src2, ekUTF8, &nb);
+            if (c != 0)
+            {
+                if (c >= '0' && c <= '9')
+                {
+                }
+                else
+                {
+                    cassert(len > 0);
+                    len -= 1;
+                }
+            }
+        }
+    }
 
-//         for (i = 0; i < n; ++i)
-//         {
-//             uint32_t c = unicode_to_u32(src, ekUTF8);
-//             if (c != 0)
-//             {
-//                 uint32_t nb = unicode_to_char(c, dest, ekUTF8);
-//                 src += nb;
-//                 dest += nb;
-//             }
-//             else
-//             {
-//                 break;
-//             }
-//         }
+    {
+        const char_t *src = text->text;
+        char_t *dest = filter->text;
+        uint32_t dsize = sizeof(filter->text);
+        uint32_t i = 0, cpos = text->cpos;
 
-//         /* Check if all chars are numbers */
-//         for (i = 0; i < text->len; ++i)
-//         {
-//             uint32_t nb;
-//             uint32_t c = unicode_to_u32b(src, ekUTF8, &nb);
-//             if (c != 0)
-//             {
-//                 if (c >= '0' && c <= '9')
-//                 {
-//                     uint32_t nb2 = unicode_to_char(c, dest, ekUTF8);
-//                     dest += nb2;
-//                     num_valids += 1;
-//                 }
-//                 else if (c == '/')
-//                 {
-//                     // Ignore the date '/'
-//                 }
-//                 else
-//                 {
-//                     // Invalid input
-//                     num_valids = -1;
-//                     break;
-//                 }
+        for(;;)
+        {
+            uint32_t nb;
+            uint32_t c = unicode_to_u32b(src, ekUTF8, &nb);
+            if (c != 0)
+            {
+                if (c >= '0' && c <= '9')
+                {
+                    if (dsize > nb)
+                    {
+                        unicode_to_char(c, dest, ekUTF8);
+                        dest += nb;
+                        dsize -= nb;
+                    }
+                }
+                else
+                {
+                    if (cpos > i)
+                        cpos -= 1;
+                }
 
-//                 src += nb;
-//             }
-//             else
-//             {
-//                 break;
-//             }
-//         }
+                i += 1;
+                src += nb;
+            }
+            /* End of input string */
+            else
+            {
+                break;
+            }
+        }
 
-//         /* Copy the rest of chars */
-//         for (; ; )
-//         {
-//             uint32_t c = unicode_to_u32(src, ekUTF8);
-//             if (c != 0)
-//             {
-//                 uint32_t nb = unicode_to_char(c, dest, ekUTF8);
-//                 src += nb;
-//                 dest += nb;
-//             }
-//             else
-//             {
-//                 break;
-//             }
-//         }
+        cassert(dsize > 0);
+        *dest = '\0';
+        filter->cpos = cpos;
+        filter->apply = TRUE;
+    }
 
-//         *dest = '\0';
-//         filter->apply = TRUE;
-//         filter->cpos = text->cpos;
+    return len;
 
-//     }
-
-
-
-//     while(text->text[i] != '\0')
-//     {
-//         if (text->text[i] >= '0' && text->text[i] <= '9')
-//         {
-//             filter->text[j] = text->text[i];
-//             j += 1;
-
-//             if (j == 2 || j == 5)
-//             {
-//                 filter->text[j] = '/';
-//                 j += 1;
-//             }
-
-//             if (j == 10)
-//                 break;
-//         }
-
-//         i += 1;
-//     }
-
-//     filter->apply = TRUE;
-//     filter->cpos = j;
-
-//     for (; j < 10; ++j)
-//     {
-//         if (j == 2 || j == 5)
-//             filter->text[j] = '/';
-//         else
-//             filter->text[j] = ' ';
-//     }
-
-//     filter->text[j] = '\0';
-// }
+}
 
 /*---------------------------------------------------------------------------*/
 
-static void i_filter_date(const EvText *text, EvTextFilter *filter)
+static void i_filter_date(const EvText *text, EvTextFilter *filter, const char_t *format, bool_t insert)
 {
-    uint32_t i = 0, j = 0;
-    cassert_no_null(text);
-    cassert_no_null(filter);
-    while(text->text[i] != '\0')
+    const char_t *src = text->text;
+    char_t *dest = filter->text;
+    uint32_t dsize = sizeof(filter->text);
+    uint32_t i = 0;
+    filter->cpos = text->cpos;
+
+    for(;;)
     {
-        if (text->text[i] >= '0' && text->text[i] <= '9')
+        uint32_t nbf;
+        bool_t sep = FALSE;
+
+        /* Current character of format string */
+        uint32_t f = unicode_to_u32b(format, ekUTF8, &nbf);
+
+        /* End of format string --> bye */
+        if (f == 0)
+            break;
+
+        /* Digit position */
+        if(f == 'd' || f == 'D' || f == 'm' || f == 'M' || f == 'y' || f == 'Y')
         {
-            filter->text[j] = text->text[i];
-            j += 1;
+            uint32_t nb;
+            uint32_t d = unicode_to_u32b(src, ekUTF8, &nb);
 
-            if (j == 2 || j == 5)
+            /* We have a digit into input text */
+            if (d != 0)
             {
-                filter->text[j] = '/';
-                j += 1;
+                /* Write the digit into dest */
+                if (dsize > nb)
+                {
+                    unicode_to_char(d, dest, ekUTF8);
+                    dest += nb;
+                    dsize -= nb;
+                }
             }
-
-            if (j == 10)
-                break;
+            /* No more digits --> Write an space in dest */
+            else
+            {
+                if (dsize > 1)
+                {
+                    unicode_to_char(' ', dest, ekUTF8);
+                    dest += 1;
+                    dsize -= 1;
+                }
+            }
+        }
+        /* We have a format separator character, just write it into dest */
+        else
+        {
+            sep = TRUE;
+            if (dsize > nbf)
+            {
+                unicode_to_char(f, dest, ekUTF8);
+                dest += nbf;
+                dsize -= nbf;
+            }
         }
 
+        /* Advance to next character of format string */
+        format = unicode_next(format, ekUTF8);
         i += 1;
+
+        /* Compute the new caret position */
+        if (text->cpos == i && sep == TRUE)
+        {
+            filter->cpos = text->cpos + 1;
+        }
     }
 
+    cassert(dsize > 0);
+    *dest = '\0';
     filter->apply = TRUE;
-    filter->cpos = j;
 
-    for (; j < 10; ++j)
-    {
-        if (j == 2 || j == 5)
-            filter->text[j] = '/';
-        else
-            filter->text[j] = ' ';
-    }
+}
 
-    filter->text[j] = '\0';
+/*---------------------------------------------------------------------------*/
+
+static void i_filter_bypass(const EvText *text, EvTextFilter *filter)
+{
+    str_copy_c(filter->text, sizeof(filter->text), text->text);
+    filter->apply = TRUE;
+    filter->cpos = text->cpos;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3511,29 +3512,60 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
         {
             if (cuaobj->dtype == ekTYPE_DATE)
             {
-                i_filter_date(p, res);
-                log_printf("Date CPOS: %d", res->cpos);
+                EvTextFilter fil1;
+                EvTextFilter fil2;
+                uint32_t len;
+                fil1.apply = FALSE;
+                fil2.apply = FALSE;
 
-                if (res->cpos == 10)
+                len = i_filter_number(p, &fil1);
+                cassert(fil1.apply == TRUE);
+
                 {
-                    log_printf("END DATE EDITING");
-
-                    if (cuawin->errorDataCodeBlock != NULL)
-                    {
-                        long r = hb_dateUnformat( res->text, hb_setGetDateFormat());
-                        log_printf("DATE processing result: %d", r);
-
-                        /* Date invalid */
-                        if (r == 0)
-                        {
-                            PHB_ITEM retItem = NULL;
-                            cuawin->processing_invalid_date = TRUE;
-                            retItem = hb_itemDo(cuawin->errorDataCodeBlock, 0);
-                            hb_itemRelease(retItem);
-                            cuawin->processing_invalid_date = FALSE;
-                        }
-                    }
+                    EvText tf;
+                    //cassert(filTec.cpos == p->cpos);
+                    tf.text = fil1.text;
+                    tf.cpos = fil1.cpos;
+                    tf.len = len;
+                    i_filter_overwrite(&tf, &fil2, GTNAP_GLOBAL->date_digits);
                 }
+
+                cassert(fil2.apply == TRUE);
+
+                {
+                    EvText tf;
+                    //cassert(filTec.cpos == p->cpos);
+                    tf.text = fil2.text;
+                    tf.cpos = fil2.cpos;
+                    tf.len = 0;
+                    i_filter_date(&tf, res, hb_setGetDateFormat(), p->len >= 0);
+                }
+
+                cassert(res->apply == TRUE);
+
+                //i_filter_date(p, res);
+                //log_printf("Date CPOS: %d", res->cpos);
+
+                // if (res->cpos == 10)
+                // {
+                //     log_printf("END DATE EDITING");
+
+                //     if (cuawin->errorDataCodeBlock != NULL)
+                //     {
+                //         long r = hb_dateUnformat( res->text, hb_setGetDateFormat());
+                //         log_printf("DATE processing result: %d", r);
+
+                //         /* Date invalid */
+                //         if (r == 0)
+                //         {
+                //             PHB_ITEM retItem = NULL;
+                //             cuawin->processing_invalid_date = TRUE;
+                //             retItem = hb_itemDo(cuawin->errorDataCodeBlock, 0);
+                //             hb_itemRelease(retItem);
+                //             cuawin->processing_invalid_date = FALSE;
+                //         }
+                //     }
+                // }
             }
             else
             {
