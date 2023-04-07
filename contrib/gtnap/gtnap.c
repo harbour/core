@@ -3200,13 +3200,13 @@ static void i_filter_overwrite(const EvText *text, EvTextFilter *filter, const u
         cassert(dsize > 0);
         *dest = '\0';
         updated = TRUE;
+        filter->cpos = text->cpos;
     }
 
     if (updated == FALSE)
         str_copy_c(filter->text, sizeof(filter->text), text->text);
 
     filter->apply = TRUE;
-    filter->cpos = text->cpos;
 
     /* Trim to size*/
     {
@@ -3307,7 +3307,7 @@ static void i_filter_date(const EvText *text, EvTextFilter *filter, const char_t
     char_t *dest = filter->text;
     uint32_t dsize = sizeof(filter->text);
     uint32_t i = 0;
-    filter->cpos = text->cpos;
+    uint32_t cpos = text->cpos;
 
     for(;;)
     {
@@ -3337,6 +3337,7 @@ static void i_filter_date(const EvText *text, EvTextFilter *filter, const char_t
                     dest += nb;
                     dsize -= nb;
                 }
+                src = unicode_next(src, ekUTF8);
             }
             /* No more digits --> Write an space in dest */
             else
@@ -3366,15 +3367,25 @@ static void i_filter_date(const EvText *text, EvTextFilter *filter, const char_t
         i += 1;
 
         /* Compute the new caret position */
-        if (text->cpos == i && sep == TRUE)
+        if (sep == TRUE)
         {
-            filter->cpos = text->cpos + 1;
+            if (insert == TRUE)
+            {
+                if (cpos >= i - 1)
+                    cpos = cpos + 1;
+            }
+            else
+            {
+                if (cpos == i - 1)
+                    cpos -= 1;
+            }
         }
     }
 
     cassert(dsize > 0);
     *dest = '\0';
     filter->apply = TRUE;
+    filter->cpos = cpos;
 
 }
 
@@ -3538,6 +3549,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                     tf.text = fil2.text;
                     tf.cpos = fil2.cpos;
                     tf.len = 0;
+                    //i_filter_bypass(&tf, res);
                     i_filter_date(&tf, res, hb_setGetDateFormat(), p->len >= 0);
                 }
 
