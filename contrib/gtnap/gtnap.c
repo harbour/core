@@ -3437,8 +3437,37 @@ static bool_t i_is_editable(GtNapCualibObject *cuaobj)
 
 static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
 {
-    Edit *edit = event_sender(e, Edit);
-    edit_select(edit, 0, 0);
+    const bool_t *p = event_params(e, bool_t);
+    cassert_no_null(cuawin);
+    if (*p == TRUE)
+    {
+        Edit *edit = event_sender(e, Edit);
+
+        if (cuawin->message_label_id != UINT32_MAX)
+        {
+            GtNapCualibObject *cuaobj = NULL;
+
+            // FRAN: IMPROVE
+            arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+                if (obj->type == ekOBJ_EDIT)
+                {
+                    if (edit == (Edit*)obj->component)
+                    {
+                        cuaobj = obj;
+                        break;
+                    }
+                }
+            arrst_end();
+
+            if (cuaobj != NULL)
+            {
+                GtNapCualibObject *mes_obj = arrst_get(cuawin->gui_objects, cuawin->message_label_id, GtNapCualibObject);
+                i_set_edit_message(cuaobj, mes_obj);
+            }
+        }
+
+        edit_select(edit, 0, 0);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3449,6 +3478,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
     GtNapCualibObject *cuaobj = NULL;
     cassert_no_null(cuawin);
 
+    // FRAN: IMPROVE
     arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
         if (obj->type == ekOBJ_EDIT)
         {
@@ -3465,13 +3495,13 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
         const EvText *p = event_params(e, EvText);
         EvTextFilter *res = event_result(e, EvTextFilter);
 
-        // FRAN: TODO
-        // This block must be move to edit_OnFocus()
-        if (cuawin->message_label_id != UINT32_MAX)
-        {
-            GtNapCualibObject *mes_obj = arrst_get(cuawin->gui_objects, cuawin->message_label_id, GtNapCualibObject);
-            i_set_edit_message(cuaobj, mes_obj);
-        }
+        // // FRAN: TODO
+        // // This block must be move to edit_OnFocus()
+        // if (cuawin->message_label_id != UINT32_MAX)
+        // {
+        //     GtNapCualibObject *mes_obj = arrst_get(cuawin->gui_objects, cuawin->message_label_id, GtNapCualibObject);
+        //     i_set_edit_message(cuaobj, mes_obj);
+        // }
 
         // FRAN: TODO
         // This block must be move to edit_OnFocus()
