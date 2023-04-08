@@ -294,13 +294,19 @@ ESPECIALIZE V_Janela ENTRADA ROLAVERTICAL
 *
 ATIVE(V_Janela)
 DESTRUA V_Janela
+
+NAP_LOG("VALUE OF CAMPO1: " + C_Campo1)
+NAP_LOG("VALUE OF CAMPO2: " + C_Campo2)
+NAP_LOG("VALUE OF CAMPO3: " + C_Campo3)
 *
 ***************************
 STAT FUNC PREENCHE_CAMPO_02(C_Campo2)
 ***************************
+NAP_LOG("PREENCHE_CAMPO_02 Begin: '" + C_Campo2 + "'")
 IF EMPTY(C_Campo2)
    C_Campo2 := REPL("2",LEN(C_Campo2))
 ENDIF
+NAP_LOG("PREENCHE_CAMPO_02 After: '" + C_Campo2 + "'")
 RETURN .T.
 *
 **********************

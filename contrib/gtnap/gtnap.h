@@ -169,7 +169,8 @@ extern void hb_gtnap_cualib_edit(
                     const char_t *type,
                     PHB_ITEM getobj,
                     const bool_t in_scroll_panel,
-                    const uint32_t filtroTecParamId);
+                    const uint32_t filtroTecParamId,
+                    const uint32_t whenParamId);
 
 extern void hb_gtnap_cualib_toolbar(const uint32_t nPixelsImage);
 

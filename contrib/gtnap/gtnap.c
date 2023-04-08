@@ -132,6 +132,7 @@ struct _gtnap_cualib_object_t
     PHB_ITEM listaCodeBlock;
     PHB_ITEM autoCodeBlock;
     PHB_ITEM filtroTecBlock;
+    PHB_ITEM whenCodeBlock;
     PHB_ITEM getobjItem;
     GuiComponent *component;
 };
@@ -1214,6 +1215,9 @@ static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t ind
     if (object->filtroTecBlock != NULL)
         hb_itemRelease(object->filtroTecBlock);
 
+    if (object->whenCodeBlock != NULL)
+        hb_itemRelease(object->whenCodeBlock);
+
     if (object->getobjItem != NULL)
         hb_itemRelease(object->getobjItem);
 
@@ -1406,6 +1410,7 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->listaCodeBlock = NULL;
     object->autoCodeBlock = NULL;
     object->filtroTecBlock = NULL;
+    object->whenCodeBlock = NULL;
     object->getobjItem = NULL;
     log_printf("Added object at: %.2f, %.2f w:%.2f h:%.2f", object->pos.x, object->pos.y, object->size.width, object->size.height);
 }
@@ -1943,7 +1948,8 @@ extern void hb_gtnap_cualib_edit(
                     const char_t *type,
                     PHB_ITEM getobj,
                     const bool_t in_scroll_panel,
-                    const uint32_t filtroTecParamId)
+                    const uint32_t filtroTecParamId,
+                    const uint32_t whenParamId)
 {
     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibObject *obj = NULL;
@@ -1955,6 +1961,7 @@ extern void hb_gtnap_cualib_edit(
     PHB_ITEM listaCodeBlock = NULL;
     PHB_ITEM autoCodeBlock = NULL;
     PHB_ITEM filtroTecBlock = NULL;
+    PHB_ITEM whenCodeBlock = NULL;
 
     Edit *edit = edit_create();
     // //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
@@ -2022,6 +2029,12 @@ extern void hb_gtnap_cualib_edit(
         obj->filtroTecBlock = hb_itemNew(filtroTecBlock);
     else
         obj->filtroTecBlock = NULL;
+
+    whenCodeBlock = hb_param(whenParamId, HB_IT_BLOCK);
+    if (whenCodeBlock != NULL)
+        obj->whenCodeBlock = hb_itemNew(whenCodeBlock);
+    else
+        obj->whenCodeBlock = NULL;
 
     if (getobj != NULL)
         obj->getobjItem = hb_itemNew(getobj);
@@ -3442,29 +3455,43 @@ static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
     if (*p == TRUE)
     {
         Edit *edit = event_sender(e, Edit);
+        GtNapCualibObject *cuaobj = NULL;
+
+        // FRAN: IMPROVE
+        arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+            if (obj->type == ekOBJ_EDIT)
+            {
+                if (edit == (Edit*)obj->component)
+                {
+                    cuaobj = obj;
+                    break;
+                }
+            }
+        arrst_end();
 
         if (cuawin->message_label_id != UINT32_MAX)
         {
-            GtNapCualibObject *cuaobj = NULL;
-
-            // FRAN: IMPROVE
-            arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
-                if (obj->type == ekOBJ_EDIT)
-                {
-                    if (edit == (Edit*)obj->component)
-                    {
-                        cuaobj = obj;
-                        break;
-                    }
-                }
-            arrst_end();
-
             if (cuaobj != NULL)
             {
                 GtNapCualibObject *mes_obj = arrst_get(cuawin->gui_objects, cuawin->message_label_id, GtNapCualibObject);
                 i_set_edit_message(cuaobj, mes_obj);
             }
         }
+
+        if (cuaobj->whenCodeBlock != NULL)
+        {
+            PHB_ITEM retItem = hb_itemDo(cuaobj->whenCodeBlock, 0);
+            HB_TYPE type = HB_ITEM_TYPE(retItem);
+            bool_t updated = FALSE;
+            log_printf("After WHEN Type: %d", type);
+            cassert(type == HB_IT_LOGICAL);
+            updated = (bool_t)hb_itemGetL(retItem);
+            hb_itemRelease(retItem);
+
+            if (updated == TRUE)
+                i_set_edit_text(cuaobj);
+        }
+
 
         edit_select(edit, 0, 0);
     }
