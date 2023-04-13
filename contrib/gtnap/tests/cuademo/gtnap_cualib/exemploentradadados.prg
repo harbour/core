@@ -313,9 +313,10 @@ RETURN .T.
 STAT FUNC VALIDA_CAMPO (C_Titulo_Campo,C_Conteudo_Campo)
 **********************
 LOCAL L_OK := .T.
+NAP_LOG("VALIDA_CAMPO" + C_Titulo_Campo + ": " + C_Conteudo_Campo)
+
 IF EMPTY(C_Conteudo_Campo)
    L_OK := .F.
-   NAP_LOG("OJO!!!! VALIDA_CAMPO")
    ALARME("M22222","Campo "+C_Titulo_Campo+" vazio")
 ENDIF
 RETURN L_OK

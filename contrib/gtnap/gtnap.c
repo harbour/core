@@ -120,7 +120,7 @@ struct _gtnap_cualib_object_t
     V2Df pos;
     S2Df size;
     bool_t is_last_edit;
-    bool_t is_on_edit_change;
+    //bool_t is_on_edit_change;
     bool_t in_scroll_panel;
     uint32_t editSize;
     PHB_ITEM labelCodeBlock;
@@ -167,8 +167,8 @@ struct _gtnap_cualib_window_t
     bool_t is_configured;
     bool_t is_closed_by_esc;
     bool_t focus_by_previous;
-    bool_t tabstop_by_return_or_arrow;
-    bool_t processing_invalid_date;
+    //bool_t tabstop_by_return_or_arrow;
+    //bool_t processing_invalid_date;
     bool_t modal_window_alive;
     bool_t buttons_navigation;
     uint32_t message_label_id;
@@ -181,7 +181,7 @@ struct _gtnap_cualib_window_t
     GtNapArea *gtarea;
     GtNapVector *gtvector;
     PHB_ITEM confirmaCodeBlock;
-    PHB_ITEM errorDataCodeBlock;
+    PHB_ITEM errorDataCodeBlock;  // OJO: Data es Date (fecha)
     ArrSt(GtNapCualibObject) *gui_objects;
     ArrPt(GtNapCallback) *callbacks;
 };
@@ -1399,7 +1399,7 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->pos.y = (real32_t)(cell_y * (int32_t)cell_y_size);
     object->size = *size;
     object->is_last_edit = FALSE;
-    object->is_on_edit_change = FALSE;
+    //object->is_on_edit_change = FALSE;
     object->in_scroll_panel = in_scroll_panel;
     object->labelCodeBlock = NULL;
     object->editCodeBlock = NULL;
@@ -1490,8 +1490,8 @@ uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, 
     cuawin->is_configured = FALSE;
     cuawin->is_closed_by_esc = FALSE;
     cuawin->focus_by_previous = FALSE;
-    cuawin->tabstop_by_return_or_arrow = FALSE;
-    cuawin->processing_invalid_date = FALSE;
+    //cuawin->tabstop_by_return_or_arrow = FALSE;
+    //cuawin->processing_invalid_date = FALSE;
     cuawin->modal_window_alive = FALSE;
     cuawin->message_label_id = UINT32_MAX;
     cuawin->default_button = UINT32_MAX;
@@ -2848,7 +2848,7 @@ static void i_OnNextTabstop(GtNapCualibWindow *cuawin, Event *e)
     unref(e);
     cassert_no_null(cuawin);
     cuawin->focus_by_previous = FALSE;
-    cuawin->tabstop_by_return_or_arrow = TRUE;
+    //cuawin->tabstop_by_return_or_arrow = TRUE;
     window_next_tabstop(cuawin->window);
 }
 
@@ -2859,7 +2859,7 @@ static void i_OnPreviousTabstop(GtNapCualibWindow *cuawin, Event *e)
     unref(e);
     cassert_no_null(cuawin);
     cuawin->focus_by_previous = TRUE;
-    cuawin->tabstop_by_return_or_arrow = TRUE;
+    //cuawin->tabstop_by_return_or_arrow = TRUE;
     window_previous_tabstop(cuawin->window);
 }
 
@@ -2944,111 +2944,133 @@ static GtNapCualibObject *i_cualib_obj(ArrSt(GtNapCualibObject) *objects, const 
 
 static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
 {
+    const EvText *p = event_params(e, EvText);
     GtNapCualibObject *cuaobj = NULL;
-    bool_t valid = TRUE;
     cassert_no_null(cuawin);
-
 
     if (cuawin->modal_window_alive == FALSE)
     {
-        log_printf("Modal Window: %p  in not alive", cuawin);
+        log_printf("i_OnEditChange: Modal Window: %p in not alive", cuawin);
         return;
     }
 
-
-    /* Update Harbour with the content of the EditBox */
+    /* Get the EditBox that launched the event */
     cuaobj = i_cualib_obj(cuawin->gui_objects, (GuiComponent*)event_sender(e, Edit));
     cassert(cuaobj->type == ekOBJ_EDIT);
 
-    if (cuaobj->is_on_edit_change == TRUE)
+    /* Update Harbour with the content of the EditBox */
+    i_update_harbour_from_edit_text(cuaobj);
+
+    /* The editbox has a validation code block */
+    if (cuaobj->validaCodeBlock != NULL)
     {
-        log_printf("Object: %p  is_on_edit_change", cuaobj);
-        return;
+        bool_t valid = TRUE;
+        PHB_ITEM retItem = hb_itemDo(cuaobj->validaCodeBlock, 0 /*,1, cuaobj->getobjItem*/);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        cassert(type == HB_IT_LOGICAL);
+        valid = (bool_t)hb_itemGetL(retItem);
+        hb_itemRelease(retItem);
+
+        /* If the input is not valid --> The editbox keep the focus and event finish here */
+        if (valid == FALSE)
+        {
+            bool_t *r = event_result(e, bool_t);
+            *r = FALSE;
+            return;
+        }
     }
 
-    if (cuaobj->is_last_edit == TRUE && cuawin->tabstop_by_return_or_arrow == FALSE)
+    /* The window has a global function to process invalid date */
+    if (cuaobj->dtype == ekTYPE_DATE)
     {
-            log_printf("Modal Window: %p  tabstop_by_return_or_arrow FALSE", cuawin);
-        return;
+        if (cuawin->errorDataCodeBlock != NULL)
+        {
+            long r = hb_dateUnformat( p->text, hb_setGetDateFormat());
+            log_printf("DATE processing result: %d", r);
 
+            /* Date invalid --> The editbox keep the focus and event finish here */
+            if (r == 0)
+            {
+                PHB_ITEM retItem = NULL;
+                bool_t *r = event_result(e, bool_t);
+                retItem = hb_itemDo(cuawin->errorDataCodeBlock, 0);
+                hb_itemRelease(retItem);
+                *r = FALSE;
+                return;
+            }
+        }
     }
 
-    cuaobj->is_on_edit_change = TRUE;
-
+    // TODO: DELETE
     if (cuaobj->is_last_edit == TRUE)
         log_printf("Entering i_OnEditChange LAST_EDIT: %p", cuaobj);
     else
         log_printf("Entering i_OnEditChange: %p", cuaobj);
 
-    i_update_harbour_from_edit_text(cuaobj);
+    /* Update possible labels associated with this input */
+    arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+        if (obj->type == ekOBJ_LABEL)
+            i_set_label_text(obj);
+    arrst_end();
 
-        log_printf("Voy a hacer el VALID check!");
-    if (cuaobj->validaCodeBlock != NULL)
+
+    /* The window must stop modal when the last input loses the focus */
+    if (cuawin->stops_last_edit == TRUE)
     {
-        // FRAN:TODO Corrections when NAppGUI implement NO LOSE focus OnEditChange
-        // PHB_ITEM retItem = hb_itemDo(cuaobj->validaCodeBlock, 1, cuaobj->getobjItem);
-        // HB_TYPE type = HB_ITEM_TYPE(retItem);
-        // cassert(type == HB_IT_LOGICAL);
-        // valid = (bool_t)hb_itemGetL(retItem);
-        // hb_itemRelease(retItem);
-        valid = TRUE;
-    }
-        log_printf("HE Salido del VALID check!");
-
-    if (valid == TRUE)
-    {
-        /* Update possible labels associated with this input */
-        arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
-            if (obj->type == ekOBJ_LABEL)
-                i_set_label_text(obj);
-        arrst_end();
-
-
-        /* The window must stop modal when the last input loses the focus */
-        if (cuawin->stops_last_edit == TRUE)
+        /* If user have pressed the [ESC] key, we left the stop for that event */
+        if (cuawin->is_closed_by_esc == FALSE)
         {
-            /* If user have pressed the [ESC] key, we left the stop for that event */
-            if (cuawin->is_closed_by_esc == FALSE)
+            /* The last editbox has lost the focus --> Close the window */
+            if (cuaobj->is_last_edit == TRUE)
             {
-                /* If user have navigated with [UP] button, the window must continue open */
+                /* We dont execute confirmaCodeBlock if we moved from last edit to previos one */
                 if (cuawin->focus_by_previous == FALSE)
                 {
-                    /* The last editbox has lost the focus --> Close the window */
-                    if (cuaobj->is_last_edit == TRUE)
+                    bool_t close = TRUE;
+
+                    /* We have asociated a confirmation block */
+                    if (cuawin->confirmaCodeBlock != NULL)
                     {
-                        bool_t close = TRUE;
+                        PHB_ITEM retItem = hb_itemDo(cuawin->confirmaCodeBlock, 0);
+                        HB_TYPE type = HB_ITEM_TYPE(retItem);
+                        cassert(type == HB_IT_LOGICAL);
+                        close = (bool_t)hb_itemGetL(retItem);
+                        hb_itemRelease(retItem);
+                    }
 
-                        /* We have asociated a confirmation block */
-                        if (cuawin->confirmaCodeBlock != NULL)
-                        {
-                            PHB_ITEM retItem = hb_itemDo(cuawin->confirmaCodeBlock, 0);
-                            HB_TYPE type = HB_ITEM_TYPE(retItem);
-                            cassert(type == HB_IT_LOGICAL);
-                            close = (bool_t)hb_itemGetL(retItem);
-                            hb_itemRelease(retItem);
-                        }
-
-                        if (close == TRUE)
-                        {
-                            if (cuawin->processing_invalid_date == TRUE)
-                                close = FALSE;
-                        }
-
-                        if (close == TRUE)
-                        {
-                            log_printf("--> STOP CUALIB Modal Window: %p 'i_OnEditChange'", cuawin->window);
-                            cuawin->modal_window_alive = FALSE;
-                            window_stop_modal(cuawin->window, 5000);
-                        }
+                    if (close == TRUE)
+                    {
+                        log_printf("--> STOP CUALIB Modal Window: %p 'i_OnEditChange'", cuawin->window);
+                        cuawin->modal_window_alive = FALSE;
+                        window_stop_modal(cuawin->window, 5000);
                     }
                 }
             }
         }
     }
 
+
+
+    // }
+
+//cuaobj->validaCodeBlock
+    // if (cuaobj->is_on_edit_change == TRUE)
+    // {
+    //     log_printf("Object: %p  is_on_edit_change", cuaobj);
+    //     return;
+    // }
+
+    // if (cuaobj->is_last_edit == TRUE && cuawin->tabstop_by_return_or_arrow == FALSE)
+    // {
+    //         log_printf("Modal Window: %p  tabstop_by_return_or_arrow FALSE", cuawin);
+    //     return;
+
+    // }
+
+    //cuaobj->is_on_edit_change = TRUE;
     cuawin->focus_by_previous = FALSE;
-    cuaobj->is_on_edit_change = FALSE;
-    cuawin->tabstop_by_return_or_arrow = FALSE;
+    //cuaobj->is_on_edit_change = FALSE;
+    //cuawin->tabstop_by_return_or_arrow = FALSE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3450,25 +3472,25 @@ static bool_t i_is_editable(GtNapCualibObject *cuaobj)
 
 static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
 {
+    Edit *edit = event_sender(e, Edit);
     const bool_t *p = event_params(e, bool_t);
+    GtNapCualibObject *cuaobj = NULL;
     cassert_no_null(cuawin);
+
+    // FRAN: IMPROVE
+    arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+        if (obj->type == ekOBJ_EDIT)
+        {
+            if (edit == (Edit*)obj->component)
+            {
+                cuaobj = obj;
+                break;
+            }
+        }
+    arrst_end();
+
     if (*p == TRUE)
     {
-        Edit *edit = event_sender(e, Edit);
-        GtNapCualibObject *cuaobj = NULL;
-
-        // FRAN: IMPROVE
-        arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
-            if (obj->type == ekOBJ_EDIT)
-            {
-                if (edit == (Edit*)obj->component)
-                {
-                    cuaobj = obj;
-                    break;
-                }
-            }
-        arrst_end();
-
         if (cuawin->message_label_id != UINT32_MAX)
         {
             if (cuaobj != NULL)
@@ -3532,37 +3554,37 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
 
         // FRAN: TODO
         // This block must be move to edit_OnFocus()
-        log_printf("cuaobj->autoCodeBlock: %p", cuaobj->autoCodeBlock);
-        if (cuaobj->autoCodeBlock != NULL)
-        {
-            bool_t lista = FALSE;
+        // log_printf("cuaobj->autoCodeBlock: %p", cuaobj->autoCodeBlock);
+        // if (cuaobj->autoCodeBlock != NULL)
+        // {
+        //     bool_t lista = FALSE;
 
-            log_printf("BEFORE AUTO Function CALL");
-            {
-                PHB_ITEM retItem = hb_itemDo(cuaobj->autoCodeBlock, 0);
-                HB_TYPE type = HB_ITEM_TYPE(retItem);
-                cassert(type == HB_IT_LOGICAL);
-                lista = (bool_t)hb_itemGetL(retItem);
-                hb_itemRelease(retItem);
-            }
-            log_printf("END AUTO Function CALL: %d", lista);
+        //     log_printf("BEFORE AUTO Function CALL");
+        //     {
+        //         PHB_ITEM retItem = hb_itemDo(cuaobj->autoCodeBlock, 0);
+        //         HB_TYPE type = HB_ITEM_TYPE(retItem);
+        //         cassert(type == HB_IT_LOGICAL);
+        //         lista = (bool_t)hb_itemGetL(retItem);
+        //         hb_itemRelease(retItem);
+        //     }
+        //     log_printf("END AUTO Function CALL: %d", lista);
 
-            cuawin->processing_invalid_date = TRUE;
+        //     //cuawin->processing_invalid_date = TRUE;
 
-            if (lista == TRUE  && cuaobj->listaCodeBlock != NULL)
-            {
-                char_t temp[1024];
-                PHB_ITEM retItem2 = hb_itemDo(cuaobj->listaCodeBlock, 0);
-                HB_TYPE type2 = HB_ITEM_TYPE(retItem2);
-                cassert(type2 == HB_IT_STRING);
-                hb_itemCopyStrUTF8(retItem2, temp, sizeof(temp));
-                edit_text((Edit*)cuaobj->component, temp);
-                hb_itemRelease(retItem2);
-            }
+        //     if (lista == TRUE  && cuaobj->listaCodeBlock != NULL)
+        //     {
+        //         char_t temp[1024];
+        //         PHB_ITEM retItem2 = hb_itemDo(cuaobj->listaCodeBlock, 0);
+        //         HB_TYPE type2 = HB_ITEM_TYPE(retItem2);
+        //         cassert(type2 == HB_IT_STRING);
+        //         hb_itemCopyStrUTF8(retItem2, temp, sizeof(temp));
+        //         edit_text((Edit*)cuaobj->component, temp);
+        //         hb_itemRelease(retItem2);
+        //     }
 
-            cuawin->processing_invalid_date = FALSE;
+        //     //cuawin->processing_invalid_date = FALSE;
 
-        }
+        // }
         // --------------------------------
 
         if (i_is_editable(cuaobj) == FALSE)
@@ -3623,31 +3645,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                 //log_printf("Date CPOS: %d", res->cpos);
 
                 if (res->cpos == 10)
-                {
-                    log_printf("END DATE EDITING");
-
-                    if (cuawin->errorDataCodeBlock != NULL)
-                    {
-                        long r = hb_dateUnformat( res->text, hb_setGetDateFormat());
-                        log_printf("DATE processing result: %d", r);
-
-                        /* Date invalid */
-                        if (r == 0)
-                        {
-                            PHB_ITEM retItem = NULL;
-                            cuawin->processing_invalid_date = TRUE;
-                            retItem = hb_itemDo(cuawin->errorDataCodeBlock, 0);
-                            hb_itemRelease(retItem);
-                            cuawin->processing_invalid_date = FALSE;
-                        }
-                        else
-                        {
-                            cuawin->focus_by_previous = FALSE;
-                            cuawin->tabstop_by_return_or_arrow = TRUE;
-                            window_next_tabstop(cuawin->window);
-                        }
-                    }
-                }
+                    window_next_tabstop(cuawin->window);
             }
             else
             {
@@ -3671,7 +3669,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                 if (res->cpos >= cuaobj->editSize)
                 {
                     cuawin->focus_by_previous = FALSE;
-                    cuawin->tabstop_by_return_or_arrow = TRUE;
+                    //cuawin->tabstop_by_return_or_arrow = TRUE;
                     window_next_tabstop(cuawin->window);
                 }
             }
