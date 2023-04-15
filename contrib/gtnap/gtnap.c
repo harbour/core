@@ -122,6 +122,7 @@ struct _gtnap_cualib_object_t
     bool_t is_last_edit;
     //bool_t is_on_edit_change;
     bool_t in_scroll_panel;
+    bool_t can_auto_lista;
     uint32_t editSize;
     PHB_ITEM labelCodeBlock;
     PHB_ITEM editCodeBlock;
@@ -173,6 +174,7 @@ struct _gtnap_cualib_window_t
     bool_t buttons_navigation;
     uint32_t message_label_id;
     uint32_t default_button;
+    GtNapCualibObject *current_obj;
     Window *window;
     S2Df panel_size;
     Panel *panel;
@@ -1401,6 +1403,7 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->is_last_edit = FALSE;
     //object->is_on_edit_change = FALSE;
     object->in_scroll_panel = in_scroll_panel;
+    object->can_auto_lista = TRUE;
     object->labelCodeBlock = NULL;
     object->editCodeBlock = NULL;
     object->editableGlobalCodeBlock = NULL;
@@ -3470,6 +3473,55 @@ static bool_t i_is_editable(GtNapCualibObject *cuaobj)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnShowList(GtNapCualibWindow *cuawin, Event *e)
+{
+    GtNapCualibObject *cuaobj = NULL;
+    cassert_no_null(cuawin);
+    cuaobj = cuawin->current_obj;
+    cassert_no_null(cuaobj);
+    unref(e);
+
+    // log_printf("cuaobj->autoCodeBlock: %p", cuaobj->autoCodeBlock);
+    if (cuaobj->can_auto_lista == TRUE && cuaobj->listaCodeBlock != NULL && cuaobj->autoCodeBlock != NULL)
+    {
+        bool_t lista = FALSE;
+
+        {
+            PHB_ITEM retItem = hb_itemDo(cuaobj->autoCodeBlock, 0);
+            HB_TYPE type = HB_ITEM_TYPE(retItem);
+            cassert(type == HB_IT_LOGICAL);
+            lista = (bool_t)hb_itemGetL(retItem);
+            hb_itemRelease(retItem);
+        }
+
+        if (lista == TRUE)
+        {
+            cuaobj->can_auto_lista = FALSE;
+
+            {
+                char_t temp[1024];
+                PHB_ITEM retItem2 = hb_itemDo(cuaobj->listaCodeBlock, 0);
+                HB_TYPE type = HB_ITEM_TYPE(retItem2);
+
+                if (type != HB_IT_NIL)
+                {
+                    cassert(type == HB_IT_STRING);
+                    hb_itemCopyStrUTF8(retItem2, temp, sizeof(temp));
+                    edit_text((Edit*)cuaobj->component, temp);
+                }
+
+                hb_itemRelease(retItem2);
+
+                if (type != HB_IT_NIL)
+                    gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
+            }
+        }
+    }
+    // --------------------------------
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
 {
     Edit *edit = event_sender(e, Edit);
@@ -3484,7 +3536,12 @@ static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
             if (edit == (Edit*)obj->component)
             {
                 cuaobj = obj;
-                break;
+            }
+            else
+            {
+                /* An edit can't lauch lista auto twice if focus doen't change to other editbox */
+                /* Avoid burst lists */
+                obj->can_auto_lista = TRUE;
             }
         }
     arrst_end();
@@ -3514,35 +3571,10 @@ static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
                 i_set_edit_text(cuaobj);
         }
 
-        // log_printf("cuaobj->autoCodeBlock: %p", cuaobj->autoCodeBlock);
-        if (cuaobj->listaCodeBlock != NULL && cuaobj->autoCodeBlock != NULL)
-        {
-            bool_t lista = FALSE;
-
-            {
-                PHB_ITEM retItem = hb_itemDo(cuaobj->autoCodeBlock, 0);
-                HB_TYPE type = HB_ITEM_TYPE(retItem);
-                cassert(type == HB_IT_LOGICAL);
-                lista = (bool_t)hb_itemGetL(retItem);
-                hb_itemRelease(retItem);
-            }
-
-            if (lista == TRUE)
-            {
-                char_t temp[1024];
-                PHB_ITEM retItem2 = hb_itemDo(cuaobj->listaCodeBlock, 0);
-                HB_TYPE type2 = HB_ITEM_TYPE(retItem2);
-                cassert(type2 == HB_IT_STRING);
-                hb_itemCopyStrUTF8(retItem2, temp, sizeof(temp));
-                edit_text((Edit*)cuaobj->component, temp);
-                hb_itemRelease(retItem2);
-                //window_next_tabstop(cuawin->window);
-            }
-        }
-        // --------------------------------
-
+        cuawin->current_obj = cuaobj;
 
         edit_select(edit, 0, 0);
+        gui_OnIdle(listener(cuawin, i_OnShowList, GtNapCualibWindow));
     }
 }
 
