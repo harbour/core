@@ -2130,11 +2130,12 @@ extern void hb_gtnap_cualib_edit(
     if (obj->listaCodeBlock != NULL)
     {
         Button *button = button_push();
-        char_t text[] = {0xE2, 0x96, 0xBE, 0};
+        char_t text[] = {(char_t)0xE2, (char_t)0x96, (char_t)0xBE, 0};
         GtNapCualibObject *objbut = NULL;
         S2Df bsize;
         uint32_t editIndex;
         //uint32_t butIndex;
+        button_vpadding(button, i_button_vpadding());
         log_printf("EDIT (%s) HAS LISTA IN SCROLL: %d", edit_get_text((Edit*)obj->component), in_scroll_panel);
         button_text(button, text);
         button_font(button, GTNAP_GLOBAL->global_font);
