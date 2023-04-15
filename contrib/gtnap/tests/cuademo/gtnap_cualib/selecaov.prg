@@ -437,8 +437,13 @@ IF L_ForcaLerTudo
 
             X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
 
-            // FRAN: TODO
-            X_Retorno := 1
+            NAP_LOG("MenuVert Modal return: " + hb_ntos(X_Retorno))
+
+            // FRAN: TODO Menu Vert X_Retorno must contain the selection
+            if X_Retorno < 1000
+                L_Abortado := .T.
+            endif
+            // X_Retorno := 1
             // IF X_Retorno == 1000
             //     L_FechouComAutoClose = .T.
             // ENDIF
@@ -869,10 +874,19 @@ IF  SOB_MODO_GRAFICO()
 
     IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
         V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
-        X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
+        IF L_Abortado
+            X_Retorno := 0
+        ELSE
+            X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
+        ENDIF
+
     ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-        V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
-        X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
+        IF L_Abortado
+            X_Retorno := 0
+        ELSE
+            V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+            X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
+        ENDIF
 
     ENDIF
 
