@@ -114,6 +114,13 @@ HB_FUNC( NAP_CUALIB_WINDOW_STOPS_LAST_EDIT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CUALIB_WINDOW_F4_LISTA )
+{
+    hb_gtnap_cualib_window_f4_lista();
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_CUALIB_ADD_MESSAGE_LABEL )
 {
     int32_t N_LinIni = hb_parni(1);

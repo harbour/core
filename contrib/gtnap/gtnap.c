@@ -123,6 +123,7 @@ struct _gtnap_cualib_object_t
     //bool_t is_on_edit_change;
     bool_t in_scroll_panel;
     bool_t can_auto_lista;
+    bool_t has_focus;
     uint32_t editSize;
     PHB_ITEM labelCodeBlock;
     PHB_ITEM editCodeBlock;
@@ -1404,6 +1405,7 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     //object->is_on_edit_change = FALSE;
     object->in_scroll_panel = in_scroll_panel;
     object->can_auto_lista = TRUE;
+    object->has_focus = FALSE;
     object->labelCodeBlock = NULL;
     object->editCodeBlock = NULL;
     object->editableGlobalCodeBlock = NULL;
@@ -3473,7 +3475,33 @@ static bool_t i_is_editable(GtNapCualibObject *cuaobj)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnShowList(GtNapCualibWindow *cuawin, Event *e)
+static void i_launch_lista(GtNapCualibWindow *cuawin, GtNapCualibObject *obj)
+{
+    char_t temp[1024];
+    PHB_ITEM retItem = NULL;
+    HB_TYPE type = HB_IT_NIL;
+    cassert_no_null(cuawin);
+    cassert_no_null(obj);
+    cassert_no_null(obj->listaCodeBlock);
+    retItem = hb_itemDo(obj->listaCodeBlock, 0);
+    type = HB_ITEM_TYPE(retItem);
+
+    if (type != HB_IT_NIL)
+    {
+        cassert(type == HB_IT_STRING);
+        hb_itemCopyStrUTF8(retItem, temp, sizeof(temp));
+        edit_text((Edit*)obj->component, temp);
+    }
+
+    hb_itemRelease(retItem);
+
+    if (type != HB_IT_NIL)
+        gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnAutoList(GtNapCualibWindow *cuawin, Event *e)
 {
     GtNapCualibObject *cuaobj = NULL;
     cassert_no_null(cuawin);
@@ -3497,27 +3525,36 @@ static void i_OnShowList(GtNapCualibWindow *cuawin, Event *e)
         if (lista == TRUE)
         {
             cuaobj->can_auto_lista = FALSE;
-
-            {
-                char_t temp[1024];
-                PHB_ITEM retItem2 = hb_itemDo(cuaobj->listaCodeBlock, 0);
-                HB_TYPE type = HB_ITEM_TYPE(retItem2);
-
-                if (type != HB_IT_NIL)
-                {
-                    cassert(type == HB_IT_STRING);
-                    hb_itemCopyStrUTF8(retItem2, temp, sizeof(temp));
-                    edit_text((Edit*)cuaobj->component, temp);
-                }
-
-                hb_itemRelease(retItem2);
-
-                if (type != HB_IT_NIL)
-                    gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
-            }
+            i_launch_lista(cuawin, cuaobj);
         }
     }
     // --------------------------------
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnF4Lista(GtNapCualibWindow *cuawin, Event *e)
+{
+    cassert_no_null(cuawin);
+    arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+        if (obj->type == ekOBJ_EDIT)
+        {
+            if (obj->has_focus == TRUE)
+            {
+                if (obj->listaCodeBlock != NULL)
+                    i_launch_lista(cuawin, obj);
+                return;
+            }
+        }
+    arrst_end();
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_window_f4_lista(void)
+{
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    window_hotkey(cuawin->window, ekKEY_F4, 0, listener(cuawin, i_OnF4Lista, GtNapCualibWindow));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3536,12 +3573,14 @@ static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
             if (edit == (Edit*)obj->component)
             {
                 cuaobj = obj;
+                obj->has_focus = TRUE;
             }
             else
             {
                 /* An edit can't lauch lista auto twice if focus doen't change to other editbox */
                 /* Avoid burst lists */
                 obj->can_auto_lista = TRUE;
+                obj->has_focus = FALSE;
             }
         }
     arrst_end();
@@ -3574,7 +3613,7 @@ static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
         cuawin->current_obj = cuaobj;
 
         edit_select(edit, 0, 0);
-        gui_OnIdle(listener(cuawin, i_OnShowList, GtNapCualibWindow));
+        gui_OnIdle(listener(cuawin, i_OnAutoList, GtNapCualibWindow));
     }
 }
 

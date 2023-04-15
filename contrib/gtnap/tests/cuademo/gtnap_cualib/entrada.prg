@@ -754,6 +754,7 @@ IF SOB_MODO_GRAFICO()
         NAP_CUALIB_WINDOW_ENTER_TABSTOP()
         NAP_CUALIB_WINDOW_ARROWS_TABSTOP()
         NAP_CUALIB_WINDOW_STOPS_LAST_EDIT()
+        NAP_CUALIB_WINDOW_F4_LISTA()
 
         NAP_LOG("ENTRADA MESSAGE POS: " + hb_ntos(LinMess(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)))
 
