@@ -1291,7 +1291,8 @@ _draw2d_api void guictx_append_globals_manager_imp(
                         FPtr_gctx_cursor func_globals_cursor,
                         FPtr_gctx_destroy func_globals_cursor_destroy,
                         FPtr_gctx_get_indexed func_globals_value,
-                        FPtr_gctx_set2_real64 func_globals_transitions);
+                        FPtr_gctx_set2_real64 func_globals_transitions,
+                        FPtr_gctx_set_listener func_globals_OnIdle);
 #define guictx_append_globals_manager(\
                         context,\
                         func_globals_device,\
@@ -1302,6 +1303,7 @@ _draw2d_api void guictx_append_globals_manager_imp(
                         func_globals_cursor_destroy,\
                         func_globals_value,\
                         func_globals_transitions,\
+                        func_globals_OnIdle,\
                         image_type)\
     (\
         FUNC_CHECK_GCTX_GET_ENUM(func_globals_device, void, device_t),\
@@ -1312,6 +1314,7 @@ _draw2d_api void guictx_append_globals_manager_imp(
         FUNC_CHECK_GCTX_DESTROY(func_globals_cursor_destroy, Cursor),\
         FUNC_CHECK_GCTX_GET_INDEXED(func_globals_value),\
         FUNC_CHECK_GCTX_SET2_REAL64(func_globals_transitions, void),\
+        FUNC_CHECK_GCTX_SET_LISTENER(func_globals_OnIdle, void),\
         guictx_append_globals_manager_imp(\
                         context,\
                         (FPtr_gctx_get_enum)func_globals_device,\
@@ -1321,7 +1324,8 @@ _draw2d_api void guictx_append_globals_manager_imp(
                         (FPtr_gctx_cursor)func_globals_cursor,\
                         (FPtr_gctx_destroy)func_globals_cursor_destroy,\
                         (FPtr_gctx_get_indexed)func_globals_value,\
-                        (FPtr_gctx_set2_real64)func_globals_transitions)\
+                        (FPtr_gctx_set2_real64)func_globals_transitions,\
+                        (FPtr_gctx_set_listener)func_globals_OnIdle)\
     )
 
 _draw2d_api void guictx_append_drawctrl_manager_imp(

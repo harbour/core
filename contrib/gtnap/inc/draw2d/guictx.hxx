@@ -808,6 +808,7 @@ struct _guictx_t
     FPtr_gctx_destroy func_globals_cursor_destroy;
     FPtr_gctx_get_indexed func_globals_value;
     FPtr_gctx_set2_real64 func_globals_transitions;
+    FPtr_gctx_set_listener func_globals_OnIdle;
 
     /*! <Draw Custom Controls> */
     FPtr_gctx_get_ptr func_drawctrl_font;

@@ -2950,7 +2950,7 @@ static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
 
     if (cuawin->modal_window_alive == FALSE)
     {
-        log_printf("i_OnEditChange: Modal Window: %p in not alive", cuawin);
+        log_printf("i_OnEditChange: Modal Window: %p is not alive", cuawin);
         return;
     }
 
@@ -3514,6 +3514,33 @@ static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
                 i_set_edit_text(cuaobj);
         }
 
+        // log_printf("cuaobj->autoCodeBlock: %p", cuaobj->autoCodeBlock);
+        if (cuaobj->listaCodeBlock != NULL && cuaobj->autoCodeBlock != NULL)
+        {
+            bool_t lista = FALSE;
+
+            {
+                PHB_ITEM retItem = hb_itemDo(cuaobj->autoCodeBlock, 0);
+                HB_TYPE type = HB_ITEM_TYPE(retItem);
+                cassert(type == HB_IT_LOGICAL);
+                lista = (bool_t)hb_itemGetL(retItem);
+                hb_itemRelease(retItem);
+            }
+
+            if (lista == TRUE)
+            {
+                char_t temp[1024];
+                PHB_ITEM retItem2 = hb_itemDo(cuaobj->listaCodeBlock, 0);
+                HB_TYPE type2 = HB_ITEM_TYPE(retItem2);
+                cassert(type2 == HB_IT_STRING);
+                hb_itemCopyStrUTF8(retItem2, temp, sizeof(temp));
+                edit_text((Edit*)cuaobj->component, temp);
+                hb_itemRelease(retItem2);
+                //window_next_tabstop(cuawin->window);
+            }
+        }
+        // --------------------------------
+
 
         edit_select(edit, 0, 0);
     }
@@ -3551,41 +3578,6 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
         //     GtNapCualibObject *mes_obj = arrst_get(cuawin->gui_objects, cuawin->message_label_id, GtNapCualibObject);
         //     i_set_edit_message(cuaobj, mes_obj);
         // }
-
-        // FRAN: TODO
-        // This block must be move to edit_OnFocus()
-        // log_printf("cuaobj->autoCodeBlock: %p", cuaobj->autoCodeBlock);
-        // if (cuaobj->autoCodeBlock != NULL)
-        // {
-        //     bool_t lista = FALSE;
-
-        //     log_printf("BEFORE AUTO Function CALL");
-        //     {
-        //         PHB_ITEM retItem = hb_itemDo(cuaobj->autoCodeBlock, 0);
-        //         HB_TYPE type = HB_ITEM_TYPE(retItem);
-        //         cassert(type == HB_IT_LOGICAL);
-        //         lista = (bool_t)hb_itemGetL(retItem);
-        //         hb_itemRelease(retItem);
-        //     }
-        //     log_printf("END AUTO Function CALL: %d", lista);
-
-        //     //cuawin->processing_invalid_date = TRUE;
-
-        //     if (lista == TRUE  && cuaobj->listaCodeBlock != NULL)
-        //     {
-        //         char_t temp[1024];
-        //         PHB_ITEM retItem2 = hb_itemDo(cuaobj->listaCodeBlock, 0);
-        //         HB_TYPE type2 = HB_ITEM_TYPE(retItem2);
-        //         cassert(type2 == HB_IT_STRING);
-        //         hb_itemCopyStrUTF8(retItem2, temp, sizeof(temp));
-        //         edit_text((Edit*)cuaobj->component, temp);
-        //         hb_itemRelease(retItem2);
-        //     }
-
-        //     //cuawin->processing_invalid_date = FALSE;
-
-        // }
-        // --------------------------------
 
         if (i_is_editable(cuaobj) == FALSE)
         {
@@ -3645,7 +3637,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                 //log_printf("Date CPOS: %d", res->cpos);
 
                 if (res->cpos == 10)
-                    window_next_tabstop(cuawin->window);
+                    gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
             }
             else
             {
@@ -3670,7 +3662,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                 {
                     cuawin->focus_by_previous = FALSE;
                     //cuawin->tabstop_by_return_or_arrow = TRUE;
-                    window_next_tabstop(cuawin->window);
+                    gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
                 }
             }
         }

@@ -55,6 +55,8 @@ _gui_api void gui_update_transitions(const real64_t prtime, const real64_t crtim
 
 _gui_api void gui_OnNotification(Listener *listener);
 
+_gui_api void gui_OnIdle(Listener *listener);
+
 _gui_api void *evbind_object_imp(Event *e, const char_t *type);
 
 _gui_api bool_t evbind_modify_imp(Event *e, const char_t *type, const uint16_t size, const char_t *mname, const char_t *mtype, const uint16_t moffset, const uint16_t msize);
