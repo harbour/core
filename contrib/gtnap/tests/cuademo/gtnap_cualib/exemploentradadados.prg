@@ -221,15 +221,15 @@ LOCAL C_Campo5 := "Valor 5....."
    TECLAS {} AJUDA "T?????"
 ESPECIALIZE V_Janela ENTRADA ROLAVERTICAL
 
-@ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
+@ V_Janela,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C1????"
 @ V_Janela,01,10 SAY LOWER(C_Campo1)
-@ V_Janela,02,02 SAY "Campo 2" GET C_Campo2 AJUDA "C?????"
+@ V_Janela,02,02 SAY "Campo 2" GET C_Campo2 AJUDA "C2????"
 @ V_Janela,03,10 SAY LOWER(C_Campo2)
-@ V_Janela,04,02 SAY "Campo 3" GET C_Campo3 AJUDA "C?????"
+@ V_Janela,04,02 SAY "Campo 3" GET C_Campo3 AJUDA "C3????"
 @ V_Janela,05,10 SAY LOWER(C_Campo3)
-@ V_Janela,06,02 SAY "Campo 4" GET C_Campo4 AJUDA "C?????"
+@ V_Janela,06,02 SAY "Campo 4" GET C_Campo4 AJUDA "C4????"
 @ V_Janela,07,10 SAY LOWER(C_Campo4)
-@ V_Janela,08,02 SAY "Campo 5" GET C_Campo5 AJUDA "C?????"
+@ V_Janela,08,02 SAY "Campo 5" GET C_Campo5 AJUDA "C5????"
 @ V_Janela,09,10 SAY LOWER(C_Campo5)
 
 L_Ok := ATIVE(V_Janela)

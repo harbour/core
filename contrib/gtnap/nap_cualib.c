@@ -121,6 +121,14 @@ HB_FUNC( NAP_CUALIB_WINDOW_F4_LISTA )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CUALIB_WINDOW_CURRENT_EDIT )
+{
+    uint32_t id = hb_gtnap_cualib_window_current_edit();
+    hb_retni(id + 1);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_CUALIB_ADD_MESSAGE_LABEL )
 {
     int32_t N_LinIni = hb_parni(1);

@@ -3559,6 +3559,24 @@ void hb_gtnap_cualib_window_f4_lista(void)
 
 /*---------------------------------------------------------------------------*/
 
+uint32_t hb_gtnap_cualib_window_current_edit(void)
+{
+    uint32_t id = 0;
+    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+        if (obj->type == ekOBJ_EDIT)
+        {
+            if (obj->has_focus == TRUE)
+                return id;
+            id += 1;
+        }
+    arrst_end();
+    cassert(FALSE);
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
 {
     Edit *edit = event_sender(e, Edit);

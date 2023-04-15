@@ -12,4 +12,4 @@ echo %cd%
 ::..\\..\\..\\..\\..\\bin\\win\\msvc\\hbmk2.exe -hbraw exemplo.prg
 
 START /B exemplo --hb:gtnap
-::START /B exemplo --hb:gtwin
+@REM START /B exemplo --hb:gtwin

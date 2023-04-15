@@ -107,6 +107,8 @@ extern void hb_gtnap_cualib_window_stops_last_edit(void);
 
 extern void hb_gtnap_cualib_window_f4_lista(void);
 
+extern uint32_t hb_gtnap_cualib_window_current_edit(void);
+
 extern void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_ColIni);
 
 extern void hb_gtnap_cualib_window_scroll_panel(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin);

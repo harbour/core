@@ -603,15 +603,24 @@ ELSE
 ENDIF
 RETURN C_Dado
 *
+
+
+STATIC PROC NAP_ENTRADA_HELP(C_CdTela_,C_Cabec_,V_Lst_CdGET_)
+    LOCAL N_Sel := NAP_CUALIB_WINDOW_CURRENT_EDIT()
+    XXHELP(C_CdTela_,C_Cabec_,V_Lst_CdGET_[N_Sel][1],V_Lst_CdGET_)
+RETURN
+
+
 ****************************
 STATIC FUNC Ler( VX_Janela )
 ****************************
 *
-LOCAL N_CursorAnt , C_ReadVarAnt, N_Col, N_Row
+LOCAL N_CursorAnt , C_ReadVarAnt, N_Col, N_Row, N_Cont
 LOCAL VX_Get      , VX_Edicao
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL N_Aux_SayGetCor, X_Info, X_Retorno, X_Dado
 LOCAL B_ConfirmaBlock := NIL, B_DesisteBlock := NIL
+
 //LOCAL L_IsData := .F.
 //LOCAL N_PaintRefresh_Old
 *
@@ -633,6 +642,13 @@ IF SOB_MODO_GRAFICO()
     IF L_PrimAtivacao
         NAP_LOG("ENTRADA N_LinCobertas: " + hb_ntos(N_LinCobertas))
         NAP_LOG("ENTRADA LIBRE: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
+        NAP_LOG("ENTRADA V_Lst_CdGET: " + hb_ntos(LEN(V_Lst_CdGET)))
+        FOR N_Cont := 1 TO LEN(V_Lst_CdGET)
+            NAP_LOG("V_Lst_CdGET: [" + hb_ntos(N_Cont) + "] " + V_Lst_CdGET[N_Cont][1])
+        NEXT
+
+        //LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdGET)  // LOGAR conteúdo de telas
+        NAP_LOG("ENTRADA V_Lst_CdGET: " + hb_ntos(LEN(V_Lst_CdGET)))
 
         FOR N_Aux_SayGetCor := 1 TO LEN(VX_SayGetList)
 
@@ -648,6 +664,7 @@ IF SOB_MODO_GRAFICO()
             #DEFINE B_Auto X_Info:CARGO[5]
             #DEFINE VX_Edicao   VX_SubObj
             #DEFINE B_Mess X_Info:CARGO[6]
+
 
             //X_Dado := EVAL(X_Info:BLOCK)
 
@@ -755,6 +772,7 @@ IF SOB_MODO_GRAFICO()
         NAP_CUALIB_WINDOW_ARROWS_TABSTOP()
         NAP_CUALIB_WINDOW_STOPS_LAST_EDIT()
         NAP_CUALIB_WINDOW_F4_LISTA()
+        NAP_CUALIB_HOTKEY(K_F1,{||NAP_ENTRADA_HELP(C_CdTela,C_Cabec,V_Lst_CdGET)}, .F.)
 
         NAP_LOG("ENTRADA MESSAGE POS: " + hb_ntos(LinMess(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)))
 
@@ -835,7 +853,7 @@ ENDIF  // L_PrimAtivacao
 //    #erro "Código não adaptado para esta plataforma"
 // #endif
 
-ELSE
+ELSE  // .NOT. SOB_MODO_GRAFICO()
 
 *
 N_CursorAnt  := SET(_SET_CURSOR,SC_NONE)
