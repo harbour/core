@@ -125,6 +125,7 @@ struct _gtnap_cualib_object_t
     bool_t can_auto_lista;
     bool_t has_focus;
     uint32_t editSize;
+    uint32_t editBoxIndexForButton;
     PHB_ITEM labelCodeBlock;
     PHB_ITEM editCodeBlock;
     PHB_ITEM editableGlobalCodeBlock;
@@ -137,6 +138,7 @@ struct _gtnap_cualib_object_t
     PHB_ITEM whenCodeBlock;
     PHB_ITEM getobjItem;
     GuiComponent *component;
+    GtNapCualibWindow *cuawin;
 };
 
 struct _gtnap_cualib_toolbar_t
@@ -1406,6 +1408,7 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
     object->in_scroll_panel = in_scroll_panel;
     object->can_auto_lista = TRUE;
     object->has_focus = FALSE;
+    object->editBoxIndexForButton = UINT32_MAX;
     object->labelCodeBlock = NULL;
     object->editCodeBlock = NULL;
     object->editableGlobalCodeBlock = NULL;
@@ -1939,6 +1942,69 @@ static void i_update_harbour_from_edit_text(const GtNapCualibObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
+static Listener *i_gtnap_cualib_listener_noblock(const int32_t key, GtNapCualibWindow *cuawin, FPtr_gtnap_callback func_callback)
+{
+    GtNapCallback *callback = heap_new0(GtNapCallback);
+    callback->codeBlock = NULL;
+    callback->cuawin = cuawin;
+    callback->key = key;
+    callback->autoclose = FALSE;
+    arrpt_append(cuawin->callbacks, callback, GtNapCallback);
+    return listener(callback, func_callback, GtNapCallback);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnNextTabstop(GtNapCualibWindow *cuawin, Event *e)
+{
+    unref(e);
+    cassert_no_null(cuawin);
+    cuawin->focus_by_previous = FALSE;
+    //cuawin->tabstop_by_return_or_arrow = TRUE;
+    window_next_tabstop(cuawin->window);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_launch_lista(GtNapCualibWindow *cuawin, GtNapCualibObject *obj)
+{
+    char_t temp[1024];
+    PHB_ITEM retItem = NULL;
+    HB_TYPE type = HB_IT_NIL;
+    cassert_no_null(cuawin);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_EDIT);
+    cassert_no_null(obj->listaCodeBlock);
+    retItem = hb_itemDo(obj->listaCodeBlock, 0);
+    type = HB_ITEM_TYPE(retItem);
+
+    if (type != HB_IT_NIL)
+    {
+        cassert(type == HB_IT_STRING);
+        hb_itemCopyStrUTF8(retItem, temp, sizeof(temp));
+        edit_text((Edit*)obj->component, temp);
+    }
+
+    hb_itemRelease(retItem);
+
+    if (type != HB_IT_NIL)
+        gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnListaButton(GtNapCallback *callback, Event *e)
+{
+    GtNapCualibObject *obj = NULL;
+    cassert_no_null(callback);
+    cassert_no_null(callback->cuawin);
+    obj = arrst_get(callback->cuawin->gui_objects, callback->key, GtNapCualibObject);
+    log_printf("Pressed Lista Button: %d", callback->key);
+    i_launch_lista(callback->cuawin, obj);
+}
+
+/*---------------------------------------------------------------------------*/
+
 extern void hb_gtnap_cualib_edit(
                     const uint32_t editaBlockParamId,
                     const uint32_t editableGlobalParamId,
@@ -2059,6 +2125,42 @@ extern void hb_gtnap_cualib_edit(
     i_set_edit_text(obj);
 
     log_printf("Added EDIT (%s) into CUALIB Window: %d, %d, %d", edit_get_text((Edit*)obj->component), nLin, nCol, nSize);
+
+
+    if (obj->listaCodeBlock != NULL)
+    {
+        Button *button = button_push();
+        char_t text[] = {0xE2, 0x96, 0xBE, 0};
+        GtNapCualibObject *objbut = NULL;
+        S2Df bsize;
+        uint32_t editIndex;
+        //uint32_t butIndex;
+        log_printf("EDIT (%s) HAS LISTA IN SCROLL: %d", edit_get_text((Edit*)obj->component), in_scroll_panel);
+        button_text(button, text);
+        button_font(button, GTNAP_GLOBAL->global_font);
+
+        editIndex = arrst_size(cuawin->gui_objects, GtNapCualibObject) - 1;
+        bsize.width = (real32_t)(2 * GTNAP_GLOBAL->cell_x_size);
+        bsize.height = (real32_t)(1 * GTNAP_GLOBAL->button_y_size);
+        i_add_object(ekOBJ_BUTTON, (nCol - cuawin->N_ColIni) + nSize + 1, (nLin - cuawin->N_LinIni), GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &bsize, in_scroll_panel, (GuiComponent*)button, cuawin);
+
+        objbut = arrst_last(cuawin->gui_objects, GtNapCualibObject);
+        cassert_no_null(objbut);
+        cassert(objbut->type = ekOBJ_BUTTON);
+        cassert(objbut->editBoxIndexForButton == UINT32_MAX);
+        cassert(objbut->cuawin == NULL);
+        objbut->cuawin = cuawin;
+        objbut->editBoxIndexForButton = editIndex;
+        //butIndex = arrst_size(cuawin->gui_objects, GtNapCualibObject);
+
+        {
+            Listener *listener = i_gtnap_cualib_listener_noblock(editIndex, cuawin, i_OnListaButton);
+            button_OnClick(button, listener);
+        }
+    }
+
+
+
 
 
     //str_destroy(&ctext);
@@ -2734,7 +2836,12 @@ static void i_attach_to_panel(ArrSt(GtNapCualibObject) *objects, Panel *main_pan
                     pos.y += (real32_t)(toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size);
                     break;
                 case ekOBJ_BUTTON:
-                    pos.y += (real32_t)GTNAP_GLOBAL->cell_y_size;
+                    if (object->editBoxIndexForButton == UINT32_MAX)
+                        pos.y += (real32_t)GTNAP_GLOBAL->cell_y_size;
+                    else
+                        // The same as related editbox
+                        pos.y += (real32_t)toolbar->pixels_button;
+
                     if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->button_y_size)
                         pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->button_y_size) / 2);
                     break;
@@ -2844,17 +2951,6 @@ static void i_OnWindowClose(GtNapCallback *callback, Event *e)
         callback->cuawin->is_closed_by_esc = TRUE;
 
     log_printf("i_OnWindowClose EVENT RESPONSE %d", ret);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_OnNextTabstop(GtNapCualibWindow *cuawin, Event *e)
-{
-    unref(e);
-    cassert_no_null(cuawin);
-    cuawin->focus_by_previous = FALSE;
-    //cuawin->tabstop_by_return_or_arrow = TRUE;
-    window_next_tabstop(cuawin->window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3475,32 +3571,6 @@ static bool_t i_is_editable(GtNapCualibObject *cuaobj)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_launch_lista(GtNapCualibWindow *cuawin, GtNapCualibObject *obj)
-{
-    char_t temp[1024];
-    PHB_ITEM retItem = NULL;
-    HB_TYPE type = HB_IT_NIL;
-    cassert_no_null(cuawin);
-    cassert_no_null(obj);
-    cassert_no_null(obj->listaCodeBlock);
-    retItem = hb_itemDo(obj->listaCodeBlock, 0);
-    type = HB_ITEM_TYPE(retItem);
-
-    if (type != HB_IT_NIL)
-    {
-        cassert(type == HB_IT_STRING);
-        hb_itemCopyStrUTF8(retItem, temp, sizeof(temp));
-        edit_text((Edit*)obj->component, temp);
-    }
-
-    hb_itemRelease(retItem);
-
-    if (type != HB_IT_NIL)
-        gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
-}
-
-/*---------------------------------------------------------------------------*/
-
 static void i_OnAutoList(GtNapCualibWindow *cuawin, Event *e)
 {
     GtNapCualibObject *cuaobj = NULL;
@@ -3859,6 +3929,21 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
             scroll_panel = panel;
             cuawin->scrolled_panel = panel;
         }
+
+
+        arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
+            if (obj->type == ekOBJ_EDIT)
+            {
+                if (obj->listaCodeBlock != NULL)
+                {
+                    log_printf("Edit %d: WITH LISTA", obj_i);
+                }
+                else
+                {
+                    log_printf("Edit %d: WITHOUT LISTA", obj_i);
+                }
+            }
+        arrst_end();
 
         /* Attach gui objects in certain Z-Order (from back to front) */
         i_attach_to_panel(cuawin->gui_objects, cuawin->panel, scroll_panel, &offset, ekOBJ_MENUVERT, cuawin->toolbar);

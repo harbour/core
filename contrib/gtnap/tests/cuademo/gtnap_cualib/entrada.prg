@@ -190,6 +190,7 @@ LOCAL N_LarguraVar, N_LarguraTela, N_LarguraGet, C_CorNaoSele
 LOCAL C_Tipo_de_GET
 LOCAL C_Picture_GET_Aux
 LOCAL L_Get_tem_Picture
+LOCAL L_With_B_Lista := .F.
 *
 IF .NOT. LEFT(C_CdGET,1) == "C"
    ? MEMVAR->ERRO_ASSUME
@@ -457,6 +458,8 @@ IF B_Edita == NIL
 ENDIF
 IF B_Lista == NIL
    B_Lista := {||NIL}
+ELSE
+   L_With_B_Lista := .T.
 ENDIF
 IF B_Auto == NIL
    B_Auto := {||.F.}
@@ -495,7 +498,7 @@ N_LarguraGet := LarguraTela(VX_Get:BLOCK,VX_Get:PICTURE)
 VX_Get:CARGO := { N_Lin, N_Col, B_Edita, B_Lista, B_Auto, B_Mess,;
                   N_LarguraVar, N_LarguraTela, C_CdGET, N_LarguraGet,;
                   C_Tipo_de_GET, O_Dominio, O_Campo, C_IdCurtoCampoDoCampo,;
-                  L_F4ComCodigo, L_SemF4, L_CampoOpcional }
+                  L_F4ComCodigo, L_SemF4, L_CampoOpcional, L_With_B_Lista }
 *
 #DEFINE VX_Edicao   VX_SubObj
 AADD(VX_SayGetList,VX_Get)
@@ -620,7 +623,7 @@ LOCAL VX_Get      , VX_Edicao
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL N_Aux_SayGetCor, X_Info, X_Retorno, X_Dado
 LOCAL B_ConfirmaBlock := NIL, B_DesisteBlock := NIL
-
+LOCAL B_FinalLista := NIL
 //LOCAL L_IsData := .F.
 //LOCAL N_PaintRefresh_Old
 *
@@ -661,11 +664,14 @@ IF SOB_MODO_GRAFICO()
             #DEFINE N_LarguraTela X_Info:CARGO[8]
             #DEFINE B_Edita X_Info:CARGO[3]
             #DEFINE B_Lista X_Info:CARGO[4]
+            #DEFINE L_With_B_Lista X_Info:CARGO[18]
             #DEFINE B_Auto X_Info:CARGO[5]
             #DEFINE VX_Edicao   VX_SubObj
             #DEFINE B_Mess X_Info:CARGO[6]
 
-
+            IF L_With_B_Lista
+                B_FinalLista := B_Lista
+            ENDIF
             //X_Dado := EVAL(X_Info:BLOCK)
 
             // NAP_LOG("TYPE X_Dado: " + X_Info:TYPE)
@@ -693,7 +699,7 @@ IF SOB_MODO_GRAFICO()
             B_Edita_Global, ;
             B_Edita, ;
             B_Mess, ;
-            B_Lista, ;
+            B_FinalLista /* IF B_Lista is a NIL code block --> No lista  B_Lista*/, ;
             B_Auto, ;
             X_Info:POSTBLOCK, ;
             X_Info, ;
