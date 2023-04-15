@@ -207,15 +207,16 @@ static void i_run_option(MenuVert *menu)
 
         if (menu->autoclose == TRUE)
         {
+            bool_t close = TRUE;
             if (HB_IS_LOGICAL(pReturn))
+                close = (bool_t)hb_itemGetL(pReturn);
+
+            if (close == TRUE)
             {
-                if (hb_itemGetL(pReturn))
-                {
-                    Window *window = menu->window;
-                    if (window == NULL)
-                        window = _component_window((const GuiComponent*)menu->view);
-                    window_stop_modal(window, 1000);
-                }
+                Window *window = menu->window;
+                if (window == NULL)
+                    window = _component_window((const GuiComponent*)menu->view);
+                window_stop_modal(window, 1000);
             }
         }
 
@@ -231,6 +232,7 @@ static void i_OnUp(Panel *panel, Event *e)
     unref(e);
     if (menu->launch_sel == TRUE)
     {
+        log_printf("MenuVert i_OnUp before i_run_option");
         i_run_option(menu);
         menu->launch_sel = FALSE;
     }
