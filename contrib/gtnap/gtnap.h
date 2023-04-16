@@ -159,7 +159,7 @@ extern void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlo
 
 extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose);
 
-extern void hb_gtnap_cualib_text_confirma_button(const uint32_t button_id, const uint32_t codeBlockParamId, const bool_t autoclose);
+extern void hb_gtnap_cualib_text_confirma_button(const uint32_t button_id, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose);
 
 extern void hb_gtnap_cualib_default_button(const uint32_t nDefault);
 
@@ -190,7 +190,7 @@ extern void hb_gtnap_cualib_toolbar_separator(void);
 
 extern void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, const bool_t autoclose);
 
-extern void hb_gtnap_cualib_text_confirma_hotkey(const int32_t key, const uint32_t codeBlockParamId, const bool_t autoclose);
+extern void hb_gtnap_cualib_text_confirma_hotkey(const int32_t key, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose);
 
 extern void hb_gtnap_cualib_error_data(const uint32_t errorDataBlockParamId);
 

@@ -196,12 +196,15 @@ IF SOB_MODO_GRAFICO()
         ENDIF
 
         NAP_TEXTVIEW_SCROLL(V_TextView, L_RolaHorizontal, IIF(L_NaoRolaVertical==.F.,.T.,.F.))
+        NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto)
+        NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
+        NAP_CUALIB_TEXTVIEW_CARET(V_TextView, 0)
 
 
         //#DEFINE V_RegiaoBotoes VX_Janela[21]        // dados sobre os botões de função
         NAP_LOG("TEXTO V_RegiaoBotoes: " + hb_ntos(LEN(V_RegiaoBotoes)) )
         FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
-            NAP_CUALIB_TEXT_CONFIRMA_BUTTON(N_Cont, B_Confirma, .F.)
+            NAP_CUALIB_TEXT_CONFIRMA_BUTTON(N_Cont, B_Confirma, B_Valid, .F.)
             //V_RegiaoBotoes[N_Cont,_BOTAO_BLOCO_ACAO] := B_Confirma
             //V_RegiaoBotoes[N_Cont,_BOTAO_AUTOCLOSE] := .F.
         NEXT
@@ -210,12 +213,9 @@ IF SOB_MODO_GRAFICO()
 
 
         FOR N_Cont := 1 TO LEN(VN_TeclaGravar) STEP +1
-            NAP_CUALIB_TEXT_CONFIRMA_HOTKEY(VN_TeclaGravar[N_Cont], B_Confirma, .F.)
+            NAP_CUALIB_TEXT_CONFIRMA_HOTKEY(VN_TeclaGravar[N_Cont], B_Confirma, B_Valid, .F.)
         NEXT
 
-        NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto)
-        NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
-        NAP_CUALIB_TEXTVIEW_CARET(V_TextView, 0)
         L_PrimAtivacao := .F.
     ENDIF
 

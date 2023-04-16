@@ -98,9 +98,10 @@ DO WHILE L_OK
    L_OK :=  ATIVE(V_Janela)
 ENDDO
 
-NAP_LOG("Final texto in 'C_Texto': " + C_Texto)
+NAP_LOG("Final CONFIRMAR texto in 'C_Texto': " + C_Texto)
 
 DESTRUA V_Janela
+
 *
 
 
@@ -130,6 +131,7 @@ LOCAL C_Texto,V_Janela, L_OK
 //  Fran: This code works on Windows and Linux
 //
 C_Texto := MEMOREAD("../dados/textotes.txt")
+C_Texto := "Validar initial text"
 
 ESPECIALIZE V_Janela TEXTO C_Texto TERMINAR {K_F2} EDITA .T. ;
             VALID COMECAR_COM_CASA(C_Texto)
@@ -139,7 +141,12 @@ DO WHILE L_OK
    MOSTRAR("M15606","Texto editado com sucesso. Usuário teclou F2")
    L_OK :=  ATIVE(V_Janela)
 ENDDO
+
+NAP_LOG("Final VALIDAR texto in 'C_Texto': " + C_Texto)
+
 DESTRUA V_Janela
+
+
 *
 **************************
 STAT FUNC COMECAR_COM_CASA(C_Texto)
