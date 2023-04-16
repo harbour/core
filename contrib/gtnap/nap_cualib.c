@@ -202,7 +202,7 @@ HB_FUNC( NAP_CUALIB_TEXTVIEW )
     uint32_t nLeft = hb_parni(3);
     uint32_t nBottom = hb_parni(4);
     uint32_t nRight = hb_parni(5);
-    hb_gtnap_cualib_textview(view, nTop, nLeft, nBottom, nRight);
+    hb_gtnap_cualib_textview(view, 6, nTop, nLeft, nBottom, nRight);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -234,11 +234,11 @@ HB_FUNC( NAP_CUALIB_BUTTON )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_CHANGE_BUTTON_BLOCK )
+HB_FUNC( NAP_CUALIB_TEXT_CONFIRMA_BUTTON )
 {
     uint32_t nID = hb_parni(1);
     bool_t autoclose = (bool_t)hb_parl(3);
-    hb_gtnap_cualib_change_button_block(nID, 2, autoclose);
+    hb_gtnap_cualib_text_confirma_button(nID, 2, autoclose);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -317,6 +317,15 @@ HB_FUNC( NAP_CUALIB_HOTKEY )
     int32_t key = hb_parni(1);
     bool_t autoclose = (bool_t)hb_parl(3);
     hb_gtnap_cualib_hotkey(key, 2, autoclose);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_CUALIB_TEXT_CONFIRMA_HOTKEY )
+{
+    int32_t key = hb_parni(1);
+    bool_t autoclose = (bool_t)hb_parl(3);
+    hb_gtnap_cualib_text_confirma_hotkey(key, 2, autoclose);
 }
 
 /*---------------------------------------------------------------------------*/
