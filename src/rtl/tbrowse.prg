@@ -240,7 +240,7 @@ CREATE CLASS TBrowse
    /* NOTE: nMode is an undocumented parameter in CA-Cl*pper */
    METHOD configure( nMode )                    // mark that the internal settings of the TBrowse object should be reconfigured
 
-   METHOD new( nTop, nLeft, nBottom, nRight )   // constructor, NOTE: This method is a Harbour extension [vszakats]
+   METHOD init( nTop, nLeft, nBottom, nRight )   // constructor, NOTE: This method is a Harbour extension [vszakats]
 
    PROTECTED:
 
@@ -302,7 +302,7 @@ FUNCTION TBrowseNew( nTop, nLeft, nBottom, nRight )
    RETURN TBrowse():new( nTop, nLeft, nBottom, nRight )
 
 
-METHOD new( nTop, nLeft, nBottom, nRight ) CLASS TBrowse
+METHOD init( nTop, nLeft, nBottom, nRight ) CLASS TBrowse
 
    __defaultNIL( @nTop, 0 )
    __defaultNIL( @nLeft, 0 )

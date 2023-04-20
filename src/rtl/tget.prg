@@ -99,7 +99,7 @@ CREATE CLASS Get
    VAR rejected       INIT .F. READONLY
    VAR typeOut        INIT .F. READONLY
 
-   METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) /* NOTE: This method is a Harbour extension [vszakats] */
 
    METHOD assign()
    METHOD badDate()
@@ -1935,7 +1935,7 @@ METHOD Reader( xValue ) CLASS Get
 
 /* ------------------------------------------------------------------------- */
 
-METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
+METHOD Init( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
 
    IF nRow == NIL
       nRow := Row()

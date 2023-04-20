@@ -81,7 +81,7 @@ CREATE CLASS ScrollBar FUNCTION HBScrollBar
    METHOD update()
    METHOD hitTest( nMRow, nMCol )
 
-   METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient )  /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( nStart, nEnd, nOffset, bSBlock, nOrient )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -391,7 +391,7 @@ METHOD CalcThumbPos() CLASS ScrollBar
 #define SB_THUMB        hb_UTF8ToStr( "░" )
 #define SB_TRACK        hb_UTF8ToStr( "▓" )
 
-METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) CLASS ScrollBar
+METHOD Init( nStart, nEnd, nOffset, bSBlock, nOrient ) CLASS ScrollBar
 
    LOCAL cColor
 

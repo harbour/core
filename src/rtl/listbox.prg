@@ -150,7 +150,7 @@ CREATE CLASS ListBox FUNCTION HBListBox
    METHOD value() SETGET                                   /* NOTE: Undocumented CA-Cl*pper method. */
    METHOD vScroll( oVScroll ) SETGET
 
-   METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )   /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( nTop, nLeft, nBottom, nRight, lDropDown )   /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -1047,7 +1047,7 @@ METHOD vScroll( oVScroll ) CLASS ListBox
 
 /* --- */
 
-METHOD New( nTop, nLeft, nBottom, nRight, lDropDown ) CLASS ListBox
+METHOD Init( nTop, nLeft, nBottom, nRight, lDropDown ) CLASS ListBox
 
    LOCAL cColor
 
