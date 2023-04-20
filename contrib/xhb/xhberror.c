@@ -242,7 +242,9 @@ HB_FUNC_STATIC( ERRORINIT )
          if( ! pItem )
          {
             if( strcmp( szProcName, "ERRORNEW" ) == 0 ||
-                strcmp( szProcName, "XHB_ERRORNEW" ) == 0 )
+                strcmp( szProcName, "XHB_ERRORNEW" ) == 0 ||
+                strcmp( szProcName, "__ERRRT_BASE" ) == 0 ||
+                strcmp( szProcName, "__ERRRT_SBASE" ) == 0 )
                continue;
             hb_errPutProcName( pError, szProcName );
             hb_errPutProcLine( pError, uiProcLine );

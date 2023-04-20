@@ -5213,6 +5213,8 @@ static void hb_objSetIVars( PHB_ITEM pObject, PHB_ITEM pArray )
                   PHB_DYNS pParentSym;
                   char szClassName[ HB_SYMBOL_NAME_LEN + 1 ];
 
+                  if( nLen > HB_SYMBOL_NAME_LEN )
+                     nLen = HB_SYMBOL_NAME_LEN;
                   memcpy( szClassName, pszMethod, nLen );
                   szClassName[ nLen ] = '\0';
                   pParentSym = hb_dynsymFindName( szClassName );
