@@ -957,6 +957,7 @@ DYNAMIC hb_vfErase
 DYNAMIC hb_vfExists
 DYNAMIC hb_vfFlush
 DYNAMIC hb_vfHandle
+DYNAMIC hb_vfIsLocal
 DYNAMIC hb_vfLink
 DYNAMIC hb_vfLinkRead
 DYNAMIC hb_vfLinkSym

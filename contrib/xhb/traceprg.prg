@@ -51,32 +51,39 @@
 
 STATIC s_lSET_TRACE      := .T.
 STATIC s_cSET_TRACEFILE  := "trace.log"
+STATIC s_cSET_TRACEFILER := nil
 STATIC s_nSET_TRACESTACK := HB_SET_TRACESTACK_ALL
 
 FUNCTION xhb_SetTrace( xTrace )
 
    LOCAL lTrace := s_lSET_TRACE
 
-   IF HB_ISLOGICAL( xTrace )
+   DO CASE
+   CASE HB_ISLOGICAL( xTrace )
       s_lSET_TRACE := xTrace
-   ELSEIF HB_ISSTRING( xTrace )
-      IF Upper( xTrace ) == "ON"
+   CASE HB_ISSTRING( xTrace )
+      SWITCH Upper( xTrace )
+      CASE "ON"
          s_lSET_TRACE := .T.
-      ELSEIF Upper( xTrace ) == "OFF"
+         EXIT
+      CASE "OFF"
          s_lSET_TRACE := .F.
-      ENDIF
-   ENDIF
+         EXIT
+      ENDSWITCH
+   ENDCASE
 
    RETURN lTrace
 
 FUNCTION xhb_SetTraceFile( xFile, lAppend )
 
    LOCAL cTraceFile := s_cSET_TRACEFILE
+   LOCAL hFile
 
-   IF HB_ISSTRING( xFile )
-      s_cSET_TRACEFILE := xFile
-      IF ! HB_ISLOGICAL( lAppend ) .OR. ! lAppend
-         FClose( FCreate( s_cSET_TRACEFILE ) )
+   IF HB_ISSTRING( xFile ) .AND. ! Empty( xFile )
+      s_cSET_TRACEFILER := s_cSET_TRACEFILE := s_RealPath( xFile )
+      IF ! hb_defaultValue( lAppend, .F. ) .AND. ;
+         ( hFile := hb_vfOpen( @s_cSET_TRACEFILER, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+         hb_vfClose( hFile )
       ENDIF
    ENDIF
 
@@ -86,88 +93,106 @@ FUNCTION xhb_SetTraceStack( xLevel )
 
    LOCAL nTraceLevel := s_nSET_TRACESTACK
 
-   IF HB_ISSTRING( xLevel )
-      IF Upper( xLevel ) == "NONE"
+   DO CASE
+   CASE HB_ISSTRING( xLevel )
+      SWITCH xLevel
+      CASE "NONE"
          s_nSET_TRACESTACK := HB_SET_TRACESTACK_NONE
-      ELSEIF Upper( xLevel ) == "CURRENT"
+         EXIT
+      CASE "CURRENT"
          s_nSET_TRACESTACK := HB_SET_TRACESTACK_CURRENT
-      ELSEIF Upper( xLevel ) == "ALL"
+         EXIT
+      CASE "ALL"
          s_nSET_TRACESTACK := HB_SET_TRACESTACK_ALL
-      ENDIF
-   ELSEIF HB_ISNUMERIC( xLevel )
+         EXIT
+      ENDSWITCH
+   CASE HB_ISNUMERIC( xLevel )
       IF xLevel >= 0
          s_nSET_TRACESTACK := xLevel
       ENDIF
-   ENDIF
+   ENDCASE
 
    RETURN nTraceLevel
 
-// --------------------------------------------------------------//
+/* --- */
 
 FUNCTION TraceLog( ... )
 
    // Using PRIVATE instead of LOCALs so TraceLog() is DIVERT friendly.
-   LOCAL cFile, FileHandle, nLevel, ProcName, xParam
+   LOCAL hFile, nLevel, ProcName, xParam, cData
 
-#ifdef __XHARBOUR__
-   IF ! Set( _SET_TRACE )
-      RETURN .T.
+   IF s_lSET_TRACE
+
+      cData := ""
+
+      nLevel := s_nSET_TRACESTACK
+
+      IF nLevel > 0
+         cData += "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")"
+      ENDIF
+
+      IF nLevel > 1 .AND. ! ProcName( 2 ) == ""
+         cData += " Called from:" + hb_eol()
+         nLevel := 1
+         DO WHILE ! ( ProcName := ProcName( ++nLevel ) ) == ""
+            cData += Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol()
+         ENDDO
+      ELSE
+         cData += hb_eol()
+      ENDIF
+
+      FOR EACH xParam IN hb_AParams()
+         cData += "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol()
+      NEXT
+
+      cData += hb_eol()
+
+      IF s_cSET_TRACEFILER == nil
+         s_cSET_TRACEFILER := s_cSET_TRACEFILE := s_RealPath( s_cSET_TRACEFILE )
+      ENDIF
+      IF ( hFile := hb_vfOpen( @s_cSET_TRACEFILER, FO_CREAT + FO_WRITE ) ) != NIL
+         hb_vfSeek( hFile, 0, FS_END )
+         hb_vfWrite( hFile, cData )
+         hb_vfClose( hFile )
+      ENDIF
    ENDIF
-
-   cFile := Set( _SET_TRACEFILE )
-   nLevel := Set( _SET_TRACESTACK )
-#else
-   IF ! s_lSET_TRACE
-      RETURN .T.
-   ENDIF
-
-   cFile := s_cSET_TRACEFILE
-   nLevel := s_nSET_TRACESTACK
-#endif
-
-   /* hb_FileExists() and FOpen()/FCreate() make different assumptions rgdg path,
-      so we have to make sure cFile contains path to avoid ambiguity */
-   cFile := cWithPath( cFile )
-
-   IF hb_FileExists( cFile )
-      FileHandle := FOpen( cFile, FO_WRITE )
-   ELSE
-      FileHandle := FCreate( cFile )
-   ENDIF
-
-   FSeek( FileHandle, 0, FS_END )
-
-   IF nLevel > 0
-      FWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
-   ENDIF
-
-   IF nLevel > 1 .AND. ! ( ProcName( 2 ) == "" )
-      FWrite( FileHandle, " Called from: "  + hb_eol() )
-      nLevel := 1
-      DO WHILE ! ( ( ProcName := ProcName( ++nLevel ) ) == "" )
-         FWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
-      ENDDO
-   ELSE
-      FWrite( FileHandle, hb_eol() )
-   ENDIF
-
-   FOR EACH xParam IN hb_AParams()
-      FWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
-   NEXT
-
-   FWrite( FileHandle, hb_eol() )
-
-   FClose( FileHandle )
 
    RETURN .T.
 
-//
+STATIC FUNCTION s_RealPath( cFilename )
 
-/* Ensure cFilename contains path. If it doesn't, add current directory to the front of it */
-STATIC FUNCTION cWithPath( cFilename )
+   LOCAL cPath, cName, cExt, cDrv, cDir, nStart
 
-   LOCAL cPath
+   IF hb_vfIsLocal( cFilename )
+      hb_FNameSplit( cFilename, @cPath, @cName, @cExt, @cDrv )
+      IF Empty( hb_osDriveSeparator() )
+         cDrv := ""
+      ENDIF
+      nStart := iif( Empty( cDrv ), 1, 3 )
+      IF ! SubStr( cPath, nStart, 1 ) $ hb_osPathDelimiters()
+         IF Empty( cDrv ) .OR. cDrv == DiskName()
+            cPath := hb_cwd() + SubStr( cPath, nStart )
+         ELSE
+            #ifdef __PLATFORM__WINDOWS
+               /* WIN API used by Harbour binds current directory with
+                  process not with drive letters, due to side effects in
+                  current Harbour code for MS-Windows using CurDir( cDrv )
+                  changes current directory to root path [druzus] */
+               cDir := ""
+            #else
+               IF ! Empty( cDir := CurDir( cDrv ) )
+                  cDir += hb_ps()
+               ENDIF
+            #endif
+            cPath := cDrv + hb_osDriveSeparator() + hb_ps() + cDir + ;
+                     SubStr( cPath, nStart )
+         ENDIF
+         cFilename := hb_FNameMerge( cPath, cName, cExt )
+      ELSEIF Empty( cDrv ) .AND. ! Empty( cDrv := DiskName() ) .AND. ;
+             ! SubStr( cPath, 2, 1 ) $ hb_osPathDelimiters()
+         cPath := cDrv + hb_osDriveSeparator() + cPath
+         cFilename := hb_FNameMerge( cPath, cName, cExt )
+      ENDIF
+   ENDIF
 
-   hb_FNameSplit( cFilename, @cPath )
-
-   RETURN iif( Empty( cPath ), "." + hb_ps(), "" ) + cFilename
+   RETURN cFilename

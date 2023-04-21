@@ -129,6 +129,11 @@ static void hb_fileReturn( PHB_FILE pFile )
       hb_ret();
 }
 
+/* hb_vfIsLocal( <cFileName> ) --> <lOK> */
+HB_FUNC( HB_VFISLOCAL )
+{
+   hb_retl( hb_fileIsLocalName( hb_parc( 1 ) ) );
+}
 /* hb_vfExists( <cFileName>, [ @<cDestFileName> ] ) --> <lOK> */
 HB_FUNC( HB_VFEXISTS )
 {
