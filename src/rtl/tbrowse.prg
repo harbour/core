@@ -46,7 +46,7 @@
  *
  */
 
-#define HB_CLS_NOTOBJECT
+//#define HB_CLS_NOTOBJECT
 
 #include "hbclass.ch"
 
