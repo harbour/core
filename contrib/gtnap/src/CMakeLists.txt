@@ -9,9 +9,9 @@ else()
     project(Cuademo)
 endif()
 
-# NAppGUI Build Scripts
-get_filename_component(ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR} PATH)
-include(${ROOT_PATH}/prj/CMakeNAppGUI.cmake)
+# Using NAppGUI build system
+get_filename_component(GTNAP_PATH ${CMAKE_CURRENT_SOURCE_DIR} PATH)
+include(${GTNAP_PATH}/prj/CMakeNAppGUI.cmake)
 
 # Static libraries
 staticLib("sewer" "sewer" "" NRC_NONE)
@@ -24,10 +24,39 @@ staticLib("gui" "gui" "draw2d" NRC_EMBEDDED)
 staticLib("inet" "inet" "core" NRC_NONE)
 staticLib("osapp" "osapp" "osgui;gui" NRC_NONE)
 
-# Your projects here!
 if (GTNAP_DEVELOPER_MODE)
-    message("NAppGUI Developer mode")
-    desktopApp(exemplo "exemplo" "osapp" NRC_NODE)
+    message("GTNAP Developer mode")
+    # set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "/wd4668")
+    # set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "/wd4668")
+    staticLib("gtnap" "gtnap" "osapp" NRC_NONE)
+    desktopApp(exemplo "exemplo" "gtnap" NRC_NODE)
 endif()
 
 generateSolution()
+
+if (GTNAP_DEVELOPER_MODE)
+    cmake_policy(SET CMP0079 NEW)
+    set(ROOT_PATH ${GTNAP_PATH}/../..)
+    set(HARBOUR_LIBS "")
+    set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbct.lib hbextern.lib hbdebug.lib hbvm.lib hbrtl.lib hblang.lib hbcpage.lib")
+    target_include_directories("gtnap" PUBLIC ${ROOT_PATH}/include)
+    target_link_directories("exemplo" PUBLIC ${ROOT_PATH}/lib/win/msvc)
+    target_link_libraries("exemplo" ${HARBOUR_LIBS})
+    #target_compile_options("example" PRIVATE /WD4668)
+
+
+    #cmake_policy()
+ #C:\harbour_nappgui\contrib\gtnap\src\exemplo\hbmk_17hew9.obj
+#  -libpath:C:\harbour_nappgui\lib\win\msvc
+#  -libpath:C:\harbour_nappgui\contrib\gtnap\build
+#  -libpath:C:\harbour_nappgui\contrib\gtnap\build\Debug\lib
+#  /NODEFAULTLIB:LIBCMT.lib
+#  -debug -subsystem:windows
+#  -nxcompat -dynamicbase
+#  -fixed:no  gtnap.lib osapp.lib gui.lib osgui.lib draw2d.lib geom2d.lib core.lib osbs.lib sewer.lib
+
+#   gtcgi.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib gtgui.lib hbrdd.lib hbuddall.lib hbusrrdd.lib rddntx.lib rddcdx.lib rddnsx.lib rddfpt.lib hbrdd.lib hbhsx.lib hbsix.lib hbmacro.lib hbcplr.lib hbpp.lib hbcommon.lib winmm.lib kernel32.lib user32.lib gdi32.lib advapi32.lib ws2_32.lib iphlpapi.lib winspool.lib comctl32.lib comdlg32.lib shell32.lib uuid.lib ole32.lib oleaut32.lib mpr.lib mapi32.lib imm32.lib msimg32.lib wininet.lib hbpcre.lib hbzlib.lib
+
+
+
+endif()

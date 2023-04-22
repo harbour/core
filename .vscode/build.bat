@@ -19,12 +19,12 @@ if not exist %cwd%\src\exemplo mkdir %cwd%\src\exemplo
 ..\\..\\..\\..\\..\\bin\\win\\msvc\\hbmk2.exe -debug -trace -workdir=%cwd%\src\exemplo -o%cwd%\build\exemplo exemplo.hbp || goto error
 
 :: Generate exemplo debug project
-::cd %cwd%
-::cmake -S src -B build_cuademo -DCMAKE_WARN_VS11=OFF -DGTNAP_DEVELOPER_MODE=ON
+cd %cwd%
+cmake -S src -B build_cuademo -DCMAKE_WARN_VS11=OFF -DGTNAP_DEVELOPER_MODE=ON
 
 :: Run exemplo
 cd %cwd%\\build
-START /B exemplo --hb:gtnap
+::START /B exemplo --hb:gtnap
 ::START /B exemplo --hb:gtwin
 goto end
 

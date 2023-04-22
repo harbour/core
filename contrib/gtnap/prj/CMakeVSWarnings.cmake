@@ -18,6 +18,8 @@ set(AdditionalDefinitions
 	"/wd4514"
 	"/wd4625"
 	"/wd4626"
+	"/wd4668"
+	"/wd4255"
 
     # Additional warning over W4
     # (level 4) enumerator 'identifier' in a switch of enum 'enumeration' is not explicitly handled by a case label.
@@ -36,7 +38,7 @@ set(AdditionalDefinitions
     "/w44254"
 
     # (level 4) 'function': no function prototype given: converting '()' to '(void)'
-    "/w44255"
+    #"/w44255"
 
     # (level 4) 'function': member function does not override any base class virtual member function
     "/w44263"
@@ -168,7 +170,7 @@ set(AdditionalDefinitions
     "/w44640"
 
     # (level 4)	'symbol' is not defined as a preprocessor macro, replacing with '0' for 'directives'
-    "/w44668"
+    #"/w44668"
 
     # (level 4)	'symbol' : no directional parameter attribute specified, defaulting to [in]
     "/w44682"
