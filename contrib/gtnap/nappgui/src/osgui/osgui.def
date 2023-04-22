@@ -1,0 +1,27 @@
+/* OSGui library import/export */
+
+#if defined(NAPPGUI_SHARED)
+    #if defined(NAPPGUI_BUILD_OSGUI_LIB)
+        #define NAPPGUI_OSGUI_EXPORT_DLL
+    #else
+        #define NAPPGUI_OSGUI_IMPORT_DLL
+    #endif
+#endif
+
+#if defined(__GNUC__)
+    #if defined(NAPPGUI_OSGUI_EXPORT_DLL)
+        #define _osgui_api __attribute__((visibility("default")))
+    #else
+        #define _osgui_api
+    #endif
+#elif defined(_MSC_VER)
+    #if defined(NAPPGUI_OSGUI_IMPORT_DLL)
+        #define _osgui_api __declspec(dllimport)
+    #elif defined(NAPPGUI_OSGUI_EXPORT_DLL)
+        #define _osgui_api __declspec(dllexport)
+    #else
+        #define _osgui_api
+    #endif
+#else
+    #error Unknown compiler
+#endif

@@ -1,0 +1,1 @@
+processStaticLib(inet "core" "")

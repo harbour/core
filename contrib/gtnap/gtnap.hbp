@@ -4,20 +4,20 @@
 -hblib
 -inc
 
--iinc/osapp
--iinc/gui
--iinc/draw2d
--iinc/geom2d
--iinc/core
--iinc/osbs
--iinc/sewer
+-inappgui/src/osapp
+-inappgui/src/gui
+-inappgui/src/draw2d
+-inappgui/src/geom2d
+-inappgui/src/core
+-inappgui/src/osbs
+-inappgui/src/sewer
 
 -cflag={msvc}-D_WINDOWS
 -cflag={gcc}-g
 -cflag=-DCMAKE_DEBUG
 
 #-olib/${hb_plat}/${hb_comp}/${hb_name}
--obuild/${hb_comp}/${hb_name}
+-obuild/${hb_name}
 
 # Fran: Whats that? -w3 == Warning level   -es2???
 -w3 -es2

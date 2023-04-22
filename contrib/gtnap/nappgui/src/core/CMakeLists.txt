@@ -1,0 +1,1 @@
+processStaticLib(core "osbs" "")

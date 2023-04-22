@@ -1,0 +1,1 @@
+processStaticLib(osapp "osgui;gui" "")

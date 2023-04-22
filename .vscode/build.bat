@@ -3,10 +3,14 @@ set "cwd=%cd%"
 echo %cd%
 cd .\\contrib\\gtnap
 echo %cd%
-..\\..\\bin\\win\\msvc\\hbmk2.exe gtnap.hbp
+call build -b Debug -msvc12
 cd %cwd%
+
+echo After GTNAP build
+echo Building exemplo.hbp
+
 echo %cd%
-cd .\\contrib\\gtnap\\tests\\cuademo\\gtnap_cualib
+cd .\\tests\\cuademo\\gtnap_cualib
 echo %cd%
 ..\\..\\..\\..\\..\\bin\\win\\msvc\\hbmk2.exe exemplo.hbp
 ::..\\..\\..\\..\\..\\bin\\win\\msvc\\hbmk2.exe -hbraw exemplo.prg

@@ -50,4 +50,8 @@ hbct.hbc
 -z
 
 # C compiler options
--debug{DEBUG}
+#-debug{DEBUG}
+
+-workdir=./build
+-debug
+-trace
