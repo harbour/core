@@ -15,7 +15,6 @@
 # Output
 -o.\exemplo
 
-
 exemplo.prg
 exemploauxiliar.prg
 exemploentradadados.prg
@@ -42,16 +41,20 @@ texto.prg
 gtnap.hbc
 hbct.hbc
 
-
 # Harbour compiler options
 -m -a -w -es2 -ql
 -b{DEBUG}
 -d_TESTE{DEBUG}
 -z
 
+
+#
+# To remove...
+#
 # C compiler options
 #-debug{DEBUG}
 
--workdir=./build
--debug
--trace
+# From command line
+#-workdir=./build
+#-debug
+#-trace

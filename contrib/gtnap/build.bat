@@ -26,17 +26,36 @@ GOTO parse
 echo ---------------------------
 echo Generating GTNAP
 echo Main path: %CWD%
-echo Compiler: %COMPILER%
 echo Build type: %BUILD%
 echo ---------------------------
 
 ::
 :: Build NAppGUI from sources
 ::
-call cmake -S %CWD%\nappgui\src -B %CWD%\build -DCMAKE_WARN_VS11=OFF
-call cmake --build %CWD%\build --config %BUILD%
+call cmake -S %CWD%\nappgui\src -B %CWD%\build -DCMAKE_WARN_VS11=OFF || goto error_cmake
+call cmake --build %CWD%\build --config %BUILD%  || goto error_build
 
 ::
 :: Build GTNAP
 ::
-call %HBMK_PATH%\\hbmk2.exe gtnap.hbp
+call %HBMK_PATH%\\hbmk2.exe gtnap.hbp || goto error_gtnap
+
+goto end
+
+::
+:: Errors
+::
+
+:error_cmake
+echo Error in NAppGUI CMake generate
+exit 1
+
+:error_build
+echo Error building NAppGUI
+exit 1
+
+:error_gtnap
+echo Error building GTNAP
+exit 1
+
+:end
