@@ -2,7 +2,12 @@
 # NAppGUI CMake build script
 #------------------------------------------
 cmake_minimum_required(VERSION 2.8.12)
-project(NAppGUI)
+
+if (NOT GTNAP_DEVELOPER_MODE)
+    project(NAppGUI)
+else()
+    project(Cuademo)
+endif()
 
 # NAppGUI Build Scripts
 get_filename_component(ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR} PATH)

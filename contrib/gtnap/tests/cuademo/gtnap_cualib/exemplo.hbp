@@ -12,9 +12,6 @@
 -gttrm{gcc}
 -gtnap
 
-# Output
--o.\exemplo
-
 exemplo.prg
 exemploauxiliar.prg
 exemploentradadados.prg
@@ -58,3 +55,4 @@ hbct.hbc
 #-workdir=./build
 #-debug
 #-trace
+# -o.\exemplo

@@ -45,7 +45,6 @@ goto end
 ::
 :: Errors
 ::
-
 :error_cmake
 echo Error in NAppGUI CMake generate
 exit 1
