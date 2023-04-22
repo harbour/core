@@ -3812,7 +3812,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ENDIF
                   RETURN _EXIT_WORKDIRCREATE
                ENDIF
-               lDeleteWorkDir := .T.
+               lDeleteWorkDir := .F.
             ENDIF
          ENDIF
       ENDIF
@@ -6314,7 +6314,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ELSE
                   _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .c program could not be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
-                     AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
+                     AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {|| .T.}/*{| tmp | FErase( tmp ) }*/ )
                   ENDIF
                   IF lDeleteWorkDir
                      hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
@@ -6423,7 +6423,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ELSE
                   _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .cpp program could not be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
-                     AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
+                     AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {||.T.}/*{| tmp | FErase( tmp ) }*/ )
                   ENDIF
                   IF lDeleteWorkDir
                      hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
@@ -7379,11 +7379,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          DoLinkDelete( hbmk )
       ENDIF
       IF ! Empty( l_cCSTUB )
-         FErase( l_cCSTUB )
+         /*FErase( l_cCSTUB )*/
          FErase( FNameDirExtSet( l_cCSTUB, hbmk[ _HBMK_cWorkDir ], cObjExt ) )
       ENDIF
       IF ! Empty( l_cCPPSTUB )
-         FErase( l_cCPPSTUB )
+         /*FErase( l_cCPPSTUB )*/
          FErase( FNameDirExtSet( l_cCPPSTUB, hbmk[ _HBMK_cWorkDir ], cObjExt ) )
       ENDIF
       IF ! Empty( l_cRESSTUB )
@@ -7391,7 +7391,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          FErase( FNameDirExtSet( l_cRESSTUB, hbmk[ _HBMK_cWorkDir ], cResExt ) )
       ENDIF
       IF ! hbmk[ _HBMK_lINC ] .OR. hbmk[ _HBMK_lCLEAN ]
-         AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
+         AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), /*{| tmp | FErase( tmp ) }*/ {||.T.} )
       ENDIF
       IF hbmk[ _HBMK_lCLEAN ]
          IF hbmk[ _HBMK_lINC ]
