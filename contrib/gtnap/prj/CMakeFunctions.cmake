@@ -388,7 +388,6 @@ endfunction()
 
 function(appendIncludeDependency targetName depend)
 
-    message("DEPEND!!!!!!! ${depend}")
     if ("${${targetName}_INCLUDEDEPENDS}" STREQUAL "")
         set(${targetName}_INCLUDEDEPENDS "${depend}" CACHE INTERNAL "")
     else()
@@ -434,7 +433,6 @@ function(targetDependsIncludeDirectories targetName firstLevelDepends)
     getRecursiveTargetIncludes(${targetName} "${firstLevelDepends}")
 
     if (${targetName}_INCLUDEDEPENDS)
-        message(STATUS "HOLA!!!!! ${${targetName}_INCLUDEDEPENDS}")
         target_include_directories(${targetName} PUBLIC "${${targetName}_INCLUDEDEPENDS}")
     endif()
 
@@ -1570,28 +1568,6 @@ function(generateSolution)
         # Precompiled targets don't have to be added
         if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${sourcePath})
             add_subdirectory(${sourcePath})
-
-            foreach(target ${NAPPGUI_CACHE_PATH_TARGETS_${sourcePath}})
-                setTargetFilter(${target} ${sourcePath})
-            endforeach()
-
-            # We can't remove project specific 'CMakeLists.txt' because problems in macOS
-            # file(REMOVE "${sourcePath}/CMakeLists.txt")
-        endif()
-
-    endforeach()
-
-endfunction()
-
-#------------------------------------------------------------------------------
-
-function(generateSolution2 buildDir)
-
-    foreach(sourcePath ${NAPPGUI_CACHE_SOURCE_DIRECTORIES})
-
-        # Precompiled targets don't have to be added
-        if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${sourcePath})
-            add_subdirectory(${sourcePath} ${buildDir})
 
             foreach(target ${NAPPGUI_CACHE_PATH_TARGETS_${sourcePath}})
                 setTargetFilter(${target} ${sourcePath})
