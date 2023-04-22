@@ -1,0 +1,94 @@
+/*
+ * Harbour 3.2.0dev (r2104281802)
+ * Microsoft Visual C++ 17.0.61030 (32-bit)
+ * Generated C source from "acentos.prg"
+ */
+
+#include "hbvmpub.h"
+#include "hbinit.h"
+
+
+HB_FUNC( ACENTUA );
+HB_FUNC_EXTERN( LASTKEY );
+HB_FUNC_EXTERN( AT );
+HB_FUNC_EXTERN( CHR );
+HB_FUNC_EXTERN( SET );
+HB_FUNC_EXTERN( SUBSTR );
+HB_FUNC_EXTERN( __DBGENTRY );
+HB_FUNC_INITSTATICS();
+HB_FUNC_INITLINES();
+
+
+HB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_ACENTOS )
+{ "ACENTUA", {HB_FS_PUBLIC | HB_FS_FIRST | HB_FS_LOCAL}, {HB_FUNCNAME( ACENTUA )}, NULL },
+{ "LASTKEY", {HB_FS_PUBLIC}, {HB_FUNCNAME( LASTKEY )}, NULL },
+{ "AT", {HB_FS_PUBLIC}, {HB_FUNCNAME( AT )}, NULL },
+{ "CHR", {HB_FS_PUBLIC}, {HB_FUNCNAME( CHR )}, NULL },
+{ "SET", {HB_FS_PUBLIC}, {HB_FUNCNAME( SET )}, NULL },
+{ "SUBSTR", {HB_FS_PUBLIC}, {HB_FUNCNAME( SUBSTR )}, NULL },
+{ "__DBGENTRY", {HB_FS_PUBLIC}, {HB_FUNCNAME( __DBGENTRY )}, NULL },
+{ "(_INITSTATICS00001)", {HB_FS_INITEXIT | HB_FS_LOCAL}, {hb_INITSTATICS}, NULL },
+{ "(_INITLINES)", {HB_FS_INITEXIT | HB_FS_LOCAL}, {hb_INITLINES}, NULL }
+HB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_ACENTOS, "acentos.prg", 0x0, 0x0003 )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup hb_vm_SymbolInit_ACENTOS
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( hb_vm_SymbolInit_ACENTOS )
+   #include "hbiniseg.h"
+#endif
+
+HB_FUNC( ACENTUA )
+{
+	static const HB_BYTE pcode[] =
+	{
+		13,3,0,116,7,0,51,97,99,101,110,116,111,115,
+		46,112,114,103,58,65,67,69,78,84,85,65,0,36,
+		12,0,118,0,1,0,78,95,84,69,67,76,65,95,
+		65,78,84,0,36,13,0,37,1,0,78,95,84,69,
+		67,76,65,0,176,1,0,12,0,80,1,37,2,0,
+		67,95,82,69,84,79,82,78,79,0,36,14,0,37,
+		3,0,78,95,80,79,83,0,36,22,0,176,2,0,
+		176,3,0,103,1,0,12,1,176,3,0,95,1,12,
+		1,72,106,9,95,111,95,97,95,79,95,65,0,12,
+		2,80,3,36,23,0,95,3,121,69,95,3,92,2,
+		50,122,8,0,28,48,36,25,0,176,4,0,92,29,
+		12,1,28,8,106,2,8,0,25,6,106,2,19,0,
+		176,5,0,106,9,32,186,32,170,32,186,32,170,0,
+		95,3,122,72,122,12,3,72,80,2,36,33,0,176,
+		3,0,95,1,12,1,106,29,197,160,239,191,189,226,
+		128,162,226,128,148,195,148,195,158,195,163,195,171,197,
+		146,195,151,226,128,147,195,170,0,24,28,11,36,34,
+		0,106,2,32,0,80,2,36,37,0,95,1,82,1,
+		0,36,38,0,95,2,110,7
+	};
+
+	hb_vmExecute( pcode, symbols );
+}
+
+HB_FUNC_INITSTATICS()
+{
+	static const HB_BYTE pcode[] =
+	{
+		117,7,0,1,0,116,7,0,51,97,99,101,110,116,
+		111,115,46,112,114,103,58,40,95,73,78,73,84,83,
+		84,65,84,73,67,83,41,0,121,82,1,0,7
+	};
+
+	hb_vmExecute( pcode, symbols );
+}
+
+HB_FUNC_INITLINES()
+{
+	static const HB_BYTE pcode[] =
+	{
+		51,97,99,101,110,116,111,115,46,112,114,103,58,40,
+		95,73,78,73,84,76,73,78,69,83,41,0,106,12,
+		97,99,101,110,116,111,115,46,112,114,103,0,92,8,
+		106,5,112,192,2,102,0,4,3,0,4,1,0,110,
+		7
+	};
+
+	hb_vmExecute( pcode, symbols );
+}
+

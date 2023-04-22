@@ -20,5 +20,9 @@ staticLib("inet" "inet" "core" NRC_NONE)
 staticLib("osapp" "osapp" "osgui;gui" NRC_NONE)
 
 # Your projects here!
+if (GTNAP_DEVELOPER_MODE)
+    message("NAppGUI Developer mode")
+    desktopApp(exemplo "exemplo" "osapp" NRC_NODE)
+endif()
 
 generateSolution()

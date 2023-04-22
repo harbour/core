@@ -4,13 +4,13 @@
 -hblib
 -inc
 
--inappgui/src/osapp
--inappgui/src/gui
--inappgui/src/draw2d
--inappgui/src/geom2d
--inappgui/src/core
--inappgui/src/osbs
--inappgui/src/sewer
+-isrc/osapp
+-isrc/gui
+-isrc/draw2d
+-isrc/geom2d
+-isrc/core
+-isrc/osbs
+-isrc/sewer
 
 -cflag={msvc}-D_WINDOWS
 -cflag={gcc}-g
@@ -28,26 +28,26 @@
 # Fran: Perfect, for the moment only Windows. I want to see the error when I compile on Linux/macOS
 # "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform. See gtnap.hbp -stop"
 
-gtnap.c
-gtconvert.c
-nap_button.c
-nap_color.c
-nap_combo.c
-nap_cualib.c
-nap_edit.c
-nap_event.c
-nap_font.c
-nap_global.c
-nap_image.c
-nap_imageview.c
-nap_label.c
-nap_layout.c
-nap_listbox.c
-nap_menuvert.c
-nap_panel.c
-nap_tableview.c
-nap_textview.c
-nap_window.c
+src/gtnap/gtnap.c
+src/gtnap/gtconvert.c
+src/gtnap/nap_button.c
+src/gtnap/nap_color.c
+src/gtnap/nap_combo.c
+src/gtnap/nap_cualib.c
+src/gtnap/nap_edit.c
+src/gtnap/nap_event.c
+src/gtnap/nap_font.c
+src/gtnap/nap_global.c
+src/gtnap/nap_image.c
+src/gtnap/nap_imageview.c
+src/gtnap/nap_label.c
+src/gtnap/nap_layout.c
+src/gtnap/nap_listbox.c
+src/gtnap/nap_menuvert.c
+src/gtnap/nap_panel.c
+src/gtnap/nap_tableview.c
+src/gtnap/nap_textview.c
+src/gtnap/nap_window.c
 
 # Avoid linker error '__gxx_personality_v0'
 # GTNAP need to be linked with g++

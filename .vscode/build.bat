@@ -15,7 +15,11 @@ cd %cwd%
 echo %cd%
 cd .\\tests\\cuademo\\gtnap_cualib
 echo %cd%
-..\\..\\..\\..\\..\\bin\\win\\msvc\\hbmk2.exe -debug -trace -workdir=./build exemplo.hbp || goto error
+if not exist ..\..\..\src\exemplo mkdir ..\..\..\src\exemplo
+..\\..\\..\\..\\..\\bin\\win\\msvc\\hbmk2.exe -debug -trace -workdir=..\..\..\src\exemplo exemplo.hbp || goto error
+
+:: Generate cuademo debug project
+::cmake -S ../../../nappgui/src -B ../../../build_cuademo -DCMAKE_WARN_VS11=OFF -DGTNAP_DEVELOPER_MODE=ON
 
 START /B exemplo --hb:gtnap
 ::START /B exemplo --hb:gtwin
