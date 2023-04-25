@@ -39,10 +39,10 @@ static HWND i_create_scroll(DWORD type, HWND hwnd, int width, int height)
                         0, L"SCROLLBAR", NULL,
                         WS_CHILD | WS_CLIPSIBLINGS | type,
                         CW_USEDEFAULT, CW_USEDEFAULT,
-                        width, height,
+                        width, height, 
                         hwnd,
                         (HMENU)NULL,
-                        _osgui_instance(),
+                        _osgui_instance(), 
                         NULL);
 }
 
@@ -215,7 +215,7 @@ int osscroll_bar_height(const OSScroll *scroll, const bool_t check_if_visible)
     else
     {
         return GetSystemMetrics(SM_CXHSCROLL);
-    }
+    }       
 }
 
 /*---------------------------------------------------------------------------*/
@@ -225,7 +225,7 @@ static int i_incr(HWND scroll, int nBar, int incr)
     SCROLLINFO si;
     int pos = 0;
     BOOL ok;
-
+    
     si.cbSize = sizeof(SCROLLINFO);
     si.fMask = SIF_ALL;
     ok = GetScrollInfo(scroll, nBar, &si);

@@ -73,7 +73,7 @@ __END_C
 #define cassert_fatal_msg(cond, msg)    (void)(1==1)
 #define cassert_no_null(ptr)            (void)(ptr)
 #define cassert_no_nullf(fptr)          (void)(fptr)
-#define cassert_default()               default:
+#define cassert_default()               default: 
 #define cassert_unref(cond, v)          unref(v)
 
 #endif

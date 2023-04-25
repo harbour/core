@@ -34,7 +34,9 @@ _core_api String *str_path(const platform_t platform, const char_t *format, ...)
 
 _core_api String *str_cpath(const char_t *format, ...) __PRINTF(1, 2);
 
-_core_api String *str_relpath(const char_t *path1, const char_t *path2);
+_core_api String *str_relpath(const platform_t platform, const char_t *path1, const char_t *path2);
+
+_core_api String *str_crelpath(const char_t *path1, const char_t *path2);
 
 _core_api String *str_repl(const char_t *str, ...);
 

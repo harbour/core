@@ -253,9 +253,230 @@ static void i_overwrite_mode(const char_t* src, char_t* dest, const uint32_t siz
 void tfilter_date(const char_t* src, char_t* dest, const uint32_t size, const char_t *pattern, const uint32_t cpos, const bool_t deleted, uint32_t* ncpos)
 {
     cassert_no_null(ncpos);
+    unref(pattern);
     *ncpos = cpos;
     i_overwrite_mode(src, dest, size, deleted, ncpos);
-    unref(pattern);
+
+   // uint32_t i = 0, j = 0, cp = 0;
+   // uint32_t pt = 0;
+
+   // cassert_no_null(pattern);
+   // pt = pattern[i];
+   // cp = unicode_to_u32(src, ekUTF8);
+
+   // while(pt != 0)
+   // {
+   //     /* We expect a number in this pattern position */
+   //     if(pt == 'd' || pt == 'D' || pt == 'm' || pt == 'M' || pt == 'y' || pt == 'Y')
+   //     {
+   //         /* A number */
+   //         if(cp >= '0' && cp <= '9')
+   //         {
+   //             if(j + 1 < size)
+   //             {
+   //                 dest[j] = (char_t)cp;
+   //                 src = unicode_next(src, ekUTF8);
+   //                 cp = unicode_to_u32(src, ekUTF8);
+   //                 j += 1;
+   //             }
+   //             else
+   //             {
+   //                 /* No space in dest */
+   //                 break;
+   //             }
+   //         }
+   //         /* No more chars in the input --> fill with a space */
+   //         else if(cp == 0 || cp == ' ')
+   //         {
+   //             if(j + 1 < size)
+   //             {
+   //                 dest[j] = ' ';
+   //                 j += 1;
+   //             }
+   //             else
+   //             {
+   //                 /* No space in dest */
+   //                 break;
+   //             }
+   //         }
+   //         /* The codepoint is not a number --> ignore */
+   //         else
+   //         {
+   //             src = unicode_next(src, ekUTF8);
+   //             cp = unicode_to_u32(src, ekUTF8);
+   //         }
+   //     }
+   //     /* We are in a pattern character --> Just copy the pattern in dest */
+   //     else
+   //     {
+   //         /* We only accept ASCII separators in pattern */
+   //         cassert(pt < 128);
+   //         if(j + 1 < size)
+   //         {
+   //             dest[j] = (char_t)pt;
+   //             j += 1;
+   //         }
+   //         else
+   //         {
+   //             /* No space in dest */
+   //             break;
+   //         }
+
+   //         /* We jump the separator charac */
+   //         if(cp == pt)
+   //         {
+   //             src = unicode_next(src, ekUTF8);
+   //             cp = unicode_to_u32(src, ekUTF8);
+   //         }
+   //     }
+
+   //     i += 1;
+   //     pt = pattern[i];
+   // }
+
+   // dest[j] = '\0';
+
+   // if (ncpos != NULL)
+   // {
+   //     uint32_t ic = 0;
+   //     for(; ic < j; ++ic)
+   //     {
+   //         if (dest[ic] == ' ')
+   //             break;
+   //     }
+
+   //     *ncpos = ic;
+
+   //     //for(; ic < j; ++ic)
+   //     //    dest[ic] = ' ';
+
+   //     //dest[ic] = '\0';
+   //     //if (deleted == FALSE)
+   //     //{
+   //     //    uint32_t pn = str_len_c(pattern);
+
+   //     //    while(ic < pn)
+   //     //    {
+   //     //        if(pattern[ic] != 'd' && pattern[ic] != 'D' &&
+   //     //            pattern[ic] != 'm' && pattern[ic] != 'M' &&
+   //     //            pattern[ic] != 'y' && pattern[ic] != 'Y')
+   //     //            ic += 1;
+   //     //        else
+   //     //            break;
+   //     //    }
+   //     //}
+   //     //else
+   //     //{
+   //     //    bool_t jump = FALSE;
+   //     //    while(ic > 0)
+   //     //    {
+   //     //        if(pattern[ic - 1] != 'd' && pattern[ic - 1] != 'D' &&
+   //     //            pattern[ic - 1] != 'm' && pattern[ic - 1] != 'M' &&
+   //     //            pattern[ic - 1] != 'y' && pattern[ic - 1] != 'Y')
+   //     //        {
+   //     //            ic -= 1;
+   //     //            jump = TRUE;
+   //     //        }
+   //     //        else
+   //     //        {
+   //     //            break;
+   //     //        }
+   //     //    }
+
+   //     //    //if (ic > 0 && jump == TRUE)
+   //     //    //    ic -= 1;
+   //     //}
+
+   //     //*ncpos = ic;
+   // }
+
+
+
+   //// static bool_t i_date_pattern(const char_t *pattern, uint32_t *d, uint32_t *m, uint32_t *y, uint32_t *ny, char_t *sep)
+   //// uint32_t g1 = n1;
+   //// uint32_t g2 = n1 + n2 + 1;
+   //// uint32_t ed = n1 + n2 + n3 + 2;
+
+   ////uint32_t i = 0, j = 0;
+ 
+   //// cassert_no_null(src);
+   //// cassert_no_null(dest);
+   //// cassert(size >= ed + 1);
+   //// unref(nchar);
+   //// while(src[i] != '\0')
+   //// {
+   ////     if(cpos != UINT32_MAX)
+   ////     {
+   ////         if (cpos == i)
+   ////         {
+   ////             //if (deleted == FALSE)
+   ////             //    i += 1;
+   ////         }
+   ////     }
+
+   ////     if (src[i] != '\0' && src[i] >= '0' && src[i] <= '9')
+   ////     {
+   ////         if (j == size - 1 || j == ed)
+   ////             break;
+
+   ////         dest[j] = src[i];
+   ////         j += 1;
+
+   ////         if (j == g1 || j == g2)
+   ////         {
+   ////             if (j == size - 1 || j == ed)
+   ////                 break;
+
+   ////             dest[j] = sep;
+   ////             j += 1;
+   ////         }
+
+   ////         if (j == ed)
+   ////             break;
+   ////     }
+
+   ////     i += 1;
+   //// }
+
+   //// if (ncpos != NULL)
+   //// {
+   ////     *ncpos = cpos;
+   ////     if (cpos > 0)
+   ////     {
+   ////         if (src[cpos - 1] >= '0' && src[cpos - 1] <= '9')
+   ////         {
+   ////             //if (deleted == FALSE)
+   ////             //{
+   ////             //    if (cpos == g1 || cpos == g2)
+   ////             //    {
+   ////             //        *ncpos += 1;
+   ////             //    }
+   ////             //}
+   ////             // 
+   ////             //else
+   ////             //{
+   ////             //    if(cpos == g1 - 1 || cpos == g2 - 1)
+   ////             //    {
+   ////             //        *ncpos -= 1;
+   ////             //    }
+   ////             //}
+   ////         }
+   ////         else
+   ////         {
+   ////             *ncpos = cpos - 1;
+   ////         }
+   ////     }
+   //// }
+
+   //// for (; j < ed && j < size - 1; ++j)
+   //// {
+   ////     if (j == g1 || j == g2)
+   ////         dest[j] = sep;
+   ////     else
+   ////         dest[j] = ' ';
+   //// }
+
+   //// dest[j] = '\0';
 }
 
 /*---------------------------------------------------------------------------*/

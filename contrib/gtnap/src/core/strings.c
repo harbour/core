@@ -312,14 +312,15 @@ String *str_cpath(const char_t *format, ...)
 
 /*---------------------------------------------------------------------------*/
 
-String *str_relpath(const char_t *path1, const char_t *path2)
+String *str_relpath(const platform_t platform, const char_t *path1, const char_t *path2)
 {
     register uint32_t prefix = str_prefix(path1, path2);
+    String *str = NULL;
     if (prefix > 0)
     {
         register uint32_t s1 = str_len_c(path1);
         register uint32_t i, n = 0;
-        String *str = str_c("");
+        str = str_c("");
 
         prefix -= 1;
         while (path1[prefix] != '/' && path1[prefix] != '\\')
@@ -334,13 +335,27 @@ String *str_relpath(const char_t *path1, const char_t *path2)
 
         for (i = 0; i < n; ++i)
             str_cat(&str, "../");
+
         str_cat(&str, path2 + prefix + 1);
-        return str;
     }
     else
     {
-        return str_c(path2);
+        str = str_c(path2);
     }
+
+    if (platform == ekWINDOWS)
+        str_subs(str, '/', '\\');
+    else
+        str_subs(str, '\\', '/');
+
+    return str;
+}
+
+/*---------------------------------------------------------------------------*/
+
+String *str_crelpath(const char_t *path1, const char_t *path2)
+{
+    return str_relpath(osbs_platform(), path1, path2);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -961,7 +976,7 @@ ArrPt(String) *str_splits(const char_t *str, const char_t *substr, const bool_t 
         {
             uint32_t n = (uint32_t)(fstr - str);
             String *sstr = NULL;
-            
+
             if (trim == TRUE)
                 sstr = str_trim_n(str, n);
             else
