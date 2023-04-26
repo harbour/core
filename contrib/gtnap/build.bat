@@ -40,6 +40,7 @@ call cmake --build %CWD%\build --config %BUILD%  || goto error_build
 ::
 call %HBMK_PATH%\\hbmk2.exe %CWD%\src\gtnap\gtnap.hbp || goto error_gtnap
 
+echo GTNAP build succeed
 goto end
 
 ::

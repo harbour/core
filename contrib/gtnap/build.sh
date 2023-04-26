@@ -1,0 +1,46 @@
+#
+# Input parameters
+#
+HBMK_PATH=../../bin/linux/gcc
+BUILD=Debug
+CWD=$(pwd)
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -b)
+      BUILD="$2"
+      shift
+      shift
+      ;;
+    -*|--*)
+      shift
+      ;;
+  esac
+done
+
+#
+# Beginning
+#
+echo ---------------------------
+echo Generating GTNAP
+echo Main path: $CWD
+echo Build type: $BUILD
+echo ---------------------------
+
+#
+# Build NAppGUI from sources
+#
+rm -rf build
+mkdir build
+cd build
+cmake  ../src -DCMAKE_BUILD_CONFIG=$BUILD || exit 1
+make -j 4 || exit 1
+#call cmake --build %CWD%\build --config %BUILD%  || goto error_build
+
+#
+# Build GTNAP
+#
+cd $CWD
+$HBMK_PATH/hbmk2 ./src/gtnap/gtnap.hbp || exit 1
+
+echo GTNAP build succeed

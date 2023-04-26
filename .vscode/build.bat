@@ -1,4 +1,4 @@
-:: Build and run exemplo (cuademo) in Windows (Developer mode)
+:: Build GTNAP and run exemplo (cuademo) in Windows (Developer mode)
 
 :: Set the compiler
 call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
