@@ -643,6 +643,8 @@ void oswindow_destroy(OSWindow **window)
     cassert_no_null(window);
     cassert_no_null(*window);
     cassert((*window)->menu == NULL);
+
+    gtk_widget_hide((*window)->control.widget);
     g_signal_handler_disconnect(G_OBJECT((*window)->control.widget), (*window)->signal_delete);
     g_signal_handler_disconnect(G_OBJECT((*window)->control.widget), (*window)->signal_config);
     g_signal_handler_disconnect(G_OBJECT((*window)->control.widget), (*window)->signal_key);
@@ -1236,8 +1238,8 @@ void _oswindow_lock_edit_focus_events(OSControl *control)
     OSWindow *window = NULL;
     cassert_no_null(control);
     window = i_root(control->widget);
-    cassert_no_null(window);
-    window->allow_edit_focus_event = FALSE;
+    if (window != NULL)
+        window->allow_edit_focus_event = FALSE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1247,8 +1249,8 @@ void _oswindow_unlock_edit_focus_events(OSControl *control)
     OSWindow *window = NULL;
     cassert_no_null(control);
     window = i_root(control->widget);
-    cassert_no_null(window);
-    window->allow_edit_focus_event = TRUE;
+    if (window != NULL)
+        window->allow_edit_focus_event = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1258,6 +1260,7 @@ bool_t _oswindow_can_edit_focus_events(OSControl *control)
     OSWindow *window = NULL;
     cassert_no_null(control);
     window = i_root(control->widget);
-    cassert_no_null(window);
-    return window->allow_edit_focus_event;
+    if (window != NULL)
+        return window->allow_edit_focus_event;
+    return FALSE;
 }

@@ -268,6 +268,8 @@ static __INLINE bool_t i_with_focus(const OSEdit *edit)
 
 static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSEdit *edit)
 {
+    unref(widget);
+    unref(event);
     if (i_with_focus(edit) == TRUE)
     {
         return FALSE;
@@ -860,7 +862,7 @@ void _osedit_unset_focus(OSEdit *edit)
 
     if (_oswindow_can_edit_focus_events((OSControl*)edit) == TRUE)
     {
-        i_cache_selection(edit, TRUE);
+        i_cache_selection((OSEdit*)edit, TRUE);
 
         if (edit->OnFocus != NULL)
         {
@@ -886,7 +888,7 @@ bool_t _osedit_validate(const OSEdit *edit)
             EvText params;
             bool_t allocated;
             /* The OnChange event can lost focus (p.e: launching a modal window) */
-            i_cache_selection(edit, TRUE);
+            i_cache_selection((OSEdit*)edit, TRUE);
             params.text = (const char_t*)i_text(edit, &allocated);
             listener_event(edit->OnChange, ekGUI_EVENT_TXTCHANGE, edit, &params, &lost_focus, OSEdit, EvText, bool_t);
             if (allocated)

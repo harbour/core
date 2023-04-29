@@ -16,6 +16,7 @@
 #include "oscontrol.inl"
 #include "ospanel.inl"
 #include "ossplit.inl"
+#include "oswindow.inl"
 #include "cassert.h"
 #include "color.h"
 #include "event.h"

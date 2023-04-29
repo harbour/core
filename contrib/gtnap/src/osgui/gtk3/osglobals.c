@@ -497,8 +497,21 @@ void osglobals_resolution(const void *non_used, real32_t *width, real32_t *heigh
 	unref(non_used);
 	cassert_no_null(width);
 	cassert_no_null(height);
+#if GTK_CHECK_VERSION(3, 22, 0)
+
+    {
+        GdkDisplay *display = gdk_display_get_default();
+        GdkMonitor *primary_monitor = gdk_display_get_primary_monitor(display);
+        GdkRectangle monitor_geometry;
+        gdk_monitor_get_geometry(primary_monitor, &monitor_geometry);
+        *width = (real32_t)monitor_geometry.width;
+        *height = (real32_t)monitor_geometry.height;
+    }
+
+#else
     *width = (real32_t)gdk_screen_width();
     *height = (real32_t)gdk_screen_height();
+#endif
 }
 
 /*---------------------------------------------------------------------------*/

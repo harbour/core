@@ -16,7 +16,7 @@ echo %cd%
 cd .\\tests\\cuademo\\gtnap_cualib
 echo %cd%
 if not exist %cwd%\src\exemplo mkdir %cwd%\src\exemplo
-..\\..\\..\\..\\..\\bin\\win\\msvc\\hbmk2.exe -debug -trace -workdir=%cwd%\src\exemplo -o%cwd%\build\exemplo exemplo.hbp || goto error
+..\\..\\..\\..\\..\\bin\\win\\msvc\\hbmk2.exe -debug -trace -keepc -workdir=%cwd%\src\exemplo -o%cwd%\build\exemplo exemplo.hbp || goto error
 
 :: Generate exemplo debug project
 cd %cwd%

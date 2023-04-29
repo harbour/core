@@ -130,6 +130,8 @@ static gboolean i_OnKeyPress(GtkWidget *widget, GdkEventKey *event, OSButton *bu
 
 static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSButton *button)
 {
+    unref(widget);
+    unref(event);
     if (_oswindow_in_tablist((OSControl*)button) == FALSE)
     {
         _oswindow_lock_edit_focus_events((OSControl*)button);
