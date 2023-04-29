@@ -1,3 +1,5 @@
+# Build GTNAP and run exemplo (cuademo) in Linux (Developer mode)
+
 pwd=$(pwd)
 pwd
 cd ./contrib/gtnap
