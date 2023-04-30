@@ -1,3 +1,10 @@
+#!/bin/sh
+
+#
+# GTNAP build script
+# build -b [Debug/Release]
+#
+
 #
 # Input parameters
 #
@@ -35,7 +42,6 @@ mkdir build
 cd build
 cmake  ../src -DCMAKE_BUILD_CONFIG=$BUILD || exit 1
 make -j 4 || exit 1
-#call cmake --build %CWD%\build --config %BUILD%  || goto error_build
 
 #
 # Build GTNAP
@@ -43,4 +49,6 @@ make -j 4 || exit 1
 cd $CWD
 $HBMK_PATH/hbmk2 ./src/gtnap/gtnap.hbp || exit 1
 
+echo ---------------------------
 echo GTNAP build succeed
+echo ---------------------------

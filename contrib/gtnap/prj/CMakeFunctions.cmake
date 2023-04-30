@@ -317,7 +317,7 @@ function(installResourcePacks targetName targetType sourceDir)
             endforeach()
 
         else()
-            message(WARNING "logo48.ico doesn't exists in '${resourcePath}'")
+            #message(WARNING "logo48.ico doesn't exists in '${resourcePath}'")
         endif()
 
     endif()
@@ -905,7 +905,7 @@ function(getRecursiveTargetLinks targetName dependList)
 				getDirectDepends(${depend} childDependList)
 
             else()
-				message(FATAL_ERROR "- ${targetName}: Unknown dependency '${depend}'")
+                message(FATAL_ERROR "- ${targetName}: Unknown dependency '${depend}'")
 
 			endif()
 
@@ -1557,6 +1557,22 @@ function(desktopApp appName appPath dependencies nrcMode)
     file(APPEND ${appFullPath}/CMakeLists.txt "processDesktopApp(${appName} \"${dependencies}\" \"${ARGV4}\")\n")
     configure_file("${appFullPath}/CMakeLists.txt" "${appFullPath}/CMakeLists.txt" NEWLINE_STYLE UNIX)
 
+endfunction()
+
+#------------------------------------------------------------------------------
+
+function(linkExternalLibrary targetName targetPath dependencies)
+    set(targetFullPath ${CMAKE_CURRENT_SOURCE_DIR}/${targetPath})
+    file(APPEND ${targetFullPath}/CMakeLists.txt "target_link_libraries(${targetName} \"${dependencies}\")\n")
+    configure_file("${targetFullPath}/CMakeLists.txt" "${targetFullPath}/CMakeLists.txt" NEWLINE_STYLE UNIX)
+endfunction()
+
+#------------------------------------------------------------------------------
+
+function(includeDirectory targetName targetPath include)
+    set(targetFullPath ${CMAKE_CURRENT_SOURCE_DIR}/${targetPath})
+    file(APPEND ${targetFullPath}/CMakeLists.txt "target_include_directories(${targetName} PUBLIC \"${include}\")\n")
+    configure_file("${targetFullPath}/CMakeLists.txt" "${targetFullPath}/CMakeLists.txt" NEWLINE_STYLE UNIX)
 endfunction()
 
 #------------------------------------------------------------------------------

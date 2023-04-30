@@ -3,12 +3,113 @@
 Harbour cross-platform video subsystem using NAppGUI-SDK
 https://github.com/frang75/nappgui_src
 
+## Installing CMake
+
+For building gtnap CMake tool is necessary:
+
+* In Windows:
+    * Download from https://cmake.org/download/
+    * Select **Add CMake to the system PATH for all users** when installing.
+
+* In Linux:
+    * `sudo apt-get install cmake cmake-gui`
+
+* Open a terminal/cmd and check if cmake works:
+    ```
+    :~/$ cmake --version
+    cmake version 3.10.2
+    ```
+## Build gtnap
+
+### In Windows
+```
+:: Goto gtnap folder
+cd contrib/gtnap
+
+:: Set the Visual Studio compiler
+"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
+
+:: Just build
+build.bat -b Debug
+build.bat -b Release
+```
+
+This will generate several static libraries:
+
+* The GT library: `gtnap.lib` in `/build` folder.
+* The NAppGUI libraries: `sewer.lib`, `osbs.lib`, `core.lib`, `geom2d.lib`, `draw2d.lib`, `osgui.lib`, `gui.lib`, `osapp.lib`, `inet.lib` in `build/[Debug|Release]` folder.
+
+### In Linux
+```
+# Goto gtnap folder
+cd contrib/gtnap
+
+# Just build
+bash ./build.sh -b Debug
+bash ./build.sh -b Release
+```
+
+This will generate several static libraries:
+
+* The GT library: `libgtnap.a` in `/build` folder.
+* The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]` folder.
+
+## Using gtnap
+
+Just adding `-gtnap` flag into your `.hbp` project file.
+
+## Compile and run an CUADEMO example
+
+- To compile the semi-graphics (Windows):
+   * `cd contrib\gtnap\tests\cuademo\gtnap_cualib`
+   * `..\..\..\..\..\bin\win\msvc\hbmk2.exe exemplo.hbp`
+   * `exemplo --hb:gtnap`
+   * `exemplo --hb:gtwin`
+
+- To compile the semi-graphics (Linux):
+
+   * `cd contrib/gtnap/tests/cuademo/gtnap_cualib`
+   * `../../../../../bin/linux/gcc/hbmk2 exemplo.hbp`
+   * `./exemplo --hb:gtnap`
+   * `./exemplo --hb:gttrm`
+
+![gtnap_cualib_semigraph_windows](https://user-images.githubusercontent.com/42999199/202914436-e1cc6c7e-e28a-4ba0-bb0e-169cc03b78fc.png)
+![gtnap_cualib_gtwin](https://user-images.githubusercontent.com/42999199/202914447-1722dfe4-f340-4bd8-91a9-00824c0eb46c.png)
+
+![gtnap_cualib_semigraph_linux](https://user-images.githubusercontent.com/42999199/202914463-76905df1-0e83-4e9d-b321-23c09dd8bbb0.png)
+
+![gtnap_cualib_gttrm](https://user-images.githubusercontent.com/42999199/202914496-ae868c1c-460a-4be8-997a-f559ce5b7d18.png)
+
+
+
+Just adding `-gtnap` flag into your `.hbp` project file.
+
+For build the exemplo application:
+
+```
+cd ./tests/cuademo/gtnap_cualib
+
+hbmk2 exemplo.hbp
+
+./exemplo --hb:gtnap
+```
+
+../../bin/linux/gcc/hbmk2 exemplo.hbp
+
+../../bin/linux/gcc/hbmk2 exemplo.hbp
+
+
+
+
+:: Set the compiler
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
+
 * At the moment the project compile in:
    * VisualStudio 2012 (windows)
    * Ubuntu 18 GCC 7.5.0 (linux)
 
 GTNAP has been designed with two modes of operation in mind:
-   * **Full-Graphic:** Cross-platform "modern" look&feel applications. Not compatible with Harbour/Clipper text command neither CUALIB. 
+   * **Full-Graphic:** Cross-platform "modern" look&feel applications. Not compatible with Harbour/Clipper text command neither CUALIB.
    * **Semi-Graphic:** Cross-platform "cualib-compatible" graphics layer. Improve the appearance of GTWVW solution and runs in Windows/Linux.
 
 ![GTNAP_Full_graphic](https://user-images.githubusercontent.com/42999199/202912012-ecc6d479-7455-4cca-85f6-05cd57730407.png)
@@ -39,7 +140,7 @@ git clone https://github.com/frang75/harbour_nappgui.git
     ! Component: 'zlib' found in c:/harbour_gtnap/src/3rd/zlib (local)
     ...
     ```
-    
+
 - Compile in Ubuntu 18:
 
    * Open a Terminal
@@ -53,13 +154,13 @@ git clone https://github.com/frang75/harbour_nappgui.git
 - Compile in VS 2012:
 
    * Open Developer Command Prompt for VS2012
-     
+
    * Go to `gtnap` working copy `(cd C:\harbour_nappgui\contrib\gtnap)`
 
    * `..\..\bin\win\msvc\hbmk2.exe gtnap.hbp`
 
    * This will generate: `hbmk2: Target up to date: build\msvc\gtnap.lib`
-   
+
 - Compile in Ubuntu 18:
 
    * Open a Terminal
@@ -88,27 +189,6 @@ git clone https://github.com/frang75/harbour_nappgui.git
 ![exemplo_full_graphics_linux](https://user-images.githubusercontent.com/42999199/202913872-9700e5c1-1763-4453-8907-d8531c829c1e.png)
 
 
-## Compile and run an CUADEMO example SEMI GRAPHICS
-
-- To compile the semi-graphics (Windows):
-   * `cd C:\harbour_nappgui\contrib\gtnap\tests\cuademo\gtnap_cualib`
-   * `..\..\..\..\..\bin\win\msvc\hbmk2.exe exemplo.hbp`
-   * `exemplo --hb:gtnap`
-   * `exemplo --hb:gtwin`
-
-- To compile the semi-graphics (Linux):
-
-   * `cd harbour_nappgui/contrib/gtnap/tests/cuademo/gtnap_cualib`
-   * `../../../../../bin/linux/gcc/hbmk2 exemplo.hbp`
-   * `./exemplo --hb:gtnap`
-   * `./exemplo --hb:gttrm`
-
-![gtnap_cualib_semigraph_windows](https://user-images.githubusercontent.com/42999199/202914436-e1cc6c7e-e28a-4ba0-bb0e-169cc03b78fc.png)
-![gtnap_cualib_gtwin](https://user-images.githubusercontent.com/42999199/202914447-1722dfe4-f340-4bd8-91a9-00824c0eb46c.png)
-
-![gtnap_cualib_semigraph_linux](https://user-images.githubusercontent.com/42999199/202914463-76905df1-0e83-4e9d-b321-23c09dd8bbb0.png)
-
-![gtnap_cualib_gttrm](https://user-images.githubusercontent.com/42999199/202914496-ae868c1c-460a-4be8-997a-f559ce5b7d18.png)
 
 
 # GTNAP Log
@@ -147,7 +227,7 @@ GTNAP generates a log file.
 [17:39:14] hb_gtnap_SetPos(0, 1)
 [17:39:14] hb_gtnap_DispCount()
 [17:39:14] hb_gtnap_GetPos(0, 1)
-[17:39:14] hb_gtnap_WriteAt(0, 1, 109):                                           Escolha o tipo de janela                                           
+[17:39:14] hb_gtnap_WriteAt(0, 1, 109):                                           Escolha o tipo de janela
 [17:39:14] hb_gtnap_DispCount()
 [17:39:14] hb_gtnap_SetPos(0, 0)
 [17:39:14] hb_gtnap_DispCount()
