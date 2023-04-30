@@ -1116,19 +1116,19 @@ LOG_PRINT("HELLLO FRAN!!!!. Window_NUM: " + hb_ntos(N_WindowNum))
 LOG_PRINT("Window LOCATION: " + hb_ntos(N_LinIni) + ", " + hb_ntos(N_ColIni) + ", " + hb_ntos(N_LinFin) + ", " + hb_ntos(N_ColFin))
 //SCROLL(N_LinIni,N_ColIni,N_LinFin,N_ColFin)      // limpar área
 
-IF N_WindowNum = 0
-    FOR N_Cont := 0 TO 35
-    @ N_Cont, 0 SAY "**" + hb_ntos(N_Cont)
-    @ N_Cont, 107 SAY "*" + hb_ntos(N_Cont)
-    NEXT
+// IF N_WindowNum = 0
+//     FOR N_Cont := 0 TO 35
+//     @ N_Cont, 0 SAY "**" + hb_ntos(N_Cont)
+//     @ N_Cont, 107 SAY "*" + hb_ntos(N_Cont)
+//     NEXT
 
-    @ 1, 4 SAY "****** ********* ********* ********* ********* ********* ********* ********* ********* ********* *******"
-    @ 34, 4 SAY "****** ********* ********* ********* ********* ********* ********* ********* ********* ********* *******"
-    @ 0, 107 SAY "109"
+//     @ 1, 4 SAY "****** ********* ********* ********* ********* ********* ********* ********* ********* ********* *******"
+//     @ 34, 4 SAY "****** ********* ********* ********* ********* ********* ********* ********* ********* ********* *******"
+//     @ 0, 107 SAY "109"
 
-    @ 26, 87 SAY "@ [26,87]"
+//     @ 26, 87 SAY "@ [26,87]"
 
-ENDIF
+// ENDIF
 
 //@ 4, 20 SAY "***************************************************************************************************" // + hb_ntos(N_Cont)
 //@ 3, 41 SAY "*******" // + hb_ntos(N_Cont)
