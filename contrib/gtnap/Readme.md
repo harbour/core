@@ -187,13 +187,19 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
 
 * Go to `gtnap\build-dev` in explorer and double click in `Cuademo.sln`. This will open VS IDE.
 
+   ![cuademo_solution](https://user-images.githubusercontent.com/42999199/235441790-76a70f65-2178-4d9f-8253-cef90c23f21e.png)
+
 * Build->Build Solution
+
+   ![build_solution](https://user-images.githubusercontent.com/42999199/235441823-26ad4413-43ec-4e23-a291-1fec9c4ad75d.png)
 
 * In Solution Explorer, right click over `exemplo` project, then `Properties`, `Debugging`, `Command Arguments`: `--hb:gtnap`.
 
 * Right click again over `exemplo`: `Set as Statup Project`.
 
 * Debug->Start Debugging: This will launch the exemplo executable in Debug mode. You will be able to set breakpoints in any NAppGUI, GTNap or example source file, inspect variables, step by step, etc.
+
+   ![debug_visual_studio](https://user-images.githubusercontent.com/42999199/235441869-da3fd867-8a35-4554-a526-4775c0b84f0b.png)
 
 ### Step 4. Debugging using VSCode (Linux)
 
