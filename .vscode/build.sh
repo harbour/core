@@ -1,12 +1,12 @@
 # Build GTNAP and run exemplo (cuademo) in Linux (Developer mode)
 
-# # Generate GTNAP
+# Generate GTNAP
 mpath=$(pwd)
 echo Main path: $mpath
 cd ./contrib/gtnap
 gtpath=$(pwd)
 echo GTNAP path: $gtpath
-# bash ./build.sh -b Debug
+bash ./build.sh -b Debug
 
 # Generate exemplo
 cd $gtpath/tests/cuademo/gtnap_cualib

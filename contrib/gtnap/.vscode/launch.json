@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Exemplo",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build-dev/Debug/bin/exemplo",
+            "args": ["--hb:gtnap"],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

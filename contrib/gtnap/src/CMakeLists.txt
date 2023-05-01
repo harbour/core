@@ -44,16 +44,18 @@ if (GTNAP_DEVELOPER_MODE)
     file(APPEND ${HBMK2_FILE} "#include \"hbapi.h\"\n")
     file(APPEND ${HBMK2_FILE} "\n")
 
+    file(APPEND ${HBMK2_FILE} "HB_FUNC_EXTERN( HB_GT_NAP );\n")
+
     if (WIN32)
         file(APPEND ${HBMK2_FILE} "HB_FUNC_EXTERN( HB_GT_WIN );\n")
     else()
         file(APPEND ${HBMK2_FILE} "HB_FUNC_EXTERN( HB_GT_TRM );\n")
     endif()
 
-    file(APPEND ${HBMK2_FILE} "HB_FUNC_EXTERN( HB_GT_NAP );\n")
     file(APPEND ${HBMK2_FILE} "\n")
     file(APPEND ${HBMK2_FILE} "void _hb_lnk_ForceLink_hbmk( void )\n")
     file(APPEND ${HBMK2_FILE} "{\n")
+    file(APPEND ${HBMK2_FILE} "    HB_FUNC_EXEC( HB_GT_NAP );\n")
 
     if (WIN32)
         file(APPEND ${HBMK2_FILE} "    HB_FUNC_EXEC( HB_GT_WIN );\n")
@@ -61,7 +63,6 @@ if (GTNAP_DEVELOPER_MODE)
         file(APPEND ${HBMK2_FILE} "    HB_FUNC_EXEC( HB_GT_TRM );\n")
     endif()
 
-    file(APPEND ${HBMK2_FILE} "    HB_FUNC_EXEC( HB_GT_NAP );\n")
     file(APPEND ${HBMK2_FILE} "}\n")
 
     staticLib("gtnap" "gtnap" "osapp" NRC_NONE)
@@ -84,72 +85,10 @@ if (GTNAP_DEVELOPER_MODE)
     endif()
 
     foreach(lib ${HARBOUR_LIBS})
-        message("${lib} --> ${HARBOUR_LIB_PATH}")
         find_library(LIB_NAME_${lib} NAMES ${lib} PATHS ${HARBOUR_LIB_PATH})
         linkExternalLibrary(exemplo "exemplo" ${LIB_NAME_${lib}})
     endforeach()
 
-    # addExternalDepend(exemplo "exemplo" "/home/fran/harbour_nappgui/lib/linux/gcc/libhbextern.a")
-    # addExternalDepend(exemplo "exemplo" "/home/fran/harbour_nappgui/lib/linux/gcc/libhbdebug.a")
-    # addExternalDepend(exemplo "exemplo" "/home/fran/harbour_nappgui/lib/linux/gcc/libhbvm.a")
-
 endif()
 
 generateSolution()
-
-# if (GTNAP_DEVELOPER_MODE)
-#     target_include_directories("gtnap" PUBLIC ${ROOT_PATH}/include)
-# endif()
-
-# if (GTNAP_DEVELOPER_MODE)
-#     # if(${CMAKE_VERSION} VERSION_GREATER "3.12.999")
-#     #     cmake_policy(SET CMP0079 NEW)
-#     # endif()
-#     message(STATUS "HOLA!!!!!!!!!!! ${CMAKE_BINARY_DIR}")
-#     message(STATUS "HOLA!!!!!!!!!!! ${CMAKE_SOURCE_DIR}")
-#     set(ROOT_PATH ${GTNAP_PATH}/../..)
-#     set(HARBOUR_LIBS "")
-#     if (WIN32)
-#         set(HARBOUR_LIB_PATH ${ROOT_PATH}/lib/win/msvc)
-#         set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbct.lib;hbextern.lib;hbdebug.lib;hbvm.lib;hbrtl.lib;hblang.lib;hbcpage.lib")
-#         set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbrdd.lib;hbuddall.lib;hbusrrdd.lib;rddntx.lib;rddcdx.lib;rddnsx.lib;rddfpt.lib;hbrdd.lib")
-#         set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbhsx.lib;hbsix.lib;hbmacro.lib;hbcplr.lib;hbpp.lib;hbcommon.lib")
-#         set(HARBOUR_LIBS ${HARBOUR_LIBS} "winmm.lib;gtwin.lib")
-#     else()
-#         set(HARBOUR_LIB_PATH ${ROOT_PATH}/lib/linux/gcc)
-#         set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbct")
-#         # set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbct;hbextern;hbdebug;hbvm;hbrtl;hblang;hbcpage")
-#         # set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbrdd;hbuddall;hbusrrdd;rddntx;rddcdx;rddnsx;rddfpt;hbrdd")
-#         # set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbhsx;hbsix;hbmacro;hbcplr;hbpp;hbcommon")
-#     endif()
-
-#     #hb_regexGet
-#     #-lhbhsx -lhbsix -lhbmacro -lhbcplr -lhbpp -lhbcommon -lm -ldl -lrt -lpcre -lz
-
-#     target_include_directories("gtnap" PUBLIC ${ROOT_PATH}/include)
-#         #target_link_directories("exemplo" PUBLIC ${ROOT_PATH}/lib/win/msvc)
-
-#     #set_target_properties("exemplo" PROPERTIES LINK_FLAGS "-L'${HARBOUR_LIB_PATH}'")
-#     foreach(lib ${HARBOUR_LIBS})
-
-#         #add_library(${lib} STATIC IMPORTED GLOBAL)
-#         # You can define two import-locations: one for debug and one for release.
-#         #set_target_properties(${lib} PROPERTIES IMPORTED_LOCATION ${HARBOUR_LIB_PATH}/lib${lib}.a)
-#         message("Library: ${LIB_NAME}")
-
-#         # file(COPY ${HARBOUR_LIB_PATH}/lib${lib}.a DESTINATION ${CMAKE_BINARY_DIR}/exemplo)
-#         #target_link_libraries("exemplo" PRIVATE "/home/fran/harbour_nappgui/lib/linux/gcc/libhbct.a")
-#         #target_link_libraries("exemplo" ${LIB_NAME})
-
-#         #set(MY_LINKER_FLAGS "${MY_LINKER_FLAGS} '${HARBOUR_LIB_PATH}/lib${lib}.a'")
-#         # set(MY_LINKER_FLAGS "${MY_LINKER_FLAGS} -l${lib}")
-#     endforeach()
-#         message(STATUS ${MY_LINKER_FLAGS})
-
-#     # set_target_properties("exemplo" PROPERTIES LINK_FLAGS ${MY_LINKER_FLAGS})
-
-
-#     #-libpath:C:\harbour_nappgui\lib\win\msvc
-#      #libgtcgi.a libgtpca.a libgtstd.a libgttrm.a libhbrdd.a libhbuddall.a libhbusrrdd.a librddntx.a librddcdx.a librddnsx.a librddfpt.a libhbrdd.a libhbhsx.a libhbsix.a libhbmacro.a libhbcplr.a libhbpp.a libhbcommon.a libm.a libdl.a librt.a libpcre.a libz.a
-#     #-L'/home/fran/harbour_nappgui/lib/linux/gcc'
-# endif()
