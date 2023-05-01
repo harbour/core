@@ -39,7 +39,7 @@ Readme.md   Documentation.
 ### In Windows
 ```
 :: Goto gtnap folder
-cd contrib/gtnap
+cd contrib\gtnap
 
 :: Set the Visual Studio compiler
 "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
@@ -147,7 +147,14 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
 * In Windows:
 
     ```
+    :: Go to exemplo folder
+    cd contrib\gtnap\tests\cuademo\gtnap_cualib
 
+    :: Create exemplo folder in /src
+    mkdir ..\..\..\src\exemplo
+
+    :: Build exemplo preserving hbmk2 generated C files
+    ..\..\..\..\..\bin\win\msvc\hbmk2 exemplo.hbp -debug -trace -keepc -workdir=..\..\..\src\exemplo -o..\..\..\build\exemplo exemplo.hbp
     ```
 
 * In Linux:
@@ -162,6 +169,33 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
     # Build exemplo preserving hbmk2 generated C files
     ../../../../../bin/linux/gcc/hbmk2 exemplo.hbp -debug -trace -keepc -workdir=../../../src/exemplo -o../../../build/exemplo exemplo.hbp
     ```
+
+### Step 3. Debugging using Visual Studio (Windows)
+
+* Open a terminal
+
+    ```
+    :: Goto gtnap folder
+    cd contrib\gtnap
+
+    :: Set the Visual Studio version
+    "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
+
+    :: Generate the solution
+    cmake -S src -B build-dev -DCMAKE_WARN_VS11=OFF -DGTNAP_DEVELOPER_MODE=ON
+    ```
+
+* Go to `gtnap\build-dev` in explorer and double click in `Cuademo.sln`. This will open VS IDE.
+
+* Build->Build Solution
+
+* In Solution Explorer, right click over `exemplo` project, then `Properties`, `Debugging`, `Command Arguments`: `--hb:gtnap`.
+
+* Right click again over `exemplo`: `Set as Statup Project`.
+
+* Debug->Start Debugging: This will launch the exemplo executable in Debug mode. You will be able to set breakpoints in any NAppGUI, GTNap or example source file, inspect variables, step by step, etc.
+
+
 
 ### Step 4. Debugging using VSCode (Linux)
 
