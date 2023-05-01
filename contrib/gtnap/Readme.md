@@ -182,7 +182,7 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
 * **[F1] CMake:Configure.** Will run CMake over `/src/CMakeLists.txt` and generate `build-dev` folder.
 
    ```
-   [main] Configuring project: gtnap 
+   [main] Configuring project: gtnap
    [cmake] ---------------------------------------------
    [cmake] NAppGUI Cross-Platform SDK 1.3.1.4310
    [cmake] 2015-2023 Francisco Garcia Collado
@@ -195,7 +195,7 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
    [cmake] - Host architecture: x86_64
    [cmake] - Build Config: Debug
    [cmake] - Toolkit: Gtk+3
-   [cmake] - GTNAP Developer mode   
+   [cmake] - GTNAP Developer mode
    ...
    ```
 
