@@ -195,8 +195,6 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
 
 * Debug->Start Debugging: This will launch the exemplo executable in Debug mode. You will be able to set breakpoints in any NAppGUI, GTNap or example source file, inspect variables, step by step, etc.
 
-
-
 ### Step 4. Debugging using VSCode (Linux)
 
 * Install VSCode in Linux
@@ -241,36 +239,7 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
 
    ![debug_vscode](https://user-images.githubusercontent.com/42999199/235436730-8df78930-7aad-487a-a79a-f79d00363931.png)
 
-
-
-### OTROS
-
-
-Just adding `-gtnap` flag into your `.hbp` project file.
-
-For build the exemplo application:
-
-```
-cd ./tests/cuademo/gtnap_cualib
-
-hbmk2 exemplo.hbp
-
-./exemplo --hb:gtnap
-```
-
-../../bin/linux/gcc/hbmk2 exemplo.hbp
-
-../../bin/linux/gcc/hbmk2 exemplo.hbp
-
-
-
-
-:: Set the compiler
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
-
-* At the moment the project compile in:
-   * VisualStudio 2012 (windows)
-   * Ubuntu 18 GCC 7.5.0 (linux)
+### GTNap design
 
 GTNAP has been designed with two modes of operation in mind:
    * **Full-Graphic:** Cross-platform "modern" look&feel applications. Not compatible with Harbour/Clipper text command neither CUALIB.
@@ -278,82 +247,6 @@ GTNAP has been designed with two modes of operation in mind:
 
 ![GTNAP_Full_graphic](https://user-images.githubusercontent.com/42999199/202912012-ecc6d479-7455-4cca-85f6-05cd57730407.png)
 ![GTNAP_Semil_graphic](https://user-images.githubusercontent.com/42999199/202912021-e6ffcd8b-08b5-494f-ae1a-f78b6403bddb.png)
-
-## Compile Harbour
-
-- Clone the harbour repository
-
-```
-git clone https://github.com/frang75/harbour_nappgui.git
-```
-
-- Compile in VS 2012:
-
-    * Open Developer Command Prompt for VS2012
-
-    * Go to ``harbour_nappgui`` working copy
-
-    * ``win-make``
-
-    ```
-    ! Building Harbour 3.2.0dev from source - https://harbour.github.io
-    ! MAKE: win-make 4.1 sh.exe
-    ! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
-    ! HB_PLATFORM: win (x86) (auto-detected)
-    ! HB_COMPILER: msvc (v1700) (auto-detected: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/BIN/)
-    ! Component: 'zlib' found in c:/harbour_gtnap/src/3rd/zlib (local)
-    ...
-    ```
-
-- Compile in Ubuntu 18:
-
-   * Open a Terminal
-
-   * Go to ``harbour_nappgui`` working copy
-
-   * ``make``
-
-## Compile **GTNAP**
-
-- Compile in VS 2012:
-
-   * Open Developer Command Prompt for VS2012
-
-   * Go to `gtnap` working copy `(cd C:\harbour_nappgui\contrib\gtnap)`
-
-   * `..\..\bin\win\msvc\hbmk2.exe gtnap.hbp`
-
-   * This will generate: `hbmk2: Target up to date: build\msvc\gtnap.lib`
-
-- Compile in Ubuntu 18:
-
-   * Open a Terminal
-
-   * Go to `gtnap` working copy `(cd harbour_nappgui/contrib/gtnap)`
-
-   * `../../bin/linux/gcc/hbmk2 gtnap.hbp`
-
-   * This will generate: `hbmk2: Target up to date: build/gcc/libgtnap.a`
-
-
-## Compile and run an CUADEMO example FULL GRAPHICS
-
-- To compile the full-graphics (Windows):
-   * `cd C:\harbour_nappgui\contrib\gtnap\tests\cuademo\gtnap_pure`
-   * `..\..\..\..\..\bin\win\msvc\hbmk2.exe exemplo.hbp`
-   * `exemplo`
-
-- To compile the full-graphics (Linux):
-
-   * `cd harbour_nappgui/contrib/gtnap/tests/cuademo/gtnap_pure`
-   * `../../../../../bin/linux/gcc/hbmk2 exemplo.hbp`
-   * `./exemplo`
-
-![exemplo_full_graphics_windows](https://user-images.githubusercontent.com/42999199/202913860-fdb93eb1-08bd-42c1-ae8b-95687dd8b7fd.png)
-![exemplo_full_graphics_linux](https://user-images.githubusercontent.com/42999199/202913872-9700e5c1-1763-4453-8907-d8531c829c1e.png)
-
-
-
 
 # GTNAP Log
 
