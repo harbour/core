@@ -10,6 +10,7 @@ For building gtnap CMake tool is necessary:
 * In Windows:
     * Download from https://cmake.org/download/
     * Select **Add CMake to the system PATH for all users** when installing.
+    ![cmake_win](https://user-images.githubusercontent.com/42999199/235419286-0a6101f4-b43b-4e40-a3cb-c585fe908185.png)
 
 * In Linux:
     * `sudo apt-get install cmake cmake-gui`
@@ -60,25 +61,29 @@ Just adding `-gtnap` flag into your `.hbp` project file.
 
 ## Compile and run an CUADEMO example
 
+
 - To compile the semi-graphics (Windows):
-   * `cd contrib\gtnap\tests\cuademo\gtnap_cualib`
-   * `..\..\..\..\..\bin\win\msvc\hbmk2.exe exemplo.hbp`
-   * `exemplo --hb:gtnap`
-   * `exemplo --hb:gtwin`
+   ```
+   cd contrib\gtnap\tests\cuademo\gtnap_cualib
+   ..\..\..\..\..\bin\win\msvc\hbmk2.exe exemplo.hbp
+   exemplo --hb:gtnap
+   exemplo --hb:gtwin
+   ```
 
 - To compile the semi-graphics (Linux):
+   ```
+   cd contrib/gtnap/tests/cuademo/gtnap_cualib
+   ../../../../../bin/linux/gcc/hbmk2 exemplo.hbp
+   ./exemplo --hb:gtnap
+   ./exemplo --hb:gttrm
+   ```
+   
+![gtnap_win](https://user-images.githubusercontent.com/42999199/235419502-456ce304-62cf-4559-b84f-964e20a763d3.png)
+![gtnap_linux](https://user-images.githubusercontent.com/42999199/235419548-0ef049d8-6c51-45e2-be4d-393a58c1f07a.png)
+![gt_win](https://user-images.githubusercontent.com/42999199/235419608-10188d35-8283-4419-89e2-76def4a13cb4.png)
+![gtrtrm_linux](https://user-images.githubusercontent.com/42999199/235419619-9dd0093e-bdd5-4ae8-aac1-1a3b55f96125.png)
 
-   * `cd contrib/gtnap/tests/cuademo/gtnap_cualib`
-   * `../../../../../bin/linux/gcc/hbmk2 exemplo.hbp`
-   * `./exemplo --hb:gtnap`
-   * `./exemplo --hb:gttrm`
 
-![gtnap_cualib_semigraph_windows](https://user-images.githubusercontent.com/42999199/202914436-e1cc6c7e-e28a-4ba0-bb0e-169cc03b78fc.png)
-![gtnap_cualib_gtwin](https://user-images.githubusercontent.com/42999199/202914447-1722dfe4-f340-4bd8-91a9-00824c0eb46c.png)
-
-![gtnap_cualib_semigraph_linux](https://user-images.githubusercontent.com/42999199/202914463-76905df1-0e83-4e9d-b321-23c09dd8bbb0.png)
-
-![gtnap_cualib_gttrm](https://user-images.githubusercontent.com/42999199/202914496-ae868c1c-460a-4be8-997a-f559ce5b7d18.png)
 
 
 
