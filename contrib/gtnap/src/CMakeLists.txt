@@ -26,7 +26,7 @@ staticLib("osapp" "osapp" "osgui;gui" NRC_NONE)
 
 # If we are in dev mode, 'gtnap' and 'exemplo' target will be built in same solution
 if (GTNAP_DEVELOPER_MODE)
-    message("GTNAP Developer mode")
+    message(STATUS "- GTNAP Developer mode")
     set(ROOT_PATH ${GTNAP_PATH}/../..)
 
     if (WIN32)
