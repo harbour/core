@@ -183,6 +183,30 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
 
     :: Generate the solution
     cmake -S src -B build-dev -DCMAKE_WARN_VS11=OFF -DGTNAP_DEVELOPER_MODE=ON
+
+
+    -- Building for: Visual Studio 11 2012
+    -- The C compiler identification is MSVC 17.0.61030.0
+    -- The CXX compiler identification is MSVC 17.0.61030.0
+    -- Detecting C compiler ABI info
+    -- Detecting C compiler ABI info - done
+    -- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/bin/cl.exe - skipped
+    -- Detecting C compile features
+    -- Detecting C compile features - done
+    -- Detecting CXX compiler ABI info
+    -- Detecting CXX compiler ABI info - done
+    -- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/bin/cl.exe - skipped
+    -- Detecting CXX compile features
+    -- Detecting CXX compile features - done
+    -- ---------------------------------------------
+    -- NAppGUI Cross-Platform SDK 1.3.1.4310
+    -- 2015-2023 Francisco Garcia Collado
+    -- MIT License
+    -- ---------------------------------------------
+    -- Visual Studio 11 2012
+    -- - Platform Toolset: v110/x86
+    -- - GTNAP Developer mode
+    ...
     ```
 
 * Go to `gtnap\build-dev` in explorer and double click in `Cuademo.sln`. This will open VS IDE.
