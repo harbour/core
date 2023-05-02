@@ -223,10 +223,6 @@ struct _gtnap_t
 
 /*---------------------------------------------------------------------------*/
 
-static GtNap *GTNAP_GLOBAL = NULL;
-static PHB_ITEM INIT_CODEBLOCK = NULL;
-static PHB_ITEM END_CODEBLOCK = NULL;
-
 static const GtNapKey KEYMAPS[] = {
 { K_F1, ekKEY_F1, 0 },
 { K_F2, ekKEY_F2, 0 },
@@ -336,6 +332,190 @@ void _window_taborder(Window *window, void *ositem);
 void _panel_content_size(Panel *panel, const real32_t width, const real32_t height);
 
 __END_C
+
+/*---------------------------------------------------------------------------*/
+
+static GtNap *GTNAP_GLOBAL = NULL;
+static PHB_ITEM INIT_CODEBLOCK = NULL;
+static PHB_ITEM END_CODEBLOCK = NULL;
+static char_t INIT_TITLE[128];
+static uint32_t INIT_ROWS = 0;
+static uint32_t INIT_COLS = 0;
+
+/*---------------------------------------------------------------------------*/
+
+/* DELETE THIS */
+static void i_gtnap_cualib_destroy(GtNap **data);
+
+/*---------------------------------------------------------------------------*/
+
+static void i_create_fonts(const real32_t size, GtNap *gtnap)
+{
+    real32_t rsize = bmath_ceilf(size * .9f);
+    cassert_no_null(gtnap);
+    ptr_destopt(font_destroy, &gtnap->global_font, Font);
+    ptr_destopt(font_destroy, &gtnap->reduced_font, Font);
+    gtnap->global_font = font_monospace(size, 0);
+    gtnap->reduced_font = font_monospace(rsize, 0);
+}
+
+/*---------------------------------------------------------------------------*/
+
+/* Change this value to make buttons higher */
+static real32_t i_button_vpadding(void)
+{
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+/* Change this value to make edits higher */
+static real32_t i_edit_vpadding(void)
+{
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_compute_cell_size(GtNap *gtnap)
+{
+    uint32_t bh = 0, eh = 0;
+    uint32_t fw = 0, fh = 0;
+
+    cassert_no_null(gtnap);
+
+    /* Create an impostor window, only for measure the real height of buttons and edits */
+    {
+        Panel *panel = panel_create();
+        Button *button = button_push();
+        Edit *edit = edit_create();
+        Window *window = window_create(ekWINDOW_STD | ekWINDOW_OFFSCREEN);
+        Layout *layout = layout_create(1, 2);
+        button_text(button, "DEMO");
+        button_font(button, gtnap->reduced_font);
+        button_vpadding(button, i_button_vpadding());
+        edit_font(edit, gtnap->reduced_font);
+        edit_vpadding(edit, i_edit_vpadding());
+        layout_button(layout, button, 0, 0);
+        layout_edit(layout, edit, 0, 1);
+        panel_layout(panel, layout);
+        window_panel(window, panel);
+        window_show(window);
+        bh = (uint32_t)button_get_height(button);
+        eh = (uint32_t)edit_get_height(edit);
+        window_destroy(&window);
+    }
+
+    {
+        real32_t w, h;
+        font_extents(gtnap->global_font, "OOOOOO", -1, &w, &h);
+        fw = (uint32_t)w;
+        fh = (uint32_t)h;
+    }
+
+    gtnap->cell_x_size = fw / 6;
+
+    /* Cell height will be the higher of labels, buttons and edits */
+    gtnap->cell_y_size = fh;
+    gtnap->label_y_size = fh;
+    gtnap->button_y_size = bh;
+    gtnap->edit_y_size = eh;
+
+    if (bh > gtnap->cell_y_size)
+        gtnap->cell_y_size = bh;
+
+    if (eh > gtnap->cell_y_size)
+        gtnap->cell_y_size = eh;
+
+    log_printf("Cell height: %d. Label height: %d Button height: %d Edit height: %d", gtnap->cell_y_size, gtnap->label_y_size, gtnap->button_y_size, gtnap->edit_y_size);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_compute_font_size(const uint32_t max_width, const uint32_t max_height, GtNap *gtnap)
+{
+    real32_t font_size = (real32_t)(max_height / (gtnap->rows + 5));
+
+    for(;;)
+    {
+        i_create_fonts(font_size, gtnap);
+        i_compute_cell_size(gtnap);
+        log_printf("Computed font: %.2f: Total width: %d, Total height: %d", font_size, gtnap->cell_x_size * gtnap->cols, gtnap->cell_y_size * gtnap->rows);
+
+        /* The total width exceeds the screen limits */
+        if (gtnap->cell_x_size * gtnap->cols > max_width)
+        {
+            font_size -= 1;
+            continue;
+        }
+
+        /* The total height exceeds the screen limits */
+        if (gtnap->cell_y_size * gtnap->rows > max_height)
+        {
+            font_size -= 1;
+            continue;
+        }
+
+        break;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNap *i_gtnap_cualib_create(void)
+{
+    S2Df screen;
+    GTNAP_GLOBAL = heap_new0(GtNap);
+    GTNAP_GLOBAL->cualib_mode = TRUE;
+    GTNAP_GLOBAL->title = gtconvert_1252_to_UTF8(INIT_TITLE);
+    GTNAP_GLOBAL->rows = INIT_ROWS;
+    GTNAP_GLOBAL->cols = INIT_COLS;
+    GTNAP_GLOBAL->linespacing = 0;
+    GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
+    GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == HB_TRUE) ? 8 : 6;
+    GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
+    globals_resolution(&screen);
+    screen.height -= 50; // S.O. Dock or Taskbars
+    i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
+    //log_printf("i_gtnap_cualib_create(%s, %d, %d)", CUALIB_TITLE, CUALIB_ROWS, CUALIB_COLS);
+    //log_printf("GTNAP Cell Size(%d, %d)", GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size);
+    //log_printf("Date Format: %s", hb_setGetDateFormat());
+
+    {
+        PHB_ITEM pRet = NULL;
+        pRet = hb_itemDo(INIT_CODEBLOCK, 0);
+        hb_itemRelease(pRet);
+        hb_itemRelease(INIT_CODEBLOCK);
+        INIT_CODEBLOCK = NULL;
+    }
+
+    return GTNAP_GLOBAL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM codeBlock_begin)
+{
+    void *hInstance = NULL;
+
+#if defined( HB_OS_WIN )
+    hb_winmainArgGet(&hInstance, NULL, NULL);
+#endif
+
+    log_printf("hb_gtnap_cualib_setup()");
+
+    INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
+    str_copy_c(INIT_TITLE, sizeof(INIT_TITLE), title);
+    INIT_ROWS = rows;
+    INIT_COLS = cols;
+
+    osmain_imp(
+                0, NULL, hInstance, 0.,
+                (FPtr_app_create)i_gtnap_cualib_create,
+                (FPtr_app_update)NULL,
+                (FPtr_destroy)i_gtnap_cualib_destroy,
+                (char_t*)"");
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -994,12 +1174,6 @@ bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e)
 //
 // CUALIB Support in GTNAP
 //
-/*---------------------------------------------------------------------------*/
-
-static PHB_ITEM CUALIB_INIT_CODEBLOCK = NULL;
-static char_t CUALIB_TITLE[128];
-static uint32_t CUALIB_ROWS = 0;
-static uint32_t CUALIB_COLS = 0;
 
 /*---------------------------------------------------------------------------*/
 
@@ -1023,152 +1197,6 @@ String *hb_gtnap_cualib_parText(const uint32_t iParam)
     }
 
     return str_c("");
-}
-
-/*---------------------------------------------------------------------------*/
-
-/* Change this value to make buttons higher */
-static real32_t i_button_vpadding(void)
-{
-    return 0;
-}
-
-/*---------------------------------------------------------------------------*/
-
-/* Change this value to make edits higher */
-static real32_t i_edit_vpadding(void)
-{
-    return 0;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_compute_cell_size(GtNap *gtnap)
-{
-    uint32_t bh = 0, eh = 0;
-    uint32_t fw = 0, fh = 0;
-
-    cassert_no_null(gtnap);
-
-    /* Create an impostor window, only for measure the real height of buttons and edits */
-    {
-        Panel *panel = panel_create();
-        Button *button = button_push();
-        Edit *edit = edit_create();
-        Window *window = window_create(ekWINDOW_STD | ekWINDOW_OFFSCREEN);
-        Layout *layout = layout_create(1, 2);
-        button_text(button, "DEMO");
-        button_font(button, gtnap->reduced_font);
-        button_vpadding(button, i_button_vpadding());
-        edit_font(edit, gtnap->reduced_font);
-        edit_vpadding(edit, i_edit_vpadding());
-        layout_button(layout, button, 0, 0);
-        layout_edit(layout, edit, 0, 1);
-        panel_layout(panel, layout);
-        window_panel(window, panel);
-        window_show(window);
-        bh = (uint32_t)button_get_height(button);
-        eh = (uint32_t)edit_get_height(edit);
-        window_destroy(&window);
-    }
-
-    {
-        real32_t w, h;
-        font_extents(gtnap->global_font, "OOOOOO", -1, &w, &h);
-        fw = (uint32_t)w;
-        fh = (uint32_t)h;
-    }
-
-    gtnap->cell_x_size = fw / 6;
-
-    /* Cell height will be the higher of labels, buttons and edits */
-    gtnap->cell_y_size = fh;
-    gtnap->label_y_size = fh;
-    gtnap->button_y_size = bh;
-    gtnap->edit_y_size = eh;
-
-    if (bh > gtnap->cell_y_size)
-        gtnap->cell_y_size = bh;
-
-    if (eh > gtnap->cell_y_size)
-        gtnap->cell_y_size = eh;
-
-    log_printf("Cell height: %d. Label height: %d Button height: %d Edit height: %d", gtnap->cell_y_size, gtnap->label_y_size, gtnap->button_y_size, gtnap->edit_y_size);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_create_fonts(const real32_t size, GtNap *gtnap)
-{
-    real32_t rsize = bmath_ceilf(size * .9f);
-    cassert_no_null(gtnap);
-    ptr_destopt(font_destroy, &gtnap->global_font, Font);
-    ptr_destopt(font_destroy, &gtnap->reduced_font, Font);
-    gtnap->global_font = font_monospace(size, 0);
-    gtnap->reduced_font = font_monospace(rsize, 0);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_compute_font_size(const uint32_t max_width, const uint32_t max_height, GtNap *gtnap)
-{
-    real32_t font_size = (real32_t)(max_height / (gtnap->rows + 5));
-
-    for(;;)
-    {
-        i_create_fonts(font_size, gtnap);
-        i_compute_cell_size(gtnap);
-        log_printf("Computed font: %.2f: Total width: %d, Total height: %d", font_size, gtnap->cell_x_size * gtnap->cols, gtnap->cell_y_size * gtnap->rows);
-
-        /* The total width exceeds the screen limits */
-        if (gtnap->cell_x_size * gtnap->cols > max_width)
-        {
-            font_size -= 1;
-            continue;
-        }
-
-        /* The total height exceeds the screen limits */
-        if (gtnap->cell_y_size * gtnap->rows > max_height)
-        {
-            font_size -= 1;
-            continue;
-        }
-
-        break;
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNap *i_gtnap_cualib_create(void)
-{
-    S2Df screen;
-    GTNAP_GLOBAL = heap_new0(GtNap);
-    GTNAP_GLOBAL->cualib_mode = TRUE;
-    GTNAP_GLOBAL->title = gtconvert_1252_to_UTF8(CUALIB_TITLE);
-    GTNAP_GLOBAL->rows = CUALIB_ROWS;
-    GTNAP_GLOBAL->cols = CUALIB_COLS;
-    GTNAP_GLOBAL->linespacing = 0;
-    GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
-    GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == HB_TRUE) ? 8 : 6;
-    GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
-    globals_resolution(&screen);
-    screen.height -= 50; // S.O. Dock or Taskbars
-    i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
-    log_printf("i_gtnap_cualib_create(%s, %d, %d)", CUALIB_TITLE, CUALIB_ROWS, CUALIB_COLS);
-    log_printf("GTNAP Cell Size(%d, %d)", GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size);
-    log_printf("Date Format: %s", hb_setGetDateFormat());
-
-    {
-        PHB_ITEM pRet = NULL;
-        pRet = hb_itemDo(CUALIB_INIT_CODEBLOCK, 0);
-        hb_itemRelease(pRet);
-        hb_itemRelease(CUALIB_INIT_CODEBLOCK);
-        CUALIB_INIT_CODEBLOCK = NULL;
-    }
-
-
-    return GTNAP_GLOBAL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1315,29 +1343,6 @@ void hb_gtnap_cualib_init_log(void)
     log_file("C:\\Users\\USUARIO\\AppData\\Roaming\\exemplo\\log2.txt");
 }
 
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM codeBlock_begin)
-{
-    void *hInstance = NULL;
-#if defined( HB_OS_WIN )
-    hb_winmainArgGet(&hInstance, NULL, NULL);
-#endif
-
-    log_printf("hb_gtnap_cualib_setup()");
-
-    CUALIB_INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
-    str_copy_c(CUALIB_TITLE, sizeof(CUALIB_TITLE), title);
-    CUALIB_ROWS = rows;
-    CUALIB_COLS = cols;
-
-    osmain_imp(
-                0, NULL, hInstance, 0.,
-                (FPtr_app_create)i_gtnap_cualib_create,
-                (FPtr_app_update)NULL,
-                (FPtr_destroy)i_gtnap_cualib_destroy,
-                (char_t*)"");
-}
 
 /*---------------------------------------------------------------------------*/
 

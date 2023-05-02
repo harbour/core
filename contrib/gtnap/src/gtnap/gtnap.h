@@ -21,7 +21,24 @@ typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
 HB_EXTERN_BEGIN
 
+extern void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
+
+
+/*
+*
+* DEPRECATED / UNUSED funtions
+*
+*
+*/
 extern void hb_gtnap_runloop(void);
+
+/*
+*
+*
+*
+*/
+
+
 
 extern void hb_gtnap_set_global_font(Font *font);
 
@@ -86,7 +103,6 @@ String *hb_gtnap_cualib_parText(const uint32_t iParam);
 
 extern void hb_gtnap_cualib_init_log(void);
 
-extern void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM codeBlock_begin);
 
 extern uint32_t hb_gtnap_cualib_linespacing(void);
 

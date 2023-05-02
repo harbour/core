@@ -1,17 +1,10 @@
 /* encoding: cp850 */
 
-// #pragma DebugInfo=On
-
-// /*
-
+//
 //                                Aspec - Informatica
 //                            Direitos Autorais Reservado
-
-
-//    Variantes especificas da classe janela
-
-// */
-// *
+//                        Variantes especificas da classe janela
+//
 #INCLUDE "xx.ch"
 #INCLUDE "inkey.ch"
 #INCLUDE "janela.ch"          // para usar os pseudo métodos do objeto janela
@@ -21,6 +14,36 @@
 #INCLUDE "mousecua.ch"
 #INCLUDE "define_cua.ch"
 #INCLUDE "hbgtinfo.ch"
+
+/*---------------------------------------------------------------------------*/
+
+FUNCTION Setup_nap(C_Title, N_QtLin, N_QtCol, B_Init)
+    NAP_CUALIB_SETUP(C_Title, N_QtLin, N_QtCol, B_Init)
+    RETURN (.T.)
+
+/*---------------------------------------------------------------------------*/
+
+FUNCTION DIRET_BMPS(C_DIRET_NEW)
+    STATIC C_DIRET_BMPS := ""
+    LOCAL C_DIRET_ANT := C_DIRET_BMPS
+    IF C_DIRET_NEW # NIL
+        C_DIRET_BMPS := C_DIRET_NEW
+    ENDIF
+    RETURN C_DIRET_ANT
+
+/*---------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
 
 ***********************
 STAT FUNCTION Perguntar (C_Cabec_x,C_SubCabec,VC_Menu,;
@@ -779,71 +802,8 @@ RETURN N_OPCAO
 // #endif
 *
 *
-***************
-FUNC DIRET_BMPS(C_DIRET_NEW)
-***************
-STATIC C_DIRET_BMPS := ""
-LOCAL C_DIRET_ANT := C_DIRET_BMPS
-IF C_DIRET_NEW # NIL
-   C_DIRET_BMPS := C_DIRET_NEW
-ENDIF
-RETURN C_DIRET_ANT
 *
 *
-#if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX)
-    *
-    * FRAN: This is an adaptation of Setup_wvw to GTNAP. We mantain the _wvw suffix in all functions for retro-compatibility
-    *
-   ******************
-   FUNCTION Setup_nap(C_Title,N_QtLin,N_QtCol,InitCodeBlock)
-   ******************
-   *
-   * FRAN: GTNAP doesn't use palettes
-   *
-//    LOCAL V_PALETTE
-//       *
-//       * Fazer com que a cor "W"-white, usada na cor de fundo das janelas
-//       * seja a mesma cor de fundo padrï¿½o do windows.
-//       * Isto resolveu o problema que aparecia quando se usava o sistema em computador
-//       * com somente 256 cores, onde a cor da entrelinha aparecia diferente da cor
-//       * de fundo das linhas, que inviabilizava o uso do sistema em computadores /
-//       * terminais remotos com somente 256 disponï¿½veis.
-//       #define _COR_WHITE  08   // Cor "W"
-//       V_PALETTE := WVW_GetPalette()
-//       //#INCLUDE "winuser.ch"
-//       V_PALETTE[_COR_WHITE] := GetSysColor(COLOR_BTNFACE)
-//       WVW_SetPalette(V_PALETTE)
-
-
-
-
-      *
-    //   WVW_SetCodePage(,255)
-    //   SetDefaultWindowSize(N_QtLin,N_QtCol)
-    //   WvW_SetMainCoord( .T. )
-    //   WvW_SetPaintRefresh( _REPAINT_DEFAULT )
-    //   WvW_SetVertCaret( .T. )
-    //   WvW_SetAltF4Close( .F. )
-    //   *
-    //   * ATENï¿½ï¿½O: O arquivo GTWVW.PDF documenta que a WvW_SetMouseMove() tem
-    //   *          DOIS parï¿½metros. Ver cï¿½digo fonte da GTWVW para ter certeza
-    //   *          quantos parï¿½metros possui, e ajustar o cï¿½digo abaixo, se necessï¿½rio.
-    //   *
-    //   * ATENï¿½ï¿½O: ï¿½ possï¿½vel que a linha abaixo nï¿½o esteja fazendo nada,
-    //   *          caso a funï¿½ï¿½o tenha realmente DOIS parï¿½metros.
-    //   WvW_SetMouseMove( .T. )  // ATENï¿½ï¿½O: Linha provavelmente com BUG !
-    //   *
-    //   * Colocar um intervalo de clique tï¿½o pequeno, que o double-click
-    //   * serï¿½ interpretado como 2 cliques normais.
-    //   WvW_SetMaxBMcache( 50 )  // os bitmaps sï¿½o geralmente pequenos
-    //   WvW_SetPointer( 0, 1 )
-    //   Wvw_SetTitle(,HB_OEMtoANSI(C_Title))
-    //   * wvw_maximize(0)
-    //   * WVW_SIZE_READY(.T.)
-    //   *
-
-    NAP_CUALIB_SETUP(C_Title,N_QtLin,N_QtCol,InitCodeBlock)
-   RETURN (.T.)
 
 //    FUNCTION SetDefaultWindowSize(N_QtLin,N_QtCol)
 //     LOCAL N_HeightMin   // altura  mínima que, com certeza, cabe na menor resolução

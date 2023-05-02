@@ -1,9 +1,11 @@
 {
+    "files.encoding": "windows1252",
+
     "cmake.sourceDirectory": "${workspaceFolder}/src",
     "cmake.buildDirectory": "${workspaceFolder}/build-dev",
 
     "cmake.configureArgs": [
         "-DCMAKE_BUILD_CONFIG=Debug",
         "-DGTNAP_DEVELOPER_MODE=Yes"
-    ],
+    ]
 }
