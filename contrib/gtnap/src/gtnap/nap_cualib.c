@@ -40,19 +40,6 @@ HB_FUNC( WVW_SETLINESPACING )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( WVW_SETDEFLINESPACING )
-{
-   uint32_t byOldLineSpacing = hb_gtnap_cualib_linespacing();
-
-   if( ! HB_ISNIL( 1 ) && HB_ISNUM( 1 ) && hb_parni( 1 ) >= 0 && hb_parni( 1 ) <= 40 ) //&& /*nobody is crazy enough to use > 40 */
-       //fmod( hb_parnd( 1 ), 2 ) == 0 )
-       hb_gtnap_cualib_set_linespacing(hb_parni( 1 ));
-
-   hb_retni( byOldLineSpacing );
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( WVW_SETMAINCOORD )
 {
     // FRAN TODO

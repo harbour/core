@@ -196,7 +196,6 @@ DeclSt(GtNapCualibWindow);
 
 struct _gtnap_t
 {
-    //bool_t cualib_mode;
     Font *global_font;
     Font *reduced_font;
     uint8_t date_digits;
@@ -209,7 +208,6 @@ struct _gtnap_t
     uint32_t label_y_size;
     uint32_t button_y_size;
     uint32_t edit_y_size;
-    uint32_t linespacing;
     ArrSt(GtNapCualibWindow) *cualib_windows;
 };
 
@@ -461,7 +459,6 @@ static GtNap *i_gtnap_cualib_create(void)
     GTNAP_GLOBAL->title = gtconvert_1252_to_UTF8(INIT_TITLE);
     GTNAP_GLOBAL->rows = INIT_ROWS;
     GTNAP_GLOBAL->cols = INIT_COLS;
-    GTNAP_GLOBAL->linespacing = 0;
     GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
@@ -1083,21 +1080,6 @@ void hb_gtnap_cualib_init_log(void)
     osbs_start();
     log_output(FALSE, FALSE);
     log_file("C:\\Users\\USUARIO\\AppData\\Roaming\\exemplo\\log2.txt");
-}
-
-
-/*---------------------------------------------------------------------------*/
-
-uint32_t hb_gtnap_cualib_linespacing(void)
-{
-    return GTNAP_GLOBAL->linespacing;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_set_linespacing(const uint32_t spacing)
-{
-    GTNAP_GLOBAL->linespacing = spacing;
 }
 
 /*---------------------------------------------------------------------------*/

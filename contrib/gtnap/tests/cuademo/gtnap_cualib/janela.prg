@@ -121,8 +121,10 @@ ELSE
    ENDIF
 ENDIF
 *
+
+// Fran Review N_EspacamentoEmPixels
 IF SOB_MODO_GRAFICO()
-    DEFAULT N_EspacamentoEmPixels TO WVW_SetDefLineSpacing()
+    DEFAULT N_EspacamentoEmPixels TO 0
 ELSE
     DEFAULT N_EspacamentoEmPixels TO 4   // só usado na GTWVW
 ENDIF

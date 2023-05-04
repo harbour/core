@@ -79,10 +79,6 @@ String *hb_gtnap_cualib_parText(const uint32_t iParam);
 extern void hb_gtnap_cualib_init_log(void);
 
 
-extern uint32_t hb_gtnap_cualib_linespacing(void);
-
-extern void hb_gtnap_cualib_set_linespacing(const uint32_t spacing);
-
 // N_LinIni --> Top
 // N_ColIni --> Left
 // N_LinFin --> Bottom
