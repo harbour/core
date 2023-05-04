@@ -7,15 +7,6 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_WINDOW_CREATE )
-{
-    uint32_t flags = hb_parni(1);
-    Window *window = window_create(flags);
-    hb_gtnap_retWindowGC(window);
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_WINDOW_PANEL )
 {
     Window *window = hb_gtnap_parWindow(1);
@@ -94,32 +85,6 @@ HB_FUNC( NAP_WINDOW_HIDE )
 {
     Window *window = hb_gtnap_parWindow(1);
     window_hide(window);
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_WINDOW_MODAL )
-{
-    Window *window = hb_gtnap_parWindow(1);
-    Window *parent = hb_gtnap_current_modal();
-    uint32_t ret = UINT32_MAX;
-
-    if (parent == NULL)
-        parent = hb_gtnap_main_window();
-
-    hb_gtnap_set_modal_window(window);
-    ret = window_modal(window, parent);
-    hb_gtnap_destroy_modal();
-    hb_retni(ret);
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_WINDOW_STOP_MODAL )
-{
-    Window *window = hb_gtnap_current_modal();
-    uint32_t return_value = hb_parni(1);
-    window_stop_modal(window, return_value);
 }
 
 /*---------------------------------------------------------------------------*/

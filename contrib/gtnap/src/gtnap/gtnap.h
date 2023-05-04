@@ -24,13 +24,6 @@ HB_EXTERN_BEGIN
 extern void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
 
 
-/*
-*
-* DEPRECATED / UNUSED funtions
-*
-*
-*/
-extern void hb_gtnap_runloop(void);
 
 /*
 *
@@ -43,14 +36,6 @@ extern void hb_gtnap_runloop(void);
 extern void hb_gtnap_set_global_font(Font *font);
 
 extern Font *hb_gtnap_global_font(void);
-
-extern Window *hb_gtnap_main_window(void);
-
-extern Window *hb_gtnap_current_modal(void);
-
-extern void hb_gtnap_set_modal_window(Window *window);
-
-extern void hb_gtnap_destroy_modal(void);
 
 extern GtNapArea *hb_gtnap_new_area(TableView *view);
 
@@ -84,8 +69,6 @@ extern Window *hb_gtnap_parWindow(int iParam);
 extern void hb_gtnap_retImageGC(Image *image);
 
 extern void hb_gtnap_retFontGC(Font *font);
-
-extern void hb_gtnap_retWindowGC(Window *window);
 
 extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, FPtr_gtnap_callback func_callback);
 

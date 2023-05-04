@@ -215,8 +215,8 @@ struct _gtnap_t
     ArrSt(GtNapCualibWindow) *cualib_windows;
 
     // Only for pure-gtnap
-    ArrPt(Window) *modals;
-    ArrPt(Window) *windows;
+    //ArrPt(Window) *modals;
+    //ArrPt(Window) *windows;
     ArrPt(GtNapCallback) *callbacks;
     ArrPt(GtNapArea) *areas;
 };
@@ -519,25 +519,6 @@ void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint3
 
 /*---------------------------------------------------------------------------*/
 
-static GtNap *i_nappgui_create(void)
-{
-    PHB_ITEM pRet = NULL;
-    log_printf("i_nappgui_create()");
-    GTNAP_GLOBAL = heap_new0(GtNap);
-    GTNAP_GLOBAL->global_font = font_system(font_regular_size(), 0);
-    GTNAP_GLOBAL->modals = arrpt_create(Window);
-    GTNAP_GLOBAL->windows = arrpt_create(Window);
-    GTNAP_GLOBAL->callbacks = arrpt_create(GtNapCallback);
-    GTNAP_GLOBAL->areas = arrpt_create(GtNapArea);
-    pRet = hb_itemDo(INIT_CODEBLOCK, 0);
-    hb_itemRelease(pRet);
-    hb_itemRelease(INIT_CODEBLOCK);
-    INIT_CODEBLOCK = NULL;
-    return GTNAP_GLOBAL;
-}
-
-/*---------------------------------------------------------------------------*/
-
 static void i_destroy_callback(GtNapCallback **callback)
 {
     cassert_no_null(callback);
@@ -676,54 +657,6 @@ static void i_window_destroy(Window **window)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_nappgui_destroy(GtNap **data)
-{
-    PHB_ITEM pRet = NULL;
-    cassert_no_null(data);
-    cassert_no_null(*data);
-    log_printf("i_nappgui_destroy()");
-    font_destroy(&(*data)->global_font);
-    cassert((*data)->reduced_font == NULL);
-    arrpt_destopt(&(*data)->windows, i_window_destroy, Window);
-    // No modal window can be alive here!
-    cassert(arrpt_size((*data)->modals, Window) == 0);
-    arrpt_destopt(&(*data)->modals, NULL, Window);
-    arrpt_destopt(&(*data)->callbacks, i_destroy_callback, GtNapCallback);
-    arrpt_destopt(&(*data)->areas, i_destroy_area, GtNapArea);
-    pRet = hb_itemDo(END_CODEBLOCK, 0);
-    hb_itemRelease(pRet);
-    hb_itemRelease(END_CODEBLOCK);
-    END_CODEBLOCK = NULL;
-    heap_delete(data, GtNap);
-    GTNAP_GLOBAL = NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_runloop( void )
-{
-    void *hInstance = NULL;
-    PHB_ITEM codeBlock_begin = hb_param(1, HB_IT_BLOCK);
-    PHB_ITEM codeBlock_end = hb_param(2, HB_IT_BLOCK);
-
-#if defined( HB_OS_WIN )
-    hb_winmainArgGet(&hInstance, NULL, NULL);
-#endif
-
-    log_printf("hb_gtnap_runloop()");
-    INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
-    END_CODEBLOCK = hb_itemNew(codeBlock_end);
-
-    osmain_imp(
-                0, NULL, hInstance, 0.,
-                (FPtr_app_create)i_nappgui_create,
-                (FPtr_app_update)NULL,
-                (FPtr_destroy)i_nappgui_destroy,
-                (char_t*)"");
-}
-
-/*---------------------------------------------------------------------------*/
-
 void hb_gtnap_set_global_font(Font *font)
 {
     cassert_no_null(GTNAP_GLOBAL);
@@ -737,50 +670,6 @@ Font *hb_gtnap_global_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);
     return GTNAP_GLOBAL->global_font;
-}
-
-/*---------------------------------------------------------------------------*/
-
-Window *hb_gtnap_main_window(void)
-{
-    Window *window = NULL;
-    cassert_no_null(GTNAP_GLOBAL);
-    window = arrpt_get(GTNAP_GLOBAL->windows, 0, Window);
-    cassert_no_null(window);
-    return window;
-}
-
-/*---------------------------------------------------------------------------*/
-
-Window *hb_gtnap_current_modal(void)
-{
-    Window *modal = NULL;
-    cassert_no_null(GTNAP_GLOBAL);
-    if (arrpt_size(GTNAP_GLOBAL->modals, Window) > 0)
-        modal = arrpt_last(GTNAP_GLOBAL->modals, Window);
-
-    return modal;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_set_modal_window(Window *window)
-{
-    cassert_no_null(GTNAP_GLOBAL);
-    arrpt_append(GTNAP_GLOBAL->modals, window, Window);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_destroy_modal(void)
-{
-    Window *modal = NULL;
-    uint32_t i = 0;
-    cassert_no_null(GTNAP_GLOBAL);
-    modal = arrpt_last(GTNAP_GLOBAL->modals, Window);
-    i = arrpt_find(GTNAP_GLOBAL->windows, modal, Window);
-    arrpt_delete(GTNAP_GLOBAL->windows, i, i_window_destroy, Window);
-    arrpt_pop(GTNAP_GLOBAL->modals, NULL, Window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1079,24 +968,6 @@ void hb_gtnap_retFontGC(Font *font)
         void **ph = (void**)hb_gcAllocate(sizeof(Font*), &s_gc_Font_funcs);
         *ph = font;
             log_printf("'hb_gtnap_retFontGC': %p - %p", ph, font);
-        hb_retptrGC(ph);
-    }
-    else
-    {
-        hb_retptr(NULL);
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_retWindowGC(Window *window)
-{
-    if (window != NULL)
-    {
-        void **ph = (void**)hb_gcAllocate(sizeof(Window*), &s_gc_Window_funcs);
-        *ph = window;
-        cassert_no_null(GTNAP_GLOBAL);
-        arrpt_append(GTNAP_GLOBAL->windows, window, Window);
         hb_retptrGC(ph);
     }
     else
