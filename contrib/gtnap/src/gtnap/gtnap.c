@@ -20,13 +20,13 @@ typedef struct _gtnap_key_t GtNapKey;
 typedef struct _gtnap_column_t GtNapColumn;
 typedef struct _gtnap_cualib_object_t GtNapCualibObject;
 typedef struct _gtnap_cualib_toolbar_t GtNapCualibToolbar;
-typedef struct _gtnap_cualib_window_t GtNapCualibWindow;
+typedef struct _gtnap_window_t GtNapWindow;
 typedef struct _vecitem_t VecItem;
 typedef struct _gui_context_t GuiContext;
 
 struct _gtnap_callback_t
 {
-    GtNapCualibWindow *cuawin;
+    GtNapWindow *cuawin;
     GuiComponent *cb_component;
     Window *cb_window;
     int32_t key;
@@ -139,7 +139,7 @@ struct _gtnap_cualib_object_t
     PHB_ITEM whenCodeBlock;
     PHB_ITEM getobjItem;
     GuiComponent *component;
-    GtNapCualibWindow *cuawin;
+    GtNapWindow *cuawin;
 };
 
 struct _gtnap_cualib_toolbar_t
@@ -151,7 +151,7 @@ struct _gtnap_cualib_toolbar_t
 
 DeclSt(GtNapCualibObject);
 
-struct _gtnap_cualib_window_t
+struct _gtnap_window_t
 {
     int32_t N_LinIni;
     int32_t N_ColIni;
@@ -192,7 +192,7 @@ struct _gtnap_cualib_window_t
     ArrPt(GtNapCallback) *callbacks;
 };
 
-DeclSt(GtNapCualibWindow);
+DeclSt(GtNapWindow);
 
 struct _gtnap_t
 {
@@ -208,7 +208,7 @@ struct _gtnap_t
     uint32_t label_y_size;
     uint32_t button_y_size;
     uint32_t edit_y_size;
-    ArrSt(GtNapCualibWindow) *cualib_windows;
+    ArrSt(GtNapWindow) *windows;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -335,7 +335,7 @@ static uint32_t INIT_COLS = 0;
 /*---------------------------------------------------------------------------*/
 
 /* DELETE THIS */
-static void i_gtnap_cualib_destroy(GtNap **data);
+static void i_gtnap_destroy(GtNap **data);
 
 /*---------------------------------------------------------------------------*/
 
@@ -452,26 +452,22 @@ static void i_compute_font_size(const uint32_t max_width, const uint32_t max_hei
 
 /*---------------------------------------------------------------------------*/
 
-static GtNap *i_gtnap_cualib_create(void)
+static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->title = gtconvert_1252_to_UTF8(INIT_TITLE);
     GTNAP_GLOBAL->rows = INIT_ROWS;
     GTNAP_GLOBAL->cols = INIT_COLS;
-    GTNAP_GLOBAL->cualib_windows = arrst_create(GtNapCualibWindow);
+    GTNAP_GLOBAL->windows = arrst_create(GtNapWindow);
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
     globals_resolution(&screen);
     screen.height -= 50; // S.O. Dock or Taskbars
     i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
-    //log_printf("i_gtnap_cualib_create(%s, %d, %d)", CUALIB_TITLE, CUALIB_ROWS, CUALIB_COLS);
-    //log_printf("GTNAP Cell Size(%d, %d)", GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size);
-    //log_printf("Date Format: %s", hb_setGetDateFormat());
 
     {
-        PHB_ITEM pRet = NULL;
-        pRet = hb_itemDo(INIT_CODEBLOCK, 0);
+        PHB_ITEM pRet = hb_itemDo(INIT_CODEBLOCK, 0);
         hb_itemRelease(pRet);
         hb_itemRelease(INIT_CODEBLOCK);
         INIT_CODEBLOCK = NULL;
@@ -482,7 +478,7 @@ static GtNap *i_gtnap_cualib_create(void)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM codeBlock_begin)
+void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block)
 {
     void *hInstance = NULL;
 
@@ -490,18 +486,16 @@ void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint3
     hb_winmainArgGet(&hInstance, NULL, NULL);
 #endif
 
-    log_printf("hb_gtnap_cualib_setup()");
-
-    INIT_CODEBLOCK = hb_itemNew(codeBlock_begin);
+    INIT_CODEBLOCK = hb_itemNew(begin_block);
     str_copy_c(INIT_TITLE, sizeof(INIT_TITLE), title);
     INIT_ROWS = rows;
     INIT_COLS = cols;
 
     osmain_imp(
                 0, NULL, hInstance, 0.,
-                (FPtr_app_create)i_gtnap_cualib_create,
+                (FPtr_app_create)i_gtnap_create,
                 (FPtr_app_update)NULL,
-                (FPtr_destroy)i_gtnap_cualib_destroy,
+                (FPtr_destroy)i_gtnap_destroy,
                 (char_t*)"");
 }
 
@@ -941,7 +935,7 @@ String *hb_gtnap_cualib_parText(const uint32_t iParam)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_remove_cualib_object(GtNapCualibWindow *cuawin, const uint32_t index)
+static void i_remove_cualib_object(GtNapWindow *cuawin, const uint32_t index)
 {
     GtNapCualibObject *object = NULL;
     const char_t *type = NULL;
@@ -1019,7 +1013,7 @@ static void i_remove_toolbar(GtNapCualibToolbar *toolbar, Panel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_remove_cualib_win(GtNapCualibWindow *cuawin)
+static void i_remove_cualib_win(GtNapWindow *cuawin)
 {
     uint32_t i, n;
     cassert_no_null(cuawin);
@@ -1059,14 +1053,13 @@ static void i_remove_cualib_win(GtNapCualibWindow *cuawin)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_gtnap_cualib_destroy(GtNap **data)
+static void i_gtnap_destroy(GtNap **data)
 {
     cassert_no_null(data);
     cassert_no_null(*data);
-    log_printf("i_gtnap_cualib_destroy()");
     cassert(*data == GTNAP_GLOBAL);
-    cassert(arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow) == 0);
-    arrst_destroy(&GTNAP_GLOBAL->cualib_windows, i_remove_cualib_win, GtNapCualibWindow);
+    cassert(arrst_size(GTNAP_GLOBAL->windows, GtNapWindow) == 0);
+    arrst_destroy(&GTNAP_GLOBAL->windows, i_remove_cualib_win, GtNapWindow);
     font_destroy(&GTNAP_GLOBAL->global_font);
     font_destroy(&(*data)->reduced_font);
     str_destroy(&GTNAP_GLOBAL->title);
@@ -1084,26 +1077,26 @@ void hb_gtnap_cualib_init_log(void)
 
 /*---------------------------------------------------------------------------*/
 
-static GtNapCualibWindow *i_current_cuawin(GtNap *gtnap)
+static GtNapWindow *i_current_cuawin(GtNap *gtnap)
 {
     uint32_t id = 0;
     cassert_no_null(gtnap);
-    id = arrst_size(gtnap->cualib_windows, GtNapCualibWindow);
+    id = arrst_size(gtnap->windows, GtNapWindow);
     if (id >= 1)
-        return arrst_get(gtnap->cualib_windows, id - 1, GtNapCualibWindow);
+        return arrst_get(gtnap->windows, id - 1, GtNapWindow);
     else
         return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static GtNapCualibWindow *i_parent_cuawin(GtNap *gtnap)
+static GtNapWindow *i_parent_cuawin(GtNap *gtnap)
 {
     uint32_t id = 0;
     cassert_no_null(gtnap);
-    id = arrst_size(gtnap->cualib_windows, GtNapCualibWindow);
+    id = arrst_size(gtnap->windows, GtNapWindow);
     if (id >= 2)
-        return arrst_get(gtnap->cualib_windows, id - 2, GtNapCualibWindow);
+        return arrst_get(gtnap->windows, id - 2, GtNapWindow);
     else
         return NULL;
 }
@@ -1112,7 +1105,7 @@ static GtNapCualibWindow *i_parent_cuawin(GtNap *gtnap)
 
 // static void i_OnWindowClose(GtNap *gtnap, Event *e)
 // {
-//     GtNapCualibWindow *cuawin = i_current_cuawin(gtnap);
+//     GtNapWindow *cuawin = i_current_cuawin(gtnap);
 //     uint32_t i, n;
 //     cassert_no_null(cuawin);
 //     n = arrst_size(cuawin->gui_objects, GtNapCualibObject);
@@ -1123,7 +1116,7 @@ static GtNapCualibWindow *i_parent_cuawin(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_add_object(const objtype_t type, const int32_t cell_x, const int32_t cell_y, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, const bool_t in_scroll_panel, GuiComponent *component, GtNapCualibWindow *cuawin)
+static void i_add_object(const objtype_t type, const int32_t cell_x, const int32_t cell_y, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, const bool_t in_scroll_panel, GuiComponent *component, GtNapWindow *cuawin)
 {
     GtNapCualibObject *object = NULL;
     cassert_no_null(cuawin);
@@ -1159,7 +1152,7 @@ static void i_add_object(const objtype_t type, const int32_t cell_x, const int32
 
 /*---------------------------------------------------------------------------*/
 
-static void i_add_label_object(const int32_t cell_x, const int32_t cell_y, const char_t *text, const color_t background, const bool_t in_scroll_panel, GtNap *gtnap, GtNapCualibWindow *cuawin)
+static void i_add_label_object(const int32_t cell_x, const int32_t cell_y, const char_t *text, const color_t background, const bool_t in_scroll_panel, GtNap *gtnap, GtNapWindow *cuawin)
 {
     Label *label = label_create();
     S2Df size;
@@ -1211,12 +1204,12 @@ static __INLINE uint32_t i_window_flags(const bool_t close_return, const bool_t 
 uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation)
 {
     uint32_t id = UINT32_MAX;
-    GtNapCualibWindow *cuawin = NULL;
+    GtNapWindow *cuawin = NULL;
     uint32_t flags = i_window_flags(close_return, close_esc, minimize_button);
     Window *window = window_create(flags);
     Panel *panel = panel_create();
-    id = arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow);
-    cuawin = arrst_new0(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow);
+    id = arrst_size(GTNAP_GLOBAL->windows, GtNapWindow);
+    cuawin = arrst_new0(GTNAP_GLOBAL->windows, GtNapWindow);
     cuawin->window = window;
     cuawin->panel = panel;
     cuawin->N_LinIni = N_LinIni;
@@ -1259,7 +1252,7 @@ uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, 
 
 void hb_gtnap_cualib_window_enter_tabstop(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cuawin->enter_tabstop = TRUE;
 }
 
@@ -1267,7 +1260,7 @@ void hb_gtnap_cualib_window_enter_tabstop(void)
 
 void hb_gtnap_cualib_window_arrows_tabstop(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cuawin->arrows_tabstop = TRUE;
 }
 
@@ -1275,7 +1268,7 @@ void hb_gtnap_cualib_window_arrows_tabstop(void)
 
 void hb_gtnap_cualib_window_stops_last_edit(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cuawin->stops_last_edit = TRUE;
 }
 
@@ -1283,7 +1276,7 @@ void hb_gtnap_cualib_window_stops_last_edit(void)
 
 void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_ColIni)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     uint32_t id = arrst_size(cuawin->gui_objects, GtNapCualibObject);
     i_add_label_object(N_ColIni - cuawin->N_ColIni, N_LinIni - cuawin->N_LinIni, "--MENS--", 0, FALSE, GTNAP_GLOBAL, cuawin);
     cassert(cuawin->message_label_id == UINT32_MAX);
@@ -1294,7 +1287,7 @@ void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_C
 
 void hb_gtnap_cualib_window_scroll_panel(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cuawin->scroll_panel = TRUE;
     cuawin->scroll_N_LinIni = N_LinIni;
     cuawin->scroll_N_ColIni = N_ColIni;
@@ -1306,7 +1299,7 @@ void hb_gtnap_cualib_window_scroll_panel(const int32_t N_LinIni, const int32_t N
 
 void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     S2Df size, final_size;
     cassert_no_null(cuawin);
     log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
@@ -1322,7 +1315,7 @@ void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nL
 
 void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     S2Df size;
     cassert_no_null(cuawin);
     log_printf("Added TableView into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
@@ -1337,7 +1330,7 @@ void hb_gtnap_cualib_textview(TextView *view,
     const uint32_t editaBlockParamId,
     const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     S2Df size;
     PHB_ITEM editCodeBlock = NULL;
     GtNapCualibObject *obj = NULL;
@@ -1365,7 +1358,7 @@ void hb_gtnap_cualib_textview(TextView *view,
 
 /*---------------------------------------------------------------------------*/
 
-static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const int32_t key, const bool_t autoclose, GtNapCualibWindow *cuawin, FPtr_gtnap_callback func_callback)
+static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const int32_t key, const bool_t autoclose, GtNapWindow *cuawin, FPtr_gtnap_callback func_callback)
 {
     PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
     if (codeBlock != NULL)
@@ -1403,7 +1396,7 @@ static void i_OnImageClick(GtNapCallback *callback, Event *e)
 
 void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     Image *image = image_from_file(pathname, NULL);
     cassert_no_null(cuawin);
     if (image != NULL)
@@ -1460,7 +1453,7 @@ static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 
 void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     Button *button = button_push();
     String *ctext = gtconvert_1252_to_UTF8(text);
     Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
@@ -1607,7 +1600,7 @@ static void i_OnTextConfirmaButton(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static Listener *i_gtnap_cualib_listener_noblock(const int32_t key, GtNapCualibWindow *cuawin, FPtr_gtnap_callback func_callback)
+static Listener *i_gtnap_cualib_listener_noblock(const int32_t key, GtNapWindow *cuawin, FPtr_gtnap_callback func_callback)
 {
     GtNapCallback *callback = heap_new0(GtNapCallback);
     callback->codeBlock = NULL;
@@ -1622,7 +1615,7 @@ static Listener *i_gtnap_cualib_listener_noblock(const int32_t key, GtNapCualibW
 
 void hb_gtnap_cualib_text_confirma_button(const uint32_t button_id, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibObject *bobj = i_get_button_id(cuawin->gui_objects, button_id - 1);
     GtNapCualibObject *obj = NULL;
 
@@ -1668,7 +1661,7 @@ void hb_gtnap_cualib_text_confirma_button(const uint32_t button_id, const uint32
 
 void hb_gtnap_cualib_default_button(const uint32_t nDefault)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert(cuawin->default_button == UINT32_MAX);
     cassert(nDefault > 0);
     cuawin->default_button = nDefault - 1;
@@ -1740,7 +1733,7 @@ static void i_set_edit_message(GtNapCualibObject *obj, GtNapCualibObject *mes_ob
 
 void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibObject *obj = NULL;
     PHB_ITEM labelCodeBlock = NULL;
     color_t back = (background == TRUE) ? kCOLOR_CYAN : 0;
@@ -1848,7 +1841,7 @@ static void i_update_harbour_from_edit_text(const GtNapCualibObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnNextTabstop(GtNapCualibWindow *cuawin, Event *e)
+static void i_OnNextTabstop(GtNapWindow *cuawin, Event *e)
 {
     unref(e);
     cassert_no_null(cuawin);
@@ -1859,7 +1852,7 @@ static void i_OnNextTabstop(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_launch_lista(GtNapCualibWindow *cuawin, GtNapCualibObject *obj)
+static void i_launch_lista(GtNapWindow *cuawin, GtNapCualibObject *obj)
 {
     char_t temp[1024];
     PHB_ITEM retItem = NULL;
@@ -1881,7 +1874,7 @@ static void i_launch_lista(GtNapCualibWindow *cuawin, GtNapCualibObject *obj)
     hb_itemRelease(retItem);
 
     if (type != HB_IT_NIL)
-        gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
+        gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapWindow));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1916,7 +1909,7 @@ extern void hb_gtnap_cualib_edit(
                     const uint32_t filtroTecParamId,
                     const uint32_t whenParamId)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     GtNapCualibObject *obj = NULL;
     PHB_ITEM editCodeBlock = NULL;
     PHB_ITEM editableGlobalCodeBlock = NULL;
@@ -2074,7 +2067,7 @@ extern void hb_gtnap_cualib_edit(
 
 void hb_gtnap_cualib_toolbar(const uint32_t nPixelsImage)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     cassert(cuawin->toolbar == NULL);
     cuawin->toolbar = heap_new0(GtNapCualibToolbar);
@@ -2091,7 +2084,7 @@ void hb_gtnap_cualib_toolbar_button(const char_t *pathname, const char_t *toolti
     Image *image = image_from_file(pathname, NULL);
     if (image != NULL)
     {
-        GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+        GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
         Button *button = button_flat();
         String *text = gtconvert_1252_to_UTF8(tooltip);
         cassert_no_null(cuawin);
@@ -2121,7 +2114,7 @@ void hb_gtnap_cualib_toolbar_button(const char_t *pathname, const char_t *toolti
 
 void hb_gtnap_cualib_toolbar_separator(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->toolbar);
     arrpt_append(cuawin->toolbar->buttons, NULL, Button);
@@ -2153,7 +2146,7 @@ static GtNapVector *i_create_vector(void)
 
 GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view, const uint32_t whileBlockParamId)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     cassert(cuawin->gtarea == NULL);
     cuawin->gtarea = i_create_area();
@@ -2351,7 +2344,7 @@ static void i_gtnap_select_row(GtNapArea *area)
 
 GtNapVector *hb_gtnap_cualib_tableview_vector(TableView *view)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     cassert(cuawin->gtvector == NULL);
     cuawin->gtvector = i_create_vector();
@@ -2363,7 +2356,7 @@ GtNapVector *hb_gtnap_cualib_tableview_vector(TableView *view)
 
 // GtNapArea *hb_gtnap_cualib_tableview_get_area(TableView *view)
 // {
-//     GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+//     GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
 //     cassert_no_null(cuawin);
 //     cassert_no_null(cuawin->gtarea);
 //     cassert_unref(cuawin->gtarea->view == view, view);
@@ -2403,7 +2396,7 @@ void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *ti
 {
     uint32_t id = UINT32_MAX;
     GtNapColumn *column = NULL;
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     uint32_t hnchars = 0;
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtarea);
@@ -2430,7 +2423,7 @@ void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *ti
 void hb_gtnap_cualib_tableview_vector_add_column(TableView *view, /*const char_t *title, const bool_t freeze,*/ const uint32_t width, PHB_ITEM codeBlock)
 {
     uint32_t id = UINT32_MAX;
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtvector);
     cassert(view == cuawin->gtvector->view);
@@ -2474,7 +2467,7 @@ void hb_gtnap_cualib_tableview_vector_add_column(TableView *view, /*const char_t
 
 void hb_gtnap_cualib_tableview_vector_add_item(TableView *view, String *text, PHB_ITEM codeBlock, const uint32_t hotkey_pos)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     VecItem *item = NULL;
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtvector);
@@ -2501,7 +2494,7 @@ static bool_t i_in_vect(const ArrSt(uint32_t) *sel, const uint32_t i)
 
 void hb_gtnap_cualib_vector_selection(const ArrSt(uint32_t) *sel)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtvector);
     arrst_foreach(item, cuawin->gtvector->items, VecItem)
@@ -2513,7 +2506,7 @@ void hb_gtnap_cualib_vector_selection(const ArrSt(uint32_t) *sel)
 
 void hb_gtnap_cualib_tableview_refresh_all(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     if (cuawin != NULL)
     {
         if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
@@ -2529,7 +2522,7 @@ void hb_gtnap_cualib_tableview_refresh_all(void)
 
 void hb_gtnap_cualib_tableview_refresh_current(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     if (cuawin != NULL)
     {
         if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
@@ -2579,7 +2572,7 @@ void hb_gtnap_area_restore_cur_db_row(GtNapArea *area)
 uint32_t hb_gtnap_cualib_tableview_select_single_row(void)
 {
     const ArrSt(uint32_t) *sel = NULL;
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtarea);
     sel = tableview_selected(cuawin->gtarea->view);
@@ -2600,7 +2593,7 @@ ArrSt(uint32_t) *hb_gtnap_cualib_tableview_select_multiple_row(void)
 {
     const ArrSt(uint32_t) *sel = NULL;
     ArrSt(uint32_t) *recs = arrst_create(uint32_t);
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtarea);
     sel = tableview_selected(cuawin->gtarea->view);
@@ -2659,7 +2652,7 @@ static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
 
 void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, const bool_t autoclose)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     const GtNapKey *nkey = i_convert_key(key);
     cassert_no_null(cuawin);
 
@@ -2696,7 +2689,7 @@ void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, 
 
 void hb_gtnap_cualib_text_confirma_hotkey(const int32_t key, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     const GtNapKey *nkey = i_convert_key(key);
     cassert_no_null(cuawin);
     unref(autoclose);
@@ -2926,7 +2919,7 @@ static void i_OnWindowClose(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnPreviousTabstop(GtNapCualibWindow *cuawin, Event *e)
+static void i_OnPreviousTabstop(GtNapWindow *cuawin, Event *e)
 {
     unref(e);
     cassert_no_null(cuawin);
@@ -2937,7 +2930,7 @@ static void i_OnPreviousTabstop(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_num_buttons(GtNapCualibWindow *cuawin)
+static uint32_t i_num_buttons(GtNapWindow *cuawin)
 {
     uint32_t n = 0;
     cassert_no_null(cuawin);
@@ -2950,7 +2943,7 @@ static uint32_t i_num_buttons(GtNapCualibWindow *cuawin)
 
 /*---------------------------------------------------------------------------*/
 
-static GtNapCualibObject *i_get_button(GtNapCualibWindow *cuawin, const uint32_t index)
+static GtNapCualibObject *i_get_button(GtNapWindow *cuawin, const uint32_t index)
 {
     uint32_t i = 0;
     cassert_no_null(cuawin);
@@ -2968,7 +2961,7 @@ static GtNapCualibObject *i_get_button(GtNapCualibWindow *cuawin, const uint32_t
 
 /*---------------------------------------------------------------------------*/
 
-static void i_set_defbutton(GtNapCualibWindow *cuawin)
+static void i_set_defbutton(GtNapWindow *cuawin)
 {
     GtNapCualibObject *button = i_get_button(cuawin, cuawin->default_button);
     if (button != NULL)
@@ -2977,7 +2970,7 @@ static void i_set_defbutton(GtNapCualibWindow *cuawin)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnLeftButton(GtNapCualibWindow *cuawin, Event *e)
+static void i_OnLeftButton(GtNapWindow *cuawin, Event *e)
 {
     unref(e);
     cassert_no_null(cuawin);
@@ -2990,7 +2983,7 @@ static void i_OnLeftButton(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnRightButton(GtNapCualibWindow *cuawin, Event *e)
+static void i_OnRightButton(GtNapWindow *cuawin, Event *e)
 {
     unref(e);
     cassert_no_null(cuawin);
@@ -3014,7 +3007,7 @@ static GtNapCualibObject *i_cualib_obj(ArrSt(GtNapCualibObject) *objects, const 
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditChange(GtNapCualibWindow *cuawin, Event *e)
+static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
 {
     const EvText *p = event_params(e, EvText);
     GtNapCualibObject *cuaobj = NULL;
@@ -3542,7 +3535,7 @@ static bool_t i_is_editable(GtNapCualibObject *cuaobj)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnAutoList(GtNapCualibWindow *cuawin, Event *e)
+static void i_OnAutoList(GtNapWindow *cuawin, Event *e)
 {
     GtNapCualibObject *cuaobj = NULL;
     cassert_no_null(cuawin);
@@ -3574,7 +3567,7 @@ static void i_OnAutoList(GtNapCualibWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnF4Lista(GtNapCualibWindow *cuawin, Event *e)
+static void i_OnF4Lista(GtNapWindow *cuawin, Event *e)
 {
     cassert_no_null(cuawin);
     unref(e);
@@ -3595,8 +3588,8 @@ static void i_OnF4Lista(GtNapCualibWindow *cuawin, Event *e)
 
 void hb_gtnap_cualib_window_f4_lista(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
-    window_hotkey(cuawin->window, ekKEY_F4, 0, listener(cuawin, i_OnF4Lista, GtNapCualibWindow));
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    window_hotkey(cuawin->window, ekKEY_F4, 0, listener(cuawin, i_OnF4Lista, GtNapWindow));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3604,7 +3597,7 @@ void hb_gtnap_cualib_window_f4_lista(void)
 uint32_t hb_gtnap_cualib_window_current_edit(void)
 {
     uint32_t id = 0;
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
         if (obj->type == ekOBJ_EDIT)
         {
@@ -3619,7 +3612,7 @@ uint32_t hb_gtnap_cualib_window_current_edit(void)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
+static void i_OnEditFocus(GtNapWindow *cuawin, Event *e)
 {
     Edit *edit = event_sender(e, Edit);
     const bool_t *p = event_params(e, bool_t);
@@ -3673,13 +3666,13 @@ static void i_OnEditFocus(GtNapCualibWindow *cuawin, Event *e)
         cuawin->current_obj = cuaobj;
 
         edit_select(edit, 0, 0);
-        gui_OnIdle(listener(cuawin, i_OnAutoList, GtNapCualibWindow));
+        gui_OnIdle(listener(cuawin, i_OnAutoList, GtNapWindow));
     }
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
+static void i_OnEditFilter(GtNapWindow *cuawin, Event *e)
 {
     Edit *edit = event_sender(e, Edit);
     GtNapCualibObject *cuaobj = NULL;
@@ -3768,7 +3761,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                 //log_printf("Date CPOS: %d", res->cpos);
 
                 if (res->cpos == 10)
-                    gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
+                    gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapWindow));
             }
             else
             {
@@ -3793,7 +3786,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
                 {
                     cuawin->focus_by_previous = FALSE;
                     //cuawin->tabstop_by_return_or_arrow = TRUE;
-                    gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
+                    gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapWindow));
                 }
             }
         }
@@ -3804,7 +3797,7 @@ static void i_OnEditFilter(GtNapCualibWindow *cuawin, Event *e)
 
 void hb_gtnap_cualib_error_data(const uint32_t errorDataBlockParamId)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
 
     // FRAN: IMPROVE... ADD TO hb_gtnap_cualib_launch_modal
@@ -3850,7 +3843,7 @@ static S2Df i_scroll_content_size(const ArrSt(GtNapCualibObject) *objects)
 
 uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const uint32_t cancelBlockParamId)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
 
     /* Configure the Window before the first launch */
@@ -3956,20 +3949,20 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
         window_OnClose(cuawin->window, listener);
 
         if (cuawin->enter_tabstop == TRUE)
-            window_hotkey(cuawin->window, ekKEY_RETURN, 0, listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
+            window_hotkey(cuawin->window, ekKEY_RETURN, 0, listener(cuawin, i_OnNextTabstop, GtNapWindow));
 
         if (cuawin->arrows_tabstop == TRUE)
         {
             cassert(cuawin->buttons_navigation == FALSE);
-            window_hotkey(cuawin->window, ekKEY_UP, 0, listener(cuawin, i_OnPreviousTabstop, GtNapCualibWindow));
-            window_hotkey(cuawin->window, ekKEY_DOWN, 0, listener(cuawin, i_OnNextTabstop, GtNapCualibWindow));
+            window_hotkey(cuawin->window, ekKEY_UP, 0, listener(cuawin, i_OnPreviousTabstop, GtNapWindow));
+            window_hotkey(cuawin->window, ekKEY_DOWN, 0, listener(cuawin, i_OnNextTabstop, GtNapWindow));
         }
         else if (cuawin->buttons_navigation == TRUE)
         {
             if (i_num_buttons(cuawin) > 1)
             {
-                window_hotkey(cuawin->window, ekKEY_LEFT, 0, listener(cuawin, i_OnLeftButton, GtNapCualibWindow));
-                window_hotkey(cuawin->window, ekKEY_RIGHT, 0, listener(cuawin, i_OnRightButton, GtNapCualibWindow));
+                window_hotkey(cuawin->window, ekKEY_LEFT, 0, listener(cuawin, i_OnLeftButton, GtNapWindow));
+                window_hotkey(cuawin->window, ekKEY_RIGHT, 0, listener(cuawin, i_OnRightButton, GtNapWindow));
             }
         }
 
@@ -3980,9 +3973,9 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
             arrst_foreach(obj, cuawin->gui_objects, GtNapCualibObject)
                 if (obj->type == ekOBJ_EDIT)
                 {
-                    edit_OnChange((Edit*)obj->component, listener(cuawin, i_OnEditChange, GtNapCualibWindow));
-                    edit_OnFilter((Edit*)obj->component, listener(cuawin, i_OnEditFilter, GtNapCualibWindow));
-                    edit_OnFocus((Edit*)obj->component, listener(cuawin, i_OnEditFocus, GtNapCualibWindow));
+                    edit_OnChange((Edit*)obj->component, listener(cuawin, i_OnEditChange, GtNapWindow));
+                    edit_OnFilter((Edit*)obj->component, listener(cuawin, i_OnEditFilter, GtNapWindow));
+                    edit_OnFocus((Edit*)obj->component, listener(cuawin, i_OnEditFocus, GtNapWindow));
                     obj->is_last_edit = FALSE;
                     last_edit = obj;
                 }
@@ -4016,13 +4009,13 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
 
     /* Launch the window */
     {
-        GtNapCualibWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
+        GtNapWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
         V2Df pos;
         uint32_t ret = 0;
 
         if (parent == NULL)
         {
-            cassert(arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow) == 1);
+            cassert(arrst_size(GTNAP_GLOBAL->windows, GtNapWindow) == 1);
         }
 
         pos.x = (real32_t)(cuawin->N_ColIni * GTNAP_GLOBAL->cell_x_size);
@@ -4030,7 +4023,7 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
 
         if (parent != NULL)
         {
-            const GtNapCualibWindow *rootwin = arrst_get_const(GTNAP_GLOBAL->cualib_windows, 0, GtNapCualibWindow);
+            const GtNapWindow *rootwin = arrst_get_const(GTNAP_GLOBAL->windows, 0, GtNapWindow);
             V2Df ppos = window_get_origin(rootwin->window);
             pos.x += ppos.x /*- 2 * GTNAP_GLOBAL->cell_x_size*/;
             pos.y += ppos.y;
@@ -4052,11 +4045,11 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
 
 void hb_gtnap_cualib_destroy_window(void)
 {
-    uint32_t id = arrst_size(GTNAP_GLOBAL->cualib_windows, GtNapCualibWindow);
-    GtNapCualibWindow *cuawin = NULL;
+    uint32_t id = arrst_size(GTNAP_GLOBAL->windows, GtNapWindow);
+    GtNapWindow *cuawin = NULL;
     cassert(id > 0);
-    cuawin = arrst_get(GTNAP_GLOBAL->cualib_windows, id - 1, GtNapCualibWindow);
-    arrst_delete(GTNAP_GLOBAL->cualib_windows, id - 1, i_remove_cualib_win, GtNapCualibWindow);
+    cuawin = arrst_get(GTNAP_GLOBAL->windows, id - 1, GtNapWindow);
+    arrst_delete(GTNAP_GLOBAL->windows, id - 1, i_remove_cualib_win, GtNapWindow);
     window_destroy(&cuawin->window);
 }
 
@@ -4064,7 +4057,7 @@ void hb_gtnap_cualib_destroy_window(void)
 
 Window *hb_gtnap_cualib_current_window(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     return cuawin->window;
 }
@@ -4073,7 +4066,7 @@ Window *hb_gtnap_cualib_current_window(void)
 
 TableView *hb_gtnap_cualib_current_tableview(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     TableView *view = NULL;
     cassert_no_null(cuawin);
     if (cuawin->gtarea != NULL)
@@ -4095,7 +4088,7 @@ TableView *hb_gtnap_cualib_current_tableview(void)
 
 Panel *hb_gtnap_cualib_current_menuvert(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     Panel *menuvert = NULL;
     cassert_no_null(cuawin);
 
@@ -4132,7 +4125,7 @@ static void i_OnTableViewSelect(GtNapCallback *callback, Event *e)
 
 void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
     {
@@ -4161,7 +4154,7 @@ static void i_OnTableViewSingleSelect(GtNapArea *area, Event *e)
 
 void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
     {
@@ -4181,7 +4174,7 @@ void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
 
 bool_t hb_gtnap_cualib_current_row_selected(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
     {
@@ -4202,7 +4195,7 @@ bool_t hb_gtnap_cualib_current_row_selected(void)
 
 void hb_gtnap_cualib_multisel(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
     cassert_no_null(cuawin->gtarea);
     cuawin->gtarea->multisel = TRUE;
@@ -4212,7 +4205,7 @@ void hb_gtnap_cualib_multisel(void)
 
 void hb_gtnap_cualib_select_current(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     uint32_t focused = UINT32_MAX;
     const ArrSt(uint32_t) *sel = NULL;
     cassert_no_null(cuawin);
@@ -4233,7 +4226,7 @@ void hb_gtnap_cualib_select_current(void)
 
 void hb_gtnap_cualib_select_current_vector(void)
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     uint32_t focused = UINT32_MAX;
     VecItem *item = NULL;
     const ArrSt(uint32_t) *sel = NULL;
@@ -4376,7 +4369,7 @@ static HB_BOOL hb_gtnap_CheckPos( PHB_GT pGT, int iRow, int iCol, long * plIndex
 
 static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
     if (cuawin != NULL)
     {
@@ -4394,7 +4387,7 @@ static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
 
 static void hb_gtnap_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
     if (cuawin != NULL)
     {
@@ -4556,7 +4549,7 @@ static void hb_gtnap_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, HB_B
 
 static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText, HB_SIZE ulLength )
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( ulLength );
     if (cuawin != NULL)
@@ -4583,7 +4576,7 @@ static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom,
 
 static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, HB_USHORT bChar, int iRows, int iCols )
 {
-    GtNapCualibWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( iTop );
     HB_SYMBOL_UNUSED( iLeft );
@@ -4958,7 +4951,7 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 }
 
 /*---------------------------------------------------------------------------*/
-/* 
+/*
  *   Deprecated/Unused
  *
  */

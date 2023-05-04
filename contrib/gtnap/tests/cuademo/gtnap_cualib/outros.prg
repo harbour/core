@@ -17,8 +17,8 @@
 
 /*---------------------------------------------------------------------------*/
 
-FUNCTION Setup_nap(C_Title, N_QtLin, N_QtCol, B_Init)
-    NAP_CUALIB_SETUP(C_Title, N_QtLin, N_QtCol, B_Init)
+FUNCTION Setup_nap(C_Title, N_Lines, N_Cols, B_Init)
+    NAP_SETUP(C_Title, N_Lines, N_Cols, B_Init)
     RETURN (.T.)
 
 /*---------------------------------------------------------------------------*/

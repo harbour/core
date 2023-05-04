@@ -7,14 +7,13 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_SETUP )
+HB_FUNC( NAP_SETUP )
 {
     const char_t *title = hb_gtnap_parText(1);
-    uint32_t qt_lin = hb_parni(2);
-    uint32_t qt_col = hb_parni(3);
-    PHB_ITEM codeBlock_begin = hb_param(4, HB_IT_BLOCK);
-    hb_gtnap_cualib_setup(title, qt_lin, qt_col, codeBlock_begin);
-    //str_destroy(&title);
+    uint32_t rows = hb_parni(2);
+    uint32_t cols = hb_parni(3);
+    PHB_ITEM begin_block = hb_param(4, HB_IT_BLOCK);
+    hb_gtnap_setup(title, rows, cols, begin_block);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -21,7 +21,7 @@ typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
 HB_EXTERN_BEGIN
 
-extern void hb_gtnap_cualib_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
+extern void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
 
 
 
@@ -206,7 +206,7 @@ extern void hb_gtnap_cualib_select_current(void);
 extern void hb_gtnap_cualib_select_current_vector(void);
 
 
-/* 
+/*
  *   Deprecated/Unused
  *
  */
