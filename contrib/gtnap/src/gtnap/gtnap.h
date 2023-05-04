@@ -37,10 +37,6 @@ extern void hb_gtnap_set_global_font(Font *font);
 
 extern Font *hb_gtnap_global_font(void);
 
-extern GtNapArea *hb_gtnap_new_area(TableView *view);
-
-extern GtNapArea *hb_gtnap_get_area(TableView *view);
-
 extern void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, const align_t align, PHB_ITEM codeBlock);
 
 extern uint32_t hb_gtnap_area_row_count(GtNapArea *area);
@@ -69,10 +65,6 @@ extern Window *hb_gtnap_parWindow(int iParam);
 extern void hb_gtnap_retImageGC(Image *image);
 
 extern void hb_gtnap_retFontGC(Font *font);
-
-extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, FPtr_gtnap_callback func_callback);
-
-extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback);
 
 extern void hb_gtnap_callback(GtNapCallback *callback, Event *e);
 
@@ -216,6 +208,15 @@ extern void hb_gtnap_cualib_multisel(void);
 extern void hb_gtnap_cualib_select_current(void);
 
 extern void hb_gtnap_cualib_select_current_vector(void);
+
+
+/* 
+ *   Deprecated/Unused
+ *
+ */
+extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, FPtr_gtnap_callback func_callback);
+
+extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback);
 
 HB_EXTERN_END
 

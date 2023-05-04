@@ -138,15 +138,6 @@ static void i_OnTableData(GtNapArea *gtarea, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_BIND_DB )
-{
-    TableView *view = (TableView*)hb_parptr(1);
-    GtNapArea *gtarea = hb_gtnap_new_area(view);
-    tableview_OnData(view, listener(gtarea, i_OnTableData, GtNapArea));
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_TABLEVIEW_CUALIB_BIND_DB )
 {
     TableView *view = (TableView*)hb_parptr(1);
@@ -261,19 +252,6 @@ HB_FUNC( NAP_TABLEVIEW_CUALIB_VECTOR_ADD )
 
 //NAP_TABLEVIEW_CUALIB_VECTOR_ADD(V_TableView, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
 
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_TABLEVIEW_COLUMN_DB )
-{
-    TableView *view = (TableView*)hb_parptr(1);
-    const char_t *title = hb_gtnap_parText(2);
-    real32_t width = (real32_t)hb_parnd(3);
-    align_t align = (align_t)hb_parni(4);
-    PHB_ITEM codeBlock = hb_param(5, HB_IT_BLOCK);
-    GtNapArea *gtarea = hb_gtnap_get_area(view);
-    hb_gtnap_area_add_column(gtarea, title, width, align, codeBlock);
-}
 
 /*---------------------------------------------------------------------------*/
 
