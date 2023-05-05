@@ -29,6 +29,7 @@ extern Font *hb_gtnap_font(void);
 
 extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
+extern void hb_gtnap_window_scroll_panel(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
 
 
 
@@ -95,7 +96,6 @@ extern uint32_t hb_gtnap_cualib_window_current_edit(void);
 
 extern void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_ColIni);
 
-extern void hb_gtnap_cualib_window_scroll_panel(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin);
 
 extern void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);
 

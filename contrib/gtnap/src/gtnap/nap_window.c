@@ -25,6 +25,34 @@ HB_FUNC( NAP_WINDOW )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_WINDOW_SCROLL_PANEL )
+{
+    int32_t top = hb_parni(1);
+    int32_t left = hb_parni(2);
+    int32_t bottom = hb_parni(3);
+    int32_t right = hb_parni(4);
+    hb_gtnap_window_scroll_panel(top, left, bottom, right);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_WINDOW_PANEL )
 {
     Window *window = hb_gtnap_parWindow(1);

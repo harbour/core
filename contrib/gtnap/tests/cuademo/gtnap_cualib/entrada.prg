@@ -653,6 +653,15 @@ IF SOB_MODO_GRAFICO()
         //LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdGET)  // LOGAR conteúdo de telas
         NAP_LOG("ENTRADA V_Lst_CdGET: " + hb_ntos(LEN(V_Lst_CdGET)))
 
+
+        IF L_ScrollVertical
+            NAP_LOG("EDITS WITH SCROLL")
+            NAP_LOG("SCROLL-PANEL DIMS: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " +  hb_ntos(Col2Livre(VX_Janela))  )
+            NAP_WINDOW_SCROLL_PANEL(Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
+        ENDIF
+
+
+
         FOR N_Aux_SayGetCor := 1 TO LEN(VX_SayGetList)
 
         X_Info := VX_SayGetList[N_Aux_SayGetCor]
@@ -785,16 +794,6 @@ IF SOB_MODO_GRAFICO()
         // DISPOUT(PADR(EVAL(B_Mess),N_LargJanela))             // mensagem
 
 
-        IF L_ScrollVertical
-            NAP_LOG("EDITS WITH SCROLL")
-
-            NAP_LOG("SCROLL-PANEL DIMS: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " +  hb_ntos(Col2Livre(VX_Janela))  )
-
-
-            NAP_CUALIB_WINDOW_SCROLL_PANEL(Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
-
-
-        ENDIF
 ENDIF  // L_PrimAtivacao
 
     B_ConfirmaBlock := B_Confirma

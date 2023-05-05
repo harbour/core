@@ -93,17 +93,6 @@ HB_FUNC( NAP_CUALIB_ADD_MESSAGE_LABEL )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_WINDOW_SCROLL_PANEL )
-{
-    int32_t N_LinIni = hb_parni(1);
-    int32_t N_ColIni = hb_parni(2);
-    int32_t N_LinFin = hb_parni(3);
-    int32_t N_ColFin = hb_parni(4);
-    hb_gtnap_cualib_window_scroll_panel(N_LinIni, N_ColIni, N_LinFin, N_ColFin);
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_CUALIB_ERROR_DATA )
 {
     hb_gtnap_cualib_error_data(1);
