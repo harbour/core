@@ -320,7 +320,7 @@ HB_FUNC( NAP_CUALIB_VETOR_SELECT )
 HB_FUNC( NAP_CUALIB_TEXTVIEW_WRITE )
 {
     TextView *view = (TextView*)hb_parptr(1);
-    String *text = hb_gtnap_parc(2);
+    String *text = hb_gtnap_parstr(2);
     textview_writef(view, tc(text));
     str_destroy(&text);
 }

@@ -466,7 +466,7 @@ static void i_OnHotKey(MenuVert *menu, Event *e)
 HB_FUNC( NAP_MENUVERT_CUALIB_ADD )
 {
     Panel *panel = (Panel*)hb_parptr(1);
-    String *text = hb_gtnap_parc(2);
+    String *text = hb_gtnap_parstr(2);
     PHB_ITEM codeBlock = hb_param(3, HB_IT_BLOCK);
     uint32_t hotkey_pos = hb_parni(4);
     MenuVert *menu = panel_get_data(panel, MenuVert);

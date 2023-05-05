@@ -657,7 +657,7 @@ IF SOB_MODO_GRAFICO()
         IF L_ScrollVertical
             NAP_LOG("EDITS WITH SCROLL")
             NAP_LOG("SCROLL-PANEL DIMS: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " +  hb_ntos(Col2Livre(VX_Janela))  )
-            NAP_WINDOW_SCROLL_PANEL(Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
+            NAP_SCROLL_PANEL(Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
         ENDIF
 
 

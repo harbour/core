@@ -157,7 +157,6 @@ struct _gtnap_window_t
     int32_t right;
     int32_t cursor_row;
     int32_t cursor_col;
-    bool_t scroll_panel;
     int32_t scroll_top;
     int32_t scroll_left;
     int32_t scroll_bottom;
@@ -167,8 +166,6 @@ struct _gtnap_window_t
     bool_t is_configured;
     bool_t is_closed_by_esc;
     bool_t focus_by_previous;
-    //bool_t tabstop_by_return_or_arrow;
-    //bool_t processing_invalid_date;
     bool_t modal_window_alive;
     bool_t buttons_navigation;
     uint32_t message_label_id;
@@ -499,7 +496,7 @@ void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t col
 
 /*---------------------------------------------------------------------------*/
 
-String *hb_gtnap_parc(const uint32_t iParam)
+String *hb_gtnap_parstr(const uint32_t iParam)
 {
     /* TODO: Use Harbour code-page (not 1252 allways) */
     if (!HB_ISNIL(iParam))
@@ -563,7 +560,11 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
     gtwin->right = right;
     gtwin->cursor_row = 0;
     gtwin->cursor_col = 0;
-    gtwin->scroll_panel = FALSE;
+    gtwin->scroll_top = -1;
+    gtwin->scroll_left = -1;
+    gtwin->scroll_bottom = -1;
+    gtwin->scroll_right = -1;
+
     gtwin->is_configured = FALSE;
     gtwin->is_closed_by_esc = FALSE;
     gtwin->focus_by_previous = FALSE;
@@ -602,10 +603,9 @@ static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_window_scroll_panel(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
+void hb_gtnap_scroll_panel(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    gtwin->scroll_panel = TRUE;
     gtwin->scroll_top = top;
     gtwin->scroll_left = left;
     gtwin->scroll_bottom = bottom;
@@ -1836,7 +1836,6 @@ static void i_OnNextTabstop(GtNapWindow *cuawin, Event *e)
     unref(e);
     cassert_no_null(cuawin);
     cuawin->focus_by_previous = FALSE;
-    //cuawin->tabstop_by_return_or_arrow = TRUE;
     window_next_tabstop(cuawin->window);
 }
 
@@ -2914,7 +2913,6 @@ static void i_OnPreviousTabstop(GtNapWindow *cuawin, Event *e)
     unref(e);
     cassert_no_null(cuawin);
     cuawin->focus_by_previous = TRUE;
-    //cuawin->tabstop_by_return_or_arrow = TRUE;
     window_previous_tabstop(cuawin->window);
 }
 
@@ -3840,6 +3838,21 @@ static S2Df i_scroll_content_size(const ArrSt(GtNapObject) *objects)
 
 /*---------------------------------------------------------------------------*/
 
+static bool_t i_with_scroll_panel(const GtNapWindow *gtwin)
+{
+    cassert_no_null(gtwin);
+    if (gtwin->top >= 0)
+        return TRUE;
+
+    cassert(gtwin->top == -1);
+    cassert(gtwin->left == -1);
+    cassert(gtwin->bottom == -1);
+    cassert(gtwin->right == -1);
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const uint32_t cancelBlockParamId)
 {
     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
@@ -3860,7 +3873,7 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
         panel_layout(cuawin->panel, layout);
         window_panel(cuawin->window, cuawin->panel);
 
-        if (cuawin->scroll_panel == TRUE)
+        if (i_with_scroll_panel(cuawin) == TRUE)
         {
             // We add a subpanel to window main panel to implement the scroll area
 

@@ -13,7 +13,7 @@ HB_FUNC( NAP_WINDOW )
     int32_t left = hb_parni(2);
     int32_t bottom = hb_parni(3);
     int32_t right = hb_parni(4);
-    String *title = hb_gtnap_parc(5);
+    String *title = hb_gtnap_parstr(5);
     bool_t close_return = (bool_t)hb_parl(6);
     bool_t close_esc = (bool_t)hb_parl(7);
     bool_t minimize_button = (bool_t)hb_parl(8);
@@ -25,13 +25,13 @@ HB_FUNC( NAP_WINDOW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_WINDOW_SCROLL_PANEL )
+HB_FUNC( NAP_SCROLL_PANEL )
 {
     int32_t top = hb_parni(1);
     int32_t left = hb_parni(2);
     int32_t bottom = hb_parni(3);
     int32_t right = hb_parni(4);
-    hb_gtnap_window_scroll_panel(top, left, bottom, right);
+    hb_gtnap_scroll_panel(top, left, bottom, right);
 }
 
 

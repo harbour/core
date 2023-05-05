@@ -23,13 +23,13 @@ HB_EXTERN_BEGIN
 
 extern void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
 
-String *hb_gtnap_parc(const uint32_t iParam);
+String *hb_gtnap_parstr(const uint32_t iParam);
 
 extern Font *hb_gtnap_font(void);
 
 extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
-extern void hb_gtnap_window_scroll_panel(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
+extern void hb_gtnap_scroll_panel(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
 
 
 
