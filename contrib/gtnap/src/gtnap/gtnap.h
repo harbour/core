@@ -88,7 +88,6 @@ extern void hb_gtnap_cualib_init_log(void);
 
 
 
-extern void hb_gtnap_cualib_window_stops_last_edit(void);
 
 extern void hb_gtnap_cualib_window_f4_lista(void);
 

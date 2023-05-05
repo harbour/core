@@ -783,7 +783,6 @@ IF SOB_MODO_GRAFICO()
         //     ENDIF
         //     #UNDEF L_E_Get
 
-        NAP_CUALIB_WINDOW_STOPS_LAST_EDIT()
         NAP_CUALIB_WINDOW_F4_LISTA()
         NAP_CUALIB_HOTKEY(K_F1,{||NAP_ENTRADA_HELP(C_CdTela,C_Cabec,V_Lst_CdGET)}, .F.)
 

@@ -59,14 +59,6 @@ HB_FUNC( WVW_SETMAINCOORD )
    hb_retni( TRUE );
 }
 
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_CUALIB_WINDOW_STOPS_LAST_EDIT )
-{
-    hb_gtnap_cualib_window_stops_last_edit();
-}
-
 /*---------------------------------------------------------------------------*/
 
 HB_FUNC( NAP_CUALIB_WINDOW_F4_LISTA )

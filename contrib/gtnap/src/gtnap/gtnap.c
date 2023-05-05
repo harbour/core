@@ -155,14 +155,8 @@ struct _gtnap_window_t
     int32_t left;
     int32_t bottom;
     int32_t right;
-
-
-
-
-
     int32_t cursor_row;
     int32_t cursor_col;
-    bool_t stops_last_edit;
     bool_t scroll_panel;
     int32_t scroll_top;
     int32_t scroll_left;
@@ -569,7 +563,6 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
     gtwin->right = right;
     gtwin->cursor_row = 0;
     gtwin->cursor_col = 0;
-    gtwin->stops_last_edit = FALSE;
     gtwin->scroll_panel = FALSE;
     gtwin->is_configured = FALSE;
     gtwin->is_closed_by_esc = FALSE;
@@ -618,6 +611,10 @@ void hb_gtnap_window_scroll_panel(const int32_t top, const int32_t left, const i
     gtwin->scroll_bottom = bottom;
     gtwin->scroll_right = right;
 }
+
+
+
+
 
 
 
@@ -1275,14 +1272,6 @@ static void i_add_label_object(const int32_t cell_x, const int32_t cell_y, const
 
     size.height = (real32_t)gtnap->label_y_size;
     i_add_object(ekOBJ_LABEL, cell_x, cell_y, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll_panel, (GuiComponent*)label, cuawin);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_window_stops_last_edit(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cuawin->stops_last_edit = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3093,36 +3082,32 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
     arrst_end();
 
 
-    /* The window must stop modal when the last input loses the focus */
-    if (cuawin->stops_last_edit == TRUE)
+    /* If user have pressed the [ESC] key, we left the stop for that event */
+    if (cuawin->is_closed_by_esc == FALSE)
     {
-        /* If user have pressed the [ESC] key, we left the stop for that event */
-        if (cuawin->is_closed_by_esc == FALSE)
+        /* The last editbox has lost the focus --> Close the window */
+        if (cuaobj->is_last_edit == TRUE)
         {
-            /* The last editbox has lost the focus --> Close the window */
-            if (cuaobj->is_last_edit == TRUE)
+            /* We dont execute confirmaCodeBlock if we moved from last edit to previos one */
+            if (cuawin->focus_by_previous == FALSE)
             {
-                /* We dont execute confirmaCodeBlock if we moved from last edit to previos one */
-                if (cuawin->focus_by_previous == FALSE)
+                bool_t close = TRUE;
+
+                /* We have asociated a confirmation block */
+                if (cuawin->confirmaCodeBlock != NULL)
                 {
-                    bool_t close = TRUE;
+                    PHB_ITEM retItem = hb_itemDo(cuawin->confirmaCodeBlock, 0);
+                    HB_TYPE type = HB_ITEM_TYPE(retItem);
+                    cassert(type == HB_IT_LOGICAL);
+                    close = (bool_t)hb_itemGetL(retItem);
+                    hb_itemRelease(retItem);
+                }
 
-                    /* We have asociated a confirmation block */
-                    if (cuawin->confirmaCodeBlock != NULL)
-                    {
-                        PHB_ITEM retItem = hb_itemDo(cuawin->confirmaCodeBlock, 0);
-                        HB_TYPE type = HB_ITEM_TYPE(retItem);
-                        cassert(type == HB_IT_LOGICAL);
-                        close = (bool_t)hb_itemGetL(retItem);
-                        hb_itemRelease(retItem);
-                    }
-
-                    if (close == TRUE)
-                    {
-                        log_printf("--> STOP CUALIB Modal Window: %p 'i_OnEditChange'", cuawin->window);
-                        cuawin->modal_window_alive = FALSE;
-                        window_stop_modal(cuawin->window, 5000);
-                    }
+                if (close == TRUE)
+                {
+                    log_printf("--> STOP CUALIB Modal Window: %p 'i_OnEditChange'", cuawin->window);
+                    cuawin->modal_window_alive = FALSE;
+                    window_stop_modal(cuawin->window, 5000);
                 }
             }
         }
@@ -4264,8 +4249,6 @@ void hb_gtnap_cualib_select_current_vector(void)
 static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    // Lock and Unlock are always called before other operation. Avoid dirtying the log.
-    // log_printf("hb_gtnap_Lock()");
     return TRUE;
 }
 
@@ -4274,8 +4257,6 @@ static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 static void hb_gtnap_Unlock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    // Lock and Unlock are always called before other operation. Avoid dirtying the log.
-    // log_printf("hb_gtnap_Unlock()");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4283,7 +4264,6 @@ static void hb_gtnap_Unlock( PHB_GT pGT )
 static void hb_gtnap_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_Init()");
     HB_SYMBOL_UNUSED( hFilenoStdin );
     HB_SYMBOL_UNUSED( hFilenoStdout );
     HB_SYMBOL_UNUSED( hFilenoStderr );
@@ -4294,18 +4274,6 @@ static void hb_gtnap_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFile
 static void hb_gtnap_Exit( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_Exit()");
-
-    // if (GTNAP_GLOBAL->cualib_mode == TRUE)
-    // {
-    //     log_printf("GTNAP exit of CUALIB mode");
-    //     font_destroy(&GTNAP_GLOBAL->global_font);
-    //     str_destroy(&GTNAP_GLOBAL->title);
-    //     gui_context_destroy(&GTNAP_GLOBAL->native_gui);
-    //     heap_delete(&GTNAP_GLOBAL, GtNap);
-    //     osgui_finish();
-    //     gui_finish();
-    // }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4333,9 +4301,8 @@ static HB_BOOL hb_gtnap_SetMode( PHB_GT pGT, int iRow, int iCol )
 static void hb_gtnap_GetSize( PHB_GT pGT, int * piRows, int  * piCols )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_GetSize");
-    *piRows = 500;
-    *piCols = 250;
+    *piRows = (int)GTNAP_GLOBAL->rows;
+    *piCols = (int)GTNAP_GLOBAL->cols;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4354,7 +4321,6 @@ static void hb_gtnap_ExposeArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, i
 static int hb_gtnap_MaxCol( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_MaxCol()");
     return GTNAP_GLOBAL->cols - 1;
 }
 
@@ -4363,7 +4329,6 @@ static int hb_gtnap_MaxCol( PHB_GT pGT )
 static int hb_gtnap_MaxRow( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_MaxRow()");
     return GTNAP_GLOBAL->rows - 1;
 }
 
@@ -4382,17 +4347,12 @@ static HB_BOOL hb_gtnap_CheckPos( PHB_GT pGT, int iRow, int iCol, long * plIndex
 
 static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
-    if (cuawin != NULL)
+    if (gtwin != NULL)
     {
-        cuawin->cursor_row = (int32_t)iRow;
-        cuawin->cursor_col = (int32_t)iCol;
-        //log_printf("hb_gtnap_SetPos(%d, %d)", iRow, iCol);
-    }
-    else
-    {
-        //log_printf("hb_gtnap_SetPos(%d, %d). NO GTNAP Window!", iRow, iCol);
+        gtwin->cursor_row = (int32_t)iRow;
+        gtwin->cursor_col = (int32_t)iCol;
     }
 }
 
@@ -4400,19 +4360,17 @@ static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
 
 static void hb_gtnap_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
-    if (cuawin != NULL)
+    if (gtwin != NULL)
     {
-        *piRow = (int)cuawin->cursor_row;
-        *piCol = (int)cuawin->cursor_col;
-        //log_printf("hb_gtnap_GetPos(%d, %d)", *piRow, *piCol);
+        *piRow = (int)gtwin->cursor_row;
+        *piCol = (int)gtwin->cursor_col;
     }
     else
     {
         *piRow = 0;
         *piCol = 0;
-        //log_printf("hb_gtnap_GetPos(%d, %d). NO GTNAP Window!", *piRow, *piCol);
     }
 }
 
@@ -4421,7 +4379,6 @@ static void hb_gtnap_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 static HB_BOOL hb_gtnap_IsColor( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_IsColor()");
     return TRUE;
 }
 
@@ -4430,7 +4387,6 @@ static HB_BOOL hb_gtnap_IsColor( PHB_GT pGT )
 static int hb_gtnap_GetCursorStyle( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_GetCursorStyle()");
     return SC_NORMAL;
 }
 
@@ -4439,7 +4395,6 @@ static int hb_gtnap_GetCursorStyle( PHB_GT pGT )
 static void hb_gtnap_SetCursorStyle( PHB_GT pGT, int iStyle )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_SetCursorStyle(%d)", iStyle);
 
     switch( iStyle )
     {
@@ -4462,7 +4417,6 @@ static void hb_gtnap_SetCursorStyle( PHB_GT pGT, int iStyle )
 static void hb_gtnap_DispBegin( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_DispBegin()");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4470,7 +4424,6 @@ static void hb_gtnap_DispBegin( PHB_GT pGT )
 static void hb_gtnap_DispEnd( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_DispEnd()");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4478,7 +4431,6 @@ static void hb_gtnap_DispEnd( PHB_GT pGT )
 static int hb_gtnap_DispCount( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_DispCount()");
     return 0;
 }
 
@@ -4562,15 +4514,11 @@ static void hb_gtnap_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, HB_B
 
 static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText, HB_SIZE ulLength )
 {
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( ulLength );
-    if (cuawin != NULL)
-    {
-        String *ctext = gtconvert_1252_to_UTF8(pText);
-        i_add_label_object(iCol - cuawin->left, iRow - cuawin->top, pText, 0, FALSE, GTNAP_GLOBAL, cuawin);
-        str_destroy(&ctext);
-    }
+    if (gtwin != NULL)
+        i_add_label_object(iCol - gtwin->left, iRow - gtwin->top, pText, 0, FALSE, GTNAP_GLOBAL, gtwin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4589,7 +4537,7 @@ static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom,
 
 static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, HB_USHORT bChar, int iRows, int iCols )
 {
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( iTop );
     HB_SYMBOL_UNUSED( iLeft );
@@ -4600,20 +4548,20 @@ static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int i
     HB_SYMBOL_UNUSED( iRows );
     HB_SYMBOL_UNUSED( iCols );
 
-    if (cuawin != NULL)
+    if (gtwin != NULL)
     {
         uint32_t i, n;
         // FRAN: The scroll, at the moment, delete all texts
         // Improve taking into account the input rectangle
         // Take into account if a real scroll exists (iRows > 0 || iCols > 0)
-        n = arrst_size(cuawin->gui_objects, GtNapObject);
+        n = arrst_size(gtwin->gui_objects, GtNapObject);
         for (i = 0; i < n; )
         {
-            GtNapObject *object = arrst_get(cuawin->gui_objects, i, GtNapObject);
+            GtNapObject *object = arrst_get(gtwin->gui_objects, i, GtNapObject);
             const char_t *type = _component_type(object->component);
             if (str_equ_c(type, "Label") == TRUE)
             {
-                i_remove_cualib_object(cuawin, i);
+                i_remove_cualib_object(gtwin, i);
                 n -= 1;
             }
             else
@@ -4666,7 +4614,6 @@ static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, HB_U
 static HB_BOOL hb_gtnap_GetBlink( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_GetBlink()");
     return TRUE;
 }
 
@@ -4683,7 +4630,6 @@ static void hb_gtnap_SetBlink( PHB_GT pGT, HB_BOOL bBlink )
 static const char * hb_gtnap_Version( PHB_GT pGT, int iType )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_Version(%d)", iType);
     if( iType == 0 )
         return HB_GT_DRVNAME( HB_GT_NAME );
 
@@ -4737,7 +4683,6 @@ static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 static void hb_gtnap_mouse_Init( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_mouse_Init()");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4745,7 +4690,6 @@ static void hb_gtnap_mouse_Init( PHB_GT pGT )
 static void hb_gtnap_mouse_Exit( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_mouse_Exit()");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4753,7 +4697,6 @@ static void hb_gtnap_mouse_Exit( PHB_GT pGT )
 static HB_BOOL hb_gtnap_mouse_IsPresent( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_mouse_IsPresent()");
     return TRUE;
 }
 
@@ -4762,7 +4705,6 @@ static HB_BOOL hb_gtnap_mouse_IsPresent( PHB_GT pGT )
 static int hb_gtnap_mouse_Col( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_mouse_Col()");
     return 1;
 }
 
@@ -4771,7 +4713,6 @@ static int hb_gtnap_mouse_Col( PHB_GT pGT )
 static int hb_gtnap_mouse_Row( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_mouse_Row()");
     return 1;
 }
 
@@ -4780,7 +4721,6 @@ static int hb_gtnap_mouse_Row( PHB_GT pGT )
 static int hb_gtnap_mouse_CountButton( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_mouse_CountButton()");
     return 3;
 }
 
@@ -4824,8 +4764,6 @@ static void hb_gtnap_gfxText( PHB_GT pGT, int iTop, int iLeft, const char * cBuf
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-    //log_printf("hb_gt_FuncInit()");
-
     pFuncTable->Lock = hb_gtnap_Lock;
     pFuncTable->Unlock = hb_gtnap_Unlock;
     pFuncTable->Init = hb_gtnap_Init;
