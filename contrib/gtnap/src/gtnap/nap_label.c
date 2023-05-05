@@ -10,7 +10,7 @@
 HB_FUNC( NAP_LABEL_CREATE )
 {
     Label *label = label_create();
-    label_font(label, hb_gtnap_global_font());
+    label_font(label, hb_gtnap_font());
     hb_retptr(label);
 }
 
@@ -21,7 +21,7 @@ HB_FUNC( NAP_LABEL_WITH_TEXT )
     Label *label = label_create();
     const char_t *text = hb_gtnap_parText(1);
     label_text(label, text);
-    label_font(label, hb_gtnap_global_font());
+    label_font(label, hb_gtnap_font());
     hb_retptr(label);
 }
 
@@ -30,7 +30,7 @@ HB_FUNC( NAP_LABEL_WITH_TEXT )
 HB_FUNC( NAP_LABEL_MULTILINE )
 {
     Label *label = label_multiline();
-    label_font(label, hb_gtnap_global_font());
+    label_font(label, hb_gtnap_font());
     hb_retptr(label);
 }
 

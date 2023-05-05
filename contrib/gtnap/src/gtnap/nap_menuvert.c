@@ -372,7 +372,7 @@ HB_FUNC( NAP_MENUVERT_CREATE )
     View *view = view_scroll();
     MenuVert *menu = i_create();
     uint32_t cell_y_size = hb_gtnap_cell_height();
-    menu->font = hb_gtnap_global_font();
+    menu->font = hb_gtnap_font();
     font_extents(menu->font, "OOOOOO", -1, &menu->cell_x_size, &menu->cell_y_size);
     menu->cell_x_size /= 6;
     menu->layout = layout;

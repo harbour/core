@@ -29,7 +29,7 @@ HB_FUNC( NAP_TABLEVIEW_SCROLL )
 HB_FUNC( NAP_TABLEVIEW_FONT )
 {
     TableView *view = (TableView*)hb_parptr(1);
-    tableview_font(view, hb_gtnap_global_font());
+    tableview_font(view, hb_gtnap_font());
 }
 
 /*---------------------------------------------------------------------------*/

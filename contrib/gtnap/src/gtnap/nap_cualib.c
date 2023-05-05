@@ -61,24 +61,6 @@ HB_FUNC( WVW_SETMAINCOORD )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_WINDOW )
-{
-    int32_t N_LinIni = hb_parni(1);
-    int32_t N_ColIni = hb_parni(2);
-    int32_t N_LinFin = hb_parni(3);
-    int32_t N_ColFin = hb_parni(4);
-    String *C_Cabec = hb_gtnap_cualib_parText(5);
-    bool_t close_return = (bool_t)hb_parl(6);
-    bool_t close_esc = (bool_t)hb_parl(7);
-    bool_t minimize_button = (bool_t)hb_parl(8);
-    bool_t buttons_navigation = (bool_t)hb_parl(9);
-    uint32_t id = hb_gtnap_cualib_window(N_LinIni, N_ColIni, N_LinFin, N_ColFin, tc(C_Cabec), close_return, close_esc, minimize_button, buttons_navigation);
-    str_destroy(&C_Cabec);
-    hb_retni(id);
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_CUALIB_WINDOW_ENTER_TABSTOP )
 {
     hb_gtnap_cualib_window_enter_tabstop();

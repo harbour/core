@@ -19,7 +19,7 @@ __END_C
 HB_FUNC( NAP_EDIT_CREATE )
 {
     Edit *edit = edit_create();
-    edit_font(edit, hb_gtnap_global_font());
+    edit_font(edit, hb_gtnap_font());
     hb_retptr(edit);
 }
 

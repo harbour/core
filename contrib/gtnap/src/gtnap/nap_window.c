@@ -7,6 +7,24 @@
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_WINDOW )
+{
+    int32_t top = hb_parni(1);
+    int32_t left = hb_parni(2);
+    int32_t bottom = hb_parni(3);
+    int32_t right = hb_parni(4);
+    String *title = hb_gtnap_cualib_parText(5);
+    bool_t close_return = (bool_t)hb_parl(6);
+    bool_t close_esc = (bool_t)hb_parl(7);
+    bool_t minimize_button = (bool_t)hb_parl(8);
+    bool_t buttons_navigation = (bool_t)hb_parl(9);
+    uint32_t id = hb_gtnap_window(top, left, bottom, right, tc(title), close_return, close_esc, minimize_button, buttons_navigation);
+    str_destroy(&title);
+    hb_retni(id);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_WINDOW_PANEL )
 {
     Window *window = hb_gtnap_parWindow(1);

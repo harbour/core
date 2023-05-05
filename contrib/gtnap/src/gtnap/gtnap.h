@@ -23,6 +23,15 @@ HB_EXTERN_BEGIN
 
 extern void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
 
+extern Font *hb_gtnap_font(void);
+
+extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
+
+
+
+
+
+
 
 
 /*
@@ -33,9 +42,7 @@ extern void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint3
 
 
 
-extern void hb_gtnap_set_global_font(Font *font);
 
-extern Font *hb_gtnap_global_font(void);
 
 extern void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, const align_t align, PHB_ITEM codeBlock);
 
@@ -78,13 +85,6 @@ String *hb_gtnap_cualib_parText(const uint32_t iParam);
 
 extern void hb_gtnap_cualib_init_log(void);
 
-
-// N_LinIni --> Top
-// N_ColIni --> Left
-// N_LinFin --> Bottom
-// N_ColFin --> Right
-// C_Cabec --> Title
-extern uint32_t hb_gtnap_cualib_window(const int32_t N_LinIni, const int32_t N_ColIni, const int32_t N_LinFin, const int32_t N_ColFin, const char_t *C_Cabec, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
 extern void hb_gtnap_cualib_window_enter_tabstop(void);
 

@@ -632,7 +632,7 @@ LOCAL L_BUTTONS_NAVIGATION := .F.
 
 
 // FRAN: A NAppGUI/GTNAP application owns the event cicle.
-// The hotkey should be asigned when Window is created after NAP_CUALIB_WINDOW()
+// The hotkey should be asigned when Window is created after NAP_WINDOW()
 IF .NOT. SOB_MODO_GRAFICO()
     B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
 ENDIF
@@ -803,7 +803,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
                 L_MINIMIZE_BUTTON := .F.
             ENDIF
 
-            N_WindowNum := NAP_CUALIB_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux, L_CLOSE_WITH_RETURN, L_CLOSE_WITH_ESC, L_MINIMIZE_BUTTON, L_BUTTONS_NAVIGATION)
+            N_WindowNum := NAP_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux, L_CLOSE_WITH_RETURN, L_CLOSE_WITH_ESC, L_MINIMIZE_BUTTON, L_BUTTONS_NAVIGATION)
 
             NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)}, .F.)
 
