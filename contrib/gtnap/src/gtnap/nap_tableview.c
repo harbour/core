@@ -202,7 +202,7 @@ HB_FUNC( NAP_TABLEVIEW_CUALIB_BIND_VETOR )
 HB_FUNC( NAP_TABLEVIEW_CUALIB_VECTOR_ADD )
 {
     TableView *view = (TableView*)hb_parptr(1);
-    String *text = hb_gtnap_cualib_parText(2);
+    String *text = hb_gtnap_parc(2);
     PHB_ITEM codeBlock = hb_param(3, HB_IT_BLOCK);
     uint32_t hotkey_pos = hb_parni(4);
     hb_gtnap_cualib_tableview_vector_add_item(view, text, codeBlock, hotkey_pos);

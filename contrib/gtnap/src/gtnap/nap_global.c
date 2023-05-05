@@ -16,7 +16,7 @@ HB_FUNC( NAP_GLOBAL_EXIT )
 
 HB_FUNC( NAP_LOG )
 {
-    String *text = hb_gtnap_cualib_parText(1);
+    String *text = hb_gtnap_parc(1);
     log_printf("%s", tc(text));
     str_destroy(&text);
 }

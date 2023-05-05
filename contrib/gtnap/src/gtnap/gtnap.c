@@ -159,8 +159,6 @@ struct _gtnap_window_t
 
     int32_t cursor_row;
     int32_t cursor_col;
-    bool_t enter_tabstop;
-    bool_t arrows_tabstop;
     bool_t stops_last_edit;
     bool_t scroll_panel;
     int32_t scroll_N_LinIni;
@@ -504,6 +502,27 @@ void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t col
 
 /*---------------------------------------------------------------------------*/
 
+String *hb_gtnap_parc(const uint32_t iParam)
+{
+    /* TODO: Use Harbour code-page (not 1252 allways) */
+    if (!HB_ISNIL(iParam))
+    {
+        if (HB_ISCHAR(iParam))
+        {
+            const char_t *str = hb_parcx(iParam);
+            return gtconvert_1252_to_UTF8(str);
+        }
+        else
+        {
+            return str_c("Unknown text");
+        }
+    }
+
+    return str_c("");
+}
+
+/*---------------------------------------------------------------------------*/
+
 Font *hb_gtnap_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);
@@ -547,8 +566,6 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
     gtwin->right = right;
     gtwin->cursor_row = 0;
     gtwin->cursor_col = 0;
-    gtwin->enter_tabstop = FALSE;
-    gtwin->arrows_tabstop = FALSE;
     gtwin->stops_last_edit = FALSE;
     gtwin->scroll_panel = FALSE;
     gtwin->is_configured = FALSE;
@@ -573,11 +590,6 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
     window_cycle_tabstop(window, FALSE);
     return id;
 }
-
-
-
-
-
 
 
 
@@ -993,29 +1005,6 @@ bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e)
 // CUALIB Support in GTNAP
 //
 
-/*---------------------------------------------------------------------------*/
-
-String *hb_gtnap_cualib_parText(const uint32_t iParam)
-{
-    // TODO: Translate code-page to UTF8
-    if (!HB_ISNIL(iParam))
-    {
-        if (HB_ISCHAR(iParam))
-        {
-            const char_t *str = hb_parcx(iParam);
-            return gtconvert_1252_to_UTF8(str);
-        }
-        else
-        {
-            // const char_t *str = (const char_t*)hb_parni(iParam);
-            // return str;
-
-            return str_c("Unknown text"); // (const char_t*)hb_parni(iParam);
-        }
-    }
-
-    return str_c("");
-}
 
 /*---------------------------------------------------------------------------*/
 
@@ -1263,22 +1252,6 @@ static void i_add_label_object(const int32_t cell_x, const int32_t cell_y, const
 
     size.height = (real32_t)gtnap->label_y_size;
     i_add_object(ekOBJ_LABEL, cell_x, cell_y, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll_panel, (GuiComponent*)label, cuawin);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_window_enter_tabstop(void)
-{
-    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
-    cuawin->enter_tabstop = TRUE;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_window_arrows_tabstop(void)
-{
-    GtNapWindow *cuawin = i_current_cuawin(GTNAP_GLOBAL);
-    cuawin->arrows_tabstop = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2960,6 +2933,19 @@ static uint32_t i_num_buttons(GtNapWindow *cuawin)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_num_edits(GtNapWindow *cuawin)
+{
+    uint32_t n = 0;
+    cassert_no_null(cuawin);
+    arrst_foreach_const(obj, cuawin->gui_objects, GtNapObject)
+        if (obj->type == ekOBJ_EDIT)
+            n += 1;
+    arrst_end();
+    return n;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNapObject *i_get_button(GtNapWindow *cuawin, const uint32_t index)
 {
     uint32_t i = 0;
@@ -3965,16 +3951,15 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
         listener = i_gtnap_cualib_listener(cancelBlockParamId, INT32_MAX, FALSE, cuawin, i_OnWindowClose);
         window_OnClose(cuawin->window, listener);
 
-        if (cuawin->enter_tabstop == TRUE)
-            window_hotkey(cuawin->window, ekKEY_RETURN, 0, listener(cuawin, i_OnNextTabstop, GtNapWindow));
-
-        if (cuawin->arrows_tabstop == TRUE)
+        /* Allow navigation between edit controls with arrows and return */
+        if (i_num_edits(cuawin) > 1)
         {
-            cassert(cuawin->buttons_navigation == FALSE);
             window_hotkey(cuawin->window, ekKEY_UP, 0, listener(cuawin, i_OnPreviousTabstop, GtNapWindow));
             window_hotkey(cuawin->window, ekKEY_DOWN, 0, listener(cuawin, i_OnNextTabstop, GtNapWindow));
+            window_hotkey(cuawin->window, ekKEY_RETURN, 0, listener(cuawin, i_OnNextTabstop, GtNapWindow));
         }
-        else if (cuawin->buttons_navigation == TRUE)
+        
+        if (cuawin->buttons_navigation == TRUE)
         {
             if (i_num_buttons(cuawin) > 1)
             {

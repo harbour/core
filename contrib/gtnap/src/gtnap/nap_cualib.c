@@ -59,19 +59,6 @@ HB_FUNC( WVW_SETMAINCOORD )
    hb_retni( TRUE );
 }
 
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_CUALIB_WINDOW_ENTER_TABSTOP )
-{
-    hb_gtnap_cualib_window_enter_tabstop();
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_CUALIB_WINDOW_ARROWS_TABSTOP )
-{
-    hb_gtnap_cualib_window_arrows_tabstop();
-}
 
 /*---------------------------------------------------------------------------*/
 
@@ -352,7 +339,7 @@ HB_FUNC( NAP_CUALIB_VETOR_SELECT )
 HB_FUNC( NAP_CUALIB_TEXTVIEW_WRITE )
 {
     TextView *view = (TextView*)hb_parptr(1);
-    String *text = hb_gtnap_cualib_parText(2);
+    String *text = hb_gtnap_parc(2);
     textview_writef(view, tc(text));
     str_destroy(&text);
 }

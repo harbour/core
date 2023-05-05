@@ -23,11 +23,11 @@ HB_EXTERN_BEGIN
 
 extern void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
 
+String *hb_gtnap_parc(const uint32_t iParam);
+
 extern Font *hb_gtnap_font(void);
 
 extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
-
-
 
 
 
@@ -81,14 +81,11 @@ extern bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e);
 // GTNAP-CUALIB Specific function
 //
 
-String *hb_gtnap_cualib_parText(const uint32_t iParam);
 
 extern void hb_gtnap_cualib_init_log(void);
 
 
-extern void hb_gtnap_cualib_window_enter_tabstop(void);
 
-extern void hb_gtnap_cualib_window_arrows_tabstop(void);
 
 extern void hb_gtnap_cualib_window_stops_last_edit(void);
 
