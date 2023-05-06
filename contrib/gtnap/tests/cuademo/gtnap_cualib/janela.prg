@@ -3311,14 +3311,22 @@ ENDIF
 //ENDIF
 
 //NAP_LOG("Before V_Botao[_BOTAO_LIN_INICIAL]")
-NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;
-                    V_Botao[_BOTAO_BLOCO_ACAO],;
-                    1000,; // BUTTON_ID
-                    N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
-                    N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
-                    N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
-                    N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ],;
-                    V_Botao[_BOTAO_AUTOCLOSE])
+
+NAP_BUTTON(N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
+            N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
+            N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
+            N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ],;
+            0,;
+            {|| C_TextoBotaoAux_CodigoPagina},;
+            V_Botao[_BOTAO_BLOCO_ACAO],;
+            V_Botao[_BOTAO_AUTOCLOSE],;
+            .F.)
+//         {|| C_TextoBotaoAux_CodigoPagina},;
+//         V_Botao[_BOTAO_BLOCO_ACAO],;
+// NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;
+//                     V_Botao[_BOTAO_BLOCO_ACAO],;
+//                     1000,; // BUTTON_ID
+//                     V_Botao[_BOTAO_AUTOCLOSE])
 
 //NAP_LOG("Before NAP_CUALIB_HOTKEY")
 

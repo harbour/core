@@ -20,6 +20,8 @@ typedef struct _gtnap_vector_t GtNapVector;
 typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
 /* Return codes when modal window has been closed */
+#define WINCLOSE_BUTTON_AUTOCLOSE   1000
+
 #define WINCLOSE_IMAGE_AUTOCLOSE    2000
 
 HB_EXTERN_BEGIN
@@ -37,6 +39,8 @@ extern uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM 
 extern void hb_gtnap_label_fgcolor(const uint32_t id, const color_t color);
 
 extern void hb_gtnap_label_bgcolor(const uint32_t id, const color_t color);
+
+extern uint32_t hb_gtnap_button(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel);
 
 extern uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose);
 
@@ -153,7 +157,7 @@ extern uint32_t hb_gtnap_cualib_tableview_select_single_row(void);
 extern ArrSt(uint32_t) *hb_gtnap_cualib_tableview_select_multiple_row(void);
 
 
-extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose);
+//extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose);
 
 extern void hb_gtnap_cualib_text_confirma_button(const uint32_t button_id, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose);
 

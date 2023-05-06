@@ -117,7 +117,7 @@ struct _gtnap_object_t
     bool_t has_focus;
     uint32_t editSize;
     uint32_t editBoxIndexForButton;
-    PHB_ITEM labelCodeBlock;
+    PHB_ITEM text_block;
     PHB_ITEM editCodeBlock;
     PHB_ITEM editableGlobalCodeBlock;
     PHB_ITEM editableLocalCodeBlock;
@@ -729,7 +729,7 @@ static uint32_t i_add_object(const objtype_t type, const int32_t cell_x, const i
     obj->can_auto_lista = TRUE;
     obj->has_focus = FALSE;
     obj->editBoxIndexForButton = UINT32_MAX;
-    obj->labelCodeBlock = NULL;
+    obj->text_block = NULL;
     obj->editCodeBlock = NULL;
     obj->editableGlobalCodeBlock = NULL;
     obj->editableLocalCodeBlock = NULL;
@@ -784,9 +784,9 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
         nchars = unicode_nchars(utf8_text, ekUTF8);
         label_text((Label*)obj->component, utf8_text);
     }
-    else if (obj->labelCodeBlock != NULL)
+    else if (obj->text_block != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(obj->labelCodeBlock, 0);
+        PHB_ITEM retItem = hb_itemDo(obj->text_block, 0);
         HB_TYPE type = HB_ITEM_TYPE(retItem);
 
         if (type == HB_IT_STRING)
@@ -810,6 +810,28 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_set_button_text(GtNapObject *obj)
+{
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_BUTTON);
+    if (obj->text_block != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(obj->text_block, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+
+        if (type == HB_IT_STRING)
+        {
+            char_t buffer[STATIC_TEXT_SIZE];
+            i_item_to_str_utf8(retItem, buffer, sizeof32(buffer));
+            button_text((Button*)obj->component, buffer);
+        }
+
+        hb_itemRelease(retItem);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
@@ -819,7 +841,7 @@ uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM *text_b
     cassert(obj->type == ekOBJ_LABEL);
 
     if (text_block != NULL)
-        obj->labelCodeBlock = hb_itemNew(text_block);
+        obj->text_block = hb_itemNew(text_block);
 
     i_set_label_text(obj, NULL);
     return id;
@@ -870,6 +892,79 @@ static Listener *i_gtnap_listener(HB_ITEM *block, const int32_t key, const bool_
     arrpt_append(gtwin->callbacks, callback, GtNapCallback);
     return listener(callback, func_callback, GtNapCallback);    
 }
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnButtonClick2(GtNapCallback *callback, Event *e)
+{
+    bool_t ret = FALSE;
+    cassert_no_null(callback);
+    if (callback->codeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        if (type == HB_IT_LOGICAL)
+            ret = (bool_t)hb_itemGetL(retItem);
+        hb_itemRelease(retItem);
+    }
+
+    if (ret == TRUE || callback->autoclose == TRUE)
+    {
+        const Button *button = event_sender(e, Button);
+        uint32_t tag = _component_get_tag((const GuiComponent*)button);
+        cassert(tag < 128);
+        callback->cuawin->modal_window_alive = FALSE;
+        window_stop_modal(callback->cuawin->window, WINCLOSE_BUTTON_AUTOCLOSE + tag);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_button(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel)
+{
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    Button *button = NULL;
+    Listener *listener = NULL;
+    S2Df size;
+    uint32_t id = UINT32_MAX;
+    cassert_no_null(gtwin);
+    button = button_push();
+    listener = i_gtnap_listener(click_block, INT32_MAX, autoclose, gtwin, i_OnButtonClick2);
+    button_OnClick(button, listener);
+    _component_set_tag((GuiComponent*)button, tag);
+    button_font(button, GTNAP_GLOBAL->reduced_font);
+    button_vpadding(button, i_button_vpadding());
+    cassert(bottom == top);
+    size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
+    size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->button_y_size);
+    id = i_add_object(ekOBJ_BUTTON, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)button, gtwin);
+
+    if (text_block != NULL)
+    {
+        GtNapObject *obj = arrst_last(gtwin->gui_objects, GtNapObject);
+        cassert_no_null(obj);
+        cassert(obj->type == ekOBJ_BUTTON);
+        obj->text_block = hb_itemNew(text_block);
+        i_set_button_text(obj);
+    }
+
+    return id;
+
+    //Button *button = button_push();
+    //String *ctext = gtconvert_1252_to_UTF8(text);
+    //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
+    //S2Df size;
+    //cassert_no_null(cuawin);
+    //button_text(button, tc(ctext));
+    //log_printf("Added BUTTON (%s) into CUALIB Window: %d, %d, %d, %d", tc(ctext), nTop, nLeft, nBottom, nRight);
+    //i_add_object(ekOBJ_BUTTON, nLeft - cuawin->left, nTop - cuawin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)button, cuawin);
+    //str_destroy(&ctext);
+
+    //if (listener != NULL)
+    //    button_OnClick(button, listener);
+
+}
+
 
 /*---------------------------------------------------------------------------*/
 
@@ -1389,8 +1484,8 @@ static void i_remove_cualib_object(GtNapWindow *cuawin, const uint32_t index)
 
     _component_destroy(&object->component);
 
-    if (object->labelCodeBlock != NULL)
-        hb_itemRelease(object->labelCodeBlock);
+    if (object->text_block != NULL)
+        hb_itemRelease(object->text_block);
 
     if (object->editCodeBlock != NULL)
         hb_itemRelease(object->editCodeBlock);
@@ -1643,28 +1738,28 @@ static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    Button *button = button_push();
-    String *ctext = gtconvert_1252_to_UTF8(text);
-    Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
-    S2Df size;
-    cassert_no_null(cuawin);
-    _component_set_tag((GuiComponent*)button, nTag);
-    button_text(button, tc(ctext));
-    button_font(button, GTNAP_GLOBAL->reduced_font);
-    button_vpadding(button, i_button_vpadding());
-    cassert(nBottom == nTop);
-    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->button_y_size);
-    log_printf("Added BUTTON (%s) into CUALIB Window: %d, %d, %d, %d", tc(ctext), nTop, nLeft, nBottom, nRight);
-    i_add_object(ekOBJ_BUTTON, nLeft - cuawin->left, nTop - cuawin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)button, cuawin);
-    str_destroy(&ctext);
-
-    if (listener != NULL)
-        button_OnClick(button, listener);
-}
+//void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    Button *button = button_push();
+//    String *ctext = gtconvert_1252_to_UTF8(text);
+//    Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
+//    S2Df size;
+//    cassert_no_null(cuawin);
+//    _component_set_tag((GuiComponent*)button, nTag);
+//    button_text(button, tc(ctext));
+//    button_font(button, GTNAP_GLOBAL->reduced_font);
+//    button_vpadding(button, i_button_vpadding());
+//    cassert(nBottom == nTop);
+//    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+//    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->button_y_size);
+//    log_printf("Added BUTTON (%s) into CUALIB Window: %d, %d, %d, %d", tc(ctext), nTop, nLeft, nBottom, nRight);
+//    i_add_object(ekOBJ_BUTTON, nLeft - cuawin->left, nTop - cuawin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)button, cuawin);
+//    str_destroy(&ctext);
+//
+//    if (listener != NULL)
+//        button_OnClick(button, listener);
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -1897,7 +1992,7 @@ static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
 //{
 //    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
 //    GtNapObject *obj = NULL;
-//    PHB_ITEM labelCodeBlock = NULL;
+//    PHB_ITEM text_block = NULL;
 //    unref(background);
 //    i_add_label(nLin - gtwin->top, nCol - gtwin->left, in_scroll_panel, gtwin, GTNAP_GLOBAL);
 //
@@ -1905,11 +2000,11 @@ static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
 //    cassert_no_null(obj);
 //    cassert(obj->type == ekOBJ_LABEL);
 //
-//    labelCodeBlock = hb_param(updateBlockParamId, HB_IT_BLOCK);
-//    if (labelCodeBlock != NULL)
-//        obj->labelCodeBlock = hb_itemNew(labelCodeBlock);
+//    text_block = hb_param(updateBlockParamId, HB_IT_BLOCK);
+//    if (text_block != NULL)
+//        obj->text_block = hb_itemNew(text_block);
 //    else
-//        obj->labelCodeBlock = NULL;
+//        obj->text_block = NULL;
 //
 //    {
 //        char_t utf8[STATIC_TEXT_SIZE];

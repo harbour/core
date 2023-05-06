@@ -156,17 +156,17 @@ HB_FUNC( NAP_CUALIB_TEXTVIEW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_BUTTON )
-{
-    const char_t *text = hb_gtnap_parText(1);
-    uint32_t nTag = hb_parni(3);
-    int32_t nTop = hb_parni(4);
-    int32_t nLeft = hb_parni(5);
-    int32_t nBottom = hb_parni(6);
-    int32_t nRight = hb_parni(7);
-    bool_t autoclose = (bool_t)hb_parl(8);
-    hb_gtnap_cualib_button(text, 2, nTag, nTop, nLeft, nBottom, nRight, autoclose);
-}
+//HB_FUNC( NAP_CUALIB_BUTTON )
+//{
+//    const char_t *text = hb_gtnap_parText(1);
+//    uint32_t nTag = hb_parni(3);
+//    int32_t nTop = hb_parni(4);
+//    int32_t nLeft = hb_parni(5);
+//    int32_t nBottom = hb_parni(6);
+//    int32_t nRight = hb_parni(7);
+//    bool_t autoclose = (bool_t)hb_parl(8);
+//    hb_gtnap_cualib_button(text, 2, nTag, nTop, nLeft, nBottom, nRight, autoclose);
+//}
 
 /*---------------------------------------------------------------------------*/
 

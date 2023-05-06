@@ -101,7 +101,13 @@ IF SOB_MODO_GRAFICO()
     FOR N_Cont := 1 TO LEN(VC_Menu)
         *
         N_OptLen := LEN(VC_Menu[N_Cont])
-        NAP_CUALIB_BUTTON(VC_Menu[N_Cont], {||.T.}, 1000 + N_Cont, N_Row, N_Col, N_Row, N_Col + N_OptLen, .T.)
+
+        NAP_BUTTON(N_Row, N_Col, N_Row, N_Col + N_OptLen, N_Cont, {|| VC_Menu[N_Cont]}, NIL, .T., .F.)
+
+
+        //NAP_CUALIB_BUTTON(VC_Menu[N_Cont], {||.T.}, 1000 + N_Cont, N_Row, N_Col, N_Row, N_Col + N_OptLen, .T.)
+
+
         N_Col += N_OptLen + 2
         NAP_LOG(VC_Menu[N_Cont] + " Row:" + hb_ntos(N_Row) + " Col:" + hb_ntos(N_Col))
         //C_TeclaAtalho := XUpper(Left(Troca(VC_Menu[N_Cont]," [",""),1))
