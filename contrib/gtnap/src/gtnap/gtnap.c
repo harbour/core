@@ -50,8 +50,6 @@ struct _gtnap_column_t
     PHB_ITEM codeBlock;
 };
 
-DeclSt(GtNapColumn);
-
 struct _gtnap_area_t
 {
     AREA *area;
@@ -76,8 +74,6 @@ struct _vecitem_t
     bool_t selected;
 };
 
-DeclSt(VecItem);
-
 struct _gtnap_vector_t
 {
     TableView *view;
@@ -88,11 +84,6 @@ struct _gtnap_vector_t
     PHB_ITEM codeBlock1;
     char_t temp[512];       // Temporal buffer between RDD and TableView
 };
-
-DeclPt(GtNapCallback);
-DeclPt(GtNapArea);
-DeclPt(Window);
-DeclPt(Button);
 
 typedef enum _objtype_t
 {
@@ -168,6 +159,7 @@ struct _gtnap_window_t
     bool_t focus_by_previous;
     bool_t modal_window_alive;
     bool_t buttons_navigation;
+
     uint32_t message_label_id;
     uint32_t default_button;
     GtNapObject *current_obj;
@@ -205,7 +197,16 @@ struct _gtnap_t
 
 DeclSt(GtNapObject);
 DeclSt(GtNapWindow);
+DeclSt(GtNapColumn);
+DeclSt(VecItem);
+DeclPt(GtNapCallback);
+DeclPt(GtNapArea);
+DeclPt(Window);
+DeclPt(Button);
 
+/*---------------------------------------------------------------------------*/
+
+#define STATIC_TEXT_SIZE    1024
 /*---------------------------------------------------------------------------*/
 
 static const GtNapKey KEYMAPS[] = {
@@ -517,6 +518,79 @@ String *hb_gtnap_parstr(const uint32_t iParam)
 
 /*---------------------------------------------------------------------------*/
 
+const char_t *hb_gtnap_parText(const uint32_t iParam)
+{
+    static char_t TEMP_TEXT[1024 + 1];
+
+    if (HB_ISCHAR(iParam))
+    {
+        const char_t *str = hb_parcx(iParam);
+        HB_SIZE i = 0, j = 0, size = hb_parclen(iParam);
+
+        /* Avoid the Carriage Return (CR) character (NAppGUI doesn't like) */
+        for (; i < size && j < 1024; )
+        {
+            if (str[i] != 13)
+            {
+                TEMP_TEXT[j] = str[i];
+                i += 1;
+                j += 1;
+            }
+            else
+            {
+                i += 1;
+            }
+        }
+
+        TEMP_TEXT[j] = '\0';
+        return TEMP_TEXT;
+    }
+
+    return "";
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_remove_utf8_CR(char_t *utf8)
+{
+    /* Remove the Carriage Return (CR) character (NAppGUI doesn't like) */
+    uint32_t i = 0, j = 0;
+    for(; utf8[i] != 0;)
+    {
+        if (utf8[i] != 13)
+        {
+            utf8[j] = utf8[i];
+            j += 1;
+        }
+
+        i += 1;
+    }
+
+    utf8[j] = 0;
+    return j;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_item_to_str_utf8(HB_ITEM *item, char_t *utf8, const uint32_t size)
+{
+    hb_itemCopyStrUTF8(item, (char*)utf8, (HB_SIZE)size);
+    return i_remove_utf8_CR(utf8);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_cp_str_utf8(const char_t *cp_str, char_t *utf8, const uint32_t size)
+{
+    HB_CODEPAGE *cp = hb_vmCDP();
+    cassert_no_null(cp_str);
+    cassert_no_null(utf8);
+    hb_cdpStrToUTF8(cp, (const char*)cp_str, (HB_SIZE)str_len_c(cp_str), (char*)utf8, (HB_SIZE)size);
+    return i_remove_utf8_CR(utf8);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Font *hb_gtnap_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);
@@ -603,6 +677,15 @@ static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
+static GtNapObject *i_get_object(GtNap *gtnap, const uint32_t id)
+{
+    GtNapWindow *gtwin = i_current_gtwin(gtnap);
+    cassert_no_null(gtwin);
+    return arrst_get(gtwin->gui_objects, id, GtNapObject);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_scroll_panel(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
@@ -611,6 +694,145 @@ void hb_gtnap_scroll_panel(const int32_t top, const int32_t left, const int32_t 
     gtwin->scroll_bottom = bottom;
     gtwin->scroll_right = right;
 }
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_add_object(const objtype_t type, const int32_t cell_x, const int32_t cell_y, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, const bool_t in_scroll_panel, GuiComponent *component, GtNapWindow *gtwin)
+{
+    uint32_t id;
+    GtNapObject *obj = NULL;
+    cassert_no_null(gtwin);
+    cassert_no_null(size);
+    id = arrst_size(gtwin->gui_objects, GtNapObject);
+    obj = arrst_new0(gtwin->gui_objects, GtNapObject);
+    obj->type = type;
+    obj->cell_x = cell_x;
+    obj->cell_y = cell_y;
+    obj->component = component;
+    obj->pos.x = (real32_t)(cell_x * (int32_t)cell_x_size);
+    obj->pos.y = (real32_t)(cell_y * (int32_t)cell_y_size);
+    obj->size = *size;
+    obj->is_last_edit = FALSE;
+    obj->in_scroll_panel = in_scroll_panel;
+    obj->can_auto_lista = TRUE;
+    obj->has_focus = FALSE;
+    obj->editBoxIndexForButton = UINT32_MAX;
+    obj->labelCodeBlock = NULL;
+    obj->editCodeBlock = NULL;
+    obj->editableGlobalCodeBlock = NULL;
+    obj->editableLocalCodeBlock = NULL;
+    obj->mensCodeBlock = NULL;
+    obj->confirmaCodeBlock = NULL;
+    obj->validaCodeBlock = NULL;
+    obj->listaCodeBlock = NULL;
+    obj->autoCodeBlock = NULL;
+    obj->filtroTecBlock = NULL;
+    obj->whenCodeBlock = NULL;
+    obj->getobjItem = NULL;
+    return id;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_add_label(const int32_t top, const int32_t left, const bool_t in_scroll_panel, GtNapWindow *gtwin, GtNap *gtnap)
+{
+    Label *label = label_create();
+    S2Df size;
+
+    cassert_no_null(gtnap);
+    label_font(label, gtnap->global_font);
+
+    //if (str_empty_c(text) == FALSE)
+    //{
+    //    uint32_t len = str_len_c(text);
+    //    String *ctext = gtconvert_1252_to_UTF8(text);
+    //    label_text(label, tc(ctext));
+    //    size.width = (real32_t)(len * gtnap->cell_x_size);
+    //    str_destroy(&ctext);
+    //}
+    //else
+    //{
+    //    size.width = (real32_t)(1 * gtnap->cell_x_size);
+    //}
+
+    size.width = (real32_t)(1 * gtnap->cell_x_size);
+    size.height = (real32_t)gtnap->label_y_size;
+    return i_add_object(ekOBJ_LABEL, left, top, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll_panel, (GuiComponent*)label, gtwin);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
+{
+    uint32_t nchars = UINT32_MAX;
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_LABEL);
+    if (utf8_text != NULL)
+    {
+        nchars = unicode_nchars(utf8_text, ekUTF8);
+        label_text((Label*)obj->component, utf8_text);
+    }
+    else if (obj->labelCodeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(obj->labelCodeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+
+        if (type == HB_IT_STRING)
+        {
+            char_t buffer[STATIC_TEXT_SIZE];
+            i_item_to_str_utf8(retItem, buffer, sizeof32(buffer));
+            nchars = unicode_nchars(buffer, ekUTF8);
+            label_text((Label*)obj->component, buffer);
+        }
+
+        hb_itemRelease(retItem);
+    }
+
+    /* Text has been updated */
+    if (nchars != UINT32_MAX)
+    {
+        obj->size.width = (real32_t)(nchars * GTNAP_GLOBAL->cell_x_size);
+        _component_set_frame(obj->component, &obj->pos, &obj->size);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel)
+{
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    uint32_t id = i_add_label(top - gtwin->top, left - gtwin->left, in_scroll_panel, gtwin, GTNAP_GLOBAL);
+    GtNapObject *obj = arrst_last(gtwin->gui_objects, GtNapObject);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_LABEL);
+
+    if (text_block != NULL)
+        obj->labelCodeBlock = hb_itemNew(text_block);
+
+    i_set_label_text(obj, NULL);
+    return id;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_label_fgcolor(const uint32_t id, const color_t color)
+{
+    GtNapObject *obj = i_get_object(GTNAP_GLOBAL, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_LABEL);
+    label_color((Label*)obj->component, color);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_label_bgcolor(const uint32_t id, const color_t color)
+{
+    GtNapObject *obj = i_get_object(GTNAP_GLOBAL, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_LABEL);
+    label_bgcolor((Label*)obj->component, color);
+}
+
 
 
 
@@ -907,40 +1129,6 @@ static const HB_GC_FUNCS s_gc_Window_funcs =
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *hb_gtnap_parText(const uint32_t iParam)
-{
-    static char_t TEMP_TEXT[1024 + 1];
-
-    if (HB_ISCHAR(iParam))
-    {
-        const char_t *str = hb_parcx(iParam);
-        HB_SIZE i, j, size = hb_parclen(iParam);
-
-        for (i = 0, j = 0; i < size && j < 1024; )
-        {
-            if (str[i] != 13)
-            {
-                TEMP_TEXT[j] = str[i];
-                i += 1;
-                j += 1;
-            }
-            else
-            {
-                i += 1;
-            }
-        }
-
-        TEMP_TEXT[j] = '\0';
-        return TEMP_TEXT;
-    }
-    else
-    {
-        return "Unknown text"; // (const char_t*)hb_parni(iParam);
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
 Image *hb_gtnap_parImage(int iParam)
 {
     void **ph = (void**)hb_parptrGC(&s_gc_Image_funcs, iParam);
@@ -1207,82 +1395,21 @@ static GtNapWindow *i_parent_cuawin(GtNap *gtnap)
 //     unref(e);
 // }
 
-/*---------------------------------------------------------------------------*/
-
-static void i_add_object(const objtype_t type, const int32_t cell_x, const int32_t cell_y, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, const bool_t in_scroll_panel, GuiComponent *component, GtNapWindow *cuawin)
-{
-    GtNapObject *object = NULL;
-    cassert_no_null(cuawin);
-    cassert_no_null(size);
-    object = arrst_new0(cuawin->gui_objects, GtNapObject);
-    object->type = type;
-    object->cell_x = cell_x;
-    object->cell_y = cell_y;
-    object->component = component;
-    object->pos.x = (real32_t)(cell_x * (int32_t)cell_x_size);
-    object->pos.y = (real32_t)(cell_y * (int32_t)cell_y_size);
-    object->size = *size;
-    object->is_last_edit = FALSE;
-    //object->is_on_edit_change = FALSE;
-    object->in_scroll_panel = in_scroll_panel;
-    object->can_auto_lista = TRUE;
-    object->has_focus = FALSE;
-    object->editBoxIndexForButton = UINT32_MAX;
-    object->labelCodeBlock = NULL;
-    object->editCodeBlock = NULL;
-    object->editableGlobalCodeBlock = NULL;
-    object->editableLocalCodeBlock = NULL;
-    object->mensCodeBlock = NULL;
-    object->confirmaCodeBlock = NULL;
-    object->validaCodeBlock = NULL;
-    object->listaCodeBlock = NULL;
-    object->autoCodeBlock = NULL;
-    object->filtroTecBlock = NULL;
-    object->whenCodeBlock = NULL;
-    object->getobjItem = NULL;
-    log_printf("Added object at: %.2f, %.2f w:%.2f h:%.2f", object->pos.x, object->pos.y, object->size.width, object->size.height);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_add_label_object(const int32_t cell_x, const int32_t cell_y, const char_t *text, const color_t background, const bool_t in_scroll_panel, GtNap *gtnap, GtNapWindow *cuawin)
-{
-    Label *label = label_create();
-    S2Df size;
-    cassert_no_null(gtnap);
-    label_font(label, gtnap->global_font);
-
-    if (background != 0)
-        label_bgcolor(label, background);
-
-    if (str_empty_c(text) == FALSE)
-    {
-        uint32_t len = str_len_c(text);
-        String *ctext = gtconvert_1252_to_UTF8(text);
-        label_text(label, tc(ctext));
-        size.width = (real32_t)(len * gtnap->cell_x_size);
-        log_printf("Added label: '%s' at %d %d", tc(ctext), cell_x, cell_y);
-        str_destroy(&ctext);
-    }
-    else
-    {
-        size.width = (real32_t)(1 * gtnap->cell_x_size);
-        log_printf("Added label: 'NO TEXT' at %d %d", cell_x, cell_y);
-    }
-
-    size.height = (real32_t)gtnap->label_y_size;
-    i_add_object(ekOBJ_LABEL, cell_x, cell_y, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll_panel, (GuiComponent*)label, cuawin);
-}
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_ColIni)
 {
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    uint32_t id = arrst_size(cuawin->gui_objects, GtNapObject);
-    i_add_label_object(N_ColIni - cuawin->left, N_LinIni - cuawin->top, "--MENS--", 0, FALSE, GTNAP_GLOBAL, cuawin);
-    cassert(cuawin->message_label_id == UINT32_MAX);
-    cuawin->message_label_id = id;
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    uint32_t id = i_add_label(N_LinIni - gtwin->top, N_ColIni - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
+    cassert(gtwin->message_label_id == UINT32_MAX);
+    gtwin->message_label_id = id;
+
+    /* TODO: Remove (just for debug) */
+    {
+        GtNapObject *obj = arrst_last(gtwin->gui_objects, GtNapObject);
+        i_set_label_text(obj, "--MENS--");
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1659,36 +1786,6 @@ void hb_gtnap_cualib_default_button(const uint32_t nDefault)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_set_label_text(GtNapObject *obj)
-{
-    cassert_no_null(obj);
-    cassert(obj->type == ekOBJ_LABEL);
-    if (obj->labelCodeBlock != NULL)
-    {
-        PHB_ITEM retItem = hb_itemDo(obj->labelCodeBlock, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
-
-        if (type == HB_IT_STRING)
-        {
-            char_t buffer[1024];
-            uint32_t len;
-            hb_itemCopyStrUTF8( retItem, (char*)buffer, (HB_SIZE)sizeof(buffer));
-            len = unicode_nchars(buffer, ekUTF8);
-            obj->size.width = (real32_t)(len * GTNAP_GLOBAL->cell_x_size);
-            _component_set_frame(obj->component, &obj->pos, &obj->size);
-            label_text((Label*)obj->component, buffer);
-        }
-        else
-        {
-            cassert_msg(FALSE, "Unkown type in i_set_label_text");
-        }
-
-        hb_itemRelease(retItem);
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
 static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
 {
     cassert_no_null(obj);
@@ -1721,28 +1818,30 @@ static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    GtNapObject *obj = NULL;
-    PHB_ITEM labelCodeBlock = NULL;
-    color_t back = (background == TRUE) ? kCOLOR_CYAN : 0;
-    i_add_label_object(nCol - cuawin->left, nLin - cuawin->top, text, back, in_scroll_panel, GTNAP_GLOBAL, cuawin);
-
-    obj = arrst_last(cuawin->gui_objects, GtNapObject);
-    cassert_no_null(obj);
-    cassert(obj->type == ekOBJ_LABEL);
-
-    //log_printf("Before LABEL CODE  BLOCK");
-    labelCodeBlock = hb_param(updateBlockParamId, HB_IT_BLOCK);
-    if (labelCodeBlock != NULL)
-        obj->labelCodeBlock = hb_itemNew(labelCodeBlock);
-    else
-        obj->labelCodeBlock = NULL;
-    //log_printf("AFTER LABEL CODE  BLOCK");
-
-    //i_set_label_text(obj);
-}
+//void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId)
+//{
+//    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+//    GtNapObject *obj = NULL;
+//    PHB_ITEM labelCodeBlock = NULL;
+//    unref(background);
+//    i_add_label(nLin - gtwin->top, nCol - gtwin->left, in_scroll_panel, gtwin, GTNAP_GLOBAL);
+//
+//    obj = arrst_last(gtwin->gui_objects, GtNapObject);
+//    cassert_no_null(obj);
+//    cassert(obj->type == ekOBJ_LABEL);
+//
+//    labelCodeBlock = hb_param(updateBlockParamId, HB_IT_BLOCK);
+//    if (labelCodeBlock != NULL)
+//        obj->labelCodeBlock = hb_itemNew(labelCodeBlock);
+//    else
+//        obj->labelCodeBlock = NULL;
+//
+//    {
+//        char_t utf8[STATIC_TEXT_SIZE];
+//        i_cp_str_utf8(text, utf8, sizeof32(utf8));
+//        i_set_label_text(obj, utf8);
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -2812,8 +2911,8 @@ static void i_attach_to_panel(ArrSt(GtNapObject) *objects, Panel *main_panel, Pa
             _component_set_frame(object->component, &pos, &object->size);
 
             // FRAN: TODO! IMPROVe
-            if (object->type == ekOBJ_LABEL)
-                i_set_label_text(object);
+            //if (object->type == ekOBJ_LABEL)
+            //    i_set_label_text(object, NULL);
         }
     arrst_end();
 }
@@ -3076,7 +3175,7 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
     /* Update possible labels associated with this input */
     arrst_foreach(obj, cuawin->gui_objects, GtNapObject)
         if (obj->type == ekOBJ_LABEL)
-            i_set_label_text(obj);
+            i_set_label_text(obj, NULL);
     arrst_end();
 
 
@@ -4531,7 +4630,16 @@ static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( ulLength );
     if (gtwin != NULL)
-        i_add_label_object(iCol - gtwin->left, iRow - gtwin->top, pText, 0, FALSE, GTNAP_GLOBAL, gtwin);
+    {
+        i_add_label(iRow - gtwin->top, iCol - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
+        if (pText != NULL)
+        {
+            GtNapObject *obj = arrst_last(gtwin->gui_objects, GtNapObject);
+            char_t utf8[STATIC_TEXT_SIZE];
+            i_cp_str_utf8(pText, utf8, sizeof32(utf8));
+            i_set_label_text(obj, utf8);
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/

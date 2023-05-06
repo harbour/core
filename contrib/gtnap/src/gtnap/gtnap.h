@@ -23,13 +23,23 @@ HB_EXTERN_BEGIN
 
 extern void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
 
-String *hb_gtnap_parstr(const uint32_t iParam);
-
 extern Font *hb_gtnap_font(void);
 
 extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
 extern void hb_gtnap_scroll_panel(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
+
+extern uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel);
+
+extern void hb_gtnap_label_fgcolor(const uint32_t id, const color_t color);
+
+extern void hb_gtnap_label_bgcolor(const uint32_t id, const color_t color);
+
+
+
+
+
+
 
 
 
@@ -42,6 +52,11 @@ extern void hb_gtnap_scroll_panel(const int32_t top, const int32_t left, const i
 */
 
 
+/* Must be deleted */ 
+String *hb_gtnap_parstr(const uint32_t iParam);
+
+/* Must be deleted */ 
+const char_t *hb_gtnap_parText(const uint32_t iParam);
 
 
 
@@ -62,7 +77,6 @@ extern char_t* hb_gtnap_area_temp(GtNapArea *area, uint32_t *size);
 
 extern void* hb_gtnap_area(GtNapArea *area);
 
-const char_t *hb_gtnap_parText(const uint32_t iParam);
 
 extern Image *hb_gtnap_parImage(int iParam);
 
@@ -146,8 +160,6 @@ extern void hb_gtnap_cualib_text_confirma_button(const uint32_t button_id, const
 
 extern void hb_gtnap_cualib_default_button(const uint32_t nDefault);
 
-extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId);
-
 extern void hb_gtnap_cualib_edit(
                     const uint32_t editaBlockParamId,
                     const uint32_t editableGlobalParamId,
@@ -209,6 +221,8 @@ extern void hb_gtnap_cualib_select_current_vector(void);
 extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, FPtr_gtnap_callback func_callback);
 
 extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback);
+
+//extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId);
 
 HB_EXTERN_END
 

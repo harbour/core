@@ -187,15 +187,15 @@ HB_FUNC( NAP_CUALIB_DEFAULT_BUTTON )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_LABEL )
-{
-    uint32_t nLin = hb_parni(1);
-    uint32_t nCol = hb_parni(2);
-    const char_t *text = hb_gtnap_parText(3);
-    bool_t background = (bool_t)hb_parl(4);
-    bool_t in_scroll = (bool_t)hb_parl(5);
-    hb_gtnap_cualib_label(text, nLin, nCol, background, in_scroll, 6);
-}
+// HB_FUNC( NAP_CUALIB_LABEL )
+// {
+//     uint32_t nLin = hb_parni(1);
+//     uint32_t nCol = hb_parni(2);
+//     const char_t *text = hb_parcx(3);
+//     bool_t background = (bool_t)hb_parl(4);
+//     bool_t in_scroll = (bool_t)hb_parl(5);
+//     hb_gtnap_cualib_label(text, nLin, nCol, background, in_scroll, 6);
+// }
 
 /*---------------------------------------------------------------------------*/
 

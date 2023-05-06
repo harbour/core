@@ -3,6 +3,15 @@
     TODO: More info
 */
 
+
+//
+// FRAN!!!!!!! Must be deleted this file 
+//
+// Must be used: 'hbapicdp.h'
+//
+
+
+
 #ifndef HB_GTCONVERT_H_
 #define HB_GTCONVERT_H_
 
