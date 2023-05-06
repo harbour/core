@@ -7,6 +7,31 @@
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_IMAGE )
+{
+    uint32_t top = hb_parni(1);
+    uint32_t left = hb_parni(2);
+    uint32_t bottom = hb_parni(3);
+    uint32_t right = hb_parni(4);
+    const char_t *pathname = hb_parcx(5);
+    HB_ITEM *click_block = hb_param(6, HB_IT_BLOCK);
+    bool_t autoclose = (bool_t)hb_parl(7);
+    uint32_t id = hb_gtnap_image(top, left, bottom, right, pathname, click_block, autoclose);
+    hb_retni(id);
+}
+
+
+
+
+
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_IMAGE_FROM_FILE )
 {
     const char_t *pathname = hb_gtnap_parText(1);

@@ -143,16 +143,16 @@ HB_FUNC( NAP_CUALIB_TEXTVIEW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_IMAGE )
-{
-    const char_t *pathname = hb_gtnap_parText(1);
-    uint32_t nTop = hb_parni(3);
-    uint32_t nLeft = hb_parni(4);
-    uint32_t nBottom = hb_parni(5);
-    uint32_t nRight = hb_parni(6);
-    bool_t autoclose = (bool_t)hb_parl(7);
-    hb_gtnap_cualib_image(pathname, 2, nTop, nLeft, nBottom, nRight, autoclose);
-}
+//HB_FUNC( NAP_CUALIB_IMAGE )
+//{
+//    const char_t *pathname = hb_gtnap_parText(1);
+//    uint32_t nTop = hb_parni(3);
+//    uint32_t nLeft = hb_parni(4);
+//    uint32_t nBottom = hb_parni(5);
+//    uint32_t nRight = hb_parni(6);
+//    bool_t autoclose = (bool_t)hb_parl(7);
+//    hb_gtnap_cualib_image(pathname, 2, nTop, nLeft, nBottom, nRight, autoclose);
+//}
 
 /*---------------------------------------------------------------------------*/
 

@@ -19,6 +19,9 @@ typedef struct _gtnap_vector_t GtNapVector;
 
 typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
+/* Return codes when modal window has been closed */
+#define WINCLOSE_IMAGE_AUTOCLOSE    2000
+
 HB_EXTERN_BEGIN
 
 extern void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
@@ -34,6 +37,12 @@ extern uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM 
 extern void hb_gtnap_label_fgcolor(const uint32_t id, const color_t color);
 
 extern void hb_gtnap_label_bgcolor(const uint32_t id, const color_t color);
+
+extern uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose);
+
+
+
+
 
 
 
@@ -78,15 +87,6 @@ extern char_t* hb_gtnap_area_temp(GtNapArea *area, uint32_t *size);
 extern void* hb_gtnap_area(GtNapArea *area);
 
 
-extern Image *hb_gtnap_parImage(int iParam);
-
-extern Font *hb_gtnap_parFont(int iParam);
-
-extern Window *hb_gtnap_parWindow(int iParam);
-
-extern void hb_gtnap_retImageGC(Image *image);
-
-extern void hb_gtnap_retFontGC(Font *font);
 
 extern void hb_gtnap_callback(GtNapCallback *callback, Event *e);
 
@@ -152,7 +152,6 @@ extern uint32_t hb_gtnap_cualib_tableview_select_single_row(void);
 
 extern ArrSt(uint32_t) *hb_gtnap_cualib_tableview_select_multiple_row(void);
 
-extern void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose);
 
 extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose);
 
@@ -223,6 +222,19 @@ extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComp
 extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback);
 
 //extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId);
+
+//extern void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose);
+
+extern Image *hb_gtnap_parImage(int iParam);
+
+extern Font *hb_gtnap_parFont(int iParam);
+
+extern Window *hb_gtnap_parWindow(int iParam);
+
+extern void hb_gtnap_retImageGC(Image *image);
+
+extern void hb_gtnap_retFontGC(Font *font);
+
 
 HB_EXTERN_END
 

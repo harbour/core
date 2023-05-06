@@ -1075,13 +1075,24 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
     IF SOB_MODO_GRAFICO()
         FOR N_Cont := 1 TO LEN(V_LstImagens)
 
-            NAP_CUALIB_IMAGE(V_LstImagens[N_Cont,_IMAGEM_ARQUIVO],;
-                            V_LstImagens[N_Cont,_IMAGEM_BLOCO_ACAO],;
-                            N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_INICIAL],;
-                            N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_INICIAL],;
-                            N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_FINAL  ],;
-                            N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_FINAL  ],;
-                            V_LstImagens[N_Cont,_IMAGEM_AUTOCLOSE])
+            NAP_IMAGE(N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_INICIAL],;
+                    N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_INICIAL],;
+                    N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_FINAL  ],;
+                    N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_FINAL  ],;
+                    V_LstImagens[N_Cont,_IMAGEM_ARQUIVO],;
+                    V_LstImagens[N_Cont,_IMAGEM_BLOCO_ACAO],;
+                    V_LstImagens[N_Cont,_IMAGEM_AUTOCLOSE])
+
+            // NAP_CUALIB_IMAGE(
+            //     V_LstImagens[N_Cont,_IMAGEM_ARQUIVO],;
+            //                 V_LstImagens[N_Cont,_IMAGEM_BLOCO_ACAO],;
+            //                 N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_INICIAL],;
+            //                 N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_INICIAL],;
+            //                 N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_FINAL  ],;
+            //                 N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_FINAL  ],;
+            //                 V_LstImagens[N_Cont,_IMAGEM_AUTOCLOSE])
+
+
 
             // OutStd("Image: " + V_LstImagens[N_Cont,_IMAGEM_ARQUIVO])
             // OutStd("STLin: " + hb_ntos(N_LinIni+V_LstImagens[N_Cont,_IMAGEM_LIN_INICIAL]))
@@ -2971,13 +2982,13 @@ RETURN L_FechouComAutoClose
 ***************************
 STATIC PROC DesenhaDrawLabe(VX_Janela)
 ***************************
-LOCAL B_Text1 := {|| space(26-(LEN(INFO_VERSAO[8])+3)) + "Versão " + INFO_VERSAO[5] + "." + INFO_VERSAO[6] + CHR(VAL(INFO_VERSAO[7])) + "(b"+INFO_VERSAO[8] + ") - S" + TRIM(SERIE_ASPEC_INI())}
-LOCAL B_Text2 := {|| "www.aspec.com.br   Aspec " + chr(184) + "1993-" + STR(YEAR(DATE()),4,0) + ". Todos os direitos reservados"}
-LOCAL N_Id1 := NAP_LABEL(32, 57, B_Text1, .F.)
-LOCAL N_Id2 := NAP_LABEL(33, 39, B_Text2, .F.)
-NAP_LABEL_FGCOLOR(N_Id1, NAP_COLOR_RED())
-NAP_LABEL_BGCOLOR(N_Id1, NAP_COLOR_CYAN())
-NAP_LABEL_BGCOLOR(N_Id2, NAP_COLOR_CYAN())
+    LOCAL B_Text1 := {|| space(26-(LEN(INFO_VERSAO[8])+3)) + "Versão " + INFO_VERSAO[5] + "." + INFO_VERSAO[6] + CHR(VAL(INFO_VERSAO[7])) + "(b"+INFO_VERSAO[8] + ") - S" + TRIM(SERIE_ASPEC_INI())}
+    LOCAL B_Text2 := {|| "www.aspec.com.br   Aspec " + chr(184) + "1993-" + STR(YEAR(DATE()),4,0) + ". Todos os direitos reservados"}
+    LOCAL N_Id1 := NAP_LABEL(32, 57, B_Text1, .F.)
+    LOCAL N_Id2 := NAP_LABEL(33, 39, B_Text2, .F.)
+    NAP_LABEL_FGCOLOR(N_Id1, NAP_COLOR_RED())
+    NAP_LABEL_BGCOLOR(N_Id1, NAP_COLOR_CYAN())
+    NAP_LABEL_BGCOLOR(N_Id2, NAP_COLOR_CYAN())
 
 
 

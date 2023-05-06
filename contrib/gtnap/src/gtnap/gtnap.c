@@ -322,9 +322,8 @@ __END_C
 /*---------------------------------------------------------------------------*/
 
 static GtNap *GTNAP_GLOBAL = NULL;
-static PHB_ITEM INIT_CODEBLOCK = NULL;
-static PHB_ITEM END_CODEBLOCK = NULL;
 static char_t INIT_TITLE[128];
+static PHB_ITEM INIT_CODEBLOCK = NULL;
 static uint32_t INIT_ROWS = 0;
 static uint32_t INIT_COLS = 0;
 
@@ -448,11 +447,62 @@ static void i_compute_font_size(const uint32_t max_width, const uint32_t max_hei
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_remove_utf8_CR(char_t *utf8)
+{
+    /* Remove the Carriage Return (CR) character (NAppGUI doesn't like) */
+    uint32_t i = 0, j = 0;
+    for(; utf8[i] != 0;)
+    {
+        if (utf8[i] != 13)
+        {
+            utf8[j] = utf8[i];
+            j += 1;
+        }
+
+        i += 1;
+    }
+
+    utf8[j] = 0;
+    return j;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_item_to_str_utf8(HB_ITEM *item, char_t *utf8, const uint32_t size)
+{
+    hb_itemCopyStrUTF8(item, (char*)utf8, (HB_SIZE)size);
+    return i_remove_utf8_CR(utf8);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_cp_str_utf8(const char_t *cp_str, char_t *utf8, const uint32_t size)
+{
+    HB_CODEPAGE *cp = hb_vmCDP();
+    cassert_no_null(cp_str);
+    cassert_no_null(utf8);
+    hb_cdpStrToUTF8(cp, (const char*)cp_str, (HB_SIZE)str_len_c(cp_str), (char*)utf8, (HB_SIZE)size);
+    return i_remove_utf8_CR(utf8);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static String *i_cp_str_string(const char_t *cp_str)
+{
+    char_t utf8[STATIC_TEXT_SIZE];
+    String *str = NULL;
+    i_cp_str_utf8(cp_str, utf8, sizeof32(utf8));
+    str = str_c(utf8);
+    return str;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
     GTNAP_GLOBAL = heap_new0(GtNap);
-    GTNAP_GLOBAL->title = gtconvert_1252_to_UTF8(INIT_TITLE);
+    GTNAP_GLOBAL->title = i_cp_str_string(INIT_TITLE);
     GTNAP_GLOBAL->rows = INIT_ROWS;
     GTNAP_GLOBAL->cols = INIT_COLS;
     GTNAP_GLOBAL->windows = arrst_create(GtNapWindow);
@@ -466,8 +516,10 @@ static GtNap *i_gtnap_create(void)
         PHB_ITEM pRet = hb_itemDo(INIT_CODEBLOCK, 0);
         hb_itemRelease(pRet);
         hb_itemRelease(INIT_CODEBLOCK);
-        INIT_CODEBLOCK = NULL;
     }
+
+    INIT_TITLE[0] = 0;
+    INIT_CODEBLOCK = NULL;
 
     return GTNAP_GLOBAL;
 }
@@ -482,8 +534,8 @@ void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t col
     hb_winmainArgGet(&hInstance, NULL, NULL);
 #endif
 
+    str_copy_c(INIT_TITLE, sizeof32(INIT_TITLE), title);
     INIT_CODEBLOCK = hb_itemNew(begin_block);
-    str_copy_c(INIT_TITLE, sizeof(INIT_TITLE), title);
     INIT_ROWS = rows;
     INIT_COLS = cols;
 
@@ -547,46 +599,6 @@ const char_t *hb_gtnap_parText(const uint32_t iParam)
     }
 
     return "";
-}
-
-/*---------------------------------------------------------------------------*/
-
-static uint32_t i_remove_utf8_CR(char_t *utf8)
-{
-    /* Remove the Carriage Return (CR) character (NAppGUI doesn't like) */
-    uint32_t i = 0, j = 0;
-    for(; utf8[i] != 0;)
-    {
-        if (utf8[i] != 13)
-        {
-            utf8[j] = utf8[i];
-            j += 1;
-        }
-
-        i += 1;
-    }
-
-    utf8[j] = 0;
-    return j;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static uint32_t i_item_to_str_utf8(HB_ITEM *item, char_t *utf8, const uint32_t size)
-{
-    hb_itemCopyStrUTF8(item, (char*)utf8, (HB_SIZE)size);
-    return i_remove_utf8_CR(utf8);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static uint32_t i_cp_str_utf8(const char_t *cp_str, char_t *utf8, const uint32_t size)
-{
-    HB_CODEPAGE *cp = hb_vmCDP();
-    cassert_no_null(cp_str);
-    cassert_no_null(utf8);
-    hb_cdpStrToUTF8(cp, (const char*)cp_str, (HB_SIZE)str_len_c(cp_str), (char*)utf8, (HB_SIZE)size);
-    return i_remove_utf8_CR(utf8);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -832,6 +844,133 @@ void hb_gtnap_label_bgcolor(const uint32_t id, const color_t color)
     cassert(obj->type == ekOBJ_LABEL);
     label_bgcolor((Label*)obj->component, color);
 }
+
+/*---------------------------------------------------------------------------*/
+
+static void i_gtnap_callback(GtNapCallback *callback)
+{
+    cassert_no_null(callback);
+    if (callback->codeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
+        hb_itemRelease(retItem);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Listener *i_gtnap_listener(HB_ITEM *block, const int32_t key, const bool_t autoclose, GtNapWindow *gtwin, FPtr_gtnap_callback func_callback)
+{
+    GtNapCallback *callback = heap_new0(GtNapCallback);
+    cassert_no_null(gtwin);
+    callback->codeBlock = block ? hb_itemNew(block) : NULL;
+    callback->cuawin = gtwin;
+    callback->key = key;
+    callback->autoclose = autoclose;
+    arrpt_append(gtwin->callbacks, callback, GtNapCallback);
+    return listener(callback, func_callback, GtNapCallback);    
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnImageClick(GtNapCallback *callback, Event *e)
+{
+    i_gtnap_callback(callback);
+    if (callback->autoclose == TRUE)
+    {
+        callback->cuawin->modal_window_alive = FALSE;
+        window_stop_modal(callback->cuawin->window, WINCLOSE_IMAGE_AUTOCLOSE);
+    }
+
+    unref(e);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose)
+{
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    ImageView *view;
+    Listener *listener;
+    S2Df size;
+    cassert_no_null(gtwin);
+    view = imageview_create();
+    listener = i_gtnap_listener(click_block, INT32_MAX, autoclose, gtwin, i_OnImageClick);
+    view_OnClick((View*)view, listener);
+    imageview_scale(view, ekGUI_SCALE_AUTO);
+    size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
+    size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
+    
+    {
+        Image *image = NULL;
+        char_t utf8[STATIC_TEXT_SIZE];
+        i_cp_str_utf8(pathname, utf8, sizeof32(utf8));
+        image = image_from_file(utf8, NULL);
+        if (image != NULL)
+        {
+            imageview_image(view, image);
+            image_destroy(&image);
+        }
+    }
+
+    return i_add_object(ekOBJ_IMAGE, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, gtwin);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const int32_t key, const bool_t autoclose, GtNapWindow *cuawin, FPtr_gtnap_callback func_callback)
+{
+    PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
+    if (codeBlock != NULL)
+    {
+        GtNapCallback *callback = heap_new0(GtNapCallback);
+        callback->codeBlock = hb_itemNew(codeBlock);
+        callback->cuawin = cuawin;
+        callback->key = key;
+        callback->autoclose = autoclose;
+        arrpt_append(cuawin->callbacks, callback, GtNapCallback);
+        return listener(callback, func_callback, GtNapCallback);
+    }
+    else
+    {
+        log_printf("NULL listener in paramId: %d  Autoclose: %d", codeBlockParamId, autoclose);
+        return NULL;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+//void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    Image *image = image_from_file(pathname, NULL);
+//    cassert_no_null(cuawin);
+//    if (image != NULL)
+//    {
+//        S2Df size;
+//        ImageView *view = imageview_create();
+//        Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT32_MAX, autoclose, cuawin, i_OnImageClick);
+//        log_printf("Added IMAGE into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+//        imageview_image(view, image);
+//        imageview_scale(view, ekGUI_SCALE_AUTO);
+//        size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+//        size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+//        i_add_object(ekOBJ_IMAGE, nLeft - cuawin->left, nTop - cuawin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, cuawin);
+//        image_destroy(&image);
+//
+//        if (listener != NULL)
+//            view_OnClick((View*)view, listener);
+//    }
+//    else
+//    {
+//        log_printf("Cannot load '%s' image", pathname);
+//    }
+//}
+
+
+
+
+
 
 
 
@@ -1473,70 +1612,6 @@ void hb_gtnap_cualib_textview(TextView *view,
         obj->editCodeBlock = NULL;
 }
 
-/*---------------------------------------------------------------------------*/
-
-static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const int32_t key, const bool_t autoclose, GtNapWindow *cuawin, FPtr_gtnap_callback func_callback)
-{
-    PHB_ITEM codeBlock = hb_param(codeBlockParamId, HB_IT_BLOCK);
-    if (codeBlock != NULL)
-    {
-        GtNapCallback *callback = heap_new0(GtNapCallback);
-        callback->codeBlock = hb_itemNew(codeBlock);
-        callback->cuawin = cuawin;
-        callback->key = key;
-        callback->autoclose = autoclose;
-        arrpt_append(cuawin->callbacks, callback, GtNapCallback);
-        return listener(callback, func_callback, GtNapCallback);
-    }
-    else
-    {
-        log_printf("NULL listener in paramId: %d  Autoclose: %d", codeBlockParamId, autoclose);
-        return NULL;
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_OnImageClick(GtNapCallback *callback, Event *e)
-{
-    hb_gtnap_callback(callback, e);
-    log_printf("Click image OnIdle process");
-    if (callback->autoclose == TRUE)
-    {
-        log_printf("--> STOP CUALIB Modal Window: %p 'i_OnImageClick'", callback->cuawin->window);
-        callback->cuawin->modal_window_alive = FALSE;
-        window_stop_modal(callback->cuawin->window, 1000);
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    Image *image = image_from_file(pathname, NULL);
-    cassert_no_null(cuawin);
-    if (image != NULL)
-    {
-        S2Df size;
-        ImageView *view = imageview_create();
-        Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT32_MAX, autoclose, cuawin, i_OnImageClick);
-        log_printf("Added IMAGE into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
-        imageview_image(view, image);
-        imageview_scale(view, ekGUI_SCALE_AUTO);
-        size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
-        size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
-        i_add_object(ekOBJ_IMAGE, nLeft - cuawin->left, nTop - cuawin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, cuawin);
-        image_destroy(&image);
-
-        if (listener != NULL)
-            view_OnClick((View*)view, listener);
-    }
-    else
-    {
-        log_printf("Cannot load '%s' image", pathname);
-    }
-}
 
 /*---------------------------------------------------------------------------*/
 
