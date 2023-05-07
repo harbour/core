@@ -986,31 +986,30 @@ static void i_OnImageClick(GtNapCallback *callback, Event *e)
 
 uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel)
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    ImageView *view;
-    Listener *listener;
-    S2Df size;
-    cassert_no_null(gtwin);
-    view = imageview_create();
-    listener = i_gtnap_listener(click_block, INT32_MAX, autoclose, gtwin, i_OnImageClick);
-    view_OnClick((View*)view, listener);
-    imageview_scale(view, ekGUI_SCALE_AUTO);
-    size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
-    
+    Image *image = NULL;
+    char_t utf8[STATIC_TEXT_SIZE];
+    i_cp_str_utf8(pathname, utf8, sizeof32(utf8));
+    image = image_from_file(utf8, NULL);
+
+    if (image != NULL)
     {
-        Image *image = NULL;
-        char_t utf8[STATIC_TEXT_SIZE];
-        i_cp_str_utf8(pathname, utf8, sizeof32(utf8));
-        image = image_from_file(utf8, NULL);
-        if (image != NULL)
-        {
-            imageview_image(view, image);
-            image_destroy(&image);
-        }
+        GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+        ImageView *view;
+        Listener *listener;
+        S2Df size;
+        cassert_no_null(gtwin);
+        view = imageview_create();
+        listener = i_gtnap_listener(click_block, INT32_MAX, autoclose, gtwin, i_OnImageClick);
+        view_OnClick((View*)view, listener);
+        imageview_scale(view, ekGUI_SCALE_AUTO);
+        size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
+        size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);    
+        imageview_image(view, image);
+        image_destroy(&image);
+        return i_add_object(ekOBJ_IMAGE, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)view, gtwin);
     }
 
-    return i_add_object(ekOBJ_IMAGE, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)view, gtwin);
+    return UINT32_MAX;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4946,9 +4945,11 @@ static void hb_gtnap_OutErr( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 {
     HB_SYMBOL_UNUSED( pGT );
     if (pbyStr != NULL && ulLen > 0)
-        log_printf("hb_gtnap_OutErr(%s (%d))", pbyStr, (int)ulLen);
-    else
-        log_printf("hb_gtnap_OutErr(empty)");
+    {
+        char_t utf8[STATIC_TEXT_SIZE];
+        i_cp_str_utf8(pbyStr, utf8, sizeof32(utf8));
+        log_printf("%s", utf8);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4969,6 +4970,21 @@ static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
     HB_SYMBOL_UNUSED( iType );
     HB_SYMBOL_UNUSED( pInfo );
     return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_Alert( PHB_GT pGT, PHB_ITEM message, PHB_ITEM opts, int a, int b, double c )
+{
+    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED( message );
+    HB_SYMBOL_UNUSED( opts );
+    HB_SYMBOL_UNUSED( a );
+    HB_SYMBOL_UNUSED( b );
+    HB_SYMBOL_UNUSED( c );
+    /* TODO: Improbe altert message */
+    cassert_fatal_msg(FALSE, "Harbour Alert!");
+    return 1;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5141,7 +5157,7 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->Tone = hb_gtnap_Tone;
     pFuncTable->Bell = NULL;
     pFuncTable->Info = hb_gtnap_Info;
-    pFuncTable->Alert = NULL;
+    pFuncTable->Alert = hb_gtnap_Alert;
     pFuncTable->SetFlag = NULL;
 
     /* internationalization */
