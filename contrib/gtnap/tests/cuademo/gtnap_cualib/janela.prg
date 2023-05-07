@@ -1081,7 +1081,8 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
                     N_ColIni+V_LstImagens[N_Cont,_IMAGEM_COL_FINAL  ],;
                     V_LstImagens[N_Cont,_IMAGEM_ARQUIVO],;
                     V_LstImagens[N_Cont,_IMAGEM_BLOCO_ACAO],;
-                    V_LstImagens[N_Cont,_IMAGEM_AUTOCLOSE])
+                    V_LstImagens[N_Cont,_IMAGEM_AUTOCLOSE],;
+                    .F.)
 
             // NAP_CUALIB_IMAGE(
             //     V_LstImagens[N_Cont,_IMAGEM_ARQUIVO],;

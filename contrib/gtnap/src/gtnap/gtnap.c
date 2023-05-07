@@ -646,10 +646,11 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
     gtwin->right = right;
     gtwin->cursor_row = 0;
     gtwin->cursor_col = 0;
-    gtwin->scroll_top = -1;
-    gtwin->scroll_left = -1;
-    gtwin->scroll_bottom = -1;
-    gtwin->scroll_right = -1;
+    gtwin->scroll_top = INT32_MIN;
+    gtwin->scroll_left = INT32_MIN;
+    gtwin->scroll_bottom = INT32_MIN;
+    gtwin->scroll_right = INT32_MIN;
+
 
     gtwin->is_configured = FALSE;
     gtwin->is_closed_by_esc = FALSE;
@@ -701,6 +702,7 @@ static GtNapObject *i_get_object(GtNap *gtnap, const uint32_t id)
 void hb_gtnap_scroll_panel(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    cassert(gtwin->scroll_top == INT32_MIN);
     gtwin->scroll_top = top;
     gtwin->scroll_left = left;
     gtwin->scroll_bottom = bottom;
@@ -982,7 +984,7 @@ static void i_OnImageClick(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose)
+uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     ImageView *view;
@@ -1008,7 +1010,7 @@ uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t 
         }
     }
 
-    return i_add_object(ekOBJ_IMAGE, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, gtwin);
+    return i_add_object(ekOBJ_IMAGE, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)view, gtwin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4110,13 +4112,13 @@ static S2Df i_scroll_content_size(const ArrSt(GtNapObject) *objects)
 static bool_t i_with_scroll_panel(const GtNapWindow *gtwin)
 {
     cassert_no_null(gtwin);
-    if (gtwin->top >= 0)
+    if (gtwin->scroll_top >= 0)
         return TRUE;
 
-    cassert(gtwin->top == -1);
-    cassert(gtwin->left == -1);
-    cassert(gtwin->bottom == -1);
-    cassert(gtwin->right == -1);
+    cassert(gtwin->scroll_top == INT32_MIN);
+    cassert(gtwin->scroll_left == INT32_MIN);
+    cassert(gtwin->scroll_bottom == INT32_MIN);
+    cassert(gtwin->scroll_right == INT32_MIN);
     return FALSE;
 }
 

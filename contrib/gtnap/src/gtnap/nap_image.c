@@ -16,7 +16,8 @@ HB_FUNC( NAP_IMAGE )
     const char_t *pathname = hb_parcx(5);
     HB_ITEM *click_block = hb_param(6, HB_IT_BLOCK);
     bool_t autoclose = (bool_t)hb_parl(7);
-    uint32_t id = hb_gtnap_image(top, left, bottom, right, pathname, click_block, autoclose);
+    bool_t in_scroll = (bool_t)hb_parl(8);
+    uint32_t id = hb_gtnap_image(top, left, bottom, right, pathname, click_block, autoclose, in_scroll);
     hb_retni(id);
 }
 
