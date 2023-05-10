@@ -57,6 +57,8 @@ _gui_api void gui_OnNotification(Listener *listener);
 
 _gui_api void gui_OnIdle(Listener *listener);
 
+_gui_api uint32_t gui_info_window(const bool_t fatal, const char_t *msg, const char_t *caption, const char_t *detail, const char_t *file, const uint32_t line, const ArrPt(String) *buttons, const uint32_t defindex);
+
 _gui_api void *evbind_object_imp(Event *e, const char_t *type);
 
 _gui_api bool_t evbind_modify_imp(Event *e, const char_t *type, const uint16_t size, const char_t *mname, const char_t *mtype, const uint16_t moffset, const uint16_t msize);

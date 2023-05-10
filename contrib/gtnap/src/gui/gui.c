@@ -96,6 +96,7 @@ static ArrPt(Window) *i_WINDOWS = NULL;
 static ArrPt(Menu) *i_MENUS = NULL;
 static String *i_APP_NAME = NULL;
 static Window *i_ASSERT_WINDOW = NULL;
+static Window *i_INFO_WINDOW = NULL;
 static bool_t i_SHOW_ASSERT_WINDOW = FALSE;
 static bool_t i_WRITE_ASSERT_LOG = FALSE;
 static bool_t i_IN_ASSERT = FALSE;
@@ -782,8 +783,7 @@ static Layout *i_assert_layout(const ResPack *pack, const char_t *message, const
     Layout *layout1 = layout_create(1, (uint32_t)(icon == ekICON_CRASH ? 2 : 3));
     Layout *layout2 = i_icons_layout(pack, icon);
     Label *label = label_multiline();
-    String *smessage = str_printf("%s %s %s", message, respack_text(pack, CONTACT_INFO), "support@nappgui.com");
-    label_text(label, tc(smessage));
+    label_text(label, message);
     layout_layout(layout, layout2, 0, 0);
     layout_valign(layout, 0, 0, ekTOP);
     layout_hmargin(layout, 0, 5.f);
@@ -801,7 +801,6 @@ static Layout *i_assert_layout(const ResPack *pack, const char_t *message, const
     layout_hexpand(layout, 1);
     layout_vmargin(layout1, 0, 5.f);
     layout_layout(layout, layout1, 1, 0);
-    str_destroy(&smessage);
     return layout;
 }
 
@@ -866,17 +865,15 @@ static Layout *i_buttons_layout(const ResPack *pack, const icon_t icon, Button *
 
 /*---------------------------------------------------------------------------*/
 
-static Window *i_assert_window(ResPack *pack, const char_t *message, const icon_t icon, Layout *info_layout)
+static Window *i_assert_window(ResPack *pack, const char_t *message, const icon_t icon, Layout *info_layout, Layout *buttons_layout, Button *defbutton)
 {
-    Button *defbutton = NULL;
     Panel *panel = panel_create();
     Layout *layout = layout_create(1, 2);
     Layout *layout1 = i_assert_layout(pack, message, icon, info_layout);
-    Layout *layout2 = i_buttons_layout(pack, icon, &defbutton);
     String *title = str_printf(respack_text(pack, ASSERT_TITLE), tc(i_APP_NAME));
     Window *window = window_create(ekWINDOW_TITLE);
     layout_layout(layout, layout1, 0, 0);
-    layout_layout(layout, layout2, 0, 1);
+    layout_layout(layout, buttons_layout, 0, 1);
     layout_vmargin(layout, 0, 20.f);
     layout_margin(layout, 15.f);
     panel_layout(panel, layout);
@@ -889,13 +886,15 @@ static Window *i_assert_window(ResPack *pack, const char_t *message, const icon_
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_launch_assert(void)
+static uint32_t i_launch_assert(Window **window)
 {
     Window *main_window = _gui_main_window();
     S2Df size1;
     S2Df size2;
     V2Df origin;
     uint32_t ret;
+
+    cassert_no_null(window);
 
     if (main_window != NULL)
     {
@@ -908,12 +907,12 @@ static uint32_t i_launch_assert(void)
         size1 = gui_resolution();
     }
 
-    size2 = window_get_size(i_ASSERT_WINDOW);
+    size2 = window_get_size(*window);
     origin.x += .5f * (size1.width - size2.width);
     origin.y += 50.f;
-    window_origin(i_ASSERT_WINDOW, origin);
-    ret = window_modal(i_ASSERT_WINDOW, main_window);
-    window_destroy(&i_ASSERT_WINDOW);
+    window_origin(*window, origin);
+    ret = window_modal(*window, main_window);
+    window_destroy(window);
     return ret;
 }
 
@@ -942,14 +941,16 @@ static void i_assert_handler(void *item, const uint32_t group, const char_t *cap
 
     if (i_SHOW_ASSERT_WINDOW == TRUE)
     {
+        Button *defbutton = NULL;
         ResPack *pack = res_gui_respack("");
         const char_t *message = respack_text(pack, group == 0 ? ASSERT_CRASH : ASSERT_INFO);
+        String *smessage = str_printf("%s %s %s", message, respack_text(pack, CONTACT_INFO), "support@nappgui.com");
         icon_t icon = group == 0 ? ekICON_CRASH : ekICON_ASSERT;
         Layout *info_layout = i_info_layout(pack, caption, detail, file, line);
+        Layout *buttons_layout = i_buttons_layout(pack, icon, &defbutton);
         uint32_t assert_ret;
-        i_ASSERT_WINDOW = i_assert_window(pack, message, icon, info_layout);
-
-        assert_ret = i_launch_assert();
+        i_ASSERT_WINDOW = i_assert_window(pack, tc(smessage), icon, info_layout, buttons_layout, defbutton);
+        assert_ret = i_launch_assert(&i_ASSERT_WINDOW);
         switch (assert_ret) {
         case 0:
             break;
@@ -963,6 +964,7 @@ static void i_assert_handler(void *item, const uint32_t group, const char_t *cap
         }
 
         respack_destroy(&pack);
+        str_destroy(&smessage);
     }
 
     if (i_WRITE_ASSERT_LOG == TRUE)
@@ -981,3 +983,52 @@ static void i_assert_handler(void *item, const uint32_t group, const char_t *cap
     i_IN_ASSERT = finish;
 }
 
+/*---------------------------------------------------------------------------*/
+
+static void i_OnInfoClick(void *unused, Event *e)
+{
+    Button *sender = event_sender(e, Button);
+    uint32_t tag = button_get_tag(sender);
+    window_stop_modal(i_INFO_WINDOW, tag);
+    unref(unused);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_info_buttons_layout(const ArrPt(String) *buttons, const uint32_t defindex, Button **defbutton)
+{
+    uint32_t i, n = arrpt_size(buttons, String);
+    Layout *layout = layout_create(n, 1);
+    cassert_no_null(defbutton);
+    cassert(defindex < n);
+    for (i = 0; i < n; ++i)
+    {
+        Button *button = button_push();
+        const String *text = arrpt_get_const(buttons, i, String);
+        button_text(button, tc(text));
+        button_tag(button, i);
+        button_OnClick(button, listener(NULL, i_OnInfoClick, void));
+        layout_button(layout, button, i, 0);
+
+        if (i < n - 1)
+            layout_hmargin(layout, i, 10.f);
+
+        if (i == defindex)
+            *defbutton = button;
+    }
+
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t gui_info_window(const bool_t fatal, const char_t *msg, const char_t *caption, const char_t *detail, const char_t *file, const uint32_t line, const ArrPt(String) *buttons, const uint32_t defindex)
+{
+    ResPack *pack = res_gui_respack("");
+    Button *defbutton = NULL;
+    icon_t icon = fatal ? ekICON_CRASH : ekICON_ASSERT;
+    Layout *info_layout = i_info_layout(pack, caption, detail, file, line);
+    Layout *buttons_layout = i_info_buttons_layout(buttons, defindex, &defbutton);
+    i_INFO_WINDOW = i_assert_window(pack, msg, icon, info_layout, buttons_layout, defbutton);
+    return i_launch_assert(&i_INFO_WINDOW);
+}

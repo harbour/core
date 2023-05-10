@@ -4974,17 +4974,56 @@ static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_Alert( PHB_GT pGT, PHB_ITEM message, PHB_ITEM opts, int a, int b, double c )
+static int hb_gtnap_Alert( PHB_GT pGT, PHB_ITEM message, PHB_ITEM options, int a, int b, double c )
 {
+    String *msg = NULL;
+    ArrPt(String) *opts = NULL;
+    uint32_t ret = 0;
+
     HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( message );
-    HB_SYMBOL_UNUSED( opts );
     HB_SYMBOL_UNUSED( a );
     HB_SYMBOL_UNUSED( b );
     HB_SYMBOL_UNUSED( c );
-    /* TODO: Improbe altert message */
-    cassert_fatal_msg(FALSE, "Harbour Alert!");
-    return 1;
+
+    if (HB_ITEM_TYPE(message) == HB_IT_STRING)
+    {
+        char_t utf8[STATIC_TEXT_SIZE];
+        hb_itemCopyStrUTF8(message, utf8, sizeof(utf8));
+        msg = str_c(utf8);
+    }
+    else
+    {
+        msg = str_c("Unknown alert message");
+    }
+
+    opts = arrpt_create(String);
+    if (HB_ITEM_TYPE(options) == HB_IT_ARRAY)
+    {
+        HB_SIZE i, n = hb_arrayLen(options);
+        for (i = 0; i < n; ++i)
+        {
+            PHB_ITEM elem = hb_arrayGetItemPtr(options, i + 1);
+            String *opt = NULL;
+            if (HB_ITEM_TYPE(elem) == HB_IT_STRING)
+            {
+                char_t utf8[STATIC_TEXT_SIZE];
+                hb_itemCopyStrUTF8(elem, utf8, sizeof(utf8));
+                opt = str_c(utf8);
+            }
+            else
+            {
+                opt = str_c("Unknown opt");
+            }
+
+            arrpt_append(opts, opt, String);
+        }
+    }
+
+    ret = gui_info_window(TRUE, tc(msg), "Harbour alert", "Please contact ASPEC technical support", "--", 0, opts, 0);
+    str_destroy(&msg);
+    arrpt_destroy(&opts, str_destroy, String);
+
+    return ret + 1;
 }
 
 /*---------------------------------------------------------------------------*/
