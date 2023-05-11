@@ -36,6 +36,8 @@ extern void hb_gtnap_scroll_panel(const int32_t top, const int32_t left, const i
 
 extern uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel);
 
+extern uint32_t hb_gtnap_mesage_label(const uint32_t top, const uint32_t left);
+
 extern void hb_gtnap_label_fgcolor(const uint32_t id, const color_t color);
 
 extern void hb_gtnap_label_bgcolor(const uint32_t id, const color_t color);
@@ -44,6 +46,36 @@ extern uint32_t hb_gtnap_button(const int32_t top, const int32_t left, const int
 
 extern uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel);
 
+extern uint32_t hb_gtnap_edit(
+                    const uint32_t top,
+                    const uint32_t left,
+                    const uint32_t width,
+                    const char_t type,
+                    HB_ITEM *get_set_block,
+                    HB_ITEM *is_editable_block,
+                    HB_ITEM *when_block,
+                    HB_ITEM *valida_block,
+                    HB_ITEM *message_block,
+                    HB_ITEM *keyfilter_block,
+                    HB_ITEM *auto_block,
+                    HB_ITEM *lista_block,
+                    const bool_t in_scroll_panel);
+
+
+                    ////const uint32_t editaBlockParamId,
+                    ////const uint32_t editableGlobalParamId,
+                    ////const uint32_t editableLocalParamId,
+                    //const uint32_t mensParamId,
+                    //const uint32_t listaParamId,
+                    //const uint32_t autoParamId,
+                    //const uint32_t validaParamId,
+                    ////const uint32_t nLin,
+                    ////const uint32_t nCol,
+                    ////const uint32_t nSize,
+                    //PHB_ITEM getobj,
+                    //const bool_t in_scroll_panel,
+                    //const uint32_t filtroTecParamId,
+                    //const uint32_t whenParamId);
 
 
 

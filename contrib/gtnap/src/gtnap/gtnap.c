@@ -851,6 +851,24 @@ uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM *text_b
 
 /*---------------------------------------------------------------------------*/
 
+uint32_t hb_gtnap_mesage_label(const uint32_t top, const uint32_t left)
+{
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    uint32_t id = i_add_label(top - gtwin->top, left - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
+    cassert(gtwin->message_label_id == UINT32_MAX);
+    gtwin->message_label_id = id;
+
+    /* TODO: Remove (just for debug) */
+    {
+        GtNapObject *obj = arrst_last(gtwin->gui_objects, GtNapObject);
+        i_set_label_text(obj, "--MENS--");
+    }
+
+    return id;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_label_fgcolor(const uint32_t id, const color_t color)
 {
     GtNapObject *obj = i_get_object(GTNAP_GLOBAL, id);
@@ -1011,6 +1029,218 @@ uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t 
 
     return UINT32_MAX;
 }
+
+/*---------------------------------------------------------------------------*/
+
+static void i_get_edit_text(const GtNapObject *obj, char_t *utf8, const uint32_t size)
+{
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_EDIT);
+    if (obj->editCodeBlock != NULL)
+    {
+        PHB_ITEM retItem = hb_itemDo(obj->editCodeBlock, 0);
+        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        switch (type) {
+        case HB_IT_STRING:
+            cassert(obj->dtype == ekTYPE_CHARACTER);
+            hb_itemCopyStrUTF8(retItem, (char*)utf8, (HB_SIZE)size);
+            break;
+
+        case HB_IT_DATE:
+        {
+            char date[16];
+            char temp[16];
+            cassert(obj->dtype == ekTYPE_DATE);
+            hb_itemGetDS(retItem, date);
+            hb_dateFormat(date, temp, hb_setGetDateFormat());
+            str_copy_c(utf8, size, temp);
+            break;
+        }
+
+        default:
+            str_copy_c(utf8, size, "");
+        }
+
+        hb_itemRelease(retItem);
+    }
+    else
+    {
+        str_copy_c(utf8, size, "");
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_set_edit_text(const GtNapObject *obj)
+{
+    char_t buffer[STATIC_TEXT_SIZE];
+    cassert_no_null(obj);
+    i_get_edit_text(obj, buffer, sizeof(buffer));
+    edit_text((Edit*)obj->component, buffer);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_edit(
+                    const uint32_t top,
+                    const uint32_t left,
+                    const uint32_t width,
+                    const char_t type,
+                    HB_ITEM *get_set_block,
+                    HB_ITEM *is_editable_block,
+                    HB_ITEM *when_block,
+                    HB_ITEM *valida_block,
+                    HB_ITEM *message_block,
+                    HB_ITEM *keyfilter_block,
+                    HB_ITEM *auto_block,
+                    HB_ITEM *lista_block,
+                    const bool_t in_scroll_panel)
+{
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    Edit *edit = edit_create();
+    S2Df size;
+    uint32_t id = UINT32_MAX;
+    GtNapObject *obj = NULL;
+    cassert_no_null(gtwin);
+    edit_font(edit, GTNAP_GLOBAL->reduced_font);
+    edit_vpadding(edit, i_edit_vpadding());
+    edit_bgcolor_focus(edit, kCOLOR_CYAN);
+    size.width = (real32_t)((width + 1) * GTNAP_GLOBAL->cell_x_size);
+    size.height = (real32_t)GTNAP_GLOBAL->edit_y_size;
+    id = i_add_object(ekOBJ_EDIT, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)edit, gtwin);
+    obj = arrst_last(gtwin->gui_objects, GtNapObject);
+    cassert_no_null(obj);
+    cassert(obj->type = ekOBJ_EDIT);
+
+    obj->editSize = width;
+
+    if (type == 'C') {
+        obj->dtype = ekTYPE_CHARACTER;
+    }
+    else if (type == 'D') {
+        obj->dtype = ekTYPE_DATE;
+    }
+    else {
+        obj->dtype = ENUM_MAX(datatype_t);
+        cassert(FALSE);
+    }
+
+    if (get_set_block != NULL)
+        obj->editCodeBlock = hb_itemNew(get_set_block);
+
+    if (is_editable_block != NULL)
+        obj->editableGlobalCodeBlock = hb_itemNew(is_editable_block);
+
+    if (when_block != NULL)
+        obj->whenCodeBlock = hb_itemNew(when_block);
+
+    if (valida_block != NULL)
+        obj->validaCodeBlock = hb_itemNew(valida_block);
+
+    if (message_block != NULL)
+        obj->mensCodeBlock = hb_itemNew(message_block);
+
+    if (keyfilter_block != NULL)
+        obj->mensCodeBlock = hb_itemNew(keyfilter_block);
+
+    if (auto_block != NULL)
+        obj->autoCodeBlock = hb_itemNew(auto_block);
+
+    if (lista_block != NULL)
+        obj->listaCodeBlock = hb_itemNew(lista_block);
+
+    i_set_edit_text(obj);
+
+    //log_printf("Added EDIT (%s) into CUALIB Window: %d, %d, %d", edit_get_text((Edit*)obj->component), nLin, nCol, nSize);
+
+
+    //if (obj->listaCodeBlock != NULL)
+    //{
+    //    Button *button = button_push();
+    //    char_t text[8];
+    //    GtNapObject *objbut = NULL;
+    //    S2Df bsize;
+    //    uint32_t editIndex;
+
+    //    {
+    //        uint32_t b = unicode_to_char(0x25BE, text, ekUTF8);
+    //        text[b] = '\0';
+    //    }
+
+    //    //uint32_t butIndex;
+    //    button_vpadding(button, i_button_vpadding());
+    //    log_printf("EDIT (%s) HAS LISTA IN SCROLL: %d", edit_get_text((Edit*)obj->component), in_scroll_panel);
+    //    button_text(button, text);
+    //    button_font(button, GTNAP_GLOBAL->global_font);
+
+    //    editIndex = arrst_size(cuawin->gui_objects, GtNapObject) - 1;
+    //    bsize.width = (real32_t)(2 * GTNAP_GLOBAL->cell_x_size);
+    //    bsize.height = (real32_t)(1 * GTNAP_GLOBAL->button_y_size);
+    //    i_add_object(ekOBJ_BUTTON, (nCol - cuawin->left) + nSize + 1, (nLin - cuawin->top), GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &bsize, in_scroll_panel, (GuiComponent*)button, cuawin);
+
+    //    objbut = arrst_last(cuawin->gui_objects, GtNapObject);
+    //    cassert_no_null(objbut);
+    //    cassert(objbut->type = ekOBJ_BUTTON);
+    //    cassert(objbut->editBoxIndexForButton == UINT32_MAX);
+    //    cassert(objbut->cuawin == NULL);
+    //    objbut->cuawin = cuawin;
+    //    objbut->editBoxIndexForButton = editIndex;
+    //    //butIndex = arrst_size(cuawin->gui_objects, GtNapObject);
+
+    //    {
+    //        Listener *listener = i_gtnap_cualib_listener_noblock(editIndex, cuawin, i_OnListaButton);
+    //        button_OnClick(button, listener);
+    //    }
+    //}
+
+
+
+
+
+    //str_destroy(&ctext);
+
+    // if (listener != NULL)
+    //     button_OnClick(button, listener);
+
+    return id;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*---------------------------------------------------------------------------*/
 
@@ -2014,55 +2244,6 @@ static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
 //    }
 //}
 
-/*---------------------------------------------------------------------------*/
-
-static void i_get_edit_text(const GtNapObject *obj, char_t *buffer, const uint32_t size)
-{
-    cassert_no_null(obj);
-    cassert(obj->type == ekOBJ_EDIT);
-
-    if (obj->editCodeBlock != NULL)
-    {
-        PHB_ITEM retItem = hb_itemDo(obj->editCodeBlock, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
-
-        if (type == HB_IT_STRING)
-        {
-            cassert(obj->dtype == ekTYPE_CHARACTER);
-            hb_itemCopyStrUTF8( retItem, (char*)buffer, (HB_SIZE)size);
-        }
-        else if (type == HB_IT_DATE)
-        {
-            char date[16];
-            char temp[16];
-            cassert(obj->dtype == ekTYPE_DATE);
-            hb_itemGetDS(retItem, date);
-            hb_dateFormat(date, temp, hb_setGetDateFormat());
-            str_copy_c(buffer, size, temp);
-        }
-        else
-        {
-            cassert_msg(FALSE, "Unknown Type in i_set_edit_text");
-            str_copy_c(buffer, size, "");
-        }
-
-        hb_itemRelease(retItem);
-    }
-    else
-    {
-        str_copy_c(buffer, size, "");
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_set_edit_text(const GtNapObject *obj)
-{
-    char_t buffer[1024];
-    cassert_no_null(obj);
-    i_get_edit_text(obj, buffer, sizeof(buffer));
-    edit_text((Edit*)obj->component, buffer);
-}
 
 /*---------------------------------------------------------------------------*/
 
@@ -2151,7 +2332,7 @@ static void i_OnListaButton(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-extern void hb_gtnap_cualib_edit(
+void hb_gtnap_cualib_edit(
                     const uint32_t editaBlockParamId,
                     const uint32_t editableGlobalParamId,
                     const uint32_t editableLocalParamId,
