@@ -159,7 +159,7 @@ struct _gtnap_window_t
     HB_ITEM *desist_block;
     HB_ITEM *error_date_block;
 
-
+    uint16_t *text_buffer;
 
     bool_t is_configured;
     bool_t is_closed_by_esc;
@@ -337,6 +337,47 @@ static uint32_t INIT_COLS = 0;
 
 /* DELETE THIS */
 static void i_gtnap_destroy(GtNap **data);
+static void i_gtwin_configure(GtNapWindow *gtwin);
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapWindow *i_gtwin(GtNap *gtnap, const uint32_t wid)
+{
+    /* Future note: wid might not be its position in the array */
+    cassert_no_null(gtnap);
+    return arrst_get(gtnap->windows, wid, GtNapWindow);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapWindow *i_current_gtwin(GtNap *gtnap)
+{
+    uint32_t id = 0;
+    cassert_no_null(gtnap);
+    id = arrst_size(gtnap->windows, GtNapWindow);
+    if (id >= 1)
+        return arrst_get(gtnap->windows, id - 1, GtNapWindow);
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapObject *i_get_object(GtNap *gtnap, const uint32_t id)
+{
+    GtNapWindow *gtwin = i_current_gtwin(gtnap);
+    cassert_no_null(gtwin);
+    return arrst_get(gtwin->gui_objects, id, GtNapObject);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapObject *i_gtobj(GtNap *gtnap, const uint32_t wid, const uint32_t id)
+{
+    GtNapWindow *gtwin = i_gtwin(gtnap, wid);
+    cassert_no_null(gtwin);
+    return arrst_get(gtwin->gui_objects, id, GtNapObject);
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -635,6 +676,38 @@ static __INLINE uint32_t i_window_flags(const bool_t close_return, const bool_t 
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnTerminalClose(GtNapWindow *gtwin, Event *e)
+{
+    unref(gtwin);
+    unref(e);
+    osapp_finish();
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_terminal(void)
+{
+    GtNap *gtnap = GTNAP_GLOBAL;
+    GtNapWindow *gtwin = NULL;
+    cassert(arrst_size(gtnap->windows, GtNapWindow) == 0);
+    hb_gtnap_window(0, 0, gtnap->rows - 1, gtnap->cols - 1, tc(gtnap->title), FALSE, TRUE, TRUE, FALSE);
+    gtwin = i_current_gtwin(gtnap);
+    i_gtwin_configure(gtwin);
+
+    {
+        uint32_t cwidth = gtwin->right - gtwin->left + 1;
+        uint32_t cheight = gtwin->bottom - gtwin->top + 1;
+        cassert(gtwin->text_buffer == NULL);
+        gtwin->text_buffer = (uint16_t*)heap_malloc(cwidth * cheight * sizeof(uint16_t), "gtwin_textbuffer");
+        bmem_set_zero((byte_t*)gtwin->text_buffer, cwidth * cheight * sizeof(uint16_t));
+    }
+
+    window_OnClose(gtwin->window, listener(gtwin, i_OnTerminalClose, GtNapWindow));
+    window_show(gtwin->window);    
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation)
 {
     uint32_t id = UINT32_MAX;
@@ -683,46 +756,6 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
 
     window_cycle_tabstop(window, FALSE);
     return id;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNapWindow *i_gtwin(GtNap *gtnap, const uint32_t wid)
-{
-    /* Future note: wid might not be its position in the array */
-    cassert_no_null(gtnap);
-    return arrst_get(gtnap->windows, wid, GtNapWindow);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNapWindow *i_current_gtwin(GtNap *gtnap)
-{
-    uint32_t id = 0;
-    cassert_no_null(gtnap);
-    id = arrst_size(gtnap->windows, GtNapWindow);
-    if (id >= 1)
-        return arrst_get(gtnap->windows, id - 1, GtNapWindow);
-
-    return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNapObject *i_get_object(GtNap *gtnap, const uint32_t id)
-{
-    GtNapWindow *gtwin = i_current_gtwin(gtnap);
-    cassert_no_null(gtwin);
-    return arrst_get(gtwin->gui_objects, id, GtNapObject);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNapObject *i_gtobj(GtNap *gtnap, const uint32_t wid, const uint32_t id)
-{
-    GtNapWindow *gtwin = i_gtwin(gtnap, wid);
-    cassert_no_null(gtwin);
-    return arrst_get(gtwin->gui_objects, id, GtNapObject);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1864,7 +1897,6 @@ static void i_remove_window(GtNapWindow *cuawin)
     if (cuawin->gtvector != NULL)
         i_destroy_vector(&cuawin->gtvector);
 
-
     if (cuawin->is_editable_block != NULL)
         hb_itemRelease(cuawin->is_editable_block);
 
@@ -1877,9 +1909,17 @@ static void i_remove_window(GtNapWindow *cuawin)
     if (cuawin->error_date_block != NULL)
         hb_itemRelease(cuawin->error_date_block);
 
+    if (cuawin->text_buffer != NULL)
+    {
+        uint32_t cwidth = cuawin->right - cuawin->left + 1;
+        uint32_t cheight = cuawin->bottom - cuawin->top + 1;
+        heap_free((byte_t**)&cuawin->text_buffer, cwidth * cheight * sizeof(uint16_t), "gtwin_textbuffer");
+    }
+
     cassert(arrst_size(cuawin->gui_objects, GtNapObject) == 0);
     arrst_destroy(&cuawin->gui_objects, NULL, GtNapObject);
     arrpt_destroy(&cuawin->callbacks, i_destroy_callback, GtNapCallback);
+    window_destroy(&cuawin->window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1889,7 +1929,6 @@ static void i_gtnap_destroy(GtNap **data)
     cassert_no_null(data);
     cassert_no_null(*data);
     cassert(*data == GTNAP_GLOBAL);
-    cassert(arrst_size(GTNAP_GLOBAL->windows, GtNapWindow) == 0);
     arrst_destroy(&GTNAP_GLOBAL->windows, i_remove_window, GtNapWindow);
     font_destroy(&GTNAP_GLOBAL->global_font);
     font_destroy(&(*data)->reduced_font);
@@ -4378,12 +4417,123 @@ static bool_t i_with_scroll_panel(const GtNapWindow *gtwin)
 
 static void i_OnCanvasDraw(GtNapWindow *gtwin, Event *e)
 {
-    const EvDraw *p = event_params(e, EvDraw);
-    draw_clear(p->ctx, gui_view_color());
-    draw_font(p->ctx, GTNAP_GLOBAL->global_font);
-    drawctrl_text(p->ctx, "Hello Canvas", 300, 200, ekCTRL_STATE_NORMAL);
-    draw_line(p->ctx, 0, 0, p->width, p->height);    
+    //const EvDraw *p = event_params(e, EvDraw);
+    //draw_clear(p->ctx, gui_view_color());
+    //draw_font(p->ctx, GTNAP_GLOBAL->global_font);
+    //drawctrl_text(p->ctx, "Hello Canvas", 300, 200, ekCTRL_STATE_NORMAL);
+    //draw_line(p->ctx, 0, 0, p->width, p->height);    
     unref(gtwin);
+    unref(e);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_gtwin_configure(GtNapWindow *gtwin)
+{
+    Panel *scroll_panel = NULL;
+    Layout *layout = layout_create(1, 1);
+    V2Df offset = kV2D_ZEROf;
+    cassert_no_null(gtwin);
+    cassert(gtwin->is_configured == FALSE);
+
+    if (gtwin->toolbar != NULL)
+        gtwin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size;
+
+    panel_size(gtwin->panel, gtwin->panel_size);
+    panel_layout(gtwin->panel, layout);
+    window_panel(gtwin->window, gtwin->panel);
+
+    if (i_with_scroll_panel(gtwin) == TRUE)
+    {
+        /* We add a subpanel to window main panel to implement the scroll area */
+        Panel *panel = panel_scroll(FALSE, TRUE);
+        S2Df csize = i_scroll_content_size(gtwin->gui_objects);
+        int32_t cell_x = gtwin->scroll_left - gtwin->left;
+        int32_t cell_y = gtwin->scroll_top - gtwin->top;
+        real32_t pos_x = (real32_t)(cell_x * GTNAP_GLOBAL->cell_x_size);
+        real32_t pos_y = (real32_t)(cell_y * GTNAP_GLOBAL->cell_y_size);
+        real32_t width = (real32_t)((gtwin->scroll_right - gtwin->scroll_left + 3) * GTNAP_GLOBAL->cell_x_size);
+        real32_t height = (real32_t)((gtwin->scroll_bottom - gtwin->scroll_top + 1) * GTNAP_GLOBAL->cell_y_size);
+        V2Df pos = v2df(pos_x, pos_y);
+        S2Df size = s2df(width, height);
+        _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)panel);
+        _component_set_frame((GuiComponent*)panel, &pos, &size);
+        _component_visible((GuiComponent*)panel, FALSE);
+        _panel_content_size(panel, csize.width, csize.height);
+        offset.x = -pos.x;
+        offset.y = -pos.y;
+        scroll_panel = panel;
+        gtwin->scrolled_panel = panel;
+    }
+
+    /* Create the view canvas*/ 
+    cassert(gtwin->canvas == NULL);
+    gtwin->canvas = view_create();
+    view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
+    _component_set_frame((GuiComponent*)gtwin->canvas, &kV2D_ZEROf, &gtwin->panel_size);
+    _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
+    _component_visible((GuiComponent*)gtwin->canvas, TRUE);
+
+    /* Attach gui objects in certain Z-Order (from back to front) */
+    i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_MENUVERT, gtwin->toolbar);
+    i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_TABLEVIEW, gtwin->toolbar);
+    i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_TEXTVIEW, gtwin->toolbar);
+    i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_LABEL, gtwin->toolbar);
+    i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_BUTTON, gtwin->toolbar);
+    i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_EDIT, gtwin->toolbar);
+    i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_IMAGE, gtwin->toolbar);
+    i_attach_toolbar_to_panel(gtwin->toolbar, gtwin->panel);
+
+    /* Tab-stops order */
+    _window_taborder(gtwin->window, NULL);
+
+    if (scroll_panel != NULL)
+        _component_visible((GuiComponent*)scroll_panel, TRUE);
+
+    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_MENUVERT);
+    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_TABLEVIEW);
+    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_TEXTVIEW);
+    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_EDIT);
+    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_BUTTON);
+    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_LABEL);
+    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_IMAGE);
+    i_toolbar_tabstop(gtwin->toolbar);
+
+    /* Allow navigation between edit controls with arrows and return */
+    if (i_num_edits(gtwin) > 1)
+    {
+        window_hotkey(gtwin->window, ekKEY_UP, 0, listener(gtwin, i_OnPreviousTabstop, GtNapWindow));
+        window_hotkey(gtwin->window, ekKEY_DOWN, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
+        window_hotkey(gtwin->window, ekKEY_RETURN, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
+    }
+
+    if (gtwin->buttons_navigation == TRUE)
+    {
+        if (i_num_buttons(gtwin) > 1)
+        {
+            window_hotkey(gtwin->window, ekKEY_LEFT, 0, listener(gtwin, i_OnLeftButton, GtNapWindow));
+            window_hotkey(gtwin->window, ekKEY_RIGHT, 0, listener(gtwin, i_OnRightButton, GtNapWindow));
+        }
+    }
+
+    {
+        GtNapObject *last_edit = NULL;
+        arrst_foreach(obj, gtwin->gui_objects, GtNapObject)
+            if (obj->type == ekOBJ_EDIT)
+            {
+                edit_OnChange((Edit*)obj->component, listener(gtwin, i_OnEditChange, GtNapWindow));
+                edit_OnFilter((Edit*)obj->component, listener(gtwin, i_OnEditFilter, GtNapWindow));
+                edit_OnFocus((Edit*)obj->component, listener(gtwin, i_OnEditFocus, GtNapWindow));
+                obj->is_last_edit = FALSE;
+                last_edit = obj;
+            }
+        arrst_end();
+
+        if (last_edit != NULL)
+            last_edit->is_last_edit = TRUE;
+    }
+
+    gtwin->is_configured = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4396,101 +4546,9 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
     /* Configure the Window before the first launch */
     if (cuawin->is_configured == FALSE)
     {
-        Panel *scroll_panel = NULL;
-        Layout *layout = layout_create(1, 1);
-        V2Df offset = kV2D_ZEROf;
         Listener *listener = NULL;
+        i_gtwin_configure(cuawin);
 
-        if (cuawin->toolbar != NULL)
-            cuawin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size;
-
-        panel_size(cuawin->panel, cuawin->panel_size);
-        panel_layout(cuawin->panel, layout);
-        window_panel(cuawin->window, cuawin->panel);
-
-        if (i_with_scroll_panel(cuawin) == TRUE)
-        {
-            // We add a subpanel to window main panel to implement the scroll area
-
-            // FRAN TODO: With Scroll!!!
-            // Panel *panel = panel_scroll(FALSE, TRUE);
-            // ------------------------------------------------
-
-            Panel *panel = panel_scroll(FALSE, TRUE);
-            S2Df csize = i_scroll_content_size(cuawin->gui_objects);
-            int32_t cell_x = cuawin->scroll_left - cuawin->left;
-            int32_t cell_y = cuawin->scroll_top - cuawin->top;
-            real32_t pos_x = (real32_t)(cell_x * GTNAP_GLOBAL->cell_x_size);
-            real32_t pos_y = (real32_t)(cell_y * GTNAP_GLOBAL->cell_y_size);
-            real32_t width = (real32_t)((cuawin->scroll_right - cuawin->scroll_left + 3) * GTNAP_GLOBAL->cell_x_size);
-            real32_t height = (real32_t)((cuawin->scroll_bottom - cuawin->scroll_top + 1) * GTNAP_GLOBAL->cell_y_size);
-            V2Df pos = v2df(pos_x, pos_y);
-            S2Df size = s2df(width, height);
-
-            _component_attach_to_panel((GuiComponent*)cuawin->panel, (GuiComponent*)panel);
-            _component_set_frame((GuiComponent*)panel, &pos, &size);
-            _component_visible((GuiComponent*)panel, FALSE);
-
-            // NAppGUI support for direct setting the panel_scroll content size
-            log_printf("Panel scroll content size: %.2f, %.2f", csize.width, csize.height);
-            _panel_content_size(panel, csize.width, csize.height);
-            // -------------------------------------------------
-
-            offset.x = -pos.x;
-            offset.y = -pos.y;
-            scroll_panel = panel;
-            cuawin->scrolled_panel = panel;
-        }
-
-
-        arrst_foreach(obj, cuawin->gui_objects, GtNapObject)
-            if (obj->type == ekOBJ_EDIT)
-            {
-                if (obj->listaCodeBlock != NULL)
-                {
-                    log_printf("Edit %d: WITH LISTA", obj_i);
-                }
-                else
-                {
-                    log_printf("Edit %d: WITHOUT LISTA", obj_i);
-                }
-            }
-        arrst_end();
-
-        /* Create the view canvas*/ 
-        cassert(cuawin->canvas == NULL);
-        cuawin->canvas = view_create();
-        view_OnDraw(cuawin->canvas, listener(cuawin, i_OnCanvasDraw, GtNapWindow));
-        _component_set_frame((GuiComponent*)cuawin->canvas, &kV2D_ZEROf, &cuawin->panel_size);
-        _component_attach_to_panel((GuiComponent*)cuawin->panel, (GuiComponent*)cuawin->canvas);
-        _component_visible((GuiComponent*)cuawin->canvas, TRUE);
-
-        /* Attach gui objects in certain Z-Order (from back to front) */
-        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, scroll_panel, &offset, ekOBJ_MENUVERT, cuawin->toolbar);
-        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, scroll_panel, &offset, ekOBJ_TABLEVIEW, cuawin->toolbar);
-        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, scroll_panel, &offset, ekOBJ_TEXTVIEW, cuawin->toolbar);
-        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, scroll_panel, &offset, ekOBJ_LABEL, cuawin->toolbar);
-        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, scroll_panel, &offset, ekOBJ_BUTTON, cuawin->toolbar);
-        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, scroll_panel, &offset, ekOBJ_EDIT, cuawin->toolbar);
-        i_attach_to_panel(cuawin->gui_objects, cuawin->panel, scroll_panel, &offset, ekOBJ_IMAGE, cuawin->toolbar);
-        i_attach_toolbar_to_panel(cuawin->toolbar, cuawin->panel);
-
-        /* Tab-stops order */
-        _window_taborder(cuawin->window, NULL);
-
-        if (scroll_panel != NULL)
-            _component_visible((GuiComponent*)scroll_panel, TRUE);
-
-        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_MENUVERT);
-        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_TABLEVIEW);
-        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_TEXTVIEW);
-        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_EDIT);
-        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_BUTTON);
-        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_LABEL);
-        i_component_tabstop(cuawin->gui_objects, cuawin->window, ekOBJ_IMAGE);
-        i_toolbar_tabstop(cuawin->toolbar);
-
-        /* Confirma Codeblock */
         {
             PHB_ITEM codeBlock = NULL;
             cassert(cuawin->confirm_block == NULL);
@@ -4502,52 +4560,9 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
         /* OnClose listener */
         listener = i_gtnap_cualib_listener(cancelBlockParamId, INT32_MAX, FALSE, cuawin, i_OnWindowClose);
         window_OnClose(cuawin->window, listener);
-
-        /* Allow navigation between edit controls with arrows and return */
-        if (i_num_edits(cuawin) > 1)
-        {
-            window_hotkey(cuawin->window, ekKEY_UP, 0, listener(cuawin, i_OnPreviousTabstop, GtNapWindow));
-            window_hotkey(cuawin->window, ekKEY_DOWN, 0, listener(cuawin, i_OnNextTabstop, GtNapWindow));
-            window_hotkey(cuawin->window, ekKEY_RETURN, 0, listener(cuawin, i_OnNextTabstop, GtNapWindow));
-        }
-
-        if (cuawin->buttons_navigation == TRUE)
-        {
-            if (i_num_buttons(cuawin) > 1)
-            {
-                window_hotkey(cuawin->window, ekKEY_LEFT, 0, listener(cuawin, i_OnLeftButton, GtNapWindow));
-                window_hotkey(cuawin->window, ekKEY_RIGHT, 0, listener(cuawin, i_OnRightButton, GtNapWindow));
-            }
-        }
-
-
-        //if (cuawin->stops_last_edit == TRUE)
-        {
-            GtNapObject *last_edit = NULL;
-            arrst_foreach(obj, cuawin->gui_objects, GtNapObject)
-                if (obj->type == ekOBJ_EDIT)
-                {
-                    edit_OnChange((Edit*)obj->component, listener(cuawin, i_OnEditChange, GtNapWindow));
-                    edit_OnFilter((Edit*)obj->component, listener(cuawin, i_OnEditFilter, GtNapWindow));
-                    edit_OnFocus((Edit*)obj->component, listener(cuawin, i_OnEditFocus, GtNapWindow));
-                    obj->is_last_edit = FALSE;
-                    last_edit = obj;
-                }
-            arrst_end();
-
-            if (last_edit != NULL)
-            {
-                // GtNapObject *obj = NULL;
-                last_edit->is_last_edit = TRUE;
-                // cassert(cuawin->message_label_id != UINT32_MAX);
-                // obj = arrst_get(cuawin->gui_objects, cuawin->message_label_id, GtNapObject);
-                // cassert(obj->type == ekOBJ_LABEL);
-                // _component_taborder(obj->component, cuawin->window);
-            }
-        }
-
-        cuawin->is_configured = TRUE;
     }
+
+
 
     if (cuawin->buttons_navigation == TRUE)
     {
@@ -4604,7 +4619,6 @@ void hb_gtnap_cualib_destroy_window(void)
     cassert(id > 0);
     cuawin = arrst_get(GTNAP_GLOBAL->windows, id - 1, GtNapWindow);
     arrst_delete(GTNAP_GLOBAL->windows, id - 1, i_remove_window, GtNapWindow);
-    window_destroy(&cuawin->window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5005,8 +5019,23 @@ static HB_BOOL hb_gtnap_GetChar( PHB_GT pGT, int iRow, int iCol, int * pbColor, 
 
 /*---------------------------------------------------------------------------*/
 
+//static GtNapWindow *i_force_gtwin(GtNap *gtnap)
+//{
+//    sffdgd
+//    GtNapWindow *gtwin = i_current_gtwin(gtnap);
+//    if (gtwin == NULL)
+//    {
+//        hb_gtnap_window(0, 0, gtnap->rows - 1, gtnap->cols - 1, tc(gtnap->title), FALSE, TRUE, TRUE, FALSE);
+//
+//    }
+//}
+
+/*---------------------------------------------------------------------------*/
+
 static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
+        //GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( iRow );
     HB_SYMBOL_UNUSED( iCol );
