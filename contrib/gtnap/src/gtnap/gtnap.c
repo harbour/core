@@ -685,11 +685,11 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
 
 /*---------------------------------------------------------------------------*/
 
-static GtNapWindow *i_gtwin(GtNap *gtnap, const uint32_t window_id)
+static GtNapWindow *i_gtwin(GtNap *gtnap, const uint32_t wid)
 {
-    /* Future note: window_id might not be its position in the array */
+    /* Future note: wid might not be its position in the array */
     cassert_no_null(gtnap);
-    return arrst_get(gtnap->windows, window_id, GtNapWindow);
+    return arrst_get(gtnap->windows, wid, GtNapWindow);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -716,9 +716,18 @@ static GtNapObject *i_get_object(GtNap *gtnap, const uint32_t id)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_window_editable(const uint32_t window_id, HB_ITEM *is_editable_block)
+static GtNapObject *i_gtobj(GtNap *gtnap, const uint32_t wid, const uint32_t id)
 {
-    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    GtNapWindow *gtwin = i_gtwin(gtnap, wid);
+    cassert_no_null(gtwin);
+    return arrst_get(gtwin->gui_objects, id, GtNapObject);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_window_editable(const uint32_t wid, HB_ITEM *is_editable_block)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     cassert_no_null(gtwin);
     cassert(gtwin->is_editable_block == NULL);
     gtwin->is_editable_block = hb_itemNew(is_editable_block);
@@ -726,9 +735,9 @@ void hb_gtnap_window_editable(const uint32_t window_id, HB_ITEM *is_editable_blo
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_window_confirm(const uint32_t window_id, HB_ITEM *confirm_block)
+void hb_gtnap_window_confirm(const uint32_t wid, HB_ITEM *confirm_block)
 {
-    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     cassert_no_null(gtwin);
     cassert(gtwin->confirm_block == NULL);
     gtwin->confirm_block = hb_itemNew(confirm_block);
@@ -736,9 +745,9 @@ void hb_gtnap_window_confirm(const uint32_t window_id, HB_ITEM *confirm_block)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_window_desist(const uint32_t window_id, HB_ITEM *desist_block)
+void hb_gtnap_window_desist(const uint32_t wid, HB_ITEM *desist_block)
 {
-    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     cassert_no_null(gtwin);
     cassert(gtwin->desist_block == NULL);
     gtwin->desist_block = hb_itemNew(desist_block);
@@ -746,9 +755,9 @@ void hb_gtnap_window_desist(const uint32_t window_id, HB_ITEM *desist_block)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_window_errdate(const uint32_t window_id, HB_ITEM *error_date_block)
+void hb_gtnap_window_errdate(const uint32_t wid, HB_ITEM *error_date_block)
 {
-    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     cassert_no_null(gtwin);
     cassert(gtwin->error_date_block == NULL);
     gtwin->error_date_block = hb_itemNew(error_date_block);
@@ -756,9 +765,9 @@ void hb_gtnap_window_errdate(const uint32_t window_id, HB_ITEM *error_date_block
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_window_scroll(const uint32_t window_id, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
+void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
 {
-    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     cassert(gtwin->scroll_top == INT32_MIN);
     cassert(gtwin->is_configured == FALSE);
     gtwin->scroll_top = top;
@@ -892,9 +901,9 @@ static void i_set_button_text(GtNapObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_label(const uint32_t window_id, const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel)
+uint32_t hb_gtnap_label(const uint32_t wid, const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel)
 {
-    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     uint32_t id;
     GtNapObject *obj;
     cassert(gtwin->is_configured == FALSE);
@@ -912,14 +921,12 @@ uint32_t hb_gtnap_label(const uint32_t window_id, const uint32_t top, const uint
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_mesage_label(const uint32_t top, const uint32_t left)
+uint32_t hb_gtnap_label_message(const uint32_t wid, const uint32_t top, const uint32_t left, const bool_t in_scroll_panel)
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    uint32_t id;
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     cassert(gtwin->is_configured == FALSE);
     cassert(gtwin->message_label_id == UINT32_MAX);
-    id = i_add_label(top - gtwin->top, left - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
-    gtwin->message_label_id = id;
+    gtwin->message_label_id = i_add_label(top - gtwin->top, left - gtwin->left, in_scroll_panel, gtwin, GTNAP_GLOBAL);
 
     /* TODO: Remove (just for debug) */
     {
@@ -927,14 +934,14 @@ uint32_t hb_gtnap_mesage_label(const uint32_t top, const uint32_t left)
         i_set_label_text(obj, "--MENS--");
     }
 
-    return id;
+    return gtwin->message_label_id;
 }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_label_fgcolor(const uint32_t id, const color_t color)
+void hb_gtnap_label_fgcolor(const uint32_t wid, const uint32_t id, const color_t color)
 {
-    GtNapObject *obj = i_get_object(GTNAP_GLOBAL, id);
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_LABEL);
     label_color((Label*)obj->component, color);
@@ -942,9 +949,9 @@ void hb_gtnap_label_fgcolor(const uint32_t id, const color_t color)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_label_bgcolor(const uint32_t id, const color_t color)
+void hb_gtnap_label_bgcolor(const uint32_t wid, const uint32_t id, const color_t color)
 {
-    GtNapObject *obj = i_get_object(GTNAP_GLOBAL, id);
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_LABEL);
     label_bgcolor((Label*)obj->component, color);

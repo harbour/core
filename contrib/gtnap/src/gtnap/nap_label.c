@@ -9,12 +9,24 @@
 
 HB_FUNC( NAP_LABEL )
 {
-    uint32_t window_id = hb_parni(1);
+    uint32_t wid = hb_parni(1);
     uint32_t top = hb_parni(2);
     uint32_t left = hb_parni(3);
     HB_ITEM *text_block = hb_param(4, HB_IT_BLOCK);
     bool_t in_scroll = (bool_t)hb_parl(5);
-    uint32_t id = hb_gtnap_label(window_id, top, left, text_block, in_scroll);
+    uint32_t id = hb_gtnap_label(wid, top, left, text_block, in_scroll);
+    hb_retni(id);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_LABEL_MESSAGE )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t top = hb_parni(2);
+    uint32_t left = hb_parni(3);
+    bool_t in_scroll = (bool_t)hb_parl(4);
+    uint32_t id = hb_gtnap_label_message(wid, top, left, in_scroll);
     hb_retni(id);
 }
 
@@ -22,18 +34,20 @@ HB_FUNC( NAP_LABEL )
 
 HB_FUNC( NAP_LABEL_FGCOLOR )
 {
-    uint32_t id = hb_parni(1);
-    color_t color = (color_t)hb_parni(2);
-    hb_gtnap_label_fgcolor(id, color);
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    color_t color = (color_t)hb_parni(3);
+    hb_gtnap_label_fgcolor(wid, id, color);
 }
 
 /*---------------------------------------------------------------------------*/
 
 HB_FUNC( NAP_LABEL_BGCOLOR )
 {
-    uint32_t id = hb_parni(1);
-    color_t color = (color_t)hb_parni(2);
-    hb_gtnap_label_bgcolor(id, color);
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    color_t color = (color_t)hb_parni(3);
+    hb_gtnap_label_bgcolor(wid, id, color);
 }
 
 

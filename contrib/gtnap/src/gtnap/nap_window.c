@@ -26,12 +26,12 @@ HB_FUNC( NAP_WINDOW )
 
 HB_FUNC( NAP_WINDOW_SCROLL )
 {
-    uint32_t window_id = hb_parni(1);
+    uint32_t wid = hb_parni(1);
     int32_t top = hb_parni(2);
     int32_t left = hb_parni(3);
     int32_t bottom = hb_parni(4);
     int32_t right = hb_parni(5);
-    hb_gtnap_window_scroll(window_id, top, left, bottom, right);
+    hb_gtnap_window_scroll(wid, top, left, bottom, right);
 }
 
 

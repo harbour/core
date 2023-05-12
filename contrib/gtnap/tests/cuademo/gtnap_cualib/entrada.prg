@@ -4,8 +4,8 @@
 
 /*
 
-                               Aspec - Informatica
-                           Direitos Autorais Reservado
+                    Aspec - Informatica
+                    Direitos Autorais Reservado
 
    Criacao e tratamento das entradas de dados
 
@@ -40,10 +40,7 @@
 #INCLUDE "define_cua.ch"
 #INCLUDE "def_dados.ch"
 
-
-
 *
-
 * sinalizadores de movimentação (armazenado em N_CodMovi)
 
 #DEFINE ST_CIMA        1      // ir para o GET de cima
@@ -617,52 +614,27 @@ RETURN
 ****************************
 STATIC FUNC Ler( VX_Janela )
 ****************************
-*
-//LOCAL N_CurrWin
-LOCAL N_CursorAnt , C_ReadVarAnt, N_Col, N_Row, N_Cont
-LOCAL VX_Get      , VX_Edicao
+LOCAL N_CursorAnt, C_ReadVarAnt, N_Col, N_Row, N_Cont
+LOCAL VX_Get, VX_Edicao
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL N_Aux_SayGetCor, X_Info, X_Retorno, X_Dado
 LOCAL B_ConfirmaBlock := NIL, B_DesisteBlock := NIL
 LOCAL B_FinalLista := NIL
-//LOCAL L_IsData := .F.
-//LOCAL N_PaintRefresh_Old
-*
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-*
+LOCAL N_Message := NIL
+
 VX_Edicao := VX_SubObj
-*
+
 IF SOB_MODO_GRAFICO()
 
-    //N_CurrWin := NAP_WINDOW_LAST()
-
     IF L_PrimAtivacao
-        NAP_LOG("ENTRADA N_LinCobertas: " + hb_ntos(N_LinCobertas))
-        NAP_LOG("ENTRADA LIBRE: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
-        NAP_LOG("ENTRADA V_Lst_CdGET: " + hb_ntos(LEN(V_Lst_CdGET)))
-        FOR N_Cont := 1 TO LEN(V_Lst_CdGET)
-            NAP_LOG("V_Lst_CdGET: [" + hb_ntos(N_Cont) + "] " + V_Lst_CdGET[N_Cont][1])
-        NEXT
 
-        //LOGA_AJTELAT(C_CdTela,C_Cabec,V_Lst_CdGET)  // LOGAR conteúdo de telas
-        NAP_LOG("ENTRADA V_Lst_CdGET: " + hb_ntos(LEN(V_Lst_CdGET)))
-
-
+        // Create an inner scroll panel
         IF L_ScrollVertical
-            NAP_LOG("EDITS WITH SCROLL")
-            NAP_LOG("SCROLL-PANEL DIMS: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " +  hb_ntos(Col2Livre(VX_Janela))  )
             NAP_WINDOW_SCROLL(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
         ENDIF
 
-
+        // Label for Get messages
+        N_Message := NAP_LABEL_MESSAGE(N_WindowNum, LinMess(VX_Janela), Col1Livre(VX_Janela), .F.)
 
         FOR N_Aux_SayGetCor := 1 TO LEN(VX_SayGetList)
 
@@ -792,7 +764,6 @@ IF SOB_MODO_GRAFICO()
 
         NAP_LOG("ENTRADA MESSAGE POS: " + hb_ntos(LinMess(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)))
 
-        NAP_CUALIB_ADD_MESSAGE_LABEL(LinMess(VX_Janela), Col1Livre(VX_Janela))
         // SETPOS(LinMess(VX_Janela),Col1Livre(VX_Janela))      // mostrar
         // DISPOUT(PADR(EVAL(B_Mess),N_LargJanela))             // mensagem
 
