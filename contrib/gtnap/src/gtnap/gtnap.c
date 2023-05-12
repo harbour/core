@@ -1010,9 +1010,9 @@ static void i_OnButtonClick2(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_button(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel)
+uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel)
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     Button *button = NULL;
     Listener *listener = NULL;
     S2Df size;
@@ -1039,20 +1039,6 @@ uint32_t hb_gtnap_button(const int32_t top, const int32_t left, const int32_t bo
     }
 
     return id;
-
-    //Button *button = button_push();
-    //String *ctext = gtconvert_1252_to_UTF8(text);
-    //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
-    //S2Df size;
-    //cassert_no_null(cuawin);
-    //button_text(button, tc(ctext));
-    //log_printf("Added BUTTON (%s) into CUALIB Window: %d, %d, %d, %d", tc(ctext), nTop, nLeft, nBottom, nRight);
-    //i_add_object(ekOBJ_BUTTON, nLeft - cuawin->left, nTop - cuawin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)button, cuawin);
-    //str_destroy(&ctext);
-
-    //if (listener != NULL)
-    //    button_OnClick(button, listener);
-
 }
 
 
