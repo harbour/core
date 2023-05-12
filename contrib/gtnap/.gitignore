@@ -1,6 +1,7 @@
 /build
 /build-dev
 /src/exemplo
+/src/hello
 /src/sewer/CMakeLists.txt
 /src/osbs/CMakeLists.txt
 /src/core/CMakeLists.txt

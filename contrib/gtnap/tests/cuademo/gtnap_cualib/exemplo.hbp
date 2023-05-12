@@ -12,6 +12,7 @@
 -gttrm{gcc}
 -gtnap
 
+# Sources
 exemplo.prg
 exemploauxiliar.prg
 exemploentradadados.prg

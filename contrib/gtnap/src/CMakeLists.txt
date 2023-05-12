@@ -69,6 +69,7 @@ if (GTNAP_DEVELOPER_MODE)
     includeDirectory("gtnap" "gtnap" ${ROOT_PATH}/include)
 
     desktopApp(exemplo "exemplo" "gtnap" NRC_NODE)
+    desktopApp(hello "hello" "gtnap" NRC_NODE)
 
     # Link with Harbour libraries
     set(HARBOUR_LIBS "")
@@ -91,6 +92,7 @@ if (GTNAP_DEVELOPER_MODE)
     foreach(lib ${HARBOUR_LIBS})
         find_library(LIB_NAME_${lib} NAMES ${lib} PATHS ${HARBOUR_LIB_PATH})
         linkExternalLibrary(exemplo "exemplo" ${LIB_NAME_${lib}})
+        linkExternalLibrary(hello "hello" ${LIB_NAME_${lib}})
     endforeach()
 
 endif()
