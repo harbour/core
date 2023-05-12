@@ -153,6 +153,12 @@ struct _gtnap_window_t
     int32_t scroll_bottom;
     int32_t scroll_right;
 
+    HB_ITEM *is_editable_block;
+    HB_ITEM *confirm_block;
+    HB_ITEM *desist_block;    
+    HB_ITEM *error_date_block;
+
+
 
     bool_t is_configured;
     bool_t is_closed_by_esc;
@@ -170,8 +176,6 @@ struct _gtnap_window_t
     GtNapCualibToolbar *toolbar;
     GtNapArea *gtarea;
     GtNapVector *gtvector;
-    PHB_ITEM confirmaCodeBlock;
-    PHB_ITEM errorDataCodeBlock;  // OJO: Data es Date (fecha)
     ArrSt(GtNapObject) *gui_objects;
     ArrPt(GtNapCallback) *callbacks;
 };
@@ -662,17 +666,30 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
     gtwin->callbacks = arrpt_create(GtNapCallback);
     gtwin->panel_size.width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (gtwin->right - gtwin->left + 1));
     gtwin->panel_size.height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (gtwin->bottom - gtwin->top + 1));
-    gtwin->confirmaCodeBlock = NULL;
-    gtwin->errorDataCodeBlock = NULL;
     gtwin->buttons_navigation = buttons_navigation;
 
     if (str_empty_c(title) == FALSE)
-        window_title(window, title);
+    {
+        char_t utf8[STATIC_TEXT_SIZE];
+        i_cp_str_utf8(title, utf8, sizeof(utf8));
+        window_title(window, utf8);
+    }
     else
+    {
         window_title(window, tc(GTNAP_GLOBAL->title));
+    }
 
     window_cycle_tabstop(window, FALSE);
     return id;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapWindow *i_gtwin(GtNap *gtnap, const uint32_t window_id)
+{
+    /* Future note: window_id might not be its position in the array */
+    cassert_no_null(gtnap);
+    return arrst_get(gtnap->windows, window_id, GtNapWindow);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -699,10 +716,51 @@ static GtNapObject *i_get_object(GtNap *gtnap, const uint32_t id)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_scroll_panel(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
+void hb_gtnap_window_editable(const uint32_t window_id, HB_ITEM *is_editable_block)
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    cassert_no_null(gtwin);
+    cassert(gtwin->is_editable_block == NULL);
+    gtwin->is_editable_block = hb_itemNew(is_editable_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_window_confirm(const uint32_t window_id, HB_ITEM *confirm_block)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    cassert_no_null(gtwin);
+    cassert(gtwin->confirm_block == NULL);
+    gtwin->confirm_block = hb_itemNew(confirm_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_window_desist(const uint32_t window_id, HB_ITEM *desist_block)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    cassert_no_null(gtwin);
+    cassert(gtwin->desist_block == NULL);
+    gtwin->desist_block = hb_itemNew(desist_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_window_errdate(const uint32_t window_id, HB_ITEM *error_date_block)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    cassert_no_null(gtwin);
+    cassert(gtwin->error_date_block == NULL);
+    gtwin->error_date_block = hb_itemNew(error_date_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_window_scroll(const uint32_t window_id, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
     cassert(gtwin->scroll_top == INT32_MIN);
+    cassert(gtwin->is_configured == FALSE);
     gtwin->scroll_top = top;
     gtwin->scroll_left = left;
     gtwin->scroll_bottom = bottom;
@@ -834,11 +892,14 @@ static void i_set_button_text(GtNapObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel)
+uint32_t hb_gtnap_label(const uint32_t window_id, const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel)
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    uint32_t id = i_add_label(top - gtwin->top, left - gtwin->left, in_scroll_panel, gtwin, GTNAP_GLOBAL);
-    GtNapObject *obj = arrst_last(gtwin->gui_objects, GtNapObject);
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, window_id);
+    uint32_t id;
+    GtNapObject *obj;
+    cassert(gtwin->is_configured == FALSE);
+    id = i_add_label(top - gtwin->top, left - gtwin->left, in_scroll_panel, gtwin, GTNAP_GLOBAL);
+    obj = arrst_last(gtwin->gui_objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_LABEL);
 
@@ -854,8 +915,10 @@ uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM *text_b
 uint32_t hb_gtnap_mesage_label(const uint32_t top, const uint32_t left)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    uint32_t id = i_add_label(top - gtwin->top, left - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
+    uint32_t id;
+    cassert(gtwin->is_configured == FALSE);
     cassert(gtwin->message_label_id == UINT32_MAX);
+    id = i_add_label(top - gtwin->top, left - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
     gtwin->message_label_id = id;
 
     /* TODO: Remove (just for debug) */
@@ -1799,11 +1862,18 @@ static void i_remove_window(GtNapWindow *cuawin)
     if (cuawin->gtvector != NULL)
         i_destroy_vector(&cuawin->gtvector);
 
-    if (cuawin->confirmaCodeBlock != NULL)
-        hb_itemRelease(cuawin->confirmaCodeBlock);
 
-    if (cuawin->errorDataCodeBlock != NULL)
-        hb_itemRelease(cuawin->errorDataCodeBlock);
+    if (cuawin->is_editable_block != NULL)
+        hb_itemRelease(cuawin->is_editable_block);
+
+    if (cuawin->confirm_block != NULL)
+        hb_itemRelease(cuawin->confirm_block);
+
+    if (cuawin->desist_block != NULL)
+        hb_itemRelease(cuawin->desist_block);
+
+    if (cuawin->error_date_block != NULL)
+        hb_itemRelease(cuawin->error_date_block);
 
     cassert(arrst_size(cuawin->gui_objects, GtNapObject) == 0);
     arrst_destroy(&cuawin->gui_objects, NULL, GtNapObject);
@@ -3500,7 +3570,7 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
     /* The window has a global function to process invalid date */
     if (cuaobj->dtype == ekTYPE_DATE)
     {
-        if (cuawin->errorDataCodeBlock != NULL)
+        if (cuawin->error_date_block != NULL)
         {
             long r = hb_dateUnformat( p->text, hb_setGetDateFormat());
             log_printf("DATE processing result: %d", r);
@@ -3510,7 +3580,7 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
             {
                 PHB_ITEM retItem = NULL;
                 bool_t *r = event_result(e, bool_t);
-                retItem = hb_itemDo(cuawin->errorDataCodeBlock, 0);
+                retItem = hb_itemDo(cuawin->error_date_block, 0);
                 hb_itemRelease(retItem);
                 *r = FALSE;
                 return;
@@ -3543,9 +3613,9 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
                 bool_t close = TRUE;
 
                 /* We have asociated a confirmation block */
-                if (cuawin->confirmaCodeBlock != NULL)
+                if (cuawin->confirm_block != NULL)
                 {
-                    PHB_ITEM retItem = hb_itemDo(cuawin->confirmaCodeBlock, 0);
+                    PHB_ITEM retItem = hb_itemDo(cuawin->confirm_block, 0);
                     HB_TYPE type = HB_ITEM_TYPE(retItem);
                     cassert(type == HB_IT_LOGICAL);
                     close = (bool_t)hb_itemGetL(retItem);
@@ -4249,11 +4319,11 @@ void hb_gtnap_cualib_error_data(const uint32_t errorDataBlockParamId)
     cassert_no_null(cuawin);
 
     // FRAN: IMPROVE... ADD TO hb_gtnap_cualib_launch_modal
-    if(cuawin->errorDataCodeBlock == NULL)
+    if(cuawin->error_date_block == NULL)
     {
         PHB_ITEM codeBlock = hb_param(errorDataBlockParamId, HB_IT_BLOCK);
         if (codeBlock != NULL)
-            cuawin->errorDataCodeBlock = hb_itemNew(codeBlock);
+            cuawin->error_date_block = hb_itemNew(codeBlock);
     }
 }
 
@@ -4401,10 +4471,10 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
         /* Confirma Codeblock */
         {
             PHB_ITEM codeBlock = NULL;
-            cassert(cuawin->confirmaCodeBlock == NULL);
+            cassert(cuawin->confirm_block == NULL);
             codeBlock = hb_param(confirmaBlockParamId, HB_IT_BLOCK);
             if (codeBlock != NULL)
-                cuawin->confirmaCodeBlock = hb_itemNew(codeBlock);
+                cuawin->confirm_block = hb_itemNew(codeBlock);
         }
 
         /* OnClose listener */

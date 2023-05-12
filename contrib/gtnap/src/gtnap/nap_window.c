@@ -13,25 +13,25 @@ HB_FUNC( NAP_WINDOW )
     int32_t left = hb_parni(2);
     int32_t bottom = hb_parni(3);
     int32_t right = hb_parni(4);
-    String *title = hb_gtnap_parstr(5);
+    const char_t *title = hb_parcx(5);
     bool_t close_return = (bool_t)hb_parl(6);
     bool_t close_esc = (bool_t)hb_parl(7);
     bool_t minimize_button = (bool_t)hb_parl(8);
     bool_t buttons_navigation = (bool_t)hb_parl(9);
-    uint32_t id = hb_gtnap_window(top, left, bottom, right, tc(title), close_return, close_esc, minimize_button, buttons_navigation);
-    str_destroy(&title);
+    uint32_t id = hb_gtnap_window(top, left, bottom, right, title, close_return, close_esc, minimize_button, buttons_navigation);
     hb_retni(id);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_SCROLL_PANEL )
+HB_FUNC( NAP_WINDOW_SCROLL )
 {
-    int32_t top = hb_parni(1);
-    int32_t left = hb_parni(2);
-    int32_t bottom = hb_parni(3);
-    int32_t right = hb_parni(4);
-    hb_gtnap_scroll_panel(top, left, bottom, right);
+    uint32_t window_id = hb_parni(1);
+    int32_t top = hb_parni(2);
+    int32_t left = hb_parni(3);
+    int32_t bottom = hb_parni(4);
+    int32_t right = hb_parni(5);
+    hb_gtnap_window_scroll(window_id, top, left, bottom, right);
 }
 
 

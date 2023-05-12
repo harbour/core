@@ -2985,8 +2985,8 @@ STATIC PROC DesenhaDrawLabe(VX_Janela)
 ***************************
     LOCAL B_Text1 := {|| space(26-(LEN(INFO_VERSAO[8])+3)) + "Versão " + INFO_VERSAO[5] + "." + INFO_VERSAO[6] + CHR(VAL(INFO_VERSAO[7])) + "(b"+INFO_VERSAO[8] + ") - S" + TRIM(SERIE_ASPEC_INI())}
     LOCAL B_Text2 := {|| "www.aspec.com.br   Aspec " + chr(184) + "1993-" + STR(YEAR(DATE()),4,0) + ". Todos os direitos reservados"}
-    LOCAL N_Id1 := NAP_LABEL(32, 57, B_Text1, .F.)
-    LOCAL N_Id2 := NAP_LABEL(33, 39, B_Text2, .F.)
+    LOCAL N_Id1 := NAP_LABEL(N_WindowNum, 32, 57, B_Text1, .F.)
+    LOCAL N_Id2 := NAP_LABEL(N_WindowNum, 33, 39, B_Text2, .F.)
     NAP_LABEL_FGCOLOR(N_Id1, NAP_COLOR_RED())
     NAP_LABEL_BGCOLOR(N_Id1, NAP_COLOR_CYAN())
     NAP_LABEL_BGCOLOR(N_Id2, NAP_COLOR_CYAN())

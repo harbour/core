@@ -12,10 +12,11 @@
          [TITULO <soumalinha>] [SUBTITULO <linhas>] ;
          [TECLAS <vetor>] [EMBUTIDA <embut>] ;
          [ESPACOPIXELS <espaco_pixels>] [DESLOCACAB <posicoes_desloc>];
-         AJUDA <help> ;    
+         AJUDA <help> ;
          => <objjanela> := CriarJanela(<topo>,<esq>,<baixo>,<dir>,<soumalinha>,;
                                        <vetor>,<help>,<embut>,<linhas>,<espaco_pixels>,;
                                        <posicoes_desloc>)
+
 #command ADDIMAGEM <objjanela> ARQUIVO <arquivoimagem>  ;
          COORDENADAS <topo>,<esq>,<baixo>,<dir> ;
          [KEYBOARD <teclaskeyboard>] [AJUDA <help>] => ;
@@ -26,7 +27,7 @@
 
 #command DESTRUA <objjanela> => DestruaJan(<objjanela>)
 
-* Janela auxiliar                   
+* Janela auxiliar
 
 #command FECHAR MSGAGUARDE <objjanela> => FecharMsgAguarde(<objjanela>)
 
@@ -69,7 +70,7 @@
 
 * 1.1) GET original
 *      - Com cláusula PICTURE no GET
-*      - Com cláusula LISTA...[AUTO...] 
+*      - Com cláusula LISTA...[AUTO...]
 *      - Sem cláusula DOMINIO...[AUTO...] [F4COMCODIGO] [SEMF4]
 *      - Sem cláusula CAMPO...[AUTO...] [F4COMCODIGO] [SEMF4]
 *      - Sem cláusula IDCAMPO...[AUTO...] [F4COMCODIGO] [SEMF4]
@@ -94,7 +95,7 @@
 
 * 1.2) GET com cláusula DOMINIO
 *      - Sem cláusula PICTURE no GET
-*      - Sem cláusula LISTA...[AUTO...] 
+*      - Sem cláusula LISTA...[AUTO...]
 *      - Com cláusula DOMINIO...[AUTO...] [F4COMCODIGO] [SEMF4]
 *      - Sem cláusula CAMPO...[AUTO...] [F4COMCODIGO] [SEMF4]
 *      - Sem cláusula IDCAMPO...[AUTO...] [F4COMCODIGO] [SEMF4]
@@ -124,7 +125,7 @@
 
 
 * 1.3) GET com cláusula CAMPO
-*      - Sem cláusula LISTA...[AUTO...] 
+*      - Sem cláusula LISTA...[AUTO...]
 *      - Sem cláusula DOMINIO...[AUTO...] [F4COMCODIGO] [SEMF4]
 *      - Com cláusula CAMPO...[AUTO...] [F4COMCODIGO] [SEMF4]
 *      - Sem cláusula IDCAMPO...[AUTO...] [F4COMCODIGO] [SEMF4]

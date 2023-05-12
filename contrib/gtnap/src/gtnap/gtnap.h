@@ -26,15 +26,23 @@ typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
 HB_EXTERN_BEGIN
 
-extern void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
+/* Public functions (with Harbour wrapper) */ 
 
-extern Font *hb_gtnap_font(void);
+extern void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
 
 extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
-extern void hb_gtnap_scroll_panel(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
+extern void hb_gtnap_window_editable(const uint32_t window_id, HB_ITEM *is_editable_block);
 
-extern uint32_t hb_gtnap_label(const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel);
+extern void hb_gtnap_window_confirm(const uint32_t window_id, HB_ITEM *confirm_block);
+
+extern void hb_gtnap_window_desist(const uint32_t window_id, HB_ITEM *desist_block);
+
+extern void hb_gtnap_window_errdate(const uint32_t window_id, HB_ITEM *error_date_block);
+
+extern void hb_gtnap_window_scroll(const uint32_t window_id, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
+
+extern uint32_t hb_gtnap_label(const uint32_t window_id, const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel);
 
 extern uint32_t hb_gtnap_mesage_label(const uint32_t top, const uint32_t left);
 
@@ -86,7 +94,11 @@ extern uint32_t hb_gtnap_edit(
 
 
 
-
+/* 
+ * Private functions
+ *
+ */
+extern Font *hb_gtnap_font(void);
 
 
 

@@ -618,6 +618,7 @@ RETURN
 STATIC FUNC Ler( VX_Janela )
 ****************************
 *
+//LOCAL N_CurrWin
 LOCAL N_CursorAnt , C_ReadVarAnt, N_Col, N_Row, N_Cont
 LOCAL VX_Get      , VX_Edicao
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
@@ -641,6 +642,7 @@ VX_Edicao := VX_SubObj
 *
 IF SOB_MODO_GRAFICO()
 
+    //N_CurrWin := NAP_WINDOW_LAST()
 
     IF L_PrimAtivacao
         NAP_LOG("ENTRADA N_LinCobertas: " + hb_ntos(N_LinCobertas))
@@ -657,7 +659,7 @@ IF SOB_MODO_GRAFICO()
         IF L_ScrollVertical
             NAP_LOG("EDITS WITH SCROLL")
             NAP_LOG("SCROLL-PANEL DIMS: " + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " +  hb_ntos(Col2Livre(VX_Janela))  )
-            NAP_SCROLL_PANEL(Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
+            NAP_WINDOW_SCROLL(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
         ENDIF
 
 
@@ -734,7 +736,7 @@ IF SOB_MODO_GRAFICO()
         X_Dado := EVAL(B_Expressao)
 
         //NAP_CUALIB_LABEL(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), "", .F., L_ScrollVertical, B_Expressao)
-        NAP_LABEL(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), B_Expressao, L_ScrollVertical)
+        NAP_LABEL(N_WindowNum, N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), B_Expressao, L_ScrollVertical)
         NAP_LOG("SAY: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ") '" + X_Dado + "'")
         #UNDEF B_Expressao
         #UNDEF C_Pict
