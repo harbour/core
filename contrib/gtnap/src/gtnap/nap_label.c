@@ -10,8 +10,8 @@
 HB_FUNC( NAP_LABEL )
 {
     uint32_t wid = hb_parni(1);
-    uint32_t top = hb_parni(2);
-    uint32_t left = hb_parni(3);
+    int32_t top = hb_parni(2);
+    int32_t left = hb_parni(3);
     HB_ITEM *text_block = hb_param(4, HB_IT_BLOCK);
     bool_t in_scroll = (bool_t)hb_parl(5);
     uint32_t id = hb_gtnap_label(wid, top, left, text_block, in_scroll);
@@ -23,8 +23,8 @@ HB_FUNC( NAP_LABEL )
 HB_FUNC( NAP_LABEL_MESSAGE )
 {
     uint32_t wid = hb_parni(1);
-    uint32_t top = hb_parni(2);
-    uint32_t left = hb_parni(3);
+    int32_t top = hb_parni(2);
+    int32_t left = hb_parni(3);
     bool_t in_scroll = (bool_t)hb_parl(4);
     uint32_t id = hb_gtnap_label_message(wid, top, left, in_scroll);
     hb_retni(id);

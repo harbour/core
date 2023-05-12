@@ -901,7 +901,7 @@ static void i_set_button_text(GtNapObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_label(const uint32_t wid, const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel)
+uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     uint32_t id;
@@ -921,7 +921,7 @@ uint32_t hb_gtnap_label(const uint32_t wid, const uint32_t top, const uint32_t l
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_label_message(const uint32_t wid, const uint32_t top, const uint32_t left, const bool_t in_scroll_panel)
+uint32_t hb_gtnap_label_message(const uint32_t wid, const int32_t top, const int32_t left, const bool_t in_scroll_panel)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     cassert(gtwin->is_configured == FALSE);
@@ -1058,7 +1058,7 @@ static void i_OnImageClick(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel)
+uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel)
 {
     Image *image = NULL;
     char_t utf8[STATIC_TEXT_SIZE];
@@ -1067,7 +1067,7 @@ uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t 
 
     if (image != NULL)
     {
-        GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+        GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
         ImageView *view;
         Listener *listener;
         S2Df size;

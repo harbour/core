@@ -42,9 +42,9 @@ extern void hb_gtnap_window_errdate(const uint32_t wid, HB_ITEM *error_date_bloc
 
 extern void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
 
-extern uint32_t hb_gtnap_label(const uint32_t wid, const uint32_t top, const uint32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel);
+extern uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel);
 
-extern uint32_t hb_gtnap_label_message(const uint32_t wid, const uint32_t top, const uint32_t left, const bool_t in_scroll_panel);
+extern uint32_t hb_gtnap_label_message(const uint32_t wid, const int32_t top, const int32_t left, const bool_t in_scroll_panel);
 
 extern void hb_gtnap_label_fgcolor(const uint32_t wid, const uint32_t id, const color_t color);
 
@@ -52,7 +52,13 @@ extern void hb_gtnap_label_bgcolor(const uint32_t wid, const uint32_t id, const 
 
 extern uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel);
 
-extern uint32_t hb_gtnap_image(const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel);
+extern uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel);
+
+
+
+
+
+
 
 extern uint32_t hb_gtnap_edit(
                     const uint32_t top,
