@@ -40,7 +40,7 @@ hb_cdpSelect("PTISO")
 // the application is ready to start. {|| RUN_MAIN() }
 //
 IF HB_GTVERSION()=="NAP"
-    NAP_SETUP("GTNAP Hello Demo", 35, 110, {|| RUN_MAIN() })
+    NAP_INIT("GTNAP Hello Demo", 35, 110, {|| RUN_MAIN() })
 
  ELSE
     SETMODE(35,110)
@@ -58,7 +58,7 @@ PROC RUN_MAIN
     wait
 
 IF HB_GTVERSION()=="NAP"
-    NAP_GLOBAL_EXIT()
+    NAP_EXIT()
 ENDIF
 
 QUIT

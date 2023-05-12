@@ -155,7 +155,7 @@ struct _gtnap_window_t
 
     HB_ITEM *is_editable_block;
     HB_ITEM *confirm_block;
-    HB_ITEM *desist_block;    
+    HB_ITEM *desist_block;
     HB_ITEM *error_date_block;
 
 
@@ -530,7 +530,7 @@ static GtNap *i_gtnap_create(void)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block)
+void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block)
 {
     void *hInstance = NULL;
 
@@ -980,7 +980,7 @@ static Listener *i_gtnap_listener(HB_ITEM *block, const int32_t key, const bool_
     callback->key = key;
     callback->autoclose = autoclose;
     arrpt_append(gtwin->callbacks, callback, GtNapCallback);
-    return listener(callback, func_callback, GtNapCallback);    
+    return listener(callback, func_callback, GtNapCallback);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1077,7 +1077,7 @@ uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t lef
         view_OnClick((View*)view, listener);
         imageview_scale(view, ekGUI_SCALE_AUTO);
         size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
-        size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);    
+        size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
         imageview_image(view, image);
         image_destroy(&image);
         return i_add_object(ekOBJ_IMAGE, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)view, gtwin);
@@ -4481,7 +4481,7 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
             window_hotkey(cuawin->window, ekKEY_DOWN, 0, listener(cuawin, i_OnNextTabstop, GtNapWindow));
             window_hotkey(cuawin->window, ekKEY_RETURN, 0, listener(cuawin, i_OnNextTabstop, GtNapWindow));
         }
-        
+
         if (cuawin->buttons_navigation == TRUE)
         {
             if (i_num_buttons(cuawin) > 1)

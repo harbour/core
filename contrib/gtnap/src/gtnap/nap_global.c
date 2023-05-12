@@ -7,7 +7,18 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_GLOBAL_EXIT )
+HB_FUNC( NAP_INIT )
+{
+    const char_t *title = hb_parcx(1);
+    uint32_t rows = hb_parni(2);
+    uint32_t cols = hb_parni(3);
+    PHB_ITEM begin_block = hb_param(4, HB_IT_BLOCK);
+    hb_gtnap_init(title, rows, cols, begin_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_EXIT )
 {
     osapp_finish();
 }

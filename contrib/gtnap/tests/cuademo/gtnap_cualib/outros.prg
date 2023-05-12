@@ -18,7 +18,7 @@
 /*---------------------------------------------------------------------------*/
 
 FUNCTION Setup_nap(C_Title, N_Lines, N_Cols, B_Init)
-    NAP_SETUP(C_Title, N_Lines, N_Cols, B_Init)
+    NAP_INIT(C_Title, N_Lines, N_Cols, B_Init)
     RETURN (.T.)
 
 /*---------------------------------------------------------------------------*/

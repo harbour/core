@@ -26,9 +26,9 @@ typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
 HB_EXTERN_BEGIN
 
-/* Public functions (with Harbour wrapper) */ 
+/* Public functions (with Harbour wrapper) */
 
-extern void hb_gtnap_setup(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
+extern void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block);
 
 extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
@@ -100,7 +100,7 @@ extern uint32_t hb_gtnap_edit(
 
 
 
-/* 
+/*
  * Private functions
  *
  */
@@ -115,10 +115,10 @@ extern Font *hb_gtnap_font(void);
 */
 
 
-/* Must be deleted */ 
+/* Must be deleted */
 String *hb_gtnap_parstr(const uint32_t iParam);
 
-/* Must be deleted */ 
+/* Must be deleted */
 const char_t *hb_gtnap_parText(const uint32_t iParam);
 
 

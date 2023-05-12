@@ -99,7 +99,7 @@ SET CURSOR ON
 // the internal message runloop structures.
 //
 IF HB_GTVERSION()=="NAP"
-    NAP_GLOBAL_EXIT()
+    NAP_EXIT()
 ENDIF
 
 QUIT

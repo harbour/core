@@ -7,17 +7,6 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_SETUP )
-{
-    const char_t *title = hb_gtnap_parText(1);
-    uint32_t rows = hb_parni(2);
-    uint32_t cols = hb_parni(3);
-    PHB_ITEM begin_block = hb_param(4, HB_IT_BLOCK);
-    hb_gtnap_setup(title, rows, cols, begin_block);
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_CUALIB_INIT_LOG )
 {
     hb_gtnap_cualib_init_log();
