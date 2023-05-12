@@ -9,6 +9,7 @@
 #include "nap_menuvert.h"
 #include "nappgui.h"
 #include "osmain.h"
+#include "drawctrl.inl"
 #include "hbapiitm.h"
 #include "hbapirdd.h"
 #include "hbapistr.h"
@@ -173,6 +174,7 @@ struct _gtnap_window_t
     S2Df panel_size;
     Panel *panel;
     Panel *scrolled_panel;
+    View *canvas;
     GtNapCualibToolbar *toolbar;
     GtNapArea *gtarea;
     GtNapVector *gtvector;
@@ -1835,6 +1837,13 @@ static void i_remove_window(GtNapWindow *cuawin)
     n = arrst_size(cuawin->gui_objects, GtNapObject);
     for (i = 0; i < n; ++i)
         i_remove_cualib_object(cuawin, 0);
+
+    if (cuawin->canvas != NULL)
+    {
+        _component_visible((GuiComponent*)cuawin->canvas, FALSE);
+        _component_detach_from_panel((GuiComponent*)cuawin->panel, (GuiComponent*)cuawin->canvas);
+        _component_destroy((GuiComponent**)&cuawin->canvas);
+    }
 
     if (cuawin->scrolled_panel != NULL)
     {
@@ -4367,6 +4376,18 @@ static bool_t i_with_scroll_panel(const GtNapWindow *gtwin)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnCanvasDraw(GtNapWindow *gtwin, Event *e)
+{
+    const EvDraw *p = event_params(e, EvDraw);
+    draw_clear(p->ctx, gui_view_color());
+    draw_font(p->ctx, GTNAP_GLOBAL->global_font);
+    drawctrl_text(p->ctx, "Hello Canvas", 300, 200, ekCTRL_STATE_NORMAL);
+    draw_line(p->ctx, 0, 0, p->width, p->height);    
+    unref(gtwin);
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const uint32_t cancelBlockParamId)
 {
     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
@@ -4435,6 +4456,14 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
                 }
             }
         arrst_end();
+
+        /* Create the view canvas*/ 
+        cassert(cuawin->canvas == NULL);
+        cuawin->canvas = view_create();
+        view_OnDraw(cuawin->canvas, listener(cuawin, i_OnCanvasDraw, GtNapWindow));
+        _component_set_frame((GuiComponent*)cuawin->canvas, &kV2D_ZEROf, &cuawin->panel_size);
+        _component_attach_to_panel((GuiComponent*)cuawin->panel, (GuiComponent*)cuawin->canvas);
+        _component_visible((GuiComponent*)cuawin->canvas, TRUE);
 
         /* Attach gui objects in certain Z-Order (from back to front) */
         i_attach_to_panel(cuawin->gui_objects, cuawin->panel, scroll_panel, &offset, ekOBJ_MENUVERT, cuawin->toolbar);
@@ -5015,6 +5044,8 @@ static void hb_gtnap_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
 
 static int hb_gtnap_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const char * pText, HB_SIZE ulLen )
 {
+    //GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( iRow );
     HB_SYMBOL_UNUSED( iCol );
