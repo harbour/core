@@ -20,6 +20,8 @@ typedef struct _gtnap_vector_t GtNapVector;
 
 #define WINCLOSE_IMAGE_AUTOCLOSE    2000
 
+#define WINCLOSE_TEXTVIEW_CONFIRM   3000
+
 HB_EXTERN_BEGIN
 
 /* Public functions (with Harbour wrapper) */
@@ -54,13 +56,15 @@ extern uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int3
 
 extern uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left, const uint32_t width, const char_t type, HB_ITEM *get_set_block, HB_ITEM *is_editable_block, HB_ITEM *when_block, HB_ITEM *valida_block, HB_ITEM *message_block, HB_ITEM *keyfilter_block, HB_ITEM *auto_block, HB_ITEM *lista_block, const bool_t in_scroll);
 
-extern uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *get_set_block, const bool_t in_scroll);
+extern uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *get_set_block, HB_ITEM *valida_block, const bool_t in_scroll);
 
 extern void hb_gtnap_textview_scroll(const uint32_t wid, const uint32_t id, const bool_t horizontal, const bool_t vertical);
 
 extern void hb_gtnap_textview_caret(const uint32_t wid, const uint32_t id, const int64_t pos);
 
+extern void hb_gtnap_textview_button(const uint32_t wid, const uint32_t id, const uint32_t bid);
 
+extern void hb_gtnap_textview_hotkey(uint32_t wid, uint32_t id, int32_t key);
 
 
 

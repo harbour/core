@@ -3217,7 +3217,7 @@ STATIC PROC DesenhaDrawLabe(VX_Janela)
 STATIC FUNC ADICIONA_BOTAO_PUSH(VX_Janela,N_PosBotao)
 *******************************
 LOCAL V_Botao := V_RegiaoBotoes[N_PosBotao]
-//LOCAL N_Handle_PushButton
+LOCAL N_BotId
 LOCAL N_Keyboard := V_Botao[_BOTAO_INKEY_DESTAQUE]
 LOCAL C_TextoDestaque := V_Botao[_BOTAO_TEXTO_DESTAQUE]
 LOCAL C_TextoBotaoAux := V_Botao[_BOTAO_TEXTO_TRATADO_2]
@@ -3225,6 +3225,8 @@ LOCAL C_TextoBotaoAux := V_Botao[_BOTAO_TEXTO_TRATADO_2]
 LOCAL N_Pos
 LOCAL C_TextoBotaoAux_CodigoPagina
 *
+
+//HB_IT_SYMBOL
 // NAP_LOG("BEGIN BOTAO:")
 // V_Botao := V_RegiaoBotoes[N_PosBotao]
 // NAP_LOG("BOTAO GET:")
@@ -3312,7 +3314,7 @@ ENDIF
 
 //NAP_LOG("Before V_Botao[_BOTAO_LIN_INICIAL]")
 
-NAP_BUTTON(N_WindowNum, N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
+N_BotId := NAP_BUTTON(N_WindowNum, N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
             N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
             N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
             N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ],;
@@ -3321,6 +3323,9 @@ NAP_BUTTON(N_WindowNum, N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
             V_Botao[_BOTAO_BLOCO_ACAO],;
             V_Botao[_BOTAO_AUTOCLOSE],;
             .F.)
+
+ V_Botao[_BOTAO_HANDLE_PUSHBUTTON] := N_BotId
+
 //         {|| C_TextoBotaoAux_CodigoPagina},;
 //         V_Botao[_BOTAO_BLOCO_ACAO],;
 // NAP_CUALIB_BUTTON(C_TextoBotaoAux_CodigoPagina,;

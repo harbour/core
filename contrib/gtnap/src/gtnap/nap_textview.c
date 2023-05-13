@@ -15,8 +15,9 @@ HB_FUNC( NAP_TEXTVIEW )
     int32_t bottom = hb_parni(4);
     int32_t right = hb_parni(5);
     HB_ITEM *get_set_block = hb_param(6, HB_IT_BLOCK);
-    bool_t in_scroll = (bool_t)hb_parl(7);
-    uint32_t id = hb_gtnap_textview(wid, top, left, bottom, right, get_set_block, in_scroll);
+    HB_ITEM *valida_block = hb_param(7, HB_IT_BLOCK);
+    bool_t in_scroll = (bool_t)hb_parl(8);
+    uint32_t id = hb_gtnap_textview(wid, top, left, bottom, right, get_set_block, valida_block, in_scroll);
     hb_retni(id);
 }
 
@@ -39,6 +40,26 @@ HB_FUNC( NAP_TEXTVIEW_CARET )
     uint32_t id = hb_parni(2);
     int64_t pos = hb_parni(3);
     hb_gtnap_textview_caret(wid, id, pos);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TEXTVIEW_BUTTON )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    uint32_t bid = hb_parni(3);
+    hb_gtnap_textview_button(wid, id, bid);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TEXTVIEW_HOTKEY )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    int32_t key = hb_parni(3);
+    hb_gtnap_textview_hotkey(wid, id, key);
 }
 
 /*---------------------------------------------------------------------------*/

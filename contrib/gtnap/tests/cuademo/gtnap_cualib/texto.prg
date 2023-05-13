@@ -100,17 +100,13 @@ PARAMETERS VX_Janela
 LOCAL V_TextView, N_Cont
 LOCAL N_TextId
 LOCAL X_Retorno
-//LOCAL VX_Sele := VX_SubObj
 
 PRIVATE N_CtInic, N_TotLinhas, C_Texto, N_Tecla_Ant := 0
 PRIVATE C_Texto_Original  // para permitir o "undo"
 PRIVATE L_FimOK := .F.  // Informa se edição do texto terminou com sucesso
 PRIVATE C_AcaoForaDaMemoEdit := ""  // Ação que deve ser executada fora da MEMOEDIT(), e em seguida voltar para a MEMOEDIT()
-//PRIVATE N_PaintRefresh_Old
 PRIVATE L_ReadInsert_Ativado_Automaticamente := .F.
 *
-
-NAP_LOG("STATIC FUNCTION Texto")
 
 #DEFINE B_Texto        MEMVAR->VX_SubObj[01]
 #DEFINE VN_TeclaGravar MEMVAR->VX_SubObj[02]
@@ -130,29 +126,6 @@ NAP_LOG("STATIC FUNCTION Texto")
 #DEFINE L_RolaHorizontal MEMVAR->VX_SubObj[16]
 
 *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       * //!! ATENCAO:
-//       * Não existe controle sobre os SET KEYs, ou seja, qualquer SET KEY
-//       * ativado de dentro desta rotina ficará com _REPAINT_QUASE_DESATIVADO,
-//       * o que pode ser bastante desagradável visualmente.
-//       * Uma saída seria alterar todas as rotinas que sejam chamadas por SET KEYs
-//       * para mudar para _REPAINT_DEFAULT.
-//       *
-//       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-//    ENDIF
-//    *
-//    IF L_PrimAtivacao .AND. SOB_MODO_GRAFICO()
-//       AddGuiObject(VX_Janela,DesenhaBoxExterno(VX_Janela),;
-//                    CoordenadasBoxExterno(VX_Janela))
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-
-*
 IF EVAL(B_Edita)
    * Como a memoedit do Harbour é cheia de bugs, evitar a todo custo
    * existir rolamento horizontal em variável memo (dá problema no Harbour...).
@@ -170,71 +143,30 @@ IF SOB_MODO_GRAFICO()
 
     IF L_PrimAtivacao
 
-        //NAP_LOG("STATIC FUNCTION Texto BEFORE CoordenadasBrowse(VX_Sele)")
-
+        // Set window global functions
         NAP_WINDOW_EDITABLE(N_WindowNum, B_Edita)
         NAP_WINDOW_CONFIRM(N_WindowNum, B_Confirma)
         NAP_WINDOW_DESIST(N_WindowNum, B_Desiste)
 
-        //V_TextView := NAP_TEXTVIEW_CREATE()
-        N_TextId := NAP_TEXTVIEW(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto, .F.)
-
-        //NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto)
-
-        // LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
-
-        // IF EVAL(B_Edita)
-        //     NAP_TEXTVIEW_EDITABLE(V_TextView, .T.)
-        // ELSE
-        //     NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
-        // ENDIF
-
-        // IF L_RolaHorizontal == .T.
-        //     LOG_PRINT("TEXTVIEW With HORIZONTAL ScrollBar!!")
-        // ELSE
-        //     LOG_PRINT("TEXTVIEW  WITHOUT HORIZONTAL ScrollBar!!")
-        // ENDIF
-
-        // IF L_NaoRolaVertical == .F.
-        //     LOG_PRINT("TEXTIVEW With VERTICAL ScrollBar!!")
-        // ELSE
-        //     LOG_PRINT("TEXTIVEW  WITHOUT VERTICAL ScrollBar!!")
-        // ENDIF
-
+        // Create the textview
+        N_TextId := NAP_TEXTVIEW(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto, B_Valid, .F.)
+        // Show/hide scrollbars
         NAP_TEXTVIEW_SCROLL(N_WindowNum, N_TextId, L_RolaHorizontal, IIF(L_NaoRolaVertical==.F.,.T.,.F.))
-        // NAP_TEXTVIEW_SCROLL(V_TextView, L_RolaHorizontal, IIF(L_NaoRolaVertical==.F.,.T.,.F.))
-        // NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto)
-        // NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
+        // Set the caret at position 0 (beginning)
         NAP_TEXTVIEW_CARET(N_WindowNum, N_TextId, 0)
-        // NAP_CUALIB_TEXTVIEW_CARET(V_TextView, 0)
 
+        // Set "end editing" buttons
+        FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
+            NAP_TEXTVIEW_BUTTON(N_WindowNum, N_TextId, V_RegiaoBotoes[N_Cont,_BOTAO_HANDLE_PUSHBUTTON])
+        NEXT
 
-        //#DEFINE V_RegiaoBotoes VX_Janela[21]        // dados sobre os botões de função
-        // NAP_LOG("TEXTO V_RegiaoBotoes: " + hb_ntos(LEN(V_RegiaoBotoes)) )
-        // FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
-        //     NAP_CUALIB_TEXT_CONFIRMA_BUTTON(N_Cont, B_Confirma, B_Valid, .F.)
-        //     //V_RegiaoBotoes[N_Cont,_BOTAO_BLOCO_ACAO] := B_Confirma
-        //     //V_RegiaoBotoes[N_Cont,_BOTAO_AUTOCLOSE] := .F.
-        // NEXT
-
-        //#UNDEF V_RegiaoBotoes
-
-
-        // FOR N_Cont := 1 TO LEN(VN_TeclaGravar) STEP +1
-        //     NAP_CUALIB_TEXT_CONFIRMA_HOTKEY(VN_TeclaGravar[N_Cont], B_Confirma, B_Valid, .F.)
-        // NEXT
+        // Set "end editing" hotkeys
+        FOR N_Cont := 1 TO LEN(VN_TeclaGravar)
+            NAP_TEXTVIEW_HOTKEY(N_WindowNum, N_TextId, VN_TeclaGravar[N_Cont])
+        NEXT
 
         L_PrimAtivacao := .F.
     ENDIF
-
-
-    // C_Texto := MEMOEDIT(C_Texto,,;
-    //     Col1Livre(MEMVAR->VX_Janela),;
-    //     Lin2Livre(MEMVAR->VX_Janela),;
-    //     Col2Livre(MEMVAR->VX_Janela),EVAL(B_Edita),;
-
-    // L_Coords := CoordenadasBrowse(VX_Sele)
-
 
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
     NAP_LOG("Texto en Memoria X_Retorno: " + hb_ntos(X_Retorno))
@@ -247,7 +179,7 @@ IF SOB_MODO_GRAFICO()
     ELSE
         L_FimOK := .F.
     ENDIF
-    //LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)))
+
 ELSE   // NOT SOB_MODO_GRAFICO
 
 
@@ -418,30 +350,7 @@ L_PrimAtivacao := .F.
 
 ENDIF // IF SOB_MODO_GRAFICO()
 
-*
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       WVW_SetPaintRefresh(N_PaintRefresh_Old)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-*
 RETURN L_FimOK
-// *
-// **************************
-// STATIC FUNCTION JogarTecla ( N_Tecla )
-// HB_KeyPut(N_Tecla)
-// RETURN NIL
-// *
-// *
-
-// FUNCTION _CuaTexto_ ( N_Modo , N_Lin , N_Col, O_Edicao )     // não pode ser estática
-// return 0
-
-
 
 *******************
 FUNCTION _CuaTexto_ ( N_Modo , N_Lin , N_Col, O_Edicao )     // não pode ser estática
@@ -786,17 +695,6 @@ IF N_Modo == ME_IDLE
    ENDIF
    *
 
-   // FRAN: NEVER SOB_MODO_GRAFICO HERE
-//    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//       IF SOB_MODO_GRAFICO()
-//          WVW_SetPaintRefresh(_REPAINT_WAIT_STATE)
-//       ENDIF
-//    #elif defined(__PLATFORM__LINUX)
-//       // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//    #else
-//       #erro "Código não adaptado para esta plataforma"
-//    #endif
-   *
    N_SEGUNDOS := SECONDS()
    N_TIMEOUT  := SETA_TIMEOUT()
    DO WHILE NEXTKEY() == 0     // resolve o problema do TIME SLICE
@@ -808,18 +706,6 @@ IF N_Modo == ME_IDLE
          ENDIF
       ENDIF
    ENDDO
-   *
-
-   // FRAN: Never SOB_MODO_GRAFICO Here
-//    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//       IF SOB_MODO_GRAFICO()
-//          WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-//       ENDIF
-//    #elif defined(__PLATFORM__LINUX)
-//       // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//    #else
-//       #erro "Código não adaptado para esta plataforma"
-//    #endif
    *
 ENDIF
 *
@@ -836,33 +722,7 @@ Local C_Lista := { K_UP, K_DOWN, K_LEFT, K_RIGHT, K_HOME, K_END, K_PGUP,;
                    K_SH_TAB, K_INS, K_BS, K_CTRL_T, K_CTRL_Y }
 *
 RETURN ASCAN(C_Lista,N_Tecla) # 0
-// *
-// *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    ***************************
-//    STAT FUNC DesenhaBoxExterno (VX_Janela)
-//    ***************************
-//    #define RGB(nR,nG,nB)  ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
-//    RETURN {|| WVW_SetPen(0,0,rgb(210,1210,210)),;
-//               WVW_DrawBoxRecessed( N_WindowNum,;
-//                                    Lin1Livre(VX_Janela),;
-//                                    Col1Livre(VX_Janela),;
-//                                    Lin2Livre(VX_Janela),;
-//                                    Col2Livre(VX_Janela) ) }
-//    *
-//    *******************************
-//    STAT FUNC CoordenadasBoxExterno(VX_Janela)
-//    *******************************
-//    RETURN { Lin1Livre(VX_Janela),Col1Livre(VX_Janela),;
-//             Lin2Livre(VX_Janela),Col2Livre(VX_Janela)   }
-//    *
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-// *
-// *
+
 **********************************
 STATIC FUNC INABILITA_EDICAO_TEXTO()
 **********************************
