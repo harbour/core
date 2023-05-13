@@ -98,7 +98,7 @@ LOCAL C_CorAnt, N_RowAnt, N_ColAnt
 *
 PARAMETERS VX_Janela
 LOCAL V_TextView, N_Cont
-
+LOCAL N_TextId
 LOCAL X_Retorno
 //LOCAL VX_Sele := VX_SubObj
 
@@ -170,51 +170,54 @@ IF SOB_MODO_GRAFICO()
 
     IF L_PrimAtivacao
 
-        NAP_LOG("STATIC FUNCTION Texto BEFORE CoordenadasBrowse(VX_Sele)")
+        //NAP_LOG("STATIC FUNCTION Texto BEFORE CoordenadasBrowse(VX_Sele)")
 
-        V_TextView := NAP_TEXTVIEW_CREATE()
+        //V_TextView := NAP_TEXTVIEW_CREATE()
 
+        N_TextId := NAP_TEXTVIEW(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto, .F.)
 
-        LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
+        //NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto)
 
-        IF EVAL(B_Edita)
-            NAP_TEXTVIEW_EDITABLE(V_TextView, .T.)
-        ELSE
-            NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
-        ENDIF
+        // LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
 
-        IF L_RolaHorizontal == .T.
-            LOG_PRINT("TEXTVIEW With HORIZONTAL ScrollBar!!")
-        ELSE
-            LOG_PRINT("TEXTVIEW  WITHOUT HORIZONTAL ScrollBar!!")
-        ENDIF
+        // IF EVAL(B_Edita)
+        //     NAP_TEXTVIEW_EDITABLE(V_TextView, .T.)
+        // ELSE
+        //     NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
+        // ENDIF
 
-        IF L_NaoRolaVertical == .F.
-            LOG_PRINT("TEXTIVEW With VERTICAL ScrollBar!!")
-        ELSE
-            LOG_PRINT("TEXTIVEW  WITHOUT VERTICAL ScrollBar!!")
-        ENDIF
+        // IF L_RolaHorizontal == .T.
+        //     LOG_PRINT("TEXTVIEW With HORIZONTAL ScrollBar!!")
+        // ELSE
+        //     LOG_PRINT("TEXTVIEW  WITHOUT HORIZONTAL ScrollBar!!")
+        // ENDIF
 
-        NAP_TEXTVIEW_SCROLL(V_TextView, L_RolaHorizontal, IIF(L_NaoRolaVertical==.F.,.T.,.F.))
-        NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto)
-        NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
-        NAP_CUALIB_TEXTVIEW_CARET(V_TextView, 0)
+        // IF L_NaoRolaVertical == .F.
+        //     LOG_PRINT("TEXTIVEW With VERTICAL ScrollBar!!")
+        // ELSE
+        //     LOG_PRINT("TEXTIVEW  WITHOUT VERTICAL ScrollBar!!")
+        // ENDIF
+
+        // NAP_TEXTVIEW_SCROLL(V_TextView, L_RolaHorizontal, IIF(L_NaoRolaVertical==.F.,.T.,.F.))
+        // NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto)
+        // NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
+        // NAP_CUALIB_TEXTVIEW_CARET(V_TextView, 0)
 
 
         //#DEFINE V_RegiaoBotoes VX_Janela[21]        // dados sobre os botões de função
-        NAP_LOG("TEXTO V_RegiaoBotoes: " + hb_ntos(LEN(V_RegiaoBotoes)) )
-        FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
-            NAP_CUALIB_TEXT_CONFIRMA_BUTTON(N_Cont, B_Confirma, B_Valid, .F.)
-            //V_RegiaoBotoes[N_Cont,_BOTAO_BLOCO_ACAO] := B_Confirma
-            //V_RegiaoBotoes[N_Cont,_BOTAO_AUTOCLOSE] := .F.
-        NEXT
+        // NAP_LOG("TEXTO V_RegiaoBotoes: " + hb_ntos(LEN(V_RegiaoBotoes)) )
+        // FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
+        //     NAP_CUALIB_TEXT_CONFIRMA_BUTTON(N_Cont, B_Confirma, B_Valid, .F.)
+        //     //V_RegiaoBotoes[N_Cont,_BOTAO_BLOCO_ACAO] := B_Confirma
+        //     //V_RegiaoBotoes[N_Cont,_BOTAO_AUTOCLOSE] := .F.
+        // NEXT
 
         //#UNDEF V_RegiaoBotoes
 
 
-        FOR N_Cont := 1 TO LEN(VN_TeclaGravar) STEP +1
-            NAP_CUALIB_TEXT_CONFIRMA_HOTKEY(VN_TeclaGravar[N_Cont], B_Confirma, B_Valid, .F.)
-        NEXT
+        // FOR N_Cont := 1 TO LEN(VN_TeclaGravar) STEP +1
+        //     NAP_CUALIB_TEXT_CONFIRMA_HOTKEY(VN_TeclaGravar[N_Cont], B_Confirma, B_Valid, .F.)
+        // NEXT
 
         L_PrimAtivacao := .F.
     ENDIF

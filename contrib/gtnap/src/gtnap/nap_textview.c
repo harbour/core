@@ -7,6 +7,21 @@
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_TEXTVIEW )
+{
+    uint32_t wid = hb_parni(1);
+    int32_t top = hb_parni(2);
+    int32_t left = hb_parni(3);
+    int32_t bottom = hb_parni(4);
+    int32_t right = hb_parni(5);
+    HB_ITEM *get_set_block = hb_param(6, HB_IT_BLOCK);
+    bool_t in_scroll = (bool_t)hb_parl(7);
+    uint32_t id = hb_gtnap_textview(wid, top, left, bottom, right, get_set_block, in_scroll);
+    hb_retni(id);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TEXTVIEW_CREATE )
 {
     TextView *view = textview_create();
