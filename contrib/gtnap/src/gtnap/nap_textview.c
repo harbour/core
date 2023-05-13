@@ -22,20 +22,31 @@ HB_FUNC( NAP_TEXTVIEW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TEXTVIEW_CREATE )
+HB_FUNC( NAP_TEXTVIEW_SCROLL )
 {
-    TextView *view = textview_create();
-    hb_retptr(view);
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    bool_t horizontal = (bool_t)hb_parl(3);
+    bool_t vertical = (bool_t)hb_parl(4);
+    hb_gtnap_textview_scroll(wid, id, horizontal, vertical);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TEXTVIEW_SCROLL )
+HB_FUNC( NAP_TEXTVIEW_CARET )
 {
-    TextView *view = (TextView*)hb_parptr(1);
-    bool_t hor = (bool_t)hb_parl(2);
-    bool_t ver = (bool_t)hb_parl(3);
-    textview_scroll_visible(view, hor, ver);
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    int64_t pos = hb_parni(3);
+    hb_gtnap_textview_caret(wid, id, pos);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TEXTVIEW_CREATE )
+{
+    TextView *view = textview_create();
+    hb_retptr(view);
 }
 
 /*---------------------------------------------------------------------------*/

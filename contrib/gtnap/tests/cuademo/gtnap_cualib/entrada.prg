@@ -636,6 +636,7 @@ IF SOB_MODO_GRAFICO()
         // Sets the editable block for whole window
         NAP_WINDOW_EDITABLE(N_WindowNum, B_Edita_Global)
 
+
         // Label for Get messages
         N_Message := NAP_LABEL_MESSAGE(N_WindowNum, LinMess(VX_Janela), Col1Livre(VX_Janela), .F.)
 

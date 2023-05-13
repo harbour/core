@@ -1389,6 +1389,33 @@ static void i_set_view_text(const GtNapObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
+static bool_t i_is_editable(GtNapWindow *gtwin, GtNapObject *gtobj)
+{
+    bool_t editable = TRUE;
+    cassert_no_null(gtwin);
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_EDIT || gtobj->type == ekOBJ_TEXTVIEW);
+    if (editable == TRUE && gtwin->is_editable_block != NULL)
+    {
+        PHB_ITEM ritem = hb_itemDo(gtwin->is_editable_block, 0);
+        cassert(HB_ITEM_TYPE(ritem) == HB_IT_LOGICAL);
+        editable = (bool_t)hb_itemGetL(ritem);
+        hb_itemRelease(ritem);
+    }
+
+    if (editable == TRUE && gtobj->is_editable_block != NULL)
+    {
+        PHB_ITEM ritem = hb_itemDo(gtobj->is_editable_block, 0);
+        cassert(HB_ITEM_TYPE(ritem) == HB_IT_LOGICAL);
+        editable = (bool_t)hb_itemGetL(ritem);
+        hb_itemRelease(ritem);
+    }
+
+    return editable;
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *get_set_block, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
@@ -1396,12 +1423,13 @@ uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t 
     S2Df size;
     uint32_t id = UINT32_MAX;
     GtNapObject *obj = NULL;
+    bool_t is_editable = FALSE;
     cassert_no_null(gtwin);
     textview_family(view, font_family(GTNAP_GLOBAL->global_font));
     textview_fsize(view, font_size(GTNAP_GLOBAL->global_font));
     size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
-    i_add_object(ekOBJ_TEXTVIEW, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)view, gtwin);
+    id = i_add_object(ekOBJ_TEXTVIEW, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)view, gtwin);
     obj = arrst_last(gtwin->gui_objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_TEXTVIEW);
@@ -1410,10 +1438,30 @@ uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t 
         obj->get_set_block = hb_itemNew(get_set_block);
 
     i_set_view_text(obj);
+    is_editable = i_is_editable(gtwin, obj);
+    textview_editable(view, is_editable);
     return id;
 }
 
+/*---------------------------------------------------------------------------*/
 
+void hb_gtnap_textview_scroll(const uint32_t wid, const uint32_t id, const bool_t horizontal, const bool_t vertical)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TEXTVIEW);
+    textview_scroll_visible((TextView*)obj->component, horizontal, vertical);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_textview_caret(const uint32_t wid, const uint32_t id, const int64_t pos)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TEXTVIEW);
+    textview_move_caret((TextView*)obj->component, pos);
+}
 
 
 
@@ -4120,34 +4168,6 @@ static void i_filter_bypass(const EvText *text, EvTextFilter *filter)
     str_copy_c(filter->text, sizeof(filter->text), text->text);
     filter->apply = TRUE;
     filter->cpos = text->cpos;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static bool_t i_is_editable(GtNapWindow *gtwin, GtNapObject *gtobj)
-{
-    bool_t editable = TRUE;
-    cassert_no_null(gtwin);
-    cassert_no_null(gtobj);
-    cassert(gtobj->type == ekOBJ_EDIT);
-
-    if (editable == TRUE && gtwin->is_editable_block != NULL)
-    {
-        PHB_ITEM ritem = hb_itemDo(gtwin->is_editable_block, 0);
-        cassert(HB_ITEM_TYPE(ritem) == HB_IT_LOGICAL);
-        editable = (bool_t)hb_itemGetL(ritem);
-        hb_itemRelease(ritem);
-    }
-
-    if (editable == TRUE && gtobj->is_editable_block != NULL)
-    {
-        PHB_ITEM ritem = hb_itemDo(gtobj->is_editable_block, 0);
-        cassert(HB_ITEM_TYPE(ritem) == HB_IT_LOGICAL);
-        editable = (bool_t)hb_itemGetL(ritem);
-        hb_itemRelease(ritem);
-    }
-
-    return editable;
 }
 
 /*---------------------------------------------------------------------------*/

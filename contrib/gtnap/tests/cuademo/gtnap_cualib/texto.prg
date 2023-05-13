@@ -172,8 +172,8 @@ IF SOB_MODO_GRAFICO()
 
         //NAP_LOG("STATIC FUNCTION Texto BEFORE CoordenadasBrowse(VX_Sele)")
 
+        NAP_WINDOW_EDITABLE(N_WindowNum, B_Edita)
         //V_TextView := NAP_TEXTVIEW_CREATE()
-
         N_TextId := NAP_TEXTVIEW(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto, .F.)
 
         //NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto)
@@ -198,9 +198,11 @@ IF SOB_MODO_GRAFICO()
         //     LOG_PRINT("TEXTIVEW  WITHOUT VERTICAL ScrollBar!!")
         // ENDIF
 
+        NAP_TEXTVIEW_SCROLL(N_WindowNum, N_TextId, L_RolaHorizontal, IIF(L_NaoRolaVertical==.F.,.T.,.F.))
         // NAP_TEXTVIEW_SCROLL(V_TextView, L_RolaHorizontal, IIF(L_NaoRolaVertical==.F.,.T.,.F.))
         // NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto)
         // NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, C_Texto)
+        NAP_TEXTVIEW_CARET(N_WindowNum, N_TextId, 0)
         // NAP_CUALIB_TEXTVIEW_CARET(V_TextView, 0)
 
 

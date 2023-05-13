@@ -43,6 +43,11 @@ HB_FUNC( NAP_WINDOW_EDITABLE )
     hb_gtnap_window_editable(wid, is_editable_block);
 }
 
+// extern void hb_gtnap_window_confirm(const uint32_t wid, HB_ITEM *confirm_block);
+
+// extern void hb_gtnap_window_desist(const uint32_t wid, HB_ITEM *desist_block);
+
+// extern void hb_gtnap_window_errdate(const uint32_t wid, HB_ITEM *error_date_block);
 
 
 

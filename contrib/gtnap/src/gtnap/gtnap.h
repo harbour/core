@@ -56,7 +56,9 @@ extern uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32
 
 extern uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *get_set_block, const bool_t in_scroll);
 
+extern void hb_gtnap_textview_scroll(const uint32_t wid, const uint32_t id, const bool_t horizontal, const bool_t vertical);
 
+extern void hb_gtnap_textview_caret(const uint32_t wid, const uint32_t id, const int64_t pos);
 
 
 
