@@ -44,17 +44,17 @@ extern void hb_gtnap_window_errdate(const uint32_t wid, HB_ITEM *error_date_bloc
 
 extern void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
 
-extern uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel);
+extern uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t left, HB_ITEM *text_block, const bool_t in_scroll);
 
-extern uint32_t hb_gtnap_label_message(const uint32_t wid, const int32_t top, const int32_t left, const bool_t in_scroll_panel);
+extern uint32_t hb_gtnap_label_message(const uint32_t wid, const int32_t top, const int32_t left, const bool_t in_scroll);
 
 extern void hb_gtnap_label_fgcolor(const uint32_t wid, const uint32_t id, const color_t color);
 
 extern void hb_gtnap_label_bgcolor(const uint32_t wid, const uint32_t id, const color_t color);
 
-extern uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel);
+extern uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll);
 
-extern uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel);
+extern uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll);
 
 
 
@@ -75,7 +75,7 @@ extern uint32_t hb_gtnap_edit(
                     HB_ITEM *keyfilter_block,
                     HB_ITEM *auto_block,
                     HB_ITEM *lista_block,
-                    const bool_t in_scroll_panel);
+                    const bool_t in_scroll);
 
 
                     ////const uint32_t editaBlockParamId,
@@ -89,7 +89,7 @@ extern uint32_t hb_gtnap_edit(
                     ////const uint32_t nCol,
                     ////const uint32_t nSize,
                     //PHB_ITEM getobj,
-                    //const bool_t in_scroll_panel,
+                    //const bool_t in_scroll,
                     //const uint32_t filtroTecParamId,
                     //const uint32_t whenParamId);
 
@@ -228,7 +228,7 @@ extern void hb_gtnap_cualib_edit(
                     const uint32_t nSize,
                     const char_t *type,
                     PHB_ITEM getobj,
-                    const bool_t in_scroll_panel,
+                    const bool_t in_scroll,
                     const uint32_t filtroTecParamId,
                     const uint32_t whenParamId);
 
@@ -277,7 +277,7 @@ extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComp
 
 extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback);
 
-//extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId);
+//extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll, const uint32_t updateBlockParamId);
 
 //extern void hb_gtnap_cualib_image(const char_t *pathname, const uint32_t codeBlockParamId, const uint32_t nTop, const uint32_t nLeft, const uint32_t nBottom, const uint32_t nRight, const bool_t autoclose);
 

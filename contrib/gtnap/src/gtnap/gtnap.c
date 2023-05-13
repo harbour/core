@@ -107,17 +107,23 @@ struct _gtnap_object_t
 {
     objtype_t type;
     datatype_t dtype;
-    int32_t cell_x;
-    int32_t cell_y;
+    int32_t top;
+    int32_t left;
+
+
+
     V2Df pos;
     S2Df size;
     bool_t is_last_edit;
     //bool_t is_on_edit_change;
-    bool_t in_scroll_panel;
+    bool_t in_scroll;
     bool_t can_auto_lista;
     bool_t has_focus;
     uint32_t editSize;
     uint32_t editBoxIndexForButton;
+
+
+
     PHB_ITEM text_block;
     PHB_ITEM editCodeBlock;
     PHB_ITEM editableGlobalCodeBlock;
@@ -813,7 +819,7 @@ void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_add_object(const objtype_t type, const int32_t cell_x, const int32_t cell_y, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, const bool_t in_scroll_panel, GuiComponent *component, GtNapWindow *gtwin)
+static uint32_t i_add_object(const objtype_t type, const int32_t top, const int32_t left, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, const bool_t in_scroll, GuiComponent *component, GtNapWindow *gtwin)
 {
     uint32_t id;
     GtNapObject *obj = NULL;
@@ -822,14 +828,14 @@ static uint32_t i_add_object(const objtype_t type, const int32_t cell_x, const i
     id = arrst_size(gtwin->gui_objects, GtNapObject);
     obj = arrst_new0(gtwin->gui_objects, GtNapObject);
     obj->type = type;
-    obj->cell_x = cell_x;
-    obj->cell_y = cell_y;
+    obj->top = top;
+    obj->left = left;
     obj->component = component;
-    obj->pos.x = (real32_t)(cell_x * (int32_t)cell_x_size);
-    obj->pos.y = (real32_t)(cell_y * (int32_t)cell_y_size);
+    obj->pos.x = (real32_t)(left * (int32_t)cell_x_size);
+    obj->pos.y = (real32_t)(top * (int32_t)cell_y_size);
     obj->size = *size;
     obj->is_last_edit = FALSE;
-    obj->in_scroll_panel = in_scroll_panel;
+    obj->in_scroll = in_scroll;
     obj->can_auto_lista = TRUE;
     obj->has_focus = FALSE;
     obj->editBoxIndexForButton = UINT32_MAX;
@@ -850,7 +856,7 @@ static uint32_t i_add_object(const objtype_t type, const int32_t cell_x, const i
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_add_label(const int32_t top, const int32_t left, const bool_t in_scroll_panel, GtNapWindow *gtwin, GtNap *gtnap)
+static uint32_t i_add_label(const int32_t top, const int32_t left, const bool_t in_scroll, GtNapWindow *gtwin, GtNap *gtnap)
 {
     Label *label = label_create();
     S2Df size;
@@ -873,7 +879,7 @@ static uint32_t i_add_label(const int32_t top, const int32_t left, const bool_t 
 
     size.width = (real32_t)(1 * gtnap->cell_x_size);
     size.height = (real32_t)gtnap->label_y_size;
-    return i_add_object(ekOBJ_LABEL, left, top, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll_panel, (GuiComponent*)label, gtwin);
+    return i_add_object(ekOBJ_LABEL, top, left, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll, (GuiComponent*)label, gtwin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -936,13 +942,13 @@ static void i_set_button_text(GtNapObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t left, HB_ITEM *text_block, const bool_t in_scroll_panel)
+uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t left, HB_ITEM *text_block, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     uint32_t id;
     GtNapObject *obj;
     cassert(gtwin->is_configured == FALSE);
-    id = i_add_label(top - gtwin->top, left - gtwin->left, in_scroll_panel, gtwin, GTNAP_GLOBAL);
+    id = i_add_label(top - gtwin->top, left - gtwin->left, in_scroll, gtwin, GTNAP_GLOBAL);
     obj = arrst_last(gtwin->gui_objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_LABEL);
@@ -956,12 +962,12 @@ uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t lef
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_label_message(const uint32_t wid, const int32_t top, const int32_t left, const bool_t in_scroll_panel)
+uint32_t hb_gtnap_label_message(const uint32_t wid, const int32_t top, const int32_t left, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     cassert(gtwin->is_configured == FALSE);
     cassert(gtwin->message_label_id == UINT32_MAX);
-    gtwin->message_label_id = i_add_label(top - gtwin->top, left - gtwin->left, in_scroll_panel, gtwin, GTNAP_GLOBAL);
+    gtwin->message_label_id = i_add_label(top - gtwin->top, left - gtwin->left, in_scroll, gtwin, GTNAP_GLOBAL);
 
     /* TODO: Remove (just for debug) */
     {
@@ -1045,7 +1051,7 @@ static void i_OnButtonClick2(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel)
+uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     Button *button = NULL;
@@ -1062,7 +1068,7 @@ uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t le
     cassert(bottom == top);
     size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->button_y_size);
-    id = i_add_object(ekOBJ_BUTTON, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)button, gtwin);
+    id = i_add_object(ekOBJ_BUTTON, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)button, gtwin);
 
     if (text_block != NULL)
     {
@@ -1093,7 +1099,7 @@ static void i_OnImageClick(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll_panel)
+uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll)
 {
     Image *image = NULL;
     char_t utf8[STATIC_TEXT_SIZE];
@@ -1115,7 +1121,7 @@ uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t lef
         size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
         imageview_image(view, image);
         image_destroy(&image);
-        return i_add_object(ekOBJ_IMAGE, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)view, gtwin);
+        return i_add_object(ekOBJ_IMAGE, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)view, gtwin);
     }
 
     return UINT32_MAX;
@@ -1185,7 +1191,7 @@ uint32_t hb_gtnap_edit(
                     HB_ITEM *keyfilter_block,
                     HB_ITEM *auto_block,
                     HB_ITEM *lista_block,
-                    const bool_t in_scroll_panel)
+                    const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     Edit *edit = edit_create();
@@ -1198,7 +1204,7 @@ uint32_t hb_gtnap_edit(
     edit_bgcolor_focus(edit, kCOLOR_CYAN);
     size.width = (real32_t)((width + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)GTNAP_GLOBAL->edit_y_size;
-    id = i_add_object(ekOBJ_EDIT, left - gtwin->left, top - gtwin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)edit, gtwin);
+    id = i_add_object(ekOBJ_EDIT, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)edit, gtwin);
     obj = arrst_last(gtwin->gui_objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_EDIT);
@@ -1260,14 +1266,14 @@ uint32_t hb_gtnap_edit(
 
     //    //uint32_t butIndex;
     //    button_vpadding(button, i_button_vpadding());
-    //    log_printf("EDIT (%s) HAS LISTA IN SCROLL: %d", edit_get_text((Edit*)obj->component), in_scroll_panel);
+    //    log_printf("EDIT (%s) HAS LISTA IN SCROLL: %d", edit_get_text((Edit*)obj->component), in_scroll);
     //    button_text(button, text);
     //    button_font(button, GTNAP_GLOBAL->global_font);
 
     //    editIndex = arrst_size(cuawin->gui_objects, GtNapObject) - 1;
     //    bsize.width = (real32_t)(2 * GTNAP_GLOBAL->cell_x_size);
     //    bsize.height = (real32_t)(1 * GTNAP_GLOBAL->button_y_size);
-    //    i_add_object(ekOBJ_BUTTON, (nCol - cuawin->left) + nSize + 1, (nLin - cuawin->top), GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &bsize, in_scroll_panel, (GuiComponent*)button, cuawin);
+    //    i_add_object(ekOBJ_BUTTON, (nCol - cuawin->left) + nSize + 1, (nLin - cuawin->top), GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &bsize, in_scroll, (GuiComponent*)button, cuawin);
 
     //    objbut = arrst_last(cuawin->gui_objects, GtNapObject);
     //    cassert_no_null(objbut);
@@ -1799,7 +1805,7 @@ static void i_remove_cualib_object(GtNapWindow *cuawin, const uint32_t index)
 
     _component_visible(object->component, FALSE);
 
-    if (object->in_scroll_panel == TRUE)
+    if (object->in_scroll == TRUE)
         _component_detach_from_panel((GuiComponent*)cuawin->scrolled_panel, object->component);
     else
         _component_detach_from_panel((GuiComponent*)cuawin->panel, object->component);
@@ -2000,7 +2006,7 @@ void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nL
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
     _panel_compose(panel, &size, &final_size);
     _panel_locate(panel);
-    i_add_object(ekOBJ_MENUVERT, nLeft - cuawin->left, nTop - cuawin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)panel, cuawin);
+    i_add_object(ekOBJ_MENUVERT, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)panel, cuawin);
     //log_printf("MenuVert size: %.2f, %.2f, %.2f, %.2f", size.width, size.height, final_size.width, final_size.height);
 }
 
@@ -2014,7 +2020,7 @@ void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_
     log_printf("Added TableView into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
-    i_add_object(ekOBJ_TABLEVIEW, nLeft - cuawin->left, nTop - cuawin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, cuawin);
+    i_add_object(ekOBJ_TABLEVIEW, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, cuawin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2034,7 +2040,7 @@ void hb_gtnap_cualib_textview(TextView *view,
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
     textview_family(view, font_family(GTNAP_GLOBAL->global_font));
     textview_fsize(view, font_size(GTNAP_GLOBAL->global_font));
-    i_add_object(ekOBJ_TEXTVIEW, nLeft - cuawin->left, nTop - cuawin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, cuawin);
+    i_add_object(ekOBJ_TEXTVIEW, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, cuawin);
     obj = arrst_last(cuawin->gui_objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_TEXTVIEW);
@@ -2330,13 +2336,13 @@ static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
 
 /*---------------------------------------------------------------------------*/
 
-//void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll_panel, const uint32_t updateBlockParamId)
+//void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll, const uint32_t updateBlockParamId)
 //{
 //    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
 //    GtNapObject *obj = NULL;
 //    PHB_ITEM text_block = NULL;
 //    unref(background);
-//    i_add_label(nLin - gtwin->top, nCol - gtwin->left, in_scroll_panel, gtwin, GTNAP_GLOBAL);
+//    i_add_label(nLin - gtwin->top, nCol - gtwin->left, in_scroll, gtwin, GTNAP_GLOBAL);
 //
 //    obj = arrst_last(gtwin->gui_objects, GtNapObject);
 //    cassert_no_null(obj);
@@ -2456,7 +2462,7 @@ void hb_gtnap_cualib_edit(
                     const uint32_t nSize,
                     const char_t *type,
                     PHB_ITEM getobj,
-                    const bool_t in_scroll_panel,
+                    const bool_t in_scroll,
                     const uint32_t filtroTecParamId,
                     const uint32_t whenParamId)
 {
@@ -2483,7 +2489,7 @@ void hb_gtnap_cualib_edit(
     //edit_editable(edit, editable);
     size.width = (real32_t)((nSize + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)GTNAP_GLOBAL->edit_y_size;
-    i_add_object(ekOBJ_EDIT, nCol - cuawin->left, nLin - cuawin->top, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll_panel, (GuiComponent*)edit, cuawin);
+    i_add_object(ekOBJ_EDIT, nLin - cuawin->top, nCol - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)edit, cuawin);
 
     obj = arrst_last(cuawin->gui_objects, GtNapObject);
     cassert_no_null(obj);
@@ -2580,14 +2586,14 @@ void hb_gtnap_cualib_edit(
 
         //uint32_t butIndex;
         button_vpadding(button, i_button_vpadding());
-        log_printf("EDIT (%s) HAS LISTA IN SCROLL: %d", edit_get_text((Edit*)obj->component), in_scroll_panel);
+        log_printf("EDIT (%s) HAS LISTA IN SCROLL: %d", edit_get_text((Edit*)obj->component), in_scroll);
         button_text(button, text);
         button_font(button, GTNAP_GLOBAL->global_font);
 
         editIndex = arrst_size(cuawin->gui_objects, GtNapObject) - 1;
         bsize.width = (real32_t)(2 * GTNAP_GLOBAL->cell_x_size);
         bsize.height = (real32_t)(1 * GTNAP_GLOBAL->button_y_size);
-        i_add_object(ekOBJ_BUTTON, (nCol - cuawin->left) + nSize + 1, (nLin - cuawin->top), GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &bsize, in_scroll_panel, (GuiComponent*)button, cuawin);
+        i_add_object(ekOBJ_BUTTON, (nLin - cuawin->top), (nCol - cuawin->left) + nSize + 1, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &bsize, in_scroll, (GuiComponent*)button, cuawin);
 
         objbut = arrst_last(cuawin->gui_objects, GtNapObject);
         cassert_no_null(objbut);
@@ -3315,7 +3321,7 @@ static void i_attach_to_panel(ArrSt(GtNapObject) *objects, Panel *main_panel, Pa
         {
             V2Df pos = object->pos;
 
-            if (object->in_scroll_panel == TRUE)
+            if (object->in_scroll == TRUE)
                 _component_attach_to_panel((GuiComponent*)scroll_panel, object->component);
             else
                 _component_attach_to_panel((GuiComponent*)main_panel, object->component);
@@ -3336,7 +3342,7 @@ static void i_attach_to_panel(ArrSt(GtNapObject) *objects, Panel *main_panel, Pa
                     if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->edit_y_size)
                         pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->edit_y_size) / 2);
 
-                    if (object->in_scroll_panel == TRUE)
+                    if (object->in_scroll == TRUE)
                     {
                         object->size.width -= GTNAP_GLOBAL->cell_x_size;
                     }
@@ -3364,7 +3370,7 @@ static void i_attach_to_panel(ArrSt(GtNapObject) *objects, Panel *main_panel, Pa
                 }
             }
 
-            if (object->in_scroll_panel == TRUE)
+            if (object->in_scroll == TRUE)
             {
                 pos.x += scroll_offset->x;
                 pos.y += scroll_offset->y;
@@ -4378,7 +4384,7 @@ static S2Df i_scroll_content_size(const ArrSt(GtNapObject) *objects)
     real32_t max_y = -1e10f;
 
     arrst_foreach_const(object, objects, GtNapObject)
-        if (object->in_scroll_panel == TRUE)
+        if (object->in_scroll == TRUE)
         {
             real32_t x1 = object->pos.x;
             real32_t x2 = object->pos.x + object->size.width;
@@ -4443,6 +4449,14 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
     panel_layout(gtwin->panel, layout);
     window_panel(gtwin->window, gtwin->panel);
 
+    /* Create the view canvas*/ 
+    cassert(gtwin->canvas == NULL);
+    gtwin->canvas = view_create();
+    view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
+    _component_set_frame((GuiComponent*)gtwin->canvas, &kV2D_ZEROf, &gtwin->panel_size);
+    _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
+    _component_visible((GuiComponent*)gtwin->canvas, TRUE);
+
     if (i_with_scroll_panel(gtwin) == TRUE)
     {
         /* We add a subpanel to window main panel to implement the scroll area */
@@ -4465,14 +4479,6 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
         scroll_panel = panel;
         gtwin->scrolled_panel = panel;
     }
-
-    /* Create the view canvas*/ 
-    cassert(gtwin->canvas == NULL);
-    gtwin->canvas = view_create();
-    view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
-    _component_set_frame((GuiComponent*)gtwin->canvas, &kV2D_ZEROf, &gtwin->panel_size);
-    _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
-    _component_visible((GuiComponent*)gtwin->canvas, TRUE);
 
     /* Attach gui objects in certain Z-Order (from back to front) */
     i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_MENUVERT, gtwin->toolbar);
