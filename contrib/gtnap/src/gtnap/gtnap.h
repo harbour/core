@@ -56,43 +56,8 @@ extern uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int
 
 extern uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll);
 
+extern uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left, const uint32_t width, const char_t type, HB_ITEM *get_set_block, HB_ITEM *is_editable_block, HB_ITEM *when_block, HB_ITEM *valida_block, HB_ITEM *message_block, HB_ITEM *keyfilter_block, HB_ITEM *auto_block, HB_ITEM *lista_block, const bool_t in_scroll);
 
-
-
-
-
-
-extern uint32_t hb_gtnap_edit(
-                    const uint32_t wid,
-                    const int32_t top,
-                    const int32_t left,
-                    const uint32_t width,
-                    const char_t type,
-                    HB_ITEM *get_set_block,
-                    HB_ITEM *is_editable_block,
-                    HB_ITEM *when_block,
-                    HB_ITEM *valida_block,
-                    HB_ITEM *message_block,
-                    HB_ITEM *keyfilter_block,
-                    HB_ITEM *auto_block,
-                    HB_ITEM *lista_block,
-                    const bool_t in_scroll);
-
-
-                    ////const uint32_t editaBlockParamId,
-                    ////const uint32_t editableGlobalParamId,
-                    ////const uint32_t editableLocalParamId,
-                    //const uint32_t mensParamId,
-                    //const uint32_t listaParamId,
-                    //const uint32_t autoParamId,
-                    //const uint32_t validaParamId,
-                    ////const uint32_t nLin,
-                    ////const uint32_t nCol,
-                    ////const uint32_t nSize,
-                    //PHB_ITEM getobj,
-                    //const bool_t in_scroll,
-                    //const uint32_t filtroTecParamId,
-                    //const uint32_t whenParamId);
 
 
 

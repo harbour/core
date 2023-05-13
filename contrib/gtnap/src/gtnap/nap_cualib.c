@@ -188,26 +188,26 @@ HB_FUNC( NAP_CUALIB_DEFAULT_BUTTON )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_EDIT )
-{
-    uint32_t nLin = hb_parni(1);
-    uint32_t nCol = hb_parni(2);
-    uint32_t nSize = hb_parni(3);
-    const char_t *type = hb_gtnap_parText(5);
-    PHB_ITEM getobj = hb_param(12, HB_IT_OBJECT);
-    bool_t in_scroll = (bool_t)hb_parl(13);
-    hb_gtnap_cualib_edit(
-        4 /* GetText*/,
-        6 /* EditaGlobal */,
-        7 /* EditaLocal */,
-        8 /* Message */,
-        9 /* Lista */,
-        10 /* Auto */,
-        11 /* Valida */,
-        nLin, nCol, nSize, type, getobj, in_scroll,
-        14, /* FiltroTec */
-        15); /* When */
-}
+//HB_FUNC( NAP_CUALIB_EDIT )
+//{
+//    uint32_t nLin = hb_parni(1);
+//    uint32_t nCol = hb_parni(2);
+//    uint32_t nSize = hb_parni(3);
+//    const char_t *type = hb_gtnap_parText(5);
+//    PHB_ITEM getobj = hb_param(12, HB_IT_OBJECT);
+//    bool_t in_scroll = (bool_t)hb_parl(13);
+//    hb_gtnap_cualib_edit(
+//        4 /* GetText*/,
+//        6 /* EditaGlobal */,
+//        7 /* EditaLocal */,
+//        8 /* Message */,
+//        9 /* Lista */,
+//        10 /* Auto */,
+//        11 /* Valida */,
+//        nLin, nCol, nSize, type, getobj, in_scroll,
+//        14, /* FiltroTec */
+//        15); /* When */
+//}
 
 /*---------------------------------------------------------------------------*/
 
