@@ -18,12 +18,15 @@
 
 typedef struct _gtnap_t GtNap;
 typedef struct _gtnap_key_t GtNapKey;
+typedef struct _gtnap_callback_t GtNapCallback;
 typedef struct _gtnap_column_t GtNapColumn;
 typedef struct _gtnap_object_t GtNapObject;
 typedef struct _gtnap_cualib_toolbar_t GtNapCualibToolbar;
 typedef struct _gtnap_window_t GtNapWindow;
 typedef struct _vecitem_t VecItem;
-typedef struct _gui_context_t GuiContext;
+typedef struct _gui_component_t GuiComponent;
+
+typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
 struct _gtnap_callback_t
 {
@@ -354,6 +357,8 @@ static uint32_t INIT_COLS = 0;
 /* DELETE THIS */
 static void i_gtnap_destroy(GtNap **data);
 static void i_gtwin_configure(GtNapWindow *gtwin);
+static void hb_gtnap_callback(GtNapCallback *callback, Event *e);
+static bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e);
 
 /*---------------------------------------------------------------------------*/
 
@@ -5553,25 +5558,25 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
  *   Deprecated/Unused
  *
  */
-Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, FPtr_gtnap_callback func_callback)
-{
-    unref(codeBlockParamId);
-    unref(component);
-    unref(func_callback);
-    cassert(FALSE);
-    return NULL;
-}
+//Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, FPtr_gtnap_callback func_callback)
+//{
+//    unref(codeBlockParamId);
+//    unref(component);
+//    unref(func_callback);
+//    cassert(FALSE);
+//    return NULL;
+//}
 
 /*---------------------------------------------------------------------------*/
 
-Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback)
-{
-    unref(codeBlockParamId);
-    unref(window);
-    unref(func_callback);
-    cassert(FALSE);
-    return NULL;
-}
+//Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback)
+//{
+//    unref(codeBlockParamId);
+//    unref(window);
+//    unref(func_callback);
+//    cassert(FALSE);
+//    return NULL;
+//}
 
 /*---------------------------------------------------------------------------*/
 

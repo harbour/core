@@ -15,19 +15,19 @@ HB_FUNC( NAP_LISTBOX_CREATE )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnSelect(GtNapCallback *callback, Event *e)
-{
-    hb_gtnap_callback(callback, e);
-}
+//static void i_OnSelect(GtNapCallback *callback, Event *e)
+//{
+//    hb_gtnap_callback(callback, e);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_LISTBOX_ONSELECT )
-{
-    ListBox *listbox = (ListBox*)hb_parptr(1);
-    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)listbox, i_OnSelect);
-    listbox_OnSelect(listbox, listener);
-}
+//HB_FUNC( NAP_LISTBOX_ONSELECT )
+//{
+//    ListBox *listbox = (ListBox*)hb_parptr(1);
+//    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)listbox, i_OnSelect);
+//    listbox_OnSelect(listbox, listener);
+//}
 
 /*---------------------------------------------------------------------------*/
 

@@ -12,12 +12,8 @@
 #include "hbgtcore.h"
 #include "gui.hxx"
 
-typedef struct _gui_component_t GuiComponent;
-typedef struct _gtnap_callback_t GtNapCallback;
 typedef struct _gtnap_area_t GtNapArea;
 typedef struct _gtnap_vector_t GtNapVector;
-
-typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
 /* Return codes when modal window has been closed */
 #define WINCLOSE_BUTTON_AUTOCLOSE   1000
@@ -110,9 +106,7 @@ extern void* hb_gtnap_area(GtNapArea *area);
 
 
 
-extern void hb_gtnap_callback(GtNapCallback *callback, Event *e);
 
-extern bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e);
 
 //
 // GTNAP-CUALIB Specific function
@@ -239,9 +233,9 @@ extern void hb_gtnap_cualib_select_current_vector(void);
  *   Deprecated/Unused
  *
  */
-extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, FPtr_gtnap_callback func_callback);
+//extern Listener *hb_gtnap_comp_listener(const uint32_t codeBlockParamId, GuiComponent *component, FPtr_gtnap_callback func_callback);
 
-extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback);
+//extern Listener *hb_gtnap_wind_listener(const uint32_t codeBlockParamId, Window *window, FPtr_gtnap_callback func_callback);
 
 //extern void hb_gtnap_cualib_label(const char_t *text, const uint32_t nLin, const uint32_t nCol, const bool_t background, const bool_t in_scroll, const uint32_t updateBlockParamId);
 

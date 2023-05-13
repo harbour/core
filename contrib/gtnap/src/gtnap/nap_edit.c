@@ -7,12 +7,12 @@
 
 /*---------------------------------------------------------------------------*/
 
-__EXTERN_C
-
-void _component_set_tag(GuiComponent *component, const uint32_t tag);
-uint32_t _component_get_tag(const GuiComponent *component);
-
-__END_C
+//__EXTERN_C
+//
+//void _component_set_tag(GuiComponent *component, const uint32_t tag);
+//uint32_t _component_get_tag(const GuiComponent *component);
+//
+//__END_C
 
 /*---------------------------------------------------------------------------*/
 
@@ -63,35 +63,35 @@ HB_FUNC( NAP_EDIT_MULTILINE )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditFilter(GtNapCallback *idp, Event *e)
-{
-    hb_gtnap_callback(idp, e);
-}
+//static void i_OnEditFilter(GtNapCallback *idp, Event *e)
+//{
+//    hb_gtnap_callback(idp, e);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_EDIT_ONFILTER )
-{
-    Edit *edit = (Edit*)hb_parptr(1);
-    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)edit, i_OnEditFilter);
-    edit_OnFilter(edit, listener);
-}
+//HB_FUNC( NAP_EDIT_ONFILTER )
+//{
+//    Edit *edit = (Edit*)hb_parptr(1);
+//    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)edit, i_OnEditFilter);
+//    edit_OnFilter(edit, listener);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditChange(GtNapCallback *idp, Event *e)
-{
-    hb_gtnap_callback(idp, e);
-}
+//static void i_OnEditChange(GtNapCallback *idp, Event *e)
+//{
+//    hb_gtnap_callback(idp, e);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_EDIT_ONCHANGE )
-{
-    Edit *edit = (Edit*)hb_parptr(1);
-    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)edit, i_OnEditChange);
-    edit_OnChange(edit, listener);
-}
+//HB_FUNC( NAP_EDIT_ONCHANGE )
+//{
+//    Edit *edit = (Edit*)hb_parptr(1);
+//    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)edit, i_OnEditChange);
+//    edit_OnChange(edit, listener);
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -227,18 +227,18 @@ HB_FUNC( NAP_EDIT_GET_TEXT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_EDIT_ID )
-{
-    Edit *edit = (Edit*)hb_parptr(1);
-    uint32_t id = hb_parni(2);
-    _component_set_tag((GuiComponent*)edit, id);
-}
+//HB_FUNC( NAP_EDIT_ID )
+//{
+//    Edit *edit = (Edit*)hb_parptr(1);
+//    uint32_t id = hb_parni(2);
+//    _component_set_tag((GuiComponent*)edit, id);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_EDIT_GET_ID )
-{
-    Edit *edit = (Edit*)hb_parptr(1);
-    uint32_t id = _component_get_tag((GuiComponent*)edit);
-    hb_retni((int)id);
-}
+//HB_FUNC( NAP_EDIT_GET_ID )
+//{
+//    Edit *edit = (Edit*)hb_parptr(1);
+//    uint32_t id = _component_get_tag((GuiComponent*)edit);
+//    hb_retni((int)id);
+//}

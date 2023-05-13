@@ -89,19 +89,19 @@ HB_FUNC( NAP_LABEL_MULTILINE )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnLabelClick(GtNapCallback *idp, Event *e)
-{
-    hb_gtnap_callback(idp, e);
-}
+//static void i_OnLabelClick(GtNapCallback *idp, Event *e)
+//{
+//    hb_gtnap_callback(idp, e);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_LABEL_ONCLICK )
-{
-    Label *label = (Label*)hb_parptr(1);
-    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)label, i_OnLabelClick);
-    label_OnClick(label, listener);
-}
+//HB_FUNC( NAP_LABEL_ONCLICK )
+//{
+//    Label *label = (Label*)hb_parptr(1);
+//    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)label, i_OnLabelClick);
+//    label_OnClick(label, listener);
+//}
 
 /*---------------------------------------------------------------------------*/
 

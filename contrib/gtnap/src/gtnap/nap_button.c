@@ -10,12 +10,12 @@
 
 /*---------------------------------------------------------------------------*/
 
-__EXTERN_C
-
-void _component_set_tag(GuiComponent *component, const uint32_t tag);
-uint32_t _component_get_tag(const GuiComponent *component);
-
-__END_C
+//__EXTERN_C
+//
+//void _component_set_tag(GuiComponent *component, const uint32_t tag);
+//uint32_t _component_get_tag(const GuiComponent *component);
+//
+//__END_C
 
 /*---------------------------------------------------------------------------*/
 
@@ -85,19 +85,19 @@ HB_FUNC( NAP_BUTTON_FLATGLE )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnButtonClick(GtNapCallback *callback, Event *e)
-{
-    hb_gtnap_callback(callback, e);
-}
+//static void i_OnButtonClick(GtNapCallback *callback, Event *e)
+//{
+//    hb_gtnap_callback(callback, e);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_ONCLICK )
-{
-    Button *button = (Button*)hb_parptr(1);
-    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)button, i_OnButtonClick);
-    button_OnClick(button, listener);
-}
+//HB_FUNC( NAP_BUTTON_ONCLICK )
+//{
+//    Button *button = (Button*)hb_parptr(1);
+//    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)button, i_OnButtonClick);
+//    button_OnClick(button, listener);
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -150,21 +150,21 @@ HB_FUNC( NAP_BUTTON_IMAGE_ALT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_ID )
-{
-    Button *button = (Button*)hb_parptr(1);
-    uint32_t id = hb_parni(2);
-    _component_set_tag((GuiComponent*)button, id);
-}
+//HB_FUNC( NAP_BUTTON_ID )
+//{
+//    Button *button = (Button*)hb_parptr(1);
+//    uint32_t id = hb_parni(2);
+//    _component_set_tag((GuiComponent*)button, id);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_GET_ID )
-{
-    Button *button = (Button*)hb_parptr(1);
-    uint32_t id = _component_get_tag((GuiComponent*)button);
-    hb_retni((int)id);
-}
+//HB_FUNC( NAP_BUTTON_GET_ID )
+//{
+//    Button *button = (Button*)hb_parptr(1);
+//    uint32_t id = _component_get_tag((GuiComponent*)button);
+//    hb_retni((int)id);
+//}
 
 /*---------------------------------------------------------------------------*/
 

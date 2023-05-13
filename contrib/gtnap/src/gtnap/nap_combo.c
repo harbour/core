@@ -15,35 +15,35 @@ HB_FUNC( NAP_COMBO_CREATE )
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnComboFilter(GtNapCallback *idp, Event *e)
-{
-    hb_gtnap_callback(idp, e);
-}
+//static void i_OnComboFilter(GtNapCallback *idp, Event *e)
+//{
+//    hb_gtnap_callback(idp, e);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_COMBO_ONFILTER )
-{
-    Combo *combo = (Combo*)hb_parptr(1);
-    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)combo, i_OnComboFilter);
-    combo_OnFilter(combo, listener);
-}
+//HB_FUNC( NAP_COMBO_ONFILTER )
+//{
+//    Combo *combo = (Combo*)hb_parptr(1);
+//    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)combo, i_OnComboFilter);
+//    combo_OnFilter(combo, listener);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnComboChange(GtNapCallback *idp, Event *e)
-{
-    hb_gtnap_callback(idp, e);
-}
+//static void i_OnComboChange(GtNapCallback *idp, Event *e)
+//{
+//    hb_gtnap_callback(idp, e);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_COMBO_ONCHANGE )
-{
-    Combo *combo = (Combo*)hb_parptr(1);
-    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)combo, i_OnComboChange);
-    combo_OnChange(combo, listener);
-}
+//HB_FUNC( NAP_COMBO_ONCHANGE )
+//{
+//    Combo *combo = (Combo*)hb_parptr(1);
+//    Listener *listener = hb_gtnap_comp_listener(2, (GuiComponent*)combo, i_OnComboChange);
+//    combo_OnChange(combo, listener);
+//}
 
 /*---------------------------------------------------------------------------*/
 
