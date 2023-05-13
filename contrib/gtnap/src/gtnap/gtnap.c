@@ -122,11 +122,11 @@ struct _gtnap_object_t
     uint32_t editSize;
     uint32_t editBoxIndexForButton;
 
-
-
     PHB_ITEM text_block;
-    PHB_ITEM editCodeBlock;
-    PHB_ITEM editableGlobalCodeBlock;
+
+
+
+    PHB_ITEM get_set_block;
     PHB_ITEM editableLocalCodeBlock;
     PHB_ITEM mensCodeBlock;
     PHB_ITEM confirmaCodeBlock;
@@ -839,9 +839,6 @@ static uint32_t i_add_object(const objtype_t type, const int32_t top, const int3
     obj->can_auto_lista = TRUE;
     obj->has_focus = FALSE;
     obj->editBoxIndexForButton = UINT32_MAX;
-    obj->text_block = NULL;
-    obj->editCodeBlock = NULL;
-    obj->editableGlobalCodeBlock = NULL;
     obj->editableLocalCodeBlock = NULL;
     obj->mensCodeBlock = NULL;
     obj->confirmaCodeBlock = NULL;
@@ -1133,9 +1130,9 @@ static void i_get_edit_text(const GtNapObject *obj, char_t *utf8, const uint32_t
 {
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_EDIT);
-    if (obj->editCodeBlock != NULL)
+    if (obj->get_set_block != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(obj->editCodeBlock, 0);
+        PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 0);
         HB_TYPE type = HB_ITEM_TYPE(retItem);
         switch (type) {
         case HB_IT_STRING:
@@ -1179,8 +1176,9 @@ static void i_set_edit_text(const GtNapObject *obj)
 /*---------------------------------------------------------------------------*/
 
 uint32_t hb_gtnap_edit(
-                    const uint32_t top,
-                    const uint32_t left,
+                    const uint32_t wid,
+                    const int32_t top,
+                    const int32_t left,
                     const uint32_t width,
                     const char_t type,
                     HB_ITEM *get_set_block,
@@ -1193,7 +1191,7 @@ uint32_t hb_gtnap_edit(
                     HB_ITEM *lista_block,
                     const bool_t in_scroll)
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     Edit *edit = edit_create();
     S2Df size;
     uint32_t id = UINT32_MAX;
@@ -1223,10 +1221,10 @@ uint32_t hb_gtnap_edit(
     }
 
     if (get_set_block != NULL)
-        obj->editCodeBlock = hb_itemNew(get_set_block);
+        obj->get_set_block = hb_itemNew(get_set_block);
 
     if (is_editable_block != NULL)
-        obj->editableGlobalCodeBlock = hb_itemNew(is_editable_block);
+        obj->editableLocalCodeBlock = hb_itemNew(is_editable_block);
 
     if (when_block != NULL)
         obj->whenCodeBlock = hb_itemNew(when_block);
@@ -1238,7 +1236,7 @@ uint32_t hb_gtnap_edit(
         obj->mensCodeBlock = hb_itemNew(message_block);
 
     if (keyfilter_block != NULL)
-        obj->mensCodeBlock = hb_itemNew(keyfilter_block);
+        obj->filtroTecBlock = hb_itemNew(keyfilter_block);
 
     if (auto_block != NULL)
         obj->autoCodeBlock = hb_itemNew(auto_block);
@@ -1815,11 +1813,8 @@ static void i_remove_cualib_object(GtNapWindow *cuawin, const uint32_t index)
     if (object->text_block != NULL)
         hb_itemRelease(object->text_block);
 
-    if (object->editCodeBlock != NULL)
-        hb_itemRelease(object->editCodeBlock);
-
-    if (object->editableGlobalCodeBlock != NULL)
-        hb_itemRelease(object->editableGlobalCodeBlock);
+    if (object->get_set_block != NULL)
+        hb_itemRelease(object->get_set_block);
 
     if (object->editableLocalCodeBlock != NULL)
         hb_itemRelease(object->editableLocalCodeBlock);
@@ -2031,7 +2026,7 @@ void hb_gtnap_cualib_textview(TextView *view,
 {
     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
     S2Df size;
-    PHB_ITEM editCodeBlock = NULL;
+    PHB_ITEM get_set_block = NULL;
     GtNapObject *obj = NULL;
 
     cassert_no_null(cuawin);
@@ -2044,15 +2039,15 @@ void hb_gtnap_cualib_textview(TextView *view,
     obj = arrst_last(cuawin->gui_objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_TEXTVIEW);
-    cassert(obj->editCodeBlock == NULL);
+    cassert(obj->get_set_block == NULL);
     cassert(obj->validaCodeBlock == NULL);
     cassert(obj->confirmaCodeBlock == NULL);
 
-    editCodeBlock = hb_param(editaBlockParamId, HB_IT_BLOCK);
-    if (editCodeBlock != NULL)
-        obj->editCodeBlock = hb_itemNew(editCodeBlock);
+    get_set_block = hb_param(editaBlockParamId, HB_IT_BLOCK);
+    if (get_set_block != NULL)
+        obj->get_set_block = hb_itemNew(get_set_block);
     else
-        obj->editCodeBlock = NULL;
+        obj->get_set_block = NULL;
 }
 
 
@@ -2147,7 +2142,7 @@ static void i_OnTextConfirmaButton(GtNapCallback *callback, Event *e)
     if (obj != NULL)
     {
         // static void i_update_harbour_from_edit_text(const GtNapObject *obj)
-        if (obj->editCodeBlock != NULL)
+        if (obj->get_set_block != NULL)
         {
             // FRAN: IMPROVE --> MAke dynamic
             char hOriginalHarbourText[4096];
@@ -2157,7 +2152,7 @@ static void i_OnTextConfirmaButton(GtNapCallback *callback, Event *e)
 
             /* Gets a copy of current content of Harbour text variable */
             {
-                PHB_ITEM retItem = hb_itemDo(obj->editCodeBlock, 0);
+                PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 0);
                 HB_TYPE type = HB_ITEM_TYPE(retItem);
                 cassert(type == HB_IT_STRING);
                 nOriginalHarbourTextSize = hb_itemCopyStr(retItem, hb_setGetOSCP(), hOriginalHarbourText, 4096);
@@ -2174,7 +2169,7 @@ static void i_OnTextConfirmaButton(GtNapCallback *callback, Event *e)
 
                 if (pItem != NULL)
                 {
-                    PHB_ITEM retItem = hb_itemDo(obj->editCodeBlock, 1, pItem);
+                    PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 1, pItem);
                     hb_itemRelease(pItem);
                     hb_itemRelease(retItem);
                 }
@@ -2216,7 +2211,7 @@ static void i_OnTextConfirmaButton(GtNapCallback *callback, Event *e)
 
                 if (pItem != NULL)
                 {
-                    PHB_ITEM retItem = hb_itemDo(obj->editCodeBlock, 1, pItem);
+                    PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 1, pItem);
                     hb_itemRelease(pItem);
                     hb_itemRelease(retItem);
                 }
@@ -2368,7 +2363,7 @@ static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
 static void i_update_harbour_from_edit_text(const GtNapObject *obj)
 {
     cassert_no_null(obj);
-    if (obj->editCodeBlock != NULL)
+    if (obj->get_set_block != NULL)
     {
         PHB_ITEM pItem = NULL;
         const char_t *text = edit_get_text((Edit*)obj->component);
@@ -2390,7 +2385,7 @@ static void i_update_harbour_from_edit_text(const GtNapObject *obj)
 
         if (pItem != NULL)
         {
-            PHB_ITEM retItem = hb_itemDo(obj->editCodeBlock, 1, pItem);
+            PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 1, pItem);
             hb_itemRelease(pItem);
             hb_itemRelease(retItem);
         }
@@ -2468,8 +2463,8 @@ void hb_gtnap_cualib_edit(
 {
     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
     GtNapObject *obj = NULL;
-    PHB_ITEM editCodeBlock = NULL;
-    PHB_ITEM editableGlobalCodeBlock = NULL;
+    PHB_ITEM get_set_block = NULL;
+//    PHB_ITEM editableGlobalCodeBlock = NULL;
     PHB_ITEM editableLocalCodeBlock = NULL;
     PHB_ITEM mensCodeBlock = NULL;
     PHB_ITEM validaCodeBlock = NULL;
@@ -2482,6 +2477,7 @@ void hb_gtnap_cualib_edit(
     // //Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT_MAX, autoclose, cuawin, i_OnButtonClick);
     S2Df size;
     cassert_no_null(cuawin);
+    unref(editableGlobalParamId);
     // //_component_set_tag((GuiComponent*)button, nTag);
     edit_font(edit, GTNAP_GLOBAL->reduced_font);
     edit_vpadding(edit, i_edit_vpadding());
@@ -2497,17 +2493,17 @@ void hb_gtnap_cualib_edit(
 
     obj->editSize = nSize;
 
-    editCodeBlock = hb_param(editaBlockParamId, HB_IT_BLOCK);
-    if (editCodeBlock != NULL)
-        obj->editCodeBlock = hb_itemNew(editCodeBlock);
+    get_set_block = hb_param(editaBlockParamId, HB_IT_BLOCK);
+    if (get_set_block != NULL)
+        obj->get_set_block = hb_itemNew(get_set_block);
     else
-        obj->editCodeBlock = NULL;
+        obj->get_set_block = NULL;
 
-    editableGlobalCodeBlock = hb_param(editableGlobalParamId, HB_IT_BLOCK);
-    if (editableGlobalCodeBlock != NULL)
-        obj->editableGlobalCodeBlock = hb_itemNew(editableGlobalCodeBlock);
-    else
-        obj->editableGlobalCodeBlock = NULL;
+    //editableGlobalCodeBlock = hb_param(editableGlobalParamId, HB_IT_BLOCK);
+    //if (editableGlobalCodeBlock != NULL)
+    //    obj->editableGlobalCodeBlock = hb_itemNew(editableGlobalCodeBlock);
+    //else
+    //    obj->editableGlobalCodeBlock = NULL;
 
     editableLocalCodeBlock = hb_param(editableLocalParamId, HB_IT_BLOCK);
     if (editableLocalCodeBlock != NULL)
@@ -4071,28 +4067,27 @@ static void i_filter_bypass(const EvText *text, EvTextFilter *filter)
 
 /*---------------------------------------------------------------------------*/
 
-static bool_t i_is_editable(GtNapObject *cuaobj)
+static bool_t i_is_editable(GtNapWindow *gtwin, GtNapObject *gtobj)
 {
     bool_t editable = TRUE;
-    cassert_no_null(cuaobj);
-    cassert(cuaobj->type == ekOBJ_EDIT);
+    cassert_no_null(gtwin);
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_EDIT);
 
-    if (editable == TRUE && cuaobj->editableGlobalCodeBlock != NULL)
+    if (editable == TRUE && gtwin->is_editable_block != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(cuaobj->editableGlobalCodeBlock, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
-        cassert(type == HB_IT_LOGICAL);
-        editable = (bool_t)hb_itemGetL(retItem);
-        hb_itemRelease(retItem);
+        PHB_ITEM ritem = hb_itemDo(gtwin->is_editable_block, 0);
+        cassert(HB_ITEM_TYPE(ritem) == HB_IT_LOGICAL);
+        editable = (bool_t)hb_itemGetL(ritem);
+        hb_itemRelease(ritem);
     }
 
-    if (editable == TRUE && cuaobj->editableLocalCodeBlock != NULL)
+    if (editable == TRUE && gtobj->editableLocalCodeBlock != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(cuaobj->editableLocalCodeBlock, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
-        cassert(type == HB_IT_LOGICAL);
-        editable = (bool_t)hb_itemGetL(retItem);
-        hb_itemRelease(retItem);
+        PHB_ITEM ritem = hb_itemDo(gtobj->editableLocalCodeBlock, 0);
+        cassert(HB_ITEM_TYPE(ritem) == HB_IT_LOGICAL);
+        editable = (bool_t)hb_itemGetL(ritem);
+        hb_itemRelease(ritem);
     }
 
     return editable;
@@ -4268,7 +4263,7 @@ static void i_OnEditFilter(GtNapWindow *cuawin, Event *e)
         //     i_set_edit_message(cuaobj, mes_obj);
         // }
 
-        if (i_is_editable(cuaobj) == FALSE)
+        if (i_is_editable(cuawin, cuaobj) == FALSE)
         {
             /* If editBox is not editable --> Restore the original text */
             i_get_edit_text(cuaobj, res->text, sizeof(res->text));

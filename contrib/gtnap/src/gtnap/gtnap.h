@@ -63,8 +63,9 @@ extern uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int3
 
 
 extern uint32_t hb_gtnap_edit(
-                    const uint32_t top,
-                    const uint32_t left,
+                    const uint32_t wid,
+                    const int32_t top,
+                    const int32_t left,
                     const uint32_t width,
                     const char_t type,
                     HB_ITEM *get_set_block,

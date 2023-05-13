@@ -633,6 +633,9 @@ IF SOB_MODO_GRAFICO()
             NAP_WINDOW_SCROLL(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
         ENDIF
 
+        // Sets the editable block for whole window
+        NAP_WINDOW_EDITABLE(N_WindowNum, B_Edita_Global)
+
         // Label for Get messages
         N_Message := NAP_LABEL_MESSAGE(N_WindowNum, LinMess(VX_Janela), Col1Livre(VX_Janela), .F.)
 
@@ -673,24 +676,40 @@ IF SOB_MODO_GRAFICO()
 
             //NAP_LOG("BEFORE NAP_CUALIB_EDIT")
 
-            NAP_CUALIB_EDIT( ;
-            N_Row + Lin1Livre(VX_Janela) - 1, ;
-            N_Col + Col1Livre(VX_Janela), ;
-            N_LarguraVar, ;
-            X_Info:BLOCK, ;
-            X_Info:TYPE, ;
-            B_Edita_Global, ;
-            B_Edita, ;
-            B_Mess, ;
-            B_FinalLista /* IF B_Lista is a NIL code block --> No lista  B_Lista*/, ;
-            B_Auto, ;
-            X_Info:POSTBLOCK, ;
-            X_Info, ;
-            L_ScrollVertical, ;
-            B_FiltroTec, ;
-            X_Info:PREBLOCK)
+            NAP_EDIT( ;
+                    N_WindowNum,;
+                    N_Row + Lin1Livre(VX_Janela) - 1, ;
+                    N_Col + Col1Livre(VX_Janela), ;
+                    N_LarguraVar, ;
+                    X_Info:TYPE, ;
+                    X_Info:BLOCK, ;
+                    B_Edita, ;
+                    X_Info:PREBLOCK, ;
+                    X_Info:POSTBLOCK, ;
+                    B_Mess, ;
+                    B_FiltroTec, ;
+                    B_Auto, ;
+                    B_FinalLista, ;
+                    L_ScrollVertical)
+
+            // NAP_CUALIB_EDIT( ;
+            // N_Row + Lin1Livre(VX_Janela) - 1, ;
+            // N_Col + Col1Livre(VX_Janela), ;
+            // N_LarguraVar, ;
+            // X_Info:BLOCK, ;
+            // X_Info:TYPE, ;
+            // B_Edita_Global, ;
+            // B_Edita, ;
+            // B_Mess, ;
+            // B_FinalLista /* IF B_Lista is a NIL code block --> No lista  B_Lista*/, ;
+            // B_Auto, ;
+            // X_Info:POSTBLOCK, ;
+            // X_Info, ;
+            // L_ScrollVertical, ;
+            // B_FiltroTec, ;
+            // X_Info:PREBLOCK)
             //NAP_LOG("BEFORE EDIT GET:")
-            NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
+            //NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
 
             #UNDEF N_LarguraVar
             #UNDEF N_LarguraTela

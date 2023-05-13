@@ -34,6 +34,14 @@ HB_FUNC( NAP_WINDOW_SCROLL )
     hb_gtnap_window_scroll(wid, top, left, bottom, right);
 }
 
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_WINDOW_EDITABLE )
+{
+    uint32_t wid = hb_parni(1);
+    HB_ITEM *is_editable_block = hb_param(2, HB_IT_BLOCK);
+    hb_gtnap_window_editable(wid, is_editable_block);
+}
 
 
 
