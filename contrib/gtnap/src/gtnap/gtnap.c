@@ -745,6 +745,25 @@ void hb_gtnap_terminal(void)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnWindowClose(GtNapWindow *gtwin, Event *e)
+{
+    const EvWinClose *p = event_params(e, EvWinClose);
+    bool_t *res = event_result(e, bool_t);
+    cassert(*res == TRUE);
+    if (gtwin->desist_block != NULL)
+    {
+        PHB_ITEM ritem = hb_itemDo(gtwin->desist_block, 0);
+        cassert(HB_ITEM_TYPE(ritem) == HB_IT_LOGICAL);
+        *res = (bool_t)hb_itemGetL(ritem);
+        hb_itemRelease(ritem);
+    }
+
+    if (*res == TRUE && p->origin == ekGUI_CLOSE_ESC)
+        gtwin->is_closed_by_esc = TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation)
 {
     uint32_t id = UINT32_MAX;
@@ -792,6 +811,7 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
     }
 
     window_cycle_tabstop(window, FALSE);
+    window_OnClose(window, listener(gtwin, i_OnWindowClose, GtNapWindow));
     return id;
 }
 
@@ -3562,21 +3582,6 @@ static void i_toolbar_tabstop(GtNapCualibToolbar *toolbar)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnWindowClose(GtNapCallback *callback, Event *e)
-{
-    bool_t ret = hb_gtnap_callback_bool(callback, e);
-    const EvWinClose *p = event_params(e, EvWinClose);
-    bool_t *res = event_result(e, bool_t);
-    *res = ret;
-
-    if (ret == TRUE && p->origin == ekGUI_CLOSE_ESC)
-        callback->cuawin->is_closed_by_esc = TRUE;
-
-    log_printf("i_OnWindowClose EVENT RESPONSE %d", ret);
-}
-
-/*---------------------------------------------------------------------------*/
-
 static void i_OnPreviousTabstop(GtNapWindow *cuawin, Event *e)
 {
     unref(e);
@@ -4620,24 +4625,21 @@ uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const
 {
     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
     cassert_no_null(cuawin);
-
+    unref(confirmaBlockParamId);
+    unref(cancelBlockParamId);
+    //confirmaBlockParamId, const uint32_t cancelBlockParamId
     /* Configure the Window before the first launch */
     if (cuawin->is_configured == FALSE)
     {
-        Listener *listener = NULL;
         i_gtwin_configure(cuawin);
 
-        {
-            PHB_ITEM codeBlock = NULL;
-            cassert(cuawin->confirm_block == NULL);
-            codeBlock = hb_param(confirmaBlockParamId, HB_IT_BLOCK);
-            if (codeBlock != NULL)
-                cuawin->confirm_block = hb_itemNew(codeBlock);
-        }
-
-        /* OnClose listener */
-        listener = i_gtnap_cualib_listener(cancelBlockParamId, INT32_MAX, FALSE, cuawin, i_OnWindowClose);
-        window_OnClose(cuawin->window, listener);
+        //{
+        //    PHB_ITEM codeBlock = NULL;
+        //    cassert(cuawin->confirm_block == NULL);
+        //    codeBlock = hb_param(confirmaBlockParamId, HB_IT_BLOCK);
+        //    if (codeBlock != NULL)
+        //        cuawin->confirm_block = hb_itemNew(codeBlock);
+        //}
     }
 
 

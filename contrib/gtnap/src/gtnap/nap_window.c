@@ -43,11 +43,32 @@ HB_FUNC( NAP_WINDOW_EDITABLE )
     hb_gtnap_window_editable(wid, is_editable_block);
 }
 
-// extern void hb_gtnap_window_confirm(const uint32_t wid, HB_ITEM *confirm_block);
+/*---------------------------------------------------------------------------*/
 
-// extern void hb_gtnap_window_desist(const uint32_t wid, HB_ITEM *desist_block);
+HB_FUNC( NAP_WINDOW_CONFIRM )
+{
+    uint32_t wid = hb_parni(1);
+    HB_ITEM *confirm_block = hb_param(2, HB_IT_BLOCK);
+    hb_gtnap_window_confirm(wid, confirm_block);
+}
 
-// extern void hb_gtnap_window_errdate(const uint32_t wid, HB_ITEM *error_date_block);
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_WINDOW_DESIST )
+{
+    uint32_t wid = hb_parni(1);
+    HB_ITEM *desist_block = hb_param(2, HB_IT_BLOCK);
+    hb_gtnap_window_desist(wid, desist_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_WINDOW_ERRDATE )
+{
+    uint32_t wid = hb_parni(1);
+    HB_ITEM *error_date_block = hb_param(2, HB_IT_BLOCK);
+    hb_gtnap_window_errdate(wid, error_date_block);
+}
 
 
 

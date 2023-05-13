@@ -173,6 +173,9 @@ IF SOB_MODO_GRAFICO()
         //NAP_LOG("STATIC FUNCTION Texto BEFORE CoordenadasBrowse(VX_Sele)")
 
         NAP_WINDOW_EDITABLE(N_WindowNum, B_Edita)
+        NAP_WINDOW_CONFIRM(N_WindowNum, B_Confirma)
+        NAP_WINDOW_DESIST(N_WindowNum, B_Desiste)
+
         //V_TextView := NAP_TEXTVIEW_CREATE()
         N_TextId := NAP_TEXTVIEW(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto, .F.)
 
@@ -233,7 +236,7 @@ IF SOB_MODO_GRAFICO()
     // L_Coords := CoordenadasBrowse(VX_Sele)
 
 
-    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, B_Desiste)
+    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
     NAP_LOG("Texto en Memoria X_Retorno: " + hb_ntos(X_Retorno))
     // X_Retorno == 1 --> window has been closed by [ESC]
     // X_Retorno == 2 --> window has been closed by [INTRO]
