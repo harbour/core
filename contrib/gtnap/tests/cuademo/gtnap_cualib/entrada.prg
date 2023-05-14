@@ -613,7 +613,7 @@ RETURN
 STATIC FUNC Ler( VX_Janela )
 ****************************
 LOCAL N_CursorAnt, C_ReadVarAnt, N_Col, N_Row, N_Cont
-LOCAL VX_Get, VX_Edicao
+LOCAL VX_Get, VX_Edicao, N_EditId, N_ButId
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL N_Aux_SayGetCor, X_Info, X_Retorno, X_Dado
 LOCAL B_ConfirmaBlock := NIL, B_DesisteBlock := NIL, B_ErrorDataBlock := NIL
@@ -661,26 +661,38 @@ IF SOB_MODO_GRAFICO()
                 #DEFINE VX_Edicao   VX_SubObj
                 #DEFINE B_Mess X_Info:CARGO[6]
 
+                N_EditId := NAP_EDIT( ;
+                                        N_WindowNum,;
+                                        N_Row + Lin1Livre(VX_Janela) - 1, ;
+                                        N_Col + Col1Livre(VX_Janela), ;
+                                        N_LarguraVar, ;
+                                        X_Info:TYPE, ;
+                                        X_Info:BLOCK, ;
+                                        B_Edita, ;
+                                        X_Info:PREBLOCK, ;
+                                        X_Info:POSTBLOCK, ;
+                                        B_Mess, ;
+                                        B_FiltroTec, ;
+                                        NIL, ;
+                                        NIL, ;
+                                        L_ScrollVertical)
+
+                // We create a wizard for editbox
                 IF L_With_B_Lista
-                    B_FinalLista := B_Lista
+                    N_ButId := NAP_BUTTON(;
+                                        N_WindowNum, ;
+                                        N_Row + Lin1Livre(VX_Janela) - 1, ;
+                                        N_Col + Col1Livre(VX_Janela) + N_LarguraVar + 1, ;
+                                        N_Row + Lin1Livre(VX_Janela) - 1, ;
+                                        N_Col + Col1Livre(VX_Janela) + N_LarguraVar + 3, ;
+                                        N_Aux_SayGetCor, ;
+                                        NIL, ;
+                                        NIL, ;
+                                        .F., ;
+                                        .F.)
+
+                    NAP_EDIT_WIZARD(N_WindowNum, N_EditId, N_ButId, K_F4, B_Auto, B_Lista)
                 ENDIF
-
-                NAP_EDIT( ;
-                        N_WindowNum,;
-                        N_Row + Lin1Livre(VX_Janela) - 1, ;
-                        N_Col + Col1Livre(VX_Janela), ;
-                        N_LarguraVar, ;
-                        X_Info:TYPE, ;
-                        X_Info:BLOCK, ;
-                        B_Edita, ;
-                        X_Info:PREBLOCK, ;
-                        X_Info:POSTBLOCK, ;
-                        B_Mess, ;
-                        B_FiltroTec, ;
-                        B_Auto, ;
-                        B_FinalLista, ;
-                        L_ScrollVertical)
-
                 #UNDEF N_LarguraVar
                 #UNDEF N_LarguraTela
                 #UNDEF B_Edita
@@ -703,7 +715,7 @@ IF SOB_MODO_GRAFICO()
             NEXT
 
             // REFACTOR: TODO
-            NAP_CUALIB_WINDOW_F4_LISTA()
+            //NAP_CUALIB_WINDOW_F4_LISTA()
             NAP_CUALIB_HOTKEY(K_F1,{||NAP_ENTRADA_HELP(C_CdTela,C_Cabec,V_Lst_CdGET)}, .F.)
 
     ENDIF  // L_PrimAtivacao

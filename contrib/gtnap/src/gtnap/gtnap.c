@@ -114,7 +114,7 @@ typedef enum _datatype_t
     //HB_ITEM *message_block = hb_param(10, HB_IT_BLOCK);
     //HB_ITEM *keyfilter_block = hb_param(11, HB_IT_BLOCK);
     //HB_ITEM *auto_block = hb_param(12, HB_IT_BLOCK);
-    //HB_ITEM *lista_block = hb_param(13, HB_IT_BLOCK);
+    //HB_ITEM *wizard_block = hb_param(13, HB_IT_BLOCK);
 
 
 struct _gtnap_object_t
@@ -144,7 +144,7 @@ struct _gtnap_object_t
     PHB_ITEM message_block;
     PHB_ITEM keyfilter_block;
     PHB_ITEM auto_block;
-    PHB_ITEM lista_block;
+    PHB_ITEM wizard_block;
 
 
     PHB_ITEM confirmaCodeBlock;
@@ -982,17 +982,12 @@ static void i_set_button_text(GtNapObject *obj)
     cassert(obj->type == ekOBJ_BUTTON);
     if (obj->text_block != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(obj->text_block, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
-
-        if (type == HB_IT_STRING)
-        {
-            char_t buffer[STATIC_TEXT_SIZE];
-            i_item_to_utf8(retItem, buffer, sizeof32(buffer));
-            button_text((Button*)obj->component, buffer);
-        }
-
-        hb_itemRelease(retItem);
+        PHB_ITEM ritem = hb_itemDo(obj->text_block, 0);
+        char_t utf8[STATIC_TEXT_SIZE];
+        cassert(HB_ITEM_TYPE(ritem) == HB_IT_STRING);
+        i_item_to_utf8(ritem, utf8, sizeof32(utf8));
+        button_text((Button*)obj->component, utf8);
+        hb_itemRelease(ritem);
     }
 }
 
@@ -1257,7 +1252,7 @@ static void i_OnNextTabstop(GtNapWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_launch_lista(GtNapWindow *cuawin, GtNapObject *obj)
+static void i_launch_wizard(GtNapWindow *cuawin, GtNapObject *obj)
 {
     char_t temp[1024];
     PHB_ITEM retItem = NULL;
@@ -1265,8 +1260,8 @@ static void i_launch_lista(GtNapWindow *cuawin, GtNapObject *obj)
     cassert_no_null(cuawin);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_EDIT);
-    cassert_no_null(obj->lista_block);
-    retItem = hb_itemDo(obj->lista_block, 0);
+    cassert_no_null(obj->wizard_block);
+    retItem = hb_itemDo(obj->wizard_block, 0);
     type = HB_ITEM_TYPE(retItem);
 
     if (type != HB_IT_NIL)
@@ -1284,20 +1279,19 @@ static void i_launch_lista(GtNapWindow *cuawin, GtNapObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnListaButton(GtNapCallback *callback, Event *e)
+static void i_OnWizardButton(GtNapCallback *callback, Event *e)
 {
     GtNapObject *obj = NULL;
     cassert_no_null(callback);
     cassert_no_null(callback->cuawin);
     unref(e);
     obj = arrpt_get(callback->cuawin->gui_objects, callback->key, GtNapObject);
-    log_printf("Pressed Lista Button: %d", callback->key);
-    i_launch_lista(callback->cuawin, obj);
+    i_launch_wizard(callback->cuawin, obj);
 }
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left, const uint32_t width, const char_t type, HB_ITEM *get_set_block, HB_ITEM *is_editable_block, HB_ITEM *when_block, HB_ITEM *valida_block, HB_ITEM *message_block, HB_ITEM *keyfilter_block, HB_ITEM *auto_block, HB_ITEM *lista_block, const bool_t in_scroll)
+uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left, const uint32_t width, const char_t type, HB_ITEM *get_set_block, HB_ITEM *is_editable_block, HB_ITEM *when_block, HB_ITEM *valida_block, HB_ITEM *message_block, HB_ITEM *keyfilter_block, HB_ITEM *auto_block, HB_ITEM *wizard_block, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     Edit *edit = edit_create();
@@ -1346,51 +1340,54 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
     if (keyfilter_block != NULL)
         obj->keyfilter_block = hb_itemNew(keyfilter_block);
 
-    if (auto_block != NULL)
-        obj->auto_block = hb_itemNew(auto_block);
+    unref(auto_block);
+    unref(wizard_block);
+    //if (auto_block != NULL)
+    //    obj->auto_block = hb_itemNew(auto_block);
 
-    if (lista_block != NULL)
-        obj->lista_block = hb_itemNew(lista_block);
+    //if (wizard_block != NULL)
+    //    obj->wizard_block = hb_itemNew(wizard_block);
 
     i_set_edit_text(obj);
 
-    if (obj->lista_block != NULL)
-    {
-        Button *button = button_push();
-        char_t text[8];
-        GtNapObject *objbut = NULL;
-        S2Df bsize;
-        uint32_t editIndex;
+    //if (obj->wizard_block != NULL)
+    //{
+    //    Button *button = button_push();
+    //    char_t text[8];
+    //    GtNapObject *objbut = NULL;
+    //    S2Df bsize;
+    //    uint32_t editIndex;
 
-        {
-            uint32_t b = unicode_to_char(0x25BE, text, ekUTF8);
-            text[b] = '\0';
-        }
+    //    {
+    //    char_t text[8];
+    //        uint32_t b = unicode_to_char(0x25BE, text, ekUTF8);
+    //        text[b] = '\0';
+    //    }
 
-        //uint32_t butIndex;
-        button_vpadding(button, i_button_vpadding());
-        log_printf("EDIT (%s) HAS LISTA IN SCROLL: %d", edit_get_text((Edit*)obj->component), in_scroll);
-        button_text(button, text);
-        button_font(button, GTNAP_GLOBAL->global_font);
+    //    //uint32_t butIndex;
+    //    button_vpadding(button, i_button_vpadding());
+    //    log_printf("EDIT (%s) HAS LISTA IN SCROLL: %d", edit_get_text((Edit*)obj->component), in_scroll);
+    //    button_text(button, text);
+    //    button_font(button, GTNAP_GLOBAL->global_font);
 
-        editIndex = arrpt_size(gtwin->gui_objects, GtNapObject) - 1;
-        bsize.width = (real32_t)(2 * GTNAP_GLOBAL->cell_x_size);
-        bsize.height = (real32_t)(1 * GTNAP_GLOBAL->button_y_size);
-        i_add_object(ekOBJ_BUTTON, (top - gtwin->top), (left - gtwin->left) + width + 1, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &bsize, in_scroll, (GuiComponent*)button, gtwin);
+    //    editIndex = arrpt_size(gtwin->gui_objects, GtNapObject) - 1;
+    //    bsize.width = (real32_t)(2 * GTNAP_GLOBAL->cell_x_size);
+    //    bsize.height = (real32_t)(1 * GTNAP_GLOBAL->button_y_size);
+    //    i_add_object(ekOBJ_BUTTON, (top - gtwin->top), (left - gtwin->left) + width + 1, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &bsize, in_scroll, (GuiComponent*)button, gtwin);
 
-        objbut = arrpt_last(gtwin->gui_objects, GtNapObject);
-        cassert_no_null(objbut);
-        cassert(objbut->type = ekOBJ_BUTTON);
-        cassert(objbut->editBoxIndexForButton == UINT32_MAX);
-        objbut->cuawin = gtwin;
-        objbut->editBoxIndexForButton = editIndex;
-        //butIndex = arrst_size(cuawin->gui_objects, GtNapObject);
+    //    objbut = arrpt_last(gtwin->gui_objects, GtNapObject);
+    //    cassert_no_null(objbut);
+    //    cassert(objbut->type = ekOBJ_BUTTON);
+    //    cassert(objbut->editBoxIndexForButton == UINT32_MAX);
+    //    objbut->cuawin = gtwin;
+    //    objbut->editBoxIndexForButton = editIndex;
+    //    //butIndex = arrst_size(cuawin->gui_objects, GtNapObject);
 
-        {
-            Listener *listener = i_gtnap_listener(NULL, editIndex, FALSE, gtwin, i_OnListaButton);
-            button_OnClick(button, listener);
-        }
-    }
+    //    {
+    //        Listener *listener = i_gtnap_listener(NULL, editIndex, FALSE, gtwin, i_OnListaButton);
+    //        button_OnClick(button, listener);
+    //    }
+    //}
 
 
 
@@ -1402,6 +1399,78 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
     //     button_OnClick(button, listener);
 
     return id;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static const GtNapKey *i_convert_key(const int32_t key)
+{
+    uint32_t i, n = sizeof(KEYMAPS) / sizeof(GtNapKey);
+    for (i = 0; i < n; ++i)
+    {
+        if (KEYMAPS[i].hkey == key)
+            return &KEYMAPS[i];
+    }
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnKeyWizard(GtNapWindow *cuawin, Event *e)
+{
+    cassert_no_null(cuawin);
+    unref(e);
+    arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
+        if (obj->type == ekOBJ_EDIT)
+        {
+            if (obj->has_focus == TRUE)
+            {
+                if (obj->wizard_block != NULL)
+                    i_launch_wizard(cuawin, obj);
+                return;
+            }
+        }
+    arrpt_end();
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_edit_wizard(const uint32_t wid, const uint32_t id, const uint32_t bid, int32_t key, HB_ITEM *auto_block, HB_ITEM *wizard_block)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    const GtNapKey *nkey = i_convert_key(key);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_EDIT);
+    cassert(obj->auto_block == NULL);
+    cassert(obj->wizard_block == NULL);
+    unref(key);
+    if (auto_block != NULL)
+        obj->auto_block = hb_itemNew(auto_block);
+
+    if (wizard_block != NULL)
+        obj->wizard_block = hb_itemNew(wizard_block);
+
+    if (bid != UINT32_MAX)
+    {
+        GtNapObject *bobj = i_gtobj(GTNAP_GLOBAL, wid, bid);
+        Listener *listener = NULL;
+        cassert_no_null(bobj);
+        cassert(bobj->type == ekOBJ_BUTTON);
+        listener = i_gtnap_listener(NULL, id, FALSE, bobj->cuawin, i_OnWizardButton);
+        bobj->editBoxIndexForButton = id;
+        button_OnClick((Button*)bobj->component, listener);
+
+        {
+            char_t text[8];
+            uint32_t b = unicode_to_char(0x25BE, text, ekUTF8);
+            text[b] = '\0';
+            button_text((Button*)bobj->component, text);
+        }
+    }
+
+    if (nkey != NULL)
+        window_hotkey(obj->cuawin->window, nkey->key, 0, listener(obj->cuawin, i_OnKeyWizard, GtNapWindow));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1581,20 +1650,6 @@ void hb_gtnap_textview_button(const uint32_t wid, const uint32_t id, const uint3
     cassert(obj->type == ekOBJ_TEXTVIEW);
     cassert(bobj->type == ekOBJ_BUTTON);
     button_OnClick((Button*)bobj->component, listener(obj, i_OnTextConfirm, GtNapObject));
-}
-
-/*---------------------------------------------------------------------------*/
-
-static const GtNapKey *i_convert_key(const int32_t key)
-{
-    uint32_t i, n = sizeof(KEYMAPS) / sizeof(GtNapKey);
-    for (i = 0; i < n; ++i)
-    {
-        if (KEYMAPS[i].hkey == key)
-            return &KEYMAPS[i];
-    }
-
-    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2175,8 +2230,8 @@ static void i_destroy_cualib_object(GtNapWindow *cuawin, const uint32_t index)
     if (object->auto_block != NULL)
         hb_itemRelease(object->auto_block);
 
-    if (object->lista_block != NULL)
-        hb_itemRelease(object->lista_block);
+    if (object->wizard_block != NULL)
+        hb_itemRelease(object->wizard_block);
 
 
 
@@ -2812,9 +2867,9 @@ static void i_update_harbour_from_edit_text(const GtNapObject *obj)
 //
 //    listaCodeBlock = hb_param(listaParamId, HB_IT_BLOCK);
 //    if (listaCodeBlock != NULL)
-//        obj->lista_block = hb_itemNew(listaCodeBlock);
+//        obj->wizard_block = hb_itemNew(listaCodeBlock);
 //    else
-//        obj->lista_block = NULL;
+//        obj->wizard_block = NULL;
 //
 //    autoCodeBlock = hb_param(autoParamId, HB_IT_BLOCK);
 //    if (autoCodeBlock != NULL)
@@ -2854,7 +2909,7 @@ static void i_update_harbour_from_edit_text(const GtNapObject *obj)
 //    log_printf("Added EDIT (%s) into CUALIB Window: %d, %d, %d", edit_get_text((Edit*)obj->component), nLin, nCol, nSize);
 //
 //
-//    if (obj->lista_block != NULL)
+//    if (obj->wizard_block != NULL)
 //    {
 //        Button *button = button_push();
 //        char_t text[8];
@@ -4322,7 +4377,7 @@ static void i_filter_bypass(const EvText *text, EvTextFilter *filter)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnAutoList(GtNapWindow *cuawin, Event *e)
+static void i_OnAutoWizard(GtNapWindow *cuawin, Event *e)
 {
     GtNapObject *cuaobj = NULL;
     cassert_no_null(cuawin);
@@ -4331,7 +4386,7 @@ static void i_OnAutoList(GtNapWindow *cuawin, Event *e)
     unref(e);
 
     // log_printf("cuaobj->autoCodeBlock: %p", cuaobj->autoCodeBlock);
-    if (cuaobj->can_auto_lista == TRUE && cuaobj->auto_block != NULL && cuaobj->lista_block != NULL)
+    if (cuaobj->can_auto_lista == TRUE && cuaobj->auto_block != NULL && cuaobj->wizard_block != NULL)
     {
         bool_t lista = FALSE;
 
@@ -4346,37 +4401,19 @@ static void i_OnAutoList(GtNapWindow *cuawin, Event *e)
         if (lista == TRUE)
         {
             cuaobj->can_auto_lista = FALSE;
-            i_launch_lista(cuawin, cuaobj);
+            i_launch_wizard(cuawin, cuaobj);
         }
     }
     // --------------------------------
 }
 
-/*---------------------------------------------------------------------------*/
-
-static void i_OnF4Lista(GtNapWindow *cuawin, Event *e)
-{
-    cassert_no_null(cuawin);
-    unref(e);
-    arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
-        if (obj->type == ekOBJ_EDIT)
-        {
-            if (obj->has_focus == TRUE)
-            {
-                if (obj->lista_block != NULL)
-                    i_launch_lista(cuawin, obj);
-                return;
-            }
-        }
-    arrpt_end();
-}
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_cualib_window_f4_lista(void)
 {
     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    window_hotkey(cuawin->window, ekKEY_F4, 0, listener(cuawin, i_OnF4Lista, GtNapWindow));
+    window_hotkey(cuawin->window, ekKEY_F4, 0, listener(cuawin, i_OnKeyWizard, GtNapWindow));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4453,7 +4490,7 @@ static void i_OnEditFocus(GtNapWindow *cuawin, Event *e)
         cuawin->current_obj = cuaobj;
 
         edit_select(edit, 0, 0);
-        gui_OnIdle(listener(cuawin, i_OnAutoList, GtNapWindow));
+        gui_OnIdle(listener(cuawin, i_OnAutoWizard, GtNapWindow));
     }
 }
 

@@ -36,6 +36,19 @@ HB_FUNC( NAP_EDIT )
     hb_retni(id);
 }
 
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_EDIT_WIZARD )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    uint32_t bid = hb_parni(3);
+    int32_t key = hb_parni(4);
+    HB_ITEM *auto_block = hb_param(5, HB_IT_BLOCK);
+    HB_ITEM *wizard_block = hb_param(6, HB_IT_BLOCK);
+    hb_gtnap_edit_wizard(wid, id, bid, key, auto_block, wizard_block);
+}
+
 
 
 
