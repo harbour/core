@@ -1382,7 +1382,6 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
         cassert_no_null(objbut);
         cassert(objbut->type = ekOBJ_BUTTON);
         cassert(objbut->editBoxIndexForButton == UINT32_MAX);
-        cassert(objbut->cuawin == NULL);
         objbut->cuawin = gtwin;
         objbut->editBoxIndexForButton = editIndex;
         //butIndex = arrst_size(cuawin->gui_objects, GtNapObject);

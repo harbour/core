@@ -39,6 +39,7 @@
 #INCLUDE "janela.ch"
 #INCLUDE "define_cua.ch"
 #INCLUDE "def_dados.ch"
+#INCLUDE "gtnap.ch"
 
 *
 * sinalizadores de movimentação (armazenado em N_CodMovi)
@@ -472,10 +473,6 @@ IF VX_Get:TYPE == "C" .AND. VX_Get:PICTURE # NIL
       N_Larguravar := N_LarguraTela := NIL
    ENDIF
    *
-
-   //
-   //  FRAN: ADDED
-   //
 ELSEIF VX_Get:TYPE == "C"
     *
     N_LarguraVar  := LEN(VX_Get:VARGET())
@@ -488,6 +485,7 @@ ELSEIF VX_Get:TYPE == "D"
 
 ELSE
     NAP_LOG("TYPE OF DATA: " + VX_Get:TYPE)
+
 ENDIF
 *
 * //!! depois unificar as variáveis N_LARGURATELA E N_LARGURABOX
@@ -508,17 +506,17 @@ AADD(V_RegiaoSayGet,{N_Lin, N_Col, ;
 *
 IF .NOT. L_SemF4
    #DEFINE N_ColSay  N_Col + LarguraTela(VX_Get:BLOCK,VX_Get:PICTURE)
-   IF SOB_MODO_GRAFICO()
-      * Os 3 espaços em branco vão ser sobrepostos pelo símbolo de drop-down,
-      * sendo que o símbolo de drop-down ocupará 2 bytes, sendo impresso
-      * de forma deslocada. Em resumo, ocupará "metade" do primeiro byte,
-      * o segundo byte inteiro e "metade" do terceiro byte.
-      AnexeSay ( VX_Janela, N_Lin, N_ColSay, {||" "+" "+" "},,,.T.)
-   ELSE
+//    IF SOB_MODO_GRAFICO()
+//       * Os 3 espaços em branco vão ser sobrepostos pelo símbolo de drop-down,
+//       * sendo que o símbolo de drop-down ocupará 2 bytes, sendo impresso
+//       * de forma deslocada. Em resumo, ocupará "metade" do primeiro byte,
+//       * o segundo byte inteiro e "metade" do terceiro byte.
+//       AnexeSay ( VX_Janela, N_Lin, N_ColSay, {||" "+" "+" "},,,.T.)
+//    ELSE
       * O mouse será ativado também se for clicado no espaço em branco...
       * //!! depois decidir se deixa assim mesmo...
       AnexeSay ( VX_Janela, N_Lin, N_ColSay, {||" "+CHR(31)+" "} )
-   ENDIF
+   //ENDIF
    *
    #DEFINE _REGIAO_DROP_DOWN "DROP"
    *
@@ -618,7 +616,7 @@ LOCAL N_CursorAnt, C_ReadVarAnt, N_Col, N_Row, N_Cont
 LOCAL VX_Get, VX_Edicao
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL N_Aux_SayGetCor, X_Info, X_Retorno, X_Dado
-LOCAL B_ConfirmaBlock := NIL, B_DesisteBlock := NIL
+LOCAL B_ConfirmaBlock := NIL, B_DesisteBlock := NIL, B_ErrorDataBlock := NIL
 LOCAL B_FinalLista := NIL
 LOCAL N_Message := NIL
 
@@ -628,186 +626,90 @@ IF SOB_MODO_GRAFICO()
 
     IF L_PrimAtivacao
 
+        B_ConfirmaBlock := IIF(B_Confirma # NIL, B_Confirma, {||.T.})
+        B_DesisteBlock := IIF(B_Desiste # NIL, B_Desiste, {||.T.})
+        B_ErrorDataBlock := IIF(B_ErroData # NIL, B_ErroData, {||.T.})
+
+        // Set window global functions
+        NAP_WINDOW_EDITABLE(N_WindowNum, B_Edita_Global)
+        NAP_WINDOW_CONFIRM(N_WindowNum, B_ConfirmaBlock)
+        NAP_WINDOW_DESIST(N_WindowNum, B_DesisteBlock)
+        NAP_WINDOW_ERRDATE(N_WindowNum, B_ErrorDataBlock)
+
         // Create an inner scroll panel
         IF L_ScrollVertical
             NAP_WINDOW_SCROLL(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela))
         ENDIF
-
-        // Sets the editable block for whole window
-        NAP_WINDOW_EDITABLE(N_WindowNum, B_Edita_Global)
-
 
         // Label for Get messages
         N_Message := NAP_LABEL_MESSAGE(N_WindowNum, LinMess(VX_Janela), Col1Livre(VX_Janela), .F.)
 
         FOR N_Aux_SayGetCor := 1 TO LEN(VX_SayGetList)
 
-        X_Info := VX_SayGetList[N_Aux_SayGetCor]
-        N_Col := ColVirtual(VX_Janela,N_Aux_SayGetCor)
-        N_Row := LinVirtual(VX_Janela,N_Aux_SayGetCor)
-        #DEFINE L_E_Get  (VALTYPE(X_Info) == "O")
-        IF L_E_Get
-            #DEFINE N_LarguraVar  X_Info:CARGO[7]
-            #DEFINE N_LarguraTela X_Info:CARGO[8]
-            #DEFINE B_Edita X_Info:CARGO[3]
-            #DEFINE B_Lista X_Info:CARGO[4]
-            #DEFINE L_With_B_Lista X_Info:CARGO[18]
-            #DEFINE B_Auto X_Info:CARGO[5]
-            #DEFINE VX_Edicao   VX_SubObj
-            #DEFINE B_Mess X_Info:CARGO[6]
+            X_Info := VX_SayGetList[N_Aux_SayGetCor]
+            N_Col := ColVirtual(VX_Janela,N_Aux_SayGetCor)
+            N_Row := LinVirtual(VX_Janela,N_Aux_SayGetCor)
 
-            IF L_With_B_Lista
-                B_FinalLista := B_Lista
+            #DEFINE L_E_Get  (VALTYPE(X_Info) == "O")
+            IF L_E_Get
+                #DEFINE N_LarguraVar  X_Info:CARGO[7]
+                #DEFINE N_LarguraTela X_Info:CARGO[8]
+                #DEFINE B_Edita X_Info:CARGO[3]
+                #DEFINE B_Lista X_Info:CARGO[4]
+                #DEFINE L_With_B_Lista X_Info:CARGO[18]
+                #DEFINE B_Auto X_Info:CARGO[5]
+                #DEFINE VX_Edicao   VX_SubObj
+                #DEFINE B_Mess X_Info:CARGO[6]
+
+                IF L_With_B_Lista
+                    B_FinalLista := B_Lista
+                ENDIF
+
+                NAP_EDIT( ;
+                        N_WindowNum,;
+                        N_Row + Lin1Livre(VX_Janela) - 1, ;
+                        N_Col + Col1Livre(VX_Janela), ;
+                        N_LarguraVar, ;
+                        X_Info:TYPE, ;
+                        X_Info:BLOCK, ;
+                        B_Edita, ;
+                        X_Info:PREBLOCK, ;
+                        X_Info:POSTBLOCK, ;
+                        B_Mess, ;
+                        B_FiltroTec, ;
+                        B_Auto, ;
+                        B_FinalLista, ;
+                        L_ScrollVertical)
+
+                #UNDEF N_LarguraVar
+                #UNDEF N_LarguraTela
+                #UNDEF B_Edita
+                #UNDEF B_Lista
+                #UNDEF B_Auto
+                #UNDEF VX_Edicao
+                #UNDEF B_Mess
+
+            ELSE
+                #DEFINE B_Expressao X_Info[3]
+                #DEFINE C_Pict      X_Info[4]
+                #DEFINE C_CorSay    X_Info[5]
+                NAP_LABEL(N_WindowNum, N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), B_Expressao, L_ScrollVertical)
+                #UNDEF B_Expressao
+                #UNDEF C_Pict
+                #UNDEF C_CorSay
+
             ENDIF
-            //X_Dado := EVAL(X_Info:BLOCK)
+            #UNDEF L_E_Get
+            NEXT
 
-            // NAP_LOG("TYPE X_Dado: " + X_Info:TYPE)
+            // REFACTOR: TODO
+            NAP_CUALIB_WINDOW_F4_LISTA()
+            NAP_CUALIB_HOTKEY(K_F1,{||NAP_ENTRADA_HELP(C_CdTela,C_Cabec,V_Lst_CdGET)}, .F.)
 
-            // IF X_Info:TYPE == "C"
-            //     //L_IsData := .F.
-            // ELSEIF X_Info:TYPE == "D"
-            //     //L_IsData := .T.
-            //     //NAP_LOG("BEFORE DtoC")
-            //     X_Dado := DtoC(X_Dado)
-            //     //NAP_LOG("After DtoC")
-            // ELSE
-            //     NAP_CRASH()
-            // ENDIF
-            *
+    ENDIF  // L_PrimAtivacao
 
-            //NAP_LOG("BEFORE NAP_CUALIB_EDIT")
-
-            NAP_EDIT( ;
-                    N_WindowNum,;
-                    N_Row + Lin1Livre(VX_Janela) - 1, ;
-                    N_Col + Col1Livre(VX_Janela), ;
-                    N_LarguraVar, ;
-                    X_Info:TYPE, ;
-                    X_Info:BLOCK, ;
-                    B_Edita, ;
-                    X_Info:PREBLOCK, ;
-                    X_Info:POSTBLOCK, ;
-                    B_Mess, ;
-                    B_FiltroTec, ;
-                    B_Auto, ;
-                    B_FinalLista, ;
-                    L_ScrollVertical)
-
-            // NAP_CUALIB_EDIT( ;
-            // N_Row + Lin1Livre(VX_Janela) - 1, ;
-            // N_Col + Col1Livre(VX_Janela), ;
-            // N_LarguraVar, ;
-            // X_Info:BLOCK, ;
-            // X_Info:TYPE, ;
-            // B_Edita_Global, ;
-            // B_Edita, ;
-            // B_Mess, ;
-            // B_FinalLista /* IF B_Lista is a NIL code block --> No lista  B_Lista*/, ;
-            // B_Auto, ;
-            // X_Info:POSTBLOCK, ;
-            // X_Info, ;
-            // L_ScrollVertical, ;
-            // B_FiltroTec, ;
-            // X_Info:PREBLOCK)
-            //NAP_LOG("BEFORE EDIT GET:")
-            //NAP_LOG("GET: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ")" + "- LARVAR: " + hb_ntos(N_LarguraVar) + " LARTELA: " + hb_ntos(N_LarguraTela) + " '" + X_Dado + "'")
-
-            #UNDEF N_LarguraVar
-            #UNDEF N_LarguraTela
-            #UNDEF B_Edita
-            #UNDEF B_Lista
-            #UNDEF B_Auto
-            #UNDEF VX_Edicao
-            #UNDEF B_Mess
-
-        ELSE
-            #DEFINE B_Expressao X_Info[3]
-            #DEFINE C_Pict      X_Info[4]
-            #DEFINE C_CorSay    X_Info[5]
-
-        X_Dado := EVAL(B_Expressao)
-
-        //NAP_CUALIB_LABEL(N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), "", .F., L_ScrollVertical, B_Expressao)
-        NAP_LABEL(N_WindowNum, N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), B_Expressao, L_ScrollVertical)
-        NAP_LOG("SAY: " + hb_ntos(N_Aux_SayGetCor) + " (" + hb_ntos(N_Row) + ", " + hb_ntos(N_Col) + ") '" + X_Dado + "'")
-        #UNDEF B_Expressao
-        #UNDEF C_Pict
-        #UNDEF C_CorSay
-
-        ENDIF
-        #UNDEF L_E_Get
-        NEXT
-
-
-        // DO WHILE PreencheDados(VX_Janela,N_SayGetCor2,@N_Lin,@N_Col) == 0 .AND. L_Continua
-        //     #DEFINE VX_Edicao   VX_SubObj
-        //     X_Info := VX_SayGetList[N_SayGetCor2]
-        //     *
-        //     #DEFINE L_E_Get  (VALTYPE(X_Info) == "O")
-        //     IF L_E_Get
-        //        X_Info:ROW := N_Lin - N_LinCobertas + Lin1Livre(VX_Janela)
-        //        X_Info:COL := N_Col - N_ColCobertas + Col1Livre(VX_Janela)
-        //        X_Info:DISPLAY()
-        //        *
-        //        IF N_Col-N_ColCobertas+LarguraTela(X_Info:BLOCK,X_Info:PICTURE) > ;
-        //           Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1  // largura da janela
-        //           ? MEMVAR->ERRO_LARGURA
-        //        ENDIF
-        //        *
-        //     ELSE
-        //        #DEFINE B_Expressao X_Info[3]
-        //        #DEFINE C_Pict      X_Info[4]
-        //        #DEFINE C_CorSay    X_Info[5]
-        //        *
-        //        SETPOS(N_Lin-N_LinCobertas+Lin1Livre(VX_Janela),;
-        //               N_Col-N_ColCobertas+Col1Livre(VX_Janela))
-        //        IF C_Pict # NIL
-        //           C_TextoSay := TRANSFORM(EVAL(B_Expressao),C_Pict)
-        //        ELSE
-        //           C_TextoSay := EVAL(B_Expressao)
-        //        ENDIF
-        //        DISPOUT(C_TextoSay,C_CorSay)
-        //        *
-        //        IF N_Col-N_ColCobertas+LEN(C_TextoSay) > ;
-        //           Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1  // largura da janela
-        //           ? MEMVAR->ERRO_LARGURA
-        //        ENDIF
-        //        *
-        //        #UNDEF B_Expressao
-        //        #UNDEF C_Pict
-        //        #UNDEF C_CorSay
-        //     ENDIF
-        //     #UNDEF L_E_Get
-
-        NAP_CUALIB_WINDOW_F4_LISTA()
-        NAP_CUALIB_HOTKEY(K_F1,{||NAP_ENTRADA_HELP(C_CdTela,C_Cabec,V_Lst_CdGET)}, .F.)
-
-        NAP_LOG("ENTRADA MESSAGE POS: " + hb_ntos(LinMess(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)))
-
-        // SETPOS(LinMess(VX_Janela),Col1Livre(VX_Janela))      // mostrar
-        // DISPOUT(PADR(EVAL(B_Mess),N_LargJanela))             // mensagem
-
-
-ENDIF  // L_PrimAtivacao
-
-    B_ConfirmaBlock := B_Confirma
-
-    IF B_ConfirmaBlock == NIL
-        B_ConfirmaBlock := {||.T.}
-    ENDIF
-
-    B_DesisteBlock := B_Desiste
-
-    IF B_DesisteBlock == NIL
-        B_DesisteBlock := {||.T.}
-    ENDIF
-
-    IF B_ErroData == NIL
-        NAP_CRASH()
-    ENDIF
-
-    NAP_CUALIB_ERROR_DATA(B_ErroData)
-    X_Retorno := NAP_CUALIB_LAUNCH_MODAL(B_ConfirmaBlock, B_DesisteBlock)
+    // REFACTOR: TODO
+    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
     NAP_LOG("ENTRADA RETORNO: " + hb_ntos(X_Retorno))
 
     // CLOSED BY ESC OR BY [X] Button
@@ -820,35 +722,6 @@ ENDIF  // L_PrimAtivacao
         NAP_LOG("ENTRADA UNEXPECTED RETORNO: " + hb_ntos(X_Retorno))
         NAP_CRASH()
     ENDIF
-
-//     #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF L_PrimAtivacao .AND. SOB_MODO_GRAFICO()
-//       FOR N_Aux_SayGetCor := 1 TO LEN(VX_SayGetList)
-//           X_Info := VX_SayGetList[N_Aux_SayGetCor]
-//           #DEFINE L_E_Get  (VALTYPE(X_Info) == "O")
-//           IF L_E_Get
-//              AddGuiObject(VX_Janela,;
-//                           DesenhaBoxGet(VX_Janela,N_Aux_SayGetCor,X_Info),;
-//                           {Lin1Livre(VX_Janela),Col1Livre(VX_Janela),;
-//                            Lin2Livre(VX_Janela),Col2Livre(VX_Janela)})
-//           ELSE
-//              #DEFINE L_SimboloDropDown  X_Info[6]
-//              IF L_SimboloDropDown
-//                 AddGuiObject(VX_Janela,;
-//                              DesenhaSimboloDropDown(VX_Janela,N_Aux_SayGetCor,X_Info),;
-//                              {Lin1Livre(VX_Janela),Col1Livre(VX_Janela),;
-//                               Lin2Livre(VX_Janela),Col2Livre(VX_Janela)})
-//              ENDIF
-//              #UNDEF L_SimboloDropDown
-//           ENDIF
-//           #UNDEF L_E_Get
-//       NEXT
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
 
 ELSE  // .NOT. SOB_MODO_GRAFICO()
 
@@ -923,21 +796,12 @@ IF L_PrimAtivacao
 ENDIF
 *
 *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       WVW_SetPaintRefresh(N_PaintRefresh_Old)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-*
 ENDIF
 
 L_PrimAtivacao := .F.
 
 RETURN .NOT. L_Aborta
+
 *
 ***********************
 STATIC FUNC PreparaTela ( VX_Janela , N_SayGetCor2 )
@@ -1150,22 +1014,6 @@ IF L_NaoSaltou  // GET pode receber foco
             N_Tecla := K_F4
          ELSE
             N_Tecla := INKEYX(0)
-            *
-            * Em qual página de código vem a tecla
-            // IF Version()=="Harbour 3.2.0dev (r1703241902)"
-            //    * Já vem na PC850
-            // ELSEIF Version()=="Harbour 3.2.0dev (r2011030937)"  .OR. Version()=="Harbour 3.2.0dev (r1704061005)"  // PENDENTE_LINUX
-            //    IF SOB_MODO_GRAFICO()
-            //       * Vem na ANSI.
-            //       IF N_Tecla >= 128 .AND. N_Tecla <= 255  // Faixa diferente entre ANSI e OEM
-            //          N_Tecla := ASC(HB_ANSItoOEM(CHR(N_Tecla)))  // Converter de ANSI para OEM
-            //          hb_SetLastKey(N_Tecla)
-            //       ENDIF
-            //    ELSE
-            //       * Já vem na PC850
-            //    ENDIF
-            // ENDIF ERRO
-            *
             * Teclas combinadas precisam de tratamento especial de "desempate" (ex: CTRL-C).
             N_Tecla := AjustaTecla(N_Tecla)
          ENDIF
@@ -1997,138 +1845,7 @@ ENDIF
 RETURN L_OK
 *
 *
-#if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-   #DEFINE VX_Edicao    VX_SubObj
-   #DEFINE N_AlturaJanela  (Lin2Livre(VX_Janela) - Lin1Livre(VX_Janela) + 1)
-   *
-   ***********************
-   STAT FUNC DesenhaBoxGet(VX_Janela,N_Aux_SayGetCor,X_Info)
-   ***********************
-   * Só desenhar o box para os GETs visíveis.
-   *
-    RETURN {|| .T.}
-//    RETURN {||DesenhaBoxGet2(VX_Janela,N_Aux_SayGetCor,X_Info)}
-//    *
-//    ************************
-//    STAT PROC DesenhaBoxGet2(VX_Janela,N_Aux_SayGetCor,X_Info)
-//    ************************
-//    #DEFINE N_LinVirtual  X_Info:CARGO[1]
-//    #DEFINE N_LarguraGet  X_Info:CARGO[10]
-//    *
-//    LOCAL N_LI,N_CI,N_LF,N_CF
-//    *
-//    IF L_AtivaGui
-//       N_LI := LinVirtual(VX_Janela,N_Aux_SayGetCor)-N_LinCobertas+Lin1Livre(VX_Janela)
-//       N_CI := ColVirtual(VX_Janela,N_Aux_SayGetCor)-N_ColCobertas+Col1Livre(VX_Janela)
-//       N_LF := N_LI
-//       N_CF := N_CI+N_LarguraGet
-//       IF (N_LinVirtual - N_LinCobertas) >= 0 .AND. ;   // após o início do trecho visível
-//          (N_LinVirtual - N_LinCobertas - N_AlturaJanela) < 0 .AND. ; // antes do fim do trecho vísivel
-//          TEVE_SOBREPOSICAO(VX_Janela,WVW_GetPaintRect(N_WindowNum),{N_LI,N_CI-1,N_LF,N_CF})
-//          *
-//          * Fazer com que o get ativo não possua a borda superior e inferior
-//          * (desenhando somente as bordas laterais), para que não ocorra a
-//          * a piscada (flicker) que ocorria quando se digita qualquer letra no GET,
-//          * causando uma sensação visual muito ruim.
-//          * Em resumo, o GET ativo fica mais feio, mas não fica "piscando"...
-//          *
-//          IF X_Info:HasFocus()
-//             Wvw_DrawLine(N_WindowNum,N_LI,N_CI,;
-//                          N_LI,N_CI,;
-//                          1,2,3,;   // 1=vertical, 2=plain e 3=left
-//                          NIL,NIL,RGB(0,0,0),;    // cor preta
-//                          {-2,-1,+3,0})
-//             Wvw_DrawLine(N_WindowNum,N_LI,N_CI+N_LarguraGet-1,;
-//                          N_LI,N_CI+N_LarguraGet-1,;
-//                          1,2,4,;   // 1=vertical, 2=plain e 4=right
-//                          NIL,NIL,RGB(0,0,0),;    // cor preta
-//                          {-2,0,+3,+1})
-//          ELSE
-//             WVW_DrawBoxGet(N_WindowNum,N_LI,N_CI,N_LarguraGet)
-//          ENDIF
-//       ENDIF
-//    ENDIF
-   *
-   #UNDEF N_LinVirtual
-   #UNDEF N_LarguraGet
-   *
-   ********************************
-   STAT FUNC DesenhaSimboloDropDown(VX_Janela,N_Aux_SayGetCor,X_Info)
-   ********************************
-   * Só desenhar o símbolo do drop-down para os GETs visíveis.
-   *
-   LOCAL V_Deslocamento
-   LOCAL N_TelaHeight := TelaPrincipalHeight()
-   LOCAL N_TelaWidth  := TelaPrincipalWidth()
-   *
-   * O sistema supõe que existam 3 espaços em branco entre o final do GET e o
-   * SAY correspondente. O botão de drop-down tem 2 bytes de largura, e está
-   * deslocado à direita, de forma que ficará no "meio" dos 3 espaços em branco.
-   *
-   IF N_TelaHeight >= 1024 .AND. ;    // resolução VERTICAL e HORIZONTAL
-      N_TelaWidth >= 1280
-      V_Deslocamento := {0,+6,+1,+6}
-   ELSEIF N_TelaHeight >= 960 .AND. ;
-      N_TelaWidth >= 1280
-      V_Deslocamento := {0,+6,+1,+6}
-   ELSEIF N_TelaHeight >= 864 .AND. ;
-      N_TelaWidth >= 1152
-      V_Deslocamento := {0,+6,+1,+6}
-   ELSEIF N_TelaHeight >= 768 .AND. ;
-      N_TelaWidth >= 1024
-      V_Deslocamento := {-1,+5,+2,+6}
-   ELSEIF N_TelaHeight >= 600 .AND. ;
-          N_TelaWidth >= 800
-      V_Deslocamento := {-1,+4,+3,+5}
-   ELSE
-      V_Deslocamento := {-1,+3,+1,+4}
-   ENDIF
-   *
-   RETURN {||DesenhaSimboloDropDown2(VX_Janela,N_Aux_SayGetCor,X_Info,V_Deslocamento)}
-   *
-   *********************************
-   STAT PROC DesenhaSimboloDropDown2(VX_Janela,N_Aux_SayGetCor,X_Info,V_Deslocamento)
-   *********************************
-   LOCAL N_LI,N_CI,N_LF,N_CF
-   *
-   #DEFINE N_LinVirtual X_Info[1]
-   *
-   IF SOB_MODO_GRAFICO()
-//    IF L_AtivaGui
-//       N_LI := LinVirtual(VX_Janela,N_Aux_SayGetCor)-N_LinCobertas+Lin1Livre(VX_Janela)
-//       N_CI := ColVirtual(VX_Janela,N_Aux_SayGetCor)-N_ColCobertas+Col1Livre(VX_Janela)
-//       N_LF := LinVirtual(VX_Janela,N_Aux_SayGetCor)-N_LinCobertas+Lin1Livre(VX_Janela)
-//       N_CF := ColVirtual(VX_Janela,N_Aux_SayGetCor)-N_ColCobertas+Col1Livre(VX_Janela)+1
-//       IF (N_LinVirtual - N_LinCobertas) >= 0 .AND. ;   // após o início do trecho visível
-//          (N_LinVirtual - N_LinCobertas - N_AlturaJanela) < 0 .AND. ; // antes do fim do trecho vísivel
-//          TEVE_SOBREPOSICAO(VX_Janela,WVW_GetPaintRect(N_WindowNum),{N_LI,N_CI,N_LF,N_CF+1})
-//          *
-//          WVW_DrawScrollButton(N_WindowNum,N_LI,N_CI,N_LF,N_CF,V_Deslocamento,3,.F.)
-//       ENDIF
-//    ENDIF
-   ENDIF
-   *
-   #UNDEF N_LinVirtual
-   *
-   #UNDEF N_AlturaJanela
-   #UNDEF VX_Edicao
-   *
-   * *************************
-   * FUNC SETA_BITMAP_DROPDOWN(C_BITMAP_NEW)
-   * *************************
-   * STATIC C_BITMAP2 := ""
-   * IF C_BITMAP_NEW # NIL
-   *    C_BITMAP2 := C_BITMAP_NEW
-   * ENDIF
-   * RETURN C_BITMAP2
-   *
 
-#elif defined(__PLATFORM__LINUX)
-   // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-#else
-   #erro "Código não adaptado para esta plataforma"
-#endif
-*
 ***************************
 FUNC GetCdGET_Atual_Entrada(VX_Janela)
 ***************************

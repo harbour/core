@@ -4,6 +4,7 @@
 -hblib
 -inc
 
+-i.
 -isrc/osapp
 -isrc/gui
 -isrc/draw2d
