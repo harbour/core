@@ -753,7 +753,7 @@ void hb_gtnap_terminal(void)
     }
 
     window_OnClose(gtwin->window, listener(gtwin, i_OnTerminalClose, GtNapWindow));
-    window_show(gtwin->window);    
+    window_show(gtwin->window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -970,7 +970,8 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
     if (nchars != UINT32_MAX)
     {
         obj->size.width = (real32_t)(nchars * GTNAP_GLOBAL->cell_x_size);
-        _component_set_frame(obj->component, &obj->pos, &obj->size);
+        if (obj->cuawin->is_configured == TRUE)
+            _component_set_frame(obj->component, &obj->pos, &obj->size);
     }
 }
 
@@ -4686,7 +4687,7 @@ static void i_OnCanvasDraw(GtNapWindow *gtwin, Event *e)
     //draw_clear(p->ctx, gui_view_color());
     //draw_font(p->ctx, GTNAP_GLOBAL->global_font);
     //drawctrl_text(p->ctx, "Hello Canvas", 300, 200, ekCTRL_STATE_NORMAL);
-    //draw_line(p->ctx, 0, 0, p->width, p->height);    
+    //draw_line(p->ctx, 0, 0, p->width, p->height);
     unref(gtwin);
     unref(e);
 }
@@ -4708,12 +4709,12 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
     panel_layout(gtwin->panel, layout);
     window_panel(gtwin->window, gtwin->panel);
 
-    /* Create the view canvas*/ 
+    /* Create the view canvas*/
     cassert(gtwin->canvas == NULL);
     gtwin->canvas = view_create();
     view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
-    _component_set_frame((GuiComponent*)gtwin->canvas, &kV2D_ZEROf, &gtwin->panel_size);
     _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
+    _component_set_frame((GuiComponent*)gtwin->canvas, &kV2D_ZEROf, &gtwin->panel_size);
     _component_visible((GuiComponent*)gtwin->canvas, TRUE);
 
     if (i_with_scroll_panel(gtwin) == TRUE)
