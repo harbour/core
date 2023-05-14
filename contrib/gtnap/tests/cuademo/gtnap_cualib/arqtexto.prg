@@ -15,7 +15,7 @@
 #INCLUDE "common.ch"
 #INCLUDE "define_cua.ch"
 #INCLUDE "janela.ch"
-
+#INCLUDE "gtnap.ch"
 
 ********************
 FUNCTION EspArqTexto ( VX_Janela, N_Handle, N_TamLinha, VN_TeclaFim, ;
@@ -90,23 +90,12 @@ LOCAL N_LinhasALer,  L_Remontar , N_Cont, V_Buffer
 LOCAL N_AlturaJan  := Lin2Livre(VX_Janela)-Lin1Livre(VX_Janela)+1
 LOCAL N_LarguraJan := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL L_RolaCima, L_RolaBaixo     // variáveis para evitar o teste
+LOCAL N_TextId
 LOCAL X_Retorno
 *                                 // quando for movimentação horizontal
-
 LOCAL N_Fsize := 0
 LOCAL C_Lin, C_CorAnt
-LOCAL N_Keyboard, N_mRow, N_mCol, N_RegiaoMouse, V_TextView
-//LOCAL N_PaintRefresh_Old
-*
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
+LOCAL N_Keyboard, N_mRow, N_mCol, N_RegiaoMouse
 *
 #DEFINE N_Handle       VX_SubObj[01]
 #DEFINE N_TamLinha     VX_SubObj[02]
@@ -121,18 +110,6 @@ LOCAL N_Keyboard, N_mRow, N_mCol, N_RegiaoMouse, V_TextView
 #DEFINE L_NaoRolaVertical VX_SubObj[09]
 #DEFINE L_NaoRolaHorizontal VX_SubObj[10]
 
-*
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF L_PrimAtivacao .AND. SOB_MODO_GRAFICO()
-//       AddGuiObject(VX_Janela,DesenhaBoxExterno(VX_Janela),;
-//                    CoordenadasBoxExterno(VX_Janela))
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-*
 IF L_PrimAtivacao
    V_Linhas := ARRAY(Lin2Livre(VX_Janela) - Lin1Livre(VX_Janela) + 1 )
 ENDIF
@@ -143,64 +120,50 @@ N_CursorAnt := SET(_SET_CURSOR,SC_NONE)
 N_LinhasALer := N_AlturaJan
 L_Remontar   := .T.
 
-
 IF SOB_MODO_GRAFICO()
 
     IF L_PrimAtivacao
 
-        NAP_LOG("STATIC FUNCTION ArqTexto ( VX_Janela )")
-
-        V_TextView := NAP_TEXTVIEW_CREATE()
-
-        LOG_PRINT("TEXTVIEW Coords:" + hb_ntos(Lin1Livre(VX_Janela)) + ", " + hb_ntos(Col1Livre(VX_Janela)) + ", " + hb_ntos(Lin2Livre(VX_Janela)) + ", " + hb_ntos(Col2Livre(VX_Janela)))
-
-        NAP_TEXTVIEW_EDITABLE(V_TextView, .F.)
-
-        IF L_NaoRolaHorizontal == .F.
-            LOG_PRINT("TEXTVIEW With HORIZONTAL ScrollBar!!")
-        ELSE
-            LOG_PRINT("TEXTVIEW  WITHOUT HORIZONTAL ScrollBar!!")
-        ENDIF
-
-        IF L_NaoRolaVertical == .F.
-            LOG_PRINT("TEXTIVEW With VERTICAL ScrollBar!!")
-        ELSE
-            LOG_PRINT("TEXTIVEW  WITHOUT VERTICAL ScrollBar!!")
-        ENDIF
-
-        NAP_TEXTVIEW_SCROLL(V_TextView, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
-
-        FOR N_Cont := 1 TO LEN(VN_TeclaFim) STEP +1
-            NAP_CUALIB_HOTKEY(VN_TeclaFim[N_Cont], {||.T.}, .T.)
-        NEXT
-
-        NAP_CUALIB_TEXTVIEW(V_TextView, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), NIL)
-
+        // Read the file
         FileTop2( N_Handle )
         N_Fsize := FileSize2( N_Handle )
-
         V_Buffer := FReadStr( N_Handle, N_Fsize )
 
-        NAP_CUALIB_TEXTVIEW_WRITE(V_TextView, V_Buffer)
-        NAP_CUALIB_TEXTVIEW_CARET(V_TextView, 0)
+        // Set window global functions
+        NAP_WINDOW_EDITABLE(N_WindowNum, {||.F.})
+        NAP_WINDOW_CONFIRM(N_WindowNum, {||.T.})
+        NAP_WINDOW_DESIST(N_WindowNum, {||.T.})
+
+        // Create the textview
+        N_TextId := NAP_TEXTVIEW(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), {|| V_Buffer}, {||.T.}, .F.)
+        // Show/hide scrollbars
+        NAP_TEXTVIEW_SCROLL(N_WindowNum, N_TextId, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
+        // Set the caret at position 0 (beginning)
+        NAP_TEXTVIEW_CARET(N_WindowNum, N_TextId, 0)
+
+        // Set "end editing" buttons
+        FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
+            NAP_TEXTVIEW_BUTTON(N_WindowNum, N_TextId, V_RegiaoBotoes[N_Cont,_BOTAO_HANDLE_PUSHBUTTON])
+        NEXT
+
+        // Set "end editing" hotkeys
+        FOR N_Cont := 1 TO LEN(VN_TeclaFim)
+            NAP_TEXTVIEW_HOTKEY(N_WindowNum, N_TextId, VN_TeclaFim[N_Cont])
+        NEXT
+
         L_PrimAtivacao := .F.
     ENDIF
 
-
-
-    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.},{||.T.})
-    NAP_LOG("RETORNO ARQUIVO TEXT: " + hb_ntos(X_Retorno))
-    // X_Retorno == 1 --> window has been closed by [ESC]
-    // X_Retorno == 2 --> window has been closed by [INTRO]
-    // X_Retorno == 3 --> window has been closed by [X]
-    // X_Retorno >= 1000 --> window has been closed by PushButton
-    IF X_Retorno >= 1000
+    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
+    IF X_Retorno == WINCLOSE_TEXTVIEW_CONFIRM
         L_FimOK := .T.
-    ELSE
+    ELSEIF X_Retorno == WINCLOSE_ESC .OR. X_Retorno == WINCLOSE_X_BUTTON
         L_FimOK := .F.
+    ELSE
+        ? MEMVAR->ERR_NAP_MODAL_RETURN
     ENDIF
 
-ELSE
+ELSE   // NOT SOB_MODO_GRAFICO
 
 *
 DO WHILE L_Continua
@@ -348,15 +311,6 @@ ENDIF
 *
 L_PrimAtivacao := .F.
 *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       WVW_SetPaintRefresh(N_PaintRefresh_Old)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
 *
 RETURN L_FimOK
 *
@@ -478,31 +432,6 @@ DO WHILE (N_Pos := AT(XLOWER(C_PalDest),C_Lin)) # 0
    DISPOUT(C_PalDest,CorJanInten(VX_Janela))
    C_Lin := SPACE(N_Pos+LEN(C_PalDest))+SUBSTR(C_Lin,N_Pos+LEN(C_PalDest))
 ENDDO
-*
-*
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    ***************************
-//    STAT FUNC DesenhaBoxExterno (VX_Janela)
-//    ***************************
-//    #define RGB(nR,nG,nB)  ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
-//    RETURN {|| WVW_SetPen(0,0,rgb(210,1210,210)),;
-//               WVW_DrawBoxRecessed( N_WindowNum,;
-//                                    Lin1Livre(VX_Janela),;
-//                                    Col1Livre(VX_Janela),;
-//                                    Lin2Livre(VX_Janela),;
-//                                    Col2Livre(VX_Janela) ) }
-//    *
-//    *******************************
-//    STAT FUNC CoordenadasBoxExterno(VX_Janela)
-//    *******************************
-//    RETURN { Lin1Livre(VX_Janela),Col1Livre(VX_Janela),;
-//             Lin2Livre(VX_Janela),Col2Livre(VX_Janela)   }
-
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
 *
 *
 *********************************

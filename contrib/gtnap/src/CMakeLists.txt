@@ -67,6 +67,7 @@ if (GTNAP_DEVELOPER_MODE)
 
     staticLib("gtnap" "gtnap" "osapp" NRC_NONE)
     includeDirectory("gtnap" "gtnap" ${ROOT_PATH}/include)
+    includeDirectory("gtnap" "gtnap" ${GTNAP_PATH})
 
     desktopApp(exemplo "exemplo" "gtnap" NRC_NODE)
     desktopApp(hello "hello" "gtnap" NRC_NODE)

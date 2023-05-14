@@ -10,17 +10,14 @@
 
 #include "hbvmint.h"
 #include "hbgtcore.h"
+
+// TODO: "gui.hxx" is not required here
 #include "gui.hxx"
+
+#include "gtnap.ch"
 
 typedef struct _gtnap_area_t GtNapArea;
 typedef struct _gtnap_vector_t GtNapVector;
-
-/* Return codes when modal window has been closed */
-#define WINCLOSE_BUTTON_AUTOCLOSE   1000
-
-#define WINCLOSE_IMAGE_AUTOCLOSE    2000
-
-#define WINCLOSE_TEXTVIEW_CONFIRM   3000
 
 HB_EXTERN_BEGIN
 

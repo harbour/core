@@ -16,6 +16,7 @@
 #INCLUDE "setcurs.ch"
 #INCLUDE "define_cua.ch"
 #INCLUDE "janela.ch"
+#INCLUDE "gtnap.ch"
 
 MEMVAR L_ReadInsert_Ativado_Automaticamente
 MEMVAR L_Converter_Tecla_ANSI_para_OEM
@@ -97,12 +98,12 @@ LOCAL L_ScorAnt, N_Tab , N_CursorAnt, L_Finaliza
 LOCAL C_CorAnt, N_RowAnt, N_ColAnt
 *
 PARAMETERS VX_Janela
-LOCAL V_TextView, N_Cont
 LOCAL N_TextId
+LOCAL N_Cont
 LOCAL X_Retorno
 
-PRIVATE N_CtInic, N_TotLinhas, C_Texto, N_Tecla_Ant := 0
-PRIVATE C_Texto_Original  // para permitir o "undo"
+PRIVATE N_CtInic, N_TotLinhas, N_Tecla_Ant := 0
+PRIVATE C_Texto, C_Texto_Original  // para permitir o "undo"
 PRIVATE L_FimOK := .F.  // Informa se edição do texto terminou com sucesso
 PRIVATE C_AcaoForaDaMemoEdit := ""  // Ação que deve ser executada fora da MEMOEDIT(), e em seguida voltar para a MEMOEDIT()
 PRIVATE L_ReadInsert_Ativado_Automaticamente := .F.
@@ -134,10 +135,6 @@ IF EVAL(B_Edita)
       ? MEMVAR->TAMLINHA
    ENDIF
 ENDIF
-*
-C_Texto     := EVAL(B_Texto)
-C_Texto_Original := C_Texto
-*
 
 IF SOB_MODO_GRAFICO()
 
@@ -169,19 +166,17 @@ IF SOB_MODO_GRAFICO()
     ENDIF
 
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
-    NAP_LOG("Texto en Memoria X_Retorno: " + hb_ntos(X_Retorno))
-    // X_Retorno == 1 --> window has been closed by [ESC]
-    // X_Retorno == 2 --> window has been closed by [INTRO]
-    // X_Retorno == 3 --> window has been closed by [X]
-    // X_Retorno >= 1000 --> window has been closed by PushButton
-    IF X_Retorno >= 1000
+    IF X_Retorno == WINCLOSE_TEXTVIEW_CONFIRM
         L_FimOK := .T.
-    ELSE
+    ELSEIF X_Retorno == WINCLOSE_ESC .OR. X_Retorno == WINCLOSE_X_BUTTON
         L_FimOK := .F.
+    ELSE
+        ? MEMVAR->ERR_NAP_MODAL_RETURN
     ENDIF
-
 ELSE   // NOT SOB_MODO_GRAFICO
 
+C_Texto     := EVAL(B_Texto)
+C_Texto_Original := C_Texto
 
 L_ScorAnt   := SET(_SET_SCOREBOARD,.F.)
 N_CursorAnt := SET(_SET_CURSOR)

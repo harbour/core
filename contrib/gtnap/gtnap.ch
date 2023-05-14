@@ -3,6 +3,20 @@
     TODO: More info
 */
 
+/* Return codes when modal window has been closed */
+#define WINCLOSE_ESC                1
+
+#define WINCLOSE_ENTER              2
+
+#define WINCLOSE_X_BUTTON           3
+
+#define WINCLOSE_BUTTON_AUTOCLOSE   1000
+
+#define WINCLOSE_IMAGE_AUTOCLOSE    2000
+
+#define WINCLOSE_TEXTVIEW_CONFIRM   3000
+
+
 // https://nappgui.com/en/draw2d/draw2d.html
 
 // enum fstyle_t
