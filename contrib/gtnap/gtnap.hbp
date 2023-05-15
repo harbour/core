@@ -44,7 +44,7 @@ src/gtnap/nap_imageview.c
 src/gtnap/nap_label.c
 src/gtnap/nap_layout.c
 src/gtnap/nap_listbox.c
-src/gtnap/nap_menuvert.c
+src/gtnap/nap_menu.c
 src/gtnap/nap_panel.c
 src/gtnap/nap_tableview.c
 src/gtnap/nap_textview.c

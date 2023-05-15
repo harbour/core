@@ -5,8 +5,11 @@
 */
 
 #include "gtnap.h"
+#include "gtnap.inl"
+#include "nap_menu.inl"
+
+
 #include "gtconvert.h"
-#include "nap_menuvert.h"
 #include "nappgui.h"
 #include "osmain.h"
 #include "drawctrl.inl"
@@ -94,7 +97,7 @@ typedef enum _objtype_t
     ekOBJ_LABEL,
     ekOBJ_EDIT,
     ekOBJ_BUTTON,
-    ekOBJ_MENUVERT,
+    ekOBJ_MENU,
     ekOBJ_TABLEVIEW,
     ekOBJ_TEXTVIEW,
     ekOBJ_IMAGE
@@ -573,6 +576,7 @@ static uint32_t i_cp_to_utf8(const char_t *cp_str, char_t *utf8, const uint32_t 
 
 static String *i_cp_to_utf8_string(const char_t *cp_str)
 {
+    // TODO: Improve, make dynamic
     char_t utf8[STATIC_TEXT_SIZE];
     String *str = NULL;
     i_cp_to_utf8(cp_str, utf8, sizeof32(utf8));
@@ -753,7 +757,7 @@ void hb_gtnap_terminal(void)
     }
 
     window_OnClose(gtwin->window, listener(gtwin, i_OnTerminalClose, GtNapWindow));
-    window_show(gtwin->window);    
+    window_show(gtwin->window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1662,34 +1666,33 @@ void hb_gtnap_textview_hotkey(uint32_t wid, uint32_t id, int32_t key)
     cassert(obj->type == ekOBJ_TEXTVIEW);
     if (nkey != NULL)
         window_hotkey(obj->cuawin->window, nkey->key, nkey->modifiers, listener(obj, i_OnTextConfirm, GtNapObject));
-
-    //{
-    //    //uint32_t pos = UINT32_MAX;
-    //    ////GtNapObject *obj = NULL;
-
-    //    ////log_printf("hb_gtnap_cualib_text_confirma_hotkey Found hotkey: %d", nkey->key);
-
-    //    //// Delete a previous callback on this hotkey
-    //    //arrpt_foreach(callback, obj->cuawin->callbacks, GtNapCallback)
-    //    //    if (callback->key == key)
-    //    //    {
-    //    //        pos = callback_i;
-    //    //        break;
-    //    //    }
-    //    //arrpt_end();
-
-    //    //if (pos != UINT32_MAX)
-    //    //    arrpt_delete(obj->cuawin->callbacks, pos, i_destroy_callback, GtNapCallback);
-
-    //    {
-    //        Listener *listener = i_gtnap_listener(NULL, key, FALSE, cuawin, i_OnTextConfirm);
-
-    //        if (listener != NULL)
-    //            window_hotkey(cuawin->window, nkey->key, nkey->modifiers, listener);
-    //    }
-    //}
 }
 
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_menu(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t autoclose, const bool_t in_scroll)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    Panel *panel = nap_menu_create(autoclose);
+    S2Df size;
+    uint32_t id = UINT32_MAX;
+    cassert_no_null(gtwin);
+    size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
+    size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
+    id = i_add_object(ekOBJ_MENU, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)panel, gtwin);
+    return id;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_menu_add(const uint32_t wid, uint32_t id, HB_ITEM *text_block, HB_ITEM *click_block, uint32_t kpos)
+{
+    GtNapObject *gtobj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(gtobj);
+    cassert_no_null(gtobj->cuawin);
+    cassert(gtobj->type == ekOBJ_MENU);
+    nap_menu_add((Panel*)gtobj->component, gtobj->cuawin->window, text_block, click_block, kpos);
+}
 
 
 
@@ -2406,7 +2409,7 @@ void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nL
     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
     _panel_compose(panel, &size, &final_size);
     _panel_locate(panel);
-    i_add_object(ekOBJ_MENUVERT, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)panel, cuawin);
+    i_add_object(ekOBJ_MENU, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)panel, cuawin);
     //log_printf("MenuVert size: %.2f, %.2f, %.2f, %.2f", size.width, size.height, final_size.width, final_size.height);
 }
 
@@ -3670,7 +3673,7 @@ static void i_attach_to_panel(ArrPt(GtNapObject) *objects, Panel *main_panel, Pa
                     break;
 
                 case ekOBJ_IMAGE:
-                case ekOBJ_MENUVERT:
+                case ekOBJ_MENU:
                     pos.y += (real32_t)toolbar->pixels_button;
                     break;
                 case ekOBJ_TABLEVIEW:
@@ -3753,7 +3756,7 @@ static void i_component_tabstop(ArrPt(GtNapObject) *objects, Window *window, con
                 // Buttons don't have tabstop
                 //_component_taborder(object->component, window);
                 break;
-            case ekOBJ_MENUVERT:
+            case ekOBJ_MENU:
                 nap_menuvert_taborder((Panel*)object->component, window);
                 break;
             case ekOBJ_TABLEVIEW:
@@ -4686,7 +4689,7 @@ static void i_OnCanvasDraw(GtNapWindow *gtwin, Event *e)
     //draw_clear(p->ctx, gui_view_color());
     //draw_font(p->ctx, GTNAP_GLOBAL->global_font);
     //drawctrl_text(p->ctx, "Hello Canvas", 300, 200, ekCTRL_STATE_NORMAL);
-    //draw_line(p->ctx, 0, 0, p->width, p->height);    
+    //draw_line(p->ctx, 0, 0, p->width, p->height);
     unref(gtwin);
     unref(e);
 }
@@ -4708,7 +4711,7 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
     panel_layout(gtwin->panel, layout);
     window_panel(gtwin->window, gtwin->panel);
 
-    /* Create the view canvas*/ 
+    /* Create the view canvas*/
     cassert(gtwin->canvas == NULL);
     gtwin->canvas = view_create();
     view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
@@ -4740,7 +4743,7 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
     }
 
     /* Attach gui objects in certain Z-Order (from back to front) */
-    i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_MENUVERT, gtwin->toolbar);
+    i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_MENU, gtwin->toolbar);
     i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_TABLEVIEW, gtwin->toolbar);
     i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_TEXTVIEW, gtwin->toolbar);
     i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_LABEL, gtwin->toolbar);
@@ -4755,7 +4758,7 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
     if (scroll_panel != NULL)
         _component_visible((GuiComponent*)scroll_panel, TRUE);
 
-    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_MENUVERT);
+    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_MENU);
     i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_TABLEVIEW);
     i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_TEXTVIEW);
     i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_EDIT);
@@ -4924,7 +4927,7 @@ Panel *hb_gtnap_cualib_current_menuvert(void)
 
     arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
         // Only one menuvert is allowed
-        if (obj->type == ekOBJ_MENUVERT)
+        if (obj->type == ekOBJ_MENU)
         {
             cassert(menuvert == NULL);
             menuvert = (Panel*)obj->component;
@@ -4941,6 +4944,23 @@ Panel *hb_gtnap_cualib_current_menuvert(void)
 uint32_t hb_gtnap_cell_height(void)
 {
     return GTNAP_GLOBAL->cell_y_size;
+}
+
+/*---------------------------------------------------------------------------*/
+
+//String *hb_gtnap_utf8_to_cp(const char_t *cp_str)
+//{
+//    return i_cp_to_utf8_string(cp_str);
+//}
+
+/*---------------------------------------------------------------------------*/
+
+extern String *hb_block_to_utf8(HB_ITEM *item)
+{
+    PHB_ITEM ritem = hb_itemDo(item, 0);
+    String *str = i_item_to_utf8_string(ritem);
+    hb_itemRelease(ritem);
+    return str;
 }
 
 /*---------------------------------------------------------------------------*/

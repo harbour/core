@@ -101,30 +101,30 @@ HB_FUNC( NAP_BUTTON_FLATGLE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_TEXT )
-{
-    Button *button = (Button*)hb_parptr(1);
-    const char_t *text = hb_gtnap_parText(2);
-    button_text(button, text);
-}
+//HB_FUNC( NAP_BUTTON_TEXT )
+//{
+//    Button *button = (Button*)hb_parptr(1);
+//    const char_t *text = hb_gtnap_parText(2);
+//    button_text(button, text);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_TEXT_ALT )
-{
-    Button *button = (Button*)hb_parptr(1);
-    const char_t *text = hb_gtnap_parText(2);
-    button_text_alt(button, text);
-}
+//HB_FUNC( NAP_BUTTON_TEXT_ALT )
+//{
+//    Button *button = (Button*)hb_parptr(1);
+//    const char_t *text = hb_gtnap_parText(2);
+//    button_text_alt(button, text);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_TOOLTIP )
-{
-    Button *button = (Button*)hb_parptr(1);
-    const char_t *text = hb_gtnap_parText(2);
-    button_tooltip(button, text);
-}
+//HB_FUNC( NAP_BUTTON_TOOLTIP )
+//{
+//    Button *button = (Button*)hb_parptr(1);
+//    const char_t *text = hb_gtnap_parText(2);
+//    button_tooltip(button, text);
+//}
 
 /*---------------------------------------------------------------------------*/
 

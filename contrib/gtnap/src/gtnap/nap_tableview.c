@@ -3,6 +3,7 @@
 */
 
 #include "gtnap.h"
+#include "gtnap.inl"
 #include "nappgui.h"
 #include "hbapi.h"
 

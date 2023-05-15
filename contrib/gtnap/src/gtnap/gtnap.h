@@ -65,6 +65,10 @@ extern void hb_gtnap_textview_button(const uint32_t wid, const uint32_t id, cons
 
 extern void hb_gtnap_textview_hotkey(uint32_t wid, uint32_t id, int32_t key);
 
+extern uint32_t hb_gtnap_menu(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t autoclose, const bool_t in_scroll);
+
+extern void hb_gtnap_menu_add(const uint32_t wid, uint32_t id, HB_ITEM *text_block, HB_ITEM *click_block, uint32_t kpos);
+
 
 
 
@@ -75,7 +79,6 @@ extern void hb_gtnap_textview_hotkey(uint32_t wid, uint32_t id, int32_t key);
  * Private functions
  *
  */
-extern Font *hb_gtnap_font(void);
 
 
 
@@ -86,11 +89,7 @@ extern Font *hb_gtnap_font(void);
 */
 
 
-/* Must be deleted */
-String *hb_gtnap_parstr(const uint32_t iParam);
 
-/* Must be deleted */
-const char_t *hb_gtnap_parText(const uint32_t iParam);
 
 
 
@@ -215,13 +214,9 @@ extern uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId
 
 extern void hb_gtnap_cualib_destroy_window(void);
 
-extern Window *hb_gtnap_cualib_current_window(void);
-
 extern TableView *hb_gtnap_cualib_current_tableview(void);
 
 extern Panel *hb_gtnap_cualib_current_menuvert(void);
-
-extern uint32_t hb_gtnap_cell_height(void);
 
 extern void hb_gtnap_cualib_tableview_On_Single_Select_Change(void);
 

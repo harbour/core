@@ -6,6 +6,7 @@
 // NAppGUI-Event wrapper for Harbour
 // https://nappgui.com/en/core/event.html
 #include "gtnap.h"
+#include "gtnap.inl"
 #include "nappgui.h"
 
 /*---------------------------------------------------------------------------*/
