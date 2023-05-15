@@ -1,4 +1,4 @@
-# Build GTNAP and run exemplo (cuademo) in Linux (Developer mode)
+# Build GTNAP and generate developer mode examples (Linux)
 
 # Generate GTNAP
 mpath=$(pwd)
@@ -8,7 +8,7 @@ gtpath=$(pwd)
 echo GTNAP path: $gtpath
 bash ./build.sh -b Debug
 
-# Generate exemplo
+# Generate exemplo sources
 cd $gtpath/tests/cuademo/gtnap_cualib
 echo Exemplo: $gtpath/src/exemplo
 
@@ -16,24 +16,22 @@ if [ ! -d "$gtpath/src/exemplo" ]; then
     mkdir $gtpath/src/exemplo
 fi
 
-$mpath/bin/linux/gcc/hbmk2 -debug -trace -keepc -workdir=$gtpath/src/exemplo -o$gtpath/build/exemplo exemplo.hbp || exit 1
+$mpath/bin/linux/gcc/hbmk2 exemplo.hbp -debug -trace -keepc -workdir=$gtpath/src/exemplo -o$gtpath/build/exemplo || exit 1
 
-# Generate exemplo debug project
-if [ ! -d "$gtpath/build_cuademo" ]; then
-    mkdir $gtpath/build_cuademo
+# Generate hello sources
+cd $gtpath/tests/hello
+echo Hello: $gtpath/src/hello
+
+if [ ! -d "$gtpath/src/hello" ]; then
+    mkdir $gtpath/src/hello
 fi
 
-cd $gtpath/build_cuademo
+$mpath/bin/linux/gcc/hbmk2 hello.hbp -debug -trace -keepc -workdir=$gtpath/src/hello -o$gtpath/build/hello || exit 1
+
+# Generate CMake solution
+if [ ! -d "$gtpath/build-dev" ]; then
+    mkdir $gtpath/build-dev
+fi
+
+cd $gtpath/build-dev
 cmake ../src -DGTNAP_DEVELOPER_MODE=ON
-
-# cd %gtpath%
-
-
-# # ../../bin/linux/gcc/hbmk2 gtnap.hbp
-# # cd ${pwd}
-# # pwd
-# # cd ./contrib/gtnap/tests/cuademo/gtnap_cualib
-# # pwd
-# # ../../../../../bin/linux/gcc/hbmk2 exemplo.hbp
-# # ./exemplo --hb:gtnap
-# # # ./exemplo --hb:gttrm

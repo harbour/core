@@ -7,7 +7,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build-dev/Debug/bin/exemplo",
             "args": ["--hb:gtnap"],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}/tests/cuademo/gtnap_cualib"
         }
     ]
 }

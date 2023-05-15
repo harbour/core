@@ -974,7 +974,8 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
     if (nchars != UINT32_MAX)
     {
         obj->size.width = (real32_t)(nchars * GTNAP_GLOBAL->cell_x_size);
-        _component_set_frame(obj->component, &obj->pos, &obj->size);
+        if (obj->cuawin->is_configured == TRUE)
+            _component_set_frame(obj->component, &obj->pos, &obj->size);
     }
 }
 
@@ -4715,8 +4716,8 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
     cassert(gtwin->canvas == NULL);
     gtwin->canvas = view_create();
     view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
-    _component_set_frame((GuiComponent*)gtwin->canvas, &kV2D_ZEROf, &gtwin->panel_size);
     _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
+    _component_set_frame((GuiComponent*)gtwin->canvas, &kV2D_ZEROf, &gtwin->panel_size);
     _component_visible((GuiComponent*)gtwin->canvas, TRUE);
 
     if (i_with_scroll_panel(gtwin) == TRUE)
