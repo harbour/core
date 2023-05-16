@@ -1675,13 +1675,27 @@ uint32_t hb_gtnap_menu(const uint32_t wid, const int32_t top, const int32_t left
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     Panel *panel = nap_menu_create(autoclose);
-    S2Df size;
+    S2Df size, final_size;
     uint32_t id = UINT32_MAX;
     cassert_no_null(gtwin);
     size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
+    _panel_compose(panel, &size, &final_size);
+    _panel_locate(panel);
     id = i_add_object(ekOBJ_MENU, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)panel, gtwin);
     return id;
+
+
+    //GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+    //S2Df size, final_size;
+    //cassert_no_null(cuawin);
+    //log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+    //size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+    //size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+    //_panel_compose(panel, &size, &final_size);
+    //_panel_locate(panel);
+    //i_add_object(ekOBJ_MENU, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)panel, cuawin);
+
 }
 
 /*---------------------------------------------------------------------------*/

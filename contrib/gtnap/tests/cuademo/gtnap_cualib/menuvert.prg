@@ -186,9 +186,6 @@ STATIC FUNCTION Selecionar ( VX_Janela )
 LOCAL VX_Sele := VX_SubObj
 LOCAL L_Retorno
 *
-
-LOG_PRINT("MenuVert num opts: " + hb_ntos(LEN(V_Opcoes)))
-
 IF LEN(V_Opcoes)==0
    ? MEMVAR->JANELA_DE_MENU_SEM_ADDOPCAO
 ENDIF
@@ -218,30 +215,16 @@ LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao
 LOCAL B_Ajuda_Ant
 
 
-LOCAL V_MenuVert, L_Coords, X_Retorno
-
+LOCAL N_MenID, L_Coords, X_Retorno
 
 #DEFINE C_CdOpcao VX_Sele:CARGO[17]
-// FRAN: A NAppGUI/GTNAP application owns the event cicle.
+
 IF SOB_MODO_GRAFICO()
     NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}, .F.)
 ELSE
     B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}) // salvar help anterior
 ENDIF
 #UNDEF  C_CdOpcao
-
-//
-// FRAN - This code is not necessary in GTNAP
-//
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
 
 *
 * antes de tudo, remontar a tela caso usuário tenha solicitado
@@ -259,43 +242,17 @@ IF L_ForcaLerTudo
                 L_Coords[4]++
             ENDIF
 
-            LOG_PRINT("Menu Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
-
-            V_MenuVert := NAP_MENUVERT_CREATE()
+            N_MenID := NAP_MENU(N_WindowNum, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], L_AutoClose, .F.)
 
             FOR N_Cont := 1 TO LEN(V_Opcoes)
-                //IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] // # 0  // tem tecla hotkey
-                    NAP_MENUVERT_CUALIB_ADD(V_MenuVert, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
-                //ENDIF
+                NAP_MENU_ADD(N_WindowNum, N_MenID, {||V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]}, V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
             NEXT
-
-            IF L_AutoClose
-                NAP_MENUVERT_AUTOCLOSE(V_MenuVert)
-            ENDIF
-
-            NAP_CUALIB_MENUVERT(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
 
             X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
 
             IF X_Retorno == 1000
                 L_FechouComAutoClose = .T.
             ENDIF
-            //
-            // FRAN MenuVert automatically managed by NAP_MENUVERT
-            //
-            // * dar destaque ao item correntemente selecionado
-            // AddGuiObject(VX_Janela,;
-            //                 DesenhaBoxItemSelecionado(VX_Janela,VX_Sele),;
-            //                 CoordenadasBrowse(VX_Sele))
-            // * colocar sublinhado sob as teclas de atalho
-            // FOR N_Cont := 1 TO LEN(V_Opcoes)
-            //     IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] # 0  // tem tecla hotkey
-            //         AddGuiObject(VX_Janela,DesenhaAtalho(VX_Janela,VX_Sele,N_Cont),;
-            //                     CoordenadasBrowse(VX_Sele))
-            //     ENDIF
-            // NEXT
-
-
         ENDIF   // SOB_MODO_GRAFICO()
     ENDIF   // L_PrimAtivacao
     *
@@ -316,8 +273,7 @@ IF L_ForcaLerTudo
 ENDIF   // IF L_ForcaLerTudo
 
 //
-// FRAN: Menu keyboard and mouse management ONLY in text terminals
-// A GTNAP application/window manage its own keyboard and mouse events
+// FRAN-GTNAP: From here, the code is ONLY for text-terminal version
 //
 IF .NOT. SOB_MODO_GRAFICO()
 *
@@ -387,9 +343,6 @@ DO WHILE L_Mais
             L_RolaCima := .T.
             VX_Sele:GOTOP()
 
-        //
-        // FRAN: Mouse management
-        //
         CASE N_Tecla == K_LBUTTONDOWN .OR. ;
             N_Tecla == K_LDBLCLK     .OR. ;
             N_Tecla == K_RBUTTONDOWN .OR. ;
@@ -458,18 +411,10 @@ DO WHILE L_Mais
 		            ENDIF
 	            ENDIF  // N_RegiaoMouse == AREA_UTIL
 
-
             // N_RegiaoMouse == AREA_UTIL
             ELSEIF (N_RegiaoMouse == BOTAO_IDENTIFICADO .OR. ;      // N_Keyboard preenchido
                     N_RegiaoMouse == BOTAO_NAO_IDENTIFICADO)        // N_Keyboard não preenchido
 
-                //
-                // Fran: GTNAP will never enter here
-                //
-                // IF SOB_MODO_GRAFICO()
-                //     ? MEMVAR->MODO_GRAFICO_NAO_USA_ESTE_TRECHO_DE_CODIGO
-                // ENDIF
-                *
                 * Atualizar completamente a tela antes de executar o bloco de código
                 Atualizar_Tela_Browse(VX_Janela,VX_Sele,L_RolaCima,L_RolaBaixo)
                 *
@@ -508,19 +453,6 @@ DO WHILE L_Mais
                 Atualizar_Tela_Browse(VX_Janela,VX_Sele,L_RolaCima,L_RolaBaixo)
                 *
 
-                //
-                // Fran: GTNAP will never enter here
-                //
-                // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                //     IF SOB_MODO_GRAFICO()
-                //     WVW_SetPaintRefresh(N_PaintRefresh_Old)
-                // ENDIF
-                // #elif defined(__PLATFORM__LINUX)
-                // // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                // #else
-                // #erro "Código não adaptado para esta plataforma"
-                // #endif
-
                 //!! no futuro, remover
                 ASSUMIR_NIL_OU_FALSE({V_Imagem[_IMAGEM_ALIAS_MUDA],;
                                     V_Imagem[_IMAGEM_RECNO_MUDA],;
@@ -536,19 +468,6 @@ DO WHILE L_Mais
                     LOGAINFO_ID_TELA_RELAT_BOTAO("botão/ação",V_Imagem[_IMAGEM_CDBOTAO],;
                                                 C_CdTela,"Imagem "+V_Imagem[_IMAGEM_ARQUIVO])   // Log de uso de imagem no sistema
                 ENDIF
-
-                //
-                // Fran: GTNAP will never enter here
-                //
-                // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                // IF SOB_MODO_GRAFICO()
-                //     WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-                // ENDIF
-                // #elif defined(__PLATFORM__LINUX)
-                //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                // #else
-                //     #erro "Código não adaptado para esta plataforma"
-                // #endif
                 *
                 IF V_Imagem[_IMAGEM_AUTOCLOSE]
                     DEFAULT X_Retorno_Eval TO .F. // não fechar janela de menu
@@ -597,19 +516,6 @@ DO WHILE L_Mais
                                                     VX_Sele:ROWPOS,VX_Sele:COLCOUNT} ,{2,3})
                             ENDIF
                             *
-                            //
-                            // Fran: GTNAP will never enter here
-                            //
-                            // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                            // IF SOB_MODO_GRAFICO()
-                            //     WVW_SetPaintRefresh(N_PaintRefresh_Old)
-                            // ENDIF
-                            // #elif defined(__PLATFORM__LINUX)
-                            //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                            // #else
-                            //     #erro "Código não adaptado para esta plataforma"
-                            // #endif
-
                             //!! no futuro, remover
                             ASSUMIR_NIL_OU_FALSE({V_LstAcoes[N_Pos_Acao,_ACAO_ALIAS_MUDA],;
                                                     V_LstAcoes[N_Pos_Acao,_ACAO_RECNO_MUDA],;
@@ -625,19 +531,6 @@ DO WHILE L_Mais
                                 LOGAINFO_ID_TELA_RELAT_BOTAO("botão/ação",V_LstAcoes[N_Pos_Acao,_ACAO_CDBOTAO],;
                                                             C_CdTela,"Ação "+STR(V_LstAcoes[N_Pos_Acao,_ACAO_KEYBOARD],5))   // Log de uso de ações de teclado no sistema
                             ENDIF
-
-                            //
-                            // Fran: GTNAP will never enter here
-                            //
-                            // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                            // IF SOB_MODO_GRAFICO()
-                            //     WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-                            // ENDIF
-                            // #elif defined(__PLATFORM__LINUX)
-                            //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                            // #else
-                            //     #erro "Código não adaptado para esta plataforma"
-                            // #endif
                             *
                             IF V_LstAcoes[N_Pos_Acao,_ACAO_AUTOCLOSE]
                                 DEFAULT X_Retorno_Eval TO .F. // não fechar janela de menu
@@ -660,19 +553,6 @@ DO WHILE L_Mais
                     * Atualizar completamente a tela antes de executar o bloco de código
                     Atualizar_Tela_Browse(VX_Janela,VX_Sele,L_RolaCima,L_RolaBaixo)
                     *
-                    //
-                    // Fran: GTNAP will never enter here
-                    //
-                    // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                    // IF SOB_MODO_GRAFICO()
-                    //     WVW_SetPaintRefresh(N_PaintRefresh_Old)
-                    // ENDIF
-                    // #elif defined(__PLATFORM__LINUX)
-                    //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                    // #else
-                    //     #erro "Código não adaptado para esta plataforma"
-                    // #endif
-
                     //!! no futuro, remover
                     ASSUMIR_NIL_OU_FALSE({V_Opcoes[N_Selecio,_OPCAO_ALIAS_MUDA],;
                                             V_Opcoes[N_Selecio,_OPCAO_RECNO_MUDA],;
@@ -690,19 +570,6 @@ DO WHILE L_Mais
                         LOGAINFO_ID_TELA_RELAT_BOTAO("opção",V_Opcoes[N_Selecio,_OPCAO_CDOPCAO],;
                                                     C_CdTela,"Opção "+V_Opcoes[N_Selecio,_OPCAO_TEXTO])   // Log de uso de opção no sistema
                     ENDIF
-
-                    //
-                    // Fran: GTNAP will never enter here
-                    //
-                    // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                    // IF SOB_MODO_GRAFICO()
-                    //     WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-                    // ENDIF
-                    // #elif defined(__PLATFORM__LINUX)
-                    //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                    // #else
-                    //     #erro "Código não adaptado para esta plataforma"
-                    // #endif
                     *
                     IF L_AutoClose
                         DEFAULT X_Retorno_Eval TO .F. // não fechar janela de menu
@@ -727,18 +594,6 @@ DO WHILE L_Mais
 ENDDO
 
 ENDIF // IF .NOT. SOB_MODO_GRAFICO()
-
-// *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-// IF SOB_MODO_GRAFICO()
-//     WVW_SetPaintRefresh(N_PaintRefresh_Old)
-// ENDIF
-// #elif defined(__PLATFORM__LINUX)
-// // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-// #erro "Código não adaptado para esta plataforma"
-// #endif
-// *
 
 IF .NOT. SOB_MODO_GRAFICO()
     #DEFINE C_CdOpcao VX_Sele:CARGO[17]

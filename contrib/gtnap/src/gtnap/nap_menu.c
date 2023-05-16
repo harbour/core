@@ -475,6 +475,8 @@ void nap_menu_add(Panel *panel, Window *window, HB_ITEM *text_block, HB_ITEM *cl
         if (opt->key != ENUM_MAX(vkey_t))
             window_hotkey(window, opt->key, opt->hotmodif, listener(menu, i_OnHotKey, MenuVert));
     }
+
+    i_view_size(menu);
 }
 
 /*---------------------------------------------------------------------------*/
