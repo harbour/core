@@ -69,6 +69,7 @@ extern uint32_t hb_gtnap_menu(const uint32_t wid, const int32_t top, const int32
 
 extern void hb_gtnap_menu_add(const uint32_t wid, uint32_t id, HB_ITEM *text_block, HB_ITEM *click_block, uint32_t kpos);
 
+extern uint32_t hb_gtnap_menu_selected(const uint32_t wid, uint32_t id);
 
 
 
@@ -216,7 +217,7 @@ extern void hb_gtnap_cualib_destroy_window(void);
 
 extern TableView *hb_gtnap_cualib_current_tableview(void);
 
-extern Panel *hb_gtnap_cualib_current_menuvert(void);
+// extern Panel *hb_gtnap_cualib_current_menuvert(void);
 
 extern void hb_gtnap_cualib_tableview_On_Single_Select_Change(void);
 

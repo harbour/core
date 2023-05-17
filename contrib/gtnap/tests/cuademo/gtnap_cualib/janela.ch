@@ -40,8 +40,9 @@
 #DEFINE N_IdScrollBarHorizontal VX_Janela[52]
 #DEFINE B_ScrollBarVertical     VX_Janela[53]
 #DEFINE B_ScrollBarHorizontal   VX_Janela[54]
-#DEFINE N_IdProgressBar1 VX_Janela[45]    
-#DEFINE N_IdProgressBar2 VX_Janela[48] 
-   
+#DEFINE N_IdProgressBar1 VX_Janela[45]
+#DEFINE N_IdProgressBar2 VX_Janela[48]
+#DEFINE N_ItemId VX_Janela[56]
+
 
 #endif

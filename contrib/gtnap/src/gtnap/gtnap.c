@@ -1709,6 +1709,18 @@ void hb_gtnap_menu_add(const uint32_t wid, uint32_t id, HB_ITEM *text_block, HB_
     nap_menu_add((Panel*)gtobj->component, gtobj->cuawin->window, text_block, click_block, kpos);
 }
 
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_menu_selected(const uint32_t wid, uint32_t id)
+{
+    GtNapObject *gtobj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_MENU);
+    return nap_menu_selected((Panel*)gtobj->component);
+}
+
+
+
 
 
 
@@ -4934,25 +4946,25 @@ TableView *hb_gtnap_cualib_current_tableview(void)
 
 /*---------------------------------------------------------------------------*/
 
-Panel *hb_gtnap_cualib_current_menuvert(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    Panel *menuvert = NULL;
-    cassert_no_null(cuawin);
+// Panel *hb_gtnap_cualib_current_menuvert(void)
+// {
+//     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//     Panel *menuvert = NULL;
+//     cassert_no_null(cuawin);
 
-    arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
-        // Only one menuvert is allowed
-        if (obj->type == ekOBJ_MENU)
-        {
-            cassert(menuvert == NULL);
-            menuvert = (Panel*)obj->component;
-        }
-    arrpt_end();
+//     arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
+//         // Only one menuvert is allowed
+//         if (obj->type == ekOBJ_MENU)
+//         {
+//             cassert(menuvert == NULL);
+//             menuvert = (Panel*)obj->component;
+//         }
+//     arrpt_end();
 
-    // A MenuVert is required
-    cassert_no_null(menuvert);
-    return menuvert;
-}
+//     // A MenuVert is required
+//     cassert_no_null(menuvert);
+//     return menuvert;
+// }
 
 /*---------------------------------------------------------------------------*/
 

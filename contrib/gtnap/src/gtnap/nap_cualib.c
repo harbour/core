@@ -264,11 +264,11 @@ HB_FUNC( NAP_CUALIB_CURRENT_TABLEVIEW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_CURRENT_MENUVERT )
-{
-    Panel *menuvert = hb_gtnap_cualib_current_menuvert();
-    hb_retptr(menuvert);
-}
+// HB_FUNC( NAP_CUALIB_CURRENT_MENUVERT )
+// {
+//     Panel *menuvert = hb_gtnap_cualib_current_menuvert();
+//     hb_retptr(menuvert);
+// }
 
 /*---------------------------------------------------------------------------*/
 

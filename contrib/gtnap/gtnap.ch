@@ -16,6 +16,7 @@
 
 #define WINCLOSE_TEXTVIEW_CONFIRM   3000
 
+#define WINCLOSE_MENUVERT           4000
 
 // https://nappgui.com/en/draw2d/draw2d.html
 

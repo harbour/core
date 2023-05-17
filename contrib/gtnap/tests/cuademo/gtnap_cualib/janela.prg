@@ -275,6 +275,7 @@ ENDIF
 #DEFINE B_ScrollBarVertical     Nil // Bloco de código que especializa a Scroll Vertical
 #DEFINE B_ScrollBarHorizontal   Nil // Bloco de código que especializa a Scroll Horizontal
 #DEFINE N_ProgressBar           Nil // Guarda a quantidade de ProgressBar. Observação: Para janela do tipo MsgAguarde
+#DEFINE N_ItemId                Nil
 *
 RETURN { N_LinIni , N_ColIni , N_LinFin , N_ColFin , ;
          C_TelaCoberta , N_LinAnt , N_ColAnt , VC_Titulo , N_LinBotoes , ;
@@ -290,7 +291,7 @@ RETURN { N_LinIni , N_ColIni , N_LinFin , N_ColFin , ;
          N_IdProgressBar1, V_LstAcoes, L_CUA_10, N_IdProgressBar2, ;
          B_SetInkeyAfterBlock_Old,N_ToolBarCodigoAcao,;
          N_IdScrollBarVertical,N_IdScrollBarHorizontal,B_ScrollBarVertical,B_ScrollBarHorizontal,;
-         N_ProgressBar}
+         N_ProgressBar, N_ItemId}
 #UNDEF C_CorJan
 #UNDEF C_TelaCoberta
 #UNDEF N_LinAnt
@@ -324,6 +325,8 @@ RETURN { N_LinIni , N_ColIni , N_LinFin , N_ColFin , ;
 #UNDEF B_ScrollBarVertical
 #UNDEF B_ScrollBarHorizontal
 #UNDEF N_ProgressBar
+#UNDEF N_ItemId
+
 *
 ******************
 FUNC CriarJanela20(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec,;
@@ -405,6 +408,8 @@ RETURN VX_Janela
 #DEFINE B_ScrollBarVertical     VX_Janela[53]
 #DEFINE B_ScrollBarHorizontal   VX_Janela[54]
 #DEFINE N_ProgressBar VX_Janela[55]
+#DEFINE N_ItemId VX_Janela[56]   // For Menuvert, TextView or TableView ids (GTNAP)
+
 
 *
 *************

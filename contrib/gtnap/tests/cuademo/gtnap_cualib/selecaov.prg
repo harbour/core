@@ -11,6 +11,7 @@
 #INCLUDE "common.ch"
 #INCLUDE "define_cua.ch"
 #INCLUDE "janela.ch"       // métodos externos da classe JANELA
+#INCLUDE "gtnap.ch"       // métodos externos da classe JANELA
 *
 ********************
 FUNCTION EspSelVet20 ( VX_Janela, N_TP_Selecao, L_SemGrade, ;
@@ -253,8 +254,8 @@ LOCAL N_Row_Inicial_Util
 LOCAL N_mRow, N_mCol, N_Desloca, N_RegiaoMouse, N_Keyboard
 LOCAL N_Desloca_Aux, N_RowPos_Ant
 LOCAL X_Retorno
-LOCAL L_Coords, V_MenuVert, V_TableView
-LOCAL /*N_PaintRefresh_Old,*/ X_Retorno_Eval
+LOCAL L_Coords, N_MenID, V_TableView
+LOCAL X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, N_TeclaUpper, L_PodeExecutar
 
 *
@@ -392,19 +393,22 @@ IF L_ForcaLerTudo
             ELSE
             LOG_PRINT("Menu Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
 
-            V_MenuVert := NAP_MENUVERT_CREATE()
+            N_MenID := NAP_MENU(N_WindowNum, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], L_AutoClose, .F.)
+            N_ItemId := N_MenID
+            //V_MenuVert := NAP_MENUVERT_CREATE()
 
             FOR N_Cont := 1 TO LEN(V_Opcoes)
                 //IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] // # 0  // tem tecla hotkey
-                    NAP_MENUVERT_CUALIB_ADD(V_MenuVert, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
+                NAP_MENU_ADD(N_WindowNum, N_MenID, {||V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]}, V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
+                    //NAP_MENUVERT_CUALIB_ADD(V_MenuVert, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
                 //ENDIF
             NEXT
 
-            IF L_AutoClose
-                NAP_MENUVERT_AUTOCLOSE(V_MenuVert)
-            ENDIF
+            // IF L_AutoClose
+            //     NAP_MENUVERT_AUTOCLOSE(V_MenuVert)
+            // ENDIF
 
-            NAP_CUALIB_MENUVERT(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
+            //NAP_CUALIB_MENUVERT(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
 
             ENDIF
 
@@ -427,7 +431,7 @@ IF L_ForcaLerTudo
             // NEXT
 
             FOR N_Cont := 1 TO LEN(V_LstAcoes)
-                NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
+                //NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
 
                 IF V_LstAcoes[N_Cont,_ACAO_KEYBOARD] # NIL
                     NAP_CUALIB_HOTKEY(V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
@@ -437,10 +441,10 @@ IF L_ForcaLerTudo
 
             X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
 
-            NAP_LOG("MenuVert Modal return: " + hb_ntos(X_Retorno))
+            //NAP_LOG("MenuVert Modal return: " + hb_ntos(X_Retorno))
 
             // FRAN: TODO Menu Vert X_Retorno must contain the selection
-            if X_Retorno < 1000
+            if X_Retorno < WINCLOSE_MENUVERT
                 L_Abortado := .T.
             endif
             // X_Retorno := 1
@@ -873,11 +877,11 @@ ENDIF   // IF .NOT. SOB_MODO_GRAFICO()
 IF  SOB_MODO_GRAFICO()
 
     IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
-        V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
+        //V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
         IF L_Abortado
             X_Retorno := 0
         ELSE
-            X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
+            X_Retorno := X_Retorno - WINCLOSE_MENUVERT + 1//NAP_MENUVERT_SELECTED(V_MenuVert)
         ENDIF
 
     ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
@@ -952,7 +956,7 @@ FUNC ItensSelecionados (VX_Janela)
 LOCAL X_Retorno
 LOCAL VX_Sele := VX_SubObj
 LOCAL V_TableView := NIL
-LOCAL V_MenuVert := NIL
+//LOCAL V_MenuVert := NIL
 
 IF SOB_MODO_GRAFICO()
 
@@ -978,8 +982,9 @@ IF N_TP_Jan == _JAN_SELE_ARQ_20
     // Selection in MenuVert
 ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
     IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
-        V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
-        X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
+        X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
+        // V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
+        // X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
     ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
         V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
         X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)

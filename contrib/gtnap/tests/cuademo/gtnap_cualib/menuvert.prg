@@ -243,6 +243,7 @@ IF L_ForcaLerTudo
             ENDIF
 
             N_MenID := NAP_MENU(N_WindowNum, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], L_AutoClose, .F.)
+            N_ItemId := N_MenID
 
             FOR N_Cont := 1 TO LEN(V_Opcoes)
                 NAP_MENU_ADD(N_WindowNum, N_MenID, {||V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]}, V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
