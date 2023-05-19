@@ -160,12 +160,12 @@ HB_FUNC( NAP_CUALIB_TEXTVIEW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_TEXT_CONFIRMA_BUTTON )
-{
-    uint32_t nID = hb_parni(1);
-    bool_t autoclose = (bool_t)hb_parl(4);
-    hb_gtnap_cualib_text_confirma_button(nID, 2, 3, autoclose);
-}
+// HB_FUNC( NAP_CUALIB_TEXT_CONFIRMA_BUTTON )
+// {
+//     uint32_t nID = hb_parni(1);
+//     bool_t autoclose = (bool_t)hb_parl(4);
+//     hb_gtnap_cualib_text_confirma_button(nID, 2, 3, autoclose);
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -247,12 +247,12 @@ HB_FUNC( NAP_CUALIB_HOTKEY )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_TEXT_CONFIRMA_HOTKEY )
-{
-    int32_t key = hb_parni(1);
-    bool_t autoclose = (bool_t)hb_parl(4);
-    hb_gtnap_cualib_text_confirma_hotkey(key, 2, 3, autoclose);
-}
+// HB_FUNC( NAP_CUALIB_TEXT_CONFIRMA_HOTKEY )
+// {
+//     int32_t key = hb_parni(1);
+//     bool_t autoclose = (bool_t)hb_parl(4);
+//     hb_gtnap_cualib_text_confirma_hotkey(key, 2, 3, autoclose);
+// }
 
 /*---------------------------------------------------------------------------*/
 

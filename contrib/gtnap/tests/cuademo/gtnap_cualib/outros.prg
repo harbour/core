@@ -102,7 +102,7 @@ IF SOB_MODO_GRAFICO()
         *
         N_OptLen := LEN(VC_Menu[N_Cont])
 
-        NAP_BUTTON(N_WindowNum, N_Row, N_Col, N_Row, N_Col + N_OptLen, N_Cont, {|| VC_Menu[N_Cont]}, NIL, .T., .F.)
+        NAP_BUTTON(N_WindowNum, N_Row, N_Col, N_Row, N_Col + N_OptLen, {|| VC_Menu[N_Cont]}, NIL, .T., .F.)
 
 
         //NAP_CUALIB_BUTTON(VC_Menu[N_Cont], {||.T.}, 1000 + N_Cont, N_Row, N_Col, N_Row, N_Col + N_OptLen, .T.)

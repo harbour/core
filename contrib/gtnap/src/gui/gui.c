@@ -1030,5 +1030,6 @@ uint32_t gui_info_window(const bool_t fatal, const char_t *msg, const char_t *ca
     Layout *info_layout = i_info_layout(pack, caption, detail, file, line);
     Layout *buttons_layout = i_info_buttons_layout(buttons, defindex, &defbutton);
     i_INFO_WINDOW = i_assert_window(pack, msg, icon, info_layout, buttons_layout, defbutton);
+    respack_destroy(&pack);
     return i_launch_assert(&i_INFO_WINDOW);
 }

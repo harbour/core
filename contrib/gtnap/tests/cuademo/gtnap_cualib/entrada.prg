@@ -685,7 +685,6 @@ IF SOB_MODO_GRAFICO()
                                         N_Col + Col1Livre(VX_Janela) + N_LarguraVar + 1, ;
                                         N_Row + Lin1Livre(VX_Janela) - 1, ;
                                         N_Col + Col1Livre(VX_Janela) + N_LarguraVar + 3, ;
-                                        N_Aux_SayGetCor, ;
                                         NIL, ;
                                         NIL, ;
                                         .F., ;

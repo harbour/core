@@ -47,7 +47,7 @@ extern void hb_gtnap_label_fgcolor(const uint32_t wid, const uint32_t id, const 
 
 extern void hb_gtnap_label_bgcolor(const uint32_t wid, const uint32_t id, const color_t color);
 
-extern uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll);
+extern uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll);
 
 extern uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll);
 
@@ -178,7 +178,7 @@ extern ArrSt(uint32_t) *hb_gtnap_cualib_tableview_select_multiple_row(void);
 
 //extern void hb_gtnap_cualib_button(const char_t *text, const uint32_t codeBlockParamId, const uint32_t nTag, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight, const bool_t autoclose);
 
-extern void hb_gtnap_cualib_text_confirma_button(const uint32_t button_id, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose);
+// extern void hb_gtnap_cualib_text_confirma_button(const uint32_t button_id, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose);
 
 extern void hb_gtnap_cualib_default_button(const uint32_t nDefault);
 
@@ -207,7 +207,7 @@ extern void hb_gtnap_cualib_toolbar_separator(void);
 
 extern void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, const bool_t autoclose);
 
-extern void hb_gtnap_cualib_text_confirma_hotkey(const int32_t key, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose);
+// extern void hb_gtnap_cualib_text_confirma_hotkey(const int32_t key, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose);
 
 extern void hb_gtnap_cualib_error_data(const uint32_t errorDataBlockParamId);
 

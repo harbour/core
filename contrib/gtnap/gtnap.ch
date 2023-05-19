@@ -18,6 +18,10 @@
 
 #define WINCLOSE_MENUVERT           4000
 
+#define NAP_MAX_IMAGES              50
+
+#define NAP_MAX_BUTTONS             50
+
 // https://nappgui.com/en/draw2d/draw2d.html
 
 // enum fstyle_t

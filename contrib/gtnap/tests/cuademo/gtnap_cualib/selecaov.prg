@@ -11,7 +11,7 @@
 #INCLUDE "common.ch"
 #INCLUDE "define_cua.ch"
 #INCLUDE "janela.ch"       // métodos externos da classe JANELA
-#INCLUDE "gtnap.ch"       // métodos externos da classe JANELA
+#INCLUDE "gtnap.ch"
 *
 ********************
 FUNCTION EspSelVet20 ( VX_Janela, N_TP_Selecao, L_SemGrade, ;

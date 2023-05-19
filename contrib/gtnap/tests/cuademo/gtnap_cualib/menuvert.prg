@@ -10,6 +10,7 @@
 #INCLUDE "common.ch"
 #INCLUDE "define_cua.ch"
 #INCLUDE "janela.ch"       // métodos externos da classe JANELA
+#INCLUDE "gtnap.ch"
 
 ********************
 FUNCTION EspMenuVert( VX_Janela, L_RolaVertical, L_AutoClose )
@@ -251,8 +252,18 @@ IF L_ForcaLerTudo
 
             X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
 
-            IF X_Retorno == 1000
+            IF X_Retorno == WINCLOSE_ESC
+                L_FechouComAutoClose = .F.
+            ELSEIF X_Retorno == WINCLOSE_X_BUTTON
+                L_FechouComAutoClose = .F.
+            ELSEIF X_Retorno > WINCLOSE_IMAGE_AUTOCLOSE .AND. X_Retorno <= WINCLOSE_IMAGE_AUTOCLOSE + NAP_MAX_IMAGES
                 L_FechouComAutoClose = .T.
+            ELSEIF X_Retorno > WINCLOSE_BUTTON_AUTOCLOSE .AND. X_Retorno <= WINCLOSE_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
+                L_FechouComAutoClose = .T.
+            ELSEIF X_Retorno > WINCLOSE_MENUVERT .AND. X_Retorno <= WINCLOSE_MENUVERT + LEN(V_Opcoes)
+                L_FechouComAutoClose = .T.
+            ELSE
+                Alert( "Invalid X_Retorno (" + hb_ntos(X_Retorno) + ") in menuvert")
             ENDIF
         ENDIF   // SOB_MODO_GRAFICO()
     ENDIF   // L_PrimAtivacao
@@ -605,7 +616,6 @@ ENDIF
 *
 RETURN L_FechouComAutoClose
 *
-
 
 **************************
 PROC Atualizar_Tela_Browse (VX_Janela,VX_Sele,L_RolaCima,L_RolaBaixo)

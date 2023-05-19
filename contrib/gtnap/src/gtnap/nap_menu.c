@@ -204,13 +204,13 @@ static void i_run_option(MenuVert *menu)
     const MenuOpt *opt = arrst_get_const(menu->opts, menu->selected, MenuOpt);
     if (opt->block != NULL)
     {
-        PHB_ITEM pReturn = hb_itemDo(opt->block, 0);
+        PHB_ITEM ritem = hb_itemDo(opt->block, 0);
 
         if (menu->autoclose == TRUE)
         {
-            bool_t close = TRUE;
-            if (HB_IS_LOGICAL(pReturn))
-                close = (bool_t)hb_itemGetL(pReturn);
+            bool_t close = FALSE;
+            if (HB_IS_LOGICAL(ritem))
+                close = (bool_t)hb_itemGetL(ritem);
 
             if (close == TRUE)
             {
@@ -221,7 +221,7 @@ static void i_run_option(MenuVert *menu)
             }
         }
 
-        hb_itemRelease(pReturn);
+        hb_itemRelease(ritem);
     }
 }
 

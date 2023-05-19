@@ -1095,10 +1095,11 @@ static Listener *i_gtnap_listener(HB_ITEM *block, const int32_t key, const bool_
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnButtonClick2(GtNapCallback *callback, Event *e)
+static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 {
     bool_t ret = FALSE;
     cassert_no_null(callback);
+    unref(e);
     if (callback->codeBlock != NULL)
     {
         PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
@@ -1110,28 +1111,38 @@ static void i_OnButtonClick2(GtNapCallback *callback, Event *e)
 
     if (ret == TRUE || callback->autoclose == TRUE)
     {
-        const Button *button = event_sender(e, Button);
-        uint32_t tag = _component_get_tag((const GuiComponent*)button);
-        cassert(tag < 128);
         callback->cuawin->modal_window_alive = FALSE;
-        window_stop_modal(callback->cuawin->window, WINCLOSE_BUTTON_AUTOCLOSE + tag);
+        window_stop_modal(callback->cuawin->window, WINCLOSE_BUTTON_AUTOCLOSE + callback->key);
     }
 }
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const uint32_t tag, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll)
+static uint32_t i_num_buttons(GtNapWindow *cuawin)
+{
+    uint32_t n = 0;
+    cassert_no_null(cuawin);
+    arrpt_foreach_const(obj, cuawin->gui_objects, GtNapObject)
+        if (obj->type == ekOBJ_BUTTON)
+            n += 1;
+    arrpt_end();
+    return n;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    uint32_t bid = i_num_buttons(gtwin);
     Button *button = NULL;
     Listener *listener = NULL;
     S2Df size;
     uint32_t id = UINT32_MAX;
     cassert_no_null(gtwin);
     button = button_push();
-    listener = i_gtnap_listener(click_block, INT32_MAX, autoclose, gtwin, i_OnButtonClick2);
+    listener = i_gtnap_listener(click_block, bid + 1, autoclose, gtwin, i_OnButtonClick);
     button_OnClick(button, listener);
-    _component_set_tag((GuiComponent*)button, tag);
     button_font(button, GTNAP_GLOBAL->reduced_font);
     button_vpadding(button, i_button_vpadding());
     cassert(bottom == top);
@@ -1160,10 +1171,23 @@ static void i_OnImageClick(GtNapCallback *callback, Event *e)
     if (callback->autoclose == TRUE)
     {
         callback->cuawin->modal_window_alive = FALSE;
-        window_stop_modal(callback->cuawin->window, WINCLOSE_IMAGE_AUTOCLOSE);
+        window_stop_modal(callback->cuawin->window, WINCLOSE_IMAGE_AUTOCLOSE + callback->key);
     }
 
     unref(e);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_num_images(const GtNapWindow *gtwin)
+{
+    uint32_t n = 0;
+    cassert_no_null(gtwin);
+    arrpt_foreach_const(obj, gtwin->gui_objects, GtNapObject)
+        if (obj->type == ekOBJ_IMAGE)
+            n += 1;
+    arrpt_end();
+    return n;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1178,12 +1202,13 @@ uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t lef
     if (image != NULL)
     {
         GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+        uint32_t imgid = i_num_images(gtwin);
         ImageView *view;
         Listener *listener;
         S2Df size;
         cassert_no_null(gtwin);
         view = imageview_create();
-        listener = i_gtnap_listener(click_block, INT32_MAX, autoclose, gtwin, i_OnImageClick);
+        listener = i_gtnap_listener(click_block, imgid + 1, autoclose, gtwin, i_OnImageClick);
         view_OnClick((View*)view, listener);
         imageview_scale(view, ekGUI_SCALE_AUTO);
         size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
@@ -2488,31 +2513,31 @@ void hb_gtnap_cualib_textview(TextView *view,
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnButtonClick(GtNapCallback *callback, Event *e)
-{
-    bool_t ret = FALSE;
-    cassert_no_null(callback);
-    if (callback->codeBlock != NULL)
-    {
-        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
-        if (type == HB_IT_LOGICAL)
-            ret = (bool_t)hb_itemGetL(retItem);
-        hb_itemRelease(retItem);
-    }
-
-    log_printf("Click button");
-    if (ret == TRUE || callback->autoclose == TRUE)
-    {
-        const Button *button = event_sender(e, Button);
-        uint32_t tag = _component_get_tag((const GuiComponent*)button);
-        if (tag == UINT32_MAX)
-            tag = 1000;
-        log_printf("--> STOP CUALIB Modal Window: %p 'i_OnButtonClick'", callback->cuawin->window);
-        callback->cuawin->modal_window_alive = FALSE;
-        window_stop_modal(callback->cuawin->window, tag);
-    }
-}
+//static void i_OnButtonClick(GtNapCallback *callback, Event *e)
+//{
+//    bool_t ret = FALSE;
+//    cassert_no_null(callback);
+//    if (callback->codeBlock != NULL)
+//    {
+//        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
+//        HB_TYPE type = HB_ITEM_TYPE(retItem);
+//        if (type == HB_IT_LOGICAL)
+//            ret = (bool_t)hb_itemGetL(retItem);
+//        hb_itemRelease(retItem);
+//    }
+//
+//    log_printf("Click button");
+//    if (ret == TRUE || callback->autoclose == TRUE)
+//    {
+//        const Button *button = event_sender(e, Button);
+//        uint32_t tag = _component_get_tag((const GuiComponent*)button);
+//        if (tag == UINT32_MAX)
+//            tag = 1000;
+//        log_printf("--> STOP CUALIB Modal Window: %p 'i_OnButtonClick'", callback->cuawin->window);
+//        callback->cuawin->modal_window_alive = FALSE;
+//        window_stop_modal(callback->cuawin->window, tag);
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -2541,173 +2566,173 @@ static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static GtNapObject *i_get_button_id(ArrPt(GtNapObject) *objects, const uint32_t button_id)
-{
-    uint32_t button = 0;
-    arrpt_foreach(obj, objects, GtNapObject)
-        if (obj->type == ekOBJ_BUTTON)
-        {
-            if (button_id == button)
-                return obj;
-            button += 1;
-        }
-    arrpt_end();
-    cassert(FALSE);
-    return NULL;
-}
+// static GtNapObject *i_get_button_id(ArrPt(GtNapObject) *objects, const uint32_t button_id)
+// {
+//     uint32_t button = 0;
+//     arrpt_foreach(obj, objects, GtNapObject)
+//         if (obj->type == ekOBJ_BUTTON)
+//         {
+//             if (button_id == button)
+//                 return obj;
+//             button += 1;
+//         }
+//     arrpt_end();
+//     cassert(FALSE);
+//     return NULL;
+// }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnTextConfirmaButton(GtNapCallback *callback, Event *e)
-{
-    GtNapObject *obj = NULL;
-    cassert_no_null(callback);
-    unref(e);
-    log_printf("IN i_OnTextConfirmaButton");
+// static void i_OnTextConfirmaButton(GtNapCallback *callback, Event *e)
+// {
+//     GtNapObject *obj = NULL;
+//     cassert_no_null(callback);
+//     unref(e);
+//     log_printf("IN i_OnTextConfirmaButton");
 
-    /* Get the textview object */
-    arrpt_foreach(cobj, callback->cuawin->gui_objects, GtNapObject)
-        if (cobj->type == ekOBJ_TEXTVIEW)
-        {
-            obj = cobj;
-            break;
-        }
-    arrpt_end();
+//     /* Get the textview object */
+//     arrpt_foreach(cobj, callback->cuawin->gui_objects, GtNapObject)
+//         if (cobj->type == ekOBJ_TEXTVIEW)
+//         {
+//             obj = cobj;
+//             break;
+//         }
+//     arrpt_end();
 
-    if (obj != NULL)
-    {
-        // static void i_update_harbour_from_edit_text(const GtNapObject *obj)
-        if (obj->get_set_block != NULL)
-        {
-            // FRAN: IMPROVE --> MAke dynamic
-            char hOriginalHarbourText[4096];
-            HB_SIZE nOriginalHarbourTextSize;
-            bool_t valid = TRUE;
-            bool_t confirma = FALSE;
+//     if (obj != NULL)
+//     {
+//         // static void i_update_harbour_from_edit_text(const GtNapObject *obj)
+//         if (obj->get_set_block != NULL)
+//         {
+//             // FRAN: IMPROVE --> MAke dynamic
+//             char hOriginalHarbourText[4096];
+//             HB_SIZE nOriginalHarbourTextSize;
+//             bool_t valid = TRUE;
+//             bool_t confirma = FALSE;
 
-            /* Gets a copy of current content of Harbour text variable */
-            {
-                PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 0);
-                HB_TYPE type = HB_ITEM_TYPE(retItem);
-                cassert(type == HB_IT_STRING);
-                nOriginalHarbourTextSize = hb_itemCopyStr(retItem, hb_setGetOSCP(), hOriginalHarbourText, 4096);
-                hb_itemRelease(retItem);
-            }
+//             /* Gets a copy of current content of Harbour text variable */
+//             {
+//                 PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 0);
+//                 HB_TYPE type = HB_ITEM_TYPE(retItem);
+//                 cassert(type == HB_IT_STRING);
+//                 nOriginalHarbourTextSize = hb_itemCopyStr(retItem, hb_setGetOSCP(), hOriginalHarbourText, 4096);
+//                 hb_itemRelease(retItem);
+//             }
 
-            log_printf("Original text: '%s' - '%d'", hOriginalHarbourText, nOriginalHarbourTextSize);
+//             log_printf("Original text: '%s' - '%d'", hOriginalHarbourText, nOriginalHarbourTextSize);
 
-            /* Sets into the Harbour variable the current TextView text */
-            {
-                const char_t *text = textview_get_text((const TextView*)obj->component);
-                String *u1252 = gtconvert_UTF8_to_1252(text);
-                PHB_ITEM pItem = hb_itemPutC(NULL, tc(u1252));
+//             /* Sets into the Harbour variable the current TextView text */
+//             {
+//                 const char_t *text = textview_get_text((const TextView*)obj->component);
+//                 String *u1252 = gtconvert_UTF8_to_1252(text);
+//                 PHB_ITEM pItem = hb_itemPutC(NULL, tc(u1252));
 
-                if (pItem != NULL)
-                {
-                    PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 1, pItem);
-                    hb_itemRelease(pItem);
-                    hb_itemRelease(retItem);
-                }
+//                 if (pItem != NULL)
+//                 {
+//                     PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 1, pItem);
+//                     hb_itemRelease(pItem);
+//                     hb_itemRelease(retItem);
+//                 }
 
-                str_destroy(&u1252);
-            }
+//                 str_destroy(&u1252);
+//             }
 
-            /* Validate the text */
-            if (obj->valida_block != NULL)
-            {
-                PHB_ITEM retItem = hb_itemDo(obj->valida_block, 0 /*,1, cuaobj->getobjItem*/);
-                HB_TYPE type = HB_ITEM_TYPE(retItem);
-                cassert(type == HB_IT_LOGICAL);
-                valid = (bool_t)hb_itemGetL(retItem);
-                hb_itemRelease(retItem);
-            }
+//             /* Validate the text */
+//             if (obj->valida_block != NULL)
+//             {
+//                 PHB_ITEM retItem = hb_itemDo(obj->valida_block, 0 /*,1, cuaobj->getobjItem*/);
+//                 HB_TYPE type = HB_ITEM_TYPE(retItem);
+//                 cassert(type == HB_IT_LOGICAL);
+//                 valid = (bool_t)hb_itemGetL(retItem);
+//                 hb_itemRelease(retItem);
+//             }
 
-            log_printf("Valida text: '%d'", valid);
+//             log_printf("Valida text: '%d'", valid);
 
-            /* Confirma the text */
-            if (valid == TRUE)
-            {
-                if (obj->confirmaCodeBlock != NULL)
-                {
-                    PHB_ITEM retItem = hb_itemDo(obj->confirmaCodeBlock, 0);
-                    HB_TYPE type = HB_ITEM_TYPE(retItem);
-                    cassert(type == HB_IT_LOGICAL);
-                    confirma = (bool_t)hb_itemGetL(retItem);
-                    hb_itemRelease(retItem);
-                }
-            }
+//             /* Confirma the text */
+//             if (valid == TRUE)
+//             {
+//                 if (obj->confirmaCodeBlock != NULL)
+//                 {
+//                     PHB_ITEM retItem = hb_itemDo(obj->confirmaCodeBlock, 0);
+//                     HB_TYPE type = HB_ITEM_TYPE(retItem);
+//                     cassert(type == HB_IT_LOGICAL);
+//                     confirma = (bool_t)hb_itemGetL(retItem);
+//                     hb_itemRelease(retItem);
+//                 }
+//             }
 
-            log_printf("Confirma text: '%d'", confirma);
+//             log_printf("Confirma text: '%d'", confirma);
 
-            /* NO confirma --> Restore the Harbour variable with the original text */
-            if (confirma == FALSE)
-            {
-                PHB_ITEM pItem = hb_itemPutC(NULL, hOriginalHarbourText);
+//             /* NO confirma --> Restore the Harbour variable with the original text */
+//             if (confirma == FALSE)
+//             {
+//                 PHB_ITEM pItem = hb_itemPutC(NULL, hOriginalHarbourText);
 
-                if (pItem != NULL)
-                {
-                    PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 1, pItem);
-                    hb_itemRelease(pItem);
-                    hb_itemRelease(retItem);
-                }
-            }
+//                 if (pItem != NULL)
+//                 {
+//                     PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 1, pItem);
+//                     hb_itemRelease(pItem);
+//                     hb_itemRelease(retItem);
+//                 }
+//             }
 
-            hb_strfree( hOriginalHarbourText );
+//             hb_strfree( hOriginalHarbourText );
 
-            if (confirma == TRUE)
-            {
-                callback->cuawin->modal_window_alive = FALSE;
-                window_stop_modal(callback->cuawin->window, 1001);
-            }
-        }
-    }
-}
+//             if (confirma == TRUE)
+//             {
+//                 callback->cuawin->modal_window_alive = FALSE;
+//                 window_stop_modal(callback->cuawin->window, 1001);
+//             }
+//         }
+//     }
+// }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_text_confirma_button(const uint32_t button_id, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    GtNapObject *bobj = i_get_button_id(cuawin->gui_objects, button_id - 1);
-    GtNapObject *obj = NULL;
+// void hb_gtnap_cualib_text_confirma_button(const uint32_t button_id, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose)
+// {
+//     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//     GtNapObject *bobj = i_get_button_id(cuawin->gui_objects, button_id - 1);
+//     GtNapObject *obj = NULL;
 
-    unref(autoclose);
+//     unref(autoclose);
 
-    arrpt_foreach(cobj, cuawin->gui_objects, GtNapObject)
-        if (cobj->type == ekOBJ_TEXTVIEW)
-        {
-            obj = cobj;
-            break;
-        }
-    arrpt_end()
+//     arrpt_foreach(cobj, cuawin->gui_objects, GtNapObject)
+//         if (cobj->type == ekOBJ_TEXTVIEW)
+//         {
+//             obj = cobj;
+//             break;
+//         }
+//     arrpt_end()
 
-    if (obj != NULL)
-    {
-        Listener *listener = NULL;
+//     if (obj != NULL)
+//     {
+//         Listener *listener = NULL;
 
-        if (obj->confirmaCodeBlock == NULL)
-        {
-            PHB_ITEM confirmaCodeBlock = hb_param(confirmaBlockParamId, HB_IT_BLOCK);
-            if (confirmaCodeBlock != NULL)
-                obj->confirmaCodeBlock = hb_itemNew(confirmaCodeBlock);
-            else
-                obj->confirmaCodeBlock = NULL;
-        }
+//         if (obj->confirmaCodeBlock == NULL)
+//         {
+//             PHB_ITEM confirmaCodeBlock = hb_param(confirmaBlockParamId, HB_IT_BLOCK);
+//             if (confirmaCodeBlock != NULL)
+//                 obj->confirmaCodeBlock = hb_itemNew(confirmaCodeBlock);
+//             else
+//                 obj->confirmaCodeBlock = NULL;
+//         }
 
-        if (obj->valida_block == NULL)
-        {
-            PHB_ITEM validaCodeBlock = hb_param(validBlockParamId, HB_IT_BLOCK);
-            if (validaCodeBlock != NULL)
-                obj->valida_block = hb_itemNew(validaCodeBlock);
-            else
-                obj->valida_block = NULL;
-        }
+//         if (obj->valida_block == NULL)
+//         {
+//             PHB_ITEM validaCodeBlock = hb_param(validBlockParamId, HB_IT_BLOCK);
+//             if (validaCodeBlock != NULL)
+//                 obj->valida_block = hb_itemNew(validaCodeBlock);
+//             else
+//                 obj->valida_block = NULL;
+//         }
 
-        listener = i_gtnap_listener(NULL, INT32_MAX, FALSE, cuawin, i_OnTextConfirmaButton);
-        if (listener != NULL)
-            button_OnClick((Button*)bobj->component, listener);
-    }
-}
+//         listener = i_gtnap_listener(NULL, INT32_MAX, FALSE, cuawin, i_OnTextConfirmaButton);
+//         if (listener != NULL)
+//             button_OnClick((Button*)bobj->component, listener);
+//     }
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -3599,72 +3624,72 @@ void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, 
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_text_confirma_hotkey(const int32_t key, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    const GtNapKey *nkey = i_convert_key(key);
-    cassert_no_null(cuawin);
-    unref(autoclose);
+// void hb_gtnap_cualib_text_confirma_hotkey(const int32_t key, const uint32_t confirmaBlockParamId, const uint32_t validBlockParamId, const bool_t autoclose)
+// {
+//     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//     const GtNapKey *nkey = i_convert_key(key);
+//     cassert_no_null(cuawin);
+//     unref(autoclose);
 
-    log_printf("hb_gtnap_cualib_text_confirma_hotkey Looking for hotkey: %d", key);
+//     log_printf("hb_gtnap_cualib_text_confirma_hotkey Looking for hotkey: %d", key);
 
-    // Exists a Harbour/NAppGUI key convertion
-    if (nkey != NULL)
-    {
-        uint32_t pos = UINT32_MAX;
-        GtNapObject *obj = NULL;
+//     // Exists a Harbour/NAppGUI key convertion
+//     if (nkey != NULL)
+//     {
+//         uint32_t pos = UINT32_MAX;
+//         GtNapObject *obj = NULL;
 
-        log_printf("hb_gtnap_cualib_text_confirma_hotkey Found hotkey: %d", nkey->key);
+//         log_printf("hb_gtnap_cualib_text_confirma_hotkey Found hotkey: %d", nkey->key);
 
-        // Delete a previous callback on this hotkey
-        arrpt_foreach(callback, cuawin->callbacks, GtNapCallback)
-            if (callback->key == key)
-            {
-                pos = callback_i;
-                break;
-            }
-        arrpt_end();
+//         // Delete a previous callback on this hotkey
+//         arrpt_foreach(callback, cuawin->callbacks, GtNapCallback)
+//             if (callback->key == key)
+//             {
+//                 pos = callback_i;
+//                 break;
+//             }
+//         arrpt_end();
 
-        if (pos != UINT32_MAX)
-            arrpt_delete(cuawin->callbacks, pos, i_destroy_callback, GtNapCallback);
+//         if (pos != UINT32_MAX)
+//             arrpt_delete(cuawin->callbacks, pos, i_destroy_callback, GtNapCallback);
 
-        arrpt_foreach(cobj, cuawin->gui_objects, GtNapObject)
-            if (cobj->type == ekOBJ_TEXTVIEW)
-            {
-                obj = cobj;
-                break;
-            }
-        arrpt_end()
+//         arrpt_foreach(cobj, cuawin->gui_objects, GtNapObject)
+//             if (cobj->type == ekOBJ_TEXTVIEW)
+//             {
+//                 obj = cobj;
+//                 break;
+//             }
+//         arrpt_end()
 
-        if (obj != NULL)
-        {
-            Listener *listener = NULL;
+//         if (obj != NULL)
+//         {
+//             Listener *listener = NULL;
 
-            if (obj->confirmaCodeBlock == NULL)
-            {
-                PHB_ITEM confirmaCodeBlock = hb_param(confirmaBlockParamId, HB_IT_BLOCK);
-                if (confirmaCodeBlock != NULL)
-                    obj->confirmaCodeBlock = hb_itemNew(confirmaCodeBlock);
-                else
-                    obj->confirmaCodeBlock = NULL;
-            }
+//             if (obj->confirmaCodeBlock == NULL)
+//             {
+//                 PHB_ITEM confirmaCodeBlock = hb_param(confirmaBlockParamId, HB_IT_BLOCK);
+//                 if (confirmaCodeBlock != NULL)
+//                     obj->confirmaCodeBlock = hb_itemNew(confirmaCodeBlock);
+//                 else
+//                     obj->confirmaCodeBlock = NULL;
+//             }
 
-            if (obj->valida_block == NULL)
-            {
-                PHB_ITEM validaCodeBlock = hb_param(validBlockParamId, HB_IT_BLOCK);
-                if (validaCodeBlock != NULL)
-                    obj->valida_block = hb_itemNew(validaCodeBlock);
-                else
-                    obj->valida_block = NULL;
-            }
+//             if (obj->valida_block == NULL)
+//             {
+//                 PHB_ITEM validaCodeBlock = hb_param(validBlockParamId, HB_IT_BLOCK);
+//                 if (validaCodeBlock != NULL)
+//                     obj->valida_block = hb_itemNew(validaCodeBlock);
+//                 else
+//                     obj->valida_block = NULL;
+//             }
 
-            listener = i_gtnap_listener(NULL, key, FALSE, cuawin, i_OnTextConfirmaButton);
+//             listener = i_gtnap_listener(NULL, key, FALSE, cuawin, i_OnTextConfirmaButton);
 
-            if (listener != NULL)
-                window_hotkey(cuawin->window, nkey->key, nkey->modifiers, listener);
-        }
-    }
-}
+//             if (listener != NULL)
+//                 window_hotkey(cuawin->window, nkey->key, nkey->modifiers, listener);
+//         }
+//     }
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -3822,19 +3847,6 @@ static void i_OnPreviousTabstop(GtNapWindow *cuawin, Event *e)
     cassert_no_null(cuawin);
     cuawin->focus_by_previous = TRUE;
     window_previous_tabstop(cuawin->window);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static uint32_t i_num_buttons(GtNapWindow *cuawin)
-{
-    uint32_t n = 0;
-    cassert_no_null(cuawin);
-    arrpt_foreach_const(obj, cuawin->gui_objects, GtNapObject)
-        if (obj->type == ekOBJ_BUTTON)
-            n += 1;
-    arrpt_end();
-    return n;
 }
 
 /*---------------------------------------------------------------------------*/

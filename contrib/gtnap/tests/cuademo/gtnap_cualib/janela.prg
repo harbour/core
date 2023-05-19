@@ -3319,11 +3319,12 @@ ENDIF
 
 //NAP_LOG("Before V_Botao[_BOTAO_LIN_INICIAL]")
 
-N_BotId := NAP_BUTTON(N_WindowNum, N_LinMess  +V_Botao[_BOTAO_LIN_INICIAL],;
-            N_Col1Livre+V_Botao[_BOTAO_COL_INICIAL],;
-            N_LinMess  +V_Botao[_BOTAO_LIN_FINAL  ],;
-            N_Col1Livre+V_Botao[_BOTAO_COL_FINAL  ],;
-            0,;
+N_BotId := NAP_BUTTON(;
+            N_WindowNum,;
+            N_LinMess + V_Botao[_BOTAO_LIN_INICIAL],;
+            N_Col1Livre + V_Botao[_BOTAO_COL_INICIAL],;
+            N_LinMess + V_Botao[_BOTAO_LIN_FINAL],;
+            N_Col1Livre + V_Botao[_BOTAO_COL_FINAL],;
             {|| C_TextoBotaoAux_CodigoPagina},;
             V_Botao[_BOTAO_BLOCO_ACAO],;
             V_Botao[_BOTAO_AUTOCLOSE],;
