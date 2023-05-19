@@ -71,9 +71,16 @@ ENDIF
 ENDIF
 *
 IF L_AutoClose
-   ADDBOTAO(VX_Janela,"Enter=selecionar",{||.T.},.T.,;
+    IF SOB_MODO_GRAFICO()
+        // Fran: window_stop_modal needs to know the current menu selection before stop
+        ADDBOTAO(VX_Janela,"Enter=selecionar",{|| GetGtNapWinCloseMenuSel(VX_Janela)},.T.,;
             "B17862",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
             .T.)
+    ELSE
+        ADDBOTAO(VX_Janela,"Enter=selecionar",{||.T.},.T.,;
+            "B17862",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
+            .T.)
+    ENDIF
 ENDIF
 *
 AJUSTA_BOTOES(VX_Janela)  // ajusta Lin2Livre à quantidade de botões de função
@@ -227,6 +234,11 @@ RETURN NIL
 #DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Nunca existe rolamento horizontal em vetores (conterá sempre .F.)
 #DEFINE L_NaoRolaVertical    VX_Sele:CARGO[19]      // FRAN: With vertical scroll bar
 #DEFINE L_NaoRolaHorizontal  VX_Sele:CARGO[20]      // FRAN: With horizontal scroll bar
+
+
+STATIC FUNCTION GetGtNapWinCloseMenuSel( VX_Janela )
+    LOCAL N_Sel := WINCLOSE_MENUVERT + NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
+RETURN N_Sel
 
 *
 **************************
@@ -441,7 +453,7 @@ IF L_ForcaLerTudo
 
             X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
 
-            //NAP_LOG("MenuVert Modal return: " + hb_ntos(X_Retorno))
+            NAP_LOG("---> MenuVert Modal return: " + hb_ntos(X_Retorno))
 
             // FRAN: TODO Menu Vert X_Retorno must contain the selection
             if X_Retorno < WINCLOSE_MENUVERT
@@ -881,7 +893,7 @@ IF  SOB_MODO_GRAFICO()
         IF L_Abortado
             X_Retorno := 0
         ELSE
-            X_Retorno := X_Retorno - WINCLOSE_MENUVERT + 1//NAP_MENUVERT_SELECTED(V_MenuVert)
+            X_Retorno := X_Retorno - WINCLOSE_MENUVERT//NAP_MENUVERT_SELECTED(V_MenuVert)
         ENDIF
 
     ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
@@ -983,6 +995,7 @@ IF N_TP_Jan == _JAN_SELE_ARQ_20
 ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
     IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
         X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
+        NAP_LOG("ItensSelecionados() _JAN_SELE_VETO_20/_SELE_SIMPLES = " + hb_ntos(X_Retorno))
         // V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
         // X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
     ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA

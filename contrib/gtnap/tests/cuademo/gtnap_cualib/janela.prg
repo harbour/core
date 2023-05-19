@@ -1131,8 +1131,8 @@ ENDIF // C_TelaCoberta == NIL
 
 // FRAN
 // Testing about window and widget dimensions
-LOG_PRINT("HELLLO FRAN!!!!. Window_NUM: " + hb_ntos(N_WindowNum))
-LOG_PRINT("Window LOCATION: " + hb_ntos(N_LinIni) + ", " + hb_ntos(N_ColIni) + ", " + hb_ntos(N_LinFin) + ", " + hb_ntos(N_ColFin))
+// LOG_PRINT("HELLLO FRAN!!!!. Window_NUM: " + hb_ntos(N_WindowNum))
+// LOG_PRINT("Window LOCATION: " + hb_ntos(N_LinIni) + ", " + hb_ntos(N_ColIni) + ", " + hb_ntos(N_LinFin) + ", " + hb_ntos(N_ColFin))
 //SCROLL(N_LinIni,N_ColIni,N_LinFin,N_ColFin)      // limpar área
 
 // IF N_WindowNum = 0
@@ -1210,7 +1210,7 @@ LOG_PRINT("Window LOCATION: " + hb_ntos(N_LinIni) + ", " + hb_ntos(N_ColIni) + "
 //     OutStd("ATIVE B_Metodo VALID")
 // ENDIF
 
-NAP_LOG("FRAN Janela ATIVE antes de EVAL()")
+//NAP_LOG("FRAN Janela ATIVE antes de EVAL()")
 IF N_TP_Jan == NIL
     //OutStd("Before EVAL(B_Metodo,VX_Janela)")
     X_Retorno := EVAL(B_Metodo,VX_Janela)
@@ -1218,7 +1218,7 @@ ELSE
     //OutStd("Before EVAL(B_Metodo)")
     X_Retorno := EVAL(B_Metodo)
 ENDIF
-NAP_LOG("FRAN Janela ATIVE despues de EVAL()")
+//NAP_LOG("FRAN Janela ATIVE despues de EVAL()")
 
  *
  SETCOLOR(C_CorAnt)                    // restaurar cor anterior
@@ -1228,15 +1228,15 @@ NAP_LOG("FRAN Janela ATIVE despues de EVAL()")
     SETKEY(K_F1,B_Ajuda_Ant)            // restaurar ajuda anterior
  ENDIF
 
- NAP_LOG("FRAN Janela ATIVE IF .NOT. L_CUA_10")
+//  NAP_LOG("FRAN Janela ATIVE IF .NOT. L_CUA_10")
 
  *
  IF .NOT. L_CUA_10
-    NAP_LOG("Antes de DestruaJan:")
+    // NAP_LOG("Antes de DestruaJan:")
     DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha após ativação
-    NAP_LOG("Despues de DestruaJan:")
+    // NAP_LOG("Despues de DestruaJan:")
 ELSE
-    NAP_LOG("L_CUA_10 JANELA NOT DESTROY")
+    // NAP_LOG("L_CUA_10 JANELA NOT DESTROY")
 
  ENDIF
  *

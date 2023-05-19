@@ -217,7 +217,7 @@ static void i_run_option(MenuVert *menu)
                 Window *window = menu->window;
                 if (window == NULL)
                     window = _component_window((const GuiComponent*)menu->view);
-                window_stop_modal(window, WINCLOSE_MENUVERT + menu->selected);
+                window_stop_modal(window, WINCLOSE_MENUVERT + 1 + menu->selected);
             }
         }
 

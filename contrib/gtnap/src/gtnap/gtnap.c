@@ -3536,6 +3536,8 @@ ArrSt(uint32_t) *hb_gtnap_cualib_tableview_select_multiple_row(void)
 static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
 {
     bool_t ret = FALSE;
+    uint32_t ret_val = 1001;
+
     cassert_no_null(callback);
     unref(e);
     if (callback->codeBlock != NULL)
@@ -3544,6 +3546,8 @@ static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
         HB_TYPE type = HB_ITEM_TYPE(retItem);
         if (type == HB_IT_LOGICAL)
             ret = (bool_t)hb_itemGetL(retItem);
+        else if (type == HB_IT_INTEGER)
+            ret_val = hb_itemGetNI(retItem);
         hb_itemRelease(retItem);
     }
 
@@ -3552,7 +3556,7 @@ static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
     {
         log_printf("--> STOP CUALIB Modal Window: %p 'i_OnWindowHotKey'", callback->cuawin->window);
         callback->cuawin->modal_window_alive = FALSE;
-        window_stop_modal(callback->cuawin->window, 1001);
+        window_stop_modal(callback->cuawin->window, ret_val);
     }
 }
 
