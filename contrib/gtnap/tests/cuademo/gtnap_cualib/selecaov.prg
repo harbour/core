@@ -73,7 +73,7 @@ ENDIF
 IF L_AutoClose
     IF SOB_MODO_GRAFICO()
         // Fran: window_stop_modal needs to know the current menu selection before stop
-        ADDBOTAO(VX_Janela,"Enter=selecionar",{|| GetGtNapWinCloseMenuSel(VX_Janela)},.T.,;
+        ADDBOTAO(VX_Janela,"Enter=selecionar",{|| GtNapCloseWithMenuSel(VX_Janela)},.T.,;
             "B17862",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
             .T.)
     ELSE
@@ -236,8 +236,8 @@ RETURN NIL
 #DEFINE L_NaoRolaHorizontal  VX_Sele:CARGO[20]      // FRAN: With horizontal scroll bar
 
 
-STATIC FUNCTION GetGtNapWinCloseMenuSel( VX_Janela )
-    LOCAL N_Sel := WINCLOSE_MENUVERT + NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
+STATIC FUNCTION GtNapCloseWithMenuSel( VX_Janela )
+    LOCAL N_Sel := NAP_MODAL_MENU_AUTOCLOSE + NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
 RETURN N_Sel
 
 *
@@ -269,7 +269,6 @@ LOCAL X_Retorno
 LOCAL L_Coords, N_MenID, V_TableView
 LOCAL X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, N_TeclaUpper, L_PodeExecutar
-
 *
 LOCAL N_Count, O_Column, N_Width, C_Title
 
@@ -442,6 +441,16 @@ IF L_ForcaLerTudo
             //     NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
             // NEXT
 
+
+            // FRAN: TODO ADD GtNapCloseWithMenuSel() to BUTTONS
+            // Y eliminarla de 'ADDBOTAO'
+            FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
+                V_Botao := V_RegiaoBotoes[N_Cont]
+                NAP_LOG("!!!!!!!!!!!! BOTAO: " + hb_ntos(N_Cont) + " ID: " + hb_ntos(V_Botao[_BOTAO_HANDLE_PUSHBUTTON]))
+            NEXT
+
+
+            // FRAN: TODO ADD GtNapCloseWithMenuSel() to HOTKEYS
             FOR N_Cont := 1 TO LEN(V_LstAcoes)
                 //NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
 
@@ -453,12 +462,17 @@ IF L_ForcaLerTudo
 
             X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
 
-            NAP_LOG("---> MenuVert Modal return: " + hb_ntos(X_Retorno))
-
-            // FRAN: TODO Menu Vert X_Retorno must contain the selection
-            if X_Retorno < WINCLOSE_MENUVERT
+            IF X_Retorno == NAP_MODAL_ESC
                 L_Abortado := .T.
-            endif
+            ELSEIF X_Retorno == NAP_MODAL_X_BUTTON
+                L_Abortado := .T.
+            ELSEIF X_Retorno > NAP_MODAL_MENU_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_MENU_AUTOCLOSE + LEN(V_Opcoes)
+                X_Retorno := X_Retorno - NAP_MODAL_MENU_AUTOCLOSE
+                L_Abortado := .F.
+            ELSE
+                Alert( "Invalid Menu X_Retorno (" + hb_ntos(X_Retorno) + ") in selecaov")
+                L_Abortado := .T.
+            ENDIF
             // X_Retorno := 1
             // IF X_Retorno == 1000
             //     L_FechouComAutoClose = .T.
@@ -892,8 +906,6 @@ IF  SOB_MODO_GRAFICO()
         //V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
         IF L_Abortado
             X_Retorno := 0
-        ELSE
-            X_Retorno := X_Retorno - WINCLOSE_MENUVERT//NAP_MENUVERT_SELECTED(V_MenuVert)
         ENDIF
 
     ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA

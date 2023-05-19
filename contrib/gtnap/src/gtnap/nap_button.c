@@ -34,53 +34,58 @@ HB_FUNC( NAP_BUTTON )
     hb_retni(id);
 }
 
-/*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_PUSH )
-{
-    Button *button = button_push();
-    hb_retptr(button);
-}
 
-/*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_CHECK )
-{
-    Button *button = button_check();
-    hb_retptr(button);
-}
 
-/*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_CHECK3 )
-{
-    Button *button = button_check3();
-    hb_retptr(button);
-}
+// /*---------------------------------------------------------------------------*/
 
-/*---------------------------------------------------------------------------*/
+// HB_FUNC( NAP_BUTTON_PUSH )
+// {
+//     Button *button = button_push();
+//     hb_retptr(button);
+// }
 
-HB_FUNC( NAP_BUTTON_RADIO )
-{
-    Button *button = button_radio();
-    hb_retptr(button);
-}
+// /*---------------------------------------------------------------------------*/
 
-/*---------------------------------------------------------------------------*/
+// HB_FUNC( NAP_BUTTON_CHECK )
+// {
+//     Button *button = button_check();
+//     hb_retptr(button);
+// }
 
-HB_FUNC( NAP_BUTTON_FLAT )
-{
-    Button *button = button_flat();
-    hb_retptr(button);
-}
+// /*---------------------------------------------------------------------------*/
 
-/*---------------------------------------------------------------------------*/
+// HB_FUNC( NAP_BUTTON_CHECK3 )
+// {
+//     Button *button = button_check3();
+//     hb_retptr(button);
+// }
 
-HB_FUNC( NAP_BUTTON_FLATGLE )
-{
-    Button *button = button_flatgle();
-    hb_retptr(button);
-}
+// /*---------------------------------------------------------------------------*/
+
+// HB_FUNC( NAP_BUTTON_RADIO )
+// {
+//     Button *button = button_radio();
+//     hb_retptr(button);
+// }
+
+// /*---------------------------------------------------------------------------*/
+
+// HB_FUNC( NAP_BUTTON_FLAT )
+// {
+//     Button *button = button_flat();
+//     hb_retptr(button);
+// }
+
+// /*---------------------------------------------------------------------------*/
+
+// HB_FUNC( NAP_BUTTON_FLATGLE )
+// {
+//     Button *button = button_flatgle();
+//     hb_retptr(button);
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -131,21 +136,21 @@ HB_FUNC( NAP_BUTTON_FLATGLE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_IMAGE )
-{
-    Button *button = (Button*)hb_parptr(1);
-    Image *image = hb_gtnap_parImage(2);
-    button_image(button, image);
-}
+// HB_FUNC( NAP_BUTTON_IMAGE )
+// {
+//     Button *button = (Button*)hb_parptr(1);
+//     Image *image = hb_gtnap_parImage(2);
+//     button_image(button, image);
+// }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_IMAGE_ALT )
-{
-    Button *button = (Button*)hb_parptr(1);
-    Image *image = hb_gtnap_parImage(2);
-    button_image_alt(button, image);
-}
+// HB_FUNC( NAP_BUTTON_IMAGE_ALT )
+// {
+//     Button *button = (Button*)hb_parptr(1);
+//     Image *image = hb_gtnap_parImage(2);
+//     button_image_alt(button, image);
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -167,20 +172,20 @@ HB_FUNC( NAP_BUTTON_IMAGE_ALT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_STATE )
-{
-    Button *button = (Button*)hb_parptr(1);
-    gui_state_t state = (gui_state_t)hb_parni(2);
-    button_state(button, state);
-}
+// HB_FUNC( NAP_BUTTON_STATE )
+// {
+//     Button *button = (Button*)hb_parptr(1);
+//     gui_state_t state = (gui_state_t)hb_parni(2);
+//     button_state(button, state);
+// }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON_GET_STATE )
-{
-    Button *button = (Button*)hb_parptr(1);
-    gui_state_t state = button_get_state(button);
-    hb_retni((int)state);
-}
+// HB_FUNC( NAP_BUTTON_GET_STATE )
+// {
+//     Button *button = (Button*)hb_parptr(1);
+//     gui_state_t state = button_get_state(button);
+//     hb_retni((int)state);
+// }
 
 /*---------------------------------------------------------------------------*/

@@ -3229,6 +3229,7 @@ LOCAL C_TextoBotaoAux := V_Botao[_BOTAO_TEXTO_TRATADO_2]
  //LOCAL B_BlocoAux, N_Pos
 LOCAL N_Pos
 LOCAL C_TextoBotaoAux_CodigoPagina
+LOCAL B_Bloco := V_Botao[_BOTAO_BLOCO_ACAO]
 *
 
 //HB_IT_SYMBOL
@@ -3319,6 +3320,7 @@ ENDIF
 
 //NAP_LOG("Before V_Botao[_BOTAO_LIN_INICIAL]")
 
+
 N_BotId := NAP_BUTTON(;
             N_WindowNum,;
             N_LinMess + V_Botao[_BOTAO_LIN_INICIAL],;
@@ -3326,7 +3328,7 @@ N_BotId := NAP_BUTTON(;
             N_LinMess + V_Botao[_BOTAO_LIN_FINAL],;
             N_Col1Livre + V_Botao[_BOTAO_COL_FINAL],;
             {|| C_TextoBotaoAux_CodigoPagina},;
-            V_Botao[_BOTAO_BLOCO_ACAO],;
+            B_Bloco,;
             V_Botao[_BOTAO_AUTOCLOSE],;
             .F.)
 
@@ -3347,7 +3349,8 @@ IF N_TP_Jan == _JAN_MENU_VERT
 // FRAN: The hotkeys are mapped via V_LstAcoes
 IF N_KeyBoard # NIL
     NAP_LOG("BUTTON KEYBOARD " + hb_ntos(N_Keyboard))
-    NAP_CUALIB_HOTKEY(N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
+    NAP_WINDOW_HOTKEY(N_WindowNum, N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
+    // NAP_CUALIB_HOTKEY(N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
 ENDIF
 
 ENDIF

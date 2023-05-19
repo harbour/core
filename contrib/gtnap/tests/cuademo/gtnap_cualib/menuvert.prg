@@ -252,15 +252,17 @@ IF L_ForcaLerTudo
 
             X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
 
-            IF X_Retorno == WINCLOSE_ESC
+            IF X_Retorno == NAP_MODAL_ESC
                 L_FechouComAutoClose = .F.
-            ELSEIF X_Retorno == WINCLOSE_X_BUTTON
+            ELSEIF X_Retorno == NAP_MODAL_X_BUTTON
                 L_FechouComAutoClose = .F.
-            ELSEIF X_Retorno > WINCLOSE_IMAGE_AUTOCLOSE .AND. X_Retorno <= WINCLOSE_IMAGE_AUTOCLOSE + NAP_MAX_IMAGES
+            ELSEIF X_Retorno > NAP_MODAL_BUTTON_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
                 L_FechouComAutoClose = .T.
-            ELSEIF X_Retorno > WINCLOSE_BUTTON_AUTOCLOSE .AND. X_Retorno <= WINCLOSE_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
+            ELSEIF X_Retorno > NAP_MODAL_HOTKEY_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_HOTKEY_AUTOCLOSE + NAP_MAX_BUTTONS
                 L_FechouComAutoClose = .T.
-            ELSEIF X_Retorno > WINCLOSE_MENUVERT .AND. X_Retorno <= WINCLOSE_MENUVERT + LEN(V_Opcoes)
+            ELSEIF X_Retorno > NAP_MODAL_IMAGE_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_IMAGE_AUTOCLOSE + NAP_MAX_IMAGES
+                L_FechouComAutoClose = .T.
+            ELSEIF X_Retorno > NAP_MODAL_MENU_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_MENU_AUTOCLOSE + LEN(V_Opcoes)
                 L_FechouComAutoClose = .T.
             ELSE
                 Alert( "Invalid X_Retorno (" + hb_ntos(X_Retorno) + ") in menuvert")

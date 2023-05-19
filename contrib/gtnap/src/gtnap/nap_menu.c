@@ -208,7 +208,7 @@ static void i_run_option(MenuVert *menu)
 
         if (menu->autoclose == TRUE)
         {
-            bool_t close = FALSE;
+            bool_t close = TRUE;
             if (HB_IS_LOGICAL(ritem))
                 close = (bool_t)hb_itemGetL(ritem);
 
@@ -217,7 +217,7 @@ static void i_run_option(MenuVert *menu)
                 Window *window = menu->window;
                 if (window == NULL)
                     window = _component_window((const GuiComponent*)menu->view);
-                window_stop_modal(window, WINCLOSE_MENUVERT + 1 + menu->selected);
+                window_stop_modal(window, NAP_MODAL_MENU_AUTOCLOSE + 1 + menu->selected);
             }
         }
 

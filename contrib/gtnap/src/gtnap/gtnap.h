@@ -29,6 +29,8 @@ extern void hb_gtnap_terminal(void);
 
 extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
+extern void hb_gtnap_window_hotkey(const uint32_t wid, const int32_t key, HB_ITEM *block, const bool_t autoclose);
+
 extern void hb_gtnap_window_editable(const uint32_t wid, HB_ITEM *is_editable_block);
 
 extern void hb_gtnap_window_confirm(const uint32_t wid, HB_ITEM *confirm_block);
@@ -48,6 +50,8 @@ extern void hb_gtnap_label_fgcolor(const uint32_t wid, const uint32_t id, const 
 extern void hb_gtnap_label_bgcolor(const uint32_t wid, const uint32_t id, const color_t color);
 
 extern uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll);
+
+extern void hb_gtnap_button_click(const uint32_t wid, const uint32_t id, HB_ITEM *click_block);
 
 extern uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *pathname, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll);
 

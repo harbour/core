@@ -155,9 +155,9 @@ IF SOB_MODO_GRAFICO()
     ENDIF
 
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
-    IF X_Retorno == WINCLOSE_TEXTVIEW_CONFIRM
+    IF X_Retorno == NAP_MODAL_TEXT_CONFIRM
         L_FimOK := .T.
-    ELSEIF X_Retorno == WINCLOSE_ESC .OR. X_Retorno == WINCLOSE_X_BUTTON
+    ELSEIF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON
         L_FimOK := .F.
     ELSE
         ? MEMVAR->ERR_NAP_MODAL_RETURN

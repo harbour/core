@@ -33,12 +33,10 @@ typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
 struct _gtnap_callback_t
 {
-    GtNapWindow *cuawin;
-    GuiComponent *cb_component;
-    Window *cb_window;
+    GtNapWindow *gtwin;
+    HB_ITEM *block;
     int32_t key;
-    bool_t autoclose;
-    PHB_ITEM codeBlock;
+    uint32_t autoclose_id;
 };
 
 struct _gtnap_key_t
@@ -360,8 +358,8 @@ static uint32_t INIT_COLS = 0;
 /* DELETE THIS */
 static void i_gtnap_destroy(GtNap **data);
 static void i_gtwin_configure(GtNapWindow *gtwin);
-static void hb_gtnap_callback(GtNapCallback *callback, Event *e);
-static bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e);
+//static void hb_gtnap_callback(GtNapCallback *callback, Event *e);
+//static bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e);
 
 /*---------------------------------------------------------------------------*/
 
@@ -834,6 +832,106 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
 
 /*---------------------------------------------------------------------------*/
 
+static const GtNapKey *i_convert_key(const int32_t key)
+{
+    uint32_t i, n = sizeof(KEYMAPS) / sizeof(GtNapKey);
+    for (i = 0; i < n; ++i)
+    {
+        if (KEYMAPS[i].hkey == key)
+            return &KEYMAPS[i];
+    }
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_destroy_callback(GtNapCallback **callback)
+{
+    cassert_no_null(callback);
+    cassert_no_null(*callback);
+    if ((*callback)->block != NULL)
+        hb_itemRelease((*callback)->block);
+
+    heap_delete(callback, GtNapCallback);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Listener *i_gtnap_listener(HB_ITEM *block, const int32_t key, const uint32_t autoclose_id, GtNapWindow *gtwin, FPtr_gtnap_callback func_callback)
+{
+    GtNapCallback *callback = heap_new0(GtNapCallback);
+    cassert_no_null(gtwin);
+    callback->block = block ? hb_itemNew(block) : NULL;
+    callback->gtwin = gtwin;
+    callback->key = key;
+    callback->autoclose_id = autoclose_id;
+    arrpt_append(gtwin->callbacks, callback, GtNapCallback);
+    return listener(callback, func_callback, GtNapCallback);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnWindowHotKey2(GtNapCallback *callback, Event *e)
+{
+    cassert_no_null(callback);
+    cassert_no_null(callback->gtwin);
+    unref(e);
+    if (callback->block != NULL)
+    {
+        PHB_ITEM ritem = hb_itemDo(callback->block, 0);
+        //HB_TYPE type = HB_ITEM_TYPE(ritem);
+        //if (type == HB_IT_LOGICAL)
+        //    ret = (bool_t)hb_itemGetL(retItem);
+        //else if (type == HB_IT_INTEGER)
+        //    ret_val = hb_itemGetNI(retItem);
+        hb_itemRelease(ritem);
+    }
+
+    if (callback->autoclose_id != UINT32_MAX)
+    {
+        callback->gtwin->modal_window_alive = FALSE;
+        window_stop_modal(callback->gtwin->window, NAP_MODAL_HOTKEY_AUTOCLOSE + callback->autoclose_id);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_window_hotkey(const uint32_t wid, const int32_t key, HB_ITEM *block, const bool_t autoclose)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    const GtNapKey *nkey = i_convert_key(key);
+    cassert_no_null(gtwin);
+
+    /* Exists a Harbour/NAppGUI key convertion */
+    if (nkey != NULL)
+    {
+        {
+            uint32_t pos = UINT32_MAX;
+
+            /* Delete a previous callback on this hotkey */
+            arrpt_foreach(callback, gtwin->callbacks, GtNapCallback)
+                if (callback->key == key)
+                {
+                    pos = callback_i;
+                    break;
+                }
+            arrpt_end();
+
+            if (pos != UINT32_MAX)
+                arrpt_delete(gtwin->callbacks, pos, i_destroy_callback, GtNapCallback);
+        }
+
+        {
+            uint32_t autoclose_id = autoclose ? 1 : UINT32_MAX;
+            Listener *listener = i_gtnap_listener(block, key, autoclose_id, gtwin, i_OnWindowHotKey2);
+            window_hotkey(gtwin->window, nkey->key, nkey->modifiers, listener);
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_window_editable(const uint32_t wid, HB_ITEM *is_editable_block)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
@@ -1059,25 +1157,11 @@ void hb_gtnap_label_bgcolor(const uint32_t wid, const uint32_t id, const color_t
 static void i_gtnap_callback(GtNapCallback *callback)
 {
     cassert_no_null(callback);
-    if (callback->codeBlock != NULL)
+    if (callback->block != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
-        hb_itemRelease(retItem);
+        PHB_ITEM ritem = hb_itemDo(callback->block, 0);
+        hb_itemRelease(ritem);
     }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static Listener *i_gtnap_listener(HB_ITEM *block, const int32_t key, const bool_t autoclose, GtNapWindow *gtwin, FPtr_gtnap_callback func_callback)
-{
-    GtNapCallback *callback = heap_new0(GtNapCallback);
-    cassert_no_null(gtwin);
-    callback->codeBlock = block ? hb_itemNew(block) : NULL;
-    callback->cuawin = gtwin;
-    callback->key = key;
-    callback->autoclose = autoclose;
-    arrpt_append(gtwin->callbacks, callback, GtNapCallback);
-    return listener(callback, func_callback, GtNapCallback);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1097,22 +1181,27 @@ static Listener *i_gtnap_listener(HB_ITEM *block, const int32_t key, const bool_
 
 static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 {
-    bool_t ret = FALSE;
+    uint32_t ret_val = UINT32_MAX;
     cassert_no_null(callback);
+    cassert_no_null(callback->gtwin);
     unref(e);
-    if (callback->codeBlock != NULL)
+    if (callback->block != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
-        if (type == HB_IT_LOGICAL)
-            ret = (bool_t)hb_itemGetL(retItem);
-        hb_itemRelease(retItem);
+        PHB_ITEM ritem = hb_itemDo(callback->block, 0);
+        HB_TYPE type = HB_ITEM_TYPE(ritem);
+        //if (type == HB_IT_LOGICAL)
+        //    ret = (bool_t)hb_itemGetL(ritem);
+        if (type == HB_IT_INTEGER)
+            ret_val = hb_itemGetNI(ritem);
+        hb_itemRelease(ritem);
     }
 
-    if (ret == TRUE || callback->autoclose == TRUE)
+    if (/*ret == TRUE ||*/ callback->autoclose_id != UINT32_MAX)
     {
-        callback->cuawin->modal_window_alive = FALSE;
-        window_stop_modal(callback->cuawin->window, WINCLOSE_BUTTON_AUTOCLOSE + callback->key);
+        if (ret_val == UINT32_MAX)
+            ret_val = NAP_MODAL_BUTTON_AUTOCLOSE + callback->autoclose_id;
+        callback->gtwin->modal_window_alive = FALSE;
+        window_stop_modal(callback->gtwin->window, ret_val);
     }
 }
 
@@ -1134,14 +1223,14 @@ static uint32_t i_num_buttons(GtNapWindow *cuawin)
 uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *text_block, HB_ITEM *click_block, const bool_t autoclose, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
-    uint32_t bid = i_num_buttons(gtwin);
+    uint32_t autoclose_id = autoclose ? i_num_buttons(gtwin) + 1 : UINT32_MAX;
     Button *button = NULL;
     Listener *listener = NULL;
     S2Df size;
     uint32_t id = UINT32_MAX;
     cassert_no_null(gtwin);
     button = button_push();
-    listener = i_gtnap_listener(click_block, bid + 1, autoclose, gtwin, i_OnButtonClick);
+    listener = i_gtnap_listener(click_block, INT32_MAX, autoclose_id, gtwin, i_OnButtonClick);
     button_OnClick(button, listener);
     button_font(button, GTNAP_GLOBAL->reduced_font);
     button_vpadding(button, i_button_vpadding());
@@ -1162,19 +1251,19 @@ uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t le
     return id;
 }
 
-
 /*---------------------------------------------------------------------------*/
 
 static void i_OnImageClick(GtNapCallback *callback, Event *e)
 {
     i_gtnap_callback(callback);
-    if (callback->autoclose == TRUE)
-    {
-        callback->cuawin->modal_window_alive = FALSE;
-        window_stop_modal(callback->cuawin->window, WINCLOSE_IMAGE_AUTOCLOSE + callback->key);
-    }
-
+    cassert_no_null(callback);
+    cassert_no_null(callback->gtwin);
     unref(e);
+    if (callback->autoclose_id != UINT32_MAX)
+    {
+        callback->gtwin->modal_window_alive = FALSE;
+        window_stop_modal(callback->gtwin->window, NAP_MODAL_IMAGE_AUTOCLOSE + callback->autoclose_id);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1202,13 +1291,13 @@ uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t lef
     if (image != NULL)
     {
         GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
-        uint32_t imgid = i_num_images(gtwin);
+        uint32_t autoclose_id = autoclose ? i_num_images(gtwin) + 1 : UINT32_MAX;
         ImageView *view;
         Listener *listener;
         S2Df size;
         cassert_no_null(gtwin);
         view = imageview_create();
-        listener = i_gtnap_listener(click_block, imgid + 1, autoclose, gtwin, i_OnImageClick);
+        listener = i_gtnap_listener(click_block, INT32_MAX, autoclose_id, gtwin, i_OnImageClick);
         view_OnClick((View*)view, listener);
         imageview_scale(view, ekGUI_SCALE_AUTO);
         size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
@@ -1313,10 +1402,11 @@ static void i_OnWizardButton(GtNapCallback *callback, Event *e)
 {
     GtNapObject *obj = NULL;
     cassert_no_null(callback);
-    cassert_no_null(callback->cuawin);
+    cassert_no_null(callback->gtwin);
+    cassert(callback->autoclose_id == UINT32_MAX);
     unref(e);
-    obj = arrpt_get(callback->cuawin->gui_objects, callback->key, GtNapObject);
-    i_launch_wizard(callback->cuawin, obj);
+    obj = arrpt_get(callback->gtwin->gui_objects, callback->key, GtNapObject);
+    i_launch_wizard(callback->gtwin, obj);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1433,20 +1523,6 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
 
 /*---------------------------------------------------------------------------*/
 
-static const GtNapKey *i_convert_key(const int32_t key)
-{
-    uint32_t i, n = sizeof(KEYMAPS) / sizeof(GtNapKey);
-    for (i = 0; i < n; ++i)
-    {
-        if (KEYMAPS[i].hkey == key)
-            return &KEYMAPS[i];
-    }
-
-    return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
 static void i_OnKeyWizard(GtNapWindow *cuawin, Event *e)
 {
     cassert_no_null(cuawin);
@@ -1487,7 +1563,7 @@ void hb_gtnap_edit_wizard(const uint32_t wid, const uint32_t id, const uint32_t 
         Listener *listener = NULL;
         cassert_no_null(bobj);
         cassert(bobj->type == ekOBJ_BUTTON);
-        listener = i_gtnap_listener(NULL, id, FALSE, bobj->cuawin, i_OnWizardButton);
+        listener = i_gtnap_listener(NULL, id, UINT32_MAX, bobj->cuawin, i_OnWizardButton);
         bobj->editBoxIndexForButton = id;
         button_OnClick((Button*)bobj->component, listener);
 
@@ -1664,7 +1740,7 @@ static void i_OnTextConfirm(GtNapObject *gtobj, Event *e)
         if (confirm == TRUE)
         {
             gtobj->cuawin->modal_window_alive = FALSE;
-            window_stop_modal(gtobj->cuawin->window, WINCLOSE_TEXTVIEW_CONFIRM);
+            window_stop_modal(gtobj->cuawin->window, NAP_MODAL_TEXT_CONFIRM);
         }
     }
 }
@@ -1796,10 +1872,10 @@ static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const 
     if (codeBlock != NULL)
     {
         GtNapCallback *callback = heap_new0(GtNapCallback);
-        callback->codeBlock = hb_itemNew(codeBlock);
-        callback->cuawin = cuawin;
+        callback->block = hb_itemNew(codeBlock);
+        callback->gtwin = cuawin;
         callback->key = key;
-        callback->autoclose = autoclose;
+        callback->autoclose_id = autoclose;
         arrpt_append(cuawin->callbacks, callback, GtNapCallback);
         return listener(callback, func_callback, GtNapCallback);
     }
@@ -1876,17 +1952,6 @@ static Listener *i_gtnap_cualib_listener(const uint32_t codeBlockParamId, const 
 
 
 
-/*---------------------------------------------------------------------------*/
-
-static void i_destroy_callback(GtNapCallback **callback)
-{
-    cassert_no_null(callback);
-    cassert_no_null(*callback);
-    if ((*callback)->codeBlock != NULL)
-        hb_itemRelease((*callback)->codeBlock);
-
-    heap_delete(callback, GtNapCallback);
-}
 
 /*---------------------------------------------------------------------------*/
 
@@ -2197,40 +2262,40 @@ void hb_gtnap_retFontGC(Font *font)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_callback(GtNapCallback *callback, Event *e)
-{
-    cassert_no_null(callback);
-    unref(e);
-    if (callback->codeBlock != NULL)
-    {
-        PHB_ITEM phiEvent = hb_itemNew(NULL);
-        PHB_ITEM retItem = NULL;
-        hb_itemPutPtr(phiEvent, e);
-        cassert_msg(e != NULL, "hb_gtnap_callback: NULL Event");
-        retItem = hb_itemDo(callback->codeBlock, 1, phiEvent);
-        hb_itemRelease(phiEvent);
-        hb_itemRelease(retItem);
-    }
-}
+//void hb_gtnap_callback(GtNapCallback *callback, Event *e)
+//{
+//    cassert_no_null(callback);
+//    unref(e);
+//    if (callback->block != NULL)
+//    {
+//        PHB_ITEM phiEvent = hb_itemNew(NULL);
+//        PHB_ITEM retItem = NULL;
+//        hb_itemPutPtr(phiEvent, e);
+//        cassert_msg(e != NULL, "hb_gtnap_callback: NULL Event");
+//        retItem = hb_itemDo(callback->block, 1, phiEvent);
+//        hb_itemRelease(phiEvent);
+//        hb_itemRelease(retItem);
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
-bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e)
-{
-    bool_t ret = FALSE;
-    cassert_no_null(callback);
-    unref(e);
-    if (callback->codeBlock != NULL)
-    {
-        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
-        cassert(type == HB_IT_LOGICAL);
-        ret = (bool_t)hb_itemGetL(retItem);
-        hb_itemRelease(retItem);
-    }
-
-    return ret;
-}
+//bool_t hb_gtnap_callback_bool(GtNapCallback *callback, Event *e)
+//{
+//    bool_t ret = FALSE;
+//    cassert_no_null(callback);
+//    unref(e);
+//    if (callback->codeBlock != NULL)
+//    {
+//        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
+//        HB_TYPE type = HB_ITEM_TYPE(retItem);
+//        cassert(type == HB_IT_LOGICAL);
+//        ret = (bool_t)hb_itemGetL(retItem);
+//        hb_itemRelease(retItem);
+//    }
+//
+//    return ret;
+//}
 
 /*---------------------------------------------------------------------------*/
 //
@@ -3561,13 +3626,13 @@ ArrSt(uint32_t) *hb_gtnap_cualib_tableview_select_multiple_row(void)
 static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
 {
     bool_t ret = FALSE;
-    uint32_t ret_val = 1001;
+    uint32_t ret_val = 8000;
 
     cassert_no_null(callback);
     unref(e);
-    if (callback->codeBlock != NULL)
+    if (callback->block != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(callback->codeBlock, 0);
+        PHB_ITEM retItem = hb_itemDo(callback->block, 0);
         HB_TYPE type = HB_ITEM_TYPE(retItem);
         if (type == HB_IT_LOGICAL)
             ret = (bool_t)hb_itemGetL(retItem);
@@ -3576,12 +3641,10 @@ static void i_OnWindowHotKey(GtNapCallback *callback, Event *e)
         hb_itemRelease(retItem);
     }
 
-    log_printf("Pressed hotkey %d", callback->key);
-    if (ret == TRUE || callback->autoclose == TRUE)
+    if (ret == TRUE || callback->autoclose_id == TRUE)
     {
-        log_printf("--> STOP CUALIB Modal Window: %p 'i_OnWindowHotKey'", callback->cuawin->window);
-        callback->cuawin->modal_window_alive = FALSE;
-        window_stop_modal(callback->cuawin->window, ret_val);
+        callback->gtwin->modal_window_alive = FALSE;
+        window_stop_modal(callback->gtwin->window, ret_val);
     }
 }
 
@@ -5010,7 +5073,10 @@ extern String *hb_block_to_utf8(HB_ITEM *item)
 
 static void i_OnTableViewSelect(GtNapCallback *callback, Event *e)
 {
-    hb_gtnap_callback(callback, e);
+    unref(callback);
+    unref(e);
+    cassert(FALSE);
+    //hb_gtnap_callback(callback, e);
     log_printf("TableView selection changed");
 }
 

@@ -25,6 +25,17 @@ HB_FUNC( NAP_WINDOW )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_WINDOW_HOTKEY )
+{
+    uint32_t wid = hb_parni(1);
+    int32_t key = hb_parni(2);
+    HB_ITEM *block = hb_param(3, HB_IT_BLOCK);
+    bool_t autoclose = (bool_t)hb_parl(4);
+    hb_gtnap_window_hotkey(wid, key, block, autoclose);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_WINDOW_SCROLL )
 {
     uint32_t wid = hb_parni(1);
