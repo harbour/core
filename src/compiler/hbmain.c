@@ -1122,6 +1122,9 @@ PHB_HDECLARED hb_compMethodAdd( HB_COMP_DECL, PHB_HCLASS pClass, const char * sz
 {
    PHB_HDECLARED pMethod;
 
+   if( HB_COMP_PARAM->iWarnings < 3 )
+      return NULL;
+
    if( ! pClass )
    {
       char buffer[ 80 ];
@@ -1136,9 +1139,6 @@ PHB_HDECLARED hb_compMethodAdd( HB_COMP_DECL, PHB_HCLASS pClass, const char * sz
    #if 0
    printf( "\nDeclaring Method: %s of Class: %s Pointer: %li\n", szMethodName, pClass->szName, pClass );
    #endif
-
-   if( HB_COMP_PARAM->iWarnings < 3 )
-      return NULL;
 
    if( ( pMethod = hb_compMethodFind( pClass, szMethodName ) ) != NULL )
    {
