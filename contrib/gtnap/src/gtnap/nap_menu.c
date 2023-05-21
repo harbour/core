@@ -208,7 +208,7 @@ static void i_run_option(MenuVert *menu)
 
         if (menu->autoclose == TRUE)
         {
-            bool_t close = TRUE;
+            bool_t close = FALSE;
             if (HB_IS_LOGICAL(ritem))
                 close = (bool_t)hb_itemGetL(ritem);
 

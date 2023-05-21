@@ -15,9 +15,9 @@
 
 #define NAP_MODAL_HOTKEY_AUTOCLOSE  2000    /* + vkey_t use NAP_INKEY(ret - NAP_MODAL_HOTKEY_AUTOCLOSE)*/
 
-#define NAP_MODAL_IMAGE_AUTOCLOSE   3000    /* + index of image */
+#define NAP_MODAL_IMAGE_AUTOCLOSE   3000    /* + index of image >= 1 */
 
-#define NAP_MODAL_MENU_AUTOCLOSE    4000    /* + index of option */
+#define NAP_MODAL_MENU_AUTOCLOSE    4000    /* + index of option >= 1 */
 
 #define NAP_MODAL_TEXT_CONFIRM      5000
 

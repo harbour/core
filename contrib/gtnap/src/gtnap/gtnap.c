@@ -999,6 +999,114 @@ void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_num_buttons(GtNapWindow *cuawin)
+{
+    uint32_t n = 0;
+    cassert_no_null(cuawin);
+    arrpt_foreach_const(obj, cuawin->gui_objects, GtNapObject)
+        if (obj->type == ekOBJ_BUTTON)
+            n += 1;
+    arrpt_end();
+    return n;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapObject *i_get_button(GtNapWindow *cuawin, const uint32_t index)
+{
+    uint32_t i = 0;
+    cassert_no_null(cuawin);
+    arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
+        if (obj->type == ekOBJ_BUTTON)
+        {
+            if (i == index)
+                return obj;
+            i += 1;
+        }
+    arrpt_end();
+    cassert(FALSE);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_set_defbutton(GtNapWindow *cuawin)
+{
+    GtNapObject *button = i_get_button(cuawin, cuawin->default_button);
+    if (button != NULL)
+        window_defbutton(cuawin->window, (Button*)button->component);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapWindow *i_parent_cuawin(GtNap *gtnap)
+{
+    uint32_t id = 0;
+    cassert_no_null(gtnap);
+    id = arrst_size(gtnap->windows, GtNapWindow);
+    if (id >= 2)
+        return arrst_get(gtnap->windows, id - 2, GtNapWindow);
+    else
+        return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_window_modal(const uint32_t wid)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    cassert_no_null(gtwin);
+
+    if (gtwin->is_configured == FALSE)
+        i_gtwin_configure(gtwin);
+
+    if (gtwin->buttons_navigation == TRUE)
+    {
+        uint32_t n = i_num_buttons(gtwin);
+        if (n > 0)
+        {
+            if (gtwin->default_button == UINT32_MAX)
+                gtwin->default_button = 0;
+            cassert(gtwin->default_button < n);
+            i_set_defbutton(gtwin);
+        }
+    }
+
+    /* Launch the window */
+    {
+        GtNapWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
+        V2Df pos;
+        uint32_t ret = 0;
+
+        if (parent == NULL)
+        {
+            cassert(arrst_size(GTNAP_GLOBAL->windows, GtNapWindow) == 1);
+        }
+
+        pos.x = (real32_t)(gtwin->left * GTNAP_GLOBAL->cell_x_size);
+        pos.y = (real32_t)(gtwin->top * GTNAP_GLOBAL->cell_y_size);
+
+        if (parent != NULL)
+        {
+            const GtNapWindow *rootwin = arrst_get_const(GTNAP_GLOBAL->windows, 0, GtNapWindow);
+            V2Df ppos = window_get_origin(rootwin->window);
+            pos.x += ppos.x /*- 2 * GTNAP_GLOBAL->cell_x_size*/;
+            pos.y += ppos.y;
+
+            if (gtwin->toolbar != NULL)
+                pos.y -= (real32_t)(GTNAP_GLOBAL->cell_y_size - (gtwin->toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size));
+        }
+
+        window_origin(gtwin->window, pos);
+        gtwin->is_closed_by_esc = FALSE;
+        gtwin->modal_window_alive = TRUE;
+        ret = window_modal(gtwin->window, parent ? parent->window : NULL);
+        return ret;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static uint32_t i_add_object(const objtype_t type, const int32_t top, const int32_t left, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, const bool_t in_scroll, GuiComponent *component, GtNapWindow *gtwin)
 {
     uint32_t id;
@@ -1215,19 +1323,6 @@ static void i_OnButtonClick(GtNapCallback *callback, Event *e)
         callback->gtwin->modal_window_alive = FALSE;
         window_stop_modal(callback->gtwin->window, NAP_MODAL_BUTTON_AUTOCLOSE + callback->autoclose_id);
     }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static uint32_t i_num_buttons(GtNapWindow *cuawin)
-{
-    uint32_t n = 0;
-    cassert_no_null(cuawin);
-    arrpt_foreach_const(obj, cuawin->gui_objects, GtNapObject)
-        if (obj->type == ekOBJ_BUTTON)
-            n += 1;
-    arrpt_end();
-    return n;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2481,19 +2576,6 @@ void hb_gtnap_cualib_init_log(void)
     osbs_start();
     log_output(FALSE, FALSE);
     log_file("C:\\Users\\USUARIO\\AppData\\Roaming\\exemplo\\log2.txt");
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNapWindow *i_parent_cuawin(GtNap *gtnap)
-{
-    uint32_t id = 0;
-    cassert_no_null(gtnap);
-    id = arrst_size(gtnap->windows, GtNapWindow);
-    if (id >= 2)
-        return arrst_get(gtnap->windows, id - 2, GtNapWindow);
-    else
-        return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3935,33 +4017,6 @@ static uint32_t i_num_edits(GtNapWindow *cuawin)
             n += 1;
     arrpt_end();
     return n;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNapObject *i_get_button(GtNapWindow *cuawin, const uint32_t index)
-{
-    uint32_t i = 0;
-    cassert_no_null(cuawin);
-    arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
-        if (obj->type == ekOBJ_BUTTON)
-        {
-            if (i == index)
-                return obj;
-            i += 1;
-        }
-    arrpt_end();
-    cassert(FALSE);
-    return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_set_defbutton(GtNapWindow *cuawin)
-{
-    GtNapObject *button = i_get_button(cuawin, cuawin->default_button);
-    if (button != NULL)
-        window_defbutton(cuawin->window, (Button*)button->component);
 }
 
 /*---------------------------------------------------------------------------*/

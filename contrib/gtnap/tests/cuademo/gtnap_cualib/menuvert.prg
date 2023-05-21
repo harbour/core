@@ -4,7 +4,6 @@
 
 /*
 * objeto MENU VERTICAL
-*
 */
 #INCLUDE "inkey.ch"
 #INCLUDE "common.ch"
@@ -51,8 +50,7 @@ ENDIF
 *
 * NOTA: Menu vertical possui uma única coluna, nunca tendo separador de colunas.
 *       Decidiu-se instanciar da subclasse somente para ficar igual à seleção em arquivo e em vetor.
-VX_Sele := ;
-   TBROWSESubClass():New(Lin1Livre(VX_Janela) , Col1Livre(VX_Janela),;
+VX_Sele := TBROWSESubClass():New(Lin1Livre(VX_Janela) , Col1Livre(VX_Janela),;
                          Lin2Livre(VX_Janela) , Col2Livre(VX_Janela))
 
 *
@@ -210,7 +208,6 @@ LOCAL L_ForcaParada, N_Cont
 LOCAL N_Row_Inicial_Util
 LOCAL N_mRow, N_mCol, N_Desloca, N_RegiaoMouse, N_Keyboard
 LOCAL N_Desloca_Aux, N_RowPos_Ant
-
 LOCAL N_PaintRefresh_Old, X_Retorno_Eval, L_FechouComAutoClose := .F.
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao
 LOCAL B_Ajuda_Ant
@@ -221,7 +218,7 @@ LOCAL N_MenID, L_Coords, X_Retorno
 #DEFINE C_CdOpcao VX_Sele:CARGO[17]
 
 IF SOB_MODO_GRAFICO()
-    NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}, .F.)
+    NAP_WINDOW_HOTKEY(N_WindowNum, K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}, .F.)
 ELSE
     B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,V_Lst_CdOpcao[N_Selecio,1],V_Lst_CdOpcao)}) // salvar help anterior
 ENDIF
@@ -250,8 +247,9 @@ IF L_ForcaLerTudo
                 NAP_MENU_ADD(N_WindowNum, N_MenID, {||V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]}, V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
             NEXT
 
-            X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
+            X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
 
+            // MenuVert return True (autoclose) or False (ESC or [X])
             IF X_Retorno == NAP_MODAL_ESC
                 L_FechouComAutoClose = .F.
             ELSEIF X_Retorno == NAP_MODAL_X_BUTTON
@@ -628,8 +626,6 @@ ENDDO
 MontarSetas(VX_Janela,L_RolaCima,L_RolaBaixo,_SELE_SIMPLES)   // dos indicativos de rolamento
 L_AtivaGui := .T.
 *
-
-
 
 *************************
 PROC SETA_SKIPBLOCK_VETOR(VX_Janela)

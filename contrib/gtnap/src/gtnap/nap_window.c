@@ -82,10 +82,14 @@ HB_FUNC( NAP_WINDOW_ERRDATE )
     hb_gtnap_window_errdate(wid, error_date_block);
 }
 
+/*---------------------------------------------------------------------------*/
 
-
-
-
+HB_FUNC( NAP_WINDOW_MODAL )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t ret = hb_gtnap_window_modal(wid);
+    hb_retni(ret);
+}
 
 
 

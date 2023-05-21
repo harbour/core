@@ -43,6 +43,8 @@ extern void hb_gtnap_window_errdate(const uint32_t wid, HB_ITEM *error_date_bloc
 
 extern void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
 
+extern uint32_t hb_gtnap_window_modal(const uint32_t wid);
+
 extern uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t left, HB_ITEM *text_block, const bool_t in_scroll);
 
 extern uint32_t hb_gtnap_label_message(const uint32_t wid, const int32_t top, const int32_t left, const bool_t in_scroll);
