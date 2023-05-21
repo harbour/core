@@ -80,8 +80,12 @@ extern void hb_gtnap_menu_add(const uint32_t wid, uint32_t id, HB_ITEM *text_blo
 extern uint32_t hb_gtnap_menu_selected(const uint32_t wid, uint32_t id);
 
 
-
-
+//
+// Future improvements for more generalist GTNAP
+//
+// hb_gtnap_edit_wizard not in gtnap (but in cualib)
+// MenuVert option autoclose decision not in gtnap (but in cualib) (.T., .F., .NIL., No return, Selecaov, etc)
+//
 
 
 /*

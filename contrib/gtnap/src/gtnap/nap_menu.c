@@ -202,26 +202,31 @@ static void i_OnExit(Panel *panel, Event *e)
 static void i_run_option(MenuVert *menu)
 {
     const MenuOpt *opt = arrst_get_const(menu->opts, menu->selected, MenuOpt);
+    bool_t close = FALSE;
+
     if (opt->block != NULL)
     {
         PHB_ITEM ritem = hb_itemDo(opt->block, 0);
 
         if (menu->autoclose == TRUE)
         {
-            bool_t close = FALSE;
             if (HB_IS_LOGICAL(ritem))
                 close = (bool_t)hb_itemGetL(ritem);
-
-            if (close == TRUE)
-            {
-                Window *window = menu->window;
-                if (window == NULL)
-                    window = _component_window((const GuiComponent*)menu->view);
-                window_stop_modal(window, NAP_MODAL_MENU_AUTOCLOSE + 1 + menu->selected);
-            }
         }
 
         hb_itemRelease(ritem);
+    }
+    else
+    {
+        close = menu->autoclose;
+    }
+
+    if (close == TRUE)
+    {
+        Window *window = menu->window;
+        if (window == NULL)
+            window = _component_window((const GuiComponent*)menu->view);
+        window_stop_modal(window, NAP_MODAL_MENU_AUTOCLOSE + 1 + menu->selected);
     }
 }
 

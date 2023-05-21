@@ -4,7 +4,6 @@
 
 /*
 * objeto SELECAO EM VETOR
-*
 */
 
 #INCLUDE "inkey.ch"
@@ -56,31 +55,23 @@ IF N_TP_Selecao # _SELE_SIMPLES
       ? MEMVAR->JANELA_JA_TEM_ACAO_BARRA_DE_ESPACO_AUTOMATICO
    ENDIF
 
+   // FRAN: Improve IN TABLEVIEW-based selecaov
    IF SOB_MODO_GRAFICO()
-    ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_CUALIB_SELECT_CURRENT_VECTOR()},.F.,;
-        "B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
-        .T.)
-    NAP_CUALIB_HOTKEY(K_SPACE, ,{||NAP_CUALIB_SELECT_CURRENT_VECTOR()},.F.)
-ELSE
-
-   ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,;
+        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_CUALIB_SELECT_CURRENT_VECTOR()},.F.,;
             "B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
             .T.)
+        NAP_CUALIB_HOTKEY(K_SPACE, ,{||NAP_CUALIB_SELECT_CURRENT_VECTOR()},.F.)
+    ELSE
+
+        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,;
+                    "B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
+                    .T.)
 ENDIF
 
 ENDIF
 *
 IF L_AutoClose
-    // IF SOB_MODO_GRAFICO()
-    //     // Fran: window_stop_modal needs to know the current menu selection before stop
-    //     ADDBOTAO(VX_Janela,"Enter=selecionar",{|| GtNapCloseWithMenuSel(VX_Janela)},.T.,;
-    //         "B17862",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
-    //         .T.)
-    // ELSE
-        ADDBOTAO(VX_Janela,"Enter=selecionar",{||.T.},.T.,;
-            "B17862",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
-            .T.)
-    //ENDIF
+    ADDBOTAO(VX_Janela,"Enter=selecionar",{||.T.},.T.,"B17862",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
 ENDIF
 *
 AJUSTA_BOTOES(VX_Janela)  // ajusta Lin2Livre à quantidade de botões de função
@@ -144,7 +135,6 @@ IF N_TP_Selecao # _SELE_SIMPLES
 ENDIF
 *
 #DEFINE B_2LinCorrente  NIL   // será atribuído mais abaixo
-*
 #DEFINE L_PriFora      .F.    // indica se primeira linha não está na janela
 #DEFINE L_UltFora      .F.    // indica se última linha não está na janela
 #DEFINE L_ForcaLerTudo .T.    // forçar um refreshall() + estabilização das setas
@@ -164,8 +154,8 @@ VX_Sele:CARGO := { B_2LinCorrente , L_PriFora , L_UltFora , ;
                    L_AutoClose, VN_Selecio, L_MostraGrade,;
                    N_Congela , N_TP_Selecao, N_AlturaCabec,;
                    N_Selecio , N_ColunaIniVetor,;
-		   V_Opcoes, L_TemHotKey, V_Lst_CdOpcao, L_TeveRolaHorizontal,;
-            L_NaoRolaVertical, L_NaoRolaHorizontal  }
+		           V_Opcoes, L_TemHotKey, V_Lst_CdOpcao, L_TeveRolaHorizontal,;
+                   L_NaoRolaVertical, L_NaoRolaHorizontal  }
 
 #UNDEF B_2LinCorrente
 #UNDEF L_PriFora
@@ -185,7 +175,7 @@ VX_Sele:CARGO := { B_2LinCorrente , L_PriFora , L_UltFora , ;
 *
 N_TP_Jan  := _JAN_SELE_VETO_20    // especializando
 VX_SubObj := VX_Sele              // a janela
-B_Metodo  := {||Selecionar(VX_Janela)}
+B_Metodo  := { || Selecionar(VX_Janela) }
 *
 * TEM de ser via DEFINE, pois existe bloco de código
 * citando uma posição específica da variável CARGO
@@ -193,8 +183,7 @@ B_Metodo  := {||Selecionar(VX_Janela)}
 #DEFINE B_LinCorrente vX_Sele:CARGO[01]
 #DEFINE VN_Selecio    VX_Sele:CARGO[08]
 IF N_TP_Selecao # _SELE_SIMPLES
-   AnexeCol(VX_Janela, NIL,;
-              { || IIF(ASCAN(VN_Selecio,EVAL(B_LinCorrente))==0," ","»")})
+   AnexeCol(VX_Janela, NIL, { || IIF(ASCAN(VN_Selecio,EVAL(B_LinCorrente))==0," ","»")})
 ENDIF
 #UNDEF VN_Selecio
 #UNDEF B_LinCorrente
@@ -235,11 +224,6 @@ RETURN NIL
 #DEFINE L_NaoRolaVertical    VX_Sele:CARGO[19]      // FRAN: With vertical scroll bar
 #DEFINE L_NaoRolaHorizontal  VX_Sele:CARGO[20]      // FRAN: With horizontal scroll bar
 
-
-// STATIC FUNCTION GtNapCloseWithMenuSel( VX_Janela )
-//     LOCAL N_Sel := NAP_MODAL_MENU_AUTOCLOSE + NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
-// RETURN N_Sel
-
 *
 **************************
 STATIC FUNCTION Selecionar ( VX_Janela )
@@ -271,24 +255,9 @@ LOCAL X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, N_TeclaUpper, L_PodeExecutar
 *
 LOCAL N_Count, O_Column, N_Width, C_Title
-
-//
-//  FRAN: Unused - This code is win32 (GtWvW)
-//
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-
-
 *
 *
-L_Abortado := .F.         // se .T. se teclado ESC
+L_Abortado := .F.  // se .T. se teclado ESC
 *
 * antes de tudo, remontar a tela caso usuário tenha solicitado
 *
@@ -305,11 +274,12 @@ IF L_ForcaLerTudo
                 L_Coords[4]++
             ENDIF
 
-            // FRAN: Browse de vetor WITH Grade is implemented with a TableView control
+            // Fran: GTNAP
+            // Browse de vetor WITH Grade is implemented with a TableView control
             // Browse de vetor WITHOUT Grade is implemented with a MenuVert control
             IF L_MostraGrade
 
-
+                // FRAN: Clean when gtnap tableview refactor
                 V_TableView := NAP_TABLEVIEW_CREATE()
 
                 IF L_NaoRolaHorizontal == .F.
@@ -336,7 +306,6 @@ IF L_ForcaLerTudo
                 ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
                     NAP_TABLEVIEW_MULTISEL(V_TableView, .T., .T.)
                 ENDIF
-
 
                 // FRAN: NO database connection in Browse de vetor
                 //NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView)
@@ -381,164 +350,67 @@ IF L_ForcaLerTudo
 
                 LOG_PRINT("Current VETOR VN_Selecio" + hb_ntos(LEN(VN_Selecio)))
 
-            //
-            // FRAN: Automatic first selection and change selection event
-            //
-            NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
+                //
+                // FRAN: Automatic first selection and change selection event
+                //
+                NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
 
-            IF N_TP_Selecao == _SELE_SIMPLES
-                NAP_TABLEVIEW_SELECT(V_TableView, 1)
-            ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-                //NAP_TABLEVIEW_SELECT(V_TableView, 1)
-                NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
-                NAP_CUALIB_VETOR_SELECT(VN_Selecio)
-                // //NAP_CUALIB_SET_JANELA(VX_Sele)
-                // //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
-                // NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
-                // IF N_Congela # 0
-                //     NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
-                // ENDIF
+                IF N_TP_Selecao == _SELE_SIMPLES
+                    NAP_TABLEVIEW_SELECT(V_TableView, 1)
+                ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+                    //NAP_TABLEVIEW_SELECT(V_TableView, 1)
+                    NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
+                    NAP_CUALIB_VETOR_SELECT(VN_Selecio)
+                    // //NAP_CUALIB_SET_JANELA(VX_Sele)
+                    // //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
+                    // NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
+                    // IF N_Congela # 0
+                    //     NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
+                    // ENDIF
 
-            ENDIF
+                ENDIF
 
             ELSE  // NOT L_MostrarGrade
-            LOG_PRINT("Menu Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
 
-            N_MenID := NAP_MENU(N_WindowNum, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], L_AutoClose, .F.)
-            N_ItemId := N_MenID
-            //V_MenuVert := NAP_MENUVERT_CREATE()
+                N_MenID := NAP_MENU(N_WindowNum, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], L_AutoClose, .F.)
+                N_ItemId := N_MenID
 
-            FOR N_Cont := 1 TO LEN(V_Opcoes)
-                //IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] // # 0  // tem tecla hotkey
-                NAP_MENU_ADD(N_WindowNum, N_MenID, {||V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]}, V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
-                    //NAP_MENUVERT_CUALIB_ADD(V_MenuVert, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
-                //ENDIF
-            NEXT
-
-            // IF L_AutoClose
-            //     NAP_MENUVERT_AUTOCLOSE(V_MenuVert)
-            // ENDIF
-
-            //NAP_CUALIB_MENUVERT(V_MenuVert, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
+                FOR N_Cont := 1 TO LEN(V_Opcoes)
+                    NAP_MENU_ADD(N_WindowNum, N_MenID, {||V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]}, NIL/*V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO]*/, V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
+                NEXT
 
             ENDIF
 
-            // * Constantes do vetor de ações de teclado (V_LstAcoes) das janelas
-            // #DEFINE _ACAO_KEYBOARD        1
-            // #DEFINE _ACAO_KEYBOARD_CASE   2
-            // #DEFINE _ACAO_BLOCO_ACAO      3
-            // #DEFINE _ACAO_AUTOCLOSE       4
-            // #DEFINE _ACAO_CDBOTAO         5
-            // #DEFINE _ACAO_ALIAS_MUDA      6
-            // #DEFINE _ACAO_RECNO_MUDA      7
-            // #DEFINE _ACAO_FILTER_MUDA     8
-            // #DEFINE _ACAO_ORDER_MUDA      9
-            // #DEFINE _ACAO_EOFOK          10
-            // #DEFINE _ACAO_HANDLE_MUDA    11
-            // #DEFINE _ACAO_MUDADADOS      12
-
-            // FOR N_Cont := 1 TO LEN(V_LstAcoes)
-            //     NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
-            // NEXT
-
-
-            // // FRAN: TODO ADD GtNapCloseWithMenuSel() to BUTTONS
-            // // Y eliminarla de 'ADDBOTAO'
-            // FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
-            //     V_Botao := V_RegiaoBotoes[N_Cont]
-            //     NAP_LOG("!!!!!!!!!!!! BOTAO: " + hb_ntos(N_Cont) + " ID: " + hb_ntos(V_Botao[_BOTAO_HANDLE_PUSHBUTTON]))
-            // NEXT
-
-
-            // FRAN: TODO ADD GtNapCloseWithMenuSel() to HOTKEYS
             FOR N_Cont := 1 TO LEN(V_LstAcoes)
-                //NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
-
                 IF V_LstAcoes[N_Cont,_ACAO_KEYBOARD] # NIL
                     NAP_WINDOW_HOTKEY(N_WindowNum, V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
-                    //NAP_CUALIB_HOTKEY(V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
                 ENDIF
             NEXT
 
+            X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
 
-            X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
-
-            IF X_Retorno == NAP_MODAL_ESC
-                L_Abortado := .T.
-            ELSEIF X_Retorno == NAP_MODAL_X_BUTTON
-                L_Abortado := .T.
-            ELSEIF L_MostraGrade
-                // Return based in TableView
-                Alert( "Invalid TableView X_Retorno (" + hb_ntos(X_Retorno) + ") in selecaov")
+            IF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON
                 L_Abortado := .T.
             ELSE
-                // Return based in MenuVert
-                IF X_Retorno > NAP_MODAL_MENU_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_MENU_AUTOCLOSE + LEN(V_Opcoes)
-                    X_Retorno := X_Retorno - NAP_MODAL_MENU_AUTOCLOSE
-                    L_Abortado := .F.
-                ELSEIF X_Retorno > NAP_MODAL_BUTTON_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
-                    X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
-                    L_Abortado := .F.
-                ELSEIF X_Retorno > NAP_MODAL_HOTKEY_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_HOTKEY_AUTOCLOSE + NAP_MAX_VKEY
-                    X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
-                    L_Abortado := .F.
-                ELSEIF X_Retorno > NAP_MODAL_IMAGE_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_IMAGE_AUTOCLOSE + NAP_MAX_IMAGES
-                    X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
-                    L_Abortado := .F.
-                ELSE
-                    Alert( "Invalid Menu X_Retorno (" + hb_ntos(X_Retorno) + ") in selecaov")
-                    L_Abortado := .T.
-                ENDIF
+                L_Abortado := .F.
             ENDIF
 
         ELSE
 
-        *
-        * No harbour, a atribuição da variável FREEZE reexecuta os codes blocks,
-        * o que causava erro quando um registro era deletado. Corrigir este
-        * problema usando a variável L_PrimAtivacao, que faz com que o FREEZE
-        * somente seja setado uma vez por janela (na primeira ativação).
-        *
-        VX_Sele:FREEZE := N_Congela
+            *
+            * No harbour, a atribuição da variável FREEZE reexecuta os codes blocks,
+            * o que causava erro quando um registro era deletado. Corrigir este
+            * problema usando a variável L_PrimAtivacao, que faz com que o FREEZE
+            * somente seja setado uma vez por janela (na primeira ativação).
+            *
+            VX_Sele:FREEZE := N_Congela
 
-    ENDIF  // SOB_MODO_GRAFICO()
+        ENDIF  // SOB_MODO_GRAFICO()
 
-      *
-    //   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-    //      IF SOB_MODO_GRAFICO()
-    //         IF L_MostraGrade
-    //            * montar grid
-    //         //    AddGuiObject(VX_Janela,DesenhaGridH(VX_Janela,VX_Sele),;
-    //         //                 CoordenadasBrowse(VX_Sele))
-    //         //    AddGuiObject(VX_Janela,DesenhaGridV(VX_Janela,VX_Sele),;
-    //         //                 CoordenadasBrowse(VX_Sele))
-    //         //    AddGuiObject(VX_Janela,DesenhaBoxExterno(VX_Janela,VX_Sele),;
-    //         //                 CoordenadasBrowse(VX_Sele))
-    //         ELSEIF N_TP_Selecao == _SELE_SIMPLES
-    //            * dar destaque ao item correntemente selecionado
-    //         //    AddGuiObject(VX_Janela,;
-    //         //                 DesenhaBoxItemSelecionado(VX_Janela,VX_Sele),;
-    //         //                 CoordenadasBrowse(VX_Sele))
-    //         ENDIF
-    //         *
-    //         * colocar sublinhado sob as teclas de atalho
-    //         // FOR N_Cont := 1 TO LEN(V_Opcoes)
-    //         //     IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] # 0  // tem tecla hotkey
-    //         //        AddGuiObject(VX_Janela,DesenhaAtalho(VX_Janela,VX_Sele,N_Cont),;
-    //         //                     CoordenadasBrowse(VX_Sele))
-    //         //     ENDIF
-    //         // NEXT
-    //      ENDIF
-    //   #elif defined(__PLATFORM__LINUX)
-    //      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-    //   #else
-    //      #erro "Código não adaptado para esta plataforma"
-    //   #endif
-      *
-   ENDIF    // L_PrimAtivacao
-   *
+    ENDIF    // L_PrimAtivacao
+    *
 
-   IF .NOT. SOB_MODO_GRAFICO()
+    IF .NOT. SOB_MODO_GRAFICO()
         IF N_TP_Selecao # _SELE_SIMPLES .AND. VX_Sele:COLPOS == 1   &&* TALVEZ SAIA
             VX_Sele:COLPOS := 2          // cursor não acessa indicativo de seleção
         ENDIF
@@ -551,18 +423,15 @@ IF L_ForcaLerTudo
         N_ColunaIniVetor := COL()
         L_AtivaGui := .T.
     ENDIF() // IF .NOT. SOB_MODO_GRAFICO()
-
    *
 ENDIF   // L_ForcaLerTudo
 *
-
 
 //
 //  FRAN: This custom event loop is only for text-based versions
 //  GTNAP/NAppGUI have their own event loop
 //
 IF .NOT. SOB_MODO_GRAFICO()
-
 
     L_RolaCima := L_RolaBaixo := .F.
     *
@@ -721,11 +590,6 @@ IF .NOT. SOB_MODO_GRAFICO()
                 ENDIF
             ELSEIF (N_RegiaoMouse == BOTAO_IDENTIFICADO .OR. ;  // N_Keyboard preenchido
                     N_RegiaoMouse == BOTAO_NAO_IDENTIFICADO)    // N_Keyboard não preenchido
-
-                // FRAN: Here only text-based versions
-                // IF SOB_MODO_GRAFICO()
-                //     ? MEMVAR->MODO_GRAFICO_NAO_USA_ESTE_TRECHO_DE_CODIGO
-                // ENDIF
                 *
                 * Atualizar completamente a tela antes de executar o bloco de código
                 Atualizar_Tela_Browse(VX_Janela,VX_Sele,L_RolaCima,L_RolaBaixo)
@@ -762,20 +626,6 @@ IF .NOT. SOB_MODO_GRAFICO()
                 * Atualizar completamente a tela antes de executar o bloco de código
                 Atualizar_Tela_Browse(VX_Janela,VX_Sele,L_RolaCima,L_RolaBaixo)
                 *
-                //
-                //  FRAN: Unused - This code is win32 (GtWvW)
-                //
-                //   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                //      IF SOB_MODO_GRAFICO()
-                //         WVW_SetPaintRefresh(N_PaintRefresh_Old)
-                //      ENDIF
-                //   #elif defined(__PLATFORM__LINUX)
-                //      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                //   #else
-                //      #erro "Código não adaptado para esta plataforma"
-                //   #endif
-                *
-
                 //!! no futuro, remover
                 ASSUMIR_NIL_OU_FALSE({V_Imagem[_IMAGEM_ALIAS_MUDA],;
                                         V_Imagem[_IMAGEM_RECNO_MUDA],;
@@ -791,19 +641,6 @@ IF .NOT. SOB_MODO_GRAFICO()
                     LOGAINFO_ID_TELA_RELAT_BOTAO("botão/ação",V_Imagem[_IMAGEM_CDBOTAO],;
                                                 C_CdTela,"Imagem "+V_Imagem[_IMAGEM_ARQUIVO])   // Log de uso de imagem no sistema
                 ENDIF
-
-                //
-                //  FRAN: Unused - This code is win32 (GtWvW)
-                //
-                //   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                //      IF SOB_MODO_GRAFICO()
-                //         WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-                //      ENDIF
-                //   #elif defined(__PLATFORM__LINUX)
-                //      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                //   #else
-                //      #erro "Código não adaptado para esta plataforma"
-                //   #endif
                 *
                 IF V_Imagem[_IMAGEM_AUTOCLOSE]
                     DEFAULT X_Retorno_Eval TO .F. // não fechar janela de menu
@@ -847,20 +684,6 @@ IF .NOT. SOB_MODO_GRAFICO()
                                             VX_Sele:ROWPOS,VX_Sele:COLCOUNT} ,{2,3})
                         ENDIF
                         *
-
-                        //
-                        //  FRAN: Unused - This code is win32 (GtWvW)
-                        //
-                        // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                        //    IF SOB_MODO_GRAFICO()
-                        //       WVW_SetPaintRefresh(N_PaintRefresh_Old)
-                        //    ENDIF
-                        // #elif defined(__PLATFORM__LINUX)
-                        //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                        // #else
-                        //    #erro "Código não adaptado para esta plataforma"
-                        // #endif
-
                         //!! no futuro, remover
                         ASSUMIR_NIL_OU_FALSE({V_LstAcoes[N_Pos_Acao,_ACAO_ALIAS_MUDA],;
                                             V_LstAcoes[N_Pos_Acao,_ACAO_RECNO_MUDA],;
@@ -876,19 +699,6 @@ IF .NOT. SOB_MODO_GRAFICO()
                         LOGAINFO_ID_TELA_RELAT_BOTAO("botão/ação",V_LstAcoes[N_Pos_Acao,_ACAO_CDBOTAO],;
                                                         C_CdTela,"Ação "+STR(V_LstAcoes[N_Pos_Acao,_ACAO_KEYBOARD],5))   // Log de uso de ações de teclado no sistema
                         ENDIF
-
-                        //
-                        //  FRAN: Unused - This code is win32 (GtWvW)
-                        //
-                        // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                        //    IF SOB_MODO_GRAFICO()
-                        //       WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-                        //    ENDIF
-                        // #elif defined(__PLATFORM__LINUX)
-                        //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                        // #else
-                        //    #erro "Código não adaptado para esta plataforma"
-                        // #endif
                         *
                         IF V_LstAcoes[N_Pos_Acao,_ACAO_AUTOCLOSE]
                         DEFAULT X_Retorno_Eval TO .F. // não fechar janela de menu
@@ -908,36 +718,44 @@ IF .NOT. SOB_MODO_GRAFICO()
     ENDDO
 
 
-ENDIF   // IF .NOT. SOB_MODO_GRAFICO()
+ENDIF // IF .NOT. SOB_MODO_GRAFICO()
 *
-
 
 IF  SOB_MODO_GRAFICO()
 
     IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
-        //V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
         IF L_Abortado
             X_Retorno := 0
+        ELSE
+            X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
         ENDIF
 
-    ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+    ELSEIF N_TP_Selecao == _SELE_MULTIPLA
         IF L_Abortado
-            X_Retorno := 0
+            X_Retorno := {}
         ELSE
             V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
             X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
         ENDIF
 
-    ENDIF
+    ELSEIF N_TP_Selecao == _SELE_EXTENDIDA
+        IF L_Abortado
+            X_Retorno := {}
+        ELSE
+            V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+            X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
+            // FRAN TODO: selecao implicita
+            IF LEN(X_Retorno) == 0
+                X_Retorno := {1}
+            ENDIF
+        ENDIF
 
-    // // FRAN TODO
-    // X_Retorno := {1}
+    ENDIF
 
 ELSE // IF .NOT. SOB_MODO_GRAFICO()
 
-
     IF L_Abortado
-    MudeLista(VX_Janela)            // limpa o vetor VN_Selecio
+        MudeLista(VX_Janela)            // limpa o vetor VN_Selecio
     ENDIF
     *
     * foi pressionada uma tecla de não movimentação, forçar total estabilização
@@ -949,19 +767,6 @@ ELSE // IF .NOT. SOB_MODO_GRAFICO()
     L_AtivaGui := .T.
     *
     * retornar o(s) item(ns) selecionado(s)
-    *
-    //
-    //  FRAN: Unused - This code is win32 (GtWvW)
-    //
-    // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-    //    IF SOB_MODO_GRAFICO()
-    //       WVW_SetPaintRefresh(N_PaintRefresh_Old)
-    //    ENDIF
-    // #elif defined(__PLATFORM__LINUX)
-    //    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-    // #else
-    //    #erro "Código não adaptado para esta plataforma"
-    // #endif
     *
     IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
     IF L_Abortado
@@ -983,8 +788,8 @@ ELSE // IF .NOT. SOB_MODO_GRAFICO()
 
 ENDIF   // IF .NOT. SOB_MODO_GRAFICO()
 
-
 RETURN X_Retorno
+
 *
 **********************
 FUNC ItensSelecionados (VX_Janela)
@@ -992,57 +797,47 @@ FUNC ItensSelecionados (VX_Janela)
 LOCAL X_Retorno
 LOCAL VX_Sele := VX_SubObj
 LOCAL V_TableView := NIL
-//LOCAL V_MenuVert := NIL
 
 IF SOB_MODO_GRAFICO()
 
-IF N_TP_Jan == _JAN_SELE_ARQ_20
+    IF N_TP_Jan == _JAN_SELE_ARQ_20
 
+        IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
+            X_Retorno := NAP_TABLEVIEW_CUALIB_SINGLE_ROW_SELECTED()
 
+        ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+            X_Retorno := NAP_TABLEVIEW_CUALIB_SELECT_MULTIPLE_ROW()
 
-    // FRAN: Selection in TableView
-    IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
-        X_Retorno := NAP_TABLEVIEW_CUALIB_SINGLE_ROW_SELECTED()
+        ELSE
+            X_Retorno := 0
 
-    ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-        // V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
-        // X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
+        ENDIF
 
-        X_Retorno := NAP_TABLEVIEW_CUALIB_SELECT_MULTIPLE_ROW()
+    ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
+        IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
+            X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
 
-    ELSE
+        ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+            V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+            X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
 
-        X_Retorno := 0
+        ELSE
+            X_Retorno := 0
+
+        ENDIF
     ENDIF
 
-    // Selection in MenuVert
-ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
-    IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
-        X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
-        NAP_LOG("ItensSelecionados() _JAN_SELE_VETO_20/_SELE_SIMPLES = " + hb_ntos(X_Retorno))
-        // V_MenuVert := NAP_CUALIB_CURRENT_MENUVERT()
-        // X_Retorno := NAP_MENUVERT_SELECTED(V_MenuVert)
-    ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-        V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
-        X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
-
-    ELSE
-
-        X_Retorno := 0
-    ENDIF
-ENDIF
-
-ELSE // SOB_MODO_GRAFICO()
+ELSE // .NOT. SOB_MODO_GRAFICO()
 
     // Text version
     IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
-    X_Retorno := EVAL(B_LinCorrente)
+        X_Retorno := EVAL(B_LinCorrente)
     ELSE
-    IF N_TP_Selecao == _SELE_EXTENDIDA .AND. LEN(VN_Selecio)==0    // se extendida com seleçao implicita
-        X_Retorno := {EVAL(B_LinCorrente)}
-    ELSE
-        X_Retorno := VN_Selecio      // se selecao multipla ou extendida com selecao explicita
-    ENDIF
+        IF N_TP_Selecao == _SELE_EXTENDIDA .AND. LEN(VN_Selecio)==0    // se extendida com seleçao implicita
+            X_Retorno := {EVAL(B_LinCorrente)}
+        ELSE
+            X_Retorno := VN_Selecio      // se selecao multipla ou extendida com selecao explicita
+        ENDIF
     ENDIF
 
 ENDIF
@@ -1108,19 +903,12 @@ AADD(V_Opcoes,{C_TxtOpcao,;      // _OPCAO_TEXTO
                L_EofOk,;         // _OPCAO_EOFOK
                L_HandleMuda,;    // _OPCAO_HANDLE_MUDA
                L_MudaDados})     // _OPCAO_MUDADADOS
-
-
 *
 *****************
 FUNCTION AnexeCol ( VX_Janela , C_Titulo , B_Bloco , N_Largura )
 *****************
 *
 LOCAL VX_Coluna, VX_Sele         // objeto do tipo coluna
-//LOCAL N_ColWidth := 0
-*
-// IF C_Titulo # NIL
-//     NAP_LOG("Adding column: " + C_Titulo + " Bloco:" + hb_ntos(B_Bloco) + " N_Largura:" + hb_ntos(N_Largura))
-// ENDIF
 
 IF B_Bloco == NIL
 ENDIF
@@ -1137,32 +925,17 @@ IF C_Titulo # NIL
 ENDIF
 *
 
-// IF SOB_MODO_GRAFICO()
-
-//     IF N_Largura # NIL
-//         N_ColWidth := N_Largura
-//     ENDIF
-
-//     // This column is from Table
-//     // ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
-//     // FRAN: Implement better!
-//     IF C_Titulo # NIL
-//         NAP_TABLEVIEW_CUALIB_COLUMN_DB(C_Titulo,B_Bloco,N_ColWidth)
-//     ENDIF
-
-// ELSE
-
 VX_Coluna := TBCOLUMNNEW(C_Titulo,B_Bloco)
 *
 IF N_Largura # NIL
    VX_Coluna:WIDTH := N_Largura
 ENDIF
+
 VX_Coluna:DEFCOLOR   :=     { 1 , 3 }    // fixa Bright para títulos e células
 VX_Coluna:COLORBLOCK := {|| { 2 , 3 } }  // faz com que todas as células (corpo)
 *                                        //   fique em cor normal (tira o Bright)
 VX_Sele:ADDCOLUMN(VX_Coluna)
 *
-// ENDIF
 
 RETURN NIL
 *
@@ -1247,16 +1020,4 @@ ENDIF
 STATIC PROC INABILITA_MENSAGEM()
 ******************************
 ALARME("M28816","Opção não disponível para base de dados reserva!")
-// *
-// *****************
-// FUNC ItemCorrente (VX_Janela)
-// *****************
-// LOCAL X_Retorno
-// LOCAL VX_Sele := VX_SubObj
-// *
-// X_Retorno := EVAL(B_LinCorrente)
-// *
-// RETURN X_Retorno
-// *
-// ************* FIM
 
