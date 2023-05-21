@@ -11,9 +11,9 @@
 
 #define NAP_MODAL_X_BUTTON          3
 
-#define NAP_MODAL_BUTTON_AUTOCLOSE  1000    /* + index of button */
+#define NAP_MODAL_BUTTON_AUTOCLOSE  1000    /* + index of button >= 1 */
 
-#define NAP_MODAL_HOTKEY_AUTOCLOSE  2000    /* + index of button */
+#define NAP_MODAL_HOTKEY_AUTOCLOSE  2000    /* + vkey_t use NAP_INKEY(ret - NAP_MODAL_HOTKEY_AUTOCLOSE)*/
 
 #define NAP_MODAL_IMAGE_AUTOCLOSE   3000    /* + index of image */
 
@@ -25,6 +25,7 @@
 
 #define NAP_MAX_BUTTONS             50
 
+#define NAP_MAX_VKEY                112
 
 
 // // https://nappgui.com/en/draw2d/draw2d.html

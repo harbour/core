@@ -258,7 +258,7 @@ IF L_ForcaLerTudo
                 L_FechouComAutoClose = .F.
             ELSEIF X_Retorno > NAP_MODAL_BUTTON_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
                 L_FechouComAutoClose = .T.
-            ELSEIF X_Retorno > NAP_MODAL_HOTKEY_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_HOTKEY_AUTOCLOSE + NAP_MAX_BUTTONS
+            ELSEIF X_Retorno > NAP_MODAL_HOTKEY_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_HOTKEY_AUTOCLOSE + NAP_MAX_VKEY
                 L_FechouComAutoClose = .T.
             ELSEIF X_Retorno > NAP_MODAL_IMAGE_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_IMAGE_AUTOCLOSE + NAP_MAX_IMAGES
                 L_FechouComAutoClose = .T.

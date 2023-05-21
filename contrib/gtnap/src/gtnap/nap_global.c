@@ -33,6 +33,15 @@ HB_FUNC( NAP_EXIT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_INKEY )
+{
+    vkey_t vkey = (vkey_t)hb_parni(1);
+    int32_t key = hb_gtnap_inkey(vkey);
+    hb_retni(key);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_LOG )
 {
     String *text = hb_gtnap_parstr(1);

@@ -41,8 +41,8 @@ struct _gtnap_callback_t
 
 struct _gtnap_key_t
 {
-    int32_t hkey;
-    vkey_t key;
+    int32_t key;    /* inkey.ch */
+    vkey_t vkey;
     uint32_t modifiers;
 };
 
@@ -760,6 +760,20 @@ void hb_gtnap_terminal(void)
 
 /*---------------------------------------------------------------------------*/
 
+int32_t hb_gtnap_inkey(const vkey_t vkey)
+{
+    uint32_t i, n = sizeof(KEYMAPS) / sizeof(GtNapKey);
+    for (i = 0; i < n; ++i)
+    {
+        if (KEYMAPS[i].vkey == vkey)
+            return KEYMAPS[i].key;
+    }
+
+    return INT32_MAX;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnWindowClose(GtNapWindow *gtwin, Event *e)
 {
     const EvWinClose *p = event_params(e, EvWinClose);
@@ -837,7 +851,7 @@ static const GtNapKey *i_convert_key(const int32_t key)
     uint32_t i, n = sizeof(KEYMAPS) / sizeof(GtNapKey);
     for (i = 0; i < n; ++i)
     {
-        if (KEYMAPS[i].hkey == key)
+        if (KEYMAPS[i].key == key)
             return &KEYMAPS[i];
     }
 
@@ -923,9 +937,9 @@ void hb_gtnap_window_hotkey(const uint32_t wid, const int32_t key, HB_ITEM *bloc
         }
 
         {
-            uint32_t autoclose_id = autoclose ? 1 : UINT32_MAX;
+            uint32_t autoclose_id = autoclose ? nkey->vkey : UINT32_MAX;
             Listener *listener = i_gtnap_listener(block, key, autoclose_id, gtwin, i_OnWindowHotKey2);
-            window_hotkey(gtwin->window, nkey->key, nkey->modifiers, listener);
+            window_hotkey(gtwin->window, nkey->vkey, nkey->modifiers, listener);
         }
     }
 }
@@ -1181,27 +1195,25 @@ static void i_gtnap_callback(GtNapCallback *callback)
 
 static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 {
-    uint32_t ret_val = UINT32_MAX;
+    //uint32_t ret_val = UINT32_MAX;
     cassert_no_null(callback);
     cassert_no_null(callback->gtwin);
     unref(e);
     if (callback->block != NULL)
     {
         PHB_ITEM ritem = hb_itemDo(callback->block, 0);
-        HB_TYPE type = HB_ITEM_TYPE(ritem);
-        //if (type == HB_IT_LOGICAL)
-        //    ret = (bool_t)hb_itemGetL(ritem);
-        if (type == HB_IT_INTEGER)
-            ret_val = hb_itemGetNI(ritem);
+        //HB_TYPE type = HB_ITEM_TYPE(ritem);
+        ////if (type == HB_IT_LOGICAL)
+        ////    ret = (bool_t)hb_itemGetL(ritem);
+        //if (type == HB_IT_INTEGER)
+        //    ret_val = hb_itemGetNI(ritem);
         hb_itemRelease(ritem);
     }
 
     if (/*ret == TRUE ||*/ callback->autoclose_id != UINT32_MAX)
     {
-        if (ret_val == UINT32_MAX)
-            ret_val = NAP_MODAL_BUTTON_AUTOCLOSE + callback->autoclose_id;
         callback->gtwin->modal_window_alive = FALSE;
-        window_stop_modal(callback->gtwin->window, ret_val);
+        window_stop_modal(callback->gtwin->window, NAP_MODAL_BUTTON_AUTOCLOSE + callback->autoclose_id);
     }
 }
 
@@ -1576,7 +1588,7 @@ void hb_gtnap_edit_wizard(const uint32_t wid, const uint32_t id, const uint32_t 
     }
 
     if (nkey != NULL)
-        window_hotkey(obj->cuawin->window, nkey->key, 0, listener(obj->cuawin, i_OnKeyWizard, GtNapWindow));
+        window_hotkey(obj->cuawin->window, nkey->vkey, 0, listener(obj->cuawin, i_OnKeyWizard, GtNapWindow));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1767,7 +1779,7 @@ void hb_gtnap_textview_hotkey(uint32_t wid, uint32_t id, int32_t key)
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TEXTVIEW);
     if (nkey != NULL)
-        window_hotkey(obj->cuawin->window, nkey->key, nkey->modifiers, listener(obj, i_OnTextConfirm, GtNapObject));
+        window_hotkey(obj->cuawin->window, nkey->vkey, nkey->modifiers, listener(obj, i_OnTextConfirm, GtNapObject));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3664,7 +3676,7 @@ void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, 
         uint32_t pos = UINT32_MAX;
         Listener *listener = NULL;
 
-        log_printf("Found hotkey: %d", nkey->key);
+        log_printf("Found hotkey: %d", nkey->vkey);
 
         // Delete a previous callback on this hotkey
         arrpt_foreach(callback, cuawin->callbacks, GtNapCallback)
@@ -3681,7 +3693,7 @@ void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, 
         listener = i_gtnap_cualib_listener(codeBlockParamId, key, autoclose, cuawin, i_OnWindowHotKey);
 
         if (listener != NULL)
-            window_hotkey(cuawin->window, nkey->key, nkey->modifiers, listener);
+            window_hotkey(cuawin->window, nkey->vkey, nkey->modifiers, listener);
     }
 }
 

@@ -22,11 +22,6 @@ ADDOPCAO V_JANELA TEXTO "Menu com #AutoClose" ;
 ATIVE(V_JANELA)
 *
 
-// STAT PROC TST_MENU_COM_AUTOCLOSE
-//     @ 22, 0 SAY ""
-//     OutStd("TST_MENU_COM_AUTOCLOSE() Option selected")
-//     RETURN
-
 ********************************
 STAT PROC TST_MENU_COM_ROLAMENTO
 ********************************

@@ -71,16 +71,16 @@ ENDIF
 ENDIF
 *
 IF L_AutoClose
-    IF SOB_MODO_GRAFICO()
-        // Fran: window_stop_modal needs to know the current menu selection before stop
-        ADDBOTAO(VX_Janela,"Enter=selecionar",{|| GtNapCloseWithMenuSel(VX_Janela)},.T.,;
-            "B17862",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
-            .T.)
-    ELSE
+    // IF SOB_MODO_GRAFICO()
+    //     // Fran: window_stop_modal needs to know the current menu selection before stop
+    //     ADDBOTAO(VX_Janela,"Enter=selecionar",{|| GtNapCloseWithMenuSel(VX_Janela)},.T.,;
+    //         "B17862",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
+    //         .T.)
+    // ELSE
         ADDBOTAO(VX_Janela,"Enter=selecionar",{||.T.},.T.,;
             "B17862",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
             .T.)
-    ENDIF
+    //ENDIF
 ENDIF
 *
 AJUSTA_BOTOES(VX_Janela)  // ajusta Lin2Livre à quantidade de botões de função
@@ -236,9 +236,9 @@ RETURN NIL
 #DEFINE L_NaoRolaHorizontal  VX_Sele:CARGO[20]      // FRAN: With horizontal scroll bar
 
 
-STATIC FUNCTION GtNapCloseWithMenuSel( VX_Janela )
-    LOCAL N_Sel := NAP_MODAL_MENU_AUTOCLOSE + NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
-RETURN N_Sel
+// STATIC FUNCTION GtNapCloseWithMenuSel( VX_Janela )
+//     LOCAL N_Sel := NAP_MODAL_MENU_AUTOCLOSE + NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
+// RETURN N_Sel
 
 *
 **************************
@@ -401,7 +401,7 @@ IF L_ForcaLerTudo
 
             ENDIF
 
-            ELSE
+            ELSE  // NOT L_MostrarGrade
             LOG_PRINT("Menu Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
 
             N_MenID := NAP_MENU(N_WindowNum, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], L_AutoClose, .F.)
@@ -442,12 +442,12 @@ IF L_ForcaLerTudo
             // NEXT
 
 
-            // FRAN: TODO ADD GtNapCloseWithMenuSel() to BUTTONS
-            // Y eliminarla de 'ADDBOTAO'
-            FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
-                V_Botao := V_RegiaoBotoes[N_Cont]
-                NAP_LOG("!!!!!!!!!!!! BOTAO: " + hb_ntos(N_Cont) + " ID: " + hb_ntos(V_Botao[_BOTAO_HANDLE_PUSHBUTTON]))
-            NEXT
+            // // FRAN: TODO ADD GtNapCloseWithMenuSel() to BUTTONS
+            // // Y eliminarla de 'ADDBOTAO'
+            // FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
+            //     V_Botao := V_RegiaoBotoes[N_Cont]
+            //     NAP_LOG("!!!!!!!!!!!! BOTAO: " + hb_ntos(N_Cont) + " ID: " + hb_ntos(V_Botao[_BOTAO_HANDLE_PUSHBUTTON]))
+            // NEXT
 
 
             // FRAN: TODO ADD GtNapCloseWithMenuSel() to HOTKEYS
@@ -455,7 +455,8 @@ IF L_ForcaLerTudo
                 //NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
 
                 IF V_LstAcoes[N_Cont,_ACAO_KEYBOARD] # NIL
-                    NAP_CUALIB_HOTKEY(V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
+                    NAP_WINDOW_HOTKEY(N_WindowNum, V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
+                    //NAP_CUALIB_HOTKEY(V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
                 ENDIF
             NEXT
 
@@ -466,18 +467,29 @@ IF L_ForcaLerTudo
                 L_Abortado := .T.
             ELSEIF X_Retorno == NAP_MODAL_X_BUTTON
                 L_Abortado := .T.
-            ELSEIF X_Retorno > NAP_MODAL_MENU_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_MENU_AUTOCLOSE + LEN(V_Opcoes)
-                X_Retorno := X_Retorno - NAP_MODAL_MENU_AUTOCLOSE
-                L_Abortado := .F.
-            ELSE
-                Alert( "Invalid Menu X_Retorno (" + hb_ntos(X_Retorno) + ") in selecaov")
+            ELSEIF L_MostraGrade
+                // Return based in TableView
+                Alert( "Invalid TableView X_Retorno (" + hb_ntos(X_Retorno) + ") in selecaov")
                 L_Abortado := .T.
+            ELSE
+                // Return based in MenuVert
+                IF X_Retorno > NAP_MODAL_MENU_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_MENU_AUTOCLOSE + LEN(V_Opcoes)
+                    X_Retorno := X_Retorno - NAP_MODAL_MENU_AUTOCLOSE
+                    L_Abortado := .F.
+                ELSEIF X_Retorno > NAP_MODAL_BUTTON_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
+                    X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
+                    L_Abortado := .F.
+                ELSEIF X_Retorno > NAP_MODAL_HOTKEY_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_HOTKEY_AUTOCLOSE + NAP_MAX_VKEY
+                    X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
+                    L_Abortado := .F.
+                ELSEIF X_Retorno > NAP_MODAL_IMAGE_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_IMAGE_AUTOCLOSE + NAP_MAX_IMAGES
+                    X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
+                    L_Abortado := .F.
+                ELSE
+                    Alert( "Invalid Menu X_Retorno (" + hb_ntos(X_Retorno) + ") in selecaov")
+                    L_Abortado := .T.
+                ENDIF
             ENDIF
-            // X_Retorno := 1
-            // IF X_Retorno == 1000
-            //     L_FechouComAutoClose = .T.
-            // ENDIF
-
 
         ELSE
 
