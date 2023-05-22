@@ -11,5 +11,4 @@ void nap_menuvert_taborder(Panel *panel, Window *window);
 
 uint32_t nap_menu_selected(Panel *panel);
 
-
 __END_C

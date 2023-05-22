@@ -101,14 +101,14 @@ HB_FUNC( NAP_WINDOW_MODAL )
 
 
 
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_WINDOW_PANEL )
-{
-    Window *window = hb_gtnap_parWindow(1);
-    Panel *panel = (Panel*)hb_parptr(2);
-    window_panel(window, panel);
-}
+///*---------------------------------------------------------------------------*/
+//
+//HB_FUNC( NAP_WINDOW_PANEL )
+//{
+//    Window *window = hb_gtnap_parWindow(1);
+//    Panel *panel = (Panel*)hb_parptr(2);
+//    window_panel(window, panel);
+//}
 
 ///*---------------------------------------------------------------------------*/
 //
@@ -158,30 +158,30 @@ HB_FUNC( NAP_WINDOW_PANEL )
 //    window_OnResize(window, listener);
 //}
 
-/*---------------------------------------------------------------------------*/
+///*---------------------------------------------------------------------------*/
+//
+//HB_FUNC( NAP_WINDOW_TITLE )
+//{
+//    Window *window = hb_gtnap_parWindow(1);
+//    const char_t *text = hb_gtnap_parText(2);
+//    window_title(window, text);
+//}
 
-HB_FUNC( NAP_WINDOW_TITLE )
-{
-    Window *window = hb_gtnap_parWindow(1);
-    const char_t *text = hb_gtnap_parText(2);
-    window_title(window, text);
-}
+///*---------------------------------------------------------------------------*/
+//
+//HB_FUNC( NAP_WINDOW_SHOW )
+//{
+//    Window *window = hb_gtnap_parWindow(1);
+//    window_show(window);
+//}
 
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_WINDOW_SHOW )
-{
-    Window *window = hb_gtnap_parWindow(1);
-    window_show(window);
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_WINDOW_HIDE )
-{
-    Window *window = hb_gtnap_parWindow(1);
-    window_hide(window);
-}
+///*---------------------------------------------------------------------------*/
+//
+//HB_FUNC( NAP_WINDOW_HIDE )
+//{
+//    Window *window = hb_gtnap_parWindow(1);
+//    window_hide(window);
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -203,31 +203,31 @@ HB_FUNC( NAP_WINDOW_HIDE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_WINDOW_UPDATE )
-{
-    Window *window = hb_gtnap_parWindow(1);
-    window_update(window);
-}
+//HB_FUNC( NAP_WINDOW_UPDATE )
+//{
+//    Window *window = hb_gtnap_parWindow(1);
+//    window_update(window);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_WINDOW_ORIGIN )
-{
-    Window *window = hb_gtnap_parWindow(1);
-    real32_t x = (real32_t)hb_parnd(2);
-    real32_t y = (real32_t)hb_parnd(3);
-    window_origin(window, v2df(x, y));
-}
+//HB_FUNC( NAP_WINDOW_ORIGIN )
+//{
+//    Window *window = hb_gtnap_parWindow(1);
+//    real32_t x = (real32_t)hb_parnd(2);
+//    real32_t y = (real32_t)hb_parnd(3);
+//    window_origin(window, v2df(x, y));
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_WINDOW_SIZE )
-{
-    Window *window = hb_gtnap_parWindow(1);
-    real32_t width = (real32_t)hb_parnd(2);
-    real32_t height = (real32_t)hb_parnd(3);
-    window_size(window, s2df(width, height));
-}
+//HB_FUNC( NAP_WINDOW_SIZE )
+//{
+//    Window *window = hb_gtnap_parWindow(1);
+//    real32_t width = (real32_t)hb_parnd(2);
+//    real32_t height = (real32_t)hb_parnd(3);
+//    window_size(window, s2df(width, height));
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -239,22 +239,22 @@ HB_FUNC( NAP_WINDOW_SIZE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_WINDOW_DEFBUTTON )
-{
-    Window *window = hb_gtnap_parWindow(1);
-    Button *button = (Button*)hb_parptr(2);
-    window_defbutton(window, button);
-}
+//HB_FUNC( NAP_WINDOW_DEFBUTTON )
+//{
+//    Window *window = hb_gtnap_parWindow(1);
+//    Button *button = (Button*)hb_parptr(2);
+//    window_defbutton(window, button);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_WINDOW_FOCUS )
-{
-    Window *window = hb_gtnap_parWindow(1);
-    Layout *layout = (Layout*)hb_parptr(2);
-    uint32_t col = hb_parni(3);
-    uint32_t row = hb_parni(4);
-    Cell *cell = layout_cell(layout, col, row);
-    unref(window);
-    cell_focus(cell);
-}
+//HB_FUNC( NAP_WINDOW_FOCUS )
+//{
+//    Window *window = hb_gtnap_parWindow(1);
+//    Layout *layout = (Layout*)hb_parptr(2);
+//    uint32_t col = hb_parni(3);
+//    uint32_t row = hb_parni(4);
+//    Cell *cell = layout_cell(layout, col, row);
+//    unref(window);
+//    cell_focus(cell);
+//}

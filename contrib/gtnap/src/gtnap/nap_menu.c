@@ -486,6 +486,24 @@ void nap_menu_add(Panel *panel, Window *window, HB_ITEM *text_block, HB_ITEM *cl
 
 /*---------------------------------------------------------------------------*/
 
+void nap_menuvert_taborder(Panel *panel, Window *window)
+{
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    menu->window = window;
+    _component_taborder((GuiComponent*)menu->view, window);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t nap_menu_selected(Panel *panel)
+{
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    cassert_no_null(menu);
+    return menu->selected;
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_MENU )
 {
     uint32_t wid = hb_parni(1);
@@ -519,24 +537,6 @@ HB_FUNC( NAP_MENU_SELECTED )
     uint32_t id = hb_parni(2);
     uint32_t sel = hb_gtnap_menu_selected(wid, id);
     hb_retni(sel + 1);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void nap_menuvert_taborder(Panel *panel, Window *window)
-{
-    MenuVert *menu = panel_get_data(panel, MenuVert);
-    menu->window = window;
-    _component_taborder((GuiComponent*)menu->view, window);
-}
-
-/*---------------------------------------------------------------------------*/
-
-uint32_t nap_menu_selected(Panel *panel)
-{
-    MenuVert *menu = panel_get_data(panel, MenuVert);
-    cassert_no_null(menu);
-    return menu->selected;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -652,12 +652,12 @@ uint32_t nap_menu_selected(Panel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_MENUVERT_SELECTED )
-{
-    Panel *panel = (Panel*)hb_parptr(1);
-    MenuVert *menu = panel_get_data(panel, MenuVert);
-    hb_retni(menu->selected + 1);
-}
+//HB_FUNC( NAP_MENUVERT_SELECTED )
+//{
+//    Panel *panel = (Panel*)hb_parptr(1);
+//    MenuVert *menu = panel_get_data(panel, MenuVert);
+//    hb_retni(menu->selected + 1);
+//}
 
 /*---------------------------------------------------------------------------*/
 
