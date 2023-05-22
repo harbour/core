@@ -1927,17 +1927,86 @@ uint32_t hb_gtnap_menu_selected(const uint32_t wid, uint32_t id)
     return nap_menu_selected((Panel*)gtobj->component);
 }
 
+/*---------------------------------------------------------------------------*/
 
+uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t in_scroll)
+{
+// If single_sel --> connect this void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
+    unref(wid);
+    unref(multisel);
+    unref(top);
+    unref(left);
+    unref(bottom);
+    unref(right);
+    unref(in_scroll);
+    return 0;
+}
 
+/*---------------------------------------------------------------------------*/
 
+void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint32_t width, HB_ITEM *head_block, HB_ITEM *eval_block)
+{
+    unref(wid);
+    unref(id);
+    unref(width);
+    unref(head_block);
+    unref(eval_block);
+}
 
+/*---------------------------------------------------------------------------*/
 
+void hb_gtnap_tableview_scroll(const uint32_t wid, const uint32_t id, const bool_t horizontal, const bool_t vertical)
+{
+    unref(wid);
+    unref(id);
+    unref(horizontal);
+    unref(vertical);
+}
 
-//    asdfasdf
-//    hb_gtnap_textview_hotkey(wid, id, key, autoclose);
-//}
+/*---------------------------------------------------------------------------*/
 
+void hb_gtnap_tableview_grid(const uint32_t wid, const uint32_t id, const bool_t hlines, const bool_t vlines)
+{
+    unref(wid);
+    unref(id);
+    unref(hlines);
+    unref(vlines);
+}
 
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_tableview_freeze(const uint32_t wid, const uint32_t id, const uint32_t col_id)
+{
+    unref(wid);
+    unref(id);
+    unref(col_id);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM *while_block)
+{
+    unref(wid);
+    unref(id);
+    unref(while_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_ITEM *selection)
+{
+    unref(wid);
+    unref(id);
+    unref(selection);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id)
+{
+    unref(wid);
+    unref(id);
+}
 
 
 

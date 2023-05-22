@@ -7,25 +7,94 @@
 #include "nappgui.h"
 #include "hbapi.h"
 
+/*---------------------------------------------------------------------------*/
 
-// extern uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t in_scroll);
-// // If single_sel --> connect this void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
+HB_FUNC( NAP_TABLEVIEW )
+{
+    uint32_t wid = hb_parni(1);
+    bool_t multisel = (bool_t)hb_parl(2);
+    int32_t top = hb_parni(3);
+    int32_t left = hb_parni(4);
+    int32_t bottom = hb_parni(5);
+    int32_t right = hb_parni(6);
+    bool_t in_scroll = (bool_t)hb_parl(7);
+    uint32_t id = hb_gtnap_tableview(wid, multisel, top, left, bottom, right, in_scroll);
+    hb_retni(id);
+}
 
-// extern void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint32_t width, HB_ITEM *head_block, HB_ITEM *eval_block);
+/*---------------------------------------------------------------------------*/
 
-// extern void hb_gtnap_tableview_scroll(const uint32_t wid, const uint32_t id, const bool_t horizontal, const bool_t vertical);
+HB_FUNC( NAP_TABLEVIEW_COLUMN )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    uint32_t width = hb_parni(3);
+    HB_ITEM *head_block = hb_param(4, HB_IT_BLOCK);
+    HB_ITEM *eval_block = hb_param(5, HB_IT_BLOCK);
+    hb_gtnap_tableview_column(wid, id, width, head_block, eval_block);
+}
 
-// extern void hb_gtnap_tableview_grid(const uint32_t wid, const uint32_t id, const bool_t hlines, const bool_t vlines);
+/*---------------------------------------------------------------------------*/
 
-// //extern void hb_gtnap_tableview_multisel(const uint32_t wid, const uint32_t id, const bool_t multisel);
+HB_FUNC( NAP_TABLEVIEW_SCROLL2 )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    bool_t horizontal = (bool_t)hb_parl(3);
+    bool_t vertical = (bool_t)hb_parl(4);
+    hb_gtnap_tableview_scroll(wid, id, horizontal, vertical);
+}
 
-// extern void hb_gtnap_tableview_freeze(const uint32_t wid, const uint32_t id, const uint32_t col_id);
+/*---------------------------------------------------------------------------*/
 
-// extern void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM *while_block);
+HB_FUNC( NAP_TABLEVIEW_GRID2 )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    bool_t hlines = (bool_t)hb_parl(3);
+    bool_t vlines = (bool_t)hb_parl(4);
+    hb_gtnap_tableview_grid(wid, id, hlines, vlines);
+}
 
-// extern void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_ITEM *selection);
+/*---------------------------------------------------------------------------*/
 
-// extern void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id);
+HB_FUNC( NAP_TABLEVIEW_FREEZE )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    uint32_t col_id = hb_parni(3);
+    hb_gtnap_tableview_freeze(wid, id, col_id);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_BIND_AREA )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    HB_ITEM *while_block = hb_param(3, HB_IT_BLOCK);
+    hb_gtnap_tableview_bind_area(wid, id, while_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_SELECT2 )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    HB_ITEM *selection = hb_param(3, HB_IT_BLOCK);
+    hb_gtnap_tableview_select(wid, id, selection);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_REFRESH_ALL )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    hb_gtnap_tableview_refresh_all(wid, id);
+}
+
 
 
 

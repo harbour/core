@@ -80,15 +80,12 @@ extern void hb_gtnap_menu_add(const uint32_t wid, uint32_t id, HB_ITEM *text_blo
 extern uint32_t hb_gtnap_menu_selected(const uint32_t wid, uint32_t id);
 
 extern uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t in_scroll);
-// If single_sel --> connect this void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
 
 extern void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint32_t width, HB_ITEM *head_block, HB_ITEM *eval_block);
 
 extern void hb_gtnap_tableview_scroll(const uint32_t wid, const uint32_t id, const bool_t horizontal, const bool_t vertical);
 
 extern void hb_gtnap_tableview_grid(const uint32_t wid, const uint32_t id, const bool_t hlines, const bool_t vlines);
-
-//extern void hb_gtnap_tableview_multisel(const uint32_t wid, const uint32_t id, const bool_t multisel);
 
 extern void hb_gtnap_tableview_freeze(const uint32_t wid, const uint32_t id, const uint32_t col_id);
 
