@@ -79,6 +79,24 @@ extern void hb_gtnap_menu_add(const uint32_t wid, uint32_t id, HB_ITEM *text_blo
 
 extern uint32_t hb_gtnap_menu_selected(const uint32_t wid, uint32_t id);
 
+extern uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t in_scroll);
+// If single_sel --> connect this void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
+
+extern void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint32_t width, HB_ITEM *head_block, HB_ITEM *eval_block);
+
+extern void hb_gtnap_tableview_scroll(const uint32_t wid, const uint32_t id, const bool_t horizontal, const bool_t vertical);
+
+extern void hb_gtnap_tableview_grid(const uint32_t wid, const uint32_t id, const bool_t hlines, const bool_t vlines);
+
+//extern void hb_gtnap_tableview_multisel(const uint32_t wid, const uint32_t id, const bool_t multisel);
+
+extern void hb_gtnap_tableview_freeze(const uint32_t wid, const uint32_t id, const uint32_t col_id);
+
+extern void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM *while_block);
+
+extern void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_ITEM *selection);
+
+extern void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id);
 
 //
 // Future improvements for more generalist GTNAP
@@ -106,7 +124,7 @@ extern uint32_t hb_gtnap_menu_selected(const uint32_t wid, uint32_t id);
 
 
 
-extern void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, const align_t align, PHB_ITEM codeBlock);
+//extern void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, const align_t align, PHB_ITEM codeBlock);
 
 extern uint32_t hb_gtnap_area_row_count(GtNapArea *area);
 
@@ -145,17 +163,17 @@ extern uint32_t hb_gtnap_cualib_window_current_edit(void);
 extern void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_ColIni);
 
 
-extern void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);
+// extern void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);
 
 extern void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight);
 
-extern void hb_gtnap_cualib_textview(
-    TextView *view,
-    const uint32_t editaBlockParamId,
-    const int32_t nTop,
-    const int32_t nLeft,
-    const int32_t nBottom,
-    const int32_t nRight);
+// extern void hb_gtnap_cualib_textview(
+//     TextView *view,
+//     const uint32_t editaBlockParamId,
+//     const int32_t nTop,
+//     const int32_t nLeft,
+//     const int32_t nBottom,
+//     const int32_t nRight);
 
 extern GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view, const uint32_t whileBlockParamId);
 

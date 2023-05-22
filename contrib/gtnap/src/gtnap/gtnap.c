@@ -2122,21 +2122,21 @@ static void i_destroy_vector(GtNapVector **vector)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, const align_t align, PHB_ITEM codeBlock)
-{
-    uint32_t id = 0;
-    GtNapColumn *column = NULL;
-    cassert_no_null(area);
-    id = tableview_new_column_text(area->view);
-    tableview_header_title(area->view, id, title);
-    tableview_header_align(area->view, id, align);
-    tableview_column_width(area->view, id, width);
-    cassert(id == arrst_size(area->columns, GtNapColumn));
-    column = arrst_new0(area->columns, GtNapColumn);
-    column->fixed_width = UINT32_MAX;
-    column->align = align;
-    column->codeBlock = hb_itemNew(codeBlock);
-}
+//void hb_gtnap_area_add_column(GtNapArea *area, const char_t *title, const real32_t width, const align_t align, PHB_ITEM codeBlock)
+//{
+//    uint32_t id = 0;
+//    GtNapColumn *column = NULL;
+//    cassert_no_null(area);
+//    id = tableview_new_column_text(area->view);
+//    tableview_header_title(area->view, id, title);
+//    tableview_header_align(area->view, id, align);
+//    tableview_column_width(area->view, id, width);
+//    cassert(id == arrst_size(area->columns, GtNapColumn));
+//    column = arrst_new0(area->columns, GtNapColumn);
+//    column->fixed_width = UINT32_MAX;
+//    column->align = align;
+//    column->codeBlock = hb_itemNew(codeBlock);
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -2610,19 +2610,19 @@ void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_C
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    S2Df size, final_size;
-    cassert_no_null(cuawin);
-    log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
-    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
-    _panel_compose(panel, &size, &final_size);
-    _panel_locate(panel);
-    i_add_object(ekOBJ_MENU, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)panel, cuawin);
-    //log_printf("MenuVert size: %.2f, %.2f, %.2f, %.2f", size.width, size.height, final_size.width, final_size.height);
-}
+// void hb_gtnap_cualib_menuvert(Panel *panel, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight)
+// {
+//     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//     S2Df size, final_size;
+//     cassert_no_null(cuawin);
+//     log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+//     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+//     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+//     _panel_compose(panel, &size, &final_size);
+//     _panel_locate(panel);
+//     i_add_object(ekOBJ_MENU, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)panel, cuawin);
+//     //log_printf("MenuVert size: %.2f, %.2f, %.2f, %.2f", size.width, size.height, final_size.width, final_size.height);
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -2639,35 +2639,35 @@ void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_textview(TextView *view,
-    const uint32_t editaBlockParamId,
-    const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    S2Df size;
-    PHB_ITEM get_set_block = NULL;
-    GtNapObject *obj = NULL;
+// void hb_gtnap_cualib_textview(TextView *view,
+//     const uint32_t editaBlockParamId,
+//     const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight)
+// {
+//     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//     S2Df size;
+//     PHB_ITEM get_set_block = NULL;
+//     GtNapObject *obj = NULL;
 
-    cassert_no_null(cuawin);
-    log_printf("Added TextView into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
-    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
-    textview_family(view, font_family(GTNAP_GLOBAL->global_font));
-    textview_fsize(view, font_size(GTNAP_GLOBAL->global_font));
-    i_add_object(ekOBJ_TEXTVIEW, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, cuawin);
-    obj = arrpt_last(cuawin->gui_objects, GtNapObject);
-    cassert_no_null(obj);
-    cassert(obj->type = ekOBJ_TEXTVIEW);
-    cassert(obj->get_set_block == NULL);
-    cassert(obj->valida_block == NULL);
-    cassert(obj->confirmaCodeBlock == NULL);
+//     cassert_no_null(cuawin);
+//     log_printf("Added TextView into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+//     size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+//     size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+//     textview_family(view, font_family(GTNAP_GLOBAL->global_font));
+//     textview_fsize(view, font_size(GTNAP_GLOBAL->global_font));
+//     i_add_object(ekOBJ_TEXTVIEW, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, cuawin);
+//     obj = arrpt_last(cuawin->gui_objects, GtNapObject);
+//     cassert_no_null(obj);
+//     cassert(obj->type = ekOBJ_TEXTVIEW);
+//     cassert(obj->get_set_block == NULL);
+//     cassert(obj->valida_block == NULL);
+//     cassert(obj->confirmaCodeBlock == NULL);
 
-    get_set_block = hb_param(editaBlockParamId, HB_IT_BLOCK);
-    if (get_set_block != NULL)
-        obj->get_set_block = hb_itemNew(get_set_block);
-    else
-        obj->get_set_block = NULL;
-}
+//     get_set_block = hb_param(editaBlockParamId, HB_IT_BLOCK);
+//     if (get_set_block != NULL)
+//         obj->get_set_block = hb_itemNew(get_set_block);
+//     else
+//         obj->get_set_block = NULL;
+// }
 
 
 /*---------------------------------------------------------------------------*/

@@ -97,15 +97,15 @@ HB_FUNC( NAP_CUALIB_DESTROY_WINDOW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_MENUVERT )
-{
-    Panel *panel = (Panel*)hb_parptr(1);
-    int32_t nTop = hb_parni(2);
-    int32_t nLeft = hb_parni(3);
-    int32_t nBottom = hb_parni(4);
-    int32_t nRight = hb_parni(5);
-    hb_gtnap_cualib_menuvert(panel, nTop, nLeft, nBottom, nRight);
-}
+// HB_FUNC( NAP_CUALIB_MENUVERT )
+// {
+//     Panel *panel = (Panel*)hb_parptr(1);
+//     int32_t nTop = hb_parni(2);
+//     int32_t nLeft = hb_parni(3);
+//     int32_t nBottom = hb_parni(4);
+//     int32_t nRight = hb_parni(5);
+//     hb_gtnap_cualib_menuvert(panel, nTop, nLeft, nBottom, nRight);
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -121,15 +121,15 @@ HB_FUNC( NAP_CUALIB_TABLEVIEW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_TEXTVIEW )
-{
-    TextView *view = (TextView*)hb_parptr(1);
-    uint32_t nTop = hb_parni(2);
-    uint32_t nLeft = hb_parni(3);
-    uint32_t nBottom = hb_parni(4);
-    uint32_t nRight = hb_parni(5);
-    hb_gtnap_cualib_textview(view, 6, nTop, nLeft, nBottom, nRight);
-}
+// HB_FUNC( NAP_CUALIB_TEXTVIEW )
+// {
+//     TextView *view = (TextView*)hb_parptr(1);
+//     uint32_t nTop = hb_parni(2);
+//     uint32_t nLeft = hb_parni(3);
+//     uint32_t nBottom = hb_parni(4);
+//     uint32_t nRight = hb_parni(5);
+//     hb_gtnap_cualib_textview(view, 6, nTop, nLeft, nBottom, nRight);
+// }
 
 /*---------------------------------------------------------------------------*/
 
