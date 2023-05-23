@@ -4,8 +4,9 @@
 
 #include "gtnap.h"
 #include "gtnap.inl"
-#include "nappgui.h"
+#include "nap_tableview.inl"
 #include "hbapi.h"
+#include "nappgui.h"
 
 /*---------------------------------------------------------------------------*/
 
