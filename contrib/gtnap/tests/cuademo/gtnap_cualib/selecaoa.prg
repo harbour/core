@@ -295,7 +295,6 @@ IF L_ForcaLerTudo
 
             L_Coords := CoordenadasBrowse(VX_Sele)
 
-            // Add an extra column to scrollbar
             IF L_ScrollVertical
                 L_Coords[4]++
             ENDIF
@@ -309,59 +308,8 @@ IF L_ForcaLerTudo
             N_TableID := NAP_TABLEVIEW(N_WindowNum, L_Multisel, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], .F.)
             N_ItemId := N_TableID
 
-            //NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
-
-            //V_TableView := NAP_TABLEVIEW_CREATE()
-
-            // IF L_NaoRolaHorizontal == .F.
-            //     LOG_PRINT("With HORIZONTAL ScrollBar!!")
-            // ELSE
-            //     LOG_PRINT("WITHOUT HORIZONTAL ScrollBar!!")
-            // ENDIF
-
-            // IF L_NaoRolaVertical == .F.
-            //     LOG_PRINT("With VERTICAL ScrollBar!!")
-            // ELSE
-            //     LOG_PRINT("WITHOUT VERTICAL ScrollBar!!")
-            // ENDIF
-
-            NAP_TABLEVIEW_SCROLL2(N_WindowNum, N_TableID, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
-
-            IF L_MostraGrade
-                //NAP_TABLEVIEW_GRID(V_TableView, .T., .T.)
-                NAP_TABLEVIEW_GRID2(N_WindowNum, N_TableID, .T., .T.)
-            ELSE
-                NAP_TABLEVIEW_GRID2(N_WindowNum, N_TableID, .F., .F.)
-            ENDIF
-            //NAP_TABLEVIEW_SCROLL(V_TableView, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
-
-            // LOG_PRINT("With VERTICAL ScrollBar: " + L_NaoRolaVertical)
-
-            // #DEFINE B_While VX_Sele:CARGO[21]
-            // //NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView, B_While)
-            // NAP_TABLEVIEW_BIND_AREA(N_WindowNum, N_TableID, B_While)
-            // #UNDEF B_While
-
-
-            //NAP_TABLEVIEW_FONT(V_TableView)
-
-
-            // IF N_TP_Selecao == _SELE_SIMPLES
-            //     NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
-            // ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-            //     NAP_CUALIB_MULTISEL()
-            //     NAP_TABLEVIEW_MULTISEL(V_TableView, .T., .T.)
-
-
-
-            // ENDIF
-
-            // LOG_PRINT("TableView Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
-
-            // NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
-
-            // LOG_PRINT("Num cols: " + hb_ntos(VX_Sele:COLCOUNT))
-
+            NAP_TABLEVIEW_SCROLL2(N_WindowNum, N_TableID, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
+            NAP_TABLEVIEW_GRID2(N_WindowNum, N_TableID, L_MostraGrade, L_MostraGrade)
 
             FOR N_Count := 1 TO VX_Sele:COLCOUNT
                 O_Column := VX_Sele:GetColumn(N_Count)
@@ -376,81 +324,35 @@ IF L_ForcaLerTudo
                     N_Width := 0
                 ENDIF
 
-                // LOG_PRINT(O_Column:HEADING + ":")
-                // IF O_Column:WIDTH # NIL
-                //     LOG_PRINT("WIDTH " + hb_ntos(O_Column:WIDTH))
-                // ELSE
-                //     LOG_PRINT("WIDTH IS NULL")
-                // ENDIF
                 NAP_TABLEVIEW_COLUMN(N_WindowNum, N_TableID, N_Width, {||C_Title}, O_Column:BLOCK)
-                //NAP_TABLEVIEW_CUALIB_COLUMN_DB(V_TableView, C_Title,O_Column:BLOCK,N_Width)
-
             NEXT
 
             IF N_Congela # 0
-                //NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
                 NAP_TABLEVIEW_FREEZE(N_WindowNum, N_TableID, N_Congela)
             ENDIF
 
-
             #DEFINE B_While VX_Sele:CARGO[21]
-            //NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView, B_While)
             NAP_TABLEVIEW_BIND_AREA(N_WindowNum, N_TableID, B_While)
             #UNDEF B_While
 
-            // NAP_TABLEVIEW_UPDATE(V_TableView)
-
-            //LOG_PRINT("Current VN_Selecio: " + hb_ntos(LEN(VN_Selecio)))
             NAP_TABLEVIEW_REFRESH_ALL(N_WindowNum, N_TableID)
-            //NAP_TABLEVIEW_CUALIB_REFRESH_ALL()
 
-            //
-            // FRAN: Automatic first selection and change selection event
-            //
-            //NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
-
-            NAP_TABLEVIEW_SELECT2(N_WindowNum, N_TableID, VN_Selecio)
-            // IF N_TP_Selecao == _SELE_SIMPLES
-            //     // NAP_TABLEVIEW_CUALIB_REFRESH do the select
-            //     //NAP_TABLEVIEW_SELECT(V_TableView, 1)
-            //     //NAP_TABLEVIEW_CUALIB_ON_SINGLE_SELECT_CHANGE()
-
-            // ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-            //     NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
-            //     //NAP_CUALIB_SET_JANELA(VX_Sele)
-            //     //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
-            //     //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
-            //     // IF N_Congela # 0
-            //     //     NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
-            //     // ENDIF
-
-            // ENDIF
-
-
-            //LOG_PRINT("TableView DEFAULT SEL:" + hb_ntos(LEN(VN_Selecio)) + ", JAJAJAJ")
-
+            IF N_TP_Selecao == _SELE_SIMPLES
+                NAP_TABLEVIEW_SELECT2(N_WindowNum, N_TableID, 1)
+            ELSE
+                NAP_TABLEVIEW_SELECT2(N_WindowNum, N_TableID, VN_Selecio)
+            ENDIF
 
         ENDIF   // SOB_MODO_GRAFICO()
 
-   ENDIF  // L_PrimAtivacao
+    ENDIF  // L_PrimAtivacao
+    *
+    IF N_TP_Selecao # _SELE_SIMPLES .AND. VX_Sele:COLPOS == 1   &&* TALVEZ SAIA
+        VX_Sele:COLPOS := 2          // cursor não acessa indicativo de seleção
+    ENDIF
    *
-   IF N_TP_Selecao # _SELE_SIMPLES .AND. VX_Sele:COLPOS == 1   &&* TALVEZ SAIA
-      VX_Sele:COLPOS := 2          // cursor não acessa indicativo de seleção
-   ENDIF
-   *
-   * No harbour, corrigir cor de fundo das colunas inicial e final do Tbrowse().
-   * Na ativação inicial da janela, mesmo sem ter tipo nenhum
-   * rolamento horizotal, é necessário fazer isto porque a
-   * cor de fundo eventualmente fica diferente do resto da área útil
-   * do TBrowse(), ficando uma "marca" vertical na tela.
-   * Vide explicação detalhada no próprio método abaixo.
-//    IF SOB_MODO_GRAFICO()
-//       VX_Sele:LimparColunasInicialFinal_do_BugDispBox(L_MostraGrade)
-//    ENDIF
-   *
-
     //
-    // FRAN: The reading of data on demand will be controlled inside the TableView.
+    // FRAN/GTNAP: The reading of data on demand will be controlled inside the TableView.
     // This control manages the scroll bars, the keyboard, etc. Calculate the visible
     // area and request the necessary data according to the area of the database
     // visible on the screen. Harbour TBrowse is totally dispensed with for browsing the data.
@@ -463,20 +365,6 @@ ENDIF   // L_ForcaLerTudo
 *
 
 IF SOB_MODO_GRAFICO()
-
-            // * Constantes do vetor de ações de teclado (V_LstAcoes) das janelas
-            // #DEFINE _ACAO_KEYBOARD        1
-            // #DEFINE _ACAO_KEYBOARD_CASE   2
-            // #DEFINE _ACAO_BLOCO_ACAO      3
-            // #DEFINE _ACAO_AUTOCLOSE       4
-            // #DEFINE _ACAO_CDBOTAO         5
-            // #DEFINE _ACAO_ALIAS_MUDA      6
-            // #DEFINE _ACAO_RECNO_MUDA      7
-            // #DEFINE _ACAO_FILTER_MUDA     8
-            // #DEFINE _ACAO_ORDER_MUDA      9
-            // #DEFINE _ACAO_EOFOK          10
-            // #DEFINE _ACAO_HANDLE_MUDA    11
-            // #DEFINE _ACAO_MUDADADOS      12
 
     FOR N_Cont := 1 TO LEN(V_LstAcoes)
         NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
@@ -491,23 +379,14 @@ IF SOB_MODO_GRAFICO()
         NAP_CUALIB_HOTKEY(N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
     ENDIF
 
-
     NAP_LOG("SELECAOA::NAP_CUALIB_LAUNCH_MODAL!!!!!!")
     X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
     NAP_LOG("SELECAOA::FINISH!!!!  NAP_CUALIB_LAUNCH_MODAL!!!!!!")
 
-    //X_Retorno := 0
-
-
 ELSE
 
 //
-// THIS BLOCK ONLY FOR TEXT GTs
-//
-// FRAN: The reading of data on demand will be controlled inside the TableView.
-// This control manages the scroll bars, the keyboard, etc. Calculate the visible
-// area and request the necessary data according to the area of the database
-// visible on the screen. Harbour TBrowse is totally dispensed with for browsing the data.
+// FRAN/GTNAP: From here ONLY for Text GTs
 //
 
 L_RolaCima := L_RolaBaixo := .F.
@@ -558,15 +437,7 @@ DO WHILE L_Mais
               *
               IF L_TeveRolaHorizontal
                  L_TeveRolaHorizontal := .F.
-                 *
-                 * No Harbour, corrigir limpeza das colunas inicial e final do Tbrowse()
-                 * Vide explicação detalhada no próprio método abaixo.
-                //
-                // FRAN. This part only enter in TEXT terminals
-                //
-                //  IF SOB_MODO_GRAFICO()
-                //     VX_Sele:LimparColunasInicialFinal_do_BugDispBox(L_MostraGrade)
-                //  ENDIF
+
               ENDIF
               *
            ELSE
@@ -708,12 +579,6 @@ DO WHILE L_Mais
               ENDIF
            ELSEIF (N_RegiaoMouse == BOTAO_IDENTIFICADO .OR. ;  // N_Keyboard preenchido
                    N_RegiaoMouse == BOTAO_NAO_IDENTIFICADO)    // N_Keyboard não preenchido
-                //
-                // FRAN. This part only enter in TEXT terminals
-                //
-                //   IF SOB_MODO_GRAFICO()
-                //      ? MEMVAR->MODO_GRAFICO_NAO_USA_ESTE_TRECHO_DE_CODIGO
-                //   ENDIF
               *
               L_PodeExecutar := .T.
               IF LEFT(UPPER(V_Botao[_BOTAO_TEXTO_COMANDO]),2) $ "I=/A=/E=/C=/L="
@@ -774,18 +639,6 @@ DO WHILE L_Mais
               * Atualizar completamente a tela antes de executar o bloco de código
               Atualizar_Tela_Browse(VX_Janela,VX_Sele,L_RolaCima,L_RolaBaixo)
               *
-            //
-            // FRAN. This part only enter in TEXT terminals
-            //
-            //   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-            //      IF SOB_MODO_GRAFICO()
-            //         WVW_SetPaintRefresh(N_PaintRefresh_Old)
-            //      ENDIF
-            //   #elif defined(__PLATFORM__LINUX)
-            //      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-            //   #else
-            //      #erro "Código não adaptado para esta plataforma"
-            //   #endif
               *
               IF .NOT. XEOF() .OR. V_Imagem[_IMAGEM_EOFOK]
                  V_Ambiente_Alias := Salva_Ambiente_Alias()
@@ -812,20 +665,6 @@ DO WHILE L_Mais
                  ENDIF
 
               ENDIF
-              *
-
-            //
-            // FRAN. This part only enter in TEXT terminals
-            //
-            //   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-            //      IF SOB_MODO_GRAFICO()
-            //         WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-            //      ENDIF
-            //   #elif defined(__PLATFORM__LINUX)
-            //      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-            //   #else
-            //      #erro "Código não adaptado para esta plataforma"
-            //   #endif
               *
               IF L_ForcaLerTudo
                  * Usuário pode ter chamado a RELEIA TUDO
@@ -879,19 +718,6 @@ DO WHILE L_Mais
                                        VX_Sele:ROWPOS,VX_Sele:COLCOUNT} ,{2,3})
                  ENDIF
                  *
-
-                //
-                // FRAN. This part only enter in TEXT terminals
-                //
-                //  #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                //     IF SOB_MODO_GRAFICO()
-                //        WVW_SetPaintRefresh(N_PaintRefresh_Old)
-                //     ENDIF
-                //  #elif defined(__PLATFORM__LINUX)
-                //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                //  #else
-                //     #erro "Código não adaptado para esta plataforma"
-                //  #endif
                  *
                  IF .NOT. XEOF() .OR. V_LstAcoes[N_Pos_Acao,_ACAO_EOFOK]
                     V_Ambiente_Alias := Salva_Ambiente_Alias()
@@ -918,20 +744,6 @@ DO WHILE L_Mais
                     ENDIF
 
                  ENDIF
-                 *
-
-                //
-                // FRAN. This part only enter in TEXT terminals
-                //
-                //  #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                //     IF SOB_MODO_GRAFICO()
-                //        WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-                //     ENDIF
-                //  #elif defined(__PLATFORM__LINUX)
-                //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                //  #else
-                //     #erro "Código não adaptado para esta plataforma"
-                //  #endif
                  *
                  IF L_ForcaLerTudo
                     * Usuário pode ter chamado a RELEIA TUDO
@@ -976,20 +788,6 @@ L_AtivaGui := .T.
 *
 * retornar o(s) item(ns) selecionado(s)
 *
-
-//
-// FRAN. This part only enter in TEXT terminals
-//
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       WVW_SetPaintRefresh(N_PaintRefresh_Old)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-*
 IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
    IF L_Abortado
       X_Retorno := 0
@@ -1014,7 +812,6 @@ NAP_LOG("SELECAOA::Selecao finish with: " + hb_ntos(X_Retorno))
 
 RETURN X_Retorno
 *
-
 
 // *
 // **************************************************************************************************************************************************
@@ -1118,8 +915,6 @@ ENDIF
 #UNDEF L_RegValido
 *
 RETURN NIL
-
-
 
 ********************
 FUNCTION MontarSetas (VX_Janela,L_RolaCima,L_RolaBaixo,N_2TP_Selecao)
@@ -1472,154 +1267,12 @@ ENDIF
 
 RETURN NIL
 
-
-// *
-// *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    *
-//    #define RGB(nR,nG,nB)  ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
-//    *****************
-//    FUNC DesenhaGridH (VX_Janela,VX_Sele)
-//    *****************
-//    RETURN {|| WVW_SetPen(0,0,rgb(210,1210,210)),;
-//               WVW_DrawGridHorz( N_WindowNum,;
-//                                 VX_Sele:nTop+MAX(N_AlturaCabec,1), VX_Sele:nLeft,;
-//                                 VX_Sele:nRight,;
-//                                 VX_Sele:nBottom-(VX_Sele:nTop+MAX(N_AlturaCabec,1))+1 )}
-//    *****************
-//    FUNC DesenhaGridV (VX_Janela,VX_Sele)
-//    *****************
-//    LOCAL N_DeslocaHorizontal
-//    LOCAL N_TelaWidth  := TelaPrincipalWidth()
-//    *
-//    * "descolar" a linha vertical de algumas colunas do Tbrowse()
-//    *
-//    IF N_TelaWidth >=  1280   // resolução HORIZONTAL
-//       N_DeslocaHorizontal :=  +6
-//    ELSEIF N_TelaWidth >=  1152 .OR. ;
-//           N_TelaWidth >=  1088
-//       N_DeslocaHorizontal :=  +5
-//    ELSEIF N_TelaWidth >=  1024
-//       N_DeslocaHorizontal :=  +4
-//    ELSEIF N_TelaWidth >=   800
-//       N_DeslocaHorizontal :=  +3
-//    ELSE
-//       N_DeslocaHorizontal :=  +2
-//    ENDIF
-//    *
-//    * No Harbour, foi preciso criar o método aColumnsSep(), para poder
-//    * listar as linhas verticais, que necessitam da informação contina em "VX_Sele:aColumnsSep()"
-//    RETURN {|| WVW_SetPen(0,0,rgb(210,1210,210)),;
-//               WVW_DrawGridVert( N_WindowNum, VX_Sele:nTop, VX_Sele:nBottom,;
-//                                 VX_Sele:aColumnsSep(), len(VX_Sele:aColumnsSep()),;
-//                                 {0,N_DeslocaHorizontal,0,N_DeslocaHorizontal} ) }
-//    *
-//    **********************
-//    FUNC DesenhaBoxExterno (VX_Janela,VX_Sele)
-//    **********************
-//    * -1 foi para fazer com que a margem direita do Box "colasse" na
-//    * linha horizontal feita pela WVW_DrawGridHorz(). Antes ficada 1 pixel
-//    * vazio...
-//    *
-//    RETURN {|| WVW_SetPen(0,0,rgb(210,1210,210)),;
-//               WVW_DrawBoxRecessed( N_WindowNum,;
-//                                    VX_Sele:nTop, VX_Sele:nLeft,;
-//                                    VX_Sele:nBottom,VX_Sele:nRight,;
-//                                    {0,0,0,-1} )}
-//    *
-
-
 **********************
 FUNC CoordenadasBrowse (VX_Sele)
 **********************
 RETURN {VX_Sele:nTop, VX_Sele:nLeft,VX_Sele:nBottom,VX_Sele:nRight }
 
 
-//    *
-//    ******************
-//    FUNC DesenhaAtalho(VX_Janela,VX_Sele,N_Cont)
-//    ******************
-//    LOCAL N_DeslocaVertical, N_AlturaEmPixels
-//    LOCAL N_TelaHeight := TelaPrincipalHeight()
-//    *
-//    * Subir o sublinhado, para ficar mais próximo da respectiva letra
-//    *
-//    IF N_TelaHeight >= 1024  .OR. ;   // resolução VERTICAL
-//       N_TelaHeight >=  960
-//       N_DeslocaVertical := -1
-//       N_AlturaEmPixels  :=  2
-//    ELSEIF N_TelaHeight >=  864
-//       N_DeslocaVertical := -1
-//       N_AlturaEmPixels  :=  1
-//    ELSEIF N_TelaHeight >= 768 .OR. ;
-//           N_TelaHeight >= 600
-//       N_DeslocaVertical :=  0
-//       N_AlturaEmPixels  :=  1
-//    ELSE
-//       N_DeslocaVertical :=  0
-//       N_AlturaEmPixels  :=  1
-//    ENDIF
-//    *
-//    RETURN {||DesenhaAtalho2(VX_Janela,VX_Sele,N_Cont,N_DeslocaVertical,N_AlturaEmPixels)}
-//    *
-//    ************************
-//    STAT PROC DesenhaAtalho2(VX_Janela,VX_Sele,N_Cont,N_DeslocaVertical,N_AlturaEmPixels)
-//    ************************
-//    LOCAL N_LI,N_CI,N_LF,N_CF
-//    *
-//    #DEFINE N_LinCobertas  (N_Selecio - VX_Sele:ROWPOS())
-//    #DEFINE N_AlturaJanela (Lin2Livre(VX_Janela) - Lin1Livre(VX_Janela) + 1)
-//    *
-//    IF L_AtivaGui
-//       N_LI := N_Cont-N_LinCobertas+Lin1Livre(VX_Janela)-1
-//       N_CI := N_ColunaIniVetor+V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE]
-//       N_LF := N_Cont-N_LinCobertas+Lin1Livre(VX_Janela)-1
-//       N_CF := N_ColunaIniVetor+V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE]
-//       IF N_Cont - N_LinCobertas - 1 >= 0 .AND. ;
-//          N_Cont - N_LinCobertas - N_AlturaJanela - 1 < 0 .AND. ;
-//          TEVE_SOBREPOSICAO(VX_Janela,WVW_GetPaintRect(N_WindowNum),{N_LI,N_CI,N_LF,N_CF})
-//          *
-//          WVW_SetPen(0,0,rgb(210,1210,210))
-//          WVW_DrawLine(N_WindowNum,N_LI,N_CI,N_LF,N_CF,;
-//                       0,2,2,;  // 0=horizontal, 2=plain e 2=bottom
-//                       NIL,N_AlturaEmPixels,NIL,;
-//                       {N_DeslocaVertical,0,N_DeslocaVertical,0})
-//       ENDIF
-//    ENDIF
-//    *
-//    #UNDEF N_LinCobertas
-//    #UNDEF N_AlturaJanela
-//    *
-//    ******************************
-//    FUNC DesenhaBoxItemSelecionado(VX_Janela,VX_Sele)
-//    ******************************
-//    RETURN {||DesenhaBoxItemSelecionado2(VX_Janela,VX_Sele)}
-//    *
-//    ************************************
-//    STAT PROC DesenhaBoxItemSelecionado2(VX_Janela,VX_Sele)
-//    ************************************
-//    LOCAL N_LI,N_CI,N_LF,N_CF
-//    *
-//    IF L_AtivaGui
-//       N_LI := VX_Sele:nTop+N_AlturaCabec+VX_Sele:RowPos()-1
-//       N_CI := VX_Sele:nLeft
-//       N_LF := N_LI
-//       N_CF := VX_Sele:nRight
-//       IF TEVE_SOBREPOSICAO(VX_Janela,WVW_GetPaintRect(N_WindowNum),;
-//                            {N_LI,N_CI,N_LF,N_CF})
-//          WVW_SetPen(0,0,rgb(210,1210,210))
-//          WVW_DrawBoxRaised(N_WindowNum,N_LI,N_CI,N_LF,N_CF,;
-//                            {0,+2,0,-2})
-//       ENDIF
-//    ENDIF
-//    *
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-// *
-// *
 ****************
 FUNC SETA_ACEJAN  (B_ACEJAN_NEW)   // seta a funcao de teste de acesso a janela
 ****************

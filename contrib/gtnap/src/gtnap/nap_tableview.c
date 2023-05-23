@@ -83,7 +83,7 @@ HB_FUNC( NAP_TABLEVIEW_SELECT2 )
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
-    HB_ITEM *selection = hb_param(3, HB_IT_BLOCK);
+    HB_ITEM *selection = hb_param(3, HB_IT_ANY);
     hb_gtnap_tableview_select(wid, id, selection);
 }
 

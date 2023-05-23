@@ -2018,9 +2018,6 @@ static uint32_t i_col_width(const uint32_t fixed_width, const uint32_t str_width
     if (cwidth == 0)
         cwidth = str_width;
 
-    if (cwidth == 0)
-        cwidth = 10;
-
     return (cwidth + 1) * gtnap->cell_x_size;
 }
 
@@ -2280,7 +2277,7 @@ void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_ITEM *s
     if (selection != NULL)
     {
         HB_TYPE type = HB_ITEM_TYPE(selection);
-        if (type == HB_IT_NUMERIC)
+        if (type & HB_IT_NUMERIC)
         {
             uint32_t row = hb_itemGetNI(selection) - 1;
             arrst_append(rows, row, uint32_t);
