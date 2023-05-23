@@ -58,11 +58,18 @@ struct _gtnap_column_t
 struct _gtnap_area_t
 {
     AREA *area;
+
+    // view MUST BE DELETED FROM HERE!!!!!!!
     TableView *view;
+
     char_t temp[512];               // Temporal buffer between RDD and TableView
-    uint32_t cache_recno;           // Store the DB recno while table drawing
+    HB_ULONG cache_recno;           // Store the DB recno while table drawing
+    
+    // multisel MUST BE DELETED FROM HERE!!!!!!!
     bool_t multisel;
 
+    GtNapObject *gtobj;
+    
     // COLUMNS MUST BE DELETED FROM HERE!!!!!!!
     ArrSt(GtNapColumn) *columns;
 
@@ -1973,6 +1980,7 @@ uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int
     cassert_no_null(gtwin);
     cassert(gtwin->gtarea == NULL);
     cassert(gtwin->gtvector == NULL);
+    tableview_font(view, GTNAP_GLOBAL->global_font);    
     tableview_multisel(view, multisel, multisel);
     size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
@@ -2052,9 +2060,9 @@ void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint
     col->width = i_col_width(col->fixed_width, hnchars, GTNAP_GLOBAL);
     col->align = ekLEFT;
     col->codeBlock = hb_itemNew(eval_block);
-    tableview_header_title((TableView*)obj->component, id, tc(col->title));
-    tableview_column_width((TableView*)obj->component, id, (real32_t)col->width);
-    tableview_header_align((TableView*)obj->component, id, col->align);
+    tableview_header_title((TableView*)obj->component, cid, tc(col->title));
+    tableview_column_width((TableView*)obj->component, cid, (real32_t)col->width);
+    tableview_header_align((TableView*)obj->component, cid, col->align);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2123,24 +2131,96 @@ static void i_OnTableSelect(GtNapArea *gtarea, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-/* TODO!!!!!!!!! public members make private */
+static const char_t *i_area_eval_field(GtNapArea *gtarea, const uint32_t field_id, const uint32_t row_id, align_t *align)
+{
+    uint32_t recno = 0;
+    const GtNapColumn *column = NULL;
+    HB_ITEM *ritem = NULL;
+    HB_TYPE type = 0;
+
+    cassert_no_null(gtarea);
+    cassert_no_null(gtarea->gtobj);
+    cassert(field_id > 0);
+
+    /* Go to DB record */
+    recno = *arrst_get_const(gtarea->records, row_id, uint32_t);
+    SELF_GOTO(gtarea->area, recno);
+
+    /* Get the table column */
+    column = arrst_get_const(gtarea->gtobj->columns, field_id - 1, GtNapColumn);
+
+    /* CodeBlock that computes the cell content */
+    ritem = hb_itemDo(column->codeBlock, 0);
+
+    /* Fill the temporal cell buffer with cell result */
+    type = HB_ITEM_TYPE(ritem);
+    gtarea->temp[0] = '\0';
+
+    if (type == HB_IT_STRING)
+    {
+        hb_itemCopyStrUTF8(ritem, gtarea->temp, sizeof(gtarea->temp));
+    }
+    else if (type == HB_IT_DATE)
+    {
+        char date[16];
+        hb_itemGetDS(ritem, date);
+        hb_dateFormat(date, gtarea->temp, hb_setGetDateFormat());
+    }
+    else if (type == HB_IT_DOUBLE)
+    {
+        double value = hb_itemGetND(ritem);
+        bstd_sprintf(gtarea->temp, sizeof(gtarea->temp), "%12.4f", value);
+    }
+
+    hb_itemRelease(ritem);
+
+    if (align != NULL)
+        *align = column->align;
+
+    return gtarea->temp;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_area_column_width(GtNapArea *gtarea, const uint32_t col, const char_t *text)
+{
+    GtNapColumn *column = NULL;
+    uint32_t nchars, width;
+    cassert_no_null(gtarea);
+    cassert_no_null(gtarea->gtobj);
+    cassert(gtarea->gtobj->type == ekOBJ_TABLEVIEW);
+    column = arrst_get(gtarea->gtobj->columns, col, GtNapColumn);
+    nchars = unicode_nchars(text, ekUTF8);
+    width = i_col_width(column->fixed_width, nchars, GTNAP_GLOBAL);
+
+    if (width > column->width)
+    {
+        column->width = width;
+        tableview_column_width((TableView*)gtarea->gtobj->component, col, (real32_t)column->width);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnTableData(GtNapArea *gtarea, Event *e)
 {
     uint32_t etype = event_type(e);
+    cassert_no_null(gtarea);
 
     switch(etype) {
     case ekGUI_EVENT_TBL_BEGIN:
-        hb_gtnap_area_cache_cur_db_row(gtarea);
+        SELF_RECNO(gtarea->area, &gtarea->cache_recno);
         break;
 
     case ekGUI_EVENT_TBL_END:
-        hb_gtnap_area_restore_cur_db_row(gtarea);
+        SELF_GOTO(gtarea->area, gtarea->cache_recno);
+        gtarea->cache_recno = UINT32_MAX;
         break;
 
     case ekGUI_EVENT_TBL_NROWS:
     {
         uint32_t *n = event_result(e, uint32_t);
-        *n = hb_gtnap_area_row_count(gtarea);
+        *n = arrst_size(gtarea->records, uint32_t);
         break;
     }
 
@@ -2148,10 +2228,9 @@ static void i_OnTableData(GtNapArea *gtarea, Event *e)
     {
         EvTbCell *cell = event_result(e, EvTbCell);
         const EvTbPos *pos = event_params(e, EvTbPos);
-        cell->text = hb_gtnap_area_eval_field(gtarea, pos->col + 1, pos->row, &cell->align);
-
-        // Table column automatic width based on cell content
-        hb_gtnap_cualib_column_width(gtarea, pos->col, cell->text);
+        cell->text = i_area_eval_field(gtarea, pos->col + 1, pos->row, &cell->align);
+        /* Table column automatic width based on cell content */
+        i_area_column_width(gtarea, pos->col, cell->text);
         break;
     }
 
@@ -2177,6 +2256,7 @@ void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM
     gtwin->gtarea = i_create_area();
     gtwin->gtarea->area = (AREA*)hb_rddGetCurrentWorkAreaPointer();
     gtwin->gtarea->view = (TableView*)obj->component;
+    gtwin->gtarea->gtobj = obj;
     gtwin->gtarea->multisel = obj->multisel;
 
     if (while_block != NULL)

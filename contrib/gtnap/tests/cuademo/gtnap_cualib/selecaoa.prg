@@ -258,48 +258,6 @@ LOGA_AJTELAT(C_CdTela,C_Cabec,NIL)  // LOGAR conteúdo de telas
 RETURN X_Retorno
 *
 
-
-//
-// FRAN: A Multi-select TableView control can change the selection using [CTRL+Click] or [SHIFT+UP/DOWN]
-// This funcion syncronizes the TableView with the Janela selection
-//
-// STATIC PROC UpdatedSelected()
-
-//     // NAP_TABLEVIEW_CUALIB_REFRESH(SET(_SET_DELETED))
-
-
-//     // //         //NAP_TABLEVIEW_UPDATE(V_TableView)
-
-//     // LOCAL V_TableView := NIL
-//     // LOCAL VN_Selection := NIL
-
-//     // LOG_PRINT("UPDATED. Len of VX_Janela: " /*+ hb_ntos(LEN(VX_Janela))*/ )
-//     // // IF SOB_MODO_GRAFICO()
-//     // //      V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
-
-//     // //     IF V_TableView # NIL
-//     // //         VN_Selection := NAP_TABLEVIEW_SELECTED(V_TableView)
-//     // //     ENDIF
-
-//     // //     LOG_PRINT("TABLEVIEW SELECTION WITH " + hb_ntos(LEN(VN_Selection)))
-//     // //     LOG_PRINT("JANELA VALUE: " + hb_ntos(VX_Janela))
-//     // //     IF VN_Selection # NIL
-//     // //         IF VX_Janela == NIL
-//     // //             LOG_PRINT("VX_Janela == NIL!!!!!!!!!!!!!")
-//     // //         ELSE
-
-//     // //             #DEFINE VX_Sele  VX_SubObj
-//     // //             // VN_Selecio := VN_Selection
-//     // //             LOG_PRINT("VN_Selecio Current size: " + hb_ntos(LEN(VN_Selecio)))
-//     // //              #UNDEF VX_Sele
-//     // //             // MudeLista ( VX_Janela , VN_Selection )
-//     // //         ENDIF
-//     // //         //NAP_TABLEVIEW_UPDATE(V_TableView)
-//     // //     ENDIF
-//     // // ENDIF
-
-//     RETURN
-
 ***********************
 STATIC FUNCTION Selecao ( VX_Janela, VX_Sele)
 ***********************
@@ -311,65 +269,29 @@ LOCAL L_ForcaParada, L_Abortado, N_Cont
 LOCAL N_Row_Inicial_Util
 LOCAL N_mRow, N_mCol, N_Desloca, N_RegiaoMouse, N_Keyboard
 LOCAL N_Desloca_Aux, N_RowPos_Ant
-LOCAL X_Retorno
-LOCAL N_PaintRefresh_Old, X_Retorno_Eval
+LOCAL X_Retorno, L_Multisel, N_TableID
+LOCAL X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, L_PodeExecutar
 LOCAL V_Ambiente_Alias
-LOCAL V_TableView, L_Coords, N_Count, O_Column, C_Title, N_Width
-
-*
-//
-// FRAN - This code is not necessary in GTNAP
-//
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
+LOCAL L_Coords, N_Count, O_Column, C_Title, N_Width
 *
 L_Abortado := .F.         // se .T. se teclado ESC
 *
 * antes de tudo, remontar a tela caso usuário tenha solicitado
 *
 IF L_ForcaLerTudo
-   *
-   IF L_PrimAtivacao
-      L_PrimAtivacao := .F.
-      *
-      * No xHarbour, a atribuição da variável FREEZE reexecuta os codes blocks,
-      * o que causava erro quando um registro era deletado. Corrigir este
-      * problema usando a variável L_PrimAtivacao, que faz com que o FREEZE
-      * somente seja setado uma vez por janela (na primeira ativação).
-      *
-      VX_Sele:FREEZE := N_Congela
-      *
-    //   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-    //      IF SOB_MODO_GRAFICO()
-    //         IF L_MostraGrade
-    //            * montar grid
-    //            AddGuiObject(VX_Janela,DesenhaGridH(VX_Janela,VX_Sele),;
-    //                         CoordenadasBrowse(VX_Sele))
-    //            AddGuiObject(VX_Janela,DesenhaGridV(VX_Janela,VX_Sele),;
-    //                         CoordenadasBrowse(VX_Sele))
-    //            AddGuiObject(VX_Janela,DesenhaBoxExterno(VX_Janela,VX_Sele),;
-    //                         CoordenadasBrowse(VX_Sele))
-    //         ENDIF
-    //      ENDIF
-    //   #elif defined(__PLATFORM__LINUX)
-    //      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-    //   #else
-    //      #erro "Código não adaptado para esta plataforma"
-    //   #endif
-      *
-
+    *
+    IF L_PrimAtivacao
+        L_PrimAtivacao := .F.
+        *
+        * No xHarbour, a atribuição da variável FREEZE reexecuta os codes blocks,
+        * o que causava erro quando um registro era deletado. Corrigir este
+        * problema usando a variável L_PrimAtivacao, que faz com que o FREEZE
+        * somente seja setado uma vez por janela (na primeira ativação).
+        *
+        VX_Sele:FREEZE := N_Congela
+        *
         IF SOB_MODO_GRAFICO()
-            //
-            // FRAN: Here we have to create the TableView
-            //
 
             L_Coords := CoordenadasBrowse(VX_Sele)
 
@@ -378,50 +300,69 @@ IF L_ForcaLerTudo
                 L_Coords[4]++
             ENDIF
 
-            V_TableView := NAP_TABLEVIEW_CREATE()
-
-            IF L_NaoRolaHorizontal == .F.
-                LOG_PRINT("With HORIZONTAL ScrollBar!!")
-            ELSE
-                LOG_PRINT("WITHOUT HORIZONTAL ScrollBar!!")
+            IF N_TP_Selecao == _SELE_SIMPLES
+                L_Multisel := .F.
+            ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+                L_Multisel := .T.
             ENDIF
 
-            IF L_NaoRolaVertical == .F.
-                LOG_PRINT("With VERTICAL ScrollBar!!")
-            ELSE
-                LOG_PRINT("WITHOUT VERTICAL ScrollBar!!")
-            ENDIF
+            N_TableID := NAP_TABLEVIEW(N_WindowNum, L_Multisel, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], .F.)
+            N_ItemId := N_TableID
 
-            NAP_TABLEVIEW_SCROLL(V_TableView, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
+            //NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
+
+            //V_TableView := NAP_TABLEVIEW_CREATE()
+
+            // IF L_NaoRolaHorizontal == .F.
+            //     LOG_PRINT("With HORIZONTAL ScrollBar!!")
+            // ELSE
+            //     LOG_PRINT("WITHOUT HORIZONTAL ScrollBar!!")
+            // ENDIF
+
+            // IF L_NaoRolaVertical == .F.
+            //     LOG_PRINT("With VERTICAL ScrollBar!!")
+            // ELSE
+            //     LOG_PRINT("WITHOUT VERTICAL ScrollBar!!")
+            // ENDIF
+
+            NAP_TABLEVIEW_SCROLL2(N_WindowNum, N_TableID, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
+
+            IF L_MostraGrade
+                //NAP_TABLEVIEW_GRID(V_TableView, .T., .T.)
+                NAP_TABLEVIEW_GRID2(N_WindowNum, N_TableID, .T., .T.)
+            ELSE
+                NAP_TABLEVIEW_GRID2(N_WindowNum, N_TableID, .F., .F.)
+            ENDIF
+            //NAP_TABLEVIEW_SCROLL(V_TableView, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
 
             // LOG_PRINT("With VERTICAL ScrollBar: " + L_NaoRolaVertical)
 
-            #DEFINE B_While              VX_Sele:CARGO[21]      // FRAN: Condition
-            NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView, B_While)
-            #UNDEF B_While
+            // #DEFINE B_While VX_Sele:CARGO[21]
+            // //NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView, B_While)
+            // NAP_TABLEVIEW_BIND_AREA(N_WindowNum, N_TableID, B_While)
+            // #UNDEF B_While
 
 
-            NAP_TABLEVIEW_FONT(V_TableView)
+            //NAP_TABLEVIEW_FONT(V_TableView)
 
-            IF L_MostraGrade
-                NAP_TABLEVIEW_GRID(V_TableView, .T., .T.)
-            ENDIF
 
-            IF N_TP_Selecao == _SELE_SIMPLES
-                NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
-            ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-                NAP_CUALIB_MULTISEL()
-                NAP_TABLEVIEW_MULTISEL(V_TableView, .T., .T.)
+            // IF N_TP_Selecao == _SELE_SIMPLES
+            //     NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
+            // ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+            //     NAP_CUALIB_MULTISEL()
+            //     NAP_TABLEVIEW_MULTISEL(V_TableView, .T., .T.)
 
 
 
-            ENDIF
+            // ENDIF
 
-            LOG_PRINT("TableView Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
+            // LOG_PRINT("TableView Vert Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
 
-            NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
+            // NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
 
-            LOG_PRINT("Num cols: " + hb_ntos(VX_Sele:COLCOUNT))
+            // LOG_PRINT("Num cols: " + hb_ntos(VX_Sele:COLCOUNT))
+
+
             FOR N_Count := 1 TO VX_Sele:COLCOUNT
                 O_Column := VX_Sele:GetColumn(N_Count)
                 C_Title := O_Column:HEADING
@@ -441,37 +382,49 @@ IF L_ForcaLerTudo
                 // ELSE
                 //     LOG_PRINT("WIDTH IS NULL")
                 // ENDIF
-
-                NAP_TABLEVIEW_CUALIB_COLUMN_DB(V_TableView, C_Title,O_Column:BLOCK,N_Width)
+                NAP_TABLEVIEW_COLUMN(N_WindowNum, N_TableID, N_Width, {||C_Title}, O_Column:BLOCK)
+                //NAP_TABLEVIEW_CUALIB_COLUMN_DB(V_TableView, C_Title,O_Column:BLOCK,N_Width)
 
             NEXT
 
+            IF N_Congela # 0
+                //NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
+                NAP_TABLEVIEW_FREEZE(N_WindowNum, N_TableID, N_Congela)
+            ENDIF
+
+
+            #DEFINE B_While VX_Sele:CARGO[21]
+            //NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView, B_While)
+            NAP_TABLEVIEW_BIND_AREA(N_WindowNum, N_TableID, B_While)
+            #UNDEF B_While
 
             // NAP_TABLEVIEW_UPDATE(V_TableView)
 
-            LOG_PRINT("Current VN_Selecio: " + hb_ntos(LEN(VN_Selecio)))
-            NAP_TABLEVIEW_CUALIB_REFRESH_ALL()
+            //LOG_PRINT("Current VN_Selecio: " + hb_ntos(LEN(VN_Selecio)))
+            NAP_TABLEVIEW_REFRESH_ALL(N_WindowNum, N_TableID)
+            //NAP_TABLEVIEW_CUALIB_REFRESH_ALL()
 
             //
             // FRAN: Automatic first selection and change selection event
             //
             //NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
 
-            IF N_TP_Selecao == _SELE_SIMPLES
-                // NAP_TABLEVIEW_CUALIB_REFRESH do the select
-                //NAP_TABLEVIEW_SELECT(V_TableView, 1)
-                NAP_TABLEVIEW_CUALIB_ON_SINGLE_SELECT_CHANGE()
+            NAP_TABLEVIEW_SELECT2(N_WindowNum, N_TableID, VN_Selecio)
+            // IF N_TP_Selecao == _SELE_SIMPLES
+            //     // NAP_TABLEVIEW_CUALIB_REFRESH do the select
+            //     //NAP_TABLEVIEW_SELECT(V_TableView, 1)
+            //     //NAP_TABLEVIEW_CUALIB_ON_SINGLE_SELECT_CHANGE()
 
-            ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-                NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
-                //NAP_CUALIB_SET_JANELA(VX_Sele)
-                //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
-                //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
-                IF N_Congela # 0
-                    NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
-                ENDIF
+            // ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+            //     NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
+            //     //NAP_CUALIB_SET_JANELA(VX_Sele)
+            //     //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
+            //     //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
+            //     // IF N_Congela # 0
+            //     //     NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
+            //     // ENDIF
 
-            ENDIF
+            // ENDIF
 
 
             //LOG_PRINT("TableView DEFAULT SEL:" + hb_ntos(LEN(VN_Selecio)) + ", JAJAJAJ")
