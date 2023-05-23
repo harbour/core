@@ -248,7 +248,7 @@ extern TableView *hb_gtnap_cualib_current_tableview(void);
 
 extern void hb_gtnap_cualib_tableview_On_Single_Select_Change(void);
 
-extern void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId);
+//extern void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId);
 
 extern bool_t hb_gtnap_cualib_current_row_selected(void);
 

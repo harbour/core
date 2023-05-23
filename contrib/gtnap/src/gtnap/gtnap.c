@@ -2196,7 +2196,7 @@ void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_ITEM *s
     ArrSt(uint32_t) *rows = arrst_create(uint32_t);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    
+
     if (selection != NULL)
     {
         HB_TYPE type = HB_ITEM_TYPE(selection);
@@ -5538,16 +5538,16 @@ static void i_OnTableViewSelect(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
-    {
-        Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT32_MAX, FALSE, cuawin, i_OnTableViewSelect);
-        tableview_OnSelect(cuawin->gtarea->view, listener);
-    }
-}
+// void hb_gtnap_cualib_tableview_OnSelect(const uint32_t codeBlockParamId)
+// {
+//     GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//     cassert_no_null(cuawin);
+//     if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+//     {
+//         Listener *listener = i_gtnap_cualib_listener(codeBlockParamId, INT32_MAX, FALSE, cuawin, i_OnTableViewSelect);
+//         tableview_OnSelect(cuawin->gtarea->view, listener);
+//     }
+// }
 
 /*---------------------------------------------------------------------------*/
 

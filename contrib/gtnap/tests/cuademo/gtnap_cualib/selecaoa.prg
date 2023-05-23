@@ -2,10 +2,9 @@
 
 #pragma DebugInfo=Off
 
-// /*
-// * objeto SELECAO
-// *
-// */
+/*
+* objeto SELECAO
+*/
 
 * Conserto de bug na linguagem
 * (EXISTE bug na FUNCAO EOF(), usada dentro de objetos TBROWSE, em modo
@@ -21,7 +20,6 @@
 #INCLUDE "janela.ch"       // métodos externos da classe JANELA
 #INCLUDE "intercep.ch"  // interceptar comandos de manipulação de dados
 *
-
 
 ********************
 FUNCTION EspSelArq20 ( VX_Janela, N_TP_Selecao, L_SemGrade, ;
@@ -55,34 +53,30 @@ IF L_AutoClose
 ENDIF
 *
 IF N_TP_Selecao # _SELE_SIMPLES
-   IF ASCAN(V_RegiaoBotoes,;
-       {|V_Botao|"BARRA DE ESPAÇO=" $ XUPPER(V_Botao[_BOTAO_TEXTO_COMANDO]) .OR. ;
-                 "BARRA DE ESPACO=" $ XUPPER(V_Botao[_BOTAO_TEXTO_COMANDO]) .OR. ;
-                 "ESPAÇO=" $ XUPPER(V_Botao[_BOTAO_TEXTO_COMANDO]) .OR. ;
-                 "ESPACO=" $ XUPPER(V_Botao[_BOTAO_TEXTO_COMANDO]) }) # 0
-      ? MEMVAR->JANELA_JA_TEM_BOTAO_BARRA_DE_ESPACO_AUTOMATICO
-   ENDIF
-   IF ASCAN(V_LstAcoes,{|V_Acao|K_SPACE==V_Acao[_ACAO_KEYBOARD]}) # 0
-      ? MEMVAR->JANELA_JA_TEM_ACAO_BARRA_DE_ESPACO_AUTOMATICO
-   ENDIF
+    IF ASCAN(V_RegiaoBotoes,;
+        {|V_Botao|"BARRA DE ESPAÇO=" $ XUPPER(V_Botao[_BOTAO_TEXTO_COMANDO]) .OR. ;
+                    "BARRA DE ESPACO=" $ XUPPER(V_Botao[_BOTAO_TEXTO_COMANDO]) .OR. ;
+                    "ESPAÇO=" $ XUPPER(V_Botao[_BOTAO_TEXTO_COMANDO]) .OR. ;
+                    "ESPACO=" $ XUPPER(V_Botao[_BOTAO_TEXTO_COMANDO]) }) # 0
+        ? MEMVAR->JANELA_JA_TEM_BOTAO_BARRA_DE_ESPACO_AUTOMATICO
+    ENDIF
+    IF ASCAN(V_LstAcoes,{|V_Acao|K_SPACE==V_Acao[_ACAO_KEYBOARD]}) # 0
+        ? MEMVAR->JANELA_JA_TEM_ACAO_BARRA_DE_ESPACO_AUTOMATICO
+    ENDIF
 
-   IF SOB_MODO_GRAFICO()
-    ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_CUALIB_SELECT_CURRENT()},.F.,;
-        "B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
-        .T.)
-    NAP_CUALIB_HOTKEY(K_SPACE, ,{||NAP_CUALIB_SELECT_CURRENT()},.F.)
-ELSE
-    ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,;
-                "B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
-                .T.)
+    IF SOB_MODO_GRAFICO()
+        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_CUALIB_SELECT_CURRENT()},.F.,;
+                "B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
+        NAP_CUALIB_HOTKEY(K_SPACE, ,{||NAP_CUALIB_SELECT_CURRENT()},.F.)
+    ELSE
+        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,;
+                "B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
     ENDIF
 
 ENDIF
 *
 IF L_AutoClose
-   ADDBOTAO(VX_Janela,"Enter=selecionar",{||.T.},.T.,;
-            "B17860",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
-            .T.)
+   ADDBOTAO(VX_Janela,"Enter=selecionar",{||.T.},.T.,"B17860",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
 ENDIF
 *
 AJUSTA_BOTOES(VX_Janela)  // ajusta Lin2Livre à quantidade de botões de função
@@ -172,14 +166,15 @@ B_LinCorrente :=  {||RECNO()}        // bloco que retorna a linha corrente
 #DEFINE L_TemHotKey     .F.   // usado somente no browse de vetores
 #DEFINE V_Lst_CdOpcao   NIL   // Manter compatibilidade do vetor CARGO entre os programas: SELECAOA, SELECAOV e MENUVERT
 #DEFINE L_TeveRolaHorizontal .F.  // Para saber se teve rolamento horizontal desde última estabilização
-VX_Sele:CARGO := { B_LinCorrente , L_PriFora , L_UltFora , ;
-                   L_ForcaLerTudo , L_PrimAtivacao , L_AtivaGui,;
-                   L_AutoClose, VN_Selecio, L_MostraGrade,;
-                   N_Congela , N_TP_Selecao, N_AlturaCabec,;
-                   N_Selecio , N_ColunaIniVetor,;
-		   V_Opcoes, L_TemHotKey, V_Lst_CdOpcao, L_TeveRolaHorizontal,;
-            L_NaoRolaVertical, L_NaoRolaHorizontal,;
-                B_While }
+VX_Sele:CARGO := { ;
+                    B_LinCorrente , L_PriFora , L_UltFora , ;
+                    L_ForcaLerTudo , L_PrimAtivacao , L_AtivaGui,;
+                    L_AutoClose, VN_Selecio, L_MostraGrade,;
+                    N_Congela , N_TP_Selecao, N_AlturaCabec,;
+                    N_Selecio , N_ColunaIniVetor,;
+                    V_Opcoes, L_TemHotKey, V_Lst_CdOpcao, L_TeveRolaHorizontal,;
+                    L_NaoRolaVertical, L_NaoRolaHorizontal, B_While ;
+                }
 #UNDEF L_PriFora
 #UNDEF L_UltFora
 #UNDEF L_ForcaLerTudo
@@ -195,8 +190,8 @@ VX_Sele:CARGO := { B_LinCorrente , L_PriFora , L_UltFora , ;
 #UNDEF V_Lst_CdOpcao
 #UNDEF L_TeveRolaHorizontal
 *
-N_TP_Jan  := _JAN_SELE_ARQ_20    // especializando
-VX_SubObj := VX_Sele              // a janela
+N_TP_Jan  := _JAN_SELE_ARQ_20       // especializando
+VX_SubObj := VX_Sele                // a janela
 B_Metodo  := {||Selecionar(VX_Janela)}
 *
 * TEM de ser via DEFINE, pois existe bloco de código
@@ -204,14 +199,10 @@ B_Metodo  := {||Selecionar(VX_Janela)}
 * (VN_Selecio é "detached local")
 #DEFINE VN_Selecio    VX_Sele:CARGO[08]
 IF N_TP_Selecao # _SELE_SIMPLES
-
     IF SOB_MODO_GRAFICO()
-        AnexeCol(VX_Janela, NIL,;
-            { || IIF(NAP_CUALIB_IS_SELECTED(B_LinCorrente)==.F.," ","»")})
-
+        AnexeCol(VX_Janela, NIL, { || IIF(NAP_CUALIB_IS_SELECTED(B_LinCorrente)==.F.," ","»")})
     ELSE
-    AnexeCol(VX_Janela, NIL,;
-              { || IIF(ASCAN(VN_Selecio,EVAL(B_LinCorrente))==0," ","»")})
+        AnexeCol(VX_Janela, NIL, { || IIF(ASCAN(VN_Selecio,EVAL(B_LinCorrente))==0," ","»")})
     ENDIF
 ENDIF
 #UNDEF VN_Selecio
@@ -243,109 +234,6 @@ RETURN NIL
 #DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Para saber se teve rolamento horizontal desde última estabilização
 #DEFINE L_NaoRolaVertical    VX_Sele:CARGO[19]      // FRAN: With vertical scroll bar
 #DEFINE L_NaoRolaHorizontal  VX_Sele:CARGO[20]      // FRAN: With horizontal scroll bar
-
-// *
-// **************************************************************************************************************************************************
-// *
-***********************
-STAT FUNCTION SkipWhile ( N_Salto , B_While )
-***********************
-*
-LOCAL N_Saltado := 0, L_PriRegOK
-*
-#DEFINE L_RegValido   EVAL(B_While) .AND. .NOT. EOF()
-*
-IF N_Salto == 0
-   REFRESH_RECORD()
-ENDIF
-*
-IF (L_PriRegOK := (L_RegValido))   // validade do reg.corrente
-   *
-   DO CASE
-      CASE N_Salto > 0
-           DO WHILE N_Saltado < N_Salto .AND. L_RegValido
-              SKIP
-              N_Saltado := N_Saltado + 1
-           ENDDO
-           IF L_PriRegOK .AND. .NOT. ( L_RegValido )
-              SKIP -1
-              N_Saltado := N_Saltado - 1
-           ENDIF
-      CASE N_Salto < 0
-           DO WHILE N_Saltado > N_Salto .AND. .NOT. BOF() .AND. L_RegValido
-              SKIP -1
-              IF .NOT. BOF()
-                 N_Saltado := N_Saltado - 1
-              ENDIF
-           ENDDO
-           IF L_PriRegOK .AND. .NOT. (L_RegValido)
-              SKIP
-              N_Saltado := N_Saltado + 1
-           ENDIF
-   ENDCASE
-   *
-ELSE
-   GOTO_EOF()                 // forçar o EOF()
-ENDIF
-*
-#UNDEF L_RegValido
-*
-RETURN N_Saltado
-*
-*
-**********************
-STAT FUNCTION TopWhile ( B_While )
-**********************
-*
-LOCAL L_PriRegOK
-*
-#DEFINE L_RegValido   EVAL(B_While) .AND. .NOT. EOF()
-*
-REFRESH_RECORD()
-*
-IF (L_PriRegOK := ( L_RegValido ))    // validade do reg.corrente
-   *
-   DO WHILE .NOT. BOF() .AND. L_RegValido
-      SKIP -1                           // retrocede nos registros do arquivo
-   ENDDO
-   *
-   IF L_PriRegOK .AND. .NOT. (L_RegValido)   // se existiu algum registro válido
-      SKIP                                   // avançar para o último válido
-   ENDIF
-   *
-ELSE
-   GOTO_EOF()                 // forçar o EOF()
-ENDIF
-RETURN NIL
-*
-#UNDEF L_RegValido
-*
-*************************
-STAT FUNCTION BottomWhile ( B_While )
-*************************
-*
-LOCAL L_PriRegOK
-*
-#DEFINE L_RegValido   EVAL(B_While) .AND. .NOT. EOF()
-*
-REFRESH_RECORD()
-*
-IF (L_PriRegOK := ( L_RegValido ))    // validade do reg.corrente
-   *
-   DO WHILE L_RegValido
-      SKIP                          // avança nos registros do arquivo
-   ENDDO
-   *
-   IF L_PriRegOK                    // se existiu algum registro válido
-      SKIP -1                       // retroceder para o último válido
-   ENDIF
-ELSE
-   GOTO_EOF()                 // forçar o EOF()
-ENDIF
-*
-#UNDEF L_RegValido
-*
-RETURN NIL
 *
 **************************
 STATIC FUNCTION Selecionar ( VX_Janela )
@@ -375,42 +263,42 @@ RETURN X_Retorno
 // FRAN: A Multi-select TableView control can change the selection using [CTRL+Click] or [SHIFT+UP/DOWN]
 // This funcion syncronizes the TableView with the Janela selection
 //
-STATIC PROC UpdatedSelected()
+// STATIC PROC UpdatedSelected()
 
-    // NAP_TABLEVIEW_CUALIB_REFRESH(SET(_SET_DELETED))
+//     // NAP_TABLEVIEW_CUALIB_REFRESH(SET(_SET_DELETED))
 
 
-    // //         //NAP_TABLEVIEW_UPDATE(V_TableView)
+//     // //         //NAP_TABLEVIEW_UPDATE(V_TableView)
 
-    // LOCAL V_TableView := NIL
-    // LOCAL VN_Selection := NIL
+//     // LOCAL V_TableView := NIL
+//     // LOCAL VN_Selection := NIL
 
-    // LOG_PRINT("UPDATED. Len of VX_Janela: " /*+ hb_ntos(LEN(VX_Janela))*/ )
-    // // IF SOB_MODO_GRAFICO()
-    // //      V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
+//     // LOG_PRINT("UPDATED. Len of VX_Janela: " /*+ hb_ntos(LEN(VX_Janela))*/ )
+//     // // IF SOB_MODO_GRAFICO()
+//     // //      V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
 
-    // //     IF V_TableView # NIL
-    // //         VN_Selection := NAP_TABLEVIEW_SELECTED(V_TableView)
-    // //     ENDIF
+//     // //     IF V_TableView # NIL
+//     // //         VN_Selection := NAP_TABLEVIEW_SELECTED(V_TableView)
+//     // //     ENDIF
 
-    // //     LOG_PRINT("TABLEVIEW SELECTION WITH " + hb_ntos(LEN(VN_Selection)))
-    // //     LOG_PRINT("JANELA VALUE: " + hb_ntos(VX_Janela))
-    // //     IF VN_Selection # NIL
-    // //         IF VX_Janela == NIL
-    // //             LOG_PRINT("VX_Janela == NIL!!!!!!!!!!!!!")
-    // //         ELSE
+//     // //     LOG_PRINT("TABLEVIEW SELECTION WITH " + hb_ntos(LEN(VN_Selection)))
+//     // //     LOG_PRINT("JANELA VALUE: " + hb_ntos(VX_Janela))
+//     // //     IF VN_Selection # NIL
+//     // //         IF VX_Janela == NIL
+//     // //             LOG_PRINT("VX_Janela == NIL!!!!!!!!!!!!!")
+//     // //         ELSE
 
-    // //             #DEFINE VX_Sele  VX_SubObj
-    // //             // VN_Selecio := VN_Selection
-    // //             LOG_PRINT("VN_Selecio Current size: " + hb_ntos(LEN(VN_Selecio)))
-    // //              #UNDEF VX_Sele
-    // //             // MudeLista ( VX_Janela , VN_Selection )
-    // //         ENDIF
-    // //         //NAP_TABLEVIEW_UPDATE(V_TableView)
-    // //     ENDIF
-    // // ENDIF
+//     // //             #DEFINE VX_Sele  VX_SubObj
+//     // //             // VN_Selecio := VN_Selection
+//     // //             LOG_PRINT("VN_Selecio Current size: " + hb_ntos(LEN(VN_Selecio)))
+//     // //              #UNDEF VX_Sele
+//     // //             // MudeLista ( VX_Janela , VN_Selection )
+//     // //         ENDIF
+//     // //         //NAP_TABLEVIEW_UPDATE(V_TableView)
+//     // //     ENDIF
+//     // // ENDIF
 
-    RETURN
+//     RETURN
 
 ***********************
 STATIC FUNCTION Selecao ( VX_Janela, VX_Sele)
@@ -578,7 +466,7 @@ IF L_ForcaLerTudo
                 NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
                 //NAP_CUALIB_SET_JANELA(VX_Sele)
                 //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
-                NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
+                //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
                 IF N_Congela # 0
                     NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
                 ENDIF
@@ -1175,6 +1063,108 @@ RETURN X_Retorno
 *
 
 
+// *
+// **************************************************************************************************************************************************
+// *
+***********************
+STAT FUNCTION SkipWhile ( N_Salto , B_While )
+***********************
+*
+LOCAL N_Saltado := 0, L_PriRegOK
+*
+#DEFINE L_RegValido   EVAL(B_While) .AND. .NOT. EOF()
+*
+IF N_Salto == 0
+   REFRESH_RECORD()
+ENDIF
+*
+IF (L_PriRegOK := (L_RegValido))   // validade do reg.corrente
+   *
+   DO CASE
+      CASE N_Salto > 0
+           DO WHILE N_Saltado < N_Salto .AND. L_RegValido
+              SKIP
+              N_Saltado := N_Saltado + 1
+           ENDDO
+           IF L_PriRegOK .AND. .NOT. ( L_RegValido )
+              SKIP -1
+              N_Saltado := N_Saltado - 1
+           ENDIF
+      CASE N_Salto < 0
+           DO WHILE N_Saltado > N_Salto .AND. .NOT. BOF() .AND. L_RegValido
+              SKIP -1
+              IF .NOT. BOF()
+                 N_Saltado := N_Saltado - 1
+              ENDIF
+           ENDDO
+           IF L_PriRegOK .AND. .NOT. (L_RegValido)
+              SKIP
+              N_Saltado := N_Saltado + 1
+           ENDIF
+   ENDCASE
+   *
+ELSE
+   GOTO_EOF()                 // forçar o EOF()
+ENDIF
+*
+#UNDEF L_RegValido
+*
+RETURN N_Saltado
+*
+*
+**********************
+STAT FUNCTION TopWhile ( B_While )
+**********************
+*
+LOCAL L_PriRegOK
+*
+#DEFINE L_RegValido   EVAL(B_While) .AND. .NOT. EOF()
+*
+REFRESH_RECORD()
+*
+IF (L_PriRegOK := ( L_RegValido ))    // validade do reg.corrente
+   *
+   DO WHILE .NOT. BOF() .AND. L_RegValido
+      SKIP -1                           // retrocede nos registros do arquivo
+   ENDDO
+   *
+   IF L_PriRegOK .AND. .NOT. (L_RegValido)   // se existiu algum registro válido
+      SKIP                                   // avançar para o último válido
+   ENDIF
+   *
+ELSE
+   GOTO_EOF()                 // forçar o EOF()
+ENDIF
+RETURN NIL
+*
+#UNDEF L_RegValido
+*
+*************************
+STAT FUNCTION BottomWhile ( B_While )
+*************************
+*
+LOCAL L_PriRegOK
+*
+#DEFINE L_RegValido   EVAL(B_While) .AND. .NOT. EOF()
+*
+REFRESH_RECORD()
+*
+IF (L_PriRegOK := ( L_RegValido ))    // validade do reg.corrente
+   *
+   DO WHILE L_RegValido
+      SKIP                          // avança nos registros do arquivo
+   ENDDO
+   *
+   IF L_PriRegOK                    // se existiu algum registro válido
+      SKIP -1                       // retroceder para o último válido
+   ENDIF
+ELSE
+   GOTO_EOF()                 // forçar o EOF()
+ENDIF
+*
+#UNDEF L_RegValido
+*
+RETURN NIL
 
 
 

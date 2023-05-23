@@ -515,10 +515,10 @@ HB_FUNC( NAP_TABLEVIEW_CUALIB_SELECT_MULTIPLE_ROW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE )
-{
-    hb_gtnap_cualib_tableview_OnSelect(1);
-}
+// HB_FUNC( NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE )
+// {
+//     hb_gtnap_cualib_tableview_OnSelect(1);
+// }
 
 
 /*---------------------------------------------------------------------------*/
