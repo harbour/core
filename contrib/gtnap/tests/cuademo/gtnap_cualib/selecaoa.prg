@@ -19,6 +19,7 @@
 #INCLUDE "define_cua.ch"
 #INCLUDE "janela.ch"       // métodos externos da classe JANELA
 #INCLUDE "intercep.ch"  // interceptar comandos de manipulação de dados
+#INCLUDE "gtnap.ch"
 *
 
 ********************
@@ -273,7 +274,7 @@ LOCAL L_ForcaParada, L_Abortado, N_Cont
 LOCAL N_Row_Inicial_Util
 LOCAL N_mRow, N_mCol, N_Desloca, N_RegiaoMouse, N_Keyboard
 LOCAL N_Desloca_Aux, N_RowPos_Ant
-LOCAL X_Retorno, L_Multisel, N_TableID
+LOCAL X_Retorno, V_Sel, L_Multisel, N_TableID
 LOCAL X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, L_PodeExecutar
 LOCAL V_Ambiente_Alias
@@ -383,9 +384,32 @@ IF SOB_MODO_GRAFICO()
         NAP_WINDOW_HOTKEY(N_WindowNum, N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
     ENDIF
 
-    NAP_LOG("SELECAOA::NAP_CUALIB_LAUNCH_MODAL!!!!!!")
-    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
-    NAP_LOG("SELECAOA::FINISH!!!!  NAP_CUALIB_LAUNCH_MODAL!!!!!!")
+    X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
+
+    // Window closed --> Return zero or empty vector
+    IF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON
+        IF N_TP_Selecao == _SELE_SIMPLES
+            X_Retorno := 0
+
+        ELSE
+            X_Retorno := {}
+        ENDIF
+    // Window accepted
+    ELSE
+        V_Sel := NAP_TABLEVIEW_SELECTED2(N_WindowNum, N_ItemId)
+        IF N_TP_Selecao == _SELE_SIMPLES
+            X_Retorno := V_Sel[1]
+        ELSEIF N_TP_Selecao == _SELE_MULTIPLA
+            X_Retorno := V_Sel
+        ELSEIF N_TP_Selecao == _SELE_EXTENDIDA
+            IF LEN(V_Sel) == 0
+                X_Retorno = { NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId) }
+            ELSE
+                X_Retorno := V_Sel
+            ENDIF
+        ENDIF
+
+    ENDIF
 
 ELSE
 
@@ -811,8 +835,6 @@ ELSE
 ENDIF
 
 ENDIF // NOT SOB_MODO_GRAFICO()
-
-NAP_LOG("SELECAOA::Selecao finish with: " + hb_ntos(X_Retorno))
 
 RETURN X_Retorno
 *

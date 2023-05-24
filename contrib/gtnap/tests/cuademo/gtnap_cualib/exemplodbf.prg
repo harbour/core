@@ -8,10 +8,6 @@ PROC EXEMPLO_BROWSE_DBF
 ***********************
 LOCAL V_Janela
 *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//
-//  Fran: This code works on Windows and Linux
-//
 IF FILE("../dados/cotacao.dbf") .AND. ;
     .NOT. FILE("../dados/cotacao.cdx")
     USE ../dados/cotacao NEW EXCLUSIVE
@@ -19,22 +15,11 @@ IF FILE("../dados/cotacao.dbf") .AND. ;
         TO ../dados/cotacao.cdx
     CLOSE COTACAO
 ENDIF
-// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    IF FILE("/opt/cuadados/cotacao.dbf") .AND. ;
-//       .NOT. FILE("/opt/cuadados/cotacao.cdx")
-//       USE /opt/cuadados/cotacao NEW EXCLUSIVE
-//       INDEX ON COTACAO->CDINDX+DTOS(COTACAO->DTCOTA) TAG COTACAO1 ;
-//             TO /opt/cuadados/cotacao.cdx
-//       CLOSE COTACAO
-//    ENDIF
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-*
+
 CUA20 @ 15,20,26,80 JANELA V_Janela ;
      TITULO "Escolha o tipo de janela de browse de DBF" SUBTITULO "%T";
      AJUDA "T?????"
-*
+
 ESPECIALIZE V_Janela MENU
 ADDOPCAO V_Janela TEXTO "janela seleção simples, com grid, com toolbar" ;
    ACAO TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR() AJUDA "P06697"
@@ -53,62 +38,17 @@ ADDOPCAO V_Janela TEXTO "janela seleção simples com BUG no rolamento vertical" ;
 *
 ATIVE(V_Janela)
 *
-
-// PROC TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR
-//     @ 22, 0 SAY ""
-//     OutStd("TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR() Option selected")
-//     RETURN
-
-// PROC TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR
-//     @ 22, 0 SAY ""
-//     OutStd("TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR() Option selected")
-//     RETURN
-
-
-
-
-
-
-
-
-// PROC TST_BROWSE_DBF_COLUNA_CONGELADA
-//     @ 22, 0 SAY ""
-//     OutStd("TST_BROWSE_DBF_COLUNA_CONGELADA() Option selected")
-//     RETURN
-
-// PROC TST_BROWSE_DBF_WHILE
-//     @ 22, 0 SAY ""
-//     OutStd("TST_BROWSE_DBF_WHILE() Option selected")
-//     RETURN
-
 *****************************************************
 STAT PROC TST_BROWSE_DBF_SIMPLES_COM_GRID_COM_TOOLBAR
 *****************************************************
 LOCAL V_Janela
+LOCAL N_Sel
 *
-
-//
-//  Fran: This code works on Windows and Linux
-//
 USE ../dados/cotacao NEW SHARED
 SET INDEX TO ../dados/cotacao
 GOTO TOP
 // Fran: We force to start at 21th visible register
 SKIP 20
-
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    USE dados\cotacao NEW SHARED
-//    SET INDEX TO dados\cotacao
-// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    USE /opt/cuadados/cotacao NEW SHARED
-//    SET INDEX TO /opt/cuadados/cotacao
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-// GOTO TOP
-*
-
-NAP_LOG("Number of DB registers: " + hb_ntos(RecCount()))
 
 CUA20 @ 01,41,MAXROW()-2,MAXCOL()-30 JANELA V_Janela ;
     TITU "Browse de arquivo DBF" ;
@@ -139,18 +79,10 @@ ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
 ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
 ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
 *
-
-NAP_LOG("Before ATIVE JANELA: " + hb_ntos(RecCount()))
-
-ATIVE(V_Janela)
+N_Sel := ATIVE(V_Janela)
 *
-NAP_LOG("After ATIVE JANELA: " + hb_ntos(RecCount()))
-
-NAP_LOG("Before CLOSE COTACAO: " + hb_ntos(RecCount()))
-
+MOSTRAR("M15668","Foi selecionada register " + hb_ntos(N_Sel))
 CLOSE COTACAO
-
-NAP_LOG("After CLOSE COTACAO: " + hb_ntos(RecCount()))
 
 
 *****************************************************

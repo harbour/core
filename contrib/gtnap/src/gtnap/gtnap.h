@@ -95,6 +95,8 @@ extern void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_
 
 extern void hb_gtnap_tableview_toggle(const uint32_t wid, const uint32_t id, HB_ITEM *selection);
 
+extern const ArrSt(uint32_t) *hb_gtnap_tableview_selected(const uint32_t wid, const uint32_t id);
+
 extern uint32_t hb_gtnap_tableview_focus_row(const uint32_t wid, const uint32_t id);
 
 extern void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id);

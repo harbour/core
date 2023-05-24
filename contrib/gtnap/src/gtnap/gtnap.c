@@ -2350,6 +2350,16 @@ void hb_gtnap_tableview_toggle(const uint32_t wid, const uint32_t id, HB_ITEM *s
 
 /*---------------------------------------------------------------------------*/
 
+const ArrSt(uint32_t) *hb_gtnap_tableview_selected(const uint32_t wid, const uint32_t id)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TABLEVIEW);
+    return tableview_selected((TableView*)obj->component);
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_tableview_focus_row(const uint32_t wid, const uint32_t id)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
@@ -2357,7 +2367,7 @@ uint32_t hb_gtnap_tableview_focus_row(const uint32_t wid, const uint32_t id)
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
     focused = tableview_get_focus_row((TableView*)obj->component);
-    return focused + 1;
+    return focused;
 }
 
 /*---------------------------------------------------------------------------*/
