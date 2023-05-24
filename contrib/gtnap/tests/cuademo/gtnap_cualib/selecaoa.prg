@@ -65,12 +65,10 @@ IF N_TP_Selecao # _SELE_SIMPLES
     ENDIF
 
     IF SOB_MODO_GRAFICO()
-        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_CUALIB_SELECT_CURRENT()},.F.,;
-                "B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
-        NAP_CUALIB_HOTKEY(K_SPACE, ,{||NAP_CUALIB_SELECT_CURRENT()},.F.)
+        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_TOGGLE_SELECT(VX_Janela)},.F.,"B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
+        NAP_WINDOW_HOTKEY(N_WindowNum, K_SPACE, {||NAP_TOGGLE_SELECT(VX_Janela)}, .F.)
     ELSE
-        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,;
-                "B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
+        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,"B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
     ENDIF
 
 ENDIF
@@ -210,6 +208,12 @@ ENDIF
 RETURN NIL
 *
 *
+*
+STATIC PROC NAP_TOGGLE_SELECT(VX_Janela)
+    LOCAL N_FocusRow := NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId)
+    NAP_TABLEVIEW_TOGGLE(N_WindowNum, N_ItemId, N_FocusRow)
+
+
 **************************************************************************************************************************************************
 *
 * DEFINICOES PARA USO GERAL
@@ -370,13 +374,13 @@ IF SOB_MODO_GRAFICO()
         NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
 
         IF V_LstAcoes[N_Cont,_ACAO_KEYBOARD] # NIL
-            NAP_CUALIB_HOTKEY(V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
+            NAP_WINDOW_HOTKEY(N_WindowNum, V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
         ENDIF
     NEXT
 
     IF N_KeyBoard # NIL
         NAP_LOG("BUTTON KEYBOARD " + hb_ntos(N_Keyboard))
-        NAP_CUALIB_HOTKEY(N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
+        NAP_WINDOW_HOTKEY(N_WindowNum, N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
     ENDIF
 
     NAP_LOG("SELECAOA::NAP_CUALIB_LAUNCH_MODAL!!!!!!")

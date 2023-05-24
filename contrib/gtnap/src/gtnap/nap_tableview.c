@@ -89,6 +89,26 @@ HB_FUNC( NAP_TABLEVIEW_SELECT2 )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_TABLEVIEW_TOGGLE )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    HB_ITEM *selection = hb_param(3, HB_IT_ANY);
+    hb_gtnap_tableview_toggle(wid, id, selection);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_FOCUS_ROW )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    uint32_t row = hb_gtnap_tableview_focus_row(wid, id);
+    hb_retni(row);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TABLEVIEW_REFRESH_ALL )
 {
     uint32_t wid = hb_parni(1);

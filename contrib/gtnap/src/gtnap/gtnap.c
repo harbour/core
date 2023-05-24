@@ -2270,17 +2270,17 @@ void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM
 void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_ITEM *selection)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
-    ArrSt(uint32_t) *rows = arrst_create(uint32_t);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-
+    
+    tableview_deselect_all((TableView*)obj->component);
     if (selection != NULL)
     {
         HB_TYPE type = HB_ITEM_TYPE(selection);
         if (type & HB_IT_NUMERIC)
         {
             uint32_t row = hb_itemGetNI(selection) - 1;
-            arrst_append(rows, row, uint32_t);
+            tableview_select((TableView*)obj->component, &row, 1);
         }
         else if (type == HB_IT_ARRAY)
         {
@@ -2288,14 +2288,76 @@ void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_ITEM *s
             for (i = 0; i < n; ++i)
             {
                 uint32_t row = hb_arrayGetNI(selection, i + 1) - 1;
-                arrst_append(rows, row, uint32_t);
+                tableview_select((TableView*)obj->component, &row, 1);
+            }
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static bool_t i_in_vect(const ArrSt(uint32_t) *sel, const uint32_t i)
+{
+    arrst_foreach_const(id, sel, uint32_t)
+        if (*id == i)
+            return TRUE;
+    arrst_end();
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_toogle_sel(TableView *view, const ArrSt(uint32_t) *sel, const uint32_t row)
+{
+    if (i_in_vect(sel, row) == TRUE)
+        tableview_deselect(view, &row, 1);
+    else
+        tableview_select(view, &row, 1);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_tableview_toggle(const uint32_t wid, const uint32_t id, HB_ITEM *selection)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    const ArrSt(uint32_t) *sel = NULL;
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TABLEVIEW);
+
+    sel = tableview_selected((TableView*)obj->component);
+
+    if (selection != NULL)
+    {
+        HB_TYPE type = HB_ITEM_TYPE(selection);
+        if (type & HB_IT_NUMERIC)
+        {
+            uint32_t row = hb_itemGetNI(selection) - 1;
+            i_toogle_sel((TableView*)obj->component, sel, row);
+        }
+        else if (type == HB_IT_ARRAY)
+        {
+            uint32_t i, n = hb_arrayLen(selection);
+            for (i = 0; i < n; ++i)
+            {
+                uint32_t row = hb_arrayGetNI(selection, i + 1) - 1;
+                i_toogle_sel((TableView*)obj->component, sel, row);
             }
         }
     }
 
-    tableview_deselect_all((TableView*)obj->component);
-    tableview_select((TableView*)obj->component, arrst_all_const(rows, uint32_t), arrst_size(rows, uint32_t));
-    arrst_destroy(&rows, NULL, uint32_t);
+    tableview_update((TableView*)obj->component);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_tableview_focus_row(const uint32_t wid, const uint32_t id)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    uint32_t focused;
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TABLEVIEW);
+    focused = tableview_get_focus_row((TableView*)obj->component);
+    return focused + 1;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4052,17 +4114,6 @@ void hb_gtnap_cualib_tableview_vector_add_item(TableView *view, String *text, PH
     item->codeBlock = hb_itemNew(codeBlock);
     item->hoykey_pos = hotkey_pos;
     item->selected = FALSE;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static bool_t i_in_vect(const ArrSt(uint32_t) *sel, const uint32_t i)
-{
-    arrst_foreach_const(id, sel, uint32_t)
-        if (*id == i)
-            return TRUE;
-    arrst_end();
-    return FALSE;
 }
 
 /*---------------------------------------------------------------------------*/
