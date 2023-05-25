@@ -342,9 +342,7 @@ IF L_ForcaLerTudo
 
             NAP_TABLEVIEW_REFRESH_ALL(N_WindowNum, N_TableID)
 
-            IF N_TP_Selecao == _SELE_SIMPLES
-                NAP_TABLEVIEW_SELECT2(N_WindowNum, N_TableID, 1)
-            ELSE
+            IF N_TP_Selecao # _SELE_SIMPLES
                 NAP_TABLEVIEW_SELECT2(N_WindowNum, N_TableID, VN_Selecio)
             ENDIF
 

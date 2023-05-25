@@ -48,7 +48,7 @@ USE ../dados/cotacao NEW SHARED
 SET INDEX TO ../dados/cotacao
 GOTO TOP
 // Fran: We force to start at 21th visible register
-SKIP 20
+SKIP 21
 
 CUA20 @ 01,41,MAXROW()-2,MAXCOL()-30 JANELA V_Janela ;
     TITU "Browse de arquivo DBF" ;
@@ -81,8 +81,9 @@ ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99
 *
 N_Sel := ATIVE(V_Janela)
 *
-MOSTRAR("M15668","Foi selecionada register " + hb_ntos(N_Sel))
 CLOSE COTACAO
+
+MOSTRAR("M15668","Foi selecionada register " + hb_ntos(N_Sel))
 
 
 *****************************************************
