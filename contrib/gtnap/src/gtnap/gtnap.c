@@ -2267,31 +2267,23 @@ void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_ITEM *selection)
+void hb_gtnap_tableview_deselect_all(const uint32_t wid, const uint32_t id)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-
     tableview_deselect_all((TableView*)obj->component);
-    if (selection != NULL)
-    {
-        HB_TYPE type = HB_ITEM_TYPE(selection);
-        if (type & HB_IT_NUMERIC)
-        {
-            uint32_t row = hb_itemGetNI(selection) - 1;
-            tableview_select((TableView*)obj->component, &row, 1);
-        }
-        else if (type == HB_IT_ARRAY)
-        {
-            uint32_t i, n = hb_arrayLen(selection);
-            for (i = 0; i < n; ++i)
-            {
-                uint32_t row = hb_arrayGetNI(selection, i + 1) - 1;
-                tableview_select((TableView*)obj->component, &row, 1);
-            }
-        }
-    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_tableview_select_row(const uint32_t wid, const uint32_t id, const uint32_t row_id)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TABLEVIEW);
+    tableview_select((TableView*)obj->component, &row_id, 1);
+    tableview_update((TableView*)obj->component);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2317,34 +2309,14 @@ static void i_toogle_sel(TableView *view, const ArrSt(uint32_t) *sel, const uint
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_tableview_toggle(const uint32_t wid, const uint32_t id, HB_ITEM *selection)
+void hb_gtnap_tableview_toggle_row(const uint32_t wid, const uint32_t id, const uint32_t row_id)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     const ArrSt(uint32_t) *sel = NULL;
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-
     sel = tableview_selected((TableView*)obj->component);
-
-    if (selection != NULL)
-    {
-        HB_TYPE type = HB_ITEM_TYPE(selection);
-        if (type & HB_IT_NUMERIC)
-        {
-            uint32_t row = hb_itemGetNI(selection) - 1;
-            i_toogle_sel((TableView*)obj->component, sel, row);
-        }
-        else if (type == HB_IT_ARRAY)
-        {
-            uint32_t i, n = hb_arrayLen(selection);
-            for (i = 0; i < n; ++i)
-            {
-                uint32_t row = hb_arrayGetNI(selection, i + 1) - 1;
-                i_toogle_sel((TableView*)obj->component, sel, row);
-            }
-        }
-    }
-
+    i_toogle_sel((TableView*)obj->component, sel, row_id);
     tableview_update((TableView*)obj->component);
 }
 
@@ -2372,7 +2344,7 @@ uint32_t hb_gtnap_tableview_focus_row(const uint32_t wid, const uint32_t id)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_tableview_recno(const uint32_t wid, const uint32_t id, const uint32_t row_id)
+uint32_t hb_gtnap_tableview_recno_from_row(const uint32_t wid, const uint32_t id, const uint32_t row_id)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     GtNapWindow *gtwin = NULL;
@@ -2384,6 +2356,38 @@ uint32_t hb_gtnap_tableview_recno(const uint32_t wid, const uint32_t id, const u
     {
         uint32_t recno = *arrst_get_const(gtwin->gtarea->records, row_id, uint32_t);
         return recno;
+    }
+
+    return UINT32_MAX;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_row_from_recno(GtNapArea *area, const uint32_t recno)
+{
+    cassert_no_null(area);
+    cassert(recno > 0);
+    arrst_foreach_const(rec, area->records, uint32_t)
+        if (*rec == recno)
+            return rec_i;
+    arrst_end();
+    return UINT32_MAX;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_tableview_row_from_recno(const uint32_t wid, const uint32_t id, const uint32_t recno)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    GtNapWindow *gtwin = NULL;
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TABLEVIEW);
+    gtwin = obj->cuawin;
+    cassert_no_null(gtwin);
+    if (gtwin->gtarea != NULL)
+    {
+        uint32_t row = i_row_from_recno(gtwin->gtarea, recno);
+        return row;
     }
 
     return UINT32_MAX;
@@ -2447,19 +2451,6 @@ static void i_area_refresh(GtNapArea *area)
 
     /* Restore database RECNO() */
     SELF_GOTO(area->area, ulCurRec);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static uint32_t i_row_from_recno(GtNapArea *area, const uint32_t recno)
-{
-    cassert_no_null(area);
-    cassert(recno > 0);
-    arrst_foreach_const(rec, area->records, uint32_t)
-        if (*rec == recno)
-            return rec_i;
-    arrst_end();
-    return UINT32_MAX;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2532,6 +2523,16 @@ static void i_area_select_row(GtNapArea *area)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_tableview_refresh_current(const uint32_t wid, const uint32_t id)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TABLEVIEW);
+    tableview_update((TableView*)obj->component);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
@@ -2544,8 +2545,12 @@ void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id)
     {
         cassert(gtwin->gtarea->view == (TableView*)obj->component);
         i_area_refresh(gtwin->gtarea);
-        tableview_update(gtwin->gtarea->view);
+        tableview_update((TableView*)obj->component);
         i_area_select_row(gtwin->gtarea);
+    }
+    else
+    {
+        tableview_update((TableView*)obj->component);
     }
 }
 

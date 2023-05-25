@@ -198,9 +198,7 @@ B_Metodo  := {||Selecionar(VX_Janela)}
 * (VN_Selecio é "detached local")
 #DEFINE VN_Selecio    VX_Sele:CARGO[08]
 IF N_TP_Selecao # _SELE_SIMPLES
-    IF SOB_MODO_GRAFICO()
-        AnexeCol(VX_Janela, NIL, { || IIF(NAP_CUALIB_IS_SELECTED(B_LinCorrente)==.F.," ","»")})
-    ELSE
+    IF .NOT. SOB_MODO_GRAFICO()
         AnexeCol(VX_Janela, NIL, { || IIF(ASCAN(VN_Selecio,EVAL(B_LinCorrente))==0," ","»")})
     ENDIF
 ENDIF
@@ -213,11 +211,17 @@ RETURN NIL
 **************************************************************************************************************************************************
 STATIC PROC NAP_TOGGLE_SELECT(VX_Janela)
     LOCAL N_FocusRow := NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId)
-    NAP_TABLEVIEW_TOGGLE(N_WindowNum, N_ItemId, N_FocusRow)
+    NAP_TABLEVIEW_TOGGLE_ROW(N_WindowNum, N_ItemId, N_FocusRow)
 
-// STATIC PROC NAP_IS_SELECTED(VX_Janela)
-//         LOCAL N_FocusRow := NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId)
-//         NAP_TABLEVIEW_TOGGLE(N_WindowNum, N_ItemId, N_FocusRow)
+STATIC FUNC NAP_IS_SELECTED(VX_Janela, B_LinCorrente)
+    LOCAL N_Rec := EVAL(B_LinCorrente)
+    LOCAL N_Cont, V_Rows := NAP_TABLEVIEW_SELECTED_ROWS(N_WindowNum, N_ItemId)
+    FOR N_Cont := 1 TO LEN(V_Rows)
+        IF NAP_TABLEVIEW_RECNO_FROM_ROW(N_WindowNum, N_ItemId, V_Rows[N_Cont]) == N_Rec
+            RETURN .T.
+        ENDIF
+    NEXT
+    RETURN .F.
 
 **************************************************************************************************************************************************
 *
@@ -274,7 +278,7 @@ STATIC FUNCTION Selecao ( VX_Janela, VX_Sele)
 #INCLUDE "set.ch"
 *
 LOCAL L_Mais, N_Tecla, N_Pos, L_RolaCima, L_RolaBaixo
-LOCAL L_ForcaParada, L_Abortado, N_Cont
+LOCAL L_ForcaParada, L_Abortado, N_Cont, N_Row
 LOCAL N_Row_Inicial_Util
 LOCAL N_mRow, N_mCol, N_Desloca, N_RegiaoMouse, N_Keyboard
 LOCAL N_Desloca_Aux, N_RowPos_Ant
@@ -320,6 +324,10 @@ IF L_ForcaLerTudo
             NAP_TABLEVIEW_SCROLL2(N_WindowNum, N_TableID, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
             NAP_TABLEVIEW_GRID2(N_WindowNum, N_TableID, L_MostraGrade, L_MostraGrade)
 
+            IF N_TP_Selecao # _SELE_SIMPLES
+                NAP_TABLEVIEW_COLUMN(N_WindowNum, N_TableID, 0, {||""}, { || IIF(NAP_IS_SELECTED(VX_Janela, B_LinCorrente)==.F.," ","»") })
+            ENDIF
+
             FOR N_Count := 1 TO VX_Sele:COLCOUNT
                 O_Column := VX_Sele:GetColumn(N_Count)
                 C_Title := O_Column:HEADING
@@ -347,7 +355,11 @@ IF L_ForcaLerTudo
             NAP_TABLEVIEW_REFRESH_ALL(N_WindowNum, N_TableID)
 
             IF N_TP_Selecao # _SELE_SIMPLES
-                NAP_TABLEVIEW_SELECT2(N_WindowNum, N_TableID, VN_Selecio)
+                NAP_TABLEVIEW_DESELECT_ALL2(N_WindowNum, N_TableID)
+                FOR N_Cont := 1 TO LEN(VN_Selecio)
+                    N_Row := NAP_TABLEVIEW_ROW_FROM_RECNO(N_WindowNum, N_TableID, VN_Selecio[N_Cont])
+                    NAP_TABLEVIEW_SELECT_ROW(N_WindowNum, N_TableID, N_Row)
+                NEXT
             ENDIF
 
         ENDIF   // SOB_MODO_GRAFICO()
@@ -374,15 +386,12 @@ ENDIF   // L_ForcaLerTudo
 IF SOB_MODO_GRAFICO()
 
     FOR N_Cont := 1 TO LEN(V_LstAcoes)
-        NAP_LOG("V_LstAcoes:" + hb_ntos(N_Cont) + " KEy: " + hb_ntos(V_LstAcoes[N_Cont,_ACAO_KEYBOARD]))
-
         IF V_LstAcoes[N_Cont,_ACAO_KEYBOARD] # NIL
             NAP_WINDOW_HOTKEY(N_WindowNum, V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
         ENDIF
     NEXT
 
     IF N_KeyBoard # NIL
-        NAP_LOG("BUTTON KEYBOARD " + hb_ntos(N_Keyboard))
         NAP_WINDOW_HOTKEY(N_WindowNum, N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
     ENDIF
 
@@ -392,7 +401,6 @@ IF SOB_MODO_GRAFICO()
     IF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON
         IF N_TP_Selecao == _SELE_SIMPLES
             X_Retorno := 0
-
         ELSE
             X_Retorno := {}
         ENDIF
@@ -400,17 +408,21 @@ IF SOB_MODO_GRAFICO()
     ELSE
         V_Sel := NAP_TABLEVIEW_SELECTED_ROWS(N_WindowNum, N_ItemId)
         IF N_TP_Selecao == _SELE_SIMPLES
-            X_Retorno := NAP_TABLEVIEW_RECNO(N_WindowNum, N_ItemId, V_Sel[1])
+            IF LEN(V_Sel) == 1
+                X_Retorno := NAP_TABLEVIEW_RECNO_FROM_ROW(N_WindowNum, N_ItemId, V_Sel[1])
+            ELSE
+                X_Retorno := 0
+            ENDIF
         ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
             FOR N_Cont := 1 TO LEN(V_Sel)
-                V_Sel[N_Cont] := NAP_TABLEVIEW_RECNO(N_WindowNum, N_ItemId, V_Sel[N_Cont])
+                V_Sel[N_Cont] := NAP_TABLEVIEW_RECNO_FROM_ROW(N_WindowNum, N_ItemId, V_Sel[N_Cont])
             NEXT
             X_Retorno := V_Sel
         ENDIF
 
         IF N_TP_Selecao == _SELE_EXTENDIDA .AND. LEN(V_Sel) == 0
             V_Sel := NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId)
-            V_Sel := NAP_TABLEVIEW_RECNO(N_WindowNum, N_ItemId, V_Sel)
+            V_Sel := NAP_TABLEVIEW_RECNO_FROM_ROW(N_WindowNum, N_ItemId, V_Sel)
             X_Retorno = { V_Sel }
         ENDIF
 
@@ -1223,8 +1235,7 @@ RETURN NIL
 ******************
 FUNCTION MudeLista ( VX_Janela , VN_Default )
 *
-LOCAL VX_Sele
-LOCAL V_TableView := NIL
+LOCAL VX_Sele, N_Cont, N_Row
 *
 VX_Sele := VX_SubObj
 *
@@ -1239,16 +1250,17 @@ IF LEN(VN_Selecio) # 0 .OR. LEN(VN_Default) # 0         // algo a fazer
       * a ser atualizado.
    ELSE
     IF SOB_MODO_GRAFICO()
-        V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
-        IF V_TableView # NIL
-            NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
-            NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
+        NAP_TABLEVIEW_DESELECT_ALL2(N_WindowNum, N_ItemId)
+        FOR N_Cont := 1 TO LEN(VN_Selecio)
+            N_Row := NAP_TABLEVIEW_ROW_FROM_RECNO(N_WindowNum, N_ItemId, VN_Selecio[N_Cont])
+            NAP_TABLEVIEW_SELECT_ROW(N_WindowNum, N_ItemId, N_Row)
+        NEXT
 
-            IF N_TP_Jan == _JAN_SELE_VETO_20
-                NAP_CUALIB_VETOR_SELECT(VN_Selecio)
-            ENDIF
-
+        // TODO: CHANGE THIS CALL
+        IF N_TP_Jan == _JAN_SELE_VETO_20
+            NAP_CUALIB_VETOR_SELECT(VN_Selecio)
         ENDIF
+
     ELSE
 
         VX_Sele:REFRESHALL()
@@ -1272,12 +1284,11 @@ RETURN NIL
 FUNCTION ReleiaCorrente ( VX_Janela )
 *
 IF SOB_MODO_GRAFICO()
-    NAP_TABLEVIEW_CUALIB_REFRESH_CURRENT()
-
+    NAP_TABLEVIEW_REFRESH_CURRENT(N_WindowNum, N_ItemId)
 ELSE
-#DEFINE VX_Sele VX_SubObj
-VX_Sele:REFRESHCURRENT()
-#UNDEF  VX_Sele
+    #DEFINE VX_Sele VX_SubObj
+    VX_Sele:REFRESHCURRENT()
+    #UNDEF  VX_Sele
 ENDIF
 *
 RETURN NIL
@@ -1293,7 +1304,7 @@ L_ForcaLerTudo := .T.      // como pode ter sido apagado algum registro
 #UNDEF  VX_Sele
 
 IF SOB_MODO_GRAFICO()
-    NAP_TABLEVIEW_CUALIB_REFRESH_ALL()
+    NAP_TABLEVIEW_REFRESH_ALL(N_WindowNum, N_ItemId)
 ENDIF
 
 RETURN NIL

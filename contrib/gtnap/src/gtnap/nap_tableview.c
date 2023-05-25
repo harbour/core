@@ -79,22 +79,33 @@ HB_FUNC( NAP_TABLEVIEW_BIND_AREA )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_SELECT2 )
+HB_FUNC( NAP_TABLEVIEW_DESELECT_ALL2 )
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
-    HB_ITEM *selection = hb_param(3, HB_IT_ANY);
-    hb_gtnap_tableview_select(wid, id, selection);
+    hb_gtnap_tableview_deselect_all(wid, id);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_TOGGLE )
+HB_FUNC( NAP_TABLEVIEW_SELECT_ROW )
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
-    HB_ITEM *selection = hb_param(3, HB_IT_ANY);
-    hb_gtnap_tableview_toggle(wid, id, selection);
+    uint32_t row_id = hb_parni(3);
+    cassert(row_id > 0);
+    hb_gtnap_tableview_select_row(wid, id, row_id - 1);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_TOGGLE_ROW )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    uint32_t row_id = hb_parni(3);
+    cassert(row_id > 0);
+    hb_gtnap_tableview_toggle_row(wid, id, row_id - 1);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -123,15 +134,36 @@ HB_FUNC( NAP_TABLEVIEW_FOCUS_ROW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_RECNO )
+HB_FUNC( NAP_TABLEVIEW_RECNO_FROM_ROW )
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
     uint32_t row_id = hb_parni(3);
     uint32_t recno;
     cassert(row_id > 0);
-    recno = hb_gtnap_tableview_recno(wid, id, row_id - 1);
+    recno = hb_gtnap_tableview_recno_from_row(wid, id, row_id - 1);
     hb_retni(recno);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_ROW_FROM_RECNO )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    uint32_t recno = hb_parni(3);
+    uint32_t row;
+    row = hb_gtnap_tableview_row_from_recno(wid, id, recno);
+    hb_retni(row + 1);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_REFRESH_CURRENT )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    hb_gtnap_tableview_refresh_current(wid, id);
 }
 
 /*---------------------------------------------------------------------------*/

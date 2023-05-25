@@ -91,15 +91,21 @@ extern void hb_gtnap_tableview_freeze(const uint32_t wid, const uint32_t id, con
 
 extern void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM *while_block);
 
-extern void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_ITEM *selection);
+extern void hb_gtnap_tableview_deselect_all(const uint32_t wid, const uint32_t id);
 
-extern void hb_gtnap_tableview_toggle(const uint32_t wid, const uint32_t id, HB_ITEM *selection);
+extern void hb_gtnap_tableview_select_row(const uint32_t wid, const uint32_t id, const uint32_t row_id);
+
+extern void hb_gtnap_tableview_toggle_row(const uint32_t wid, const uint32_t id, const uint32_t row_id);
 
 extern const ArrSt(uint32_t) *hb_gtnap_tableview_selected_rows(const uint32_t wid, const uint32_t id);
 
 extern uint32_t hb_gtnap_tableview_focus_row(const uint32_t wid, const uint32_t id);
 
-extern uint32_t hb_gtnap_tableview_recno(const uint32_t wid, const uint32_t id, const uint32_t row_id);
+extern uint32_t hb_gtnap_tableview_recno_from_row(const uint32_t wid, const uint32_t id, const uint32_t row_id);
+
+extern uint32_t hb_gtnap_tableview_row_from_recno(const uint32_t wid, const uint32_t id, const uint32_t recno);
+
+extern void hb_gtnap_tableview_refresh_current(const uint32_t wid, const uint32_t id);
 
 extern void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id);
 

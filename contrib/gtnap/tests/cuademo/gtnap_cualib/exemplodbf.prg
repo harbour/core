@@ -91,24 +91,10 @@ STAT PROC TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR
 *****************************************************
 LOCAL V_Janela
 
-//
-//  Fran: This code works on Windows and Linux
-//
 USE ../dados/cotacao NEW SHARED
 SET INDEX TO ../dados/cotacao
 GOTO TOP
 
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    USE dados\cotacao NEW SHARED
-//    SET INDEX TO dados\cotacao
-// #elif defined(__PLATFORM__LINUX)  || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    USE /opt/cuadados/cotacao NEW SHARED
-//    SET INDEX TO /opt/cuadados/cotacao
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-// GOTO TOP
-*
 CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
     TITU "Browse de arquivo DBF" ;
     SUBTITULO "%T;seleção múltipla;sem grid e sem toolbar";

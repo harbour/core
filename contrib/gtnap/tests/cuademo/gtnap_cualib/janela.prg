@@ -817,19 +817,24 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             //     NAP_LOG("AQUI!!!!! _JAN_SELE_ARQ_20")
             // ENDIF
 
-            //#DEFINE VX_Sele  VX_SubObj
+/*             #DEFINE VX_Sele  VX_SubObj
             // OJO!!! FRAN PROGRAM CRASH IF 'VX_SubObj:CARGO[07]'
-            //L_AutoClose  := VX_SubObj:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
-            L_AutoClose  := .T.
-            //#UNDEF VX_Sele
-
+            L_AutoClose  := VX_Sele:CARGO[07]      // se é para fechar a janela automaticamente (cua 2.0)
+            //L_AutoClose  := .T.
+            #UNDEF VX_Sele
+ */
             // IF L_AutoClose == .T.
             //     NAP_LOG("AQUI!!!!! L_AutoClose == .T.")
             // ENDIF
+           //#DEFINE VX_Sele  VX_SubObj
+        //    NAP_LOG("ANTES DEL L_AUTOCLOSE")
+        //     L_AutoClose  := VX_SubObj//:CARGO[07]
+        //     //#UNDEF VX_Sele
+        //     NAP_LOG("DESPUES DEL L_AUTOCLOSE")
 
-            IF N_TP_Jan == _JAN_SELE_ARQ_20 .AND. L_AutoClose == .T.
-                NAP_CUALIB_HOTKEY(K_ENTER,{||.T.}, .T.)
-            ENDIF
+        //     IF N_TP_Jan == _JAN_SELE_ARQ_20 .AND. L_AutoClose == .T.
+        //         NAP_CUALIB_HOTKEY(K_ENTER,{||.T.}, .T.)
+        //     ENDIF
 
             // N_WindowNum := WVW_nOpenWindow(C_Cabec_Aux,;
             //     N_LinIni,N_ColIni,N_LinFin,N_ColFin)
