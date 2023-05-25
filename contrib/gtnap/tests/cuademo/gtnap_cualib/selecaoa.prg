@@ -210,10 +210,14 @@ RETURN NIL
 *
 *
 *
+**************************************************************************************************************************************************
 STATIC PROC NAP_TOGGLE_SELECT(VX_Janela)
     LOCAL N_FocusRow := NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId)
     NAP_TABLEVIEW_TOGGLE(N_WindowNum, N_ItemId, N_FocusRow)
 
+// STATIC PROC NAP_IS_SELECTED(VX_Janela)
+//         LOCAL N_FocusRow := NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId)
+//         NAP_TABLEVIEW_TOGGLE(N_WindowNum, N_ItemId, N_FocusRow)
 
 **************************************************************************************************************************************************
 *
@@ -392,19 +396,22 @@ IF SOB_MODO_GRAFICO()
         ELSE
             X_Retorno := {}
         ENDIF
-    // Window accepted
+    // Window accepted --> We get the selected rows and transform them to RECNOs
     ELSE
-        V_Sel := NAP_TABLEVIEW_SELECTED2(N_WindowNum, N_ItemId)
+        V_Sel := NAP_TABLEVIEW_SELECTED_ROWS(N_WindowNum, N_ItemId)
         IF N_TP_Selecao == _SELE_SIMPLES
-            X_Retorno := V_Sel[1]
-        ELSEIF N_TP_Selecao == _SELE_MULTIPLA
+            X_Retorno := NAP_TABLEVIEW_RECNO(N_WindowNum, N_ItemId, V_Sel[1])
+        ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+            FOR N_Cont := 1 TO LEN(V_Sel)
+                V_Sel[N_Cont] := NAP_TABLEVIEW_RECNO(N_WindowNum, N_ItemId, V_Sel[N_Cont])
+            NEXT
             X_Retorno := V_Sel
-        ELSEIF N_TP_Selecao == _SELE_EXTENDIDA
-            IF LEN(V_Sel) == 0
-                X_Retorno = { NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId) }
-            ELSE
-                X_Retorno := V_Sel
-            ENDIF
+        ENDIF
+
+        IF N_TP_Selecao == _SELE_EXTENDIDA .AND. LEN(V_Sel) == 0
+            V_Sel := NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId)
+            V_Sel := NAP_TABLEVIEW_RECNO(N_WindowNum, N_ItemId, V_Sel)
+            X_Retorno = { V_Sel }
         ENDIF
 
     ENDIF

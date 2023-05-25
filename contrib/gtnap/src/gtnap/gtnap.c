@@ -64,12 +64,12 @@ struct _gtnap_area_t
 
     char_t temp[512];               // Temporal buffer between RDD and TableView
     HB_ULONG cache_recno;           // Store the DB recno while table drawing
-    
+
     // multisel MUST BE DELETED FROM HERE!!!!!!!
     bool_t multisel;
 
     GtNapObject *gtobj;
-    
+
     // COLUMNS MUST BE DELETED FROM HERE!!!!!!!
     ArrSt(GtNapColumn) *columns;
 
@@ -1980,7 +1980,7 @@ uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int
     cassert_no_null(gtwin);
     cassert(gtwin->gtarea == NULL);
     cassert(gtwin->gtvector == NULL);
-    tableview_font(view, GTNAP_GLOBAL->global_font);    
+    tableview_font(view, GTNAP_GLOBAL->global_font);
     tableview_multisel(view, multisel, multisel);
     size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
@@ -2272,7 +2272,7 @@ void hb_gtnap_tableview_select(const uint32_t wid, const uint32_t id, HB_ITEM *s
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    
+
     tableview_deselect_all((TableView*)obj->component);
     if (selection != NULL)
     {
@@ -2350,7 +2350,7 @@ void hb_gtnap_tableview_toggle(const uint32_t wid, const uint32_t id, HB_ITEM *s
 
 /*---------------------------------------------------------------------------*/
 
-const ArrSt(uint32_t) *hb_gtnap_tableview_selected(const uint32_t wid, const uint32_t id)
+const ArrSt(uint32_t) *hb_gtnap_tableview_selected_rows(const uint32_t wid, const uint32_t id)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
@@ -2368,6 +2368,25 @@ uint32_t hb_gtnap_tableview_focus_row(const uint32_t wid, const uint32_t id)
     cassert(obj->type == ekOBJ_TABLEVIEW);
     focused = tableview_get_focus_row((TableView*)obj->component);
     return focused;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_tableview_recno(const uint32_t wid, const uint32_t id, const uint32_t row_id)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    GtNapWindow *gtwin = NULL;
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TABLEVIEW);
+    gtwin = obj->cuawin;
+    cassert_no_null(gtwin);
+    if (gtwin->gtarea != NULL)
+    {
+        uint32_t recno = *arrst_get_const(gtwin->gtarea->records, row_id, uint32_t);
+        return recno;
+    }
+
+    return UINT32_MAX;
 }
 
 /*---------------------------------------------------------------------------*/

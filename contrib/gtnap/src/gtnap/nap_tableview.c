@@ -89,20 +89,6 @@ HB_FUNC( NAP_TABLEVIEW_SELECT2 )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_SELECTED2 )
-{
-    uint32_t wid = hb_parni(1);
-    uint32_t id = hb_parni(2);
-    const ArrSt(uint32_t) *selected = hb_gtnap_tableview_selected(wid, id);
-    uint32_t n = arrst_size(selected, uint32_t);
-    hb_reta(n);
-    arrst_foreach_const(v, selected, uint32_t)
-        hb_storvnl((long)(*v + 1), -1, v_i + 1);
-    arrst_end();
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_TABLEVIEW_TOGGLE )
 {
     uint32_t wid = hb_parni(1);
@@ -113,12 +99,39 @@ HB_FUNC( NAP_TABLEVIEW_TOGGLE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_TABLEVIEW_SELECTED_ROWS )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    const ArrSt(uint32_t) *selected = hb_gtnap_tableview_selected_rows(wid, id);
+    uint32_t n = arrst_size(selected, uint32_t);
+    hb_reta(n);
+    arrst_foreach_const(v, selected, uint32_t)
+        hb_storvnl((long)(*v + 1), -1, v_i + 1);
+    arrst_end();
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TABLEVIEW_FOCUS_ROW )
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
     uint32_t row = hb_gtnap_tableview_focus_row(wid, id) + 1;
     hb_retni(row);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_RECNO )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    uint32_t row_id = hb_parni(3);
+    uint32_t recno;
+    cassert(row_id > 0);
+    recno = hb_gtnap_tableview_recno(wid, id, row_id - 1);
+    hb_retni(recno);
 }
 
 /*---------------------------------------------------------------------------*/
