@@ -156,16 +156,33 @@ NEXT
 MOSTRAR("M15668","Seleçao extendida: " + C_SelStr)
 
 
+******************************
+STAT PROC TST_BROWSE_DBF_WHILE
+******************************
+LOCAL V_Janela
 
+USE ../dados/cotacao NEW SHARED
+SET INDEX TO ../dados/cotacao
+GOTO TOP
 
+CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
+    TITU "Browse de arquivo DBF" ;
+    SUBTITULO "%T;cláusula WHILE;sem barras de rolagem" ;
+    AJUDA "T?????"
 
+ADDBOTAO V_Janela TEXTO "Enter=exibir selecionado" ;
+   ACAO EXIBIR_SELECIONADO(V_Janela) AJUDA "B19275"
 
+SEEK "99"
+CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES ;
+    WHILE cdindx=="99" NAOROLAVERTICAL NAOROLAHORIZONTAL
 
+ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
+ANEXE V_Janela TITULO "Data"      COLUNA dtcota
+ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
 
-
-
-
-
+ATIVE(V_Janela)
+CLOSE COTACAO
 
 
 ***********************
@@ -173,18 +190,9 @@ STAT FUNC TESTA_DELECAO(L_NAO_EOF)
 ***********************
 LOCAL C_Str
 IF L_NAO_EOF
-   IF DELETED()
-      C_Str := "Sim"
-      // Como o SET DELETED ON está ativo, não era para passar por aqui...
-
-      //
-      // FRAN: NEVER USE ALTD() with GTNAP!
-      // GTNAP is not ready for the CA-Clipper debugger.
-      // Using ALTD() with GTNAP causes the program to go into an infinite loop of hb_gtnap_mouse_IsPresent()
-      // calls that are very difficult to debug.
-      // ALTD()
-      //
-      //
+    IF DELETED()
+        C_Str := "Sim"
+        ALTD()
    ELSE
       C_Str := "Não"
    ENDIF
@@ -192,69 +200,67 @@ ELSE
    C_Str := "Eof"
 ENDIF
 Return C_Str
-*
 
 *****************************
 STAT PROC INCREMENTA_CORRENTE(V_Janela)
 *****************************
 LOCAL N_Selecionado := ITENSSELECIONADOS(V_Janela)
-*
-MOSTRAR("M15634","O registro selecionado foi o RECNO() "+;
-   LTRIM(STR(N_Selecionado)))
-*
+MOSTRAR("M15634","O registro selecionado foi o RECNO() " + LTRIM(STR(N_Selecionado)))
 RLOCK()
 REPL vlcota WITH vlcota+1
 DBCOMMIT()
 UNLOCK
 RELEIA CORRENTE V_Janela
-*
+
 *************************
 STAT PROC INCREMENTA_TODOS(V_Janela)
 **************************
 LOCAL N_Selecionado := ITENSSELECIONADOS(V_Janela)
-*
-MOSTRAR("M15636","O registro atual é o RECNO() "+;
-   LTRIM(STR(N_Selecionado)))
-*
+MOSTRAR("M15636","O registro atual é o RECNO() " + LTRIM(STR(N_Selecionado)))
 FLOCK()
 REPL ALL vlcota WITH vlcota+1
 DBCOMMIT()
 UNLOCK
 GOTO N_Selecionado
-*
 RELEIA TUDO V_Janela
-*
 
-// STAT PROC EXCLUI_LINHA_ATUAL(V_Janela)
-//     RETURN
+*********************************
+STAT PROC INCREMENTA_SELECIONADOS(V_Janela)
+*********************************
+LOCAL V_Selecionados := ITENSSELECIONADOS(V_Janela)
+LOCAL N_Ct, N_Recno_Ant
+
+MOSTRAR("M15638", "Foram selecionados " + LTRIM(STR(LEN(V_Selecionados))) + " registros")
+
+N_Recno_Ant := RECNO()
+FOR N_Ct := 1 TO LEN(V_Selecionados)
+    GOTO V_Selecionados[N_Ct]
+    RLOCK()
+    REPL vlcota WITH vlcota+1
+    UNLOCK
+NEXT
+
+DBCOMMIT()
+GOTO N_Recno_Ant
+RELEIA TUDO V_Janela
+
 ****************************
 STAT PROC EXCLUI_LINHA_ATUAL(V_Janela)
 ****************************
-MOSTRAR("M?????","O registro atual (a ser deletado) é o RECNO() "+;
-   LTRIM(STR(RECNO())))
-*
+MOSTRAR("M?????","O registro atual (a ser deletado) é o RECNO() " + LTRIM(STR(RECNO())))
 RLOCK()
-NAP_LOG("BEFORE DELETE RECNO: " + hb_ntos(RECNO()))
 DELETE
-NAP_LOG("AFTER DELETE RECNO: " + hb_ntos(RECNO()))
 DBCOMMIT()
 UNLOCK
-*
 RELEIA TUDO V_Janela
-*
-
-// STAT PROC PROCURAR_REGISTRO (V_Janela)
-//     RETURN
 
 ***************************
 STAT PROC PROCURAR_REGISTRO (V_Janela)
 ***************************
 LOCAL C_CDINDX, D_DTCOTA
 LOCAL N_Opcao
-*
-// FRAN: By default the third option (for testing)
-N_Opcao := PERGUN("Qual registro pesquisar:",;
-               {"Primeiro","Terceiro","Antepenultimo","Ultimo"}, 3)
+
+N_Opcao := PERGUN("Qual registro pesquisar:", {"Primeiro","Terceiro","Antepenultimo","Ultimo"}, 3)
 IF N_Opcao==1
    C_CDINDX := "01" // primeiro registro
    D_DTCOTA := CTOD("31/01/1993")
@@ -270,154 +276,34 @@ ELSEIF N_Opcao==4
 ELSE
    ? MEMVAR->ALGO_TEM_DE_SER_SELECIONADO
 ENDIF
-*
-ADVERTE("M?????","Busca por:;"+C_CDINDX+" "+DTOC(D_DTCOTA))
-*
+
+ADVERTE("M?????","Busca por:;" + C_CDINDX + " " + DTOC(D_DTCOTA))
 SEEK C_CDINDX+DTOS(D_DTCOTA)
 IF .NOT. FOUND()
    ? MEMVAR->REGISTRO_TEM_DE_EXISTIR
 ENDIF
-
-NAP_LOG("PROCURAR_REGISTRO RECNO: " + hb_ntos(RECNO()))
-*
 RELEIA TUDO V_Janela
-// *
-// *****************************************************
-// STAT PROC TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR
-// *****************************************************
-// LOCAL V_Janela
-
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    USE dados\cotacao NEW SHARED
-//    SET INDEX TO dados\cotacao
-// #elif defined(__PLATFORM__LINUX)  || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    USE /opt/cuadados/cotacao NEW SHARED
-//    SET INDEX TO /opt/cuadados/cotacao
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-// GOTO TOP
-// *
-// CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
-//     TITU "Browse de arquivo DBF" ;
-//     SUBTITULO "%T;seleção múltipla;sem grid e sem toolbar";
-//     AJUDA "T?????"
-// ADDBOTAO V_Janela TEXTO "R=incrementar registros selecionados" ;
-//    ACAO INCREMENTA_SELECIONADOS(V_Janela) AJUDA "B19269"
-
-// ADDBOTAO V_Janela TEXTO "V=voltar seleção para o 'default'" ;
-//    ACAO DEFAULT_SELECIONADOS(V_Janela) AJUDA "B19271"
-
-// CUA20 ESPECIALIZE V_Janela SELECAO MULTIPLA CONGELAR 1 ;
-//    SEMGRADE SEMTOOLBAR
-
-// ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
-// ANEXE V_Janela TITULO "Data"      COLUNA dtcota
-// ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
-// ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
-// ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
-// *
-// MUDE SELECAO V_Janela PARA {2,4,6,8}   // registros pré-selecionados
-// *
-// ATIVE(V_Janela)
-// *
-// CLOSE COTACAO
-// *
-
-
-*********************************
-STAT PROC INCREMENTA_SELECIONADOS(V_Janela)
-*********************************
-LOCAL V_Selecionados := ITENSSELECIONADOS(V_Janela)
-LOCAL N_Ct, N_Recno_Ant
-*
-MOSTRAR("M15638","Foram selecionados "+;
-        LTRIM(STR(LEN(V_Selecionados)))+" registros")
-*
-N_Recno_Ant := RECNO()
-FOR N_Ct := 1 TO LEN(V_Selecionados)
-   GOTO V_Selecionados[N_Ct]
-   RLOCK()
-   REPL vlcota WITH vlcota+1
-   UNLOCK
-NEXT
-DBCOMMIT()
-GOTO N_Recno_Ant
-*
-RELEIA TUDO V_Janela
-*
-
-
-// STAT PROC DEFAULT_SELECIONADOS(V_Janela)
-// RETURN
-// NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
 
 *********************************
 STAT PROC DEFAULT_SELECIONADOS(V_Janela)
 *********************************
 MUDE SELECAO V_Janela PARA {2,4,6,8}   // registros pré-selecionados
 
-*
-*
-
 *****************************
 STAT PROC CONTAR_SELECIONADOS(V_Janela)
 *****************************
 LOCAL V_Selecionados := ITENSSELECIONADOS(V_Janela)
-*
-MOSTRAR("M15640","Foram selecionados "+;
-        LTRIM(STR(LEN(V_Selecionados)))+" registros")
-*
-******************************
-STAT PROC TST_BROWSE_DBF_WHILE
-******************************
-LOCAL V_Janela
+MOSTRAR("M15640","Foram selecionados " + LTRIM(STR(LEN(V_Selecionados))) + " registros")
 
-//
-//  Fran: This code works on Windows and Linux
-//
-USE ../dados/cotacao NEW SHARED
-SET INDEX TO ../dados/cotacao
-GOTO TOP
-
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    USE dados\cotacao NEW SHARED
-//    SET INDEX TO dados\cotacao
-// #elif defined(__PLATFORM__LINUX)  || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    USE /opt/cuadados/cotacao NEW SHARED
-//    SET INDEX TO /opt/cuadados/cotacao
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-// GOTO TOP
-*
-CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
-    TITU "Browse de arquivo DBF" ;
-    SUBTITULO "%T;cláusula WHILE;sem barras de rolagem" ;
-    AJUDA "T?????"
-ADDBOTAO V_Janela TEXTO "Enter=exibir selecionado" ;
-   ACAO EXIBIR_SELECIONADO(V_Janela) AJUDA "B19275"
-
-SEEK "99"
-CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES ;
-    WHILE cdindx=="99" NAOROLAVERTICAL NAOROLAHORIZONTAL
-
-ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
-ANEXE V_Janela TITULO "Data"      COLUNA dtcota
-ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
-*
-ATIVE(V_Janela)
-*
-CLOSE COTACAO
-*
 ****************************
 STAT PROC EXIBIR_SELECIONADO(V_Janela)
 ****************************
 LOCAL N_Selecionado := ITENSSELECIONADOS(V_Janela)
-*
-MOSTRAR("M15642","O registro selecionado foi o RECNO() "+;
-        LTRIM(STR(N_Selecionado)))
-*
+MOSTRAR("M15642","O registro selecionado foi o RECNO() " + LTRIM(STR(N_Selecionado)))
+
+
+
+
 
 // **********************************************
 // STAT PROC TST_BROWSE_ERRO_ROLAMENTO_HORIZONTAL()
