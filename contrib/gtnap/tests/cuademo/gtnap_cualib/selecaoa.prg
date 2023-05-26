@@ -66,8 +66,8 @@ IF N_TP_Selecao # _SELE_SIMPLES
     ENDIF
 
     IF SOB_MODO_GRAFICO()
-        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_TOGGLE_SELECT(VX_Janela)},.F.,"B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
-        NAP_WINDOW_HOTKEY(N_WindowNum, K_SPACE, {||NAP_TOGGLE_SELECT(VX_Janela)}, .F.)
+        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_TOGGLE_FOCUS_ROW(VX_Janela)},.F.,"B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
+        NAP_WINDOW_HOTKEY(N_WindowNum, K_SPACE, {||NAP_TOGGLE_FOCUS_ROW(VX_Janela)}, .F.)
     ELSE
         ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,"B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
     ENDIF
@@ -209,11 +209,11 @@ RETURN NIL
 *
 *
 **************************************************************************************************************************************************
-STATIC PROC NAP_TOGGLE_SELECT(VX_Janela)
+STATIC PROC NAP_TOGGLE_FOCUS_ROW(VX_Janela)
     LOCAL N_FocusRow := NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId)
     NAP_TABLEVIEW_TOGGLE_ROW(N_WindowNum, N_ItemId, N_FocusRow)
 
-STATIC FUNC NAP_IS_SELECTED(VX_Janela, B_LinCorrente)
+STATIC FUNC NAP_RECNO_IS_SELECTED(VX_Janela, B_LinCorrente)
     LOCAL N_Rec := EVAL(B_LinCorrente)
     LOCAL N_Cont, V_Rows := NAP_TABLEVIEW_SELECTED_ROWS(N_WindowNum, N_ItemId)
     FOR N_Cont := 1 TO LEN(V_Rows)
@@ -325,7 +325,7 @@ IF L_ForcaLerTudo
             NAP_TABLEVIEW_GRID2(N_WindowNum, N_TableID, L_MostraGrade, L_MostraGrade)
 
             IF N_TP_Selecao # _SELE_SIMPLES
-                NAP_TABLEVIEW_COLUMN(N_WindowNum, N_TableID, 0, {||""}, { || IIF(NAP_IS_SELECTED(VX_Janela, B_LinCorrente)==.F.," ","»") })
+                NAP_TABLEVIEW_COLUMN(N_WindowNum, N_TableID, 0, {||""}, { || IIF(NAP_RECNO_IS_SELECTED(VX_Janela, B_LinCorrente)==.F.," ","»") })
             ENDIF
 
             FOR N_Count := 1 TO VX_Sele:COLCOUNT
@@ -348,6 +348,17 @@ IF L_ForcaLerTudo
                 NAP_TABLEVIEW_FREEZE(N_WindowNum, N_TableID, N_Congela)
             ENDIF
 
+            FOR N_Cont := 1 TO LEN(V_LstAcoes)
+                IF V_LstAcoes[N_Cont,_ACAO_KEYBOARD] # NIL
+                    NAP_WINDOW_HOTKEY(N_WindowNum, V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
+                ENDIF
+            NEXT
+
+            IF N_KeyBoard # NIL
+                NAP_WINDOW_HOTKEY(N_WindowNum, N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
+            ENDIF
+
+            // Database connector
             #DEFINE B_While VX_Sele:CARGO[21]
             NAP_TABLEVIEW_BIND_AREA(N_WindowNum, N_TableID, B_While)
             #UNDEF B_While
@@ -384,16 +395,6 @@ ENDIF   // L_ForcaLerTudo
 *
 
 IF SOB_MODO_GRAFICO()
-
-    FOR N_Cont := 1 TO LEN(V_LstAcoes)
-        IF V_LstAcoes[N_Cont,_ACAO_KEYBOARD] # NIL
-            NAP_WINDOW_HOTKEY(N_WindowNum, V_LstAcoes[N_Cont,_ACAO_KEYBOARD], V_LstAcoes[N_Cont,_ACAO_BLOCO_ACAO], V_LstAcoes[N_Cont,_ACAO_AUTOCLOSE])
-        ENDIF
-    NEXT
-
-    IF N_KeyBoard # NIL
-        NAP_WINDOW_HOTKEY(N_WindowNum, N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
-    ENDIF
 
     X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
 
