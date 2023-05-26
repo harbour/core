@@ -47,7 +47,7 @@ LOCAL N_Sel
 USE ../dados/cotacao NEW SHARED
 SET INDEX TO ../dados/cotacao
 GOTO TOP
-// Fran: We force to start at 21th visible register
+// Fran: We force to start at 21th visible register (just for testing)
 SKIP 21
 
 CUA20 @ 01,41,MAXROW()-2,MAXCOL()-30 JANELA V_Janela ;
@@ -78,13 +78,11 @@ ANEXE V_Janela TITULO "Data"      COLUNA dtcota
 ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
 ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
 ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
-*
+
 N_Sel := ATIVE(V_Janela)
-*
 CLOSE COTACAO
 
-MOSTRAR("M15668","Foi selecionada register " + hb_ntos(N_Sel))
-
+MOSTRAR("M15668","Foi selecionada register: " + hb_ntos(N_Sel))
 
 *****************************************************
 STAT PROC TST_BROWSE_DBF_MULTIPLA_SEM_GRID_SEM_TOOLBAR
@@ -113,20 +111,63 @@ ANEXE V_Janela TITULO "Data"      COLUNA dtcota
 ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
 ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
 ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
-*
+
 MUDE SELECAO V_Janela PARA {2,4,6,8}   // registros pré-selecionados
 
-*
 ATIVE(V_Janela)
-
-
-*
 CLOSE COTACAO
-*
+
+
+*****************************************
+STAT PROC TST_BROWSE_DBF_COLUNA_CONGELADA
+*****************************************
+LOCAL V_Janela
+LOCAL N_Sel, N_Cont
+LOCAL C_SelStr
+
+USE ../dados/cotacao NEW SHARED
+SET INDEX TO ../dados/cotacao
+GOTO TOP
+
+CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
+    TITU "Browse de arquivo DBF" ;
+    SUBTITULO "%T;seleção estendida;com coluna congelada" ;
+    AJUDA "T?????"
+
+ADDBOTAO V_Janela TEXTO "Enter=contar selecionados e fechar janela" ;
+   ACAO (CONTAR_SELECIONADOS(V_Janela),.T.) AUTOCLOSE AJUDA "B19273"
+
+CUA20 ESPECIALIZE V_Janela SELECAO ESTENDIDA CONGELAR 1
+
+ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
+ANEXE V_Janela TITULO "Data"      COLUNA dtcota
+ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
+ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
+ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
+
+N_Sel := ATIVE(V_Janela)
+CLOSE COTACAO
+
+C_SelStr := "(" + hb_ntos(LEN(N_Sel)) + ") "
+FOR N_Cont := 1 TO LEN(N_Sel)
+    C_SelStr := C_SelStr + hb_ntos(N_Sel[N_Cont]) + " "
+NEXT
+
+MOSTRAR("M15668","Seleçao extendida: " + C_SelStr)
 
 
 
-*
+
+
+
+
+
+
+
+
+
+
+
 ***********************
 STAT FUNC TESTA_DELECAO(L_NAO_EOF)
 ***********************
@@ -317,49 +358,6 @@ STAT PROC DEFAULT_SELECIONADOS(V_Janela)
 MUDE SELECAO V_Janela PARA {2,4,6,8}   // registros pré-selecionados
 
 *
-*****************************************
-STAT PROC TST_BROWSE_DBF_COLUNA_CONGELADA
-*****************************************
-LOCAL V_Janela
-
-//
-//  Fran: This code works on Windows and Linux
-//
-USE ../dados/cotacao NEW SHARED
-SET INDEX TO ../dados/cotacao
-GOTO TOP
-
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    USE dados\cotacao NEW SHARED
-//    SET INDEX TO dados\cotacao
-// #elif defined(__PLATFORM__LINUX)  || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    USE /opt/cuadados/cotacao NEW SHARED
-//    SET INDEX TO /opt/cuadados/cotacao
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-// GOTO TOP
-
-
-
-*
-CUA20 @ 01,41,MAXROW()-2,MAXCOL()-20 JANELA V_Janela ;
-    TITU "Browse de arquivo DBF" ;
-    SUBTITULO "%T;seleção estendida;com coluna congelada" ;
-    AJUDA "T?????"
-ADDBOTAO V_Janela TEXTO "Enter=contar selecionados e fechar janela" ;
-   ACAO (CONTAR_SELECIONADOS(V_Janela),.T.) AUTOCLOSE AJUDA "B19273"
-CUA20 ESPECIALIZE V_Janela SELECAO ESTENDIDA CONGELAR 1
-
-ANEXE V_Janela TITULO "Cd;moeda"  COLUNA cdindx
-ANEXE V_Janela TITULO "Data"      COLUNA dtcota
-ANEXE V_Janela TITULO "Data+2"    COLUNA dtcota+1
-ANEXE V_Janela TITULO "Data+3"    COLUNA dtcota+2
-ANEXE V_Janela TITULO "Cotação"   COLUNA TRANSFORM(vlcota,"@E 999,999,999,999.99999999")
-*
-ATIVE(V_Janela)
-*
-CLOSE COTACAO
 *
 
 *****************************
