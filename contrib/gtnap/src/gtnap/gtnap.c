@@ -6,13 +6,13 @@
 
 #include "gtnap.h"
 #include "gtnap.inl"
+#include "gtnap.ch"
 #include "nap_menu.inl"
-
-
 #include "gtconvert.h"
 #include "nappgui.h"
 #include "osmain.h"
 #include "drawctrl.inl"
+
 #include "hbapiitm.h"
 #include "hbapirdd.h"
 #include "hbapistr.h"

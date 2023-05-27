@@ -10,6 +10,7 @@
 
 #include "gtnap.h"
 #include "gtnap.inl"
+#include "gtnap.ch"
 #include "nap_menu.inl"
 #include "hbapiitm.h"
 #include "nappgui.h"
