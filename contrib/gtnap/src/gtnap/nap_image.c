@@ -4,7 +4,6 @@
 
 #include "gtnap.h"
 #include "gtnap.inl"
-#include "nappgui.h"
 
 /*---------------------------------------------------------------------------*/
 
@@ -22,24 +21,3 @@ HB_FUNC( NAP_IMAGE )
     uint32_t id = hb_gtnap_image(wid, top, left, bottom, right, pathname, click_block, autoclose, in_scroll);
     hb_retni(id);
 }
-
-
-
-
-
-
-
-
-
-
-
-///*---------------------------------------------------------------------------*/
-//
-//HB_FUNC( NAP_IMAGE_FROM_FILE )
-//{
-//    const char_t *pathname = hb_gtnap_parText(1);
-//    String *cpath = str_cpath("%s", pathname);
-//    Image *image = image_from_file(tc(cpath), NULL);
-//    str_destroy(&cpath);
-//    hb_gtnap_retImageGC(image);
-//}

@@ -4,9 +4,9 @@
 
 #include "gtnap.h"
 #include "gtnap.inl"
-#include "nap_tableview.inl"
 #include "hbapi.h"
-#include "nappgui.h"
+#include "cassert.h"
+#include "arrst.h"
 
 /*---------------------------------------------------------------------------*/
 

@@ -666,12 +666,12 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             N_WindowNum := N_WindowNum_Pai   // vincular com a janela pai
             *
             * espaçamento da janela filha deve ser idêntico à da janela pai
-            IF N_EspacamentoEmPixels # WVW_SetLineSpacing(N_WindowNum_Pai)
-               ? MEMVAR->ERRO_DE_ESPACAMENTO_DE_JANELA_EMBUTIDA
-            ENDIF
+            // IF N_EspacamentoEmPixels # WVW_SetLineSpacing(N_WindowNum_Pai)
+            //    ? MEMVAR->ERRO_DE_ESPACAMENTO_DE_JANELA_EMBUTIDA
+            // ENDIF
 
         ELSE // L_Embutida  --> Window in not embedded
-            L_MainCoord_Ant := WvW_SetMainCoord()
+            //L_MainCoord_Ant := WvW_SetMainCoord()
             AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
 
             // FRAN: GTNAP doesn't create any window by default
