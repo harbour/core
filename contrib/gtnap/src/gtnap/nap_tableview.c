@@ -59,6 +59,16 @@ HB_FUNC( NAP_TABLEVIEW_GRID2 )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_TABLEVIEW_HEADER )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    bool_t visible = (bool_t)hb_parl(3);
+    hb_gtnap_tableview_header(wid, id, visible);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TABLEVIEW_FREEZE )
 {
     uint32_t wid = hb_parni(1);
@@ -75,6 +85,16 @@ HB_FUNC( NAP_TABLEVIEW_BIND_AREA )
     uint32_t id = hb_parni(2);
     HB_ITEM *while_block = hb_param(3, HB_IT_BLOCK);
     hb_gtnap_tableview_bind_area(wid, id, while_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_TABLEVIEW_BIND_DATA )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    uint32_t num_rows = hb_parni(3);
+    hb_gtnap_tableview_bind_data(wid, id, num_rows);
 }
 
 /*---------------------------------------------------------------------------*/

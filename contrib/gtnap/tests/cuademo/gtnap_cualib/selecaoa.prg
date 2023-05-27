@@ -203,25 +203,23 @@ IF N_TP_Selecao # _SELE_SIMPLES
     ENDIF
 ENDIF
 #UNDEF VN_Selecio
-*
+
 RETURN NIL
-*
-*
-*
+
 **************************************************************************************************************************************************
-STATIC PROC NAP_TOGGLE_FOCUS_ROW(VX_Janela)
-    LOCAL N_FocusRow := NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId)
-    NAP_TABLEVIEW_TOGGLE_ROW(N_WindowNum, N_ItemId, N_FocusRow)
+PROC NAP_TOGGLE_FOCUS_ROW(VX_Janela)
+LOCAL N_FocusRow := NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId)
+NAP_TABLEVIEW_TOGGLE_ROW(N_WindowNum, N_ItemId, N_FocusRow)
 
 STATIC FUNC NAP_RECNO_IS_SELECTED(VX_Janela, B_LinCorrente)
-    LOCAL N_Rec := EVAL(B_LinCorrente)
-    LOCAL N_Cont, V_Rows := NAP_TABLEVIEW_SELECTED_ROWS(N_WindowNum, N_ItemId)
-    FOR N_Cont := 1 TO LEN(V_Rows)
-        IF NAP_TABLEVIEW_RECNO_FROM_ROW(N_WindowNum, N_ItemId, V_Rows[N_Cont]) == N_Rec
-            RETURN .T.
-        ENDIF
-    NEXT
-    RETURN .F.
+LOCAL N_Rec := EVAL(B_LinCorrente)
+LOCAL N_Cont, V_Rows := NAP_TABLEVIEW_SELECTED_ROWS(N_WindowNum, N_ItemId)
+FOR N_Cont := 1 TO LEN(V_Rows)
+    IF NAP_TABLEVIEW_RECNO_FROM_ROW(N_WindowNum, N_ItemId, V_Rows[N_Cont]) == N_Rec
+        RETURN .T.
+    ENDIF
+NEXT
+RETURN .F.
 
 **************************************************************************************************************************************************
 *
@@ -247,13 +245,12 @@ STATIC FUNC NAP_RECNO_IS_SELECTED(VX_Janela, B_LinCorrente)
 #DEFINE L_TeveRolaHorizontal VX_Sele:CARGO[18]      // Para saber se teve rolamento horizontal desde última estabilização
 #DEFINE L_NaoRolaVertical    VX_Sele:CARGO[19]      // FRAN: With vertical scroll bar
 #DEFINE L_NaoRolaHorizontal  VX_Sele:CARGO[20]      // FRAN: With horizontal scroll bar
-*
+
 **************************
 STATIC FUNCTION Selecionar ( VX_Janela )
-*
 LOCAL VX_Sele := VX_SubObj
 LOCAL X_Retorno
-*
+
 #DEFINE C_Ajuda     VX_Janela[17]
 IF EVAL(SETA_ACEJAN(),C_Ajuda)   // usuário acessa janela
    X_Retorno := Selecao(VX_Janela,VX_Sele)
@@ -265,11 +262,9 @@ ELSE
   ENDIF
 ENDIF
 #UNDEF C_Ajuda
-*
+
 LOGA_AJTELAT(C_CdTela,C_Cabec,NIL)  // LOGAR conteúdo de telas
-*
 RETURN X_Retorno
-*
 
 ***********************
 STATIC FUNCTION Selecao ( VX_Janela, VX_Sele)
@@ -282,7 +277,7 @@ LOCAL L_ForcaParada, L_Abortado, N_Cont, N_Row
 LOCAL N_Row_Inicial_Util
 LOCAL N_mRow, N_mCol, N_Desloca, N_RegiaoMouse, N_Keyboard
 LOCAL N_Desloca_Aux, N_RowPos_Ant
-LOCAL X_Retorno, V_Sel, L_Multisel, N_TableID
+LOCAL X_Retorno, V_Sel, L_Multisel
 LOCAL X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, L_PodeExecutar
 LOCAL V_Ambiente_Alias
@@ -318,14 +313,12 @@ IF L_ForcaLerTudo
                 L_Multisel := .T.
             ENDIF
 
-            N_TableID := NAP_TABLEVIEW(N_WindowNum, L_Multisel, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], .F.)
-            N_ItemId := N_TableID
-
-            NAP_TABLEVIEW_SCROLL2(N_WindowNum, N_TableID, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
-            NAP_TABLEVIEW_GRID2(N_WindowNum, N_TableID, L_MostraGrade, L_MostraGrade)
+            N_ItemId := NAP_TABLEVIEW(N_WindowNum, L_Multisel, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], .F.)
+            NAP_TABLEVIEW_SCROLL2(N_WindowNum, N_ItemId, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
+            NAP_TABLEVIEW_GRID2(N_WindowNum, N_ItemId, L_MostraGrade, L_MostraGrade)
 
             IF N_TP_Selecao # _SELE_SIMPLES
-                NAP_TABLEVIEW_COLUMN(N_WindowNum, N_TableID, 0, {||""}, { || IIF(NAP_RECNO_IS_SELECTED(VX_Janela, B_LinCorrente)==.F.," ","»") })
+                NAP_TABLEVIEW_COLUMN(N_WindowNum, N_ItemId, 0, {||""}, { || IIF(NAP_RECNO_IS_SELECTED(VX_Janela, B_LinCorrente)==.F.," ","»") })
             ENDIF
 
             FOR N_Count := 1 TO VX_Sele:COLCOUNT
@@ -341,11 +334,11 @@ IF L_ForcaLerTudo
                     N_Width := 0
                 ENDIF
 
-                NAP_TABLEVIEW_COLUMN(N_WindowNum, N_TableID, N_Width, {||C_Title}, O_Column:BLOCK)
+                NAP_TABLEVIEW_COLUMN(N_WindowNum, N_ItemId, N_Width, {||C_Title}, O_Column:BLOCK)
             NEXT
 
             IF N_Congela # 0
-                NAP_TABLEVIEW_FREEZE(N_WindowNum, N_TableID, N_Congela)
+                NAP_TABLEVIEW_FREEZE(N_WindowNum, N_ItemId, N_Congela)
             ENDIF
 
             FOR N_Cont := 1 TO LEN(V_LstAcoes)
@@ -360,16 +353,16 @@ IF L_ForcaLerTudo
 
             // Database connector
             #DEFINE B_While VX_Sele:CARGO[21]
-            NAP_TABLEVIEW_BIND_AREA(N_WindowNum, N_TableID, B_While)
+            NAP_TABLEVIEW_BIND_AREA(N_WindowNum, N_ItemId, B_While)
             #UNDEF B_While
 
-            NAP_TABLEVIEW_REFRESH_ALL(N_WindowNum, N_TableID)
+            NAP_TABLEVIEW_REFRESH_ALL(N_WindowNum, N_ItemId)
 
             IF N_TP_Selecao # _SELE_SIMPLES
-                NAP_TABLEVIEW_DESELECT_ALL2(N_WindowNum, N_TableID)
+                NAP_TABLEVIEW_DESELECT_ALL2(N_WindowNum, N_ItemId)
                 FOR N_Cont := 1 TO LEN(VN_Selecio)
-                    N_Row := NAP_TABLEVIEW_ROW_FROM_RECNO(N_WindowNum, N_TableID, VN_Selecio[N_Cont])
-                    NAP_TABLEVIEW_SELECT_ROW(N_WindowNum, N_TableID, N_Row)
+                    N_Row := NAP_TABLEVIEW_ROW_FROM_RECNO(N_WindowNum, N_ItemId, VN_Selecio[N_Cont])
+                    NAP_TABLEVIEW_SELECT_ROW(N_WindowNum, N_ItemId, N_Row)
                 NEXT
             ENDIF
 
@@ -1235,55 +1228,55 @@ RETURN NIL
 *
 ******************
 FUNCTION MudeLista ( VX_Janela , VN_Default )
-*
 LOCAL VX_Sele, N_Cont, N_Row
-*
+
 VX_Sele := VX_SubObj
-*
+
 IF VN_Default == NIL
    VN_Default := {}
 ENDIF
-*
+
 IF LEN(VN_Selecio) # 0 .OR. LEN(VN_Default) # 0         // algo a fazer
-   VN_Selecio := VN_Default
-   IF L_PrimAtivacao
-      * Janela que não foi ainda aberta não tem nenhum aspecto visual
-      * a ser atualizado.
-   ELSE
-    IF SOB_MODO_GRAFICO()
-        NAP_TABLEVIEW_DESELECT_ALL2(N_WindowNum, N_ItemId)
-        FOR N_Cont := 1 TO LEN(VN_Selecio)
-            N_Row := NAP_TABLEVIEW_ROW_FROM_RECNO(N_WindowNum, N_ItemId, VN_Selecio[N_Cont])
-            NAP_TABLEVIEW_SELECT_ROW(N_WindowNum, N_ItemId, N_Row)
-        NEXT
-
-        // TODO: CHANGE THIS CALL
-        IF N_TP_Jan == _JAN_SELE_VETO_20
-            NAP_CUALIB_VETOR_SELECT(VN_Selecio)
-        ENDIF
-
+    VN_Selecio := VN_Default
+    IF L_PrimAtivacao
+    * Janela que não foi ainda aberta não tem nenhum aspecto visual
+    * a ser atualizado.
     ELSE
+        IF SOB_MODO_GRAFICO()
+            NAP_TABLEVIEW_DESELECT_ALL2(N_WindowNum, N_ItemId)
 
-        VX_Sele:REFRESHALL()
-        *
-        * No Harbour, a chamada da REFRESHALL() muda o registro corrente para
-        * topo do Browse(), quando o cursor não está na primeira linha do browse().
-        * Isto causava erro quando a MudeLista() era chamada fora
-        * da CUA (isto é permitido).
-        *
-        * O cursor só volta para o registro correto APÓS a estabilização da janela.
-        DO WHILE .NOT. VX_Sele:STABILIZE()
-        ENDDO
-    ENDIF
+            IF N_TP_Jan == _JAN_SELE_ARQ_20
+                FOR N_Cont := 1 TO LEN(VN_Selecio)
+                    N_Row := NAP_TABLEVIEW_ROW_FROM_RECNO(N_WindowNum, N_ItemId, VN_Selecio[N_Cont])
+                    NAP_TABLEVIEW_SELECT_ROW(N_WindowNum, N_ItemId, N_Row)
+                NEXT
+            ELSEIF N_TP_Jan == _JAN_SELE_VETO_20
+                FOR N_Cont := 1 TO LEN(VN_Selecio)
+                    NAP_TABLEVIEW_SELECT_ROW(N_WindowNum, N_ItemId, VN_Selecio[N_Cont])
+                NEXT
+            ENDIF
+
+        ELSE // .NOT. SOB_MODO_GRAFICO()
+
+            VX_Sele:REFRESHALL()
+            *
+            * No Harbour, a chamada da REFRESHALL() muda o registro corrente para
+            * topo do Browse(), quando o cursor não está na primeira linha do browse().
+            * Isto causava erro quando a MudeLista() era chamada fora
+            * da CUA (isto é permitido).
+            *
+            * O cursor só volta para o registro correto APÓS a estabilização da janela.
+            DO WHILE .NOT. VX_Sele:STABILIZE()
+            ENDDO
+        ENDIF
    ENDIF
 ENDIF
-*
+
 RETURN NIL
-*
-*
-// ***********************
+
+***********************
 FUNCTION ReleiaCorrente ( VX_Janela )
-*
+
 IF SOB_MODO_GRAFICO()
     NAP_TABLEVIEW_REFRESH_CURRENT(N_WindowNum, N_ItemId)
 ELSE
@@ -1291,17 +1284,16 @@ ELSE
     VX_Sele:REFRESHCURRENT()
     #UNDEF  VX_Sele
 ENDIF
-*
+
 RETURN NIL
-*
-*
+
 *******************
 FUNCTION ReleiaTudo ( VX_Janela )
-*
+
 #DEFINE VX_Sele VX_SubObj
-L_ForcaLerTudo := .T.      // como pode ter sido apagado algum registro
-*                          // este procedimento merece tratamento especial
-*                          // (um simples REFRESHALL() não resolve !) .
+L_ForcaLerTudo := .T.       // como pode ter sido apagado algum registro
+                            // este procedimento merece tratamento especial
+                            // (um simples REFRESHALL() não resolve !) .
 #UNDEF  VX_Sele
 
 IF SOB_MODO_GRAFICO()
@@ -1315,7 +1307,6 @@ FUNC CoordenadasBrowse (VX_Sele)
 **********************
 RETURN {VX_Sele:nTop, VX_Sele:nLeft,VX_Sele:nBottom,VX_Sele:nRight }
 
-
 ****************
 FUNC SETA_ACEJAN  (B_ACEJAN_NEW)   // seta a funcao de teste de acesso a janela
 ****************
@@ -1324,7 +1315,7 @@ IF B_ACEJAN_NEW # NIL
    B_ACEJAN2 := B_ACEJAN_NEW
 ENDIF
 RETURN B_ACEJAN2
-*
+
 ****************
 FUNC SETA_ACEOPC  (B_ACEOPC_NEW)   // seta a funcao de teste de acesso a opçäo
 ****************
@@ -1333,7 +1324,7 @@ IF B_ACEOPC_NEW # NIL
    B_ACEOPC2 := B_ACEOPC_NEW
 ENDIF
 RETURN B_ACEOPC2
-*
+
 *****************
 FUNC SETA_DIREITO(B_DIREITO_NEW)   // determina a funcao de definicao de direitos do usuário
 *****************
@@ -1342,12 +1333,11 @@ IF B_DIREITO_NEW # NIL
    B_DIREITO2 := B_DIREITO_NEW
 ENDIF
 RETURN B_DIREITO2
-*
+
 ******************************
 STAT FUNC Salva_Ambiente_Alias()
 ******************************
 LOCAL V_Ambiente_Alias
-*
 * Características que não devem mudar durante a execução da ação
 #DEFINE _AMBIENTE_ALIAS        01
 #DEFINE _AMBIENTE_SELECT       02

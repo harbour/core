@@ -211,6 +211,10 @@ struct _gtnap_window_t
     GtNapCualibToolbar *toolbar;
     GtNapArea *gtarea;
     GtNapVector *gtvector;
+    uint32_t num_rows;
+    // TODO
+    //HB_ITEM *row_param;
+
     ArrPt(GtNapObject) *gui_objects;
     ArrPt(GtNapCallback) *callbacks;
 };
@@ -246,6 +250,8 @@ DeclPt(Button);
 /*---------------------------------------------------------------------------*/
 
 #define STATIC_TEXT_SIZE    1024
+char_t TEMP_BUFFER[STATIC_TEXT_SIZE];       // Temporal buffer between RDD and TableView
+
 /*---------------------------------------------------------------------------*/
 
 static const GtNapKey KEYMAPS[] = {
@@ -2084,6 +2090,16 @@ void hb_gtnap_tableview_grid(const uint32_t wid, const uint32_t id, const bool_t
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_tableview_header(const uint32_t wid, const uint32_t id, const bool_t visible)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TABLEVIEW);
+    tableview_header_visible((TableView*)obj->component, visible);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_tableview_freeze(const uint32_t wid, const uint32_t id, const uint32_t col_id)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
@@ -2108,7 +2124,7 @@ static GtNapArea *i_create_area(void)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnTableSelect(GtNapArea *gtarea, Event *e)
+static void i_OnTableAreaRowSelect(GtNapArea *gtarea, Event *e)
 {
     cassert_no_null(gtarea);
     if (gtarea->multisel == FALSE)
@@ -2199,7 +2215,7 @@ static void i_area_column_width(GtNapArea *gtarea, const uint32_t col, const cha
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnTableData(GtNapArea *gtarea, Event *e)
+static void i_OnTableAreaData(GtNapArea *gtarea, Event *e)
 {
     uint32_t etype = event_type(e);
     cassert_no_null(gtarea);
@@ -2261,8 +2277,108 @@ void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM
     else
         gtwin->gtarea->whileCodeBlock = NULL;
 
-    tableview_OnData((TableView*)obj->component, listener(gtwin->gtarea, i_OnTableData, GtNapArea));
-    tableview_OnSelect((TableView*)obj->component, listener(gtwin->gtarea, i_OnTableSelect, GtNapArea));
+    tableview_OnData((TableView*)obj->component, listener(gtwin->gtarea, i_OnTableAreaData, GtNapArea));
+    tableview_OnSelect((TableView*)obj->component, listener(gtwin->gtarea, i_OnTableAreaRowSelect, GtNapArea));
+}
+
+/*---------------------------------------------------------------------------*/
+
+static const char_t *i_data_eval_field(GtNapObject *gtobj, const uint32_t col_id, const uint32_t row_id, align_t *align)
+{
+    const GtNapColumn *column = NULL;
+    HB_ITEM *pitem = NULL;
+    HB_ITEM *ritem = NULL;
+    HB_TYPE type = 0;
+
+    cassert_no_null(gtobj);
+
+    /* Get the table column */
+    column = arrst_get_const(gtobj->columns, col_id, GtNapColumn);
+
+    /* TODO: CACHE THIS PARAM */ 
+    pitem = hb_itemPutNI(NULL, row_id + 1);
+
+    /* CodeBlock that computes the cell content */
+    ritem = hb_itemDo(column->codeBlock, 1, pitem);
+
+    /* Fill the temporal cell buffer with cell result */
+    type = HB_ITEM_TYPE(ritem);
+    TEMP_BUFFER[0] = '\0';
+
+    if (type == HB_IT_STRING)
+    {
+        hb_itemCopyStrUTF8(ritem, TEMP_BUFFER, sizeof(TEMP_BUFFER));
+    }
+    else if (type == HB_IT_DATE)
+    {
+        char date[16];
+        hb_itemGetDS(ritem, date);
+        hb_dateFormat(date, TEMP_BUFFER, hb_setGetDateFormat());
+    }
+    else if (type == HB_IT_DOUBLE)
+    {
+        double value = hb_itemGetND(ritem);
+        bstd_sprintf(TEMP_BUFFER, sizeof(TEMP_BUFFER), "%12.4f", value);
+    }
+
+    hb_itemRelease(pitem);
+    hb_itemRelease(ritem);
+
+    if (align != NULL)
+        *align = column->align;
+
+    return TEMP_BUFFER;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnTableData(GtNapObject *gtobj, Event *e)
+{
+    uint32_t etype = event_type(e);
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_TABLEVIEW);
+    cassert_no_null(gtobj->cuawin);
+
+    switch(etype) {
+    case ekGUI_EVENT_TBL_BEGIN:
+        break;
+
+    case ekGUI_EVENT_TBL_END:
+        break;
+
+    case ekGUI_EVENT_TBL_NROWS:
+    {
+        uint32_t *n = event_result(e, uint32_t);
+        *n = gtobj->cuawin->num_rows;
+        break;
+    }
+
+    case ekGUI_EVENT_TBL_CELL:
+    {
+        EvTbCell *cell = event_result(e, EvTbCell);
+        const EvTbPos *pos = event_params(e, EvTbPos);
+        cell->text = i_data_eval_field(gtobj, pos->col, pos->row, &cell->align);
+        break;
+    }
+
+    default:
+        break;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_tableview_bind_data(const uint32_t wid, const uint32_t id, const uint32_t num_rows)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    GtNapWindow *gtwin = NULL;
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TABLEVIEW);
+    gtwin = obj->cuawin;
+    cassert_no_null(gtwin);
+    gtwin->num_rows = num_rows;
+    tableview_OnData((TableView*)obj->component, listener(obj, i_OnTableData, GtNapObject));
+    tableview_OnSelect((TableView*)obj->component, NULL);
 }
 
 /*---------------------------------------------------------------------------*/

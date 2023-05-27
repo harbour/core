@@ -6,11 +6,11 @@
 PROC EXEMPLO_BROWSE_VETOR
 *************************
 LOCAL V_Janela
-*
+
 CUA20 @ 15,20,27,85 JANELA V_Janela ;
      TITULO "Escolha o tipo de janela de browse de vetor" SUBTITULO "%T";
      AJUDA "T?????"
-*
+
 ESPECIALIZE V_Janela MENU
 ADDOPCAO V_Janela TEXTO "janela seleção simples, sem grade, nem toolbar" ;
    ACAO TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM() AJUDA "P06749"
@@ -20,9 +20,9 @@ ADDOPCAO V_Janela TEXTO "janela seleção estendida, com grade, sem barra de rolag
    ACAO TST_BROWSE_VETOR_ESTENDIDA_COM_GRADE_COM_TOOLBAR_SEM_ROLAGEM() AJUDA "P06753"
 ADDOPCAO V_Janela TEXTO "janela seleção simples com AUTOCLOSE" ;
    ACAO TST_BROWSE_VETOR_SIMPLES_COM_AUTOCLOSE() AJUDA "P06755"
-*
+
 ATIVE(V_Janela)
-*
+
 *******************************************************************
 STAT PROC TST_BROWSE_VETOR_SIMPLES_SEM_GRADE_SEM_TOOLBAR_SEM_ROLAGEM
 *******************************************************************
@@ -31,7 +31,7 @@ LOCAL V_Janela, V_Vetor
 V_Vetor := {"#Leite condensado","A#rroz tipo 1","Ac#arajé","Doc#e de leite",;
             "Doce#s diversos","Churrasco de #gado","Rapadura #preta",;
             "Amendoim #torrado","Panelada de #bucho"}
-*
+
 CUA20 @ 06,64,MAXROW()-4,MAXCOL()-5 JANELA V_Janela ;
     TITU "Browse de vetor" ;
     SUBTITULO "%T;sem grade, sem toolbar;sem barra de rolagem" ;
@@ -50,16 +50,6 @@ CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES VETOR V_Vetor NAOROLAVERTICAL ;
 
 ATIVE(V_Janela)
 
-*
-*********************************
-STAT PROC EXIBIR_ITEM_SELECIONADO(V_Janela,V_Vetor)
-*********************************
-LOCAL N_Posicao := ITENSSELECIONADOS(V_Janela)
-*
-MOSTRAR("M15664","A posição selecionada foi "+LTRIM(STR(N_Posicao)))
-MOSTRAR("M15666","A posição selecionada contém '"+V_Vetor[N_Posicao]+"'")
-*
-
 ********************************************************************
 STAT PROC TST_BROWSE_VETOR_MULTIPLA_COM_GRADE_COM_TOOLBAR_COM_ROLAGEM
 ********************************************************************
@@ -68,11 +58,12 @@ LOCAL V_Janela, V_Vetor, V_Posicoes, N_Cont, C_Info
 V_Vetor := {"#Leite condensado","A#rroz tipo 1","Ac#arajé","Doc#e de leite",;
             "Doce#s diversos","Churrasco de #gado","Rapadura #preta",;
             "Amendoim #torrado","Panelada de #bucho"}
-*
+
 CUA20 @ 15,64,MAXROW()-5,MAXCOL()-5 JANELA V_Janela ;
     TITU "Browse de vetor" ;
     SUBTITULO "%T;com grade, sem toolbar;com barra de rolagem" ;
     AJUDA "T?????"
+
 ADDBOTAO V_Janela TEXTO "Enter=exibir itens selecionados" ;
     ACAO EXIBIR_ITENS_SELECIONADOS(V_Janela,V_Vetor) AUTOCLOSE AJUDA "B19279"
 
@@ -84,13 +75,24 @@ CUA20 ESPECIALIZE V_Janela SELECAO MULTIPLA VETOR V_Vetor NAOROLAHORIZONTAL
 MUDE SELECAO V_Janela PARA {2,4}
 
 V_Posicoes := ATIVE(V_Janela)
-*
+
 C_Info := "Select posiçãoes: "
 FOR N_Cont := 1 TO LEN(V_Posicoes)
     C_Info := C_Info + hb_ntos(V_Posicoes[N_Cont]) + " "
 NEXT
 
 MOSTRAR("M15668",C_Info)
+
+
+
+*
+*********************************
+STAT PROC EXIBIR_ITEM_SELECIONADO(V_Janela,V_Vetor)
+*********************************
+LOCAL N_Posicao := ITENSSELECIONADOS(V_Janela)
+MOSTRAR("M15664","A posição selecionada foi "+LTRIM(STR(N_Posicao)))
+MOSTRAR("M15666","A posição selecionada contém '"+V_Vetor[N_Posicao]+"'")
+
 *
 ***********************************
 STAT PROC EXIBIR_ITENS_SELECIONADOS(V_Janela,V_Vetor)

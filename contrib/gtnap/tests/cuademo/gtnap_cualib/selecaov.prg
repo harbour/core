@@ -55,19 +55,13 @@ IF N_TP_Selecao # _SELE_SIMPLES
       ? MEMVAR->JANELA_JA_TEM_ACAO_BARRA_DE_ESPACO_AUTOMATICO
    ENDIF
 
-   // FRAN: Improve IN TABLEVIEW-based selecaov
-   IF SOB_MODO_GRAFICO()
-        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_CUALIB_SELECT_CURRENT_VECTOR()},.F.,;
-            "B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
-            .T.)
-        NAP_CUALIB_HOTKEY(K_SPACE, ,{||NAP_CUALIB_SELECT_CURRENT_VECTOR()},.F.)
+    IF SOB_MODO_GRAFICO()
+        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_TOGGLE_FOCUS_ROW(VX_Janela)},.F.,"B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
+        NAP_WINDOW_HOTKEY(N_WindowNum, K_SPACE, {||NAP_TOGGLE_FOCUS_ROW(VX_Janela)}, .F.)
     ELSE
 
-        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,;
-                    "B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,;
-                    .T.)
-ENDIF
-
+        ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,"B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
+    ENDIF
 ENDIF
 *
 IF L_AutoClose
@@ -183,7 +177,9 @@ B_Metodo  := { || Selecionar(VX_Janela) }
 #DEFINE B_LinCorrente vX_Sele:CARGO[01]
 #DEFINE VN_Selecio    VX_Sele:CARGO[08]
 IF N_TP_Selecao # _SELE_SIMPLES
-   AnexeCol(VX_Janela, NIL, { || IIF(ASCAN(VN_Selecio,EVAL(B_LinCorrente))==0," ","»")})
+    IF .NOT. SOB_MODO_GRAFICO()
+        AnexeCol(VX_Janela, NIL, { || IIF(ASCAN(VN_Selecio,EVAL(B_LinCorrente))==0," ","»")})
+    ENDIF
 ENDIF
 #UNDEF VN_Selecio
 #UNDEF B_LinCorrente
@@ -224,21 +220,26 @@ RETURN NIL
 #DEFINE L_NaoRolaVertical    VX_Sele:CARGO[19]      // FRAN: With vertical scroll bar
 #DEFINE L_NaoRolaHorizontal  VX_Sele:CARGO[20]      // FRAN: With horizontal scroll bar
 
-*
+**************************************************************************************************************************************************
+
+STATIC FUNC NAP_ROW_IS_SELECTED(VX_Janela, N_Row)
+LOCAL N_Cont, V_Rows := NAP_TABLEVIEW_SELECTED_ROWS(N_WindowNum, N_ItemId)
+FOR N_Cont := 1 TO LEN(V_Rows)
+    IF V_Rows[N_Cont] == N_Row
+        RETURN .T.
+    ENDIF
+NEXT
+RETURN .F.
+
 **************************
 STATIC FUNCTION Selecionar ( VX_Janela )
-*
 LOCAL VX_Sele := VX_SubObj
 LOCAL X_Retorno
-*
 ADICIONAR_COLUNA_VETOR_AO_BROWSE(VX_Janela,N_TP_Selecao)
-*
 X_Retorno := Selecao(VX_Janela,VX_Sele)
-*
 LOGA_AJTELAT(C_CdTela,C_Cabec,NIL)  // LOGAR conteúdo de telas
-*
 RETURN X_Retorno
-*
+
 ***********************
 STATIC FUNCTION Selecao ( VX_Janela, VX_Sele)
 *
@@ -249,8 +250,8 @@ LOCAL L_ForcaParada, N_Cont, L_Abortado
 LOCAL N_Row_Inicial_Util
 LOCAL N_mRow, N_mCol, N_Desloca, N_RegiaoMouse, N_Keyboard
 LOCAL N_Desloca_Aux, N_RowPos_Ant
-LOCAL X_Retorno
-LOCAL L_Coords, N_MenID, V_TableView
+LOCAL X_Retorno, L_Multisel
+LOCAL L_Coords
 LOCAL X_Retorno_Eval
 LOCAL L_Executar, V_Botao, V_Imagem, N_Pos_Acao, N_TeclaUpper, L_PodeExecutar
 *
@@ -274,49 +275,60 @@ IF L_ForcaLerTudo
                 L_Coords[4]++
             ENDIF
 
-            // Fran: GTNAP
+            // Fran/GTNAP
             // Browse de vetor WITH Grade is implemented with a TableView control
             // Browse de vetor WITHOUT Grade is implemented with a MenuVert control
             IF L_MostraGrade
 
-                // FRAN: Clean when gtnap tableview refactor
-                V_TableView := NAP_TABLEVIEW_CREATE()
-
-                IF L_NaoRolaHorizontal == .F.
-                    LOG_PRINT("BROWSE VETOR With HORIZONTAL ScrollBar!!")
-                ELSE
-                    LOG_PRINT("BROWSE VETOR WITHOUT HORIZONTAL ScrollBar!!")
+                IF N_TP_Selecao == _SELE_SIMPLES
+                    L_Multisel := .F.
+                ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+                    L_Multisel := .T.
                 ENDIF
 
-                IF L_NaoRolaVertical == .F.
-                    LOG_PRINT("BROWSE VETOR With VERTICAL ScrollBar!!")
-                ELSE
-                    LOG_PRINT("BROWSE VETOR WITHOUT VERTICAL ScrollBar!!")
-                ENDIF
+                N_ItemId := NAP_TABLEVIEW(N_WindowNum, L_Multisel, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], .F.)
+                NAP_TABLEVIEW_SCROLL2(N_WindowNum, N_ItemId, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
+                NAP_TABLEVIEW_GRID2(N_WindowNum, N_ItemId, .T., .T.)
+                NAP_TABLEVIEW_HEADER(N_WindowNum, N_ItemId, .F.)
 
-                NAP_TABLEVIEW_SCROLL(V_TableView, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
-                NAP_TABLEVIEW_FONT(V_TableView)
-                NAP_TABLEVIEW_HEADER_VISIBLE(V_TableView, .F.)
-                NAP_TABLEVIEW_GRID(V_TableView, .T., .T.)
+
+                // IF L_NaoRolaHorizontal == .F.
+                //     LOG_PRINT("BROWSE VETOR With HORIZONTAL ScrollBar!!")
+                // ELSE
+                //     LOG_PRINT("BROWSE VETOR WITHOUT HORIZONTAL ScrollBar!!")
+                // ENDIF
+
+                // IF L_NaoRolaVertical == .F.
+                //     LOG_PRINT("BROWSE VETOR With VERTICAL ScrollBar!!")
+                // ELSE
+                //     LOG_PRINT("BROWSE VETOR WITHOUT VERTICAL ScrollBar!!") ÇÇÇÇÇÇçççç
+                // ENDIF
+
+                //NAP_TABLEVIEW_FONT(V_TableView)
+                //NAP_TABLEVIEW_HEADER_VISIBLE(V_TableView, .F.)
+                //NAP_TABLEVIEW_GRID(V_TableView, .T., .T.)
 
                 //NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
 
-                IF N_TP_Selecao == _SELE_SIMPLES
-                    NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
-                ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-                    NAP_TABLEVIEW_MULTISEL(V_TableView, .T., .T.)
-                ENDIF
+                // IF N_TP_Selecao == _SELE_SIMPLES
+                //     NAP_TABLEVIEW_MULTISEL(V_TableView, .F., .F.)
+                // ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+                //     NAP_TABLEVIEW_MULTISEL(V_TableView, .T., .T.)
+                // ENDIF
 
                 // FRAN: NO database connection in Browse de vetor
                 //NAP_TABLEVIEW_CUALIB_BIND_DB(V_TableView)
-                NAP_TABLEVIEW_CUALIB_BIND_VETOR(V_TableView)
 
-                LOG_PRINT("TableView Vector Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
-                NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
+                // LOG_PRINT("TableView Vector Coords:" + hb_ntos(L_Coords[1]) + ", " + hb_ntos(L_Coords[2]) + ", " + hb_ntos(L_Coords[3]) + ", " + hb_ntos(L_Coords[4]))
+                // NAP_CUALIB_TABLEVIEW(V_TableView, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4])
 
-                LOG_PRINT("Num cols: " + hb_ntos(VX_Sele:COLCOUNT))
+                IF N_TP_Selecao # _SELE_SIMPLES
+                    // TODO. FRAN -> Inspect where '11' comes
+                    NAP_TABLEVIEW_COLUMN(N_WindowNum, N_ItemId, 11, {||""}, { | N_Row | IIF(NAP_ROW_IS_SELECTED(VX_Janela, N_Row)==.F.," ","»") })
+                ENDIF
+
                 FOR N_Count := 1 TO VX_Sele:COLCOUNT
-                     O_Column := VX_Sele:GetColumn(N_Count)
+                    O_Column := VX_Sele:GetColumn(N_Count)
                     C_Title := O_Column:HEADING
                     N_Width := O_Column:WIDTH
 
@@ -328,55 +340,63 @@ IF L_ForcaLerTudo
                         N_Width := 0
                     ENDIF
 
-                    LOG_PRINT("Title: " + C_Title)
-                    IF O_Column:WIDTH # NIL
-                        LOG_PRINT("WIDTH " + hb_ntos(O_Column:WIDTH))
-                    ELSE
-                        LOG_PRINT("WIDTH IS NULL")
-                    ENDIF
+                    NAP_TABLEVIEW_COLUMN(N_WindowNum, N_ItemId, N_Width, {||C_Title}, { | N_Row | V_Opcoes[N_Row,_OPCAO_TEXTO_TRATADO] })
 
-                    NAP_TABLEVIEW_CUALIB_COLUMN_VECTOR(V_TableView, O_Column:BLOCK,N_Width)
+                    //NAP_TABLEVIEW_CUALIB_COLUMN_VECTOR(V_TableView, O_Column:BLOCK,N_Width)
                     //NAP_TABLEVIEW_CUALIB_COLUMN_DB(V_TableView, C_Title,O_Column:BLOCK,N_Width)
 
                 NEXT
 
-                FOR N_Cont := 1 TO LEN(V_Opcoes)
-                    //IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] // # 0  // tem tecla hotkey
-                        NAP_TABLEVIEW_CUALIB_VECTOR_ADD(V_TableView, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
-                    //ENDIF
-                NEXT
+                // NAP_TABLEVIEW_CUALIB_BIND_VETOR(V_TableView)
 
-                NAP_TABLEVIEW_UPDATE(V_TableView)
+                // FOR N_Cont := 1 TO LEN(V_Opcoes)
+                //     //IF V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE] // # 0  // tem tecla hotkey
+                //         NAP_TABLEVIEW_CUALIB_VECTOR_ADD(V_TableView, V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO], V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
+                //     //ENDIF
+                // NEXT
+                NAP_TABLEVIEW_BIND_DATA(N_WindowNum, N_ItemId, LEN(V_Opcoes))
+                NAP_TABLEVIEW_REFRESH_ALL(N_WindowNum, N_ItemId)
 
-                LOG_PRINT("Current VETOR VN_Selecio" + hb_ntos(LEN(VN_Selecio)))
+                //NAP_TABLEVIEW_UPDATE(V_TableView)
+
+                //LOG_PRINT("Current VETOR VN_Selecio" + hb_ntos(LEN(VN_Selecio)))
 
                 //
                 // FRAN: Automatic first selection and change selection event
                 //
-                NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
 
-                IF N_TP_Selecao == _SELE_SIMPLES
-                    NAP_TABLEVIEW_SELECT(V_TableView, 1)
-                ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
-                    //NAP_TABLEVIEW_SELECT(V_TableView, 1)
-                    NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
-                    NAP_CUALIB_VETOR_SELECT(VN_Selecio)
-                    // //NAP_CUALIB_SET_JANELA(VX_Sele)
-                    // //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
-                    // NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
-                    // IF N_Congela # 0
-                    //     NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
-                    // ENDIF
-
+                IF N_TP_Selecao # _SELE_SIMPLES
+                    NAP_TABLEVIEW_DESELECT_ALL2(N_WindowNum, N_ItemId)
+                    FOR N_Cont := 1 TO LEN(VN_Selecio)
+                        NAP_TABLEVIEW_SELECT_ROW(N_WindowNum, N_ItemId, VN_Selecio[N_Cont])
+                    NEXT
                 ENDIF
+
+
+                // TODO
+                // NAP_TABLEVIEW_DESELECT_ALL(V_TableView)
+
+                // IF N_TP_Selecao == _SELE_SIMPLES
+                //     NAP_TABLEVIEW_SELECT(V_TableView, 1)
+                // ELSEIF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+                //     //NAP_TABLEVIEW_SELECT(V_TableView, 1)
+                //     NAP_TABLEVIEW_SELECT(V_TableView, VN_Selecio)
+                //     NAP_CUALIB_VETOR_SELECT(VN_Selecio)
+                //     // //NAP_CUALIB_SET_JANELA(VX_Sele)
+                //     // //NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ | VX_Janela | UpdatedSelected(VX_Janela)})
+                //     // NAP_TABLEVIEW_CUALIB_ON_SELECT_CHANGE({ || UpdatedSelected()})
+                //     // IF N_Congela # 0
+                //     //     NAP_TABLEVIEW_COLUMN_FREEZE(V_TableView, N_Congela)
+                //     // ENDIF
+
+                // ENDIF
 
             ELSE  // NOT L_MostrarGrade
 
-                N_MenID := NAP_MENU(N_WindowNum, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], L_AutoClose, .F.)
-                N_ItemId := N_MenID
+                N_ItemId := NAP_MENU(N_WindowNum, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], L_AutoClose, .F.)
 
                 FOR N_Cont := 1 TO LEN(V_Opcoes)
-                    NAP_MENU_ADD(N_WindowNum, N_MenID, {||V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]}, NIL/*V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO]*/, V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
+                    NAP_MENU_ADD(N_WindowNum, N_ItemId, {||V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]}, NIL/*V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO]*/, V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
                 NEXT
 
             ENDIF
@@ -721,38 +741,42 @@ IF .NOT. SOB_MODO_GRAFICO()
 ENDIF // IF .NOT. SOB_MODO_GRAFICO()
 *
 
-IF  SOB_MODO_GRAFICO()
+// Process the return value
+IF SOB_MODO_GRAFICO()
 
-    IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
-        IF L_Abortado
-            X_Retorno := 0
-        ELSE
-            X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
-        ENDIF
+    // TableView-based browse vector
+    IF L_MostraGrade
+        IF N_TP_Selecao == _SELE_MULTIPLA .OR. N_TP_Selecao == _SELE_EXTENDIDA
+            IF L_Abortado
+                X_Retorno := {}
+            ELSE
+                X_Retorno := NAP_TABLEVIEW_SELECTED_ROWS(N_WindowNum, N_ItemId)
 
-    ELSEIF N_TP_Selecao == _SELE_MULTIPLA
-        IF L_Abortado
-            X_Retorno := {}
-        ELSE
-            V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
-            X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
-        ENDIF
-
-    ELSEIF N_TP_Selecao == _SELE_EXTENDIDA
-        IF L_Abortado
-            X_Retorno := {}
-        ELSE
-            V_TableView := NAP_CUALIB_CURRENT_TABLEVIEW()
-            X_Retorno := NAP_TABLEVIEW_SELECTED(V_TableView)
-            // FRAN TODO: selecao implicita
-            IF LEN(X_Retorno) == 0
-                X_Retorno := {1}
+                IF N_TP_Selecao == _SELE_EXTENDIDA .AND. LEN(X_Retorno) == 0
+                    X_Retorno = { NAP_TABLEVIEW_FOCUS_ROW(N_WindowNum, N_ItemId) }
+                ENDIF
             ENDIF
+        ELSE
+            // FRAN/GTNAP Single-select is not supported by TableView
+            X_Retorno := 0
+        ENDIF
+
+    // Menu-based browse vector
+    ELSE
+        IF N_TP_Selecao == _SELE_SIMPLES       // se selecao simples
+            IF L_Abortado
+                X_Retorno := 0
+            ELSE
+                X_Retorno := NAP_MENU_SELECTED(N_WindowNum, N_ItemId)
+            ENDIF
+        ELSE
+            // FRAN/GTNAP Multi-select is not supported by Menu
+            X_Retorno := {}
         ENDIF
 
     ENDIF
 
-ELSE // IF .NOT. SOB_MODO_GRAFICO()
+ELSE // .NOT. SOB_MODO_GRAFICO()
 
     IF L_Abortado
         MudeLista(VX_Janela)            // limpa o vetor VN_Selecio

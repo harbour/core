@@ -87,9 +87,13 @@ extern void hb_gtnap_tableview_scroll(const uint32_t wid, const uint32_t id, con
 
 extern void hb_gtnap_tableview_grid(const uint32_t wid, const uint32_t id, const bool_t hlines, const bool_t vlines);
 
+extern void hb_gtnap_tableview_header(const uint32_t wid, const uint32_t id, const bool_t visible);
+
 extern void hb_gtnap_tableview_freeze(const uint32_t wid, const uint32_t id, const uint32_t col_id);
 
 extern void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM *while_block);
+
+extern void hb_gtnap_tableview_bind_data(const uint32_t wid, const uint32_t id, const uint32_t num_rows);
 
 extern void hb_gtnap_tableview_deselect_all(const uint32_t wid, const uint32_t id);
 
