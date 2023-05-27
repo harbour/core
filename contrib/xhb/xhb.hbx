@@ -367,6 +367,7 @@ DYNAMIC SecondsSleep
 DYNAMIC SetCorruptFunc
 DYNAMIC SetDefaultPrinter
 DYNAMIC SetErrorFooter
+DYNAMIC SetErrorMode
 DYNAMIC SetInkeyAfterBlock
 DYNAMIC SetInkeyBeforeBlock
 DYNAMIC SetNetDelay
@@ -424,6 +425,7 @@ DYNAMIC ValToNumber
 DYNAMIC ValToObject
 DYNAMIC ValToPrg
 DYNAMIC ValToPrgExp
+DYNAMIC ValToTimeStamp
 DYNAMIC ValToType
 DYNAMIC WaitForThreads
 DYNAMIC WideToANSI

@@ -768,7 +768,9 @@ HB_FUNC( HB_GCSTEP )
  */
 HB_FUNC( HB_GCALL )
 {
+#if defined( hb_ret )
    HB_STACK_TLS_PRELOAD
+#endif
 
    /* call hb_ret() to clear stack return item, HVM does not clean
     * it before calling functions/procedures if caller does not
@@ -786,10 +788,11 @@ HB_FUNC( HB_GCALL )
 #ifdef HB_GC_AUTO
 HB_FUNC( HB_GCSETAUTO )
 {
-   HB_STACK_TLS_PRELOAD
-
    HB_PTRUINT nBlocks, nPrevBlocks;
    HB_BOOL fSet = HB_ISNUM( 1 );
+#if defined( hb_retnint )
+   HB_STACK_TLS_PRELOAD
+#endif
 
    nBlocks = fSet ? hb_parnint( 1 ) * 1000 : 0;
 

@@ -437,7 +437,9 @@ DYNAMIC hb_FEof
 DYNAMIC hb_FGetAttr
 DYNAMIC hb_FGetDateTime
 DYNAMIC hb_FieldDec
+DYNAMIC hb_FieldGet
 DYNAMIC hb_FieldLen
+DYNAMIC hb_FieldPut
 DYNAMIC hb_FieldType
 DYNAMIC hb_FileDelete
 DYNAMIC hb_FileExists
@@ -477,7 +479,9 @@ DYNAMIC hb_gfxPrimitive
 DYNAMIC hb_gfxText
 DYNAMIC hb_gtAlert
 DYNAMIC hb_gtCreate
+DYNAMIC hb_gtExists
 DYNAMIC hb_gtInfo
+DYNAMIC hb_gtList
 DYNAMIC hb_gtLock
 DYNAMIC hb_gtReload
 DYNAMIC hb_gtSelect
@@ -845,6 +849,7 @@ DYNAMIC hb_socketSetFilter
 DYNAMIC hb_socketSetKeepAlive
 DYNAMIC hb_socketSetMulticast
 DYNAMIC hb_socketSetNoDelay
+DYNAMIC hb_socketSetNoSigPipe
 DYNAMIC hb_socketSetRcvBufSize
 DYNAMIC hb_socketSetReuseAddr
 DYNAMIC hb_socketSetSndBufSize
@@ -952,6 +957,7 @@ DYNAMIC hb_vfErase
 DYNAMIC hb_vfExists
 DYNAMIC hb_vfFlush
 DYNAMIC hb_vfHandle
+DYNAMIC hb_vfIsLocal
 DYNAMIC hb_vfLink
 DYNAMIC hb_vfLinkRead
 DYNAMIC hb_vfLinkSym
@@ -1605,6 +1611,7 @@ DYNAMIC __TypeFile
 DYNAMIC __vmCountThreads
 DYNAMIC __vmItemID
 DYNAMIC __vmItemRefs
+DYNAMIC __vmKeyPool
 DYNAMIC __vmModulesVerify
 DYNAMIC __vmNoInternals
 DYNAMIC __Wait

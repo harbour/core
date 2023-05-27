@@ -50,7 +50,7 @@ CREATE CLASS Symbol
 
    EXPORTED:
 
-   METHOD New( cSymName )     // Constructor. cSymName may already exists or not
+   METHOD Init( cSymName )     // Constructor. cSymName may already exists or not
    METHOD name()              // retrieves the symbol name
    METHOD isEqual( oSymbol )  // Compares two symbol objects
    METHOD exec( ... )         // Executes the function referred to by the
@@ -61,7 +61,7 @@ CREATE CLASS Symbol
 
 ENDCLASS
 
-METHOD New( cSymName ) CLASS Symbol
+METHOD Init( cSymName ) CLASS Symbol
 
    ::nSym := __dynsN2Sym( cSymName )
 

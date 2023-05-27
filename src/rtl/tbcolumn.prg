@@ -89,7 +89,7 @@ CREATE CLASS TBColumn
    METHOD setStyle( nStyle, lNewValue )
 #endif
 
-   METHOD New( cHeading, bBlock )                    /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( cHeading, bBlock )                    /* NOTE: This method is a Harbour extension [vszakats] */
 
 ENDCLASS
 
@@ -200,7 +200,7 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBColumn
 
 #endif
 
-METHOD New( cHeading, bBlock ) CLASS TBColumn
+METHOD Init( cHeading, bBlock ) CLASS TBColumn
 
    ::cHeading := cHeading  /* NOTE: CA-Cl*pper allows any type here. [vszakats] */
    ::bBlock := bBlock      /* NOTE: CA-Cl*pper allows any type here. [vszakats] */

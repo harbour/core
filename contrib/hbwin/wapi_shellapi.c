@@ -85,8 +85,10 @@ HB_FUNC( WAPI_SHELLEXECUTE_WAIT )
    void * hDirectory;
    BOOL retVal;
    MSG msg;
-   SHELLEXECUTEINFO ShExecInfo = {0};
-   ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+   SHELLEXECUTEINFO ShExecInfo;
+
+   memset( &ShExecInfo, 0, sizeof( ShExecInfo ) );
+   ShExecInfo.cbSize = sizeof( SHELLEXECUTEINFO );
    ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
    ShExecInfo.hwnd = ( HWND ) hb_parptr( 1 );
    ShExecInfo.lpVerb = HB_PARSTR( 2, &hOperation, NULL );
@@ -95,9 +97,9 @@ HB_FUNC( WAPI_SHELLEXECUTE_WAIT )
    ShExecInfo.lpDirectory = HB_PARSTR( 5, &hDirectory, NULL );
    ShExecInfo.nShow = hb_parnidef( 6, SW_SHOWNORMAL );
    ShExecInfo.hInstApp = NULL;
-   retVal = ShellExecuteEx(&ShExecInfo);
+   retVal = ShellExecuteEx( &ShExecInfo );
    hb_retl( retVal );
-   while( WaitForSingleObject(ShExecInfo.hProcess,1000) != WAIT_OBJECT_0 )
+   while( WaitForSingleObject( ShExecInfo.hProcess, 1000 ) != WAIT_OBJECT_0 )
    {
       while( PeekMessage( &msg, ( HWND ) NULL, 0, 0, PM_REMOVE ) )
       {

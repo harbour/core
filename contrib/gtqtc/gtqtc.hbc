@@ -28,6 +28,7 @@ depfinish=qt5
 {bsd&HBMK_HAS_QT5}libpaths=/usr/local/lib/qt5
 {(allwin|os2)&!HBMK_HAS_QT5}libs=QtCore4 QtGui4
 {(allwin|os2|linux|bsd|beos|symbian)&HBMK_HAS_QT5}libs=Qt5Core Qt5Gui Qt5Widgets
+{(allwin|os2|linux|bsd|beos|symbian)&HBMK_HAS_QT5&HB_QT_SOUND='yes'}libs=Qt5Multimedia
 {(linux|beos|symbian)&!HBMK_HAS_QT5}libs=QtCore QtGui
 {!HBMK_HAS_QT5&darwin}ldflags=-F${HBMK_DIR_QT}/../lib
 {!HBMK_HAS_QT5&darwin}dflags=-F${HBMK_DIR_QT}/../lib
@@ -35,6 +36,7 @@ depfinish=qt5
 {HBMK_HAS_QT5&darwin}dflags=-F${HBMK_DIR_QT5}/../lib
 {darwin}frameworks=QtCore QtGui
 {darwin&HBMK_HAS_QT5}frameworks=QtWidgets
+{darwin&HBMK_HAS_QT5&HB_QT_SOUND='yes'}frameworks=QtMultimedia
 {bsd|darwin}libs=stdc++
 
 cpp=yes

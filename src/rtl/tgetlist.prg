@@ -112,7 +112,7 @@ CREATE CLASS HBGetList
    METHOD ShowGetMsg( oGet, aMsg )
    METHOD EraseGetMsg( aMsg )
 
-   METHOD New( GetList )
+   METHOD Init( GetList )
 
    PROTECTED:
 
@@ -1656,7 +1656,7 @@ METHOD EraseGetMsg( aMsg ) CLASS HBGetList
 
 /* --- */
 
-METHOD New( GetList ) CLASS HBGetList
+METHOD Init( GetList ) CLASS HBGetList
 
    ::aGetList := GetList
 
