@@ -66,19 +66,19 @@ HB_FUNC( NAP_CUALIB_WINDOW_CURRENT_EDIT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_ADD_MESSAGE_LABEL )
-{
-    int32_t N_LinIni = hb_parni(1);
-    int32_t N_ColIni = hb_parni(2);
-    hb_gtnap_cualib_add_message_label(N_LinIni, N_ColIni);
-}
+//HB_FUNC( NAP_CUALIB_ADD_MESSAGE_LABEL )
+//{
+//    int32_t N_LinIni = hb_parni(1);
+//    int32_t N_ColIni = hb_parni(2);
+//    hb_gtnap_cualib_add_message_label(N_LinIni, N_ColIni);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_ERROR_DATA )
-{
-    hb_gtnap_cualib_error_data(1);
-}
+//HB_FUNC( NAP_CUALIB_ERROR_DATA )
+//{
+//    hb_gtnap_cualib_error_data(1);
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -109,15 +109,15 @@ HB_FUNC( NAP_CUALIB_DESTROY_WINDOW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_TABLEVIEW )
-{
-    TableView *view = (TableView*)hb_parptr(1);
-    uint32_t nTop = hb_parni(2);
-    uint32_t nLeft = hb_parni(3);
-    uint32_t nBottom = hb_parni(4);
-    uint32_t nRight = hb_parni(5);
-    hb_gtnap_cualib_tableview(view, nTop, nLeft, nBottom, nRight);
-}
+//HB_FUNC( NAP_CUALIB_TABLEVIEW )
+//{
+//    TableView *view = (TableView*)hb_parptr(1);
+//    uint32_t nTop = hb_parni(2);
+//    uint32_t nLeft = hb_parni(3);
+//    uint32_t nBottom = hb_parni(4);
+//    uint32_t nRight = hb_parni(5);
+//    hb_gtnap_cualib_tableview(view, nTop, nLeft, nBottom, nRight);
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -256,11 +256,11 @@ HB_FUNC( NAP_CUALIB_HOTKEY )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_CURRENT_TABLEVIEW )
-{
-    TableView *view = hb_gtnap_cualib_current_tableview();
-    hb_retptr(view);
-}
+//HB_FUNC( NAP_CUALIB_CURRENT_TABLEVIEW )
+//{
+//    TableView *view = hb_gtnap_cualib_current_tableview();
+//    hb_retptr(view);
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -272,38 +272,38 @@ HB_FUNC( NAP_CUALIB_CURRENT_TABLEVIEW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_IS_SELECTED )
-{
-    bool_t sel = hb_gtnap_cualib_current_row_selected();
-    hb_retl(sel);
-}
+//HB_FUNC( NAP_CUALIB_IS_SELECTED )
+//{
+//    bool_t sel = hb_gtnap_cualib_current_row_selected();
+//    hb_retl(sel);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_VETOR_SELECT )
-{
-    ArrSt(uint32_t) *rows = arrst_create(uint32_t);
-
-    if (HB_ISNUM(1))
-    {
-        uint32_t row = hb_parni(1) - 1;
-        arrst_append(rows, row, uint32_t);
-    }
-    else if (HB_ISARRAY(1))
-    {
-        uint32_t i, n = hb_parinfa(1, 0);
-        for (i = 0; i < n; ++i)
-        {
-            uint32_t row = hb_parvni(1, i + 1) - 1;
-            log_printf("Added %d row to selection", row);
-            arrst_append(rows, row, uint32_t);
-        }
-    }
-
-    hb_gtnap_cualib_vector_selection(rows);
-
-    arrst_destroy(&rows, NULL, uint32_t);
-}
+//HB_FUNC( NAP_CUALIB_VETOR_SELECT )
+//{
+//    ArrSt(uint32_t) *rows = arrst_create(uint32_t);
+//
+//    if (HB_ISNUM(1))
+//    {
+//        uint32_t row = hb_parni(1) - 1;
+//        arrst_append(rows, row, uint32_t);
+//    }
+//    else if (HB_ISARRAY(1))
+//    {
+//        uint32_t i, n = hb_parinfa(1, 0);
+//        for (i = 0; i < n; ++i)
+//        {
+//            uint32_t row = hb_parvni(1, i + 1) - 1;
+//            log_printf("Added %d row to selection", row);
+//            arrst_append(rows, row, uint32_t);
+//        }
+//    }
+//
+//    hb_gtnap_cualib_vector_selection(rows);
+//
+//    arrst_destroy(&rows, NULL, uint32_t);
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -326,21 +326,21 @@ HB_FUNC( NAP_CUALIB_TEXTVIEW_CARET )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_MULTISEL )
-{
-    hb_gtnap_cualib_multisel();
-}
+//HB_FUNC( NAP_CUALIB_MULTISEL )
+//{
+//    hb_gtnap_cualib_multisel();
+//}
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_SELECT_CURRENT )
-{
-    hb_gtnap_cualib_select_current();
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_CUALIB_SELECT_CURRENT_VECTOR )
-{
-    hb_gtnap_cualib_select_current_vector();
-}
+//HB_FUNC( NAP_CUALIB_SELECT_CURRENT )
+//{
+//    hb_gtnap_cualib_select_current();
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//HB_FUNC( NAP_CUALIB_SELECT_CURRENT_VECTOR )
+//{
+//    hb_gtnap_cualib_select_current_vector();
+//}

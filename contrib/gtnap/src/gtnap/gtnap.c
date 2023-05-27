@@ -28,6 +28,8 @@ typedef struct _gtnap_cualib_toolbar_t GtNapCualibToolbar;
 typedef struct _gtnap_window_t GtNapWindow;
 typedef struct _vecitem_t VecItem;
 typedef struct _gui_component_t GuiComponent;
+typedef struct _gtnap_area_t GtNapArea;
+typedef struct _gtnap_vector_t GtNapVector;
 
 typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
@@ -2844,119 +2846,119 @@ static void i_destroy_vector(GtNapVector **vector)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_area_row_count(GtNapArea *area)
-{
-    cassert_no_null(area);
-    return arrst_size(area->records, uint32_t);
-}
+//uint32_t hb_gtnap_area_row_count(GtNapArea *area)
+//{
+//    cassert_no_null(area);
+//    return arrst_size(area->records, uint32_t);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id, const uint32_t row_id, align_t *align)
-{
-    uint32_t recno = 0;
-    const GtNapColumn *column = NULL;
-    PHB_ITEM pItem = NULL;
-    HB_TYPE type = 0;
-
-    cassert_no_null(area);
-    cassert(field_id > 0);
-
-    /* Go to DB record */
-    recno = *arrst_get_const(area->records, row_id, uint32_t);
-    SELF_GOTO(area->area, recno);
-
-    /* Get the table column */
-    column = arrst_get_const(area->columns, field_id - 1, GtNapColumn);
-
-    /* CodeBlock that computes the cell content */
-    pItem = hb_itemDo(column->codeBlock, 0);
-
-    /* Fill the temporal cell buffer with cell result */
-    type = HB_ITEM_TYPE(pItem);
-    area->temp[0] = '\0';
-
-    if (type == HB_IT_STRING)
-    {
-        hb_itemCopyStrUTF8(pItem, area->temp, sizeof(area->temp));
-    }
-    else if (type == HB_IT_DATE)
-    {
-        char date[16];
-        hb_itemGetDS(pItem, date);
-        hb_dateFormat(date, area->temp, hb_setGetDateFormat());
-    }
-    else if (type == HB_IT_DOUBLE)
-    {
-        double value = hb_itemGetND(pItem);
-        bstd_sprintf(area->temp, sizeof(area->temp), "%12.4f", value);
-    }
-
-    hb_itemRelease(pItem);
-
-    if (align != NULL)
-        *align = column->align;
-
-    return area->temp;
-}
-
-/*---------------------------------------------------------------------------*/
-
-const char_t *hb_gtnap_vector_eval_field(GtNapVector *vector, const uint32_t field_id, const uint32_t row_id)
-{
-    const VecItem *item = NULL;
-    cassert_no_null(vector);
-    item = arrst_get_const(vector->items, row_id, VecItem);
-    if (field_id == 0)
-    {
-        if (item->selected == TRUE)
-        {
-            // � in UTF8
-            vector->temp[0] = 194;
-            vector->temp[1] = 187;
-            vector->temp[2] = 0;
-            return vector->temp;
-        }
-        else
-        {
-            return "";
-        }
-    }
-    else if (field_id == 1)
-    {
-        return tc(item->text);
-    }
-    else
-    {
-        cassert(field_id == 0 || field_id == 1);
-        return "";
-    }
-}
+//const char_t *hb_gtnap_area_eval_field(GtNapArea *area, const uint32_t field_id, const uint32_t row_id, align_t *align)
+//{
+//    uint32_t recno = 0;
+//    const GtNapColumn *column = NULL;
+//    PHB_ITEM pItem = NULL;
+//    HB_TYPE type = 0;
+//
+//    cassert_no_null(area);
+//    cassert(field_id > 0);
+//
+//    /* Go to DB record */
+//    recno = *arrst_get_const(area->records, row_id, uint32_t);
+//    SELF_GOTO(area->area, recno);
+//
+//    /* Get the table column */
+//    column = arrst_get_const(area->columns, field_id - 1, GtNapColumn);
+//
+//    /* CodeBlock that computes the cell content */
+//    pItem = hb_itemDo(column->codeBlock, 0);
+//
+//    /* Fill the temporal cell buffer with cell result */
+//    type = HB_ITEM_TYPE(pItem);
+//    area->temp[0] = '\0';
+//
+//    if (type == HB_IT_STRING)
+//    {
+//        hb_itemCopyStrUTF8(pItem, area->temp, sizeof(area->temp));
+//    }
+//    else if (type == HB_IT_DATE)
+//    {
+//        char date[16];
+//        hb_itemGetDS(pItem, date);
+//        hb_dateFormat(date, area->temp, hb_setGetDateFormat());
+//    }
+//    else if (type == HB_IT_DOUBLE)
+//    {
+//        double value = hb_itemGetND(pItem);
+//        bstd_sprintf(area->temp, sizeof(area->temp), "%12.4f", value);
+//    }
+//
+//    hb_itemRelease(pItem);
+//
+//    if (align != NULL)
+//        *align = column->align;
+//
+//    return area->temp;
+//}
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_vector_items_count(GtNapVector *vector)
-{
-    cassert_no_null(vector);
-    return arrst_size(vector->items, VecItem);
-}
+//const char_t *hb_gtnap_vector_eval_field(GtNapVector *vector, const uint32_t field_id, const uint32_t row_id)
+//{
+//    const VecItem *item = NULL;
+//    cassert_no_null(vector);
+//    item = arrst_get_const(vector->items, row_id, VecItem);
+//    if (field_id == 0)
+//    {
+//        if (item->selected == TRUE)
+//        {
+//            // � in UTF8
+//            vector->temp[0] = 194;
+//            vector->temp[1] = 187;
+//            vector->temp[2] = 0;
+//            return vector->temp;
+//        }
+//        else
+//        {
+//            return "";
+//        }
+//    }
+//    else if (field_id == 1)
+//    {
+//        return tc(item->text);
+//    }
+//    else
+//    {
+//        cassert(field_id == 0 || field_id == 1);
+//        return "";
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
-char_t* hb_gtnap_area_temp(GtNapArea *area, uint32_t *size)
-{
-    cassert_no_null(area);
-    *size = sizeof(area->temp);
-    return area->temp;
-}
+//uint32_t hb_gtnap_vector_items_count(GtNapVector *vector)
+//{
+//    cassert_no_null(vector);
+//    return arrst_size(vector->items, VecItem);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void* hb_gtnap_area(GtNapArea *area)
-{
-    cassert_no_null(area);
-    return area->area;
-}
+//char_t* hb_gtnap_area_temp(GtNapArea *area, uint32_t *size)
+//{
+//    cassert_no_null(area);
+//    *size = sizeof(area->temp);
+//    return area->temp;
+//}
+
+/*---------------------------------------------------------------------------*/
+
+//void* hb_gtnap_area(GtNapArea *area)
+//{
+//    cassert_no_null(area);
+//    return area->area;
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -3016,60 +3018,60 @@ static const HB_GC_FUNCS s_gc_Window_funcs =
 
 /*---------------------------------------------------------------------------*/
 
-Image *hb_gtnap_parImage(int iParam)
-{
-    void **ph = (void**)hb_parptrGC(&s_gc_Image_funcs, iParam);
-    return *((Image**)ph);
-}
+//Image *hb_gtnap_parImage(int iParam)
+//{
+//    void **ph = (void**)hb_parptrGC(&s_gc_Image_funcs, iParam);
+//    return *((Image**)ph);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-Font *hb_gtnap_parFont(int iParam)
-{
-    void **ph = (void**)hb_parptrGC(&s_gc_Font_funcs, iParam);
-    return *((Font**)ph);
-}
+//Font *hb_gtnap_parFont(int iParam)
+//{
+//    void **ph = (void**)hb_parptrGC(&s_gc_Font_funcs, iParam);
+//    return *((Font**)ph);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-Window *hb_gtnap_parWindow(int iParam)
-{
-    void **ph = (void**)hb_parptrGC(&s_gc_Window_funcs, iParam);
-    return *((Window**)ph);
-}
+//Window *hb_gtnap_parWindow(int iParam)
+//{
+//    void **ph = (void**)hb_parptrGC(&s_gc_Window_funcs, iParam);
+//    return *((Window**)ph);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_retImageGC(Image *image)
-{
-    if (image != NULL)
-    {
-        void **ph = (void**)hb_gcAllocate(sizeof(Image*), &s_gc_Image_funcs);
-        *ph = image;
-        hb_retptrGC(ph);
-    }
-    else
-    {
-        hb_retptr(NULL);
-    }
-}
+//void hb_gtnap_retImageGC(Image *image)
+//{
+//    if (image != NULL)
+//    {
+//        void **ph = (void**)hb_gcAllocate(sizeof(Image*), &s_gc_Image_funcs);
+//        *ph = image;
+//        hb_retptrGC(ph);
+//    }
+//    else
+//    {
+//        hb_retptr(NULL);
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_retFontGC(Font *font)
-{
-    if (font != NULL)
-    {
-        void **ph = (void**)hb_gcAllocate(sizeof(Font*), &s_gc_Font_funcs);
-        *ph = font;
-            log_printf("'hb_gtnap_retFontGC': %p - %p", ph, font);
-        hb_retptrGC(ph);
-    }
-    else
-    {
-        hb_retptr(NULL);
-    }
-}
+//void hb_gtnap_retFontGC(Font *font)
+//{
+//    if (font != NULL)
+//    {
+//        void **ph = (void**)hb_gcAllocate(sizeof(Font*), &s_gc_Font_funcs);
+//        *ph = font;
+//            log_printf("'hb_gtnap_retFontGC': %p - %p", ph, font);
+//        hb_retptrGC(ph);
+//    }
+//    else
+//    {
+//        hb_retptr(NULL);
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -3300,19 +3302,19 @@ void hb_gtnap_cualib_init_log(void)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_ColIni)
-{
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    uint32_t id = i_add_label(N_LinIni - gtwin->top, N_ColIni - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
-    cassert(gtwin->message_label_id == UINT32_MAX);
-    gtwin->message_label_id = id;
-
-    /* TODO: Remove (just for debug) */
-    {
-        GtNapObject *obj = arrpt_last(gtwin->gui_objects, GtNapObject);
-        i_set_label_text(obj, "--MENS--");
-    }
-}
+//void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_ColIni)
+//{
+//    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+//    uint32_t id = i_add_label(N_LinIni - gtwin->top, N_ColIni - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
+//    cassert(gtwin->message_label_id == UINT32_MAX);
+//    gtwin->message_label_id = id;
+//
+//    /* TODO: Remove (just for debug) */
+//    {
+//        GtNapObject *obj = arrpt_last(gtwin->gui_objects, GtNapObject);
+//        i_set_label_text(obj, "--MENS--");
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -3332,16 +3334,16 @@ void hb_gtnap_cualib_add_message_label(const int32_t N_LinIni, const int32_t N_C
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    S2Df size;
-    cassert_no_null(cuawin);
-    log_printf("Added TableView into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
-    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
-    i_add_object(ekOBJ_TABLEVIEW, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, cuawin);
-}
+//void hb_gtnap_cualib_tableview(TableView *view, const int32_t nTop, const int32_t nLeft, const int32_t nBottom, const int32_t nRight)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    S2Df size;
+//    cassert_no_null(cuawin);
+//    log_printf("Added TableView into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
+//    size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
+//    size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
+//    i_add_object(ekOBJ_TABLEVIEW, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)view, cuawin);
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -3947,40 +3949,40 @@ static GtNapVector *i_create_vector(void)
 
 /*---------------------------------------------------------------------------*/
 
-GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view, const uint32_t whileBlockParamId)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    cassert(cuawin->gtarea == NULL);
-    cuawin->gtarea = i_create_area();
-    cuawin->gtarea->area = (AREA*)hb_rddGetCurrentWorkAreaPointer();
-    cuawin->gtarea->view = view;
-
-    {
-        PHB_ITEM codeBlock = hb_param(whileBlockParamId, HB_IT_BLOCK);
-        if (codeBlock != NULL)
-        {
-            log_printf("WHILE BLOCK IS NOT NULL");
-            cuawin->gtarea->whileCodeBlock = hb_itemNew(codeBlock);
-        }
-        else
-        {
-            log_printf("WHILE BLOCK IS NULL");
-            cuawin->gtarea->whileCodeBlock = NULL;
-        }
-    }
-
-    if (cuawin->gtarea->area != NULL)
-    {
-        log_printf("hb_gtnap_cualib_area() works!!!");
-    }
-    else
-    {
-        log_printf("hb_rddGetCurrentWorkAreaPointer() fails. Not area defined");
-    }
-
-    return cuawin->gtarea;
-}
+//GtNapArea *hb_gtnap_cualib_tableview_area(TableView *view, const uint32_t whileBlockParamId)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    cassert_no_null(cuawin);
+//    cassert(cuawin->gtarea == NULL);
+//    cuawin->gtarea = i_create_area();
+//    cuawin->gtarea->area = (AREA*)hb_rddGetCurrentWorkAreaPointer();
+//    cuawin->gtarea->view = view;
+//
+//    {
+//        PHB_ITEM codeBlock = hb_param(whileBlockParamId, HB_IT_BLOCK);
+//        if (codeBlock != NULL)
+//        {
+//            log_printf("WHILE BLOCK IS NOT NULL");
+//            cuawin->gtarea->whileCodeBlock = hb_itemNew(codeBlock);
+//        }
+//        else
+//        {
+//            log_printf("WHILE BLOCK IS NULL");
+//            cuawin->gtarea->whileCodeBlock = NULL;
+//        }
+//    }
+//
+//    if (cuawin->gtarea->area != NULL)
+//    {
+//        log_printf("hb_gtnap_cualib_area() works!!!");
+//    }
+//    else
+//    {
+//        log_printf("hb_rddGetCurrentWorkAreaPointer() fails. Not area defined");
+//    }
+//
+//    return cuawin->gtarea;
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -4145,15 +4147,15 @@ static void i_gtnap_select_row(GtNapArea *area)
 
 /*---------------------------------------------------------------------------*/
 
-GtNapVector *hb_gtnap_cualib_tableview_vector(TableView *view)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    cassert(cuawin->gtvector == NULL);
-    cuawin->gtvector = i_create_vector();
-    cuawin->gtvector->view = view;
-    return cuawin->gtvector;
-}
+//GtNapVector *hb_gtnap_cualib_tableview_vector(TableView *view)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    cassert_no_null(cuawin);
+//    cassert(cuawin->gtvector == NULL);
+//    cuawin->gtvector = i_create_vector();
+//    cuawin->gtvector->view = view;
+//    return cuawin->gtvector;
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -4179,208 +4181,208 @@ static uint32_t i_column_width(const uint32_t str_len)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *title, const bool_t freeze, const uint32_t width, PHB_ITEM codeBlock)
-{
-    uint32_t id = UINT32_MAX;
-    GtNapColumn *column = NULL;
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    uint32_t hnchars = 0;
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtarea);
-    cassert(view == cuawin->gtarea->view);
-    unref(freeze);
-    id = tableview_new_column_text(view);
-    cassert(id == arrst_size(cuawin->gtarea->columns, GtNapColumn));
-    column = arrst_new(cuawin->gtarea->columns, GtNapColumn);
-    column->title = gtconvert_1252_to_UTF8(title);
-    str_repl_c(tcc(column->title), ";", "\n");
-    hnchars = i_header_char_width(tc(column->title));
-    column->fixed_width = width;
-    column->width = i_column_width(hnchars);
-    column->align = ekLEFT;
-    column->codeBlock = hb_itemNew(codeBlock);
-    tableview_header_title(view, id, tc(column->title));
-    tableview_column_width(view, id, (real32_t)column->width);
-    tableview_header_align(view, id, column->align);
-    log_printf("hb_gtnap_cualib_tableview_area_add_column: '%s'", tc(column->title));
-}
+//void hb_gtnap_cualib_tableview_area_add_column(TableView *view, const char_t *title, const bool_t freeze, const uint32_t width, PHB_ITEM codeBlock)
+//{
+//    uint32_t id = UINT32_MAX;
+//    GtNapColumn *column = NULL;
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    uint32_t hnchars = 0;
+//    cassert_no_null(cuawin);
+//    cassert_no_null(cuawin->gtarea);
+//    cassert(view == cuawin->gtarea->view);
+//    unref(freeze);
+//    id = tableview_new_column_text(view);
+//    cassert(id == arrst_size(cuawin->gtarea->columns, GtNapColumn));
+//    column = arrst_new(cuawin->gtarea->columns, GtNapColumn);
+//    column->title = gtconvert_1252_to_UTF8(title);
+//    str_repl_c(tcc(column->title), ";", "\n");
+//    hnchars = i_header_char_width(tc(column->title));
+//    column->fixed_width = width;
+//    column->width = i_column_width(hnchars);
+//    column->align = ekLEFT;
+//    column->codeBlock = hb_itemNew(codeBlock);
+//    tableview_header_title(view, id, tc(column->title));
+//    tableview_column_width(view, id, (real32_t)column->width);
+//    tableview_header_align(view, id, column->align);
+//    log_printf("hb_gtnap_cualib_tableview_area_add_column: '%s'", tc(column->title));
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_tableview_vector_add_column(TableView *view, /*const char_t *title, const bool_t freeze,*/ const uint32_t width, PHB_ITEM codeBlock)
-{
-    uint32_t id = UINT32_MAX;
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtvector);
-    cassert(view == cuawin->gtvector->view);
-    //unref(freeze);
-    id = tableview_new_column_text(view);
-
-    if (id == 0)
-    {
-        cassert(cuawin->gtvector->codeBlock0 == NULL);
-        if (codeBlock != NULL)
-            cuawin->gtvector->codeBlock0 = hb_itemNew(codeBlock);
-        cuawin->gtvector->width0 = 11 * GTNAP_GLOBAL->cell_x_size;
-        tableview_column_width(view, id, (real32_t)cuawin->gtvector->width0);
-    }
-    else if (id == 1)
-    {
-        cassert(cuawin->gtvector->codeBlock1 == NULL);
-        if (codeBlock != NULL)
-            cuawin->gtvector->codeBlock1 = hb_itemNew(codeBlock);
-        cuawin->gtvector->width1 = i_column_width(width);
-        tableview_column_width(view, id, (real32_t)cuawin->gtvector->width1);
-    }
-    else
-    {
-        // TableView for Vector only one or two columns
-        cassert(id == 0 || id == 1);
-    }
-    // cassert(id == arrst_size(cuawin->gtarea->columns, GtNapColumn));
-    // column = arrst_new(cuawin->gtarea->columns, GtNapColumn);
-    // column->title = gtconvert_1252_to_UTF8(title);
-    // column->fixed_width = width;
-    // column->width = i_column_width(width);
-    // column->align = ekLEFT;
-    // column->codeBlock = hb_itemNew(codeBlock);
-    // tableview_header_title(view, id, tc(column->title));
-    // tableview_header_align(view, id, column->align);
-    // log_printf("hb_gtnap_cualib_tableview_area_add_column: '%s'", tc(column->title));
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_tableview_vector_add_item(TableView *view, String *text, PHB_ITEM codeBlock, const uint32_t hotkey_pos)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    VecItem *item = NULL;
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtvector);
-    cassert(view == cuawin->gtvector->view);
-    item = arrst_new0(cuawin->gtvector->items, VecItem);
-    item->text = text;
-    item->codeBlock = hb_itemNew(codeBlock);
-    item->hoykey_pos = hotkey_pos;
-    item->selected = FALSE;
-}
+//void hb_gtnap_cualib_tableview_vector_add_column(TableView *view, /*const char_t *title, const bool_t freeze,*/ const uint32_t width, PHB_ITEM codeBlock)
+//{
+//    uint32_t id = UINT32_MAX;
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    cassert_no_null(cuawin);
+//    cassert_no_null(cuawin->gtvector);
+//    cassert(view == cuawin->gtvector->view);
+//    //unref(freeze);
+//    id = tableview_new_column_text(view);
+//
+//    if (id == 0)
+//    {
+//        cassert(cuawin->gtvector->codeBlock0 == NULL);
+//        if (codeBlock != NULL)
+//            cuawin->gtvector->codeBlock0 = hb_itemNew(codeBlock);
+//        cuawin->gtvector->width0 = 11 * GTNAP_GLOBAL->cell_x_size;
+//        tableview_column_width(view, id, (real32_t)cuawin->gtvector->width0);
+//    }
+//    else if (id == 1)
+//    {
+//        cassert(cuawin->gtvector->codeBlock1 == NULL);
+//        if (codeBlock != NULL)
+//            cuawin->gtvector->codeBlock1 = hb_itemNew(codeBlock);
+//        cuawin->gtvector->width1 = i_column_width(width);
+//        tableview_column_width(view, id, (real32_t)cuawin->gtvector->width1);
+//    }
+//    else
+//    {
+//        // TableView for Vector only one or two columns
+//        cassert(id == 0 || id == 1);
+//    }
+//    // cassert(id == arrst_size(cuawin->gtarea->columns, GtNapColumn));
+//    // column = arrst_new(cuawin->gtarea->columns, GtNapColumn);
+//    // column->title = gtconvert_1252_to_UTF8(title);
+//    // column->fixed_width = width;
+//    // column->width = i_column_width(width);
+//    // column->align = ekLEFT;
+//    // column->codeBlock = hb_itemNew(codeBlock);
+//    // tableview_header_title(view, id, tc(column->title));
+//    // tableview_header_align(view, id, column->align);
+//    // log_printf("hb_gtnap_cualib_tableview_area_add_column: '%s'", tc(column->title));
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_vector_selection(const ArrSt(uint32_t) *sel)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtvector);
-    arrst_foreach(item, cuawin->gtvector->items, VecItem)
-        item->selected = i_in_vect(sel, item_i);
-    arrst_end();
-}
+//void hb_gtnap_cualib_tableview_vector_add_item(TableView *view, String *text, PHB_ITEM codeBlock, const uint32_t hotkey_pos)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    VecItem *item = NULL;
+//    cassert_no_null(cuawin);
+//    cassert_no_null(cuawin->gtvector);
+//    cassert(view == cuawin->gtvector->view);
+//    item = arrst_new0(cuawin->gtvector->items, VecItem);
+//    item->text = text;
+//    item->codeBlock = hb_itemNew(codeBlock);
+//    item->hoykey_pos = hotkey_pos;
+//    item->selected = FALSE;
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_tableview_refresh_all(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    if (cuawin != NULL)
-    {
-        if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
-        {
-            i_gtnap_cualib_area_refresh(cuawin->gtarea);
-            tableview_update(cuawin->gtarea->view);
-            i_gtnap_select_row(cuawin->gtarea);
-        }
-    }
-}
+//void hb_gtnap_cualib_vector_selection(const ArrSt(uint32_t) *sel)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    cassert_no_null(cuawin);
+//    cassert_no_null(cuawin->gtvector);
+//    arrst_foreach(item, cuawin->gtvector->items, VecItem)
+//        item->selected = i_in_vect(sel, item_i);
+//    arrst_end();
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_tableview_refresh_current(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    if (cuawin != NULL)
-    {
-        if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
-            tableview_update(cuawin->gtarea->view);
-    }
-}
+//void hb_gtnap_cualib_tableview_refresh_all(void)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    if (cuawin != NULL)
+//    {
+//        if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+//        {
+//            i_gtnap_cualib_area_refresh(cuawin->gtarea);
+//            tableview_update(cuawin->gtarea->view);
+//            i_gtnap_select_row(cuawin->gtarea);
+//        }
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_column_width(GtNapArea *area, const uint32_t col, const char_t *text)
-{
-    GtNapColumn *column = NULL;
-    cassert_no_null(area);
-    column = arrst_get(area->columns, col, GtNapColumn);
-    if (column->fixed_width == 0)
-    {
-        uint32_t len = str_len_c(text);
-        uint32_t width = i_column_width(len);
-        if (width > column->width)
-        {
-            column->width = width;
-            tableview_column_width(area->view, col, (real32_t)column->width);
-        }
-    }
-}
+//void hb_gtnap_cualib_tableview_refresh_current(void)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    if (cuawin != NULL)
+//    {
+//        if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+//            tableview_update(cuawin->gtarea->view);
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_area_cache_cur_db_row(GtNapArea *area)
-{
-    HB_ULONG uiRecNo = 0;
-    cassert_no_null(area);
-    SELF_RECNO(area->area, &uiRecNo);
-    area->cache_recno = (uint32_t)uiRecNo;
-}
+//void hb_gtnap_cualib_column_width(GtNapArea *area, const uint32_t col, const char_t *text)
+//{
+//    GtNapColumn *column = NULL;
+//    cassert_no_null(area);
+//    column = arrst_get(area->columns, col, GtNapColumn);
+//    if (column->fixed_width == 0)
+//    {
+//        uint32_t len = str_len_c(text);
+//        uint32_t width = i_column_width(len);
+//        if (width > column->width)
+//        {
+//            column->width = width;
+//            tableview_column_width(area->view, col, (real32_t)column->width);
+//        }
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_area_restore_cur_db_row(GtNapArea *area)
-{
-    cassert_no_null(area);
-    SELF_GOTO(area->area, area->cache_recno);
-}
+//void hb_gtnap_area_cache_cur_db_row(GtNapArea *area)
+//{
+//    HB_ULONG uiRecNo = 0;
+//    cassert_no_null(area);
+//    SELF_RECNO(area->area, &uiRecNo);
+//    area->cache_recno = (uint32_t)uiRecNo;
+//}
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_cualib_tableview_select_single_row(void)
-{
-    const ArrSt(uint32_t) *sel = NULL;
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtarea);
-    sel = tableview_selected(cuawin->gtarea->view);
-
-    if (arrst_size(sel, uint32_t) == 1)
-    {
-        uint32_t row = *arrst_first_const(sel, uint32_t);
-        uint32_t recno = *arrst_get_const(cuawin->gtarea->records, row, uint32_t);
-        return recno;
-    }
-
-    return 0;
-}
+//void hb_gtnap_area_restore_cur_db_row(GtNapArea *area)
+//{
+//    cassert_no_null(area);
+//    SELF_GOTO(area->area, area->cache_recno);
+//}
 
 /*---------------------------------------------------------------------------*/
 
-ArrSt(uint32_t) *hb_gtnap_cualib_tableview_select_multiple_row(void)
-{
-    const ArrSt(uint32_t) *sel = NULL;
-    ArrSt(uint32_t) *recs = arrst_create(uint32_t);
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtarea);
-    sel = tableview_selected(cuawin->gtarea->view);
+//uint32_t hb_gtnap_cualib_tableview_select_single_row(void)
+//{
+//    const ArrSt(uint32_t) *sel = NULL;
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    cassert_no_null(cuawin);
+//    cassert_no_null(cuawin->gtarea);
+//    sel = tableview_selected(cuawin->gtarea->view);
+//
+//    if (arrst_size(sel, uint32_t) == 1)
+//    {
+//        uint32_t row = *arrst_first_const(sel, uint32_t);
+//        uint32_t recno = *arrst_get_const(cuawin->gtarea->records, row, uint32_t);
+//        return recno;
+//    }
+//
+//    return 0;
+//}
 
-    arrst_foreach_const(row, sel, uint32_t)
-        uint32_t recno = *arrst_get_const(cuawin->gtarea->records, *row, uint32_t);
-        arrst_append(recs, recno, uint32_t);
-    arrst_end();
+/*---------------------------------------------------------------------------*/
 
-    return recs;
-}
+//ArrSt(uint32_t) *hb_gtnap_cualib_tableview_select_multiple_row(void)
+//{
+//    const ArrSt(uint32_t) *sel = NULL;
+//    ArrSt(uint32_t) *recs = arrst_create(uint32_t);
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    cassert_no_null(cuawin);
+//    cassert_no_null(cuawin->gtarea);
+//    sel = tableview_selected(cuawin->gtarea->view);
+//
+//    arrst_foreach_const(row, sel, uint32_t)
+//        uint32_t recno = *arrst_get_const(cuawin->gtarea->records, *row, uint32_t);
+//        arrst_append(recs, recno, uint32_t);
+//    arrst_end();
+//
+//    return recs;
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -5462,19 +5464,19 @@ static void i_OnEditFilter(GtNapWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_error_data(const uint32_t errorDataBlockParamId)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-
-    // FRAN: IMPROVE... ADD TO hb_gtnap_cualib_launch_modal
-    if(cuawin->error_date_block == NULL)
-    {
-        PHB_ITEM codeBlock = hb_param(errorDataBlockParamId, HB_IT_BLOCK);
-        if (codeBlock != NULL)
-            cuawin->error_date_block = hb_itemNew(codeBlock);
-    }
-}
+//void hb_gtnap_cualib_error_data(const uint32_t errorDataBlockParamId)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    cassert_no_null(cuawin);
+//
+//    // FRAN: IMPROVE... ADD TO hb_gtnap_cualib_launch_modal
+//    if(cuawin->error_date_block == NULL)
+//    {
+//        PHB_ITEM codeBlock = hb_param(errorDataBlockParamId, HB_IT_BLOCK);
+//        if (codeBlock != NULL)
+//            cuawin->error_date_block = hb_itemNew(codeBlock);
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -5737,25 +5739,25 @@ Window *hb_gtnap_cualib_current_window(void)
 
 /*---------------------------------------------------------------------------*/
 
-TableView *hb_gtnap_cualib_current_tableview(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    TableView *view = NULL;
-    cassert_no_null(cuawin);
-    if (cuawin->gtarea != NULL)
-        return cuawin->gtarea->view;
-
-    arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
-        // Only one menuvert is allowed
-        if (obj->type == ekOBJ_TABLEVIEW)
-        {
-            cassert(view == NULL);
-            view = (TableView*)obj->component;
-        }
-    arrpt_end();
-
-    return view;
-}
+//TableView *hb_gtnap_cualib_current_tableview(void)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    TableView *view = NULL;
+//    cassert_no_null(cuawin);
+//    if (cuawin->gtarea != NULL)
+//        return cuawin->gtarea->view;
+//
+//    arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
+//        // Only one menuvert is allowed
+//        if (obj->type == ekOBJ_TABLEVIEW)
+//        {
+//            cassert(view == NULL);
+//            view = (TableView*)obj->component;
+//        }
+//    arrpt_end();
+//
+//    return view;
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -5845,16 +5847,16 @@ static void i_OnTableViewSingleSelect(GtNapArea *area, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
-    {
-        Listener *listener = listener(cuawin->gtarea, i_OnTableViewSingleSelect, GtNapArea);
-        tableview_OnSelect(cuawin->gtarea->view, listener);
-    }
-}
+//void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    cassert_no_null(cuawin);
+//    if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+//    {
+//        Listener *listener = listener(cuawin->gtarea, i_OnTableViewSingleSelect, GtNapArea);
+//        tableview_OnSelect(cuawin->gtarea->view, listener);
+//    }
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -5865,79 +5867,79 @@ void hb_gtnap_cualib_tableview_On_Single_Select_Change(void)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t hb_gtnap_cualib_current_row_selected(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
-    {
-        HB_ULONG uiRecNo = 0;
-        const ArrSt(uint32_t) *sel = tableview_selected(cuawin->gtarea->view);
-        SELF_RECNO(cuawin->gtarea->area, &uiRecNo);
-        arrst_foreach_const(row, sel, uint32_t)
-            const uint32_t recno = *arrst_get_const(cuawin->gtarea->records, *row, uint32_t);
-            if (recno == uiRecNo)
-                return TRUE;
-        arrst_end();
-    }
-
-    return FALSE;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_multisel(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtarea);
-    cuawin->gtarea->multisel = TRUE;
-}
+//bool_t hb_gtnap_cualib_current_row_selected(void)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    cassert_no_null(cuawin);
+//    if (cuawin->gtarea != NULL && cuawin->gtarea->view != NULL)
+//    {
+//        HB_ULONG uiRecNo = 0;
+//        const ArrSt(uint32_t) *sel = tableview_selected(cuawin->gtarea->view);
+//        SELF_RECNO(cuawin->gtarea->area, &uiRecNo);
+//        arrst_foreach_const(row, sel, uint32_t)
+//            const uint32_t recno = *arrst_get_const(cuawin->gtarea->records, *row, uint32_t);
+//            if (recno == uiRecNo)
+//                return TRUE;
+//        arrst_end();
+//    }
+//
+//    return FALSE;
+//}
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_select_current(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    uint32_t focused = UINT32_MAX;
-    const ArrSt(uint32_t) *sel = NULL;
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtarea);
-    cassert(cuawin->gtarea->multisel == TRUE);
-    focused = tableview_get_focus_row(cuawin->gtarea->view);
-    sel = tableview_selected(cuawin->gtarea->view);
+//void hb_gtnap_cualib_multisel(void)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    cassert_no_null(cuawin);
+//    cassert_no_null(cuawin->gtarea);
+//    cuawin->gtarea->multisel = TRUE;
+//}
 
-    if (i_in_vect(sel, focused) == TRUE)
-        tableview_deselect(cuawin->gtarea->view, &focused, 1);
-    else
-        tableview_select(cuawin->gtarea->view, &focused, 1);
-
-    tableview_update(cuawin->gtarea->view);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_select_current_vector(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    uint32_t focused = UINT32_MAX;
-    VecItem *item = NULL;
-    const ArrSt(uint32_t) *sel = NULL;
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->gtvector);
-    focused = tableview_get_focus_row(cuawin->gtvector->view);
-    sel = tableview_selected(cuawin->gtvector->view);
-
-    if (i_in_vect(sel, focused) == TRUE)
-        tableview_deselect(cuawin->gtvector->view, &focused, 1);
-    else
-        tableview_select(cuawin->gtvector->view, &focused, 1);
-
-    item = arrst_get(cuawin->gtvector->items, focused, VecItem);
-    item->selected = !item->selected;
-
-    tableview_update(cuawin->gtvector->view);
-}
+///*---------------------------------------------------------------------------*/
+//
+//void hb_gtnap_cualib_select_current(void)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    uint32_t focused = UINT32_MAX;
+//    const ArrSt(uint32_t) *sel = NULL;
+//    cassert_no_null(cuawin);
+//    cassert_no_null(cuawin->gtarea);
+//    cassert(cuawin->gtarea->multisel == TRUE);
+//    focused = tableview_get_focus_row(cuawin->gtarea->view);
+//    sel = tableview_selected(cuawin->gtarea->view);
+//
+//    if (i_in_vect(sel, focused) == TRUE)
+//        tableview_deselect(cuawin->gtarea->view, &focused, 1);
+//    else
+//        tableview_select(cuawin->gtarea->view, &focused, 1);
+//
+//    tableview_update(cuawin->gtarea->view);
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//void hb_gtnap_cualib_select_current_vector(void)
+//{
+//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+//    uint32_t focused = UINT32_MAX;
+//    VecItem *item = NULL;
+//    const ArrSt(uint32_t) *sel = NULL;
+//    cassert_no_null(cuawin);
+//    cassert_no_null(cuawin->gtvector);
+//    focused = tableview_get_focus_row(cuawin->gtvector->view);
+//    sel = tableview_selected(cuawin->gtvector->view);
+//
+//    if (i_in_vect(sel, focused) == TRUE)
+//        tableview_deselect(cuawin->gtvector->view, &focused, 1);
+//    else
+//        tableview_select(cuawin->gtvector->view, &focused, 1);
+//
+//    item = arrst_get(cuawin->gtvector->items, focused, VecItem);
+//    item->selected = !item->selected;
+//
+//    tableview_update(cuawin->gtvector->view);
+//}
 
 /*---------------------------------------------------------------------------*/
 
