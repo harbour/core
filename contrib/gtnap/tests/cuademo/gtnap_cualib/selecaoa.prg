@@ -314,8 +314,8 @@ IF L_ForcaLerTudo
             ENDIF
 
             N_ItemId := NAP_TABLEVIEW(N_WindowNum, L_Multisel, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], .F.)
-            NAP_TABLEVIEW_SCROLL2(N_WindowNum, N_ItemId, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
-            NAP_TABLEVIEW_GRID2(N_WindowNum, N_ItemId, L_MostraGrade, L_MostraGrade)
+            NAP_TABLEVIEW_SCROLL(N_WindowNum, N_ItemId, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
+            NAP_TABLEVIEW_GRID(N_WindowNum, N_ItemId, L_MostraGrade, L_MostraGrade)
 
             IF N_TP_Selecao # _SELE_SIMPLES
                 NAP_TABLEVIEW_COLUMN(N_WindowNum, N_ItemId, 0, {||""}, { || IIF(NAP_RECNO_IS_SELECTED(VX_Janela, B_LinCorrente)==.F.," ","»") })

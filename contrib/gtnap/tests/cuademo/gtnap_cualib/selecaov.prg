@@ -287,8 +287,8 @@ IF L_ForcaLerTudo
                 ENDIF
 
                 N_ItemId := NAP_TABLEVIEW(N_WindowNum, L_Multisel, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], .F.)
-                NAP_TABLEVIEW_SCROLL2(N_WindowNum, N_ItemId, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
-                NAP_TABLEVIEW_GRID2(N_WindowNum, N_ItemId, .T., .T.)
+                NAP_TABLEVIEW_SCROLL(N_WindowNum, N_ItemId, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
+                NAP_TABLEVIEW_GRID(N_WindowNum, N_ItemId, .T., .T.)
                 NAP_TABLEVIEW_HEADER(N_WindowNum, N_ItemId, .F.)
 
                 IF N_TP_Selecao # _SELE_SIMPLES
@@ -748,7 +748,7 @@ RETURN X_Retorno
 **********************
 FUNC ItensSelecionados (VX_Janela)
 **********************
-LOCAL X_Retorno, V_Sel
+LOCAL X_Retorno, V_Sel, N_Cont
 LOCAL VX_Sele := VX_SubObj
 
 IF SOB_MODO_GRAFICO()
