@@ -185,11 +185,6 @@ DeclPt(Button);
 
 /*---------------------------------------------------------------------------*/
 
-#define STATIC_TEXT_SIZE    1024
-char_t TEMP_BUFFER[STATIC_TEXT_SIZE];
-
-/*---------------------------------------------------------------------------*/
-
 static const GtNapKey KEYMAPS[] = {
     { K_F1, ekKEY_F1, 0 },
     { K_F2, ekKEY_F2, 0 },
@@ -308,6 +303,9 @@ static char_t INIT_TITLE[128];
 static PHB_ITEM INIT_CODEBLOCK = NULL;
 static uint32_t INIT_ROWS = 0;
 static uint32_t INIT_COLS = 0;
+
+#define STATIC_TEXT_SIZE    1024
+char_t TEMP_BUFFER[STATIC_TEXT_SIZE];
 
 /*---------------------------------------------------------------------------*/
 
@@ -569,7 +567,7 @@ static GtNapObject *i_get_button(GtNapWindow *gtwin, const uint32_t index)
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_num_buttons(GtNapWindow *gtwin)
+static uint32_t i_num_buttons(const GtNapWindow *gtwin)
 {
     uint32_t n = 0;
     cassert_no_null(gtwin);
@@ -582,7 +580,20 @@ static uint32_t i_num_buttons(GtNapWindow *gtwin)
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_num_edits(GtNapWindow *gtwin)
+static uint32_t i_num_images(const GtNapWindow *gtwin)
+{
+    uint32_t n = 0;
+    cassert_no_null(gtwin);
+    arrpt_foreach_const(obj, gtwin->gui_objects, GtNapObject)
+        if (obj->type == ekOBJ_IMAGE)
+            n += 1;
+    arrpt_end();
+    return n;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_num_edits(const GtNapWindow *gtwin)
 {
     uint32_t n = 0;
     cassert_no_null(gtwin);
@@ -1089,6 +1100,7 @@ static void i_OnRightButton(GtNapWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+/* TO BE REMOVED!!! */ 
 static GtNapObject *i_cualib_obj(ArrPt(GtNapObject) *objects, const GuiComponent *component)
 {
     arrpt_foreach(obj, objects, GtNapObject)
@@ -1185,6 +1197,7 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
     }
 
     /* Get the EditBox that launched the event */
+    /* TODO: Change cuawin parameter with gtobj */
     cuaobj = i_cualib_obj(cuawin->gui_objects, (GuiComponent*)event_sender(e, Edit));
     cassert(cuaobj->type == ekOBJ_EDIT);
 
@@ -2450,129 +2463,6 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*---------------------------------------------------------------------------*/
-
-String *hb_gtnap_parstr(const uint32_t iParam)
-{
-    /* TODO: Use Harbour code-page (not 1252 allways) */
-    if (!HB_ISNIL(iParam))
-    {
-        if (HB_ISCHAR(iParam))
-        {
-            const char_t *str = hb_parcx(iParam);
-            return gtconvert_1252_to_UTF8(str);
-        }
-        else
-        {
-            return str_c("Unknown text");
-        }
-    }
-
-    return str_c("");
-}
-
-/*---------------------------------------------------------------------------*/
-
-const char_t *hb_gtnap_parText(const uint32_t iParam)
-{
-    static char_t TEMP_TEXT[1024 + 1];
-
-    if (HB_ISCHAR(iParam))
-    {
-        const char_t *str = hb_parcx(iParam);
-        HB_SIZE i = 0, j = 0, size = hb_parclen(iParam);
-
-        /* Avoid the Carriage Return (CR) character (NAppGUI doesn't like) */
-        for (; i < size && j < 1024; )
-        {
-            if (str[i] != 13)
-            {
-                TEMP_TEXT[j] = str[i];
-                i += 1;
-                j += 1;
-            }
-            else
-            {
-                i += 1;
-            }
-        }
-
-        TEMP_TEXT[j] = '\0';
-        return TEMP_TEXT;
-    }
-
-    return "";
-}
-
-/*---------------------------------------------------------------------------*/
-
-Font *hb_gtnap_font(void)
-{
-    cassert_no_null(GTNAP_GLOBAL);
-    return GTNAP_GLOBAL->global_font;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*---------------------------------------------------------------------------*/
 
 static uint32_t i_add_object(const objtype_t type, const int32_t top, const int32_t left, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, const bool_t in_scroll, GuiComponent *component, GtNapWindow *gtwin)
@@ -2628,24 +2518,6 @@ static uint32_t i_add_label(const int32_t top, const int32_t left, const bool_t 
     size.width = (real32_t)(1 * gtnap->cell_x_size);
     size.height = (real32_t)gtnap->label_y_size;
     return i_add_object(ekOBJ_LABEL, top, left, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll, (GuiComponent*)label, gtwin);
-}
-
-
-/*---------------------------------------------------------------------------*/
-
-static void i_set_button_text(GtNapObject *obj)
-{
-    cassert_no_null(obj);
-    cassert(obj->type == ekOBJ_BUTTON);
-    if (obj->text_block != NULL)
-    {
-        PHB_ITEM ritem = hb_itemDo(obj->text_block, 0);
-        char_t utf8[STATIC_TEXT_SIZE];
-        cassert(HB_ITEM_TYPE(ritem) == HB_IT_STRING);
-        i_item_to_utf8(ritem, utf8, sizeof32(utf8));
-        button_text((Button*)obj->component, utf8);
-        hb_itemRelease(ritem);
-    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2708,52 +2580,38 @@ void hb_gtnap_label_bgcolor(const uint32_t wid, const uint32_t id, const color_t
 
 /*---------------------------------------------------------------------------*/
 
-static void i_gtnap_callback(GtNapCallback *callback)
-{
-    cassert_no_null(callback);
-    if (callback->block != NULL)
-    {
-        PHB_ITEM ritem = hb_itemDo(callback->block, 0);
-        hb_itemRelease(ritem);
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-//static Listener *i_gtnap_cualib_listener_noblock(const int32_t key, GtNapWindow *cuawin, FPtr_gtnap_callback func_callback)
-//{
-//    GtNapCallback *callback = heap_new0(GtNapCallback);
-//    callback->codeBlock = NULL;
-//    callback->cuawin = cuawin;
-//    callback->key = key;
-//    callback->autoclose = FALSE;
-//    arrpt_append(cuawin->callbacks, callback, GtNapCallback);
-//    return listener(callback, func_callback, GtNapCallback);
-//}
-
-/*---------------------------------------------------------------------------*/
-
 static void i_OnButtonClick(GtNapCallback *callback, Event *e)
 {
-    //uint32_t ret_val = UINT32_MAX;
     cassert_no_null(callback);
     cassert_no_null(callback->gtwin);
     unref(e);
     if (callback->block != NULL)
     {
         PHB_ITEM ritem = hb_itemDo(callback->block, 0);
-        //HB_TYPE type = HB_ITEM_TYPE(ritem);
-        ////if (type == HB_IT_LOGICAL)
-        ////    ret = (bool_t)hb_itemGetL(ritem);
-        //if (type == HB_IT_INTEGER)
-        //    ret_val = hb_itemGetNI(ritem);
         hb_itemRelease(ritem);
     }
 
-    if (/*ret == TRUE ||*/ callback->autoclose_id != UINT32_MAX)
+    if (callback->autoclose_id != UINT32_MAX)
     {
         callback->gtwin->modal_window_alive = FALSE;
         window_stop_modal(callback->gtwin->window, NAP_MODAL_BUTTON_AUTOCLOSE + callback->autoclose_id);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_set_button_text(GtNapObject *obj)
+{
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_BUTTON);
+    if (obj->text_block != NULL)
+    {
+        PHB_ITEM ritem = hb_itemDo(obj->text_block, 0);
+        char_t utf8[STATIC_TEXT_SIZE];
+        cassert(HB_ITEM_TYPE(ritem) == HB_IT_STRING);
+        i_item_to_utf8(ritem, utf8, sizeof32(utf8));
+        button_text((Button*)obj->component, utf8);
+        hb_itemRelease(ritem);
     }
 }
 
@@ -2794,28 +2652,20 @@ uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t le
 
 static void i_OnImageClick(GtNapCallback *callback, Event *e)
 {
-    i_gtnap_callback(callback);
     cassert_no_null(callback);
     cassert_no_null(callback->gtwin);
     unref(e);
+    if (callback->block != NULL)
+    {
+        PHB_ITEM ritem = hb_itemDo(callback->block, 0);
+        hb_itemRelease(ritem);
+    }
+
     if (callback->autoclose_id != UINT32_MAX)
     {
         callback->gtwin->modal_window_alive = FALSE;
         window_stop_modal(callback->gtwin->window, NAP_MODAL_IMAGE_AUTOCLOSE + callback->autoclose_id);
     }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static uint32_t i_num_images(const GtNapWindow *gtwin)
-{
-    uint32_t n = 0;
-    cassert_no_null(gtwin);
-    arrpt_foreach_const(obj, gtwin->gui_objects, GtNapObject)
-        if (obj->type == ekOBJ_IMAGE)
-            n += 1;
-    arrpt_end();
-    return n;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2847,23 +2697,6 @@ uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t lef
     }
 
     return UINT32_MAX;
-}
-
-
-
-
-
-/*---------------------------------------------------------------------------*/
-
-static void i_OnWizardButton(GtNapCallback *callback, Event *e)
-{
-    GtNapObject *obj = NULL;
-    cassert_no_null(callback);
-    cassert_no_null(callback->gtwin);
-    cassert(callback->autoclose_id == UINT32_MAX);
-    unref(e);
-    obj = arrpt_get(callback->gtwin->gui_objects, callback->key, GtNapObject);
-    i_launch_wizard(callback->gtwin, obj);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2980,6 +2813,19 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnWizardButton(GtNapCallback *callback, Event *e)
+{
+    GtNapObject *obj = NULL;
+    cassert_no_null(callback);
+    cassert_no_null(callback->gtwin);
+    cassert(callback->autoclose_id == UINT32_MAX);
+    unref(e);
+    obj = arrpt_get(callback->gtwin->gui_objects, callback->key, GtNapObject);
+    i_launch_wizard(callback->gtwin, obj);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnKeyWizard(GtNapWindow *cuawin, Event *e)
 {
     cassert_no_null(cuawin);
@@ -3052,7 +2898,6 @@ static void i_set_view_text(const GtNapObject *obj)
         str_destroy(&str);
     }
 }
-
 
 /*---------------------------------------------------------------------------*/
 
@@ -3216,18 +3061,6 @@ uint32_t hb_gtnap_menu(const uint32_t wid, const int32_t top, const int32_t left
     _panel_locate(panel);
     id = i_add_object(ekOBJ_MENU, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)panel, gtwin);
     return id;
-
-
-    //GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    //S2Df size, final_size;
-    //cassert_no_null(cuawin);
-    //log_printf("Added MenuVert into CUALIB Window: %d, %d, %d, %d", nTop, nLeft, nBottom, nRight);
-    //size.width = (real32_t)((nRight - nLeft + 1) * GTNAP_GLOBAL->cell_x_size);
-    //size.height = (real32_t)((nBottom - nTop + 1) * GTNAP_GLOBAL->cell_y_size);
-    //_panel_compose(panel, &size, &final_size);
-    //_panel_locate(panel);
-    //i_add_object(ekOBJ_MENU, nTop - cuawin->top, nLeft - cuawin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, FALSE, (GuiComponent*)panel, cuawin);
-
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3262,7 +3095,6 @@ uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int
     GtNapObject *obj = NULL;
     cassert_no_null(gtwin);
     cassert(gtwin->gtarea == NULL);
-    //cassert(gtwin->gtvector == NULL);
     tableview_font(view, GTNAP_GLOBAL->global_font);
     tableview_multisel(view, multisel, multisel);
     size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
@@ -3391,33 +3223,10 @@ void hb_gtnap_tableview_freeze(const uint32_t wid, const uint32_t id, const uint
 static GtNapArea *i_create_area(void)
 {
     GtNapArea *area = heap_new0(GtNapArea);
-    //area->columns = arrst_create(GtNapColumn);
     area->records = arrst_create(uint32_t);
     area->cache_recno = UINT32_MAX;
     area->while_block = NULL;
     return area;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_OnTableAreaRowSelect(GtNapArea *gtarea, Event *e)
-{
-    cassert_no_null(gtarea);
-    cassert_no_null(gtarea->gtobj);
-    cassert(gtarea->gtobj->type == ekOBJ_TABLEVIEW);
-    if (gtarea->gtobj->multisel == FALSE)
-    {
-        const EvTbSel *sel = event_params(e, EvTbSel);
-        uint32_t first = 0;
-        uint32_t recno = 0;
-        cassert(arrst_size(sel->sel, uint32_t) == 1);
-        /* The row selected in table */
-        first = *arrst_first_const(sel->sel, uint32_t);
-        /* The DB RECNO in this row selected in table */
-        recno = *arrst_get_const(gtarea->records, first, uint32_t);
-        /* Just GOTO */
-        SELF_GOTO(gtarea->area, recno);
-    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3532,6 +3341,28 @@ static void i_OnTableAreaData(GtNapArea *gtarea, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnTableAreaRowSelect(GtNapArea *gtarea, Event *e)
+{
+    cassert_no_null(gtarea);
+    cassert_no_null(gtarea->gtobj);
+    cassert(gtarea->gtobj->type == ekOBJ_TABLEVIEW);
+    if (gtarea->gtobj->multisel == FALSE)
+    {
+        const EvTbSel *sel = event_params(e, EvTbSel);
+        uint32_t first = 0;
+        uint32_t recno = 0;
+        cassert(arrst_size(sel->sel, uint32_t) == 1);
+        /* The row selected in table */
+        first = *arrst_first_const(sel->sel, uint32_t);
+        /* The DB RECNO in this row selected in table */
+        recno = *arrst_get_const(gtarea->records, first, uint32_t);
+        /* Just GOTO */
+        SELF_GOTO(gtarea->area, recno);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM *while_block)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
@@ -3546,9 +3377,7 @@ void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM
 
     gtwin->gtarea = i_create_area();
     gtwin->gtarea->area = (AREA*)hb_rddGetCurrentWorkAreaPointer();
-    //gtwin->gtarea->view = (TableView*)obj->component;
     gtwin->gtarea->gtobj = obj;
-    //gtwin->gtarea->multisel = obj->multisel;
 
     if (while_block != NULL)
         gtwin->gtarea->while_block = hb_itemNew(while_block);
@@ -3789,6 +3618,16 @@ uint32_t hb_gtnap_tableview_row_from_recno(const uint32_t wid, const uint32_t id
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_tableview_refresh_current(const uint32_t wid, const uint32_t id)
+{
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TABLEVIEW);
+    tableview_update((TableView*)obj->component);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_area_refresh(GtNapArea *area)
 {
     HB_ULONG ulCurRec;
@@ -3921,16 +3760,6 @@ static void i_area_select_row(GtNapArea *gtarea)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_tableview_refresh_current(const uint32_t wid, const uint32_t id)
-{
-    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
-    cassert_no_null(obj);
-    cassert(obj->type == ekOBJ_TABLEVIEW);
-    tableview_update((TableView*)obj->component);
-}
-
-/*---------------------------------------------------------------------------*/
-
 void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
@@ -3952,6 +3781,216 @@ void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id)
         tableview_update(view);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
+String *hb_gtnap_parstr(const uint32_t iParam)
+{
+    /* TODO: Use Harbour code-page (not 1252 allways) */
+    if (!HB_ISNIL(iParam))
+    {
+        if (HB_ISCHAR(iParam))
+        {
+            const char_t *str = hb_parcx(iParam);
+            return gtconvert_1252_to_UTF8(str);
+        }
+        else
+        {
+            return str_c("Unknown text");
+        }
+    }
+
+    return str_c("");
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *hb_gtnap_parText(const uint32_t iParam)
+{
+    static char_t TEMP_TEXT[1024 + 1];
+
+    if (HB_ISCHAR(iParam))
+    {
+        const char_t *str = hb_parcx(iParam);
+        HB_SIZE i = 0, j = 0, size = hb_parclen(iParam);
+
+        /* Avoid the Carriage Return (CR) character (NAppGUI doesn't like) */
+        for (; i < size && j < 1024; )
+        {
+            if (str[i] != 13)
+            {
+                TEMP_TEXT[j] = str[i];
+                i += 1;
+                j += 1;
+            }
+            else
+            {
+                i += 1;
+            }
+        }
+
+        TEMP_TEXT[j] = '\0';
+        return TEMP_TEXT;
+    }
+
+    return "";
+}
+
+/*---------------------------------------------------------------------------*/
+
+Font *hb_gtnap_font(void)
+{
+    cassert_no_null(GTNAP_GLOBAL);
+    return GTNAP_GLOBAL->global_font;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
+//static Listener *i_gtnap_cualib_listener_noblock(const int32_t key, GtNapWindow *cuawin, FPtr_gtnap_callback func_callback)
+//{
+//    GtNapCallback *callback = heap_new0(GtNapCallback);
+//    callback->codeBlock = NULL;
+//    callback->cuawin = cuawin;
+//    callback->key = key;
+//    callback->autoclose = FALSE;
+//    arrpt_append(cuawin->callbacks, callback, GtNapCallback);
+//    return listener(callback, func_callback, GtNapCallback);
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
