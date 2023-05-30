@@ -55,6 +55,15 @@ This will generate several static libraries:
 * The NAppGUI libraries: `sewer.lib`, `osbs.lib`, `core.lib`, `geom2d.lib`, `draw2d.lib`, `osgui.lib`, `gui.lib`, `osapp.lib`, `inet.lib` in `build/[Debug|Release]` folder.
 
 ### In Linux
+First of all, install the required development libraries:
+
+```
+sudo apt-get install libgtk-3-dev
+sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+sudo apt-get install libcurl4-openssl-dev
+```
+
+Then, compile gtnap
 ```
 # Goto gtnap folder
 cd contrib/gtnap
