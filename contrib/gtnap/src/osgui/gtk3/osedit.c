@@ -705,7 +705,7 @@ void osedit_vpadding(OSEdit *edit, const real32_t padding)
     uint32_t mpad = (uint32_t)((padding / 2) + .5f);
     char_t css[256];
     cassert_no_null(edit);
-    bstd_sprintf(css, sizeof(css), "%s {padding-top:%dpx;padding-bottom:%dpx;}", entry, mpad, mpad);
+    bstd_sprintf(css, sizeof(css), "%s {padding-top:%dpx;padding-bottom:%dpx;min-height:0px}", entry, mpad, mpad);
     _oscontrol_set_css(edit->control.widget, css);
 }
 

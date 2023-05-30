@@ -80,7 +80,7 @@ if (GTNAP_DEVELOPER_MODE)
     else()
         set(HARBOUR_LIBS ${HARBOUR_LIBS} "gtcgi;gtpca;gtstd;gttrm;hbrtl")
     endif()
-    set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbrdd;hbuddall;hbusrrdd;rddntx;rddcdx;rddnsx;rddfpt;hbrdd")
+    set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbrdd;hbuddall;hbusrrdd;rddntx;hbrtl;rddcdx;rddnsx;rddfpt;hbrdd")
     set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbhsx;hbsix;hbmacro;hbcplr;hbpp;hbcommon")
 
     if (WIN32)
