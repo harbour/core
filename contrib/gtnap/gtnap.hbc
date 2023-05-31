@@ -4,8 +4,8 @@ debug=yes
 incpaths=.
 
 # NAppGUI library paths
+libpaths=build build/Release/lib
 {debug}libpaths=build build/Debug/lib
-{nodebug}libpaths=build build/Release/lib
 
 # NAppGUI uses static-linked 'LIBCMTD.lib' in Debug (sewer.lib)
 # This line avoid conflicts with 'LIBCMT.lib' in Debug mode
