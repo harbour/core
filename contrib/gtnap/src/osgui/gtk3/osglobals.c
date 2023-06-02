@@ -60,6 +60,9 @@ static color_t kSELTXBACKDROP_COLOR = 0;
 static color_t kHOTTXBACKDROP_COLOR = 0;
 static String *kCSS_ENTRY = NULL;
 static String *kCSS_BUTTON = NULL;
+static String *kCSS_COMBOBOX = NULL;
+static String *kCSS_TEXTVIEW = NULL;
+static String *kCSS_TEXTVIEWTEXT = NULL;
 
 /*---------------------------------------------------------------------------*/
 
@@ -752,37 +755,66 @@ static void i_parse_gtk_theme(void)
 
         if (section != NULL)
         {
-            if (kCSS_ENTRY == NULL || kCSS_BUTTON == NULL)
+            str_copy_cn(csect, sizeof(csect), section, nsection);
+            csect[nsection] = '\0';
+
+            if (kCSS_ENTRY == NULL)
             {
-                str_copy_cn(csect, sizeof(csect), section, nsection);
-                csect[nsection] = '\0';
-
-                if (kCSS_ENTRY == NULL)
+                if (str_equ_nocase(csect, "entry") == TRUE ||
+                    str_equ_nocase(csect, ".entry") == TRUE)
                 {
-                    if (str_equ_nocase(csect, "entry") == TRUE ||
-                        str_equ_nocase(csect, ".entry") == TRUE)
-                    {
-                        kCSS_ENTRY = str_c(csect);
-                    }
-                }
-
-                if (kCSS_BUTTON == NULL)
-                {
-                    if (str_equ_nocase(csect, "button") == TRUE ||
-                        str_equ_nocase(csect, ".button") == TRUE)
-                    {
-                        kCSS_BUTTON = str_c(csect);
-                    }
+                    kCSS_ENTRY = str_c(csect);
                 }
             }
 
-            i_jump_next_section(&pcss);
+            if (kCSS_BUTTON == NULL)
+            {
+                if (str_equ_nocase(csect, "button") == TRUE ||
+                    str_equ_nocase(csect, ".button") == TRUE)
+                {
+                    kCSS_BUTTON = str_c(csect);
+                }
+            }
+
+            if (kCSS_COMBOBOX == NULL)
+            {
+                if (str_equ_nocase(csect, "combobox") == TRUE ||
+                    str_equ_nocase(csect, "GtkComboBox") == TRUE)
+                {
+                    kCSS_COMBOBOX = str_c(csect);
+                }
+            }
+
+            if (kCSS_TEXTVIEW == NULL)
+            {
+                if (str_equ_nocase(csect, "textview") == TRUE ||
+                    str_equ_nocase(csect, "GtkTextView") == TRUE)
+                {
+                    kCSS_TEXTVIEW = str_c(csect);
+                }
+            }
+
+            if (kCSS_TEXTVIEWTEXT == NULL)
+            {
+                if (str_equ_nocase(csect, "textview text") == TRUE)
+                {
+                    kCSS_TEXTVIEWTEXT = str_c(csect);
+                }
+            }
+
+            if (kCSS_ENTRY == NULL || kCSS_BUTTON == NULL || kCSS_COMBOBOX == NULL || kCSS_TEXTVIEW == NULL || kCSS_TEXTVIEWTEXT == NULL)
+                i_jump_next_section(&pcss);
+            else
+                break;
         }
         else
         {
             break;
         }
     }
+
+    if (kCSS_TEXTVIEWTEXT == NULL && kCSS_TEXTVIEW != NULL)
+        kCSS_TEXTVIEWTEXT = str_copy(kCSS_TEXTVIEW);
 
     g_free(theme_name);
     g_free(css_data);
@@ -826,6 +858,9 @@ void osglobals_finish(void)
 
     str_destopt(&kCSS_ENTRY);
     str_destopt(&kCSS_BUTTON);
+    str_destopt(&kCSS_COMBOBOX);
+    str_destopt(&kCSS_TEXTVIEW);
+    str_destopt(&kCSS_TEXTVIEWTEXT);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -901,6 +936,27 @@ const char_t *osglobals_css_entry(void)
 const char_t *osglobals_css_button(void)
 {
     return tc(kCSS_BUTTON);
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *osglobals_css_combobox(void)
+{
+    return tc(kCSS_COMBOBOX);
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *osglobals_css_textview(void)
+{
+    return tc(kCSS_TEXTVIEW);
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *osglobals_css_textview_text(void)
+{
+    return tc(kCSS_TEXTVIEWTEXT);
 }
 
 /*---------------------------------------------------------------------------*/

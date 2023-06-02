@@ -206,8 +206,9 @@ OSButton *osbutton_create(const button_flag_t flags)
 
     if (_osgui_button_text_allowed(flags) == TRUE)
     {
+        const char_t *cssbut = osglobals_css_button();
         button->font = _osgui_create_default_font();
-        _oscontrol_set_font((OSControl*)button, button->font, &button->pfont);
+        _oscontrol_widget_font(button->control.widget, cssbut, button->font, &button->pfont);
     }
 
     g_signal_connect(G_OBJECT(widget), "button-press-event", G_CALLBACK (i_OnPressed), (gpointer)button);
@@ -272,10 +273,11 @@ void osbutton_tooltip(OSButton *button, const char_t *text)
 
 void osbutton_font(OSButton *button, const Font *font)
 {
+    const char_t *cssbut = osglobals_css_button();
     cassert_no_null(button);
     cassert(_osgui_button_text_allowed(button->flags) == TRUE);
     _oscontrol_remove_provider(button->control.widget, button->pfont);
-    _oscontrol_set_font((OSControl*)button, font, &button->pfont);
+    _oscontrol_widget_font(button->control.widget, cssbut, font, &button->pfont);
 }
 
 /*---------------------------------------------------------------------------*/

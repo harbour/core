@@ -52,12 +52,6 @@ struct _osedit_t
     Listener *OnFocus;
 };
 
-#if GTK_CHECK_VERSION(3, 22, 0)
-static const char_t *CSS_TEXTVIEW = "textview";
-#else
-static const char_t *CSS_TEXTVIEW = "GtkTextView";
-#endif
-
 /*---------------------------------------------------------------------------*/
 
 static void i_iter(GtkTextBuffer *buffer, const int32_t pos, GtkTextIter *iter)
@@ -310,6 +304,7 @@ OSEdit *osedit_create(const edit_flag_t flags)
 
     case ekEDIT_MULTI:
     {
+        const char_t *textv = osglobals_css_textview();
         GtkTextBuffer *buffer = NULL;
         GtkBorder padding;
         String *css1 = NULL;
@@ -318,7 +313,7 @@ OSEdit *osedit_create(const edit_flag_t flags)
         buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(edit->tview));
         g_signal_connect_after(G_OBJECT(buffer), "insert-text", G_CALLBACK(i_OnBufferInsert), (gpointer)edit);
         g_signal_connect_after(G_OBJECT(buffer), "delete-range", G_CALLBACK(i_OnBufferDelete), (gpointer)edit);
-        _oscontrol_widget_font(edit->tview, CSS_TEXTVIEW, font, &edit->font);
+        _oscontrol_widget_font(edit->tview, textv, font, &edit->font);
         gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(edit->tview), FALSE);
         widget = gtk_scrolled_window_new(NULL, NULL);
         gtk_container_add(GTK_CONTAINER(widget), edit->tview);
@@ -326,11 +321,10 @@ OSEdit *osedit_create(const edit_flag_t flags)
         gtk_widget_show(edit->tview);
         gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(edit->tview), GTK_WRAP_WORD_CHAR);
         osglobals_register_entry(&padding);
-        css1 = str_printf("%s {background-image:none;background-color:transparent;}", CSS_TEXTVIEW);
-        css2 = str_printf("%s text {background-image:none;background-color:transparent;}", CSS_TEXTVIEW);
+        css1 = str_printf("%s {background-image:none;background-color:transparent;}", textv);
+        css2 = str_printf("%s text {background-image:none;background-color:transparent;}", textv);
         _oscontrol_set_css(edit->tview, tc(css1));
         _oscontrol_set_css(edit->tview, tc(css2));
-
         gtk_text_view_set_left_margin(GTK_TEXT_VIEW(edit->tview), padding.left);
         gtk_text_view_set_right_margin(GTK_TEXT_VIEW(edit->tview), padding.right);
 
@@ -492,9 +486,10 @@ void osedit_font(OSEdit *edit, const Font *font)
     edit->fsize = (uint32_t)font_size(font);
     if (edit->tview != NULL)
     {
+        const char_t *textv = osglobals_css_textview();
         cassert(edit_get_type(edit->flags) == ekEDIT_MULTI);
         _oscontrol_remove_provider(edit->tview, edit->font);
-        _oscontrol_widget_font(edit->tview, CSS_TEXTVIEW, font, &edit->font);
+        _oscontrol_widget_font(edit->tview, textv, font, &edit->font);
     }
     else
     {
@@ -616,15 +611,12 @@ static void i_set_color(OSEdit *edit, const color_t color)
     GtkWidget *widget = NULL;
     const char_t *type = NULL;
     cassert_no_null(edit);
+
     if (edit->tview != NULL)
     {
         cassert(edit_get_type(edit->flags) == ekEDIT_MULTI);
         widget = edit->tview;
-    #if GTK_CHECK_VERSION(3, 24, 0)
-        type = "textview text";
-    #else
-        type = CSS_TEXTVIEW;
-    #endif
+        type = osglobals_css_textview_text();
     }
     else
     {

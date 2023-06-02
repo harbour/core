@@ -391,6 +391,7 @@ void ostext_set_text(OSText *view, const char_t *text)
     GtkTextBuffer *buffer;
     cassert_no_null(view);
     cassert_no_null(text);
+
     buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view->tview));
     gtk_text_buffer_set_text (buffer, (const gchar*)text, -1);
 }

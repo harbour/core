@@ -14,6 +14,7 @@
 #include "ospopup.inl"
 #include "osgui.inl"
 #include "osgui_gtk.inl"
+#include "osglobals.inl"
 #include "oscontrol.inl"
 #include "oscombo.inl"
 #include "ospanel.inl"
@@ -66,6 +67,7 @@ OSPopUp *ospopup_create(const uint32_t flags)
     OSPopUp *popup = heap_new0(OSPopUp);
     GtkWidget *widget = gtk_combo_box_new();
     Font *font = _osgui_create_default_font();
+    const char_t *csscombo = osglobals_css_combobox();
     cassert_unref(flags == ekPOPUP_FLAG, flags);
     /* GtkCellView->GtkBox->GtkToggleButton */
 #if GTK_CHECK_VERSION(3, 16, 0)
@@ -88,7 +90,7 @@ OSPopUp *ospopup_create(const uint32_t flags)
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(widget), popup->txtcell, "text", 1, NULL);
     g_signal_connect (widget, "changed", G_CALLBACK(i_OnSelect), (gpointer)popup);
     _oscontrol_init(&popup->control, ekGUI_TYPE_POPUP, widget, popup->button, TRUE);
-    _oscontrol_set_font((OSControl*)popup, font, &popup->font);
+    _oscontrol_widget_font(popup->control.widget, csscombo, font, &popup->font);
     popup->fsize = (uint32_t)(font_size(font) + 2.5f);
     font_destroy(&font);
     popup->launch_event = TRUE;
@@ -163,9 +165,10 @@ void ospopup_tooltip(OSPopUp *popup, const char_t *text)
 
 void ospopup_font(OSPopUp *popup, const Font *font)
 {
+    const char_t *csscombo = osglobals_css_combobox();
     cassert_no_null(popup);
     _oscontrol_remove_provider(popup->control.widget, popup->font);
-    _oscontrol_set_font((OSControl*)popup, font, &popup->font);
+    _oscontrol_widget_font(popup->control.widget, csscombo, font, &popup->font);
     popup->fsize = (uint32_t)(font_size(font) + 2.5f);
 }
 

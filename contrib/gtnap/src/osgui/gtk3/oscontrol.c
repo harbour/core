@@ -328,45 +328,6 @@ void _oscontrol_widget_font(GtkWidget *widget, const char_t *css_type, const Fon
 
 /*---------------------------------------------------------------------------*/
 
-static const char_t *i_css_sel(const gui_type_t type)
-{
-    switch (type) {
-    case ekGUI_TYPE_LABEL:
-        return "label";
-    case ekGUI_TYPE_BUTTON:
-        return "button";
-    case ekGUI_TYPE_POPUP:
-    case ekGUI_TYPE_COMBOBOX:
-        return "combobox";
-    case ekGUI_TYPE_EDITBOX:
-        return "entry";
-    case ekGUI_TYPE_SLIDER:
-    case ekGUI_TYPE_UPDOWN:
-    case ekGUI_TYPE_PROGRESS:
-    case ekGUI_TYPE_TEXTVIEW:
-    case ekGUI_TYPE_TABLEVIEW:
-    case ekGUI_TYPE_TREEVIEW:
-    case ekGUI_TYPE_BOXVIEW:
-    case ekGUI_TYPE_SPLITVIEW:
-    case ekGUI_TYPE_CUSTOMVIEW:
-    cassert_default();
-    }
-
-    return "";
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_set_font(OSControl *control, const Font *font, GtkCssProvider **css_prov)
-{
-    const char_t *css_type;
-    cassert_no_null(control);
-    css_type = i_css_sel(control->type);
-    _oscontrol_widget_font(control->widget, css_type, font, css_prov);
-}
-
-/*---------------------------------------------------------------------------*/
-
 static GtkAlign i_align(const align_t align)
 {
     switch(align) {

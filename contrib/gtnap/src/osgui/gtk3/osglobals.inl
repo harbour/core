@@ -32,6 +32,12 @@ const char_t *osglobals_css_entry(void);
 
 const char_t *osglobals_css_button(void);
 
+const char_t *osglobals_css_combobox(void);
+
+const char_t *osglobals_css_textview(void);
+
+const char_t *osglobals_css_textview_text(void);
+
 color_t osglobals_text_color(void);
 
 color_t osglobals_seltext_color(void);

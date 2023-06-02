@@ -38,8 +38,6 @@ uint32_t _oscontrol_widget_font_size(GtkWidget *widget);
 
 void _oscontrol_widget_font(GtkWidget *widget, const char_t *css_type, const Font *font, GtkCssProvider **css_prov);
 
-void _oscontrol_set_font(OSControl *control, const Font *font, GtkCssProvider **css_prov);
-
 void _oscontrol_set_halign(OSControl *control, const align_t align);
 
 void _oscontrol_set_css_prov(GtkWidget *widget, const char_t *css, GtkCssProvider **css_prov);
