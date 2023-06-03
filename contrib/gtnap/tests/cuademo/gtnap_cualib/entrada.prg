@@ -713,9 +713,7 @@ IF SOB_MODO_GRAFICO()
             #UNDEF L_E_Get
             NEXT
 
-            // REFACTOR: TODO
-            //NAP_CUALIB_WINDOW_F4_LISTA()
-            NAP_CUALIB_HOTKEY(K_F1,{||NAP_ENTRADA_HELP(C_CdTela,C_Cabec,V_Lst_CdGET)}, .F.)
+            NAP_WINDOW_HOTKEY(N_WindowNum, K_F1, {||NAP_ENTRADA_HELP(C_CdTela,C_Cabec,V_Lst_CdGET)}, .F.)
 
     ENDIF  // L_PrimAtivacao
 

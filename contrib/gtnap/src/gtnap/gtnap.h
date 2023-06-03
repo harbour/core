@@ -130,8 +130,6 @@ extern void hb_gtnap_cualib_toolbar_button(const char_t *pathname, const char_t 
 
 extern void hb_gtnap_cualib_toolbar_separator(void);
 
-extern void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, const bool_t autoclose);
-
 HB_EXTERN_END
 
 #endif

@@ -670,7 +670,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             ENDIF
 
             N_WindowNum := NAP_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux, L_CLOSE_WITH_RETURN, L_CLOSE_WITH_ESC, L_MINIMIZE_BUTTON, L_BUTTONS_NAVIGATION)
-            NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)}, .F.)
+            NAP_WINDOW_HOTKEY(N_WindowNum, K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)}, .F.)
 
             AADD(V_PilhaJanelas,{N_WindowNum,VX_Janela})
 

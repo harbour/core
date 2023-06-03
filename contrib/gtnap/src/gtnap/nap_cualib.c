@@ -61,12 +61,3 @@ HB_FUNC( NAP_CUALIB_TOOLBAR_SEPARATOR )
 {
     hb_gtnap_cualib_toolbar_separator();
 }
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_CUALIB_HOTKEY )
-{
-    int32_t key = hb_parni(1);
-    bool_t autoclose = (bool_t)hb_parl(3);
-    hb_gtnap_cualib_hotkey(key, 2, autoclose);
-}
