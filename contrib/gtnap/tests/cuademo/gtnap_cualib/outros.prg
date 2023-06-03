@@ -14,6 +14,7 @@
 #INCLUDE "mousecua.ch"
 #INCLUDE "define_cua.ch"
 #INCLUDE "hbgtinfo.ch"
+#INCLUDE "gtnap.ch"
 
 /*---------------------------------------------------------------------------*/
 
@@ -115,15 +116,10 @@ IF SOB_MODO_GRAFICO()
 
     NAP_CUALIB_DEFAULT_BUTTON(N_Default)
 
-    N_Opcao := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
-    NAP_LOG("OPCAO PERGUNTAR: " + hb_ntos(N_Opcao))
+    N_Opcao := NAP_WINDOW_MODAL(N_WindowNum)
 
-    // N_Opcao == 1 --> window has been closed by [ESC]
-    // N_Opcao == 2 --> window has been closed by [INTRO]
-    // N_Opcao == 3 --> window has been closed by [X]
-    // N_Opcao >= 1000 --> window has been closed by PushButton
-    IF N_Opcao >= 1000
-        N_Opcao -= 1000
+    IF N_Opcao >= NAP_MODAL_BUTTON_AUTOCLOSE .AND. N_Opcao <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
+        N_Opcao -= NAP_MODAL_BUTTON_AUTOCLOSE
     ELSE
         N_Opcao := 0   // NO OPTION SELECTED
     ENDIF
@@ -339,44 +335,24 @@ LOCAL N_PaintRefresh_Old
 DEFAULT L_Parar TO .T.
 DEFAULT N_Segundos TO 0
 DEFAULT L_TipoMsgAguarde TO .F.
-*
-//
-// FRAN: This code is not required
-//
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO() .AND. N_Segundos == 0
-//       N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-*
+
 N_CursorAnt := SET(_SET_CURSOR,SC_NONE)          // salvar modo do cursor
-*
+
 VX_Janela := MontarJanela(C_Cabec_x,C_SubCabec,,VC_TxtBotoes)
 IF SOB_MODO_GRAFICO()
    ADDIMAGEM VX_Janela ARQUIVO DIRET_BMPS()+C_ArqImagem ;
        COORDENADAS 00,01,01,04 AJUDA "B19125"
-   //   ADDIMAGEM VX_Janela ARQUIVO DIRET_BMPS()+C_ArqImagem ;
-   //    COORDENADAS 00,00,02,04
 ENDIF
 *
 IF L_TipoMsgAguarde
    SetJanTipoMsgAguarde(VX_Janela,L_TipoMsgAguarde)
    SetProgressBar(VX_Janela,N_ProgressBar)
 ENDIF
-*
 
-NAP_LOG("INFORMAR BEFORE ATIVE()")
 Ative(VX_Janela)
-NAP_LOG("INFORMAR AFTER ATIVE()")
-*
 
 IF SOB_MODO_GRAFICO()
-    NAP_LOG("INFORMAR BEFORE NAP_CUALIB_LAUNCH_MODAL")
-    NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
+    NAP_WINDOW_MODAL(N_WindowNum)
     Destrua VX_Janela
 ELSE
     IF L_Parar .AND. N_Segundos == 0

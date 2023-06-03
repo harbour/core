@@ -8,11 +8,11 @@
 PROC EXEMPLO_ENTRADA_DADOS
 **************************
 LOCAL V_Janela
-*
+
 CUA20 @ 08,20,25,80 JANELA V_Janela ;
      TITULO "Escolha o tipo de janela" SUBTITULO "%T;entrada de dados";
      AJUDA "T?????"
-*
+
 ESPECIALIZE V_Janela MENU
 ADDOPCAO V_Janela TEXTO "entrada de dados (read-only)" ;
    ACAO TST_ENTRADA_DADOS_TODA_READ_ONLY() AJUDA "P06705"
@@ -42,37 +42,6 @@ ADDOPCAO V_Janela TEXTO "entrada de dados com 'campo' " ;
 */
 *
 ATIVE(V_Janela)
-*
-
-// STAT PROC TST_ENTRADA_DADOS_TODA_READ_ONLY()
-// RETURN
-
-// STAT PROC TST_ENTRADA_DADOS_COM_CAMPO_READ_ONLY()
-// RETURN
-
-// STAT PROC TST_ENTRADA_DADOS_COM_CONFIRMACOES()
-// RETURN
-
-// STAT PROC TST_ENTRADA_DADOS_DATA_INVALIDA()
-// RETURN
-
-// STAT PROC TST_ENTRADA_DADOS_FILTRO_TECLAS()
-// RETURN
-
-// STAT PROC TST_ENTRADA_DADOS_COM_ROLAMENTO()
-// RETURN
-
-// STAT PROC TST_ENTRADA_DADOS_CORES_MENSAGENS()
-// RETURN
-
-// STAT PROC TST_ENTRADA_DADOS_VALID()
-// RETURN
-
-// STAT PROC TST_ENTRADA_DADOS_LISTA_AUTO()
-// RETURN
-
-STAT PROC TST_ENTRADA_DADOS_PEDEJAN()
-RETURN
 
 
 ************************************************
@@ -98,7 +67,7 @@ DO WHILE L_Ok
    L_Ok := ATIVE(V_Janela)
 ENDDO
 DESTRUA V_Janela
-*
+
 *****************************************************
 STAT PROC TST_ENTRADA_DADOS_COM_CAMPO_READ_ONLY
 *****************************************************
@@ -368,37 +337,33 @@ ENDIF
 *
 RETURN C_Retorno
 *
-// **************************************
-// STAT PROC TST_ENTRADA_DADOS_PEDEJAN
-// **************************************
-// LOCAL L_Ok, V_Janela, V_Janela2
-// LOCAL C_Texto
 
-// L_OK := .F.
-// V_Janela := {}
-// V_Janela2:= {}
+**************************************
+STAT PROC TST_ENTRADA_DADOS_PEDEJAN
+**************************************
+LOCAL L_Ok, V_Janela, V_Janela2
+LOCAL C_Texto
 
-// V_Janela := DEFJAN()
+L_OK := .F.
+V_Janela := {}
+V_Janela2:= {}
 
-// @ MAXROW()-19,MAXCOL()-90,MAXROW()-3,MAXCOL()-9 JANELA V_Janela2 SUBTITULO "" ;
-//     TECLAS {"F9=Encerra texto"} EMBUTIDA V_Janela AJUDA "T?????"
+V_Janela := DEFJAN()
 
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    C_Texto := MEMOREAD("dados\textotes.txt")
-// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    C_Texto := MEMOREAD("/opt/cuadados/textotes.txt")
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-// ESPECIALIZE V_Janela2 TEXTO C_Texto LARGURA 55 TABULACAO 1 ;
-//     EDITA .T. TERMINAR {K_F9} SEMTOOLBAR
+@ MAXROW()-19,MAXCOL()-90,MAXROW()-3,MAXCOL()-9 JANELA V_Janela2 SUBTITULO "" ;
+    TECLAS {"F9=Encerra texto"} EMBUTIDA V_Janela AJUDA "T?????"
 
-// KEYBOARD CHR(K_ESC)
-// ATIVE(V_JANELA)
+C_Texto := MEMOREAD("../dados/textotes.txt")
+
+ESPECIALIZE V_Janela2 TEXTO C_Texto LARGURA 55 TABULACAO 1 ;
+    EDITA .T. TERMINAR {K_F9} SEMTOOLBAR
+
+//KEYBOARD CHR(K_ESC)
+//ATIVE(V_JANELA)
 // KEYBOARD CHR(K_HOME)+CHR(K_ESC)
-// ATIVE(V_JANELA2)
+ATIVE(V_JANELA2)
 
-// L_Ok := ATIVE(V_Janela)
+//L_Ok := ATIVE(V_Janela)
 // IF L_OK
 //     L_OK := ATIVE(V_Janela2)
 // 	DO WHILE LASTKEY() == K_F9
@@ -407,29 +372,37 @@ RETURN C_Retorno
 // 	   L_Ok := ATIVE(V_Janela)
 // 	ENDDO
 // ENDIF
+
 // DESTRUA V_Janela2
-// DESTRUA V_Janela
+DESTRUA V_Janela
 
-// **********************
-// STAT FUNC DEFJAN
-// **********************
-// LOCAl V_JAN:={}
-// LOCAL C_Campo1 := Space(40)
-// LOCAL C_Campo2 := Space(40)
+**********************
+STAT FUNC DEFJAN
+**********************
+LOCAl V_JAN:={}
+LOCAL C_Campo1 := Space(40)
+LOCAL C_Campo2 := Space(40)
 
-// @ 03,01,MAXROW()-1,MAXCOL()-1 JANELA V_JAN ;
-//    TITULO "Teste de entrada de dados" ;
-//    SUBTITULO "%T;PedeJan" ;
-//    TECLAS {"Esc=sair"} AJUDA "T?????"
+@ 03,01,MAXROW()-1,MAXCOL()-1 JANELA V_JAN ;
+   TITULO "Teste de entrada de dados" ;
+   SUBTITULO "%T;PedeJan" ;
+   TECLAS {"Esc=sair"} AJUDA "T?????"
 
-// ESPECIALIZE V_Jan ENTRADA EDITA .T.
-// *
-// @ V_Jan,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
-// @ V_Jan,01,02 SAY "Campo 2" GET C_Campo2 AJUDA "C?????"
-// @ V_Jan,07,02 SAY "Observacao"
+ESPECIALIZE V_Jan ENTRADA EDITA .T.
+*
+@ V_Jan,00,02 SAY "Campo 1" GET C_Campo1 AJUDA "C?????"
+@ V_Jan,01,02 SAY "Campo 2" GET C_Campo2 AJUDA "C?????"
+@ V_Jan,07,02 SAY "Observacao"
+
+RETURN V_JAN
 
 
-// RETURN V_JAN
+
+
+
+
+
+
 
 // /*
 // ***********************************

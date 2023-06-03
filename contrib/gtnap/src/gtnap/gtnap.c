@@ -2550,10 +2550,10 @@ uint32_t hb_gtnap_label_message(const uint32_t wid, const int32_t top, const int
     gtwin->message_label_id = i_add_label(top - gtwin->top, left - gtwin->left, in_scroll, gtwin, GTNAP_GLOBAL);
 
     /* TODO: Remove (just for debug) */
-    {
-        GtNapObject *obj = arrpt_last(gtwin->gui_objects, GtNapObject);
-        i_set_label_text(obj, "--MENS--");
-    }
+    //{
+    //    GtNapObject *obj = arrpt_last(gtwin->gui_objects, GtNapObject);
+    //    i_set_label_text(obj, "--MENS--");
+    //}
 
     return gtwin->message_label_id;
 }

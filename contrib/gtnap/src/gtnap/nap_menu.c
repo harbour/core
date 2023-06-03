@@ -239,7 +239,6 @@ static void i_OnUp(Panel *panel, Event *e)
     unref(e);
     if (menu->launch_sel == TRUE)
     {
-        log_printf("MenuVert i_OnUp before i_run_option");
         i_run_option(menu);
         menu->launch_sel = FALSE;
     }
@@ -355,7 +354,6 @@ static void i_OnSize(Panel *panel, Event *e)
 {
     MenuVert *menu = panel_get_data(panel, MenuVert);
     const EvSize *p = event_params(e, EvSize);
-    log_printf("MenuVert:i_OnSize() (%.2f, %.2f)", p->width, p->height);
     menu->control_width = (uint32_t)p->width;
     menu->control_height = (uint32_t)p->height;
     i_view_size(menu);

@@ -44,5 +44,4 @@
 #DEFINE N_IdProgressBar2 VX_Janela[48]
 #DEFINE N_ItemId VX_Janela[56]
 
-
 #endif

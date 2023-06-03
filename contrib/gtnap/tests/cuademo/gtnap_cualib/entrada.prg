@@ -720,7 +720,7 @@ IF SOB_MODO_GRAFICO()
     ENDIF  // L_PrimAtivacao
 
     // REFACTOR: TODO
-    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
+    X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
     NAP_LOG("ENTRADA RETORNO: " + hb_ntos(X_Retorno))
 
     // CLOSED BY ESC OR BY [X] Button
@@ -729,9 +729,11 @@ IF SOB_MODO_GRAFICO()
     // CLOSED BY LAST EDIT INPUT
     ELSEIF X_Retorno == 5000
         L_Aborta      :=  .F.
+    // BUTTONS IN JANELA --> Improve
     ELSE
-        NAP_LOG("ENTRADA UNEXPECTED RETORNO: " + hb_ntos(X_Retorno))
-        NAP_CRASH()
+        L_Aborta      :=  .T.
+        // NAP_LOG("ENTRADA UNEXPECTED RETORNO: " + hb_ntos(X_Retorno))
+        // NAP_CRASH()
     ENDIF
 
 ELSE  // .NOT. SOB_MODO_GRAFICO()

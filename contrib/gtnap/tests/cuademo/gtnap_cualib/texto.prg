@@ -165,7 +165,7 @@ IF SOB_MODO_GRAFICO()
         L_PrimAtivacao := .F.
     ENDIF
 
-    X_Retorno := NAP_CUALIB_LAUNCH_MODAL({||.T.}, {||.T.})
+    X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
     IF X_Retorno == NAP_MODAL_TEXT_CONFIRM
         L_FimOK := .T.
     ELSEIF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON
