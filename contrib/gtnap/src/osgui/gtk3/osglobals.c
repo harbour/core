@@ -742,10 +742,11 @@ static void i_parse_gtk_theme(void)
     /* a GtkCssProvider with the theme loaded. This memory is owned by GTK+, and you must not free it. */
     prov = gtk_css_provider_get_named(theme_name, NULL);
 
-    if (prov == NULL)
-        prov = gtk_css_provider_get_default();
+    if (prov != NULL)
+        css_data = gtk_css_provider_to_string(prov);
+    else
+        css_data = "";
 
-    css_data = gtk_css_provider_to_string(prov);
     pcss = css_data;
 
     for(;;)
@@ -811,6 +812,33 @@ static void i_parse_gtk_theme(void)
         {
             break;
         }
+    }
+
+    if (kCSS_TEXTVIEW == NULL)
+    {
+        if (kCSS_TEXTVIEWTEXT != NULL)
+        {
+            const char_t *t = tc(kCSS_TEXTVIEWTEXT);
+            while(*t != 0)
+            {
+                if (*t == ' ')
+                {
+                    kCSS_TEXTVIEW = str_cn(tc(kCSS_TEXTVIEWTEXT), (uint32_t)(t - tc(kCSS_TEXTVIEWTEXT)));
+                    break;
+                }
+
+                t++;
+            }
+        }
+    }
+
+    if (kCSS_TEXTVIEW == NULL)
+    {
+    #if GTK_CHECK_VERSION(3, 22, 0)
+        kCSS_TEXTVIEW = str_c("textview");
+    #else
+        kCSS_TEXTVIEW = str_c("GtkTextView");
+    #endif
     }
 
     if (kCSS_TEXTVIEWTEXT == NULL && kCSS_TEXTVIEW != NULL)

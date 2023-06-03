@@ -352,7 +352,7 @@ static GtkTextTag *i_tag_attribs(OSText *view)
 
 static void i_global_attribs(OSText *view)
 {
-    const char_t *csstype = osglobals_css_textview_text();
+    const char_t *csstype = osglobals_css_textview();
 
     if (view->fontcss != NULL)
     {
