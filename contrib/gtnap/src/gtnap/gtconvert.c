@@ -58,37 +58,6 @@ uint8_t gtconvert_UTF8_to_1252_char(const uint32_t cp)
     return UINT8_MAX;
 }
 
-// /*---------------------------------------------------------------------------*/
-
-// uint32_t gtconvert_1252_to_UTF8_char(const uint8_t cp)
-// {
-//     return (uint32_t)CP1252_UNICODE_TABLE[cp];
-// }
-
-/*---------------------------------------------------------------------------*/
-
-String *gtconvert_1252_to_UTF8(const char_t *str)
-{
-    uint32_t i, n = str_len_c(str);
-    uint32_t n2 = 0;
-    uint16_t *buf = heap_new_n(n + 1, uint16_t);
-    String *utf8 = NULL;
-    char_t *utf8_buf = NULL;
-
-    //log_printf("gtconvert_1252_to_UTF8; %s", str);
-
-    for (i = 0; i < n; ++i)
-        buf[i] = CP1252_UNICODE_TABLE[(uint8_t)str[i]];
-    buf[i] = 0;
-
-    n2 = unicode_convers_nbytes((const char_t*)buf, ekUTF16, ekUTF8);
-    utf8 = str_reserve(n2);
-    utf8_buf = tcc(utf8);
-    unicode_convers((const char_t*)buf, utf8_buf, ekUTF16, ekUTF8, str_len(utf8) + 1);
-    heap_delete_n(&buf, n + 1, uint16_t);
-    return utf8;
-}
-
 /*---------------------------------------------------------------------------*/
 
 String *gtconvert_UTF8_to_1252(const char_t *str)

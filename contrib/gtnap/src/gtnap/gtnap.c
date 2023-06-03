@@ -590,15 +590,6 @@ static GtNapWindow *i_parent_cuawin(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
-static GtNapObject *i_get_object(GtNap *gtnap, const uint32_t id)
-{
-    GtNapWindow *gtwin = i_current_gtwin(gtnap);
-    cassert_no_null(gtwin);
-    return arrpt_get(gtwin->gui_objects, id, GtNapObject);
-}
-
-/*---------------------------------------------------------------------------*/
-
 static GtNapObject *i_gtobj(GtNap *gtnap, const uint32_t wid, const uint32_t id)
 {
     GtNapWindow *gtwin = i_gtwin(gtnap, wid);
@@ -2215,6 +2206,15 @@ void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32_t cols
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_log(const char_t *text)
+{
+    String *str = i_cp_to_utf8_string(text);
+    log_printf("%s", tc(str));
+    str_destroy(&str);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnTerminalClose(GtNapWindow *gtwin, Event *e)
 {
     unref(gtwin);
@@ -2617,23 +2617,8 @@ static uint32_t i_add_label(const int32_t top, const int32_t left, const bool_t 
 {
     Label *label = label_create();
     S2Df size;
-
     cassert_no_null(gtnap);
     label_font(label, gtnap->global_font);
-
-    //if (str_empty_c(text) == FALSE)
-    //{
-    //    uint32_t len = str_len_c(text);
-    //    String *ctext = gtconvert_1252_to_UTF8(text);
-    //    label_text(label, tc(ctext));
-    //    size.width = (real32_t)(len * gtnap->cell_x_size);
-    //    str_destroy(&ctext);
-    //}
-    //else
-    //{
-    //    size.width = (real32_t)(1 * gtnap->cell_x_size);
-    //}
-
     size.width = (real32_t)(1 * gtnap->cell_x_size);
     size.height = (real32_t)gtnap->label_y_size;
     return i_add_object(ekOBJ_LABEL, top, left, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll, (GuiComponent*)label, gtwin);
@@ -3906,56 +3891,56 @@ void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id)
 
 /*---------------------------------------------------------------------------*/
 
-String *hb_gtnap_parstr(const uint32_t iParam)
+void hb_gtnap_toolbar(const uint32_t wid, const uint32_t image_pixels)
 {
-    /* TODO: Use Harbour code-page (not 1252 allways) */
-    if (!HB_ISNIL(iParam))
-    {
-        if (HB_ISCHAR(iParam))
-        {
-            const char_t *str = hb_parcx(iParam);
-            return gtconvert_1252_to_UTF8(str);
-        }
-        else
-        {
-            return str_c("Unknown text");
-        }
-    }
-
-    return str_c("");
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    cassert_no_null(gtwin);
+    cassert(gtwin->toolbar == NULL);
+    gtwin->toolbar = heap_new0(GtNapToolbar);
+    gtwin->toolbar->buttons = arrpt_create(Button);
+    gtwin->toolbar->pixels_image = image_pixels;
+    gtwin->toolbar->pixels_button = (uint32_t)((real32_t)image_pixels * 1.3f);
 }
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *hb_gtnap_parText(const uint32_t iParam)
+void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const char_t *tooltip)
 {
-    static char_t TEMP_TEXT[1024 + 1];
+    Image *image = NULL;
+    char_t utf8[STATIC_TEXT_SIZE];
+    i_cp_to_utf8(pathname, utf8, sizeof(utf8));
+    image = image_from_file(utf8, NULL);
 
-    if (HB_ISCHAR(iParam))
+    if (image != NULL)
     {
-        const char_t *str = hb_parcx(iParam);
-        HB_SIZE i = 0, j = 0, size = hb_parclen(iParam);
+        GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+        Button *button = button_flat();
+        cassert_no_null(gtwin);
+        cassert_no_null(gtwin->toolbar);
 
-        /* Avoid the Carriage Return (CR) character (NAppGUI doesn't like) */
-        for (; i < size && j < 1024; )
+        if (image_width(image) != gtwin->toolbar->pixels_image || image_height(image) != gtwin->toolbar->pixels_image)
         {
-            if (str[i] != 13)
-            {
-                TEMP_TEXT[j] = str[i];
-                i += 1;
-                j += 1;
-            }
-            else
-            {
-                i += 1;
-            }
+            Image *scaled = image_scale(image, gtwin->toolbar->pixels_image, gtwin->toolbar->pixels_image);
+            image_destroy(&image);
+            image = scaled;
         }
 
-        TEMP_TEXT[j] = '\0';
-        return TEMP_TEXT;
+        button_image(button, image);
+        i_cp_to_utf8(tooltip, utf8, sizeof(utf8));
+        button_tooltip(button, utf8);
+        arrpt_append(gtwin->toolbar->buttons, button, Button);
+        image_destroy(&image);
     }
+}
 
-    return "";
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_toolbar_separator(const uint32_t wid)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    cassert_no_null(gtwin);
+    cassert_no_null(gtwin->toolbar);
+    arrpt_append(gtwin->toolbar->buttons, NULL, Button);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3985,62 +3970,6 @@ void hb_gtnap_cualib_default_button(const uint32_t nDefault)
     cuawin->default_button = nDefault - 1;
 }
 
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_toolbar(const uint32_t nPixelsImage)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    cassert(cuawin->toolbar == NULL);
-    cuawin->toolbar = heap_new0(GtNapToolbar);
-    cuawin->toolbar->buttons = arrpt_create(Button);
-    cuawin->toolbar->pixels_image = nPixelsImage;
-    cuawin->toolbar->pixels_button = (uint32_t)((real32_t)nPixelsImage * 1.3f);
-    log_printf("Created toolbar with '%d' pixels button", nPixelsImage);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_toolbar_button(const char_t *pathname, const char_t *tooltip)
-{
-    Image *image = image_from_file(pathname, NULL);
-    if (image != NULL)
-    {
-        GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-        Button *button = button_flat();
-        String *text = gtconvert_1252_to_UTF8(tooltip);
-        cassert_no_null(cuawin);
-        cassert_no_null(cuawin->toolbar);
-
-        if (image_width(image) != cuawin->toolbar->pixels_image || image_height(image) != cuawin->toolbar->pixels_image)
-        {
-            Image *scaled = image_scale(image, cuawin->toolbar->pixels_image, cuawin->toolbar->pixels_image);
-            image_destroy(&image);
-            image = scaled;
-        }
-
-        button_image(button, image);
-        button_tooltip(button, tc(text));
-        arrpt_append(cuawin->toolbar->buttons, button, Button);
-        log_printf("Added toolbar button '%s' with tooltip '%s'", pathname, tc(text));
-        str_destroy(&text);
-        image_destroy(&image);
-    }
-    else
-    {
-        log_printf("Cannot load '%s' image", pathname);
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_toolbar_separator(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    cassert_no_null(cuawin->toolbar);
-    arrpt_append(cuawin->toolbar->buttons, NULL, Button);
-}
 
 /*---------------------------------------------------------------------------*/
 
@@ -4066,15 +3995,6 @@ uint32_t hb_gtnap_cualib_window_current_edit(void)
     arrpt_end();
     cassert(FALSE);
     return 0;
-}
-
-/*---------------------------------------------------------------------------*/
-
-Window *hb_gtnap_cualib_current_window(void)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    return cuawin->window;
 }
 
 /*---------------------------------------------------------------------------*/

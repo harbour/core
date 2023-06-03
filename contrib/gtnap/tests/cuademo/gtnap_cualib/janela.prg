@@ -922,7 +922,7 @@ ELSE
     N_PixelsBotao := 18
 ENDIF
 
-NAP_CUALIB_TOOLBAR(N_PixelsBotao)
+NAP_TOOLBAR(N_WindowNum, N_PixelsBotao)
 
 IF TEM_BOTAO(VX_Janela,{"Incluir","Alterar","Excluir","Consultar"})
     *
@@ -1133,8 +1133,7 @@ ENDIF
 
 *
 ********************************
-STAT PROC ADICIONA_BOTAO_TOOLBAR (VX_Janela,V_TOOLBAR_COD_BITMAP,;
-                                    C_TOOLBAR_TOOLTIP,B_TOOLBAR_BLOCO_ACAO, N_SEQUENCIA, L_MudaDados)
+STAT PROC ADICIONA_BOTAO_TOOLBAR (VX_Janela,V_TOOLBAR_COD_BITMAP,C_TOOLBAR_TOOLTIP,B_TOOLBAR_BLOCO_ACAO, N_SEQUENCIA, L_MudaDados)
 ********************************
 LOCAL N_TOOLBAR_COD_BITMAP
 LOCAL C_BASE_PATH := "../imgtbar/"
@@ -1197,18 +1196,7 @@ ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_SALVAR_DESAB
     C_ICON_PATHNAME := C_BASE_PATH + "salvar_i.bmp"
 ENDIF
 
-//NAP_LOG(C_ICON_PATHNAME + C_TOOLBAR_TOOLTIP)
-NAP_CUALIB_TOOLBAR_BUTTON(C_ICON_PATHNAME, C_TOOLBAR_TOOLTIP)
-
-//NAP_LOG("ADD TOOLBAR BUTTON: " + hb_ntos(N_ToolBarCodigoAcao) + ":" + C_TOOLBAR_TOOLTIP + ":" + hb_ntos(N_TOOLBAR_COD_BITMAP))
-
-//
-//  FRAN: TODO Adding button
-//
-*
-// WVW_TBAddButton(N_WindowNum,N_ToolBarCodigoAcao,N_TOOLBAR_COD_BITMAP,;
-//                 C_TOOLBAR_TOOLTIP,0,.T.)
-
+NAP_TOOLBAR_BUTTON(N_WindowNum, C_ICON_PATHNAME, C_TOOLBAR_TOOLTIP)
 
 *
 *
@@ -1217,23 +1205,7 @@ STAT PROC ADICIONA_SEPARADOR_AO_TOOLBAR (VX_Janela)
 ***************************************
 * Este número vai de 400 em diante, e é necessário ao Windows
 N_ToolBarCodigoAcao++
-*
-* A chamada no formato WVW_TBAddButton(N_WindowNum)
-* coloca uma vertical na ToolBar, para separar grupos
-* de botões. Mas visualmente é quase imperceptível.
-* Por isto se está adicionando um botão sem conteúdo, para servir de separador.
-* Desabilitá-lo, para que não mude a aparência ao cursor passar em cima.
-* Existe o "-1" porque o primeiro botão é o "0".
-*WVW_TBAddButton(N_WindowNum,N_ToolBarCodigoAcao,_BITMAP_ESPACOVAZIO,"",{||NIL})
-*WVW_TBEnableButton(N_WindowNum,WVW_TBButtonCount()-1,.F.)
-*
-* O separador padrão da WVW possui uma aparência melhor
-//
-// FRAN TODO
-//
-//NAP_LOG("ADD TOOLBAR SEPARATOR")
-//WVW_TBAddButton(N_WindowNum)
-NAP_CUALIB_TOOLBAR_SEPARATOR()
+NAP_TOOLBAR_SEPARATOR(N_WindowNum)
 *
 *******************
 STAT FUNC TEM_BOTAO(VX_Janela,VC_TeclasBusca, L_ChecaMudaDados, L_MudaDados)

@@ -60,9 +60,8 @@ HB_FUNC( NAP_INKEY )
 
 HB_FUNC( NAP_LOG )
 {
-    String *text = hb_gtnap_parstr(1);
-    log_printf("%s", tc(text));
-    str_destroy(&text);
+    const char_t *text = hb_parcx(1);
+    hb_gtnap_log(text);
 }
 
 /*---------------------------------------------------------------------------*/

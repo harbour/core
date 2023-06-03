@@ -16,6 +16,8 @@ HB_EXTERN_BEGIN
 
 extern void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32_t cols, HB_ITEM *begin_block);
 
+extern void hb_gtnap_log(const char_t *text);
+
 extern uint32_t hb_gtnap_width(void);
 
 extern uint32_t hb_gtnap_height(void);
@@ -112,6 +114,12 @@ extern void hb_gtnap_tableview_refresh_current(const uint32_t wid, const uint32_
 
 extern void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id);
 
+extern void hb_gtnap_toolbar(const uint32_t wid, const uint32_t image_pixels);
+
+extern void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const char_t *tooltip);
+
+extern void hb_gtnap_toolbar_separator(const uint32_t wid);
+
 /*
  * Fran TODO: Pending refactoring
  *
@@ -123,12 +131,6 @@ extern void hb_gtnap_cualib_window_f4_lista(void);
 extern uint32_t hb_gtnap_cualib_window_current_edit(void);
 
 extern void hb_gtnap_cualib_default_button(const uint32_t nDefault);
-
-extern void hb_gtnap_cualib_toolbar(const uint32_t nPixelsImage);
-
-extern void hb_gtnap_cualib_toolbar_button(const char_t *pathname, const char_t *tooltip);
-
-extern void hb_gtnap_cualib_toolbar_separator(void);
 
 HB_EXTERN_END
 

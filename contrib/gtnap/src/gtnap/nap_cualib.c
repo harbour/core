@@ -36,28 +36,3 @@ HB_FUNC( NAP_CUALIB_DEFAULT_BUTTON )
     hb_gtnap_cualib_default_button(nDef);
 }
 
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_CUALIB_TOOLBAR )
-{
-    uint32_t nPixelsImage = hb_parni(1);
-    hb_gtnap_cualib_toolbar(nPixelsImage);
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_CUALIB_TOOLBAR_BUTTON )
-{
-    String *pathname = str_c(hb_gtnap_parText(1));
-    String *tooltip = str_c(hb_gtnap_parText(2));
-    hb_gtnap_cualib_toolbar_button(tc(pathname), tc(tooltip));
-    str_destroy(&pathname);
-    str_destroy(&tooltip);
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_CUALIB_TOOLBAR_SEPARATOR )
-{
-    hb_gtnap_cualib_toolbar_separator();
-}
