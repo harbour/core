@@ -2224,6 +2224,22 @@ static void i_OnTerminalClose(GtNapWindow *gtwin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+uint32_t hb_gtnap_width(void)
+{
+    cassert_no_null(GTNAP_GLOBAL);
+    return GTNAP_GLOBAL->cell_x_size * GTNAP_GLOBAL->cols;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_height(void)
+{
+    cassert_no_null(GTNAP_GLOBAL);
+    return GTNAP_GLOBAL->cell_y_size * GTNAP_GLOBAL->rows;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_terminal(void)
 {
     GtNap *gtnap = GTNAP_GLOBAL;

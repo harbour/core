@@ -19,6 +19,22 @@ HB_FUNC( NAP_INIT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_WIDTH )
+{
+    uint32_t width = hb_gtnap_width();
+    hb_retni(width);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_HEIGHT )
+{
+    uint32_t height = hb_gtnap_height();
+    hb_retni(height);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TERMINAL )
 {
     hb_gtnap_terminal();

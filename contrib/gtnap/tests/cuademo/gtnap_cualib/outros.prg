@@ -1027,40 +1027,17 @@ RETURN N_OPCAO
 //    *
 
 ************************
-FUNC TelaPrincipalHeight // Altura APROXIMADO, em pixels, da tela principal
+FUNC TelaPrincipalHeight    // Altura APROXIMADO, em pixels, da tela principal
 ************************
-* Proporção entre a quantidade máxima de linhas que caberia e a efetivamente usada
-LOCAL N_TelaPrincipalHeight := 1000
-// LOCAL N_Proporcao := MAXROW() / WVW_MAXMAXROW()
-// LOCAL N_TelaPrincipalHeight := INT(WVW_GetScreenHeight() * N_Proporcao) ;
-//                                 - 21  // quantidade aproximada de pixels do título da janela
-*
-// ALERT("H "+STR(MAXROW())+" "+STR(WVW_MAXMAXROW())+" "+STR(WVW_GetScreenHeight())+";;;;")
-// ALERT("H "+STR(N_TelaPrincipalHeight)+";;;;")
-
+LOCAL N_TelaPrincipalHeight := NAP_HEIGHT()
 RETURN N_TelaPrincipalHeight
 
-   ***********************
-   FUNC TelaPrincipalWidth // Largura APROXIMADA, em pixels, da tela principal
-    ***********************
-    LOCAL N_TelaPrincipalWidth := 1000
+***********************
+FUNC TelaPrincipalWidth     // Largura APROXIMADA, em pixels, da tela principal
+***********************
+LOCAL N_TelaPrincipalWidth := NAP_WIDTH()
+RETURN N_TelaPrincipalWidth
 
-    // * Proporção entre a quantidade máxima de colunas que caberia e a efetivamente usada
-    // LOCAL N_Proporcao := MAXCOL() / WVW_MAXMAXCOL()
-    // LOCAL N_TelaPrincipalWidth := INT(WVW_GetScreenWidth() * N_Proporcao)
-    // *
-    // // ALERT("W "+STR(MAXCOL())+" "+STR(WVW_MAXMAXCOL())+" "+STR(WVW_GetScreenWidth())+";;;;")
-    // // ALERT("W "+STR(N_TelaPrincipalWidth)+";;;;")
-    *
-    RETURN N_TelaPrincipalWidth
-    *
-    ****************
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-// #endif
-// *
 ***************************
 FUNCTION GETCLIPBOARD_ASPEC
 ***************************

@@ -23,6 +23,7 @@ STATIC V_PilhaJanelas := {}
 #INCLUDE "recursos.ch"
 #INCLUDE "mousecua.ch"
 #INCLUDE "cua.ch"
+#INCLUDE "gtnap.ch"
 *
 ********************
 FUNCTION CriarJanela ( N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec, ;
@@ -34,10 +35,12 @@ LOCAL N_Lin1Livre, N_Col1Livre, N_Lin2Livre, N_Col2Livre
 LOCAL VC_Titulo, C_CorInten
 LOCAL L_DesenhaBox, N_MargemSuperior, N_MargemDemais
 LOCAL L_Embutida := (V_Janela_Pai # NIL)
-LOCAL L_MainCoord_Atu
+LOCAL L_MainCoord_Atu := .F.
 LOCAL V_RegiaoBotoes := {}, N_CT
 LOCAL B_Metodo
 LOCAL V_Janela := NIL
+LOCAL B_BotAcao := IIF(SOB_MODO_GRAFICO(),{||.T.},{||NIL})
+LOCAL L_BotAutoClose := SOB_MODO_GRAFICO()
 *
 DEFAULT C_Cabec       TO ""
 DEFAULT VC_TxtBotoes_10  TO {}
@@ -60,7 +63,6 @@ LOGAINFO_ID_TELA_RELAT_BOTAO("tela",C_CDTELA,NIL,NIL)   // Log de uso de tela no
 
 IF L_CUA_10
    FOR N_CT := 1 TO LEN(VC_TxtBotoes_10)
-    IF SOB_MODO_GRAFICO()
         AADD(V_RegiaoBotoes,{;
         NIL,;                     // _BOTAO_LIN_INICIAL
         NIL,;                     // _BOTAO_COL_INICIAL
@@ -71,8 +73,8 @@ IF L_CUA_10
         NIL,;                     // _BOTAO_TEXTO_TRATADO_2
         NIL,;                     // _BOTAO_COL_DESTAQUE
         NIL,;                     // _BOTAO_TEXTO_DESTAQUE
-        {||.T.},;                 // _BOTAO_BLOCO_ACAO   // FRAN ADVERTE() INFORMAR() BUTTONS MUST CLOSE THE WINDOW AT CLICK
-        .T.,;                     // _BOTAO_AUTOCLOSE    // FRAN ADVERTE() INFORMAR() BUTTONS MUST CLOSE THE WINDOW AT CLICK
+        B_BotAcao,;               // _BOTAO_BLOCO_ACAO
+        L_BotAutoClose,;          // _BOTAO_AUTOCLOSE
         NIL,;                     // _BOTAO_CDBOTAO
         NIL,;                     // _BOTAO_ALIAS_MUDA
         NIL,;                     // _BOTAO_RECNO_MUDA
@@ -84,30 +86,6 @@ IF L_CUA_10
         NIL,;                     // _BOTAO_INKEY_DESTAQUE_CASE
         NIL,;                     // _BOTAO_HANDLE_PUSHBUTTON
         NIL})                     // _BOTAO_MUDADADOS
-ELSE
-       AADD(V_RegiaoBotoes,{NIL,;                     // _BOTAO_LIN_INICIAL
-                            NIL,;                     // _BOTAO_COL_INICIAL
-                            NIL,;                     // _BOTAO_LIN_FINAL
-                            NIL,;                     // _BOTAO_COL_FINAL
-                            VC_TxtBotoes_10[N_CT],;   // _BOTAO_TEXTO_COMANDO
-                            NIL,;                     // _BOTAO_TEXTO_TRATADO_1
-                            NIL,;                     // _BOTAO_TEXTO_TRATADO_2
-                            NIL,;                     // _BOTAO_COL_DESTAQUE
-                            NIL,;                     // _BOTAO_TEXTO_DESTAQUE
-                            {||NIL},;                 // _BOTAO_BLOCO_ACAO
-                            .F.,;                     // _BOTAO_AUTOCLOSE
-                            NIL,;                     // _BOTAO_CDBOTAO
-                            NIL,;                     // _BOTAO_ALIAS_MUDA
-                            NIL,;                     // _BOTAO_RECNO_MUDA
-                            NIL,;                     // _BOTAO_FILTER_MUDA
-                            NIL,;                     // _BOTAO_ORDER_MUDA
-                            NIL,;                     // _BOTAO_EOFOK
-                            NIL,;                     // _BOTAO_HANDLE_MUDA
-                            NIL,;                     // _BOTAO_INKEY_DESTAQUE
-                            NIL,;                     // _BOTAO_INKEY_DESTAQUE_CASE
-                            NIL,;                     // _BOTAO_HANDLE_PUSHBUTTON
-                            NIL})                     // _BOTAO_MUDADADOS
-    ENDIF
    NEXT
 ELSE
    IF LEN(VC_TxtBotoes_10) # 0
@@ -116,41 +94,8 @@ ELSE
 ENDIF
 *
 
-// Fran Review N_EspacamentoEmPixels
-IF SOB_MODO_GRAFICO()
-    DEFAULT N_EspacamentoEmPixels TO 0
-ELSE
-    DEFAULT N_EspacamentoEmPixels TO 4   // só usado na GTWVW
-ENDIF
-IF N_EspacamentoEmPixels # 0 .AND. ;    // controles já devidamente adaptados
-   N_EspacamentoEmPixels # 4            // para estes 2 espaçamentos
-   ? MEMVAR->ESPACAMENTO_INVALIDO
-ENDIF
-*
-IF N_EspacamentoEmPixels # 4
-   IF N_LinIni # 0 .OR. ;
-      N_ColIni # 0 .OR. ;
-      N_LinFin # MAXROW()
-      * A chamada da WVW_AddRows() supõe que toda a área vertical
-      * da tela está sendo utilizada, senão as linhas adicionadas
-      * poderiam ficar "debaixo" da taskbar do windows.
-      *
-      * A coluna inicial também tem de ser zero, senão dá problema
-      * no refresh da tela. A coluna final não precisa ser MAXCOL().
-      //? MEMVAR->ESPACAMENTO_OPCIONAL_USA_SEMPRE_LIMITES_MAXIMOS
-   ENDIF
-ENDIF
-*
 DEFAULT N_DeslocaCabecalho TO 0
-*
-* A tela inicial do sistema possui tamanho 35rows/110cols. Caso se especifique
-* o espaçamento 0, cabe mais linhas na tela. Mas as rotinas internas da
-* GTWVW somente imprimem além do MAXROW() (que é sempre a da janela inicial
-* do sistema) se o MainCoord for .F.
-* Desta forma, é necessário salvar este status de cada janela.
-*
-L_MainCoord_Atu := (N_EspacamentoEmPixels # 0)
-*
+
 IF ";" $ C_CABEC
    IF SOB_MODO_GRAFICO()
       ALARME("M28746","TITULO com mais de uma linha")
@@ -651,8 +596,6 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
 
         C_TelaCoberta := ""
 
-        // Fran: Only not embutida (main) windows will be activated
-        // The embutida windows will be considered as child windows in main one
         IF .NOT. L_Embutida
 
             IF LEN(V_PilhaJanelas)==0
@@ -731,13 +674,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
 
             AADD(V_PilhaJanelas,{N_WindowNum,VX_Janela})
 
-            IF L_ComEmbutidas
-                NAP_LOG("----- ATIVE: Has Embutidas!!!!!!")
-            ELSE
-                NAP_LOG("----- ATIVE: NO Embutidas")
-            ENDIF
-
-        ELSE
+        ELSE // L_Embutida
             N_PaiWindowNum := V_PilhaJanelas[LEN(V_PilhaJanelas)][1]
             N_WindowNum := NAP_EMBEDDED_WINDOW(N_PaiWindowNum, N_LinIni, N_ColIni, N_LinFin, N_ColFin)
 
@@ -782,8 +719,10 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
         ENDIF
     ENDIF
 
-    * Adding Toolbar
-    IF SOB_MODO_GRAFICO() .AND. L_CriarToolBar
+    *
+    * Adding Toolbar (only in main (not embutida) windows)
+    *
+    IF SOB_MODO_GRAFICO() .AND. L_CriarToolBar .AND. .NOT. L_Embutida
 
         L_AcrescentarSeparadorSubtitulo := .T.
         IF N_TP_Jan == _JAN_SELE_ARQ_20
@@ -815,7 +754,9 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
 
     ENDIF   // SOB_MODO_GRAFICO() .AND. L_CriarToolBar
 
+    *
     * Adding Buttons
+    *
     IF SOB_MODO_GRAFICO()
         FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
             ADICIONA_BOTAO_PUSH(VX_Janela,N_Cont)
@@ -838,7 +779,9 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
 
     ENDIF   // SOB_MODO_GRAFICO() Buttons
 
+    *
     * Adding Images
+    *
     IF SOB_MODO_GRAFICO()
         FOR N_Cont := 1 TO LEN(V_LstImagens)
 
@@ -869,7 +812,7 @@ ENDIF
  ENDIF
  *
  IF .NOT. L_CUA_10
-    DestruaJan(VX_Janela,.T.)  // Na CUA 2.0, a janela sempre fecha após ativação
+    DestruaJan(VX_Janela,.T.)           // Na CUA 2.0, a janela sempre fecha após ativação
  ELSE
 
  ENDIF
@@ -895,7 +838,6 @@ PROC AJUSTA_BOTOES(VX_Janela)
 LOCAL N_Cont
 * não imprime nada, só retorna as teclas devidamente formatadas
 *
-//NAP_LOG("AJUSTA_BOTOES!!!!!")
 IF N_LinBotoes # NIL
    ? MEMVAR->AJUSTA_BOTOES_SO_PODE_SER_CHAMADA_UMA_VEZ
 ENDIF
@@ -922,40 +864,18 @@ FOR N_Cont := 1 TO LEN(V_RegiaoBotoes)
    ENDIF
 NEXT
 *
-IF SOB_MODO_GRAFICO() .AND. N_LinBotoes > 1 .AND. N_EspacamentoEmPixels == 0
-    NAP_LOG("MEMVAR->SOBREPOSICAO_DE_BOTOES AJUSTA_BOTOES!!!!!")
 
-   * Com espaçamento 0, somente é possível ter uma única "fileira" de botões,
-   * senão ocorrerá sobreposição das bordas.
-   //? MEMVAR->SOBREPOSICAO_DE_BOTOES
-ENDIF
-*
 **************************
 PROC SETA_PARA_TER_TOOLBAR (VX_Janela)
 **************************
 IF L_CriarToolBar
    ? MEMVAR->CONFIGURACAO_PARA_TER_TOOLBAR_JA_FEITA
 ENDIF
+
 L_CriarToolBar := .T.
-*
+
 IF SOB_MODO_GRAFICO()
-   * O Windows posiciona a "ToolBar" "acima" da coordenada
-   * da janela já criada.
-   *
-   * Para que a ToolBar inicie "mais ou menos" (tamanho da ToolBar
-   * não é sempre proporcional) no local definido pelo programador
-   * na criação da janela, baixar a tela em uma linha.
-   *
-   * 2 linhas deslocadas da linha inicial, para dar espaço à ToolBar
-
-   //
-   //  FRAN: The toolbar extra height will be managed by GTNAP
-   //  It's not a real equivalence between lines and toolbar buttons
-   //
-
-//    LOG_PRINT("JAJAJA! TOOLBAR")
-//    N_LinIni++
-//    N_LinIni++
+    * GTNAP nothing to do here
 ELSE
    * O modo texto não tem ToolBar, mas o cabeçalho será acrescentado
    * uma linha em branco(no topo), de forma que o programador,
@@ -966,16 +886,14 @@ ELSE
    AINS(VC_Titulo,1)
    VC_Titulo[1] := ""
 ENDIF
+
 N_Lin1Livre++
-*
-*
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+
 
 ************************
 STAT PROC ADDGUI_TOOLBAR(VX_Janela)
 ************************
 LOCAL L_PermiteEdicao
-//LOCAL hWndToolBar
 LOCAL L_TOOLBAR_AINDA_SEM_BOTOES := .T.
 LOCAL N_TelaHeight := TelaPrincipalHeight()
 LOCAL N_PixelsBotao
@@ -1003,22 +921,7 @@ ELSEIF N_TelaHeight >= 600
 ELSE
     N_PixelsBotao := 18
 ENDIF
-*
-* A criação da toolbar caso for .T. se não apresenta mensagem.
-* No Xharbour e no Harbour 3.2.0 (GCC 6.3.0), a WVW_TBCREATE() retorna um número.
-* O retorno podia ser testado.
-*  IF ( hWndToolBar := WVW_TBCREATE( N_WindowNum, .F., NIL, 0, N_PixelsBotao, N_PixelsBotao ) ) == 0
-*     ALARME("M28028","Falha ao criar a 'ToolBar'")
-*    ? MEMVAR->TOOLBAR_NAO_CRIADA
-*  ENDIF
-* Mas, no Harbour 3.2.0 (GCC 10.1.0), a WVW_TBCREATE() retorna um ponteiro.
-* O retorno não mais será testado, portanto.
-//
-// FRAN: TODO Create a toolbar in GTNAP
-//
-//hWndToolBar := WVW_TBCREATE( N_WindowNum, .F., NIL, 0, N_PixelsBotao, N_PixelsBotao )
-*
-//NAP_LOG("CREATE TOOLBAR!!!!")
+
 NAP_CUALIB_TOOLBAR(N_PixelsBotao)
 
 IF TEM_BOTAO(VX_Janela,{"Incluir","Alterar","Excluir","Consultar"})
@@ -1741,9 +1644,6 @@ RETURN N_RegiaoMouse
 *
 
 
-
-
-
 ***************
 FUNC _Pega_Cor_ ( C_CorCompleta, N_Indice, L_Frente )
 *
@@ -2072,12 +1972,9 @@ RETURN L_EXIBE_AJUDA
 // NEXT
 // SETCOLOR(C_Cor_Aux)
 // *
-// ********************
-// FUNC GetPilhaJanelas
-// ********************
-// RETURN V_PilhaJanelas     // rotina chamadora nï¿½o pode alterar este vetor...
-// *
-// ******************
+
+
+******************
 FUNC GetCdTelaTopo
 ******************
 LOCAL C_CdTelaTopo := SPACE(06)   // Tnnnnn
@@ -2123,11 +2020,21 @@ IF SOB_MODO_GRAFICO()
 
     X_Retorno_Eval := NAP_WINDOW_MODAL(N_WindowNum)
 
-    IF X_Retorno_Eval == 1000
+    IF X_Retorno_Eval == NAP_MODAL_ESC
+        L_FechouComAutoClose = .F.
+    ELSEIF X_Retorno_Eval == NAP_MODAL_X_BUTTON
+        L_FechouComAutoClose = .F.
+    ELSEIF X_Retorno_Eval > NAP_MODAL_BUTTON_AUTOCLOSE .AND. X_Retorno_Eval <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
         L_FechouComAutoClose = .T.
+    ELSEIF X_Retorno_Eval > NAP_MODAL_HOTKEY_AUTOCLOSE .AND. X_Retorno_Eval <= NAP_MODAL_HOTKEY_AUTOCLOSE + NAP_MAX_VKEY
+        L_FechouComAutoClose = .T.
+    ELSEIF X_Retorno_Eval > NAP_MODAL_IMAGE_AUTOCLOSE .AND. X_Retorno_Eval <= NAP_MODAL_IMAGE_AUTOCLOSE + NAP_MAX_IMAGES
+        L_FechouComAutoClose = .T.
+    ELSE
+        Alert( "Invalid X_Retorno_Eval (" + hb_ntos(X_Retorno_Eval) + ") in TrataEventos")
     ENDIF
 
-ELSE
+ELSE // .NOT. SOB_MODO_GRAFICO()
 
 //
 // FRAN: Manual event management ONLY in TEXT terminal versions
@@ -2155,12 +2062,6 @@ DO WHILE L_Mais
            // #INCLUDE "mousecua.ch"
            IF (N_RegiaoMouse == BOTAO_IDENTIFICADO .OR. ;  // N_Keyboard preenchido
                N_RegiaoMouse == BOTAO_NAO_IDENTIFICADO)    // N_Keyboard não preenchido
-                //
-                // Fran: Only TEXT terminal version enter here
-                //
-                //   IF SOB_MODO_GRAFICO()
-                //      ? MEMVAR->MODO_GRAFICO_NAO_USA_ESTE_TRECHO_DE_CODIGO
-                //   ENDIF
 
               X_Retorno_Eval := EVAL(V_Botao[_BOTAO_BLOCO_ACAO])
               *
@@ -2182,18 +2083,6 @@ DO WHILE L_Mais
               ENDIF
            ELSEIF N_RegiaoMouse == SOBRE_IMAGEM
               *
-            //
-            // Fran: Only TEXT terminal version enter here
-            //
-            //   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-            //      IF SOB_MODO_GRAFICO()
-            //         WVW_SetPaintRefresh(N_PaintRefresh_Old)
-            //      ENDIF
-            //   #elif defined(__PLATFORM__LINUX)
-            //      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-            //   #else
-            //     #erro "Código não adaptado para esta plataforma"
-            //   #endif
 
               X_Retorno_Eval := EVAL(V_Imagem[_IMAGEM_BLOCO_ACAO])
 
@@ -2203,19 +2092,6 @@ DO WHILE L_Mais
                                               C_CdTela,"Imagem "+V_Imagem[_IMAGEM_ARQUIVO])   // Log de uso de imagem no sistema
               ENDIF
 
-            //
-            // Fran: Only TEXT terminal version enter here
-            //
-            //   #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-            //      IF SOB_MODO_GRAFICO()
-            //         WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-            //      ENDIF
-            //   #elif defined(__PLATFORM__LINUX)
-            //      // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-            //   #else
-            //     #erro "Código não adaptado para esta plataforma"
-            //   #endif
-              *
               IF V_Imagem[_IMAGEM_AUTOCLOSE]
                  DEFAULT X_Retorno_Eval TO .F. // não fechar janela de menu
                  IF .NOT. VALTYPE(X_Retorno_Eval)=="L" // tem de ser lógico
@@ -2239,34 +2115,7 @@ DO WHILE L_Mais
                                   V_Acao[_ACAO_KEYBOARD_CASE]==N_Tecla})
               IF N_Pos_Acao # 0
 
-                //
-                // Fran: Only TEXT terminal version enter here
-                //
-                //  #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                //     IF SOB_MODO_GRAFICO()
-                //        WVW_SetPaintRefresh(N_PaintRefresh_Old)
-                //     ENDIF
-                //  #elif defined(__PLATFORM__LINUX)
-                //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                //  #else
-                //     #erro "Código não adaptado para esta plataforma"
-                //  #endif
-
                  X_Retorno_Eval := EVAL(V_LstAcoes[N_Pos_Acao,_ACAO_BLOCO_ACAO])
-
-                //
-                // Fran: Only TEXT terminal version enter here
-                //
-                //  #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-                //     IF SOB_MODO_GRAFICO()
-                //        WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-                //     ENDIF
-                //  #elif defined(__PLATFORM__LINUX)
-                //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-                //  #else
-                //     #erro "Código não adaptado para esta plataforma"
-                //  #endif
-
                  *
                  IF V_LstAcoes[N_Pos_Acao,_ACAO_AUTOCLOSE]
                     DEFAULT X_Retorno_Eval TO .F. // não fechar janela de menu
@@ -2284,24 +2133,10 @@ DO WHILE L_Mais
    *
 ENDDO
 *
-//
-// Fran: Only TEXT terminal version enter here
-//
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    IF SOB_MODO_GRAFICO()
-//       WVW_SetPaintRefresh(N_PaintRefresh_Old)
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-// #erro "Código não adaptado para esta plataforma"
-// #endif
-*
 
 ENDIF  //  SOB_MODO_GRAFICO()
 
 RETURN L_FechouComAutoClose
-
 
 ***************************
 STATIC PROC DesenhaDrawLabe(VX_Janela)
@@ -2364,13 +2199,9 @@ N_BotId := NAP_BUTTON(;
 
 // FRAN: _JAN_MENU_VERT doen't have V_LstAcoes
 IF N_TP_Jan == _JAN_MENU_VERT
-// FRAN: Button HotKey
-// FRAN: The hotkeys are mapped via V_LstAcoes
-IF N_KeyBoard # NIL
-    NAP_LOG("BUTTON KEYBOARD " + hb_ntos(N_Keyboard))
-    NAP_WINDOW_HOTKEY(N_WindowNum, N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
-ENDIF
-
+    IF N_KeyBoard # NIL
+        NAP_WINDOW_HOTKEY(N_WindowNum, N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
+    ENDIF
 ENDIF
 
 INABILITA_BOTAO_PUSH(VX_Janela, N_PosBotao)
@@ -2378,128 +2209,11 @@ INABILITA_BOTAO_PUSH(VX_Janela, N_PosBotao)
 RETURN NIL
 *
 
-//
-// FRAN: TODO
-//
+****************************
 STAT PROC EXIBEVIDEO(C_TIPO,C_ARQUIVO,C_TITULO)
-    RETURN
-// *************************
-// STAT PROC EXIBEVIDEO(C_TIPO,C_ARQUIVO,C_TITULO)
-// *************************
-// LOCAL N_HANDLE
-// DEFAULT C_TIPO TO "V"
-// *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    EXISTENCIA_EXE("EXIBIRTF",GS_EXTENSAO_EXE(),,.F.)
-//    N_HANDLE := HB_processOpen(DIREXE()+"exibirtf."+GS_EXTENSAO_EXE()+" "+C_TIPO+" "+C_ARQUIVO+" "+C_TITULO)
-//    IF N_HANDLE < 0
-//       ALARME("M28320","Nï¿½o foi possï¿½vel exibir a Video Aula!")
-//    ENDIF
-// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)  // PENDENTE_LINUX
-//    // ? MEMVAR->NAO_ADAPTADO_PARA_LINUX
-// #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-// #endif
-// INKEYX(2)
-// *
-// *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    *********************
-//    PROC CRIA_PROGRESSBAR(VX_Janela)
-//    *********************
-//    LOCAL N_COMPRIMENTO
-//    *
-//    IF N_ProgressBar == 2
-//       N_IdProgressBar1 := WVW_PGCreate(N_WindowNum,N_Lin2Livre+4,N_Col1Livre,N_Lin2Livre+4,N_Col2Livre,,,rgb(112,112,250),.T.,.F.)
-//       //@ N_Lin2Livre+5,N_Col1Livre+1 SAY "Tabela(s) a processar"
-//       IF N_IdProgressBar1 == 0
-//          ALARME("M28546","Falha ao criar a 'ProgressBar1'")
-//          ? MEMVAR->ProgressBar1_NAO_CRIADA
-//       ENDIF
-//       *
-//       N_IdProgressBar2 := WVW_PGCreate(N_WindowNum,N_Lin2Livre+2,N_Col1Livre,N_Lin2Livre+2,N_Col2Livre,,,rgb(112,112,250),.T.,.F.)
-//       //@ N_Lin2Livre+3,N_Col1Livre+1 SAY "Processo atual"
-//       IF N_IdProgressBar2 == 0
-//          ALARME("M28548","Falha ao criar a 'ProgressBar2'")
-//          ? MEMVAR->ProgressBar2_NAO_CRIADA
-//       ENDIF
-//    ELSEIF N_ProgressBar == 1
-//       N_IdProgressBar1 := WVW_PGCreate(N_WindowNum,N_Lin2Livre+2,N_Col1Livre,N_Lin2Livre+2,N_Col2Livre,,,rgb(112,112,250),.T.,.F.)
-//       //@ N_Lin2Livre+3,N_Col1Livre+1 SAY "Registro(s) processado(s)"
-//       IF N_IdProgressBar1 == 0
-//          ALARME("M28550","Falha ao criar a 'ProgressBar1'")
-//          ? MEMVAR->ProgressBar1_NAO_CRIADA
-//       ENDIF
-//    ENDIF
-//    *
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-// #endif
-// *
-// *
-// **************************
-// PROC ANDAMENTO_PROGRESSBAR(VX_Janela, N_ContPosPG1, N_TotalPG1, N_ContPosPG2, N_TotalPG2,C_MENSAGEMBAR_1,C_MENSAGEMBAR_2)
-// **************************
-// LOCAL N_POS1, N_POS2
-// LOCAL C_NOVO_SUBTITULO
-// LOCAL N_OLD_VALOR_55  := GetProgressBar( VX_Janela )
-// *
-// DEFAULT C_MENSAGEMBAR_1 TO "Total a processar"
-// DEFAULT C_MENSAGEMBAR_2 TO "Processo atual"
-// DEFAULT N_TotalPG1      TO 1    /// Pra evitar error divisao por ZERO
-// DEFAULT N_TotalPG2      TO 1
-// *
-//    N_POS1 := INT((N_ContPosPG1/N_TotalPG1) * 100)
-// *
-// IF SOB_MODO_GRAFICO()
-//    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//       WVW_PGSetPos(N_WindowNum, N_IdProgressBar1, N_POS1)                             /// Desenha o Andamento da Barra modo grafico
-//       @ N_Lin2Livre+IF(VX_Janela[55]>1,5,3),N_Col1Livre    SAY PADR(C_MENSAGEMBAR_1, 47, " ")
-//       @ N_Lin2Livre+IF(VX_Janela[55]>1,5,3),N_Col1Livre+46 SAY STR(N_POS1) + "%"
-//    #elif defined(__PLATFORM__LINUX)
-//       // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//    #else
-//       #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//    #endif
-// ELSE
-//    #IFDEF _TESTE
-//       IF (LEN( VX_Janela[8] ) < 8)    /// ï¿½ progressBar do tipo texto a pos 8 da janela, tem que ser um vetor de 8 elementos!!!
-//          ? MEMVAR->JANELA_NAO_EH_PROGRESSBAR
-//       ENDIF
-//    #ENDIF
-//    VX_Janela[8,IF(VX_Janela[55]>1, 6, 4)] := "["+PADR(REPLICATE(CHR(219),N_POS1/2),49,CHR(176))+"]"       /// Seta o Andamento da Barra modo texto
-//    VX_Janela[8,IF(VX_Janela[55]>1, 7, 5)] := PADR( C_MENSAGEMBAR_1, 46, " " ) + " " + STR(N_POS1,3) + "%"
-// ENDIF
-// *
-// IF VX_Janela[55] > 1                                                                  /// Testa se ï¿½ ProgressBar e se tem 2 barras
-//    N_POS2 := INT((N_ContPosPG2/N_TotalPG2) * 100)
-//    *
-//    IF SOB_MODO_GRAFICO()
-//       #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//          WVW_PGSetPos(N_WindowNum, N_IdProgressBar2, N_POS2)                            /// Desenha o Andamento da Barra modo grafico
-//          @ N_Lin2Livre+3,N_Col1Livre    SAY PADR(C_MENSAGEMBAR_2, 47, " ")
-//          @ N_Lin2Livre+3,N_Col1Livre+46 SAY STR(N_POS2) + "%"
-//       #elif defined(__PLATFORM__LINUX)
-//          // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//       #else
-//          #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//       #endif
-//    ELSE
-//       VX_Janela[8,3] := "["+PADR(REPLICATE(CHR(219),N_POS2/2),49,CHR(176))+"]"       /// Seta o Andamento da Barra modo texto
-//       VX_Janela[8,4] := PADR( C_MENSAGEMBAR_2, 46, " " ) + " " + STR(N_POS2,3) + "%"
-//    ENDIF
-// ENDIF
-// *
-// IF ! SOB_MODO_GRAFICO()
-//    VX_Janela[55] := 0    /// So para garantir que o MudeSubtitulo manipule a Janela ProgressBar
-//    C_NOVO_SUBTITULO := VX_Janela[8,1]+";"+VX_Janela[8,2]+";"+VX_Janela[8,3]+";"+VX_Janela[8,4]+";"+VX_Janela[8,5]+;
-//                                        ";"+VX_Janela[8,6]+";"+VX_Janela[8,7]+";"+VX_Janela[8,8]
-//    MUDE SUBTITULO VX_Janela PARA C_NOVO_SUBTITULO     /// Andamento da(s) Barra(s) em modo texto.
-//    VX_Janela[55] := N_OLD_VALOR_55
-// ENDIF
-*
+****************************
+RETURN
+
 ****************************
 STATIC FUNC INABILITA_IMAGEM(L_MUDADADOS)
 ****************************
@@ -2514,10 +2228,8 @@ IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
 ENDIF
 *
 RETURN L_RET
-// *
-// *
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    ********************************
+
+********************************
 STATIC PROC INABILITA_BOTAO_PUSH(VX_Janela, N_PosBotao)
 ********************************
 LOCAL L_MUDADADOS
@@ -2564,14 +2276,7 @@ IF CHECAR_MUDADADOS_COM_ESTE_SISTEMA_INABILITA()
 ENDIF
 *
 RETURN L_RET
-//    *
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-// #endif
-// *
-// *
+
 *****************************
 STATIC FUNC INABILITA_ADDACAO(L_MUDADADOS)
 *****************************
@@ -2601,123 +2306,5 @@ IF G_SGSIST() # NIL
 ENDIF
 *
 RETURN L_RET
-// *
-// ********************
-// *
-// #pragma BEGINDUMP
-// #include "hbapi.h"
 
-// // Fonte base obtido no link abaixo:
-// //  http://batchloaf.wordpress.com/2012/04/17/simulating-a-keystroke-in-win32-c-or-c-using-sendinput/
-
-// // Simulates a key press and a key release
-
-// // Because the SendInput function is only supported in
-// // Windows 2000 and later, WINVER needs to be set as
-// // follows so that SendInput gets defined when windows.h
-// // is included below.
-// #ifdef __WIN32__
-// #define WINVER 0x0500
-// #include <windows.h>
-
-// HB_FUNC( MANDAR_ESPACO_PARA_BUFFER_WINDOWS )
-// {
-//    // This structure will be used to create the keyboard
-//    // input event.
-//    INPUT ip;
-
-//    // Set up a generic keyboard event.
-//    ip.type = INPUT_KEYBOARD;
-//    ip.ki.wScan = 0; // hardware scan code for key
-//     ip.ki.time = 0;
-//    ip.ki.dwExtraInfo = 0;
-
-//    // Press the key
-//    ip.ki.wVk = 0x20; // virtual-key code for the " " key (VK_SPACE)
-//    ip.ki.dwFlags = 0; // 0 for key press
-//    SendInput(1, &ip, sizeof(INPUT));
-
-//    // Release the key
-//    ip.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release
-//    SendInput(1, &ip, sizeof(INPUT));
-
-//    hb_ret() ;
-// }
-// #else
-// HB_FUNC( MANDAR_ESPACO_PARA_BUFFER_WINDOWS )
-// {
-//    hb_ret();
-// }
-// #endif
-
-// #pragma ENDDUMP
-// *
-// *
-// * //!! Ao se ativar a WVW_SIZE() ficou dando um erro de GPF...
-// * //!! Tentar depois descobrir o motivo...
-// * *************
-// * FUNC WVW_SIZE_DEU_ERRO (nWinNum, hWnd, message, wParam, lParam)
-// * *************
-// * * this function is called by gtwvw AFTER the size is changed
-// * * WARNING: screen repainting is not performed completely by gtwvw at this point of call
-// *
-// * IF WVW_SIZE_READY() .AND. nWinNum == 0
-// *    * avoid reentrance
-// *    WVW_SIZE_READY(.f.)
-// *
-// *    do case
-// *       case wParam == 2 //SIZE_MAXIMIZED
-// *       case wParam == 1 //SIZE_MINIMIZED
-// *       case wParam == 0 //SIZE_RESTORED
-// *    endcase
-// *
-// *    * allow next call
-// *    WVW_SIZE_READY(.t.)
-// * endif
-// *
-// * RETURN NIL
-// *
-// * Um local recomendava fazer a WVW_SIZE_READY em cï¿½digo C mesmo,
-// * pois rotinas de callback nï¿½o deviam usar variï¿½veis estï¿½ticas.
-// * *******************
-// * FUNC WVW_SIZE_READY(L_ReSize_New)
-// * *******************
-// * STAT L_ReSize := .F.
-// * LOCAL L_ReSize_Old := L_ReSize
-// * IF L_ReSize_New # NIL
-// *    L_ReSize := L_ReSize_New
-// * ENDIF
-// * RETURN L_ReSize_Old
-// *
-// * #pragma BEGINDUMP
-// *
-// * #include "hbapi.h"
-// *
-// * HB_FUNC( WVW_SIZE_READY )
-// * {
-// *    BOOL bIsReady;
-// *    static BOOL s_bIsReady = FALSE;
-// *    bIsReady = s_bIsReady;
-// *    if (ISLOG(1))
-// *    {
-// *       s_bIsReady = hb_parl(1);
-// *    }
-// *    hb_retl(bIsReady);
-// * }
-// * #pragma ENDDUMP
-// *
-// * #IFDEF _TESTE
-// * **************
-// * PROC LOGAR_WVW(C_STR)
-// * **************
-// * #INCLUDE "fileio.ch"
-// * LOCAL N_Handle := FOPEN("p:\temp\wvw.log",FO_READWRITE)
-// * IF N_Handle==-1
-// *    N_Handle := FCREATE("p:\temp\wvw.log")
-// * ENDIF
-// * FSEEK(N_Handle,0,FS_END)
-// * FWRITE(N_Handle,C_STR+CHR(13)+CHR(10))
-// * FCLOSE(N_Handle)
-// * #ENDIF
-// *
 // ******************************** FIM DO JANELA ********************************
