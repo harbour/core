@@ -208,8 +208,7 @@ DO WHILE L_Continua
          L_RolaBaixo := TemMais(VX_Janela,+1)
       ENDIF
       *
-      Rolamento_(VX_Janela,N_ColCobertas#0,L_RolaCima,L_RolaBaixo,;
-                 N_TamLinha-N_ColCobertas>N_LarguraJan)
+      Rolamento_(VX_Janela, N_ColCobertas#0, L_RolaCima, L_RolaBaixo, N_TamLinha - N_ColCobertas > N_LarguraJan)
    ENDIF
    *
    N_Tecla := Inkey_(.T.)

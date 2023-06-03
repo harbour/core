@@ -24,6 +24,14 @@ HB_FUNC( NAP_WINDOW )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_WINDOW_DESTROY )
+{
+    uint32_t wid = hb_parni(1);
+    hb_gtnap_window_destroy(wid);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_WINDOW_HOTKEY )
 {
     uint32_t wid = hb_parni(1);

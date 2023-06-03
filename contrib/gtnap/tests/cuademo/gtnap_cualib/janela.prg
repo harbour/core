@@ -738,7 +738,6 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
                 NAP_LOG("----- ATIVE: NO Embutidas")
             ENDIF
 
-
         ENDIF // .NOT. L_Embutida
 
     ELSE // SOB_MODO_GRAFICO()
@@ -1360,14 +1359,8 @@ FOR N_Cont := 1 TO LEN(VC_TeclasBusca)
 NEXT
 *
 RETURN L_TemBotao
-//    *
-// #elif defined(__PLATFORM__LINUX)
-//    // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//    #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-// #endif
-// *
-*
+
+
 *******************
 FUNCTION DestruaJan ( VX_Janela, L_Permitir_CUA_20 )
 *******************
@@ -1385,96 +1378,29 @@ IF L_JanTipoMsgAguarde
 ENDIF
 *
 IF C_TelaCoberta # NIL
-   *
-   IF SOB_MODO_GRAFICO()
-      IF L_Embutida
-         //IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)  // destruir sempre a última ativada
-         IF N_WindowNum # V_PilhaJanelas[LEN(V_PilhaJanelas)][1]  // destruir sempre a última ativada
-                ALARME("M28752","Alguma janela aberta nï¿½o foi fechada - passo 2...")
-            *ALERT("Alguma janela aberta nï¿½o foi fechada - passo 2...")
-         ENDIF
-      ELSE
 
-        //#IFDEF _TESTE
-        //   IMPRIME_PARA_DEBUGAR(DIRSAIDA()+"destruajan.txt",LEN(V_PilhaJanelas),V_PilhaJanelas[LEN(V_PilhaJanelas),2])
-        //#ENDIF
+    IF SOB_MODO_GRAFICO()
+        IF L_Embutida
+            // IF N_WindowNum # V_PilhaJanelas[LEN(V_PilhaJanelas)][1]  // destruir sempre a última ativada
+            //     ALARME("M28752","Alguma janela aberta não foi fechada - passo 2...")
+            // ENDIF
+        ELSE
 
-        //
-        // FRAN: In GTNAP All widgets are destroyed with the window
-        //
-        // IF L_CriarToolBar
-        //     * Restaurar o conteï¿½do anterior do filtro de Inkeys, seja lï¿½ qual for.
-        //     hb_gtInfo( HB_GTI_INKEYFILTER, B_SetInkeyAfterBlock_Old )
-        //     *
-        //     * A rigor, os exemplo da ToolBar da GTWVW nunca
-        //     * incluem a exclusï¿½o prï¿½via dos botï¿½es, e o manual
-        //     * informa que a destruiï¿½ï¿½o da ToolBar jï¿½ destroi os botï¿½es.
-        //     * Mas fazer a exclusï¿½o manual prï¿½via, para ficar mais
-        //     * documentado e se fazer o inverso do que foi feito na
-        //     * criaï¿½ï¿½o da janela.
-        //     FOR N_CT := WVW_TBButtonCount() TO 1 STEP -1
-        //         * Existe o "-1" porque o primeiro botï¿½o ï¿½ o "0".
-        //         WVW_TBDelButton(N_WindowNum,N_CT-1)
-        //     NEXT
-        //     *
-        //     WVW_TBDESTROY(N_WindowNum)
-        // ENDIF
-        *
+            NAP_WINDOW_DESTROY(N_WindowNum)
 
-        //
-        // FRAN: In GTNAP All widgets are destroyed with the window
-        //
-        // FOR N_CT := 1 TO LEN(V_RegiaoBotoes)
-        //     WVW_PBDESTROY(N_WindowNum,V_RegiaoBotoes[N_CT,_BOTAO_HANDLE_PUSHBUTTON])
-        // NEXT
-        *
-        *
-        //
-        // FRAN: In GTNAP All widgets are destroyed with the window
-        //
-        // IF L_JanTipoMsgAguarde
-        //     IF N_ProgressBar == 2
-        //         WVW_PGDESTROY(N_WindowNum,N_IdProgressBar1)
-        //         WVW_PGDESTROY(N_WindowNum,N_IdProgressBar2)
-        //         N_ProgressBar := 0
-        //     ELSEIF N_ProgressBar == 1
-        //         WVW_PGDESTROY(N_WindowNum,N_IdProgressBar1)
-        //         N_ProgressBar := 0
-        //     ENDIF
-        // ENDIF
+            IF N_WindowNum # V_PilhaJanelas[LEN(V_PilhaJanelas)][1]  // destruir sempre a última ativada
+                ALARME("M28754","Alguma janela aberta não foi fechada - passo 2...")
+            ENDIF
+            ASIZE(V_PilhaJanelas,LEN(V_PilhaJanelas)-1)
 
-        *
-        //
-        // FRAN: GTNAP doesn't create any window by default
-        //
-        // IF LEN(V_PilhaJanelas)==1 .AND. EH_PRODUCAO()
-        //     * A GTWVW jï¿½ fecha a janela 0 automaticamente.
-        //     * Fazer com que a ï¿½ltima janela fechada pela CUA
-        //     * seja a mesma.
-        // ELSE
-        //     WVW_lCloseWindow()
-        // ENDIF
-        // WvW_SetMainCoord(L_MainCoord_Ant)
-        *
-        NAP_CUALIB_DESTROY_WINDOW()
+        ENDIF // L_Embutida
 
+    ELSE // NOT SOB_MODO_GRAFICO()
 
-
-        // IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)  // destruir sempre a ï¿½ltima ativada
-        IF N_WindowNum # V_PilhaJanelas[LEN(V_PilhaJanelas)][1]  // destruir sempre a última ativada
-            ALARME("M28754","Alguma janela aberta nï¿½o foi fechada - passo 2...")
+        RESTSCREEN(N_LinIni,N_ColIni,N_LinFin,N_ColFin,C_TelaCoberta)  // restaurar tela
+        IF .NOT. L_Embutida
+            ASIZE(V_PilhaJanelas,LEN(V_PilhaJanelas)-1)
         ENDIF
-        ASIZE(V_PilhaJanelas,LEN(V_PilhaJanelas)-1)
-
-
-
-      ENDIF // L_Embutida
-
-   ELSE // NOT SOB_MODO_GRAFICO()
-      RESTSCREEN(N_LinIni,N_ColIni,N_LinFin,N_ColFin,C_TelaCoberta)  // restaurar tela
-      IF .NOT. L_Embutida
-         ASIZE(V_PilhaJanelas,LEN(V_PilhaJanelas)-1)
-      ENDIF
 
    ENDIF // SOB_MODO_GRAFICO()
    *
@@ -1497,174 +1423,129 @@ ASIZE(VX_Janela,0)
 *
 RETURN NIL
 
-
-//
-//  FRAN: TODO
-//
 *
 *******************
 FUNCTION Rolamento_ ( VX_Janela , L_Esq , L_Cima , L_Baixo , L_Dir )
 *
-RETURN NIL
+LOCAL N_CursorAnt , N_LinhaAnt , N_ColunaAnt, N_Cont
+LOCAL L_ScrollVerticalMudou := (L_RolaCima  # L_Cima ) .OR. ;
+                               (L_RolaBaixo # L_Baixo)
+LOCAL L_ScrollHorizontalMudou := (L_RolaEsquerda # L_Esq ) .OR.;
+                                 (L_RolaDireita  # L_Dir )
+*
+* atualizar atributos do objeto janela
+L_RolaCima      := L_Cima
+L_RolaBaixo     := L_Baixo
+L_RolaEsquerda  := L_Esq
+L_RolaDireita   := L_Dir
+*
 
-// *
-// *******************
-// FUNCTION Rolamento_ ( VX_Janela , L_Esq , L_Cima , L_Baixo , L_Dir )
-// *
-// LOCAL N_CursorAnt , N_LinhaAnt , N_ColunaAnt, N_Cont
-// LOCAL L_ScrollVerticalMudou := (L_RolaCima  # L_Cima ) .OR. ;
-//                                (L_RolaBaixo # L_Baixo)
-// LOCAL L_ScrollHorizontalMudou := (L_RolaEsquerda # L_Esq ) .OR.;
-//                                  (L_RolaDireita  # L_Dir )
-// *
-// * atualizar atributos do objeto janela
-// L_RolaCima      := L_Cima
-// L_RolaBaixo     := L_Baixo
-// L_RolaEsquerda  := L_Esq
-// L_RolaDireita   := L_Dir
-// *
-// IF (L_Cima .OR. L_Baixo) .AND. .NOT. L_TemScrollVertical
-//    IF SOB_MODO_GRAFICO()
-//       ALARME("M28756","Erro no rolamento vertical")
-//       ? MEMVAR->ERRO_VERTICAL
-//    ELSE
-//       ALERT("Erro no rolamento vertical")
-//       ? MEMVAR->ERRO_VERTICAL
-//    ENDIF
-// ENDIF
-// *
-// IF (L_Esq .OR. L_Dir) .AND. .NOT. L_TemScrollHorizontal
-//    IF SOB_MODO_GRAFICO()
-//       ALARME("M28758","Erro no rolamento horizontal")
-//       ? MEMVAR->ERRO_HORIZONTAL
-//    ELSE
-//      ALERT("Erro no rolamento horizontal")
-//      ? MEMVAR->ERRO_HORIZONTAL
-//    ENDIF
-// ENDIF
-// *
-// * imprimir indicativos de rolamento
-// *
-// IF L_ScrollVerticalMudou .OR. ;
-//    L_ScrollHorizontalMudou
-//    N_CursorAnt := SET(_SET_CURSOR,SC_NONE)          // salvar modo do cursor
-//    N_LinhaAnt  := ROW()
-//    N_ColunaAnt := COL()
-// ENDIF
-// *
-// IF L_TemScrollVertical .AND. L_ScrollVerticalMudou
-//    IF SOB_MODO_GRAFICO()
-//       #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//          * - Apesar de ser um elemento grï¿½fico, o desenho tem de ser imediato,
-//          *   pois o CONTEï¿½DO mudou.
-//          * - O redesenho em backgroup tambï¿½m continua a ser feito,
-//          *   atravï¿½s da WVW_PAINT(), para os casos do prï¿½prio windows
-//          *   solicitar o redesenho
-//          DesenhaScrollVertical(VX_Janela)
-//       #elif defined(__PLATFORM__LINUX)
-//          // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//       #else
-//          #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//       #endif
-//    ELSE
-//       DispBegin()
-//       IF .NOT. L_Cima .AND. .NOT. L_Baixo
-//          * limpar ï¿½rea da barra de rolagem
-//          SCROLL(N_Lin1Livre,N_Col2Livre+2,N_Lin2Livre,N_Col2Livre+2)
-//          N_LinMarcadorVertical := 0
-//       ELSE
-//          * montar seta para cima
-//          SETPOS(N_Lin1Livre,N_Col2Livre+2)
-//          DISPOUT(CHR(30),C_CorInten)      //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
-//          *
-//          IF .NOT. L_Cima      // no topo
-//             N_LinMarcadorVertical := N_Lin1Livre+1
-//          ELSEIF .NOT. L_Baixo // embaixo
-//             N_LinMarcadorVertical := N_Lin2Livre-1
-//          ELSE                 // no meio
-//             N_LinMarcadorVertical := ROUND((N_Lin1Livre+N_Lin2Livre)/2,0)
-//          ENDIF
-//          *
-//          * montar barra de rolagem
-//          FOR N_Cont := N_Lin1Livre+1 TO N_Lin2Livre-1
-//             SETPOS(N_Cont,N_Col2Livre+2)
-//             IF N_Cont == N_LinMarcadorVertical
-//                DISPOUT(CHR(219),C_CorInten)  //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
-//             ELSE
-//                DISPOUT(CHR(176),C_CorInten)  //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
-//             ENDIF
-//          NEXT
-//          *
-//          * montar seta para baixo
-//          SETPOS(N_Lin2Livre,N_Col2Livre+2)
-//          DISPOUT( CHR(31),C_CorInten)     //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
-//          *
-//       ENDIF
-//       DispEnd()
-//    ENDIF
-// ENDIF
-// *
-// IF L_TemScrollHorizontal .AND. L_ScrollHorizontalMudou
-//    IF SOB_MODO_GRAFICO()
-//       #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//          * - Apesar de ser um elemento grï¿½fico, o desenho tem de ser imediato,
-//          *   pois o CONTEï¿½DO mudou.
-//          * - O redesenho em backgroup tambï¿½m continua a ser feito,
-//          *   atravï¿½s da WVW_PAINT(), para os casos do prï¿½prio windows
-//          *   solicitar o redesenho
-//          DesenhaScrollHorizontal(VX_Janela)
-//       #elif defined(__PLATFORM__LINUX)
-//          // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-//       #else
-//          #erro "Cï¿½digo nï¿½o adaptado para esta plataforma"
-//       #endif
-//    ELSE
-//       DispBegin()
-//       IF .NOT. L_Esq .AND. .NOT. L_Dir
-//          * limpar ï¿½rea da barra de rolagem
-//          SCROLL(N_Lin2Livre+2,N_Col1Livre,N_Lin2Livre+2,N_Col2Livre)
-//          N_ColMarcadorHorizontal := 0
-//       ELSE
-//          * montar seta para esquerda
-//          SETPOS(N_Lin2Livre+2,N_Col1Livre+1)
-//          DISPOUT(CHR(17),C_CorInten)      //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
-//          *
-//          IF .NOT. L_Esq       // na margem esquerda
-//             N_ColMarcadorHorizontal := N_Col1Livre+2
-//          ELSEIF .NOT. L_Dir   // na margem direita
-//             N_ColMarcadorHorizontal := N_Col2Livre-2-1
-//          ELSE                 // no meio
-//             N_ColMarcadorHorizontal := ROUND((N_Col1Livre+N_Col2Livre)/2,0)
-//          ENDIF
-//          *
-//          * montar barra de rolagem
-//          FOR N_Cont := N_Col1Livre+2 TO N_Col2Livre-2
-//             SETPOS(N_Lin2Livre+2,N_Cont)
-//             IF N_Cont == N_ColMarcadorHorizontal .OR. ;
-//                N_Cont == N_ColMarcadorHorizontal+1
-//                DISPOUT(CHR(219),C_CorInten)  //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
-//             ELSE
-//                DISPOUT(CHR(177),C_CorInten)  //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
-//             ENDIF
-//          NEXT
-//          *
-//          * montar seta para direita
-//          SETPOS(N_Lin2Livre+2,N_Col2Livre-1)
-//          DISPOUT( CHR(16),C_CorInten)
-//          *                                //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
-//       ENDIF
-//       DispEnd()
-//    ENDIF
-// ENDIF
-// *
-// IF L_ScrollVerticalMudou .OR. ;
-//    L_ScrollHorizontalMudou
-//    SET(_SET_CURSOR,N_CursorAnt)          // restaurar modo do cursor
-//    SETPOS(N_LinhaAnt,N_ColunaAnt)
-// ENDIF
-// *
-// RETURN NIL
-// *
+IF SOB_MODO_GRAFICO()
+    ALARME("M28756","Rolamento_() can't be called in SOB_MODO_GRAFICO")
+ENDIF
+
+IF (L_Cima .OR. L_Baixo) .AND. .NOT. L_TemScrollVertical
+    ALERT("Erro no rolamento vertical")
+    ? MEMVAR->ERRO_VERTICAL
+ENDIF
+*
+IF (L_Esq .OR. L_Dir) .AND. .NOT. L_TemScrollHorizontal
+    ALERT("Erro no rolamento horizontal")
+    ? MEMVAR->ERRO_HORIZONTAL
+ENDIF
+*
+* imprimir indicativos de rolamento
+*
+IF L_ScrollVerticalMudou .OR. ;
+   L_ScrollHorizontalMudou
+   N_CursorAnt := SET(_SET_CURSOR,SC_NONE)          // salvar modo do cursor
+   N_LinhaAnt  := ROW()
+   N_ColunaAnt := COL()
+ENDIF
+*
+IF L_TemScrollVertical .AND. L_ScrollVerticalMudou
+    DispBegin()
+    IF .NOT. L_Cima .AND. .NOT. L_Baixo
+        * limpar ï¿½rea da barra de rolagem
+        SCROLL(N_Lin1Livre,N_Col2Livre+2,N_Lin2Livre,N_Col2Livre+2)
+        N_LinMarcadorVertical := 0
+    ELSE
+        * montar seta para cima
+        SETPOS(N_Lin1Livre,N_Col2Livre+2)
+        DISPOUT(CHR(30),C_CorInten)      //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
+        *
+        IF .NOT. L_Cima      // no topo
+        N_LinMarcadorVertical := N_Lin1Livre+1
+        ELSEIF .NOT. L_Baixo // embaixo
+        N_LinMarcadorVertical := N_Lin2Livre-1
+        ELSE                 // no meio
+        N_LinMarcadorVertical := ROUND((N_Lin1Livre+N_Lin2Livre)/2,0)
+        ENDIF
+        *
+        * montar barra de rolagem
+        FOR N_Cont := N_Lin1Livre+1 TO N_Lin2Livre-1
+        SETPOS(N_Cont,N_Col2Livre+2)
+        IF N_Cont == N_LinMarcadorVertical
+            DISPOUT(CHR(219),C_CorInten)  //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
+        ELSE
+            DISPOUT(CHR(176),C_CorInten)  //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
+        ENDIF
+        NEXT
+        *
+        * montar seta para baixo
+        SETPOS(N_Lin2Livre,N_Col2Livre+2)
+        DISPOUT( CHR(31),C_CorInten)     //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
+        *
+    ENDIF
+    DispEnd()
+ENDIF
+*
+IF L_TemScrollHorizontal .AND. L_ScrollHorizontalMudou
+    DispBegin()
+    IF .NOT. L_Esq .AND. .NOT. L_Dir
+        * limpar ï¿½rea da barra de rolagem
+        SCROLL(N_Lin2Livre+2,N_Col1Livre,N_Lin2Livre+2,N_Col2Livre)
+        N_ColMarcadorHorizontal := 0
+    ELSE
+        * montar seta para esquerda
+        SETPOS(N_Lin2Livre+2,N_Col1Livre+1)
+        DISPOUT(CHR(17),C_CorInten)      //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
+        *
+        IF .NOT. L_Esq       // na margem esquerda
+        N_ColMarcadorHorizontal := N_Col1Livre+2
+        ELSEIF .NOT. L_Dir   // na margem direita
+        N_ColMarcadorHorizontal := N_Col2Livre-2-1
+        ELSE                 // no meio
+        N_ColMarcadorHorizontal := ROUND((N_Col1Livre+N_Col2Livre)/2,0)
+        ENDIF
+        *
+        * montar barra de rolagem
+        FOR N_Cont := N_Col1Livre+2 TO N_Col2Livre-2
+        SETPOS(N_Lin2Livre+2,N_Cont)
+        IF N_Cont == N_ColMarcadorHorizontal .OR. ;
+            N_Cont == N_ColMarcadorHorizontal+1
+            DISPOUT(CHR(219),C_CorInten)  //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
+        ELSE
+            DISPOUT(CHR(177),C_CorInten)  //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
+        ENDIF
+        NEXT
+        *
+        * montar seta para direita
+        SETPOS(N_Lin2Livre+2,N_Col2Livre-1)
+        DISPOUT( CHR(16),C_CorInten)
+        *                                //!! NAO EXIBE EM MODO TEXTO COM LUCIDA CONSOLE
+    ENDIF
+    DispEnd()
+ENDIF
+*
+IF L_ScrollVerticalMudou .OR. ;
+   L_ScrollHorizontalMudou
+   SET(_SET_CURSOR,N_CursorAnt)          // restaurar modo do cursor
+   SETPOS(N_LinhaAnt,N_ColunaAnt)
+ENDIF
+*
+RETURN NIL
+*
 
 *********************
 FUNC SOB_MODO_GRAFICO

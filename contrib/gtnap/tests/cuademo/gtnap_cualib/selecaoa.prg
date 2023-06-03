@@ -1043,7 +1043,7 @@ ENDIF
 #DEFINE L_EsqFora  (VX_Sele:LEFTVISIBLE - VX_Sele:FREEZE > 1)
 #DEFINE L_DirFora  (VX_Sele:RIGHTVISIBLE # VX_Sele:COLCOUNT)
 *
-Rolamento_(VX_Janela,L_EsqFora,L_PriFora,L_UltFora,L_DirFora)
+Rolamento_(VX_Janela, L_EsqFora, L_PriFora, L_UltFora, L_DirFora)
 *
 #UNDEF L_EsqFora
 #UNDEF L_DirFora

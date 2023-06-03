@@ -511,6 +511,19 @@ static GtNapWindow *i_gtwin(GtNap *gtnap, const uint32_t wid)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_gtwin_index(GtNap *gtnap, const uint32_t wid)
+{
+    cassert_no_null(gtnap);
+    arrst_foreach(gtwin, gtnap->windows, GtNapWindow)
+        if (gtwin->id == wid)
+            return gtwin_i;
+    arrst_end()
+    cassert(FALSE);
+    return UINT32_MAX;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 {
     uint32_t id = 0;
@@ -2316,11 +2329,11 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
 
 /*---------------------------------------------------------------------------*/
 
-//void hb_gtnap_window_destroy(const uint32_t wid)
-//{
-//    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
-//    i_remove_gtwin
-//}
+void hb_gtnap_window_destroy(const uint32_t wid)
+{
+    uint32_t id = i_gtwin_index(GTNAP_GLOBAL, wid);
+    arrst_delete(GTNAP_GLOBAL->windows, id, i_remove_gtwin, GtNapWindow);
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -5703,17 +5716,6 @@ uint32_t hb_gtnap_cualib_window_current_edit(void)
 }
 
 
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_cualib_destroy_window(void)
-{
-    uint32_t id = arrst_size(GTNAP_GLOBAL->windows, GtNapWindow);
-    GtNapWindow *cuawin = NULL;
-    cassert(id > 0);
-    cuawin = arrst_get(GTNAP_GLOBAL->windows, id - 1, GtNapWindow);
-    arrst_delete(GTNAP_GLOBAL->windows, id - 1, i_remove_gtwin, GtNapWindow);
-}
 
 /*---------------------------------------------------------------------------*/
 

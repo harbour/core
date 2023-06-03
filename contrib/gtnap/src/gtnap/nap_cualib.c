@@ -30,13 +30,6 @@ HB_FUNC( NAP_CUALIB_WINDOW_CURRENT_EDIT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_DESTROY_WINDOW )
-{
-    hb_gtnap_cualib_destroy_window();
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_CUALIB_DEFAULT_BUTTON )
 {
     uint32_t nDef = hb_parni(1);

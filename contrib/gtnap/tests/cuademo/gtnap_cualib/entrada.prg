@@ -763,10 +763,7 @@ ENDIF
 MostrarInfo(VX_Janela,1,_POSITIVO)
 #UNDEF _POSITIVO
 *
-Rolamento_(VX_Janela,.F.,;
-                     N_LinCobertas#0,;
-                     PreencheDados(VX_Janela,LEN(VX_SayGetList))#0,;
-                     .F.)
+Rolamento_(VX_Janela, .F., N_LinCobertas#0, PreencheDados(VX_Janela,LEN(VX_SayGetList))#0, .F.)
 *
 * editar os GETs , a partir do primeiro
 *
@@ -853,10 +850,7 @@ ENDIF
 MostrarInfo(VX_Janela,N_SayGetCor2,N_Scroll)
 *
 IF N_Scroll # 0
-   Rolamento_(VX_Janela,.F.,;
-                        N_LinCobertas#0,;
-                        PreencheDados(VX_Janela,LEN(VX_SayGetList))#0,;
-                        .F.)
+   Rolamento_(VX_Janela, .F., N_LinCobertas#0, PreencheDados(VX_Janela, LEN(VX_SayGetList)) # 0, .F.)
 ENDIF
 *
 #UNDEF VX_Edicao
