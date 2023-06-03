@@ -719,21 +719,28 @@ IF SOB_MODO_GRAFICO()
 
     ENDIF  // L_PrimAtivacao
 
-    // REFACTOR: TODO
-    X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
-    NAP_LOG("ENTRADA RETORNO: " + hb_ntos(X_Retorno))
 
-    // CLOSED BY ESC OR BY [X] Button
-    IF X_Retorno == 1 .OR. X_Retorno == 3
-        L_Aborta      :=  .T.
-    // CLOSED BY LAST EDIT INPUT
-    ELSEIF X_Retorno == 5000
-        L_Aborta      :=  .F.
-    // BUTTONS IN JANELA --> Improve
+    // REFACTOR: TODO
+    // This window has embedded windows and is its first ativation --> Not modal launch
+    // We wait the activation of child windows before
+    IF L_PrimAtivacao .AND. L_ComEmbutidas
+        L_Aborta := .T.
     ELSE
-        L_Aborta      :=  .T.
-        // NAP_LOG("ENTRADA UNEXPECTED RETORNO: " + hb_ntos(X_Retorno))
-        // NAP_CRASH()
+        X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
+        NAP_LOG("ENTRADA RETORNO: " + hb_ntos(X_Retorno))
+
+        // CLOSED BY ESC OR BY [X] Button
+        IF X_Retorno == 1 .OR. X_Retorno == 3
+            L_Aborta      :=  .T.
+        // CLOSED BY LAST EDIT INPUT
+        ELSEIF X_Retorno == 5000
+            L_Aborta      :=  .F.
+        // BUTTONS IN JANELA --> Improve
+        ELSE
+            L_Aborta      :=  .T.
+            // NAP_LOG("ENTRADA UNEXPECTED RETORNO: " + hb_ntos(X_Retorno))
+            // NAP_CRASH()
+        ENDIF
     ENDIF
 
 ELSE  // .NOT. SOB_MODO_GRAFICO()

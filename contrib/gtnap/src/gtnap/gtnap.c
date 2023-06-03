@@ -121,6 +121,7 @@ struct _gtnap_object_t
 
 struct _gtnap_window_t
 {
+    uint32_t id;
     int32_t top;
     int32_t left;
     int32_t bottom;
@@ -499,9 +500,13 @@ static void i_gtnap_destroy(GtNap **gtnap)
 
 static GtNapWindow *i_gtwin(GtNap *gtnap, const uint32_t wid)
 {
-    /* Future note: wid might not be its position in the array */
     cassert_no_null(gtnap);
-    return arrst_get(gtnap->windows, wid, GtNapWindow);
+    arrst_foreach(gtwin, gtnap->windows, GtNapWindow)
+        if (gtwin->id == wid)
+            return gtwin;
+    arrst_end()
+    cassert(FALSE);
+    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2236,15 +2241,39 @@ static void i_OnWindowClose(GtNapWindow *gtwin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_get_window_id(GtNap *gtnap)
+{
+    uint32_t id = 0;
+    bool_t found = FALSE;
+    while(!found)
+    {
+        bool_t valid_id = TRUE;
+        arrst_foreach_const(gtwin, gtnap->windows, GtNapWindow)
+            if (gtwin->id == id)
+            {
+                id += 1;
+                valid_id = FALSE;
+                break;
+            }
+        arrst_end();
+
+        if (valid_id == TRUE)
+            found = TRUE;
+    }
+
+    return id;
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation)
 {
-    uint32_t id = UINT32_MAX;
     GtNapWindow *gtwin = NULL;
     uint32_t flags = i_window_flags(close_return, close_esc, minimize_button);
     Window *window = window_create(flags);
     Panel *panel = panel_create();
-    id = arrst_size(GTNAP_GLOBAL->windows, GtNapWindow);
     gtwin = arrst_new0(GTNAP_GLOBAL->windows, GtNapWindow);
+    gtwin->id = i_get_window_id(GTNAP_GLOBAL);
     gtwin->window = window;
     gtwin->panel = panel;
     gtwin->top = top;
@@ -2282,8 +2311,16 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
 
     window_cycle_tabstop(window, FALSE);
     window_OnClose(window, listener(gtwin, i_OnWindowClose, GtNapWindow));
-    return id;
+    return gtwin->id;
 }
+
+/*---------------------------------------------------------------------------*/
+
+//void hb_gtnap_window_destroy(const uint32_t wid)
+//{
+//    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+//    i_remove_gtwin
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -5666,94 +5703,6 @@ uint32_t hb_gtnap_cualib_window_current_edit(void)
 }
 
 
-
-/*---------------------------------------------------------------------------*/
-
-//void hb_gtnap_cualib_error_data(const uint32_t errorDataBlockParamId)
-//{
-//    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-//    cassert_no_null(cuawin);
-//
-//    // FRAN: IMPROVE... ADD TO hb_gtnap_cualib_launch_modal
-//    if(cuawin->error_date_block == NULL)
-//    {
-//        PHB_ITEM codeBlock = hb_param(errorDataBlockParamId, HB_IT_BLOCK);
-//        if (codeBlock != NULL)
-//            cuawin->error_date_block = hb_itemNew(codeBlock);
-//    }
-//}
-
-
-/*---------------------------------------------------------------------------*/
-
-uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const uint32_t cancelBlockParamId)
-{
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert_no_null(cuawin);
-    unref(confirmaBlockParamId);
-    unref(cancelBlockParamId);
-    //confirmaBlockParamId, const uint32_t cancelBlockParamId
-    /* Configure the Window before the first launch */
-    if (cuawin->is_configured == FALSE)
-    {
-        i_gtwin_configure(cuawin);
-
-        //{
-        //    PHB_ITEM codeBlock = NULL;
-        //    cassert(cuawin->confirm_block == NULL);
-        //    codeBlock = hb_param(confirmaBlockParamId, HB_IT_BLOCK);
-        //    if (codeBlock != NULL)
-        //        cuawin->confirm_block = hb_itemNew(codeBlock);
-        //}
-    }
-
-
-
-    if (cuawin->buttons_navigation == TRUE)
-    {
-        uint32_t n = i_num_buttons(cuawin);
-        if (n > 0)
-        {
-            if (cuawin->default_button == UINT32_MAX)
-                cuawin->default_button = 0;
-            cassert(cuawin->default_button < n);
-            i_set_defbutton(cuawin);
-        }
-    }
-
-    /* Launch the window */
-    {
-        GtNapWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
-        V2Df pos;
-        uint32_t ret = 0;
-
-        if (parent == NULL)
-        {
-            cassert(arrst_size(GTNAP_GLOBAL->windows, GtNapWindow) == 1);
-        }
-
-        pos.x = (real32_t)(cuawin->left * GTNAP_GLOBAL->cell_x_size);
-        pos.y = (real32_t)(cuawin->top * GTNAP_GLOBAL->cell_y_size);
-
-        if (parent != NULL)
-        {
-            const GtNapWindow *rootwin = arrst_get_const(GTNAP_GLOBAL->windows, 0, GtNapWindow);
-            V2Df ppos = window_get_origin(rootwin->window);
-            pos.x += ppos.x /*- 2 * GTNAP_GLOBAL->cell_x_size*/;
-            pos.y += ppos.y;
-
-            if (cuawin->toolbar != NULL)
-                pos.y -= (real32_t)(GTNAP_GLOBAL->cell_y_size - (cuawin->toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size));
-        }
-
-        window_origin(cuawin->window, pos);
-        //log_printf("--> Launch CUALIB Modal Window: %p, Parent %p (%d, %d, %d, %d)", cuawin->window, parent ? parent->window : NULL, cuawin->N_LinIni, cuawin->N_ColIni, cuawin->N_LinFin, cuawin->N_ColFin);
-        cuawin->is_closed_by_esc = FALSE;
-        cuawin->modal_window_alive = TRUE;
-        ret = window_modal(cuawin->window, parent ? parent->window : NULL);
-        return ret;
-    }
-}
 
 /*---------------------------------------------------------------------------*/
 

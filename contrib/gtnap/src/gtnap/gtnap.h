@@ -22,6 +22,8 @@ extern int32_t hb_gtnap_inkey(const vkey_t vkey);
 
 extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
+extern void hb_gtnap_window_destroy(const uint32_t wid);
+
 extern void hb_gtnap_window_hotkey(const uint32_t wid, const int32_t key, HB_ITEM *block, const bool_t autoclose);
 
 extern void hb_gtnap_window_editable(const uint32_t wid, HB_ITEM *is_editable_block);
@@ -123,8 +125,6 @@ extern void hb_gtnap_cualib_toolbar_button(const char_t *pathname, const char_t 
 extern void hb_gtnap_cualib_toolbar_separator(void);
 
 extern void hb_gtnap_cualib_hotkey(const int32_t key, const uint32_t codeBlockParamId, const bool_t autoclose);
-
-extern uint32_t hb_gtnap_cualib_launch_modal(const uint32_t confirmaBlockParamId, const uint32_t cancelBlockParamId);
 
 extern void hb_gtnap_cualib_destroy_window(void);
 

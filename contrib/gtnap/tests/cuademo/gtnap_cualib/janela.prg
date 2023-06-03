@@ -13,7 +13,6 @@
 *
 MEMVAR INFO_VERSAO
 STATIC V_PilhaJanelas := {}
-STATIC L_GuiObjectsAtivos := .T.
 *
 #INCLUDE "inkey.ch"
 #INCLUDE "setcurs.ch"
@@ -268,7 +267,7 @@ ENDIF
 #DEFINE B_ScrollBarHorizontal   Nil // Bloco de código que especializa a Scroll Horizontal
 #DEFINE N_ProgressBar           Nil // Guarda a quantidade de ProgressBar. Observação: Para janela do tipo MsgAguarde
 #DEFINE N_ItemId                Nil
-#DEFINE V_Embutidas             {}
+#DEFINE L_ComEmbutidas          .F.
 *
 V_Janela := { N_LinIni , N_ColIni , N_LinFin , N_ColFin , ;
                 C_TelaCoberta , N_LinAnt , N_ColAnt , VC_Titulo , N_LinBotoes , ;
@@ -284,7 +283,14 @@ V_Janela := { N_LinIni , N_ColIni , N_LinFin , N_ColFin , ;
                 N_IdProgressBar1, V_LstAcoes, L_CUA_10, N_IdProgressBar2, ;
                 B_SetInkeyAfterBlock_Old,N_ToolBarCodigoAcao,;
                 N_IdScrollBarVertical,N_IdScrollBarHorizontal,B_ScrollBarVertical,B_ScrollBarHorizontal,;
-                N_ProgressBar, N_ItemId, V_Embutidas }
+                N_ProgressBar, N_ItemId, L_ComEmbutidas }
+
+IF V_Janela_Pai # NIL
+    #DEFINE L_PaiComEmbutidas  V_Janela_Pai[57]
+    L_PaiComEmbutidas := .T.
+    #UNDEF L_PaiComEmbutidas
+ENDIF
+
 #UNDEF C_CorJan
 #UNDEF C_TelaCoberta
 #UNDEF N_LinAnt
@@ -319,15 +325,7 @@ V_Janela := { N_LinIni , N_ColIni , N_LinFin , N_ColFin , ;
 #UNDEF B_ScrollBarHorizontal
 #UNDEF N_ProgressBar
 #UNDEF N_ItemId
-#UNDEF V_Embutidas
-
-IF SOB_MODO_GRAFICO()
-    IF V_Janela_Pai # NIL
-        #DEFINE V_PaiEmbutidas  V_Janela_Pai[57]
-        AADD(V_PaiEmbutidas, V_Janela)
-        #UNDEF V_PaiEmbutidas
-    ENDIF
-ENDIF
+#UNDEF L_ComEmbutidas
 
 RETURN V_Janela
 
@@ -406,7 +404,7 @@ RETURN VX_Janela
 #DEFINE B_ScrollBarHorizontal       VX_Janela[54]
 #DEFINE N_ProgressBar               VX_Janela[55]
 #DEFINE N_ItemId                    VX_Janela[56]   // For Menuvert, TextView or TableView ids (GTNAP)
-#DEFINE V_Embutidas                 VX_Janela[57]   // Vector of Embutidas (child windows)
+#DEFINE L_ComEmbutidas              VX_Janela[57]   // This Janela has child (embutidas) windows
 
 *************
 PROC AddBotao (VX_Janela,C_TxtBotao,B_AcaoBotao,L_AutoClose,;
@@ -658,9 +656,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
         // The embutida windows will be considered as child windows in main one
         IF .NOT. L_Embutida
 
-            AADD(V_PilhaJanelas,{LEN(V_PilhaJanelas),VX_Janela})
-
-            IF LEN(V_PilhaJanelas)==1
+            IF LEN(V_PilhaJanelas)==0
                 // The first window takes the title from 'Setup_nap' (compatible with GTWVW/Cualib)
                 C_Cabec_Aux := NIL
             ELSE
@@ -725,7 +721,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
 
             ENDIF
 
-            IF LEN(V_PilhaJanelas)==1
+            IF LEN(V_PilhaJanelas)==0
                 L_MINIMIZE_BUTTON := .T.
             ELSE
                 L_MINIMIZE_BUTTON := .F.
@@ -734,8 +730,13 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             N_WindowNum := NAP_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux, L_CLOSE_WITH_RETURN, L_CLOSE_WITH_ESC, L_MINIMIZE_BUTTON, L_BUTTONS_NAVIGATION)
             NAP_CUALIB_HOTKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)}, .F.)
 
-            NAP_LOG("----- ATIVE: Number of Embutidas: " + hb_ntos(LEN(V_Embutidas)))
+            AADD(V_PilhaJanelas,{N_WindowNum,VX_Janela})
 
+            IF L_ComEmbutidas
+                NAP_LOG("----- ATIVE: Has Embutidas!!!!!!")
+            ELSE
+                NAP_LOG("----- ATIVE: NO Embutidas")
+            ENDIF
 
 
         ENDIF // .NOT. L_Embutida
@@ -1387,8 +1388,9 @@ IF C_TelaCoberta # NIL
    *
    IF SOB_MODO_GRAFICO()
       IF L_Embutida
-         IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)  // destruir sempre a última ativada
-            ALARME("M28752","Alguma janela aberta nï¿½o foi fechada - passo 2...")
+         //IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)  // destruir sempre a última ativada
+         IF N_WindowNum # V_PilhaJanelas[LEN(V_PilhaJanelas)][1]  // destruir sempre a última ativada
+                ALARME("M28752","Alguma janela aberta nï¿½o foi fechada - passo 2...")
             *ALERT("Alguma janela aberta nï¿½o foi fechada - passo 2...")
          ENDIF
       ELSE
@@ -1457,9 +1459,10 @@ IF C_TelaCoberta # NIL
         NAP_CUALIB_DESTROY_WINDOW()
 
 
-        IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)  // destruir sempre a ï¿½ltima ativada
+
+        // IF N_WindowNum # LEN(V_PilhaJanelas)-IIF(EH_PRODUCAO(),1,0)  // destruir sempre a ï¿½ltima ativada
+        IF N_WindowNum # V_PilhaJanelas[LEN(V_PilhaJanelas)][1]  // destruir sempre a última ativada
             ALARME("M28754","Alguma janela aberta nï¿½o foi fechada - passo 2...")
-            *ALERT("Alguma janela aberta nï¿½o foi fechada - passo 2...")
         ENDIF
         ASIZE(V_PilhaJanelas,LEN(V_PilhaJanelas)-1)
 

@@ -30,14 +30,6 @@ HB_FUNC( NAP_CUALIB_WINDOW_CURRENT_EDIT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CUALIB_LAUNCH_MODAL )
-{
-    uint32_t ret = hb_gtnap_cualib_launch_modal(1, 2);
-    hb_retni(ret);
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_CUALIB_DESTROY_WINDOW )
 {
     hb_gtnap_cualib_destroy_window();
