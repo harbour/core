@@ -331,14 +331,17 @@ static void i_remove_column(GtNapColumn *column)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_remove_toolbar(GtNapToolbar *toolbar, Panel *panel)
+static void i_remove_toolbar(GtNapToolbar *toolbar, Panel *panel, const bool_t is_configured)
 {
     cassert_no_null(toolbar);
     arrpt_foreach(button, toolbar->buttons, Button)
         if (button != NULL)
         {
             Button *dbutton = button;
-            _component_detach_from_panel((GuiComponent*)panel, (GuiComponent*)button);
+
+            if (is_configured == TRUE)
+                _component_detach_from_panel((GuiComponent*)panel, (GuiComponent*)button);
+
             _component_destroy((GuiComponent**)&dbutton);
         }
     arrpt_end();
@@ -367,19 +370,22 @@ static void i_destroy_area(GtNapArea **area)
 static void i_destroy_gtobject(GtNapWindow *gtwin, const uint32_t index)
 {
     GtNapObject *gtobj = NULL;
-    const char_t *type = NULL;
     cassert_no_null(gtwin);
     gtobj = arrpt_get(gtwin->gui_objects, index, GtNapObject);
-    type = _component_type(gtobj->component);
-    if (str_equ_c(type, "Panel") == TRUE)
-        _panel_detach_components((Panel*)gtobj->component);
 
     _component_visible(gtobj->component, FALSE);
 
-    if (gtobj->in_scroll == TRUE)
-        _component_detach_from_panel((GuiComponent*)gtwin->scrolled_panel, gtobj->component);
-    else
-        _component_detach_from_panel((GuiComponent*)gtwin->panel, gtobj->component);
+    if (gtwin->is_configured == TRUE)
+    {
+        const char_t *type = _component_type(gtobj->component);
+        if (str_equ_c(type, "Panel") == TRUE)
+            _panel_detach_components((Panel*)gtobj->component);
+
+        if (gtobj->in_scroll == TRUE)
+            _component_detach_from_panel((GuiComponent*)gtwin->scrolled_panel, gtobj->component);
+        else
+            _component_detach_from_panel((GuiComponent*)gtwin->panel, gtobj->component);
+    }
 
     _component_destroy(&gtobj->component);
 
@@ -437,20 +443,26 @@ static void i_remove_gtwin(GtNapWindow *gtwin)
     if (gtwin->canvas != NULL)
     {
         _component_visible((GuiComponent*)gtwin->canvas, FALSE);
-        _component_detach_from_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
+
+        if (gtwin->is_configured == TRUE)
+            _component_detach_from_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
+
         _component_destroy((GuiComponent**)&gtwin->canvas);
     }
 
     if (gtwin->scrolled_panel != NULL)
     {
         _component_visible((GuiComponent*)gtwin->scrolled_panel, FALSE);
-        _component_detach_from_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->scrolled_panel);
+
+        if (gtwin->is_configured == TRUE)
+            _component_detach_from_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->scrolled_panel);
+
         _component_destroy((GuiComponent**)&gtwin->scrolled_panel);
     }
 
     if (gtwin->toolbar != NULL)
     {
-        i_remove_toolbar(gtwin->toolbar, gtwin->panel);
+        i_remove_toolbar(gtwin->toolbar, gtwin->panel, gtwin->is_configured);
         heap_delete(&gtwin->toolbar, GtNapToolbar);
     }
 
@@ -505,7 +517,7 @@ static GtNapWindow *i_gtwin(GtNap *gtnap, const uint32_t wid)
         if (gtwin->id == wid)
             return gtwin;
     arrst_end()
-    cassert(FALSE);
+    cassert_msg(FALSE, "Invalid window id");
     return NULL;
 }
 
@@ -2045,6 +2057,9 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
     V2Df offset = kV2D_ZEROf;
     cassert_no_null(gtwin);
     cassert(gtwin->is_configured == FALSE);
+    cassert(gtwin->panel == NULL);
+
+    gtwin->panel = panel_create();
 
     if (gtwin->toolbar != NULL)
         gtwin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size;
@@ -2256,7 +2271,7 @@ static void i_OnWindowClose(GtNapWindow *gtwin, Event *e)
 
 static uint32_t i_get_window_id(GtNap *gtnap)
 {
-    uint32_t id = 0;
+    uint32_t id = NAP_WINDOW_FIST_ID;
     bool_t found = FALSE;
     while(!found)
     {
@@ -2284,11 +2299,10 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
     GtNapWindow *gtwin = NULL;
     uint32_t flags = i_window_flags(close_return, close_esc, minimize_button);
     Window *window = window_create(flags);
-    Panel *panel = panel_create();
     gtwin = arrst_new0(GTNAP_GLOBAL->windows, GtNapWindow);
     gtwin->id = i_get_window_id(GTNAP_GLOBAL);
     gtwin->window = window;
-    gtwin->panel = panel;
+    gtwin->panel = NULL;
     gtwin->top = top;
     gtwin->left = left;
     gtwin->bottom = bottom;

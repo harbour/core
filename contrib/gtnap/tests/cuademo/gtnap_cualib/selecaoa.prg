@@ -67,7 +67,6 @@ IF N_TP_Selecao # _SELE_SIMPLES
 
     IF SOB_MODO_GRAFICO()
         ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_TOGGLE_FOCUS_ROW(VX_Janela)},.F.,"B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
-        NAP_WINDOW_HOTKEY(N_WindowNum, K_SPACE, {||NAP_TOGGLE_FOCUS_ROW(VX_Janela)}, .F.)
     ELSE
         ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,"B17859",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
     ENDIF
@@ -318,6 +317,7 @@ IF L_ForcaLerTudo
             NAP_TABLEVIEW_GRID(N_WindowNum, N_ItemId, L_MostraGrade, L_MostraGrade)
 
             IF N_TP_Selecao # _SELE_SIMPLES
+                NAP_WINDOW_HOTKEY(N_WindowNum, K_SPACE, {||NAP_TOGGLE_FOCUS_ROW(VX_Janela)}, .F.)
                 NAP_TABLEVIEW_COLUMN(N_WindowNum, N_ItemId, 0, {||""}, { || IIF(NAP_RECNO_IS_SELECTED(VX_Janela, B_LinCorrente)==.F.," ","»") })
             ENDIF
 

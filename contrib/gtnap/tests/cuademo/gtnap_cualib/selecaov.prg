@@ -57,9 +57,7 @@ IF N_TP_Selecao # _SELE_SIMPLES
 
     IF SOB_MODO_GRAFICO()
         ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||NAP_TOGGLE_FOCUS_ROW(VX_Janela)},.F.,"B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
-        NAP_WINDOW_HOTKEY(N_WindowNum, K_SPACE, {||NAP_TOGGLE_FOCUS_ROW(VX_Janela)}, .F.)
     ELSE
-
         ADDBOTAO(VX_Janela,"Barra de espaço=marcar",{||__Keyboard(CHR(32))},.F.,"B17861",.F.,.F.,.F.,.F.,.F.,.F.,.F.,.T.)
     ENDIF
 ENDIF
@@ -294,6 +292,7 @@ IF L_ForcaLerTudo
                 IF N_TP_Selecao # _SELE_SIMPLES
                     // TODO. FRAN -> Inspect where '11' comes
                     NAP_TABLEVIEW_COLUMN(N_WindowNum, N_ItemId, 11, {||""}, { | N_Row | IIF(NAP_ROW_IS_SELECTED(VX_Janela, N_Row)==.F.," ","»") })
+                    NAP_WINDOW_HOTKEY(N_WindowNum, K_SPACE, {||NAP_TOGGLE_FOCUS_ROW(VX_Janela)}, .F.)
                 ENDIF
 
                 FOR N_Count := 1 TO VX_Sele:COLCOUNT
