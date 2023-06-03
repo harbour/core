@@ -122,6 +122,7 @@ struct _gtnap_object_t
 struct _gtnap_window_t
 {
     uint32_t id;
+    uint32_t parent_id;
     int32_t top;
     int32_t left;
     int32_t bottom;
@@ -491,7 +492,15 @@ static void i_remove_gtwin(GtNapWindow *gtwin)
     cassert(arrpt_size(gtwin->gui_objects, GtNapObject) == 0);
     arrpt_destroy(&gtwin->gui_objects, NULL, GtNapObject);
     arrpt_destroy(&gtwin->callbacks, i_destroy_callback, GtNapCallback);
-    window_destroy(&gtwin->window);
+
+    if (gtwin->parent_id == UINT32_MAX)
+    {
+        window_destroy(&gtwin->window);
+    }
+    else
+    {
+        cassert(gtwin->window == NULL);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -501,6 +510,7 @@ static void i_gtnap_destroy(GtNap **gtnap)
     cassert_no_null(gtnap);
     cassert_no_null(*gtnap);
     cassert(*gtnap == GTNAP_GLOBAL);
+    cassert(arrst_size((*gtnap)->windows, GtNapWindow) == 0);
     arrst_destroy(&(*gtnap)->windows, i_remove_gtwin, GtNapWindow);
     font_destroy(&(*gtnap)->global_font);
     font_destroy(&(*gtnap)->reduced_font);
@@ -532,6 +542,25 @@ static uint32_t i_gtwin_index(GtNap *gtnap, const uint32_t wid)
     arrst_end()
     cassert(FALSE);
     return UINT32_MAX;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Window *i_effective_window(GtNapWindow *gtwin, GtNap *gtnap)
+{
+    cassert_no_null(gtwin);
+    cassert_no_null(gtnap);
+    if (gtwin->parent_id == UINT32_MAX)
+    {
+        cassert_no_null(gtwin->window);
+        return gtwin->window;
+    }
+    else
+    {
+        GtNapWindow *gtparent = i_gtwin(gtnap, gtwin->parent_id);
+        cassert_no_null(gtparent->window);
+        return gtparent->window;
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2294,50 +2323,60 @@ static uint32_t i_get_window_id(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation)
+static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
 {
     GtNapWindow *gtwin = NULL;
-    uint32_t flags = i_window_flags(close_return, close_esc, minimize_button);
-    Window *window = window_create(flags);
-    gtwin = arrst_new0(GTNAP_GLOBAL->windows, GtNapWindow);
-    gtwin->id = i_get_window_id(GTNAP_GLOBAL);
-    gtwin->window = window;
-    gtwin->panel = NULL;
+    cassert_no_null(gtnap);
+    gtwin = arrst_new0(gtnap->windows, GtNapWindow);
+    gtwin->id = i_get_window_id(gtnap);
+    gtwin->parent_id = parent_id;
     gtwin->top = top;
     gtwin->left = left;
     gtwin->bottom = bottom;
     gtwin->right = right;
-    gtwin->cursor_row = 0;
-    gtwin->cursor_col = 0;
     gtwin->scroll_top = INT32_MIN;
     gtwin->scroll_left = INT32_MIN;
     gtwin->scroll_bottom = INT32_MIN;
     gtwin->scroll_right = INT32_MIN;
-    gtwin->is_configured = FALSE;
-    gtwin->is_closed_by_esc = FALSE;
-    gtwin->focus_by_previous = FALSE;
-    gtwin->modal_window_alive = FALSE;
     gtwin->message_label_id = UINT32_MAX;
     gtwin->default_button = UINT32_MAX;
     gtwin->gui_objects = arrpt_create(GtNapObject);
     gtwin->callbacks = arrpt_create(GtNapCallback);
-    gtwin->panel_size.width = (real32_t)(GTNAP_GLOBAL->cell_x_size * (gtwin->right - gtwin->left + 1));
-    gtwin->panel_size.height = (real32_t)(GTNAP_GLOBAL->cell_y_size * (gtwin->bottom - gtwin->top + 1));
+    gtwin->panel_size.width = (real32_t)(gtnap->cell_x_size * (gtwin->right - gtwin->left + 1));
+    gtwin->panel_size.height = (real32_t)(gtnap->cell_y_size * (gtwin->bottom - gtwin->top + 1));
+    return gtwin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation)
+{
+    GtNapWindow *gtwin = i_new_window(GTNAP_GLOBAL, UINT32_MAX, top, left, bottom, right);
+    uint32_t flags = i_window_flags(close_return, close_esc, minimize_button);
+    gtwin->window = window_create(flags);
     gtwin->buttons_navigation = buttons_navigation;
 
     if (str_empty_c(title) == FALSE)
     {
         char_t utf8[STATIC_TEXT_SIZE];
         i_cp_to_utf8(title, utf8, sizeof(utf8));
-        window_title(window, utf8);
+        window_title(gtwin->window, utf8);
     }
     else
     {
-        window_title(window, tc(GTNAP_GLOBAL->title));
+        window_title(gtwin->window, tc(GTNAP_GLOBAL->title));
     }
 
-    window_cycle_tabstop(window, FALSE);
-    window_OnClose(window, listener(gtwin, i_OnWindowClose, GtNapWindow));
+    window_cycle_tabstop(gtwin->window, FALSE);
+    window_OnClose(gtwin->window, listener(gtwin, i_OnWindowClose, GtNapWindow));
+    return gtwin->id;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_embedded_window(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
+{
+    GtNapWindow *gtwin = i_new_window(GTNAP_GLOBAL, wid, top, left, bottom, right);
     return gtwin->id;
 }
 
@@ -3107,7 +3146,10 @@ void hb_gtnap_textview_hotkey(uint32_t wid, uint32_t id, int32_t key)
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TEXTVIEW);
     if (nkey != NULL)
-        window_hotkey(obj->cuawin->window, nkey->vkey, nkey->modifiers, listener(obj, i_OnTextConfirm, GtNapObject));
+    {
+        Window *window = i_effective_window(obj->cuawin, GTNAP_GLOBAL);
+        window_hotkey(window, nkey->vkey, nkey->modifiers, listener(obj, i_OnTextConfirm, GtNapObject));
+    }
 }
 
 /*---------------------------------------------------------------------------*/

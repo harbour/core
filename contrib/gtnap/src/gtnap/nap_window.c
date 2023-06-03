@@ -24,6 +24,19 @@ HB_FUNC( NAP_WINDOW )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_EMBEDDED_WINDOW )
+{
+    uint32_t wid = hb_parni(1);
+    int32_t top = hb_parni(2);
+    int32_t left = hb_parni(3);
+    int32_t bottom = hb_parni(4);
+    int32_t right = hb_parni(5);
+    uint32_t id = hb_gtnap_embedded_window(wid, top, left, bottom, right);
+    hb_retni(id);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_WINDOW_DESTROY )
 {
     uint32_t wid = hb_parni(1);

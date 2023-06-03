@@ -624,6 +624,7 @@ LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
 LOCAL L_AutoClose := .F.
 
 // Window flags
+LOCAL N_PaiWindowNum := 0
 LOCAL L_CLOSE_WITH_RETURN := .F.
 LOCAL L_CLOSE_WITH_ESC := .F.
 LOCAL L_MINIMIZE_BUTTON := .F.
@@ -634,13 +635,11 @@ LOCAL L_BUTTONS_NAVIGATION := .F.
 IF .NOT. SOB_MODO_GRAFICO()
     B_Ajuda_Ant := SETKEY(K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)})
 ENDIF
-
 *
 IF N_LinBotoes == NIL
     ? MEMVAR->AJUSTA_BOTOES_DEVE_SER_CHAMADA_UMA_VEZ
 ENDIF
 *
-
 IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
     *
     N_LinAnt    := ROW()
@@ -737,6 +736,10 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             ELSE
                 NAP_LOG("----- ATIVE: NO Embutidas")
             ENDIF
+
+        ELSE
+            N_PaiWindowNum := V_PilhaJanelas[LEN(V_PilhaJanelas)][1]
+            N_WindowNum := NAP_EMBEDDED_WINDOW(N_PaiWindowNum, N_LinIni, N_ColIni, N_LinFin, N_ColFin)
 
         ENDIF // .NOT. L_Embutida
 
@@ -1380,20 +1383,19 @@ ENDIF
 IF C_TelaCoberta # NIL
 
     IF SOB_MODO_GRAFICO()
-        IF L_Embutida
-            // IF N_WindowNum # V_PilhaJanelas[LEN(V_PilhaJanelas)][1]  // destruir sempre a última ativada
-            //     ALARME("M28752","Alguma janela aberta não foi fechada - passo 2...")
-            // ENDIF
-        ELSE
 
-            NAP_WINDOW_DESTROY(N_WindowNum)
+        // FRAN: In GTNAP embedded (embutida) window also have to be destroyed
+        // GTNAP manages the destruction differences
+        NAP_WINDOW_DESTROY(N_WindowNum)
 
+        // Embedded (embutida) window NEVER in V_PilhaJanelas
+        IF .NOT. L_Embutida
             IF N_WindowNum # V_PilhaJanelas[LEN(V_PilhaJanelas)][1]  // destruir sempre a última ativada
                 ALARME("M28754","Alguma janela aberta não foi fechada - passo 2...")
             ENDIF
             ASIZE(V_PilhaJanelas,LEN(V_PilhaJanelas)-1)
 
-        ENDIF // L_Embutida
+        ENDIF
 
     ELSE // NOT SOB_MODO_GRAFICO()
 
