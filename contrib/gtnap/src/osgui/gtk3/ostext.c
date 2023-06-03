@@ -31,22 +31,25 @@
 struct _ostext_t
 {
     OSControl control;
-    char_t family[64];
-    real32_t size;
-    uint32_t units;
-    uint32_t style;
+    char_t ffamily[64];
+    real32_t fsize;
+    uint32_t fstyle;
     color_t color;
     color_t bgcolor;
     align_t align;
-    gint lspacing;
-    gint bfspace;
-    gint afspace;
+    gint lspacing_px;
+    gint bfspace_px;
+    gint afspace_px;
+    GtkTextTag *tag_attribs;
+    bool_t global_attribs;
     int64_t scroll_pos;
-    GtkTextTag *curtag;
     GtkWidget *tview;
     GtkTextBuffer *buffer;
     gchar *text_cache;
-    GtkCssProvider *pgcolor;
+    GtkCssProvider *fontcss;
+    GtkCssProvider *colorcss;
+    GtkCssProvider *bgcolorcss;
+    GtkCssProvider *pgcolorcss;
     OSControl *capture;
     Listener *OnChange;
 };
@@ -106,18 +109,6 @@ OSText *ostext_create(const uint32_t flags)
     GtkWidget *top = NULL;
     GtkWidget *focus = NULL;
     unref(flags);
-    view->family[0] = '\0';
-    view->size = 1e10f;
-    view->units = UINT32_MAX;
-    view->style = UINT32_MAX;
-    view->color = kCOLOR_DEFAULT;
-    view->bgcolor = kCOLOR_DEFAULT;
-    view->align = ENUM_MAX(align_t);
-    view->lspacing = 0;
-    view->bfspace = 0;
-    view->afspace = 0;
-    view->curtag = NULL;
-    view->text_cache = NULL;
     view->tview = gtk_text_view_new();
 
     /* A parent widget can "capture" the mouse */
@@ -202,16 +193,16 @@ void ostext_OnTextChange(OSText *view, Listener *listener)
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE gint i_size_pango(const real32_t size, const uint32_t units)
+static __INLINE gint i_size_pango(const real32_t size, const uint32_t fstyle)
 {
     static gint val = 0;
-    if ((units & ekFPOINTS) == ekFPOINTS)
+    if ((fstyle & ekFPOINTS) == ekFPOINTS)
     {
         val = (gint)(size * (real32_t)PANGO_SCALE);
     }
     else
     {
-        cassert((units & ekFPIXELS) == ekFPIXELS);
+        cassert((fstyle & ekFPIXELS) == ekFPIXELS);
         val = (gint)(size / i_device_to_pixels());
     }
 
@@ -220,168 +211,222 @@ static __INLINE gint i_size_pango(const real32_t size, const uint32_t units)
 
 /*---------------------------------------------------------------------------*/
 
+static GtkTextTag *i_tag_attribs(OSText *view)
+{
+    GtkTextTag *tag = NULL;
+    GValue gtrue = G_VALUE_INIT;
+
+    cassert_no_null(view);
+    tag = gtk_text_buffer_create_tag(view->buffer, NULL, NULL);
+    g_value_init(&gtrue, G_TYPE_BOOLEAN);
+    g_value_set_boolean(&gtrue, TRUE);
+
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, G_TYPE_STRING);
+        g_value_set_string(&gvalue, (gchar*)view->ffamily);
+        g_object_set_property(G_OBJECT(tag), "family-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "family", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, i_size_pango(view->fsize, view->fstyle));
+        g_object_set_property(G_OBJECT(tag), "size-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "size", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    if (view->fstyle & ekFBOLD)
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, PANGO_WEIGHT_BOLD);
+        g_object_set_property(G_OBJECT(tag), "weight-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "weight", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    if (view->fstyle & ekFITALIC)
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, PANGO_TYPE_STYLE);
+        g_value_set_enum(&gvalue, PANGO_STYLE_ITALIC);
+        g_object_set_property(G_OBJECT(tag), "style-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "style", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    if (view->fstyle & ekFUNDERLINE)
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, PANGO_TYPE_UNDERLINE);
+        g_value_set_enum(&gvalue, PANGO_UNDERLINE_SINGLE);
+        g_object_set_property(G_OBJECT(tag), "underline-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "underline", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    if (view->fstyle & ekFSTRIKEOUT)
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, G_TYPE_BOOLEAN);
+        g_value_set_boolean(&gvalue, TRUE);
+        g_object_set_property(G_OBJECT(tag), "strikethrough-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "strikethrough", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    if (view->color != kCOLOR_DEFAULT)
+    {
+        GdkRGBA gdkcolor;
+        GValue gvalue = G_VALUE_INIT;
+        _oscontrol_to_gdkrgba(view->color, &gdkcolor);
+        g_value_init(&gvalue, GDK_TYPE_RGBA);
+        g_value_set_boxed(&gvalue, &gdkcolor);
+        g_object_set_property(G_OBJECT(tag), "foreground-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "foreground-rgba", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    if (view->bgcolor != kCOLOR_DEFAULT)
+    {
+        GdkRGBA gdkcolor;
+        GValue gvalue = G_VALUE_INIT;
+        _oscontrol_to_gdkrgba(view->bgcolor, &gdkcolor);
+        g_value_init(&gvalue, GDK_TYPE_RGBA);
+        g_value_set_boxed(&gvalue, &gdkcolor);
+        g_object_set_property(G_OBJECT(tag), "background-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "background-rgba", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    if (view->align != ekLEFT)
+    {
+        GtkJustification justif = _oscontrol_justification(view->align);
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, GTK_TYPE_JUSTIFICATION);
+        g_value_set_enum(&gvalue, justif);
+        g_object_set_property(G_OBJECT(tag), "justification-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "justification", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    if (view->lspacing_px != 0)
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, view->lspacing_px);
+        g_object_set_property(G_OBJECT(tag), "pixels-inside-wrap-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "pixels-inside-wrap", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    if (view->bfspace_px > 0)
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, view->bfspace_px);
+        g_object_set_property(G_OBJECT(tag), "pixels-above-lines-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "pixels-above-lines", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    if (view->afspace_px > 0)
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, view->afspace_px);
+        g_object_set_property(G_OBJECT(tag), "pixels-below-lines-set", &gtrue);
+        g_object_set_property(G_OBJECT(tag), "pixels-below-lines", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    g_value_unset(&gtrue);
+    return tag;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_global_attribs(OSText *view)
+{
+    const char_t *csstype = osglobals_css_textview_text();
+
+    if (view->fontcss != NULL)
+    {
+        _oscontrol_remove_provider(view->tview, view->fontcss);
+        view->fontcss = NULL;
+    }
+
+    if (view->colorcss != NULL)
+    {
+        _oscontrol_remove_provider(view->tview, view->colorcss);
+        view->colorcss = NULL;
+    }
+
+    if (view->bgcolorcss != NULL)
+    {
+        _oscontrol_remove_provider(view->tview, view->bgcolorcss);
+        view->bgcolorcss = NULL;
+    }
+
+    _oscontrol_widget_font_desc(view->tview, csstype, view->ffamily, view->fsize, view->fstyle, &view->fontcss);
+
+    if (view->color != kCOLOR_DEFAULT)
+        _oscontrol_widget_color(view->tview, csstype, view->color, &view->colorcss);
+
+    if (view->bgcolor != kCOLOR_DEFAULT)
+        _oscontrol_widget_bg_color(view->tview, csstype, view->bgcolor, &view->bgcolorcss);
+
+    {
+        GtkJustification justif = _oscontrol_justification(view->align);
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, GTK_TYPE_JUSTIFICATION);
+        g_value_set_enum(&gvalue, justif);
+        g_object_set_property(G_OBJECT(view->tview), "justification", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, view->lspacing_px);
+        g_object_set_property(G_OBJECT(view->tview), "pixels-inside-wrap", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, view->bfspace_px);
+        g_object_set_property(G_OBJECT(view->tview), "pixels-above-lines", &gvalue);
+        g_value_unset(&gvalue);
+    }
+
+    {
+        GValue gvalue = G_VALUE_INIT;
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, view->afspace_px);
+        g_object_set_property(G_OBJECT(view->tview), "pixels-below-lines", &gvalue);
+        g_value_unset(&gvalue);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void ostext_insert_text(OSText *view, const char_t *text)
 {
     GtkTextIter end;
-    GtkTextTag *tag = NULL;
-
     cassert_no_null(view);
     cassert_no_null(text);
 
-    if (view->curtag == NULL)
-    {
-        GValue gtrue = G_VALUE_INIT;
-        tag = gtk_text_buffer_create_tag(view->buffer, NULL, "family-set", TRUE, "size-set", TRUE, NULL);
-        g_value_init(&gtrue, G_TYPE_BOOLEAN);
-        g_value_set_boolean(&gtrue, TRUE);
-
-        {
-            GValue gvalue = G_VALUE_INIT;
-            g_value_init(&gvalue, G_TYPE_STRING);
-            g_value_set_string(&gvalue, (gchar*)view->family);
-            g_object_set_property(G_OBJECT(tag), "family", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        {
-            GValue gvalue = G_VALUE_INIT;
-            g_value_init(&gvalue, G_TYPE_INT);
-            g_value_set_int(&gvalue, i_size_pango(view->size, view->units));
-            g_object_set_property(G_OBJECT(tag), "size", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        if (view->style & ekFBOLD)
-        {
-            GValue gvalue = G_VALUE_INIT;
-            g_value_init(&gvalue, G_TYPE_INT);
-            g_value_set_int(&gvalue, PANGO_WEIGHT_BOLD);
-            g_object_set_property(G_OBJECT(tag), "weight-set", &gtrue);
-            g_object_set_property(G_OBJECT(tag), "weight", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        if (view->style & ekFITALIC)
-        {
-            GValue gvalue = G_VALUE_INIT;
-            g_value_init(&gvalue, PANGO_TYPE_STYLE);
-            g_value_set_enum(&gvalue, PANGO_STYLE_ITALIC);
-            g_object_set_property(G_OBJECT(tag), "style-set", &gtrue);
-            g_object_set_property(G_OBJECT(tag), "style", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        if (view->style & ekFUNDERLINE)
-        {
-            GValue gvalue = G_VALUE_INIT;
-            g_value_init(&gvalue, PANGO_TYPE_UNDERLINE);
-            g_value_set_enum(&gvalue, PANGO_UNDERLINE_SINGLE);
-            g_object_set_property(G_OBJECT(tag), "underline-set", &gtrue);
-            g_object_set_property(G_OBJECT(tag), "underline", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        if (view->style & ekFSTRIKEOUT)
-        {
-            GValue gvalue = G_VALUE_INIT;
-            g_value_init(&gvalue, G_TYPE_BOOLEAN);
-            g_value_set_boolean(&gvalue, TRUE);
-            g_object_set_property(G_OBJECT(tag), "strikethrough-set", &gtrue);
-            g_object_set_property(G_OBJECT(tag), "strikethrough", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        if (view->color != kCOLOR_DEFAULT)
-        {
-            GdkRGBA gdkcolor;
-            GValue gvalue = G_VALUE_INIT;
-            _oscontrol_to_gdkrgba(view->color, &gdkcolor);
-            g_value_init(&gvalue, GDK_TYPE_RGBA);
-            g_value_set_boxed(&gvalue, &gdkcolor);
-            g_object_set_property(G_OBJECT(tag), "foreground-set", &gtrue);
-            g_object_set_property(G_OBJECT(tag), "foreground-rgba", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        if (view->bgcolor != kCOLOR_DEFAULT)
-        {
-            GdkRGBA gdkcolor;
-            GValue gvalue = G_VALUE_INIT;
-            _oscontrol_to_gdkrgba(view->bgcolor, &gdkcolor);
-            g_value_init(&gvalue, GDK_TYPE_RGBA);
-            g_value_set_boxed(&gvalue, &gdkcolor);
-            g_object_set_property(G_OBJECT(tag), "background-set", &gtrue);
-            g_object_set_property(G_OBJECT(tag), "background-rgba", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        if (view->align != ekLEFT)
-        {
-            GtkJustification justif = GTK_JUSTIFY_LEFT;
-            GValue gvalue = G_VALUE_INIT;
-            switch(view->align) {
-            case ekLEFT:
-                justif = GTK_JUSTIFY_LEFT;
-                break;
-            case ekRIGHT:
-                justif = GTK_JUSTIFY_RIGHT;
-                break;
-            case ekCENTER:
-                justif = GTK_JUSTIFY_CENTER;
-                break;
-            case ekJUSTIFY:
-                justif = GTK_JUSTIFY_FILL;
-                break;
-            cassert_default();
-            }
-
-            g_value_init(&gvalue, GTK_TYPE_JUSTIFICATION);
-            g_value_set_enum(&gvalue, justif);
-            g_object_set_property(G_OBJECT(tag), "justification-set", &gtrue);
-            g_object_set_property(G_OBJECT(tag), "justification", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        if (view->lspacing != 0)
-        {
-            GValue gvalue = G_VALUE_INIT;
-            g_value_init(&gvalue, G_TYPE_INT);
-            g_value_set_int(&gvalue, view->lspacing);
-            g_object_set_property(G_OBJECT(tag), "pixels-inside-wrap-set", &gtrue);
-            g_object_set_property(G_OBJECT(tag), "pixels-inside-wrap", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        if (view->bfspace > 0)
-        {
-            GValue gvalue = G_VALUE_INIT;
-            g_value_init(&gvalue, G_TYPE_INT);
-            g_value_set_int(&gvalue, view->bfspace);
-            g_object_set_property(G_OBJECT(tag), "pixels-above-lines-set", &gtrue);
-            g_object_set_property(G_OBJECT(tag), "pixels-above-lines", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        if (view->afspace > 0)
-        {
-            GValue gvalue = G_VALUE_INIT;
-            g_value_init(&gvalue, G_TYPE_INT);
-            g_value_set_int(&gvalue, view->afspace);
-            g_object_set_property(G_OBJECT(tag), "pixels-below-lines-set", &gtrue);
-            g_object_set_property(G_OBJECT(tag), "pixels-below-lines", &gvalue);
-            g_value_unset(&gvalue);
-        }
-
-        g_value_unset(&gtrue);
-        view->curtag = tag;
-    }
-    else
-    {
-        tag = view->curtag;
-    }
+    if (view->tag_attribs == NULL)
+        view->tag_attribs = i_tag_attribs(view);
 
     gtk_text_buffer_get_end_iter(view->buffer, &end);
-    gtk_text_buffer_insert_with_tags(view->buffer, &end, (const gchar*)text, -1, tag, NULL);
+    gtk_text_buffer_insert_with_tags(view->buffer, &end, (const gchar*)text, -1, view->tag_attribs, NULL);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -392,8 +437,14 @@ void ostext_set_text(OSText *view, const char_t *text)
     cassert_no_null(view);
     cassert_no_null(text);
 
+    if (view->global_attribs == FALSE)
+    {
+        i_global_attribs(view);
+        view->global_attribs = TRUE;
+    }
+
     buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view->tview));
-    gtk_text_buffer_set_text (buffer, (const gchar*)text, -1);
+    gtk_text_buffer_set_text(buffer, (const gchar*)text, -1);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -433,42 +484,60 @@ void ostext_property(OSText *view, const gui_prop_t prop, const void *value)
     cassert_no_null(view);
     switch (prop) {
     case ekGUI_PROP_FAMILY:
-        if (str_cmp_c(view->family, (const char_t*)value) != 0)
+        if (str_cmp_c(view->ffamily, (const char_t*)value) != 0)
         {
-            str_copy_c(view->family, sizeof(view->family), (const char_t*)value);
-            view->curtag = NULL;
-        }
-        break;
-
-    case ekGUI_PROP_UNITS:
-        if (view->units != *((const uint32_t*)value))
-        {
-            view->units = *((const uint32_t*)value);
-            view->curtag = NULL;
+            str_copy_c(view->ffamily, sizeof(view->ffamily), (const char_t*)value);
+            view->tag_attribs = NULL;
+            view->global_attribs = FALSE;
         }
         break;
 
     case ekGUI_PROP_SIZE:
-        if (view->size != *((real32_t*)value))
+        if (view->fsize != *((real32_t*)value))
         {
-            view->size = *((real32_t*)value);
-            view->curtag = NULL;
+            view->fsize = *((real32_t*)value);
+            view->tag_attribs = NULL;
+            view->global_attribs = FALSE;
         }
         break;
 
     case ekGUI_PROP_STYLE:
-        if (view->style != *((uint32_t*)value))
+    {
+        uint32_t fstyle = *(uint32_t*)value;
+        if (view->fstyle & ekFPOINTS)
+            fstyle |= ekFPOINTS;
+
+        if (view->fstyle != fstyle)
         {
-            view->style = *((uint32_t*)value);
-            view->curtag = NULL;
+            view->fstyle = fstyle;
+            view->tag_attribs = NULL;
+            view->global_attribs = FALSE;
         }
         break;
+    }
+
+    case ekGUI_PROP_UNITS:
+    {
+        uint32_t fstyle = view->fstyle & (~ekFPOINTS);
+
+        if (*((const uint32_t*)value) & ekFPOINTS)
+            fstyle |= ekFPOINTS;
+
+        if (view->fstyle != fstyle)
+        {
+            view->fstyle = fstyle;
+            view->tag_attribs = NULL;
+            view->global_attribs = FALSE;
+        }
+        break;
+    }
 
     case ekGUI_PROP_COLOR:
         if (view->color != *((color_t*)value))
         {
             view->color = *((color_t*)value);
-            view->curtag = NULL;
+            view->tag_attribs = NULL;
+            view->global_attribs = FALSE;
         }
         break;
 
@@ -476,26 +545,28 @@ void ostext_property(OSText *view, const gui_prop_t prop, const void *value)
         if (view->bgcolor != *((color_t*)value))
         {
             view->bgcolor = *((color_t*)value);
-            view->curtag = NULL;
+            view->tag_attribs = NULL;
+            view->global_attribs = FALSE;
         }
         break;
 
     case ekGUI_PROP_PGCOLOR:
-        if (view->pgcolor != NULL)
+        if (view->pgcolorcss != NULL)
         {
-            _oscontrol_remove_provider(view->tview, view->pgcolor);
-            view->pgcolor = NULL;
+            _oscontrol_remove_provider(view->tview, view->pgcolorcss);
+            view->pgcolorcss = NULL;
         }
 
         if (*(color_t*)value != kCOLOR_DEFAULT)
-            _oscontrol_widget_bg_color(view->tview, "textview", *(color_t*)value, &view->pgcolor);
+            _oscontrol_widget_bg_color(view->tview, "textview", *(color_t*)value, &view->pgcolorcss);
         break;
 
     case ekGUI_PROP_PARALIGN:
         if (view->align != *((align_t*)value))
         {
             view->align = *((align_t*)value);
-            view->curtag = NULL;
+            view->tag_attribs = NULL;
+            view->global_attribs = FALSE;
         }
         break;
 
@@ -505,16 +576,17 @@ void ostext_property(OSText *view, const gui_prop_t prop, const void *value)
         gint lspacing = 0;
         if (spacing > 1)
         {
-            Font *font = font_create(view->family, view->size, view->style | view->units);
+            Font *font = font_create(view->ffamily, view->fsize, view->fstyle);
             real32_t cell_size = font_height(font);
             font_destroy(&font);
             lspacing = (spacing - 1) * cell_size;
         }
 
-        if (view->lspacing != lspacing)
+        if (view->lspacing_px != lspacing)
         {
-            view->lspacing = lspacing;
-            view->curtag = NULL;
+            view->lspacing_px = lspacing;
+            view->tag_attribs = NULL;
+            view->global_attribs = FALSE;
         }
 
         break;
@@ -522,11 +594,12 @@ void ostext_property(OSText *view, const gui_prop_t prop, const void *value)
 
     case ekGUI_PROP_AFPARSPACE:
     {
-        gint lspace = i_size_pango(*((real32_t*)value), view->units) / PANGO_SCALE;
-        if (lspace >= 0 && lspace != view->afspace)
+        gint lspace = i_size_pango(*((real32_t*)value), view->fstyle) / PANGO_SCALE;
+        if (lspace >= 0 && lspace != view->afspace_px)
         {
-            view->afspace = lspace;
-            view->curtag = NULL;
+            view->afspace_px = lspace;
+            view->tag_attribs = NULL;
+            view->global_attribs = FALSE;
         }
 
         break;
@@ -534,11 +607,12 @@ void ostext_property(OSText *view, const gui_prop_t prop, const void *value)
 
     case ekGUI_PROP_BFPARSPACE:
     {
-        gint lspace = i_size_pango(*((real32_t*)value), view->units) / PANGO_SCALE;
-        if (lspace >= 0 && lspace != view->bfspace)
+        gint lspace = i_size_pango(*((real32_t*)value), view->fstyle) / PANGO_SCALE;
+        if (lspace >= 0 && lspace != view->bfspace_px)
         {
-            view->bfspace = lspace;
-            view->curtag = NULL;
+            view->bfspace_px = lspace;
+            view->tag_attribs = NULL;
+            view->global_attribs = FALSE;
         }
 
         break;

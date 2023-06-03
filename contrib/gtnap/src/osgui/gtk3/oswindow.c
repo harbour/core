@@ -493,7 +493,8 @@ static gboolean i_OnKeyPress(GtkWidget *widget, GdkEventKey *event, OSWindow *wi
         {
             GtkWidget *focus = gtk_window_get_focus(GTK_WINDOW(widget));
             GtkWidget *bfocus = _osbutton_focus(window->defbutton);
-            gtk_window_set_focus(GTK_WINDOW(widget), bfocus);
+            if (gtk_widget_get_can_focus(bfocus) == TRUE)
+                gtk_window_set_focus(GTK_WINDOW(widget), bfocus);
             _osbutton_command(window->defbutton);
             osglobals_restore_focus(widget, focus);
         }

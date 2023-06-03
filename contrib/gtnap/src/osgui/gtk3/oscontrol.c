@@ -276,19 +276,16 @@ static real32_t i_font_pt(const real32_t fsize, const uint32_t fstyle)
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_widget_font(GtkWidget *widget, const char_t *css_type, const Font *font, GtkCssProvider **css_prov)
+void _oscontrol_widget_font_desc(GtkWidget *widget, const char_t *css_type, const char_t *ffamily, const real32_t fsize, const uint32_t fstyle, GtkCssProvider **css_prov)
 {
-    PangoFontDescription *fdesc = (PangoFontDescription*)font_native(font);
-    const char *family = pango_font_description_get_family(fdesc);
-    uint32_t fstyle = font_style(font);
-    real32_t ptsize = i_font_pt(font_size(font), fstyle);
+    real32_t ptsize = i_font_pt(fsize, fstyle);
     const char *italic = (fstyle & ekFITALIC) ? "italic" : "normal";
     const char *bold = (fstyle & ekFBOLD) ? "bold" : "normal";
     Stream *stm = stm_memory(256);
     String *css = NULL;
 
     stm_printf(stm, "%s { ", css_type);
-    stm_printf(stm, "font-family: \"%s\"; ", family);
+    stm_printf(stm, "font-family: \"%s\"; ", ffamily);
 
 #if GTK_CHECK_VERSION(3, 22, 0)
     stm_printf(stm, "font-size: %.2fpt; ", ptsize);
@@ -328,6 +325,17 @@ void _oscontrol_widget_font(GtkWidget *widget, const char_t *css_type, const Fon
 
 /*---------------------------------------------------------------------------*/
 
+void _oscontrol_widget_font(GtkWidget *widget, const char_t *css_type, const Font *font, GtkCssProvider **css_prov)
+{
+    PangoFontDescription *fdesc = (PangoFontDescription*)font_native(font);
+    const char *ffamily = pango_font_description_get_family(fdesc);
+    real32_t fsize = font_size(font);
+    uint32_t fstyle = font_style(font);
+    _oscontrol_widget_font_desc(widget, css_type, ffamily, fsize, fstyle, css_prov);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtkAlign i_align(const align_t align)
 {
     switch(align) {
@@ -351,6 +359,25 @@ void _oscontrol_set_halign(OSControl *control, const align_t align)
     GtkAlign a = i_align(align);
     cassert_no_null(control);
     gtk_widget_set_halign(control->widget, a);
+}
+
+/*---------------------------------------------------------------------------*/
+
+GtkJustification _oscontrol_justification(const align_t align)
+{
+    switch (align) {
+    case ekLEFT:
+        return GTK_JUSTIFY_LEFT;
+    case ekCENTER:
+        return GTK_JUSTIFY_CENTER;
+    case ekJUSTIFY:
+        return GTK_JUSTIFY_FILL;
+    case ekRIGHT:
+        return GTK_JUSTIFY_RIGHT;
+    cassert_default();
+    }
+
+    return GTK_JUSTIFY_LEFT;
 }
 
 /*---------------------------------------------------------------------------*/

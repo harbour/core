@@ -507,23 +507,7 @@ void osedit_align(OSEdit *edit, const align_t align)
     cassert_no_null(edit);
     if (edit->tview != NULL)
     {
-        GtkJustification just = GTK_JUSTIFY_LEFT;
-        switch (align) {
-        case ekLEFT:
-            just = GTK_JUSTIFY_LEFT;
-            break;
-        case ekCENTER:
-            just = GTK_JUSTIFY_CENTER;
-            break;
-        case ekJUSTIFY:
-            just = GTK_JUSTIFY_FILL;
-            break;
-        case ekRIGHT:
-            just = GTK_JUSTIFY_RIGHT;
-            break;
-        cassert_default();
-        }
-
+        GtkJustification just = _oscontrol_justification(align);
         gtk_text_view_set_justification(GTK_TEXT_VIEW(edit->tview), just);
     }
     else
