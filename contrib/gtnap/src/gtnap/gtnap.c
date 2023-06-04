@@ -2214,6 +2214,7 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
                 i_gtwin_configure(gtnap, embgtwin, gtwin);
                 _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)embgtwin->panel);
                 _component_set_frame((GuiComponent*)embgtwin->panel, &pos, &embgtwin->panel_size);
+                _component_visible((GuiComponent*)embgtwin->panel, TRUE);
             }
         arrst_end();
     }
