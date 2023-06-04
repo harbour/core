@@ -500,6 +500,8 @@ static void i_remove_gtwin(GtNapWindow *gtwin)
     else
     {
         cassert(gtwin->window == NULL);
+        if (gtwin->panel != NULL)
+            _component_destroy((GuiComponent**)&gtwin->panel);
     }
 }
 
@@ -2446,9 +2448,48 @@ uint32_t hb_gtnap_embedded_window(const uint32_t wid, const int32_t top, const i
 
 /*---------------------------------------------------------------------------*/
 
+static void i_dettach_embedded(GtNap *gtnap, GtNapWindow *gtwin)
+{
+    cassert_no_null(gtnap);
+    cassert_no_null(gtwin);
+    if (gtwin->is_configured == TRUE)
+    {
+        /* We are in a main window --> Dettach all possible embedded windows */
+        if (gtwin->parent_id == UINT32_MAX)
+        {
+            arrst_foreach(embgtwin, GTNAP_GLOBAL->windows, GtNapWindow)
+                if (embgtwin->parent_id == gtwin->id)
+                {
+                    cassert(embgtwin->is_configured == TRUE);
+                    _component_visible((GuiComponent*)embgtwin->panel, FALSE);
+                    _component_detach_from_panel((GuiComponent*)gtwin->panel, (GuiComponent*)embgtwin->panel);
+                }
+            arrst_end()
+        }
+        /* We are in an embedded window --> Dettach from ONLY one parent */
+        else
+        {
+            arrst_foreach(maingtwin, GTNAP_GLOBAL->windows, GtNapWindow)
+                if (gtwin->parent_id == maingtwin->id)
+                {
+                    cassert(maingtwin->is_configured == TRUE);
+                    _component_visible((GuiComponent*)gtwin->panel, FALSE);
+                    _component_detach_from_panel((GuiComponent*)maingtwin->panel, (GuiComponent*)gtwin->panel);
+                    break;
+                }
+            arrst_end()
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_window_destroy(const uint32_t wid)
 {
     uint32_t id = i_gtwin_index(GTNAP_GLOBAL, wid);
+    GtNapWindow *gtwin = arrst_get(GTNAP_GLOBAL->windows, id, GtNapWindow);
+    /* Before destroy we have to dettach the possible parent-embedded connections */
+    i_dettach_embedded(GTNAP_GLOBAL, gtwin);
     arrst_delete(GTNAP_GLOBAL->windows, id, i_remove_gtwin, GtNapWindow);
 }
 
