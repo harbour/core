@@ -2080,11 +2080,12 @@ static void i_OnEditFocus(GtNapWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_gtwin_configure(GtNapWindow *gtwin, GtNapWindow *main_gtwin)
+static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *main_gtwin)
 {
     Panel *scroll_panel = NULL;
     Layout *layout = layout_create(1, 1);
     V2Df offset = kV2D_ZEROf;
+    cassert_no_null(gtnap);
     cassert_no_null(gtwin);
     cassert(gtwin->is_configured == FALSE);
     cassert(gtwin->panel == NULL);
@@ -2171,6 +2172,24 @@ static void i_gtwin_configure(GtNapWindow *gtwin, GtNapWindow *main_gtwin)
         cassert(gtwin->toolbar == NULL);
     }
 
+    /* Configure the child (embedded) windows as subpanels */
+    if (gtwin->parent_id == UINT32_MAX)
+    {
+        arrst_forback(embgtwin, gtnap->windows, GtNapWindow)
+            if (embgtwin->parent_id == gtwin->id)
+            {
+                V2Df pos;
+                int32_t cell_x = embgtwin->left - gtwin->left;
+                int32_t cell_y = embgtwin->top - gtwin->top;
+                pos.x = (real32_t)(cell_x * GTNAP_GLOBAL->cell_x_size);
+                pos.y = (real32_t)(cell_y * GTNAP_GLOBAL->cell_y_size);
+                i_gtwin_configure(gtnap, embgtwin, gtwin);
+                _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)embgtwin->panel);
+                _component_set_frame((GuiComponent*)embgtwin->panel, &pos, &embgtwin->panel_size);
+            }
+        arrst_end();
+    }
+
     /* Allow navigation between edit controls with arrows and return */
     if (i_num_edits(gtwin) > 1)
     {
@@ -2206,7 +2225,7 @@ static void i_gtwin_configure(GtNapWindow *gtwin, GtNapWindow *main_gtwin)
             window_hotkey(gtwin->window, ekKEY_RIGHT, 0, listener(gtwin, i_OnRightButton, GtNapWindow));
         }
     }
-
+    
     gtwin->is_configured = TRUE;
 }
 
@@ -2276,7 +2295,7 @@ void hb_gtnap_terminal(void)
     cassert(arrst_size(gtnap->windows, GtNapWindow) == 0);
     hb_gtnap_window(0, 0, gtnap->rows - 1, gtnap->cols - 1, tc(gtnap->title), FALSE, TRUE, TRUE, FALSE);
     gtwin = i_current_gtwin(gtnap);
-    i_gtwin_configure(gtwin, gtwin);
+    i_gtwin_configure(gtnap, gtwin, gtwin);
 
     {
         uint32_t cwidth = gtwin->right - gtwin->left + 1;
@@ -2570,7 +2589,7 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
         uint32_t ret = 0;
 
         if (gtwin->is_configured == FALSE)
-            i_gtwin_configure(gtwin, gtwin);
+            i_gtwin_configure(GTNAP_GLOBAL, gtwin, gtwin);
 
         if (gtwin->buttons_navigation == TRUE)
         {
