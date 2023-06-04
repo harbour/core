@@ -15,11 +15,11 @@ For building GTNap CMake tool is necessary:
 * In Linux:
     * `sudo apt-get install cmake cmake-gui`
 
-* Open a terminal/cmd and check if cmake works:
-    ```
-    :~/$ cmake --version
-    cmake version 3.10.2
-    ```
+   * Open a terminal/cmd and check if cmake works:
+      ```
+      :~/$ cmake --version
+      cmake version 3.10.2
+      ```
 ## Build GTNap
 
 The `/contrib/gtnap` project consists of several files and folders:
