@@ -549,6 +549,18 @@ static uint32_t i_gtwin_index(GtNap *gtnap, const uint32_t wid)
 
 /*---------------------------------------------------------------------------*/
 
+static bool_t i_gtwin_has_embedded(GtNap *gtnap, const uint32_t wid)
+{
+    cassert_no_null(gtnap);
+    arrst_foreach(gtwin, gtnap->windows, GtNapWindow)
+        if (gtwin->parent_id == wid)
+            return TRUE;
+    arrst_end()
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Window *i_effective_window(GtNapWindow *gtwin, GtNap *gtnap)
 {
     cassert_no_null(gtwin);
@@ -2619,6 +2631,28 @@ void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t
 
 /*---------------------------------------------------------------------------*/
 
+static GtNapObject *i_get_first_focus(GtNapWindow *gtwin)
+{
+    cassert_no_null(gtwin);
+    arrpt_foreach(gtobj, gtwin->gui_objects, GtNapObject)
+        switch(gtobj->type) {
+        case ekOBJ_EDIT:
+        case ekOBJ_TABLEVIEW:
+        case ekOBJ_TEXTVIEW:
+            return gtobj;
+        case ekOBJ_LABEL:
+        case ekOBJ_BUTTON:
+        case ekOBJ_MENU:
+        case ekOBJ_IMAGE:
+            break;
+        }
+    arrpt_end();
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_window_modal(const uint32_t wid)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
@@ -2674,32 +2708,17 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
                 pos.y -= (real32_t)(GTNAP_GLOBAL->cell_y_size - (gtwin->toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size));
         }
 
-        /* We are lauched an embedded window */
-        if (embgtwin != NULL)
+        /* Check if a first control has to be focused */
         {
-            bool_t focused = FALSE;
-            cassert(embgtwin->is_configured == TRUE);
+            GtNapObject *gtobj_focus = NULL;
 
-            /* Move the focus to first control in embedded window */
-            arrpt_foreach(gtobj, embgtwin->gui_objects, GtNapObject)
-                switch(gtobj->type) {
-                case ekOBJ_EDIT:
-                case ekOBJ_TABLEVIEW:
-                case ekOBJ_TEXTVIEW:
-                    _window_focus(gtwin->window, gtobj->component);
-                    focused = TRUE;
-                    break;
+            if (embgtwin != NULL)
+                gtobj_focus = i_get_first_focus(embgtwin);
+            else if (i_gtwin_has_embedded(GTNAP_GLOBAL, gtwin->id) == TRUE)
+                gtobj_focus = i_get_first_focus(gtwin);
 
-                case ekOBJ_LABEL:
-                case ekOBJ_BUTTON:
-                case ekOBJ_MENU:
-                case ekOBJ_IMAGE:
-                    break;
-                }
-
-                if (focused == TRUE)
-                    break;
-            arrpt_end();
+            if (gtobj_focus != NULL)
+                _window_focus(gtwin->window, gtobj_focus->component);
         }
 
         window_origin(gtwin->window, pos);
@@ -3247,8 +3266,12 @@ static void i_OnTextConfirm(GtNapObject *gtobj, Event *e)
 
         if (confirm == TRUE)
         {
-            gtobj->cuawin->modal_window_alive = FALSE;
-            window_stop_modal(gtobj->cuawin->window, NAP_MODAL_TEXT_CONFIRM);
+            GtNapWindow *gtwin = gtobj->cuawin;
+            if (gtobj->cuawin->parent_id != UINT32_MAX)
+                gtwin = i_gtwin(GTNAP_GLOBAL, gtobj->cuawin->parent_id);
+
+            gtwin->modal_window_alive = FALSE;
+            window_stop_modal(gtwin->window, NAP_MODAL_TEXT_CONFIRM);
         }
     }
 }
