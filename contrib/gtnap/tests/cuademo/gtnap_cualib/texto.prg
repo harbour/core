@@ -162,7 +162,11 @@ IF SOB_MODO_GRAFICO()
 
     ENDIF // L_PrimAtivacao
 
-    IF .NOT. L_Embutida
+    // Embutida Janela can't be launched in first activation
+    IF L_Embutida .AND. L_PrimAtivacao
+        L_FimOK := .T.
+
+    ELSE
         X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
         IF X_Retorno == NAP_MODAL_TEXT_CONFIRM
             L_FimOK := .T.
@@ -171,13 +175,7 @@ IF SOB_MODO_GRAFICO()
         ELSE
             ? MEMVAR->ERR_NAP_MODAL_RETURN
         ENDIF
-    ELSE
 
-        IF .NOT. L_PrimAtivacao
-            NAP_WINDOW_ACTIVATE(N_WindowNum)
-        ENDIF
-
-        L_FimOK := .T.
     ENDIF
 
     L_PrimAtivacao := .F.

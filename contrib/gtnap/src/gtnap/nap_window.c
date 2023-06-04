@@ -113,14 +113,6 @@ HB_FUNC( NAP_WINDOW_MODAL )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_WINDOW_ACTIVATE )
-{
-    uint32_t wid = hb_parni(1);
-    hb_gtnap_window_activate(wid);
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_TOOLBAR )
 {
     uint32_t wid = hb_parni(1);

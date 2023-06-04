@@ -2622,9 +2622,17 @@ void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t
 uint32_t hb_gtnap_window_modal(const uint32_t wid)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    GtNapWindow *embgtwin = NULL;
     cassert_no_null(gtwin);
 
-    if (gtwin->parent_id == UINT32_MAX)
+    /* An embedded window can't be launched as modal. We must launch the parent */
+    if (gtwin->parent_id != UINT32_MAX)
+    {
+        embgtwin = gtwin;
+        gtwin = i_gtwin(GTNAP_GLOBAL, gtwin->parent_id);
+        cassert_no_null(gtwin);
+    }
+
     {
         GtNapWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
         V2Df pos;
@@ -2666,42 +2674,19 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
                 pos.y -= (real32_t)(GTNAP_GLOBAL->cell_y_size - (gtwin->toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size));
         }
 
-        window_origin(gtwin->window, pos);
-        gtwin->is_closed_by_esc = FALSE;
-        gtwin->modal_window_alive = TRUE;
-        ret = window_modal(gtwin->window, parent ? parent->window : NULL);
-        return ret;
-    }
-
-    cassert_msg(FALSE, "Embedded windows can't be launched as modals");
-    return UINT32_MAX;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_window_activate(const uint32_t wid)
-{
-    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
-    cassert_no_null(gtwin);
-
-    /* Only embedded windows can be activated */
-    if (gtwin->parent_id != UINT32_MAX)
-    {
-        if (gtwin->is_configured)
+        /* We are lauched an embedded window */
+        if (embgtwin != NULL)
         {
-            GtNapWindow *maingtwin = i_gtwin(GTNAP_GLOBAL, gtwin->parent_id);
             bool_t focused = FALSE;
-            cassert_no_null(maingtwin);
-            cassert(maingtwin->is_configured == TRUE);
-            cassert_no_null(maingtwin->window);
+            cassert(embgtwin->is_configured == TRUE);
 
-            /* Activate == Move the focus to first control in embedded window */
-            arrpt_foreach(gtobj, gtwin->gui_objects, GtNapObject)
+            /* Move the focus to first control in embedded window */
+            arrpt_foreach(gtobj, embgtwin->gui_objects, GtNapObject)
                 switch(gtobj->type) {
                 case ekOBJ_EDIT:
                 case ekOBJ_TABLEVIEW:
                 case ekOBJ_TEXTVIEW:
-                    _window_focus(maingtwin->window, gtobj->component);
+                    _window_focus(gtwin->window, gtobj->component);
                     focused = TRUE;
                     break;
 
@@ -2716,6 +2701,12 @@ void hb_gtnap_window_activate(const uint32_t wid)
                     break;
             arrpt_end();
         }
+
+        window_origin(gtwin->window, pos);
+        gtwin->is_closed_by_esc = FALSE;
+        gtwin->modal_window_alive = TRUE;
+        ret = window_modal(gtwin->window, parent ? parent->window : NULL);
+        return ret;
     }
 }
 
