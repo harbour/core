@@ -681,6 +681,19 @@ static uint32_t i_num_edits(const GtNapWindow *gtwin)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_num_texts(const GtNapWindow *gtwin)
+{
+    uint32_t n = 0;
+    cassert_no_null(gtwin);
+    arrpt_foreach_const(obj, gtwin->gui_objects, GtNapObject)
+        if (obj->type == ekOBJ_TEXTVIEW)
+            n += 1;
+    arrpt_end();
+    return n;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_set_defbutton(GtNapWindow *gtwin)
 {
     GtNapObject *button = i_get_button(gtwin, gtwin->default_button);
@@ -2210,10 +2223,6 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     {
         /* At the moment, embedded windows with edits is not allowed */
         GtNapObject *last_edit = NULL;
-        cassert(gtwin->window != NULL);
-        window_hotkey(gtwin->window, ekKEY_UP, 0, listener(gtwin, i_OnPreviousTabstop, GtNapWindow));
-        window_hotkey(gtwin->window, ekKEY_DOWN, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
-        window_hotkey(gtwin->window, ekKEY_RETURN, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
 
         arrpt_foreach(obj, gtwin->gui_objects, GtNapObject)
             if (obj->type == ekOBJ_EDIT)
@@ -2719,6 +2728,22 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
 
             if (gtobj_focus != NULL)
                 _window_focus(gtwin->window, gtobj_focus->component);
+        }
+
+        cassert(gtwin->window != NULL);
+        /* Allow arrows/intro in TextView */
+        if (embgtwin != NULL && i_num_texts(embgtwin) > 0)
+        {
+            window_hotkey(gtwin->window, ekKEY_UP, 0, NULL);
+            window_hotkey(gtwin->window, ekKEY_DOWN, 0, NULL);
+            window_hotkey(gtwin->window, ekKEY_RETURN, 0, NULL);
+        }
+        /* Allow arrows/intro navigation between editboxes */
+        else if (i_num_edits(gtwin) > 0)
+        {
+            window_hotkey(gtwin->window, ekKEY_UP, 0, listener(gtwin, i_OnPreviousTabstop, GtNapWindow));
+            window_hotkey(gtwin->window, ekKEY_DOWN, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
+            window_hotkey(gtwin->window, ekKEY_RETURN, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
         }
 
         window_origin(gtwin->window, pos);
