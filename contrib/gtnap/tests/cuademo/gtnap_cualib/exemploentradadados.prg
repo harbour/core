@@ -363,7 +363,7 @@ ATIVE(V_JANELA)
 KEYBOARD CHR(K_HOME)+CHR(K_ESC)
 ATIVE(V_JANELA2)
 
-//L_Ok := ATIVE(V_Janela)
+L_Ok := ATIVE(V_Janela)
 // IF L_OK
 //     L_OK := ATIVE(V_Janela2)
 // 	DO WHILE LASTKEY() == K_F9

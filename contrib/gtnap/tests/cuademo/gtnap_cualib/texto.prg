@@ -31,8 +31,6 @@ DEFAULT L_NaoRolaVertical TO .F.
 DEFAULT L_RolaHorizontal  TO .F.
 DEFAULT L_SemToolBar      TO .F.
 *
-NAP_LOG("EspTexto -- 1")
-
 IF .NOT. L_SemToolBar
    SETA_PARA_TER_TOOLBAR(VX_Janela) // ajusta N_LinIni e N_LinLivre
 ENDIF

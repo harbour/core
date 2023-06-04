@@ -577,15 +577,25 @@ static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
+/* FRAN REMOVE!!! Parent must come in hb_gtnap_window_modal */
 static GtNapWindow *i_parent_cuawin(GtNap *gtnap)
 {
-    uint32_t id = 0;
+    uint32_t c = 0;
     cassert_no_null(gtnap);
-    id = arrst_size(gtnap->windows, GtNapWindow);
-    if (id >= 2)
-        return arrst_get(gtnap->windows, id - 2, GtNapWindow);
-    else
-        return NULL;
+    arrst_forback(gtwin, gtnap->windows, GtNapWindow);
+        if (gtwin->parent_id == UINT32_MAX)
+        {
+            if (c > 0)
+            {
+                cassert_no_null(gtwin->window);
+                return gtwin;
+            }
+
+            c += 1;
+        }
+    arrst_end();
+
+    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2070,7 +2080,7 @@ static void i_OnEditFocus(GtNapWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_gtwin_configure(GtNapWindow *gtwin)
+static void i_gtwin_configure(GtNapWindow *gtwin, GtNapWindow *main_gtwin)
 {
     Panel *scroll_panel = NULL;
     Layout *layout = layout_create(1, 1);
@@ -2078,6 +2088,8 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
     cassert_no_null(gtwin);
     cassert(gtwin->is_configured == FALSE);
     cassert(gtwin->panel == NULL);
+    cassert_no_null(main_gtwin);
+    cassert_no_null(main_gtwin->window);
 
     gtwin->panel = panel_create();
 
@@ -2086,7 +2098,6 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
 
     panel_size(gtwin->panel, gtwin->panel_size);
     panel_layout(gtwin->panel, layout);
-    window_panel(gtwin->window, gtwin->panel);
 
     /* Create the view canvas*/
     cassert(gtwin->canvas == NULL);
@@ -2129,40 +2140,47 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
     i_attach_to_panel(gtwin->gui_objects, gtwin->panel, scroll_panel, &offset, ekOBJ_IMAGE, gtwin->toolbar);
     i_attach_toolbar_to_panel(gtwin->toolbar, gtwin->panel);
 
-    /* Tab-stops order */
-    _window_taborder(gtwin->window, NULL);
-
     if (scroll_panel != NULL)
         _component_visible((GuiComponent*)scroll_panel, TRUE);
 
-    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_MENU);
-    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_TABLEVIEW);
-    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_TEXTVIEW);
-    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_EDIT);
-    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_BUTTON);
-    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_LABEL);
-    i_component_tabstop(gtwin->gui_objects, gtwin->window, ekOBJ_IMAGE);
-    i_toolbar_tabstop(gtwin->toolbar);
+    /* We are in a main (not embedded) window */
+    if (gtwin->window != NULL)
+    {
+        cassert(gtwin == main_gtwin);
+        window_panel(gtwin->window, gtwin->panel);
+
+        /* Begin tab-stops order */
+        _window_taborder(gtwin->window, NULL);
+    }
+
+    i_component_tabstop(gtwin->gui_objects, main_gtwin->window, ekOBJ_MENU);
+    i_component_tabstop(gtwin->gui_objects, main_gtwin->window, ekOBJ_TABLEVIEW);
+    i_component_tabstop(gtwin->gui_objects, main_gtwin->window, ekOBJ_TEXTVIEW);
+    i_component_tabstop(gtwin->gui_objects, main_gtwin->window, ekOBJ_EDIT);
+    i_component_tabstop(gtwin->gui_objects, main_gtwin->window, ekOBJ_BUTTON);
+    i_component_tabstop(gtwin->gui_objects, main_gtwin->window, ekOBJ_LABEL);
+    i_component_tabstop(gtwin->gui_objects, main_gtwin->window, ekOBJ_IMAGE);
+
+    if (gtwin->window != NULL)
+    {
+        i_toolbar_tabstop(gtwin->toolbar);
+    }
+    else
+    {
+        /* Toolbar is not allowed in embedded windows */
+        cassert(gtwin->toolbar == NULL);
+    }
 
     /* Allow navigation between edit controls with arrows and return */
     if (i_num_edits(gtwin) > 1)
     {
+        /* At the moment, embedded windows with edits is not allowed */
+        GtNapObject *last_edit = NULL;
+        cassert(gtwin->window != NULL);
         window_hotkey(gtwin->window, ekKEY_UP, 0, listener(gtwin, i_OnPreviousTabstop, GtNapWindow));
         window_hotkey(gtwin->window, ekKEY_DOWN, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
         window_hotkey(gtwin->window, ekKEY_RETURN, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
-    }
 
-    if (gtwin->buttons_navigation == TRUE)
-    {
-        if (i_num_buttons(gtwin) > 1)
-        {
-            window_hotkey(gtwin->window, ekKEY_LEFT, 0, listener(gtwin, i_OnLeftButton, GtNapWindow));
-            window_hotkey(gtwin->window, ekKEY_RIGHT, 0, listener(gtwin, i_OnRightButton, GtNapWindow));
-        }
-    }
-
-    {
-        GtNapObject *last_edit = NULL;
         arrpt_foreach(obj, gtwin->gui_objects, GtNapObject)
             if (obj->type == ekOBJ_EDIT)
             {
@@ -2174,8 +2192,19 @@ static void i_gtwin_configure(GtNapWindow *gtwin)
             }
         arrpt_end();
 
-        if (last_edit != NULL)
-            last_edit->is_last_edit = TRUE;
+        cassert_no_null(last_edit);
+        last_edit->is_last_edit = TRUE;
+    }
+
+    if (gtwin->buttons_navigation == TRUE)
+    {
+        if (i_num_buttons(gtwin) > 1)
+        {
+            /* At the moment, embedded windows with button navigation is not allowed */
+            cassert(gtwin->window != NULL);
+            window_hotkey(gtwin->window, ekKEY_LEFT, 0, listener(gtwin, i_OnLeftButton, GtNapWindow));
+            window_hotkey(gtwin->window, ekKEY_RIGHT, 0, listener(gtwin, i_OnRightButton, GtNapWindow));
+        }
     }
 
     gtwin->is_configured = TRUE;
@@ -2247,7 +2276,7 @@ void hb_gtnap_terminal(void)
     cassert(arrst_size(gtnap->windows, GtNapWindow) == 0);
     hb_gtnap_window(0, 0, gtnap->rows - 1, gtnap->cols - 1, tc(gtnap->title), FALSE, TRUE, TRUE, FALSE);
     gtwin = i_current_gtwin(gtnap);
-    i_gtwin_configure(gtwin);
+    i_gtwin_configure(gtwin, gtwin);
 
     {
         uint32_t cwidth = gtwin->right - gtwin->left + 1;
@@ -2534,26 +2563,28 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     cassert_no_null(gtwin);
 
-    if (gtwin->is_configured == FALSE)
-        i_gtwin_configure(gtwin);
-
-    if (gtwin->buttons_navigation == TRUE)
-    {
-        uint32_t n = i_num_buttons(gtwin);
-        if (n > 0)
-        {
-            if (gtwin->default_button == UINT32_MAX)
-                gtwin->default_button = 0;
-            cassert(gtwin->default_button < n);
-            i_set_defbutton(gtwin);
-        }
-    }
-
-    /* Launch the window */
+    if (gtwin->parent_id == UINT32_MAX)
     {
         GtNapWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
         V2Df pos;
         uint32_t ret = 0;
+
+        if (gtwin->is_configured == FALSE)
+            i_gtwin_configure(gtwin, gtwin);
+
+        if (gtwin->buttons_navigation == TRUE)
+        {
+            uint32_t n = i_num_buttons(gtwin);
+            if (n > 0)
+            {
+                if (gtwin->default_button == UINT32_MAX)
+                    gtwin->default_button = 0;
+                cassert(gtwin->default_button < n);
+                i_set_defbutton(gtwin);
+            }
+        }
+
+        /* Launch the window */
 
         if (parent == NULL)
         {
@@ -2580,6 +2611,9 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
         ret = window_modal(gtwin->window, parent ? parent->window : NULL);
         return ret;
     }
+
+    cassert_msg(FALSE, "Embedded windows can't be launched as modals");
+    return UINT32_MAX;
 }
 
 /*---------------------------------------------------------------------------*/
