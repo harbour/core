@@ -160,8 +160,7 @@ IF SOB_MODO_GRAFICO()
             NAP_TEXTVIEW_HOTKEY(N_WindowNum, N_TextId, VN_TeclaGravar[N_Cont])
         NEXT
 
-        L_PrimAtivacao := .F.
-    ENDIF
+    ENDIF // L_PrimAtivacao
 
     IF .NOT. L_Embutida
         X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
@@ -173,8 +172,15 @@ IF SOB_MODO_GRAFICO()
             ? MEMVAR->ERR_NAP_MODAL_RETURN
         ENDIF
     ELSE
+
+        IF .NOT. L_PrimAtivacao
+            NAP_WINDOW_ACTIVATE(N_WindowNum)
+        ENDIF
+
         L_FimOK := .T.
     ENDIF
+
+    L_PrimAtivacao := .F.
 
 ELSE   // NOT SOB_MODO_GRAFICO
 

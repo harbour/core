@@ -28,7 +28,7 @@ extern int32_t hb_gtnap_inkey(const vkey_t vkey);
 
 extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
-extern uint32_t hb_gtnap_embedded_window(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
+extern uint32_t hb_gtnap_window_embedded(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
 
 extern void hb_gtnap_window_destroy(const uint32_t wid);
 
@@ -45,6 +45,8 @@ extern void hb_gtnap_window_errdate(const uint32_t wid, HB_ITEM *error_date_bloc
 extern void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
 
 extern uint32_t hb_gtnap_window_modal(const uint32_t wid);
+
+extern void hb_gtnap_window_activate(const uint32_t wid);
 
 extern uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t left, HB_ITEM *text_block, const bool_t in_scroll);
 

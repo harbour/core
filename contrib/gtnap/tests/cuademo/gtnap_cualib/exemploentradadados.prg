@@ -364,14 +364,14 @@ KEYBOARD CHR(K_HOME)+CHR(K_ESC)
 ATIVE(V_JANELA2)
 
 L_Ok := ATIVE(V_Janela)
-// IF L_OK
-//     L_OK := ATIVE(V_Janela2)
-// 	DO WHILE LASTKEY() == K_F9
-//        SETPOS(2,40)
-// 	   MOSTRAR("M15592","Entrada de dados finalizada com sucesso.")
-// 	   L_Ok := ATIVE(V_Janela)
-// 	ENDDO
-// ENDIF
+IF L_OK
+    L_OK := ATIVE(V_Janela2)
+	DO WHILE LASTKEY() == K_F9
+       SETPOS(2,40)
+	   MOSTRAR("M15592","Entrada de dados finalizada com sucesso.")
+	   L_Ok := ATIVE(V_Janela)
+	ENDDO
+ENDIF
 
 DESTRUA V_Janela2
 DESTRUA V_Janela

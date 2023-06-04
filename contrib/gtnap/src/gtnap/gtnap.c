@@ -294,6 +294,7 @@ void _panel_compose(Panel *panel, const S2Df *required_size, S2Df *final_size);
 void _panel_locate(Panel *panel);
 void _panel_detach_components(Panel *panel);
 void _window_taborder(Window *window, void *ositem);
+void _window_focus(Window *window, GuiComponent *component);
 void _panel_content_size(Panel *panel, const real32_t width, const real32_t height);
 
 __END_C
@@ -2227,7 +2228,7 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
             window_hotkey(gtwin->window, ekKEY_RIGHT, 0, listener(gtwin, i_OnRightButton, GtNapWindow));
         }
     }
-    
+
     gtwin->is_configured = TRUE;
 }
 
@@ -2440,7 +2441,7 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_embedded_window(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
+uint32_t hb_gtnap_window_embedded(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
 {
     GtNapWindow *gtwin = i_new_window(GTNAP_GLOBAL, wid, top, left, bottom, right);
     return gtwin->id;
@@ -2674,6 +2675,48 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
 
     cassert_msg(FALSE, "Embedded windows can't be launched as modals");
     return UINT32_MAX;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_window_activate(const uint32_t wid)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    cassert_no_null(gtwin);
+
+    /* Only embedded windows can be activated */
+    if (gtwin->parent_id != UINT32_MAX)
+    {
+        if (gtwin->is_configured)
+        {
+            GtNapWindow *maingtwin = i_gtwin(GTNAP_GLOBAL, gtwin->parent_id);
+            bool_t focused = FALSE;
+            cassert_no_null(maingtwin);
+            cassert(maingtwin->is_configured == TRUE);
+            cassert_no_null(maingtwin->window);
+
+            /* Activate == Move the focus to first control in embedded window */
+            arrpt_foreach(gtobj, gtwin->gui_objects, GtNapObject)
+                switch(gtobj->type) {
+                case ekOBJ_EDIT:
+                case ekOBJ_TABLEVIEW:
+                case ekOBJ_TEXTVIEW:
+                    _window_focus(maingtwin->window, gtobj->component);
+                    focused = TRUE;
+                    break;
+
+                case ekOBJ_LABEL:
+                case ekOBJ_BUTTON:
+                case ekOBJ_MENU:
+                case ekOBJ_IMAGE:
+                    break;
+                }
+
+                if (focused == TRUE)
+                    break;
+            arrpt_end();
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/
