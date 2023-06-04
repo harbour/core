@@ -172,6 +172,8 @@ IF SOB_MODO_GRAFICO()
             L_FimOK := .T.
         ELSEIF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON
             L_FimOK := .F.
+        ELSEIF X_Retorno >= NAP_MODAL_BUTTON_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
+            L_FimOK := .F.
         ELSE
             ? MEMVAR->ERR_NAP_MODAL_RETURN
         ENDIF
