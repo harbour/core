@@ -2081,8 +2081,12 @@ static void i_OnEditFocus(GtNapWindow *cuawin, Event *e)
         {
             if (cuaobj != NULL)
             {
-                GtNapObject *mes_obj = arrpt_get(cuawin->gui_objects, cuawin->message_label_id, GtNapObject);
-                i_set_edit_message(cuaobj, mes_obj);
+                // TODO: Review this in PEDEGAN
+                if (cuawin->message_label_id < arrpt_size(cuawin->gui_objects, GtNapObject))
+                {
+                    GtNapObject *mes_obj = arrpt_get(cuawin->gui_objects, cuawin->message_label_id, GtNapObject);
+                    i_set_edit_message(cuaobj, mes_obj);
+                }
             }
         }
 
@@ -4185,8 +4189,7 @@ uint32_t hb_gtnap_cualib_window_current_edit(void)
             id += 1;
         }
     arrpt_end();
-    cassert(FALSE);
-    return 0;
+    return UINT32_MAX;
 }
 
 /*---------------------------------------------------------------------------*/

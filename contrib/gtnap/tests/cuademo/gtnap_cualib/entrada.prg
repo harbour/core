@@ -602,13 +602,6 @@ ENDIF
 RETURN C_Dado
 *
 
-
-STATIC PROC NAP_ENTRADA_HELP(C_CdTela_,C_Cabec_,V_Lst_CdGET_)
-    LOCAL N_Sel := NAP_CUALIB_WINDOW_CURRENT_EDIT()
-    XXHELP(C_CdTela_,C_Cabec_,V_Lst_CdGET_[N_Sel][1],V_Lst_CdGET_)
-RETURN
-
-
 ****************************
 STATIC FUNC Ler( VX_Janela )
 ****************************
@@ -713,7 +706,7 @@ IF SOB_MODO_GRAFICO()
             #UNDEF L_E_Get
             NEXT
 
-            NAP_WINDOW_HOTKEY(N_WindowNum, K_F1, {||NAP_ENTRADA_HELP(C_CdTela,C_Cabec,V_Lst_CdGET)}, .F.)
+            //NAP_WINDOW_HOTKEY(N_WindowNum, K_F1, {||NAP_HELP(C_CdTela,C_Cabec,V_Lst_CdGET)}, .F.)
 
     ENDIF  // L_PrimAtivacao
 

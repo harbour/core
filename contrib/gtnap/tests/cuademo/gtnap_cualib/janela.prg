@@ -556,6 +556,29 @@ ENDIF
 RETURN N_Keyboard_Case
 
 
+******************************
+PROC NAP_HELP(VX_Janela)
+******************************
+LOCAL N_Sel, L_RunHelp := .F.
+
+IF N_TP_Jan == _JAN_ENTRADA_10
+    #DEFINE VX_Edicao VX_SubObj
+    #DEFINE V_Lst_CdGET VX_Edicao[20]
+    N_Sel := NAP_CUALIB_WINDOW_CURRENT_EDIT()
+    IF N_Sel > 0
+        XXHELP(C_CdTela, C_Cabec, V_Lst_CdGET[N_Sel][1], V_Lst_CdGET)
+        L_RunHelp := .T.
+    ENDIF
+    #UNDEF V_Lst_CdGET
+    #UNDEF VX_Edicao
+ENDIF
+
+IF .NOT. L_RunHelp
+    XXHELP(C_CdTela, C_Cabec, NIL, NIL)
+ENDIF
+
+RETURN
+
 **************
 FUNCTION Ative ( VX_Janela )
 **************
@@ -670,7 +693,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             ENDIF
 
             N_WindowNum := NAP_WINDOW(N_LinIni, N_ColIni, N_LinFin, N_ColFin, C_Cabec_Aux, L_CLOSE_WITH_RETURN, L_CLOSE_WITH_ESC, L_MINIMIZE_BUTTON, L_BUTTONS_NAVIGATION)
-            NAP_WINDOW_HOTKEY(N_WindowNum, K_F1,{||XXHELP(C_CdTela,C_Cabec,NIL,NIL)}, .F.)
+            NAP_WINDOW_HOTKEY(N_WindowNum, K_F1,{||NAP_HELP(VX_Janela)}, .F.)
 
             AADD(V_PilhaJanelas,{N_WindowNum,VX_Janela})
 
@@ -1114,8 +1137,8 @@ ENDIF
 *
 IF N_TP_Jan # NIL   // indica que janela foi especializada
     * Colocar em todas as telas ?
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_CALCULA} ,"Calculadora",{||HB_KeyPut(K_F5)})
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_AJUDA} ,"Ajuda",{||HB_KeyPut(K_F1)})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_CALCULA} ,"Calculadora",BLOCO_TOOLBAR({||HB_KeyPut(K_F5)}, {||CALCULADORA()}))
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_AJUDA} ,"Ajuda",BLOCO_TOOLBAR({||HB_KeyPut(K_F1)}, {||NAP_HELP(VX_Janela)}))
     *
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     *

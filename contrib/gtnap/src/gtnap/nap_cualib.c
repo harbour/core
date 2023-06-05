@@ -25,7 +25,11 @@ HB_FUNC( NAP_CUALIB_WINDOW_F4_LISTA )
 HB_FUNC( NAP_CUALIB_WINDOW_CURRENT_EDIT )
 {
     uint32_t id = hb_gtnap_cualib_window_current_edit();
-    hb_retni(id + 1);
+    if (id == UINT32_MAX)
+        id = 0;
+    else
+        id += 1;
+    hb_retni(id);
 }
 
 /*---------------------------------------------------------------------------*/

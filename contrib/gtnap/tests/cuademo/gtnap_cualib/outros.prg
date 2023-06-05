@@ -741,6 +741,12 @@ ENDIF
 RETURN N_OPCAO
 *
 *
+
+* Abra a calculadora na barra de ferramentas
+PROC CALCULADORA
+    RETURN
+
+
 // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
 //    **********************
 //    STAT FUNC DesenhaBotao(VX_Janela,N_Lin,N_Col,N_Largura)
