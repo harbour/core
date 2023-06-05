@@ -1119,7 +1119,7 @@ IF N_TP_Jan # NIL   // indica que janela foi especializada
     *
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     *
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_SAIDA} ,"Saida",{||HB_KeyPut(K_ESC)})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_SAIDA} ,"Saida", BLOCO_TOOLBAR({||HB_KeyPut(K_ESC)}, {||NAP_WINDOW_STOP_MODAL(NAP_MODAL_TOOLBAR)}))
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 ENDIF
 *
@@ -1130,6 +1130,16 @@ IF L_TOOLBAR_AINDA_SEM_BOTOES
 ENDIF
 
 
+*
+********************************
+STAT FUNC BLOCO_TOOLBAR(B_TextGT, B_GraphicGT)
+LOCAL B_Ret
+IF SOB_MODO_GRAFICO()
+    B_Ret := B_GraphicGT
+ELSE
+    B_Ret := B_TextGT
+ENDIF
+RETURN B_Ret
 
 *
 ********************************
@@ -1149,8 +1159,7 @@ ELSE
     N_TOOLBAR_COD_BITMAP := V_TOOLBAR_COD_BITMAP[1] // Índice 1, imagem indicando botão habilitado
 ENDIF
 *
-AADD(V_BotoesToolBar,{N_ToolBarCodigoAcao,N_TOOLBAR_COD_BITMAP,;
-                        C_TOOLBAR_TOOLTIP,B_TOOLBAR_BLOCO_ACAO})
+AADD(V_BotoesToolBar,{N_ToolBarCodigoAcao,N_TOOLBAR_COD_BITMAP,C_TOOLBAR_TOOLTIP,B_TOOLBAR_BLOCO_ACAO})
 
 IF N_TOOLBAR_COD_BITMAP == _BITMAP_INCLUI
     C_ICON_PATHNAME := C_BASE_PATH + "inclui.bmp"
@@ -1196,7 +1205,7 @@ ELSEIF N_TOOLBAR_COD_BITMAP == _BITMAP_SALVAR_DESAB
     C_ICON_PATHNAME := C_BASE_PATH + "salvar_i.bmp"
 ENDIF
 
-NAP_TOOLBAR_BUTTON(N_WindowNum, C_ICON_PATHNAME, C_TOOLBAR_TOOLTIP)
+NAP_TOOLBAR_BUTTON(N_WindowNum, C_ICON_PATHNAME, C_TOOLBAR_TOOLTIP, B_TOOLBAR_BLOCO_ACAO)
 
 *
 *
@@ -1992,9 +2001,7 @@ IF SOB_MODO_GRAFICO()
 
     X_Retorno_Eval := NAP_WINDOW_MODAL(N_WindowNum)
 
-    IF X_Retorno_Eval == NAP_MODAL_ESC
-        L_FechouComAutoClose = .F.
-    ELSEIF X_Retorno_Eval == NAP_MODAL_X_BUTTON
+    IF X_Retorno_Eval == NAP_MODAL_ESC .OR. X_Retorno_Eval == NAP_MODAL_X_BUTTON .OR. X_Retorno_Eval == NAP_MODAL_TOOLBAR
         L_FechouComAutoClose = .F.
     ELSEIF X_Retorno_Eval > NAP_MODAL_BUTTON_AUTOCLOSE .AND. X_Retorno_Eval <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
         L_FechouComAutoClose = .T.

@@ -392,7 +392,7 @@ IF SOB_MODO_GRAFICO()
     X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
 
     // Window closed --> Return zero or empty vector
-    IF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON
+    IF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON .OR. X_Retorno == NAP_MODAL_TOOLBAR
         IF N_TP_Selecao == _SELE_SIMPLES
             X_Retorno := 0
         ELSE

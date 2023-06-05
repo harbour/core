@@ -113,6 +113,14 @@ HB_FUNC( NAP_WINDOW_MODAL )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_WINDOW_STOP_MODAL )
+{
+    uint32_t result = hb_parni(1);
+    hb_gtnap_window_stop_modal(result);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TOOLBAR )
 {
     uint32_t wid = hb_parni(1);
@@ -127,7 +135,8 @@ HB_FUNC( NAP_TOOLBAR_BUTTON )
     uint32_t wid = hb_parni(1);
     const char_t *pathname = hb_parcx(2);
     const char_t *tooltip = hb_parcx(3);
-    hb_gtnap_toolbar_button(wid, pathname, tooltip);
+    HB_ITEM *click_block = hb_param(4, HB_IT_BLOCK);
+    hb_gtnap_toolbar_button(wid, pathname, tooltip, click_block);
 }
 
 /*---------------------------------------------------------------------------*/

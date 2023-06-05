@@ -170,7 +170,7 @@ IF SOB_MODO_GRAFICO()
         X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
         IF X_Retorno == NAP_MODAL_TEXT_CONFIRM
             L_FimOK := .T.
-        ELSEIF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON
+        ELSEIF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON .OR. X_Retorno == NAP_MODAL_TOOLBAR
             L_FimOK := .F.
         ELSEIF X_Retorno >= NAP_MODAL_BUTTON_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
             L_FimOK := .F.

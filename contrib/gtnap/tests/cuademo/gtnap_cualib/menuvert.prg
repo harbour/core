@@ -250,9 +250,7 @@ IF L_ForcaLerTudo
             X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
 
             // MenuVert return True (autoclose) or False (ESC or [X])
-            IF X_Retorno == NAP_MODAL_ESC
-                L_FechouComAutoClose = .F.
-            ELSEIF X_Retorno == NAP_MODAL_X_BUTTON
+            IF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON .OR. X_Retorno == NAP_MODAL_TOOLBAR
                 L_FechouComAutoClose = .F.
             ELSEIF X_Retorno > NAP_MODAL_BUTTON_AUTOCLOSE .AND. X_Retorno <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
                 L_FechouComAutoClose = .T.

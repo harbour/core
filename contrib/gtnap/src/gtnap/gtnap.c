@@ -174,6 +174,7 @@ struct _gtnap_t
     uint32_t button_y_size;
     uint32_t edit_y_size;
     ArrSt(GtNapWindow) *windows;
+    /* TODO Implement a stack of modal window IDs 'hb_gtnap_window_stop_modal' */
 };
 
 /*---------------------------------------------------------------------------*/
@@ -582,11 +583,11 @@ static Window *i_effective_window(GtNapWindow *gtwin, GtNap *gtnap)
 
 static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 {
-    uint32_t id = 0;
     cassert_no_null(gtnap);
-    id = arrst_size(gtnap->windows, GtNapWindow);
-    if (id >= 1)
-        return arrst_get(gtnap->windows, id - 1, GtNapWindow);
+    arrst_forback(gtwin, gtnap->windows, GtNapWindow)
+        if (gtwin->parent_id == UINT32_MAX)
+            return gtwin;
+    arrst_end();
     return NULL;
 }
 
@@ -2757,6 +2758,18 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_window_stop_modal(const uint32_t result)
+{
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    if (gtwin != NULL)
+    {
+        gtwin->modal_window_alive = FALSE;
+        window_stop_modal(gtwin->window, result);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static uint32_t i_add_object(const objtype_t type, const int32_t top, const int32_t left, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, const bool_t in_scroll, GuiComponent *component, GtNapWindow *gtwin)
 {
     uint32_t id;
@@ -4081,7 +4094,7 @@ void hb_gtnap_toolbar(const uint32_t wid, const uint32_t image_pixels)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const char_t *tooltip)
+void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const char_t *tooltip, HB_ITEM *click_block)
 {
     Image *image = NULL;
     char_t utf8[STATIC_TEXT_SIZE];
@@ -4092,6 +4105,7 @@ void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const c
     {
         GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
         Button *button = button_flat();
+        Listener *listener = i_gtnap_listener(click_block, INT32_MAX, UINT32_MAX, gtwin, i_OnButtonClick);
         cassert_no_null(gtwin);
         cassert_no_null(gtwin->toolbar);
 
@@ -4103,6 +4117,7 @@ void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const c
         }
 
         button_image(button, image);
+        button_OnClick(button, listener);
         i_cp_to_utf8(tooltip, utf8, sizeof(utf8));
         button_tooltip(button, utf8);
         arrpt_append(gtwin->toolbar->buttons, button, Button);

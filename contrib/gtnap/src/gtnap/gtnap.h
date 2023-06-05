@@ -46,6 +46,8 @@ extern void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const 
 
 extern uint32_t hb_gtnap_window_modal(const uint32_t wid);
 
+extern void hb_gtnap_window_stop_modal(const uint32_t result);
+
 extern uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t left, HB_ITEM *text_block, const bool_t in_scroll);
 
 extern uint32_t hb_gtnap_label_message(const uint32_t wid, const int32_t top, const int32_t left, const bool_t in_scroll);
@@ -116,7 +118,7 @@ extern void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id
 
 extern void hb_gtnap_toolbar(const uint32_t wid, const uint32_t image_pixels);
 
-extern void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const char_t *tooltip);
+extern void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const char_t *tooltip, HB_ITEM *click_block);
 
 extern void hb_gtnap_toolbar_separator(const uint32_t wid);
 
