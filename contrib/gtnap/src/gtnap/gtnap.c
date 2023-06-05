@@ -583,6 +583,18 @@ static Window *i_effective_window(GtNapWindow *gtwin, GtNap *gtnap)
 
 static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 {
+    uint32_t id = 0;
+    cassert_no_null(gtnap);
+    id = arrst_size(gtnap->windows, GtNapWindow);
+    if (id >= 1)
+        return arrst_get(gtnap->windows, id - 1, GtNapWindow);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapWindow *i_current_main_gtwin(GtNap *gtnap)
+{
     cassert_no_null(gtnap);
     arrst_forback(gtwin, gtnap->windows, GtNapWindow)
         if (gtwin->parent_id == UINT32_MAX)
@@ -2081,12 +2093,8 @@ static void i_OnEditFocus(GtNapWindow *cuawin, Event *e)
         {
             if (cuaobj != NULL)
             {
-                // TODO: Review this in PEDEGAN
-                if (cuawin->message_label_id < arrpt_size(cuawin->gui_objects, GtNapObject))
-                {
-                    GtNapObject *mes_obj = arrpt_get(cuawin->gui_objects, cuawin->message_label_id, GtNapObject);
-                    i_set_edit_message(cuaobj, mes_obj);
-                }
+                GtNapObject *mes_obj = arrpt_get(cuawin->gui_objects, cuawin->message_label_id, GtNapObject);
+                i_set_edit_message(cuaobj, mes_obj);
             }
         }
 
@@ -2764,7 +2772,7 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
 
 void hb_gtnap_window_stop_modal(const uint32_t result)
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    GtNapWindow *gtwin = i_current_main_gtwin(GTNAP_GLOBAL);
     if (gtwin != NULL)
     {
         gtwin->modal_window_alive = FALSE;
@@ -4180,7 +4188,7 @@ void hb_gtnap_cualib_window_f4_lista(void)
 uint32_t hb_gtnap_cualib_window_current_edit(void)
 {
     uint32_t id = 0;
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
+    GtNapWindow *cuawin = i_current_main_gtwin(GTNAP_GLOBAL);
     arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
         if (obj->type == ekOBJ_EDIT)
         {

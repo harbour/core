@@ -706,8 +706,6 @@ IF SOB_MODO_GRAFICO()
             #UNDEF L_E_Get
             NEXT
 
-            //NAP_WINDOW_HOTKEY(N_WindowNum, K_F1, {||NAP_HELP(C_CdTela,C_Cabec,V_Lst_CdGET)}, .F.)
-
     ENDIF  // L_PrimAtivacao
 
 
