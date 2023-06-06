@@ -2061,61 +2061,51 @@ static void i_OnAutoWizard(GtNapWindow *cuawin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditFocus(GtNapWindow *cuawin, Event *e)
+static void i_OnEditFocus(GtNapObject *gtobj, Event *e)
 {
-    Edit *edit = event_sender(e, Edit);
     const bool_t *p = event_params(e, bool_t);
-    GtNapObject *cuaobj = NULL;
-    cassert_no_null(cuawin);
+    GtNapWindow *gtwin = NULL;
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_EDIT);
+    gtwin = gtobj->cuawin;
+    cassert_no_null(gtwin);
 
-    // FRAN: IMPROVE
-    arrpt_foreach(obj, cuawin->gui_objects, GtNapObject)
-        if (obj->type == ekOBJ_EDIT)
-        {
-            if (edit == (Edit*)obj->component)
-            {
-                cuaobj = obj;
-                obj->has_focus = TRUE;
-            }
-            else
-            {
-                /* An edit can't lauch lista auto twice if focus doen't change to other editbox */
-                /* Avoid burst lists */
-                obj->can_auto_lista = TRUE;
-                obj->has_focus = FALSE;
-            }
-        }
-    arrpt_end();
+    gtobj->has_focus = *p;
 
     if (*p == TRUE)
     {
-        if (cuawin->message_label_id != UINT32_MAX)
-        {
-            if (cuaobj != NULL)
+        /* We sure only one control has the focus */
+        arrpt_foreach(obj, gtwin->gui_objects, GtNapObject)
+            if (obj != gtobj)
             {
-                GtNapObject *mes_obj = arrpt_get(cuawin->gui_objects, cuawin->message_label_id, GtNapObject);
-                i_set_edit_message(cuaobj, mes_obj);
+                obj->has_focus = FALSE;
+                obj->can_auto_lista = TRUE;
             }
+        arrpt_end();
+
+        if (gtwin->message_label_id != UINT32_MAX)
+        {
+            GtNapObject *mes_obj = arrpt_get(gtwin->gui_objects, gtwin->message_label_id, GtNapObject);
+            i_set_edit_message(gtobj, mes_obj);
         }
 
-        if (cuaobj->when_block != NULL)
+        if (gtobj->when_block != NULL)
         {
-            PHB_ITEM retItem = hb_itemDo(cuaobj->when_block, 0);
+            PHB_ITEM retItem = hb_itemDo(gtobj->when_block, 0);
             HB_TYPE type = HB_ITEM_TYPE(retItem);
             bool_t updated = FALSE;
-            log_printf("After WHEN Type: %d", type);
             cassert(type == HB_IT_LOGICAL);
             updated = (bool_t)hb_itemGetL(retItem);
             hb_itemRelease(retItem);
 
             if (updated == TRUE)
-                i_set_edit_text(cuaobj);
+                i_set_edit_text(gtobj);
         }
 
-        cuawin->current_obj = cuaobj;
+        gtwin->current_obj = gtobj;
 
-        edit_select(edit, 0, 0);
-        gui_OnIdle(listener(cuawin, i_OnAutoWizard, GtNapWindow));
+        edit_select((Edit*)gtobj->component, 0, 0);
+        gui_OnIdle(listener(gtwin, i_OnAutoWizard, GtNapWindow));
     }
 }
 
@@ -2243,7 +2233,7 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
             {
                 edit_OnChange((Edit*)obj->component, listener(gtwin, i_OnEditChange, GtNapWindow));
                 edit_OnFilter((Edit*)obj->component, listener(gtwin, i_OnEditFilter, GtNapWindow));
-                edit_OnFocus((Edit*)obj->component, listener(gtwin, i_OnEditFocus, GtNapWindow));
+                edit_OnFocus((Edit*)obj->component, listener(obj, i_OnEditFocus, GtNapObject));
                 obj->is_last_edit = FALSE;
                 last_edit = obj;
             }
@@ -2650,6 +2640,60 @@ void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t
     gtwin->scroll_left = left;
     gtwin->scroll_bottom = bottom;
     gtwin->scroll_right = right;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static GtNapObject *i_focus_obj(GtNapWindow *gtwin)
+{
+    GtNapObject *focus = NULL;
+    arrpt_foreach(gtobj, gtwin->gui_objects, GtNapObject)
+        if (gtobj->has_focus == TRUE)
+        {
+            cassert(focus == NULL);
+            focus = gtobj;
+        }
+    arrpt_end();
+    return focus;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_window_copy(const uint32_t wid)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    GtNapObject *gtobj = i_focus_obj(gtwin);
+    if (gtobj != NULL)
+    {
+        if (gtobj->type == ekOBJ_EDIT)
+            edit_copy((Edit*)gtobj->component);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_window_paste(const uint32_t wid)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    GtNapObject *gtobj = i_focus_obj(gtwin);
+    if (gtobj != NULL)
+    {
+        if (gtobj->type == ekOBJ_EDIT)
+            edit_paste((Edit*)gtobj->component);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_window_cut(const uint32_t wid)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    GtNapObject *gtobj = i_focus_obj(gtwin);
+    if (gtobj != NULL)
+    {
+        if (gtobj->type == ekOBJ_EDIT)
+            edit_cut((Edit*)gtobj->component);
+    }
 }
 
 /*---------------------------------------------------------------------------*/

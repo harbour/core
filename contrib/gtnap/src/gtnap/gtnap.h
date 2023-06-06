@@ -44,6 +44,12 @@ extern void hb_gtnap_window_errdate(const uint32_t wid, HB_ITEM *error_date_bloc
 
 extern void hb_gtnap_window_scroll(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right);
 
+extern void hb_gtnap_window_copy(const uint32_t wid);
+
+extern void hb_gtnap_window_paste(const uint32_t wid);
+
+extern void hb_gtnap_window_cut(const uint32_t wid);
+
 extern uint32_t hb_gtnap_window_modal(const uint32_t wid);
 
 extern void hb_gtnap_window_stop_modal(const uint32_t result);

@@ -56,18 +56,6 @@ HB_FUNC( NAP_WINDOW_HOTKEY )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_WINDOW_SCROLL )
-{
-    uint32_t wid = hb_parni(1);
-    int32_t top = hb_parni(2);
-    int32_t left = hb_parni(3);
-    int32_t bottom = hb_parni(4);
-    int32_t right = hb_parni(5);
-    hb_gtnap_window_scroll(wid, top, left, bottom, right);
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_WINDOW_EDITABLE )
 {
     uint32_t wid = hb_parni(1);
@@ -100,6 +88,42 @@ HB_FUNC( NAP_WINDOW_ERRDATE )
     uint32_t wid = hb_parni(1);
     HB_ITEM *error_date_block = hb_param(2, HB_IT_BLOCK);
     hb_gtnap_window_errdate(wid, error_date_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_WINDOW_SCROLL )
+{
+    uint32_t wid = hb_parni(1);
+    int32_t top = hb_parni(2);
+    int32_t left = hb_parni(3);
+    int32_t bottom = hb_parni(4);
+    int32_t right = hb_parni(5);
+    hb_gtnap_window_scroll(wid, top, left, bottom, right);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_WINDOW_COPY )
+{
+    uint32_t wid = hb_parni(1);
+    hb_gtnap_window_copy(wid);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_WINDOW_PASTE )
+{
+    uint32_t wid = hb_parni(1);
+    hb_gtnap_window_paste(wid);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_WINDOW_CUT )
+{
+    uint32_t wid = hb_parni(1);
+    hb_gtnap_window_cut(wid);
 }
 
 /*---------------------------------------------------------------------------*/

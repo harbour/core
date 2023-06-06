@@ -1026,20 +1026,20 @@ IF N_TP_Jan == _JAN_TEXTO_10 .OR. ;
     *
     IF L_PermiteEdicao
         * No teclado será colocado, de fato, a K_CTRL_F11, mas a AjustaTecla() voltará o conteúdo para K_CTRL_X.
-        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_RECORTAR},"Recortar",{||HB_KeyPut(K_CTRL_X_TROCADO_POR_K_CTRL_F11)})
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_RECORTAR}, "Recortar", BLOCO_TOOLBAR({||HB_KeyPut(K_CTRL_X_TROCADO_POR_K_CTRL_F11)}, {||NAP_WINDOW_CUT(N_WindowNum)}))
     ENDIF
     *
     * No teclado será colocado, de fato, a K_CTRL_F9, mas a AjustaTecla() voltará o conteúdo para K_CTRL_C.
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_COPIA},"Copiar",{||HB_KeyPut(K_CTRL_C_TROCADO_POR_K_CTRL_F9)})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_COPIA}, "Copiar", BLOCO_TOOLBAR({||HB_KeyPut(K_CTRL_C_TROCADO_POR_K_CTRL_F9)}, {||NAP_WINDOW_COPY(N_WindowNum)}))
     *
     IF L_PermiteEdicao
         * No teclado será colocado, de fato, a K_CTRL_F10, mas a AjustaTecla() voltará o conteúdo para K_CTRL_V.
-        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_COLAR},"Colar",{||HB_KeyPut(K_CTRL_V_TROCADO_POR_K_CTRL_F10)})
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_COLAR}, "Colar", BLOCO_TOOLBAR({||HB_KeyPut(K_CTRL_V_TROCADO_POR_K_CTRL_F10)}, {||NAP_WINDOW_PASTE(N_WindowNum)}))
     ENDIF
     *
     IF L_PermiteEdicao
         * No teclado será colocado, de fato, a K_CTRL_F12, mas a AjustaTecla() voltará o conteúdo para K_CTRL_Z.
-        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_DESFAZER},"Desfazer",{||HB_KeyPut(K_CTRL_Z_TROCADO_POR_K_CTRL_F12)})
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_DESFAZER}, "Desfazer", {||HB_KeyPut(K_CTRL_Z_TROCADO_POR_K_CTRL_F12)})
     ENDIF
     *
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
@@ -1137,12 +1137,12 @@ ENDIF
 *
 IF N_TP_Jan # NIL   // indica que janela foi especializada
     * Colocar em todas as telas ?
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_CALCULA} ,"Calculadora",BLOCO_TOOLBAR({||HB_KeyPut(K_F5)}, {||CALCULADORA()}))
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_AJUDA} ,"Ajuda",BLOCO_TOOLBAR({||HB_KeyPut(K_F1)}, {||NAP_HELP(VX_Janela)}))
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_CALCULA}, "Calculadora", BLOCO_TOOLBAR({||HB_KeyPut(K_F5)}, {||CALCULADORA()}))
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_AJUDA}, "Ajuda", BLOCO_TOOLBAR({||HB_KeyPut(K_F1)}, {||NAP_HELP(VX_Janela)}))
     *
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     *
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_SAIDA} ,"Saida", BLOCO_TOOLBAR({||HB_KeyPut(K_ESC)}, {||NAP_WINDOW_STOP_MODAL(NAP_MODAL_TOOLBAR)}))
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_SAIDA} ,"Saida", BLOCO_TOOLBAR({||HB_KeyPut(K_ESC)}, {||NAP_WINDOW_STOP_MODAL(NAP_MODAL_TOOLBAR)}))
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 ENDIF
 *
