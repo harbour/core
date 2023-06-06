@@ -101,7 +101,7 @@ struct _gtnap_object_t
     bool_t in_scroll;
     bool_t can_auto_lista;
     bool_t has_focus;
-    uint32_t editSize;
+    uint32_t max_chars;
     uint32_t editBoxIndexForButton;
     PHB_ITEM text_block;
     PHB_ITEM get_set_block;
@@ -112,11 +112,9 @@ struct _gtnap_object_t
     PHB_ITEM keyfilter_block;
     PHB_ITEM auto_block;
     PHB_ITEM wizard_block;
-    PHB_ITEM confirmaCodeBlock;
-    PHB_ITEM getobjItem;
     ArrSt(GtNapColumn) *columns;
     GuiComponent *component;
-    GtNapWindow *cuawin;
+    GtNapWindow *gtwin;
 };
 
 struct _gtnap_window_t
@@ -418,12 +416,6 @@ static void i_destroy_gtobject(GtNapWindow *gtwin, const uint32_t index)
 
     if (gtobj->wizard_block != NULL)
         hb_itemRelease(gtobj->wizard_block);
-
-    if (gtobj->confirmaCodeBlock != NULL)
-        hb_itemRelease(gtobj->confirmaCodeBlock);
-
-    if (gtobj->getobjItem != NULL)
-        hb_itemRelease(gtobj->getobjItem);
 
     arrst_destopt(&gtobj->columns, i_remove_column, GtNapColumn);
 
@@ -1278,7 +1270,7 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
     if (nchars != UINT32_MAX)
     {
         obj->size.width = (real32_t)(nchars * GTNAP_GLOBAL->cell_x_size);
-        if (obj->cuawin->is_configured == TRUE)
+        if (obj->gtwin->is_configured == TRUE)
             _component_set_frame(obj->component, &obj->pos, &obj->size);
     }
 }
@@ -1941,13 +1933,13 @@ static void i_OnEditFilter(GtNapWindow *cuawin, Event *e)
                     tf.text = filTec.text;
                     tf.cpos = filTec.cpos;
                     tf.len = p->len;
-                    i_filter_overwrite(&tf, res, cuaobj->editSize);
+                    i_filter_overwrite(&tf, res, cuaobj->max_chars);
                 }
 
                 cassert(res->apply == TRUE);
 
                 /* End of editable string reached. */
-                if (res->cpos >= cuaobj->editSize)
+                if (res->cpos >= cuaobj->max_chars)
                 {
                     cuawin->focus_by_previous = FALSE;
                     //cuawin->tabstop_by_return_or_arrow = TRUE;
@@ -2067,7 +2059,7 @@ static void i_OnEditFocus(GtNapObject *gtobj, Event *e)
     GtNapWindow *gtwin = NULL;
     cassert_no_null(gtobj);
     cassert(gtobj->type == ekOBJ_EDIT);
-    gtwin = gtobj->cuawin;
+    gtwin = gtobj->gtwin;
     cassert_no_null(gtwin);
 
     gtobj->has_focus = *p;
@@ -2223,7 +2215,7 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     }
 
     /* Allow navigation between edit controls with arrows and return */
-    if (i_num_edits(gtwin) > 1)
+    if (i_num_edits(gtwin) > 0)
     {
         /* At the moment, embedded windows with edits is not allowed */
         GtNapObject *last_edit = NULL;
@@ -2847,9 +2839,7 @@ static uint32_t i_add_object(const objtype_t type, const int32_t top, const int3
     obj->can_auto_lista = TRUE;
     obj->has_focus = FALSE;
     obj->editBoxIndexForButton = UINT32_MAX;
-    obj->confirmaCodeBlock = NULL;
-    obj->getobjItem = NULL;
-    obj->cuawin = gtwin;
+    obj->gtwin = gtwin;
     return id;
 }
 
@@ -3047,7 +3037,7 @@ uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t lef
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left, const uint32_t width, const char_t type, HB_ITEM *get_set_block, HB_ITEM *is_editable_block, HB_ITEM *when_block, HB_ITEM *valida_block, HB_ITEM *message_block, HB_ITEM *keyfilter_block, HB_ITEM *auto_block, HB_ITEM *wizard_block, const bool_t in_scroll)
+uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left, const uint32_t width, const char_t type, HB_ITEM *get_set_block, HB_ITEM *is_editable_block, HB_ITEM *when_block, HB_ITEM *valida_block, HB_ITEM *message_block, HB_ITEM *keyfilter_block, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     Edit *edit = edit_create();
@@ -3065,15 +3055,18 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_EDIT);
 
-    obj->editSize = width;
+    obj->max_chars = width;
 
-    if (type == 'C') {
+    if (type == 'C') 
+    {
         obj->dtype = ekTYPE_CHARACTER;
     }
-    else if (type == 'D') {
+    else if (type == 'D') 
+    {
         obj->dtype = ekTYPE_DATE;
     }
-    else {
+    else 
+    {
         obj->dtype = ENUM_MAX(datatype_t);
         cassert(FALSE);
     }
@@ -3096,63 +3089,7 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
     if (keyfilter_block != NULL)
         obj->keyfilter_block = hb_itemNew(keyfilter_block);
 
-    unref(auto_block);
-    unref(wizard_block);
-    //if (auto_block != NULL)
-    //    obj->auto_block = hb_itemNew(auto_block);
-
-    //if (wizard_block != NULL)
-    //    obj->wizard_block = hb_itemNew(wizard_block);
-
     i_set_edit_text(obj);
-
-    //if (obj->wizard_block != NULL)
-    //{
-    //    Button *button = button_push();
-    //    char_t text[8];
-    //    GtNapObject *objbut = NULL;
-    //    S2Df bsize;
-    //    uint32_t editIndex;
-
-    //    {
-    //    char_t text[8];
-    //        uint32_t b = unicode_to_char(0x25BE, text, ekUTF8);
-    //        text[b] = '\0';
-    //    }
-
-    //    //uint32_t butIndex;
-    //    button_vpadding(button, i_button_vpadding());
-    //    log_printf("EDIT (%s) HAS LISTA IN SCROLL: %d", edit_get_text((Edit*)obj->component), in_scroll);
-    //    button_text(button, text);
-    //    button_font(button, GTNAP_GLOBAL->global_font);
-
-    //    editIndex = arrpt_size(gtwin->gui_objects, GtNapObject) - 1;
-    //    bsize.width = (real32_t)(2 * GTNAP_GLOBAL->cell_x_size);
-    //    bsize.height = (real32_t)(1 * GTNAP_GLOBAL->button_y_size);
-    //    i_add_object(ekOBJ_BUTTON, (top - gtwin->top), (left - gtwin->left) + width + 1, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &bsize, in_scroll, (GuiComponent*)button, gtwin);
-
-    //    objbut = arrpt_last(gtwin->gui_objects, GtNapObject);
-    //    cassert_no_null(objbut);
-    //    cassert(objbut->type = ekOBJ_BUTTON);
-    //    cassert(objbut->editBoxIndexForButton == UINT32_MAX);
-    //    objbut->cuawin = gtwin;
-    //    objbut->editBoxIndexForButton = editIndex;
-    //    //butIndex = arrst_size(cuawin->gui_objects, GtNapObject);
-
-    //    {
-    //        Listener *listener = i_gtnap_listener(NULL, editIndex, FALSE, gtwin, i_OnListaButton);
-    //        button_OnClick(button, listener);
-    //    }
-    //}
-
-
-
-
-
-    //str_destroy(&ctext);
-
-    // if (listener != NULL)
-    //     button_OnClick(button, listener);
 
     return id;
 }
@@ -3212,7 +3149,7 @@ void hb_gtnap_edit_wizard(const uint32_t wid, const uint32_t id, const uint32_t 
         Listener *listener = NULL;
         cassert_no_null(bobj);
         cassert(bobj->type == ekOBJ_BUTTON);
-        listener = i_gtnap_listener(NULL, id, UINT32_MAX, bobj->cuawin, i_OnWizardButton);
+        listener = i_gtnap_listener(NULL, id, UINT32_MAX, bobj->gtwin, i_OnWizardButton);
         bobj->editBoxIndexForButton = id;
         button_OnClick((Button*)bobj->component, listener);
 
@@ -3225,7 +3162,7 @@ void hb_gtnap_edit_wizard(const uint32_t wid, const uint32_t id, const uint32_t 
     }
 
     if (nkey != NULL)
-        window_hotkey(obj->cuawin->window, nkey->vkey, 0, listener(obj->cuawin, i_OnKeyWizard, GtNapWindow));
+        window_hotkey(obj->gtwin->window, nkey->vkey, 0, listener(obj->gtwin, i_OnKeyWizard, GtNapWindow));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3303,7 +3240,7 @@ static void i_OnTextConfirm(GtNapObject *gtobj, Event *e)
 {
     cassert_no_null(gtobj);
     cassert(gtobj->type == ekOBJ_TEXTVIEW);
-    cassert_no_null(gtobj->cuawin);
+    cassert_no_null(gtobj->gtwin);
     unref(e);
     if (gtobj->get_set_block != NULL)
     {
@@ -3341,9 +3278,9 @@ static void i_OnTextConfirm(GtNapObject *gtobj, Event *e)
         /* Confirma the text */
         if (valid == TRUE)
         {
-            if (gtobj->cuawin->confirm_block != NULL)
+            if (gtobj->gtwin->confirm_block != NULL)
             {
-                HB_ITEM *ritem = hb_itemDo(gtobj->cuawin->confirm_block, 0);
+                HB_ITEM *ritem = hb_itemDo(gtobj->gtwin->confirm_block, 0);
                 cassert(HB_ITEM_TYPE(ritem) == HB_IT_LOGICAL);
                 confirm = (bool_t)hb_itemGetL(ritem);
                 hb_itemRelease(ritem);
@@ -3361,9 +3298,9 @@ static void i_OnTextConfirm(GtNapObject *gtobj, Event *e)
 
         if (confirm == TRUE)
         {
-            GtNapWindow *gtwin = gtobj->cuawin;
-            if (gtobj->cuawin->parent_id != UINT32_MAX)
-                gtwin = i_gtwin(GTNAP_GLOBAL, gtobj->cuawin->parent_id);
+            GtNapWindow *gtwin = gtobj->gtwin;
+            if (gtwin->parent_id != UINT32_MAX)
+                gtwin = i_gtwin(GTNAP_GLOBAL, gtwin->parent_id);
 
             gtwin->modal_window_alive = FALSE;
             window_stop_modal(gtwin->window, NAP_MODAL_TEXT_CONFIRM);
@@ -3394,7 +3331,7 @@ void hb_gtnap_textview_hotkey(uint32_t wid, uint32_t id, int32_t key)
     cassert(obj->type == ekOBJ_TEXTVIEW);
     if (nkey != NULL)
     {
-        Window *window = i_effective_window(obj->cuawin, GTNAP_GLOBAL);
+        Window *window = i_effective_window(obj->gtwin, GTNAP_GLOBAL);
         window_hotkey(window, nkey->vkey, nkey->modifiers, listener(obj, i_OnTextConfirm, GtNapObject));
     }
 }
@@ -3422,9 +3359,9 @@ void hb_gtnap_menu_add(const uint32_t wid, uint32_t id, HB_ITEM *text_block, HB_
 {
     GtNapObject *gtobj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(gtobj);
-    cassert_no_null(gtobj->cuawin);
+    cassert_no_null(gtobj->gtwin);
     cassert(gtobj->type == ekOBJ_MENU);
-    nap_menu_add((Panel*)gtobj->component, gtobj->cuawin->window, text_block, click_block, kpos);
+    nap_menu_add((Panel*)gtobj->component, gtobj->gtwin->window, text_block, click_block, kpos);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3722,7 +3659,7 @@ void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM
     GtNapWindow *gtwin = NULL;
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    gtwin = obj->cuawin;
+    gtwin = obj->gtwin;
     cassert_no_null(gtwin);
 
     if (gtwin->gtarea != NULL)
@@ -3797,7 +3734,7 @@ static void i_OnTableData(GtNapObject *gtobj, Event *e)
     uint32_t etype = event_type(e);
     cassert_no_null(gtobj);
     cassert(gtobj->type == ekOBJ_TABLEVIEW);
-    cassert_no_null(gtobj->cuawin);
+    cassert_no_null(gtobj->gtwin);
 
     switch(etype) {
     case ekGUI_EVENT_TBL_BEGIN:
@@ -3809,7 +3746,7 @@ static void i_OnTableData(GtNapObject *gtobj, Event *e)
     case ekGUI_EVENT_TBL_NROWS:
     {
         uint32_t *n = event_result(e, uint32_t);
-        *n = gtobj->cuawin->num_rows;
+        *n = gtobj->gtwin->num_rows;
         break;
     }
 
@@ -3834,7 +3771,7 @@ void hb_gtnap_tableview_bind_data(const uint32_t wid, const uint32_t id, const u
     GtNapWindow *gtwin = NULL;
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    gtwin = obj->cuawin;
+    gtwin = obj->gtwin;
     cassert_no_null(gtwin);
     gtwin->num_rows = num_rows;
     tableview_OnData((TableView*)obj->component, listener(obj, i_OnTableData, GtNapObject));
@@ -3926,7 +3863,7 @@ uint32_t hb_gtnap_tableview_recno_from_row(const uint32_t wid, const uint32_t id
     GtNapWindow *gtwin = NULL;
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    gtwin = obj->cuawin;
+    gtwin = obj->gtwin;
     cassert_no_null(gtwin);
     if (gtwin->gtarea != NULL)
     {
@@ -3958,7 +3895,7 @@ uint32_t hb_gtnap_tableview_row_from_recno(const uint32_t wid, const uint32_t id
     GtNapWindow *gtwin = NULL;
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    gtwin = obj->cuawin;
+    gtwin = obj->gtwin;
     cassert_no_null(gtwin);
     if (gtwin->gtarea != NULL)
     {
@@ -4120,7 +4057,7 @@ void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id)
     TableView *view = NULL;
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    gtwin = obj->cuawin;
+    gtwin = obj->gtwin;
     view = (TableView*)obj->component;
     cassert_no_null(gtwin);
     if (gtwin->gtarea != NULL && view != NULL)

@@ -666,8 +666,6 @@ IF SOB_MODO_GRAFICO()
                                         X_Info:POSTBLOCK, ;
                                         B_Mess, ;
                                         B_FiltroTec, ;
-                                        NIL, ;
-                                        NIL, ;
                                         L_ScrollVertical)
 
                 // We create a wizard for editbox

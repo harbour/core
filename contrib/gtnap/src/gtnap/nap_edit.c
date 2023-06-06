@@ -20,10 +20,8 @@ HB_FUNC( NAP_EDIT )
     HB_ITEM *valida_block = hb_param(9, HB_IT_BLOCK);
     HB_ITEM *message_block = hb_param(10, HB_IT_BLOCK);
     HB_ITEM *keyfilter_block = hb_param(11, HB_IT_BLOCK);
-    HB_ITEM *auto_block = hb_param(12, HB_IT_BLOCK);
-    HB_ITEM *lista_block = hb_param(13, HB_IT_BLOCK);
-    bool_t in_scroll = (bool_t)hb_parl(14);
-    uint32_t id = hb_gtnap_edit(wid, top, left, width, type ? type[0] : 'X', get_set_block, is_editable_block, when_block, valida_block, message_block, keyfilter_block, auto_block, lista_block, in_scroll);
+    bool_t in_scroll = (bool_t)hb_parl(12);
+    uint32_t id = hb_gtnap_edit(wid, top, left, width, type ? type[0] : 'X', get_set_block, is_editable_block, when_block, valida_block, message_block, keyfilter_block, in_scroll);
     hb_retni(id);
 }
 
