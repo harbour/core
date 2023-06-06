@@ -405,6 +405,25 @@ void osedit_bounds(const OSEdit *edit, const real32_t refwidth, const uint32_t l
 
 /*---------------------------------------------------------------------------*/
 
+void osedit_clipboard(OSEdit *edit, const clipboard_t clipboard)
+{
+    cassert_no_null(edit);
+    switch(clipboard) {
+    case ekCLIPBOARD_COPY:
+        SendMessage(edit->control.hwnd, WM_COPY, (WPARAM)0, (LPARAM)0);
+        break;
+    case ekCLIPBOARD_PASTE:
+        SendMessage(edit->control.hwnd, WM_PASTE, (WPARAM)0, (LPARAM)0);
+        break;
+    case ekCLIPBOARD_CUT:
+        SendMessage(edit->control.hwnd, WM_CUT, (WPARAM)0, (LPARAM)0);
+        break;
+    cassert_default();
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void osedit_attach(OSEdit *edit, OSPanel *panel)
 {
     _ospanel_attach_control(panel, (OSControl*)edit);

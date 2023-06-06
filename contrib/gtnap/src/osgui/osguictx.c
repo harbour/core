@@ -126,6 +126,7 @@ GuiCtx *osguictx(void)
                         osedit_bgcolor,
                         osedit_vpadding,
                         osedit_bounds,
+                        osedit_clipboard,
                         osedit_attach,
                         osedit_detach,
                         osedit_visible,

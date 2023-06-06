@@ -334,6 +334,7 @@ void guictx_append_edit_manager_imp(
                         FPtr_gctx_set_uint32 func_edit_set_bg_color,
                         FPtr_gctx_set_real32 func_edit_set_vpadding,
                         FPtr_gctx_bounds4 func_edit_bounds,
+                        FPtr_gctx_clipboard func_edit_clipboard,
                         FPtr_gctx_set_ptr func_attach_edit_to_panel,
                         FPtr_gctx_set_ptr func_detach_edit_from_panel,
                         FPtr_gctx_set_bool func_edit_set_visible,
@@ -360,6 +361,7 @@ void guictx_append_edit_manager_imp(
     cassert(context->func_edit_set_bg_color == NULL);
     cassert(context->func_edit_set_vpadding == NULL);
     cassert(context->func_edit_bounds == NULL);
+    cassert(context->func_edit_clipboard == NULL);
     cassert(context->func_attach_to_panel[ekGUI_TYPE_EDITBOX] == NULL);
     cassert(context->func_detach_from_panel[ekGUI_TYPE_EDITBOX] == NULL);
     cassert(context->func_set_visible[ekGUI_TYPE_EDITBOX] == NULL);
@@ -384,6 +386,7 @@ void guictx_append_edit_manager_imp(
     cassert_no_nullf(func_edit_set_bg_color);
     cassert_no_nullf(func_edit_set_vpadding);
     cassert_no_nullf(func_edit_bounds);
+    cassert_no_nullf(func_edit_clipboard);
     cassert_no_nullf(func_attach_edit_to_panel);
     cassert_no_nullf(func_detach_edit_from_panel);
     cassert_no_nullf(func_edit_set_visible);
@@ -408,6 +411,7 @@ void guictx_append_edit_manager_imp(
     context->func_edit_set_bg_color = func_edit_set_bg_color;
     context->func_edit_set_vpadding = func_edit_set_vpadding;
     context->func_edit_bounds = func_edit_bounds;
+    context->func_edit_clipboard = func_edit_clipboard;
     context->func_attach_to_panel[ekGUI_TYPE_EDITBOX] = func_attach_edit_to_panel;
     context->func_detach_from_panel[ekGUI_TYPE_EDITBOX] = func_detach_edit_from_panel;
     context->func_set_visible[ekGUI_TYPE_EDITBOX] = func_edit_set_visible;

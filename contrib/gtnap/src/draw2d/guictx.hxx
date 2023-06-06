@@ -214,6 +214,13 @@ typedef enum _gui_prop_t
     ekGUI_PROP_VSCROLL
 } gui_prop_t;
 
+typedef enum _clipboard_t
+{
+    ekCLIPBOARD_COPY,
+    ekCLIPBOARD_CUT,
+    ekCLIPBOARD_PASTE
+} clipboard_t;
+
 typedef enum _label_flag_t
 {
     ekLABEL_FLAG    = 0,
@@ -591,6 +598,10 @@ typedef void(*FPtr_gctx_draw_image)(void*, const Image*, const int32_t, const in
 #define FUNC_CHECK_GCTX_DRAW_IMAGE(func, type, enum_type)\
     (void)((void(*)(type*, const Image*, const int32_t, const int32_t, const enum_type))func == func)
 
+typedef void(*FPtr_gctx_clipboard)(void*, const clipboard_t);
+#define FUNC_CHECK_GCTX_CLIPBOARD(func, type)\
+    (void)((void(*)(type*, const clipboard_t))func == func)
+
 struct _guictx_t
 {
     uint32_t retain_count;
@@ -654,6 +665,7 @@ struct _guictx_t
     FPtr_gctx_set_uint32 func_edit_set_bg_color;
     FPtr_gctx_set_real32 func_edit_set_vpadding;
     FPtr_gctx_bounds4 func_edit_bounds;
+    FPtr_gctx_clipboard func_edit_clipboard;
 
     /*! <Combo> */
     FPtr_gctx_set_listener func_combo_OnFilter;

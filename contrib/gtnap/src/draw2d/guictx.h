@@ -295,6 +295,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
                         FPtr_gctx_set_uint32 func_edit_set_bg_color,
                         FPtr_gctx_set_real32 func_edit_set_vpadding,
                         FPtr_gctx_bounds4 func_edit_bounds,
+                        FPtr_gctx_clipboard func_edit_clipboard,
                         FPtr_gctx_set_ptr func_attach_edit_to_panel,
                         FPtr_gctx_set_ptr func_detach_edit_from_panel,
                         FPtr_gctx_set_bool func_edit_set_visible,
@@ -321,6 +322,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
                         func_edit_set_bg_color,\
                         func_edit_set_vpadding,\
                         func_edit_bounds,\
+                        func_edit_clipboard,\
                         func_attach_edit_to_panel,\
                         func_detach_edit_from_panel,\
                         func_edit_set_visible,\
@@ -347,6 +349,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
         FUNC_CHECK_GCTX_SET_UINT32(func_edit_set_bg_color, edit_type),\
         FUNC_CHECK_GCTX_SET_REAL32(func_edit_set_vpadding, edit_type),\
         FUNC_CHECK_GCTX_BOUNDS4(func_edit_bounds, edit_type),\
+        FUNC_CHECK_GCTX_CLIPBOARD(func_edit_clipboard, edit_type),\
         FUNC_CHECK_GCTX_SET_PTR(func_attach_edit_to_panel, edit_type, panel_type),\
         FUNC_CHECK_GCTX_SET_PTR(func_detach_edit_from_panel, edit_type, panel_type),\
         FUNC_CHECK_GCTX_SET_BOOL(func_edit_set_visible, edit_type),\
@@ -373,6 +376,7 @@ _draw2d_api void guictx_append_edit_manager_imp(
                         (FPtr_gctx_set_uint32)func_edit_set_bg_color,\
                         (FPtr_gctx_set_real32)func_edit_set_vpadding,\
                         (FPtr_gctx_bounds4)func_edit_bounds,\
+                        (FPtr_gctx_clipboard)func_edit_clipboard,\
                         (FPtr_gctx_set_ptr)func_attach_edit_to_panel,\
                         (FPtr_gctx_set_ptr)func_detach_edit_from_panel,\
                         (FPtr_gctx_set_bool)func_edit_set_visible,\

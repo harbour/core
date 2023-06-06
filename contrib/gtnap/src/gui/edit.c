@@ -439,6 +439,33 @@ real32_t edit_get_height(const Edit *edit)
 
 /*---------------------------------------------------------------------------*/
 
+void edit_copy(const Edit *edit)
+{
+    cassert_no_null(edit);
+    cassert_no_nullf(edit->component.context->func_edit_clipboard);
+    edit->component.context->func_edit_clipboard(edit->component.ositem, ekCLIPBOARD_COPY);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void edit_cut(Edit *edit)
+{
+    cassert_no_null(edit);
+    cassert_no_nullf(edit->component.context->func_edit_clipboard);
+    edit->component.context->func_edit_clipboard(edit->component.ositem, ekCLIPBOARD_CUT);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void edit_paste(Edit *edit)
+{
+    cassert_no_null(edit);
+    cassert_no_nullf(edit->component.context->func_edit_clipboard);
+    edit->component.context->func_edit_clipboard(edit->component.ositem, ekCLIPBOARD_PASTE);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void _edit_dimension(Edit *edit, const uint32_t i, real32_t *dim0, real32_t *dim1)
 {
     cassert_no_null(edit);

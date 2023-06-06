@@ -48,6 +48,7 @@ _osgui_api void osedit_vpadding(OSEdit *edit, const real32_t padding);
 
 _osgui_api void osedit_bounds(const OSEdit *edit, const real32_t refwidth, const uint32_t lines, real32_t *width, real32_t *height);
 
+_osgui_api void osedit_clipboard(OSEdit *edit, const clipboard_t clipboard);
 
 _osgui_api void osedit_attach(OSEdit *edit, OSPanel *panel);
 
