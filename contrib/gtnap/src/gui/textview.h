@@ -17,6 +17,8 @@ __EXTERN_C
 
 _gui_api TextView *textview_create(void);
 
+_gui_api void textview_OnFocus(TextView *view, Listener *listener);
+
 _gui_api void textview_size(TextView *view, const S2Df size);
 
 _gui_api void textview_clear(TextView *view);

@@ -20,6 +20,8 @@ _osgui_api void ostext_destroy(OSText **view);
 
 _osgui_api void ostext_OnTextChange(OSText *view, Listener *listener);
 
+_osgui_api void ostext_OnFocus(OSText *view, Listener *listener);
+
 _osgui_api void ostext_insert_text(OSText *view, const char_t *text);
 
 _osgui_api void ostext_set_text(OSText *view, const char_t *text);

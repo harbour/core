@@ -261,6 +261,7 @@ GuiCtx *osguictx(void)
                         ostext_create,
                         ostext_destroy,
                         ostext_OnTextChange,
+                        ostext_OnFocus,
                         ostext_insert_text,
                         ostext_set_text,
                         ostext_set_rtf,

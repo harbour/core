@@ -29,7 +29,17 @@ struct _textview_t
     GuiComponent component;
     S2Df size;
     Listener *OnChange;
+    Listener *OnFocus;
 };
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnFocus(TextView *view, Event *e)
+{
+    cassert_no_null(view);
+    if (view->OnFocus != NULL)
+        listener_pass_event(view->OnFocus, e, view, TextView);
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -59,6 +69,7 @@ TextView *textview_create(void)
     context->func_text_set_prop(ositem, ekGUI_PROP_BFPARSPACE, (void*)&bfpspace);
     context->func_text_set_prop(ositem, ekGUI_PROP_AFPARSPACE, (void*)&afpspace);
     _component_init(&view->component, context, PARAM(type, ekGUI_TYPE_TEXTVIEW), &ositem);
+    context->func_text_OnFocus(view->component.ositem, obj_listener(view, i_OnFocus, TextView));
     font_destroy(&font);
     return view;
 }
@@ -71,6 +82,7 @@ void _textview_destroy(TextView **view)
     cassert_no_null(*view);
     _component_destroy_imp(&(*view)->component);
     listener_destroy(&(*view)->OnChange);
+    listener_destroy(&(*view)->OnFocus);
     obj_delete(view, TextView);
 }
 
@@ -82,6 +94,14 @@ void _textview_destroy(TextView **view)
     cassert_no_null(view->OnTextChange.object);
     listener_pass_event(&view->OnTextChange, view, event, Text);
 }*/
+
+/*---------------------------------------------------------------------------*/
+
+void textview_OnFocus(TextView *view, Listener *listener)
+{
+    cassert_no_null(view);
+    listener_update(&view->OnFocus, listener);
+}
 
 /*---------------------------------------------------------------------------*/
 

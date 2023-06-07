@@ -2058,10 +2058,10 @@ static void i_OnEditFocus(GtNapObject *gtobj, Event *e)
     gtwin = gtobj->gtwin;
     cassert_no_null(gtwin);
 
-    gtobj->has_focus = *p;
-
     if (*p == TRUE)
     {
+        gtobj->has_focus = TRUE;
+
         /* We sure only one control has the focus */
         arrpt_foreach(obj, gtwin->objects, GtNapObject)
             if (obj != gtobj)
@@ -2094,6 +2094,32 @@ static void i_OnEditFocus(GtNapObject *gtobj, Event *e)
 
         edit_select((Edit*)gtobj->component, 0, 0);
         gui_OnIdle(listener(gtwin, i_OnAutoWizard, GtNapWindow));
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnTextFocus(GtNapObject *gtobj, Event *e)
+{
+    const bool_t *p = event_params(e, bool_t);
+    GtNapWindow *gtwin = NULL;
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_TEXTVIEW);
+    gtwin = gtobj->gtwin;
+    cassert_no_null(gtwin);
+
+    if (*p == TRUE)
+    {
+        gtobj->has_focus = TRUE;
+
+        /* We sure only one control has the focus */
+        arrpt_foreach(obj, gtwin->objects, GtNapObject)
+            if (obj != gtobj)
+            {
+                obj->has_focus = FALSE;
+                obj->can_auto_lista = TRUE;
+            }
+        arrpt_end();
     }
 }
 
@@ -2230,6 +2256,14 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         cassert_no_null(last_edit);
         last_edit->is_last_edit = TRUE;
     }
+
+    /* Allow TextView listeners */
+    arrpt_foreach(obj, gtwin->objects, GtNapObject)
+        if (obj->type == ekOBJ_TEXTVIEW)
+        {
+            textview_OnFocus((TextView*)obj->component, listener(obj, i_OnTextFocus, GtNapObject));
+        }
+    arrpt_end();
 
     if (gtwin->buttons_navigation == TRUE)
     {

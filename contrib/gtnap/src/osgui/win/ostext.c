@@ -52,6 +52,7 @@ struct _ostext_t
     bool_t is_editable;
     RECT border;
     Listener *OnChange;
+    Listener *OnFocus;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -79,13 +80,28 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
     case WM_SETFOCUS:
         if (_oswindow_in_tablist((OSControl*)view) == TRUE)
         {
+            if (view->OnFocus != NULL)
+            {
+                bool_t params = TRUE;
+                listener_event(view->OnFocus, ekGUI_EVENT_FOCUS, view, &params, NULL, OSText, bool_t, void);
+            }
+
             RedrawWindow(hwnd, NULL, NULL, RDW_FRAME | RDW_INVALIDATE);
             break;
         }
         return 0;
 
     case WM_KILLFOCUS:
-        RedrawWindow(hwnd, NULL, NULL, RDW_FRAME | RDW_INVALIDATE);
+        if (_oswindow_in_tablist((OSControl*)view) == TRUE)
+        {
+            if (view->OnFocus != NULL)
+            {
+                bool_t params = FALSE;
+                listener_event(view->OnFocus, ekGUI_EVENT_FOCUS, view, &params, NULL, OSText, bool_t, void);
+            }
+
+            RedrawWindow(hwnd, NULL, NULL, RDW_FRAME | RDW_INVALIDATE);
+        }
         break;
 
     case WM_PAINT:
@@ -174,6 +190,7 @@ void ostext_destroy(OSText **view)
     cassert_no_null(view);
     cassert_no_null(*view);
     listener_destroy(&(*view)->OnChange);
+    listener_destroy(&(*view)->OnFocus);
 
     if ((*view)->text != NULL)
         heap_free((byte_t**)&(*view)->text, (*view)->text_size, "OSTextText");
@@ -193,6 +210,14 @@ void ostext_OnTextChange(OSText *view, Listener *listener)
         SendMessage(view->control.hwnd, EM_SETEVENTMASK, (WPARAM)0, ENM_CHANGE);
     else
         SendMessage(view->control.hwnd, EM_SETEVENTMASK, (WPARAM)0, ENM_NONE);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void ostext_OnFocus(OSText *view, Listener *listener)
+{
+    cassert_no_null(view);
+    listener_update(&view->OnFocus, listener);
 }
 
 /*---------------------------------------------------------------------------*/

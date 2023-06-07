@@ -699,6 +699,7 @@ struct _guictx_t
 
     /*! <Text view> */
     FPtr_gctx_set_listener func_text_OnTextChange;
+    FPtr_gctx_set_listener func_text_OnFocus;
     FPtr_gctx_set_text func_text_insert_text;
     FPtr_gctx_set_text func_text_set_text;
     FPtr_gctx_set_ptr func_text_set_rtf;

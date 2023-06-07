@@ -704,6 +704,7 @@ void guictx_append_text_manager_imp(
                         FPtr_gctx_create func_text_create,
                         FPtr_gctx_destroy func_text_destroy,
                         FPtr_gctx_set_listener func_text_OnTextChange,
+                        FPtr_gctx_set_listener func_text_OnFocus,
                         FPtr_gctx_set_text func_text_insert_text,
                         FPtr_gctx_set_text func_text_set_text,
                         FPtr_gctx_set_ptr func_text_set_rtf,
@@ -725,6 +726,7 @@ void guictx_append_text_manager_imp(
     cassert(context->func_create[ekGUI_TYPE_TEXTVIEW] == NULL);
     cassert(context->func_destroy[ekGUI_TYPE_TEXTVIEW] == NULL);
     cassert(context->func_text_OnTextChange == NULL);
+    cassert(context->func_text_OnFocus == NULL);
     cassert(context->func_text_insert_text == NULL);
     cassert(context->func_text_set_text == NULL);
     cassert(context->func_text_set_rtf == NULL);
@@ -744,6 +746,7 @@ void guictx_append_text_manager_imp(
     cassert_no_nullf(func_text_create);
     cassert_no_nullf(func_text_destroy);
     cassert_no_nullf(func_text_OnTextChange);
+    cassert_no_nullf(func_text_OnFocus);
     cassert_no_nullf(func_text_insert_text);
     cassert_no_nullf(func_text_set_text);
     cassert_no_nullf(func_text_set_rtf);
@@ -763,6 +766,7 @@ void guictx_append_text_manager_imp(
     context->func_create[ekGUI_TYPE_TEXTVIEW] = func_text_create;
     context->func_destroy[ekGUI_TYPE_TEXTVIEW] = func_text_destroy;
     context->func_text_OnTextChange = func_text_OnTextChange;
+    context->func_text_OnFocus = func_text_OnFocus;
     context->func_text_insert_text = func_text_insert_text;
     context->func_text_set_text = func_text_set_text;
     context->func_text_set_rtf = func_text_set_rtf;

@@ -45,9 +45,9 @@ struct _edit_t
     color_t bg_color;
     color_t bg_focus_color;
     color_t placeholder_color;
-    Listener *OnFocus;
     Listener *OnFilter;
     Listener *OnChange;
+    Listener *OnFocus;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -57,9 +57,9 @@ void _edit_destroy(Edit **edit)
     cassert_no_null(edit);
     cassert_no_null(*edit);
     _component_destroy_imp(&(*edit)->component);
-    listener_destroy(&(*edit)->OnFocus);
     listener_destroy(&(*edit)->OnFilter);
     listener_destroy(&(*edit)->OnChange);
+    listener_destroy(&(*edit)->OnFocus);
     ptr_destopt(str_destroy, &(*edit)->placeholder, String);
     str_destroy(&(*edit)->text);
     font_destroy(&(*edit)->font);
