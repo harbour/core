@@ -712,6 +712,7 @@ void guictx_append_text_manager_imp(
                         FPtr_gctx_get_text func_text_get_text,
                         FPtr_gctx_set2_bool func_text_scroller_visible,
                         FPtr_gctx_call func_text_set_need_display,
+                        FPtr_gctx_clipboard func_text_clipboard,
                         FPtr_gctx_set_ptr func_attach_text_to_panel,
                         FPtr_gctx_set_ptr func_detach_text_from_panel,
                         FPtr_gctx_set_bool func_text_set_visible,
@@ -732,6 +733,7 @@ void guictx_append_text_manager_imp(
     cassert(context->func_text_get_text == NULL);
     cassert(context->func_text_scroller_visible == NULL);
     cassert(context->func_text_set_need_display == NULL);
+    cassert(context->func_text_clipboard == NULL);
     cassert(context->func_attach_to_panel[ekGUI_TYPE_TEXTVIEW] == NULL);
     cassert(context->func_detach_from_panel[ekGUI_TYPE_TEXTVIEW] == NULL);
     cassert(context->func_set_visible[ekGUI_TYPE_TEXTVIEW] == NULL);
@@ -750,6 +752,7 @@ void guictx_append_text_manager_imp(
     cassert_no_nullf(func_text_get_text);
     cassert_no_nullf(func_text_scroller_visible);
     cassert_no_nullf(func_text_set_need_display);
+    cassert_no_nullf(func_text_clipboard);
     cassert_no_nullf(func_attach_text_to_panel);
     cassert_no_nullf(func_detach_text_from_panel);
     cassert_no_nullf(func_text_set_visible);
@@ -768,6 +771,7 @@ void guictx_append_text_manager_imp(
     context->func_text_get_text = func_text_get_text;
     context->func_text_scroller_visible = func_text_scroller_visible;
     context->func_text_set_need_display = func_text_set_need_display;
+    context->func_text_clipboard = func_text_clipboard;
     context->func_attach_to_panel[ekGUI_TYPE_TEXTVIEW] = func_attach_text_to_panel;
     context->func_detach_from_panel[ekGUI_TYPE_TEXTVIEW] = func_detach_text_from_panel;
     context->func_set_visible[ekGUI_TYPE_TEXTVIEW] = func_text_set_visible;

@@ -36,6 +36,7 @@ _osgui_api void ostext_scroller_visible(OSText *view, const bool_t horizontal, c
 
 _osgui_api void ostext_set_need_display(OSText *view);
 
+_osgui_api void ostext_clipboard(OSText *view, const clipboard_t clipboard);
 
 _osgui_api void ostext_attach(OSText *view, OSPanel *panel);
 

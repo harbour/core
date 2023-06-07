@@ -707,6 +707,7 @@ struct _guictx_t
     FPtr_gctx_get_text func_text_get_text;
     FPtr_gctx_set2_bool func_text_scroller_visible;
     FPtr_gctx_call func_text_set_need_display;
+    FPtr_gctx_clipboard func_text_clipboard;
 
     /*! <Split view> */
     FPtr_gctx_set_ptr func_split_attach_control;

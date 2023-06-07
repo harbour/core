@@ -2655,6 +2655,8 @@ void hb_gtnap_window_copy(const uint32_t wid)
     {
         if (gtobj->type == ekOBJ_EDIT)
             edit_copy((Edit*)gtobj->component);
+        else if (gtobj->type == ekOBJ_TEXTVIEW)
+            textview_copy((TextView*)gtobj->component);
     }
 }
 
@@ -2668,6 +2670,8 @@ void hb_gtnap_window_paste(const uint32_t wid)
     {
         if (gtobj->type == ekOBJ_EDIT)
             edit_paste((Edit*)gtobj->component);
+        else if (gtobj->type == ekOBJ_TEXTVIEW)
+            textview_paste((TextView*)gtobj->component);
     }
 }
 
@@ -2681,6 +2685,8 @@ void hb_gtnap_window_cut(const uint32_t wid)
     {
         if (gtobj->type == ekOBJ_EDIT)
             edit_cut((Edit*)gtobj->component);
+        else if (gtobj->type == ekOBJ_TEXTVIEW)
+            textview_cut((TextView*)gtobj->component);
     }
 }
 

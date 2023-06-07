@@ -331,6 +331,33 @@ const char_t *textview_get_text(const TextView *view)
 
 /*---------------------------------------------------------------------------*/
 
+void textview_copy(const TextView *view)
+{
+    cassert_no_null(view);
+    cassert_no_nullf(view->component.context->func_text_clipboard);
+    view->component.context->func_text_clipboard(view->component.ositem, ekCLIPBOARD_COPY);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void textview_cut(TextView *view)
+{
+    cassert_no_null(view);
+    cassert_no_nullf(view->component.context->func_text_clipboard);
+    view->component.context->func_text_clipboard(view->component.ositem, ekCLIPBOARD_CUT);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void textview_paste(TextView *view)
+{
+    cassert_no_null(view);
+    cassert_no_nullf(view->component.context->func_text_clipboard);
+    view->component.context->func_text_clipboard(view->component.ositem, ekCLIPBOARD_PASTE);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void _textview_dimension(TextView *view, const uint32_t i, real32_t *dim0, real32_t *dim1)
 {
     cassert_no_null(view);

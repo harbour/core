@@ -57,5 +57,11 @@ _gui_api void textview_editable(TextView *view, const bool_t is_editable);
 
 _gui_api const char_t *textview_get_text(const TextView *view);
 
+_gui_api void textview_copy(const TextView *view);
+
+_gui_api void textview_cut(TextView *view);
+
+_gui_api void textview_paste(TextView *view);
+
 __END_C
 

@@ -269,6 +269,7 @@ GuiCtx *osguictx(void)
                         ostext_get_text,
                         ostext_scroller_visible,
                         ostext_set_need_display,
+                        ostext_clipboard,
                         ostext_attach,
                         ostext_detach,
                         ostext_visible,

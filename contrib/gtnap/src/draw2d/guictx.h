@@ -683,6 +683,7 @@ _draw2d_api void guictx_append_text_manager_imp(
                         FPtr_gctx_get_text func_text_get_text,
                         FPtr_gctx_set2_bool func_text_scroller_visible,
                         FPtr_gctx_call func_text_set_need_display,
+                        FPtr_gctx_clipboard func_text_clipboard,
                         FPtr_gctx_set_ptr func_attach_text_to_panel,
                         FPtr_gctx_set_ptr func_detach_text_from_panel,
                         FPtr_gctx_set_bool func_text_set_visible,
@@ -703,6 +704,7 @@ _draw2d_api void guictx_append_text_manager_imp(
                         func_text_get_text,\
                         func_text_scroller_visible,\
                         func_text_set_need_display,\
+                        func_text_clipboard,\
                         func_attach_text_to_panel,\
                         func_detach_text_from_panel,\
                         func_text_set_visible,\
@@ -723,6 +725,7 @@ _draw2d_api void guictx_append_text_manager_imp(
         FUNC_CHECK_GCTX_GET_TEXT(func_text_get_text, text_type),\
         FUNC_CHECK_GCTX_SET2_BOOL(func_text_scroller_visible, text_type),\
         FUNC_CHECK_GCTX_CALL(func_text_set_need_display, text_type),\
+        FUNC_CHECK_GCTX_CLIPBOARD(func_text_clipboard, text_type),\
         FUNC_CHECK_GCTX_SET_PTR(func_attach_text_to_panel, text_type, panel_type),\
         FUNC_CHECK_GCTX_SET_PTR(func_detach_text_from_panel, text_type, panel_type),\
         FUNC_CHECK_GCTX_SET_BOOL(func_text_set_visible, text_type),\
@@ -743,6 +746,7 @@ _draw2d_api void guictx_append_text_manager_imp(
                         (FPtr_gctx_get_text)func_text_get_text,\
                         (FPtr_gctx_set2_bool)func_text_scroller_visible,\
                         (FPtr_gctx_call)func_text_set_need_display,\
+                        (FPtr_gctx_clipboard)func_text_clipboard,\
                         (FPtr_gctx_set_ptr)func_attach_text_to_panel,\
                         (FPtr_gctx_set_ptr)func_detach_text_from_panel,\
                         (FPtr_gctx_set_bool)func_text_set_visible,\
