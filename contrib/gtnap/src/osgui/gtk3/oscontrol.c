@@ -15,6 +15,7 @@
 #include "osgui_gtk.inl"
 #include "osedit.inl"
 #include "oscombo.inl"
+#include "ostext.inl"
 #include "osview.inl"
 #include "oswindow.inl"
 #include "bstd.h"
@@ -139,6 +140,9 @@ void _oscontrol_set_focus(OSControl *control)
     case ekGUI_TYPE_CUSTOMVIEW:
         _osview_set_focus((OSView*)control);
         break;
+    case ekGUI_TYPE_TEXTVIEW:
+        _ostext_set_focus((OSText*)control);
+        break;
     default:
         break;
     }
@@ -158,6 +162,9 @@ void _oscontrol_unset_focus(OSControl *control)
         break;
     case ekGUI_TYPE_CUSTOMVIEW:
         _osview_unset_focus((OSView*)control);
+        break;
+    case ekGUI_TYPE_TEXTVIEW:
+        _ostext_unset_focus((OSText*)control);
         break;
     case ekGUI_TYPE_WINDOW:
         _oswindow_unset_focus((OSWindow*)control);

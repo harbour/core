@@ -16,6 +16,10 @@ __EXTERN_C
 
 void _ostext_detach_and_destroy(OSText **view, OSPanel *panel);
 
+void _ostext_set_focus(OSText *view);
+
+void _ostext_unset_focus(OSText *view);
+
 GtkWidget *_ostext_focus(OSText *view);
 
 void _ostext_set_capture(OSText *view, OSControl *control);

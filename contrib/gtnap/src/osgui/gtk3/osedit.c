@@ -711,6 +711,47 @@ void osedit_bounds(const OSEdit *edit, const real32_t refwidth, const uint32_t l
 
 /*---------------------------------------------------------------------------*/
 
+void osedit_clipboard(OSEdit *edit, const clipboard_t clipboard)
+{
+    cassert_no_null(edit);
+    if (edit->tview != NULL)
+    {
+        GtkTextBuffer *tbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(edit->tview));
+        GtkClipboard *system_board = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+        cassert(edit_get_type(edit->flags) == ekEDIT_MULTI);
+        switch (clipboard) {
+        case ekCLIPBOARD_COPY:
+            gtk_text_buffer_copy_clipboard(tbuf, system_board);
+            break;
+        case ekCLIPBOARD_CUT:
+            gtk_text_buffer_cut_clipboard(tbuf, system_board, TRUE);
+            break;
+        case ekCLIPBOARD_PASTE:
+            gtk_text_buffer_paste_clipboard(tbuf, system_board, NULL, TRUE);
+            break;
+        cassert_default();
+        }
+    }
+    else
+    {
+        cassert(edit_get_type(edit->flags) == ekEDIT_SINGLE);
+        switch (clipboard) {
+        case ekCLIPBOARD_COPY:
+            gtk_editable_copy_clipboard(GTK_EDITABLE(edit->control.widget));
+            break;
+        case ekCLIPBOARD_CUT:
+            gtk_editable_cut_clipboard(GTK_EDITABLE(edit->control.widget));
+            break;
+        case ekCLIPBOARD_PASTE:
+            gtk_editable_paste_clipboard(GTK_EDITABLE(edit->control.widget));
+            break;
+        cassert_default();
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void osedit_attach(OSEdit *edit, OSPanel *panel)
 {
     _ospanel_attach_control(panel, (OSControl*)edit);

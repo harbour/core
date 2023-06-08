@@ -51,6 +51,7 @@ struct _ostext_t
     GtkCssProvider *bgcolorcss;
     GtkCssProvider *pgcolorcss;
     OSControl *capture;
+    Listener *OnFocus;
     Listener *OnChange;
 };
 
@@ -169,6 +170,7 @@ void ostext_destroy(OSText **view)
 {
     cassert_no_null(view);
     cassert_no_null(*view);
+    listener_destroy(&(*view)->OnFocus);
     listener_destroy(&(*view)->OnChange);
     gtk_container_remove(GTK_CONTAINER(i_scrolled_window(*view)), (*view)->tview);
     _oscontrol_destroy(*(OSControl**)view);
@@ -189,6 +191,14 @@ void ostext_OnTextChange(OSText *view, Listener *listener)
     unref(view);
     unref(listener);
     cassert(FALSE);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void ostext_OnFocus(OSText *view, Listener *listener)
+{
+    cassert_no_null(view);
+    listener_update(&view->OnFocus, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -685,6 +695,26 @@ void ostext_set_need_display(OSText *view)
 
 /*---------------------------------------------------------------------------*/
 
+void ostext_clipboard(OSText *view, const clipboard_t clipboard)
+{
+    GtkClipboard *system_board = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+    cassert_no_null(view);
+    switch (clipboard) {
+    case ekCLIPBOARD_COPY:
+        gtk_text_buffer_copy_clipboard(view->buffer, system_board);
+        break;
+    case ekCLIPBOARD_CUT:
+        gtk_text_buffer_cut_clipboard(view->buffer, system_board, TRUE);
+        break;
+    case ekCLIPBOARD_PASTE:
+        gtk_text_buffer_paste_clipboard(view->buffer, system_board, NULL, TRUE);
+        break;
+    cassert_default();
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void ostext_attach(OSText *view, OSPanel *panel)
 {
     _ospanel_attach_control(panel, (OSControl*)view);
@@ -742,6 +772,36 @@ void _ostext_detach_and_destroy(OSText **view, OSPanel *panel)
     cassert_no_null(view);
     ostext_detach(*view, panel);
     ostext_destroy(view);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _ostext_set_focus(OSText *view)
+{
+    cassert_no_null(view);
+    if (_oswindow_can_edit_focus_events((OSControl*)view) == TRUE)
+    {
+        if (view->OnFocus != NULL)
+        {
+            bool_t params = TRUE;
+            listener_event(view->OnFocus, ekGUI_EVENT_FOCUS, view, &params, NULL, OSText, bool_t, void);
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _ostext_unset_focus(OSText *view)
+{
+    cassert_no_null(view);
+    if (_oswindow_can_edit_focus_events((OSControl*)view) == TRUE)
+    {
+        if (view->OnFocus != NULL)
+        {
+            bool_t params = FALSE;
+            listener_event(view->OnFocus, ekGUI_EVENT_FOCUS, view, &params, NULL, OSText, bool_t, void);
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/
