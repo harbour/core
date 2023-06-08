@@ -2146,12 +2146,23 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     panel_layout(gtwin->panel, layout);
 
     /* Create the view canvas*/
-    cassert(gtwin->canvas == NULL);
-    gtwin->canvas = view_create();
-    view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
-    _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
-    _component_set_frame((GuiComponent*)gtwin->canvas, &kV2D_ZEROf, &gtwin->panel_size);
-    _component_visible((GuiComponent*)gtwin->canvas, TRUE);
+    {
+        V2Df pos = kV2D_ZEROf;
+        S2Df size = gtwin->panel_size;
+        cassert(gtwin->canvas == NULL);
+
+        if (gtwin->toolbar != NULL)
+        {
+            pos.y += gtwin->toolbar->pixels_button;
+            size.height -= gtwin->toolbar->pixels_button;
+        }
+
+        gtwin->canvas = view_create();
+        view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
+        _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
+        _component_set_frame((GuiComponent*)gtwin->canvas, &pos, &size);
+        _component_visible((GuiComponent*)gtwin->canvas, TRUE);
+    }
 
     if (i_with_scroll_panel(gtwin) == TRUE)
     {
@@ -3086,15 +3097,15 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
 
     obj->max_chars = width;
 
-    if (type == 'C') 
+    if (type == 'C')
     {
         obj->dtype = ekTYPE_CHARACTER;
     }
-    else if (type == 'D') 
+    else if (type == 'D')
     {
         obj->dtype = ekTYPE_DATE;
     }
-    else 
+    else
     {
         obj->dtype = ENUM_MAX(datatype_t);
         cassert(FALSE);
