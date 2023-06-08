@@ -26,6 +26,7 @@ typedef struct _gtnap_column_t GtNapColumn;
 typedef struct _gtnap_toolbar_t GtNapToolbar;
 typedef struct _gtnap_area_t GtNapArea;
 typedef struct _gtnap_object_t GtNapObject;
+typedef struct _gtnap_geom_t GtNapGeom;
 typedef struct _gtnap_window_t GtNapWindow;
 typedef struct _gtnap_t GtNap;
 
@@ -47,6 +48,12 @@ typedef enum _datatype_t
     ekTYPE_CHARACTER,
     ekTYPE_DATE
 } datatype_t;
+
+typedef enum _geomtype_t
+{
+    ekGEOM_LINE,
+    ekGEOM_RECT
+} geomtype_t;
 
 struct _gtnap_callback_t
 {
@@ -117,6 +124,15 @@ struct _gtnap_object_t
     GtNapWindow *gtwin;
 };
 
+struct _gtnap_geom_t
+{
+    geomtype_t type;
+    real32_t x0;
+    real32_t y0;
+    real32_t x1;
+    real32_t y1;
+};
+
 struct _gtnap_window_t
 {
     uint32_t id;
@@ -154,6 +170,7 @@ struct _gtnap_window_t
     uint32_t num_rows;
     // TODO HB_ITEM *row_param;
     ArrPt(GtNapObject) *objects;
+    ArrSt(GtNapGeom) *geoms;
     ArrPt(GtNapCallback) *callbacks;
 };
 
@@ -181,6 +198,7 @@ DeclPt(GtNapCallback);
 DeclSt(GtNapColumn);
 DeclPt(GtNapArea);
 DeclPt(GtNapObject);
+DeclSt(GtNapGeom);
 DeclSt(GtNapWindow);
 DeclPt(Button);
 
@@ -485,6 +503,7 @@ static void i_remove_gtwin(GtNapWindow *gtwin)
 
     cassert(arrpt_size(gtwin->objects, GtNapObject) == 0);
     arrpt_destroy(&gtwin->objects, NULL, GtNapObject);
+    arrst_destroy(&gtwin->geoms, NULL, GtNapGeom);
     arrpt_destroy(&gtwin->callbacks, i_destroy_callback, GtNapCallback);
 
     if (gtwin->parent_id == UINT32_MAX)
@@ -943,13 +962,27 @@ static GtNap *i_gtnap_create(void)
 
 static void i_OnCanvasDraw(GtNapWindow *gtwin, Event *e)
 {
-    //const EvDraw *p = event_params(e, EvDraw);
-    //draw_clear(p->ctx, gui_view_color());
-    //draw_font(p->ctx, GTNAP_GLOBAL->global_font);
-    //drawctrl_text(p->ctx, "Hello Canvas", 300, 200, ekCTRL_STATE_NORMAL);
-    //draw_line(p->ctx, 0, 0, p->width, p->height);
-    unref(gtwin);
-    unref(e);
+    cassert_no_null(gtwin);
+    if (arrst_size(gtwin->geoms, GtNapGeom) > 0)
+    {
+        const EvDraw *p = event_params(e, EvDraw);
+        draw_antialias(p->ctx, FALSE);
+        draw_line_color(p->ctx, gui_line_color());
+        draw_line_width(p->ctx, 1);
+        arrst_foreach(geom, gtwin->geoms, GtNapGeom);
+        switch (geom->type) {
+        case ekGEOM_LINE:
+            draw_line(p->ctx, geom->x0, geom->y0, geom->x1, geom->y1);
+            break;
+        case ekGEOM_RECT:
+            draw_rect(p->ctx, ekSTROKE, geom->x0, geom->y0, geom->x1 - geom->x0, geom->y1 - geom->y0);
+            break;
+        cassert_default();
+        }
+        arrst_end();
+        //draw_line(p->ctx, 0, 0, p->width, p->height);
+        //draw_line(p->ctx, p->width, 0, 0, p->height);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2151,11 +2184,11 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         S2Df size = gtwin->panel_size;
         cassert(gtwin->canvas == NULL);
 
-        if (gtwin->toolbar != NULL)
-        {
-            pos.y += gtwin->toolbar->pixels_button;
-            size.height -= gtwin->toolbar->pixels_button;
-        }
+        //if (gtwin->toolbar != NULL)
+        //{
+        //    pos.y += gtwin->toolbar->pixels_button;
+        //    size.height -= gtwin->toolbar->pixels_button;
+        //}
 
         gtwin->canvas = view_create();
         view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
@@ -2243,6 +2276,21 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
                 _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)embgtwin->panel);
                 _component_set_frame((GuiComponent*)embgtwin->panel, &pos, &embgtwin->panel_size);
                 _component_visible((GuiComponent*)embgtwin->panel, TRUE);
+
+                {
+                    GtNapGeom *geom = arrst_new0(gtwin->geoms, GtNapGeom);
+                    geom->type = ekGEOM_RECT;
+                    geom->x0 = pos.x - 1;
+                    geom->y0 = pos.y - 1;
+                    geom->x1 = pos.x + embgtwin->panel_size.width;
+                    geom->y1 = pos.y + embgtwin->panel_size.height;
+
+                    //if (gtwin->toolbar != NULL)
+                    //{
+                    //    geom->y0 -= gtwin->toolbar->pixels_button;
+                    //    geom->y1 -= gtwin->toolbar->pixels_button;
+                    //}
+                }
             }
         arrst_end();
     }
@@ -2466,6 +2514,7 @@ static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t
     gtwin->message_label_id = UINT32_MAX;
     gtwin->default_button = UINT32_MAX;
     gtwin->objects = arrpt_create(GtNapObject);
+    gtwin->geoms = arrst_create(GtNapGeom);
     gtwin->callbacks = arrpt_create(GtNapCallback);
     gtwin->panel_size.width = (real32_t)(gtnap->cell_x_size * (gtwin->right - gtwin->left + 1));
     gtwin->panel_size.height = (real32_t)(gtnap->cell_y_size * (gtwin->bottom - gtwin->top + 1));

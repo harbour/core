@@ -54,7 +54,7 @@ color_t osglobals_color(const syscolor_t *color)
         return GetSysColor(COLOR_3DFACE) | (255 << 24);
 
     case ekSYSCOLOR_LINE:
-        return GetSysColor(COLOR_3DLIGHT) | (255 << 24);
+        return GetSysColor(COLOR_SCROLLBAR) | (255 << 24);
 
     case ekSYSCOLOR_LINK:
         return GetSysColor(COLOR_HOTLIGHT) | (255 << 24);
