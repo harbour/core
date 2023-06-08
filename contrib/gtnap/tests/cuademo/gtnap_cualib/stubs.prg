@@ -192,13 +192,15 @@ PROC LOGAFONT_AMBIENTE (C_TPLOGAFONT,C_ALIAS_REAL,C_CDBOTAO,C_MENSLOGA)
 **********************
 // ALERT(C_TPLOGAFONT+" "; "+C_ALIAS_REAL+" ; "+C_CDBOTAO+" ; "+C_MENSLOGA)
 // *
-// *******************
-// PROC EXISTENCIA_EXE
-// *******************
-// PROC GS_EXTENSAO_EXE
-// ********************
-// FUNC DIREXE
-// RETURN "q:\aspec\veratual\exe\"
+
+*******************
+PROC EXISTENCIA_EXE
+*******************
+PROC GS_EXTENSAO_EXE
+********************
+FUNC DIREXE
+RETURN "q:\aspec\veratual\exe\"
+
 *******************
 PROC REFRESH_RECORD
 *******************
@@ -295,8 +297,8 @@ RETURN TROCA(LOWER(C_String), _AC_MAIUS , _AC_MINUS )
 ************
 FUNC TIRACEN (C_String)
 ************
-    RETURN TROCA(C_String, _AC_UM_SIM , _AC_UM_NAO )
-// *
+RETURN TROCA(C_String, _AC_UM_SIM , _AC_UM_NAO )
+
 ****************
 PROCEDURE ERRCTRL (C_CDMENS,C_TXT_MENSAGEM)
 ****************
@@ -308,16 +310,6 @@ DEFAULT C_TXT_MENSAGEM TO "Houve uma condição invalida na execução do programa;"
 *
 ALARME(C_CDMENS,C_TXT_MENSAGEM)
 *
-// ***************
-// FUNC HB_HASH_CI // CI=Case_Insensitive
-// ***************
-// LOCAL H_HASH_CI
-// *
-// H_HASH_CI := HB_HASH()
-// HB_HCASEMATCH(H_HASH_CI,.F.)
-// *
-// RETURN H_HASH_CI
-// *
 ********
 FUNC COR ( C_TpCor )
 ********
@@ -458,124 +450,3 @@ DO WHILE ";" $ V_TITULO
 ENDDO
 RETURN N_LINHAS_TIT
 
-
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-
-//    #pragma begindump
-
-//    #ifndef _WIN32_WINNT
-//    #define _WIN32_WINNT 0x0501
-//    #endif
-
-//    #include <stdlib.h>
-//    #include <time.h>
-//    #include <windows.h>
-//    #include <imagehlp.h>
-//    #include <hbapi.h>
-//    #include <hbapiitm.h>
-//    #include <stdio.h>
-//    #include <cpuid.h>
-//    #include <string.h>
-//    #include <ctype.h>
-
-//    typedef int (__stdcall *MSGBOXAAPI)(IN HWND hWnd,
-//            IN LPCSTR lpText, IN LPCSTR lpCaption,
-//            IN UINT uType, IN WORD wLanguageId, IN DWORD dwMilliseconds);
-//    typedef int (__stdcall *MSGBOXWAPI)(IN HWND hWnd,
-//            IN LPCWSTR lpText, IN LPCWSTR lpCaption,
-//            IN UINT uType, IN WORD wLanguageId, IN DWORD dwMilliseconds);
-
-//    int MessageBoxTimeoutA(IN HWND hWnd, IN LPCSTR lpText,
-//        IN LPCSTR lpCaption, IN UINT uType,
-//        IN WORD wLanguageId, IN DWORD dwMilliseconds);
-//    int MessageBoxTimeoutW(IN HWND hWnd, IN LPCWSTR lpText,
-//        IN LPCWSTR lpCaption, IN UINT uType,
-//        IN WORD wLanguageId, IN DWORD dwMilliseconds);
-
-//    #ifdef UNICODE
-//        #define MessageBoxTimeout MessageBoxTimeoutW
-//    #else
-//        #define MessageBoxTimeout MessageBoxTimeoutA
-//    #endif
-
-//    #define MB_TIMEDOUT 32000
-
-//    int MessageBoxTimeoutA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType, WORD wLanguageId, DWORD dwMilliseconds)
-//    {
-//        static MSGBOXAAPI MsgBoxTOA = NULL;
-
-//        if (!MsgBoxTOA)
-//        {
-//            HMODULE hUser32 = GetModuleHandle(TEXT("user32.dll"));
-//            if (hUser32)
-//            {
-//                MsgBoxTOA = (MSGBOXAAPI)GetProcAddress(hUser32, "MessageBoxTimeoutA");
-//            }
-//            else
-//            {
-//                return 0;
-//            }
-//        }
-
-//        if (MsgBoxTOA)
-//        {
-//            return MsgBoxTOA(hWnd, lpText, lpCaption, uType, wLanguageId, dwMilliseconds);
-//        }
-
-//        return 0;
-//    }
-
-//    int MessageBoxTimeoutW(HWND hWnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType, WORD wLanguageId, DWORD dwMilliseconds)
-//    {
-//        static MSGBOXWAPI MsgBoxTOW = NULL;
-
-//        if (!MsgBoxTOW)
-//        {
-//            HMODULE hUser32 = GetModuleHandle(TEXT("user32.dll"));
-//            if (hUser32)
-//            {
-//                MsgBoxTOW = (MSGBOXWAPI)GetProcAddress(hUser32, "MessageBoxTimeoutW");
-//            }
-//            else
-//            {
-//                return 0;
-//            }
-//        }
-
-//        if (MsgBoxTOW)
-//        {
-//            return MsgBoxTOW(hWnd, lpText, lpCaption, uType, wLanguageId, dwMilliseconds);
-//        }
-
-//        return 0;
-//    }
-
-//    /* 2013/09/19 Alexandre Alencar
-//     * Fun´?¢´?¢o WVW_MESSAGEBOXTIMEOUT(hwnd, lpText, lpCation, uType, dwSeconds)
-//     * Exibe uma MessageBox padr´?¢o Windows, com timeout, retorna o bot´?¢o clicado ou MB_TIMEOUT
-//     * se nenhum bot´?¢o for clicado e o tempo expirou
-//     */
-
-//    HB_FUNC( WVW_MESSAGEBOXTIMEOUT )
-//    {
-//       //HMODULE hUser32 = LoadLibrary(TEXT("user32.dll"));
-//       DWORD iRet = 0;
-
-//       //if (hUser32)
-//       //{
-//           iRet = MessageBoxTimeout((HWND)hb_parni( 1 ), TEXT(hb_parcx( 2 )), TEXT(hb_parcx( 3 )), hb_parni ( 4 ), 0, hb_parni ( 5 ) * 1000);
-//       //    FreeLibrary(hUser32);
-//       //}
-
-//       hb_retnl( iRet );
-//    }
-
-//    #pragma enddump
-
-// #elif defined(__PLATFORM__LINUX)|| defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    //? MEMVAR->NAO_ADAPTADO_PARA_LINUX
-// #else
-//    #erro "C´?¢digo n´?¢o adaptado para esta plataforma"
-// #endif
-// *
-// ***************************************

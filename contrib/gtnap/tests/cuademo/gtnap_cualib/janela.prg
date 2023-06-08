@@ -1048,88 +1048,74 @@ IF N_TP_Jan == _JAN_TEXTO_10 .OR. ;
 ENDIF
 *
 IF C_CdTela == "T03221"  // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                {||EXIBEVIDEO("V","aPfO9X_r63k","Cotacoes_de_Precos")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","aPfO9X_r63k","Cotacoes_de_Precos")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T01306" .AND. LEN(VC_Titulo) > 1    // DESCONSIDERAR_CHECA_ID
     IF VC_Titulo[2] == "PREGÃO"
-        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                                {||EXIBEVIDEO("V","aYae8t-oviM","Corona_Interno")})
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","aYae8t-oviM","Corona_Interno")})
         ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
         L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
     ELSEIF VC_Titulo[2] == "TOMADA DE PREÇOS"
-        ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                                {||EXIBEVIDEO("V","05Bukz8ymck","Definicao_de_Lotes_de_Licitacao")})
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","05Bukz8ymck","Definicao_de_Lotes_de_Licitacao")})
         ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
         L_TOOLBAR_AINDA_SEM_BOTOES := .F.
     ENDIF
 
 ELSEIF C_CdTela == "T00380"    // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","8J_vOoVMeOs","Empenho")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","8J_vOoVMeOs","Empenho")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T00452"    // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","6xlfNLDbMP4","Pagamento")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","6xlfNLDbMP4","Pagamento")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T00757"    // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","txoHEuXjxvk","Receita")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","txoHEuXjxvk","Receita")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T03240"    // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","RzLdTT7eYPg","Equivalencia_Dotacao")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","RzLdTT7eYPg","Equivalencia_Dotacao")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T06101"    // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","p85Wk3xjlfI","Equivalencia_Dotacao_em_registro_preco")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","p85Wk3xjlfI","Equivalencia_Dotacao_em_registro_preco")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T18125" // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","XvdCnede-pQ","Cadastro_das_comissoes_de_avaliacao_e_inventario")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","XvdCnede-pQ","Cadastro_das_comissoes_de_avaliacao_e_inventario")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T17261" // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V", "tx7C_-sRJ84", "Cadastro_das_localizacoes")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T17257" // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T17535" // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","tx7C_-sRJ84","Cadastro_das_localizacoes")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T03253" // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","wgDezwHfHFE","Dotacoes_e_controle_de_saldos")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","wgDezwHfHFE","Dotacoes_e_controle_de_saldos")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
 ELSEIF C_CdTela == "T06290" // DESCONSIDERAR_CHECA_ID
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela,{_BITMAP_VIDEO},"Vídeo Aula",;
-                            {||EXIBEVIDEO("V","wgDezwHfHFE","Dotacoes_e_controle_de_saldos")})
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_VIDEO}, "Vídeo Aula", {||EXIBEVIDEO("V","wgDezwHfHFE","Dotacoes_e_controle_de_saldos")})
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 
@@ -2211,10 +2197,20 @@ INABILITA_BOTAO_PUSH(VX_Janela, N_PosBotao)
 RETURN NIL
 *
 
-****************************
+*************************
 STAT PROC EXIBEVIDEO(C_TIPO,C_ARQUIVO,C_TITULO)
-****************************
-RETURN
+*************************
+LOCAL N_HANDLE
+DEFAULT C_TIPO TO "V"
+
+IF SOB_MODO_GRAFICO()
+    EXISTENCIA_EXE("EXIBIRTF",GS_EXTENSAO_EXE(),,.F.)
+    N_HANDLE := HB_processOpen(DIREXE() + "exibirtf." + GS_EXTENSAO_EXE() + " " + C_TIPO + " " + C_ARQUIVO + " " + C_TITULO)
+    IF N_HANDLE < 0
+        ALARME("M28320","Não foi possível exibir a Video Aula!")
+    ENDIF
+ENDIF
+INKEYX(2)
 
 ****************************
 STATIC FUNC INABILITA_IMAGEM(L_MUDADADOS)
