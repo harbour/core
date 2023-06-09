@@ -311,7 +311,6 @@ void _oscontrol_set_visible(OSControl *control, const bool_t visible)
 
 void _oscontrol_set_enabled(OSControl *control, const bool_t enabled)
 {
-    //if (IsWindowEnabled(control->hwnd) != (BOOL)enabled)
     EnableWindow(control->hwnd, (BOOL)enabled);
 }
 
@@ -413,55 +412,6 @@ void _oscontrol_get_size(const OSControl *control, real32_t *width, real32_t *he
     *width = (real32_t)(rect.right - rect.left);
     *height = (real32_t)(rect.bottom - rect.top);
 }
-
-/*---------------------------------------------------------------------------*/
-
-/*
-static bool_t i_check_control_frame(HWND hwnd)
-{
-    HWND parent;
-    HWND window;
-    uint32_t num_window_children;
-    HWND window_children[2];
-
-    cassert_no_null(hwnd);
-
-    parent = GetParent(hwnd);
-    if (parent == NULL)
-        return TRUE;
-
-    window = GetAncestor(hwnd, GA_ROOT);
-    if (window == NULL)
-        return TRUE;
-
-    num_window_children = _oscontrol_get_children(window, window_children, 2);
-//    cassert(num_window_children == 1);
-
-    if (window_children[0] == hwnd)
-        return TRUE;
-
-    {
-        BOOL ret;
-        RECT parent_frame;
-        RECT frame;
-        cassert([[object superview] isKindOfClass:[OSXView class]] == YES 
-            || [[object superview] isKindOfClass:[OSXBox class]] == YES
-            || [[object superview] isKindOfClass:[OSXSplitView class]] == YES);
-        ret = GetWindowRect(parent, &parent_frame);
-	    cassert(ret != 0);
-        ret = GetWindowRect(hwnd, &frame);
-	    cassert(ret != 0);
-        cassert(parent_frame.left >= 0);
-        cassert(parent_frame.top >= 0);
-        cassert(parent_frame.right - parent_frame.left >= 0);
-        cassert(parent_frame.bottom - parent_frame.top >= 0);
-        cassert(frame.left >= 0);
-        cassert(frame.top >= 0);
-        cassert(frame.right - frame.left >= 0);
-        cassert(frame.bottom - frame.top >= 0);
-    }
-    return TRUE;
-}*/
 
 /*---------------------------------------------------------------------------*/
 
@@ -590,21 +540,3 @@ void _oscontrol_draw_focus(HWND hwnd, const INT left_offset, const INT right_off
     FrameRect(hdc, &rc, kCHESSBOARD_BRUSH);
     EndPaint(hwnd, &st);
 }
-
-/*---------------------------------------------------------------------------*/
-
-/*
-HWND _oscontrol_hit_point(const OSControl *control, const POINT *point)
-{
-    cassert_no_null(control);
-    cassert_no_null(point);
-    if (IsWindowVisible(control->hwnd) != 0 && IsWindowEnabled(control->hwnd) != 0)
-    {
-        RECT rect;
-        _oscontrol_get_local_frame(control->hwnd, &rect);
-        if (PtInRect(&rect, *point) != 0)
-            return control->hwnd;
-    }
-
-    return NULL;
-}*/
