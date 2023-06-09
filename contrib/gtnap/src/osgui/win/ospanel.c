@@ -53,6 +53,7 @@ struct _ospanel_t
     HDC memhdc;
     HBITMAP dbuffer;
     uint32_t flags;
+    RECT border;
     ArrSt(Area) *areas;
 };
 
@@ -179,21 +180,15 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
         }
         break;
 
-    /*case WM_PAINT:
-        {
-            BOOL ret;
-            RECT frame, rect;
-            HDC hdc;
-            PAINTSTRUCT ps;
-            //Gdiplus::Color c(0, 120, 215);
-            ret = GetClientRect(hwnd, &frame);
-	        cassert(ret != 0);
-            rect = frame;
-            hdc = BeginPaint(panel->control.hwnd, &ps);
-            FillRect(hdc, &rect, CreateSolidBrush(RGB(255, 200, 200)));
-            EndPaint(hwnd, &ps);
-        }
-        return 0;*/
+    case WM_NCCALCSIZE:
+        if (panel->flags & ekVIEW_BORDER)
+            _osgui_nccalcsize(hwnd, wParam, lParam, FALSE, 0, &panel->border);
+        break;
+
+    case WM_NCPAINT:
+        if (panel->flags & ekVIEW_BORDER)
+            _osgui_ncpaint(hwnd, &panel->border, NULL);
+        break;
 
     case WM_MEASUREITEM:
     {
@@ -520,6 +515,7 @@ void ospanel_origin(const OSPanel *panel, real32_t *x, real32_t *y)
 
 void ospanel_frame(OSPanel *panel, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
+    cassert_no_null(panel);
     _oscontrol_set_frame((OSControl*)panel, x, y, width, height);
     if (panel->scroll != NULL)
         osscroll_control_size(panel->scroll, width, height);

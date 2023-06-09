@@ -157,6 +157,7 @@ struct _gtnap_window_t
     bool_t focus_by_previous;
     bool_t modal_window_alive;
     bool_t buttons_navigation;
+    bool_t border;
     uint32_t message_label_id;
     uint32_t default_button;
     GtNapObject *current_obj;
@@ -2170,7 +2171,7 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     cassert_no_null(main_gtwin);
     cassert_no_null(main_gtwin->window);
 
-    gtwin->panel = panel_create();
+    gtwin->panel = panel_custom(FALSE, FALSE, gtwin->border);
 
     if (gtwin->toolbar != NULL)
         gtwin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size;
@@ -2278,12 +2279,12 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
                 _component_visible((GuiComponent*)embgtwin->panel, TRUE);
 
                 {
-                    GtNapGeom *geom = arrst_new0(gtwin->geoms, GtNapGeom);
-                    geom->type = ekGEOM_RECT;
-                    geom->x0 = pos.x - 1;
-                    geom->y0 = pos.y - 1;
-                    geom->x1 = pos.x + embgtwin->panel_size.width;
-                    geom->y1 = pos.y + embgtwin->panel_size.height;
+                    //GtNapGeom *geom = arrst_new0(gtwin->geoms, GtNapGeom);
+                    //geom->type = ekGEOM_RECT;
+                    //geom->x0 = pos.x - 1;
+                    //geom->y0 = pos.y - 1;
+                    //geom->x1 = pos.x + embgtwin->panel_size.width;
+                    //geom->y1 = pos.y + embgtwin->panel_size.height;
 
                     //if (gtwin->toolbar != NULL)
                     //{
@@ -2496,7 +2497,7 @@ static uint32_t i_get_window_id(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
-static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
+static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t border)
 {
     GtNapWindow *gtwin = NULL;
     cassert_no_null(gtnap);
@@ -2507,6 +2508,7 @@ static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t
     gtwin->left = left;
     gtwin->bottom = bottom;
     gtwin->right = right;
+    gtwin->border = border;
     gtwin->scroll_top = INT32_MIN;
     gtwin->scroll_left = INT32_MIN;
     gtwin->scroll_bottom = INT32_MIN;
@@ -2525,7 +2527,7 @@ static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t
 
 uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation)
 {
-    GtNapWindow *gtwin = i_new_window(GTNAP_GLOBAL, UINT32_MAX, top, left, bottom, right);
+    GtNapWindow *gtwin = i_new_window(GTNAP_GLOBAL, UINT32_MAX, top, left, bottom, right, FALSE);
     uint32_t flags = i_window_flags(close_return, close_esc, minimize_button);
     gtwin->window = window_create(flags);
     gtwin->buttons_navigation = buttons_navigation;
@@ -2548,9 +2550,9 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_window_embedded(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right)
+uint32_t hb_gtnap_window_embedded(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t border)
 {
-    GtNapWindow *gtwin = i_new_window(GTNAP_GLOBAL, wid, top, left, bottom, right);
+    GtNapWindow *gtwin = i_new_window(GTNAP_GLOBAL, wid, top, left, bottom, right, border);
     return gtwin->id;
 }
 

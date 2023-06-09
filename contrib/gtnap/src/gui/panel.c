@@ -113,6 +113,17 @@ Panel *panel_scroll(const bool_t hscroll, const bool_t vscroll)
 
 /*---------------------------------------------------------------------------*/
 
+Panel *panel_custom(const bool_t hscroll, const bool_t vscroll, const bool_t border)
+{
+    uint32_t flags = 0;
+    flags |= (hscroll == TRUE) ? ekVIEW_HSCROLL : 0;
+    flags |= (vscroll == TRUE) ? ekVIEW_VSCROLL : 0;
+    flags |= (border == TRUE) ? ekVIEW_BORDER : 0;
+    return i_create(flags);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void panel_data_imp(Panel *panel, void **data, FPtr_destroy func_destroy_data)
 {
     cassert_no_null(panel);

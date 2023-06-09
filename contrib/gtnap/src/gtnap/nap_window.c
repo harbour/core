@@ -31,7 +31,8 @@ HB_FUNC( NAP_WINDOW_EMBEDDED )
     int32_t left = hb_parni(3);
     int32_t bottom = hb_parni(4);
     int32_t right = hb_parni(5);
-    uint32_t id = hb_gtnap_window_embedded(wid, top, left, bottom, right);
+    bool_t border = (bool_t)hb_parl(6);
+    uint32_t id = hb_gtnap_window_embedded(wid, top, left, bottom, right, border);
     hb_retni(id);
 }
 

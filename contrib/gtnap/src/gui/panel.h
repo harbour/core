@@ -19,6 +19,8 @@ _gui_api Panel *panel_create(void);
 
 _gui_api Panel *panel_scroll(const bool_t hscroll, const bool_t vscroll);
 
+_gui_api Panel *panel_custom(const bool_t hscroll, const bool_t vscroll, const bool_t border);
+
 _gui_api void panel_data_imp(Panel *panel, void **data, FPtr_destroy func_destroy_data);
 
 _gui_api void *panel_get_data_imp(const Panel *panel);

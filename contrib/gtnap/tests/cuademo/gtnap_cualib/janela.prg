@@ -699,7 +699,7 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
 
         ELSE // L_Embutida
             N_PaiWindowNum := V_PilhaJanelas[LEN(V_PilhaJanelas)][1]
-            N_WindowNum := NAP_WINDOW_EMBEDDED(N_PaiWindowNum, N_LinIni, N_ColIni, N_LinFin, N_ColFin)
+            N_WindowNum := NAP_WINDOW_EMBEDDED(N_PaiWindowNum, N_LinIni, N_ColIni, N_LinFin, N_ColFin, .T.)
 
         ENDIF // .NOT. L_Embutida
 
