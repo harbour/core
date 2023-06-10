@@ -129,6 +129,14 @@ HB_FUNC( NAP_WINDOW_CUT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_WINDOW_UNDO )
+{
+    uint32_t wid = hb_parni(1);
+    hb_gtnap_window_undo(wid);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_WINDOW_MODAL )
 {
     uint32_t wid = hb_parni(1);

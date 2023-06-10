@@ -98,6 +98,7 @@ struct _gtnap_object_t
     V2Df pos;
     S2Df size;
     bool_t multisel;
+    bool_t autoclose;
     bool_t is_last_edit;
     bool_t in_scroll;
     bool_t can_auto_lista;
@@ -1987,6 +1988,23 @@ static void i_set_edit_text(const GtNapObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_set_view_text(const GtNapObject *obj)
+{
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_TEXTVIEW);
+    textview_clear((TextView*)obj->component);
+    if (obj->get_set_block != NULL)
+    {
+        PHB_ITEM ritem = hb_itemDo(obj->get_set_block, 0);
+        String *str = i_item_to_utf8_string(ritem);
+        textview_writef((TextView*)obj->component, tc(str));
+        hb_itemRelease(ritem);
+        str_destroy(&str);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_launch_wizard(GtNapWindow *cuawin, GtNapObject *obj)
 {
     char_t temp[1024];
@@ -2735,6 +2753,21 @@ void hb_gtnap_window_cut(const uint32_t wid)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_window_undo(const uint32_t wid)
+{
+    GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    GtNapObject *gtobj = i_focus_obj(gtwin);
+    if (gtobj != NULL)
+    {
+        if (gtobj->type == ekOBJ_EDIT)
+            i_set_edit_text(gtobj);
+        else if (gtobj->type == ekOBJ_TEXTVIEW)
+            i_set_view_text(gtobj);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNapObject *i_get_first_focus(GtNapWindow *gtwin)
 {
     cassert_no_null(gtwin);
@@ -3205,23 +3238,6 @@ void hb_gtnap_edit_wizard(const uint32_t wid, const uint32_t id, const uint32_t 
 
 /*---------------------------------------------------------------------------*/
 
-static void i_set_view_text(const GtNapObject *obj)
-{
-    cassert_no_null(obj);
-    cassert(obj->type == ekOBJ_TEXTVIEW);
-    textview_clear((TextView*)obj->component);
-    if (obj->get_set_block != NULL)
-    {
-        PHB_ITEM ritem = hb_itemDo(obj->get_set_block, 0);
-        String *str = i_item_to_utf8_string(ritem);
-        textview_writef((TextView*)obj->component, tc(str));
-        hb_itemRelease(ritem);
-        str_destroy(&str);
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
 uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *get_set_block, HB_ITEM *valida_block, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
@@ -3450,11 +3466,32 @@ static void i_OnTableRowClick(GtNapObject *gtobj, Event *e)
             tableview_update((TableView*)gtobj->component);
         }
     }
+    else if (gtobj->autoclose == TRUE)
+    {
+        uint32_t ret_value = NAP_MODAL_ROW_CLICK;
+        GtNapWindow *gtwin = gtobj->gtwin;
+        GtNapArea *gtarea = NULL;
+        cassert_no_null(gtwin);
+        gtarea = gtwin->gtarea;
+        if (gtarea != NULL)
+        {
+            uint32_t *recno = arrst_get(gtarea->records, p->row, uint32_t);
+            cassert_no_null(recno);
+            ret_value += *recno;
+        }
+        else
+        {
+            ret_value += p->row + 1;
+        }
+
+        gtwin->modal_window_alive = FALSE;
+        window_stop_modal(gtwin->window, ret_value);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t in_scroll)
+uint32_t hb_gtnap_tableview(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t multisel, const bool_t autoclose, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     TableView *view = tableview_create();
@@ -3472,6 +3509,7 @@ uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_TABLEVIEW);
     obj->multisel = multisel;
+    obj->autoclose = autoclose;
     tableview_OnRowClick(view, listener(obj, i_OnTableRowClick, GtNapObject));
     return id;
 }

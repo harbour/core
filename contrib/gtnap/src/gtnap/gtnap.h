@@ -50,6 +50,8 @@ extern void hb_gtnap_window_paste(const uint32_t wid);
 
 extern void hb_gtnap_window_cut(const uint32_t wid);
 
+extern void hb_gtnap_window_undo(const uint32_t wid);
+
 extern uint32_t hb_gtnap_window_modal(const uint32_t wid);
 
 extern void hb_gtnap_window_stop_modal(const uint32_t result);
@@ -88,7 +90,7 @@ extern void hb_gtnap_menu_add(const uint32_t wid, uint32_t id, HB_ITEM *text_blo
 
 extern uint32_t hb_gtnap_menu_selected(const uint32_t wid, uint32_t id);
 
-extern uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t in_scroll);
+extern uint32_t hb_gtnap_tableview(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t multisel, const bool_t autoclose, const bool_t in_scroll);
 
 extern void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint32_t width, HB_ITEM *head_block, HB_ITEM *eval_block);
 

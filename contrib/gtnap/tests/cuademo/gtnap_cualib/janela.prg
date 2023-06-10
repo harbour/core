@@ -1039,7 +1039,7 @@ IF N_TP_Jan == _JAN_TEXTO_10 .OR. ;
     *
     IF L_PermiteEdicao
         * No teclado será colocado, de fato, a K_CTRL_F12, mas a AjustaTecla() voltará o conteúdo para K_CTRL_Z.
-        ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_DESFAZER}, "Desfazer", {||HB_KeyPut(K_CTRL_Z_TROCADO_POR_K_CTRL_F12)})
+        ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_DESFAZER}, "Desfazer", BLOCO_TOOLBAR({||HB_KeyPut(K_CTRL_Z_TROCADO_POR_K_CTRL_F12)}, {||NAP_WINDOW_UNDO(N_WindowNum)}))
     ENDIF
     *
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
