@@ -93,6 +93,7 @@ struct _tdata_t
     bool_t vlines;
     Listener *OnData;
     Listener *OnSelect;
+    Listener *OnRowClick;
     Listener *OnHeaderClick;
     Window *window;
 };
@@ -153,6 +154,7 @@ static void i_destroy_data(TData **data)
     font_destroy(&(*data)->head_font);
     listener_destroy(&(*data)->OnData);
     listener_destroy(&(*data)->OnSelect);
+    listener_destroy(&(*data)->OnRowClick);
     listener_destroy(&(*data)->OnHeaderClick);
     arrst_destroy(&(*data)->columns, i_remove_column, Column);
     arrst_destroy(&(*data)->selected, NULL, uint32_t);
@@ -1149,6 +1151,10 @@ static void i_OnDown(TableView *view, Event *e)
         else if (data->mouse_row != UINT32_MAX)
         {
             bool_t changed = FALSE;
+            bool_t previous_sel = FALSE;
+
+            if (data->OnRowClick != NULL)
+                previous_sel = i_row_is_selected(data->selected, data->mouse_row);
 
             if (data->mouse_row < n)
             {
@@ -1166,6 +1172,15 @@ static void i_OnDown(TableView *view, Event *e)
                     arrst_clear(data->selected, NULL, uint32_t);
                     changed |= TRUE;
                 }
+            }
+
+            if (data->OnRowClick != NULL)
+            {
+                EvTbRow row;
+                bool_t cur_sel = i_row_is_selected(data->selected, data->mouse_row);
+                row.sel = !(previous_sel == cur_sel);
+                row.row = data->mouse_row;
+                listener_event(data->OnRowClick, ekGUI_EVENT_TBL_ROWCLICK, view, &row, NULL, TableView, EvTbRow, void);
             }
 
             if (changed == TRUE)
@@ -1510,6 +1525,15 @@ void tableview_OnSelect(TableView *view, Listener *listener)
     TData *data = view_get_data((View*)view, TData);
     cassert_no_null(data);
     listener_update(&data->OnSelect, listener);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void tableview_OnRowClick(TableView *view, Listener *listener)
+{
+    TData *data = view_get_data((View*)view, TData);
+    cassert_no_null(data);
+    listener_update(&data->OnRowClick, listener);
 }
 
 /*---------------------------------------------------------------------------*/

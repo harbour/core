@@ -21,6 +21,8 @@ _gui_api void tableview_OnData(TableView *view, Listener *listener);
 
 _gui_api void tableview_OnSelect(TableView *view, Listener *listener);
 
+_gui_api void tableview_OnRowClick(TableView *view, Listener *listener);
+
 _gui_api void tableview_OnHeaderClick(TableView *view, Listener *listener);
 
 _gui_api void tableview_font(TableView *view, const Font *font);

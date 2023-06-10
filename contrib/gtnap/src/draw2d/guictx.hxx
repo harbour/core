@@ -145,6 +145,7 @@ typedef enum _gui_event_t
     ekGUI_EVENT_TBL_CELL,
     ekGUI_EVENT_TBL_SEL,
     ekGUI_EVENT_TBL_HEADCLICK,
+    ekGUI_EVENT_TBL_ROWCLICK,
 
     ekGUI_EVENT_IDLE
 } gui_event_t;
@@ -399,6 +400,7 @@ typedef struct _evsize_t EvSize;
 typedef struct _evwinclose_t EvWinClose;
 typedef struct _evmenu_t EvMenu;
 typedef struct _evtbpos_t EvTbPos;
+typedef struct _evtbrow_t EvTbRow;
 typedef struct _evtbrect_t EvTbRect;
 typedef struct _evtbsel_t EvTbSel;
 typedef struct _evtbcell_t EvTbCell;
@@ -933,6 +935,12 @@ struct _evmenu_t
 struct _evtbpos_t
 {
     uint32_t col;
+    uint32_t row;
+};
+
+struct _evtbrow_t
+{
+    bool_t sel;
     uint32_t row;
 };
 

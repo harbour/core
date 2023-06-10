@@ -2147,6 +2147,13 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         V2Df pos = kV2D_ZEROf;
         S2Df size = gtwin->panel_size;
         cassert(gtwin->canvas == NULL);
+
+        if (gtwin->toolbar != NULL)
+        {
+            pos.y += gtwin->toolbar->pixels_button;
+            size.height -= gtwin->toolbar->pixels_button;
+        }
+
         gtwin->canvas = view_create();
         view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
         _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
@@ -3407,6 +3414,46 @@ uint32_t hb_gtnap_menu_selected(const uint32_t wid, uint32_t id)
 
 /*---------------------------------------------------------------------------*/
 
+static bool_t i_in_vect(const ArrSt(uint32_t) *sel, const uint32_t i)
+{
+    arrst_foreach_const(id, sel, uint32_t)
+        if (*id == i)
+            return TRUE;
+    arrst_end();
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_toogle_sel(TableView *view, const ArrSt(uint32_t) *sel, const uint32_t row)
+{
+    if (i_in_vect(sel, row) == TRUE)
+        tableview_deselect(view, &row, 1);
+    else
+        tableview_select(view, &row, 1);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnTableRowClick(GtNapObject *gtobj, Event *e)
+{
+    const EvTbRow *p = event_params(e, EvTbRow);
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_TABLEVIEW);
+    if (gtobj->multisel == TRUE)
+    {
+        /* The row has not been selected in click --> We force the selection */
+        if (p->sel == FALSE)
+        {
+            const ArrSt(uint32_t) *sel = tableview_selected((TableView*)gtobj->component);
+            i_toogle_sel((TableView*)gtobj->component, sel, p->row);
+            tableview_update((TableView*)gtobj->component);
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
@@ -3425,6 +3472,7 @@ uint32_t hb_gtnap_tableview(const uint32_t wid, const bool_t multisel, const int
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_TABLEVIEW);
     obj->multisel = multisel;
+    tableview_OnRowClick(view, listener(obj, i_OnTableRowClick, GtNapObject));
     return id;
 }
 
@@ -3552,15 +3600,62 @@ static GtNapArea *i_create_area(void)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_hbitem_to_char(HB_ITEM *item, char_t *buffer, const uint32_t size)
+{
+    HB_TYPE type = HB_ITEM_TYPE(item);
+    buffer[0] = '\0';
+
+    switch(type) {
+    case HB_IT_STRING:
+        hb_itemCopyStrUTF8(item, buffer, size);
+        break;
+
+    case HB_IT_DATE:
+    {
+        char date[16];
+        hb_itemGetDS(item, date);
+        hb_dateFormat(date, buffer, hb_setGetDateFormat());
+        break;
+    }
+
+    case HB_IT_DOUBLE:
+    {
+        double value = hb_itemGetND(item);
+        bstd_sprintf(buffer, size, "%12.4f", value);
+        break;
+    }
+
+    case HB_IT_LONG:
+    case HB_IT_INTEGER:
+    {
+        HB_MAXINT value = hb_itemGetNInt(item);
+        bstd_sprintf(buffer, size, "%d", value);
+        break;
+    }
+
+    case HB_IT_LOGICAL:
+    {
+        HB_BOOL value = hb_itemGetL(item);
+        bstd_sprintf(buffer, size, "%s", value ? "true" : "false");
+        break;
+    }
+
+    default:
+        buffer[0] = '\0';
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static const char_t *i_area_eval_field(GtNapArea *gtarea, const uint32_t field_id, const uint32_t row_id, align_t *align)
 {
     uint32_t recno = 0;
     const GtNapColumn *column = NULL;
     HB_ITEM *ritem = NULL;
-    HB_TYPE type = 0;
 
     cassert_no_null(gtarea);
     cassert_no_null(gtarea->gtobj);
+    cassert(gtarea->gtobj->type == ekOBJ_TABLEVIEW);
     cassert(field_id > 0);
 
     /* Go to DB record */
@@ -3574,24 +3669,7 @@ static const char_t *i_area_eval_field(GtNapArea *gtarea, const uint32_t field_i
     ritem = hb_itemDo(column->block, 0);
 
     /* Fill the temporal cell buffer with cell result */
-    type = HB_ITEM_TYPE(ritem);
-    TEMP_BUFFER[0] = '\0';
-
-    if (type == HB_IT_STRING)
-    {
-        hb_itemCopyStrUTF8(ritem, TEMP_BUFFER, sizeof(TEMP_BUFFER));
-    }
-    else if (type == HB_IT_DATE)
-    {
-        char date[16];
-        hb_itemGetDS(ritem, date);
-        hb_dateFormat(date, TEMP_BUFFER, hb_setGetDateFormat());
-    }
-    else if (type == HB_IT_DOUBLE)
-    {
-        double value = hb_itemGetND(ritem);
-        bstd_sprintf(TEMP_BUFFER, sizeof(TEMP_BUFFER), "%12.4f", value);
-    }
+    i_hbitem_to_char(ritem, TEMP_BUFFER, sizeof(TEMP_BUFFER));
 
     hb_itemRelease(ritem);
 
@@ -3716,9 +3794,9 @@ static const char_t *i_data_eval_field(GtNapObject *gtobj, const uint32_t col_id
     const GtNapColumn *column = NULL;
     HB_ITEM *pitem = NULL;
     HB_ITEM *ritem = NULL;
-    HB_TYPE type = 0;
 
     cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_TABLEVIEW);
 
     /* Get the table column */
     column = arrst_get_const(gtobj->columns, col_id, GtNapColumn);
@@ -3730,24 +3808,7 @@ static const char_t *i_data_eval_field(GtNapObject *gtobj, const uint32_t col_id
     ritem = hb_itemDo(column->block, 1, pitem);
 
     /* Fill the temporal cell buffer with cell result */
-    type = HB_ITEM_TYPE(ritem);
-    TEMP_BUFFER[0] = '\0';
-
-    if (type == HB_IT_STRING)
-    {
-        hb_itemCopyStrUTF8(ritem, TEMP_BUFFER, sizeof(TEMP_BUFFER));
-    }
-    else if (type == HB_IT_DATE)
-    {
-        char date[16];
-        hb_itemGetDS(ritem, date);
-        hb_dateFormat(date, TEMP_BUFFER, hb_setGetDateFormat());
-    }
-    else if (type == HB_IT_DOUBLE)
-    {
-        double value = hb_itemGetND(ritem);
-        bstd_sprintf(TEMP_BUFFER, sizeof(TEMP_BUFFER), "%12.4f", value);
-    }
+    i_hbitem_to_char(ritem, TEMP_BUFFER, sizeof(TEMP_BUFFER));
 
     hb_itemRelease(pitem);
     hb_itemRelease(ritem);
@@ -3828,27 +3889,6 @@ void hb_gtnap_tableview_select_row(const uint32_t wid, const uint32_t id, const 
     cassert(obj->type == ekOBJ_TABLEVIEW);
     tableview_select((TableView*)obj->component, &row_id, 1);
     tableview_update((TableView*)obj->component);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static bool_t i_in_vect(const ArrSt(uint32_t) *sel, const uint32_t i)
-{
-    arrst_foreach_const(id, sel, uint32_t)
-        if (*id == i)
-            return TRUE;
-    arrst_end();
-    return FALSE;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_toogle_sel(TableView *view, const ArrSt(uint32_t) *sel, const uint32_t row)
-{
-    if (i_in_vect(sel, row) == TRUE)
-        tableview_deselect(view, &row, 1);
-    else
-        tableview_select(view, &row, 1);
 }
 
 /*---------------------------------------------------------------------------*/
