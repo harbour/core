@@ -601,7 +601,7 @@ static GtNapWindow *i_current_main_gtwin(GtNap *gtnap)
 /*---------------------------------------------------------------------------*/
 
 /* FRAN REMOVE!!! Parent must come in hb_gtnap_window_modal */
-static GtNapWindow *i_parent_cuawin(GtNap *gtnap)
+static GtNapWindow *i_parent_gtwin(GtNap *gtnap)
 {
     uint32_t c = 0;
     cassert_no_null(gtnap);
@@ -1141,47 +1141,47 @@ static void i_toolbar_tabstop(GtNapToolbar *toolbar)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnPreviousTabstop(GtNapWindow *cuawin, Event *e)
+static void i_OnPreviousTabstop(GtNapWindow *gtwin, Event *e)
 {
     unref(e);
-    cassert_no_null(cuawin);
-    cuawin->focus_by_previous = TRUE;
-    window_previous_tabstop(cuawin->window);
+    cassert_no_null(gtwin);
+    gtwin->focus_by_previous = TRUE;
+    window_previous_tabstop(gtwin->window);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnNextTabstop(GtNapWindow *cuawin, Event *e)
+static void i_OnNextTabstop(GtNapWindow *gtwin, Event *e)
 {
     unref(e);
-    cassert_no_null(cuawin);
-    cuawin->focus_by_previous = FALSE;
-    window_next_tabstop(cuawin->window);
+    cassert_no_null(gtwin);
+    gtwin->focus_by_previous = FALSE;
+    window_next_tabstop(gtwin->window);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnLeftButton(GtNapWindow *cuawin, Event *e)
+static void i_OnLeftButton(GtNapWindow *gtwin, Event *e)
 {
     unref(e);
-    cassert_no_null(cuawin);
-    if (cuawin->default_button > 0)
+    cassert_no_null(gtwin);
+    if (gtwin->default_button > 0)
     {
-        cuawin->default_button -= 1;
-        i_set_defbutton(cuawin);
+        gtwin->default_button -= 1;
+        i_set_defbutton(gtwin);
     }
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnRightButton(GtNapWindow *cuawin, Event *e)
+static void i_OnRightButton(GtNapWindow *gtwin, Event *e)
 {
     unref(e);
-    cassert_no_null(cuawin);
-    if (cuawin->default_button < i_num_buttons(cuawin) - 1)
+    cassert_no_null(gtwin);
+    if (gtwin->default_button < i_num_buttons(gtwin) - 1)
     {
-        cuawin->default_button += 1;
-        i_set_defbutton(cuawin);
+        gtwin->default_button += 1;
+        i_set_defbutton(gtwin);
     }
 }
 
@@ -1271,21 +1271,21 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
+static void i_OnEditChange(GtNapWindow *gtwin, Event *e)
 {
     const EvText *p = event_params(e, EvText);
     GtNapObject *cuaobj = NULL;
-    cassert_no_null(cuawin);
+    cassert_no_null(gtwin);
 
-    if (cuawin->modal_window_alive == FALSE)
+    if (gtwin->modal_window_alive == FALSE)
     {
-        log_printf("i_OnEditChange: Modal Window: %p is not alive", cuawin);
+        log_printf("i_OnEditChange: Modal Window: %p is not alive", gtwin);
         return;
     }
 
     /* Get the EditBox that launched the event */
-    /* TODO: Change cuawin parameter with gtobj */
-    cuaobj = i_cualib_obj(cuawin->objects, (GuiComponent*)event_sender(e, Edit));
+    /* TODO: Change gtwin parameter with gtobj */
+    cuaobj = i_cualib_obj(gtwin->objects, (GuiComponent*)event_sender(e, Edit));
     cassert(cuaobj->type == ekOBJ_EDIT);
 
     /* Update Harbour with the content of the EditBox */
@@ -1313,7 +1313,7 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
     /* The window has a global function to process invalid date */
     if (cuaobj->dtype == ekTYPE_DATE)
     {
-        if (cuawin->error_date_block != NULL)
+        if (gtwin->error_date_block != NULL)
         {
             long r = hb_dateUnformat( p->text, hb_setGetDateFormat());
             log_printf("DATE processing result: %d", r);
@@ -1323,7 +1323,7 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
             {
                 PHB_ITEM retItem = NULL;
                 bool_t *r = event_result(e, bool_t);
-                retItem = hb_itemDo(cuawin->error_date_block, 0);
+                retItem = hb_itemDo(gtwin->error_date_block, 0);
                 hb_itemRelease(retItem);
                 *r = FALSE;
                 return;
@@ -1338,27 +1338,27 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
         log_printf("Entering i_OnEditChange: %p", cuaobj);
 
     /* Update possible labels associated with this input */
-    arrpt_foreach(obj, cuawin->objects, GtNapObject)
+    arrpt_foreach(obj, gtwin->objects, GtNapObject)
         if (obj->type == ekOBJ_LABEL)
             i_set_label_text(obj, NULL);
     arrpt_end();
 
 
     /* If user have pressed the [ESC] key, we left the stop for that event */
-    if (cuawin->is_closed_by_esc == FALSE)
+    if (gtwin->is_closed_by_esc == FALSE)
     {
         /* The last editbox has lost the focus --> Close the window */
         if (cuaobj->is_last_edit == TRUE)
         {
             /* We dont execute confirmaCodeBlock if we moved from last edit to previos one */
-            if (cuawin->focus_by_previous == FALSE)
+            if (gtwin->focus_by_previous == FALSE)
             {
                 bool_t close = TRUE;
 
                 /* We have asociated a confirmation block */
-                if (cuawin->confirm_block != NULL)
+                if (gtwin->confirm_block != NULL)
                 {
-                    PHB_ITEM retItem = hb_itemDo(cuawin->confirm_block, 0);
+                    PHB_ITEM retItem = hb_itemDo(gtwin->confirm_block, 0);
                     HB_TYPE type = HB_ITEM_TYPE(retItem);
                     cassert(type == HB_IT_LOGICAL);
                     close = (bool_t)hb_itemGetL(retItem);
@@ -1367,9 +1367,9 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
 
                 if (close == TRUE)
                 {
-                    log_printf("--> STOP CUALIB Modal Window: %p 'i_OnEditChange'", cuawin->window);
-                    cuawin->modal_window_alive = FALSE;
-                    window_stop_modal(cuawin->window, 5000);
+                    log_printf("--> STOP CUALIB Modal Window: %p 'i_OnEditChange'", gtwin->window);
+                    gtwin->modal_window_alive = FALSE;
+                    window_stop_modal(gtwin->window, 5000);
                 }
             }
         }
@@ -1386,17 +1386,17 @@ static void i_OnEditChange(GtNapWindow *cuawin, Event *e)
     //     return;
     // }
 
-    // if (cuaobj->is_last_edit == TRUE && cuawin->tabstop_by_return_or_arrow == FALSE)
+    // if (cuaobj->is_last_edit == TRUE && gtwin->tabstop_by_return_or_arrow == FALSE)
     // {
-    //         log_printf("Modal Window: %p  tabstop_by_return_or_arrow FALSE", cuawin);
+    //         log_printf("Modal Window: %p  tabstop_by_return_or_arrow FALSE", gtwin);
     //     return;
 
     // }
 
     //cuaobj->is_on_edit_change = TRUE;
-    cuawin->focus_by_previous = FALSE;
+    gtwin->focus_by_previous = FALSE;
     //cuaobj->is_on_edit_change = FALSE;
-    //cuawin->tabstop_by_return_or_arrow = FALSE;
+    //gtwin->tabstop_by_return_or_arrow = FALSE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1823,14 +1823,14 @@ static void i_filter_tecla(const GtNapObject *obj, const EvText *text, EvTextFil
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditFilter(GtNapWindow *cuawin, Event *e)
+static void i_OnEditFilter(GtNapWindow *gtwin, Event *e)
 {
     Edit *edit = event_sender(e, Edit);
     GtNapObject *cuaobj = NULL;
-    cassert_no_null(cuawin);
+    cassert_no_null(gtwin);
 
     // FRAN: IMPROVE
-    arrpt_foreach(obj, cuawin->objects, GtNapObject)
+    arrpt_foreach(obj, gtwin->objects, GtNapObject)
         if (obj->type == ekOBJ_EDIT)
         {
             if (edit == (Edit*)obj->component)
@@ -1848,13 +1848,13 @@ static void i_OnEditFilter(GtNapWindow *cuawin, Event *e)
 
         // // FRAN: TODO
         // // This block must be move to edit_OnFocus()
-        // if (cuawin->message_label_id != UINT32_MAX)
+        // if (gtwin->message_label_id != UINT32_MAX)
         // {
-        //     GtNapObject *mes_obj = arrst_get(cuawin->objects, cuawin->message_label_id, GtNapObject);
+        //     GtNapObject *mes_obj = arrst_get(gtwin->objects, gtwin->message_label_id, GtNapObject);
         //     i_set_edit_message(cuaobj, mes_obj);
         // }
 
-        if (i_is_editable(cuawin, cuaobj) == FALSE)
+        if (i_is_editable(gtwin, cuaobj) == FALSE)
         {
             /* If editBox is not editable --> Restore the original text */
             i_get_edit_text(cuaobj, res->text, sizeof(res->text));
@@ -1912,7 +1912,7 @@ static void i_OnEditFilter(GtNapWindow *cuawin, Event *e)
                 //log_printf("Date CPOS: %d", res->cpos);
 
                 if (res->cpos == 10)
-                    gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapWindow));
+                    gui_OnIdle(listener(gtwin, i_OnNextTabstop, GtNapWindow));
             }
             else
             {
@@ -1935,9 +1935,9 @@ static void i_OnEditFilter(GtNapWindow *cuawin, Event *e)
                 /* End of editable string reached. */
                 if (res->cpos >= cuaobj->max_chars)
                 {
-                    cuawin->focus_by_previous = FALSE;
-                    //cuawin->tabstop_by_return_or_arrow = TRUE;
-                    gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapWindow));
+                    gtwin->focus_by_previous = FALSE;
+                    //gtwin->tabstop_by_return_or_arrow = TRUE;
+                    gui_OnIdle(listener(gtwin, i_OnNextTabstop, GtNapWindow));
                 }
             }
         }
@@ -2005,12 +2005,12 @@ static void i_set_view_text(const GtNapObject *obj)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_launch_wizard(GtNapWindow *cuawin, GtNapObject *obj)
+static void i_launch_wizard(GtNapWindow *gtwin, GtNapObject *obj)
 {
     char_t temp[1024];
     PHB_ITEM retItem = NULL;
     HB_TYPE type = HB_IT_NIL;
-    cassert_no_null(cuawin);
+    cassert_no_null(gtwin);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_EDIT);
     cassert_no_null(obj->wizard_block);
@@ -2027,16 +2027,16 @@ static void i_launch_wizard(GtNapWindow *cuawin, GtNapObject *obj)
     hb_itemRelease(retItem);
 
     if (type != HB_IT_NIL)
-        gui_OnIdle(listener(cuawin, i_OnNextTabstop, GtNapWindow));
+        gui_OnIdle(listener(gtwin, i_OnNextTabstop, GtNapWindow));
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnAutoWizard(GtNapWindow *cuawin, Event *e)
+static void i_OnAutoWizard(GtNapWindow *gtwin, Event *e)
 {
     GtNapObject *cuaobj = NULL;
-    cassert_no_null(cuawin);
-    cuaobj = cuawin->current_obj;
+    cassert_no_null(gtwin);
+    cuaobj = gtwin->current_obj;
     cassert_no_null(cuaobj);
     unref(e);
 
@@ -2056,7 +2056,7 @@ static void i_OnAutoWizard(GtNapWindow *cuawin, Event *e)
         if (lista == TRUE)
         {
             cuaobj->can_auto_lista = FALSE;
-            i_launch_wizard(cuawin, cuaobj);
+            i_launch_wizard(gtwin, cuaobj);
         }
     }
     // --------------------------------
@@ -2805,7 +2805,7 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
     }
 
     {
-        GtNapWindow *parent = i_parent_cuawin(GTNAP_GLOBAL);
+        GtNapWindow *parent = i_parent_gtwin(GTNAP_GLOBAL);
         V2Df pos;
         uint32_t ret = 0;
 
@@ -3180,17 +3180,17 @@ static void i_OnWizardButton(GtNapCallback *callback, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnKeyWizard(GtNapWindow *cuawin, Event *e)
+static void i_OnKeyWizard(GtNapWindow *gtwin, Event *e)
 {
-    cassert_no_null(cuawin);
+    cassert_no_null(gtwin);
     unref(e);
-    arrpt_foreach(obj, cuawin->objects, GtNapObject)
+    arrpt_foreach(obj, gtwin->objects, GtNapObject)
         if (obj->type == ekOBJ_EDIT)
         {
             if (obj->has_focus == TRUE)
             {
                 if (obj->wizard_block != NULL)
-                    i_launch_wizard(cuawin, obj);
+                    i_launch_wizard(gtwin, obj);
                 return;
             }
         }
@@ -4258,10 +4258,10 @@ void hb_gtnap_cualib_init_log(void)
 
 void hb_gtnap_cualib_default_button(const uint32_t nDefault)
 {
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert(cuawin->default_button == UINT32_MAX);
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    cassert(gtwin->default_button == UINT32_MAX);
     cassert(nDefault > 0);
-    cuawin->default_button = nDefault - 1;
+    gtwin->default_button = nDefault - 1;
 }
 
 
@@ -4269,8 +4269,8 @@ void hb_gtnap_cualib_default_button(const uint32_t nDefault)
 
 void hb_gtnap_cualib_window_f4_lista(void)
 {
-    GtNapWindow *cuawin = i_current_gtwin(GTNAP_GLOBAL);
-    window_hotkey(cuawin->window, ekKEY_F4, 0, listener(cuawin, i_OnKeyWizard, GtNapWindow));
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    window_hotkey(gtwin->window, ekKEY_F4, 0, listener(gtwin, i_OnKeyWizard, GtNapWindow));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4278,8 +4278,8 @@ void hb_gtnap_cualib_window_f4_lista(void)
 uint32_t hb_gtnap_cualib_window_current_edit(void)
 {
     uint32_t id = 0;
-    GtNapWindow *cuawin = i_current_main_gtwin(GTNAP_GLOBAL);
-    arrpt_foreach(obj, cuawin->objects, GtNapObject)
+    GtNapWindow *gtwin = i_current_main_gtwin(GTNAP_GLOBAL);
+    arrpt_foreach(obj, gtwin->objects, GtNapObject)
         if (obj->type == ekOBJ_EDIT)
         {
             if (obj->has_focus == TRUE)
