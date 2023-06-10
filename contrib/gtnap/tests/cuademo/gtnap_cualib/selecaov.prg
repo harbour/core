@@ -284,7 +284,7 @@ IF L_ForcaLerTudo
                     L_Multisel := .T.
                 ENDIF
 
-                N_ItemId := NAP_TABLEVIEW(N_WindowNum, L_Multisel, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], .F.)
+                N_ItemId := NAP_TABLEVIEW(N_WindowNum, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], L_Multisel, L_AutoClose, .F.)
                 NAP_TABLEVIEW_SCROLL(N_WindowNum, N_ItemId, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
                 NAP_TABLEVIEW_GRID(N_WindowNum, N_ItemId, .T., .T.)
                 NAP_TABLEVIEW_HEADER(N_WindowNum, N_ItemId, .F.)
@@ -315,7 +315,7 @@ IF L_ForcaLerTudo
                 NAP_TABLEVIEW_REFRESH_ALL(N_WindowNum, N_ItemId)
 
                 IF N_TP_Selecao # _SELE_SIMPLES
-                    NAP_TABLEVIEW_DESELECT_ALL2(N_WindowNum, N_ItemId)
+                    NAP_TABLEVIEW_DESELECT_ALL(N_WindowNum, N_ItemId)
                     FOR N_Cont := 1 TO LEN(VN_Selecio)
                         NAP_TABLEVIEW_SELECT_ROW(N_WindowNum, N_ItemId, VN_Selecio[N_Cont])
                     NEXT
