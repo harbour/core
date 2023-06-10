@@ -337,7 +337,7 @@ typedef enum _window_flag_t
     ekWINDOW_RETURN         = 1 << 6,
     ekWINDOW_ESC            = 1 << 7,
     ekWINDOW_OFFSCREEN      = 1 << 8,
-    ekWINDOW_MODAL_NOHIDE    = 1 << 9,
+    ekWINDOW_MODAL_NOHIDE   = 1 << 9,
     ekWINDOW_STD            = ekWINDOW_TITLE | ekWINDOW_MIN | ekWINDOW_CLOSE,
     ekWINDOW_STDRES         = ekWINDOW_STD | ekWINDOW_MAX | ekWINDOW_RESIZE
 } window_flag_t;
