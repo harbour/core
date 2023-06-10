@@ -52,7 +52,7 @@ struct _ospanel_t
 {
     OSControl control;
     OSControl *capture;
-    GtkWidget *content;
+    GtkWidget *layout;
     GtkAdjustment *hadjust;
     GtkAdjustment *vadjust;
     ArrSt(Area) *areas;
@@ -76,7 +76,7 @@ static gboolean i_OnDraw(GtkWidget *widget, cairo_t *cr, OSPanel *panel)
 
     cairo_save(cr);
 
-    if (panel->content != NULL)
+    if (panel->hadjust != NULL)
     {
         gdouble x = gtk_adjustment_get_value(panel->hadjust);
         gdouble y = gtk_adjustment_get_value(panel->vadjust);
@@ -139,36 +139,47 @@ OSPanel *ospanel_create(const uint32_t flags)
 {
     OSPanel *panel = heap_new0(OSPanel);
     GtkWidget *widget = gtk_layout_new(NULL, NULL);
+    GtkWidget *top = widget;
+    GtkWidget *focus = widget;
+
+    panel->layout = widget;
     g_signal_connect(G_OBJECT(widget), "draw", G_CALLBACK(i_OnDraw), panel);
     g_signal_connect(G_OBJECT(widget), "button-press-event", G_CALLBACK(i_OnPressed), panel);
 
     if (flags & ekVIEW_HSCROLL || flags & ekVIEW_VSCROLL)
     {
         GtkWidget *scroll = gtk_scrolled_window_new(NULL, NULL);
-        panel->content = widget;
-        gtk_widget_show(panel->content);
-        _oscontrol_init(&panel->control, ekGUI_TYPE_PANEL, scroll, scroll, FALSE);
+        gtk_widget_show(panel->layout);
         gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-        g_object_set_data(G_OBJECT(widget), "OSControl", &panel->control);
-        gtk_container_add(GTK_CONTAINER(panel->control.widget), panel->content);
+        gtk_container_add(GTK_CONTAINER(scroll), panel->layout);
 
         /* A parent widget can "capture" the mouse */
         {
-            GtkWidget *vscroll = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(panel->control.widget));
-            GtkWidget *hscroll = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(panel->control.widget));
+            GtkWidget *vscroll = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(scroll));
+            GtkWidget *hscroll = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(scroll));
             g_signal_connect(G_OBJECT(vscroll), "button-press-event", G_CALLBACK(i_OnPressed), panel);
             g_signal_connect(G_OBJECT(hscroll), "button-press-event", G_CALLBACK(i_OnPressed), panel);
             g_signal_connect(G_OBJECT(scroll), "button-press-event", G_CALLBACK(i_OnPressed), panel);
         }
 
-        panel->hadjust = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(panel->control.widget));
-        panel->vadjust = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(panel->control.widget));
-    }
-    else
-    {
-        _oscontrol_init(&panel->control, ekGUI_TYPE_PANEL, widget, widget, TRUE);
+        panel->hadjust = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(scroll));
+        panel->vadjust = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scroll));
+        top = scroll;
+        focus = scroll;
     }
 
+    /* Creating the frame (border) view */
+    if (flags & ekVIEW_BORDER)
+    {
+        GtkWidget *frame = gtk_frame_new(NULL);
+        cassert(gtk_widget_get_has_window(frame) == FALSE);
+        gtk_container_add(GTK_CONTAINER(frame), top);
+        gtk_widget_show(top);
+        top = frame;
+    }
+
+    _oscontrol_init(&panel->control, ekGUI_TYPE_PANEL, top, focus, TRUE);
+    g_object_set_data(G_OBJECT(panel->layout), "OSControl", &panel->control);
     return panel;
 }
 
@@ -181,13 +192,6 @@ void ospanel_destroy(OSPanel **panel)
 
     if ((*panel)->areas != NULL)
         arrst_destroy(&(*panel)->areas, NULL, Area);
-
-    if ((*panel)->content != NULL)
-    {
-        /* The object is unref when removed
-        g_object_ref((*view)->area); */
-        gtk_container_remove(GTK_CONTAINER((*panel)->control.widget), (*panel)->content);
-    }
 
     _oscontrol_destroy(*(OSControl**)panel);
     heap_delete(panel, OSPanel);
@@ -252,11 +256,11 @@ void ospanel_scroller_size(const OSPanel *panel, real32_t *width, real32_t *heig
 void ospanel_content_size(OSPanel *panel, const real32_t width, const real32_t height, const real32_t line_width, const real32_t line_height)
 {
     cassert_no_null(panel);
-    cassert(panel->content != NULL);
-    cassert(GTK_IS_SCROLLED_WINDOW(panel->control.widget) == TRUE);
+    cassert(panel->layout != NULL);
+    cassert(panel->hadjust != NULL && panel->vadjust != NULL);
     unref(line_width);
     unref(line_height);
-    gtk_layout_set_size(GTK_LAYOUT(panel->content), (guint)width, (guint)height);
+    gtk_layout_set_size(GTK_LAYOUT(panel->layout), (guint)width, (guint)height);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -397,7 +401,7 @@ void _ospanel_destroy(OSPanel **panel)
 void _ospanel_attach_control(OSPanel *panel, OSControl *control)
 {
     cassert_no_null(panel);
-    _oscontrol_attach_to_parent(control, panel->content ? panel->content : panel->control.widget);
+    _oscontrol_attach_to_parent(control, panel->layout);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -405,7 +409,7 @@ void _ospanel_attach_control(OSPanel *panel, OSControl *control)
 void _ospanel_detach_control(OSPanel *panel, OSControl *control)
 {
     cassert_no_null(panel);
-    _oscontrol_detach_from_parent(control, panel->content ? panel->content : panel->control.widget);
+    _oscontrol_detach_from_parent(control, panel->layout);
 }
 
 /*---------------------------------------------------------------------------*/
