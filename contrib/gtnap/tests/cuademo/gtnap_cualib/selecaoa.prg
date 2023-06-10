@@ -312,7 +312,7 @@ IF L_ForcaLerTudo
                 L_Multisel := .T.
             ENDIF
 
-            N_ItemId := NAP_TABLEVIEW(N_WindowNum, L_Multisel, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], .F.)
+            N_ItemId := NAP_TABLEVIEW(N_WindowNum, L_Coords[1], L_Coords[2], L_Coords[3], L_Coords[4], L_Multisel, L_AutoClose, .F.)
             NAP_TABLEVIEW_SCROLL(N_WindowNum, N_ItemId, .NOT. L_NaoRolaHorizontal, .NOT. L_NaoRolaVertical)
             NAP_TABLEVIEW_GRID(N_WindowNum, N_ItemId, L_MostraGrade, L_MostraGrade)
 
@@ -359,7 +359,7 @@ IF L_ForcaLerTudo
             NAP_TABLEVIEW_REFRESH_ALL(N_WindowNum, N_ItemId)
 
             IF N_TP_Selecao # _SELE_SIMPLES
-                NAP_TABLEVIEW_DESELECT_ALL2(N_WindowNum, N_ItemId)
+                NAP_TABLEVIEW_DESELECT_ALL(N_WindowNum, N_ItemId)
                 FOR N_Cont := 1 TO LEN(VN_Selecio)
                     N_Row := NAP_TABLEVIEW_ROW_FROM_RECNO(N_WindowNum, N_ItemId, VN_Selecio[N_Cont])
                     NAP_TABLEVIEW_SELECT_ROW(N_WindowNum, N_ItemId, N_Row)
@@ -1243,7 +1243,7 @@ IF LEN(VN_Selecio) # 0 .OR. LEN(VN_Default) # 0         // algo a fazer
     * a ser atualizado.
     ELSE
         IF SOB_MODO_GRAFICO()
-            NAP_TABLEVIEW_DESELECT_ALL2(N_WindowNum, N_ItemId)
+            NAP_TABLEVIEW_DESELECT_ALL(N_WindowNum, N_ItemId)
 
             IF N_TP_Jan == _JAN_SELE_ARQ_20
                 FOR N_Cont := 1 TO LEN(VN_Selecio)
