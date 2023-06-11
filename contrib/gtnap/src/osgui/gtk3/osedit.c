@@ -891,7 +891,7 @@ void _osedit_unset_focus(OSEdit *edit)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t _osedit_validate(const OSEdit *edit)
+bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control)
 {
     bool_t lost_focus = TRUE;
     cassert_no_null(edit);
@@ -907,6 +907,7 @@ bool_t _osedit_validate(const OSEdit *edit)
             /* The OnChange event can lost focus (p.e: launching a modal window) */
             i_cache_selection((OSEdit*)edit, TRUE);
             params.text = (const char_t*)i_text(edit, &allocated);
+            params.ptr1 = (void*)next_control;
             listener_event(edit->OnChange, ekGUI_EVENT_TXTCHANGE, edit, &params, &lost_focus, OSEdit, EvText, bool_t);
             if (allocated)
                 g_free((gchar*)params.text);

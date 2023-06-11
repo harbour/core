@@ -170,22 +170,6 @@ static __INLINE uint32_t i_search_tabstop(const OSControl **tabstop, const uint3
 
 /*---------------------------------------------------------------------------*/
 
-static bool_t i_widget_grab_focus(GtkWidget *widget, const OSControl *control, GtkWidget **ctabstop)
-{
-    cassert_no_null(control);
-    cassert_no_null(ctabstop);
-    if (widget && gtk_widget_is_sensitive(widget) && gtk_widget_get_visible(widget))
-    {
-        *ctabstop = widget;
-        gtk_widget_grab_focus(widget);
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-/*---------------------------------------------------------------------------*/
-
 static void i_control_rect(const OSControl *control, RectI *rect)
 {
     real32_t x, y, w, h;
@@ -200,7 +184,7 @@ static void i_control_rect(const OSControl *control, RectI *rect)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_set_tabstop(const OSControl **tabstop, const uint32_t size, const uint32_t index, const bool_t reverse, GtkWidget **ctabstop)
+static const OSControl *i_effective_tabstop(const OSControl **tabstop, const uint32_t size, const uint32_t index, const bool_t reverse)
 {
     uint32_t idx = index, i;
     cassert(index < size);
@@ -208,37 +192,8 @@ static void i_set_tabstop(const OSControl **tabstop, const uint32_t size, const 
     {
         const OSControl *control = tabstop[idx];
         GtkWidget *widget = i_focus_widget(control);
-
-        if (i_widget_grab_focus(widget, control, ctabstop) == TRUE)
-        {
-            GtkWidget *parent = gtk_widget_get_parent(control->widget);
-	        /*const gchar *ptype = G_OBJECT_TYPE_NAME(parent);*/
-            OSControl *pcontrol = (OSControl*)g_object_get_data(G_OBJECT(parent), "OSControl");
-            cassert_no_null(pcontrol);
-            if (pcontrol->type == ekGUI_TYPE_PANEL)
-            {
-                RectI prect, crect;
-                int scroll_x = INT_MAX, scroll_y = INT_MAX;
-
-                i_control_rect(control, &crect);
-                _ospanel_scroll_frame((OSPanel*)pcontrol, &prect);
-
-                if (prect.left > crect.left)
-                    scroll_x = (crect.left - i_SCROLL_OFFSET);
-                else if (prect.right < crect.right)
-                    scroll_x = (crect.right + i_SCROLL_OFFSET) - (prect.right - prect.left);
-
-                if (prect.top > crect.top)
-                    scroll_y = (crect.top - i_SCROLL_OFFSET);
-                else if (prect.bottom < crect.bottom)
-                    scroll_y = (crect.bottom + i_SCROLL_OFFSET) - (prect.bottom - prect.top);
-
-                if (scroll_x != INT_MAX || scroll_y != INT_MAX)
-                    _ospanel_scroll((OSPanel*)pcontrol, scroll_x, scroll_y);
-            }
-
-            return;
-        }
+        if (widget && gtk_widget_is_sensitive(widget) && gtk_widget_get_visible(widget))
+            return control;
 
         if (reverse == TRUE)
         {
@@ -255,6 +210,47 @@ static void i_set_tabstop(const OSControl **tabstop, const uint32_t size, const 
                 idx += 1;
         }
     }
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_set_tabstop(const OSControl *tabstop, GtkWidget **ctabstop)
+{
+    GtkWidget *widget = i_focus_widget(tabstop);
+    GtkWidget *parent = NULL;
+    OSControl *pcontrol = NULL;
+    cassert_no_null(tabstop);
+    cassert_no_null(ctabstop);
+    *ctabstop = widget;
+    gtk_widget_grab_focus(widget);
+
+    parent = gtk_widget_get_parent(tabstop->widget);
+    /*const gchar *ptype = G_OBJECT_TYPE_NAME(parent);*/
+    pcontrol = (OSControl*)g_object_get_data(G_OBJECT(parent), "OSControl");
+    cassert_no_null(pcontrol);
+    if (pcontrol->type == ekGUI_TYPE_PANEL)
+    {
+        RectI prect, crect;
+        int scroll_x = INT_MAX, scroll_y = INT_MAX;
+
+        i_control_rect(tabstop, &crect);
+        _ospanel_scroll_frame((OSPanel*)pcontrol, &prect);
+
+        if (prect.left > crect.left)
+            scroll_x = (crect.left - i_SCROLL_OFFSET);
+        else if (prect.right < crect.right)
+            scroll_x = (crect.right + i_SCROLL_OFFSET) - (prect.right - prect.left);
+
+        if (prect.top > crect.top)
+            scroll_y = (crect.top - i_SCROLL_OFFSET);
+        else if (prect.bottom < crect.bottom)
+            scroll_y = (crect.bottom + i_SCROLL_OFFSET) - (prect.bottom - prect.top);
+
+        if (scroll_x != INT_MAX || scroll_y != INT_MAX)
+            _ospanel_scroll((OSPanel*)pcontrol, scroll_x, scroll_y);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -266,6 +262,7 @@ static void i_set_ctabstop(const ArrPt(OSControl) *tabstops, GtkWidget **ctabsto
     if (size > 0)
     {
         const OSControl **tabstop = arrpt_all_const(tabstops, OSControl);
+        const OSControl *control = NULL;
         uint32_t tabindex = 0;
 
         if (*ctabstop == NULL)
@@ -275,7 +272,8 @@ static void i_set_ctabstop(const ArrPt(OSControl) *tabstops, GtkWidget **ctabsto
         if (tabindex == UINT32_MAX)
             tabindex = 0;
 
-        i_set_tabstop(tabstop, size, tabindex, FALSE, ctabstop);
+        control = i_effective_tabstop(tabstop, size, tabindex, FALSE);
+        i_set_tabstop(control, ctabstop);
     }
 }
 
@@ -296,7 +294,7 @@ static bool_t i_close(OSWindow *window, const gui_close_t close_origin)
         if (tabindex != UINT32_MAX)
         {
             if (tabstop[tabindex]->type == ekGUI_TYPE_EDITBOX)
-                closed = _osedit_validate((const OSEdit*)tabstop[tabindex]);
+                closed = _osedit_validate((const OSEdit*)tabstop[tabindex], NULL);
         }
     }
 
@@ -384,33 +382,35 @@ static void i_set_next_tabstop(const ArrPt(OSControl) *tabstops, const bool_t ta
     {
         const OSControl **tabstop = arrpt_all_const(tabstops, OSControl);
         uint32_t tabindex = i_search_tabstop(tabstop, size, widget);
+        uint32_t next_tabindex = tabindex;
         bool_t move_tabstop = TRUE;
+        const OSControl *next_control = NULL;
+
+        if (next_tabindex == UINT32_MAX)
+            next_tabindex = 0;
+
+        if (next_tabindex == size - 1)
+        {
+            if (tabstop_cycle == TRUE)
+                next_tabindex = 0;
+        }
+        else
+        {
+            next_tabindex += 1;
+        }
+
+        next_control = i_effective_tabstop(tabstop, size, next_tabindex, FALSE);
 
         if (tabindex != UINT32_MAX)
         {
             if (tabstop[tabindex]->type == ekGUI_TYPE_EDITBOX)
-                move_tabstop = _osedit_validate((const OSEdit*)tabstop[tabindex]);
+                move_tabstop = _osedit_validate((const OSEdit*)tabstop[tabindex], next_control);
         }
 
         if (move_tabstop == TRUE)
         {
-            uint32_t next_tabindex = tabindex;
-
-            if (next_tabindex == UINT32_MAX)
-                next_tabindex = 0;
-
-            if (next_tabindex == size - 1)
-            {
-                if (tabstop_cycle == TRUE)
-                    next_tabindex = 0;
-            }
-            else
-            {
-                next_tabindex += 1;
-            }
-
             if (next_tabindex != tabindex)
-                i_set_tabstop(tabstop, size, next_tabindex, FALSE, ctabstop);
+                i_set_tabstop(next_control, ctabstop);
         }
     }
 }
@@ -424,33 +424,35 @@ static void i_set_previous_tabstop(const ArrPt(OSControl) *tabstops, const bool_
     {
         const OSControl **tabstop = arrpt_all_const(tabstops, OSControl);
         uint32_t tabindex = i_search_tabstop(tabstop, size, widget);
+        uint32_t next_tabindex = tabindex;
         bool_t move_tabstop = TRUE;
+        const OSControl *next_control = NULL;
+
+        if (next_tabindex == UINT32_MAX)
+            next_tabindex = 0;
+
+        if (next_tabindex == 0)
+        {
+            if (tabstop_cycle == TRUE)
+                next_tabindex = size - 1;
+        }
+        else
+        {
+            next_tabindex -= 1;
+        }
+
+        next_control = i_effective_tabstop(tabstop, size, next_tabindex, TRUE);
 
         if (tabindex != UINT32_MAX)
         {
             if (tabstop[tabindex]->type == ekGUI_TYPE_EDITBOX)
-                move_tabstop = _osedit_validate((const OSEdit*)tabstop[tabindex]);
+                move_tabstop = _osedit_validate((const OSEdit*)tabstop[tabindex], next_control);
         }
 
         if (move_tabstop == TRUE)
         {
-            uint32_t next_tabindex = tabindex;
-
-            if (next_tabindex == UINT32_MAX)
-                next_tabindex = 0;
-
-            if (next_tabindex == 0)
-            {
-                if (tabstop_cycle == TRUE)
-                    next_tabindex = size - 1;
-            }
-            else
-            {
-                next_tabindex -= 1;
-            }
-
             if (next_tabindex != tabindex)
-                i_set_tabstop(tabstop, size, next_tabindex, TRUE, ctabstop);
+                i_set_tabstop(next_control, ctabstop);
         }
     }
 }
@@ -848,7 +850,8 @@ void oswindow_focus(OSWindow *window, OSControl *control)
     arrpt_foreach(tabstop, window->tabstops, OSControl)
         if (i_focus_widget(tabstop) == widget)
         {
-            i_widget_grab_focus(widget, control, &window->ctabstop);
+            window->ctabstop = widget;
+            gtk_widget_grab_focus(widget);
             break;
         }
     arrpt_end();
@@ -1208,7 +1211,7 @@ bool_t _oswindow_can_mouse_down(OSControl *control)
         if (fcontrol != NULL)
         {
             if (fcontrol->type == ekGUI_TYPE_EDITBOX)
-                return _osedit_validate((const OSEdit*)fcontrol);
+                return _osedit_validate((const OSEdit*)fcontrol, control);
         }
     }
 

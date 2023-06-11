@@ -20,7 +20,7 @@ void _osedit_set_focus(OSEdit *edit);
 
 void _osedit_unset_focus(OSEdit *edit);
 
-bool_t _osedit_validate(const OSEdit *edit);
+bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control);
 
 GtkWidget *_osedit_focus(OSEdit *edit);
 

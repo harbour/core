@@ -153,7 +153,6 @@ struct _gtnap_window_t
     GtNapToolbar *toolbar;
     GtNapArea *gtarea;
     uint32_t num_rows;
-    // TODO HB_ITEM *row_param;
     ArrPt(GtNapObject) *objects;
     ArrPt(GtNapCallback) *callbacks;
 };
@@ -1065,7 +1064,7 @@ static void i_attach_to_panel(ArrPt(GtNapObject) *objects, Panel *main_panel, Pa
                     if (object->editBoxIndexForButton == UINT32_MAX)
                         pos.y += (real32_t)GTNAP_GLOBAL->cell_y_size;
                     else
-                        // The same as related editbox
+                        /* The same as related editbox */
                         pos.y += (real32_t)toolbar->pixels_button;
 
                     if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->button_y_size)
@@ -1110,7 +1109,7 @@ static void i_attach_toolbar_to_panel(const GtNapToolbar *toolbar, Panel *panel)
             }
             else
             {
-                pos.x += 5.f; // Separator
+                pos.x += 5.f; /* Separator */
             }
         arrpt_end();
     }
@@ -2030,7 +2029,6 @@ static void i_OnAutoWizard(GtNapWindow *gtwin, Event *e)
     cassert_no_null(cuaobj);
     unref(e);
 
-    // log_printf("cuaobj->autoCodeBlock: %p", cuaobj->autoCodeBlock);
     if (cuaobj->can_auto_lista == TRUE && cuaobj->auto_block != NULL && cuaobj->wizard_block != NULL)
     {
         bool_t lista = FALSE;
@@ -2049,7 +2047,6 @@ static void i_OnAutoWizard(GtNapWindow *gtwin, Event *e)
             i_launch_wizard(gtwin, cuaobj);
         }
     }
-    // --------------------------------
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2621,7 +2618,7 @@ void hb_gtnap_window_hotkey(const uint32_t wid, const int32_t key, HB_ITEM *bloc
         }
 
         {
-            uint32_t autoclose_id = autoclose ? nkey->vkey : UINT32_MAX;
+            uint32_t autoclose_id = autoclose ? (uint32_t)nkey->vkey : UINT32_MAX;
             Listener *listener = i_gtnap_listener(block, key, autoclose_id, gtwin, i_OnWindowHotKey);
             window_hotkey(gtwin->window, nkey->vkey, nkey->modifiers, listener);
         }
@@ -3657,7 +3654,7 @@ static void i_hbitem_to_char(HB_ITEM *item, char_t *buffer, const uint32_t size)
     case HB_IT_INTEGER:
     {
         HB_MAXINT value = hb_itemGetNInt(item);
-        bstd_sprintf(buffer, size, "%d", value);
+        bstd_sprintf(buffer, size, "%d", (int)value);
         break;
     }
 
@@ -4502,23 +4499,8 @@ static HB_BOOL hb_gtnap_GetChar( PHB_GT pGT, int iRow, int iCol, int * pbColor, 
 
 /*---------------------------------------------------------------------------*/
 
-//static GtNapWindow *i_force_gtwin(GtNap *gtnap)
-//{
-//    sffdgd
-//    GtNapWindow *gtwin = i_current_gtwin(gtnap);
-//    if (gtwin == NULL)
-//    {
-//        hb_gtnap_window(0, 0, gtnap->rows - 1, gtnap->cols - 1, tc(gtnap->title), FALSE, TRUE, TRUE, FALSE);
-//
-//    }
-//}
-
-/*---------------------------------------------------------------------------*/
-
 static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
-        //GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( iRow );
     HB_SYMBOL_UNUSED( iCol );
@@ -4556,8 +4538,6 @@ static void hb_gtnap_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
 
 static int hb_gtnap_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const char * pText, HB_SIZE ulLen )
 {
-    //GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( iRow );
     HB_SYMBOL_UNUSED( iCol );
@@ -4630,9 +4610,11 @@ static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int i
     if (gtwin != NULL)
     {
         uint32_t i, n;
-        // FRAN: The scroll, at the moment, delete all texts
-        // Improve taking into account the input rectangle
-        // Take into account if a real scroll exists (iRows > 0 || iCols > 0)
+        /*
+           FRAN: The scroll, at the moment, delete all texts
+           Improve taking into account the input rectangle
+           Take into account if a real scroll exists (iRows > 0 || iCols > 0)
+        */
         n = arrpt_size(gtwin->objects, GtNapObject);
         for (i = 0; i < n; )
         {
