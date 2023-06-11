@@ -1213,9 +1213,9 @@ static void i_update_harbour_from_edit_text(const GtNapObject *obj)
 
         if (pItem != NULL)
         {
-            PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 1, pItem);
+            PHB_ITEM ritem = hb_itemDo(obj->get_set_block, 1, pItem);
             hb_itemRelease(pItem);
-            hb_itemRelease(retItem);
+            hb_itemRelease(ritem);
         }
     }
 }
@@ -1234,18 +1234,18 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
     }
     else if (obj->text_block != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(obj->text_block, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        PHB_ITEM ritem = hb_itemDo(obj->text_block, 0);
+        HB_TYPE type = HB_ITEM_TYPE(ritem);
 
         if (type == HB_IT_STRING)
         {
             char_t buffer[STATIC_TEXT_SIZE];
-            i_item_to_utf8(retItem, buffer, sizeof32(buffer));
+            i_item_to_utf8(ritem, buffer, sizeof32(buffer));
             nchars = unicode_nchars(buffer, ekUTF8);
             label_text((Label*)obj->component, buffer);
         }
 
-        hb_itemRelease(retItem);
+        hb_itemRelease(ritem);
     }
 
     /* Text has been updated */
@@ -1278,11 +1278,11 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
     if (gtobj->valida_block != NULL)
     {
         bool_t valid = TRUE;
-        PHB_ITEM retItem = hb_itemDo(gtobj->valida_block, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        PHB_ITEM ritem = hb_itemDo(gtobj->valida_block, 0);
+        HB_TYPE type = HB_ITEM_TYPE(ritem);
         cassert(type == HB_IT_LOGICAL);
-        valid = (bool_t)hb_itemGetL(retItem);
-        hb_itemRelease(retItem);
+        valid = (bool_t)hb_itemGetL(ritem);
+        hb_itemRelease(ritem);
 
         /* If the input is not valid --> The editbox keep the focus and event finish here */
         if (valid == FALSE)
@@ -1388,12 +1388,12 @@ static void i_get_edit_text(const GtNapObject *obj, char_t *utf8, const uint32_t
     cassert(obj->type == ekOBJ_EDIT);
     if (obj->get_set_block != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(obj->get_set_block, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        PHB_ITEM ritem = hb_itemDo(obj->get_set_block, 0);
+        HB_TYPE type = HB_ITEM_TYPE(ritem);
         switch (type) {
         case HB_IT_STRING:
             cassert(obj->dtype == ekTYPE_CHARACTER);
-            hb_itemCopyStrUTF8(retItem, (char*)utf8, (HB_SIZE)size);
+            hb_itemCopyStrUTF8(ritem, (char*)utf8, (HB_SIZE)size);
             break;
 
         case HB_IT_DATE:
@@ -1401,7 +1401,7 @@ static void i_get_edit_text(const GtNapObject *obj, char_t *utf8, const uint32_t
             char date[16];
             char temp[16];
             cassert(obj->dtype == ekTYPE_DATE);
-            hb_itemGetDS(retItem, date);
+            hb_itemGetDS(ritem, date);
             hb_dateFormat(date, temp, hb_setGetDateFormat());
             str_copy_c(utf8, size, temp);
             break;
@@ -1411,7 +1411,7 @@ static void i_get_edit_text(const GtNapObject *obj, char_t *utf8, const uint32_t
             str_copy_c(utf8, size, "");
         }
 
-        hb_itemRelease(retItem);
+        hb_itemRelease(ritem);
     }
     else
     {
@@ -1723,8 +1723,8 @@ static void i_filter_tecla(const GtNapObject *obj, const EvText *text, EvTextFil
 
                     // Call to filter
                     {
-                        PHB_ITEM retItem = hb_itemDo(obj->keyfilter_block, 0);
-                        HB_TYPE type = HB_ITEM_TYPE(retItem);
+                        PHB_ITEM ritem = hb_itemDo(obj->keyfilter_block, 0);
+                        HB_TYPE type = HB_ITEM_TYPE(ritem);
                         if (type == HB_IT_NIL)
                         {
                             ncp = c;
@@ -1734,12 +1734,12 @@ static void i_filter_tecla(const GtNapObject *obj, const EvText *text, EvTextFil
                         {
                             char_t temp[1024];
                             cassert(type == HB_IT_STRING);
-                            hb_itemCopyStrUTF8(retItem, temp, sizeof(temp));
+                            hb_itemCopyStrUTF8(ritem, temp, sizeof(temp));
                             cassert(unicode_nchars(temp, ekUTF8) == 1);
                             ncp = unicode_to_u32b(temp, ekUTF8, &nb2);
                         }
 
-                        hb_itemRelease(retItem);
+                        hb_itemRelease(ritem);
                     }
 
                     /* There is space in dest */
@@ -1880,14 +1880,14 @@ static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
     cassert(mes_obj->type == ekOBJ_LABEL);
     if (obj->message_block != NULL)
     {
-        PHB_ITEM retItem = hb_itemDo(obj->message_block, 0);
-        HB_TYPE type = HB_ITEM_TYPE(retItem);
+        PHB_ITEM ritem = hb_itemDo(obj->message_block, 0);
+        HB_TYPE type = HB_ITEM_TYPE(ritem);
 
         if (type == HB_IT_STRING)
         {
             char_t buffer[1024];
             uint32_t len;
-            hb_itemCopyStrUTF8( retItem, (char*)buffer, (HB_SIZE)sizeof(buffer));
+            hb_itemCopyStrUTF8(ritem, (char*)buffer, (HB_SIZE)sizeof(buffer));
             len = unicode_nchars(buffer, ekUTF8);
             mes_obj->size.width = (real32_t)(len * GTNAP_GLOBAL->cell_x_size);
             _component_set_frame(mes_obj->component, &mes_obj->pos, &mes_obj->size);
@@ -1898,7 +1898,7 @@ static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
             cassert_msg(FALSE, "Unkown type in i_set_edit_message");
         }
 
-        hb_itemRelease(retItem);
+        hb_itemRelease(ritem);
     }
 }
 
@@ -1934,23 +1934,23 @@ static void i_set_view_text(const GtNapObject *obj)
 static void i_launch_wizard(GtNapWindow *gtwin, GtNapObject *obj)
 {
     char_t temp[1024];
-    PHB_ITEM retItem = NULL;
+    PHB_ITEM ritem = NULL;
     HB_TYPE type = HB_IT_NIL;
     cassert_no_null(gtwin);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_EDIT);
     cassert_no_null(obj->wizard_block);
-    retItem = hb_itemDo(obj->wizard_block, 0);
-    type = HB_ITEM_TYPE(retItem);
+    ritem = hb_itemDo(obj->wizard_block, 0);
+    type = HB_ITEM_TYPE(ritem);
 
     if (type != HB_IT_NIL)
     {
         cassert(type == HB_IT_STRING);
-        hb_itemCopyStrUTF8(retItem, temp, sizeof(temp));
+        hb_itemCopyStrUTF8(ritem, temp, sizeof(temp));
         edit_text((Edit*)obj->component, temp);
     }
 
-    hb_itemRelease(retItem);
+    hb_itemRelease(ritem);
 
     if (type != HB_IT_NIL)
         gui_OnIdle(listener(gtwin, i_OnNextTabstop, GtNapWindow));
@@ -1972,11 +1972,11 @@ static void i_OnAutoWizard(GtNapWindow *gtwin, Event *e)
         bool_t lista = FALSE;
 
         {
-            PHB_ITEM retItem = hb_itemDo(cuaobj->auto_block, 0);
-            HB_TYPE type = HB_ITEM_TYPE(retItem);
+            PHB_ITEM ritem = hb_itemDo(cuaobj->auto_block, 0);
+            HB_TYPE type = HB_ITEM_TYPE(ritem);
             cassert(type == HB_IT_LOGICAL);
-            lista = (bool_t)hb_itemGetL(retItem);
-            hb_itemRelease(retItem);
+            lista = (bool_t)hb_itemGetL(ritem);
+            hb_itemRelease(ritem);
         }
 
         if (lista == TRUE)
@@ -2020,12 +2020,12 @@ static void i_OnEditFocus(GtNapObject *gtobj, Event *e)
 
         if (gtobj->when_block != NULL)
         {
-            PHB_ITEM retItem = hb_itemDo(gtobj->when_block, 0);
-            HB_TYPE type = HB_ITEM_TYPE(retItem);
+            PHB_ITEM ritem = hb_itemDo(gtobj->when_block, 0);
+            HB_TYPE type = HB_ITEM_TYPE(ritem);
             bool_t updated = FALSE;
             cassert(type == HB_IT_LOGICAL);
-            updated = (bool_t)hb_itemGetL(retItem);
-            hb_itemRelease(retItem);
+            updated = (bool_t)hb_itemGetL(ritem);
+            hb_itemRelease(ritem);
 
             if (updated == TRUE)
                 i_set_edit_text(gtobj);
