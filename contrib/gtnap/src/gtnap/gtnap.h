@@ -52,7 +52,7 @@ extern void hb_gtnap_window_cut(const uint32_t wid);
 
 extern void hb_gtnap_window_undo(const uint32_t wid);
 
-extern uint32_t hb_gtnap_window_modal(const uint32_t wid);
+extern uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t delay_seconds);
 
 extern void hb_gtnap_window_stop_modal(const uint32_t result);
 

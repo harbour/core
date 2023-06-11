@@ -140,7 +140,8 @@ HB_FUNC( NAP_WINDOW_UNDO )
 HB_FUNC( NAP_WINDOW_MODAL )
 {
     uint32_t wid = hb_parni(1);
-    uint32_t ret = hb_gtnap_window_modal(wid);
+    uint32_t delay_seconds = hb_parni(2);
+    uint32_t ret = hb_gtnap_window_modal(wid, delay_seconds);
     hb_retni(ret);
 }
 

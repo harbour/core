@@ -34,41 +34,10 @@ ENDIF
 *
 N_Tecla := IIF(L_Forever,INKEYX(0),INKEYX())
 DO WHILE (B_BlocoKey := SETKEY(N_Tecla)) # NIL
-   *
-   #INCLUDE "janela.ch"
-   #INCLUDE "define_cua.ch"
-   *
-    //
-    // Fran: GTNAP will never enter here
-    //
-    // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-    // IF SOB_MODO_GRAFICO()
-    //     * Garantir que o código "normal" do sistema (fora da CUA) seja
-    //     * executado com refresh default.
-    //     N_PaintRefresh_Old := WVW_SetPaintRefresh(_REPAINT_DEFAULT)
-    // ENDIF
-    // #elif defined(__PLATFORM__LINUX)
-    //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-    // #else
-    //     #erro "Código não adaptado para esta plataforma"
-    // #endif
-   *
-   EVAL(B_BlocoKey, PROCNAME(N_Pilha), PROCLINE(N_Pilha))
-   *
-    //
-    // Fran: GTNAP will never enter here
-    //
-    // #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-    // IF SOB_MODO_GRAFICO()
-    //     WVW_SetPaintRefresh(N_PaintRefresh_Old)
-    // ENDIF
-    // #elif defined(__PLATFORM__LINUX)
-    //     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-    // #else
-    //     #erro "Código não adaptado para esta plataforma"
-    // #endif
-   *
-   N_Tecla := IIF(L_Forever,INKEYX(0),INKEYX())
+    #INCLUDE "janela.ch"
+    #INCLUDE "define_cua.ch"
+    EVAL(B_BlocoKey, PROCNAME(N_Pilha), PROCLINE(N_Pilha))
+    N_Tecla := IIF(L_Forever,INKEYX(0),INKEYX())
 ENDDO
 *
 RETURN( N_Tecla )
@@ -79,23 +48,7 @@ FUNC INKEYX ( N_SEG )   // resolve o problema do TIME SLICE
 ***********
 LOCAL N_INKEY, N_SEGUNDOS, N_TIMEOUT
 LOCAL N_PaintRefresh_Old
-*
-//
-// Fran: GTNAP will never enter here
-//
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-// IF SOB_MODO_GRAFICO() .AND. N_SEG # NIL
-//     N_PaintRefresh_Old := WVW_SetPaintRefresh()
-//     IF N_PaintRefresh_Old # _REPAINT_WAIT_STATE
-//         WVW_SetPaintRefresh(_REPAINT_WAIT_STATE)
-//     ENDIF
-// ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//     #erro "Código não adaptado para esta plataforma"
-// #endif
-*
+
 IF N_SEG==NIL        // INKEY(NIL) para o programa !!
    N_INKEY := INKEY()
 ELSEIF N_SEG # 0
@@ -115,24 +68,7 @@ ELSE
       ENDIF
    ENDIF
 ENDIF
-*
-//
-// Fran: GTNAP will never enter here
-//
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-// IF SOB_MODO_GRAFICO() .AND. N_SEG # NIL
-//     IF N_PaintRefresh_Old # WVW_SetPaintRefresh()
-//         WVW_SetPaintRefresh(N_PaintRefresh_Old)
-//     ENDIF
-// ENDIF
-// #elif defined(__PLATFORM__LINUX)
-//     // NAO_ADAPTADO_PARA_LINUX_INTERFACE_SEMI_GRAFICA
-// #else
-//     #erro "Código não adaptado para esta plataforma"
-// #endif
-*
 RETURN N_INKEY
-*
 
 *****************
 FUNC SETA_TIMEOUT(B_TIMEOUT_NEW)
@@ -152,27 +88,6 @@ IF L_LIMITE_NEW # NIL
 ENDIF
 RETURN L_LIMITE
 
-// *
-// **************
-// PROC XKEYBOARD(C_CODIGO)
-// **************
-// IF C_CODIGO == NIL
-//    C_CODIGO := ""
-// ENDIF
-// IF SETA_TEMPOLIMITE()
-//    __KEYBOARD(BUFFER_TECLADO())
-// ELSE
-//    __KEYBOARD(C_CODIGO)
-// ENDIF
-// *
-// *******************
-// FUNC BUFFER_TECLADO
-// *******************
-// LOCAL C_TECLAS := ""
-// DO WHILE NEXTKEY() # 0
-//    C_TECLAS := C_TECLAS + CHR(INKEYX())     // Tirar do buffer
-// ENDDO
-// RETURN C_TECLAS
-// *
+
 // ******************************* FIM DA INKEY_()  ***********************
 

@@ -172,6 +172,8 @@ struct _gtnap_t
     uint32_t button_y_size;
     uint32_t edit_y_size;
     ArrSt(GtNapWindow) *windows;
+    uint64_t modal_timestamp;
+    uint32_t modal_close_seconds;
     /* TODO Implement a stack of modal window IDs 'hb_gtnap_window_stop_modal' */
 };
 
@@ -2294,6 +2296,33 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
 
 /*---------------------------------------------------------------------------*/
 
+static void i_gtnap_update(GtNap *gtnap, const real64_t prtime, const real64_t ctime)
+{
+    /* Full modal application */
+    cassert(gtnap == NULL);
+    gtnap = GTNAP_GLOBAL;
+    cassert_no_null(gtnap);
+    unref(prtime);
+    unref(ctime);
+    if (gtnap->modal_close_seconds > 0)
+    {
+        uint64_t now = btime_now();
+        if ((now - gtnap->modal_timestamp) / 1000000 >= gtnap->modal_close_seconds)
+        {
+            GtNapWindow *gtwin = i_current_main_gtwin(GTNAP_GLOBAL);
+            gtnap->modal_timestamp = 0;
+            gtnap->modal_close_seconds = 0;
+            if (gtwin != NULL)
+            {
+                gtwin->modal_window_alive = FALSE;
+                window_stop_modal(gtwin->window, NAP_MODAL_TIMESTAMP);
+            }
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32_t cols, PHB_ITEM begin_block)
 {
     void *hInstance = NULL;
@@ -2308,9 +2337,9 @@ void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32_t cols
     INIT_COLS = cols;
 
     osmain_imp(
-                0, NULL, hInstance, 0.,
+                0, NULL, hInstance, 0.5f,
                 (FPtr_app_create)i_gtnap_create,
-                (FPtr_app_update)NULL,
+                (FPtr_app_update)i_gtnap_update,
                 (FPtr_destroy)i_gtnap_destroy,
                 (char_t*)"");
 }
@@ -2777,7 +2806,7 @@ static GtNapObject *i_get_first_focus(GtNapWindow *gtwin)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_window_modal(const uint32_t wid)
+uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t delay_seconds)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     GtNapWindow *embgtwin = NULL;
@@ -2864,6 +2893,13 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid)
         window_origin(gtwin->window, pos);
         gtwin->is_closed_by_esc = FALSE;
         gtwin->modal_window_alive = TRUE;
+
+        if (delay_seconds > 0)
+        {
+            GTNAP_GLOBAL->modal_close_seconds = delay_seconds;
+            GTNAP_GLOBAL->modal_timestamp = btime_now();
+        }
+
         ret = window_modal(gtwin->window, parent ? parent->window : NULL);
         return ret;
     }

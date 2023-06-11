@@ -13,6 +13,8 @@
 
 #define NAP_MODAL_TOOLBAR           4
 
+#define NAP_MODAL_TIMESTAMP			5
+
 #define NAP_MODAL_BUTTON_AUTOCLOSE  1000    /* + index of button >= 1 */
 
 #define NAP_MODAL_HOTKEY_AUTOCLOSE  2000    /* + vkey_t use NAP_INKEY(ret - NAP_MODAL_HOTKEY_AUTOCLOSE) */

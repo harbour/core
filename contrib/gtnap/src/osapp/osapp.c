@@ -255,6 +255,9 @@ static void i_OnFinishLaunching(i_App *app)
 
     app->state = i_ekSTATE_RUNNING;
 
+    if (app->func_update != NULL)
+        app->app_clock = clock_create(app->lframe);
+
     if (app->func_create != NULL)
     {
         gui_update();
@@ -263,9 +266,6 @@ static void i_OnFinishLaunching(i_App *app)
 
     app->initialized = TRUE;
     osapp_cancel_user_attention(app->osapp);
-
-    if (app->func_update != NULL)
-        app->app_clock = clock_create(app->lframe);
 
     /* An application can terminate in app->func_create() */
     if (app->terminated == TRUE)

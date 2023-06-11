@@ -2008,7 +2008,7 @@ LOCAL V_Botao, V_Imagem, N_Pos_Acao
 
 IF SOB_MODO_GRAFICO()
 
-    X_Retorno_Eval := NAP_WINDOW_MODAL(N_WindowNum)
+    X_Retorno_Eval := NAP_WINDOW_MODAL(N_WindowNum, 0)
 
     IF X_Retorno_Eval == NAP_MODAL_ESC .OR. X_Retorno_Eval == NAP_MODAL_X_BUTTON .OR. X_Retorno_Eval == NAP_MODAL_TOOLBAR
         L_FechouComAutoClose = .F.

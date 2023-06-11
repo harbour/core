@@ -73,7 +73,7 @@ IF SOB_MODO_GRAFICO()
 
     NAP_CUALIB_DEFAULT_BUTTON(N_Default)
 
-    N_Opcao := NAP_WINDOW_MODAL(N_WindowNum)
+    N_Opcao := NAP_WINDOW_MODAL(N_WindowNum, 0)
 
     IF N_Opcao >= NAP_MODAL_BUTTON_AUTOCLOSE .AND. N_Opcao <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
         N_Opcao -= NAP_MODAL_BUTTON_AUTOCLOSE
@@ -220,6 +220,7 @@ IF SOB_MODO_GRAFICO()
 ENDIF
 
 IF L_TipoMsgAguarde
+    NAP_LOG("L_TipoMsgAguarde")
     SetJanTipoMsgAguarde(VX_Janela,L_TipoMsgAguarde)
     SetProgressBar(VX_Janela,N_ProgressBar)
 ENDIF
@@ -227,7 +228,7 @@ ENDIF
 Ative(VX_Janela)
 
 IF SOB_MODO_GRAFICO()
-    NAP_WINDOW_MODAL(N_WindowNum)
+    NAP_WINDOW_MODAL(N_WindowNum, 0)
     Destrua VX_Janela
 ELSE
     IF L_Parar .AND. N_Segundos == 0

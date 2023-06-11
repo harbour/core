@@ -247,7 +247,7 @@ IF L_ForcaLerTudo
                 NAP_MENU_ADD(N_WindowNum, N_MenID, {||V_Opcoes[N_Cont,_OPCAO_TEXTO_TRATADO]}, V_Opcoes[N_Cont,_OPCAO_BLOCO_ACAO], V_Opcoes[N_Cont,_OPCAO_COL_DESTAQUE])
             NEXT
 
-            X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
+            X_Retorno := NAP_WINDOW_MODAL(N_WindowNum, 0)
 
             // MenuVert return True (autoclose) or False (ESC or [X])
             IF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON .OR. X_Retorno == NAP_MODAL_TOOLBAR
