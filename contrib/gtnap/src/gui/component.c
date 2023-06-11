@@ -591,6 +591,14 @@ const char_t *_component_type(const GuiComponent *component)
 
 /*---------------------------------------------------------------------------*/
 
+void *_component_ositem(const GuiComponent *component)
+{
+    cassert_no_null(component);
+    return component->ositem;
+}
+
+/*---------------------------------------------------------------------------*/
+
 Window *_component_window(const GuiComponent *component)
 {
     Layout *layout = NULL;

@@ -271,18 +271,18 @@ NAP_LOG("VALUE OF CAMPO3: " + C_Campo3)
 ***************************
 STAT FUNC PREENCHE_CAMPO_02(C_Campo2)
 ***************************
-NAP_LOG("PREENCHE_CAMPO_02 Begin: '" + C_Campo2 + "'")
+//NAP_LOG("PREENCHE_CAMPO_02 Begin: '" + C_Campo2 + "'")
 IF EMPTY(C_Campo2)
    C_Campo2 := REPL("2",LEN(C_Campo2))
 ENDIF
-NAP_LOG("PREENCHE_CAMPO_02 After: '" + C_Campo2 + "'")
+//NAP_LOG("PREENCHE_CAMPO_02 After: '" + C_Campo2 + "'")
 RETURN .T.
 *
 **********************
 STAT FUNC VALIDA_CAMPO (C_Titulo_Campo,C_Conteudo_Campo)
 **********************
 LOCAL L_OK := .T.
-NAP_LOG("VALIDA_CAMPO" + C_Titulo_Campo + ": " + C_Conteudo_Campo)
+//NAP_LOG("VALIDA_CAMPO" + C_Titulo_Campo + ": " + C_Conteudo_Campo)
 
 IF EMPTY(C_Conteudo_Campo)
    L_OK := .F.

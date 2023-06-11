@@ -140,7 +140,6 @@ struct _gtnap_window_t
     uint16_t *text_buffer;
     bool_t is_configured;
     bool_t is_closed_by_esc;
-    bool_t focus_by_previous;
     bool_t modal_window_alive;
     bool_t buttons_navigation;
     bool_t border;
@@ -280,18 +279,14 @@ __EXTERN_C
  * These are internal, non-documented functions of NAppGUI.
  * They are used for direct handling of widgets, avoiding the 'layout' layer.
  */
-Window *_component_window(const GuiComponent *component);
 void _component_attach_to_panel(GuiComponent *panel_component, GuiComponent *child_component);
 void _component_detach_from_panel(GuiComponent *panel_component, GuiComponent *child_component);
 void _component_set_frame(GuiComponent *component, const V2Df *origin, const S2Df *size);
-void _component_get_origin(const GuiComponent *component, V2Df *origin);
-void _component_get_size(const GuiComponent *component, S2Df *size);
-uint32_t _component_get_tag(const GuiComponent *component);
-void _component_set_tag(GuiComponent *component, const uint32_t tag);
 void _component_visible(GuiComponent *component, const bool_t visible);
 void _component_destroy(GuiComponent **component);
 void _component_taborder(GuiComponent *component, Window *window);
 const char_t *_component_type(const GuiComponent *component);
+void *_component_ositem(const GuiComponent *component);
 void _panel_compose(Panel *panel, const S2Df *required_size, S2Df *final_size);
 void _panel_locate(Panel *panel);
 void _panel_detach_components(Panel *panel);
@@ -916,6 +911,17 @@ static String *i_utf8_to_cp_string(const char_t *utf8)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_utf8_to_cp(const char_t *utf8, char_t *buffer, const uint32_t size)
+{
+    HB_CODEPAGE *cp = hb_vmCDP();
+    HB_SIZE n = (HB_SIZE)str_len_c(utf8);
+    HB_SIZE s1 = hb_cdpUTF8AsStrLen(cp, utf8, n, 0);
+    HB_SIZE s2 = hb_cdpUTF8ToStr(cp, utf8, n, buffer, size);
+    cassert(s1 == s2);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
@@ -1145,7 +1151,6 @@ static void i_OnPreviousTabstop(GtNapWindow *gtwin, Event *e)
 {
     unref(e);
     cassert_no_null(gtwin);
-    gtwin->focus_by_previous = TRUE;
     window_previous_tabstop(gtwin->window);
 }
 
@@ -1155,7 +1160,6 @@ static void i_OnNextTabstop(GtNapWindow *gtwin, Event *e)
 {
     unref(e);
     cassert_no_null(gtwin);
-    gtwin->focus_by_previous = FALSE;
     window_next_tabstop(gtwin->window);
 }
 
@@ -1188,21 +1192,26 @@ static void i_OnRightButton(GtNapWindow *gtwin, Event *e)
 /*---------------------------------------------------------------------------*/
 
 /* Run the codeBlock that updates after a text entry in EditBox */
-static void i_update_harbour_from_edit_text(const GtNapObject *obj)
+static void i_update_harbour_from_edit_text(const GtNapObject *gtobj)
 {
-    cassert_no_null(obj);
-    if (obj->get_set_block != NULL)
+    cassert_no_null(gtobj);
+    if (gtobj->get_set_block != NULL)
     {
         PHB_ITEM pItem = NULL;
-        const char_t *text = edit_get_text((Edit*)obj->component);
+        const char_t *text = edit_get_text((Edit*)gtobj->component);
 
-        if (obj->dtype == ekTYPE_CHARACTER)
+        if (gtobj->dtype == ekTYPE_CHARACTER)
         {
-            String *u1252 = gtconvert_UTF8_to_1252(text);
-            pItem = hb_itemPutC(NULL, tc(u1252));
-            str_destroy(&u1252);
+            char_t cp[STATIC_TEXT_SIZE];
+            uint32_t i, len = 0;
+            i_utf8_to_cp(text, cp, sizeof(cp));
+            len = str_len_c(cp);
+            for (i = len; i < gtobj->max_chars; ++i)
+                cp[i] = ' ';
+            cp[gtobj->max_chars] = 0;
+            pItem = hb_itemPutC(NULL, cp);
         }
-        else if (obj->dtype == ekTYPE_DATE)
+        else if (gtobj->dtype == ekTYPE_DATE)
         {
             pItem = hb_itemPutDS(NULL, text);
         }
@@ -1213,7 +1222,7 @@ static void i_update_harbour_from_edit_text(const GtNapObject *obj)
 
         if (pItem != NULL)
         {
-            PHB_ITEM ritem = hb_itemDo(obj->get_set_block, 1, pItem);
+            PHB_ITEM ritem = hb_itemDo(gtobj->get_set_block, 1, pItem);
             hb_itemRelease(pItem);
             hb_itemRelease(ritem);
         }
@@ -1259,6 +1268,49 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
 
 /*---------------------------------------------------------------------------*/
 
+static GuiComponent *i_find_component(GtNapWindow *gtwin, void *ositem)
+{
+    cassert_no_null(gtwin);
+    arrpt_foreach(obj, gtwin->objects, GtNapObject)
+        if (_component_ositem(obj->component) == ositem)
+            return obj->component;
+    arrpt_end();
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static bool_t i_move_focus_above(GtNapObject *gtobj, void *ositem)
+{
+    GtNapWindow *gtwin = NULL;
+    GuiComponent  *next_component = NULL;
+    cassert_no_null(gtobj);
+    gtwin = gtobj->gtwin;
+    cassert_no_null(gtwin);
+    next_component = i_find_component(gtwin, ositem);
+    if (next_component != NULL)
+    {
+        uint32_t next_id = UINT32_MAX;
+        uint32_t curr_id = UINT32_MAX;
+        arrpt_foreach(obj, gtwin->objects, GtNapObject)
+            if (obj->component == next_component)
+                next_id = obj_i;
+            if (obj->component == gtobj->component)
+                curr_id = obj_i;
+        arrpt_end();
+
+        if (next_id != UINT32_MAX && curr_id != UINT32_MAX)
+        {
+            if (next_id < curr_id)
+                return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnEditChange(GtNapObject *gtobj, Event *e)
 {
     const EvText *p = event_params(e, EvText);
@@ -1268,11 +1320,16 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
     gtwin = gtobj->gtwin;
     cassert_no_null(gtwin);
 
+    /* Current window is in close process by 'window_stop_modal'. Validations should not be performed */
     if (gtwin->modal_window_alive == FALSE)
         return;
 
     /* Update Harbour with the content of the EditBox */
     i_update_harbour_from_edit_text(gtobj);
+
+    /* If we move to a control above of current editbox --> Not perform validations, just move */
+    if (i_move_focus_above(gtobj, p->ptr1) == TRUE)
+        return;
 
     /* The editbox has a validation code block */
     if (gtobj->valida_block != NULL)
@@ -1298,7 +1355,7 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
     {
         if (gtwin->error_date_block != NULL)
         {
-            long r = hb_dateUnformat( p->text, hb_setGetDateFormat());
+            long r = hb_dateUnformat(p->text, hb_setGetDateFormat());
 
             /* Date invalid --> The editbox keep the focus and event finish here */
             if (r == 0)
@@ -1326,31 +1383,25 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
         /* The last editbox has lost the focus --> Close the window */
         if (gtobj->is_last_edit == TRUE)
         {
-            /* We dont execute confirmaCodeBlock if we moved from last edit to previos one */
-            if (gtwin->focus_by_previous == FALSE)
+            bool_t close = TRUE;
+
+            /* We have asociated a confirmation block */
+            if (gtwin->confirm_block != NULL)
             {
-                bool_t close = TRUE;
+                PHB_ITEM ritem = hb_itemDo(gtwin->confirm_block, 0);
+                HB_TYPE type = HB_ITEM_TYPE(ritem);
+                cassert(type == HB_IT_LOGICAL);
+                close = (bool_t)hb_itemGetL(ritem);
+                hb_itemRelease(ritem);
+            }
 
-                /* We have asociated a confirmation block */
-                if (gtwin->confirm_block != NULL)
-                {
-                    PHB_ITEM ritem = hb_itemDo(gtwin->confirm_block, 0);
-                    HB_TYPE type = HB_ITEM_TYPE(ritem);
-                    cassert(type == HB_IT_LOGICAL);
-                    close = (bool_t)hb_itemGetL(ritem);
-                    hb_itemRelease(ritem);
-                }
-
-                if (close == TRUE)
-                {
-                    gtwin->modal_window_alive = FALSE;
-                    window_stop_modal(gtwin->window, 5000);
-                }
+            if (close == TRUE)
+            {
+                gtwin->modal_window_alive = FALSE;
+                window_stop_modal(gtwin->window, 5000);
             }
         }
     }
-
-    gtwin->focus_by_previous = FALSE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1862,8 +1913,6 @@ static void i_OnEditFilter(GtNapObject *gtobj, Event *e)
             /* End of editable string reached. */
             if (res->cpos >= gtobj->max_chars)
             {
-                gtwin->focus_by_previous = FALSE;
-                //gtwin->tabstop_by_return_or_arrow = TRUE;
                 gui_OnIdle(listener(gtwin, i_OnNextTabstop, GtNapWindow));
             }
         }

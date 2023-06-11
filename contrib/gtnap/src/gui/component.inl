@@ -68,6 +68,8 @@ void _component_update_listener_imp(
 
 const char_t *_component_type(const GuiComponent *component);
 
+void *_component_ositem(const GuiComponent *component);
+
 Window *_component_window(const GuiComponent *component);
 
 __END_C
