@@ -220,7 +220,6 @@ IF SOB_MODO_GRAFICO()
 ENDIF
 
 IF L_TipoMsgAguarde
-    NAP_LOG("L_TipoMsgAguarde")
     SetJanTipoMsgAguarde(VX_Janela,L_TipoMsgAguarde)
     SetProgressBar(VX_Janela,N_ProgressBar)
 ENDIF
@@ -228,8 +227,10 @@ ENDIF
 Ative(VX_Janela)
 
 IF SOB_MODO_GRAFICO()
-    NAP_WINDOW_MODAL(N_WindowNum, 0)
-    Destrua VX_Janela
+    IF L_Parar
+        NAP_WINDOW_MODAL(N_WindowNum, N_Segundos)
+        Destrua VX_Janela
+    ENDIF
 ELSE
     IF L_Parar .AND. N_Segundos == 0
     *
@@ -258,6 +259,7 @@ SET(_SET_CURSOR,N_CursorAnt)          // restaurar modo do cursor
 IF L_Parar
    RETURN NIL
 ENDIF
+
 RETURN VX_Janela
 
 **************************
@@ -433,7 +435,7 @@ ENDIF
 RETURN V_JAN
 *
 *******************
-FUNCTION MSGAGUARDE ( C_CDMENS, C_Cabec_x, C_SubCabec , L_ComBotaoEsc, N_ProgressBar )
+FUNCTION MSGAGUARDE(C_CDMENS, C_Cabec_x, C_SubCabec , L_ComBotaoEsc, N_ProgressBar)
 *******************
 LOCAL C_COR_ANT, V_JAN
 LOCAL V_TECLAS
@@ -447,6 +449,7 @@ DEFAULT C_Cabec_x        TO "Aguarde..."
 DEFAULT C_SubCabec       TO "Aguarde... "
 DEFAULT L_ComBotaoEsc    TO .T.
 DEFAULT N_ProgressBar    TO 0
+
 *
 IF N_ProgressBar > 2
    ? MEMVAR->A_JANELA_NAO_TEM_MAIS_QUE_2_PROGRESSBAR
@@ -497,17 +500,28 @@ ENDIF
 *
 RETURN V_JAN
 *
+
+
 *********************
-PROC FECHARMSGAGUARDE ( V_JAN )
+PROC MOSTRARMSGAGUARDE ( VX_Janela, N_DelaySeconds )
 *********************
-IF .NOT. GetJanTipoMsgAguarde(V_JAN)
+IF SOB_MODO_GRAFICO()
+    NAP_WINDOW_MODAL(N_WindowNum, N_DelaySeconds)
+ELSE
+    INKEY(N_DelaySeconds)
+ENDIF
+
+*********************
+PROC FECHARMSGAGUARDE ( VX_Janela )
+*********************
+IF .NOT. GetJanTipoMsgAguarde(VX_Janela)
    ? MEMVAR->ERRO_FECHAMENTO_SEM_DESTRUAJAN
 ENDIF
 *
-SetJanTipoMsgAguarde(V_JAN,.F.)  // tirar o atributo, para n�o gerar log na DESTRUA...
-SetProgressBar(V_JAN,NIL)  // Ao destruir uma MsgAguarde, setar NIL para o par�metro de N_ProgressBar
+SetJanTipoMsgAguarde(VX_Janela, .F.)    // tirar o atributo, para n�o gerar log na DESTRUA...
+SetProgressBar(VX_Janela, NIL)          // Ao destruir uma MsgAguarde, setar NIL para o par�metro de N_ProgressBar
 *
-DESTRUA V_JAN
+DESTRUA VX_Janela
 
 *****************
 FUNCTION CONFIRME (C_SubCabec,N_DEFAULT)

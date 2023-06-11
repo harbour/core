@@ -38,17 +38,18 @@ MOSTRAR("M15566","Teste de janela; de informação; com parada")
 STAT PROC TST_INFORMACAO_SEM_PARADA
 ***********************************
 LOCAL V_Janela
-*
-V_Janela := MSGAGUARDE("M?????",,"Teste de janela; de informação; sem parada...",.T.)
-*
-INKEY(3)
+V_Janela := MSGAGUARDE("M?????", , "Teste de janela; de informação; sem parada...", .T.)
+
+// Fran: Use 'MOSTRAR MSGAGUARDE' instead of 'INKEY(3)'
+MOSTRAR MSGAGUARDE V_Janela, 3
 TONE(200,2)
+
+// Fran: TODO 'MUDE SUBTITULO' support
 // MUDE SUBTITULO V_Janela PARA "Teste de ;mudança do ;subtítulo"+";;(M15568)"
-// INKEY(2)
-// TONE(200,2)
-*
+// MOSTRAR MSGAGUARDE V_Janela, 2
+TONE(200,2)
+
 FECHAR MSGAGUARDE V_Janela
-*
 
 *************************
 STAT PROC TST_ADVERTENCIA

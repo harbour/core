@@ -29,6 +29,8 @@
 
 * Janela auxiliar
 
+#command MOSTRAR MSGAGUARDE <objjanela>, <delay> => MostrarMsgAguarde(<objjanela>,<delay>)
+
 #command FECHAR MSGAGUARDE <objjanela> => FecharMsgAguarde(<objjanela>)
 
 * selecao em arquivo (Browse)
