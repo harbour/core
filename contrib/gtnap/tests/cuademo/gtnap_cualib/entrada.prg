@@ -505,31 +505,21 @@ AADD(V_RegiaoSayGet,{N_Lin, N_Col, ;
 #UNDEF  VX_Edicao
 *
 IF .NOT. L_SemF4
-   #DEFINE N_ColSay  N_Col + LarguraTela(VX_Get:BLOCK,VX_Get:PICTURE)
-//    IF SOB_MODO_GRAFICO()
-//       * Os 3 espaços em branco vão ser sobrepostos pelo símbolo de drop-down,
-//       * sendo que o símbolo de drop-down ocupará 2 bytes, sendo impresso
-//       * de forma deslocada. Em resumo, ocupará "metade" do primeiro byte,
-//       * o segundo byte inteiro e "metade" do terceiro byte.
-//       AnexeSay ( VX_Janela, N_Lin, N_ColSay, {||" "+" "+" "},,,.T.)
-//    ELSE
-      * O mouse será ativado também se for clicado no espaço em branco...
-      * //!! depois decidir se deixa assim mesmo...
-      AnexeSay ( VX_Janela, N_Lin, N_ColSay, {||" "+CHR(31)+" "} )
-   //ENDIF
-   *
-   #DEFINE _REGIAO_DROP_DOWN "DROP"
-   *
-   #DEFINE VX_Edicao   VX_SubObj
-   AADD(V_RegiaoSayGet,{N_Lin, N_ColSay, N_Lin, N_ColSay+2,_REGIAO_DROP_DOWN,;
+    #DEFINE N_ColSay  N_Col + LarguraTela(VX_Get:BLOCK,VX_Get:PICTURE)
+    AnexeSay ( VX_Janela, N_Lin, N_ColSay, {||" "+CHR(31)+" "} )
+    *
+    #DEFINE _REGIAO_DROP_DOWN "DROP"
+    *
+    #DEFINE VX_Edicao   VX_SubObj
+    AADD(V_RegiaoSayGet,{N_Lin, N_ColSay, N_Lin, N_ColSay+2,_REGIAO_DROP_DOWN,;
                         LEN(VX_SayGetList)-1}) // deve apontar para o GET original
-   #UNDEF VX_Edicao
-   #UNDEF N_ColSay
+    #UNDEF VX_Edicao
+    #UNDEF N_ColSay
 ENDIF
 IF N_LarguraVar # N_LarguraTela
-   #DEFINE N_ColSay  N_Col + N_LarguraTela + 1
-   AnexeSay ( VX_Janela, N_Lin, N_ColSay, {||CHR(26)} )    // seta para esquerda
-   #UNDEF N_ColSay
+    #DEFINE N_ColSay  N_Col + N_LarguraTela + 1
+    AnexeSay ( VX_Janela, N_Lin, N_ColSay, {||CHR(26)} )    // seta para esquerda
+    #UNDEF N_ColSay
 ENDIF
 *
 RETURN NIL
@@ -582,7 +572,7 @@ RETURN NIL
 STAT FUNC LarguraTela ( B_Dado, C_Pict )
 *********************
 RETURN LEN(ConteudoCaractere(B_Dado,C_Pict))
-*
+
 ***************************
 STAT FUNC ConteudoCaractere ( B_Dado, C_Pict )
 ***************************
@@ -600,7 +590,6 @@ ELSE
     ENDIF
 ENDIF
 RETURN C_Dado
-*
 
 ****************************
 STATIC FUNC Ler( VX_Janela )
@@ -706,27 +695,16 @@ IF SOB_MODO_GRAFICO()
 
     ENDIF  // L_PrimAtivacao
 
-
-    // REFACTOR: TODO
     // This window has embedded windows and is its first ativation --> Not modal launch
     // We wait the activation of child windows before
     IF L_PrimAtivacao .AND. L_ComEmbutidas
         L_Aborta := .T.
     ELSE
         X_Retorno := NAP_WINDOW_MODAL(N_WindowNum)
-        NAP_LOG("ENTRADA RETORNO: " + hb_ntos(X_Retorno))
-
-        // CLOSED BY ESC OR BY [X] Button
-        IF X_Retorno == 1 .OR. X_Retorno == 3
-            L_Aborta      :=  .T.
-        // CLOSED BY LAST EDIT INPUT
-        ELSEIF X_Retorno == 5000
+        IF X_Retorno == NAP_MODAL_LAST_INPUT
             L_Aborta      :=  .F.
-        // BUTTONS IN JANELA --> Improve
         ELSE
             L_Aborta      :=  .T.
-            // NAP_LOG("ENTRADA UNEXPECTED RETORNO: " + hb_ntos(X_Retorno))
-            // NAP_CRASH()
         ENDIF
     ENDIF
 

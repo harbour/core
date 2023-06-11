@@ -11,7 +11,7 @@
 
 #define NAP_MODAL_X_BUTTON          3
 
-#define NAP_MODAL_TOOLBAR			4
+#define NAP_MODAL_TOOLBAR           4
 
 #define NAP_MODAL_BUTTON_AUTOCLOSE  1000    /* + index of button >= 1 */
 
@@ -23,7 +23,9 @@
 
 #define NAP_MODAL_TEXT_CONFIRM      5000
 
-#define NAP_MODAL_ROW_CLICK			10000	/* + RECNO clicked or ROW pos clicked */
+#define NAP_MODAL_LAST_INPUT        6000
+
+#define NAP_MODAL_ROW_CLICK         10000   /* + RECNO clicked or ROW pos clicked */
 
 #define NAP_MAX_IMAGES              50
 
@@ -31,6 +33,4 @@
 
 #define NAP_MAX_VKEY                112
 
-#define NAP_WINDOW_FIST_ID			10000
-
-
+#define NAP_WINDOW_FIST_ID          10000

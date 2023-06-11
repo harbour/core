@@ -1412,7 +1412,7 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
             if (close == TRUE)
             {
                 gtwin->modal_window_alive = FALSE;
-                window_stop_modal(gtwin->window, 5000);
+                window_stop_modal(gtwin->window, NAP_MODAL_LAST_INPUT);
             }
         }
     }
