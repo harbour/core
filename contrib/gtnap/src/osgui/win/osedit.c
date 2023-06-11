@@ -50,7 +50,7 @@ struct _osedit_t
 
 /*---------------------------------------------------------------------------*/
 
-static bool_t i_change_event(const OSEdit *edit)
+static bool_t i_change_event(const OSEdit *edit, const OSControl *next_control)
 {
     bool_t lost_focus = TRUE;
     cassert_no_null(edit);
@@ -65,6 +65,7 @@ static bool_t i_change_event(const OSEdit *edit)
             params.text = (const char_t*)edit_text;
             params.cpos = UINT32_MAX;
             params.len = INT32_MAX;
+            params.ptr1 = (void*)next_control;
             listener_event(edit->OnChange, ekGUI_EVENT_TXTCHANGE, edit, &params, &lost_focus, OSEdit, EvText, bool_t);
             heap_free((byte_t**)&edit_text, tsize, "OSControlGetText");
         }
@@ -560,7 +561,7 @@ HBRUSH _osedit_background_color(const OSEdit *edit, COLORREF *color)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t _osedit_validate(const OSEdit *edit)
+bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control)
 {
-    return i_change_event(edit);
+    return i_change_event(edit, next_control);
 }

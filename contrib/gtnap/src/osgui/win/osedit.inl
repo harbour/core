@@ -22,7 +22,7 @@ COLORREF _osedit_color(const OSEdit *edit);
 
 HBRUSH _osedit_background_color(const OSEdit *edit, COLORREF *color);
 
-bool_t _osedit_validate(const OSEdit *edit);
+bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control);
 
 __END_C
 

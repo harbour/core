@@ -40,6 +40,8 @@ S2Df _window_get_size(const Window *window);
 
 void _window_focus(Window *window, GuiComponent *component);
 
+GuiComponent *_window_find_component(Window *window, void *ositem);
+
 void window_launch_overlay(Window *window, Window *parent_window);
 
 __END_C

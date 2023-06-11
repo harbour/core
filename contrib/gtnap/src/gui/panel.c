@@ -354,6 +354,23 @@ GuiComponent *_panel_get_component(Panel *panel)
 
 /*---------------------------------------------------------------------------*/
 
+GuiComponent *_panel_find_component(Panel *panel, void *ositem)
+{
+    cassert_no_null(panel);
+    arrpt_foreach(comp, panel->visible_children, GuiComponent)
+        if (comp->ositem == ositem)
+            return comp;
+
+        if (comp->type == ekGUI_TYPE_PANEL)
+        {
+            GuiComponent *child = _panel_find_component((Panel*)comp, ositem);
+            if (child != NULL)
+                return child;
+        }
+    arrpt_end();
+    return NULL;
+}
+
 /*
 void *_panel_get_object_by_tag(const Panel *panel, const uint32_t tag, const char_t *type);
 void *_panel_get_object_by_tag(const Panel *panel, const uint32_t tag, const char_t *type)

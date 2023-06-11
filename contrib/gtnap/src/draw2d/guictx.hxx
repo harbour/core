@@ -863,6 +863,7 @@ struct _evtext_t
     const char_t *text;
     uint32_t cpos;
     int32_t len;
+    void *ptr1;
 };
 
 #define kTEXTFILTER_SIZE    1024

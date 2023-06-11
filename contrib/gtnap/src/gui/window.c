@@ -723,6 +723,16 @@ void _window_focus(Window *window, GuiComponent *component)
 
 /*---------------------------------------------------------------------------*/
 
+GuiComponent *_window_find_component(Window *window, void *ositem)
+{
+    Panel *main_panel = NULL;
+    cassert_no_null(window);
+    main_panel = layout_get_panel(window->main_layout, 0, 0);
+    return _panel_find_component(main_panel, ositem);
+}
+
+/*---------------------------------------------------------------------------*/
+
 S2Df window_get_client_size(const Window *window)
 {
     Panel *panel = NULL;
