@@ -8,7 +8,6 @@
 #include "gtnap.inl"
 #include "gtnap.ch"
 #include "nap_menu.inl"
-#include "gtconvert.h"
 #include "nappgui.h"
 #include "osmain.h"
 #include "drawctrl.inl"
@@ -922,6 +921,22 @@ static void i_utf8_to_cp(const char_t *utf8, char_t *buffer, const uint32_t size
 
 /*---------------------------------------------------------------------------*/
 
+static uint8_t i_utf8_to_cp_char(const uint32_t codepoint)
+{
+    char_t utf8[16];
+    char_t cpstr[16];
+    HB_SIZE s1, s2;
+    HB_CODEPAGE *cp = hb_vmCDP();
+    uint32_t nb = unicode_to_char(codepoint, utf8, ekUTF8);
+    utf8[nb] = 0;
+    s1 = hb_cdpUTF8AsStrLen(cp, utf8, (HB_SIZE)nb, sizeof(utf8));
+    s2 = hb_cdpUTF8ToStr(cp, utf8, (HB_SIZE)nb, cpstr, sizeof(cpstr));
+    cassert(s1 == s2);
+    return (uint8_t)cpstr[0];
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
@@ -1736,18 +1751,18 @@ static void i_filter_date(const EvText *text, EvTextFilter *filter, const char_t
 
 /*---------------------------------------------------------------------------*/
 
-static void i_filter_tecla(const GtNapObject *obj, const EvText *text, EvTextFilter *filter)
+static void i_filter_tecla(const GtNapObject *gtobj, const EvText *text, EvTextFilter *filter)
 {
     bool_t updated = FALSE;
-    cassert_no_null(obj);
+    cassert_no_null(gtobj);
     cassert_no_null(text);
     cassert_no_null(filter);
-    cassert(obj->type == ekOBJ_EDIT);
+    cassert(gtobj->type == ekOBJ_EDIT);
     /* Some text has been inserted */
     if (text->len > 0)
     {
         /* We have a filter */
-        if (obj->keyfilter_block != NULL)
+        if (gtobj->keyfilter_block != NULL)
         {
             const char_t *src = text->text;
             char_t *dest = filter->text;
@@ -1765,16 +1780,16 @@ static void i_filter_tecla(const GtNapObject *obj, const EvText *text, EvTextFil
                 uint32_t c = unicode_to_u32b(src, ekUTF8, &nb);
                 if (c != 0)
                 {
-                    // From Unicode (NappGUI) to 1252 (Cualib)
-                    uint8_t cp2 = gtconvert_UTF8_to_1252_char(c);
+                    /* From Unicode (NappGUI) to code page */
+                    uint8_t cp2 = i_utf8_to_cp_char(c);
                     uint32_t nb2, ncp;
 
-                    // Set character as lastKey
+                    /* Set character as lastKey */
                     hb_inkeySetLast(cp2);
 
-                    // Call to filter
+                    /* Call to filter */
                     {
-                        PHB_ITEM ritem = hb_itemDo(obj->keyfilter_block, 0);
+                        PHB_ITEM ritem = hb_itemDo(gtobj->keyfilter_block, 0);
                         HB_TYPE type = HB_ITEM_TYPE(ritem);
                         if (type == HB_IT_NIL)
                         {
@@ -1783,7 +1798,7 @@ static void i_filter_tecla(const GtNapObject *obj, const EvText *text, EvTextFil
                         }
                         else
                         {
-                            char_t temp[1024];
+                            char_t temp[32];
                             cassert(type == HB_IT_STRING);
                             hb_itemCopyStrUTF8(ritem, temp, sizeof(temp));
                             cassert(unicode_nchars(temp, ekUTF8) == 1);

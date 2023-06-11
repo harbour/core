@@ -30,7 +30,6 @@
 # "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform. See gtnap.hbp -stop"
 
 src/gtnap/gtnap.c
-src/gtnap/gtconvert.c
 src/gtnap/nap_button.c
 src/gtnap/nap_color.c
 src/gtnap/nap_cualib.c
@@ -39,7 +38,6 @@ src/gtnap/nap_global.c
 src/gtnap/nap_image.c
 src/gtnap/nap_label.c
 src/gtnap/nap_menu.c
-
 src/gtnap/nap_tableview.c
 src/gtnap/nap_textview.c
 src/gtnap/nap_window.c
