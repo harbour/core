@@ -1187,18 +1187,6 @@ static void i_OnRightButton(GtNapWindow *gtwin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-// TO BE REMOVED!!!
-static GtNapObject *i_cualib_obj(ArrPt(GtNapObject) *objects, const GuiComponent *component)
-{
-    arrpt_foreach(obj, objects, GtNapObject)
-        if (obj->component == component)
-            return obj;
-    arrpt_end();
-    return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
 /* Run the codeBlock that updates after a text entry in EditBox */
 static void i_update_harbour_from_edit_text(const GtNapObject *obj)
 {
@@ -1271,31 +1259,26 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditChange(GtNapWindow *gtwin, Event *e)
+static void i_OnEditChange(GtNapObject *gtobj, Event *e)
 {
     const EvText *p = event_params(e, EvText);
-    GtNapObject *cuaobj = NULL;
+    GtNapWindow *gtwin = NULL;
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_EDIT);
+    gtwin = gtobj->gtwin;
     cassert_no_null(gtwin);
 
     if (gtwin->modal_window_alive == FALSE)
-    {
-        log_printf("i_OnEditChange: Modal Window: %p is not alive", gtwin);
         return;
-    }
-
-    /* Get the EditBox that launched the event */
-    /* TODO: Change gtwin parameter with gtobj */
-    cuaobj = i_cualib_obj(gtwin->objects, (GuiComponent*)event_sender(e, Edit));
-    cassert(cuaobj->type == ekOBJ_EDIT);
 
     /* Update Harbour with the content of the EditBox */
-    i_update_harbour_from_edit_text(cuaobj);
+    i_update_harbour_from_edit_text(gtobj);
 
     /* The editbox has a validation code block */
-    if (cuaobj->valida_block != NULL)
+    if (gtobj->valida_block != NULL)
     {
         bool_t valid = TRUE;
-        PHB_ITEM retItem = hb_itemDo(cuaobj->valida_block, 0 /*,1, cuaobj->getobjItem*/);
+        PHB_ITEM retItem = hb_itemDo(gtobj->valida_block, 0);
         HB_TYPE type = HB_ITEM_TYPE(retItem);
         cassert(type == HB_IT_LOGICAL);
         valid = (bool_t)hb_itemGetL(retItem);
@@ -1311,31 +1294,24 @@ static void i_OnEditChange(GtNapWindow *gtwin, Event *e)
     }
 
     /* The window has a global function to process invalid date */
-    if (cuaobj->dtype == ekTYPE_DATE)
+    if (gtobj->dtype == ekTYPE_DATE)
     {
         if (gtwin->error_date_block != NULL)
         {
             long r = hb_dateUnformat( p->text, hb_setGetDateFormat());
-            log_printf("DATE processing result: %d", r);
 
             /* Date invalid --> The editbox keep the focus and event finish here */
             if (r == 0)
             {
-                PHB_ITEM retItem = NULL;
+                PHB_ITEM ritem = NULL;
                 bool_t *r = event_result(e, bool_t);
-                retItem = hb_itemDo(gtwin->error_date_block, 0);
-                hb_itemRelease(retItem);
+                ritem = hb_itemDo(gtwin->error_date_block, 0);
+                hb_itemRelease(ritem);
                 *r = FALSE;
                 return;
             }
         }
     }
-
-    // TODO: DELETE
-    if (cuaobj->is_last_edit == TRUE)
-        log_printf("Entering i_OnEditChange LAST_EDIT: %p", cuaobj);
-    else
-        log_printf("Entering i_OnEditChange: %p", cuaobj);
 
     /* Update possible labels associated with this input */
     arrpt_foreach(obj, gtwin->objects, GtNapObject)
@@ -1348,7 +1324,7 @@ static void i_OnEditChange(GtNapWindow *gtwin, Event *e)
     if (gtwin->is_closed_by_esc == FALSE)
     {
         /* The last editbox has lost the focus --> Close the window */
-        if (cuaobj->is_last_edit == TRUE)
+        if (gtobj->is_last_edit == TRUE)
         {
             /* We dont execute confirmaCodeBlock if we moved from last edit to previos one */
             if (gtwin->focus_by_previous == FALSE)
@@ -1358,16 +1334,15 @@ static void i_OnEditChange(GtNapWindow *gtwin, Event *e)
                 /* We have asociated a confirmation block */
                 if (gtwin->confirm_block != NULL)
                 {
-                    PHB_ITEM retItem = hb_itemDo(gtwin->confirm_block, 0);
-                    HB_TYPE type = HB_ITEM_TYPE(retItem);
+                    PHB_ITEM ritem = hb_itemDo(gtwin->confirm_block, 0);
+                    HB_TYPE type = HB_ITEM_TYPE(ritem);
                     cassert(type == HB_IT_LOGICAL);
-                    close = (bool_t)hb_itemGetL(retItem);
-                    hb_itemRelease(retItem);
+                    close = (bool_t)hb_itemGetL(ritem);
+                    hb_itemRelease(ritem);
                 }
 
                 if (close == TRUE)
                 {
-                    log_printf("--> STOP CUALIB Modal Window: %p 'i_OnEditChange'", gtwin->window);
                     gtwin->modal_window_alive = FALSE;
                     window_stop_modal(gtwin->window, 5000);
                 }
@@ -1375,28 +1350,7 @@ static void i_OnEditChange(GtNapWindow *gtwin, Event *e)
         }
     }
 
-
-
-    // }
-
-//cuaobj->validaCodeBlock
-    // if (cuaobj->is_on_edit_change == TRUE)
-    // {
-    //     log_printf("Object: %p  is_on_edit_change", cuaobj);
-    //     return;
-    // }
-
-    // if (cuaobj->is_last_edit == TRUE && gtwin->tabstop_by_return_or_arrow == FALSE)
-    // {
-    //         log_printf("Modal Window: %p  tabstop_by_return_or_arrow FALSE", gtwin);
-    //     return;
-
-    // }
-
-    //cuaobj->is_on_edit_change = TRUE;
     gtwin->focus_by_previous = FALSE;
-    //cuaobj->is_on_edit_change = FALSE;
-    //gtwin->tabstop_by_return_or_arrow = FALSE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1823,122 +1777,94 @@ static void i_filter_tecla(const GtNapObject *obj, const EvText *text, EvTextFil
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnEditFilter(GtNapWindow *gtwin, Event *e)
+static void i_OnEditFilter(GtNapObject *gtobj, Event *e)
 {
-    Edit *edit = event_sender(e, Edit);
-    GtNapObject *cuaobj = NULL;
+    const EvText *p = event_params(e, EvText);
+    EvTextFilter *res = event_result(e, EvTextFilter);
+    GtNapWindow *gtwin = NULL;
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_EDIT);
+    gtwin = gtobj->gtwin;
     cassert_no_null(gtwin);
 
-    // FRAN: IMPROVE
-    arrpt_foreach(obj, gtwin->objects, GtNapObject)
-        if (obj->type == ekOBJ_EDIT)
-        {
-            if (edit == (Edit*)obj->component)
-            {
-                cuaobj = obj;
-                break;
-            }
-        }
-    arrpt_end();
-
-    if (cuaobj != NULL)
+    if (i_is_editable(gtwin, gtobj) == FALSE)
     {
-        const EvText *p = event_params(e, EvText);
-        EvTextFilter *res = event_result(e, EvTextFilter);
-
-        // // FRAN: TODO
-        // // This block must be move to edit_OnFocus()
-        // if (gtwin->message_label_id != UINT32_MAX)
-        // {
-        //     GtNapObject *mes_obj = arrst_get(gtwin->objects, gtwin->message_label_id, GtNapObject);
-        //     i_set_edit_message(cuaobj, mes_obj);
-        // }
-
-        if (i_is_editable(gtwin, cuaobj) == FALSE)
+        /* If editBox is not editable --> Restore the original text */
+        i_get_edit_text(gtobj, res->text, sizeof(res->text));
+        if (p->cpos > 0)
         {
-            /* If editBox is not editable --> Restore the original text */
-            i_get_edit_text(cuaobj, res->text, sizeof(res->text));
-            if (p->cpos > 0)
-            {
-                if (p->len > 0)
-                    res->cpos = p->cpos - p->len;
-                else
-                    res->cpos = p->cpos;
-            }
+            if (p->len > 0)
+                res->cpos = p->cpos - p->len;
             else
-            {
-                res->cpos = 0;
-            }
-            res->apply = TRUE;
+                res->cpos = p->cpos;
         }
         else
         {
-            if (cuaobj->dtype == ekTYPE_DATE)
+            res->cpos = 0;
+        }
+
+        res->apply = TRUE;
+    }
+    else
+    {
+        if (gtobj->dtype == ekTYPE_DATE)
+        {
+            EvTextFilter fil1;
+            EvTextFilter fil2;
+            uint32_t len;
+            fil1.apply = FALSE;
+            fil2.apply = FALSE;
+
+            len = i_filter_number(p, &fil1);
+            cassert(fil1.apply == TRUE);
+
             {
-                EvTextFilter fil1;
-                EvTextFilter fil2;
-                uint32_t len;
-                fil1.apply = FALSE;
-                fil2.apply = FALSE;
-
-                len = i_filter_number(p, &fil1);
-                cassert(fil1.apply == TRUE);
-
-                {
-                    EvText tf;
-                    //cassert(filTec.cpos == p->cpos);
-                    tf.text = fil1.text;
-                    tf.cpos = fil1.cpos;
-                    tf.len = len;
-                    i_filter_overwrite(&tf, &fil2, GTNAP_GLOBAL->date_digits);
-                }
-
-                cassert(fil2.apply == TRUE);
-
-                {
-                    EvText tf;
-                    //cassert(filTec.cpos == p->cpos);
-                    tf.text = fil2.text;
-                    tf.cpos = fil2.cpos;
-                    tf.len = 0;
-                    log_printf("Before filter date cpos: %d", tf.cpos);
-                    //i_filter_bypass(&tf, res);
-                    i_filter_date(&tf, res, hb_setGetDateFormat(), p->len >= 0);
-                }
-
-                cassert(res->apply == TRUE);
-
-                //i_filter_date(p, res);
-                //log_printf("Date CPOS: %d", res->cpos);
-
-                if (res->cpos == 10)
-                    gui_OnIdle(listener(gtwin, i_OnNextTabstop, GtNapWindow));
+                EvText tf;
+                tf.text = fil1.text;
+                tf.cpos = fil1.cpos;
+                tf.len = len;
+                i_filter_overwrite(&tf, &fil2, GTNAP_GLOBAL->date_digits);
             }
-            else
+
+            cassert(fil2.apply == TRUE);
+
             {
-                EvTextFilter filTec;
-                filTec.apply = FALSE;
-                i_filter_tecla(cuaobj, p, &filTec);
-                cassert(filTec.apply == TRUE);
+                EvText tf;
+                tf.text = fil2.text;
+                tf.cpos = fil2.cpos;
+                tf.len = 0;
+                i_filter_date(&tf, res, hb_setGetDateFormat(), p->len >= 0);
+            }
 
-                {
-                    EvText tf;
-                    cassert(filTec.cpos == p->cpos);
-                    tf.text = filTec.text;
-                    tf.cpos = filTec.cpos;
-                    tf.len = p->len;
-                    i_filter_overwrite(&tf, res, cuaobj->max_chars);
-                }
+            cassert(res->apply == TRUE);
 
-                cassert(res->apply == TRUE);
+            if (res->cpos == GTNAP_GLOBAL->date_chars)
+                gui_OnIdle(listener(gtwin, i_OnNextTabstop, GtNapWindow));
+        }
+        else
+        {
+            EvTextFilter filTec;
+            filTec.apply = FALSE;
+            i_filter_tecla(gtobj, p, &filTec);
+            cassert(filTec.apply == TRUE);
 
-                /* End of editable string reached. */
-                if (res->cpos >= cuaobj->max_chars)
-                {
-                    gtwin->focus_by_previous = FALSE;
-                    //gtwin->tabstop_by_return_or_arrow = TRUE;
-                    gui_OnIdle(listener(gtwin, i_OnNextTabstop, GtNapWindow));
-                }
+            {
+                EvText tf;
+                cassert(filTec.cpos == p->cpos);
+                tf.text = filTec.text;
+                tf.cpos = filTec.cpos;
+                tf.len = p->len;
+                i_filter_overwrite(&tf, res, gtobj->max_chars);
+            }
+
+            cassert(res->apply == TRUE);
+
+            /* End of editable string reached. */
+            if (res->cpos >= gtobj->max_chars)
+            {
+                gtwin->focus_by_previous = FALSE;
+                //gtwin->tabstop_by_return_or_arrow = TRUE;
+                gui_OnIdle(listener(gtwin, i_OnNextTabstop, GtNapWindow));
             }
         }
     }
@@ -2271,8 +2197,8 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         arrpt_foreach(obj, gtwin->objects, GtNapObject)
             if (obj->type == ekOBJ_EDIT)
             {
-                edit_OnChange((Edit*)obj->component, listener(gtwin, i_OnEditChange, GtNapWindow));
-                edit_OnFilter((Edit*)obj->component, listener(gtwin, i_OnEditFilter, GtNapWindow));
+                edit_OnChange((Edit*)obj->component, listener(obj, i_OnEditChange, GtNapObject));
+                edit_OnFilter((Edit*)obj->component, listener(obj, i_OnEditFilter, GtNapObject));
                 edit_OnFocus((Edit*)obj->component, listener(obj, i_OnEditFocus, GtNapObject));
                 obj->is_last_edit = FALSE;
                 last_edit = obj;
