@@ -70,7 +70,6 @@ IF SOB_MODO_GRAFICO()
         N_OptLen := LEN(VC_Menu[N_Cont])
         NAP_BUTTON(N_WindowNum, N_Row, N_Col, N_Row, N_Col + N_OptLen, {|| VC_Menu[N_Cont]}, NIL, .T., .F.)
         N_Col += N_OptLen + 2
-        NAP_LOG(VC_Menu[N_Cont] + " Row:" + hb_ntos(N_Row) + " Col:" + hb_ntos(N_Col))
     NEXT
 
     NAP_CUALIB_DEFAULT_BUTTON(N_Default)

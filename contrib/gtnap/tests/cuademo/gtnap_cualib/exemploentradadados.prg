@@ -134,7 +134,6 @@ ESPECIALIZE V_Janela ENTRADA DATAERRADA DATAINVA()
 
 L_Ok := ATIVE(V_Janela)
 DO WHILE L_Ok
-    NAP_LOG("EHHHH ENTRADA FINISH()")
    MOSTRAR("M15590","Entrada de dados finalizada com sucesso.")
    L_Ok := ATIVE(V_Janela)
 ENDDO
@@ -166,7 +165,6 @@ STAT FUNC CONVERTE_PARA_UPPER()
 *****************************
 LOCAL N_Lastkey := LASTKEY()
 LOCAL C_Retorno
-//NAP_LOG("HEY!!!! CONVERTE_PARA_UPPER(): " + hb_ntos(N_Lastkey))
 IF N_Lastkey >= 97 .AND. N_Lastkey <= 122   // letras minúsculas
    C_Retorno := UPPER(CHR(N_Lastkey))
 ELSE
@@ -263,26 +261,19 @@ ESPECIALIZE V_Janela ENTRADA ROLAVERTICAL
 *
 ATIVE(V_Janela)
 DESTRUA V_Janela
-
-NAP_LOG("VALUE OF CAMPO1: " + C_Campo1)
-NAP_LOG("VALUE OF CAMPO2: " + C_Campo2)
-NAP_LOG("VALUE OF CAMPO3: " + C_Campo3)
 *
 ***************************
 STAT FUNC PREENCHE_CAMPO_02(C_Campo2)
 ***************************
-//NAP_LOG("PREENCHE_CAMPO_02 Begin: '" + C_Campo2 + "'")
 IF EMPTY(C_Campo2)
    C_Campo2 := REPL("2",LEN(C_Campo2))
 ENDIF
-//NAP_LOG("PREENCHE_CAMPO_02 After: '" + C_Campo2 + "'")
 RETURN .T.
 *
 **********************
 STAT FUNC VALIDA_CAMPO (C_Titulo_Campo,C_Conteudo_Campo)
 **********************
 LOCAL L_OK := .T.
-//NAP_LOG("VALIDA_CAMPO" + C_Titulo_Campo + ": " + C_Conteudo_Campo)
 
 IF EMPTY(C_Conteudo_Campo)
    L_OK := .F.
@@ -327,7 +318,6 @@ CUA20 ESPECIALIZE V_Janela SELECAO SIMPLES VETOR V_Vetor ;
    NAOROLAVERTICAL NAOROLAHORIZONTAL SEMGRADE SEMTOOLBAR AUTOCLOSE
 *
 N_Opcao := ATIVE(V_Janela)
-NAP_LOG("LISTA N_Opcao: " + hb_ntos(N_Opcao))
 *
 IF N_Opcao # 0
    C_Retorno := PADR(V_Vetor[N_Opcao],35)

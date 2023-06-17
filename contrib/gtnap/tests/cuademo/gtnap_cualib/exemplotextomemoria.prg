@@ -98,10 +98,7 @@ DO WHILE L_OK
    L_OK :=  ATIVE(V_Janela)
 ENDDO
 
-NAP_LOG("Final CONFIRMAR texto in 'C_Texto': " + C_Texto)
-
 DESTRUA V_Janela
-
 *
 
 
