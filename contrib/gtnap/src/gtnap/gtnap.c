@@ -104,6 +104,7 @@ struct _gtnap_object_t
     bool_t has_focus;
     uint32_t max_chars;
     uint32_t editBoxIndexForButton;
+    String *text;
     PHB_ITEM text_block;
     PHB_ITEM get_set_block;
     PHB_ITEM is_editable_block;
@@ -387,6 +388,8 @@ static void i_destroy_gtobject(GtNapWindow *gtwin, const uint32_t index)
     }
 
     _component_destroy(&gtobj->component);
+
+    str_destopt(&gtobj->text);
 
     if (gtobj->text_block != NULL)
         hb_itemRelease(gtobj->text_block);
@@ -1256,6 +1259,11 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
     {
         nchars = unicode_nchars(utf8_text, ekUTF8);
         label_text((Label*)obj->component, utf8_text);
+    }
+    else if (obj->text != NULL)
+    {
+        nchars = str_nchars(obj->text);
+        label_text((Label*)obj->component, tc(obj->text));
     }
     else if (obj->text_block != NULL)
     {
@@ -2971,8 +2979,18 @@ uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t lef
     cassert(obj->type == ekOBJ_LABEL);
 
     if (text_block != NULL)
-        obj->text_block = hb_itemNew(text_block);
-
+    {
+        if (HB_ITEM_TYPE(text_block) == HB_IT_STRING)
+        {
+            obj->text = i_item_to_utf8_string(text_block);
+        }
+        else
+        {
+            cassert(HB_ITEM_TYPE(text_block) == HB_IT_BLOCK);
+            obj->text_block = hb_itemNew(text_block);
+        }
+    }
+    
     i_set_label_text(obj, NULL);
     return id;
 }
@@ -2999,6 +3017,8 @@ void hb_gtnap_label_update(const uint32_t wid, const uint32_t id, const int32_t 
     gtwin = gtobj->gtwin;
     cassert_no_null(gtwin);
 
+    str_destopt(&gtobj->text);
+
     if (gtobj->text_block != NULL)
     {
         hb_itemRelease(gtobj->text_block);
@@ -3006,7 +3026,17 @@ void hb_gtnap_label_update(const uint32_t wid, const uint32_t id, const int32_t 
     }
 
     if (text_block != NULL)
-        gtobj->text_block = hb_itemNew(text_block);
+    {
+        if (HB_ITEM_TYPE(text_block) == HB_IT_STRING)
+        {
+            gtobj->text = i_item_to_utf8_string(text_block);
+        }
+        else
+        {
+            cassert(HB_ITEM_TYPE(text_block) == HB_IT_BLOCK);
+            gtobj->text_block = hb_itemNew(text_block);
+        }
+    }
 
     gtobj->pos.x = (real32_t)((left - gtwin->left) * (int32_t)GTNAP_GLOBAL->cell_x_size);
     gtobj->pos.y = (real32_t)((top - gtwin->top) * (int32_t)GTNAP_GLOBAL->cell_y_size);
