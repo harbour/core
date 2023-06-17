@@ -343,6 +343,7 @@ void edit_color(Edit *edit, const color_t color)
 {
     cassert_no_null(edit);
     edit->color = color;
+    edit->component.context->func_edit_set_text_color(edit->component.ositem, color);
     i_update_placeholder(edit);
 }
 
