@@ -3257,7 +3257,6 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
     cassert_no_null(gtwin);
     edit_font(edit, GTNAP_GLOBAL->reduced_font);
     edit_vpadding(edit, i_edit_vpadding());
-    //edit_bgcolor_focus(edit, kCOLOR_CYAN);
     size.width = (real32_t)((width + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)GTNAP_GLOBAL->edit_y_size;
     id = i_add_object(ekOBJ_EDIT, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)edit, gtwin);
