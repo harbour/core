@@ -61,3 +61,13 @@ HB_FUNC( NAP_LABEL_BGCOLOR )
     color_t color = (color_t)hb_parni(3);
     hb_gtnap_label_bgcolor(wid, id, color);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_LABEL_COLOR )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    const char_t *hb_color = hb_parcx(3);
+    hb_gtnap_label_color(wid, id, hb_color);
+}

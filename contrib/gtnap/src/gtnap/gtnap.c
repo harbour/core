@@ -274,6 +274,27 @@ static const GtNapKey KEYMAPS[] = {
 
 /*---------------------------------------------------------------------------*/
 
+#define COL_BLACK           0
+#define COL_BLUE            1
+#define COL_GREEN           2
+#define COL_CYAN            3
+#define COL_RED             4
+#define COL_MAGENTA         5
+#define COL_BROWN           6
+#define COL_WHITE           7
+#define COL_LIGHT_GRAY      8
+#define COL_BRIGHT_BLUE     9
+#define COL_BRIGHT_GREEN    10
+#define COL_BRIGHT_CYAN     11
+#define COL_BRIGHT_RED      12
+#define COL_BRIGHT_MAGENTA  13
+#define COL_YELLOW          14
+#define COL_BRIGHT_WHITE    15
+
+static color_t i_COLORS[16];
+
+/*---------------------------------------------------------------------------*/
+
 __EXTERN_C
 
 /*
@@ -941,6 +962,28 @@ static uint8_t i_utf8_to_cp_char(const uint32_t codepoint)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_init_colors(void)
+{
+    i_COLORS[COL_BLACK] = color_rgb(0x0, 0x0, 0x0);
+    i_COLORS[COL_BLUE] = color_rgb(0x0, 0x0, 0x85);
+    i_COLORS[COL_GREEN] = color_rgb(0x0, 0x85, 0x0);
+    i_COLORS[COL_CYAN] = color_rgb(0x0, 0x85, 0x85);
+    i_COLORS[COL_RED] = color_rgb(0x85, 0x0, 0x0);
+    i_COLORS[COL_MAGENTA] = color_rgb(0x85, 0x0, 0x85);
+    i_COLORS[COL_BROWN] = color_rgb(0x85, 0x85, 0x0);
+    i_COLORS[COL_WHITE] = color_rgb(0xC6, 0xC6, 0xC6);
+    i_COLORS[COL_LIGHT_GRAY] = color_rgb(0x60, 0x60, 0x60);
+    i_COLORS[COL_BRIGHT_BLUE] = color_rgb(0x00, 0x00, 0xFF);
+    i_COLORS[COL_BRIGHT_GREEN] = color_rgb(0x60, 0xFF, 0x60);
+    i_COLORS[COL_BRIGHT_CYAN] = color_rgb(0x60, 0xFF, 0xFF);
+    i_COLORS[COL_BRIGHT_RED] = color_rgb(0xF8, 0x00, 0x26);
+    i_COLORS[COL_BRIGHT_MAGENTA] = color_rgb(0xFF, 0x60, 0xFF);
+    i_COLORS[COL_YELLOW] = color_rgb(0xFF, 0xFF, 0x00);
+    i_COLORS[COL_BRIGHT_WHITE] = color_rgb(0xFF, 0xFF, 0xFF);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
@@ -954,6 +997,7 @@ static GtNap *i_gtnap_create(void)
     globals_resolution(&screen);
     screen.height -= 50;        /* Margin for Dock or Taskbars */
     i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
+    i_init_colors();
 
     {
         PHB_ITEM ritem = hb_itemDo(INIT_CODEBLOCK, 0);
@@ -2990,7 +3034,7 @@ uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t lef
             obj->text_block = hb_itemNew(text_block);
         }
     }
-    
+
     i_set_label_text(obj, NULL);
     return id;
 }
@@ -3062,6 +3106,22 @@ void hb_gtnap_label_bgcolor(const uint32_t wid, const uint32_t id, const color_t
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_LABEL);
     label_bgcolor((Label*)obj->component, color);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_label_color(const uint32_t wid, const uint32_t id, const char_t *hb_color)
+{
+    int attr = hb_gtColorToN(hb_color);
+    int fore = attr & 0x000F;
+    int back = ( attr & 0x00F0 ) >> 4;
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_LABEL);
+    cassert(fore < 16);
+    cassert(back < 16);
+    label_color((Label*)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
+    label_bgcolor((Label*)obj->component, (back != COL_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3197,7 +3257,7 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
     cassert_no_null(gtwin);
     edit_font(edit, GTNAP_GLOBAL->reduced_font);
     edit_vpadding(edit, i_edit_vpadding());
-    edit_bgcolor_focus(edit, kCOLOR_CYAN);
+    //edit_bgcolor_focus(edit, kCOLOR_CYAN);
     size.width = (real32_t)((width + 1) * GTNAP_GLOBAL->cell_x_size);
     size.height = (real32_t)GTNAP_GLOBAL->edit_y_size;
     id = i_add_object(ekOBJ_EDIT, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)edit, gtwin);
@@ -3242,6 +3302,44 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
     i_set_edit_text(obj);
 
     return id;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_edit_color(const uint32_t wid, const uint32_t id, const char_t *hb_color)
+{
+    ArrPt(String) *hbcols = str_splits(hb_color, ",", TRUE);
+    GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    cassert_no_null(obj);
+    cassert(obj->type == ekOBJ_EDIT);
+
+    if (arrpt_size(hbcols, String) > 0)
+    {
+        const String *c = arrpt_get_const(hbcols, 0, String);
+        int attr = hb_gtColorToN(tc(c));
+        int fore = attr & 0x000F;
+        int back = ( attr & 0x00F0 ) >> 4;
+        cassert(fore < 16);
+        cassert(back < 16);
+        //edit_color((Edit*)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
+        //edit_bgcolor((Edit*)obj->component, (back != COL_BRIGHT_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
+    }
+
+    if (arrpt_size(hbcols, String) > 1)
+    {
+        const String *c = arrpt_get_const(hbcols, 1, String);
+        int attr = hb_gtColorToN(tc(c));
+        int fore = attr & 0x000F;
+        int back = ( attr & 0x00F0 ) >> 4;
+        cassert(fore < 16);
+        cassert(back < 16);
+        edit_color_focus((Edit*)obj->component, kCOLOR_RED);
+
+        //edit_color_focus((Edit*)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
+        //edit_bgcolor_focus((Edit*)obj->component, (back != COL_BRIGHT_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
+    }
+
+    arrpt_destroy(&hbcols, str_destroy, String);
 }
 
 /*---------------------------------------------------------------------------*/

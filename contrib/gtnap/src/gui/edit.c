@@ -136,7 +136,7 @@ static void i_update_placeholder(Edit *edit)
     {
         if (_gui_effective_alt_font(edit->font, edit->placeholder_font) == TRUE)
             edit->component.context->func_edit_set_font(edit->component.ositem, edit->placeholder_font);
-        if (edit->placeholder_color != UINT32_MAX)
+        if (edit->placeholder_color != kCOLOR_DEFAULT)
             edit->component.context->func_edit_set_text_color(edit->component.ositem, edit->placeholder_color);
         edit->component.context->func_edit_set_text(edit->component.ositem, tc(edit->placeholder));
         edit->is_placeholder_active = TRUE;
@@ -146,9 +146,9 @@ static void i_update_placeholder(Edit *edit)
         if (_gui_effective_alt_font(edit->font, edit->placeholder_font) == TRUE)
             edit->component.context->func_edit_set_font(edit->component.ositem, edit->font);
 
-        if (edit->placeholder_color != UINT32_MAX)
+        if (edit->placeholder_color != kCOLOR_DEFAULT)
         {
-            if (edit->is_focused == TRUE && edit->focus_color != UINT32_MAX)
+            if (edit->is_focused == TRUE && edit->focus_color != kCOLOR_DEFAULT)
                 edit->component.context->func_edit_set_text_color(edit->component.ositem, edit->focus_color);
             else
                 edit->component.context->func_edit_set_text_color(edit->component.ositem, edit->color);
@@ -174,10 +174,10 @@ static void i_OnFocus(Edit *edit, Event *e)
     {
         char_t filter[128];
 
-        if (edit->focus_color != UINT32_MAX)
+        if (edit->focus_color != kCOLOR_DEFAULT)
             edit->component.context->func_edit_set_text_color(edit->component.ositem, edit->focus_color);
 
-        if (edit->bg_focus_color != UINT32_MAX)
+        if (edit->bg_focus_color != kCOLOR_DEFAULT)
             edit->component.context->func_edit_set_bg_color(edit->component.ositem, edit->bg_focus_color);
 
         if (edit->component.parent != NULL)
@@ -188,10 +188,10 @@ static void i_OnFocus(Edit *edit, Event *e)
     }
     else
     {
-        if (edit->focus_color != UINT32_MAX)
+        if (edit->focus_color != kCOLOR_DEFAULT)
             edit->component.context->func_edit_set_text_color(edit->component.ositem, edit->color);
 
-        if (edit->bg_focus_color != UINT32_MAX)
+        if (edit->bg_focus_color != kCOLOR_DEFAULT)
             edit->component.context->func_edit_set_bg_color(edit->component.ositem, edit->bg_color);
     }
 
@@ -215,11 +215,11 @@ static Edit *i_create(const align_t halign, const uint32_t flags)
     edit->flags = flags;
     edit->text = str_c("");
     edit->font = _gui_create_default_font();
-    edit->color = kCOLOR_TRANSPARENT;
-    edit->focus_color = kCOLOR_TRANSPARENT;
-    edit->bg_color = kCOLOR_TRANSPARENT;
-    edit->bg_focus_color = kCOLOR_TRANSPARENT;
-    edit->placeholder_color = kCOLOR_TRANSPARENT;
+    edit->color = kCOLOR_DEFAULT;
+    edit->focus_color = kCOLOR_DEFAULT;
+    edit->bg_color = kCOLOR_DEFAULT;
+    edit->bg_focus_color = kCOLOR_DEFAULT;
+    edit->placeholder_color = kCOLOR_DEFAULT;
     ositem = context->func_create[ekGUI_TYPE_EDITBOX](flags);
     context->func_edit_set_font(ositem, edit->font);
     context->func_edit_set_align(ositem, (enum_t)halign);

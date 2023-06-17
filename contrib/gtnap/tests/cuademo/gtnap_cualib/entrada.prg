@@ -595,7 +595,7 @@ RETURN C_Dado
 STATIC FUNC Ler( VX_Janela )
 ****************************
 LOCAL N_CursorAnt, C_ReadVarAnt, N_Col, N_Row, N_Cont
-LOCAL VX_Get, VX_Edicao, N_EditId, N_ButId
+LOCAL VX_Get, VX_Edicao, N_EditId, N_LabelId, N_ButId
 LOCAL N_LargJanela := Col2Livre(VX_Janela)-Col1Livre(VX_Janela)+1
 LOCAL N_Aux_SayGetCor, X_Info, X_Retorno, X_Dado
 LOCAL B_ConfirmaBlock := NIL, B_DesisteBlock := NIL, B_ErrorDataBlock := NIL
@@ -642,7 +642,9 @@ IF SOB_MODO_GRAFICO()
                 #DEFINE B_Auto X_Info:CARGO[5]
                 #DEFINE VX_Edicao   VX_SubObj
                 #DEFINE B_Mess X_Info:CARGO[6]
+                #DEFINE C_CorGet X_Info:COLORSPEC
 
+                NAP_LOG("COLOR_GET: " + C_CorGet)
                 N_EditId := NAP_EDIT( ;
                                         N_WindowNum,;
                                         N_Row + Lin1Livre(VX_Janela) - 1, ;
@@ -656,6 +658,8 @@ IF SOB_MODO_GRAFICO()
                                         B_Mess, ;
                                         B_FiltroTec, ;
                                         L_ScrollVertical)
+
+                NAP_EDIT_COLOR(N_WindowNum, N_EditId, C_CorGet)
 
                 // We create a wizard for editbox
                 IF L_With_B_Lista
@@ -684,7 +688,8 @@ IF SOB_MODO_GRAFICO()
                 #DEFINE B_Expressao X_Info[3]
                 #DEFINE C_Pict      X_Info[4]
                 #DEFINE C_CorSay    X_Info[5]
-                NAP_LABEL(N_WindowNum, N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), B_Expressao, L_ScrollVertical)
+                N_LabelId := NAP_LABEL(N_WindowNum, N_Row + Lin1Livre(VX_Janela) - 1, N_Col + Col1Livre(VX_Janela), B_Expressao, L_ScrollVertical)
+                NAP_LABEL_COLOR(N_WindowNum, N_LabelId, C_CorSay)
                 #UNDEF B_Expressao
                 #UNDEF C_Pict
                 #UNDEF C_CorSay

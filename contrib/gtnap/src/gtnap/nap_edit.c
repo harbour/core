@@ -27,6 +27,16 @@ HB_FUNC( NAP_EDIT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_EDIT_COLOR )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    const char_t *hb_color = hb_parcx(3);
+    hb_gtnap_edit_color(wid, id, hb_color);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_EDIT_WIZARD )
 {
     uint32_t wid = hb_parni(1);
