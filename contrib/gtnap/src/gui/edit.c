@@ -157,10 +157,6 @@ static void i_update_placeholder(Edit *edit)
         edit->component.context->func_edit_set_text(edit->component.ositem, tc(edit->text));
         edit->is_placeholder_active = FALSE;
     }
-    else
-    {
-        edit->component.context->func_edit_set_text_color(edit->component.ositem, edit->color);
-    }
 }
 
 /*---------------------------------------------------------------------------*/

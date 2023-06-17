@@ -3321,8 +3321,8 @@ void hb_gtnap_edit_color(const uint32_t wid, const uint32_t id, const char_t *hb
         int back = ( attr & 0x00F0 ) >> 4;
         cassert(fore < 16);
         cassert(back < 16);
-        //edit_color((Edit*)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
-        //edit_bgcolor((Edit*)obj->component, (back != COL_BRIGHT_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
+        edit_color((Edit*)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
+        edit_bgcolor((Edit*)obj->component, (back != COL_BRIGHT_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
     }
 
     if (arrpt_size(hbcols, String) > 1)
@@ -3333,10 +3333,8 @@ void hb_gtnap_edit_color(const uint32_t wid, const uint32_t id, const char_t *hb
         int back = ( attr & 0x00F0 ) >> 4;
         cassert(fore < 16);
         cassert(back < 16);
-        edit_color_focus((Edit*)obj->component, kCOLOR_RED);
-
-        //edit_color_focus((Edit*)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
-        //edit_bgcolor_focus((Edit*)obj->component, (back != COL_BRIGHT_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
+        edit_color_focus((Edit*)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
+        edit_bgcolor_focus((Edit*)obj->component, (back != COL_BRIGHT_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
     }
 
     arrpt_destroy(&hbcols, str_destroy, String);
