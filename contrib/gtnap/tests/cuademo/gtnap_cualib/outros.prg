@@ -435,7 +435,7 @@ ENDIF
 RETURN V_JAN
 *
 *******************
-FUNCTION MSGAGUARDE(C_CDMENS, C_Cabec_x, C_SubCabec , L_ComBotaoEsc, N_ProgressBar)
+FUNCTION MSGAGUARDE(C_CDMENS, C_Cabec_x, C_SubCabec, L_ComBotaoEsc, N_ProgressBar)
 *******************
 LOCAL C_COR_ANT, V_JAN
 LOCAL V_TECLAS
@@ -458,7 +458,7 @@ ENDIF
 ASSUME LEFT(C_CDMENS,1) == "M"
 ASSUME LEN(TROCA(C_CDMENS,"M0123456789?",""))==0
 ASSUME LEN(C_CDMENS)==6
-IF N_ProgressBar > 0    ///  So se for ProgressBar nï¿½o aceita Multilinhas no subtitulo
+IF N_ProgressBar > 0    ///  So se for ProgressBar não aceita Multilinhas no subtitulo
    *
    C_SubCabec := IF( AT( ";", C_SubCabec ) > 0, LEFT(C_SubCabec, AT( ";", C_SubCabec )-1 ), C_SubCabec )
    C_SubCabec := IF( LEN(C_SubCabec) > 53, LEFT(C_SubCabec, 53), C_SubCabec )
@@ -501,7 +501,6 @@ ENDIF
 RETURN V_JAN
 *
 
-
 *********************
 PROC MOSTRARMSGAGUARDE ( VX_Janela, N_DelaySeconds )
 *********************
@@ -518,8 +517,8 @@ IF .NOT. GetJanTipoMsgAguarde(VX_Janela)
    ? MEMVAR->ERRO_FECHAMENTO_SEM_DESTRUAJAN
 ENDIF
 *
-SetJanTipoMsgAguarde(VX_Janela, .F.)    // tirar o atributo, para nï¿½o gerar log na DESTRUA...
-SetProgressBar(VX_Janela, NIL)          // Ao destruir uma MsgAguarde, setar NIL para o parï¿½metro de N_ProgressBar
+SetJanTipoMsgAguarde(VX_Janela, .F.)    // tirar o atributo, para não gerar log na DESTRUA...
+SetProgressBar(VX_Janela, NIL)          // Ao destruir uma MsgAguarde, setar NIL para o parâmetro de N_ProgressBar
 *
 DESTRUA VX_Janela
 

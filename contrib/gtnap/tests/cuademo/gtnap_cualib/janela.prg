@@ -213,6 +213,7 @@ ENDIF
 #DEFINE N_ProgressBar           Nil // Guarda a quantidade de ProgressBar. Observação: Para janela do tipo MsgAguarde
 #DEFINE N_ItemId                Nil
 #DEFINE L_ComEmbutidas          .F.
+#define V_LstTituloLabels       {}  // Guarda IDs de título para MudeSubtitle (GTNAP)
 *
 V_Janela := { N_LinIni , N_ColIni , N_LinFin , N_ColFin , ;
                 C_TelaCoberta , N_LinAnt , N_ColAnt , VC_Titulo , N_LinBotoes , ;
@@ -228,7 +229,7 @@ V_Janela := { N_LinIni , N_ColIni , N_LinFin , N_ColFin , ;
                 N_IdProgressBar1, V_LstAcoes, L_CUA_10, N_IdProgressBar2, ;
                 B_SetInkeyAfterBlock_Old,N_ToolBarCodigoAcao,;
                 N_IdScrollBarVertical,N_IdScrollBarHorizontal,B_ScrollBarVertical,B_ScrollBarHorizontal,;
-                N_ProgressBar, N_ItemId, L_ComEmbutidas }
+                N_ProgressBar, N_ItemId, L_ComEmbutidas, V_LstTituloLabels }
 
 IF V_Janela_Pai # NIL
     #DEFINE L_PaiComEmbutidas  V_Janela_Pai[57]
@@ -271,6 +272,7 @@ ENDIF
 #UNDEF N_ProgressBar
 #UNDEF N_ItemId
 #UNDEF L_ComEmbutidas
+#UNDEF V_LstTituloLabels
 
 RETURN V_Janela
 
@@ -350,6 +352,7 @@ RETURN VX_Janela
 #DEFINE N_ProgressBar               VX_Janela[55]
 #DEFINE N_ItemId                    VX_Janela[56]   // For Menuvert, TextView or TableView ids (GTNAP)
 #DEFINE L_ComEmbutidas              VX_Janela[57]   // This Janela has child (embutidas) windows
+#DEFINE V_LstTituloLabels           VX_Janela[58]   // IDs Labels de título (GTNAP)
 
 *************
 PROC AddBotao (VX_Janela,C_TxtBotao,B_AcaoBotao,L_AutoClose,;
@@ -586,7 +589,7 @@ LOCAL N_Largura, N_LinImp, X_Retorno
 LOCAL N_CursorAnt := SET(_SET_CURSOR,SC_NONE)        // salvar modo do cursor
 LOCAL C_CorAnt    := SETCOLOR(C_CorJan)              // salvar cor anterior
 LOCAL B_Ajuda_Ant  // salvar help anterior, se existir novo
-LOCAL N_Cont, N_AddRows
+LOCAL N_Cont, N_AddRows, N_IdLabel
 LOCAL C_Cabec_Aux
 LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
 LOCAL L_AutoClose := .F.
@@ -724,8 +727,13 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
     N_LinImp  := N_LinIni+N_MargemSuperior
     *
     FOR N_Cont := 1 TO LEN(VC_Titulo)
-        SETPOS(N_LinImp-1+N_Cont,N_Col1Livre+N_DeslocaCabecalho)
-        DISPOUT(PADC(VC_Titulo[N_Cont],N_Largura-N_DeslocaCabecalho))
+        IF SOB_MODO_GRAFICO()
+            N_IdLabel := NAP_LABEL(N_WindowNum, N_LinImp-1+N_Cont, N_Col1Livre+N_DeslocaCabecalho, {|| PADC(VC_Titulo[N_Cont],N_Largura-N_DeslocaCabecalho)}, .F.)
+            AADD(V_LstTituloLabels,N_IdLabel)
+        ELSE
+            SETPOS(N_LinImp-1+N_Cont,N_Col1Livre+N_DeslocaCabecalho)
+            DISPOUT(PADC(VC_Titulo[N_Cont],N_Largura-N_DeslocaCabecalho))
+        ENDIF
     NEXT
     *
     * montar área de função
@@ -1920,49 +1928,53 @@ ENDIF
 *
 RETURN L_EXIBE_AJUDA
 *
-    // *
-// ******************
-// PROC MudeSubtitulo (VX_Janela,C_SubCabec_Novo)
-// ******************
-// LOCAL N_Cont, N_Largura, N_LinImp
-// LOCAL N_TAM_CAB_ANT := LEN(VC_Titulo)
-// LOCAL C_Cor_Aux
-// LOCAL N_POS1, N_POS2
-// LOCAL L_EH_PROGRESSBAR := GetProgressBar( VX_Janela ) != 0
-// *
-// IF C_TelaCoberta == NIL
-//    ? MEMVAR->JANELA_AINDA_NAO_ATIVADA_NENHUMA_VEZ
-// ENDIF
-// *
-// #IFDEF _TESTE
-// IF L_EH_PROGRESSBAR                          /// Janela do Tipo ProgressBar, sï¿½ pode ser
-//    ? MEMVAR->JANELA_E_DO_TIPO_PROGRESSBAR    /// Manipulada pela funï¿½ï¿½o, ANDAMENTO_PROGRESSBAR!
-// ENDIF
-// #ENDIF
-// *
-// * nï¿½o imprime nada, sï¿½ monta a matriz de cabeï¿½alho devidamente formatado
-// *
-// C_SubCabec_Novo := STRTRAN(C_SubCabec_Novo,"%t",C_Cabec)
-// C_SubCabec_Novo := STRTRAN(C_SubCabec_Novo,"%T",C_Cabec)
-// VC_Titulo := StrToVet_(C_SubCabec_Novo)
-// *
-// IF N_TAM_CAB_ANT # LEN(VC_Titulo)
-//    ? MEMVAR->CABECALHO_COM_NUMERO_DE_LINHAS_DIFERENTE
-// ENDIF
-// *
-// * montar cabeï¿½alho
-// *
-// N_Largura := N_Col2Livre-N_Col1Livre+1
-// N_LinImp  := N_LinIni+N_MargemSuperior
-// *
-// C_Cor_Aux := SETCOLOR(C_CorJan)  // mudar para a cor da janela
-// FOR N_Cont := 1 TO LEN(VC_Titulo)
-//     SETPOS(N_LinImp-1+N_Cont,N_Col1Livre+N_DeslocaCabecalho)
-//     DISPOUT(PADC(VC_Titulo[N_Cont],N_Largura-N_DeslocaCabecalho))
-// NEXT
-// SETCOLOR(C_Cor_Aux)
-// *
+*
+******************
+PROC MudeSubtitulo ( VX_Janela, C_SubCabec_Novo )
+******************
+LOCAL N_Cont, N_Largura, N_LinImp
+LOCAL N_TAM_CAB_ANT := LEN(VC_Titulo)
+LOCAL C_Cor_Aux
+LOCAL N_POS1, N_POS2
+LOCAL L_EH_PROGRESSBAR := GetProgressBar( VX_Janela ) != 0
+*
+IF C_TelaCoberta == NIL
+   ? MEMVAR->JANELA_AINDA_NAO_ATIVADA_NENHUMA_VEZ
+ENDIF
+*
+#IFDEF _TESTE
+IF L_EH_PROGRESSBAR                          /// Janela do Tipo ProgressBar, só pode ser
+   ? MEMVAR->JANELA_E_DO_TIPO_PROGRESSBAR    /// Manipulada pela função, ANDAMENTO_PROGRESSBAR!
+ENDIF
+#ENDIF
+*
+* não imprime nada, só monta a matriz de cabeçalho devidamente formatado
+*
+C_SubCabec_Novo := STRTRAN(C_SubCabec_Novo,"%t",C_Cabec)
+C_SubCabec_Novo := STRTRAN(C_SubCabec_Novo,"%T",C_Cabec)
+VC_Titulo := StrToVet_(C_SubCabec_Novo)
+*
+IF N_TAM_CAB_ANT # LEN(VC_Titulo)
+   ? MEMVAR->CABECALHO_COM_NUMERO_DE_LINHAS_DIFERENTE
+ENDIF
 
+*
+* montar cabeçalho
+*
+N_Largura := N_Col2Livre-N_Col1Livre+1
+N_LinImp  := N_LinIni+N_MargemSuperior
+*
+C_Cor_Aux := SETCOLOR(C_CorJan)  // mudar para a cor da janela
+FOR N_Cont := 1 TO LEN(VC_Titulo)
+    IF SOB_MODO_GRAFICO()
+        NAP_LABEL_UPDATE(N_WindowNum, V_LstTituloLabels[N_Cont], N_LinImp-1+N_Cont, N_Col1Livre+N_DeslocaCabecalho, {|| PADC(VC_Titulo[N_Cont],N_Largura-N_DeslocaCabecalho)})
+    ELSE
+        SETPOS(N_LinImp-1+N_Cont,N_Col1Livre+N_DeslocaCabecalho)
+        DISPOUT(PADC(VC_Titulo[N_Cont],N_Largura-N_DeslocaCabecalho))
+    ENDIF
+NEXT
+SETCOLOR(C_Cor_Aux)
+*
 
 ******************
 FUNC GetCdTelaTopo

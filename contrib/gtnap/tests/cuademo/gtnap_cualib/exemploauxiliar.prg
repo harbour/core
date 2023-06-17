@@ -45,8 +45,8 @@ MOSTRAR MSGAGUARDE V_Janela, 3
 TONE(200,2)
 
 // Fran: TODO 'MUDE SUBTITULO' support
-// MUDE SUBTITULO V_Janela PARA "Teste de ;mudança do ;subtítulo"+";;(M15568)"
-// MOSTRAR MSGAGUARDE V_Janela, 2
+MUDE SUBTITULO V_Janela PARA "Teste de ;mudança do ;subtítulo"+";;(M15568)"
+MOSTRAR MSGAGUARDE V_Janela, 2
 TONE(200,2)
 
 FECHAR MSGAGUARDE V_Janela

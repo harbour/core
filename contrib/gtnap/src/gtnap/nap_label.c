@@ -32,6 +32,18 @@ HB_FUNC( NAP_LABEL_MESSAGE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_LABEL_UPDATE )
+{
+    uint32_t wid = hb_parni(1);
+    uint32_t id = hb_parni(2);
+    int32_t top = hb_parni(3);
+    int32_t left = hb_parni(4);
+    HB_ITEM *text_block = hb_param(5, HB_IT_BLOCK);
+    hb_gtnap_label_update(wid, id, top, left, text_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_LABEL_FGCOLOR )
 {
     uint32_t wid = hb_parni(1);

@@ -2990,6 +2990,32 @@ uint32_t hb_gtnap_label_message(const uint32_t wid, const int32_t top, const int
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_label_update(const uint32_t wid, const uint32_t id, const int32_t top, const int32_t left, HB_ITEM *text_block)
+{
+    GtNapObject *gtobj = i_gtobj(GTNAP_GLOBAL, wid, id);
+    GtNapWindow *gtwin = NULL;
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_LABEL);
+    gtwin = gtobj->gtwin;
+    cassert_no_null(gtwin);
+
+    if (gtobj->text_block != NULL)
+    {
+        hb_itemRelease(gtobj->text_block);
+        gtobj->text_block = NULL;
+    }
+
+    if (text_block != NULL)
+        gtobj->text_block = hb_itemNew(text_block);
+
+    gtobj->pos.x = (real32_t)((left - gtwin->left) * (int32_t)GTNAP_GLOBAL->cell_x_size);
+    gtobj->pos.y = (real32_t)((top - gtwin->top) * (int32_t)GTNAP_GLOBAL->cell_y_size);
+
+    i_set_label_text(gtobj, NULL);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_label_fgcolor(const uint32_t wid, const uint32_t id, const color_t color)
 {
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
