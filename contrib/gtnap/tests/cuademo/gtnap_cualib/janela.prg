@@ -660,12 +660,17 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             // Windows flags based on specializations
             IF N_TP_Jan == NIL
                 L_CLOSE_WITH_ESC := .T.
+                L_CLOSE_WITH_RETURN := .F.
+
+            ELSEIF N_TP_Jan == _JAN_PERGUNTAR
+                L_CLOSE_WITH_ESC := .T.
                 L_CLOSE_WITH_RETURN := .T.
                 L_BUTTONS_NAVIGATION := .T.
 
-            ELSEIF N_TP_Jan == _JAN_TEXTO_10
+            ELSEIF N_TP_Jan == _JAN_INFORMAR
                 L_CLOSE_WITH_ESC := .T.
-                L_CLOSE_WITH_RETURN := .F.
+                L_CLOSE_WITH_RETURN := .T.
+                L_BUTTONS_NAVIGATION := .T.
 
             ELSEIF N_TP_Jan == _JAN_ARQTEXTO_10
                 L_CLOSE_WITH_ESC := .T.
@@ -2022,7 +2027,7 @@ IF SOB_MODO_GRAFICO()
 
     X_Retorno_Eval := NAP_WINDOW_MODAL(N_WindowNum, 0)
 
-    IF X_Retorno_Eval == NAP_MODAL_ESC .OR. X_Retorno_Eval == NAP_MODAL_X_BUTTON .OR. X_Retorno_Eval == NAP_MODAL_TOOLBAR
+    IF X_Retorno_Eval == NAP_MODAL_ESC .OR. X_Retorno_Eval == NAP_MODAL_ENTER .OR. X_Retorno_Eval == NAP_MODAL_X_BUTTON .OR. X_Retorno_Eval == NAP_MODAL_TOOLBAR
         L_FechouComAutoClose = .F.
     ELSEIF X_Retorno_Eval > NAP_MODAL_BUTTON_AUTOCLOSE .AND. X_Retorno_Eval <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
         L_FechouComAutoClose = .T.
@@ -2197,8 +2202,8 @@ N_BotId := NAP_BUTTON(;
 
  V_Botao[_BOTAO_HANDLE_PUSHBUTTON] := N_BotId
 
-// FRAN: _JAN_MENU_VERT doen't have V_LstAcoes
-IF N_TP_Jan == _JAN_MENU_VERT
+ // FRAN: These kind of windows don't have V_LstAcoes
+IF N_TP_Jan == _JAN_MENU_VERT .OR. N_TP_Jan == _JAN_PERGUNTAR .OR. N_TP_Jan == NIL
     IF N_KeyBoard # NIL
         NAP_WINDOW_HOTKEY(N_WindowNum, N_KeyBoard, V_Botao[_BOTAO_BLOCO_ACAO], V_Botao[_BOTAO_AUTOCLOSE])
     ENDIF

@@ -53,6 +53,8 @@ FOR N_Cont := 1 TO LEN(VC_Menu_Aux)
 NEXT
 
 VX_Janela := MontarJanela(C_Cabec_x,C_SubCabec,VC_Menu_Aux,VC_TxtBotoes)
+N_TP_Jan  := _JAN_PERGUNTAR
+
 IF SOB_MODO_GRAFICO()
    ADDIMAGEM VX_Janela ARQUIVO DIRET_BMPS()+"b99903.abm" ;      //"pergunta.abm"
        COORDENADAS 00,00,02,04 AJUDA "B19123"
@@ -214,6 +216,7 @@ DEFAULT L_TipoMsgAguarde TO .F.
 N_CursorAnt := SET(_SET_CURSOR,SC_NONE)          // salvar modo do cursor
 
 VX_Janela := MontarJanela(C_Cabec_x,C_SubCabec,,VC_TxtBotoes)
+N_TP_Jan  := _JAN_INFORMAR
 
 IF SOB_MODO_GRAFICO()
    ADDIMAGEM VX_Janela ARQUIVO DIRET_BMPS() + C_ArqImagem COORDENADAS 00,01,01,04 AJUDA "B19125"

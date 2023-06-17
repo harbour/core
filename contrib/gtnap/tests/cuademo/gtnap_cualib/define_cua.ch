@@ -14,6 +14,9 @@
 #define _JAN_SELE_VETO_20  6        // janela de selecao em vetor
 #define _JAN_SELE_ARQ_20   7        // janela de selecao em arquivo
 
+* GTNAP specific (different window flags than 'pure' sem specealizaçao)
+#define _JAN_PERGUNTAR     8        // perguntar janela
+#define _JAN_INFORMAR      9        // informar janela
 
 * Constantes para uso do Browse
 #DEFINE _SELE_SIMPLES   1
@@ -23,14 +26,14 @@
 * Constantes do vetor de opções vertical (V_Opcoes) do browse
 #DEFINE _OPCAO_TEXTO                  1
 #DEFINE _OPCAO_TEXTO_TRATADO          2
-#DEFINE _OPCAO_COL_DESTAQUE           3 
+#DEFINE _OPCAO_COL_DESTAQUE           3
 #DEFINE _OPCAO_TEXTO_DESTAQUE         4
 #DEFINE _OPCAO_BLOCO_ACAO             5
 #DEFINE _OPCAO_CDOPCAO                6
 #DEFINE _OPCAO_INKEY_DESTAQUE         7
 #DEFINE _OPCAO_INKEY_DESTAQUE_CASE    8
-#DEFINE _OPCAO_ALIAS_MUDA             9 
-#DEFINE _OPCAO_RECNO_MUDA            10 
+#DEFINE _OPCAO_ALIAS_MUDA             9
+#DEFINE _OPCAO_RECNO_MUDA            10
 #DEFINE _OPCAO_FILTER_MUDA           11
 #DEFINE _OPCAO_ORDER_MUDA            12
 #DEFINE _OPCAO_EOFOK                 13
@@ -197,7 +200,7 @@
 #DEFINE K_CTRL_Z_TROCADO_POR_K_CTRL_F12   K_CTRL_F12
 
 
-* Comandos repetidos (já existem no "z:\f\xx\xx.ch") para que 
+* Comandos repetidos (já existem no "z:\f\xx\xx.ch") para que
 * tenham efeito também quando a CUA está sendo debugada via "z:\f\cua\exemplo\".
 #xcommand ENDIF ERRO             => else ; ? MEMVAR->ERRO_IF ; endif
 #xcommand ENDCASE ERRO           => otherwise ; ? MEMVAR->ERRO_CASE ; endcase

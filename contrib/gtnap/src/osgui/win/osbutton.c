@@ -238,6 +238,12 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
             _oswindow_store_focus((OSControl*)button);
 		break;
 
+	case WM_KILLFOCUS:
+        /* GTNAP fix for double '_osbutton_command' call */
+        if (button->is_default == TRUE)
+            return 0;
+        break;
+
     case WM_LBUTTONDOWN:
     case WM_LBUTTONDBLCLK:
         if(_oswindow_in_tablist((OSControl*)button) == FALSE)
