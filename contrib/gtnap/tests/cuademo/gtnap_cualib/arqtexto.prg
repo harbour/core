@@ -135,7 +135,7 @@ IF SOB_MODO_GRAFICO()
         NAP_WINDOW_DESIST(N_WindowNum, {||.T.})
 
         // Create the textview
-        N_TextId := NAP_TEXTVIEW(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), {|| V_Buffer}, {||.T.}, .F.)
+        N_TextId := NAP_TEXTVIEW(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), {|| V_Buffer}, {||.T.}, NIL, .F.)
         // Show/hide scrollbars
         NAP_TEXTVIEW_SCROLL(N_WindowNum, N_TextId, IIF(L_NaoRolaHorizontal==.F.,.T.,.F.), IIF(L_NaoRolaVertical==.F.,.T.,.F.))
         // Set the caret at position 0 (beginning)

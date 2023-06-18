@@ -16,8 +16,9 @@ HB_FUNC( NAP_TEXTVIEW )
     int32_t right = hb_parni(5);
     HB_ITEM *get_set_block = hb_param(6, HB_IT_BLOCK);
     HB_ITEM *valida_block = hb_param(7, HB_IT_BLOCK);
-    bool_t in_scroll = (bool_t)hb_parl(8);
-    uint32_t id = hb_gtnap_textview(wid, top, left, bottom, right, get_set_block, valida_block, in_scroll);
+    HB_ITEM *keyfilter_block = hb_param(8, HB_IT_BLOCK);
+    bool_t in_scroll = (bool_t)hb_parl(9);
+    uint32_t id = hb_gtnap_textview(wid, top, left, bottom, right, get_set_block, valida_block, keyfilter_block, in_scroll);
     hb_retni(id);
 }
 

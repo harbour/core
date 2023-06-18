@@ -1810,7 +1810,7 @@ static void i_filter_tecla(const GtNapObject *gtobj, const EvText *text, EvTextF
     cassert_no_null(gtobj);
     cassert_no_null(text);
     cassert_no_null(filter);
-    cassert(gtobj->type == ekOBJ_EDIT);
+    cassert(gtobj->type == ekOBJ_EDIT || gtobj->type == ekOBJ_TEXTVIEW);
     /* Some text has been inserted */
     if (text->len > 0)
     {
@@ -2181,6 +2181,17 @@ static void i_OnTextFocus(GtNapObject *gtobj, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnTextFilter(GtNapObject *gtobj, Event *e)
+{
+    const EvText *p = event_params(e, EvText);
+    EvTextFilter *r = event_result(e, EvTextFilter);
+    cassert_no_null(gtobj);
+    cassert(gtobj->type == ekOBJ_TEXTVIEW);
+    i_filter_tecla(gtobj, p, r);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *main_gtwin)
 {
     Panel *scroll_panel = NULL;
@@ -2329,6 +2340,8 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         if (obj->type == ekOBJ_TEXTVIEW)
         {
             textview_OnFocus((TextView*)obj->component, listener(obj, i_OnTextFocus, GtNapObject));
+            if (obj->keyfilter_block != NULL)
+                textview_OnFilter((TextView*)obj->component, listener(obj, i_OnTextFilter, GtNapObject));
         }
     arrpt_end();
 
@@ -3412,7 +3425,7 @@ void hb_gtnap_edit_wizard(const uint32_t wid, const uint32_t id, const uint32_t 
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *get_set_block, HB_ITEM *valida_block, const bool_t in_scroll)
+uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, HB_ITEM *get_set_block, HB_ITEM *valida_block, HB_ITEM *keyfilter_block, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
     TextView *view = textview_create();
@@ -3435,6 +3448,9 @@ uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t 
 
     if (valida_block != NULL)
         obj->valida_block = hb_itemNew(valida_block);
+
+    if (keyfilter_block != NULL)
+        obj->keyfilter_block = hb_itemNew(keyfilter_block);
 
     i_set_view_text(obj);
     is_editable = i_is_editable(gtwin, obj);

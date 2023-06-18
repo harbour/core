@@ -23,7 +23,6 @@
 #include "font.h"
 #include "heap.h"
 #include "ptr.h"
-#include "strings.h"
 #include "stream.h"
 #include "unicode.h"
 
@@ -50,6 +49,7 @@ struct _ostext_t
 	WCHAR szFaceName[LF_FACESIZE];
     char_t *text;
     uint32_t text_size;
+    uint32_t num_chars;
     bool_t is_editable;
     bool_t launch_event;
     RECT border;
@@ -161,6 +161,7 @@ OSText *ostext_create(const uint32_t flags)
     i_set_editable(view->control.hwnd, FALSE);
     view->launch_event = TRUE;
     view->dyLineSpacing = 20;
+    view->num_chars = 0;
 	return view;
 }
 
@@ -199,6 +200,16 @@ void ostext_OnFocus(OSText *view, Listener *listener)
 {
     cassert_no_null(view);
     listener_update(&view->OnFocus, listener);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_text_length(HWND hwnd)
+{
+    GETTEXTLENGTHEX textl;
+    textl.flags = GTL_DEFAULT;
+    textl.codepage = 1200;
+    return (uint32_t)SendMessage(hwnd, EM_GETTEXTLENGTHEX, (WPARAM)&textl, (LPARAM)0);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -277,6 +288,7 @@ void ostext_insert_text(OSText *view, const char_t *text)
     cr.cpMin = -1;
     cr.cpMax = -1;
     i_add_text(view, &cr, text);
+    view->num_chars = i_text_length(view->control.hwnd);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -287,6 +299,7 @@ void ostext_set_text(OSText *view, const char_t *text)
     cr.cpMin = 0;
     cr.cpMax = -1;
     i_add_text(view, &cr, text);
+    view->num_chars = i_text_length(view->control.hwnd);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -443,7 +456,7 @@ void ostext_editable(OSText *view, const bool_t is_editable)
 
 /*---------------------------------------------------------------------------*/
 
-static char_t *i_get_text(HWND hwnd, uint32_t *size)
+static char_t *i_get_text(HWND hwnd, uint32_t *size, uint32_t *nchars)
 {
     uint32_t num_chars = 0;
     WCHAR *wtext_alloc = NULL;
@@ -458,6 +471,8 @@ static char_t *i_get_text(HWND hwnd, uint32_t *size)
         textl.flags = GTL_DEFAULT;
         textl.codepage = 1200;
         num_chars = 1 + (uint32_t)SendMessage(hwnd, EM_GETTEXTLENGTHEX, (WPARAM)&textl, (LPARAM)0);
+        if (nchars != NULL)
+            *nchars = num_chars - 1;
     }
 
     if (num_chars < WCHAR_BUFFER_SIZE)
@@ -504,7 +519,7 @@ const char_t *ostext_get_text(const OSText *view)
 	cassert_no_null(view);
     if (view->text != NULL)
         heap_free((byte_t**)&view->text, view->text_size, "OSTextText");
-    ((OSText*)view)->text = i_get_text(view->control.hwnd, &((OSText*)view)->text_size);
+    ((OSText*)view)->text = i_get_text(view->control.hwnd, &((OSText*)view)->text_size, NULL);
     return view->text;
 }
 
@@ -620,7 +635,7 @@ static void i_set_cursor_pos(HWND hwnd, const uint32_t pos)
 }
 
 /*---------------------------------------------------------------------------*/
-#include "bstd.h"
+
 void _ostext_command(OSText *view, WPARAM wParam)
 {
     cassert_no_null(view);
@@ -630,26 +645,25 @@ void _ostext_command(OSText *view, WPARAM wParam)
         {
             char_t *edit_text;
             uint32_t tsize;
+            uint32_t nchars;
             EvText params;
             EvTextFilter result;
-            edit_text = i_get_text(view->control.hwnd, &tsize);
+            edit_text = i_get_text(view->control.hwnd, &tsize, &nchars);
             params.text = (const char_t*)edit_text;
             params.cpos = i_get_cursor_pos(view->control.hwnd);
-            params.len = INT32_MAX;
+            params.len = (int32_t)nchars - (int32_t)view->num_chars;
             result.apply = FALSE;
             result.text[0] = '\0';
-            result.str = NULL;
             result.cpos = UINT32_MAX;
             listener_event(view->OnFilter, ekGUI_EVENT_TXTFILTER, view, &params, &result, OSText, EvText, EvTextFilter);
-            heap_free((byte_t**)&edit_text, tsize, "OSControlGetText");
+            heap_free((byte_t**)&edit_text, tsize, "OSTextText");
 
             if (result.apply == TRUE)
             {
                 bool_t prev = view->launch_event;
                 view->launch_event = FALSE;
-                ostext_set_text(view, tc(result.str));
+                ostext_set_text(view, result.text);
                 view->launch_event = prev;
-                str_destroy(&result.str);
             }
 
             if (result.cpos != UINT32_MAX)

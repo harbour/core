@@ -24,8 +24,8 @@ MEMVAR L_Converter_Tecla_ANSI_para_OEM
 *****************
 FUNCTION EspTexto ( VX_Janela, B_Texto, VN_TeclaGravar, N_TamLinha,;
                     N_Tab, B_Valid, B_Edita, B_Confirma, B_Desiste,;
-                    B_FiltroTec,L_NaoRolaVertical, L_RolaHorizontal,;
-                    L_SemToolBar  )
+                    B_FiltroTec, L_NaoRolaVertical, L_RolaHorizontal,;
+                    L_SemToolBar )
 *
 DEFAULT L_NaoRolaVertical TO .F.
 DEFAULT L_RolaHorizontal  TO .F.
@@ -144,7 +144,7 @@ IF SOB_MODO_GRAFICO()
         NAP_WINDOW_DESIST(N_WindowNum, B_Desiste)
 
         // Create the textview
-        N_TextId := NAP_TEXTVIEW(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto, B_Valid, .F.)
+        N_TextId := NAP_TEXTVIEW(N_WindowNum, Lin1Livre(VX_Janela), Col1Livre(VX_Janela), Lin2Livre(VX_Janela), Col2Livre(VX_Janela), B_Texto, B_Valid, B_FiltroTec, .F.)
         // Show/hide scrollbars
         NAP_TEXTVIEW_SCROLL(N_WindowNum, N_TextId, L_RolaHorizontal, IIF(L_NaoRolaVertical==.F.,.T.,.F.))
         // Set the caret at position 0 (beginning)

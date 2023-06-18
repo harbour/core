@@ -866,13 +866,12 @@ struct _evtext_t
     void *ptr1;
 };
 
-#define kTEXTFILTER_SIZE    1024
+#define kTEXTFILTER_SIZE    4096
 
 struct _evtextfilter_t
 {
     bool_t apply;
     char_t text[kTEXTFILTER_SIZE];
-    String *str;
     uint32_t cpos;
 };
 

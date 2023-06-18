@@ -20,12 +20,8 @@ ADDOPCAO V_Janela TEXTO "edição de texto em m#emória com 'valid'" ;
     ACAO TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_VALID() AJUDA "P14975"
 ADDOPCAO V_Janela TEXTO "edição de texto em memó#ria com filtro de tecla" ;
     ACAO TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_FILTRO_TECLAS() AJUDA "P14977"
-*
-ATIVE(V_Janela)
-*
 
-// STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_ONLY
-//     RETURN
+ATIVE(V_Janela)
 
 *******************************************
 STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_ONLY
@@ -37,32 +33,16 @@ LOCAL C_Texto,V_Janela, L_OK
   TECLAS {"F2=fecha texto"} ;
   AJUDA "T?????"
 
-//
-//  Fran: This code works on Windows and Linux
-//
 C_Texto := MEMOREAD("../dados/textotes.txt")
 
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    C_Texto := MEMOREAD("dados\textotes.txt")
-// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    C_Texto := MEMOREAD("/opt/cuadados/textotes.txt")
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-
 ESPECIALIZE V_Janela TEXTO C_Texto TERMINAR {K_F2} EDITA .F.
-*
+
 L_OK :=  ATIVE(V_Janela)
 DO WHILE L_OK
    MOSTRAR("M15602","Usuário teclou F2")
    L_OK :=  ATIVE(V_Janela)
 ENDDO
 DESTRUA V_Janela
-*
-
-
-// STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_CONFIRMACOES
-// RETURN
 
 *************************************************************
 STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_CONFIRMACOES
@@ -74,17 +54,6 @@ LOCAL C_Texto,V_Janela, L_OK
   TECLAS {"F2=fecha texto"} ;
   AJUDA "T?????"
 
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    C_Texto := MEMOREAD("dados\textotes.txt")
-// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    C_Texto := MEMOREAD("/opt/cuadados/textotes.txt")
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-
-//
-//  Fran: This code works on Windows and Linux
-//
 C_Texto := MEMOREAD("../dados/textotes.txt")
 C_Texto := "Confirmar initial text"
 
@@ -101,10 +70,6 @@ ENDDO
 DESTRUA V_Janela
 *
 
-
-// STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_VALID
-// RETURN
-
 ******************************************************
 STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_VALID
 ******************************************************
@@ -116,17 +81,6 @@ LOCAL C_Texto,V_Janela, L_OK
   TECLAS {"F2=fecha texto"} ;
   AJUDA "T?????"
 
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    C_Texto := MEMOREAD("dados\textotes.txt")
-// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    C_Texto := MEMOREAD("/opt/cuadados/textotes.txt")
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-
-//
-//  Fran: This code works on Windows and Linux
-//
 C_Texto := MEMOREAD("../dados/textotes.txt")
 C_Texto := "Validar initial text"
 
@@ -143,8 +97,6 @@ NAP_LOG("Final VALIDAR texto in 'C_Texto': " + C_Texto)
 
 DESTRUA V_Janela
 
-
-*
 **************************
 STAT FUNC COMECAR_COM_CASA(C_Texto)
 **************************
@@ -154,10 +106,6 @@ IF UPPER(LEFT(C_Texto,4)) # "CASA"
    ALARME("M?????","Texto deve iniciar com a palavra 'CASA'")
 ENDIF
 RETURN L_OK
-*
-
-// STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_FILTRO_TECLAS
-// RETURN
 
 **************************************************************
 STAT PROC TST_EXIBE_TEXTO_MEMORIA_READ_WRITE_COM_FILTRO_TECLAS
@@ -170,16 +118,6 @@ LOCAL C_Texto,V_Janela, L_OK
   TECLAS {"F2=fecha texto"} ;
   AJUDA "T?????"
 
-// #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
-//    C_Texto := MEMOREAD("dados\textotes.txt")
-// #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
-//    C_Texto := MEMOREAD("/opt/cuadados/textotes.txt")
-// #else
-//    #erro "Código não adaptado para esta plataforma"
-// #endif
-//
-//  Fran: This code works on Windows and Linux
-//
 C_Texto := MEMOREAD("../dados/textotes.txt")
 
 ESPECIALIZE V_Janela TEXTO C_Texto TERMINAR {K_F2} EDITA .T. ;
@@ -203,7 +141,7 @@ ELSE
    C_Retorno := NIL
 ENDIF
 RETURN C_Retorno
-// *
+
 // *********************
 
 
