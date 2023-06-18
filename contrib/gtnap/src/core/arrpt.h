@@ -129,7 +129,7 @@
 
 #define arrpt_forback(elem, array, type)\
     {\
-        register type **elem##_buf = arrpt_all(array, type);;\
+        register type **elem##_buf = arrpt_all(array, type);\
         register uint32_t i, elem##_i, elem##_total = arrpt_size(array, type);\
         elem##_buf += elem##_total - 1;\
         elem##_i = elem##_total - 1;\
