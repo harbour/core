@@ -27,7 +27,6 @@ typedef struct _gtnap_area_t GtNapArea;
 typedef struct _gtnap_object_t GtNapObject;
 typedef struct _gtnap_geom_t GtNapGeom;
 typedef struct _gtnap_window_t GtNapWindow;
-typedef struct _gtnap_modal_t GtNapModal;
 typedef struct _gtnap_t GtNap;
 
 typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
@@ -181,7 +180,6 @@ struct _gtnap_t
     uint32_t button_y_size;
     uint32_t edit_y_size;
     ArrPt(GtNapWindow) *windows;
-    ArrSt(GtNapModal) *stack;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -191,7 +189,6 @@ DeclSt(GtNapColumn);
 DeclPt(GtNapArea);
 DeclPt(GtNapObject);
 DeclPt(GtNapWindow);
-DeclSt(GtNapModal);
 DeclPt(Button);
 
 /*---------------------------------------------------------------------------*/
@@ -541,9 +538,7 @@ static void i_gtnap_destroy(GtNap **gtnap)
     cassert_no_null(*gtnap);
     cassert(*gtnap == GTNAP_GLOBAL);
     cassert(arrpt_size((*gtnap)->windows, GtNapWindow) == 0);
-    cassert(arrst_size((*gtnap)->stack, GtNapModal) == 0);
     arrpt_destroy(&(*gtnap)->windows, i_destroy_gtwin, GtNapWindow);
-    arrst_destroy(&(*gtnap)->stack, NULL, GtNapModal);
     font_destroy(&(*gtnap)->global_font);
     font_destroy(&(*gtnap)->reduced_font);
     str_destroy(&(*gtnap)->title);
@@ -631,51 +626,6 @@ static GtNapWindow *i_current_main_gtwin(GtNap *gtnap)
             return gtwin;
     arrpt_end();
     return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNapModal *i_top_stack(GtNap *gtnap)
-{
-    cassert_no_null(gtnap);
-    if (arrst_size(gtnap->stack, GtNapModal) > 0)
-        return arrst_last(gtnap->stack, GtNapModal);
-    else
-        return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_pop_modal(GtNap *gtnap, GtNapWindow *gtwin)
-{
-    GtNapModal *gtmodal = i_top_stack(gtnap);
-    uint32_t n = arrst_size(gtnap->stack, GtNapModal);
-    cassert_no_null(gtmodal);
-    cassert(gtmodal->gtwin == gtwin);
-    cassert(n > 0);
-    arrst_delete(gtnap->stack, n - 1, NULL, GtNapModal);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNapModal *i_base_stack(GtNap *gtnap)
-{
-    cassert_no_null(gtnap);
-    if (arrst_size(gtnap->stack, GtNapModal) > 0)
-        return arrst_first(gtnap->stack, GtNapModal);
-    else
-        return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNapWindow *i_current_modal(GtNap *gtnap)
-{
-    GtNapModal *gtmodal = i_top_stack(gtnap);
-    if (gtmodal != NULL)
-        return gtmodal->gtwin;
-    else
-        return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1030,7 +980,6 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->rows = INIT_ROWS;
     GTNAP_GLOBAL->cols = INIT_COLS;
     GTNAP_GLOBAL->windows = arrpt_create(GtNapWindow);
-    GTNAP_GLOBAL->stack = arrst_create(GtNapModal);
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
     globals_resolution(&screen);
@@ -1420,15 +1369,8 @@ static bool_t i_move_focus_above(GtNapObject *gtobj, void *ositem)
 
 static void i_stop_modal(GtNap *gtnap, GtNapWindow *gtwin, const uint32_t retcode)
 {
-    GtNapModal *gtmodal = NULL;
-    uint32_t n = 0;
-    cassert_no_null(gtnap);
+    unref(gtnap);
     cassert_no_null(gtwin);
-    n = arrst_size(gtnap->stack, GtNapModal);
-    cassert(n > 0);
-    gtmodal = arrst_last(gtnap->stack, GtNapModal);
-    cassert_no_null(gtmodal );
-    cassert(gtmodal ->gtwin == gtwin);
     gtwin->modal_window_alive = FALSE;
     window_stop_modal(gtwin->window, retcode);
 }
@@ -2416,26 +2358,25 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
 
 static void i_gtnap_update(GtNap *gtnap, const real64_t prtime, const real64_t ctime)
 {
-    GtNapModal *gtmodal = NULL;
     cassert(gtnap == NULL);
     gtnap = GTNAP_GLOBAL;
     cassert_no_null(gtnap);
     unref(prtime);
     unref(ctime);
-    gtmodal  = i_top_stack(gtnap);
-    if (gtmodal  != NULL)
-    {
-        if (gtmodal->close_seconds > 0)
-        {
-            uint64_t now = btime_now();
-            if ((now - gtmodal->timestamp) / 1000000 >= gtmodal->close_seconds)
-            {
-                gtmodal->timestamp = 0;
-                gtmodal->close_seconds = 0;
-                i_stop_modal(gtnap, gtmodal->gtwin, NAP_MODAL_TIMESTAMP);
-            }
-        }
-    }
+    //gtmodal  = i_top_stack(gtnap);
+    //if (gtmodal  != NULL)
+    //{
+    //    if (gtmodal->close_seconds > 0)
+    //    {
+    //        uint64_t now = btime_now();
+    //        if ((now - gtmodal->timestamp) / 1000000 >= gtmodal->close_seconds)
+    //        {
+    //            gtmodal->timestamp = 0;
+    //            gtmodal->close_seconds = 0;
+    //            i_stop_modal(gtnap, gtmodal->gtwin, NAP_MODAL_TIMESTAMP);
+    //        }
+    //    }
+    //}
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2567,9 +2508,6 @@ static void i_OnWindowClose(GtNapWindow *gtwin, Event *e)
 
     if (*res == TRUE && p->origin == ekGUI_CLOSE_ESC)
         gtwin->is_closed_by_esc = TRUE;
-
-    if (*res == TRUE)
-        i_pop_modal(GTNAP_GLOBAL, gtwin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2939,7 +2877,7 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t delay_seconds)
     }
 
     {
-        GtNapWindow *parent = i_current_modal(GTNAP_GLOBAL);
+        //GtNapWindow *parent = i_current_modal(GTNAP_GLOBAL);
         V2Df pos;
         uint32_t ret = 0;
 
@@ -2959,26 +2897,26 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t delay_seconds)
         }
 
         /* Launch the window */
-        if (parent == NULL)
-        {
-            cassert(arrpt_size(GTNAP_GLOBAL->windows, GtNapWindow) == 1);
-        }
+        //if (parent == NULL)
+        //{
+        //    cassert(arrpt_size(GTNAP_GLOBAL->windows, GtNapWindow) == 1);
+        //}
 
         pos.x = (real32_t)(gtwin->left * GTNAP_GLOBAL->cell_x_size);
         pos.y = (real32_t)(gtwin->top * GTNAP_GLOBAL->cell_y_size);
 
-        if (parent != NULL)
-        {
-            GtNapModal *base = i_base_stack(GTNAP_GLOBAL);
-            V2Df ppos;
-            cassert_no_null(base);
-            cassert_no_null(base->gtwin);
-            ppos = window_get_origin(base->gtwin->window);
-            pos.x += ppos.x;
-            pos.y += ppos.y;
-            if (gtwin->toolbar != NULL)
-                pos.y -= (real32_t)(GTNAP_GLOBAL->cell_y_size - (gtwin->toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size));
-        }
+        //if (parent != NULL)
+        //{
+        //    GtNapModal *base = i_base_stack(GTNAP_GLOBAL);
+        //    V2Df ppos;
+        //    cassert_no_null(base);
+        //    cassert_no_null(base->gtwin);
+        //    ppos = window_get_origin(base->gtwin->window);
+        //    pos.x += ppos.x;
+        //    pos.y += ppos.y;
+        //    if (gtwin->toolbar != NULL)
+        //        pos.y -= (real32_t)(GTNAP_GLOBAL->cell_y_size - (gtwin->toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size));
+        //}
 
         /* Check if a first control has to be focused */
         {
@@ -3013,19 +2951,20 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t delay_seconds)
         gtwin->is_closed_by_esc = FALSE;
         gtwin->modal_window_alive = TRUE;
 
-        {
-            GtNapModal *top = arrst_new0(GTNAP_GLOBAL->stack, GtNapModal);
+        //{
+        //    GtNapModal *top = arrst_new0(GTNAP_GLOBAL->stack, GtNapModal);
 
-            if (delay_seconds > 0)
-            {
-                top->close_seconds = delay_seconds;
-                top->timestamp = btime_now();
-            }
+        //    if (delay_seconds > 0)
+        //    {
+        //        top->close_seconds = delay_seconds;
+        //        top->timestamp = btime_now();
+        //    }
 
-            top->gtwin = gtwin;
-        }
+        //    top->gtwin = gtwin;
+        //}
 
-        ret = window_modal(gtwin->window, parent ? parent->window : NULL);
+        //ret = window_modal(gtwin->window, parent ? parent->window : NULL);
+        ret = window_modal(gtwin->window, NULL);
         return ret;
     }
 }
@@ -3034,9 +2973,9 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t delay_seconds)
 
 void hb_gtnap_window_stop_modal(const uint32_t result)
 {
-    GtNapModal *gtmodal = i_top_stack(GTNAP_GLOBAL);
-    if (gtmodal != NULL)
-        i_stop_modal(GTNAP_GLOBAL, gtmodal->gtwin, result);
+    //GtNapModal *gtmodal = i_top_stack(GTNAP_GLOBAL);
+    //if (gtmodal != NULL)
+    //    i_stop_modal(GTNAP_GLOBAL, gtmodal->gtwin, result);
 }
 
 /*---------------------------------------------------------------------------*/
