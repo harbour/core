@@ -700,7 +700,7 @@ struct _guictx_t
     FPtr_gctx_get_real32e func_progress_get_thickness;
 
     /*! <Text view> */
-    FPtr_gctx_set_listener func_text_OnTextChange;
+    FPtr_gctx_set_listener func_text_OnFilter;
     FPtr_gctx_set_listener func_text_OnFocus;
     FPtr_gctx_set_text func_text_insert_text;
     FPtr_gctx_set_text func_text_set_text;
@@ -872,6 +872,7 @@ struct _evtextfilter_t
 {
     bool_t apply;
     char_t text[kTEXTFILTER_SIZE];
+    String *str;
     uint32_t cpos;
 };
 

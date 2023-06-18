@@ -674,7 +674,7 @@ _draw2d_api void guictx_append_text_manager_imp(
                         GuiCtx *context,
                         FPtr_gctx_create func_text_create,
                         FPtr_gctx_destroy func_text_destroy,
-                        FPtr_gctx_set_listener func_text_OnTextChange,
+                        FPtr_gctx_set_listener func_text_OnFilter,
                         FPtr_gctx_set_listener func_text_OnFocus,
                         FPtr_gctx_set_text func_text_insert_text,
                         FPtr_gctx_set_text func_text_set_text,
@@ -696,7 +696,7 @@ _draw2d_api void guictx_append_text_manager_imp(
                         context,\
                         func_text_create,\
                         func_text_destroy,\
-                        func_text_OnTextChange,\
+                        func_text_OnFilter,\
                         func_text_OnFocus,\
                         func_text_insert_text,\
                         func_text_set_text,\
@@ -718,7 +718,7 @@ _draw2d_api void guictx_append_text_manager_imp(
     (\
         FUNC_CHECK_GCTX_CREATE(func_text_create, text_type),\
         FUNC_CHECK_GCTX_DESTROY(func_text_destroy, text_type),\
-        FUNC_CHECK_GCTX_SET_LISTENER(func_text_OnTextChange, text_type),\
+        FUNC_CHECK_GCTX_SET_LISTENER(func_text_OnFilter, text_type),\
         FUNC_CHECK_GCTX_SET_LISTENER(func_text_OnFocus, text_type),\
         FUNC_CHECK_GCTX_SET_TEXT(func_text_insert_text, text_type),\
         FUNC_CHECK_GCTX_SET_TEXT(func_text_set_text, text_type),\
@@ -740,7 +740,7 @@ _draw2d_api void guictx_append_text_manager_imp(
                         context,\
                         (FPtr_gctx_create)func_text_create,\
                         (FPtr_gctx_destroy)func_text_destroy,\
-                        (FPtr_gctx_set_listener)func_text_OnTextChange,\
+                        (FPtr_gctx_set_listener)func_text_OnFilter,\
                         (FPtr_gctx_set_listener)func_text_OnFocus,\
                         (FPtr_gctx_set_text)func_text_insert_text,\
                         (FPtr_gctx_set_text)func_text_set_text,\

@@ -502,7 +502,6 @@ static void i_set_cursor_pos(HWND hwnd, const uint32_t pos)
 void _osedit_command(OSEdit *edit, WPARAM wParam)
 {
     cassert_no_null(edit);
-    /*EN_UPDATE Cambiar*/
     if (HIWORD(wParam) == EN_UPDATE)
     {
         if (edit->launch_event == TRUE && IsWindowEnabled(edit->control.hwnd) && edit->OnFilter != NULL)

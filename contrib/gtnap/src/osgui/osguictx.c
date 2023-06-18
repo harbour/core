@@ -260,7 +260,7 @@ GuiCtx *osguictx(void)
                         context,
                         ostext_create,
                         ostext_destroy,
-                        ostext_OnTextChange,
+                        ostext_OnFilter,
                         ostext_OnFocus,
                         ostext_insert_text,
                         ostext_set_text,

@@ -18,7 +18,7 @@ _osgui_api OSText *ostext_create(const uint32_t flags);
 
 _osgui_api void ostext_destroy(OSText **view);
 
-_osgui_api void ostext_OnTextChange(OSText *view, Listener *listener);
+_osgui_api void ostext_OnFilter(OSText *view, Listener *listener);
 
 _osgui_api void ostext_OnFocus(OSText *view, Listener *listener);
 
