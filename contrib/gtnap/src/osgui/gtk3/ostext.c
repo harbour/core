@@ -40,8 +40,11 @@ struct _ostext_t
     gint lspacing_px;
     gint bfspace_px;
     gint afspace_px;
+    int32_t select_start;
+    int32_t select_end;
     GtkTextTag *tag_attribs;
     bool_t global_attribs;
+    bool_t launch_event;
     int64_t scroll_pos;
     GtkWidget *tview;
     GtkTextBuffer *buffer;
@@ -51,8 +54,8 @@ struct _ostext_t
     GtkCssProvider *bgcolorcss;
     GtkCssProvider *pgcolorcss;
     OSControl *capture;
+    Listener *OnFilter;
     Listener *OnFocus;
-    Listener *OnChange;
 };
 
 static real32_t i_PANGO_TO_PIXELS = -1;
@@ -103,6 +106,113 @@ static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSText *vi
 
 /*---------------------------------------------------------------------------*/
 
+static gchar *i_text(const OSText *view, bool_t *allocated)
+{
+    GtkTextIter st, end;
+    cassert_no_null(view);
+    gtk_text_buffer_get_start_iter(view->buffer, &st);
+    gtk_text_buffer_get_end_iter(view->buffer, &end);
+    *allocated = TRUE;
+    return gtk_text_buffer_get_text(view->buffer, &st, &end, FALSE);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_iter(GtkTextBuffer *buffer, const int32_t pos, GtkTextIter *iter)
+{
+    if (pos >= 0)
+    {
+        gtk_text_buffer_get_start_iter(buffer, iter);
+        gtk_text_iter_forward_chars(iter, (gint)pos);
+    }
+    else
+    {
+        gtk_text_buffer_get_end_iter(buffer, iter);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static gboolean i_select(OSText *view)
+{
+    cassert_no_null(view);
+    if (view->select_start != INT32_MAX)
+    {
+        GtkTextIter st_iter;
+        GtkTextIter ed_iter;
+        cassert(view->select_start >= -1);
+        cassert(view->select_end >= -1);
+        i_iter(view->buffer, view->select_start, &st_iter);
+        i_iter(view->buffer, view->select_end, &ed_iter);
+        gtk_text_buffer_select_range(view->buffer, &st_iter, &ed_iter);
+        /*gtk_text_view_scroll_to_iter(GTK_TEXT_VIEW(view->tview), &st_iter, 0, TRUE, 0, 0);*/
+        view->select_start = INT32_MAX;
+        view->select_end = INT32_MAX;
+    }
+
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnFilter(OSText *view, const uint32_t cpos, const int32_t len)
+{
+    cassert_no_null(view);
+    if (view->launch_event == TRUE && gtk_widget_is_sensitive(view->control.widget) && view->OnFilter != NULL)
+    {
+        EvText params;
+        EvTextFilter result;
+        bool_t allocated;
+        params.text = (const char_t*)i_text(view, &allocated);
+        params.cpos = cpos;
+        params.len = len;
+        result.apply = FALSE;
+        result.text[0] = '\0';
+        result.cpos = UINT32_MAX;
+        listener_event(view->OnFilter, ekGUI_EVENT_TXTFILTER, view, &params, &result, OSText, EvText, EvTextFilter);
+        if (allocated)
+            g_free((gchar*)params.text);
+
+        if (result.apply == TRUE)
+        {
+            bool_t prev = view->launch_event;
+            view->launch_event = FALSE;
+            gtk_text_buffer_set_text(view->buffer, (const gchar*)result.text, -1);
+            view->launch_event = prev;
+        }
+
+        if (result.cpos != UINT32_MAX)
+        {
+            view->select_start = (gint)result.cpos;
+            view->select_end = view->select_start;
+            i_select(view);
+            /*g_idle_add((GSourceFunc)i_select, view);*/
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnBufferInsert(GtkTextBuffer *buffer, GtkTextIter *location, gchar *text, gint len, OSText *view)
+{
+    gint position = gtk_text_iter_get_offset(location);
+    unref(buffer);
+    unref(text);
+    i_OnFilter(view, (uint32_t)position, (int32_t)len);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnBufferDelete(GtkTextBuffer *buffer, GtkTextIter *start, GtkTextIter *end, OSText *view)
+{
+    gint stpos = gtk_text_iter_get_offset(start);
+    gint edpos = gtk_text_iter_get_offset(end);
+    unref(buffer);
+    i_OnFilter(view, (uint32_t)stpos, edpos - stpos);
+}
+
+/*---------------------------------------------------------------------------*/
+
 OSText *ostext_create(const uint32_t flags)
 {
     OSText *view = heap_new0(OSText);
@@ -124,6 +234,8 @@ OSText *ostext_create(const uint32_t flags)
 
     gtk_widget_show(view->tview);
     view->buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view->tview));
+    g_signal_connect_after(G_OBJECT(view->buffer), "insert-text", G_CALLBACK(i_OnBufferInsert), (gpointer)view);
+    g_signal_connect_after(G_OBJECT(view->buffer), "delete-range", G_CALLBACK(i_OnBufferDelete), (gpointer)view);
     gtk_text_view_set_editable(GTK_TEXT_VIEW(view->tview), FALSE);
     gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(view->tview),GTK_WRAP_WORD);
     gtk_text_view_set_left_margin(GTK_TEXT_VIEW(view->tview), 5);
@@ -142,7 +254,9 @@ OSText *ostext_create(const uint32_t flags)
         top = frame;
     }
 
+    view->launch_event = TRUE;
     _oscontrol_init(&view->control, ekGUI_TYPE_TEXTVIEW, top, focus, TRUE);
+
     return view;
 }
 
@@ -170,8 +284,8 @@ void ostext_destroy(OSText **view)
 {
     cassert_no_null(view);
     cassert_no_null(*view);
+    listener_destroy(&(*view)->OnFilter);
     listener_destroy(&(*view)->OnFocus);
-    listener_destroy(&(*view)->OnChange);
     gtk_container_remove(GTK_CONTAINER(i_scrolled_window(*view)), (*view)->tview);
     _oscontrol_destroy(*(OSControl**)view);
 
@@ -186,11 +300,10 @@ void ostext_destroy(OSText **view)
 
 /*---------------------------------------------------------------------------*/
 
-void ostext_OnTextChange(OSText *view, Listener *listener)
+void ostext_OnFilter(OSText *view, Listener *listener)
 {
-    unref(view);
-    unref(listener);
-    cassert(FALSE);
+    cassert_no_null(view);
+    listener_update(&view->OnFilter, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -431,12 +544,14 @@ void ostext_insert_text(OSText *view, const char_t *text)
     GtkTextIter end;
     cassert_no_null(view);
     cassert_no_null(text);
+    view->launch_event = FALSE;
 
     if (view->tag_attribs == NULL)
         view->tag_attribs = i_tag_attribs(view);
 
     gtk_text_buffer_get_end_iter(view->buffer, &end);
     gtk_text_buffer_insert_with_tags(view->buffer, &end, (const gchar*)text, -1, view->tag_attribs, NULL);
+    view->launch_event = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -446,6 +561,7 @@ void ostext_set_text(OSText *view, const char_t *text)
     GtkTextBuffer *buffer;
     cassert_no_null(view);
     cassert_no_null(text);
+    view->launch_event = FALSE;
 
     if (view->global_attribs == FALSE)
     {
@@ -455,6 +571,7 @@ void ostext_set_text(OSText *view, const char_t *text)
 
     buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view->tview));
     gtk_text_buffer_set_text(buffer, (const gchar*)text, -1);
+    view->launch_event = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
