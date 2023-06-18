@@ -937,6 +937,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
     g_main_loop_run(window->runloop);
     g_main_loop_unref(window->runloop);
     gtk_window_set_transient_for(GTK_WINDOW(window->control.widget), NULL);
+    gtk_window_set_modal(GTK_WINDOW(window->control.widget), FALSE);
 
     if (parent_window != NULL)
         i_set_ctabstop(parent_window->tabstops, &parent_window->ctabstop);
