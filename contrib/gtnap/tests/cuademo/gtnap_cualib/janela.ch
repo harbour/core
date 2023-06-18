@@ -45,5 +45,6 @@
 #DEFINE N_IdProgressBar2        VX_Janela[48]
 #DEFINE N_ItemId                VX_Janela[56]
 #DEFINE L_ComEmbutidas          VX_Janela[57]
+#DEFINE N_PaiWindowNum          VX_Janela[59]
 
 #endif

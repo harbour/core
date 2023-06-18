@@ -74,7 +74,7 @@ IF SOB_MODO_GRAFICO()
 
     NAP_CUALIB_DEFAULT_BUTTON(N_Default)
 
-    N_Opcao := NAP_WINDOW_MODAL(N_WindowNum, 0)
+    N_Opcao := NAP_WINDOW_MODAL(N_WindowNum, N_PaiWindowNum, 0)
 
     IF N_Opcao >= NAP_MODAL_BUTTON_AUTOCLOSE .AND. N_Opcao <= NAP_MODAL_BUTTON_AUTOCLOSE + NAP_MAX_BUTTONS
         N_Opcao -= NAP_MODAL_BUTTON_AUTOCLOSE
@@ -230,7 +230,7 @@ Ative(VX_Janela)
 
 IF SOB_MODO_GRAFICO()
     IF L_Parar
-        NAP_WINDOW_MODAL(N_WindowNum, N_Segundos)
+        NAP_WINDOW_MODAL(N_WindowNum, N_PaiWindowNum, N_Segundos)
         Destrua VX_Janela
     ENDIF
 ELSE
@@ -507,7 +507,7 @@ RETURN V_JAN
 PROC MOSTRARMSGAGUARDE ( VX_Janela, N_DelaySeconds )
 *********************
 IF SOB_MODO_GRAFICO()
-    NAP_WINDOW_MODAL(N_WindowNum, N_DelaySeconds)
+    NAP_WINDOW_MODAL(N_WindowNum, N_PaiWindowNum, N_DelaySeconds)
 ELSE
     INKEY(N_DelaySeconds)
 ENDIF

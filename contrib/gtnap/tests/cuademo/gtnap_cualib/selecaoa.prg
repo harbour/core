@@ -389,7 +389,7 @@ ENDIF   // L_ForcaLerTudo
 
 IF SOB_MODO_GRAFICO()
 
-    X_Retorno := NAP_WINDOW_MODAL(N_WindowNum, 0)
+    X_Retorno := NAP_WINDOW_MODAL(N_WindowNum, N_PaiWindowNum, 0)
 
     // Window closed --> Return zero or empty vector
     IF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON .OR. X_Retorno == NAP_MODAL_TOOLBAR

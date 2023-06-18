@@ -336,7 +336,7 @@ IF L_ForcaLerTudo
                 ENDIF
             NEXT
 
-            X_Retorno := NAP_WINDOW_MODAL(N_WindowNum, 0)
+            X_Retorno := NAP_WINDOW_MODAL(N_WindowNum, N_PaiWindowNum, 0)
 
             IF X_Retorno == NAP_MODAL_ESC .OR. X_Retorno == NAP_MODAL_X_BUTTON .OR. X_Retorno == NAP_MODAL_TOOLBAR
                 L_Abortado := .T.

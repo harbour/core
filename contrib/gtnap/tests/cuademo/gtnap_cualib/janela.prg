@@ -214,6 +214,8 @@ ENDIF
 #DEFINE N_ItemId                Nil
 #DEFINE L_ComEmbutidas          .F.
 #define V_LstTituloLabels       {}  // Guarda IDs de título para MudeSubtitle (GTNAP)
+#DEFINE N_PaiWindowNum          NIL // Parent window num
+
 *
 V_Janela := { N_LinIni , N_ColIni , N_LinFin , N_ColFin , ;
                 C_TelaCoberta , N_LinAnt , N_ColAnt , VC_Titulo , N_LinBotoes , ;
@@ -229,7 +231,7 @@ V_Janela := { N_LinIni , N_ColIni , N_LinFin , N_ColFin , ;
                 N_IdProgressBar1, V_LstAcoes, L_CUA_10, N_IdProgressBar2, ;
                 B_SetInkeyAfterBlock_Old,N_ToolBarCodigoAcao,;
                 N_IdScrollBarVertical,N_IdScrollBarHorizontal,B_ScrollBarVertical,B_ScrollBarHorizontal,;
-                N_ProgressBar, N_ItemId, L_ComEmbutidas, V_LstTituloLabels }
+                N_ProgressBar, N_ItemId, L_ComEmbutidas, V_LstTituloLabels, N_PaiWindowNum }
 
 IF V_Janela_Pai # NIL
     #DEFINE L_PaiComEmbutidas  V_Janela_Pai[57]
@@ -273,6 +275,7 @@ ENDIF
 #UNDEF N_ItemId
 #UNDEF L_ComEmbutidas
 #UNDEF V_LstTituloLabels
+#UNDEF N_PaiWindowNum
 
 RETURN V_Janela
 
@@ -353,6 +356,7 @@ RETURN VX_Janela
 #DEFINE N_ItemId                    VX_Janela[56]   // For Menuvert, TextView or TableView ids (GTNAP)
 #DEFINE L_ComEmbutidas              VX_Janela[57]   // This Janela has child (embutidas) windows
 #DEFINE V_LstTituloLabels           VX_Janela[58]   // IDs Labels de título (GTNAP)
+#DEFINE N_PaiWindowNum              VX_Janela[59]
 
 *************
 PROC AddBotao (VX_Janela,C_TxtBotao,B_AcaoBotao,L_AutoClose,;
@@ -595,7 +599,6 @@ LOCAL L_AcrescentarSeparadorSubtitulo, L_MostraGrade
 LOCAL L_AutoClose := .F.
 
 // Window flags
-LOCAL N_PaiWindowNum := 0
 LOCAL L_CLOSE_WITH_RETURN := .F.
 LOCAL L_CLOSE_WITH_ESC := .F.
 LOCAL L_MINIMIZE_BUTTON := .F.
@@ -616,6 +619,13 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
     N_LinAnt    := ROW()
     N_ColAnt    := COL()
     *
+
+    IF (LEN(V_PilhaJanelas) > 0)
+        N_PaiWindowNum := V_PilhaJanelas[LEN(V_PilhaJanelas)][1]
+    ELSE
+        N_PaiWindowNum := 0
+    ENDIF
+
     IF SOB_MODO_GRAFICO()
         * A restauração do trecho da tela anterior que vai ser coberta
         * pela tela atual é feita automaticamente pelo Windows.
@@ -710,7 +720,6 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
             AADD(V_PilhaJanelas,{N_WindowNum,VX_Janela})
 
         ELSE // L_Embutida
-            N_PaiWindowNum := V_PilhaJanelas[LEN(V_PilhaJanelas)][1]
             N_WindowNum := NAP_WINDOW_EMBEDDED(N_PaiWindowNum, N_LinIni, N_ColIni, N_LinFin, N_ColFin, .T.)
 
         ENDIF // .NOT. L_Embutida
@@ -1145,7 +1154,7 @@ IF N_TP_Jan # NIL   // indica que janela foi especializada
     *
     ADICIONA_SEPARADOR_AO_TOOLBAR(VX_Janela)
     *
-    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_SAIDA} ,"Saida", BLOCO_TOOLBAR({||HB_KeyPut(K_ESC)}, {||NAP_WINDOW_STOP_MODAL(NAP_MODAL_TOOLBAR)}))
+    ADICIONA_BOTAO_TOOLBAR(VX_Janela, {_BITMAP_SAIDA} ,"Saida", BLOCO_TOOLBAR({||HB_KeyPut(K_ESC)}, {||NAP_WINDOW_STOP_MODAL(N_WindowNum, NAP_MODAL_TOOLBAR)}))
     L_TOOLBAR_AINDA_SEM_BOTOES := .F.
 ENDIF
 *
@@ -2029,7 +2038,7 @@ LOCAL V_Botao, V_Imagem, N_Pos_Acao
 
 IF SOB_MODO_GRAFICO()
 
-    X_Retorno_Eval := NAP_WINDOW_MODAL(N_WindowNum, 0)
+    X_Retorno_Eval := NAP_WINDOW_MODAL(N_WindowNum, N_PaiWindowNum, 0)
 
     IF X_Retorno_Eval == NAP_MODAL_ESC .OR. X_Retorno_Eval == NAP_MODAL_ENTER .OR. X_Retorno_Eval == NAP_MODAL_X_BUTTON .OR. X_Retorno_Eval == NAP_MODAL_TOOLBAR
         L_FechouComAutoClose = .F.

@@ -140,8 +140,9 @@ HB_FUNC( NAP_WINDOW_UNDO )
 HB_FUNC( NAP_WINDOW_MODAL )
 {
     uint32_t wid = hb_parni(1);
-    uint32_t delay_seconds = hb_parni(2);
-    uint32_t ret = hb_gtnap_window_modal(wid, delay_seconds);
+    uint32_t pwid = hb_parni(2);
+    uint32_t delay_seconds = hb_parni(3);
+    uint32_t ret = hb_gtnap_window_modal(wid, pwid, delay_seconds);
     hb_retni(ret);
 }
 
@@ -149,8 +150,9 @@ HB_FUNC( NAP_WINDOW_MODAL )
 
 HB_FUNC( NAP_WINDOW_STOP_MODAL )
 {
-    uint32_t result = hb_parni(1);
-    hb_gtnap_window_stop_modal(result);
+    uint32_t wid = hb_parni(1);
+    uint32_t result = hb_parni(2);
+    hb_gtnap_window_stop_modal(wid, result);
 }
 
 /*---------------------------------------------------------------------------*/

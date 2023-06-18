@@ -705,7 +705,7 @@ IF SOB_MODO_GRAFICO()
     IF L_PrimAtivacao .AND. L_ComEmbutidas
         L_Aborta := .T.
     ELSE
-        X_Retorno := NAP_WINDOW_MODAL(N_WindowNum, 0)
+        X_Retorno := NAP_WINDOW_MODAL(N_WindowNum, N_PaiWindowNum, 0)
         IF X_Retorno == NAP_MODAL_LAST_INPUT
             L_Aborta      :=  .F.
         ELSE

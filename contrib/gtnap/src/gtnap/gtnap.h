@@ -52,9 +52,9 @@ extern void hb_gtnap_window_cut(const uint32_t wid);
 
 extern void hb_gtnap_window_undo(const uint32_t wid);
 
-extern uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t delay_seconds);
+extern uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t pwid, const uint32_t delay_seconds);
 
-extern void hb_gtnap_window_stop_modal(const uint32_t result);
+extern void hb_gtnap_window_stop_modal(const uint32_t wid, const uint32_t result);
 
 extern uint32_t hb_gtnap_label(const uint32_t wid, const int32_t top, const int32_t left, HB_ITEM *text_block, const bool_t in_scroll);
 
