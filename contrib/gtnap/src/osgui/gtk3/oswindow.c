@@ -591,7 +591,24 @@ OSWindow *oswindow_create(const uint32_t flags)
     gtk_window_set_resizable(GTK_WINDOW(window->control.widget), (gboolean)window->is_resizable);
 
     if ((flags & ekWINDOW_MIN) == 0)
-        gtk_window_set_type_hint(GTK_WINDOW(window->control.widget), GDK_WINDOW_TYPE_HINT_DIALOG);
+    {
+        /* TODO: Research a secure way to disable the minimize button */
+        /*
+        const char *css = "window headerbar minimize titlebutton { background-image: none; }";
+        GtkCssProvider *css_provider = gtk_css_provider_new();
+        GtkStyleContext *style_context = gtk_widget_get_style_context(window->control.widget);
+        gtk_css_provider_load_from_data(css_provider, css, -1, NULL);
+        gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        const char* gdk_x11_screen_get_window_manager_name (GdkScreen *screen);
+        // gtk_window_set_type_hint(GTK_WINDOW(window->control.widget), GDK_WINDOW_TYPE_HINT_MENU);
+        {
+            GdkDisplay *display = gdk_display_get_default();
+            GdkScreen *screen = gdk_display_get_default_screen(display);
+            //GdkWindow *window = gdk_screen_get_root_window(screen);
+            const gchar *windowManagerName = gdk_x11_screen_get_window_manager_name(screen);
+            g_print("Window Manager: %s\n", windowManagerName);
+        } */
+    }
 
     window->signal_delete = g_signal_connect(G_OBJECT(widget), "delete-event", G_CALLBACK(i_OnClose), (gpointer)window);
     window->signal_config = g_signal_connect(G_OBJECT(widget), "configure-event", G_CALLBACK(i_OnConfigure), (gpointer)window);
@@ -937,7 +954,6 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
     g_main_loop_run(window->runloop);
     g_main_loop_unref(window->runloop);
     gtk_window_set_transient_for(GTK_WINDOW(window->control.widget), NULL);
-    gtk_window_set_modal(GTK_WINDOW(window->control.widget), FALSE);
 
     if (parent_window != NULL)
         i_set_ctabstop(parent_window->tabstops, &parent_window->ctabstop);
