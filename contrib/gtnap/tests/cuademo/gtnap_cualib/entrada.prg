@@ -644,7 +644,6 @@ IF SOB_MODO_GRAFICO()
                 #DEFINE B_Mess X_Info:CARGO[6]
                 #DEFINE C_CorGet X_Info:COLORSPEC
 
-                NAP_LOG("COLOR_GET: " + C_CorGet)
                 N_EditId := NAP_EDIT( ;
                                         N_WindowNum,;
                                         N_Row + Lin1Livre(VX_Janela) - 1, ;

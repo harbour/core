@@ -607,6 +607,18 @@ static Window *i_effective_window(GtNapWindow *gtwin, GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
+bool_t i_gtwin_alive(GtNapWindow *gtwin, GtNap *gtnap)
+{
+    cassert_no_null(gtnap);
+    arrpt_foreach(win, gtnap->windows, GtNapWindow)
+        if (win == gtwin)
+            return TRUE;
+    arrpt_end();
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 /* TODO: TO BE REMOVED */
 static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 {
@@ -1214,6 +1226,10 @@ static void i_OnNextTabstop(GtNapWindow *gtwin, Event *e)
 {
     unref(e);
     cassert_no_null(gtwin);
+
+    if (i_gtwin_alive(gtwin, GTNAP_GLOBAL) == FALSE)
+        return;
+
     window_next_tabstop(gtwin->window);
 }
 
@@ -1978,9 +1994,7 @@ static void i_OnEditFilter(GtNapObject *gtobj, Event *e)
 
             /* End of editable string reached. */
             if (res->cpos >= gtobj->max_chars)
-            {
                 gui_OnIdle(listener(gtwin, i_OnNextTabstop, GtNapWindow));
-            }
         }
     }
 }
@@ -2077,6 +2091,10 @@ static void i_OnAutoWizard(GtNapWindow *gtwin, Event *e)
 {
     GtNapObject *cuaobj = NULL;
     cassert_no_null(gtwin);
+
+    if (i_gtwin_alive(gtwin, GTNAP_GLOBAL) == FALSE)
+        return;
+
     cuaobj = gtwin->current_obj;
     cassert_no_null(cuaobj);
     unref(e);
