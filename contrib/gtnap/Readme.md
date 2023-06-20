@@ -132,7 +132,7 @@ texto.prg
 
 ### In Linux
 
-Copy `icon48.ico` to the same directory as the executable and rename it the same as the executable (`example.ico`). NAppGUI looks for this file and will pass it to the GTK toolkit.
+Copy `icon48.ico` to the same directory as the executable and rename it the same as the executable (`example.ico`). NAppGUI looks for this file at runtime and will pass it to the GTK toolkit. No action is required at compile time.
 
 ![image](https://github.com/frang75/harbour_nappgui/assets/42999199/d136e7d4-072c-45c9-af02-49a112fb7ed2)
 
