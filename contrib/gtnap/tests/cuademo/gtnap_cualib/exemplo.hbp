@@ -8,9 +8,9 @@
 -gui
 
 # GT
+-gtnap
 -gtwin{msvc}
 -gttrm{gcc}
--gtnap
 
 # Sources
 exemplo.prg
@@ -34,6 +34,9 @@ tbrowsesubclass.prg
 stubs.prg
 inkey_.prg
 texto.prg
+
+# Icon
+{msvc}exemplo.rc
 
 # Libraries
 gtnap.hbc
