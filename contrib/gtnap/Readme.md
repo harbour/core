@@ -105,6 +105,32 @@ Just adding `-gtnap` flag into your `.hbp` project file.
 ![gt_win](https://user-images.githubusercontent.com/42999199/235419608-10188d35-8283-4419-89e2-76def4a13cb4.png)
 ![gtrtrm_linux](https://user-images.githubusercontent.com/42999199/235419619-9dd0093e-bdd5-4ae8-aac1-1a3b55f96125.png)
 
+## Application ICON
+
+Create two `.ico` files with transparent backgrounds. One of 48x48 (Linux) and another 256x256 (Windows). You can refer to the files in `/contrib/gtnap/tests/cuademo`.
+
+### In Windows
+
+Create a `*.rc` file with the application name in the same code directory `example.rc`. The content of this file should point to the location of the icon:
+```
+APPLICATION_ICON ICON "..\\icon256.ico"
+```
+
+Add the `*.rc` to your `*.hbp` so that it compiles with the rest of the source files (for MSVC only).
+```
+...
+stubs.prg
+inkey_.prg
+texto.prg
+
+# Icon
+{msvc}exemplo.rc
+```
+
+### In Linux
+
+Copy `icon48.ico` to the same directory as the executable and rename it the same as the executable (`example.ico`). NAppGUI looks for this file and will pass it to the GTK toolkit.
+
 ## GTNap developer mode
 
 **(Only if you are working on gtnap development)**. Otherwise, you can skip this section.
