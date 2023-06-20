@@ -109,6 +109,8 @@ Just adding `-gtnap` flag into your `.hbp` project file.
 
 Create two `.ico` files with transparent backgrounds. One of 48x48 (Linux) and another 256x256 (Windows). You can refer to the files in `/contrib/gtnap/tests/cuademo`.
 
+![image](https://github.com/frang75/harbour_nappgui/assets/42999199/bbe22a2f-6c86-43fc-9bca-64ddf6ee2532)
+
 ### In Windows
 
 Create a `*.rc` file with the application name in the same code directory `example.rc`. The content of this file should point to the location of the icon:
@@ -126,10 +128,15 @@ texto.prg
 # Icon
 {msvc}exemplo.rc
 ```
+![application_icon_win](https://github.com/frang75/harbour_nappgui/assets/42999199/7455ccb8-08f9-4e59-93cc-d1fca0806ea5)
 
 ### In Linux
 
 Copy `icon48.ico` to the same directory as the executable and rename it the same as the executable (`example.ico`). NAppGUI looks for this file and will pass it to the GTK toolkit.
+
+![image](https://github.com/frang75/harbour_nappgui/assets/42999199/d136e7d4-072c-45c9-af02-49a112fb7ed2)
+
+![application_icon_xfce](https://github.com/frang75/harbour_nappgui/assets/42999199/af3528c8-b232-437c-b307-cae9b401815c)
 
 ## GTNap developer mode
 
