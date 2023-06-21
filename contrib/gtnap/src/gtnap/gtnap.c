@@ -145,7 +145,7 @@ struct _gtnap_window_t
     bool_t border;
     uint32_t message_label_id;
     uint32_t default_button;
-    GtNapObject *current_obj;
+    GtNapObject *wizard_obj;
     Window *window;
     S2Df panel_size;
     Panel *panel;
@@ -2089,22 +2089,22 @@ static void i_launch_wizard(GtNapWindow *gtwin, GtNapObject *obj)
 
 static void i_OnAutoWizard(GtNapWindow *gtwin, Event *e)
 {
-    GtNapObject *cuaobj = NULL;
+    GtNapObject *gtobj = NULL;
     cassert_no_null(gtwin);
 
     if (i_gtwin_alive(gtwin, GTNAP_GLOBAL) == FALSE)
         return;
 
-    cuaobj = gtwin->current_obj;
-    cassert_no_null(cuaobj);
+    gtobj = gtwin->wizard_obj;
+    cassert_no_null(gtobj);
     unref(e);
 
-    if (cuaobj->can_auto_lista == TRUE && cuaobj->auto_block != NULL && cuaobj->wizard_block != NULL)
+    if (gtobj->can_auto_lista == TRUE && gtobj->auto_block != NULL && gtobj->wizard_block != NULL)
     {
         bool_t lista = FALSE;
 
         {
-            PHB_ITEM ritem = hb_itemDo(cuaobj->auto_block, 0);
+            PHB_ITEM ritem = hb_itemDo(gtobj->auto_block, 0);
             HB_TYPE type = HB_ITEM_TYPE(ritem);
             cassert(type == HB_IT_LOGICAL);
             lista = (bool_t)hb_itemGetL(ritem);
@@ -2113,8 +2113,8 @@ static void i_OnAutoWizard(GtNapWindow *gtwin, Event *e)
 
         if (lista == TRUE)
         {
-            cuaobj->can_auto_lista = FALSE;
-            i_launch_wizard(gtwin, cuaobj);
+            gtobj->can_auto_lista = FALSE;
+            i_launch_wizard(gtwin, gtobj);
         }
     }
 }
@@ -2162,10 +2162,13 @@ static void i_OnEditFocus(GtNapObject *gtobj, Event *e)
                 i_set_edit_text(gtobj);
         }
 
-        gtwin->current_obj = gtobj;
-
         edit_select((Edit*)gtobj->component, 0, 0);
-        gui_OnIdle(listener(gtwin, i_OnAutoWizard, GtNapWindow));
+
+        if (gtobj->can_auto_lista == TRUE && gtobj->auto_block != NULL && gtobj->wizard_block != NULL)
+        {
+            gtwin->wizard_obj = gtobj;
+            gui_OnIdle(listener(gtwin, i_OnAutoWizard, GtNapWindow));
+        }
     }
 }
 
