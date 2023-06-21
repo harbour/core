@@ -1736,7 +1736,6 @@ static void i_filter_date(const EvText *text, EvTextFilter *filter, const char_t
     uint32_t dsize = sizeof(filter->text);
     uint32_t i = 0;
     uint32_t cpos = text->cpos;
-    log_printf("Filter Date Cursor pos: %d", cpos);
     for(;;)
     {
         uint32_t nbf;
@@ -1824,7 +1823,7 @@ static void i_filter_tecla(const GtNapObject *gtobj, const EvText *text, EvTextF
     cassert_no_null(gtobj);
     cassert_no_null(text);
     cassert_no_null(filter);
-    cassert(gtobj->type == ekOBJ_EDIT || gtobj->type == ekOBJ_TEXTVIEW);
+    cassert(gtobj->type == ekOBJ_EDIT);
     /* Some text has been inserted */
     if (text->len > 0)
     {
@@ -1906,6 +1905,90 @@ static void i_filter_tecla(const GtNapObject *gtobj, const EvText *text, EvTextF
 
     filter->apply = TRUE;
     filter->cpos = text->cpos;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_filter_tecla_textview(const GtNapObject *gtobj, const EvText *text, EvTextFilter *filter)
+{
+    bool_t updated = FALSE;
+    cassert_no_null(gtobj);
+    cassert_no_null(text);
+    cassert_no_null(filter);
+    cassert(gtobj->type == ekOBJ_TEXTVIEW);
+    /* Some text has been inserted */
+    if (text->len > 0)
+    {
+        /* We have a filter */
+        if (gtobj->keyfilter_block != NULL)
+        {
+            const char_t *src = text->text;
+            char_t *dest = filter->text;
+            uint32_t dsize = sizeof(filter->text);
+            int32_t i;
+            //, n = (int32_t)text->cpos - text->len;
+            //cassert(n >= 0);
+
+            /* Copy the string prefix (old string init until new insertions) */
+            //i_copy_nchars(&src, &dest, &dsize, (uint32_t)n);
+
+            /* Filter all characters inserted */
+            for (i = 0; i < text->len; ++i)
+            {
+                uint32_t nb;
+                uint32_t c = unicode_to_u32b(src, ekUTF8, &nb);
+                if (c != 0)
+                {
+                    /* From Unicode (NappGUI) to code page */
+                    uint8_t cp2 = i_utf8_to_cp_char(c);
+                    uint32_t nb2, ncp;
+
+                    /* Set character as lastKey */
+                    hb_inkeySetLast(cp2);
+
+                    /* Call to filter */
+                    {
+                        PHB_ITEM ritem = hb_itemDo(gtobj->keyfilter_block, 0);
+                        HB_TYPE type = HB_ITEM_TYPE(ritem);
+                        if (type == HB_IT_NIL)
+                        {
+                            ncp = c;
+                            nb2 = nb;
+                        }
+                        else
+                        {
+                            char_t temp[32];
+                            cassert(type == HB_IT_STRING);
+                            hb_itemCopyStrUTF8(ritem, temp, sizeof(temp));
+                            cassert(unicode_nchars(temp, ekUTF8) == 1);
+                            ncp = unicode_to_u32b(temp, ekUTF8, &nb2);
+                        }
+
+                        hb_itemRelease(ritem);
+                    }
+
+                    /* There is space in dest */
+                    if (dsize > nb2)
+                    {
+                        unicode_to_char(ncp, dest, ekUTF8);
+                        dest += nb2;
+                        dsize -= nb2;
+                    }
+
+                    src += nb;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            *dest = '\0';
+            updated = TRUE;
+        }
+    }
+
+    filter->apply = updated;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2206,7 +2289,7 @@ static void i_OnTextFilter(GtNapObject *gtobj, Event *e)
     EvTextFilter *r = event_result(e, EvTextFilter);
     cassert_no_null(gtobj);
     cassert(gtobj->type == ekOBJ_TEXTVIEW);
-    i_filter_tecla(gtobj, p, r);
+    i_filter_tecla_textview(gtobj, p, r);
 }
 
 /*---------------------------------------------------------------------------*/

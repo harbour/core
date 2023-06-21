@@ -204,10 +204,10 @@ void ostext_OnFocus(OSText *view, Listener *listener)
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_text_length(HWND hwnd)
+static uint32_t i_text_num_chars(HWND hwnd)
 {
     GETTEXTLENGTHEX textl;
-    textl.flags = GTL_DEFAULT;
+    textl.flags = GTL_PRECISE | GTL_NUMCHARS;
     textl.codepage = 1200;
     return (uint32_t)SendMessage(hwnd, EM_GETTEXTLENGTHEX, (WPARAM)&textl, (LPARAM)0);
 }
@@ -288,7 +288,7 @@ void ostext_insert_text(OSText *view, const char_t *text)
     cr.cpMin = -1;
     cr.cpMax = -1;
     i_add_text(view, &cr, text);
-    view->num_chars = i_text_length(view->control.hwnd);
+    view->num_chars = i_text_num_chars(view->control.hwnd);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -299,7 +299,7 @@ void ostext_set_text(OSText *view, const char_t *text)
     cr.cpMin = 0;
     cr.cpMax = -1;
     i_add_text(view, &cr, text);
-    view->num_chars = i_text_length(view->control.hwnd);
+    view->num_chars = i_text_num_chars(view->control.hwnd);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -514,6 +514,57 @@ static char_t *i_get_text(HWND hwnd, uint32_t *size, uint32_t *nchars)
 
 /*---------------------------------------------------------------------------*/
 
+static char_t *i_get_seltext(HWND hwnd, const CHARRANGE *cr, uint32_t *size)
+{
+    uint32_t num_chars = 0;
+    WCHAR *wtext_alloc = NULL;
+    WCHAR wtext_static[WCHAR_BUFFER_SIZE];
+    WCHAR *wtext = NULL;
+    char_t *text = NULL;
+
+    cassert_no_null(cr);
+    cassert_no_null(size);
+    num_chars = cr->cpMax - cr->cpMin;
+
+    if (num_chars < WCHAR_BUFFER_SIZE)
+    {
+        wtext = wtext_static;
+    }
+    else
+    {
+        wtext_alloc = (WCHAR*)heap_malloc(num_chars * sizeof(WCHAR), "OSTextGetText");
+        wtext = wtext_alloc;
+    }
+
+    {
+        GETTEXTEX gtext;
+        uint32_t num_charsw;
+        gtext.cb = num_chars * sizeof(WCHAR);
+        gtext.flags = GT_DEFAULT;
+        gtext.codepage = 1200;
+        gtext.lpDefaultChar = NULL;
+        gtext.lpUsedDefChar = NULL;
+        /* EM_GETSELTEXT: The return value is the number of TCHARs copied into the output buffer, NOT including the null terminator. */
+        num_charsw = (uint32_t)SendMessage(hwnd, EM_GETSELTEXT, (WPARAM)0, (LPARAM)wtext);
+        cassert(num_chars == num_charsw);
+    }
+
+    *size = unicode_convers_nbytes((const char_t*)wtext, kWINDOWS_UNICODE, ekUTF8);
+    text = (char_t*)heap_malloc(*size, "OSTextSelText");
+
+    {
+        register uint32_t bytes = unicode_convers((const char_t*)wtext, text, kWINDOWS_UNICODE, ekUTF8, *size);
+        cassert_unref(bytes == *size, bytes);
+    }
+
+    if (wtext_alloc != NULL)
+        heap_free((byte_t**)&wtext_alloc, num_chars * sizeof(WCHAR), "OSTextGetText");
+
+    return text;
+}
+
+/*---------------------------------------------------------------------------*/
+
 const char_t *ostext_get_text(const OSText *view)
 {
 	cassert_no_null(view);
@@ -636,6 +687,42 @@ static void i_set_cursor_pos(HWND hwnd, const uint32_t pos)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_replace_text(OSText *view, const char_t *text)
+{
+    uint32_t num_bytes = 0;
+    WCHAR *wtext_alloc = NULL;
+    WCHAR wtext_static[WCHAR_BUFFER_SIZE];
+    WCHAR *wtext;
+
+    cassert_no_null(view);
+
+    view->launch_event = FALSE;
+    num_bytes = unicode_convers_nbytes(text, ekUTF8, kWINDOWS_UNICODE);
+    if (num_bytes < sizeof(wtext_static))
+    {
+        wtext = wtext_static; 
+    }
+    else
+    {
+        wtext_alloc = (WCHAR*)heap_malloc(num_bytes, "OSTextReplaceText");
+        wtext = wtext_alloc;
+    }
+
+    {
+        register uint32_t bytes = unicode_convers(text, (char_t*)wtext, ekUTF8, kWINDOWS_UNICODE, num_bytes);
+        cassert_unref(bytes == num_bytes, bytes);
+    }
+
+    SendMessage(view->control.hwnd, EM_REPLACESEL, 0, (LPARAM)wtext);
+
+    if (wtext_alloc != NULL)
+        heap_free((byte_t**)&wtext_alloc, num_bytes, "OSTextReplaceText");
+
+    view->launch_event = TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void _ostext_command(OSText *view, WPARAM wParam)
 {
     cassert_no_null(view);
@@ -643,33 +730,52 @@ void _ostext_command(OSText *view, WPARAM wParam)
     {
         if (view->launch_event == TRUE && IsWindowEnabled(view->control.hwnd) && view->OnFilter != NULL)
         {
-            char_t *edit_text;
-            uint32_t tsize;
-            uint32_t nchars;
-            EvText params;
-            EvTextFilter result;
-            edit_text = i_get_text(view->control.hwnd, &tsize, &nchars);
-            params.text = (const char_t*)edit_text;
-            params.cpos = i_get_cursor_pos(view->control.hwnd);
-            params.len = (int32_t)nchars - (int32_t)view->num_chars;
-            result.apply = FALSE;
-            result.text[0] = '\0';
-            result.cpos = UINT32_MAX;
-            listener_event(view->OnFilter, ekGUI_EVENT_TXTFILTER, view, &params, &result, OSText, EvText, EvTextFilter);
-            heap_free((byte_t**)&edit_text, tsize, "OSTextText");
-
-            if (result.apply == TRUE)
+            uint32_t num_chars = i_text_num_chars(view->control.hwnd);
+            /* Event only if inserted text */
+            if (num_chars > view->num_chars)
             {
-                bool_t prev = view->launch_event;
-                view->launch_event = FALSE;
-                ostext_set_text(view, result.text);
-                view->launch_event = prev;
-            }
+                CHARRANGE cr;
+                char_t *edit_text = NULL;
+                uint32_t tsize;
+                uint32_t inschars = num_chars - view->num_chars;
+                EvText params;
+                EvTextFilter result;
+                cr.cpMax = (LONG)i_get_cursor_pos(view->control.hwnd);
+                cr.cpMin = cr.cpMax - inschars;
 
-            if (result.cpos != UINT32_MAX)
-                i_set_cursor_pos(view->control.hwnd, result.cpos);
+                /* Select the inserted text */
+                SendMessage(view->control.hwnd, EM_EXSETSEL, 0, (LPARAM)&cr);
+
+                edit_text = i_get_seltext(view->control.hwnd, &cr, &tsize);
+                params.text = (const char_t*)edit_text;
+                params.cpos = (uint32_t)cr.cpMax;
+                params.len = (int32_t)inschars;
+                result.apply = FALSE;
+                result.text[0] = '\0';
+                result.cpos = UINT32_MAX;
+                listener_event(view->OnFilter, ekGUI_EVENT_TXTFILTER, view, &params, &result, OSText, EvText, EvTextFilter);
+                heap_free((byte_t**)&edit_text, tsize, "OSTextSelText");
+
+                view->num_chars = num_chars;
+
+                if (result.apply == TRUE)
+                {
+                    bool_t prev = view->launch_event;
+                    uint32_t replnchars = unicode_nchars(result.text, ekUTF8);
+                    view->launch_event = FALSE;
+                    i_replace_text(view, result.text);
+                    view->launch_event = prev;
+
+                    if (replnchars > inschars)
+                        view->num_chars += replnchars - inschars;
+                    else
+                        view->num_chars += inschars - replnchars;
+                }
+            }
             else
-                i_set_cursor_pos(view->control.hwnd, params.cpos);
+            {
+                view->num_chars = num_chars;
+            }
         }
     }
 }
