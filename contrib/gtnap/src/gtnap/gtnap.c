@@ -1940,11 +1940,6 @@ static void i_filter_tecla_textview(const GtNapObject *gtobj, const EvText *text
             char_t *dest = filter->text;
             uint32_t dsize = sizeof(filter->text);
             int32_t i;
-            //, n = (int32_t)text->cpos - text->len;
-            //cassert(n >= 0);
-
-            /* Copy the string prefix (old string init until new insertions) */
-            //i_copy_nchars(&src, &dest, &dsize, (uint32_t)n);
 
             /* Filter all characters inserted */
             for (i = 0; i < text->len; ++i)
@@ -4532,7 +4527,7 @@ void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const c
 void hb_gtnap_toolbar_separator(const uint32_t wid)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
-    View *separator = _view_create(ekVIEW_BORDER | ekVIEW_CONTROL);    
+    View *separator = _view_create(ekVIEW_BORDER | ekVIEW_CONTROL);
     cassert_no_null(gtwin);
     cassert_no_null(gtwin->toolbar);
     arrpt_append(gtwin->toolbar->items, (GuiComponent*)separator, GuiComponent);
