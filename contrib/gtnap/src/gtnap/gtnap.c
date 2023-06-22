@@ -76,7 +76,7 @@ struct _gtnap_toolbar_t
 {
     uint32_t pixels_image;
     uint32_t pixels_button;
-    ArrPt(Button) *buttons;
+    ArrPt(GuiComponent) *items;
 };
 
 struct _gtnap_area_t
@@ -192,7 +192,7 @@ DeclSt(GtNapColumn);
 DeclPt(GtNapArea);
 DeclPt(GtNapObject);
 DeclPt(GtNapWindow);
-DeclPt(Button);
+DeclPt(GuiComponent);
 
 /*---------------------------------------------------------------------------*/
 
@@ -322,6 +322,7 @@ void _panel_detach_components(Panel *panel);
 void _window_taborder(Window *window, void *ositem);
 void _window_focus(Window *window, GuiComponent *component);
 void _panel_content_size(Panel *panel, const real32_t width, const real32_t height);
+View *_view_create(const uint32_t flags);
 
 __END_C
 
@@ -362,18 +363,18 @@ static void i_remove_column(GtNapColumn *column)
 static void i_remove_toolbar(GtNapToolbar *toolbar, Panel *panel, const bool_t is_configured)
 {
     cassert_no_null(toolbar);
-    arrpt_foreach(button, toolbar->buttons, Button)
-        if (button != NULL)
+    arrpt_foreach(item, toolbar->items, GuiComponent)
+        if (item != NULL)
         {
-            Button *dbutton = button;
+            GuiComponent *ditem = item;
 
             if (is_configured == TRUE)
-                _component_detach_from_panel((GuiComponent*)panel, (GuiComponent*)button);
+                _component_detach_from_panel((GuiComponent*)panel, item);
 
-            _component_destroy((GuiComponent**)&dbutton);
+            _component_destroy(&ditem);
         }
     arrpt_end();
-    arrpt_destroy(&toolbar->buttons, NULL, Button);
+    arrpt_destroy(&toolbar->items, NULL, GuiComponent);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1144,24 +1145,37 @@ static void i_attach_toolbar_to_panel(const GtNapToolbar *toolbar, Panel *panel)
 {
     if (toolbar != NULL)
     {
-        V2Df pos;
-        S2Df size;
-        pos.x = 0;
-        pos.y = 0;
-        size.width = (real32_t)toolbar->pixels_button;
-        size.height = (real32_t)toolbar->pixels_button;
+        V2Df p1, p2;
+        S2Df s1, s2;
+        p1.x = 0;
+        p1.y = 0;
+        p2.x = 0;
+        p2.y = 3;
+        s1.width = (real32_t)toolbar->pixels_button;
+        s1.height = (real32_t)toolbar->pixels_button;
+        s2.width = 1;
+        s2.height = s1.height - 6;
 
-        arrpt_foreach(button, toolbar->buttons, Button)
-            if (button != NULL)
+        arrpt_foreach(item, toolbar->items, GuiComponent)
+            if (item != NULL)
             {
-                _component_attach_to_panel((GuiComponent*)panel, (GuiComponent*)button);
-                _component_visible((GuiComponent*)button, FALSE);
-                _component_set_frame((GuiComponent*)button, &pos, &size);
-                pos.x += (real32_t)toolbar->pixels_button;
-            }
-            else
-            {
-                pos.x += 5.f; /* Separator */
+                const char_t *type = _component_type(item);
+                _component_attach_to_panel((GuiComponent*)panel, item);
+                _component_visible(item, FALSE);
+                if (str_equ_c(type, "Button") == TRUE)
+                {
+                    _component_set_frame(item, &p1, &s1);
+                    p1.x += s1.width;
+                    p2.x = p1.x;
+                }
+                else
+                {
+                    cassert(str_equ_c(type, "View") == TRUE);
+                    p2.x += 2;
+                    _component_set_frame(item, &p2, &s2);
+                    p2.x += 3;
+                    p1.x = p2.x;
+                }
             }
         arrpt_end();
     }
@@ -1204,9 +1218,9 @@ static void i_toolbar_tabstop(GtNapToolbar *toolbar)
 {
     if (toolbar != NULL)
     {
-        arrpt_foreach(button, toolbar->buttons, Button)
-            if (button != NULL)
-                _component_visible((GuiComponent*)button, TRUE);
+        arrpt_foreach(item, toolbar->items, GuiComponent)
+            if (item != NULL)
+                _component_visible(item, TRUE);
         arrpt_end();
     }
 }
@@ -4475,7 +4489,7 @@ void hb_gtnap_toolbar(const uint32_t wid, const uint32_t image_pixels)
     cassert_no_null(gtwin);
     cassert(gtwin->toolbar == NULL);
     gtwin->toolbar = heap_new0(GtNapToolbar);
-    gtwin->toolbar->buttons = arrpt_create(Button);
+    gtwin->toolbar->items = arrpt_create(GuiComponent);
     gtwin->toolbar->pixels_image = image_pixels;
     gtwin->toolbar->pixels_button = (uint32_t)((real32_t)image_pixels * 1.3f);
 }
@@ -4508,7 +4522,7 @@ void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const c
         button_OnClick(button, listener);
         i_cp_to_utf8(tooltip, utf8, sizeof(utf8));
         button_tooltip(button, utf8);
-        arrpt_append(gtwin->toolbar->buttons, button, Button);
+        arrpt_append(gtwin->toolbar->items, (GuiComponent*)button, GuiComponent);
         image_destroy(&image);
     }
 }
@@ -4518,9 +4532,10 @@ void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const c
 void hb_gtnap_toolbar_separator(const uint32_t wid)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
+    View *separator = _view_create(ekVIEW_BORDER | ekVIEW_CONTROL);    
     cassert_no_null(gtwin);
     cassert_no_null(gtwin->toolbar);
-    arrpt_append(gtwin->toolbar->buttons, NULL, Button);
+    arrpt_append(gtwin->toolbar->items, (GuiComponent*)separator, GuiComponent);
 }
 
 /*---------------------------------------------------------------------------*/
