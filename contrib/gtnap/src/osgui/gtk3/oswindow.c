@@ -530,6 +530,9 @@ static gboolean i_OnKeyPress(GtkWidget *widget, GdkEventKey *event, OSWindow *wi
         if (key >= 97 && key <= 122)
             key -= 32;
 
+        if (key == GDK_KEY_KP_Enter)
+            key = GDK_KEY_Return;
+
         arrst_foreach(hotkey, window->hotkeys, HotKey)
             cassert(hotkey->key < kNUM_VKEYS);
             if (key == kVIRTUAL_KEY[hotkey->key] && modifiers == hotkey->modifiers)

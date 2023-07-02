@@ -312,7 +312,7 @@ static void i_OnKeyDown(Panel *panel, Event *e)
             if (update == TRUE)
                 i_update_sel_bottom(menu);
         }
-        else if (p->key == ekKEY_RETURN)
+        else if (p->key == ekKEY_RETURN || p->key == ekKEY_NUMRET)
         {
             i_run_option(menu);
         }

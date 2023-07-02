@@ -3064,6 +3064,7 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t pwid, const ui
             window_hotkey(gtwin->window, ekKEY_UP, 0, listener(gtwin, i_OnPreviousTabstop, GtNapWindow));
             window_hotkey(gtwin->window, ekKEY_DOWN, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
             window_hotkey(gtwin->window, ekKEY_RETURN, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
+            window_hotkey(gtwin->window, ekKEY_NUMRET, 0, listener(gtwin, i_OnNextTabstop, GtNapWindow));
         }
 
         window_origin(gtwin->window, pos);
