@@ -2269,7 +2269,7 @@ HB_BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
       {
          pExecSym->value.pFunPtr();
       }
-      else
+      else if( pStack->uiClass )
       {
          PCLASS pClass   = s_pClasses[ pStack->uiClass ];
          PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
