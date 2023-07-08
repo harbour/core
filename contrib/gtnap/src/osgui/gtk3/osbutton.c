@@ -416,7 +416,7 @@ void osbutton_vpadding(OSButton *button, const real32_t padding)
         const char_t *cssbut = osglobals_css_button();
         uint32_t mpad = (uint32_t)((padding / 2) + .5f);
         char_t css[256];
-        bstd_sprintf(css, sizeof(css), "%s {padding-top:%dpx;padding-bottom:%dpx;padding-left:4px;padding-right:4px;}", cssbut, mpad, mpad);
+        bstd_sprintf(css, sizeof(css), "%s {padding-top:%dpx;padding-bottom:%dpx;padding-left:4px;padding-right:4px;min-height:0}", cssbut, mpad, mpad);
         _oscontrol_set_css(button->control.widget, css);
     }
 }
