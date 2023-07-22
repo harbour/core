@@ -1149,6 +1149,7 @@ HB_FUN_HB_VFERASE
 HB_FUN_HB_VFEXISTS
 HB_FUN_HB_VFFLUSH
 HB_FUN_HB_VFHANDLE
+HB_FUN_HB_VFISLOCAL
 HB_FUN_HB_VFLINK
 HB_FUN_HB_VFLINKREAD
 HB_FUN_HB_VFLINKSYM
@@ -2444,6 +2445,7 @@ hb_errRT_New
 hb_errRT_New_Subst
 hb_errRT_SubstParams
 hb_errRT_TERM
+hb_errReinit
 hb_errRelease
 hb_errorBlock
 hb_errorHandler
@@ -3588,6 +3590,8 @@ hb_vmResumeThreads
 hb_vmSend
 hb_vmSetCDP
 hb_vmSetDefaultGT
+hb_vmSetDynFunc
+hb_vmSetFunction
 hb_vmSetKeyPool
 hb_vmSetLang
 hb_vmSetLinkedMain

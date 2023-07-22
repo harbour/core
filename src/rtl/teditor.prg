@@ -112,9 +112,9 @@ CREATE CLASS HBEditor
 
    MESSAGE RefreshWindow() METHOD Display()              // for compatibility
 
-   METHOD New( cText, nTop, nLeft, nBottom, ;            // Constructor
-               nRight, lEditMode, nLineLength, nTabSize, ;
-               nTextRow, nTextCol, nWndRow, nWndCol )
+   METHOD Init( cText, nTop, nLeft, nBottom, ;            // Constructor
+                nRight, lEditMode, nLineLength, nTabSize, ;
+                nTextRow, nTextCol, nWndRow, nWndCol )
 
    PROTECTED:
 
@@ -150,8 +150,8 @@ CREATE CLASS HBEditor
 ENDCLASS
 
 
-METHOD New( cText, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, ;
-            nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS HBEditor
+METHOD Init( cText, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, ;
+             nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS HBEditor
 
    ::cColorSpec := SetColor()
 

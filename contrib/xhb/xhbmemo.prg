@@ -430,49 +430,49 @@ FUNCTION xhb_MemoEdit( ;
    // 2006-07-22 - E.F. Check argument types.
    //
    IF ! HB_ISNIL( cString ) .AND. ! HB_ISSTRING( cString ) .AND. ! HB_ISMEMO( cString )
-      Throw( ErrorNew( "BASE", 0, 1127, "<cString> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<cString> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( nTop ) .AND. ! HB_ISNUMERIC( nTop )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTop> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nTop> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( nLeft ) .AND. ! HB_ISNUMERIC( nLeft )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nLeft> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nLeft> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( nRight ) .AND. ! HB_ISNUMERIC( nRight )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nRight> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nRight> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( nBottom ) .AND. ! HB_ISNUMERIC( nBottom )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nBottom> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nBottom> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( lEditMode ) .AND. ! HB_ISLOGICAL( lEditMode )
-      Throw( ErrorNew( "BASE", 0, 1127, "<lEditMode> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<lEditMode> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( xUDF ) .AND. ! HB_ISSTRING( xUDF ) .AND. ! HB_ISLOGICAL( xUDF )
-      Throw( ErrorNew( "BASE", 0, 1127, "<cUserFunction> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<cUserFunction> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( nLineLength ) .AND. ! HB_ISNUMERIC( nLineLength )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nLineLength> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nLineLength> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( nTabSize ) .AND. ! HB_ISNUMERIC( nTabSize )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTabSize> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nTabSize> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( nTextBuffRow ) .AND. ! HB_ISNUMERIC( nTextBuffRow )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTextBuffRow> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nTextBuffRow> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( nTextBuffColumn ) .AND. ! HB_ISNUMERIC( nTextBuffColumn )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTextBuffColumn> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nTextBuffColumn> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( nWindowRow ) .AND. ! HB_ISNUMERIC( nWindowRow )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nWindowRow> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nWindowRow> Argument type error", ProcName() ) )
    ENDIF
    IF ! HB_ISNIL( nWindowColumn ) .AND. ! HB_ISNUMERIC( nWindowColumn )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nWindowColumn> Argument type error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nWindowColumn> Argument type error", ProcName() ) )
    ENDIF
 
 
    // 2006-07-22 - E.F. To avoid run time error.
    IF nTop > nBottom .OR. nLeft > nRight
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTop,nLeft,nRight,nBottom> Argument error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nTop,nLeft,nRight,nBottom> Argument error", ProcName() ) )
    ENDIF
 
    IF HB_ISSTRING( xUDF ) .AND. Empty( xUDF )

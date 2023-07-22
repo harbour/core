@@ -1064,7 +1064,7 @@ static HB_BOOL hb_clsIsFriendSymbol( PCLASS pClass, PHB_SYMB pSym )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_clsIsFriendSymbol(%p,%p)", ( void * ) pClass, ( void * ) pSym ) );
 
-   if( pSym >= pClass->pFriendModule &&
+   if( pClass->pFriendModule && pSym >= pClass->pFriendModule &&
        pSym < pClass->pFriendModule + pClass->uiFriendModule )
       return HB_TRUE;
 
@@ -2269,7 +2269,7 @@ HB_BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
       {
          pExecSym->value.pFunPtr();
       }
-      else
+      else if( pStack->uiClass )
       {
          PCLASS pClass   = s_pClasses[ pStack->uiClass ];
          PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
@@ -5213,6 +5213,8 @@ static void hb_objSetIVars( PHB_ITEM pObject, PHB_ITEM pArray )
                   PHB_DYNS pParentSym;
                   char szClassName[ HB_SYMBOL_NAME_LEN + 1 ];
 
+                  if( nLen > HB_SYMBOL_NAME_LEN )
+                     nLen = HB_SYMBOL_NAME_LEN;
                   memcpy( szClassName, pszMethod, nLen );
                   szClassName[ nLen ] = '\0';
                   pParentSym = hb_dynsymFindName( szClassName );

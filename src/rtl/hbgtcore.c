@@ -2018,6 +2018,19 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 {
    int iRet = 0, iOptions;
 
+   if( pMessage && HB_IS_HASH( pMessage ) )
+   {
+      if( ! pOptions || hb_arrayLen( pOptions ) == 0 )
+         pOptions = hb_hashGetCItemPtr( pMessage, "BTN" );
+      if( dDelay <= 0 )
+      {
+         PHB_ITEM pVal = hb_hashGetCItemPtr( pMessage, "TIM" );
+         if( pVal && HB_IS_NUMERIC( pVal ) )
+           dDelay = hb_itemGetND( pVal );
+      }
+      pMessage = hb_hashGetCItemPtr( pMessage, "TXT" );
+   }
+
    if( pMessage && HB_IS_STRING( pMessage ) &&
        pOptions && ( iOptions = ( int ) hb_arrayLen( pOptions ) ) > 0 )
    {
@@ -2051,7 +2064,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       if( fScreen )
       {
          void * pBuffer = NULL;
-         int iDspCount, iStyle, iRow, iCol, iTop, iLeft, iBottom, iRight, iPos, iClr;
+         int iDspCount, iStyle, iRow, iCol, iTop, iLeft, iBottom, iRight, iPos;
          HB_UINT ulLines = 0, ulWidth = 0, ulCurrWidth = 0, ulMsg = 0, ulDst = 0,
                  ulLast = 0, ulSpace1 = 0, ulSpace2 = 0, ulDefWidth, ulMaxWidth;
          HB_WCHAR * szMsgDsp;
@@ -2217,7 +2230,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             {
                void * hOpt;
                const HB_WCHAR * szOptW;
-               iClr = i == iPos ? iClrHigh : iClrNorm;
+               int iClr = i == iPos ? iClrHigh : iClrNorm;
                szOptW = hb_arrayGetStrU16( pOptions, i, HB_CDP_ENDIAN_NATIVE, &hOpt, &nLen );
                HB_GTSELF_PUTTEXTW( pGT, iBottom - 1, iMnuCol, iClr, s_szSpaceW, 1 );
                HB_GTSELF_PUTTEXTW( pGT, iBottom - 1, iMnuCol + 1, iClr, szOptW, nLen );

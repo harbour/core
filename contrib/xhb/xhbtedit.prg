@@ -262,7 +262,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    // 2006-07-22 - E.F. To avoid run time error.
    IF nTop > nBottom .OR. nLeft > nRight
-      Throw( ErrorNew( "BASE", 0, 1127, "Argument error: <nTop,nRight,nLeft,nBottom>", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "Argument error: <nTop,nRight,nLeft,nBottom>", ProcName() ) )
    ENDIF
 
 

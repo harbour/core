@@ -43,7 +43,7 @@
  * RC4 is a registered trademark of RSA Laboratories.
  */
 
-#include "arc4.h"
+#include "hbarc4.h"
 #include "hbdate.h"
 #include "hbthread.h"
 

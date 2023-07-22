@@ -100,7 +100,7 @@ CREATE CLASS RadioGroup FUNCTION HBRadioGroup
    METHOD typeOut() SETGET
    METHOD value() SETGET                       /* NOTE: Undocumented CA-Cl*pper var. */
 
-   METHOD New( nTop, nLeft, nBottom, nRight )  /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( nTop, nLeft, nBottom, nRight )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -604,7 +604,7 @@ METHOD typeOut() CLASS RadioGroup
 METHOD value() CLASS RadioGroup
    RETURN ::nValue
 
-METHOD New( nTop, nLeft, nBottom, nRight ) CLASS RadioGroup
+METHOD Init( nTop, nLeft, nBottom, nRight ) CLASS RadioGroup
 
    LOCAL cColor
 
