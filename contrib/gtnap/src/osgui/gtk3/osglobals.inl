@@ -64,9 +64,8 @@ uint32_t osglobals_scroll_width(void);
 
 uint32_t osglobals_scroll_height(void);
 
-GdkPixbuf* osglobals_checks_bitmap(void);
+GdkPixbuf *osglobals_checks_bitmap(void);
 
 void osglobals_restore_focus(GtkWidget *window, GtkWidget *widget);
 
 __END_C
-

@@ -20,9 +20,7 @@ void *_window_ositem(Window *window);
 
 bool_t _window_is_visible(const Window *window);
 
-void _window_hide_on_close(Window *window, const bool_t hide);
-
-#if defined (__DESKTOP__)
+#if defined(__DESKTOP__)
 
 void _window_taborder(Window *window, void *ositem);
 
@@ -40,9 +38,6 @@ S2Df _window_get_size(const Window *window);
 
 void _window_focus(Window *window, GuiComponent *component);
 
-GuiComponent *_window_find_component(Window *window, void *ositem);
-
 void window_launch_overlay(Window *window, Window *parent_window);
 
 __END_C
-

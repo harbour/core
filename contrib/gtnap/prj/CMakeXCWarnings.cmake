@@ -62,6 +62,7 @@ macro(configureMacOSGcc)
         XCODE_ATTRIBUTE_GCC_WARN_UNUSED_VARIABLE                    "YES"
         XCODE_ATTRIBUTE_GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS         "YES"
         XCODE_ATTRIBUTE_GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO       "YES"
+
 	    # Avoid warnings when C90 is used
         XCODE_ATTRIBUTE_WARNING_CFLAGS                              "-Wno-long-long -Wno-overlength-strings")
 

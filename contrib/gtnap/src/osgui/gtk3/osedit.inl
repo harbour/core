@@ -25,4 +25,3 @@ bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control);
 GtkWidget *_osedit_focus(OSEdit *edit);
 
 __END_C
-

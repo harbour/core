@@ -13,12 +13,12 @@
 #include "osapp.h"
 #include "osapp.inl"
 #include "osapp_gtk.inl"
-#include "osgui.h"
-#include "bfile.h"
-#include "bmem.h"
-#include "cassert.h"
-#include "event.h"
-#include "strings.h"
+#include <osgui/osgui.h>
+#include <core/event.h>
+#include <core/strings.h>
+#include <osbs/bfile.h>
+#include <sewer/bmem.h>
+#include <sewer/cassert.h>
 #include <stdlib.h>
 #include <locale.h>
 
@@ -55,13 +55,13 @@ static OSApp i_APP;
 /*---------------------------------------------------------------------------*/
 
 OSApp *osapp_init_imp(
-                    uint32_t argc,
-                    char_t **argv,
-                    void *instance,
-                    void *listener,
-                    const bool_t with_run_loop,
-                    FPtr_app_call func_OnFinishLaunching,
-                    FPtr_app_call func_OnTimerSignal)
+    uint32_t argc,
+    char_t **argv,
+    void *instance,
+    void *listener,
+    const bool_t with_run_loop,
+    FPtr_app_call func_OnFinishLaunching,
+    FPtr_app_call func_OnTimerSignal)
 {
     bmem_zero(&i_APP, OSApp);
     cassert_unref(instance == NULL, instance);
@@ -182,7 +182,7 @@ void osapp_argv(OSApp *app, const uint32_t index, char_t *argv, const uint32_t m
    and the function will not be called again. */
 static gboolean i_OnTimerLoop(gpointer data)
 {
-    OSApp *app = (OSApp*)data;
+    OSApp *app = (OSApp *)data;
     cassert(app == &i_APP);
 
     if (app->terminate == TRUE)
@@ -204,7 +204,7 @@ static gboolean i_OnTimerLoop(gpointer data)
    not be called again. */
 static gboolean i_OnTimerInit(gpointer data)
 {
-    OSApp *app = (OSApp*)data;
+    OSApp *app = (OSApp *)data;
     cassert(app == &i_APP);
 
     /* Create impostor window before app running */
@@ -223,7 +223,7 @@ static gboolean i_OnTimerInit(gpointer data)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnActivate(GtkApplication* gtk_app, OSApp *app)
+static void i_OnActivate(GtkApplication *gtk_app, OSApp *app)
 {
     char_t pathname[1024];
     cassert_no_null(app);
@@ -259,7 +259,7 @@ void osapp_run(OSApp *app)
     int status = 0;
     cassert_no_null(app);
     cassert(app->with_run_loop == TRUE);
-    signal_id = g_signal_connect(app->gtk_app, "activate", G_CALLBACK (i_OnActivate), (gpointer)app);
+    signal_id = g_signal_connect(app->gtk_app, "activate", G_CALLBACK(i_OnActivate), (gpointer)app);
     cassert_unref(signal_id > 0, signal_id);
     status = g_application_run(G_APPLICATION(app->gtk_app), app->argc, app->argv);
     unref(status);
@@ -321,4 +321,3 @@ void osapp_OnThemeChanged(OSApp *app, Listener *listener)
     cassert_no_null(app);
     listener_update(&app->OnTheme, listener);
 }
-

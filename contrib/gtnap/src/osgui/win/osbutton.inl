@@ -27,4 +27,3 @@ void _osbutton_set_default(OSButton *button);
 void _osbutton_unset_default(OSButton *button);
 
 __END_C
-

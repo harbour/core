@@ -15,4 +15,3 @@
 BOOL _ostext_is(NSView *view);
 
 void _ostext_detach_and_destroy(OSText **view, OSPanel *panel);
-

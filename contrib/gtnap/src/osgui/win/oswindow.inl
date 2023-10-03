@@ -49,4 +49,3 @@ bool_t _oswindow_can_edit_focus_events(OSControl *control);
 void _oswindow_unset_defbutton(OSControl *control);
 
 __END_C
-

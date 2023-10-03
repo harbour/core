@@ -80,4 +80,3 @@ void _oscontrol_draw_focus(HWND hwnd, const INT left_offset, const INT right_off
 //HWND _oscontrol_hit_point(const OSControl *control, const POINT *point);
 
 __END_C
-

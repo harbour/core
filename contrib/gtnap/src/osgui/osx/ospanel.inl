@@ -21,4 +21,3 @@ void _ospanel_attach_control(OSPanel *panel, NSView *control);
 void _ospanel_detach_control(OSPanel *panel, NSView *control);
 
 __END_C
-

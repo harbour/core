@@ -62,7 +62,6 @@ _osgui_api void osview_set_need_display(OSView *view);
 
 _osgui_api void *osview_get_native_view(const OSView *view);
 
-
 _osgui_api void osview_attach(OSView *view, OSPanel *panel);
 
 _osgui_api void osview_detach(OSView *view, OSPanel *panel);

@@ -24,7 +24,6 @@ struct _evscroll_t
     real32_t pos;
 };
 
-
 /* For revision */
 enum gui_toolbar_button_type_t
 {
@@ -60,4 +59,3 @@ DeclPt(OSControl);
 DeclPt(OSMenuItem);
 
 #endif
-

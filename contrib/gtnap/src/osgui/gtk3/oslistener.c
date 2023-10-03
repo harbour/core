@@ -14,9 +14,9 @@
 #include "oscontrol.inl"
 #include "osgui.inl"
 #include "osgui_gtk.inl"
-#include "cassert.h"
-#include "event.h"
-#include "bmem.h"
+#include <core/event.h>
+#include <sewer/cassert.h>
+#include <sewer/bmem.h>
 
 #if !defined(__GTK3__)
 #error This file is only for GTK Toolkit
@@ -55,9 +55,9 @@ void _oslistener_remove(ViewListeners *listeners)
 void _oslistener_signal(GtkWidget *widget, bool_t add, gint *signal_id, gint signal_mask, const gchar *signal_name, GCallback callback, gpointer callback_data)
 {
     gboolean is_realized = gtk_widget_get_realized(widget);
-    #if defined (__DEBUG__)
+#if defined(__DEBUG__)
     const gchar *type = G_OBJECT_TYPE_NAME(widget);
-    #endif
+#endif
     cassert(gtk_widget_get_has_window(widget) == TRUE);
 
     /*
@@ -115,9 +115,9 @@ void _oslistener_signal(GtkWidget *widget, bool_t add, gint *signal_id, gint sig
         }
     }
 
-    #if defined (__DEBUG__)
+#if defined(__DEBUG__)
     unref(type);
-    #endif
+#endif
 }
 
 /*---------------------------------------------------------------------------*/
@@ -226,7 +226,8 @@ void _oslistener_mouse_down(OSControl *sender, GdkEventButton *event, GtkAdjustm
     cassert_no_null(listeners);
     if (listeners->is_enabled == TRUE)
     {
-        switch(event->button) {
+        switch (event->button)
+        {
         case 1:
             listeners->button = ekGUI_MOUSE_LEFT;
             break;
@@ -298,7 +299,8 @@ void _oslistener_mouse_up(OSControl *sender, GdkEventButton *event, GtkAdjustmen
             params.ly = params.y;
             params.button = listeners->button;
 
-            switch(event->type) {
+            switch (event->type)
+            {
             case GDK_BUTTON_PRESS:
                 params.count = 1;
                 break;
@@ -372,8 +374,9 @@ static bool_t i_key_event(OSControl *sender, const uint32_t type, GdkEventKey *e
         {
             kval -= 32;
         }
-        else switch(kval)
-        {
+        else
+            switch (kval)
+            {
             case GDK_KEY_KP_Home:
                 kval = GDK_KEY_Home;
                 break;
@@ -407,7 +410,7 @@ static bool_t i_key_event(OSControl *sender, const uint32_t type, GdkEventKey *e
             case GDK_KEY_KP_Delete:
                 kval = GDK_KEY_Delete;
                 break;
-        }
+            }
 
         for (i = 0; i < n; ++i)
         {

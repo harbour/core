@@ -19,4 +19,3 @@ void _osupdown_detach_and_destroy(OSUpDown **updown, OSPanel *panel);
 void _osupdown_OnNotification(OSUpDown *updown, const NMHDR *nmhdr, LPARAM lParam);
 
 __END_C
-

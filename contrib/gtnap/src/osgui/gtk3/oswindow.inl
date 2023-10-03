@@ -37,4 +37,3 @@ void _oswindow_unlock_edit_focus_events(OSControl *control);
 bool_t _oswindow_can_edit_focus_events(OSControl *control);
 
 __END_C
-

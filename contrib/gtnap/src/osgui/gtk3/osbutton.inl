@@ -23,4 +23,3 @@ void _osbutton_command(OSButton *button);
 void _osbutton_default(OSButton *button, const bool_t is_default);
 
 __END_C
-

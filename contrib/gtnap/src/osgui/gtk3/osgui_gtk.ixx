@@ -19,9 +19,9 @@
 #error This file is only for GTK Toolkit
 #endif
 
-#include "nowarn.hxx"
+#include <sewer/nowarn.hxx>
 #include <gtk/gtk.h>
-#include "warn.hxx"
+#include <sewer/warn.hxx>
 
 typedef struct _view_listeners_t ViewListeners;
 typedef struct _recti_t RectI;
@@ -64,9 +64,9 @@ struct _oscontrol_t
     gui_type_t type;
     GtkWidget *widget;
 
-    #if defined (__ASSERTS__)
+#if defined(__ASSERTS__)
     bool_t is_alive;
-    #endif
+#endif
 };
 
 struct _strsize_data_t
@@ -75,4 +75,3 @@ struct _strsize_data_t
 };
 
 #endif
-

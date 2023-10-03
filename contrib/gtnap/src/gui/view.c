@@ -17,16 +17,15 @@
 #include "gui.inl"
 #include "panel.inl"
 #include "window.inl"
-#include "guictx.h"
-
-#include "cassert.h"
-#include "event.h"
-#include "keybuf.h"
-#include "ptr.h"
-#include "objh.h"
-#include "s2d.h"
-#include "v2d.h"
-#include "strings.h"
+#include <draw2d/guictx.h>
+#include <geom2d/s2d.h>
+#include <geom2d/v2d.h>
+#include <core/event.h>
+#include <core/keybuf.h>
+#include <core/objh.h>
+#include <core/strings.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 struct _view_t
 {
@@ -446,7 +445,7 @@ void _view_set_subtype(View *view, const char_t *subtype)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t* _view_subtype(const View *view)
+const char_t *_view_subtype(const View *view)
 {
     cassert_no_null(view);
     if (view->subtype != NULL)
@@ -495,8 +494,8 @@ void view_screen_rect(const View *view, R2Df *rect)
 {
     cassert_no_null(view);
     cassert_no_null(rect);
-    _component_get_global_origin((const GuiComponent*)view, &rect->pos);
-    _component_get_size((const GuiComponent*)view, &rect->size);
+    _component_get_global_origin((const GuiComponent *)view, &rect->pos);
+    _component_get_size((const GuiComponent *)view, &rect->size);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -512,14 +511,14 @@ GuiCtx *_view_context(View *view)
 Cell *_view_cell(View *view)
 {
     cassert_no_null(view);
-	return view->component.parent;
+    return view->component.parent;
 }
 
 /*---------------------------------------------------------------------------*/
 
 Window *_view_window(View *view)
 {
-    return _component_window((GuiComponent*)view);
+    return _component_window((GuiComponent *)view);
 }
 
 /*---------------------------------------------------------------------------*/

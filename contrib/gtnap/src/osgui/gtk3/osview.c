@@ -19,11 +19,11 @@
 #include "ospanel.inl"
 #include "ossplit.inl"
 #include "oswindow.inl"
-#include "cassert.h"
-#include "dctxh.h"
-#include "event.h"
-#include "heap.h"
-#include "strings.h"
+#include <draw2d/dctxh.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <core/strings.h>
+#include <sewer/cassert.h>
 
 #if !defined(__GTK3__)
 #error This file is only for GTK Toolkit
@@ -71,7 +71,7 @@ static gboolean i_OnConfig(GtkWidget *widget, GdkEventConfigure *event, OSView *
             uint32_t w = (uint32_t)gtk_widget_get_allocated_width(widget);
             uint32_t h = (uint32_t)gtk_widget_get_allocated_height(widget);
             if (w != view->clip_width || h != view->clip_height)
-                dctx_update_view(view->ctx, (void*)widget);
+                dctx_update_view(view->ctx, (void *)widget);
         }
     }
 
@@ -124,7 +124,7 @@ static gboolean i_OnDraw(GtkWidget *widget, cairo_t *cr, OSView *view)
         params.ctx = view->ctx;
 
         dctx_set_gcontext(view->ctx, cr, (uint32_t)view->clip_width, (uint32_t)view->clip_height, params.x, params.y, 0, TRUE);
-        _oslistener_redraw((OSControl*)view, &params, &view->listeners);
+        _oslistener_redraw((OSControl *)view, &params, &view->listeners);
         dctx_unset_gcontext(view->ctx);
 
         if (view->OnOverlay != NULL)
@@ -146,7 +146,7 @@ static gboolean i_OnDraw(GtkWidget *widget, cairo_t *cr, OSView *view)
         params.ctx = NULL;
         cassert(view->area_width == view->clip_width);
         cassert(view->area_height == view->clip_height);
-        _oslistener_redraw((OSControl*)view, &params, &view->listeners);
+        _oslistener_redraw((OSControl *)view, &params, &view->listeners);
     }
 
     /* Important! Draw the scrollbars */
@@ -167,7 +167,7 @@ static gboolean i_OnRender(GtkGLArea *widget, GdkGLContext *glctx, OSView *view)
     params.y = 0;
     params.width = (real32_t)gtk_widget_get_allocated_width(GTK_WIDGET(widget));
     params.height = (real32_t)gtk_widget_get_allocated_height(GTK_WIDGET(widget));
-    _oslistener_redraw((OSControl*)view, &params, &view->listeners);
+    _oslistener_redraw((OSControl *)view, &params, &view->listeners);
     return TRUE;
 }
 
@@ -188,7 +188,7 @@ static gboolean i_OnMove(GtkWidget *widget, GdkEventMotion *event, OSView *view)
        Only we accept the motion over scroll window */
     if ((int)view->clip_width == w && (int)view->clip_height == h)
     {
-        _oslistener_mouse_moved((OSControl*)view, event, view->hadjust, view->vadjust, &view->listeners);
+        _oslistener_mouse_moved((OSControl *)view, event, view->hadjust, view->vadjust, &view->listeners);
     }
 
     return TRUE;
@@ -200,7 +200,7 @@ static gboolean i_OnEnter(GtkWidget *widget, GdkEventCrossing *event, OSView *vi
 {
     cassert(event->type == GDK_ENTER_NOTIFY);
     if (event->mode == GDK_CROSSING_NORMAL)
-        _oslistener_mouse_enter((OSControl*)view, event, view->hadjust, view->vadjust, &view->listeners);
+        _oslistener_mouse_enter((OSControl *)view, event, view->hadjust, view->vadjust, &view->listeners);
     unref(widget);
     return TRUE;
 }
@@ -211,7 +211,7 @@ static gboolean i_OnExit(GtkWidget *widget, GdkEventCrossing *event, OSView *vie
 {
     cassert(event->type == GDK_LEAVE_NOTIFY);
     if (event->mode == GDK_CROSSING_NORMAL)
-        _oslistener_mouse_exit((OSControl*)view, event, &view->listeners);
+        _oslistener_mouse_exit((OSControl *)view, event, &view->listeners);
     unref(widget);
     return TRUE;
 }
@@ -220,13 +220,13 @@ static gboolean i_OnExit(GtkWidget *widget, GdkEventCrossing *event, OSView *vie
 
 static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSView *view)
 {
-    if (_oswindow_can_mouse_down((OSControl*)view) == TRUE)
+    if (_oswindow_can_mouse_down((OSControl *)view) == TRUE)
     {
         if (view->capture != NULL)
         {
             if (view->capture->type == ekGUI_TYPE_SPLITVIEW)
             {
-                _ossplit_OnPress((OSSplit*)view->capture, event);
+                _ossplit_OnPress((OSSplit *)view->capture, event);
             }
         }
         else
@@ -237,7 +237,7 @@ static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSView *vi
             if (can_focus == TRUE)
                 gtk_widget_grab_focus(widget);
 
-            _oslistener_mouse_down((OSControl*)view, event, view->hadjust, view->vadjust, &view->listeners);
+            _oslistener_mouse_down((OSControl *)view, event, view->hadjust, view->vadjust, &view->listeners);
         }
     }
 
@@ -248,7 +248,7 @@ static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSView *vi
 
 static gboolean i_OnRelease(GtkWidget *widget, GdkEventButton *event, OSView *view)
 {
-    _oslistener_mouse_up((OSControl*)view, event, view->hadjust, view->vadjust, &view->listeners);
+    _oslistener_mouse_up((OSControl *)view, event, view->hadjust, view->vadjust, &view->listeners);
     unref(widget);
     return TRUE;
 }
@@ -262,10 +262,10 @@ static gboolean i_OnWheel(GtkWidget *widget, GdkEventScroll *event, OSView *view
     if (view->vscroll != NULL)
     {
         if (gtk_widget_get_realized(view->vscroll) == TRUE)
-            gtk_widget_event(view->vscroll, (GdkEvent*)event);
+            gtk_widget_event(view->vscroll, (GdkEvent *)event);
     }
 
-    _oslistener_scroll_whell((OSControl*)view, event, view->hadjust, view->vadjust, &view->listeners);
+    _oslistener_scroll_whell((OSControl *)view, event, view->hadjust, view->vadjust, &view->listeners);
     return FALSE;
 }
 
@@ -279,7 +279,7 @@ static gboolean i_OnKeyPress(GtkWidget *widget, GdkEventKey *event, OSView *view
     if (event->keyval == GDK_KEY_Tab || event->keyval == GDK_KEY_ISO_Left_Tab)
         return FALSE;
 
-    return (gboolean)_oslistener_key_down((OSControl*)view, event, &view->listeners);
+    return (gboolean)_oslistener_key_down((OSControl *)view, event, &view->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -292,7 +292,7 @@ static gboolean i_OnKeyRelease(GtkWidget *widget, GdkEventKey *event, OSView *vi
     if (event->keyval == GDK_KEY_Tab || event->keyval == GDK_KEY_ISO_Left_Tab)
         return FALSE;
 
-    return (gboolean)_oslistener_key_up((OSControl*)view, event, &view->listeners);
+    return (gboolean)_oslistener_key_up((OSControl *)view, event, &view->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -333,14 +333,14 @@ OSView *osview_create(const uint32_t flags)
     /* Creating a OpenGL-based drawing area */
     else
     {
-    #if GTK_CHECK_VERSION(3, 16, 0)
+#if GTK_CHECK_VERSION(3, 16, 0)
         area = gtk_gl_area_new();
         g_signal_connect(area, "render", G_CALLBACK(i_OnRender), (gpointer)view);
 
-    #else
+#else
         cassert(FALSE);
 
-    #endif
+#endif
     }
 
     /* DrawingArea or Layout have their own GDK window for event listeners */
@@ -385,7 +385,7 @@ OSView *osview_create(const uint32_t flags)
     view->listeners.is_enabled = TRUE;
 
     _oscontrol_init(&view->control, ekGUI_TYPE_CUSTOMVIEW, top, area, TRUE);
-    gtk_widget_show_all (top);
+    gtk_widget_show_all(top);
     return view;
 }
 
@@ -403,7 +403,7 @@ void osview_destroy(OSView **view)
     if ((*view)->ctx != NULL)
         dctx_destroy(&(*view)->ctx);
 
-    _oscontrol_destroy(*(OSControl**)view);
+    _oscontrol_destroy(*(OSControl **)view);
     heap_delete(view, OSView);
 }
 
@@ -688,42 +688,42 @@ void *osview_get_native_view(const OSView *view)
 
 void osview_attach(OSView *view, OSPanel *panel)
 {
-    _ospanel_attach_control(panel, (OSControl*)view);
+    _ospanel_attach_control(panel, (OSControl *)view);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_detach(OSView *view, OSPanel *panel)
 {
-    _ospanel_detach_control(panel, (OSControl*)view);
+    _ospanel_detach_control(panel, (OSControl *)view);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_visible(OSView *view, const bool_t is_visible)
 {
-    _oscontrol_set_visible((OSControl*)view, is_visible);
+    _oscontrol_set_visible((OSControl *)view, is_visible);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_enabled(OSView *view, const bool_t is_enabled)
 {
-    _oscontrol_set_enabled((OSControl*)view, is_enabled);
+    _oscontrol_set_enabled((OSControl *)view, is_enabled);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_size(const OSView *view, real32_t *width, real32_t *height)
 {
-    _oscontrol_get_size((const OSControl*)view, width, height);
+    _oscontrol_get_size((const OSControl *)view, width, height);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_origin(const OSView *view, real32_t *x, real32_t *y)
 {
-    _oscontrol_get_origin((const OSControl*)view, x, y);
+    _oscontrol_get_origin((const OSControl *)view, x, y);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -731,7 +731,7 @@ void osview_origin(const OSView *view, real32_t *x, real32_t *y)
 void osview_frame(OSView *view, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     cassert_no_null(view);
-    _oscontrol_set_frame((OSControl*)view, x, y, width, height);
+    _oscontrol_set_frame((OSControl *)view, x, y, width, height);
     if (view->control.widget != view->darea)
     {
         cassert(GTK_IS_FRAME(view->control.widget) == TRUE);

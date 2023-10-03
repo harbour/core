@@ -19,4 +19,3 @@ void _ostext_detach_and_destroy(OSText **view, OSPanel *panel);
 void _ostext_command(OSText *view, WPARAM wParam);
 
 __END_C
-

@@ -17,4 +17,3 @@ __EXTERN_C
 void _osview_detach_and_destroy(OSView **view, OSPanel *panel);
 
 __END_C
-

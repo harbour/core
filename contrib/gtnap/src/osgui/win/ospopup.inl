@@ -21,4 +21,3 @@ void _ospopup_command(OSPopUp *popup, WPARAM wParam);
 HWND _ospopup_focus(OSPopUp *popup);
 
 __END_C
-

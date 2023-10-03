@@ -26,10 +26,10 @@
 #include "osprogress.inl"
 #include "ostext.inl"
 #include "osview.inl"
-#include "arrst.h"
-#include "cassert.h"
-#include "color.h"
-#include "heap.h"
+#include <draw2d/color.h>
+#include <core/arrst.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
 
 #if !defined(__GTK3__)
 #error This file is only for GTK Toolkit
@@ -55,14 +55,14 @@ struct _ospanel_t
     GtkWidget *layout;
     GtkAdjustment *hadjust;
     GtkAdjustment *vadjust;
-    ArrSt(Area) *areas;
+    ArrSt(Area) * areas;
 };
 
 DeclSt(Area);
-#define i_red(rgba)     (((double)((uint8_t)((rgba) >>  0))) / 255.)
-#define i_green(rgba)   (((double)((uint8_t)((rgba) >>  8))) / 255.)
-#define i_blue(rgba)    (((double)((uint8_t)((rgba) >> 16))) / 255.)
-#define i_alpha(rgba)   (((double)((uint8_t)((rgba) >> 24))) / 255.)
+#define i_red(rgba) (((double)((uint8_t)((rgba) >> 0))) / 255.)
+#define i_green(rgba) (((double)((uint8_t)((rgba) >> 8))) / 255.)
+#define i_blue(rgba) (((double)((uint8_t)((rgba) >> 16))) / 255.)
+#define i_alpha(rgba) (((double)((uint8_t)((rgba) >> 24))) / 255.)
 
 /*---------------------------------------------------------------------------*/
 
@@ -80,32 +80,31 @@ static gboolean i_OnDraw(GtkWidget *widget, cairo_t *cr, OSPanel *panel)
     {
         gdouble x = gtk_adjustment_get_value(panel->hadjust);
         gdouble y = gtk_adjustment_get_value(panel->vadjust);
-        cairo_translate(cr, - (double)x, - (double)y);
+        cairo_translate(cr, -(double)x, -(double)y);
     }
 
-    arrst_foreach(area, panel->areas, Area)
-        if (area->bgcolor != kCOLOR_TRANSPARENT)
-        {
-            real32_t r, g, b, a;
-            color_get_rgbaf(area->bgcolor, &r, &g, &b, &a);
-            cairo_set_source_rgba(cr, (double)r, (double)g, (double)b, (double)a);
-            cairo_rectangle(cr, (double)area->x, (double)area->y, (double)area->w, (double)area->h);
-            cairo_fill(cr);
-        }
+    arrst_foreach(area, panel->areas, Area) if (area->bgcolor != kCOLOR_TRANSPARENT)
+    {
+        real32_t r, g, b, a;
+        color_get_rgbaf(area->bgcolor, &r, &g, &b, &a);
+        cairo_set_source_rgba(cr, (double)r, (double)g, (double)b, (double)a);
+        cairo_rectangle(cr, (double)area->x, (double)area->y, (double)area->w, (double)area->h);
+        cairo_fill(cr);
+    }
 
-        if (area->skcolor != kCOLOR_TRANSPARENT)
-        {
-            real32_t r, g, b, a;
-            cairo_antialias_t ca;
-            color_get_rgbaf(area->skcolor, &r, &g, &b, &a);
-            cairo_set_source_rgba(cr, (double)r, (double)g, (double)b, (double)a);
-            cairo_set_line_width(cr, 1.);
-            ca = cairo_get_antialias(cr);
-            cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
-            cairo_rectangle(cr, (double)area->x + 1, (double)area->y + 1, (double)area->w - 1, (double)area->h - 1);
-            cairo_stroke(cr);
-            cairo_set_antialias(cr, ca);
-        }
+    if (area->skcolor != kCOLOR_TRANSPARENT)
+    {
+        real32_t r, g, b, a;
+        cairo_antialias_t ca;
+        color_get_rgbaf(area->skcolor, &r, &g, &b, &a);
+        cairo_set_source_rgba(cr, (double)r, (double)g, (double)b, (double)a);
+        cairo_set_line_width(cr, 1.);
+        ca = cairo_get_antialias(cr);
+        cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
+        cairo_rectangle(cr, (double)area->x + 1, (double)area->y + 1, (double)area->w - 1, (double)area->h - 1);
+        cairo_stroke(cr);
+        cairo_set_antialias(cr, ca);
+    }
 
     arrst_end();
     cairo_restore(cr);
@@ -121,7 +120,7 @@ static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSPanel *p
     if (panel->capture != NULL)
     {
         if (panel->capture->type == ekGUI_TYPE_SPLITVIEW)
-            _ossplit_OnPress((OSSplit*)panel->capture, event);
+            _ossplit_OnPress((OSSplit *)panel->capture, event);
 
         return TRUE;
     }
@@ -193,7 +192,7 @@ void ospanel_destroy(OSPanel **panel)
     if ((*panel)->areas != NULL)
         arrst_destroy(&(*panel)->areas, NULL, Area);
 
-    _oscontrol_destroy(*(OSControl**)panel);
+    _oscontrol_destroy(*(OSControl **)panel);
     heap_delete(panel, OSPanel);
 }
 
@@ -209,12 +208,11 @@ void ospanel_area(OSPanel *panel, void *obj, const color_t bgcolor, const color_
         if (panel->areas == NULL)
             panel->areas = arrst_create(Area);
 
-        arrst_foreach(larea, panel->areas, Area)
-            if (larea->obj == obj)
-            {
-                area = larea;
-                break;
-            }
+        arrst_foreach(larea, panel->areas, Area) if (larea->obj == obj)
+        {
+            area = larea;
+            break;
+        }
         arrst_end();
 
         if (area == NULL)
@@ -275,49 +273,49 @@ void ospanel_display(OSPanel *panel)
 
 void ospanel_attach(OSPanel *panel, OSPanel *parent_panel)
 {
-    _ospanel_attach_control(parent_panel, (OSControl*)panel);
+    _ospanel_attach_control(parent_panel, (OSControl *)panel);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospanel_detach(OSPanel *panel, OSPanel *parent_panel)
 {
-    _ospanel_detach_control(parent_panel, (OSControl*)panel);
+    _ospanel_detach_control(parent_panel, (OSControl *)panel);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospanel_visible(OSPanel *panel, const bool_t is_visible)
 {
-    _oscontrol_set_visible((OSControl*)panel, is_visible);
+    _oscontrol_set_visible((OSControl *)panel, is_visible);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospanel_enabled(OSPanel *panel, const bool_t is_enabled)
 {
-    _oscontrol_set_enabled((OSControl*)panel, is_enabled);
+    _oscontrol_set_enabled((OSControl *)panel, is_enabled);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospanel_size(const OSPanel *panel, real32_t *width, real32_t *height)
 {
-    _oscontrol_get_size((const OSControl*)panel, width, height);
+    _oscontrol_get_size((const OSControl *)panel, width, height);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospanel_origin(const OSPanel *panel, real32_t *x, real32_t *y)
 {
-    _oscontrol_get_origin((const OSControl*)panel, x, y);
+    _oscontrol_get_origin((const OSControl *)panel, x, y);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospanel_frame(OSPanel *panel, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
-    _oscontrol_set_frame((OSControl*)panel, x, y, width, height);
+    _oscontrol_set_frame((OSControl *)panel, x, y, width, height);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -334,46 +332,47 @@ void ospanel_position(OSPanel *panel, const real32_t x, const real32_t y)
 
 static void i_destroy_child(GtkWidget *widget, gpointer data)
 {
-    OSPanel *panel = (OSPanel*)data;
-    OSControl *control = (OSControl*)g_object_get_data(G_OBJECT(widget), "OSControl");
+    OSPanel *panel = (OSPanel *)data;
+    OSControl *control = (OSControl *)g_object_get_data(G_OBJECT(widget), "OSControl");
     cassert_no_null(control);
-    switch (control->type) {
+    switch (control->type)
+    {
     case ekGUI_TYPE_LABEL:
-        _oslabel_detach_and_destroy((OSLabel**)&control, panel);
+        _oslabel_detach_and_destroy((OSLabel **)&control, panel);
         break;
     case ekGUI_TYPE_BUTTON:
-        _osbutton_detach_and_destroy((OSButton**)&control, panel);
+        _osbutton_detach_and_destroy((OSButton **)&control, panel);
         break;
     case ekGUI_TYPE_POPUP:
-        _ospopup_detach_and_destroy((OSPopUp**)&control, panel);
+        _ospopup_detach_and_destroy((OSPopUp **)&control, panel);
         break;
     case ekGUI_TYPE_EDITBOX:
-        _osedit_detach_and_destroy((OSEdit**)&control, panel);
+        _osedit_detach_and_destroy((OSEdit **)&control, panel);
         break;
     case ekGUI_TYPE_COMBOBOX:
-        _oscombo_detach_and_destroy((OSCombo**)&control, panel);
+        _oscombo_detach_and_destroy((OSCombo **)&control, panel);
         break;
     case ekGUI_TYPE_SLIDER:
-        _osslider_detach_and_destroy((OSSlider**)&control, panel);
+        _osslider_detach_and_destroy((OSSlider **)&control, panel);
         break;
     case ekGUI_TYPE_UPDOWN:
-        _osupdown_detach_and_destroy((OSUpDown**)&control, panel);
+        _osupdown_detach_and_destroy((OSUpDown **)&control, panel);
         break;
     case ekGUI_TYPE_PROGRESS:
-        _osprogress_detach_and_destroy((OSProgress**)&control, panel);
+        _osprogress_detach_and_destroy((OSProgress **)&control, panel);
         break;
     case ekGUI_TYPE_TEXTVIEW:
-        _ostext_detach_and_destroy((OSText**)&control, panel);
+        _ostext_detach_and_destroy((OSText **)&control, panel);
         break;
     case ekGUI_TYPE_CUSTOMVIEW:
-        _osview_detach_and_destroy((OSView**)&control, panel);
+        _osview_detach_and_destroy((OSView **)&control, panel);
         break;
     case ekGUI_TYPE_PANEL:
-        ospanel_detach((OSPanel*)control, panel);
-        _ospanel_destroy((OSPanel**)&control);
+        ospanel_detach((OSPanel *)control, panel);
+        _ospanel_destroy((OSPanel **)&control);
         break;
     case ekGUI_TYPE_SPLITVIEW:
-        _ossplit_detach_and_destroy((OSSplit**)&control, panel);
+        _ossplit_detach_and_destroy((OSSplit **)&control, panel);
         break;
     case ekGUI_TYPE_TABLEVIEW:
     case ekGUI_TYPE_TREEVIEW:
@@ -382,7 +381,7 @@ static void i_destroy_child(GtkWidget *widget, gpointer data)
     case ekGUI_TYPE_HEADER:
     case ekGUI_TYPE_WINDOW:
     case ekGUI_TYPE_TOOLBAR:
-    cassert_default();
+        cassert_default();
     }
 }
 

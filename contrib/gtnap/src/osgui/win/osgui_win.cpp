@@ -15,156 +15,153 @@
 #include "osmenu.inl"
 #include "ospanel.inl"
 #include "oswindow.inl"
-#include "win/osstyleXP.inl"
-#include "arrst.h"
-#include "cassert.h"
-#include "core.h"
-#include "heap.h"
-#include "unicode.h"
+#include "osstyleXP.inl"
+#include <core/arrst.h>
+#include <core/core.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
+#include <sewer/unicode.h>
 
 #if !defined(__WINDOWS__)
 #error This file is only for Windows
 #endif
 
-#pragma comment (lib, "gdiplus.lib")
-/* #pragma comment (lib, "Msimg32.lib") TransparentBlt (_osimage_scale_hbitmap) */
-#pragma comment (lib, "Shlwapi.lib")
-#pragma comment (lib, "comctl32.lib")
-//#pragma comment (lib, "d3d9.lib")
+#pragma comment(lib, "gdiplus.lib")
+#pragma comment(lib, "Shlwapi.lib")
+#pragma comment(lib, "comctl32.lib")
 
-/* Avoid Microsoft Warnings */
-#include "nowarn.hxx"
+#include <sewer/nowarn.hxx>
 #include <Commctrl.h>
 #include <Richedit.h>
 #include <uxtheme.h>
 #include <gdiplus.h>
-#include "warn.hxx"
+#include <sewer/warn.hxx>
 
 /*---------------------------------------------------------------------------*/
 
 const WORD kVIRTUAL_KEY[] =
-{
-    UINT16_MAX,     /*ekKEY_UNASSIGNED      = 0*/
-    'A',            /*ekKEY_A               = 1*/
-    'S',            /*ekKEY_S               = 2*/
-    'D',            /*ekKEY_D               = 3*/
-    'F',            /*ekKEY_F               = 4*/
-    'H',            /*ekKEY_H               = 5*/
-    'G',            /*ekKEY_G               = 6*/
-    'Z',            /*ekKEY_Z               = 7*/
-    'X',            /*ekKEY_X               = 8*/
-    'C',            /*ekKEY_C               = 9*/
+    {
+        UINT16_MAX, /*ekKEY_UNASSIGNED      = 0*/
+        'A',        /*ekKEY_A               = 1*/
+        'S',        /*ekKEY_S               = 2*/
+        'D',        /*ekKEY_D               = 3*/
+        'F',        /*ekKEY_F               = 4*/
+        'H',        /*ekKEY_H               = 5*/
+        'G',        /*ekKEY_G               = 6*/
+        'Z',        /*ekKEY_Z               = 7*/
+        'X',        /*ekKEY_X               = 8*/
+        'C',        /*ekKEY_C               = 9*/
 
-    'V',            /*ekKEY_V               = 10*/
-    VK_OEM_5,       /*ekKEY_BSLASH          = 11*/
-    'B',            /*ekKEY_B               = 12*/
-    'Q',            /*ekKEY_Q               = 13*/
-    'W',            /*ekKEY_W               = 14*/
-    'E',            /*ekKEY_E               = 15*/
-    'R',            /*ekKEY_R               = 16*/
-    'Y',            /*ekKEY_Y               = 17*/
-    'T',            /*ekKEY_T               = 18*/
-    '1',            /*ekKEY_1               = 19*/
+        'V',      /*ekKEY_V               = 10*/
+        VK_OEM_5, /*ekKEY_BSLASH          = 11*/
+        'B',      /*ekKEY_B               = 12*/
+        'Q',      /*ekKEY_Q               = 13*/
+        'W',      /*ekKEY_W               = 14*/
+        'E',      /*ekKEY_E               = 15*/
+        'R',      /*ekKEY_R               = 16*/
+        'Y',      /*ekKEY_Y               = 17*/
+        'T',      /*ekKEY_T               = 18*/
+        '1',      /*ekKEY_1               = 19*/
 
-    '2',            /*ekKEY_2               = 20*/
-    '3',            /*ekKEY_3               = 21*/
-    '4',            /*ekKEY_4               = 22*/
-    '6',            /*ekKEY_6               = 23*/
-    '5',            /*ekKEY_5               = 24*/
-    '9',            /*ekKEY_9               = 25*/
-    '7',            /*ekKEY_7               = 26*/
-    '8',            /*ekKEY_8               = 27*/
-    '0',            /*ekKEY_0               = 28*/
-    VK_OEM_2,       /*ekKEY_RCURLY          = 29*/
+        '2',      /*ekKEY_2               = 20*/
+        '3',      /*ekKEY_3               = 21*/
+        '4',      /*ekKEY_4               = 22*/
+        '6',      /*ekKEY_6               = 23*/
+        '5',      /*ekKEY_5               = 24*/
+        '9',      /*ekKEY_9               = 25*/
+        '7',      /*ekKEY_7               = 26*/
+        '8',      /*ekKEY_8               = 27*/
+        '0',      /*ekKEY_0               = 28*/
+        VK_OEM_2, /*ekKEY_RCURLY          = 29*/
 
-    'O',            /*ekKEY_O               = 30*/
-    'U',            /*ekKEY_U               = 31*/
-    VK_OEM_7,       /*ekKEY_LCURLY          = 32*/
-    'I',            /*ekKEY_I               = 33*/
-    'P',            /*ekKEY_P               = 34*/
-    VK_RETURN,      /*ekKEY_RETURN          = 35*/
-    'L',            /*ekKEY_L               = 36*/
-    'J',            /*ekKEY_J               = 37*/
-    ';',            /*ekKEY_SEMICOLON       = 38*/
-    'K',            /*ekKEY_K               = 39*/
+        'O',       /*ekKEY_O               = 30*/
+        'U',       /*ekKEY_U               = 31*/
+        VK_OEM_7,  /*ekKEY_LCURLY          = 32*/
+        'I',       /*ekKEY_I               = 33*/
+        'P',       /*ekKEY_P               = 34*/
+        VK_RETURN, /*ekKEY_RETURN          = 35*/
+        'L',       /*ekKEY_L               = 36*/
+        'J',       /*ekKEY_J               = 37*/
+        ';',       /*ekKEY_SEMICOLON       = 38*/
+        'K',       /*ekKEY_K               = 39*/
 
-    VK_OEM_4,       /*ekKEY_QUEST           = 40*/
-    VK_OEM_COMMA,   /*ekKEY_COMMA           = 41*/
-    VK_OEM_MINUS,   /*ekKEY_MINUS           = 42*/
-    'N',            /*ekKEY_N               = 43*/
-    'M',            /*ekKEY_M               = 44*/
-    VK_OEM_PERIOD,  /*ekKEY_PERIOD          = 45*/
-    VK_TAB,         /*ekKEY_TAB             = 46*/
-    VK_SPACE,       /*ekKEY_SPACE           = 47*/
-    VK_OEM_102,     /*ekKEY_GTLT            = 48*/
-    VK_BACK,        /*ekKEY_BACK            = 49*/
+        VK_OEM_4,      /*ekKEY_QUEST           = 40*/
+        VK_OEM_COMMA,  /*ekKEY_COMMA           = 41*/
+        VK_OEM_MINUS,  /*ekKEY_MINUS           = 42*/
+        'N',           /*ekKEY_N               = 43*/
+        'M',           /*ekKEY_M               = 44*/
+        VK_OEM_PERIOD, /*ekKEY_PERIOD          = 45*/
+        VK_TAB,        /*ekKEY_TAB             = 46*/
+        VK_SPACE,      /*ekKEY_SPACE           = 47*/
+        VK_OEM_102,    /*ekKEY_GTLT            = 48*/
+        VK_BACK,       /*ekKEY_BACK            = 49*/
 
-    VK_ESCAPE,      /*ekKEY_ESCAPE          = 50*/
-    VK_F17,         /*ekKEY_F17             = 51*/
-    VK_DECIMAL,     /*ekKEY_NUMDECIMAL      = 52*/
-    VK_MULTIPLY,    /*ekKEY_NUMMULT         = 53*/
-    VK_ADD,         /*ekKEY_NUMADD          = 54*/
-    VK_NUMLOCK,     /*ekKEY_NUMLOCK         = 55*/
-    VK_DIVIDE,      /*ekKEY_NUMDIV          = 56*/
-    VK_RETURN,      /*ekKEY_NUMRET          = 57*/
-    VK_SUBTRACT,    /*ekKEY_NUMMINUS        = 58*/
-    VK_F18,         /*ekKEY_F18             = 59*/
+        VK_ESCAPE,   /*ekKEY_ESCAPE          = 50*/
+        VK_F17,      /*ekKEY_F17             = 51*/
+        VK_DECIMAL,  /*ekKEY_NUMDECIMAL      = 52*/
+        VK_MULTIPLY, /*ekKEY_NUMMULT         = 53*/
+        VK_ADD,      /*ekKEY_NUMADD          = 54*/
+        VK_NUMLOCK,  /*ekKEY_NUMLOCK         = 55*/
+        VK_DIVIDE,   /*ekKEY_NUMDIV          = 56*/
+        VK_RETURN,   /*ekKEY_NUMRET          = 57*/
+        VK_SUBTRACT, /*ekKEY_NUMMINUS        = 58*/
+        VK_F18,      /*ekKEY_F18             = 59*/
 
-    VK_F19,         /*ekKEY_F19             = 60*/
-    ' ',            /*ekKEY_NUMPAD_EQUAL    = 61*/
-    VK_NUMPAD0,     /*ekKEY_NUM0            = 62*/
-    VK_NUMPAD1,     /*ekKEY_NUM1            = 63*/
-    VK_NUMPAD2,     /*ekKEY_NUM2            = 64*/
-    VK_NUMPAD3,     /*ekKEY_NUM3            = 65*/
-    VK_NUMPAD4,     /*ekKEY_NUM4            = 66*/
-    VK_NUMPAD5,     /*ekKEY_NUM5            = 67*/
-    VK_NUMPAD6,     /*ekKEY_NUM6            = 68*/
-    VK_NUMPAD7,     /*ekKEY_NUM7            = 69*/
+        VK_F19,     /*ekKEY_F19             = 60*/
+        ' ',        /*ekKEY_NUMPAD_EQUAL    = 61*/
+        VK_NUMPAD0, /*ekKEY_NUM0            = 62*/
+        VK_NUMPAD1, /*ekKEY_NUM1            = 63*/
+        VK_NUMPAD2, /*ekKEY_NUM2            = 64*/
+        VK_NUMPAD3, /*ekKEY_NUM3            = 65*/
+        VK_NUMPAD4, /*ekKEY_NUM4            = 66*/
+        VK_NUMPAD5, /*ekKEY_NUM5            = 67*/
+        VK_NUMPAD6, /*ekKEY_NUM6            = 68*/
+        VK_NUMPAD7, /*ekKEY_NUM7            = 69*/
 
-    VK_NUMPAD8,     /*ekKEY_NUM8            = 70*/
-    VK_NUMPAD9,     /*ekKEY_NUM9            = 71*/
-    VK_F5,          /*ekKEY_F5              = 72*/
-    VK_F6,          /*ekKEY_F6              = 73*/
-    VK_F7,          /*ekKEY_F7              = 74*/
-    VK_F3,          /*ekKEY_F3              = 75*/
-    VK_F8,          /*ekKEY_F8              = 76*/
-    VK_F9,          /*ekKEY_F9              = 77*/
-    VK_F11,         /*ekKEY_F11             = 78*/
-    VK_F13,         /*ekKEY_F13             = 79*/
+        VK_NUMPAD8, /*ekKEY_NUM8            = 70*/
+        VK_NUMPAD9, /*ekKEY_NUM9            = 71*/
+        VK_F5,      /*ekKEY_F5              = 72*/
+        VK_F6,      /*ekKEY_F6              = 73*/
+        VK_F7,      /*ekKEY_F7              = 74*/
+        VK_F3,      /*ekKEY_F3              = 75*/
+        VK_F8,      /*ekKEY_F8              = 76*/
+        VK_F9,      /*ekKEY_F9              = 77*/
+        VK_F11,     /*ekKEY_F11             = 78*/
+        VK_F13,     /*ekKEY_F13             = 79*/
 
-    VK_F16,         /*ekKEY_F16             = 80*/
-    VK_F14,         /*ekKEY_F14             = 81*/
-    VK_F10,         /*ekKEY_F10             = 82*/
-    VK_F12,         /*ekKEY_F12             = 83*/
-    VK_F15,         /*ekKEY_F15             = 84*/
-    VK_PRIOR,       /*ekKEY_PAGEUP          = 85*/
-    VK_HOME,        /*ekKEY_HOME            = 86*/
-    VK_DELETE,      /*ekKEY_SUPR            = 87*/
-    VK_F4,          /*ekKEY_F4              = 88*/
-    VK_NEXT,        /*ekKEY_PAGEDOWN        = 89*/
+        VK_F16,    /*ekKEY_F16             = 80*/
+        VK_F14,    /*ekKEY_F14             = 81*/
+        VK_F10,    /*ekKEY_F10             = 82*/
+        VK_F12,    /*ekKEY_F12             = 83*/
+        VK_F15,    /*ekKEY_F15             = 84*/
+        VK_PRIOR,  /*ekKEY_PAGEUP          = 85*/
+        VK_HOME,   /*ekKEY_HOME            = 86*/
+        VK_DELETE, /*ekKEY_SUPR            = 87*/
+        VK_F4,     /*ekKEY_F4              = 88*/
+        VK_NEXT,   /*ekKEY_PAGEDOWN        = 89*/
 
-    VK_F2,          /*ekKEY_F2              = 90*/
-    VK_END,         /*ekKEY_END             = 91*/
-    VK_F1,          /*ekKEY_F1              = 92*/
-    VK_LEFT,        /*ekKEY_LEFT            = 93*/
-    VK_RIGHT,       /*ekKEY_RIGHT           = 94*/
-    VK_DOWN,        /*ekKEY_DOWN            = 95*/
-    VK_UP,          /*ekKEY_UP              = 96*/
-    VK_LSHIFT,      /*ekKEY_LSHIFT          = 97*/
-    VK_RSHIFT,      /*ekKEY_RSHIFT          = 98*/
-    VK_LCONTROL,    /*ekKEY_LCTRL           = 99 */
-    VK_RCONTROL,    /*ekKEY_RCTRL           = 100 */
-    VK_LMENU,       /*ekKEY_LALT            = 101 */
-    VK_RMENU,       /*ekKEY_RALT            = 102 */
-    VK_INSERT,      /*ekKEY_INSERT          = 103 */
-    VK_OEM_6,       /*ekKEY_EXCLAM          = 104 */
-    VK_APPS,        /*ekKEY_MENU            = 105 */
-    VK_LWIN,        /*ekKEY_LWIN            = 106 */
-    VK_RWIN,        /*ekKEY_RWIN            = 107 */
-    VK_CAPITAL,     /*ekKEY_CAPS            = 108 */
-    VK_OEM_3,       /*ekKEY_TILDE           = 109 */
-    VK_OEM_1,       /*ekKEY_GRAVE           = 110 */
-    VK_OEM_PLUS     /*ekKEY_PLUS            = 111 */
+        VK_F2,       /*ekKEY_F2              = 90*/
+        VK_END,      /*ekKEY_END             = 91*/
+        VK_F1,       /*ekKEY_F1              = 92*/
+        VK_LEFT,     /*ekKEY_LEFT            = 93*/
+        VK_RIGHT,    /*ekKEY_RIGHT           = 94*/
+        VK_DOWN,     /*ekKEY_DOWN            = 95*/
+        VK_UP,       /*ekKEY_UP              = 96*/
+        VK_LSHIFT,   /*ekKEY_LSHIFT          = 97*/
+        VK_RSHIFT,   /*ekKEY_RSHIFT          = 98*/
+        VK_LCONTROL, /*ekKEY_LCTRL           = 99 */
+        VK_RCONTROL, /*ekKEY_RCTRL           = 100 */
+        VK_LMENU,    /*ekKEY_LALT            = 101 */
+        VK_RMENU,    /*ekKEY_RALT            = 102 */
+        VK_INSERT,   /*ekKEY_INSERT          = 103 */
+        VK_OEM_6,    /*ekKEY_EXCLAM          = 104 */
+        VK_APPS,     /*ekKEY_MENU            = 105 */
+        VK_LWIN,     /*ekKEY_LWIN            = 106 */
+        VK_RWIN,     /*ekKEY_RWIN            = 107 */
+        VK_CAPITAL,  /*ekKEY_CAPS            = 108 */
+        VK_OEM_3,    /*ekKEY_TILDE           = 109 */
+        VK_OEM_1,    /*ekKEY_GRAVE           = 110 */
+        VK_OEM_PLUS  /*ekKEY_PLUS            = 111 */
 };
 
 uint32_t kNUM_VKEYS = sizeof(kVIRTUAL_KEY) / sizeof(WORD);
@@ -198,25 +195,25 @@ static void i_registry_custom_window_class(void)
 {
     WNDCLASSEX wc;
     cassert(i_INSTANCE != NULL);
-	wc.cbSize		 = sizeof(WNDCLASSEX);
-    wc.style		 = CS_GLOBALCLASS | CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc	 = DefWindowProc;
-    wc.cbClsExtra	 = 0;
-	wc.cbWndExtra	 = 0;
-    wc.hInstance	 = i_INSTANCE;
-	wc.hIcon		 = LoadIcon(NULL, IDI_APPLICATION);
-	wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
+    wc.cbSize = sizeof(WNDCLASSEX);
+    wc.style = CS_GLOBALCLASS | CS_HREDRAW | CS_VREDRAW;
+    wc.lpfnWndProc = DefWindowProc;
+    wc.cbClsExtra = 0;
+    wc.cbWndExtra = 0;
+    wc.hInstance = i_INSTANCE;
+    wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 
-    // Avoid warning C4306: 'type cast' : conversion from 'int' to 'HBRUSH' of greater size
-    #if defined (__x64__)
-	wc.hbrBackground = (HBRUSH)(uint64_t)(COLOR_BTNFACE);
-    #else
+// Avoid warning C4306: 'type cast' : conversion from 'int' to 'HBRUSH' of greater size
+#if defined(__x64__)
+    wc.hbrBackground = (HBRUSH)(uint64_t)(COLOR_BTNFACE);
+#else
     wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
-    #endif
+#endif
 
-	wc.lpszMenuName  = NULL;
-	wc.lpszClassName = kWINDOW_CLASS;
-	wc.hIconSm		 = LoadIcon(NULL, IDI_APPLICATION);
+    wc.lpszMenuName = NULL;
+    wc.lpszClassName = kWINDOW_CLASS;
+    wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
     {
         ATOM ret = 0;
@@ -235,7 +232,7 @@ static void i_registry_view_class(void)
     wc.style = CS_GLOBALCLASS;
     wc.lpfnWndProc = DefWindowProc;
     wc.cbClsExtra = 0;
-    wc.cbWndExtra = sizeof(char*) * 2;
+    wc.cbWndExtra = sizeof(char *) * 2;
     wc.hInstance = i_INSTANCE;
     wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -265,16 +262,16 @@ LRESULT _osgui_nccalcsize(HWND hwnd, WPARAM wParam, LPARAM lParam, bool_t expand
     cassert(ypadding >= 0);
 
     // LParam points to a NCCALCSIZE_PARAMS struct
-	if(wParam == TRUE)
-	{
-        NCCALCSIZE_PARAMS *cp = (NCCALCSIZE_PARAMS*)lParam;
+    if (wParam == TRUE)
+    {
+        NCCALCSIZE_PARAMS *cp = (NCCALCSIZE_PARAMS *)lParam;
         window_rect = &cp->rgrc[0];
-	}
+    }
     // LParam points to a RECT struct
-	else
-	{
-        window_rect = (RECT*)lParam;
-	}
+    else
+    {
+        window_rect = (RECT *)lParam;
+    }
 
     osstyleXP_GetThemeBackgroundContentRect(theme, hdc, EP_EDITTEXT, ETS_NORMAL, window_rect, &content_rect);
 
@@ -289,18 +286,18 @@ LRESULT _osgui_nccalcsize(HWND hwnd, WPARAM wParam, LPARAM lParam, bool_t expand
     border->bottom = window_rect->bottom - content_rect.bottom;
 
     // LParam points to a NCCALCSIZE_PARAMS struct
-	if(wParam == TRUE)
-	{
-        NCCALCSIZE_PARAMS *cp = (NCCALCSIZE_PARAMS*)lParam;
+    if (wParam == TRUE)
+    {
+        NCCALCSIZE_PARAMS *cp = (NCCALCSIZE_PARAMS *)lParam;
         cp->rgrc[0] = content_rect;
         res = WVR_REDRAW;
-	}
+    }
     // LParam points to a RECT struct
-	else
-	{
-        *(RECT*)lParam = content_rect;
+    else
+    {
+        *(RECT *)lParam = content_rect;
         res = 0;
-	}
+    }
 
     osstyleXP_CloseTheme(theme);
     ReleaseDC(hwnd, hdc);
@@ -325,7 +322,7 @@ LRESULT _osgui_nccalcsize(HWND hwnd, WPARAM wParam, LPARAM lParam, bool_t expand
 
 LRESULT _osgui_ncpaint(HWND hwnd, const RECT *border, HBRUSH padding_bgcolor)
 {
-	HDC hdc = GetWindowDC(hwnd);
+    HDC hdc = GetWindowDC(hwnd);
     HTHEME theme = NULL;
     int partId = _CP_BORDER;
     int stateId = _CBB_NORMAL;
@@ -364,12 +361,12 @@ LRESULT _osgui_ncpaint(HWND hwnd, const RECT *border, HBRUSH padding_bgcolor)
     client_rect.top += border->top;
     client_rect.right -= border->right;
     client_rect.bottom -= border->bottom;
-	ExcludeClipRect(hdc, client_rect.left, client_rect.top, client_rect.right, client_rect.bottom);
+    ExcludeClipRect(hdc, client_rect.left, client_rect.top, client_rect.right, client_rect.bottom);
 
     osstyleXP_DrawThemeBackground2(theme, partId, stateId, hdc, &window_rect);
 
     /* For extra non-client area in edits, for vertical padding "simulation" */
-    if(padding_bgcolor != NULL)
+    if (padding_bgcolor != NULL)
     {
         RECT bgrect = window_rect;
         bgrect.left += border->left;
@@ -433,7 +430,7 @@ void _osgui_start_imp(void)
     to the new parent.
     */
     i_DEFAULT_OSPANEL = _ospanel_create_default();
-    kDEFAULT_PARENT_WINDOW = ((OSControl*)i_DEFAULT_OSPANEL)->hwnd;
+    kDEFAULT_PARENT_WINDOW = ((OSControl *)i_DEFAULT_OSPANEL)->hwnd;
 
     /* Cursors */
     kNORMAL_ARROW_CURSOR = LoadCursor(NULL, IDC_ARROW);
@@ -442,7 +439,7 @@ void _osgui_start_imp(void)
 
     /* Brushes and pens */
     {
-        unsigned short chess_board[] = { 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55 };
+        unsigned short chess_board[] = {0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55};
         HBITMAP bitmap = CreateBitmap(8, 8, 1, 1, chess_board);
         kCHESSBOARD_BRUSH = CreatePatternBrush(bitmap);
         DeleteObject(bitmap);
@@ -640,12 +637,11 @@ void _osgui_remove_accelerator(WORD cmd)
     cassert_no_null(i_ACCELERATORS);
     cassert_no_null(i_HWND_ACCELERATORS);
 
-    arrst_foreach(accel, i_ACCELERATORS, ACCEL)
-        if (accel->cmd == cmd)
-        {
-            i = accel_i;
-            break;
-        }
+    arrst_foreach(accel, i_ACCELERATORS, ACCEL) if (accel->cmd == cmd)
+    {
+        i = accel_i;
+        break;
+    }
     arrst_end();
 
     cassert(i < arrst_size(i_ACCELERATORS, ACCEL));
@@ -678,14 +674,13 @@ void _osgui_change_accelerator(BYTE fVirt, WORD key, WORD cmd)
     cassert_no_null(i_HWND_ACCELERATORS);
     cassert(arrst_size(i_HWND_ACCELERATORS, HWND) == arrst_size(i_ACCELERATORS, ACCEL));
 
-    arrst_foreach(accel, i_ACCELERATORS, ACCEL)
-        if (accel->cmd == cmd)
-        {
-            i = accel_i;
-            accel->fVirt = fVirt;
-            accel->key = key;
-            break;
-        }
+    arrst_foreach(accel, i_ACCELERATORS, ACCEL) if (accel->cmd == cmd)
+    {
+        i = accel_i;
+        accel->fVirt = fVirt;
+        accel->key = key;
+        break;
+    }
     arrst_end();
 
     cassert(i < arrst_size(i_ACCELERATORS, ACCEL));
@@ -710,12 +705,11 @@ HWND _osgui_hwnd_accelerator(WORD cmd)
     cassert_no_null(i_ACCELERATORS);
     cassert_no_null(i_HWND_ACCELERATORS);
     cassert(arrst_size(i_HWND_ACCELERATORS, HWND) == arrst_size(i_ACCELERATORS, ACCEL));
-    arrst_foreach(accel, i_ACCELERATORS, ACCEL)
-        if (accel->cmd == cmd)
-        {
-            HWND *hwnd = arrst_get(i_HWND_ACCELERATORS, accel_i, HWND);
-            return *hwnd;
-        }
+    arrst_foreach(accel, i_ACCELERATORS, ACCEL) if (accel->cmd == cmd)
+    {
+        HWND *hwnd = arrst_get(i_HWND_ACCELERATORS, accel_i, HWND);
+        return *hwnd;
+    }
     arrst_end();
     cassert_msg(FALSE, "Unknown win32 acelerator cmd");
     return NULL;
@@ -765,7 +759,7 @@ void _osgui_word_size(StringSizeData *data, const char_t *word, real32_t *width,
     cassert_no_null(width);
     cassert_no_null(height);
     num_chars = unicode_nchars(word, ekUTF8);
-    num_bytes = unicode_convers(word, (char_t*)wword, ekUTF8, ekUTF16, sizeof(wword));
+    num_bytes = unicode_convers(word, (char_t *)wword, ekUTF8, ekUTF16, sizeof(wword));
     cassert(num_bytes < sizeof(wword));
     ret = GetTextExtentPoint32(data->hdc, wword, (int)num_chars, &word_size);
     cassert(ret != 0);

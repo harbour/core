@@ -13,12 +13,13 @@
 #include "osglobals.h"
 #include "osglobals.inl"
 #include "oscontrol.inl"
-#include "cassert.h"
-#include "color.h"
-#include "event.h"
-#include "heap.h"
-#include "image.h"
-#include "unicode.h"
+#include <draw2d/color.h>
+#include <draw2d/image.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <core/strings.h>
+#include <sewer/cassert.h>
+#include <sewer/unicode.h>
 
 #if !defined(__GTK3__)
 #error This file is only for GTK Toolkit
@@ -29,7 +30,7 @@ static GtkWidget *kWINDOW = NULL;
 static GtkWidget *kLABEL = NULL;
 static GtkWidget *kENTRY = NULL;
 static GtkWidget *kBUTTON = NULL;
-static GtkWidget *kCHECK[10] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+static GtkWidget *kCHECK[10] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 static GtkWidget *kSEPARATOR = NULL;
 static GtkWidget *kLINKBUTTON = NULL;
 static GtkWidget *kPROGRESSBAR = NULL;
@@ -79,22 +80,26 @@ static void i_widget_margins(GtkWidget *widget, const uint32_t max_width, const 
     gtk_widget_draw(widget, cairo);
     bitmap = gdk_pixbuf_get_from_surface(surface, 0, 0, max_width, max_height);
     cassert(gdk_pixbuf_get_rowstride(bitmap) % 4 == 0);
-    buffer = (uint32_t*)gdk_pixbuf_get_pixels(bitmap);
+    buffer = (uint32_t *)gdk_pixbuf_get_pixels(bitmap);
     *color = 0;
 
     for (i = 0; i < max_width; ++i)
-    for (j = 0; j < max_height; ++j)
-    {
-        if (buffer[j * max_width + i] != 0)
+        for (j = 0; j < max_height; ++j)
         {
-            if (i < x0) x0 = i;
-            if (i > x1) x1 = i;
-            if (j < y0) y0 = j;
-            if (j > y1) y1 = j;
-            if (*color == 0)
-                *color = buffer[j * max_width + i];
+            if (buffer[j * max_width + i] != 0)
+            {
+                if (i < x0)
+                    x0 = i;
+                if (i > x1)
+                    x1 = i;
+                if (j < y0)
+                    y0 = j;
+                if (j > y1)
+                    y1 = j;
+                if (*color == 0)
+                    *color = buffer[j * max_width + i];
+            }
         }
-    }
 
     cairo_surface_destroy(surface);
     cairo_destroy(cairo);
@@ -137,10 +142,10 @@ static void i_button_images(cairo_t *cairo, GtkWidget **button, gdouble offset)
 static color_t i_from_gdkcolor(const GdkRGBA *gdkcolor)
 {
     return color_rgba(
-                (uint8_t)(gdkcolor->red * 255.),
-                (uint8_t)(gdkcolor->green * 255.),
-                (uint8_t)(gdkcolor->blue * 255.),
-                (uint8_t)(gdkcolor->alpha * 255.));
+        (uint8_t)(gdkcolor->red * 255.),
+        (uint8_t)(gdkcolor->green * 255.),
+        (uint8_t)(gdkcolor->blue * 255.),
+        (uint8_t)(gdkcolor->alpha * 255.));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -152,7 +157,7 @@ static color_t i_color_prop(GtkWidget *widget, const char_t *prop, GtkStateFlags
     color_t color = 0;
     GtkStyleContext *c = gtk_widget_get_style_context(widget);
     gtk_style_context_get_property(c, prop, flags, &value);
-    gdkcolor = (GdkRGBA*)g_value_get_boxed(&value);
+    gdkcolor = (GdkRGBA *)g_value_get_boxed(&value);
     color = i_from_gdkcolor(gdkcolor);
     g_value_unset(&value);
     return color;
@@ -192,14 +197,14 @@ static color_t i_frame_color(void)
     gtk_widget_draw(kFRAME, cairo);
     bitmap = gdk_pixbuf_get_from_surface(surface, 0, 0, size, size);
     cassert(gdk_pixbuf_get_rowstride(bitmap) % 4 == 0);
-    buffer = (uint32_t*)gdk_pixbuf_get_pixels(bitmap);
+    buffer = (uint32_t *)gdk_pixbuf_get_pixels(bitmap);
 
     for (i = 0; i < size && col == 0; ++i)
-    for (j = size/2; j < size && col == 0; ++j)
-    {
-        if (buffer[j * size + i] != 0)
-            col = buffer[j * size + i];
-    }
+        for (j = size / 2; j < size && col == 0; ++j)
+        {
+            if (buffer[j * size + i] != 0)
+                col = buffer[j * size + i];
+        }
 
     cairo_surface_destroy(surface);
     cairo_destroy(cairo);
@@ -227,8 +232,8 @@ static void i_precompute_colors(void)
     kHOTTXBACKDROP_COLOR = i_color_prop(kTABLE, "color", GTK_STATE_FLAG_PRELIGHT | GTK_STATE_FLAG_BACKDROP);
 
     r = (real32_t)((uint8_t)(kVIEW_COLOR) / 255.f);
-    g = (real32_t)((uint8_t)(kVIEW_COLOR >> 8)/255.f);
-    b = (real32_t)((uint8_t)(kVIEW_COLOR >> 16)/255.f);
+    g = (real32_t)((uint8_t)(kVIEW_COLOR >> 8) / 255.f);
+    b = (real32_t)((uint8_t)(kVIEW_COLOR >> 16) / 255.f);
     kDARK_MODE = (.21 * r + .72 * g + .07 * b) < .5 ? TRUE : FALSE;
 }
 
@@ -269,14 +274,14 @@ static void i_precompute_checks(void)
     /* Image with checkbox and radio states for drawing in contexts */
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 10 * mwidth, mheight);
     cairo = cairo_create(surface);
-    cairo_translate(cairo, - (gdouble)(mx + mwidth), - (gdouble)my);
+    cairo_translate(cairo, -(gdouble)(mx + mwidth), -(gdouble)my);
     i_button_images(cairo, kCHECK, (gdouble)mwidth);
     i_button_images(cairo, kCHECK + 5, (gdouble)mwidth);
     kCHECK_WIDTH = mwidth;
     kCHECK_HEIGHT = mheight;
     kCHECKSBITMAP = gdk_pixbuf_get_from_surface(surface, 0, 0, 10 * mwidth, mheight);
 
-/*
+    /*
     #include "stream.h"
     #include "image.inl"
     Stream *stm = stm_to_file("/home/fran/Desktop/check.png", NULL);
@@ -326,13 +331,13 @@ static gboolean i_OnWindowDamage(GtkWidget *widget, GdkEventExpose *event, gpoin
         GtkWidget *hscroll = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(kSCROLL));
         GtkWidget *vscroll = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(kSCROLL));
 
-    #if GTK_CHECK_VERSION(3, 20, 0)
+#if GTK_CHECK_VERSION(3, 20, 0)
         gtk_widget_get_allocated_size(hscroll, &halloc, NULL);
         gtk_widget_get_allocated_size(vscroll, &valloc, NULL);
-    #else
+#else
         gtk_widget_get_allocation(hscroll, &halloc);
         gtk_widget_get_allocation(vscroll, &valloc);
-    #endif
+#endif
 
         kSCROLL_WIDTH = valloc.width;
         kSCROLL_HEIGHT = halloc.height;
@@ -377,9 +382,9 @@ static void i_impostor_window(void)
     gtk_tree_view_append_column(GTK_TREE_VIEW(kTABLE), column1);
     gtk_tree_view_append_column(GTK_TREE_VIEW(kTABLE), column2);
     gtk_tree_view_column_set_sizing(GTK_TREE_VIEW_COLUMN(column1), GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_fixed_width(GTK_TREE_VIEW_COLUMN (column1), 100);
+    gtk_tree_view_column_set_fixed_width(GTK_TREE_VIEW_COLUMN(column1), 100);
     gtk_tree_view_column_set_sizing(GTK_TREE_VIEW_COLUMN(column2), GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_fixed_width(GTK_TREE_VIEW_COLUMN (column2), 100);
+    gtk_tree_view_column_set_fixed_width(GTK_TREE_VIEW_COLUMN(column2), 100);
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(kTABLE), TRUE);
     gtk_widget_set_size_request(kTABLE, (gint)200, (gint)100);
     store = gtk_list_store_new(1, G_TYPE_STRING);
@@ -463,7 +468,8 @@ color_t osglobals_color(const syscolor_t *color)
     cassert_no_null(color);
     cassert(kWINDOW != NULL);
 
-    switch (*color) {
+    switch (*color)
+    {
     case ekSYSCOLOR_DARKMODE:
         return kDARK_MODE;
 
@@ -487,7 +493,7 @@ color_t osglobals_color(const syscolor_t *color)
         cassert(kBORD_COLOR != 0);
         return kBORD_COLOR;
 
-    cassert_default();
+        cassert_default();
     }
 
     return 0;
@@ -497,9 +503,9 @@ color_t osglobals_color(const syscolor_t *color)
 
 void osglobals_resolution(const void *non_used, real32_t *width, real32_t *height)
 {
-	unref(non_used);
-	cassert_no_null(width);
-	cassert_no_null(height);
+    unref(non_used);
+    cassert_no_null(width);
+    cassert_no_null(height);
 #if GTK_CHECK_VERSION(3, 22, 0)
 
     {
@@ -522,9 +528,9 @@ void osglobals_resolution(const void *non_used, real32_t *width, real32_t *heigh
 void osglobals_mouse_position(const void *non_used, real32_t *x, real32_t *y)
 {
     cassert(FALSE);
-	unref(non_used);
-	unref(x);
-	unref(y);
+    unref(non_used);
+    unref(x);
+    unref(y);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -533,7 +539,8 @@ Cursor *osglobals_cursor(const gui_cursor_t cursor, const Image *image, const re
 {
     GdkDisplay *display = gdk_display_get_default();
     GdkCursor *gdkcursor = NULL;
-    switch (cursor) {
+    switch (cursor)
+    {
     case ekGUI_CURSOR_ARROW:
         gdkcursor = gdk_cursor_new_for_display(display, GDK_ARROW);
         break;
@@ -558,18 +565,17 @@ Cursor *osglobals_cursor(const gui_cursor_t cursor, const Image *image, const re
         gdkcursor = gdk_cursor_new_for_display(display, GDK_SB_V_DOUBLE_ARROW);
         break;
 
-    case ekGUI_CURSOR_USER:
-    {
+    case ekGUI_CURSOR_USER: {
         const GdkPixbuf *pixbuf = image_native(image);
-        gdkcursor = gdk_cursor_new_from_pixbuf(display, (GdkPixbuf*)pixbuf, (gint)hot_x, (gint)hot_y);
+        gdkcursor = gdk_cursor_new_from_pixbuf(display, (GdkPixbuf *)pixbuf, (gint)hot_x, (gint)hot_y);
         break;
     }
 
-    cassert_default();
+        cassert_default();
     }
 
     heap_auditor_add("GdkCursor");
-    return (Cursor*)gdkcursor;
+    return (Cursor *)gdkcursor;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -578,7 +584,7 @@ void osglobals_cursor_destroy(Cursor **cursor)
 {
     cassert_no_null(cursor);
     cassert_no_null(*cursor);
-    g_object_unref((GdkCursor*)*cursor);
+    g_object_unref((GdkCursor *)*cursor);
     heap_auditor_delete("GdkCursor");
     *cursor = NULL;
 }
@@ -588,16 +594,17 @@ void osglobals_cursor_destroy(Cursor **cursor)
 void osglobals_value(const uint32_t index, void *value)
 {
     cassert_no_null(value);
-    switch (index) {
+    switch (index)
+    {
     case 0:
-        (*(uint32_t*)value) = 0;
+        (*(uint32_t *)value) = 0;
         break;
 
     case 1:
-        (*(uint32_t*)value) = 0;
+        (*(uint32_t *)value) = 0;
         break;
 
-    cassert_default();
+        cassert_default();
     }
 }
 
@@ -645,7 +652,7 @@ static void i_null_log(const gchar *log_domain, GLogLevelFlags log_levels, const
 
 /*---------------------------------------------------------------------------*/
 
-#define IS_BLANK(c) (bool_t)((c) == ' '|| (c) == '\n' || (c) == '\t' || (c) == '\v' || (c) == '\f' || (c) == '\r')
+#define IS_BLANK(c) (bool_t)((c) == ' ' || (c) == '\n' || (c) == '\t' || (c) == '\v' || (c) == '\f' || (c) == '\r')
 
 static const char *i_get_next_section(const char *css_data, char **pcss, int *n)
 {
@@ -657,7 +664,7 @@ static const char *i_get_next_section(const char *css_data, char **pcss, int *n)
     {
         char *st = *pcss;
         char *ed = *pcss;
-        while(st > css_data)
+        while (st > css_data)
         {
             st--;
             /* The end of previous block */
@@ -694,7 +701,7 @@ static void i_jump_next_section(char **pcss)
 {
     uint32_t i = 0;
     cassert(*(*pcss) == '{');
-    for(;;)
+    for (;;)
     {
         /* Malformed CSS */
         if (*(*pcss) == 0)
@@ -749,7 +756,7 @@ static void i_parse_gtk_theme(void)
 
     pcss = css_data;
 
-    for(;;)
+    for (;;)
     {
         char_t csect[256];
         section = i_get_next_section(css_data, &pcss, &nsection);
@@ -819,7 +826,7 @@ static void i_parse_gtk_theme(void)
         if (kCSS_TEXTVIEWTEXT != NULL)
         {
             const char_t *t = tc(kCSS_TEXTVIEWTEXT);
-            while(*t != 0)
+            while (*t != 0)
             {
                 if (*t == ' ')
                 {
@@ -834,11 +841,11 @@ static void i_parse_gtk_theme(void)
 
     if (kCSS_TEXTVIEW == NULL)
     {
-    #if GTK_CHECK_VERSION(3, 22, 0)
+#if GTK_CHECK_VERSION(3, 22, 0)
         kCSS_TEXTVIEW = str_c("textview");
-    #else
+#else
         kCSS_TEXTVIEW = str_c("GtkTextView");
-    #endif
+#endif
     }
 
     if (kCSS_TEXTVIEWTEXT == NULL && kCSS_TEXTVIEW != NULL)
@@ -854,7 +861,7 @@ static void i_parse_gtk_theme(void)
 void osglobals_init(void)
 {
     /* Disable unavoidable GLib warnings when processing CSS */
-    g_log_set_handler ("GLib", (GLogLevelFlags)0xFFFF, i_null_log, NULL);
+    g_log_set_handler("GLib", (GLogLevelFlags)0xFFFF, i_null_log, NULL);
     i_parse_gtk_theme();
     i_impostor_window();
 }
@@ -1090,7 +1097,7 @@ uint32_t osglobals_scroll_height(void)
 
 /*---------------------------------------------------------------------------*/
 
-GdkPixbuf* osglobals_checks_bitmap(void)
+GdkPixbuf *osglobals_checks_bitmap(void)
 {
     cassert(kCHECKSBITMAP != NULL);
     return kCHECKSBITMAP;

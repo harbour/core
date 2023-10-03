@@ -11,7 +11,6 @@
 /* View listeners */
 
 #include "osgui_osx.ixx"
-#include "core.hxx"
 
 void _oslistener_init(ViewListeners *listeners);
 
@@ -40,4 +39,3 @@ void _oslistener_key_down(const NSView *view, NSEvent *theEvent, ViewListeners *
 void _oslistener_key_up(const NSView *view, NSEvent *theEvent, ViewListeners *listeners);
 
 void _oslistener_key_flags_changed(const NSView *view, NSEvent *theEvent, ViewListeners *listeners);
-

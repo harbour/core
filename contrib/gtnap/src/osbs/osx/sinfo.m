@@ -12,23 +12,24 @@
 
 #include "bfile.h"
 
-#if !defined (__MACOS__)
+#if !defined(__MACOS__)
 #error This file is only for OSX
 #endif
 
-#include "nowarn.hxx"
+#include <sewer/nowarn.hxx>
 #include <Cocoa/Cocoa.h>
-#include "warn.hxx"
 #include <mach-o/dyld.h>
-#include "cassert.h"
-#include "unicode.h"
+#include <sewer/warn.hxx>
+
+#include <sewer/cassert.h>
+#include <sewer/unicode.h>
 
 /*---------------------------------------------------------------------------*/
 
 uint32_t bfile_dir_home(char_t *pathname, const uint32_t size)
 {
     const char *home = getenv("HOME");
-    return unicode_convers((const char_t*)home, pathname, ekUTF8, ekUTF8, size);
+    return unicode_convers((const char_t *)home, pathname, ekUTF8, ekUTF8, size);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -37,7 +38,7 @@ uint32_t bfile_dir_data(char_t *pathname, const uint32_t size)
 {
     uint32_t s;
     const char *home = getenv("HOME");
-    s = unicode_convers((const char_t*)home, pathname, ekUTF8, ekUTF8, size);
+    s = unicode_convers((const char_t *)home, pathname, ekUTF8, ekUTF8, size);
     if (s + 8 < size)
     {
         strcpy(pathname + s - 1, "/Library");
@@ -51,11 +52,10 @@ uint32_t bfile_dir_data(char_t *pathname, const uint32_t size)
 uint32_t bfile_dir_exec(char_t *pathname, const uint32_t size)
 {
     uint32_t lsize = size;
-    if (_NSGetExecutablePath((char*)pathname, &lsize) != 0)
+    if (_NSGetExecutablePath((char *)pathname, &lsize) != 0)
     {
         cassert_msg(FALSE, "Buffer too small");
     }
-    
+
     return lsize;
 }
-

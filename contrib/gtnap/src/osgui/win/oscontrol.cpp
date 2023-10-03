@@ -16,20 +16,20 @@
 #include "ostooltip.inl"
 #include "ospanel.inl"
 #include "oswindow.inl"
-#include "cassert.h"
-#include "color.h"
-#include "font.h"
-#include "unicode.h"
-#include "heap.h"
-#include "ptr.h"
+#include <draw2d/color.h>
+#include <draw2d/font.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
+#include <sewer/unicode.h>
 
 #if !defined(__WINDOWS__)
 #error This file is only for Windows
 #endif
 
-#pragma warning (push, 0) 
+#include <sewer/nowarn.hxx>
 #include <math.h>
-#pragma warning (pop) 
+#include <sewer/warn.hxx>
 
 static const unicode_t i_SYSTEM_FORMAT = ekUTF16;
 
@@ -50,19 +50,19 @@ static void i_init(OSControl *control, const DWORD dwExStyle, const DWORD dwStyl
     cassert_no_null(control);
     instance = _osgui_instance();
     cassert_no_null(instance);
-        
+
     control->hwnd = CreateWindowEx(
-                        dwExStyle, 
-                        lpClassName,
-                        PARAM(lpWindowName, NULL),
-                        dwStyle,
-                        PARAM(x, 0),
-                        PARAM(y, 0),                        
-                        nWidth, nHeight,
-                        PARAM(hWndParent, parent_window),
-                        (HMENU)NULL,
-                        instance, 
-                        PARAM(lpParam, NULL));
+        dwExStyle,
+        lpClassName,
+        PARAM(lpWindowName, NULL),
+        dwStyle,
+        PARAM(x, 0),
+        PARAM(y, 0),
+        nWidth, nHeight,
+        PARAM(hWndParent, parent_window),
+        (HMENU)NULL,
+        instance,
+        PARAM(lpParam, NULL));
 
     cassert_no_null(control->hwnd);
     control->tooltip_hwnd = NULL;
@@ -73,7 +73,7 @@ static void i_init(OSControl *control, const DWORD dwExStyle, const DWORD dwStyl
         control->def_wnd_proc = NULL;
 
     {
-        void *data = (void*)SetWindowLongPtr(control->hwnd, GWLP_USERDATA, (LONG_PTR)control);
+        void *data = (void *)SetWindowLongPtr(control->hwnd, GWLP_USERDATA, (LONG_PTR)control);
         cassert_unref(data == NULL, data);
     }
 }
@@ -111,17 +111,17 @@ WCHAR *_oscontrol_convers_text(const char_t *text_utf8, uint32_t *size)
     uint32_t used_bytes = UINT32_MAX;
     cassert_no_null(size);
     *size = unicode_convers_nbytes(text_utf8, ekUTF8, ekUTF16);
-    text = (char_t*)heap_malloc(*size, "OSControlConversText");
+    text = (char_t *)heap_malloc(*size, "OSControlConversText");
     used_bytes = unicode_convers(text_utf8, text, ekUTF8, ekUTF16, *size);
     cassert(*size == used_bytes);
-    return (WCHAR*)text;
+    return (WCHAR *)text;
 }
 
 /*---------------------------------------------------------------------------*/
 
 void _oscontrol_destroy_text(WCHAR **text, const uint32_t size)
 {
-    heap_free((byte_t**)text, size, "OSControlConversText");
+    heap_free((byte_t **)text, size, "OSControlConversText");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -143,7 +143,7 @@ char_t *_oscontrol_get_text(const OSControl *control, uint32_t *tsize)
     }
     else
     {
-        wtext_alloc = (WCHAR*)heap_malloc(num_chars * sizeof(WCHAR), "OSControlGetTextBuf");
+        wtext_alloc = (WCHAR *)heap_malloc(num_chars * sizeof(WCHAR), "OSControlGetTextBuf");
         wtext = wtext_alloc;
     }
 
@@ -154,16 +154,16 @@ char_t *_oscontrol_get_text(const OSControl *control, uint32_t *tsize)
         cassert(num_chars == num_chars_copied + 1);
     }
 
-    *tsize = unicode_convers_nbytes((const char_t*)wtext, kWINDOWS_UNICODE, ekUTF8);
-    control_text = (char_t*)heap_malloc(*tsize, "OSControlGetText");
+    *tsize = unicode_convers_nbytes((const char_t *)wtext, kWINDOWS_UNICODE, ekUTF8);
+    control_text = (char_t *)heap_malloc(*tsize, "OSControlGetText");
 
     {
-        register uint32_t bytes = unicode_convers((const char_t*)wtext, control_text, kWINDOWS_UNICODE, ekUTF8, *tsize);
+        register uint32_t bytes = unicode_convers((const char_t *)wtext, control_text, kWINDOWS_UNICODE, ekUTF8, *tsize);
         cassert_unref(bytes == *tsize, bytes);
     }
 
     if (wtext_alloc != NULL)
-        heap_free((byte_t**)&wtext_alloc, num_chars * sizeof(WCHAR), "OSControlGetTextBuf");
+        heap_free((byte_t **)&wtext_alloc, num_chars * sizeof(WCHAR), "OSControlGetTextBuf");
 
     return control_text;
 }
@@ -184,12 +184,12 @@ void _oscontrol_set_text(OSControl *control, const char_t *text)
     }
     else
     {
-        wtext_alloc = (WCHAR*)heap_malloc(num_chars * sizeof(WCHAR), "OSControlSetText");
+        wtext_alloc = (WCHAR *)heap_malloc(num_chars * sizeof(WCHAR), "OSControlSetText");
         wtext = wtext_alloc;
     }
 
     {
-        register uint32_t bytes = unicode_convers(text, (char_t*)wtext, ekUTF8, kWINDOWS_UNICODE, num_chars * sizeof(WCHAR));
+        register uint32_t bytes = unicode_convers(text, (char_t *)wtext, ekUTF8, kWINDOWS_UNICODE, num_chars * sizeof(WCHAR));
         cassert_unref(bytes == num_chars * sizeof(WCHAR), bytes);
     }
 
@@ -199,7 +199,7 @@ void _oscontrol_set_text(OSControl *control, const char_t *text)
     }
 
     if (wtext_alloc != NULL)
-        heap_free((byte_t**)&wtext_alloc, num_chars * sizeof(WCHAR), "OSControlSetText");
+        heap_free((byte_t **)&wtext_alloc, num_chars * sizeof(WCHAR), "OSControlSetText");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -207,7 +207,7 @@ void _oscontrol_set_text(OSControl *control, const char_t *text)
 void _oscontrol_set_tooltip(OSControl *control, const char_t *text)
 {
     cassert_no_null(control);
-    _ostooltip_set_text(&control->tooltip_hwnd, control->hwnd, text);    
+    _ostooltip_set_text(&control->tooltip_hwnd, control->hwnd, text);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -215,7 +215,7 @@ void _oscontrol_set_tooltip(OSControl *control, const char_t *text)
 void _oscontrol_set_tooltip_hwnd(OSControl *control, HWND hwnd, const char_t *text)
 {
     cassert_no_null(control);
-    _ostooltip_set_text(&control->tooltip_hwnd, hwnd, text);    
+    _ostooltip_set_text(&control->tooltip_hwnd, hwnd, text);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -248,13 +248,13 @@ DWORD _oscontrol_halign(const align_t halign)
 {
     switch (halign)
     {
-        case ekLEFT:
-            return SS_LEFT;
-        case ekCENTER:
-        case ekJUSTIFY:
-            return SS_CENTER;
-        case ekRIGHT:
-            return SS_RIGHT;
+    case ekLEFT:
+        return SS_LEFT;
+    case ekCENTER:
+    case ekJUSTIFY:
+        return SS_CENTER;
+    case ekRIGHT:
+        return SS_RIGHT;
         cassert_default();
     }
 
@@ -267,15 +267,15 @@ DWORD _oscontrol_ellipsis(const ellipsis_t ellipsis)
 {
     switch (ellipsis)
     {
-        case ekELLIPNONE:
-        case ekELLIPMLINE:
-            return 0;
-        case ekELLIPBEGIN:
-            return SS_ENDELLIPSIS;
-        case ekELLIPEND:
-            return SS_ENDELLIPSIS;
-        case ekELLIPMIDDLE:
-            return SS_PATHELLIPSIS;
+    case ekELLIPNONE:
+    case ekELLIPMLINE:
+        return 0;
+    case ekELLIPBEGIN:
+        return SS_ENDELLIPSIS;
+    case ekELLIPEND:
+        return SS_ENDELLIPSIS;
+    case ekELLIPMIDDLE:
+        return SS_PATHELLIPSIS;
     }
 
     return 0;
@@ -367,7 +367,7 @@ void _oscontrol_destroy_brush(HBRUSH *brush)
 void _oscontrol_get_local_frame(HWND hwnd, RECT *rect)
 {
     BOOL ret = GetWindowRect(hwnd, rect);
-	cassert_unref(ret != 0, ret);
+    cassert_unref(ret != 0, ret);
     MapWindowPoints(HWND_DESKTOP, GetParent(hwnd), (LPPOINT)rect, 2);
 }
 
@@ -390,10 +390,10 @@ void _oscontrol_get_origin_in_screen(HWND hwnd, real32_t *x, real32_t *y)
 {
     BOOL ret;
     RECT rect;
-	cassert_no_null(x);
-	cassert_no_null(y);
+    cassert_no_null(x);
+    cassert_no_null(y);
     ret = GetWindowRect(hwnd, &rect);
-	cassert_unref(ret != 0, ret);
+    cassert_unref(ret != 0, ret);
     *x = (real32_t)rect.left;
     *y = (real32_t)rect.top;
 }
@@ -405,10 +405,10 @@ void _oscontrol_get_size(const OSControl *control, real32_t *width, real32_t *he
     BOOL ret;
     RECT rect;
     cassert_no_null(control);
-	cassert_no_null(width);
-	cassert_no_null(height);
+    cassert_no_null(width);
+    cassert_no_null(height);
     ret = GetWindowRect(control->hwnd, &rect);
-	cassert_unref(ret != 0, ret);
+    cassert_unref(ret != 0, ret);
     *width = (real32_t)(rect.right - rect.left);
     *height = (real32_t)(rect.bottom - rect.top);
 }
@@ -447,10 +447,10 @@ void _oscontrol_set_frame(OSControl *control, const real32_t x, const real32_t y
     cassert(floorf(width) == width);
     cassert(floorf(height) == height);
 
-    parent = (OSControl*)GetWindowLongPtr(GetParent(control->hwnd), GWLP_USERDATA);
+    parent = (OSControl *)GetWindowLongPtr(GetParent(control->hwnd), GWLP_USERDATA);
     if (parent != NULL && parent->type == ekGUI_TYPE_PANEL)
-        _ospanel_scroll_pos((OSPanel*)parent, &scroll_x, &scroll_y);
-    
+        _ospanel_scroll_pos((OSPanel *)parent, &scroll_x, &scroll_y);
+
     ret = SetWindowPos(control->hwnd, NULL, (int)x - scroll_x, (int)y - scroll_y, (int)width, (int)height, SWP_NOZORDER);
     cassert_unref(ret != 0, ret);
     control->x = (int)x;
@@ -466,14 +466,14 @@ void _oscontrol_attach_to_parent(OSControl *control, OSControl *parent_control)
     cassert_no_null(parent_control);
     ret = SetParent(control->hwnd, parent_control->hwnd);
     cassert_no_null(ret);
-    #if defined (__ASSERTS__)
+#if defined(__ASSERTS__)
     {
         HWND parent;
         parent = GetParent(control->hwnd);
         cassert_no_null(parent);
         cassert(parent == parent_control->hwnd);
     }
-    #endif
+#endif
 }
 
 /*---------------------------------------------------------------------------*/
@@ -492,11 +492,11 @@ void _oscontrol_detach_from_parent(OSControl *control, OSControl *parent_control
 
 static BOOL CALLBACK i_children_count(HWND child_hwnd, LPARAM lParam)
 {
-    i_Children *children_str = (i_Children*)lParam;
+    i_Children *children_str = (i_Children *)lParam;
     if (children_str->num_children < children_str->children_size)
         children_str->children[children_str->num_children] = child_hwnd;
     children_str->num_children += 1;
-    return TRUE;    
+    return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/

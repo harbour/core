@@ -15,17 +15,16 @@
 #include "cell.inl"
 #include "component.inl"
 #include "gui.inl"
-#include "guictx.h"
-
-#include "cassert.h"
-#include "color.h"
-#include "event.h"
-#include "font.h"
-#include "ptr.h"
-#include "objh.h"
-#include "strings.h"
-#include "s2d.h"
-#include "unicode.h"
+#include <geom2d/s2d.h>
+#include <draw2d/color.h>
+#include <draw2d/font.h>
+#include <draw2d/guictx.h>
+#include <core/event.h>
+#include <core/objh.h>
+#include <core/strings.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
+#include <sewer/unicode.h>
 
 struct _edit_t
 {
@@ -86,8 +85,8 @@ static void i_OnFilter(Edit *edit, Event *e)
     res->apply = FALSE;
 
     /* Native edit doesn't known exactly the inserted or deleted text size */
-    if(p->len == INT32_MAX)
-        ((EvText*)p)->len = i_text_diff(tc(edit->text), p->text);
+    if (p->len == INT32_MAX)
+        ((EvText *)p)->len = i_text_diff(tc(edit->text), p->text);
 
     if (edit->component.parent != NULL)
         res->apply = _cell_filter_str(edit->component.parent, p->text, res->text, sizeof(res->text));
@@ -429,8 +428,8 @@ real32_t edit_get_height(const Edit *edit)
 {
     real32_t width, height;
     cassert_no_null(edit);
-    _edit_dimension((Edit*)edit, 0, &width, &height);
-    _edit_dimension((Edit*)edit, 1, &width, &height);
+    _edit_dimension((Edit *)edit, 0, &width, &height);
+    _edit_dimension((Edit *)edit, 1, &width, &height);
     return height;
 }
 

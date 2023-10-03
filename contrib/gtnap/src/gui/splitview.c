@@ -15,15 +15,14 @@
 #include "component.inl"
 #include "gui.inl"
 #include "panel.inl"
-#include "guictx.h"
-
-#include "bmath.h"
-#include "cassert.h"
-#include "event.h"
-#include "ptr.h"
-#include "objh.h"
-#include "s2d.h"
-#include "v2d.h"
+#include <draw2d/guictx.h>
+#include <geom2d/s2d.h>
+#include <geom2d/v2d.h>
+#include <core/event.h>
+#include <core/objh.h>
+#include <sewer/bmath.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 struct _splitview_t
 {
@@ -293,28 +292,28 @@ void splitview_size(SplitView *split, const S2Df size)
 
 void splitview_view(SplitView *split, View *view)
 {
-    i_add_child(split, (GuiComponent*)view);
+    i_add_child(split, (GuiComponent *)view);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void splitview_text(SplitView *split, TextView *view)
 {
-    i_add_child(split, (GuiComponent*)view);
+    i_add_child(split, (GuiComponent *)view);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void splitview_split(SplitView *split, SplitView *child)
 {
-    i_add_child(split, (GuiComponent*)child);
+    i_add_child(split, (GuiComponent *)child);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void splitview_panel(SplitView *split, Panel *panel)
 {
-    i_add_child(split, (GuiComponent*)panel);
+    i_add_child(split, (GuiComponent *)panel);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -338,7 +337,7 @@ void splitview_pos(SplitView *split, const real32_t pos)
     else
     {
         BIT_SET(split->flags, ekSPLIT_RIGHT);
-        split->div_pos = - pos;
+        split->div_pos = -pos;
     }
 }
 
@@ -466,7 +465,7 @@ void _splitview_OnResize(SplitView *split, const S2Df *size)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_accum_panels(const SplitView* split, uint32_t* num_panels, Panel** panels)
+static void i_accum_panels(const SplitView *split, uint32_t *num_panels, Panel **panels)
 {
     cassert_no_null(split);
     cassert_no_null(num_panels);
@@ -476,13 +475,13 @@ static void i_accum_panels(const SplitView* split, uint32_t* num_panels, Panel**
     {
         if (split->child1->type == ekGUI_TYPE_PANEL)
         {
-            panels[*num_panels] = (Panel*)split->child1;
+            panels[*num_panels] = (Panel *)split->child1;
             *num_panels += 1;
             cassert(*num_panels < GUI_COMPONENT_MAX_PANELS);
         }
-        else if(split->child1->type == ekGUI_TYPE_SPLITVIEW)
+        else if (split->child1->type == ekGUI_TYPE_SPLITVIEW)
         {
-            i_accum_panels((SplitView*)split->child1, num_panels, panels);
+            i_accum_panels((SplitView *)split->child1, num_panels, panels);
         }
     }
 
@@ -490,13 +489,13 @@ static void i_accum_panels(const SplitView* split, uint32_t* num_panels, Panel**
     {
         if (split->child2->type == ekGUI_TYPE_PANEL)
         {
-            panels[*num_panels] = (Panel*)split->child2;
+            panels[*num_panels] = (Panel *)split->child2;
             *num_panels += 1;
             cassert(*num_panels < GUI_COMPONENT_MAX_PANELS);
         }
-        else if(split->child2->type == ekGUI_TYPE_SPLITVIEW)
+        else if (split->child2->type == ekGUI_TYPE_SPLITVIEW)
         {
-            i_accum_panels((SplitView*)split->child2, num_panels, panels);
+            i_accum_panels((SplitView *)split->child2, num_panels, panels);
         }
     }
 }
