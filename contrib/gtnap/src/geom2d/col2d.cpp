@@ -1208,9 +1208,9 @@ static bool_t i_poly_segment(const Pol2D<real> *poly, const Seg2D<real> *seg, Co
     }
     else
     {
-        const ArrPt<SATPoly<real>> *sats = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)poly);
-        const SATPoly<real> **sat = ArrPt<SATPoly<real>>::all(sats);
-        uint32_t i, n = ArrPt<SATPoly<real>>::size(sats);
+        const ArrPt<SATPoly<real> > *sats = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)poly);
+        const SATPoly<real> **sat = ArrPt<SATPoly<real> >::all(sats);
+        uint32_t i, n = ArrPt<SATPoly<real> >::size(sats);
 
         for (i = 0; i < n; ++i)
         {
@@ -1282,9 +1282,9 @@ static bool_t i_poly_box(const Pol2D<real> *poly, const Box2D<real> *box, Col2D<
     }
     else
     {
-        const ArrPt<SATPoly<real>> *sats = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)poly);
-        const SATPoly<real> **sat = ArrPt<SATPoly<real>>::all(sats);
-        uint32_t i, n = ArrPt<SATPoly<real>>::size(sats);
+        const ArrPt<SATPoly<real> > *sats = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)poly);
+        const SATPoly<real> **sat = ArrPt<SATPoly<real> >::all(sats);
+        uint32_t i, n = ArrPt<SATPoly<real> >::size(sats);
 
         for (i = 0; i < n; ++i)
         {
@@ -1326,9 +1326,9 @@ static bool_t i_poly_obb(const Pol2D<real> *poly, const OBB2D<real> *obb, Col2D<
     }
     else
     {
-        const ArrPt<SATPoly<real>> *sats = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)poly);
-        const SATPoly<real> **sat = ArrPt<SATPoly<real>>::all(sats);
-        uint32_t i, n = ArrPt<SATPoly<real>>::size(sats);
+        const ArrPt<SATPoly<real> > *sats = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)poly);
+        const SATPoly<real> **sat = ArrPt<SATPoly<real> >::all(sats);
+        uint32_t i, n = ArrPt<SATPoly<real> >::size(sats);
 
         for (i = 0; i < n; ++i)
         {
@@ -1372,9 +1372,9 @@ static bool_t i_poly_tri(const Pol2D<real> *poly, const Tri2D<real> *tri, Col2D<
     }
     else
     {
-        const ArrPt<SATPoly<real>> *sats = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)poly);
-        const SATPoly<real> **sat = ArrPt<SATPoly<real>>::all(sats);
-        uint32_t i, n = ArrPt<SATPoly<real>>::size(sats);
+        const ArrPt<SATPoly<real> > *sats = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)poly);
+        const SATPoly<real> **sat = ArrPt<SATPoly<real> >::all(sats);
+        uint32_t i, n = ArrPt<SATPoly<real> >::size(sats);
 
         for (i = 0; i < n; ++i)
         {
@@ -1416,9 +1416,9 @@ static bool_t i_poly_poly(const Pol2D<real> *pol1, const Pol2D<real> *pol2, Col2
         }
         else
         {
-            const ArrPt<SATPoly<real>> *sats = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)pol2);
-            const SATPoly<real> **sat = ArrPt<SATPoly<real>>::all(sats);
-            uint32_t i, n = ArrPt<SATPoly<real>>::size(sats);
+            const ArrPt<SATPoly<real> > *sats = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)pol2);
+            const SATPoly<real> **sat = ArrPt<SATPoly<real> >::all(sats);
+            uint32_t i, n = ArrPt<SATPoly<real> >::size(sats);
 
             for (i = 0; i < n; ++i)
             {
@@ -1431,9 +1431,9 @@ static bool_t i_poly_poly(const Pol2D<real> *pol1, const Pol2D<real> *pol2, Col2
     }
     else
     {
-        const ArrPt<SATPoly<real>> *sats1 = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)pol1);
-        const SATPoly<real> **sat1 = ArrPt<SATPoly<real>>::all(sats1);
-        uint32_t n1 = ArrPt<SATPoly<real>>::size(sats1);
+        const ArrPt<SATPoly<real> > *sats1 = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)pol1);
+        const SATPoly<real> **sat1 = ArrPt<SATPoly<real> >::all(sats1);
+        uint32_t n1 = ArrPt<SATPoly<real> >::size(sats1);
         uint32_t i;
         if (Pol2D<real>::convex(pol2) == TRUE)
         {
@@ -1448,9 +1448,9 @@ static bool_t i_poly_poly(const Pol2D<real> *pol1, const Pol2D<real> *pol2, Col2
         }
         else
         {
-            const ArrPt<SATPoly<real>> *sats2 = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)pol2);
-            const SATPoly<real> **sat2 = ArrPt<SATPoly<real>>::all(sats2);
-            uint32_t n2 = ArrPt<SATPoly<real>>::size(sats2);
+            const ArrPt<SATPoly<real> > *sats2 = Pol2DI<real>::convex_sat_polys((Pol2D<real> *)pol2);
+            const SATPoly<real> **sat2 = ArrPt<SATPoly<real> >::all(sats2);
+            uint32_t n2 = ArrPt<SATPoly<real> >::size(sats2);
             uint32_t j;
 
             for (i = 0; i < n1; ++i)

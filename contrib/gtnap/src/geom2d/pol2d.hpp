@@ -48,9 +48,9 @@ struct Pol2D
 
     _geom2d_api static V2D<real> (*visual_center)(const Pol2D<real> *pol, const real tol);
 
-    _geom2d_api static ArrSt<Tri2D<real>> *(*triangles)(const Pol2D<real> *pol);
+    _geom2d_api static ArrSt<Tri2D<real> > *(*triangles)(const Pol2D<real> *pol);
 
-    _geom2d_api static ArrPt<Pol2D<real>> *(*convex_partition)(const Pol2D<real> *pol);
+    _geom2d_api static ArrPt<Pol2D<real> > *(*convex_partition)(const Pol2D<real> *pol);
 };
 
 #endif

@@ -19,7 +19,7 @@
 template <typename real>
 struct OBB2DI
 {
-    static SATPoly<real> *(*sat_poly)(const OBB2D<real> *obb);
+    static SATPoly<real>* (*sat_poly)(const OBB2D<real>* obb);
 };
 
 #endif

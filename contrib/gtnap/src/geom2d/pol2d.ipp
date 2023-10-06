@@ -26,9 +26,9 @@ struct Pol2DI
 
     static V2D<real> (*poly_label)(const Pol2D<real> *pol, const real norm_tol);
 
-    static ArrPt<SATPoly<real>> *(*get_convex_sat_polys)(const Pol2D<real> *pol);
+    static ArrPt<SATPoly<real> > *(*get_convex_sat_polys)(const Pol2D<real> *pol);
 
-    static ArrPt<SATPoly<real>> *(*convex_sat_polys)(Pol2D<real> *pol);
+    static ArrPt<SATPoly<real> > *(*convex_sat_polys)(Pol2D<real> *pol);
 };
 
 #endif

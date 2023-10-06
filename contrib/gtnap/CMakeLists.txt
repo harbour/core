@@ -140,12 +140,21 @@ if (GTNAP_DEVELOPER_MODE)
     add_subdirectory("src/gtnap")
 
     file(COPY "${GTNAP_PATH}/resources/CMakeLists.txt" DESTINATION "${GTNAP_PATH}/src/exemplo")
-    file(COPY "${GTNAP_PATH}/resources/hbmk2.c" DESTINATION "${GTNAP_PATH}/src/exemplo")
+    if (WIN32)
+        file(COPY "${GTNAP_PATH}/resources/hbmk2_win.c" DESTINATION "${GTNAP_PATH}/src/exemplo")
+    else()
+        file(COPY "${GTNAP_PATH}/resources/hbmk2_lin.c" DESTINATION "${GTNAP_PATH}/src/exemplo")
+    endif()
     set(EXAMPLE_NAME "exemplo")
     add_subdirectory("src/exemplo")
 
     file(COPY "${GTNAP_PATH}/resources/CMakeLists.txt" DESTINATION "${GTNAP_PATH}/src/hello")
-    file(COPY "${GTNAP_PATH}/resources/hbmk2.c" DESTINATION "${GTNAP_PATH}/src/hello")
+    if (WIN32)
+        file(COPY "${GTNAP_PATH}/resources/hbmk2_win.c" DESTINATION "${GTNAP_PATH}/src/hello")
+    else()
+        file(COPY "${GTNAP_PATH}/resources/hbmk2_lin.c" DESTINATION "${GTNAP_PATH}/src/hello")
+    endif()
+
     set(EXAMPLE_NAME "hello")
     add_subdirectory("src/hello")
 

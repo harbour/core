@@ -1,7 +1,7 @@
 {
     "files.encoding": "windows1252",
 
-    "cmake.sourceDirectory": "${workspaceFolder}/src",
+    "cmake.sourceDirectory": "/home/fran/harbour_nappgui/contrib/gtnap",
     "cmake.buildDirectory": "${workspaceFolder}/build-dev",
 
     "cmake.configureArgs": [

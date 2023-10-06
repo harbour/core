@@ -244,7 +244,7 @@ static void i_triangulate_ear_clipping(const Pol2D<real> *pol, ArrSt<uint32_t> *
 // Time complexity: O(n^2), n is the number of vertices.
 // Space complexity: O(n)
 template <typename real>
-static void i_triangulate_polygon(const Pol2D<real> *pol, ArrSt<Tri2D<real>> *triangles)
+static void i_triangulate_polygon(const Pol2D<real> *pol, ArrSt<Tri2D<real> > *triangles)
 {
     const V2D<real> *point = Pol2D<real>::points(pol);
     ArrSt<uint32_t> *vids = ArrSt<uint32_t>::create();
@@ -258,7 +258,7 @@ static void i_triangulate_polygon(const Pol2D<real> *pol, ArrSt<Tri2D<real>> *tr
     cassert(n % 3 == 0);
     for (i = 0; i < n; i += 3)
     {
-        Tri2D<real> *tri = ArrSt<Tri2D<real>>::nnew(triangles);
+        Tri2D<real> *tri = ArrSt<Tri2D<real> >::nnew(triangles);
         tri->p0 = point[vid[i]];
         tri->p1 = point[vid[i + 1]];
         tri->p2 = point[vid[i + 2]];
@@ -272,7 +272,7 @@ static void i_triangulate_polygon(const Pol2D<real> *pol, ArrSt<Tri2D<real>> *tr
 ArrSt(Tri2Df) * pol2d_trianglesf(const Pol2Df *pol)
 {
     ArrSt(Tri2Df) *triangles = arrst_create(Tri2Df);
-    i_triangulate_polygon<real32_t>((const Pol2D<real32_t> *)pol, (ArrSt<Tri2D<real32_t>> *)triangles);
+    i_triangulate_polygon<real32_t>((const Pol2D<real32_t> *)pol, (ArrSt<Tri2D<real32_t> > *)triangles);
     return triangles;
 }
 
@@ -281,16 +281,16 @@ ArrSt(Tri2Df) * pol2d_trianglesf(const Pol2Df *pol)
 ArrSt(Tri2Dd) * pol2d_trianglesd(const Pol2Dd *pol)
 {
     ArrSt(Tri2Dd) *triangles = arrst_create(Tri2Dd);
-    i_triangulate_polygon<real64_t>((const Pol2D<real64_t> *)pol, (ArrSt<Tri2D<real64_t>> *)triangles);
+    i_triangulate_polygon<real64_t>((const Pol2D<real64_t> *)pol, (ArrSt<Tri2D<real64_t> > *)triangles);
     return triangles;
 }
 
 /*---------------------------------------------------------------------------*/
 
 template <typename real>
-static ArrSt<Tri2D<real>> *i_triangles(const Pol2D<real> *pol)
+static ArrSt<Tri2D<real> > *i_triangles(const Pol2D<real> *pol)
 {
-    ArrSt<Tri2D<real>> *triangles = ArrSt<Tri2D<real>>::create();
+    ArrSt<Tri2D<real> > *triangles = ArrSt<Tri2D<real> >::create();
     i_triangulate_polygon<real>(pol, triangles);
     return triangles;
 }
@@ -339,9 +339,9 @@ static ArrSt<Poly> *i_polys_from_triangles(const ArrSt<uint32_t> *vids)
 // that produces a convex partitioning of a polygon from a triangulation by throwing
 // out unnecessary triangulation edges.
 template <typename real>
-static ArrPt<SATPoly<real>> *i_get_convex_sat_polys(const Pol2D<real> *pol)
+static ArrPt<SATPoly<real> > *i_get_convex_sat_polys(const Pol2D<real> *pol)
 {
-    ArrPt<SATPoly<real>> *convex_sats = ArrPt<SATPoly<real>>::create();
+    ArrPt<SATPoly<real> > *convex_sats = ArrPt<SATPoly<real> >::create();
     const V2D<real> *point = Pol2D<real>::points(pol);
     ArrSt<uint32_t> *vids = ArrSt<uint32_t>::create();
     bool_t revert = !Pol2D<real>::ccw(pol);
@@ -489,7 +489,7 @@ static ArrPt<SATPoly<real>> *i_get_convex_sat_polys(const Pol2D<real> *pol)
 
         SATPoly<real>::limits(v, a, n, n, sat->min, sat->max);
         sat->updated = TRUE;
-        ArrPt<SATPoly<real>>::append(convex_sats, sat);
+        ArrPt<SATPoly<real> >::append(convex_sats, sat);
     }
 
     ArrSt<uint32_t>::destroy(&vids, NULL);
@@ -500,13 +500,13 @@ static ArrPt<SATPoly<real>> *i_get_convex_sat_polys(const Pol2D<real> *pol)
 /*---------------------------------------------------------------------------*/
 
 template <>
-ArrSt<Tri2D<real32_t>> *(*Pol2D<real32_t>::triangles)(const Pol2D<real32_t> *) = i_triangles<real32_t>;
+ArrSt<Tri2D<real32_t> > *(*Pol2D<real32_t>::triangles)(const Pol2D<real32_t> *) = i_triangles<real32_t>;
 
 template <>
-ArrSt<Tri2D<real64_t>> *(*Pol2D<real64_t>::triangles)(const Pol2D<real64_t> *) = i_triangles<real64_t>;
+ArrSt<Tri2D<real64_t> > *(*Pol2D<real64_t>::triangles)(const Pol2D<real64_t> *) = i_triangles<real64_t>;
 
 template <>
-ArrPt<SATPoly<real32_t>> *(*Pol2DI<real32_t>::get_convex_sat_polys)(const Pol2D<real32_t> *) = i_get_convex_sat_polys<real32_t>;
+ArrPt<SATPoly<real32_t> > *(*Pol2DI<real32_t>::get_convex_sat_polys)(const Pol2D<real32_t> *) = i_get_convex_sat_polys<real32_t>;
 
 template <>
-ArrPt<SATPoly<real64_t>> *(*Pol2DI<real64_t>::get_convex_sat_polys)(const Pol2D<real64_t> *) = i_get_convex_sat_polys<real64_t>;
+ArrPt<SATPoly<real64_t> > *(*Pol2DI<real64_t>::get_convex_sat_polys)(const Pol2D<real64_t> *) = i_get_convex_sat_polys<real64_t>;

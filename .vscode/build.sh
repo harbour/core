@@ -34,4 +34,4 @@ if [ ! -d "$gtpath/build-dev" ]; then
 fi
 
 cd $gtpath/build-dev
-cmake ../src -DGTNAP_DEVELOPER_MODE=ON
+cmake .. -DGTNAP_DEVELOPER_MODE=ON

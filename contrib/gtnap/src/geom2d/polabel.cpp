@@ -144,7 +144,7 @@ static V2D<real> i_poly_label(const Pol2D<real> *pol, const real norm_tol)
         uint32_t n = Pol2D<real>::n(pol);
         real hsize = cell_size / 2;
         Cell<real> best_cell;
-        ArrSt<Cell<real>> *queue = ArrSt<Cell<real>>::create();
+        ArrSt<Cell<real> > *queue = ArrSt<Cell<real> >::create();
         real tol = cell_size * norm_tol;
         uint32_t num_probes = 0;
 
@@ -152,7 +152,7 @@ static V2D<real> i_poly_label(const Pol2D<real> *pol, const real norm_tol)
         for (real x = box.min.x; x < box.max.x; x += cell_size)
             for (real y = box.min.y; y < box.max.y; y += cell_size)
             {
-                Cell<real> *cell = ArrSt<Cell<real>>::nnew(queue);
+                Cell<real> *cell = ArrSt<Cell<real> >::nnew(queue);
                 i_init_cell<real>(cell, V2D<real>(x + hsize, y + hsize), hsize, verts, n);
                 num_probes += 1;
             }
@@ -168,14 +168,14 @@ static V2D<real> i_poly_label(const Pol2D<real> *pol, const real norm_tol)
                 best_cell = box_cell;
         }
 
-        while (ArrSt<Cell<real>>::size(queue) > 0)
+        while (ArrSt<Cell<real> >::size(queue) > 0)
         {
             Cell<real> cell;
 
             // Pick the most promising cell from the queue
-            ArrSt<Cell<real>>::sort(queue, i_cmp_cell<real>);
-            cell = *ArrSt<Cell<real>>::last(queue);
-            ArrSt<Cell<real>>::pop(queue, NULL);
+            ArrSt<Cell<real> >::sort(queue, i_cmp_cell<real>);
+            cell = *ArrSt<Cell<real> >::last(queue);
+            ArrSt<Cell<real> >::pop(queue, NULL);
 
             // Update the best cell if we found a better one
             if (cell.dist > best_cell.dist)
@@ -185,7 +185,7 @@ static V2D<real> i_poly_label(const Pol2D<real> *pol, const real norm_tol)
             if (cell.maxdist - best_cell.dist > tol)
             {
                 // Split the cell into four cells
-                Cell<real> *ncell = ArrSt<Cell<real>>::new_n(queue, 4);
+                Cell<real> *ncell = ArrSt<Cell<real> >::new_n(queue, 4);
                 hsize = cell.hsize / 2;
                 i_init_cell<real>(&ncell[0], V2D<real>(cell.center.x - hsize, cell.center.y - hsize), hsize, verts, n);
                 i_init_cell<real>(&ncell[1], V2D<real>(cell.center.x + hsize, cell.center.y - hsize), hsize, verts, n);
@@ -196,7 +196,7 @@ static V2D<real> i_poly_label(const Pol2D<real> *pol, const real norm_tol)
         }
 
         unref(num_probes);
-        ArrSt<Cell<real>>::destroy(&queue, NULL);
+        ArrSt<Cell<real> >::destroy(&queue, NULL);
         return best_cell.center;
     }
     else

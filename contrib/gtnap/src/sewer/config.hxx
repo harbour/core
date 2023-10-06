@@ -156,10 +156,10 @@
 #define STRUCT_MEMBER_OFFSET(type, member) offsetof(type, member)
 #endif
 
-#define STRUCT_MEMBER_SIZE(type, member) sizeof(((type *)0)->member)
+#define STRUCT_MEMBER_SIZE(type, member) sizeof(((type*)0)->member)
 
 #define CHECK_STRUCT_MEMBER_TYPE(type, member, mtype) \
-    (void)(&((type *)0)->member == (mtype *)&((type *)0)->member)
+    (void)(&((type*)0)->member == (mtype*)&((type*)0)->member)
 
 /*! <Assigments> */
 #define unref(x) (void)(x)
@@ -183,7 +183,7 @@
 #else /* C Compiler */
 
 #if defined(_MSC_VER) && _MSC_VER >= 1935 /* Visual Studio 2022 version 17.5.0 */
-#define cast_func_ptr(fptr, type) ((type)(void *)fptr)
+#define cast_func_ptr(fptr, type) ((type)(void*)fptr)
 #else
 #define cast_func_ptr(fptr, type) ((type)fptr)
 #endif

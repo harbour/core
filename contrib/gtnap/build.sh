@@ -40,7 +40,7 @@ echo ---------------------------
 rm -rf build
 mkdir build
 cd build
-cmake  ../src -DCMAKE_BUILD_CONFIG=$BUILD || exit 1
+cmake  .. -DCMAKE_BUILD_CONFIG=$BUILD || exit 1
 make -j 4 || exit 1
 
 #

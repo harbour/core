@@ -31,7 +31,7 @@ struct Pol2DImp
     uint32_t flags;
     real area;
     SATPoly<real> *sat;
-    ArrPt<SATPoly<real>> *convex_sat;
+    ArrPt<SATPoly<real> > *convex_sat;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -312,7 +312,7 @@ static Pol2D<real> *i_copy(const Pol2D<real> *pol)
     dest->sat = SATPoly<real>::copy(src->sat);
 
     if (src->convex_sat != NULL)
-        dest->convex_sat = ArrPt<SATPoly<real>>::copy(src->convex_sat, SATPoly<real>::copy);
+        dest->convex_sat = ArrPt<SATPoly<real> >::copy(src->convex_sat, SATPoly<real>::copy);
     else
         dest->convex_sat = NULL;
 
@@ -342,7 +342,7 @@ static void i_destroy(Pol2D<real> **pol)
     SATPoly<real>::destroy(&(*poly)->sat);
 
     if ((*poly)->convex_sat != NULL)
-        ArrPt<SATPoly<real>>::destroy(&(*poly)->convex_sat, SATPoly<real>::destroy);
+        ArrPt<SATPoly<real> >::destroy(&(*poly)->convex_sat, SATPoly<real>::destroy);
 
     heap_delete(poly, Pol2DImp<real>);
 }
@@ -372,7 +372,7 @@ static void i_transform(Pol2D<real> *pol, const T2D<real> *t2d)
     T2D<real>::vmultn(poly->sat->vertex, t2d, poly->sat->vertex, poly->sat->num_vertices);
 
     if (poly->convex_sat != NULL)
-        ArrPt<SATPoly<real>>::destroy(&poly->convex_sat, SATPoly<real>::destroy);
+        ArrPt<SATPoly<real> >::destroy(&poly->convex_sat, SATPoly<real>::destroy);
 
     poly->sat->updated = FALSE;
     poly->flags = 0;
@@ -715,7 +715,7 @@ static SATPoly<real> *i_sat_poly(const Pol2D<real> *pol)
 /*---------------------------------------------------------------------------*/
 
 template <typename real>
-static ArrPt<SATPoly<real>> *i_convex_sat_polys(Pol2D<real> *pol)
+static ArrPt<SATPoly<real> > *i_convex_sat_polys(Pol2D<real> *pol)
 {
     Pol2DImp<real> *poly = (Pol2DImp<real> *)pol;
     cassert_no_null(poly);
@@ -728,23 +728,23 @@ static ArrPt<SATPoly<real>> *i_convex_sat_polys(Pol2D<real> *pol)
 /*---------------------------------------------------------------------------*/
 
 template <typename real>
-static void i_convex_polygons(const Pol2D<real> *pol, ArrPt<Pol2D<real>> *polys)
+static void i_convex_polygons(const Pol2D<real> *pol, ArrPt<Pol2D<real> > *polys)
 {
     if (i_convex<real>(pol) == TRUE)
     {
         Pol2D<real> *pcopy = Pol2D<real>::copy(pol);
-        ArrPt<Pol2D<real>>::append(polys, pcopy);
+        ArrPt<Pol2D<real> >::append(polys, pcopy);
     }
     else
     {
-        const ArrPt<SATPoly<real>> *sats = i_convex_sat_polys<real>((Pol2D<real> *)pol);
-        const SATPoly<real> **sat = ArrPt<SATPoly<real>>::all(sats);
-        uint32_t i, n = ArrPt<SATPoly<real>>::size(sats);
+        const ArrPt<SATPoly<real> > *sats = i_convex_sat_polys<real>((Pol2D<real> *)pol);
+        const SATPoly<real> **sat = ArrPt<SATPoly<real> >::all(sats);
+        uint32_t i, n = ArrPt<SATPoly<real> >::size(sats);
         for (i = 0; i < n; ++i)
         {
             SATPoly<real> *sat_copy = SATPoly<real>::copy(sat[i]);
             Pol2D<real> *npol = i_create_with_sat<real>(sat_copy);
-            ArrPt<Pol2D<real>>::append(polys, npol);
+            ArrPt<Pol2D<real> >::append(polys, npol);
         }
     }
 }
@@ -754,7 +754,7 @@ static void i_convex_polygons(const Pol2D<real> *pol, ArrPt<Pol2D<real>> *polys)
 ArrPt(Pol2Df) * pol2d_convex_partitionf(const Pol2Df *pol)
 {
     ArrPt(Pol2Df) *polys = arrpt_create(Pol2Df);
-    i_convex_polygons<real32_t>((const Pol2D<real32_t> *)pol, (ArrPt<Pol2D<real32_t>> *)polys);
+    i_convex_polygons<real32_t>((const Pol2D<real32_t> *)pol, (ArrPt<Pol2D<real32_t> > *)polys);
     return polys;
 }
 
@@ -763,16 +763,16 @@ ArrPt(Pol2Df) * pol2d_convex_partitionf(const Pol2Df *pol)
 ArrPt(Pol2Dd) * pol2d_convex_partitiond(const Pol2Dd *pol)
 {
     ArrPt(Pol2Dd) *polys = arrpt_create(Pol2Dd);
-    i_convex_polygons<real64_t>((const Pol2D<real64_t> *)pol, (ArrPt<Pol2D<real64_t>> *)polys);
+    i_convex_polygons<real64_t>((const Pol2D<real64_t> *)pol, (ArrPt<Pol2D<real64_t> > *)polys);
     return polys;
 }
 
 /*---------------------------------------------------------------------------*/
 
 template <typename real>
-static ArrPt<Pol2D<real>> *i_convex_partition(const Pol2D<real> *pol)
+static ArrPt<Pol2D<real> > *i_convex_partition(const Pol2D<real> *pol)
 {
-    ArrPt<Pol2D<real>> *polys = ArrPt<Pol2D<real>>::create();
+    ArrPt<Pol2D<real> > *polys = ArrPt<Pol2D<real> >::create();
     i_convex_polygons<real>(pol, polys);
     return polys;
 }
@@ -858,10 +858,10 @@ template <>
 V2D<real64_t> (*Pol2D<real64_t>::visual_center)(const Pol2D<real64_t> *, const real64_t) = i_visual_center<real64_t>;
 
 template <>
-ArrPt<Pol2D<real32_t>> *(*Pol2D<real32_t>::convex_partition)(const Pol2D<real32_t> *pol) = i_convex_partition<real32_t>;
+ArrPt<Pol2D<real32_t> > *(*Pol2D<real32_t>::convex_partition)(const Pol2D<real32_t> *pol) = i_convex_partition<real32_t>;
 
 template <>
-ArrPt<Pol2D<real64_t>> *(*Pol2D<real64_t>::convex_partition)(const Pol2D<real64_t> *pol) = i_convex_partition<real64_t>;
+ArrPt<Pol2D<real64_t> > *(*Pol2D<real64_t>::convex_partition)(const Pol2D<real64_t> *pol) = i_convex_partition<real64_t>;
 
 template <>
 const V2D<real32_t> *(*Pol2DI<real32_t>::vertices)(const Pol2D<real32_t> *, uint32_t *) = i_vertices<real32_t>;
@@ -876,7 +876,7 @@ template <>
 SATPoly<real64_t> *(*Pol2DI<real64_t>::sat_poly)(const Pol2D<real64_t> *) = i_sat_poly<real64_t>;
 
 template <>
-ArrPt<SATPoly<real32_t>> *(*Pol2DI<real32_t>::convex_sat_polys)(Pol2D<real32_t> *) = i_convex_sat_polys<real32_t>;
+ArrPt<SATPoly<real32_t> > *(*Pol2DI<real32_t>::convex_sat_polys)(Pol2D<real32_t> *) = i_convex_sat_polys<real32_t>;
 
 template <>
-ArrPt<SATPoly<real64_t>> *(*Pol2DI<real64_t>::convex_sat_polys)(Pol2D<real64_t> *) = i_convex_sat_polys<real64_t>;
+ArrPt<SATPoly<real64_t> > *(*Pol2DI<real64_t>::convex_sat_polys)(Pol2D<real64_t> *) = i_convex_sat_polys<real64_t>;
