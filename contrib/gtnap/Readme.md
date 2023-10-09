@@ -20,11 +20,12 @@ For building GTNap CMake tool is necessary:
       :~/$ cmake --version
       cmake version 3.10.2
       ```
-
+      
 * In macOS:
     * Download from https://cmake.org/download/
     * Move `CMake.app` to `/Applications` folder.
     * By default, CMake does not configure command line access on macOS. You can create symbolic links with `sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install`.
+    ![cmake_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/0c25cc32-faf9-4e81-a949-6c5ac1b67bb5)
 
    * Open a terminal/cmd and check if cmake works:
       ```
@@ -96,6 +97,9 @@ This will generate several static libraries:
 ### In macOS
 
 First of all, install Xcode.
+
+![xcode_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/cf140563-49df-4c3f-acef-24149fda9382)
+
 Check Xcode is working:
 ```
 % xcode-select -p
