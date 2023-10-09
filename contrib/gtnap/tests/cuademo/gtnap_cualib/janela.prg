@@ -1473,7 +1473,7 @@ FUNC SOB_MODO_GRAFICO
 *********************
 LOCAL L_ModoGrafico := .F.
 IF HB_GTVERSION()=="NAP"
-    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX)
+    #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows) || defined(__PLATFORM__LINUX) || defined(__PLATFORM__DARWIN)
         L_ModoGrafico := .T.
     #else
        #erro "Código não adaptado para esta plataforma"

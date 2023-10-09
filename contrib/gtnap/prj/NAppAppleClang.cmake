@@ -1,8 +1,9 @@
 macro(nap_apple_clang_flags)
 
     # Warnings
-    set(FLAGS "-Wall -Wextra -pedantic -fPIE -Wno-long-long -Wno-overlength-strings -Wno-newline-eof -Wno-extended-offsetof")
-    
+    # Clang 14.0.3.14030022 not support -Wno-extended-offsetof
+    set(FLAGS "-Wall -Wextra -pedantic -fPIE -Wno-long-long -Wno-overlength-strings -Wno-newline-eof")
+
     if (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER "4.2.9999")
     	set(FLAGS "${FLAGS} -Wno-undefined-var-template")
     endif()
