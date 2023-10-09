@@ -761,9 +761,9 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
 
     * Adding Labels
     IF SOB_MODO_GRAFICO()
-        IF N_WindowNum = 0 .AND. EH_PRODUCAO()
+        IF (N_WindowNum - NAP_WINDOW_FIST_ID) = 0 .AND. EH_PRODUCAO()
             DesenhaDrawLabe(VX_Janela)
-        ELSEIF N_WindowNum = 1 .AND. .NOT. EH_PRODUCAO()
+        ELSEIF (N_WindowNum - NAP_WINDOW_FIST_ID) = 1 .AND. .NOT. EH_PRODUCAO()
             DesenhaDrawLabe(VX_Janela)
         ENDIF
     ENDIF
