@@ -15,11 +15,11 @@
 #include "osgui.inl"
 #include "osgui_win.inl"
 #include "osscroll.inl"
-#include "bmem.h"
-#include "types.h"
-#include "btime.h"
-#include "cassert.h"
-#include "event.h"
+#include <core/event.h>
+#include <osbs/btime.h>
+#include <sewer/bmem.h>
+#include <sewer/cassert.h>
+#include <sewer/types.h>
 
 #if !defined(__WINDOWS__)
 #error This file is only for Windows
@@ -140,7 +140,7 @@ void oslistener_mouse_moved(OSControl *sender, WPARAM event_wParam, const real32
                 BOOL ok;
                 listeners->is_mouse_inside = TRUE;
                 track.cbSize = sizeof(TRACKMOUSEEVENT);
-                track.dwFlags = /*TME_HOVER | */TME_LEAVE;
+                track.dwFlags = /*TME_HOVER | */ TME_LEAVE;
                 track.hwndTrack = sender->hwnd;
                 track.dwHoverTime = HOVER_DEFAULT;
                 ok = TrackMouseEvent(&track);
@@ -352,4 +352,3 @@ bool_t oslistener_key_up(OSControl *sender, WPARAM wParam, LPARAM lParam, ViewLi
 //            i_launch_key_event(view, ekGUI_EVENT_KEYUP, ekGUI_KEY_CONTROL, &listeners->OnKeyUp);
 //    }
 //}
-

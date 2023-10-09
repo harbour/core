@@ -2,16 +2,5 @@
 /build-dev
 /src/exemplo
 /src/hello
-/src/sewer/CMakeLists.txt
-/src/osbs/CMakeLists.txt
-/src/core/CMakeLists.txt
-/src/geom2d/CMakeLists.txt
-/src/draw2d/CMakeLists.txt
-/src/osgui/CMakeLists.txt
-/src/gui/CMakeLists.txt
-/src/osapp/CMakeLists.txt
-/src/inet/CMakeLists.txt
-/src/gtnap/CMakeLists.txt
 /tests/cuademo/gtnap_cualib/exemplo
-
-!prj/script/**/*.exe
+/tools/build

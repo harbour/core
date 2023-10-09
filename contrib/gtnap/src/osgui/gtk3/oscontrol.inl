@@ -69,4 +69,3 @@ void _oscontrol_attach_to_parent(OSControl *control, GtkWidget *parent_widget);
 void _oscontrol_detach_from_parent(OSControl *control, GtkWidget *parent_widget);
 
 __END_C
-

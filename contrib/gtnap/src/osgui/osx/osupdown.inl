@@ -15,4 +15,3 @@
 BOOL _osupdown_is(NSView *view);
 
 void _osupdown_detach_and_destroy(OSUpDown **updown, OSPanel *panel);
-

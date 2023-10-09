@@ -10,16 +10,16 @@
 
 /* Cocoa control */
 
-#include "osgui_osx.inl"
 #include "osgui.inl"
+#include "osgui_osx.inl"
 #include "oscontrol.inl"
 #include "oscolor.inl"
-#include "cassert.h"
-#include "color.h"
-#include "font.h"
-#include "image.h"
-#include "ptr.h"
-#include "unicode.h"
+#include <draw2d/color.h>
+#include <draw2d/font.h>
+#include <draw2d/image.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
+#include <sewer/unicode.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX
@@ -63,7 +63,7 @@ static __INLINE NSTextAlignment i_text_alignment(const align_t halign)
         cassert_default();
     }
     return NSTextAlignmentLeft;
-    
+
 #else
     switch (halign)
     {
@@ -210,7 +210,7 @@ void _oscontrol_tooltip_set(NSView *view, const char_t *text)
         [view setToolTip:str];
         [str release];
     }
-    else    
+    else
     {
         [view setToolTip:nil];
     }
@@ -276,7 +276,7 @@ static NSDictionary *i_text_attribs(NSControl *control, const align_t align, con
     keys[4] = NSFontAttributeName;
     objects[0] = (fstyle & ekFUNDERLINE) ? kUNDERLINE_STYLE_SINGLE : kUNDERLINE_STYLE_NONE;
     objects[1] = (fstyle & ekFSTRIKEOUT) ? kUNDERLINE_STYLE_SINGLE : kUNDERLINE_STYLE_NONE;
-    
+
     switch (align) {
     case ekLEFT:
     case ekJUSTIFY:
@@ -290,10 +290,10 @@ static NSDictionary *i_text_attribs(NSControl *control, const align_t align, con
         break;
     cassert_default();
     }
-    
+
     objects[3] = i_control_color(control, color);
     objects[4] = font;
-    
+
     return [NSDictionary dictionaryWithObjects:objects forKeys:keys count:5];
 }
 
@@ -340,20 +340,20 @@ static void i_update_text(NSControl *control, const OSTextAttr *attrs, NSString 
         NSAttributedString *mstr = [[NSAttributedString alloc] initWithString:str attributes:dict];
 
         [cell setFont:font];
-        
+
         if ([cell isKindOfClass:[NSButtonCell class]])
             [(NSButtonCell*)cell setAttributedTitle:mstr];
         else
             [cell setAttributedStringValue:mstr];
-        
+
         [mstr release];
     }
     /*else
     {
         NSFont *font = (NSFont*)font_native(attrs->font);
-        
+
         [cell setFont:font];
-        
+
         if ([cell isKindOfClass:[NSTextFieldCell class]])
             [(NSTextFieldCell*)cell setTextColor:i_control_color(attrs->color, (bool_t)[control isEnabled])];
         if ([cell isKindOfClass:[NSButtonCell class]])
@@ -436,7 +436,7 @@ static __INLINE NSLevelIndicatorStyle i_level_style(const enum gui_indicator_sty
         case ekGUI_INDICATOR_STYLE_DISCRETE:
             return NSLevelIndicatorStyleDiscreteCapacity;
             cassert_default();
-    }    
+    }
 #else
     switch (style)
     {
@@ -471,19 +471,10 @@ void _oscontrol_attach_to_parent(NSView *control, NSView *parent)
 
 void _oscontrol_detach_from_parent(NSView *control, NSView *parent)
 {
-    register NSUInteger rc, rp;
     cassert_no_null(control);
     cassert_no_null(parent);
-    rc = [control retainCount];
-    rp = [parent retainCount];
     cassert([control superview] == parent);
     [control removeFromSuperviewWithoutNeedingDisplay];
-    /*if ([control retainCount] == rc)
-    {
-        cassert([control retainCount] > 1);
-        [control release];
-    }*/
-    rp = [parent retainCount];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -525,7 +516,7 @@ void _oscontrol_get_origin(const NSView *object, real32_t *x, real32_t *y)
     cassert_no_null(object);
     cassert_no_null(x);
     cassert_no_null(y);
-    
+
     rect = [object frame];
     if (*x < 0.f)
     {
@@ -547,7 +538,7 @@ void _oscontrol_get_origin(const NSView *object, real32_t *x, real32_t *y)
             wframe = [object.window frameRectForContentRect:wframe];
             rect.origin.y += wframe.size.height - 100.f;
         }
-        
+
         /* Window Coordinates in Screen */
         {
             NSRect window_rect = [object.window frame];
@@ -624,14 +615,14 @@ void _oscontrol_set_origin(NSView *object, const real32_t x, const real32_t y)
 
 /*---------------------------------------------------------------------------*/
 
-/* 
+/*
     Changed 'oscontrol_set_size' and 'oscontrol_set_origin' for 'oscontrol_set_frame'
     From Cocoa documentation:
-    Repositioning or resizing a view is a potentially complex operation. 
-    When a view moves or resizes it can expose portions of its superview that weren’t previously visible, 
-    requiring the superview to redisplay. Resizing can also affect the layout of the view’s subviews. 
-    Changes to a view's layout in either case may be of interest to other objects, which might need to be notified 
-    of the change. 
+    Repositioning or resizing a view is a potentially complex operation.
+    When a view moves or resizes it can expose portions of its superview that weren’t previously visible,
+    requiring the superview to redisplay. Resizing can also affect the layout of the view’s subviews.
+    Changes to a view's layout in either case may be of interest to other objects, which might need to be notified
+    of the change.
 */
 void _oscontrol_set_frame(NSView *object, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {

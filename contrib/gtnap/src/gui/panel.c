@@ -16,21 +16,20 @@
 #include "gui.inl"
 #include "layout.inl"
 #include "window.inl"
-#include "guictx.h"
-
-#include "arrpt.h"
-#include "cassert.h"
-#include "ptr.h"
-#include "objh.h"
-#include "s2d.h"
-#include "strings.h"
-#include "v2d.h"
+#include <draw2d/guictx.h>
+#include <geom2d/s2d.h>
+#include <geom2d/v2d.h>
+#include <core/arrpt.h>
+#include <core/objh.h>
+#include <core/strings.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 struct _panel_t
 {
     GuiComponent component;
     Window *window;
-    ArrPt(Layout) *layouts;
+    ArrPt(Layout) * layouts;
     uint32_t visible_layout;
     uint32_t active_layout;
     uint32_t flags;
@@ -39,8 +38,7 @@ struct _panel_t
     S2Df content_size;
     void *data;
     FPtr_destroy func_destroy_data;
-    ArrPt(GuiComponent) *visible_children;
-    ArrPt(GuiComponent) *children;
+    ArrPt(GuiComponent) * children;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -70,7 +68,6 @@ void _panel_destroy_all(Panel **panel)
     _component_destroy_imp(&(*panel)->component);
     arrpt_destroy(&(*panel)->layouts, _layout_destroy, Layout);
     arrpt_destroy(&(*panel)->children, _component_destroy, GuiComponent);
-    arrpt_destroy(&(*panel)->visible_children, NULL, GuiComponent);
     obj_delete(panel, Panel);
 }
 
@@ -90,7 +87,6 @@ static Panel *i_create(const uint32_t flags)
     panel->content_size = s2df(-1.f, -1.f);
     panel->flags = flags;
     panel->children = arrpt_create(GuiComponent);
-    panel->visible_children = arrpt_create(GuiComponent);
     return panel;
 }
 
@@ -250,7 +246,7 @@ void _panel_attach_component(Panel *panel, GuiComponent *component)
     if (arrpt_find(panel->children, component, GuiComponent) == UINT32_MAX)
     {
         arrpt_append(panel->children, component, GuiComponent);
-        _component_attach_to_panel((GuiComponent*)panel, component);
+        _component_attach_to_panel((GuiComponent *)panel, component);
     }
 }
 
@@ -273,7 +269,7 @@ static void i_hide_component(GuiComponent *component)
     _component_visible(component, FALSE);
     _component_panels(component, &n, panels);
 
-    for(i = 0; i < n; ++i)
+    for (i = 0; i < n; ++i)
     {
         arrpt_foreach(child, panels[i]->children, GuiComponent)
             i_hide_component(child);
@@ -290,32 +286,27 @@ void _panel_destroy_component(Panel *panel, GuiComponent *component)
     cassert_no_null(component);
 
     /* Check if component exists in any panel layout */
-    /*arrpt_foreach(layout, panel->layouts, Layout)
-        if (_layout_search_component(layout, component) != NULL)
-        {
-            exists = TRUE;
-            break;
-        }
-    arrpt_end()*/
+    arrpt_foreach(layout, panel->layouts, Layout) if (_layout_search_component(layout, component) != NULL)
+    {
+        exists = TRUE;
+        break;
+    }
+    arrpt_end()
 
-    if (exists == FALSE)
+        if (exists == FALSE)
     {
         register uint32_t index;
 
-        /* Prevent flickering in Windows because destroyed component new parent
+/* Prevent flickering in Windows because destroyed component new parent
         will be set to NULL (Desktop HWND) when is detached from this panel. */
-        #if defined(__WINDOWS__)
+#if defined(__WINDOWS__)
         i_hide_component(component);
-        #endif
+#endif
 
         _component_set_parent_window(component, NULL);
         i_detach_component(&panel->component, component);
         index = arrpt_find(panel->children, component, GuiComponent);
-        cassert(index != UINT32_MAX);
         arrpt_delete(panel->children, index, _component_destroy, GuiComponent);
-        index = arrpt_find(panel->visible_children, component, GuiComponent);
-        if (index != UINT32_MAX)
-            arrpt_delete(panel->visible_children, index, NULL, GuiComponent);
     }
 }
 
@@ -354,63 +345,13 @@ GuiComponent *_panel_get_component(Panel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-GuiComponent *_panel_find_component(Panel *panel, void *ositem)
-{
-    cassert_no_null(panel);
-    arrpt_foreach(comp, panel->visible_children, GuiComponent)
-        if (comp->ositem == ositem)
-            return comp;
-
-        if (comp->type == ekGUI_TYPE_PANEL)
-        {
-            GuiComponent *child = _panel_find_component((Panel*)comp, ositem);
-            if (child != NULL)
-                return child;
-        }
-    arrpt_end();
-    return NULL;
-}
-
-/*
-void *_panel_get_object_by_tag(const Panel *panel, const uint32_t tag, const char_t *type);
-void *_panel_get_object_by_tag(const Panel *panel, const uint32_t tag, const char_t *type)
-{
-    cassert_no_null(panel);
-    if (panel->component.tag.tag_uint32 == tag)
-    {
-        cassert(str_equ_c(type, "Panel") == TRUE);
-        return (void*)panel;
-    }
-
-    if (panel->active_layout != UINT32_MAX)
-    {
-        const Layout *layout = arrpt_get(panel->layouts, panel->active_layout, Layout);
-        void *component = _layout_get_object_by_tag(layout, tag, type);
-        if (component != NULL)
-            return component;
-    }
-
-    arrpt_foreach(layout, panel->layouts, Layout)
-        if (layout_i != panel->active_layout)
-        {
-            void *component = _layout_get_object_by_tag(layout, tag, type);
-            if (component != NULL)
-                return component;
-        }
-    arrpt_end();
-
-    return NULL;
-}*/
-
-/*---------------------------------------------------------------------------*/
-
 void _panel_panels(const Panel *panel, uint32_t *num_panels, Panel **panels)
 {
     cassert_no_null(panel);
     cassert_no_null(num_panels);
     cassert_no_null(panels);
     *num_panels = 1;
-    panels[0] = (Panel*)panel;
+    panels[0] = (Panel *)panel;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -452,37 +393,20 @@ Window *_panel_get_window(Panel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_activate_layout(
-                        ArrPt(Layout) *layouts,
-                        const uint32_t active_layout,
-                        uint32_t *visible_layout,
-                        ArrPt(GuiComponent) **visible_children)
+static void i_activate_layout(const ArrPt(Layout) * layouts, ArrPt(GuiComponent) * children, const uint32_t active_layout)
 {
-    Layout *layout = NULL;
-    ArrPt(GuiComponent) *layout_components = NULL;
-    cassert_no_null(visible_layout);
-    cassert_no_null(visible_children);
-    cassert(*visible_layout != active_layout);
-    layout = arrpt_get(layouts, active_layout, Layout);
-    cassert_no_null(layout);
-    layout_components = arrpt_create(GuiComponent);
+    const Layout *layout = arrpt_get_const(layouts, active_layout, Layout);
+    ArrPt(GuiComponent) *layout_components = arrpt_create(GuiComponent);
+
     _layout_components(layout, layout_components);
 
-    /*! <Hidden components that's become visible> */
-    arrpt_foreach(component, layout_components, GuiComponent)
-        if (arrpt_find(*visible_children, component, GuiComponent) == UINT32_MAX)
-            _component_visible(component, TRUE);
+    /* Show or hide component depending if is in active layout */
+    arrpt_foreach(component, children, GuiComponent) if (arrpt_find(layout_components, component, GuiComponent) != UINT32_MAX)
+        _component_visible(component, TRUE);
+    else _component_visible(component, FALSE);
     arrpt_end()
 
-    /*! <Visible components that's become hidden> */
-    arrpt_foreach(component, *visible_children, GuiComponent)
-        if (arrpt_find(layout_components, component, GuiComponent) == UINT32_MAX)
-            _component_visible(component, FALSE);
-    arrpt_end()
-
-    arrpt_destroy(visible_children, NULL, GuiComponent);
-    *visible_children = layout_components;
-    *visible_layout = active_layout;
+        arrpt_destroy(&layout_components, NULL, GuiComponent);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -494,7 +418,10 @@ void _panel_compose(Panel *panel, const S2Df *required_size, S2Df *final_size)
     cassert_no_null(panel);
 
     if (panel->visible_layout != panel->active_layout)
-        i_activate_layout(panel->layouts, panel->active_layout, &panel->visible_layout, &panel->visible_children);
+    {
+        i_activate_layout(panel->layouts, panel->children, panel->active_layout);
+        panel->visible_layout = panel->active_layout;
+    }
 
     layout = arrpt_get(panel->layouts, panel->active_layout, Layout);
     _layout_compose(layout, required_size, final_size);
@@ -509,8 +436,12 @@ void _panel_dimension(Panel *panel, const uint32_t di, real32_t *dim0, real32_t 
 {
     Layout *layout = NULL;
     cassert_no_null(panel);
+
     if (panel->visible_layout != panel->active_layout)
-        i_activate_layout(panel->layouts, panel->active_layout, &panel->visible_layout, &panel->visible_children);
+    {
+        i_activate_layout(panel->layouts, panel->children, panel->active_layout);
+        panel->visible_layout = panel->active_layout;
+    }
 
     layout = arrpt_get(panel->layouts, panel->active_layout, Layout);
     _layout_dimension(layout, di, dim0, dim1);
@@ -567,7 +498,7 @@ void _panel_expand(Panel *panel, const uint32_t di, const real32_t current_size,
 
         if (panel->control_size.height > 0)
         {
-            cassert(current_size == panel->control_size.height);
+            /*cassert(current_size == panel->control_size.height);*/
             if (required_size > panel->control_size.height)
                 reqsize = required_size;
             else
@@ -638,7 +569,7 @@ void _panel_locale(Panel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-ArrPt(Layout) *_panel_layouts(const Panel *panel)
+ArrPt(Layout) * _panel_layouts(const Panel *panel)
 {
     cassert_no_null(panel);
     return panel->layouts;

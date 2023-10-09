@@ -19,4 +19,3 @@ void _ospopup_detach_and_destroy(OSPopUp **popup, OSPanel *panel);
 GtkWidget *_ospopup_focus(OSPopUp *popup);
 
 __END_C
-

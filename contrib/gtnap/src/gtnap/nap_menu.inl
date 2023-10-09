@@ -1,5 +1,5 @@
 
-#include "gui.hxx"
+#include <gui/gui.hxx>
 
 __EXTERN_C
 

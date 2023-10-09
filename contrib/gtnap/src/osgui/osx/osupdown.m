@@ -16,9 +16,9 @@
 #include "osgui.inl"
 #include "oscontrol.inl"
 #include "ospanel.inl"
-#include "cassert.h"
-#include "event.h"
-#include "heap.h"
+#include <core/event.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX

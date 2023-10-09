@@ -5,13 +5,7 @@
 -inc
 
 -i.
--isrc/osapp
--isrc/gui
--isrc/draw2d
--isrc/geom2d
--isrc/core
--isrc/osbs
--isrc/sewer
+-isrc
 
 -cflag={msvc}-D_WINDOWS
 -cflag={gcc}-g

@@ -15,4 +15,3 @@
 BOOL _osprogress_is(NSView *view);
 
 void _osprogress_detach_and_destroy(OSProgress **progress, OSPanel *panel);
-

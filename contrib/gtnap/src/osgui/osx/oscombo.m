@@ -10,17 +10,16 @@
 
 /* Operating System native combo box */
 
-#include "osgui_osx.inl"
 #include "oscombo.h"
 #include "oscombo.inl"
 #include "osgui.inl"
 #include "oscontrol.inl"
 #include "ospanel.inl"
 #include "oswindow.inl"
-#include "cassert.h"
-#include "event.h"
-#include "heap.h"
-#include "ptr.h"
+#include <core/event.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 /*---------------------------------------------------------------------------*/
 

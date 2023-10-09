@@ -19,25 +19,24 @@
 #include "oslistener.inl"
 #include "osscroll.inl"
 #include "ospanel.inl"
-#include "win/osstyleXP.inl"
-#include "draw.h"
-#include "dctxh.h"
-
-#include "cassert.h"
-#include "color.h"
-#include "heap.h"
-#include "event.h"
-#include "osbs.h"
-#include "ptr.h"
+#include "osstyleXP.inl"
+#include <draw2d/color.h>
+#include <draw2d/draw.h>
+#include <draw2d/dctxh.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <osbs/osbs.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #if !defined(__WINDOWS__)
 #error This file is only for Windows
 #endif
 
-#include "nowarn.hxx"
+#include <sewer/nowarn.hxx>
 #include <gdiplus.h>
 #include <Commctrl.h>
-#include "warn.hxx"
+#include <sewer/warn.hxx>
 
 struct _osview_t
 {
@@ -59,25 +58,26 @@ struct _osview_t
 
 /*---------------------------------------------------------------------------*/
 
-#define i_color(c)\
+#define i_color(c) \
     Gdiplus::Color((BYTE)(c), (BYTE)((c) >> 8), (BYTE)((c) >> 16))
 
 /*---------------------------------------------------------------------------*/
 
 static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    OSView *view = (OSView*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    OSView *view = (OSView *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
     cassert_no_null(view);
     cassert(view->control.type == ekGUI_TYPE_CUSTOMVIEW);
     cassert(view->control.hwnd == hwnd);
 
-	switch(uMsg) {
+    switch (uMsg)
+    {
     case WM_ERASEBKGND:
         return 1;
 
     case WM_PRINTCLIENT:
         cassert(FALSE);
-        oslistener_draw((OSControl*)view, NULL, 0, 0, 0, 0, 0, 0, &view->listeners);
+        oslistener_draw((OSControl *)view, NULL, 0, 0, 0, 0, 0, 0, &view->listeners);
         return 0;
 
     case WM_NCCALCSIZE:
@@ -96,8 +96,7 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
         }
         break;
 
-    case WM_PAINT:
-    {
+    case WM_PAINT: {
         LONG_PTR edata;
 
         if (_oswindow_in_resizing(hwnd) == TRUE)
@@ -128,7 +127,7 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
             uint32_t background;
             if (view->parent_panel != NULL)
             {
-                cassert(((OSControl*)view->parent_panel)->type == ekGUI_TYPE_PANEL);
+                cassert(((OSControl *)view->parent_panel)->type == ekGUI_TYPE_PANEL);
                 background = (uint32_t)_ospanel_background_color(view->parent_panel, hwnd);
             }
             else
@@ -155,8 +154,8 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
             void *ctx[2];
             ctx[0] = graphics;
             ctx[1] = memHdc;
-            dctx_set_gcontext(view->ctx, ctx, (uint32_t)vwidth, (uint32_t)vheight, -(real32_t)vx, -(real32_t)vy, background, TRUE/*(view->flags & ekCONTROL) ? FALSE : TRUE*/);
-            oslistener_draw((OSControl*)view, view->ctx, (real32_t)twidth, (real32_t)theight, (real32_t)vx, (real32_t)vy, (real32_t)vwidth, (real32_t)vheight, &view->listeners);
+            dctx_set_gcontext(view->ctx, ctx, (uint32_t)vwidth, (uint32_t)vheight, -(real32_t)vx, -(real32_t)vy, background, TRUE /*(view->flags & ekCONTROL) ? FALSE : TRUE*/);
+            oslistener_draw((OSControl *)view, view->ctx, (real32_t)twidth, (real32_t)theight, (real32_t)vx, (real32_t)vy, (real32_t)vwidth, (real32_t)vheight, &view->listeners);
             dctx_unset_gcontext(view->ctx);
 
             if (view->OnOverlay != NULL)
@@ -168,7 +167,7 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
                 params.width = (real32_t)vwidth;
                 params.height = (real32_t)vheight;
                 dctx_set_gcontext(view->ctx, ctx, (uint32_t)vwidth, (uint32_t)vheight, 0, 0, 0, TRUE);
-                listener_event(view->OnOverlay, ekGUI_EVENT_OVERLAY, (OSControl*)view, &params, NULL, OSControl, EvDraw, void);
+                listener_event(view->OnOverlay, ekGUI_EVENT_OVERLAY, (OSControl *)view, &params, NULL, OSControl, EvDraw, void);
                 dctx_unset_gcontext(view->ctx);
             }
 
@@ -186,76 +185,70 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
         // The window is rendered with other technology
         else
         {
-            oslistener_draw((OSControl*)view, NULL, (real32_t)view->dbuffer_width, (real32_t)view->dbuffer_height, 0, 0, (real32_t)view->dbuffer_width, (real32_t)view->dbuffer_height, &view->listeners);
+            oslistener_draw((OSControl *)view, NULL, (real32_t)view->dbuffer_width, (real32_t)view->dbuffer_height, 0, 0, (real32_t)view->dbuffer_width, (real32_t)view->dbuffer_height, &view->listeners);
         }
     }
 
-    return 0;
-
-    // This Window must process mouse events
-   // case WM_NCHITTEST:
-		 //Automatic SetFocus for Mouse Wheel over view without click
-   //     if (osbs_windows() <= ekWIN_8 && (view->listeners.OnWheel != NULL || view->vscroll != NULL))
-   //         SetFocus(hwnd);
-   //     return HTCLIENT;
-//
-    case WM_MOUSELEAVE:
-        oslistener_mouse_exit((OSControl*)view, &view->listeners);
         return 0;
 
-    case WM_MOUSEMOVE:
-    {
+        // This Window must process mouse events
+        // case WM_NCHITTEST:
+        //Automatic SetFocus for Mouse Wheel over view without click
+        //     if (osbs_windows() <= ekWIN_8 && (view->listeners.OnWheel != NULL || view->vscroll != NULL))
+        //         SetFocus(hwnd);
+        //     return HTCLIENT;
+        //
+    case WM_MOUSELEAVE:
+        oslistener_mouse_exit((OSControl *)view, &view->listeners);
+        return 0;
+
+    case WM_MOUSEMOVE: {
         POINTS point = MAKEPOINTS(lParam);
-        oslistener_mouse_moved((OSControl*)view, wParam, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
+        oslistener_mouse_moved((OSControl *)view, wParam, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
         return 0;
     }
 
     case WM_LBUTTONDOWN:
-        if (_oswindow_can_mouse_down((OSControl*)view) == TRUE)
+        if (_oswindow_can_mouse_down((OSControl *)view) == TRUE)
         {
             POINTS point = MAKEPOINTS(lParam);
-            oslistener_mouse_down((OSControl*)view, ekGUI_MOUSE_LEFT, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
-            _oswindow_focus((OSControl*)view);
+            oslistener_mouse_down((OSControl *)view, ekGUI_MOUSE_LEFT, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
+            _oswindow_focus((OSControl *)view);
         }
         return 0;
 
     case WM_LBUTTONDBLCLK:
-        if (_oswindow_can_mouse_down((OSControl*)view) == TRUE)
+        if (_oswindow_can_mouse_down((OSControl *)view) == TRUE)
             break;
         return 0;
 
-    case WM_RBUTTONDOWN:
-    {
+    case WM_RBUTTONDOWN: {
         POINTS point = MAKEPOINTS(lParam);
-        oslistener_mouse_down((OSControl*)view, ekGUI_MOUSE_RIGHT, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
+        oslistener_mouse_down((OSControl *)view, ekGUI_MOUSE_RIGHT, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
         return 0;
     }
 
-    case WM_MBUTTONDOWN:
-    {
+    case WM_MBUTTONDOWN: {
         POINTS point = MAKEPOINTS(lParam);
-        oslistener_mouse_down((OSControl*)view, ekGUI_MOUSE_MIDDLE, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
+        oslistener_mouse_down((OSControl *)view, ekGUI_MOUSE_MIDDLE, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
         return 0;
     }
 
-    case WM_LBUTTONUP:
-    {
+    case WM_LBUTTONUP: {
         POINTS point = MAKEPOINTS(lParam);
-        oslistener_mouse_up((OSControl*)view, ekGUI_MOUSE_LEFT, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
+        oslistener_mouse_up((OSControl *)view, ekGUI_MOUSE_LEFT, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
         return 0;
     }
 
-    case WM_RBUTTONUP:
-    {
+    case WM_RBUTTONUP: {
         POINTS point = MAKEPOINTS(lParam);
-        oslistener_mouse_up((OSControl*)view, ekGUI_MOUSE_RIGHT, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
+        oslistener_mouse_up((OSControl *)view, ekGUI_MOUSE_RIGHT, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
         return 0;
     }
 
-    case WM_MBUTTONUP:
-    {
+    case WM_MBUTTONUP: {
         POINTS point = MAKEPOINTS(lParam);
-        oslistener_mouse_up((OSControl*)view, ekGUI_MOUSE_MIDDLE, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
+        oslistener_mouse_up((OSControl *)view, ekGUI_MOUSE_MIDDLE, (real32_t)point.x, (real32_t)point.y, view->scroll, &view->listeners);
         return 0;
     }
 
@@ -266,11 +259,11 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
                 InvalidateRect(view->control.hwnd, NULL, FALSE);
         }
 
-        oslistener_whell((OSControl*)view, wParam, lParam, view->scroll, &view->listeners);
+        oslistener_whell((OSControl *)view, wParam, lParam, view->scroll, &view->listeners);
         break;
 
     case WM_SETFOCUS:
-        _oswindow_store_focus((OSControl*)view);
+        _oswindow_store_focus((OSControl *)view);
 
         if (view->flags & ekVIEW_BORDER)
             RedrawWindow(hwnd, NULL, NULL, RDW_FRAME | RDW_INVALIDATE);
@@ -296,13 +289,13 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
     case WM_KEYDOWN:
     case WM_SYSKEYDOWN:
-        if (oslistener_key_down((OSControl*)view, wParam, lParam, &view->listeners) == TRUE)
+        if (oslistener_key_down((OSControl *)view, wParam, lParam, &view->listeners) == TRUE)
             return 0;
         break;
 
     case WM_KEYUP:
     case WM_SYSKEYUP:
-        if (oslistener_key_up((OSControl*)view, wParam, lParam, &view->listeners) == TRUE)
+        if (oslistener_key_up((OSControl *)view, wParam, lParam, &view->listeners) == TRUE)
             return 0;
         break;
 
@@ -332,7 +325,7 @@ OSView *osview_create(const uint32_t flags)
     if (flags & ekVIEW_VSCROLL)
         dwStyle |= WS_VSCROLL;
 
-    _oscontrol_init((OSControl*)view, PARAM(dwExStyle, WS_EX_NOPARENTNOTIFY), dwStyle, kVIEW_CLASS, 16, 16, i_WndProc, kDEFAULT_PARENT_WINDOW);
+    _oscontrol_init((OSControl *)view, PARAM(dwExStyle, WS_EX_NOPARENTNOTIFY), dwStyle, kVIEW_CLASS, 16, 16, i_WndProc, kDEFAULT_PARENT_WINDOW);
     view->control.type = ekGUI_TYPE_CUSTOMVIEW;
     view->flags = flags;
 
@@ -542,7 +535,7 @@ void osview_scroll_get(const OSView *view, real32_t *x, real32_t *y)
 
 /*---------------------------------------------------------------------------*/
 
-void osview_scroller_size(const OSView* view, real32_t* width, real32_t* height)
+void osview_scroller_size(const OSView *view, real32_t *width, real32_t *height)
 {
     cassert_no_null(view);
     if (width != NULL)
@@ -562,7 +555,7 @@ void osview_scroller_visible(OSView *view, const bool_t horizontal, const bool_t
 
 /*---------------------------------------------------------------------------*/
 
-void osview_content_size(OSView* view, const real32_t width, const real32_t height, const real32_t line_width, const real32_t line_height)
+void osview_content_size(OSView *view, const real32_t width, const real32_t height, const real32_t line_width, const real32_t line_height)
 {
     cassert_no_null(view);
     osscroll_content_size(view->scroll, width, height, line_width, line_height);
@@ -589,7 +582,7 @@ void osview_set_need_display(OSView *view)
 void *osview_get_native_view(const OSView *view)
 {
     cassert_no_null(view);
-    return (void*)view->control.hwnd;
+    return (void *)view->control.hwnd;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -598,7 +591,7 @@ void osview_attach(OSView *view, OSPanel *panel)
 {
     cassert(view->parent_panel == NULL);
     view->parent_panel = panel;
-    _ospanel_attach_control(panel, (OSControl*)view);
+    _ospanel_attach_control(panel, (OSControl *)view);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -607,35 +600,35 @@ void osview_detach(OSView *view, OSPanel *panel)
 {
     cassert(view->parent_panel == panel);
     view->parent_panel = NULL;
-    _ospanel_detach_control(panel, (OSControl*)view);
+    _ospanel_detach_control(panel, (OSControl *)view);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_visible(OSView *view, const bool_t visible)
 {
-    _oscontrol_set_visible((OSControl*)view, visible);
+    _oscontrol_set_visible((OSControl *)view, visible);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_enabled(OSView *view, const bool_t enabled)
 {
-   _oscontrol_set_enabled((OSControl*)view, enabled);
+    _oscontrol_set_enabled((OSControl *)view, enabled);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_size(const OSView *view, real32_t *width, real32_t *height)
 {
-    _oscontrol_get_size((const OSControl*)view, width, height);
+    _oscontrol_get_size((const OSControl *)view, width, height);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_origin(const OSView *view, real32_t *x, real32_t *y)
 {
-    _oscontrol_get_origin((const OSControl*)view, x, y);
+    _oscontrol_get_origin((const OSControl *)view, x, y);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -643,7 +636,7 @@ void osview_origin(const OSView *view, real32_t *x, real32_t *y)
 void osview_frame(OSView *view, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     cassert_no_null(view);
-    _oscontrol_set_frame((OSControl*)view, x, y, width, height);
+    _oscontrol_set_frame((OSControl *)view, x, y, width, height);
     view->dbuffer_width = (LONG)width;
     view->dbuffer_height = (LONG)height;
 

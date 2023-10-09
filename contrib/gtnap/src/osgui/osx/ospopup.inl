@@ -15,4 +15,3 @@
 BOOL _ospopup_is(NSView *view);
 
 void _ospopup_detach_and_destroy(OSPopUp **popup, OSPanel *panel);
-

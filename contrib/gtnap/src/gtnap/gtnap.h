@@ -10,7 +10,7 @@
 
 #include "hbvmint.h"
 #include "hbgtcore.h"
-#include "gui.hxx"
+#include <gui/gui.hxx>
 
 HB_EXTERN_BEGIN
 

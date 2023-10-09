@@ -10,7 +10,6 @@
 
 /* Operating System native panel */
 
-#include "osgui_osx.inl"
 #include "ospanel.h"
 #include "ospanel.inl"
 #include "osgui.inl"
@@ -25,9 +24,9 @@
 #include "osslider.inl"
 #include "ostext.inl"
 #include "osupdown.inl"
-#include "arrst.h"
-#include "cassert.h"
-#include "heap.h"
+#include <core/arrst.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX

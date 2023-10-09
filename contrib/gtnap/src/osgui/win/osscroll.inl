@@ -41,4 +41,3 @@ void osscroll_control_size(OSScroll *scroll, const real32_t width, const real32_
 void osscroll_visible(OSScroll *scroll, const bool_t horizontal, const bool_t vertical);
 
 __END_C
-

@@ -39,5 +39,3 @@ bool_t _oslistener_key_down(OSControl *sender, GdkEventKey *event, ViewListeners
 bool_t _oslistener_key_up(OSControl *sender, GdkEventKey *event, ViewListeners *listeners);
 
 __END_C
-
-

@@ -10,19 +10,19 @@
 
 /* Draw context */
 
-#include "nowarn.hxx"
+#include <sewer/nowarn.hxx>
 #include <Cocoa/Cocoa.h>
-#include "warn.hxx"
+#include <sewer/warn.hxx>
+#include "draw2d_osx.ixx"
 
 #include "dctx.h"
 #include "dctxh.h"
 #include "dctx.inl"
-#include "cassert.h"
 #include "color.h"
 #include "font.h"
-#include "heap.h"
-#include "ptr.h"
-#include "draw2d_osx.ixx"
+#include <core/heap.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX

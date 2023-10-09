@@ -23,4 +23,3 @@ void _oswindow_focus_edit(NSWindow *window, NSView *edit);
 NSView *_oswindow_get_focus_edit(NSWindow *window);
 
 __END_C
-

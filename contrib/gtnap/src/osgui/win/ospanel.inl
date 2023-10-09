@@ -20,8 +20,6 @@ void _ospanel_destroy_default(OSPanel **panel);
 
 void _ospanel_destroy(OSPanel **panel);
 
-//HWND _ospanel_hit_point(const OSPanel *panel, const POINT *point);
-
 void _ospanel_resize_double_buffer(OSPanel *panel, LONG width, LONG height);
 
 HDC _ospanel_paint_double_buffer(OSPanel *panel, const uint32_t resize_strategy, LONG *width, LONG *height);
@@ -41,4 +39,3 @@ void _ospanel_scroll_frame(const OSPanel *panel, RECT *rect);
 void _ospanel_scroll(OSPanel *panel, const int x, const int y);
 
 __END_C
-

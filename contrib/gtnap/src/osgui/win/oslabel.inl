@@ -21,4 +21,3 @@ COLORREF _oslabel_color(const OSLabel *label);
 HBRUSH _oslabel_background_color(const OSLabel *label, COLORREF *color);
 
 __END_C
-

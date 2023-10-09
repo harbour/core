@@ -17,4 +17,3 @@ BOOL _osbutton_is(NSView *view);
 void _osbutton_detach_and_destroy(OSButton **button, OSPanel *panel);
 
 BOOL _osbutton_OnIntro(NSResponder *resp);
-

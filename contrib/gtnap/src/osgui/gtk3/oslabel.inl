@@ -17,4 +17,3 @@ __EXTERN_C
 void _oslabel_detach_and_destroy(OSLabel **label, OSPanel *panel);
 
 __END_C
-

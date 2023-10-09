@@ -10,15 +10,14 @@
 
 /* Operating System native slider */
 
-#include "osgui_osx.inl"
 #include "osslider.h"
 #include "osslider.inl"
 #include "osgui.inl"
 #include "oscontrol.inl"
 #include "ospanel.inl"
-#include "cassert.h"
-#include "event.h"
-#include "heap.h"
+#include <core/event.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX

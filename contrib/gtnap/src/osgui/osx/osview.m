@@ -10,18 +10,18 @@
 
 /* Cocoa CustomView */
 
-#include "osgui_osx.inl"
 #include "osview.h"
 #include "osview.inl"
 #include "osgui.inl"
 #include "oscontrol.inl"
 #include "oslistener.inl"
 #include "ospanel.inl"
-#include "cassert.h"
-#include "dctxh.h"
-#include "event.h"
-#include "heap.h"
-#include "ptr.h"
+#include <draw2d/dctxh.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
+
 
 #if !defined (__MACOS__)
 #error This file is only for OSX
@@ -46,14 +46,14 @@
 
 /*---------------------------------------------------------------------------*/
 
-static CGContextRef i_CGContext(NSGraphicsContext *nscontext)
-{
-#if defined (MAC_OS_X_VERSION_10_10) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10
-    return [nscontext CGContext];
-#else
-    return (CGContextRef)[nscontext graphicsPort];
-#endif
-}
+// static CGContextRef i_CGContext(NSGraphicsContext *nscontext)
+// {
+// #if defined (MAC_OS_X_VERSION_10_10) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10
+//     return [nscontext CGContext];
+// #else
+//     return (CGContextRef)[nscontext graphicsPort];
+// #endif
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -114,7 +114,7 @@ static void i_area_expand(EvDraw *params, const real32_t area_width, const real3
         if ((self->flags & ekVIEW_OPENGL) == 0)
         {
             NSGraphicsContext *nscontext;
-            CGContextRef cgcontext;
+            // CGContextRef cgcontext;
 
             if (self->ctx == NULL)
             {
@@ -124,7 +124,7 @@ static void i_area_expand(EvDraw *params, const real32_t area_width, const real3
 
             params.ctx = self->ctx;
             nscontext = [NSGraphicsContext currentContext];
-            cgcontext = i_CGContext(nscontext);
+            // cgcontext = i_CGContext(nscontext);
             dctx_set_gcontext(self->ctx, nscontext, (uint32_t)rect.size.width, (uint32_t)rect.size.height, 0, 0, 0, TRUE);
             listener_event(self->listeners.OnDraw, ekGUI_EVENT_DRAW, (OSView*)self, &params, NULL, OSView, EvDraw, void);
             dctx_unset_gcontext(self->ctx);
@@ -680,6 +680,16 @@ void osview_scroller_size(const OSView *view, real32_t *width, real32_t *height)
 				*height = (real32_t)[scroller frame].size.height;
 		}
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void osview_scroller_visible(OSView *view, const bool_t horizontal, const bool_t vertical)
+{
+    unref(view);
+    unref(horizontal);
+    unref(vertical);
+    cassert(FALSE);
 }
 
 /*---------------------------------------------------------------------------*/

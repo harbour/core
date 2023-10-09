@@ -15,18 +15,17 @@
 #include "gui.inl"
 #include "button.inl"
 #include "component.inl"
-#include "panel.inl"
-#include "panel.h"
 #include "layout.inl"
 #include "layout.h"
-#include "guictx.h"
-
-#include "cassert.h"
-#include "event.h"
-#include "ptr.h"
-#include "objh.h"
-#include "s2d.h"
-#include "v2d.h"
+#include "panel.inl"
+#include "panel.h"
+#include <draw2d/guictx.h>
+#include <geom2d/s2d.h>
+#include <geom2d/v2d.h>
+#include <core/event.h>
+#include <core/objh.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 struct _window_t
 {
@@ -78,11 +77,11 @@ static void i_destroy(Window **window)
     {
         Panel *main_panel = layout_get_panel((*window)->main_layout, 0, 0);
 
-        /* Prevent flickering in Windows because the main panel new parent will be
+/* Prevent flickering in Windows because the main panel new parent will be
         set to NULL (Desktop HWND) when is detached from this window. */
-        #if defined(__WINDOWS__)
+#if defined(__WINDOWS__)
         _panel_hide_all(main_panel);
-        #endif
+#endif
 
         i_detach_main_panel(main_panel, (*window)->ositem, (*window)->context->func_detach_main_panel_from_window);
         _layout_destroy(&(*window)->main_layout);
@@ -93,7 +92,7 @@ static void i_destroy(Window **window)
     listener_destroy(&(*window)->OnMoved);
     listener_destroy(&(*window)->OnResize);
     listener_destroy(&(*window)->OnClose);
-    guictx_release((GuiCtx**)(&(*window)->context));
+    guictx_release((GuiCtx **)(&(*window)->context));
     obj_delete(window, Window);
 }
 
@@ -140,31 +139,30 @@ static void i_OnWindowResize(Window *window, Event *e)
     params = event_params(e, EvSize);
     cassert_no_null(params);
 
-	switch (event_type(e)) {
-	case ekGUI_EVENT_WND_SIZING:
-	{
-		S2Df reqsize;
-		S2Df finsize;
-		EvSize* result = event_result(e, EvSize);
-		cassert_no_null(result);
-		reqsize.width = params->width;
-		reqsize.height = params->height;
-		_layout_compose(window->main_layout, &reqsize, &finsize);
-		result->width = finsize.width;
-		result->height = finsize.height;
-		break;
-	}
+    switch (event_type(e))
+    {
+    case ekGUI_EVENT_WND_SIZING: {
+        S2Df reqsize;
+        S2Df finsize;
+        EvSize *result = event_result(e, EvSize);
+        cassert_no_null(result);
+        reqsize.width = params->width;
+        reqsize.height = params->height;
+        _layout_compose(window->main_layout, &reqsize, &finsize);
+        result->width = finsize.width;
+        result->height = finsize.height;
+        break;
+    }
 
-	case ekGUI_EVENT_WND_SIZE:
-	{
-		_layout_locate(window->main_layout);
-		if (window->OnResize != NULL)
-			listener_pass_event(window->OnResize, e, window, Window);
-		break;
-	}
+    case ekGUI_EVENT_WND_SIZE: {
+        _layout_locate(window->main_layout);
+        if (window->OnResize != NULL)
+            listener_pass_event(window->OnResize, e, window, Window);
+        break;
+    }
 
-	cassert_default();
-	}
+        cassert_default();
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -182,7 +180,8 @@ static void i_OnWindowClose(Window *window, Event *event)
 
     window->in_will_close_event = TRUE;
 
-    switch (params->origin) {
+    switch (params->origin)
+    {
     case ekGUI_CLOSE_BUTTON:
         if (window->OnClose != NULL)
         {
@@ -193,17 +192,17 @@ static void i_OnWindowClose(Window *window, Event *event)
         {
             switch (window->role)
             {
-                case ekGUI_ROLE_MAIN:
-                    closed = FALSE;
-                    break;
-                case ekGUI_ROLE_OVERLAY:
-                case ekGUI_ROLE_MODAL:
-                    closed = TRUE;
-                    break;
-                case ekGUI_ROLE_MANAGED:
-                    cassert(FALSE);
-                    closed = FALSE;
-                    break;
+            case ekGUI_ROLE_MAIN:
+                closed = FALSE;
+                break;
+            case ekGUI_ROLE_OVERLAY:
+            case ekGUI_ROLE_MODAL:
+                closed = TRUE;
+                break;
+            case ekGUI_ROLE_MANAGED:
+                cassert(FALSE);
+                closed = FALSE;
+                break;
                 cassert_default();
             }
         }
@@ -242,7 +241,7 @@ static void i_OnWindowClose(Window *window, Event *event)
         closed = FALSE;
         break;
 
-    cassert_default();
+        cassert_default();
     }
 
     if (closed == TRUE)
@@ -343,9 +342,9 @@ void window_panel(Window *window, Panel *panel)
 void window_OnMoved(Window *window, Listener *listener)
 {
     component_update_listener(
-                    window, &window->OnMoved, listener, i_OnWindowMoved,
-                    window->context->func_window_OnMoved,
-                    Window);
+        window, &window->OnMoved, listener, i_OnWindowMoved,
+        window->context->func_window_OnMoved,
+        Window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -546,7 +545,7 @@ void window_cycle_tabstop(Window *window, const bool_t cycle)
 
 /*---------------------------------------------------------------------------*/
 
-void _window_tabstop(Window* window, const bool_t next)
+void _window_tabstop(Window *window, const bool_t next)
 {
     cassert_no_null(window);
     cassert_no_null(window->context);
@@ -723,16 +722,6 @@ void _window_focus(Window *window, GuiComponent *component)
 
 /*---------------------------------------------------------------------------*/
 
-GuiComponent *_window_find_component(Window *window, void *ositem)
-{
-    Panel *main_panel = NULL;
-    cassert_no_null(window);
-    main_panel = layout_get_panel(window->main_layout, 0, 0);
-    return _panel_find_component(main_panel, ositem);
-}
-
-/*---------------------------------------------------------------------------*/
-
 S2Df window_get_client_size(const Window *window)
 {
     Panel *panel = NULL;
@@ -753,7 +742,7 @@ void window_defbutton(Window *window, Button *button)
     if (button != NULL)
     {
         cassert(_button_is_pushbutton(button) == TRUE);
-        window->context->func_window_set_default_pushbutton(window->ositem, ((GuiComponent*)button)->ositem);
+        window->context->func_window_set_default_pushbutton(window->ositem, ((GuiComponent *)button)->ositem);
     }
     else
     {
@@ -769,7 +758,7 @@ void window_cursor(Window *window, const gui_cursor_t cursor, const Image *image
     if (cursor != ekGUI_CURSOR_ARROW)
     {
         const Cursor *oscursor = _gui_cursor(cursor, image, hot_x, hot_y);
-        window->context->func_window_set_cursor(window->ositem, (Cursor*)oscursor);
+        window->context->func_window_set_cursor(window->ositem, (Cursor *)oscursor);
     }
     else
     {

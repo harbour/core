@@ -1,0 +1,120 @@
+#------------------------------------------------------------------------------
+# NAppGUI CMake build script
+# Copyright (C) 2018 Francisco García Collado
+# MIT License (See LICENSE.txt)
+#------------------------------------------------------------------------------
+cmake_minimum_required(VERSION 3.0)
+project(NAppGUI)
+
+set(NAPPGUI_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Configurations
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release;ReleaseWithAssert" CACHE INTERNAL "Configuration Types" FORCE)
+set(CMAKE_CXX_FLAGS_RELEASEWITHASSERT ${CMAKE_CXX_FLAGS_RELEASE})
+set(CMAKE_C_FLAGS_RELEASEWITHASSERT ${CMAKE_C_FLAGS_RELEASE})
+set(CMAKE_EXE_LINKER_FLAGS_RELEASEWITHASSERT ${CMAKE_EXE_LINKER_FLAGS_RELEASE})
+set(CMAKE_SHARED_LINKER_FLAGS_RELEASEWITHASSERT ${CMAKE_SHARED_LINKER_FLAGS_RELEASE})
+
+# Globals
+set(NAPPGUI_SHARED False CACHE BOOL "Build NAppGUI shared libraries.")
+set(NAPPGUI_DEMO True CACHE BOOL "Build NAppGUI demo examples.")
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+# Welcome
+string(TIMESTAMP CURRENT_YEAR %Y)
+include(${NAPPGUI_ROOT_PATH}/prj/NAppVersion.cmake)
+message (STATUS "---------------------------------------------")
+message (STATUS "NAppGUI Cross-Platform SDK")
+message (STATUS "2015-${CURRENT_YEAR} Francisco Garcia Collado")
+message (STATUS "MIT License")
+message (STATUS "---------------------------------------------")
+message (STATUS "* Version: ${NAPPGUI_MAJOR}.${NAPPGUI_MINOR}.${NAPPGUI_PATCH}.${NAPPGUI_BUILD}")
+
+# Build options
+message (STATUS "* Generator: ${CMAKE_GENERATOR}")
+
+if (NAPPGUI_SHARED)
+    message (STATUS "* Build shared: True")
+else()
+    message (STATUS "* Build shared: False")
+endif()
+
+# Config compiler
+include(${NAPPGUI_ROOT_PATH}/prj/NAppCompilers.cmake)
+nap_config_compiler()
+message (STATUS "* Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+message (STATUS "* Build type: ${CMAKE_BUILD_TYPE}")
+message (STATUS "* Build arch: ${CMAKE_ARCHITECTURE}")
+message (STATUS "* Host arch: ${CMAKE_HOST_ARCHITECTURE}")
+message (STATUS "* PackageID: ${CMAKE_PACKAGE_ID}")
+# message (STATUS "* CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
+# message (STATUS "* CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+message (STATUS "---------------------------------------------")
+
+# Tools required to generate NAppGUI projets ('nrc')
+# They need to be compiled before NAppGUI configure/generate
+include(${NAPPGUI_ROOT_PATH}/prj/NAppGenerateTools.cmake)
+nap_generate_tools()
+
+# Generate targets
+include(${NAPPGUI_ROOT_PATH}/prj/NAppTarget.cmake)
+include(${NAPPGUI_ROOT_PATH}/CMakeTargets.cmake)
+
+foreach (target ${ALL_TARGETS})
+    add_subdirectory(${target})
+endforeach()
+
+# If we are in dev mode, 'gtnap' and 'exemplo' target will be built in same solution
+if (GTNAP_DEVELOPER_MODE)
+    message(STATUS "- GTNAP Developer mode")
+    set(GTNAP_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+    set(HARBOUR_ROOT_PATH ${GTNAP_PATH}/../..)
+
+    if (WIN32)
+        string(REGEX REPLACE "/w44668" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+        string(REGEX REPLACE "/w44255" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+        string(REGEX REPLACE "/w44668" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        string(REGEX REPLACE "/w44255" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    endif()
+
+    # Link with Harbour libraries
+    set(HARBOUR_LIBS "")
+    set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbct;hbextern;hbdebug;hbvm;hbrtl;hblang;hbcpage")
+    if (WIN32)
+        set(HARBOUR_LIBS ${HARBOUR_LIBS} "gtcgi;gtpca;gtstd;hbrtl")
+    else()
+        set(HARBOUR_LIBS ${HARBOUR_LIBS} "gtcgi;gtpca;gtstd;gttrm;hbrtl")
+    endif()
+    set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbrdd;hbuddall;hbusrrdd;rddntx;hbrtl;rddcdx;rddnsx;rddfpt;hbrdd")
+    set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbhsx;hbsix;hbmacro;hbcplr;hbpp;hbcommon")
+
+    if (WIN32)
+        set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/win/msvc)
+        set(HARBOUR_LIBS ${HARBOUR_LIBS} "winmm;gtwin")
+    elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+        set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/darwin/clang)
+    else()
+        set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/linux/gcc)
+    endif()
+
+    add_subdirectory("src/gtnap")
+
+    file(COPY "${GTNAP_PATH}/resources/CMakeLists.txt" DESTINATION "${GTNAP_PATH}/src/exemplo")
+    if (WIN32)
+        file(COPY "${GTNAP_PATH}/resources/hbmk2_win.c" DESTINATION "${GTNAP_PATH}/src/exemplo")
+    else()
+        file(COPY "${GTNAP_PATH}/resources/hbmk2_lin.c" DESTINATION "${GTNAP_PATH}/src/exemplo")
+    endif()
+    set(EXAMPLE_NAME "exemplo")
+    add_subdirectory("src/exemplo")
+
+    file(COPY "${GTNAP_PATH}/resources/CMakeLists.txt" DESTINATION "${GTNAP_PATH}/src/hello")
+    if (WIN32)
+        file(COPY "${GTNAP_PATH}/resources/hbmk2_win.c" DESTINATION "${GTNAP_PATH}/src/hello")
+    else()
+        file(COPY "${GTNAP_PATH}/resources/hbmk2_lin.c" DESTINATION "${GTNAP_PATH}/src/hello")
+    endif()
+    set(EXAMPLE_NAME "hello")
+    add_subdirectory("src/hello")
+
+endif()

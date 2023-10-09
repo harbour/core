@@ -16,10 +16,10 @@
 #include "oscontrol.inl"
 #include "oslistener.inl"
 #include "ospanel.inl"
-#include "cassert.h"
-#include "event.h"
-#include "heap.h"
-#include "ptr.h"
+#include <core/event.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX

@@ -21,4 +21,3 @@ extern NSMutableParagraphStyle *kCENTER_PARAGRAPH_STYLE;
 extern NSMutableParagraphStyle *kRIGHT_PARAGRAPH_STYLE;
 
 __END_C
-

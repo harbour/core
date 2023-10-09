@@ -12,17 +12,16 @@
 
 #include "osgui.h"
 #include "osgui.inl"
-
-#include "blib.h"
-#include "bmem.h"
-#include "cassert.h"
-#include "font.h"
-#include "heap.h"
-#include "image.h"
-#include "log.h"
-#include "draw2d.h"
-#include "strings.h"
-#include "unicode.h"
+#include <draw2d/draw2d.h>
+#include <draw2d/font.h>
+#include <draw2d/image.h>
+#include <core/heap.h>
+#include <core/strings.h>
+#include <osbs/log.h>
+#include <sewer/blib.h>
+#include <sewer/bmem.h>
+#include <sewer/cassert.h>
+#include <sewer/unicode.h>
 
 #if defined(__GTK3__)
 #include "gtk3/oswindow.inl"
@@ -35,34 +34,33 @@ static OSWindow *i_MAIN_WINDOW = NULL;
 static OSMenu *i_MAIN_MENU = NULL;
 
 static const vkey_t kASCII_VIRTUAL_KEY[] =
-{
-    ekKEY_A,
-    ekKEY_B,
-    ekKEY_C,
-    ekKEY_D,
-    ekKEY_E,
-    ekKEY_F,
-    ekKEY_G,
-    ekKEY_H,
-    ekKEY_I,
-    ekKEY_J,
-    ekKEY_K,
-    ekKEY_L,
-    ekKEY_M,
-    ekKEY_N,
-    ekKEY_O,
-    ekKEY_P,
-    ekKEY_Q,
-    ekKEY_R,
-    ekKEY_S,
-    ekKEY_T,
-    ekKEY_U,
-    ekKEY_V,
-    ekKEY_W,
-    ekKEY_X,
-    ekKEY_Y,
-    ekKEY_Z
-};
+    {
+        ekKEY_A,
+        ekKEY_B,
+        ekKEY_C,
+        ekKEY_D,
+        ekKEY_E,
+        ekKEY_F,
+        ekKEY_G,
+        ekKEY_H,
+        ekKEY_I,
+        ekKEY_J,
+        ekKEY_K,
+        ekKEY_L,
+        ekKEY_M,
+        ekKEY_N,
+        ekKEY_O,
+        ekKEY_P,
+        ekKEY_Q,
+        ekKEY_R,
+        ekKEY_S,
+        ekKEY_T,
+        ekKEY_U,
+        ekKEY_V,
+        ekKEY_W,
+        ekKEY_X,
+        ekKEY_Y,
+        ekKEY_Z};
 
 /*---------------------------------------------------------------------------*/
 
@@ -134,8 +132,7 @@ void osgui_set_menubar(OSMenu *menu, OSWindow *window)
 
 void osgui_unset_menubar(OSMenu *menu, OSWindow *window)
 {
-    if ((menu != NULL && i_MAIN_MENU == menu)
-        || (window != NULL && i_MAIN_WINDOW == window))
+    if ((menu != NULL && i_MAIN_MENU == menu) || (window != NULL && i_MAIN_WINDOW == window))
     {
         cassert_no_null(i_MAIN_WINDOW);
         _osgui_detach_menubar(i_MAIN_WINDOW, i_MAIN_MENU);
@@ -148,7 +145,7 @@ void osgui_unset_menubar(OSMenu *menu, OSWindow *window)
 
 void osgui_redraw_menubar(void)
 {
-#if defined (__WINDOWS__)
+#if defined(__WINDOWS__)
     if (i_MAIN_MENU != NULL && i_MAIN_WINDOW != NULL)
         _osgui_change_menubar(i_MAIN_WINDOW, i_MAIN_MENU, i_MAIN_MENU);
 #endif
@@ -195,7 +192,7 @@ void osgui_terminate(void)
 void osgui_set_app(void *app, void *icon)
 {
 #if defined(__GTK3__)
-    _oswindow_gtk_app((GtkApplication*)app, (GdkPixbuf*)icon);
+    _oswindow_gtk_app((GtkApplication *)app, (GdkPixbuf *)icon);
 #endif
 
     unref(app);
@@ -216,7 +213,7 @@ Font *_osgui_create_default_font(void)
 static const char_t *i_jump_blanks(const char_t *str)
 {
     cassert_no_null(str);
-    for (;*str != '\0';)
+    for (; *str != '\0';)
     {
         if (*str == ' ' || *str == '\t' || *str == '\r')
         {
@@ -236,7 +233,7 @@ static const char_t *i_jump_blanks(const char_t *str)
 static const char_t *i_jump_not_blanks(const char_t *str)
 {
     cassert_no_null(str);
-    for (;*str != '\0';)
+    for (; *str != '\0';)
     {
         if (*str != ' ' && *str != '\t' && *str != '\r' && *str != '\0' && *str != '\n')
         {
@@ -252,10 +249,10 @@ static const char_t *i_jump_not_blanks(const char_t *str)
 }
 
 /*---------------------------------------------------------------------------*/
-#define i_WORD_TYPE_END         0
-#define i_WORD_TYPE_NEW_LINE    1
-#define i_WORD_TYPE_BLANCKS     2
-#define i_WORD_TYPE_TEXT        3
+#define i_WORD_TYPE_END 0
+#define i_WORD_TYPE_NEW_LINE 1
+#define i_WORD_TYPE_BLANCKS 2
+#define i_WORD_TYPE_TEXT 3
 
 static const char_t *i_next_word(const char_t *str, int *word_type)
 {
@@ -357,7 +354,8 @@ void _osgui_text_bounds(StringSizeData *data, const char_t *text, const real32_t
 
         next_text = i_next_word(ctext, &word_type);
 
-        switch (word_type) {
+        switch (word_type)
+        {
 
         case i_WORD_TYPE_END:
             if (current_width > .01f || num_lines == 0)
@@ -391,8 +389,7 @@ void _osgui_text_bounds(StringSizeData *data, const char_t *text, const real32_t
             }
             break;
 
-        case i_WORD_TYPE_TEXT:
-        {
+        case i_WORD_TYPE_TEXT: {
             char_t word[128];
             real32_t word_width = 0.f, word_height = 0.f;
             register uint32_t size = (uint32_t)(next_text - ctext);
@@ -419,7 +416,7 @@ void _osgui_text_bounds(StringSizeData *data, const char_t *text, const real32_t
             break;
         }
 
-        cassert_default();
+            cassert_default();
         }
 
         ctext = next_text;
@@ -435,44 +432,44 @@ const char_t *_osgui_component_type(const gui_type_t type)
 {
     switch (type)
     {
-        case ekGUI_TYPE_LABEL:
-            return "OSLabel";
-        case ekGUI_TYPE_BUTTON:
-            return "OSButton";
-        case ekGUI_TYPE_POPUP:
-            return "OSPopUp";
-        case ekGUI_TYPE_EDITBOX:
-            return "OSEdit";
-        case ekGUI_TYPE_COMBOBOX:
-            return "OSComboBox";
-        case ekGUI_TYPE_SLIDER:
-            return "OSSlider";
-        case ekGUI_TYPE_UPDOWN:
-            return "OSUpDown";
-        case ekGUI_TYPE_PROGRESS:
-            return "OSProgress";
-        case ekGUI_TYPE_TEXTVIEW:
-            return "OSTextView";
-        case ekGUI_TYPE_TABLEVIEW:
-            return "OSTableView";
-        case ekGUI_TYPE_TREEVIEW:
-            return "OSTreeView";
-        case ekGUI_TYPE_BOXVIEW:
-            return "OSBoxView";
-        case ekGUI_TYPE_SPLITVIEW:
-            return "OSSplitView";
-        case ekGUI_TYPE_CUSTOMVIEW:
-            return "OSCView";
-        case ekGUI_TYPE_PANEL:
-            return "OSView";
-        case ekGUI_TYPE_LINE:
-            return "OSLine";
-        case ekGUI_TYPE_HEADER:
-            return "OSHeader";
-        case ekGUI_TYPE_TOOLBAR:
-            return "OSToolbar";
-        case ekGUI_TYPE_WINDOW:
-            return "OSWindow";
+    case ekGUI_TYPE_LABEL:
+        return "OSLabel";
+    case ekGUI_TYPE_BUTTON:
+        return "OSButton";
+    case ekGUI_TYPE_POPUP:
+        return "OSPopUp";
+    case ekGUI_TYPE_EDITBOX:
+        return "OSEdit";
+    case ekGUI_TYPE_COMBOBOX:
+        return "OSComboBox";
+    case ekGUI_TYPE_SLIDER:
+        return "OSSlider";
+    case ekGUI_TYPE_UPDOWN:
+        return "OSUpDown";
+    case ekGUI_TYPE_PROGRESS:
+        return "OSProgress";
+    case ekGUI_TYPE_TEXTVIEW:
+        return "OSTextView";
+    case ekGUI_TYPE_TABLEVIEW:
+        return "OSTableView";
+    case ekGUI_TYPE_TREEVIEW:
+        return "OSTreeView";
+    case ekGUI_TYPE_BOXVIEW:
+        return "OSBoxView";
+    case ekGUI_TYPE_SPLITVIEW:
+        return "OSSplitView";
+    case ekGUI_TYPE_CUSTOMVIEW:
+        return "OSCView";
+    case ekGUI_TYPE_PANEL:
+        return "OSView";
+    case ekGUI_TYPE_LINE:
+        return "OSLine";
+    case ekGUI_TYPE_HEADER:
+        return "OSHeader";
+    case ekGUI_TYPE_TOOLBAR:
+        return "OSToolbar";
+    case ekGUI_TYPE_WINDOW:
+        return "OSWindow";
         cassert_default();
     }
 
@@ -485,15 +482,15 @@ bool_t _osgui_button_text_allowed(const uint32_t flags)
 {
     switch (button_get_type(flags))
     {
-        case ekBUTTON_PUSH:
-        case ekBUTTON_CHECK2:
-        case ekBUTTON_CHECK3:
-        case ekBUTTON_RADIO:
-        case ekBUTTON_HEADER:
-            return TRUE;
-        case ekBUTTON_FLAT:
-        case ekBUTTON_FLATGLE:
-            return FALSE;
+    case ekBUTTON_PUSH:
+    case ekBUTTON_CHECK2:
+    case ekBUTTON_CHECK3:
+    case ekBUTTON_RADIO:
+    case ekBUTTON_HEADER:
+        return TRUE;
+    case ekBUTTON_FLAT:
+    case ekBUTTON_FLATGLE:
+        return FALSE;
         cassert_default();
     }
     return FALSE;
@@ -505,14 +502,14 @@ bool_t _osgui_button_image_allowed(const uint32_t flags)
 {
     switch (button_get_type(flags))
     {
-        case ekBUTTON_CHECK2:
-        case ekBUTTON_CHECK3:
-        case ekBUTTON_RADIO:
-            return FALSE;
-        case ekBUTTON_PUSH:
-        case ekBUTTON_FLAT:
-        case ekBUTTON_FLATGLE:
-            return TRUE;
+    case ekBUTTON_CHECK2:
+    case ekBUTTON_CHECK3:
+    case ekBUTTON_RADIO:
+        return FALSE;
+    case ekBUTTON_PUSH:
+    case ekBUTTON_FLAT:
+    case ekBUTTON_FLATGLE:
+        return TRUE;
         cassert_default();
     }
     return FALSE;
@@ -538,9 +535,9 @@ vkey_t _osgui_vkey_from_text(const char_t *text)
     uint32_t cp = unicode_to_u32b(text, ekUTF8, &nb);
     bool_t prev_ampersand = FALSE;
 
-    while(cp != 0)
+    while (cp != 0)
     {
-        if(cp == '&')
+        if (cp == '&')
         {
             prev_ampersand = !prev_ampersand;
         }
@@ -561,7 +558,7 @@ vkey_t _osgui_vkey_from_text(const char_t *text)
     vcp = unicode_toupper(vcp);
 
     /* Only letters will be transformed into hotkey */
-    if(vcp >= 'A' && vcp <= 'Z')
+    if (vcp >= 'A' && vcp <= 'Z')
     {
         cassert(sizeof(kASCII_VIRTUAL_KEY) / sizeof(vkey_t) == 'Z' - 'A' + 1);
         return kASCII_VIRTUAL_KEY[vcp - 'A'];

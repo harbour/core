@@ -10,14 +10,13 @@
 
 /* Operating System native progress indicator */
 
-#include "osgui_osx.inl"
 #include "osprogress.h"
 #include "osprogress.inl"
 #include "osgui.inl"
 #include "oscontrol.inl"
 #include "ospanel.inl"
-#include "cassert.h"
-#include "heap.h"
+#include <core/heap.h>
+#include <sewer/cassert.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX
@@ -25,7 +24,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-@interface OSXProgress : NSProgressIndicator 
+@interface OSXProgress : NSProgressIndicator
 {
     @public
     void *non_used;
@@ -62,7 +61,7 @@ OSProgress *osprogress_create(const uint32_t flags)
     [progress setHidden:YES];
     [progress setIndeterminate:NO];
     [progress setMinValue:0.];
-    [progress setMaxValue:1.];    
+    [progress setMaxValue:1.];
     return (OSProgress*)progress;
 }
 
@@ -97,7 +96,7 @@ void osprogress_position(OSProgress *progress, const real32_t position)
         cassert(position <= 1.f);
         if ([(OSXProgress*)progress isIndeterminate] == YES)
             [(OSXProgress*)progress setIndeterminate:NO];
-        
+
         [(OSXProgress*)progress setDoubleValue:(double)position];
     }
 }

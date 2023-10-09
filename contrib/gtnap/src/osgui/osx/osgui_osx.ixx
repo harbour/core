@@ -13,12 +13,12 @@
 #ifndef __OSGUI_OSX_IXX__
 #define __OSGUI_OSX_IXX__
 
-#include "nowarn.hxx"
+#include <sewer/nowarn.hxx>
 #include <Cocoa/Cocoa.h>
-#include "warn.hxx"
+#include <sewer/warn.hxx>
 #include "osgui.ixx"
 
-#if !defined (__MACOS__)
+#if !defined(__MACOS__)
 #error This file is only for OSX
 #endif
 
@@ -57,4 +57,3 @@ struct _ostext_attr_t
 };
 
 #endif
-

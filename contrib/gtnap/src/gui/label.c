@@ -16,16 +16,15 @@
 #include "gui.h"
 #include "gui.inl"
 #include "panel.inl"
-#include "guictx.h"
-
-#include "cassert.h"
-#include "color.h"
-#include "event.h"
-#include "font.h"
-#include "ptr.h"
-#include "objh.h"
-#include "s2d.h"
-#include "strings.h"
+#include <draw2d/color.h>
+#include <draw2d/font.h>
+#include <draw2d/guictx.h>
+#include <geom2d/s2d.h>
+#include <core/event.h>
+#include <core/objh.h>
+#include <core/strings.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 struct _label_t
 {
@@ -104,7 +103,7 @@ static void i_OnClick(Label *label, Event *event)
     cassert_no_null(label->OnClick);
     params = event_params(event, EvText);
     cassert(params->text == NULL);
-    ((EvText*)params)->text = tc(label->text);
+    ((EvText *)params)->text = tc(label->text);
     listener_pass_event(label->OnClick, event, label, Label);
 }
 
@@ -267,15 +266,14 @@ void _label_dimension(Label *label, const uint32_t i, real32_t *dim0, real32_t *
         cassert(i == 1);
         switch (label_get_type(label->flags))
         {
-            case ekLABEL_SINGLE:
-                *dim1 = label->size.height;
-                break;
-            case ekLABEL_MULTI:
-            {
-                real32_t width = 0.f;
-                label->component.context->func_label_bounds(label->component.ositem, tc(label->text), *dim0, &width, dim1);
-                break;
-            }
+        case ekLABEL_SINGLE:
+            *dim1 = label->size.height;
+            break;
+        case ekLABEL_MULTI: {
+            real32_t width = 0.f;
+            label->component.context->func_label_bounds(label->component.ositem, tc(label->text), *dim0, &width, dim1);
+            break;
+        }
             cassert_default();
         }
     }
@@ -309,4 +307,3 @@ bool_t _label_is_multiline(const Label *label)
     cassert_no_null(label);
     return (bool_t)(label_get_type(label->flags) == ekLABEL_MULTI);
 }
-

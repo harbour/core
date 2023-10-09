@@ -15,4 +15,3 @@
 BOOL _osslider_is(NSView *view);
 
 void _osslider_detach_and_destroy(OSSlider **slider, OSPanel *panel);
-

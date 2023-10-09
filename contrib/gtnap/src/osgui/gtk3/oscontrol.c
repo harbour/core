@@ -13,18 +13,18 @@
 #include "oscontrol.inl"
 #include "osgui.inl"
 #include "osgui_gtk.inl"
-#include "osedit.inl"
 #include "oscombo.inl"
+#include "osedit.inl"
 #include "ostext.inl"
 #include "osview.inl"
 #include "oswindow.inl"
-#include "bstd.h"
-#include "cassert.h"
-#include "color.h"
-#include "font.h"
-#include "ptr.h"
-#include "stream.h"
-#include "strings.h"
+#include <draw2d/color.h>
+#include <draw2d/font.h>
+#include <core/stream.h>
+#include <core/strings.h>
+#include <sewer/bstd.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #if !defined(__GTK3__)
 #error This file is only for GTK Toolkit
@@ -55,16 +55,16 @@ void _oscontrol_init(OSControl *control, const gui_type_t type, GtkWidget *widge
     cassert_no_null(control);
     control->type = type;
     control->widget = widget;
-    #if defined (__ASSERTS__)
+#if defined(__ASSERTS__)
     control->is_alive = TRUE;
-    #endif
+#endif
     g_signal_connect(focus_widget, "grab-focus", G_CALLBACK(i_OnFocus), (gpointer)control);
     g_signal_connect(focus_widget, "focus-out-event", G_CALLBACK(i_OnFocusOut), (gpointer)control);
     g_object_ref(control->widget);
     g_object_set_data(G_OBJECT(control->widget), "OSControl", control);
     gtk_widget_hide(control->widget);
     unref(show);
-/*    if (show == TRUE)
+    /*    if (show == TRUE)
        gtk_widget_show(control->widget);
    else
        gtk_widget_hide(control->widget);
@@ -73,11 +73,11 @@ void _oscontrol_init(OSControl *control, const gui_type_t type, GtkWidget *widge
 
 /*---------------------------------------------------------------------------*/
 
-#if defined (__ASSERTS__)
+#if defined(__ASSERTS__)
 
 static void i_count(GtkWidget *widget, gpointer data)
 {
-    uint32_t *n = (uint32_t*)data;
+    uint32_t *n = (uint32_t *)data;
     unref(widget);
     *n += 1;
 }
@@ -109,20 +109,20 @@ static void i_OnDestroy(GtkWidget *obj, OSControl *control)
 void _oscontrol_destroy(OSControl *control)
 {
     cassert_no_null(control);
-    #if defined (__ASSERTS__)
+#if defined(__ASSERTS__)
     cassert(control->is_alive == TRUE);
     g_signal_connect(control->widget, "destroy", G_CALLBACK(i_OnDestroy), (gpointer)control);
-    /* if (GTK_IS_LAYOUT(control->widget) || GTK_IS_WINDOW(control->widget) || GTK_IS_SCROLLED_WINDOW(control->widget))
+/* if (GTK_IS_LAYOUT(control->widget) || GTK_IS_WINDOW(control->widget) || GTK_IS_SCROLLED_WINDOW(control->widget))
     {
        cassert(i_num_children(GTK_CONTAINER(control->widget)) == 0);
     }
     */
-    #endif
+#endif
 
     g_object_unref(control->widget);
-    #if defined (__ASSERTS__)
-    /* cassert(control->is_alive == FALSE); */
-    #endif
+#if defined(__ASSERTS__)
+/* cassert(control->is_alive == FALSE); */
+#endif
 }
 
 /*---------------------------------------------------------------------------*/
@@ -130,18 +130,19 @@ void _oscontrol_destroy(OSControl *control)
 void _oscontrol_set_focus(OSControl *control)
 {
     cassert_no_null(control);
-    switch (control->type) {
+    switch (control->type)
+    {
     case ekGUI_TYPE_EDITBOX:
-        _osedit_set_focus((OSEdit*)control);
+        _osedit_set_focus((OSEdit *)control);
         break;
     case ekGUI_TYPE_COMBOBOX:
-        _oscombo_set_focus((OSCombo*)control);
+        _oscombo_set_focus((OSCombo *)control);
         break;
     case ekGUI_TYPE_CUSTOMVIEW:
-        _osview_set_focus((OSView*)control);
+        _osview_set_focus((OSView *)control);
         break;
     case ekGUI_TYPE_TEXTVIEW:
-        _ostext_set_focus((OSText*)control);
+        _ostext_set_focus((OSText *)control);
         break;
     default:
         break;
@@ -153,21 +154,22 @@ void _oscontrol_set_focus(OSControl *control)
 void _oscontrol_unset_focus(OSControl *control)
 {
     cassert_no_null(control);
-    switch (control->type) {
+    switch (control->type)
+    {
     case ekGUI_TYPE_EDITBOX:
-        _osedit_unset_focus((OSEdit*)control);
+        _osedit_unset_focus((OSEdit *)control);
         break;
     case ekGUI_TYPE_COMBOBOX:
-        _oscombo_unset_focus((OSCombo*)control);
+        _oscombo_unset_focus((OSCombo *)control);
         break;
     case ekGUI_TYPE_CUSTOMVIEW:
-        _osview_unset_focus((OSView*)control);
+        _osview_unset_focus((OSView *)control);
         break;
     case ekGUI_TYPE_TEXTVIEW:
-        _ostext_unset_focus((OSText*)control);
+        _ostext_unset_focus((OSText *)control);
         break;
     case ekGUI_TYPE_WINDOW:
-        _oswindow_unset_focus((OSWindow*)control);
+        _oswindow_unset_focus((OSWindow *)control);
         break;
     default:
         break;
@@ -188,10 +190,10 @@ void _oscontrol_remove_provider(GtkWidget *widget, GtkCssProvider *css_prov)
 color_t _oscontrol_from_gdkrgba(const GdkRGBA *gdkcolor)
 {
     return color_rgba(
-                (uint8_t)(gdkcolor->red * 255.),
-                (uint8_t)(gdkcolor->green * 255.),
-                (uint8_t)(gdkcolor->blue * 255.),
-                (uint8_t)(gdkcolor->alpha * 255.));
+        (uint8_t)(gdkcolor->red * 255.),
+        (uint8_t)(gdkcolor->green * 255.),
+        (uint8_t)(gdkcolor->blue * 255.),
+        (uint8_t)(gdkcolor->alpha * 255.));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -254,9 +256,9 @@ void _oscontrol_widget_bg_color(GtkWidget *widget, const char_t *css_type, const
 uint32_t _oscontrol_widget_font_size(GtkWidget *widget)
 {
     PangoFontDescription *fdesc;
-    GtkStyleContext *ctx = gtk_widget_get_style_context (widget);
+    GtkStyleContext *ctx = gtk_widget_get_style_context(widget);
     PangoFontMap *fontmap = pango_cairo_font_map_get_default();
-    real32_t dpi = (real32_t)pango_cairo_font_map_get_resolution((PangoCairoFontMap*)fontmap);
+    real32_t dpi = (real32_t)pango_cairo_font_map_get_resolution((PangoCairoFontMap *)fontmap);
     real32_t fsize = 0;
     gtk_style_context_get(ctx, GTK_STATE_FLAG_NORMAL, "font", &fdesc, NULL);
     fsize = (real32_t)pango_font_description_get_size(fdesc);
@@ -276,7 +278,7 @@ static real32_t i_font_pt(const real32_t fsize, const uint32_t fstyle)
     else
     {
         PangoFontMap *fontmap = pango_cairo_font_map_get_default();
-        real32_t dpi = (real32_t)pango_cairo_font_map_get_resolution((PangoCairoFontMap*)fontmap);
+        real32_t dpi = (real32_t)pango_cairo_font_map_get_resolution((PangoCairoFontMap *)fontmap);
         return fsize / (dpi / 72.f);
     }
 }
@@ -334,7 +336,7 @@ void _oscontrol_widget_font_desc(GtkWidget *widget, const char_t *css_type, cons
 
 void _oscontrol_widget_font(GtkWidget *widget, const char_t *css_type, const Font *font, GtkCssProvider **css_prov)
 {
-    PangoFontDescription *fdesc = (PangoFontDescription*)font_native(font);
+    PangoFontDescription *fdesc = (PangoFontDescription *)font_native(font);
     const char *ffamily = pango_font_description_get_family(fdesc);
     real32_t fsize = font_size(font);
     uint32_t fstyle = font_style(font);
@@ -345,7 +347,8 @@ void _oscontrol_widget_font(GtkWidget *widget, const char_t *css_type, const Fon
 
 static GtkAlign i_align(const align_t align)
 {
-    switch(align) {
+    switch (align)
+    {
     case ekLEFT:
         return GTK_ALIGN_START;
     case ekCENTER:
@@ -354,7 +357,7 @@ static GtkAlign i_align(const align_t align)
         return GTK_ALIGN_END;
     case ekJUSTIFY:
         return GTK_ALIGN_FILL;
-    cassert_default();
+        cassert_default();
     }
     return GTK_ALIGN_START;
 }
@@ -372,7 +375,8 @@ void _oscontrol_set_halign(OSControl *control, const align_t align)
 
 GtkJustification _oscontrol_justification(const align_t align)
 {
-    switch (align) {
+    switch (align)
+    {
     case ekLEFT:
         return GTK_JUSTIFY_LEFT;
     case ekCENTER:
@@ -381,7 +385,7 @@ GtkJustification _oscontrol_justification(const align_t align)
         return GTK_JUSTIFY_FILL;
     case ekRIGHT:
         return GTK_JUSTIFY_RIGHT;
-    cassert_default();
+        cassert_default();
     }
 
     return GTK_JUSTIFY_LEFT;
@@ -393,7 +397,7 @@ void _oscontrol_set_css_prov(GtkWidget *widget, const char_t *css, GtkCssProvide
 {
     GtkCssProvider *p = gtk_css_provider_new();
     GtkStyleContext *c = gtk_widget_get_style_context(widget);
-    gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(p), (gchar*)css, -1, NULL);
+    gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(p), (gchar *)css, -1, NULL);
     gtk_style_context_add_provider(c, GTK_STYLE_PROVIDER(p), GTK_STYLE_PROVIDER_PRIORITY_USER);
     g_object_unref(p);
     ptr_assign(css_prov, p);
@@ -414,19 +418,19 @@ void _oscontrol_text_bounds(const OSControl *control, PangoLayout *layout, const
 
     if (layout == NULL)
     {
-        const PangoFontDescription *fdesc = (PangoFontDescription*)font_native(font);
+        const PangoFontDescription *fdesc = (PangoFontDescription *)font_native(font);
         pango_layout_set_font_description(kPANGO_LAYOUT, fdesc);
         pango_layout_set_wrap(kPANGO_LAYOUT, PANGO_WRAP_WORD);
         pango_layout_set_ellipsize(kPANGO_LAYOUT, PANGO_ELLIPSIZE_NONE);
         pango_layout_set_alignment(kPANGO_LAYOUT, PANGO_ALIGN_CENTER);
-        pango_layout_set_width(kPANGO_LAYOUT, refwidth > 0.f ? (int)(refwidth * (real32_t)PANGO_SCALE): -1);
-        pango_layout_set_text(kPANGO_LAYOUT, (const char*)text, -1);
+        pango_layout_set_width(kPANGO_LAYOUT, refwidth > 0.f ? (int)(refwidth * (real32_t)PANGO_SCALE) : -1);
+        pango_layout_set_text(kPANGO_LAYOUT, (const char *)text, -1);
         pango_layout_get_pixel_size(kPANGO_LAYOUT, &w, &h);
     }
     else
     {
-        pango_layout_set_width(layout, refwidth > 0.f ? (int)(refwidth * (real32_t)PANGO_SCALE): -1);
-        pango_layout_set_text(layout, (const char*)text, -1);
+        pango_layout_set_width(layout, refwidth > 0.f ? (int)(refwidth * (real32_t)PANGO_SCALE) : -1);
+        pango_layout_set_text(layout, (const char *)text, -1);
         pango_layout_get_pixel_size(layout, &w, &h);
     }
 
@@ -511,7 +515,7 @@ void _oscontrol_set_position(OSControl *control, const int x, const int y)
     unref(control);
     unref(x);
     unref(y);
-	cassert(FALSE);
+    cassert(FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -521,24 +525,24 @@ void _oscontrol_set_frame(OSControl *control, const real32_t x, const real32_t y
     GtkWidget *parent;
     const gchar *ptype;
     cassert_no_null(control);
-	parent = gtk_widget_get_parent(control->widget);
+    parent = gtk_widget_get_parent(control->widget);
     cassert_no_null(parent);
-	ptype = G_OBJECT_TYPE_NAME(parent);
+    ptype = G_OBJECT_TYPE_NAME(parent);
     /* 	GtkLayout inside GtkLayout
 	https://stackoverflow.com/questions/47879677/is-it-possible-to-put-gtklayouts-inside-gtklayout */
-	if (str_equ_c(ptype, "GtkLayout"))
-	{
-	    gtk_layout_move(GTK_LAYOUT(parent), control->widget, (gint)x, (gint)y);
-	    gtk_widget_set_size_request(control->widget, (gint)width, (gint)height);
-	}
-	else
-	{
-	    cassert(str_equ_c(ptype, "GtkBox"));
+    if (str_equ_c(ptype, "GtkLayout"))
+    {
+        gtk_layout_move(GTK_LAYOUT(parent), control->widget, (gint)x, (gint)y);
+        gtk_widget_set_size_request(control->widget, (gint)width, (gint)height);
+    }
+    else
+    {
+        cassert(str_equ_c(ptype, "GtkBox"));
         cassert(str_equ_c(G_OBJECT_TYPE_NAME(control->widget), "GtkLayout") || str_equ_c(G_OBJECT_TYPE_NAME(control->widget), "GtkScrolledWindow"));
-	    cassert(control->type == ekGUI_TYPE_PANEL);
-	    cassert(x == 0.f);
-	    cassert(y == 0.f);
-	    /* gtk_widget_set_size_request(control->widget, (gint)width, (gint)height);
+        cassert(control->type == ekGUI_TYPE_PANEL);
+        cassert(x == 0.f);
+        cassert(y == 0.f);
+        /* gtk_widget_set_size_request(control->widget, (gint)width, (gint)height);
         gtk_widget_set_size_request(control->widget, 0, 0);
         gtk_layout_set_size(GTK_LAYOUT(control->widget), (gint)width, (gint)height); */
     }
@@ -548,9 +552,9 @@ void _oscontrol_set_frame(OSControl *control, const real32_t x, const real32_t y
 
 void _oscontrol_attach_to_parent(OSControl *control, GtkWidget *parent_widget)
 {
-    #if defined(__ASSERTS__)
+#if defined(__ASSERTS__)
     uint32_t c = i_num_children(GTK_CONTAINER(parent_widget));
-    #endif
+#endif
     cassert_no_null(control);
     cassert(str_equ_c(G_OBJECT_TYPE_NAME(parent_widget), "GtkLayout"));
     gtk_layout_put(GTK_LAYOUT(parent_widget), control->widget, 0, 0);
@@ -561,12 +565,11 @@ void _oscontrol_attach_to_parent(OSControl *control, GtkWidget *parent_widget)
 
 void _oscontrol_detach_from_parent(OSControl *control, GtkWidget *parent_widget)
 {
-    #if defined(__ASSERTS__)
+#if defined(__ASSERTS__)
     uint32_t c = i_num_children(GTK_CONTAINER(parent_widget));
     cassert(c > 0);
-    #endif
+#endif
     cassert_no_null(control);
     gtk_container_remove(GTK_CONTAINER(parent_widget), control->widget);
     cassert(i_num_children(GTK_CONTAINER(parent_widget)) == c - 1);
 }
-

@@ -32,4 +32,3 @@ _gui_api void splitview_panel(SplitView *split, Panel *panel);
 _gui_api void splitview_pos(SplitView *split, const real32_t pos);
 
 __END_C
-

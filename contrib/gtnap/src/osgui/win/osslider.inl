@@ -19,4 +19,3 @@ void _osslider_detach_and_destroy(OSSlider **slider, OSPanel *panel);
 void _osslider_message(OSSlider *slider, WPARAM wParam);
 
 __END_C
-

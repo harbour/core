@@ -1888,7 +1888,9 @@ STAT Func AjustaTecla_vinda_por_Teclado (N_Tecla)
 #elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)                // ADAPTACAO_LINUX
    // Na plataforma LINUX não há necessidade de tratar "ARBITRADO_TECLADO"?   // ADAPTACAO_LINUX
    // É necessário entender onde mais isso precisa ser tratado. //!!          // ADAPTACAO_LINUX
-#else                                                                         // ADAPTACAO_LINUX
+#elif defined(__PLATFORM__DARWIN)
+   // Fran: macOS
+#else
    #erro "Código não adaptado para esta plataforma"
 #endif
 *

@@ -10,7 +10,6 @@
 
 /* Cocoa NSwindow wrapper */
 
-#include "osgui_osx.inl"
 #include "oswindow.h"
 #include "oswindow.inl"
 #include "osgui.inl"
@@ -18,11 +17,11 @@
 #include "oscontrol.inl"
 #include "ospanel.inl"
 #include "osview.inl"
-#include "cassert.h"
-#include "arrst.h"
-#include "event.h"
-#include "heap.h"
-#include "ptr.h"
+#include <core/arrst.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX
@@ -623,7 +622,7 @@ void oswindow_tabstop(OSWindow *window, const bool_t next)
     NSView *oscontrol = nil;
 
     cassert_no_null(oswindow);
-    
+
     if (oswindow->current_edit_focus != nil)
     {
         oscontrol = oswindow->current_edit_focus;
@@ -647,6 +646,15 @@ void oswindow_tabstop(OSWindow *window, const bool_t next)
         if (focus != nil)
             [oswindow makeFirstResponder:focus];
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void oswindow_tabcycle(OSWindow *window, const bool_t cycle)
+{
+    unref(window);
+    unref(cycle);
+    /*cassert(FALSE);*/
 }
 
 /*---------------------------------------------------------------------------*/

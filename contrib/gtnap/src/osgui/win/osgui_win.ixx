@@ -19,7 +19,7 @@
 #define _WIN32_WINNT 0x501
 #endif
 
-#include "nowarn.hxx"
+#include <sewer/nowarn.hxx>
 #include <windows.h>
 #include <uxtheme.h>
 #if _MSC_VER > 1400
@@ -28,9 +28,9 @@
 #else
 #include <tmschema.h>
 #endif
-#include "warn.hxx"
+#include <sewer/warn.hxx>
 
-#define WCHAR_BUFFER_SIZE		512
+#define WCHAR_BUFFER_SIZE 512
 
 typedef struct _view_listeners_t ViewListeners;
 typedef struct _osimgdata_t OSImgData;
@@ -42,7 +42,7 @@ struct _view_listeners_t
 {
     BOOL is_mouse_inside;
     BOOL enabled;
-	gui_mouse_t button;
+    gui_mouse_t button;
     LONG OnMouseMoved_event_source;
     real32_t mouse_down_x;
     real32_t mouse_down_y;
@@ -85,4 +85,3 @@ struct _osdraw_t
 };
 
 #endif
-

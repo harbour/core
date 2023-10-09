@@ -11,10 +11,10 @@
 /* Text filters */
 
 #include "tfilter.inl"
-#include "cassert.h"
 #include "date.h"
 #include "strings.h"
-#include "unicode.h"
+#include <sewer/cassert.h>
+#include <sewer/unicode.h>
 
 typedef enum _state_t
 {
@@ -26,7 +26,7 @@ typedef enum _state_t
 
 /*---------------------------------------------------------------------------*/
 
-void tfilter_number(const char_t *src, char_t *dest, const uint32_t size, const uint32_t num_decimals, const bool_t allow_negatives)
+void tfilter_number(const char_t* src, char_t* dest, const uint32_t size, const uint32_t num_decimals, const bool_t allow_negatives)
 {
     uint32_t csize, i = 0;
     uint32_t codepoint = unicode_to_u32b(src, ekUTF8, &csize);
@@ -36,7 +36,8 @@ void tfilter_number(const char_t *src, char_t *dest, const uint32_t size, const 
     while (codepoint != 0)
     {
         valid = FALSE;
-        switch (state) {
+        switch (state)
+        {
         case stSTART:
             if (codepoint == '0')
             {
@@ -130,10 +131,10 @@ static void i_overwrite_mode(const char_t* src, char_t* dest, const uint32_t siz
 {
     cassert_no_null(cpos);
 
-    if(deleted == FALSE)
+    if (deleted == FALSE)
     {
         uint32_t nc = unicode_nchars(src, ekUTF8);
-        if(*cpos >= nc)
+        if (*cpos >= nc)
         {
             str_copy_c(dest, size, src);
             *cpos = nc;
@@ -144,7 +145,7 @@ static void i_overwrite_mode(const char_t* src, char_t* dest, const uint32_t siz
             uint32_t cp = 0, nb = 0, sz = size;
 
             /* Copy the first characters to caret position */
-            for(i = 0; i < c; ++i)
+            for (i = 0; i < c; ++i)
             {
                 cp = unicode_to_u32b(src, ekUTF8, &nb);
 
@@ -178,7 +179,7 @@ static void i_overwrite_mode(const char_t* src, char_t* dest, const uint32_t siz
 
 /*---------------------------------------------------------------------------*/
 
-void tfilter_date(const char_t* src, char_t* dest, const uint32_t size, const char_t *pattern, const uint32_t cpos, const bool_t deleted, uint32_t* ncpos)
+void tfilter_date(const char_t* src, char_t* dest, const uint32_t size, const char_t* pattern, const uint32_t cpos, const bool_t deleted, uint32_t* ncpos)
 {
     cassert_no_null(ncpos);
     unref(pattern);
@@ -192,15 +193,15 @@ Date tfilter_to_date(const char_t* text, const char_t* pattern)
 {
     Date date = kDATE_NULL;
     uint32_t n = str_len_c(text);
-    if(n == str_len_c(pattern))
+    if (n == str_len_c(pattern))
     {
         char_t day[3];
         char_t month[3];
         char_t year[5];
         uint32_t id = 0, im = 0, iy = 0, i = 0;
-        while(i < n)
+        while (i < n)
         {
-            if(pattern[i] == 'd' || pattern[i] == 'D')
+            if (pattern[i] == 'd' || pattern[i] == 'D')
             {
                 day[id] = text[i];
                 id += 1;
@@ -208,7 +209,7 @@ Date tfilter_to_date(const char_t* text, const char_t* pattern)
                 if (id > 2)
                     break;
             }
-            else if(pattern[i] == 'm' || pattern[i] == 'M')
+            else if (pattern[i] == 'm' || pattern[i] == 'M')
             {
                 month[im] = text[i];
                 im += 1;
@@ -216,7 +217,7 @@ Date tfilter_to_date(const char_t* text, const char_t* pattern)
                 if (im > 2)
                     break;
             }
-            else if(pattern[i] == 'y' || pattern[i] == 'Y')
+            else if (pattern[i] == 'y' || pattern[i] == 'Y')
             {
                 year[iy] = text[i];
                 iy += 1;
@@ -238,7 +239,7 @@ Date tfilter_to_date(const char_t* text, const char_t* pattern)
 
         /* Two digits year */
         /* https://www.ibm.com/docs/en/i/7.2?topic=mcdtdi-conversion-2-digit-years-4-digit-years-centuries */
-        if(date.year < 100)
+        if (date.year < 100)
         {
             if (date.year >= 40)
                 date.year += 1900;

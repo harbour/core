@@ -10,8 +10,6 @@
 
 /* Core library all-in-one headers include */
 
-#include "osbsall.h"
-
 #include "core.h"
 #include "arrpt.h"
 #include "arrst.h"
@@ -31,4 +29,4 @@
 #include "stream.h"
 #include "strings.h"
 #include "tfilter.h"
-
+#include <osbs/osbsall.h>

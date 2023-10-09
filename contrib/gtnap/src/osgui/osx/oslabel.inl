@@ -15,4 +15,3 @@
 BOOL _oslabel_is(NSView *view);
 
 void _oslabel_detach_and_destroy(OSLabel **label, OSPanel *panel);
-

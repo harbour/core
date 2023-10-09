@@ -17,13 +17,13 @@
 #include "oscontrol.inl"
 #include "ospanel.inl"
 #include "osglobals.inl"
-#include "bmem.h"
-#include "cassert.h"
-#include "event.h"
-#include "font.h"
-#include "heap.h"
-#include "image.h"
-#include "ptr.h"
+#include <draw2d/font.h>
+#include <draw2d/image.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <sewer/bmem.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX
@@ -105,7 +105,7 @@ static void i_OnClick(OSXButton *button)
     if ([button isEnabled] == YES)
     {
         gui_state_t state = i_get_state(button);
-        
+
         [[button window] endEditingFor:nil];
         [[button window] makeFirstResponder:button];
 
@@ -1073,13 +1073,13 @@ void osbutton_bounds(const OSButton *button, const char_t *text, const real32_t 
                 *height = 16.f;
                 break;
             }
-            
+
             if (lbutton->vpadding != UINT32_MAX)
             {
-                *height += (real32_t)lbutton->vpadding;                            
-                [[lbutton cell] setBezelStyle:NSRegularSquareBezelStyle];
+                *height += (real32_t)lbutton->vpadding;
+                [[lbutton cell] setBezelStyle:REGULAR_SQUARE_BEZEL];
             }
-            
+
             break;
         }
 

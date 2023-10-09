@@ -4,15 +4,25 @@ debug=yes
 incpaths=.
 
 # NAppGUI library paths
-libpaths=build build/Release/lib
-{debug}libpaths=build build/Debug/lib
+{!darwin}libpaths=build build/Release/lib
+{debug&!darwin}libpaths=build build/Debug/lib
+{debug&darwin}libpaths=build build/Debug/lib /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks
 
 # NAppGUI uses static-linked 'LIBCMTD.lib' in Debug (sewer.lib)
 # This line avoid conflicts with 'LIBCMT.lib' in Debug mode
 {msvc & debug}ldflags=/NODEFAULTLIB:LIBCMT.lib
 
 {msvc}libs=osapp gui osgui draw2d geom2d core osbs sewer
-{gcc}libs=osapp gui osgui draw2d geom2d core osbs sewer pthread gtk-3 gdk-3 pangocairo-1.0 cairo gdk_pixbuf-2.0 pango-1.0 gio-2.0 glib-2.0 gobject-2.0
+{linux}libs=osapp gui osgui draw2d geom2d core osbs sewer pthread gtk-3 gdk-3 pangocairo-1.0 cairo gdk_pixbuf-2.0 pango-1.0 gio-2.0 glib-2.0 gobject-2.0
+{darwin}libs=osapp gui osgui draw2d geom2d core osbs sewer
+
+# The GTNAP-based executables will run in macOS High Sierra and higher
+{darwin}ldflags=-mmacosx-version-min=10.13
+
+# {darwin}frameworks=Cocoa
+# UniformTypeIdentifiers only from macOS 12
+{darwin}frameworks=Cocoa UniformTypeIdentifiers
+
 # REVIEW {unix&!darwin}ldflags="`pkg-config --libs cairo`"
 
 {gcc}cpp=yes
@@ -20,6 +30,3 @@ libpaths=build build/Release/lib
 
 gt=${hb_name}
 gui=yes
-
-
-

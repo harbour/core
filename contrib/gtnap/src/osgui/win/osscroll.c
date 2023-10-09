@@ -12,9 +12,9 @@
 
 #include "osscroll.inl"
 #include "osgui_win.inl"
-#include "cassert.h"
-#include "heap.h"
-#include "ptr.h"
+#include <core/heap.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 struct _osscroll_t
 {
@@ -36,14 +36,14 @@ struct _osscroll_t
 static HWND i_create_scroll(DWORD type, HWND hwnd, int width, int height)
 {
     return CreateWindowEx(
-                        0, L"SCROLLBAR", NULL,
-                        WS_CHILD | WS_CLIPSIBLINGS | type,
-                        CW_USEDEFAULT, CW_USEDEFAULT,
-                        width, height, 
-                        hwnd,
-                        (HMENU)NULL,
-                        _osgui_instance(), 
-                        NULL);
+        0, L"SCROLLBAR", NULL,
+        WS_CHILD | WS_CLIPSIBLINGS | type,
+        CW_USEDEFAULT, CW_USEDEFAULT,
+        width, height,
+        hwnd,
+        (HMENU)NULL,
+        _osgui_instance(),
+        NULL);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -70,7 +70,7 @@ OSScroll *osscroll_create(HWND hwnd, const bool_t horizontal, const bool_t verti
     scroll->vvisible = TRUE;
 
     cassert(scroll->hscroll != NULL || scroll->vscroll != NULL);
-	return scroll;
+    return scroll;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -215,7 +215,7 @@ int osscroll_bar_height(const OSScroll *scroll, const bool_t check_if_visible)
     else
     {
         return GetSystemMetrics(SM_CXHSCROLL);
-    }       
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -225,7 +225,7 @@ static int i_incr(HWND scroll, int nBar, int incr)
     SCROLLINFO si;
     int pos = 0;
     BOOL ok;
-    
+
     si.cbSize = sizeof(SCROLLINFO);
     si.fMask = SIF_ALL;
     ok = GetScrollInfo(scroll, nBar, &si);
@@ -256,7 +256,7 @@ bool_t osscroll_wheel(OSScroll *scroll, WPARAM wParam, const bool_t update_child
     {
         int dY = scroll->line_height;
         if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
-            dY = - scroll->line_height;
+            dY = -scroll->line_height;
 
         dY = i_incr(scroll->vscroll, i_verbar(scroll), dY);
 
@@ -310,7 +310,8 @@ void osscroll_message(OSScroll *scroll, WPARAM wParam, UINT nMsg, const bool_t u
         current_pos = si.nPos;
         pos = si.nPos;
         max = si.nMax - si.nPage;
-        switch (lw) {
+        switch (lw)
+        {
         case SB_TOP:
             pos = 0;
             break;
@@ -340,7 +341,7 @@ void osscroll_message(OSScroll *scroll, WPARAM wParam, UINT nMsg, const bool_t u
             pos = si.nTrackPos;
             break;
 
-        cassert_default();
+            cassert_default();
         }
 
         if (current_pos != pos)

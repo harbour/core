@@ -35,4 +35,3 @@ _osgui_api void osgui_terminate(void);
 _osgui_api void osgui_set_app(void *app, void *icon);
 
 __END_C
-

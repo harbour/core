@@ -17,4 +17,3 @@ BOOL _osview_is(NSView *view);
 void _osview_OnFocus(NSView *view, const bool_t focus);
 
 void _osview_detach_and_destroy(OSView **view, OSPanel *panel);
-

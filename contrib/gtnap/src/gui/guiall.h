@@ -10,10 +10,6 @@
 
 /* All-in-one gui headers */
 
-/* osdraw */
-#include "draw2dall.h"
-
-/* gui */
 #include "button.h"
 #include "cell.h"
 #include "combo.h"
@@ -37,4 +33,4 @@
 #include "updown.h"
 #include "view.h"
 #include "window.h"
-
+#include <draw2d/draw2dall.h>

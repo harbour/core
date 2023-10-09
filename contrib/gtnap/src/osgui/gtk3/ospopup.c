@@ -12,19 +12,19 @@
 
 #include "ospopup.h"
 #include "ospopup.inl"
+#include "osglobals.inl"
 #include "osgui.inl"
 #include "osgui_gtk.inl"
-#include "osglobals.inl"
 #include "oscontrol.inl"
 #include "oscombo.inl"
 #include "ospanel.inl"
-#include "arrpt.h"
-#include "cassert.h"
-#include "event.h"
-#include "font.h"
-#include "heap.h"
-#include "image.h"
-#include "strings.h"
+#include <draw2d/font.h>
+#include <draw2d/image.h>
+#include <core/arrpt.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <core/strings.h>
+#include <sewer/cassert.h>
 
 #if !defined(__GTK3__)
 #error This file is only for GTK Toolkit
@@ -40,15 +40,15 @@ struct _ospopup_t
     GtkCssProvider *font;
     bool_t launch_event;
     Listener *OnSelect;
-    ArrPt(String) *texts;
-    ArrPt(Image) *images;
+    ArrPt(String) * texts;
+    ArrPt(Image) * images;
 };
 
 /*---------------------------------------------------------------------------*/
 
 static void i_OnSelect(GtkComboBox *widget, gpointer data)
 {
-    OSPopUp *popup = (OSPopUp*)data;
+    OSPopUp *popup = (OSPopUp *)data;
     cassert(popup->control.widget == GTK_WIDGET(widget));
     if (popup->launch_event == TRUE && popup->OnSelect != NULL)
     {
@@ -73,7 +73,7 @@ OSPopUp *ospopup_create(const uint32_t flags)
 #if GTK_CHECK_VERSION(3, 16, 0)
     popup->button = gtk_bin_get_child(GTK_BIN(widget));
     popup->button = gtk_widget_get_parent(gtk_widget_get_parent(popup->button));
-    cassert(str_equ_c((const char_t*)G_OBJECT_TYPE_NAME(popup->button), "GtkToggleButton"));
+    cassert(str_equ_c((const char_t *)G_OBJECT_TYPE_NAME(popup->button), "GtkToggleButton"));
 #else
     popup->button = widget;
 #endif
@@ -88,7 +88,7 @@ OSPopUp *ospopup_create(const uint32_t flags)
     gtk_cell_renderer_set_alignment(popup->txtcell, 0.f, .5);
     gtk_cell_renderer_set_padding(popup->txtcell, 0, 0);
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(widget), popup->txtcell, "text", 1, NULL);
-    g_signal_connect (widget, "changed", G_CALLBACK(i_OnSelect), (gpointer)popup);
+    g_signal_connect(widget, "changed", G_CALLBACK(i_OnSelect), (gpointer)popup);
     _oscontrol_init(&popup->control, ekGUI_TYPE_POPUP, widget, popup->button, TRUE);
     _oscontrol_widget_font(popup->control.widget, csscombo, font, &popup->font);
     popup->fsize = (uint32_t)(font_size(font) + 2.5f);
@@ -117,7 +117,7 @@ void ospopup_destroy(OSPopUp **popup)
     listener_destroy(&(*popup)->OnSelect);
     arrpt_destroy(&(*popup)->texts, str_destroy, String);
     arrpt_destroy(&(*popup)->images, i_img_dest, Image);
-    _oscontrol_destroy(*(OSControl**)popup);
+    _oscontrol_destroy(*(OSControl **)popup);
     heap_delete(popup, OSPopUp);
 }
 
@@ -158,7 +158,7 @@ void ospopup_elem(OSPopUp *popup, const ctrl_op_t op, const uint32_t index, cons
 void ospopup_tooltip(OSPopUp *popup, const char_t *text)
 {
     cassert_no_null(popup);
-    gtk_widget_set_tooltip_text(popup->control.widget, (const gchar*)text);
+    gtk_widget_set_tooltip_text(popup->control.widget, (const gchar *)text);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -224,49 +224,49 @@ void ospopup_bounds(const OSPopUp *popup, const char_t *text, real32_t *width, r
 
 void ospopup_attach(OSPopUp *popup, OSPanel *panel)
 {
-    _ospanel_attach_control(panel, (OSControl*)popup);
+    _ospanel_attach_control(panel, (OSControl *)popup);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospopup_detach(OSPopUp *popup, OSPanel *panel)
 {
-    _ospanel_detach_control(panel, (OSControl*)popup);
+    _ospanel_detach_control(panel, (OSControl *)popup);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospopup_visible(OSPopUp *popup, const bool_t is_visible)
 {
-    _oscontrol_set_visible((OSControl*)popup, is_visible);
+    _oscontrol_set_visible((OSControl *)popup, is_visible);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospopup_enabled(OSPopUp *popup, const bool_t is_enabled)
 {
-    _oscontrol_set_enabled((OSControl*)popup, is_enabled);
+    _oscontrol_set_enabled((OSControl *)popup, is_enabled);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospopup_size(const OSPopUp *popup, real32_t *width, real32_t *height)
 {
-    _oscontrol_get_size((const OSControl*)popup, width, height);
+    _oscontrol_get_size((const OSControl *)popup, width, height);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospopup_origin(const OSPopUp *popup, real32_t *x, real32_t *y)
 {
-    _oscontrol_get_origin((const OSControl*)popup, x, y);
+    _oscontrol_get_origin((const OSControl *)popup, x, y);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ospopup_frame(OSPopUp *popup, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
-    _oscontrol_set_frame((OSControl*)popup, x, y, width, height);
+    _oscontrol_set_frame((OSControl *)popup, x, y, width, height);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -285,4 +285,3 @@ GtkWidget *_ospopup_focus(OSPopUp *popup)
     cassert_no_null(popup);
     return popup->button;
 }
-

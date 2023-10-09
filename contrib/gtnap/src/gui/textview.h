@@ -68,4 +68,3 @@ _gui_api void textview_cut(TextView *view);
 _gui_api void textview_paste(TextView *view);
 
 __END_C
-

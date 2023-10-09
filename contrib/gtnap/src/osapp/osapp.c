@@ -13,51 +13,48 @@
 #include "osmain.h"
 #include "osapp.h"
 #include "osapp.inl"
-
-#include "arrpt.h"
-#include "bfile.h"
-#include "bthread.h"
-#include "bstd.h"
-#include "core.h"
-#include "cassert.h"
-#include "clock.h"
-#include "event.h"
-#include "gui.h"
-#include "guictx.h"
-
-#include "heap.h"
-#include "hfile.h"
-#include "log.h"
-#include "menu.h"
-#include "osgui.h"
-#include "osguictx.h"
-#include "ptr.h"
-#include "objh.h"
-#include "strings.h"
-#include "menu.h"
-#include "window.h"
+#include <gui/gui.h>
+#include <gui/menu.h>
+#include <gui/window.h>
+#include <osgui/osgui.h>
+#include <osgui/osguictx.h>
+#include <draw2d/guictx.h>
+#include <core/arrpt.h>
+#include <core/clock.h>
+#include <core/core.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <core/hfile.h>
+#include <core/objh.h>
+#include <core/strings.h>
+#include <osbs/bfile.h>
+#include <osbs/bthread.h>
+#include <osbs/log.h>
+#include <sewer/bstd.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 typedef struct i_task_t i_Task;
 typedef struct i_app_t i_App;
 
 typedef enum _icon_t
 {
-    i_ekICON_ASSERT         = 0,
-    i_ekICON_CRASH          = 1,
-    i_ekICON_SYSTEM         = 2
+    i_ekICON_ASSERT = 0,
+    i_ekICON_CRASH = 1,
+    i_ekICON_SYSTEM = 2
 } icon_t;
 
 typedef enum _task_state_t
 {
-    i_ekSTATE_RUNNING       = 0,
-    i_ekSTATE_WAITING       = 1,
-    i_ekSTATE_FINISH        = 2,
+    i_ekSTATE_RUNNING = 0,
+    i_ekSTATE_WAITING = 1,
+    i_ekSTATE_FINISH = 2,
 
-    i_ekSTATE_ASSERT        = 6,
-    i_ekSTATE_ERROR         = 7,
-    i_ekSTATE_MESSAGE       = 8,
+    i_ekSTATE_ASSERT = 6,
+    i_ekSTATE_ERROR = 7,
+    i_ekSTATE_MESSAGE = 8,
 
-    i_ekSTATE_DEBUG_BREAK   = 9
+    i_ekSTATE_DEBUG_BREAK = 9
 } tstate_t;
 
 struct i_task_t
@@ -90,7 +87,7 @@ struct i_app_t
     FPtr_app_update func_update;
     FPtr_gctx_call func_async_call;
     String *locale;
-    ArrPt(i_Task) *scheduler;
+    ArrPt(i_Task) * scheduler;
 };
 
 DeclSt(i_Task);
@@ -173,38 +170,37 @@ static uint32_t i_dispatch_task(i_Task *task)
 /*---------------------------------------------------------------------------*/
 
 /* This function runs in the MAIN thread */
-static void i_scheduler_cycle(ArrPt(i_Task) *scheduler, const real64_t crtime)
+static void i_scheduler_cycle(ArrPt(i_Task) * scheduler, const real64_t crtime)
 {
     i_Task *deleted_task = NULL;
 
-    arrpt_foreach(task, scheduler, i_Task)
-        if (task->state == i_ekSTATE_WAITING)
+    arrpt_foreach(task, scheduler, i_Task) if (task->state == i_ekSTATE_WAITING)
+    {
+        cassert(task->thread == NULL);
+        task->thread = bthread_create(i_dispatch_task, task, i_Task);
+        task->lastupd = crtime;
+    }
+    else if (task->state == i_ekSTATE_RUNNING)
+    {
+        if (task->func_update != NULL)
         {
-            cassert(task->thread == NULL);
-            task->thread = bthread_create(i_dispatch_task, task, i_Task);
-            task->lastupd = crtime;
-        }
-        else if (task->state == i_ekSTATE_RUNNING)
-        {
-            if (task->func_update != NULL)
+            if (crtime - task->lastupd > task->updtime)
             {
-                if (crtime - task->lastupd > task->updtime)
-                {
-                    task->func_update(task->data);
-                    task->lastupd = crtime;
-                }
+                task->func_update(task->data);
+                task->lastupd = crtime;
             }
         }
-        else if (task->state == i_ekSTATE_FINISH)
+    }
+    else if (task->state == i_ekSTATE_FINISH)
+    {
+        if (deleted_task == NULL)
         {
-            if (deleted_task == NULL)
-            {
-                uint32_t rvalue = bthread_wait(task->thread);
-                if (task->func_end != NULL)
-                    task->func_end(task->data, rvalue);
-                deleted_task = task;
-            }
+            uint32_t rvalue = bthread_wait(task->thread);
+            if (task->func_end != NULL)
+                task->func_end(task->data, rvalue);
+            deleted_task = task;
         }
+    }
     arrpt_end();
 
     if (deleted_task != NULL)
@@ -279,32 +275,30 @@ static void i_OnNotification(void *sender, Event *e)
     i_App *app = osapp_listener(i_App);
     uint32_t type = event_type(e);
 
-    switch (type) {
-    case ekGUI_NOTIF_LANGUAGE:
+    switch (type)
     {
+    case ekGUI_NOTIF_LANGUAGE: {
         const char_t *params = event_params(e, char_t);
         osapp_set_lang(app->osapp, params);
         osgui_redraw_menubar();
         break;
     }
 
-    case ekGUI_NOTIF_WIN_DESTROY:
-    {
+    case ekGUI_NOTIF_WIN_DESTROY: {
         const Window *window = event_params(e, Window);
-        OSWindow *oswindow = (OSWindow*)window_imp(window);
+        OSWindow *oswindow = (OSWindow *)window_imp(window);
         osgui_unset_menubar(NULL, oswindow);
         break;
     }
 
-    case ekGUI_NOTIF_MENU_DESTROY:
-    {
+    case ekGUI_NOTIF_MENU_DESTROY: {
         const Menu *menu = event_params(e, Menu);
-        OSMenu *osmenu = (OSMenu*)menu_imp(menu);
+        OSMenu *osmenu = (OSMenu *)menu_imp(menu);
         osgui_unset_menubar(osmenu, NULL);
         break;
     }
 
-    cassert_default();
+        cassert_default();
     }
     unref(sender);
 }
@@ -321,21 +315,21 @@ static void i_OnTheme(void *sender, Event *e)
 /*---------------------------------------------------------------------------*/
 
 void osmain_imp(
-                uint32_t argc,
-                char_t **argv,
-                void *instance,
-                const real64_t lframe,
-                FPtr_app_create func_create,
-                FPtr_app_update func_update,
-                FPtr_destroy func_destroy,
-                char_t *options)
+    uint32_t argc,
+    char_t **argv,
+    void *instance,
+    const real64_t lframe,
+    FPtr_app_create func_create,
+    FPtr_app_update func_update,
+    FPtr_destroy func_destroy,
+    char_t *options)
 {
     i_App *app = NULL;
-	void *pool = NULL;
+    void *pool = NULL;
     char_t pathname[256];
 
-	/* Init platform-dependent autorelease pool (MacOSX) */
-	pool = osapp_init_pool();
+    /* Init platform-dependent autorelease pool (MacOSX) */
+    pool = osapp_init_pool();
     osgui_start();
     gui_start();
 
@@ -365,7 +359,7 @@ void osmain_imp(
     osapp_OnThemeChanged(app->osapp, listener(NULL, i_OnTheme, void));
     osapp_set_lang(app->osapp, "en");
     osapp_request_user_attention(app->osapp);
-	osapp_release_pool(pool);
+    osapp_release_pool(pool);
     osapp_run(app->osapp);
 }
 
@@ -404,5 +398,5 @@ void osapp_menubar(Menu *menu, Window *window)
     cassert_no_null(menu);
     oswindow = window_imp(window);
     osmenu = menu_imp(menu);
-    osgui_set_menubar((OSMenu*)osmenu, (OSWindow*)oswindow);
+    osgui_set_menubar((OSMenu *)osmenu, (OSWindow *)oswindow);
 }

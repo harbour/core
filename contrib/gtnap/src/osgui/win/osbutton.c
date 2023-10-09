@@ -20,15 +20,14 @@
 #include "osdrawctrl.inl"
 #include "ospanel.inl"
 #include "oswindow.inl"
-
-#include "cassert.h"
-#include "bmath.h"
-#include "btime.h"
-#include "event.h"
-#include "font.h"
-#include "heap.h"
-#include "image.h"
-#include "ptr.h"
+#include <draw2d/font.h>
+#include <draw2d/image.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <osbs/btime.h>
+#include <sewer/bmath.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #if !defined(__WINDOWS__)
 #error This file is only for Windows
@@ -186,59 +185,59 @@ static void i_draw_header_button(HWND hwnd, const Font *font, const Image *image
 
 static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    OSButton *button = (OSButton*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    OSButton *button = (OSButton *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
     cassert_no_null(button);
 
-    switch (uMsg) {
-	case WM_ERASEBKGND:
-		return 1;
+    switch (uMsg)
+    {
+    case WM_ERASEBKGND:
+        return 1;
 
-	case WM_PAINT:
-		if (_oswindow_in_resizing(hwnd) == TRUE)
-			return 0;
+    case WM_PAINT:
+        if (_oswindow_in_resizing(hwnd) == TRUE)
+            return 0;
 
-		if (button_get_type(button->flags) == ekBUTTON_FLAT
-			|| button_get_type(button->flags) == ekBUTTON_FLATGLE)
-		{
-			i_draw_flat_button(button->control.hwnd, button->image);
-			if (GetFocus() == button->control.hwnd)
-				_oscontrol_draw_focus(hwnd, 3, 3, 3, 3);
-		}
+        if (button_get_type(button->flags) == ekBUTTON_FLAT || button_get_type(button->flags) == ekBUTTON_FLATGLE)
+        {
+            i_draw_flat_button(button->control.hwnd, button->image);
+            if (GetFocus() == button->control.hwnd)
+                _oscontrol_draw_focus(hwnd, 3, 3, 3, 3);
+        }
         else if (button_get_type(button->flags) == ekBUTTON_HEADER)
         {
-			i_draw_header_button(button->control.hwnd, button->font, button->image);
-			if (GetFocus() == button->control.hwnd)
-				_oscontrol_draw_focus(hwnd, 3, 3, 3, 3);
+            i_draw_header_button(button->control.hwnd, button->font, button->image);
+            if (GetFocus() == button->control.hwnd)
+                _oscontrol_draw_focus(hwnd, 3, 3, 3, 3);
         }
-		else
-		{
-			CallWindowProc(button->control.def_wnd_proc, hwnd, uMsg, wParam, lParam);
-		}
+        else
+        {
+            CallWindowProc(button->control.def_wnd_proc, hwnd, uMsg, wParam, lParam);
+        }
 
-		return 0;
+        return 0;
 
-	case WM_SETFOCUS:
-		if (button_get_type(button->flags) == ekBUTTON_RADIO)
-		{
-			uint64_t microseconds;
-			microseconds = btime_now();
-			i_LAST_FOCUS = button->control.hwnd;
-			i_LAST_FOCUS_TIME = i_TIME_SEC(microseconds);
-		}
-		else
-		{
-			i_LAST_FOCUS = NULL;
-		}
+    case WM_SETFOCUS:
+        if (button_get_type(button->flags) == ekBUTTON_RADIO)
+        {
+            uint64_t microseconds;
+            microseconds = btime_now();
+            i_LAST_FOCUS = button->control.hwnd;
+            i_LAST_FOCUS_TIME = i_TIME_SEC(microseconds);
+        }
+        else
+        {
+            i_LAST_FOCUS = NULL;
+        }
 
-        /* If a button that is not in the tablist is clicked, it will take the focus, 
+        /* If a button that is not in the tablist is clicked, it will take the focus,
            removing the focus from the current focused control */
-        if(_oswindow_in_tablist((OSControl*)button) == FALSE)
+        if (_oswindow_in_tablist((OSControl *)button) == FALSE)
             i_RESTORE_FOCUS = (HWND)wParam;
         else
-            _oswindow_store_focus((OSControl*)button);
-		break;
+            _oswindow_store_focus((OSControl *)button);
+        break;
 
-	case WM_KILLFOCUS:
+    case WM_KILLFOCUS:
         /* GTNAP fix for double '_osbutton_command' call */
         if (button->is_default == TRUE)
             return 0;
@@ -246,14 +245,14 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
     case WM_LBUTTONDOWN:
     case WM_LBUTTONDBLCLK:
-        if(_oswindow_in_tablist((OSControl*)button) == FALSE)
+        if (_oswindow_in_tablist((OSControl *)button) == FALSE)
         {
-            _oswindow_lock_edit_focus_events((OSControl*)button);
+            _oswindow_lock_edit_focus_events((OSControl *)button);
             break;
         }
         else
         {
-            if (_oswindow_can_mouse_down((OSControl*)button) == TRUE)
+            if (_oswindow_can_mouse_down((OSControl *)button) == TRUE)
                 break;
         }
 
@@ -269,19 +268,19 @@ static DWORD i_button_skin(const button_flag_t flags)
 {
     switch (flags)
     {
-        case ekBUTTON_PUSH:
-        case ekBUTTON_FLAT:
-        case ekBUTTON_HEADER:
-            return BS_PUSHBUTTON;
-        case ekBUTTON_CHECK2:
-        case ekBUTTON_FLATGLE:
-            return BS_AUTOCHECKBOX;
-        case ekBUTTON_CHECK3:
-            return BS_AUTO3STATE;
-        case ekBUTTON_RADIO:
-            return BS_RADIOBUTTON;
+    case ekBUTTON_PUSH:
+    case ekBUTTON_FLAT:
+    case ekBUTTON_HEADER:
+        return BS_PUSHBUTTON;
+    case ekBUTTON_CHECK2:
+    case ekBUTTON_FLATGLE:
+        return BS_AUTOCHECKBOX;
+    case ekBUTTON_CHECK3:
+        return BS_AUTO3STATE;
+    case ekBUTTON_RADIO:
+        return BS_RADIOBUTTON;
 
-        case ekBUTTON_TYPE:
+    case ekBUTTON_TYPE:
         cassert_default();
     }
 
@@ -332,12 +331,12 @@ OSButton *osbutton_create(const uint32_t flags)
     button->key = ENUM_MAX(vkey_t);
     button->id = _osgui_unique_child_id();
 
-    _oscontrol_init((OSControl*)button, PARAM(dwExStyle, WS_EX_NOPARENTNOTIFY), i_style(flags, ekCENTER), L"button", 0, 0, i_WndProc, kDEFAULT_PARENT_WINDOW);
+    _oscontrol_init((OSControl *)button, PARAM(dwExStyle, WS_EX_NOPARENTNOTIFY), i_style(flags, ekCENTER), L"button", 0, 0, i_WndProc, kDEFAULT_PARENT_WINDOW);
 
     if (_osgui_button_text_allowed(flags) == TRUE)
     {
         button->font = _osgui_create_default_font();
-        _oscontrol_set_font((OSControl*)button, button->font);
+        _oscontrol_set_font((OSControl *)button, button->font);
     }
 
     return button;
@@ -370,7 +369,7 @@ void osbutton_text(OSButton *button, const char_t *text)
 {
     cassert_no_null(button);
     cassert(_osgui_button_text_allowed(button->flags) == TRUE);
-    _oscontrol_set_text((OSControl*)button, text);
+    _oscontrol_set_text((OSControl *)button, text);
 
     /* Update key accelerator from text */
     {
@@ -397,7 +396,7 @@ void osbutton_text(OSButton *button, const char_t *text)
 
 void osbutton_tooltip(OSButton *button, const char_t *text)
 {
-    _oscontrol_set_tooltip((OSControl*)button, text);
+    _oscontrol_set_tooltip((OSControl *)button, text);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -417,7 +416,7 @@ void osbutton_font(OSButton *button, const Font *font)
 {
     cassert_no_null(button);
     cassert(_osgui_button_text_allowed(button->flags) == TRUE);
-    _oscontrol_update_font((OSControl*)button, &button->font, font);
+    _oscontrol_update_font((OSControl *)button, &button->font, font);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -452,8 +451,7 @@ void osbutton_image(OSButton *button, const Image *image)
     }
     else
     {
-        cassert(button_get_type(button->flags) == ekBUTTON_FLAT
-            || button_get_type(button->flags) == ekBUTTON_FLATGLE);
+        cassert(button_get_type(button->flags) == ekBUTTON_FLAT || button_get_type(button->flags) == ekBUTTON_FLATGLE);
         button->image = image_copy(image);
     }
 }
@@ -469,13 +467,13 @@ void osbutton_state(OSButton *button, const gui_state_t state)
         DWORD cstate = 0;
         switch (state)
         {
-            case ekGUI_ON:
-            case ekGUI_MIXED:
-                cstate = BST_CHECKED;
-                break;
-            case ekGUI_OFF:
-                cstate = BST_UNCHECKED;
-                break;
+        case ekGUI_ON:
+        case ekGUI_MIXED:
+            cstate = BST_CHECKED;
+            break;
+        case ekGUI_OFF:
+            cstate = BST_UNCHECKED;
+            break;
             cassert_default();
         }
 
@@ -486,15 +484,15 @@ void osbutton_state(OSButton *button, const gui_state_t state)
         DWORD cstate = 0;
         switch (state)
         {
-            case ekGUI_ON:
-                cstate = BST_CHECKED;
-                break;
-            case ekGUI_OFF:
-                cstate = BST_UNCHECKED;
-                break;
-            case ekGUI_MIXED:
-                cstate = BST_INDETERMINATE;
-                break;
+        case ekGUI_ON:
+            cstate = BST_CHECKED;
+            break;
+        case ekGUI_OFF:
+            cstate = BST_UNCHECKED;
+            break;
+        case ekGUI_MIXED:
+            cstate = BST_INDETERMINATE;
+            break;
             cassert_default();
         }
 
@@ -508,31 +506,30 @@ static gui_state_t i_get_state(const button_flag_t flags, HWND hwnd)
 {
     switch (button_get_type(flags))
     {
-        case ekBUTTON_PUSH:
-        case ekBUTTON_FLAT:
-        case ekBUTTON_HEADER:
-            return ekGUI_ON;
+    case ekBUTTON_PUSH:
+    case ekBUTTON_FLAT:
+    case ekBUTTON_HEADER:
+        return ekGUI_ON;
 
-        case ekBUTTON_CHECK2:
-        case ekBUTTON_CHECK3:
-        case ekBUTTON_RADIO:
-        case ekBUTTON_FLATGLE:
+    case ekBUTTON_CHECK2:
+    case ekBUTTON_CHECK3:
+    case ekBUTTON_RADIO:
+    case ekBUTTON_FLATGLE: {
+        register LRESULT state = SendMessage(hwnd, BM_GETCHECK, (WPARAM)0, (LPARAM)0);
+        if (state == BST_CHECKED)
         {
-            register LRESULT state = SendMessage(hwnd, BM_GETCHECK, (WPARAM)0, (LPARAM)0);
-            if (state == BST_CHECKED)
-            {
-                return ekGUI_ON;
-            }
-            else if (state == BST_UNCHECKED)
-            {
-                return ekGUI_OFF;
-            }
-            else
-            {
-                cassert(state == BST_INDETERMINATE);
-                return ekGUI_MIXED;
-            }
+            return ekGUI_ON;
         }
+        else if (state == BST_UNCHECKED)
+        {
+            return ekGUI_OFF;
+        }
+        else
+        {
+            cassert(state == BST_INDETERMINATE);
+            return ekGUI_MIXED;
+        }
+    }
 
         cassert_default();
     }
@@ -567,62 +564,61 @@ void osbutton_bounds(const OSButton *button, const char_t *text, const real32_t 
 
     switch (button_get_type(button->flags))
     {
-        case ekBUTTON_PUSH:
-        case ekBUTTON_HEADER:
+    case ekBUTTON_PUSH:
+    case ekBUTTON_HEADER: {
+        real32_t woff, hoff;
+        real32_t fheight;
+        _oscontrol_text_bounds((const OSControl *)button, text, button->font, -1.f, width, &fheight);
+
+        if (refheight > fheight)
+            *height = refheight;
+        else
+            *height = fheight;
+
+        _oscontrol_text_bounds((const OSControl *)button, "O", button->font, -1.f, &woff, &hoff);
+
+        if (refwidth > 0.f)
         {
-            real32_t woff, hoff;
-            real32_t fheight;
-            _oscontrol_text_bounds((const OSControl*)button, text, button->font, -1.f, width, &fheight);
-
-            if (refheight > fheight)
-                *height = refheight;
-            else
-                *height = fheight;
-
-            _oscontrol_text_bounds((const OSControl*)button, "O", button->font, -1.f, &woff, &hoff);
-
-            if (refwidth > 0.f)
-            {
-                *width += refwidth;
-                *width += (real32_t)(2 * GetSystemMetrics(SM_CXEDGE));
-            }
-
-            *width += 2 * woff;
-
-            if (button->vpadding == UINT32_MAX)
-            {
-                *height = bmath_ceilf(1.5f * *height) + 2.f;
-            }
-            else
-            {
-                uint32_t padding = button->vpadding;
-
-                if (*height == fheight)
-                    padding += 2;
-
-                if (padding % 2 == 1)
-                    padding += 1;
-
-                *height += (real32_t)padding;
-            }
-
-            break;
+            *width += refwidth;
+            *width += (real32_t)(2 * GetSystemMetrics(SM_CXEDGE));
         }
 
-        case ekBUTTON_CHECK2:
-        case ekBUTTON_CHECK3:
-        case ekBUTTON_RADIO:
-            _oscontrol_text_bounds((const OSControl*)button, text, button->font, -1.f, width, height);
-            *width += (real32_t)GetSystemMetrics(SM_CXMENUCHECK);
-            *width += (real32_t)GetSystemMetrics(SM_CXEDGE);
-            *height = (real32_t)GetSystemMetrics(SM_CYMENUCHECK);
-            break;
+        *width += 2 * woff;
 
-        case ekBUTTON_FLAT:
-        case ekBUTTON_FLATGLE:
-            *width = (real32_t)(uint32_t)((refwidth * 1.5f) + .5f);
-            *height = (real32_t)(uint32_t)((refheight * 1.5f) + .5f);
-            break;
+        if (button->vpadding == UINT32_MAX)
+        {
+            *height = bmath_ceilf(1.5f * *height) + 2.f;
+        }
+        else
+        {
+            uint32_t padding = button->vpadding;
+
+            if (*height == fheight)
+                padding += 2;
+
+            if (padding % 2 == 1)
+                padding += 1;
+
+            *height += (real32_t)padding;
+        }
+
+        break;
+    }
+
+    case ekBUTTON_CHECK2:
+    case ekBUTTON_CHECK3:
+    case ekBUTTON_RADIO:
+        _oscontrol_text_bounds((const OSControl *)button, text, button->font, -1.f, width, height);
+        *width += (real32_t)GetSystemMetrics(SM_CXMENUCHECK);
+        *width += (real32_t)GetSystemMetrics(SM_CXEDGE);
+        *height = (real32_t)GetSystemMetrics(SM_CYMENUCHECK);
+        break;
+
+    case ekBUTTON_FLAT:
+    case ekBUTTON_FLATGLE:
+        *width = (real32_t)(uint32_t)((refwidth * 1.5f) + .5f);
+        *height = (real32_t)(uint32_t)((refheight * 1.5f) + .5f);
+        break;
 
         cassert_default();
     }
@@ -632,52 +628,53 @@ void osbutton_bounds(const OSButton *button, const char_t *text, const real32_t 
 
 void osbutton_attach(OSButton *button, OSPanel *panel)
 {
-    _ospanel_attach_control(panel, (OSControl*)button);
+    _ospanel_attach_control(panel, (OSControl *)button);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osbutton_detach(OSButton *button, OSPanel *panel)
 {
-    _oswindow_unset_defbutton((OSControl*)button);
-    _ospanel_detach_control(panel, (OSControl*)button);
+    _oswindow_unset_defbutton((OSControl *)button);
+    _ospanel_detach_control(panel, (OSControl *)button);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osbutton_visible(OSButton *button, const bool_t visible)
 {
-    _oscontrol_set_visible((OSControl*)button, visible);
+    _oscontrol_set_visible((OSControl *)button, visible);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osbutton_enabled(OSButton *button, const bool_t enabled)
 {
-    _oscontrol_set_enabled((OSControl*)button, enabled);
-    if (button->flags == ekBUTTON_FLAT || button->flags == ekBUTTON_FLATGLE);
-        InvalidateRect(button->control.hwnd, NULL, FALSE);
+    _oscontrol_set_enabled((OSControl *)button, enabled);
+    if (button->flags == ekBUTTON_FLAT || button->flags == ekBUTTON_FLATGLE)
+        ;
+    InvalidateRect(button->control.hwnd, NULL, FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osbutton_size(const OSButton *button, real32_t *width, real32_t *height)
 {
-    _oscontrol_get_size((const OSControl*)button, width, height);
+    _oscontrol_get_size((const OSControl *)button, width, height);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osbutton_origin(const OSButton *button, real32_t *x, real32_t *y)
 {
-    _oscontrol_get_origin((const OSControl*)button, x, y);
+    _oscontrol_get_origin((const OSControl *)button, x, y);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osbutton_frame(OSButton *button, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
-    _oscontrol_set_frame((OSControl*)button, x, y, width, height);
+    _oscontrol_set_frame((OSControl *)button, x, y, width, height);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -725,13 +722,13 @@ void _osbutton_command(OSButton *button, WPARAM wParam, const bool_t restore_foc
         if (button->is_default == FALSE && button_get_type(button->flags) == ekBUTTON_PUSH)
             _osbutton_unset_default(button);
 
-        if(i_RESTORE_FOCUS != NULL)
+        if (i_RESTORE_FOCUS != NULL)
         {
             if (restore_focus == TRUE)
                 SetFocus(i_RESTORE_FOCUS);
             i_RESTORE_FOCUS = NULL;
 
-            _oswindow_unlock_edit_focus_events((OSControl*)button);
+            _oswindow_unlock_edit_focus_events((OSControl *)button);
         }
     }
 }

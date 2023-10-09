@@ -17,12 +17,13 @@
 #include "oscontrol.inl"
 #include "oscolor.inl"
 #include "ospanel.inl"
-#include "cassert.h"
-#include "color.h"
-#include "event.h"
-#include "heap.h"
-#include "strings.h"
-#include "ptr.h"
+
+#include <draw2d/color.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <core/strings.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX
@@ -174,19 +175,37 @@ void ostext_destroy(OSText **view)
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE OSXTextViewDelegate *i_get_delegate(OSText *view)
+//static __INLINE OSXTextViewDelegate *i_get_delegate(OSText *view)
+//{
+//    cassert_no_null(view);
+//    return [(OSXTextView*)[(NSScrollView*)view documentView] delegate];
+//}
+
+// /*---------------------------------------------------------------------------*/
+
+// void ostext_OnTextChange(OSText *view, Listener *listener)
+// {
+//     OSXTextViewDelegate *delegate = i_get_delegate(view);
+//     cassert_no_null(delegate);
+//     listener_update(&delegate->OnTextChange_listener, listener);
+// }
+
+/*---------------------------------------------------------------------------*/
+
+void ostext_OnFilter(OSText *view, Listener *listener)
 {
-    cassert_no_null(view);
-    return [(OSXTextView*)[(NSScrollView*)view documentView] delegate];
+    unref(view);
+    unref(listener);
+    cassert(FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void ostext_OnTextChange(OSText *view, Listener *listener)
+void ostext_OnFocus(OSText *view, Listener *listener)
 {
-    OSXTextViewDelegate *delegate = i_get_delegate(view);
-    cassert_no_null(delegate);
-    listener_update(&delegate->OnTextChange_listener, listener);
+    unref(view);
+    unref(listener);
+    cassert(FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -267,15 +286,15 @@ static NSFont *i_convent_to_italic(NSFont *font, const CGFloat height, NSFontMan
     NSFont *italic_font = nil;
     NSFontTraitMask fontTraits = (NSFontTraitMask)0;
     cassert_no_null(font);
-    
+
     italic_font = [font_manager convertFont:font toHaveTrait:NSItalicFontMask];
     fontTraits = [font_manager traitsOfFont:italic_font];
-    
+
     if ((fontTraits & NSItalicFontMask) == 0)
     {
         NSAffineTransform *font_transform = [NSAffineTransform transform];
         [font_transform scaleBy:height];
-        
+
         {
             NSAffineTransformStruct data;
             NSAffineTransform *italic_transform = nil;
@@ -289,10 +308,10 @@ static NSFont *i_convent_to_italic(NSFont *font, const CGFloat height, NSFontMan
             [italic_transform setTransformStruct:data];
             [font_transform appendTransform:italic_transform];
         }
-        
+
         italic_font = [NSFont fontWithDescriptor:[italic_font fontDescriptor] textTransform:font_transform];
     }
-    
+
     return italic_font;
 }
 
@@ -312,7 +331,7 @@ static NSFont *i_font_create(const char_t *family, const real32_t size, const ui
 
     if (style == UINT32_MAX)
         return nil;
-    
+
     {
         NSFontManager *fontManager = [NSFontManager sharedFontManager];
         NSString *ffamily = [NSString stringWithUTF8String:family];
@@ -329,7 +348,7 @@ static NSFont *i_font_create(const char_t *family, const real32_t size, const ui
             nsfont = i_convent_to_italic(nsfont, (CGFloat)size, fontManager);
         }
     }
-    
+
     return nsfont;
 }
 
@@ -387,7 +406,7 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
     cassert_no_null(view);
     lview = [(NSScrollView*)view documentView];
     cassert_no_null(lview);
-            
+
     switch (param) {
     case ekGUI_PROP_FAMILY:
         if (str_equ_c(lview->ffamily, (const char_t*)value) == FALSE)
@@ -492,17 +511,6 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *ostext_get_text(const OSText *view)
-{
-    OSXTextView *lview;
-    cassert_no_null(view);
-    lview = [(NSScrollView*)view documentView];
-    cassert_no_null(lview);
-    return (const char_t*)[[[lview textStorage] string] UTF8String];
-}
-
-/*---------------------------------------------------------------------------*/
-
 void ostext_editable(OSText *view, const bool_t is_editable)
 {
     OSXTextView *lview;
@@ -515,6 +523,27 @@ void ostext_editable(OSText *view, const bool_t is_editable)
 
 /*---------------------------------------------------------------------------*/
 
+const char_t *ostext_get_text(const OSText *view)
+{
+    OSXTextView *lview;
+    cassert_no_null(view);
+    lview = [(NSScrollView*)view documentView];
+    cassert_no_null(lview);
+    return (const char_t*)[[[lview textStorage] string] UTF8String];
+}
+
+/*---------------------------------------------------------------------------*/
+
+void ostext_scroller_visible(OSText *view, const bool_t horizontal, const bool_t vertical)
+{
+    unref(view);
+    unref(horizontal);
+    unref(vertical);
+    cassert(FALSE);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void ostext_set_need_display(OSText *view)
 {
     OSXTextView *lview;
@@ -522,6 +551,15 @@ void ostext_set_need_display(OSText *view)
     lview = [(NSScrollView*)view documentView];
     cassert_no_null(lview);
     [lview setNeedsDisplay:YES];
+}
+
+/*---------------------------------------------------------------------------*/
+
+void ostext_clipboard(OSText *view, const clipboard_t clipboard)
+{
+    unref(view);
+    unref(clipboard);
+    cassert(FALSE);
 }
 
 /*---------------------------------------------------------------------------*/

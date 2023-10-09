@@ -10,17 +10,16 @@
 
 /* Operating System native popup button */
 
-#include "osgui_osx.inl"
 #include "ospopup.h"
 #include "ospopup.inl"
 #include "osgui.inl"
 #include "oscontrol.inl"
 #include "ospanel.inl"
-#include "cassert.h"
-#include "event.h"
-#include "heap.h"
-#include "image.h"
-#include "ptr.h"
+#include <draw2d/image.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX

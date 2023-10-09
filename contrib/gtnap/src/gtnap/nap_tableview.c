@@ -5,8 +5,8 @@
 #include "gtnap.h"
 #include "gtnap.inl"
 #include "hbapi.h"
-#include "cassert.h"
-#include "arrst.h"
+#include <core/arrst.h>
+#include <sewer/cassert.h>
 
 /*---------------------------------------------------------------------------*/
 

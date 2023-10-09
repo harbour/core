@@ -15,7 +15,7 @@
 #include "osglobals.inl"
 #include "oscontrol.inl"
 #include "oscomwin.inl"
-#include "cassert.h"
+#include <sewer/cassert.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX
@@ -103,3 +103,11 @@ void _osgui_change_menubar(OSWindow *window, OSMenu *previous_menu, OSMenu *new_
     unref(window);
     [NSApp setMainMenu:(NSMenu*)new_menu];
 }
+
+/*---------------------------------------------------------------------------*/
+
+void _osgui_message_loop(void)
+{
+    cassert(FALSE);
+}
+

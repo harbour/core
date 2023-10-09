@@ -37,7 +37,7 @@ echo ---------------------------
 ::
 :: Build NAppGUI from sources
 ::
-call cmake -S %CWD%\src -B %CWD%\build -DCMAKE_WARN_VS11=OFF || goto error_cmake
+call cmake -S %CWD% -B %CWD%\build -DCMAKE_WARN_VS11=OFF || goto error_cmake
 call cmake --build %CWD%\build --config %BUILD%  || goto error_build
 
 ::

@@ -25,4 +25,3 @@ void _oscombo_elem(HWND hwnd, OSImgList *imglist, const ctrl_op_t op, const uint
 void _oscombo_set_list_height(HWND hwnd, HWND combo_hwnd, const uint32_t image_height, uint32_t num_elems);
 
 __END_C
-

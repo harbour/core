@@ -73,5 +73,3 @@ void _oscontrol_get_origin(const NSView *object, real32_t *x, real32_t *y);
 void _oscontrol_set_origin(NSView *object, const real32_t x, const real32_t y);
 
 void _oscontrol_set_frame(NSView *object, const real32_t x, const real32_t y, const real32_t width, const real32_t height);
-
-

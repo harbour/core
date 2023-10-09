@@ -9,8 +9,8 @@
 #include "gtnap.ch"
 #include "nap_menu.inl"
 #include "nappgui.h"
-#include "osmain.h"
-#include "drawctrl.inl"
+#include <osapp/osmain.h>
+#include <gui/drawctrl.inl>
 
 #include "hbapiitm.h"
 #include "hbapirdd.h"

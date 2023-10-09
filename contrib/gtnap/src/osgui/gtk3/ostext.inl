@@ -27,4 +27,3 @@ void _ostext_set_capture(OSText *view, OSControl *control);
 void _ostext_release_capture(OSText *view);
 
 __END_C
-

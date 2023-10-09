@@ -12,9 +12,9 @@
 
 #include "oslistener.inl"
 #include "osgui.inl"
-#include "bmem.h"
-#include "cassert.h"
-#include "event.h"
+#include <core/event.h>
+#include <sewer/bmem.h>
+#include <sewer/cassert.h>
 
 #if !defined (__MACOS__)
 #error This file is only for OSX

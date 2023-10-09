@@ -12,6 +12,17 @@ HBMK_PATH=../../bin/linux/gcc
 BUILD=Debug
 CWD=$(pwd)
 
+if [ "$(uname)" == "Darwin" ]; then
+    # Do something under Mac OS X platform
+    HBMK_PATH=../../bin/darwin/clang
+# elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+#     # Do something under GNU/Linux platform
+# elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+#     # Do something under 32 bits Windows NT platform
+# elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
+#     # Do something under 64 bits Windows NT platform
+fi
+
 while [[ $# -gt 0 ]]; do
   case $1 in
     -b)
@@ -31,6 +42,7 @@ done
 echo ---------------------------
 echo Generating GTNAP
 echo Main path: $CWD
+echo HBMK path: $HBMK_PATH
 echo Build type: $BUILD
 echo ---------------------------
 
@@ -40,8 +52,13 @@ echo ---------------------------
 rm -rf build
 mkdir build
 cd build
-cmake  ../src -DCMAKE_BUILD_CONFIG=$BUILD || exit 1
-make -j 4 || exit 1
+if [ "$(uname)" == "Darwin" ]; then
+    cmake -G Xcode .. -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 || exit 1
+    xcodebuild -configuration $BUILD || exit 1
+else
+    cmake  .. -DCMAKE_BUILD_CONFIG=$BUILD || exit 1
+    make -j 4 || exit 1
+fi
 
 #
 # Build GTNAP

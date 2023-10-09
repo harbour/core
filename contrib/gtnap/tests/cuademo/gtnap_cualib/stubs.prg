@@ -436,7 +436,7 @@ RETURN V_RETORNO
 ********************
 STAT FUNC LINHAS_TIT(V_TITULO)  // Em Windows a rotina é chamada de forma ESTÁTICA.
 ********************
-#elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux)   // ADAPTACAO_LINUX
+#elif defined(__PLATFORM__LINUX) || defined(__PLATFORM__Linux) || defined(__PLATFORM__DARWIN)
 ********************
 FUNC LINHAS_TIT(V_TITULO) // Em Linux foi necessário deixa-la PÚBLICA. (Motivo desconhecido até o momento)
 ********************

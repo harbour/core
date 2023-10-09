@@ -15,4 +15,3 @@
 BOOL _osedit_is(NSView *view);
 
 void _osedit_detach_and_destroy(OSEdit **edit, OSPanel *panel);
-

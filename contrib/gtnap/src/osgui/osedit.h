@@ -65,4 +65,3 @@ _osgui_api void osedit_origin(const OSEdit *edit, real32_t *x, real32_t *y);
 _osgui_api void osedit_frame(OSEdit *edit, const real32_t x, const real32_t y, const real32_t width, const real32_t height);
 
 __END_C
-
