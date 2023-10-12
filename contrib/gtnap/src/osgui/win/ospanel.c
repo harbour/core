@@ -15,6 +15,7 @@
 #include "osgui_win.inl"
 #include "oslabel.inl"
 #include "osbutton.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "oscombo.inl"
 #include "osview.inl"
@@ -63,11 +64,9 @@ DeclSt(Area);
 
 static void i_remove_area(Area *area)
 {
-    if (area->bgbrush != NULL)
-        DeleteObject(area->bgbrush);
-
-    if (area->skbrush != NULL)
-        DeleteObject(area->skbrush);
+    cassert_no_null(area);
+    _oscontrol_destroy_brush(&area->bgbrush);
+    _oscontrol_destroy_brush(&area->skbrush);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -98,15 +97,17 @@ static HBRUSH i_brush(HWND hwnd, const ArrSt(Area) * areas, COLORREF *c)
     RECT rc;
     _oscontrol_get_local_frame(hwnd, &rc);
     arrst_foreach_const(area, areas, Area)
-        POINT pt;
-    pt.x = rc.left + 1;
-    pt.y = rc.top + 1;
-    if (PtInRect(&area->rect, pt) == TRUE)
     {
-        if (area->bgbrush != NULL)
+        POINT pt;
+        pt.x = rc.left + 1;
+        pt.y = rc.top + 1;
+        if (PtInRect(&area->rect, pt) == TRUE)
         {
-            ptr_assign(c, area->bgcolor);
-            return area->bgbrush;
+            if (area->bgbrush != NULL)
+            {
+                ptr_assign(c, area->bgcolor);
+                return area->bgbrush;
+            }
         }
     }
     arrst_end();
@@ -720,7 +721,7 @@ COLORREF _ospanel_background_color(OSPanel *panel, HWND child_hwnd)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t _ospanel_with_scroll(const OSPanel *panel)
+bool_t ospanel_with_scroll(const OSPanel *panel)
 {
     cassert_no_null(panel);
     return (bool_t)(panel->scroll != NULL);
@@ -747,7 +748,7 @@ void _ospanel_scroll_pos(OSPanel *panel, int *scroll_x, int *scroll_y)
 
 /*---------------------------------------------------------------------------*/
 
-void _ospanel_scroll_frame(const OSPanel *panel, OSFrame *rect)
+void ospanel_scroll_frame(const OSPanel *panel, OSFrame *rect)
 {
     int x, y, w, h;
     cassert_no_null(panel);
@@ -761,7 +762,7 @@ void _ospanel_scroll_frame(const OSPanel *panel, OSFrame *rect)
 
 /*---------------------------------------------------------------------------*/
 
-void _ospanel_scroll(OSPanel *panel, const int32_t x, const int32_t y)
+void ospanel_scroll(OSPanel *panel, const int32_t x, const int32_t y)
 {
     cassert_no_null(panel);
     if (panel->scroll != NULL)

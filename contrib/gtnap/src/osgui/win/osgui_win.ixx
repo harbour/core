@@ -66,6 +66,8 @@ struct _oscontrol_t
     HWND hwnd;
     HWND tooltip_hwnd;
     WNDPROC def_wnd_proc;
+
+	/* Review */
     int x;
     int y;
     bool_t visible;

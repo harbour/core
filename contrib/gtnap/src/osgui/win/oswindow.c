@@ -16,6 +16,7 @@
 #include "osgui_win.inl"
 #include "osbutton.inl"
 #include "osedit.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "oscombo.inl"
 #include "osmenuitem.inl"
@@ -200,113 +201,6 @@ static void i_moved(OSWindow *window, const int16_t content_x, const int16_t con
 
 /*---------------------------------------------------------------------------*/
 
-OSWidget *_osgui_control_focus_widget(const OSControl *control)
-{
-    cassert_no_null(control);
-    switch (control->type)
-    {
-    case ekGUI_TYPE_LABEL:
-    case ekGUI_TYPE_PROGRESS:
-        return NULL;
-
-    case ekGUI_TYPE_BUTTON:
-    case ekGUI_TYPE_EDITBOX:
-    case ekGUI_TYPE_SLIDER:
-    case ekGUI_TYPE_TEXTVIEW:
-    case ekGUI_TYPE_UPDOWN:
-    case ekGUI_TYPE_CUSTOMVIEW:
-        return (OSWidget*)control->hwnd;
-
-    case ekGUI_TYPE_POPUP:
-        return (OSWidget*)_ospopup_focus((OSPopUp *)control);
-
-    case ekGUI_TYPE_COMBOBOX:
-        return (OSWidget*)_oscombo_focus((OSCombo *)control);
-
-    case ekGUI_TYPE_TABLEVIEW:
-    case ekGUI_TYPE_TREEVIEW:
-    case ekGUI_TYPE_BOXVIEW:
-    case ekGUI_TYPE_SPLITVIEW:
-    case ekGUI_TYPE_PANEL:
-    case ekGUI_TYPE_LINE:
-    case ekGUI_TYPE_HEADER:
-    case ekGUI_TYPE_WINDOW:
-    case ekGUI_TYPE_TOOLBAR:
-    cassert_default();
-    }
-
-    return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-OSWidget *_osgui_control_focused(void)
-{
-    return (OSWidget*)GetFocus();
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osgui_control_set_focused(OSWidget *widget)
-{
-    cassert_no_null(widget);
-    SetFocus((HWND)widget);
-}
-
-/*---------------------------------------------------------------------------*/
-
-bool_t _osgui_control_widget_visible(const OSWidget *widget)
-{
-    cassert_no_null(widget);
-    return (bool_t)IsWindowVisible((HWND)widget);
-}
-
-/*---------------------------------------------------------------------------*/
-
-bool_t _osgui_control_widget_enable(const OSWidget *widget)
-{
-    cassert_no_null(widget);
-    return (bool_t)IsWindowEnabled((HWND)widget);
-}
-
-/*---------------------------------------------------------------------------*/
-
-OSControl *_osgui_control_parent(const OSControl *control)
-{
-    HWND parentHWND = NULL;
-    OSControl *parent = NULL;
-    cassert_no_null(control);
-    parentHWND = GetParent(control->hwnd);
-    parent = (OSControl*)GetWindowLongPtr(parentHWND, GWLP_USERDATA);
-    return parent;
-}
-
-/*---------------------------------------------------------------------------*/
-
-gui_type_t _osgui_control_type(const OSControl *control)
-{
-    cassert_no_null(control);
-    return control->type;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osgui_control_frame(const OSControl *control, OSFrame *rect)
-{
-    BOOL ret;
-    RECT wrect;
-    cassert_no_null(control);
-    cassert_no_null(rect);
-    rect->left = control->x;
-    rect->top = control->y;
-    ret = GetWindowRect(control->hwnd, &wrect);
-    cassert_unref(ret != 0, ret);
-    rect->right = rect->left + (wrect.right - wrect.left);
-    rect->bottom = rect->top + (wrect.bottom - wrect.top);
-}
-
-/*---------------------------------------------------------------------------*/
-
 static bool_t i_close(OSWindow *window, const gui_close_t close_origin)
 {
     bool_t closed = TRUE;
@@ -314,7 +208,7 @@ static bool_t i_close(OSWindow *window, const gui_close_t close_origin)
 
     /* Checks if the current control allows the window to be closed */
     if (close_origin == ekGUI_CLOSE_INTRO)
-        closed = _osgui_control_can_close_window(window->tabstops_);
+        closed = oscontrol_can_close_window(window->tabstops_);
 
     /* Notify the user and check if allows the window to be closed */
     if (closed == TRUE && window->OnClose != NULL)
@@ -567,7 +461,7 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
         if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
         {
             i_CURRENT_ACTIVE_WINDOW = hwnd;
-            _osgui_control_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+            oscontrol_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
         }
         else
         {
@@ -1017,9 +911,9 @@ void oswindow_tabstop(OSWindow *window, const bool_t next)
 {
     cassert_no_null(window);
     if (next == TRUE)
-        _osgui_control_set_next_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+        oscontrol_set_next_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
     else
-        _osgui_control_set_previous_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+        oscontrol_set_previous_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1040,7 +934,7 @@ void oswindow_focus(OSWindow *window, OSControl *control)
     if (arrpt_find(window->tabstops_, control, OSControl) != UINT32_MAX)
     {
         window->ctabstop_ = control;
-        _osgui_control_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+        oscontrol_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
     }
 }
 
@@ -1120,7 +1014,7 @@ void oswindow_launch(OSWindow *window, OSWindow *parent_window)
 
         SetActiveWindow(window->control.hwnd);
         /* Check if its done by ACTIVATE_EVENT */
-        _osgui_control_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+        oscontrol_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
     }
 }
 
@@ -1159,7 +1053,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
 
     SetActiveWindow(window->control.hwnd);
     /* Check if its done by ACTIVATE_EVENT */
-    _osgui_control_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+    oscontrol_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
 
     /* Wait until the window is closed */
     ret = _oswindow_message_loop(window);
@@ -1176,7 +1070,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
 
         SetActiveWindow(parent_window->control.hwnd);
         /* Check if its done by ACTIVATE_EVENT */
-        _osgui_control_set_tabstop(parent_window->tabstops_, parent_window->tabstop_cycle, &parent_window->ctabstop_);
+        oscontrol_set_tabstop(parent_window->tabstops_, parent_window->tabstop_cycle, &parent_window->ctabstop_);
     }
 
     return ret;
@@ -1419,9 +1313,9 @@ static BOOL i_IsDialogMessage(HWND hDlg, LPMSG lpMsg)
                     SHORT rshif_state = GetAsyncKeyState(VK_RSHIFT);
                     BOOL previous = ((0x8000 & lshif_state) != 0) || ((0x8000 & rshif_state) != 0);
                     if (previous == TRUE)
-                        _osgui_control_set_previous_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+                        oscontrol_set_previous_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
                     else
-                        _osgui_control_set_next_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+                        oscontrol_set_next_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
                     return TRUE;
                 }
             }
@@ -1566,7 +1460,7 @@ uint32_t _oswindow_message_loop(OSWindow *window)
                 {
                     SetActiveWindow(window->control.hwnd);
                     /* Check if its done by ACTIVATE_EVENT */
-                    _osgui_control_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+                    oscontrol_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
                 }
             }
 
@@ -1672,10 +1566,7 @@ bool_t _oswindow_can_mouse_down(OSControl *control)
     unref(control);
 
     if (fcontrol != NULL)
-    {
-        if (fcontrol->type == ekGUI_TYPE_EDITBOX)
-            return _osedit_validate((const OSEdit *)fcontrol, control);
-    }
+        return oscontrol_validate(fcontrol, control);
 
     return TRUE;
 }

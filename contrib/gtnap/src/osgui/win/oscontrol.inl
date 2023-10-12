@@ -20,17 +20,11 @@ void _oscontrol_init_hidden(OSControl *control, const DWORD dwExStyle, const DWO
 
 void _oscontrol_destroy(OSControl *control);
 
-WCHAR *_oscontrol_convers_text(const char_t *text_utf8, uint32_t *size);
-
-void _oscontrol_destroy_text(WCHAR **text, const uint32_t size);
-
 char_t *_oscontrol_get_text(const OSControl *control, uint32_t *tsize);
 
 void _oscontrol_set_text(OSControl *control, const char_t *text);
 
 void _oscontrol_set_tooltip(OSControl *control, const char_t *text);
-
-void _oscontrol_set_tooltip_hwnd(OSControl *control, HWND hwnd, const char_t *text);
 
 void _oscontrol_set_font(OSControl *control, const Font *font);
 
@@ -64,19 +58,14 @@ void _oscontrol_get_size(const OSControl *control, real32_t *width, real32_t *he
 
 void _oscontrol_set_position(OSControl *control, const int x, const int y);
 
-void _oscontrol_set_size(HWND hwnd, const real32_t width, const real32_t height);
-
 void _oscontrol_set_frame(OSControl *control, const real32_t x, const real32_t y, const real32_t width, const real32_t height);
 
 void _oscontrol_attach_to_parent(OSControl *control, OSControl *parent_control);
 
 void _oscontrol_detach_from_parent(OSControl *control, OSControl *parent_control);
 
-uint32_t _oscontrol_get_children(HWND hwnd, HWND *children, const uint32_t children_size);
-
 uint32_t _oscontrol_num_children(HWND hwnd);
 
 void _oscontrol_draw_focus(HWND hwnd, const INT left_offset, const INT right_offset, const INT top_offset, const INT bottom_offset);
-//HWND _oscontrol_hit_point(const OSControl *control, const POINT *point);
 
 __END_C
