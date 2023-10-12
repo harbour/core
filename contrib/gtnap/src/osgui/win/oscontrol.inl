@@ -48,8 +48,6 @@ void _oscontrol_update_brush(const color_t color, HBRUSH *brush, COLORREF *color
 
 void _oscontrol_destroy_brush(HBRUSH *brush);
 
-void _oscontrol_get_local_frame(HWND hwnd, RECT *rect);
-
 void _oscontrol_get_origin(const OSControl *control, real32_t *x, real32_t *y);
 
 void _oscontrol_get_origin_in_screen(HWND hwnd, real32_t *x, real32_t *y);

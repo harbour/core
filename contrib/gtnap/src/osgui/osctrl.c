@@ -132,6 +132,22 @@ static void i_set_tabstop(const OSControl *tabstop)
 
 /*---------------------------------------------------------------------------*/
 
+void oscontrol_taborder(ArrPt(OSControl) *tabstops, OSControl *control)
+{
+    if (control != NULL)
+    {
+        gui_type_t type = oscontrol_type(control);
+        cassert_unref(type != ekGUI_TYPE_PANEL, type);
+        arrpt_append(tabstops, control, OSControl);
+    }
+    else
+    {
+        arrpt_clear(tabstops, NULL, OSControl);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void oscontrol_set_next_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **curtabstop)
 {
     uint32_t size = arrpt_size(tabstops, OSControl);

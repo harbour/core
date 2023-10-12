@@ -278,7 +278,6 @@ void _oscontrol_set_visible(OSControl *control, const bool_t visible)
 {
     cassert_no_null(control);
     ShowWindow(control->hwnd, (visible == TRUE) ? SW_SHOW : SW_HIDE);
-    control->visible = visible;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -338,24 +337,13 @@ void _oscontrol_destroy_brush(HBRUSH *brush)
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_get_local_frame(HWND hwnd, RECT *rect)
-{
-    BOOL ret = GetWindowRect(hwnd, rect);
-    cassert_unref(ret != 0, ret);
-    MapWindowPoints(HWND_DESKTOP, GetParent(hwnd), (LPPOINT)rect, 2);
-}
-
-/*---------------------------------------------------------------------------*/
-
 void _oscontrol_get_origin(const OSControl *control, real32_t *x, real32_t *y)
 {
-    RECT rect;
     cassert_no_null(control);
     cassert_no_null(x);
     cassert_no_null(y);
-    _oscontrol_get_local_frame(control->hwnd, &rect);
-    *x = (real32_t)rect.left;
-    *y = (real32_t)rect.top;
+    *x = (real32_t)control->x;
+    *y = (real32_t)control->y;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -416,8 +404,8 @@ void _oscontrol_set_frame(OSControl *control, const real32_t x, const real32_t y
 
     ret = SetWindowPos(control->hwnd, NULL, (int)x - scroll_x, (int)y - scroll_y, (int)width, (int)height, SWP_NOZORDER);
     cassert_unref(ret != 0, ret);
-    control->x = (int)x;
-    control->y = (int)y;
+    control->x = (int32_t)x;
+    control->y = (int32_t)y;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -516,16 +504,14 @@ OSControl *oscontrol_parent(const OSControl *control)
 
 void oscontrol_frame(const OSControl *control, OSFrame *rect)
 {
-    BOOL ret;
-    RECT wrect;
+    real32_t width, height;
     cassert_no_null(control);
     cassert_no_null(rect);
+    _oscontrol_get_size(control, &width, &height);
     rect->left = control->x;
     rect->top = control->y;
-    ret = GetWindowRect(control->hwnd, &wrect);
-    cassert_unref(ret != 0, ret);
-    rect->right = rect->left + (wrect.right - wrect.left);
-    rect->bottom = rect->top + (wrect.bottom - wrect.top);
+    rect->right = rect->left + (int32_t)width;
+    rect->bottom = rect->top + (int32_t)height;
 }
 
 /*---------------------------------------------------------------------------*/

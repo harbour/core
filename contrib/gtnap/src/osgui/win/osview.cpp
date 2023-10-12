@@ -128,7 +128,7 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
             if (view->parent_panel != NULL)
             {
                 cassert(((OSControl *)view->parent_panel)->type == ekGUI_TYPE_PANEL);
-                background = (uint32_t)_ospanel_background_color(view->parent_panel, hwnd);
+                background = (uint32_t)_ospanel_background_color(view->parent_panel, (OSControl*)view);
             }
             else
             {

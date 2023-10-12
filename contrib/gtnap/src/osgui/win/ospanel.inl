@@ -28,7 +28,7 @@ void _ospanel_attach_control(OSPanel *panel, OSControl *control);
 
 void _ospanel_detach_control(OSPanel *panel, OSControl *control);
 
-COLORREF _ospanel_background_color(OSPanel *panel, HWND child_hwnd);
+COLORREF _ospanel_background_color(OSPanel *panel, OSControl *control);
 
 void _ospanel_scroll_pos(OSPanel *panel, int *scroll_x, int *scroll_y);
 

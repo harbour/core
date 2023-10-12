@@ -36,6 +36,8 @@ bool_t oscontrol_validate(const OSControl *control, const OSControl *next_contro
 
 bool_t oscontrol_can_close_window(const ArrPt(OSControl) *tabstops);
 
+void oscontrol_taborder(ArrPt(OSControl) *tabstops, OSControl *control);
+
 void oscontrol_set_next_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **curtabstop);
 
 void oscontrol_set_previous_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **curtabstop);

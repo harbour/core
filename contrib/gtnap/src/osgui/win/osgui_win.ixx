@@ -67,10 +67,11 @@ struct _oscontrol_t
     HWND tooltip_hwnd;
     WNDPROC def_wnd_proc;
 
-	/* Review */
-    int x;
-    int y;
-    bool_t visible;
+	/* HWND does not save the coordinates of the child with respect to the parent. 
+	   They can be calculated with 'MapWindowPoints', but it does not work correctly 
+	   on scrolling panels. */
+    int32_t x;
+    int32_t y;
 };
 
 struct _strsize_data_t

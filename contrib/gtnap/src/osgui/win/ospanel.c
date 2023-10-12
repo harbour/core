@@ -92,16 +92,20 @@ static __INLINE void i_area(HDC hdc, const Area *area)
 
 /*---------------------------------------------------------------------------*/
 
-static HBRUSH i_brush(HWND hwnd, const ArrSt(Area) * areas, COLORREF *c)
+static HBRUSH i_brush(OSControl *control, const ArrSt(Area) * areas, COLORREF *c)
 {
+    OSFrame rect;
     RECT rc;
-    _oscontrol_get_local_frame(hwnd, &rc);
+    oscontrol_frame(control, &rect);
+    rc.left = rect.left;
+    rc.right = rect.right;
+    rc.top = rect.top;
+    rc.bottom = rect.bottom;
+
     arrst_foreach_const(area, areas, Area)
     {
-        POINT pt;
-        pt.x = rc.left + 1;
-        pt.y = rc.top + 1;
-        if (PtInRect(&area->rect, pt) == TRUE)
+        RECT inter;
+        if (IntersectRect(&inter, &area->rect, &rc) == TRUE)
         {
             if (area->bgbrush != NULL)
             {
@@ -232,16 +236,16 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     return (LRESULT)bgbrush;
                 }
             }
-        }
 
-        if (panel->areas != NULL)
-        {
-            COLORREF bgcolor;
-            HBRUSH brush = i_brush((HWND)lParam, panel->areas, &bgcolor);
-            if (brush != NULL)
+            if (panel->areas != NULL)
             {
-                SetBkColor((HDC)wParam, bgcolor);
-                return (LRESULT)brush;
+                COLORREF bgcolor;
+                HBRUSH brush = i_brush(control, panel->areas, &bgcolor);
+                if (brush != NULL)
+                {
+                    SetBkColor((HDC)wParam, bgcolor);
+                    return (LRESULT)brush;
+                }
             }
         }
 
@@ -707,12 +711,12 @@ void _ospanel_detach_control(OSPanel *panel, OSControl *control)
 
 /*---------------------------------------------------------------------------*/
 
-COLORREF _ospanel_background_color(OSPanel *panel, HWND child_hwnd)
+COLORREF _ospanel_background_color(OSPanel *panel, OSControl *control)
 {
     if (panel->areas != NULL)
     {
         COLORREF c;
-        if (i_brush(child_hwnd, panel->areas, &c) != NULL)
+        if (i_brush(control, panel->areas, &c) != NULL)
             return c;
     }
 
