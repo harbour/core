@@ -42,4 +42,39 @@ void _osgui_change_menubar(OSWindow *window, OSMenu *previous_menu, OSMenu *new_
 
 void _osgui_message_loop(void);
 
+/* Move to oscontrol.inl */
+bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control);
+
+bool_t _ospanel_with_scroll(const OSPanel *panel);
+
+void _ospanel_scroll(OSPanel *panel, const int32_t x, const int32_t y);
+
+void _ospanel_scroll_frame(const OSPanel *panel, OSFrame *rect);
+
+OSWidget *_osgui_control_focus_widget(const OSControl *control);
+
+OSWidget *_osgui_control_focused(void);
+
+void _osgui_control_set_focused(OSWidget *widget);
+
+bool_t _osgui_control_widget_visible(const OSWidget *widget);
+
+bool_t _osgui_control_widget_enable(const OSWidget *widget);
+
+OSControl *_osgui_control_parent(const OSControl *control);
+
+gui_type_t _osgui_control_type(const OSControl *control);
+
+void _osgui_control_frame(const OSControl *control, OSFrame *rect);
+
+
+
+bool_t _osgui_control_can_close_window(const ArrPt(OSControl) *tabstops);
+
+void _osgui_control_set_next_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **curtabstop);
+
+void _osgui_control_set_previous_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **curtabstop);
+
+void _osgui_control_set_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **tabstop);
+
 __END_C

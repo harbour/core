@@ -747,23 +747,23 @@ void _ospanel_scroll_pos(OSPanel *panel, int *scroll_x, int *scroll_y)
 
 /*---------------------------------------------------------------------------*/
 
-void _ospanel_scroll_frame(const OSPanel *panel, RECT *rect)
+void _ospanel_scroll_frame(const OSPanel *panel, OSFrame *rect)
 {
     int x, y, w, h;
     cassert_no_null(panel);
     cassert_no_null(rect);
     osscroll_visible_area(panel->scroll, &x, &y, &w, &h, NULL, NULL);
-    rect->left = (LONG)x;
-    rect->top = (LONG)y;
-    rect->right = (LONG)(x + w);
-    rect->bottom = (LONG)(y + h);
+    rect->left = (int32_t)x;
+    rect->top = (int32_t)y;
+    rect->right = (int32_t)(x + w);
+    rect->bottom = (int32_t)(y + h);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _ospanel_scroll(OSPanel *panel, const int x, const int y)
+void _ospanel_scroll(OSPanel *panel, const int32_t x, const int32_t y)
 {
     cassert_no_null(panel);
     if (panel->scroll != NULL)
-        osscroll_set(panel->scroll, x, y, TRUE);
+        osscroll_set(panel->scroll, (int)x, (int)y, TRUE);
 }

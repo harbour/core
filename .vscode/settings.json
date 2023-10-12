@@ -6,7 +6,8 @@
         "hbapicdp.h": "c",
         "*.ch": "c",
         "*.def": "c",
-        "gui.hxx": "c"
+        "gui.hxx": "c",
+        "*.ixx": "c"
     },
     "files.encoding": "windows1252"
 }
