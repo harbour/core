@@ -66,7 +66,7 @@ OSUpDown *osupdown_create(const uint32_t flags)
     OSXUpDown *updown = [[OSXUpDown alloc] initWithFrame:NSMakeRect(0.f, 0.f, 16.f, 16.f)];
     unref(flags);
     heap_auditor_add("OSXUpDown");
-    [updown setHidden:YES];
+    _oscontrol_init(updown);
     [updown setTarget:updown];
     [updown setAction:@selector(onClickUpDown:)];
     [updown setAutorepeat:YES];

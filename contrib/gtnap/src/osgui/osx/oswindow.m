@@ -284,6 +284,8 @@ static void i_OnFocus(NSResponder *view, const bool_t focus)
 {
     /* '231' Comes from OSXEdit intro keyDown */
     unsigned short code = (theEvent == (NSEvent*)231) ? 36 : [theEvent keyCode];
+    NSEventModifierFlags flags = [theEvent modifierFlags];
+    BOOL shift = (flags & NSEventModifierFlagShift) != 0;
     if (code == 36 || code == 76)
     {
         if (self->defbutton != NULL)
@@ -419,6 +421,7 @@ void oswindow_destroy(OSWindow **window)
     OSXWindow *windowp = NULL;
     OSXWindowDelegate *delegate = NULL;
     cassert_no_null(window);
+    cassert([(NSResponder*)*window isKindOfClass:[OSXWindow class]] == YES);
     windowp = (OSXWindow*)*window;
     cassert_no_null(windowp);
     delegate = [windowp delegate];
@@ -452,6 +455,7 @@ void oswindow_OnMoved(OSWindow *window, Listener *listener)
 {
     OSXWindowDelegate *delegate;
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     delegate = [(OSXWindow*)window delegate];
     cassert_no_null(delegate);
     listener_update(&delegate->OnMoved, listener);
@@ -463,6 +467,7 @@ void oswindow_OnResize(OSWindow *window, Listener *listener)
 {
     OSXWindowDelegate *delegate;
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     delegate = [(OSXWindow*)window delegate];
     cassert_no_null(delegate);
     listener_update(&delegate->OnResize, listener);
@@ -474,6 +479,7 @@ void oswindow_OnClose(OSWindow *window, Listener *listener)
 {
     OSXWindowDelegate *delegate;
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     delegate = [(OSXWindow*)window delegate];
     cassert_no_null(delegate);
     listener_update(&delegate->OnClose, listener);
@@ -485,6 +491,7 @@ void oswindow_title(OSWindow *window, const char_t *text)
 {
     NSString *str;
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
 #if defined (MAC_OS_X_VERSION_10_12) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_12
     cassert(([(OSXWindow*)window styleMask] & NSWindowStyleMaskTitled) == NSWindowStyleMaskTitled);
 #else
@@ -501,6 +508,7 @@ void oswindow_title(OSWindow *window, const char_t *text)
 void oswindow_edited(OSWindow *window, const bool_t is_edited)
 {
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     [(OSXWindow*)window setDocumentEdited:(BOOL)is_edited];
 }
 
@@ -509,6 +517,7 @@ void oswindow_edited(OSWindow *window, const bool_t is_edited)
 void oswindow_movable(OSWindow *window, const bool_t is_movable)
 {
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     #if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
     [(OSXWindow*)window setMovable:(BOOL)is_movable];
     #endif
@@ -522,6 +531,7 @@ void oswindow_z_order(OSWindow *window, OSWindow *below_window)
     NSInteger below_level = 0;
     cassert_no_null(window);
     cassert_no_null(below_window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     below_level = [(OSXWindow*)below_window level];
     [(OSXWindow*)window setLevel:below_level + 10];
 }
@@ -532,6 +542,7 @@ void oswindow_alpha(OSWindow *window, const real32_t alpha)
 {
     cassert_no_null(window);
     cassert(alpha >= 0.f && alpha <= 1.f);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     /* cassert(((OSXWindow*)window)->skin == ekGUI_WINDOW_SKIN_ROUNDED); */
     cassert(FALSE);
     ((OSXWindow*)window)->alpha = (CGFloat)alpha;
@@ -542,6 +553,7 @@ void oswindow_alpha(OSWindow *window, const real32_t alpha)
 void oswindow_enable_mouse_events(OSWindow *window, const bool_t enabled)
 {
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     [(OSXWindow*)window setIgnoresMouseEvents:!(BOOL)enabled];
 }
 
@@ -550,7 +562,8 @@ void oswindow_enable_mouse_events(OSWindow *window, const bool_t enabled)
 void oswindow_hotkey(OSWindow *window, const vkey_t key, const uint32_t modifiers, Listener *listener)
 {
     OSXWindow *windowp = (OSXWindow*)window;
-    cassert_no_null(windowp);
+    cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
 
     if (windowp->hotkeys == NULL && listener != NULL)
         windowp->hotkeys = arrst_create(HotKey);
@@ -582,6 +595,8 @@ void oswindow_taborder(OSWindow *window, OSControl *control)
     NSView *oscontrol;
     cassert_no_null(window);
     cassert(control == NULL || [(NSObject*)control isKindOfClass:[NSView class]] == YES);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
+
     oswindow = (OSXWindow*)window;
     oscontrol = (NSView*)control;
 
@@ -621,7 +636,8 @@ void oswindow_tabstop(OSWindow *window, const bool_t next)
     OSXWindow *oswindow =(OSXWindow*)window;
     NSView *oscontrol = nil;
 
-    cassert_no_null(oswindow);
+    cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
 
     if (oswindow->current_edit_focus != nil)
     {
@@ -662,7 +678,8 @@ void oswindow_tabcycle(OSWindow *window, const bool_t cycle)
 void oswindow_focus(OSWindow *window, OSControl *control)
 {
     NSView *view = (NSView*)control;
-    unref(window);
+    cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     [(OSXWindow*)window endEditingFor:nil];
     [(OSXWindow*)window makeFirstResponder:view];
 }
@@ -673,6 +690,7 @@ void oswindow_attach_panel(OSWindow *window, OSPanel *panel)
 {
     cassert_no_null(window);
     cassert_no_null(panel);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     [(OSXWindow*)window setContentView:(NSView*)panel];
 }
 
@@ -683,6 +701,7 @@ void oswindow_detach_panel(OSWindow *window, OSPanel *panel)
     NSUInteger count = 0;
     cassert_no_null(window);
     cassert_no_null(panel);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     cassert([(OSXWindow*)window contentView] == (NSView*)panel);
     count = [(NSView*)panel retainCount];
     cassert(count > 0);
@@ -717,6 +736,7 @@ void oswindow_launch(OSWindow *window, OSWindow *parent_window)
 {
     OSXWindow *parent = NULL;
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     if (parent_window != nil)
     {
         cassert([(NSObject*)parent_window isKindOfClass:[OSXWindow class]] == YES);
@@ -736,6 +756,7 @@ void oswindow_hide(OSWindow *window, OSWindow *parent_window)
 {
     OSXWindow *parent = NULL;
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     if (parent_window != nil)
     {
         cassert([(NSObject*)parent_window isKindOfClass:[OSXWindow class]] == YES);
@@ -766,6 +787,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
     OSXWindow *front_window = nil;
     NSInteger ret;
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
 
     if (parent_window != NULL)
     {
@@ -795,6 +817,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
 void oswindow_stop_modal(OSWindow *window, const uint32_t return_value)
 {
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     cassert([NSApp modalWindow] == (OSXWindow*)window);
     [(OSXWindow*)window close];
     [NSApp stopModalWithCode:(NSInteger)return_value];
@@ -832,6 +855,7 @@ void oswindow_get_origin(const OSWindow *window, real32_t *x, real32_t *y)
     cassert_no_null(window);
     cassert_no_null(x);
     cassert_no_null(y);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     frame = [(OSXWindow*)window frame];
     _oscontrol_origin_in_screen_coordinates(&frame, &origin_x, &origin_y);
     *x = (real32_t)origin_x;
@@ -845,6 +869,7 @@ void oswindow_origin(OSWindow *window, const real32_t x, const real32_t y)
     NSRect window_frame;
     NSPoint origin;
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     window_frame = [(OSXWindow*)window frame];
     window_frame.origin.x = (CGFloat)x;
     window_frame.origin.y = (CGFloat)y;
@@ -860,6 +885,7 @@ void oswindow_get_size(const OSWindow *window, real32_t *width, real32_t *height
     cassert_no_null(window);
     cassert_no_null(width);
     cassert_no_null(height);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     frame_size = [(OSXWindow*)window frame].size;
     *width = (real32_t)frame_size.width;
     *height = (real32_t)frame_size.height;
@@ -872,6 +898,7 @@ void oswindow_size(OSWindow *window, const real32_t content_width, const real32_
     NSSize size;
     real32_t x, y;
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     size.width = (CGFloat)content_width;
     size.height = (CGFloat)content_height;
     oswindow_get_origin(window, &x, &y);
@@ -886,6 +913,7 @@ void oswindow_size(OSWindow *window, const real32_t content_width, const real32_
 void oswindow_set_default_pushbutton(OSWindow *window, OSButton *button)
 {
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     ((OSXWindow*)window)->defbutton = button;
     [(NSButton*)button setKeyEquivalent:@"\r"];
 }
@@ -903,6 +931,7 @@ void oswindow_set_cursor(OSWindow *window, Cursor *cursor)
 void oswindow_property(OSWindow *window, const gui_prop_t property, const void *value)
 {
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     unref(value);
     switch (property)
     {
@@ -919,6 +948,7 @@ void oswindow_property(OSWindow *window, const gui_prop_t property, const void *
 
 BOOL _oswindow_in_destroy(NSWindow *window)
 {
+    cassert_no_null(window);
     cassert([window isKindOfClass:[OSXWindow class]] == YES);
     return ((OSXWindow*)window)->in_window_destroy;
 }
@@ -928,6 +958,7 @@ BOOL _oswindow_in_destroy(NSWindow *window)
 NSView *_oswindow_main_view(OSWindow *window)
 {
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     return [(OSXWindow*)window contentView];
 }
 
@@ -936,6 +967,7 @@ NSView *_oswindow_main_view(OSWindow *window)
 void _oswindow_focus_edit(NSWindow *window, NSView *edit)
 {
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     ((OSXWindow*)window)->current_edit_focus = edit;
 }
 
@@ -944,5 +976,6 @@ void _oswindow_focus_edit(NSWindow *window, NSView *edit)
 NSView *_oswindow_get_focus_edit(NSWindow *window)
 {
     cassert_no_null(window);
+    cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     return ((OSXWindow*)window)->current_edit_focus;
 }

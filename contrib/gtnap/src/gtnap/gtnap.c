@@ -150,7 +150,6 @@ struct _gtnap_window_t
     S2Df panel_size;
     Panel *panel;
     Panel *scrolled_panel;
-    View *canvas;
     GtNapToolbar *toolbar;
     GtNapArea *gtarea;
     uint32_t num_rows;
@@ -466,16 +465,6 @@ static void i_destroy_gtwin(GtNapWindow **dgtwin)
         uint32_t i, n = arrpt_size(gtwin->objects, GtNapObject);
         for (i = 0; i < n; ++i)
             i_destroy_gtobject(gtwin, 0);
-    }
-
-    if (gtwin->canvas != NULL)
-    {
-        _component_visible((GuiComponent*)gtwin->canvas, FALSE);
-
-        if (gtwin->is_configured == TRUE)
-            _component_detach_from_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
-
-        _component_destroy((GuiComponent**)&gtwin->canvas);
     }
 
     if (gtwin->scrolled_panel != NULL)
@@ -894,9 +883,9 @@ static String *i_item_to_utf8_string(HB_ITEM *item)
     String *str = NULL;
     cassert(HB_ITEM_TYPE(item) == HB_IT_STRING);
     s1 = hb_itemCopyStrUTF8(item, NULL, (HB_SIZE)UINT32_MAX);
-    str = str_reserve(s1);
+    str = str_reserve((uint32_t)s1);
     s2 = hb_itemCopyStrUTF8(item, tcc(str), s1 + 1);
-    cassert(s1 == s2);
+    cassert_unref(s1 == s2, s2);
     i_remove_utf8_CR(tcc(str));
     return str;
 }
@@ -931,9 +920,9 @@ static String *i_utf8_to_cp_string(const char_t *utf8)
     HB_CODEPAGE *cp = hb_vmCDP();
     HB_SIZE n = (HB_SIZE)str_len_c(utf8);
     HB_SIZE s1 = hb_cdpUTF8AsStrLen(cp, utf8, n, 0);
-    String *str = str_reserve(s1);
+    String *str = str_reserve((uint32_t)s1);
     HB_SIZE s2 = hb_cdpUTF8ToStr(cp, utf8, n, tcc(str), s1 + 1);
-    cassert(s1 == s2);
+    cassert_unref(s1 == s2, s2);
     return str;
 }
 
@@ -1013,14 +1002,6 @@ static GtNap *i_gtnap_create(void)
     INIT_CODEBLOCK = NULL;
 
     return GTNAP_GLOBAL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_OnCanvasDraw(GtNapWindow *gtwin, Event *e)
-{
-    unref(gtwin);
-    unref(e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2327,19 +2308,12 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     {
         V2Df pos = kV2D_ZEROf;
         S2Df size = gtwin->panel_size;
-        cassert(gtwin->canvas == NULL);
 
         if (gtwin->toolbar != NULL)
         {
             pos.y += gtwin->toolbar->pixels_button;
             size.height -= gtwin->toolbar->pixels_button;
         }
-
-        gtwin->canvas = view_create();
-        view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
-        _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
-        _component_set_frame((GuiComponent*)gtwin->canvas, &pos, &size);
-        _component_visible((GuiComponent*)gtwin->canvas, TRUE);
     }
 
     if (i_with_scroll_panel(gtwin) == TRUE)

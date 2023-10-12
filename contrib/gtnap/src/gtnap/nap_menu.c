@@ -323,7 +323,7 @@ static void i_OnKeyDown(Panel *panel, Event *e)
 
 static void i_view_size(MenuVert *menu)
 {
-    real32_t width = 0, height = 0, n = 0;
+    real32_t width = 0, height = 0;
     cassert_no_null(menu);
 
     arrst_foreach(opt, menu->opts, MenuOpt)
@@ -333,19 +333,12 @@ static void i_view_size(MenuVert *menu)
         if (opt->size.width > width)
             width = opt->size.width;
 
-        height += menu->row_height;// opt->size.height;
-        n += 1;
+        height += menu->row_height;
 
     arrst_end();
 
     menu->total_height = height;
-    //view_content_size(menu->view, s2df(width + 20, height + 1), s2df(0, (real32_t)menu->row_height));
     view_content_size(menu->view, s2df((real32_t)menu->control_width, height + 1), s2df(0, (real32_t)menu->row_height));
-
-    // if (menu->visible_opts == 0 || menu->visible_opts >= n)
-    //     view_size(menu->view, s2df(width + 20, height + 1));
-    // else
-    //     view_size(menu->view, s2df(width + 20, (real32_t)(menu->visible_opts * menu->row_height) + 1));
 }
 
 /*---------------------------------------------------------------------------*/

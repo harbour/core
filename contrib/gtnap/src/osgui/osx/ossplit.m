@@ -11,6 +11,7 @@
 /* Operating System split view */
 
 #include "osgui_osx.inl"
+#include "ossplit.inl"
 #include "ossplit.h"
 #include "osgui.inl"
 #include "oscontrol.inl"
@@ -191,6 +192,13 @@ static NSCursor *i_cursor(NSView *view, NSPoint *pt_window)
 }
 
 @end
+
+/*---------------------------------------------------------------------------*/
+
+BOOL _ossplit_is(NSView *view)
+{
+    return [view isKindOfClass:[OSXSplitView class]];
+}
 
 /*---------------------------------------------------------------------------*/
 

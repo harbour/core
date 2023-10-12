@@ -352,6 +352,8 @@ OSView *osview_create(const uint32_t flags)
     if (flags & ekVIEW_HSCROLL || flags & ekVIEW_VSCROLL)
     {
         NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSZeroRect];
+        [view setHidden:NO];
+        [scroll setHidden:YES];
         [scroll setDrawsBackground:NO];
         [scroll setDocumentView:view];
         [scroll setHasHorizontalScroller:(flags & ekVIEW_HSCROLL) ? YES : NO];
@@ -363,6 +365,7 @@ OSView *osview_create(const uint32_t flags)
     }
     else
     {
+        [view setHidden:YES];
         view->scroll = nil;
         return (OSView*)view;
     }
@@ -762,7 +765,11 @@ void osview_detach(OSView *view, OSPanel *panel)
 
 void osview_visible(OSView *view, const bool_t is_visible)
 {
-    _oscontrol_set_visible((NSView*)view, is_visible);
+    OSXView *lview = i_get_view(view);
+    if (lview->scroll != nil)
+        _oscontrol_set_visible(lview->scroll, is_visible);
+    else
+        _oscontrol_set_visible(lview, is_visible);
 }
 
 /*---------------------------------------------------------------------------*/

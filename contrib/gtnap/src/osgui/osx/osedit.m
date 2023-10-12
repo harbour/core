@@ -14,6 +14,7 @@
 #include "osedit.inl"
 #include "oscolor.inl"
 #include "osgui.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "ospanel.inl"
 #include "oswindow.inl"
@@ -777,4 +778,14 @@ void _osedit_detach_and_destroy(OSEdit **edit, OSPanel *panel)
     cassert_no_null(edit);
     osedit_detach(*edit, panel);
     osedit_destroy(edit);
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t osedit_validate(const OSEdit *edit, const OSControl *next_control)
+{
+    unref(edit);
+    unref(next_control);
+    cassert(FALSE);
+    return FALSE;
 }

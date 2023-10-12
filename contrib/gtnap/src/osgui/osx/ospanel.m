@@ -15,6 +15,7 @@
 #include "osgui.inl"
 #include "osbutton.inl"
 #include "oscombo.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "osview.inl"
 #include "osedit.inl"
@@ -241,7 +242,7 @@ static void i_destroy_child(NSView *child, OSPanel *panel)
         return;
     }
 
-    if ([child isKindOfClass:[OSXPanel class]])
+    if (_ospanel_is(child) == YES)
     {
         ospanel_detach((OSPanel*)child, panel);
         _ospanel_destroy((OSPanel**)&child);
@@ -249,6 +250,13 @@ static void i_destroy_child(NSView *child, OSPanel *panel)
     }
 
     cassert_fatal_msg(FALSE, "Unknown child type");
+}
+
+/*---------------------------------------------------------------------------*/
+
+BOOL _ospanel_is(NSView *view)
+{
+    return [view isKindOfClass:[OSXPanel class]];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -473,4 +481,32 @@ void _ospanel_detach_control(OSPanel *panel, NSView *control)
 {
     OSXPanel *lpanel = i_get_panel(panel);
     _oscontrol_detach_from_parent(control, (NSView*)lpanel);
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t ospanel_with_scroll(const OSPanel *panel)
+{
+    unref(panel);
+    cassert(FALSE);
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void ospanel_scroll(OSPanel *panel, const int32_t x, const int32_t y)
+{
+    unref(panel);
+    unref(x);
+    unref(y);
+    cassert(FALSE);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void ospanel_scroll_frame(const OSPanel *panel, OSFrame *rect)
+{
+    unref(panel);
+    unref(rect);
+    cassert(FALSE);
 }

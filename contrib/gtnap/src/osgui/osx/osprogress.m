@@ -55,10 +55,9 @@ OSProgress *osprogress_create(const uint32_t flags)
     cassert_unref(progress_get_type(flags) == ekPROGRESS_HORZ, flags);
     heap_auditor_add("OSXProgress");
     progress = [[OSXProgress alloc] initWithFrame:NSZeroRect];
-    //_oscontrol_progress_set_control_size(progress, size);
+    _oscontrol_init(progress);
     [progress setStyle:STYLE_BAR];
     [progress setUsesThreadedAnimation:NO];
-    [progress setHidden:YES];
     [progress setIndeterminate:NO];
     [progress setMinValue:0.];
     [progress setMaxValue:1.];
