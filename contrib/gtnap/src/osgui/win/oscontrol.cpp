@@ -218,45 +218,6 @@ void _oscontrol_update_font(OSControl *control, Font **current_font, const Font 
 
 /*---------------------------------------------------------------------------*/
 
-DWORD _oscontrol_halign(const align_t halign)
-{
-    switch (halign)
-    {
-    case ekLEFT:
-        return SS_LEFT;
-    case ekCENTER:
-    case ekJUSTIFY:
-        return SS_CENTER;
-    case ekRIGHT:
-        return SS_RIGHT;
-        cassert_default();
-    }
-
-    return UINT32_MAX;
-}
-
-/*---------------------------------------------------------------------------*/
-
-DWORD _oscontrol_ellipsis(const ellipsis_t ellipsis)
-{
-    switch (ellipsis)
-    {
-    case ekELLIPNONE:
-    case ekELLIPMLINE:
-        return 0;
-    case ekELLIPBEGIN:
-        return SS_ENDELLIPSIS;
-    case ekELLIPEND:
-        return SS_ENDELLIPSIS;
-    case ekELLIPMIDDLE:
-        return SS_PATHELLIPSIS;
-    }
-
-    return 0;
-}
-
-/*---------------------------------------------------------------------------*/
-
 void _oscontrol_text_bounds(const OSControl *control, const char_t *text, const Font *font, const real32_t refwidth, real32_t *width, real32_t *height)
 {
     StringSizeData data;
@@ -284,55 +245,8 @@ void _oscontrol_set_visible(OSControl *control, const bool_t visible)
 
 void _oscontrol_set_enabled(OSControl *control, const bool_t enabled)
 {
+    cassert_no_null(control);
     EnableWindow(control->hwnd, (BOOL)enabled);
-}
-
-/*---------------------------------------------------------------------------*/
-
-COLORREF _oscontrol_colorref(const color_t color)
-{
-    uint8_t r, g, b;
-    color_get_rgb(color, &r, &g, &b);
-    return RGB(r, g, b);
-}
-
-/*---------------------------------------------------------------------------*/
-
-color_t _oscontrol_from_colorref(const COLORREF color)
-{
-    return color_rgb(GetRValue(color), GetGValue(color), GetBValue(color));
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_update_brush(const color_t color, HBRUSH *brush, COLORREF *colorref)
-{
-    register COLORREF cf;
-    cassert_no_null(brush);
-    if (*brush != NULL)
-    {
-        BOOL ok = DeleteObject(*brush);
-        cassert_unref(ok != 0, ok);
-        *brush = NULL;
-    }
-
-    cf = _oscontrol_colorref(color);
-    ptr_assign(colorref, cf);
-    if (color != kCOLOR_TRANSPARENT)
-        *brush = CreateSolidBrush(cf);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_destroy_brush(HBRUSH *brush)
-{
-    cassert_no_null(brush);
-    if (*brush != NULL)
-    {
-        BOOL ok = DeleteObject(*brush);
-        cassert_unref(ok != 0, ok);
-        *brush = NULL;
-    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -348,13 +262,14 @@ void _oscontrol_get_origin(const OSControl *control, real32_t *x, real32_t *y)
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_get_origin_in_screen(HWND hwnd, real32_t *x, real32_t *y)
+void _oscontrol_get_origin_in_screen(const OSControl *control, real32_t *x, real32_t *y)
 {
     BOOL ret;
     RECT rect;
+    cassert_no_null(control);
     cassert_no_null(x);
     cassert_no_null(y);
-    ret = GetWindowRect(hwnd, &rect);
+    ret = GetWindowRect(control->hwnd, &rect);
     cassert_unref(ret != 0, ret);
     *x = (real32_t)rect.left;
     *y = (real32_t)rect.top;
@@ -452,13 +367,14 @@ static BOOL CALLBACK i_children_count(HWND child_hwnd, LPARAM lParam)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t _oscontrol_num_children(HWND hwnd)
+uint32_t _oscontrol_num_children(const OSControl *control)
 {
     i_Children children_str;
     children_str.num_children = 0;
     children_str.children = NULL;
     children_str.children_size = 0;
-    EnumChildWindows(hwnd, i_children_count, (LPARAM)&children_str);
+    cassert_no_null(control);
+    EnumChildWindows(control->hwnd, i_children_count, (LPARAM)&children_str);
     return children_str.num_children;
 }
 
@@ -478,6 +394,93 @@ void _oscontrol_draw_focus(HWND hwnd, const INT left_offset, const INT right_off
     hdc = BeginPaint(hwnd, &st);
     FrameRect(hdc, &rc, kCHESSBOARD_BRUSH);
     EndPaint(hwnd, &st);
+}
+
+/*---------------------------------------------------------------------------*/
+
+DWORD _oscontrol_halign(const align_t halign)
+{
+    switch (halign)
+    {
+    case ekLEFT:
+        return SS_LEFT;
+    case ekCENTER:
+    case ekJUSTIFY:
+        return SS_CENTER;
+    case ekRIGHT:
+        return SS_RIGHT;
+        cassert_default();
+    }
+
+    return UINT32_MAX;
+}
+
+/*---------------------------------------------------------------------------*/
+
+DWORD _oscontrol_ellipsis(const ellipsis_t ellipsis)
+{
+    switch (ellipsis)
+    {
+    case ekELLIPNONE:
+    case ekELLIPMLINE:
+        return 0;
+    case ekELLIPBEGIN:
+        return SS_ENDELLIPSIS;
+    case ekELLIPEND:
+        return SS_ENDELLIPSIS;
+    case ekELLIPMIDDLE:
+        return SS_PATHELLIPSIS;
+    }
+
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+COLORREF _oscontrol_colorref(const color_t color)
+{
+    uint8_t r, g, b;
+    color_get_rgb(color, &r, &g, &b);
+    return RGB(r, g, b);
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t _oscontrol_from_colorref(const COLORREF color)
+{
+    return color_rgb(GetRValue(color), GetGValue(color), GetBValue(color));
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_update_brush(const color_t color, HBRUSH *brush, COLORREF *colorref)
+{
+    register COLORREF cf;
+    cassert_no_null(brush);
+    if (*brush != NULL)
+    {
+        BOOL ok = DeleteObject(*brush);
+        cassert_unref(ok != 0, ok);
+        *brush = NULL;
+    }
+
+    cf = _oscontrol_colorref(color);
+    ptr_assign(colorref, cf);
+    if (color != kCOLOR_TRANSPARENT)
+        *brush = CreateSolidBrush(cf);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_destroy_brush(HBRUSH *brush)
+{
+    cassert_no_null(brush);
+    if (*brush != NULL)
+    {
+        BOOL ok = DeleteObject(*brush);
+        cassert_unref(ok != 0, ok);
+        *brush = NULL;
+    }
 }
 
 /*---------------------------------------------------------------------------*/

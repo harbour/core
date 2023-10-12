@@ -30,27 +30,15 @@ void _oscontrol_set_font(OSControl *control, const Font *font);
 
 void _oscontrol_update_font(OSControl *control, Font **current_font, const Font *font);
 
-DWORD _oscontrol_halign(const align_t align);
-
-DWORD _oscontrol_ellipsis(const ellipsis_t ellipsis);
-
 void _oscontrol_text_bounds(const OSControl *control, const char_t *text, const Font *font, const real32_t refwidth, real32_t *width, real32_t *height);
 
 void _oscontrol_set_visible(OSControl *control, const bool_t visible);
 
 void _oscontrol_set_enabled(OSControl *control, const bool_t enabled);
 
-COLORREF _oscontrol_colorref(const color_t color);
-
-color_t _oscontrol_from_colorref(const COLORREF color);
-
-void _oscontrol_update_brush(const color_t color, HBRUSH *brush, COLORREF *colorref);
-
-void _oscontrol_destroy_brush(HBRUSH *brush);
-
 void _oscontrol_get_origin(const OSControl *control, real32_t *x, real32_t *y);
 
-void _oscontrol_get_origin_in_screen(HWND hwnd, real32_t *x, real32_t *y);
+void _oscontrol_get_origin_in_screen(const OSControl *control, real32_t *x, real32_t *y);
 
 void _oscontrol_get_size(const OSControl *control, real32_t *width, real32_t *height);
 
@@ -62,8 +50,20 @@ void _oscontrol_attach_to_parent(OSControl *control, OSControl *parent_control);
 
 void _oscontrol_detach_from_parent(OSControl *control, OSControl *parent_control);
 
-uint32_t _oscontrol_num_children(HWND hwnd);
+uint32_t _oscontrol_num_children(const OSControl *control);
 
 void _oscontrol_draw_focus(HWND hwnd, const INT left_offset, const INT right_offset, const INT top_offset, const INT bottom_offset);
+
+DWORD _oscontrol_halign(const align_t align);
+
+DWORD _oscontrol_ellipsis(const ellipsis_t ellipsis);
+
+COLORREF _oscontrol_colorref(const color_t color);
+
+color_t _oscontrol_from_colorref(const COLORREF color);
+
+void _oscontrol_update_brush(const color_t color, HBRUSH *brush, COLORREF *colorref);
+
+void _oscontrol_destroy_brush(HBRUSH *brush);
 
 __END_C

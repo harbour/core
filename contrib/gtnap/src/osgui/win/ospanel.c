@@ -392,7 +392,7 @@ void ospanel_destroy(OSPanel **panel)
     if ((*panel)->scroll != NULL)
         osscroll_destroy(&(*panel)->scroll);
 
-    cassert(_oscontrol_num_children((*panel)->control.hwnd) == 0);
+    cassert(_oscontrol_num_children((OSControl *)(*panel)) == 0);
     _oscontrol_destroy((OSControl *)(*panel));
     heap_delete(panel, OSPanel);
 }

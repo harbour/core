@@ -650,7 +650,7 @@ void oswindow_destroy(OSWindow **window)
     }
 
     cassert((*window)->main_panel == NULL);
-    cassert(_oscontrol_num_children((*window)->control.hwnd) == 0);
+    cassert(_oscontrol_num_children((OSControl*)(*window)) == 0);
     listener_destroy(&(*window)->OnMoved);
     listener_destroy(&(*window)->OnResize);
     listener_destroy(&(*window)->OnClose);
@@ -1000,7 +1000,8 @@ void oswindow_stop_modal(OSWindow *window, const uint32_t return_value)
 
 void oswindow_get_origin(const OSWindow *window, real32_t *x, real32_t *y)
 {
-    _oscontrol_get_origin_in_screen(window->control.hwnd, x, y);
+    cassert_no_null(window);
+    _oscontrol_get_origin_in_screen(&window->control, x, y);
 }
 
 /*---------------------------------------------------------------------------*/
