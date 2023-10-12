@@ -22,7 +22,7 @@ void oscontrol_frame(const OSControl *control, OSFrame *rect);
 
 OSWidget *oscontrol_focus_widget(const OSControl *control);
 
-OSWidget *oscontrol_widget_get_focus(void);
+OSWidget *oscontrol_widget_get_focus(OSWindow *window);
 
 void oscontrol_widget_set_focus(OSWidget *widget);
 
@@ -34,13 +34,13 @@ bool_t oscontrol_widget_enable(const OSWidget *widget);
 
 bool_t oscontrol_validate(const OSControl *control, const OSControl *next_control);
 
-bool_t oscontrol_can_close_window(const ArrPt(OSControl) *tabstops);
+bool_t oscontrol_can_close_window(const ArrPt(OSControl) *tabstops, OSWindow *window);
 
 void oscontrol_taborder(ArrPt(OSControl) *tabstops, OSControl *control);
 
-void oscontrol_set_next_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **curtabstop);
+void oscontrol_set_next_tabstop(const ArrPt(OSControl) *tabstops, OSWindow *window, const bool_t tabstop_cycle, OSControl **curtabstop);
 
-void oscontrol_set_previous_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **curtabstop);
+void oscontrol_set_previous_tabstop(const ArrPt(OSControl) *tabstops, OSWindow *window, const bool_t tabstop_cycle, OSControl **curtabstop);
 
 void oscontrol_set_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **tabstop);
 

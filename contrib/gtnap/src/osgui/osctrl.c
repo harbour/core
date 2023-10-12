@@ -35,9 +35,9 @@ static uint32_t i_search_tabstop(const ArrPt(OSControl) *tabstops, OSWidget *wid
 
 /*---------------------------------------------------------------------------*/
 
-bool_t oscontrol_can_close_window(const ArrPt(OSControl) *tabstops)
+bool_t oscontrol_can_close_window(const ArrPt(OSControl) *tabstops, OSWindow *window)
 {
-    OSWidget *widget = oscontrol_widget_get_focus();
+    OSWidget *widget = oscontrol_widget_get_focus(window);
     uint32_t tabindex = i_search_tabstop(tabstops, widget);
     if (tabindex != UINT32_MAX)
     {
@@ -148,12 +148,12 @@ void oscontrol_taborder(ArrPt(OSControl) *tabstops, OSControl *control)
 
 /*---------------------------------------------------------------------------*/
 
-void oscontrol_set_next_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **curtabstop)
+void oscontrol_set_next_tabstop(const ArrPt(OSControl) *tabstops, OSWindow *window, const bool_t tabstop_cycle, OSControl **curtabstop)
 {
     uint32_t size = arrpt_size(tabstops, OSControl);
     if (size > 0)
     {
-        OSWidget *widget = oscontrol_widget_get_focus();
+        OSWidget *widget = oscontrol_widget_get_focus(window);
         uint32_t tabindex = i_search_tabstop(tabstops, widget);
         uint32_t next_tabindex = tabindex;
         bool_t move_tabstop = TRUE;
@@ -194,12 +194,12 @@ void oscontrol_set_next_tabstop(const ArrPt(OSControl) *tabstops, const bool_t t
 
 /*---------------------------------------------------------------------------*/
 
-void oscontrol_set_previous_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **curtabstop)
+void oscontrol_set_previous_tabstop(const ArrPt(OSControl) *tabstops, OSWindow *window, const bool_t tabstop_cycle, OSControl **curtabstop)
 {
     uint32_t size = arrpt_size(tabstops, OSControl);
     if (size > 0)
     {
-        OSWidget *widget = oscontrol_widget_get_focus();
+        OSWidget *widget = oscontrol_widget_get_focus(window);
         uint32_t tabindex = i_search_tabstop(tabstops, widget);
         uint32_t next_tabindex = tabindex;
         bool_t move_tabstop = TRUE;

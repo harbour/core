@@ -559,8 +559,9 @@ OSWidget *oscontrol_focus_widget(const OSControl *control)
 
 /*---------------------------------------------------------------------------*/
 
-OSWidget *oscontrol_widget_get_focus(void)
+OSWidget *oscontrol_widget_get_focus(OSWindow *window)
 {
+    unref(window);
     return (OSWidget*)GetFocus();
 }
 

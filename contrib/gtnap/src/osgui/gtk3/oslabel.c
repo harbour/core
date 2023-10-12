@@ -161,7 +161,7 @@ static void i_set_bg_color(OSLabel *label, const color_t color)
 #if GTK_CHECK_VERSION(3, 22, 0)
     if (label->bgcolor != NULL)
     {
-        _oscontrol_remove_provider(label->label, label->bgcolor);
+        _oscontrol_widget_remove_provider(label->label, label->bgcolor);
         label->bgcolor = NULL;
     }
 

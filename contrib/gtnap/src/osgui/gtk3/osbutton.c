@@ -185,7 +185,7 @@ OSButton *osbutton_create(const button_flag_t flags)
     case ekBUTTON_RADIO:
         widget = gtk_radio_button_new_with_label(NULL, "");
         gtk_button_set_use_underline(GTK_BUTTON(widget), TRUE);
-        _oscontrol_set_css(widget, "radiobutton {padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;}");
+        _oscontrol_widget_set_css(widget, "radiobutton {padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;}");
         button->radio = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(widget), "");
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button->radio), TRUE);
         focus_widget = widget;
@@ -195,7 +195,7 @@ OSButton *osbutton_create(const button_flag_t flags)
     case ekBUTTON_CHECK3:
         widget = gtk_check_button_new();
         gtk_button_set_use_underline(GTK_BUTTON(widget), TRUE);
-        _oscontrol_set_css(widget, "checkbutton {padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;}");
+        _oscontrol_widget_set_css(widget, "checkbutton {padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;}");
         focus_widget = widget;
         break;
     }
@@ -275,7 +275,7 @@ void osbutton_font(OSButton *button, const Font *font)
     const char_t *cssbut = osglobals_css_button();
     cassert_no_null(button);
     cassert(_osgui_button_text_allowed(button->flags) == TRUE);
-    _oscontrol_remove_provider(button->control.widget, button->pfont);
+    _oscontrol_widget_remove_provider(button->control.widget, button->pfont);
     _oscontrol_widget_font(button->control.widget, cssbut, font, &button->pfont);
 }
 
@@ -417,7 +417,7 @@ void osbutton_vpadding(OSButton *button, const real32_t padding)
         uint32_t mpad = (uint32_t)((padding / 2) + .5f);
         char_t css[256];
         bstd_sprintf(css, sizeof(css), "%s {padding-top:%dpx;padding-bottom:%dpx;padding-left:4px;padding-right:4px;min-height:0}", cssbut, mpad, mpad);
-        _oscontrol_set_css(button->control.widget, css);
+        _oscontrol_widget_set_css(button->control.widget, css);
     }
 }
 
