@@ -798,9 +798,9 @@ void oswindow_tabstop(OSWindow *window, const bool_t next)
 {
     cassert_no_null(window);
     if (next == TRUE)
-        oscontrol_set_next_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+        oscontrol_set_next_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
     else
-        oscontrol_set_previous_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+        oscontrol_set_previous_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1204,9 +1204,9 @@ static BOOL i_IsDialogMessage(HWND hDlg, LPMSG lpMsg)
                     SHORT rshif_state = GetAsyncKeyState(VK_RSHIFT);
                     BOOL previous = ((0x8000 & lshif_state) != 0) || ((0x8000 & rshif_state) != 0);
                     if (previous == TRUE)
-                        oscontrol_set_previous_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+                        oscontrol_set_previous_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
                     else
-                        oscontrol_set_next_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+                        oscontrol_set_next_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
                     return TRUE;
                 }
             }
