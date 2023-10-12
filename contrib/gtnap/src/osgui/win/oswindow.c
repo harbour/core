@@ -341,7 +341,6 @@ static bool_t i_press_defbutton(OSWindow *window)
 
 /*---------------------------------------------------------------------------*/
 
-#include <osbs/log.h>
 static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     OSWindow *window = (OSWindow *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
@@ -353,11 +352,11 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
         if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
         {
             i_CURRENT_ACTIVE_WINDOW = hwnd;
-            log_printf("ACTIVATE %p !!!!!!!!!!!", window);
             oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
         }
         else
         {
+            cassert(wParam == WA_INACTIVE);
             if (window->role == ekGUI_ROLE_OVERLAY)
             {
                 if (i_close(window, ekGUI_CLOSE_DEACT) == TRUE)
@@ -880,6 +879,16 @@ void oswindow_detach_window(OSWindow *parent_window, OSWindow *child_window)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_activate(OSWindow *window)
+{
+    cassert_no_null(window);
+    /* Force the tabstop because 'WM_ACTIVATE' is not send if hwnd is the current active */
+    SetActiveWindow(window->control.hwnd);
+    oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void oswindow_launch(OSWindow *window, OSWindow *parent_window)
 {
     cassert_no_null(window);
@@ -900,9 +909,7 @@ void oswindow_launch(OSWindow *window, OSWindow *parent_window)
         _oscontrol_set_visible((OSControl *)window, TRUE);
         window->launch_resize_event = TRUE;
 
-        SetActiveWindow(window->control.hwnd);
-        /* Check if its done by ACTIVATE_EVENT */
-        oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+        i_activate(window);
     }
 }
 
@@ -938,10 +945,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
     window->launch_resize_event = FALSE;
     _oscontrol_set_visible((OSControl *)window, TRUE);
     window->launch_resize_event = TRUE;
-
-    SetActiveWindow(window->control.hwnd);
-    /* Check if its done by ACTIVATE_EVENT */
-    oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+    i_activate(window);
 
     /* Wait until the window is closed */
     ret = _oswindow_message_loop(window);
@@ -956,9 +960,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
             SetWindowPos(parent_window->control.hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
         }
 
-        SetActiveWindow(parent_window->control.hwnd);
-        /* Check if its done by ACTIVATE_EVENT */
-        oscontrol_set_tabstop(parent_window->tabstops, parent_window->tabstop_cycle, &parent_window->ctabstop);
+        i_activate(parent_window);
     }
 
     return ret;
@@ -1345,11 +1347,7 @@ uint32_t _oswindow_message_loop(OSWindow *window)
                    Will this we ensure the correct message processing
                 */
                 if (GetActiveWindow() != window->control.hwnd)
-                {
-                    SetActiveWindow(window->control.hwnd);
-                    /* Check if its done by ACTIVATE_EVENT */
-                    oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
-                }
+                    i_activate(window);
             }
 
             if (i_message((void *)&msg, accel) == FALSE)
