@@ -518,7 +518,7 @@ void osview_OnNotify(OSView *view, Listener *listener)
 void osview_scroll(OSView *view, const real32_t x, const real32_t y)
 {
     cassert_no_null(view);
-    osscroll_set(view->scroll, x >= 0 ? (int)x : INT_MAX, y >= 0 ? (int)y : INT_MAX, FALSE);
+    osscroll_set(view->scroll, x >= 0 ? (int)x : INT32_MAX, y >= 0 ? (int)y : INT32_MAX, FALSE);
 }
 
 /*---------------------------------------------------------------------------*/

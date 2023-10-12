@@ -24,7 +24,6 @@
 #include <sewer/warn.hxx>
 
 typedef struct _view_listeners_t ViewListeners;
-typedef struct _recti_t RectI;
 
 struct _view_listeners_t
 {
@@ -49,14 +48,6 @@ struct _view_listeners_t
     Listener *OnWheel;
     Listener *OnKeyDown;
     Listener *OnKeyUp;
-};
-
-struct _recti_t
-{
-    int left;
-    int top;
-    int right;
-    int bottom;
 };
 
 struct _oscontrol_t

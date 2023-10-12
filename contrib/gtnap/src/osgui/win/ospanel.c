@@ -770,5 +770,5 @@ void ospanel_scroll(OSPanel *panel, const int32_t x, const int32_t y)
 {
     cassert_no_null(panel);
     if (panel->scroll != NULL)
-        osscroll_set(panel->scroll, (int)x, (int)y, TRUE);
+        osscroll_set(panel->scroll, x, y, TRUE);
 }

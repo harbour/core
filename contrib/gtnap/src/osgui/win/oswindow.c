@@ -208,7 +208,7 @@ static bool_t i_close(OSWindow *window, const gui_close_t close_origin)
 
     /* Checks if the current control allows the window to be closed */
     if (close_origin == ekGUI_CLOSE_INTRO)
-        closed = oscontrol_can_close_window(window->tabstops);
+        closed = oscontrol_can_close_window(window->tabstops, window);
 
     /* Notify the user and check if allows the window to be closed */
     if (closed == TRUE && window->OnClose != NULL)
@@ -1431,7 +1431,7 @@ bool_t _oswindow_in_tablist(OSControl *control)
     cassert_no_null(control);
     window = i_root(control->hwnd);
     cassert_no_null(window);
-    tabindex = arrpt_find(window->tabstops, control, OSControl); 
+    tabindex = arrpt_find(window->tabstops, control, OSControl);
 
     if (tabindex == UINT32_MAX)
         return FALSE;

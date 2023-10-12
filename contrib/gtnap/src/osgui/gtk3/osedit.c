@@ -14,6 +14,7 @@
 #include "osedit.inl"
 #include "osgui.inl"
 #include "osglobals.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "ospanel.inl"
 #include "oswindow.inl"
@@ -893,7 +894,26 @@ void _osedit_unset_focus(OSEdit *edit)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control)
+void _osedit_detach_and_destroy(OSEdit **edit, OSPanel *panel)
+{
+    cassert_no_null(edit);
+    osedit_detach(*edit, panel);
+    osedit_destroy(edit);
+}
+
+/*---------------------------------------------------------------------------*/
+
+GtkWidget *_osedit_focus(OSEdit *edit)
+{
+    cassert_no_null(edit);
+    if (edit->tview != NULL)
+        return edit->tview;
+    return edit->control.widget;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t osedit_validate(const OSEdit *edit, const OSControl *next_control)
 {
     bool_t lost_focus = TRUE;
     cassert_no_null(edit);
@@ -923,23 +943,4 @@ bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control)
     }
 
     return lost_focus;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osedit_detach_and_destroy(OSEdit **edit, OSPanel *panel)
-{
-    cassert_no_null(edit);
-    osedit_detach(*edit, panel);
-    osedit_destroy(edit);
-}
-
-/*---------------------------------------------------------------------------*/
-
-GtkWidget *_osedit_focus(OSEdit *edit)
-{
-    cassert_no_null(edit);
-    if (edit->tview != NULL)
-        return edit->tview;
-    return edit->control.widget;
 }
