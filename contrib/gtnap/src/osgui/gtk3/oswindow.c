@@ -62,8 +62,8 @@ struct _oswindow_t
     Listener *OnResize;
     Listener *OnClose;
     ArrSt(HotKey) *hotkeys;
-    ArrPt(OSControl) *tabstops_;
-    OSControl *ctabstop_;
+    ArrPt(OSControl) *tabstops;
+    OSControl *ctabstop;
     OSButton *defbutton;
     bool_t destroy_main_view;
     bool_t is_resizable;
@@ -93,7 +93,7 @@ static bool_t i_close(OSWindow *window, const gui_close_t close_origin)
 
     /* Checks if the current control allows the window to be closed */
     if (close_origin == ekGUI_CLOSE_INTRO)
-        closed = oscontrol_can_close_window(window->tabstops_, window);
+        closed = oscontrol_can_close_window(window->tabstops, window);
 
     /* Notify the user and check if allows the window to be closed */
     if (closed == TRUE && window->OnClose != NULL)
@@ -118,178 +118,6 @@ static gboolean i_OnClose(GtkWidget *widget, GdkEvent *event, OSWindow *window)
     unref(event);
     return (gboolean)i_close(window, ekGUI_CLOSE_BUTTON);
 }
-
-// /*---------------------------------------------------------------------------*/
-
-// static __INLINE GtkWidget *i_focus_widget(const OSControl *control)
-// {
-//     cassert_no_null(control);
-//     switch (control->type)
-//     {
-//     case ekGUI_TYPE_LABEL:
-//     case ekGUI_TYPE_PROGRESS:
-//         return NULL;
-
-//     case ekGUI_TYPE_SLIDER:
-//     case ekGUI_TYPE_UPDOWN:
-//         return control->widget;
-
-//     case ekGUI_TYPE_TEXTVIEW:
-//         return _ostext_focus((OSText *)control);
-
-//     case ekGUI_TYPE_CUSTOMVIEW:
-//         return _osview_focus((OSView *)control);
-
-//     case ekGUI_TYPE_EDITBOX:
-//         return _osedit_focus((OSEdit *)control);
-
-//     case ekGUI_TYPE_BUTTON:
-//         return _osbutton_focus((OSButton *)control);
-
-//     case ekGUI_TYPE_POPUP:
-//         return _ospopup_focus((OSPopUp *)control);
-
-//     case ekGUI_TYPE_COMBOBOX:
-//         return _oscombo_focus((OSCombo *)control);
-
-//     case ekGUI_TYPE_TABLEVIEW:
-//     case ekGUI_TYPE_TREEVIEW:
-//     case ekGUI_TYPE_BOXVIEW:
-//     case ekGUI_TYPE_SPLITVIEW:
-//     case ekGUI_TYPE_PANEL:
-//     case ekGUI_TYPE_LINE:
-//     case ekGUI_TYPE_HEADER:
-//     case ekGUI_TYPE_WINDOW:
-//     case ekGUI_TYPE_TOOLBAR:
-//         cassert_default();
-//     }
-
-//     return NULL;
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// static __INLINE uint32_t i_search_tabstop(const OSControl **tabstop, const uint32_t size, GtkWidget *widget)
-// {
-//     uint32_t i;
-//     if (widget == NULL)
-//         return UINT32_MAX;
-
-//     for (i = 0; i < size; ++i)
-//         if (i_focus_widget(tabstop[i]) == widget)
-//             return i;
-
-//     return UINT32_MAX;
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// static void i_control_rect(const OSControl *control, RectI *rect)
-// {
-//     real32_t x, y, w, h;
-//     cassert_no_null(rect);
-//     _oscontrol_get_origin(control, &x, &y);
-//     _oscontrol_get_size(control, &w, &h);
-//     rect->left = (int)x;
-//     rect->top = (int)y;
-//     rect->right = (int)(x + w);
-//     rect->bottom = (int)(y + h);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// static const OSControl *i_effective_tabstop(const OSControl **tabstop, const uint32_t size, const uint32_t index, const bool_t reverse)
-// {
-//     uint32_t idx = index, i;
-//     cassert(index < size);
-//     for (i = 0; i < size; ++i)
-//     {
-//         const OSControl *control = tabstop[idx];
-//         GtkWidget *widget = i_focus_widget(control);
-//         if (widget && gtk_widget_is_sensitive(widget) && gtk_widget_get_visible(widget))
-//             return control;
-
-//         if (reverse == TRUE)
-//         {
-//             if (idx == 0)
-//                 idx = size - 1;
-//             else
-//                 idx -= 1;
-//         }
-//         else
-//         {
-//             if (idx == size - 1)
-//                 idx = 0;
-//             else
-//                 idx += 1;
-//         }
-//     }
-
-//     return NULL;
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// static void i_set_tabstop(const OSControl *tabstop, GtkWidget **ctabstop)
-// {
-//     GtkWidget *widget = i_focus_widget(tabstop);
-//     GtkWidget *parent = NULL;
-//     OSControl *pcontrol = NULL;
-//     cassert_no_null(tabstop);
-//     cassert_no_null(ctabstop);
-//     *ctabstop = widget;
-//     gtk_widget_grab_focus(widget);
-
-//     parent = gtk_widget_get_parent(tabstop->widget);
-//     /*const gchar *ptype = G_OBJECT_TYPE_NAME(parent);*/
-//     pcontrol = (OSControl *)g_object_get_data(G_OBJECT(parent), "OSControl");
-//     cassert_no_null(pcontrol);
-//     if (pcontrol->type == ekGUI_TYPE_PANEL)
-//     {
-//         RectI prect, crect;
-//         int scroll_x = INT_MAX, scroll_y = INT_MAX;
-
-//         i_control_rect(tabstop, &crect);
-//         _ospanel_scroll_frame((OSPanel *)pcontrol, &prect);
-
-//         if (prect.left > crect.left)
-//             scroll_x = (crect.left - i_SCROLL_OFFSET);
-//         else if (prect.right < crect.right)
-//             scroll_x = (crect.right + i_SCROLL_OFFSET) - (prect.right - prect.left);
-
-//         if (prect.top > crect.top)
-//             scroll_y = (crect.top - i_SCROLL_OFFSET);
-//         else if (prect.bottom < crect.bottom)
-//             scroll_y = (crect.bottom + i_SCROLL_OFFSET) - (prect.bottom - prect.top);
-
-//         if (scroll_x != INT_MAX || scroll_y != INT_MAX)
-//             _ospanel_scroll((OSPanel *)pcontrol, scroll_x, scroll_y);
-//     }
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// static void i_set_ctabstop(const ArrPt(OSControl) * tabstops, GtkWidget **ctabstop)
-// {
-//     uint32_t size = arrpt_size(tabstops, OSControl);
-//     cassert_no_null(ctabstop);
-//     if (size > 0)
-//     {
-//         const OSControl **tabstop = arrpt_all_const(tabstops, OSControl);
-//         const OSControl *control = NULL;
-//         uint32_t tabindex = 0;
-
-//         if (*ctabstop == NULL)
-//             *ctabstop = tabstop[0]->widget;
-
-//         tabindex = i_search_tabstop(tabstop, size, *ctabstop);
-//         if (tabindex == UINT32_MAX)
-//             tabindex = 0;
-
-//         control = i_effective_tabstop(tabstop, size, tabindex, FALSE);
-//         i_set_tabstop(control, ctabstop);
-//     }
-// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -348,95 +176,11 @@ static gboolean i_OnConfigure(GtkWidget *widget, GdkEventConfigure *event, OSWin
     else
     {
         /* When window is moved dragging the titlebar, the focus is lost */
-        oscontrol_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+        oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
     }
 
     return FALSE;
 }
-
-/*---------------------------------------------------------------------------*/
-
-// static void i_set_next_tabstop(const ArrPt(OSControl) * tabstops, const bool_t tabstop_cycle, GtkWidget *widget, GtkWidget **ctabstop)
-// {
-//     uint32_t size = arrpt_size(tabstops, OSControl);
-//     if (size > 0)
-//     {
-//         const OSControl **tabstop = arrpt_all_const(tabstops, OSControl);
-//         uint32_t tabindex = i_search_tabstop(tabstop, size, widget);
-//         uint32_t next_tabindex = tabindex;
-//         bool_t move_tabstop = TRUE;
-//         const OSControl *next_control = NULL;
-
-//         if (next_tabindex == UINT32_MAX)
-//             next_tabindex = 0;
-
-//         if (next_tabindex == size - 1)
-//         {
-//             if (tabstop_cycle == TRUE)
-//                 next_tabindex = 0;
-//         }
-//         else
-//         {
-//             next_tabindex += 1;
-//         }
-
-//         next_control = i_effective_tabstop(tabstop, size, next_tabindex, FALSE);
-
-//         if (tabindex != UINT32_MAX)
-//         {
-//             if (tabstop[tabindex]->type == ekGUI_TYPE_EDITBOX)
-//                 move_tabstop = _osedit_validate((const OSEdit *)tabstop[tabindex], next_control);
-//         }
-
-//         if (move_tabstop == TRUE)
-//         {
-//             if (next_tabindex != tabindex)
-//                 i_set_tabstop(next_control, ctabstop);
-//         }
-//     }
-// }
-
-/*---------------------------------------------------------------------------*/
-
-// static void i_set_previous_tabstop(const ArrPt(OSControl) * tabstops, const bool_t tabstop_cycle, GtkWidget *widget, GtkWidget **ctabstop)
-// {
-//     uint32_t size = arrpt_size(tabstops, OSControl);
-//     if (size > 0)
-//     {
-//         const OSControl **tabstop = arrpt_all_const(tabstops, OSControl);
-//         uint32_t tabindex = i_search_tabstop(tabstop, size, widget);
-//         uint32_t next_tabindex = tabindex;
-//         bool_t move_tabstop = TRUE;
-//         const OSControl *next_control = NULL;
-
-//         if (next_tabindex == UINT32_MAX)
-//             next_tabindex = 0;
-
-//         if (next_tabindex == 0)
-//         {
-//             if (tabstop_cycle == TRUE)
-//                 next_tabindex = size - 1;
-//         }
-//         else
-//         {
-//             next_tabindex -= 1;
-//         }
-
-//         next_control = i_effective_tabstop(tabstop, size, next_tabindex, TRUE);
-
-//         if (tabindex != UINT32_MAX)
-//         {
-//             if (tabstop[tabindex]->type == ekGUI_TYPE_EDITBOX)
-//                 move_tabstop = _osedit_validate((const OSEdit *)tabstop[tabindex], next_control);
-//         }
-
-//         if (move_tabstop == TRUE)
-//         {
-//             if (next_tabindex != tabindex)
-//                 i_set_tabstop(next_control, ctabstop);
-//         }
-//     }
-// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -450,12 +194,12 @@ static gboolean i_OnKeyPress(GtkWidget *widget, GdkEventKey *event, OSWindow *wi
     switch (key)
     {
     case GDK_KEY_Tab:
-        oscontrol_set_next_tabstop(window->tabstops_, window, window->tabstop_cycle, &window->ctabstop_);
+        oscontrol_set_next_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
         return TRUE;
 
     /* https://mail.gnome.org/archives/gtk-list/1999-August/msg00127.html */
     case GDK_KEY_ISO_Left_Tab:
-        oscontrol_set_previous_tabstop(window->tabstops_, window, window->tabstop_cycle, &window->ctabstop_);
+        oscontrol_set_previous_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
         return TRUE;
 
     case GDK_KEY_Escape:
@@ -547,7 +291,7 @@ static gboolean i_OnWindowState(GtkWindow *widget, GdkEventWindowState *event, O
     cassert_no_null(event);
     cassert_no_null(window);
     if (event->new_window_state & GDK_WINDOW_STATE_FOCUSED)
-        oscontrol_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+        oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
     return FALSE;
 }
 
@@ -563,7 +307,7 @@ OSWindow *oswindow_create(const uint32_t flags)
     _oscontrol_init((OSControl *)window, ekGUI_TYPE_WINDOW, widget, widget, FALSE);
     window->flags = flags;
     window->destroy_main_view = TRUE;
-    window->tabstops_ = arrpt_create(OSControl);
+    window->tabstops = arrpt_create(OSControl);
     window->is_resizable = (flags & ekWINDOW_RESIZE) == ekWINDOW_RESIZE ? TRUE : FALSE;
     window->resize_event = TRUE;
     window->tabstop_cycle = TRUE;
@@ -671,7 +415,7 @@ void oswindow_destroy(OSWindow **window)
     listener_destroy(&(*window)->OnMoved);
     listener_destroy(&(*window)->OnResize);
     listener_destroy(&(*window)->OnClose);
-    arrpt_destroy(&(*window)->tabstops_, NULL, OSControl);
+    arrpt_destroy(&(*window)->tabstops, NULL, OSControl);
     arrst_destopt(&(*window)->hotkeys, i_remove_hotkey, HotKey);
     cassert(i_num_children(GTK_CONTAINER((*window)->control.widget)) == 1);
     cassert(i_num_children(GTK_CONTAINER(gtk_bin_get_child(GTK_BIN((*window)->control.widget)))) == 0);
@@ -799,7 +543,7 @@ static void i_disable_widget_focus(GtkWidget *widget, gpointer nullpt)
 void oswindow_taborder(OSWindow *window, OSControl *control)
 {
     cassert_no_null(window);
-    oscontrol_taborder(window->tabstops_, control);
+    oscontrol_taborder(window->tabstops, control);
 
     if (control != NULL)
     {
@@ -821,9 +565,9 @@ void oswindow_tabstop(OSWindow *window, const bool_t next)
 {
     cassert_no_null(window);
     if (next == TRUE)
-        oscontrol_set_next_tabstop(window->tabstops_, window, window->tabstop_cycle, &window->ctabstop_);
+        oscontrol_set_next_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
     else
-        oscontrol_set_previous_tabstop(window->tabstops_, window, window->tabstop_cycle, &window->ctabstop_);
+        oscontrol_set_previous_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -840,10 +584,10 @@ void oswindow_focus(OSWindow *window, OSControl *control)
 {
     cassert_no_null(window);
     cassert_no_null(control);
-    if (arrpt_find(window->tabstops_, control, OSControl) != UINT32_MAX)
+    if (arrpt_find(window->tabstops, control, OSControl) != UINT32_MAX)
     {
-        window->ctabstop_ = control;
-        oscontrol_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+        window->ctabstop = control;
+        oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
     }
 }
 
@@ -897,7 +641,7 @@ void oswindow_launch(OSWindow *window, OSWindow *parent_window)
     unref(parent_window);
     window->resize_event = FALSE;
     gtk_widget_show(window->control.widget);
-    oscontrol_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+    oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -915,7 +659,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
 {
     cassert_no_null(window);
     cassert(window->runloop == NULL);
-    oscontrol_set_tabstop(window->tabstops_, window->tabstop_cycle, &window->ctabstop_);
+    oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
     gtk_window_set_modal(GTK_WINDOW(window->control.widget), TRUE);
     window->resize_event = FALSE;
     window->runloop = g_main_loop_new(NULL, FALSE);
@@ -929,7 +673,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
     gtk_window_set_transient_for(GTK_WINDOW(window->control.widget), NULL);
 
     if (parent_window != NULL)
-        oscontrol_set_tabstop(parent_window->tabstops_, parent_window->tabstop_cycle, &parent_window->ctabstop_);
+        oscontrol_set_tabstop(parent_window->tabstops, parent_window->tabstop_cycle, &parent_window->ctabstop);
 
     window->runloop = NULL;
     return window->modal_return;
@@ -1147,7 +891,7 @@ void _oswindow_unset_focus(OSWindow *window)
     OSControl *control = NULL;
     cassert_no_null(window);
     focus_widget = gtk_window_get_focus(GTK_WINDOW(window->control.widget));
-    arrpt_foreach(tabstop, window->tabstops_, OSControl)
+    arrpt_foreach(tabstop, window->tabstops, OSControl)
     {
         GtkWidget *widget = (GtkWidget*)oscontrol_focus_widget(tabstop);
         if (widget == focus_widget)
@@ -1221,7 +965,7 @@ bool_t _oswindow_in_tablist(OSControl *control)
     cassert_no_null(control);
     window = i_root(control->widget);
     cassert_no_null(window);
-    tabindex = arrpt_find(window->tabstops_, control, OSControl);
+    tabindex = arrpt_find(window->tabstops, control, OSControl);
 
     if (tabindex == UINT32_MAX)
         return FALSE;
