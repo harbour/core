@@ -176,7 +176,7 @@ static gboolean i_OnConfigure(GtkWidget *widget, GdkEventConfigure *event, OSWin
     else
     {
         /* When window is moved dragging the titlebar, the focus is lost */
-        oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+        oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
     }
 
     return FALSE;
@@ -291,7 +291,7 @@ static gboolean i_OnWindowState(GtkWindow *widget, GdkEventWindowState *event, O
     cassert_no_null(event);
     cassert_no_null(window);
     if (event->new_window_state & GDK_WINDOW_STATE_FOCUSED)
-        oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+        oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
     return FALSE;
 }
 
@@ -587,7 +587,7 @@ void oswindow_focus(OSWindow *window, OSControl *control)
     if (arrpt_find(window->tabstops, control, OSControl) != UINT32_MAX)
     {
         window->ctabstop = control;
-        oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+        oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
     }
 }
 
@@ -641,7 +641,7 @@ void oswindow_launch(OSWindow *window, OSWindow *parent_window)
     unref(parent_window);
     window->resize_event = FALSE;
     gtk_widget_show(window->control.widget);
-    oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+    oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -659,7 +659,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
 {
     cassert_no_null(window);
     cassert(window->runloop == NULL);
-    oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+    oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
     gtk_window_set_modal(GTK_WINDOW(window->control.widget), TRUE);
     window->resize_event = FALSE;
     window->runloop = g_main_loop_new(NULL, FALSE);
@@ -673,7 +673,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
     gtk_window_set_transient_for(GTK_WINDOW(window->control.widget), NULL);
 
     if (parent_window != NULL)
-        oscontrol_set_tabstop(parent_window->tabstops, parent_window->tabstop_cycle, &parent_window->ctabstop);
+        oscontrol_set_tabstop(parent_window->tabstops, window, parent_window->tabstop_cycle, &parent_window->ctabstop);
 
     window->runloop = NULL;
     return window->modal_return;
