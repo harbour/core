@@ -26,6 +26,7 @@
 #include "ostext.inl"
 #include "osupdown.inl"
 #include "osview.inl"
+#include "oswindow.inl"
 
 #include <draw2d/color.h>
 #include <draw2d/font.h>
@@ -471,7 +472,7 @@ void _oscontrol_get_origin(const NSView *object, real32_t *x, real32_t *y)
     cassert_no_null(y);
 
     rect = [object frame];
-    
+
     /* This block must be removed */
     if (*x < 0.f)
     {
@@ -631,7 +632,6 @@ gui_type_t oscontrol_type(const OSControl *control)
     /* Unknown control type */
     cassert(FALSE);
     return ENUM_MAX(gui_type_t);
-    
 }
 
 /*---------------------------------------------------------------------------*/
@@ -673,29 +673,31 @@ OSWidget *oscontrol_focus_widget(const OSControl *control)
 
 OSWidget *oscontrol_widget_get_focus(OSWindow *window)
 {
-    unref(window);
-    return NULL;
+    return (OSWidget*)_oswindow_get_focus((NSWindow*)window);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void oscontrol_widget_set_focus(OSWidget *widget)
+void oscontrol_widget_set_focus(OSWidget *widget, OSWindow *window)
 {
-    unref(widget);
+    _oswindow_set_focus((NSWindow*)window, (NSView*)widget);
 }
 
 /*---------------------------------------------------------------------------*/
 
 bool_t oscontrol_widget_visible(const OSWidget *widget)
 {
-    unref(widget);
-    return FALSE;
+    cassert_no_null(widget);
+    return (bool_t)![(NSView*)widget isHidden];
 }
 
 /*---------------------------------------------------------------------------*/
 
 bool_t oscontrol_widget_enable(const OSWidget *widget)
 {
-    unref(widget);
-    return FALSE;
+    cassert_no_null(widget);
+    if ([(NSObject*)widget isKindOfClass:[NSControl class]] == YES)
+        return (bool_t)[(NSControl*)widget isEnabled];
+    else
+        return TRUE;
 }

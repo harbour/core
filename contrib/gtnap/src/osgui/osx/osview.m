@@ -159,7 +159,7 @@ static void i_area_expand(EvDraw *params, const real32_t area_width, const real3
 
 /*---------------------------------------------------------------------------*/
 
-- (BOOL) resignFirstResponder
+-(BOOL)resignFirstResponder
 {
     if (self->listeners.is_enabled == YES && self->OnFocus != NULL)
     {

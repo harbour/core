@@ -93,7 +93,7 @@ static OSControl *i_effective_tabstop(const ArrPt(OSControl) *tabstops, const ui
 
 /*---------------------------------------------------------------------------*/
 
-static void i_set_tabstop(const OSControl *tabstop)
+static void i_set_tabstop(const OSControl *tabstop, OSWindow *window)
 {
     OSWidget *widget = oscontrol_focus_widget(tabstop);
     OSControl *parent = oscontrol_parent(tabstop);
@@ -101,7 +101,7 @@ static void i_set_tabstop(const OSControl *tabstop)
 
     cassert_no_null(parent);
     ptype = oscontrol_type(parent);
-    oscontrol_widget_set_focus(widget);
+    oscontrol_widget_set_focus(widget, window);
 
     if (parent != NULL && ptype == ekGUI_TYPE_PANEL)
     {
@@ -185,7 +185,7 @@ void oscontrol_set_next_tabstop(const ArrPt(OSControl) *tabstops, OSWindow *wind
             if (next_tabindex != tabindex)
             {
                 cassert_no_null(curtabstop);
-                i_set_tabstop(next_control);
+                i_set_tabstop(next_control, window);
                 *curtabstop = next_control;
             }
         }
@@ -231,7 +231,7 @@ void oscontrol_set_previous_tabstop(const ArrPt(OSControl) *tabstops, OSWindow *
             if (next_tabindex != tabindex)
             {
                 cassert_no_null(curtabstop);
-                i_set_tabstop(next_control);
+                i_set_tabstop(next_control, window);
                 *curtabstop = next_control;
             }
         }
@@ -240,7 +240,7 @@ void oscontrol_set_previous_tabstop(const ArrPt(OSControl) *tabstops, OSWindow *
 
 /*---------------------------------------------------------------------------*/
 
-void oscontrol_set_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabstop_cycle, OSControl **tabstop)
+void oscontrol_set_tabstop(const ArrPt(OSControl) *tabstops, OSWindow *window, const bool_t tabstop_cycle, OSControl **tabstop)
 {
     uint32_t size = arrpt_size(tabstops, OSControl);
     cassert_no_null(tabstop);
@@ -262,7 +262,7 @@ void oscontrol_set_tabstop(const ArrPt(OSControl) *tabstops, const bool_t tabsto
         control = i_effective_tabstop(tabstops, tabindex, FALSE, tabstop_cycle);
         if (control != NULL)
         {
-            i_set_tabstop(control);
+            i_set_tabstop(control, window);
             *tabstop = control;
         }
     }

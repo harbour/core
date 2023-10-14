@@ -659,9 +659,10 @@ OSWidget *oscontrol_widget_get_focus(OSWindow *window)
 
 /*---------------------------------------------------------------------------*/
 
-void oscontrol_widget_set_focus(OSWidget *widget)
+void oscontrol_widget_set_focus(OSWidget *widget, OSWindow *window)
 {
     cassert_no_null(widget);
+    unref(window);
     gtk_widget_grab_focus((GtkWidget*)widget);
 }
 

@@ -773,27 +773,30 @@ static void i_compute_cell_size(GtNap *gtnap)
     cassert_no_null(gtnap);
 
     /* Create an impostor window, only for measure the real height of buttons and edits */
-    {
-        Panel *panel = panel_create();
-        Button *button = button_push();
-        Edit *edit = edit_create();
-        Window *window = window_create(ekWINDOW_STD | ekWINDOW_OFFSCREEN);
-        Layout *layout = layout_create(1, 2);
-        button_text(button, "DEMO");
-        button_font(button, gtnap->reduced_font);
-        button_vpadding(button, i_button_vpadding());
-        edit_font(edit, gtnap->reduced_font);
-        edit_vpadding(edit, i_edit_vpadding());
-        layout_button(layout, button, 0, 0);
-        layout_edit(layout, edit, 0, 1);
-        panel_layout(panel, layout);
-        window_panel(window, panel);
-        window_show(window);
-        bh = (uint32_t)button_get_height(button);
-        eh = (uint32_t)edit_get_height(edit);
-        window_destroy(&window);
-    }
+//    {
+//        Panel *panel = panel_create();
+//        Button *button = button_push();
+//        Edit *edit = edit_create();
+//        Window *window = window_create(ekWINDOW_STD | ekWINDOW_OFFSCREEN);
+//        Layout *layout = layout_create(1, 2);
+//        button_text(button, "DEMO");
+//        button_font(button, gtnap->reduced_font);
+//        button_vpadding(button, i_button_vpadding());
+//        edit_font(edit, gtnap->reduced_font);
+//        edit_vpadding(edit, i_edit_vpadding());
+//        layout_button(layout, button, 0, 0);
+//        layout_edit(layout, edit, 0, 1);
+//        panel_layout(panel, layout);
+//        window_panel(window, panel);
+//        window_show(window);
+//        bh = (uint32_t)button_get_height(button);
+//        eh = (uint32_t)edit_get_height(edit);
+//        window_destroy(&window);
+//    }
 
+    bh = 25;
+    eh = 25;
+    
     {
         real32_t w, h;
         font_extents(gtnap->global_font, "OOOOOO", -1, &w, &h);

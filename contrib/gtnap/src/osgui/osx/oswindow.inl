@@ -18,9 +18,8 @@ BOOL _oswindow_in_destroy(NSWindow *window);
 
 NSView *_oswindow_main_view(OSWindow *window);
 
-void _oswindow_focus_edit(NSWindow *window, NSView *edit);
+NSView *_oswindow_get_focus(NSWindow *window);
 
-NSView *_oswindow_get_focus_edit(NSWindow *window);
-
+void _oswindow_set_focus(NSWindow *window, NSView *view);
 
 __END_C

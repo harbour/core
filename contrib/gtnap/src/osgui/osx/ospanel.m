@@ -487,9 +487,8 @@ void _ospanel_detach_control(OSPanel *panel, NSView *control)
 
 bool_t ospanel_with_scroll(const OSPanel *panel)
 {
-    unref(panel);
-    cassert(FALSE);
-    return FALSE;
+    OSXPanel *lpanel = i_get_panel(panel);
+    return (bool_t)(lpanel->scroll != nil);
 }
 
 /*---------------------------------------------------------------------------*/
