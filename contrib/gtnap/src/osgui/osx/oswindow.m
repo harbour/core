@@ -288,7 +288,8 @@ static void i_OnFocus(NSResponder *resp, const bool_t focus)
 {
     /* '231' Comes from OSXEdit intro keyDown */
     unsigned short code = (theEvent == (NSEvent*)231) ? kVK_Return : [theEvent keyCode];
-
+//    NSResponder *resp = [self firstResponder];
+//    NSResponder *next = [resp nextResponder];
     if (code == kVK_Tab)
     {
         NSEventModifierFlags flags = [theEvent modifierFlags];
@@ -334,6 +335,15 @@ static void i_OnFocus(NSResponder *resp, const bool_t focus)
 
     }
 
+//    if (self->ctabstop != nil)
+//    {
+//        NSResponder *resp = (NSResponder*)self->ctabstop;
+//        if ([resp isKindOfClass:[NSScrollView class]] == YES)
+//            resp = [(NSScrollView*)resp documentView];
+//
+//        [resp keyDown:theEvent];
+//
+//    }
     [super keyDown:theEvent];
 }
 
@@ -717,7 +727,16 @@ void oswindow_launch(OSWindow *window, OSWindow *parent_window)
     }
 
     oscontrol_set_tabstop(windowp->tabstops, window, windowp->tabstop_cycle, &windowp->ctabstop);
-    [windowp makeKeyAndOrderFront:(OSXWindow*)parent];
+    
+    // https://developer.apple.com/forums/thread/729496
+    // I started seeing same warnings but they weren't there before.
+    // Not sure if some behaviour on macOS changed or is just noise, but to on the safe side
+    // I changed my implementation to open the first window on my app.
+    // The key is to use orderFrontRegardless() instead of makeKeyAndOrderFront(nil)
+    if (parent != nil)
+        [windowp makeKeyAndOrderFront:(OSXWindow*)parent];
+    else
+        [windowp orderFrontRegardless];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -756,7 +775,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
 {
     OSXWindow *windowp = (OSXWindow*)window;
     OSXWindow *pwindowp = (OSXWindow*)parent_window;
-    OSXWindow *front_window = nil;
+    OSXWindow *wfront = nil;
     NSInteger ret;
     cassert_no_null(window);
     cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
@@ -764,15 +783,20 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
     if (pwindowp != nil)
     {
         cassert([(NSResponder*)parent_window isKindOfClass:[OSXWindow class]] == YES);
-        front_window = pwindowp;
         [pwindowp setWorksWhenModal:NO];
-    }
-    else
-    {
-        front_window = windowp;
+        wfront = pwindowp;
     }
 
-    [windowp makeKeyAndOrderFront:nil];
+    // https://developer.apple.com/forums/thread/729496
+    // I started seeing same warnings but they weren't there before.
+    // Not sure if some behaviour on macOS changed or is just noise, but to on the safe side
+    // I changed my implementation to open the first window on my app.
+    // The key is to use orderFrontRegardless() instead of makeKeyAndOrderFront(nil)
+    if (wfront != nil)
+        [windowp makeKeyAndOrderFront:nil];
+    else
+        [windowp orderFrontRegardless];
+    
     oscontrol_set_tabstop(windowp->tabstops, window, windowp->tabstop_cycle, &windowp->ctabstop);
     ret = [NSApp runModalForWindow:windowp];
 
@@ -943,6 +967,14 @@ NSView *_oswindow_get_focus(NSWindow *window)
     cassert_no_null(window);
     cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     resp = [(OSXWindow*)window firstResponder];
+    
+    // The firstResponder is the window itself (no focused control)
+    if ([resp isKindOfClass:[OSXWindow class]] == YES)
+    {
+        cassert((OSXWindow*)window == resp);
+        return nil;
+    }
+    
     cassert([resp isKindOfClass:[NSView class]] == YES);
     return (NSView*)resp;
 }
@@ -951,12 +983,17 @@ NSView *_oswindow_get_focus(NSWindow *window)
 
 void _oswindow_set_focus(NSWindow *window, NSView *view)
 {
+    BOOL ok = NO;
+    //NSResponder *resp = nil;
     cassert_no_null(window);
     cassert_no_null(view);
     cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     cassert([view isKindOfClass:[NSView class]] == YES);
-    if ([view isKindOfClass:[NSScrollView class]] == YES)
-        [(OSXWindow*)window makeFirstResponder:[(NSScrollView*)view documentView]];
-    else
-        [(OSXWindow*)window makeFirstResponder:view];
+//    if ([view isKindOfClass:[NSScrollView class]] == YES)
+//        resp = [(NSScrollView*)view documentView];
+//    else
+//        resp = view;
+    ok = [(OSXWindow*)window makeFirstResponder:view];
+    cassert_unref(ok == YES, ok);
+    //resp = [(OSXWindow*)window firstResponder];
 }
