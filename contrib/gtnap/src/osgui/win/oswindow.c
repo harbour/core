@@ -352,7 +352,7 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
         if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
         {
             i_CURRENT_ACTIVE_WINDOW = hwnd;
-            oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+            oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
         }
         else
         {
@@ -821,7 +821,7 @@ void oswindow_focus(OSWindow *window, OSControl *control)
     if (arrpt_find(window->tabstops, control, OSControl) != UINT32_MAX)
     {
         window->ctabstop = control;
-        oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+        oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
     }
 }
 
@@ -884,7 +884,7 @@ static void i_activate(OSWindow *window)
     cassert_no_null(window);
     /* Force the tabstop because 'WM_ACTIVATE' is not send if hwnd is the current active */
     SetActiveWindow(window->control.hwnd);
-    oscontrol_set_tabstop(window->tabstops, window->tabstop_cycle, &window->ctabstop);
+    oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
 }
 
 /*---------------------------------------------------------------------------*/
