@@ -16,6 +16,7 @@
 #include "osgui_win.inl"
 #include "osbutton.inl"
 #include "osedit.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "oscombo.inl"
 #include "osmenuitem.inl"
@@ -69,9 +70,9 @@ struct _oswindow_t
     Listener *OnMoved;
     Listener *OnResize;
     Listener *OnClose;
-    ArrSt(HotKey) * hotkeys;
-    ArrPt(OSControl) * tabstops;
-    HWND ctabstop;
+    ArrSt(HotKey) *hotkeys;
+    ArrPt(OSControl) *tabstops;
+    OSControl *ctabstop;
     HCURSOR cursor;
     OSButton *defbutton;
     bool_t destroy_main_view;
@@ -84,7 +85,6 @@ DeclPt(Listener);
 
 #define i_WM_MODAL_STOP 0x444
 static HWND i_CURRENT_ACTIVE_WINDOW = NULL;
-static int i_SCROLL_OFFSET = 10;
 static ArrPt(Listener) *i_IDLES = NULL;
 
 /*---------------------------------------------------------------------------*/
@@ -201,80 +201,16 @@ static void i_moved(OSWindow *window, const int16_t content_x, const int16_t con
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE HWND i_focus_hwnd(const OSControl *control)
-{
-    cassert_no_null(control);
-    switch (control->type)
-    {
-    case ekGUI_TYPE_LABEL:
-    case ekGUI_TYPE_PROGRESS:
-        return NULL;
-
-    case ekGUI_TYPE_BUTTON:
-    case ekGUI_TYPE_EDITBOX:
-    case ekGUI_TYPE_SLIDER:
-    case ekGUI_TYPE_TEXTVIEW:
-    case ekGUI_TYPE_UPDOWN:
-    case ekGUI_TYPE_CUSTOMVIEW:
-        return control->hwnd;
-
-    case ekGUI_TYPE_POPUP:
-        return _ospopup_focus((OSPopUp *)control);
-
-    case ekGUI_TYPE_COMBOBOX:
-        return _oscombo_focus((OSCombo *)control);
-
-    case ekGUI_TYPE_TABLEVIEW:
-    case ekGUI_TYPE_TREEVIEW:
-    case ekGUI_TYPE_BOXVIEW:
-    case ekGUI_TYPE_SPLITVIEW:
-    case ekGUI_TYPE_PANEL:
-    case ekGUI_TYPE_LINE:
-    case ekGUI_TYPE_HEADER:
-    case ekGUI_TYPE_WINDOW:
-    case ekGUI_TYPE_TOOLBAR:
-        cassert_default();
-    }
-
-    return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static uint32_t i_search_tabstop(const OSControl **tabstop, const uint32_t size, HWND hwnd)
-{
-    uint32_t i;
-    if (hwnd == NULL)
-        return UINT32_MAX;
-
-    for (i = 0; i < size; ++i)
-        if (i_focus_hwnd(tabstop[i]) == hwnd)
-            return i;
-
-    return UINT32_MAX;
-}
-
-/*---------------------------------------------------------------------------*/
-
 static bool_t i_close(OSWindow *window, const gui_close_t close_origin)
 {
     bool_t closed = TRUE;
     cassert_no_null(window);
 
-    /* Before close, finish a possible text editing */
+    /* Checks if the current control allows the window to be closed */
     if (close_origin == ekGUI_CLOSE_INTRO)
-    {
-        HWND hwnd = GetFocus();
-        const OSControl **tabstop = arrpt_all(window->tabstops, OSControl);
-        uint32_t size = arrpt_size(window->tabstops, OSControl);
-        uint32_t tabindex = i_search_tabstop(tabstop, size, hwnd);
-        if (tabindex != UINT32_MAX)
-        {
-            if (tabstop[tabindex]->type == ekGUI_TYPE_EDITBOX)
-                closed = _osedit_validate((const OSEdit *)tabstop[tabindex], NULL);
-        }
-    }
+        closed = oscontrol_can_close_window(window->tabstops, window);
 
+    /* Notify the user and check if allows the window to be closed */
     if (closed == TRUE && window->OnClose != NULL)
     {
         EvWinClose params;
@@ -382,190 +318,6 @@ static void i_log_control(HWND hwnd, uint32_t taborder)
 
 /*---------------------------------------------------------------------------*/
 
-static const OSControl *i_effective_tabstop(const OSControl **tabstop, const uint32_t size, const uint32_t index, const bool_t reverse)
-{
-    uint32_t idx = index, i;
-    cassert(index < size);
-    for (i = 0; i < size; ++i)
-    {
-        HWND hwnd = i_focus_hwnd(tabstop[idx]);
-        if (hwnd && IsWindowEnabled(hwnd) && IsWindowVisible(hwnd))
-            return tabstop[idx];
-
-        if (reverse == TRUE)
-        {
-            if (idx == 0)
-                idx = size - 1;
-            else
-                idx -= 1;
-        }
-        else
-        {
-            if (idx == size - 1)
-                idx = 0;
-            else
-                idx += 1;
-        }
-    }
-
-    return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_set_tabstop(const OSControl *tabstop, HWND *ctabstop)
-{
-    HWND hwnd = i_focus_hwnd(tabstop);
-    OSControl *parent = (OSControl *)GetWindowLongPtr(GetParent(hwnd), GWLP_USERDATA);
-    cassert_no_null(ctabstop);
-    *ctabstop = hwnd;
-
-    SetFocus(hwnd);
-
-    if (parent != NULL && parent->type == ekGUI_TYPE_PANEL)
-    {
-        OSPanel *panel = (OSPanel *)parent;
-        /* Automatic panel scrolling if control is not completely visible */
-        if (_ospanel_with_scroll(panel) == TRUE)
-        {
-            RECT prect, crect;
-            int scroll_x = INT_MAX, scroll_y = INT_MAX;
-            _ospanel_scroll_frame((OSPanel *)parent, &prect);
-            GetWindowRect(hwnd, &crect);
-            crect.right = (crect.right - crect.left);
-            crect.bottom = (crect.bottom - crect.top);
-            crect.left = tabstop->x;
-            crect.right += tabstop->x;
-            crect.top = tabstop->y;
-            crect.bottom += tabstop->y;
-
-            if (prect.left > crect.left)
-                scroll_x = (crect.left - i_SCROLL_OFFSET);
-            else if (prect.right < crect.right)
-                scroll_x = (crect.right + i_SCROLL_OFFSET) - (prect.right - prect.left);
-
-            if (prect.top > crect.top)
-                scroll_y = (crect.top - i_SCROLL_OFFSET);
-            else if (prect.bottom < crect.bottom)
-                scroll_y = (crect.bottom + i_SCROLL_OFFSET) - (prect.bottom - prect.top);
-
-            if (scroll_x != INT_MAX || scroll_y != INT_MAX)
-                _ospanel_scroll(panel, scroll_x, scroll_y);
-        }
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_set_next_tabstop(const ArrPt(OSControl) * tabstops, const bool_t tabstop_cycle, HWND hwnd, HWND *ctabstop)
-{
-    uint32_t size = arrpt_size(tabstops, OSControl);
-    if (size > 0)
-    {
-        const OSControl **tabstop = arrpt_all_const(tabstops, OSControl);
-        uint32_t tabindex = i_search_tabstop(tabstop, size, hwnd);
-        uint32_t next_tabindex = tabindex;
-        bool_t move_tabstop = TRUE;
-        const OSControl *next_control = NULL;
-
-        if (next_tabindex == UINT32_MAX)
-            next_tabindex = 0;
-
-        if (next_tabindex == size - 1)
-        {
-            if (tabstop_cycle == TRUE)
-                next_tabindex = 0;
-        }
-        else
-        {
-            next_tabindex += 1;
-        }
-
-        next_control = i_effective_tabstop(tabstop, size, next_tabindex, FALSE);
-
-        if (tabindex != UINT32_MAX)
-        {
-            if (tabstop[tabindex]->type == ekGUI_TYPE_EDITBOX)
-                move_tabstop = _osedit_validate((const OSEdit *)tabstop[tabindex], next_control);
-        }
-
-        if (move_tabstop == TRUE)
-        {
-            if (next_tabindex != tabindex)
-                i_set_tabstop(next_control, ctabstop);
-        }
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_set_previous_tabstop(const ArrPt(OSControl) * tabstops, const bool_t tabstop_cycle, HWND hwnd, HWND *ctabstop)
-{
-    uint32_t size = arrpt_size(tabstops, OSControl);
-    if (size > 0)
-    {
-        const OSControl **tabstop = arrpt_all_const(tabstops, OSControl);
-        uint32_t tabindex = i_search_tabstop(tabstop, size, hwnd);
-        uint32_t next_tabindex = tabindex;
-        bool_t move_tabstop = TRUE;
-        const OSControl *next_control = NULL;
-
-        if (next_tabindex == UINT32_MAX)
-            next_tabindex = 0;
-
-        if (next_tabindex == 0)
-        {
-            if (tabstop_cycle == TRUE)
-                next_tabindex = size - 1;
-        }
-        else
-        {
-            next_tabindex -= 1;
-        }
-
-        next_control = i_effective_tabstop(tabstop, size, next_tabindex, TRUE);
-
-        if (tabindex != UINT32_MAX)
-        {
-            if (tabstop[tabindex]->type == ekGUI_TYPE_EDITBOX)
-                move_tabstop = _osedit_validate((const OSEdit *)tabstop[tabindex], next_control);
-        }
-
-        if (move_tabstop == TRUE)
-        {
-            if (next_tabindex != tabindex)
-                i_set_tabstop(next_control, ctabstop);
-        }
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_set_ctabstop(const ArrPt(OSControl) * tabstops, HWND *ctabstop)
-{
-    uint32_t size = arrpt_size(tabstops, OSControl);
-    cassert_no_null(ctabstop);
-    if (size > 0)
-    {
-        const OSControl **tabstop = arrpt_all_const(tabstops, OSControl);
-        const OSControl *control = NULL;
-        uint32_t tabindex = 0;
-
-        if (*ctabstop == NULL)
-            *ctabstop = tabstop[0]->hwnd;
-
-        tabindex = i_search_tabstop(tabstop, size, *ctabstop);
-        if (tabindex == UINT32_MAX)
-            tabindex = 0;
-
-        control = i_effective_tabstop(tabstop, size, tabindex, FALSE);
-        if (control != NULL)
-            i_set_tabstop(control, ctabstop);
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
 static bool_t i_press_defbutton(OSWindow *window)
 {
     if (window->defbutton != NULL)
@@ -600,10 +352,11 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
         if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
         {
             i_CURRENT_ACTIVE_WINDOW = hwnd;
-            i_set_ctabstop(window->tabstops, &window->ctabstop);
+            oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
         }
         else
         {
+            cassert(wParam == WA_INACTIVE);
             if (window->role == ekGUI_ROLE_OVERLAY)
             {
                 if (i_close(window, ekGUI_CLOSE_DEACT) == TRUE)
@@ -897,7 +650,7 @@ void oswindow_destroy(OSWindow **window)
     }
 
     cassert((*window)->main_panel == NULL);
-    cassert(_oscontrol_num_children((*window)->control.hwnd) == 0);
+    cassert(_oscontrol_num_children((OSControl*)(*window)) == 0);
     listener_destroy(&(*window)->OnMoved);
     listener_destroy(&(*window)->OnResize);
     listener_destroy(&(*window)->OnClose);
@@ -1030,14 +783,9 @@ void oswindow_taborder(OSWindow *window, OSControl *control)
 {
     cassert_no_null(window);
     cassert(window->state != i_ekSTATE_MANAGED);
-    if (control != NULL)
+    oscontrol_taborder(window->tabstops, control);
+    if (control == NULL)
     {
-        cassert(control->type != ekGUI_TYPE_PANEL);
-        arrpt_append(window->tabstops, control, OSControl);
-    }
-    else
-    {
-        arrpt_clear(window->tabstops, NULL, OSControl);
         /* Force to show the focus rectangle in all controls */
         /* https://stackoverflow.com/questions/46489537/focus-rectangle-not-showing-even-if-control-has-focus */
         SendMessage(window->control.hwnd, WM_UPDATEUISTATE, MAKEWPARAM(UIS_CLEAR, UISF_HIDEFOCUS | UISF_HIDEACCEL), (LPARAM)NULL);
@@ -1048,12 +796,11 @@ void oswindow_taborder(OSWindow *window, OSControl *control)
 
 void oswindow_tabstop(OSWindow *window, const bool_t next)
 {
-    HWND hwnd = GetFocus();
     cassert_no_null(window);
     if (next == TRUE)
-        i_set_next_tabstop(window->tabstops, window->tabstop_cycle, hwnd, &window->ctabstop);
+        oscontrol_set_next_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
     else
-        i_set_previous_tabstop(window->tabstops, window->tabstop_cycle, hwnd, &window->ctabstop);
+        oscontrol_set_previous_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1071,13 +818,11 @@ void oswindow_focus(OSWindow *window, OSControl *control)
     cassert_no_null(window);
     cassert_no_null(control);
     cassert(window->state != i_ekSTATE_MANAGED);
-    arrpt_foreach(tabstop, window->tabstops, OSControl) if (tabstop->hwnd == control->hwnd)
+    if (arrpt_find(window->tabstops, control, OSControl) != UINT32_MAX)
     {
-        SetFocus(control->hwnd);
-        window->ctabstop = control->hwnd;
-        break;
+        window->ctabstop = control;
+        oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
     }
-    arrpt_end();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1134,6 +879,16 @@ void oswindow_detach_window(OSWindow *parent_window, OSWindow *child_window)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_activate(OSWindow *window)
+{
+    cassert_no_null(window);
+    /* Force the tabstop because 'WM_ACTIVATE' is not send if hwnd is the current active */
+    SetActiveWindow(window->control.hwnd);
+    oscontrol_set_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void oswindow_launch(OSWindow *window, OSWindow *parent_window)
 {
     cassert_no_null(window);
@@ -1154,8 +909,7 @@ void oswindow_launch(OSWindow *window, OSWindow *parent_window)
         _oscontrol_set_visible((OSControl *)window, TRUE);
         window->launch_resize_event = TRUE;
 
-        SetActiveWindow(window->control.hwnd);
-        i_set_ctabstop(window->tabstops, &window->ctabstop);
+        i_activate(window);
     }
 }
 
@@ -1191,9 +945,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
     window->launch_resize_event = FALSE;
     _oscontrol_set_visible((OSControl *)window, TRUE);
     window->launch_resize_event = TRUE;
-
-    SetActiveWindow(window->control.hwnd);
-    i_set_ctabstop(window->tabstops, &window->ctabstop);
+    i_activate(window);
 
     /* Wait until the window is closed */
     ret = _oswindow_message_loop(window);
@@ -1208,8 +960,7 @@ uint32_t oswindow_launch_modal(OSWindow *window, OSWindow *parent_window)
             SetWindowPos(parent_window->control.hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
         }
 
-        SetActiveWindow(parent_window->control.hwnd);
-        i_set_ctabstop(parent_window->tabstops, &parent_window->ctabstop);
+        i_activate(parent_window);
     }
 
     return ret;
@@ -1249,7 +1000,8 @@ void oswindow_stop_modal(OSWindow *window, const uint32_t return_value)
 
 void oswindow_get_origin(const OSWindow *window, real32_t *x, real32_t *y)
 {
-    _oscontrol_get_origin_in_screen(window->control.hwnd, x, y);
+    cassert_no_null(window);
+    _oscontrol_get_origin_in_screen(&window->control, x, y);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1451,11 +1203,10 @@ static BOOL i_IsDialogMessage(HWND hDlg, LPMSG lpMsg)
                     SHORT lshif_state = GetAsyncKeyState(VK_LSHIFT);
                     SHORT rshif_state = GetAsyncKeyState(VK_RSHIFT);
                     BOOL previous = ((0x8000 & lshif_state) != 0) || ((0x8000 & rshif_state) != 0);
-                    HWND hwnd = GetFocus();
                     if (previous == TRUE)
-                        i_set_previous_tabstop(window->tabstops, window->tabstop_cycle, hwnd, &window->ctabstop);
+                        oscontrol_set_previous_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
                     else
-                        i_set_next_tabstop(window->tabstops, window->tabstop_cycle, hwnd, &window->ctabstop);
+                        oscontrol_set_next_tabstop(window->tabstops, window, window->tabstop_cycle, &window->ctabstop);
                     return TRUE;
                 }
             }
@@ -1515,10 +1266,13 @@ static BOOL i_IsDialogMessage(HWND hDlg, LPMSG lpMsg)
         }
         else if (lpMsg->message == WM_SETFOCUS)
         {
-            arrpt_foreach(tabstop, window->tabstops, OSControl) if (tabstop->hwnd == lpMsg->hwnd)
+            arrpt_foreach(tabstop, window->tabstops, OSControl)
             {
-                window->ctabstop = lpMsg->hwnd;
-                break;
+                if (tabstop->hwnd == lpMsg->hwnd)
+                {
+                    window->ctabstop = tabstop;
+                    break;
+                }
             }
             arrpt_end();
         }
@@ -1594,10 +1348,7 @@ uint32_t _oswindow_message_loop(OSWindow *window)
                    Will this we ensure the correct message processing
                 */
                 if (GetActiveWindow() != window->control.hwnd)
-                {
-                    SetActiveWindow(window->control.hwnd);
-                    i_set_ctabstop(window->tabstops, &window->ctabstop);
-                }
+                    i_activate(window);
             }
 
             if (i_message((void *)&msg, accel) == FALSE)
@@ -1668,7 +1419,7 @@ void _oswindow_store_focus(OSControl *control)
     cassert_no_null(control);
     window = i_root(control->hwnd);
     cassert_no_null(window);
-    window->ctabstop = control->hwnd;
+    window->ctabstop = control;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1676,15 +1427,11 @@ void _oswindow_store_focus(OSControl *control)
 bool_t _oswindow_in_tablist(OSControl *control)
 {
     OSWindow *window = NULL;
-    const OSControl **tabstop = NULL;
-    uint32_t size = UINT32_MAX;
     uint32_t tabindex = UINT32_MAX;
     cassert_no_null(control);
     window = i_root(control->hwnd);
     cassert_no_null(window);
-    tabstop = arrpt_all_const(window->tabstops, OSControl);
-    size = arrpt_size(window->tabstops, OSControl);
-    tabindex = i_search_tabstop(tabstop, size, control->hwnd);
+    tabindex = arrpt_find(window->tabstops, control, OSControl);
 
     if (tabindex == UINT32_MAX)
         return FALSE;
@@ -1701,10 +1448,7 @@ bool_t _oswindow_can_mouse_down(OSControl *control)
     unref(control);
 
     if (fcontrol != NULL)
-    {
-        if (fcontrol->type == ekGUI_TYPE_EDITBOX)
-            return _osedit_validate((const OSEdit *)fcontrol, control);
-    }
+        return oscontrol_validate(fcontrol, control);
 
     return TRUE;
 }

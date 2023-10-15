@@ -195,7 +195,7 @@ void oscombo_font(OSCombo *combo, const Font *font)
     GtkWidget *entry;
     cassert_no_null(combo);
     entry = gtk_bin_get_child(GTK_BIN(combo->control.widget));
-    _oscontrol_remove_provider(entry, combo->font);
+    _oscontrol_widget_remove_provider(entry, combo->font);
     _oscontrol_widget_font(entry, "entry", font, &combo->font);
     combo->fsize = (uint32_t)(font_size(font) + 2.5f);
 }
@@ -227,7 +227,7 @@ static void i_set_color(OSCombo *combo, const color_t color)
     entry = gtk_bin_get_child(GTK_BIN(combo->control.widget));
     if (combo->color != NULL)
     {
-        _oscontrol_remove_provider(entry, combo->color);
+        _oscontrol_widget_remove_provider(entry, combo->color);
         combo->color = NULL;
     }
 
@@ -252,7 +252,7 @@ void oscombo_bgcolor(OSCombo *combo, const color_t color)
     entry = gtk_bin_get_child(GTK_BIN(combo->control.widget));
     if (combo->bgcolor != NULL)
     {
-        _oscontrol_remove_provider(entry, combo->bgcolor);
+        _oscontrol_widget_remove_provider(entry, combo->bgcolor);
         combo->bgcolor = NULL;
     }
 

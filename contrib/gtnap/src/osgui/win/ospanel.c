@@ -15,6 +15,7 @@
 #include "osgui_win.inl"
 #include "oslabel.inl"
 #include "osbutton.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "oscombo.inl"
 #include "osview.inl"
@@ -63,11 +64,9 @@ DeclSt(Area);
 
 static void i_remove_area(Area *area)
 {
-    if (area->bgbrush != NULL)
-        DeleteObject(area->bgbrush);
-
-    if (area->skbrush != NULL)
-        DeleteObject(area->skbrush);
+    cassert_no_null(area);
+    _oscontrol_destroy_brush(&area->bgbrush);
+    _oscontrol_destroy_brush(&area->skbrush);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -93,20 +92,26 @@ static __INLINE void i_area(HDC hdc, const Area *area)
 
 /*---------------------------------------------------------------------------*/
 
-static HBRUSH i_brush(HWND hwnd, const ArrSt(Area) * areas, COLORREF *c)
+static HBRUSH i_brush(OSControl *control, const ArrSt(Area) * areas, COLORREF *c)
 {
+    OSFrame rect;
     RECT rc;
-    _oscontrol_get_local_frame(hwnd, &rc);
+    oscontrol_frame(control, &rect);
+    rc.left = rect.left;
+    rc.right = rect.right;
+    rc.top = rect.top;
+    rc.bottom = rect.bottom;
+
     arrst_foreach_const(area, areas, Area)
-        POINT pt;
-    pt.x = rc.left + 1;
-    pt.y = rc.top + 1;
-    if (PtInRect(&area->rect, pt) == TRUE)
     {
-        if (area->bgbrush != NULL)
+        RECT inter;
+        if (IntersectRect(&inter, &area->rect, &rc) == TRUE)
         {
-            ptr_assign(c, area->bgcolor);
-            return area->bgbrush;
+            if (area->bgbrush != NULL)
+            {
+                ptr_assign(c, area->bgcolor);
+                return area->bgbrush;
+            }
         }
     }
     arrst_end();
@@ -231,16 +236,16 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     return (LRESULT)bgbrush;
                 }
             }
-        }
 
-        if (panel->areas != NULL)
-        {
-            COLORREF bgcolor;
-            HBRUSH brush = i_brush((HWND)lParam, panel->areas, &bgcolor);
-            if (brush != NULL)
+            if (panel->areas != NULL)
             {
-                SetBkColor((HDC)wParam, bgcolor);
-                return (LRESULT)brush;
+                COLORREF bgcolor;
+                HBRUSH brush = i_brush(control, panel->areas, &bgcolor);
+                if (brush != NULL)
+                {
+                    SetBkColor((HDC)wParam, bgcolor);
+                    return (LRESULT)brush;
+                }
             }
         }
 
@@ -387,7 +392,7 @@ void ospanel_destroy(OSPanel **panel)
     if ((*panel)->scroll != NULL)
         osscroll_destroy(&(*panel)->scroll);
 
-    cassert(_oscontrol_num_children((*panel)->control.hwnd) == 0);
+    cassert(_oscontrol_num_children((OSControl *)(*panel)) == 0);
     _oscontrol_destroy((OSControl *)(*panel));
     heap_delete(panel, OSPanel);
 }
@@ -706,12 +711,12 @@ void _ospanel_detach_control(OSPanel *panel, OSControl *control)
 
 /*---------------------------------------------------------------------------*/
 
-COLORREF _ospanel_background_color(OSPanel *panel, HWND child_hwnd)
+COLORREF _ospanel_background_color(OSPanel *panel, OSControl *control)
 {
     if (panel->areas != NULL)
     {
         COLORREF c;
-        if (i_brush(child_hwnd, panel->areas, &c) != NULL)
+        if (i_brush(control, panel->areas, &c) != NULL)
             return c;
     }
 
@@ -720,7 +725,7 @@ COLORREF _ospanel_background_color(OSPanel *panel, HWND child_hwnd)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t _ospanel_with_scroll(const OSPanel *panel)
+bool_t ospanel_with_scroll(const OSPanel *panel)
 {
     cassert_no_null(panel);
     return (bool_t)(panel->scroll != NULL);
@@ -747,21 +752,21 @@ void _ospanel_scroll_pos(OSPanel *panel, int *scroll_x, int *scroll_y)
 
 /*---------------------------------------------------------------------------*/
 
-void _ospanel_scroll_frame(const OSPanel *panel, RECT *rect)
+void ospanel_scroll_frame(const OSPanel *panel, OSFrame *rect)
 {
     int x, y, w, h;
     cassert_no_null(panel);
     cassert_no_null(rect);
     osscroll_visible_area(panel->scroll, &x, &y, &w, &h, NULL, NULL);
-    rect->left = (LONG)x;
-    rect->top = (LONG)y;
-    rect->right = (LONG)(x + w);
-    rect->bottom = (LONG)(y + h);
+    rect->left = (int32_t)x;
+    rect->top = (int32_t)y;
+    rect->right = (int32_t)(x + w);
+    rect->bottom = (int32_t)(y + h);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _ospanel_scroll(OSPanel *panel, const int x, const int y)
+void ospanel_scroll(OSPanel *panel, const int32_t x, const int32_t y)
 {
     cassert_no_null(panel);
     if (panel->scroll != NULL)

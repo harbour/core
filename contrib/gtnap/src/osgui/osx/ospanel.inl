@@ -14,6 +14,8 @@
 
 __EXTERN_C
 
+BOOL _ospanel_is(NSView *view);
+
 void _ospanel_destroy(OSPanel **panel);
 
 void _ospanel_attach_control(OSPanel *panel, NSView *control);

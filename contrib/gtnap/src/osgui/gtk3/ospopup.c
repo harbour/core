@@ -167,7 +167,7 @@ void ospopup_font(OSPopUp *popup, const Font *font)
 {
     const char_t *csscombo = osglobals_css_combobox();
     cassert_no_null(popup);
-    _oscontrol_remove_provider(popup->control.widget, popup->font);
+    _oscontrol_widget_remove_provider(popup->control.widget, popup->font);
     _oscontrol_widget_font(popup->control.widget, csscombo, font, &popup->font);
     popup->fsize = (uint32_t)(font_size(font) + 2.5f);
 }

@@ -14,6 +14,7 @@
 #include "osedit.inl"
 #include "oscolor.inl"
 #include "osgui.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "ospanel.inl"
 #include "oswindow.inl"
@@ -189,8 +190,6 @@ static void OSX_becomeFirstResponder(OSXEdit *edit, NSTextField *field)
         NSWindow *window = [field window];
         NSText *text = [window fieldEditor:YES forObject:field];
 
-        _oswindow_focus_edit(window, (NSView*)edit);
-
         if (BIT_TEST(edit->flags, ekEDIT_AUTOSEL) == TRUE)
         {
             [text selectAll:nil];
@@ -230,14 +229,10 @@ static void OSX_textDidChange(OSXEdit *edit, NSTextField *field)
         if (result.apply == TRUE)
             _oscontrol_set_text(field, &edit->attrs, result.text);
 
-        /* The focused editBox can be changed in 'ekGUI_EVENT_TXTFILTER' event */
-        if (_oswindow_get_focus_edit(window) == edit)
-        {
-        	if (result.cpos != UINT32_MAX)
-            	[text setSelectedRange:NSMakeRange((NSUInteger)result.cpos, 0)];
-	        else
-            	[text setSelectedRange:NSMakeRange((NSUInteger)params.cpos, 0)];
-        }
+        if (result.cpos != UINT32_MAX)
+            [text setSelectedRange:NSMakeRange((NSUInteger)result.cpos, 0)];
+        else
+            [text setSelectedRange:NSMakeRange((NSUInteger)params.cpos, 0)];
     }
 }
 
@@ -249,8 +244,6 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSTextField *field, NSNotificat
     if ([field isEnabled] == YES)
     {
         NSWindow *window = [field window];
-
-        _oswindow_focus_edit(window, nil);
 
         if (edit->OnChange != NULL && _oswindow_in_destroy(window) == NO)
         {
@@ -777,4 +770,14 @@ void _osedit_detach_and_destroy(OSEdit **edit, OSPanel *panel)
     cassert_no_null(edit);
     osedit_detach(*edit, panel);
     osedit_destroy(edit);
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t osedit_validate(const OSEdit *edit, const OSControl *next_control)
+{
+    unref(edit);
+    unref(next_control);
+    cassert(FALSE);
+    return FALSE;
 }

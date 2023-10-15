@@ -155,7 +155,7 @@ void ossplit_destroy(OSSplit **view)
 {
     cassert_no_null(view);
     cassert_no_null(*view);
-    cassert(_oscontrol_num_children((*view)->control.hwnd) == 0);
+    cassert(_oscontrol_num_children((OSControl*)(*view)) == 0);
     listener_destroy(&(*view)->OnDrag);
     _oscontrol_destroy(&(*view)->control);
     heap_delete(view, OSSplit);

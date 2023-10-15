@@ -56,7 +56,7 @@ if [ "$(uname)" == "Darwin" ]; then
     cmake -G Xcode .. -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 || exit 1
     xcodebuild -configuration $BUILD || exit 1
 else
-    cmake  .. -DCMAKE_BUILD_CONFIG=$BUILD || exit 1
+    cmake  .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
     make -j 4 || exit 1
 fi
 

@@ -366,14 +366,14 @@ void osscroll_message(OSScroll *scroll, WPARAM wParam, UINT nMsg, const bool_t u
 
 /*---------------------------------------------------------------------------*/
 
-void osscroll_set(OSScroll *scroll, const int x, const int y, const bool_t update_children)
+void osscroll_set(OSScroll *scroll, const int32_t x, const int32_t y, const bool_t update_children)
 {
     int lx = x;
     int ly = y;
 
     cassert_no_null(scroll);
 
-    if (lx != INT_MAX)
+    if (lx != INT32_MAX)
     {
         if (lx < 0)
             lx = 0;
@@ -381,7 +381,7 @@ void osscroll_set(OSScroll *scroll, const int x, const int y, const bool_t updat
             lx = scroll->content_width - scroll->view_width;
     }
 
-    if (ly != INT_MAX)
+    if (ly != INT32_MAX)
     {
         if (ly < 0)
             ly = 0;
@@ -394,14 +394,14 @@ void osscroll_set(OSScroll *scroll, const int x, const int y, const bool_t updat
         int dx = 0;
         int dy = 0;
 
-        if (lx != INT_MAX && scroll->hscroll != NULL)
+        if (lx != INT32_MAX && scroll->hscroll != NULL)
         {
             int cx = GetScrollPos(scroll->hscroll, i_horbar(scroll));
             SetScrollPos(scroll->hscroll, i_horbar(scroll), lx, TRUE);
             dx = cx - lx;
         }
 
-        if (ly != INT_MAX && scroll->vscroll != NULL)
+        if (ly != INT32_MAX && scroll->vscroll != NULL)
         {
             int cy = GetScrollPos(scroll->vscroll, i_verbar(scroll));
             SetScrollPos(scroll->vscroll, i_verbar(scroll), ly, TRUE);
@@ -412,10 +412,10 @@ void osscroll_set(OSScroll *scroll, const int x, const int y, const bool_t updat
     }
     else
     {
-        if (lx != INT_MAX && scroll->hscroll != NULL)
+        if (lx != INT32_MAX && scroll->hscroll != NULL)
             SetScrollPos(scroll->hscroll, i_horbar(scroll), lx, TRUE);
 
-        if (ly != INT_MAX && scroll->vscroll != NULL)
+        if (ly != INT32_MAX && scroll->vscroll != NULL)
             SetScrollPos(scroll->vscroll, i_verbar(scroll), ly, TRUE);
     }
 }

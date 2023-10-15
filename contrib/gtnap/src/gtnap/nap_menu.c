@@ -128,9 +128,10 @@ static void i_OnDraw(Panel *panel, Event *e)
             draw_fill_color(p->ctx, kCOLOR_CYAN);
             draw_rect(p->ctx, ekFILL, xpos, ypos, (real32_t)menu->control_width, (real32_t)menu->row_height /* opt->size.height*/);
 
-            // To be removed, just for debug
-            // draw_line_color(p->ctx, kCOLOR_RED);
-            // draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, menu->total_height - 1);
+            /* To be removed, just for debug
+            draw_line_color(p->ctx, kCOLOR_RED);
+            draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, menu->total_height - 1);
+            */
         }
 
         if (opt_i == menu->mouse_row)
@@ -149,11 +150,11 @@ static void i_OnDraw(Panel *panel, Event *e)
             draw_line(p->ctx, stx, ypos + opt->size.height - 1, edx, ypos + opt->size.height - 1);
         }
 
-        ypos += menu->row_height; // opt->size.height;
+        ypos += menu->row_height;
 
     arrst_end();
 
-    //draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1);
+    /* draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1); */
 }
 
 /*---------------------------------------------------------------------------*/
@@ -323,7 +324,7 @@ static void i_OnKeyDown(Panel *panel, Event *e)
 
 static void i_view_size(MenuVert *menu)
 {
-    real32_t width = 0, height = 0, n = 0;
+    real32_t width = 0, height = 0;
     cassert_no_null(menu);
 
     arrst_foreach(opt, menu->opts, MenuOpt)
@@ -333,19 +334,12 @@ static void i_view_size(MenuVert *menu)
         if (opt->size.width > width)
             width = opt->size.width;
 
-        height += menu->row_height;// opt->size.height;
-        n += 1;
+        height += menu->row_height;
 
     arrst_end();
 
     menu->total_height = height;
-    //view_content_size(menu->view, s2df(width + 20, height + 1), s2df(0, (real32_t)menu->row_height));
     view_content_size(menu->view, s2df((real32_t)menu->control_width, height + 1), s2df(0, (real32_t)menu->row_height));
-
-    // if (menu->visible_opts == 0 || menu->visible_opts >= n)
-    //     view_size(menu->view, s2df(width + 20, height + 1));
-    // else
-    //     view_size(menu->view, s2df(width + 20, (real32_t)(menu->visible_opts * menu->row_height) + 1));
 }
 
 /*---------------------------------------------------------------------------*/

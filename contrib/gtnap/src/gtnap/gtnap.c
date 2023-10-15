@@ -150,7 +150,6 @@ struct _gtnap_window_t
     S2Df panel_size;
     Panel *panel;
     Panel *scrolled_panel;
-    View *canvas;
     GtNapToolbar *toolbar;
     GtNapArea *gtarea;
     uint32_t num_rows;
@@ -466,16 +465,6 @@ static void i_destroy_gtwin(GtNapWindow **dgtwin)
         uint32_t i, n = arrpt_size(gtwin->objects, GtNapObject);
         for (i = 0; i < n; ++i)
             i_destroy_gtobject(gtwin, 0);
-    }
-
-    if (gtwin->canvas != NULL)
-    {
-        _component_visible((GuiComponent*)gtwin->canvas, FALSE);
-
-        if (gtwin->is_configured == TRUE)
-            _component_detach_from_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
-
-        _component_destroy((GuiComponent**)&gtwin->canvas);
     }
 
     if (gtwin->scrolled_panel != NULL)
@@ -894,9 +883,9 @@ static String *i_item_to_utf8_string(HB_ITEM *item)
     String *str = NULL;
     cassert(HB_ITEM_TYPE(item) == HB_IT_STRING);
     s1 = hb_itemCopyStrUTF8(item, NULL, (HB_SIZE)UINT32_MAX);
-    str = str_reserve(s1);
+    str = str_reserve((uint32_t)s1);
     s2 = hb_itemCopyStrUTF8(item, tcc(str), s1 + 1);
-    cassert(s1 == s2);
+    cassert_unref(s1 == s2, s2);
     i_remove_utf8_CR(tcc(str));
     return str;
 }
@@ -931,9 +920,9 @@ static String *i_utf8_to_cp_string(const char_t *utf8)
     HB_CODEPAGE *cp = hb_vmCDP();
     HB_SIZE n = (HB_SIZE)str_len_c(utf8);
     HB_SIZE s1 = hb_cdpUTF8AsStrLen(cp, utf8, n, 0);
-    String *str = str_reserve(s1);
+    String *str = str_reserve((uint32_t)s1);
     HB_SIZE s2 = hb_cdpUTF8ToStr(cp, utf8, n, tcc(str), s1 + 1);
-    cassert(s1 == s2);
+    cassert_unref(s1 == s2, s2);
     return str;
 }
 
@@ -945,7 +934,8 @@ static void i_utf8_to_cp(const char_t *utf8, char_t *buffer, const uint32_t size
     HB_SIZE n = (HB_SIZE)str_len_c(utf8);
     HB_SIZE s1 = hb_cdpUTF8AsStrLen(cp, utf8, n, 0);
     HB_SIZE s2 = hb_cdpUTF8ToStr(cp, utf8, n, buffer, size);
-    cassert(s1 == s2);
+    cassert_unref(s1 == s2, s1);
+    cassert_unref(s1 == s2, s2);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -960,7 +950,8 @@ static uint8_t i_utf8_to_cp_char(const uint32_t codepoint)
     utf8[nb] = 0;
     s1 = hb_cdpUTF8AsStrLen(cp, utf8, (HB_SIZE)nb, sizeof(utf8));
     s2 = hb_cdpUTF8ToStr(cp, utf8, (HB_SIZE)nb, cpstr, sizeof(cpstr));
-    cassert(s1 == s2);
+    cassert_unref(s1 == s2, s1);
+    cassert_unref(s1 == s2, s2);
     return (uint8_t)cpstr[0];
 }
 
@@ -1013,14 +1004,6 @@ static GtNap *i_gtnap_create(void)
     INIT_CODEBLOCK = NULL;
 
     return GTNAP_GLOBAL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_OnCanvasDraw(GtNapWindow *gtwin, Event *e)
-{
-    unref(gtwin);
-    unref(e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1436,7 +1419,7 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
         bool_t valid = TRUE;
         PHB_ITEM ritem = hb_itemDo(gtobj->valida_block, 0);
         HB_TYPE type = HB_ITEM_TYPE(ritem);
-        cassert(type == HB_IT_LOGICAL);
+        cassert_unref(type == HB_IT_LOGICAL, type);
         valid = (bool_t)hb_itemGetL(ritem);
         hb_itemRelease(ritem);
 
@@ -1489,7 +1472,7 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
             {
                 PHB_ITEM ritem = hb_itemDo(gtwin->confirm_block, 0);
                 HB_TYPE type = HB_ITEM_TYPE(ritem);
-                cassert(type == HB_IT_LOGICAL);
+                cassert_unref(type == HB_IT_LOGICAL, type);
                 close = (bool_t)hb_itemGetL(ritem);
                 hb_itemRelease(ritem);
             }
@@ -2198,7 +2181,7 @@ static void i_OnAutoWizard(GtNapWindow *gtwin, Event *e)
         {
             PHB_ITEM ritem = hb_itemDo(gtobj->auto_block, 0);
             HB_TYPE type = HB_ITEM_TYPE(ritem);
-            cassert(type == HB_IT_LOGICAL);
+            cassert_unref(type == HB_IT_LOGICAL, type);
             lista = (bool_t)hb_itemGetL(ritem);
             hb_itemRelease(ritem);
         }
@@ -2246,7 +2229,7 @@ static void i_OnEditFocus(GtNapObject *gtobj, Event *e)
             PHB_ITEM ritem = hb_itemDo(gtobj->when_block, 0);
             HB_TYPE type = HB_ITEM_TYPE(ritem);
             bool_t updated = FALSE;
-            cassert(type == HB_IT_LOGICAL);
+            cassert_unref(type == HB_IT_LOGICAL, type);
             updated = (bool_t)hb_itemGetL(ritem);
             hb_itemRelease(ritem);
 
@@ -2327,19 +2310,12 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     {
         V2Df pos = kV2D_ZEROf;
         S2Df size = gtwin->panel_size;
-        cassert(gtwin->canvas == NULL);
 
         if (gtwin->toolbar != NULL)
         {
             pos.y += gtwin->toolbar->pixels_button;
             size.height -= gtwin->toolbar->pixels_button;
         }
-
-        gtwin->canvas = view_create();
-        view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
-        _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->canvas);
-        _component_set_frame((GuiComponent*)gtwin->canvas, &pos, &size);
-        _component_visible((GuiComponent*)gtwin->canvas, TRUE);
     }
 
     if (i_with_scroll_panel(gtwin) == TRUE)
@@ -4364,7 +4340,7 @@ static void i_area_refresh(GtNapArea *area)
                 PHB_ITEM ritem = hb_itemDo(area->while_block, 0);
                 HB_TYPE type = HB_ITEM_TYPE(ritem);
                 bool_t add = FALSE;
-                cassert(type == HB_IT_LOGICAL);
+                cassert_unref(type == HB_IT_LOGICAL, type);
                 add = (bool_t)hb_itemGetL(ritem);
                 hb_itemRelease(ritem);
 
@@ -5195,67 +5171,67 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->Unlock = hb_gtnap_Unlock;
     pFuncTable->Init = hb_gtnap_Init;
     pFuncTable->Exit = hb_gtnap_Exit;
-    // pFuncTable->New = NULL;
-    // pFuncTable->Free = NULL;
-    // pFuncTable->Mark = NULL;
+    /* pFuncTable->New = NULL;
+       pFuncTable->Free = NULL;
+       pFuncTable->Mark = NULL; */
     pFuncTable->Resize = hb_gtnap_Resize;
     pFuncTable->SetMode = hb_gtnap_SetMode;
     pFuncTable->GetSize = hb_gtnap_GetSize;
-    // pFuncTable->SemiCold = NULL;
-    // pFuncTable->ColdArea = NULL;
+    /* pFuncTable->SemiCold = NULL;
+    pFuncTable->ColdArea = NULL; */
     pFuncTable->ExposeArea = hb_gtnap_ExposeArea;
-    // pFuncTable->ScrollArea = NULL;
-    // pFuncTable->TouchLine = NULL;
-    // pFuncTable->TouchCell = NULL;
-    // pFuncTable->Redraw = NULL;
-    // pFuncTable->RedrawDiff = NULL;
-    // pFuncTable->Refresh = NULL;
-    // pFuncTable->Flush = NULL;
+    /* pFuncTable->ScrollArea = NULL;
+    pFuncTable->TouchLine = NULL;
+    pFuncTable->TouchCell = NULL;
+    pFuncTable->Redraw = NULL;
+    pFuncTable->RedrawDiff = NULL;
+    pFuncTable->Refresh = NULL;
+    pFuncTable->Flush = NULL; */
     pFuncTable->MaxCol = hb_gtnap_MaxCol;
     pFuncTable->MaxRow = hb_gtnap_MaxRow;
     pFuncTable->CheckPos = hb_gtnap_CheckPos;
     pFuncTable->SetPos = hb_gtnap_SetPos;
     pFuncTable->GetPos =  hb_gtnap_GetPos;
     pFuncTable->IsColor = hb_gtnap_IsColor;
-    // pFuncTable->GetColorStr = NULL;
-    // pFuncTable->SetColorStr = NULL;
-    // pFuncTable->ColorSelect = NULL;
-    // pFuncTable->GetColor = NULL;
-    // pFuncTable->ColorNum = NULL;
-    // pFuncTable->ColorsToString = NULL;
-    // pFuncTable->StringToColors = NULL;
-    // pFuncTable->GetColorData = NULL;
-    // pFuncTable->GetClearColor = NULL;
-    // pFuncTable->SetClearColor = NULL;
-    // pFuncTable->GetClearChar = NULL;
-    // pFuncTable->SetClearChar = NULL;
+    /* pFuncTable->GetColorStr = NULL;
+    pFuncTable->SetColorStr = NULL;
+    pFuncTable->ColorSelect = NULL;
+    pFuncTable->GetColor = NULL;
+    pFuncTable->ColorNum = NULL;
+    pFuncTable->ColorsToString = NULL;
+    pFuncTable->StringToColors = NULL;
+    pFuncTable->GetColorData = NULL;
+    pFuncTable->GetClearColor = NULL;
+    pFuncTable->SetClearColor = NULL;
+    pFuncTable->GetClearChar = NULL;
+    pFuncTable->SetClearChar = NULL; */
     pFuncTable->GetCursorStyle = hb_gtnap_GetCursorStyle;
     pFuncTable->SetCursorStyle = hb_gtnap_SetCursorStyle;
-    // pFuncTable->GetScrCursor = NULL;
-    // pFuncTable->GetScrChar = NULL;
-    // pFuncTable->PutScrChar = NULL;
-    // pFuncTable->GetScrUC = NULL;
+    /* pFuncTable->GetScrCursor = NULL;
+    pFuncTable->GetScrChar = NULL;
+    pFuncTable->PutScrChar = NULL;
+    pFuncTable->GetScrUC = NULL; */
     pFuncTable->DispBegin = hb_gtnap_DispBegin;
     pFuncTable->DispEnd = hb_gtnap_DispEnd;
     pFuncTable->DispCount = hb_gtnap_DispCount;
     pFuncTable->GetChar = hb_gtnap_GetChar;
     pFuncTable->PutChar = hb_gtnap_PutChar;
-    // pFuncTable->RectSize = NULL;
+    /* pFuncTable->RectSize = NULL; */
     pFuncTable->Save = hb_gtnap_Save;
     pFuncTable->Rest = hb_gtnap_Rest;
     pFuncTable->PutText = hb_gtnap_PutText;
-    // pFuncTable->PutTextW = NULL;
+    /* pFuncTable->PutTextW = NULL; */
     pFuncTable->Replicate = hb_gtnap_Replicate;
     pFuncTable->WriteAt = hb_gtnap_WriteAt;
-    // pFuncTable->WriteAtW = NULL;
-    // pFuncTable->Write = NULL;
-    // pFuncTable->WriteW = NULL;
-    // pFuncTable->WriteCon = NULL;
-    // pFuncTable->WriteConW = NULL;
+    /* pFuncTable->WriteAtW = NULL;
+    pFuncTable->Write = NULL;
+    pFuncTable->WriteW = NULL;
+    pFuncTable->WriteCon = NULL;
+    pFuncTable->WriteConW = NULL; */
     pFuncTable->SetAttribute = hb_gtnap_SetAttribute;
-    // pFuncTable->DrawShadow = NULL;
+    /* pFuncTable->DrawShadow = NULL; */
     pFuncTable->Scroll = hb_gtnap_Scroll;
-    // pFuncTable->ScrollUp = NULL;
+    /* pFuncTable->ScrollUp = NULL; */
     pFuncTable->Box = hb_gtnap_Box;
     pFuncTable->BoxW = NULL;
     pFuncTable->BoxD = NULL;
@@ -5264,12 +5240,12 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->VertLine  = hb_gtnap_VertLine;
     pFuncTable->GetBlink = hb_gtnap_GetBlink;
     pFuncTable->SetBlink = hb_gtnap_SetBlink;
-    // pFuncTable->SetSnowFlag = NULL;
+    /* pFuncTable->SetSnowFlag = NULL; */
     pFuncTable->Version = hb_gtnap_Version;
-    // pFuncTable->Suspend = NULL;
-    // pFuncTable->Resume = NULL;
-    // pFuncTable->PreExt = NULL;
-    // pFuncTable->PostExt = NULL;
+    /* pFuncTable->Suspend = NULL;
+    pFuncTable->Resume = NULL;
+    pFuncTable->PreExt = NULL;
+    pFuncTable->PostExt = NULL; */
     pFuncTable->OutStd = hb_gtnap_OutStd;
     pFuncTable->OutErr = hb_gtnap_OutErr;
     pFuncTable->Tone = hb_gtnap_Tone;
@@ -5279,46 +5255,46 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->SetFlag = NULL;
 
     /* internationalization */
-    // pFuncTable->SetDispCP = NULL;
-    // pFuncTable->SetKeyCP = NULL;
+    /* pFuncTable->SetDispCP = NULL;
+    pFuncTable->SetKeyCP = NULL; */
 
     /* keyboard */
-    // pFuncTable->ReadKey = NULL;
-    // pFuncTable->InkeyGet = NULL;
-    // pFuncTable->InkeyPut = NULL;
-    // pFuncTable->InkeyIns = NULL;
-    // pFuncTable->InkeyLast = NULL;
-    // pFuncTable->InkeyNext = NULL;
-    // pFuncTable->InkeyPoll = NULL;
-    // pFuncTable->InkeySetText = NULL;
-    // pFuncTable->InkeySetLast = NULL;
-    // pFuncTable->InkeyReset = NULL;
-    // pFuncTable->InkeyExit = NULL;
+    /* pFuncTable->ReadKey = NULL;
+    pFuncTable->InkeyGet = NULL;
+    pFuncTable->InkeyPut = NULL;
+    pFuncTable->InkeyIns = NULL;
+    pFuncTable->InkeyLast = NULL;
+    pFuncTable->InkeyNext = NULL;
+    pFuncTable->InkeyPoll = NULL;
+    pFuncTable->InkeySetText = NULL;
+    pFuncTable->InkeySetLast = NULL;
+    pFuncTable->InkeyReset = NULL;
+    pFuncTable->InkeyExit = NULL; */
 
     /* mouse */
     pFuncTable->MouseInit = hb_gtnap_mouse_Init;
     pFuncTable->MouseExit = hb_gtnap_mouse_Exit;
     pFuncTable->MouseIsPresent = hb_gtnap_mouse_IsPresent;
-    // pFuncTable->MouseShow = NULL;
-    // pFuncTable->MouseHide = NULL;
-    // pFuncTable->MouseGetCursor = NULL;
-    // pFuncTable->MouseSetCursor = NULL;
+    /* pFuncTable->MouseShow = NULL;
+    pFuncTable->MouseHide = NULL;
+    pFuncTable->MouseGetCursor = NULL;
+    pFuncTable->MouseSetCursor = NULL; */
     pFuncTable->MouseCol = hb_gtnap_mouse_Col;
     pFuncTable->MouseRow = hb_gtnap_mouse_Row;
-    // pFuncTable->MouseGetPos = NULL;
-    // pFuncTable->MouseSetPos = NULL;
-    // pFuncTable->MouseSetBounds = NULL;
-    // pFuncTable->MouseGetBounds = NULL;
-    // pFuncTable->MouseStorageSize = NULL;
-    // pFuncTable->MouseSaveState = NULL;
-    // pFuncTable->MouseRestoreState = NULL;
-    // pFuncTable->MouseGetDoubleClickSpeed = NULL;
-    // pFuncTable->MouseSetDoubleClickSpeed = NULL;
+    /* pFuncTable->MouseGetPos = NULL;
+    pFuncTable->MouseSetPos = NULL;
+    pFuncTable->MouseSetBounds = NULL;
+    pFuncTable->MouseGetBounds = NULL;
+    pFuncTable->MouseStorageSize = NULL;
+    pFuncTable->MouseSaveState = NULL;
+    pFuncTable->MouseRestoreState = NULL;
+    pFuncTable->MouseGetDoubleClickSpeed = NULL;
+    pFuncTable->MouseSetDoubleClickSpeed = NULL; */
     pFuncTable->MouseCountButton = hb_gtnap_mouse_CountButton;
     pFuncTable->MouseButtonState = hb_gtnap_mouse_ButtonState;
-    // pFuncTable->MouseButtonPressed = NULL;
-    // pFuncTable->MouseButtonReleased = NULL;
-    // pFuncTable->MouseReadKey = NULL;
+    /* pFuncTable->MouseButtonPressed = NULL;
+    pFuncTable->MouseButtonReleased = NULL;
+    pFuncTable->MouseReadKey = NULL; */
 
     /* Graphics API */
     pFuncTable->GfxPrimitive = hb_gtnap_gfxPrimitive;

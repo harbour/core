@@ -767,4 +767,4 @@ void _osgui_word_size(StringSizeData *data, const char_t *word, real32_t *width,
     *height = (real32_t)word_size.cy;
 }
 
-/*---------------------------------------------------------------------------*/
+

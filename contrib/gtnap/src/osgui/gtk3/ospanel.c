@@ -15,6 +15,7 @@
 #include "ossplit.inl"
 #include "osgui.inl"
 #include "osgui_gtk.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "oslabel.inl"
 #include "osbutton.inl"
@@ -429,35 +430,45 @@ void _ospanel_release_capture(OSPanel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-void _ospanel_scroll_frame(const OSPanel *panel, RectI *rect)
+bool_t ospanel_with_scroll(const OSPanel *panel)
+{
+    cassert_no_null(panel);
+    return (bool_t)(panel->hadjust != NULL);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void ospanel_scroll(OSPanel *panel, const int32_t x, const int32_t y)
+{
+    cassert_no_null(panel);
+
+    if (panel->hadjust != NULL && x != INT32_MAX)
+        gtk_adjustment_set_value(panel->hadjust, (gdouble)x);
+
+    if (panel->vadjust != NULL && y != INT32_MAX)
+        gtk_adjustment_set_value(panel->vadjust, (gdouble)y);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void ospanel_scroll_frame(const OSPanel *panel, OSFrame *rect)
 {
     real32_t w, h;
     cassert_no_null(panel);
     cassert_no_null(rect);
     if (panel->hadjust != NULL)
-        rect->left = (int)gtk_adjustment_get_value(panel->hadjust);
+        rect->left = (int32_t)gtk_adjustment_get_value(panel->hadjust);
     else
         rect->left = 0;
 
     if (panel->vadjust != NULL)
-        rect->top = (int)gtk_adjustment_get_value(panel->vadjust);
+        rect->top = (int32_t)gtk_adjustment_get_value(panel->vadjust);
     else
         rect->top = 0;
 
     _oscontrol_get_size(&panel->control, &w, &h);
-    rect->right = rect->left + (int)w;
-    rect->bottom = rect->top + (int)h;
+    rect->right = rect->left + (int32_t)w;
+    rect->bottom = rect->top + (int32_t)h;
 }
 
-/*---------------------------------------------------------------------------*/
 
-void _ospanel_scroll(OSPanel *panel, const int x, const int y)
-{
-    cassert_no_null(panel);
-
-    if (panel->hadjust != NULL)
-        gtk_adjustment_set_value(panel->hadjust, (gdouble)x);
-
-    if (panel->vadjust != NULL)
-        gtk_adjustment_set_value(panel->vadjust, (gdouble)y);
-}

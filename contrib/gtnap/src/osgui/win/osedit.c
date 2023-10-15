@@ -14,6 +14,7 @@
 #include "osedit.inl"
 #include "osgui.inl"
 #include "osgui_win.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "ospanel.inl"
 #include "oswindow.inl"
@@ -232,8 +233,7 @@ void osedit_destroy(OSEdit **edit)
     listener_destroy(&(*edit)->OnFilter);
     listener_destroy(&(*edit)->OnChange);
     listener_destroy(&(*edit)->OnFocus);
-    if ((*edit)->bgbrush != NULL)
-        DeleteObject((*edit)->bgbrush);
+    _oscontrol_destroy_brush(&(*edit)->bgbrush);
     _oscontrol_destroy(&(*edit)->control);
     heap_delete(edit, OSEdit);
 }
@@ -562,7 +562,7 @@ HBRUSH _osedit_background_color(const OSEdit *edit, COLORREF *color)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control)
+bool_t osedit_validate(const OSEdit *edit, const OSControl *next_control)
 {
     return i_change_event(edit, next_control);
 }

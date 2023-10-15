@@ -425,19 +425,19 @@ static void i_global_attribs(OSText *view)
 
     if (view->fontcss != NULL)
     {
-        _oscontrol_remove_provider(view->tview, view->fontcss);
+        _oscontrol_widget_remove_provider(view->tview, view->fontcss);
         view->fontcss = NULL;
     }
 
     if (view->colorcss != NULL)
     {
-        _oscontrol_remove_provider(view->tview, view->colorcss);
+        _oscontrol_widget_remove_provider(view->tview, view->colorcss);
         view->colorcss = NULL;
     }
 
     if (view->bgcolorcss != NULL)
     {
-        _oscontrol_remove_provider(view->tview, view->bgcolorcss);
+        _oscontrol_widget_remove_provider(view->tview, view->bgcolorcss);
         view->bgcolorcss = NULL;
     }
 
@@ -625,7 +625,7 @@ void ostext_property(OSText *view, const gui_prop_t prop, const void *value)
     case ekGUI_PROP_PGCOLOR:
         if (view->pgcolorcss != NULL)
         {
-            _oscontrol_remove_provider(view->tview, view->pgcolorcss);
+            _oscontrol_widget_remove_provider(view->tview, view->pgcolorcss);
             view->pgcolorcss = NULL;
         }
 

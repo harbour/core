@@ -72,11 +72,12 @@ OSSlider *osslider_create(const uint32_t flags)
     gtk_range_set_increments(GTK_RANGE(widget), .1, .1);
     g_signal_connect(widget, "change-value", G_CALLBACK(i_OnMoved), (gpointer)slider);
 
-    /*    if (o == GTK_ORIENTATION_HORIZONTAL)
-       _oscontrol_set_css(widget, "scale {min-height:5px;padding-left:5px;padding-right:5px}");
-   else
-       _oscontrol_set_css(widget, "scale {min-height:5px;padding-top:5px;padding-bottom:5px}");
- */
+    /*
+    if (o == GTK_ORIENTATION_HORIZONTAL)
+       _oscontrol_widget_set_css(widget, "scale {min-height:5px;padding-left:5px;padding-right:5px}");
+    else
+       _oscontrol_widget_set_css(widget, "scale {min-height:5px;padding-top:5px;padding-bottom:5px}");
+    */
 
     _oscontrol_init(&slider->control, ekGUI_TYPE_SLIDER, widget, widget, TRUE);
     slider->size = ENUM_MAX(gui_size_t);

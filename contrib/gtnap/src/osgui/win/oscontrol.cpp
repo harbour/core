@@ -11,10 +11,13 @@
 /* Windows controls commons */
 
 #include "oscontrol.inl"
+#include "osctrl.inl"
 #include "osgui.inl"
 #include "osgui_win.inl"
 #include "ostooltip.inl"
+#include "oscombo.inl"
 #include "ospanel.inl"
+#include "ospopup.inl"
 #include "oswindow.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
@@ -105,27 +108,6 @@ void _oscontrol_destroy(OSControl *control)
 
 /*---------------------------------------------------------------------------*/
 
-WCHAR *_oscontrol_convers_text(const char_t *text_utf8, uint32_t *size)
-{
-    char_t *text = NULL;
-    uint32_t used_bytes = UINT32_MAX;
-    cassert_no_null(size);
-    *size = unicode_convers_nbytes(text_utf8, ekUTF8, ekUTF16);
-    text = (char_t *)heap_malloc(*size, "OSControlConversText");
-    used_bytes = unicode_convers(text_utf8, text, ekUTF8, ekUTF16, *size);
-    cassert(*size == used_bytes);
-    return (WCHAR *)text;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_destroy_text(WCHAR **text, const uint32_t size)
-{
-    heap_free((byte_t **)text, size, "OSControlConversText");
-}
-
-/*---------------------------------------------------------------------------*/
-
 char_t *_oscontrol_get_text(const OSControl *control, uint32_t *tsize)
 {
     uint32_t num_chars = 0;
@@ -212,14 +194,6 @@ void _oscontrol_set_tooltip(OSControl *control, const char_t *text)
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_set_tooltip_hwnd(OSControl *control, HWND hwnd, const char_t *text)
-{
-    cassert_no_null(control);
-    _ostooltip_set_text(&control->tooltip_hwnd, hwnd, text);
-}
-
-/*---------------------------------------------------------------------------*/
-
 void _oscontrol_set_font(OSControl *control, const Font *font)
 {
     HFONT hfont = (HFONT)font_native(font);
@@ -240,6 +214,186 @@ void _oscontrol_update_font(OSControl *control, Font **current_font, const Font 
         *current_font = font_copy(font);
     }
     SendMessage(control->hwnd, WM_SETFONT, (WPARAM)hfont, (LPARAM)FALSE);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_text_bounds(const OSControl *control, const char_t *text, const Font *font, const real32_t refwidth, real32_t *width, real32_t *height)
+{
+    StringSizeData data;
+    HFONT current_font = NULL;
+    int ret = 0;
+    cassert_no_null(control);
+    data.hdc = GetDC(control->hwnd);
+    current_font = (HFONT)SelectObject(data.hdc, (HFONT)font_native(font));
+    cassert_no_null(current_font);
+    _osgui_text_bounds(&data, text, refwidth, width, height);
+    SelectObject(data.hdc, current_font);
+    ret = ReleaseDC(NULL, data.hdc);
+    cassert_unref(ret == 1, ret);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_set_visible(OSControl *control, const bool_t visible)
+{
+    cassert_no_null(control);
+    ShowWindow(control->hwnd, (visible == TRUE) ? SW_SHOW : SW_HIDE);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_set_enabled(OSControl *control, const bool_t enabled)
+{
+    cassert_no_null(control);
+    EnableWindow(control->hwnd, (BOOL)enabled);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_get_origin(const OSControl *control, real32_t *x, real32_t *y)
+{
+    cassert_no_null(control);
+    cassert_no_null(x);
+    cassert_no_null(y);
+    *x = (real32_t)control->x;
+    *y = (real32_t)control->y;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_get_origin_in_screen(const OSControl *control, real32_t *x, real32_t *y)
+{
+    BOOL ret;
+    RECT rect;
+    cassert_no_null(control);
+    cassert_no_null(x);
+    cassert_no_null(y);
+    ret = GetWindowRect(control->hwnd, &rect);
+    cassert_unref(ret != 0, ret);
+    *x = (real32_t)rect.left;
+    *y = (real32_t)rect.top;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_get_size(const OSControl *control, real32_t *width, real32_t *height)
+{
+    BOOL ret;
+    RECT rect;
+    cassert_no_null(control);
+    cassert_no_null(width);
+    cassert_no_null(height);
+    ret = GetWindowRect(control->hwnd, &rect);
+    cassert_unref(ret != 0, ret);
+    *width = (real32_t)(rect.right - rect.left);
+    *height = (real32_t)(rect.bottom - rect.top);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_set_position(OSControl *control, const int x, const int y)
+{
+    BOOL ret;
+    cassert_no_null(control);
+    ret = SetWindowPos(control->hwnd, NULL, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+    cassert_unref(ret != 0, ret);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_set_frame(OSControl *control, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
+{
+    BOOL ret = FALSE;
+    OSControl *parent = NULL;
+    int scroll_x = 0, scroll_y = 0;
+    cassert_no_null(control);
+    cassert(floorf(x) == x);
+    cassert(floorf(y) == y);
+    cassert(floorf(width) == width);
+    cassert(floorf(height) == height);
+
+    parent = (OSControl *)GetWindowLongPtr(GetParent(control->hwnd), GWLP_USERDATA);
+    if (parent != NULL && parent->type == ekGUI_TYPE_PANEL)
+        _ospanel_scroll_pos((OSPanel *)parent, &scroll_x, &scroll_y);
+
+    ret = SetWindowPos(control->hwnd, NULL, (int)x - scroll_x, (int)y - scroll_y, (int)width, (int)height, SWP_NOZORDER);
+    cassert_unref(ret != 0, ret);
+    control->x = (int32_t)x;
+    control->y = (int32_t)y;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_attach_to_parent(OSControl *control, OSControl *parent_control)
+{
+    HWND ret;
+    cassert_no_null(control);
+    cassert_no_null(parent_control);
+    ret = SetParent(control->hwnd, parent_control->hwnd);
+    cassert_no_null(ret);
+#if defined(__ASSERTS__)
+    {
+        HWND parent;
+        parent = GetParent(control->hwnd);
+        cassert_no_null(parent);
+        cassert(parent == parent_control->hwnd);
+    }
+#endif
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_detach_from_parent(OSControl *control, OSControl *parent_control)
+{
+    HWND ret;
+    cassert_no_null(control);
+    cassert_no_null(parent_control);
+    cassert(GetParent(control->hwnd) == parent_control->hwnd);
+    ret = SetParent(control->hwnd, NULL);
+    cassert(ret == parent_control->hwnd);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static BOOL CALLBACK i_children_count(HWND child_hwnd, LPARAM lParam)
+{
+    i_Children *children_str = (i_Children *)lParam;
+    if (children_str->num_children < children_str->children_size)
+        children_str->children[children_str->num_children] = child_hwnd;
+    children_str->num_children += 1;
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t _oscontrol_num_children(const OSControl *control)
+{
+    i_Children children_str;
+    children_str.num_children = 0;
+    children_str.children = NULL;
+    children_str.children_size = 0;
+    cassert_no_null(control);
+    EnumChildWindows(control->hwnd, i_children_count, (LPARAM)&children_str);
+    return children_str.num_children;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_draw_focus(HWND hwnd, const INT left_offset, const INT right_offset, const INT top_offset, const INT bottom_offset)
+{
+    RECT rc;
+    PAINTSTRUCT st;
+    HDC hdc;
+    GetClientRect(hwnd, &rc);
+    rc.left += left_offset;
+    rc.right -= right_offset;
+    rc.top += top_offset;
+    rc.bottom -= bottom_offset;
+    InvalidateRect(hwnd, NULL, FALSE);
+    hdc = BeginPaint(hwnd, &st);
+    FrameRect(hdc, &rc, kCHESSBOARD_BRUSH);
+    EndPaint(hwnd, &st);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -279,39 +433,6 @@ DWORD _oscontrol_ellipsis(const ellipsis_t ellipsis)
     }
 
     return 0;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_text_bounds(const OSControl *control, const char_t *text, const Font *font, const real32_t refwidth, real32_t *width, real32_t *height)
-{
-    StringSizeData data;
-    HFONT current_font = NULL;
-    int ret = 0;
-    cassert_no_null(control);
-    data.hdc = GetDC(control->hwnd);
-    current_font = (HFONT)SelectObject(data.hdc, (HFONT)font_native(font));
-    cassert_no_null(current_font);
-    _osgui_text_bounds(&data, text, refwidth, width, height);
-    SelectObject(data.hdc, current_font);
-    ret = ReleaseDC(NULL, data.hdc);
-    cassert_unref(ret == 1, ret);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_set_visible(OSControl *control, const bool_t visible)
-{
-    cassert_no_null(control);
-    ShowWindow(control->hwnd, (visible == TRUE) ? SW_SHOW : SW_HIDE);
-    control->visible = visible;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_set_enabled(OSControl *control, const bool_t enabled)
-{
-    EnableWindow(control->hwnd, (BOOL)enabled);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -364,179 +485,107 @@ void _oscontrol_destroy_brush(HBRUSH *brush)
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_get_local_frame(HWND hwnd, RECT *rect)
+gui_type_t oscontrol_type(const OSControl *control)
 {
-    BOOL ret = GetWindowRect(hwnd, rect);
-    cassert_unref(ret != 0, ret);
-    MapWindowPoints(HWND_DESKTOP, GetParent(hwnd), (LPPOINT)rect, 2);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_get_origin(const OSControl *control, real32_t *x, real32_t *y)
-{
-    RECT rect;
     cassert_no_null(control);
-    cassert_no_null(x);
-    cassert_no_null(y);
-    _oscontrol_get_local_frame(control->hwnd, &rect);
-    *x = (real32_t)rect.left;
-    *y = (real32_t)rect.top;
+    return control->type;
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_get_origin_in_screen(HWND hwnd, real32_t *x, real32_t *y)
+OSControl *oscontrol_parent(const OSControl *control)
 {
-    BOOL ret;
-    RECT rect;
-    cassert_no_null(x);
-    cassert_no_null(y);
-    ret = GetWindowRect(hwnd, &rect);
-    cassert_unref(ret != 0, ret);
-    *x = (real32_t)rect.left;
-    *y = (real32_t)rect.top;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_get_size(const OSControl *control, real32_t *width, real32_t *height)
-{
-    BOOL ret;
-    RECT rect;
-    cassert_no_null(control);
-    cassert_no_null(width);
-    cassert_no_null(height);
-    ret = GetWindowRect(control->hwnd, &rect);
-    cassert_unref(ret != 0, ret);
-    *width = (real32_t)(rect.right - rect.left);
-    *height = (real32_t)(rect.bottom - rect.top);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_set_position(OSControl *control, const int x, const int y)
-{
-    BOOL ret;
-    cassert_no_null(control);
-    ret = SetWindowPos(control->hwnd, NULL, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-    cassert_unref(ret != 0, ret);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_set_size(HWND hwnd, const real32_t width, const real32_t height)
-{
-    BOOL ret = FALSE;
-    cassert(floorf(width) == width);
-    cassert(floorf(height) == height);
-    ret = SetWindowPos(hwnd, NULL, 0, 0, (int)width, (int)height, SWP_NOMOVE | SWP_NOZORDER);
-    cassert_unref(ret != 0, ret);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_set_frame(OSControl *control, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
-{
-    BOOL ret = FALSE;
+    HWND parentHWND = NULL;
     OSControl *parent = NULL;
-    int scroll_x = 0, scroll_y = 0;
     cassert_no_null(control);
-    cassert(floorf(x) == x);
-    cassert(floorf(y) == y);
-    cassert(floorf(width) == width);
-    cassert(floorf(height) == height);
-
-    parent = (OSControl *)GetWindowLongPtr(GetParent(control->hwnd), GWLP_USERDATA);
-    if (parent != NULL && parent->type == ekGUI_TYPE_PANEL)
-        _ospanel_scroll_pos((OSPanel *)parent, &scroll_x, &scroll_y);
-
-    ret = SetWindowPos(control->hwnd, NULL, (int)x - scroll_x, (int)y - scroll_y, (int)width, (int)height, SWP_NOZORDER);
-    cassert_unref(ret != 0, ret);
-    control->x = (int)x;
-    control->y = (int)y;
+    parentHWND = GetParent(control->hwnd);
+    parent = (OSControl*)GetWindowLongPtr(parentHWND, GWLP_USERDATA);
+    return parent;
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_attach_to_parent(OSControl *control, OSControl *parent_control)
+void oscontrol_frame(const OSControl *control, OSFrame *rect)
 {
-    HWND ret;
+    real32_t width, height;
     cassert_no_null(control);
-    cassert_no_null(parent_control);
-    ret = SetParent(control->hwnd, parent_control->hwnd);
-    cassert_no_null(ret);
-#if defined(__ASSERTS__)
+    cassert_no_null(rect);
+    _oscontrol_get_size(control, &width, &height);
+    rect->left = control->x;
+    rect->top = control->y;
+    rect->right = rect->left + (int32_t)width;
+    rect->bottom = rect->top + (int32_t)height;
+}
+
+/*---------------------------------------------------------------------------*/
+
+OSWidget *oscontrol_focus_widget(const OSControl *control)
+{
+    cassert_no_null(control);
+    switch (control->type)
     {
-        HWND parent;
-        parent = GetParent(control->hwnd);
-        cassert_no_null(parent);
-        cassert(parent == parent_control->hwnd);
+    case ekGUI_TYPE_LABEL:
+    case ekGUI_TYPE_PROGRESS:
+        return NULL;
+
+    case ekGUI_TYPE_BUTTON:
+    case ekGUI_TYPE_EDITBOX:
+    case ekGUI_TYPE_SLIDER:
+    case ekGUI_TYPE_TEXTVIEW:
+    case ekGUI_TYPE_UPDOWN:
+    case ekGUI_TYPE_CUSTOMVIEW:
+        return (OSWidget*)control->hwnd;
+
+    case ekGUI_TYPE_POPUP:
+        return (OSWidget*)_ospopup_focus((OSPopUp *)control);
+
+    case ekGUI_TYPE_COMBOBOX:
+        return (OSWidget*)_oscombo_focus((OSCombo *)control);
+
+    case ekGUI_TYPE_TABLEVIEW:
+    case ekGUI_TYPE_TREEVIEW:
+    case ekGUI_TYPE_BOXVIEW:
+    case ekGUI_TYPE_SPLITVIEW:
+    case ekGUI_TYPE_PANEL:
+    case ekGUI_TYPE_LINE:
+    case ekGUI_TYPE_HEADER:
+    case ekGUI_TYPE_WINDOW:
+    case ekGUI_TYPE_TOOLBAR:
+    cassert_default();
     }
-#endif
+
+    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_detach_from_parent(OSControl *control, OSControl *parent_control)
+OSWidget *oscontrol_widget_get_focus(OSWindow *window)
 {
-    HWND ret;
-    cassert_no_null(control);
-    cassert_no_null(parent_control);
-    cassert(GetParent(control->hwnd) == parent_control->hwnd);
-    ret = SetParent(control->hwnd, NULL);
-    cassert(ret == parent_control->hwnd);
+    unref(window);
+    return (OSWidget*)GetFocus();
 }
 
 /*---------------------------------------------------------------------------*/
 
-static BOOL CALLBACK i_children_count(HWND child_hwnd, LPARAM lParam)
+void oscontrol_widget_set_focus(OSWidget *widget, OSWindow *window)
 {
-    i_Children *children_str = (i_Children *)lParam;
-    if (children_str->num_children < children_str->children_size)
-        children_str->children[children_str->num_children] = child_hwnd;
-    children_str->num_children += 1;
-    return TRUE;
+    cassert_no_null(widget);
+    unref(window);
+    SetFocus((HWND)widget);
 }
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t _oscontrol_get_children(HWND hwnd, HWND *children, const uint32_t children_size)
+bool_t oscontrol_widget_visible(const OSWidget *widget)
 {
-    i_Children children_str;
-    children_str.num_children = 0;
-    children_str.children = children;
-    children_str.children_size = children_size;
-    EnumChildWindows(hwnd, i_children_count, (LPARAM)&children_str);
-    return children_str.num_children;
+    cassert_no_null(widget);
+    return (bool_t)IsWindowVisible((HWND)widget);
 }
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t _oscontrol_num_children(HWND hwnd)
+bool_t oscontrol_widget_enable(const OSWidget *widget)
 {
-    i_Children children_str;
-    children_str.num_children = 0;
-    children_str.children = NULL;
-    children_str.children_size = 0;
-    EnumChildWindows(hwnd, i_children_count, (LPARAM)&children_str);
-    return children_str.num_children;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_draw_focus(HWND hwnd, const INT left_offset, const INT right_offset, const INT top_offset, const INT bottom_offset)
-{
-    RECT rc;
-    PAINTSTRUCT st;
-    HDC hdc;
-    GetClientRect(hwnd, &rc);
-    rc.left += left_offset;
-    rc.right -= right_offset;
-    rc.top += top_offset;
-    rc.bottom -= bottom_offset;
-    InvalidateRect(hwnd, NULL, FALSE);
-    hdc = BeginPaint(hwnd, &st);
-    FrameRect(hdc, &rc, kCHESSBOARD_BRUSH);
-    EndPaint(hwnd, &st);
+    cassert_no_null(widget);
+    return (bool_t)IsWindowEnabled((HWND)widget);
 }

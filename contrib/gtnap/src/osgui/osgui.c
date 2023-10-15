@@ -15,6 +15,7 @@
 #include <draw2d/draw2d.h>
 #include <draw2d/font.h>
 #include <draw2d/image.h>
+#include <core/arrpt.h>
 #include <core/heap.h>
 #include <core/strings.h>
 #include <osbs/log.h>

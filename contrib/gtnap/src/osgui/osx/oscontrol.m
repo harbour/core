@@ -14,6 +14,20 @@
 #include "osgui_osx.inl"
 #include "oscontrol.inl"
 #include "oscolor.inl"
+#include "oslabel.inl"
+#include "osbutton.inl"
+#include "oscombo.inl"
+#include "osedit.inl"
+#include "ospanel.inl"
+#include "ospopup.inl"
+#include "osprogress.inl"
+#include "osslider.inl"
+#include "ossplit.inl"
+#include "ostext.inl"
+#include "osupdown.inl"
+#include "osview.inl"
+#include "oswindow.inl"
+
 #include <draw2d/color.h>
 #include <draw2d/font.h>
 #include <draw2d/image.h>
@@ -118,13 +132,6 @@ static __INLINE NSControlSize i_control_size(const gui_size_t size)
 #endif
 
     return (NSControlSize)UINT32_MAX;
-}
-
-/*---------------------------------------------------------------------------*/
-
-NSControlSize _oscontrol_size(const gui_size_t size)
-{
-    return i_control_size(size);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -408,58 +415,6 @@ void _oscontrol_set_text_color(NSTextField *control, OSTextAttr *attrs, const co
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_textfield_deselect(NSTextField *control)
-{
-    NSText *field_editor = [[control window] fieldEditor:YES forObject:control];
-    cassert_no_null(field_editor);
-    [field_editor setSelectedRange:NSMakeRange([[field_editor string] length],0)];
-    [field_editor setNeedsDisplay:YES];
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_progress_set_control_size(NSProgressIndicator *progress, const gui_size_t size)
-{
-    cassert_no_null(progress);
-    [progress setControlSize:i_control_size(size)];
-}
-
-/*---------------------------------------------------------------------------*/
-
-static __INLINE NSLevelIndicatorStyle i_level_style(const enum gui_indicator_style_t style)
-{
-#if defined (MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14
-    switch (style)
-    {
-        case ekGUI_INDICATOR_STYLE_CONTINUOUS:
-            return NSLevelIndicatorStyleContinuousCapacity;
-        case ekGUI_INDICATOR_STYLE_DISCRETE:
-            return NSLevelIndicatorStyleDiscreteCapacity;
-            cassert_default();
-    }
-#else
-    switch (style)
-    {
-        case ekGUI_INDICATOR_STYLE_CONTINUOUS:
-            return NSContinuousCapacityLevelIndicatorStyle;
-        case ekGUI_INDICATOR_STYLE_DISCRETE:
-            return NSDiscreteCapacityLevelIndicatorStyle;
-        cassert_default();
-    }
-#endif
-    return (NSLevelIndicatorStyle)UINT32_MAX;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_level_set_cell_style(NSLevelIndicatorCell *cell, const enum gui_indicator_style_t style)
-{
-    cassert_no_null(cell);
-    [cell setLevelIndicatorStyle:i_level_style(style)];
-}
-
-/*---------------------------------------------------------------------------*/
-
 void _oscontrol_attach_to_parent(NSView *control, NSView *parent)
 {
     cassert_no_null(control);
@@ -482,8 +437,7 @@ void _oscontrol_detach_from_parent(NSView *control, NSView *parent)
 void _oscontrol_set_visible(NSView *object, const bool_t is_visible)
 {
     cassert_no_null(object);
-    if ([object isHidden] == (BOOL)is_visible)
-        [object setHidden:!(BOOL)is_visible];
+    [object setHidden:!(BOOL)is_visible];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -518,11 +472,13 @@ void _oscontrol_get_origin(const NSView *object, real32_t *x, real32_t *y)
     cassert_no_null(y);
 
     rect = [object frame];
+
+    /* This block must be removed */
     if (*x < 0.f)
     {
         NSView *parent = [object superview];
         cassert(*y < 0.f);
-
+        cassert(FALSE);
         /* Control origin in MainView coordinates */
         while (parent != nil)
         {
@@ -607,14 +563,6 @@ static BOOL i_check_control_frame(NSView *object)
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_set_origin(NSView *object, const real32_t x, const real32_t y)
-{
-    cassert_no_null(object);
-    [object setFrameOrigin:NSMakePoint((CGFloat)x, (CGFloat)y)];
-}
-
-/*---------------------------------------------------------------------------*/
-
 /*
     Changed 'oscontrol_set_size' and 'oscontrol_set_origin' for 'oscontrol_set_frame'
     From Cocoa documentation:
@@ -639,3 +587,118 @@ void _oscontrol_set_frame(NSView *object, const real32_t x, const real32_t y, co
     cassert(i_check_control_frame(object) == YES);
 }
 
+/*---------------------------------------------------------------------------*/
+
+gui_type_t oscontrol_type(const OSControl *control)
+{
+    cassert_no_null(control);
+    cassert([(NSObject*)control isKindOfClass:[NSView class]] == YES);
+    if (_oslabel_is((NSView*)control) == YES)
+        return ekGUI_TYPE_LABEL;
+
+    if (_osbutton_is((NSView*)control) == YES)
+        return ekGUI_TYPE_BUTTON;
+
+    if (_ospopup_is((NSView*)control) == YES)
+        return ekGUI_TYPE_POPUP;
+
+    if (_osedit_is((NSView*)control) == YES)
+        return ekGUI_TYPE_EDITBOX;
+
+    if (_oscombo_is((NSView*)control) == YES)
+        return ekGUI_TYPE_COMBOBOX;
+
+    if (_osslider_is((NSView*)control) == YES)
+        return ekGUI_TYPE_SLIDER;
+
+    if (_osupdown_is((NSView*)control) == YES)
+        return ekGUI_TYPE_UPDOWN;
+
+    if (_osprogress_is((NSView*)control) == YES)
+        return ekGUI_TYPE_PROGRESS;
+
+    if (_ostext_is((NSView*)control) == YES)
+        return ekGUI_TYPE_TEXTVIEW;
+
+    if (_ossplit_is((NSView*)control) == YES)
+        return ekGUI_TYPE_SPLITVIEW;
+
+    if (_osview_is((NSView*)control) == YES)
+        return ekGUI_TYPE_CUSTOMVIEW;
+
+    if (_ospanel_is((NSView*)control) == YES)
+        return ekGUI_TYPE_PANEL;
+
+    /* Unknown control type */
+    cassert(FALSE);
+    return ENUM_MAX(gui_type_t);
+}
+
+/*---------------------------------------------------------------------------*/
+
+OSControl *oscontrol_parent(const OSControl *control)
+{
+    cassert_no_null(control);
+    cassert([(NSObject*)control isKindOfClass:[NSView class]] == YES);
+    return (OSControl*)[(NSView*)control superview];
+}
+
+/*---------------------------------------------------------------------------*/
+
+void oscontrol_frame(const OSControl *control, OSFrame *rect)
+{
+    real32_t x, y, w, h;
+    cassert_no_null(control);
+    cassert_no_null(rect);
+    cassert([(NSObject*)control isKindOfClass:[NSView class]] == YES);
+    _oscontrol_get_origin((NSView*)control, &x, &y);
+    _oscontrol_get_size((NSView*)control, &w, &h);
+    rect->left = (int32_t)x;
+    rect->top = (int32_t)y;
+    rect->right = rect->left + (int32_t)w;
+    rect->bottom = rect->top + (int32_t)h;
+}
+
+/*---------------------------------------------------------------------------*/
+
+OSWidget *oscontrol_focus_widget(const OSControl *control)
+{
+    cassert_no_null(control);
+    cassert([(NSObject*)control isKindOfClass:[NSView class]] == YES);
+    if (_osview_is((NSView*)control) == YES)
+        return (OSWidget*)_osview_focus((NSView*)control);    
+    return (OSWidget*)control;
+}
+
+/*---------------------------------------------------------------------------*/
+
+OSWidget *oscontrol_widget_get_focus(OSWindow *window)
+{
+    return (OSWidget*)_oswindow_get_focus((NSWindow*)window);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void oscontrol_widget_set_focus(OSWidget *widget, OSWindow *window)
+{
+    _oswindow_set_focus((NSWindow*)window, (NSView*)widget);
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t oscontrol_widget_visible(const OSWidget *widget)
+{
+    cassert_no_null(widget);
+    return (bool_t)![(NSView*)widget isHidden];
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t oscontrol_widget_enable(const OSWidget *widget)
+{
+    cassert_no_null(widget);
+    if ([(NSObject*)widget isKindOfClass:[NSControl class]] == YES)
+        return (bool_t)[(NSControl*)widget isEnabled];
+    else
+        return TRUE;
+}

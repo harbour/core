@@ -158,10 +158,7 @@ void oslabel_destroy(OSLabel **label)
     listener_destroy(&(*label)->OnClick);
     listener_destroy(&(*label)->OnMouseEnter);
     listener_destroy(&(*label)->OnMouseExit);
-
-    if ((*label)->bgbrush != NULL)
-        DeleteObject((*label)->bgbrush);
-
+    _oscontrol_destroy_brush(&(*label)->bgbrush);
     _oscontrol_destroy(&(*label)->control);
     heap_delete(label, OSLabel);
 }

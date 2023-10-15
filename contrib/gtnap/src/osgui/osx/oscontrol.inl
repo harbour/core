@@ -18,8 +18,6 @@ void _oscontrol_origin_in_screen_coordinates(const NSRect *frame, CGFloat *x, CG
 
 NSTextAlignment _oscontrol_text_alignment(const align_t halign);
 
-NSControlSize _oscontrol_size(const gui_size_t size);
-
 void _oscontrol_size_from_font(NSCell *cell, const Font *font);
 
 //// DEPRECATED FUERA!!!!!!!!
@@ -48,16 +46,6 @@ void _oscontrol_set_align(NSControl *control, OSTextAttr *attrs, const align_t a
 
 void _oscontrol_set_text_color(NSTextField *control, OSTextAttr *attrs, const color_t color);
 
-void _oscontrol_textfield_deselect(NSTextField *control);
-
-//// DEPRECATED FUERA!!!!!!!!
-void _oscontrol_progress_set_control_size(NSProgressIndicator *progress, const gui_size_t size);
-/////
-
-//// DEPRECATED FUERA!!!!!!!!
-void _oscontrol_level_set_cell_style(NSLevelIndicatorCell *cell, const enum gui_indicator_style_t style);
-/////
-
 void _oscontrol_attach_to_parent(NSView *control, NSView *parent);
 
 void _oscontrol_detach_from_parent(NSView *control, NSView *parent);
@@ -69,7 +57,5 @@ void _oscontrol_set_enabled(NSControl *object, const bool_t is_enabled);
 void _oscontrol_get_size(const NSView *object, real32_t *width, real32_t *height);
 
 void _oscontrol_get_origin(const NSView *object, real32_t *x, real32_t *y);
-
-void _oscontrol_set_origin(NSView *object, const real32_t x, const real32_t y);
 
 void _oscontrol_set_frame(NSView *object, const real32_t x, const real32_t y, const real32_t width, const real32_t height);

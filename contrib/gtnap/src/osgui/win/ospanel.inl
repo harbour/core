@@ -28,14 +28,8 @@ void _ospanel_attach_control(OSPanel *panel, OSControl *control);
 
 void _ospanel_detach_control(OSPanel *panel, OSControl *control);
 
-COLORREF _ospanel_background_color(OSPanel *panel, HWND child_hwnd);
-
-bool_t _ospanel_with_scroll(const OSPanel *panel);
+COLORREF _ospanel_background_color(OSPanel *panel, OSControl *control);
 
 void _ospanel_scroll_pos(OSPanel *panel, int *scroll_x, int *scroll_y);
-
-void _ospanel_scroll_frame(const OSPanel *panel, RECT *rect);
-
-void _ospanel_scroll(OSPanel *panel, const int x, const int y);
 
 __END_C

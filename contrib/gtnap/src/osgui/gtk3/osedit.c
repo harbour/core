@@ -14,6 +14,7 @@
 #include "osedit.inl"
 #include "osgui.inl"
 #include "osglobals.inl"
+#include "osctrl.inl"
 #include "oscontrol.inl"
 #include "ospanel.inl"
 #include "oswindow.inl"
@@ -322,8 +323,8 @@ OSEdit *osedit_create(const edit_flag_t flags)
         osglobals_register_entry(&padding);
         css1 = str_printf("%s {background-image:none;background-color:transparent;}", textv);
         css2 = str_printf("%s text {background-image:none;background-color:transparent;}", textv);
-        _oscontrol_set_css(edit->tview, tc(css1));
-        _oscontrol_set_css(edit->tview, tc(css2));
+        _oscontrol_widget_set_css(edit->tview, tc(css1));
+        _oscontrol_widget_set_css(edit->tview, tc(css2));
         gtk_text_view_set_left_margin(GTK_TEXT_VIEW(edit->tview), padding.left);
         gtk_text_view_set_right_margin(GTK_TEXT_VIEW(edit->tview), padding.right);
 
@@ -487,14 +488,14 @@ void osedit_font(OSEdit *edit, const Font *font)
     {
         const char_t *textv = osglobals_css_textview();
         cassert(edit_get_type(edit->flags) == ekEDIT_MULTI);
-        _oscontrol_remove_provider(edit->tview, edit->font);
+        _oscontrol_widget_remove_provider(edit->tview, edit->font);
         _oscontrol_widget_font(edit->tview, textv, font, &edit->font);
     }
     else
     {
         const char_t *entry = osglobals_css_entry();
         cassert(edit_get_type(edit->flags) == ekEDIT_SINGLE);
-        _oscontrol_remove_provider(edit->control.widget, edit->font);
+        _oscontrol_widget_remove_provider(edit->control.widget, edit->font);
         _oscontrol_widget_font(edit->control.widget, entry, font, &edit->font);
     }
 }
@@ -611,7 +612,7 @@ static void i_set_color(OSEdit *edit, const color_t color)
 
     if (edit->color != NULL)
     {
-        _oscontrol_remove_provider(widget, edit->color);
+        _oscontrol_widget_remove_provider(widget, edit->color);
         edit->color = NULL;
     }
 
@@ -657,7 +658,7 @@ void osedit_bgcolor(OSEdit *edit, const color_t color)
         cassert(edit_get_type(edit->flags) == ekEDIT_SINGLE);
         if (edit->bgcolor != NULL)
         {
-            _oscontrol_remove_provider(edit->control.widget, edit->bgcolor);
+            _oscontrol_widget_remove_provider(edit->control.widget, edit->bgcolor);
             edit->bgcolor = NULL;
         }
 
@@ -667,7 +668,7 @@ void osedit_bgcolor(OSEdit *edit, const color_t color)
             String *css = NULL;
             _oscontrol_to_css_rgb(color, rgb, sizeof(rgb));
             css = str_printf("%s {background:%s;} %s:selected {background-color:@selected_bg_color;}", osglobals_css_entry(), rgb, osglobals_css_entry());
-            _oscontrol_set_css_prov(edit->control.widget, tc(css), &edit->bgcolor);
+            _oscontrol_widget_set_provider(edit->control.widget, tc(css), &edit->bgcolor);
             str_destroy(&css);
         }
     }
@@ -682,7 +683,7 @@ void osedit_vpadding(OSEdit *edit, const real32_t padding)
     char_t css[256];
     cassert_no_null(edit);
     bstd_sprintf(css, sizeof(css), "%s {padding-top:%dpx;padding-bottom:%dpx;min-height:0px}", entry, mpad, mpad);
-    _oscontrol_set_css(edit->control.widget, css);
+    _oscontrol_widget_set_css(edit->control.widget, css);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -893,7 +894,26 @@ void _osedit_unset_focus(OSEdit *edit)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control)
+void _osedit_detach_and_destroy(OSEdit **edit, OSPanel *panel)
+{
+    cassert_no_null(edit);
+    osedit_detach(*edit, panel);
+    osedit_destroy(edit);
+}
+
+/*---------------------------------------------------------------------------*/
+
+GtkWidget *_osedit_focus(OSEdit *edit)
+{
+    cassert_no_null(edit);
+    if (edit->tview != NULL)
+        return edit->tview;
+    return edit->control.widget;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t osedit_validate(const OSEdit *edit, const OSControl *next_control)
 {
     bool_t lost_focus = TRUE;
     cassert_no_null(edit);
@@ -923,23 +943,4 @@ bool_t _osedit_validate(const OSEdit *edit, const OSControl *next_control)
     }
 
     return lost_focus;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osedit_detach_and_destroy(OSEdit **edit, OSPanel *panel)
-{
-    cassert_no_null(edit);
-    osedit_detach(*edit, panel);
-    osedit_destroy(edit);
-}
-
-/*---------------------------------------------------------------------------*/
-
-GtkWidget *_osedit_focus(OSEdit *edit)
-{
-    cassert_no_null(edit);
-    if (edit->tview != NULL)
-        return edit->tview;
-    return edit->control.widget;
 }
