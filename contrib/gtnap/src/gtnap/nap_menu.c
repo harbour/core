@@ -128,9 +128,10 @@ static void i_OnDraw(Panel *panel, Event *e)
             draw_fill_color(p->ctx, kCOLOR_CYAN);
             draw_rect(p->ctx, ekFILL, xpos, ypos, (real32_t)menu->control_width, (real32_t)menu->row_height /* opt->size.height*/);
 
-            // To be removed, just for debug
-            // draw_line_color(p->ctx, kCOLOR_RED);
-            // draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, menu->total_height - 1);
+            /* To be removed, just for debug
+            draw_line_color(p->ctx, kCOLOR_RED);
+            draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, menu->total_height - 1);
+            */
         }
 
         if (opt_i == menu->mouse_row)
@@ -149,11 +150,11 @@ static void i_OnDraw(Panel *panel, Event *e)
             draw_line(p->ctx, stx, ypos + opt->size.height - 1, edx, ypos + opt->size.height - 1);
         }
 
-        ypos += menu->row_height; // opt->size.height;
+        ypos += menu->row_height;
 
     arrst_end();
 
-    //draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1);
+    /* draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, p->height - 1); */
 }
 
 /*---------------------------------------------------------------------------*/

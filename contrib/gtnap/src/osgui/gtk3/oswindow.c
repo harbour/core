@@ -887,23 +887,28 @@ void _oswindow_set_app_terminate(void)
 
 void _oswindow_unset_focus(OSWindow *window)
 {
-    GtkWidget *focus_widget = NULL;
-    OSControl *control = NULL;
     cassert_no_null(window);
-    focus_widget = gtk_window_get_focus(GTK_WINDOW(window->control.widget));
-    arrpt_foreach(tabstop, window->tabstops, OSControl)
-    {
-        GtkWidget *widget = (GtkWidget*)oscontrol_focus_widget(tabstop);
-        if (widget == focus_widget)
-        {
-            control = tabstop;
-            break;
-        }
-    }
-    arrpt_end();
 
-    if (control != NULL)
-        _oscontrol_unset_focus(control);
+    /* This event can be received during window destroy */
+    if (window->tabstops != NULL)
+    {
+        GtkWidget *focus_widget = NULL;
+        OSControl *control = NULL;
+        focus_widget = gtk_window_get_focus(GTK_WINDOW(window->control.widget));
+        arrpt_foreach(tabstop, window->tabstops, OSControl)
+        {
+            GtkWidget *widget = (GtkWidget*)oscontrol_focus_widget(tabstop);
+            if (widget == focus_widget)
+            {
+                control = tabstop;
+                break;
+            }
+        }
+        arrpt_end();
+
+        if (control != NULL)
+            _oscontrol_unset_focus(control);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
