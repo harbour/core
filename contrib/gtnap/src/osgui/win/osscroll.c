@@ -12,13 +12,15 @@
 
 #include "osscroll.inl"
 #include "osgui_win.inl"
+#include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
 
 struct _osscroll_t
 {
-    HWND hwnd;
+    OSControl *parent;
+    Listener *OnScroll;
     HWND hscroll;
     HWND vscroll;
     bool_t hvisible;
@@ -48,15 +50,19 @@ static HWND i_create_scroll(DWORD type, HWND hwnd, int width, int height)
 
 /*---------------------------------------------------------------------------*/
 
-OSScroll *osscroll_create(HWND hwnd, const bool_t horizontal, const bool_t vertical)
+OSScroll *osscroll_create(OSControl *parent, const bool_t horizontal, const bool_t vertical)
 {
     OSScroll *scroll = heap_new0(OSScroll);
-    DWORD dwStyle = (DWORD)GetWindowLong(hwnd, GWL_STYLE);
-    scroll->hwnd = hwnd;
+    HWND hwnd;
+    DWORD dwStyle = 0;
+    cassert_no_null(parent);
+    scroll->parent = parent;
+    hwnd = parent->hwnd;
+    dwStyle = (DWORD)GetWindowLong(hwnd, GWL_STYLE);
 
     // The window has standard horizontal scrollbar
     if (dwStyle & WS_HSCROLL)
-        scroll->hscroll = hwnd;
+        scroll->hscroll = parent->hwnd;
     else if (horizontal == TRUE)
         scroll->hscroll = i_create_scroll(SBS_HORZ, hwnd, 100, GetSystemMetrics(SM_CXHSCROLL));
 
@@ -90,16 +96,28 @@ static void i_destroy_scroll(HWND scroll, HWND hwnd)
 
 void osscroll_destroy(OSScroll **scroll)
 {
+    HWND hwnd = 0;
     cassert_no_null(scroll);
     cassert_no_null(*scroll);
+    cassert_no_null((*scroll)->parent);
 
-    if ((*scroll)->hscroll != NULL && (*scroll)->hscroll != (*scroll)->hwnd)
-        i_destroy_scroll((*scroll)->hscroll, (*scroll)->hwnd);
+    hwnd = (*scroll)->parent->hwnd;
+    if ((*scroll)->hscroll != NULL && (*scroll)->hscroll != hwnd)
+        i_destroy_scroll((*scroll)->hscroll, hwnd);
 
-    if ((*scroll)->vscroll != NULL && (*scroll)->vscroll != (*scroll)->hwnd)
-        i_destroy_scroll((*scroll)->vscroll, (*scroll)->hwnd);
+    if ((*scroll)->vscroll != NULL && (*scroll)->vscroll != hwnd)
+        i_destroy_scroll((*scroll)->vscroll, hwnd);
 
+    listener_destroy(&(*scroll)->OnScroll);
     heap_delete(scroll, OSScroll);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void osscroll_OnScroll(OSScroll *scroll, Listener *listener)
+{
+    cassert_no_null(scroll);
+    listener_update(&scroll->OnScroll, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -108,7 +126,8 @@ static __INLINE int i_horbar(const OSScroll *scroll)
 {
     cassert_no_null(scroll);
     cassert_no_null(scroll->hscroll);
-    return scroll->hscroll == scroll->hwnd ? SB_HORZ : SB_CTL;
+    cassert_no_null(scroll->parent);
+    return scroll->hscroll == scroll->parent->hwnd ? SB_HORZ : SB_CTL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -117,7 +136,8 @@ static __INLINE int i_verbar(const OSScroll *scroll)
 {
     cassert_no_null(scroll);
     cassert_no_null(scroll->vscroll);
-    return scroll->vscroll == scroll->hwnd ? SB_VERT : SB_CTL;
+    cassert_no_null(scroll->parent);
+    return scroll->vscroll == scroll->parent->hwnd ? SB_VERT : SB_CTL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -252,6 +272,7 @@ static int i_incr(HWND scroll, int nBar, int incr)
 bool_t osscroll_wheel(OSScroll *scroll, WPARAM wParam, const bool_t update_children)
 {
     cassert_no_null(scroll);
+    cassert_no_null(scroll->parent);
     if (scroll->vscroll != NULL && scroll->content_height > scroll->view_height)
     {
         int dY = scroll->line_height;
@@ -263,7 +284,7 @@ bool_t osscroll_wheel(OSScroll *scroll, WPARAM wParam, const bool_t update_child
         if (dY != 0)
         {
             if (update_children == TRUE)
-                ScrollWindowEx(scroll->hwnd, 0, dY, NULL, NULL, NULL, NULL, SW_SCROLLCHILDREN | SW_INVALIDATE | SW_ERASE);
+                ScrollWindowEx(scroll->parent->hwnd, 0, dY, NULL, NULL, NULL, NULL, SW_SCROLLCHILDREN | SW_INVALIDATE | SW_ERASE);
 
             return TRUE;
         }
@@ -276,9 +297,9 @@ bool_t osscroll_wheel(OSScroll *scroll, WPARAM wParam, const bool_t update_child
 
 void osscroll_message(OSScroll *scroll, WPARAM wParam, UINT nMsg, const bool_t update_children)
 {
-    WORD lw = 0;
+    WORD lw = LOWORD(wParam);
     cassert_no_null(scroll);
-    lw = LOWORD(wParam);
+    cassert_no_null(scroll->parent);
     if (lw != SB_ENDSCROLL)
     {
         SCROLLINFO si;
@@ -344,6 +365,33 @@ void osscroll_message(OSScroll *scroll, WPARAM wParam, UINT nMsg, const bool_t u
             cassert_default();
         }
 
+        if (scroll->OnScroll != NULL)
+        {
+            EvScroll p;
+            real32_t r = (real32_t)pos;
+            p.orient = (nMsg == WM_HSCROLL) ? ekGUI_HORIZONTAL : ekGUI_VERTICAL;
+            if (lw == SB_LINEUP)
+                p.origin = 0;
+            else if (lw == SB_LINEDOWN)
+                p.origin = 1;
+            else
+                p.origin = 2;
+
+            p.pos = (real32_t)si.nPos;
+
+            if (scroll->parent->type == ekGUI_TYPE_PANEL)
+            {
+                listener_event(scroll->OnScroll, ekGUI_EVENT_SCROLL, (OSPanel*)scroll->parent, &p, &r, OSPanel, EvScroll, real32_t); 
+            }
+            else
+            {
+                cassert(scroll->parent->type == ekGUI_TYPE_CUSTOMVIEW);
+                listener_event(scroll->OnScroll, ekGUI_EVENT_SCROLL, (OSView*)scroll->parent, &p, &r, OSView, EvScroll, real32_t); 
+            }
+
+            pos = (int)r;
+        }
+
         if (current_pos != pos)
         {
             SetScrollPos(hwnd, nBar, pos, TRUE);
@@ -372,6 +420,7 @@ void osscroll_set(OSScroll *scroll, const int32_t x, const int32_t y, const bool
     int ly = y;
 
     cassert_no_null(scroll);
+    cassert_no_null(scroll->parent);
 
     if (lx != INT32_MAX)
     {
@@ -408,7 +457,7 @@ void osscroll_set(OSScroll *scroll, const int32_t x, const int32_t y, const bool
             dy = cy - ly;
         }
 
-        ScrollWindowEx(scroll->hwnd, dx, dy, NULL, NULL, NULL, NULL, SW_SCROLLCHILDREN | SW_INVALIDATE | SW_ERASE);
+        ScrollWindowEx(scroll->parent->hwnd, dx, dy, NULL, NULL, NULL, NULL, SW_SCROLLCHILDREN | SW_INVALIDATE | SW_ERASE);
     }
     else
     {

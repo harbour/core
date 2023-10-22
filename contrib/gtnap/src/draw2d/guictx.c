@@ -864,7 +864,7 @@ void guictx_append_view_manager_imp(
     FPtr_gctx_set_listener func_view_OnKeyDown,
     FPtr_gctx_set_listener func_view_OnKeyUp,
     FPtr_gctx_set_listener func_view_OnFocus,
-    FPtr_gctx_set_listener func_view_OnNotify,
+    FPtr_gctx_set_listener func_view_OnScroll,
     FPtr_gctx_set_listener func_view_OnTouchTap,
     FPtr_gctx_set_listener func_view_OnTouchStartDrag,
     FPtr_gctx_set_listener func_view_OnTouchDragging,
@@ -905,7 +905,7 @@ void guictx_append_view_manager_imp(
     cassert(context->func_view_OnKeyDown == NULL);
     cassert(context->func_view_OnKeyUp == NULL);
     cassert(context->func_view_OnFocus == NULL);
-    cassert(context->func_view_OnNotify == NULL);
+    cassert(context->func_view_OnScroll == NULL);
     cassert(context->func_view_OnTouchTap == NULL);
     cassert(context->func_view_OnTouchStartDrag == NULL);
     cassert(context->func_view_OnTouchDragging == NULL);
@@ -944,7 +944,7 @@ void guictx_append_view_manager_imp(
     cassert_no_nullf(func_view_OnWheel);
     cassert_no_nullf(func_view_OnKeyDown);
     cassert_no_nullf(func_view_OnKeyUp);
-    cassert_no_nullf(func_view_OnNotify);
+    cassert_no_nullf(func_view_OnScroll);
     cassert_no_nullf(func_view_OnFocus);
     cassert_no_nullf(func_view_scroll);
     cassert_no_nullf(func_view_scroll_get);
@@ -976,7 +976,7 @@ void guictx_append_view_manager_imp(
     context->func_view_OnKeyDown = func_view_OnKeyDown;
     context->func_view_OnKeyUp = func_view_OnKeyUp;
     context->func_view_OnFocus = func_view_OnFocus;
-    context->func_view_OnNotify = func_view_OnNotify;
+    context->func_view_OnScroll = func_view_OnScroll;
     context->func_view_OnTouchTap = func_view_OnTouchTap;
     context->func_view_OnTouchStartDrag = func_view_OnTouchStartDrag;
     context->func_view_OnTouchDragging = func_view_OnTouchDragging;

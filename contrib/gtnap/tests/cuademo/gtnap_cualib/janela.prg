@@ -768,6 +768,21 @@ IF C_TelaCoberta == NIL    // se janela ainda não foi aberta, abrí-la
         ENDIF
     ENDIF
 
+    // IF SOB_MODO_GRAFICO()
+    //     IF (N_WindowNum - NAP_WINDOW_FIST_ID) = 0
+    //         FOR N_Cont := 0 TO 35
+    //         @ N_Cont, 0 SAY "**" + hb_ntos(N_Cont)
+    //         @ N_Cont, 107 SAY "*" + hb_ntos(N_Cont)
+    //         NEXT
+
+    //         // @ 1, 4 SAY "****** ********* ********* ********* ********* ********* ********* ********* ********* ********* *******"
+    //         // @ 34, 4 SAY "****** ********* ********* ********* ********* ********* ********* ********* ********* ********* *******"
+    //         // @ 0, 107 SAY "109"
+
+    //         // @ 26, 87 SAY "@ [26,87]"
+    //     ENDIF
+    // ENDIF
+
     *
     * Adding Toolbar (only in main (not embutida) windows)
     *

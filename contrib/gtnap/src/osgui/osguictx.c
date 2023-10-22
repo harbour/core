@@ -230,7 +230,7 @@ GuiCtx *osguictx(void)
         osview_OnKeyDown,
         osview_OnKeyUp,
         osview_OnFocus,
-        osview_OnNotify,
+        osview_OnScroll,
         NULL, /* osview_OnTouchTap, */
         NULL, /* osview_OnTouchStartDrag, */
         NULL, /* osview_OnTouchDragging, */

@@ -53,6 +53,8 @@ _gui_api void view_OnKeyUp(View *view, Listener *listener);
 
 _gui_api void view_OnFocus(View *view, Listener *listener);
 
+_gui_api void view_OnScroll(View *view, Listener *listener);
+
 _gui_api void view_keybuf(View *view, KeyBuf *buffer);
 
 _gui_api void view_get_size(const View *view, S2Df *size);

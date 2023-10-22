@@ -131,6 +131,7 @@ typedef enum _gui_event_t
     ekGUI_EVENT_WHEEL,
     ekGUI_EVENT_KEYDOWN,
     ekGUI_EVENT_KEYUP,
+    ekGUI_EVENT_SCROLL,
     ekGUI_EVENT_WND_MOVED,
     ekGUI_EVENT_WND_SIZING,
     ekGUI_EVENT_WND_SIZE,
@@ -399,6 +400,7 @@ typedef struct _evpos_t EvPos;
 typedef struct _evsize_t EvSize;
 typedef struct _evwinclose_t EvWinClose;
 typedef struct _evmenu_t EvMenu;
+typedef struct _evscroll_t EvScroll;
 typedef struct _evtbpos_t EvTbPos;
 typedef struct _evtbrow_t EvTbRow;
 typedef struct _evtbrect_t EvTbRect;
@@ -732,7 +734,7 @@ struct _guictx_t
     FPtr_gctx_set_listener func_view_OnKeyDown;
     FPtr_gctx_set_listener func_view_OnKeyUp;
     FPtr_gctx_set_listener func_view_OnFocus;
-    FPtr_gctx_set_listener func_view_OnNotify;
+    FPtr_gctx_set_listener func_view_OnScroll;
     FPtr_gctx_set_listener func_view_OnTouchTap;
     FPtr_gctx_set_listener func_view_OnTouchStartDrag;
     FPtr_gctx_set_listener func_view_OnTouchDragging;
@@ -931,6 +933,13 @@ struct _evmenu_t
     uint32_t index;
     gui_state_t state;
     const char_t *str;
+};
+
+struct _evscroll_t
+{
+    gui_orient_t orient;
+    uint32_t origin;
+    real32_t pos;
 };
 
 struct _evtbpos_t

@@ -359,7 +359,7 @@ OSPanel *ospanel_create(const uint32_t flags)
     _oscontrol_init((OSControl *)panel, PARAM(dwExStyle, WS_EX_NOPARENTNOTIFY), dwStyle, kVIEW_CLASS, 0, 0, i_WndProc, kDEFAULT_PARENT_WINDOW);
 
     if ((flags & ekVIEW_HSCROLL) || (flags & ekVIEW_VSCROLL))
-        panel->scroll = osscroll_create(panel->control.hwnd, FALSE, FALSE);
+        panel->scroll = osscroll_create((OSControl*)panel, FALSE, FALSE);
 
     panel->flags = flags;
     return panel;

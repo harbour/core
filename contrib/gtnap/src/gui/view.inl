@@ -40,8 +40,6 @@ Window *_view_window(View *view);
 
 void *_view_get_native_imp(View *view);
 
-void view_OnNotify(View *view, Listener *listener);
-
 void view_OnEmpty(View *view, FPtr_gctx_call func_empty);
 
 void view_OnUInt32(View *view, FPtr_gctx_set_uint32 func_uint32);

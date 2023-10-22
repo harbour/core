@@ -302,6 +302,12 @@ IF L_ForcaLerTudo
 
             L_Coords := CoordenadasBrowse(VX_Sele)
 
+            // Add an extra row to scrollbar
+            IF L_ScrollHorizontal
+                L_Coords[3]++
+            ENDIF
+
+            // Add an extra column to scrollbar
             IF L_ScrollVertical
                 L_Coords[4]++
             ENDIF

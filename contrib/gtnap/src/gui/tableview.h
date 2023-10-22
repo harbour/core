@@ -51,6 +51,12 @@ _gui_api void tableview_header_clickable(TableView *view, const bool_t clickable
 
 _gui_api void tableview_header_resizable(TableView *view, const bool_t resizable);
 
+_gui_api void tableview_header_height(TableView *view, const real32_t height);
+
+_gui_api void tableview_row_height(TableView *view, const real32_t height);
+
+_gui_api void tableview_hkey_scroll(TableView *view, const bool_t force_column, const real32_t scroll);
+
 _gui_api void tableview_multisel(TableView *view, const bool_t multisel, const bool_t preserve);
 
 _gui_api void tableview_grid(TableView *view, const bool_t hlines, const bool_t vlines);

@@ -67,6 +67,7 @@ struct _gtnap_column_t
 {
     uint32_t fixed_width;
     uint32_t width;
+    uint32_t header_lines;
     align_t align;
     String *title;
     HB_ITEM *block;
@@ -74,8 +75,8 @@ struct _gtnap_column_t
 
 struct _gtnap_toolbar_t
 {
-    uint32_t pixels_image;
-    uint32_t pixels_button;
+    uint32_t button_width;
+    uint32_t height;
     ArrPt(GuiComponent) *items;
 };
 
@@ -1072,13 +1073,13 @@ static void i_attach_to_panel(ArrPt(GtNapObject) *objects, Panel *main_panel, Pa
             {
                 switch(type) {
                 case ekOBJ_LABEL:
-                    pos.y += (real32_t)toolbar->pixels_button;
+                    pos.y += (real32_t)toolbar->height;
                     if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->label_y_size)
                         pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->label_y_size) / 2);
                     break;
 
                 case ekOBJ_EDIT:
-                    pos.y += (real32_t)toolbar->pixels_button;
+                    pos.y += (real32_t)toolbar->height;
                     if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->edit_y_size)
                         pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->edit_y_size) / 2);
 
@@ -1090,18 +1091,17 @@ static void i_attach_to_panel(ArrPt(GtNapObject) *objects, Panel *main_panel, Pa
 
                 case ekOBJ_IMAGE:
                 case ekOBJ_MENU:
-                    pos.y += (real32_t)toolbar->pixels_button;
+                    pos.y += (real32_t)toolbar->height;
                     break;
                 case ekOBJ_TABLEVIEW:
                 case ekOBJ_TEXTVIEW:
-                    pos.y += (real32_t)(toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size);
                     break;
                 case ekOBJ_BUTTON:
-                    if (object->editBoxIndexForButton == UINT32_MAX)
-                        pos.y += (real32_t)GTNAP_GLOBAL->cell_y_size;
-                    else
+                    if (object->editBoxIndexForButton != UINT32_MAX)
+                    {
                         /* The same as related editbox */
-                        pos.y += (real32_t)toolbar->pixels_button;
+                        pos.y += (real32_t)toolbar->height;
+                    }
 
                     if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->button_y_size)
                         pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->button_y_size) / 2);
@@ -1130,14 +1130,15 @@ static void i_attach_toolbar_to_panel(const GtNapToolbar *toolbar, Panel *panel)
     {
         V2Df p1, p2;
         S2Df s1, s2;
+        real32_t bsize = (real32_t)(toolbar->button_width + 4);
         p1.x = 0;
-        p1.y = 0;
+        p1.y = ((real32_t)toolbar->height - bsize) / 2.f;
         p2.x = 0;
-        p2.y = 3;
-        s1.width = (real32_t)toolbar->pixels_button;
-        s1.height = (real32_t)toolbar->pixels_button;
+        p2.y = p1.y;
+        s1.width = bsize;
+        s1.height = bsize;
         s2.width = 1;
-        s2.height = s1.height - 6;
+        s2.height = bsize;
 
         arrpt_foreach(item, toolbar->items, GuiComponent)
             if (item != NULL)
@@ -2300,23 +2301,11 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
 
     gtwin->panel = panel_custom(FALSE, FALSE, gtwin->border);
 
-    if (gtwin->toolbar != NULL)
-        gtwin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size;
+    //if (gtwin->toolbar != NULL)
+    //    gtwin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size;
 
     panel_size(gtwin->panel, gtwin->panel_size);
     panel_layout(gtwin->panel, layout);
-
-    /* Create the view canvas*/
-    {
-        V2Df pos = kV2D_ZEROf;
-        S2Df size = gtwin->panel_size;
-
-        if (gtwin->toolbar != NULL)
-        {
-            pos.y += gtwin->toolbar->pixels_button;
-            size.height -= gtwin->toolbar->pixels_button;
-        }
-    }
 
     if (i_with_scroll_panel(gtwin) == TRUE)
     {
@@ -3009,8 +2998,6 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t pwid, const ui
             ppos = window_get_origin(base->window);
             pos.x += ppos.x;
             pos.y += ppos.y;
-            if (gtwin->toolbar != NULL)
-                pos.y -= (real32_t)(GTNAP_GLOBAL->cell_y_size - (gtwin->toolbar->pixels_button - GTNAP_GLOBAL->cell_y_size));
         }
 
         /* Check if a first control has to be focused */
@@ -3783,15 +3770,19 @@ uint32_t hb_gtnap_tableview(const uint32_t wid, const int32_t top, const int32_t
     obj->multisel = multisel;
     obj->autoclose = autoclose;
     tableview_OnRowClick(view, listener(obj, i_OnTableRowClick, GtNapObject));
+    tableview_row_height(view, (real32_t)GTNAP_GLOBAL->cell_y_size);
+    tableview_hkey_scroll(view, TRUE, 0.f);
     return id;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_header_char_width(const char_t *title)
+static uint32_t i_header_char_width(const char_t *title, uint32_t *nlines)
 {
     uint32_t nchars = 0;
     ArrPt(String) *strs = str_splits(title, "\n", TRUE);
+    cassert_no_null(nlines);
+    *nlines = arrpt_size(strs, String);
     arrpt_foreach_const(str, strs, String)
         uint32_t n = unicode_nchars(tc(str), ekUTF8);
         if (n > nchars)
@@ -3823,6 +3814,7 @@ void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint
     GtNapColumn *col = NULL;
     uint32_t cid = UINT32_MAX;
     uint32_t hnchars = 0;
+    uint32_t nlines = 0;
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
 
@@ -3846,14 +3838,21 @@ void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint
     }
 
     str_repl_c(tcc(col->title), ";", "\n");
-    hnchars = i_header_char_width(tc(col->title));
+    hnchars = i_header_char_width(tc(col->title), &col->header_lines);
     col->fixed_width = width;
     col->width = i_col_width(col->fixed_width, hnchars, GTNAP_GLOBAL);
     col->align = ekLEFT;
     col->block = hb_itemNew(eval_block);
+
+    arrst_foreach(c, obj->columns, GtNapColumn)
+        if (c->header_lines > nlines)
+            nlines = c->header_lines;
+    arrst_end();
+
     tableview_header_title((TableView*)obj->component, cid, tc(col->title));
     tableview_column_width((TableView*)obj->component, cid, (real32_t)col->width);
     tableview_header_align((TableView*)obj->component, cid, col->align);
+    tableview_header_height((TableView*)obj->component, (real32_t)(nlines * GTNAP_GLOBAL->cell_y_size));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4462,8 +4461,8 @@ void hb_gtnap_toolbar(const uint32_t wid, const uint32_t image_pixels)
     cassert(gtwin->toolbar == NULL);
     gtwin->toolbar = heap_new0(GtNapToolbar);
     gtwin->toolbar->items = arrpt_create(GuiComponent);
-    gtwin->toolbar->pixels_image = image_pixels;
-    gtwin->toolbar->pixels_button = (uint32_t)((real32_t)image_pixels * 1.3f);
+    gtwin->toolbar->button_width = image_pixels;
+    gtwin->toolbar->height = GTNAP_GLOBAL->cell_y_size * 2;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4480,12 +4479,13 @@ void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const c
         GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
         Button *button = button_flat();
         Listener *listener = i_gtnap_listener(click_block, INT32_MAX, UINT32_MAX, gtwin, i_OnButtonClick);
+        uint32_t image_size = UINT32_MAX;
         cassert_no_null(gtwin);
         cassert_no_null(gtwin->toolbar);
-
-        if (image_width(image) != gtwin->toolbar->pixels_image || image_height(image) != gtwin->toolbar->pixels_image)
+        image_size = gtwin->toolbar->button_width;
+        if (image_width(image) != image_size || image_height(image) != image_size)
         {
-            Image *scaled = image_scale(image, gtwin->toolbar->pixels_image, gtwin->toolbar->pixels_image);
+            Image *scaled = image_scale(image, image_size, image_size);
             image_destroy(&image);
             image = scaled;
         }

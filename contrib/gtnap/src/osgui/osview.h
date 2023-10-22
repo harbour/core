@@ -44,7 +44,7 @@ _osgui_api void osview_OnKeyUp(OSView *view, Listener *listener);
 
 _osgui_api void osview_OnFocus(OSView *view, Listener *listener);
 
-_osgui_api void osview_OnNotify(OSView *view, Listener *listener);
+_osgui_api void osview_OnScroll(OSView *view, Listener *listener);
 
 _osgui_api void osview_scroll(OSView *view, const real32_t x, const real32_t y);
 

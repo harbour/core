@@ -48,7 +48,7 @@ struct _osview_t
     real32_t clip_height;
     ViewListeners listeners;
     Listener *OnFocus;
-    Listener *OnNotify;
+    Listener *OnScroll;
     Listener *OnOverlay;
 };
 
@@ -397,7 +397,7 @@ void osview_destroy(OSView **view)
     cassert_no_null(*view);
     _oslistener_remove(&(*view)->listeners);
     listener_destroy(&(*view)->OnFocus);
-    listener_destroy(&(*view)->OnNotify);
+    listener_destroy(&(*view)->OnScroll);
     listener_destroy(&(*view)->OnOverlay);
 
     if ((*view)->ctx != NULL)
@@ -538,10 +538,10 @@ void osview_OnFocus(OSView *view, Listener *listener)
 
 /*---------------------------------------------------------------------------*/
 
-void osview_OnNotify(OSView *view, Listener *listener)
+void osview_OnScroll(OSView *view, Listener *listener)
 {
     cassert_no_null(view);
-    listener_update(&view->OnNotify, listener);
+    listener_update(&view->OnScroll, listener);
 }
 
 /*---------------------------------------------------------------------------*/

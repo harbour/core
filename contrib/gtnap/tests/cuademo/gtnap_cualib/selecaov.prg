@@ -268,6 +268,11 @@ IF L_ForcaLerTudo
         IF SOB_MODO_GRAFICO()
             L_Coords := CoordenadasBrowse(VX_Sele)
 
+            // Add an extra row to scrollbar
+            // IF L_ScrollHorizontal
+            //     L_Coords[3]++
+            // ENDIF
+
             // Add an extra column to scrollbar
             IF L_ScrollVertical
                 L_Coords[4]++
