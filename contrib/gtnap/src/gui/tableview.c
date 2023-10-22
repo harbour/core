@@ -65,9 +65,11 @@ struct _tdata_t
     align_t focus_align;
     uint32_t num_rows;
     uint32_t focus_row;
+    uint32_t head_height_forced;
     uint32_t head_height;
     uint32_t head_line_height;
     uint32_t head_yoffset;
+    uint32_t row_height_forced;
     uint32_t row_height;
     uint32_t mouse_row;
     uint32_t mouse_head;
@@ -127,6 +129,8 @@ static TData *i_create_data(void)
     data->resize_mouse_x = UINT32_MAX;
     data->resize_col_width = UINT32_MAX;
     data->head_visible = TRUE;
+    data->head_height_forced = UINT32_MAX;
+    data->row_height_forced = UINT32_MAX;
     data->content_width = UINT32_MAX;
     data->content_height = UINT32_MAX;
     data->freeze_col_id = UINT32_MAX;
@@ -695,13 +699,22 @@ static void i_head_height(TData *data)
 
     arrst_foreach_const(col, data->columns, Column)
         uint32_t n = arrpt_size(col->head_text, String);
-    if (n > num_lines)
-        num_lines = n;
+        if (n > num_lines)
+            num_lines = n;
     arrst_end();
 
-    data->head_line_height = i_font_height(data->head_font);
-    data->head_height = data->head_line_height * num_lines;
-    data->head_height += 2 * drawctrl_row_padding(NULL);
+    if (data->head_height_forced != UINT32_MAX)
+    {
+        data->head_height = data->head_height_forced;
+        data->head_line_height = data->head_height / num_lines;
+    }
+    else
+    {
+        data->head_line_height = i_font_height(data->head_font);
+        data->head_height = data->head_line_height * num_lines;
+        data->head_height += 2 * drawctrl_row_padding(NULL);
+    }
+
     data->head_yoffset = (data->head_height - (data->head_line_height * num_lines)) / 2;
 }
 
@@ -710,19 +723,26 @@ static void i_head_height(TData *data)
 static void i_row_height(TData *data)
 {
     cassert_no_null(data);
-    data->row_height = 0;
-    arrst_foreach(col, data->columns, Column)
-        uint32_t height = i_col_height(col);
-    if (height > data->row_height)
-        data->row_height = height;
-    arrst_end();
+    if (data->row_height_forced == UINT32_MAX)
+    {
+        data->row_height = 0;
+        arrst_foreach(col, data->columns, Column)
+            uint32_t height = i_col_height(col);
+            if (height > data->row_height)
+                data->row_height = height;
+        arrst_end();
+
+        if (data->hlines == TRUE)
+            data->row_height += 1;
+    }
+    else
+    {
+        data->row_height = data->row_height_forced;
+    }
 
     arrst_foreach(col, data->columns, Column)
         i_col_y_offset(col, data->row_height);
     arrst_end();
-
-    if (data->hlines == TRUE)
-        data->row_height += 1;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1774,6 +1794,24 @@ void tableview_header_resizable(TableView *view, const bool_t resizable)
     {
         data->head_resizable = resizable;
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void tableview_header_height(TableView *view, const real32_t height)
+{
+    TData *data = view_get_data((View *)view, TData);
+    data->head_height_forced = (uint32_t)height;
+    i_head_height(data);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void tableview_row_height(TableView *view, const real32_t height)
+{
+    TData *data = view_get_data((View *)view, TData);
+    data->row_height_forced = (uint32_t)height;
+    i_row_height(data);
 }
 
 /*---------------------------------------------------------------------------*/
