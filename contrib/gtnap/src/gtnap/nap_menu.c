@@ -313,6 +313,35 @@ static void i_OnKeyDown(Panel *panel, Event *e)
             if (update == TRUE)
                 i_update_sel_bottom(menu);
         }
+        else if (p->key == ekKEY_PAGEUP)
+        {
+            if (menu->selected > 0)
+            {
+                uint32_t num_visible = menu->control_height / menu->row_height;
+                if (menu->selected > num_visible)
+                    menu->selected -= num_visible;
+                else
+                    menu->selected = 0;
+                update = TRUE;
+            }
+
+            if (update == TRUE)
+                i_update_sel_top(menu);
+        }
+        else if (p->key == ekKEY_PAGEDOWN)
+        {
+            if (menu->selected < n - 1)
+            {
+                uint32_t num_visible = menu->control_height / menu->row_height;
+                menu->selected += num_visible;
+                if (menu->selected >= n)
+                    menu->selected = n - 1;
+                update = TRUE;
+            }
+
+            if (update == TRUE)
+                i_update_sel_bottom(menu);
+        }
         else if (p->key == ekKEY_RETURN || p->key == ekKEY_NUMRET)
         {
             i_run_option(menu);
