@@ -3771,6 +3771,7 @@ uint32_t hb_gtnap_tableview(const uint32_t wid, const int32_t top, const int32_t
     obj->autoclose = autoclose;
     tableview_OnRowClick(view, listener(obj, i_OnTableRowClick, GtNapObject));
     tableview_row_height(view, (real32_t)GTNAP_GLOBAL->cell_y_size);
+    tableview_hkey_scroll(view, TRUE, 0.f);
     return id;
 }
 

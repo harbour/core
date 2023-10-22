@@ -46,7 +46,7 @@ struct _view_t
     Listener *OnKeyDown;
     Listener *OnKeyUp;
     Listener *OnFocus;
-    Listener *OnNotify;
+    Listener *OnScroll;
     KeyBuf *keybuf;
     void *data;
     FPtr_destroy func_destroy_data;
@@ -200,11 +200,10 @@ static void i_OnFocus(View *view, Event *event)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnNotify(View *view, Event *event)
+static void i_OnScroll(View *view, Event *event)
 {
     cassert_no_null(view);
-    cassert_no_null(event);
-    listener_pass_event(view->OnNotify, event, view, View);
+    listener_pass_event(view->OnScroll, event, view, View);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -297,7 +296,7 @@ void _view_destroy(View **view)
     listener_destroy(&(*view)->OnKeyDown);
     listener_destroy(&(*view)->OnKeyUp);
     listener_destroy(&(*view)->OnFocus);
-    listener_destroy(&(*view)->OnNotify);
+    listener_destroy(&(*view)->OnScroll);
     _gui_delete_transition(*view, View);
     obj_delete(view, View);
 }
@@ -415,9 +414,9 @@ void view_OnFocus(View *view, Listener *listener)
 
 /*---------------------------------------------------------------------------*/
 
-void view_OnNotify(View *view, Listener *listener)
+void view_OnScroll(View *view, Listener *listener)
 {
-    component_update_listener(view, &view->OnNotify, listener, i_OnNotify, view->component.context->func_view_OnNotify, View);
+    component_update_listener(view, &view->OnScroll, listener, i_OnScroll, view->component.context->func_view_OnScroll, View);
 }
 
 /*---------------------------------------------------------------------------*/

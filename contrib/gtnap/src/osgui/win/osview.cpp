@@ -53,7 +53,6 @@ struct _osview_t
     OSDraw osdraw;
     Listener *OnOverlay;
     Listener *OnFocus;
-    Listener *OnNotify;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -334,7 +333,7 @@ OSView *osview_create(const uint32_t flags)
     SetWindowLongPtr(view->control.hwnd, 0, 0);
 
     if ((flags & ekVIEW_HSCROLL) || (flags & ekVIEW_VSCROLL))
-        view->scroll = osscroll_create(view->control.hwnd, (flags & ekVIEW_HSCROLL) ? TRUE : FALSE, (flags & ekVIEW_VSCROLL) ? TRUE : FALSE);
+        view->scroll = osscroll_create((OSControl*)view, (flags & ekVIEW_HSCROLL) ? TRUE : FALSE, (flags & ekVIEW_VSCROLL) ? TRUE : FALSE);
 
     if (flags & ekVIEW_CONTROL)
     {
@@ -363,7 +362,6 @@ void osview_destroy(OSView **view)
     oslistener_remove(&(*view)->listeners);
     listener_destroy(&(*view)->OnOverlay);
     listener_destroy(&(*view)->OnFocus);
-    listener_destroy(&(*view)->OnNotify);
 
     if ((*view)->dbuffer != NULL)
     {
@@ -507,10 +505,11 @@ void osview_OnFocus(OSView *view, Listener *listener)
 
 /*---------------------------------------------------------------------------*/
 
-void osview_OnNotify(OSView *view, Listener *listener)
+void osview_OnScroll(OSView *view, Listener *listener)
 {
     cassert_no_null(view);
-    listener_update(&view->OnNotify, listener);
+    cassert_no_null(view->scroll);
+    osscroll_OnScroll(view->scroll, listener);
 }
 
 /*---------------------------------------------------------------------------*/

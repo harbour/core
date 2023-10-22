@@ -92,6 +92,7 @@ struct _tdata_t
     bool_t preserve;
     bool_t hlines;
     bool_t vlines;
+    uint32_t hkey_scroll;
     Listener *OnData;
     Listener *OnSelect;
     Listener *OnRowClick;
@@ -134,6 +135,7 @@ static TData *i_create_data(void)
     data->content_width = UINT32_MAX;
     data->content_height = UINT32_MAX;
     data->freeze_col_id = UINT32_MAX;
+    data->hkey_scroll = i_HORIZONTAL_KEY_SCROLL;
     data->multisel_mode = ekCTRL_MSEL_NO;
     data->cursor = ekGUI_CURSOR_ARROW;
     return data;
@@ -1260,6 +1262,89 @@ static bool_t i_update_sel_bottom(TableView *view, TData *data, const uint32_t s
 
 /*---------------------------------------------------------------------------*/
 
+static real32_t i_left_scroll(TData *data, const uint32_t scroll_x)
+{
+    cassert_no_null(data);
+    if (data->content_width > data->control_width)
+    {
+        if (scroll_x > 0)
+        {
+            real32_t scroll_to = 0.f;
+
+            /* Horizontal scroll fixed amount */
+            if (data->hkey_scroll != UINT32_MAX)
+            {
+                if (scroll_x > data->hkey_scroll)
+                    scroll_to = (real32_t)(scroll_x - data->hkey_scroll);
+            }
+            /* Horizontal scroll forced to column */
+            else
+            {
+                uint32_t cscroll = 0;
+                arrst_foreach(col, data->columns, Column)
+                    uint32_t ncscroll = cscroll + col->width;
+                   
+                    /* This is the left-most visible column --> Jump to column begin */
+                    if (scroll_x <= ncscroll)
+                    {
+                        scroll_to = (real32_t)cscroll;
+                        break;
+                    }
+
+                    cscroll = ncscroll;
+                arrst_end();
+            }
+
+            return scroll_to;
+        }
+    }
+
+    return -1.f;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static real32_t i_right_scroll(TData *data, const uint32_t scroll_x)
+{
+    cassert_no_null(data);
+    if (data->content_width > data->control_width)
+    {
+        if (scroll_x < data->content_width - data->control_width)
+        {
+            real32_t scroll_to = -1.f;
+
+            /* Horizontal scroll fixed amount */
+            if (data->hkey_scroll != UINT32_MAX)
+            {
+                scroll_to = (real32_t)(scroll_x + data->hkey_scroll);
+            }
+            /* Horizontal scroll forced to column */
+            else
+            {
+                uint32_t cscroll = 0;
+                arrst_foreach(col, data->columns, Column)
+                    uint32_t ncscroll = cscroll + col->width;
+                   
+                    /* This is the right-most visible column --> Jump to column end */
+                    if (scroll_x < ncscroll)
+                    {
+                        scroll_to = (real32_t)ncscroll;
+                        break;
+                    }
+
+                    cscroll = ncscroll;
+                arrst_end();
+            }
+
+            return scroll_to;
+        }
+    }
+
+    return -1.f;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnKeyDown(TableView *view, Event *e)
 {
     TData *data = view_get_data((View *)view, TData);
@@ -1452,26 +1537,20 @@ static void i_OnKeyDown(TableView *view, Event *e)
         }
         else if (p->key == ekKEY_LEFT)
         {
-            if (data->content_width > data->control_width)
+            real32_t scroll_to = i_left_scroll(data, scroll_x);
+            if (scroll_to >= 0)
             {
-                if (scroll_x > 0)
-                {
-                    view_scroll_x((View *)view, (real32_t)(scroll_x > i_HORIZONTAL_KEY_SCROLL ? scroll_x - i_HORIZONTAL_KEY_SCROLL : 0));
-                    view_update((View *)view);
-                }
+                view_scroll_x((View*)view, scroll_to);
+                view_update((View*)view);
             }
         }
         else if (p->key == ekKEY_RIGHT)
         {
-            real32_t scroll_width = 0;
-            view_scroll_size((View *)view, &scroll_width, NULL);
-            if (data->content_width > data->control_width - scroll_width)
+            real32_t scroll_to = i_right_scroll(data, scroll_x);
+            if (scroll_to >= 0)
             {
-                if (scroll_x < data->content_width - data->control_width + scroll_width)
-                {
-                    view_scroll_x((View *)view, (real32_t)(scroll_x + i_HORIZONTAL_KEY_SCROLL));
-                    view_update((View *)view);
-                }
+                view_scroll_x((View*)view, scroll_to);
+                view_update((View*)view);
             }
         }
         else if (data->multisel == TRUE)
@@ -1498,6 +1577,33 @@ static void i_OnKeyUp(TableView *view, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnScroll(TableView *view, Event *e)
+{
+    TData *data = view_get_data((View *)view, TData);
+    const EvScroll *p = event_params(e, EvScroll);
+    if (p->orient == ekGUI_HORIZONTAL)
+    {
+        /* Left or right scroll button click */
+        if (p->origin == 0 || p->origin == 1)
+        {
+            real32_t scroll_to = -1.f;
+
+            if (p->origin == 0)
+                scroll_to = i_left_scroll(data, (uint32_t)p->pos);
+            else
+                scroll_to = i_right_scroll(data, (uint32_t)p->pos);
+
+            if (scroll_to >= 0)
+            {
+                real32_t *pos = event_result(e, real32_t);
+                *pos = scroll_to;
+            }
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 TableView *tableview_create(void)
 {
     View *view = _view_create(ekVIEW_HSCROLL | ekVIEW_VSCROLL | ekVIEW_BORDER | ekVIEW_CONTROL | ekVIEW_NOERASE);
@@ -1519,6 +1625,7 @@ TableView *tableview_create(void)
     view_OnUp(view, listener((TableView *)view, i_OnUp, TableView));
     view_OnKeyDown(view, listener((TableView *)view, i_OnKeyDown, TableView));
     view_OnKeyUp(view, listener((TableView *)view, i_OnKeyUp, TableView));
+    view_OnScroll(view, listener((TableView *)view, i_OnScroll, TableView));
     _view_set_subtype(view, "TableView");
     view_size(view, s2df(256, 128));
     i_head_height(data);
@@ -1812,6 +1919,17 @@ void tableview_row_height(TableView *view, const real32_t height)
     TData *data = view_get_data((View *)view, TData);
     data->row_height_forced = (uint32_t)height;
     i_row_height(data);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void tableview_hkey_scroll(TableView *view, const bool_t force_column, const real32_t scroll)
+{
+    TData *data = view_get_data((View *)view, TData);
+    if (force_column == TRUE)
+        data->hkey_scroll = UINT32_MAX;
+    else
+        data->hkey_scroll = (uint32_t)scroll;
 }
 
 /*---------------------------------------------------------------------------*/

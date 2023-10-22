@@ -19,7 +19,6 @@ typedef struct _oswidget_t OSWidget;
 typedef struct _oscolumn_t OSColumn;
 typedef struct _osframe_t OSFrame;
 typedef struct _strsize_data_t StringSizeData;
-typedef struct _evscroll_t EvScroll;
 
 struct _osframe_t
 {
@@ -27,11 +26,6 @@ struct _osframe_t
     int32_t top;
     int32_t right;
     int32_t bottom;
-};
-
-struct _evscroll_t
-{
-    real32_t pos;
 };
 
 DeclPt(OSControl);

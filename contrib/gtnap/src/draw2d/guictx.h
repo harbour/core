@@ -829,7 +829,7 @@ _draw2d_api void guictx_append_view_manager_imp(
     FPtr_gctx_set_listener func_view_OnKeyDown,
     FPtr_gctx_set_listener func_view_OnKeyUp,
     FPtr_gctx_set_listener func_view_OnFocus,
-    FPtr_gctx_set_listener func_view_OnNotify,
+    FPtr_gctx_set_listener func_view_OnScroll,
     FPtr_gctx_set_listener func_view_OnTouchTap,
     FPtr_gctx_set_listener func_view_OnTouchStartDrag,
     FPtr_gctx_set_listener func_view_OnTouchDragging,
@@ -870,7 +870,7 @@ _draw2d_api void guictx_append_view_manager_imp(
     func_view_OnKeyDown,                                                             \
     func_view_OnKeyUp,                                                               \
     func_view_OnFocus,                                                               \
-    func_view_OnNotify,                                                              \
+    func_view_OnScroll,                                                              \
     func_view_OnTouchTap,                                                            \
     func_view_OnTouchStartDrag,                                                      \
     func_view_OnTouchDragging,                                                       \
@@ -911,7 +911,7 @@ _draw2d_api void guictx_append_view_manager_imp(
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnKeyDown, view_type),                \
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnKeyUp, view_type),                  \
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnFocus, view_type),                  \
-        FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnNotify, view_type),                 \
+        FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnScroll, view_type),                 \
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnTouchTap, view_type),               \
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnTouchStartDrag, view_type),         \
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnTouchDragging, view_type),          \
@@ -952,7 +952,7 @@ _draw2d_api void guictx_append_view_manager_imp(
             (FPtr_gctx_set_listener)func_view_OnKeyDown,                             \
             (FPtr_gctx_set_listener)func_view_OnKeyUp,                               \
             (FPtr_gctx_set_listener)func_view_OnFocus,                               \
-            (FPtr_gctx_set_listener)func_view_OnNotify,                              \
+            (FPtr_gctx_set_listener)func_view_OnScroll,                              \
             (FPtr_gctx_set_listener)func_view_OnTouchTap,                            \
             (FPtr_gctx_set_listener)func_view_OnTouchStartDrag,                      \
             (FPtr_gctx_set_listener)func_view_OnTouchDragging,                       \

@@ -14,9 +14,11 @@
 
 __EXTERN_C
 
-OSScroll *osscroll_create(HWND hwnd, const bool_t horizontal, const bool_t vertical);
+OSScroll *osscroll_create(OSControl *parent, const bool_t horizontal, const bool_t vertical);
 
 void osscroll_destroy(OSScroll **scroll);
+
+void osscroll_OnScroll(OSScroll *scroll, Listener *listener);
 
 void osscroll_visible_area(OSScroll *scroll, int *x, int *y, int *width, int *height, int *total_width, int *total_height);
 
