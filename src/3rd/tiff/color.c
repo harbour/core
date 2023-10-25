@@ -36,8 +36,8 @@
  * Color space conversion routines.
  */
 
-#include "tiffiop.h"
 #include <math.h>
+#include "tiffiop.h"
 
 /*
  * Convert color value from the CIE L*a*b* 1976 space to CIE XYZ.
