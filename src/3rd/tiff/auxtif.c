@@ -29,9 +29,9 @@
  *
  * Auxiliary Support Routines.
  */
+#include <math.h>
 #include "tiffiop.h"
 #include "predict.h"
-#include <math.h>
 
 uint32
 _TIFFMultiply32(TIFF* tif, uint32 first, uint32 second, const char* where)
