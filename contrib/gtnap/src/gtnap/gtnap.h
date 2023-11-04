@@ -136,6 +136,10 @@ extern void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, 
 
 extern void hb_gtnap_toolbar_separator(const uint32_t wid);
 
+/* LibreOffice interface */
+
+extern uint32_t hb_gtnap_office_text_to_pdf(HB_ITEM *src_block, HB_ITEM *dest_block);
+
 /*
  * Fran TODO: Pending refactoring
  *
@@ -147,6 +151,7 @@ extern void hb_gtnap_cualib_window_f4_lista(void);
 extern uint32_t hb_gtnap_cualib_window_current_edit(void);
 
 extern void hb_gtnap_cualib_default_button(const uint32_t nDefault);
+
 
 HB_EXTERN_END
 

@@ -20,7 +20,7 @@ cd ./contrib/gtnap
 gtpath=$(pwd)
 echo GTNAP path: $gtpath
 echo HBMK path: $HBMK_PATH
-bash ./build.sh -b Debug
+bash ./build.sh -b Debug || exit 1
 
 # Generate exemplo sources
 cd $gtpath/tests/cuademo/gtnap_cualib

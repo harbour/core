@@ -36,3 +36,9 @@
 #define NAP_MAX_VKEY                112
 
 #define NAP_WINDOW_FIST_ID          10000
+
+/* Return codes for LibreOffice SDK */
+
+#define SDKRES_OK                   1
+
+#define SDKRES_NOENV                2

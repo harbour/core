@@ -11,6 +11,7 @@
 #include "nappgui.h"
 #include <osapp/osmain.h>
 #include <gui/drawctrl.inl>
+#include <officesdk/officesdk.h>
 
 #include "hbapiitm.h"
 #include "hbapirdd.h"
@@ -4508,6 +4509,18 @@ void hb_gtnap_toolbar_separator(const uint32_t wid)
     cassert_no_null(gtwin);
     cassert_no_null(gtwin->toolbar);
     arrpt_append(gtwin->toolbar->items, (GuiComponent*)separator, GuiComponent);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_office_text_to_pdf(HB_ITEM *src_block, HB_ITEM *dest_block)
+{
+    String *src = hb_block_to_utf8(src_block);
+    String *dest = hb_block_to_utf8(dest_block);
+    sdkres_t res = officesdk_text_to_pdf(tc(src), tc(dest));
+    str_destroy(&src);
+    str_destroy(&dest);
+    return (uint32_t)res;
 }
 
 /*---------------------------------------------------------------------------*/
