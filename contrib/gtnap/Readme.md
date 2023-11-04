@@ -20,7 +20,7 @@ For building GTNap CMake tool is necessary:
       :~/$ cmake --version
       cmake version 3.10.2
       ```
-      
+
 * In macOS:
     * Download from https://cmake.org/download/
     * Move `CMake.app` to `/Applications` folder.
@@ -32,6 +32,36 @@ For building GTNap CMake tool is necessary:
       % cmake --version
       cmake version 3.21.4
       ```
+
+## Installing LibreOffice-SDK
+
+As of November 23, GTNap adds support for the LibreOffice-SDK, in order to add capabilities for editing documents from Harbour. It is necessary to **correctly install the LibreOffice package**, both on the development machines and on the client machines.
+
+* In Linux:
+    * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
+        ```
+        sudo apt-get install libreoffice
+        ```
+    * Install the LibreOffice development libraries. This installation is **required ONLY for compile GTNAP in development machines**.
+        ```
+        sudo apt-get install libreoffice-dev
+
+        # Optional, not mandatory for compile
+        sudo apt-get install libreoffice-dev-doc
+        ```
+    * Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `/usr/lib/libreoffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime. It is recommended to define this variable in the `.bashrc` so that it is always present.
+        ```
+        nano .bashrc
+        # Add at the end
+        export LIBREOFFICE_HOME=/usr/lib/libreoffice
+        # Ctrl+X to save
+        source .bashrc
+        cd $LIBREOFFICE_HOME
+        ls
+        CREDITS.fodt  NOTICE  presets  program  sdk  share
+        ```
+
+> GTNAP-based programs will not be able to compile or run if LibreOffice is not correctly installed.
 
 ## Build GTNap
 

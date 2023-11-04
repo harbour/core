@@ -1,3 +1,4 @@
 *.user
 *.old
 *.swp
+/build
