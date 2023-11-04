@@ -1969,7 +1969,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       cOptPrefix := "-/"
       /* NOTE: Some targets (watcom, pocc/xcc) need kernel32 explicitly. */
       l_aLIBSYSCORE := { "winmm", "kernel32", "user32", "gdi32", "advapi32", "ws2_32", "iphlpapi" }
-      l_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "uuid", "ole32", "oleaut32", "mpr", "mapi32", "imm32", "msimg32", "wininet" }
+      IF hbmk[ _HBMK_cCOMP ] == "bcc64"
+         l_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "mpr", "mapi32", "imm32", "msimg32", "wininet" }
+      ELSE
+         l_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "uuid", "ole32", "oleaut32", "mpr", "mapi32", "imm32", "msimg32", "wininet" }
+      ENDIF
    CASE hbmk[ _HBMK_cPLAT ] == "wce"
 #if ! defined( __PLATFORM__UNIX )
       aCOMPDET := { ;
@@ -5008,16 +5012,20 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cBin_CompC := "bcc32.exe"
          ENDIF
          cBin_CompCPP := cBin_CompC
-         cOpt_CompC := "-c -q -CP437"
+         IF hbmk[ _HBMK_cCOMP ] == "bcc64"
+            cOpt_CompC := "-c -q"
+         ELSE
+            cOpt_CompC := "-c -q -CP437"
+         ENDIF
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-               cOpt_CompC += " -d -O2 -OS -Ov -Oc"
+               cOpt_CompC += " -d -O2"
             ELSE
                cOpt_CompC += " -d -O2 -OS -Ov -Oc -Oi -6"
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-            cLibBCC_CRTL := "cw64mt.lib"
+            cLibBCC_CRTL := "cw64mt.a"
          ELSE
             cLibBCC_CRTL := "cw32mt.lib"
          ENDIF
@@ -5030,7 +5038,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                AAdd( hbmk[ _HBMK_aOPTC ], "-tWM" )
             ELSE
                IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-                  cLibBCC_CRTL := "cw64.lib"
+                  cLibBCC_CRTL := "cw64.a"
                ELSE
                   cLibBCC_CRTL := "cw32.lib"
                ENDIF
@@ -5038,12 +5046,21 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ELSE
             AAdd( hbmk[ _HBMK_aOPTC ], "-tWM" )
          ENDIF
-         SWITCH hbmk[ _HBMK_nWARN ]
-         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )         ; EXIT
-         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q -w-sig-" ) ; EXIT
-         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-sig- -w-aus- -w-ccc- -w-csu- -w-par- -w-rch- -w-ucp- -w-use- -w-prc- -w-pia-" ) ; EXIT
-         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )           ; EXIT
-         ENDSWITCH
+         IF hbmk[ _HBMK_cCOMP ] == "bcc64"
+            SWITCH hbmk[ _HBMK_nWARN ]
+            CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )  ; EXIT
+            CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )  ; EXIT
+            CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )  ; EXIT
+            CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )  ; EXIT
+            ENDSWITCH
+         ELSE
+            SWITCH hbmk[ _HBMK_nWARN ]
+            CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )         ; EXIT
+            CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q -w-sig-" ) ; EXIT
+            CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-sig- -w-aus- -w-ccc- -w-csu- -w-par- -w-rch- -w-ucp- -w-use- -w-prc- -w-pia-" ) ; EXIT
+            CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )           ; EXIT
+            ENDSWITCH
+         ENDIF
          cOpt_CompC += " {FC} {LC}"
          cBin_Res := "brcc32.exe"
          cOpt_Res := "{FR} {IR} -fo{OS}"
@@ -5055,14 +5072,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          cBin_Dyn := cBin_Link
          IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-            cOpt_Link := "-Gn -Tpe -L{DL} {FL} " + iif( hbmk[ _HBMK_lGUI ], "c0w64.obj", "c0x64.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64.lib, {IM}, {LS}{SCRIPT}"
-            cOpt_Dyn  := "-Gn -Tpd -L{DL} {FD} " +                          "c0d64.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64.lib, {IM}, {LS}{SCRIPT}"
+            cOpt_Link := "-Gn -Tpe -L{DL} {FL} " + iif( hbmk[ _HBMK_lGUI ], "c0w64.obj", "c0x64.o" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64.a, {IM}, {LS}{SCRIPT}"
+            cOpt_Dyn  := "-Gn -Tpd -L{DL} {FD} " +                          "c0d64.obj"              + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64.a, {IM}, {LS}{SCRIPT}"
          ELSE
             cOpt_Link := "-Gn -Tpe -L{DL} {FL} " + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
             cOpt_Dyn  := "-Gn -Tpd -L{DL} {FD} " +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
          ENDIF
-         IF hbmk[ _HBMK_cCOMP ] == "bcc"
-            /* TODO: Add support for bcc64/mkexp */
+         IF hbmk[ _HBMK_cCOMP ] == "bcc64"
+            bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_bcc( hbmk, "mkexp.exe {FI} {OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
+         ELSE
             bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_bcc( hbmk, "implib.exe -c {FI} {OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
          ENDIF
          cLibPathPrefix := ""
