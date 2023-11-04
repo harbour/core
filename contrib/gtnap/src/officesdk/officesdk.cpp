@@ -2,14 +2,14 @@
 #include <sewer/cassert.h>
 
 #include <cppuhelper/bootstrap.hxx>
-// #include <rtl/bootstrap.hxx>
-// #include <beans/XPropertySet.hpp>
-// #include <bridge/XUnoUrlResolver.hpp>
-// #include <frame/Desktop.hpp>
-// #include <frame/XComponentLoader.hpp>
-// #include <frame/XStorable.hpp>
-// #include <lang/XMultiComponentFactory.hpp>
-// #include <text/XTextDocument.hpp>
+#include <rtl/bootstrap.hxx>
+#include <beans/XPropertySet.hpp>
+#include <bridge/XUnoUrlResolver.hpp>
+#include <frame/Desktop.hpp>
+#include <frame/XComponentLoader.hpp>
+#include <frame/XStorable.hpp>
+#include <lang/XMultiComponentFactory.hpp>
+#include <text/XTextDocument.hpp>
 
 class OfficeSdk
 {
@@ -17,7 +17,7 @@ public:
     ~OfficeSdk();
 
 public:
-    css::uno::Reference<css::uno::XComponentContext> xComponentContext;
+    //css::uno::Reference<css::uno::XComponentContext> xComponentContext;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -37,10 +37,14 @@ sdkres_t officesdk_text_to_pdf(const char_t *src_pathname, const char_t *dest_pa
 {
     cassert_no_null(src_pathname);
     cassert_no_null(dest_pathname);
+    rtl::OUString sDocUrl("file:///home/fran/harbour_nappgui/contrib/gtnap/tests/unotest/test.odt"), sPDFUrl("file:///home/fran/harbour_nappgui/contrib/gtnap/tests/unotest/test.pdf");
+    rtl::OUString sConnectionString("uno:socket,host=localhost,port=2083;urp;StarOffice.ServiceManager");
+    rtl::Bootstrap::set("URE_MORE_TYPES", "file:///usr/lib/libreoffice/program/types/offapi.rdb");
+    rtl::Bootstrap::set("URE_BOOTSTRAP", "vnd.sun.star.pathname:/usr/lib/libreoffice/program/fundamentalrc");
 
-    if (i_OFFICE_SDK.xComponentContext.get() == nullptr)
-        return ekSDKRES_NOENV;
-    else
+    // if (i_OFFICE_SDK.xComponentContext.get() == nullptr)
+    //     return ekSDKRES_NOENV;
+    // else
         return ekSDKRES_OK;
 }
 
