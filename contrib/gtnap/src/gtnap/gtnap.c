@@ -4525,6 +4525,13 @@ uint32_t hb_gtnap_office_text_to_pdf(HB_ITEM *src_block, HB_ITEM *dest_block)
 
 /*---------------------------------------------------------------------------*/
 
+const char_t *hb_gtnap_office_error(const uint32_t errcode)
+{
+    return officesdk_error((sdkres_t)errcode);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Font *hb_gtnap_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);

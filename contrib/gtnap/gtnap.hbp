@@ -35,6 +35,7 @@ src/gtnap/nap_menu.c
 src/gtnap/nap_tableview.c
 src/gtnap/nap_textview.c
 src/gtnap/nap_window.c
+src/gtnap/nap_office.c
 
 # Avoid linker error '__gxx_personality_v0'
 # GTNAP need to be linked with g++

@@ -140,6 +140,8 @@ extern void hb_gtnap_toolbar_separator(const uint32_t wid);
 
 extern uint32_t hb_gtnap_office_text_to_pdf(HB_ITEM *src_block, HB_ITEM *dest_block);
 
+extern const char_t *hb_gtnap_office_error(const uint32_t errcode);
+
 /*
  * Fran TODO: Pending refactoring
  *

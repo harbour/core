@@ -89,6 +89,8 @@ ADDOPCAO V_Janela TEXTO "#entrada de dados" ;
     ACAO EXEMPLO_ENTRADA_DADOS() AJUDA "P06681"
 ADDOPCAO V_Janela TEXTO "#janelas auxiliares" ;
     ACAO EXEMPLO_AUXILIARES() AJUDA "P06683"
+ADDOPCAO V_Janela TEXTO "#LibreOffice examples" ;
+    ACAO EXEMPLO_LIBOFFICE() AJUDA "P06683"
 
 L_FechouComAutoclose := ATIVE(V_Janela)
 

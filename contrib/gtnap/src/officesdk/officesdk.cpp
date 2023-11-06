@@ -17,7 +17,7 @@ public:
     ~OfficeSdk();
 
 public:
-    //css::uno::Reference<css::uno::XComponentContext> xComponentContext;
+    css::uno::Reference<css::uno::XComponentContext> xComponentContext;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -45,7 +45,21 @@ sdkres_t officesdk_text_to_pdf(const char_t *src_pathname, const char_t *dest_pa
     // if (i_OFFICE_SDK.xComponentContext.get() == nullptr)
     //     return ekSDKRES_NOENV;
     // else
-        return ekSDKRES_OK;
+        //return ekSDKRES_OK;
+        return ekSDKRES_NOENV;
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t* officesdk_error(const sdkres_t code)
+{
+    switch(code) {
+    case ekSDKRES_OK:
+        return "Ok";
+    case ekSDKRES_NOENV:
+        return "No environment variable";
+    cassert_default();
+    }
 }
 
 /*---------------------------------------------------------------------------*/
