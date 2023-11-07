@@ -1,6 +1,6 @@
-diff -urN pcre.orig/pcrejitc.c pcre/pcrejitc.c
---- pcre.orig/pcrejitc.c	2014-02-03 09:05:44.496039042 +0100
-+++ pcre/pcrejitc.c	2014-02-03 09:05:44.496039042 +0100
+diff --strip-trailing-cr -urN pcre.orig/pcrejitc.c pcre/pcrejitc.c
+--- pcre.orig/pcrejitc.c	2020-02-11 17:36:46.000000000 +0000
++++ pcre/pcrejitc.c	2023-11-07 01:09:40.000000000 +0000
 @@ -59,7 +59,7 @@
  #define SLJIT_VERBOSE 0
  #define SLJIT_DEBUG 0
@@ -10,19 +10,20 @@ diff -urN pcre.orig/pcrejitc.c pcre/pcrejitc.c
  
  #if defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED
  #error Unsupported architecture
-diff -urN pcre.orig/sjconfi.h pcre/sjconfi.h
---- pcre.orig/sjconfi.h	2014-02-03 09:05:44.536039042 +0100
-+++ pcre/sjconfi.h	2014-02-03 09:05:44.536039042 +0100
-@@ -323,8 +323,12 @@
+diff --strip-trailing-cr -urN pcre.orig/sjconfi.h pcre/sjconfi.h
+--- pcre.orig/sjconfi.h	2019-11-19 16:21:54.000000000 +0000
++++ pcre/sjconfi.h	2023-11-07 01:15:20.000000000 +0000
+@@ -505,8 +505,13 @@
  
  #if defined(__GNUC__) && !defined(__APPLE__)
  
 +#if ( __GNUC__ > 3 ) || ( ( __GNUC__ == 3 ) && ( __GNUC_MINOR__ >= 4 ) )
- #define SLJIT_CALL __attribute__ ((fastcall))
+ #define SLJIT_FUNC __attribute__ ((fastcall))
  #define SLJIT_X86_32_FASTCALL 1
 +#else
-+#define SLJIT_CALL
++#define SLJIT_FUNC
 +#endif
++
  
  #elif defined(_MSC_VER)
  
