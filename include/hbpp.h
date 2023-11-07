@@ -216,7 +216,7 @@ typedef HB_PP_MSG_FUNC_( ( * PHB_PP_MSG_FUNC ) );
 #define HB_PP_TOKEN_STATIC       0x4000
 #define HB_PP_TOKEN_PREDEFINED   0x8000
 
-#define HB_PP_TOKEN_SETTYPE(t,n) do{ (t)->type = ( (t)->type & 0xff00 ) | (n); } while(0)
+#define HB_PP_TOKEN_SETTYPE(t,n) do{ (t)->type = ( (t)->type & ( HB_USHORT ) 0xff00 ) | (n); } while(0)
 
 #define HB_PP_TOKEN_ALLOC(t)     ( ( (t) & HB_PP_TOKEN_STATIC ) == 0 )
 #define HB_PP_TOKEN_ISPREDEF(t)  ( ( (t)->type & HB_PP_TOKEN_PREDEFINED ) != 0 )

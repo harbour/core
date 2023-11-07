@@ -1202,7 +1202,7 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
 
 char * hb_compEncodeString( int iMethod, const char * szText, HB_SIZE * pnLen )
 {
-   char * pBuffer = ( char * ) hb_xgrab( *pnLen + 1 );
+   HB_UCHAR * pBuffer = ( HB_UCHAR * ) hb_xgrab( *pnLen + 1 );
 
    memcpy( pBuffer, szText, *pnLen );
    pBuffer[ *pnLen ] = '\0';
@@ -1212,12 +1212,12 @@ char * hb_compEncodeString( int iMethod, const char * szText, HB_SIZE * pnLen )
       for( nPos = 0; nPos < *pnLen; nPos++ )
          pBuffer[ nPos ] ^= 0xF3;
    }
-   return pBuffer;
+   return ( char * ) pBuffer;
 }
 
 char * hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pnLen )
 {
-   char * pBuffer = ( char * ) hb_xgrab( *pnLen + 1 );
+   HB_UCHAR * pBuffer = ( HB_UCHAR * ) hb_xgrab( *pnLen + 1 );
 
    memcpy( pBuffer, szText, *pnLen );
    pBuffer[ *pnLen ] = '\0';
@@ -1227,7 +1227,7 @@ char * hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pnLen )
       for( nPos = 0; nPos < *pnLen; nPos++ )
          pBuffer[ nPos ] ^= 0xF3;
    }
-   return pBuffer;
+   return ( char * ) pBuffer;
 }
 
 /* 'pDest' must be double the size of 'size'. [vszakats] */

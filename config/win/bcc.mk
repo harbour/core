@@ -22,25 +22,34 @@ CC_OUT := -o
 
 CFLAGS += -I. -I$(HB_HOST_INC)
 
-ifeq ($(HB_COMPILER),bcc64)
-   CFLAGS += -q -tWM
-else
-   CFLAGS += -q -tWM -CP437
+CFLAGS += -q -tWM
+ifneq ($(HB_COMPILER),bcc64)
+   CFLAGS += -CP437
 endif
 
-ifeq ($(HB_COMPILER),bcc64)
-   CFLAGS += -w
-else
-   ifeq ($(HB_BUILD_WARN),no)
-      CFLAGS += -w-sig- -w-aus- -w-ccc- -w-csu- -w-par- -w-rch- -w-ucp- -w-use- -w-prc- -w-pia-
+ifeq ($(HB_BUILD_WARN),no)
+   ifeq ($(HB_COMPILER),bcc64)
+      # same as clang
+      CFLAGS += -w -Wmissing-braces -Wreturn-type -Wformat
+      ifneq ($(HB_BUILD_MODE),cpp)
+         CFLAGS += -Wimplicit-int -Wimplicit-function-declaration
+      endif
    else
-      CFLAGS += -w -Q -w-sig-
+      CFLAGS += -w-aus -w-ccc -w-csu -w-ovf -w-par -w-rch -w-spa
+   endif
+else
+   ifeq ($(HB_COMPILER),bcc64)
+      # same as clang
+      CFLAGS += -W -Wall
+   else
+      CFLAGS += -w -Q -w-sig
    endif
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
    ifeq ($(HB_COMPILER),bcc64)
-      CFLAGS += -d -O2
+      # same as clang
+      CFLAGS += -O3
    else
       # for some reason -6 generates the exact same code as -4 with both 5.5 and 5.8.
       # -5 seems to be significantly slower than both. [vszakats]
@@ -101,7 +110,7 @@ endif
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(3RDLIB_DIR),$(subst /,$(BACKSLASH),-L"$(dir)"))
 LDFLAGS += $(LIBPATHS) -Gn -Tpe
 ifeq ($(HB_COMPILER),bcc64)
-   LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x64$(OBJ_EXT) $(filter-out %$(RES_EXT),$(^F)), "$(subst /,$(BACKSLASH),$(BIN_DIR)/$@)", nul, $(LDLIBS) cw64mt import64 xmath,, $(filter %$(RES_EXT),$(^F)) $(LDSTRIP)
+   LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x64$(OBJ_EXT) $(filter-out %$(RES_EXT),$(^F)), "$(subst /,$(BACKSLASH),$(BIN_DIR)/$@)", nul, $(LDLIBS) cw64mt import64,, $(filter %$(RES_EXT),$(^F)) $(LDSTRIP)
 else
    LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32$(OBJ_EXT) $(filter-out %$(RES_EXT),$(^F)), "$(subst /,$(BACKSLASH),$(BIN_DIR)/$@)", nul, $(LDLIBS) cw32mt import32,, $(filter %$(RES_EXT),$(^F)) $(LDSTRIP)
 endif
@@ -157,8 +166,10 @@ DY_OUT :=
 # NOTE: .lib extension not added to keep line short enough to work on Win9x/ME
 ifeq ($(HB_COMPILER),bcc64)
    DLIBS := $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS) cw64mt import64
+   DLL_STARTUP_MODULE = c0d64$(OBJ_EXT)
 else
    DLIBS := $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS) cw32mt import32
+   DLL_STARTUP_MODULE = c0d32$(OBJ_EXT)
 endif
 
 # NOTE: The empty line directly before 'endef' HAS TO exist!
@@ -170,11 +181,63 @@ define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dynlib_object))
    @$(ECHO) $(ECHOQUOTE), $(subst /,$(ECHOBACKSLASH),$(DYN_DIR)/$@),, $(subst /,$(ECHOBACKSLASH),$(DLIBS))$(ECHOQUOTE) >> __dyn__.tmp
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) c0d32.obj @__dyn__.tmp
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DLL_STARTUP_MODULE) @__dyn__.tmp
    @$(CP) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT)) $(subst /,$(DIRSEP),$(IMP_FILE))
    @$(RM) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT))
 endef
 
 DY_RULE = $(create_dynlib)
+
+
+# Don't let Clang-based (7.60+ (?)) bcc64 parse UTF-8 in our sources.
+# https://quality.embarcadero.com/browse/RSP-26502 got closed but the issue remains:
+# if Clang-based bcc64 detects UTF-8, it will convert it to ANSI in the binary.
+# So, for known UTF-8 string literals in our sources, we modify CC_RULE:
+# first, a PowerShell script converts UTF-8 to \123 octal characters, and
+# then the result is fed into bcc64 instead of the original file.
+# PowerShell could be changed to C if anyone cares.
+# As the source location changes, -I$(GRANDP) must be added as well.
+ifneq ($(filter bcc64:hbcpage bcc64:hblang,$(HB_COMPILER):$(LIBNAME)),)
+   define cc_bcc64_hack
+      powershell " \
+         function byteToCLiteral { \
+            param([string]$$m) \
+	    $$n = [int]$$m; \
+            $$(If($$n -lt 128) { [string][char]$$n } \
+               Else { '\{0}' -f [Convert]::ToString($$n, 8) } \
+            ) \
+         } \
+         function fileFixHighBit { \
+            param([string]$$filename) \
+            [regex]::Replace((Get-Content -Raw -Encoding byte $$filename), '(\b\d+ *)', $$function:byteToCLiteral) \
+         } \
+         $$f = '$(subst /,$(DIRSEP),$<)'; \
+         $$fn = '$(<F)'; \
+         $$p = '#include .(l_\w*\.h).*$$'; \
+         $$q = (Select-String -Path $$f -Pattern $$p); \
+         if ($$q) { \
+            $$inc=($$q.Line -replace $$p, '$(subst /,$(DIRSEP),$(<D)/)$$1'); \
+            Set-Content -Path $$fn ((Get-Content $$f) -replace $$p, (fileFixHighBit($$inc))) \
+         } else { \
+            Set-Content -Path $$fn (fileFixHighBit($$f)) \
+         } \
+      "
+      $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) -I$(GRANDP) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(HB_CFLAGS_STA) $(CC_IN) $(<F))
+   endef
+   CC_RULE = $(cc_bcc64_hack)
+   ifneq ($(HB_BUILD_DYN),no)
+      ifneq ($(HB_DYN_COPT),)
+         ifneq ($(LIBNAME),)
+            ifneq ($(filter $(LIBNAME),$(HB_DYN_LIBS)),)
+               define cc_comp_all
+	          $(cc_bcc64_hack)
+                  $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) -I$(GRANDP) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_DYN_SUFFIX)$(OBJ_EXT)) $(HB_DYN_COPT) $(HB_CFLAGS_DYN) $(CC_IN) $(<F))
+               endef
+               CC_RULE = $(cc_comp_all)
+            endif
+         endif
+      endif
+   endif
+endif
 
 include $(TOP)$(ROOT)config/rules.mk

@@ -73,7 +73,7 @@
    #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-wce-x86" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_CE )
    #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-wce" ) HB_DLL_EXT
-#elif defined( __BORLANDC__ )
+#elif defined( __BORLANDC__ ) && !defined( HB_CPU_X86_64 )
    #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-bcc" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_X86_64 )
    #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-x64" ) HB_DLL_EXT
