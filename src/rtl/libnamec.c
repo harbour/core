@@ -86,7 +86,7 @@ HB_FUNC( HB_LIBPREFIX )
    #define HB_DLL_SUFFIX  HB_DLL_VER "-wce-x86"
 #elif defined( HB_OS_WIN_CE )
    #define HB_DLL_SUFFIX  HB_DLL_VER "-wce"
-#elif defined( __BORLANDC__ )
+#elif defined( __BORLANDC__ ) && !defined( HB_CPU_X86_64 )
    #define HB_DLL_SUFFIX  HB_DLL_VER "-bcc"
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_X86_64 )
    #define HB_DLL_SUFFIX  HB_DLL_VER "-x64"

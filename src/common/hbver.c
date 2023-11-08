@@ -935,7 +935,8 @@ HB_BOOL hb_iswince( void )
 
 /* NOTE: The caller must free the returned buffer. [vszakats] */
 
-#define COMPILER_BUF_SIZE  80
+/* Note: Clang-based bcc64 takes ~86 bytes */
+#define COMPILER_BUF_SIZE 128
 
 char * hb_verCompiler( void )
 {
@@ -1050,6 +1051,52 @@ char * hb_verCompiler( void )
 #endif
    iVerPatch = __OPENCC_PATCHLEVEL__;
 
+#elif defined( __BORLANDC__ )
+
+   /* NOTE: keep borland detection before clang detection. */
+
+   #if __BORLANDC__ >= 0x0590  /* Version 5.9 */
+      #if __BORLANDC__ >= 0x0620  /* Version 6.2 */
+         pszName = "Borland/Embarcadero C++";
+      #else
+         pszName = "Borland/CodeGear C++";
+      #endif
+   #else
+      pszName = "Borland C++";
+   #endif
+   #if   __BORLANDC__ == 0x0400  /* Version 3.0 */
+      iVerMajor = 3;
+      iVerMinor = 0;
+      iVerPatch = 0;
+   #elif __BORLANDC__ == 0x0410  /* Version 3.1 */
+      iVerMajor = 3;
+      iVerMinor = 1;
+      iVerPatch = 0;
+   #elif __BORLANDC__ == 0x0452  /* Version 4.0 */
+      iVerMajor = 4;
+      iVerMinor = 0;
+      iVerPatch = 0;
+   #elif __BORLANDC__ == 0x0460  /* Version 4.5 */
+      iVerMajor = 4;
+      iVerMinor = 5;
+      iVerPatch = 0;
+   #elif __BORLANDC__ >= 0x0500  /* Version 5.x */
+      iVerMajor = __BORLANDC__ >> 8;
+      iVerMinor = ( __BORLANDC__ & 0xFF ) >> 4;
+      iVerPatch = __BORLANDC__ & 0xF;
+   #else /* Version 4.x */
+      iVerMajor = __BORLANDC__ >> 8;
+      iVerMinor = ( __BORLANDC__ - 1 & 0xFF ) >> 4;
+      iVerPatch = 0;
+   #endif
+
+#elif defined( __TURBOC__ )
+
+   pszName = "Borland Turbo C";
+   iVerMajor = __TURBOC__ >> 8;
+   iVerMinor = __TURBOC__ & 0xFF;
+   iVerPatch = 0;
+
 #elif defined( __clang__ ) && defined( __clang_major__ )
 
    /* NOTE: keep clang detection before msvc detection. */
@@ -1116,50 +1163,6 @@ char * hb_verCompiler( void )
    #else
       iVerPatch = 0;
    #endif
-
-#elif defined( __BORLANDC__ )
-
-   #if __BORLANDC__ >= 0x0590  /* Version 5.9 */
-      #if __BORLANDC__ >= 0x0620  /* Version 6.2 */
-         pszName = "Borland/Embarcadero C++";
-      #else
-         pszName = "Borland/CodeGear C++";
-      #endif
-   #else
-      pszName = "Borland C++";
-   #endif
-   #if   __BORLANDC__ == 0x0400  /* Version 3.0 */
-      iVerMajor = 3;
-      iVerMinor = 0;
-      iVerPatch = 0;
-   #elif __BORLANDC__ == 0x0410  /* Version 3.1 */
-      iVerMajor = 3;
-      iVerMinor = 1;
-      iVerPatch = 0;
-   #elif __BORLANDC__ == 0x0452  /* Version 4.0 */
-      iVerMajor = 4;
-      iVerMinor = 0;
-      iVerPatch = 0;
-   #elif __BORLANDC__ == 0x0460  /* Version 4.5 */
-      iVerMajor = 4;
-      iVerMinor = 5;
-      iVerPatch = 0;
-   #elif __BORLANDC__ >= 0x0500  /* Version 5.x */
-      iVerMajor = __BORLANDC__ >> 8;
-      iVerMinor = ( __BORLANDC__ & 0xFF ) >> 4;
-      iVerPatch = __BORLANDC__ & 0xF;
-   #else /* Version 4.x */
-      iVerMajor = __BORLANDC__ >> 8;
-      iVerMinor = ( __BORLANDC__ - 1 & 0xFF ) >> 4;
-      iVerPatch = 0;
-   #endif
-
-#elif defined( __TURBOC__ )
-
-   pszName = "Borland Turbo C";
-   iVerMajor = __TURBOC__ >> 8;
-   iVerMinor = __TURBOC__ & 0xFF;
-   iVerPatch = 0;
 
 #elif defined( __MPW__ )
 
@@ -1300,11 +1303,15 @@ char * hb_verCompiler( void )
       hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE - 1 );
 
 #if defined( __clang_version__ )
-   if( strstr( __clang_version__, "(" ) )
-      /* "2.0 (trunk 103176)" -> "(trunk 103176)" */
-      hb_snprintf( szSub, sizeof( szSub ), " %s", strstr( __clang_version__, "(" ) );
-   else
-      hb_snprintf( szSub, sizeof( szSub ), " (%s)", __clang_version__ );
+   #if defined( __BORLANDC__ )
+      hb_snprintf( szSub, sizeof( szSub ), " (based on Clang %s)", __clang_version__ );
+   #else
+      if( strstr( __clang_version__, "(" ) )
+         /* "2.0 (trunk 103176)" -> "(trunk 103176)" */
+         hb_snprintf( szSub, sizeof( szSub ), " %s", strstr( __clang_version__, "(" ) );
+      else
+         hb_snprintf( szSub, sizeof( szSub ), " (%s)", __clang_version__ );
+   #endif
    hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
 #endif
 
