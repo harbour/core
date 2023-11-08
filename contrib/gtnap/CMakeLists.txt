@@ -99,6 +99,17 @@ if (GTNAP_DEVELOPER_MODE)
 
     add_subdirectory("src/gtnap")
 
+    # Libreoffice link libraries
+    set(LOROOT "$ENV{LIBREOFFICE_HOME}")
+
+    if (NOT LOROOT)
+        message(FATAL_ERROR "LIBREOFFICE_HOME environment variable is required to compile GTNAP")
+    endif()
+
+    set(LIBREOFFICE_LIB_PATH "${LOROOT}/program ${LOROOT}/sdk/lib")
+    #set(LIBREOFFICE_LIB_PATH2 "${LOROOT}/sdk/lib")
+    set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
+
     file(COPY "${GTNAP_PATH}/resources/CMakeLists.txt" DESTINATION "${GTNAP_PATH}/src/exemplo")
     if (WIN32)
         file(COPY "${GTNAP_PATH}/resources/hbmk2_win.c" DESTINATION "${GTNAP_PATH}/src/exemplo")
