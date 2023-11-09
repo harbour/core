@@ -1,0 +1,76 @@
+name: macos-ci
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos
+        compiler:
+          - clang
+          - gcc
+        strictness:
+          - "normal"
+          - "strict"
+
+    steps:
+      - name: Configure environment
+        run: |
+          {
+            HB_USER_CFLAGS="-arch arm64 -arch x86_64"
+            HB_USER_LDFLAGS="-arch arm64 -arch x86_64"
+            case ${{matrix.strictness}} in
+              normal) ;;
+              strict) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
+            esac
+            echo HB_BUILD_VERBOSE="yes"
+            echo HB_USER_CFLAGS="$HB_USER_CFLAGS"
+            echo HB_USER_LDFLAGS="$HB_USER_LDFLAGS"
+            echo HB_BUILD_CONTRIBS="no hbfimage" # incompatible with freeimage 3.18+
+          } >> $GITHUB_ENV
+          tee -a $GITHUB_PATH <<EOPATH
+          /usr/lib/ccache
+          /usr/local/opt/ccache/libexec
+          EOPATH
+
+      - name: Install packages
+        run: |
+          brew install \
+            slang \
+            cairo \
+            freeimage \
+            libgd \
+            mysql \
+            postgresql \
+            qt5
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.client_payload.branch }}
+
+      - run: pwd
+      - run: ls
+
+      - name: Prepare ccache using action
+        uses: hendrikmuhs/ccache-action@v1.2.10
+        with:
+          key: ${{ matrix.os }}-${{ matrix.cpu }}-${{ matrix.compiler }}-${{ matrix.strictness }}-ci
+          max-size: "32M"
+
+      - name: Compile Harbour
+        run: |
+          make \
+            HB_COMPILER=${{matrix.compiler}} \
+            -j$(nproc)
+
+      - name: Run tests
+        run: |
+          bin/darwin/${{matrix.compiler}}/hbtest

@@ -1,0 +1,85 @@
+name: linux-ci
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu
+        compiler:
+          - clang
+          - gcc
+        strictness:
+          - "normal"
+          - "strict"
+
+    steps:
+      - name: Configure environment
+        run: |
+          {
+            HB_USER_CFLAGS=""
+            HB_USER_LDFLAGS=""
+            case ${{matrix.strictness}} in
+              normal) ;;
+              strict) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
+            esac
+            echo HB_BUILD_VERBOSE="yes"
+            echo HB_USER_CFLAGS="$HB_USER_CFLAGS"
+            echo HB_USER_LDFLAGS="$HB_USER_LDFLAGS"
+          } >> $GITHUB_ENV
+          tee -a $GITHUB_PATH <<EOPATH
+          /usr/lib/ccache
+          /usr/local/opt/ccache/libexec
+          EOPATH
+
+      - name: Install packages
+        run: |
+          sudo apt-get install -qq \
+            libncurses-dev	\
+            libslang2-dev	\
+            libx11-dev	\
+            libgpm-dev	\
+            liballegro4.2-dev	\
+            libcairo2-dev	\
+            libcups2-dev	\
+            libcurl4-openssl-dev	\
+            firebird-dev	\
+            libfreeimage-dev	\
+            libgd-dev	\
+            libgs-dev	\
+            libmagic-dev	\
+            libmysqlclient-dev	\
+            unixodbc-dev	\
+            libpq-dev	\
+            qtbase5-dev
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.client_payload.branch }}
+
+      - run: pwd
+      - run: ls
+
+      - name: Prepare ccache using action
+        uses: hendrikmuhs/ccache-action@v1.2.10
+        with:
+          key: ${{ matrix.os }}-${{ matrix.compiler }}-${{ matrix.strictness }}-ci
+          max-size: "32M"
+
+      - name: Compile Harbour
+        run: |
+          make \
+            HB_COMPILER=${{matrix.compiler}} \
+            -j$(nproc)
+
+      - name: Run tests
+        run: |
+          bin/linux/${{matrix.compiler}}/hbtest
