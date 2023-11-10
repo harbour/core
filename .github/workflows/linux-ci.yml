@@ -5,14 +5,12 @@ on:
   - pull_request
 
 jobs:
-  build-ubuntu:
+  ubuntu-ci:
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu
         compiler:
           - clang
           - gcc
@@ -21,23 +19,11 @@ jobs:
           - "strict"
 
     steps:
+
       - name: Configure environment
+        shell: bash
         run: |
-          {
-            HB_USER_CFLAGS=""
-            HB_USER_LDFLAGS=""
-            case ${{matrix.strictness}} in
-              normal) ;;
-              strict) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
-            esac
-            echo HB_BUILD_VERBOSE="yes"
-            echo HB_USER_CFLAGS="$HB_USER_CFLAGS"
-            echo HB_USER_LDFLAGS="$HB_USER_LDFLAGS"
-          } >> $GITHUB_ENV
-          tee -a $GITHUB_PATH <<EOPATH
-          /usr/lib/ccache
-          /usr/local/opt/ccache/libexec
-          EOPATH
+          echo "Nothing to do for Linux"
 
       - name: Install packages
         run: |
@@ -51,7 +37,6 @@ jobs:
             libcups2-dev	\
             libcurl4-openssl-dev	\
             firebird-dev	\
-            libfreeimage-dev	\
             libgd-dev	\
             libgs-dev	\
             libmagic-dev	\
@@ -59,6 +44,10 @@ jobs:
             unixodbc-dev	\
             libpq-dev	\
             qtbase5-dev
+
+          # Dependencies for disabled contribs:
+          #  libfreeimage-dev	\
+
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -71,15 +60,50 @@ jobs:
       - name: Prepare ccache using action
         uses: hendrikmuhs/ccache-action@v1.2.10
         with:
-          key: ${{ matrix.os }}-${{ matrix.compiler }}-${{ matrix.strictness }}-ci
+          key: linux-${{ matrix.compiler }}-${{ matrix.strictness }}-ci
           max-size: "32M"
 
-      - name: Compile Harbour
+      - name: Configure build shell
         run: |
-          make \
-            HB_COMPILER=${{matrix.compiler}} \
-            -j$(nproc)
+          set -ex
+          HB_USER_CFLAGS=""
+          HB_USER_LDFLAGS=""
+          case ${{matrix.strictness}} in
+            normal) ;;
+            strict) case ${{matrix.compiler}} in
+                      (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
+                    esac ;;
+          esac
+          tee ./.bashrc <<EOENV
+          # These contribs do not build on any platform
+          export HB_BUILD_CONTRIBS="no hbfimage"  # incompatible with freeimage 3.18+
+
+          export HB_BUILD_VERBOSE="yes"
+          export HB_USER_CFLAGS="$HB_USER_CFLAGS"
+          export HB_USER_LDFLAGS="$HB_USER_LDFLAGS"
+          export HB_CCACHE=ccache
+          EOENV
+
+      - name: Build Harbour
+        run: |
+          echo ::group::Build Harbour
+          set -ex
+          . ./.bashrc
+          make -j$(nproc) \
+            HB_BUILD_CONTRIBS=no \
+            HB_COMPILER=${{matrix.compiler}}
+
+      - name: Build contribs
+        run: |
+          echo ::group::Build contribs
+          set -ex
+          . ./.bashrc
+          make -j$(nproc) \
+            -C contrib \
+            HB_COMPILER=${{matrix.compiler}}
 
       - name: Run tests
         run: |
-          bin/linux/${{matrix.compiler}}/hbtest
+            echo ::group::Run tests
+            set -ex
+            bin/linux/${{matrix.compiler}}/hbtest

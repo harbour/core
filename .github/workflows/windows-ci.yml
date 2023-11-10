@@ -5,37 +5,32 @@ on:
   - pull_request
 
 jobs:
-  build-windows:
+  windows-ci:
     runs-on: windows-latest
 
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - windows
         compiler:
+          - bcc
           - mingw64
         cpu:
           - x86
           - x86_64
+        exclude:
+          - compiler: bcc
+            cpu: x86_64
         strictness:
           - "normal"
           - "strict"
 
     steps:
+
       - name: Configure environment
         shell: bash
         run: |
+          set -ex
           {
-            HB_USER_CFLAGS=""
-            HB_USER_LDFLAGS=""
-            case ${{matrix.strictness}} in
-              normal) ;;
-              strict) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
-            esac
-            echo HB_BUILD_VERBOSE="yes"
-            echo HB_USER_CFLAGS="$HB_USER_CFLAGS"
-            echo HB_USER_LDFLAGS="$HB_USER_LDFLAGS"
             case ${{matrix.cpu}} in
               (x86)    echo MINGWxx="MINGW32"
                        echo "msys_cpu=i686" ;;
@@ -43,9 +38,6 @@ jobs:
                        echo "msys_cpu=${{matrix.cpu}}" ;;
             esac
           } >> $GITHUB_ENV
-          tee -a $GITHUB_PATH <<EOPATH
-          /mingw64/lib/ccache/bin
-          EOPATH
 
       - name: Install packages
         uses: msys2/setup-msys2@v2
@@ -61,13 +53,15 @@ jobs:
             mingw-w64-${{ env.msys_cpu }}-cairo
             mingw-w64-${{ env.msys_cpu }}-curl
             mingw-w64-${{ env.msys_cpu }}-firebird2-git
-            mingw-w64-${{ env.msys_cpu }}-freeimage
             mingw-w64-${{ env.msys_cpu }}-libgd
             mingw-w64-${{ env.msys_cpu }}-ghostscript
             mingw-w64-${{ env.msys_cpu }}-libmariadbclient
             mingw-w64-${{ env.msys_cpu }}-openssl
             mingw-w64-${{ env.msys_cpu }}-postgresql
             mingw-w64-${{ env.msys_cpu }}-qt5-base
+
+          # Dependencies for disabled contribs:
+          #  mingw-w64-${{ env.msys_cpu }}-freeimage
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -78,20 +72,75 @@ jobs:
       - run: ls
 
       - name: Prepare ccache using action
+        if: matrix.compiler != 'bcc'
         uses: hendrikmuhs/ccache-action@v1.2.10
         with:
-          key: ${{ matrix.os }}-${{ matrix.cpu }}-${{ matrix.compiler }}-${{ matrix.strictness }}-ci
+          key: windows-${{ matrix.cpu }}-${{ matrix.compiler }}-${{ matrix.strictness }}-ci
           max-size: "32M"
 
-      - name: Compile Harbour
+      - name: Configure build shell
         shell: msys2 {0}
         run: |
-          mingw32-make.exe \
-            HB_COMPILER=${{matrix.compiler}} \
+          set -ex
+          HB_USER_CFLAGS=""
+          HB_USER_LDFLAGS=""
+          case ${{matrix.strictness}} in
+            normal) ;;
+            strict) case ${{matrix.compiler}} in
+                      (bcc) HB_USER_CFLAGS="$HB_USER_CFLAGS -w!" ;;
+                      (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
+                    esac ;;
+          esac
+          tee ./.bashrc <<EOENV
+          # These contribs do not build on any platform
+          export HB_BUILD_CONTRIBS="no hbfimage"  # incompatible with freeimage 3.18+
+
+          export HB_BUILD_VERBOSE="yes"
+          export HB_USER_CFLAGS="$HB_USER_CFLAGS"
+          export HB_USER_LDFLAGS="$HB_USER_LDFLAGS"
+          export HB_CCACHE=$(which ccache.exe)
+          export mingwxx="$(echo "$MINGWxx" | tr A-Z a-z)"
+          EOENV
+
+          case ${{matrix.compiler}} in
+            bcc)
+              curl -LO "http://altd.embarcadero.com/download/bcppbuilder/freecommandLinetools.exe"
+              ./freecommandLinetools.exe -s -verbose
+              find /c/Borland -type d || exit 1
+              tee -a ./.bashrc <<EOMSYSENV
+          export PATH="/c/Borland/BCC55/Bin:\$PATH"
+          export HB_WITH_CURL="/d/msys64/$mingwxx/include"
+          export HB_CCACHE=""
+          EOMSYSENV
+              ;;
+          esac
+
+
+      - name: Build Harbour
+        shell: msys2 {0}
+        run: |
+          echo ::group::Build Harbour
+          set -ex
+          source ./.bashrc
+          mingw32-make.exe -j2 \
             HB_CPU=${{matrix.cpu}} \
-            -j2
+            HB_BUILD_CONTRIBS=no \
+            HB_COMPILER=${{matrix.compiler}}
+
+      - name: Build contribs
+        shell: msys2 {0}
+        run: |
+          echo ::group::Build contribs
+          set -ex
+          source ./.bashrc
+          mingw32-make.exe -j2 \
+            -C contrib \
+            HB_CPU=${{matrix.cpu}} \
+            HB_COMPILER=${{matrix.compiler}}
 
       - name: Run tests
         shell: msys2 {0}
         run: |
+          echo ::group::Run tests
+          set -ex
           bin/win/${{matrix.compiler}}/hbtest.exe
