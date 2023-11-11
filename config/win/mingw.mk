@@ -16,7 +16,7 @@ ifneq ($(HB_COMPILER),mingw64)
    endif
 endif
 
-CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
+CC := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
 CC_IN := -c
 CC_OUT := -o
 
