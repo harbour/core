@@ -122,7 +122,7 @@ jobs:
           tee ~/work/run_build.sh <<'EOF'
           set -ex
           echo "::group::Configure ccache in VM"
-          ccache --set-config="cache_dir=$HOME/work/harbour/harbour/.ccache"
+          ccache --set-config="cache_dir=$(pwd)/.ccache"
           ccache --set-config=max_size=32M
           ccache --set-config=compression=true
           ccache -p
@@ -130,14 +130,14 @@ jobs:
           echo ::group::Build Harbour
           set -ex
           . ./.bashrc
-          gmake -j$(sysctl -n hw.ncpu) \
+          gmake -j$(/sbin/sysctl -n hw.ncpu) \
             HB_BUILD_CONTRIBS=no \
             HB_COMPILER=${{matrix.compiler}}
 
           echo "::group::Build contribs"
           set -ex
           . ./.bashrc
-          gmake -j$(sysctl -n hw.ncpu) \
+          gmake -j$(/sbin/sysctl -n hw.ncpu) \
             -C contrib \
             HB_COMPILER=${{matrix.compiler}}
 
