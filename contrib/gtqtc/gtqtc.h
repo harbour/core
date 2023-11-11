@@ -372,7 +372,7 @@ public:
    void setFontSize( int iFH, int iFW );
    void setImageSize( void );
    void copySelection( void );
-   void repaintChars( const QRect & rect );
+   void repaintChars( const QRect & rx );
 
 protected:
    void inputMethodEvent( QInputMethodEvent * evt );
