@@ -4385,6 +4385,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             EXIT
          CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )                 ; EXIT
          ENDSWITCH
+
+         IF hbmk[ _HBMK_cCOMP ] == "mingw64"
+            // Newer MinGW-W64 versions (10+, IIRC) need this to opt out of C99 format
+            // string emulation and keep our format strings compatible among the
+            // different Windows compilers
+            cOpt_CompC += " -D__USE_MINGW_ANSI_STDIO=0"
+         ENDIF
+
          IF hbmk[ _HBMK_lHARDEN ]
             IF hbmk[ _HBMK_cPLAT ] == "win"
                /* It is also supported by official mingw 4.4.x and mingw64 4.4.x,
