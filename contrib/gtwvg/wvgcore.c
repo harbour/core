@@ -290,7 +290,7 @@ POINT  hb_wvt_gtGetXYFromColRow( int col, int row )
  *                 Modeless Dialogs Implementation
  */
 
-BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
+INT_PTR CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -391,7 +391,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
    return lReturn;
 }
 
-BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
+INT_PTR CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
