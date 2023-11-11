@@ -106,7 +106,13 @@ else
    AR := tlib.exe
 endif
 ARFLAGS += /P128
-AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) "$(subst /,$(BACKSLASH),$(LIB_DIR)/$@)" $(foreach file,$(?F),-+$(file))
+
+ifeq ($(HB_SHELL),sh)
+   q = '
+else
+   q = "
+endif
+AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(q)$(subst /,$(BACKSLASH),$(LIB_DIR)/$@)$(q) $(foreach file,$(?F),-+$(file))
 
 ifneq ($(HB_SHELL),sh)
    ifeq ($(HB_SHELL_XP),)
