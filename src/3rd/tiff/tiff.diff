@@ -1,556 +1,501 @@
-diff -urN tiff.orig/dirread.c tiff/dirread.c
---- tiff.orig/dirread.c	Sat Feb 02 20:52:59 2013
-+++ tiff/dirread.c	Sat Feb 02 20:52:59 2013
-@@ -2216,7 +2216,7 @@
- 		case TIFF_FLOAT:
- 			if (tif->tif_flags&TIFF_SWAB)
- 				TIFFSwabArrayOfLong((uint32*)origdata,count);  
--			TIFFCvtIEEEDoubleToNative(tif,count,(float*)origdata);
-+			TIFFCvtIEEEFloatToNative(tif,count,(float*)origdata);
- 			*value=(float*)origdata;
- 			return(TIFFReadDirEntryErrOk);
- 	}
-@@ -3194,11 +3194,7 @@
- /*
-  * Largest 32-bit unsigned integer value.
+diff --strip-trailing-cr -urN tiff.orig/dir.c tiff/dir.c
+--- tiff.orig/dir.c	2023-05-22 14:03:41.000000000 +0000
++++ tiff/dir.c	2023-11-06 22:26:31.000000000 +0000
+@@ -571,9 +571,9 @@
+             break;
+         case TIFFTAG_INKNAMES:
+         {
++            uint16_t ninksinstring;
+             v = (uint16_t)va_arg(ap, uint16_vap);
+             s = va_arg(ap, char *);
+-            uint16_t ninksinstring;
+             ninksinstring = countInkNamesString(tif, v, s);
+             status = ninksinstring > 0;
+             if (ninksinstring > 0)
+@@ -771,8 +771,9 @@
+                 }
+                 else
+                 {
++                    size_t len;
+                     mb = (const char *)va_arg(ap, const char *);
+-                    size_t len = strlen(mb) + 1;
++                    len = strlen(mb) + 1;
+                     if (len >= 0x80000000U)
+                     {
+                         status = 0;
+@@ -853,7 +854,8 @@
+                         if (tv->info->field_type == TIFF_LONG8)
+                         {
+                             uint64_t *pui64 = (uint64_t *)tv->value;
+-                            for (int i = 0; i < tv->count; i++)
++                            int i;
++                            for (i = 0; i < tv->count; i++)
+                             {
+                                 if (pui64[i] > 0xffffffffu)
+                                 {
+@@ -872,7 +874,8 @@
+                         else if (tv->info->field_type == TIFF_SLONG8)
+                         {
+                             int64_t *pi64 = (int64_t *)tv->value;
+-                            for (int i = 0; i < tv->count; i++)
++                            int i;
++                            for (i = 0; i < tv->count; i++)
+                             {
+                                 if (pi64[i] > 2147483647 ||
+                                     pi64[i] < (-2147483647 - 1))
+diff --strip-trailing-cr -urN tiff.orig/dirread.c tiff/dirread.c
+--- tiff.orig/dirread.c	2023-07-18 14:59:48.000000000 +0000
++++ tiff/dirread.c	2023-11-06 22:33:50.000000000 +0000
+@@ -2781,7 +2781,7 @@
+         case TIFF_FLOAT:
+             if (tif->tif_flags & TIFF_SWAB)
+                 TIFFSwabArrayOfLong((uint32_t *)origdata, count);
+-            TIFFCvtIEEEDoubleToNative(tif, count, (float *)origdata);
++            TIFFCvtIEEEFloatToNative(tif, count, (float *)origdata);
+             *value = (float *)origdata;
+             return (TIFFReadDirEntryErrOk);
+     }
+@@ -5427,6 +5427,9 @@
   */
--#if defined(__WIN32__) && defined(_MSC_VER)
--# define TIFF_UINT32_MAX 0xFFFFFFFFI64
--#else
--# define TIFF_UINT32_MAX 0xFFFFFFFFLL
--#endif
-+#define TIFF_UINT32_MAX UINT32_MAX
+ int _TIFFCheckDirNumberAndOffset(TIFF *tif, tdir_t dirn, uint64_t diroff)
+ {
++    TIFFOffsetAndDirNumber entry;
++    TIFFOffsetAndDirNumber *foundEntry;
++
+     if (diroff == 0) /* no more directories */
+         return 0;
  
- static enum TIFFReadDirEntryErr
- TIFFReadDirEntryCheckRangeLongLong8(uint64 value)
-@@ -3286,11 +3282,7 @@
- /*
-  * Largest 64-bit signed integer value.
+@@ -5461,11 +5464,10 @@
+      * loop
+      * -  no: add to list or update offset at that IFD number
+      */
+-    TIFFOffsetAndDirNumber entry;
+     entry.offset = diroff;
+     entry.dirNumber = dirn;
+ 
+-    TIFFOffsetAndDirNumber *foundEntry =
++    foundEntry =
+         (TIFFOffsetAndDirNumber *)TIFFHashSetLookup(
+             tif->tif_map_dir_offset_to_number, &entry);
+     if (foundEntry)
+@@ -5494,12 +5496,13 @@
+         if (foundEntry->offset != diroff)
+         {
+             TIFFOffsetAndDirNumber entryOld;
++            TIFFOffsetAndDirNumber *foundEntryOld;
+             entryOld.offset = foundEntry->offset;
+             entryOld.dirNumber = dirn;
+             /* We must remove first from tif_map_dir_number_to_offset as the */
+             /* entry is owned (and thus freed) by */
+             /* tif_map_dir_offset_to_number */
+-            TIFFOffsetAndDirNumber *foundEntryOld =
++            foundEntryOld =
+                 (TIFFOffsetAndDirNumber *)TIFFHashSetLookup(
+                     tif->tif_map_dir_number_to_offset, &entryOld);
+             if (foundEntryOld)
+@@ -5515,6 +5518,7 @@
+                                   foundEntryOld);
+             }
+ 
++            {
+             TIFFOffsetAndDirNumber *entryPtr = (TIFFOffsetAndDirNumber *)malloc(
+                 sizeof(TIFFOffsetAndDirNumber));
+             if (entryPtr == NULL)
+@@ -5539,6 +5543,7 @@
+                     "Insertion in tif_map_dir_number_to_offset failed");
+                 return 0;
+             }
++            }
+         }
+         return 1;
+     }
+@@ -5553,6 +5558,7 @@
+         return 0;
+     }
+ 
++    {
+     TIFFOffsetAndDirNumber *entryPtr =
+         (TIFFOffsetAndDirNumber *)malloc(sizeof(TIFFOffsetAndDirNumber));
+     if (entryPtr == NULL)
+@@ -5577,6 +5583,7 @@
+                       "Insertion in tif_map_dir_number_to_offset failed");
+         return 0;
+     }
++    }
+ 
+     return 1;
+ } /* --- _TIFFCheckDirNumberAndOffset() ---*/
+@@ -5590,6 +5597,8 @@
   */
--#if defined(__WIN32__) && defined(_MSC_VER)
--# define TIFF_INT64_MAX 0x7FFFFFFFFFFFFFFFI64
--#else
--# define TIFF_INT64_MAX 0x7FFFFFFFFFFFFFFFLL
--#endif
-+#define TIFF_INT64_MAX INT64_MAX
- 
- static enum TIFFReadDirEntryErr
- TIFFReadDirEntryCheckRangeSlong8Long8(uint64 value)
-diff -urN tiff.orig/dirwrite.c tiff/dirwrite.c
---- tiff.orig/dirwrite.c	Sat Feb 02 20:52:59 2013
-+++ tiff/dirwrite.c	Sat Feb 02 20:52:59 2013
-@@ -2238,7 +2238,7 @@
+ int _TIFFGetDirNumberFromOffset(TIFF *tif, uint64_t diroff, tdir_t *dirn)
  {
- 	assert(count<0x40000000);
- 	assert(sizeof(float)==4);
--	TIFFCvtNativeToIEEEFloat(tif,count,&value);
-+	TIFFCvtNativeToIEEEFloat(tif,count,value);
- 	if (tif->tif_flags&TIFF_SWAB)
- 		TIFFSwabArrayOfFloat(value,count);
- 	return(TIFFWriteDirectoryTagData(tif,ndir,dir,tag,TIFF_FLOAT,count,count*4,value));
-@@ -2263,7 +2263,7 @@
++    TIFFOffsetAndDirNumber entry;
++    TIFFOffsetAndDirNumber *foundEntry;
+     if (diroff == 0) /* no more directories */
+         return 0;
+ 
+@@ -5599,11 +5608,10 @@
+      */
+     if (tif->tif_map_dir_offset_to_number == NULL)
+         return 0;
+-    TIFFOffsetAndDirNumber entry;
+     entry.offset = diroff;
+     entry.dirNumber = 0; /* not used */
+ 
+-    TIFFOffsetAndDirNumber *foundEntry =
++    foundEntry =
+         (TIFFOffsetAndDirNumber *)TIFFHashSetLookup(
+             tif->tif_map_dir_offset_to_number, &entry);
+     if (foundEntry)
+@@ -5636,13 +5644,14 @@
+ int _TIFFGetOffsetFromDirNumber(TIFF *tif, tdir_t dirn, uint64_t *diroff)
  {
- 	assert(count<0x20000000);
- 	assert(sizeof(double)==8);
--	TIFFCvtNativeToIEEEDouble(tif,count,&value);
-+	TIFFCvtNativeToIEEEDouble(tif,count,value);
- 	if (tif->tif_flags&TIFF_SWAB)
- 		TIFFSwabArrayOfDouble(value,count);
- 	return(TIFFWriteDirectoryTagData(tif,ndir,dir,tag,TIFF_DOUBLE,count,count*8,value));
-diff -urN tiff.orig/dumpmode.c tiff/dumpmode.c
---- tiff.orig/dumpmode.c	Sat Feb 02 20:52:59 2013
-+++ tiff/dumpmode.c	Sat Feb 02 20:52:59 2013
-@@ -80,19 +80,11 @@
- 	static const char module[] = "DumpModeDecode";
- 	(void) s;
- 	if (tif->tif_rawcc < cc) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 		TIFFErrorExt(tif->tif_clientdata, module,
--"Not enough data for scanline %lu, expected a request for at most %I64d bytes, got a request for %I64d bytes",
-+"Not enough data for scanline %lu, expected a request for at most " TIFF_INT64_FORMAT " bytes, got a request for " TIFF_INT64_FORMAT " bytes",
- 		             (unsigned long) tif->tif_row,
--		             (signed __int64) tif->tif_rawcc,
--		             (signed __int64) cc);
--#else
--		TIFFErrorExt(tif->tif_clientdata, module,
--"Not enough data for scanline %lu, expected a request for at most %lld bytes, got a request for %lld bytes",
--		             (unsigned long) tif->tif_row,
--		             (signed long long) tif->tif_rawcc,
--		             (signed long long) cc);
--#endif
-+		             (TIFF_INT64_T) tif->tif_rawcc,
-+		             (TIFF_INT64_T) cc);
- 		return (0);
- 	}
- 	/*
-diff -urN tiff.orig/luv.c tiff/luv.c
---- tiff.orig/luv.c	Sat Feb 02 20:52:59 2013
-+++ tiff/luv.c	Sat Feb 02 20:52:59 2013
-@@ -224,17 +224,10 @@
- 					tp[i++] |= (int16)*bp++ << shft;
- 			}
- 		if (i != npixels) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
--			    "Not enough data at row %lu (short %I64d pixels)",
-+			    "Not enough data at row %lu (short " TIFF_UINT64_FORMAT " pixels)",
- 				     (unsigned long) tif->tif_row,
--				     (unsigned __int64) (npixels - i));
--#else
--			TIFFErrorExt(tif->tif_clientdata, module,
--			    "Not enough data at row %lu (short %llu pixels)",
--				     (unsigned long) tif->tif_row,
--				     (unsigned long long) (npixels - i));
--#endif
-+				     (TIFF_UINT64_T) (npixels - i));
- 			tif->tif_rawcp = (uint8*) bp;
- 			tif->tif_rawcc = cc;
- 			return (0);
-@@ -282,17 +275,10 @@
- 	tif->tif_rawcp = (uint8*) bp;
- 	tif->tif_rawcc = cc;
- 	if (i != npixels) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--		TIFFErrorExt(tif->tif_clientdata, module,
--			"Not enough data at row %lu (short %I64d pixels)",
--			     (unsigned long) tif->tif_row,
--			     (unsigned __int64) (npixels - i));
--#else
- 		TIFFErrorExt(tif->tif_clientdata, module,
--			"Not enough data at row %lu (short %llu pixels)",
-+			"Not enough data at row %lu (short " TIFF_UINT64_FORMAT " pixels)",
- 			     (unsigned long) tif->tif_row,
--			     (unsigned long long) (npixels - i));
--#endif
-+			     (TIFF_UINT64_T) (npixels - i));
- 		return (0);
- 	}
- 	(*sp->tfunc)(sp, op, npixels);
-@@ -347,17 +333,10 @@
- 					tp[i++] |= (uint32)*bp++ << shft;
- 			}
- 		if (i != npixels) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--			TIFFErrorExt(tif->tif_clientdata, module,
--			"Not enough data at row %lu (short %I64d pixels)",
--				     (unsigned long) tif->tif_row,
--				     (unsigned __int64) (npixels - i));
--#else
- 			TIFFErrorExt(tif->tif_clientdata, module,
--			"Not enough data at row %lu (short %llu pixels)",
-+			"Not enough data at row %lu (short " TIFF_UINT64_FORMAT " pixels)",
- 				     (unsigned long) tif->tif_row,
--				     (unsigned long long) (npixels - i));
--#endif
-+				     (TIFF_UINT64_T) (npixels - i));
- 			tif->tif_rawcp = (uint8*) bp;
- 			tif->tif_rawcc = cc;
- 			return (0);
-diff -urN tiff.orig/lzw.c tiff/lzw.c
---- tiff.orig/lzw.c	Sat Feb 02 20:52:59 2013
-+++ tiff/lzw.c	Sat Feb 02 20:52:59 2013
-@@ -549,15 +549,9 @@
- 	sp->dec_maxcodep = maxcodep;
  
- 	if (occ > 0) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 		TIFFErrorExt(tif->tif_clientdata, module,
--			"Not enough data at scanline %d (short %I64d bytes)",
--			     tif->tif_row, (unsigned __int64) occ);
--#else
--		TIFFErrorExt(tif->tif_clientdata, module,
--			"Not enough data at scanline %d (short %llu bytes)",
--			     tif->tif_row, (unsigned long long) occ);
--#endif
-+			"Not enough data at scanline %d (short " TIFF_UINT64_FORMAT " bytes)",
-+			     tif->tif_row, (TIFF_UINT64_T) occ);
- 		return (0);
- 	}
- 	return (1);
-@@ -753,15 +747,9 @@
- 	sp->dec_maxcodep = maxcodep;
++    TIFFOffsetAndDirNumber entry;
++    TIFFOffsetAndDirNumber *foundEntry;
+     if (tif->tif_map_dir_number_to_offset == NULL)
+         return 0;
+-    TIFFOffsetAndDirNumber entry;
+     entry.offset = 0; /* not used */
+     entry.dirNumber = dirn;
  
- 	if (occ > 0) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--		TIFFErrorExt(tif->tif_clientdata, module,
--			"Not enough data at scanline %d (short %I64d bytes)",
--			     tif->tif_row, (unsigned __int64) occ);
--#else
- 		TIFFErrorExt(tif->tif_clientdata, module,
--			"Not enough data at scanline %d (short %llu bytes)",
--			     tif->tif_row, (unsigned long long) occ);
--#endif
-+			"Not enough data at scanline %d (short " TIFF_UINT64_FORMAT " bytes)",
-+			     tif->tif_row, (TIFF_UINT64_T) occ);
- 		return (0);
- 	}
- 	return (1);
-diff -urN tiff.orig/print.c tiff/print.c
---- tiff.orig/print.c	Sat Feb 02 20:52:59 2013
-+++ tiff/print.c	Sat Feb 02 20:52:59 2013
-@@ -98,27 +98,13 @@
- 			|| fip->field_type == TIFF_FLOAT)
- 			fprintf(fd, "%f", ((float *) raw_data)[j]);
- 		else if(fip->field_type == TIFF_LONG8)
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--			fprintf(fd, "%I64u",
--			    (unsigned __int64)((uint64 *) raw_data)[j]);
--#else
--			fprintf(fd, "%llu",
--			    (unsigned long long)((uint64 *) raw_data)[j]);
--#endif
-+			fprintf(fd, TIFF_UINT64_FORMAT,
-+			    (TIFF_UINT64_T)((uint64 *) raw_data)[j]);
- 		else if(fip->field_type == TIFF_SLONG8)
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--			fprintf(fd, "%I64d", (__int64)((int64 *) raw_data)[j]);
--#else
--			fprintf(fd, "%lld", (long long)((int64 *) raw_data)[j]);
--#endif
-+			fprintf(fd, TIFF_INT64_FORMAT, (TIFF_INT64_T)((int64 *) raw_data)[j]);
- 		else if(fip->field_type == TIFF_IFD8)
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--			fprintf(fd, "0x%I64x",
--				(unsigned __int64)((uint64 *) raw_data)[j]);
--#else
--			fprintf(fd, "0x%llx",
--				(unsigned long long)((uint64 *) raw_data)[j]);
--#endif
-+			fprintf(fd, "0x%" HB_PF64 "x",
-+				(TIFF_UINT64_T)((uint64 *) raw_data)[j]);
- 		else if(fip->field_type == TIFF_FLOAT)
- 			fprintf(fd, "%f", ((float *)raw_data)[j]);
- 		else if(fip->field_type == TIFF_DOUBLE)
-@@ -240,15 +226,9 @@
- 	uint16 i;
- 	long l, n;
+-    TIFFOffsetAndDirNumber *foundEntry =
++    foundEntry =
+         (TIFFOffsetAndDirNumber *)TIFFHashSetLookup(
+             tif->tif_map_dir_number_to_offset, &entry);
+     if (foundEntry)
+@@ -5662,17 +5671,18 @@
+  */
+ int _TIFFRemoveEntryFromDirectoryListByOffset(TIFF *tif, uint64_t diroff)
+ {
++    TIFFOffsetAndDirNumber entryOld;
++    TIFFOffsetAndDirNumber *foundEntryOldOff;
+     if (tif->tif_map_dir_offset_to_number == NULL)
+         return 1;
  
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--	fprintf(fd, "TIFF Directory at offset 0x%I64x (%I64u)\n",
--		(unsigned __int64) tif->tif_diroff,
--		(unsigned __int64) tif->tif_diroff);
--#else
--	fprintf(fd, "TIFF Directory at offset 0x%llx (%llu)\n",
--		(unsigned long long) tif->tif_diroff,
--		(unsigned long long) tif->tif_diroff);
--#endif
-+	fprintf(fd, "TIFF Directory at offset 0x%" HB_PF64 "x (%" HB_PF64 "u)\n",
-+		(TIFF_UINT64_T) tif->tif_diroff,
-+		(TIFF_UINT64_T) tif->tif_diroff);
- 	if (TIFFFieldSet(tif,FIELD_SUBFILETYPE)) {
- 		fprintf(fd, "  Subfile Type:");
- 		sep = " ";
-@@ -552,13 +532,8 @@
- 	if (TIFFFieldSet(tif, FIELD_SUBIFD) && (td->td_subifd)) {
- 		fprintf(fd, "  SubIFD Offsets:");
- 		for (i = 0; i < td->td_nsubifd; i++)
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--			fprintf(fd, " %5I64u",
--				(unsigned __int64) td->td_subifd[i]);
--#else
--			fprintf(fd, " %5llu",
--				(unsigned long long) td->td_subifd[i]);
--#endif
-+			fprintf(fd, " %5" HB_PF64 "u",
-+				(TIFF_UINT64_T) td->td_subifd[i]);
- 		fputc('\n', fd);
- 	}
+-    TIFFOffsetAndDirNumber entryOld;
+     entryOld.offset = diroff;
+     entryOld.dirNumber = 0;
+     /* We must remove first from tif_map_dir_number_to_offset as the
+      * entry is owned (and thus freed) by tif_map_dir_offset_to_number.
+      * However, we need firstly to find the directory number from offset. */
  
-@@ -658,17 +633,10 @@
- 		    (long) td->td_nstrips,
- 		    isTiled(tif) ? "Tiles" : "Strips");
- 		for (s = 0; s < td->td_nstrips; s++)
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--			fprintf(fd, "    %3lu: [%8I64u, %8I64u]\n",
-+			fprintf(fd, "    %3lu: [%8" HB_PF64 "u, %8" HB_PF64 "u]\n",
- 			    (unsigned long) s,
--			    (unsigned __int64) td->td_stripoffset[s],
--			    (unsigned __int64) td->td_stripbytecount[s]);
--#else
--			fprintf(fd, "    %3lu: [%8llu, %8llu]\n",
--			    (unsigned long) s,
--			    (unsigned long long) td->td_stripoffset[s],
--			    (unsigned long long) td->td_stripbytecount[s]);
--#endif
-+			    (TIFF_UINT64_T) td->td_stripoffset[s],
-+			    (TIFF_UINT64_T) td->td_stripbytecount[s]);
- 	}
+-    TIFFOffsetAndDirNumber *foundEntryOldOff =
++    foundEntryOldOff =
+         (TIFFOffsetAndDirNumber *)TIFFHashSetLookup(
+             tif->tif_map_dir_offset_to_number, &entryOld);
+     if (foundEntryOldOff)
+diff --strip-trailing-cr -urN tiff.orig/dirwrite.c tiff/dirwrite.c
+--- tiff.orig/dirwrite.c	2023-06-26 13:18:09.000000000 +0000
++++ tiff/dirwrite.c	2023-11-06 22:40:09.000000000 +0000
+@@ -311,6 +311,7 @@
+ int TIFFRewriteDirectory(TIFF *tif)
+ {
+     static const char module[] = "TIFFRewriteDirectory";
++    uint64_t torewritediroff;
+ 
+     /* We don't need to do anything special if it hasn't been written. */
+     if (tif->tif_diroff == 0)
+@@ -320,7 +321,7 @@
+      * Find and zero the pointer to this directory, so that TIFFLinkDirectory
+      * will cause it to be added after this directories current pre-link.
+      */
+-    uint64_t torewritediroff = tif->tif_diroff;
++    torewritediroff = tif->tif_diroff;
+ 
+     if (!(tif->tif_flags & TIFF_BIGTIFF))
+     {
+@@ -2068,6 +2069,7 @@
+     uint16_t n;
+     uint16_t *o;
+     int p;
++    int i;
+     if (dir == NULL)
+     {
+         (*ndir)++;
+@@ -2082,7 +2084,7 @@
+     /* clang-format on */
+ 
+     /* Check for proper number of transferfunctions */
+-    for (int i = 0; i < n; i++)
++    for (i = 0; i < n; i++)
+     {
+         if (tif->tif_dir.td_transferfunction[i] == NULL)
+         {
+@@ -2562,7 +2564,7 @@
+     }
+     else
+     {
+-        nMax = ((9223372036854775807 - 1) / 2); /* for ULLONG range */
++        nMax = ((HB_ULL( 9223372036854775807 ) - 1) / 2); /* for ULLONG range */
+     }
+     fMax = (double)nMax;
+ 
+@@ -2816,7 +2818,7 @@
+ {
+     assert(count < 0x40000000);
+     assert(sizeof(float) == 4);
+-    TIFFCvtNativeToIEEEFloat(tif, count, &value);
++    TIFFCvtNativeToIEEEFloat(tif, count, value);
+     if (tif->tif_flags & TIFF_SWAB)
+         TIFFSwabArrayOfFloat(value, count);
+     return (TIFFWriteDirectoryTagData(tif, ndir, dir, tag, TIFF_FLOAT, count,
+@@ -2830,7 +2832,7 @@
+ {
+     assert(count < 0x20000000);
+     assert(sizeof(double) == 8);
+-    TIFFCvtNativeToIEEEDouble(tif, count, &value);
++    TIFFCvtNativeToIEEEDouble(tif, count, value);
+     if (tif->tif_flags & TIFF_SWAB)
+         TIFFSwabArrayOfDouble(value, count);
+     return (TIFFWriteDirectoryTagData(tif, ndir, dir, tag, TIFF_DOUBLE, count,
+diff --strip-trailing-cr -urN tiff.orig/error.c tiff/error.c
+--- tiff.orig/error.c	2023-05-22 13:49:02.000000000 +0000
++++ tiff/error.c	2023-11-06 21:36:11.000000000 +0000
+@@ -83,9 +83,10 @@
+     va_list ap;
+     if (opts && opts->errorhandler)
+     {
++        int stop;
+         va_start(ap, fmt);
+-        int stop = opts->errorhandler(NULL, opts->errorhandler_user_data,
+-                                      module, fmt, ap);
++        stop = opts->errorhandler(NULL, opts->errorhandler_user_data,
++                                  module, fmt, ap);
+         va_end(ap);
+         if (stop)
+             return;
+@@ -109,8 +110,9 @@
+     va_list ap;
+     if (tif && tif->tif_errorhandler)
+     {
++        int stop;
+         va_start(ap, fmt);
+-        int stop = (*tif->tif_errorhandler)(
++        stop = (*tif->tif_errorhandler)(
+             tif, tif->tif_errorhandler_user_data, module, fmt, ap);
+         va_end(ap);
+         if (stop)
+@@ -125,7 +127,7 @@
+     if (_TIFFerrorHandlerExt)
+     {
+         va_start(ap, fmt);
+-        (*_TIFFerrorHandlerExt)(tif ? tif->tif_clientdata : NULL, module, fmt,
++        (*_TIFFerrorHandlerExt)(tif ? tif->tif_clientdata : (thandle_t)0, module, fmt,
+                                 ap);
+         va_end(ap);
+     }
+diff --strip-trailing-cr -urN tiff.orig/getimage.c tiff/getimage.c
+--- tiff.orig/getimage.c	2023-05-22 13:49:02.000000000 +0000
++++ tiff/getimage.c	2023-11-06 21:45:16.000000000 +0000
+@@ -796,9 +796,11 @@
+                 this_tw = tw - fromskew;
+                 this_toskew = toskew + fromskew;
+             }
++            {
+             tmsize_t roffset = (tmsize_t)y * w + tocol;
+             (*put)(img, raster + roffset, tocol, y, this_tw, nrow, fromskew,
+                    this_toskew, buf + pos);
++            }
+             tocol += this_tw;
+             col += this_tw;
+             /*
+@@ -999,10 +1001,12 @@
+                 this_tw = tw - fromskew;
+                 this_toskew = toskew + fromskew;
+             }
++            {
+             tmsize_t roffset = (tmsize_t)y * w + tocol;
+             (*put)(img, raster + roffset, tocol, y, this_tw, nrow, fromskew,
+                    this_toskew, p0 + pos, p1 + pos, p2 + pos,
+                    (alpha ? (pa + pos) : NULL));
++            }
+             tocol += this_tw;
+             col += this_tw;
+             /*
+@@ -1122,9 +1126,11 @@
+ 
+         pos = ((row + img->row_offset) % rowsperstrip) * scanline +
+               ((tmsize_t)img->col_offset * img->samplesperpixel);
++        {
+         tmsize_t roffset = (tmsize_t)y * w;
+         (*put)(img, raster + roffset, 0, y, w, nrow, fromskew, toskew,
+                buf + pos);
++        }
+         y += ((flip & FLIP_VERTICALLY) ? -(int32_t)nrow : (int32_t)nrow);
+     }
+ 
+@@ -1291,9 +1297,11 @@
+ 
+         pos = ((row + img->row_offset) % rowsperstrip) * scanline +
+               ((tmsize_t)img->col_offset * img->samplesperpixel);
++        {
+         tmsize_t roffset = (tmsize_t)y * w;
+         (*put)(img, raster + roffset, 0, y, w, nrow, fromskew, toskew, p0 + pos,
+                p1 + pos, p2 + pos, (alpha ? (pa + pos) : NULL));
++        }
+         y += ((flip & FLIP_VERTICALLY) ? -(int32_t)nrow : (int32_t)nrow);
+     }
+ 
+diff --strip-trailing-cr -urN tiff.orig/hash_set.c tiff/hash_set.c
+--- tiff.orig/hash_set.c	2023-05-22 14:03:41.000000000 +0000
++++ tiff/hash_set.c	2023-11-06 22:14:24.000000000 +0000
+@@ -26,7 +26,7 @@
+  * DEALINGS IN THE SOFTWARE.
+  ****************************************************************************/
+ 
+-#include "tif_config.h"
++#include "tiffconf.h"
+ 
+ #include "hash_set.h"
+ 
+@@ -225,15 +225,17 @@
+ 
+ static void TIFFHashSetClearInternal(TIFFHashSet *set, bool bFinalize)
+ {
++    int i;
+     assert(set != NULL);
+-    for (int i = 0; i < set->nAllocatedSize; i++)
++    for (i = 0; i < set->nAllocatedSize; i++)
+     {
+         TIFFList *cur = set->tabList[i];
+         while (cur)
+         {
++            TIFFList *psNext;
+             if (set->fnFreeEltFunc)
+                 set->fnFreeEltFunc(cur->pData);
+-            TIFFList *psNext = cur->psNext;
++            psNext = cur->psNext;
+             if (bFinalize)
+                 free(cur);
+             else
+@@ -368,6 +370,7 @@
+     int nNewAllocatedSize = anPrimes[set->nIndiceAllocatedSize];
+     TIFFList **newTabList =
+         (TIFFList **)(calloc(sizeof(TIFFList *), nNewAllocatedSize));
++    int i;
+     if (newTabList == NULL)
+         return false;
+ #ifdef HASH_DEBUG
+@@ -378,7 +381,7 @@
+               set->nCollisions * 100.0 / set->nSize);
+     set->nCollisions = 0;
+ #endif
+-    for (int i = 0; i < set->nAllocatedSize; i++)
++    for (i = 0; i < set->nAllocatedSize; i++)
+     {
+         TIFFList *cur = set->tabList[i];
+         while (cur)
+@@ -439,8 +442,9 @@
+ 
+ bool TIFFHashSetInsert(TIFFHashSet *set, void *elt)
+ {
++    void **pElt;
+     assert(set != NULL);
+-    void **pElt = TIFFHashSetFindPtr(set, elt);
++    pElt = TIFFHashSetFindPtr(set, elt);
+     if (pElt)
+     {
+         if (set->fnFreeEltFunc)
+@@ -464,12 +468,14 @@
+         }
+     }
+ 
++    {
+     const unsigned long nHashVal = set->fnHashFunc(elt) % set->nAllocatedSize;
+ #ifdef HASH_DEBUG
+     if (set->tabList[nHashVal])
+         set->nCollisions++;
+ #endif
+ 
++    {
+     TIFFList *new_elt = TIFFHashSetGetNewListElt(set);
+     if (new_elt == NULL)
+     {
+@@ -481,6 +487,8 @@
+     new_elt->psNext = set->tabList[nHashVal];
+     set->tabList[nHashVal] = new_elt;
+     set->nSize++;
++    }
++    }
+ 
+     return true;
+ }
+@@ -501,8 +509,9 @@
+ 
+ void *TIFFHashSetLookup(TIFFHashSet *set, const void *elt)
+ {
++    void **pElt;
+     assert(set != NULL);
+-    void **pElt = TIFFHashSetFindPtr(set, elt);
++    pElt = TIFFHashSetFindPtr(set, elt);
+     if (pElt)
+         return *pElt;
+ 
+@@ -532,6 +541,7 @@
+         }
+     }
+ 
++    {
+     int nHashVal = (int)(set->fnHashFunc(elt) % set->nAllocatedSize);
+     TIFFList *cur = set->tabList[nHashVal];
+     TIFFList *prev = NULL;
+@@ -558,6 +568,7 @@
+         prev = cur;
+         cur = cur->psNext;
+     }
++    }
+     return false;
  }
  
-diff -urN tiff.orig/read.c tiff/read.c
---- tiff.orig/read.c	Sat Feb 02 20:52:59 2013
-+++ tiff/read.c	Sat Feb 02 20:52:59 2013
-@@ -125,19 +125,11 @@
-         cc = TIFFReadFile(tif, tif->tif_rawdata + unused_data, to_read);
- 
-         if (cc != to_read) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
-                 TIFFErrorExt(tif->tif_clientdata, module,
--                             "Read error at scanline %lu; got %I64u bytes, expected %I64u",
-+                             "Read error at scanline %lu; got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
-                              (unsigned long) tif->tif_row,
--                             (unsigned __int64) cc,
--                             (unsigned __int64) to_read);
--#else
--                TIFFErrorExt(tif->tif_clientdata, module,
--                             "Read error at scanline %lu; got %llu bytes, expected %llu",
--                             (unsigned long) tif->tif_row,
--                             (unsigned long long) cc,
--                             (unsigned long long) to_read);
--#endif
-+                             (TIFF_UINT64_T) cc,
-+                             (TIFF_UINT64_T) to_read);
-                 return 0;
-         }
-         
-@@ -381,19 +373,11 @@
- 		}
- 		cc = TIFFReadFile(tif, buf, size);
- 		if (cc != size) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
--		"Read error at scanline %lu; got %I64u bytes, expected %I64u",
-+		"Read error at scanline %lu; got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
- 				     (unsigned long) tif->tif_row,
--				     (unsigned __int64) cc,
--				     (unsigned __int64) size);
--#else
--			TIFFErrorExt(tif->tif_clientdata, module,
--		"Read error at scanline %lu; got %llu bytes, expected %llu",
--				     (unsigned long) tif->tif_row,
--				     (unsigned long long) cc,
--				     (unsigned long long) size);
--#endif
-+				     (TIFF_UINT64_T) cc,
-+				     (TIFF_UINT64_T) size);
- 			return ((tmsize_t)(-1));
- 		}
- 	} else {
-@@ -408,21 +392,12 @@
- 		else
- 			n=size;
- 		if (n!=size) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
--	"Read error at scanline %lu, strip %lu; got %I64u bytes, expected %I64u",
-+	"Read error at scanline %lu, strip %lu; got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
- 				     (unsigned long) tif->tif_row,
- 				     (unsigned long) strip,
--				     (unsigned __int64) n,
--				     (unsigned __int64) size);
--#else
--			TIFFErrorExt(tif->tif_clientdata, module,
--	"Read error at scanline %lu, strip %lu; got %llu bytes, expected %llu",
--				     (unsigned long) tif->tif_row,
--				     (unsigned long) strip,
--				     (unsigned long long) n,
--				     (unsigned long long) size);
--#endif
-+				     (TIFF_UINT64_T) n,
-+				     (TIFF_UINT64_T) size);
- 			return ((tmsize_t)(-1));
- 		}
- 		_TIFFmemcpy(buf, tif->tif_base + ma,
-@@ -459,17 +434,10 @@
- 	}
- 	bytecount = td->td_stripbytecount[strip];
- 	if (bytecount <= 0) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--		TIFFErrorExt(tif->tif_clientdata, module,
--			     "%I64u: Invalid strip byte count, strip %lu",
--			     (unsigned __int64) bytecount,
--			     (unsigned long) strip);
--#else
- 		TIFFErrorExt(tif->tif_clientdata, module,
--			     "%llu: Invalid strip byte count, strip %lu",
--			     (unsigned long long) bytecount,
-+			     TIFF_UINT64_FORMAT ": Invalid strip byte count, strip %lu",
-+			     (TIFF_UINT64_T) bytecount,
- 			     (unsigned long) strip);
--#endif
- 		return ((tmsize_t)(-1));
- 	}
- 	bytecountm = (tmsize_t)bytecount;
-@@ -499,17 +467,10 @@
- 	{
- 		uint64 bytecount = td->td_stripbytecount[strip];
- 		if (bytecount <= 0) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
--				"Invalid strip byte count %I64u, strip %lu",
--				     (unsigned __int64) bytecount,
-+				"Invalid strip byte count " TIFF_UINT64_FORMAT ", strip %lu",
-+				     (TIFF_UINT64_T) bytecount,
- 				     (unsigned long) strip);
--#else
--			TIFFErrorExt(tif->tif_clientdata, module,
--				"Invalid strip byte count %llu, strip %lu",
--				     (unsigned long long) bytecount,
--				     (unsigned long) strip);
--#endif
- 			return (0);
- 		}
- 		if (isMapped(tif) &&
-@@ -548,23 +509,13 @@
- 				 * it's what would happen if a read were done
- 				 * instead.
- 				 */
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 				TIFFErrorExt(tif->tif_clientdata, module,
- 
- 					"Read error on strip %lu; "
--					"got %I64u bytes, expected %I64u",
-+					"got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
- 					(unsigned long) strip,
--					(unsigned __int64) tif->tif_size - td->td_stripoffset[strip],
--					(unsigned __int64) bytecount);
--#else
--				TIFFErrorExt(tif->tif_clientdata, module,
--
--					"Read error on strip %lu; "
--					"got %llu bytes, expected %llu",
--					(unsigned long) strip,
--					(unsigned long long) tif->tif_size - td->td_stripoffset[strip],
--					(unsigned long long) bytecount);
--#endif
-+					(TIFF_UINT64_T) tif->tif_size - td->td_stripoffset[strip],
-+					(TIFF_UINT64_T) bytecount);
- 				tif->tif_curstrip = NOSTRIP;
- 				return (0);
- 			}
-@@ -695,21 +646,12 @@
- 		}
- 		cc = TIFFReadFile(tif, buf, size);
- 		if (cc != size) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
--	"Read error at row %lu, col %lu; got %I64u bytes, expected %I64u",
-+	"Read error at row %lu, col %lu; got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
- 				     (unsigned long) tif->tif_row,
- 				     (unsigned long) tif->tif_col,
--				     (unsigned __int64) cc,
--				     (unsigned __int64) size);
--#else
--			TIFFErrorExt(tif->tif_clientdata, module,
--	"Read error at row %lu, col %lu; got %llu bytes, expected %llu",
--				     (unsigned long) tif->tif_row,
--				     (unsigned long) tif->tif_col,
--				     (unsigned long long) cc,
--				     (unsigned long long) size);
--#endif
-+				     (TIFF_UINT64_T) cc,
-+				     (TIFF_UINT64_T) size);
- 			return ((tmsize_t)(-1));
- 		}
- 	} else {
-@@ -724,23 +666,13 @@
- 		else
- 			n=size;
- 		if (n!=size) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
--"Read error at row %lu, col %lu, tile %lu; got %I64u bytes, expected %I64u",
-+"Read error at row %lu, col %lu, tile %lu; got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
- 				     (unsigned long) tif->tif_row,
- 				     (unsigned long) tif->tif_col,
- 				     (unsigned long) tile,
--				     (unsigned __int64) n,
--				     (unsigned __int64) size);
--#else
--			TIFFErrorExt(tif->tif_clientdata, module,
--"Read error at row %lu, col %lu, tile %lu; got %llu bytes, expected %llu",
--				     (unsigned long) tif->tif_row,
--				     (unsigned long) tif->tif_col,
--				     (unsigned long) tile,
--				     (unsigned long long) n,
--				     (unsigned long long) size);
--#endif
-+				     (TIFF_UINT64_T) n,
-+				     (TIFF_UINT64_T) size);
- 			return ((tmsize_t)(-1));
- 		}
- 		_TIFFmemcpy(buf, tif->tif_base + ma, size);
-@@ -802,17 +734,10 @@
- 	{
- 		uint64 bytecount = td->td_stripbytecount[tile];
- 		if (bytecount <= 0) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
--				"%I64u: Invalid tile byte count, tile %lu",
--				     (unsigned __int64) bytecount,
-+				TIFF_UINT64_FORMAT ": Invalid tile byte count, tile %lu",
-+				     (TIFF_UINT64_T) bytecount,
- 				     (unsigned long) tile);
--#else
--			TIFFErrorExt(tif->tif_clientdata, module,
--				"%llu: Invalid tile byte count, tile %lu",
--				     (unsigned long long) bytecount,
--				     (unsigned long) tile);
--#endif
- 			return (0);
- 		}
- 		if (isMapped(tif) &&
-diff -urN tiff.orig/strip.c tiff/strip.c
---- tiff.orig/strip.c	Sat Feb 02 20:52:59 2013
-+++ tiff/strip.c	Sat Feb 02 20:52:59 2013
-@@ -154,17 +154,10 @@
- 
- 	if (bytecount == 0)
- 	{
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 		TIFFErrorExt(tif->tif_clientdata, module,
--			     "%I64u: Invalid strip byte count, strip %lu",
--			     (unsigned __int64) bytecount,
-+			     TIFF_UINT64_FORMAT ": Invalid strip byte count, strip %lu",
-+			     (TIFF_UINT64_T) bytecount,
- 			     (unsigned long) strip);
--#else
--		TIFFErrorExt(tif->tif_clientdata, module,
--			     "%llu: Invalid strip byte count, strip %lu",
--			     (unsigned long long) bytecount,
--			     (unsigned long) strip);
--#endif
- 		bytecount = (uint64) -1;
- 	}
- 
-diff -urN tiff.orig/thunder.c tiff/thunder.c
---- tiff.orig/thunder.c	Sat Feb 02 20:52:59 2013
-+++ tiff/thunder.c	Sat Feb 02 20:52:59 2013
-@@ -143,21 +143,12 @@
- 	tif->tif_rawcp = (uint8*) bp;
- 	tif->tif_rawcc = cc;
- 	if (npixels != maxpixels) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 		TIFFErrorExt(tif->tif_clientdata, module,
--			     "%s data at scanline %lu (%I64u != %I64u)",
-+			     "%s data at scanline %lu (" TIFF_UINT64_FORMAT " != " TIFF_UINT64_FORMAT ")",
- 			     npixels < maxpixels ? "Not enough" : "Too much",
- 			     (unsigned long) tif->tif_row,
--			     (unsigned __int64) npixels,
--			     (unsigned __int64) maxpixels);
--#else
--		TIFFErrorExt(tif->tif_clientdata, module,
--			     "%s data at scanline %lu (%llu != %llu)",
--			     npixels < maxpixels ? "Not enough" : "Too much",
--			     (unsigned long) tif->tif_row,
--			     (unsigned long long) npixels,
--			     (unsigned long long) maxpixels);
--#endif
-+			     (TIFF_UINT64_T) npixels,
-+			     (TIFF_UINT64_T) maxpixels);
- 		return (0);
- 	}
- 
-diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
---- tiff.orig/tiffconf.h	Sat Feb 02 20:52:59 2013
-+++ tiff/tiffconf.h	Sat Feb 02 20:52:59 2013
-@@ -7,44 +7,65 @@
+diff --strip-trailing-cr -urN tiff.orig/open.c tiff/open.c
+--- tiff.orig/open.c	2023-05-22 14:03:41.000000000 +0000
++++ tiff/open.c	2023-11-06 22:41:24.000000000 +0000
+@@ -219,6 +219,7 @@
+     m = _TIFFgetMode(opts, clientdata, mode, module);
+     if (m == -1)
+         goto bad2;
++    {
+     tmsize_t size_to_alloc = (tmsize_t)(sizeof(TIFF) + strlen(name) + 1);
+     if (opts && opts->max_single_mem_alloc > 0 &&
+         size_to_alloc > opts->max_single_mem_alloc)
+@@ -232,6 +233,7 @@
+         goto bad2;
+     }
+     tif = (TIFF *)_TIFFmallocExt(NULL, size_to_alloc);
++    }
+     if (tif == NULL)
+     {
+         _TIFFErrorEarly(opts, clientdata, module,
+diff --strip-trailing-cr -urN tiff.orig/print.c tiff/print.c
+--- tiff.orig/print.c	2023-05-22 13:49:02.000000000 +0000
++++ tiff/print.c	2023-11-06 22:15:34.000000000 +0000
+@@ -82,7 +82,8 @@
+     const char *field_name = fip->field_name;
+     if (TIFFFieldIsAnonymous(fip))
+     {
+-        for (size_t i = 0; i < NTAGS; ++i)
++        size_t i;
++        for (i = 0; i < NTAGS; ++i)
+         {
+             if (fip->field_tag == tagnames[i].tag)
+             {
+diff --strip-trailing-cr -urN tiff.orig/tiffconf.h tiff/tiffconf.h
+--- tiff.orig/tiffconf.h	2023-05-22 14:03:41.000000000 +0000
++++ tiff/tiffconf.h	2023-11-06 12:58:27.000000000 +0000
+@@ -13,38 +13,43 @@
  #ifndef _TIFFCONF_
  #define _TIFFCONF_
  
 +#include "hbdefs.h"
 +#include "hb_io.h"
-+
+ 
+-#include <stddef.h>
+-#include <stdint.h>
+-#include <inttypes.h>
+-
++#include <inttypes.h> /* For PRIu16 */
+ 
  /* Signed 16-bit type */
 -#undef TIFF_INT16_T
 +#define TIFF_INT16_T HB_I16
@@ -586,55 +531,16 @@ diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
  /* Signed size type */
 -#undef TIFF_SSIZE_T
 +#define TIFF_SSIZE_T HB_ISIZ
- 
- /* Pointer difference type */
--#undef TIFF_PTRDIFF_T
-+#define TIFF_PTRDIFF_T HB_PTRDIFF
-+
-+/* Signed 32-bit type formatter */
-+#define TIFF_INT32_FORMAT "%d"
-+
-+/* Unsigned 32-bit type formatter */
-+#define TIFF_UINT32_FORMAT "%u"
-+
-+/* Signed 64-bit type formatter */
-+#define TIFF_INT64_FORMAT "%" HB_PF64 "d"
-+
-+/* Unsigned 64-bit type formatter */
-+#define TIFF_UINT64_FORMAT "%" HB_PF64 "u"
 +
 +/* Signed size type formatter */
-+#define TIFF_SSIZE_FORMAT "%" HB_PFS "d"
++#define TIFF_SSIZE_FORMAT "" HB_PFS "d"
 +
 +/* file handler */
 +#define TIFF_FILE_HANDLE HB_FHANDLE
  
- /* Define to 1 if the system has the type `int16'. */
--#undef HAVE_INT16
-+#define HAVE_INT16
- 
- /* Define to 1 if the system has the type `int32'. */
--#undef HAVE_INT32
-+#define HAVE_INT32
- 
- /* Define to 1 if the system has the type `int8'. */
--#undef HAVE_INT8
-+#define HAVE_INT8
- 
  /* Compatibility stuff. */
  
-@@ -53,17 +74,29 @@
- #undef HAVE_IEEEFP
- 
- /* Set the native cpu bit order (FILLORDER_LSB2MSB or FILLORDER_MSB2LSB) */
--#undef HOST_FILLORDER
-+#if defined( HB_BIG_ENDIAN )
-+   #define HOST_FILLORDER FILLORDER_LSB2MSB
-+#elif defined( HB_LITTLE_ENDIAN )
-+   #define HOST_FILLORDER FILLORDER_MSB2LSB
-+#else
-+   #undef HOST_FILLORDER
-+#endif
+@@ -66,28 +71,40 @@
  
  /* Native cpu byte order: 1 if big-endian (Motorola) or 0 if little-endian
     (Intel) */
@@ -655,7 +561,12 @@ diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
  
  /* Support JBIG compression (requires JBIG-KIT library) */
  #undef JBIG_SUPPORT
-@@ -71,11 +104,15 @@
+ 
++#if 0
+ /* Support LERC compression */
+ #undef LERC_SUPPORT
++#endif
+ 
  /* Support LogLuv high dynamic range encoding */
  #undef LOGLUV_SUPPORT
  
@@ -671,7 +582,7 @@ diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
  
  /* Support Old JPEG compresson (read contrib/ojpeg/README first! Compilation
     fails with unpatched IJG JPEG library) */
-@@ -90,8 +127,10 @@
+@@ -102,11 +119,15 @@
  /* Support ThunderScan 4-bit RLE algorithm */
  #undef THUNDER_SUPPORT
  
@@ -680,13 +591,17 @@ diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
  #undef ZIP_SUPPORT
 +#endif
  
++#if 0
+ /* Support libdeflate enhanced compression */
+ #undef LIBDEFLATE_SUPPORT
++#endif
+ 
  /* Support strip chopping (whether or not to convert single-strip uncompressed
-    images to mutiple strips of ~8Kb to reduce memory usage) */
-@@ -123,5 +162,23 @@
- #define ICC_SUPPORT
+    images to multiple strips of ~8Kb to reduce memory usage) */
+@@ -139,6 +160,24 @@
  #define PHOTOSHOP_SUPPORT
  #define IPTC_SUPPORT
-+
+ 
 +#if ! defined( HB_OS_UNIX )
 +#ifndef O_RDONLY
 +#define O_RDONLY 0
@@ -704,24 +619,26 @@ diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
 +#define O_TRUNC 001000
 +#endif
 +#endif
- 
++
  #endif /* _TIFFCONF_ */
-diff -urN tiff.orig/tiffio.h tiff/tiffio.h
---- tiff.orig/tiffio.h	Sat Feb 02 20:52:59 2013
-+++ tiff/tiffio.h	Sat Feb 02 20:52:59 2013
-@@ -102,6 +102,8 @@
- # else
- typedef HFILE thandle_t;       /* client data handle */
- # endif /* __WIN32__ */
+ 
+ /* clang-format on */
+diff --strip-trailing-cr -urN tiff.orig/tiffio.h tiff/tiffio.h
+--- tiff.orig/tiffio.h	2023-09-05 10:01:39.000000000 +0000
++++ tiff/tiffio.h	2023-11-05 17:01:47.000000000 +0000
+@@ -103,6 +103,8 @@
+ #else
+ typedef HFILE thandle_t; /* client data handle */
+ #endif /* __WIN32__ */
 +#elif defined(TIFF_FILE_HANDLE)
 +typedef TIFF_FILE_HANDLE thandle_t; /* client data handle */
  #else
- typedef void* thandle_t;       /* client data handle */
+ typedef void *thandle_t; /* client data handle */
  #endif /* USE_WIN32_FILEIO */
-diff -urN tiff.orig/tiffiop.h tiff/tiffiop.h
---- tiff.orig/tiffiop.h	Sat Feb 02 20:52:59 2013
-+++ tiff/tiffiop.h	Sat Feb 02 20:52:59 2013
-@@ -30,7 +30,7 @@
+diff --strip-trailing-cr -urN tiff.orig/tiffiop.h tiff/tiffiop.h
+--- tiff.orig/tiffiop.h	2023-05-22 14:03:41.000000000 +0000
++++ tiff/tiffiop.h	2023-11-05 17:38:19.000000000 +0000
+@@ -28,7 +28,7 @@
   * ``Library-private'' definitions.
   */
  
@@ -729,11 +646,11 @@ diff -urN tiff.orig/tiffiop.h tiff/tiffiop.h
 +#include "tiffconf.h"
  
  #ifdef HAVE_FCNTL_H
- # include <fcntl.h>
-diff -urN tiff.orig/unix.c tiff/unix.c
---- tiff.orig/unix.c	Sat Feb 02 20:52:59 2013
-+++ tiff/unix.c	Sat Feb 02 20:52:59 2013
-@@ -29,7 +29,7 @@
+ #include <fcntl.h>
+diff --strip-trailing-cr -urN tiff.orig/unix.c tiff/unix.c
+--- tiff.orig/unix.c	2023-05-22 13:49:02.000000000 +0000
++++ tiff/unix.c	2023-11-06 13:14:04.000000000 +0000
+@@ -27,7 +27,7 @@
   * Windows Common RunTime Library.
   */
  
@@ -741,4 +658,44 @@ diff -urN tiff.orig/unix.c tiff/unix.c
 +#include "tiffconf.h"
  
  #ifdef HAVE_SYS_TYPES_H
- # include <sys/types.h>
+ #include <sys/types.h>
+@@ -228,7 +228,7 @@
+     int m, fd;
+     TIFF *tif;
+ 
+-    m = _TIFFgetMode(opts, NULL, mode, module);
++    m = _TIFFgetMode(opts, (thandle_t)0, mode, module);
+     if (m == -1)
+         return ((TIFF *)0);
+ 
+@@ -242,12 +242,12 @@
+     {
+         if (errno > 0 && strerror(errno) != NULL)
+         {
+-            _TIFFErrorEarly(opts, NULL, module, "%s: %s", name,
++            _TIFFErrorEarly(opts, (thandle_t)0, module, "%s: %s", name,
+                             strerror(errno));
+         }
+         else
+         {
+-            _TIFFErrorEarly(opts, NULL, module, "%s: Cannot open", name);
++            _TIFFErrorEarly(opts, (thandle_t)0, module, "%s: Cannot open", name);
+         }
+         return ((TIFF *)0);
+     }
+diff --strip-trailing-cr -urN tiff.orig/warn.c tiff/warn.c
+--- tiff.orig/warn.c	2023-05-22 13:49:02.000000000 +0000
++++ tiff/warn.c	2023-11-06 22:20:35.000000000 +0000
+@@ -82,9 +82,10 @@
+     va_list ap;
+     if (tif && tif->tif_warnhandler)
+     {
++        int stop;
+         va_start(ap, fmt);
+-        int stop = (*tif->tif_warnhandler)(tif, tif->tif_warnhandler_user_data,
+-                                           module, fmt, ap);
++        stop = (*tif->tif_warnhandler)(tif, tif->tif_warnhandler_user_data,
++                                       module, fmt, ap);
+         va_end(ap);
+         if (stop)
+             return;
