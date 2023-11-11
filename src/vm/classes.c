@@ -508,7 +508,7 @@ static void hb_clsDictInit( PCLASS pClass, HB_SYMCNT uiHashKey )
 {
    HB_SIZE nSize;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_clsDictInit(%p,%hu)", ( void * ) pClass, uiHashKey ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_clsDictInit(%p,%u)", ( void * ) pClass, uiHashKey ) );
 
    pClass->uiHashKey = uiHashKey;
 #ifdef HB_MSG_POOL
