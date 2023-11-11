@@ -65,18 +65,7 @@
 #include <QtGui/QMouseEvent>
 #include <QtCore/QTimer>
 
-#if QT_VERSION <= 0x040900
-#include <QtGui/QApplication>
-#include <QtGui/QMainWindow>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QWidget>
-#include <QtGui/QMessageBox>
-#include <QtGui/QAbstractButton>
-#include <QtGui/QAction>
-#ifdef HB_QT_SOUND
-  #include <QtGui/QSound>
-#endif
-#else
+#if QT_VERSION >= 0x050000
 #include <QtGui/QScreen>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
@@ -87,6 +76,17 @@
 #include <QtWidgets/QAction>
 #ifdef HB_QT_SOUND
   #include <QtMultimedia/QSound>
+#endif
+#else
+#include <QtGui/QApplication>
+#include <QtGui/QMainWindow>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QWidget>
+#include <QtGui/QMessageBox>
+#include <QtGui/QAbstractButton>
+#include <QtGui/QAction>
+#ifdef HB_QT_SOUND
+  #include <QtGui/QSound>
 #endif
 #endif
 
@@ -394,18 +394,18 @@ protected:
 
 class QTCWindow : public QMainWindow
 {
-    Q_OBJECT
+   Q_OBJECT
 
 public:
-    QTCWindow( PHB_GTQTC pQTC );
-    virtual ~QTCWindow( void );
+   QTCWindow( PHB_GTQTC pQTC );
+   virtual ~QTCWindow( void );
 
-    QTConsole * qConsole;
-    void setWindowSize( void );
-    void setResizing( void );
+   QTConsole * qConsole;
+   void setWindowSize( void );
+   void setResizing( void );
 
 protected:
-    void closeEvent( QCloseEvent * evt );
+   void closeEvent( QCloseEvent * evt );
 };
 
 #endif /* HB_QTC_H_ */
