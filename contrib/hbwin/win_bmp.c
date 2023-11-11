@@ -166,17 +166,18 @@ HB_FUNC( WIN_DRAWBITMAP )
    BITMAPINFO * pbmi = NULL;
    BYTE * pBits = NULL;
    HDC hDC = hbwapi_par_HDC( 1 );
+   /* FIXME: No check is done on 2nd parameter which is a large security hole
+             and may cause GPF in simple error cases.
+             [vszakats] */
    HB_SIZE nSize = hb_parclen( 2 );
    BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 2 );
    int iType = hbwin_bitmapType( pbmfh, nSize );
 
-   /* FIXME: No check is done on 2nd parameter which is a large security hole
-             and may cause GPF in simple error cases.
-             [vszakats] */
    if( hbwin_bitmapIsSupported( hDC, iType, pbmfh, nSize ) == 0 )
    {
       int iWidth  = hb_parni( 7 );
       int iHeight = hb_parni( 8 );
+      BITMAPINFO bmi;
 
       if( iType == HB_WIN_BITMAP_BMP )
       {
@@ -197,8 +198,6 @@ HB_FUNC( WIN_DRAWBITMAP )
       }
       else if( iWidth && iHeight )
       {
-         BITMAPINFO bmi;
-
          memset( &bmi, 0, sizeof( bmi ) );
          bmi.bmiHeader.biSize        = sizeof( BITMAPINFO );
          bmi.bmiHeader.biWidth       = iWidth;
