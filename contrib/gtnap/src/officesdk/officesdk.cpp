@@ -14,6 +14,7 @@
 #include <frame/XStorable.hpp>
 #include <lang/XMultiComponentFactory.hpp>
 #include <text/XTextDocument.hpp>
+#include <iostream>
 
 class OfficeSdk
 {
@@ -36,16 +37,10 @@ public:
 
 public:
     bool init;
-    //Proc *liboffice_proc;
-    //String *liboff_path;
-    //css::uno::Reference<css::uno::XComponentContext> xComponentContext;
-    css::uno::Reference<css::uno::XInterface> xInterface;
-    //css::uno::Reference<css::bridge::XUnoUrlResolver> xResolver;
-    css::uno::Reference<css::beans::XPropertySet> xPropSet;// = css::uno::Reference<css::beans::XPropertySet>(this->xInterface, css::uno::UNO_QUERY);
 
-    css::uno::Reference<css::uno::XComponentContext> xComponentContext;
     css::uno::Reference<css::lang::XMultiComponentFactory> xMultiComponentFactoryClient;
-    css::uno::Reference<css::frame::XDesktop2> xComponentLoader;// = css::frame::Desktop::create(xComponentContext);
+
+    css::uno::Reference<css::frame::XDesktop2> xComponentLoader;
 
 };
 
@@ -54,8 +49,6 @@ public:
 OfficeSdk::OfficeSdk()
 {
     init = false;
-    //liboffice_proc = NULL;
-    //liboff_path = NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -88,11 +81,6 @@ static ::rtl::OUString i_OUStringFromUTF8(const char_t *str)
 
 /*---------------------------------------------------------------------------*/
 
-// static sdkres_t i_exception(css::uno::Exception& e)
-// Inherited by IllegalAccessibleComponentStateException, AuthenticationFailedException, InvalidArgumentException, InvalidContextException, InvalidCredentialException, InvalidPrincipalException, PersistenceFailureException, UnsupportedException, PrinterException, IllegalTypeException, IntrospectionException, NotRemoveableException, PropertyExistException, PropertyVetoException, UnknownPropertyException, BridgeExistsException, InvalidProtocolChangeException, MalformedDataException, MergeRecoveryRequest, CannotLoadConfigurationException, AlreadyAcceptingException, ConnectionSetupException, NoConnectException, ElementExistException, NoSuchElementException, UnsupportedFlavorException, DependencyException, DeploymentException, ExtensionRemovedException, InstallException, InvalidRemovedParameterException, LicenseException, PlatformException, VersionException, AmbigousFilterRequest, BrokenPackageRequest, ChangedByOthersRequest, ExoticFileLoadException, FilterOptionsRequest, LockedDocumentRequest, LockedOnSavingRequest, NoSuchFilterRequest, OwnLockOnDocumentRequest, UndoFailedException, GraphicFilterRequest, LinkageMisuseException, NoVisualAreaSizeException, ObjectSaveVetoException, UnreachableStateException, WrongStateException, IncompatibleTypesException, InvalidBindingStateException, DoubleInitializationException, TerminationVetoException, UnknownModuleException, MultipleCharsOutputException, IOException, WrongJavaVersionException, ClassNotFoundException, IllegalAccessException, IndexOutOfBoundsException, InvalidListenerException, ListenerExistException, NoSuchFieldException, NoSuchMethodException, NoSupportException, NullPointerException, ServiceNotRegisteredException, WrappedTargetException, LdapConnectionException, LdapGenericException, CannotActivateFactoryException, MailException, EncryptionNotAllowedException, NoEncryptionException, WrongPasswordException, ZipException, ParseException, QueryException, RepositoryException, InvalidTypeNameException, NoSuchTypeNameException, CannotRegisterImplementationException, InvalidRegistryException, InvalidValueException, MergeConflictException, VolatileContentDestroyedException, ScannerException, BasicErrorException, CannotConvertException, CannotCreateAdapterException, LibraryNotLoadedException, ModuleSizeExceededRequest, ScriptErrorRaisedException, ScriptFrameworkErrorException, SQLException, NoConvergenceException, SystemShellExecuteException, ClassifiedInteractionRequest, ErrorCodeRequest, PDFExportException, InvalidTextContentException, AlreadyInitializedException, CommandAbortedException, CommandFailedException, ContentCreationException, DuplicateCommandIdentifierException, DuplicateProviderException, IllegalIdentifierException, InteractiveBadTransferURLException, ListenerAlreadySetException, MissingInputStreamException, MissingPropertiesException, ServiceNotFoundException, UnsupportedCommandException, UnsupportedDataSinkException, UnsupportedNameClashException, UnsupportedOpenModeException, ExecutableDialogException, RuntimeException, CloseVetoException, InvalidStateException, MalformedNumberFormatException, NotNumericException, VetoException, DOMException, EventException, SAXException, and XPathException.
-
-/*---------------------------------------------------------------------------*/
-
 sdkres_t OfficeSdk::Init()
 {
     sdkres_t res = ekSDKRES_OK;
@@ -115,6 +103,7 @@ sdkres_t OfficeSdk::Init()
             str_destroy(&boots);
         }
 
+        // Kill a previous instance of LibreOffice
         if (res == ekSDKRES_OK)
             res = KillLibreOffice();
 
@@ -122,7 +111,7 @@ sdkres_t OfficeSdk::Init()
         if (res == ekSDKRES_OK)
             res = WakeUpServer();
 
-        // Wait a little to openoffice wake up
+        // Wait a little to LibreOffice wake up
         if (res == ekSDKRES_OK)
             bthread_sleep(2000);
 
@@ -170,19 +159,15 @@ sdkres_t OfficeSdk::WakeUpServer()
 sdkres_t OfficeSdk::ConnectServer()
 {
     sdkres_t res = ekSDKRES_OK;
-
     rtl::OUString sConnectionString("uno:socket,host=localhost,port=2083;urp;StarOffice.ServiceManager");
-    css::uno::Reference<css::uno::XComponentContext> _xComponentContext(cppu::defaultBootstrap_InitialComponentContext());
-    css::uno::Reference<css::lang::XMultiComponentFactory> _xMultiComponentFactoryClient(_xComponentContext->getServiceManager());
-
-    this->xComponentContext = _xComponentContext;
-    this->xMultiComponentFactoryClient = _xMultiComponentFactoryClient;
-    this->xInterface = this->xMultiComponentFactoryClient->createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", this->xComponentContext);
-
+    css::uno::Reference<css::uno::XComponentContext> xComponentContext(cppu::defaultBootstrap_InitialComponentContext());
+    css::uno::Reference<css::lang::XMultiComponentFactory> multiComponentFactoryClient(xComponentContext->getServiceManager());
+    css::uno::Reference<css::uno::XInterface> xInterface = multiComponentFactoryClient->createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", xComponentContext);
+    this->xMultiComponentFactoryClient = multiComponentFactoryClient;
     try
     {
-        css::uno::Reference<css::bridge::XUnoUrlResolver> xResolver = css::uno::Reference<css::bridge::XUnoUrlResolver>(this->xInterface, css::uno::UNO_QUERY);
-        this->xInterface = css::uno::Reference<css::uno::XInterface>(xResolver->resolve(sConnectionString), css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::bridge::XUnoUrlResolver> xResolver = css::uno::Reference<css::bridge::XUnoUrlResolver>(xInterface, css::uno::UNO_QUERY);
+        xInterface = css::uno::Reference<css::uno::XInterface>(xResolver->resolve(sConnectionString), css::uno::UNO_QUERY_THROW);
     }
     catch (css::uno::Exception&)
     {
@@ -192,12 +177,12 @@ sdkres_t OfficeSdk::ConnectServer()
     // Try to create a component loader
     if (res == ekSDKRES_OK)
     {
-        css::uno::Reference<css::beans::XPropertySet> propSet = css::uno::Reference<css::beans::XPropertySet>(this->xInterface, css::uno::UNO_QUERY);
-        propSet->getPropertyValue("DefaultContext") >>= this->xComponentContext;
+        css::uno::Reference<css::beans::XPropertySet> propSet = css::uno::Reference<css::beans::XPropertySet>(xInterface, css::uno::UNO_QUERY);
+        propSet->getPropertyValue("DefaultContext") >>= xComponentContext;
         if (this->xComponentLoader.get() != nullptr)
             this->xComponentLoader->dispose();
 
-        this->xComponentLoader = css::frame::Desktop::create(this->xComponentContext);
+        this->xComponentLoader = css::frame::Desktop::create(xComponentContext);
         if (this->xComponentLoader.get() == nullptr)
             res = ekSDKRES_COMPONENT_LOADER;
     }
@@ -206,48 +191,23 @@ sdkres_t OfficeSdk::ConnectServer()
 }
 
 /*---------------------------------------------------------------------------*/
-#include <iostream>
+
 sdkres_t OfficeSdk::OpenTextDocument(const char_t *url, css::uno::Reference<css::text::XTextDocument> &xDocument)
 {
     sdkres_t res = ekSDKRES_OK;
     ::rtl::OUString docUrl =  "file://" + i_OUStringFromUTF8(url);
 
-
     try
     {
-        // rtl::OUString sConnectionString("uno:socket,host=localhost,port=2083;urp;StarOffice.ServiceManager");
-        // css::uno::Reference<css::uno::XComponentContext> xComponentContext(cppu::defaultBootstrap_InitialComponentContext());
-        // css::uno::Reference<css::lang::XMultiComponentFactory> xMultiComponentFactoryClient(xComponentContext->getServiceManager());
-        // css::uno::Reference<css::uno::XInterface> xInterface = xMultiComponentFactoryClient->createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", xComponentContext);
-        // css::uno::Reference<css::bridge::XUnoUrlResolver> resolver = css::uno::Reference<css::bridge::XUnoUrlResolver>(xInterface, css::uno::UNO_QUERY);
-        // xInterface = css::uno::Reference<css::uno::XInterface>(resolver->resolve(sConnectionString), css::uno::UNO_QUERY_THROW);
-
-
-        // css::uno::Reference<css::beans::XPropertySet> xPropSet = css::uno::Reference<css::beans::XPropertySet>(xInterface, css::uno::UNO_QUERY);
-        // xPropSet->getPropertyValue("DefaultContext") >>= xComponentContext;
-        // std::cout << "xComponentContext=" << xComponentContext.get() << std::endl;
-        // //css::uno::Reference<css::lang::XMultiComponentFactory> xMultiComponentFactoryServer(xComponentContext->getServiceManager());
-        // css::uno::Reference<css::frame::XDesktop2> xComponentLoader = css::frame::Desktop::create(xComponentContext);
-        // css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
-        // loadProperties[0].Name = "Hidden";
-        // loadProperties[0].Value <<= true;
-
-        // css::uno::Reference<css::lang::XComponent> xComponent = xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
-        // xDocument = css::uno::Reference<css::text::XTextDocument>(xComponent, css::uno::UNO_QUERY_THROW);
-
         css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
         loadProperties[0].Name = "Hidden";
         loadProperties[0].Value <<= true;
         css::uno::Reference<css::lang::XComponent> xComponent = this->xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
         xDocument = css::uno::Reference<css::text::XTextDocument>(xComponent, css::uno::UNO_QUERY_THROW);
-
-
-
-
     }
     catch(css::uno::Exception &e)
     {
-        std::cout << "LOAD EXCEPTION: " << e.Message << std::endl;
+        std::cout << "Error loading " << url << " file: " << e.Message;
         res = ekSDKRES_OPEN_FILE_ERROR;
     }
 
@@ -287,7 +247,7 @@ sdkres_t OfficeSdk::SaveTextDocument(const css::uno::Reference<css::text::XTextD
     }
     catch(css::uno::Exception &e)
     {
-        std::cout << "SAVE EXCEPTION: " << e.Message << std::endl;
+        std::cout << "Error saving " << url << " file: " << e.Message;
         res = ekSDKRES_SAVE_FILE_ERROR;
     }
 
@@ -324,16 +284,6 @@ sdkres_t officesdk_text_to_pdf(const char_t *src_pathname, const char_t *dest_pa
         xDocument->dispose();
 
     return res;
-    // rtl::OUString sDocUrl("file:///home/fran/harbour_nappgui/contrib/gtnap/tests/unotest/test.odt"), sPDFUrl("file:///home/fran/harbour_nappgui/contrib/gtnap/tests/unotest/test.pdf");
-    // rtl::OUString sConnectionString("uno:socket,host=localhost,port=2083;urp;StarOffice.ServiceManager");
-    // rtl::Bootstrap::set("URE_MORE_TYPES", "file:///usr/lib/libreoffice/program/types/offapi.rdb");
-    // rtl::Bootstrap::set("URE_BOOTSTRAP", "vnd.sun.star.pathname:/usr/lib/libreoffice/program/fundamentalrc");
-
-    // if (i_OFFICE_SDK.xComponentContext.get() == nullptr)
-    //     return ekSDKRES_NOENV;
-    // else
-        //return ekSDKRES_OK;
-        //return ekSDKRES_NOENV;
 }
 
 /*---------------------------------------------------------------------------*/
