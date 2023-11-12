@@ -495,7 +495,6 @@ the build. Make sure to adjust them to your own directories:
     HB_WITH_QT=C:\Qt\include (version 4.5.0 or upper is required)
     HB_WITH_SLANG= (on *nix systems)
     HB_WITH_SQLITE3=C:\sqlite3 (defaults to locally hosted version if not found)
-    HB_WITH_TIFF=C:\libtiff (defaults to locally hosted version if not found)
     HB_WITH_TINYMT=C:\tinymt\tinymt (defaults to locally hosted version)
     HB_WITH_WATT= (on MS-DOS systems)
     HB_WITH_X11= (on *nix systems)
@@ -1831,8 +1830,6 @@ Supported shells per host platforms:
         * <https://download.qt-project.org/official_releases/qt/>
      * HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
         * <https://www.sqlite.org/>
-     * HB_WITH_TIFF - libtiff [multiplatform, free, open-source]
-        * <http://www.libtiff.org/>
      * HB_WITH_TINYMT - TinyMT (Mersenne Twister) [multiplatform, free, open-source]
         * <http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/TINYMT/>
      * HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
