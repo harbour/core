@@ -21,7 +21,7 @@ ATIVE(V_Janela)
 STAT PROC TST_ODT_PARA_PDF
 ***********************************
 LOCAL V_Janela
-LOCAL N_Ret := NAP_OFFICE_TEXT_TO_PDF({|| "../office/test.odt" }, {|| "../office/test.pdf" })
+LOCAL N_Ret := NAP_OFFICE_TEXT_TO_PDF({|| NAP_WORK_PATH() + "/../office/test.odt" }, {|| NAP_WORK_PATH() + "/../office/test.pdf" })
 LOCAL C_ERR
 
 IF N_Ret == SDKRES_OK

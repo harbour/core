@@ -14,6 +14,7 @@
         "oswindow.inl": "c",
         "osedit.inl": "c",
         "ostext.inl": "c",
-        "*.hdl": "cpp"
+        "*.hdl": "cpp",
+        "*.def": "cpp"
     }
 }

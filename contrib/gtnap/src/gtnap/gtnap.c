@@ -173,6 +173,7 @@ struct _gtnap_t
     uint8_t date_digits;
     uint8_t date_chars;
     String *title;
+    String *working_path;
     uint32_t rows;
     uint32_t cols;
     uint32_t cell_x_size;
@@ -537,6 +538,7 @@ static void i_gtnap_destroy(GtNap **gtnap)
     font_destroy(&(*gtnap)->global_font);
     font_destroy(&(*gtnap)->reduced_font);
     str_destroy(&(*gtnap)->title);
+    str_destroy(&(*gtnap)->working_path);
     officesdk_finish();
     heap_delete(&(*gtnap), GtNap);
 }
@@ -992,6 +994,13 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->windows = arrpt_create(GtNapWindow);
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
+
+    {
+        char_t path[512];
+        bfile_dir_work(path, sizeof(path));
+        GTNAP_GLOBAL->working_path = str_c(path);
+    }
+
     globals_resolution(&screen);
     screen.height -= 50;        /* Margin for Dock or Taskbars */
     i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
@@ -2654,6 +2663,13 @@ static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t
     gtwin->panel_size.height = (real32_t)(gtnap->cell_y_size * (gtwin->bottom - gtwin->top + 1));
     arrpt_append(gtnap->windows, gtwin, GtNapWindow);
     return gtwin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+extern const char_t *hb_gtnap_working_path(void)
+{
+    return tc(GTNAP_GLOBAL->working_path);
 }
 
 /*---------------------------------------------------------------------------*/
