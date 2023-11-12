@@ -33,7 +33,7 @@ For building GTNap CMake tool is necessary:
       cmake version 3.21.4
       ```
 
-## Installing LibreOffice-SDK
+## LibreOffice-SDK support
 
 As of November 23, GTNap adds support for the LibreOffice-SDK, in order to add capabilities for editing documents from Harbour. It is necessary to **correctly install the LibreOffice package**, both on the development machines and on the client machines.
 
@@ -61,7 +61,14 @@ As of November 23, GTNap adds support for the LibreOffice-SDK, in order to add c
         CREDITS.fodt  NOTICE  presets  program  sdk  share
         ```
 
-> GTNAP-based programs will not be able to compile or run if LibreOffice is not correctly installed.
+> **Important:** GTNAP-based programs will not be able to compile or run if LibreOffice is not correctly installed.
+
+> **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`
+
+> **Important:** The first time a GTNAP program uses a LibreOffice function, an instance of the LibreOffice application will be started invisibly (`soffice.bin` process). This first call will have a small delay due to the initialization of the process. It is imperative that LibreOffice is running in order to use the SDK from C++/Harbour/GTNAP.
+
+> **Important:** In order to run `exemplo` or any GTNAP-based application, the `LD_LIBRARY_PATH` environment variable must point to `${LIBREOFFICE_HOME}/program`. e.g.
+`/usr/lib/libreoffice/program`.
 
 ## Build GTNap
 
