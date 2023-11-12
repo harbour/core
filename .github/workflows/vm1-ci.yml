@@ -113,6 +113,7 @@ jobs:
           export HB_BUILD_CONTRIBS="no hbfimage"  # incompatible with freeimage 3.18+
 
           export HB_BUILD_VERBOSE="yes"
+          export HBMK_WITH_SQLITE3="local"
           export HB_USER_CFLAGS="$HB_USER_CFLAGS"
           export HB_USER_LDFLAGS="$HB_USER_LDFLAGS"
           export HB_CCACHE=ccache
