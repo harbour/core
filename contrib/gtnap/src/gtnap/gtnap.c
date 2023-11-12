@@ -537,6 +537,7 @@ static void i_gtnap_destroy(GtNap **gtnap)
     font_destroy(&(*gtnap)->global_font);
     font_destroy(&(*gtnap)->reduced_font);
     str_destroy(&(*gtnap)->title);
+    officesdk_finish();
     heap_delete(&(*gtnap), GtNap);
 }
 

@@ -13,6 +13,7 @@
         "*.ixx": "c",
         "oswindow.inl": "c",
         "osedit.inl": "c",
-        "ostext.inl": "c"
+        "ostext.inl": "c",
+        "*.hdl": "cpp"
     }
 }

@@ -72,6 +72,7 @@ int main()
         xComponent->dispose();
     }
     catch(css::uno::Exception& e) {
+
         std::cout << "Can not open the file ~/test.odt" << std::endl;
     }
 
