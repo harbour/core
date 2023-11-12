@@ -70,6 +70,8 @@ As of November 23, GTNap adds support for the LibreOffice-SDK, in order to add c
 > **Important:** In order to run `exemplo` or any GTNAP-based application, the `LD_LIBRARY_PATH` environment variable must point to `${LIBREOFFICE_HOME}/program`. e.g.
 `/usr/lib/libreoffice/program`.
 
+> **Important:** A new directory has been created for the LibreOffice example files (read/write) `/tests/cuademo/office`.
+
 ## Build GTNap
 
 The `/contrib/gtnap` project consists of several files and folders:
