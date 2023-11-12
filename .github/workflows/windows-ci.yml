@@ -69,7 +69,10 @@ jobs:
           ref: ${{ github.event.client_payload.branch }}
 
       - run: pwd
+        shell: msys2 {0}
+
       - run: ls
+        shell: msys2 {0}
 
       - name: Prepare ccache using action
         if: matrix.compiler != 'bcc'
@@ -87,9 +90,9 @@ jobs:
           case ${{matrix.strictness}} in
             normal) ;;
             strict) case ${{matrix.compiler}} in
-                      (mingw64) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror -Wno-error=array-bounds" ;;
+                      (mingw64) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror -Wno-error=deprecated-declarations -Wno-error=array-bounds" ;;
                       (bcc) HB_USER_CFLAGS="$HB_USER_CFLAGS -w!" ;;
-                      (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
+                      (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror -Wno-error=deprecated-declarations" ;;
                     esac ;;
           esac
           tee ./.bashrc <<EOENV
@@ -113,6 +116,15 @@ jobs:
           export HB_WITH_CURL="/d/msys64/$mingwxx/include"
           export HB_CCACHE=""
           EOMSYSENV
+              ;;
+            *)
+              tee -a ./.bashrc <<'EOCCACHE'
+          # Reconfigure ccache in msys2
+          ccache --set-config="cache_dir=$(pwd)/.ccache"
+          ccache --set-config=max_size=32M
+          ccache --set-config=compression=true
+          ccache -p
+          EOCCACHE
               ;;
           esac
 
