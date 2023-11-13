@@ -2327,6 +2327,7 @@ hb_compExprReduceMod
 hb_compExprReduceMult
 hb_compExprReduceNE
 hb_compExprReduceNegate
+hb_compExprReduceNot
 hb_compExprReduceOr
 hb_compExprReducePlus
 hb_compExprReducePower

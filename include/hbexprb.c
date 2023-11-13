@@ -3407,30 +3407,10 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-      {
-         PHB_EXPR pExpr;
-
          pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
-         pExpr = pSelf->value.asOperator.pLeft;
-
-         if( pExpr->ExprType == HB_ET_LOGICAL )
-         {
-            pExpr->value.asLogical = ! pExpr->value.asLogical;
-            HB_COMP_EXPR_CLEAR( pSelf );
-            pSelf = pExpr;
-         }
-         else if( pExpr->ExprType == HB_EO_NOT && HB_SUPPORT_EXTOPT )
-         {
-            /* NOTE: This will not generate a runtime error if incompatible
-             * data type is used
-             */
-            pExpr->ExprType = HB_ET_NONE;  /* do not delete operator parameter - we are still using it */
-            pExpr = pExpr->value.asOperator.pLeft;
-            HB_COMP_EXPR_FREE( pSelf );
-            pSelf = pExpr;
-         }
+         pSelf = hb_compExprReduceNot( pSelf, HB_COMP_PARAM );
          break;
-      }
+
       case HB_EA_ARRAY_AT:
          HB_COMP_ERROR_TYPE( pSelf );
          break;
