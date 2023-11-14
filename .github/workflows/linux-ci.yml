@@ -28,6 +28,7 @@ jobs:
       - name: Install packages
         run: |
           sudo apt-get install -qq \
+            valgrind \
             libncurses-dev	\
             libslang2-dev	\
             libx11-dev	\
@@ -106,6 +107,12 @@ jobs:
 
       - name: Run tests
         run: |
-            echo ::group::Run tests
-            set -ex
-            bin/linux/${{matrix.compiler}}/hbtest
+          echo ::group::Run tests
+          set -ex
+          VALGRIND="valgrind --error-exitcode=1"
+
+          $VALGRIND bin/linux/${{matrix.compiler}}/hbtest
+
+          cd contrib/hbsqlit3/tests
+          ../../../bin/linux/${{matrix.compiler}}/hbmk2 backup.prg
+          $VALGRIND ./backup
