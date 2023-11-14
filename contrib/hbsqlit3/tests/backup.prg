@@ -60,6 +60,10 @@
 
 #require "hbsqlit3"
 
+PROCEDURE init_trace( pDbDest, cPrefix )
+   sqlite3_trace( pDbDest, .T., cPrefix + ".log" )
+   RETURN
+
 PROCEDURE Main()
 
    LOCAL cFileSource := ":memory:", cFileDest := "backup.db", cSQLTEXT
@@ -85,7 +89,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   sqlite3_trace( pDbDest, .T., "backup.log" )
+   init_trace( pDbDest, "backup" )
 
    pBackup := sqlite3_backup_init( pDbDest, "main", pDbSource, "main" )
    IF Empty( pBackup )
