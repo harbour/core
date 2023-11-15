@@ -180,4 +180,7 @@
 #define SQLITE_TRACE_ROW        0x04
 #define SQLITE_TRACE_CLOSE      0x08
 
+/* sqlite3_prepare() option (requires sqlite 3.20.0) */
+#define SQLITE_PREPARE_PERSISTENT          0x01
+
 #endif
