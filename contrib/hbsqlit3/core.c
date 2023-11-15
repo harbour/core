@@ -2460,7 +2460,7 @@ HB_FUNC( SQLITE3_COMPILEOPTION_GET )
 /**
    Create Or Redefine SQL Functions
 
-   sqlite3_create_function( db, cFuncName, nArg, [cFunc|sFunc] )
+   sqlite3_create_function( db, cFuncName, nArg, [cFunc|sFunc], [nFunctionFlags] )
 
    Only scalar function creation now supported.
  */
@@ -2487,7 +2487,7 @@ HB_FUNC( SQLITE3_CREATE_FUNCTION )
             sqlite3_create_function( pHbSqlite3->db,
                                      hb_parstr_utf8( 2, &hFuncName, NULL ),
                                      hb_parnidef( 4, -1 ),
-                                     SQLITE_UTF8,
+                                     SQLITE_UTF8 | hb_parnidef( 5, 0 ),
                                      pHbSqlite3->cbFunc,
                                      func, NULL, NULL ) );
       }
@@ -2496,7 +2496,7 @@ HB_FUNC( SQLITE3_CREATE_FUNCTION )
             sqlite3_create_function( pHbSqlite3->db,
                                      hb_parstr_utf8( 2, &hFuncName, NULL ),
                                      -1,
-                                     SQLITE_UTF8,
+                                     SQLITE_UTF8 | hb_parnidef( 5, 0 ),
                                      NULL,
                                      NULL, NULL, NULL ) );
 
