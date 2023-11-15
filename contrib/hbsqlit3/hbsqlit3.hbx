@@ -110,6 +110,7 @@ DYNAMIC sqlite3_sleep
 DYNAMIC sqlite3_sourceid
 DYNAMIC sqlite3_sql
 DYNAMIC sqlite3_status
+DYNAMIC sqlite3_status64
 DYNAMIC sqlite3_step
 DYNAMIC sqlite3_stmt_readonly
 DYNAMIC sqlite3_stmt_status
