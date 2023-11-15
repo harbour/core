@@ -1,31 +1,68 @@
-diff --strip-trailing-cr -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
---- sqlite3.orig/sqlite3.c	2013-12-06 15:05:16.000000000 +0000
-+++ sqlite3/sqlite3.c	2019-04-22 18:53:05.000000000 +0000
-@@ -27008,7 +27008,11 @@
-       ** is the same technique used by glibc to implement posix_fallocate()
-       ** on systems that do not have a real fallocate() system call.
+--- sqlite3.orig/sqlite3.c	2023-11-24 14:33:56.000000000 +0100
++++ sqlite3/sqlite3.c	2023-12-07 21:33:32.000000000 +0100
+@@ -34853,6 +34853,17 @@
+   return h;
+ }
+ 
++#if defined( __BORLANDC__ )
++#  if __BORLANDC__ >= 0x530
++#     define _LL( num )           num##i64
++#  else
++#     define _LL( num )           num
++#  endif
++#elif defined( _MSC_VER )
++#  define _LL( num )   num
++#else
++#  define _LL( num )   num##LL
++#endif
+ /* Double-Double multiplication.  (x[0],x[1]) *= (y,yy)
+ **
+ ** Reference:
+@@ -34872,11 +34883,11 @@
+   double hx, hy;
+   u64 m;
+   memcpy(&m, (void*)&x[0], 8);
+-  m &= 0xfffffffffc000000LL;
++  m &= _LL(0xfffffffffc000000);
+   memcpy(&hx, &m, 8);
+   tx = x[0] - hx;
+   memcpy(&m, &y, 8);
+-  m &= 0xfffffffffc000000LL;
++  m &= _LL(0xfffffffffc000000);
+   memcpy(&hy, &m, 8);
+   ty = y - hy;
+   p = hx*hy;
+@@ -35441,7 +35452,7 @@
+   memcpy(&v,&r,8);
+   e = v>>52;
+   if( (e&0x7ff)==0x7ff ){
+-    p->isSpecial = 1 + (v!=0x7ff0000000000000LL);
++    p->isSpecial = 1 + (v!=_LL(0x7ff0000000000000));
+     p->n = 0;
+     p->iDP = 0;
+     return;
+@@ -35561,7 +35572,7 @@
+   int i;
+   for(i=0; sqlite3Isdigit(z[i]); i++){
+     v = v*10 + z[i] - '0';
+-    if( v>4294967296LL ){ *pI = 0; return 0; }
++    if( v>_LL(4294967296) ){ *pI = 0; return 0; }
+   }
+   if( i==0 || z[i]!=0 ){ *pI = 0; return 0; }
+   *pI = (u32)v;
+@@ -41770,7 +41781,11 @@
+       ** This is a similar technique to that used by glibc on systems
+       ** that do not have a real fallocate() call.
        */
 +#if __minix
 +      int nBlk = 4096;            /* MFS default; good enough for now */
 +#else
        int nBlk = buf.st_blksize;  /* File-system block size */
 +#endif
+       int nWrite = 0;             /* Number of bytes written by seekAndWrite */
        i64 iWrite;                 /* Next offset to write to */
  
-       if( robust_ftruncate(pFile->h, nSize) ){
-@@ -32848,6 +32852,11 @@
- ** create a substitute.
- */
- /* #include <time.h> */
-+#if defined( _MSC_VER )
-+#define _LL( num )   num
-+#else
-+#define _LL( num )   num##LL
-+#endif
- struct tm *__cdecl localtime(const time_t *t)
- {
-   static struct tm y;
-@@ -32855,7 +32864,7 @@
+@@ -48194,7 +48209,7 @@
    SYSTEMTIME pTm;
    sqlite3_int64 t64;
    t64 = *t;
@@ -34,7 +71,43 @@ diff --strip-trailing-cr -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
    uTm.dwLowDateTime = (DWORD)(t64 & 0xFFFFFFFF);
    uTm.dwHighDateTime= (DWORD)(t64 >> 32);
    osFileTimeToLocalFileTime(&uTm,&lTm);
-@@ -73680,7 +73689,8 @@
+@@ -82701,7 +82716,7 @@
+   double r2 = (double)i;
+   return r1==0.0
+       || (memcmp(&r1, &r2, sizeof(r1))==0
+-          && i >= -2251799813685248LL && i < 2251799813685248LL);
++          && i >= _LL(-2251799813685248) && i < _LL(2251799813685248));
+ }
+ 
+ /* Convert a floating point value to its closest integer.  Do so in
+@@ -95469,7 +95484,7 @@
+             testcase( pIn1->u.i==140737488355327LL );
+             testcase( pIn1->u.i==-140737488355328LL );
+             testcase( pIn1->u.i==-140737488355329LL );
+-            if( pIn1->u.i<=140737488355327LL && pIn1->u.i>=-140737488355328LL){
++            if( pIn1->u.i<=_LL(140737488355327) && pIn1->u.i>=_LL(-140737488355328)){
+               pIn1->flags |= MEM_IntReal;
+               pIn1->flags &= ~MEM_Int;
+             }else{
+@@ -95532,7 +95547,7 @@
+       testcase( pIn1->u.i==140737488355327LL );
+       testcase( pIn1->u.i==-140737488355328LL );
+       testcase( pIn1->u.i==-140737488355329LL );
+-      if( pIn1->u.i<=140737488355327LL && pIn1->u.i>=-140737488355328LL ){
++      if( pIn1->u.i<=_LL(140737488355327) && pIn1->u.i>=_LL(-140737488355328) ){
+         pIn1->flags |= MEM_IntReal;
+         pIn1->flags &= ~MEM_Int;
+       }else{
+@@ -95732,7 +95747,7 @@
+       }else if( uu<=2147483647 ){
+         nData += 4;
+         pRec->uTemp = 4;
+-      }else if( uu<=140737488355327LL ){
++      }else if( uu<=_LL(140737488355327) ){
+         nData += 6;
+         pRec->uTemp = 5;
+       }else{
+@@ -102360,7 +102375,8 @@
  
      /* Copy as much data as is available in the buffer into the start of
      ** p->aAlloc[].  */
@@ -44,3 +117,21 @@ diff --strip-trailing-cr -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
      p->iReadOff += nAvail;
      nRem = nByte - nAvail;
  
+@@ -129191,7 +129207,7 @@
+ ** Add a (possibly large) integer to the running sum.
+ */
+ static void kahanBabuskaNeumaierStepInt64(volatile SumCtx *pSum, i64 iVal){
+-  if( iVal<=-4503599627370496LL || iVal>=+4503599627370496LL ){
++  if( iVal<=_LL(-4503599627370496) || iVal>=_LL(+4503599627370496) ){
+     i64 iBig, iSm;
+     iSm = iVal % 16384;
+     iBig = iVal - iSm;
+@@ -129209,7 +129225,7 @@
+   volatile SumCtx *p,
+   i64 iVal
+ ){
+-  if( iVal<=-4503599627370496LL || iVal>=+4503599627370496LL ){
++  if( iVal<=_LL(-4503599627370496) || iVal>=_LL(+4503599627370496) ){
+     i64 iSm = iVal % 16384;
+     p->rSum = (double)(iVal - iSm);
+     p->rErr = (double)iSm;
