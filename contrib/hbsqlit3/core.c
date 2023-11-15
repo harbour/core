@@ -82,6 +82,9 @@ static int  progress_handler( void * );
 static int  hook_commit( void * );
 static void hook_rollback( void * );
 static void func( sqlite3_context *, int, sqlite3_value ** );
+#if SQLITE_VERSION_NUMBER >= 3014000
+static int  trace_handler( unsigned, void *, void *, void * );
+#endif
 
 typedef struct
 {
@@ -92,8 +95,12 @@ typedef struct
    PHB_ITEM  cbHookCommit;
    PHB_ITEM  cbHookRollback;
    PHB_ITEM  cbFunc;
+#if SQLITE_VERSION_NUMBER >= 3014000
+   PHB_ITEM  cbTraceHandler;
+#else
    PHB_ITEM  sProfileFileName;
    PHB_ITEM  sTraceFileName;
+#endif
 } HB_SQLITE3, * PHB_SQLITE3;
 
 typedef struct
@@ -156,6 +163,13 @@ static HB_GARBAGE_FUNC( hb_sqlite3_destructor )
          pStructHolder->hbsqlite3->cbFunc = NULL;
       }
 
+#if SQLITE_VERSION_NUMBER >= 3014000
+      if( pStructHolder->hbsqlite3->cbTraceHandler )
+      {
+         hb_itemRelease( pStructHolder->hbsqlite3->cbTraceHandler );
+         pStructHolder->hbsqlite3->cbTraceHandler = NULL;
+      }
+#else
       if( pStructHolder->hbsqlite3->sProfileFileName )
       {
          hb_itemRelease( pStructHolder->hbsqlite3->sProfileFileName );
@@ -166,6 +180,7 @@ static HB_GARBAGE_FUNC( hb_sqlite3_destructor )
          hb_itemRelease( pStructHolder->hbsqlite3->sTraceFileName );
          pStructHolder->hbsqlite3->sTraceFileName = NULL;
       }
+#endif
 
       hb_xfree( pStructHolder->hbsqlite3 );
       pStructHolder->hbsqlite3 = NULL;
@@ -196,6 +211,12 @@ static HB_GARBAGE_FUNC( hb_sqlite3_mark )
       if( pStructHolder->hbsqlite3->cbFunc )
          hb_gcMark( pStructHolder->hbsqlite3->cbFunc );
 
+#if SQLITE_VERSION_NUMBER >= 3014000
+      if( pStructHolder->hbsqlite3->cbTraceHandler )
+      {
+         hb_gcMark( pStructHolder->hbsqlite3->cbTraceHandler );
+      }
+#else
       if( pStructHolder->hbsqlite3->sProfileFileName )
       {
          hb_gcMark( pStructHolder->hbsqlite3->sProfileFileName );
@@ -204,6 +225,7 @@ static HB_GARBAGE_FUNC( hb_sqlite3_mark )
       {
          hb_gcMark( pStructHolder->hbsqlite3->sTraceFileName );
       }
+#endif
    }
 }
 
@@ -1776,14 +1798,108 @@ HB_FUNC( SQLITE3_ENABLE_SHARED_CACHE )
    hb_retni( sqlite3_enable_shared_cache( hb_parl( 1 ) ) );
 }
 
-/* TODO: implement sqlite3_trace_v2(), that replaces both of these deprecated functions */
 
 /**
    Tracing And Profiling Functions
 
+   sqlite3_trace_v2( db, nMask, [ bCallback ] )  // Starting with 3.14.0
+
    sqlite3_trace( db, lOnOff, [ filename ] )     // Deprecated in 3.14.0
    sqlite3_profile( db, lOnOff, [ filename ] )   // Deprecated in 3.14.0
  */
+
+#if SQLITE_VERSION_NUMBER >= 3014000
+static int trace_handler( unsigned uType, void *cbTraceHandler, void * p, void * x )
+{
+   PHB_ITEM pCallback = ( PHB_ITEM ) cbTraceHandler;
+   int iRes = 0;
+
+   if( pCallback && hb_vmRequestReenter() )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( pCallback );
+      hb_vmPushNumInt( uType );
+      switch( uType )
+      {
+         case SQLITE_TRACE_STMT:
+            hb_vmPushPointer( p );
+            hb_vmPushString( x, strlen( x ) );
+            hb_vmSend( 3 );
+            break;
+         case SQLITE_TRACE_PROFILE:
+            hb_vmPushPointer( p );
+            hb_vmPushNumInt( *( sqlite3_uint64 * ) x );
+            hb_vmSend( 3 );
+            break;
+         case SQLITE_TRACE_ROW:
+            HB_SYMBOL_UNUSED( x );
+            hb_vmPushPointer( p );
+            hb_vmSend( 2 );
+            break;
+         case SQLITE_TRACE_CLOSE:
+         {
+            PHB_ITEM pItem = hb_itemNew( NULL );
+            HB_SQLITE3 * hbsqlite3 = ( HB_SQLITE3 * ) hb_xgrabz( sizeof( HB_SQLITE3 ) );
+            HB_SYMBOL_UNUSED( x );
+
+            hbsqlite3->db = p;
+            hb_sqlite3_itemPut( pItem, hbsqlite3, HB_SQLITE3_DB );
+            hb_vmPush( pItem );
+            hb_vmSend( 2 );
+
+            /* We don't want sqlite3_close() called recursively
+             * and don't want to implement a weak reference engine yet
+             * so we just clear the pointer before hb_itemRelease(). */
+            hbsqlite3->db = NULL;
+            hb_itemRelease( pItem );
+            break;
+         }
+      }
+      iRes = hb_parni( -1 );
+      hb_vmRequestRestore();
+   }
+   return iRes;
+}
+#endif
+
+HB_FUNC( SQLITE3_TRACE_V2 )
+{
+#if SQLITE_VERSION_NUMBER >= 3014000
+   HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
+
+   if( pHbSqlite3 && pHbSqlite3->db )
+   {
+      unsigned uMask = ( unsigned int ) hb_parnint( 2 );
+      int iRes;
+
+      if( pHbSqlite3->cbTraceHandler )
+      {
+         hb_itemRelease( pHbSqlite3->cbTraceHandler );
+         pHbSqlite3->cbTraceHandler = NULL;
+      }
+
+      if( HB_ISEVALITEM( 3 ) )
+      {
+         pHbSqlite3->cbTraceHandler = hb_itemNew( hb_param( 3, HB_IT_EVALITEM ) );
+         hb_gcUnlock( pHbSqlite3->cbTraceHandler );
+
+         iRes = sqlite3_trace_v2( pHbSqlite3->db, uMask,
+                                  uMask ? trace_handler : NULL,
+                                  uMask ? ( void * ) pHbSqlite3->cbTraceHandler : NULL );
+      }
+      else
+         iRes = sqlite3_trace_v2( pHbSqlite3->db, 0, NULL, NULL );
+      hb_retni( iRes );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
+}
+
+
+#if SQLITE_VERSION_NUMBER < 3014000
 static void SQL3ProfileLog( void * sFile, const char * sProfileMsg, sqlite3_uint64 uint64 )
 {
    if( sProfileMsg )
@@ -1811,9 +1927,11 @@ static void SQL3TraceLog( void * sFile, const char * sTraceMsg )
       }
    }
 }
+#endif
 
 HB_FUNC( SQLITE3_PROFILE )
 {
+#if SQLITE_VERSION_NUMBER < 3014000
    HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db )
@@ -1835,10 +1953,14 @@ HB_FUNC( SQLITE3_PROFILE )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 HB_FUNC( SQLITE3_TRACE )
 {
+#if SQLITE_VERSION_NUMBER < 3014000
    HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db )
@@ -1860,7 +1982,11 @@ HB_FUNC( SQLITE3_TRACE )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
+
 
 /**
    BLOB Import/export
@@ -2359,4 +2485,47 @@ HB_FUNC( SQLITE3_CREATE_FUNCTION )
    }
    else
       hb_retni( SQLITE_ERROR );
+}
+
+
+/**
+   Get database filename for given connection and database name
+
+   sqlite3_db_filename( pDb, sDbName )
+  */
+HB_FUNC( SQLITE3_DB_FILENAME )
+{
+#if SQLITE_VERSION_NUMBER >= 3007010
+   HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
+
+   if( pHbSqlite3 && pHbSqlite3->db && HB_ISCHAR( 2 ) )
+      hb_retc( ( const char * ) sqlite3_db_filename( pHbSqlite3->db, hb_parc( 2 ) ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
+}
+
+
+/**
+   Get expanded SQL for a prepared statement
+
+   sqlite3_expanded_sql( pPreparedStatement )
+  */
+HB_FUNC( SQLITE3_EXPANDED_SQL )
+{
+#if SQLITE_VERSION_NUMBER >= 3014000
+   psqlite3_stmt pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
+   if( pStmt )
+   {
+      char *sql = sqlite3_expanded_sql( pStmt );
+      hb_retstr_utf8( sql );
+      sqlite3_free( sql );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }

@@ -174,4 +174,10 @@
 #define SQLITE_LIMIT_VARIABLE_NUMBER       9
 #define SQLITE_LIMIT_TRIGGER_DEPTH         10
 
+/* Trace Event Codes */
+#define SQLITE_TRACE_STMT       0x01
+#define SQLITE_TRACE_PROFILE    0x02
+#define SQLITE_TRACE_ROW        0x04
+#define SQLITE_TRACE_CLOSE      0x08
+
 #endif
