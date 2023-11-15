@@ -402,7 +402,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                         nPosComment += nIndent
                      ENDIF
                      IF i > 1 .AND. ( ( nState == RF_STATE_RET .AND. ::nLineRet > 0 .AND. nStatePrev != RF_STATE_FUNC ) .OR. ;
-                                      ( nState == RF_STATE_FUNC .AND. ::nLineFnc > 0 .AND. nStatePrev > 0 ) .OR. ;
+                                      ( nState == RF_STATE_FUNC .AND. ::nLineFnc > 0 ) .OR. ; // ThundEric (www.idlagam.com)
                                       ( nState == RF_STATE_VAR .AND. nStatePrev != nState .AND. ::nLineVar > 0 ) .OR. ;
                                       ( nState == RF_STATE_CODE .AND. nStatePrev != nState .AND. ::nLineCode > 0 ) )
                         nPos := i - 1
