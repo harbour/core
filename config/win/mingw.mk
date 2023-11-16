@@ -16,7 +16,7 @@ ifneq ($(HB_COMPILER),mingw64)
    endif
 endif
 
-CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
+CC := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
 CC_IN := -c
 CC_OUT := -o
 
@@ -78,6 +78,13 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
+ifeq ($(HB_COMPILER),mingw64)
+   # Newer MinGW-W64 versions (10+, IIRC) need this to opt out of C99 format
+   # string emulation and keep our format strings compatible among the
+   # different Windows compilers
+   CFLAGS += -D__USE_MINGW_ANSI_STDIO=0
+endif
+
 RC := $(HB_CCPATH)$(HB_CCPREFIX)windres
 RC_OUT := -o$(subst x,x, )
 RCFLAGS += -I. -I$(HB_HOST_INC) -O coff
@@ -107,7 +114,7 @@ LDFLAGS += $(LIBPATHS)
 
 AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define library_object
    @$(ECHO) $(ECHOQUOTE)$(subst \,/,$(file))$(ECHOQUOTE) >> __lib__.tmp
 
@@ -125,7 +132,7 @@ DFLAGS += -shared $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS),-l$(lib))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define dynlib_object
    @$(ECHO) $(ECHOQUOTE)INPUT($(subst \,/,$(file)))$(ECHOQUOTE) >> __dyn__.tmp
 

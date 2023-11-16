@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,11 +54,11 @@ HB_EXTERN_BEGIN
 
 #if defined( __WATCOMC__ )
    #define HB_MATH_HANDLER
-   #if ( __WATCOMC__ > 1000 ) /* && defined( __cplusplus ) */
+   #if __WATCOMC__ > 1000  /* && defined( __cplusplus ) */
       #define exception _exception
    #endif
 #elif defined( __BORLANDC__ )
-   #if ( __BORLANDC__ == 1328 ) && defined( __cplusplus )
+   #if ( __BORLANDC__ == 0x530 ) && defined( __cplusplus )
       /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
                the redefinition of matherr, because nor "_exception" neither
                "exception" will work. [vszakats] */
@@ -66,7 +66,7 @@ HB_EXTERN_BEGIN
       #define HB_MATH_HANDLER
       #define matherr _matherr
       /* NOTE: This is needed for Borland C++ 5.5 in C++/STDC mode. [vszakats] */
-      #if ( __BORLANDC__ >= 1360 )
+      #if ( __BORLANDC__ >= 0x550 )
          #define exception _exception
       #endif
    #endif
@@ -93,21 +93,21 @@ HB_EXTERN_BEGIN
 
 typedef struct _HB_MATH_EXCEPTION
 {
-   int            type;
-   const char *   funcname;
-   const char *   error;
-   double         arg1;
-   double         arg2;
-   double         retval;
-   int            retvalwidth;
-   int            retvaldec;
-   int            handled;
+   int          type;
+   const char * funcname;
+   const char * error;
+   double       arg1;
+   double       arg2;
+   double       retval;
+   int          retvalwidth;
+   int          retvaldec;
+   int          handled;
 } HB_MATH_EXCEPTION;
 
 typedef int ( * HB_MATH_HANDLERPROC )( HB_MATH_EXCEPTION * err );
 
 extern HB_EXPORT void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc );
-extern HB_EXPORT HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc, double arg1, double arg2, double dResult );
+extern HB_EXPORT HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc, double arg1, double arg2, double dResult );
 
 extern HB_EXPORT int hb_mathSetErrMode( int imode );
 extern HB_EXPORT int hb_mathGetErrMode( void );

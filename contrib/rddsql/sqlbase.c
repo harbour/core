@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -104,11 +104,11 @@ void hb_rddsqlSetError( HB_ERRCODE errCode, const char * szError, const char * s
 
 static HB_ERRCODE hb_errRT_SQLBASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation )
 {
-   PHB_ITEM   pError;
    HB_ERRCODE iRet = HB_FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
+      PHB_ITEM pError;
       pError = hb_errRT_New( ES_ERROR, "SQLBASE", errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );
       iRet   = hb_errLaunch( pError );
       hb_itemRelease( pError );
@@ -117,7 +117,7 @@ static HB_ERRCODE hb_errRT_SQLBASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode
 }
 
 
-/*================ NULL SDD ==========================================================*/
+/* --- NULL SDD --- */
 
 static HB_ERRCODE sddConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE sddDisconnect( SQLDDCONNECTION * pConnection );
@@ -224,7 +224,7 @@ static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG 
 }
 
 
-/*==================== SDD registration =====================================*/
+/* --- SDD registration --- */
 
 static PSDDNODE s_pSdd = NULL;
 
@@ -263,7 +263,7 @@ int hb_sddRegister( PSDDNODE pSdd )
 }
 
 
-/*============= RDD METHODS =============================================================*/
+/* --- RDD METHODS --- */
 
 static HB_ERRCODE sqlbaseGoBottom( SQLBASEAREAP pArea )
 {
@@ -310,13 +310,11 @@ static HB_ERRCODE sqlbaseGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
 static HB_ERRCODE sqlbaseGoToId( SQLBASEAREAP pArea, PHB_ITEM pItem )
 {
-   PHB_ITEM pError;
-
    if( HB_IS_NUMERIC( pItem ) )
       return SELF_GOTO( &pArea->area, hb_itemGetNL( pItem ) );
    else
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );
@@ -472,7 +470,7 @@ static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
 
 static HB_ERRCODE sqlbaseGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength )
 {
-   /*  TODO: should we use this code? */
+   /* TODO: should we use this code? */
 #if 0
    if( pArea->area.lpFields[ uiIndex ].uiType == HB_IT_MEMO )
       return pArea->pSDD->GetVarLen( pArea, uiIndex, pLength );
@@ -541,6 +539,7 @@ static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
        ( HB_IS_NUMBER( pItem ) && ( pField->uiType == HB_FT_INTEGER || pField->uiType == HB_FT_LONG ||
                                     pField->uiType == HB_FT_FLOAT || pField->uiType == HB_FT_DOUBLE ) ) ||
        ( HB_IS_LOGICAL( pItem ) && pField->uiType == HB_FT_LOGICAL ) ||
+       pField->uiType == HB_FT_ANY ||
        HB_IS_NIL( pItem ) )
    {
       hb_arraySet( ( PHB_ITEM ) pArea->pRecord, uiIndex, pItem );
@@ -598,6 +597,31 @@ static HB_ERRCODE sqlbaseRecId( SQLBASEAREAP pArea, PHB_ITEM pRecNo )
    errCode = SELF_RECNO( &pArea->area, &ulRecNo );
    hb_itemPutNInt( pRecNo, ulRecNo );
    return errCode;
+}
+
+
+static HB_ERRCODE sqlbaseZap( SQLBASEAREAP pArea )
+{
+   HB_ULONG ulIndex;
+
+   for( ulIndex = 1; ulIndex <= pArea->ulRecCount; ulIndex++ )
+   {
+      if( pArea->pRowFlags[ ulIndex ] & SQLDD_FLAG_CACHED )
+         hb_itemRelease( ( PHB_ITEM ) pArea->pRow[ ulIndex ] );
+   }
+
+   pArea->ulRecCount = 0;
+   pArea->ulRecNo = 0;
+
+   pArea->pRow = ( void ** ) hb_xrealloc( pArea->pRow, SQLDD_ROWSET_RESIZE * sizeof( void * ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, SQLDD_ROWSET_RESIZE * sizeof( HB_BYTE ) );
+   pArea->ulRecMax = SQLDD_ROWSET_RESIZE;
+
+   pArea->fFetched = HB_TRUE;
+
+   pArea->fPositioned = HB_FALSE;
+
+   return SELF_GOTOP( &pArea->area );
 }
 
 
@@ -900,12 +924,12 @@ static HB_ERRCODE sqlbaseInit( LPRDDNODE pRDD )
 
 static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
 {
-   HB_ULONG ul;
-
    HB_SYMBOL_UNUSED( pRDD );
 
    if( s_pConnection )
    {
+      HB_ULONG ul;
+
       /* Disconnect all connections */
       for( ul = 0; ul < s_ulConnectionCount; ul++ )
       {
@@ -1089,7 +1113,7 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
 }
 
 
-/*====================================================================================*/
+/* --- */
 
 static RDDFUNCS sqlbaseTable =
 {
@@ -1142,7 +1166,7 @@ static RDDFUNCS sqlbaseTable =
    ( DBENTRYP_VS ) NULL,             /* sqlbaseSort */
    ( DBENTRYP_VT ) NULL,             /* sqlbaseTrans */
    ( DBENTRYP_VT ) NULL,             /* sqlbaseTransRec */
-   ( DBENTRYP_V ) NULL,              /* sqlbaseZap */
+   ( DBENTRYP_V ) sqlbaseZap,
    ( DBENTRYP_VR ) NULL,             /* sqlbaseChildEnd */
    ( DBENTRYP_VR ) NULL,             /* sqlbaseChildStart */
    ( DBENTRYP_VR ) NULL,             /* sqlbaseChildSync */
@@ -1196,7 +1220,7 @@ static RDDFUNCS sqlbaseTable =
 };
 
 
-/*================ Module initialization code ========================================*/
+/* --- Module initialization code --- */
 
 HB_FUNC( SQLBASE )
 {

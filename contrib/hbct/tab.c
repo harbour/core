@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -272,7 +272,7 @@ HB_FUNC( TABPACK )
          {
             if( sTabIndex == sTabWidth - 1 )
             {
-               /* we have just found the last character of a tabstopp */
+               /* we have just found the last character of a tabstop */
                *( pcRet + sRetLen ) = cTab;
                sRetLen++;
                sFillCount = 0;
@@ -290,7 +290,7 @@ HB_FUNC( TABPACK )
          {
             *( pcRet + sRetLen ) = cTab;
             sRetLen++;
-            /* discard any fill characters before the tabstopp */
+            /* discard any fill characters before the tabstop */
             sFillCount = 0;
             sTabIndex = 0;
             sIndex++;

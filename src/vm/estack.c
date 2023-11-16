@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,7 +59,7 @@
 #include "hbapirdd.h"
 #include "hbdate.h"
 
-/* ------------------------------- */
+/* --- */
 
 #if ! defined( STACK_INITHB_ITEMS )
    #define STACK_INITHB_ITEMS    200
@@ -69,7 +69,7 @@
 #endif
 
 
-/* ------------------------------- */
+/* --- */
 
 #if defined( HB_MT_VM )
 
@@ -144,23 +144,23 @@
 
 #endif /* HB_MT_VM */
 
-/* ------------------------------- */
+/* --- */
 
 static char s_szDirBuffer[ HB_PATH_MAX ];
 static HB_IOERRORS s_IOErrors;
 static HB_TRACEINFO s_traceInfo;
 
-/* ------------------------------- */
+/* --- */
 
 static HB_SYMB s_initSymbol = { "hb_stackInit", { HB_FS_STATIC }, { NULL }, NULL };
 
-/* ------------------------------- */
+/* --- */
 
 static void hb_stack_init( PHB_STACK pStack )
 {
    HB_ISIZ n;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_init(%p)", pStack ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_init(%p)", ( void * ) pStack ) );
 
    memset( pStack, 0, sizeof( HB_STACK ) );
 
@@ -186,7 +186,7 @@ static void hb_stack_init( PHB_STACK pStack )
 
 static void hb_stack_destroy_TSD( PHB_STACK pStack )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_destroy_TSD(%p)", pStack ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_destroy_TSD(%p)", ( void * ) pStack ) );
 
    while( pStack->iTSD )
    {
@@ -212,7 +212,7 @@ static void hb_stack_free( PHB_STACK pStack )
 {
    HB_ISIZ n;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_free(%p)", pStack ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_free(%p)", ( void * ) pStack ) );
 
    hb_stack_destroy_TSD( pStack );
 
@@ -235,11 +235,11 @@ static void hb_stack_free( PHB_STACK pStack )
       hb_xfree( pStack->pDirBuffer );
       pStack->pDirBuffer = NULL;
    }
-   if( pStack->iDynH )
+   if( pStack->uiDynH )
    {
       hb_xfree( pStack->pDynH );
       pStack->pDynH = NULL;
-      pStack->iDynH = 0;
+      pStack->uiDynH = 0;
    }
 #endif
 }
@@ -257,7 +257,7 @@ void * hb_stackGetTSD( PHB_TSD pTSD )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stackGetTSD(%p)", pTSD ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackGetTSD(%p)", ( void * ) pTSD ) );
 
 #if defined( HB_MT_VM )
    if( pTSD->iHandle == 0 || pTSD->iHandle > hb_stack.iTSD ||
@@ -308,7 +308,7 @@ void * hb_stackTestTSD( PHB_TSD pTSD )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stackTestTSD(%p)", pTSD ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackTestTSD(%p)", ( void * ) pTSD ) );
 
 #if defined( HB_MT_VM )
    return ( pTSD->iHandle && pTSD->iHandle <= hb_stack.iTSD ) ?
@@ -322,7 +322,7 @@ void hb_stackReleaseTSD( PHB_TSD pTSD )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stackReleaseTSD(%p)", pTSD ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackReleaseTSD(%p)", ( void * ) pTSD ) );
 
    if( pTSD->iHandle && pTSD->iHandle <= hb_stack.iTSD &&
        hb_stack.pTSD[ pTSD->iHandle ].value )
@@ -335,7 +335,7 @@ void hb_stackReleaseTSD( PHB_TSD pTSD )
       pTSD->iHandle = 0;
       /* TODO: add recovery system to not lose TSD handles and
        *       make this functionality more general and public
-       *       for 3-rd party developers
+       *       for 3rd party developers
        */
    }
 }
@@ -396,50 +396,53 @@ void hb_stackIdSetActionRequest( void * pStackId, HB_USHORT uiAction )
 }
 
 #undef hb_stackDynHandlesCount
-int hb_stackDynHandlesCount( void )
+HB_SYMCNT hb_stackDynHandlesCount( void )
 {
    HB_STACK_TLS_PRELOAD
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_stackDynHandlesCount()" ) );
 
-   return hb_stack.iDynH;
+   return hb_stack.uiDynH;
 }
 
 PHB_DYN_HANDLES hb_stackGetDynHandle( PHB_DYNS pDynSym )
 {
    HB_STACK_TLS_PRELOAD
-   int iDynSym;
+   HB_SYMCNT uiDynSym;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_stackGetDynHandle()" ) );
 
-   iDynSym = pDynSym->uiSymNum;
-   if( iDynSym > hb_stack.iDynH )
+   uiDynSym = pDynSym->uiSymNum;
+   if( uiDynSym > hb_stack.uiDynH )
    {
       hb_stack.pDynH = ( PHB_DYN_HANDLES ) hb_xrealloc( hb_stack.pDynH,
-                                          iDynSym * sizeof( HB_DYN_HANDLES ) );
-      memset( &hb_stack.pDynH[ hb_stack.iDynH ], 0,
-              ( iDynSym - hb_stack.iDynH ) * sizeof( HB_DYN_HANDLES ) );
-      hb_stack.iDynH = iDynSym;
+                                          uiDynSym * sizeof( HB_DYN_HANDLES ) );
+      memset( &hb_stack.pDynH[ hb_stack.uiDynH ], 0,
+              ( uiDynSym - hb_stack.uiDynH ) * sizeof( HB_DYN_HANDLES ) );
+      hb_stack.uiDynH = uiDynSym;
    }
 
-   return &hb_stack.pDynH[ iDynSym - 1 ];
+   return &hb_stack.pDynH[ uiDynSym - 1 ];
 }
 
-void hb_stackClearMemvars( int iExcept )
+void hb_stackClearMemvars( HB_SYMCNT uiExcept )
 {
    HB_STACK_TLS_PRELOAD
-   int iDynSym;
+   HB_SYMCNT uiDynSym;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stackClearMemvars(%d)", iExcept ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackClearMemvars(%d)", uiExcept ) );
 
-   iDynSym = hb_stack.iDynH;
-   while( --iDynSym >= 0 )
+   uiDynSym = hb_stack.uiDynH;
+   while( uiDynSym > 0 )
    {
-      if( hb_stack.pDynH[ iDynSym ].pMemvar && iDynSym != iExcept )
+      if( uiDynSym-- != uiExcept )
       {
-         PHB_ITEM pMemvar = ( PHB_ITEM ) hb_stack.pDynH[ iDynSym ].pMemvar;
-         hb_stack.pDynH[ iDynSym ].pMemvar = NULL;
-         hb_memvarValueDecRef( pMemvar );
+         if( hb_stack.pDynH[ uiDynSym ].pMemvar )
+         {
+            PHB_ITEM pMemvar = ( PHB_ITEM ) hb_stack.pDynH[ uiDynSym ].pMemvar;
+            hb_stack.pDynH[ uiDynSym ].pMemvar = NULL;
+            hb_memvarValueDecRef( pMemvar );
+         }
       }
    }
 }
@@ -1320,11 +1323,11 @@ static void hb_stackIsMemvarRef( PHB_STACK pStack )
    /* 2. Mark all visible memvars (PRIVATEs and PUBLICs) */
 #if defined( HB_MT_VM )
    {
-      int iDynSym = pStack->iDynH;
+      HB_SYMCNT uiDynSym = pStack->uiDynH;
 
-      while( --iDynSym >= 0 )
+      while( uiDynSym > 0 )
       {
-         PHB_ITEM pMemvar = ( PHB_ITEM ) pStack->pDynH[ iDynSym ].pMemvar;
+         PHB_ITEM pMemvar = ( PHB_ITEM ) pStack->pDynH[ --uiDynSym ].pMemvar;
          if( pMemvar && HB_IS_GCITEM( pMemvar ) )
             hb_gcItemRef( pMemvar );
       }
@@ -1384,7 +1387,7 @@ void hb_stackIsStackRef( void * pStackId, PHB_TSD_FUNC pCleanFunc )
 
 void hb_stackUpdateAllocator( void * pStackId, PHB_ALLOCUPDT_FUNC pFunc, int iCount )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stackUpdateAllocator(%p, %p, %d)", pStackId, pFunc, iCount ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackUpdateAllocator(%p, %p, %d)", pStackId, ( void * ) pFunc, iCount ) );
 
 #if defined( HB_MT_VM )
    {

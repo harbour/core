@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -77,8 +77,8 @@ void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen )
    {
       HB_BYTE uchr = ( HB_BYTE ) pText[ nPos ];
       /*
-       * NOTE: After optimization some Chr(n) can be converted
-       *       into a string containing nonprintable characters.
+       * NOTE: After optimization some Chr( n ) can be converted
+       *       into a string containing non-printable characters.
        *
        * ? is escaped to avoid conflicts with trigraph sequences which
        * are part of ANSI C standard
@@ -279,7 +279,7 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCo
                break;
 #endif
             lValue = -lValue;
-            /* no break */
+            /* fallthrough */
 
          case HB_P_PLUS:
             fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ldL ) ) break;\n", lValue );
@@ -1639,7 +1639,7 @@ static HB_GENC_FUNC( hb_p_seqend )
 
    HB_GENC_LABEL();
 
-   if( nOffset == 4 ) /* no RECOVER clasue */
+   if( nOffset == 4 ) /* no RECOVER clause */
       fprintf( cargo->yyc, "\tbreak;\n\t}\n\tif( hb_xvmSeqEnd() ) break;\n" );
    else               /* RECOVER exists */
       fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05" HB_PFS "u;\n\t}\n",
@@ -2344,7 +2344,7 @@ static const PHB_GENC_FUNC s_verbose_table[] = {
    hb_p_enumend,
    hb_p_switch,
    hb_p_pushdate,
-   /* optimalization of inlined math operations (+=, -= */
+   /* optimization of inlined math operations (+=, -= */
    hb_p_pluseqpop,
    hb_p_minuseqpop,
    hb_p_multeqpop,

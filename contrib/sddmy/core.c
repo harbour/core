@@ -1,5 +1,5 @@
 /*
- * MySQL Database Driver
+ * MariaDB/MySQL Database Driver
  *
  * Copyright 2007 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,11 +44,10 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbrddsql.h"
+
 #include "hbapiitm.h"
 #include "hbvm.h"
-
-#include "hbrddsql.h"
 
 #ifndef my_socket_defined
 #define my_socket_defined
@@ -138,7 +137,7 @@ HB_CALL_ON_STARTUP_END( _hb_mysqldd_init_ )
 #endif
 
 
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_MySQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
@@ -150,8 +149,7 @@ static HB_USHORT hb_errRT_MySQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
    return uiAction;
 }
 
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE mysqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    MYSQL *  pMySql;
@@ -329,17 +327,15 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
             dbFieldInfo.uiLen  = 4;
             break;
 
-/*
+#if 0
          case MYSQL_TYPE_NULL:
          case MYSQL_TYPE_YEAR:
          case MYSQL_TYPE_NEWDATE:
-         case MYSQL_TYPE_ENUM:
          case MYSQL_TYPE_SET:
          case MYSQL_TYPE_VARCHAR:
          case MYSQL_TYPE_BIT:
          case MYSQL_TYPE_GEOMETRY:
- */
-
+#endif
          default:
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) pMyField->type;
@@ -397,9 +393,10 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          hb_arraySetForward( pItemEof, uiCount + 1, pItem );
          hb_itemRelease( pItem );
 
-/*       if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
+#if 0
+         if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
             dbFieldInfo.uiType = HB_IT_LONG;
- */
+#endif
 
          if( ! bError )
             bError = ( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE );
@@ -490,15 +487,14 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    char *    pValue;
    char      szBuffer[ 64 ];
    HB_BOOL   bError;
-   PHB_ITEM  pError;
-   HB_SIZE   ulLen;
+   HB_SIZE   nLen;
 
    bError = HB_FALSE;
    uiIndex--;
    pField = pArea->area.lpFields + uiIndex;
 
    pValue = pSDDData->pNatRecord[ uiIndex ];
-   ulLen  = pSDDData->pNatLength[ uiIndex ];
+   nLen   = pSDDData->pNatLength[ uiIndex ];
 
    /* NULL => NIL (?) */
    if( ! pValue )
@@ -516,22 +512,22 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
          /* Expand strings to field length */
          pStr = ( char * ) hb_xgrab( pField->uiLen + 1 );
-         memcpy( pStr, pValue, ulLen );
+         memcpy( pStr, pValue, nLen );
 
-         if( ( HB_SIZE ) pField->uiLen > ulLen )
-            memset( pStr + ulLen, ' ', pField->uiLen - ulLen );
+         if( ( HB_SIZE ) pField->uiLen > nLen )
+            memset( pStr + nLen, ' ', pField->uiLen - nLen );
 
          pStr[ pField->uiLen ] = '\0';
          hb_itemPutCRaw( pItem, pStr, pField->uiLen );
 #else
          /* Do not expand strings */
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
 #endif
          break;
       }
 
       case HB_FT_MEMO:
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
          hb_itemSetCMemo( pItem );
          break;
 
@@ -620,7 +616,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
    if( bError )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );

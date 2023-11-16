@@ -2,6 +2,8 @@
  * Exception handlers
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt) (hb_winExceptionHandler() Windows exception info dump code.)
+ * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour) (hb_winExceptionHandler() Module listing code, x86_64/WinCE/ARM support, OS/2, MIPS32, MIPS64, SH, IA64 CPU dumps.)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,23 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
- *    hb_winExceptionHandler() Windows exception info dump code.
- *
- * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour)
- *    hb_winExceptionHandler() Module listing code.
- *    hb_winExceptionHandler() x64 support.
- *    hb_winExceptionHandler() WinCE/ARM support.
- *    hb_winExceptionHandler() OS/2 CPU dump.
- *    hb_winExceptionHandler() MIPS32, MIPS64, SH, IA64 CPU dumps.
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -164,7 +149,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
 
       /* TODO: 64-bit stack trace.
                See: - StackWalk64()
-                    - http://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
+                    - https://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
    }
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_IA_64 )
    {
@@ -363,7 +348,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          pc = ( unsigned char * ) pCtx->Eip;
          for( i = 0; i < 16; i++ )
          {
-            /* TOFIX: Unsafe funcion. */
+            /* FIXME: Unsafe function. */
             if( IsBadReadPtr( pc, 1 ) )
                break;
             hb_snprintf( buf, sizeof( buf ), " %02X", ( int ) pc[ i ] );
@@ -373,7 +358,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          sc = ( unsigned int * ) pCtx->Esp;
          for( i = 0; i < 16; i++ )
          {
-            /* TOFIX: Unsafe funcion. */
+            /* FIXME: Unsafe function. */
             if( IsBadReadPtr( sc, 4 ) )
                break;
             hb_snprintf( buf, sizeof( buf ), " %08X", sc[ i ] );
@@ -384,12 +369,12 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          hb_strncat( errmsg, "    EIP:     EBP:       Frame: OldEBP, RetAddr, Params...\n", errmsglen );
          eip = pCtx->Eip;
          ebp = ( unsigned int * ) pCtx->Ebp;
-         /* TOFIX: Unsafe funcion. */
+         /* FIXME: Unsafe function. */
          if( ! IsBadWritePtr( ebp, 8 ) )
          {
             for( i = 0; i < 20; i++ )
             {
-               /* TOFIX: Unsafe funcion. */
+               /* FIXME: Unsafe function. */
                if( ( unsigned int ) ebp % 4 != 0 || IsBadWritePtr( ebp, 40 ) || ( unsigned int ) ebp >= ebp[ 0 ] )
                   break;
                hb_snprintf( buf, sizeof( buf ), "    %08X %08X  ", ( int ) eip, ( int ) ebp );
@@ -460,7 +445,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                   {
                      char buf[ 256 ];
 #if defined( HB_OS_WIN_64 )
-                     /* TOFIX: me32.szExePath seemed trashed in some (standalone) tests. */
+                     /* FIXME: me32.szExePath seemed trashed in some (standalone) tests. */
                      hb_snprintf( buf, sizeof( buf ), "%016" PFLL "X %016" PFLL "X %s\n", ( HB_PTRUINT ) me32.modBaseAddr, ( HB_PTRUINT ) me32.modBaseSize, me32.szExePath );
 #else
                      char szBuffer[ MAX_PATH ];
@@ -594,7 +579,7 @@ void hb_vmSetExceptionHandler( void )
       s_regRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
       rc = DosSetExceptionHandler( &s_regRec );
       if( rc != NO_ERROR )
-         hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
+         hb_errInternal( HB_EI_ERRUNRECOV, "Could not setup exception handler (DosSetExceptionHandler())", NULL, NULL );
    }
 #elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
    {
@@ -628,7 +613,7 @@ void hb_vmUnsetExceptionHandler( void )
    {
       APIRET rc;                             /* Return code                   */
 
-      /* I don't do any check on return code since harbour is exiting in any case */
+      /* I don't do any check on return code since Harbour is exiting in any case */
       rc = DosUnsetExceptionHandler( &s_regRec );
       HB_SYMBOL_UNUSED( rc );
    }

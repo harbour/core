@@ -7,11 +7,6 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
@@ -21,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -57,10 +52,10 @@
 
 #pragma -b-
 
-#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
+#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject class */
 #include "hbclass.ch"
 
-#include "hbdebug.ch"   /* for "nMode" of __dbgEntry */
+#include "hbdebug.ch"   /* for "nMode" of __dbgEntry() */
 #include "hbgtinfo.ch"
 #include "hbmemvar.ch"
 
@@ -499,7 +494,7 @@ METHOD PROCEDURE BuildBrowseStack() CLASS HBDebugger
          ::oBrwStack:Cargo := Min( Max( ::oBrwStack:Cargo, 1 ), ;
          Len( ::aProcStack ) ), ::oBrwStack:Cargo - nOld }
 
-      ::oBrwStack:Cargo := 1 // Actual highligthed row
+      ::oBrwStack:Cargo := 1 // Actual highlighted row
 
       ::oBrwStack:AddColumn( HBDbColumnNew( "", {|| iif( Len( ::aProcStack ) > 0, ;
          PadC( ::aProcStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_FUNCTION ], 14 ), Space( 14 ) ) } ) )
@@ -721,7 +716,7 @@ METHOD PROCEDURE Colors() CLASS HBDebugger
       RETURN
    ENDIF
 
-   oBrwColors:Cargo := { 1, {} }  // Actual highligthed row
+   oBrwColors:Cargo := { 1, {} }  // Actual highlighted row
    oBrwColors:ColorSpec := ::ClrModal()
    oBrwColors:goTopBlock := {|| oBrwColors:cargo[ 1 ] := 1 }
    oBrwColors:goBottomBlock := {|| oBrwColors:cargo[ 1 ] := Len( oBrwColors:cargo[ 2 ][ 1 ] ) }
@@ -1318,7 +1313,7 @@ METHOD PROCEDURE EditVar( nVar ) CLASS HBDebugger
       cVarStr := ::InputBox( cVarName, __dbgValToExp( uVarValue ), __dbgExprValidBlock() )
 
       IF LastKey() != K_ESC
-         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+         BEGIN SEQUENCE WITH __BreakBlock()
             ::VarSetValue( ::aVars[ nVar ], &cVarStr )
          RECOVER USING oErr
             __dbgAlert( oErr:description )
@@ -2147,7 +2142,7 @@ METHOD PROCEDURE OSShell() CLASS HBDebugger
    QOut( "Type 'exit' to RETURN to the Debugger" )
    SetCursor( SC_NORMAL )     // standard cursor for OS shell
 
-   BEGIN SEQUENCE WITH {| objErr | Break( objErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
 
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
     defined( __PLATFORM__DOS ) .OR. ;
@@ -2412,8 +2407,8 @@ METHOD PROCEDURE SaveAppScreen() CLASS HBDebugger
 
 METHOD PROCEDURE SaveAppState() CLASS HBDebugger
 
-   ::nAppDirCase := Set( _SET_DIRCASE, 0 )
-   ::nAppFileCase := Set( _SET_FILECASE, 0 )
+   ::nAppDirCase := Set( _SET_DIRCASE, HB_SET_CASE_MIXED )
+   ::nAppFileCase := Set( _SET_FILECASE, HB_SET_CASE_MIXED )
    ::nAppTypeAhead := Set( _SET_TYPEAHEAD, 16 )
    ::nAppLastKey := LastKey()
 
@@ -3065,10 +3060,13 @@ METHOD TracepointAdd( cExpr ) CLASS HBDebugger
          RETURN Self
       ENDIF
    ENDIF
+
    cExpr := AllTrim( cExpr )
+
    IF Empty( cExpr )
       RETURN Self
    ENDIF
+
    aWatch := { "tp", cExpr, NIL }
    ::RestoreAppState()
    __dbgAddWatch( ::pInfo, cExpr, .T. )
@@ -3217,20 +3215,21 @@ METHOD WatchpointDel( xPos ) CLASS HBDebugger
    LOCAL nPos := -1, lAll := .F.
 
    IF ::oWndPnt != NIL .AND. ::oWndPnt:lVisible
-      IF Empty( xPos )
-         nPos := ::InputBox( "Enter item number to delete", ::oBrwPnt:cargo[ 1 ] - 1 )
-         IF LastKey() == K_ESC
-            nPos := -1
-         ENDIF
-      ELSEIF HB_ISSTRING( xPos )
+      DO CASE
+      CASE HB_ISSTRING( xPos )
          IF Upper( xPos ) == "ALL"
             lAll := .T.
          ELSEIF IsDigit( xPos )
             nPos := Val( xPos )
          ENDIF
-      ELSEIF HB_ISNUMERIC( xPos )
+      CASE HB_ISNUMERIC( xPos )
          nPos := xPos
-      ENDIF
+      OTHERWISE
+         nPos := ::InputBox( "Enter item number to delete", ::oBrwPnt:cargo[ 1 ] - 1 )
+         IF LastKey() == K_ESC
+            nPos := -1
+         ENDIF
+      ENDCASE
 
       IF lAll .OR. ( nPos >= 0 .AND. nPos < Len( ::aWatch ) )
          ::oBrwPnt:gotop()
@@ -3577,6 +3576,7 @@ STATIC FUNCTION hb_LeftEqN( cLine, cStart, nMin )
 
 
 FUNCTION __dbgExprValidBlock( cType )
+
    LOCAL cTypeName
 
    IF HB_ISSTRING( cType )
@@ -3731,7 +3731,7 @@ FUNCTION __dbgRestScreen( ... )
 
 
 FUNCTION __dbgTextToArray( cString )
-   RETURN hb_ATokens( StrTran( cString, Chr( 13 ) ), Chr( 10 ) )
+   RETURN hb_ATokens( cString, .T. )
 
 FUNCTION __dbgValToStr( uVal )
 

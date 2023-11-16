@@ -6,7 +6,7 @@ INSTALL_DIR := $(strip $(INSTALL_DIR))
 ifneq ($(INSTALL_FILES),) # Empty install list
 
 ifeq ($(INSTALL_DIR),) # Empty install dir
-   INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Can't install, install dir isn't set$(ECHOQUOTE)
+   INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Cannot install, install dir is not set$(ECHOQUOTE)
 else
 
 _SAME_DIR :=
@@ -40,7 +40,7 @@ ifeq ($(HB_SHELL),sh)
       @$(MDP) $(INSTALL_DIR_OS); \
       if [ ! -d "$(INSTALL_DIR_OS)" ]; \
       then \
-         $(ECHO) "! Can't install, path not found: '$(INSTALL_DIR_OS)'" 1>&2; \
+         $(ECHO) "! Cannot install, path not found: '$(INSTALL_DIR_OS)'" 1>&2; \
          $(FALSE); \
       else \
          for i in $(INSTALL_FILES); \
@@ -51,7 +51,7 @@ ifeq ($(HB_SHELL),sh)
                $(CP) $$i $(INSTALL_DIR_OS); \
                true; \
             else \
-               $(ECHO) "! Can't install $$i, not found" 1>&2; \
+               $(ECHO) "! Cannot install $$i, not found" 1>&2; \
             fi \
          done \
       fi
@@ -76,7 +76,7 @@ ifeq ($(HB_SHELL),os2)
       $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
    endef
 
-   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
    #       It causes that every command will be separated by LF
    define inst_file
       -@$(CP) $(file) $(INSTALL_DIR_OS)
@@ -94,7 +94,7 @@ ifeq ($(HB_SHELL),dos)
       $(foreach file,$(INSTALL_FILES_OS),$(inst_file))
    endef
 
-   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
    #       It causes that every command will be separated by LF
    define inst_file
       -@$(CP) $(file) $(INSTALL_DIR_OS)

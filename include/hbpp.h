@@ -1,5 +1,5 @@
 /*
- *
+ * Harbour preprocessor
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,9 +62,9 @@ HB_EXTERN_BEGIN
 #define HB_PP_STREAM_OFF      0 /* standard preprocessing */
 #define HB_PP_STREAM_COMMENT  1 /* multiline comment */
 #define HB_PP_STREAM_DUMP_C   2 /* pragma BEGINDUMP */
-#define HB_PP_STREAM_CLIPPER  3 /* clipper compatible TEXT/ENDTEXT */
+#define HB_PP_STREAM_CLIPPER  3 /* Cl*pper compatible TEXT/ENDTEXT */
 #define HB_PP_STREAM_PRG      4 /* TEXT/ENDTEXT lines joined with LF */
-#define HB_PP_STREAM_C        5 /* TEXT/ENDTEXT lines joined and ESC seq processed */
+#define HB_PP_STREAM_C        5 /* TEXT/ENDTEXT lines joined and ESC sequences processed */
 #define HB_PP_STREAM_INLINE_C 6 /* hb_inLIne() {...} data, should not be preprocessed */
 #define HB_PP_STREAM_BINARY   7 /* __binarystreaminclude */
 
@@ -355,7 +355,7 @@ typedef HB_PP_MSG_FUNC_( ( * PHB_PP_MSG_FUNC ) );
                                         HB_PP_TOKEN_ISEXPVAL( (t)->pNext->type ) ) )
 
 #ifdef HB_CLP_STRICT
-/* Clipper supports quoting by [] for 1-st token in the line so we
+/* Clipper supports quoting by [] for 1st token in the line so we
    are not checking for HB_PP_TOKEN_NUL in this macro */
 #define HB_PP_TOKEN_CANQUOTE(t)     ( HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_KEYWORD && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROVAR && \
@@ -413,10 +413,10 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
 #define HB_PP_TRANSLATE       2
 #define HB_PP_COMMAND         4
 
-/* comparision modes */
+/* comparison modes */
 #define HB_PP_CMP_ADDR        0 /* compare token addresses */
 #define HB_PP_CMP_STD         1 /* standard comparison, ignore the case of the characters */
-#define HB_PP_CMP_DBASE       2 /* dbase keyword comparison (accepts at least four character shortcuts) ignore the case of the characters */
+#define HB_PP_CMP_DBASE       2 /* dBase keyword comparison (accepts at least four character shortcuts) ignore the case of the characters */
 #define HB_PP_CMP_CASE        3 /* case sensitive comparison */
 
 #define HB_PP_CMP_MODE(t)     ( (t) & 0xff )
@@ -495,8 +495,8 @@ HB_PP_MARKER, * PHB_PP_MARKER;
 typedef struct _HB_PP_RULE
 {
    struct _HB_PP_RULE * pPrev;      /* previous rule */
-   PHB_PP_TOKEN   pMatch;           /* match patern or NULL */
-   PHB_PP_TOKEN   pResult;          /* result patern or NULL */
+   PHB_PP_TOKEN   pMatch;           /* match pattern or NULL */
+   PHB_PP_TOKEN   pResult;          /* result pattern or NULL */
    HB_USHORT      mode;             /* comparison mode HB_PP_CMP_* */
    HB_USHORT      markers;          /* number of markers in marker table */
    /* filled when pattern matches for substitution, cleared after */
@@ -606,7 +606,7 @@ typedef struct
    HB_USHORT usLastType;            /* last token type */
    HB_BOOL   fCanNextLine;          /* ';' token found and we do not know yet if it's command separator or line concatenator */
    HB_BOOL   fDirective;            /* # directives is parsed */
-   HB_BOOL   fNewStatement;         /* set to HB_TRUE at line begining or after each ';' token */
+   HB_BOOL   fNewStatement;         /* set to HB_TRUE at line beginning or after each ';' token */
    PHB_PP_TOKEN   pFuncOut;         /* function used for each line in HB_PP_STREAM_* dumping */
    PHB_PP_TOKEN   pFuncEnd;         /* end function for HB_PP_STREAM_* dumping */
    PHB_MEM_BUFFER pStreamBuffer;    /* buffer for stream output */
@@ -660,7 +660,7 @@ extern HB_EXPORT void    hb_pp_setStdRules( PHB_PP_STATE pState );
 extern HB_EXPORT void    hb_pp_setStdBase( PHB_PP_STATE pState );
 extern HB_EXPORT void    hb_pp_setStream( PHB_PP_STATE pState, int iMode );
 extern HB_EXPORT void    hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, HB_BOOL fReplace );
-extern HB_EXPORT HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE nLen, int iStartLine );
+extern HB_EXPORT HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * szFileName, const char * pBuffer, HB_SIZE nLen, int iStartLine );
 extern HB_EXPORT HB_BOOL hb_pp_inFile( PHB_PP_STATE pState, const char * szFileName, HB_BOOL fSearchPath, FILE * file_in, HB_BOOL fError );
 extern HB_EXPORT HB_BOOL hb_pp_outFile( PHB_PP_STATE pState, const char * szOutFileName, FILE * file_out );
 extern HB_EXPORT HB_BOOL hb_pp_traceFile( PHB_PP_STATE pState, const char * szTraceFileName, FILE * file_trace );

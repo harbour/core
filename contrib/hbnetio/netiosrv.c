@@ -1,30 +1,30 @@
 /*
- * demonstration code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server with RPC support
- *    All files which names starts 'net:' are redirected to this API.
- *    This is server code giving the following .prg functions:
- *       netio_Listen( [<nPort>], [<cAddress>], [<cRootDir>], [<lRPC>] )
- *                                              -> <pListenSocket> | NIL
- *       netio_Accept( <pListenSocket>, [<nTimeOut>],
- *                     [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
- *                                              -> <pConnectionSocket> | NIL
- *       netio_Compress( <pConnectionSocket>,
- *                       [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
- *                                              -> NIL
- *       netio_Server( <pConnectionSocket> ) -> NIL
- *       netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] )
- *                                              -> NIL
- *       netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
- *       netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
- *                                              -> <lPrev>
- *       netio_RPCFilter( <pConnectionSocket>,
- *                        <sFuncSym> | <hValue> | NIL ) -> NIL
+ * Demonstration code for alternative RDD IO API which uses own
+ * very simple TCP/IP file server with RPC support
+ * All files which names starts 'net:' are redirected to this API.
+ * This is server code giving the following .prg functions:
+ *    netio_Listen( [<nPort>], [<cAddress>], [<cRootDir>], [<lRPC>] )
+ *                                           --> <pListenSocket> | NIL
+ *    netio_Accept( <pListenSocket>, [<nTimeOut>],
+ *                  [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
+ *                                           --> <pConnectionSocket> | NIL
+ *    netio_Compress( <pConnectionSocket>,
+ *                    [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
+ *                                           --> NIL
+ *    netio_Server( <pConnectionSocket> ) --> NIL
+ *    netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] )
+ *                                           --> NIL
+ *    netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) --> [<nTimeOut>]
+ *    netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
+ *                                           --> <lPrev>
+ *    netio_RPCFilter( <pConnectionSocket>,
+ *                     <sFuncSym> | <hValue> | NIL ) --> NIL
  *
- *       netio_SrvStatus( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
- *       netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> )
- *             -> <lSent>
- *       netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> )
- *             -> <lSent>
+ *    netio_SrvStatus( <pConnectionSocket> [, <nStreamID>] ) --> <nStatus>
+ *    netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> )
+ *          --> <lSent>
+ *    netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> )
+ *          --> <lSent>
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -39,9 +39,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -129,7 +129,7 @@ HB_LISTENSD, * PHB_LISTENSD;
 
 static HB_BOOL s_isDirSep( char c )
 {
-   /* intentionally used explicit values instead of harbour macros
+   /* intentionally used explicit values instead of Harbour macros
     * because client can use different OS
     */
    return c == '/' || c == '\\';
@@ -348,26 +348,22 @@ static HB_BOOL s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
    long lRead = 0, l;
-   HB_MAXUINT end_timer;
-
-   end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
+   HB_MAXINT timeout = conn->timeout;
+   HB_MAXUINT timer = hb_timerInit( timeout );
 
    while( lRead < len && ! conn->stop )
    {
       l = hb_sockexRead( conn->sock, ptr + lRead, len - lRead, 1000 );
-      if( l <= 0 )
-      {
-         if( l == 0 ||
-             hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
-             hb_vmRequestQuery() != 0 ||
-             ( end_timer != 0 && end_timer <= hb_dateMilliSeconds() ) )
-            break;
-      }
-      else
+      if( l > 0 )
       {
          lRead += l;
          conn->rd_count += l;
       }
+      else if( l == 0 ||
+               hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
+               ( timeout = hb_timerTest( timeout, &timer ) ) == 0 ||
+               hb_vmRequestQuery() != 0 )
+         break;
    }
 
    return lRead == len;
@@ -376,28 +372,25 @@ static HB_BOOL s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
 static HB_BOOL s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
-   long lSent = 0, l;
-   HB_MAXUINT end_timer;
+   long lSent = 0;
 
    if( ! conn->mutex || hb_threadMutexLock( conn->mutex ) )
    {
-      end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
+      HB_MAXINT timeout = conn->timeout;
+      HB_MAXUINT timer = hb_timerInit( timeout );
 
       while( lSent < len && ! conn->stop )
       {
-         l = hb_sockexWrite( conn->sock, ptr + lSent, len - lSent, 1000 );
+         long l = hb_sockexWrite( conn->sock, ptr + lSent, len - lSent, 1000 );
          if( l > 0 )
          {
             lSent += l;
             conn->wr_count += l;
          }
-         else
-         {
-            if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
-                hb_vmRequestQuery() != 0 ||
-                ( end_timer != 0 && end_timer <= hb_dateMilliSeconds() ) )
-               break;
-         }
+         else if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
+                  ( timeout = hb_timerTest( timeout, &timer ) ) == 0 ||
+                  hb_vmRequestQuery() != 0 )
+            break;
       }
       if( lSent == len && ! conn->stop )
       {
@@ -483,7 +476,7 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath, HB_BOOL rpc )
 }
 
 
-/* netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) -> <lPrev>
+/* netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) --> <lPrev>
  */
 HB_FUNC( NETIO_RPC )
 {
@@ -510,7 +503,7 @@ HB_FUNC( NETIO_RPC )
 }
 
 /* netio_RPCFilter( <pConnectionSocket>,
- *                  <sFuncSym> | <hValue> | NIL ) -> NIL
+ *                  <sFuncSym> | <hValue> | NIL ) --> NIL
  */
 HB_FUNC( NETIO_RPCFILTER )
 {
@@ -536,12 +529,12 @@ HB_FUNC( NETIO_RPCFILTER )
    }
 }
 
-/* netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) -> NIL
+/* netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) --> NIL
  */
 HB_FUNC( NETIO_SERVERSTOP )
 {
    PHB_LISTENSD lsd = s_listenParam( 1, HB_FALSE );
-   HB_BOOL fStop = hb_parldef( 2, 1 );
+   HB_BOOL fStop = hb_parldef( 2, HB_TRUE );
 
    if( lsd )
       lsd->stop = fStop;
@@ -553,7 +546,7 @@ HB_FUNC( NETIO_SERVERSTOP )
    }
 }
 
-/* netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
+/* netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) --> [<nTimeOut>]
  */
 HB_FUNC( NETIO_SERVERTIMEOUT )
 {
@@ -568,7 +561,7 @@ HB_FUNC( NETIO_SERVERTIMEOUT )
 }
 
 /* netio_Listen( [<nPort>], [<cIfAddr>], [<cRootDir>], [<lRPC>] )
- *    -> <pListenSocket> | NIL
+ *    --> <pListenSocket> | NIL
  */
 HB_FUNC( NETIO_LISTEN )
 {
@@ -608,7 +601,7 @@ HB_FUNC( NETIO_LISTEN )
 
 /* netio_Accept( <pListenSocket>, [<nTimeOut>],
  *               [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
- *    -> <pConnectionSocket> | NIL
+ *    --> <pConnectionSocket> | NIL
  */
 HB_FUNC( NETIO_ACCEPT )
 {
@@ -658,7 +651,7 @@ HB_FUNC( NETIO_ACCEPT )
 }
 
 /* netio_Compress( <pConnectionSocket>,
- *                 [<cPass>], [<nCompressionLevel>], [<nStrategy>] ) -> NIL
+ *                 [<cPass>], [<nCompressionLevel>], [<nStrategy>] ) --> NIL
  */
 HB_FUNC( NETIO_COMPRESS )
 {
@@ -720,7 +713,7 @@ static HB_BOOL s_netio_login_accept( PHB_CONSRV conn )
    return conn && conn->login;
 }
 
-/* netio_VerifyClient( <pConnectionSocket> ) -> <lAccepted>
+/* netio_VerifyClient( <pConnectionSocket> ) --> <lAccepted>
  */
 HB_FUNC( NETIO_VERIFYCLIENT )
 {
@@ -730,7 +723,7 @@ HB_FUNC( NETIO_VERIFYCLIENT )
       hb_retl( s_netio_login_accept( conn ) );
 }
 
-/* netio_Server( <pConnectionSocket> ) -> NIL
+/* netio_Server( <pConnectionSocket> ) --> NIL
  */
 HB_FUNC( NETIO_SERVER )
 {
@@ -1277,6 +1270,7 @@ HB_FUNC( NETIO_SERVER )
 
             case NETIO_UNLOCK:
                fNoAnswer = HB_TRUE;
+               /* fallthrough */
             case NETIO_LOCK:
             case NETIO_TESTLOCK:
                iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
@@ -1425,6 +1419,7 @@ HB_FUNC( NETIO_SERVER )
 
             case NETIO_PROC:
                fNoAnswer = HB_TRUE;
+               /* fallthrough */
             case NETIO_PROCIS:
             case NETIO_PROCW:
             case NETIO_FUNC:
@@ -1471,7 +1466,6 @@ HB_FUNC( NETIO_SERVER )
                               HB_SIZE nSize = size - size2;
                               HB_USHORT uiPCount = 0;
                               HB_BOOL fSend = HB_FALSE;
-                              int iStreamType;
 
                               iStreamID = 0;
                               data += size2;
@@ -1495,6 +1489,8 @@ HB_FUNC( NETIO_SERVER )
                               }
                               if( uiMsg == NETIO_FUNCCTRL )
                               {
+                                 int iStreamType;
+
                                  iStreamID = HB_GET_LE_INT32( &msgbuf[ 8 ] );
                                  iStreamType = HB_GET_LE_INT32( &msgbuf[ 12 ] );
                                  hb_vmPush( hb_param( 1, HB_IT_ANY ) );
@@ -1605,14 +1601,16 @@ HB_FUNC( NETIO_SERVER )
             case NETIO_SYNC:
                continue;
 
-            default: /* unkown message */
+            default: /* unrecognized message */
                errCode = NETIO_ERR_UNKNOWN_COMMAND;
                break;
          }
 
          if( fNoAnswer )
          {
-            /* continue; */ /* do not send dummy record */
+            #if 0
+            continue; /* do not send dummy record */
+            #endif
             HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_SYNC );
             memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
             len = NETIO_MSGLEN;
@@ -1638,7 +1636,7 @@ HB_FUNC( NETIO_SERVER )
    }
 }
 
-/* netio_ServedConnection() -> <pConnectionSocket>
+/* netio_ServedConnection() --> <pConnectionSocket>
  */
 HB_FUNC( NETIO_SERVEDCONNECTION )
 {
@@ -1661,7 +1659,7 @@ HB_FUNC( NETIO_SERVEDCONNECTION )
    }
 }
 
-/* netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
+/* netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> ) --> <lSent>
  */
 HB_FUNC( NETIO_SRVSENDITEM )
 {
@@ -1706,7 +1704,7 @@ HB_FUNC( NETIO_SRVSENDITEM )
    hb_retl( fResult );
 }
 
-/* netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> ) -> <lSent>
+/* netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> ) --> <lSent>
  */
 HB_FUNC( NETIO_SRVSENDDATA )
 {
@@ -1747,7 +1745,7 @@ HB_FUNC( NETIO_SRVSENDDATA )
 }
 
 /* netio_SrvStatus( <pConnectionSocket>
- *                  [, <nStreamID> | <nSrvInfo>, @<xData>] ) -> <nStatus>
+ *                  [, <nStreamID> | <nSrvInfo>, @<xData>] ) --> <nStatus>
  */
 HB_FUNC( NETIO_SRVSTATUS )
 {

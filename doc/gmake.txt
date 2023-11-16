@@ -1,18 +1,18 @@
 INTRODUCTION
 ============
 
-This file explains the philosophy for the GNU-make based build system
+This file explains the philosophy for the GNU Make based build system
 for Harbour, and gives instructions on how to use it.
 
 
 PHILOSOPHY
 ==========
 
-This build system is based on GNU-make, the idea being that GNU-make
-is freely available for every platform you can dream up, and it is
+This build system is based on GNU Make, the idea being that GNU Make
+is free software, available for every platform you can dream up, and it is
 usually more powerful than any native make.
 
-Each directory in the project contains one makefile, called Makefile,
+Each directory in the project contains one Makefile, called Makefile,
 which lists the data (file names, directory names, etc.) that is used
 to determine how to bring every target up to date within that
 directory. There are no rules in the Makefiles, to keep them
@@ -23,13 +23,12 @@ For example, the following was the Makefile for an early version
 of the VM library:
 
 --  Cut here  ---------------------------------------
-
 ROOT := ../../
 
 C_SOURCES := \
-        dynsym.c \
-        hvm.c \
-        initsymb.c \
+   dynsym.c \
+   hvm.c \
+   initsymb.c \
 
 LIB := vm
 
@@ -51,7 +50,6 @@ What this means is:
 Let's look at another Makefile, this one for the Harbour compiler:
 
 --  Cut here  ---------------------------------------
-
 ROOT := ../../
 
 YACC_SOURCE := harbour.y
@@ -59,7 +57,7 @@ YACC_SOURCE := harbour.y
 LEX_SOURCE := harbour.l
 
 C_SOURCES := \
-        genobj32.c \
+   genobj32.c \
 
 C_MAIN=harbour.c
 
@@ -79,12 +77,12 @@ One final Makefile, this one from the source directory:
 ROOT := ../
 
 DIRS := \
-        compiler \
-        hbpp \
-        rtl \
-        vm \
-        rdd \
-        tools \
+   compiler \
+   hbpp \
+   rtl \
+   vm \
+   rdd \
+   tools \
 
 include $(TOP)$(ROOT)config/dir.mk
 --  Cut here  ---------------------------------------
@@ -113,8 +111,8 @@ files compiled with gcc). This has two advantages:
 USAGE
 =====
 
-To use the system, you need to install GNU-make 3.81 or later on your
-system. To check this, type "make -v"; you should see
+To use the system, you need to install GNU Make 3.81 or later on your
+system. To check this, type `make -v`; you should see
 
   GNU Make 3.81
   Copyright (C) 2006  Free Software Foundation, Inc.
@@ -123,44 +121,36 @@ system. To check this, type "make -v"; you should see
 Then, you must set a couple of environment variables that indicate
 your platform and compiler.
 
-For gcc on Windows with the Cygwin library:
-  Notes: The CYGWIN environment variable must include "noglob" in order
-         to avoid having Harbour or programs created with Harbour expand
-         wildcard command line arguments (this is checked at run-time!)
-  HB_PLATFORM       win
-  HB_COMPILER       gcc
-  CYGWIN            noglob
-
-For gcc on Windows with the MinGW library:
+For MinGW (GCC port for Windows):
   HB_PLATFORM       win
   HB_COMPILER       mingw
 
 For MSVC on Windows:
-  Notes: gnu make is case sensitive!  If your editor converts
-         harbour.c to HARBOUR.C when it saves the file, then gnu make
+  Notes: GNU Make is case sensitive!  If your editor converts
+         harbour.c to HARBOUR.C when it saves the file, then GNU Make
          _will_not_work.
          If you have MAKE_MODE in your dos environment, make sure it is
-         not set to unix
+         not set to Unix
 
          For best results, also set:
   HB_PLATFORM       win
   HB_COMPILER       msvc
 
-For GCC on BSD:
-  HB_PLATFORM       bsd
-  HB_COMPILER       gcc
-  Notes:
-    1)  You have to have bison and gmake installed in order to build
-        Harbour for BSD. The file doc/howtobsd.txt gives an overview
-        of what is required.
-
 For GCC on Linux:
   HB_PLATFORM       linux
   HB_COMPILER       gcc
-  Notes:
-    1)  If you want to take advantage of compiler cache programs
-        (such as http://ccaache.samba.org), you may set environment
+
+  Note: If you want to take advantage of compiler cache programs
+        (such as https://ccache.samba.org), you may set environment
         variable HB_CCACHE with the value containing the name of program.
+
+For GCC on BSD:
+  HB_PLATFORM       bsd
+  HB_COMPILER       gcc
+
+  Note: You have to have bison and gmake installed in order to build
+        Harbour for BSD. The file doc/howtobsd.txt gives an overview
+        of what is required.
 
 For GCC on OS/2 for VIO mode:
   Note: You must point C_INCLUDE_PATH to the EMX include directory and
@@ -168,17 +158,9 @@ For GCC on OS/2 for VIO mode:
   HB_PLATFORM       os2
   HB_COMPILER       gcc
 
-For Borland C++
-  HB_PLATFORM       win
-  HB_COMPILER       bcc
-
 For DJGPP (GCC port for MS-DOS)
   HB_PLATFORM       dos
   HB_COMPILER       djgpp
-
-For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
-  HB_PLATFORM       dos
-  HB_COMPILER       watcom
 
 The most used targets are these:
 
@@ -197,8 +179,8 @@ See README.md about details.
 
 
 You can build and/or run any program in tests/working by using hbmk2
-and hbrun. For example, 'hbmk2 scroll.prg -run' will build the scroll.prg
-program and then run it. 'hbrun scroll.prg' will run the program as
+and hbrun. For example, `hbmk2 scroll.prg -run` will build the scroll.prg
+program and then run it. `hbrun scroll.prg` will run the program as
 a script. You can also pass parameters to the program. For example,
-'hbrun readfile.prg harbour.ini' will rebuild the readfile.prg program
-and run it with 'harbour.ini' as a command line parameter.
+`hbrun readfile.prg harbour.ini` will rebuild the readfile.prg program
+and run it with `harbour.ini` as a command-line parameter.

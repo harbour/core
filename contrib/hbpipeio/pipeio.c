@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -339,7 +339,7 @@ static PHB_FILE hb_fileFromPipeHandle( HB_FHANDLE hProcess, HB_FHANDLE hPipeRD, 
 }
 
 /* hb_vfFromPipes( [<hReads>], [<hWrite>], [<hProcess>], [<nTimeout>] )
-         -> <pHandle> | NIL */
+         --> <pHandle> | NIL */
 HB_FUNC( HB_VFFROMPIPES )
 {
    HB_FHANDLE hPipeRD = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );
@@ -352,7 +352,7 @@ HB_FUNC( HB_VFFROMPIPES )
 }
 
 /* hb_vfOpenProcess( <cCommand>, [<nMode>=FO_READ], [<nTimeout>], [<lDetach>] )
-         -> <pHandle> | NIL */
+         --> <pHandle> | NIL */
 HB_FUNC( HB_VFOPENPROCESS )
 {
    const char * pszCommand = hb_parc( 1 );

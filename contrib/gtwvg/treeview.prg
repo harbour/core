@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpTreeView compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbpTreeView compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               26Nov2008
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgTreeView INHERIT WvgWindow, WvgDataRef
 
    VAR    alwaysShowSelection                   INIT .F.
    VAR    hasButtons                            INIT .F.
@@ -100,10 +94,10 @@ CREATE CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
    VAR    textItemSelected                      INIT ""
 
    METHOD getSelectionInfo( nlParam )
-   METHOD setColorFG( nRGB )                    INLINE Wvg_TreeView_SetTextColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 0 ), nRGB ) )
-   METHOD setColorBG( nRGB )                    INLINE Wvg_TreeView_SetBkColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 1 ), nRGB ) )
-   METHOD setColorLines( nRGB )                 INLINE Wvg_TreeView_SetLineColor( ::hWnd, nRGB )
-   METHOD showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
+   METHOD setColorFG( nRGB )                    INLINE wvg_TreeView_SetTextColor( ::hWnd, iif( HB_ISSTRING( nRGB ), wvt_GetRGBColorByString( nRGB, 0 ), nRGB ) )
+   METHOD setColorBG( nRGB )                    INLINE wvg_TreeView_SetBkColor( ::hWnd, iif( HB_ISSTRING( nRGB ), wvt_GetRGBColorByString( nRGB, 1 ), nRGB ) )
+   METHOD setColorLines( nRGB )                 INLINE wvg_TreeView_SetLineColor( ::hWnd, nRGB )
+   METHOD showExpanded( lExpanded, nLevels )    INLINE wvg_TreeView_ShowExpanded( ::hWnd, ;
       iif( HB_ISNIL( lExpanded ), .F., lExpanded ), nLevels )
 
 ENDCLASS
@@ -134,7 +128,7 @@ METHOD WvgTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::style += TVS_HASLINES + TVS_LINESATROOT
    ENDIF
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -167,13 +161,13 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 
    CASE HB_GTE_COMMAND
       IF HB_ISBLOCK( ::sl_lbClick )
-         Eval( ::sl_lbClick, NIL, NIL, self )
+         Eval( ::sl_lbClick, , , Self )
          RETURN EVENT_HANDELLED
       ENDIF
       EXIT
 
    CASE HB_GTE_NOTIFY
-      aHdr := Wvg_GetNMTreeViewInfo( aNM[ 2 ] )
+      aHdr := wvg_GetNMTreeViewInfo( aNM[ 2 ] )
 
       DO CASE
       CASE aHdr[ NMH_code ] == NM_DBLCLK .OR. aHdr[ NMH_code ] == NM_RETURN
@@ -219,13 +213,13 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 #if 0  /* It must never reach here */
    CASE HB_GTE_ANY
       IF aNM[ 1 ] == WM_LBUTTONDOWN
-         aHdr := Wvg_GetNMTreeViewInfo( aNM[ 3 ] )
+         aHdr := wvg_GetNMTreeViewInfo( aNM[ 3 ] )
          ::getSelectionInfo( aNM[ 2 ] )
          IF HB_ISBLOCK( ::sl_lbClick )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            Eval( ::sl_lbClick, NIL, NIL, Self )
+            Eval( ::sl_lbClick, , , Self )
             IF ::isParentCrt()
                ::setFocus()
             ENDIF
@@ -252,11 +246,11 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-METHOD WvgTreeView:destroy()
+METHOD PROCEDURE WvgTreeView:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgTreeView:getSelectionInfo( nlParam )
 
@@ -265,7 +259,7 @@ METHOD WvgTreeView:getSelectionInfo( nlParam )
    LOCAL cText   := Space( 20 )
    LOCAL n
 
-   Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
+   wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
 
    ::hParentSelected    := hParentOfSelected
    ::hItemSelected      := hItemSelected
@@ -347,7 +341,7 @@ CREATE CLASS WvgTreeViewItem
    METHOD configure()
    METHOD destroy()
 
-   METHOD Expand( lExpand )                      INLINE Wvg_TreeView_Expand( ::hTree, ::hItem, ;
+   METHOD Expand( lExpand )                      INLINE wvg_TreeView_Expand( ::hTree, ::hItem, ;
       iif( HB_ISLOGICAL( lExpand ), lExpand, .T. ) )
    METHOD isExpanded()
    METHOD setCaption( cCaption )
@@ -363,81 +357,72 @@ CREATE CLASS WvgTreeViewItem
 
 ENDCLASS
 
-METHOD new() CLASS WvgTreeViewItem
-
+METHOD WvgTreeViewItem:new()
    RETURN Self
 
-METHOD create() CLASS WvgTreeViewItem
-
+METHOD WvgTreeViewItem:create()
    RETURN Self
 
-METHOD configure() CLASS WvgTreeViewItem
-
+METHOD WvgTreeViewItem:configure()
    RETURN Self
 
-METHOD destroy() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:destroy()
+   RETURN
 
-   RETURN NIL
+METHOD PROCEDURE WvgTreeViewItem:isExpanded()
+   RETURN
 
-METHOD isExpanded() CLASS WvgTreeViewItem
-
-   RETURN NIL
-
-METHOD setCaption( cCaption ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setCaption( cCaption )
 
    HB_SYMBOL_UNUSED( cCaption )
 
-   RETURN NIL
+   RETURN
 
-METHOD setExpandedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
-
-   HB_SYMBOL_UNUSED( nResIdoBitmap )
-
-   RETURN NIL
-
-METHOD setImage( nResIdoBitmap ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setExpandedImage( nResIdoBitmap )
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
 
-   RETURN NIL
+   RETURN
 
-METHOD setMarkedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setImage( nResIdoBitmap )
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
 
-   RETURN NIL
+   RETURN
 
-METHOD addItem( cCaption ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setMarkedImage( nResIdoBitmap )
+
+   HB_SYMBOL_UNUSED( nResIdoBitmap )
+
+   RETURN
+
+METHOD WvgTreeViewItem:addItem( cCaption )
 
    LOCAL oItem, hParent
 
    oItem := WvgTreeViewItem():New()
 
    oItem:hTree   := ::hTree
-   oItem:oParent := self
+   oItem:oParent := Self
    oItem:caption := cCaption
    oItem:oWnd    := ::oWnd
 
    hParent := iif( HB_ISOBJECT( oItem:oParent ), oItem:oParent:hItem, NIL )
 
-   oItem:hItem := Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:caption )
+   oItem:hItem := wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:caption )
 
    AAdd( oItem:oWnd:aItems, oItem )
 
    RETURN oItem
 
-METHOD delItem() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:delItem()
+   RETURN
 
-   RETURN NIL
+METHOD PROCEDURE WvgTreeViewItem:getChildItems()
+   RETURN
 
-METHOD getChildItems() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:getParentItem()
+   RETURN
 
-   RETURN NIL
-
-METHOD getParentItem() CLASS WvgTreeViewItem
-
-   RETURN NIL
-
-METHOD insItem() CLASS WvgTreeViewItem
-
-   RETURN NIL
+METHOD PROCEDURE WvgTreeViewItem:insItem()
+   RETURN

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -179,6 +179,7 @@ extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceLT( PHB_EXPR pSelf, HB_COMP_DECL 
 extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceEQ( PHB_EXPR pSelf, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceAnd( PHB_EXPR pSelf, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceOr( PHB_EXPR pSelf, HB_COMP_DECL );
+extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceNot( PHB_EXPR pSelf, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceIIF( PHB_EXPR, HB_COMP_DECL );
 
 extern HB_EXPORT_INT HB_BOOL hb_compExprReduceAT( PHB_EXPR, HB_COMP_DECL );

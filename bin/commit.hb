@@ -1,6 +1,6 @@
-#!/usr/bin/hbmk2
+#!/usr/bin/env hbmk2
 /*
- * Commit preparer
+ * Commit preparer and source checker/fixer
  *
  * Copyright 2012-2013 Viktor Szakats (vszakats.net/harbour)
  *
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -205,8 +205,8 @@ STATIC FUNCTION MakeEntry( aChanges, cMyName, cLogName, lAllowChangeLog )
    LOCAL cLog := hb_StrFormat( "%1$s UTC%2$s%3$02d%4$02d %5$s", ;
       hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
       iif( nOffset < 0, "-", "+" ), ;
-      Int( nOffset / 3600 ), ;
-      Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ), ;
+      Int( Abs( nOffset ) / 3600 ), ;
+      Int( Abs( nOffset ) % 3600 / 60 ), ;
       cMyName ) + hb_eol()
 
    LOCAL cLine

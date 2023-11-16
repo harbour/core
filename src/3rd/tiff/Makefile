@@ -20,9 +20,11 @@ C_SOURCES := \
    fax3.c \
    fax3sm.c \
    getimage.c \
+   hash_set.c \
    jbig.c \
    jpeg.c \
    jpeg_12.c \
+   lerc.c \
    luv.c \
    lzma.c \
    lzw.c \
@@ -38,6 +40,8 @@ C_SOURCES := \
    tile.c \
    version.c \
    warn.c \
+   webp.c \
+   zstd.c \
 
 C_SOURCES += \
    close.c \
@@ -88,12 +92,12 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://www.remotesensing.org/libtiff/
-# VER    4.0.3
-# URL    http://download.osgeo.org/libtiff/tiff-4.0.3.zip
-# DIFF   tiff.dif
+# ORIGIN https://libtiff.gitlab.io/libtiff/
+# VER    4.6.0
+# URL    https://download.osgeo.org/libtiff/tiff-4.6.0.tar.xz
+# DIFF   tiff.diff
 #
-# MAP    COPYRIGHT                LICENSE
+# MAP    LICENSE.md               LICENSE
 # MAP    libtiff/tif_aux.c        auxtif.c
 # MAP    libtiff/tif_close.c      close.c
 # MAP    libtiff/tif_codec.c      codec.c
@@ -110,9 +114,11 @@ endif
 # MAP    libtiff/tif_fax3sm.c     fax3sm.c
 # MAP    libtiff/tif_flush.c      flush.c
 # MAP    libtiff/tif_getimage.c   getimage.c
+# MAP    libtiff/tif_hash_set.c   hash_set.c
 # MAP    libtiff/tif_jbig.c       jbig.c
 # MAP    libtiff/tif_jpeg.c       jpeg.c
 # MAP    libtiff/tif_jpeg_12.c    jpeg_12.c
+# MAP    libtiff/tif_lerc.c       lerc.c
 # MAP    libtiff/tif_luv.c        luv.c
 # MAP    libtiff/tif_lzma.c       lzma.c
 # MAP    libtiff/tif_lzw.c        lzw.c
@@ -131,9 +137,11 @@ endif
 # MAP    libtiff/tif_unix.c       unix.c
 # MAP    libtiff/tif_version.c    version.c
 # MAP    libtiff/tif_warning.c    warn.c
+# MAP    libtiff/tif_webp.c       webp.c
 # MAP    libtiff/tif_win32.c      win32.c
 # MAP    libtiff/tif_write.c      write.c
 # MAP    libtiff/tif_zip.c        zip.c
+# MAP    libtiff/tif_zstd.c       zstd.c
 # MAP    libtiff/t4.h             t4.h
 # MAP    libtiff/tiff.h           tiff.h
 # MAP    libtiff/tiffio.h         tiffio.h
@@ -141,6 +149,7 @@ endif
 # MAP    libtiff/tiffvers.h       tiffvers.h
 # MAP    libtiff/tif_dir.h        dir.h
 # MAP    libtiff/tif_fax3.h       fax3.h
+# MAP    libtiff/tif_hash_set.h   hash_set.h
 # MAP    libtiff/tif_predict.h    predict.h
 # MAP    libtiff/uvcode.h         uvcode.h
 # MAP    libtiff/tiffconf.h.in    tiffconf.h

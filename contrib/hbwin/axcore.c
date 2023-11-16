@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -129,7 +129,6 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
 {
    IUnknown *  pUnk  = NULL;
    IDispatch * pDisp = NULL;
-   HRESULT     lOleError;
 
    if( pItem )
       hb_itemClear( pItem );
@@ -141,7 +140,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
    }
    else
    {
-      lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
+      HRESULT lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
 
       if( lOleError == S_OK )
       {
@@ -201,11 +200,11 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
          if( lOleError == S_OK )
          {
             MSG Msg;
-            RECT rct;
+            RECT rc;
 
             memset( &Msg, 0, sizeof( Msg ) );
-            GetClientRect( hWnd, &rct );
-            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rct );
+            GetClientRect( hWnd, &rc );
+            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rc );
          }
          HB_VTBL( lpOleObject )->Release( HB_THIS( lpOleObject ) );
       }
@@ -217,7 +216,7 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
 }
 
 
-/* ======================== Event handler support ======================== */
+/* --- Event handler support --- */
 
 
 #if ! defined( HB_OLE_C_API )
@@ -398,7 +397,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
    TYPEATTR *  pTypeAttr;
    HREFTYPE    hRefType;
    HRESULT     hr;
-   int         iFlags, i, j;
+   int         iFlags, i;
 
    if( ! szEvent )
    {
@@ -491,6 +490,8 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                {
                   if( pTypeAttr->typekind == TKIND_COCLASS )
                   {
+                     int j;
+
                      for( j = 0; j < pTypeAttr->cImplTypes; j++ )
                      {
                         if( szEvent )
@@ -587,7 +588,7 @@ static void hb_sink_destruct( void * cargo )
       DWORD dwCookie = pSink->dwCookie;
 
       /* Unadvise() may activate pSink destructor so clear these
-       * items as protection against recursive Unadvise call.
+       * items as protection against recursive Unadvise() call.
        */
       pSink->pConnectionPoint = NULL;
       pSink->dwCookie = 0;

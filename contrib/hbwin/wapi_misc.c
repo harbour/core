@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,13 +46,25 @@
 
 #include "hbwapi.h"
 
+HB_SIZE hbwapi_tstrlen( const TCHAR * pText )
+{
+   HB_SIZE nLen = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrlen(%p)", ( const void * ) pText ) );
+
+   while( pText[ nLen ] != TEXT( '\0' ) )
+      ++nLen;
+
+   return nLen;
+}
+
 /* NOTE: Based on hb_strdup() */
 TCHAR * hbwapi_tstrdup( const TCHAR * pszText )
 {
    TCHAR * pszDup;
    HB_SIZE nLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrdup(%p)", pszText ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrdup(%p)", ( const void * ) pszText ) );
 
    nLen = ( hbwapi_tstrlen( pszText ) + 1 ) * sizeof( TCHAR );
 
@@ -67,7 +79,7 @@ TCHAR * hbwapi_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
 {
    TCHAR * pBuf = pDest;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrncat(%p, %p, %" HB_PFS "u)", pDest, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrncat(%p, %p, %" HB_PFS "u)", ( void * ) pDest, ( const void * ) pSource, nLen ) );
 
    pDest[ nLen ] = TEXT( '\0' );
 
@@ -81,18 +93,6 @@ TCHAR * hbwapi_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
       nLen--;
 
    return pBuf;
-}
-
-HB_SIZE hbwapi_tstrlen( const TCHAR * pText )
-{
-   HB_SIZE nLen = 0;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrlen(%p)", pText ) );
-
-   while( pText[ nLen ] != TEXT( '\0' ) )
-      ++nLen;
-
-   return nLen;
 }
 
 static TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )

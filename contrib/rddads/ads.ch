@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,7 +51,7 @@
    to the *latest* version you want to allow/require, as in
       -DADS_LIB_VERSION=500
 
-   As of 6/7/2004, the default supports linking to v6 and v7,
+   As of 2004-06-07, the default supports linking to v6 and v7,
    as there are no v7-specific features yet.
    It does cover v6 data dictionary support, built-in
    Internet Server capabilities, etc.
@@ -62,7 +62,7 @@
 
    2) Set this "define" when compiling rddads:
       -DADS_LIB_VERSION=500
-*/
+ */
 
 #ifndef ADS_CH_
 #define ADS_CH_
@@ -89,10 +89,11 @@
 
 /* For retrieving scope settings
    In the Harbour RDD, use TOPSCOPE and BOTTOMSCOPE as the values are
-   different (Top = 0, Bottom = 1)
+   different (Top = 0, Bottom = 1) */
+#if 0
    #define ADS_TOP                        1
    #define ADS_BOTTOM                     2
-*/
+#endif
 
 /* for calls that can optionally use filters */
 #define ADS_RESPECTFILTERS                1
@@ -189,7 +190,7 @@
 #define ADS_DD_TABLE_MEMO_BLOCK_SIZE      215
 #define ADS_DD_TABLE_PERMISSION_LEVEL     216
 
-/* Field properties between 300 - 399 */
+/* Field properties between 300-399 */
 #define ADS_DD_FIELD_DEFAULT_VALUE        300
 #define ADS_DD_FIELD_CAN_NULL             301
 #define ADS_DD_FIELD_MIN_VALUE            302
@@ -200,7 +201,7 @@
 #define ADS_DD_FIELD_LENGTH               307
 #define ADS_DD_FIELD_DECIMAL              308
 
-/* Index tag properties between 400 - 499 */
+/* Index tag properties between 400-499 */
 #define ADS_DD_INDEX_FILE_NAME            400
 #define ADS_DD_INDEX_EXPRESSION           401
 #define ADS_DD_INDEX_CONDITION            402
@@ -238,7 +239,7 @@
 #define ADS_DD_INDEX_FILE_PAGESIZE        901
 
 /*
- * Object rights properties 1001 - 1099 .  They can be used
+ * Object rights properties 1001-1099. They can be used
  * with either user or user group objects.
  */
 #define ADS_DD_TABLES_RIGHTS              1001
@@ -247,15 +248,15 @@
 #define ADS_DD_OBJECTS_RIGHTS             1004
 #define ADS_DD_FREE_TABLES_RIGHTS         1005
 
-/* User Properties 1101 - 1199 */
+/* User Properties 1101-1199 */
 #define ADS_DD_USER_PASSWORD              1101
 #define ADS_DD_USER_GROUP_MEMBERSHIP      1102
 #define ADS_DD_USER_BAD_LOGINS            1103
 
-/* User group Properties 1201 - 1299 */
+/* User group Properties 1201-1299 */
 /* None at this moment. */
 
-/* Link properties 1301 - 1399 */
+/* Link properties 1301-1399 */
 #define ADS_DD_LINK_PATH                  1300
 #define ADS_DD_LINK_OPTIONS               1301
 #define ADS_DD_LINK_USERNAME              1302

@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpTreeView compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbpTreeView compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               26Nov2008
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgListBox INHERIT WvgWindow, WvgDataRef
 
    VAR    adjustHeight                          INIT .F.
    VAR    horizScroll                           INIT .F.
@@ -78,21 +72,21 @@ CREATE CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
 
    METHOD handleEvent( nMessage, aNM )
 
-   METHOD getItemHeight()                       INLINE  ::sendMessage( LB_GETITEMHEIGHT, 0, 0 )
-   METHOD getTopItem()                          INLINE  ::sendMessage( LB_GETTOPINDEX, 0, 0 )
+   METHOD getItemHeight()                       INLINE ::sendMessage( LB_GETITEMHEIGHT, 0, 0 )
+   METHOD getTopItem()                          INLINE ::sendMessage( LB_GETTOPINDEX, 0, 0 )
    METHOD getVisibleItems()                     VIRTUAL
-   METHOD numItems()                            INLINE  ::sendMessage( LB_GETCOUNT, 0, 0 )
-   METHOD setItemsHeight( nPixel )              INLINE  ::sendMessage( LB_SETITEMHEIGHT, 0, nPixel )
-   METHOD setTopItem( nIndex )                  INLINE  ::sendMessage( LB_SETTOPINDEX, nIndex - 1, 0 )
+   METHOD numItems()                            INLINE ::sendMessage( LB_GETCOUNT, 0, 0 )
+   METHOD setItemsHeight( nPixel )              INLINE ::sendMessage( LB_SETITEMHEIGHT, 0, nPixel )
+   METHOD setTopItem( nIndex )                  INLINE ::sendMessage( LB_SETTOPINDEX, nIndex - 1, 0 )
 
-   METHOD addItem( cItem )                      INLINE  Wvg_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
+   METHOD addItem( cItem )                      INLINE wvg_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
    METHOD clear()
-   METHOD delItem( nIndex )                     INLINE  ::sendMessage( LB_DELETESTRING, nIndex - 1, 0 )
-   METHOD getItem( nIndex )                     INLINE  Wvg_LBGetText( ::hWnd, nIndex - 1 )
+   METHOD delItem( nIndex )                     INLINE ::sendMessage( LB_DELETESTRING, nIndex - 1, 0 )
+   METHOD getItem( nIndex )                     INLINE wvg_lbGetText( ::hWnd, nIndex - 1 )
    METHOD getTabstops()                         VIRTUAL
-   METHOD insItem( nIndex, cItem )              INLINE  Wvg_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex - 1, cItem )
+   METHOD insItem( nIndex, cItem )              INLINE wvg_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex - 1, cItem )
    METHOD setColumnWidth()                      VIRTUAL
-   METHOD setItem( nIndex, cItem )              INLINE  ::delItem( nIndex ), ::insItem( nIndex, cItem )
+   METHOD setItem( nIndex, cItem )              INLINE ::delItem( nIndex ), ::insItem( nIndex, cItem )
    METHOD setTabstops()                         VIRTUAL
 
 
@@ -175,13 +169,14 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
-      IF aNM[ 1 ] == LBN_SELCHANGE
-         ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
+      DO CASE
+      CASE aNM[ 1 ] == LBN_SELCHANGE
+         ::nCurSelected := wvg_lbGetCurSel( ::hWnd ) + 1
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
          IF HB_ISBLOCK( ::sl_itemMarked )
-            Eval( ::sl_itemMarked, NIL, NIL, self )
+            Eval( ::sl_itemMarked, , , Self )
          ENDIF
          IF ::isParentCrt()
             IF ::pointerFocus
@@ -189,13 +184,13 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == LBN_DBLCLK
+      CASE aNM[ 1 ] == LBN_DBLCLK
          ::editBuffer := ::nCurSelected
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
          IF HB_ISBLOCK( ::sl_itemSelected )
-            Eval( ::sl_itemSelected, NIL, NIL, self )
+            Eval( ::sl_itemSelected, , , Self )
          ENDIF
          IF ::isParentCrt()
             IF ::pointerFocus
@@ -203,13 +198,13 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == LBN_KILLFOCUS
+      CASE aNM[ 1 ] == LBN_KILLFOCUS
          ::killInputFocus()
 
-      ELSEIF aNM[ 1 ] == LBN_SETFOCUS
+      CASE aNM[ 1 ] == LBN_SETFOCUS
          ::setInputFocus()
 
-      ENDIF
+      ENDCASE
 
    CASE nMessage == HB_GTE_KEYTOITEM
       IF aNM[ 1 ] == K_ENTER
@@ -217,7 +212,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ::oParent:setFocus()
          ENDIF
          IF HB_ISBLOCK( ::sl_itemSelected )
-            Eval( ::sl_itemSelected, NIL, NIL, self )
+            Eval( ::sl_itemSelected, , , Self )
          ENDIF
          IF ::isParentCrt()
             IF ::pointerFocus
@@ -230,56 +225,57 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    CASE nMessage == HB_GTE_ANY               /* This will never be reached */
-      IF aNM[ 1 ] == WM_LBUTTONUP
-         ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
+      DO CASE
+      CASE aNM[ 1 ] == WM_LBUTTONUP
+         ::nCurSelected := wvg_lbGetCurSel( ::hWnd ) + 1
          IF HB_ISBLOCK( ::sl_itemMarked )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            Eval( ::sl_itemMarked, NIL, NIL, self )
+            Eval( ::sl_itemMarked, , , Self )
             IF ::isParentCrt()
                ::setFocus()
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == WM_LBUTTONDBLCLK
+      CASE aNM[ 1 ] == WM_LBUTTONDBLCLK
          ::editBuffer := ::nCurSelected
          IF HB_ISBLOCK( ::sl_itemSelected )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            Eval( ::sl_itemSelected, NIL, NIL, self )
+            Eval( ::sl_itemSelected, , , Self )
             IF ::isParentCrt()
                ::setFocus()
             ENDIF
             RETURN EVENT_HANDELLED
          ENDIF
 
-      ELSEIF aNM[ 1 ] == WM_KEYUP
-         IF ::nCurSelected != Wvg_LBGetCurSel( ::hWnd ) + 1
-            ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
+      CASE aNM[ 1 ] == WM_KEYUP
+         IF ::nCurSelected != wvg_lbGetCurSel( ::hWnd ) + 1
+            ::nCurSelected := wvg_lbGetCurSel( ::hWnd ) + 1
             IF HB_ISBLOCK( ::sl_itemMarked )
                IF ::isParentCrt()
                   ::oParent:setFocus()
                ENDIF
-               Eval( ::sl_itemMarked, NIL, NIL, self )
+               Eval( ::sl_itemMarked, , , Self )
                IF ::isParentCrt()
                   ::setFocus()
                ENDIF
             ENDIF
          ENDIF
 
-      ENDIF
+      ENDCASE
    ENDCASE
 
    RETURN EVENT_UNHANDELLED
@@ -296,8 +292,8 @@ METHOD WvgListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    RETURN Self
 
-METHOD WvgListBox:destroy()
+METHOD PROCEDURE WvgListBox:destroy()
 
    ::WvgWindow:destroy()
 
-   RETURN NIL
+   RETURN

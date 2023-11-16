@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,15 +60,24 @@
 #define HB_SSL_CTX_NEW_METHOD_TLSV1                         6
 #define HB_SSL_CTX_NEW_METHOD_TLSV1_SERVER                  7
 #define HB_SSL_CTX_NEW_METHOD_TLSV1_CLIENT                  8
-#define HB_SSL_CTX_NEW_METHOD_SSLV23                        9
-#define HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER                 10
-#define HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT                 11
+#define HB_SSL_CTX_NEW_METHOD_TLS                           9
+#define HB_SSL_CTX_NEW_METHOD_TLS_SERVER                    10
+#define HB_SSL_CTX_NEW_METHOD_TLS_CLIENT                    11
+#define HB_SSL_CTX_NEW_METHOD_SSLV23                        HB_SSL_CTX_NEW_METHOD_TLS
+#define HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER                 HB_SSL_CTX_NEW_METHOD_TLS_SERVER
+#define HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT                 HB_SSL_CTX_NEW_METHOD_TLS_CLIENT
 
-#define HB_SSLEAY_VERSION                                   0
-#define HB_SSLEAY_CFLAGS                                    1
-#define HB_SSLEAY_BUILT_ON                                  2
-#define HB_SSLEAY_PLATFORM                                  3
-#define HB_SSLEAY_DIR                                       4
+#define HB_OPENSSL_VERSION                                  0
+#define HB_OPENSSL_CFLAGS                                   1
+#define HB_OPENSSL_BUILT_ON                                 2
+#define HB_OPENSSL_PLATFORM                                 3
+#define HB_OPENSSL_DIR                                      4
+
+#define HB_SSLEAY_VERSION                                   HB_OPENSSL_VERSION
+#define HB_SSLEAY_CFLAGS                                    HB_OPENSSL_CFLAGS
+#define HB_SSLEAY_BUILT_ON                                  HB_OPENSSL_BUILT_ON
+#define HB_SSLEAY_PLATFORM                                  HB_OPENSSL_PLATFORM
+#define HB_SSLEAY_DIR                                       HB_OPENSSL_DIR
 
 #define HB_SSL_ERROR_NONE                                   0
 #define HB_SSL_ERROR_SSL                                    1
@@ -105,6 +114,8 @@
 #define HB_SSL_OP_NO_SSLv2                                  0x01000000
 #define HB_SSL_OP_NO_SSLv3                                  0x02000000
 #define HB_SSL_OP_NO_TLSv1                                  0x04000000
+#define HB_SSL_OP_NO_TLSv1_2                                0x08000000
+#define HB_SSL_OP_NO_TLSv1_1                                0x10000000
 #define HB_SSL_OP_PKCS1_CHECK_1                             0x08000000
 #define HB_SSL_OP_PKCS1_CHECK_2                             0x10000000
 #define HB_SSL_OP_NETSCAPE_CA_DN_BUG                        0x20000000

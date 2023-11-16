@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -83,7 +83,7 @@
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
        * defined and effectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
+       * on 32-bit machines.
        */
       #define HB_USE_LARGEFILE64
    #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
@@ -235,7 +235,7 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 }
 
 /* NOTE: szFileName buffer must be at least HB_PATH_MAX long.
- *       Because some freign code may not be updated yet then
+ *       Because some foreign code may not be updated yet then
  *       hb_fsFNameMerge() effectively uses only HB_PATH_MAX buffer
  *       but it will be changed in the future.
  */
@@ -243,7 +243,7 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFNameMerge(%p, %p)", pszFileName, pFileName ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFNameMerge(%p, %p)", ( void * ) pszFileName, ( void * ) pFileName ) );
 
    if( pszFileName && pFileName )
    {
@@ -569,7 +569,7 @@ HB_BOOL hb_fsNameExists( const char * pszFileName )
 {
    HB_BOOL fExist = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsNameExists(%p)", pszFileName ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsNameExists(%p)", ( const void * ) pszFileName ) );
 
    if( pszFileName != NULL )
    {
@@ -621,7 +621,7 @@ HB_BOOL hb_fsFileExists( const char * pszFileName )
 {
    HB_BOOL fExist = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFileExists(%p)", pszFileName ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFileExists(%p)", ( const void * ) pszFileName ) );
 
    if( pszFileName != NULL )
    {
@@ -683,7 +683,7 @@ HB_BOOL hb_fsDirExists( const char * pszDirName )
 {
    HB_BOOL fExist = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsDirExists(%p)", pszDirName ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsDirExists(%p)", ( const void * ) pszDirName ) );
 
    if( pszDirName != NULL )
    {

@@ -1,4 +1,5 @@
 /*
+ * CStruct header
  *
  * Copyright 2000 Ron Pinkas <ronpinkas@profit-master.com>
  *
@@ -13,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,13 +61,11 @@
       // <elem> instead of <!elem!> to allow ElemName[n] syntax.
       #xcommand MEMBER <elem> IS <type> => hb_Member( #<elem>, <type> )
 
-      /*
-         Will match:
+      /* Will match:
             MEMBER <elem> IS <!stru!>
          due to expansion of:
             #xtranslate IS <stru> [...] => := hb_CStructure( #<stru> ):Init( {} )
-         as established by C STRUCTURE <!stru!> #xcommand for the given structure.
-      */
+         as established by C STRUCTURE <!stru!> #xcommand for the given structure. */
       #xcommand MEMBER <elem> := hb_CStructure( <literalstru> ):Init( {} ) => ;
                hb_Member( #<elem>, hb_CStructureId( <literalstru>, .T. ) )
 
@@ -83,13 +82,11 @@
                #xtranslate IS <stru> \[ \<x: :=, INIT> { \<initlist,...> } ] => := hb_CStructure( #<stru> ):Init( {\<initlist>} ); ;
                #xtranslate IS <stru> FROM \<pointer> => := hb_CStructure( #<stru> ):Buffer( \<pointer> )
 
-      //----------------------------- C Syntax support ---------------------------------//
+      /* C Syntax support */
+
       /* NOTES:
-
-        1. #pragma pack(<x>) needs to be translated to pragma pack(<X>) without the <#>.
-
-        2. First line must end with <;> so the whole definition is a single PRG line!
-      */
+         1. #pragma pack(<x>) needs to be translated to pragma pack(<X>) without the <#>.
+         2. First line must end with <;> so the whole definition is a single PRG line! */
 
       #define __PACK 8
 

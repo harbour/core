@@ -39,13 +39,13 @@
       <cGetColor> Color string to be used for the GET expression.
    $DESCRIPTION$
       This command adds a GET object to the reserved array variable
-      named GETLIST[] and displays it to the screen. The field or variable
+      named `GetList` and displays it to the screen. The field or variable
       to be added to the GET object is specified in <xVar> and is displayed
       at row, column coordinate <nRow>, <nCol>.
 
       If the SAY clause is used <cSay> will be displayed starting at
       <nRow>, <nCol>, with the field variable <xVar> displayed at Row(),
-      Col()+ 1. If <cSayPicr>, the picture template for the SAY expression
+      `Col() + 1`. If <cSayPicr>, the picture template for the SAY expression
       <cSay>, is used, all formatting rules contained will apply See the
       TRANSFORM I function for further information.
 
@@ -68,7 +68,7 @@
       until the condition in <lValid> evaluates to true (.T.). The name
       of a user-defined function returning a logical true (.T.) or false
       (.F.) or it code block may be specified in <lValid>. This clause is
-      not activated until a READ command or ReadModal( ) function call is
+      not activated until a READ command or ReadModal() function call is
       issued.
 
       If the RANGE clause is specified instead of the VALID clause, the
@@ -76,11 +76,13 @@
       and <xEnd>. Id <xVar> is a date data type, <xStart> and <xEnd> must
       also be date data types; if <xVar> is a numeric data type <xStart>
       and <xEnd> must also be numeric data types. If a value fails the
-      RANGE test ,a message of OUT OF RANGE will appear in the SCOREBOARD
+      RANGE test, the message "OUT OF RANGE" will appear in the SCOREBOARD
       area (row = 0, col = 60). The RANGE message may be turned off it the
-      SET SCOREBOARD command or Set() function appropriately toggled.
+      `SET SCOREBOARD` command or Set() function appropriately toggled.
 
-      NOTE       GET functions/formatting rules:
+   $NOTES$
+
+      GET functions/formatting rules:
 
       <table-noheader>
       @A          Allows only alphabetic characters.
@@ -121,20 +123,18 @@
       </table>
 
       Format PICTURE functions may he grouped together as well as used
-      in Conjunction with a PICTURE templates;however, a blank space must
+      in conjunction with a PICTURE templates; however, a blank space must
       be included in the PICTURE string if there are both functions and
       templates.
    $EXAMPLES$
-      PROCEDURE Main()
-         LOCAL cVar := Space( 50 )
-         LOCAL nId := 0
-         CLS
-         @ 3, 1 SAY "Name" GET cVar PICTURE "@!S 30"
-         @ 4, 1 SAY "Id"   GET nId  PICTURE "999.999"
-         READ
-         ? "The name you entered is", cVar
-         ? "The id you entered is", nId
-         RETURN
+      LOCAL cVar := Space( 50 ), nId := 0
+      LOCAL GetList := {}
+      CLS
+      @ 3, 1 SAY "Name" GET cVar PICTURE "@!S 30"
+      @ 4, 1 SAY "Id"   GET nId  PICTURE "999.999"
+      READ
+      ? "The name you entered is", cVar
+      ? "The id you entered is", nId
    $STATUS$
       R
    $COMPLIANCE$
@@ -177,14 +177,12 @@
       the screen.
 
       For a complete list of PICTURES templates and functions, see the
-      @...GET command.
+      `@...GET` command.
    $EXAMPLES$
-      PROCEDURE Main()
-         CLS
-         @ 2, 1 SAY "Harbour"
-         @ 3, 1 SAY "is" COLOR "b/r+"
-         @ 4, 1 SAY "Power" PICTURE "@!"
-         RETURN
+      CLS
+      @ 2, 1 SAY "Harbour"
+      @ 3, 1 SAY "is" COLOR "b/r+"
+      @ 4, 1 SAY "Power" PICTURE "@!"
    $STATUS$
       R
    $COMPLIANCE$

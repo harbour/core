@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,13 +46,13 @@
 
 #pragma -b-
 
-#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
+#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject class */
 #include "hbclass.ch"
 
 #include "inkey.ch"
 #include "setcurs.ch"
 
-/* object message descirption */
+/* object message description */
 #define OMSG_NAME       1
 #define OMSG_VALUE      2
 #define OMSG_EDIT       3
@@ -143,14 +143,14 @@ METHOD addWindows( nRow ) CLASS HBDbObject
 
    nMaxLen := 0
    AEval( ::pItems, {| x | nMaxLen := Max( nMaxLen, Len( x[ OMSG_NAME ] ) ) } )
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::pItems[ ::arrayindex, OMSG_NAME ] } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::pItems[ ::arrayindex ][ OMSG_NAME ] } ) )
    oCol:width := nMaxLen
    oCol:DefColor := { 1, 2 }
    oBrwSets:Freeze := 1
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| iif( ! ::pItems[ ::ArrayIndex, OMSG_EDIT ], ;
-      ::pItems[ ::ArrayIndex, OMSG_VALUE ], ;
-      __dbgValToExp( __dbgObjGetValue( ::TheObj, ::pItems[ ::arrayindex, OMSG_NAME ] ) ) ) } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| iif( ! ::pItems[ ::ArrayIndex ][ OMSG_EDIT ], ;
+      ::pItems[ ::ArrayIndex ][ OMSG_VALUE ], ;
+      __dbgValToExp( __dbgObjGetValue( ::TheObj, ::pItems[ ::arrayindex ][ OMSG_NAME ] ) ) ) } ) )
 
    oCol:DefColor := { 1, 3 }
    oCol:width := oWndSets:nRight - oWndSets:nLeft - nMaxLen - 2
@@ -186,7 +186,7 @@ METHOD PROCEDURE doGet( oBrowse ) CLASS HBDbObject
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1, ;
                   oBrowse:getColumn( oBrowse:colPos ):Width, @cValue, ;
                   __dbgExprValidBlock(), __dbgColors()[ 2 ], 256 )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          __dbgObjSetValue( ::TheObj, aItemRef[ OMSG_NAME ], &cValue )
       RECOVER USING oErr
          __dbgAlert( oErr:description )
@@ -273,7 +273,7 @@ STATIC FUNCTION __dbgObjGetValue( oObject, cVar, lCanAcc )
       xResult := __dbgSendMsg( nProcLevel, oObject, cVar )
       lCanAcc := .T.
    RECOVER
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          /* Try to access variables using class code level */
          xResult := __dbgSendMsg( 0, oObject, cVar )
          lCanAcc := .T.
@@ -293,7 +293,7 @@ STATIC FUNCTION __dbgObjSetValue( oObject, cVar, xValue )
    BEGIN SEQUENCE WITH {|| Break() }
       __dbgSendMsg( nProcLevel, oObject, "_" + cVar, xValue )
    RECOVER
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          /* Try to access variables using class code level */
          __dbgSendMsg( 0, oObject, "_" + cVar, xValue )
       RECOVER USING oErr

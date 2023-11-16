@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,6 +55,11 @@
 #include "ierrors.h"
 #include "iapi.h"
 
+/* Workaround to build with pre-9.18 versions */
+#if defined( e_Quit )
+#  define gs_error_Quit  e_Quit
+#endif
+
 HB_FUNC( HB_GS )
 {
    HB_BOOL  bResult = HB_FALSE;
@@ -82,12 +87,12 @@ HB_FUNC( HB_GS )
          code  = gsapi_init_with_args( minst, gsargc, gsargv );
          code1 = gsapi_exit( minst );
 
-         if( code == 0 || code == e_Quit )
+         if( code == 0 || code == gs_error_Quit )
             code = code1;
 
          gsapi_delete_instance( minst );
 
-         bResult = ( code == 0 || code == e_Quit );
+         bResult = ( code == 0 || code == gs_error_Quit );
       }
    }
 

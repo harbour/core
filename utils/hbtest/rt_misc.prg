@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -83,8 +83,8 @@ PROCEDURE Main_MISC()
    HBTEST Set( _SET_MARGIN    , -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:25;N:-1 "
 
 #ifdef HB_COMPAT_C53
-   HBTEST Set( _SET_EVENTMASK  )       IS 128
-   HBTEST Set( _SET_VIDEOMODE  )       IS NIL
+   HBTEST Set( _SET_EVENTMASK  )       IS 128  /* INKEY_KEYBOARD */
+   HBTEST Set( _SET_VIDEOMODE  )       IS NIL, 0
    HBTEST Set( _SET_MBLOCKSIZE )       IS 64
    HBTEST Set( _SET_MFILEEXT   )       IS ""
    HBTEST Set( _SET_STRICTREAD )       IS .F.
@@ -94,7 +94,7 @@ PROCEDURE Main_MISC()
    HBTEST Set( _SET_AUTOSHARE  )       IS 0
 
    HBTEST Set( _SET_EVENTMASK , -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:39;N:-1 "
-   HBTEST Set( _SET_VIDEOMODE , -1 )   IS NIL
+   HBTEST Set( _SET_VIDEOMODE , -1 )   IS NIL, 0
    HBTEST Set( _SET_MBLOCKSIZE, -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:41;N:-1 "
    HBTEST Set( _SET_MFILEEXT  , {} )   IS ""
    HBTEST Set( _SET_STRICTREAD, {} )   IS .F.
@@ -537,7 +537,7 @@ PROCEDURE Main_MISC()
    HBTEST suNIL:Eval()                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S"
    HBTEST scString:Eval()                 IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S"
    HBTEST snIntP:Eval()                   IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:10 F:S"
-   HBTEST sdDateE:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:0d00000000 F:S"
+   HBTEST sdDateE:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:0d0 F:S"
    HBTEST slFalse:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:L:.F. F:S"
    HBTEST sbBlock:Eval()                  IS NIL
    HBTEST saArray:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S"
@@ -545,7 +545,7 @@ PROCEDURE Main_MISC()
    HBTEST suNIL:Eval                      IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S"
    HBTEST scString:Eval                   IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S"
    HBTEST snIntP:Eval                     IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:10 F:S"
-   HBTEST sdDateE:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:0d00000000 F:S"
+   HBTEST sdDateE:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:0d0 F:S"
    HBTEST slFalse:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:L:.F. F:S"
    HBTEST sbBlock:Eval                    IS NIL
    HBTEST saArray:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S"
@@ -701,7 +701,7 @@ PROCEDURE Main_MISC()
 
 #endif /* __XPP__ */
 
-   /* NOTE: BIN2*() functions are quite untable in CA-Cl*pper when the passed
+   /* NOTE: BIN2*() functions are quite unstable in CA-Cl*pper when the passed
       parameter is smaller than the required length. */
 
    /* Bin2I() */
@@ -806,7 +806,7 @@ PROCEDURE Main_MISC()
    HBTEST __CopyFile( "$$COPYFR.TMP" )                 IS "E 1 BASE 2010 Argument error (__COPYFILE) OS:0 #:0 A:1:C:$$COPYFR.TMP "
    HBTEST __CopyFile( "$$COPYFR.TMP", "$$COPYTO.TMP" ) IS NIL
    HBTEST __CopyFile( "NOT_HERE.$$$", "$$COPYTO.TMP" ) IS "E 21 BASE 2012 Open error <NOT_HERE.$$$> OS:2 #:1 F:DR"
-   HBTEST __CopyFile( "$$COPYFR.TMP", BADFNAME() )     IS "E 20 BASE 2012 Create error <" + BADFNAME() + "> OS:2 #:1 F:DR"
+   HBTEST __CopyFile( "$$COPYFR.TMP", BADFNAME1() )    IS "E 20 BASE 2012 Create error <" + BADFNAME1() + "> OS:2 #:1 F:DR"
 
    FErase( "$$COPYFR.TMP" )
    FErase( "$$COPYTO.TMP" )
@@ -1208,14 +1208,14 @@ STATIC FUNCTION TESTFNAME( cFull )
 
    RETURN ;
       hb_FNameMerge( cPath, cName, cExt ) + ";" + ;
-      cPath + ";" +;
-      cName + ";" +;
-      cExt + ";" +;
+      cPath + ";" + ;
+      cName + ";" + ;
+      cExt + ";" + ;
       ""
 
 #endif
 
-STATIC FUNCTION BADFNAME()
+STATIC FUNCTION BADFNAME1()
    /* NOTE: The dot in the "*INVALID*." filename is intentional and serves
             to hide different path handling, since Harbour is platform
             independent. */

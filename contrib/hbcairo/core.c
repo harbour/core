@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,8 +48,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-
-/* ============ cairo_t * support ============ */
+/* --- cairo_t * support --- */
 static HB_GARBAGE_FUNC( hb_cairo_destructor )
 {
    cairo_t ** ppCairo = ( cairo_t ** ) Cargo;
@@ -67,14 +66,12 @@ static const HB_GC_FUNCS s_gcCairoFuncs =
    hb_gcDummyMark
 };
 
-
 cairo_t * hb_cairoItemGet( PHB_ITEM pItem )
 {
    cairo_t ** ppCairo = ( cairo_t ** ) hb_itemGetPtrGC( pItem, &s_gcCairoFuncs );
 
    return ppCairo ? *ppCairo : NULL;
 }
-
 
 PHB_ITEM hb_cairoItemPut( PHB_ITEM pItem, cairo_t * pCairo )
 {
@@ -83,7 +80,6 @@ PHB_ITEM hb_cairoItemPut( PHB_ITEM pItem, cairo_t * pCairo )
    *ppCairo = pCairo;
    return hb_itemPutPtrGC( pItem, ppCairo );
 }
-
 
 cairo_t * hb_cairo_param( int iParam )
 {
@@ -96,12 +92,10 @@ cairo_t * hb_cairo_param( int iParam )
    return NULL;
 }
 
-
 void hb_cairo_ret( cairo_t * pCairo )
 {
    hb_cairoItemPut( hb_stackReturnItem(), pCairo );
 }
-
 
 HB_FUNC( CAIRO_DESTROY )
 {
@@ -116,8 +110,7 @@ HB_FUNC( CAIRO_DESTROY )
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-
-/* ============ cairo_surface_t * support ============ */
+/* --- cairo_surface_t * support --- */
 static HB_GARBAGE_FUNC( hb_cairo_surface_destructor )
 {
    cairo_surface_t ** ppSurface = ( cairo_surface_t ** ) Cargo;
@@ -135,14 +128,12 @@ static const HB_GC_FUNCS s_gcSurfaceFuncs =
    hb_gcDummyMark
 };
 
-
 cairo_surface_t * hb_cairoSurfaceItemGet( PHB_ITEM pItem )
 {
    cairo_surface_t ** ppSurface = ( cairo_surface_t ** ) hb_itemGetPtrGC( pItem, &s_gcSurfaceFuncs );
 
    return ppSurface ? *ppSurface : NULL;
 }
-
 
 PHB_ITEM hb_cairoSurfaceItemPut( PHB_ITEM pItem, cairo_surface_t * pSurface )
 {
@@ -152,7 +143,6 @@ PHB_ITEM hb_cairoSurfaceItemPut( PHB_ITEM pItem, cairo_surface_t * pSurface )
    return hb_itemPutPtrGC( pItem, ppSurface );
 }
 
-
 void hb_cairoSurfaceStor( cairo_surface_t * pSurface, int iParam )
 {
    cairo_surface_t ** ppSurface = ( cairo_surface_t ** ) hb_gcAllocate( sizeof( cairo_surface_t * ), &s_gcSurfaceFuncs );
@@ -160,7 +150,6 @@ void hb_cairoSurfaceStor( cairo_surface_t * pSurface, int iParam )
    *ppSurface = pSurface;
    hb_storptrGC( ppSurface, iParam );
 }
-
 
 cairo_surface_t * hb_cairo_surface_param( int iParam )
 {
@@ -173,12 +162,10 @@ cairo_surface_t * hb_cairo_surface_param( int iParam )
    return NULL;
 }
 
-
 void hb_cairo_surface_ret( cairo_surface_t * pSurface )
 {
    hb_cairoSurfaceItemPut( hb_stackReturnItem(), pSurface );
 }
-
 
 HB_FUNC( CAIRO_SURFACE_DESTROY )
 {
@@ -193,8 +180,7 @@ HB_FUNC( CAIRO_SURFACE_DESTROY )
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-
-/* ============ cairo_path_t * support ============ */
+/* --- cairo_path_t * support --- */
 static HB_GARBAGE_FUNC( hb_cairo_path_destructor )
 {
    cairo_path_t ** ppPath = ( cairo_path_t ** ) Cargo;
@@ -212,14 +198,12 @@ static const HB_GC_FUNCS s_gcPathFuncs =
    hb_gcDummyMark
 };
 
-
 cairo_path_t * hb_cairoPathItemGet( PHB_ITEM pItem )
 {
    cairo_path_t ** ppPath = ( cairo_path_t ** ) hb_itemGetPtrGC( pItem, &s_gcPathFuncs );
 
    return ppPath ? *ppPath : NULL;
 }
-
 
 PHB_ITEM hb_cairoPathItemPut( PHB_ITEM pItem, cairo_path_t * pPath )
 {
@@ -228,7 +212,6 @@ PHB_ITEM hb_cairoPathItemPut( PHB_ITEM pItem, cairo_path_t * pPath )
    *ppPath = pPath;
    return hb_itemPutPtrGC( pItem, ppPath );
 }
-
 
 cairo_path_t * hb_cairo_path_param( int iParam )
 {
@@ -241,12 +224,10 @@ cairo_path_t * hb_cairo_path_param( int iParam )
    return NULL;
 }
 
-
 void hb_cairo_path_ret( cairo_path_t * pPath )
 {
    hb_cairoPathItemPut( hb_stackReturnItem(), pPath );
 }
-
 
 HB_FUNC( CAIRO_PATH_DESTROY )
 {
@@ -261,20 +242,16 @@ HB_FUNC( CAIRO_PATH_DESTROY )
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* --- cairo_path_t * iterator support --- */
 
-/* ============ cairo_path_t * iterator support ============ */
-
-/*
- * NOTE: Path iterator functions are is not cairo functions.
- *       This is only a way to pass path data to .prg level
- */
+/* NOTE: Path iterator functions are is not cairo functions.
+         This is only a way to pass path data to .prg level */
 
 typedef struct
 {
    cairo_path_t ** ppPath;
    int iPos;
 } HB_CAIRO_PATH_ITERATOR, * PHB_CAIRO_PATH_ITERATOR;
-
 
 static HB_GARBAGE_FUNC( hb_cairo_path_iterator_destructor )
 {
@@ -287,7 +264,6 @@ static HB_GARBAGE_FUNC( hb_cairo_path_iterator_destructor )
    }
 }
 
-
 static HB_GARBAGE_FUNC( hb_cairo_path_iterator_mark )
 {
    PHB_CAIRO_PATH_ITERATOR pIterator = ( PHB_CAIRO_PATH_ITERATOR ) Cargo;
@@ -296,13 +272,11 @@ static HB_GARBAGE_FUNC( hb_cairo_path_iterator_mark )
       hb_gcMark( pIterator->ppPath );
 }
 
-
 static const HB_GC_FUNCS s_gcIteratorFuncs =
 {
    hb_cairo_path_iterator_destructor,
    hb_cairo_path_iterator_mark
 };
-
 
 HB_FUNC( CAIRO_PATH_ITERATOR_CREATE )
 {
@@ -320,7 +294,6 @@ HB_FUNC( CAIRO_PATH_ITERATOR_CREATE )
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-
 HB_FUNC( CAIRO_PATH_ITERATOR_DESTROY )
 {
    PHB_CAIRO_PATH_ITERATOR pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_parptrGC( &s_gcIteratorFuncs, 1 );
@@ -333,7 +306,6 @@ HB_FUNC( CAIRO_PATH_ITERATOR_DESTROY )
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
 
 HB_FUNC( CAIRO_PATH_ITERATOR_NEXT )
 {
@@ -358,7 +330,6 @@ HB_FUNC( CAIRO_PATH_ITERATOR_NEXT )
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-
 HB_FUNC( CAIRO_PATH_ITERATOR_GET_POINTS )
 {
    PHB_CAIRO_PATH_ITERATOR pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_parptrGC( &s_gcIteratorFuncs, 1 );
@@ -366,18 +337,18 @@ HB_FUNC( CAIRO_PATH_ITERATOR_GET_POINTS )
 
    if( pIterator && pIterator->ppPath && ( pPath = *( pIterator->ppPath ) ) != NULL )
    {
-      cairo_path_data_t * pData;
-
       if( pIterator->iPos < pPath->num_data && pIterator->iPos != -1 )
       {
-         PHB_ITEM pItem, pArray;
+         cairo_path_data_t * pData;
+         PHB_ITEM pArray;
          int      i;
 
          pData  = pPath->data + pIterator->iPos;
          pArray = hb_itemArrayNew( pData->header.length - 1 );
          for( i = 1; i < pData->header.length; i++ )
          {
-            hb_arrayNew( pItem = hb_arrayGetItemPtr( pArray, i ), 2 );
+            PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, i );
+            hb_arrayNew( pItem, 2 );
             hb_arraySetND( pItem, 1, pData[ i ].point.x );
             hb_arraySetND( pItem, 2, pData[ i ].point.y );
          }
@@ -390,7 +361,6 @@ HB_FUNC( CAIRO_PATH_ITERATOR_GET_POINTS )
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-
 HB_FUNC( CAIRO_PATH_ITERATOR_SET_POINTS )
 {
    PHB_CAIRO_PATH_ITERATOR pIterator = ( PHB_CAIRO_PATH_ITERATOR ) hb_parptrGC( &s_gcIteratorFuncs, 1 );
@@ -399,20 +369,19 @@ HB_FUNC( CAIRO_PATH_ITERATOR_SET_POINTS )
 
    if( pIterator && pIterator->ppPath && ( pPath = *( pIterator->ppPath ) ) != NULL && pArray )
    {
-      cairo_path_data_t * pData;
       HB_SIZE nLen;
 
       nLen = hb_arrayLen( pArray );
       if( pIterator->iPos < pPath->num_data && pIterator->iPos != -1 &&
           ( HB_SIZE ) pPath->data[ pIterator->iPos ].header.length == nLen + 1 )
       {
-         PHB_ITEM pItem;
-         int      i;
+         cairo_path_data_t * pData;
+         int i;
 
          pData = pPath->data + pIterator->iPos;
          for( i = 1; i < pData->header.length; i++ )
          {
-            pItem = hb_arrayGetItemPtr( pArray, i );
+            PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, i );
             if( hb_arrayLen( pItem ) == 2 )
             {
                pData[ i ].point.x = hb_arrayGetND( pItem, 1 );

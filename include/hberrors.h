@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -124,10 +124,14 @@ HB_EXTERN_BEGIN
 #define HB_COMP_ERR_ALWAYS_AFTER_EXIT           68
 #define HB_COMP_ERR_FILE_WRITE                  69
 #define HB_COMP_ERR_DUPL_CASE                   70
-#define HB_COMP_ERR_HISTORICAL_1                71
-#define HB_COMP_ERR_HISTORICAL_2                72
-#define HB_COMP_ERR_HISTORICAL_3                73
-#define HB_COMP_ERR_HISTORICAL_4                74
+#define HB_COMP_ERR_ENDWITH                     71
+#define HB_COMP_ERR_ENDSWITCH                   72
+#define HB_COMP_ERR_ENDSEQ                      73
+#define HB_COMP_ERR_WITHOBJECT_MACROBLOCK       74
+#define HB_COMP_ERR_HISTORICAL_1                75
+#define HB_COMP_ERR_HISTORICAL_2                76
+#define HB_COMP_ERR_HISTORICAL_3                77
+#define HB_COMP_ERR_HISTORICAL_4                78
 
 #define HB_COMP_WARN_AMBIGUOUS_VAR              1
 #define HB_COMP_WARN_MEMVAR_ASSUMED             2

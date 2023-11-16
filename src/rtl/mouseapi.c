@@ -2,6 +2,7 @@
  * Mouse API
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999 Jose Lalin <dezac@corevia.com> (API proposal)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,19 +45,9 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    API proposal
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbgtcore.h"
 
-/* NOTE: Mouse initialization is called directly from low level GT driver
+/* NOTE: Mouse initialization is called directly from low-level GT driver
  * because it possible that mouse subsystem can depend on the terminal
  * (for example, mouse subsystem cannot be initialized before ncurses
  * driver is initialized).
@@ -145,7 +136,7 @@ void hb_mouseGetPos( int * piRow, int * piCol )
 {
    PHB_GT pGT;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_mouseGetPos(%p, %p)", piRow, piCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_mouseGetPos(%p, %p)", ( void * ) piRow, ( void * ) piCol ) );
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -187,7 +178,7 @@ void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight
 {
    PHB_GT pGT;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_mouseGetBounds(%p, %p, %p, %p)", piTop, piLeft, piBottom, piRight ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_mouseGetBounds(%p, %p, %p, %p)", ( void * ) piTop, ( void * ) piLeft, ( void * ) piBottom, ( void * ) piRight ) );
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -308,7 +299,7 @@ HB_BOOL hb_mouseButtonPressed( int iButton, int * piRow, int * piCol )
    HB_BOOL fPressed = HB_FALSE;
    PHB_GT pGT;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_mouseButtonPressed(%d,%p,%p)", iButton, piRow, piCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_mouseButtonPressed(%d,%p,%p)", iButton, ( void * ) piRow, ( void * ) piCol ) );
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -324,7 +315,7 @@ HB_BOOL hb_mouseButtonReleased( int iButton, int * piRow, int * piCol )
    HB_BOOL fReleased = HB_FALSE;
    PHB_GT pGT;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_mouseButtonReleased(%d,%p,%p)", iButton, piRow, piCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_mouseButtonReleased(%d,%p,%p)", iButton, ( void * ) piRow, ( void * ) piCol ) );
 
    pGT = hb_gt_Base();
    if( pGT )

@@ -1,15 +1,12 @@
-/*******
+/* Ilina Stoilkovska <anili100/at/gmail.com> 2011
+ * Aleksander Czajczynski <hb/at/fki.pl> 2011-2017
  *
- *  Ilina Stoilkovska <anili100/at/gmail.com> 2011
- *  Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
+ * Encoding Harbour items to AMF3
  *
- *  Encoding Harbour items to AMF3
- *
- *  Contains portions from
- *  Dave Thompson's MIT licensed
- *  AmFast C library for Python
- *
- ********/
+ * Contains portions from
+ * Dave Thompson's MIT licensed
+ * AmFast C library for Python
+ */
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -36,6 +33,7 @@ typedef struct
    HB_BOOL  use_strstr;
    HB_BOOL  str_rtrim;
    HB_SIZE  strstr_count; /* used only when str_ref is disabled */
+   HB_SIZE  objnref_count; /* items that should normally appear in obj_ref, but GC says that they are not referenced */
    PHB_ITEM obj_ref;
    PHB_ITEM str_ref;
    PHB_ITEM strstr_ref;
@@ -154,7 +152,7 @@ static HB_BOOL amf3_encode_int( amfContext * context, int value )
     *
     * The int is negative if the 1st bit of the 29 int is set.
     */
-   value &= 0x1fffffff; /* Ignore 1st 3 bits of 32 bit int, since we're encoding to 29 bit. */
+   value &= 0x1fffffff; /* Ignore 1st 3 bits of 32-bit int, since we're encoding to 29 bit. */
    if( value < 0x80 )
    {
       tmp_size = 1;
@@ -236,7 +234,7 @@ static HB_BOOL amf3_encode_bool( amfContext * context, PHB_ITEM pItem )
 
 static HB_BOOL amf3_encode_string( amfContext * context, PHB_ITEM pItem )
 {
-   void *       hStr = NULL;       /* = hb_itemGetCPtr(pItem); not needed with UTF8 conversion */
+   void *       hStr = NULL;       /* = hb_itemGetCPtr( pItem ); not needed with UTF-8 conversion */
    HB_SIZE      len;
    const char * utf8str = hb_itemGetStrUTF8( pItem, &hStr, &len );
    HB_BOOL      result;
@@ -259,14 +257,13 @@ static HB_BOOL amf3_encode_string( amfContext * context, PHB_ITEM pItem )
 
 static int amf3_add_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem )
 {
-   PHB_ITEM pKey;
    PHB_ITEM pVal;
    int      result = 0;
-   HB_SIZE  str_len;
 
    if( context->use_refs )
    {
-      pKey = hb_itemNew( NULL );
+      PHB_ITEM pKey = hb_itemNew( NULL );
+
       _ref_realItemPtr( pKey, pItem );
       if( ! HB_IS_POINTER( pKey ) && ! HB_IS_DATETIME( pKey ) )
       {
@@ -274,7 +271,17 @@ static int amf3_add_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem 
          return -1;
       }
 
-      pVal = hb_itemNew( NULL );
+      if( pHash == context->str_ref )
+         result = ( int ) ( hb_hashLen( pHash ) + context->strstr_count );
+         /* ->strstr_count > 0 only when some inner context inside
+          * user-defined conversion function uses only strstr mode
+          * like amf3_FromWA() function f.e. */
+      else if( pHash == context->obj_ref )
+         result = ( int ) ( hb_hashLen( pHash ) + context->objnref_count );
+      else
+         result = ( int ) ( hb_hashLen( pHash ) );
+
+      pVal = hb_itemPutNS( NULL, result );
 
       if( ! hb_hashAdd( pHash, pKey, pVal ) )
       {
@@ -285,15 +292,12 @@ static int amf3_add_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem 
       hb_itemRelease( pVal );
 
       hb_itemRelease( pKey );
-      result = ( int ) ( hb_hashLen( pHash ) - 1 + context->strstr_count );
-      /* used only when some inner context inside
-       * conversion function uses only strstr mode
-       * like AMF3_FROMWA function f.e. */
+
    }
 
    if( ( HB_IS_STRING( pItem ) || HB_IS_MEMO( pItem ) ) && context->use_strstr )
    {
-      str_len = hb_itemGetCLen( pItem );
+      HB_SIZE str_len = hb_itemGetCLen( pItem );
       if( str_len > 3 && str_len < 32 ) /* do this only for mid-sized strings */
       {
          if( ! context->use_refs )
@@ -312,21 +316,27 @@ static int amf3_add_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem 
 
 static int amf3_get_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem )
 {
-   PHB_ITEM pKey;
-   PHB_ITEM pStrIdx;
-   HB_SIZE  nPos;
-   HB_SIZE  str_len;
-
    if( context->use_refs )
    {
-      pKey = hb_itemNew( NULL );
+      PHB_ITEM pKey = hb_itemNew( NULL );
+      HB_SIZE nPos;
+      PHB_ITEM pVal;
+
       _ref_realItemPtr( pKey, pItem );
       if( ! HB_IS_POINTER( pKey ) && ! HB_IS_DOUBLE( pKey ) )
       {
          hb_itemRelease( pKey );
          return -1;
       }
-      if( hb_hashScan( pHash, pKey, &nPos ) )
+
+      if( context->objnref_count )
+      {
+         pVal = hb_hashGetItemPtr( pHash, pKey, 0 );
+         hb_itemRelease( pKey );
+         if( pVal )
+            return ( int ) hb_itemGetNS( pVal );
+      }
+      else if( hb_hashScan( pHash, pKey, &nPos ) )
       {
          hb_itemRelease( pKey );
          return ( int ) ( nPos - 1 );
@@ -337,17 +347,13 @@ static int amf3_get_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem 
 
    if( ( HB_IS_STRING( pItem ) || HB_IS_MEMO( pItem ) ) && context->use_strstr )
    {
-      str_len = hb_itemGetCLen( pItem );
-      if( str_len > 3 && str_len < 32 ) /* do this only for mid-sized strings */
+      HB_SIZE str_len = hb_itemGetCLen( pItem );
+      if( str_len > 3 && str_len < 32 )  /* do this only for mid-sized strings */
       {
-         pStrIdx = hb_hashGetItemPtr( context->strstr_ref, pItem, 0 );
+         PHB_ITEM pStrIdx = hb_hashGetItemPtr( context->strstr_ref, pItem, 0 );
          if( pStrIdx )
             return ( int ) hb_itemGetNS( pStrIdx );
-         else
-            return -1;
       }
-      else
-         return -1;
    }
 
    return -1;
@@ -373,7 +379,6 @@ static int amf3_encode_reference( amfContext * context, PHB_ITEM pHash, PHB_ITEM
 
    if( amf3_add_index( context, pHash, pItem ) == -1 )
       return 0;
-
 
    return -1;
 }
@@ -443,7 +448,7 @@ static HB_BOOL amf3_encode_hash( amfContext * context, PHB_ITEM pItem )
       pVal = hb_hashGetValueAt( pItem, i );
       if( HB_IS_STRING( pKey ) )
       {
-         if( ! amf3_encode_string( context, pKey ) )
+         if( ! amf3_serialize_string( context, pKey ) )
             return HB_FALSE;
          if( ! amf3_encode( context, pVal ) )
             return HB_FALSE;
@@ -472,15 +477,13 @@ static HB_BOOL amf3_encode_hash( amfContext * context, PHB_ITEM pItem )
 
 static HB_BOOL amf3_encode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
 {
-   PHB_ITEM pKey;
-   PHB_ITEM pVal;
-   HB_ISIZ  i;
-   HB_ISIZ  len = hb_hashLen( pItem );
+   HB_ISIZ i;
+   HB_ISIZ len = hb_hashLen( pItem );
 
    for( i = 1; i <= len; i++ )
    {
-      pKey = hb_hashGetKeyAt( pItem, i );
-      pVal = hb_hashGetValueAt( pItem, i );
+      PHB_ITEM pKey = hb_hashGetKeyAt( pItem, i );
+      PHB_ITEM pVal = hb_hashGetValueAt( pItem, i );
       if( HB_IS_STRING( pKey ) )
       {
          if( ! amf3_serialize_string( context, pKey ) )
@@ -498,10 +501,18 @@ static HB_BOOL amf3_encode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
 
 static HB_BOOL amf3_serialize_hash( amfContext * context, PHB_ITEM pItem )
 {
-   HB_BOOL result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
+   if( context->use_refs )
+   {
+      if( hb_hashRefs( pItem ) > 1 )
+      {
+         HB_BOOL result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
 
-   if( result > -1 )
-      return result;
+         if( result > -1 )
+            return result;
+      }
+      else
+         context->objnref_count++;
+   }
 
    return amf3_encode_hash( context, pItem );
 }
@@ -574,10 +585,8 @@ static int amf3_serialize_date( amfContext * context, PHB_ITEM pItem )
 
 static HB_BOOL amf3_encode_array( amfContext * context, PHB_ITEM pItem )
 {
-   HB_SIZE  item_len = hb_arrayLen( pItem );
-   PHB_ITEM pArrayItem;
-   int      i;
-   int      result;
+   HB_SIZE item_len = hb_arrayLen( pItem );
+   int     i;
 
    if( ! amf3_encode_int( context, ( ( int ) item_len << 1 ) | REFERENCE_BIT ) )
       return HB_FALSE;
@@ -587,13 +596,14 @@ static HB_BOOL amf3_encode_array( amfContext * context, PHB_ITEM pItem )
 
    for( i = 1; i <= ( int ) item_len; i++ )
    {
-      pArrayItem = hb_itemNew( NULL );
-      hb_arrayGet( pItem, i, pArrayItem );
+      PHB_ITEM pArrayItem;
+      int result;
+
+      pArrayItem = hb_arrayGetItemPtr( pItem, i );
       if( ! pArrayItem )
          return HB_FALSE;
 
       result = amf3_encode( context, pArrayItem );
-      hb_itemRelease( pArrayItem );
       if( ! result )
          return HB_FALSE;
    }
@@ -603,10 +613,19 @@ static HB_BOOL amf3_encode_array( amfContext * context, PHB_ITEM pItem )
 
 static HB_BOOL amf3_serialize_array( amfContext * context, PHB_ITEM pItem )
 {
-   int result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
+   if( context->use_refs )
+   {
+      if( hb_arrayRefs( pItem ) > 1 )
+      {
+         int result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
 
-   if( result > -1 )
-      return result;
+         if( result > -1 )
+            return result;
+      }
+      else
+         context->objnref_count++;
+   }
+
    return amf3_encode_array( context, pItem );
 }
 
@@ -618,8 +637,9 @@ static int amf3_encode_class_def( amfContext * context, PHB_ITEM pClass )
    HB_ISIZ  i;
    PHB_ITEM class_alias;
    PHB_ITEM static_attrs;
-/* PHB_ITEM attr_len = NULL; */
-   PHB_ITEM attr_name;
+#if 0
+   PHB_ITEM attr_len = NULL;
+#endif
 
    if( ! pClass )
    {
@@ -658,7 +678,7 @@ static int amf3_encode_class_def( amfContext * context, PHB_ITEM pClass )
    if( ! static_attrs )
       return 0;
 
-   static_attr_len = hb_arrayLen( static_attrs ); /* array this is -- hb_itemGetCLen(static_attrs); */
+   static_attr_len = hb_arrayLen( static_attrs ); /* array this is -- hb_itemGetCLen( static_attrs ); */
    if( static_attr_len == -1 || static_attr_len > ( MAX_INT >> 4 ) )
       return 0;
 
@@ -667,13 +687,13 @@ static int amf3_encode_class_def( amfContext * context, PHB_ITEM pClass )
       return 0;
 
    result = amf3_serialize_string( context, class_alias );
-   /* not needed  hb_itemRelease(class_alias); */
+   /* not needed hb_itemRelease( class_alias ); */
    if( ! result )
       return 0;
 
    for( i = 0; i < static_attr_len; i++ )
    {
-      attr_name = hb_itemArrayGet( static_attrs, i );
+      PHB_ITEM attr_name = hb_itemArrayGet( static_attrs, i );
       if( ! attr_name )
       {
          /* not needed hb_itemRelease( static_attrs ); */
@@ -685,7 +705,7 @@ static int amf3_encode_class_def( amfContext * context, PHB_ITEM pClass )
          return 0;
    }
 
-   /* not needed  hb_itemRelease( static_attrs ); */
+   /* not needed hb_itemRelease( static_attrs ); */
    return 1;
 }
 
@@ -921,10 +941,18 @@ static HB_BOOL amf3_serialize_object( amfContext * context, PHB_ITEM pItem )
       return result;
    }
 
-   result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
+   if( context->use_refs )
+   {
+      if( hb_arrayRefs( pItem ) > 1 )
+      {
+         result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
 
-   if( result > -1 )
-      return result;
+         if( result > -1 )
+            return result;
+      }
+      else
+         context->objnref_count++;
+   }
 
    return amf3_encode_object( context, pItem );
 }
@@ -1025,9 +1053,6 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
    memset( context, 0, sizeof( amfContext ) );
 
    context->cBuf = ( char * ) hb_xgrab( sizeof( char ) * 8 );
-#if 0
-   memset( context->cBuf, 0, sizeof( char ) * 8 );
-#endif
    context->position  = 0;
    context->length    = sizeof( char ) * 8;
    context->str_rtrim = str_rtrim;
@@ -1039,12 +1064,14 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
          context->obj_ref   = outer_context->obj_ref;
          context->str_ref   = outer_context->str_ref;
          context->class_ref = outer_context->class_ref;
+         context->objnref_count = outer_context->objnref_count;
       }
       else
       {
          context->obj_ref   = hb_hashNew( NULL );
          context->str_ref   = hb_hashNew( NULL );
          context->class_ref = hb_hashNew( NULL );
+         context->objnref_count = 0;
       }
    }
    else
@@ -1083,7 +1110,9 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
 
 static void context_release( amfContext * context, amfContext * outer_context )
 {
-   if( context->use_refs && ! ( outer_context && outer_context->use_refs ) )
+   if( outer_context && outer_context->use_refs )
+      outer_context->objnref_count = context->objnref_count;
+   else if( context->use_refs )
    {
       hb_itemRelease( context->obj_ref );
       hb_itemRelease( context->str_ref );
@@ -1241,7 +1270,6 @@ HB_FUNC( AMF3_FROMWA )
          }
       }
 
-
       if( ! bAsArray )
       {
          pFieldNames = hb_itemNew( NULL );
@@ -1385,9 +1413,6 @@ HB_FUNC( AMF3_ENCODE )
    memset( context, 0, sizeof( amfContext ) );
 
    context->cBuf = ( char * ) hb_xgrab( sizeof( char ) * 8 );
-#if 0
-   memset( context->cBuf, 0, sizeof( char ) * 8 );
-#endif
    context->position      = 0;
    context->length        = sizeof( char ) * 8;
    context->str_rtrim     = HB_FALSE;
@@ -1397,6 +1422,7 @@ HB_FUNC( AMF3_ENCODE )
    context->use_refs      = HB_TRUE;
    context->conv_function = pFuncSym;
    context->encode_ba     = lBA;
+   context->objnref_count = 0;
 
    /* "strstr" is another optional idea of catching similar strings,
       key in this hash is not the pointer to C char, but the string

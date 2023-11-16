@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -77,7 +77,7 @@ typedef enum
    HB_P_FUNCTIONSHORT,         /*  12 instructs the virtual machine to execute a function saving its result */
    HB_P_FRAME,                 /*  13 instructs the virtual machine about how many parameters and locals a function uses */
    HB_P_FUNCPTR,               /*  14 returns a function address pointer */
-   HB_P_GREATER,               /*  15 checks if the second latest value on the stack is greater that the lastest one */
+   HB_P_GREATER,               /*  15 checks if the second latest value on the stack is greater that the latest one */
    HB_P_GREATEREQUAL,          /*  16 checks if the second latest value on the stack is greater equal that the latest one, leaves the result only */
    HB_P_DEC,                   /*  17 decrements the latest value on the virtual machine stack */
    HB_P_DIVIDE,                /*  18 divides the latest two values on the stack, removing them and leaving the result */
@@ -97,7 +97,7 @@ typedef enum
    HB_P_JUMPTRUE,              /*  32 checks a logic expression of the stack and jumps to a relative offset */
    HB_P_JUMPTRUEFAR,           /*  33 checks a logic expression of the stack and jumps to a relative offset */
    HB_P_LESSEQUAL,             /*  34 checks if the second latest value on the stack is less equal that the latest one, leaves the result only */
-   HB_P_LESS,                  /*  35 checks if the second latest value on the stack is less that the lastest one */
+   HB_P_LESS,                  /*  35 checks if the second latest value on the stack is less that the latest one */
    HB_P_LINE,                  /*  36 currently compiled source code line number */
    HB_P_LOCALNAME,             /*  37 sets the name of local variable */
    HB_P_MACROPOP,              /*  38 compile and run - pop a value from the stack */
@@ -135,7 +135,7 @@ typedef enum
    HB_P_NOT,                   /*  68 logically negates the latest value on the stack */
    HB_P_NOTEQUAL,              /*  69 checks if the latest two stack values are equal, leaves just the result */
    HB_P_OR,                    /*  70 performs the logical OR of two latest stack values, removes them and places result */
-   HB_P_PARAMETER,             /*  71 creates PRIVATE variables and assigns values to functions paramaters */
+   HB_P_PARAMETER,             /*  71 creates PRIVATE variables and assigns values to functions parameters */
    HB_P_PLUS,                  /*  72 adds the latest two values on the stack, removing them and leaving the result */
    HB_P_POP,                   /*  73 removes the latest value from the stack */
    HB_P_POPALIAS,              /*  74 pops the item from the eval stack and selects the current workarea */
@@ -194,12 +194,12 @@ typedef enum
    HB_P_MACROPUSHREF,          /* 127 Reference to macro variable @&mvar */
    HB_P_PUSHLONGLONG,          /* 128 places an integer number on the virtual machine stack */
    HB_P_ENUMSTART,             /* 129 Start of FOR EACH loop */
-   HB_P_ENUMNEXT,              /* 130 Next item of FOR EACH loop  */
-   HB_P_ENUMPREV,              /* 131 Previous item of FOR EACH loop  */
+   HB_P_ENUMNEXT,              /* 130 Next item of FOR EACH loop */
+   HB_P_ENUMPREV,              /* 131 Previous item of FOR EACH loop */
    HB_P_ENUMEND,               /* 132 End of FOR EACH loop */
    HB_P_SWITCH,                /* 133 SWITCH using long values */
    HB_P_PUSHDATE,              /* 134 places a data constant value on the virtual machine stack */
-/* optimalization of inlined math operations */
+/* optimization of inlined math operations */
    HB_P_PLUSEQPOP,             /* 135 adds a value to the variable reference */
    HB_P_MINUSEQPOP,            /* 136 subs a value from the variable reference */
    HB_P_MULTEQPOP,             /* 137 multiplies a variable reference by a value */
@@ -211,7 +211,7 @@ typedef enum
    HB_P_WITHOBJECTSTART,       /* 143 start WITH OBJECT code */
    HB_P_WITHOBJECTMESSAGE,     /* 144 push message for WITH OBJECT */
    HB_P_WITHOBJECTEND,         /* 145 end WITH OBJECT code */
-   HB_P_MACROSEND,             /* 146 send operator with macrlist params */
+   HB_P_MACROSEND,             /* 146 send operator with macro list params */
    HB_P_PUSHOVARREF,           /* 147 pushes reference to object variable */
    HB_P_ARRAYPUSHREF,          /* 148 pushes reference to array element */
    HB_P_VFRAME,                /* 149 frame with variable number of parameters */
@@ -224,7 +224,7 @@ typedef enum
    HB_P_MODEQ,                 /* 156 calculates the modulus of var reference and a value, leave result on the stack */
    HB_P_EXPEQ,                 /* 157 calculates the power of var reference and a value, leave result on the stack */
    HB_P_DUPLUNREF,             /* 158 places a copy of the latest virtual machine stack value on to the stack and unreference the source one */
-   HB_P_MPUSHBLOCKLARGE,       /* 159 code block generated by the macro compiler larger then 64kb */
+   HB_P_MPUSHBLOCKLARGE,       /* 159 code block generated by the macro compiler larger then 64 KiB */
    HB_P_MPUSHSTRLARGE,         /* 160 Macro compiled pushed string */
    HB_P_PUSHBLOCKLARGE,        /* 161 start of a codeblock definition */
    HB_P_PUSHSTRLARGE,          /* 162 places a string on the virtual machine stack */

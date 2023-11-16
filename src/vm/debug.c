@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,7 +50,6 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbstack.h"
-
 
 /* Existing debug functions
  * from debug.c:
@@ -99,13 +98,12 @@
  *    HB_DBG_VMQUIT
  */
 
-/*
+/* AddToArray( <pItem>, <pReturn>, <uiPos> )
  * Add <pItem> to array <pReturn> at pos <uiPos>
- * AddToArray( <pItem>, <pReturn>, <uiPos> )
  */
 static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE nPos )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "AddToArray(%p, %p, %" HB_PFS "u)", pItem, pReturn, nPos ) );
+   HB_TRACE( HB_TR_DEBUG, ( "AddToArray(%p, %p, %" HB_PFS "u)", ( void * ) pItem, ( void * ) pReturn, nPos ) );
 
    if( HB_IS_SYMBOL( pItem ) )                  /* Symbol is pushed as text */
    {
@@ -124,9 +122,8 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE nPos )
       hb_itemArrayPut( pReturn, nPos, pItem );
 }
 
-/*
+/* __dbgVMStkGCount() --> <nVars>
  * Returns the length of the global stack
- * __dbgVMStkGCount() --> <nVars>
  */
 HB_FUNC( __DBGVMSTKGCOUNT )
 {
@@ -136,9 +133,8 @@ HB_FUNC( __DBGVMSTKGCOUNT )
       hb_retns( 0 );
 }
 
-/*
+/* __dbgVMStkGList() --> <aStack>
  * Returns the global stack
- * __dbgVMStkGList() --> <aStack>
  */
 HB_FUNC( __DBGVMSTKGLIST )
 {
@@ -159,9 +155,8 @@ HB_FUNC( __DBGVMSTKGLIST )
       hb_reta( 0 );
 }
 
-/*
+/* hb_stackLen( <nProcLevel> ) --> <nVars>
  * Returns params plus locals amount of the nProcLevel function
- * hb_stackLen( <nProcLevel> ) --> <nVars>
  */
 static HB_ISIZ hb_stackLen( int iLevel )
 {
@@ -184,9 +179,8 @@ static HB_ISIZ hb_stackLen( int iLevel )
    return nLen;
 }
 
-/*
+/* __dbgVMStkLCount( <nProcLevel> ) --> <nVars>
  * Returns params plus locals amount of the nProcLevel function
- * __dbgVMStkLCount( <nProcLevel> ) --> <nVars>
  */
 HB_FUNC( __DBGVMSTKLCOUNT )
 {
@@ -196,8 +190,7 @@ HB_FUNC( __DBGVMSTKLCOUNT )
       hb_retns( 0 );
 }
 
-/*
- * __dbgVMStkLList() --> <aStack>
+/* __dbgVMStkLList() --> <aStack>
  * Returns the stack of the calling function
  * "[<symbol>]"  Means symbol.
  *
@@ -332,7 +325,6 @@ HB_FUNC( __DBGVMVARLSET )
       int iLevel = hb_parni( 1 ) + 1;
       int iLocal = hb_parni( 2 );
       HB_ISIZ nBaseOffset;
-      PHB_ITEM pLocal;
 
       nBaseOffset = hb_stackBaseOffset();
       while( iLevel-- > 0 && nBaseOffset > 1 )
@@ -340,6 +332,8 @@ HB_FUNC( __DBGVMVARLSET )
 
       if( iLevel < 0 )
       {
+         PHB_ITEM pLocal;
+
          if( iLocal > SHRT_MAX )
          {
             iLocal -= USHRT_MAX;

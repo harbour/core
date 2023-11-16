@@ -1,5 +1,5 @@
 Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-03 03:33\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
+Copyright \(c\) 1999\-2013, Viktor Szakats  
 <http://harbour\-project\.org/>  
 Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)  
 
@@ -718,4 +718,4 @@ License extensions:
 Συγγραφέας:  
 
 
- - Viktor Szakáts \(vszakats\.net/harbour\) 
+ - Viktor Szakats \(vszakats\.net/harbour\) 

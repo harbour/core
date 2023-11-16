@@ -25,7 +25,7 @@ vpath hbpp$(BIN_EXT) $(BIN_DIR)
 
 pptable.c : hbpp$(BIN_EXT)
 	$(HB_HOST_BIN_DIR)/hbpp$(HB_HOST_BIN_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q -c$(TOP)$(ROOT) -v$(HB_VERHEADER)
-	-@$(RM) hbpp$(OBJ_EXT) $(if $(OBJ_DYN_POSTFIX),hbpp$(OBJ_DYN_POSTFIX)$(OBJ_EXT),)
+	-@$(RM) hbpp$(OBJ_EXT) $(if $(OBJ_DYN_SUFFIX),hbpp$(OBJ_DYN_SUFFIX)$(OBJ_EXT),)
 
 ifneq ($(HB_BUILD_PARTS),lib)
    ifneq ($(HB_INSTALL_BIN),)

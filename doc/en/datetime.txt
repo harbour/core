@@ -1,12 +1,6 @@
-/*
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: CDoW(), CMonth(), Date(), CToD(), Day(), Days()
- *    DoW(), DToS(), DToC(), ElapTime(), Month(), Seconds(), Secs(), Time(), Year()
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -47,6 +41,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -71,7 +67,7 @@
    $EXAMPLES$
       ? CMonth( Date() )
       IF CMonth( Date() + 10 ) == "March"
-         ? "Have you done your system BACKUP?"
+         ? "Have you done your system backup?"
       ENDIF
    $STATUS$
       R
@@ -87,6 +83,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -122,6 +120,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -141,8 +141,8 @@
    $DESCRIPTION$
       This function converts a date that has been entered as a character
       expression to a date expression. The character expression will be in
-      the form "MM/DD/YY" (based on the default value in SET DATE) or in
-      the appropriate format specified by the SET DATE TO command. If an
+      the form `MM/DD/YY` (based on the default value in `SET DATE`) or in
+      the appropriate format specified by the `SET DATE TO` command. If an
       improper character string is passed to the function, an empty date
       value will be returned.
    $EXAMPLES$
@@ -162,6 +162,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -198,6 +200,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -219,7 +223,7 @@
       of days; 86399 seconds represents one day, 0 seconds being midnight.
    $EXAMPLES$
       ? Days( 2434234 )
-      ? "Has been passed", Days( 63251 ), "since midnight"
+      ? Days( 63251 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -234,6 +238,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -271,6 +277,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -286,12 +294,12 @@
    $ARGUMENTS$
       <dDateString> Any date
    $RETURNS$
-      <dDate> Character represention of date
+      <dDate> Character representation of date
    $DESCRIPTION$
       This function converts any date expression (a field or variable)
       expressed as <dDateString> to a character expression in the default
-      format "MM/DD/YY". The date format expressed by this function is
-      controled in part by the date format specified in the SET DATE
+      format `MM/DD/YY`. The date format expressed by this function is
+      controlled in part by the date format specified in the `SET DATE`
       command
    $EXAMPLES$
       ? DToC( Date() )
@@ -309,6 +317,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -327,7 +337,7 @@
       <dDate> String notation of the date
    $DESCRIPTION$
       This function returns the value of <dDateString> as a character
-      string in the format of YYYYMMDD. If the value of <dDateString> is
+      string in the format of `YYYYMMDD`. If the value of <dDateString> is
       an empty date, this function will return eight blank spaces.
    $EXAMPLES$
       ? DToS( Date() )
@@ -345,6 +355,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -354,14 +366,14 @@
    $SUBCATEGORY$
       Date/Time
    $ONELINER$
-      Calculates elapted time.
+      Calculates elapsed time.
    $SYNTAX$
-      ElapTime( <cStartTime>, <cEndTime> ) --> cDiference
+      ElapTime( <cStartTime>, <cEndTime> ) --> cDifference
    $ARGUMENTS$
       <cStartTime> Start in time as a string format
       <cEndTime>   End time as a string format
    $RETURNS$
-      <cDiference>  Difference between the times
+      <cDifference>  Difference between the times
    $DESCRIPTION$
       This function returns a string that shows the difference between
       the starting time represented as <cStartTime> and the ending time
@@ -389,6 +401,58 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      2017 Pete D. <pete_westg@yahoo.gr>
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_Week()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Returns the week number of year.
+   $SYNTAX$
+      hb_Week( <dDate>, [@<nYear>], [@<nDayOfWeek>] ) --> nWeekNumber
+   $ARGUMENTS$
+      <dDate> Any valid date expression.
+
+      <nYear> Optional parameter to hold the year of the given date.
+
+      <nDayOfWeek> Optional parameter to hold the day number of week.
+   $RETURNS$
+      <nWeekNumber> The ordinal week number of the year into which falls
+                    the given <dDate>.
+   $DESCRIPTION$
+      This function returns the week number of year for the given <dDate>.
+      The returned value is an ISO 8601 compliant week number.
+      Optionally, can also be obtained the year and/or the day number of
+      the week of the given <dDate>, if the <nYear> and/or <nDayOfWeek>
+      parameters have been passed by reference.
+      If <dDate> is an empty date expression, the function returns zero(s).
+      Note: new function available after 2017-02-08 19:36 UTC+0100 commit,
+            not found in earlier versions.
+   $EXAMPLES$
+      LOCAL nYear, nDayOfWeek
+      ? hb_Week( 0d20170215, @nYear, @nDayOfWeek ), nYear, nDayOfWeek  // --> 7, 2017, 3
+      ? hb_Week( 0d00000000, @nYear, @nDayOfWeek ), nYear, nDayOfWeek  // --> 0, 0, 0
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Year(), Month(), Day()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -408,7 +472,7 @@
        0 to 12
    $DESCRIPTION$
       This function returns a number that represents the month of a given
-      date expression <dDate>. If a NULL date (CToD( "" )) is passed to the
+      date expression <dDate>. If a NULL date (`hb_SToD()`) is passed to the
       function, the value of the function will be 0.
    $EXAMPLES$
       ? Month( Date() )
@@ -426,6 +490,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -464,6 +530,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -500,6 +568,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -518,7 +588,7 @@
       <cTime> Character string representing time
    $DESCRIPTION$
       This function returns the system time represented as a character
-      expression in the format of HH:MM:SS
+      expression in the format of `HH:MM:SS`
    $EXAMPLES$
       ? Time()
    $STATUS$
@@ -535,6 +605,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -544,22 +616,21 @@
    $SUBCATEGORY$
       Date/Time
    $ONELINER$
-      Converts the year portion of a date into a numeric value
+      Extracts the year designator of a given date as a numeric value
    $SYNTAX$
-      Year( <cDate> ) --> nYear
+      Year( <dDate> ) --> nYear
    $ARGUMENTS$
       <dDate> Any valid date expression
    $RETURNS$
       <nYear> The year portion of the date.
    $DESCRIPTION$
       This function returns the numeric value for the year in <dDate>.
-      This value will always be a four-digit number and is not affected
-      by the setting of the SET CENTURY and SET DATE commands. Addition
-      ally, an empty date expression passed to this function will yield
-      a zero value.
+      The returned value is not affected by the `SET CENTURY` and `SET DATE`
+      settings and will always be a four-digit year number, unless the <dDate>
+      is an empty date expression, in which case it will be zero.
    $EXAMPLES$
       ? Year( Date() )
-      ? Year( hb_SToD( "32510125" ) )
+      ? Year( 0d32510125 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -570,5 +641,51 @@
       Library is core
    $SEEALSO$
       Day(), Month()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_DToT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Create a <tDateTime> value from a <dDate> parameter
+   $SYNTAX$
+      hb_DToT( <dDate> [, <cTime|nSeconds>] ) --> <tDateTime>
+   $ARGUMENTS$
+      <dDate> Any valid date expression.
+
+      Optional: <cTime|nSeconds> representing a time of the day value.
+      <cTime> is a string in a valid time format: "hh:mm:ss.nnn".
+      <nSeconds> is a numeric value in seconds in the range from
+      0 to 86399.999~ ( 60 secs * 60 mins * 24 hours - 1 millisecond )
+   $RETURNS$
+      <tDateTime> a dateTime value
+   $DESCRIPTION$
+      This function returns a <tDateTime> value from a <dDate> value.
+      Optionally, a second parameter with the time of the day value
+      can be provided which can be represented by either of a string
+      time value or a numeric value in seconds.
+   $EXAMPLES$
+      ? hb_DToT( Date() )  // a dateTime with a empty time part
+      ? hb_DToT( Date(), "14:30:00.500" )  // a dateTime with time part 14:30pm with 500 milliseconds
+      ? hb_DToT( Date(), 3600 )  // a dateTime with time part 1:00am (one hour)
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Date()
    $END$
  */

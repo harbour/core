@@ -3,32 +3,12 @@
                   Harbour TODO list
 
 =======================================================================
-Tasks for after v.1 release:
-----------------------------
+Tasks for after v1.0 release:
+-----------------------------
 
 Assign to: Ryszard
 Detail...: SQLRDD.
 Status...: Working on it.
-
-***
-
-Assign to: <nobody>
-Detail...: Add support for virtual file handles and registering some
-           meta handles so it will be possible to make:
-              h := FOpen( "gzip:/tmp/myarchive.gz", FO_WRITE )
-              FWrite( h, cData )
-              FClose( h )
-           or:
-              h := FOpen( "tcp:some.host:port", FO_WRITE )
-              ...
-           or:
-              h := FOpen( "|lpr -PLaserJet", FO_WRITE )
-              ...
-           or:
-              h := FOpen( "gunzip /tmp/myarchive.gz|", FO_READ )
-              ...
-           etc.
-Status...: Open.
 
 ***
 
@@ -52,7 +32,7 @@ Assign to: <nobody>
 Detail...: Add NETRDD - meta RDD which will allow transport layer
            between client application and server application with any
            other chosen RDD driver. Idea similar to GTNET but for RDD
-           drivers - it's sth like ADS does.
+           drivers - it's something like ADS does.
 Status...: Open.
 
 ***
@@ -62,7 +42,7 @@ Detail...: Extended HB_IT_POINTER. In practice we can give them the
            same functionality as for objects and use them for fast
            creation objects at C level. We can also add HB_VALTYPE()
            function which will return the extended type name, f.e.
-           "WINDOW", "FONT", "SOCKET" or anything what 3-rd party
+           "WINDOW", "FONT", "SOCKET" or anything what 3rd party
            programmers may want to use. It will greatly simplify
            writing some libraries.
 Status...: Open.
@@ -77,14 +57,14 @@ Status...: Open.
 ***
 
 Assign to: Ryszard
-Detail...: Real strong typing in the compiler.
+Detail...: Static/gradual ("strong") typing in the compiler.
 Status...: Open.
 
 ***
 
 =======================================================================
 
-                  Harbour TOFIX list
+                  Harbour FIXME list
 
 =======================================================================
 

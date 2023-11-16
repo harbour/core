@@ -106,7 +106,13 @@ else
    AR := tlib.exe
 endif
 ARFLAGS += /P128
-AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) "$(subst /,$(BACKSLASH),$(LIB_DIR)/$@)" $(foreach file,$(?F),-+$(file))
+
+ifeq ($(HB_SHELL),sh)
+   q = '
+else
+   q = "
+endif
+AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(q)$(subst /,$(BACKSLASH),$(LIB_DIR)/$@)$(q) $(foreach file,$(?F),-+$(file))
 
 ifneq ($(HB_SHELL),sh)
    ifeq ($(HB_SHELL_XP),)
@@ -121,7 +127,7 @@ ifneq ($(HB_SHELL),sh)
       #       are only needed to support pre-Windows XP systems, where
       #       limit is 2047 chars. [vszakats]
 
-      # NOTE: The empty line directly before 'endef' HAVE TO exist!
+      # NOTE: The empty line directly before 'endef' HAS TO exist!
       define library_object
          @$(ECHO) $(ECHOQUOTE)-+$(subst /,$(ECHOBACKSLASH),$(file)) $(LINECONT)$(ECHOQUOTE) >> __lib__.tmp
 
@@ -153,7 +159,7 @@ else
    DLIBS := $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS) cw32mt import32
 endif
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define dynlib_object
    @$(ECHO) $(ECHOQUOTE)$(subst /,$(ECHOBACKSLASH),$(file)) +$(ECHOQUOTE) >> __dyn__.tmp
 

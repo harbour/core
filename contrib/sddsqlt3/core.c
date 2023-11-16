@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,15 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbrddsql.h"
+
 #include "hbapiitm.h"
 #include "hbapistr.h"
+#include "hbapicdp.h"
 #include "hbdate.h"
+#include "hbset.h"
 #include "hbvm.h"
 #include "hbset.h"
-
-#include "hbrddsql.h"
 
 #include <sqlite3.h>
 
@@ -78,7 +79,6 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
-
 static SDDNODE s_sqlt3dd =
 {
    NULL,
@@ -92,7 +92,6 @@ static SDDNODE s_sqlt3dd =
    ( SDDFUNC_GETVALUE ) NULL,
    ( SDDFUNC_GETVARLEN ) NULL
 };
-
 
 static void hb_sqlt3dd_init( void * cargo )
 {
@@ -144,8 +143,7 @@ HB_CALL_ON_STARTUP_END( _hb_sqlt3dd_init_ )
    #include "hbiniseg.h"
 #endif
 
-
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    PHB_ITEM  pError;
@@ -157,7 +155,6 @@ static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
 
    return uiAction;
 }
-
 
 static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
 {
@@ -174,7 +171,7 @@ static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
    }
    else
    {
-      szRet = hb_strdup( "Unable to get error message" );
+      szRet = hb_strdup( "Could not get the error message" );
       iNativeErr = 9999;
    }
 
@@ -208,7 +205,19 @@ static HB_USHORT sqlite3DeclType(sqlite3_stmt * st, HB_USHORT uiIndex )
       if( hb_strAtI( "REAL", 4, szDeclType, nLen ) != 0 ||
           hb_strAtI( "FLOA", 4, szDeclType, nLen ) != 0 ||
           hb_strAtI( "DOUB", 4, szDeclType, nLen ) != 0 )
+         return HB_FT_LONG; /* logically HB_FT_DOUBLE, what was the idea? */
+#ifdef HB_SQLT3_MAP_DECLARED_EMULATED
+      /* types not handled in a specific way by SQLITE3
+       * but anyway we should try to look at declarations
+       */
+      if( hb_strAtI( "TIME", 4, szDeclType, nLen ) != 0 )
+         return HB_FT_TIMESTAMP;
+      if( hb_strAtI( "DATE", 4, szDeclType, nLen ) != 0 )
+         return HB_FT_DATE;
+      if( hb_strAtI( "NUME", 4, szDeclType, nLen ) != 0 ||
+          hb_strAtI( "NUMB", 4, szDeclType, nLen ) != 0 )
          return HB_FT_LONG;
+#endif
    }
 
 #ifdef HB_SQLT3_MAP_UNDECLARED_TYPES_AS_ANY
@@ -236,9 +245,59 @@ static HB_USHORT sqlite3DeclType(sqlite3_stmt * st, HB_USHORT uiIndex )
 #endif
 }
 
+#ifdef HB_SQLT3_MAP_DECLARED_EMULATED
+static void sqlite3DeclStru( sqlite3_stmt * st, HB_USHORT uiIndex, HB_USHORT * puiLen, HB_USHORT * puiDec )
+{
+   const char * szDeclType = sqlite3_column_decltype( st, uiIndex );
 
-/*============= SDD METHODS =============================================================*/
+   if( szDeclType != NULL )
+   {
+      HB_SIZE nLen = strlen( szDeclType );
+      HB_SIZE nAt;
+      int iOverflow;
+      HB_MAXINT iRetLen = 0;
 
+      /* SQLite doesn't normally have field size limits,
+       * but column declarations are freeform - let's
+       * try some really stupid guesswork on schema...
+       */
+
+      if( ( nAt = hb_strAt( "(", 1, szDeclType, nLen ) ) > 0 )
+      {
+         if( puiLen )
+         {
+            iRetLen = hb_strValInt( szDeclType + nAt, &iOverflow );
+            if( ! puiDec || ( iRetLen > 0 && iRetLen < 100 ) )
+               * puiLen = ( HB_USHORT ) iRetLen;
+         }
+
+         if( ! puiDec )
+            return;
+
+         if( * puiLen < 2 )
+            * puiDec = 0;
+         else if( puiLen &&
+                  ( nAt = hb_strAt( ",", 1, szDeclType + nAt, nLen - nAt - 1 ) ) > 0 )
+         {
+            if( ( iRetLen = hb_strValInt( szDeclType + nAt, &iOverflow ) ) > 0 )
+            {
+               * puiDec = ( HB_USHORT ) HB_MIN( * puiLen - 1, iRetLen );
+
+               /* SQL column declaration doesn't include space for
+                * decimal separator, while xBase stores it.
+                */
+
+               * puiLen = ( HB_USHORT ) ++iRetLen;
+            }
+            else if( iRetLen == 0 )
+               * puiDec = 0;
+         }
+      }
+   }
+}
+#endif
+
+/* --- SDD METHODS --- */
 static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    sqlite3 * db;
@@ -257,13 +316,14 @@ static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
    return db ? HB_SUCCESS : HB_FAILURE;
 }
 
-
 static HB_ERRCODE sqlite3Disconnect( SQLDDCONNECTION * pConnection )
 {
    HB_ERRCODE errCode;
 
-   errCode = sqlite3_close( ( ( SDDCONN * ) pConnection->pSDDConn )->pDb ) ? HB_SUCCESS : HB_FAILURE;
-   hb_xfree( pConnection->pSDDConn );
+   errCode = sqlite3_close( ( ( SDDCONN * ) pConnection->pSDDConn )->pDb ) == SQLITE_OK ? HB_SUCCESS : HB_FAILURE;
+   if( errCode == HB_SUCCESS )
+      hb_xfree( pConnection->pSDDConn );
+
    return errCode;
 }
 
@@ -307,6 +367,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    HB_ERRCODE     errCode;
    char *         szError;
    HB_BOOL        bError;
+   int            iStatus, result;
 
    pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
    pSDDData        = ( SDDDATA * ) pArea->pSDDData;
@@ -314,7 +375,13 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    pItem    = hb_itemPutC( NULL, pArea->szQuery );
    pszQuery = S_HB_ITEMGETSTR( pItem, &hQuery, &nQueryLen );
 
-   if( sqlite3_prepare_v2( pDb, pszQuery, ( int ) nQueryLen, &st, NULL ) != SQLITE_OK )
+#if SQLITE_VERSION_NUMBER >= 3020000
+   result = sqlite3_prepare_v3( pDb, pszQuery, ( int ) nQueryLen, 0, &st, NULL );
+#else
+   result = sqlite3_prepare_v2( pDb, pszQuery, ( int ) nQueryLen, &st, NULL );
+#endif
+
+   if( result != SQLITE_OK )
    {
       hb_strfree( hQuery );
       hb_itemRelease( pItem );
@@ -330,7 +397,9 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       hb_itemRelease( pItem );
    }
 
-   if( sqlite3_step( st ) != SQLITE_ROW )
+   if( ( iStatus = sqlite3_step( st ) ) == SQLITE_DONE )
+      pArea->fFetched = HB_TRUE;
+   else if( iStatus != SQLITE_ROW )
    {
       szError = sqlite3GetError( pDb, &errCode );
       hb_errRT_SQLT3DD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
@@ -348,21 +417,48 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    for( uiIndex = 0; uiIndex < uiFields; ++uiIndex )
    {
       DBFIELDINFO dbFieldInfo;
-
+#ifdef HB_SQLT3_FIELDNAME_STRICT
+      HB_SIZE nPos;
+#endif
       memset( &dbFieldInfo, 0, sizeof( dbFieldInfo ) );
       pName = S_HB_ITEMPUTSTR( pName, sqlite3_column_name( st, uiIndex ) );
-      dbFieldInfo.atomName = hb_itemGetCPtr( pName );
+
+#ifdef HB_SQLT3_FIELDNAME_STRICT
+      /* WA->T.FIELD syntax is not valid, but FieldPos("t.field") is OK */
+      if( ( nPos = hb_strAt( ".", 1, hb_itemGetCPtr( pName ), hb_itemGetCLen( pName ) ) ) != 0 )
+         dbFieldInfo.atomName = hb_itemGetCPtr( pName ) + nPos;
+      else
+#endif
+         dbFieldInfo.atomName = hb_itemGetCPtr( pName );
+
       dbFieldInfo.uiType = sqlite3DeclType( st, uiIndex );
       pItem = hb_arrayGetItemPtr( pItemEof, uiIndex + 1 );
+
+      /* There are no field length limits stored in the SQLite3 database,
+         so we're resorting to setting some arbitrary default values to
+         make apps relying on these (f.e. Browse()/GET) to behave somewhat
+         better. For better results, update apps to untie UI metrics from
+         any database field/value widths. [vszakats] */
 
       switch( dbFieldInfo.uiType )
       {
          case HB_FT_STRING:
          {
-            int iSize = sqlite3_column_bytes( st, uiIndex );
-            char * pStr;
+            HB_SIZE nSize = hb_cdpUTF8StringLength( ( const char * ) sqlite3_column_text( st, uiIndex ),
+                                                    sqlite3_column_bytes( st, uiIndex ) );
 
-            dbFieldInfo.uiLen = ( HB_USHORT ) HB_MAX( iSize, 10 );
+            /* sqlite3_column_bytes() returns variable lengths for UTF-8
+               strings - *_bytes16() UTF-16 could do that too, but not
+               for mostly used character sets. Yet seems better to use
+               hb_cdpUTF8StringLength() */
+
+            char * pStr;
+            HB_USHORT uiRetLen = 10;
+
+#ifdef HB_SQLT3_MAP_DECLARED_EMULATED
+            sqlite3DeclStru( st, uiIndex, &uiRetLen, NULL );
+#endif
+            dbFieldInfo.uiLen = ( HB_USHORT ) HB_MAX( nSize, uiRetLen );
             pStr = ( char * ) hb_xgrab( ( HB_SIZE ) dbFieldInfo.uiLen + 1 );
             memset( pStr, ' ', dbFieldInfo.uiLen );
             hb_itemPutCLPtr( pItem, pStr, dbFieldInfo.uiLen );
@@ -381,8 +477,23 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
          case HB_FT_LONG:
             dbFieldInfo.uiLen = 20;
             dbFieldInfo.uiDec = ( HB_USHORT ) hb_setGetDecimals();
+#ifdef HB_SQLT3_MAP_DECLARED_EMULATED
+            sqlite3DeclStru( st, uiIndex, &dbFieldInfo.uiLen, &dbFieldInfo.uiDec );
+#endif
             hb_itemPutNDDec( pItem, 0.0, dbFieldInfo.uiDec );
             break;
+
+#ifdef HB_SQLT3_MAP_DECLARED_EMULATED
+         case HB_FT_DATE:
+            dbFieldInfo.uiLen = 8;
+            hb_itemPutDS( pItem, NULL );
+            break;
+
+         case HB_FT_TIMESTAMP:
+            dbFieldInfo.uiLen = 8;
+            hb_itemPutTDT( pItem, 0, 0 );
+            break;
+#endif
 
          case HB_FT_ANY:
             dbFieldInfo.uiLen = 6;
@@ -421,7 +532,6 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    return HB_SUCCESS;
 }
 
-
 static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
@@ -436,7 +546,6 @@ static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
    }
    return HB_SUCCESS;
 }
-
 
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
@@ -489,6 +598,40 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                pItem = hb_itemPutNDDec( NULL, sqlite3_column_double( st, ui ), pField->uiDec );
                break;
 
+#ifdef HB_SQLT3_MAP_DECLARED_EMULATED
+            case HB_FT_DATE:
+               if( sqlite3_column_bytes( st, ui ) >= 10 )
+               {
+                  char szDate[ 9 ];
+                  const char * pValue = ( const char * ) sqlite3_column_text( st, ui );
+
+                  szDate[ 0 ] = pValue[ 0 ];
+                  szDate[ 1 ] = pValue[ 1 ];
+                  szDate[ 2 ] = pValue[ 2 ];
+                  szDate[ 3 ] = pValue[ 3 ];
+                  szDate[ 4 ] = pValue[ 5 ];
+                  szDate[ 5 ] = pValue[ 6 ];
+                  szDate[ 6 ] = pValue[ 8 ];
+                  szDate[ 7 ] = pValue[ 9 ];
+                  szDate[ 8 ] = '\0';
+                  pItem = hb_itemPutDS( NULL, szDate );
+               }
+               else if( sqlite3_column_bytes( st, ui ) == 8 )
+                  pItem = hb_itemPutDS( NULL, ( const char * ) sqlite3_column_text( st, ui ) );
+
+               break;
+
+            case HB_FT_TIMESTAMP:
+               if( sqlite3_column_bytes( st, ui ) >= 10 )
+               {
+                  long lDate, lTime;
+                  const char * pValue = ( const char * ) sqlite3_column_text( st, ui );
+
+                  hb_timeStampStrGetDT( pValue, &lDate, &lTime );
+                  pItem = hb_itemPutTDT( NULL, lDate, lTime );
+                  break;
+               }
+#endif
             case HB_FT_BLOB:
                pItem = hb_itemPutCL( NULL, ( const char * ) sqlite3_column_blob( st, ui ), sqlite3_column_bytes( st, ui ) );
                break;

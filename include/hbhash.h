@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -82,7 +82,7 @@ extern HB_EXPORT_INT PHB_HASH_TABLE hb_hashTableCreate( HB_SIZE nSize,
                                                         PHB_HASH_FUNC pComp );
 extern HB_EXPORT_INT void hb_hashTableKill( PHB_HASH_TABLE pTable ); /* release all items and the hash table */
 extern HB_EXPORT_INT HB_BOOL hb_hashTableAdd( PHB_HASH_TABLE pTable, const void * pKey, const void * pValue ); /* add a new item into the table */
-extern HB_EXPORT_INT HB_BOOL hb_hashTableDel( PHB_HASH_TABLE pTable, const void * pKey ); /* delete an item from the table  */
+extern HB_EXPORT_INT HB_BOOL hb_hashTableDel( PHB_HASH_TABLE pTable, const void * pKey ); /* delete an item from the table */
 extern HB_EXPORT_INT const void * hb_hashTableFind( PHB_HASH_TABLE pTable, const void * pKey ); /* return the pointer to item's value or NULL if not found */
 extern HB_EXPORT_INT PHB_HASH_TABLE hb_hashTableResize( PHB_HASH_TABLE pTable, HB_SIZE nNewSize ); /* resize the hash table */
 extern HB_EXPORT_INT HB_SIZE hb_hashTableSize( PHB_HASH_TABLE pTable ); /* return the hash table size */

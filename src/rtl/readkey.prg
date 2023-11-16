@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,15 +48,15 @@
 
 FUNCTION ReadKey()
 
-   LOCAL nKey := LastKey()
+   LOCAL nKey
 
-   SWITCH nKey
-   CASE K_UP        ; nKey :=  4 ; EXIT /* NOTE: NG says 5 incorrectly */
-   CASE K_DOWN      ; nKey :=  5 ; EXIT /* NOTE: NG says 2 incorrectly */
+   SWITCH nKey := LastKey()
+   CASE K_UP        ; nKey :=  4 ; EXIT  /* NOTE: NG says 5 incorrectly */
+   CASE K_DOWN      ; nKey :=  5 ; EXIT  /* NOTE: NG says 2 incorrectly */
    CASE K_PGUP      ; nKey :=  6 ; EXIT
    CASE K_PGDN      ; nKey :=  7 ; EXIT
-   CASE K_CTRL_PGUP ; nKey := 34 ; EXIT /* NOTE: NG says 31 incorrectly */
-   CASE K_CTRL_PGDN ; nKey := 35 ; EXIT /* NOTE: NG says 30 incorrectly */
+   CASE K_CTRL_PGUP ; nKey := 34 ; EXIT  /* NOTE: NG says 31 incorrectly */
+   CASE K_CTRL_PGDN ; nKey := 35 ; EXIT  /* NOTE: NG says 30 incorrectly */
    CASE K_ESC       ; nKey := 12 ; EXIT
    CASE K_CTRL_W    ; nKey := 14 ; EXIT
    CASE K_ENTER     ; nKey := 15 ; EXIT

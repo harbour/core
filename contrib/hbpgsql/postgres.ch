@@ -1,6 +1,8 @@
 /*
- * PostgreSQL RDBMS low level (client api) interface code.
+ * PostgreSQL RDBMS low-level (client API) interface code.
  *
+ * Copyright 2016 P.Chornyj <myorg63@mail.ru>
+ * Copyright 2014 Viktor Szakats (vsz.me/hb)
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -14,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,6 +49,7 @@
 #ifndef HBPOSTGRES_CH_
 #define HBPOSTGRES_CH_
 
+/* PQstatus() */
 #define CONNECTION_OK                   0
 #define CONNECTION_BAD                  1
 #define CONNECTION_STARTED              2
@@ -57,6 +60,14 @@
 #define CONNECTION_SSL_STARTUP          7
 #define CONNECTION_NEEDED               8
 
+/* PQconnectPoll(), PQresetPoll() */
+#define PGRES_POLLING_FAILED            0
+#define PGRES_POLLING_READING           1
+#define PGRES_POLLING_WRITING           2
+#define PGRES_POLLING_OK                3
+#define PGRES_POLLING_ACTIVE            4
+
+/* PQresultStatus() */
 #define PGRES_EMPTY_QUERY               0
 #define PGRES_COMMAND_OK                1
 #define PGRES_TUPLES_OK                 2
@@ -66,6 +77,7 @@
 #define PGRES_NONFATAL_ERROR            6
 #define PGRES_FATAL_ERROR               7
 
+/* PQtransactionStatus() */
 #define PQTRANS_IDLE                    0
 #define PQTRANS_ACTIVE                  1
 #define PQTRANS_INTRANS                 2
@@ -80,5 +92,35 @@
 #define HBPG_META_TABLE                 5
 #define HBPG_META_TABLECOL              6
 #define HBPG_META_LEN_                  6
+
+/* PQsetErrorVerbosity() */
+#define PQERRORS_TERSE                  0
+#define PQERRORS_DEFAULT                1
+#define PQERRORS_VERBOSE                2
+
+/* PQping() */
+#define PQPING_OK                       0  /* server is accepting connections */
+#define PQPING_REJECT                   1  /* server is alive but rejecting connections */
+#define PQPING_NO_RESPONSE              2  /* could not establish connection */
+#define PQPING_NO_ATTEMPT               3  /* connection not attempted (bad params) */
+
+/* PQresultErrorField() fieldcode parameters */
+#define PG_DIAG_SEVERITY                hb_BCode( "S" )
+#define PG_DIAG_SQLSTATE                hb_BCode( "C" )
+#define PG_DIAG_MESSAGE_PRIMARY         hb_BCode( "M" )
+#define PG_DIAG_MESSAGE_DETAIL          hb_BCode( "D" )
+#define PG_DIAG_MESSAGE_HINT            hb_BCode( "H" )
+#define PG_DIAG_STATEMENT_POSITION      hb_BCode( "P" )
+#define PG_DIAG_INTERNAL_POSITION       hb_BCode( "p" )
+#define PG_DIAG_INTERNAL_QUERY          hb_BCode( "q" )
+#define PG_DIAG_CONTEXT                 hb_BCode( "W" )
+#define PG_DIAG_SCHEMA_NAME             hb_BCode( "s" )
+#define PG_DIAG_TABLE_NAME              hb_BCode( "t" )
+#define PG_DIAG_COLUMN_NAME             hb_BCode( "c" )
+#define PG_DIAG_DATATYPE_NAME           hb_BCode( "d" )
+#define PG_DIAG_CONSTRAINT_NAME         hb_BCode( "n" )
+#define PG_DIAG_SOURCE_FILE             hb_BCode( "F" )
+#define PG_DIAG_SOURCE_LINE             hb_BCode( "L" )
+#define PG_DIAG_SOURCE_FUNCTION         hb_BCode( "R" )
 
 #endif

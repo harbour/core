@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -77,7 +77,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHOR
    {
       PHB_SYMB  pModuleSymbols;     /* pointer to module symbol table */
       HB_USHORT uiModuleSymbols;    /* number of symbols on that table */
-      HB_USHORT uiStaticsOffset;    /* ofset of statics base symbol */
+      HB_USHORT uiStaticsOffset;    /* offset of statics base symbol */
       struct _HB_SYMBOLS * pNext;   /* pointer to the next SYMBOLS structure */
       HB_SYMBOLSCOPE hScope;        /* scope collected from all symbols in module used to speed initialization code */
       void *    hDynLib;            /* handler to dynamic library */
@@ -99,8 +99,8 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHOR
    extern const char *  hb_vmFindModuleSymbolName( PHB_SYMB pSym );
    extern HB_BOOL       hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols, HB_USHORT * puiSymbols );
    extern PHB_SYMB      hb_vmGetRealFuncSym( PHB_SYMB pSym );
-   extern void          hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym );
-   extern void          hb_vmSetDynFunc( PHB_DYNS pDynSym );
+   extern HB_EXPORT void hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym );
+   extern HB_EXPORT void hb_vmSetDynFunc( PHB_DYNS pDynSym );
 
    extern void          hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue );
    extern HB_BOOL       hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg ); /* create extended message reference */
@@ -130,12 +130,14 @@ extern HB_EXPORT HB_BOOL   hb_vmTryEval( PHB_ITEM * pResult, PHB_ITEM pItem, HB_
 extern HB_EXPORT HB_BOOL   hb_vmIsActive( void );
 extern HB_EXPORT HB_BOOL   hb_vmIsReady( void );
 
+extern HB_EXPORT HB_BOOL   hb_vmSetKeyPool( HB_BOOL fEnable );
+
 /* Return values of hb_vmRequestQuery() */
 #define HB_QUIT_REQUESTED     1     /* immediately quit the application */
 #define HB_BREAK_REQUESTED    2     /* break to nearest RECOVER/END sequence */
 #define HB_ENDPROC_REQUESTED  4     /* immediately return from procedure (error handler in macro evaluation) */
 #ifdef _HB_API_INTERNAL_
-#define HB_VMSTACK_REQUESTED  0x100 /* inetrnel flag to signal thread local stack */
+#define HB_VMSTACK_REQUESTED  0x100 /* internal flag to signal thread local stack */
 #endif
 
 /* Public PCode functions */
@@ -187,6 +189,7 @@ extern HB_EXPORT void     hb_vmThreadQuit( void ); /* destroy local thread HVM s
 extern HB_EXPORT void     hb_vmThreadQuitRequest( void * ); /* send QUIT request to given thread */
 extern HB_EXPORT void     hb_vmWaitForThreads( void ); /* wait for all threads to terminate can be called only by main HVM thread */
 extern HB_EXPORT void     hb_vmTerminateThreads( void ); /* send QUIT request to all threads except current one and wait for their termination, should be called only by main HVM thread */
+extern HB_EXPORT HB_BOOL  hb_vmThreadIsMain( void * ); /* check if given or current thread is main HVM thread */
 extern HB_EXPORT PHB_ITEM hb_vmThreadStart( HB_ULONG ulAttr, PHB_CARGO_FUNC pThreadFunc, void * cargo ); /* create new thread with HVM stack */
 extern HB_EXPORT void *   hb_vmThreadState( void );
 

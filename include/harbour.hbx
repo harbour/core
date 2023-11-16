@@ -437,7 +437,9 @@ DYNAMIC hb_FEof
 DYNAMIC hb_FGetAttr
 DYNAMIC hb_FGetDateTime
 DYNAMIC hb_FieldDec
+DYNAMIC hb_FieldGet
 DYNAMIC hb_FieldLen
+DYNAMIC hb_FieldPut
 DYNAMIC hb_FieldType
 DYNAMIC hb_FileDelete
 DYNAMIC hb_FileExists
@@ -477,7 +479,9 @@ DYNAMIC hb_gfxPrimitive
 DYNAMIC hb_gfxText
 DYNAMIC hb_gtAlert
 DYNAMIC hb_gtCreate
+DYNAMIC hb_gtExists
 DYNAMIC hb_gtInfo
+DYNAMIC hb_gtList
 DYNAMIC hb_gtLock
 DYNAMIC hb_gtReload
 DYNAMIC hb_gtSelect
@@ -527,6 +531,7 @@ DYNAMIC hb_HHasKey
 DYNAMIC hb_HKeepOrder
 DYNAMIC hb_HKeyAt
 DYNAMIC hb_HKeys
+DYNAMIC hb_HMAC_MD5
 DYNAMIC hb_HMAC_SHA1
 DYNAMIC hb_HMAC_SHA224
 DYNAMIC hb_HMAC_SHA256
@@ -548,6 +553,7 @@ DYNAMIC hb_HSet
 DYNAMIC hb_HSetAutoAdd
 DYNAMIC hb_HSetBinary
 DYNAMIC hb_HSetCaseMatch
+DYNAMIC hb_HSetDef
 DYNAMIC hb_HSetOrder
 DYNAMIC hb_HSort
 DYNAMIC hb_HValueAt
@@ -700,6 +706,7 @@ DYNAMIC hb_MSecToT
 DYNAMIC hb_mtvm
 DYNAMIC hb_mutexCreate
 DYNAMIC hb_mutexEval
+DYNAMIC hb_mutexExists
 DYNAMIC hb_mutexLock
 DYNAMIC hb_mutexNotify
 DYNAMIC hb_mutexNotifyAll
@@ -711,7 +718,11 @@ DYNAMIC hb_mvRestore
 DYNAMIC hb_mvSave
 DYNAMIC hb_ntoc
 DYNAMIC hb_NToColor
+DYNAMIC hb_NToHour
+DYNAMIC hb_NToMin
+DYNAMIC hb_NToMSec
 DYNAMIC hb_ntos
+DYNAMIC hb_NToSec
 DYNAMIC hb_NToT
 DYNAMIC hb_NumToHex
 DYNAMIC hb_OEMToANSI
@@ -720,7 +731,11 @@ DYNAMIC hb_osDriveSeparator
 DYNAMIC hb_osError
 DYNAMIC hb_osFileMask
 DYNAMIC hb_osIs64bit
+DYNAMIC hb_osIsWin10
 DYNAMIC hb_osIsWin2K
+DYNAMIC hb_osIsWin7
+DYNAMIC hb_osIsWin8
+DYNAMIC hb_osIsWin81
 DYNAMIC hb_osIsWin9x
 DYNAMIC hb_osIsWinCE
 DYNAMIC hb_osIsWinNT
@@ -745,6 +760,8 @@ DYNAMIC hb_ps
 DYNAMIC hb_PValue
 DYNAMIC hb_PWrite
 DYNAMIC hb_rand32
+DYNAMIC hb_randInt
+DYNAMIC hb_randNum
 DYNAMIC hb_Random
 DYNAMIC hb_RandomInt
 DYNAMIC hb_RandomIntMax
@@ -832,6 +849,7 @@ DYNAMIC hb_socketSetFilter
 DYNAMIC hb_socketSetKeepAlive
 DYNAMIC hb_socketSetMulticast
 DYNAMIC hb_socketSetNoDelay
+DYNAMIC hb_socketSetNoSigPipe
 DYNAMIC hb_socketSetRcvBufSize
 DYNAMIC hb_socketSetReuseAddr
 DYNAMIC hb_socketSetSndBufSize
@@ -853,6 +871,7 @@ DYNAMIC hb_StrToUTF8
 DYNAMIC hb_StrXor
 DYNAMIC hb_threadDetach
 DYNAMIC hb_threadID
+DYNAMIC hb_threadIsMain
 DYNAMIC hb_threadJoin
 DYNAMIC hb_threadOnce
 DYNAMIC hb_threadOnceInit
@@ -880,8 +899,12 @@ DYNAMIC hb_TSToStr
 DYNAMIC hb_TSToUTC
 DYNAMIC hb_TToC
 DYNAMIC hb_TToD
+DYNAMIC hb_TToHour
+DYNAMIC hb_TToMin
+DYNAMIC hb_TToMSec
 DYNAMIC hb_TToN
 DYNAMIC hb_TToS
+DYNAMIC hb_TToSec
 DYNAMIC hb_UAt
 DYNAMIC hb_UChar
 DYNAMIC hb_UCode
@@ -923,21 +946,26 @@ DYNAMIC hb_vfCommit
 DYNAMIC hb_vfConfig
 DYNAMIC hb_vfCopyFile
 DYNAMIC hb_vfDirectory
+DYNAMIC hb_vfDirBuild
 DYNAMIC hb_vfDirExists
 DYNAMIC hb_vfDirMake
 DYNAMIC hb_vfDirRemove
 DYNAMIC hb_vfDirSpace
+DYNAMIC hb_vfDirUnbuild
 DYNAMIC hb_vfEof
 DYNAMIC hb_vfErase
 DYNAMIC hb_vfExists
 DYNAMIC hb_vfFlush
 DYNAMIC hb_vfHandle
+DYNAMIC hb_vfIsLocal
 DYNAMIC hb_vfLink
 DYNAMIC hb_vfLinkRead
 DYNAMIC hb_vfLinkSym
 DYNAMIC hb_vfLoad
 DYNAMIC hb_vfLock
 DYNAMIC hb_vfLockTest
+DYNAMIC hb_vfMoveFile
+DYNAMIC hb_vfNameExists
 DYNAMIC hb_vfOpen
 DYNAMIC hb_vfRead
 DYNAMIC hb_vfReadAt
@@ -953,6 +981,7 @@ DYNAMIC hb_vfUnlock
 DYNAMIC hb_vfWrite
 DYNAMIC hb_vfWriteAt
 DYNAMIC hb_WAEval
+DYNAMIC hb_Week
 DYNAMIC hb_WildMatch
 DYNAMIC hb_WildMatchI
 DYNAMIC hb_ZCompress
@@ -1511,6 +1540,7 @@ DYNAMIC __mvClear
 DYNAMIC __mvDbgInfo
 DYNAMIC __mvExist
 DYNAMIC __mvGet
+DYNAMIC __mvGetDef
 DYNAMIC __mvPrivate
 DYNAMIC __mvPublic
 DYNAMIC __mvPut
@@ -1580,6 +1610,8 @@ DYNAMIC __TracePrgCalls
 DYNAMIC __TypeFile
 DYNAMIC __vmCountThreads
 DYNAMIC __vmItemID
+DYNAMIC __vmItemRefs
+DYNAMIC __vmKeyPool
 DYNAMIC __vmModulesVerify
 DYNAMIC __vmNoInternals
 DYNAMIC __Wait

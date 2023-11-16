@@ -1,6 +1,6 @@
 /*
  * Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>
- * See COPYING.txt for licensing terms.
+ * See LICENSE.txt for licensing terms.
  */
 
 #include "hblang.ch"
@@ -9,7 +9,7 @@ PROCEDURE Main( cLng )
 
    LOCAL i, a, aDay, aMnt, aErr, aInt, cDtFrm, cTrue, cFalse
 
-   hb_langSelect( "EN" )
+   hb_langSelect( "en" )
    aDay := GET_DAYS()
    aMnt := GET_MONTHS()
    aErr := GET_ERR()
@@ -23,41 +23,41 @@ PROCEDURE Main( cLng )
    ENDIF
 
    ? hb_langName()
-   ? "HB_LANG_ITEM_BASE_ID     ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_ID     ) + "]"
-   ? "HB_LANG_ITEM_BASE_MONTH  ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_MONTH  ) + "]"
-   ? "HB_LANG_ITEM_BASE_DAY    ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_DAY    ) + "]"
-   ? "HB_LANG_ITEM_BASE_NATMSG ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_NATMSG ) + "]"
+   ? "HB_LANG_ITEM_BASE_ID     ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_ID      ) + "]"
+   ? "HB_LANG_ITEM_BASE_MONTH  ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_MONTH   ) + "]"
+   ? "HB_LANG_ITEM_BASE_DAY    ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_DAY     ) + "]"
+   ? "HB_LANG_ITEM_BASE_NATMSG ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_NATMSG  ) + "]"
    ? "HB_LANG_ITEM_BASE_ERRDESC", "[" + hb_langMessage( HB_LANG_ITEM_BASE_ERRDESC ) + "]"
    ? "HB_LANG_ITEM_BASE_ERRINTR", "[" + hb_langMessage( HB_LANG_ITEM_BASE_ERRINTR ) + "]"
-   ? "HB_LANG_ITEM_BASE_TEXT   ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_TEXT   ) + "]"
+   ? "HB_LANG_ITEM_BASE_TEXT   ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_TEXT    ) + "]"
    ? "hb_langErrMsg(0)", hb_langErrMsg( 0 )
    ?
-   ? "date format: " + hb_langMessage( HB_LANG_ITEM_BASE_TEXT ) + " (" + cDtFrm + ")"
-   ? "   TRUE val: " + hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + " (" + cTrue + ")"
-   ? "  FALSE val: " + hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 2 ) + " (" + cFalse + ")"
+   ? "date format:", hb_langMessage( HB_LANG_ITEM_BASE_TEXT ) + " (" + cDtFrm + ")"
+   ? "   TRUE val:", hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + " (" + cTrue + ")"
+   ? "  FALSE val:", hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 2 ) + " (" + cFalse + ")"
    ?
    Inkey( 0 )
 
    ? "Errors:"
-   ? "-------"
+   ?
    a := GET_ERR()
    FOR i := 1 TO Len( a )
-      ? PadR( a[ i, 1 ], 15 ) + "|" + PadR( aErr[ i, 2 ], 30 ) + "|" + PadR( a[ i, 2 ], 32 )
+      ? PadR( a[ i ][ 1 ], 15 ) + "|" + PadR( aErr[ i ][ 2 ], 30 ) + "|" + PadR( a[ i ][ 2 ], 32 )
    NEXT
    ?
    Inkey( 0 )
 
    ? "Internal errors:"
-   ? "----------------"
+   ?
    a := GET_IERR()
    FOR i := 1 TO Len( a )
-      ? PadR( a[ i, 1 ], 15 ) + "|" + PadR( aInt[ i, 2 ], 30 ) + "|" + PadR( a[ i, 2 ], 32 )
+      ? PadR( a[ i ][ 1 ], 15 ) + "|" + PadR( aInt[ i ][ 2 ], 30 ) + "|" + PadR( a[ i ][ 2 ], 32 )
    NEXT
    ?
    Inkey( 0 )
 
    ? "Days:"
-   ? "-----"
+   ?
    a := GET_DAYS()
    FOR i := 1 TO Len( a )
       ? "  " + PadR( aDay[ i ], 15 ) + a[ i ]
@@ -66,7 +66,7 @@ PROCEDURE Main( cLng )
    Inkey( 0 )
 
    ? "Months:"
-   ? "-------"
+   ?
    a := GET_MONTHS()
    FOR i := 1 TO Len( a )
       ? "  " + PadR( aMnt[ i ], 15 ) + a[ i ]
@@ -76,7 +76,7 @@ PROCEDURE Main( cLng )
 
    RETURN
 
-FUNCTION GET_DAYS()
+STATIC FUNCTION GET_DAYS()
 
    LOCAL i, n, aDays[ 7 ], dt := Date()
 
@@ -88,7 +88,7 @@ FUNCTION GET_DAYS()
 
    RETURN aDays
 
-FUNCTION GET_MONTHS()
+STATIC FUNCTION GET_MONTHS()
 
    LOCAL i, n, aMonths[ 12 ], dt := Date()
 
@@ -102,11 +102,8 @@ FUNCTION GET_MONTHS()
 
    RETURN aMonths
 
-FUNCTION GET_ERR()
-
-   LOCAL aErr
-
-   aErr := { ;
+STATIC FUNCTION GET_ERR()
+   RETURN { ;
       { "EG_ARG         ", hb_langErrMsg(  1 ) }, ;
       { "EG_BOUND       ", hb_langErrMsg(  2 ) }, ;
       { "EG_STROVERFLOW ", hb_langErrMsg(  3 ) }, ;
@@ -158,17 +155,11 @@ FUNCTION GET_ERR()
       { "EG_NOTARRAY    ", hb_langErrMsg( 49 ) }, ;
       { "EG_CONDITION   ", hb_langErrMsg( 50 ) } }
 
-   RETURN aErr
-
-FUNCTION HB_LANGERRINTR( n )
-
+STATIC FUNCTION HB_LANGERRINTR( n )
    RETURN hb_langMessage( HB_LANG_ITEM_BASE_ERRINTR + n - 9000 )
 
-FUNCTION GET_IERR()
-
-   LOCAL aErr
-
-   aErr := { ;
+STATIC FUNCTION GET_IERR()
+   RETURN { ;
       { "HB_EI_ERRUNRECOV      ", HB_LANGERRINTR( 9000 ) }, ;
       { "HB_EI_ERRRECFAILURE   ", HB_LANGERRINTR( 9001 ) }, ;
       { "HB_EI_ERRNOBLOCK      ", HB_LANGERRINTR( 9002 ) }, ;
@@ -195,5 +186,3 @@ FUNCTION GET_IERR()
       { "HB_EI_XGRABNULLSIZE   ", HB_LANGERRINTR( 9023 ) }, ;
       { "HB_EI_XREALLOCNULLSIZE", HB_LANGERRINTR( 9024 ) }, ;
       { "HB_EI_XALLOCNULLSIZE  ", HB_LANGERRINTR( 9025 ) } }
-
-   RETURN aErr

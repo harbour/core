@@ -48,14 +48,18 @@ to it. This is caused by the fact that a inner codeblock can be created during
 evaluation of outer codeblock when local variables don't exist like in this
 example:
 
-PROCEDUE Main()
+PROCEDURE Main()
+
    PRIVATE foo, bar
 
    Test()
    Eval( foo )
    Eval( bar )
 
+   RETURN
+
 PROCEDURE Test()
+
    LOCAL a := "FOO", b := "BAR"
 
    foo := {|| a + ( bar := Eval( {|| b } ) ) }
@@ -73,14 +77,15 @@ used.  The negative value is used as an index to distinguish it from the
 reference to a codeblock parameter.
 
 
-Incompatbility with the Clipper.
+Incompatibility with the Clipper.
 
-1) Detached locals passed by reference
+1. Detached locals passed by reference
   There is a little difference between the handling of variables passed by
 the reference in a codeblock.
 The following code explains it (thanks to David G. Holm)
 
 PROCEDURE Main()
+
    LOCAL nTest
    LOCAL bBlock1 := MakeBlock()
    LOCAL bBlock2 := {|| DoThing( @nTest ), QOut( "From Main: ", nTest ) }
@@ -91,14 +96,16 @@ PROCEDURE Main()
    RETURN
 
 FUNCTION MakeBlock()
+
    LOCAL nTest
+
    RETURN {|| DoThing( @nTest ), QOut( "From MakeBlock: ", nTest ) }
 
-FUNCTION DoThing( n )
+PROCEDURE DoThing( n )
 
    n := 42
 
-   RETURN NIL
+   RETURN
 
 
   In Clipper it produces:
@@ -109,18 +116,22 @@ From Main: 42
 From MakeBlock: 42
 From Main: 42
 
-2) Scope of undeclared variables
+2. Scope of undeclared variables
  Consider the following code:
 
 PROCEDURE Main()
-   LOCAL cb
-   cb := Detach()
+
+   LOCAL cb := Detach()
+
    ? Eval( cb, 10 )
+
    RETURN
 
 FUNCTION Detach()
+
    LOCAL b := {| x | x + a }
    LOCAL a := 0
+
    RETURN b
 
   In Clipper the 'a' variable in a codeblock has the *local* scope however in
@@ -130,10 +141,13 @@ this code will print 10 and in Harbour it will raise 'argument error' in
   This will be true also when the 'a' variable will be declared as PRIVATE
 
 PROCEDURE Main()
+
    LOCAL cb
    PRIVATE a
+
    cb := Detach()
    ? Eval( cb, 10 )
+
    RETURN
 
 The above code also prints 10 in Clipper (even if compiled with -a or -v

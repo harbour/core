@@ -485,7 +485,7 @@ create_db()
 
 #ifdef __HARBOUR__
    #include "hbmemory.ch"
-   if MEMORY( HB_MEM_USEDMAX ) != 0
+   if MEMORY( HB_MEM_STATISTICS ) != 0
       ? "Warning !!! Memory statistic enabled."
       ?
    endif
@@ -914,12 +914,12 @@ return
    METHOD Notifier:init
       ::aQueue := {}
       ::oSignal := Signal():new()
-      RETURN self
+      RETURN Self
 
    METHOD Notifier:notify( xValue )
       AAdd( ::aQueue, xValue )
       ::oSignal:signal()
-      RETURN self
+      RETURN Self
 
    METHOD Notifier:subscribe()
       LOCAL xResult

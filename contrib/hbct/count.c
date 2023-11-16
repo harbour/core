@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,7 +51,7 @@
 #define DO_COUNT_COUNTLEFT   0
 #define DO_COUNT_COUNTRIGHT  1
 
-/* helper function for the countxxx functions */
+/* helper function for the Count*() functions */
 static void do_count( int iSwitch )
 {
    /* param check */
@@ -76,7 +76,7 @@ static void do_count( int iSwitch )
       {
          case DO_COUNT_COUNTLEFT:
             pc = pcString;
-            while( ( *pc == cSearch ) && ( pc < pcString + sStrLen ) )
+            while( *pc == cSearch && pc < ( pcString + sStrLen ) )
             {
                sRetVal++;
                pc++;
@@ -85,7 +85,7 @@ static void do_count( int iSwitch )
 
          case DO_COUNT_COUNTRIGHT:
             pc = pcString + sStrLen - 1;
-            while( ( *pc == cSearch ) && ( pc >= pcString ) )
+            while( *pc == cSearch && pc >= pcString )
             {
                sRetVal++;
                pc--;

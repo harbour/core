@@ -5,8 +5,8 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -28,9 +28,9 @@
 
 typedef struct
 {
-   const char * cFuncName;                /* function name              */
-   int          iMinParam;                /* min no of parms it needs   */
-   int          iMaxParam;                /* max no of parms need       */
+   const char * cFuncName;                /* function name                   */
+   int          iMinParam;                /* min number of parameters needed */
+   int          iMaxParam;                /* max number of parameters needed */
 } HB_FUNCINFO, * PHB_FUNCINFO;
 
 
@@ -107,11 +107,9 @@ static const HB_FUNCINFO s_stdFunc[] =
    { "YEAR"      , 1,  1 }
 };
 
-#define HB_STD_FUNCOUNT  ( sizeof( s_stdFunc ) / sizeof( HB_FUNCINFO ) )
-
 HB_BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
 {
-   unsigned int uiFirst = 0, uiLast = HB_STD_FUNCOUNT - 1, uiMiddle;
+   unsigned int uiFirst = 0, uiLast = HB_SIZEOFARRAY( s_stdFunc ) - 1, uiMiddle;
    int iLen = ( int ) strlen( szFuncCall ), iCmp;
 
    /* Respect 4 or more letters shortcuts

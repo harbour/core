@@ -1,0 +1,131 @@
+/* $DOC$
+   $AUTHOR$
+      Copyright 2000 Chen Kedem <niki@actcom.co.il>
+   $TEMPLATE$
+      Function
+   $NAME$
+      __TypeFile()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+      Show the content of a file on the console and/or printer
+   $SYNTAX$
+      __TypeFile( <cFile>, [<lPrint>] ) --> NIL
+   $ARGUMENTS$
+      <cFile> is a name of the file to display. If the file have an
+      extension, it must be specified (there is no default value).
+
+      <lPrint> is an optional logical value that specifies whether the
+      output should go only to the screen (.F.) or to both the screen and
+      printer (.T.), the default is (.F.).
+   $RETURNS$
+      __TypeFile() always return NIL.
+   $DESCRIPTION$
+      __TypeFile() function type the content of a text file on the screen
+      with an option to send this information also to the printer. The
+      file is displayed as is without any headings or formatting.
+
+      If <cFile> contain no path, __TypeFile() try to find the file first
+      in the `SET DEFAULT` directory and then in search all of the `SET PATH`
+      directories. If <cFile> cannot be found a run-time error occur.
+
+      Use `SET CONSOLE OFF` to suppress screen output.
+      You can pause the output using <Ctrl-S>, press any key to resume.
+
+      __TypeFile() function is used in the preprocessing of the TYPE
+      command.
+   $EXAMPLES$
+      // The following examples assume a file name `test.txt` exist in all
+      // specified paths, a run-time error would displayed if it does not
+
+      // display test.txt file on screen
+      __TypeFile( "test.txt" )
+
+      // display test.txt file on screen and printer
+      __TypeFile( "test.txt", .T. )
+
+      // display test.txt file on printer only
+      SET CONSOLE OFF
+      __TypeFile( "test.txt", .T. )
+      SET CONSOLE ON
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      COPY FILE, SET DEFAULT, SET PATH, SET PRINTER, TYPE
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 2000 Chen Kedem <niki@actcom.co.il>
+   $TEMPLATE$
+      Command
+   $NAME$
+      TYPE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Show the content of a file on the console, printer or file
+   $SYNTAX$
+      TYPE <xcFile> [TO PRINTER] [TO FILE <xcDestFile>]
+   $ARGUMENTS$
+      <xcFile> is a name of the file to display. If the file have an
+      extension, it must be specified (there is no default value).
+      It can be specified as literal file name or as a character
+      expression enclosed in parentheses.
+
+      `TO PRINTER` is an optional keyword that specifies that the output
+      should go to both the screen and printer.
+
+      `TO FILE` <xcDestFile> copy the source <xcFile> also to a file. If no
+      extension is given `.txt` is added to the output file name.
+      <xcDestFile> can be specified as literal file name or as a character
+      expression enclosed in parentheses.
+   $DESCRIPTION$
+      TYPE command type the content of a text file on the screen
+      with an option to send this information also to the printer or to
+      an alternate file. The file is displayed as is without any headings
+      or formatting.
+
+      If <xcFile> contain no path, TYPE try to find the file first in the
+      `SET DEFAULT` directory and then in search all of the `SET PATH`
+      directories. If <xcFile> cannot be found a run-time error occur.
+
+      If <xcDestFile> contain no path it is created in the `SET DEFAULT`
+      directory.
+
+      Use `SET CONSOLE OFF` to suppress screen output.
+      You can pause the output using <Ctrl-S>, press any key to resume.
+   $EXAMPLES$
+      // The following examples assume a file name `test.txt` exist in all
+      // specified paths, a run-time error would displayed if it does not
+
+      // display test.txt file on screen
+      TYPE test.txt
+
+      // display test.txt file on screen and printer
+      TYPE test.txt TO PRINTER
+
+      // display test.txt file on printer only
+      SET CONSOLE OFF
+      TYPE test.txt TO PRINTER
+      SET CONSOLE ON
+
+      // display test.txt file on screen and into a file myreport.txt
+      TYPE test.txt TO FILE myreport
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      COPY FILE, SET DEFAULT, SET PATH, SET PRINTER, __TypeFile()
+   $END$
+ */

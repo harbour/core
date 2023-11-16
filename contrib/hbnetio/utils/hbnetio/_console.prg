@@ -1,5 +1,5 @@
 /*
- * Harbour NETIO server management cmdline tool
+ * Harbour NETIO server management command-line tool
  *
  * Copyright 2009-2011 Viktor Szakats (vszakats.net/harbour)
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -57,7 +57,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    Set( _SET_SCOREBOARD, .F. )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   Set( _SET_TIMEFORMAT, "HH:MM:SS" )
+   Set( _SET_TIMEFORMAT, "hh:mm:ss" )
 
    SetCancel( .F. )
 
@@ -103,7 +103,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
              aHistory[ ++nHistIndex ], ;
              ( nHistIndex := Len( aHistory ) + 1, "" ) ), Len( cCommand ) ), ;
                   ManageCursor( cCommand ) } )
-      bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+      bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE, .T. ) } )
 
       bKeyTab   := SetKey( K_TAB, {|| CompleteCmd( @cCommand, hCommands ) } )
 
@@ -143,11 +143,11 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
          ELSE
             IF Left( cCommand, Len( netcliID ) + 1 ) == netcliID + "."
                IF ! Eval( netclictrl[ "cmd" ], netclictx, SubStr( cCommand, Len( netcliID ) + 2 ) )
-                  hbnetiocon_ToConsole( hb_StrFormat( "Error: Unknown command '%1$s'.", cCommand ) )
+                  hbnetiocon_ToConsole( hb_StrFormat( "Error: Unrecognized command '%1$s'.", cCommand ) )
                ENDIF
             ELSE
                IF ! Eval( netclictrl[ "cmd" ], netclictx, cCommand )
-                  hbnetiocon_ToConsole( hb_StrFormat( "Error: Unknown command '%1$s'.", cCommand ) )
+                  hbnetiocon_ToConsole( hb_StrFormat( "Error: Unrecognized command '%1$s'.", cCommand ) )
                ENDIF
             ENDIF
          ENDIF
@@ -168,7 +168,7 @@ STATIC PROCEDURE ManageCursor( cCommand )
 
    RETURN
 
-/* Complete the command line, based on the first characters that the user typed. [vailtom] */
+/* Complete the command-line, based on the first characters that the user typed. [vailtom] */
 STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
 
    LOCAL s := Lower( AllTrim( cCommand ) )
@@ -221,7 +221,7 @@ STATIC PROCEDURE ShowHelp( hCommands )
          QQOut( "Press any key to continue..." )
          Inkey( 0 )
 
-         hb_Scroll( Row(), 0, Row(), MaxCol(), 0 )
+         Scroll( Row(), 0, Row(), MaxCol() )
          SetPos( Row(), 0 )
       ENDIF
    NEXT
@@ -251,7 +251,7 @@ STATIC FUNCTION hbnetiocon_GetHidden()
    ATail( GetList ):display()
 
    SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-   bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+   bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE, .T. ) } )
 
    READ
 

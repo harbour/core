@@ -1,6 +1,5 @@
 /*
  * dbf structure related functions:
- *
  *    FieldSize(), FieldDeci(), FieldNum(), DbfSize()
  *
  * Copyright 2000 Alexander Kresin <alex@belacy.belgorod.su>
@@ -16,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,18 +61,16 @@ HB_FUNC( DBFSIZE )
    if( ( pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer() ) != NULL )
    {
       PHB_ITEM pSize = hb_itemNew( NULL );
-      HB_ULONG ulRecSize, ulRecCount;
 
       if( SELF_INFO( pArea, DBI_GETHEADERSIZE, pSize ) == HB_SUCCESS )
       {
          llSize = hb_itemGetNL( pSize ) + 1;
          if( SELF_INFO( pArea, DBI_GETRECSIZE, pSize ) == HB_SUCCESS )
          {
+            HB_ULONG ulRecSize, ulRecCount;
             ulRecSize = hb_itemGetNL( pSize );
             if( SELF_RECCOUNT( pArea, &ulRecCount ) == HB_SUCCESS )
-            {
                llSize += ( HB_MAXINT ) ulRecCount * ulRecSize;
-            }
          }
       }
       hb_itemRelease( pSize );

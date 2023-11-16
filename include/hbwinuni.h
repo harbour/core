@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -78,19 +78,20 @@
    #define HB_STRNCAT( dst, src, len )           hb_wstrncat( dst, src, len )
    #define HB_STRCMP( s1, s2 )                   hb_wstrcmp( s1, s2 )
    #define HB_STRNCMP( s1, s2, len )             hb_wstrncmp( s1, s2, len )
-   #define HB_FSNAMECONV( fname, pfree )         ( ( LPCTSTR ) ( *(pfree) = hb_fsNameConvU16( fname ) ) )
+   #define HB_FSNAMECONV( fname, pfree )         ( ( LPCTSTR ) ( *( pfree ) = hb_fsNameConvU16( fname ) ) )
    #define HB_CHARDUP( str )                     hb_osStrU16Encode( str )
    #define HB_CHARDUPN( str, len )               hb_osStrU16EncodeN( str, len )
+   #define HB_CHARDUP2( str, buf, len )          hb_osStrU16Encode2( str, buf, len )
    #define HB_OSSTRDUP( str )                    hb_osStrU16Decode( str )
    #define HB_OSSTRDUP2( str, buf, len )         hb_osStrU16Decode2( str, buf, len )
    #define HB_WINAPI_SYSTEM( cmd )               _wsystem( cmd )
    #define HB_WINAPI_KERNEL32_DLL()              ( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) )
    #if defined( HB_OS_WIN_CE )
-      #define HB_WINAPI_GETPROCADDRESS( h, n )   GetProcAddress( h, TEXT( n ) )
-      #define HB_WINAPI_GETPROCADDRESST( h, n )  GetProcAddress( h, TEXT( n ) TEXT( "W" ) )
+      #define HB_WINAPI_GETPROCADDRESS( h, n )   ( void * ) GetProcAddress( h, TEXT( n ) )
+      #define HB_WINAPI_GETPROCADDRESST( h, n )  ( void * ) GetProcAddress( h, TEXT( n ) TEXT( "W" ) )
    #else
-      #define HB_WINAPI_GETPROCADDRESS( h, n )   GetProcAddress( h, n )
-      #define HB_WINAPI_GETPROCADDRESST( h, n )  GetProcAddress( h, n "W" )
+      #define HB_WINAPI_GETPROCADDRESS( h, n )   ( void * ) GetProcAddress( h, n )
+      #define HB_WINAPI_GETPROCADDRESST( h, n )  ( void * ) GetProcAddress( h, n "W" )
    #endif
 #else
    #define HB_PARSTR( n, h, len )                hb_parstr( n, hb_setGetOSCP(), h, len )
@@ -120,12 +121,13 @@
    #define HB_FSNAMECONV( fname, pfree )         hb_fsNameConv( fname, pfree )
    #define HB_CHARDUP( str )                     hb_osStrEncode( str )
    #define HB_CHARDUPN( str, len )               hb_osStrEncodeN( str, len )
+   #define HB_CHARDUP2( str, buf, len )          hb_osStrEncode2( str, buf, len )
    #define HB_OSSTRDUP( str )                    hb_osStrDecode( str )
    #define HB_OSSTRDUP2( str, buf, len )         hb_osStrDecode2( str, buf, len )
    #define HB_WINAPI_SYSTEM( cmd )               system( cmd )
    #define HB_WINAPI_KERNEL32_DLL()              ( TEXT( "kernel32.dll" ) )
-   #define HB_WINAPI_GETPROCADDRESS( h, n )      GetProcAddress( h, n )
-   #define HB_WINAPI_GETPROCADDRESST( h, n )     GetProcAddress( h, n "A" )
+   #define HB_WINAPI_GETPROCADDRESS( h, n )      ( void * ) GetProcAddress( h, n )
+   #define HB_WINAPI_GETPROCADDRESST( h, n )     ( void * ) GetProcAddress( h, n "A" )
 #endif
 
 #endif /* HB_OS_WIN */

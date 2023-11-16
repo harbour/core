@@ -1,6 +1,6 @@
 /*
  * CT3 Date & Time functions:
- *       WaitPeriod(), TimeValid(), SetTime(), SetDate()
+ *   WaitPeriod(), TimeValid(), SetTime(), SetDate()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,9 +45,12 @@
  *
  */
 
-/* stime exists only in SVr4, SVID, X/OPEN and Linux */
+/* stime() exists only in SVr4, SVID, X/OPEN and Linux */
 #ifndef _SVID_SOURCE
-#  define _SVID_SOURCE
+#define _SVID_SOURCE
+#endif
+#ifndef _DEFAULT_SOURCE
+#define _DEFAULT_SOURCE
 #endif
 
 #include "hbapi.h"
@@ -101,18 +104,19 @@ static HB_BOOL _hb_timeValid( const char * szTime, HB_SIZE nLen, int * piDecode 
    if( nLen == 2 || nLen == 5 || nLen == 8 || nLen == 11 )
    {
       static const int sc_iMax[] = { 23, 59, 59, 99 };
-      int     i, iVal;
-      HB_SIZE ul;
+      int     i;
+      HB_SIZE nPos;
 
       fValid = HB_TRUE;
-      for( ul = 0; fValid && ul < nLen; ++ul )
+      for( nPos = 0; fValid && nPos < nLen; ++nPos )
       {
-         fValid = ul % 3 == 2 ? szTime[ ul ] == ':' :
-                  ( szTime[ ul ] >= '0' && szTime[ ul ] <= '9' );
+         fValid = nPos % 3 == 2 ? szTime[ nPos ] == ':' :
+                  ( szTime[ nPos ] >= '0' && szTime[ nPos ] <= '9' );
       }
-      for( ul = 0, i = 0; fValid && ul < nLen; ul += 3, ++i )
+      for( nPos = 0, i = 0; fValid && nPos < nLen; nPos += 3, ++i )
       {
-         iVal   = 10 * ( szTime[ ul ] - '0' ) + ( szTime[ ul + 1 ] - '0' );
+         int iVal;
+         iVal   = 10 * ( szTime[ nPos ] - '0' ) + ( szTime[ nPos + 1 ] - '0' );
          fValid = iVal <= sc_iMax[ i ];
          if( piDecode )
             piDecode[ i ] = iVal;
@@ -144,14 +148,20 @@ HB_FUNC( SETTIME )
       st.wMilliseconds = ( WORD ) iTime[ 3 ] * 10;
       fResult = SetLocalTime( &st );
 #elif defined( HB_OS_LINUX ) && ! defined( HB_OS_ANDROID ) && ! defined( __WATCOMC__ )
-/* stime exists only in SVr4, SVID, X/OPEN and Linux */
       HB_ULONG lNewTime;
       time_t   tm;
 
       lNewTime = iTime[ 0 ] * 3600 + iTime[ 1 ] * 60 + iTime[ 2 ];
       tm       = time( NULL );
       tm      += lNewTime - ( tm % 86400 );
+#  if ( defined( __GLIBC__ ) && ( ( __GLIBC__ > 2 ) || ( ( __GLIBC__ == 2 ) && ( __GLIBC_MINOR__ >= 31 ) ) ) )
+      /* stime() is deprecated in glibc 2.31+ */
+      struct timespec ts = { tm, 0 };
+      fResult  = clock_settime( CLOCK_REALTIME, &ts ) == 0;
+#  else
+      /* stime() exists only in SVr4, SVID, X/OPEN and Linux */
       fResult  = stime( &tm ) == 0;
+#  endif
 #endif
    }
 
@@ -179,14 +189,20 @@ HB_FUNC( SETDATE )
          st.wDayOfWeek = ( WORD ) hb_dateJulianDOW( lDate );
          fResult       = SetLocalTime( &st );
 #elif defined( HB_OS_LINUX ) && ! defined( HB_OS_ANDROID ) && ! defined( __WATCOMC__ )
-/* stime exists only in SVr4, SVID, X/OPEN and Linux */
-         long   lNewDate;
+         /* stime() exists only in SVr4, SVID, X/OPEN and Linux */
+         long lNewDate = lDate - hb_dateEncode( 1970, 1, 1 );
+#  if ( defined( __GLIBC__ ) && ( ( __GLIBC__ > 2 ) || ( ( __GLIBC__ == 2 ) && ( __GLIBC_MINOR__ >= 31 ) ) ) )
+         /* stime() is deprecated in glibc 2.31+ */
+         struct timespec ts = { 0 };
+         clock_gettime(CLOCK_REALTIME, &ts);  /* keep tv_nsec */
+         ts.tv_sec = lNewDate * 86400 + ( ts.tv_sec % 86400 );
+         fResult  = clock_settime( CLOCK_REALTIME, &ts ) == 0;
+#  else
          time_t tm;
-
-         lNewDate = lDate - hb_dateEncode( 1970, 1, 1 );
          tm       = time( NULL );
          tm       = lNewDate * 86400 + ( tm % 86400 );
          fResult  = stime( &tm ) == 0;
+#  endif
 #endif
       }
    }

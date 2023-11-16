@@ -1,6 +1,6 @@
 /*
  * Mini GT for GUI programs.
- *    Now it supports only low level TONE and CLIPBOARD code for Windows
+ * Now it supports only low-level Tone() and CLIPBOARD code for Windows
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -98,7 +98,6 @@ static int hb_gt_gui_optionId( const char * pszOption )
    if( pszOption )
    {
       HB_SIZE nSize;
-      int i;
 
       while( HB_ISSPACE( *pszOption ) )
          pszOption++;
@@ -108,6 +107,7 @@ static int hb_gt_gui_optionId( const char * pszOption )
 
       if( nSize >= 2 && nSize <= 9 )
       {
+         int i;
          for( i = 0; i < ( int ) _HB_BUTTON_COUNT; ++i )
          {
             if( nSize == s_buttons[ i ].len &&
@@ -241,7 +241,7 @@ static int hb_gt_gui_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
 static const char * hb_gt_gui_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Version(%p,%d)", pGT, iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Version(%p,%d)", ( void * ) pGT, iType ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -255,11 +255,12 @@ static const char * hb_gt_gui_Version( PHB_GT pGT, int iType )
 /* dDuration is in 'Ticks' (18.2 per second) */
 static void hb_gt_gui_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Tone(%p,%lf,%lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
 #if defined( HB_OS_WIN )
-   HB_SYMBOL_UNUSED( pGT );
+   hb_gt_BaseUnlock( pGT );
    hb_gt_winapi_tone( dFrequency, dDuration );
+   hb_gt_BaseLock( pGT );
 #else
    HB_GTSUPER_TONE( pGT, dFrequency, dDuration );
 #endif
@@ -269,7 +270,7 @@ static void hb_gt_gui_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 static HB_BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Info(%p,%d,%p)", pGT, iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Info(%p,%d,%p)", ( void * ) pGT, iType, ( void * ) pInfo ) );
 
    switch( iType )
    {
@@ -310,7 +311,7 @@ static HB_BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", ( void * ) pFuncTable ) );
 
    pFuncTable->Version                    = hb_gt_gui_Version;
    pFuncTable->Tone                       = hb_gt_gui_Tone;

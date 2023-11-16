@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,10 +49,7 @@
 #ifndef HB_DBINFO_CH_
 #define HB_DBINFO_CH_
 
-/*
-   Constants for SELF_RDDINFO ()
-*/
-
+/* Constants for SELF_RDDINFO() */
 #define RDDI_ISDBF                1   /* Does this RDD support DBFs? */
 #define RDDI_CANPUTREC            2   /* Can this RDD Put Records? */
 #define RDDI_DELIMITER            3   /* The field delimiter (as a string) */
@@ -69,7 +66,7 @@
 #define RDDI_CONNECTION          12   /* Get/Set default connection */
 #define RDDI_TABLETYPE           13   /* Type of table file */
 #define RDDI_MEMOTYPE            14   /* Type of MEMO file DB_MEMO_*: DBT, SMT, FPT(FP,SIX3,FLEXIII) */
-#define RDDI_LARGEFILE           15   /* Is large file size (>=4GB) supported */
+#define RDDI_LARGEFILE           15   /* Is large file size (>= 4 GiB) supported */
 #define RDDI_LOCKSCHEME          16   /* Locking scheme used by RDD */
 #define RDDI_RECORDMAP           17   /* Does RDD support record map functionality? */
 #define RDDI_ENCRYPTION          18   /* Does RDD support encryption */
@@ -117,63 +114,60 @@
 #define RDDI_AFFECTEDROWS        67   /* number of affected rows after UPDATE */
 #define RDDI_QUERY               68   /* last executed query */
 
-/*
-   Constants for SELF_ORDINFO ()
-*/
-
-#define DBOI_CONDITION            1   /* The order's conditional expression     */
-#define DBOI_EXPRESSION           2   /* The order's key expression             */
-#define DBOI_POSITION             3   /* The current key position in scope and filter  */
+/* Constants for SELF_ORDINFO() */
+#define DBOI_CONDITION            1   /* The order's conditional expression */
+#define DBOI_EXPRESSION           2   /* The order's key expression */
+#define DBOI_POSITION             3   /* The current key position in scope and filter */
 #define DBOI_RECNO                4   /* The current key position disregarding filters */
-#define DBOI_NAME                 5   /* The name of the order                      */
+#define DBOI_NAME                 5   /* The name of the order */
 #define DBOI_NUMBER               6   /* The numeric position in the list of orders */
-#define DBOI_BAGNAME              7   /* The name of the file containing this order     */
+#define DBOI_BAGNAME              7   /* The name of the file containing this order */
 #define DBOI_BAGEXT               8   /* The extension of the file containing this order */
 #define DBOI_INDEXEXT            DBOI_BAGEXT
 #define DBOI_INDEXNAME           DBOI_BAGNAME
 #define DBOI_ORDERCOUNT           9   /* The count of ORDERS contained in an index file or in total */
-#define DBOI_FILEHANDLE          10   /* The OS file handle of the index     */
+#define DBOI_FILEHANDLE          10   /* The OS file handle of the index */
 #define DBOI_ISCOND              11   /* Does the order have a FOR condition? */
 #define DBOI_ISDESC              12   /* Is the order DESCENDing? */
 #define DBOI_UNIQUE              13   /* Does the order have the UNIQUE attribute? */
 
 /* 53-level constants */
 #define DBOI_FULLPATH            20  /* The full path to the index file (Bag) */
-#define DBOI_KEYTYPE             24  /* The type of the order's key           */
-#define DBOI_KEYSIZE             25  /* The length of the order's key         */
+#define DBOI_KEYTYPE             24  /* The type of the order's key */
+#define DBOI_KEYSIZE             25  /* The length of the order's key */
 #define DBOI_KEYCOUNT            26  /* The count of keys in scope and filter */
-#define DBOI_SETCODEBLOCK        27  /* The codeblock that produces the key   */
-#define DBOI_KEYDEC              28  /* The # of decimals in a numeric key    */
-#define DBOI_HPLOCKING           29  /* Using High Performance locking for this order?  */
-#define DBOI_LOCKOFFSET          35  /* The offset used for logical locking             */
+#define DBOI_SETCODEBLOCK        27  /* The codeblock that produces the key */
+#define DBOI_KEYDEC              28  /* The # of decimals in a numeric key */
+#define DBOI_HPLOCKING           29  /* Using High Performance locking for this order? */
+#define DBOI_LOCKOFFSET          35  /* The offset used for logical locking */
 
-#define DBOI_KEYADD              36  /* Custom Index: Was Key added successfully?       */
-#define DBOI_KEYDELETE           37  /* Custom Index: Was Key Deletion successful?      */
-#define DBOI_KEYVAL              38  /* The value of the current key      */
-#define DBOI_SCOPETOP            39  /* Get or Set the scope top          */
-#define DBOI_SCOPEBOTTOM         40  /* Get or Set the scope bottom       */
-#define DBOI_SCOPETOPCLEAR       41  /* Clear the scope top               */
-#define DBOI_SCOPEBOTTOMCLEAR    42  /* Clear the scope bottom            */
-#define DBOI_CUSTOM              45  /* Is this a Custom Index?           */
-#define DBOI_SKIPUNIQUE          46  /* Was a skip to adjacent unique Key successful?   */
+#define DBOI_KEYADD              36  /* Custom Index: Was Key added successfully? */
+#define DBOI_KEYDELETE           37  /* Custom Index: Was Key Deletion successful? */
+#define DBOI_KEYVAL              38  /* The value of the current key */
+#define DBOI_SCOPETOP            39  /* Get or Set the scope top */
+#define DBOI_SCOPEBOTTOM         40  /* Get or Set the scope bottom */
+#define DBOI_SCOPETOPCLEAR       41  /* Clear the scope top */
+#define DBOI_SCOPEBOTTOMCLEAR    42  /* Clear the scope bottom */
+#define DBOI_CUSTOM              45  /* Is this a Custom Index? */
+#define DBOI_SKIPUNIQUE          46  /* Was a skip to adjacent unique Key successful? */
 
 #define DBOI_KEYSINCLUDED        50  /* Number of keys in the index order */
 /* key numbers and counts */
 #define DBOI_KEYGOTO             DBOI_POSITION
 #define DBOI_KEYGOTORAW          DBOI_KEYNORAW
 #define DBOI_KEYNO               DBOI_POSITION
-#define DBOI_KEYNORAW            51  /* The key number disregarding filters  */
-#define DBOI_KEYCOUNTRAW         52  /* The key count disregarding filter    */
+#define DBOI_KEYNORAW            51  /* The key number disregarding filters */
+#define DBOI_KEYCOUNTRAW         52  /* The key count disregarding filter */
 
 /* Query Optimization */
 #define DBOI_OPTLEVEL            53  /* Optimization level for current query */
 
 /* These shouldn't need an open table */
-#define DBOI_STRICTREAD          60  /* Flag for avoiding RDD hierarchy and using a bigger buffer when indexing  */
-#define DBOI_OPTIMIZE            61  /* Flag for whether to use query optimization             */
-#define DBOI_AUTOOPEN            62  /* Flag for automatically opening structural indexes      */
+#define DBOI_STRICTREAD          60  /* Flag for avoiding RDD hierarchy and using a bigger buffer when indexing */
+#define DBOI_OPTIMIZE            61  /* Flag for whether to use query optimization */
+#define DBOI_AUTOOPEN            62  /* Flag for automatically opening structural indexes */
 #define DBOI_AUTOORDER           63  /* When a structural index is opened, the order to be set */
-#define DBOI_AUTOSHARE           64  /* When a network is detected, open the index shared, otherwise open exclusively   */
+#define DBOI_AUTOSHARE           64  /* When a network is detected, open the index shared, otherwise open exclusively */
 
 /* Harbour extensions */
 #define DBOI_SKIPEVAL           100  /* skip while code block doesn't return TRUE */
@@ -194,7 +188,7 @@
 
 #define DBOI_ISMULTITAG         114  /* does RDD support multi tag in index file */
 #define DBOI_ISSORTRECNO        115  /* is record number part of key in sorting */
-#define DBOI_LARGEFILE          116  /* is large file size (>=4GB) supported */
+#define DBOI_LARGEFILE          116  /* is large file size (>= 4 GiB) supported */
 #define DBOI_TEMPLATE           117  /* order with free user keys */
 #define DBOI_MULTIKEY           118  /* custom order with multikeys */
 #define DBOI_CHGONLY            119  /* update only existing keys */
@@ -242,43 +236,43 @@
 #define DBRI_RECSIZE              3
 #define DBRI_RECNO                4
 #define DBRI_UPDATED              5
-#define DBRI_ENCRYPTED            6
-#define DBRI_RAWRECORD            7
-#define DBRI_RAWMEMOS             8
-#define DBRI_RAWDATA              9
+#define DBRI_ENCRYPTED            6  /* Harbour extension */
+#define DBRI_RAWRECORD            7  /* Harbour extension */
+#define DBRI_RAWMEMOS             8  /* Harbour extension */
+#define DBRI_RAWDATA              9  /* Harbour extension */
 
-/* constants for dbInfo()  */
+/* constants for dbInfo() */
 #define DBI_ISDBF                 1  /* Does this RDD support DBFs? */
-#define DBI_CANPUTREC             2  /* Can this RDD Put Records?   */
-#define DBI_GETHEADERSIZE         3  /* Data file's header size     */
-#define DBI_LASTUPDATE            4  /* The last date this file was written to  */
-#define DBI_GETDELIMITER          5  /* The delimiter (as a string)         */
-#define DBI_SETDELIMITER          6  /* The delimiter (as a string)         */
-#define DBI_GETRECSIZE            7  /* The size of 1 record in the file    */
+#define DBI_CANPUTREC             2  /* Can this RDD Put Records? */
+#define DBI_GETHEADERSIZE         3  /* Data file's header size */
+#define DBI_LASTUPDATE            4  /* The last date this file was written to */
+#define DBI_GETDELIMITER          5  /* The delimiter (as a string) */
+#define DBI_SETDELIMITER          6  /* The delimiter (as a string) */
+#define DBI_GETRECSIZE            7  /* The size of 1 record in the file */
 #define DBI_GETLOCKARRAY          8  /* An array of locked records' numbers */
-#define DBI_TABLEEXT              9  /* The data file's file extension      */
-#define DBI_FULLPATH             10  /* The Full path to the data file      */
+#define DBI_TABLEEXT              9  /* The data file's file extension */
+#define DBI_FULLPATH             10  /* The Full path to the data file */
 
-#define DBI_ISFLOCK              20  /* Is there a file lock active?        */
-#define DBI_CHILDCOUNT           22  /* Number of child relations set       */
-#define DBI_FILEHANDLE           23  /* The data file's OS file handle      */
-#define DBI_BOF                  26  /* Same as Bof()    */
-#define DBI_EOF                  27  /* Same as Eof()    */
-#define DBI_DBFILTER             28  /* Current Filter setting              */
-#define DBI_FOUND                29  /* Same as Found()  */
-#define DBI_FCOUNT               30  /* How many fields in a record?        */
-#define DBI_LOCKCOUNT            31  /* Number of record locks              */
-#define DBI_VALIDBUFFER          32  /* Is the record buffer valid?         */
-#define DBI_ALIAS                33  /* Name (alias) for this workarea      */
-#define DBI_GETSCOPE             34  /* The codeblock used in LOCATE        */
+#define DBI_ISFLOCK              20  /* Is there a file lock active? */
+#define DBI_CHILDCOUNT           22  /* Number of child relations set */
+#define DBI_FILEHANDLE           23  /* The data file's OS file handle */
+#define DBI_BOF                  26  /* Same as Bof() */
+#define DBI_EOF                  27  /* Same as Eof() */
+#define DBI_DBFILTER             28  /* Current Filter setting */
+#define DBI_FOUND                29  /* Same as Found() */
+#define DBI_FCOUNT               30  /* How many fields in a record? */
+#define DBI_LOCKCOUNT            31  /* Number of record locks */
+#define DBI_VALIDBUFFER          32  /* Is the record buffer valid? */
+#define DBI_ALIAS                33  /* Name (alias) for this workarea */
+#define DBI_GETSCOPE             34  /* The codeblock used in LOCATE */
 #define DBI_LOCKOFFSET           35  /* The offset used for logical locking */
-#define DBI_SHARED               36  /* Was the file opened shared?         */
-#define DBI_MEMOEXT              37  /* The memo file's file extension      */
-#define DBI_MEMOHANDLE           38  /* File handle of the memo file        */
-#define DBI_MEMOBLOCKSIZE        39  /* Memo File's block size              */
+#define DBI_SHARED               36  /* Was the file opened shared? */
+#define DBI_MEMOEXT              37  /* The memo file's file extension */
+#define DBI_MEMOHANDLE           38  /* File handle of the memo file */
+#define DBI_MEMOBLOCKSIZE        39  /* Memo File's block size */
 
-#define DBI_DB_VERSION          101  /* Version of the Host driver          */
-#define DBI_RDD_VERSION         102  /* current RDD's version               */
+#define DBI_DB_VERSION          101  /* Version of the Host driver */
+#define DBI_RDD_VERSION         102  /* current RDD's version */
 
 /* Harbour extension */
 #define DBI_LOCKSCHEME          128  /* Locking scheme used by RDD */
@@ -363,7 +357,7 @@
 #define DB_DBF_STD              1
 #define DB_DBF_VFP              2
 
-/* MEMO TYPES: RDDI_MEMOTYPE, DBI_MEMOTYPE,  */
+/* MEMO TYPES: RDDI_MEMOTYPE, DBI_MEMOTYPE */
 #define DB_MEMO_NONE            0
 #define DB_MEMO_DBT             1
 #define DB_MEMO_FPT             2
@@ -384,8 +378,8 @@
 #define DB_DBFLOCK_CLIPPER      1   /* default Cl*pper locking scheme */
 #define DB_DBFLOCK_COMIX        2   /* COMIX and CL53 DBFCDX hyper locking scheme */
 #define DB_DBFLOCK_VFP          3   /* [V]FP, CL52 DBFCDX, SIx3 SIXCDX, CDXLOCK.OBJ */
-#define DB_DBFLOCK_HB32         4   /* Harbour hyper locking scheme for 32bit file API */
-#define DB_DBFLOCK_HB64         5   /* Harbour hyper locking scheme for 64bit file API */
+#define DB_DBFLOCK_HB32         4   /* Harbour hyper locking scheme for 32-bit file API */
+#define DB_DBFLOCK_HB64         5   /* Harbour hyper locking scheme for 64-bit file API */
 #define DB_DBFLOCK_CLIPPER2     6   /* extended Cl*pper locking scheme NTXLOCK2.OBJ */
 
 /* for backward compatibility */
@@ -396,12 +390,14 @@
 #endif
 
 /* DBF HEADER UPDATING */
-#define DB_SETHEADER_CLOSE    0  /* update in CLOSE method - it always happens if necessary */
-#define DB_SETHEADER_COMMIT   1  /* update in FLUSH method */
-#define DB_SETHEADER_WRITE    2  /* update in GOCOLD method */
-#define DB_SETHEADER_APPEND   0  /* record append sets update header flag (always enabled) */
-#define DB_SETHEADER_REPLACE  4  /* record modification sets update header flag */
-#define DB_SETHEADER_YYEAR    16 /* store year() % 100 instead of year - 1900, FoxPro compatibility */
+#define DB_SETHEADER_CLOSE    0x00 /* update in CLOSE method - it always happens if necessary */
+#define DB_SETHEADER_COMMIT   0x01 /* update in FLUSH method */
+#define DB_SETHEADER_WRITE    0x02 /* update in GOCOLD method */
+#define DB_SETHEADER_APPEND   0x00 /* record append sets update header flag (always enabled) */
+#define DB_SETHEADER_REPLACE  0x04 /* record modification sets update header flag */
+#define DB_SETHEADER_YYEAR    0x10 /* store year() % 100 instead of year - 1900, FoxPro compatibility */
+#define DB_SETHEADER_EOL      0x20 /* set EOL when header is written, enabled in CLOSE method if header has to be updated */
+#define DB_SETHEADER_MASK     0x37 /* bits used in DB_SETHEADER_* flags */
 
 /* update in CLOSE after append only */
 #define DB_SETHEADER_MINIMAL     DB_SETHEADER_CLOSE

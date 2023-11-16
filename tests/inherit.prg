@@ -60,10 +60,10 @@ FUNCTION TEmpty()
    IF oEmpty == NIL
       oEmpty := HBClass():New( "TEmpty" )             // Create a new class def
 
-      oEmpty:AddInline( "New", {| self | self } )
+      oEmpty:AddInline( "New", {| Self | Self } )
 
       oEmpty:AddInline( "Run", {|| QOut( "Run !" ) } )  // Test command
-      oEmpty:AddInline( "Set", {| self, xParam | ::Out := xParam } )
+      oEmpty:AddInline( "Set", {| Self, xParam | ::Out := xParam } )
       oEmpty:AddData( "Out", "Hi there" )            // Test command
       oEmpty:AddVirtual( "Dispose" )                 // Clean up code
 
@@ -82,7 +82,7 @@ FUNCTION TOnTop()
 
    IF oOnTop == NIL
       oOnTop := HBClass():New( "TOnTop", "TTextFile" )
-      oOnTop:AddInline( "Say", {| self, cArg | QOut( __objSendMsg( self, cArg ) ) } )
+      oOnTop:AddInline( "Say", {| Self, cArg | QOut( __objSendMsg( Self, cArg ) ) } )
       oOnTop:Create()
    ENDIF
 
@@ -134,7 +134,7 @@ FUNCTION TTextFile()
 
 FUNCTION New( cFileName, cMode, nBlock )
 
-   LOCAL self := QSelf()                        // Get self
+   LOCAL Self := QSelf()                        // Get Self
 
    hb_default( @cMode, "R" )
    hb_default( @nBlock, 4096 )
@@ -160,11 +160,11 @@ FUNCTION New( cFileName, cMode, nBlock )
    ENDIF
    ::nBlockSize := nBlock
 
-   RETURN self
+   RETURN Self
 
 FUNCTION RUN( xTxt, lCRLF )
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
    LOCAL xRet
 
    IF ::cMode == "R"
@@ -181,7 +181,7 @@ FUNCTION RUN( xTxt, lCRLF )
 
 FUNCTION Dispose()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    ::cBlock := NIL
    IF ::hFile != F_ERROR
@@ -191,7 +191,7 @@ FUNCTION Dispose()
       ENDIF
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 //
 // Read a single line
@@ -199,7 +199,7 @@ FUNCTION Dispose()
 
 FUNCTION READ()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
    LOCAL cRet := ""
    LOCAL cBlock
    LOCAL nCrPos
@@ -256,7 +256,7 @@ FUNCTION READ()
 
 FUNCTION WriteLn( xTxt, lCRLF )
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
    LOCAL cBlock
 
    IF ::hFile == F_ERROR
@@ -276,11 +276,11 @@ FUNCTION WriteLn( xTxt, lCRLF )
       ::nLine := ::nLine + 1
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 FUNCTION Write( xTxt )
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    RETURN ::WriteLn( xTxt, .F. )
 
@@ -290,7 +290,7 @@ FUNCTION Write( xTxt )
 
 STATIC FUNCTION GOTO( nLine )
 
-   LOCAL self   := QSelf()
+   LOCAL Self   := QSelf()
    LOCAL nWhere := 1
 
    IF Empty( ::hFile )

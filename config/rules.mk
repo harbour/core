@@ -10,10 +10,14 @@ else
    endif
 endif
 
+ifneq ($(HB_USER_DCFLAGS),)
+   HB_DYN_COPT += $(HB_USER_DCFLAGS)
+endif
+
 ifeq ($(HB_DYN_COPT),)
-   OBJ_DYN_POSTFIX :=
+   OBJ_DYN_SUFFIX :=
 else
-   OBJ_DYN_POSTFIX := _dyn
+   OBJ_DYN_SUFFIX := _dyn
 endif
 
 # How to run Harbour
@@ -34,7 +38,7 @@ ifeq ($(CC_RULE),)
             ifneq ($(filter $(LIBNAME),$(HB_DYN_LIBS)),)
                define cc_comp_all
                   $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(HB_CFLAGS_STA) $(CC_IN) $<)
-                  $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_DYN_POSTFIX)$(OBJ_EXT)) $(HB_DYN_COPT) $(HB_CFLAGS_DYN) $(CC_IN) $<)
+                  $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_DYN_SUFFIX)$(OBJ_EXT)) $(HB_DYN_COPT) $(HB_CFLAGS_DYN) $(CC_IN) $<)
                endef
                CC_RULE = $(cc_comp_all)
             endif

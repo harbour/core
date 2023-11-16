@@ -1,7 +1,7 @@
 Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-03 03:33\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
+Copyright \(c\) 1999\-2013, Viktor Szakats  
 <http://harbour\-project\.org/>  
-Magyar \(hu\) fordítás: Copyright \(c\) 2009\-2013, Szakáts Viktor  
+Magyar \(hu\) fordítás: Copyright \(c\) 2009\-2013, Szakats Viktor  
 
 Használat:  
   
@@ -716,4 +716,4 @@ License extensions:
 Szerző:  
 
 
- - Viktor Szakáts \(vszakats\.net/harbour\) 
+ - Viktor Szakats \(vszakats\.net/harbour\) 

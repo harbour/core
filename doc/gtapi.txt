@@ -14,7 +14,7 @@ implementation of the _gt functions. These are functions named with
 gtxxxxxx convention and are called by the _gt functions in gtapi.c.
 I've provided the following files to implement the console functions:
 
-gtdos.c - MS-DOS implemenation
+gtdos.c - MS-DOS implementation
 gtwin.c - Windows implementation
 gtos2.c - OS/2 implementation
 gtxxx.c - Generic template for implementation
@@ -22,7 +22,7 @@ gtxxx.c - Generic template for implementation
 If you wish to port the gt functions to another platform, just take the
 gtxxx.c and populate it with calls to your OSes functions. Call the file
 something appropriate (gtmac.c, gtnext.c or whatever) and add it to
-that platforms makefile.
+that platforms Makefile.
 
 The API supports a dozen or so compilers on three platforms. You only
 have to change the gtxxx.c files to implement your platform.
@@ -40,19 +40,19 @@ directly anyway. Just compile gtapi.c alone with a #define of TEST to see
 the output (or build a PRG test if you want).
 
 You must include gtapi.c and one of the platform implementation files
-to compile sucessfully!
+to compile successfully!
 
 There are exceptions for various compilers in the platform implementation
 files so if you're using a compiler that doesn't support certain routines
 or syntax just stick in your changes and surround it with an
-#if defined(__XXX__) call.
+`#if defined( __XXX__ )` call.
 
 This is a complete set of gt functions as defined by Clipper. That is
 there are no new _gt functions added. But this is not a complete
-implementation. I do not know what _gtBegin or _gtEnd will do for
+implementation. I do not know what _gtBegin() or _gtEnd() will do for
 instance. Yes, they buffer the display but what does that really mean
 under the covers? Perhaps someone needs to implement a screen buffer
-to write to in order to achive this but the issue that immediately comes
+to write to in order to achieve this but the issue that immediately comes
 to mind is how to initialize the size of this buffer?
 
 The files are attached but I will NOT be checking them into cvs for the
@@ -63,20 +63,20 @@ overwrite someones code. If the author wants to remove his file and check
 this in then be my guest.
 
 2. This is my vision of how "I" think the gt API should be implemented.
-Perhaps it isn't Antonio's or anyone elses so review it and if you feel
+Perhaps it isn't Antonio's or anyone else's so review it and if you feel
 that it deserves being put into Harbour I'll leave that up to you.
 
 TODO:
 The following functions are not implemented in gtapi.c:
-_gtPostExt
-_gtPreExt
-_gtScroll
-_gtSetBlink
-_gtSetMode
+_gtPostExt()
+_gtPreExt()
+_gtScroll()
+_gtSetBlink()
+_gtSetMode()
 
 The following functions don't work in gtapi.c:
-_gtSave
-_gtRestore
+_gtSave()
+_gtRestore()
 
 Two Harbour functions are included in the gtapi.c file,
 Row() and Col() to get started.
@@ -171,12 +171,15 @@ For example, compile this code:
     /*** t.prg ***/
     REQUEST HB_GT_WIN
     REQUEST HB_GT_WVT
+
     PROCEDURE Main()
+
        ? hb_gtVersion(), hb_gtVersion( 1 )
        Tone( 200, 3 )
        Tone( 300, 3 )
        Tone( 500, 3 )
        Inkey( 0 )
+
        RETURN
 
 and link it as Windows GUI application. Then simply execute:
@@ -213,19 +216,19 @@ driver in GUI application. You can even create mixed GUI/CUI code in one
 program.
 
 And finally, the Tone() function problem.
-Low level TONE code is part of GT driver. In the past, GUI libraries in
-Windows were linked the whole GTWIN driver and only TONE were used. It
+Low-level Tone() code is part of GT driver. In the past, GUI libraries in
+Windows were linked the whole GTWIN driver and only Tone() were used. It
 was possible because someone blocked GTWIN to work with application
 linked as Windows GUI programs. Now, GTWIN can be used with any
 applications, and I do not want reduce its functionality. So GUI
-libraries which needs TONE should have their own GT driver which will
+libraries which needs Tone() should have their own GT driver which will
 support it. Now, such GT driver can also give much more features for
 final users, because it allow to integrate GUI library with standard
 Clipper screen functions.
 
 How to create such base GUI GT driver?
 See as example GTGUI in src/rtl/gtgui/gtgui.c
-It supports only TONE and CLIPBOARD operations.
+It supports only Tone() and CLIPBOARD operations.
 GUI libraries can use it or create other GT driver inheriting from
 this one.
 
@@ -237,16 +240,16 @@ gtnul  - base GT driver from which each other inherits.
          It's present on all platforms and i always linked.
 
 gtcgi  - very simple GT driver which does not make any output
-         formatting and simply send it as to stdout.
+         formatting and simply send it as to STDOUT.
          Supported by all platforms.
 
-gtstd  - it uses stdout output but tries to support full screen output but
-         without collor support and cursor shape. It format text to number
+gtstd  - it uses STDOUT output but tries to support full screen output but
+         without color support and cursor shape. It format text to number
          of row and columns if is able to detect these values on given
          platform.
          Supported by all platforms.
 
-gtpca  - It's PCANSI terminal GT - it works in similar way to ANSI GT
+gtpca  - It's PC-ANSI terminal GT - it works in similar way to ANSI GT
          driver in Clipper though keyboard input is not fully supported.
          Now GTTRM can make all GTPCA job and much more.
          Supported by all platforms.
@@ -258,7 +261,7 @@ gtdos  - GT driver for MS-DOS - it uses BIOS and direct hardware screen output
          Clipper compatible.
          Supported only by MS-DOS builds.
 
-gtos2  - GT driver for OS/2 - It's sth like GTWIN but for other OS.
+gtos2  - GT driver for OS/2 - It's similar to GTWIN but for another OS.
          Supported only by OS/2 builds.
 
 gtwin  - GT driver for MS-Windows console window.
@@ -302,14 +305,14 @@ gtwvt  - GT driver for MS-Windows. It creates its own GUI window
 gtwvg  - GUI emulation of GTWVT. It implements itself on top of GTWVT.
          GTWVG ( WVTGUI in xHarbour ) offers functions and classes to
          present a console application look like a windows one.
-         It renderes GUI elements on top of Clipper elements
+         It renders GUI elements on top of Clipper elements
          ( GETS, BROWSERS, BOXES, LINES ) which makes them
          feel like a Windows element. GTWVG can be used with existing
          code just adding some more code but without sacrificing or
          modifying old one.
          Also all IO commands can be rendered on top of the GUI elements
 gtxwc  - GT driver for X-Window. It's like GTWVT but for nixes.
-         Additionaly it has set of predefined vector characters
+         Additionally it has set of predefined vector characters
          (box and arrow drawing characters) which can be used
          instead of the one defined in font. It means that you
          will have all boxes and arrows you know from MS-DOS and CP437
@@ -318,12 +321,12 @@ gtxwc  - GT driver for X-Window. It's like GTWVT but for nixes.
          for simple program which demonstrates it.
          Supported by POSIX systems (mostly different *nixes)
 
-gtalleg- GT driver which uses alegro library for input/output.
+gtalleg- GT driver which uses Allegro library for input/output.
          It's also GUI driver which support HB_GFX*() drawing.
          Multi platform, works on all platforms for which allegro
-         library has been ported: MS-Win, MS-DOS, VESA, X11, FB, SDL, ...
+         library has been ported: MS-Windows, MS-DOS, VESA, X11, FB, SDL, ...
 
-gtgui  - pseudo GT driver which adds to GTNUL Clipboard and Tone
+gtgui  - pseudo GT driver which adds to GTNUL Clipboard and Tone()
          functionality. If you are using some MS-Windows GUI library
          and you still want to use Tone() function or HB_GTI_CLIPBOARD
          actions then link this GT driver with your application.

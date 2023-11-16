@@ -1,5 +1,5 @@
 /*
- * Command line and environment argument management
+ * Command-line and environment argument management
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -63,7 +63,7 @@
    #include <os2.h>
 #endif
 
-/* Command line argument management */
+/* Command-line argument management */
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
@@ -91,12 +91,11 @@ static HB_BOOL s_WinMainParam  = HB_FALSE;
 
 void hb_winmainArgVBuild( void )
 {
-   LPCTSTR lpCmdLine, lpSrc;
+   LPCTSTR lpCmdLine;
    LPTSTR * lpArgV;
    LPTSTR lpDst, lpArg, lpModuleName;
    HB_SIZE nSize, nModuleName;
    int iArgC;
-   HB_BOOL fQuoted;
 
    /* NOTE: MAX_PATH used intentionally instead of HB_MAX_PATH */
    lpModuleName = ( LPTSTR ) HB_WINARG_ALLOC( ( MAX_PATH + 1 ) * sizeof( TCHAR ) );
@@ -112,6 +111,9 @@ void hb_winmainArgVBuild( void )
 
    while( lpCmdLine && ! lpArgV && iArgC != 0 )
    {
+      HB_BOOL fQuoted;
+      LPCTSTR lpSrc;
+
       if( nSize != 0 )
       {
          lpArgV = ( LPTSTR * ) HB_WINARG_ALLOC( iArgC * sizeof( LPTSTR ) +
@@ -291,7 +293,7 @@ HB_BOOL hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdS
 
 void hb_cmdargInit( int argc, char * argv[] )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargInit(%d, %p)", argc, argv ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargInit(%d, %p)", argc, ( void * ) argv ) );
 
 #if defined( HB_OS_WIN )
    if( s_lpArgV )
@@ -459,10 +461,10 @@ int hb_cmdargPushArgs( void )
 
 HB_BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargIsInternal(%s, %p)", szArg, piLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargIsInternal(%s, %p)", szArg, ( void * ) piLen ) );
 
    /* NOTE: Not checking for '--' here, as it would filter out
-            valid command line options used by applications. [vszakats] */
+            valid command-line options used by applications. [vszakats] */
 
    if( hb_strnicmp( szArg, "--hb:", 5 ) == 0 ||
        hb_strnicmp( szArg, "//hb:", 5 ) == 0 )
@@ -494,7 +496,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargGet(%s, %d)", pszName, ( int ) bRetValue ) );
 
-   /* Check the command line first */
+   /* Check the command-line first */
 
    for( i = 1; i < s_argc; i++ )
    {
@@ -683,7 +685,7 @@ HB_FUNC( HB_ARGSTRING )
    hb_retc_null();
 }
 
-/* Returns the number of command line arguments passed to the application, this
+/* Returns the number of command-line arguments passed to the application, this
    also includes the internal arguments. */
 
 HB_FUNC( HB_ARGC )
@@ -691,9 +693,9 @@ HB_FUNC( HB_ARGC )
    hb_retni( s_argc - 1 );
 }
 
-/* Returns a command line argument passed to the application. Calling it with
+/* Returns a command-line argument passed to the application. Calling it with
    the parameter zero or no parameter, it will return the name of the executable,
-   as written in the command line. */
+   as written in the command-line. */
 
 HB_FUNC( HB_ARGV )
 {
@@ -815,7 +817,7 @@ HB_FUNC( HB_CMDLINE )
       hb_retc_null();
 }
 
-/* Check for command line internal arguments */
+/* Check for command-line internal arguments */
 void hb_cmdargProcess( void )
 {
    int iHandles;
@@ -841,7 +843,7 @@ void hb_cmdargProcess( void )
 #if defined( HB_CLP_STRICT )
          hb_snprintf( buffer, sizeof( buffer ), "DS avail=%" HB_PFS "uKB  OS avail=%" HB_PFS "uKB  EMM avail=%" HB_PFS "uKB", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ) );
 #else
-         hb_snprintf( buffer, sizeof( buffer ), "DS avail=%" HB_PFS "uKB  OS avail=%" HB_PFS "uKB  EMM avail=%" HB_PFS "uKB  MemStat:%s  MT:%s", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ), hb_xquery( HB_MEM_USEDMAX ) ? "On" : "Off", hb_vmIsMt() ? "On" : "Off" );
+         hb_snprintf( buffer, sizeof( buffer ), "DS avail=%" HB_PFS "uKB  OS avail=%" HB_PFS "uKB  EMM avail=%" HB_PFS "uKB  MemStat:%s  MT:%s", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ), hb_xquery( HB_MEM_STATISTICS ) ? "On" : "Off", hb_vmIsMt() ? "On" : "Off" );
 #endif
          hb_conOutErr( buffer, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
@@ -873,7 +875,7 @@ void hb_cmdargProcess( void )
 }
 
 /* Source repository revision number */
-int hb_verRevision( void )
+HB_MAXINT hb_verRevision( void )
 {
    return HB_VER_REVID;
 }
@@ -893,7 +895,7 @@ const char * hb_verChangeLogLastEntry( void )
 #if defined( HB_LEGACY_LEVEL4 )
 
 /* Source repository revision number */
-int hb_verSvnID( void )
+HB_MAXINT hb_verSvnID( void )
 {
    return HB_VER_REVID;
 }

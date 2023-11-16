@@ -1,5 +1,5 @@
 /*
- *
+ * Regex functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -114,7 +114,7 @@ static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen,
    {
       for( i = 0; i < iMatches; i++ )
       {
-         if( HB_REGMATCH_EO( aMatches, i ) != -1 )
+         if( HB_REGMATCH_EO( aMatches, i ) != HB_REGMATCH_UNSET )
             iResult = i + 1;
       }
    }
@@ -129,13 +129,13 @@ static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen,
       szString = szBuffer;
    }
    for( i = 0; i < iMatches; i++ )
-      HB_REGMATCH_EO( aMatches, i ) = -1;
+      HB_REGMATCH_EO( aMatches, i ) = HB_REGMATCH_UNSET;
    iResult = regexec( &pRegEx->reg, szString, iMatches, aMatches, pRegEx->iEFlags );
    if( iResult == 0 )
    {
       for( i = 0; i < iMatches; i++ )
       {
-         if( HB_REGMATCH_EO( aMatches, i ) != -1 )
+         if( HB_REGMATCH_EO( aMatches, i ) != HB_REGMATCH_UNSET )
             iResult = i + 1;
       }
    }
@@ -166,7 +166,7 @@ HB_FUNC( HB_REGEXCOMP )
       int iFlags = HBREG_EXTENDED;
       PHB_REGEX pRegEx;
 
-      if( ! hb_parldef( 2, 1 ) )
+      if( ! hb_parldef( 2, HB_TRUE ) )
          iFlags |= HBREG_ICASE;
       if( hb_parl( 3 ) )
          iFlags |= HBREG_NEWLINE;
@@ -192,7 +192,7 @@ HB_FUNC( HB_ATX )
    if( pString )
    {
       PHB_REGEX pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
-                                      ! hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 );
+                                      ! hb_parldef( 3, HB_TRUE ) ? HBREG_ICASE : 0 );
 
       if( pRegEx )
       {
@@ -257,7 +257,7 @@ static HB_BOOL hb_regex( int iRequest )
       return HB_FALSE;
    }
    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
-                         ( ! hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 ) |
+                         ( ! hb_parldef( 3, HB_TRUE ) ? HBREG_ICASE : 0 ) |
                          ( hb_parl( 4 ) ? HBREG_NEWLINE : 0 ) );
    if( ! pRegEx )
       return HB_FALSE;
@@ -360,7 +360,7 @@ static HB_BOOL hb_regex( int iRequest )
             PHB_ITEM pAtxArray;
             int      iMax       = hb_parni( 5 );   /* max nuber of matches I want, 0 = unlimited */
             int      iGetMatch  = hb_parni( 6 );   /* Gets if want only one single match or a sub-match */
-            HB_BOOL  fOnlyMatch = hb_parldef( 7, 1 ); /* if HB_TRUE returns only matches and sub-matches, not positions */
+            HB_BOOL  fOnlyMatch = hb_parldef( 7, HB_TRUE ); /* if HB_TRUE returns only matches and sub-matches, not positions */
             HB_SIZE  nOffset    = 0;
             int      iCount     = 0;
             int      iSO, iEO;

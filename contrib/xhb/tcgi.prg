@@ -2,6 +2,7 @@
  * Cgi Class
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,20 +45,10 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbclass.ch"
 #include "cgi.ch"
 
-CREATE CLASS TCgi FROM THtml
+CREATE CLASS TCgi INHERIT THtml
 
    VAR nH
    VAR Server_Software
@@ -87,9 +78,7 @@ CREATE CLASS TCgi FROM THtml
    VAR aQueryFields INIT {}
 
    METHOD New( cInBuffer )
-
    METHOD Field( cQueryName )
-
    METHOD ToObject()
 
 ENDCLASS
@@ -151,16 +140,11 @@ METHOD New( cInBuffer ) CLASS TCgi
 
    RETURN ::ToObject()
 
-/****
-*
-*        TCGI():ToObject()
-*
-*        Creates instance variables out of CGI FORM return values
-*        or URL encoded content.
-*
-*        It subclasses the TCgi class to a *new* class
-*/
-
+/* Creates instance variables out of CGI FORM return values
+ * or URL encoded content.
+ *
+ * It subclasses the TCgi class to a *new* class
+ */
 METHOD ToObject() CLASS TCgi
 
    LOCAL i

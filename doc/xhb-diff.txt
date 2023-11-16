@@ -68,11 +68,11 @@ sensitive file systems what can be seen in above example where it converts
 For users which have old Clipper code written for DOS file systems with
 mixed upper and lower letters in file names used directly or indirectly
 by procedure name, Harbour provides compile time switches which enable
-automatic filename conversions for all files opened by compiler:
-      -fn[:[l|u]|-]    set filename casing (l=lower u=upper)
+automatic file name conversions for all files opened by compiler:
+      -fn[:[l|u]|-]    set file name casing (l=lower u=upper)
       -fd[:[l|u]|-]    set directory casing (l=lower u=upper)
       -fp[:<char>]     set path separator
-      -fs[-]           turn filename space trimming on or off (default)
+      -fs[-]           turn file name space trimming on or off (default)
 This functionality is also local to Harbour so cannot be used with xHarbour
 as workaround for above problem though it should be easy to add it to this
 compiler in the future.
@@ -81,7 +81,7 @@ Both compilers support runtime switches for file name conversions.
       SET FILECASE LOWER | UPPER | MIXED
       SET DIRCASE LOWER | UPPER | MIXED
       SET DIRSEPARATOR <cDirSep>
-      set( _SET_TRIMFILENAME, <lOnOff> )
+      Set( _SET_TRIMFILENAME, <lOnOff> )
 which can be used in programs not intended to work with different
 file system(s) and with different OS(s).
 
@@ -108,7 +108,7 @@ file system(s) and with different OS(s).
          s := "abcdefghijk"
          FOR EACH c IN @s
             IF c $ "aei"
-               c := UPPER( c )
+               c := Upper( c )
             ENDIF
          NEXT
          ? s      // AbcdEfghIjk
@@ -139,7 +139,7 @@ file system(s) and with different OS(s).
                next
             endif
          return
-   In xHarbour there is function HB_ENUMINDEX() which is supported by
+   In xHarbour there is function hb_enumIndex() which is supported by
    Harbour in XHB library.
 
 2. WITH OBJECT / END[WITH]
@@ -158,8 +158,8 @@ file system(s) and with different OS(s).
       return
    It also uses OOP interface just like FOR EACH, so it's possible to
    use :__withObject() to access / assign current WITH OBJECT value.
-   In xHarbour there are functions HB_QWITH(), HB_WITHOBJECTCOUNTER()
-   and HB_RESETWITH() which are supported by Harbour in XHB library.
+   In xHarbour there are functions hb_QWith(), hb_WithObjectCounter()
+   and hb_ResetWith() which are supported by Harbour in XHB library.
 
 3. SWITCH / [ CASE / [EXIT] / ... ] OTHERWISE / END[SWITCH]
    In Harbour it uses jump table with predefined values what gives
@@ -193,7 +193,7 @@ file system(s) and with different OS(s).
       [ FINALLY ]
       END
    TRY gives exactly the same functionality as:
-      BEGIN SEQUENCE WITH { |e| break(e) }
+      BEGIN SEQUENCE WITH {| e | Break( e ) }
 
 With the exception to SWITCH implementation, in all other statements
 described above, xHarbour causes performance reduction in PCODE evaluation
@@ -207,12 +207,12 @@ different way which does not cause any overhead and slowness for other code.
 Both compilers support compile time extended codeblocks which allow
 to use statements but with a little bit different syntax. Harbour uses
 standard Clipper codeblock delimiters {}, f.e.:
-      ? eval( { | p1, p2, p3 |
+      ? Eval( {| p1, p2, p3 |
                 ? p1, p2, p3
                 return p1 + p2 + p3
               }, 1, 2, 3 )
 and xHarbour <>, f.e.:
-      ? eval( < | p1, p2, p3 |
+      ? Eval( <| p1, p2, p3 |
                 ? p1, p2, p3
                 return p1 + p2 + p3
               >, 1, 2, 3 )
@@ -239,7 +239,7 @@ warning giving unexpected results at runtime:
                      exit
                      return p * 10
                   >
-            ?? eval( cb, i )
+            ?? Eval( cb, i )
          next
       return
 It's possible to create many other similar examples which are mostly
@@ -257,38 +257,38 @@ like string, date, non integer number or pointer (in Harbour) items.
 They can be created using => for list of keys and values enclosed
 inside {}, f.e.:
       hVal := { "ABC"    => 123.45, ;
-                100.1    => date(), ;
+                100.1    => Date(), ;
                 100.2    => 10,     ;
                 100      => 5,      ;
-                date()-1 => .t. }
+                Date()-1 => .t. }
 and then items can be accessed using [] operator, f.e.:
       ? hVal[ "ABC" ]      // 123.45
       ? hVal[ 100 ]        // 5
-      ? hVal[ date()-1 ]   // .t.
+      ? hVal[ Date()-1 ]   // .t.
       ? hVal[ 100.2 ]      // 10
-      ? hVal[ 100.1 ]      // date()
+      ? hVal[ 100.1 ]      // Date()
 
 By default hash items in both compiler support automatic adding new elements
 on assign operation. It can be disabled using one of hash item functions.
-Harbour has additional extension which allows to enable autoadd with default
+Harbour has additional extension which allows to enable auto-add with default
 values also for access operation and reference operator. It also supports
 well passing hash array items by reference and has some other minor
 extensions.
 
-xHarbour does not support autoadd on access or reference operations and
+xHarbour does not support auto-add on access or reference operations and
 passing hash array items by reference does not work (see passing array and
 hash item by reference).
 
 Both compilers have set of functions to make different operations on hash
 arrays which give similar functionality. In Harbour they use HB_H prefix
-(f.e. HB_HSCAN()) in xHarbour H prefix (f.e. HSCAN())
+(f.e. hb_HScan()) in xHarbour H prefix (f.e. HScan())
 
 xHarbour has additional functionality which can be enabled for each hash
 array using HSetAACompatibility() function. It's an index where is stored
 information about the order in which items were added to hash array and
 set of functions with HAA prefix to operate on hash array items using this
-index instead of real position in hash array, i.e. HAAGETVALUEAT() which
-works like HGETVALUEAT().
+index instead of real position in hash array, i.e. haAGetValueAt() which
+works like HGetValueAt().
 In Harbour such functionality also exists and is enabled by default in all
 hash array but the internal implementation is completely different. Harbour
 does not emulate associative arrays by special index which keeps assign order
@@ -302,7 +302,7 @@ added to hash array.
 Harbour emulates HAA*() xHarbour functions in XHB library but only for
 compatibility with existing xHarbour code.
 This functionality can be disabled for each hash array in Harbour by
-HB_HKEEPORDER() function which sorts key-value pairs in hash array and
+hb_HKeepOrder() function which sorts key-value pairs in hash array and
 removes the access index.
 
 
@@ -313,7 +313,7 @@ In xHarbour the behavior of references stored in array is reverted in
 comparison to Clipper or Harbour.
 In Clipper and Harbour VM executing code like:
          aVal[ 1 ] := 100
-clears unconditionally 1-st item in aVal array and assigns to it value 100.
+clears unconditionally 1st item in aVal array and assigns to it value 100.
 xHarbour checks if aVal[ 1 ] is an reference and in such case it resolves
 the reference and then assign 100 to the destination item.
 On access Clipper and Harbour VM executing code like:
@@ -335,9 +335,9 @@ It can be seen in code like:
          x2 := aParams[ 2 ]
          x3 := aParams[ 3 ]
 
-         x1 := lower( x1 ) + "1"
-         x2 := lower( x2 ) + "2"
-         x3 := lower( x3 ) + "3"
+         x1 := Lower( x1 ) + "1"
+         x2 := Lower( x2 ) + "2"
+         x3 := Lower( x3 ) + "3"
 
 Harbour and Clipper shows:
       A B C
@@ -349,7 +349,7 @@ but xHarbour:
 It's not Clipper compatible so in some cases it may cause portability
 problems. F.e. code like above was used in Clipper as workaround for
 limited number of parameters (32 in Clipper). But it allows to directly
-assign items of arrays returned by hb_aParams() and updating corresponding
+assign items of arrays returned by hb_AParams() and updating corresponding
 variables passed by references (see functions with variable number of
 parameters below).
 Anyhow the fact that xHarbour does not have '...' operator which can
@@ -358,12 +358,12 @@ named parameters in functions with variable number of parameters causes
 that reverted references introduce limitation, f.e. it's not possible
 to make code like:
    func f( ... )
-      local aParams := hb_aParams()
-      if len( aParams ) == 1
+      local aParams := hb_AParams()
+      if Len( aParams ) == 1
          return f1( aParams[ 1 ] )
-      elseif len( aParams ) == 2
+      elseif Len( aParams ) == 2
          return f2( aParams[ 1 ], aParams[ 2 ] )
-      elseif len( aParams ) >= 3
+      elseif Len( aParams ) >= 3
          return f3( aParams[ 1 ], aParams[ 2 ], aParams[ 3 ] )
       endif
    return 0
@@ -407,7 +407,7 @@ only and does not work for SETGET methods. In Harbour it works correctly.
 This code illustrates the problem:
 
       proc main()
-         local oBrw := tbrowseNew()
+         local oBrw := TBrowseNew()
          ? oBrw:autoLite
          oBrw:autoLite := !oBrw:autoLite
          ?? "=>", oBrw:autoLite
@@ -452,7 +452,7 @@ This simple code illustrates it:
                                  AllTrim( Str( Memory( 104 ) ) )
       proc main( x )
          local n, a
-         a := array( N_LOOPS )
+         a := Array( N_LOOPS )
          FREE MEMORY
          for n := 1 to N_LOOPS
             a[n] := f( x )
@@ -461,8 +461,8 @@ This simple code illustrates it:
       return
       func f(x)
          local cb, tmp, ref
-         tmp := space( 60000 )
-         if empty( x )
+         tmp := Space( 60000 )
+         if Empty( x )
             cb := {|| .t. }
          else
             cb := {|| ref }
@@ -490,13 +490,13 @@ illustrates it:
          local cb, n := 100
          mk_block( @cb, @n )
          ? "after detaching:"
-         ? eval( cb ), n
+         ? Eval( cb ), n
       return
       proc mk_block( cb, n )
          n := 100
          cb := {|| ++n }
          ? "before detaching:"
-         ? eval( cb ), n
+         ? Eval( cb ), n
       return
 
 Above code compiled by Clipper shows:
@@ -533,10 +533,10 @@ illustrated by the following example:
 
       /*** tst.prg ***/
       proc main()
-         local cb := {|| qout( n + 5 ), qout( f ) }  // (*)
+         local cb := {|| QOut( n + 5 ), QOut( f ) }  // (*)
          field f in table
          local n := 10
-         eval( cb )
+         Eval( cb )
       return
 
 In the line which initializes cb code (*) we are using local variable n
@@ -546,10 +546,10 @@ and uses their later declarations. If you compile above code using Clipper
 with -n -w -es2 switches, i.e.
    cl tst -n -w -es2
 then it's compiled without any compile time warnings or errors. Then
-during execution it shows 15 for the first QOUT() function call and
+during execution it shows 15 for the first QOut() function call and
 generates runtime error
    Error BASE/1002  Alias does not exist: TABLE
-for the second QOUT() call. It means that it correctly recognized scope
+for the second QOut() call. It means that it correctly recognized scope
 of both variables and also bound alias TABLE with field F though it was
 declared one line below codeblock initialization.
 
@@ -614,7 +614,7 @@ i.e. this code:
       proc main()
          local n
          static s := {|| n }
-         eval( s )
+         Eval( s )
       return
 
 is cleanly compiled by Clipper and Xbase++ but it causes RTE in
@@ -632,7 +632,7 @@ named parameters and then unnamed just like in many other languages, f.e.:
 The unnamed parameters can be used in different statements passing them
 by '...' operator, f.e. as array items:
       proc main()
-         AEval( F( "1", "2", "A", "B", "C" ), {|x, i| qout( i, x ) } )
+         AEval( F( "1", "2", "A", "B", "C" ), {|x, i| QOut( i, x ) } )
       func f( p1, p2, ... )
          ? "P1:", p1
          ? "P2:", p2
@@ -648,15 +648,15 @@ or as array indexes:
 or as function parameters:
       proc main()
          info( "test1" )
-         info( "test2", 10, date(), .t. )
+         info( "test2", 10, Date(), .t. )
       proc info( msg, ... )
-         qout( "[" + msg +"]: ", ... )
+         QOut( "[" + msg +"]: ", ... )
 
 The '...' operator saves references when push parameters and it can be
 used also in codeblocks, f.e.:
-      bCode := { | a, b, c, ... | qout( a, b, c ), qout( "[", ..., "]" ) }
+      bCode := {| a, b, c, ... | QOut( a, b, c ), QOut( "[", ..., "]" ) }
 
-All parameters can be accessed also using hb_aParams() function but
+All parameters can be accessed also using hb_AParams() function but
 in xHarbour it works correctly only for functions which does not use
 any local parameters or declared with variable number of parameters
 or when number of declared parameters is not smaller then number of
@@ -668,61 +668,61 @@ passed parameters. This code illustrates it:
          p4("A","B","C")
          p5("A","B","C")
       proc p1
-         ? procname()+"(), parameters:", pcount()
-         aeval( hb_aParams(), {|x,i| qout(i,"=>",x) } )
+         ? ProcName()+"(), parameters:", PCount()
+         AEval( hb_AParams(), {|x,i| QOut(i,"=>",x) } )
       proc p2
          local l
-         ? procname()+"(), parameters:", pcount()
-         aeval( hb_aParams(), {|x,i| qout(i,"=>",x) } )
+         ? ProcName()+"(), parameters:", PCount()
+         AEval( hb_AParams(), {|x,i| QOut(i,"=>",x) } )
       proc p3(x)
-         ? procname()+"(), parameters:", pcount()
-         aeval( hb_aParams(), {|x,i| qout(i,"=>",x) } )
+         ? ProcName()+"(), parameters:", PCount()
+         AEval( hb_AParams(), {|x,i| QOut(i,"=>",x) } )
       proc p4(...)
-         ? procname()+"(), parameters:", pcount()
-         aeval( hb_aParams(), {|x,i| qout(i,"=>",x) } )
+         ? ProcName()+"(), parameters:", PCount()
+         AEval( hb_AParams(), {|x,i| QOut(i,"=>",x) } )
       proc p5(a,b,c,d,e)
-         ? procname()+"(), parameters:", pcount()
-         aeval( hb_aParams(), {|x,i| qout(i,"=>",x) } )
+         ? ProcName()+"(), parameters:", PCount()
+         AEval( hb_AParams(), {|x,i| QOut(i,"=>",x) } )
 
 In xHarbour it's only possible to declare all parameters as unnamed, f.e.:
       func f( ... )
-and then access them using hb_aParams() or PVALUE() (in Harbour it's called
-HB_PVALUE()) function. There is no support for named parameters and ...
+and then access them using hb_AParams() or PValue() (in Harbour it's called
+hb_PValue()) function. There is no support for named parameters and ...
 operator.
 
 In xHarbour due to reverted behavior of references stored in array items
-assign operation to items in array returned by hb_aParams() changes
+assign operation to items in array returned by hb_AParams() changes
 corresponding parameters passed by reference. It does not happen in
 Harbour where item references stored in arrays work like in Clipper.
 
 
 
-###    HB_ARRAYTOPARAMS() FUNCTION    ###
+###    hb_ArrayToParams() FUNCTION    ###
 =========================================
 Harbour has special function which allows to convert array into
 list of items which can be used as function parameters, array
 values or array indexes in the same way as '...' operator:
-   hb_arrayToParams( <aValue> ) -> <aValue>[ 1 ] [, <aValue>[ N ] ]
+   hb_ArrayToParams( <aValue> ) -> <aValue>[ 1 ] [, <aValue>[ N ] ]
 i.e.:
       proc main( ... )
-         local aParams := hb_aParams(), n
+         local aParams := hb_AParams(), n
          /* remove parameters starting with "--" */
          n := 1
-         while n < len( aParams )
-            if left( aParams[ n ], 2 ) == "--"
-               hb_adel( aParams, n, .t. )
+         while n < Len( aParams )
+            if Left( aParams[ n ], 2 ) == "--"
+               hb_ADel( aParams, n, .t. )
             else
                ++n
             endif
          enddo
-         ? "Public parameters:", hb_arrayToParams( aParams )
+         ? "Public parameters:", hb_ArrayToParams( aParams )
       return
 
-Note for Clipper users: 'hb_adel( aParams, n, .t. )' in above example
-works like 'adel( aParams, n ); asize( aParams, len( aParams ) - 1 )'.
+Note for Clipper users: 'hb_ADel( aParams, n, .t. )' in above example
+works like 'ADel( aParams, n ); ASize( aParams, Len( aParams ) - 1 )'.
 
 This functionality is unique to Harbour and xHarbour does not support
-hb_arrayToParams() or similar function.
+hb_ArrayToParams() or similar function.
 
 
 
@@ -755,20 +755,20 @@ i.e.:
 By default Harbour is Cl*pper compatible and also generates such
 compile time error (E0042).
 Many people do not know about this functionality in Clipper and Harbour
-and are quite often surprised when hear about it.
+and are quite often surprised when hearing about it.
 Harbour offers two compiler switches to control this feature. It can be
 completely disabled by -km compiler switch.
-   -km => turn off macrotext substitution
+   -km => turn off macro-text substitution
 When this switch is used for constant strings with "&" character inside
-faster code is generate which does not activate macrocompiler at runtime
+faster code is generated which does not activate macro-compiler at runtime
 so they are taken as is. This switch does not affect real macros.
 It only changes the runtime behavior of strings constants with "&"
-character inside (macrotext).
+character inside (macro-text).
 The second switch -kd extends above functionality and allows to use
-macrotexts and macros with declared symbols:
+macro-texts and macros with declared symbols:
    -kd => accept macros with declared symbols
 It means that also fields, local and static variables can be used in
-macrotexts and macros.
+macro-texts and macros.
 The above example compiled with -kd switch does not generate compile
 time error and final application shows "text" on the screen.
 When -km switch is used then "&var" is shown by final application.
@@ -781,20 +781,20 @@ or:
 or:
    ? &cLocalPref.func&cPriv1( cPriv2, &cStatic )
 etc.
-If it's possible then for macrocodeblocks Harbour compiler tries to
+If it's possible then for macro-codeblocks Harbour compiler tries to
 generate early eval code in which macros are expanded when codeblock
 is created. Otherwise macros are expanded each time codeblock is
 evaluated.
-In xHarbour macrotext substitution for pure strings is always enabled
+In xHarbour macro-text substitution for pure strings is always enabled
 like in Clipper but it does not detect situation when fields, local
-or static variables are used in macrotexts so it does not generate
+or static variables are used in macro-texts so it does not generate
 compile time errors in such case.
 xHarbour has similar to -kd extension always enabled but limited to
 macro variables used inside code blocks and it works only if other
 macros are not used in the same expression. When more complicated
 examples are used xHarbour compiler generates broken code which
 causes RTE or GPF during execution. It also does not support
-codeblocks which contain mixed macros and refuse to compile such
+codeblocks which contain mixed macros and refuses to compile such
 code.
 
 This example illustrates macros with declared symbols.
@@ -811,12 +811,12 @@ This example illustrates macros with declared symbols.
          private nPrivate := 10000
          private cPriv1 := "test1", cPriv2 := "abc"
       #ifndef __XHARBOUR__
-         cbVar1 := {|| &cLocal + nPrivate + val( &cStatic ) }
+         cbVar1 := {|| &cLocal + nPrivate + Val( &cStatic ) }
          cbVar2 := {|| &cLocalPref.func&cPriv1( cPriv2, &cStatic ) }
-         ? eval( cbVar1 )
-         ? eval( cbVar2 )
+         ? Eval( cbVar1 )
+         ? Eval( cbVar2 )
       #endif
-         ? &cLocal + nPrivate + val( &cStatic )
+         ? &cLocal + nPrivate + Val( &cStatic )
          cLocal := "upp"
          ? &cLocal.er( &cStatic )
          ? hb_funcTest1( cPriv2, &cStatic )
@@ -830,7 +830,7 @@ This example illustrates macros with declared symbols.
 Above code can be compiled by xHarbour but it will not work exploiting
 some problems in this compiler and generated code.
 
-This feature can be useful also in porting some other xbase compatible
+This feature can be useful also in porting some other xBase compatible
 code to Harbour because some compilers just like xHarbour accepted
 in some limited way officially unsupported syntax with macros using
 declared symbols.
@@ -844,14 +844,14 @@ Clipper does not. This example shows such macro messages usage:
 
       proc main()
          memvar var
-         local o := errorNew(), msg := "cargo"
+         local o := ErrorNew(), msg := "cargo"
          private var := "CAR"
 
          o:&msg := "<cargo>"
          o:&var.go += "<value1>"
          o:&msg += "<value2>"
          o:&( msg ) += "<value3>"
-         o:&( upper( msg ) ) += "<value4>"
+         o:&( Upper( msg ) ) += "<value4>"
 
 xHarbour does not support macro messages in assignment context.
 Older xHarbour versions for macro messages with <op>= operators
@@ -863,9 +863,9 @@ depends on the used context.
 
 
 
-###    MULTIVALUE MACROS    ###
-===============================
-In the early Harbour days was added basic support for multivalue macros
+###    MULTI-VALUE MACROS    ###
+================================
+In the early Harbour days was added basic support for multi-value macros
 which can be evaluated to list of values, f.e.:
       ? &("1,2,3")
 should show:
@@ -873,14 +873,14 @@ should show:
 The implementation of this extension was not accepted by many of Harbour
 developers and it was one of the main reasons of the xHarbour fork.
 In Harbour it was later fully removed and implemented from scratch using
-different internal algorithms and structures. Now Harbour supports multivalue
+different internal algorithms and structures. Now Harbour supports multi-value
 macros in code like:
       proc main()
          local s1 := "'a', 'b', 'c'", s2 := "1,3", a
          ? &s1
          a := { { "|", &s1, 'x', &s2, 'y' }, 'x', &s2 }
          ? "a[1] items:"
-         aeval( a[1], { |x,i| qout( i, x ) } )
+         AEval( a[ 1 ], {| x, i | QOut( i, x ) } )
          ? "a["+s2+"] =>", a[ &s2 ]
       return
 
@@ -902,9 +902,9 @@ This code can be compiled and executed by both compilers:
       proc main()
          local s := "ABCDEFG"
          ? s, "=>", s[2], s[4], s[6]
-         s[2] := lower( s[2] )
-         s[4] := lower( s[4] )
-         s[6] := lower( s[6] )
+         s[2] := Lower( s[2] )
+         s[4] := Lower( s[4] )
+         s[6] := Lower( s[6] )
          ?? " =>", s
       return
 
@@ -924,7 +924,7 @@ for strings in XHB.LIB for his own preferences removing the RTE.
 ============================================================================
 xHarbour supports negative indexes in [] operator. They are used
 to access items from tail, f.e. aVal[ -1 ] is the same as
-aVal[ len( aVal ) ] or ATail( aVal ).
+aVal[ Len( aVal ) ] or ATail( aVal ).
 By default Harbour core code does not give such functionality but
 it has strong enough OOP API to allow adding such extension without
 touching core code even by user at .prg level. It was implemented
@@ -963,7 +963,7 @@ This code can be compiled and executed by both compilers:
       #endif
       proc main()
          local c := "A"
-         ? c * 10, c - 10, c + 10, c * " ", chr( 2 ) ^ "!"
+         ? c * 10, c - 10, c + 10, c * " ", Chr( 2 ) ^ "!"
       return
 
 and gives the same results.
@@ -971,11 +971,11 @@ Anyhow the emulation is not full here. It works only for .prg code.
 In xHarbour standard C API functions/macros were modified to use
 one byte string items as numbers. It's potential source of very serious
 problems, f.e. ordSetFocus("1") should chose index called "1" or maybe
-index 49 or what should return ascan( {49,"1"}, "1" ) (1 or 2)? so
+index 49 or what should return AScan( {49,"1"}, "1" ) (1 or 2)? so
 Harbour developers decided to not add anything like that to core code
 so in Harbour functions written in C refuse to accept one byte string
 as number and code like
-      ? str( "0" )
+      ? Str( "0" )
 generates runtime error instead of printing '        48'.
 
 
@@ -1020,7 +1020,7 @@ In Harbour and xHarbour $ operator can be used to check if some key
 or hash pair belongs to hash, f.e.:
       ? "abc" $ { "qwe"=>100, "abc"=>200, "zxc"=>300 }
 In xHarbour $ operator can be also used to check if value belongs
-to array. It works like ASCAN() but with exact comparison for strings,
+to array. It works like AScan() but with exact comparison for strings,
 f.e.:
       ? "abc" $ { "qwe", "abc", "zxc" } // result .T.
       ? "a" $ { "qwe", "abc", "zxc", { "a" } } // result .F.
@@ -1044,10 +1044,10 @@ Warning! Xbase++ also supports $ operator for arrays but it makes non
          should create own code to overload $ operators used for arrays
          which will follow exact Xbase++ rules.
          CLIP also has some code for such extension but it has two bugs.
-         1-st is a semi bug: it uses non exact comparison but reverts
+         1st is a semi bug: it uses non exact comparison but reverts
          arguments so ` "abc" $ { "a" } ' gives .T.
-         2-nd which is critical: it has wrong stop condition so does
-         not stop scanning when locates 1-st matching item. It should
+         2nd which is critical: it has wrong stop condition so does
+         not stop scanning when locates 1st matching item. It should
          be fixed and I do not know what will be the final CLIP behavior.
 
 
@@ -1064,11 +1064,11 @@ Harbour does not have such operators but it has set of bit functions
 (HB_BIT*()) which are fully optimized at compile time giving such
 functionality without extending language syntax and introducing new
 operators:
-      <x> & <y>      => HB_BITAND( <x>, <y> )
-      <x> | <y>      => HB_BITOR( <x>, <y> )
-      <x> ^^ <y>     => HB_BITXOR( <x>, <y> )
-      <x> << <y>     => HB_BITSHIFT( <x>, <y> )
-      <x> >> <y>     => HB_BITSHIFT( <x>, -<y> )
+      <x> & <y>      => hb_bitAnd( <x>, <y> )
+      <x> | <y>      => hb_bitOr( <x>, <y> )
+      <x> ^^ <y>     => hb_bitXor( <x>, <y> )
+      <x> << <y>     => hb_bitShift( <x>, <y> )
+      <x> >> <y>     => hb_bitShift( <x>, -<y> )
 
 
 
@@ -1078,9 +1078,9 @@ xHarbour has three operators defined as identifier: IN, HAS, LIKE
 IN is synonym of $ operator and it's translated by lexer to $.
 It does not give any new functionality. For portable code use $.
 HAS and LIKE are regular expressions operators. In Harbour they have
-the same functionality as HB_REGEXHAS() and HB_REGEXLIKE() functions:
-      <x> HAS <y>    => HB_REGEXHAS( <y>, <x> )
-      <x> LIKE <y>   => HB_REGEXLIKE( <y>, <x> )
+the same functionality as hb_regexHas() and hb_regexLike() functions:
+      <x> HAS <y>    => hb_regexHas( <y>, <x> )
+      <x> LIKE <y>   => hb_regexLike( <y>, <x> )
 
 Using identifiers as operators is not compatible with Clipper preprocessor
 precedence rules and introduces bugs to language syntax so Harbour will
@@ -1140,12 +1140,12 @@ Here is simple code which illustrates it:
 
    proc main()
       local a, i, n
-      a := afill( array( 10 ), 100 )
+      a := AFill( Array( 10 ), 100 )
       i := n := 0
-      while i < len( a )
+      while i < Len( a )
          a[ ++i ] -= n++
       enddo
-      aeval( a, { |x| qout( x ) } )
+      AEval( a, {| x | QOut( x ) } )
    return
 
 This problem is also fixed in Xbase++ so it's possible to exchange code
@@ -1167,7 +1167,7 @@ are send to exactly the same object. This example illustrates it:
 
    proc main()
       local o
-      o := errorNew()
+      o := ErrorNew()
       ? "assign..."
       ?? f( o ):cargo := 0
       ? "predec..."
@@ -1181,7 +1181,7 @@ are send to exactly the same object. This example illustrates it:
 
 In Harbour and Xbase++ function F() is executed only once for each
 expression but in Clipper and xHarbour once for 'assign', then twice for
-'predec' and finaly three times for 'postinc'. In this code function f()
+'predec' and finally three times for 'postinc'. In this code function f()
 returns the same object 'o' on each call so it's not a problem but code
 where the expression can return different objects will not work correctly
 so OOP programmers working with Clipper or xHarbour should remember about
@@ -1194,12 +1194,12 @@ it and not create such code.
 xHarbour supports application wide static variables called GLOBALs.
 To declare GLOBAL variable you have to put
       GLOBAL <varname> [ := <initValue> ]
-before the 1-st function in compiled .prg module and use -n compiler
+before the 1st function in compiled .prg module and use -n compiler
 switch. In xHarbour GLOBAL variables cannot be declared inside function
 body. If user wants to use GLOBAL variable in different .prg module
 then he has to add declaration
       GLOBAL EXTERNAL <varname>
-to his code before the 1-st function in compiled .prg module and use
+to his code before the 1st function in compiled .prg module and use
 -n compiler switch. Also, GLOBAL EXTERNAL declaration cannot be used
 in function body. Unlike other variables GLOBALs declared in xHarbour
 reserve used names so they cannot be used in the same module in local
@@ -1226,7 +1226,7 @@ Harbour does not support GLOBALs.
 Both compilers support DATETIME/TIMESTAMP values though they use different
 implementation.
 
-In Harbour it's new type TIMESTAMP for which VALTYPE() function returns
+In Harbour it's new type TIMESTAMP for which ValType() function returns
 "T". It has its own HVM arithmetic similar to the one used by DATE type
 but not exactly the same. The difference (-) between two TIMESTAMP values
 is represented as number where integer part is number of days and fractional
@@ -1264,7 +1264,7 @@ In xHarbour DATE type was extended to hold information about time. Clipper
 compatible DATE arithmetic in HVM was modified to respect fractional part
 in numbers which was used for time part.
 The xHarbour DATETIME implementation introduces incompatibilities to Clipper
-(f.e. compare Clipper and xHarbour results in code like: '? date() + 1.125'
+(f.e. compare Clipper and xHarbour results in code like: '? Date() + 1.125'
 so in some cases existing Clipper code has to be carefully adopted to work
 correctly with xHarbour but it's fully functional solution though it needs
 some minor fixes in conversions between datetime values and numbers.
@@ -1272,10 +1272,10 @@ some minor fixes in conversions between datetime values and numbers.
 The difference between Harbour and xHarbour can be seen in this code:
       proc main()
          local dVal, tVal
-         dVal := date()
+         dVal := Date()
          tVal := dVal + {^ 02:00 }  // {^ 02:00 } timestamp
                                     // constant, see below
-         ? valtype(dVal), valtype(tVal)
+         ? ValType(dVal), ValType(tVal)
          ? dVal; ? tVal
          dVal += 1.125  // In Clipper and Harbour it increases
                         // date value by 1
@@ -1283,7 +1283,7 @@ The difference between Harbour and xHarbour can be seen in this code:
                         // and 6 hours
          ? dVal; ? tVal
          ? dVal = tVal  // In Harbour .T. because date part is the same
-         ? date() + 0.25, date() + 0.001 == date()
+         ? Date() + 0.25, Date() + 0.001 == Date()
       return
 Harbour shows:
       D T
@@ -1331,15 +1331,15 @@ gives the same results as:
 Harbour does not set any default date value when timestamp constant contains
 only time part.
 Harbour supports VFP syntax only in Compiler. It's not supported in
-macrocompiler and it can be disabled in the future so it's not suggested
+macro-compiler and it can be disabled in the future so it's not suggested
 to use with Harbour programs.
 
-Only Harbour supports date constant (in compiler and macrocompiler) in the
+Only Harbour supports date constant (in compiler and macro-compiler) in the
 form d"YYYY-MM-DD" f.e.:
       d"2009-05-20"
 Also delimiter "/" or "." can be used instead of "-".
 
-Only Harbour supports timestamp constant (in compiler and macrocompiler)
+Only Harbour supports timestamp constant (in compiler and macro-compiler)
 in the form t"YYYY-MM-DD HH:MM:SS.fff"
 The exact accepted timestamp pattern is is:
       YYYY-MM-DD [H[H][:M[M][:S[S][.f[f[f[f]]]]]]] [PM|AM]
@@ -1353,39 +1353,39 @@ f.e.:
 The following characters can be used as date delimiters: "-", "/", "."
 if PM or AM is used HH is in range < 1 : 12 > otherwise in range < 0 : 23 >
 
-Harbour compiler and macrocompiler support also date constants in the
+Harbour compiler and macro-compiler support also date constants in the
 form 0dYYYYMMDD f.e.:
       0d20090520.
 
 
 
-###    EXTENDED LITERAL STRING IN COMPILER AND MACROCOMPILER    ###
-===================================================================
+###    EXTENDED LITERAL STRING IN COMPILER AND MACRO-COMPILER    ###
+====================================================================
 Harbour and xHarbour support extended strings with C like escaped values
 as e"...", f.e.:
       ? e"Helow\r\nWorld \x21\041\x21\000abcdefgh"
-They works in compiler and macrocompiler but xHarbour macrocompiler does
+They works in compiler and macro-compiler but xHarbour macro-compiler does
 not support strings with embedded 0 so they are not fully functional here.
 
 
 
 ###    SYMBOL ITEMS AND FUNCTION REFERENCES    ###
 ==================================================
-Harbour supports SYMBOL items ( VALTYPE(funcSym) == "S" ) which can be used
+Harbour supports SYMBOL items ( ValType(funcSym) == "S" ) which can be used
 as function or message references. They have similar functionality to
 SYMBOL objects in Class(y) and understands NAME, EXEC and EVAL messages.
 They can be created literally by compiler using @<funcName>(), f.e:
-      funcSym := @str()
+      funcSym := @Str()
 and in such case they also create explicit reference (link time binding)
 to given functions or by macro compiler, f.e.:
-      funcSym := &("@upper()")
+      funcSym := &("@Upper()")
 what does not create any explicit bindings. This is simple code which
 uses symbol items:
       proc main()
          local funcSym
-         funcSym := @str()
+         funcSym := @Str()
          ? funcSym:name, "=>", funcSym:exec( 123.456, 10, 5 )
-         funcSym := &("@upper()")
+         funcSym := &("@Upper()")
          ? funcSym:name, "=>", funcSym:exec( "Harbour" )
       return
 
@@ -1393,9 +1393,9 @@ xHarbour does not have such functionality though it can create at
 compile time function references using a little bit different syntax:
       ( @<funcName>([<anyExpList,...>]) )
 the different syntax is side effect of bugs in grammar rules only and
-probably will be fixed somewhere (macrocompiler does not support such
+probably will be fixed somewhere (macro-compiler does not support such
 syntax at all).
-In xHarbour above code creates pointer item ( VALTYPE(funcSym) == "P" )
+In xHarbour above code creates pointer item ( ValType(funcSym) == "P" )
 which can be used in some cases like in Harbour but because xHarbour VM
 does not know if given pointer item is function reference or not then in
 such context xHarbour has to accept any pointer items as function
@@ -1414,18 +1414,22 @@ Anyhow so far in both compilers it is only source code decoration and it's
 simply ignored during compilation. The syntax is similar but not the same.
 In VO:
    LOCAL var1, var2 AS LOGICAL
-means that var1 and var2 are character variables and are initialized to .F.
+means that var1 and var2 are logical variables and are initialized to .F.
 at runtime. In Harbour and xHarbour 'AS <type>' has to be repeated after
 each variable so in above code only var2 is strongly typed but not var1.
 To declare both variables as logical ones it should be changed to:
    LOCAL var1 AS STRING, var2 AS STRING
+and to make implicit initialization user has to write code like:
+   LOCAL var1 AS STRING := "foo", var2 AS STRING := "bar"
+instead of:
+   LOCAL var := "foo", var2 := "bar" AS STRING
 Such syntax is also not compatible with syntax of typed object variables
 (see TYPED OBJECT VARIABLES below) where
    VAR v1, v2 AS LOGICAL
 declares both variables as logical ones.
 This can strongly confuse users so in the future adding fully functional
 support for strong typed variables probably it will be changed to syntax
-compatible with other xBase compatible languages.
+compatible with other xBase-like languages.
 Now please remember that neither Harbour nor xHarbour make type validation
 during compilation and at runtime and typed variables are not implicitly
 initialized to empty value of given type.
@@ -1451,13 +1455,13 @@ and:
 It's also possible to give unprotected access to all other functions
 declared in the same .prg module just like in xHarbour by using
 'MODULE FRIENDLY' clause in class declaration, i.e.:
-      CLASS myCls FROM parent MODULE FRIENDLY
+      CREATE CLASS myCls INHERIT parent MODULE FRIENDLY
          [...]
       ENDCLASS
 So in Harbour all scopes aspects are explicitly controlled by programmer
 and AFAIK there are no side effects forced by internal implementation.
 Important is also the fact in Harbour each codeblock block created explicitly
-or by macrocompiler inherits rights from functions when it was created
+or by macro-compiler inherits rights from functions when it was created
 and then has the same scope. It means that it's not possible to break scope
 protection using codeblocks and it's very important functionality for real
 private (hidden) data because it makes it accessible for codeblocks created
@@ -1468,8 +1472,8 @@ on module symbol table.
 
 
 
-###    OOP AND MULTIINHERITANCE    ###
-======================================
+###    OOP AND MULTI-INHERITANCE    ###
+=======================================
 Harbour and xHarbour support multiple inheritance just like Class(y).
 Anyhow only Harbour correctly resolves possible name conflicts
 by casting. xHarbour and Class(y) in Clipper does not work correctly
@@ -1496,7 +1500,7 @@ explicit casting is used. This code illustrate the problem:
          ? o:var, o:cls1:var, o:cls2:var, o:cls3:var
       return
 
-      CREATE CLASS MYCLS FROM CLS1, CLS2, CLS3
+      CREATE CLASS MYCLS INHERIT CLS1, CLS2, CLS3
       EXPORTED:
          VAR      VAR
       ENDCLASS
@@ -1536,8 +1540,8 @@ important thing.
 
 
 
-###    OOP AND PRIVATE/HIDDEN DATAs    ###
-==========================================
+###    OOP AND PRIVATE/HIDDEN DATA    ###
+=========================================
 In bigger projects where different programmers work on different classes
 which are later used as ancestors of some new classes it's extremely important
 to give support for real private (hidden) data for each class programmer
@@ -1548,13 +1552,13 @@ big projects such name conflicts can be nightmare a which eliminates some
 languages.
 
 Harbour resolves this problem automatically. All hidden variables and
-messages are automatically casted to the class which is the owner of
+messages are automatically cast to the class which is the owner of
 calling code. To make it working Harbour needs fully functional scope
-protection and multiinheritance (see OOP SCOPES and OOP AND MULTIINHERITANCE).
+protection and multi-inheritance (see OOP SCOPES and OOP AND MULTI-INHERITANCE).
 Everything is done automatically without any explicit casting or other
 then declaring variables or methods as HIDDEN source code modification.
 This code illustrates it. We have two classes and each of them has its own
-_private_ 'temp' instance variable and 'set' method. 3-rd class inherits
+_private_ 'temp' instance variable and 'set' method. 3rd class inherits
 from both of them and executes it's public methods which internally
 access hidden ones but without any explicit casting. In Harbour all is done
 automatically by HVM:
@@ -1568,7 +1572,7 @@ automatically by HVM:
          WAIT
       RETURN
 
-      CREATE CLASS MYCLS FROM CLS1, CLS2
+      CREATE CLASS MYCLS INHERIT CLS1, CLS2
       EXPORTED:
          METHOD   ACTION
       ENDCLASS
@@ -1591,7 +1595,7 @@ automatically by HVM:
          IF ::TEMP == NIL
             ::TEMP := "C1"
          ENDIF
-         ::TEMP += ":" + UPPER( x )
+         ::TEMP += ":" + Upper( x )
       RETURN Self
 
       METHOD PLUS( x )
@@ -1610,7 +1614,7 @@ automatically by HVM:
          IF ::TEMP == NIL
             ::TEMP := "c2"
          ENDIF
-         ::TEMP -= ">" + LOWER( x )
+         ::TEMP -= ">" + Lower( x )
       RETURN Self
 
       METHOD MINUS( x )
@@ -1670,7 +1674,7 @@ programmer should use:
       o := mycls():new( p1, p2, p3 )
 otherwise the code will not work with future Harbour versions supporting
 real class objects. Even if programmer do not plan to pass any parameters
-to constructor then he shold call :NEW() method:
+to constructor then he should call :NEW() method:
       o := mycls():new()
 and please remember that :NEW() will be class method so it should not
 be redefined as constructor in user class. Instead :INIT() method should
@@ -1721,7 +1725,7 @@ ENDCLASS definition to:
             __clsUnlockDef( @s_oClass, oClass ) ;;
          end sequence ;;
          oInstance := oClass:Instance() ;;
-         if __ObjHasMsg( oInstance, "InitClass" ) ;;
+         if __objHasMsg( oInstance, "InitClass" ) ;;
             oInstance:InitClass( HB_CLS_PARAM_LIST ) ;;
          end ;;
       else ;;
@@ -1761,12 +1765,12 @@ initialize numeric and logical values to 0 and .f.
 ================================
 Both Harbour and xHarbour support object destructors and both
 compilers uses reference counters and garbage collector to
-execute destructors. Anyhow the low level implementation is
+execute destructors. Anyhow the low-level implementation is
 different in the two compilers. In Harbour HVM is reentrant safe
 so the implementation of destructors is much simpler. It also
 keeps full control about reference counters and detects user
 code errors bound with complex items in .prg and C code what
-greatly helps to detect problems in user code or 3-rd party
+greatly helps to detect problems in user code or 3rd party
 libraries and gives protection against internal HVM memory
 corruption. In the last years it also helped to located few
 very hard to exploit bugs in core code.
@@ -1783,9 +1787,9 @@ protecting against corruption. The xHarbour version behavior
 is random because this .prg code corrupts internal HVM memory.
 It's possible that it will be executed without any visible
 errors or it will generate GPF or internal error. But in all
-cases it can be well seen using tools like valgrind or CodeGuard
+cases it can be well seen using tools like Valgrind or CodeGuard
 that it corrupts internal memory so the results are unpredictable.
-I.e. this is part of valgrind log generated during execution
+I.e. this is part of Valgrind log generated during execution
 of above destruct.prg compiled by xHarbour:
 
    ==22709== Invalid read of size 2
@@ -1829,7 +1833,7 @@ Harbour executes above code cleanly without any errors:
 Missing protection and error detection is not only problem for programmers.
 It also causes that in xHarbour core code few bad bugs have not been fixed
 so far though they exist for years. It also extremely time consuming problem
-for core developers when users or 3-rd party developers reports problems with
+for core developers when users or 3rd party developers reports problems with
 some memory corruption and it's necessary to locate the reason.
 I remember how much time I lost for such things working on xHarbour
 in the past so later when I moved to Harbour it was one of the main goal
@@ -1877,12 +1881,12 @@ Both compilers uses array and string preallocation to optimize resize
 operation, f.e. in code like:
       s := ""
       for i := 0 to 255
-         s += chr( i )
+         s += Chr( i )
       next
 or:
       a := {}
       for i := 0 to 255
-         aadd( a, repl( chr( i ), 5 ) )
+         AAdd( a, Replicate( Chr( i ), 5 ) )
       next
 the string inside 's' variable and array inside 'a' variable are not
 resized 256 times but much seldom. It gives noticeable speed improvement
@@ -1907,12 +1911,12 @@ seen in code like:
          memvar v
          local t, i, s
          private v := ""
-         t := secondsCPU()
+         t := SecondsCPU()
          s := "v"
          for i := 1 to 100000
-            &s += l2bin( i )
+            &s += L2Bin( i )
          next
-         t := secondsCPU() - t
+         t := SecondsCPU() - t
          ? "time:", t, "sec."
       return
 it's enough to compare time difference:
@@ -1985,7 +1989,7 @@ anything like that at least as documented language extension.
 ========================
 xHarbour has compile time support for namespaces which uses by default
 static bindings with optional support for dynamic bindings in HVM which
-is necessary for .hrb and macrocompiler. To exchange information about
+is necessary for .hrb and macro-compiler. To exchange information about
 defined by user namespaces xHarbour generates <namespace>.xns files
 during compilation of .prg ones which define public functions in given
 namespace. These files are automatically included by xHarbour compiler
@@ -2036,8 +2040,8 @@ completely different thing then namespaces in current xHarbour.
 Harbour allows to initialize more then one GT drivers at runtime
 and switch between active GTs in single application. It can be
 done using the following functions:
-      HB_GTCREATE( <cGtName>, [<nStdIn>], [<nStdOut>], [<nStdErr>] ) -> <pGT>
-      HB_GTSELECT( <pGT> ) -> <pPrevGT>
+      hb_gtCreate( <cGtName>, [<nStdIn>], [<nStdOut>], [<nStdErr>] ) -> <pGT>
+      hb_gtSelect( <pGT> ) -> <pPrevGT>
 if all references to allocated GT drivers are cleaned in visible items
 then GT windows is automatically closed.
 
@@ -2073,7 +2077,7 @@ extensively use multi window functionality like GTWVG, GTQTC.
 Not all GTs in Harbour has been adopted to work simultaneously in multi
 thread mode with more then one instance so user should not allocate more
 then one instance of the following GTs GTDOS, GTWIN, GTOS2, GTCRS, GTSLN,
-GTPCA, GTALLEG.
+GTPCA.
 
 These GTs are limited by resources or have alternative GT drivers with
 similar functionality so it's hard to say if Harbour developers invest
@@ -2129,14 +2133,14 @@ are thread local which ones are shared and how they are initialized:
          - public variable GetList := {}
            (of course if public variables are not shared with parent
            thread).
-         - error block (initialized by calling ERRORSYS())
+         - error block (initialized by calling ErrorSys())
          - math error handler and math error block
          - default macro compiler features setting (controlled by
-           hb_setMacro())
-         - RDDI_* settings in core RDDs (some 3-rd party RDDs may use
+           hb_SetMacro())
+         - RDDI_* settings in core RDDs (some 3rd party RDDs may use
            global settings)
          - thread static variables
-         - SETKEY() are reset to empty array (Clipper compatible automatic
+         - SetKey() are reset to empty array (Clipper compatible automatic
            binding between F1 key and HELP() if such function/procedure was
            registered in HVM is done only for main thread).
       Other thread local resources:
@@ -2248,9 +2252,9 @@ that each thread has its own independent work areas and aliases.
 Anyhow it's possible to move work area from one thread to other one
 using known from Xbase++ zero space. In Xbase++ each thread can
 move his work area to zero space using:
-   DbRelease( [<nWorkArea>|<cAlias>], [<bAreaBlock>] ) --> lSuccess
+   dbRelease( [<nWorkArea>|<cAlias>], [<bAreaBlock>] ) --> lSuccess
 Then this work area can be attached by other thread using:
-   DbRequest( [<cAlias>], [<lFreeArea>], ;
+   dbRequest( [<cAlias>], [<lFreeArea>], ;
               [<@bAreaBlock>], [<lWait>] ) --> lSuccess
 In Harbour above functions are available in XPP emulation library.
 There are also core Harbour functions giving this functionality:
@@ -2267,7 +2271,7 @@ and move work area to zero space. Then each thread which wants to make
 some operations on work area has to encapsulate it in lock/unlock code,
 i.e.:
    LOCK WORKAREA "DOCUMENTS"
-      COUNT TO nInvoices FOR year( DOCUMENTS->DATE ) == year( date() )
+      COUNT TO nInvoices FOR Year( DOCUMENTS->DATE ) == Year( Date() )
    UNLOCK WORKAREA
 
 In xHarbour by default work areas are global to the application and there
@@ -2280,10 +2284,10 @@ in xHarbour, i.e. mutexes).
 Later support for thread local work areas was added to xHarbour but
 without any mechanism which allows to move work area from one thread
 to another. This can be controlled by global SET:
-   SET( _SET_WORKAREAS_SHARED, <lOnOff> )
+   Set( _SET_WORKAREAS_SHARED, <lOnOff> )
 or commands:
-   SET WORKAREAS SHARED       => SET( _SET_WORKAREAS_SHARED, .T. )
-   SET WORKAREAS PRIVATE      => SET( _SET_WORKAREAS_SHARED, .F. )
+   SET WORKAREAS SHARED       => Set( _SET_WORKAREAS_SHARED, .T. )
+   SET WORKAREAS PRIVATE      => Set( _SET_WORKAREAS_SHARED, .F. )
 (SETs are global not thread local in xHarbour MT model)
 Setting _SET_WORKAREAS_SHARED to .F. disables global work areas and
 switches to thread local ones.
@@ -2352,22 +2356,22 @@ and in such form it will never be supported by HVM because it can work
 only in some very limited situations and then can be source of very bad
 bugs like internal HVM memory corruption or absolutely unexpected runtime
 behaviors. Compiled PCODE contains references to symbol tables or even
-memory addresses (i.e. macrocompiled codeblocks). If application stores
+memory addresses (i.e. macro-compiled codeblocks). If application stores
 such codeblock in some external holder, i.e. memo file then after restoring
 by different instance of the same application memory addresses can be
-different so for macrocompiled codeblocks it's not safe at all. For
+different so for macro-compiled codeblocks it's not safe at all. For
 codeblocks compiled by compiler it can work until exactly the same
 application is used. But any modifications in the code can change
 symbol table so after restoring the result can be unpredictable.
 Codeblock like:
-      {|x| qout( x ) }
-can be defined in code where just after QOUT() in symbol table is FERASE().
+      {|x| QOut( x ) }
+can be defined in code where just after QOut() in symbol table is FErase().
 Small modification in application code can cause that symbols will be
-moved and above codeblock after restoring will effectively execute FERASE()
-instead of QOUT(). What does it mean for programs which makes something like:
-      eval( cb, "The most import file is:" )
-      eval( cb, cDataFile )
-      eval( cb, "Please make backup." )
+moved and above codeblock after restoring will effectively execute FErase()
+instead of QOut(). What does it mean for programs which makes something like:
+      Eval( cb, "The most import file is:" )
+      Eval( cb, cDataFile )
+      Eval( cb, "Please make backup." )
 I do not have to explain.
 With full respect to xHarbour users IMO such "extension" is giving knife
 into monkey hands.
@@ -2396,7 +2400,7 @@ file server on TCP IP socket.
 In Harbour it's possible to dynamically register many alternative
 RDD IO APIs and use them simultaneously in one application.
 HBNETIO library in Harbour implements this so without touching even
-single line in RDD code it works for all core RDDs and also 3-rd
+single line in RDD code it works for all core RDDs and also 3rd
 party ones if they use Harbour RDD IO API (hb_file*() functions).
 Additionally client and server code in HBNETIO are fully MT safe
 so can be used in MT programs without any problems.
@@ -2411,17 +2415,17 @@ limited only by OS and file format structures. Neither Harbour nor
 xHarbour introduce own limits here.
 The maximal file size for DBFs is limited by number of records
 2^32-1 = 4294967295 and maximal record size: 2^16-1 = 65535 what
-gives nearly 2^48 = 256TB as maximal .dbf file size.
+gives nearly 2^48 = 256 TiB as maximal .dbf file size.
 The maximal memo format size depends on used memo type: DBT, FPT
 or SMT and size of memo block. It's limited by maximal number of memo
 blocks = 2^32 and size of memo block so it's 2^32*<size_of_memo_block>.
 The default memo block size for DBT is 512 bytes, FPT - 64 bytes and
 for SMT 32 bytes. So for standard memo block sizes the maximum are:
-DBT->l2TB, FPT->256GB, SMT->128GB. The maximal memo block size in
+DBT-> 2 TiB, FPT-> 256 GiB, SMT-> 128 GiB. The maximal memo block size in
 Harbour is 2^32 and minimal is 1 byte and it can be any value between
-1 and 65536 and then any number of 64KB blocks. The last limitation
+1 and 65536 and then any number of 64 KiB blocks. The last limitation
 is introduced as workaround for some wrongly implemented in other
-languages memo drivers which were setting only 16 bits in 32bit field
+languages memo drivers which were setting only 16 bits in 32-bit field
 in memo header. Most of other languages has limit for memo block
 size at 2^15 and the block size has to be power of 2. Some of them
 also introduce minimal block size limits. If programmers plans to share
@@ -2429,25 +2433,25 @@ data with programs compiled by such languages then he should check
 their documentation to not create memo files which cannot be accessed
 by them.
 
-Maximal NTX file size for standard NTX files is 4GB and it's limited
-by internal NTX structures. Enabling 64bit locking in [x]Harbour change
-slightly used NTX format and increase maximum NTX file size to 4TB.
+Maximal NTX file size for standard NTX files is 4 GiB and it's limited
+by internal NTX structures. Enabling 64-bit locking in [x]Harbour change
+slightly used NTX format and increase maximum NTX file size to 4 TiB.
 The NTX format in [x]Harbour has also many other extensions like support
-for multitag indexes or using record number as hidden part of index key
+for multi-tag indexes or using record number as hidden part of index key
 and many others which are unique to [x]Harbour. In practice all of CDX
 extensions are supported by NTX in [x]Harbour.
-The NSX format in [x]Harbour is also limited by default to 4GB but like
-in NTX enabling 64bit locking extend this limit to 4TB. It also supports
+The NSX format in [x]Harbour is also limited by default to 4 GiB but like
+in NTX enabling 64-bit locking extend this limit to 4 TiB. It also supports
 common to NTX and CDX set of features.
-The CDX format is limited to 4GB by it's internal structure. In Harbour
-just like in NTX and NSX enabling 64bit locking slightly change the
-format increasing maximum index size to 2TB for standard CDX page length
+The CDX format is limited to 4 GiB by it's internal structure. In Harbour
+just like in NTX and NSX enabling 64-bit locking slightly change the
+format increasing maximum index size to 2 TiB for standard CDX page length
 (512 bytes). DBFCDX and SIXCDX RDDs in Harbour support also user defined
 index page size. It can be set as power of 2 value from 512 up to 8192.
 Longer index pages also increase maximum file size. For 8192 bytes pages
-maximum CDX file size in Harbour is 32TB. Enabling longer index pages
+maximum CDX file size in Harbour is 32 TiB. Enabling longer index pages
 automatically change internal index format to the same as used with
-64bit locking. Longer index pages allow to use longer index key and can
+64-bit locking. Longer index pages allow to use longer index key and can
 interact with total index size and performance. User can make test with
 different values. Harbour RDDs automatically recognize index format so
 can open to work with all versions without any user settings.
@@ -2477,7 +2481,7 @@ supports few different regular expression libraries and it's possible to
 use platform or CRTL native libs or PCRE which is included in Harbour.
 Harbour always uses native for given library API. xHarbour supports only
 PCRE modified to use POSIX regex interface which does not support strings
-with embedded chr(0) characters.
+with embedded Chr( 0 ) characters.
 
 Both compilers can store and reuse compiled regular expressions.
 xHarbour stores them in string items and Harbour in GC pointer items.
@@ -2488,13 +2492,13 @@ Portable code should respect these differences.
 ###    INET SOCKETS    ###
 ==========================
 Both compilers support IP4 sockets with similar .prg API created by
-Giancarlo Niccolai though both use different low level implementations.
+Giancarlo Niccolai though both use different low-level implementations.
 In xHarbour IP4 functions have Inet*() prefix.
 In Harbour they have hb_inet*() prefix in core code and xHarbour Inet*()
 functions are available in XHB library.
 
 Harbour has also public C socket API (hbsocket.h) which is not reduced
-to IP4 protocols only and is the base low level code used for .prg level
+to IP4 protocols only and is the base low-level code used for .prg level
 [hb_]inet*() function implementation. This socket implementation was
 rewritten from scratch, it's MT safe and was designed to hide platform
 differences in BSD socket implementation. It also works in DOS builds
@@ -2507,11 +2511,11 @@ This API is available for users also at PRG level by hb_socket*() functions.
 ==========================
 Harbour and xHarbour compilers have build-in support for
 internationalization (I18N) and it's enabled during compilation using
-the same compiler time switch -j[<file>] but the low level implementation
+the same compiler time switch -j[<file>] but the low-level implementation
 in compilers and at runtime is completely different.
 
 In xHarbour during compilation with -j switch compiler looks for all
-call like I18N( <cConstValue> ) collects them and then stores them using
+call like i18n( <cConstValue> ) collects them and then stores them using
 internal xHarbour binary format in file with .hil. The base name of such
 file is taken from compiler .prg module or set by user by optional <file>
 argument of -j switch. If file already exists then strings extracted from
@@ -2521,8 +2525,8 @@ checking for duplicated strings. Duplicated strings are eliminated by
 This programs reads .hil file show all existing strings and allow to
 type translation for each existing string and then saves the translation
 table in files with .hit extension using another internal xHarbour binary
-format. At runtime application may load .hit file and then I18N() function
-will look if string passed as 1-st parameter exists in translation table
+format. At runtime application may load .hit file and then i18n() function
+will look if string passed as 1st parameter exists in translation table
 and if yes then it returns translated string and if not it returns original
 string. Only pure 1 to 1 translation exists without any extensions like
 context domains, support for plural forms or automatic CP translations.
@@ -2558,7 +2562,7 @@ macros instead of direct calls to hb_i18n_[n]gettext*() functions, i.e.:
       #xtranslate _I( <x,...> ) => hb_i18n_gettext( <x> )
       #xtranslate _IN( <x,...> ) => hb_i18n_ngettext( <x> )
 or:
-      #xtranslate I18N( <x,...> ) => hb_i18n_gettext( <x> )
+      #xtranslate i18n( <x,...> ) => hb_i18n_gettext( <x> )
 It allows to keep source code shorter and if necessary easy switch to
 STRICT (for strict parameter validation) or NOOP (disabled at compile
 time I18N support) versions.
@@ -2577,8 +2581,8 @@ runtime gettext support as optional user I18N interface.
 ==================
 Harbour RTL gives support at .prg level to ZLIB (HB_Z*()) and GZIP
 (HB_GZ*()) functions. In xHarbour RTL only ZLIB compression/decompression
-is available by: HB_COMPRESS(), HB_UNCOMPRESS(), HB_COMPRESSBUFLEN(),
-HB_COMPRESSERROR() and HB_COMPRESSERRORDESC() functions.
+is available by: hb_Compress(), hb_Uncompress(), hb_CompressBufLen(),
+hb_CompressError() and hb_CompressErrorDesc() functions.
 In Harbour these functions are available in XHB library.
 Original Harbour ZLIB API is different. It does not have any non MT safe
 extensions, it's protected against possible overflows and it's more closer
@@ -2588,13 +2592,13 @@ to original ZLIB one.
 
 ###    SERIAL PORT SUPPORT    ###
 =================================
-Harbour gives common multiplatform PRG and C level API for serial port
+Harbour gives common multi-platform PRG and C level API for serial port
 communication by hb_com*() functions in core libraries. It also implements
 few other known in Clipper serial port interfaces in contrib libraries
-like CT3 COM_*() functions in hbct library or basic support for Telepathy
-interface in hbtpathy library. All such implementations use at low level
+like CT3 COM_*() functions in hbct library or basic support for Telepath(y)
+interface in hbtpathy library. All such implementations use at low-level
 code the core hb_com*() interface so they can work on all platforms.
-xHarbour CVS contains only telepath library with some very basic Telepathy
+xHarbour CVS contains only telepath library with some very basic Telepath(y)
 interface which is not available for all platforms.
 xHarbour.com distribute also library compatible with CT3 COM*() interface
 but only for MS-Windows builds.
@@ -2611,11 +2615,11 @@ API so it's portable between different OS-es.
 In Harbour macro compiler supports the same expressions as compiler.
 The only one and documented difference is support for VFP like datetime
 constant values {^...} which are supported only by compiler.
-It's guaranteed that any valid expressions not longer then 8MB will be
+It's guaranteed that any valid expressions not longer then 8 MiB will be
 cleanly compiled and executed by Harbour. It's possible to compile and
 execute longer expressions (in practice there is no maximal size limit)
 but in such case it's not guaranteed that all expressions can be compiled,
-f.e. macro expressions containing string constant values longer then 16MB
+f.e. macro expressions containing string constant values longer then 16 MiB
 cannot be compiled. It's only guaranteed that if Harbour cannot compile
 macro expression then it generates RT error and never generates broken
 code.
@@ -2623,11 +2627,11 @@ code.
 In xHarbour there are differences between macro compiler and compiler
 and not all expressions supported at compile time can be used in macro
 compiler. The maximum size for valid expressions which are always correctly
-compiled by xHarbour is 32KB. Expressions longer then 32KB can be compiled
+compiled by xHarbour is 32 KiB. Expressions longer then 32 KiB can be compiled
 without any RT error by xHarbour but it's possible that wrong code will be
 generated for them which may cause any unpredictable behavior so user should
 not use such expressions. There is no clean way in xHarbour to check if macro
-expression longer then 32KB will be correctly compiled.
+expression longer then 32 KiB will be correctly compiled.
 
 Just like Clipper neither Harbour nor xHarbour support statements in macro
 compiler so extended codeblocks also cannot be compiled.
@@ -2710,8 +2714,8 @@ future.
 =========================
 Both compilers were ported to many different platforms on different hardware.
 The list of supported platforms is really long: different *nixes (Linux,
-MacOSX, SunOS, HP-UX, *BSD,...) on little and big endian 32 and 64 bit
-machines, DOS, OS2, Win32, Win64 and WinCE (Harbour only).
+macOS, SunOS, HP-UX, *BSD,...) on little and big-endian 32 and 64-bit
+machines, DOS, OS2, Windows (32/64-bit) and WinCE (Harbour only).
 In practice they can be ported quite easy to nearly each OS and hardware
 if it passes two important conditions: it's ASCII based machine and has
 support for 8bit bytes. Due to cleaner code it's easier to port Harbour
@@ -2730,13 +2734,13 @@ attribute and does not remove it from returned values. It helps to
 keep code clean and locate places where string constant values
 are overwritten what is illegal. It also helps C compiler to better
 optimize the code because it has additional information that some
-variables/memory regions are readonly and cannot be modified during
+variables/memory regions are read-only and cannot be modified during
 code execution what can give some additional speed improvement.
 If some C code does not respect it then during compilation with
 Harbour header files C compilers usually generate warning and
 C++ ones errors, i.e. code like:
       char * pszValue = hb_parc( 1 );
-is wrong because hb_parc() returns pointer to readonly strings
+is wrong because hb_parc() returns pointer to read-only strings
 which cannot be changed by user code. So this code should be
 changed to:
       const char * pszValue = hb_parc( 1 );
@@ -2744,7 +2748,7 @@ Now if compiled code tries to make something like:
       pszValue[ index ] = 'X';
 what is illegal in Harbour, xHarbour and also in Clipper for pointers
 returned by _parc() function then compiler generate warning or error
-about writing to readonly location.
+about writing to read-only location.
 In summary it means that Harbour forces to keep code clean and use
 more strict declarations but xHarbour and Clipper don't and wrong
 code can be silently compiled without any warnings or errors.
@@ -2779,7 +2783,7 @@ protection it generates exception and application crash. To make the
 above code safe programmer should change it to:
       HB_FUNC( NOT )
       {
-         int iValue = ISNUM( 1 ) ? _parni( 1 ) : 0;
+         int iValue = HB_ISNUM( 1 ) ? _parni( 1 ) : 0;
          hb_retni( ~iValue );
       }
 or:
@@ -2856,7 +2860,7 @@ activation in memory manager.
 These are only examples and anyone can find many other similar problems
 in xHarbour core code so in my opinion API separation with core code
 cleanup is something what has to be done in xHarbour in the future.
-Of course such separation does not mean that we can forbid 3-rd party
+Of course such separation does not mean that we can forbid 3rd party
 programmers to access HVM internals. Programmers creating code for Harbour
 can include before any other Harbour header files "hbvmint.h", i.e.:
       #include "hbvmint.h"
@@ -2968,7 +2972,7 @@ Harbour is ~75% faster in ST mode and over 100% faster in MT mode.
 In harbour/tests/speedtst.prg we have simple test which can be used to
 compare performance of different compilers.
 The tests below were done using AMD Phenom(tm) 8450 Triple-Core Processor
-2100 MHZ with 32bit Linux kernels.
+2100 MHZ with 32-bit Linux kernels.
 
 Here are results for ST mode:
 
@@ -2995,31 +2999,31 @@ Here are results for ST mode:
    [ T015: x := F_D ]..............................................0.10
    [ T016: x := o:Args ]...........................................0.14
    [ T017: x := o[2] ].............................................0.10
-   [ T018: round( i / 1000, 2 ) ]..................................0.21
-   [ T019: str( i / 1000 ) ].......................................0.55
-   [ T020: val( s ) ]..............................................0.28
-   [ T021: val( a [ i % 16 + 1 ] ) ]...............................0.39
-   [ T022: dtos( d - i % 10000 ) ].................................0.33
-   [ T023: eval( { || i % 16 } ) ].................................0.36
-   [ T024: eval( bc := { || i % 16 } ) ]...........................0.20
-   [ T025: eval( { |x| x % 16 }, i ) ].............................0.29
-   [ T026: eval( bc := { |x| x % 16 }, i ) ].......................0.20
-   [ T027: eval( { |x| f1( x ) }, i ) ]............................0.31
-   [ T028: eval( bc := { |x| f1( x ) }, i ) ]......................0.24
-   [ T029: eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.23
-   [ T030: x := &( "f1(" + str(i) + ")" ) ]........................2.95
-   [ T031: bc := &( "{|x|f1(x)}" ), eval( bc, i ) ]................2.97
-   [ T032: x := valtype( x ) +  valtype( i ) ].....................0.34
-   [ T033: x := strzero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........0.62
+   [ T018: Round( i / 1000, 2 ) ]..................................0.21
+   [ T019: Str( i / 1000 ) ].......................................0.55
+   [ T020: Val( s ) ]..............................................0.28
+   [ T021: Val( a [ i % 16 + 1 ] ) ]...............................0.39
+   [ T022: DToS( d - i % 10000 ) ].................................0.33
+   [ T023: Eval( { || i % 16 } ) ].................................0.36
+   [ T024: Eval( bc := { || i % 16 } ) ]...........................0.20
+   [ T025: Eval( { |x| x % 16 }, i ) ].............................0.29
+   [ T026: Eval( bc := { |x| x % 16 }, i ) ].......................0.20
+   [ T027: Eval( { |x| f1( x ) }, i ) ]............................0.31
+   [ T028: Eval( bc := { |x| f1( x ) }, i ) ]......................0.24
+   [ T029: Eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.23
+   [ T030: x := &( "f1(" + Str(i) + ")" ) ]........................2.95
+   [ T031: bc := &( "{|x|f1(x)}" ), Eval( bc, i ) ]................2.97
+   [ T032: x := ValType( x ) +  ValType( i ) ].....................0.34
+   [ T033: x := StrZero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........0.62
    [ T034: x := a[ i % 16 + 1 ] == s ].............................0.21
    [ T035: x := a[ i % 16 + 1 ] = s ]..............................0.23
    [ T036: x := a[ i % 16 + 1 ] >= s ].............................0.23
    [ T037: x := a[ i % 16 + 1 ] <= s ].............................0.23
    [ T038: x := a[ i % 16 + 1 ] < s ]..............................0.23
    [ T039: x := a[ i % 16 + 1 ] > s ]..............................0.23
-   [ T040: ascan( a, i % 16 ) ]....................................0.24
-   [ T041: ascan( a, { |x| x == i % 16 } ) ].......................2.34
-   [ T042: iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.T.,s,s2,a2 ]....0.70
+   [ T040: AScan( a, i % 16 ) ]....................................0.24
+   [ T041: AScan( a, { |x| x == i % 16 } ) ].......................2.34
+   [ T042: iif( i%1000==0, a:={}, ) , AAdd(a,{i,1,.T.,s,s2,a2 ]....0.70
    [ T043: x := a ]................................................0.04
    [ T044: x := {} ]...............................................0.12
    [ T045: f0() ]..................................................0.06
@@ -3032,7 +3036,7 @@ Here are results for ST mode:
    [ T052: f2( a ) ]...............................................0.11
    [ T053: x := f4() ].............................................0.45
    [ T054: x := f5() ].............................................0.22
-   [ T055: x := space(16) ]........................................0.17
+   [ T055: x := Space(16) ]........................................0.17
    [ T056: f_prv( c ) ]............................................0.31
    ====================================================================
    [ total application time: ]....................................20.27
@@ -3061,31 +3065,31 @@ Here are results for ST mode:
    [ T015: x := F_D ]..............................................0.10
    [ T016: x := o:Args ]...........................................0.27
    [ T017: x := o[2] ].............................................0.05
-   [ T018: round( i / 1000, 2 ) ]..................................0.30
-   [ T019: str( i / 1000 ) ].......................................0.69
-   [ T020: val( s ) ]..............................................0.34
-   [ T021: val( a [ i % 16 + 1 ] ) ]...............................0.51
-   [ T022: dtos( d - i % 10000 ) ].................................0.44
-   [ T023: eval( { || i % 16 } ) ].................................0.54
-   [ T024: eval( bc := { || i % 16 } ) ]...........................0.36
-   [ T025: eval( { |x| x % 16 }, i ) ].............................0.43
-   [ T026: eval( bc := { |x| x % 16 }, i ) ].......................0.33
-   [ T027: eval( { |x| f1( x ) }, i ) ]............................0.58
-   [ T028: eval( bc := { |x| f1( x ) }, i ) ]......................0.48
-   [ T029: eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.51
-   [ T030: x := &( "f1(" + str(i) + ")" ) ]........................4.70
-   [ T031: bc := &( "{|x|f1(x)}" ), eval( bc, i ) ]................5.62
-   [ T032: x := valtype( x ) +  valtype( i ) ].....................0.64
-   [ T033: x := strzero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........0.87
+   [ T018: Round( i / 1000, 2 ) ]..................................0.30
+   [ T019: Str( i / 1000 ) ].......................................0.69
+   [ T020: Val( s ) ]..............................................0.34
+   [ T021: Val( a [ i % 16 + 1 ] ) ]...............................0.51
+   [ T022: DToS( d - i % 10000 ) ].................................0.44
+   [ T023: Eval( { || i % 16 } ) ].................................0.54
+   [ T024: Eval( bc := { || i % 16 } ) ]...........................0.36
+   [ T025: Eval( { |x| x % 16 }, i ) ].............................0.43
+   [ T026: Eval( bc := { |x| x % 16 }, i ) ].......................0.33
+   [ T027: Eval( { |x| f1( x ) }, i ) ]............................0.58
+   [ T028: Eval( bc := { |x| f1( x ) }, i ) ]......................0.48
+   [ T029: Eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.51
+   [ T030: x := &( "f1(" + Str(i) + ")" ) ]........................4.70
+   [ T031: bc := &( "{|x|f1(x)}" ), Eval( bc, i ) ]................5.62
+   [ T032: x := ValType( x ) +  ValType( i ) ].....................0.64
+   [ T033: x := StrZero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........0.87
    [ T034: x := a[ i % 16 + 1 ] == s ].............................0.28
    [ T035: x := a[ i % 16 + 1 ] = s ]..............................0.28
    [ T036: x := a[ i % 16 + 1 ] >= s ].............................0.27
    [ T037: x := a[ i % 16 + 1 ] <= s ].............................0.28
    [ T038: x := a[ i % 16 + 1 ] < s ]..............................0.27
    [ T039: x := a[ i % 16 + 1 ] > s ]..............................0.28
-   [ T040: ascan( a, i % 16 ) ]....................................0.47
-   [ T041: ascan( a, { |x| x == i % 16 } ) ].......................3.95
-   [ T042: iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.T.,s,s2,a2 ]....0.89
+   [ T040: AScan( a, i % 16 ) ]....................................0.47
+   [ T041: AScan( a, { |x| x == i % 16 } ) ].......................3.95
+   [ T042: iif( i%1000==0, a:={}, ) , AAdd(a,{i,1,.T.,s,s2,a2 ]....0.89
    [ T043: x := a ]................................................0.01
    [ T044: x := {} ]...............................................0.11
    [ T045: f0() ]..................................................0.14
@@ -3098,7 +3102,7 @@ Here are results for ST mode:
    [ T052: f2( a ) ]...............................................0.18
    [ T053: x := f4() ].............................................0.81
    [ T054: x := f5() ].............................................0.49
-   [ T055: x := space(16) ]........................................0.33
+   [ T055: x := Space(16) ]........................................0.33
    [ T056: f_prv( c ) ]............................................0.75
    ====================================================================
    [ total application time: ]....................................34.52
@@ -3129,31 +3133,31 @@ And here are results for MT mode:
    [ T015: x := F_D ]..............................................0.10
    [ T016: x := o:Args ]...........................................0.15
    [ T017: x := o[2] ].............................................0.09
-   [ T018: round( i / 1000, 2 ) ]..................................0.22
-   [ T019: str( i / 1000 ) ].......................................0.62
-   [ T020: val( s ) ]..............................................0.28
-   [ T021: val( a [ i % 16 + 1 ] ) ]...............................0.41
-   [ T022: dtos( d - i % 10000 ) ].................................0.39
-   [ T023: eval( { || i % 16 } ) ].................................0.44
-   [ T024: eval( bc := { || i % 16 } ) ]...........................0.27
-   [ T025: eval( { |x| x % 16 }, i ) ].............................0.38
-   [ T026: eval( bc := { |x| x % 16 }, i ) ].......................0.24
-   [ T027: eval( { |x| f1( x ) }, i ) ]............................0.40
-   [ T028: eval( bc := { |x| f1( x ) }, i ) ]......................0.29
-   [ T029: eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.31
-   [ T030: x := &( "f1(" + str(i) + ")" ) ]........................2.83
-   [ T031: bc := &( "{|x|f1(x)}" ), eval( bc, i ) ]................3.16
-   [ T032: x := valtype( x ) +  valtype( i ) ].....................0.38
-   [ T033: x := strzero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........0.75
+   [ T018: Round( i / 1000, 2 ) ]..................................0.22
+   [ T019: Str( i / 1000 ) ].......................................0.62
+   [ T020: Val( s ) ]..............................................0.28
+   [ T021: Val( a [ i % 16 + 1 ] ) ]...............................0.41
+   [ T022: DToS( d - i % 10000 ) ].................................0.39
+   [ T023: Eval( { || i % 16 } ) ].................................0.44
+   [ T024: Eval( bc := { || i % 16 } ) ]...........................0.27
+   [ T025: Eval( { |x| x % 16 }, i ) ].............................0.38
+   [ T026: Eval( bc := { |x| x % 16 }, i ) ].......................0.24
+   [ T027: Eval( { |x| f1( x ) }, i ) ]............................0.40
+   [ T028: Eval( bc := { |x| f1( x ) }, i ) ]......................0.29
+   [ T029: Eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.31
+   [ T030: x := &( "f1(" + Str(i) + ")" ) ]........................2.83
+   [ T031: bc := &( "{|x|f1(x)}" ), Eval( bc, i ) ]................3.16
+   [ T032: x := ValType( x ) +  ValType( i ) ].....................0.38
+   [ T033: x := StrZero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........0.75
    [ T034: x := a[ i % 16 + 1 ] == s ].............................0.28
    [ T035: x := a[ i % 16 + 1 ] = s ]..............................0.29
    [ T036: x := a[ i % 16 + 1 ] >= s ].............................0.29
    [ T037: x := a[ i % 16 + 1 ] <= s ].............................0.29
    [ T038: x := a[ i % 16 + 1 ] < s ]..............................0.29
    [ T039: x := a[ i % 16 + 1 ] > s ]..............................0.29
-   [ T040: ascan( a, i % 16 ) ]....................................0.30
-   [ T041: ascan( a, { |x| x == i % 16 } ) ].......................2.87
-   [ T042: iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.T.,s,s2,a2 ]....0.81
+   [ T040: AScan( a, i % 16 ) ]....................................0.30
+   [ T041: AScan( a, { |x| x == i % 16 } ) ].......................2.87
+   [ T042: iif( i%1000==0, a:={}, ) , AAdd(a,{i,1,.T.,s,s2,a2 ]....0.81
    [ T043: x := a ]................................................0.03
    [ T044: x := {} ]...............................................0.13
    [ T045: f0() ]..................................................0.07
@@ -3166,7 +3170,7 @@ And here are results for MT mode:
    [ T052: f2( a ) ]...............................................0.11
    [ T053: x := f4() ].............................................0.45
    [ T054: x := f5() ].............................................0.24
-   [ T055: x := space(16) ]........................................0.19
+   [ T055: x := Space(16) ]........................................0.19
    [ T056: f_prv( c ) ]............................................0.38
    ====================================================================
    [ total application time: ]....................................23.10
@@ -3195,31 +3199,31 @@ And here are results for MT mode:
    [ T015: x := F_D ]..............................................0.07
    [ T016: x := o:Args ]...........................................0.36
    [ T017: x := o[2] ].............................................0.05
-   [ T018: round( i / 1000, 2 ) ]..................................0.43
-   [ T019: str( i / 1000 ) ].......................................0.83
-   [ T020: val( s ) ]..............................................0.41
-   [ T021: val( a [ i % 16 + 1 ] ) ]...............................0.65
-   [ T022: dtos( d - i % 10000 ) ].................................0.56
-   [ T023: eval( { || i % 16 } ) ].................................0.78
-   [ T024: eval( bc := { || i % 16 } ) ]...........................0.47
-   [ T025: eval( { |x| x % 16 }, i ) ].............................0.66
-   [ T026: eval( bc := { |x| x % 16 }, i ) ].......................0.49
-   [ T027: eval( { |x| f1( x ) }, i ) ]............................0.88
-   [ T028: eval( bc := { |x| f1( x ) }, i ) ]......................0.73
-   [ T029: eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.72
-   [ T030: x := &( "f1(" + str(i) + ")" ) ]........................5.69
-   [ T031: bc := &( "{|x|f1(x)}" ), eval( bc, i ) ]................6.18
-   [ T032: x := valtype( x ) +  valtype( i ) ].....................0.79
-   [ T033: x := strzero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........1.12
+   [ T018: Round( i / 1000, 2 ) ]..................................0.43
+   [ T019: Str( i / 1000 ) ].......................................0.83
+   [ T020: Val( s ) ]..............................................0.41
+   [ T021: Val( a [ i % 16 + 1 ] ) ]...............................0.65
+   [ T022: DToS( d - i % 10000 ) ].................................0.56
+   [ T023: Eval( { || i % 16 } ) ].................................0.78
+   [ T024: Eval( bc := { || i % 16 } ) ]...........................0.47
+   [ T025: Eval( { |x| x % 16 }, i ) ].............................0.66
+   [ T026: Eval( bc := { |x| x % 16 }, i ) ].......................0.49
+   [ T027: Eval( { |x| f1( x ) }, i ) ]............................0.88
+   [ T028: Eval( bc := { |x| f1( x ) }, i ) ]......................0.73
+   [ T029: Eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.72
+   [ T030: x := &( "f1(" + Str(i) + ")" ) ]........................5.69
+   [ T031: bc := &( "{|x|f1(x)}" ), Eval( bc, i ) ]................6.18
+   [ T032: x := ValType( x ) +  ValType( i ) ].....................0.79
+   [ T033: x := StrZero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........1.12
    [ T034: x := a[ i % 16 + 1 ] == s ].............................0.37
    [ T035: x := a[ i % 16 + 1 ] = s ]..............................0.36
    [ T036: x := a[ i % 16 + 1 ] >= s ].............................0.42
    [ T037: x := a[ i % 16 + 1 ] <= s ].............................0.36
    [ T038: x := a[ i % 16 + 1 ] < s ]..............................0.37
    [ T039: x := a[ i % 16 + 1 ] > s ]..............................0.38
-   [ T040: ascan( a, i % 16 ) ]....................................0.64
-   [ T041: ascan( a, { |x| x == i % 16 } ) ].......................6.21
-   [ T042: iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.T.,s,s2,a2 ]....1.29
+   [ T040: AScan( a, i % 16 ) ]....................................0.64
+   [ T041: AScan( a, { |x| x == i % 16 } ) ].......................6.21
+   [ T042: iif( i%1000==0, a:={}, ) , AAdd(a,{i,1,.T.,s,s2,a2 ]....1.29
    [ T043: x := a ]................................................0.00
    [ T044: x := {} ]...............................................0.15
    [ T045: f0() ]..................................................0.21
@@ -3232,7 +3236,7 @@ And here are results for MT mode:
    [ T052: f2( a ) ]...............................................0.27
    [ T053: x := f4() ].............................................0.99
    [ T054: x := f5() ].............................................0.65
-   [ T055: x := space(16) ]........................................0.38
+   [ T055: x := Space(16) ]........................................0.38
    [ T056: f_prv( c ) ]............................................1.24
    ====================================================================
    [ total application time: ]....................................50.90
@@ -3243,7 +3247,7 @@ Harbour have not been implemented so far so it's hard to say how may
 look final performance.
 
 Recently I've repeated above tests on the same Hardware but using 64-bit
-Linux kernels and 64bit Harbour builds and here the difference is even
+Linux kernels and 64-bit Harbour builds and here the difference is even
 bigger. Here are results for ST mode:
 
    2009-10-27 13:24:41 Linux 2.6.31.3-1-desktop x86_64
@@ -3269,31 +3273,31 @@ bigger. Here are results for ST mode:
    [ T015: x := F_D ]..............................................0.08
    [ T016: x := o:Args ]...........................................0.11
    [ T017: x := o[2] ].............................................0.06
-   [ T018: round( i / 1000, 2 ) ]..................................0.15
-   [ T019: str( i / 1000 ) ].......................................0.32
-   [ T020: val( s ) ]..............................................0.18
-   [ T021: val( a [ i % 16 + 1 ] ) ]...............................0.28
-   [ T022: dtos( d - i % 10000 ) ].................................0.28
-   [ T023: eval( { || i % 16 } ) ].................................0.29
-   [ T024: eval( bc := { || i % 16 } ) ]...........................0.18
-   [ T025: eval( { |x| x % 16 }, i ) ].............................0.24
-   [ T026: eval( bc := { |x| x % 16 }, i ) ].......................0.18
-   [ T027: eval( { |x| f1( x ) }, i ) ]............................0.27
-   [ T028: eval( bc := { |x| f1( x ) }, i ) ]......................0.22
-   [ T029: eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.22
-   [ T030: x := &( "f1(" + str(i) + ")" ) ]........................2.05
-   [ T031: bc := &( "{|x|f1(x)}" ), eval( bc, i ) ]................2.41
-   [ T032: x := valtype( x ) +  valtype( i ) ].....................0.27
-   [ T033: x := strzero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........0.54
+   [ T018: Round( i / 1000, 2 ) ]..................................0.15
+   [ T019: Str( i / 1000 ) ].......................................0.32
+   [ T020: Val( s ) ]..............................................0.18
+   [ T021: Val( a [ i % 16 + 1 ] ) ]...............................0.28
+   [ T022: DToS( d - i % 10000 ) ].................................0.28
+   [ T023: Eval( { || i % 16 } ) ].................................0.29
+   [ T024: Eval( bc := { || i % 16 } ) ]...........................0.18
+   [ T025: Eval( { |x| x % 16 }, i ) ].............................0.24
+   [ T026: Eval( bc := { |x| x % 16 }, i ) ].......................0.18
+   [ T027: Eval( { |x| f1( x ) }, i ) ]............................0.27
+   [ T028: Eval( bc := { |x| f1( x ) }, i ) ]......................0.22
+   [ T029: Eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.22
+   [ T030: x := &( "f1(" + Str(i) + ")" ) ]........................2.05
+   [ T031: bc := &( "{|x|f1(x)}" ), Eval( bc, i ) ]................2.41
+   [ T032: x := ValType( x ) +  ValType( i ) ].....................0.27
+   [ T033: x := StrZero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........0.54
    [ T034: x := a[ i % 16 + 1 ] == s ].............................0.17
    [ T035: x := a[ i % 16 + 1 ] = s ]..............................0.19
    [ T036: x := a[ i % 16 + 1 ] >= s ].............................0.18
    [ T037: x := a[ i % 16 + 1 ] <= s ].............................0.19
    [ T038: x := a[ i % 16 + 1 ] < s ]..............................0.19
    [ T039: x := a[ i % 16 + 1 ] > s ]..............................0.18
-   [ T040: ascan( a, i % 16 ) ]....................................0.22
-   [ T041: ascan( a, { |x| x == i % 16 } ) ].......................2.01
-   [ T042: iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.T.,s,s2,a2 ]....0.53
+   [ T040: AScan( a, i % 16 ) ]....................................0.22
+   [ T041: AScan( a, { |x| x == i % 16 } ) ].......................2.01
+   [ T042: iif( i%1000==0, a:={}, ) , AAdd(a,{i,1,.T.,s,s2,a2 ]....0.53
    [ T043: x := a ]................................................0.02
    [ T044: x := {} ]...............................................0.08
    [ T045: f0() ]..................................................0.05
@@ -3306,7 +3310,7 @@ bigger. Here are results for ST mode:
    [ T052: f2( a ) ]...............................................0.08
    [ T053: x := f4() ].............................................0.34
    [ T054: x := f5() ].............................................0.16
-   [ T055: x := space(16) ]........................................0.12
+   [ T055: x := Space(16) ]........................................0.12
    [ T056: f_prv( c ) ]............................................0.21
    ====================================================================
    [ total application time: ]....................................15.60
@@ -3335,31 +3339,31 @@ bigger. Here are results for ST mode:
    [ T015: x := F_D ]..............................................0.11
    [ T016: x := o:Args ]...........................................0.30
    [ T017: x := o[2] ].............................................0.07
-   [ T018: round( i / 1000, 2 ) ]..................................0.32
-   [ T019: str( i / 1000 ) ].......................................0.87
-   [ T020: val( s ) ]..............................................0.32
-   [ T021: val( a [ i % 16 + 1 ] ) ]...............................0.48
-   [ T022: dtos( d - i % 10000 ) ].................................0.43
-   [ T023: eval( { || i % 16 } ) ].................................0.62
-   [ T024: eval( bc := { || i % 16 } ) ]...........................0.40
-   [ T025: eval( { |x| x % 16 }, i ) ].............................0.47
-   [ T026: eval( bc := { |x| x % 16 }, i ) ].......................0.37
-   [ T027: eval( { |x| f1( x ) }, i ) ]............................0.66
-   [ T028: eval( bc := { |x| f1( x ) }, i ) ]......................0.56
-   [ T029: eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.58
-   [ T030: x := &( "f1(" + str(i) + ")" ) ]........................5.95
-   [ T031: bc := &( "{|x|f1(x)}" ), eval( bc, i ) ]................6.57
-   [ T032: x := valtype( x ) +  valtype( i ) ].....................0.76
-   [ T033: x := strzero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........0.90
+   [ T018: Round( i / 1000, 2 ) ]..................................0.32
+   [ T019: Str( i / 1000 ) ].......................................0.87
+   [ T020: Val( s ) ]..............................................0.32
+   [ T021: Val( a [ i % 16 + 1 ] ) ]...............................0.48
+   [ T022: DToS( d - i % 10000 ) ].................................0.43
+   [ T023: Eval( { || i % 16 } ) ].................................0.62
+   [ T024: Eval( bc := { || i % 16 } ) ]...........................0.40
+   [ T025: Eval( { |x| x % 16 }, i ) ].............................0.47
+   [ T026: Eval( bc := { |x| x % 16 }, i ) ].......................0.37
+   [ T027: Eval( { |x| f1( x ) }, i ) ]............................0.66
+   [ T028: Eval( bc := { |x| f1( x ) }, i ) ]......................0.56
+   [ T029: Eval( bc := &("{ |x| f1( x ) }"), i ) ].................0.58
+   [ T030: x := &( "f1(" + Str(i) + ")" ) ]........................5.95
+   [ T031: bc := &( "{|x|f1(x)}" ), Eval( bc, i ) ]................6.57
+   [ T032: x := ValType( x ) +  ValType( i ) ].....................0.76
+   [ T033: x := StrZero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]..........0.90
    [ T034: x := a[ i % 16 + 1 ] == s ].............................0.25
    [ T035: x := a[ i % 16 + 1 ] = s ]..............................0.25
    [ T036: x := a[ i % 16 + 1 ] >= s ].............................0.24
    [ T037: x := a[ i % 16 + 1 ] <= s ].............................0.25
    [ T038: x := a[ i % 16 + 1 ] < s ]..............................0.25
    [ T039: x := a[ i % 16 + 1 ] > s ]..............................0.24
-   [ T040: ascan( a, i % 16 ) ]....................................0.46
-   [ T041: ascan( a, { |x| x == i % 16 } ) ].......................4.10
-   [ T042: iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.T.,s,s2,a2 ]....0.92
+   [ T040: AScan( a, i % 16 ) ]....................................0.46
+   [ T041: AScan( a, { |x| x == i % 16 } ) ].......................4.10
+   [ T042: iif( i%1000==0, a:={}, ) , AAdd(a,{i,1,.T.,s,s2,a2 ]....0.92
    [ T043: x := a ]................................................0.04
    [ T044: x := {} ]...............................................0.16
    [ T045: f0() ]..................................................0.21
@@ -3372,15 +3376,15 @@ bigger. Here are results for ST mode:
    [ T052: f2( a ) ]...............................................0.24
    [ T053: x := f4() ].............................................0.94
    [ T054: x := f5() ].............................................0.63
-   [ T055: x := space(16) ]........................................0.41
+   [ T055: x := Space(16) ]........................................0.41
    [ T056: f_prv( c ) ]............................................0.86
    ====================================================================
    [ total application time: ]....................................37.14
    [ total real time: ]...........................................37.16
 
-Harbour is noticeable faster in 64 bit mode and xHarbour slower but
+Harbour is noticeable faster in 64-bit mode and xHarbour slower but
 I haven't analyzed the reasons. Few years ago xHarbour was also faster
-in 64bit modes so it's probably problem with some compile time settings.
+in 64-bit modes so it's probably problem with some compile time settings.
 Harbour build system allows to use different compile time switches
 for static and shared libraries and the bigger difference is probably
 result of better tuned switches for static libraries which cannot be
@@ -3411,31 +3415,31 @@ The last test we can make is scalability in real multi CPU environment.
    [ T015: x := F_D ]____________________________________  0.32   0.17 ->  1.94
    [ T016: x := o:Args ]_________________________________  0.44   0.24 ->  1.81
    [ T017: x := o[2] ]___________________________________  0.29   0.16 ->  1.83
-   [ T018: round( i / 1000, 2 ) ]________________________  0.59   0.28 ->  2.12
-   [ T019: str( i / 1000 ) ]_____________________________  1.21   0.69 ->  1.74
-   [ T020: val( s ) ]____________________________________  0.61   0.33 ->  1.86
-   [ T021: val( a [ i % 16 + 1 ] ) ]_____________________  0.93   0.50 ->  1.85
-   [ T022: dtos( d - i % 10000 ) ]_______________________  0.90   0.56 ->  1.60
-   [ T023: eval( { || i % 16 } ) ]_______________________  1.00   1.24 ->  0.81
-   [ T024: eval( bc := { || i % 16 } ) ]_________________  0.59   0.32 ->  1.83
-   [ T025: eval( { |x| x % 16 }, i ) ]___________________  0.81   1.03 ->  0.79
-   [ T026: eval( bc := { |x| x % 16 }, i ) ]_____________  0.59   0.30 ->  1.96
-   [ T027: eval( { |x| f1( x ) }, i ) ]__________________  0.93   1.10 ->  0.85
-   [ T028: eval( bc := { |x| f1( x ) }, i ) ]____________  0.71   0.38 ->  1.89
-   [ T029: eval( bc := &("{ |x| f1( x ) }"), i ) ]_______  0.70   0.40 ->  1.74
-   [ T030: x := &( "f1(" + str(i) + ")" ) ]______________  5.71   3.36 ->  1.70
-   [ T031: bc := &( "{|x|f1(x)}" ), eval( bc, i ) ]______  6.36   4.21 ->  1.51
-   [ T032: x := valtype( x ) +  valtype( i ) ]___________  0.86   0.51 ->  1.68
-   [ T033: x := strzero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]  1.52   0.85 ->  1.80
+   [ T018: Round( i / 1000, 2 ) ]________________________  0.59   0.28 ->  2.12
+   [ T019: Str( i / 1000 ) ]_____________________________  1.21   0.69 ->  1.74
+   [ T020: Val( s ) ]____________________________________  0.61   0.33 ->  1.86
+   [ T021: Val( a [ i % 16 + 1 ] ) ]_____________________  0.93   0.50 ->  1.85
+   [ T022: DToS( d - i % 10000 ) ]_______________________  0.90   0.56 ->  1.60
+   [ T023: Eval( { || i % 16 } ) ]_______________________  1.00   1.24 ->  0.81
+   [ T024: Eval( bc := { || i % 16 } ) ]_________________  0.59   0.32 ->  1.83
+   [ T025: Eval( { |x| x % 16 }, i ) ]___________________  0.81   1.03 ->  0.79
+   [ T026: Eval( bc := { |x| x % 16 }, i ) ]_____________  0.59   0.30 ->  1.96
+   [ T027: Eval( { |x| f1( x ) }, i ) ]__________________  0.93   1.10 ->  0.85
+   [ T028: Eval( bc := { |x| f1( x ) }, i ) ]____________  0.71   0.38 ->  1.89
+   [ T029: Eval( bc := &("{ |x| f1( x ) }"), i ) ]_______  0.70   0.40 ->  1.74
+   [ T030: x := &( "f1(" + Str(i) + ")" ) ]______________  5.71   3.36 ->  1.70
+   [ T031: bc := &( "{|x|f1(x)}" ), Eval( bc, i ) ]______  6.36   4.21 ->  1.51
+   [ T032: x := ValType( x ) +  ValType( i ) ]___________  0.86   0.51 ->  1.68
+   [ T033: x := StrZero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]  1.52   0.85 ->  1.80
    [ T034: x := a[ i % 16 + 1 ] == s ]___________________  0.62   0.35 ->  1.80
    [ T035: x := a[ i % 16 + 1 ] = s ]____________________  0.67   0.38 ->  1.75
    [ T036: x := a[ i % 16 + 1 ] >= s ]___________________  0.66   0.37 ->  1.76
    [ T037: x := a[ i % 16 + 1 ] <= s ]___________________  0.66   0.38 ->  1.73
    [ T038: x := a[ i % 16 + 1 ] < s ]____________________  0.67   0.38 ->  1.75
    [ T039: x := a[ i % 16 + 1 ] > s ]____________________  0.65   0.33 ->  1.98
-   [ T040: ascan( a, i % 16 ) ]__________________________  0.67   0.33 ->  2.01
-   [ T041: ascan( a, { |x| x == i % 16 } ) ]_____________  5.87   3.63 ->  1.62
-   [ T042: iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.T.,s ]  1.88   1.45 ->  1.29
+   [ T040: AScan( a, i % 16 ) ]__________________________  0.67   0.33 ->  2.01
+   [ T041: AScan( a, { |x| x == i % 16 } ) ]_____________  5.87   3.63 ->  1.62
+   [ T042: iif( i%1000==0, a:={}, ) , AAdd(a,{i,1,.T.,s ]  1.88   1.45 ->  1.29
    [ T043: x := a ]______________________________________  0.15   0.07 ->  1.96
    [ T044: x := {} ]_____________________________________  0.37   1.00 ->  0.37
    [ T045: f0() ]________________________________________  0.23   0.14 ->  1.58
@@ -3448,7 +3452,7 @@ The last test we can make is scalability in real multi CPU environment.
    [ T052: f2( a ) ]_____________________________________  0.31   0.16 ->  1.95
    [ T053: x := f4() ]___________________________________  0.96   0.57 ->  1.66
    [ T054: x := f5() ]___________________________________  0.59   0.39 ->  1.53
-   [ T055: x := space(16) ]______________________________  0.48   0.32 ->  1.50
+   [ T055: x := Space(16) ]______________________________  0.48   0.32 ->  1.50
    [ T056: f_prv( c ) ]__________________________________  0.86   0.56 ->  1.53
    ============================================================================
    [   TOTAL   ]_________________________________________ 46.76  30.75 ->  1.52
@@ -3480,31 +3484,31 @@ The last test we can make is scalability in real multi CPU environment.
    [ T015: x := F_D ]____________________________________  0.53   0.28 ->  1.87
    [ T016: x := o:Args ]_________________________________  1.04   0.96 ->  1.09
    [ T017: x := o[2] ]___________________________________  0.51   0.25 ->  2.04
-   [ T018: round( i / 1000, 2 ) ]________________________  1.15   0.98 ->  1.17
-   [ T019: str( i / 1000 ) ]_____________________________  1.97   1.51 ->  1.30
-   [ T020: val( s ) ]____________________________________  1.19   0.86 ->  1.38
-   [ T021: val( a [ i % 16 + 1 ] ) ]_____________________  1.65   1.23 ->  1.35
-   [ T022: dtos( d - i % 10000 ) ]_______________________  1.54   1.14 ->  1.35
-   [ T023: eval( { || i % 16 } ) ]_______________________  1.91   2.78 ->  0.68
-   [ T024: eval( bc := { || i % 16 } ) ]_________________  1.46   1.34 ->  1.09
-   [ T025: eval( { |x| x % 16 }, i ) ]___________________  1.60   2.77 ->  0.58
-   [ T026: eval( bc := { |x| x % 16 }, i ) ]_____________  1.32   1.30 ->  1.02
-   [ T027: eval( { |x| f1( x ) }, i ) ]__________________  2.13   3.10 ->  0.69
-   [ T028: eval( bc := { |x| f1( x ) }, i ) ]____________  1.75   1.78 ->  0.98
-   [ T029: eval( bc := &("{ |x| f1( x ) }"), i ) ]_______  1.77   1.79 ->  0.99
-   [ T030: x := &( "f1(" + str(i) + ")" ) ]______________ 11.34  14.11 ->  0.80
-   [ T031: bc := &( "{|x|f1(x)}" ), eval( bc, i ) ]______ 13.19  17.26 ->  0.76
-   [ T032: x := valtype( x ) +  valtype( i ) ]___________  2.11   1.65 ->  1.28
-   [ T033: x := strzero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]  2.80   1.78 ->  1.57
+   [ T018: Round( i / 1000, 2 ) ]________________________  1.15   0.98 ->  1.17
+   [ T019: Str( i / 1000 ) ]_____________________________  1.97   1.51 ->  1.30
+   [ T020: Val( s ) ]____________________________________  1.19   0.86 ->  1.38
+   [ T021: Val( a [ i % 16 + 1 ] ) ]_____________________  1.65   1.23 ->  1.35
+   [ T022: DToS( d - i % 10000 ) ]_______________________  1.54   1.14 ->  1.35
+   [ T023: Eval( { || i % 16 } ) ]_______________________  1.91   2.78 ->  0.68
+   [ T024: Eval( bc := { || i % 16 } ) ]_________________  1.46   1.34 ->  1.09
+   [ T025: Eval( { |x| x % 16 }, i ) ]___________________  1.60   2.77 ->  0.58
+   [ T026: Eval( bc := { |x| x % 16 }, i ) ]_____________  1.32   1.30 ->  1.02
+   [ T027: Eval( { |x| f1( x ) }, i ) ]__________________  2.13   3.10 ->  0.69
+   [ T028: Eval( bc := { |x| f1( x ) }, i ) ]____________  1.75   1.78 ->  0.98
+   [ T029: Eval( bc := &("{ |x| f1( x ) }"), i ) ]_______  1.77   1.79 ->  0.99
+   [ T030: x := &( "f1(" + Str(i) + ")" ) ]______________ 11.34  14.11 ->  0.80
+   [ T031: bc := &( "{|x|f1(x)}" ), Eval( bc, i ) ]______ 13.19  17.26 ->  0.76
+   [ T032: x := ValType( x ) +  ValType( i ) ]___________  2.11   1.65 ->  1.28
+   [ T033: x := StrZero( i % 100, 2 ) $ a[ i % 16 + 1 ] ]  2.80   1.78 ->  1.57
    [ T034: x := a[ i % 16 + 1 ] == s ]___________________  1.17   0.69 ->  1.71
    [ T035: x := a[ i % 16 + 1 ] = s ]____________________  1.21   0.57 ->  2.10
    [ T036: x := a[ i % 16 + 1 ] >= s ]___________________  1.15   0.62 ->  1.87
    [ T037: x := a[ i % 16 + 1 ] <= s ]___________________  1.10   0.60 ->  1.86
    [ T038: x := a[ i % 16 + 1 ] < s ]____________________  1.11   0.63 ->  1.75
    [ T039: x := a[ i % 16 + 1 ] > s ]____________________  1.14   0.61 ->  1.88
-   [ T040: ascan( a, i % 16 ) ]__________________________  1.66   1.17 ->  1.41
-   [ T041: ascan( a, { |x| x == i % 16 } ) ]_____________ 12.39  13.63 ->  0.91
-   [ T042: iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.T.,s ]  2.95   2.79 ->  1.06
+   [ T040: AScan( a, i % 16 ) ]__________________________  1.66   1.17 ->  1.41
+   [ T041: AScan( a, { |x| x == i % 16 } ) ]_____________ 12.39  13.63 ->  0.91
+   [ T042: iif( i%1000==0, a:={}, ) , AAdd(a,{i,1,.T.,s ]  2.95   2.79 ->  1.06
    [ T043: x := a ]______________________________________  0.37   0.19 ->  1.94
    [ T044: x := {} ]_____________________________________  0.70   2.29 ->  0.31
    [ T045: f0() ]________________________________________  0.78   0.73 ->  1.07
@@ -3517,7 +3521,7 @@ The last test we can make is scalability in real multi CPU environment.
    [ T052: f2( a ) ]_____________________________________  0.92   0.85 ->  1.08
    [ T053: x := f4() ]___________________________________  2.45   1.95 ->  1.26
    [ T054: x := f5() ]___________________________________  1.75   1.75 ->  1.00
-   [ T055: x := space(16) ]______________________________  1.19   1.02 ->  1.16
+   [ T055: x := Space(16) ]______________________________  1.19   1.02 ->  1.16
    [ T056: f_prv( c ) ]__________________________________  4.51   4.36 ->  1.03
    ============================================================================
    [   TOTAL   ]_________________________________________106.08 105.94 ->  1.00
@@ -3526,7 +3530,7 @@ The last test we can make is scalability in real multi CPU environment.
    [ total real time: ]..........................................212.02
 
 As we can see in xHarbour we do not have any improvement executing MT
-programs on MultiCPU machines while in Harbour the speed is noticeably
+programs on multi-CPU machines while in Harbour the speed is noticeably
 better. It means that Harbour is quite well scalable and users should
 expect speed improvement executing MT parallel programs on multi CPU
 machines. For some programs like MT servers it may be critical - programs

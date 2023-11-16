@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,7 +49,7 @@
 #include "hbapierr.h"
 
 /* returns the maximum of two date or numerics */
-/* NOTE: CA-Cl*pper returns 1-st item when they are equal [druzus] */
+/* NOTE: CA-Cl*pper returns 1st item when they are equal [druzus] */
 HB_FUNC( MAX )
 {
    PHB_ITEM p1 = hb_param( 1, HB_IT_ANY );
@@ -110,7 +110,7 @@ HB_FUNC( MAX )
 }
 
 /* returns the minimum of two date or numerics */
-/* NOTE: CA-Cl*pper returns 1-st item when they are equal [druzus] */
+/* NOTE: CA-Cl*pper returns 1st item when they are equal [druzus] */
 HB_FUNC( MIN )
 {
    PHB_ITEM p1 = hb_param( 1, HB_IT_ANY );

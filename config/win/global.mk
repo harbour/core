@@ -22,4 +22,4 @@ ifneq ($(wildcard $(TOP)$(ROOT)lib/3rd/$(HB_PLATFORM)/$(HB_COMPILER)),)
    3RDLIBS := unicows
 endif
 
-SYSLIBS += kernel32 user32 ws2_32 iphlpapi advapi32 gdi32
+SYSLIBS += winmm kernel32 user32 ws2_32 iphlpapi advapi32 gdi32

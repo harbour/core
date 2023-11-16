@@ -2,6 +2,7 @@
  * GET system module (default)
  *
  * Copyright 1999-2001 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2001 Luiz Rafael Culik (Support for CA-Cl*pper 5.3 GET-system)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,17 +45,9 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2001 Luiz Rafael Culik
- *    Support for CA-Cl*pper 5.3 Getsystem
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #ifdef HB_COMPAT_C53
+
+#include "inkey.ch"
 
 #define SLUPDATED       1
 #define SOACTIVEGET     8
@@ -128,8 +121,8 @@ FUNCTION GetActive( oGet )
 
    IF oGetList == NIL
       /* NOTE: For complete compatibility we need to make sure this
-               function works even if there is no active getlist.
-               F.e. when 3rd party software manages getlists on its
+               function works even if there is no active GetList.
+               F.e. when 3rd party software manages GetLists on its
                own and still uses this function. [vszakats] */
       IF PCount() > 0
          oGetActiveOld := t_oGetActive

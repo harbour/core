@@ -169,34 +169,34 @@ static void hb_irmMapMarkCallback( HB_ULONG ulRecNo, unsigned char * pKey, unsig
 }
 
 /*
- *  Expresion operators:
+ *  Expression operators:
  *    "&", expr1, expr2, ...
  *    "|", expr1, expr2, ...
  *  Filter operators:
- *    "=", tag, bag, value                    ORKEYVAL() = value
- *    "<=", tag, bag, value                   ORKEYVAL() <= value
- *    ">=", tag, bag, value                   ORKEYVAL() >= value
- *    "<=<=", tag, bag, value1, value2        value1 <= ORKEYVAL() <= value2
+ *    "=", tag, bag, value                    ordKeyVal() = value
+ *    "<=", tag, bag, value                   ordKeyVal() <= value
+ *    ">=", tag, bag, value                   ordKeyVal() >= value
+ *    "<=<=", tag, bag, value1, value2        value1 <= ordKeyVal() <= value2
  */
 PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
 {
-   PHB_IRMMAP   pMap, * pMapArray;
    const char * szOper;
-   HB_ULONG     ulLen, ulSize, ul, ul2;
-   AREAP        pArea;
-   DBORDERINFO  dboi;
 
    if( HB_IS_ARRAY( pItem ) && ( szOper = hb_arrayGetCPtr( pItem, 1 ) ) != NULL )
    {
+      HB_ULONG   ulLen, ulSize;
+      PHB_IRMMAP pMap;
+
       /* Expression operators */
       if( ( ! strcmp( szOper, "&" ) || ! strcmp( szOper, "|" ) ) && ( ulLen = ( HB_ULONG ) hb_arrayLen( pItem ) ) > 1 )
       {
+         HB_ULONG     ul, ul2;
+         PHB_IRMMAP * pMapArray;
+
          --ulLen;
          pMapArray = ( PHB_IRMMAP * ) hb_xgrab( sizeof( PHB_IRMMAP ) * ulLen );
          for( ul = 0; ul < ulLen; ++ul )
-         {
             pMapArray[ ul ] = hb_irmExecute( hb_arrayGetItemPtr( pItem, ul + 2 ) );
-         }
          ulSize = ( pMapArray[ 0 ]->ulSize + 7 ) >> 3;
          if( ! strcmp( szOper, "&" ) )
          {
@@ -224,9 +224,11 @@ PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
                ( ! strcmp( szOper, ">=" ) && ( hb_arrayLen( pItem ) == 4 ) ) ||
                ( ! strcmp( szOper, "<=<=" ) && ( hb_arrayLen( pItem ) == 5 ) ) )
       {
-         pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+         AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
          if( pArea )
          {
+            DBORDERINFO dboi;
+
             SELF_RECCOUNT( pArea, &ulSize );
             pMap = hb_irmMapAlloc( ulSize );
 
@@ -255,7 +257,9 @@ PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
                hb_arraySet( dboi.itmNewVal, DBRMI_HIVAL, hb_arrayGetItemPtr( pItem, 5 ) );
             }
             SELF_ORDINFO( pArea, DBOI_SCOPEEVAL, &dboi );
-            /* bitcount ulSize = hb_itemGetNL( dboi.itmResult ); */
+            #if 0
+            bitcount ulSize = hb_itemGetNL( dboi.itmResult );
+            #endif
             hb_itemRelease( dboi.itmNewVal );
             hb_itemRelease( dboi.itmResult );
             return pMap;

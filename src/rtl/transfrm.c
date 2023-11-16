@@ -2,6 +2,7 @@
  * Transform() function
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au> (String handling)
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -42,16 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
- *    String handling
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -104,9 +95,7 @@ HB_FUNC( TRANSFORM )
 
       HB_SIZE nOffset = 0;
 
-      /* ======================================================= */
-      /* Analyze picture functions                               */
-      /* ======================================================= */
+      /* --- Analyze picture functions --- */
 
       uiPicFlags = 0;
 
@@ -197,16 +186,13 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      /* ======================================================= */
-      /* Handle STRING values                                    */
-      /* ======================================================= */
+      /* --- Handle STRING values --- */
 
       if( HB_IS_STRING( pValue ) )
       {
          const char * szExp = hb_itemGetCPtr( pValue );
          HB_SIZE nExpLen = hb_itemGetCLen( pValue );
          HB_SIZE nExpPos = 0;
-         HB_BOOL bFound  = HB_FALSE;
 
          /* Grab enough */
 
@@ -337,6 +323,8 @@ HB_FUNC( TRANSFORM )
 
             if( uiPicFlags & PF_EXCHANG )
             {
+               HB_BOOL bFound = HB_FALSE;
+
                while( nExpPos < nResultPos )
                {
                   if( szResult[ nExpPos ] == ',' )
@@ -398,9 +386,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      /* ======================================================= */
-      /* Handle NUMERIC values                                   */
-      /* ======================================================= */
+      /* --- Handle NUMERIC values --- */
 
       else if( HB_IS_NUMERIC( pValue ) )
       {
@@ -408,7 +394,6 @@ HB_FUNC( TRANSFORM )
          int      iDec;                               /* Number of decimals       */
          int      iCount;
          HB_SIZE  i;
-         char     cPic;
          PHB_ITEM pNumber = NULL;
 
          double dValue = hb_itemGetND( pValue );
@@ -466,7 +451,7 @@ HB_FUNC( TRANSFORM )
          if( ( uiPicFlags & ( PF_DEBIT | PF_PARNEG | PF_PARNEGWOS ) ) && dValue < 0 )
          {
             /* Always convert absolute val */
-            if( HB_IS_NUMINT( pValue ) ) /* workaround for 64bit integer conversion */
+            if( HB_IS_NUMINT( pValue ) ) /* workaround for 64-bit integer conversion */
                pNumber = hb_itemPutNInt( NULL, -hb_itemGetNInt( pValue ) );
             else
                pNumber = hb_itemPutND( NULL, -dValue );
@@ -536,7 +521,7 @@ HB_FUNC( TRANSFORM )
 
             for( i = iCount = 0; i < nPicLen; i++ )
             {
-               cPic = szPic[ i ];
+               char cPic = szPic[ i ];
                if( cPic == '9' || cPic == '#' )
                {
                   szResult[ i ] = iCount < iWidth ? szStr[ iCount++ ] : ' ';
@@ -651,9 +636,7 @@ HB_FUNC( TRANSFORM )
          szResult[ i ] = '\0';
       }
 
-      /* ======================================================= */
-      /* Handle DATE values                                      */
-      /* ======================================================= */
+      /* --- Handle DATE values --- */
 
       else if( HB_IS_DATE( pValue ) )
       {
@@ -669,7 +652,7 @@ HB_FUNC( TRANSFORM )
          if( uiPicFlags & PF_BRITISH )
          {
             /* When @E is used CA-Cl*pper do not update date format
-             * pattern but wrongly moves 4-th and 5-th bytes of
+             * pattern but wrongly moves 4th and 5th bytes of
              * formatted date to the beginning (see below). It causes
              * that date formats formats different then MM?DD?YY[YY]
              * are wrongly translated. The code below is not CA-Cl*pper
@@ -754,9 +737,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      /* ======================================================= */
-      /* Handle TIMESTAMP values                                 */
-      /* ======================================================= */
+      /* --- Handle TIMESTAMP values --- */
 
       else if( HB_IS_TIMESTAMP( pValue ) )
       {
@@ -775,7 +756,7 @@ HB_FUNC( TRANSFORM )
          if( szDateFormat && ( uiPicFlags & PF_BRITISH ) )
          {
             /* When @E is used CA-Cl*pper do not update date format
-             * pattern but wrongly moves 4-th and 5-th bytes of
+             * pattern but wrongly moves 4th and 5th bytes of
              * formatted date to the beginning (see below). It causes
              * that date formats formats different then MM?DD?YY[YY]
              * are wrongly translated. The code below is not CA-Cl*pper
@@ -872,9 +853,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      /* ======================================================= */
-      /* Handle LOGICAL values                                   */
-      /* ======================================================= */
+      /* --- Handle LOGICAL values --- */
 
       else if( HB_IS_LOGICAL( pValue ) )
       {
@@ -904,13 +883,13 @@ HB_FUNC( TRANSFORM )
 
             switch( cPic )
             {
-               case 'y':                     /* Yes/No                   */
-               case 'Y':                     /* Yes/No                   */
+               case 'y':                     /* Yes/No */
+               case 'Y':                     /* Yes/No */
 
                   if( ! bDone )
                   {
                      szResult[ nResultPos ] = hb_itemGetL( pValue ) ? 'Y' : 'N';
-                     bDone = HB_TRUE;           /* Logical written          */
+                     bDone = HB_TRUE;           /* Logical written */
                   }
                   else
                      szResult[ nResultPos ] = ' ';
@@ -918,8 +897,8 @@ HB_FUNC( TRANSFORM )
                   break;
 
                case '#':
-               case 'l':                     /* True/False               */
-               case 'L':                     /* True/False               */
+               case 'l':                     /* True/False */
+               case 'L':                     /* True/False */
 
                   if( ! bDone )
                   {
@@ -940,7 +919,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      /* ======================================================= */
+      /* --- */
 
       else
       {
@@ -971,7 +950,7 @@ HB_FUNC( TRANSFORM )
          hb_retclen_buffer( szResult, ( nParamS && nResultPos > nParamS ) ? nParamS : nResultPos );
       }
    }
-   else if( pPic || HB_ISNIL( 2 ) ) /* Picture is an empty string or NIL */
+   else if( pPic || HB_ISNIL( 2 ) )  /* Picture is an empty string or NIL */
    {
       if( HB_IS_STRING( pValue ) )
       {

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -83,17 +83,17 @@ NSX description:
    during update operation if previous key value with valid record
    number cannot be located. Harbour RDD does not have such limit
    and can support 2^32-2 records = 4294967294.
-7. Branch nodes have also field to mark record len (RecNoLen) but
+7. Branch nodes have also field to mark record length (RecNoLen) but
    it seems to be unused (filled with 0 or 4) and record number is
    always stored in 4 bytes.
-8. Maximum key len is set to 250 but in fact with 4 bytes record len
-   such keys cannot be supported without adding some hack because
+8. Maximum key length is set to 250 but in fact with 4 bytes record
+   length such keys cannot be supported without adding some hack because
    RecNoLen[4] + Size[1] + DupCount[1] + 250 gives 256 and it cannot
    be stored in 1 byte (Size). We can add support for such long
    indexes but we have to define that Size=0 means Size=256. It can
    be done because Size=0 cannot appear in other way. I implemented
    it and Harbour works well with such indexes.
-9. In root header is address of 1-st available free page in index file,
+9. In root header is address of 1st available free page in index file,
    addresses of next pages are stored in the free pages at the same
    position as in root header (offset = 6)
 10.Leaf nodes use for duplicate compression keys' values from upper
@@ -136,10 +136,10 @@ NSX description:
    or:
       rddInfo( RDDI_MEMOTYPE, DB_MEMO_DBT, "DBFNSX" )
 16.Harbour NSX implementation in default format supports NSX files
-   upto 4GB. This is maximum keeping binary compatibility with SIX3
-   NSX RDD. But Harbour can support files up to 4TB - it's a little
+   up to 4 GiB. This is maximum keeping binary compatibility with SIX3
+   NSX RDD. But Harbour can support files up to 4 TiB - it's a little
    bit modified format with 'I' instead of 'i' in index header signature.
-   Such indexes are created when locking mode is set to 64bit. On open
+   Such indexes are created when locking mode is set to 64-bit. On open
    Harbour RDDs automatically recognize type of index files so it
    can use new format also with different locking schemes. SIX3 NSX
    cannot use new index.
@@ -151,7 +151,7 @@ LEAF KEY COMPRESSION:
    a. store record number (RecNo)
    b. count duplicated characters
    c. if full key is duplicated then key size = n + 1 and goto @g
-   d. count trailng characters to the duplicate limit
+   d. count trailing characters to the duplicate limit
    e. if rest of key value (without dup and trail chars) is not empty
       then store it using RLE compression:
       - replace each repeated 3 or more characters with with FF xx yy
@@ -220,9 +220,9 @@ HB_EXTERN_BEGIN
 #define NSX_TYPE_ANYNUM    ( NSX_TYPE_LNUM | NSX_TYPE_DNUM )
 #define NSX_TYPE_ANYEXP    ( NSX_TYPE_ANYNUM | NSX_TYPE_CHAR | NSX_TYPE_LDATE | NSX_TYPE_TIMESTAMP | NSX_TYPE_LOG )
 
-#define NSX_CMP_EXACT      0x00     /* exact comparision */
-#define NSX_CMP_PREFIX     0x01     /* prefix comparision */
-#define NSX_CMP_DATE       0x02     /* date comparision */
+#define NSX_CMP_EXACT      0x00     /* exact comparison */
+#define NSX_CMP_PREFIX     0x01     /* prefix comparison */
+#define NSX_CMP_DATE       0x02     /* date comparison */
 
 #define NSX_TAG_FULLUPDT   0x00
 #define NSX_TAG_PARTIAL    0x01
@@ -281,7 +281,7 @@ typedef struct _NSXTAGHEADER
    HB_UCHAR KeyType[ 2 ];             /* index key type: NSX_TYPE_* */
    HB_UCHAR KeySize[ 2 ];             /* index key size */
    HB_UCHAR Unique[ 2 ];              /* 0x0001 for UNIQUE indexes */
-   HB_UCHAR Descend[ 2 ];             /* 0x0001 for descond indexes */
+   HB_UCHAR Descend[ 2 ];             /* 0x0001 for descend indexes */
    HB_UCHAR KeyExpr[ NSX_MAXEXPLEN ]; /* index KEY expression ASCIIZ */
    HB_UCHAR ForExpr[ NSX_MAXEXPLEN ]; /* index FOR expression ASCIIZ */
    HB_UCHAR Unused[ NSX_PAGELEN - 14 - NSX_MAXEXPLEN - NSX_MAXEXPLEN ];
@@ -310,7 +310,7 @@ typedef struct _NSXLEAFPAGE
    HB_UCHAR NodeID[ 1 ];              /* NSX_LEAFPAGE | ( lRoot ? NSX_ROOTPAGE : 0 ) */
    HB_UCHAR RecNoLen[ 1 ];            /* number of bytes for recno in leaf keys */
    HB_UCHAR KeyCount[ 2 ];            /* number of key in page */
-   HB_UCHAR UsedArea[ 2 ];            /* arrea used in page -> offset to free area */
+   HB_UCHAR UsedArea[ 2 ];            /* area used in page -> offset to free area */
    HB_UCHAR KeyData[ NSX_PAGELEN - NSX_LEAFKEYOFFSET ];  /* with branch keys */
 } NSXLEAFPAGE;
 typedef NSXLEAFPAGE * LPNSXLEAFPAGE;
@@ -320,20 +320,20 @@ typedef NSXLEAFPAGE * LPNSXLEAFPAGE;
    variable member sizes */
 typedef struct _NSXBRANCHKEY
 {
-   HB_UCHAR Page[4];          /* page offset wih higher keys values */
-   HB_UCHAR RecNo[n];         /* where n is RecNoLen */
-   HB_UCHAR KeyData[l];       /* key value where l is KeySize */
+   HB_UCHAR Page[ 4 ];        /* page offset with higher keys values */
+   HB_UCHAR RecNo[ n ];       /* where n is RecNoLen */
+   HB_UCHAR KeyData[ l ];     /* key value where l is KeySize */
 } NSXBRANCHKEY;
 typedef NSXBRANCHKEY * LPNSXBRANCHKEY;
 
 typedef struct _NSXLEAFKEY
 {
-   HB_UCHAR RecNo[n];         /* where n is RecNoLen */
-   HB_UCHAR Size[1];          /* key data size with this byte and n RecNo HB_BYTEs
+   HB_UCHAR RecNo[ n ];       /* where n is RecNoLen */
+   HB_UCHAR Size[ 1 ];        /* key data size with this byte and n RecNo HB_BYTEs
                                * if Size == n + 1 then key is fully duplicated
                                */
-   HB_UCHAR DupCount[1];      /* number of bytes from previous key */
-   HB_UCHAR KeyData[m];       /* rest of key value with RLE compression:
+   HB_UCHAR DupCount[ 1 ];    /* number of bytes from previous key */
+   HB_UCHAR KeyData[ m ];     /* rest of key value with RLE compression:
                                *    FF xx yy => Replicate(yy, xx)
                                *    FF 01    => FF
                                * m = Size - n - 2
@@ -528,13 +528,13 @@ typedef struct
    HB_BOOL    fReindex;       /* HB_TRUE if reindexing is in process */
    HB_ULONG   ulMaxRec;       /* the highest record number */
    HB_ULONG   ulTotKeys;      /* total number of keys indexed */
-   HB_ULONG   ulKeys;         /* keys in curently created page */
+   HB_ULONG   ulKeys;         /* keys in currently created page */
    HB_ULONG   ulPages;        /* number of pages */
    HB_ULONG   ulCurPage;      /* current page */
    HB_ULONG   ulPgKeys;       /* maximum number of key in page memory buffer */
    HB_ULONG   ulMaxKey;       /* maximum number of keys in single page */
    HB_UCHAR * pKeyPool;       /* memory buffer for current page then for pages */
-   HB_UCHAR * pStartKey;      /* begining of key pool after sorting */
+   HB_UCHAR * pStartKey;      /* beginning of key pool after sorting */
    LPNSXSWAPPAGE pSwapPage;   /* list of pages */
    LPPAGEINFO NodeList[ NSX_STACKSIZE ]; /* Stack of pages */
    HB_ULONG   ulFirst;

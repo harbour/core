@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,9 +44,6 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-
 #include "hbssl.h"
 
 static HB_GARBAGE_FUNC( SSL_SESSION_release )
@@ -70,9 +67,9 @@ static const HB_GC_FUNCS s_gcSSL_SESSION_funcs =
    hb_gcDummyMark
 };
 
-void * hb_SSL_SESSION_is( int iParam )
+HB_BOOL hb_SSL_SESSION_is( int iParam )
 {
-   return hb_parptrGC( &s_gcSSL_SESSION_funcs, iParam );
+   return hb_parptrGC( &s_gcSSL_SESSION_funcs, iParam ) != NULL;
 }
 
 SSL_SESSION * hb_SSL_SESSION_par( int iParam )
@@ -176,13 +173,15 @@ HB_FUNC( SSL_SESSION_HASH )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/*
-   char *SSL_SESSION_get_app_data(SSL_SESSION *s);
-   char *SSL_SESSION_get_ex_data(const SSL_SESSION *s, int idx);
-   void SSL_SESSION_set_app_data(SSL_SESSION *s, char *a);
-   int SSL_SESSION_set_ex_data(SSL_SESSION *s, int idx, char *arg);
+#if 0
 
-   int SSL_SESSION_get_ex_new_index(long argl, char *argp, int (*new_func)(void), int (*dup_func)(void), void (*free_func)(void))
-   int SSL_SESSION_print(BIO *bp, const SSL_SESSION *x);
-   int SSL_SESSION_print_fp(FILE *fp, const SSL_SESSION *x);
- */
+char * SSL_SESSION_get_app_data( SSL_SESSION * s );
+char * SSL_SESSION_get_ex_data( const SSL_SESSION * s, int idx );
+void SSL_SESSION_set_app_data( SSL_SESSION * s, char * a );
+int SSL_SESSION_set_ex_data( SSL_SESSION * s, int idx, char * arg );
+
+int SSL_SESSION_get_ex_new_index( long argl, char * argp, int ( * new_func )( void ), int ( * dup_func )( void ), void ( * free_func )( void ) )
+int SSL_SESSION_print( BIO * bp, const SSL_SESSION * x );
+int SSL_SESSION_print_fp( FILE * fp, const SSL_SESSION * x );
+
+#endif

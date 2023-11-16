@@ -1,12 +1,10 @@
-This folder contains compression related files including:
- * zip file support based on minizip library (http://www.winimage.com/zLibDll/minizip.html)
-   including:
+This directory contains compression related files including:
    * wrapper functions for minizip
-   * some additionl functions to provide a higher level API for zip files
+   * some additionl functions to provide a higher-level API for ZIP files
 
 
-Harbour functions to mange ZIP files:
-=====================================
+Harbour functions to manage ZIP files:
+======================================
 
 hb_zipOpen( cFileName, [ iMode = HB_ZIP_CREATE ],
             [ @cGlobalComment ] ) --> hZip

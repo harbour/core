@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -90,21 +90,16 @@ static HB_USHORT s_uiRddIdSQLMIX = ( HB_USHORT ) -1;
 static RDDFUNCS sqlmixSuper;
 
 
-/*
-   =======================================================================
-   Misc functions
-   =======================================================================
- */
+/* --- Misc functions --- */
 
 
 static HB_ERRCODE sqlmixErrorRT( SQLMIXAREAP pArea, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, char * filename, HB_ERRCODE errOsCode, HB_USHORT uiFlags )
 {
-   PHB_ITEM   pError;
    HB_ERRCODE iRet = HB_FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, errGenCode );
       hb_errPutSubCode( pError, errSubCode );
       hb_errPutOsCode( pError, errOsCode );
@@ -120,13 +115,10 @@ static HB_ERRCODE sqlmixErrorRT( SQLMIXAREAP pArea, HB_ERRCODE errGenCode, HB_ER
 }
 
 
-/*
-   =======================================================================
-   Memory Index
-   =======================================================================
- */
+/* --- Memory Index --- */
 
-/* -------------------------- Key management ---------------------------- */
+/* --- Key management --- */
+
 /* hb_mixKey*() */
 
 static PMIXKEY hb_mixKeyNew( PMIXTAG pTag )
@@ -151,15 +143,15 @@ static PMIXKEY hb_mixKeyPutItem( PMIXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRecNo,
    {
       case 'C':
       {
-         HB_SIZE ul = hb_itemGetCLen( pItem );
+         HB_SIZE nLen = hb_itemGetCLen( pItem );
 
-         if( ul > ( HB_SIZE ) pTag->uiKeyLen )
-            ul = pTag->uiKeyLen;
+         if( nLen > ( HB_SIZE ) pTag->uiKeyLen )
+            nLen = pTag->uiKeyLen;
 
-         memcpy( pKey->val, hb_itemGetCPtr( pItem ), ul );
+         memcpy( pKey->val, hb_itemGetCPtr( pItem ), nLen );
 
-         if( ul < ( HB_SIZE ) pTag->uiKeyLen )
-            memset( pKey->val + ul, ' ', ( HB_SIZE ) pTag->uiKeyLen - ul );
+         if( nLen < ( HB_SIZE ) pTag->uiKeyLen )
+            memset( pKey->val + nLen, ' ', ( HB_SIZE ) pTag->uiKeyLen - nLen );
 
          break;
       }
@@ -293,7 +285,8 @@ static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, unsigne
 }
 
 
-/* -------------------------- Tag management ---------------------------- */
+/* --- Tag management --- */
+
 /* hb_mixTag*() */
 
 /* This function is used for debugging purposes. Uncomment it, if you need it. */
@@ -333,13 +326,11 @@ static void hb_mixTagPrintNode( PMIXTAG pTag, PMIXNODE pNode, int iLevel )
 
 static PMIXNODE hb_mixTagCreateNode( PMIXTAG pTag, HB_BOOL fLeaf )
 {
-   PMIXNODE pNode;
-   HB_SIZE  ulSize;
+   HB_SIZE  nSize = ( fLeaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + MIX_NODE_ORDER * pTag->uiTotalLen;
+   PMIXNODE pNode = ( PMIXNODE ) hb_xgrabz( nSize );
 
-   ulSize = ( fLeaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + MIX_NODE_ORDER * pTag->uiTotalLen;
-
-   pNode = ( PMIXNODE ) hb_xgrabz( ulSize );
    pNode->Leaf = fLeaf ? 1 : 0;
+
    return pNode;
 }
 
@@ -773,7 +764,7 @@ static PMIXTAG hb_mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_I
    pTag->szKeyExpr = ( char * ) hb_xgrab( hb_itemGetCLen( pKeyExpr ) + 1 );
    hb_strncpyTrim( pTag->szKeyExpr, hb_itemGetCPtr( pKeyExpr ), hb_itemGetCLen( pKeyExpr ) );
 
-   /* TODO: FOR expresion */
+   /* TODO: FOR expression */
    pTag->szForExpr = NULL;
 
    pTag->pKeyItem = pKeyItem;
@@ -961,7 +952,9 @@ static void hb_mixTagSkip( PMIXTAG pTag, HB_LONG lSkip )
    pNode = pTag->CurNode;
    uiPos = pTag->CurPos;
 
-/*   printf("hb_mixTagSkip: CurNode=%p, CurPos=%d lSkip=%d\n", pNode, uiPos, lSkip ); */
+   #if 0
+   printf( "hb_mixTagSkip: CurNode=%p, CurPos=%d lSkip=%d\n", pNode, uiPos, lSkip );
+   #endif
 
    if( lSkip > 0 )
    {
@@ -1082,7 +1075,8 @@ static void hb_mixTagSkip( PMIXTAG pTag, HB_LONG lSkip )
    }
 }
 
-/* -------------------------- Misc functions ---------------------------- */
+/* --- Misc functions --- */
+
 /* hb_mix*() */
 
 static PMIXTAG hb_mixFindTag( SQLMIXAREAP pArea, PHB_ITEM pOrder )
@@ -1112,20 +1106,20 @@ static PMIXTAG hb_mixFindTag( SQLMIXAREAP pArea, PHB_ITEM pOrder )
 }
 
 
-/*=======================================================================*/
+/* --- */
 
 
 static HB_ULONG hb_mixTagNodeKeyCount( PMIXNODE pNode )
 {
-   HB_ULONG     ulKeyCount;
-   unsigned int ui;
+   HB_ULONG ulKeyCount = pNode->KeyCount;
 
-   ulKeyCount = pNode->KeyCount;
    if( ! pNode->Leaf )
    {
+      unsigned int ui;
       for( ui = 0; ui <= pNode->KeyCount; ui++ )
          ulKeyCount += hb_mixTagNodeKeyCount( pNode->Child[ ui ] );
    }
+
    return ulKeyCount;
 }
 
@@ -1218,11 +1212,7 @@ static HB_ULONG hb_mixDBOIKeyNo( PMIXTAG pTag, HB_BOOL fFilter )
 }
 
 
-/*
-   =======================================================================
-   SQLMIX RDD METHODS
-   =======================================================================
- */
+/* --- SQLMIX RDD METHODS --- */
 
 static HB_ERRCODE sqlmixGoBottom( SQLMIXAREAP pArea )
 {
@@ -1475,6 +1465,29 @@ static HB_ERRCODE sqlmixGoHot( SQLMIXAREAP pArea )
       }
       pTag = pTag->pNext;
    }
+   return HB_SUCCESS;
+}
+
+static HB_ERRCODE sqlmixZap( SQLMIXAREAP pArea )
+{
+   PMIXTAG pTag;
+
+   if( SUPER_ZAP( &pArea->sqlarea.area ) == HB_FAILURE )
+      return HB_FAILURE;
+
+   pTag = pArea->pTagList;
+
+   while( pTag )
+   {
+      if( pTag->Root )
+         hb_mixTagDestroyNode( pTag->Root );
+
+      pTag->Root = hb_mixTagCreateNode( pTag, HB_TRUE );
+      pTag->fEof = HB_TRUE;
+
+      pTag = pTag->pNext;
+   }
+
    return HB_SUCCESS;
 }
 
@@ -1811,7 +1824,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, HB_USHORT uiIndex, LPDBORD
          break;
 
       case DBOI_NUMBER:
-         pOrderInfo->itmResult = hb_itemPutNI( pOrderInfo->itmResult, uiTag );  /* kitaip */
+         pOrderInfo->itmResult = hb_itemPutNI( pOrderInfo->itmResult, uiTag );  /* otherwise */
          break;
 
       case DBOI_ISCOND:
@@ -2023,7 +2036,7 @@ static RDDFUNCS sqlmixTable =
   ( DBENTRYP_VS ) NULL,                 /* sqlmixSort */
   ( DBENTRYP_VT ) NULL,                 /* sqlmixTrans */
   ( DBENTRYP_VT ) NULL,                 /* sqlmixTransRec */
-  ( DBENTRYP_V ) NULL,                  /* sqlmixZap */
+  ( DBENTRYP_V ) sqlmixZap,
   ( DBENTRYP_VR ) NULL,                 /* sqlmixChildEnd */
   ( DBENTRYP_VR ) NULL,                 /* sqlmixChildStart */
   ( DBENTRYP_VR ) NULL,                 /* sqlmixChildSync */

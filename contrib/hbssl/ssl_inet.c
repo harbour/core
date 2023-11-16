@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,13 +46,11 @@
 
 #define _HB_ZNET_INTERNAL_
 
-#include "hbapi.h"
+#include "hbssl.h"
+
 #include "hbapiitm.h"
-#include "hbapierr.h"
-#include "hbsocket.h"
 #include "hbdate.h"
 #include "hbznet.h"
-#include "hbssl.h"
 
 static long hb_inetReadSSL( PHB_ZNETSTREAM pStream, HB_SOCKET sd,
                             void * buffer, long len, HB_MAXINT timeout )

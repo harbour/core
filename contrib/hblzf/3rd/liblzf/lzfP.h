@@ -79,7 +79,11 @@
  * Unconditionally aligning does not cost very much, so do it if unsure
  */
 #ifndef STRICT_ALIGN
-# define STRICT_ALIGN !(defined(__i386) || defined (__amd64))
+# if defined(__i386) || defined (__amd64)
+#  define STRICT_ALIGN 0
+# else
+#  define STRICT_ALIGN 1
+# endif
 #endif
 
 /*
@@ -142,14 +146,21 @@ using namespace std;
 
 #ifndef LZF_USE_OFFSETS
 # if defined (WIN32) || defined(_WIN32)
-#  define LZF_USE_OFFSETS defined(_M_X64)
+#  if defined(_M_X64)
+#   define LZF_USE_OFFSETS 1
+#  endif
 # else
 #  if __cplusplus > 199711L
 #   include <cstdint>
 #  else
 #   include <stdint.h>
 #  endif
-#  define LZF_USE_OFFSETS (UINTPTR_MAX > 0xffffffffU)
+#  if (UINTPTR_MAX > 0xffffffffU)
+#   define LZF_USE_OFFSETS 1
+#  endif
+# endif
+# ifndef LZF_USE_OFFSETS
+#   define LZF_USE_OFFSETS 0
 # endif
 #endif
 

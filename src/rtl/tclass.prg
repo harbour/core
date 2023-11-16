@@ -2,6 +2,16 @@
  * Base Class for internal handling of class creation
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2000 J. Lefebvre <jfl@mafact.com> and RA. Cuylen <rac@mafact.com>
+ *    Multiple inheritance
+ *    Support shared class DATA
+ *    scoping (hidden, protected, readOnly)
+ *    Use of __cls_param function to allow multiple superclass declaration
+ *    Suppress of SetType and SetInit not needed anymore
+ *    Delegation and forwarding
+ *    Preparing the InitClass class method (not working!)
+ * Copyright 1999 Eddie Runia <eddie@runia.com>
+ *    Support for inheritance, default DATA values
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +24,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,26 +54,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 J. Lefebvre <jfl@mafact.com> and RA. Cuylen <rac@mafact.com>
- *    Multiple inheritance
- *    Support shared class DATA
- *    scoping (hidden, protected, readOnly)
- *    Use of __cls_param function to allow multiple superclass declaration
- *    Suppress of SetType and SetInit not more nedded
- *    Delegation and forwarding
- *    Preparing the InitClass class method (not working !!)
- *
- * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    Support for inheritance
- *    Support for default DATA values
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* NOTE: This .prg is also used by the debugger subsystem,
          therefore we need this switch to avoid an infinite
          loop when launching it. [vszakats] */
@@ -77,7 +67,7 @@ REQUEST HBObject
 
 FUNCTION HBClass()
 
-   STATIC s_hClass /* NOTE: Automatically defaults to NIL */
+   STATIC s_hClass  /* NOTE: Automatically defaults to NIL */
 
    LOCAL hClass
 
@@ -167,22 +157,24 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    LOCAL Self := QSelf()
    LOCAL i
 
-   IF HB_ISSYMBOL( xSuper )
+   DO CASE
+   CASE HB_ISSYMBOL( xSuper )
       ::asSuper := { xSuper }
-   ELSEIF Empty( xSuper )
+   CASE Empty( xSuper )
       ::asSuper := {}
-   ELSEIF HB_ISSTRING( xSuper )
+   CASE HB_ISSTRING( xSuper )
       ::asSuper := { __dynsN2Sym( xSuper ) }
-   ELSEIF HB_ISARRAY( xSuper )
+   CASE HB_ISARRAY( xSuper )
       ::asSuper := {}
       FOR EACH i IN xSuper
-         IF HB_ISSYMBOL( i )
+         DO CASE
+         CASE HB_ISSYMBOL( i )
             AAdd( ::asSuper, i )
-         ELSEIF HB_ISSTRING( i ) .AND. ! Empty( i )
+         CASE HB_ISSTRING( i ) .AND. ! Empty( i )
             AAdd( ::asSuper, __dynsN2Sym( i ) )
-         ENDIF
+         ENDCASE
       NEXT
-   ENDIF
+   ENDCASE
 
    ::cName         := hb_asciiUpper( cClassName )
    ::sClassFunc    := sClassFunc
@@ -234,7 +226,7 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    NEXT
 #endif
 
-   /* local messages... */
+   /* Local messages */
 
    FOR EACH n IN ::aDatas
       __clsAddMsg( hClass, n[ HB_OO_DATA_SYMBOL ]       , n:__enumIndex(), ;
@@ -292,7 +284,6 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    RETURN
 
 STATIC FUNCTION Instance()
-
    RETURN __clsInst( QSelf():hClass )
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
@@ -415,13 +406,14 @@ STATIC PROCEDURE AddDelegate( xMethod, cDelegMsg, cObject, nScope )
 
    LOCAL mth
 
-   IF HB_ISSTRING( xMethod )
+   DO CASE
+   CASE HB_ISSTRING( xMethod )
       AAdd( QSelf():aDelegates, { xMethod, cDelegMsg, cObject, nScope } )
-   ELSEIF HB_ISARRAY( xMethod )
+   CASE HB_ISARRAY( xMethod )
       FOR EACH mth IN xMethod
          AAdd( QSelf():aDelegates, { mth, cDelegMsg, cObject, nScope } )
       NEXT
-   ENDIF
+   ENDCASE
 
    RETURN
 

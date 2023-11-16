@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -64,8 +64,8 @@ ANNOUNCE FCOMMA
 
 /*
  * non work area methods receive RDD ID as first parameter
- * Methods INIT and EXIT does not have to execute SUPER methods - these is
- * always done by low level USRRDD code
+ * Methods INIT and EXIT does not have to execute SUPER methods - this is
+ * always done by low-level USRRDD code
  */
 STATIC FUNCTION FCM_INIT( nRDD )
 
@@ -81,8 +81,8 @@ STATIC FUNCTION FCM_INIT( nRDD )
  * methods: NEW and RELEASE receive pointer to work area structure
  * not work area number. It's necessary because the can be executed
  * before work area is allocated
- * these methods does not have to execute SUPER methods - these is
- * always done by low level USRRDD code
+ * these methods does not have to execute SUPER methods - this is
+ * always done by low-level USRRDD code
  */
 STATIC FUNCTION FCM_NEW( pWA )
 
@@ -337,22 +337,22 @@ FUNCTION FCOMMA_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    LOCAL cSuperRDD := NIL     /* NO SUPER RDD */
    LOCAL aMyFunc[ UR_METHODCOUNT ]
 
-   aMyFunc[ UR_INIT ]     := ( @FCM_INIT()     )
-   aMyFunc[ UR_NEW ]      := ( @FCM_NEW()      )
-   aMyFunc[ UR_CREATE ]   := ( @FCM_CREATE()   )
-   aMyFunc[ UR_OPEN ]     := ( @FCM_OPEN()     )
-   aMyFunc[ UR_CLOSE ]    := ( @FCM_CLOSE()    )
-   aMyFunc[ UR_BOF  ]     := ( @FCM_Bof()      )
-   aMyFunc[ UR_EOF  ]     := ( @FCM_EOF()      )
-   aMyFunc[ UR_DELETED ]  := ( @FCM_DELETED()  )
-   aMyFunc[ UR_SKIPRAW ]  := ( @FCM_SKIPRAW()  )
-   aMyFunc[ UR_GOTO ]     := ( @FCM_GOTO()     )
-   aMyFunc[ UR_GOTOID ]   := ( @FCM_GOTOID()   )
-   aMyFunc[ UR_GOTOP ]    := ( @FCM_GOTOP()    )
-   aMyFunc[ UR_GOBOTTOM ] := ( @FCM_GOBOTTOM() )
-   aMyFunc[ UR_RECID ]    := ( @FCM_RECID()    )
-   aMyFunc[ UR_RECCOUNT ] := ( @FCM_RECCOUNT() )
-   aMyFunc[ UR_GETVALUE ] := ( @FCM_GETVALUE() )
+   aMyFunc[ UR_INIT ]     := @FCM_INIT()
+   aMyFunc[ UR_NEW ]      := @FCM_NEW()
+   aMyFunc[ UR_CREATE ]   := @FCM_CREATE()
+   aMyFunc[ UR_OPEN ]     := @FCM_OPEN()
+   aMyFunc[ UR_CLOSE ]    := @FCM_CLOSE()
+   aMyFunc[ UR_BOF  ]     := @FCM_Bof()
+   aMyFunc[ UR_EOF  ]     := @FCM_EOF()
+   aMyFunc[ UR_DELETED ]  := @FCM_DELETED()
+   aMyFunc[ UR_SKIPRAW ]  := @FCM_SKIPRAW()
+   aMyFunc[ UR_GOTO ]     := @FCM_GOTO()
+   aMyFunc[ UR_GOTOID ]   := @FCM_GOTOID()
+   aMyFunc[ UR_GOTOP ]    := @FCM_GOTOP()
+   aMyFunc[ UR_GOBOTTOM ] := @FCM_GOBOTTOM()
+   aMyFunc[ UR_RECID ]    := @FCM_RECID()
+   aMyFunc[ UR_RECCOUNT ] := @FCM_RECCOUNT()
+   aMyFunc[ UR_GETVALUE ] := @FCM_GETVALUE()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       cSuperRDD, aMyFunc )

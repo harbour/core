@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,11 +50,10 @@
 #include "hbstack.h"
 
 /* NOTE: core random generator algorithm is the work of Steve Park
-         http://www.cs.wm.edu/~va/software/park/
- */
+         https://web.archive.org/web/www.cs.wm.edu/~va/software/park/ */
 
-#define MODULUS     2147483647 /* DON'T CHANGE THIS VALUE                  */
-#define MULTIPLIER  48271      /* DON'T CHANGE THIS VALUE                  */
+#define MODULUS     2147483647 /* DON'T CHANGE THIS VALUE */
+#define MULTIPLIER  48271      /* DON'T CHANGE THIS VALUE */
 
 static HB_TSD_NEW( s_seed, sizeof( HB_I32 ), NULL, NULL );
 #define SEED_PTR    ( ( HB_I32 * ) hb_stackGetTSD( &s_seed ) )
@@ -93,17 +92,8 @@ void hb_random_seed( HB_I32 seed )
    * SEED_PTR = ( seed < 0 ) ? seed + MODULUS : seed;
 }
 
-/*
- * hb_Random
- *
- * hb_Random() --> returns a real value n so that 0 <= n < 1
- * hb_Random( x ) --> returns a real number n so that 0 <= n < x
- * hb_Random( x, y ) --> Returns a real number n so that x <= n < y
- */
-HB_FUNC( HB_RANDOM )
+static void hb_random( double dRnd )
 {
-   double dRnd = hb_random_num();
-
    if( ! HB_ISNUM( 1 ) )
       hb_retnd( dRnd );
    else if( ! HB_ISNUM( 2 ) )
@@ -123,17 +113,22 @@ HB_FUNC( HB_RANDOM )
 }
 
 /*
- * hb_RandomInt
- *
- * hb_RandomInt() --> returns 0 or 1, evenly distributed
- * hb_RandomInt( N ) --> returns an integer between 1 and N (inclusive)
- * hb_RandomInt( x, y ) --> Returns an integer number between x and y (inclusive)
- * The integer returned is of the longest type available
+ * hb_Random() --> returns a real value n so that 0 <= n < 1
+ * hb_Random( x ) --> returns a real number n so that 0 <= n < x
+ * hb_Random( x, y ) --> Returns a real number n so that x <= n < y
  */
-HB_FUNC( HB_RANDOMINT )
+HB_FUNC( HB_RANDOM )
 {
-   double dRnd = hb_random_num();
+   hb_random( hb_random_num() );
+}
 
+HB_FUNC( HB_RANDNUM )
+{
+   hb_random( hb_random_num_secure() );
+}
+
+static void hb_randomint( double dRnd )
+{
    if( ! HB_ISNUM( 1 ) )
       hb_retni( dRnd >= 0.5 ? 0 : 1 );
    else if( ! HB_ISNUM( 2 ) )
@@ -150,6 +145,22 @@ HB_FUNC( HB_RANDOMINT )
       }
       hb_retnint( ( HB_MAXINT ) ( lX + ( dRnd * ( lY - lX + 1 ) ) ) );
    }
+}
+
+/*
+ * hb_RandomInt() --> returns 0 or 1, evenly distributed
+ * hb_RandomInt( N ) --> returns an integer between 1 and N (inclusive)
+ * hb_RandomInt( x, y ) --> Returns an integer number between x and y (inclusive)
+ * The integer returned is of the longest type available
+ */
+HB_FUNC( HB_RANDOMINT )
+{
+   hb_randomint( hb_random_num() );
+}
+
+HB_FUNC( HB_RANDINT )
+{
+   hb_randomint( hb_random_num_secure() );
 }
 
 HB_FUNC( HB_RANDOMSEED )

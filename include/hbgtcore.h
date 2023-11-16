@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -205,7 +205,7 @@ typedef struct
    int       (* InkeyLast) ( HB_GT_PTR, int iEventMask );
    int       (* InkeyNext) ( HB_GT_PTR, int iEventMask );
    void      (* InkeyPoll) ( HB_GT_PTR );
-   void      (* InkeySetText) ( HB_GT_PTR, const char * szText, HB_SIZE nLen );
+   void      (* InkeySetText) ( HB_GT_PTR, const char * szText, HB_SIZE nLen, HB_BOOL fEol );
    int       (* InkeySetLast) ( HB_GT_PTR, int iKey );
    void      (* InkeyReset) ( HB_GT_PTR );
    void      (* InkeyExit) ( HB_GT_PTR );
@@ -347,6 +347,9 @@ typedef struct _HB_GT_BASE
 
 extern HB_EXPORT PHB_GT hb_gt_Base( void );
 extern HB_EXPORT void hb_gt_BaseFree( PHB_GT pGT );
+extern HB_EXPORT void hb_gt_BaseUnlock( PHB_GT pGT );
+extern HB_EXPORT void hb_gt_BaseLock( PHB_GT pGT );
+extern HB_EXPORT void hb_gtSleep( PHB_GT pGT, double dSeconds );
 extern HB_EXPORT PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
 extern HB_EXPORT void hb_gt_gcMark( void );
 
@@ -460,7 +463,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSELF_INKEYLAST(g,m)                (g)->pFuncTable->InkeyLast(g,m)
 #define HB_GTSELF_INKEYNEXT(g,m)                (g)->pFuncTable->InkeyNext(g,m)
 #define HB_GTSELF_INKEYPOLL(g)                  (g)->pFuncTable->InkeyPoll(g)
-#define HB_GTSELF_INKEYSETTEXT(g,s,l)           (g)->pFuncTable->InkeySetText(g,s,l)
+#define HB_GTSELF_INKEYSETTEXT(g,s,l,e)         (g)->pFuncTable->InkeySetText(g,s,l,e)
 #define HB_GTSELF_INKEYSETLAST(g,k)             (g)->pFuncTable->InkeySetLast(g,k)
 #define HB_GTSELF_INKEYRESET(g)                 (g)->pFuncTable->InkeyReset(g)
 #define HB_GTSELF_INKEYEXIT(g)                  (g)->pFuncTable->InkeyExit(g)
@@ -492,7 +495,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSELF_WHOCARES(g,p)                 (g)->pFuncTable->WhoCares(g,p)
 
 #ifndef HB_GTSUPERTABLE
-#  define HB_GTSUPERTABLE(g)  HB_GTSUPER
+#define HB_GTSUPERTABLE(g)  HB_GTSUPER
 #endif
 
 #define HB_GTSUPER_LOCK(g)                       (HB_GTSUPERTABLE(g))->Lock(g)
@@ -590,7 +593,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSUPER_INKEYLAST(g,m)                (HB_GTSUPERTABLE(g))->InkeyLast(g,m)
 #define HB_GTSUPER_INKEYNEXT(g,m)                (HB_GTSUPERTABLE(g))->InkeyNext(g,m)
 #define HB_GTSUPER_INKEYPOLL(g)                  (HB_GTSUPERTABLE(g))->InkeyPoll(g)
-#define HB_GTSUPER_INKEYSETTEXT(g,s,l)           (HB_GTSUPERTABLE(g))->InkeySetText(g,s,l)
+#define HB_GTSUPER_INKEYSETTEXT(g,s,l,e)         (HB_GTSUPERTABLE(g))->InkeySetText(g,s,l,e)
 #define HB_GTSUPER_INKEYSETLAST(g,k)             (HB_GTSUPERTABLE(g))->InkeySetLast(g,k)
 #define HB_GTSUPER_INKEYRESET(g)                 (HB_GTSUPERTABLE(g))->InkeyReset(g)
 #define HB_GTSUPER_INKEYEXIT(g)                  (HB_GTSUPERTABLE(g))->InkeyExit(g)
@@ -624,7 +627,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 extern HB_EXPORT HB_BOOL hb_gtRegister( const HB_GT_INIT * gtInit );
 extern HB_EXPORT PHB_GT  hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable );
 
-/* low level GT functions common to different GTs supported by RTL */
+/* low-level GT functions common to different GTs supported by RTL */
 extern int  hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC );
 extern HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE nLen );
 extern HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pnLen );

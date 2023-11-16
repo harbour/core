@@ -14,10 +14,11 @@
 -depcontrol=odbc:force{allwin&!msvcarm}
 -depincpath=odbc:/usr/include
 -depincpath=odbc:/usr/local/include
+-depincpath=odbc:/usr/include/iodbc
 
 ${hb_name}.hbx
 
 odbc.c
 
 todbc.prg
-browodbc.prg
+browse.prg

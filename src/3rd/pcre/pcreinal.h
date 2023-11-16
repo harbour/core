@@ -7,7 +7,7 @@
 and semantics are as close as possible to those of the Perl 5 language.
 
                        Written by Philip Hazel
-           Copyright (c) 1997-2013 University of Cambridge
+           Copyright (c) 1997-2016 University of Cambridge
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -275,7 +275,7 @@ pcre.h(.in) and disable (comment out) this message. */
 
 typedef pcre_uint16 pcre_uchar;
 #define UCHAR_SHIFT (1)
-#define IN_UCHARS(x) ((x) << UCHAR_SHIFT)
+#define IN_UCHARS(x) ((x) * 2)
 #define MAX_255(c) ((c) <= 255u)
 #define TABLE_GET(c, table, default) (MAX_255(c)? ((table)[c]):(default))
 
@@ -283,7 +283,7 @@ typedef pcre_uint16 pcre_uchar;
 
 typedef pcre_uint32 pcre_uchar;
 #define UCHAR_SHIFT (2)
-#define IN_UCHARS(x) ((x) << UCHAR_SHIFT)
+#define IN_UCHARS(x) ((x) * 4)
 #define MAX_255(c) ((c) <= 255u)
 #define TABLE_GET(c, table, default) (MAX_255(c)? ((table)[c]):(default))
 
@@ -316,8 +316,8 @@ start/end of string field names are. */
        &(NLBLOCK->nllen), utf)) \
     : \
     ((p) <= NLBLOCK->PSEND - NLBLOCK->nllen && \
-     RAWUCHARTEST(p) == NLBLOCK->nl[0] && \
-     (NLBLOCK->nllen == 1 || RAWUCHARTEST(p+1) == NLBLOCK->nl[1])       \
+     UCHAR21TEST(p) == NLBLOCK->nl[0] && \
+     (NLBLOCK->nllen == 1 || UCHAR21TEST(p+1) == NLBLOCK->nl[1])       \
     ) \
   )
 
@@ -330,8 +330,8 @@ start/end of string field names are. */
        &(NLBLOCK->nllen), utf)) \
     : \
     ((p) >= NLBLOCK->PSSTART + NLBLOCK->nllen && \
-     RAWUCHARTEST(p - NLBLOCK->nllen) == NLBLOCK->nl[0] &&              \
-     (NLBLOCK->nllen == 1 || RAWUCHARTEST(p - NLBLOCK->nllen + 1) == NLBLOCK->nl[1]) \
+     UCHAR21TEST(p - NLBLOCK->nllen) == NLBLOCK->nl[0] &&              \
+     (NLBLOCK->nllen == 1 || UCHAR21TEST(p - NLBLOCK->nllen + 1) == NLBLOCK->nl[1]) \
     ) \
   )
 
@@ -582,12 +582,27 @@ changed in future to be a fixed number of bytes or to depend on LINK_SIZE. */
 #define MAX_MARK ((1u << 8) - 1)
 #endif
 
+/* There is a proposed future special "UTF-21" mode, in which only the lowest
+21 bits of a 32-bit character are interpreted as UTF, with the remaining 11
+high-order bits available to the application for other uses. In preparation for
+the future implementation of this mode, there are macros that load a data item
+and, if in this special mode, mask it to 21 bits. These macros all have names
+starting with UCHAR21. In all other modes, including the normal 32-bit
+library, the macros all have the same simple definitions. When the new mode is
+implemented, it is expected that these definitions will be varied appropriately
+using #ifdef when compiling the library that supports the special mode. */
+
+#define UCHAR21(eptr)        (*(eptr))
+#define UCHAR21TEST(eptr)    (*(eptr))
+#define UCHAR21INC(eptr)     (*(eptr)++)
+#define UCHAR21INCTEST(eptr) (*(eptr)++)
+
 /* When UTF encoding is being used, a character is no longer just a single
-byte. The macros for character handling generate simple sequences when used in
-character-mode, and more complicated ones for UTF characters. GETCHARLENTEST
-and other macros are not used when UTF is not supported, so they are not
-defined. To make sure they can never even appear when UTF support is omitted,
-we don't even define them. */
+byte in 8-bit mode or a single short in 16-bit mode. The macros for character
+handling generate simple sequences when used in the basic mode, and more
+complicated ones for UTF characters. GETCHARLENTEST and other macros are not
+used when UTF is not supported. To make sure they can never even appear when
+UTF support is omitted, we don't even define them. */
 
 #ifndef SUPPORT_UTF
 
@@ -600,10 +615,6 @@ we don't even define them. */
 #define GETCHARINC(c, eptr) c = *eptr++;
 #define GETCHARINCTEST(c, eptr) c = *eptr++;
 #define GETCHARLEN(c, eptr, len) c = *eptr;
-#define RAWUCHAR(eptr) (*(eptr))
-#define RAWUCHARINC(eptr) (*(eptr)++)
-#define RAWUCHARTEST(eptr) (*(eptr))
-#define RAWUCHARINCTEST(eptr) (*(eptr)++)
 /* #define GETCHARLENTEST(c, eptr, len) */
 /* #define BACKCHAR(eptr) */
 /* #define FORWARDCHAR(eptr) */
@@ -776,30 +787,6 @@ do not know if we are in UTF-8 mode. */
   c = *eptr; \
   if (utf && c >= 0xc0) GETUTF8LEN(c, eptr, len);
 
-/* Returns the next uchar, not advancing the pointer. This is called when
-we know we are in UTF mode. */
-
-#define RAWUCHAR(eptr) \
-  (*(eptr))
-
-/* Returns the next uchar, advancing the pointer. This is called when
-we know we are in UTF mode. */
-
-#define RAWUCHARINC(eptr) \
-  (*((eptr)++))
-
-/* Returns the next uchar, testing for UTF mode, and not advancing the
-pointer. */
-
-#define RAWUCHARTEST(eptr) \
-  (*(eptr))
-
-/* Returns the next uchar, testing for UTF mode, advancing the
-pointer. */
-
-#define RAWUCHARINCTEST(eptr) \
-  (*((eptr)++))
-
 /* If the pointer is not at the start of a character, move it back until
 it is. This is called only in UTF-8 mode - we don't put a test within the macro
 because almost all calls are already within a block of UTF-8 only code. */
@@ -895,30 +882,6 @@ we do not know if we are in UTF-16 mode. */
   c = *eptr; \
   if (utf && (c & 0xfc00) == 0xd800) GETUTF16LEN(c, eptr, len);
 
-/* Returns the next uchar, not advancing the pointer. This is called when
-we know we are in UTF mode. */
-
-#define RAWUCHAR(eptr) \
-  (*(eptr))
-
-/* Returns the next uchar, advancing the pointer. This is called when
-we know we are in UTF mode. */
-
-#define RAWUCHARINC(eptr) \
-  (*((eptr)++))
-
-/* Returns the next uchar, testing for UTF mode, and not advancing the
-pointer. */
-
-#define RAWUCHARTEST(eptr) \
-  (*(eptr))
-
-/* Returns the next uchar, testing for UTF mode, advancing the
-pointer. */
-
-#define RAWUCHARINCTEST(eptr) \
-  (*((eptr)++))
-
 /* If the pointer is not at the start of a character, move it back until
 it is. This is called only in UTF-16 mode - we don't put a test within the
 macro because almost all calls are already within a block of UTF-16 only
@@ -980,30 +943,6 @@ This is called when we do not know if we are in UTF-32 mode. */
 #define GETCHARLENTEST(c, eptr, len) \
   GETCHARTEST(c, eptr)
 
-/* Returns the next uchar, not advancing the pointer. This is called when
-we know we are in UTF mode. */
-
-#define RAWUCHAR(eptr) \
-  (*(eptr))
-
-/* Returns the next uchar, advancing the pointer. This is called when
-we know we are in UTF mode. */
-
-#define RAWUCHARINC(eptr) \
-  (*((eptr)++))
-
-/* Returns the next uchar, testing for UTF mode, and not advancing the
-pointer. */
-
-#define RAWUCHARTEST(eptr) \
-  (*(eptr))
-
-/* Returns the next uchar, testing for UTF mode, advancing the
-pointer. */
-
-#define RAWUCHARINCTEST(eptr) \
-  (*((eptr)++))
-
 /* If the pointer is not at the start of a character, move it back until
 it is. This is called only in UTF-32 mode - we don't put a test within the
 macro because almost all calls are already within a block of UTF-32 only
@@ -1045,7 +984,7 @@ other. NOTE: The values also appear in pcre_jit_compile.c. */
 #ifndef EBCDIC
 
 #define HSPACE_LIST \
-  CHAR_HT, CHAR_SPACE, 0xa0, \
+  CHAR_HT, CHAR_SPACE, CHAR_NBSP, \
   0x1680, 0x180e, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, \
   0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202f, 0x205f, 0x3000, \
   NOTACHAR
@@ -1071,7 +1010,7 @@ other. NOTE: The values also appear in pcre_jit_compile.c. */
 #define HSPACE_BYTE_CASES \
   case CHAR_HT: \
   case CHAR_SPACE: \
-  case 0xa0     /* NBSP */
+  case CHAR_NBSP
 
 #define HSPACE_CASES \
   HSPACE_BYTE_CASES: \
@@ -1098,11 +1037,12 @@ other. NOTE: The values also appear in pcre_jit_compile.c. */
 /* ------ EBCDIC environments ------ */
 
 #else
-#define HSPACE_LIST CHAR_HT, CHAR_SPACE
+#define HSPACE_LIST CHAR_HT, CHAR_SPACE, CHAR_NBSP, NOTACHAR
 
 #define HSPACE_BYTE_CASES \
   case CHAR_HT: \
-  case CHAR_SPACE
+  case CHAR_SPACE: \
+  case CHAR_NBSP
 
 #define HSPACE_CASES HSPACE_BYTE_CASES
 
@@ -1276,6 +1216,7 @@ same code point. */
 
 #define CHAR_ESC                    '\047'
 #define CHAR_DEL                    '\007'
+#define CHAR_NBSP                   '\x41'
 #define STR_ESC                     "\047"
 #define STR_DEL                     "\007"
 
@@ -1290,6 +1231,7 @@ a positive value. */
 #define CHAR_NEL                    ((unsigned char)'\x85')
 #define CHAR_ESC                    '\033'
 #define CHAR_DEL                    '\177'
+#define CHAR_NBSP                   ((unsigned char)'\xa0')
 
 #define STR_LF                      "\n"
 #define STR_NL                      STR_LF
@@ -1667,6 +1609,7 @@ only. */
 #define CHAR_VERTICAL_LINE          '\174'
 #define CHAR_RIGHT_CURLY_BRACKET    '\175'
 #define CHAR_TILDE                  '\176'
+#define CHAR_NBSP                   ((unsigned char)'\xa0')
 
 #define STR_HT                      "\011"
 #define STR_VT                      "\013"
@@ -1823,6 +1766,10 @@ only. */
 
 /* Escape items that are just an encoding of a particular data value. */
 
+#ifndef ESC_a
+#define ESC_a CHAR_BEL
+#endif
+
 #ifndef ESC_e
 #define ESC_e CHAR_ESC
 #endif
@@ -1874,8 +1821,9 @@ table. */
 /* Flag bits and data types for the extended class (OP_XCLASS) for classes that
 contain characters with values greater than 255. */
 
-#define XCL_NOT    0x01    /* Flag: this is a negative class */
-#define XCL_MAP    0x02    /* Flag: a 32-byte map is present */
+#define XCL_NOT       0x01    /* Flag: this is a negative class */
+#define XCL_MAP       0x02    /* Flag: a 32-byte map is present */
+#define XCL_HASPROP   0x04    /* Flag: property checks are present. */
 
 #define XCL_END       0    /* Marks end of individual items */
 #define XCL_SINGLE    1    /* Single item (one multibyte char) follows */
@@ -2341,7 +2289,7 @@ enum { ERR0,  ERR1,  ERR2,  ERR3,  ERR4,  ERR5,  ERR6,  ERR7,  ERR8,  ERR9,
        ERR50, ERR51, ERR52, ERR53, ERR54, ERR55, ERR56, ERR57, ERR58, ERR59,
        ERR60, ERR61, ERR62, ERR63, ERR64, ERR65, ERR66, ERR67, ERR68, ERR69,
        ERR70, ERR71, ERR72, ERR73, ERR74, ERR75, ERR76, ERR77, ERR78, ERR79,
-       ERR80, ERR81, ERR82, ERR83, ERR84, ERRCOUNT };
+       ERR80, ERR81, ERR82, ERR83, ERR84, ERR85, ERR86, ERR87, ERRCOUNT };
 
 /* JIT compiling modes. The function list is indexed by them. */
 
@@ -2506,6 +2454,8 @@ typedef struct compile_data {
   BOOL had_pruneorskip;             /* (*PRUNE) or (*SKIP) encountered */
   BOOL check_lookbehind;            /* Lookbehinds need later checking */
   BOOL dupnames;                    /* Duplicate names exist */
+  BOOL dupgroups;                   /* Duplicate groups exist: (?| found */
+  BOOL iscondassert;                /* Next assert is a condition */
   int  nltype;                      /* Newline type */
   int  nllen;                       /* Newline string length */
   pcre_uchar nl[4];                 /* Newline string when fixed length */
@@ -2518,6 +2468,13 @@ typedef struct branch_chain {
   struct branch_chain *outer;
   pcre_uchar *current_branch;
 } branch_chain;
+
+/* Structure for mutual recursion detection. */
+
+typedef struct recurse_check {
+  struct recurse_check *prev;
+  const pcre_uchar *group;
+} recurse_check;
 
 /* Structure for items in a linked list that represents an explicit recursive
 call within the pattern; used by pcre_exec(). */
@@ -2815,6 +2772,9 @@ extern const pcre_uint8  PRIV(ucd_stage1)[];
 extern const pcre_uint16 PRIV(ucd_stage2)[];
 extern const pcre_uint32 PRIV(ucp_gentype)[];
 extern const pcre_uint32 PRIV(ucp_gbtable)[];
+#ifdef COMPILE_PCRE32
+extern const ucd_record  PRIV(dummy_ucd_record)[];
+#endif
 #ifdef SUPPORT_JIT
 extern const int         PRIV(ucp_typerange)[];
 #endif
@@ -2823,9 +2783,15 @@ extern const int         PRIV(ucp_typerange)[];
 /* UCD access macros */
 
 #define UCD_BLOCK_SIZE 128
-#define GET_UCD(ch) (PRIV(ucd_records) + \
+#define REAL_GET_UCD(ch) (PRIV(ucd_records) + \
         PRIV(ucd_stage2)[PRIV(ucd_stage1)[(int)(ch) / UCD_BLOCK_SIZE] * \
         UCD_BLOCK_SIZE + (int)(ch) % UCD_BLOCK_SIZE])
+
+#ifdef COMPILE_PCRE32
+#define GET_UCD(ch) ((ch > 0x10ffff)? PRIV(dummy_ucd_record) : REAL_GET_UCD(ch))
+#else
+#define GET_UCD(ch) REAL_GET_UCD(ch)
+#endif
 
 #define UCD_CHARTYPE(ch)    GET_UCD(ch)->chartype
 #define UCD_SCRIPT(ch)      GET_UCD(ch)->script

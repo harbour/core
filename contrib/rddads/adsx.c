@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,17 +44,16 @@
  *
  */
 
-#include "hbdefs.h"
-#include "hbapi.h"
+#include "rddads.h"
+
 #include "hbinit.h"
-#include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbdbferr.h"
 #include "hbapilng.h"
 #include "hbdate.h"
-#include "rddads.h"
 #include "hbset.h"
 #include "hbvm.h"
+
 #include "rddsys.ch"
 
 #ifndef SUPER_ORDDESTROY
@@ -94,7 +93,7 @@ typedef struct _MIXTAG
    HB_ULONG  ulRecMax;
    HB_ULONG  ulRecCount;
 
-   PHB_CODEPAGE pCodepage;      /* National sorttable for character key tags, NULL otherwise */
+   PHB_CODEPAGE pCodepage;      /* National sort table for character key tags, NULL otherwise */
 
    HB_ULONG ulKeyNo;
 } MIXTAG, * PMIXTAG;
@@ -107,7 +106,7 @@ typedef struct _ADSXAREA_
 {
    ADSAREA adsarea;
 
-   /* ================ Additional fields for ADSX RDD =================== */
+   /* Additional fields for ADSX RDD */
 
    PMIXTAG pTagList;
    PMIXTAG pTagCurrent;
@@ -125,21 +124,18 @@ static HB_USHORT s_uiRddIdADSADTX = ( HB_USHORT ) -1;
 static RDDFUNCS  adsxSuper;
 
 
-/***********************************************************************
- *  Misc functions
- ************************************************************************/
+/* Misc functions */
 
 static HB_ERRCODE hb_mixErrorRT( ADSXAREAP pArea,
                                  HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                                  const char * filename, HB_ERRCODE errOsCode,
                                  HB_USHORT uiFlags )
 {
-   PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, errGenCode );
       hb_errPutSubCode( pError, errSubCode );
       hb_errPutOsCode( pError, errOsCode );
@@ -173,9 +169,7 @@ static HB_ERRCODE hb_adsUpdateAreaFlags( ADSXAREAP pArea )
 }
 
 
-/************************************************************************
- *  Memory Index
- *************************************************************************/
+/* Memory Index */
 
 static PMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_USHORT uiLen )
 {
@@ -190,12 +184,12 @@ static PMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_US
    {
       case 'C':
       {
-         HB_SIZE ul = hb_itemGetCLen( pItem );
-         if( ul > ( HB_SIZE ) uiLen )
-            ul = uiLen;
-         memcpy( pKey->val, hb_itemGetCPtr( pItem ), ul );
-         if( ul < ( HB_SIZE ) uiLen )
-            memset( pKey->val + ul, ' ', ( HB_SIZE ) uiLen - ul );
+         HB_SIZE nLen = hb_itemGetCLen( pItem );
+         if( nLen > ( HB_SIZE ) uiLen )
+            nLen = uiLen;
+         memcpy( pKey->val, hb_itemGetCPtr( pItem ), nLen );
+         if( nLen < ( HB_SIZE ) uiLen )
+            memset( pKey->val + nLen, ' ', ( HB_SIZE ) uiLen - nLen );
          break;
       }
       case 'N':
@@ -414,7 +408,7 @@ static PMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITEM
    pTag->szKeyExpr = ( char * ) hb_xgrab( hb_itemGetCLen( pKeyExpr ) + 1 );
    hb_strncpyTrim( pTag->szKeyExpr, hb_itemGetCPtr( pKeyExpr ), hb_itemGetCLen( pKeyExpr ) );
 
-   /* TODO: for expresion */
+   /* TODO: for expression */
    pTag->szForExpr = NULL;
 
    pTag->pKeyItem = pKeyItem;
@@ -558,7 +552,6 @@ static void mixTagDestroy( PMIXTAG pTag )
 
 static PMIXTAG mixFindTag( ADSXAREAP pArea, PHB_ITEM pOrder )
 {
-   char    szTag[ MIX_MAXTAGNAMELEN + 1 ];
    PMIXTAG pTag;
 
    if( HB_IS_NUMBER( pOrder ) )
@@ -575,6 +568,8 @@ static PMIXTAG mixFindTag( ADSXAREAP pArea, PHB_ITEM pOrder )
    }
    else
    {
+      char szTag[ MIX_MAXTAGNAMELEN + 1 ];
+
       hb_strncpyUpperTrim( szTag, hb_itemGetCPtr( pOrder ), MIX_MAXTAGNAMELEN );
       pTag = pArea->pTagList;
       while( pTag && hb_stricmp( szTag, pTag->szName ) )
@@ -706,9 +701,7 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
 }
 
 
-/************************************************************************
- *  ADSX RDD METHODS
- *************************************************************************/
+/* ADSX RDD METHODS */
 
 static HB_ERRCODE adsxGoBottom( ADSXAREAP pArea )
 {
@@ -783,9 +776,9 @@ static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, H
 
    if( pArea->pTagCurrent->bType == 'C' )
    {
-      HB_SIZE ul = hb_itemGetCLen( pKey );
-      if( ul < ( HB_SIZE ) uiLen )
-         uiLen = ( HB_USHORT ) ul;
+      HB_SIZE nLen = hb_itemGetCLen( pKey );
+      if( nLen < ( HB_SIZE ) uiLen )
+         uiLen = ( HB_USHORT ) nLen;
    }
 
    /* reset any pending relations - I hope ACE make the same and the problem
@@ -934,12 +927,10 @@ static HB_ERRCODE adsxPutValue( ADSXAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
 
 static HB_ERRCODE adsxClose( ADSXAREAP pArea )
 {
-   PMIXTAG pTag;
-
    pArea->pTagCurrent = NULL;
    while( pArea->pTagList )
    {
-      pTag = pArea->pTagList;
+      PMIXTAG pTag = pArea->pTagList;
       pArea->pTagList = pArea->pTagList->pNext;
       mixTagDestroy( pTag );
    }
@@ -1123,9 +1114,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    }
 
    if( bKeyADS && bForADS && bWhileADS )
-   {
       return SUPER_ORDCREATE( &pArea->adsarea.area, pOrderInfo );
-   }
 
    if( pArea->adsarea.area.lpdbOrdCondInfo &&
        ( ( bForADS && pArea->adsarea.area.lpdbOrdCondInfo->abFor ) ||

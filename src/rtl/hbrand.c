@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,22 +45,27 @@
  */
 
 #include "hbapi.h"
-
 #include "arc4.h"
-
-HB_FUNC( HB_RAND32 ) /* returns an integer between 0 and 0xFFFFFFFF (inclusive) */
-{
-   hb_retnint( hb_arc4random() );
-}
 
 void hb_random_block( void * data, HB_SIZE len )
 {
    hb_arc4random_buf( data, len );
 }
 
+/* Returns a double value between 0 and 1 */
+double hb_random_num_secure( void )
+{
+   return ( double ) hb_arc4random() / HB_U32_MAX;
+}
+
+HB_FUNC( HB_RAND32 ) /* returns an integer between 0 and 0xFFFFFFFF (inclusive) */
+{
+   hb_retnint( hb_arc4random() );
+}
+
 HB_FUNC( HB_RANDSTR )
 {
-   HB_SIZE len = hb_parns( 1 );
+   HB_ISIZ len = hb_parns( 1 );
 
    if( len > 0 )
    {

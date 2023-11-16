@@ -2,6 +2,13 @@
  * The Console API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour) (hb_conNewLine(), DispOutAt(), hb_StrEOL())
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_conOutAlt(), hb_conOutDev(), DevOut(), hb_conDevPos(),
+ *    DevPos(), __Eject(),
+ *    hb_conOut(), hb_conOutErr(), OutErr(),
+ *    hb_conOutStd(), OutStd(), PCol(), PRow(),
+ *    SetPRC(), and hb_conInit()
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +21,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,24 +48,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_conOutAlt(), hb_conOutDev(), DevOut(), hb_conDevPos(),
- *    DevPos(), __Eject(),
- *    hb_conOut(), hb_conOutErr(), OutErr(),
- *    hb_conOutStd(), OutStd(), PCol(), PRow(),
- *    SetPRC(), and hb_conInit()
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_conNewLine()
- *    DispOutAt()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -122,7 +111,7 @@ void hb_conInit( void )
 
 #if ! defined( HB_OS_WIN )
    /* On Windows file handles with numbers 0, 1, 2 are
-      transalted inside filesys to:
+      translated inside filesys to:
       GetStdHandle( STD_INPUT_HANDLE ), GetStdHandle( STD_OUTPUT_HANDLE ),
       GetStdHandle( STD_ERROR_HANDLE ) */
 
@@ -139,7 +128,7 @@ void hb_conInit( void )
 
       if( iStderr == 0 || iStderr == 1 )  /* //STDERR with no parameter or 0 */
          s_hFilenoStderr = s_hFilenoStdout;
-      /* disabled in default builds. It's not multiplatform and very
+      /* disabled in default builds. It's not multi-platform and very
        * dangerous because it can redirect error messages to data files
        * [druzus]
        */
@@ -175,7 +164,7 @@ void hb_conRelease( void )
    /*
     * Clipper does not restore screen size on exit so I removed the code with:
     *    hb_gtSetMode( s_originalMaxRow + 1, s_originalMaxCol + 1 );
-    * If the low level GT drive change some video adapter parameters which
+    * If the low-level GT drive change some video adapter parameters which
     * have to be restored on exit then it should does it in its Exit()
     * method. Here we cannot force any actions because it may cause bad
     * results in some GTs, f.e. when the screen size is controlled by remote
@@ -364,7 +353,6 @@ HB_FUNC( QOUT )
 
    if( ( pFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != NULL )
    {
-      char buf[ 256 ];
       PHB_PRNPOS pPrnPos = hb_prnPos();
 
       pPrnPos->row++;
@@ -372,6 +360,8 @@ HB_FUNC( QOUT )
 
       if( pPrnPos->col )
       {
+         char buf[ 256 ];
+
          if( pPrnPos->col > ( int ) sizeof( buf ) )
          {
             char * pBuf = ( char * ) hb_xgrab( pPrnPos->col );
@@ -579,7 +569,7 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
 
 /* NOTE: Clipper does no checks about the screen positions. [vszakats] */
 
-HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position, but is not affected by SET ALTERNATE */
+HB_FUNC( DISPOUTAT )  /* writes a single value to the screen at specific position, but is not affected by SET ALTERNATE */
 {
    char * pszString;
    HB_SIZE nLen;
@@ -612,7 +602,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
    }
 }
 
-/* Harbour extension, works like DISPOUTAT but does not change cursor position */
+/* Harbour extension, works like DispOutAt() but does not change cursor position */
 
 HB_FUNC( HB_DISPOUTAT )
 {

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,12 +45,10 @@
  */
 
 #include "hbzebra.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 #include "hbstack.h"
 
 
-/* ================ Bit buffer ================ */
+/* --- Bit buffer --- */
 
 PHB_BITBUFFER hb_bitbuffer_create( void )
 {
@@ -164,7 +162,7 @@ void hb_bitbuffer_cat_int_rev( PHB_BITBUFFER pBitBuffer, int iValue, int iLen )
 }
 
 
-/* ================ GC pointer ================ */
+/* --- GC pointer --- */
 
 static HB_GARBAGE_FUNC( hb_zebra_destructor )
 {
@@ -229,7 +227,7 @@ void hb_zebra_ret( PHB_ZEBRA pZebra )
 }
 
 
-/* ================ Zebra ================ */
+/* --- Zebra --- */
 
 PHB_ZEBRA hb_zebra_create( void )
 {

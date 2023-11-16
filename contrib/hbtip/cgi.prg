@@ -2,14 +2,6 @@
  * TIPCgi Class oriented cgi protocol
  *
  * Copyright 2006 Lorenzo Fiorini <lorenzo.fiorini@gmail.com>
- *
- * code from:
- * TIP Class oriented Internet protocol library
- *
- * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- *
- *    CGI Session Manager Class
- *
  * Copyright 2003-2006 Francesco Saverio Giudice <info / at / fsgiudice / dot / com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -163,7 +155,7 @@ METHOD Flush() CLASS TIPCgi
    LOCAL cStream
    LOCAL lRet
 
-   LOCAL nH
+   LOCAL hFile
    LOCAL cFile
 
    LOCAL cSession
@@ -175,10 +167,10 @@ METHOD Flush() CLASS TIPCgi
    lRet := ( FWrite( hb_GetStdOut(), cStream ) == hb_BLen( cStream ) )
 
    IF ::lDumpHtml
-      IF Empty( ::cDumpSavePath )
+      IF ::cDumpSavePath == NIL
          ::cDumpSavePath := hb_DirTemp()
       ENDIF
-      hb_MemoWrit( ::cDumpSavePath + "dump.html", ::cHtmlPage )
+      hb_MemoWrit( hb_DirSepAdd( ::cDumpSavePath ) + "dump.html", ::cHtmlPage )
    ENDIF
 
    ::cCgiHeader := ""
@@ -186,14 +178,14 @@ METHOD Flush() CLASS TIPCgi
 
    IF ! Empty( ::cSID )
 
-      cFile := ::cSessionSavePath + "SESSIONID_" + ::cSID
+      cFile := hb_DirSepAdd( ::cSessionSavePath ) + "SESSIONID_" + ::cSID
 
-      IF ( nH := FCreate( cFile ) ) != F_ERROR
+      IF ( hFile := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
          cSession := ::SessionEncode()
-         IF FWrite( nH, cSession ) != hb_BLen( cSession )
+         IF hb_vfWrite( hFile, cSession ) != hb_BLen( cSession )
             ::Write( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
          ENDIF
-         FClose( nH )
+         hb_vfClose( hFile )
       ELSE
          ::Write( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
       ENDIF
@@ -206,7 +198,7 @@ METHOD SaveHtmlPage( cFile ) CLASS TIPCgi
 
 METHOD StartSession( cSID ) CLASS TIPCgi
 
-   LOCAL nH
+   LOCAL hFile
    LOCAL cFile
    LOCAL nFileSize
    LOCAL cBuffer
@@ -219,7 +211,7 @@ METHOD StartSession( cSID ) CLASS TIPCgi
       ENDCASE
    ENDIF
 
-   IF Empty( ::cSessionSavePath )
+   IF ::cSessionSavePath == NIL
       ::cSessionSavePath := hb_DirTemp()
    ENDIF
 
@@ -227,19 +219,19 @@ METHOD StartSession( cSID ) CLASS TIPCgi
 
       ::cSID := cSID
 
-      cFile := ::cSessionSavePath + "SESSIONID_" + cSID
+      cFile := hb_DirSepAdd( ::cSessionSavePath ) + "SESSIONID_" + cSID
 
-      IF hb_FileExists( cFile )
-         IF ( nH := FOpen( cFile ) ) != F_ERROR
-            nFileSize := FSeek( nH, 0, FS_END )
-            FSeek( nH, 0, FS_SET )
+      IF hb_vfExists( cFile )
+         IF ( hFile := hb_vfOpen( cFile, FO_READ ) ) != NIL
+            nFileSize := hb_vfSize( hFile )
+            hb_vfSeek( hFile, 0, FS_SET )
             cBuffer := Space( nFileSize )
-            IF FRead( nH, @cBuffer, nFileSize ) != nFileSize
+            IF hb_vfRead( hFile, @cBuffer, nFileSize ) != nFileSize
                ::ErrHandler( "ERROR: On reading session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             ELSE
                ::SessionDecode( cBuffer )
             ENDIF
-            FClose( nH )
+            hb_vfClose( hFile )
          ENDIF
       ELSE
          ::ErrHandler( "ERROR: On opening session file: " + cFile + ", file not exist." )
@@ -275,10 +267,10 @@ METHOD DestroySession( cID ) CLASS TIPCgi
 
       ::hSession := { => }
 
-      cFile := ::cSessionSavePath + "SESSIONID_" + cSID
+      cFile := hb_DirSepAdd( ::cSessionSavePath ) + "SESSIONID_" + cSID
 
-      IF ( lOk := ( FErase( cFile ) != F_ERROR ) )
-         ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + tip_DateToGMT( Date() - 1 )
+      IF ( lOk := ( hb_vfErase( cFile ) != F_ERROR ) )
+         ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + tip_DateToGMT( hb_DateTime() - 1 )
          ::CreateSID()
          ::hCookies[ "SESSIONID" ] := ::cSID
       ELSE
@@ -288,7 +280,7 @@ METHOD DestroySession( cID ) CLASS TIPCgi
 
    RETURN lOk
 
-METHOD ErrHandler( xError ) CLASS TIPCgi
+METHOD PROCEDURE ErrHandler( xError ) CLASS TIPCgi
 
    LOCAL nCalls
 
@@ -322,7 +314,7 @@ METHOD ErrHandler( xError ) CLASS TIPCgi
 
    QUIT
 
-   RETURN NIL
+   RETURN
 
 METHOD Write( cString ) CLASS TIPCgi
 

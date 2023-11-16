@@ -1,5 +1,5 @@
 /*
- * XPP compatible _dbExport() function
+ * Xbase++ compatible _dbExport() function
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,16 +46,20 @@
 
 FUNCTION _dbExport( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver, cDelimiter )
 
-   DO CASE
-   CASE cXPP_Driver == "SDFDBE"
+   SWITCH hb_defaultValue( cXPP_Driver, "" )
+   CASE "SDFDBE"
       RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF" )
-/*    Alternate CA-Cl*pper compatible call:
-      RETURN __dbSDF( .T., cFile, aFields, bFor, bWhile, nNext, nRecord, lRest ) */
-   CASE cXPP_Driver == "DELDBE"
+#if 0
+      /* Alternate CA-Cl*pper compatible call: */
+      RETURN __dbSDF( .T., cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
+#endif
+   CASE "DELDBE"
       RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , , cDelimiter )
-/*    Alternate CA-Cl*pper compatible call:
-      RETURN __dbDelim( .T., cFile, cDelimiter, aFields, bFor, bWhile, nNext, nRecord, lRest ) */
-   ENDCASE
+#if 0
+      /* Alternate CA-Cl*pper compatible call: */
+      RETURN __dbDelim( .T., cFile, cDelimiter, aFields, bFor, bWhile, nNext, nRecord, lRest )
+#endif
+   ENDSWITCH
 
    RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver )
 

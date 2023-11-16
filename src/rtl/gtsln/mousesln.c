@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -78,15 +78,8 @@ static HB_BOOL GetGpmEvent( Gpm_Event * Evt )
 {
    if( s_bMousePresent && gpm_fd >= 0 )
    {
-      struct timeval tv = { 0, 0 };
-      fd_set ReadFD;
-
-      FD_ZERO( &ReadFD );
-      FD_SET( gpm_fd, &ReadFD );
-
-      if( select( gpm_fd + 1, &ReadFD, NULL, NULL, &tv ) > 0 )
-         if( FD_ISSET( gpm_fd, &ReadFD ) )
-            return Gpm_GetEvent( Evt ) > 0;
+      if( hb_fsCanRead( gpm_fd, 0 ) > 0 )
+         return Gpm_GetEvent( Evt ) > 0;
    }
 
    return HB_FALSE;
@@ -356,7 +349,7 @@ void hb_gt_sln_mouse_Init( void )
       Conn.eventMask = GPM_MOVE | GPM_UP | GPM_DOWN | GPM_DRAG | GPM_DOUBLE;
       /* give me move events but handle them anyway */
       Conn.defaultMask= GPM_MOVE | GPM_HARD;
-      /* only pure mouse events, no Ctrl,Alt,Shft events */
+      /* only pure mouse events, no Ctrl,Alt,Shift events */
       Conn.minMod = 0;
       Conn.maxMod = 0;
 
@@ -403,7 +396,7 @@ void hb_gt_sln_mouse_Exit( void )
       if( hb_sln_UnderXterm )
       {
          const char * DisabTrack = "\033[?1000l"; /* disable mouse tracking */
-         const char * RestoHilit = "\033[?1001r"; /* restore old hilittracking */
+         const char * RestoHilit = "\033[?1001r"; /* restore old hilit tracking */
 
          /* restore xterm settings */
          SLtt_write_string( ( char * ) HB_UNCONST( DisabTrack ) );

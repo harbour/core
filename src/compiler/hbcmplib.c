@@ -1,5 +1,5 @@
 /*
- * HB_COMPILE() - compiler interface
+ * hb_compile*() - compiler interface
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,7 +44,6 @@
  *
  */
 
-#include "hbapi.h"
 #include "hbcomp.h"
 
 static void s_pp_msg( void * cargo, int iErrorFmt, int iLine,
@@ -123,7 +122,6 @@ static void hb_compGenArgList( int iFirst, int iLast,
                                PHB_PP_MSG_FUNC * pMsgFunc )
 {
    PHB_ITEM pParam;
-   HB_SIZE ul, nLen;
    int argc = 1, i;
    const char ** argv;
 
@@ -156,15 +154,15 @@ static void hb_compGenArgList( int iFirst, int iLast,
       {
          if( HB_IS_ARRAY( pParam ) )
          {
-            ul = hb_arrayLen( pParam );
-            if( ul )
+            HB_SIZE nPos = hb_arrayLen( pParam );
+            if( nPos )
             {
                do
                {
-                  if( hb_arrayGetType( pParam, ul ) & HB_IT_STRING )
+                  if( hb_arrayGetType( pParam, nPos ) & HB_IT_STRING )
                      ++argc;
                }
-               while( --ul );
+               while( --nPos );
             }
          }
          else if( HB_IS_STRING( pParam ) )
@@ -181,11 +179,11 @@ static void hb_compGenArgList( int iFirst, int iLast,
       {
          if( HB_IS_ARRAY( pParam ) )
          {
-            nLen = hb_arrayLen( pParam );
-            for( ul = 1; ul <= nLen; ++ul )
+            HB_SIZE nPos, nLen = hb_arrayLen( pParam );
+            for( nPos = 1; nPos <= nLen; ++nPos )
             {
-               if( hb_arrayGetType( pParam, ul ) & HB_IT_STRING )
-                  argv[ argc++ ] = hb_arrayGetCPtr( pParam, ul );
+               if( hb_arrayGetType( pParam, nPos ) & HB_IT_STRING )
+                  argv[ argc++ ] = hb_arrayGetCPtr( pParam, nPos );
             }
          }
          else if( HB_IS_STRING( pParam ) )
@@ -231,18 +229,18 @@ HB_FUNC( HB_COMPILEBUF )
 
 HB_FUNC( HB_COMPILEFROMBUF )
 {
-   int iResult, argc;
-   const char ** argv;
-   const char * szSource;
-   PHB_ITEM pIncItem;
-   PHB_PP_OPEN_FUNC pOpenFunc;
-   PHB_PP_MSG_FUNC pMsgFunc;
-   HB_BYTE * pBuffer;
-   HB_SIZE nLen;
+   const char * szSource = hb_parc( 1 );
 
-   szSource = hb_parc( 1 );
    if( szSource )
    {
+      int iResult, argc;
+      const char ** argv;
+      PHB_ITEM pIncItem;
+      PHB_PP_OPEN_FUNC pOpenFunc;
+      PHB_PP_MSG_FUNC pMsgFunc;
+      HB_BYTE * pBuffer;
+      HB_SIZE nLen;
+
       hb_compGenArgList( 2, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
       iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, szSource, 0, pIncItem, pOpenFunc, pMsgFunc );
       hb_xfree( ( void * ) argv );

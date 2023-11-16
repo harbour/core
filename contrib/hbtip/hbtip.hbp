@@ -12,9 +12,9 @@ encurlc.c
 mime.c
 misc.c
 
+base64u.prg
 cgi.prg
 client.prg
-credent.prg
 encb64.prg
 encoder.prg
 encqp.prg
@@ -23,8 +23,9 @@ ftpcli.prg
 httpcli.prg
 log.prg
 mail.prg
+mailassy.prg
+mailsend.prg
 popcli.prg
-sendmail.prg
 sessid.prg
 smtpcli.prg
 thtml.prg

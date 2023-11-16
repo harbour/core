@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,13 +47,13 @@
 #include "hbclass.ch"
 
 /* An URL:
-   https://user:passwd@example.com/mypages/mysite/page.html?avar=0&avar1=1
-   ^---^   ^--^ ^----^ ^---------^ ^----------------------^ ^------------^
-   cProto   UID  PWD     cServer             cPath                 cQuery
-                                   ^------------^ ^-------^
-                                     cDirectory     cFile
-                                                  ^--^ ^--^
-                                                cFname cExt
+   https://user:passwd@example.org:port/mypages/mysite/page.html?avar=0&avar1=1
+   ^---^   ^--^ ^----^ ^---------^ ^--^ ^----------------------^ ^------------^
+   cProto   UID  PWD     cServer  nPort          cPath               cQuery
+                                        ^------------^ ^-------^
+                                          cDirectory     cFile
+                                                       ^--^ ^--^
+                                                     cFname cExt
  */
 
 CREATE CLASS TUrl
@@ -82,7 +82,6 @@ CREATE CLASS TUrl
 
 ENDCLASS
 
-
 METHOD New( cUrl ) CLASS TUrl
 
    ::SetAddress( cUrl )
@@ -107,15 +106,12 @@ METHOD SetAddress( cUrl ) CLASS TUrl
    ::cFile := ""
    ::nPort := -1
 
-   IF Empty( cUrl )
+   IF cUrl == ""
       RETURN .T.
    ENDIF
 
-   // TOPLEVEL url parsing
-   aMatch := hb_regex( ::cREuri, cUrl )
-
-   // May fail
-   IF Empty( aMatch )
+   // Top-level URL parsing. May fail.
+   IF Empty( aMatch := hb_regex( ::cREuri, cUrl ) )
       RETURN .F.
    ENDIF
 
@@ -141,7 +137,6 @@ METHOD SetAddress( cUrl ) CLASS TUrl
 
    RETURN .T.
 
-
 METHOD BuildAddress() CLASS TUrl
 
    LOCAL cRet := ""
@@ -150,46 +145,46 @@ METHOD BuildAddress() CLASS TUrl
       ::cProto := Lower( ::cProto )
    ENDIF
 
-   IF ! Empty( ::cProto ) .AND. ! Empty( ::cServer )
+   IF ! Empty( ::cProto ) .AND. ! ::cServer == ""
       cRet := ::cProto + "://"
    ENDIF
 
-   IF ! Empty( ::cUserid )
+   IF ! ::cUserid == ""
       cRet += ::cUserid
-      IF ! Empty( ::cPassword )
+      IF ! ::cPassword == ""
          cRet += ":" + ::cPassword
       ENDIF
       cRet += "@"
    ENDIF
 
-   IF ! Empty( ::cServer )
+   IF ! ::cServer == ""
       cRet += ::cServer
       IF ::nPort > 0
          cRet += ":" + hb_ntos( ::nPort )
       ENDIF
    ENDIF
 
-   IF Len( ::cPath ) == 0 .OR. !( Right( ::cPath, 1 ) == "/" )
+   IF ::cPath == "" .OR. ! Right( ::cPath, 1 ) == "/"
       ::cPath += "/"
    ENDIF
 
    cRet += ::cPath + ::cFile
-   IF ! Empty( ::cQuery )
+   IF ! ::cQuery == ""
       cRet += "?" + ::cQuery
    ENDIF
 
-   RETURN iif( Len( cRet ) == 0, NIL, ::cAddress := cRet )
+   RETURN iif( cRet == "", NIL, ::cAddress := cRet )
 
 METHOD BuildQuery() CLASS TUrl
 
    LOCAL cLine
 
-   IF Len( ::cPath ) == 0 .OR. !( Right( ::cPath, 1 ) == "/" )
+   IF ::cPath == "" .OR. ! Right( ::cPath, 1 ) == "/"
       ::cPath += "/"
    ENDIF
 
    cLine := ::cPath + ::cFile
-   IF ! Empty( ::cQuery )
+   IF ! ::cQuery == ""
       cLine += "?" + ::cQuery
    ENDIF
 
@@ -200,25 +195,28 @@ METHOD AddGetForm( xPostData ) CLASS TUrl
    LOCAL cData := ""
    LOCAL item
 
-   IF HB_ISHASH( xPostData )
+   DO CASE
+   CASE HB_ISHASH( xPostData )
       FOR EACH item IN xPostData
-         cData += tip_URLEncode( AllTrim( hb_CStr( item:__enumKey() ) ) ) + "=" + ;
-                  tip_URLEncode( AllTrim( hb_CStr( item ) ) )
+         cData += ;
+            tip_URLEncode( AllTrim( hb_CStr( item:__enumKey() ) ) ) + "=" + ;
+            tip_URLEncode( AllTrim( hb_CStr( item ) ) )
          IF ! item:__enumIsLast()
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF HB_ISARRAY( xPostData )
+   CASE HB_ISARRAY( xPostData )
       FOR EACH item IN xPostData
-         cData += tip_URLEncode( AllTrim( hb_CStr( item[ 1 ] ) ) ) + "=" + ;
-                  tip_URLEncode( AllTrim( hb_CStr( item[ 2 ] ) ) )
+         cData += ;
+            tip_URLEncode( AllTrim( hb_CStr( item:__enumIndex() ) ) ) + "=" + ;
+            tip_URLEncode( AllTrim( hb_CStr( item ) ) )
          IF ! item:__enumIsLast()
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF HB_ISSTRING( xPostData )
+   CASE HB_ISSTRING( xPostData )
       cData := xPostData
-   ENDIF
+   ENDCASE
 
-   RETURN iif( Empty( cData ), NIL, ;
-               ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData )
+   RETURN iif( cData == "", NIL, ;
+      ::cQuery += iif( ::cQuery == "", "", "&" ) + cData )

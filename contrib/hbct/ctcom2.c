@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,7 +50,7 @@
 #include "hbapigt.h"
 #include "hbchksum.h"
 
-/* com_DosCon( <cString>, [<nLine>], [<nColumn>] ) -> <cNull>
+/* com_DosCon( <cString>, [<nLine>], [<nColumn>] ) --> <cNull>
  */
 HB_FUNC( COM_DOSCON )
 {
@@ -74,7 +74,7 @@ HB_FUNC( COM_DOSCON )
    hb_retc_null();
 }
 
-/* com_CRC( <cString>, [<nStart>], [<nPolynomial>] ) -> <nCRC>
+/* com_CRC( <cString>, [<nStart>], [<nPolynomial>] ) --> <nCRC>
  */
 HB_FUNC( COM_CRC )
 {
@@ -90,10 +90,10 @@ HB_FUNC( COM_CRC )
 
       /* NOTE: warning this function is not bug compatible with CT3.
        *       It fixes few problems in original CT3 implementation
-       *       i.e. it works correctly for 8 bit and smaller polynomials
+       *       i.e. it works correctly for 8-bit and smaller polynomials
        *       instead of returning 0 or supports much larger polynomials
-       *       up to 64bits.
-       *       For 16/17 bit polynomials it gives the same results as CT3
+       *       up to 64-bit.
+       *       For 16/17-bit polynomials it gives the same results as CT3
        *       so for most common usage it should be binary compatible
        *       with CT3. [druzus]
        */
@@ -111,7 +111,7 @@ static char s_xmoblock_sum( const char * szData, HB_SIZE nLen )
    return ( char ) uc;
 }
 
-/* XMoBlock( <cString>, <nBlockNumber>, [<lCRC>], [<nMode>] ) -> <cXModemBlock>
+/* XMoBlock( <cString>, <nBlockNumber>, [<lCRC>], [<nMode>] ) --> <cXModemBlock>
  */
 HB_FUNC( XMOBLOCK )
 {
@@ -152,17 +152,18 @@ HB_FUNC( XMOBLOCK )
    hb_retclen_buffer( pszBlock, nSize );
 }
 
-/* XMoCheck( <cString>, [<lCRC>] ) -> <nBlockNumber>|-1
+/* XMoCheck( <cString>, [<lCRC>] ) --> <nBlockNumber>|-1
  */
 HB_FUNC( XMOCHECK )
 {
-   HB_SIZE nLen  = hb_parclen( 1 ), nSize;
+   HB_SIZE nLen = hb_parclen( 1 );
    int iResult = -1;
 
    if( nLen >= 132 )
    {
       const char * szBlock = hb_parc( 1 );
       HB_BOOL fCRC = hb_parl( 2 );
+      HB_SIZE nSize;
 
       if( *szBlock == 0x01 )
          nSize = 128;
@@ -183,7 +184,7 @@ HB_FUNC( XMOCHECK )
    hb_retni( iResult );
 }
 
-/* ZeroInsert( <cString> ) -> <cDataBlock>
+/* ZeroInsert( <cString> ) --> <cDataBlock>
  */
 HB_FUNC( ZEROINSERT )
 {
@@ -194,7 +195,7 @@ HB_FUNC( ZEROINSERT )
       const char * szText;
       HB_SIZE nLen, nBits, n;
       unsigned int uiVal;
-      int i, j;
+      int i;
 
       szText = hb_itemGetCPtr( pString );
       nLen = hb_itemGetCLen( pString );
@@ -219,6 +220,7 @@ HB_FUNC( ZEROINSERT )
          HB_SIZE nDest = nLen + ( ( nBits + 7 ) >> 3 );
          char * pszDest = ( char * ) hb_xgrab( nDest + 1 );
          unsigned char c = 0;
+         int j;
 
          nBits = n = 0;
          i = 1;
@@ -265,7 +267,7 @@ HB_FUNC( ZEROINSERT )
       hb_retc_null();
 }
 
-/* ZeroRemove( <cDataBlock> ) -> cString
+/* ZeroRemove( <cDataBlock> ) --> cString
  */
 HB_FUNC( ZEROREMOVE )
 {

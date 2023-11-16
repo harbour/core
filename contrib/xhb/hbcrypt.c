@@ -1,5 +1,8 @@
 /*
- * Cryptography for xharbour
+ * Cryptography for xHarbour
+ *
+ * WARNING: Non-standard, insecure crypto. Use core hb_blowfish*()
+ *          functions or other _standard_ alternatives instead.
  *
  * Copyright 2003 Giancarlo Niccolai <giancarlo@niccolai.ws>
  * SEE ALSO COPYRIGHT NOTICE FOR NXS BELOW.
@@ -15,9 +18,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,8 +48,7 @@
  *
  */
 
-/*****
- * NXS aglorithm is FREE SOFTWARE. It can be reused for any
+/* NXS algorithm is FREE SOFTWARE. It can be reused for any
  * purpose, provided that this copyright notice is still present
  * in the software.
  *
@@ -55,7 +57,6 @@
  *
  * NXS author is Giancarlo Niccolai <giancarlo@niccolai.ws>
  */
-
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -69,7 +70,7 @@
  * Prerequisites:
  * 1) source must be at least 8 bytes long.
  * 2) key must be at least 6 characters long.
- *    Optimal lenght is about 12 to 16 bytes. Maximum keylen is 512 bytes
+ *    Optimal length is about 12 to 16 bytes. Maximum keylen is 512 bytes
  * 3) cipher must be preallocated with srclen bytes
  */
 
@@ -78,7 +79,6 @@ void nxs_crypt(
    const unsigned char * key, HB_SIZE keylen,
    unsigned char * cipher )
 {
-
    if( keylen > NXS_MAX_KEYLEN )
       keylen = NXS_MAX_KEYLEN;
 
@@ -97,7 +97,7 @@ void nxs_crypt(
    nxs_xorcyclic( cipher, srclen, key, keylen );
 }
 
-/*decrypting the buffer */
+/* Decrypting the buffer */
 
 void nxs_decrypt(
    const unsigned char * cipher, HB_SIZE cipherlen,
@@ -261,7 +261,7 @@ void nxs_xordecode(
 {
    HB_SIZE       pos    = 0;
    HB_USHORT     keypos = 0;
-   unsigned char c_bitrest, c_bitleft;
+   unsigned char c_bitleft;
 
    /* A very short block? */
    if( keylen > cipherlen - pos )
@@ -271,6 +271,8 @@ void nxs_xordecode(
 
    while( pos < cipherlen )
    {
+      unsigned char c_bitrest;
+
       cipher[ pos ] ^= key[ keypos ];
 
       c_bitrest       = cipher[ pos ] << 5;
@@ -286,9 +288,7 @@ void nxs_xordecode(
          keypos = 0;
          /* last block */
          if( keylen > cipherlen - pos )
-         {
             keylen = ( HB_USHORT ) ( cipherlen - pos );
-         }
 
          c_bitleft = ( cipher[ pos + keylen - 1 ] ^ key[ keylen - 1 ] ) << 5;
       }
@@ -348,10 +348,9 @@ HB_U32 nxs_cyclic_sequence( HB_U32 input )
 {
    HB_U32 first  = input & 0xffff;
    HB_U32 second = input >> 16;
-   HB_U32 ret    = ( ( second * BASE * BASE ) & 0xffff ) |
-                   ( ( first * BASE * BASE ) & 0xffff0000 );
 
-   return ret;
+   return ( ( second * BASE * BASE ) & 0xffff ) |
+          ( ( first  * BASE * BASE ) & 0xffff0000 );
 }
 
 
@@ -377,20 +376,14 @@ void nxs_make_scramble( HB_ISIZ * scramble, const unsigned char * key, HB_SIZE k
    }
 }
 
-/*
- * END OF NXS
- */
+/* END OF NXS */
 
-/*****
- * xHarbour implementation
- */
+/* xHarbour implementation */
 
-/*****
- * Encrypt a text using a key
+/* Encrypt a text using a key
  * Usage:
  * hb_Crypt( cSource, cKey ) --> cCipher
  */
-
 HB_FUNC( HB_CRYPT )
 {
    PHB_ITEM pSource = hb_param( 1, HB_IT_ANY );
@@ -406,12 +399,10 @@ HB_FUNC( HB_CRYPT )
    hb_retclen_buffer( ( char * ) cRes, hb_itemGetCLen( pSource ) );
 }
 
-/*****
- * Decrypt a text using a key
+/* Decrypt a text using a key
  * Usage:
  * hb_Decrypt( cCrypt, cKey ) --> cSource
  */
-
 HB_FUNC( HB_DECRYPT )
 {
    PHB_ITEM pSource = hb_param( 1, HB_IT_ANY );

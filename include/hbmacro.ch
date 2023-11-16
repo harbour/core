@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,7 +52,7 @@
 /* runtime settings for macro compiler */
 #define HB_SM_HARBOUR    1    /* extended Harbour features */
 #define HB_SM_XBASE      2    /* extended Xbase++ compatibility */
-#define HB_SM_SHORTCUTS  8    /* enable/disable sortcuts for logical operators */
+#define HB_SM_SHORTCUTS  8    /* enable/disable shortcuts for logical operators */
 #define HB_SM_ARRSTR     16   /* enable/disable strings as array of bytes */
 #define HB_SM_EXTOPT     32   /* enable/disable operator optimizations */
 #define HB_SM_RT_MACRO   64   /* disable automatic setup of macro flag */

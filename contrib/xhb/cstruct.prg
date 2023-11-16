@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,7 +52,7 @@
 
 THREAD STATIC t_aActiveStructure
 
-/* TOFIX: Add mutex protection for variables below. */
+/* FIXME: Add mutex protection for variables below. */
 STATIC s_aClasses := {}
 STATIC s_aArrayClasses := {}
 STATIC s_aSynonyms := {}
@@ -67,8 +67,6 @@ PROCEDURE __init_LONGLONGs()
    __ClsSetModule( __ActiveStructure() )
 
    RETURN
-
-//
 
 FUNCTION __ActiveStructure( cStructure, nAlign )
 
@@ -153,8 +151,6 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
 
    RETURN t_aActiveStructure
 
-//
-
 PROCEDURE hb_Member( cMember, CType )
 
    LOCAL nLen, nAt
@@ -174,8 +170,6 @@ PROCEDURE hb_Member( cMember, CType )
 
    RETURN
 
-//
-
 FUNCTION hb_CStructureId( cStructure, lInplace )
 
    LOCAL nID
@@ -183,11 +177,8 @@ FUNCTION hb_CStructureId( cStructure, lInplace )
 
    cStructure := Upper( cStructure )
 
-   nID := AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } )
-
-   IF nID == 0
-      nID := AScan( s_aSynonyms, {| aSynonym | aSynonym[ 1 ] == cStructure } )
-      IF nID == 0
+   IF ( nID := AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } ) ) == 0
+      IF ( nID := AScan( s_aSynonyms, {| aSynonym | aSynonym[ 1 ] == cStructure } ) ) == 0
          oErr := ErrorNew()
          oErr:Args          := { cStructure, lInplace }
          oErr:CanDefault    := .F.
@@ -213,8 +204,6 @@ FUNCTION hb_CStructureId( cStructure, lInplace )
 
    RETURN nID
 
-//
-
 PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAlign )
 
    LOCAL cElem, nAt, nIndex := 1
@@ -223,7 +212,7 @@ PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
    LOCAL nID, cSynon
 
    FOR EACH cElem IN aDefinitions
-      // *** PP bug - remove when possible! ***
+
       IF cElem == NIL
          ASize( aDefinitions, nIndex - 1 )
          EXIT
@@ -306,8 +295,6 @@ PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
 
    RETURN
 
-//
-
 FUNCTION hb_CStructure( cStructure, nAlign )
 
    LOCAL hClass
@@ -316,9 +303,8 @@ FUNCTION hb_CStructure( cStructure, nAlign )
    LOCAL oErr
 
    cStructure := Upper( cStructure )
-   nID        := AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } )
 
-   IF nID == 0
+   IF ( nID := AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } ) ) == 0
       oErr := ErrorNew()
       oErr:Args          := { cStructure, nAlign }
       oErr:CanDefault    := .F.
@@ -340,8 +326,6 @@ FUNCTION hb_CStructure( cStructure, nAlign )
 
    RETURN oStructure
 
-//
-
 STATIC PROCEDURE AllocateMembers( oStructure )
 
    LOCAL aCTypes, CType
@@ -360,8 +344,6 @@ STATIC PROCEDURE AllocateMembers( oStructure )
    // TraceLog( "Finished: " + oStructure:className() )
 
    RETURN
-
-//
 
 FUNCTION hb_CStructureFromId( nID, nAlign )
 
@@ -400,8 +382,6 @@ FUNCTION hb_CStructureFromId( nID, nAlign )
 
    RETURN oStructure
 
-//
-
 FUNCTION hb_CTypeArrayId( CType, nLen )
 
    LOCAL hClass
@@ -410,9 +390,8 @@ FUNCTION hb_CTypeArrayId( CType, nLen )
    LOCAL aCTypes, acMembers, cMember
    LOCAL cArrayClassName := "C Array of [" + hb_ntos( nLen ) + "] CType: " + Str( CType )
 
-   nID := AScan( s_aArrayClasses, {| aArrayDefinitions | aArrayDefinitions[ 1 ] == CType .AND. aArrayDefinitions[ 2 ] == nLen } )
+   IF ( nID := AScan( s_aArrayClasses, {| aArrayDefinitions | aArrayDefinitions[ 1 ] == CType .AND. aArrayDefinitions[ 2 ] == nLen } ) ) == 0
 
-   IF nID == 0
       hClass := __clsNew( "C Structure " + cArrayClassName, nLen + CLASS_PROPERTIES )
       // __clsDelMsg( hClass, "C" )
 
@@ -440,13 +419,13 @@ FUNCTION hb_CTypeArrayId( CType, nLen )
       __clsAddMsg( hClass,  "CopyTo"    , @__CStr_CopyTo() , HB_OO_MSG_METHOD )
 
       // IF Abs( CType ) == 1
-      __clsAddMsg( hClass, "AsString", @AsString()   , HB_OO_MSG_METHOD )
+      __clsAddMsg( hClass, "AsString", @AsString(), HB_OO_MSG_METHOD )
       // ENDIF
 
       FOR Counter := 1 TO nLen
          cMember := hb_ntos( Counter )
          acMembers[ Counter ] := cMember
-         __clsAddMsg( hClass,       cMember, Counter, HB_OO_MSG_PROPERTY )
+         __clsAddMsg( hClass, cMember, Counter, HB_OO_MSG_PROPERTY )
       NEXT
 
       __clsAddMsg( hClass,  "aCTypes"       , Counter++, HB_OO_MSG_PROPERTY, aCTypes )
@@ -464,13 +443,8 @@ FUNCTION hb_CTypeArrayId( CType, nLen )
 
    RETURN nID + CTYPE_STRUCTURE
 
-//
-
 FUNCTION hb_Is_CStructure( x )
-
    RETURN Left( x:ClassName(), 11 ) == "C Structure"
-
-//
 
 STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
 
@@ -513,8 +487,6 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
 
    RETURN iif( lReturnString, cOut, QSelf() )
 
-//
-
 STATIC FUNCTION Reset()
 
    LOCAL xProperty, nProperties := Len( QSelf() ) - CLASS_PROPERTIES
@@ -532,8 +504,6 @@ STATIC FUNCTION Reset()
    NEXT
 
    RETURN QSelf()
-
-//
 
 STATIC FUNCTION Buffer( Buffer, lAdopt )
 
@@ -553,15 +523,11 @@ STATIC FUNCTION Buffer( Buffer, lAdopt )
 
    RETURN QSelf()
 
-//
-
 STATIC FUNCTION GetPointer()
 
    QSelf():InternalBuffer := hb_ArrayToStructure( QSelf(), QSelf():aCTypes, QSelf():nAlign )
 
    RETURN hb_String2Pointer( QSelf():InternalBuffer )
-
-//
 
 STATIC FUNCTION Value()
 
@@ -574,8 +540,6 @@ STATIC FUNCTION Value()
    QSelf():InternalBuffer := hb_ArrayToStructure( QSelf(), QSelf():aCTypes, QSelf():nAlign )
 
    RETURN QSelf():InternalBuffer
-
-//
 
 STATIC FUNCTION DeValue( lAdopt )
 
@@ -601,8 +565,6 @@ STATIC FUNCTION DeValue( lAdopt )
 
    RETURN QSelf()
 
-//
-
 STATIC FUNCTION ArrayMethod()
 
    LOCAL aValues := {}
@@ -610,8 +572,6 @@ STATIC FUNCTION ArrayMethod()
    AEval( QSelf(), {| xVal | AAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 
    RETURN aValues
-
-//
 
 STATIC FUNCTION Init( aValues )
 
@@ -631,8 +591,6 @@ STATIC FUNCTION Init( aValues )
 
    RETURN QSelf()
 
-//
-
 STATIC FUNCTION Pointer( nNewPointer, lAdopt )
 
    IF nNewPointer != NIL
@@ -640,8 +598,6 @@ STATIC FUNCTION Pointer( nNewPointer, lAdopt )
    ENDIF
 
    RETURN QSelf()
-
-//
 
 STATIC FUNCTION AsString()
 

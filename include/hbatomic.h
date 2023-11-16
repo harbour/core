@@ -1,5 +1,5 @@
 /*
- * header file with functions for atomic operations
+ * Header file with functions for atomic operations
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -513,8 +513,7 @@ HB_EXTERN_BEGIN
 #        define HB_SPINLOCK_REPEAT     63
 #     endif
 
-/* workaround for borland C/C++ compiler limitation */
-#if defined( __BORLANDC__ )
+#if defined( __BORLANDC__ )  /* workaround for compiler limitation */
 #     define hb_spinlock_acquire_r( sl ) \
       do { \
          HB_SPINLOCK_T * l = &(sl)->lock; \

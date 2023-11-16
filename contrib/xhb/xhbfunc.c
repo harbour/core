@@ -3,6 +3,7 @@
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (hb_F_Eof())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -42,16 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
- *    hb_F_Eof()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -108,7 +99,7 @@ HB_FUNC( HB_VMMODE )
 #if   defined( HB_NO_PROFILER ) && defined( HB_NO_TRACE ) && ! defined( HB_GUI )
    hb_retni( 2 ); /* optimized for console applications */
 #elif defined( HB_NO_PROFILER ) && defined( HB_NO_TRACE ) && defined( HB_GUI )
-   hb_retni( 1 ); /* optimized for gui applications */
+   hb_retni( 1 ); /* optimized for GUI applications */
 #else
    hb_retni( 0 ); /* no optimization */
 #endif
@@ -126,7 +117,7 @@ HB_FUNC( XHB__KEYBOARD )
    }
    else if( HB_ISCHAR( 1 ) )
    {
-      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
+      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ), HB_FALSE );
    }
    else if( HB_ISARRAY( 1 ) )
    {
@@ -144,7 +135,7 @@ HB_FUNC( XHB__KEYBOARD )
          }
          else if( HB_IS_STRING( pItem ) )
          {
-            hb_inkeySetText( ( const char * ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
+            hb_inkeySetText( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), HB_FALSE );
          }
       }
    }
@@ -223,7 +214,8 @@ HB_FUNC( CURDIRX )
    else
       iDrv = iCurDrv;
 
-   /* NOTE: hb_fsCurDirBuffEx() in xhb, but I couldn't decipher the difference. [vszakats] */
+   /* NOTE: hb_fsCurDirBuffEx() in xHarbour, but I couldn't decipher the
+            difference. [vszakats] */
    hb_fsCurDirBuff( iDrv, pbyBuffer, HB_PATH_MAX );
 
    hb_retc_buffer( pbyBuffer );

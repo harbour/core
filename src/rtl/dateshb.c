@@ -2,6 +2,9 @@
  * The Date API (Harbour level)
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Jose Lalin <dezac@corevia.com> (Day(), Month(), Year(), DoW())
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (CToD(), Date())
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_SToD())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,26 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    Day()
- *    Month()
- *    Year()
- *    DoW()
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    CToD()
- *    Date()
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_SToD()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -289,6 +272,16 @@ HB_FUNC( HB_TTOD )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( HB_TTON )
+{
+   PHB_ITEM pTime = hb_param( 1, HB_IT_DATETIME );
+
+   if( pTime )
+      hb_retnd( hb_itemGetTD( pTime ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_NTOT )
 {
    PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
@@ -299,12 +292,52 @@ HB_FUNC( HB_NTOT )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_TTON )
+HB_FUNC( HB_NTOMSEC )
 {
-   PHB_ITEM pTime = hb_param( 1, HB_IT_DATETIME );
+   PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
 
-   if( pTime )
-      hb_retnd( hb_itemGetTD( pTime ) );
+   if( pNum )
+      hb_retnint( ( HB_MAXINT ) ( hb_itemGetND( pNum ) * HB_MILLISECS_PER_DAY ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_NTOSEC )
+{
+   PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pNum )
+      hb_retnd( hb_itemGetND( pNum ) * HB_SECONDS_PER_DAY );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_NTOMIN )
+{
+   PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pNum )
+      hb_retnd( hb_itemGetND( pNum ) * HB_MINUTES_PER_DAY );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_NTOHOUR )
+{
+   PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pNum )
+      hb_retnd( hb_itemGetND( pNum ) * 24 );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_TTOSEC )
+{
+   long lDate, lTime;
+
+   if( hb_partdt( &lDate, &lTime, 1 ) )
+      hb_retnd( ( double ) lDate * HB_SECONDS_PER_DAY + ( double ) lTime / 1000 );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -325,6 +358,36 @@ HB_FUNC( HB_MSECTOT )
 
    if( pNum )
       hb_rettd( hb_itemGetND( pNum ) / HB_MILLISECS_PER_DAY );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_TTOMSEC )
+{
+   long lDate, lTime;
+
+   if( hb_partdt( &lDate, &lTime, 1 ) )
+      hb_retnd( ( double ) lDate * HB_MILLISECS_PER_DAY + lTime );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_TTOMIN )
+{
+   long lDate, lTime;
+
+   if( hb_partdt( &lDate, &lTime, 1 ) )
+      hb_retnd( ( double ) lDate * HB_MINUTES_PER_DAY + ( double ) lTime / ( 60 * 1000 ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_TTOHOUR )
+{
+   long lDate, lTime;
+
+   if( hb_partdt( &lDate, &lTime, 1 ) )
+      hb_retnd( ( double ) lDate * 24 + ( double ) lTime / ( 60 * 60 * 1000 ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -499,6 +562,25 @@ HB_FUNC( HB_STRTOTS )
 
       hb_timeStampStrGetDT( szDateTime, &lDate, &lTime );
       hb_rettdt( lDate, lTime );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* get week number and other parts ISO 8601 week date:
+   hb_Week( <dDate>, [@<nYear>], [@<nDayOfWeek>] ) --> <nWeek> */
+HB_FUNC( HB_WEEK )
+{
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
+
+   if( pDate )
+   {
+      int iYear, iWeek, iDay;
+
+      hb_dateDecWeek( hb_itemGetDL( pDate ), &iYear, &iWeek, &iDay );
+      hb_storni( iYear, 2 );
+      hb_storni( iDay, 3 );
+      hb_retni( iWeek );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

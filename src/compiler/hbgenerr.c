@@ -6,7 +6,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -58,8 +58,8 @@ const char * const hb_comp_szErrors[] =
    "Jump offset too long",
    "Can't create output file '%s'",
    "Can't create preprocessed output file '%s'",
-   "Bad command line option '%s'",
-   "Bad command line parameter '%s'",
+   "Bad command-line option '%s'",
+   "Bad command-line parameter '%s'",
    "Invalid filename '%s'",
    "Mayhem in CASE handler",
    "Operation not supported for data type '%s'",
@@ -70,7 +70,7 @@ const char * const hb_comp_szErrors[] =
    "Invalid selector '%s' in send",
    "ANNOUNCEd procedure '%s' must be a public symbol",
    "Jump PCode not found",
-   "CASE or OTHERWISE does not match DO CASE",
+   "CASE or OTHERWISE does not match DO CASE or SWITCH",
    "Code block contains both macro and declared symbol references '%s'",
    "GET contains complex macro",
    "Unterminated inline block in function '%s'",
@@ -95,6 +95,10 @@ const char * const hb_comp_szErrors[] =
    "Invalid ALWAYS after %s in RECOVER code",
    "File write error",
    "Duplicate case value",
+   "ENDWITH does not match WITH OBJECT",
+   "ENDSWITCH does not match SWITCH",
+   "END SEQUENCE does not match BEGIN SEQUENCE",
+   "Code block contains both macro and WITH OBJECT messages ':%s'",
    /* Some historical, funny sounding error messages from original CA-Cl*pper.
       They serve no purpose whatsoever. [vszakats] */
    "END wreaks terrible vengeance on control stack",
@@ -105,7 +109,7 @@ const char * const hb_comp_szErrors[] =
 
 /* Table with parse warnings */
 /* NOTE: The first character stores the warning's level that triggers this
- * warning. The warning's level is set by -w<n> command line option.
+ * warning. The warning's level is set by -w<n> command-line option.
  */
 const char * const hb_comp_szWarnings[] =
 {
@@ -243,11 +247,19 @@ PHB_EXPR hb_compWarnMeaningless( HB_COMP_DECL, PHB_EXPR pExpr )
    return pExpr;
 }
 
-void hb_compErrorCodeblock( HB_COMP_DECL, const char * szBlock )
+void hb_compErrorCodeblockDecl( HB_COMP_DECL, const char * szVarName )
 {
    HB_BOOL fError = HB_COMP_PARAM->fError;
 
-   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BLOCK, szBlock, NULL );
+   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BLOCK, szVarName, NULL );
+   HB_COMP_PARAM->fError = fError; /* restore error flag for this line */
+}
+
+void hb_compErrorCodeblockWith( HB_COMP_DECL, const char * szMessage )
+{
+   HB_BOOL fError = HB_COMP_PARAM->fError;
+
+   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_WITHOBJECT_MACROBLOCK, szMessage, NULL );
    HB_COMP_PARAM->fError = fError; /* restore error flag for this line */
 }
 

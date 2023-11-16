@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,32 +47,29 @@
 /*
      QR Code is ISO/IEC18004
 
-     JIS-X-0510  QR Code standard in Japaneese language :)
-       http://sourceforge.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
+     JIS-X-0510  QR Code standard in Japanese language :)
+       https://osdn.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
 
-   http://en.wikipedia.org/wiki/QR_Code
-   http://www.denso-wave.com/qrcode/index-e.html
-   http://www.itsc.org.sg/pdf/synthesis08/Three_QR_Code.pdf
-   http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
-   http://www.swetake.com/qr/index-e.html
-   http://www.codeproject.com/KB/cs/qrcode.aspx
-   http://sourceforge.jp/projects/reedsolomon
-   http://twit88.com/home/
-   http://qrcode.sourceforge.jp/
-   http://zxing.org/w/decode.jspx                          Online decoder
+   https://en.wikipedia.org/wiki/QR_Code
+   http://www.qrcode.com/
+   https://foxdesignsstudio.com/uploads/pdf/Three_QR_Code.pdf
+   https://web.archive.org/web/www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
+   http://www.swetake.com/qrcode/index-e.html
+   https://www.codeproject.com/Articles/20574/Open-Source-QRCode-Library
+   https://osdn.jp/projects/reedsolomon/
+   https://web.archive.org/web/twit88.com/platform/projects/show/mt-qrcode
+   https://qrcode.osdn.jp/
+   https://zxing.org/w/decode.jspx                         Online decoder
    http://blog.qr4.nl/Online-QR-Code_Decoder.aspx          Online decoder (not all codes are decoded)
    http://www.thonky.com/qr-code-tutorial/                 Tutorial
-   http://code.google.com/p/zxing/                         Java library
+   https://github.com/zxing/zxing                          Java library
    http://goqr.me/                                         Online encode
-   http://www.pclviewer.com/rs2/calculator.html            Reed-solomon ECC calculator
-   http://raidenii.net/files/datasheets/misc/qr_code.pdf
+   http://www.pclviewer.com/rs2/calculator.html            Reed-Solomon ECC calculator
+   https://web.archive.org/web/raidenii.net/files/datasheets/misc/qr_code.pdf
 
  */
 
 #include "hbzebra.h"
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
 /* #define DEBUG_CODE */
 
@@ -358,13 +355,13 @@ static unsigned char * s_align[ 40 ] = {
 #ifdef DEBUG_CODE
 static int _qr_check_version_table( void )
 {
-   const QRVERSION * pQRVersion;
    int iV, iL;
    unsigned int uiSumD, uiSumE;
 
    for( iV = 1; iV <= 40; iV++ )
    {
-      pQRVersion = &s_version[ iV - 1 ];
+      const QRVERSION * pQRVersion = &s_version[ iV - 1 ];
+
       for( iL = 0; iL < 4; iL++ )
       {
          uiSumE = ( unsigned int ) ( pQRVersion->level[ iL ].block[ 0 ].uiCount ) * ( pQRVersion->level[ iL ].block[ 0 ].uiECC ) +
@@ -466,9 +463,9 @@ static int _qr_versionlength( int iVersion )
 static int _qr_fixed( int iVersion, int iRow, int iCol )
 {
    int iLength = _qr_versionlength( iVersion );
-   unsigned char * pi, * pj;
+   const unsigned char * pi;
 
-   /* position detection markers and versino info */
+   /* position detection markers and version info */
    if( iRow < 9 && iCol < 9 )
       return 1;
    if( iRow < 9 && iCol >= iLength - 8 )
@@ -484,7 +481,7 @@ static int _qr_fixed( int iVersion, int iRow, int iCol )
    pi = s_align[ iVersion - 1 ];
    for( ; *pi; pi++ )
    {
-      pj = s_align[ iVersion - 1 ];
+      const unsigned char * pj = s_align[ iVersion - 1 ];
       for( ; *pj; pj++ )
       {
          if( iRow - 2 <= ( int ) *pi && ( int ) *pi <= iRow + 2 &&
@@ -625,13 +622,12 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
    int i, iVersion, iMode;
    HB_ISIZ iLen, iDataLen, m;
    HB_SIZE n;
-   char ch;
 
    /* Select encoding mode */
-   iMode = 1;  /* 1=Numeric, 2=Alphanumeric, 4=8-bit, 8=Kanji. Not modes: 0=termibator, 3=Structured append, 7=ECI, 5=FNC1(1), 9=FNC1(2)*/
+   iMode = 1;  /* 1=Numeric, 2=Alphanumeric, 4=8-bit, 8=Kanji. Not modes: 0=terminator, 3=Structured append, 7=ECI, 5=FNC1(1), 9=FNC1(2)*/
    for( n = 0; n < nSize; n++ )
    {
-      ch = szCode[ n ];
+      char ch = szCode[ n ];
       if( '0' <= ch && ch <= '9' )
       {
       }
@@ -655,7 +651,7 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
 
    iLen += 4; /* Mode indicator length */
 
-   /*  Select version */
+   /* Select version */
    iDataLen = 0; /* to pacify warning with some C compilers (MSVS 2010) */
    iVersion = 0; /* to pacify warning */
    for( i = 1; i <= 40; i++ )
@@ -733,14 +729,14 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
 static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned char * pECC, int iECCLen, int * pPoly, int * pExp, int * pLog, int iMod )
 {
    int i, j;
-   unsigned char iM;
 
    for( i = 0; i < iECCLen; i++ )
       pECC[ i ] = 0;
 
    for( i = 0; i < iDataLen; i++ )
    {
-      iM = s_rev[ pData[ i ] ] ^ pECC[ iECCLen - 1 ];
+      unsigned char iM = s_rev[ pData[ i ] ] ^ pECC[ iECCLen - 1 ];
+
       for( j = iECCLen - 1; j > 0; j-- )
       {
          if( iM && pPoly[ j ] )
@@ -786,7 +782,7 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
          j ^= iPoly;
    }
 
-   /* Init Reed-Solomonn encode. Parameters: iECCLen, iIndex */
+   /* Init Reed-Solomon encode. Parameters: iECCLen, iIndex */
    iECCLen = pLevel->block[ 0 ].uiECC;
    iIndex = 0; /* why this parameter is different from DataMatrix ??? */
 
@@ -857,8 +853,8 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
 
 static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
 {
-   int i, j, no, up, right, iLength;
-   unsigned char * pi, * pj;
+   int i, j, iLength;
+   const unsigned char * pi;
 
    HB_SYMBOL_UNUSED( pCWBits );
 
@@ -901,7 +897,7 @@ static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
    pi = s_align[ iVersion - 1 ];
    for( ; *pi; pi++ )
    {
-      pj = s_align[ iVersion - 1 ];
+      const unsigned char * pj = s_align[ iVersion - 1 ];
       for( ; *pj; pj++ )
       {
          if( ( *pi > 10 && *pi < iLength - 10 ) ||
@@ -941,6 +937,8 @@ static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
    /* Draw data. Note: pCWBits == NULL is used only for debugging */
    if( pCWBits )
    {
+      int no, up, right;
+
       i = j = iLength - 1;
       right = 1;
       up = 1;
@@ -994,13 +992,13 @@ static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
 static int _qr_penalty( PHB_BITBUFFER pBits, int iVersion )
 {
    int i, j, k, iPenalty = 0, iLen = _qr_versionlength( iVersion );
-   HB_BOOL bBitLast, bBit;
+   HB_BOOL bBit;
 
    /* 1. Same color modules in row/column */
    for( i = 0; i < iLen; i++ )
    {
       /* Row */
-      bBitLast = hb_bitbuffer_get( pBits, i * iLen );
+      HB_BOOL bBitLast = hb_bitbuffer_get( pBits, i * iLen );
       k = 1;
       for( j = 1; j < iLen; j++ )
       {
@@ -1041,8 +1039,8 @@ static int _qr_penalty( PHB_BITBUFFER pBits, int iVersion )
    }
 
    /* 2. Block of same color modules */
-   /* Instead of looking for non-overlapped MxN block, we can search for 2x2 overlapping blocks, */
-   /* penalty value is the same for both of these methods                                        */
+   /* Instead of looking for non-overlapped MxN block, we can search for 2x2 overlapping blocks,
+      penalty value is the same for both of these methods */
    for( i = 0; i < iLen - 1; i++ )
    {
       for( j = 0; j < iLen - 1; j++ )
@@ -1142,10 +1140,12 @@ static void _qr_mask_pattern( PHB_BITBUFFER pBits, int iVersion, int iMask )
 
 static int _qr_mask( PHB_BITBUFFER pBits, int iVersion )
 {
-   int i, iPenaltyMin = 0, iMaskMin = 0, iPenalty;
+   int i, iPenaltyMin = 0, iMaskMin = 0;
 
    for( i = 0; i < 8; i++ )
    {
+      int iPenalty;
+
       _qr_mask_pattern( pBits, iVersion, i );
       iPenalty = _qr_penalty( pBits, iVersion );
 #ifdef DEBUG_CODE
@@ -1160,7 +1160,9 @@ static int _qr_mask( PHB_BITBUFFER pBits, int iVersion )
    }
 #ifdef DEBUG_CODE
    HB_TRACE( HB_TR_ALWAYS, ( "mask:%d", iMaskMin ) );
-/* iMaskMin = 0; */
+   #if 0
+   iMaskMin = 0;
+   #endif
    HB_TRACE( HB_TR_ALWAYS, ( "mask applied:%d", iMaskMin ) );
 #endif
    _qr_mask_pattern( pBits, iVersion, iMaskMin );

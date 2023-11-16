@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -90,7 +90,7 @@
 
 /* holder of memory block information */
 /* NOTE: HB_USHORT is used intentionally to fill up the structure to
- * full 16 bytes (on 16/32 bit environment)
+ * full 16 bytes (on 16/32-bit environment)
  */
 typedef struct HB_GARBAGE_
 {
@@ -153,7 +153,7 @@ static PHB_GARBAGE s_pLockedBlock = NULL;
 static PHB_GARBAGE s_pDeletedBlock = NULL;
 
 /* marks if block releasing is requested during garbage collecting */
-static HB_BOOL s_bCollecting = HB_FALSE;
+static HB_BOOL volatile s_bCollecting = HB_FALSE;
 
 /* flag for used/unused blocks - the meaning of the HB_GC_USED_FLAG bit
  * is reversed on every collecting attempt
@@ -386,7 +386,7 @@ void hb_gcGripDrop( PHB_ITEM pItem )
 }
 
 /* Lock a memory pointer so it will not be released if stored
-   outside of harbour variables
+   outside of Harbour variables
  */
 void * hb_gcLock( void * pBlock )
 {
@@ -409,7 +409,7 @@ void * hb_gcLock( void * pBlock )
 }
 
 /* Unlock a memory pointer so it can be released if there is no
-   references inside of harbour variables
+   references inside of Harbour variables
  */
 void * hb_gcUnlock( void * pBlock )
 {
@@ -724,7 +724,7 @@ void hb_gcReleaseAll( void )
 {
    if( s_pCurrBlock )
    {
-      PHB_GARBAGE pAlloc, pDelete;
+      PHB_GARBAGE pAlloc;
 
       s_bCollecting = HB_TRUE;
 
@@ -742,7 +742,8 @@ void hb_gcReleaseAll( void )
 
       do
       {
-         HB_TRACE( HB_TR_INFO, ( "Release %p", s_pCurrBlock ) );
+         PHB_GARBAGE pDelete;
+         HB_TRACE( HB_TR_INFO, ( "Release %p", ( void * ) s_pCurrBlock ) );
          pDelete = s_pCurrBlock;
          hb_gcUnlink( &s_pCurrBlock, pDelete );
          HB_GC_AUTO_DEC();
@@ -767,7 +768,9 @@ HB_FUNC( HB_GCSTEP )
  */
 HB_FUNC( HB_GCALL )
 {
+#if defined( hb_ret )
    HB_STACK_TLS_PRELOAD
+#endif
 
    /* call hb_ret() to clear stack return item, HVM does not clean
     * it before calling functions/procedures if caller does not
@@ -779,16 +782,17 @@ HB_FUNC( HB_GCALL )
     */
    hb_ret();
 
-   hb_gcCollectAll( hb_pcount() < 1 || hb_parl( 1 ) );
+   hb_gcCollectAll( hb_parldef( 1, HB_TRUE ) );
 }
 
 #ifdef HB_GC_AUTO
 HB_FUNC( HB_GCSETAUTO )
 {
-   HB_STACK_TLS_PRELOAD
-
    HB_PTRUINT nBlocks, nPrevBlocks;
    HB_BOOL fSet = HB_ISNUM( 1 );
+#if defined( hb_retnint )
+   HB_STACK_TLS_PRELOAD
+#endif
 
    nBlocks = fSet ? hb_parnint( 1 ) * 1000 : 0;
 

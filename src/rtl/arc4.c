@@ -43,14 +43,22 @@
  * RC4 is a registered trademark of RSA Laboratories.
  */
 
-#include "arc4.h"
+#include "hbarc4.h"
 #include "hbdate.h"
 #include "hbthread.h"
 
 /* XXX: Check and possibly extend this to other Unix-like platforms */
 #if ( defined( HB_OS_BSD ) && ! defined( HB_OS_DARWIN ) ) || \
    ( defined( HB_OS_LINUX ) && ! defined ( HB_OS_ANDROID ) && ! defined ( __WATCOMC__ ) )
-#  define HAVE_SYS_SYSCTL_H
+   /*
+    * sysctl() on Linux has fallen into depreciation. Not available in current
+    * runtime C libraries, like musl and glibc >= 2.30.
+    */
+#  if ( ! defined( HB_OS_LINUX ) || \
+      ( ( defined( __GLIBC__ ) && ! ( ( __GLIBC__ > 2 ) || ( ( __GLIBC__ == 2 ) && ( __GLIBC_MINOR__ >= 30 ) ) ) ) ) || \
+      defined( __UCLIBC__ ) )
+#     define HAVE_SYS_SYSCTL_H
+#  endif
 #  define HAVE_DECL_CTL_KERN
 #  define HAVE_DECL_KERN_RANDOM
 #  if defined( HB_OS_LINUX )
@@ -61,11 +69,9 @@
 #if defined( HB_OS_WIN )
 #  if ! defined( __TINYC__ )
 #     include <wincrypt.h>
-#     include <process.h>
 #  endif
 #elif defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
 #  include <sys/types.h>
-#  include <process.h>
 #else
 #  if ! defined( __WATCOMC__ )
 #     include <sys/param.h>
@@ -110,8 +116,8 @@ static struct arc4_stream rs;
 static HB_I32 arc4_count;
 
 static HB_CRITICAL_NEW( arc4_lock );
-#define _ARC4_LOCK()    hb_threadEnterCriticalSection( &arc4_lock )
-#define _ARC4_UNLOCK()  hb_threadLeaveCriticalSection( &arc4_lock )
+#define ARC4_LOCK()    hb_threadEnterCriticalSection( &arc4_lock )
+#define ARC4_UNLOCK()  hb_threadLeaveCriticalSection( &arc4_lock )
 
 #if defined( __BORLANDC__ ) && defined( _HB_INLINE_ )
 #undef _HB_INLINE_
@@ -132,12 +138,12 @@ static _HB_INLINE_ void arc4_init( void )
 
 static _HB_INLINE_ void arc4_addrandom( const HB_U8 * dat, int datlen )
 {
-   int   n;
-   HB_U8 si;
+   int n;
 
    rs.i--;
    for( n = 0; n < 256; ++n )
    {
+      HB_U8 si;
       rs.i         = ( rs.i + 1 );
       si           = rs.s[ rs.i ];
       rs.j         = rs.j + si + dat[ n % datlen ];
@@ -151,11 +157,10 @@ static _HB_INLINE_ void arc4_addrandom( const HB_U8 * dat, int datlen )
 static HB_ISIZ read_all( int fd, HB_U8 * buf, size_t count )
 {
    HB_SIZE numread = 0;
-   HB_ISIZ result;
 
    while( numread < count )
    {
-      result = read( fd, buf + numread, count - numread );
+      HB_ISIZ result = read( fd, buf + numread, count - numread );
 
       if( result < 0 )
          return -1;
@@ -175,18 +180,18 @@ static HB_ISIZ read_all( int fd, HB_U8 * buf, size_t count )
 static int arc4_seed_win( void )
 {
    /* This is adapted from Tor's crypto_seed_rng() */
-   static int        provider_set = 0;
-   static HCRYPTPROV provider;
+   static int        s_provider_set = 0;
+   static HCRYPTPROV s_provider;
    unsigned char     buf[ ADD_ENTROPY ];
 
-   if( ! provider_set &&
-       ! CryptAcquireContext( &provider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT ) &&
+   if( ! s_provider_set &&
+       ! CryptAcquireContext( &s_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT ) &&
        GetLastError() != ( DWORD ) NTE_BAD_KEYSET )
       return -1;
 
-   provider_set = 1;
+   s_provider_set = 1;
 
-   if( ! CryptGenRandom( provider, sizeof( buf ), buf ) )
+   if( ! CryptGenRandom( s_provider, sizeof( buf ), buf ) )
       return -1;
 
    arc4_addrandom( buf, sizeof( buf ) );
@@ -324,14 +329,15 @@ static int arc4_seed_proc_sys_kernel_random_uuid( void )
     * but not /dev/urandom.  Let's try /proc/sys/kernel/random/uuid.
     * Its format is stupid, so we need to decode it from hex.
     */
-   int   fd;
    char  buf[ 128 ];
    HB_U8 entropy[ 64 ];
-   int   bytes, n, i, nybbles;
+   int   bytes, i, nybbles;
 
    for( bytes = 0; bytes < ADD_ENTROPY; )
    {
-      fd = open( "/proc/sys/kernel/random/uuid", O_RDONLY, 0 );
+      int fd = open( "/proc/sys/kernel/random/uuid", O_RDONLY, 0 );
+      int n;
+
       if( fd < 0 )
          return -1;
 
@@ -382,13 +388,16 @@ static int arc4_seed_urandom( void )
       "/dev/random",
       NULL
    };
-   HB_U8   buf[ ADD_ENTROPY ];
-   int     fd, i;
-   HB_SIZE n;
+
+   int i;
 
    for( i = 0; filenames[ i ]; ++i )
    {
-      fd = open( filenames[ i ], O_RDONLY, 0 );
+      HB_U8 buf[ ADD_ENTROPY ];
+      HB_SIZE n;
+
+      int fd = open( filenames[ i ], O_RDONLY, 0 );
+
       if( fd < 0 )
          continue;
 
@@ -491,7 +500,7 @@ static void arc4_stir( void )
     * Discard early keystream, as per recommendations in
     * "Weaknesses in the Key Scheduling Algorithm of RC4" by
     * Scott Fluhrer, Itsik Mantin, and Adi Shamir.
-    * http://www.wisdom.weizmann.ac.il/~itsik/RC4/Papers/Rc4_ksa.ps
+    * https://web.archive.org/web/www.wisdom.weizmann.ac.il/~itsik/RC4/Papers/Rc4_ksa.ps
     *
     * Ilya Mironov's "(Not So) Random Shuffles of RC4" suggests that
     * we drop at least 2*256 bytes, with 12*256 as a conservative
@@ -560,16 +569,16 @@ static _HB_INLINE_ HB_U32 arc4_getword( void )
  */
 void arc4random_stir( void )
 {
-   _ARC4_LOCK();
+   ARC4_LOCK();
    arc4_stir();
-   _ARC4_UNLOCK();
+   ARC4_UNLOCK();
 }
 
 void arc4random_addrandom( const unsigned char * dat, int datlen )
 {
    int j;
 
-   _ARC4_LOCK();
+   ARC4_LOCK();
    if( ! rs_initialized )
       arc4_stir();
 
@@ -583,7 +592,7 @@ void arc4random_addrandom( const unsigned char * dat, int datlen )
        */
       arc4_addrandom( dat + j, datlen - j );
    }
-   _ARC4_UNLOCK();
+   ARC4_UNLOCK();
 }
 #endif
 
@@ -591,13 +600,13 @@ HB_U32 hb_arc4random( void )
 {
    HB_U32 val;
 
-   _ARC4_LOCK();
+   ARC4_LOCK();
 
    arc4_count -= 4;
    arc4_stir_if_needed();
    val = arc4_getword();
 
-   _ARC4_UNLOCK();
+   ARC4_UNLOCK();
 
    return val;
 }
@@ -606,7 +615,7 @@ void hb_arc4random_buf( void * _buf, HB_SIZE n )
 {
    HB_U8 * buf = ( HB_U8 * ) _buf;
 
-   _ARC4_LOCK();
+   ARC4_LOCK();
 
    arc4_stir_if_needed();
 
@@ -618,7 +627,7 @@ void hb_arc4random_buf( void * _buf, HB_SIZE n )
       buf[ n ] = arc4_getbyte();
    }
 
-   _ARC4_UNLOCK();
+   ARC4_UNLOCK();
 }
 
 /*

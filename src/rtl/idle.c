@@ -2,6 +2,7 @@
  * The idle state collector
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_ReleaseCPU())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_ReleaseCPU()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -143,13 +134,15 @@ void hb_idleSleep( double dSeconds )
 {
    if( dSeconds >= 0 )
    {
-      HB_MAXUINT end_timer = hb_dateMilliSeconds() + ( HB_MAXUINT ) ( dSeconds * 1000 );
+      HB_MAXINT timeout = dSeconds > 0 ? ( HB_MAXINT ) ( dSeconds * 1000 ) : 0;
+      HB_MAXUINT timer = hb_timerInit( timeout );
 
       do
       {
          hb_idleState();
       }
-      while( hb_dateMilliSeconds() < end_timer && hb_vmRequestQuery() == 0 );
+      while( ( timeout = hb_timerTest( timeout, &timer ) ) != 0 &&
+             hb_vmRequestQuery() == 0 );
 
       hb_idleReset();
    }
@@ -198,7 +191,7 @@ HB_FUNC( HB_IDLEADD )
 
       /* return a pointer as a handle to this idle task
        */
-      hb_retptr( ( void * ) hb_codeblockId( pBlock ) );    /* TODO: access to pointers from harbour code */
+      hb_retptr( ( void * ) hb_codeblockId( pBlock ) );    /* TODO: access to pointers from Harbour code */
    }
 }
 

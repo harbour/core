@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,43 +44,42 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbrddsql.h"
+
 #include "hbapiitm.h"
 #include "hbdate.h"
 #include "hbapistr.h"
 #include "hbset.h"
 #include "hbvm.h"
 
-#include "hbrddsql.h"
-
 /* Required by headers on Windows */
 #if defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 /* Required for WIN32_LEAN_AND_MEAN mode */
-#  if ! defined( WIN32 )
-#     define WIN32
-#  endif
+   #if ! defined( WIN32 )
+      #define WIN32
+   #endif
 #endif
 
 #include <sql.h>
 #include <sqlext.h>
 
 #if ! defined( HB_OS_WIN )
-#  if ! defined( SQLLEN ) && ! defined( SQLTCHAR ) && \
-      ! defined( UODBCINT64 ) && ! defined( SIZEOF_LONG_INT )
-typedef unsigned char SQLTCHAR;
-typedef long          SQLLEN;
-typedef unsigned long SQLULEN;
-#     ifndef SQL_WCHAR
-#        define SQL_WCHAR        (-8)
-#     endif
-#     ifndef SQL_WVARCHAR
-#        define SQL_WVARCHAR     (-9)
-#     endif
-#     ifndef SQL_WLONGVARCHAR
-#        define SQL_WLONGVARCHAR (-10)
-#     endif
-#  endif
+   #if ! defined( SQLLEN ) && ! defined( SQLTCHAR ) && \
+       ! defined( UODBCINT64 ) && ! defined( SIZEOF_LONG_INT )
+      typedef unsigned char SQLTCHAR;
+      typedef long          SQLLEN;
+      typedef unsigned long SQLULEN;
+      #ifndef SQL_WCHAR
+         #define SQL_WCHAR         ( -8 )
+      #endif
+      #ifndef SQL_WVARCHAR
+         #define SQL_WVARCHAR      ( -9 )
+      #endif
+      #ifndef SQL_WLONGVARCHAR
+         #define SQL_WLONGVARCHAR  ( -10 )
+      #endif
+   #endif
 #endif
 
 #if defined( UNICODE )
@@ -177,7 +176,7 @@ HB_CALL_ON_STARTUP_END( _hb_odbcdd_init_ )
 #endif
 
 
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_ODBCDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
@@ -208,7 +207,7 @@ static char * odbcGetError( SQLHENV hEnv, SQLHDBC hConn, SQLHSTMT hStmt, HB_ERRC
       hb_itemRelease( pRet );
    }
    else
-      szRet = hb_strdup( "HY000 Unable to get error message" );
+      szRet = hb_strdup( "HY000 Could not get the error message" );
 
    if( pErrCode )
       *pErrCode = ( HB_ERRCODE ) iNativeErr;
@@ -216,8 +215,7 @@ static char * odbcGetError( SQLHENV hEnv, SQLHDBC hConn, SQLHSTMT hStmt, HB_ERRC
 }
 
 
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    SQLHENV    hEnv     = NULL;
@@ -480,7 +478,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       /*
          We do mapping of many SQL types to one Harbour field type here, so, we need store
          real SQL type in uiTypeExtended. SQL types are signed, so, HB_USHORT type casting
-         is a little hacky. We need to remember use this casting also in expressions like
+         is a little hackish. We need to remember use this casting also in expressions like
          this:
             if( pField->uiTypeExtended == ( HB_USHORT ) SQL_BIGINT )
          or introduce our own unsigned SQL types.
@@ -554,7 +552,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
             dbFieldInfo.uiType = HB_FT_TIME;
             break;
 
-         /*  SQL_DATETIME = SQL_DATE = 9 */
+         /* SQL_DATETIME = SQL_DATE = 9 */
          case SQL_TIMESTAMP:
 #if ODBCVER >= 0x0300
          case SQL_TYPE_TIMESTAMP:
@@ -690,12 +688,17 @@ static HB_ERRCODE odbcClose( SQLBASEAREAP pArea )
 
 static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
-   SQLHSTMT  hStmt = ( ( SDDDATA * ) pArea->pSDDData )->hStmt;
+   SQLHSTMT  hStmt;
    SQLRETURN res;
    SQLLEN    iLen;
    PHB_ITEM  pArray, pItem;
    LPFIELD   pField;
    HB_USHORT ui;
+
+   /* No pArea->pSDDData for DBCreate() area...
+    * though pArea->fFetched == HB_TRUE for them
+    */
+   hStmt = pArea->pSDDData ? ( ( SDDDATA * ) pArea->pSDDData )->hStmt : NULL;
 
    while( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {

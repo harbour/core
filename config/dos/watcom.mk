@@ -17,9 +17,11 @@ LDFLAGS += OP quiet
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -w3
 else
-   CFLAGS += -w1 -wcd201 -wcd367 -wcd368
-   ifneq ($(HB_BUILD_MODE),cpp)
-      CFLAGS += -wcd124 -wcd136
+   CFLAGS += -w1
+   ifeq ($(HB_BUILD_MODE),cpp)
+      CFLAGS += -wcd367 -wcd368
+   else
+      CFLAGS += -wcd124 -wcd136 -wcd201
    endif
 endif
 
@@ -97,7 +99,7 @@ ifeq ($(HB_BUILD_DYN),dostest)
       DLIBS_COMMA :=
    endif
 
-   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
    define dynlib_object
       @$(ECHO) $(ECHOQUOTE)FILE '$(file)'$(ECHOQUOTE) >> __dyn__.tmp
 

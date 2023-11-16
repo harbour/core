@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpScrollBar Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *                 Xbase++ xbpScrollBar Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                              17Feb2009
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgScrollBar INHERIT WvgWindow, WvgDataRef
 
    VAR    autoTrack                             INIT .T.
    VAR    range                                 INIT { 0, 1 }
@@ -87,7 +81,7 @@ CREATE CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
+METHOD WvgScrollBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -97,7 +91,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrol
 
    RETURN Self
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
+METHOD WvgScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -107,7 +101,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
       ::style += SBS_HORZ
    ENDIF
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -133,7 +127,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
 
    RETURN Self
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
+METHOD WvgScrollBar:handleEvent( nMessage, aNM )
 
    LOCAL nScrMsg, nScrPos, nCommand
 
@@ -146,7 +140,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ENDIF
 
@@ -218,9 +212,8 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDCASE
 
       ::sl_editBuffer := nScrPos
-      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, Self )
+      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, , Self )
       RETURN EVENT_HANDELLED
-
 
    CASE nMessage == HB_GTE_VSCROLL
       IF ::isParentCrt()
@@ -290,28 +283,28 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDCASE
 
       ::sl_editBuffer := nScrPos
-      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
+      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, , Self )
       RETURN EVENT_HANDELLED
 
    ENDCASE
 
    RETURN EVENT_UNHANDELLED
 
-METHOD destroy() CLASS WvgScrollBar
+METHOD PROCEDURE WvgScrollBar:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
-METHOD Scroll( xParam ) CLASS WvgScrollBar
+METHOD WvgScrollBar:Scroll( xParam )
 
    IF HB_ISBLOCK( xParam )
       ::sl_xbeSB_Scroll := xParam
    ENDIF
 
-   RETURN self
+   RETURN Self
 
-METHOD setRange( aRange ) CLASS WvgScrollBar
+METHOD WvgScrollBar:setRange( aRange )
 
    LOCAL aOldRange, nMin, nMax
 
@@ -327,8 +320,5 @@ METHOD setRange( aRange ) CLASS WvgScrollBar
 
    RETURN aOldRange
 
-METHOD setScrollBoxSize( nUnits ) CLASS WvgScrollBar
-
-   LOCAL nOldUnits := nUnits
-
-   RETURN nOldUnits
+METHOD WvgScrollBar:setScrollBoxSize( nUnits )
+   RETURN nUnits

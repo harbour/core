@@ -87,12 +87,14 @@ DYNAMIC ft_FDelete
 DYNAMIC ft_FEof
 DYNAMIC ft_FError
 DYNAMIC ft_FGoBot
+DYNAMIC ft_FGoBottom
 DYNAMIC ft_FGoto
 DYNAMIC ft_FGoTop
 DYNAMIC ft_Fill
 DYNAMIC ft_FindITh
 DYNAMIC ft_FInsert
 DYNAMIC ft_FLastRe
+DYNAMIC ft_FLastRec
 DYNAMIC ft_FlopTst
 DYNAMIC ft_FOffset
 DYNAMIC ft_FReadLn

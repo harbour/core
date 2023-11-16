@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,7 +55,7 @@
 #define BliCacheLoc         1  /* Get location of real mode overlay cache (EMS/XMS) */
 #define BliCacheSize        2  /* Get size of overlay cache */
 #define BliExtMemAvail      3  /* Get bytes extended memory available to the extender */
-#define BliHostMode         4  /* Get DOS extender host mode (DPMI/VCPI/XMS) */
+#define BliHostMode         4  /* Get MS-DOS extender host mode (DPMI/VCPI/XMS) */
 #define BliMachineMode      5  /* Get current machine mode (real, protected) */
 #define BliOverlayLoc       6  /* Get location of overlay area */
 #define BliOverlaySize      7  /* Get size of overlay area */

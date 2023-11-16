@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,8 +50,8 @@
 CREATE CLASS amf_Obj
 
    METHOD New( hCachedData ) CONSTRUCTOR
-   ERROR HANDLER noMessage
-   METHOD msgNotFound
+   ERROR HANDLER noMessage( ... )
+   METHOD msgNotFound( cMessage, ... )
 
    PROTECTED:
 
@@ -67,16 +67,15 @@ CREATE CLASS amf_Obj
    ACCESS RealClass INLINE ::cRealClass
    ACCESS RpcOid INLINE ::nRpcOid
 
-END CLASS
+ENDCLASS
 
 METHOD New( hCachedData ) CLASS amf_Obj
 
    ::hCachedData := hCachedData
 
-   RETURN self
+   RETURN Self
 
 METHOD noMessage( ... ) CLASS amf_Obj
-
    RETURN ::msgNotFound( __GetMessage(), ... )
 
 METHOD msgNotFound( cMessage, ... ) CLASS amf_Obj
@@ -102,10 +101,10 @@ CREATE CLASS amf_Raw
    PROTECTED:
    VAR cData
 
-END CLASS
+ENDCLASS
 
 METHOD New( cData ) CLASS amf_Raw
 
    ::cData := cData
 
-   RETURN self
+   RETURN Self

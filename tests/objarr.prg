@@ -77,7 +77,7 @@ STATIC FUNCTION New()
 
    ::x := { 1, 1 }
 
-   RETURN self
+   RETURN Self
 
 STATIC FUNCTION Get()
 

@@ -1,6 +1,6 @@
 /*
  * Memory file system
- *   I/O driver for Memory file system
+ * I/O driver for Memory file system
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  *
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -58,11 +58,7 @@
 
 #include "directry.ch"
 
-/******************************************************
- *
- *  Memory file system
- *
- *******************************************************/
+/* -- Memory file system --- */
 
 /* change this define for public hb_memfs*() API */
 #ifdef HB_MEMFS_PUBLIC_API
@@ -155,7 +151,9 @@ static void memfsExit( void * cargo )
 
 static void memfsInit( void )
 {
-   /* HB_CRITICAL_INIT( s_mtx ); */
+   #if 0
+   HB_CRITICAL_INIT( s_mtx );
+   #endif
    s_error = 0;
    s_fs.ulInodeCount = 0;
    s_fs.ulInodeAlloc = HB_MEMFS_INITSIZE;
@@ -171,13 +169,15 @@ static void memfsInit( void )
 /* Note: returns 1 based index! */
 static HB_ULONG memfsInodeFind( const char * szName, HB_ULONG * pulPos )
 {
-   HB_ULONG ulLeft, ulRight, ulMiddle;
-   int i;
+   HB_ULONG ulLeft, ulRight;
 
    ulLeft = 0;
    ulRight = s_fs.ulInodeCount;
    while( ulLeft < ulRight )
    {
+      HB_ULONG ulMiddle;
+      int i;
+
       ulMiddle = ( ulLeft + ulRight ) >> 1;
       i = strcmp( szName, s_fs.pInodes[ ulMiddle ]->szName );
       if( i == 0 )
@@ -255,7 +255,9 @@ static PHB_MEMFS_FILE memfsHandleToFile( HB_FHANDLE hFile )
 {
    if( hFile == FS_ERROR || ( HB_ULONG ) hFile == 0 || ( HB_ULONG ) hFile > s_fs.ulFileAlloc || s_fs.pFiles[ ( HB_ULONG ) hFile - 1 ] == NULL )
    {
-      /* hb_errInternal( 9999, "memfsHandleToFile: Invalid file handle", NULL, NULL ); */
+#if 0
+      hb_errInternal( 9999, "memfsHandleToFile: Invalid file handle", NULL, NULL );
+#endif
       return NULL;
    }
    else
@@ -298,7 +300,7 @@ static HB_FHANDLE memfsHandleAlloc( PHB_MEMFS_FILE pFile )
 }
 
 
-/* ======== Public Memory FS functions ======== */
+/* --- Public Memory FS functions --- */
 
 HB_MEMFS_EXPORT HB_ERRCODE hb_memfsError( void )
 {
@@ -507,20 +509,34 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags 
 
    s_error = uiError;
 
-   if( ! pFile )
+   if( pFile )
    {
-      HB_MEMFSMT_UNLOCK();
-      return FS_ERROR;
-   }
-   pFile->pInode->uiDeny |= uiFlags & FOX_DENYFLAGS;
-   if( uiFlags & FOX_READ )
-      pFile->pInode->uiCountRead++;
-   if( uiFlags & FOX_WRITE )
-      pFile->pInode->uiCountWrite++;
+      if( uiFlags & FO_TRUNC )
+      {
+         pFile->pInode->llSize = 0;
+         if( pFile->pInode->llAlloc != HB_MEMFS_INITSIZE )
+         {
+            pFile->pInode->llAlloc = HB_MEMFS_INITSIZE;
+            hb_xfree( pFile->pInode->pData );
+            pFile->pInode->pData = ( char * ) hb_xgrab( ( HB_ULONG ) pFile->pInode->llAlloc );
+         }
+         memset( pFile->pInode->pData, 0, ( HB_SIZE ) pFile->pInode->llAlloc );
+      }
 
-   pFile->uiFlags = uiFlags;
-   hFile = memfsHandleAlloc( pFile );
+      pFile->pInode->uiDeny |= uiFlags & FOX_DENYFLAGS;
+      if( uiFlags & FOX_READ )
+         pFile->pInode->uiCountRead++;
+      if( uiFlags & FOX_WRITE )
+         pFile->pInode->uiCountWrite++;
+
+      pFile->uiFlags = uiFlags;
+      hFile = memfsHandleAlloc( pFile );
+   }
+   else
+      hFile = FS_ERROR;
+
    HB_MEMFSMT_UNLOCK();
+
    return hFile;
 }
 
@@ -651,7 +667,6 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
 {
    PHB_MEMFS_FILE  pFile;
    PHB_MEMFS_INODE pInode;
-   HB_FOFFSET      llNewAlloc;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
       return HB_FALSE;  /* invalid handle */
@@ -668,7 +683,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
    /* Reallocate if neccesary */
    if( pInode->llAlloc < llOffset )
    {
-      llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
+      HB_FOFFSET llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
 
       if( llNewAlloc < llOffset )
          llNewAlloc = llOffset;
@@ -768,11 +783,7 @@ HB_MEMFS_EXPORT int hb_memfsLockTest( HB_FHANDLE hFile, HB_FOFFSET ulStart, HB_F
    return 0;
 }
 
-/******************************************************
- *
- *  I/O Driver for Memory file system
- *
- *******************************************************/
+/* --- I/O Driver for Memory file system --- */
 
 #define FILE_PREFIX      "MEM:"
 #define FILE_PREFIX_LEN  strlen( FILE_PREFIX )
@@ -830,11 +841,11 @@ static HB_BOOL s_fileRename( PHB_FILE_FUNCS pFuncs, const char * szName, const c
 }
 
 
-static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pSrcFile, const char * pszDstFile )
+static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pszSrcFile, const char * pszDstFile )
 {
    HB_SYMBOL_UNUSED( pFuncs );
    /* TODO: optimize it when both points to MEMIO files */
-   return hb_fsCopy( pSrcFile, pszDstFile );
+   return hb_fsCopy( pszSrcFile, pszDstFile );
 }
 
 
@@ -950,7 +961,6 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
    HB_FHANDLE hFile;
    char       szNameNew[ HB_PATH_MAX ];
    HB_USHORT  uiFlags;
-   HB_SIZE    nLen;
 
    HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pPaths );
@@ -960,7 +970,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
 
    if( szDefExt )
    {
-      nLen = strlen( szNameNew );
+      HB_SIZE nLen = strlen( szNameNew );
       do
       {
          if( nLen == 0 || strchr( HB_OS_PATH_DELIM_CHR_LIST, szNameNew[ nLen - 1 ] ) )

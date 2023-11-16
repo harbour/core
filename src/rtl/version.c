@@ -2,6 +2,7 @@
  * Version related functions
  *
  * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (timestamp conversion)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -71,7 +72,7 @@ HB_FUNC( HB_VERSION )
       case HB_VERSION_MINOR:          hb_retni( HB_VER_MINOR ); break;
       case HB_VERSION_RELEASE:        hb_retni( HB_VER_RELEASE ); break;
       case HB_VERSION_STATUS:         hb_retc_const( HB_VER_STATUS ); break;
-      case HB_VERSION_REVISION:       hb_retni( hb_verRevision() ); break;
+      case HB_VERSION_REVISION:       hb_retnint( hb_verRevision() ); break;
       case HB_VERSION_CHANGELOG_LAST: hb_retc_const( hb_verChangeLogLastEntry() ); break;
       case HB_VERSION_CHANGELOG_ID:   hb_retc_const( hb_verChangeLogID() ); break;
       case HB_VERSION_PCODE_VER:      hb_retni( HB_PCODE_VER ); break;
@@ -128,7 +129,7 @@ HB_FUNC( HB_VERSION )
       case HB_VERSION_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) * 8 ); break;
       case HB_VERSION_MT:             hb_retl( hb_vmIsMt() ); break;
 
-      case HB_VERSION_SHARED:  /* TOFIX: This only works when platforms has separate
+      case HB_VERSION_SHARED:  /* FIXME: This only works when platforms has separate
                                          compilation pass for harbour dynlib build -
                                          it is 32-bit Windows. */
 
@@ -211,6 +212,26 @@ HB_FUNC( HB_OSISWIN2K )
 HB_FUNC( HB_OSISWINVISTA )
 {
    hb_retl( hb_iswinvista() );
+}
+
+HB_FUNC( HB_OSISWIN7 )
+{
+   hb_retl( hb_iswin7() );
+}
+
+HB_FUNC( HB_OSISWIN8 )
+{
+   hb_retl( hb_iswin8() );
+}
+
+HB_FUNC( HB_OSISWIN81 )
+{
+   hb_retl( hb_iswin81() );
+}
+
+HB_FUNC( HB_OSISWIN10 )
+{
+   hb_retl( hb_iswin10() );
 }
 
 HB_FUNC( HB_OSISWINCE )

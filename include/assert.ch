@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,24 +46,24 @@
 
 #ifndef HB_ASSERT_CH_
 #define HB_ASSERT_CH_
-#define _ASSERT_DEFINED /* NOTE: For complete CA-Cl*pper compatibility */
+#define _ASSERT_DEFINED  /* NOTE: For complete CA-Cl*pper compatibility */
 
 #ifdef NDEBUG
 
 /* When NDEBUG is defined, ignore all ASSERT() calls */
-#command ASSERT( <exp> [, <msg>] )      =>
+#command ASSERT( <exp> [, <msg>] )  =>
 
 #else
 
-#command ASSERT( <exp> [, <msg>] )      =>                              ;
-         IF !( <exp> )                                                  ;
-       ;    OutStd(                                                     ;
-                    hb_eol() + ProcName( 0 ) +                          ;
-                    "(" + hb_ntos( ProcLine() ) + ")" +                 ;
-                    "  Assertion failed: " +                            ;
-                    iif( <.msg.>, <msg>, <"exp"> )                      ;
-                  )                                                     ;
-       ;    QUIT                                                        ;
+#command ASSERT( <exp> [, <msg>] )  =>                  ;
+         IF !( <exp> )                                  ;
+       ;    OutStd(                                     ;
+                    hb_eol() + ProcName( 0 ) +          ;
+                    "(" + hb_ntos( ProcLine() ) + ")" + ;
+                    "  Assertion failed: " +            ;
+                    iif( <.msg.>, <msg>, <"exp"> )      ;
+                  )                                     ;
+       ;    QUIT                                        ;
        ; END
 
 #endif /* NDEBUG */

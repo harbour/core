@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -155,9 +155,9 @@ PROCEDURE Main_ARRAY()
 #ifndef __XPP__
 #ifdef HB_COMPAT_C53
    HBTEST ASize()                         IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
-   HBTEST ASize( NIL )                    IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
-   HBTEST ASize( {} )                     IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
-   HBTEST ASize( ErrorNew() )             IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+   HBTEST ASize( NIL )                    IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:1:U:NIL "
+   HBTEST ASize( {} )                     IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:1:A:{.[0].} "
+   HBTEST ASize( ErrorNew() )             IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:1:O:ERROR Object "
 #else
    HBTEST ASize()                         IS NIL
    HBTEST ASize( NIL )                    IS NIL
@@ -166,9 +166,9 @@ PROCEDURE Main_ARRAY()
 #endif
 #endif
 #ifdef HB_COMPAT_C53
-   HBTEST ASize( NIL, 0 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
-   HBTEST ASize( NIL, 1 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
-   HBTEST ASize( NIL, -1 )                IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+   HBTEST ASize( NIL, 0 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:2:U:NIL;N:0 "
+   HBTEST ASize( NIL, 1 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:2:U:NIL;N:1 "
+   HBTEST ASize( NIL, -1 )                IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:2:U:NIL;N:-1 "
 #else
    HBTEST ASize( NIL, 0 )                 IS NIL
    HBTEST ASize( NIL, 1 )                 IS NIL
@@ -210,7 +210,7 @@ PROCEDURE Main_ARRAY()
    /* disable Harbour extended optimizations to test correct RTE message */
    #pragma -ko-
 #endif
-   HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
+   HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 ", "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 A:3:N:1;N:0;N:-10 "
    HBTEST Array( 1, 0, "A" )              IS NIL
 #ifdef __HARBOUR__
    #pragma -ko+
@@ -387,15 +387,15 @@ PROCEDURE Main_ARRAY()
    HBTEST AScan( saAllTypes, sbBlock    ) IS 0
    HBTEST AScan( saAllTypes, sbBlockC   ) IS 0
    HBTEST AScan( saAllTypes, saArray    ) IS 0
-   SET EXACT ON
+   Set( _SET_EXACT, .T. )
    HBTEST AScan( saAllTypes, scString   ) IS 1
    HBTEST AScan( saAllTypes, scStringE  ) IS 2
    HBTEST AScan( saAllTypes, scStringZ  ) IS 3
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
 
-   HBTEST TAEVSM()                        IS "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0"  /* Bug in CA-Cl*pper 5.x */
-   HBTEST TASOSM1()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0NN 0NN 0         0{  }"
-   HBTEST TASOSM2()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }"
+   HBTEST TAEVSM()                        IS "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0" /* Bug in CA-Cl*pper 5.x */, "N10N 9N 8N 7N 6         5"
+   HBTEST TASOSM1()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0NN 0NN 0         0{  }"      , "NN 5NN 4         3{ 2, 1, 3 }"
+   HBTEST TASOSM2()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }"              , "NN 5NN 4         3{ 2, 1, 3 }"
 
    RETURN
 

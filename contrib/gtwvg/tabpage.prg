@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpTabPage compatible Class
  *
  * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbpTabPage compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               01Mar2009
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgTabPage  INHERIT  WvgWindow
+CREATE CLASS WvgTabPage INHERIT WvgWindow
 
    VAR    caption                               INIT NIL /* Character string, Numeric, Object ("")                                                                           */
    VAR    clipChildren                          INIT .T. /* Determines whether Xbase Parts in the child list are clipped during graphic output.                              */
@@ -86,7 +80,7 @@ CREATE CLASS WvgTabPage  INHERIT  WvgWindow
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
+METHOD WvgTabPage:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -96,7 +90,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPa
 
    RETURN Self
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
+METHOD WvgTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -106,11 +100,13 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
    IF ::clipSiblings
       ::style += WS_CLIPSIBLINGS
    ENDIF
-   /* ::style += WS_DLGFRAME */
+#if 0
+   ::style += WS_DLGFRAME
+#endif
 
    ::style += TCS_FOCUSNEVER
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -130,14 +126,13 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
 
    RETURN Self
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
+METHOD WvgTabPage:handleEvent( nMessage, aNM )
 
    LOCAL aHdr
 
    DO CASE
    CASE nMessage == HB_GTE_SETFOCUS
       IF HB_ISBLOCK( ::sl_tabActivate )
-
          RETURN EVENT_HANDELLED
       ENDIF
 
@@ -149,48 +144,47 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
       RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_NOTIFY
-      aHdr := Wvg_GetNMHdrInfo( aNM[ 2 ] )
+      aHdr := wvg_GetNMHdrInfo( aNM[ 2 ] )
 
       DO CASE
-      CASE aHdr[ NMH_code ] == - 551 /* TCN_SELCHANGE */
-
+      CASE aHdr[ NMH_code ] == -551 /* TCN_SELCHANGE */
       ENDCASE
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      RETURN Wvg_GetStockObject( NULL_BRUSH )
+      RETURN wvg_GetStockObject( NULL_BRUSH )
 
    ENDCASE
 
    RETURN EVENT_UNHANDELLED
 
-METHOD tabActivate( xParam ) CLASS WvgTabPage
+METHOD WvgTabPage:tabActivate( xParam )
 
    IF HB_ISBLOCK( xParam )
       ::sl_tabActivate := xParam
    ENDIF
 
-   RETURN self
+   RETURN Self
 
-METHOD minimize() CLASS WvgTabPage
+METHOD WvgTabPage:minimize()
 
    ::hide()
 
    RETURN .F.
 
-METHOD maximize() CLASS WvgTabPage
+METHOD WvgTabPage:maximize()
 
    ::show()
 
    RETURN .T.
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
+METHOD WvgTabPage:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-METHOD destroy() CLASS WvgTabPage
+METHOD PROCEDURE WvgTabPage:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN

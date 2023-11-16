@@ -1,5 +1,5 @@
 /*
- * hmac_sha1.c
+ * WARNING: Outdated, insecure algorithm.
  *
  * Version 1.0.0
  *

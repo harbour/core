@@ -21,9 +21,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -98,7 +98,7 @@ static void do_token1( int iSwitch )
    {
       case DO_TOKEN1_TOKEN:
          ct_token->iPreSeparator = ct_token->iPostSeparator = -1;
-         /* no "break" here !! */
+         /* fallthrough */
       case DO_TOKEN1_ATTOKEN:
       case DO_TOKEN1_NUMTOKEN:
       case DO_TOKEN1_TOKENLOWER:
@@ -120,7 +120,6 @@ static void do_token1( int iSwitch )
       HB_SIZE sSubStrLen;
       HB_SIZE sRetStrLen = 0;
       HB_SIZE nToken = 0;
-      HB_SIZE nSkipCnt;
       const char * pc;
 
       /* separator string */
@@ -179,6 +178,7 @@ static void do_token1( int iSwitch )
       while( nToken < nTokenCounter )
       {
          HB_SIZE sMatchedPos = sSeparatorStrLen;
+         HB_SIZE nSkipCnt;
 
          /* Skip the left nSkip successive separators */
          nSkipCnt = 0;

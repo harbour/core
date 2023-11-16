@@ -1,5 +1,5 @@
 /*
- * Compiler command line and environment parameters checking
+ * Compiler command-line and environment parameters checking
  *
  * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -119,7 +119,7 @@ static void hb_compChkIgnoredInfo( HB_COMP_DECL, const char * szSwitch )
    char buffer[ 64 ];
 
    hb_snprintf( buffer, sizeof( buffer ),
-                "Ignored unsupported command line option: %s\n", szSwitch );
+                "Ignored unsupported command-line option: %s\n", szSwitch );
    hb_compOutStd( HB_COMP_PARAM, buffer );
 }
 
@@ -274,7 +274,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                      break;
                   case '0':
                      ++szSwPtr;
-                     /* no break; */
+                     /* fallthrough */
                   default:
                      szSwPtr += 2;
                      HB_COMP_PARAM->iExitLevel = HB_EXITLEVEL_DEFAULT;
@@ -381,7 +381,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                         break;
                      case '0':
                         ++szSwPtr;
-                        /* no break; */
+                        /* fallthrough */
                      default:
                         HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_COMPACT;
                         break;
@@ -423,7 +423,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                         break;
                      case '0':
                         ++szSwPtr;
-                        /* no break; */
+                        /* fallthrough */
                      default:
                         HB_COMP_PARAM->iErrorFmt = HB_ERRORFMT_CLIPPER;
                         break;
@@ -455,6 +455,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                   break;
                default:
                   szSwPtr = hb_compChkOptionAddPath( HB_COMP_PARAM, szSwPtr, fEnv );
+                  break;
             }
             break;
 
@@ -592,6 +593,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                   default:
                      ch = -1;
                      --szSwPtr;
+                     break;
                }
                if( ch == -1 )
                   break;
@@ -636,7 +638,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                case '0':
                case '1':
                   ++szSwPtr;
-                  /* no break; */
+                  /* fallthrough */
                default:
                   HB_COMP_PARAM->iStartProc = 1;
                   break;
@@ -686,13 +688,14 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                   break;
                case '2':
                   HB_COMP_PARAM->fFullQuiet = HB_TRUE;
-                  /* no break */
+                  /* fallthrough */
                case '0':
                   HB_COMP_PARAM->fLogo = HB_FALSE;
                   ++szSwPtr;
-                  /* no break */
+                  /* fallthrough */
                default:
                   HB_COMP_PARAM->fQuiet = HB_TRUE;
+                  break;
             }
             break;
 
@@ -838,7 +841,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
    return "";
 }
 
-/* check command line parameters */
+/* check command-line parameters */
 void hb_compChkCommandLine( HB_COMP_DECL, int argc, const char * const argv[] )
 {
    int i;

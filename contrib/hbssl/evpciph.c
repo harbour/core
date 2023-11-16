@@ -1,7 +1,7 @@
 /*
  * OpenSSL API (EVP CIPHER) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,11 +44,9 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-#include "hbapiitm.h"
-
 #include "hbssl.h"
+
+#include "hbapiitm.h"
 
 #include <openssl/evp.h>
 
@@ -64,10 +62,14 @@ static HB_GARBAGE_FUNC( EVP_CIPHER_CTX_release )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( ph && *ph )
    {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      EVP_CIPHER_CTX_free( ( EVP_CIPHER_CTX * ) *ph );
+#else
       /* Cleanup the object */
       EVP_CIPHER_CTX_cleanup( ( EVP_CIPHER_CTX * ) *ph );
       /* Destroy the object */
       hb_xfree( *ph );
+#endif
 
       /* set pointer to NULL just in case */
       *ph = NULL;
@@ -80,9 +82,9 @@ static const HB_GC_FUNCS s_gcEVP_CIPHER_CTX_funcs =
    hb_gcDummyMark
 };
 
-static void * hb_EVP_CIPHER_CTX_is( int iParam )
+static HB_BOOL hb_EVP_CIPHER_CTX_is( int iParam )
 {
-   return hb_parptrGC( &s_gcEVP_CIPHER_CTX_funcs, iParam );
+   return hb_parptrGC( &s_gcEVP_CIPHER_CTX_funcs, iParam ) != NULL;
 }
 
 static EVP_CIPHER_CTX * hb_EVP_CIPHER_CTX_par( int iParam )
@@ -92,7 +94,7 @@ static EVP_CIPHER_CTX * hb_EVP_CIPHER_CTX_par( int iParam )
    return ph ? ( EVP_CIPHER_CTX * ) *ph : NULL;
 }
 
-int hb_EVP_CIPHER_is( int iParam )
+HB_BOOL hb_EVP_CIPHER_is( int iParam )
 {
    return HB_ISCHAR( iParam ) || HB_ISNUM( iParam );
 }
@@ -441,28 +443,28 @@ HB_FUNC( EVP_CIPHER_KEY_LENGTH )
    hb_retni( cipher ? EVP_CIPHER_key_length( cipher ) : 0 );
 }
 
-HB_FUNC( EVP_CIPHER_KEY_IV_LENGTH )
+HB_FUNC( EVP_CIPHER_IV_LENGTH )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
 
    hb_retni( cipher ? EVP_CIPHER_iv_length( cipher ) : 0 );
 }
 
-HB_FUNC( EVP_CIPHER_KEY_FLAGS )
+HB_FUNC( EVP_CIPHER_FLAGS )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
 
    hb_retnint( cipher ? EVP_CIPHER_flags( cipher ) : 0 );
 }
 
-HB_FUNC( EVP_CIPHER_KEY_MODE )
+HB_FUNC( EVP_CIPHER_MODE )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
 
 #if OPENSSL_VERSION_NUMBER < 0x00906040L
    /* fix for typo in macro definition in openssl/evp.h */
    #undef EVP_CIPHER_mode
-   #define EVP_CIPHER_mode(e)  ((e)->flags & EVP_CIPH_MODE)
+   #define EVP_CIPHER_mode( e )  ( ( e )->flags & EVP_CIPH_MODE )
 #endif
    hb_retni( cipher ? EVP_CIPHER_mode( cipher ) : 0 );
 }
@@ -474,44 +476,45 @@ HB_FUNC( EVP_CIPHER_TYPE )
    hb_retni( cipher ? EVP_CIPHER_type( cipher ) : 0 );
 }
 
-HB_FUNC( HB_EVP_CIPHER_CTX_CREATE )
+HB_FUNC( EVP_CIPHER_CTX_NEW )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_CIPHER_CTX * ), &s_gcEVP_CIPHER_CTX_funcs );
+   EVP_CIPHER_CTX * ctx;
 
-   EVP_CIPHER_CTX * ctx = ( EVP_CIPHER_CTX * ) hb_xgrab( sizeof( EVP_CIPHER_CTX ) );
-
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+   ctx = EVP_CIPHER_CTX_new();
+#else
+   ctx = ( EVP_CIPHER_CTX * ) hb_xgrab( sizeof( EVP_CIPHER_CTX ) );
    EVP_CIPHER_CTX_init( ctx );
+#endif
 
    *ph = ctx;
 
    hb_retptrGC( ph );
 }
 
-HB_FUNC( EVP_CIPHER_CTX_INIT )
+HB_FUNC_TRANSLATE( HB_EVP_CIPHER_CTX_CREATE, EVP_CIPHER_CTX_NEW )
+
+HB_FUNC( EVP_CIPHER_CTX_RESET )
 {
    if( hb_EVP_CIPHER_CTX_is( 1 ) )
    {
       EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
 
       if( ctx )
-         EVP_CIPHER_CTX_init( ctx );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( EVP_CIPHER_CTX_CLEANUP )
-{
-   if( hb_EVP_CIPHER_CTX_is( 1 ) )
-   {
-      EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
-
-      if( ctx )
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
+         hb_retni( EVP_CIPHER_CTX_reset( ctx ) );
+#else
          hb_retni( EVP_CIPHER_CTX_cleanup( ctx ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+HB_FUNC_TRANSLATE( EVP_CIPHER_CTX_INIT, EVP_CIPHER_CTX_RESET )
+HB_FUNC_TRANSLATE( EVP_CIPHER_CTX_CLEANUP, EVP_CIPHER_CTX_RESET )
 
 HB_FUNC( EVP_CIPHER_CTX_SET_PADDING )
 {
@@ -567,8 +570,8 @@ HB_FUNC( EVP_CIPHER_CTX_CTRL )
       if( ctx )
          /* NOTE: 4th param doesn't have a 'const' qualifier. This is a setter
                   function, so even if we do a copy, what sort of allocation
-                  routines to use? Probably an omission from OpenSSLs part. [vszakats] */
-         hb_retni( EVP_CIPHER_CTX_ctrl( ctx, hb_parni( 2 ), hb_parni( 3 ), ( void * ) hb_parc( 4 ) ) );
+                  routine to use? [vszakats] */
+         hb_retni( EVP_CIPHER_CTX_ctrl( ctx, hb_parni( 2 ), hb_parni( 3 ), ( void * ) HB_UNCONST( hb_parc( 4 ) ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1232,10 +1235,9 @@ HB_FUNC( EVP_OPENFINAL )
 
 #if 0
 
-#define EVP_CIPHER_CTX_get_app_data( e )     ( ( e )->app_data )
-#define EVP_CIPHER_CTX_set_app_data( e, d )  ( ( e )->app_data = ( char * ) ( d ) )
-
-int EVP_CIPHER_param_to_asn1( EVP_CIPHER_CTX * c, ASN1_TYPE * type );
-int EVP_CIPHER_asn1_to_param( EVP_CIPHER_CTX * c, ASN1_TYPE * type );
+void * EVP_CIPHER_CTX_get_app_data( const EVP_CIPHER_CTX * ctx );
+void EVP_CIPHER_CTX_set_app_data( EVP_CIPHER_CTX * ctx, void * data );
+int EVP_CIPHER_param_to_asn1( EVP_CIPHER_CTX * ctx, ASN1_TYPE * type );
+int EVP_CIPHER_asn1_to_param( EVP_CIPHER_CTX * ctx, ASN1_TYPE * type );
 
 #endif

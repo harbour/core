@@ -1,5 +1,5 @@
 /*
- * internal and switch functions for CT3 string functions
+ * Internal and switch functions for CT3 string functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -84,16 +84,14 @@ int ct_str_exit( void )
    return 1;
 }
 
-/* -------------------------- */
 /* search for exact substring */
-/* -------------------------- */
 const char * ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
                                   const char * pcMatch, HB_SIZE sMatchLen, HB_SIZE * psMatchStrLen )
 {
    HB_SIZE sPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_exact_forward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
-                            pcString, sStrLen, pcMatch, sMatchLen, psMatchStrLen ) );
+                            pcString, sStrLen, pcMatch, sMatchLen, ( void * ) psMatchStrLen ) );
 
    if( sMatchLen == 0 || sStrLen < sMatchLen )
       return NULL;
@@ -109,9 +107,7 @@ const char * ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
    }
 }
 
-/* ------------------------------------------------ */
 /* search for exact substring in backward direction */
-/* ------------------------------------------------ */
 const char * ct_at_exact_backward( const char * pcString, HB_SIZE sStrLen,
                                    const char * pcMatch, HB_SIZE sMatchLen, HB_SIZE * psMatchStrLen )
 {
@@ -119,7 +115,7 @@ const char * ct_at_exact_backward( const char * pcString, HB_SIZE sStrLen,
    const char * pcRet;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_exact_backward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
-                            pcString, sStrLen, pcMatch, sMatchLen, psMatchStrLen ) );
+                            pcString, sStrLen, pcMatch, sMatchLen, ( void * ) psMatchStrLen ) );
 
    if( sMatchLen == 0 || sStrLen < sMatchLen )
       return NULL;
@@ -143,9 +139,7 @@ const char * ct_at_exact_backward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-/* ----------------------------------- */
 /* search for substring using wildcard */
-/* ----------------------------------- */
 const char * ct_at_wildcard_forward( const char * pcString, HB_SIZE sStrLen,
                                      const char * pcMatch, HB_SIZE sMatchLen,
                                      char cWildCard, HB_SIZE * psMatchStrLen )
@@ -154,7 +148,7 @@ const char * ct_at_wildcard_forward( const char * pcString, HB_SIZE sStrLen,
    const char * pcRet, * pcStop;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_wildcard_forward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, \'%c\', %p)",
-                            pcString, sStrLen, pcMatch, sMatchLen, cWildCard, psMatchStrLen ) );
+                            pcString, sStrLen, pcMatch, sMatchLen, cWildCard, ( void * ) psMatchStrLen ) );
 
    if( sMatchLen == 0 || sStrLen < sMatchLen )
       return NULL;
@@ -180,9 +174,7 @@ const char * ct_at_wildcard_forward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-/* --------------------------------------------------------- */
 /* search for substring using wildcard in backward direction */
-/* --------------------------------------------------------- */
 const char * ct_at_wildcard_backward( const char * pcString, HB_SIZE sStrLen,
                                       const char * pcMatch, HB_SIZE sMatchLen,
                                       char cWildCard, HB_SIZE * psMatchStrLen )
@@ -191,7 +183,7 @@ const char * ct_at_wildcard_backward( const char * pcString, HB_SIZE sStrLen,
    const char * pcRet;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_wildcard_backward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, \'%c\', %p)",
-                            pcString, sStrLen, pcMatch, sMatchLen, cWildCard, psMatchStrLen ) );
+                            pcString, sStrLen, pcMatch, sMatchLen, cWildCard, ( void * ) psMatchStrLen ) );
 
    if( sMatchLen == 0 || sStrLen < sMatchLen )
       return NULL;
@@ -217,16 +209,14 @@ const char * ct_at_wildcard_backward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-/* ------------------------------- */
 /* search for character from a set */
-/* ------------------------------- */
 const char * ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
                                     const char * pcCharSet, HB_SIZE sCharSetLen, HB_SIZE * psMatchedCharPos )
 {
    const char * pcRet, * pcSet, * pcStop1, * pcStop2;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_charset_forward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
-                            pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos ) );
+                            pcString, sStrLen, pcCharSet, sCharSetLen, ( void * ) psMatchedCharPos ) );
 
    *( psMatchedCharPos ) = sCharSetLen;
 
@@ -242,7 +232,7 @@ const char * ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
          if( *pcSet == *pcRet )
          {
             if( psMatchedCharPos != NULL )
-               *( psMatchedCharPos ) = pcSet - pcCharSet;
+               *psMatchedCharPos = pcSet - pcCharSet;
             return pcRet;
          }
       }
@@ -251,16 +241,14 @@ const char * ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-/* ----------------------------------------------------- */
 /* search for character from a set in backward direction */
-/* ----------------------------------------------------- */
 const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
                                      const char * pcCharSet, HB_SIZE sCharSetLen, HB_SIZE * psMatchedCharPos )
 {
    const char * pcRet, * pcSet, * pcStop;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_charset_backward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
-                            pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos ) );
+                            pcString, sStrLen, pcCharSet, sCharSetLen, ( void * ) psMatchedCharPos ) );
 
    *( psMatchedCharPos ) = sCharSetLen;
 
@@ -275,7 +263,7 @@ const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
          if( *pcSet == *pcRet )
          {
             if( psMatchedCharPos != NULL )
-               *( psMatchedCharPos ) = pcSet - pcCharSet;
+               *psMatchedCharPos = pcSet - pcCharSet;
             return pcRet;
          }
       }
@@ -284,9 +272,7 @@ const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-/*
- *  CSetRef() stuff
- */
+/* CSetRef() stuff */
 
 void ct_setref( int iNewSwitch )
 {
@@ -322,9 +308,7 @@ HB_FUNC( CSETREF )
    }
 }
 
-/*
- * CSetAtMupa() stuff
- */
+/* CSetAtMupa() stuff */
 
 void ct_setatmupa( int iNewSwitch )
 {
@@ -360,9 +344,7 @@ HB_FUNC( CSETATMUPA )
    }
 }
 
-/*
- * SetAtLike() stuff
- */
+/* SetAtLike() stuff */
 
 void ct_setatlike( int iNewMode )
 {

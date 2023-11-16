@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,7 +55,7 @@
 #ifdef __XHARBOUR__
 
    #define hb_retc_buffer( szText )            hb_retcAdopt( ( szText ) )
-   #define hb_retclen_buffer( szText, ulLen )  hb_retclenAdopt( ( szText ), ( ulLen ) )
+   #define hb_retclen_buffer( szText, nLen )   hb_retclenAdopt( ( szText ), ( nLen ) )
    #define hb_retc_const( szText )             hb_retcStatic( ( szText ) )
 
    #define hb_storclen_buffer                  hb_storclenAdopt
@@ -100,7 +100,7 @@
 #else
 
    #define hb_retcAdopt( szText )              hb_retc_buffer( ( szText ) )
-   #define hb_retclenAdopt( szText, ulLen )    hb_retclen_buffer( ( szText ), ( ulLen ) )
+   #define hb_retclenAdopt( szText, nLen )     hb_retclen_buffer( ( szText ), ( nLen ) )
    #define hb_retcStatic( szText )             hb_retc_const( ( szText ) )
 
    #define hb_storclenAdopt                    hb_storclen_buffer

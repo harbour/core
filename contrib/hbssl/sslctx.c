@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,16 +44,20 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-#include "hbapiitm.h"
-
+/* This must come before #include "hbssl.h".
+   OpenSSL 1.1.x and upper don't require Windows headers anymore,
+   but if #included, it still must come before its own headers.
+   The Harbour wrapper code doesn't need the Windows headers, so
+   they will be dropped once 1.0.2 is EOLed in 2019-12-31. */
+#include "hbdefs.h"
 #if defined( HB_OS_WIN )
    #include <windows.h>
    #include <wincrypt.h>
 #endif
 
 #include "hbssl.h"
+
+#include "hbapiitm.h"
 
 static HB_GARBAGE_FUNC( SSL_CTX_release )
 {
@@ -76,9 +80,9 @@ static const HB_GC_FUNCS s_gcSSL_CTX_funcs =
    hb_gcDummyMark
 };
 
-void * hb_SSL_CTX_is( int iParam )
+HB_BOOL hb_SSL_CTX_is( int iParam )
 {
-   return hb_parptrGC( &s_gcSSL_CTX_funcs, iParam );
+   return hb_parptrGC( &s_gcSSL_CTX_funcs, iParam ) != NULL;
 }
 
 SSL_CTX * hb_SSL_CTX_par( int iParam )
@@ -101,6 +105,11 @@ const SSL_METHOD * hb_ssl_method_id_to_ptr( int n )
 
    switch( n )
    {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      case HB_SSL_CTX_NEW_METHOD_TLS:           p = TLS_method();           break;
+      case HB_SSL_CTX_NEW_METHOD_TLS_SERVER:    p = TLS_server_method();    break;
+      case HB_SSL_CTX_NEW_METHOD_TLS_CLIENT:    p = TLS_client_method();    break;
+#else
 #if OPENSSL_VERSION_NUMBER < 0x10000000L
       case HB_SSL_CTX_NEW_METHOD_SSLV2:         p = SSLv2_method();         break;
       case HB_SSL_CTX_NEW_METHOD_SSLV2_SERVER:  p = SSLv2_server_method();  break;
@@ -115,6 +124,7 @@ const SSL_METHOD * hb_ssl_method_id_to_ptr( int n )
       case HB_SSL_CTX_NEW_METHOD_SSLV23:        p = SSLv23_method();        break;
       case HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER: p = SSLv23_server_method(); break;
       case HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT: p = SSLv23_client_method(); break;
+#endif
       default: p = SSLv23_method();
    }
 
@@ -607,7 +617,7 @@ HB_FUNC( SSL_CTX_GET_CLIENT_CA_LIST )
 
       if( ctx )
       {
-#if OPENSSL_VERSION_NUMBER < 0x10000000L /* TOFIX: Compilation error when tried with 1.0.0beta5 */
+#if OPENSSL_VERSION_NUMBER < 0x10000000L || OPENSSL_VERSION_NUMBER >= 0x1000000FL /* NOTE: Compilation error when tried with 1.0.0beta5 */
          STACK_OF( X509_NAME ) * stack = SSL_CTX_get_client_CA_list( ctx );
          int len = sk_X509_NAME_num( stack );
 
@@ -785,51 +795,50 @@ HB_FUNC( SSL_CTX_SET_DEFAULT_VERIFY_PATHS )
 #endif
 }
 
-/*
+#if 0
 
-   #define sk_X509_NAME_new_null() SKM_sk_new_null(X509_NAME)
-   #define sk_X509_NAME_push(st, val) SKM_sk_push(X509_NAME, (st), (val))
-   #define sk_X509_NAME_free(st) SKM_sk_free(X509_NAME, (st))
+#define sk_X509_NAME_new_null()       SKM_sk_new_null( X509_NAME )
+#define sk_X509_NAME_push( st, val )  SKM_sk_push( X509_NAME, ( st ), ( val ) )
+#define sk_X509_NAME_free( st )       SKM_sk_free( X509_NAME, ( st ) )
 
-   X509_STORE *SSL_CTX_get_cert_store(const SSL_CTX *);
-   void SSL_CTX_set_cert_store(SSL_CTX *,X509_STORE *);
-   void SSL_CTX_set_cert_store(SSL_CTX *ctx, X509_STORE *cs);
-   int  SSL_CTX_use_RSAPrivateKey(SSL_CTX *ctx, RSA *rsa);
-   long SSL_CTX_ctrl(SSL_CTX *ctx, int cmd, long larg, char *parg);
+X509_STORE * SSL_CTX_get_cert_store( const SSL_CTX * );
+void SSL_CTX_set_cert_store( SSL_CTX *, X509_STORE * );
+void SSL_CTX_set_cert_store( SSL_CTX * ctx, X509_STORE * cs );
+int  SSL_CTX_use_RSAPrivateKey( SSL_CTX * ctx, RSA * rsa );
+long SSL_CTX_ctrl( SSL_CTX * ctx, int cmd, long larg, char * parg );
 
-   void SSL_CTX_set_app_data(SSL_CTX *ctx, void *arg);
-   int SSL_CTX_set_ex_data(SSL_CTX *s, int idx, char *arg);
-   char * SSL_CTX_get_app_data( ctx );
-   char * SSL_CTX_get_ex_data( ctx, int );
+void SSL_CTX_set_app_data( SSL_CTX * ctx, void * arg );
+int SSL_CTX_set_ex_data( SSL_CTX * s, int idx, char * arg );
+char * SSL_CTX_get_app_data( ctx );
+char * SSL_CTX_get_ex_data( ctx, int );
 
-   int (*SSL_CTX_get_client_cert_cb(SSL_CTX *ctx))(SSL *ssl, X509 **x509, EVP_PKEY **pkey);
-   int SSL_CTX_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
-   void (*SSL_CTX_get_info_callback(SSL_CTX *ctx))(SSL *ssl, int cb, int ret);
-   int (*SSL_CTX_get_verify_callback(const SSL_CTX *ctx))(int ok, X509_STORE_CTX *ctx);
-   SSL_SESSION *(*SSL_CTX_sess_get_get_cb(SSL_CTX *ctx))(SSL *ssl, unsigned char *data, int len, int *copy);
-   int (*SSL_CTX_sess_get_new_cb(SSL_CTX *ctx)(SSL *ssl, SSL_SESSION *sess);
-   void (*SSL_CTX_sess_get_remove_cb(SSL_CTX *ctx)(SSL_CTX *ctx, SSL_SESSION *sess);
-   void SSL_CTX_sess_set_get_cb(SSL_CTX *ctx, SSL_SESSION *(*cb)(SSL *ssl, unsigned char *data, int len, int *copy));
-   void SSL_CTX_sess_set_new_cb(SSL_CTX *ctx, int (*cb)(SSL *ssl, SSL_SESSION *sess));
-   void SSL_CTX_sess_set_remove_cb(SSL_CTX *ctx, void (*cb)(SSL_CTX *ctx, SSL_SESSION *sess));
-   LHASH *SSL_CTX_sessions(SSL_CTX *ctx);
-   void SSL_CTX_set_cert_verify_cb(SSL_CTX *ctx, int (*cb)(), char *arg)
-   void SSL_CTX_set_client_CA_list(SSL_CTX *ctx, STACK *list);
-   void SSL_CTX_set_client_cert_cb(SSL_CTX *ctx, int (*cb)(SSL *ssl, X509 **x509, EVP_PKEY **pkey));
-   void SSL_CTX_set_default_passwd_cb(SSL_CTX *ctx, int (*cb);(void))
-   void SSL_CTX_set_info_callback(SSL_CTX *ctx, void (*cb)(SSL *ssl, int cb, int ret));
-   void SSL_CTX_set_msg_callback(SSL_CTX *ctx, void (*cb)(int write_p, int version, int content_type, const void *buf, size_t len, SSL *ssl, void *arg));
-   void SSL_CTX_set_msg_callback_arg(SSL_CTX *ctx, void *arg);
-   long SSL_CTX_set_tmp_dh(SSL_CTX* ctx, DH *dh);
-   long SSL_CTX_set_tmp_dh_callback(SSL_CTX *ctx, DH *(*cb)(void));
-   long SSL_CTX_set_tmp_rsa(SSL_CTX *ctx, RSA *rsa);
-   SSL_CTX_set_tmp_rsa_callback
-   long SSL_CTX_set_tmp_rsa_callback(SSL_CTX *ctx, RSA *(*cb)(SSL *ssl, int export, int keylength));
-   Sets the callback which will be called when a temporary private key is required. The export flag will be set if the reason for needing a temp key is that an export ciphersuite is in use, in which case, keylength will contain the required keylength in bits. Generate a key of appropriate size (using ???) and return it.
-   SSL_set_tmp_rsa_callback
-   long SSL_set_tmp_rsa_callback(SSL *ssl, RSA *(*cb)(SSL *ssl, int export, int keylength));
-   The same as SSL_CTX_set_tmp_rsa_callback, except it operates on an SSL session instead of a context.
-   void SSL_CTX_set_verify(SSL_CTX *ctx, int mode, int (*cb);(void))
-   void SSL_CTX_set_psk_client_callback(SSL_CTX *ctx, unsigned int (*callback)(SSL *ssl, const char *hint, char *identity, unsigned int max_identity_len, unsigned char *psk, unsigned int max_psk_len));
-   void SSL_CTX_set_psk_server_callback(SSL_CTX *ctx, unsigned int (*callback)(SSL *ssl, const char *identity, unsigned char *psk, int max_psk_len));
- */
+int( *SSL_CTX_get_client_cert_cb( SSL_CTX * ctx ) )( SSL * ssl, X509 * *x509, EVP_PKEY * *pkey );
+int SSL_CTX_get_ex_new_index( long argl, char * argp, int ( *new_func ); ( void ), int ( * dup_func )( void ), void ( * free_func )( void ) )
+void( *SSL_CTX_get_info_callback( SSL_CTX * ctx ) )( SSL * ssl, int cb, int ret );
+int( *SSL_CTX_get_verify_callback( const SSL_CTX * ctx ) )( int ok, X509_STORE_CTX * ctx );
+SSL_SESSION *( *SSL_CTX_sess_get_get_cb( SSL_CTX * ctx ) )( SSL * ssl, unsigned char * data, int len, int * copy );
+int ( *SSL_CTX_sess_get_new_cb( SSL_CTX * ctx )( SSL * ssl, SSL_SESSION * sess );
+void ( *SSL_CTX_sess_get_remove_cb( SSL_CTX * ctx )( SSL_CTX * ctx, SSL_SESSION * sess );
+void SSL_CTX_sess_set_get_cb( SSL_CTX * ctx, SSL_SESSION * ( *cb )( SSL * ssl, unsigned char * data, int len, int * copy ) );
+void SSL_CTX_sess_set_new_cb( SSL_CTX * ctx, int ( * cb )( SSL * ssl, SSL_SESSION * sess ) );
+void SSL_CTX_sess_set_remove_cb( SSL_CTX * ctx, void ( * cb )( SSL_CTX * ctx, SSL_SESSION * sess ) );
+LHASH * SSL_CTX_sessions( SSL_CTX * ctx );
+void SSL_CTX_set_cert_verify_cb( SSL_CTX * ctx, int ( * cb )(), char * arg )
+void SSL_CTX_set_client_CA_list( SSL_CTX * ctx, STACK * list );
+void SSL_CTX_set_client_cert_cb( SSL_CTX * ctx, int ( * cb )( SSL * ssl, X509 ** x509, EVP_PKEY ** pkey ) );
+void SSL_CTX_set_default_passwd_cb( SSL_CTX * ctx, int ( *cb ); ( void ) )
+void SSL_CTX_set_info_callback( SSL_CTX * ctx, void ( * cb )( SSL * ssl, int cb, int ret ) );
+void SSL_CTX_set_msg_callback( SSL_CTX * ctx, void ( * cb )( int write_p, int version, int content_type, const void * buf, size_t len, SSL * ssl, void * arg ) );
+void SSL_CTX_set_msg_callback_arg( SSL_CTX * ctx, void * arg );
+long SSL_CTX_set_tmp_dh( SSL_CTX * ctx, DH * dh );
+long SSL_CTX_set_tmp_dh_callback( SSL_CTX * ctx, DH * ( *cb )( void ) );
+long SSL_CTX_set_tmp_rsa( SSL_CTX * ctx, RSA * rsa );
+/* SSL_CTX_set_tmp_rsa_callback */
+long SSL_CTX_set_tmp_rsa_callback( SSL_CTX * ctx, RSA * ( *cb )( SSL * ssl, int export, int keylength ) );
+long SSL_set_tmp_rsa_callback( SSL * ssl, RSA * ( *cb )( SSL * ssl, int export, int keylength ) );
+The same as SSL_CTX_set_tmp_rsa_callback, except it operates on an SSL session instead of a context.
+void SSL_CTX_set_verify( SSL_CTX * ctx, int mode, int ( *cb ); ( void ) )
+void SSL_CTX_set_psk_client_callback( SSL_CTX * ctx, unsigned int ( * callback )( SSL * ssl, const char * hint, char * identity, unsigned int max_identity_len, unsigned char * psk, unsigned int max_psk_len ) );
+void SSL_CTX_set_psk_server_callback( SSL_CTX * ctx, unsigned int ( * callback )( SSL * ssl, const char * identity, unsigned char * psk, int max_psk_len ) );
+
+#endif

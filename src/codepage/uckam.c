@@ -2,7 +2,7 @@
  * Czech and Slovak Kamenicky (CP895) <-> Unicode conversion table
  *
  * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>
- * adapted from David Kozub - http://linux.fjfi.cvut.cz/%7Ezub/cp895/
+ * adapted from David Kozub - https://linux.fjfi.cvut.cz/%7Ezub/cp895/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.

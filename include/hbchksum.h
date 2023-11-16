@@ -1,5 +1,5 @@
 /*
- * header files for functions to calculate different checksums
+ * Header files for functions to calculate different checksums
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,5 +55,7 @@ extern HB_EXPORT HB_MAXUINT hb_crc( HB_MAXUINT crc, const void * buf, HB_SIZE le
 extern HB_EXPORT HB_MAXUINT hb_crcct( HB_MAXUINT crc, const void * buf, HB_SIZE len, HB_MAXUINT poly );
 extern HB_EXPORT void hb_md5( const void * data, HB_SIZE datalen, char * digest );
 extern HB_EXPORT HB_BOOL hb_md5file( const char * pszFileName, char * digest );
+extern HB_EXPORT void hb_hmac_md5( const void * key, HB_SIZE nKeyLen,
+                                   const void * message, HB_SIZE nMsgLen, char * digest );
 
 HB_EXTERN_END

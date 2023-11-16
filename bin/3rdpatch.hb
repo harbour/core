@@ -1,9 +1,9 @@
-#!/usr/bin/hbmk2
+#!/usr/bin/env hbmk2
 /*
  * 3rdpatch - a tool to help update 3rd party components while keeping local fixes
  *
  * Copyright 2010, 2011 Tamas TEVESZ
- * See COPYING.txt for licensing terms.
+ * See LICENSE.txt for licensing terms.
  *
  * 1. CONFIGURATION
  * ----------------
@@ -38,40 +38,40 @@
  * ORIGIN
  *   Takes one argument, the URL of component's home page. Not currently used,
  *   but greatly helps locating resources regarding the component.
- *   Example: for PCRE, it is `http://www.pcre.org/'.
+ *   Example: for ZLIB, it is `https://zlib.net/'.
  *
  * VER
  *   Takes one argument, the version number of the component currently in the
  *   Harbour tree. Not currently used, but greatly helps checking whether the
  *   component needs an update.
- *   Example: for PCRE, at the time of this writing, it is `8.02'.
+ *   Example: for PCRE2, at the time of this writing, it is `10.00'.
  *
  * URL
  *   Takes one argument, the URL to the archive to the currently installed
  *   version of the component. Used by 3rdpatch.
- *   Example: for PCRE, at the time of this writing, it is
- *   `ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.02.zip'.
- *   3rdpatch can currently unpack only `tar.gz', `tar.bz2', `tgz', `tbz',
- *   `tbz2', `tar.xz', `txz' and `zip' archives -- one of these must be chosen.
+ *   Example: for PCRE2, at the time of this writing, it is
+ *   `https://ftp.pcre.org/pub/pcre/pcre2-10.22.tar.bz2'.
+ *   3rdpatch can currently unpack only `.tar.gz', `.tar.bz2', `.tgz', `.tbz',
+ *   `.tbz2', `.tar.xz', `.txz', `.tar.lz', `.tlz' and `.zip' archives -- one
+ *   of these must be chosen.
  *
  *   3rdpatch will also use the URL parameter to figure out what type of
  *   file it is working with, so a URL containing this sort if information must
- *   be picked. As an example, SourceForge-style distributed download URLs like
- *   `http://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.2/lpng142.zip/download'
- *   are OK, but `http://example.com/download/latest' is not, even if latter
+ *   be picked. As an example, download URLs like
+ *   `https://github.com/glennrp/libpng/archive/v1.6.16.tar.gz'
+ *   are OK, but `https://example.org/download/latest' is not, even if latter
  *   would ultimately result (perhaps by the server using Content-Disposition
  *   or similar headers) in a file named `example-pkg-54.tar.gz'.
  *
  * DIFF
  *   Takes one argument, the file name of the diff file containing local changes
  *   needed by Harbour. In `rediff' mode, this parameter is optional; if not
- *   specified, defaults to `$(component).dif'.
- *   Example: for PCRE, it is `pcre.dif'.
+ *   specified, defaults to `$(component).diff'.
+ *   Example: for PCRE2, it is `pcre2.diff'.
  *
  * MAP
  *   Takes one or two arguments, specifying the correspondence of the file names
- *   between the original sources and the Harbour sources (which are reduced to
- *   8+3 format, in order to stay compatible with DOS).
+ *   between the original sources and the Harbour sources.
  *   If a particular file name is the same both in the upstream and the Harbour
  *   trees, it is sufficient to specify it only once, but every file that needs
  *   to be brought over to the Harbour tree must be specified.
@@ -82,7 +82,7 @@
  *   # MAP LICENCE
  *
  *      The file named `LICENCE' needs to be brought over from the upstream tree
- *      to the Harbour tree unchanged. In case of PCRE, `MAP LICENCE' being the
+ *      to the Harbour tree unchanged. In case of PCRE2, `MAP LICENCE' being the
  *      first `MAP' line also means that 3rdpatch will use the directory
  *      containing this file as a base for all other files occurring later.
  *      Accordingly, the first `MAP' entry must be flat even on the source side.
@@ -109,7 +109,7 @@
  *   forward slash (`/'). DOS-style backslash separators are not recognized and
  *   will produce undefined results.
  *
- *   The `-validate' command line argument causes 3rdpatch to validate the
+ *   The `-validate' command-line argument causes 3rdpatch to validate the
  *   metadata without executing any actions that might otherwise be necessary.
  *   It is recommended to use this after a component's metadata changes.
  *
@@ -123,12 +123,12 @@
  * tree, for example), 3rdpatch's utility will decrease steeply. In such cases
  * considering the full manual update of the component is advised.
  *
- * If 3rdpatch is called with the `-rediff' command line argument, it switches
+ * If 3rdpatch is called with the `-rediff' command-line argument, it switches
  * to a `local diff refresh' mode. This mode is used to refresh the local diff
  * after Harbour-specific modifications have been made to the component's
  * source. In order to help with the initial diff creation, 3rdpatch will proceed
  * even if no `DIFF' is specified amongst the metadata, and defaults to
- * creating a diff named `$(component).dif').
+ * creating a diff named `$(component).diff').
  *
  * If no differences between the original and the Harbour trees were found,
  * a possibly pre-existing diff file is removed. Following this change up
@@ -144,8 +144,8 @@
  *
  * Once it has been determined that a particular component needs an update, the URL
  * argument has to be modified to point to the new source tree archive. VER should
- * also be updated. While residing in the component's directory, 3rdpatch needs
- * to be run. The rest is mostly automatic - 3rdpatch retrieves, unpacks and
+ * also be updated if there. While residing in the component's directory, 3rdpatch
+ * needs to be run. The rest is mostly automatic - 3rdpatch retrieves, unpacks and
  * otherwise prepares the updated source tree, applies any local modifications,
  * and copies any changes back to the Harbour tree (the current working directory).
  * After some inspection and a test, it is ready to be committed.
@@ -207,12 +207,12 @@
  *
  * It seems that the Unix versions of GNU patch can not handle diff files with
  * DOS-style path separators, whereas the Windows (MinGW/Cygwin) versions have no
- * problem working with Unix-style path separators. They however can't be coerced
+ * problem working with Unix-style path separators. They however cannot be coerced
  * into generating diffs with Unix-style path separators, which results in diffs
  * generated on Windows hosts can not be applied on non-Windows hosts.
  *
  * To remedy this situation, 3rdpatch will change diffs to use Unix-style path
- * separators. Since this is a grave problem (the diff is unapplyable on
+ * separators. Since this is a grave problem (the diff is unappliable on
  * non-Windows hosts), this change takes place unconditionally. The user is
  * notified of the change by an informational message stating the fact. These
  * changed diffs should be committed back to the repository.
@@ -229,6 +229,8 @@
 #pragma -ko+
 
 #include "directry.ch"
+#include "fileio.ch"
+#include "hbver.ch"
 
 #if defined( _TRACE )
    #define TRACE( str )   OutStd( "T: " + str + hb_eol() )
@@ -246,19 +248,20 @@
 #define FN_HB       2        /* hb file name in maps */
 
 STATIC s_aChangeMap := {}    /* from-to file name map */
-STATIC s_cTempDir := NIL
+STATIC s_cTempDir
 STATIC s_nErrors := 0        /* error indicator */
-STATIC s_cSourceRoot := NIL  /* top directory of the newly-unpacked source tree */
+STATIC s_cSourceRoot         /* top directory of the newly-unpacked source tree */
 
 STATIC s_aTools := { ;
-   "patch"  => NIL, ;
-   "diff"   => NIL, ;
-   "curl"   => NIL, ;
-   "tar"    => NIL, ;
-   "gzip"   => NIL, ;
-   "bzip2"  => NIL, ;
-   "xz"     => NIL, ;
-   "unzip"  => NIL }
+   "patch"  =>, ;
+   "diff"   =>, ;
+   "curl"   =>, ;
+   "tar"    =>, ;
+   "gzip"   =>, ;
+   "bzip2"  =>, ;
+   "xz"     =>, ;
+   "lzip"   =>, ;
+   "unzip"  => }
 
 PROCEDURE Main( ... )
 
@@ -273,9 +276,8 @@ PROCEDURE Main( ... )
    LOCAL cThisComponent       /* component being processed */
    LOCAL aOneMap              /* one pair from s_aChangeMap */
    LOCAL cCommand             /* patch/diff commands */
-   LOCAL nRunResult           /* patch/diff exit vals */
+   LOCAL nRunResult           /* patch/diff exit statuses */
    LOCAL cDiffText            /* diff will return the new diff in this */
-   LOCAL nDiffFD              /* for writing newly created diff file */
    LOCAL cArchiveURL          /* URL for the component */
    LOCAL cTopIndicator        /* file signifying the top of the component's source tree */
    LOCAL cStdOut              /* stdout and stderr for various externally-run apps */
@@ -284,6 +286,9 @@ PROCEDURE Main( ... )
    LOCAL lValidateOnly := .F. /* syntactic metadata validation only */
    LOCAL cArg
    LOCAL cRoot := NIL
+   LOCAL hFile
+   LOCAL nStatus
+   LOCAL nAttr, tmp
 
    LOCAL hRegexTake1Line := hb_regexComp( "^#[[:blank:]]*(ORIGIN|VER|URL|DIFF)[[:blank:]]+(.+?)[[:blank:]]*$" )
    LOCAL hRegexTake2Line := hb_regexComp( "^#[[:blank:]]*(MAP)[[:blank:]]+(.+?)[[:blank:]]+(.+?)[[:blank:]]*$" )
@@ -306,11 +311,11 @@ PROCEDURE Main( ... )
       ENDSWITCH
    NEXT
 
-   IF ! hb_FileExists( cFileName := "Makefile" )
-      IF Empty( aDir := Directory( "*.hbp" ) )
+   IF ! hb_vfExists( cFileName := "Makefile" )
+      IF Empty( aDir := hb_vfDirectory( "*.hbp" ) )
          OutStd( "No `Makefile' or '*.hbp' file in the current directory." + hb_eol() )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ELSE
          ASort( aDir,,, {| tmp, tmp1 | tmp[ F_NAME ] < tmp1[ F_NAME ] } )
          cFileName := aDir[ 1 ][ F_NAME ]
@@ -324,7 +329,7 @@ PROCEDURE Main( ... )
 
    nMemoLine := 0
 
-   FOR EACH cMemoLine IN hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH cMemoLine IN hb_ATokens( cFile, .T. )
 
       cMemoLine := AllTrim( cMemoLine )
       nMemoLine++
@@ -343,54 +348,45 @@ PROCEDURE Main( ... )
          IF aRegexMatch[ TWOARG_KW ] == "MAP"
             /* Do not allow implicit destination with non-flat source spec */
             IF Empty( aRegexMatch[ TWOARG_ARG1 ] ) .AND. "/" $ aRegexMatch[ TWOARG_ARG2 ]
-               OutStd( hb_StrFormat( "E: Non-flat source spec with implicit " + ;
-                  "destination, offending line %d:%s:", nMemoLine, hb_eol() ) )
+               OutStd( hb_StrFormat( "E: Non-flat source spec with implicit destination, " + ;
+                  "offending line %1$d:", nMemoLine ) + hb_eol() )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
-               QUIT
+               RETURN
             ENDIF
             /* Do not allow tree spec in the destination ever */
             IF "/" $ aRegexMatch[ TWOARG_ARG2 ]
-               OutStd( hb_StrFormat( "E: Non-flat destination, offending line %d:%s", ;
-                  nMemoLine, hb_eol() ) )
+               OutStd( hb_StrFormat( "E: Non-flat destination, " + ;
+                  "offending line %1$d:", nMemoLine ) + hb_eol() )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
-               QUIT
+               RETURN
             ENDIF
             /* If the source argument indicates the source tree is not flat, convert
              * path separator to native. The HB tree is always flattened. */
             IF "/" $ aRegexMatch[ TWOARG_ARG1 ]
                aRegexMatch[ TWOARG_ARG1 ] := StrTran( aRegexMatch[ TWOARG_ARG1 ], "/", hb_ps() )
             ENDIF
-            /* The destination argument must fit in the 8+3 scheme */
-            IF Len( hb_FNameName( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR. ;
-               Len( hb_FNameExt( aRegexMatch[ TWOARG_ARG2 ] ) ) > 4
-               OutStd( hb_StrFormat( "E: Destination does not fit 8+3, offending " + ;
-                  "line %d:%s", nMemoLine, hb_eol() ) )
-               OutStd( aRegexMatch[ 1 ] + hb_eol() )
-               ErrorLevel( 2 )
-               QUIT
-            ENDIF
-            /* In case the priginal and the HB file names are identical, the
+            /* In case the original and the HB file names are identical, the
              * second argument to `MAP' is optional. Due to the way the regex is
              * constructed, in this case the last backref will contain the only
              * file name, so shuffle arguments around accordingly
              */
-            AAdd( s_aChangeMap, {                                                         ;
-               iif( Empty( aRegexMatch[ TWOARG_ARG1 ] ),                                  ;
-               aRegexMatch[ TWOARG_ARG2 ],                                                ;
-               aRegexMatch[ TWOARG_ARG1 ] ), aRegexMatch[ TWOARG_ARG2 ]                   ;
+            AAdd( s_aChangeMap, { ;
+               iif( Empty( aRegexMatch[ TWOARG_ARG1 ] ), ;
+               aRegexMatch[ TWOARG_ARG2 ], ;
+               aRegexMatch[ TWOARG_ARG1 ] ), aRegexMatch[ TWOARG_ARG2 ] ;
                } )
             /* If this is the first MAP entry, treat the original part as the
              * source tree root indicator */
             IF Len( s_aChangeMap ) == 1
                cTopIndicator := s_aChangeMap[ 1 ][ FN_ORIG ]
                IF "/" $ cTopIndicator
-                  OutStd( hb_StrFormat( "E: First `MAP' entry is not flat, offending " + ;
-                     "line %d:%s", nMemoLine, hb_eol() ) )
+                  OutStd( hb_StrFormat( "E: First `MAP' entry is not flat, " + ;
+                     "offending line %1$d:", nMemoLine ) + hb_eol() )
                   OutStd( aRegexMatch[ 1 ] + hb_eol() )
                   ErrorLevel( 2 )
-                  QUIT
+                  RETURN
                ENDIF
             ENDIF
          ENDIF
@@ -401,54 +397,59 @@ PROCEDURE Main( ... )
 
    IF lValidateOnly
       OutStd( "Metadata syntax is OK." + hb_eol() )
-      QUIT
+      RETURN
    ENDIF
 
    IF Empty( s_aChangeMap ) .AND. cDiffFile == NIL
       OutStd( "No file name changes and no local diff, nothing to do." + hb_eol() )
-      QUIT
+      RETURN
    ENDIF
 
-   IF ! lRediff .AND. cDiffFile != NIL .AND. ! hb_FileExists( cDiffFile )
-      OutStd( "E: `" + cDiffFile + "' does not exist" + hb_eol() )
+   IF ! lRediff .AND. cDiffFile != NIL .AND. ! hb_vfExists( cDiffFile )
+      OutStd( hb_StrFormat( "E: `%1$s' does not exist", cDiffFile ) + hb_eol() )
       ErrorLevel( 2 )
-      QUIT
+      RETURN
    ENDIF
 
-   cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
-
+   cCWD := hb_cwd()
 #if defined( _CURDIR )
-   cRoot := cCWD + hb_ps()
+   cRoot := cCWD
 #endif
 
-   FClose( hb_FTempCreateEx( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) )
-   FErase( s_cTempDir )
-   hb_DirCreate( s_cTempDir )
+   IF ( hFile := hb_vfTempFile( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) ) != NIL
+      hb_vfClose( hFile )
+      hb_vfErase( s_cTempDir )
+      hb_vfDirMake( s_cTempDir )
+   ELSE
+      OutStd( "E: Failed to create temporary directory." + hb_eol() )
+      ErrorLevel( 2 )
+      RETURN
+   ENDIF
 
-   cThisComponent := hb_FNameName( cCWD )
+   cThisComponent := hb_FNameName( hb_DirSepDel( cCWD ) )
 
-   hb_DirCreate( CombinePath( s_cTempDir, cThisComponent ) )
-   hb_DirCreate( CombinePath( s_cTempDir, cThisComponent + ".orig" ) )
-   hb_DirCreate( CombinePath( s_cTempDir, "root" ) )
+   hb_vfDirMake( CombinePath( s_cTempDir, cThisComponent ) )
+   hb_vfDirMake( CombinePath( s_cTempDir, cThisComponent + ".orig" ) )
+   hb_vfDirMake( CombinePath( s_cTempDir, "root" ) )
 
    IF lRediff .AND. cDiffFile == NIL
       OutStd( "Requested rediff mode with no existing local diff, attempting to create one." + hb_eol() )
-      cDiffFile := cThisComponent + ".dif"
+      cDiffFile := cThisComponent + ".diff"
    ENDIF
 
    IF ! FetchAndExtract( cArchiveURL )
       OutStd( "E: Fetching or extracting the source archive failed." + hb_eol() )
-      OutStd( "   Inspect `" + s_cTempDir + "' for further clues." + hb_eol() )
+      OutStd( hb_StrFormat( "   Inspect `%1$s' for further clues.", s_cTempDir ) + hb_eol() )
       ErrorLevel( 2 )
-      QUIT
+      RETURN
    ENDIF
 
    s_cSourceRoot := WalkAndFind( CombinePath( s_cTempDir, "root" ), cTopIndicator )
    IF s_cSourceRoot == NIL
-      OutStd( "E: Unable to find the new tree's root" + hb_eol() )
-      OutStd( "   Inspect `" + s_cTempDir + "'" + hb_eol() )
+      OutStd( "E: Could not find the new tree's root" + hb_eol() )
+      OutStd( hb_StrFormat( "   Inspect `%1$s'", s_cTempDir ) + hb_eol() )
       ErrorLevel( 2 )
-      QUIT
+      RETURN
    ENDIF
 
    /*
@@ -460,77 +461,84 @@ PROCEDURE Main( ... )
    s_nErrors := 0
 
    FOR EACH aOneMap IN s_aChangeMap
-      IF ! hb_FileExists( CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ) )
-         OutStd( "W: `" + aOneMap[ FN_ORIG ] + "' does not exist in the source tree" + hb_eol() )
+      IF ! hb_vfExists( CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ) )
+         OutStd( hb_StrFormat( "W: `%1$s' does not exist in the source tree", aOneMap[ FN_ORIG ] ) + hb_eol() )
          OutStd( "   I will do what i can, but you'd better check the results manually." + hb_eol() )
          s_nErrors++
       ELSE
          /* Create the `pristine tree' */
-         hb_FCopy( ;
+         ts_hb_vfCopyFile( ;
             CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ), ;
             CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ) )
 
-         /* Munch the file, applying the appropriate xforms */
+         /* Munch the file, applying the appropriate transforms */
          hb_FileTran( CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ) )
 
          /* If operating in `rediff' mode, copy the current Harbour component tree;
           * otherwise, duplicate the pristine tree */
 
          IF lRediff
-            hb_FCopy( ;
+            ts_hb_vfCopyFile( ;
                aOneMap[ FN_HB ], ;
                CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
 
          ELSE
             /* Copy it to `our tree' */
-            hb_FCopy( ;
+            ts_hb_vfCopyFile( ;
                CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ), ;
-               CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
-         ENDIF
+               tmp := CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
 
+            /* Remove exec attribute */
+            hb_vfAttrGet( tmp, @nAttr )
+            hb_vfAttrSet( tmp, hb_bitAnd( nAttr, hb_bitNot( hb_bitOr( HB_FA_XUSR, HB_FA_XGRP, HB_FA_XOTH ) ) ) )
+         ENDIF
       ENDIF
    NEXT
 
    IF cDiffFile != NIL
 
       IF ! lRediff /* If we have a local diff, and are not to re-create it, apply */
-         cCommand := hb_StrFormat( "%s --no-backup-if-mismatch -d %s -p 1 -i %s",         ;
-            s_aTools[ "patch" ],                                                          ;
-            CombinePath( s_cTempDir, cThisComponent ),                                    ;
+         cCommand := hb_StrFormat( "%1$s -l --no-backup-if-mismatch -d %2$s -p 1 -i %3$s", ;
+            s_aTools[ "patch" ], ;
+            CombinePath( s_cTempDir, cThisComponent ), ;
             CombinePath( cCWD, cDiffFile ) )
          TRACE( "Running " + cCommand )
          nRunResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
          SaveLog( "patch", cStdOut, cStdErr )
          IF nRunResult != 0
-            OutStd( "W: Unexpected events happened during patching, inspect " + s_cTempDir + hb_eol() )
+            OutStd( hb_StrFormat( "W: Unexpected events happened during patching, inspect %1$s", s_cTempDir ) + hb_eol() )
             s_nErrors++
          ENDIF
       ENDIF
 
       /* Re-create the diff */
-      cCommand := hb_StrFormat( "%s -urN %s %s", ;
+      cCommand := hb_StrFormat( "%1$s --strip-trailing-cr -urN %2$s %3$s", ;
          s_aTools[ "diff" ], cThisComponent + ".orig", cThisComponent )
 
       DirChange( s_cTempDir )
       TRACE( "Running " + cCommand )
-      hb_processRun( cCommand, , @cDiffText, @cStdErr, .F. )
-      DirChange( cCWD )
+      nStatus := utc_hb_processRun( cCommand, , @cDiffText, @cStdErr, .F. )
+      hb_cwd( cCWD )
+
+      IF nStatus != 0 .AND. nStatus != 1
+         OutStd( hb_StrFormat( "E: `diff' command failed with exit status %1$d.", nStatus ) + hb_eol() )
+         OutStd( hb_StrFormat( "   Inspect `%1$s' for further clues.", s_cTempDir ) + hb_eol() )
+         ErrorLevel( 2 )
+         RETURN
+      ENDIF
 
       SaveLog( "diff", NIL, cStdErr )
 
-      IF Len( cDiffText ) > 0
-         nDiffFD := FCreate( cDiffFile )
-         FWrite( nDiffFD, cDiffText )
-         FClose( nDiffFD )
-         OutStd( "Local changes saved to `" + cDiffFile + "'; you may need to adjust `DIFF'." + hb_eol() )
-      ELSE
+      IF cDiffText == ""
          OutStd( "No local changes; you may need to adjust `DIFF'." + hb_eol() )
-         IF hb_FileExists( cDiffFile )
-            FErase( cDiffFile )
-            OutStd( "Removed existing `" + cDiffFile + "'." + hb_eol() )
+         IF hb_vfExists( cDiffFile )
+            hb_vfErase( cDiffFile )
+            OutStd( hb_StrFormat( "Removed existing `%1$s'.", cDiffFile ) + hb_eol() )
          ENDIF
+      ELSE
+         hb_MemoWrit( cDiffFile, cDiffText )
+         OutStd( hb_StrFormat( "Local changes saved to `%1$s'; you may need to adjust `DIFF'.", cDiffFile ) + hb_eol() )
       ENDIF
-
    ENDIF
 
    /* Only copy files back to the live tree if no errors were encountered */
@@ -538,28 +546,48 @@ PROCEDURE Main( ... )
       IF ! lRediff
          /* Only copy the complete new tree back if not in Rediff mode */
          FOR EACH aOneMap IN s_aChangeMap
-            hb_FCopy( CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ), aOneMap[ FN_HB ] )
+            ts_hb_vfCopyFile( CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ), aOneMap[ FN_HB ] )
          NEXT
       ENDIF
 
       IF cDiffFile != NIL
          /* Copy the diff back to the live tree */
-         hb_FCopy( CombinePath( s_cTempDir, cDiffFile ), cDiffFile )
+         ts_hb_vfCopyFile( CombinePath( s_cTempDir, cDiffFile ), cDiffFile )
          /* Convert path separators */
          DOSToUnixPathSep( cDiffFile )
       ENDIF
 
    ELSE
       OutStd( "Errors were encountered, no changes are made to your Harbour tree." + hb_eol() )
-      OutStd( "Inspect " + s_cTempDir + " for further clues." + hb_eol() )
+      OutStd( hb_StrFormat( "Inspect `%1$s' for further clues.", s_cTempDir ) + hb_eol() )
    ENDIF
 
    IF ! lRediff
-      OutStd( "Don't forget to update `" + cFileName + "' with the new version and URL information." + hb_eol() )
+      OutStd( hb_StrFormat( "Don't forget to update `%1$s' with the new version and URL information.", cFileName ) + hb_eol() )
    ENDIF
-   OutStd( "The temporary directory `" + s_cTempDir + "' has not been removed." + hb_eol() )
+   OutStd( hb_StrFormat( "The temporary directory `%1$s' has not been removed.", s_cTempDir ) + hb_eol() )
 
    RETURN
+
+STATIC FUNCTION ts_hb_vfCopyFile( cSrc, cDst )
+
+   LOCAL tDate
+
+   RETURN ;
+      hb_vfCopyFile( cSrc, cDst ) != F_ERROR .AND. ;
+      hb_vfTimeGet( cSrc, @tDate ) .AND. ;
+      hb_vfTimeSet( cDst, tDate )
+
+STATIC FUNCTION utc_hb_processRun( ... )
+
+   LOCAL cTZ := GetEnv( "TZ" )
+   LOCAL retval
+
+   hb_SetEnv( "TZ", "UTC" )
+   retval := hb_processRun( ... )
+   hb_SetEnv( "TZ", cTZ )
+
+   RETURN retval
 
 /* Utility functions */
 
@@ -574,12 +602,12 @@ STATIC PROCEDURE SetupTools()
    LOCAL cTool
 
    /* Look for g$tool first, only attempt raw name if it isn't found
-    * Helps non-GNU userland systems with GNU tools installed.
+    * Helps non-GNU user space systems with GNU tools installed.
     * Only several of the tools are known to have GNU variants. */
 
    FOR EACH cPathComp IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
       FOR EACH cTool IN hb_HKeys( s_aTools )
-         IF cTool $ "patch|diff|tar" .AND. hb_FileExists( CombinePath( cPathComp, "g" + cTool ) + cExeExt )
+         IF cTool $ "patch|diff|tar" .AND. hb_vfExists( CombinePath( cPathComp, "g" + cTool ) + cExeExt )
             s_aTools[ cTool ] := CombinePath( cPathComp, "g" + cTool )
          ENDIF
       NEXT
@@ -587,7 +615,7 @@ STATIC PROCEDURE SetupTools()
 
    FOR EACH cPathComp IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
       FOR EACH cTool IN hb_HKeys( s_aTools )
-         IF s_aTools[ cTool ] == NIL .AND. hb_FileExists( CombinePath( cPathComp, cTool ) + cExeExt )
+         IF s_aTools[ cTool ] == NIL .AND. hb_vfExists( CombinePath( cPathComp, cTool ) + cExeExt )
             s_aTools[ cTool ] := CombinePath( cPathComp, cTool )
          ENDIF
       NEXT
@@ -598,40 +626,35 @@ STATIC PROCEDURE SetupTools()
 STATIC FUNCTION CombinePath( ... )
 
    LOCAL aArguments := hb_AParams()
-   LOCAL cRetVal := ""
+   LOCAL cRetVal
    LOCAL nI
 
    IF Len( aArguments ) == 2
-      cRetVal := aArguments[ 1 ] + hb_ps() + aArguments[ 2 ]
+      cRetVal := hb_DirSepAdd( aArguments[ 1 ] ) + aArguments[ 2 ]
    ELSE
-      cRetVal := aArguments[ 1 ] + hb_ps()
+      cRetVal := hb_DirSepAdd( aArguments[ 1 ] )
       FOR nI := 2 TO Len( aArguments ) - 1
-         cRetVal += aArguments[ nI ] + hb_ps()
+         cRetVal += hb_DirSepAdd( aArguments[ nI ] )
       NEXT
-      cRetVal += aArguments[ Len( aArguments ) ]
+      cRetVal += ATail( aArguments )
    ENDIF
 
    RETURN cRetVal
 
 STATIC FUNCTION WalkAndFind( cTop, cLookFor )
 
-   LOCAL aDir
    LOCAL aDirEntry
    LOCAL cRetVal := NIL
 
-   cTop += iif( Right( cTop, 1 ) $ "/\", "", hb_ps() )
-   aDir := Directory( cTop + hb_osFileMask(), "D" )
+   cTop := hb_DirSepAdd( cTop )
 
-   ASort( aDir,,, {| aLeft | !( "D" $ aLeft[ F_ATTR ] ) } )   /* Files first */
-
-   FOR EACH aDirEntry IN aDir
-      IF !( "D" $ aDirEntry[ F_ATTR ] )
+   FOR EACH aDirEntry IN ASort( hb_vfDirectory( cTop + hb_osFileMask(), "D" ),,, {| aLeft | ! "D" $ aLeft[ F_ATTR ] } )  /* Files first */
+      IF ! "D" $ aDirEntry[ F_ATTR ]
          IF aDirEntry[ F_NAME ] == cLookFor
             cRetVal := cTop
             EXIT
          ENDIF
-      ELSEIF !( aDirEntry[ F_NAME ] == "." ) .AND. ;
-             !( aDirEntry[ F_NAME ] == ".." )
+      ELSEIF !( aDirEntry[ F_NAME ] == "." .OR. aDirEntry[ F_NAME ] == ".." )
          cRetVal := WalkAndFind( cTop + aDirEntry[ F_NAME ], cLookFor )
          IF ! Empty( cRetVal )
             EXIT
@@ -661,35 +684,42 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
    /* Any given package is surely available in at least one of these formats,
     * pick one of these, refrain from the more exotic ones. */
 
-   LOCAL aActionMap := {                                                                  ;
-      ".tar.gz|.tgz" => {                                                                 ;
-         "Extractor"          => "gzip",                                                  ;
-         "ExtractorArgs"      => "-d",                                                    ;
-         "ExtractedFile"      => ".tar",                                                  ;
-         "Archiver"           => "tar",                                                   ;
-         "ArchiverArgs"       => "--force-local -xvf"                                     ;
-      },                                                                                  ;
-      ".tar.bz2|.tbz|.tbz2" => {                                                          ;
-         "Extractor"          => "bzip2",                                                 ;
-         "ExtractorArgs"      => "-d",                                                    ;
-         "ExtractedFile"      => ".tar",                                                  ;
-         "Archiver"           => "tar",                                                   ;
-         "ArchiverArgs"       => "--force-local -xvf"                                     ;
-      },                                                                                  ;
-      ".tar.xz|.txz" => {                                                                 ;
-         "Extractor"          => "xz",                                                    ;
-         "ExtractorArgs"      => "-d",                                                    ;
-         "ExtractedFile"      => ".tar",                                                  ;
-         "Archiver"           => "tar",                                                   ;
-         "ArchiverArgs"       => "--force-local -xvf"                                     ;
-      },                                                                                  ;
-      ".zip" => {                                                                         ;
-         "Extractor"          => NIL,                                                     ;
-         "ExtractorArgs"      => NIL,                                                     ;
-         "ExtractedFile"      => NIL,                                                     ;
-         "Archiver"           => "unzip",                                                 ;
-         "ArchiverArgs"       => ""                                                       ;
-      }                                                                                   ;
+   LOCAL aActionMap := { ;
+      ".tar.gz|.tgz" => { ;
+         "Extractor"          => "gzip", ;
+         "ExtractorArgs"      => "-d", ;
+         "ExtractedFile"      => ".tar", ;
+         "Archiver"           => "tar", ;
+         "ArchiverArgs"       => "--force-local -xvf" ;
+      }, ;
+      ".tar.bz2|.tbz|.tbz2" => { ;
+         "Extractor"          => "bzip2", ;
+         "ExtractorArgs"      => "-d", ;
+         "ExtractedFile"      => ".tar", ;
+         "Archiver"           => "tar", ;
+         "ArchiverArgs"       => "--force-local -xvf" ;
+      }, ;
+      ".tar.xz|.txz" => { ;
+         "Extractor"          => "xz", ;
+         "ExtractorArgs"      => "-d", ;
+         "ExtractedFile"      => ".tar", ;
+         "Archiver"           => "tar", ;
+         "ArchiverArgs"       => "--force-local -xvf" ;
+      }, ;
+      ".tar.lz|.tlz" => { ;
+         "Extractor"          => "lzip", ;
+         "ExtractorArgs"      => "-d", ;
+         "ExtractedFile"      => ".tar", ;
+         "Archiver"           => "tar", ;
+         "ArchiverArgs"       => "--force-local -xvf" ;
+      }, ;
+      ".zip" => { ;
+         "Extractor"          => NIL, ;
+         "ExtractorArgs"      => NIL, ;
+         "ExtractedFile"      => NIL, ;
+         "Archiver"           => "unzip", ;
+         "ArchiverArgs"       => "" ;
+      } ;
    }
 
    IF Empty( cArchiveURL )
@@ -701,25 +731,28 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
    FOR EACH cPattern IN hb_HKeys( aActionMap )
       FOR EACH cFrag IN hb_ATokens( cPattern, "|" )
-         IF At( cFrag, cFileName ) != 0
+         IF cFrag $ cFileName
             cMatchedPattern := cFrag
             cExtractor := aActionMap[ cPattern ][ "Extractor" ]
             cExtractorArgs := aActionMap[ cPattern ][ "ExtractorArgs" ]
-            cExtractedFileName := iif( aActionMap[ cPattern ][ "ExtractedFile" ] == NIL,  ;
-                                    NIL,                                                  ;
-                                    Left( cFileName, Len( cFileName ) -                   ;
-                                       Len( cMatchedPattern ) ) +                         ;
+            cExtractedFileName := iif( aActionMap[ cPattern ][ "ExtractedFile" ] == NIL, ;
+                                    NIL, ;
+                                    hb_StrShrink( cFileName, Len( cMatchedPattern ) ) + ;
                                        aActionMap[ cPattern ][ "ExtractedFile" ] )
             cArchiver := aActionMap[ cPattern ][ "Archiver" ]
             cArchiverArgs := aActionMap[ cPattern ][ "ArchiverArgs" ]
+            IF hb_Version( HB_VERSION_PLATFORM ) $ "|DARWIN|BSD|" .AND. cArchiver == "tar"
+               /* Not supported by BSD tar */
+               cArchiverArgs := StrTran( cArchiverArgs, "--force-local" )
+            ENDIF
             EXIT
          ENDIF
       NEXT
    NEXT
 
    IF cArchiver == NIL
-      OutStd( "E: Can not find archiver for `" + ;
-         hb_FNameNameExt( cArchiveURL ) + "'" + hb_eol() )
+      OutStd( hb_StrFormat( "E: Can not find archiver for `%1$s'", ;
+         hb_FNameNameExt( cArchiveURL ) ) + hb_eol() )
       RETURN .F.
    ENDIF
 
@@ -728,29 +761,30 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       OutStd( "E: Required `curl' was not found" + hb_eol() )
       RETURN .F.
    ENDIF
-   cCommand := hb_StrFormat( "%s -L -# -o %s %s", s_aTools[ "curl" ], ;
+   cCommand := hb_StrFormat( "%1$s -L %2$s -# -o %3$s %4$s", s_aTools[ "curl" ], ;
+      iif( hb_LeftEqI( cArchiveURL, "https:" ), "--proto-redir =https", "--proto-redir =https,http" ), ;
       CombinePath( s_cTempDir, cFileName ), FNameEscape( cArchiveURL ) )
    TRACE( "Running " + cCommand )
    nResult := hb_processRun( cCommand, , , @cStdErr, .F. )
    SaveLog( "fetch", cStdOut, cStdErr )
    IF nResult != 0
-      OutStd( "E: Error fetching " + cArchiveURL + hb_eol() )
+      OutStd( hb_StrFormat( "E: Error fetching %1$s", cArchiveURL ) + hb_eol() )
       RETURN .F.
    ENDIF
 
    /* Extract */
    IF cExtractor != NIL /* May not need extraction */
       IF s_aTools[ cExtractor ] == NIL
-         OutStd( "E: Required `" + cExtractor + "' was not found" + hb_eol() )
+         OutStd( hb_StrFormat( "E: Required `%1$s' was not found", cExtractor ) + hb_eol() )
          RETURN .F.
       ENDIF
-      cCommand := hb_StrFormat( "%s " + cExtractorArgs + " %s", ;
-         cExtractor, CombinePath( s_cTempDir, cFileName ) )
+      cCommand := hb_StrFormat( "%1$s %2$s %3$s", ;
+         cExtractor, cExtractorArgs, CombinePath( s_cTempDir, cFileName ) )
       TRACE( "Running " + cCommand )
       nResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
       SaveLog( "extract", cStdOut, cStdErr )
       IF nResult != 0
-         OutStd( "E: Error extracting " + cFileName + hb_eol() )
+         OutStd( hb_StrFormat( "E: Error extracting %1$s", cFileName ) + hb_eol() )
          RETURN .F.
       ENDIF
    ELSE
@@ -759,19 +793,19 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
    /* Unarchive */
    IF s_aTools[ cArchiver ] == NIL
-      OutStd( "E: Required `" + cArchiver + "' was not found" + hb_eol() )
+      OutStd( hb_StrFormat( "E: Required `%1$s' was not found", cArchiver ) + hb_eol() )
       RETURN .F.
    ENDIF
-   cCommand := hb_StrFormat( "%s " + cArchiverArgs + " %s", ;
-      cArchiver, CombinePath( s_cTempDir, cExtractedFileName ) )
+   cCommand := hb_StrFormat( "%1$s %2$s %3$s", ;
+      cArchiver, cArchiverArgs, CombinePath( s_cTempDir, cExtractedFileName ) )
    TRACE( "Running " + cCommand )
-   cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
+   cCWD := hb_cwd()
    DirChange( CombinePath( s_cTempDir, "root" ) )
    nResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
-   DirChange( cCWD )
+   hb_cwd( cCWD )
    SaveLog( "archive", cStdOut, cStdErr )
    IF nResult != 0
-      OutStd( "E: Error unarchiving " + cFileName + hb_eol() )
+      OutStd( hb_StrFormat( "E: Error unarchiving %1$s", cFileName ) + hb_eol() )
       RETURN .F.
    ENDIF
 
@@ -779,25 +813,25 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
 STATIC PROCEDURE SaveLog( cFNTemplate, cStdOut, cStdErr )
 
-   LOCAL nLogFD
+   LOCAL hFile
 
-   nLogFD := FCreate( CombinePath( s_cTempDir, cFNTemplate + ".log" ) )
-
-   IF cStdOut != NIL
-      FWrite( nLogFd, "stdout:" + hb_eol() )
-      FWrite( nLogFD, cStdOut )
+   IF ( hFile := hb_vfOpen( CombinePath( s_cTempDir, cFNTemplate + ".log" ), FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+      IF cStdOut != NIL
+         hb_vfWrite( hFile, "stdout:" + hb_eol() )
+         hb_vfWrite( hFile, cStdOut )
+      ENDIF
+      IF cStdErr != NIL
+         hb_vfWrite( hFile, "stderr:" + hb_eol() )
+         hb_vfWrite( hFile, cStdErr )
+      ENDIF
+      hb_vfClose( hFile )
    ENDIF
-   IF cStdErr != NIL
-      FWrite( nLogFd, "stderr:" + hb_eol() )
-      FWrite( nLogFD, cStdErr )
-   ENDIF
-   FClose( nLogFD )
 
    RETURN
 
 STATIC PROCEDURE Usage( nExitVal )
 
-   OutStd( "Usage: " + hb_FNameNameExt( hb_ProgName() ) + " [-h|-help|-rediff]" + hb_eol() )
+   OutStd( hb_StrFormat( "Usage: %1$s [-h|-help|-rediff]", hb_FNameNameExt( hb_ProgName() ) ) + hb_eol() )
    OutStd( "       Documentation is provided in the source code." + hb_eol() )
    ErrorLevel( nExitVal )
    QUIT
@@ -818,11 +852,9 @@ STATIC FUNCTION URL_GetFileName( cURL )
    ENDIF
 
    cName := aComponents[ nIdx ]
-   cName := iif( "?" $ cName, Left( cName, At( "?", cName ) - 1 ), cName ) /* strip params */
-
-   DO WHILE !( "." $ cName )
+   DO WHILE ! "." $ cName
       cName := aComponents[ --nIdx ]
-      IF nIdx < 4 /* don't drain all components */
+      IF nIdx < 4  /* don't drain all components */
          RETURN ""
       ENDIF
    ENDDO
@@ -836,6 +868,7 @@ STATIC FUNCTION hb_FileTran( cFileName )
    LOCAL aChange
    LOCAL cChangeFrom
    LOCAL cChangeTo
+   LOCAL tDate
 
    cFileContent := hb_MemoRead( cFileName )
 
@@ -853,18 +886,21 @@ STATIC FUNCTION hb_FileTran( cFileName )
       cChangeTo := aChange[ 2 ]
 
       /* Local-style includes */
-      cTransformedContent := StrTran( cTransformedContent,                                ;
-         '"' + cChangeFrom + '"',                                                         ;
+      cTransformedContent := StrTran( cTransformedContent, ;
+         '"' + cChangeFrom + '"', ;
          '"' + cChangeTo + '"' )
 
       /* System-style include */
-      cTransformedContent := StrTran( cTransformedContent,                                ;
-         "<" + cChangeFrom + ">",                                                         ;
+      cTransformedContent := StrTran( cTransformedContent, ;
+         "<" + cChangeFrom + ">", ;
          "<" + cChangeTo + ">" )
-
    NEXT
 
-   RETURN hb_MemoWrit( cFileName, cTransformedContent )
+   hb_vfTimeGet( cFileName, @tDate )
+
+   RETURN ;
+      hb_MemoWrit( cFileName, cTransformedContent ) .AND. ;
+      hb_vfTimeSet( cFileName, tDate )
 
 STATIC FUNCTION FNameEscape( cFileName )
 
@@ -885,7 +921,7 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
    LOCAL nStart
    LOCAL nEnd
 
-   IF cFileName == NIL .OR. ! hb_FileExists( cFileName )
+   IF cFileName == NIL .OR. ! hb_vfExists( cFileName )
       RETURN
    ENDIF
 
@@ -897,41 +933,37 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
 
    DO WHILE .T.
 
-      nEnd := At( cLookFor, SubStr( cFile, nStart ) ) - 1
-      IF nEnd < 1
+      IF ( nEnd := hb_BAt( cLookFor, cFile, nStart ) ) == 0
          /* If anything is left in the input string, stick it to the end
           * of the output string. No path searching as that would be
           * an invalid diff anyway */
-         IF Len( SubStr( cFile, nStart ) ) > 0
-            cNewFile := SubStr( cFile, nStart )
-         ENDIF
+         cNewFile += hb_BSubStr( cFile, nStart )
          EXIT
       ENDIF
 
-      cMemoLine := SubStr( cFile, nStart, nEnd )
+      cMemoLine := hb_BSubStr( cFile, nStart, nEnd - nStart + hb_BLen( cLookFor ) )
 
-      IF ( Left( cMemoLine, 5 ) == "diff " .OR. ;
-           Left( cMemoLine, 4 ) == "+++ " .OR. ;
-           Left( cMemoLine, 4 ) == "--- " ) .AND. ;
-         At( "\", cMemoLine ) > 0
-            cNewFile += StrTran( cMemoLine, "\", "/" ) + cLookFor
-            s_nErrors++
-      ELSE
-         cNewFile += cMemoLine + cLookFor
+      IF ( hb_LeftEq( cMemoLine, "diff " ) .OR. ;
+           hb_LeftEq( cMemoLine, "+++ " ) .OR. ;
+           hb_LeftEq( cMemoLine, "--- " ) ) .AND. "\" $ cMemoLine
+
+         cMemoLine := StrTran( cMemoLine, "\", "/" )
+         s_nErrors++
       ENDIF
 
-      nStart += nEnd + Len( cLookFor )
+      cNewFile += cMemoLine
+      nStart := hb_BLen( cNewFile ) + 1
 
    ENDDO
 
    IF s_nErrors > 0
       IF hb_MemoWrit( cFileName, cNewFile )
-         OutStd( "I: DOS-style path name separators in `" + cFileName + ;
-                 "' have been converted to Unix-style" + hb_eol() )
+         OutStd( hb_StrFormat( "I: DOS-style path name separators in `%1$s' " + ;
+                 "have been converted to Unix-style", cFileName ) + hb_eol() )
          OutStd( "W: Do not forget to push this file!" + hb_eol() )
       ELSE
-         OutStd( "E: Oops, something bad happened while trying to " + ;
-                 "overwrite `" + cFileName + "'" + hb_eol() )
+         OutStd( hb_StrFormat( "E: Oops, something bad happened while trying to " + ;
+                 "overwrite `%1$s'", cFileName ) + hb_eol() )
          OutStd( "E: You will probably have to clean up manually" + hb_eol() )
          /* XXX: Error details? */
          ErrorLevel( 2 )
@@ -940,7 +972,3 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
    ENDIF
 
    RETURN
-
-/*
- * vim: ts=3 expandtab ft=clipper
- */

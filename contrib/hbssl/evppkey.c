@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,11 +44,9 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-#include "hbapiitm.h"
-
 #include "hbssl.h"
+
+#include "hbapiitm.h"
 
 #include <openssl/evp.h>
 
@@ -73,9 +71,9 @@ static const HB_GC_FUNCS s_gcEVP_PKEY_funcs =
    hb_gcDummyMark
 };
 
-void * hb_EVP_PKEY_is( int iParam )
+HB_BOOL hb_EVP_PKEY_is( int iParam )
 {
-   return hb_parptrGC( &s_gcEVP_PKEY_funcs, iParam );
+   return hb_parptrGC( &s_gcEVP_PKEY_funcs, iParam ) != NULL;
 }
 
 EVP_PKEY * hb_EVP_PKEY_par( int iParam )

@@ -34,7 +34,7 @@ and interfaces to many popular APIs.
    hope they will be useful, but there is NO GUARANTEE that they are
    complete, accurate, non-infringing or usable for any purpose whatsoever.
    Contributors are NOT LIABLE for any damages that result from using
-   Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
+   Harbour in any ways. For more legal details, see [LICENSE](LICENSE.txt).
 
    If you think you can make Harbour better, start to contribute.
    See [How to Participate](#how-to-participate).
@@ -1771,33 +1771,34 @@ Supported shells per host platforms:
 * Libraries:
 
      * HB_WITH_ADS - Advantage Client Engine API [win, linux, free, closed-source]
-        * <http://www.sybase.com/products/databasemanagement/advantagedatabaseserver/client-engine-api>
+        * <https://devzone.advantagedatabase.com/dz/content.aspx?key=20&Release=19&Product=5>
      * HB_WITH_ALLEGRO - Allegro (GUI) [multiplatform, free, open-source]
         * <http://alleg.sourceforge.net/>
      * HB_WITH_BLAT - Blat (SMTP client) [win, free, open-source]
-        * <http://www.blat.net/>
+        * <https://www.blat.net/>
      * HB_WITH_BZIP2 - libbzip2 [multiplatform, free, open-source]
         * <http://www.bzip.org/>
      * HB_WITH_CAIRO - Cairo [multiplatform, open-source]
-        * <http://www.gtk.org/download/win32.php><br />
-        Look for these components on page above: cairo-dev_*_win32.zip, cairo_*_win32.zip, libpng_*_win32.zip
+        * <https://www.gtk.org/download/windows.php><br />
+        GTK for Windows has a side effect of including a build of Cairo libs.
+        After installation look for: libcairo-*.dll, libpng*.dll, zlib*.dll
      * HB_WITH_CUPS - libcups (printing) [*nix, free, open-source]
-        * <http://www.cups.org/>
+        * <https://www.cups.org/>
      * HB_WITH_CURL - libcurl (file transfer) [multiplatform, free, open-source]
-        * <http://curl.haxx.se/>
+        * <https://curl.haxx.se/>
      * HB_WITH_EXPAT - Expat (XML parser) [multiplatform, free, open-source]
         * <http://expat.sourceforge.net/>
      * HB_WITH_FIREBIRD - firebird SQL [multiplatform, free, open-source]
-        * <http://www.firebirdsql.org/>
+        * <https://www.firebirdsql.org/>
      * HB_WITH_FREEIMAGE - FreeImage [multiplatform, free, open-source]
         * <http://freeimage.sourceforge.net/>
      * HB_WITH_GD - GD Graphics Library [multiplatform, free, open-source]
         * <http://www.libgd.org/>
      * HB_WITH_GS - Ghostscript [multiplatform, free, open-source]
-        * <http://www.ghostscript.com/>
+        * <https://www.ghostscript.com/>
         * <http://pages.cs.wisc.edu/~ghost/>
      * HB_WITH_JPEG - jpeglib [multiplatform, free, open-source]
-        * <http://www.ijg.org/>
+        * <https://www.ijg.org/>
      * HB_WITH_LIBHARU - libharu (PDF creation) [multiplatform, free, open-source]
         * <http://libharu.org/>
      * HB_WITH_LIBMAGIC - libmagic, file recognition [multiplatform, free, open-source]
@@ -1805,39 +1806,39 @@ Supported shells per host platforms:
      * HB_WITH_LZF - lzf library (RT data compression) [multiplatform, free, open-source]
         * <http://liblzf.plan9.de/>
      * HB_WITH_MINILZO - miniLZO library (RT data compression) [multiplatform, free, open-source]
-        * <http://www.oberhumer.com/opensource/lzo/>
+        * <https://www.oberhumer.com/opensource/lzo/>
      * HB_WITH_MINIZIP - minizip library [multiplatform, free, open-source]
-        * <http://www.winimage.com/zLibDll/minizip.html>
+        * <https://www.winimage.com/zLibDll/minizip.html>
      * HB_WITH_MXML - miniXML library (small XML library) [multiplatform, free, open-source]
-        * <http://www.minixml.org>
+        * <https://www.msweet.org/mxml/>
      * HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]
-        * <http://dev.mysql.com/downloads/>
+        * <https://dev.mysql.com/downloads/>
      * HB_WITH_OCILIB - OCILIB (C Driver for Oracle) [multiplatform, free, open-source]
-        * <http://orclib.sourceforge.net/>
-        * <http://www.oracle.com/technology/tech/oci/instantclient/index.html>
+        * <https://vrogier.github.io/ocilib/>
+        * <https://www.oracle.com/technetwork/database/database-technologies/instant-client/overview/index.html>
      * HB_WITH_OPENSSL - OpenSSL [multiplatform, free, open-source]
-        * <http://www.openssl.org/>
-        * <http://www.openssl.org/related/binaries.html>
-        * <http://wiki.opensslfoundation.com/>
+        * <https://www.openssl.org/>
+        * <https://wiki.openssl.org/index.php/Binaries>
+        * <https://wiki.openssl.org/index.php/Main_Page>
      * HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]
-        * <http://www.pcre.org/>
+        * <https://www.pcre.org/>
      * HB_WITH_PGSQL - PostgreSQL [multiplatform, free, open-source]
-        * <http://www.postgresql.org/>
+        * <https://www.postgresql.org/>
      * HB_WITH_PNG - libpng [multiplatform, free, open-source]
         * <http://www.libpng.org/pub/png/libpng.html>
      * HB_WITH_QT - QT (GUI) [multiplatform, free, open-source]
         * <https://qt-project.org/>
-        * <http://download.qt-project.org/official_releases/qt/>
+        * <https://download.qt-project.org/official_releases/qt/>
      * HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
-        * <http://www.sqlite.org/>
+        * <https://www.sqlite.org/>
      * HB_WITH_TIFF - libtiff [multiplatform, free, open-source]
         * <http://www.libtiff.org/>
      * HB_WITH_TINYMT - TinyMT (Mersenne Twister) [multiplatform, free, open-source]
         * <http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/TINYMT/>
      * HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
-        * <http://home.broadpark.no/~gvanem/>
+        * <http://www.watt-32.net/>
      * HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
-        * <http://www.zlib.net/>
+        * <https://www.zlib.net/>
      * HB_WITH_XDIFF - libxdiff (file differences/patches) [multiplatform, free, open-source]
         * <http://www.xmailserver.org/xdiff-lib.html>
 
@@ -1846,7 +1847,7 @@ Supported shells per host platforms:
         * Search for `w95ws2setup.exe`
             (required for Win95 support to run applications built with Harbour)
      * Windows UNICOWS .dll [win, free, closed-source]
-        * <http://go.microsoft.com/fwlink/?LinkId=14851>
+        * <https://go.microsoft.com/fwlink/?LinkId=14851>
             (required for Win9x/ME support to run applications built with Harbour in UNICODE mode)
      * Windows UNICOWS runtime/import library [win, free, open-source]
         * <http://libunicows.sourceforge.net/>
@@ -1937,7 +1938,7 @@ Supported shells per host platforms:
 
 # Harbour Links
 
-  * [Homepage](http://harbour-project.org/)
+  * [Homepage](https://harbour.github.io/)
   * [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
   * [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
   * [Source code](https://github.com/harbour/core)
@@ -1953,7 +1954,6 @@ Supported shells per host platforms:
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
 
-
-This document Copyright &copy; 2009-2015 Viktor Szakáts (vszakats.net/harbour)<br />
-Licensed under [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/)<br />
-See [COPYING](COPYING.txt).
+---
+This document Copyright &copy;&nbsp;2009&ndash;present Viktor Szakats (vszakats.net/harbour)<br />
+[![Creative Commons Attribution-ShareAlike 4.0](https://mirrors.creativecommons.org/presskit/buttons/80x15/svg/by-sa.svg)](https://creativecommons.org/licenses/by-sa/4.0/)

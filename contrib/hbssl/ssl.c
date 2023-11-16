@@ -1,7 +1,7 @@
 /*
  * OpenSSL API (SSL) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2017 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,19 +45,27 @@
  */
 
 /* for applink.c */
-#if ! defined( HB_OPENSSL_STATIC )
-   #if defined( _MSC_VER )
-      #ifndef _CRT_SECURE_NO_WARNINGS
-      #define _CRT_SECURE_NO_WARNINGS
-      #endif
+#if defined( _MSC_VER )
+   #ifndef _CRT_SECURE_NO_WARNINGS
+   #define _CRT_SECURE_NO_WARNINGS
    #endif
+#elif defined( __BORLANDC__ )
+   /* NOTE: To avoid these with BCC 5.5:
+            Warning W8065 openssl/applink.c 40: Call to function '_setmode' with no prototype in function app_fsetmod
+            Error E2451 openssl/applink.c 82: Undefined symbol '_lseek' in function OPENSSL_Applink
+    */
+   #include "io.h"
+   #define _setmode  setmode
+   #undef _lseek
+   #define _lseek    lseek
 #endif
 
-#include "hbapi.h"
-#include "hbapierr.h"
-#include "hbapiitm.h"
-#include "hbvm.h"
-
+/* This must come before #include "hbssl.h".
+   OpenSSL 1.1.x and upper don't require Windows headers anymore,
+   but if #included, it still must come before its own headers.
+   The Harbour wrapper code doesn't need the Windows headers, so
+   they will be dropped once 1.0.2 is EOLed in 2019-12-31. */
+#include "hbdefs.h"
 #if defined( HB_OS_WIN )
    #include <windows.h>
    #include <wincrypt.h>
@@ -65,17 +73,36 @@
 
 #include "hbssl.h"
 
+#include "hbapiitm.h"
+#include "hbvm.h"
+
+#if ! defined( HB_OPENSSL_NO_APPLINK ) && \
+    defined( HB_OS_WIN ) && \
+    defined( HB_CPU_X86 ) && \
+    OPENSSL_VERSION_NUMBER >= 0x00908000L
+   /* Enable this to add support for various scenarios when
+      OpenSSL is build with OPENSSL_USE_APPLINK (the default).
+      In such case care must be taken to initialize pointers
+      to C RTL function to avoid crashes. */
+   #define HB_OPENSSL_HAS_APPLINK
+#endif
+
 /* NOTE: See: http://www.openssl.org/support/faq.html#PROG2
          Application must call SSL_init(), so that this module gets linked.
          [vszakats] */
 #if defined( HB_OS_WIN ) && ! defined( HB_OPENSSL_STATIC ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
-   /* NOTE: It doesn't build in bcc55:
-            Warning W8065 openssl/applink.c 40: Call to function '_setmode' with no prototype in function app_fsetmod
-            Error E2451 openssl/applink.c 82: Undefined symbol '_lseek' in function OPENSSL_Applink
-    */
-   #if ! defined( __BORLANDC__ )
-      #include "openssl/applink.c"
-   #endif
+   /* Pull a stub that returns a table with some selected
+      C RTL function pointers. When linking to OpenSSL shared
+      libraries, the function OPENSSL_Applink() exported from
+      the application executable will be dynamically called
+      from the OpenSSL crypto .dll. When linking OpenSSL statically,
+      we will call it manually from SSL_init(). This will not
+      work when using 'hbssl' as a dynamic lib, because
+      OPENSSL_Applink() must be exported from the main executable.
+      Consequently 'hbrun' will fail with operations that require
+      C RTL calls internally. Such calls are currently made when
+      using BIO_new_fd() BIO_new_file() IO API. */
+   #include "openssl/applink.c"
 #endif
 
 HB_FUNC( SSL_INIT )
@@ -84,10 +111,40 @@ HB_FUNC( SSL_INIT )
    SSL_load_error_strings();
 }
 
-HB_FUNC( SSLEAY_VERSION )
+HB_FUNC( HB_SSL_APPLINK )
+{
+#if defined( HB_OPENSSL_HAS_APPLINK )
+   hb_retl( HB_TRUE );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}
+
+HB_FUNC( HB_SSL_STATIC )
+{
+#if defined( HB_DYNLIB )
+   hb_retl( HB_FALSE );
+#else
+   hb_retl( HB_TRUE );
+#endif
+}
+
+HB_FUNC( OPENSSL_VERSION )
 {
    int value = hb_parni( 1 );
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
+   switch( value )
+   {
+      case HB_OPENSSL_VERSION:   value = OPENSSL_VERSION;  break;
+      case HB_OPENSSL_CFLAGS:    value = OPENSSL_CFLAGS;   break;
+      case HB_OPENSSL_BUILT_ON:  value = OPENSSL_BUILT_ON; break;
+      case HB_OPENSSL_PLATFORM:  value = OPENSSL_PLATFORM; break;
+      case HB_OPENSSL_DIR:       value = OPENSSL_DIR;      break;
+   }
+   hb_retc( OpenSSL_version( value ) );
+#else
    switch( value )
    {
       case HB_SSLEAY_VERSION:   value = SSLEAY_VERSION;  break;
@@ -96,58 +153,106 @@ HB_FUNC( SSLEAY_VERSION )
       case HB_SSLEAY_PLATFORM:  value = SSLEAY_PLATFORM; break;
       case HB_SSLEAY_DIR:       value = SSLEAY_DIR;      break;
    }
-
    hb_retc( SSLeay_version( value ) );
+#endif
 }
 
-HB_FUNC( OPENSSL_VERSION )
+HB_FUNC( OPENSSL_VERSION_NUMBER )
 {
    hb_retnint( OPENSSL_VERSION_NUMBER );
 }
 
-HB_FUNC( SSLEAY )
+HB_FUNC( OPENSSL_VERSION_NUM )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
+   hb_retnint( OpenSSL_version_num() );
+#else
    hb_retnint( SSLeay() );
+#endif
 }
 
-static HB_GARBAGE_FUNC( SSL_release )
-{
-   void ** ph = ( void ** ) Cargo;
+/* SSLEAY_VERSION is existing macro so we cannot use HB_FUNC_TRANSLATE */
+#if 0
+   HB_FUNC_TRANSLATE( SSLEAY_VERSION, OPENSSL_VERSION )
+#else
+   HB_FUNC( SSLEAY_VERSION )
+   {
+      HB_FUNC_EXEC( OPENSSL_VERSION );
+   }
+#endif
+HB_FUNC_TRANSLATE( SSLEAY, OPENSSL_VERSION_NUM )
 
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && *ph )
+typedef struct _HB_SSL
+{
+   SSL * ssl;
+   PHB_ITEM pCallbackArg;
+} HB_SSL, * PHB_SSL;
+
+static HB_GARBAGE_FUNC( PHB_SSL_release )
+{
+   PHB_SSL hb_ssl = ( PHB_SSL ) Cargo;
+
+   if( hb_ssl )
    {
       /* Destroy the object */
-      SSL_free( ( SSL * ) *ph );
+      if( hb_ssl->ssl )
+      {
+         SSL_free( hb_ssl->ssl );
+         hb_ssl->ssl = NULL;
+      }
 
-      /* set pointer to NULL just in case */
-      *ph = NULL;
+      if( hb_ssl->pCallbackArg )
+      {
+         hb_itemRelease( hb_ssl->pCallbackArg );
+         hb_ssl->pCallbackArg = NULL;
+      }
+   }
+}
+
+static HB_GARBAGE_FUNC( PHB_SSL_mark )
+{
+   PHB_SSL hb_ssl = ( PHB_SSL ) Cargo;
+
+   if( hb_ssl )
+   {
+      if( hb_ssl->pCallbackArg )
+         hb_gcMark( hb_ssl->pCallbackArg );
    }
 }
 
 static const HB_GC_FUNCS s_gcSSL_funcs =
 {
-   SSL_release,
-   hb_gcDummyMark
+   PHB_SSL_release,
+   PHB_SSL_mark
 };
 
-void * hb_SSL_is( int iParam )
+HB_BOOL hb_SSL_is( int iParam )
 {
-   return hb_parptrGC( &s_gcSSL_funcs, iParam );
+   PHB_SSL hb_ssl = ( PHB_SSL ) hb_parptrGC( &s_gcSSL_funcs, iParam );
+
+   return hb_ssl && hb_ssl->ssl;
+}
+
+static PHB_SSL hb_SSL_par_raw( int iParam )
+{
+   PHB_SSL hb_ssl = ( PHB_SSL ) hb_parptrGC( &s_gcSSL_funcs, iParam );
+
+   return hb_ssl;
 }
 
 SSL * hb_SSL_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( &s_gcSSL_funcs, iParam );
+   PHB_SSL hb_ssl = ( PHB_SSL ) hb_parptrGC( &s_gcSSL_funcs, iParam );
 
-   return ph ? ( SSL * ) *ph : NULL;
+   return hb_ssl ? hb_ssl->ssl : NULL;
 }
 
 SSL * hb_SSL_itemGet( PHB_ITEM pItem )
 {
-   void ** ph = ( void ** ) hb_itemGetPtrGC( pItem, &s_gcSSL_funcs );
+   PHB_SSL hb_ssl = ( PHB_SSL ) hb_itemGetPtrGC( pItem, &s_gcSSL_funcs );
 
-   return ph ? ( SSL * ) *ph : NULL;
+   return hb_ssl ? hb_ssl->ssl : NULL;
 }
 
 HB_FUNC( SSL_NEW )
@@ -158,13 +263,12 @@ HB_FUNC( SSL_NEW )
 
       if( ctx )
       {
-         void ** ph = ( void ** ) hb_gcAllocate( sizeof( SSL * ), &s_gcSSL_funcs );
+         PHB_SSL hb_ssl = ( PHB_SSL ) hb_gcAllocate( sizeof( HB_SSL ), &s_gcSSL_funcs );
 
-         SSL * ssl = SSL_new( ctx );
+         memset( hb_ssl, 0, sizeof( HB_SSL ) );
+         hb_ssl->ssl = SSL_new( ctx );
 
-         *ph = ssl;
-
-         hb_retptrGC( ph );
+         hb_retptrGC( hb_ssl );
       }
    }
    else
@@ -179,13 +283,13 @@ HB_FUNC( SSL_DUP )
 
       if( ssl_par )
       {
-         void ** ph = ( void ** ) hb_gcAllocate( sizeof( SSL * ), &s_gcSSL_funcs );
+         PHB_SSL hb_ssl = ( PHB_SSL ) hb_gcAllocate( sizeof( HB_SSL ), &s_gcSSL_funcs );
 
-         SSL * ssl = SSL_dup( ssl_par );
+         memset( hb_ssl, 0, sizeof( HB_SSL ) );
 
-         *ph = ssl;
+         hb_ssl->ssl = SSL_dup( ssl_par );
 
-         hb_retptrGC( ph );
+         hb_retptrGC( hb_ssl );
       }
    }
    else
@@ -218,6 +322,9 @@ HB_FUNC( SSL_CLEAR )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+HB_FUNC_TRANSLATE( SSL_STATE, SSL_GET_STATE )
+#else
 HB_FUNC( SSL_STATE )
 {
    if( hb_SSL_is( 1 ) )
@@ -230,6 +337,7 @@ HB_FUNC( SSL_STATE )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+#endif
 
 HB_FUNC( SSL_PENDING )
 {
@@ -625,6 +733,11 @@ HB_FUNC( SSL_GET_SSL_METHOD )
 #endif
          int n;
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+         if(      p == TLS_method()           ) n = HB_SSL_CTX_NEW_METHOD_TLS;
+         else if( p == TLS_server_method()    ) n = HB_SSL_CTX_NEW_METHOD_TLS_SERVER;
+         else if( p == TLS_client_method()    ) n = HB_SSL_CTX_NEW_METHOD_TLS_CLIENT;
+#else
          if(      p == SSLv3_method()         ) n = HB_SSL_CTX_NEW_METHOD_SSLV3;
          else if( p == SSLv3_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV3_SERVER;
          else if( p == SSLv3_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV3_CLIENT;
@@ -639,6 +752,7 @@ HB_FUNC( SSL_GET_SSL_METHOD )
          else if( p == SSLv23_method()        ) n = HB_SSL_CTX_NEW_METHOD_SSLV23;
          else if( p == SSLv23_server_method() ) n = HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER;
          else if( p == SSLv23_client_method() ) n = HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT;
+#endif
          else                                   n = HB_SSL_CTX_NEW_METHOD_UNKNOWN;
 
          hb_retni( n );
@@ -760,6 +874,21 @@ HB_FUNC( SSL_GET_SHARED_CIPHERS )
 
          hb_retc( SSL_get_shared_ciphers( ssl, buffer, sizeof( buffer ) - 1 ) );
       }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_TLSEXT_HOST_NAME )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+#if defined( SSL_CTRL_SET_TLSEXT_HOSTNAME )
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_set_tlsext_host_name( ssl, HB_UNCONST( hb_parc( 2 ) ) ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -962,7 +1091,7 @@ HB_FUNC( SSL_GET_READ_AHEAD )
 {
    if( hb_SSL_is( 1 ) )
    {
-#if defined( __BORLANDC__ ) /* TOFIX: SSL_get_read_ahead is an unresolved external when trying to link with BCC */
+#if defined( __BORLANDC__ ) /* FIXME: SSL_get_read_ahead is an unresolved external when trying to link with BCC */
       hb_retni( 0 );
 #else
       SSL * ssl = hb_SSL_par( 1 );
@@ -1183,6 +1312,19 @@ HB_FUNC( SSL_SET_OPTIONS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_SET_VERIFY )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         SSL_set_verify( ssl, hb_parni( 2 ), NULL );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SSL_SET_QUIET_SHUTDOWN )
 {
    if( hb_SSL_is( 1 ) )
@@ -1386,7 +1528,7 @@ HB_FUNC( SSL_GET_CIPHERS )
             int      tmp;
 
             for( tmp = 0; tmp < len; tmp++ )
-               hb_arraySetPtr( pArray, tmp + 1, sk_SSL_CIPHER_value( stack, tmp ) );
+               hb_arraySetPtr( pArray, tmp + 1, HB_UNCONST( sk_SSL_CIPHER_value( stack, tmp ) ) );
 
             hb_itemReturnRelease( pArray );
          }
@@ -1458,10 +1600,15 @@ HB_FUNC( SSL_USE_RSAPRIVATEKEY_ASN1 )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
+         hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( const unsigned char * ) hb_parc( 2 ), ( int ) hb_parclen( 2 ) ) );
+#else
          /* 'const' not used in 2nd param because ssh.h misses it, too.
-             Bug report sent: #1988
+             Bug reported: #1988 [Fixed in 1.1.0 after submitting patch]
              [vszakats] */
          hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( unsigned char * ) HB_UNCONST( hb_parc( 2 ) ), ( int ) hb_parclen( 2 ) ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1535,26 +1682,29 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
 {
    if( hb_SSL_is( 1 ) )
    {
-      SSL * ssl = hb_SSL_par( 1 );
+      PHB_SSL hb_ssl = hb_SSL_par_raw( 1 );
 
-      if( ssl )
+      if( hb_ssl )
       {
 #if OPENSSL_VERSION_NUMBER >= 0x00907000L
          PHB_ITEM pCallback = hb_param( 2, HB_IT_EVALITEM );
 
+         if( hb_ssl->pCallbackArg )
+         {
+            SSL_set_msg_callback_arg( hb_ssl->ssl, NULL );
+            hb_itemRelease( hb_ssl->pCallbackArg );
+            hb_ssl->pCallbackArg = NULL;
+         }
+
          if( pCallback )
          {
-            PHB_ITEM pPassCallback = hb_itemNew( pCallback );
-            SSL_set_msg_callback_arg( ssl, pPassCallback );
-            SSL_set_msg_callback( ssl, hb_ssl_msg_callback );
+            hb_ssl->pCallbackArg = hb_itemNew( pCallback );
+            SSL_set_msg_callback_arg( hb_ssl->ssl, hb_ssl->pCallbackArg );
+            SSL_set_msg_callback( hb_ssl->ssl, hb_ssl_msg_callback );
+            hb_gcUnlock( hb_ssl->pCallbackArg );
          }
          else
-         {
-            /* NOTE: WARNING: Direct access to OpenSSL internals. [vszakats] */
-            hb_itemRelease( ( PHB_ITEM ) ssl->msg_callback_arg );
-            SSL_set_msg_callback_arg( ssl, NULL );
-            SSL_set_msg_callback( ssl, NULL );
-         }
+            SSL_set_msg_callback( hb_ssl->ssl, NULL );
 #endif
       }
    }
@@ -1562,29 +1712,30 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/*
+#if 0
 
-   void         SSL_set_psk_client_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *hint, char *identity, unsigned int max_identity_len, unsigned char *psk, unsigned int max_psk_len));
-   void         SSL_set_psk_server_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *identity, unsigned char *psk, int max_psk_len));
+void         SSL_set_psk_client_callback( SSL * ssl, unsigned int ( * callback )( SSL * ssl, const char * hint, char * identity, unsigned int max_identity_len, unsigned char * psk, unsigned int max_psk_len ) );
+void         SSL_set_psk_server_callback( SSL * ssl, unsigned int ( * callback )( SSL * ssl, const char * identity, unsigned char * psk, int max_psk_len ) );
 
-   EVP_PKEY *   SSL_get_privatekey(SSL *ssl);
+EVP_PKEY *   SSL_get_privatekey( SSL * ssl );
 
-   STACK *      SSL_get_peer_cert_chain(const SSL *ssl);
-   int          SSL_use_RSAPrivateKey(SSL *ssl, RSA *rsa);
-   void         SSL_set_app_data(SSL *ssl, char *arg);
-   int          SSL_set_ex_data(SSL *ssl, int idx, char *arg);
-   char *       SSL_get_app_data(SSL *ssl);
-   char *       SSL_get_ex_data( ssl, int );
-   int          SSL_add_dir_cert_subjects_to_stack(STACK *stack, const char *dir);
-   int          SSL_add_file_cert_subjects_to_stack(STACK *stack, const char *file);
-   STACK *      SSL_dup_CA_list(STACK *sk);
-   SSL_CTX *    SSL_get_SSL_CTX(const SSL *ssl);
-   int          SSL_get_ex_data_X509_STORE_CTX_idx(void);
-   int          SSL_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
-   void (*SSL_get_info_callback(const SSL *ssl);)()
-   SSL_SESSION *SSL_get_session(const SSL *ssl);
-   int (*SSL_get_verify_callback(const SSL *ssl))(int,X509_STORE_CTX *)
-   void         SSL_set_client_CA_list(SSL *ssl, STACK *list);
-   void         SSL_set_info_callback(SSL *ssl, void (*cb);(void))
-   void         SSL_set_verify(SSL *ssl, int mode, int (*callback);(void))
- */
+STACK *      SSL_get_peer_cert_chain( const SSL * ssl );
+int          SSL_use_RSAPrivateKey( SSL * ssl, RSA * rsa );
+void         SSL_set_app_data( SSL * ssl, char * arg );
+int          SSL_set_ex_data( SSL * ssl, int idx, char * arg );
+char *       SSL_get_app_data( SSL * ssl );
+char *       SSL_get_ex_data( ssl, int );
+int          SSL_add_dir_cert_subjects_to_stack( STACK * stack, const char * dir );
+int          SSL_add_file_cert_subjects_to_stack( STACK * stack, const char * file );
+STACK *      SSL_dup_CA_list( STACK * sk );
+SSL_CTX *    SSL_get_SSL_CTX( const SSL * ssl );
+int          SSL_get_ex_data_X509_STORE_CTX_idx( void );
+int          SSL_get_ex_new_index( long argl, char * argp, int ( *new_func ); ( void ), int ( * dup_func )( void ), void ( * free_func )( void ) )
+void( *SSL_get_info_callback( const SSL * ssl ); )()
+SSL_SESSION * SSL_get_session( const SSL * ssl );
+int( *SSL_get_verify_callback( const SSL * ssl ) )( int, X509_STORE_CTX * )
+void         SSL_set_client_CA_list( SSL * ssl, STACK * list );
+void         SSL_set_info_callback( SSL * ssl, void ( *cb ); ( void ) )
+void         SSL_set_verify( SSL * ssl, int mode, int ( *callback ); ( void ) )
+
+#endif

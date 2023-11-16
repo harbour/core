@@ -2,6 +2,7 @@
  * Inkey GT API
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2002 Walter Negro <anegro@overnet.com.ar> (hb_inkeySetLast())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
- *    hb_inkeySetLast()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -118,74 +109,74 @@ static const HB_KEY_VALUE s_transKeyFun[] = {
 };
 
 static const HB_KEY_VALUE s_transKeyStd[] = {
-   { K_SPACE,   0,               0,               0 },   /*  32 */
-   { '!',       0,               0,               0 },   /*  33 */
-   { '"',       0,               0,               0 },   /*  34 */
-   { '#',       0,               0,               0 },   /*  35 */
-   { '$',       0,               0,               0 },   /*  36 */
-   { '%',       0,               0,               0 },   /*  37 */
-   { '&',       0,               0,               0 },   /*  38 */
-   { '\'',      K_ALT_QUOTE,     7,               0 },   /*  39 */
-   { '(',       0,               0,               0 },   /*  40 */
-   { ')',       0,               0,               0 },   /*  41 */
-   { '*',       0,               0,               0 },   /*  42 */
-   { '+',       0,               0,               0 },   /*  43 */
-   { ',',       K_ALT_COMMA,     0,               0 },   /*  44 */
-   { '-',       K_ALT_MINUS,     31,              0 },   /*  45 */
-   { '.',       K_ALT_PERIOD,    0,               0 },   /*  46 */
-   { '/',       K_CTRL_QUESTION, K_CTRL_BS,       0 },   /*  47 */
-   { '0',       K_ALT_0,         0,               0 },   /*  48 */
-   { '1',       K_ALT_1,         0,               0 },   /*  49 */
-   { '2',       K_ALT_2,         259,             0 },   /*  50 */
-   { '3',       K_ALT_3,         27,              0 },   /*  51 */
-   { '4',       K_ALT_4,         28,              0 },   /*  52 */
-   { '5',       K_ALT_5,         29,              0 },   /*  53 */
-   { '6',       K_ALT_6,         30,              0 },   /*  54 */
-   { '7',       K_ALT_7,         31,              0 },   /*  55 */
-   { '8',       K_ALT_8,         127,             0 },   /*  56 */
-   { '9',       K_ALT_9,         0,               0 },   /*  57 */
-   { ':',       0,               0,               0 },   /*  58 */
-   { ';',       K_ALT_SC,        0,               0 },   /*  59 */
-   { '<',       0,               0,               0 },   /*  60 */
-   { '=',       K_ALT_EQUALS,    0,               0 },   /*  61 */
-   { '>',       0,               0,               0 },   /*  62 */
-   { '?',       0,               K_CTRL_QUESTION, 0 },   /*  63 */
-   { '@',       0,               259,             0 },   /*  64 */
-   { 'A',       K_ALT_A,         K_CTRL_A,        0 },   /*  65 */
-   { 'B',       K_ALT_B,         K_CTRL_B,        0 },   /*  66 */
-   { 'C',       K_ALT_C,         K_CTRL_C,        0 },   /*  67 */
-   { 'D',       K_ALT_D,         K_CTRL_D,        0 },   /*  68 */
-   { 'E',       K_ALT_E,         K_CTRL_E,        0 },   /*  69 */
-   { 'F',       K_ALT_F,         K_CTRL_F,        0 },   /*  70 */
-   { 'G',       K_ALT_G,         K_CTRL_G,        0 },   /*  71 */
-   { 'H',       K_ALT_H,         K_CTRL_H,        0 },   /*  72 */
-   { 'I',       K_ALT_I,         K_CTRL_I,        0 },   /*  73 */
-   { 'J',       K_ALT_J,         K_CTRL_J,        0 },   /*  74 */
-   { 'K',       K_ALT_K,         K_CTRL_K,        0 },   /*  75 */
-   { 'L',       K_ALT_L,         K_CTRL_L,        0 },   /*  76 */
-   { 'M',       K_ALT_M,         K_CTRL_M,        0 },   /*  77 */
-   { 'N',       K_ALT_N,         K_CTRL_N,        0 },   /*  78 */
-   { 'O',       K_ALT_O,         K_CTRL_O,        0 },   /*  79 */
-   { 'P',       K_ALT_P,         K_CTRL_P,        0 },   /*  80 */
-   { 'Q',       K_ALT_Q,         K_CTRL_Q,        0 },   /*  81 */
-   { 'R',       K_ALT_R,         K_CTRL_R,        0 },   /*  82 */
-   { 'S',       K_ALT_S,         K_CTRL_S,        0 },   /*  83 */
-   { 'T',       K_ALT_T,         K_CTRL_T,        0 },   /*  84 */
-   { 'U',       K_ALT_U,         K_CTRL_U,        0 },   /*  85 */
-   { 'V',       K_ALT_V,         K_CTRL_V,        0 },   /*  86 */
-   { 'W',       K_ALT_W,         K_CTRL_W,        0 },   /*  87 */
-   { 'X',       K_ALT_X,         K_CTRL_X,        0 },   /*  88 */
-   { 'Y',       K_ALT_Y,         K_CTRL_Y,        0 },   /*  89 */
-   { 'Z',       K_ALT_Z,         K_CTRL_Z,        0 },   /*  90 */
-   { '[',       K_ALT_OSB,       27,              0 },   /*  91 */
-   { '\\',      K_ALT_BACKSLASH, 28,              0 },   /*  92 */
-   { ']',       K_ALT_CSB,       29,              0 },   /*  93 */
-   { '^',       K_ALT_6,         30,              0 },   /*  94 */
-   { '_',       K_ALT_MINUS,     31,              0 },   /*  95 */
-   { '`',       K_ALT_BACKQUOTE, K_ALT_BACKQUOTE, 0 },   /*  96 */
-   { 'a',       K_ALT_A,         K_CTRL_A,        0 },   /*  97 */
-   { 'b',       K_ALT_B,         K_CTRL_B,        0 },   /*  98 */
-   { 'c',       K_ALT_C,         K_CTRL_C,        0 },   /*  99 */
+   { K_SPACE,   0,               0,               0 },   /* 32 */
+   { '!',       0,               0,               0 },   /* 33 */
+   { '"',       0,               0,               0 },   /* 34 */
+   { '#',       0,               0,               0 },   /* 35 */
+   { '$',       0,               0,               0 },   /* 36 */
+   { '%',       0,               0,               0 },   /* 37 */
+   { '&',       0,               0,               0 },   /* 38 */
+   { '\'',      K_ALT_QUOTE,     7,               0 },   /* 39 */
+   { '(',       0,               0,               0 },   /* 40 */
+   { ')',       0,               0,               0 },   /* 41 */
+   { '*',       0,               0,               0 },   /* 42 */
+   { '+',       0,               0,               0 },   /* 43 */
+   { ',',       K_ALT_COMMA,     0,               0 },   /* 44 */
+   { '-',       K_ALT_MINUS,     31,              0 },   /* 45 */
+   { '.',       K_ALT_PERIOD,    0,               0 },   /* 46 */
+   { '/',       K_CTRL_QUESTION, K_CTRL_BS,       0 },   /* 47 */
+   { '0',       K_ALT_0,         0,               0 },   /* 48 */
+   { '1',       K_ALT_1,         0,               0 },   /* 49 */
+   { '2',       K_ALT_2,         259,             0 },   /* 50 */
+   { '3',       K_ALT_3,         27,              0 },   /* 51 */
+   { '4',       K_ALT_4,         28,              0 },   /* 52 */
+   { '5',       K_ALT_5,         29,              0 },   /* 53 */
+   { '6',       K_ALT_6,         30,              0 },   /* 54 */
+   { '7',       K_ALT_7,         31,              0 },   /* 55 */
+   { '8',       K_ALT_8,         127,             0 },   /* 56 */
+   { '9',       K_ALT_9,         0,               0 },   /* 57 */
+   { ':',       0,               0,               0 },   /* 58 */
+   { ';',       K_ALT_SC,        0,               0 },   /* 59 */
+   { '<',       0,               0,               0 },   /* 60 */
+   { '=',       K_ALT_EQUALS,    0,               0 },   /* 61 */
+   { '>',       0,               0,               0 },   /* 62 */
+   { '?',       0,               K_CTRL_QUESTION, 0 },   /* 63 */
+   { '@',       0,               259,             0 },   /* 64 */
+   { 'A',       K_ALT_A,         K_CTRL_A,        0 },   /* 65 */
+   { 'B',       K_ALT_B,         K_CTRL_B,        0 },   /* 66 */
+   { 'C',       K_ALT_C,         K_CTRL_C,        0 },   /* 67 */
+   { 'D',       K_ALT_D,         K_CTRL_D,        0 },   /* 68 */
+   { 'E',       K_ALT_E,         K_CTRL_E,        0 },   /* 69 */
+   { 'F',       K_ALT_F,         K_CTRL_F,        0 },   /* 70 */
+   { 'G',       K_ALT_G,         K_CTRL_G,        0 },   /* 71 */
+   { 'H',       K_ALT_H,         K_CTRL_H,        0 },   /* 72 */
+   { 'I',       K_ALT_I,         K_CTRL_I,        0 },   /* 73 */
+   { 'J',       K_ALT_J,         K_CTRL_J,        0 },   /* 74 */
+   { 'K',       K_ALT_K,         K_CTRL_K,        0 },   /* 75 */
+   { 'L',       K_ALT_L,         K_CTRL_L,        0 },   /* 76 */
+   { 'M',       K_ALT_M,         K_CTRL_M,        0 },   /* 77 */
+   { 'N',       K_ALT_N,         K_CTRL_N,        0 },   /* 78 */
+   { 'O',       K_ALT_O,         K_CTRL_O,        0 },   /* 79 */
+   { 'P',       K_ALT_P,         K_CTRL_P,        0 },   /* 80 */
+   { 'Q',       K_ALT_Q,         K_CTRL_Q,        0 },   /* 81 */
+   { 'R',       K_ALT_R,         K_CTRL_R,        0 },   /* 82 */
+   { 'S',       K_ALT_S,         K_CTRL_S,        0 },   /* 83 */
+   { 'T',       K_ALT_T,         K_CTRL_T,        0 },   /* 84 */
+   { 'U',       K_ALT_U,         K_CTRL_U,        0 },   /* 85 */
+   { 'V',       K_ALT_V,         K_CTRL_V,        0 },   /* 86 */
+   { 'W',       K_ALT_W,         K_CTRL_W,        0 },   /* 87 */
+   { 'X',       K_ALT_X,         K_CTRL_X,        0 },   /* 88 */
+   { 'Y',       K_ALT_Y,         K_CTRL_Y,        0 },   /* 89 */
+   { 'Z',       K_ALT_Z,         K_CTRL_Z,        0 },   /* 90 */
+   { '[',       K_ALT_OSB,       27,              0 },   /* 91 */
+   { '\\',      K_ALT_BACKSLASH, 28,              0 },   /* 92 */
+   { ']',       K_ALT_CSB,       29,              0 },   /* 93 */
+   { '^',       K_ALT_6,         30,              0 },   /* 94 */
+   { '_',       K_ALT_MINUS,     31,              0 },   /* 95 */
+   { '`',       K_ALT_BACKQUOTE, K_ALT_BACKQUOTE, 0 },   /* 96 */
+   { 'a',       K_ALT_A,         K_CTRL_A,        0 },   /* 97 */
+   { 'b',       K_ALT_B,         K_CTRL_B,        0 },   /* 98 */
+   { 'c',       K_ALT_C,         K_CTRL_C,        0 },   /* 99 */
    { 'd',       K_ALT_D,         K_CTRL_D,        0 },   /* 100 */
    { 'e',       K_ALT_E,         K_CTRL_E,        0 },   /* 101 */
    { 'f',       K_ALT_F,         K_CTRL_F,        0 },   /* 102 */
@@ -322,16 +313,16 @@ int hb_inkeySetLast( int iKey )
    return iLast;
 }
 
-void hb_inkeySetText( const char * szText, HB_SIZE nLen )
+void hb_inkeySetText( const char * szText, HB_SIZE nLen, HB_BOOL fEol )
 {
    PHB_GT pGT;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeySetText(%s,%" HB_PFS "u)", szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeySetText(%s,%" HB_PFS "u, %d)", szText, nLen, fEol ) );
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_INKEYSETTEXT( pGT, szText, nLen );
+      HB_GTSELF_INKEYSETTEXT( pGT, szText, nLen, fEol );
       hb_gt_BaseFree( pGT );
    }
 }
@@ -362,13 +353,13 @@ static int s_inkeyTransChar( int iKey, int iFlags, const HB_KEY_VALUE * pKeyVal 
                return KP_ALT_ENTER;
             break;
          case '+':
-            return iFlags & HB_KF_ALT ? KP_ALT_PLUS : KP_CTRL_PLUS;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_PLUS : KP_CTRL_PLUS;
          case '-':
-            return iFlags & HB_KF_ALT ? KP_ALT_MINUS : KP_CTRL_MINUS;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_MINUS : KP_CTRL_MINUS;
          case '*':
-            return iFlags & HB_KF_ALT ? KP_ALT_ASTERISK : KP_CTRL_ASTERISK;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_ASTERISK : KP_CTRL_ASTERISK;
          case '/':
-            return iFlags & HB_KF_ALT ? KP_ALT_SLASH : KP_CTRL_SLASH;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_SLASH : KP_CTRL_SLASH;
          case '.':
          case ',':
             if( iFlags & HB_KF_CTRL )
@@ -404,7 +395,7 @@ HB_SIZE hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize )
 {
    HB_SIZE nLen = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeyKeyString(%d,%p, %" HB_PFS "u)", iKey, buffer, nSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeyKeyString(%d,%p, %" HB_PFS "u)", iKey, ( void * ) buffer, nSize ) );
 
    if( HB_INKEY_ISUNICODE( iKey ) )
    {

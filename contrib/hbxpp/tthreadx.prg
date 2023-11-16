@@ -1,8 +1,8 @@
 /*
- * XPP compatible classes to manage threads
+ * Xbase++ compatible classes to manage threads
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * special thanks for Pritpal Bedi for class skeleton with info about
+ * Special thanks for Pritpal Bedi for class skeleton with info about
  * Xbase++ and to other contributors which I hope will finish and fix
  * this code
  *
@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,9 +53,6 @@
 #include "thread.ch"
 
 
-/*
- * SIGNAL class
- */
 CREATE CLASS Signal
 
    VAR cargo      AS USUAL EXPORTED
@@ -69,22 +66,22 @@ EXPORTED:
 
 ENDCLASS
 
-METHOD new( ... ) CLASS SIGNAL
+METHOD new( ... ) CLASS Signal
+
    ::mutex := hb_mutexCreate()
    ::Init( ... )
+
    RETURN Self
 
 METHOD wait( nTimeOut ) CLASS SIGNAL
    RETURN __clsSyncWait( ::mutex, nTimeOut )
 
-METHOD signal() CLASS SIGNAL
+METHOD signal() CLASS Signal
+
    __clsSyncSignal( ::mutex )
+
    RETURN Self
 
-
-/*
- * THREAD class
- */
 
 CREATE CLASS Thread
 
@@ -127,7 +124,8 @@ EXPORTED:
 
 ENDCLASS
 
-METHOD new( ... ) CLASS THREAD
+METHOD new( ... ) CLASS Thread
+
    LOCAL nMaxStackSize
 
    IF PCount() == 1
@@ -143,14 +141,19 @@ METHOD new( ... ) CLASS THREAD
 
       /* TODO: do not ignore thread stack size set by user in ::maxStackSize */
    ENDIF
+
    ::Init( ... )
+
    RETURN Self
 
-METHOD execute() CLASS THREAD
-   HB_SYMBOL_UNUSED( Self )
-   RETURN NIL
+METHOD PROCEDURE execute() CLASS Thread
 
-METHOD quit( xResult, nRestart ) CLASS THREAD
+   HB_SYMBOL_UNUSED( Self )
+
+   RETURN
+
+METHOD PROCEDURE quit( xResult, nRestart ) CLASS Thread
+
    IF hb_threadSelf() == ::pThreadID
       IF PCount() > 0
          ::result := xResult
@@ -160,9 +163,11 @@ METHOD quit( xResult, nRestart ) CLASS THREAD
       ENDIF
       QUIT
    ENDIF
-   RETURN NIL
 
-METHOD setInterval( nHSeconds ) CLASS THREAD
+   RETURN
+
+METHOD setInterval( nHSeconds ) CLASS Thread
+
    IF HB_ISNUMERIC( nHSeconds ) .AND. Int( nHSeconds ) >= 0
       ::interval := Int( nHSeconds )
    ELSEIF PCount() > 0 .OR. nHSeconds == NIL
@@ -171,16 +176,20 @@ METHOD setInterval( nHSeconds ) CLASS THREAD
       /* TODO: RT Error */
       RETURN .F.
    ENDIF
+
    RETURN .T.
 
-METHOD setPriority( nPriority ) CLASS THREAD
+METHOD setPriority( nPriority ) CLASS Thread
+
    /* TODO: add thread priority setting */
    IF HB_ISNUMERIC( nPriority )
       ::priority := nPriority
    ENDIF
+
    RETURN .F.
 
-METHOD setStartTime( nSeconds ) CLASS THREAD
+METHOD setStartTime( nSeconds ) CLASS Thread
+
    IF HB_ISNUMERIC( nSeconds )
       IF nSeconds < 0 .OR. nSeconds > 86400
          RETURN .F.
@@ -192,13 +201,13 @@ METHOD setStartTime( nSeconds ) CLASS THREAD
       /* TODO: RT Error */
       RETURN .F.
    ENDIF
+
    RETURN .T.
 
-METHOD start( xAction, ... ) CLASS THREAD
+METHOD start( xAction, ... ) CLASS Thread
 
    IF ::active
       RETURN .F.
-
    ELSE
       ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
             {| ... |
@@ -223,7 +232,7 @@ METHOD start( xAction, ... ) CLASS THREAD
                   Eval( ::_atStart, ... )
                ENDIF
 
-               WHILE .T.
+               DO WHILE .T.
 
                   nTime := hb_MilliSeconds()
 
@@ -235,7 +244,7 @@ METHOD start( xAction, ... ) CLASS THREAD
                      ENDIF
                   ALWAYS
                      __QuitCancel()
-                  ENDSEQUENCE
+                  END SEQUENCE
 
                   nTime := Int( ( hb_MilliSeconds() - nTime ) / 10 )
                   ::deltaTime := nTime
@@ -266,27 +275,30 @@ METHOD start( xAction, ... ) CLASS THREAD
                RETURN NIL
             }, ... )
 
-      ::threadID := IIF( ::pThreadID == NIL, 0, hb_threadID( ::pThreadID ) )
-
+      ::threadID := iif( ::pThreadID == NIL, 0, hb_threadID( ::pThreadID ) )
    ENDIF
 
-RETURN .T.
+   RETURN .T.
 
-METHOD synchronize( nTimeOut ) CLASS THREAD
+METHOD synchronize( nTimeOut ) CLASS Thread
+
    LOCAL pThreadID := ::pThreadID
 
    IF hb_threadSelf() != pThreadID
       RETURN hb_threadWait( pThreadID, ;
-                            iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
-                            nTimeOut / 100, ) )
+         iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
+         nTimeOut / 100, ) )
    ENDIF
+
    RETURN .F.
 
-METHOD threadSelf() CLASS THREAD
+METHOD threadSelf() CLASS Thread
    RETURN ::pThreadID
 
-/*
-METHOD threadID() CLASS THREAD
+#if 0
+METHOD threadID() CLASS Thread
+
    LOCAL pThreadID := ::pThreadID
-   RETURN IIF( pThreadID == NIL, 0, hb_threadID( pThreadID ) )
-*/
+
+   RETURN iif( pThreadID == NIL, 0, hb_threadID( pThreadID ) )
+#endif

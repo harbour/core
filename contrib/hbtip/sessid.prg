@@ -2,14 +2,7 @@
  * Functions to create session id and some utils
  *
  * Copyright 2008 Lorenzo Fiorini <lorenzo.fiorini@gmail.com>
- *
- * code from:
- * TIP Class oriented Internet protocol library
- *
- * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- *
- *    CGI Session Manager Class
- *
+ * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws> (CGI Session Manager Class)
  * Copyright 2003-2006 Francesco Saverio Giudice <info / at / fsgiudice / dot / com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -69,13 +62,14 @@ FUNCTION tip_GenerateSID( cCRCKey )
    cSID := ""
    nKey := 0
    FOR n := 1 TO SID_LENGTH
-      nRand := hb_RandomInt( 1, nLenKeys )
+      nRand := hb_randInt( nLenKeys )
       cSID  += SubStr( cBaseKeys, nRand, 1 )
       nKey  += nRand
    NEXT
 
    nSIDCRC := nKey * 51 // Max Value is 99603 a 5 chars number
    cTemp   := StrZero( nSIDCRC, 5 )
+
    cSIDCRC := ""
    FOR n := 1 TO Len( cTemp )
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
@@ -96,7 +90,7 @@ FUNCTION tip_CheckSID( cSID, cCRCKey )
    NEXT
 
    /* Recalculate the CRC */
-   nSIDCRC := nKey * 51 // Max Value is 99603. a 5 chars number
+   nSIDCRC := nKey * 51  // Max Value is 99603. a 5 chars number
    cTemp   := StrZero( nSIDCRC, 5 )
 
    cSIDCRC := ""
@@ -106,17 +100,13 @@ FUNCTION tip_CheckSID( cSID, cCRCKey )
 
    RETURN Right( cSID, 5 ) == cSIDCRC
 
-FUNCTION tip_DateToGMT( dDate, cTime )
+FUNCTION tip_DateToGMT( tDate )
 
-   LOCAL aDays   := { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
-   LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-
-   hb_default( @dDate, Date() )
-   hb_default( @cTime, Time() )
+   hb_default( @tDate, hb_DateTime() )
 
    RETURN ;
-      aDays[ DoW( dDate ) ] + ", " + ;
-      StrZero( Day( dDate ), 2 ) + " " + ;
-      aMonths[ Month( dDate ) ] + " " + ;
-      StrZero( Year( dDate ), 4 ) + " " + ;
-      cTime + " GMT"
+      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + ", " + ;
+      StrZero( Day( tDate ), 2 ) + " " + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + " " + ;
+      StrZero( Year( tDate ), 4 ) + " " + ;
+      hb_TToC( tDate, "", "hh:mm:ss" ) + " GMT"

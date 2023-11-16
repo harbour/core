@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -551,7 +551,7 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
          return;
 
       case HB_DBG_STATICNAME:
-         HB_TRACE( HB_TR_DEBUG, ( "STATICNAME %s index %d frame %p", szName, nIndex, pFrame ) );
+         HB_TRACE( HB_TR_DEBUG, ( "STATICNAME %s index %d frame %p", szName, nIndex, ( void * ) pFrame ) );
 
          hb_dbgAddStatic( info, szName, nIndex, pFrame );
          return;
@@ -611,7 +611,6 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
                hb_xfree( info->szToCursorModule );
             }
          }
-
          /* Check if we must skip every level above info->nTraceLevel */
          else if( info->bTraceOver )
          {
@@ -633,7 +632,7 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
                return;
          }
 
-         /* Check if'we skipping to the end of current routine */
+         /* Check if we're skipping to the end of current routine */
          if( info->bNextRoutine )
             return;
 
@@ -1618,7 +1617,9 @@ HB_BOOL hb_dbgIsValidStopLine( void * handle, const char * szModule, int nLine )
 
 const char * hb_dbgGetModuleName( void * handle, const char * szName )
 {
-   /* HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle; */
+   #if 0
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+   #endif
    HB_SYMBOL_UNUSED( handle );
 
    if( szName )

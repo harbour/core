@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,7 +54,7 @@ PROCEDURE Main_MATH()
    LOCAL l, s, o
 
    MEMVAR s0, s1, v2
-   PRIVATE s0 := "V2", s1 := "V", v2
+   PRIVATE s0, s1, v2
 
    /* Log() */
 
@@ -351,7 +351,7 @@ PROCEDURE Main_MATH()
    HBTEST Str( 100.00 / 10.0           )  IS "        10.00"
    HBTEST Str( sdDate - sdDateE        )  IS "   2445785"
    HBTEST Str( sdDate - sdDate         )  IS "         0"
-   HBTEST Str( 1234567890 * 1234567890 )  IS " 1524157875019052000"  /* real val is 1524157875019052100 */
+   HBTEST Str( 1234567890 * 1234567890 )  IS " 1524157875019052000" /* real val is 1524157875019052100 */, " 1524157875019052100"
 
    /* Mod() */
 
@@ -454,32 +454,54 @@ PROCEDURE Main_MATH()
 
 #ifdef __HARBOUR__
 
+   #pragma -kd+
+   #pragma -ks-
+
    o := ErrorNew()
    s := "oscode"
+   s1 := "co"
    o:&s := 1
+   HBTEST o:&s                            IS 1
    HBTEST o:&(s)                          IS 1
    o:&s++
    HBTEST o:&(s)                          IS 2
    HBTEST o:&(s)++                        IS 2
+   HBTEST o:&s++                          IS 3
    ++o:&s
-   HBTEST o:&(s)                          IS 4
-   HBTEST ++o:&(s)                        IS 5
+   HBTEST o:&(s)                          IS 5
+   HBTEST ++o:&(s)                        IS 6
+   HBTEST ++o:&s                          IS 7
    o:&s += 10
-   HBTEST o:&(s)                          IS 15
-   HBTEST o:&(s) += 200                   IS 215
+   HBTEST o:&(s)                          IS 17
+   HBTEST o:&(s) += 200                   IS 217
+   HBTEST o:&s += 100                     IS 317
+   o:os&s1.de *= 3
+   HBTEST o:os&s1.de                      IS 951
+   HBTEST o:os&s1.de += 49                IS 1000
+   HBTEST --o:os&s1.de                    IS 999
+   HBTEST ++o:os&s1.de                    IS 1000
 
    WITH OBJECT ErrorNew()
-      :&(s) := 1
+      :&s := 1
+      HBTEST :&s                             IS 1
       HBTEST :&(s)                           IS 1
-      :&(s)++
+      :&s++
       HBTEST :&(s)                           IS 2
       HBTEST :&(s)++                         IS 2
+      HBTEST :&s++                           IS 3
       ++:&(s)
-      HBTEST :&(s)                           IS 4
-      HBTEST ++:&(s)                         IS 5
+      HBTEST :&(s)                           IS 5
+      HBTEST ++:&(s)                         IS 6
+      HBTEST ++:&s                           IS 7
       :&(s) += 10
-      HBTEST :&(s)                           IS 15
-      HBTEST :&(s) += 200                    IS 215
+      HBTEST :&(s)                           IS 17
+      HBTEST :&(s) += 200                    IS 217
+      HBTEST :&s += 100                      IS 317
+      :os&s1.de *= 3
+      HBTEST :os&s1.de                       IS 951
+      HBTEST :os&s1.de += 49                 IS 1000
+      HBTEST --:os&s1.de                     IS 999
+      HBTEST ++:os&s1.de                     IS 1000
    ENDWITH
 
    WITH OBJECT ErrorNew()
@@ -488,25 +510,138 @@ PROCEDURE Main_MATH()
       :oscode++
       HBTEST :oscode                         IS 2
       HBTEST :oscode++                       IS 2
+      HBTEST :oscode++                       IS 3
       ++:oscode
-      HBTEST :oscode                         IS 4
-      HBTEST ++:oscode                       IS 5
+      HBTEST :oscode                         IS 5
+      HBTEST ++:oscode                       IS 6
+      HBTEST ++:oscode                       IS 7
       :oscode += 10
-      HBTEST :oscode                         IS 15
-      HBTEST :oscode += 200                  IS 215
+      HBTEST :oscode                         IS 17
+      HBTEST :oscode += 200                  IS 217
+      HBTEST :oscode += 100                  IS 317
+      :oscode *= 3
+      HBTEST :oscode                         IS 951
+      HBTEST :oscode += 49                   IS 1000
+      HBTEST --:oscode                       IS 999
+      HBTEST ++:oscode                       IS 1000
    ENDWITH
 
+   s0 := "V2"
+   s1 := "V"
    &s0 := 1
    HBTEST &s0                             IS 1
    &s0++
    HBTEST &s0                             IS 2
    HBTEST &(s0)++                         IS 2
+   HBTEST &s0++                           IS 3
    ++&s0
-   HBTEST &s0                             IS 4
-   HBTEST ++&(s0)                         IS 5
+   HBTEST &s0                             IS 5
+   HBTEST ++&(s0)                         IS 6
+   HBTEST ++&s0                           IS 7
    &s0 += 10
-   HBTEST &s0                             IS 15
-   HBTEST &(s0) += 200                    IS 215
+   HBTEST &s0                             IS 17
+   HBTEST &(s0) += 200                    IS 217
+   HBTEST &s0 += 100                      IS 317
+
+   &s1.2 := 1
+   HBTEST &s1.2                           IS 1
+   &s1.2++
+   HBTEST &s1.2                           IS 2
+   HBTEST &s1.2++                         IS 2
+   ++&s1.2
+   HBTEST &s1.2                           IS 4
+   HBTEST ++&s1.2                         IS 5
+   &s1.2 += 10
+   HBTEST &s1.2                           IS 15
+   HBTEST &s1.2 += 200                    IS 215
+
+   #pragma -ks+
+
+   o := ErrorNew()
+   s := "oscode"
+   s1 := "co"
+   o:&s := 1
+   HBTEST o:&s                            IS 1
+   HBTEST o:&(s)                          IS 1
+   o:&s++
+   HBTEST o:&(s)                          IS 2
+   HBTEST o:&(s)++                        IS 2
+   HBTEST o:&s++                          IS 3
+   ++o:&s
+   HBTEST o:&(s)                          IS 5
+   HBTEST ++o:&(s)                        IS 6
+   HBTEST ++o:&s                          IS 7
+   o:&s += 10
+   HBTEST o:&(s)                          IS 17
+   HBTEST o:&(s) += 200                   IS 217
+   HBTEST o:&s += 100                     IS 317
+   o:os&s1.de *= 3
+   HBTEST o:os&s1.de                      IS 951
+   HBTEST o:os&s1.de += 49                IS 1000
+   HBTEST --o:os&s1.de                    IS 999
+   HBTEST ++o:os&s1.de                    IS 1000
+
+   WITH OBJECT ErrorNew()
+      :&s := 1
+      HBTEST :&s                             IS 1
+      HBTEST :&(s)                           IS 1
+      :&s++
+      HBTEST :&(s)                           IS 2
+      HBTEST :&(s)++                         IS 2
+      HBTEST :&s++                           IS 3
+      ++:&(s)
+      HBTEST :&(s)                           IS 5
+      HBTEST ++:&(s)                         IS 6
+      HBTEST ++:&s                           IS 7
+      :&(s) += 10
+      HBTEST :&(s)                           IS 17
+      HBTEST :&(s) += 200                    IS 217
+      HBTEST :&s += 100                      IS 317
+      :os&s1.de *= 3
+      HBTEST :os&s1.de                       IS 951
+      HBTEST :os&s1.de += 49                 IS 1000
+      HBTEST --:os&s1.de                     IS 999
+      HBTEST ++:os&s1.de                     IS 1000
+   ENDWITH
+
+   WITH OBJECT ErrorNew()
+      :oscode := 1
+      HBTEST :oscode                         IS 1
+      :oscode++
+      HBTEST :oscode                         IS 2
+      HBTEST :oscode++                       IS 2
+      HBTEST :oscode++                       IS 3
+      ++:oscode
+      HBTEST :oscode                         IS 5
+      HBTEST ++:oscode                       IS 6
+      HBTEST ++:oscode                       IS 7
+      :oscode += 10
+      HBTEST :oscode                         IS 17
+      HBTEST :oscode += 200                  IS 217
+      HBTEST :oscode += 100                  IS 317
+      :oscode *= 3
+      HBTEST :oscode                         IS 951
+      HBTEST :oscode += 49                   IS 1000
+      HBTEST --:oscode                       IS 999
+      HBTEST ++:oscode                       IS 1000
+   ENDWITH
+
+   s0 := "V2"
+   s1 := "V"
+   &s0 := 1
+   HBTEST &s0                             IS 1
+   &s0++
+   HBTEST &s0                             IS 2
+   HBTEST &(s0)++                         IS 2
+   HBTEST &s0++                           IS 3
+   ++&s0
+   HBTEST &s0                             IS 5
+   HBTEST ++&(s0)                         IS 6
+   HBTEST ++&s0                           IS 7
+   &s0 += 10
+   HBTEST &s0                             IS 17
+   HBTEST &(s0) += 200                    IS 217
+   HBTEST &s0 += 100                      IS 317
 
    &s1.2 := 1
    HBTEST &s1.2                           IS 1

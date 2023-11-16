@@ -2,8 +2,9 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
+ * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com> (sendMail())
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (SSL support)
- * Copyright 2015 Jean Lefebvre (TLS support) 
+ * Copyright 2015 Jean Lefebvre (STARTTLS support)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,17 +47,11 @@
  *
  */
 
-/* 2007-04-12, Hannes Ziegler <hz AT knowlexbase.com>
-   Added method :sendMail()
-   2015-01-29, Jean Lefebvre
-   Added METHOD StartTLS()
-*/
-
 #include "hbclass.ch"
 
 #include "tip.ch"
 
-CREATE CLASS TIPClientSMTP FROM TIPClient
+CREATE CLASS TIPClientSMTP INHERIT TIPClient
 
    VAR lAuthLOGIN INIT .F.
    VAR lAuthPLAIN INIT .F.
@@ -201,9 +196,8 @@ METHOD DetectSecurity() CLASS TIPClientSMTP
          ::lAuthLogin := .T.
          ::lAuthPlain := .T.
       ENDIF
-      IF hb_LeftEq( ::cReply, "250-" )
-         LOOP
-      ELSEIF hb_LeftEq( ::cReply, "250 " )
+
+      IF hb_LeftEq( ::cReply, "250 " )
          EXIT
       ENDIF
    ENDDO
@@ -300,7 +294,7 @@ METHOD Write( cData, nLen, bCommit ) CLASS TIPClientSMTP
       ::bInitialized := .T.
    ENDIF
 
-   RETURN ::nLastWrite := ::super:Write( cData, nLen, bCommit )
+   RETURN ::super:Write( cData, nLen, bCommit )
 
 METHOD ServerSuportSecure( /* @ */ lAuthPlain, /* @ */ lAuthLogin ) CLASS TIPClientSMTP
 

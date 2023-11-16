@@ -5,8 +5,9 @@
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
- * Copyright 2004 Ron Pinkas <ron @ xHarbour.com>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2001-2004 Ron Pinkas <ron@profit-master.com> (TraceLog())
+ * Copyright 2002 Luiz Rafael Culik <culikr@uol.com.br> (strvalue(), LogError())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +20,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,16 +48,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2001 Ron Pinkas <ron@profit-master.com>
- *    TraceLog()
- *    CStr()
- * Copyright 2002 Luiz Rafael Culik <culikr@uol.com.br>
- *    StrValue()
- *    FWriteLine()
- *    LogError()
  */
 
 #include "error.ch"
@@ -221,7 +212,7 @@ STATIC FUNCTION xhb_DefError( oError )
    ? cMessage
 
    ?
-   ? "Error at ...:", ProcName() + "(" + hb_ntos( ProcLine() ) + ") in Module:", ProcFile()
+   ? "Error at ...:", err_ProcName( oError, 3 ) + "(" + hb_ntos( err_ProcLine( oError, 3 ) ) + ") in Module:", err_ModuleName( oError, 3 )
    n := 2
    WHILE ! Empty( ProcName( ++n ) )
       ? "Called from :", ProcName( n ) + ;
@@ -277,7 +268,7 @@ STATIC FUNCTION ErrorMessage( oError )
 
    RETURN cMessage
 
-STATIC FUNCTION LogError( oerr )
+STATIC FUNCTION LogError( oErr )
 
    LOCAL cScreen
    LOCAL cLogFile    := s_cErrorLog       // error log file name
@@ -502,7 +493,7 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, "" )
       FWriteLine( nHandle, "Subsystem Call ....: " + oErr:subsystem() )
       FWriteLine( nHandle, "System Code .......: " + strvalue( oErr:suBcode() ) )
-      FWriteLine( nHandle, "Default Status ....: " + strvalue( oerr:candefault() ) )
+      FWriteLine( nHandle, "Default Status ....: " + strvalue( oErr:candefault() ) )
       FWriteLine( nHandle, "Description .......: " + oErr:description() )
       FWriteLine( nHandle, "Operation .........: " + oErr:operation() )
       FWriteLine( nHandle, "Arguments .........: " + Arguments( oErr ) )
@@ -521,7 +512,7 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, " Trace Through:" )
       FWriteLine( nHandle, "----------------" )
 
-      FWriteLine( nHandle, PadR( ProcName(), 21 ) + " : " + Transform( ProcLine(), "999,999" ) + " in Module: " + ProcFile() )
+      FWriteLine( nHandle, PadR( err_ProcName( oErr, 3 ), 21 ) + " : " + Transform( err_ProcLine( oErr, 3 ), "999,999" ) + " in Module: " + err_ModuleName( oErr, 3 ) )
 
       nCount := 3
       WHILE ! Empty( ProcName( ++nCount ) )
@@ -679,64 +670,3 @@ PROCEDURE __MinimalErrorHandler( oError )
    QUIT
 
    RETURN
-
-FUNCTION xhb_ErrorNew( cSubSystem, nGenCode, nSubCode, ;
-      cOperation, cDescription, aArgs, ;
-      cModuleName, cProcName, nProcLine )
-
-   LOCAL oError := ErrorNew()
-   LOCAL aStack, n
-
-   IF HB_ISSTRING( cSubSystem )
-      oError:SubSystem := cSubSystem
-   ENDIF
-   IF HB_ISNUMERIC( nGenCode )
-      oError:GenCode := nGenCode
-   ENDIF
-   IF HB_ISNUMERIC( nSubCode )
-      oError:SubCode := nSubCode
-   ENDIF
-   IF HB_ISSTRING( cOperation )
-      oError:Operation := cOperation
-   ENDIF
-   IF HB_ISSTRING( cDescription )
-      oError:Description := cDescription
-   ENDIF
-   IF HB_ISARRAY( aArgs )
-      oError:Args := aArgs
-   ENDIF
-
-   IF __objHasMsg( oError, "MODULENAME" )
-      IF HB_ISSTRING( cModuleName )
-         oError:ModuleName := cModuleName
-      ELSE
-         oError:ModuleName := ProcFile( 1 )
-      ENDIF
-   ENDIF
-
-   IF __objHasMsg( oError, "PROCNAME" )
-      IF HB_ISSTRING( cProcName )
-         oError:ProcName := cProcName
-      ELSE
-         oError:ProcName := ProcName( 1 )
-      ENDIF
-   ENDIF
-
-   IF __objHasMsg( oError, "PROCLINE" )
-      IF HB_ISNUMERIC( nProcLine )
-         oError:ProcLine := nProcLine
-      ELSE
-         oError:ProcLine := ProcLine( 1 )
-      ENDIF
-   ENDIF
-
-   IF __objHasMsg( oError, "AASTACK" )
-      aStack := {}
-      n := 0
-      WHILE ! Empty( ProcName( ++n ) )
-         AAdd( aStack, { ProcFile( n ), ProcName( n ), ProcLine( n ) } )
-      ENDDO
-      oError:aAStack := aStack
-   ENDIF
-
-   RETURN oError

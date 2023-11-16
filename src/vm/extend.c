@@ -2,6 +2,8 @@
  * The Extend API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2009 Viktor Szakats (vszakats.net/harbour) (hb_stor(), hb_retn*len(), hb_retdl(), hb_parn*def())
+ * Copyright 2000 Jose Lalin <dezac@corevia.com> (hb_retd())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,26 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2009 Viktor Szakats (vszakats.net/harbour)
- *    hb_stor()
- *    hb_retnlen()
- *    hb_retnilen()
- *    hb_retnllen()
- *    hb_retndlen()
- *    hb_retdl()
- *    hb_parnidef() (based on idea by Mindaugas Kavaliauskas)
- *    hb_parnldef()
- *
- * Copyright 2000 Jose Lalin <dezac@corevia.com>
- *    hb_retd()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -341,7 +323,7 @@ char * hb_pardsbuff( char * szDate, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_pardsbuff(%p, %d)", szDate, iParam ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_pardsbuff(%p, %d)", ( void * ) szDate, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -404,7 +386,7 @@ HB_BOOL hb_partdt( long * plJulian, long * plMilliSec, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_partdt(%p,%p,%d)", plJulian, plMilliSec, iParam ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_partdt(%p,%p,%d)", ( void * ) plJulian, ( void * ) plMilliSec, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -507,11 +489,7 @@ int  hb_parni( int iParam )
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( int ) ( unsigned int ) pItem->item.asDouble.value;
-#else
-         return ( int ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_INT( pItem->item.asDouble.value );
    }
 
    return 0;
@@ -535,11 +513,7 @@ int  hb_parnidef( int iParam, int iDefValue )
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( int ) ( unsigned int ) pItem->item.asDouble.value;
-#else
-         return ( int ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_INT( pItem->item.asDouble.value );
    }
 
    return iDefValue;
@@ -563,11 +537,7 @@ long  hb_parnl( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( long ) ( unsigned long ) pItem->item.asDouble.value;
-#else
-         return ( long ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_LONG( pItem->item.asDouble.value );
    }
 
    return 0;
@@ -591,11 +561,7 @@ long  hb_parnldef( int iParam, long lDefValue )
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( long ) ( unsigned long ) pItem->item.asDouble.value;
-#else
-         return ( long ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_LONG( pItem->item.asDouble.value );
    }
 
    return lDefValue;
@@ -619,7 +585,7 @@ HB_ISIZ hb_parns( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-         return ( HB_ISIZ ) pItem->item.asDouble.value;
+         return HB_CAST_ISIZ( pItem->item.asDouble.value );
    }
 
    return 0;
@@ -643,7 +609,7 @@ HB_ISIZ hb_parnsdef( int iParam, HB_ISIZ nDefValue )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-         return ( HB_ISIZ ) pItem->item.asDouble.value;
+         return HB_CAST_ISIZ( pItem->item.asDouble.value );
    }
 
    return nDefValue;
@@ -668,11 +634,7 @@ HB_LONGLONG  hb_parnll( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_LONGLONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( HB_LONGLONG ) ( HB_ULONGLONG ) pItem->item.asDouble.value;
-#else
-         return ( HB_LONGLONG ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_LONGLONG( pItem->item.asDouble.value );
    }
 
    return 0;
@@ -697,11 +659,7 @@ HB_MAXINT hb_parnint( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_MAXINT ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( HB_MAXINT ) ( HB_MAXUINT ) pItem->item.asDouble.value;
-#else
-         return ( HB_MAXINT ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_MAXINT( pItem->item.asDouble.value );
    }
 
    return 0;
@@ -725,11 +683,7 @@ HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT nDefValue )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_MAXINT ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( HB_MAXINT ) ( HB_MAXUINT ) pItem->item.asDouble.value;
-#else
-         return ( HB_MAXINT ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_MAXINT( pItem->item.asDouble.value );
    }
 
    return nDefValue;
@@ -759,7 +713,7 @@ void * hb_parptrGC( const HB_GC_FUNCS * pFuncs, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_parptrGC(%p,%d)", pFuncs, iParam ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parptrGC(%p,%d)", ( const void * ) pFuncs, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -953,7 +907,7 @@ char  * hb_parvdsbuff( char * szDate, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_parvdsbuff(%p, %d, ...)", szDate, iParam ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvdsbuff(%p, %d, ...)", ( void * ) szDate, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1049,7 +1003,7 @@ HB_BOOL hb_parvtdt( long * plJulian, long * plMilliSec, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_parvtdt(%p,%p,%d, ...)", plJulian, plMilliSec, iParam ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvtdt(%p,%p,%d, ...)", ( void * ) plJulian, ( void * ) plMilliSec, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1171,11 +1125,7 @@ int  hb_parvni( int iParam, ... )
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( int ) ( unsigned int ) pItem->item.asDouble.value;
-#else
-         return ( int ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_INT( pItem->item.asDouble.value );
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -1210,11 +1160,7 @@ long  hb_parvnl( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( long ) ( unsigned long ) pItem->item.asDouble.value;
-#else
-         return ( long ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_LONG( pItem->item.asDouble.value );
       /* CA-Cl*pper does it */
       else if( HB_IS_DATETIME( pItem ) )
          return ( long ) pItem->item.asDateTime.julian;
@@ -1252,7 +1198,7 @@ HB_ISIZ hb_parvns( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-         return ( HB_ISIZ ) pItem->item.asDouble.value;
+         return HB_CAST_ISIZ( pItem->item.asDouble.value );
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -1288,11 +1234,7 @@ HB_LONGLONG hb_parvnll( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_LONGLONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( HB_LONGLONG ) ( HB_ULONGLONG ) pItem->item.asDouble.value;
-#else
-         return ( HB_LONGLONG ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_LONGLONG( pItem->item.asDouble.value );
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -1328,11 +1270,7 @@ HB_MAXINT hb_parvnint( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_MAXINT ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( HB_MAXINT ) ( HB_MAXUINT ) pItem->item.asDouble.value;
-#else
-         return ( HB_MAXINT ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_MAXINT( pItem->item.asDouble.value );
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -1384,7 +1322,7 @@ void * hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_parvptrGC(%p,%d, ...)", pFuncs, iParam ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvptrGC(%p,%d, ...)", ( const void * ) pFuncs, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {

@@ -20,4 +20,4 @@
 
 ${hb_name}.hbx
 
-fi_wrp.c
+core.c

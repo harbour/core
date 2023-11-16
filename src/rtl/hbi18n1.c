@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -141,7 +141,7 @@ static const HB_PLURAL_FORMS s_plural_forms[] =
    { "VI",    HB_I18N_PLURAL_VI    }
 };
 
-#define HB_PLURAL_FOMRS_COUNT  ( sizeof( s_plural_forms ) / sizeof( HB_PLURAL_FORMS ) )
+#define HB_PLURAL_FOMRS_COUNT  HB_SIZEOFARRAY( s_plural_forms )
 
 static const HB_UCHAR s_signature[ 4 ] = { 193, 'H', 'B', 'L' };
 typedef struct _HB_I18N_TRANS
@@ -379,7 +379,7 @@ static PHB_I18N_TRANS hb_i18n_initialize( PHB_ITEM pTable )
 
    if( HB_IS_HASH( pTable ) )
    {
-      PHB_ITEM pKey, pContext, pDefContext = NULL, pValue;
+      PHB_ITEM pKey, pContext, pDefContext = NULL;
 
       pKey = hb_itemPutCConst( NULL, "CONTEXT" );
       pContext = hb_hashGetItemPtr( pTable, pKey, 0 );
@@ -391,6 +391,8 @@ static PHB_I18N_TRANS hb_i18n_initialize( PHB_ITEM pTable )
 
       if( pContext && pDefContext )
       {
+         PHB_ITEM pValue;
+
          pI18N = ( PHB_I18N_TRANS ) hb_xgrabz( sizeof( HB_I18N_TRANS ) );
          hb_atomic_set( &pI18N->iUsers, 1 );
          pI18N->table = pTable;
@@ -660,7 +662,7 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
                                          const char * szCdpID,
                                          HB_BOOL fBase, HB_BOOL fTranslate )
 {
-   const char * szOldCdpID = NULL, * szKey;
+   const char * szOldCdpID = NULL;
 
    if( pI18N )
    {
@@ -671,6 +673,8 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
          szOldCdpID = cdpage->id;
       if( cdp && cdp != cdpage )
       {
+         const char * szKey;
+
          if( fTranslate && cdpage )
          {
             HB_SIZE nHashLen = hb_hashLen( pI18N->context_table ), ul;
@@ -1036,9 +1040,10 @@ HB_FUNC( HB_I18N_ADDTEXT )
       {
          if( HB_IS_ARRAY( pTrans ) )
          {
-            HB_SIZE nLen = hb_arrayLen( pTrans ), n;
+            HB_SIZE nLen = hb_arrayLen( pTrans );
             if( nLen != 0 )
             {
+               HB_SIZE n;
                for( n = 1; n <= nLen; ++n )
                {
                   if( ! HB_IS_STRING( hb_arrayGetItemPtr( pTrans, n ) ) )

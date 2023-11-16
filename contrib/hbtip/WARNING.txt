@@ -1,0 +1,42 @@
+WARNING for HBTIP users
+=======================
+
+Due to the excessive amount of problem reports and long known (and unfixed)
+problems and due to the non-trivial nature of internet protocols, this document
+_strongly recommends to avoid_ using this library in anything production or
+in fact anything more serious than simple test code for educational purposes.
+Please notice that even if something happens to work in some specific
+scenario, it's highly likely it's not a stable solution, nor is it a secure
+solution.
+
+The only reason hbtip hasn't been deleted altogether is compatibility
+with 3.0, xHarbour and existing projects, plus the fact there are still some
+low-level functions that do work fine (tip_MimeType()) or have no better
+replacement yet (tip_MailAssemble()).
+
+For internet protocol related tasks, the recommended and supported library
+is _hbcurl_, which is a thin wrapper over libcurl's 'easy' API. libcurl is
+a highly ubiquitious, very stable, actively and professionally developed,
+secure communications library:
+
+   https://curl.haxx.se/libcurl/c/
+
+hbcurl's functionality covers _all_ hbtip protocol classes, and it does offer
+support for several protocols besides these.
+
+If you're looking for all required static and dynamic libraries to use hbcurl,
+including OpenSSL and libssh2, both 32 and 64-bit. See this page about feature
+support and other details:
+
+   https://github.com/vszakats/harbour-deps/
+
+Usage examples found on the internet for other languages are most of the time
+directly usable with minor modifications in Harbour. You can find several
+working examples under the hbcurl tests directory as well. Live curl
+command-lines can also be converted into compilable/adaptable API code using
+the `--libcurl <targe-source-file>` curl option.
+
+If you opt to use hbtip anyway, and find any problem with it (like very common
+SMTP or FTP incompatibilities with various live servers found on the internet),
+your best bet is to address the problem yourself. Patches of sufficent quality
+will be of course accepted.

@@ -1,0 +1,24 @@
+WARNING for XHB contrib users
+=============================
+
+This contrib is deprecated and not maintained anymore.
+
+This was originally meant as a temporary stop-gap solution to help migrating
+existing code written for xHarbour to Harbour, plus a means of documenting
+the differences between these two branches of the language. The recommended
+path is to gradually migrate to use native core Harbour functions and core
+language elements, then finalize that process by dropping the need for this
+library.
+
+Linking this library and/or using its headers (`hbcompat.ch` and `xhb.ch` in
+particular) may cause various unintended side-effects both at compilation
+and runtime.
+
+Most of this code is also never tested by this fork, and none of it is ever
+used, so the chances of bugs is higher than in other parts of Harbour.
+
+If you can't do without some parts of this code, feel free to fork it locally
+or publicly and continue maintaining it there, otherwise try switching to
+core Harbour functionality ASAP.
+
+-Viktor

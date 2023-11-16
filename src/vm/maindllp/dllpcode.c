@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -136,10 +136,10 @@ PHB_FUNC hb_dllGetProcAddress( const char * szProcName )
          {
 #if defined( HB_OS_WIN_CE )
             LPCTSTR s_lpGetProcAddr = TEXT( "_dll_hb_vmProcAddress" );
-            s_pProcGet = ( HB_PROC_GET ) GetProcAddress( s_hModule, s_lpGetProcAddr + i );
+            s_pProcGet = ( HB_PROC_GET ) ( void * ) GetProcAddress( s_hModule, s_lpGetProcAddr + i );
 #else
             static const char * s_szGetProcAddr = "_dll_hb_vmProcAddress";
-            s_pProcGet = ( HB_PROC_GET ) GetProcAddress( s_hModule, s_szGetProcAddr + i );
+            s_pProcGet = ( HB_PROC_GET ) ( void * ) GetProcAddress( s_hModule, s_szGetProcAddr + i );
 #endif
          }
          while( s_pProcGet == NULL && ( i -= i == 4 ? 3 : 1 ) >= 0 );

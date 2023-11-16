@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -89,7 +89,7 @@ CREATE CLASS TBColumn
    METHOD setStyle( nStyle, lNewValue )
 #endif
 
-   METHOD New( cHeading, bBlock )                    /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( cHeading, bBlock )                    /* NOTE: This method is a Harbour extension [vszakats] */
 
 ENDCLASS
 
@@ -200,7 +200,7 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBColumn
 
 #endif
 
-METHOD New( cHeading, bBlock ) CLASS TBColumn
+METHOD Init( cHeading, bBlock ) CLASS TBColumn
 
    ::cHeading := cHeading  /* NOTE: CA-Cl*pper allows any type here. [vszakats] */
    ::bBlock := bBlock      /* NOTE: CA-Cl*pper allows any type here. [vszakats] */

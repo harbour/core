@@ -1,12 +1,8 @@
 /*
  * CT3 video functions:
- *
  * ScreenAttr(), ScreenMix(), SayScreen(),
  * ClearWin(), InvertWin(), UnTextWin(), CharWin(), ColorWin(), ColorRepl()
- *
- *   and Harbour extension:
- *
- * ScreenText()
+ * and Harbour extension: ScreenText()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -21,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,7 +47,6 @@
  *
  */
 
-#include "hbdefs.h"
 #include "hbapi.h"
 #include "hbapigt.h"
 
@@ -82,8 +77,8 @@ HB_FUNC( SCREENMIX )
    {
       const char * szText = hb_parc( 1 );
       const char * szAttr;
-      HB_SIZE nAttr = hb_parclen( 2 ), ul = 0;
-      int iRow, iCol, i;
+      HB_SIZE nAttr = hb_parclen( 2 );
+      int iRow, iCol;
 
       if( nAttr == 0 )
       {
@@ -107,7 +102,8 @@ HB_FUNC( SCREENMIX )
          HB_USHORT usChar;
          HB_WCHAR wc;
          PHB_CODEPAGE cdp = hb_gtHostCP();
-         HB_SIZE nIndex = 0;
+         HB_SIZE nIndex = 0, ul = 0;
+         int i;
 
          hb_gtBeginWrite();
          i = iCol;
@@ -140,7 +136,7 @@ HB_FUNC( SAYSCREEN )
    if( nLen )
    {
       const char * szText = hb_parc( 1 );
-      int iRow, iCol, i;
+      int iRow, iCol;
 
       hb_gtGetPos( &iRow, &iCol );
       if( HB_ISNUM( 2 ) )
@@ -153,6 +149,7 @@ HB_FUNC( SAYSCREEN )
       {
          PHB_CODEPAGE cdp = hb_gtHostCP();
          HB_SIZE nIndex = 0;
+         int i;
 
          hb_gtBeginWrite();
          i = iCol;
@@ -186,7 +183,7 @@ static HB_BOOL hb_ctGetWinCord( int * piTop, int * piLeft,
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
 
-   hb_gtGetPosEx( piTop, piLeft );
+   hb_gtGetPos( piTop, piLeft );
 
    if( HB_ISNUM( 1 ) )
       *piTop = hb_parni( 1 );
@@ -296,10 +293,11 @@ HB_FUNC( INVERTWIN )
 HB_FUNC( UNTEXTWIN )
 {
    int iTop, iLeft, iBottom, iRight;
-   HB_USHORT usRepl, usInit, usEnd;
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
+      HB_USHORT usRepl, usInit, usEnd;
+
       usRepl = ( HB_USHORT ) hb_ctGetClearChar( 5 );
 
       if( HB_ISNUM( 6 ) )
@@ -420,15 +418,15 @@ HB_FUNC( COLORWIN )
    hb_retc_null();
 }
 
-HB_FUNC( SCREENTEXT ) /* HB_EXTENSION */
+HB_FUNC( SCREENTEXT )  /* HB_EXTENSION */
 {
    int iTop, iLeft, iBottom, iRight;
-   char * pBuffer, * szText;
-   HB_SIZE nSize;
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
-      nSize = ( HB_SIZE ) ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
+      char * pBuffer;
+      char * szText;
+      HB_SIZE nSize = ( HB_SIZE ) ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
       szText = pBuffer = ( char * ) hb_xgrab( nSize + 1 );
       while( iTop <= iBottom )
       {
@@ -454,7 +452,7 @@ HB_FUNC( COLORREPL )
 {
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
-   int iRow = 0, iCol;
+   int iRow = 0;
    int iNewColor, iOldColor = 0;
    HB_BOOL fAll = HB_FALSE;
 
@@ -468,7 +466,7 @@ HB_FUNC( COLORREPL )
    hb_gtBeginWrite();
    while( iRow <= iMaxRow )
    {
-      iCol = 0;
+      int iCol = 0;
       while( iCol <= iMaxCol )
       {
          int iColor;

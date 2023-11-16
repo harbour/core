@@ -1,14 +1,6 @@
-/*
- * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    db*() documentation
- *    ord*() documentation
- *    rdd*() documentation
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -32,12 +24,10 @@
 
       This function replaces the IndexOrd() function.
    $EXAMPLES$
-      USE test NEW VIA "DBFNTX"
-      ? ordBagExt()      //  Returns .ntx
-      dbCloseArea()
-      USE test NEW VIA "DBFCDX"
-      ? ordBagExt()      //  Returns .cdx
-      dbCloseArea()
+      USE test VIA "DBFNTX"
+      ? ordBagExt()  // --> ".ntx"
+      USE test VIA "DBFCDX"
+      ? ordBagExt()  // --> ".cdx"
    $STATUS$
       S
    $COMPLIANCE$
@@ -52,6 +42,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -75,17 +67,17 @@
       work area. If <nOrder> is specidied, it will represent the position
       in the order list of the target order. If <cOrderName> is specified,
       it will represent the name of the target order. In essence, it will
-      tell the name of the database (if That Rdd is in use) for a given
+      tell the name of the database (if That RDD is in use) for a given
       index name or index order number. If <cOrderName> is not specified
       or <nOrder> is 0, the Current active order will be used.
    $EXAMPLES$
       USE test VIA "DBFCDX" NEW
       SET INDEX TO test
-      ordBagName( "TeName" )        // Returns: Customer
-      ordBagName( "TeLast" )        // Returns: Customer
-      ordBagName( "teZip" )         // Returns: Customer
+      ? ordBagName( "TeName" )    // --> "Customer"
+      ? ordBagName( "TeLast" )    // --> "Customer"
+      ? ordBagName( "teZip" )     // --> "Customer"
       ordSetFocus( "TeName" )
-      ? OrderBagName()              // Returns: Custumer
+      ? ordBagName()              // --> "Custumer"
    $STATUS$
       S
    $COMPLIANCE$
@@ -100,6 +92,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -131,10 +125,10 @@
       order.
 
       <bForCondition> is a code block that defines a FOR condition that
-       each record within the scope must meet in order to be processed. If
-       a record does not meet the specified condition, it is ignored and the
-       next  record is processed.Duplicate keys values are not added to the
-       index file when a FOR condition is Used.
+      each record within the scope must meet in order to be processed. If
+      a record does not meet the specified condition, it is ignored and the
+      next  record is processed. Duplicate keys values are not added to the
+      index file when a FOR condition is Used.
    $DESCRIPTION$
 
    $EXAMPLES$
@@ -151,6 +145,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -190,7 +186,7 @@
       macro expanding the value of <cExpKey>.
 
       If <lUnique> is not specified, then the current internal setting of
-      SET UNIQUE ON or OFF will be observed.
+      `SET UNIQUE ON` or OFF will be observed.
 
       The active RDD driver determines the capacity in the order for a
       specific order bag.
@@ -203,11 +199,11 @@
       added. It is does exist, then the <cOrderBagName> replaces the former
       name in the order list in the current or specified work area.
    $EXAMPLES$
-      USE test VIA "DBFNDX" NEW
-      ordCreate( "FNAME",, "test->fName" )
+      USE test VIA "DBFNTX"
+      ? ordCreate( "FNAME",, "field->first" )
 
-      USE test VIA "DBFCDX" NEW
-      ordCreate( , "lName", "test->lName" )
+      USE test VIA "DBFCDX"
+      ? ordCreate( , "LNAME", "field->last" )
    $STATUS$
       S
    $COMPLIANCE$
@@ -222,6 +218,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -253,7 +251,7 @@
       and RDDADS drivers).
    $EXAMPLES$
       USE test VIA "DBFCDX" NEW
-      ordDestroy( "lName", "test" )
+      ? ordDestroy( "lName", "test" )
    $STATUS$
       S
    $COMPLIANCE$
@@ -268,6 +266,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -291,13 +291,13 @@
    $DESCRIPTION$
       This function returns a character string that is the expression for
       the FOR condition for the specified order. The order may be specified
-      if <xOrder> is the name of the order.However, <xOrder> may be an
+      if <xOrder> is the name of the order. However, <xOrder> may be an
       numeric which represent the position in the order list of the desired
       Order.
    $EXAMPLES$
       USE test NEW VIA "DBFCDX"
-      INDEX ON field->ID TO test FOR field->ID > 100
-      ordFor( "test" )   // Returns: field->ID > 100
+      INDEX ON field->first TO test FOR field->age > 50
+      ? ordFor( "test" )        // --> "field->age > 50"
    $STATUS$
       S
    $COMPLIANCE$
@@ -314,6 +314,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -337,12 +339,12 @@
 
    $EXAMPLES$
       USE test NEW VIA "DBFCDX"
-      INDEX ON field->fName TO test FOR field->fName > "CK"
-      INDEX ON field->Id    TO testid
+      INDEX ON field->first TO test FOR field->first > "CK"
+      INDEX ON field->age   TO testage
 
-      ordKey( "test" )      // Returns: field->fName
+      ? ordKey( "test" )  // --> "field->first"
       ordSetFocus( 2 )
-      ordKey()               // Returns: field->Id
+      ? ordKey()          // --> "field->age"
    $STATUS$
       S
    $COMPLIANCE$
@@ -370,7 +372,7 @@
    $ONELINER$
       Returns the file extension of the index module used in an application
    $SYNTAX$
-      IndexExt() --> <cExtension>
+      IndexExt() --> cExtension
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -378,7 +380,7 @@
    $DESCRIPTION$
       This function returns a string that tells what indexes are to be used
       or will be created in the compiled application. The default value is
-      ".ntx". This is controled by the particular database driver that is
+      `.ntx`. This is controlled by the particular database driver that is
       linked with the application.
    $EXAMPLES$
       IF IndexExt() == ".ntx"
@@ -409,7 +411,7 @@
    $ONELINER$
       Yields the key expression of a specified index file.
    $SYNTAX$
-      IndexKey( <nOrder> ) --> <cIndexKey>
+      IndexKey( <nOrder> ) --> cIndexKey
    $ARGUMENTS$
       <nOrder>  Index order number
    $RETURNS$
@@ -419,12 +421,13 @@
       index file
 
       The index key is displayed for an index file that is designated by
-      <nOrder>, its position in the USE...INDEX or SET INDEX TO command in
+      <nOrder>, its position in the `USE...INDEX` or `SET INDEX TO` command in
       the currently selected or designated work area. If there is no
       corresnponding index key at the specified order position, a NULL
       byte will be returned.
    $EXAMPLES$
-      USE test NEW INDEX test1
+      USE test NEW
+      INDEX ON field->first TO test
       ? IndexKey( 1 )
    $STATUS$
       R
@@ -451,7 +454,7 @@
    $ONELINER$
       Returns the numeric position of the controlling index.
    $SYNTAX$
-      IndexOrd() --> <nPosition>
+      IndexOrd() --> nPosition
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -462,9 +465,10 @@
       A returned value of 0 indicated that no active index is controlling
       the database, which therefore is in the natural order.
    $EXAMPLES$
-      USE test NEW INDEX test1
+      USE test NEW
+      INDEX ON field->first TO test
       IF IndexOrd() > 0
-         ? "Current order is", IndexOrd()
+         ? "Current order is", hb_ntos( IndexOrd() )
       ENDIF
    $STATUS$
       R

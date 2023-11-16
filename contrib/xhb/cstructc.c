@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbvmint.h" /* TOFIX: clean the code to not access any internal HVM structures */
+#include "hbvmint.h" /* FIXME: clean the code to not access any internal HVM structures */
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbstack.h"
@@ -57,7 +57,7 @@
 
 static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCRaw(%p, %s, %" HB_PFS "u)", pItem, szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCRaw(%p, %s, %" HB_PFS "u)", ( void * ) pItem, szText, nLen ) );
 
    if( pItem )
    {
@@ -84,7 +84,7 @@ static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, HB_SIZE nLe
 #undef hb_itemPutCRawStatic
 static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCRawStatic(%p, %s, %" HB_PFS "u)", pItem, szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCRawStatic(%p, %s, %" HB_PFS "u)", ( void * ) pItem, szText, nLen ) );
 
    if( pItem )
    {
@@ -234,50 +234,44 @@ static HB_UINT SizeOfCStructure( PHB_ITEM aDef, HB_UINT uiAlign )
          uiPad = ( ( uiMemberSize < uiAlign ) ? uiMemberSize : uiAlign );
 
          if( ( cShift = ( HB_BYTE ) ( uiSize % uiPad ) ) > 0 )
-         {
-            uiSize += ( uiPad - cShift );
-         }
+            uiSize += uiPad - cShift;
       }
 
       uiSize += uiMemberSize;
 
-      /* printf( "#%" HB_PFS "u Size: %u Align: %u Pad: %u Shift %i Size: %u\n", nIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize ); */
-
+      #if 0
+      printf( "#%" HB_PFS "u Size: %u Align: %u Pad: %u Shift %i Size: %u\n", nIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize );
+      #endif
    }
 
    if( ( cShift = ( HB_BYTE ) ( uiSize % uiAlign ) ) > 0 )
-   {
-      uiSize += ( uiAlign - cShift );
-   }
+      uiSize += uiAlign - cShift;
 
-   /* printf( "#%" HB_PFS "u Size: %u Align: %u Pad: %u Shift %i Size: %u\n", nIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize ); */
+   #if 0
+   printf( "#%" HB_PFS "u Size: %u Align: %u Pad: %u Shift %i Size: %u\n", nIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize );
+   #endif
 
    return uiSize;
 }
 
 HB_FUNC( HB_SIZEOFCSTRUCTURE )
 {
-   PHB_ITEM aDef   = hb_param( 1, HB_IT_ARRAY );
-   PHB_ITEM pAlign = hb_param( 2, HB_IT_INTEGER );
-   HB_UINT  uiAlign;
+   PHB_ITEM aDef = hb_param( 1, HB_IT_ARRAY );
 
    if( aDef )
    {
+      PHB_ITEM pAlign = hb_param( 2, HB_IT_INTEGER );
+      HB_UINT  uiAlign;
+
       if( pAlign )
-      {
          uiAlign = ( HB_BYTE ) pAlign->item.asInteger.value;
-      }
       else
-      {
          uiAlign = 8;
-      }
 
       hb_retni( SizeOfCStructure( aDef, uiAlign ) );
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 2023, NULL, "SizeOfCStructure", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
 }
 
 static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign, HB_UINT * puiSize )
@@ -292,13 +286,17 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
 
    *puiSize = SizeOfCStructure( aDef, uiAlign );
 
-   /* printf( "Size: %i\n", *puiSize ); */
+   #if 0
+   printf( "Size: %i\n", *puiSize );
+   #endif
 
    Buffer = ( HB_BYTE * ) hb_xgrab( *puiSize + 1 );
 
    for( nIndex = 0; nIndex < nLen; nIndex++ )
    {
-      /* printf( "#: %i\n", nIndex ); */
+      #if 0
+      printf( "#: %i\n", nIndex );
+      #endif
 
       switch( ( pBaseDef->pItems + nIndex )->item.asInteger.value )
       {
@@ -481,35 +479,27 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
          HB_UINT uiPad = ( ( uiMemberSize < uiAlign ) ? uiMemberSize : uiAlign );
 
          if( ( cShift = ( HB_BYTE ) ( uiOffset % uiPad ) ) > 0 )
-         {
-            uiOffset += ( uiPad - cShift );
-         }
+            uiOffset += uiPad - cShift;
       }
 
-      /* printf( "* Size: %i Offset: %i\n", uiMemberSize, uiOffset ); */
+      #if 0
+      printf( "* Size: %i Offset: %i\n", uiMemberSize, uiOffset );
+      #endif
 
       switch( ( pBaseDef->pItems + nIndex )->item.asInteger.value )
       {
          case CTYPE_CHAR:  /* char */
             if( ( pBaseVar->pItems + nIndex )->type )
-            {
                *( ( char * ) ( Buffer + uiOffset ) ) = ( char ) ( ( pBaseVar->pItems + nIndex )->item.asInteger.value );
-            }
             else
-            {
                *( ( char * ) ( Buffer + uiOffset ) ) = 0;
-            }
             break;
 
          case CTYPE_UNSIGNED_CHAR:  /* unsigned char */
             if( ( pBaseVar->pItems + nIndex )->type )
-            {
                *( ( HB_BYTE * ) ( Buffer + uiOffset ) ) = ( HB_BYTE ) ( ( pBaseVar->pItems + nIndex )->item.asInteger.value );
-            }
             else
-            {
                *( ( HB_BYTE * ) ( Buffer + uiOffset ) ) = 0;
-            }
             break;
 
          case CTYPE_CHAR_PTR:  /* char * */
@@ -565,21 +555,13 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
 
          case CTYPE_SHORT:  /* short */
             if( ( pBaseVar->pItems + nIndex )->type == HB_IT_INTEGER )
-            {
                *( ( short * ) ( Buffer + uiOffset ) ) = ( short ) ( ( pBaseVar->pItems + nIndex )->item.asInteger.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_LONG )
-            {
                *( ( short * ) ( Buffer + uiOffset ) ) = ( short ) ( ( pBaseVar->pItems + nIndex )->item.asLong.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_DOUBLE )
-            {
                *( ( short * ) ( Buffer + uiOffset ) ) = ( short ) ( ( pBaseVar->pItems + nIndex )->item.asDouble.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_NIL )
-            {
                *( ( short * ) ( Buffer + uiOffset ) ) = 0;
-            }
             else
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
@@ -589,21 +571,13 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
 
          case CTYPE_UNSIGNED_SHORT:  /* unsigned short */
             if( ( pBaseVar->pItems + nIndex )->type == HB_IT_INTEGER )
-            {
                *( ( unsigned short * ) ( Buffer + uiOffset ) ) = ( unsigned short ) ( ( pBaseVar->pItems + nIndex )->item.asInteger.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_LONG )
-            {
                *( ( unsigned short * ) ( Buffer + uiOffset ) ) = ( unsigned short ) ( ( pBaseVar->pItems + nIndex )->item.asLong.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_DOUBLE )
-            {
                *( ( unsigned short * ) ( Buffer + uiOffset ) ) = ( unsigned short ) ( ( pBaseVar->pItems + nIndex )->item.asDouble.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_NIL )
-            {
                *( ( unsigned short * ) ( Buffer + uiOffset ) ) = 0;
-            }
             else
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
@@ -657,21 +631,13 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
 
          case CTYPE_INT:  /* int */
             if( ( pBaseVar->pItems + nIndex )->type == HB_IT_INTEGER )
-            {
                *( ( int * ) ( Buffer + uiOffset ) ) = ( int ) ( ( pBaseVar->pItems + nIndex )->item.asInteger.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_LONG )
-            {
                *( ( int * ) ( Buffer + uiOffset ) ) = ( int ) ( ( pBaseVar->pItems + nIndex )->item.asLong.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_DOUBLE )
-            {
                *( ( int * ) ( Buffer + uiOffset ) ) = ( int ) ( ( pBaseVar->pItems + nIndex )->item.asDouble.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_NIL )
-            {
                *( ( int * ) ( Buffer + uiOffset ) ) = 0;
-            }
             else
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
@@ -681,21 +647,13 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
 
          case CTYPE_UNSIGNED_INT:  /* unsigned int */
             if( ( pBaseVar->pItems + nIndex )->type == HB_IT_INTEGER )
-            {
                *( ( unsigned int * ) ( Buffer + uiOffset ) ) = ( unsigned int ) ( ( pBaseVar->pItems + nIndex )->item.asInteger.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_LONG )
-            {
                *( ( unsigned int * ) ( Buffer + uiOffset ) ) = ( unsigned int ) ( ( pBaseVar->pItems + nIndex )->item.asLong.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_DOUBLE )
-            {
                *( ( unsigned int * ) ( Buffer + uiOffset ) ) = ( unsigned int ) ( ( pBaseVar->pItems + nIndex )->item.asDouble.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_NIL )
-            {
                *( ( unsigned int * ) ( Buffer + uiOffset ) ) = 0;
-            }
             else
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
@@ -750,21 +708,13 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
 
          case CTYPE_LONG:  /* long */
             if( ( pBaseVar->pItems + nIndex )->type == HB_IT_INTEGER )
-            {
                *( ( long * ) ( Buffer + uiOffset ) ) = ( long ) ( ( pBaseVar->pItems + nIndex )->item.asInteger.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_LONG )
-            {
                *( ( long * ) ( Buffer + uiOffset ) ) = ( long ) ( ( pBaseVar->pItems + nIndex )->item.asLong.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_DOUBLE )
-            {
                *( ( long * ) ( Buffer + uiOffset ) ) = ( long ) ( ( pBaseVar->pItems + nIndex )->item.asDouble.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_NIL )
-            {
                *( ( long * ) ( Buffer + uiOffset ) ) = 0;
-            }
             else
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
@@ -774,21 +724,13 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
 
          case CTYPE_UNSIGNED_LONG:  /* unsigned long */
             if( ( pBaseVar->pItems + nIndex )->type == HB_IT_INTEGER )
-            {
                *( ( unsigned long * ) ( Buffer + uiOffset ) ) = ( unsigned long ) ( ( pBaseVar->pItems + nIndex )->item.asInteger.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_LONG )
-            {
                *( ( unsigned long * ) ( Buffer + uiOffset ) ) = ( unsigned long ) ( ( pBaseVar->pItems + nIndex )->item.asLong.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_DOUBLE )
-            {
                *( ( unsigned long * ) ( Buffer + uiOffset ) ) = ( unsigned long ) ( ( pBaseVar->pItems + nIndex )->item.asDouble.value );
-            }
             else if( ( pBaseVar->pItems + nIndex )->type == HB_IT_NIL )
-            {
                *( ( unsigned long * ) ( Buffer + uiOffset ) ) = 0;
-            }
             else
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
@@ -842,13 +784,9 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
 
          case CTYPE_FLOAT:  /* float */
             if( ( pBaseVar->pItems + nIndex )->type )
-            {
                *( ( float * ) ( Buffer + uiOffset ) ) = ( float ) ( pBaseVar->pItems + nIndex )->item.asDouble.value;
-            }
             else
-            {
                *( ( float * ) ( Buffer + uiOffset ) ) = 0;
-            }
             break;
 
          case CTYPE_FLOAT_PTR:  /* float * */
@@ -880,13 +818,9 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
 
          case CTYPE_DOUBLE:  /* double */
             if( ( pBaseVar->pItems + nIndex )->type )
-            {
                *( ( double * ) ( Buffer + uiOffset ) ) = ( pBaseVar->pItems + nIndex )->item.asDouble.value;
-            }
             else
-            {
                *( ( double * ) ( Buffer + uiOffset ) ) = 0;
-            }
             break;
 
          case CTYPE_DOUBLE_PTR:  /* double * */
@@ -946,38 +880,25 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
                if( HB_IS_LONG( pStructure ) )
                {
                   if( ( pBaseDef->pItems + nIndex )->item.asInteger.value > CTYPE_STRUCTURE_PTR )
-                  {
                      *( ( void ** ) ( Buffer + uiOffset ) ) = ( void * ) ( HB_PTRUINT ) pStructure->item.asLong.value;
-                  }
                   else
-                  {
                      memcpy( ( void * ) ( Buffer + uiOffset ), ( void * ) ( HB_PTRUINT ) pStructure->item.asLong.value, uiMemberSize );
-                  }
                }
 #if UINT_MAX == ULONG_MAX
                else if( HB_IS_INTEGER( pStructure ) )
                {
                   if( ( pBaseDef->pItems + nIndex )->item.asInteger.value > CTYPE_STRUCTURE_PTR )
-                  {
                      *( ( void ** ) ( Buffer + uiOffset ) ) = ( void * ) ( HB_PTRUINT ) pStructure->item.asInteger.value;
-                  }
                   else
-                  {
                      memcpy( ( void * ) ( Buffer + uiOffset ), ( void * ) ( HB_PTRUINT ) pStructure->item.asInteger.value, uiMemberSize );
-                  }
                }
 #endif
                else if( HB_IS_NIL( pStructure ) )
                {
                   if( ( pBaseDef->pItems + nIndex )->item.asInteger.value > CTYPE_STRUCTURE_PTR )
-                  {
                      *( ( void ** ) ( Buffer + uiOffset ) ) = NULL;
-                  }
                   else
-                  {
-                     /* TraceLog( NULL,"ArrayToStructure() - Empty Inplace\n" ); */
                      memset( ( void * ) ( Buffer + uiOffset ), 0, uiMemberSize );
-                  }
                }
                else if( strncmp( hb_objGetClsName( pStructure ), "C Structure", 11 ) == 0 )
                {
@@ -987,26 +908,20 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
                   hb_objSendMsg( pStructure, "VALUE", 0 );
 
                   if( ( pBaseDef->pItems + nIndex )->item.asInteger.value > CTYPE_STRUCTURE_PTR )
-                  {
                      *( ( void ** ) ( Buffer + uiOffset ) ) = ( void * ) pInternalBuffer->item.asString.value;
-                  }
                   else
-                  {
                      memcpy( ( void * ) ( Buffer + uiOffset ), ( void * ) pInternalBuffer->item.asString.value, uiMemberSize );
-                  }
                }
                else
-               {
                   hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-               }
             }
             else
-            {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-            }
       }
 
-      /* printf( "Wrote %i bytes at Offset %i\n", uiMemberSize, uiOffset ); */
+      #if 0
+      printf( "Wrote %i bytes at Offset %i\n", uiMemberSize, uiOffset );
+      #endif
 
       uiOffset += uiMemberSize;
    }
@@ -1027,21 +942,16 @@ HB_FUNC( HB_ARRAYTOSTRUCTURE )
       HB_BYTE * Buffer;
 
       if( pAlign )
-      {
          uiAlign = ( HB_BYTE ) pAlign->item.asInteger.value;
-      }
       else
-      {
          uiAlign = 8;
-      }
 
       Buffer = ArrayToStructure( aVar, aDef, uiAlign, &uiSize );
+
       hb_retclen_buffer( ( char * ) Buffer, uiSize );
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-   }
 }
 
 static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM aDef, HB_UINT uiAlign, HB_BOOL bAdoptNested, PHB_ITEM pRet )
@@ -1051,12 +961,18 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
    HB_SIZE       nIndex;
    HB_UINT       uiOffset, uiMemberSize;
    HB_BYTE       cShift;
-   /* PHB_ITEM pRet = hb_itemNew( NULL ); */
+#if 0
+   PHB_ITEM pRet = hb_itemNew( NULL );
+#endif
    PHB_BASEARRAY pBaseVar;
 
-   /* TraceLog( NULL, "StructureToArray(%p, %p, %u, %i) ->%u\n", Buffer, aDef, uiAlign, bAdoptNested, nLen ); */
+   #if 0
+   TraceLog( NULL, "StructureToArray(%p, %p, %u, %i) ->%u\n", ( const void * ) Buffer, ( void * ) aDef, uiAlign, bAdoptNested, nLen );
+   #endif
 
-   /* hb_arrayNew( pRet, nLen ); */
+   #if 0
+   hb_arrayNew( pRet, nLen );
+   #endif
    pBaseVar = pRet->item.asArray.value;
 
    uiOffset = 0;
@@ -1161,21 +1077,21 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
          HB_UINT uiPad = ( ( uiMemberSize < uiAlign ) ? uiMemberSize : uiAlign );
 
          if( ( cShift = ( HB_BYTE ) ( uiOffset % uiPad ) ) > 0 )
-         {
-            uiOffset += ( uiPad - cShift );
-         }
+            uiOffset += uiPad - cShift;
 
-         /* TraceLog( NULL, "* Size: %i Offset: %i Pad: %i\n", uiMemberSize, uiOffset, uiPad ); */
+         #if 0
+         TraceLog( NULL, "* Size: %i Offset: %i Pad: %i\n", uiMemberSize, uiOffset, uiPad );
+         #endif
       }
       else
       {
-         /* TraceLog( NULL, "* Size: %i Offset: %i\n", uiMemberSize, uiOffset ); */
+         #if 0
+         TraceLog( NULL, "* Size: %i Offset: %i\n", uiMemberSize, uiOffset );
+         #endif
       }
 
       if( ( uiOffset + uiMemberSize ) > nBufferLen )
-      {
          break;
-      }
 
       switch( ( pBaseDef->pItems + nIndex )->item.asInteger.value )
       {
@@ -1190,16 +1106,22 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
          case CTYPE_CHAR_PTR:  /* char * */
             if( HB_IS_STRING( pBaseVar->pItems + nIndex ) && ( pBaseVar->pItems + nIndex )->item.asString.value == *( ( char ** ) ( Buffer + uiOffset ) ) )
             {
-               /* TraceLog( NULL, "IDENTICAL: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "IDENTICAL: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
             }
             else if( ! bAdoptNested )
             {
-               /* TraceLog( NULL, "Static: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "Static: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
                hb_itemPutCConst( pBaseVar->pItems + nIndex, *( ( char ** ) ( Buffer + uiOffset ) ) );
             }
             else
             {
-               /* TraceLog( NULL, "Adopt: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "Adopt: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
                hb_itemPutC( pBaseVar->pItems + nIndex, *( ( char ** ) ( Buffer + uiOffset ) ) );
             }
             break;
@@ -1207,16 +1129,22 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
          case CTYPE_UNSIGNED_CHAR_PTR:  /* unsigned char * */
             if( HB_IS_STRING( pBaseVar->pItems + nIndex ) && ( pBaseVar->pItems + nIndex )->item.asString.value == *( ( char ** ) ( Buffer + uiOffset ) ) )
             {
-               /* TraceLog( NULL, "IDENTICAL: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "IDENTICAL: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
             }
             else if( ! bAdoptNested )
             {
-               /* TraceLog( NULL, "Static: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "Static: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
                hb_itemPutCConst( pBaseVar->pItems + nIndex, *( ( char ** ) ( Buffer + uiOffset ) ) );
             }
             else
             {
-               /* TraceLog( NULL, "Adopt: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "Adopt: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
                hb_itemPutC( pBaseVar->pItems + nIndex, *( ( char ** ) ( Buffer + uiOffset ) ) );
             }
             break;
@@ -1296,11 +1224,15 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
             hb_objSendMsg( pStructure, "SizeOf", 0 );
             uiNestedSize = ( HB_UINT ) hb_parns( -1 );
 
-            /* TraceLog( NULL, "* NestedSize: %i Offset: %i\n", uiNestedSize, uiOffset ); */
+            #if 0
+            TraceLog( NULL, "* NestedSize: %i Offset: %i\n", uiNestedSize, uiOffset );
+            #endif
 
             if( ( pBaseDef->pItems + nIndex )->item.asInteger.value > CTYPE_STRUCTURE_PTR )
             {
-               /* printf( "Offset %i Pointer: %p\n", uiOffset, *( char ** ) ( (long ** )( Buffer + uiOffset ) ) ); */
+               #if 0
+               printf( "Offset %i Pointer: %p\n", uiOffset, *( char ** ) ( (long ** )( Buffer + uiOffset ) ) );
+               #endif
 
                if( *( char ** ) ( ( long ** ) ( Buffer + uiOffset ) ) )
                {
@@ -1308,19 +1240,17 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
                   PHB_ITEM      pInternalBuffer = pBaseStructure->pItems + pBaseStructure->nLen - 1;
 
                   if( ! bAdoptNested )
-                  {
                      hb_itemPutCRawStatic( pInternalBuffer, *( char ** ) ( ( long ** ) ( Buffer + uiOffset ) ), uiNestedSize );
-                  }
                   else
-                  {
                      hb_itemPutCRaw( pInternalBuffer, *( char ** ) ( ( long ** ) ( Buffer + uiOffset ) ), uiNestedSize );
-                  }
 
                   hb_objSendMsg( pStructure, "DEVALUE", 0 );
                }
                else
                {
-                  /* hb_objSendMsg( pStructure, "RESET", 0 ); */
+#if 0
+                  hb_objSendMsg( pStructure, "RESET", 0 );
+#endif
                   hb_itemClear( pStructure );
                }
             }
@@ -1333,13 +1263,17 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
                Adopt.type = HB_IT_LOGICAL;
                Adopt.item.asLogical.value = bAdoptNested;
 
-               /* TraceLog( NULL, "Before Devalue\n" ); */
+               #if 0
+               TraceLog( NULL, "Before Devalue\n" );
+               #endif
 
                hb_itemPutCRawStatic( pInternalBuffer, ( char * ) ( HB_BYTE * ) ( Buffer + uiOffset ), uiNestedSize );
 
                hb_objSendMsg( pStructure, "DEVALUE", 1, &Adopt );
 
-               /* TraceLog( NULL, "After Devalue\n" ); */
+               #if 0
+               TraceLog( NULL, "After Devalue\n" );
+               #endif
             }
 
             hb_itemMove( pBaseVar->pItems + nIndex, pStructure );
@@ -1350,7 +1284,9 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
 
       uiOffset += uiMemberSize;
 
-      /* TraceLog( NULL, "AFTER Size: %i Offset: %i\n", uiMemberSize, uiOffset ); */
+      #if 0
+      TraceLog( NULL, "AFTER Size: %i Offset: %i\n", uiMemberSize, uiOffset );
+      #endif
    }
 
    return pRet;
@@ -1363,12 +1299,12 @@ HB_FUNC( HB_STRUCTURETOARRAY )
    PHB_ITEM pAlign    = hb_param( 3, HB_IT_INTEGER );
    PHB_ITEM pAdopt    = hb_param( 4, HB_IT_LOGICAL );
    PHB_ITEM pRet      = hb_param( 5, HB_IT_ARRAY );
-   HB_BOOL  bAdopt;
 
    if( Structure && aDef )
    {
       HB_BYTE * Buffer = ( HB_BYTE * ) Structure->item.asString.value;
       HB_UINT   uiAlign;
+      HB_BOOL   bAdopt;
 
       if( pAlign )
          uiAlign = ( HB_BYTE ) pAlign->item.asInteger.value;
@@ -1392,17 +1328,11 @@ HB_FUNC( HB_POINTER2STRING )
    PHB_ITEM pLen     = hb_param( 2, HB_IT_NUMERIC );
 
    if( HB_IS_POINTER( pPointer ) && pLen )
-   {
       hb_retclen( ( char * ) hb_itemGetPtr( pPointer ), hb_itemGetNS( pLen ) );
-   }
    else if( HB_IS_INTEGER( pPointer ) && pLen )
-   {
       hb_retclen( ( char * ) ( HB_PTRUINT ) hb_itemGetNI( pPointer ), hb_itemGetNS( pLen ) );
-   }
    else if( HB_IS_LONG( pPointer ) && pLen )
-   {
       hb_retclen( ( char * ) ( HB_PTRUINT ) hb_itemGetNL( pPointer ), hb_itemGetNS( pLen ) );
-   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
@@ -1416,7 +1346,6 @@ HB_FUNC( HB_STRING2POINTER )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
-
 
 HB_FUNC( __CSTR_COPYTO )
 {

@@ -48,6 +48,7 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc tcc),)
          ifneq ($(filter $(HB_COMPILER),pocc pocc64 poccarm),)
             HB_CFLAGS += -DPNG_ALLOCATED
          endif
+         HB_CFLAGS += -DPNG_ARM_NEON_OPT=0
 
          include $(TOP)$(ROOT)config/lib.mk
       else
@@ -64,9 +65,9 @@ else
 endif
 
 # ORIGIN http://libpng.org/pub/png/libpng.html
-# VER    1.6.8
-# URL    http://downloads.sourceforge.net/libpng/libpng-1.6.8.tar.gz
-# DIFF   png.dif
+# VER    1.6.40
+# URL    http://prdownloads.sourceforge.net/libpng/libpng-1.6.40.tar.xz
+# DIFF   png.diff
 #
 # MAP    LICENSE
 # MAP    png.c

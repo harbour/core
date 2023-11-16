@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,7 +52,7 @@
  * This source file contains a modified version of MXML (Mini XML)
  * library, developed by Giancarlo Niccolai. MXML is released under
  * LGPL license; this modified version (called HBXML) is released under
- * GPL with HARBOUR exception. HBXML license does not extends into
+ * GPL with Harbour exception. HBXML license does not extends into
  * MXML; HBXML and any modification to HBXML is to be considered as
  * a part of Harbour or xHarbour projects, as it is modified to
  * be specifically working in the context of the compiler's RTL.
@@ -69,7 +69,7 @@
    #define MXML_LINE_TERMINATOR       '\r'
    #define MXML_SOFT_LINE_TERMINATOR  '\n'
 #else
-/*Notice, this works for unix AND windows */
+/* Notice, this works for both Unix and Windows */
    #define MXML_LINE_TERMINATOR       '\n'
    #define MXML_SOFT_LINE_TERMINATOR  '\r'
 #endif
@@ -84,8 +84,9 @@
 #define MXML_STYLE_TAB                0x0002
 #define MXML_STYLE_THREESPACES        0x0004
 #define MXML_STYLE_NOESCAPE           0x0008
+#define MXML_STYLE_NONEWLINE          0x0010
 
-/* Status vaules */
+/* Status values */
 
 typedef enum
 {
@@ -137,12 +138,9 @@ struct tag_mxml_output;
 typedef void ( *MXML_REFIL_FUNC )( struct tag_mxml_refil * ref );
 typedef void ( *MXML_OUTPUT_FUNC )( struct tag_mxml_output * out, const char * data, HB_ISIZ len );
 
-/*************************************************
-   Structures holding the XML data
- **************************************************/
+/* --- Structures holding the XML data --- */
 
-
-/* Refiller */
+/* Re-filler */
 
 typedef struct tag_mxml_refil
 {
@@ -156,7 +154,7 @@ typedef struct tag_mxml_refil
    HB_ISIZ         buflen;  /* valid characters in the current buffer */
    HB_ISIZ         bufpos;  /* current position */
 
-   /* lenght of the stream for implementing progress indicators */
+   /* length of the stream for implementing progress indicators */
    HB_ISIZ streampos;
    HB_ISIZ streamlen;
 

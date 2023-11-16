@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -157,7 +157,7 @@ static HB_BOOL hb_mlInit( PHB_MLC_INFO pMLC, int iParAdd )
       pMLC->nLen = hb_parclen( 1 );
 
       pMLC->nTabSize = hb_parnsdef( 3 + iParAdd, 4 );
-      pMLC->fWordWrap = hb_parldef( 4 + iParAdd, 1 );
+      pMLC->fWordWrap = hb_parldef( 4 + iParAdd, HB_TRUE );
 
 #ifdef HB_CLP_STRICT
       if( pMLC->nLineLength > 254 )
@@ -302,21 +302,21 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
  *           [ <nLineNumber>=1 ],
  *           [ <nTabSize>=4 ], [ <lWrap>=.T. ],
  *           [ <cEOL>|<acEOLs> ],
- *           [ <lPad>=.T. ] ) -> <cLine>
+ *           [ <lPad>=.T. ] ) --> <cLine>
  *
  * NOTE: <lPad> is undocumented parameter and will be removed and
  *       replaced by other solution in the future.
  */
 HB_FUNC( MEMOLINE )
 {
-   HB_MLC_INFO MLC;
    HB_ISIZ nLine = hb_parnsdef( 3, 1 );
-   HB_BOOL fPad = hb_parldef( 7, 1 );
    char * szLine = NULL;
-   HB_SIZE nIndex, nLen = 0, nSize, nCol;
+   HB_SIZE nLen = 0;
 
    if( nLine >= 1 )
    {
+      HB_MLC_INFO MLC;
+
       if( hb_mlInit( &MLC, 1 ) )
       {
          while( --nLine )
@@ -324,8 +324,12 @@ HB_FUNC( MEMOLINE )
             if( ! hb_mlGetLine( &MLC ) )
                break;
          }
+
          if( nLine == 0 )
          {
+            HB_BOOL fPad = hb_parldef( 7, HB_TRUE );
+            HB_SIZE nIndex, nSize, nCol;
+
             nIndex = MLC.nOffset;
 
             /* CA-Cl*pper also does not check if line exists and always
@@ -409,7 +413,7 @@ HB_FUNC( MEMOLINE )
 
 /* MLCount( <cString>, [ <nLineLength>=79 ],
  *          [ <nTabSize>=4 ], [ <lWrap>=.T. ],
- *          [ <cEOL>|<acEOLs> ] ) -> <nLines>
+ *          [ <cEOL>|<acEOLs> ] ) --> <nLines>
  */
 HB_FUNC( MLCOUNT )
 {
@@ -428,7 +432,7 @@ HB_FUNC( MLCOUNT )
 /* MLPos( <cString>, [ <nLineLength>=79 ],
  *        [ <nLineNumber>=1 ],
  *        [ <nTabSize>=4 ], [ <lWrap>=.T. ],
- *        [ <cEOL>|<acEOLs> ] ) -> <nLinePos>
+ *        [ <cEOL>|<acEOLs> ] ) --> <nLinePos>
  */
 HB_FUNC( MLPOS )
 {
@@ -462,7 +466,7 @@ HB_FUNC( MLPOS )
 /* MLCToPos( <cString>, [ <nLineLength>=79 ],
  *           [ <nLine>=1 ], [ <nCol>=0 ],
  *           [ <nTabSize>=4 ], [ <lWrap>=.T. ],
- *           [ <cEOL>|<acEOLs> ] ) -> <nPos>
+ *           [ <cEOL>|<acEOLs> ] ) --> <nPos>
  */
 HB_FUNC( MLCTOPOS )
 {
@@ -501,7 +505,7 @@ HB_FUNC( MLCTOPOS )
 /* MPosToLC( <cString>, [ <nLineLength>=79 ],
  *           [ <nPos>=1 ],
  *           [ <nTabSize>=4 ], [ <lWrap>=.T. ],
- *           [ <cEOL>|<acEOLs> ] ) -> <aLineCol>
+ *           [ <cEOL>|<acEOLs> ] ) --> <aLineCol>
  */
 HB_FUNC( MPOSTOLC )
 {
@@ -543,7 +547,7 @@ HB_FUNC( MPOSTOLC )
 
 /* hb_MLEval( <cString>, <bCode>, [ <nLineLength>=79 ],
  *            [ <nTabSize>=4 ], [ <lWrap>=.T. ],
- *            [ <nPos> ], [ @<nRow> ], [ @<nCol> ] ) -> <nLines>
+ *            [ <nPos> ], [ @<nRow> ], [ @<nCol> ] ) --> <nLines>
  */
 HB_FUNC( HB_MLEVAL )
 {
@@ -559,7 +563,7 @@ HB_FUNC( HB_MLEVAL )
       HB_SIZE nLen = hb_parclen( 1 );
       HB_SIZE nTabSize = hb_parnsdef( 4, 4 );
       HB_SIZE nPos = hb_parns( 6 ) - 1;
-      HB_BOOL fWordWrap = hb_parldef( 5, 1 );
+      HB_BOOL fWordWrap = hb_parldef( 5, HB_TRUE );
       PHB_CODEPAGE cdp = hb_vmCDP();
       PHB_ITEM pLineItem = NULL, pSoftItem = NULL;
       HB_BOOL fSoftCR, fEOL;

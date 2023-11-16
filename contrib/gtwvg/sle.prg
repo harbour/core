@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpSLE compatible Class
  *
  * Copyright 2008-2011 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                    Xbase++ xbpSLE compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               07Dec2008
  */
 
 #include "hbclass.ch"
@@ -103,11 +97,11 @@ CREATE CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
    METHOD changed( lChanged )                   SETGET
 
    VAR    sl_returnPressed
-   METHOD returnPressed( ... )                  SETGET
+   METHOD returnPressed( bReturnPressed )       SETGET
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
+METHOD WvgSLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -117,7 +111,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
 
    RETURN Self
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
+METHOD WvgSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    LOCAL es_ := { ES_LEFT, ES_RIGHT, ES_CENTER }
 
@@ -161,7 +155,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSL
 
    RETURN Self
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
+METHOD WvgSLE:handleEvent( nMessage, aNM )
 
    DO CASE
    CASE nMessage == HB_GTE_RESIZED
@@ -181,55 +175,56 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
          IF HB_ISBLOCK( ::sl_killInputFocus )
-            Eval( ::sl_killInputFocus, NIL, NIL, Self )
+            Eval( ::sl_killInputFocus, , , Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
          IF HB_ISBLOCK( ::sl_setInputFocus )
-            Eval( ::sl_setInputFocus, NIL, NIL, Self )
+            Eval( ::sl_setInputFocus, , , Self )
          ENDIF
 
       ENDCASE
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    CASE nMessage == HB_GTE_ANY
       DO CASE
       CASE aNM[ NMH_code ] == WM_KILLFOCUS
          IF HB_ISBLOCK( ::sl_killInputFocus )
-            Eval( ::sl_killInputFocus, NIL, NIL, Self )
+            Eval( ::sl_killInputFocus, , , Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_SETFOCUS
          IF HB_ISBLOCK( ::sl_setInputFocus )
-            Eval( ::sl_setInputFocus, NIL, NIL, Self )
+            Eval( ::sl_setInputFocus, , , Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_KEYDOWN
-         IF aNM[ 2 ] == K_ENTER
+         DO CASE
+         CASE aNM[ 2 ] == K_ENTER
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
             IF HB_ISBLOCK( ::sl_returnPressed )
-               Eval( ::sl_returnPressed, NIL, NIL, Self )
+               Eval( ::sl_returnPressed, , , Self )
             ENDIF
-         ELSEIF aNM[ 2 ] == VK_TAB
+         CASE aNM[ 2 ] == VK_TAB
             IF ::isParentCrt()
                ::oParent:setFocus()
                RETURN EVENT_HANDELLED
             ENDIF
-         ELSEIF aNM[ 2 ] == 65
+         CASE aNM[ 2 ] == 65
             // RETURN EVENT_HANDELLED
-         ENDIF
+         ENDCASE
 
       ENDCASE
 
@@ -237,11 +232,11 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
    RETURN EVENT_UNHANDELLED
 
-METHOD destroy() CLASS WvgSLE
+METHOD PROCEDURE WvgSLE:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgSLE:changed( lChanged )
 
@@ -266,11 +261,11 @@ METHOD WvgSLE:copyMarked()
    LOCAL n, nB, nE
 
    n := ::sendMessage( EM_GETSEL )
-   nB := Wvg_LOWORD( n )
-   nE := Wvg_HIWORD( n )
+   nB := wvg_LOWORD( n )
+   nE := wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
-      Wvt_SetClipboard( SubStr( ::getData(), nB, n ) )
+      wvt_SetClipboard( SubStr( ::getData(), nB, n ) )
    ENDIF
 
    RETURN n
@@ -280,8 +275,8 @@ METHOD WvgSLE:cutMarked()
    LOCAL n, nB, nE, cText
 
    n := ::sendMessage( EM_GETSEL )
-   nB := Wvg_LOWORD( n )
-   nE := Wvg_HIWORD( n )
+   nB := wvg_LOWORD( n )
+   nE := wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
       cText := ::getData()
@@ -290,14 +285,12 @@ METHOD WvgSLE:cutMarked()
 
    RETURN n
 
-METHOD WvgSLE:returnPressed( ... )
+METHOD WvgSLE:returnPressed( bReturnPressed )
 
-   LOCAL a_ := hb_AParams()
-
-   IF Len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
-      ::sl_returnPressed := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_returnPressed )
-      Eval( ::sl_returnPressed, NIL, NIL, Self )
+   IF HB_ISBLOCK( bReturnPressed )
+      ::sl_returnPressed := bReturnPressed
+   ELSEIF HB_ISBLOCK( ::sl_returnPressed )
+      Eval( ::sl_returnPressed, , , Self )
    ENDIF
 
    RETURN Self

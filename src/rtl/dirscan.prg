@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -82,8 +82,12 @@ FUNCTION hb_DirRemoveAll( cDir )
 
    LOCAL aFile, cPath, cFile, nAttr
 
-   IF hb_vfDirExists( cDir )
-      cPath := hb_DirSepAdd( cDir )
+   IF ! Empty( cDir ) .AND. hb_vfDirExists( cDir )
+      cPath := hb_DirSepDel( cDir )
+      IF hb_vfAttrGet( cPath, @nAttr ) .AND. ! hb_bitAnd( nAttr, HB_FA_READONLY ) == 0
+         hb_vfAttrSet( cPath, hb_bitXor( nAttr, HB_FA_READONLY ) )
+      ENDIF
+      cPath := hb_DirSepAdd( cPath )
       FOR EACH aFile IN hb_vfDirectory( cPath + hb_osFileMask(), "HSDL" )
          IF "D" $ aFile[ F_ATTR ] .AND. ! "L" $ aFile[ F_ATTR ]
             IF !( aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".." .OR. aFile[ F_NAME ] == "" )
@@ -104,7 +108,7 @@ FUNCTION hb_DirRemoveAll( cDir )
       RETURN hb_vfDirRemove( cDir ) == 0
    ENDIF
 
-   RETURN .F.
+   RETURN .T.
 
 FUNCTION hb_FileDelete( cFileMask, cAttr )
 

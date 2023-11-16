@@ -1,16 +1,12 @@
 /*
- * CT3 files functions
+ * CT3 files functions: SetFAttr()
  *
- * SetFattr()
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *
- * SetFDaTi(), FileSMax(), FileDelete()
+ *    SetFDaTi(), FileSMax(), FileDelete()
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
- *
- * FileSeek(), FileSize(), FileAttr(), FileTime(), FileDate()
- * FileMove(), FileSMax(),
- * DeleteFile(), RenameFile()
- *
+ *    FileSeek(), FileSize(), FileAttr(), FileTime(), FileDate()
+ *    FileMove(), FileSMax(),
+ *    DeleteFile(), RenameFile()
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,9 +20,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -202,13 +198,14 @@ HB_FUNC( SETFDATI )
 
    if( szFile && *szFile )
    {
-      PHB_ITEM pDate, pTime;
       long lJulian, lMillisec;
 
       if( HB_ISTIMESTAMP( 1 ) )
          hb_partdt( &lJulian, &lMillisec, 1 );
       else
       {
+         PHB_ITEM pDate, pTime;
+
          pDate = hb_param( 2, HB_IT_DATE );
          if( pDate )
             pTime = hb_param( 3, HB_IT_STRING );

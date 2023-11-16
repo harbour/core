@@ -1,61 +1,60 @@
 /*
- * Versatile logging system - Logger sending log message to e-mail
+ * Versatile logging system - Logger sending log message to email
  *
- * Copyright 2003 Giancarlo Niccolai [gian@niccolai.ws]
+ * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  *
- * this program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General public License as published by
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
- * this program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS for A PARTICULAR PURPOSE.  See the
- * GNU General public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General public License
- * along with this software; see the file COPYING.txt.  if not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * You should have received a copy of the GNU General Public License
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
- * As a special exception, xHarbour license gives permission for
- * additional uses of the text contained in its release of xHarbour.
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
  *
- * The exception is that, if you link the xHarbour libraries with other
+ * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General public License.
+ * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
- * linking the xHarbour library code into it.
+ * linking the Harbour library code into it.
  *
- * this exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General public License.
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
  *
- * this exception applies only to the code released with this xHarbour
- * explicit exception.  if you add/copy code from other sources,
- * as the General public License permits, the above exception does
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
- * if you write modifications of your own for xHarbour, it is your choice
+ * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
- * if you do not wish that, delete this exception notice.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
 #include "hbclass.ch"
 
-#define CRLF Chr( 13 ) + Chr( 10 )
+#define CRLF  Chr( 13 ) + Chr( 10 )
 
-#define HB_THREAD_SUPPORT
-
-CREATE CLASS HB_LogEmail FROM HB_LogChannel
+CREATE CLASS HB_LogEmail INHERIT HB_LogChannel
 
    VAR cServer
-   VAR cAddress        INIT "log@xharbour.org"
-   VAR cSubject        INIT "Log message from xharbour application"
+   VAR cAddress        INIT "log@example.org"
+   VAR cSubject        INIT "Log message from xHarbour application"
    VAR cSendTo
-   VAR cHelo           INIT "XHarbour E-mail Logger"
+   VAR cHelo           INIT "xHarbour Email Logger"
    VAR nPort           INIT 25
 
    VAR cPrefix
@@ -101,12 +100,9 @@ METHOD New( nLevel, cHelo, cServer, cSendTo, cSubject, cFrom ) CLASS HB_LogEmail
       ::cAddress := cFrom
    ENDIF
 
-   RETURN SELF
+   RETURN Self
 
-/**
- * Inet init must be called here
- */
-
+/* hb_inetInit() must be called here */
 METHOD Open( cName ) CLASS HB_LogEmail
 
    HB_SYMBOL_UNUSED( cName )
@@ -114,10 +110,7 @@ METHOD Open( cName ) CLASS HB_LogEmail
 
    RETURN .T.
 
-/**
- * InetCleanup to be called here
- */
-
+/* hb_inetCleanup() to be called here */
 METHOD Close( cName ) CLASS HB_LogEmail
 
    HB_SYMBOL_UNUSED( cName )
@@ -125,11 +118,7 @@ METHOD Close( cName ) CLASS HB_LogEmail
 
    RETURN .T.
 
-
-/**
- * Sends the real message in e-mail
- */
-
+/* Sends the real message in email */
 METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
    LOCAL skCon := hb_inetCreate()
@@ -172,10 +161,7 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
    hb_inetSendAll( skCon, "QUIT" + CRLF )
 
    RETURN ::GetOk( skCon )  // if quit fails, the mail does not go!
-
-/**
- * Get the reply and returns true if it is allright
- */
+/* Get the reply and returns true if it is alright */
 
 METHOD GetOk( skCon ) CLASS HB_LogEmail
 
@@ -208,23 +194,16 @@ METHOD Prepare( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
    RETURN cPre
 
-
-
-/*****
- * Channel for monitors listening on a port
- */
-
+/* Channel for monitors listening on a port */
 CREATE CLASS HB_LogInetPort FROM HB_LogChannel
 
    VAR nPort           INIT 7761
    VAR aListeners      INIT {}
    VAR skIn
 
-#ifdef HB_THREAD_SUPPORT
    VAR bTerminate      INIT .F.
    VAR nThread
    VAR mtxBusy
-#endif
 
    METHOD New( nLevel, nPort )
    METHOD Open( cName )
@@ -233,10 +212,8 @@ CREATE CLASS HB_LogInetPort FROM HB_LogChannel
    PROTECTED:
    METHOD Send( nStyle, cMessage, cName, nPriority )
 
-#ifdef HB_THREAD_SUPPORT
    HIDDEN:
    METHOD AcceptCon()
-#endif
 
 ENDCLASS
 
@@ -262,14 +239,8 @@ METHOD Open( cName ) CLASS HB_LogInetPort
       RETURN .F.
    ENDIF
 
-#ifdef HB_THREAD_SUPPORT
    ::mtxBusy := hb_mutexCreate()
    ::nThread := hb_threadStart( Self, "AcceptCon" )
-#else
-   // If we have not threads, we have to sync accept incoming connection
-   // when we log a message
-   hb_inetTimeout( ::skIn, 50 )
-#endif
 
    RETURN .T.
 
@@ -283,11 +254,9 @@ METHOD Close( cName ) CLASS HB_LogInetPort
       RETURN .F.
    ENDIF
 
-#ifdef HB_THREAD_SUPPORT
    // kind termination request
    ::bTerminate := .T.
    hb_threadJoin( ::nThread )
-#endif
 
    hb_inetClose( ::skIn )
 
@@ -307,18 +276,8 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
 
    LOCAL sk, nCount
 
-#ifdef HB_THREAD_SUPPORT
-
    // be sure thread is not busy now
    hb_mutexLock( ::mtxBusy )
-#else
-   // IF we have not a thread, we must see if there is a new connection
-   sk := hb_inetAccept( ::skIn )  // timeout should be short
-
-   IF sk != NIL
-      AAdd( ::aListeners, sk )
-   ENDIF
-#endif
 
    // now we transmit the message to all the available channels
    cMessage := ::Format( nStyle, cMessage, cName, nPriority )
@@ -335,13 +294,9 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
       ENDIF
    ENDDO
 
-#ifdef HB_THREAD_SUPPORT
    hb_mutexUnlock( ::mtxBusy )
-#endif
 
    RETURN .T.
-
-#ifdef HB_THREAD_SUPPORT
 
 METHOD AcceptCon() CLASS HB_LogInetPort
 
@@ -359,5 +314,3 @@ METHOD AcceptCon() CLASS HB_LogInetPort
    ENDDO
 
    RETURN .T.
-
-#endif

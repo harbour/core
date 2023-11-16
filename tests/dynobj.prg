@@ -20,7 +20,7 @@ PROCEDURE Main()
    ? "Let's add inline 'CalcArea' at run-time to an already instanced class"
 
    __objAddInline( oForm, "CalcArea", ;
-      {| self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
+      {| Self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
    ? "What methods are in the class :"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
@@ -64,7 +64,7 @@ PROCEDURE Main()
    ? "And CalcArea() will now give a result in square inches"
 
    __objModInline( oForm, "CalcArea", ;
-      {| self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) / ( 2.54 * 2.54 ) } )
+      {| Self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) / ( 2.54 * 2.54 ) } )
 
    ? "What is the Form area ?"
    ? oForm:CalcArea()

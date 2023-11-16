@@ -1,6 +1,7 @@
 /*
  * Windows OS version information
  *
+ * Copyright 2014 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  *
  * This program is free software; you can redistribute it and/or modify
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,174 +48,165 @@
 #include "hbwin.h"
 #include "hbapiitm.h"
 
-static void getwinver( OSVERSIONINFO * pOSvi )
-{
-   pOSvi->dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   GetVersionEx( pOSvi );
-}
-
 HB_FUNC( WIN_OSISNT )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT );
+   hb_retl( hb_iswinnt() != 0 );
 }
 
 HB_FUNC( WIN_OSISNT351 )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT &&
-            osvi.dwMajorVersion == 3 && osvi.dwMinorVersion == 51 );
+   hb_retl( hb_iswinnt() == 3 );
 }
 
 HB_FUNC( WIN_OSISNT4 )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT &&
-            osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
-}
-
-HB_FUNC( WIN_OSIS2000ORUPPER )
-{
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion >= 5 );
+   hb_retl( hb_iswinnt() == 4 );
 }
 
 HB_FUNC( WIN_OSIS2000 )
 {
-   OSVERSIONINFO osvi;
+   hb_retl( hb_iswinver( 5, 0, 0, HB_FALSE ) );
+}
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 0 );
+HB_FUNC( WIN_OSIS2000ORUPPER )
+{
+   hb_retl( hb_iswin2k() );
 }
 
 HB_FUNC( WIN_OSISXP )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1 );
+   hb_retl( hb_iswinver( 5, 1, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSISWINXPORUPPER )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion > 5 || ( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 1 ) );
+   hb_retl( hb_iswinver( 5, 1, 0, HB_TRUE ) );
 }
 
 HB_FUNC( WIN_OSIS2003 )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2 );
+   hb_retl( hb_iswinver( 5, 2, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSISVISTA )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0 );
+   hb_retl( hb_iswinver( 6, 0, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSISVISTAORUPPER )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion >= 6 );
+   hb_retl( hb_iswinvista() );
 }
 
 HB_FUNC( WIN_OSIS7 )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 1 );
+   hb_retl( hb_iswinver( 6, 1, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSIS8 )
 {
-   OSVERSIONINFO osvi;
+   hb_retl( hb_iswinver( 6, 2, 0, HB_FALSE ) );
+}
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 2 );
+HB_FUNC( WIN_OSIS81 )
+{
+   hb_retl( hb_iswinver( 6, 3, 0, HB_FALSE ) );
+}
+
+HB_FUNC( WIN_OSIS10 )
+{
+   hb_retl( hb_iswinver( 10, 0, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSIS9X )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
+   hb_retl( hb_iswin9x() );
 }
 
 HB_FUNC( WIN_OSIS95 )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
-            osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
+   hb_retl( hb_iswin9x() == 5 );
 }
 
 HB_FUNC( WIN_OSIS98 )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
-            osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10 );
+   hb_retl( hb_iswin9x() == 8 );
 }
 
 HB_FUNC( WIN_OSISME )
 {
-   OSVERSIONINFO osvi;
-
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
-            osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 90 );
+   hb_retl( hb_iswin9x() == 9 );
 }
 
 HB_FUNC( WIN_OSISTSCLIENT )
 {
-   HB_BOOL bResult = HB_FALSE;
-   OSVERSIONINFO osvi;
+   /* Only supported on NT 4.0 SP3 & higher */
+   #ifndef SM_REMOTESESSION
+      #define SM_REMOTESESSION  0x1000
+   #endif
 
-   getwinver( &osvi );
-   if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 4 )
-   {
-      /* Only supported on NT 4.0 SP3 & higher */
-      #ifndef SM_REMOTESESSION
-         #define SM_REMOTESESSION  0x1000
-      #endif
-      bResult = ( GetSystemMetrics( SM_REMOTESESSION ) != 0 );
-   }
-   hb_retl( bResult );
+   hb_retl( GetSystemMetrics( SM_REMOTESESSION ) != 0 );
 }
 
 HB_FUNC( WIN_OSVERSIONINFO )
 {
    PHB_ITEM pArray = hb_itemArrayNew( 5 );
-   OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_arraySetNL( pArray, 1, osvi.dwMajorVersion );
-   hb_arraySetNL( pArray, 2, osvi.dwMinorVersion );
-   if( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
-      osvi.dwBuildNumber = LOWORD( osvi.dwBuildNumber );
-   hb_arraySetNL( pArray, 3, osvi.dwBuildNumber );
-   hb_arraySetNL( pArray, 4, osvi.dwPlatformId );
-   HB_ARRAYSETSTR( pArray, 5, osvi.szCSDVersion );
+   int iMajor = 4;
+   int iMinor = 0;
+   int pos;
+
+   typedef struct
+   {
+      int iMajor;
+      int iMinor;
+   } HB_ISWINVER;
+
+   static const HB_ISWINVER s_vers[] = {
+      { 10, 0 },
+      { 6, 3 },
+      { 6, 2 },
+      { 6, 1 },
+      { 6, 0 },
+      { 5, 2 },
+      { 5, 1 },
+      { 5, 0 } };
+
+   for( pos = 0; pos < ( int ) HB_SIZEOFARRAY( s_vers ); ++pos )
+   {
+      if( hb_iswinver( s_vers[ pos ].iMajor, s_vers[ pos ].iMinor, 0, ( pos == 0 ) ) )
+      {
+         iMajor = s_vers[ pos ].iMajor;
+         iMinor = s_vers[ pos ].iMinor;
+         break;
+      }
+   }
+
+   hb_arraySetNL( pArray, 1, iMajor );
+   hb_arraySetNL( pArray, 2, iMinor );
+   hb_arraySetNL( pArray, 3, 0 );
+#if defined( HB_OS_WIN_CE )
+   hb_arraySetNL( pArray, 4, VER_PLATFORM_WIN32_CE );
+#else
+   hb_arraySetNL( pArray, 4, hb_iswinnt() ? VER_PLATFORM_WIN32_NT : VER_PLATFORM_WIN32_WINDOWS );
+#endif
+   hb_arraySetC( pArray, 5, NULL );
+
+   if( hb_iswin2k() )
+   {
+      int tmp;
+
+      for( tmp = 5; tmp > 0; --tmp )
+      {
+         if( hb_iswinsp( tmp, HB_TRUE ) )
+         {
+            char szServicePack[ 8 ];
+            hb_snprintf( szServicePack, sizeof( szServicePack ), "SP%u", tmp );
+            hb_arraySetC( pArray, 5, szServicePack );
+            break;
+         }
+      }
+   }
+
    hb_itemReturnRelease( pArray );
 }

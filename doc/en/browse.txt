@@ -1,12 +1,6 @@
-/*
- * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: Browse(), dbEdit(), TBrowseDB()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Function
    $NAME$
@@ -43,22 +37,22 @@
       into idle mode. If <xUserFunc> is a character string, it must
       contain root name of a valid user define function without
       parentheses. Both the user define function or the code block should
-      accept two parameters: nMode, nCurrentColumn. Both should return
+      accept two parameters: <nMode>, <nCurrentColumn>. Both should return
       a numeric value that correspond to one of the expected return codes
-      (see table below for a list of nMode and return codes).
+      (see table below for a list of <nMode> and return codes).
 
       <xColumnSayPictures> is an optional picture. If <xColumnSayPictures>
       is a character string, all columns would used this value as a
       picture string. If <xColumnSayPictures> is an array, each element
       should be a character string that correspond to a picture string
-      for the column with the same index. Look at the help for @...SAY
+      for the column with the same index. Look at the help for `@...SAY`
       to get more information about picture values.
 
       <xColumnHeaders> contain the header titles for each column, if this
       is a character string, all columns would have that same header, if
       this is an array, each element is a character string that contain
       the header title for one column. Header may be split to more than
-      one line by placing semicolon (;) in places where you want to break
+      one line by placing semicolon `;` in places where you want to break
       line. If omitted, the default value for each column header is taken
       from <acColumns> or field name if <acColumns> was not specified.
 
@@ -82,7 +76,7 @@
       of each column, if this is a character string, all columns would
       have that same footer, if this is an array, each element is a
       character string that contain the footer for one column. Footer may
-      be split to more than one line by placing semicolon (;) in places
+      be split to more than one line by placing semicolon `;` in places
       where you want to break line. If omitted, no footer are displayed.
    $RETURNS$
       dbEdit() return .F. if there is no database in use or if the number
@@ -93,26 +87,25 @@
       and is the equivalent of one field. Each row is equivalent of one
       database record.
 
-      Following are active keys that handled by dbEdit():       </par>
-      ---------------------------------------------------
+      Following are active keys that handled by dbEdit():
 
       <table>
-        Key              Meaning
+       Key              Meaning
 
-        Left             Move one column to the left (previous field)
-        Right            Move one column to the right (next field)
-        Up               Move up one row (previous record)
-        Down             Move down one row (next record)
-        Page-Up          Move to the previous screen
-        Page-Down        Move to the next screen
-        Ctrl Page-Up     Move to the top of the file
-        Ctrl Page-Down   Move to the end of the file
-        Home             Move to the leftmost visible column
-        End              Move to the rightmost visible column
-        Ctrl Left        Pan one column to the left
-        Ctrl Right       Pan one column to the right
-        Ctrl Home        Move to the leftmost column
-        Ctrl End         Move to the rightmost column
+       Left             Move one column to the left (previous field)
+       Right            Move one column to the right (next field)
+       Up               Move up one row (previous record)
+       Down             Move down one row (next record)
+       PgUp             Move to the previous screen
+       PgDn             Move to the next screen
+       Ctrl+PgUp        Move to the top of the file
+       Ctrl+PgDn        Move to the end of the file
+       Home             Move to the leftmost visible column
+       End              Move to the rightmost visible column
+       Ctrl+Left        Pan one column to the left
+       Ctrl+Right       Pan one column to the right
+       Ctrl+Home        Move to the leftmost column
+       Ctrl+End         Move to the rightmost column
       </table>
 
       When <xUserFunc> is omitted, two more keys are active:
@@ -125,12 +118,11 @@
       </table>
 
       When dbEdit() execute <xUserFunc> it pass the following arguments:
-      nMode and the index of current record in <acColumns>. If <acColumns>
-      is omitted, the index number is the FIELD() number of the open
+      <nMode> and the index of current record in <acColumns>. If <acColumns>
+      is omitted, the index number is the FieldName() number of the open
       database structure.
 
-      dbEdit() nMode could be one of the following:    </par>
-      ---------------------------------------------
+      dbEdit() <nMode> could be one of the following:
 
       <table>
        dbedit.ch      Meaning
@@ -145,8 +137,7 @@
       The user define function or code block must return a value that tell
       dbEdit() what to do next.
 
-      User function return codes:    </par>
-      ---------------------------   </par>
+      User function return codes:
 
       <table>
        dbedit.ch    Meaning
@@ -195,6 +186,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Function
    $NAME$
@@ -229,23 +222,23 @@
        Right            Move one column to the right (next field)
        Up               Move up one row (previous record)
        Down             Move down one row (next record)
-       Page-Up          Move to the previous screen
-       Page-Down        Move to the next screen
-       Ctrl Page-Up     Move to the top of the file
-       Ctrl Page-Down   Move to the end of the file
+       PgUp             Move to the previous screen
+       PgDn             Move to the next screen
+       Ctrl+PgUp        Move to the top of the file
+       Ctrl+PgDn        Move to the end of the file
        Home             Move to the leftmost visible column
        End              Move to the rightmost visible column
-       Ctrl Left        Pan one column to the left
-       Ctrl Right       Pan one column to the right
-       Ctrl Home        Move to the leftmost column
-       Ctrl End         Move to the rightmost column
+       Ctrl+Left        Pan one column to the left
+       Ctrl+Right       Pan one column to the right
+       Ctrl+Home        Move to the leftmost column
+       Ctrl+End         Move to the rightmost column
        Esc              Terminate Browse()
       </table>
 
       On top of the screen you see a status line with the following
       indication:
 
-       <table>
+      <table>
        Record ###/###   Current record number / Total number of records.
        <none>           There are no records, the file is empty.
        <new>            You are in append mode at the bottom of file.
@@ -258,7 +251,7 @@
       1, 0, MaxRow(), MaxCol().
    $EXAMPLES$
       // this one shows you how to browse around
-      USE around
+      USE test
       Browse()
    $STATUS$
       S
@@ -272,6 +265,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Function
    $NAME$
@@ -297,13 +292,13 @@
       and a default :SkipBlock, :GoTopBlock and :GoBottomBlock to browse
       a database file.
    $DESCRIPTION$
-      TBrowseDB() is a quick way to create a TBrowse object along with
+      TBrowseDB() is a quick way to create a TBrowse() object along with
       the minimal support needed to browse a database. Note that the
-      returned TBrowse object contain no TBColumn objects and you need
+      returned TBrowse() object contain no TBColumn() objects and you need
       to add column for each field by your self.
    $EXAMPLES$
-      for a good example, look at the source code for Browse() function
-      at src/rtl/browse.prg
+      // For a good example, look at the source code for Browse() function
+      // at src/rtl/browse.prg
    $STATUS$
       S
    $COMPLIANCE$

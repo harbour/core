@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,117 +45,115 @@
  */
 
 #include "hbzebra.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
 
 static const unsigned short s_code[] = {
-   00633,   /*            00  */
-   00663,   /*  !    !    01  */
-   01463,   /*  "    "    02  */
-   00311,   /*  #    #    03  */
-   00611,   /*  $    $    04  */
-   00621,   /*  %    %    05  */
-   00231,   /*  &    &    06  */
-   00431,   /*  '    '    07  */
-   00461,   /*  (    (    08  */
-   00223,   /*  )    )    09  */
-   00423,   /*  *    *    10  */
-   00443,   /*  +    +    11  */
-   00715,   /*  ,    ,    12  */
-   00731,   /*  -    -    13  */
-   01631,   /*  .    .    14  */
-   00635,   /*  /    /    15  */
-   00671,   /*  0    0    16  */
-   01471,   /*  1    1    17  */
-   01163,   /*  2    2    18  */
-   00723,   /*  3    3    19  */
-   01623,   /*  4    4    20  */
-   00473,   /*  5    5    21  */
-   00563,   /*  6    6    22  */
-   01667,   /*  7    7    23  */
-   00627,   /*  8    8    24  */
-   00647,   /*  9    9    25  */
-   01447,   /*  :    :    26  */
-   00467,   /*  ;    ;    27  */
-   00547,   /*  <    <    28  */
-   01147,   /*  =    =    29  */
-   00333,   /*  >    >    30  */
-   01433,   /*  ?    ?    31  */
-   01543,   /*  @    @    32  */
-   00305,   /*  A    A    33  */
-   00321,   /*  B    B    34  */
-   01421,   /*  C    C    35  */
-   00215,   /*  D    D    36  */
-   00261,   /*  E    E    37  */
-   01061,   /*  F    F    38  */
-   00213,   /*  G    G    39  */
-   00243,   /*  H    H    40  */
-   01043,   /*  I    I    41  */
-   00355,   /*  J    J    42  */
-   01615,   /*  K    K    43  */
-   01661,   /*  L    L    44  */
-   00335,   /*  M    M    45  */
-   01435,   /*  N    N    46  */
-   01561,   /*  O    O    47  */
-   01567,   /*  P    P    48  */
-   01613,   /*  Q    Q    49  */
-   01643,   /*  R    R    50  */
-   00273,   /*  S    S    51  */
-   01073,   /*  T    T    52  */
-   01673,   /*  U    U    53  */
-   00327,   /*  V    V    54  */
-   01427,   /*  W    W    55  */
-   01507,   /*  X    X    56  */
-   00267,   /*  Y    Y    57  */
-   01067,   /*  Z    Z    58  */
-   01307,   /*  [    [    59  */
-   01367,   /*  \    \    60  */
-   01023,   /*  ]    ]    61  */
-   01217,   /*  ^    ^    62  */
-   00145,   /*  _    _    63  */
-   00605,   /*  NUL   `   64  */
-   00151,   /*  SOH   a   65  */
-   01411,   /*  STX   b   66  */
-   00641,   /*  ETX   c   67  */
-   01441,   /*  EOT   d   68  */
-   00115,   /*  ENQ   e   69  */
-   00415,   /*  ACK   f   70  */
-   00131,   /*  BEL   g   71  */
-   01031,   /*  BS    h   72  */
-   00541,   /*  HT    i   73  */
-   01141,   /*  LF    j   74  */
-   01103,   /*  VT    k   75  */
-   00123,   /*  FF    l   76  */
-   01357,   /*  CR    m   77  */
-   00503,   /*  SO    n   78  */
-   01361,   /*  SI    o   79  */
-   00745,   /*  DLE   p   80  */
-   00751,   /*  DC1   q   81  */
-   01711,   /*  DC2   r   82  */
-   00475,   /*  DC3   s   83  */
-   00571,   /*  DC4   t   84  */
-   01171,   /*  NAK   u   85  */
-   00457,   /*  SYN   v   86  */
-   00517,   /*  ETB   w   87  */
-   01117,   /*  CAN   x   88  */
-   01733,   /*  EM    y   89  */
-   01573,   /*  SUB   z   90  */
-   01557,   /*  ESC   {   91  */
-   00365,   /*  FS    |   92  */
-   01705,   /*  GS    }   93  */
-   01721,   /*  RS    ~   94  */
-   00275,   /*  US   DEL  95  */
-   01075,   /*  FNC3 FNC3 96  */
-   00257,   /*  FNC2 FNC2 97  */
-   01057,   /*  ShiB ShiA 98  */
-   01735,   /*  CodC CodC 99  */
-   01675,   /*  CodB FNC4 CodB 100 */
-   01727,   /*  FNC4 CodA CodA 101 */
-   01657,   /*  FNC1 FNC1 FNC1 102 */
-   00413,   /*  Start Code A   103 */
-   00113,   /*  Start Code B   104 */
-   00713    /*  Start Code C   105 */
+   00633,   /*           00 */
+   00663,   /* !    !    01 */
+   01463,   /* "    "    02 */
+   00311,   /* #    #    03 */
+   00611,   /* $    $    04 */
+   00621,   /* %    %    05 */
+   00231,   /* &    &    06 */
+   00431,   /* '    '    07 */
+   00461,   /* (    (    08 */
+   00223,   /* )    )    09 */
+   00423,   /* *    *    10 */
+   00443,   /* +    +    11 */
+   00715,   /* ,    ,    12 */
+   00731,   /* -    -    13 */
+   01631,   /* .    .    14 */
+   00635,   /* /    /    15 */
+   00671,   /* 0    0    16 */
+   01471,   /* 1    1    17 */
+   01163,   /* 2    2    18 */
+   00723,   /* 3    3    19 */
+   01623,   /* 4    4    20 */
+   00473,   /* 5    5    21 */
+   00563,   /* 6    6    22 */
+   01667,   /* 7    7    23 */
+   00627,   /* 8    8    24 */
+   00647,   /* 9    9    25 */
+   01447,   /* :    :    26 */
+   00467,   /* ;    ;    27 */
+   00547,   /* <    <    28 */
+   01147,   /* =    =    29 */
+   00333,   /* >    >    30 */
+   01433,   /* ?    ?    31 */
+   01543,   /* @    @    32 */
+   00305,   /* A    A    33 */
+   00321,   /* B    B    34 */
+   01421,   /* C    C    35 */
+   00215,   /* D    D    36 */
+   00261,   /* E    E    37 */
+   01061,   /* F    F    38 */
+   00213,   /* G    G    39 */
+   00243,   /* H    H    40 */
+   01043,   /* I    I    41 */
+   00355,   /* J    J    42 */
+   01615,   /* K    K    43 */
+   01661,   /* L    L    44 */
+   00335,   /* M    M    45 */
+   01435,   /* N    N    46 */
+   01561,   /* O    O    47 */
+   01567,   /* P    P    48 */
+   01613,   /* Q    Q    49 */
+   01643,   /* R    R    50 */
+   00273,   /* S    S    51 */
+   01073,   /* T    T    52 */
+   01673,   /* U    U    53 */
+   00327,   /* V    V    54 */
+   01427,   /* W    W    55 */
+   01507,   /* X    X    56 */
+   00267,   /* Y    Y    57 */
+   01067,   /* Z    Z    58 */
+   01307,   /* [    [    59 */
+   01367,   /* \    \    60 */
+   01023,   /* ]    ]    61 */
+   01217,   /* ^    ^    62 */
+   00145,   /* _    _    63 */
+   00605,   /* NUL   `   64 */
+   00151,   /* SOH   a   65 */
+   01411,   /* STX   b   66 */
+   00641,   /* ETX   c   67 */
+   01441,   /* EOT   d   68 */
+   00115,   /* ENQ   e   69 */
+   00415,   /* ACK   f   70 */
+   00131,   /* BEL   g   71 */
+   01031,   /* BS    h   72 */
+   00541,   /* HT    i   73 */
+   01141,   /* LF    j   74 */
+   01103,   /* VT    k   75 */
+   00123,   /* FF    l   76 */
+   01357,   /* CR    m   77 */
+   00503,   /* SO    n   78 */
+   01361,   /* SI    o   79 */
+   00745,   /* DLE   p   80 */
+   00751,   /* DC1   q   81 */
+   01711,   /* DC2   r   82 */
+   00475,   /* DC3   s   83 */
+   00571,   /* DC4   t   84 */
+   01171,   /* NAK   u   85 */
+   00457,   /* SYN   v   86 */
+   00517,   /* ETB   w   87 */
+   01117,   /* CAN   x   88 */
+   01733,   /* EM    y   89 */
+   01573,   /* SUB   z   90 */
+   01557,   /* ESC   {   91 */
+   00365,   /* FS    |   92 */
+   01705,   /* GS    }   93 */
+   01721,   /* RS    ~   94 */
+   00275,   /* US   DEL  95 */
+   01075,   /* FNC3 FNC3 96 */
+   00257,   /* FNC2 FNC2 97 */
+   01057,   /* ShiB ShiA 98 */
+   01735,   /* CodC CodC 99 */
+   01675,   /* CodB FNC4 CodB 100 */
+   01727,   /* FNC4 CodA CodA 101 */
+   01657,   /* FNC1 FNC1 FNC1 102 */
+   00413,   /* Start Code A   103 */
+   00113,   /* Start Code B   104 */
+   00713    /* Start Code C   105 */
 };
 
 #define CODESET_A  0
@@ -196,7 +194,7 @@ static int _code128_charno( char ch, int iCodeSet )
 PHB_ZEBRA hb_zebra_create_code128( const char * szCode, HB_SIZE nLen, int iFlags )
 {
    PHB_ZEBRA  pZebra;
-   int        i, j, k, csum, iCode, iCodeSet, iCodeLen, iLen = ( int ) nLen;
+   int        i, j, k, csum, iCodeSet, iCodeLen, iLen = ( int ) nLen;
    int *      pCode;
 
    HB_SYMBOL_UNUSED( iFlags );
@@ -254,10 +252,11 @@ PHB_ZEBRA hb_zebra_create_code128( const char * szCode, HB_SIZE nLen, int iFlags
 
    /* encode source data */
    /* Warning: digit optimizer works in optimal way with this encoder code. Be careful
-      if you'll change encoder code, digit optimizer canm require adjustment also [Mindaugas] */
+      if you'll change encoder code, digit optimizer can require adjustment also [Mindaugas] */
    for( i = 0; i < iLen; i++ )
    {
-      iCode = _code128_charno( szCode[ i ], iCodeSet );
+      int iCode = _code128_charno( szCode[ i ], iCodeSet );
+
       if( iCode != -1 )
          pCode[ iCodeLen++ ] = iCode;
       else

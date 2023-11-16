@@ -1,11 +1,8 @@
 /*
  * Windows dialogs
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *    win_PrintDlgDC()
- *
- * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    win_GetOpenFileName(), win_GetSaveFileName()
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (win_PrintDlgDC())
+ * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (win_GetOpenFileName(), win_GetSaveFileName())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -57,7 +54,7 @@
 #include <commdlg.h>
 
 /* win_PrintDlgDC( [@<cDevice>], [<nFromPage>], [<nToPage>], [<nCopies>] )
- *                -> <hDC>
+ *                --> <hDC>
  */
 HB_FUNC( WIN_PRINTDLGDC )
 {
@@ -286,9 +283,9 @@ static void s_GetFileName( HB_BOOL fSave )
    hb_strfree( hDefExt );
 }
 
-/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
- *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
+ *    --> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  *
  */
 HB_FUNC( WIN_GETOPENFILENAME )
@@ -296,9 +293,9 @@ HB_FUNC( WIN_GETOPENFILENAME )
    s_GetFileName( HB_FALSE );
 }
 
-/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
- *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
+ *    --> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  *
  */
 HB_FUNC( WIN_GETSAVEFILENAME )

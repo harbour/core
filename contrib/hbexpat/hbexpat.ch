@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -94,6 +94,7 @@
 #define HB_XML_ERROR_RESERVED_PREFIX_XML                38
 #define HB_XML_ERROR_RESERVED_PREFIX_XMLNS              39
 #define HB_XML_ERROR_RESERVED_NAMESPACE_URI             40
+#define HB_XML_ERROR_INVALID_ARGUMENT                   41
 
 #define HB_XML_INITIALIZED                              0
 #define HB_XML_PARSING                                  1

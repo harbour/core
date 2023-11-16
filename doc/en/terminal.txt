@@ -1,26 +1,6 @@
-/*
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    Documentation for: hb_ColorIndex()
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    Documentation for: __Wait(), __Input()
- *
- * Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: Alert(), __NoNoAlert(), OutStd(), OutErr(),
- *                       __XSaveScreen(), SAVE SCREEN, __XRestScreen(),
- *                       RESTORE SCREEN, __TextSave(), __TextRestore()
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    Documentation for: DevOutPict()
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: EJECT, MaxRow(), MaxCol(), Row(), Col(), PRow(), PCol()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -36,13 +16,13 @@
    $ARGUMENTS$
       none.
    $DESCRIPTION$
-      __XSaveScreen() save the image of the whole screen into an internal
+      __XSaveScreen() saves the image of the whole screen into an internal
       buffer, it also save current cursor position. The information could
       later be restored by __XRestScreen(). Each call to __XSaveScreen()
       overwrite the internal buffer.
 
-      SAVE SCREEN command is preprocessed into __XSaveScreen() function
-      during compile time. Note that SAVE SCREEN TO is preprocessed into
+      `SAVE SCREEN` command is preprocessed into __XSaveScreen() function
+      during compile time. Note that `SAVE SCREEN TO` is preprocessed into
       SaveScreen() function.
 
       __XSaveScreen() is a compatibility function, it is superseded by
@@ -52,7 +32,6 @@
       // save the screen, display list of files than restore the screen
       SAVE SCREEN
       DIR *.*
-      WAIT
       RESTORE SCREEN
    $STATUS$
       R
@@ -68,6 +47,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Command
    $NAME$
@@ -83,19 +64,18 @@
    $ARGUMENTS$
       none.
    $DESCRIPTION$
-      SAVE SCREEN save the image of the whole screen into an internal
+      `SAVE SCREEN` saves the image of the whole screen into an internal
       buffer, it also save current cursor position. The information could
-      later be restored by REST SCREEN. Each call to SAVE SCREEN
+      later be restored by `RESTORE SCREEN`. Each call to `SAVE SCREEN`
       overwrite the internal buffer.
 
-      SAVE SCREEN command is preprocessed into __XSaveScreen() function
-      during compile time. Note that SAVE SCREEN TO is preprocessed into
+      `SAVE SCREEN` command is preprocessed into __XSaveScreen() function
+      during compile time. Note that `SAVE SCREEN TO` is preprocessed into
       SaveScreen() function.
    $EXAMPLES$
       // save the screen, display list of files than restore the screen
       SAVE SCREEN
       DIR *.*
-      WAIT
       RESTORE SCREEN
    $STATUS$
       R
@@ -109,6 +89,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -124,13 +106,13 @@
    $ARGUMENTS$
       none.
    $DESCRIPTION$
-      __XRestScreen() restore saved image of the whole screen from an
+      __XRestScreen() restores saved image of the whole screen from an
       internal buffer that was saved by __XSaveScreen(), it also restore
       cursor position. After a call to __XRestScreen() the internal buffer
       is cleared.
 
-      RESTORE SCREEN command is preprocessed into __XRestScreen() function
-      during compile time. Note that RESTORE SCREEN FROM is preprocessed
+      `RESTORE SCREEN` command is preprocessed into __XRestScreen() function
+      during compile time. Note that `RESTORE SCREEN FROM` is preprocessed
       into RestScreen() function.
 
       __XRestScreen() is a compatibility function, it is superseded by
@@ -139,7 +121,6 @@
       // save the screen, display list of files than restore the screen
       SAVE SCREEN
       DIR *.*
-      WAIT
       RESTORE SCREEN
    $STATUS$
       R
@@ -155,6 +136,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Command
    $NAME$
@@ -170,19 +153,18 @@
    $ARGUMENTS$
       none.
    $DESCRIPTION$
-      Rest Screen restore saved image of the whole screen from an
-      internal buffer that was saved by Save Screen, it also restore
-      cursor position. After a call to Rest Screen the internal buffer
-      is cleared.
+      `RESTORE SCREEN` restores saved image of the whole screen from an
+      internal buffer that was saved by `SAVE SCREEN`, it also restore
+      cursor position. After a call to 'RESTORE SCREEN` the internal
+      buffer is cleared.
 
-      RESTORE SCREEN command is preprocessed into __XRestScreen() function
-      during compile time. Note that RESTORE SCREEN FROM is preprocessed
+      `RESTORE SCREEN` command is preprocessed into __XRestScreen() function
+      during compile time. Note that `RESTORE SCREEN FROM` is preprocessed
       into RestScreen() function.
    $EXAMPLES$
       // save the screen, display list of files than restore the screen
       SAVE SCREEN
       DIR *.*
-      WAIT
       RESTORE SCREEN
    $STATUS$
       R
@@ -196,6 +178,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Function
    $NAME$
@@ -214,20 +198,20 @@
       If <xMessage> is an array of Character strings, each element would
       be displayed in a new line. If <xMessage> is a Character
       string, you could split the message to several lines by placing
-      a semicolon (;) in the desired places.
+      a semicolon `;` in the desired places.
 
       <aOptions> Array with available response. Each element should be
-      Character string. If omitted, default is { "Ok" }.
+      Character string. If omitted, default is `{ "Ok" }`.
 
       <cColorNorm> Color string to paint the dialog box with.
-      If omitted, default color is "W+/R".
+      If omitted, default color is `"W+/R"`.
 
       <nDelay> Number of seconds to wait to user response before abort.
       Default value is 0, that wait forever.
    $RETURNS$
       Alert() return Numeric value representing option number chosen.
 
-      If ESC was pressed, return value is zero.
+      If <Esc> was pressed, return value is zero.
 
       The return value is NIL
       if Alert() is called with no parameters, or if <xMessage> type is
@@ -236,10 +220,10 @@
    $DESCRIPTION$
       Alert() display simple dialog box on screen and let the user select
       one option. The user can move the highlight bar using arrow keys or
-      TAB key. To select an option the user can press ENTER, SPACE or the
+      <Tab> key. To select an option the user can press <Enter>, <Space> or the
       first letter of the option.
 
-      If the program is executed with the //NOALERT command-line switch,
+      If the program is executed with the `//NOALERT` command-line switch,
       nothing is displayed and it simply returns NIL. This switch could
       be overridden with __NoNoAlert().
 
@@ -250,12 +234,12 @@
       LOCAL cMessage, aOptions, nChoice
 
       // harmless message
-      cMessage := "Major Database Corruption Detected!;" +  ;
-                  "(deadline in few hours);;"             +  ;
+      cMessage := "Major Database Corruption Detected!;" + ;
+                  "(deadline in few hours);;" + ;
                   "where DO you want to go today?"
 
       // define response option
-      aOptions := { "Ok", "www.jobs.com", "Oops" }
+      aOptions := { "Ok", "www.example.org", "Oops" }
 
       // show message and let end user select panic level
       nChoice := Alert( cMessage, aOptions )
@@ -263,7 +247,7 @@
       CASE nChoice == 0
          // do nothing, blame it on some one else
       CASE nChoice == 1
-         ? "Please call home and tell them you're gonn'a be late"
+         ? "Please call home and tell them you're going to be late"
       CASE nChoice == 2
          // make sure your resume is up to date
       CASE nChoice == 3
@@ -290,10 +274,10 @@
       src/rtl/alert.prg the Left-Mouse button could be used to select
       an option.
 
-      The interpretation of the //NOALERT command-line switch is done only
+      The interpretation of the `//NOALERT` command-line switch is done only
       if HB_CLP_UNDOC was define during compilation of src/rtl/alert.prg
 
-      <cColorNorm> is a Harbour extension, or at least un-documented
+      <cColorNorm> is a Harbour extension, or at least undocumented
       in Clipper 5.2 NG.
 
       <nDelay> is a Harbour extension.
@@ -305,6 +289,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -314,13 +300,13 @@
    $SUBCATEGORY$
       User interface
    $ONELINER$
-      Override //NOALERT command-line switch
+      Override `//NOALERT` command-line switch
    $SYNTAX$
       __NoNoAlert()
    $ARGUMENTS$
       This function takes no arguments.
    $DESCRIPTION$
-      The //NOALERT command-line switch cause Clipper to ignore calls to
+      The `//NOALERT` command-line switch cause Cl*pper to ignore calls to
       the Alert() function, this function override this behavior
       and always display Alert() dialog box.
    $EXAMPLES$
@@ -359,9 +345,9 @@
       (or thinks it is running on, if an OS emulator is being used).
 
       Under HB_OS_UNIX operating system the return value is the
-      Line-Feed character (0x0a, Chr( 10 ) ); with other operating systems
+      Line-Feed character (0x0a, `Chr( 10 )` ); with other operating systems
       (like DOS) the return value is the Carriage-Return plus Line-Feed
-      characters (0x0d 0x0a, Chr( 13 ) + Chr( 10 )).
+      characters (0x0d 0x0a, `Chr( 13 ) + Chr( 10 )`).
    $EXAMPLES$
       // Get the newline character(s) for the current OS.
       OutStd( "Hello World!" + hb_eol() )
@@ -381,6 +367,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
    $TEMPLATE$
       Function
    $NAME$
@@ -390,9 +378,9 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-      Extract one color from a full colorspec string.
+      Extract one color from a full color-spec string.
    $SYNTAX$
-      hb_ColorIndex( <cColorSpec>, <nIndex> ) --> <cColor>
+      hb_ColorIndex( <cColorSpec>, <nIndex> ) --> cColor
    $ARGUMENTS$
       <cColorSpec> is a color list
 
@@ -409,7 +397,8 @@
       a given item from this list. You may use the manifest constants
       defined in color.ch to identify and extract common colors.
    $EXAMPLES$
-      ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
+      #include "color.ch"
+      ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED )  // --> "N/W"
    $STATUS$
       R
    $COMPLIANCE$
@@ -422,6 +411,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 David G. Holm <dholm@jsd-llc.com>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -446,7 +437,7 @@
       using the default transformation for the type of expression.
    $EXAMPLES$
       // Output a negative dollar amount using debit notation.
-      DevOutPict( -1.25, "@D$ 99,999.99 ) // -> $(     1.25)
+      DevOutPict( -1.25, "@D$ 99,999.99 )  // --> $(     1.25)
    $STATUS$
       R
    $COMPLIANCE$
@@ -460,6 +451,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Jose Lalin <dezac@corevia.com>
    $TEMPLATE$
       Function
    $NAME$
@@ -471,7 +464,7 @@
    $ONELINER$
       Stops application
    $SYNTAX$
-      __Input( <cMessage> ) --> <cString>
+      __Input( <cMessage> ) --> cString
    $ARGUMENTS$
       <cMessage> is any valid expression.
    $RETURNS$
@@ -491,6 +484,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -506,9 +501,9 @@
    $ARGUMENTS$
       <cFile> is either "PRINTER" (note the uppercase) in which console
       output is SET to PRINTER, or a name of a text file with a default
-      ".txt" extension, that is used to redirect console output.
+      `.txt` extension, that is used to redirect console output.
    $DESCRIPTION$
-      __TextSave() is used in the preprocessing of the TEXT TO command to
+      __TextSave() is used in the preprocessing of the `TEXT TO` command to
       redirect the console output while saving old settings that can be
       restored later by __TextRestore().
    $STATUS$
@@ -525,6 +520,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -557,6 +554,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Jose Lalin <dezac@corevia.com>
    $TEMPLATE$
       Function
    $NAME$
@@ -568,7 +567,7 @@
    $ONELINER$
       Stops the application until a key is pressed.
    $SYNTAX$
-      __Wait( <cMessage> ) --> <cKey>
+      __Wait( <cMessage> ) --> cKey
    $ARGUMENTS$
       <cMessage> is a string.
    $RETURNS$
@@ -577,10 +576,11 @@
       This function stops the application until a key is pressed. The key
       must be in the range 32..255. Control keys are not processed.
    $EXAMPLES$
+      LOCAL cKey
       // Wait for a key stroke
       __Wait( "Press a key to continue" )
-      //
-      DO WHILE !( cKey == "Q" )
+
+      DO WHILE ! cKey == "Q"
          cKey := __Wait( "Press 'Q' to continue" )
       ENDDO
    $STATUS$
@@ -595,6 +595,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -613,7 +615,7 @@
    $DESCRIPTION$
       OutStd() write one or more values into the standard output device.
       Character and Memo values are printed as is, Dates are printed
-      according to the SET DATE FORMAT, Numeric values are converted to
+      according to the `SET DATE FORMAT`, Numeric values are converted to
       strings, Logical values are printed as .T. or .F., NIL are printed
       as NIL, values of any other kind are printed as empty string. There
       is one space separating each two values. Note that Numeric value can
@@ -621,14 +623,14 @@
       source (see Str() for detail).
 
       OutStd() is similar to QQOut() with the different that QQOut() send
-      its output to the Harbour console stream, which can or can not be
+      its output to the Harbour console stream, which can or cannot be
       redirected according with the screen driver, and OutStd() send its
       output to the standard output device (STDOUT) and can be redirected.
    $EXAMPLES$
-      OutStd( "Hello" )            // Result: Hello
+      OutStd( "Hello" )           // --> Hello
 
       OutStd( 1, .T., NIL, "A" )
-      OutStd( "B" )                // Result:          1 .T. NIL AB
+      OutStd( "B" )               // -->          1 .T. NIL AB
    $STATUS$
       R
    $COMPLIANCE$
@@ -638,11 +640,13 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ?, ??, DevOut(), DevOutPict(), DispOut(), DispOutAt(), OutErr(), QOut(), QQOut(), Str()
+      ?|??, DevOut(), DevOutPict(), DispOut(), DispOutAt(), OutErr(), QOut(), QQOut(), Str()
    $END$
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -661,17 +665,17 @@
    $DESCRIPTION$
       OutErr() write one or more values into the standard error device.
       Character and Memo values are printed as is, Dates are printed
-      according to the SET DATE FORMAT, Numeric values are converted to
+      according to the `SET DATE FORMAT`, Numeric values are converted to
       strings, Logical values are printed as .T. or .F., NIL are printed
       as NIL, values of any other kind are printed as empty string. There
       is one space separating each two values. Note that Numeric value can
       take varying length when converted into string depending on its
       source (see Str() for detail).
 
-      There is an undocumented CA-Cl*pper command-line switch //STDERR
+      There is an undocumented CA-Cl*pper command-line switch `//STDERR`
       which can set the file handle to write output from OutErr(). If not
-      specified the default STDERR is used, //STDERR or //STDERR:0 set
-      OutErr() to output to the same file handle as OutStd(), //STDERR:n
+      specified the default STDERR is used, `//STDERR` or `//STDERR:0` set
+      OutErr() to output to the same file handle as OutStd(), `//STDERR:n`
       set output to file handle n. Like other undocumented features this
       switch is available only if src/rtl/console.c was compiled with
       the HB_CLP_UNDOC flag.
@@ -687,11 +691,13 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ?, ??, DevOut(), DevOutPict(), DispOut(), DispOutAt(), OutStd(), QOut(), QQOut(), Str()
+      ?|??, DevOut(), DevOutPict(), DispOut(), DispOutAt(), OutStd(), QOut(), QQOut(), Str()
    $END$
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -713,16 +719,17 @@
 
       Once completed, the values of PRow() and PCol(), the row and column
       indicators to the printer, will be set to 0. Their values, however, may
-      be manipulated before or after ussuing an EJECT by using the DevPos()
+      be manipulated before or after issuing an EJECT by using the DevPos()
       function.
 
       On compile time this command is translated into __Eject() function.
    $EXAMPLES$
-      USE clients NEW
+      LOCAL Curpos
+      USE test NEW
       SET DEVICE TO PRINTER
-      CurPos := 0
+      Curpos := 0
       DO WHILE ! Eof()
-         ? clients->NAME, clients->ADDRESS
+         ? test->first, test->last
          Curpos++
          IF Curpos > 59
             Curpos := 0
@@ -730,7 +737,6 @@
          ENDIF
       ENDDO
       SET DEVICE TO SCREEN
-      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -743,6 +749,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -778,6 +786,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -813,6 +823,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -822,13 +834,13 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-      Returns the maximun number of columns in the current video mode
+      Returns the maximum number of columns in the current video mode
    $SYNTAX$
       MaxCol() --> nPosition
    $ARGUMENTS$
       None.
    $RETURNS$
-      <nPosition>  The maximun number of columns possible in current video
+      <nPosition>  The maximum number of columns possible in current video
       mode
    $DESCRIPTION$
       This function returns the current cursor column position. The value
@@ -849,6 +861,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -864,7 +878,7 @@
    $ARGUMENTS$
       None.
    $RETURNS$
-      <nPosition>  The maximun number of rows possible in current video
+      <nPosition>  The maximum number of rows possible in current video
       mode
    $DESCRIPTION$
       This function returns the current cursor row location. The value

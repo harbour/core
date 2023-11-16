@@ -1,5 +1,5 @@
 /*
- *
+ * Standalone RTL stubs
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,9 +53,7 @@
 #include "hbcomp.h"
 #include "hbmemory.ch"
 
-/* ------------------------------------------------------------------------- */
-/* FM statistic module */
-/* ------------------------------------------------------------------------- */
+/* --- FM statistic module --- */
 
 /* remove this 'undef' when number of memory leaks will be reduced to
    reasonable size */
@@ -68,7 +66,7 @@
 #define HB_MEMSTR_BLOCK_MAX   256
 
 #ifndef HB_MEMFILER
-#  define HB_MEMFILER         0xff
+#define HB_MEMFILER         0xff
 #endif
 
 typedef struct _HB_MEMINFO
@@ -235,6 +233,10 @@ HB_SIZE hb_xquery( int iMode )
       case HB_MEM_USEDMAX:
          nResult = s_nMemoryMaxConsumed;
          break;
+
+      case HB_MEM_STATISTICS:
+         nResult = 1;
+         break;
    }
 #else
    HB_SYMBOL_UNUSED( iMode );
@@ -275,8 +277,8 @@ static char * hb_memToStr( char * szBuffer, void * pMem, HB_SIZE nSize )
       {
          int iLo = byMem[ i ] & 0x0f, iHi = byMem[ i ] >> 4;
          *pDest++ = '\\';
-         *pDest++ = iHi <= 9 ? '0' + iHi : 'A' - 10 + iHi;
-         *pDest++ = iLo <= 9 ? '0' + iLo : 'A' - 10 + iLo;
+         *pDest++ = ( char ) ( iHi <= 9 ? '0' + iHi : 'A' - 10 + iHi );
+         *pDest++ = ( char ) ( iLo <= 9 ? '0' + iLo : 'A' - 10 + iLo );
       }
    }
    *pDest = '\0';
@@ -510,7 +512,6 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
-      HB_SIZE nLen;
 
       if( pszFree )
       {
@@ -534,6 +535,8 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       /* strip trailing and leading spaces */
       if( s_fFnTrim )
       {
+         HB_SIZE nLen;
+
          if( pFileName->szName )
          {
             nLen = strlen( pFileName->szName );
@@ -604,7 +607,6 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
-      HB_SIZE nLen;
 
       szFileName = pszBuffer = hb_strncpy( ( char * ) hb_xgrab( HB_PATH_MAX ),
                                            szFileName, HB_PATH_MAX - 1 );
@@ -625,6 +627,8 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
       /* strip trailing and leading spaces */
       if( s_fFnTrim )
       {
+         HB_SIZE nLen;
+
          if( pFileName->szName )
          {
             nLen = strlen( pFileName->szName );

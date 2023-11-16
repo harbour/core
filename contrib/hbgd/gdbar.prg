@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,10 +56,10 @@
 #define THICKNESS_I250   0
 #define THICKNESS_I251   0
 
-CREATE CLASS GDBar FROM GDImage
+CREATE CLASS GDBar INHERIT GDImage
 
-   // class attributes
-   VAR positionX      AS NUMERIC INIT  4
+   // Class attributes
+   VAR positionX      AS NUMERIC INIT 4
    VAR positionY      AS NUMERIC
    VAR maxHeight      AS NUMERIC INIT 25
    VAR maxHDefa       AS NUMERIC INIT 25
@@ -81,7 +81,7 @@ CREATE CLASS GDBar FROM GDImage
    VAR KeysModeB      AS CHARACTER
    VAR KeysModeC      AS ARRAY
 
-   // image attributes
+   // Image attributes
    VAR res            AS NUMERIC
    VAR textfont       AS NUMERIC
    VAR TEXT           AS CHARACTER
@@ -93,7 +93,6 @@ CREATE CLASS GDBar FROM GDImage
    VAR lDrawValue     AS LOGICAL INIT .T.
 
    // Methods
-
    METHOD CreateBar( sx, sy, filename, cColor )
    METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue )
    METHOD Allocate()

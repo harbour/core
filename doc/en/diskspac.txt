@@ -1,12 +1,6 @@
-/*
- * Copyright 2000 Paul Tucker <ptucker@sympatico.ca>
- *    Documentation for: DiskSpace() and related functions
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Paul Tucker <ptucker@sympatico.ca>
    $TEMPLATE$
       Function
    $NAME$
@@ -18,7 +12,7 @@
    $ONELINER$
       Get the amount of space available on a disk
    $SYNTAX$
-      DiskSpace( [<nDrive>] ) --> nDiskbytes
+      DiskSpace( [<nDrive>] ) --> nDiskBytes
    $ARGUMENTS$
       <nDrive> The number of the drive you are requesting info on where 1 = A,
       2 = B, etc. For 0 or no parameter, DiskSpace will operate on the current
@@ -36,7 +30,7 @@
    $EXAMPLES$
       ? "You can use:", hb_ntos( DiskSpace() ), "bytes"
 
-      // NOTE: See tests/diskspac.prg for another example
+      // See tests/diskspac.prg for another example
    $STATUS$
       R
    $COMPLIANCE$
@@ -50,6 +44,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Paul Tucker <ptucker@sympatico.ca>
    $TEMPLATE$
       Function
    $NAME$
@@ -61,7 +57,7 @@
    $ONELINER$
       Get the amount of space available on a disk
    $SYNTAX$
-      hb_DiskSpace( [<cDrive>] [, <nType>] ) --> nDiskbytes
+      hb_DiskSpace( [<cDrive>] [, <nType>] ) --> nDiskBytes
    $ARGUMENTS$
       <cDrive> The drive letter you are requesting info on. The default
       is A:
@@ -77,17 +73,17 @@
 
       There are 4 types of information available:
 
-       HB_FS_AVAIL    The amount of space available to the user making the
+       HB_DISK_AVAIL  The amount of space available to the user making the
                       request. This value could be less than HB_FS_FREE if
                       disk quotas are supported by the O/S in use at runtime,
                       and disk quotas are in effect. Otherwise, the value
                       will be equal to that returned for HB_FS_FREE.
 
-       HB_FS_FREE     The actual amount of free diskspace on the drive.
+       HB_DISK_FREE   The actual amount of free disk space on the drive.
 
-       HB_FS_USED     The number of bytes in use on the disk.
+       HB_DISK_USED   The number of bytes in use on the disk.
 
-       HB_FS_TOTAL    The total amount of space allocated for the user if
+       HB_DISK_TOTAL  The total amount of space allocated for the user if
                       disk quotas are in effect, otherwise, the actual size
                       of the drive.
 
@@ -95,10 +91,11 @@
       error 2018 will be raised.
    $EXAMPLES$
       #include "fileio.ch"
-      ? "You can use:", hb_ntos( hb_DiskSpace() ), "bytes", ;
-        "Out of a total of", hb_ntos( hb_DiskSpace( "C:", HB_FS_TOTAL ) )
 
-      // NOTE: See tests/diskspac.prg for another example
+      ? "You can use:", hb_ntos( hb_DiskSpace() ), "bytes"
+      ? "Out of a total of:", hb_ntos( hb_DiskSpace( , HB_DISK_TOTAL ) )
+
+      // See tests/diskspac.prg for another example
    $STATUS$
       R
    $COMPLIANCE$

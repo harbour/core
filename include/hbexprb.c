@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,7 +45,6 @@
  */
 
 #include "hbcomp.h"
-#include "hbmacro.ch"
 
 #if ! defined( HB_HASH_USES_ARRAY_INDEXES )
 #  define HB_HASH_USES_ARRAY_INDEXES
@@ -174,7 +173,7 @@ const PHB_EXPR_FUNC hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
    hb_compExprUseVariable,
    hb_compExprUsePostInc,     /* post-operators -> lowest precedence */
    hb_compExprUsePostDec,
-   hb_compExprUseAssign,      /* assigments */
+   hb_compExprUseAssign,      /* assignments */
    hb_compExprUsePlusEq,
    hb_compExprUseMinusEq,
    hb_compExprUseMultEq,
@@ -547,7 +546,9 @@ static HB_EXPR_FUNC( hb_compExprUseSelf )
          /* Clipper allows such operation and because some valid Clipper
           * code needs it then I disabled error message, [druzus]
           */
-         /* HB_COMP_ERROR_TYPE( pSelf ); */
+         #if 0
+         HB_COMP_ERROR_TYPE( pSelf );
+         #endif
          break;
       case HB_EA_ARRAY_INDEX:
          hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* SELF cannot be used as array index element */
@@ -604,21 +605,22 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
 
             if( ! fArgsList )
             {
-               /* Note: direct type change */
+               /* NOTE: direct type change */
                pSelf->ExprType = HB_ET_ARGLIST;
             }
-            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-            /* restore original expression type */
-            pSelf->ExprType = HB_ET_ARRAY;
 
-            if( fArgsList )
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+
+            if( ! fArgsList )
             {
-               HB_GEN_FUNC3( PCode3, HB_P_MACROARRAYGEN,
+               /* NOTE: restore original expression type */
+               pSelf->ExprType = HB_ET_ARRAY;
+               HB_GEN_FUNC3( PCode3, HB_P_ARRAYGEN,
                              HB_LOBYTE( usItems ), HB_HIBYTE( usItems ) );
             }
             else
             {
-               HB_GEN_FUNC3( PCode3, HB_P_ARRAYGEN,
+               HB_GEN_FUNC3( PCode3, HB_P_MACROARRAYGEN,
                              HB_LOBYTE( usItems ), HB_HIBYTE( usItems ) );
             }
          }
@@ -688,10 +690,10 @@ static HB_EXPR_FUNC( hb_compExprUseHash )
       case HB_EA_PUSH_PCODE:
       {
          HB_USHORT usItems = ( HB_USHORT ) ( pSelf->nLength >> 1 );
-         /* Note: direct type change */
+         /* NOTE: direct type change */
          pSelf->ExprType = HB_ET_ARGLIST;
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         /* restore original expression type */
+         /* NOTE: restore original expression type */
          pSelf->ExprType = HB_ET_HASH;
          HB_GEN_FUNC3( PCode3, HB_P_HASHGEN, HB_LOBYTE( usItems ), HB_HIBYTE( usItems ) );
          break;
@@ -839,9 +841,12 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
          PHB_EXPR pExp = pSelf->value.asReference;
          if( pExp->ExprType == HB_ET_MACRO )
          {
-            pExp->value.asMacro.SubType = HB_ET_MACRO_REFER;
-            HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
-            break;
+            if( pExp->value.asMacro.SubType & HB_ET_MACRO_VAR )
+            {
+               pExp->value.asMacro.SubType |= HB_ET_MACRO_REFER;
+               HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
+               break;
+            }
          }
          else if( pExp->ExprType == HB_ET_ARRAYAT )
          {
@@ -861,10 +866,10 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
          }
          else if( pExp->ExprType == HB_ET_VARIABLE )
          {
-            /* Note: direct type change */
+            /* NOTE: direct type change */
             pExp->ExprType = HB_ET_VARREF;
             HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
-            /* restore original expression type */
+            /* NOTE: restore original expression type */
             pExp->ExprType = HB_ET_VARIABLE;
             break;
          }
@@ -895,6 +900,7 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( HB_COMP_PARAM, pSelf );
+         /* fallthrough */
       case HB_EA_DELETE:
          HB_COMP_EXPR_FREE( pSelf->value.asReference );
          break;
@@ -1039,19 +1045,13 @@ static HB_EXPR_FUNC( hb_compExprUseList )
       case HB_EA_REDUCE:
          pSelf = hb_compExprReduceList( pSelf, HB_COMP_PARAM );
 
-         if( HB_SUPPORT_XBASE && pSelf->ExprType == HB_ET_LIST )
+         if( HB_SUPPORT_XBASE && pSelf->ExprType == HB_ET_LIST &&
+             hb_compExprListLen( pSelf ) == 1 )
          {
-            if( hb_compExprListLen( pSelf ) == 1 )
-            {
-               PHB_EXPR pExpr = pSelf->value.asList.pExprList;
-               if( pExpr->ExprType == HB_ET_MACRO &&
-                   pExpr->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
-                   pExpr->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-                   pExpr->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
-               {
-                  pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
-               }
-            }
+            PHB_EXPR pExpr = pSelf->value.asList.pExprList;
+            if( pExpr->ExprType == HB_ET_MACRO &&
+                ( pExpr->value.asMacro.SubType & HB_ET_MACRO_NOPARE ) == 0 )
+               pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
          }
          if( HB_SUPPORT_HARBOUR )
             pSelf = hb_compExprListStrip( pSelf, HB_COMP_PARAM );
@@ -1091,12 +1091,8 @@ static HB_EXPR_FUNC( hb_compExprUseList )
                   if( HB_SUPPORT_XBASE )
                   {
                      if( pExpr->ExprType == HB_ET_MACRO &&
-                         pExpr->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
-                         pExpr->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-                         pExpr->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
-                     {
+                         ( pExpr->value.asMacro.SubType & HB_ET_MACRO_NOPARE ) == 0 )
                         pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
-                     }
                   }
 
                   if( pExpr->pNext )
@@ -1122,12 +1118,8 @@ static HB_EXPR_FUNC( hb_compExprUseList )
                if( HB_SUPPORT_XBASE )
                {
                   if( pExpr->ExprType == HB_ET_MACRO &&
-                      pExpr->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
-                      pExpr->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-                      pExpr->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
-                  {
+                      ( pExpr->value.asMacro.SubType & HB_ET_MACRO_NOPARE ) == 0 )
                       pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
-                  }
                }
 
                HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
@@ -1137,16 +1129,11 @@ static HB_EXPR_FUNC( hb_compExprUseList )
          break;
 
       case HB_EA_DELETE:
-         if( pSelf->value.asList.pExprList )
+         while( pSelf->value.asList.pExprList )
          {
-            PHB_EXPR pNext, pExpr = pSelf->value.asList.pExprList;
-            while( pExpr )
-            {
-               pNext = pExpr->pNext;    /* store next expression */
-               HB_COMP_EXPR_FREE( pExpr );
-               pExpr = pNext;
-            }
-            pSelf->value.asList.pExprList = NULL;
+            PHB_EXPR pExpr = pSelf->value.asList.pExprList;
+            pSelf->value.asList.pExprList = pExpr->pNext;
+            HB_COMP_EXPR_FREE( pExpr );
          }
          break;
    }
@@ -1217,7 +1204,7 @@ static HB_EXPR_FUNC( hb_compExprUseArgList )
 }
 
 /* NOTE: In PUSH operation it leaves all expressions on the eval stack,
- *       the expresions are divided into macro compiled blocks
+ *       the expressions are divided into macro compiled blocks
  */
 static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
 {
@@ -1357,10 +1344,10 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                       */
                      PHB_EXPR pNew = HB_COMP_EXPR_NEW( HB_ET_NONE );
                      memcpy( pNew, pExpr, sizeof( HB_EXPR ) );
-                     /* This will suppres releasing of memory occupied by components of
+                     /* This will suppress releasing of memory occupied by components of
                       * the expression - we have just copied them into the new expression.
                       * This method is simpler then traversing the list and releasing all
-                      * but this choosen one.
+                      * but this chosen one.
                       */
                      pExpr->ExprType = HB_ET_NONE;
                      /* Here comes the magic */
@@ -1406,10 +1393,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             if( HB_SUPPORT_XBASE )
             {
-               if( pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
-                   pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-                   pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_ALIASED &&
-                   ( pSelf->value.asList.pIndex->value.asMacro.SubType & HB_ET_MACRO_PARE ) == 0 )
+               if( ( pSelf->value.asList.pIndex->value.asMacro.SubType & HB_ET_MACRO_NOLIST ) == 0 )
                {
                   pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_LIST;
                   fMacroIndex = HB_TRUE;
@@ -1433,10 +1417,10 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             PHB_EXPR pList = pSelf->value.asList.pExprList;
             if( pList->ExprType == HB_ET_VARIABLE )
             {
-               /* Note: direct type change */
+               /* NOTE: direct type change */
                pList->ExprType = HB_ET_VARREF;
                HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
-               /* restore original expression type */
+               /* NOTE: restore original expression type */
                pList->ExprType = HB_ET_VARIABLE;
             }
             else if( pList->ExprType == HB_ET_ALIASVAR &&
@@ -1459,11 +1443,11 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                pList->value.asList.reference = HB_FALSE;
             }
             else if( pList->ExprType == HB_ET_MACRO &&
-                     pList->value.asMacro.SubType == HB_ET_MACRO_VAR )
+                     pList->value.asMacro.SubType & HB_ET_MACRO_VAR )
             {
-               pList->value.asMacro.SubType = HB_ET_MACRO_REFER;
+               pList->value.asMacro.SubType |= HB_ET_MACRO_REFER;
                HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
-               pList->value.asMacro.SubType = HB_ET_MACRO_VAR;
+               pList->value.asMacro.SubType &= ~HB_ET_MACRO_REFER;
             }
             else
                HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
@@ -1483,14 +1467,12 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
       case HB_EA_POP_PCODE:
       {
          HB_BOOL fMacroIndex = HB_FALSE;
+
          if( pSelf->value.asList.pIndex->ExprType == HB_ET_MACRO )
          {
             if( HB_SUPPORT_XBASE )
             {
-               if( pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
-                   pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-                   pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_ALIASED &&
-                   ( pSelf->value.asList.pIndex->value.asMacro.SubType & HB_ET_MACRO_PARE ) == 0 )
+               if( ( pSelf->value.asList.pIndex->value.asMacro.SubType & HB_ET_MACRO_NOLIST ) == 0 )
                {
                   pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_LIST;
                   fMacroIndex = HB_TRUE;
@@ -1516,10 +1498,10 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             PHB_EXPR pList = pSelf->value.asList.pExprList;
             if( pList->ExprType == HB_ET_VARIABLE )
             {
-               /* Note: direct type change */
+               /* NOTE: direct type change */
                pList->ExprType = HB_ET_VARREF;
                HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
-               /* restore original expression type */
+               /* NOTE: restore original expression type */
                pList->ExprType = HB_ET_VARIABLE;
             }
             else if( pList->ExprType == HB_ET_ALIASVAR &&
@@ -1542,11 +1524,11 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                pList->value.asList.reference = HB_FALSE;
             }
             else if( pList->ExprType == HB_ET_MACRO &&
-                     pList->value.asMacro.SubType == HB_ET_MACRO_VAR )
+                     pList->value.asMacro.SubType & HB_ET_MACRO_VAR )
             {
-               pList->value.asMacro.SubType = HB_ET_MACRO_REFER;
+               pList->value.asMacro.SubType |= HB_ET_MACRO_REFER;
                HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
-               pList->value.asMacro.SubType = HB_ET_MACRO_VAR;
+               pList->value.asMacro.SubType &= ~HB_ET_MACRO_REFER;
             }
             else
                HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
@@ -1567,7 +1549,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
           */
          HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_POP );
          HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_POP );
-         /* no break */
+         /* fallthrough */
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( HB_COMP_PARAM, pSelf );
          break;
@@ -1613,9 +1595,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                 * 'szMacro' is a variable name
                 */
 #if ! defined( HB_MACRO_SUPPORT )
-               int iEarlyEvalPass = HB_COMP_PARAM->functions.pLast->iEarlyEvalPass;
-               HB_GEN_FUNC1( PushVar, pSelf->value.asMacro.szMacro );
-               HB_COMP_PARAM->functions.pLast->iEarlyEvalPass = iEarlyEvalPass;
+               hb_compPushMacroVar( HB_COMP_PARAM, pSelf->value.asMacro.szMacro );
 #else
                HB_GEN_FUNC1( PushVar, pSelf->value.asMacro.szMacro );
 #endif
@@ -1624,7 +1604,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             {
                /* complex macro expression: prefix&var.suffix
                 * all components should be placed as a string that will
-                * be compiled after text susbstitution
+                * be compiled after text substitution
                 */
 
                /* Check if macrotext variable does not refer to
@@ -1648,13 +1628,19 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
 
          /* compile & run - leave a result on the eval stack
           */
-         if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL )
+         if( pSelf->value.asMacro.SubType & HB_ET_MACRO_SYMBOL )
             HB_GEN_FUNC1( PCode1, HB_P_MACROSYMBOL );
 
-         else if( pSelf->value.asMacro.SubType == HB_ET_MACRO_REFER )
+         else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_REFER )
             HB_GEN_FUNC1( PCode1, HB_P_MACROPUSHREF );
 
-         else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
+         else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ALIASED )
+         {
+            /* NOTE: pcode for alias context is generated in
+             * hb_compExprUseAliasVar()
+             */
+         }
+         else
          {
             if( HB_SUPPORT_XBASE )
             {
@@ -1683,10 +1669,6 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             /* Always add byte to pcode indicating requested macro compiler flag. */
             HB_GEN_FUNC1( PCode1, ( HB_BYTE ) HB_MACRO_GENFLAGS );
          }
-
-         /* NOTE: pcode for alias context is generated in
-          * hb_compExprUseAliasVar()
-          */
          break;
 
       case HB_EA_POP_PCODE:
@@ -1705,9 +1687,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                 * 'szMacro' is a variable name
                 */
 #if ! defined( HB_MACRO_SUPPORT )
-               int iEarlyEvalPass = HB_COMP_PARAM->functions.pLast->iEarlyEvalPass;
-               HB_GEN_FUNC1( PushVar, pSelf->value.asMacro.szMacro );
-               HB_COMP_PARAM->functions.pLast->iEarlyEvalPass = iEarlyEvalPass;
+               hb_compPushMacroVar( HB_COMP_PARAM, pSelf->value.asMacro.szMacro );
 #else
                HB_GEN_FUNC1( PushVar, pSelf->value.asMacro.szMacro );
 #endif
@@ -1716,7 +1696,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             {
                /* complex macro expression: prefix&var.suffix
                 * all components should be placed as a string that will
-                * be compiled after text susbstitution
+                * be compiled after text substitution
                 */
 
                /* Check if macrotext variable does not refer to
@@ -1734,7 +1714,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
          /* compile & run - macro compiler will generate pcode to pop a value
           * from the eval stack
           */
-         if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
+         if( ( pSelf->value.asMacro.SubType & HB_ET_MACRO_ALIASED ) == 0 )
          {
             HB_GEN_FUNC1( PCode1, HB_P_MACROPOP );
 
@@ -2380,7 +2360,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
    return pSelf;
 }
 
-/* handler for expression->( exression, ... ) syntax
+/* handler for expression->( expression, ... ) syntax
  */
 static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
 {
@@ -2418,7 +2398,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
          HB_EXPR_USE( pSelf->value.asAlias.pExpList, HB_EA_PUSH_PCODE );
          /* swap the two last items on the eval stack: one item is a
           * value returned by evaluated expression and the second item
-          * is previously selected workarea. After swaping select again
+          * is previously selected workarea. After swapping select again
           * the restored workarea.
           */
          HB_GEN_FUNC1( PCode1, HB_P_SWAPALIAS );
@@ -2557,7 +2537,7 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
           * operator only (if 'any_expr' is not a string) - an alias value
           * is placed on the eval stack before macro compilation.
           * The HB_MACRO_GEN_ALIASED flag is used to signal that we have to
-          * genearate alias aware pcode even if we known a variable part only.
+          * generate alias aware pcode even if we known a variable part only.
           */
          if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )
             HB_GEN_FUNC4( PushAliasedVar, pSelf->value.asSymbol.name, HB_FALSE, NULL, 0 );
@@ -2735,7 +2715,7 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
          }
          else
          {
-            /* acces to instance variable */
+            /* access to instance variable */
             hb_compExprPushSendPush( pSelf, HB_COMP_PARAM );
             HB_GEN_FUNC2( PCode2, HB_P_SENDSHORT, 0 );
          }
@@ -2932,7 +2912,7 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
          break;
 
       case HB_EA_PUSH_PCODE:
-         /* NOTE: assigment to an object instance variable needs special handling
+         /* NOTE: assignment to an object instance variable needs special handling
           */
          if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
          {
@@ -3427,30 +3407,10 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-      {
-         PHB_EXPR pExpr;
-
          pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
-         pExpr = pSelf->value.asOperator.pLeft;
-
-         if( pExpr->ExprType == HB_ET_LOGICAL )
-         {
-            pExpr->value.asLogical = ! pExpr->value.asLogical;
-            HB_COMP_EXPR_CLEAR( pSelf );
-            pSelf = pExpr;
-         }
-         else if( pExpr->ExprType == HB_EO_NOT && HB_SUPPORT_EXTOPT )
-         {
-            /* NOTE: This will not generate a runtime error if incompatible
-             * data type is used
-             */
-            pExpr->ExprType = HB_ET_NONE;  /* do not delete operator parameter - we are still using it */
-            pExpr = pExpr->value.asOperator.pLeft;
-            HB_COMP_EXPR_FREE( pSelf );
-            pSelf = pExpr;
-         }
+         pSelf = hb_compExprReduceNot( pSelf, HB_COMP_PARAM );
          break;
-      }
+
       case HB_EA_ARRAY_AT:
          HB_COMP_ERROR_TYPE( pSelf );
          break;
@@ -4552,9 +4512,7 @@ static HB_BOOL hb_compExprCodeblockPush( PHB_EXPR pSelf, int iEarlyEvalPass, HB_
    while( pExpr )
    {
       if( pExpr->ExprType == HB_ET_MACRO &&
-          pExpr->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
-          pExpr->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-          pExpr->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
+          ( pExpr->value.asMacro.SubType & HB_ET_MACRO_NOPARE ) == 0 )
       {
          /* Clipper allows for list expressions in a codeblock
           * macro := "1,2"
@@ -4575,11 +4533,11 @@ static HB_BOOL hb_compExprCodeblockPush( PHB_EXPR pSelf, int iEarlyEvalPass, HB_
          pExpr->pNext = pNext;  /* restore the link to next expression */
       }
 
-      /* Generate push/pop pcodes for all expresions except the last one
+      /* Generate push/pop pcodes for all expressions except the last one
        * The value of the last expression is used as a return value
        * of a codeblock evaluation
        */
-      /* NOTE: This will genereate warnings if constant value is
+      /* NOTE: This will generate warnings if constant value is
        * used as an expression - some operators will generate it too
        * e.g.
        * Eval( {|| 3+5, func()} )
@@ -4648,11 +4606,18 @@ static void hb_compExprCodeblockEarly( PHB_EXPR pSelf, HB_COMP_DECL )
    }
    else
    {
-      /* everything else is macro compiled at runtime
-       * {|| &variable+1} => &( '{|| &variable+1}' )
+      /* generate code to check if macro-expression refers to local, static
+       * or field variables and generate error in such case or disable
+       * iEarlyEvalPass when -kd (MACRODECL) switch is used.
+       * In the 2nd case hb_compExprCodeblockPush() returns true and generated
+       * code is accepted otherwise discarded and we have to generate macro
+       * codeblock compiled at runtime.
        */
       if( ! hb_compExprCodeblockPush( pSelf, 1, HB_COMP_PARAM ) )
       {
+         /* -kd is not necessary, everything else is macro compiled at runtime
+          * {|| &variable+1} => &( '{|| &variable+1}' )
+          */
          HB_BOOL fMacroText = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
          HB_COMP_PARAM->supported |= HB_COMPFLAG_MACROTEXT;
          HB_COMP_PARAM->functions.pLast->iEarlyEvalPass = 2;
@@ -4758,7 +4723,7 @@ static void hb_compExprPushSendPopPush( PHB_EXPR pObj, PHB_EXPR pValue,
       /* Push message */
       if( pObj->value.asMessage.szMessage )
       {
-         /* HB_TRUE used intnetionally to not push object variable in WITH OBJECT */
+         /* HB_TRUE used intentionally not to push object variable in WITH OBJECT */
          HB_GEN_FUNC2( Message, pObj->value.asMessage.szMessage, HB_TRUE );
       }
       else
@@ -4892,13 +4857,14 @@ static void hb_compExprPushOperEq( PHB_EXPR pSelf, HB_BYTE bOpEq, HB_COMP_DECL )
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO )
       {
          HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
-         if( usType == HB_ET_MACRO_VAR )
+         if( usType & HB_ET_MACRO_VAR )
          {
             /* NOTE: direct type change */
-            pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+            pSelf->value.asOperator.pLeft->value.asMacro.SubType |= HB_ET_MACRO_REFER;
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
             HB_GEN_FUNC1( PCode1, bNewOp );
+            /* NOTE: restore original expression type */
             pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
             return;
          }
@@ -4962,6 +4928,8 @@ static void hb_compExprPushOperEq( PHB_EXPR pSelf, HB_BYTE bOpEq, HB_COMP_DECL )
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
             HB_GEN_FUNC1( PCode1, bNewOp );
+            /* NOTE: restore original expression type */
+            pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARIABLE;
             return;
          }
       }
@@ -5043,13 +5011,14 @@ static void hb_compExprUseOperEq( PHB_EXPR pSelf, HB_BYTE bOpEq, HB_COMP_DECL )
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO )
       {
          HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
-         if( usType == HB_ET_MACRO_VAR )
+         if( usType & HB_ET_MACRO_VAR )
          {
             /* NOTE: direct type change */
-            pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+            pSelf->value.asOperator.pLeft->value.asMacro.SubType |= HB_ET_MACRO_REFER;
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
             HB_GEN_FUNC1( PCode1, bNewOp );
+            /* NOTE: restore original expression type */
             pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
             return;
          }
@@ -5070,7 +5039,6 @@ static void hb_compExprUseOperEq( PHB_EXPR pSelf, HB_BYTE bOpEq, HB_COMP_DECL )
 #endif
       else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
       {
-         HB_EXPRTYPE iOldType;
 #if defined( HB_MACRO_SUPPORT )
          {
 #else
@@ -5107,14 +5075,12 @@ static void hb_compExprUseOperEq( PHB_EXPR pSelf, HB_BYTE bOpEq, HB_COMP_DECL )
             }
 #endif
             /* NOTE: direct type change */
-            iOldType = pSelf->value.asOperator.pLeft->ExprType;
             pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
-
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
             HB_GEN_FUNC1( PCode1, bNewOp );
-            /* restore original expression type */
-            pSelf->value.asOperator.pLeft->ExprType = iOldType;
+            /* NOTE: restore original expression type */
+            pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARIABLE;
             return;
          }
       }
@@ -5156,12 +5122,13 @@ static void hb_compExprPushPreOp( PHB_EXPR pSelf, HB_BYTE bOper, HB_COMP_DECL )
    else if( HB_SUPPORT_HARBOUR )
    {
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
-          pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+          pSelf->value.asOperator.pLeft->value.asMacro.SubType & HB_ET_MACRO_VAR )
       {
          HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          /* NOTE: direct type change */
-         pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+         pSelf->value.asOperator.pLeft->value.asMacro.SubType |= HB_ET_MACRO_REFER;
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         /* NOTE: restore original expression type */
          pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
 
          /* increase/decrease operation, leave unreferenced value on stack */
@@ -5208,12 +5175,11 @@ static void hb_compExprPushPreOp( PHB_EXPR pSelf, HB_BYTE bOper, HB_COMP_DECL )
             else
             {
                /* NOTE: direct type change */
-               HB_EXPRTYPE iOldType = pSelf->value.asOperator.pLeft->ExprType;
                pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
                HB_GEN_FUNC1( PCode1, ( HB_BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQ : HB_P_DECEQ ) );
-               /* restore original expression type */
-               pSelf->value.asOperator.pLeft->ExprType = iOldType;
+               /* NOTE: restore original expression type */
+               pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARIABLE;
             }
             return;
          }
@@ -5263,12 +5229,13 @@ static void hb_compExprPushPostOp( PHB_EXPR pSelf, HB_BYTE bOper, HB_COMP_DECL )
    else if( HB_SUPPORT_HARBOUR )
    {
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
-          pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+          pSelf->value.asOperator.pLeft->value.asMacro.SubType & HB_ET_MACRO_VAR )
       {
          HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          /* NOTE: direct type change */
-         pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+         pSelf->value.asOperator.pLeft->value.asMacro.SubType |= HB_ET_MACRO_REFER;
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         /* NOTE: restore original expression type */
          pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
 
          /* Duplicate the reference and unref the original one -
@@ -5317,13 +5284,12 @@ static void hb_compExprPushPostOp( PHB_EXPR pSelf, HB_BYTE bOper, HB_COMP_DECL )
             else
             {
                /* NOTE: direct type change */
-               HB_EXPRTYPE iOldType = pSelf->value.asOperator.pLeft->ExprType;
                pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
                HB_GEN_FUNC1( PCode1, HB_P_DUPLUNREF );
                HB_GEN_FUNC1( PCode1, ( HB_BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQPOP : HB_P_DECEQPOP ) );
-               /* restore original expression type */
-               pSelf->value.asOperator.pLeft->ExprType = iOldType;
+               /* NOTE: restore original expression type */
+               pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARIABLE;
             }
             return;
          }
@@ -5372,12 +5338,13 @@ static void hb_compExprUsePreOp( PHB_EXPR pSelf, HB_BYTE bOper, HB_COMP_DECL )
    else if( HB_SUPPORT_HARBOUR )
    {
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
-          pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+          pSelf->value.asOperator.pLeft->value.asMacro.SubType & HB_ET_MACRO_VAR )
       {
          HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          /* NOTE: direct type change */
-         pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+         pSelf->value.asOperator.pLeft->value.asMacro.SubType |= HB_ET_MACRO_REFER;
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         /* NOTE: restore original expression type */
          pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
 
          /* increase/decrease operation */
@@ -5415,12 +5382,11 @@ static void hb_compExprUsePreOp( PHB_EXPR pSelf, HB_BYTE bOper, HB_COMP_DECL )
             else
             {
                /* NOTE: direct type change */
-               HB_EXPRTYPE iOldType = pSelf->value.asOperator.pLeft->ExprType;
                pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
                HB_GEN_FUNC1( PCode1, ( HB_BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQPOP : HB_P_DECEQPOP ) );
-               /* restore original expression type */
-               pSelf->value.asOperator.pLeft->ExprType = iOldType;
+               /* NOTE: restore original expression type */
+               pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARIABLE;
             }
             return;
          }
@@ -5459,10 +5425,6 @@ static void hb_compExprUseAliasMacro( PHB_EXPR pAliasedVar, HB_BYTE bAction, HB_
        */
       HB_GEN_FUNC2( PushString, pAlias->value.asSymbol.name, strlen( pAlias->value.asSymbol.name ) + 1 );
       HB_EXPR_USE( pVar, HB_EA_PUSH_PCODE );
-      if( bAction == HB_EA_PUSH_PCODE )
-         HB_GEN_FUNC1( PCode1, HB_P_MACROPUSHALIASED );
-      else
-         HB_GEN_FUNC1( PCode1, HB_P_MACROPOPALIASED );
    }
    else if( pVar->ExprType == HB_ET_VARIABLE )
    {
@@ -5471,20 +5433,17 @@ static void hb_compExprUseAliasMacro( PHB_EXPR pAliasedVar, HB_BYTE bAction, HB_
        */
       HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
       HB_GEN_FUNC2( PushString, pVar->value.asSymbol.name, strlen( pVar->value.asSymbol.name ) + 1 );
-      if( bAction == HB_EA_PUSH_PCODE )
-         HB_GEN_FUNC1( PCode1, HB_P_MACROPUSHALIASED );
-      else
-         HB_GEN_FUNC1( PCode1, HB_P_MACROPOPALIASED );
    }
    else
    {
       HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
       HB_EXPR_USE( pVar, HB_EA_PUSH_PCODE );
-      if( bAction == HB_EA_PUSH_PCODE )
-         HB_GEN_FUNC1( PCode1, HB_P_MACROPUSHALIASED );
-      else
-         HB_GEN_FUNC1( PCode1, HB_P_MACROPOPALIASED );
    }
+
+   if( bAction == HB_EA_PUSH_PCODE )
+      HB_GEN_FUNC1( PCode1, HB_P_MACROPUSHALIASED );
+   else
+      HB_GEN_FUNC1( PCode1, HB_P_MACROPOPALIASED );
 
    /* Always add byte to pcode indicating requested macro compiler flag. */
    HB_GEN_FUNC1( PCode1, ( HB_BYTE ) HB_MACRO_GENFLAGS );
@@ -5499,7 +5458,7 @@ static PHB_EXPR hb_compExprReduceList( PHB_EXPR pList, HB_COMP_DECL )
 {
    PHB_EXPR * pExpr;
 
-   /* NOTE: During optimalization an expression on the list can be
+   /* NOTE: During optimization an expression on the list can be
     * replaced by the new one
     */
 

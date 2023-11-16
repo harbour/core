@@ -1,37 +1,39 @@
 #require "hbpgsql"
 
-PROCEDURE Main()
+PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
-   LOCAL conn, res, aTemp, x, y, pFile
-   LOCAL cDb := "test"
-   LOCAL cUser := "user"
-   LOCAL cPass := "pass"
+   LOCAL conn, res, x, y, pFile
 
    CLS
 
-   conn := PQsetdbLogin( "localhost", "5432", NIL, NIL, cDb, cUser, cPass )
+   conn := PQsetdbLogin( cHost, "5432", , , cDatabase, cUser, cPass )
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )
 
-   conn := PQconnectdb( "dbname = " + cDb + " host = localhost user = " + cUser + " password = " + cPass + " port = 5432" )
+   conn := PQconnectdb( ;
+      "dbname = '" + hb_defaultValue( cDatabase, "postgres" ) + "' " + ;
+      "host = '" + hb_defaultValue( cHost, "localhost" ) + "' " + ;
+      "user = '" + hb_defaultValue( cUser, hb_UserName() ) + "' " + ;
+      "password = '" + hb_defaultValue( cPass, "" ) + "' " + ;
+      "port = 5432" )
 
    ? PQstatus( conn ), PQerrorMessage( conn )
 
    IF PQstatus( conn ) != CONNECTION_OK
-      QUIT
+      RETURN
    ENDIF
 
-   ? "Blocking: ", PQisnonblocking( conn ), PQsetnonblocking( conn, .T. ), PQisnonblocking( conn )
+   ? "Blocking:", PQisnonblocking( conn ), PQsetnonblocking( conn, .T. ), PQisnonblocking( conn )
 
-   pFile := PQtracecreate( "trace.log" )
+   pFile := PQtracecreate( hb_DirBase() + "trace.log" )
    PQtrace( conn, pFile )
 
-   ? "Verbose: ", PQsetErrorVerbosity( conn, 2 )
+   ? "Verbose:", PQsetErrorVerbosity( conn, 2 )
 
-   ? ;
-      "Protocol: ", PQprotocolVersion( conn ), ;
-      " Server Version: ", PQserverVersion( conn ), ;
-      " Client Encoding: ", PQsetClientEncoding( conn, "ASCII" ), ;
-      "New encode: ", PQclientEncoding( conn )
+   ? "Protocol:", PQprotocolVersion( conn )
+   ? "Server version:", PQserverVersion( conn )
+   ? "Client encoding (old):", pg_encoding_to_char( PQclientEncoding( conn ) )
+   ? "Set client encoding:", PQsetClientEncoding( conn, "UTF-8" )
+   ? "Client encoding (new):", pg_encoding_to_char( PQclientEncoding( conn ) )
 
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )
 
@@ -42,8 +44,8 @@ PROCEDURE Main()
    res := PQexec( conn, "create table products ( product_no numeric(10), name varchar(20), price numeric(10,2) )" )
    ? PQresultStatus( res ), PQresultErrorMessage( res )
 
-   res := PQexecParams( conn, "insert into products(product_no, name, price) values ($1, $2, $3)", { "2", "bread", "10.95" } )
-   ? "Oid Row: ", PQoidValue( res ), PQoidStatus( res )
+   res := PQexecParams( conn, "insert into products( product_no, name, price ) values ($1, $2, $3)", { "2", "bread", "10.95" } )
+   ? "Oid Row:", PQoidValue( res ), PQoidStatus( res )
 
    IF PQresultStatus( res ) != PGRES_COMMAND_OK
       ? PQresultStatus( res ), PQresultErrorMessage( res )
@@ -55,16 +57,15 @@ PROCEDURE Main()
       ? PQresultStatus( res ), PQresultErrorMessage( res )
    ENDIF
 
-   ? "Binary: ", PQbinaryTuples( res )
-   ? "Rows: ", PQntuples( res ), "Cols: ", PQnfields( res )
+   ? "Binary:", PQbinaryTuples( res )
+   ? "Rows:", PQntuples( res )
+   ? "Cols:", PQnfields( res )
    ? PQfname( res, 1 ), PQftable( res, 1 ), PQftype( res, 1 ), PQfnumber( res, "name" ), PQfmod( res, 1 ), PQfsize( res, 1 ), PQgetisnull( res, 1, 1 )
 
-   aTemp := PQmetadata( res )
-
-   FOR x := 1 TO Len( aTemp )
-      ? "Linha 1: "
+   FOR EACH x IN PQmetadata( res )
+      ? "Line 1:", ""
       FOR y := 1 TO 6
-         ?? aTemp[ x ][ y ], ", "
+         ?? x[ y ], ",", ""
       NEXT
    NEXT
 

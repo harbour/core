@@ -1,6 +1,6 @@
 Date: Fri, 12 Jun 2009 19:47:37 +0300
 From: Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>
-To: "Harbour Project Main Developer List." <harbour@harbour-project.org>
+To: "Harbour Project Main Developer List."
 Subject: uhttpd v0.2
 
 
@@ -12,10 +12,10 @@ I want to share some more ideas (and code) about uhttpd development.
 All pro and cons, and any brainstorming is very welcome.
 
 Sources can be obtained from:
-http://www.dbtopas.lt/hrb/uhttpd-0.2.zip
+https://dbtopas.lt/hrb/uhttpd-0.2.zip
 
 You can test running demo application at (I'll try to keep it running
-for some time): http://www.dbtopas.lt:8001/
+for some time): https://dbtopas.lt:8001/
 
 
 I also want to add answer about one question. uhttpd support and
@@ -143,26 +143,26 @@ Mounting table is hash, having this structure:
    oServer:hMount := { url => { handler, sessioned }, ... }
 URL can a single URL path, or path containing '*' wildchar in the end.
 Example:
-    /app/login   - single URL match http://host/app/login
-    /files/*     - the whole URL subtree from http://host/files/
-    /*           - the whole URL tree http://host/
+    /app/login   - single URL match https://host/app/login
+    /files/*     - the whole URL subtree from https://host/files/
+    /*           - the whole URL tree https://host/
 
 NOTE: '*' should be placed after '/' symbol to match URL subtree.
 Usage of '/files*' is invalid and do not match '/files1', '/filesa'
 or '/files/x'. The requested URL path is checked by deleting last
 slashed part until URL is found in mounting table. If no URL found
 in mounting table, 404 Not Found error is returned.
-Example 1. If '/files/folder/aaa' is requested, '/files/folder/aaa',
-'/files/folder/*', '/files/*', and '/*' will be checked before 404
+Example 1. If '/files/dir/aaa' is requested, '/files/dir/aaa',
+'/files/dir/*', '/files/*', and '/*' will be checked before 404
 error is returned.
-Example 2. If '/files/folder/' is requested, '/files/folder/',
-'/files/folder/*', '/files/*', and '/*' will be checked before 404
+Example 2. If '/files/dir/' is requested, '/files/dir/',
+'/files/dir/*', '/files/*', and '/*' will be checked before 404
 error is returned.
 
 NOTE 2: if you want to use a slash-less URL address as a synonym for
-the folder you may need an extra redirection rule. Ex.,
+the directory you may need an extra redirection rule. Ex.,
      "/files"   => { {|| URedirect( "/files/" ) }, .F. }
-     "/files/*" => { {| x | UProcFiles(DocumentRoot + x ) }, .F. }
+     "/files/*" => { {| x | UProcFiles( DocumentRoot + x ) }, .F. }
 
 
 Widgets
@@ -175,7 +175,7 @@ to use some objects (browse, etc.) instead of plain:
     UWrite('<table>')
     DO WHILE ! Eof()
        UWrite( '<tr><td>' + FIELD->NAME + '</td><td align="right">' +
-               Str( FIELD->AGE ) + '</td></tr>' )
+               hb_ntos( FIELD->AGE ) + '</td></tr>' )
        dbSkip()
     ENDDO
     UWrite('</table>')
@@ -200,31 +200,33 @@ containing the mapping of URL subtree into handler functions. Ex.,
 Page handler functions receives a parameter indicating received
 event/method. Handler has a structure:
 
-STATIC FUNC proc_handler(cMethod)
-   IF cMethod == "INIT"
+STATIC FUNCTION proc_handler( cMethod )
+   DO CASE
+   CASE cMethod == "INIT"
       // This code is executed on entering URL (first call to this URL)
       // Here we open databases used to process queries
-   ELSEIF cMethod == "POST"
+   CASE cMethod == "POST"
       // Process HTTP POST request
-   ELSEIF cMethod == "GET"
+   CASE cMethod == "GET"
       // Process HTTP GET request
-   ELSEIF cMethod == "EXIT"
+   CASE cMethod == "EXIT"
       // This code is executed on leaving URL (before first call to
       // another URL)
       // Here we close databases opened in INIT method, etc.
-   ENDIF
-RETURN .T.
+   ENDCASE
+   RETURN .T.
 
 As you can see this handler reminds the structure of traditional GUI
 based application message/event handler, for example in windows, we
 have:
 
-STATIC FUNC WndProc( hWnd, uMsg, wParam, lParam )
-   IF uMsg == WM_CREATE
-   ELSEIF uMsg == WM_PAINT
-   ELSEIF uMsg == WM_DESTROY
-   ENDIF
-RETURN ...
+STATIC FUNCTION WndProc( hWnd, uMsg, wParam, lParam )
+   DO CASE
+   CASE uMsg == WM_CREATE
+   CASE uMsg == WM_PAINT
+   CASE uMsg == WM_DESTROY
+   ENDCASE
+   RETURN ...
 
 I hope this similarity will help to develop (or convert) event based
 GUI applications to web easier.
@@ -279,7 +281,7 @@ items dialog, and items_edit_handler() function for item_edit dialog.
    PROCEDURE items_handler()
       ...
 
-      IF event = "edit button pressed"
+      IF event == "edit button pressed"
          dialog := create_new_modal_dialog() // create items_edit dialog
          dialog:handler := @items_edit_handler()
          process_event_loop() // until dialog is closed

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -178,7 +178,7 @@ static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_DYNARG pArg )
          break;
 
       case HB_DYN_CTYPE_LLONG_UNSIGNED:
-         /* TOFIX: Digits are lost. */
+         /* FIXME: Digits are lost. */
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          pArg->value.t.n64 = ( HB_MAXUINT ) hb_itemGetNInt( pParam );
 #else
@@ -188,7 +188,7 @@ static HB_U64 hb_u64par( PHB_ITEM pParam, PHB_DYNARG pArg )
          break;
 
       case HB_DYN_CTYPE_FLOAT:
-         /* TOFIX */
+         /* FIXME */
 
       case HB_DYN_CTYPE_DOUBLE:
          HB_PUT_LE_DOUBLE( ( HB_BYTE * ) &pArg->value.t.n64, hb_itemGetND( pParam ) );
@@ -384,7 +384,7 @@ static PHB_ITEM hb_u64ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_DYNVA
          break;
 
       case HB_DYN_CTYPE_FLOAT:
-         hb_itemPutND( pItem, value.t.nFL );
+         hb_itemPutND( pItem, ( double ) value.t.nFL );
          break;
 
       case HB_DYN_CTYPE_DOUBLE:
@@ -539,7 +539,7 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
 
       case HB_DYN_CTYPE_LLONG_UNSIGNED:
 #if ! defined( HB_LONG_LONG_OFF )
-         /* TOFIX: Digits are lost. */
+         /* FIXME: Digits are lost. */
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          pArg->value.t.n64 = ( HB_MAXUINT ) hb_itemGetNInt( pParam );
 #else
@@ -767,7 +767,7 @@ static PHB_ITEM hb_u32ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_DYNVA
          break;
 
       case HB_DYN_CTYPE_FLOAT:
-         hb_itemPutND( pItem, value.t.nFL );
+         hb_itemPutND( pItem, ( double ) value.t.nFL );
          break;
 
       case HB_DYN_CTYPE_DOUBLE:
