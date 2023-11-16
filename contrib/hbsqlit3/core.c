@@ -92,6 +92,8 @@ typedef struct
    PHB_ITEM  cbHookCommit;
    PHB_ITEM  cbHookRollback;
    PHB_ITEM  cbFunc;
+   PHB_ITEM  sProfileFileName;
+   PHB_ITEM  sTraceFileName;
 } HB_SQLITE3, * PHB_SQLITE3;
 
 typedef struct
@@ -154,6 +156,17 @@ static HB_GARBAGE_FUNC( hb_sqlite3_destructor )
          pStructHolder->hbsqlite3->cbFunc = NULL;
       }
 
+      if( pStructHolder->hbsqlite3->sProfileFileName )
+      {
+         hb_itemRelease( pStructHolder->hbsqlite3->sProfileFileName );
+         pStructHolder->hbsqlite3->sProfileFileName = NULL;
+      }
+      if( pStructHolder->hbsqlite3->sTraceFileName )
+      {
+         hb_itemRelease( pStructHolder->hbsqlite3->sTraceFileName );
+         pStructHolder->hbsqlite3->sTraceFileName = NULL;
+      }
+
       hb_xfree( pStructHolder->hbsqlite3 );
       pStructHolder->hbsqlite3 = NULL;
    }
@@ -182,6 +195,15 @@ static HB_GARBAGE_FUNC( hb_sqlite3_mark )
 
       if( pStructHolder->hbsqlite3->cbFunc )
          hb_gcMark( pStructHolder->hbsqlite3->cbFunc );
+
+      if( pStructHolder->hbsqlite3->sProfileFileName )
+      {
+         hb_gcMark( pStructHolder->hbsqlite3->sProfileFileName );
+      }
+      if( pStructHolder->hbsqlite3->sTraceFileName )
+      {
+         hb_gcMark( pStructHolder->hbsqlite3->sTraceFileName );
+      }
    }
 }
 
@@ -1759,8 +1781,8 @@ HB_FUNC( SQLITE3_ENABLE_SHARED_CACHE )
 /**
    Tracing And Profiling Functions
 
-   sqlite3_trace( db, lOnOff )
-   sqlite3_profile( db, lOnOff )
+   sqlite3_trace( db, lOnOff, [ filename ] )     // Deprecated in 3.14.0
+   sqlite3_profile( db, lOnOff, [ filename ] )   // Deprecated in 3.14.0
  */
 static void SQL3ProfileLog( void * sFile, const char * sProfileMsg, sqlite3_uint64 uint64 )
 {
@@ -1795,8 +1817,22 @@ HB_FUNC( SQLITE3_PROFILE )
    HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db )
-      sqlite3_profile( pHbSqlite3->db, hb_parl( 2 ) ? SQL3ProfileLog : NULL,
-                       HB_ISCHAR( 3 ) ? HB_UNCONST( hb_parcx( 3 ) ) : NULL );
+   {
+      HB_BOOL bFlag = hb_parl( 2 );
+      if( pHbSqlite3->sProfileFileName )
+      {
+         hb_itemRelease( pHbSqlite3->sProfileFileName );
+         pHbSqlite3->sProfileFileName = NULL;
+      }
+      if( bFlag && HB_ISCHAR( 3 ) )
+      {
+         pHbSqlite3->sProfileFileName = hb_itemNew( hb_param( 3, HB_IT_STRING ) );
+         hb_gcUnlock( pHbSqlite3->sProfileFileName );
+      }
+
+      sqlite3_profile( pHbSqlite3->db, bFlag ? SQL3ProfileLog : NULL,
+                       pHbSqlite3->sProfileFileName ? HB_UNCONST( hb_itemGetCPtr( pHbSqlite3->sProfileFileName ) ) : NULL );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -1806,8 +1842,22 @@ HB_FUNC( SQLITE3_TRACE )
    HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db )
-      sqlite3_trace( pHbSqlite3->db, hb_parl( 2 ) ? SQL3TraceLog : NULL,
-                     HB_ISCHAR( 3 ) ? HB_UNCONST( hb_parcx( 3 ) ) : NULL );
+   {
+      HB_BOOL bFlag = hb_parl( 2 );
+      if( pHbSqlite3->sTraceFileName )
+      {
+         hb_itemRelease( pHbSqlite3->sTraceFileName );
+         pHbSqlite3->sTraceFileName = NULL;
+      }
+      if( bFlag && HB_ISCHAR( 3 ) )
+      {
+         pHbSqlite3->sTraceFileName = hb_itemNew( hb_param( 3, HB_IT_STRING ) );
+         hb_gcUnlock( pHbSqlite3->sTraceFileName );
+      }
+
+      sqlite3_trace( pHbSqlite3->db, bFlag ? SQL3TraceLog : NULL,
+                     pHbSqlite3->sTraceFileName ? HB_UNCONST( hb_itemGetCPtr( pHbSqlite3->sTraceFileName ) ) : NULL );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
