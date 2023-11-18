@@ -9,7 +9,7 @@
 
 # GT
 -gtnap
--gtwin{msvc}
+-gtwin{allmsvc}
 -gttrm{gcc}
 
 # Sources
@@ -37,7 +37,7 @@ inkey_.prg
 texto.prg
 
 # Icon
-{msvc}exemplo.rc
+{allmsvc}exemplo.rc
 
 # Libraries
 gtnap.hbc
