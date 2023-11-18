@@ -35,14 +35,14 @@ For building GTNap CMake tool is necessary:
 
 ## LibreOffice-SDK support
 
-As of November 23, GTNap adds support for the LibreOffice-SDK, in order to add capabilities for editing documents from Harbour. It is necessary to **correctly install the LibreOffice package**, both on the development machines and on the client machines.
+As of November 23, GTNAP adds support for the LibreOffice-SDK, in order to add capabilities for editing documents from Harbour. It is necessary to **correctly install the LibreOffice package**, both on the development machines and on the client machines.
 
 * In Windows:
     * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
       ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
 
     * Install the LibreOffice development libraries. This installation is **required ONLY for compile GTNAP in development machines**.
-      > **Important:** LibreOffice-SDK is available in 32-bit and 64-bit versions. You will need to compile GTNap in 32 or 64 bits depending on the version of LibreOffice. It is not possible to mix 32 and 64 libraries in the same executable. In this tutorial we use the **64bit** version.
+      > **Important:** LibreOffice-SDK is available in 32-bit and 64-bit versions. You will need to compile GTNAP in 32 or 64 bits depending on the version of LibreOffice. It is not possible to mix 32 and 64 libraries in the same executable. **By default, GTNAP will be compiled in 64bit in Windows**.
 
       ![download_libreoffice_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/4821de74-7e38-486a-94f6-ffd59d0f14a0)
 

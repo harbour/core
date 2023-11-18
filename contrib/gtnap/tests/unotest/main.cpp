@@ -40,7 +40,7 @@ int main()
     rtl::OUString sConnectionString("uno:socket,host=localhost,port=2083;urp;StarOffice.ServiceManager");
     rtl::Bootstrap::set("URE_MORE_TYPES", "file:///C:/Program%20Files/LibreOffice/program/types/offapi.rdb");
     rtl::Bootstrap::set("URE_BOOTSTRAP", "vnd.sun.star.pathname:C:/Program%20Files/LibreOffice/program/fundamental.ini");
-    // soffice "--accept=socket,host=localhost,port=2083;urp;StarOffice.ServiceManager"
+    // soffice "--accept=socket,host=localhost,port=2083;urp;StarOffice.ServiceManager" --invisible
     int result;
     {
         WSADATA wsaData;

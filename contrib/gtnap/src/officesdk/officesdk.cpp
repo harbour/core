@@ -2,6 +2,7 @@
 #include <core/strings.h>
 #include <osbs/bproc.h>
 #include <osbs/bthread.h>
+#include <osbs/osbs.h>
 #include <sewer/blib.h>
 #include <sewer/cassert.h>
 
@@ -68,6 +69,30 @@ OfficeSdk::~OfficeSdk()
 
 /*---------------------------------------------------------------------------*/
 
+static String *i_url_spaces(const char_t *url)
+{
+    return str_repl(url, " ", "%20", 0);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static String *i_file_url(const char_t *url)
+{
+    String *str = NULL;
+    String *curl = NULL;
+    cassert_no_null(url);
+    if (url[0] == '/' || url[0] == '\\')
+        str = str_path(ekLINUX, "file://%s", url);
+    else
+        str = str_path(ekLINUX, "file:///%s", url);
+
+    curl = i_url_spaces(tc(str));
+    str_destroy(&str);
+    return curl;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static ::rtl::OUString i_OUStringFromString(const String *str)
 {
     return rtl::OUString(tc(str), (sal_Int32)str_len(str), RTL_TEXTENCODING_UTF8);
@@ -75,10 +100,20 @@ static ::rtl::OUString i_OUStringFromString(const String *str)
 
 /*---------------------------------------------------------------------------*/
 
-static ::rtl::OUString i_OUStringFromUTF8(const char_t *str)
+//static ::rtl::OUString i_OUStringFromUTF8(const char_t *str)
+//{
+//    cassert_no_null(str);
+//    return rtl::OUString(str, (sal_Int32)str_len_c(str), RTL_TEXTENCODING_UTF8);
+//}
+
+/*---------------------------------------------------------------------------*/
+
+static ::rtl::OUString i_OUStringFileUrl(const char_t *str)
 {
-    cassert_no_null(str);
-    return rtl::OUString(str, (sal_Int32)str_len_c(str), RTL_TEXTENCODING_UTF8);
+    String *url = i_file_url(str);
+    ::rtl::OUString ostr = i_OUStringFromString(url);
+    str_destroy(&url);
+    return ostr;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -97,8 +132,21 @@ sdkres_t OfficeSdk::Init()
         // Apache UNO global variables
         if (res == ekSDKRES_OK)
         {
-            String *types = str_printf("file://%s/program/types/offapi.rdb", env);
-            String *boots = str_printf("vnd.sun.star.pathname:%s/program/fundamentalrc", env);
+            String *types = NULL;
+            String *boots = NULL;
+
+            {
+                String *path = str_path(ekLINUX, "%s/program/types/offapi.rdb", env);
+                types = i_file_url(tc(path));
+                str_destroy(&path);
+            }
+
+            {
+                String *path = str_path(ekLINUX, "vnd.sun.star.pathname:%s/program/fundamentalrc", env);
+                boots = i_url_spaces(tc(path));
+                str_destroy(&path);
+            }
+
             rtl::Bootstrap::set("URE_MORE_TYPES", i_OUStringFromString(types));
             rtl::Bootstrap::set("URE_BOOTSTRAP", i_OUStringFromString(boots));
             str_destroy(&types);
@@ -115,7 +163,7 @@ sdkres_t OfficeSdk::Init()
 
         // Wait a little to LibreOffice wake up
         if (res == ekSDKRES_OK)
-            bthread_sleep(2000);
+            bthread_sleep(4000);
 
         // Connect to LibreOffice instance
         if (res == ekSDKRES_OK)
@@ -133,12 +181,29 @@ sdkres_t OfficeSdk::Init()
 sdkres_t OfficeSdk::KillLibreOffice()
 {
     sdkres_t res = ekSDKRES_OK;
-    const char_t *kill = "killall soffice.bin";
-    Proc *proc = bproc_exec(kill, NULL);
+    const char_t *kill = NULL;    
+    Proc *proc = NULL;
+    platform_t pt = osbs_platform();
+
+    switch(pt) {
+    case ekWINDOWS:
+        kill = "taskkill /IM \"soffice.bin\" /F";
+        break;
+    case ekLINUX:
+        kill = "killall soffice.bin";
+        break;
+    case ekIOS:
+    case ekMACOS:
+    cassert_default();
+    }
+                
+    proc = bproc_exec(kill, NULL);
+
     if (proc != NULL)
         bproc_close(&proc);
     else
         res = ekSDKRES_PROC_KILL_FAIL;
+
     return res;
 }
 
@@ -147,7 +212,8 @@ sdkres_t OfficeSdk::KillLibreOffice()
 sdkres_t OfficeSdk::WakeUpServer()
 {
     sdkres_t res = ekSDKRES_OK;
-    const char_t *connect = "libreoffice \"--accept=socket,host=0,port=2083;urp;\" --invisible";
+    // The WakeUp command is the same for Windows and Linux
+    const char_t *connect = "soffice \"--accept=socket,host=localhost,port=2083;urp;StarOffice.ServiceManager\" --invisible";
     Proc *proc = bproc_exec(connect, NULL);
     if (proc != NULL)
         bproc_close(&proc);
@@ -197,7 +263,7 @@ sdkres_t OfficeSdk::ConnectServer()
 sdkres_t OfficeSdk::OpenTextDocument(const char_t *url, css::uno::Reference<css::text::XTextDocument> &xDocument)
 {
     sdkres_t res = ekSDKRES_OK;
-    ::rtl::OUString docUrl =  "file://" + i_OUStringFromUTF8(url);
+    ::rtl::OUString docUrl = i_OUStringFileUrl(url);
 
     try
     {
@@ -221,7 +287,7 @@ sdkres_t OfficeSdk::OpenTextDocument(const char_t *url, css::uno::Reference<css:
 sdkres_t OfficeSdk::SaveTextDocument(const css::uno::Reference<css::text::XTextDocument> &xDocument, const char_t *url, const fileformat_t format)
 {
     sdkres_t res = ekSDKRES_OK;
-    ::rtl::OUString docUrl = "file://" + i_OUStringFromUTF8(url);
+    ::rtl::OUString docUrl = i_OUStringFileUrl(url);
 
     try
     {
