@@ -38,7 +38,23 @@ For building GTNap CMake tool is necessary:
 As of November 23, GTNap adds support for the LibreOffice-SDK, in order to add capabilities for editing documents from Harbour. It is necessary to **correctly install the LibreOffice package**, both on the development machines and on the client machines.
 
 * In Windows:
+    * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
+      ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
 
+    * Install the LibreOffice development libraries. This installation is **required ONLY for compile GTNAP in development machines**.
+      > **Important:** LibreOffice-SDK is available in 32-bit and 64-bit versions. You will need to compile GTNap in 32 or 64 bits depending on the version of LibreOffice. It is not possible to link 32 and 64 libraries in the same executable.
+         
+      ![download_libreoffice_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/4821de74-7e38-486a-94f6-ffd59d0f14a0)
+
+    * Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `C:\Program Files\LibreOffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime.
+      
+      ![envvar_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/3ad38b78-9214-4567-94b8-94dcf926848f)
+
+   * Add `%LIBREOFFICE_HOME%/program` path to `PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice .DLLs must be accesible and located.
+     
+      ![path_envvar](https://github.com/frang75/harbour_nappgui/assets/42999199/d0215a5e-8569-4dca-a313-f765ada84080)
+
+      
 * In Linux:
     * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
         ```
@@ -63,14 +79,20 @@ As of November 23, GTNap adds support for the LibreOffice-SDK, in order to add c
         CREDITS.fodt  NOTICE  presets  program  sdk  share
         ```
 
+   * Add `$LIBREOFFICE_HOME$/program` path to `LD_LIBRARY_PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice shared libraries `.so` must be accesible and located.
+        ```
+        # Add at the end of .bashrc
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH$:$LIBREOFFICE_HOME$/program
+        ```
+        
 > **Important:** GTNAP-based programs will not be able to compile or run if LibreOffice is not correctly installed.
 
-> **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`
+> **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`, `C:\Program Files\LibreOffice`
 
 > **Important:** The first time a GTNAP program uses a LibreOffice function, an instance of the LibreOffice application will be started invisibly (`soffice.bin` process). This first call will have a small delay due to the initialization of the process. It is imperative that LibreOffice is running in order to use the SDK from C++/Harbour/GTNAP.
 
-> **Important:** In order to run `exemplo` or any GTNAP-based application, the `LD_LIBRARY_PATH` environment variable must point to `${LIBREOFFICE_HOME}/program`. e.g.
-`/usr/lib/libreoffice/program`.
+> **Important:** In order to run `exemplo` or any GTNAP-based application, the `LD_LIBRARY_PATH` (Linux) or `PATH` (Windows) environment variable must point to `{LIBREOFFICE_HOME}/program`. e.g.
+`/usr/lib/libreoffice/program`, `C:\Program Files\LibreOffice\program`.
 
 > **Important:** A new directory has been created for the LibreOffice example files (read/write) `/tests/cuademo/office`.
 
