@@ -8,19 +8,32 @@
 ::
 :: Input parameters
 ::
-set HBMK_PATH=..\\..\\bin\\win\\msvc
+set HBMK_PATH=..\\..\\bin\\win\\msvc64
+set ARCH=x64
 set BUILD=Debug
 set "CWD=%cd%"
+
+:: AMD64 IA64 x86
+IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" GOTO endprocessor
+set HBMK_PATH=..\\..\\bin\\win\\msvc
+set ARCH=Win32
+:endprocessor
 
 :parse
 IF "%~1"=="" GOTO endparse
 IF "%~1"=="-b" GOTO build
+IF "%~1"=="-a" GOTO arch
 SHIFT
 GOTO parse
 
 :build
 SHIFT
 set BUILD=%~1
+GOTO parse
+
+:arch
+SHIFT
+set ARCH=%~1
 GOTO parse
 
 :endparse
@@ -31,13 +44,15 @@ GOTO parse
 echo ---------------------------
 echo Generating GTNAP
 echo Main path: %CWD%
+echo Architecture: %ARCH%
 echo Build type: %BUILD%
+echo HBMK_PATH: %HBMK_PATH%
 echo ---------------------------
 
 ::
 :: Build NAppGUI from sources
 ::
-call cmake -S %CWD% -B %CWD%\build -DCMAKE_WARN_VS11=OFF || goto error_cmake
+call cmake -S %CWD% -B %CWD%\build -A%ARCH% || goto error_cmake
 call cmake --build %CWD%\build --config %BUILD%  || goto error_build
 
 ::

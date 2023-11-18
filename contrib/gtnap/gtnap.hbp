@@ -7,7 +7,7 @@
 -i.
 -isrc
 
--cflag={msvc}-D_WINDOWS
+-cflag={allmsvc}-D_WINDOWS
 -cflag={gcc}-g
 -cflag=-DCMAKE_DEBUG
 
@@ -39,7 +39,9 @@ src/gtnap/nap_office.c
 
 # Avoid linker error '__gxx_personality_v0'
 # GTNAP need to be linked with g++
--cpp={gcc}yes
--cpp={msvc}no
+# LibreOffice support needs c++ linking
+# -cpp={gcc}yes
+# -cpp={allmsvc}no
+-cpp=yes
 
 -hbx=${hb_name}.hbx

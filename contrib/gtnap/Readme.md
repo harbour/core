@@ -94,16 +94,37 @@ Readme.md           This documentation.
 ```
 
 ### In Windows
+
+> **Important:** In case we have several versions of Visual Studio installed on the development machine, we must set a default one using the `CMAKE_GENERATOR` environment variable
+```
+Visual Studio 17 2022
+Visual Studio 16 2019
+Visual Studio 15 2017
+Visual Studio 14 2015
+Visual Studio 12 2013
+Visual Studio 11 2012
+Visual Studio 10 2010
+Visual Studio 9 2008
+Visual Studio 8 2005
+```
+
+> **Important:** On Windows 64bit machines we can force 32bit compilation using the `-a Win32` flag in `build.bat` script. By default, it will compile to 64bit.
+
 ```
 :: Goto gtnap folder
 cd contrib\gtnap
 
-:: Set the Visual Studio compiler
+:: Set Visual Studio compiler for hbmk2 (msvc)
 "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
 
+:: Set Visual Studio compiler for hbmk2 (msvc64)
+"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+
 :: Just build
-build.bat -b Debug
-build.bat -b Release
+:: default Debug
+:: default x64 (on x64 Windows SO)
+:: default Win32 (on x86 Windows SO)
+build.bat -b [Debug|Release] -a [x64|Win32]
 ```
 
 This will generate several static libraries:
@@ -241,9 +262,11 @@ Using the NAppGUI build system, based on CMake, it is possible to create a singl
 **To use developer mode, harbour needs to be recompiled, as a new -keepc option has been introduced in hbmk2.**
 
 * In Windows:
+    > **Important:** As of Nov 23, with the inclusion of LibreOffice-SDK, GTNAP and all applications that depend on it must be compiled on Windows x64. The GTNAP Win-x86 version is discontinued.
+
     ```
-    :: Set the Visual Studio compiler
-    "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
+    :: Set the Visual Studio compiler (64 bits)
+    "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 
     :: Go to main folder of harbour working copy
     cd harbour_nappgui
@@ -253,9 +276,10 @@ Using the NAppGUI build system, based on CMake, it is possible to create a singl
     ! Building Harbour 3.2.0dev from source - https://harbour.github.io
     ! MAKE: win-make 4.1 sh.exe
     ! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
-    ! HB_PLATFORM: win (x86) (auto-detected)
-    ! HB_COMPILER: msvc (v1700) (auto-detected: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/BIN/)
-    ! Component: 'zlib' found in c:/harbour_gtnap/src/3rd/zlib (local)
+    ! HB_PLATFORM: win (x86_64) (auto-detected)
+    ! HB_COMPILER: msvc64 (v1700) (auto-detected: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/BIN/amd64/)
+    ! Component: 'zlib' found in C:/harbour_nappgui/src/3rd/zlib (local)
+    ! Component: 'pcre' found in C:/harbour_nappgui/src/3rd/pcre (local)
     ...
     ```
 

@@ -5,6 +5,7 @@
 #include <sewer/blib.h>
 #include <sewer/cassert.h>
 
+#include <sewer/nowarn.hxx>
 #include <cppuhelper/bootstrap.hxx>
 #include <rtl/bootstrap.hxx>
 #include <beans/XPropertySet.hpp>
@@ -15,6 +16,7 @@
 #include <lang/XMultiComponentFactory.hpp>
 #include <text/XTextDocument.hpp>
 #include <iostream>
+#include <sewer/warn.hxx>
 
 class OfficeSdk
 {
@@ -68,7 +70,7 @@ OfficeSdk::~OfficeSdk()
 
 static ::rtl::OUString i_OUStringFromString(const String *str)
 {
-    return rtl::OUString(tc(str), str_len(str), RTL_TEXTENCODING_UTF8);
+    return rtl::OUString(tc(str), (sal_Int32)str_len(str), RTL_TEXTENCODING_UTF8);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -76,7 +78,7 @@ static ::rtl::OUString i_OUStringFromString(const String *str)
 static ::rtl::OUString i_OUStringFromUTF8(const char_t *str)
 {
     cassert_no_null(str);
-    return rtl::OUString(str, str_len_c(str), RTL_TEXTENCODING_UTF8);
+    return rtl::OUString(str, (sal_Int32)str_len_c(str), RTL_TEXTENCODING_UTF8);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -235,7 +237,7 @@ sdkres_t OfficeSdk::SaveTextDocument(const css::uno::Reference<css::text::XTextD
             pdfProps[1].Name = "Overwrite";
             pdfProps[1].Value <<= true;
             pdfProps[2].Name = "SelectPdfVersion";
-            pdfProps[2].Value <<= 1;
+            pdfProps[2].Value <<= (sal_uInt32)1;
             storeProps = pdfProps;
             break;
         }
