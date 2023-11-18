@@ -37,6 +37,8 @@ For building GTNap CMake tool is necessary:
 
 As of November 23, GTNap adds support for the LibreOffice-SDK, in order to add capabilities for editing documents from Harbour. It is necessary to **correctly install the LibreOffice package**, both on the development machines and on the client machines.
 
+* In Windows:
+
 * In Linux:
     * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
         ```

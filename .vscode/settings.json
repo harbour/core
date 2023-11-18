@@ -8,7 +8,8 @@
         "*.def": "c",
         "gui.hxx": "c",
         "*.ixx": "c",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "*.hdl": "cpp"
     },
     "files.encoding": "windows1252"
 }
