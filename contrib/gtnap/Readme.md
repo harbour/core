@@ -215,7 +215,7 @@ This will generate several static libraries:
 
 Just adding `-gtnap` flag into your `.hbp` project file.
 
-## Compile and run an CUADEMO example
+## Compile and run CUADEMO example
 
 - To compile in Windows:
    ```
@@ -270,7 +270,7 @@ inkey_.prg
 texto.prg
 
 # Icon
-{msvc}exemplo.rc
+{allmsvc}exemplo.rc
 ```
 ![application_icon_win](https://github.com/frang75/harbour_nappgui/assets/42999199/7455ccb8-08f9-4e59-93cc-d1fca0806ea5)
 
@@ -293,10 +293,8 @@ Using the NAppGUI build system, based on CMake, it is possible to create a singl
 **To use developer mode, harbour needs to be recompiled, as a new -keepc option has been introduced in hbmk2.**
 
 * In Windows:
-    > **Important:** As of Nov 23, with the inclusion of LibreOffice-SDK, GTNAP and all applications that depend on it must be compiled on Windows x64. The GTNAP Win-x86 version is discontinued.
-
     ```
-    :: Set the Visual Studio compiler (64 bits)
+    :: Set the Visual Studio 64bit compiler
     "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 
     :: Go to main folder of harbour working copy

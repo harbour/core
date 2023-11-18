@@ -13,7 +13,12 @@
             "type": "shell",
             "command": "bash ./.vscode/build.sh",
             "windows": {
-                "command": ".\\.vscode\\build.bat"
+                "command": ".\\.vscode\\build.bat",
+                "options" : {
+                    "env": {
+                        "LIBREOFFICE_HOME": "C:/Program Files/LibreOffice"
+                      }
+                }
             },
             "group": {
                 "kind": "build",
