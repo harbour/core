@@ -1,17 +1,15 @@
-# At the moment, all demos in Debug mode
-# Use -debug option in hbmk2
-# debug=no
+# GTNAP options for projects that use it
 
 incpaths=.
 
 # NAppGUI library paths
-{!darwin}libpaths=build build/Release/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib
-{debug&!darwin}libpaths=build build/Debug/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib
+{!debug&!darwin}libpaths=build/Release/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib
+{debug&!darwin}libpaths=build/Debug/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib
 {debug&darwin}libpaths=build build/Debug/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks
 
 # NAppGUI uses static-linked 'LIBCMTD.lib' in Debug (sewer.lib)
 # This line avoid conflicts with 'LIBCMT.lib' in Debug mode
-{allmsvc & debug}ldflags=/NODEFAULTLIB:LIBCMT.lib
+{allmsvc&debug}ldflags=/NODEFAULTLIB:LIBCMT.lib
 
 # NAppGUI & LibreOffice link libraries
 {allmsvc}libs=officesdk osapp gui osgui draw2d geom2d core osbs sewer icppu icppuhelper ipurpenvhelper isal isalhelper
@@ -27,8 +25,6 @@ incpaths=.
 
 # REVIEW {unix&!darwin}ldflags="`pkg-config --libs cairo`"
 
-{gcc}cpp=yes
-{allmsvc}cpp=yes
-
+cpp=yes
 gt=${hb_name}
 gui=yes

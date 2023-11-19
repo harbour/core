@@ -153,7 +153,7 @@ build.bat -b [Debug|Release] -a [x64|Win32]
 
 This will generate several static libraries:
 
-* The GT library: `gtnap.lib` in `/build` folder.
+* The GT library: `gtnap.lib` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `sewer.lib`, `osbs.lib`, `core.lib`, `geom2d.lib`, `draw2d.lib`, `osgui.lib`, `gui.lib`, `osapp.lib`, `inet.lib` in `build/[Debug|Release]/lib` folder.
 * The LibreOffice wrapper library `officesdk.lib` in `build/[Debug|Release]/lib` folder.
 
@@ -172,13 +172,12 @@ Then, compile gtnap
 cd contrib/gtnap
 
 # Just build
-bash ./build.sh -b Debug
-bash ./build.sh -b Release
+bash ./build.sh -b [Debug|Release]
 ```
 
 This will generate several static libraries:
 
-* The GT library: `libgtnap.a` in `/build` folder.
+* The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
 * The LibreOffice wrapper library `libofficesdk.a` in `build/[Debug|Release]/lib` folder.
 

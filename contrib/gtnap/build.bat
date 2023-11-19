@@ -9,8 +9,8 @@
 :: Input parameters
 ::
 set HBMK_PATH=..\\..\\bin\\win\\msvc64
-set ARCH=x64
 set BUILD=Debug
+set ARCH=x64
 set "CWD=%cd%"
 
 :: AMD64 IA64 x86
@@ -58,7 +58,13 @@ call cmake --build %CWD%\build --config %BUILD%  || goto error_build
 ::
 :: Build GTNAP
 ::
+IF "%BUILD%"=="Debug" GOTO hbmk2_debug
 call %HBMK_PATH%\\hbmk2.exe %CWD%\src\gtnap\gtnap.hbp || goto error_gtnap
+GOTO hbmk2_end
+
+:hbmk2_debug
+call %HBMK_PATH%\\hbmk2.exe -debug %CWD%\src\gtnap\gtnap.hbp || goto error_gtnap
+:hbmk2_end
 
 echo ---------------------------
 echo GTNAP build succeed
