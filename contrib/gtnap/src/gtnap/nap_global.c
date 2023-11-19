@@ -35,6 +35,14 @@ HB_FUNC( NAP_HEIGHT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_WORK_PATH )
+{
+    const char_t *path = hb_gtnap_working_path();
+    hb_retc(path);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_TERMINAL )
 {
     hb_gtnap_terminal();

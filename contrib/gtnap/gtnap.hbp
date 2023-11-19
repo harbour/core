@@ -1,28 +1,43 @@
+# GTNAP build options
 # https://github.com/frang75/harbour_nappgui/blob/master/utils/hbmk2/doc/hbmk2.en.md
 # https://groups.google.com/g/harbour-users/c/ShxoNBs6Rnw/m/mMKTRAX1BQAJ
 
 -hblib
 -inc
 
+# Include directories
 -i.
 -isrc
 
--cflag={msvc}-D_WINDOWS
--cflag={gcc}-g
--cflag=-DCMAKE_DEBUG
+# Flags
+-cflag={allmsvc}-D_WINDOWS
+-cflag={gcc&debug}-g
+-cflag={debug}-DCMAKE_DEBUG
+-cflag={nodebug}-DCMAKE_RELEASE
 
-#-olib/${hb_plat}/${hb_comp}/${hb_name}
--obuild/${hb_name}
+# Output
+{debug}-obuild/Debug/lib/${hb_name}
+{nodebug}-obuild/Release/lib/${hb_name}
 
 # Fran: Whats that? -w3 == Warning level   -es2???
 -w3 -es2
 
+# Avoid linker error '__gxx_personality_v0'
+# GTNAP need to be linked with g++
+# LibreOffice support needs c++ linking
+# -cpp={gcc}yes
+# -cpp={allmsvc}no
+-cpp=yes
+
+# Create Harbour header
+-hbx=${hb_name}.hbx
+
 # TODO: Disabled UNICODE until this code gets support for it.
 # -winuni- Fran: At the moment I only comment, to remember this option in the future.
-
 # Fran: Perfect, for the moment only Windows. I want to see the error when I compile on Linux/macOS
 # "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform. See gtnap.hbp -stop"
 
+# Files
 src/gtnap/gtnap.c
 src/gtnap/nap_button.c
 src/gtnap/nap_color.c
@@ -35,10 +50,5 @@ src/gtnap/nap_menu.c
 src/gtnap/nap_tableview.c
 src/gtnap/nap_textview.c
 src/gtnap/nap_window.c
+src/gtnap/nap_office.c
 
-# Avoid linker error '__gxx_personality_v0'
-# GTNAP need to be linked with g++
--cpp={gcc}yes
--cpp={msvc}no
-
--hbx=${hb_name}.hbx

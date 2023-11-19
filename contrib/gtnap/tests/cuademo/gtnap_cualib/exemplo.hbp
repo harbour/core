@@ -9,7 +9,7 @@
 
 # GT
 -gtnap
--gtwin{msvc}
+-gtwin{allmsvc}
 -gttrm{gcc}
 
 # Sources
@@ -21,6 +21,7 @@ exemplodbf.prg
 exemplovetor.prg
 exemplotextomemoria.prg
 exemplotextoarquivo.prg
+exemploliboffice.prg
 acentos.prg
 arqtexto.prg
 entrada.prg
@@ -36,7 +37,7 @@ inkey_.prg
 texto.prg
 
 # Icon
-{msvc}exemplo.rc
+{allmsvc}exemplo.rc
 
 # Libraries
 gtnap.hbc

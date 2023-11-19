@@ -11,6 +11,7 @@
 #include "nappgui.h"
 #include <osapp/osmain.h>
 #include <gui/drawctrl.inl>
+#include <officesdk/officesdk.h>
 
 #include "hbapiitm.h"
 #include "hbapirdd.h"
@@ -172,6 +173,7 @@ struct _gtnap_t
     uint8_t date_digits;
     uint8_t date_chars;
     String *title;
+    String *working_path;
     uint32_t rows;
     uint32_t cols;
     uint32_t cell_x_size;
@@ -536,6 +538,8 @@ static void i_gtnap_destroy(GtNap **gtnap)
     font_destroy(&(*gtnap)->global_font);
     font_destroy(&(*gtnap)->reduced_font);
     str_destroy(&(*gtnap)->title);
+    str_destroy(&(*gtnap)->working_path);
+    officesdk_finish();
     heap_delete(&(*gtnap), GtNap);
 }
 
@@ -990,6 +994,13 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->windows = arrpt_create(GtNapWindow);
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
+
+    {
+        char_t path[512];
+        bfile_dir_work(path, sizeof(path));
+        GTNAP_GLOBAL->working_path = str_c(path);
+    }
+
     globals_resolution(&screen);
     screen.height -= 50;        /* Margin for Dock or Taskbars */
     i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
@@ -2652,6 +2663,13 @@ static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t
     gtwin->panel_size.height = (real32_t)(gtnap->cell_y_size * (gtwin->bottom - gtwin->top + 1));
     arrpt_append(gtnap->windows, gtwin, GtNapWindow);
     return gtwin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+extern const char_t *hb_gtnap_working_path(void)
+{
+    return tc(GTNAP_GLOBAL->working_path);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4508,6 +4526,25 @@ void hb_gtnap_toolbar_separator(const uint32_t wid)
     cassert_no_null(gtwin);
     cassert_no_null(gtwin->toolbar);
     arrpt_append(gtwin->toolbar->items, (GuiComponent*)separator, GuiComponent);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_gtnap_office_text_to_pdf(HB_ITEM *src_block, HB_ITEM *dest_block)
+{
+    String *src = hb_block_to_utf8(src_block);
+    String *dest = hb_block_to_utf8(dest_block);
+    sdkres_t res = officesdk_text_to_pdf(tc(src), tc(dest));
+    str_destroy(&src);
+    str_destroy(&dest);
+    return (uint32_t)res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *hb_gtnap_office_error(const uint32_t errcode)
+{
+    return officesdk_error((sdkres_t)errcode);
 }
 
 /*---------------------------------------------------------------------------*/

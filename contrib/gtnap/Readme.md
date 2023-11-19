@@ -20,7 +20,7 @@ For building GTNap CMake tool is necessary:
       :~/$ cmake --version
       cmake version 3.10.2
       ```
-      
+
 * In macOS:
     * Download from https://cmake.org/download/
     * Move `CMake.app` to `/Applications` folder.
@@ -32,6 +32,68 @@ For building GTNap CMake tool is necessary:
       % cmake --version
       cmake version 3.21.4
       ```
+
+## LibreOffice-SDK support
+
+As of November 23, GTNAP adds support for the LibreOffice-SDK, in order to add capabilities for editing documents from Harbour. It is necessary to **correctly install the LibreOffice package**, both on the development machines and on the client machines.
+
+* In Windows:
+    * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
+      ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
+
+    * Install the LibreOffice-SDK package. This installation is **required ONLY for compile GTNAP in development machines**.
+      > **Important:** LibreOffice-SDK is available in 32-bit and 64-bit versions. You will need to compile GTNAP in 32 or 64 bits depending on the version of LibreOffice. It is not possible to mix 32 and 64 libraries in the same executable. **By default, GTNAP will be compiled in 64bit in Windows**.
+
+      > **Important:** The SDK version must be the same as LibreOffice application.
+
+      ![download_libreoffice_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/4821de74-7e38-486a-94f6-ffd59d0f14a0)
+
+    * Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `C:\Program Files\LibreOffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime.
+
+      ![envvar_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/3ad38b78-9214-4567-94b8-94dcf926848f)
+
+   * Add `%LIBREOFFICE_HOME%/program` path to `PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice .DLLs must be accesible and located.
+
+      ![path_envvar](https://github.com/frang75/harbour_nappgui/assets/42999199/d0215a5e-8569-4dca-a313-f765ada84080)
+
+
+* In Linux:
+    * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
+        ```
+        sudo apt-get install libreoffice
+        ```
+    * Install the LibreOffice development libraries. This installation is **required ONLY for compile GTNAP in development machines**.
+        ```
+        sudo apt-get install libreoffice-dev
+
+        # Optional, not mandatory for compile
+        sudo apt-get install libreoffice-dev-doc
+        ```
+    * Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `/usr/lib/libreoffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime. It is recommended to define this variable in the `.bashrc` so that it is always present.
+        ```
+        nano .bashrc
+        # Add at the end
+        export LIBREOFFICE_HOME=/usr/lib/libreoffice
+        # Ctrl+X to save
+        source .bashrc
+        cd $LIBREOFFICE_HOME
+        ls
+        CREDITS.fodt  NOTICE  presets  program  sdk  share
+        ```
+
+   * Add `$LIBREOFFICE_HOME$/program` path to `LD_LIBRARY_PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice shared libraries `.so` must be accesible and located.
+        ```
+        # Add at the end of .bashrc
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH$:$LIBREOFFICE_HOME$/program
+        ```
+
+> **Important:** GTNAP-based programs will not be able to compile or run if LibreOffice is not correctly installed.
+
+> **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`, `C:\Program Files\LibreOffice`
+
+> **Important:** The first time a GTNAP program uses a LibreOffice function, an instance of the LibreOffice application will be started invisibly (`soffice.bin` process). This first call will have a small delay due to the initialization of the process. It is imperative that LibreOffice is running in order to use the SDK from C++/Harbour/GTNAP.
+
+> **Important:** A new directory has been created for the LibreOffice example files (read/write) `/tests/cuademo/office`.
 
 ## Build GTNap
 
@@ -53,22 +115,47 @@ Readme.md           This documentation.
 ```
 
 ### In Windows
+
+> **Important:** The MSVC compiler used by Harbour `hbmk2` is configured using the `vcvarsall.bat` script of the specific version of Visual Studio we are going to use. To configure the compiler in CMake, we must set the `CMAKE_GENERATOR` environment variable to the same version as `vcvarsall.bat`.
+```
+set CMAKE_GENERATOR=Visual Studio 17 2022
+set CMAKE_GENERATOR=Visual Studio 16 2019
+set CMAKE_GENERATOR=Visual Studio 15 2017
+set CMAKE_GENERATOR=Visual Studio 14 2015
+set CMAKE_GENERATOR=Visual Studio 12 2013
+set CMAKE_GENERATOR=Visual Studio 11 2012
+set CMAKE_GENERATOR=Visual Studio 10 2010
+set CMAKE_GENERATOR=Visual Studio 9 2008
+set CMAKE_GENERATOR=Visual Studio 8 2005
+```
+
+> **Important:** On Windows 64bit machines we can force 32bit compilation using the `-a Win32` flag in `build.bat` script. By default, it will compile to 64bit.
+
 ```
 :: Goto gtnap folder
 cd contrib\gtnap
 
-:: Set the Visual Studio compiler
+:: Set Visual Studio 2012 CMake generator
+set CMAKE_GENERATOR=Visual Studio 11 2012
+
+:: Set Visual Studio 2012 32bit compiler for hbmk2 (msvc)
 "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
 
+:: Set Visual Studio 2012 64bit compiler for hbmk2 (msvc64)
+"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+
 :: Just build
-build.bat -b Debug
-build.bat -b Release
+:: default Debug
+:: default x64 (on x64 Windows SO)
+:: default Win32 (on x86 Windows SO)
+build.bat -b [Debug|Release] -a [x64|Win32]
 ```
 
 This will generate several static libraries:
 
-* The GT library: `gtnap.lib` in `/build` folder.
+* The GT library: `gtnap.lib` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `sewer.lib`, `osbs.lib`, `core.lib`, `geom2d.lib`, `draw2d.lib`, `osgui.lib`, `gui.lib`, `osapp.lib`, `inet.lib` in `build/[Debug|Release]/lib` folder.
+* The LibreOffice wrapper library `officesdk.lib` in `build/[Debug|Release]/lib` folder.
 
 ### In Linux
 First of all, install the required development libraries:
@@ -85,14 +172,15 @@ Then, compile gtnap
 cd contrib/gtnap
 
 # Just build
-bash ./build.sh -b Debug
-bash ./build.sh -b Release
+bash ./build.sh -b [Debug|Release]
 ```
 
 This will generate several static libraries:
 
-* The GT library: `libgtnap.a` in `/build` folder.
+* The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
+* The LibreOffice wrapper library `libofficesdk.a` in `build/[Debug|Release]/lib` folder.
+
 
 ### In macOS
 
@@ -125,12 +213,16 @@ This will generate several static libraries:
 
 Just adding `-gtnap` flag into your `.hbp` project file.
 
-## Compile and run an CUADEMO example
+## Compile and run CUADEMO example
 
 - To compile in Windows:
    ```
+   :: Set 64bit compiler
+   "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+
+   :: Use -debug option or omit for release version
    cd contrib\gtnap\tests\cuademo\gtnap_cualib
-   ..\..\..\..\..\bin\win\msvc\hbmk2.exe exemplo.hbp
+   ..\..\..\..\..\bin\win\msvc64\hbmk2.exe [-debug] exemplo.hbp
    exemplo --hb:gtnap
    exemplo --hb:gtwin
    ```
@@ -138,7 +230,8 @@ Just adding `-gtnap` flag into your `.hbp` project file.
 - To compile in Linux:
    ```
    cd contrib/gtnap/tests/cuademo/gtnap_cualib
-   ../../../../../bin/linux/gcc/hbmk2 exemplo.hbp
+   # Use -debug option or omit for release version
+   ../../../../../bin/linux/gcc/hbmk2 [-debug] exemplo.hbp
    ./exemplo --hb:gtnap
    ./exemplo --hb:gttrm
    ```
@@ -177,7 +270,7 @@ inkey_.prg
 texto.prg
 
 # Icon
-{msvc}exemplo.rc
+{allmsvc}exemplo.rc
 ```
 ![application_icon_win](https://github.com/frang75/harbour_nappgui/assets/42999199/7455ccb8-08f9-4e59-93cc-d1fca0806ea5)
 
@@ -201,8 +294,8 @@ Using the NAppGUI build system, based on CMake, it is possible to create a singl
 
 * In Windows:
     ```
-    :: Set the Visual Studio compiler
-    "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
+    :: Set the Visual Studio 64bit compiler
+    "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 
     :: Go to main folder of harbour working copy
     cd harbour_nappgui
@@ -212,9 +305,10 @@ Using the NAppGUI build system, based on CMake, it is possible to create a singl
     ! Building Harbour 3.2.0dev from source - https://harbour.github.io
     ! MAKE: win-make 4.1 sh.exe
     ! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
-    ! HB_PLATFORM: win (x86) (auto-detected)
-    ! HB_COMPILER: msvc (v1700) (auto-detected: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/BIN/)
-    ! Component: 'zlib' found in c:/harbour_gtnap/src/3rd/zlib (local)
+    ! HB_PLATFORM: win (x86_64) (auto-detected)
+    ! HB_COMPILER: msvc64 (v1700) (auto-detected: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/BIN/amd64/)
+    ! Component: 'zlib' found in C:/harbour_nappgui/src/3rd/zlib (local)
+    ! Component: 'pcre' found in C:/harbour_nappgui/src/3rd/pcre (local)
     ...
     ```
 

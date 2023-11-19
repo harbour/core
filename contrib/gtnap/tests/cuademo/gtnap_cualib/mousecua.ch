@@ -2,6 +2,7 @@
 #ifndef MOUSECUA_CH
 #define MOUSECUA_CH
 
+*
 * regi∆o onde o mouse se encontra
 *
 #DEFINE BUSCANDO_REGIAO        100   // define que busca est† em andamento

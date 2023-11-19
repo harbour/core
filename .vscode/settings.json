@@ -7,7 +7,9 @@
         "*.ch": "c",
         "*.def": "c",
         "gui.hxx": "c",
-        "*.ixx": "c"
+        "*.ixx": "c",
+        "iostream": "cpp",
+        "*.hdl": "cpp"
     },
     "files.encoding": "windows1252"
 }

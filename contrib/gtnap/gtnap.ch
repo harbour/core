@@ -36,3 +36,14 @@
 #define NAP_MAX_VKEY                112
 
 #define NAP_WINDOW_FIST_ID          10000
+
+/* Return codes for LibreOffice SDK */
+
+#define SDKRES_OK                   1
+#define SDKRES_NO_ENVAR             2
+#define SDKRES_PROC_KILL_FAIL       3
+#define SDKRES_PROC_INIT_FAIL       4
+#define SDKRES_CONECT_FAIL          5
+#define SDKRES_COMPONENT_LOADER     6
+#define SDKRES_OPEN_FILE_ERROR      7
+#define SDKRES_SAVE_FILE_ERROR      8
