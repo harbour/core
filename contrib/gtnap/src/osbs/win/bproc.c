@@ -129,7 +129,7 @@ static bool_t i_exec(const char_t *command, HANDLE *pipes, PROCESS_INFORMATION *
     size = unicode_convers(command, (char_t *)(commandw + 7), ekUTF8, ekUTF16, (1024 - 7) * sizeof(WCHAR));
     if (size < (1024 - 7) * sizeof(WCHAR))
     {
-        BOOL ok = CreateProcess(NULL, commandw, NULL, NULL, TRUE, 0, NULL, NULL, &stinfo, info);
+        BOOL ok = CreateProcess(NULL, commandw, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &stinfo, info);
         if (ok == TRUE)
         {
             /* Close the parent copy of child descriptors */

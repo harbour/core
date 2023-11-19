@@ -41,8 +41,10 @@ As of November 23, GTNAP adds support for the LibreOffice-SDK, in order to add c
     * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
       ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
 
-    * Install the LibreOffice development libraries. This installation is **required ONLY for compile GTNAP in development machines**.
+    * Install the LibreOffice-SDK package. This installation is **required ONLY for compile GTNAP in development machines**.
       > **Important:** LibreOffice-SDK is available in 32-bit and 64-bit versions. You will need to compile GTNAP in 32 or 64 bits depending on the version of LibreOffice. It is not possible to mix 32 and 64 libraries in the same executable. **By default, GTNAP will be compiled in 64bit in Windows**.
+
+      > **Important:** The SDK version must be the same as LibreOffice application.
 
       ![download_libreoffice_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/4821de74-7e38-486a-94f6-ffd59d0f14a0)
 
@@ -90,9 +92,6 @@ As of November 23, GTNAP adds support for the LibreOffice-SDK, in order to add c
 > **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`, `C:\Program Files\LibreOffice`
 
 > **Important:** The first time a GTNAP program uses a LibreOffice function, an instance of the LibreOffice application will be started invisibly (`soffice.bin` process). This first call will have a small delay due to the initialization of the process. It is imperative that LibreOffice is running in order to use the SDK from C++/Harbour/GTNAP.
-
-> **Important:** In order to run `exemplo` or any GTNAP-based application, the `LD_LIBRARY_PATH` (Linux) or `PATH` (Windows) environment variable must point to `{LIBREOFFICE_HOME}/program`. e.g.
-`/usr/lib/libreoffice/program`, `C:\Program Files\LibreOffice\program`.
 
 > **Important:** A new directory has been created for the LibreOffice example files (read/write) `/tests/cuademo/office`.
 
