@@ -49,8 +49,7 @@ echo ---------------------------
 #
 # Build NAppGUI from sources
 #
-rm -rf build
-mkdir build
+mkdir -p build
 cd build
 if [ "$(uname)" == "Darwin" ]; then
     cmake -G Xcode .. -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 || exit 1
@@ -64,7 +63,12 @@ fi
 # Build GTNAP
 #
 cd $CWD
-$HBMK_PATH/hbmk2 ./src/gtnap/gtnap.hbp || exit 1
+
+if [ $BUILD == "Debug" ]; then
+    $HBMK_PATH/hbmk2 -debug ./src/gtnap/gtnap.hbp || exit 1
+else
+    $HBMK_PATH/hbmk2 ./src/gtnap/gtnap.hbp || exit 1
+fi
 
 echo ---------------------------
 echo GTNAP build succeed

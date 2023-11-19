@@ -62,8 +62,15 @@ OfficeSdk::~OfficeSdk()
 
     if (this->xComponentLoader.get() != nullptr)
     {
-        this->xComponentLoader->dispose();
-        this->xComponentLoader.set(nullptr);
+        try
+        {
+            this->xComponentLoader->dispose();
+            this->xComponentLoader.set(nullptr);
+        }
+        catch (css::uno::Exception&)
+        {
+
+        }
     }
 }
 
