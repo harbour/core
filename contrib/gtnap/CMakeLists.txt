@@ -123,7 +123,7 @@ if (GTNAP_DEVELOPER_MODE)
         file(TO_NATIVE_PATH \"${LIBREOFFICE_LIB_PATH}\" LIBREOFFICE_LIB_PATH)
         set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
     else()
-        set(LIBREOFFICE_LIB_PATH "${LOROOT}/program ${LOROOT}/sdk/lib")
+        set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
         set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
     endif()
 

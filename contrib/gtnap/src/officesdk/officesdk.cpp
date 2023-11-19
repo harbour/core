@@ -184,7 +184,7 @@ sdkres_t OfficeSdk::Init()
 sdkres_t OfficeSdk::KillLibreOffice()
 {
     sdkres_t res = ekSDKRES_OK;
-    const char_t *kill = NULL;    
+    const char_t *kill = NULL;
     Proc *proc = NULL;
     platform_t pt = osbs_platform();
 
@@ -199,7 +199,7 @@ sdkres_t OfficeSdk::KillLibreOffice()
     case ekMACOS:
     cassert_default();
     }
-                
+
     proc = bproc_exec(kill, NULL);
 
     if (proc != NULL)
@@ -215,13 +215,29 @@ sdkres_t OfficeSdk::KillLibreOffice()
 sdkres_t OfficeSdk::WakeUpServer()
 {
     sdkres_t res = ekSDKRES_OK;
-    // The WakeUp command is the same for Windows and Linux
-    const char_t *connect = "soffice \"--accept=socket,host=localhost,port=2083;urp;StarOffice.ServiceManager\" --invisible";
-    Proc *proc = bproc_exec(connect, NULL);
+    const char_t *connect = NULL;
+    Proc *proc = NULL;
+    platform_t pt = osbs_platform();
+
+    switch(pt) {
+    case ekWINDOWS:
+        connect = "soffice \"--accept=socket,host=localhost,port=2083;urp;StarOffice.ServiceManager\" --invisible";
+        break;
+    case ekLINUX:
+        connect = "libreoffice \"--accept=socket,host=0,port=2083;urp;\" --invisible";
+        break;
+    case ekIOS:
+    case ekMACOS:
+    cassert_default();
+    }
+
+    proc = bproc_exec(connect, NULL);
+
     if (proc != NULL)
         bproc_close(&proc);
     else
         res = ekSDKRES_PROC_INIT_FAIL;
+
     return res;
 }
 
