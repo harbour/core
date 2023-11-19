@@ -30,7 +30,7 @@ if [ ! -d "$gtpath/src/exemplo" ]; then
     mkdir $gtpath/src/exemplo
 fi
 
-$mpath/$HBMK_PATH exemplo.hbp -debug -trace -keepc -workdir=$gtpath/src/exemplo -o$gtpath/build/exemplo || exit 1
+$mpath/$HBMK_PATH -debug exemplo.hbp -trace -keepc -workdir=$gtpath/src/exemplo -o$gtpath/build/exemplo || exit 1
 
 # Generate hello sources
 cd $gtpath/tests/hello
@@ -40,7 +40,7 @@ if [ ! -d "$gtpath/src/hello" ]; then
     mkdir $gtpath/src/hello
 fi
 
-$mpath/$HBMK_PATH hello.hbp -debug -trace -keepc -workdir=$gtpath/src/hello -o$gtpath/build/hello || exit 1
+$mpath/$HBMK_PATH -debug hello.hbp -trace -keepc -workdir=$gtpath/src/hello -o$gtpath/build/hello || exit 1
 
 # Generate CMake solution
 if [ ! -d "$gtpath/build-dev" ]; then

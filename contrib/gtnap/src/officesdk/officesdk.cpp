@@ -58,8 +58,6 @@ OfficeSdk::OfficeSdk()
 
 OfficeSdk::~OfficeSdk()
 {
-    this->KillLibreOffice();
-
     if (this->xComponentLoader.get() != nullptr)
     {
         try
@@ -72,6 +70,8 @@ OfficeSdk::~OfficeSdk()
 
         }
     }
+
+    this->KillLibreOffice();
 }
 
 /*---------------------------------------------------------------------------*/
