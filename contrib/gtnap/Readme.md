@@ -221,8 +221,9 @@ Just adding `-gtnap` flag into your `.hbp` project file.
    :: Set 64bit compiler
    "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 
+   :: Use -debug option or omit for release version
    cd contrib\gtnap\tests\cuademo\gtnap_cualib
-   ..\..\..\..\..\bin\win\msvc64\hbmk2.exe exemplo.hbp
+   ..\..\..\..\..\bin\win\msvc64\hbmk2.exe [-debug] exemplo.hbp
    exemplo --hb:gtnap
    exemplo --hb:gtwin
    ```
@@ -230,7 +231,8 @@ Just adding `-gtnap` flag into your `.hbp` project file.
 - To compile in Linux:
    ```
    cd contrib/gtnap/tests/cuademo/gtnap_cualib
-   ../../../../../bin/linux/gcc/hbmk2 exemplo.hbp
+   # Use -debug option or omit for release version
+   ../../../../../bin/linux/gcc/hbmk2 [-debug] exemplo.hbp
    ./exemplo --hb:gtnap
    ./exemplo --hb:gttrm
    ```

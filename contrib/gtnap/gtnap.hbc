@@ -1,5 +1,6 @@
 # At the moment, all demos in Debug mode
-debug=yes
+# Use -debug option in hbmk2
+# debug=no
 
 incpaths=.
 
