@@ -1,0 +1,28 @@
+-stop{hbdyn&!(HB_BUILD_3RD_DYN='yes')} -env:__HB_3RD_DYN=yes{hbdyn}
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-warn=low
+-cpp=no
+-pic
+
+-cflag=-DNDEBUG{!debug}
+
+crypto_scrypt-ref.c
+sha256.c
+insecure_memzero.c
+
+# ORIGIN https://www.tarsnap.com/scrypt.html
+# URL    https://www.tarsnap.com/scrypt/scrypt-1.2.1.tgz
+# DIFF   scrypt.diff
+#
+# MAP    COPYRIGHT                            LICENSE.txt
+# MAP    libcperciva/alg/sha256.c             sha256.c
+# MAP    libcperciva/alg/sha256.h             sha256.h
+# MAP    libcperciva/util/insecure_memzero.c  insecure_memzero.c
+# MAP    libcperciva/util/insecure_memzero.h  insecure_memzero.h
+# MAP    lib/crypto/crypto_scrypt-ref.c       crypto_scrypt-ref.c
+# MAP    lib/crypto/crypto_scrypt.h           crypto_scrypt.h

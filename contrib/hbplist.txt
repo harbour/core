@@ -12,6 +12,7 @@ hbcomm/hbcomm.hbp
 hbct/hbct.hbp
 hbcups/hbcups.hbp
 hbcurl/hbcurl.hbp
+hbcrypto/hbcrypto.hbp
 hbexpat/hbexpat.hbp              # uses: expat (locally hosted)
 hbfbird/hbfbird.hbp
 hbfimage/hbfimage.hbp

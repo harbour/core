@@ -1,0 +1,97 @@
+diff --strip-trailing-cr -urN ed25519.orig/ed25519.h ed25519/ed25519.h
+--- ed25519.orig/ed25519.h	2017-02-10 19:47:44.000000000 +0000
++++ ed25519/ed25519.h	2022-06-30 12:06:22.000000000 +0000
+@@ -25,7 +25,8 @@
+ #endif
+ 
+ void ED25519_DECLSPEC ed25519_create_keypair(unsigned char *public_key, unsigned char *private_key, const unsigned char *seed);
+-void ED25519_DECLSPEC ed25519_sign(unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key, const unsigned char *private_key);
++void ED25519_DECLSPEC ed25519_get_pubkey(unsigned char *public_key, const unsigned char *private_key);
++void ED25519_DECLSPEC ed25519_sign(unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *unused, const unsigned char *private_key);
+ int ED25519_DECLSPEC ed25519_verify(const unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key);
+ void ED25519_DECLSPEC ed25519_add_scalar(unsigned char *public_key, unsigned char *private_key, const unsigned char *scalar);
+ void ED25519_DECLSPEC ed25519_key_exchange(unsigned char *shared_secret, const unsigned char *public_key, const unsigned char *private_key);
+diff --strip-trailing-cr -urN ed25519.orig/fixedint.h ed25519/fixedint.h
+--- ed25519.orig/fixedint.h	2017-02-10 19:47:44.000000000 +0000
++++ ed25519/fixedint.h	2022-06-30 12:06:22.000000000 +0000
+@@ -4,7 +4,7 @@
+     Not a compatible replacement for <stdint.h>, do not blindly use it as such.
+ */
+ 
+-#if ((defined(__STDC__) && __STDC__ && __STDC_VERSION__ >= 199901L) || (defined(__WATCOMC__) && (defined(_STDINT_H_INCLUDED) || __WATCOMC__ >= 1250)) || (defined(__GNUC__) && (defined(_STDINT_H) || defined(_STDINT_H_) || defined(__UINT_FAST64_TYPE__)) )) && !defined(FIXEDINT_H_INCLUDED)
++#if ((defined(__STDC__) && __STDC__ && __STDC_VERSION__ >= 199901L) || (defined(_MSC_VER) && _MSC_VER >= 1600) || (defined(__WATCOMC__) && (defined(_STDINT_H_INCLUDED) || __WATCOMC__ >= 1250)) || (defined(__GNUC__) && (defined(_STDINT_H) || defined(_STDINT_H_) || defined(__UINT_FAST64_TYPE__)) )) && !defined(FIXEDINT_H_INCLUDED)
+     #include <stdint.h>
+     #define FIXEDINT_H_INCLUDED
+ 
+@@ -66,7 +66,11 @@
+         typedef __int64 int64_t;
+         typedef unsigned __int64 uint64_t;
+ 
++        #ifndef UINT64_C
+         #define UINT64_C(v) v ##UI64
++        #endif
++        #ifndef INT64_C
+         #define INT64_C(v) v ##I64
++        #endif
+     #endif
+ #endif
+diff --strip-trailing-cr -urN ed25519.orig/sha512.h ed25519/sha512.h
+--- ed25519.orig/sha512.h	2017-02-10 19:47:44.000000000 +0000
++++ ed25519/sha512.h	2022-06-30 12:06:22.000000000 +0000
+@@ -1,11 +1,20 @@
+ #ifndef SHA512_H
+ #define SHA512_H
+ 
+-#include <stddef.h>
++#include "hbdefs.h"
+ 
+ #include "fixedint.h"
+ 
+ /* state */
++#if defined( HB_USE_CORE_SHA512 )
++#  include "hbcrypto.h"
++#  define sha512_context hb_sha512_ctx
++#  define sha512_init    hb_sha512_init
++#  define sha512_final   hb_sha512_final
++#  define sha512_update  hb_sha512_update
++#  define sha512         hb_sha512
++#else
++#  define uint64_t       HB_U64
+ typedef struct sha512_context_ {
+     uint64_t  length, state[8];
+     size_t curlen;
+@@ -17,5 +26,6 @@
+ int sha512_final(sha512_context * md, unsigned char *out);
+ int sha512_update(sha512_context * md, const unsigned char *in, size_t inlen);
+ int sha512(const unsigned char *message, size_t message_len, unsigned char *out);
++#endif
+ 
+ #endif
+diff --strip-trailing-cr -urN ed25519.orig/sign.c ed25519/sign.c
+--- ed25519.orig/sign.c	2017-02-10 19:47:44.000000000 +0000
++++ ed25519/sign.c	2022-06-30 12:06:22.000000000 +0000
+@@ -3,13 +3,23 @@
+ #include "ge.h"
+ #include "sc.h"
+ 
++void ed25519_get_pubkey(unsigned char *public_key, const unsigned char *private_key) {
++    ge_p3 A;
+ 
+-void ed25519_sign(unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key, const unsigned char *private_key) {
++    ge_scalarmult_base(&A, private_key);
++    ge_p3_tobytes(public_key, &A);
++}
++
++void ed25519_sign(unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *unused, const unsigned char *private_key) {
+     sha512_context hash;
+     unsigned char hram[64];
+     unsigned char r[64];
+     ge_p3 R;
++    unsigned char public_key[ 32 ];
++
++    (void)unused;
+ 
++    ed25519_get_pubkey(public_key, private_key);
+ 
+     sha512_init(&hash);
+     sha512_update(&hash, private_key + 32, 32);

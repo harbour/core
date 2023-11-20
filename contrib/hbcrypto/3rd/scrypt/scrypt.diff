@@ -1,0 +1,190 @@
+diff --strip-trailing-cr -urN scrypt.orig/crypto_scrypt-ref.c scrypt/crypto_scrypt-ref.c
+--- scrypt.orig/crypto_scrypt-ref.c	2017-02-11 07:29:13.000000000 +0000
++++ scrypt/crypto_scrypt-ref.c	2017-02-19 21:18:33.000000000 +0000
+@@ -26,15 +26,11 @@
+  * This file was originally written by Colin Percival as part of the Tarsnap
+  * online backup system.
+  */
+-#include "scrypt_platform.h"
+ 
+-#include <errno.h>
+-#include <stdint.h>
+ #include <stdlib.h>
+ #include <string.h>
+ 
+ #include "sha256.h"
+-#include "sysendian.h"
+ 
+ #include "crypto_scrypt.h"
+ 
+@@ -222,20 +218,21 @@
+ 	uint8_t * XY;
+ 	size_t r = _r, p = _p;
+ 	uint32_t i;
++	int fail = -1;
+ 
+ 	/* Sanity-check parameters. */
+ #if SIZE_MAX > UINT32_MAX
+ 	if (buflen > (((uint64_t)(1) << 32) - 1) * 32) {
+-		errno = EFBIG;
++		fail = -2 /* EFBIG */;
+ 		goto err0;
+ 	}
+ #endif
+ 	if ((uint64_t)(r) * (uint64_t)(p) >= (1 << 30)) {
+-		errno = EFBIG;
++		fail = -2 /* EFBIG */;
+ 		goto err0;
+ 	}
+ 	if (((N & (N - 1)) != 0) || (N == 0)) {
+-		errno = EINVAL;
++		fail = -3 /* EINVAL */;
+ 		goto err0;
+ 	}
+ 	if ((r > SIZE_MAX / 128 / p) ||
+@@ -243,7 +240,7 @@
+ 	    (r > SIZE_MAX / 256) ||
+ #endif
+ 	    (N > SIZE_MAX / 128 / r)) {
+-		errno = ENOMEM;
++		fail = -4 /* ENOMEM */;
+ 		goto err0;
+ 	}
+ 
+@@ -281,5 +278,5 @@
+ 	free(B);
+ err0:
+ 	/* Failure! */
+-	return (-1);
++	return (fail);
+ }
+diff --strip-trailing-cr -urN scrypt.orig/crypto_scrypt.h scrypt/crypto_scrypt.h
+--- scrypt.orig/crypto_scrypt.h	2017-02-11 07:29:13.000000000 +0000
++++ scrypt/crypto_scrypt.h	2017-02-19 21:18:37.000000000 +0000
+@@ -29,8 +29,7 @@
+ #ifndef _CRYPTO_SCRYPT_H_
+ #define _CRYPTO_SCRYPT_H_
+ 
+-#include <stdint.h>
+-#include <unistd.h>
++#include "_compat.h"
+ 
+ /**
+  * crypto_scrypt(passwd, passwdlen, salt, saltlen, N, r, p, buf, buflen):
+diff --strip-trailing-cr -urN scrypt.orig/insecure_memzero.c scrypt/insecure_memzero.c
+--- scrypt.orig/insecure_memzero.c	2017-02-11 07:29:13.000000000 +0000
++++ scrypt/insecure_memzero.c	2017-02-19 21:18:33.000000000 +0000
+@@ -1,5 +1,5 @@
+ #include <stddef.h>
+-#include <stdint.h>
++#include "_compat.h"
+ 
+ #include "insecure_memzero.h"
+ 
+diff --strip-trailing-cr -urN scrypt.orig/insecure_memzero.h scrypt/insecure_memzero.h
+--- scrypt.orig/insecure_memzero.h	2017-02-11 07:29:13.000000000 +0000
++++ scrypt/insecure_memzero.h	2017-02-19 21:18:33.000000000 +0000
+@@ -27,7 +27,7 @@
+  * http://www.daemonology.net/blog/2014-09-04-how-to-zero-a-buffer.html
+  * http://www.daemonology.net/blog/2014-09-06-zeroing-buffers-is-insufficient.html
+  */
+-static inline void
++static _HB_INLINE_ void
+ insecure_memzero(volatile void * buf, size_t len)
+ {
+ 
+diff --strip-trailing-cr -urN scrypt.orig/sha256.c scrypt/sha256.c
+--- scrypt.orig/sha256.c	2017-02-11 07:29:13.000000000 +0000
++++ scrypt/sha256.c	2017-02-19 21:18:33.000000000 +0000
+@@ -1,9 +1,8 @@
+ #include <assert.h>
+-#include <stdint.h>
++#include "_compat.h"
+ #include <string.h>
+ 
+ #include "insecure_memzero.h"
+-#include "sysendian.h"
+ 
+ #include "sha256.h"
+ 
+@@ -94,9 +93,9 @@
+  * the 512-bit input block to produce a new state.
+  */
+ static void
+-SHA256_Transform(uint32_t state[static restrict 8],
+-    const uint8_t block[static restrict 64],
+-    uint32_t W[static restrict 64], uint32_t S[static restrict 8])
++SHA256_Transform(uint32_t state[HB_C99_STATIC HB_C99_RESTRICT 8],
++    const uint8_t block[HB_C99_STATIC HB_C99_RESTRICT 64],
++    uint32_t W[HB_C99_STATIC HB_C99_RESTRICT 64], uint32_t S[HB_C99_STATIC HB_C99_RESTRICT 8])
+ {
+ 	int i;
+ 
+@@ -159,7 +158,7 @@
+ 
+ /* Add padding and terminating bit-count. */
+ static void
+-SHA256_Pad(SHA256_CTX * ctx, uint32_t tmp32[static restrict 72])
++SHA256_Pad(SHA256_CTX * ctx, uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72])
+ {
+ 	size_t r;
+ 
+@@ -213,7 +212,7 @@
+  */
+ static void
+ _SHA256_Update(SHA256_CTX * ctx, const void * in, size_t len,
+-    uint32_t tmp32[static restrict 72])
++    uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72])
+ {
+ 	uint32_t r;
+ 	const uint8_t * src = in;
+@@ -271,7 +270,7 @@
+  */
+ static void
+ _SHA256_Final(uint8_t digest[32], SHA256_CTX * ctx,
+-    uint32_t tmp32[static restrict 72])
++    uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72])
+ {
+ 
+ 	/* Add padding. */
+@@ -323,8 +322,8 @@
+  */
+ static void
+ _HMAC_SHA256_Init(HMAC_SHA256_CTX * ctx, const void * _K, size_t Klen,
+-    uint32_t tmp32[static restrict 72], uint8_t pad[static restrict 64],
+-    uint8_t khash[static restrict 32])
++    uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72], uint8_t pad[HB_C99_STATIC HB_C99_RESTRICT 64],
++    uint8_t khash[HB_C99_STATIC HB_C99_RESTRICT 32])
+ {
+ 	const uint8_t * K = _K;
+ 	size_t i;
+@@ -376,7 +375,7 @@
+  */
+ static void
+ _HMAC_SHA256_Update(HMAC_SHA256_CTX * ctx, const void * in, size_t len,
+-    uint32_t tmp32[static restrict 72])
++    uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72])
+ {
+ 
+ 	/* Feed data to the inner SHA256 operation. */
+@@ -403,7 +402,7 @@
+  */
+ static void
+ _HMAC_SHA256_Final(uint8_t digest[32], HMAC_SHA256_CTX * ctx,
+-    uint32_t tmp32[static restrict 72], uint8_t ihash[static restrict 32])
++    uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72], uint8_t ihash[HB_C99_STATIC HB_C99_RESTRICT 32])
+ {
+ 
+ 	/* Finish the inner SHA256 operation. */
+diff --strip-trailing-cr -urN scrypt.orig/sha256.h scrypt/sha256.h
+--- scrypt.orig/sha256.h	2017-02-11 07:29:13.000000000 +0000
++++ scrypt/sha256.h	2017-02-19 21:18:33.000000000 +0000
+@@ -2,7 +2,7 @@
+ #define _SHA256_H_
+ 
+ #include <stddef.h>
+-#include <stdint.h>
++#include "_compat.h"
+ 
+ /*
+  * Use #defines in order to avoid namespace collisions with anyone else's
