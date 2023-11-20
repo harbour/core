@@ -1,7 +1,7 @@
 /*
  * SHA1 Harbour wrappers
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,43 +48,13 @@
 
 #include "sha1.h"
 
-HB_FUNC( HB_SHA1 )
+HB_FUNC( HB_SHA1 )  /* Considered insecure. Use SHA256 or higher instead. */
 {
    sha1_byte digest[ SHA1_DIGEST_LENGTH ];
-   SHA_CTX ctx;
+   HB_SHA_CTX ctx;
 
    hb_SHA1_Init( &ctx );
-
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_SHA1_Update( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_SHA1_Update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
-
+   hb_SHA1_Update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
    hb_SHA1_Final( digest, &ctx );
 
    if( ! hb_parl( 2 ) )

@@ -1,7 +1,7 @@
 /*
  * HMAC-SHA1 Harbour wrappers
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,67 +54,11 @@ HB_FUNC( HB_HMAC_SHA1 )
    HMAC_SHA1_CTX ctx;
 
    hb_HMAC_SHA1_Init( &ctx );
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 2 );
-      HB_SIZE nCount = hb_parclen( 2 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_HMAC_SHA1_UpdateKey( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_HMAC_SHA1_UpdateKey( &ctx, hb_parcx( 2 ), hb_parclen( 2 ) );
-   #endif
+   hb_HMAC_SHA1_UpdateKey( &ctx, hb_parcx( 2 ), hb_parclen( 2 ) );
    hb_HMAC_SHA1_EndKey( &ctx );
 
    hb_HMAC_SHA1_StartMessage( &ctx );
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_HMAC_SHA1_UpdateMessage( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_HMAC_SHA1_UpdateMessage( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
+   hb_HMAC_SHA1_UpdateMessage( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
    hb_HMAC_SHA1_EndMessage( mac, &ctx );
    hb_HMAC_SHA1_Done( &ctx );
 

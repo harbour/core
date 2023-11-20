@@ -831,9 +831,13 @@ typedef HB_U32 HB_FATTR;
 #if defined( HB_BIG_ENDIAN )
 #  define   HB_PUT_UINT32( p, v )   HB_PUT_BE_UINT32( p, ( HB_U32 ) ( v ) )
 #  define   HB_GET_UINT32( p )      HB_GET_BE_UINT32( p )
+#  define   HB_PUT_UINT64( p, v )   HB_PUT_BE_UINT64( p, ( HB_U64 ) ( v ) )
+#  define   HB_GET_UINT64( p )      HB_GET_BE_UINT64( p )
 #else
 #  define   HB_PUT_UINT32( p, v )   HB_PUT_LE_UINT32( p, ( HB_U32 ) ( v ) )
 #  define   HB_GET_UINT32( p )      HB_GET_LE_UINT32( p )
+#  define   HB_PUT_UINT64( p, v )   HB_PUT_LE_UINT64( p, ( HB_U64 ) ( v ) )
+#  define   HB_GET_UINT64( p )      HB_GET_LE_UINT64( p )
 #endif
 
 /* Macros to store/retrieve integer and double values at/from byte address */

@@ -59,10 +59,6 @@
 #include "sha1hmac.h"
 #include <string.h>
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
-
 /* Filler bytes: */
 #define IPAD_BYTE   0x36
 #define OPAD_BYTE   0x5c
@@ -76,7 +72,7 @@ void hb_HMAC_SHA1_Init(HMAC_SHA1_CTX *ctx) {
     ctx->hashkey = 0;
 }
 
-void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keylen) {
+void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, HB_SIZE keylen) {
 
     /* Do we have anything to work with?  If not, return right away. */
     if (keylen < 1)
@@ -132,7 +128,7 @@ void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int ke
 
 void hb_HMAC_SHA1_EndKey(HMAC_SHA1_CTX *ctx) {
     unsigned char   *ipad, *opad, *key;
-    unsigned int     i;
+    HB_SIZE         i;
 
     /* Did we end up hashing the key? */
     if (ctx->hashkey) {
@@ -163,13 +159,13 @@ void hb_HMAC_SHA1_StartMessage(HMAC_SHA1_CTX *ctx) {
     hb_SHA1_Update(&ctx->shactx, &(ctx->ipad[0]), HMAC_SHA1_BLOCK_LENGTH);
 }
 
-void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, unsigned int datalen) {
+void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, HB_SIZE datalen) {
     hb_SHA1_Update(&ctx->shactx, data, datalen);
 }
 
 void hb_HMAC_SHA1_EndMessage(unsigned char *out, HMAC_SHA1_CTX *ctx) {
     unsigned char   buf[HMAC_SHA1_DIGEST_LENGTH];
-    SHA_CTX     *c = &ctx->shactx;
+    HB_SHA_CTX   *c = &ctx->shactx;
 
     hb_SHA1_Final(&(buf[0]), c);
     hb_SHA1_Init(c);
@@ -186,9 +182,5 @@ void hb_HMAC_SHA1_Done(HMAC_SHA1_CTX *ctx) {
     ctx->keylen = 0;
     ctx->hashkey = 0;
 }
-
-#ifdef  __cplusplus
-}
-#endif
 
 #endif

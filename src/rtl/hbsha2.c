@@ -1,7 +1,7 @@
 /*
  * SHA2 Harbour wrappers
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009 Viktor Szakats
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,50 +46,19 @@
 
 #include "hbapi.h"
 
-#include "sha2.h"
+#include "hbcrypto.h"
 
 HB_FUNC( HB_SHA224 )
 {
-   unsigned char digest[ SHA224_DIGEST_SIZE ];
-   sha224_ctx ctx;
+   unsigned char digest[ HB_SHA224_DIGEST_SIZE ];
 
-   hb_sha224_init( &ctx );
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_sha224_update( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_sha224_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
-   hb_sha224_final( &ctx, digest );
+   hb_sha224( hb_parcx( 1 ), hb_parclen( 1 ), digest );
 
    if( ! hb_parl( 2 ) )
    {
       char hex[ ( sizeof( digest ) * 2 ) + 1 ];
       hb_strtohex( ( char * ) digest, sizeof( digest ), hex );
-      hb_retclen( hex, HB_SIZEOFARRAY( hex ) - 1 );
+      hb_retclen( hex, sizeof( hex ) - 1 );
    }
    else
       hb_retclen( ( char * ) digest, sizeof( digest ) );
@@ -97,46 +66,15 @@ HB_FUNC( HB_SHA224 )
 
 HB_FUNC( HB_SHA256 )
 {
-   unsigned char digest[ SHA256_DIGEST_SIZE ];
-   sha256_ctx ctx;
+   unsigned char digest[ HB_SHA256_DIGEST_SIZE ];
 
-   hb_sha256_init( &ctx );
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_sha256_update( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_sha256_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
-   hb_sha256_final( &ctx, digest );
+   hb_sha256( hb_parcx( 1 ), hb_parclen( 1 ), digest );
 
    if( ! hb_parl( 2 ) )
    {
       char hex[ ( sizeof( digest ) * 2 ) + 1 ];
       hb_strtohex( ( char * ) digest, sizeof( digest ), hex );
-      hb_retclen( hex, HB_SIZEOFARRAY( hex ) - 1 );
+      hb_retclen( hex, sizeof( hex ) - 1 );
    }
    else
       hb_retclen( ( char * ) digest, sizeof( digest ) );
@@ -144,46 +82,15 @@ HB_FUNC( HB_SHA256 )
 
 HB_FUNC( HB_SHA384 )
 {
-   unsigned char digest[ SHA384_DIGEST_SIZE ];
-   sha384_ctx ctx;
+   unsigned char digest[ HB_SHA384_DIGEST_SIZE ];
 
-   hb_sha384_init( &ctx );
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_sha384_update( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_sha384_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
-   hb_sha384_final( &ctx, digest );
+   hb_sha384( hb_parcx( 1 ), hb_parclen( 1 ), digest );
 
    if( ! hb_parl( 2 ) )
    {
       char hex[ ( sizeof( digest ) * 2 ) + 1 ];
       hb_strtohex( ( char * ) digest, sizeof( digest ), hex );
-      hb_retclen( hex, HB_SIZEOFARRAY( hex ) - 1 );
+      hb_retclen( hex, sizeof( hex ) - 1 );
    }
    else
       hb_retclen( ( char * ) digest, sizeof( digest ) );
@@ -191,46 +98,15 @@ HB_FUNC( HB_SHA384 )
 
 HB_FUNC( HB_SHA512 )
 {
-   unsigned char digest[ SHA512_DIGEST_SIZE ];
-   sha512_ctx ctx;
+   unsigned char digest[ HB_SHA512_DIGEST_SIZE ];
 
-   hb_sha512_init( &ctx );
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_sha512_update( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_sha512_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
-   hb_sha512_final( &ctx, digest );
+   hb_sha512( hb_parcx( 1 ), hb_parclen( 1 ), digest );
 
    if( ! hb_parl( 2 ) )
    {
       char hex[ ( sizeof( digest ) * 2 ) + 1 ];
       hb_strtohex( ( char * ) digest, sizeof( digest ), hex );
-      hb_retclen( hex, HB_SIZEOFARRAY( hex ) - 1 );
+      hb_retclen( hex, sizeof( hex ) - 1 );
    }
    else
       hb_retclen( ( char * ) digest, sizeof( digest ) );
