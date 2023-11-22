@@ -54,6 +54,7 @@ evpmd.c
 evppkey.c
 pem.c
 rand.c
+rsa.c
 ssl.c
 sslciph.c
 sslctx.c
