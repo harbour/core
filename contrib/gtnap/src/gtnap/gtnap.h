@@ -10,6 +10,7 @@
 
 #include "hbvmint.h"
 #include "hbgtcore.h"
+#include <officesdk/officesdk.hxx>
 #include <gui/gui.hxx>
 
 HB_EXTERN_BEGIN
@@ -142,7 +143,13 @@ extern void hb_gtnap_toolbar_separator(const uint32_t wid);
 
 extern uint32_t hb_gtnap_office_text_to_pdf(HB_ITEM *src_block, HB_ITEM *dest_block);
 
+extern uint32_t hb_gtnap_office_last_error(void);
+
 extern const char_t *hb_gtnap_office_error(const uint32_t errcode);
+
+extern SheetDoc *hb_gtnap_office_sheetdoc_open(HB_ITEM *pathname_block);
+
+extern void hb_gtnap_office_sheetdoc_save(SheetDoc *doc, HB_ITEM *pathname_block);
 
 /*
  * Fran TODO: Pending refactoring

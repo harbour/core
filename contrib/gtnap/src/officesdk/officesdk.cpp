@@ -19,6 +19,7 @@
 #include <text/XTextDocument.hpp>
 #include <sheet/XSpreadsheetDocument.hpp>
 #include <table/XCell.hpp>
+//#include <io/XCloseable.hpp>
 #include <iostream>
 #include <sewer/warn.hxx>
 
@@ -44,6 +45,8 @@ public:
     sdkres_t CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
 
     sdkres_t SaveTextDocument(const css::uno::Reference<css::text::XTextDocument> &xDocument, const char_t *url, const fileformat_t format);
+
+    sdkres_t SaveSheetDocument(const css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument, const char_t *url, const fileformat_t format);
 
 public:
     bool init;
@@ -343,6 +346,8 @@ sdkres_t OfficeSdk::OpenSheetDocument(const char_t *url, css::uno::Reference<css
 
 sdkres_t OfficeSdk::CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument)
 {
+    unref(xDocument);
+    return ekSDKRES_NO_ENVAR;
     // try
     // {
     //     css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
@@ -378,6 +383,15 @@ sdkres_t OfficeSdk::SaveTextDocument(const css::uno::Reference<css::text::XTextD
         css::uno::Sequence<css::beans::PropertyValue> storeProps;
 
         switch (format) {
+        case ekFORMAT_OPEN_OFFICE:
+        {
+            css::uno::Sequence<css::beans::PropertyValue> ofProps = css::uno::Sequence<css::beans::PropertyValue>(1);
+            ofProps[0].Name = "Overwrite";
+            ofProps[0].Value <<= true;
+            storeProps = ofProps;
+            break;
+        }
+
         case ekFORMAT_PDF:
         {
             css::uno::Sequence<css::beans::PropertyValue> pdfProps = css::uno::Sequence<css::beans::PropertyValue>(3);
@@ -387,6 +401,53 @@ sdkres_t OfficeSdk::SaveTextDocument(const css::uno::Reference<css::text::XTextD
             pdfProps[1].Value <<= true;
             pdfProps[2].Name = "SelectPdfVersion";
             pdfProps[2].Value <<= (sal_uInt32)1;
+            storeProps = pdfProps;
+            break;
+        }
+
+        cassert_default();
+        }
+
+        xStorable->storeToURL(docUrl, storeProps);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error saving " << url << " file: " << e.Message;
+        res = ekSDKRES_SAVE_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+sdkres_t OfficeSdk::SaveSheetDocument(const css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument, const char_t *url, const fileformat_t format)
+{
+    sdkres_t res = ekSDKRES_OK;
+    ::rtl::OUString docUrl = i_OUStringFileUrl(url);
+
+    try
+    {
+        css::uno::Reference<css::frame::XStorable> xStorable = css::uno::Reference<css::frame::XStorable>(xDocument, css::uno::UNO_QUERY_THROW);
+        css::uno::Sequence<css::beans::PropertyValue> storeProps;
+
+        switch (format) {
+        case ekFORMAT_OPEN_OFFICE:
+        {
+            css::uno::Sequence<css::beans::PropertyValue> ofProps = css::uno::Sequence<css::beans::PropertyValue>(1);
+            ofProps[0].Name = "Overwrite";
+            ofProps[0].Value <<= true;
+            storeProps = ofProps;
+            break;
+        }
+
+        case ekFORMAT_PDF:
+        {
+            css::uno::Sequence<css::beans::PropertyValue> pdfProps = css::uno::Sequence<css::beans::PropertyValue>(2);
+            pdfProps[0].Name = "FilterName";
+            pdfProps[0].Value <<= rtl::OUString("calc_pdf_Export");
+            pdfProps[1].Name = "Overwrite";
+            pdfProps[1].Value <<= true;
             storeProps = pdfProps;
             break;
         }
@@ -458,25 +519,24 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed to open file";
     case ekSDKRES_SAVE_FILE_ERROR:
         return "Failed to save file";
-    cassert_default();
+    default:
+        return "Unknown error";
     }
-    return "";
 }
 
 /*---------------------------------------------------------------------------*/
 
 SheetDoc *officesdk_sheetdoc_open(const char_t *pathname, sdkres_t *err)
 {
-    sdkres_t res = ekSDKRES_OK;
+    sdkres_t res = i_OFFICE_SDK.Init();
     SheetDoc *doc = NULL;
     css::uno::Reference<css::sheet::XSpreadsheetDocument> xDocument;
     cassert_no_null(pathname);
-    res = i_OFFICE_SDK.Init();
     if (res == ekSDKRES_OK)
         res = i_OFFICE_SDK.OpenSheetDocument(pathname, xDocument);
 
     if (res == ekSDKRES_OK)
-        doc = (SheetDoc*)xDocument.get();
+        doc = reinterpret_cast<SheetDoc*>(xDocument.get());
 
     ptr_assign(err, res);
     return doc;
@@ -492,8 +552,34 @@ SheetDoc *officesdk_sheetdoc_new(sdkres_t *err)
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheetdoc_save(const char_t *pathname, sdkres_t *err)
+void officesdk_sheetdoc_save(SheetDoc *doc, const char_t *pathname, sdkres_t *err)
 {
+    sdkres_t res = i_OFFICE_SDK.Init();
+    cassert_no_null(doc);
+    cassert_no_null(pathname);
+    
+    if (res == ekSDKRES_OK)
+    {
+        css::uno::Reference<css::sheet::XSpreadsheetDocument> xDocument(reinterpret_cast<css::sheet::XSpreadsheetDocument*>(doc));
+        res = i_OFFICE_SDK.SaveSheetDocument(xDocument, pathname, ekFORMAT_OPEN_OFFICE);
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheetdoc_close(SheetDoc *doc, sdkres_t *err)
+{
+    unref(doc);
+    unref(err);
+    //sdkres_t res = i_OFFICE_SDK.Init();
+    //cassert_no_null(doc);
+    //if (res == ekSDKRES_OK)
+    //{
+    //    css::uno::Reference<css::sheet::XSpreadsheetDocument> xDocument(reinterpret_cast<css::sheet::XSpreadsheetDocument*>(doc));
+    //    css::uno::Reference<css::io::XCloseable> xCloseable(xDocument, UNO_QUERY);
+    //    xCloseable->close(false);
 }
 
 Sheet *officesdk_sheet(SheetDoc *doc, const uint32_t index, sdkres_t *err);
