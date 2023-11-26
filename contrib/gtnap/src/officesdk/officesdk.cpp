@@ -5,6 +5,7 @@
 #include <osbs/osbs.h>
 #include <sewer/blib.h>
 #include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #include <sewer/nowarn.hxx>
 #include <cppuhelper/bootstrap.hxx>
@@ -16,6 +17,8 @@
 #include <frame/XStorable.hpp>
 #include <lang/XMultiComponentFactory.hpp>
 #include <text/XTextDocument.hpp>
+#include <sheet/XSpreadsheetDocument.hpp>
+#include <table/XCell.hpp>
 #include <iostream>
 #include <sewer/warn.hxx>
 
@@ -35,6 +38,10 @@ public:
     sdkres_t ConnectServer();
 
     sdkres_t OpenTextDocument(const char_t *url, css::uno::Reference<css::text::XTextDocument> &xDocument);
+
+    sdkres_t OpenSheetDocument(const char_t *url, css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
+
+    sdkres_t CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
 
     sdkres_t SaveTextDocument(const css::uno::Reference<css::text::XTextDocument> &xDocument, const char_t *url, const fileformat_t format);
 
@@ -310,6 +317,56 @@ sdkres_t OfficeSdk::OpenTextDocument(const char_t *url, css::uno::Reference<css:
 
 /*---------------------------------------------------------------------------*/
 
+sdkres_t OfficeSdk::OpenSheetDocument(const char_t *url, css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument)
+{
+    sdkres_t res = ekSDKRES_OK;
+    ::rtl::OUString docUrl = i_OUStringFileUrl(url);
+
+    try
+    {
+        css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
+        loadProperties[0].Name = "Hidden";
+        loadProperties[0].Value <<= true;
+        css::uno::Reference<css::lang::XComponent> xComponent = this->xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
+        xDocument = css::uno::Reference<css::sheet::XSpreadsheetDocument>(xComponent, css::uno::UNO_QUERY_THROW);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error loading " << url << " file: " << e.Message;
+        res = ekSDKRES_OPEN_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+sdkres_t OfficeSdk::CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument)
+{
+    // try
+    // {
+    //     css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
+    //     loadProperties[0].Name = "Hidden";
+    //     loadProperties[0].Value <<= true;
+    //     css::uno::Reference<css::lang::XComponent> xComponent = this->xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
+    //     xDocument = css::uno::Reference<css::sheet::XSpreadsheetDocument>(xComponent, css::uno::UNO_QUERY_THROW);
+    // }
+    // catch(css::uno::Exception &e)
+    // {
+    //     std::cout << "Error loading " << url << " file: " << e.Message;
+    //     res = ekSDKRES_OPEN_FILE_ERROR;
+    // }
+
+}
+// Reference<XComponentLoader> xComponentLoader(xServiceManager, UNO_QUERY);
+// OUString docServiceName = OUString::createFromAscii("com.sun.star.sheet.SpreadsheetDocument");
+// Reference<XInterface> xComponent = xComponentLoader->createInstanceWithArgumentsAndContext(docServiceName, Sequence<Any>(), xContext);
+// Reference<XSpreadsheetDocument> xCalcDocument(xComponent, UNO_QUERY)
+
+
+
+/*---------------------------------------------------------------------------*/
+
 sdkres_t OfficeSdk::SaveTextDocument(const css::uno::Reference<css::text::XTextDocument> &xDocument, const char_t *url, const fileformat_t format)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -407,3 +464,40 @@ const char_t* officesdk_error(const sdkres_t code)
 }
 
 /*---------------------------------------------------------------------------*/
+
+SheetDoc *officesdk_sheetdoc_open(const char_t *pathname, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    SheetDoc *doc = NULL;
+    css::uno::Reference<css::sheet::XSpreadsheetDocument> xDocument;
+    cassert_no_null(pathname);
+    res = i_OFFICE_SDK.Init();
+    if (res == ekSDKRES_OK)
+        res = i_OFFICE_SDK.OpenSheetDocument(pathname, xDocument);
+
+    if (res == ekSDKRES_OK)
+        doc = (SheetDoc*)xDocument.get();
+
+    ptr_assign(err, res);
+    return doc;
+}
+
+/*---------------------------------------------------------------------------*/
+
+SheetDoc *officesdk_sheetdoc_new(sdkres_t *err)
+{
+    unref(err);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheetdoc_save(const char_t *pathname, sdkres_t *err)
+{
+}
+
+Sheet *officesdk_sheet(SheetDoc *doc, const uint32_t index, sdkres_t *err);
+
+SheetCell *officesdk_sheet_cell(Sheet *sheet, const uint32_t col, const uint32_t row, sdkres_t *err);
+
+void officesdk_sheet_cell_text(SheetCell *cell, const char_t *text, const char_t *font_family, const real32_t font_size, const bool_t bold, const bool_t italic, sdkres_t *err);
