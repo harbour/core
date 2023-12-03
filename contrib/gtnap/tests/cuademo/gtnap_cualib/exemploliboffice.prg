@@ -14,8 +14,8 @@ CUA20 @ 15,20,30,70 JANELA V_Janela ;
 ESPECIALIZE V_Janela MENU
 ADDOPCAO V_Janela TEXTO "Exportar .odt para .pdf" ;
    ACAO TST_ODT_PARA_PDF() AJUDA "P06685"
-// ADDOPCAO V_Janela TEXTO "Adicione células à planilha" ;
-//    ACAO TST_EDITAR_PLANILHA() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Adicione células à planilha" ;
+   ACAO TST_EDITAR_PLANILHA() AJUDA "P06685"
 
 ATIVE(V_Janela)
 
@@ -51,15 +51,24 @@ RETURN L_Err
 STAT PROC TST_EDITAR_PLANILHA
 ***********************************
 
+// Open an existing spreadsheet
 LOCAL O_XLS := NAP_XLS_OPEN({|| NAP_WORK_PATH() + "/../office/empty.ods" })
 
 IF OFFICE_ERROR("Abrindo a planilha")
     RETURN
 ENDIF
 
+// Save an edited spreadsheet
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/edited.ods" })
 
 IF OFFICE_ERROR("Salvando a planilha")
+    RETURN
+ENDIF
+
+// Close the spreadsheet (mandatory)
+NAP_XLS_CLOSE(O_XLS)
+
+IF OFFICE_ERROR("Fechando planilha")
     RETURN
 ENDIF
 

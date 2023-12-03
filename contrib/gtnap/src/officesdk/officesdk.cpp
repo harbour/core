@@ -530,13 +530,26 @@ SheetDoc *officesdk_sheetdoc_open(const char_t *pathname, sdkres_t *err)
 {
     sdkres_t res = i_OFFICE_SDK.Init();
     SheetDoc *doc = NULL;
-    css::uno::Reference<css::sheet::XSpreadsheetDocument> xDocument;
+    css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = nullptr;
     cassert_no_null(pathname);
     if (res == ekSDKRES_OK)
-        res = i_OFFICE_SDK.OpenSheetDocument(pathname, xDocument);
+    {
+        xDocument = new css::uno::Reference<css::sheet::XSpreadsheetDocument>();
+        res = i_OFFICE_SDK.OpenSheetDocument(pathname, *xDocument);
+    }
 
     if (res == ekSDKRES_OK)
-        doc = reinterpret_cast<SheetDoc*>(xDocument.get());
+    {
+        doc = reinterpret_cast<SheetDoc*>(xDocument);
+    }
+    else
+    {
+        if (xDocument != nullptr)
+        {
+            delete xDocument;
+            xDocument = nullptr;
+        }
+    }
 
     ptr_assign(err, res);
     return doc;
@@ -560,8 +573,8 @@ void officesdk_sheetdoc_save(SheetDoc *doc, const char_t *pathname, sdkres_t *er
     
     if (res == ekSDKRES_OK)
     {
-        css::uno::Reference<css::sheet::XSpreadsheetDocument> xDocument(reinterpret_cast<css::sheet::XSpreadsheetDocument*>(doc));
-        res = i_OFFICE_SDK.SaveSheetDocument(xDocument, pathname, ekFORMAT_OPEN_OFFICE);
+        css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(doc);
+        res = i_OFFICE_SDK.SaveSheetDocument(*xDocument, pathname, ekFORMAT_OPEN_OFFICE);
     }
 
     ptr_assign(err, res);
@@ -571,15 +584,13 @@ void officesdk_sheetdoc_save(SheetDoc *doc, const char_t *pathname, sdkres_t *er
 
 void officesdk_sheetdoc_close(SheetDoc *doc, sdkres_t *err)
 {
-    unref(doc);
-    unref(err);
-    //sdkres_t res = i_OFFICE_SDK.Init();
-    //cassert_no_null(doc);
-    //if (res == ekSDKRES_OK)
-    //{
-    //    css::uno::Reference<css::sheet::XSpreadsheetDocument> xDocument(reinterpret_cast<css::sheet::XSpreadsheetDocument*>(doc));
-    //    css::uno::Reference<css::io::XCloseable> xCloseable(xDocument, UNO_QUERY);
-    //    xCloseable->close(false);
+    css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(doc);
+    css::uno::Reference<css::lang::XComponent> xComponent = css::uno::Reference<css::lang::XComponent>(*xDocument, css::uno::UNO_QUERY_THROW);
+    // This remove the lock file
+    xComponent->dispose();
+    delete xDocument;
+    xDocument = nullptr;
+    ptr_assign(err, ekSDKRES_OK);
 }
 
 Sheet *officesdk_sheet(SheetDoc *doc, const uint32_t index, sdkres_t *err);

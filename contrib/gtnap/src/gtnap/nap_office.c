@@ -48,3 +48,11 @@ HB_FUNC( NAP_XLS_SAVE )
     HB_ITEM *pathname_block = hb_param(2, HB_IT_BLOCK);
     hb_gtnap_office_sheetdoc_save(doc, pathname_block);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_CLOSE )
+{
+    SheetDoc *doc = (SheetDoc*)hb_parptr(1);
+    hb_gtnap_office_sheetdoc_close(doc);
+}

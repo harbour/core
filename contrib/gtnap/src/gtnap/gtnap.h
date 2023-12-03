@@ -151,6 +151,8 @@ extern SheetDoc *hb_gtnap_office_sheetdoc_open(HB_ITEM *pathname_block);
 
 extern void hb_gtnap_office_sheetdoc_save(SheetDoc *doc, HB_ITEM *pathname_block);
 
+extern void hb_gtnap_office_sheetdoc_close(SheetDoc *doc);
+
 /*
  * Fran TODO: Pending refactoring
  *

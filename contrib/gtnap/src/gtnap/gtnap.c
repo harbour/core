@@ -4577,6 +4577,13 @@ void hb_gtnap_office_sheetdoc_save(SheetDoc *doc, HB_ITEM *pathname_block)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheetdoc_close(SheetDoc *doc)
+{
+    officesdk_sheetdoc_close(doc, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Font *hb_gtnap_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);
