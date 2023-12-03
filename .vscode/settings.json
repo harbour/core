@@ -11,5 +11,6 @@
         "iostream": "cpp",
         "*.hdl": "cpp"
     },
-    "files.encoding": "windows1252"
+    "files.encoding": "windows1252",
+    "cmake.sourceDirectory": "C:/harbour_nappgui/contrib/gtnap/tests/unotest"
 }
