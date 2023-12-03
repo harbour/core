@@ -19,10 +19,15 @@ void officesdk_sheetdoc_save(SheetDoc *doc, const char_t *pathname, sdkres_t *er
 
 void officesdk_sheetdoc_close(SheetDoc *doc, sdkres_t *err);
 
-Sheet *officesdk_sheet(SheetDoc *doc, const uint32_t index, sdkres_t *err);
+void officesdk_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, const char_t *text, const char_t *font_family, const real32_t font_size, const bool_t bold, const bool_t italic, sdkres_t *err);
 
-SheetCell *officesdk_sheet_cell(Sheet *sheet, const uint32_t col, const uint32_t row, sdkres_t *err);
 
-void officesdk_sheet_cell_text(SheetCell *cell, const char_t *text, const char_t *font_family, const real32_t font_size, const bool_t bold, const bool_t italic, sdkres_t *err);
+
+
+//Sheet *officesdk_sheet(SheetDoc *doc, const uint32_t index, sdkres_t *err);
+//
+//SheetCell *officesdk_sheet_cell(Sheet *sheet, const uint32_t col, const uint32_t row, sdkres_t *err);
+//
+//void officesdk_sheet_cell_text(SheetCell *cell, const char_t *text, const char_t *font_family, const real32_t font_size, const bool_t bold, const bool_t italic, sdkres_t *err);
 
 __END_C

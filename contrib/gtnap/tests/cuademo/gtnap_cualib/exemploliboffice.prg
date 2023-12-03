@@ -58,19 +58,16 @@ IF OFFICE_ERROR("Abrindo a planilha")
     RETURN
 ENDIF
 
+NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, {|| "Hello World!"}, {|| "Arial"}, 16.0, .F., .F.)
+OFFICE_ERROR("Editando célula")
+
 // Save an edited spreadsheet
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/edited.ods" })
-
-IF OFFICE_ERROR("Salvando a planilha")
-    RETURN
-ENDIF
+OFFICE_ERROR("Salvando a planilha")
 
 // Close the spreadsheet (mandatory)
 NAP_XLS_CLOSE(O_XLS)
-
-IF OFFICE_ERROR("Fechando planilha")
-    RETURN
-ENDIF
+OFFICE_ERROR("Fechando planilha")
 
 MOSTRAR("M15566", "A planilha foi editada com sucesso.")
 

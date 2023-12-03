@@ -4584,6 +4584,17 @@ void hb_gtnap_office_sheetdoc_close(SheetDoc *doc)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, HB_ITEM *text_block, HB_ITEM *ffamily_block, const real32_t fsize, const bool_t bold, const bool_t italic)
+{
+    String *text = hb_block_to_utf8(text_block);
+    String *ffamily = hb_block_to_utf8(ffamily_block);
+    officesdk_sheetdoc_cell_text(doc, sheet_id, col, row, tc(text), tc(ffamily), fsize, bold, italic, &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&text);
+    str_destroy(&ffamily);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Font *hb_gtnap_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);
