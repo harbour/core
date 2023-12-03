@@ -58,10 +58,19 @@ IF OFFICE_ERROR("Abrindo a planilha")
     RETURN
 ENDIF
 
-NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, {|| "Hello World!"}, {|| "Arial"}, 16.0, .F., .F.)
+NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, {|| "Hello World! (0,0)"})
+OFFICE_ERROR("Editando célula text")
+
+NAP_XLS_CELL_FORMAT(O_XLS, 0, 0, 0, {|| "Arial"}, 16.0, .F., .F.)
+OFFICE_ERROR("Editando célula format")
+
+NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 1, {|| "Hello World! (0,1)"})
 OFFICE_ERROR("Editando célula")
 
-NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 1, {|| "Hello World!"}, {|| "Times New Roman"}, 20.0, .T., .T.)
+NAP_XLS_CELL_FORMAT(O_XLS, 0, 0, 1, {|| "Times New Roman"}, 20.0, .T., .T.)
+OFFICE_ERROR("Editando célula format")
+
+NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 2, {|| "Hello World! (0,2)"})
 OFFICE_ERROR("Editando célula")
 
 // Save an edited spreadsheet

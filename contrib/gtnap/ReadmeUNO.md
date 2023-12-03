@@ -13,20 +13,31 @@ PAR1: Block that returns the full path for the document.
 RET: The document object. Must be closed with NAP_XLS_CLOSE().
 ```
 
-### Set Sheet Text
+### Set Cell Text
 
 ```
-NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, {|| "Hello World!"}, {|| "Arial"}, 16.0, .F., .F.)
+NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, {|| "Hello World!"})
 
 PAR1: The sheet document.
 PAR2: Sheet index (0-based).
 PAR3: Column index (0-based).
 PAR4: Row index (0-based).
 PAR5: Block that returns the cell text.
-PAR6: Block that returns the cell font family.
-PAR7: Font size (height). Real value.
-PAR8: Font weight. Bold (.T.) or Normal (.F.).
-PAR9: Font style. Italic (.T.) or Normal (.F.).
+```
+
+### Set Cell Format
+
+```
+NAP_XLS_CELL_FORMAT(O_XLS, 0, 0, 0, {|| "Arial"}, 16.0, .F., .F.)
+
+PAR1: The sheet document.
+PAR2: Sheet index (0-based).
+PAR3: Column index (0-based).
+PAR4: Row index (0-based).
+PAR5: Block that returns the cell font family.
+PAR6: Font size (height). Real value.
+PAR7: Font weight. Bold (.T.) or Normal (.F.).
+PAR8: Font style. Italic (.T.) or Normal (.F.).
 ```
 
 ### Save Sheet

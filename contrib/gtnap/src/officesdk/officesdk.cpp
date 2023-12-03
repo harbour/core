@@ -725,7 +725,7 @@ static sdkres_t i_format_cell(
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, const char_t *text, const char_t *font_family, const real32_t font_size, const bool_t bold, const bool_t italic, sdkres_t *err)
+void officesdk_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, const char_t *text, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
@@ -740,8 +740,6 @@ void officesdk_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const 
     if (res == ekSDKRES_OK)
         res = i_set_cell_text(xCell, text);
 
-    if (res == ekSDKRES_OK)
-        res = i_format_cell(xCell, font_family, font_size, bold, italic);
 
     // More over text handing...
     // https://wiki.openoffice.org/wiki/Documentation/DevGuide/FirstSteps/Common_Mechanisms_for_Text,_Tables_and_Drawings
@@ -749,3 +747,22 @@ void officesdk_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const 
     ptr_assign(err, res);
 }
 
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheetdoc_cell_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, const char_t *font_family, const real32_t font_size, const bool_t bold, const bool_t italic, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(doc, sheet_id, xSheet);
+
+    if (res == ekSDKRES_OK)
+        res = i_get_cell(xSheet, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_format_cell(xCell, font_family, font_size, bold, italic);
+
+    ptr_assign(err, res);
+}

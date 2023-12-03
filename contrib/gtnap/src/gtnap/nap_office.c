@@ -66,11 +66,22 @@ HB_FUNC( NAP_XLS_CELL_TEXT )
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
     HB_ITEM *text_block = hb_param(5, HB_IT_BLOCK);
-    HB_ITEM *ffamily_block = hb_param(6, HB_IT_BLOCK);
-    real32_t fsize = (real32_t)hb_parnd(7);
-    bool_t bold = (bool_t)hb_parl(8);
-    bool_t italic = (bool_t)hb_parl(9);
-    hb_gtnap_office_sheetdoc_cell_text(doc, sheet_id, col, row, text_block, ffamily_block, fsize, bold, italic);
+    hb_gtnap_office_sheetdoc_cell_text(doc, sheet_id, col, row, text_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_CELL_FORMAT )
+{
+    SheetDoc *doc = (SheetDoc*)hb_parptr(1);
+    uint32_t sheet_id = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    HB_ITEM *ffamily_block = hb_param(5, HB_IT_BLOCK);
+    real32_t fsize = (real32_t)hb_parnd(6);
+    bool_t bold = (bool_t)hb_parl(7);
+    bool_t italic = (bool_t)hb_parl(8);
+    hb_gtnap_office_sheetdoc_cell_format(doc, sheet_id, col, row, ffamily_block, fsize, bold, italic);
 }
 
 /*---------------------------------------------------------------------------*/

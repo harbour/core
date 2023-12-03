@@ -153,8 +153,9 @@ extern void hb_gtnap_office_sheetdoc_save(SheetDoc *doc, HB_ITEM *pathname_block
 
 extern void hb_gtnap_office_sheetdoc_close(SheetDoc *doc);
 
-extern void hb_gtnap_office_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, HB_ITEM *text_block, HB_ITEM *ffamily_block, const real32_t fsize, const bool_t bold, const bool_t italic);
+extern void hb_gtnap_office_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, HB_ITEM *text_block);
 
+extern void hb_gtnap_office_sheetdoc_cell_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, HB_ITEM *ffamily_block, const real32_t fsize, const bool_t bold, const bool_t italic);
 
 /*
  * Fran TODO: Pending refactoring
