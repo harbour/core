@@ -61,6 +61,9 @@ ENDIF
 NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, {|| "Hello World!"}, {|| "Arial"}, 16.0, .F., .F.)
 OFFICE_ERROR("Editando célula")
 
+NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 1, {|| "Hello World!"}, {|| "Times New Roman"}, 20.0, .T., .T.)
+OFFICE_ERROR("Editando célula")
+
 // Save an edited spreadsheet
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/edited.ods" })
 OFFICE_ERROR("Salvando a planilha")

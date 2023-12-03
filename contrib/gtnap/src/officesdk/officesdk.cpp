@@ -20,6 +20,9 @@
 #include <sheet/XSpreadsheetDocument.hpp>
 #include <sheet/XSpreadsheet.hpp>
 #include <table/XCell.hpp>
+#include <awt/FontSlant.hpp>
+#include <awt/FontWeight.hpp>
+
 //#include <io/XCloseable.hpp>
 #include <iostream>
 #include <sewer/warn.hxx>
@@ -528,7 +531,8 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed to access cell";
     case ekSDKRES_EDIT_CELL_ERROR:
         return "Failed to edit cell content";
-
+    case ekSDKRES_FORMAT_CELL_ERROR:
+        return "Failed to change cell format";
     default:
         return "Unknown error";
     }
@@ -683,6 +687,44 @@ static sdkres_t i_set_cell_text(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_format_cell(
+                    css::uno::Reference<css::table::XCell> &xCell,
+                    const char_t *font_family, 
+                    const real32_t font_size, 
+                    const bool_t bold, 
+                    const bool_t italic)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::text::XText> xText(xCell, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::text::XTextCursor> xTextCursor = xText->createTextCursor();
+        css::uno::Reference<css::beans::XPropertySet> xCursorProps = css::uno::Reference<css::beans::XPropertySet>::query(xTextCursor);
+
+        // Select all text in cell
+        xTextCursor->gotoStart(false);
+        xTextCursor->gotoEnd(true);
+        
+        // Text properties
+        ::rtl::OUString fname = i_OUStringFromUTF8(font_family);
+        css::awt::FontSlant slant = italic ? css::awt::FontSlant::FontSlant_ITALIC : css::awt::FontSlant::FontSlant_NONE;
+        float weight = bold ? css::awt::FontWeight::BOLD : css::awt::FontWeight::LIGHT;
+        xCursorProps->setPropertyValue("CharFontName", css::uno::makeAny(fname));
+        xCursorProps->setPropertyValue("CharHeight", css::uno::makeAny(font_size));
+        xCursorProps->setPropertyValue("CharPosture", css::uno::makeAny(slant));
+        xCursorProps->setPropertyValue("CharWeight", css::uno::makeAny(weight));
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, const char_t *text, const char_t *font_family, const real32_t font_size, const bool_t bold, const bool_t italic, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -698,10 +740,12 @@ void officesdk_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const 
     if (res == ekSDKRES_OK)
         res = i_set_cell_text(xCell, text);
 
-    unref(italic);
-    unref(bold);
-    unref(font_size);
-    unref(font_family);
+    if (res == ekSDKRES_OK)
+        res = i_format_cell(xCell, font_family, font_size, bold, italic);
+
+    // More over text handing...
+    // https://wiki.openoffice.org/wiki/Documentation/DevGuide/FirstSteps/Common_Mechanisms_for_Text,_Tables_and_Drawings
+
     ptr_assign(err, res);
 }
 
