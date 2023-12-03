@@ -84,4 +84,18 @@ HB_FUNC( NAP_XLS_CELL_FORMAT )
     hb_gtnap_office_sheetdoc_cell_format(doc, sheet_id, col, row, ffamily_block, fsize, bold, italic);
 }
 
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_COLUMN_FORMAT )
+{
+    SheetDoc *doc = (SheetDoc*)hb_parptr(1);
+    uint32_t sheet_id = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    bool_t visible = (bool_t)hb_parl(4);
+    bool_t optimal_width = (bool_t)hb_parl(5);
+    uint32_t width = hb_parni(6);
+    hb_gtnap_office_sheetdoc_column_format(doc, sheet_id, col, visible, optimal_width, width);
+}
+
 /*---------------------------------------------------------------------------*/

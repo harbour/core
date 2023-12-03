@@ -157,6 +157,8 @@ extern void hb_gtnap_office_sheetdoc_cell_text(SheetDoc *doc, const uint32_t she
 
 extern void hb_gtnap_office_sheetdoc_cell_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, HB_ITEM *ffamily_block, const real32_t fsize, const bool_t bold, const bool_t italic);
 
+extern void hb_gtnap_office_sheetdoc_column_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const bool_t visible, const bool_t optimal_width, const uint32_t width);
+
 /*
  * Fran TODO: Pending refactoring
  *

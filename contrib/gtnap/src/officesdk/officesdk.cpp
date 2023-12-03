@@ -20,6 +20,8 @@
 #include <sheet/XSpreadsheetDocument.hpp>
 #include <sheet/XSpreadsheet.hpp>
 #include <table/XCell.hpp>
+#include <table/XTable.hpp>
+#include <table/XTableColumns.hpp>
 #include <awt/FontSlant.hpp>
 #include <awt/FontWeight.hpp>
 
@@ -533,6 +535,11 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed to edit cell content";
     case ekSDKRES_FORMAT_CELL_ERROR:
         return "Failed to change cell format";
+    case ekSDKRES_ACCESS_COLUMN_ERROR:
+        return "Failed to access column";
+    case ekSDKRES_FORMAT_COLUMN_ERROR:
+        return "Failed to change column format";
+
     default:
         return "Unknown error";
     }
@@ -665,6 +672,30 @@ static sdkres_t i_get_cell(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_get_column(
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
+                    uint32_t col_id,
+                    css::uno::Reference<css::beans::XPropertySet> &xTableCol)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::table::XColumnRowRange> xRange(xSheet, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::table::XTableColumns> xColumns = xRange->getColumns();
+        css::uno::Any item = xColumns->getByIndex((sal_Int32)col_id);
+        xTableCol = css::uno::Reference<css::beans::XPropertySet>(item, css::uno::UNO_QUERY_THROW);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_COLUMN_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_set_cell_text(
                     css::uno::Reference<css::table::XCell> &xCell,
                     const char_t *text)
@@ -725,6 +756,30 @@ static sdkres_t i_format_cell(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_format_column(
+                    css::uno::Reference<css::beans::XPropertySet> &xTableCol,
+                    const bool_t visible, 
+                    const bool_t optimal_width, 
+                    const uint32_t width)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        xTableCol->setPropertyValue("IsVisible", css::uno::makeAny((sal_Bool)visible));
+        xTableCol->setPropertyValue("OptimalWidth", css::uno::makeAny((sal_Bool)optimal_width));
+        xTableCol->setPropertyValue("Width", css::uno::makeAny((sal_Int32)width));
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_FORMAT_COLUMN_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, const char_t *text, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -764,5 +819,25 @@ void officesdk_sheetdoc_cell_format(SheetDoc *doc, const uint32_t sheet_id, cons
     if (res == ekSDKRES_OK)
         res = i_format_cell(xCell, font_family, font_size, bold, italic);
 
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheetdoc_column_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const bool_t visible, const bool_t optimal_width, const uint32_t width, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+    css::uno::Reference<css::beans::XPropertySet> xTableCol;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(doc, sheet_id, xSheet);
+
+    if (res == ekSDKRES_OK)
+        res = i_get_column(xSheet, col, xTableCol);
+
+    if (res == ekSDKRES_OK)
+        res = i_format_column(xTableCol, visible, optimal_width, width);
+    
     ptr_assign(err, res);
 }

@@ -23,6 +23,7 @@ void officesdk_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const 
 
 void officesdk_sheetdoc_cell_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, const char_t *font_family, const real32_t font_size, const bool_t bold, const bool_t italic, sdkres_t *err);
 
+void officesdk_sheetdoc_column_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const bool_t visible, const bool_t optimal_width, const uint32_t width, sdkres_t *err);
 
 
 //Sheet *officesdk_sheet(SheetDoc *doc, const uint32_t index, sdkres_t *err);

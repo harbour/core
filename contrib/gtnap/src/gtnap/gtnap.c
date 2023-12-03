@@ -4602,6 +4602,13 @@ void hb_gtnap_office_sheetdoc_cell_format(SheetDoc *doc, const uint32_t sheet_id
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheetdoc_column_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const bool_t visible, const bool_t optimal_width, const uint32_t width)
+{
+    officesdk_sheetdoc_column_format(doc, sheet_id, col, visible, optimal_width, width, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Font *hb_gtnap_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);

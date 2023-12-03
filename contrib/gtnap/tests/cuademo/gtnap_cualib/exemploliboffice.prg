@@ -73,6 +73,16 @@ OFFICE_ERROR("Editando célula format")
 NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 2, {|| "Hello World! (0,2)"})
 OFFICE_ERROR("Editando célula")
 
+NAP_XLS_COLUMN_FORMAT(O_XLS, 0, 0, .T., .F., 6000)
+OFFICE_ERROR("Editando coluna")
+
+NAP_XLS_COLUMN_FORMAT(O_XLS, 0, 1, .T., .F., 12000)
+OFFICE_ERROR("Editando coluna")
+
+// Hidden column
+NAP_XLS_COLUMN_FORMAT(O_XLS, 0, 2, .F., .F., 1000)
+OFFICE_ERROR("Editando coluna")
+
 // Save an edited spreadsheet
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/edited.ods" })
 OFFICE_ERROR("Salvando a planilha")

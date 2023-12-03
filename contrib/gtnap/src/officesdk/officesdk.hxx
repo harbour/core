@@ -21,7 +21,9 @@ typedef enum _sdkres_t
     ekSDKRES_ACCESS_DOC_ERROR,
     ekSDKRES_ACCESS_CELL_ERROR,
     ekSDKRES_EDIT_CELL_ERROR,
-    ekSDKRES_FORMAT_CELL_ERROR
+    ekSDKRES_FORMAT_CELL_ERROR,
+    ekSDKRES_ACCESS_COLUMN_ERROR,
+    ekSDKRES_FORMAT_COLUMN_ERROR
 } sdkres_t;
 
 typedef enum _fileformat_t
