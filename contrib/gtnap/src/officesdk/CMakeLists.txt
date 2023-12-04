@@ -22,24 +22,27 @@ if (NOT WIN32)
 endif()
 
 # Generate the LibreOffice-SDK C++ headers
-set(CPPUMAKER ${LOROOT}/sdk/bin/cppumaker)
-set(CPPTYPES ${LOROOT}/program/types.rdb)
-set(CPPOFFAPI ${LOROOT}/program/types/offapi.rdb)
-file(TO_NATIVE_PATH \"${CPPUMAKER}\" CPPUMAKER)
-file(TO_NATIVE_PATH \"${CPPTYPES}\" CPPTYPES)
-file(TO_NATIVE_PATH \"${CPPOFFAPI}\" CPPOFFAPI)
-execute_process(COMMAND "${CPPUMAKER}" "-Gc" "-O${CMAKE_CURRENT_BINARY_DIR}" "${CPPTYPES}" "${CPPOFFAPI}" RESULT_VARIABLE RES_VAR OUTPUT_VARIABLE OUT_VAR ERROR_VARIABLE ERR_VAR)
+IF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/com/sun/star")
+    set(CPPUMAKER ${LOROOT}/sdk/bin/cppumaker)
+    set(CPPTYPES ${LOROOT}/program/types.rdb)
+    set(CPPOFFAPI ${LOROOT}/program/types/offapi.rdb)
+    file(TO_NATIVE_PATH \"${CPPUMAKER}\" CPPUMAKER)
+    file(TO_NATIVE_PATH \"${CPPTYPES}\" CPPTYPES)
+    file(TO_NATIVE_PATH \"${CPPOFFAPI}\" CPPOFFAPI)
+    execute_process(COMMAND "${CPPUMAKER}" "-Gc" "-O${CMAKE_CURRENT_BINARY_DIR}" "${CPPTYPES}" "${CPPOFFAPI}" RESULT_VARIABLE RES_VAR OUTPUT_VARIABLE OUT_VAR ERROR_VARIABLE ERR_VAR)
 
-if (NOT "${RES_VAR}" STREQUAL "0")
-    message("CPPUMAKER RES: ${RES_VAR}")
+    if (NOT "${RES_VAR}" STREQUAL "0")
+        message("CPPUMAKER RES: ${RES_VAR}")
 
-    if (OUT_VAR)
-        message("CPPUMAKER OUT: ${OUT_VAR}")
+        if (OUT_VAR)
+            message("CPPUMAKER OUT: ${OUT_VAR}")
+        endif()
+
+        if (ERR_VAR)
+            message("CPPUMAKER ERR: ${ERR_VAR}")
+        endif()
+
+        message(FATAL_ERROR "Error generating LibreOffice C++ header files")
     endif()
 
-    if (ERR_VAR)
-        message("CPPUMAKER ERR: ${ERR_VAR}")
-    endif()
-
-    message(FATAL_ERROR "Error generating LibreOffice C++ header files")
 endif()

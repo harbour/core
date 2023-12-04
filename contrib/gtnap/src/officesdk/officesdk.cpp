@@ -5,6 +5,7 @@
 #include <osbs/osbs.h>
 #include <sewer/blib.h>
 #include <sewer/cassert.h>
+#include <sewer/ptr.h>
 
 #include <sewer/nowarn.hxx>
 #include <cppuhelper/bootstrap.hxx>
@@ -16,6 +17,15 @@
 #include <frame/XStorable.hpp>
 #include <lang/XMultiComponentFactory.hpp>
 #include <text/XTextDocument.hpp>
+#include <sheet/XSpreadsheetDocument.hpp>
+#include <sheet/XSpreadsheet.hpp>
+#include <table/XCell.hpp>
+#include <table/XTable.hpp>
+#include <table/XTableColumns.hpp>
+#include <awt/FontSlant.hpp>
+#include <awt/FontWeight.hpp>
+
+//#include <io/XCloseable.hpp>
 #include <iostream>
 #include <sewer/warn.hxx>
 
@@ -36,7 +46,13 @@ public:
 
     sdkres_t OpenTextDocument(const char_t *url, css::uno::Reference<css::text::XTextDocument> &xDocument);
 
+    sdkres_t OpenSheetDocument(const char_t *url, css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
+
+    sdkres_t CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
+
     sdkres_t SaveTextDocument(const css::uno::Reference<css::text::XTextDocument> &xDocument, const char_t *url, const fileformat_t format);
+
+    sdkres_t SaveSheetDocument(const css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument, const char_t *url, const fileformat_t format);
 
 public:
     bool init;
@@ -107,11 +123,11 @@ static ::rtl::OUString i_OUStringFromString(const String *str)
 
 /*---------------------------------------------------------------------------*/
 
-//static ::rtl::OUString i_OUStringFromUTF8(const char_t *str)
-//{
-//    cassert_no_null(str);
-//    return rtl::OUString(str, (sal_Int32)str_len_c(str), RTL_TEXTENCODING_UTF8);
-//}
+static ::rtl::OUString i_OUStringFromUTF8(const char_t *str)
+{
+    cassert_no_null(str);
+    return rtl::OUString(str, (sal_Int32)str_len_c(str), RTL_TEXTENCODING_UTF8);
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -271,7 +287,7 @@ sdkres_t OfficeSdk::ConnectServer()
     // Try to create a component loader
     if (res == ekSDKRES_OK)
     {
-        css::uno::Reference<css::beans::XPropertySet> propSet = css::uno::Reference<css::beans::XPropertySet>(xInterface, css::uno::UNO_QUERY);
+        css::uno::Reference<css::beans::XPropertySet> propSet = css::uno::Reference<css::beans::XPropertySet>(xInterface, css::uno::UNO_QUERY_THROW);
         propSet->getPropertyValue("DefaultContext") >>= xComponentContext;
         if (this->xComponentLoader.get() != nullptr)
             this->xComponentLoader->dispose();
@@ -310,6 +326,58 @@ sdkres_t OfficeSdk::OpenTextDocument(const char_t *url, css::uno::Reference<css:
 
 /*---------------------------------------------------------------------------*/
 
+sdkres_t OfficeSdk::OpenSheetDocument(const char_t *url, css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument)
+{
+    sdkres_t res = ekSDKRES_OK;
+    ::rtl::OUString docUrl = i_OUStringFileUrl(url);
+
+    try
+    {
+        css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
+        loadProperties[0].Name = "Hidden";
+        loadProperties[0].Value <<= true;
+        css::uno::Reference<css::lang::XComponent> xComponent = this->xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
+        xDocument = css::uno::Reference<css::sheet::XSpreadsheetDocument>(xComponent, css::uno::UNO_QUERY_THROW);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error loading " << url << " file: " << e.Message;
+        res = ekSDKRES_OPEN_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+sdkres_t OfficeSdk::CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument)
+{
+    unref(xDocument);
+    return ekSDKRES_NO_ENVAR;
+    // try
+    // {
+    //     css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
+    //     loadProperties[0].Name = "Hidden";
+    //     loadProperties[0].Value <<= true;
+    //     css::uno::Reference<css::lang::XComponent> xComponent = this->xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
+    //     xDocument = css::uno::Reference<css::sheet::XSpreadsheetDocument>(xComponent, css::uno::UNO_QUERY_THROW);
+    // }
+    // catch(css::uno::Exception &e)
+    // {
+    //     std::cout << "Error loading " << url << " file: " << e.Message;
+    //     res = ekSDKRES_OPEN_FILE_ERROR;
+    // }
+
+}
+// Reference<XComponentLoader> xComponentLoader(xServiceManager, UNO_QUERY);
+// OUString docServiceName = OUString::createFromAscii("com.sun.star.sheet.SpreadsheetDocument");
+// Reference<XInterface> xComponent = xComponentLoader->createInstanceWithArgumentsAndContext(docServiceName, Sequence<Any>(), xContext);
+// Reference<XSpreadsheetDocument> xCalcDocument(xComponent, UNO_QUERY)
+
+
+
+/*---------------------------------------------------------------------------*/
+
 sdkres_t OfficeSdk::SaveTextDocument(const css::uno::Reference<css::text::XTextDocument> &xDocument, const char_t *url, const fileformat_t format)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -321,6 +389,15 @@ sdkres_t OfficeSdk::SaveTextDocument(const css::uno::Reference<css::text::XTextD
         css::uno::Sequence<css::beans::PropertyValue> storeProps;
 
         switch (format) {
+        case ekFORMAT_OPEN_OFFICE:
+        {
+            css::uno::Sequence<css::beans::PropertyValue> ofProps = css::uno::Sequence<css::beans::PropertyValue>(1);
+            ofProps[0].Name = "Overwrite";
+            ofProps[0].Value <<= true;
+            storeProps = ofProps;
+            break;
+        }
+
         case ekFORMAT_PDF:
         {
             css::uno::Sequence<css::beans::PropertyValue> pdfProps = css::uno::Sequence<css::beans::PropertyValue>(3);
@@ -330,6 +407,53 @@ sdkres_t OfficeSdk::SaveTextDocument(const css::uno::Reference<css::text::XTextD
             pdfProps[1].Value <<= true;
             pdfProps[2].Name = "SelectPdfVersion";
             pdfProps[2].Value <<= (sal_uInt32)1;
+            storeProps = pdfProps;
+            break;
+        }
+
+        cassert_default();
+        }
+
+        xStorable->storeToURL(docUrl, storeProps);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error saving " << url << " file: " << e.Message;
+        res = ekSDKRES_SAVE_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+sdkres_t OfficeSdk::SaveSheetDocument(const css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument, const char_t *url, const fileformat_t format)
+{
+    sdkres_t res = ekSDKRES_OK;
+    ::rtl::OUString docUrl = i_OUStringFileUrl(url);
+
+    try
+    {
+        css::uno::Reference<css::frame::XStorable> xStorable = css::uno::Reference<css::frame::XStorable>(xDocument, css::uno::UNO_QUERY_THROW);
+        css::uno::Sequence<css::beans::PropertyValue> storeProps;
+
+        switch (format) {
+        case ekFORMAT_OPEN_OFFICE:
+        {
+            css::uno::Sequence<css::beans::PropertyValue> ofProps = css::uno::Sequence<css::beans::PropertyValue>(1);
+            ofProps[0].Name = "Overwrite";
+            ofProps[0].Value <<= true;
+            storeProps = ofProps;
+            break;
+        }
+
+        case ekFORMAT_PDF:
+        {
+            css::uno::Sequence<css::beans::PropertyValue> pdfProps = css::uno::Sequence<css::beans::PropertyValue>(2);
+            pdfProps[0].Name = "FilterName";
+            pdfProps[0].Value <<= rtl::OUString("calc_pdf_Export");
+            pdfProps[1].Name = "Overwrite";
+            pdfProps[1].Value <<= true;
             storeProps = pdfProps;
             break;
         }
@@ -401,9 +525,319 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed to open file";
     case ekSDKRES_SAVE_FILE_ERROR:
         return "Failed to save file";
-    cassert_default();
+    case ekSDKRES_CLOSE_DOC_ERROR:
+        return "Failed to close document";
+    case ekSDKRES_ACCESS_DOC_ERROR:
+        return "Failed to access document";
+    case ekSDKRES_ACCESS_CELL_ERROR:
+        return "Failed to access cell";
+    case ekSDKRES_EDIT_CELL_ERROR:
+        return "Failed to edit cell content";
+    case ekSDKRES_FORMAT_CELL_ERROR:
+        return "Failed to change cell format";
+    case ekSDKRES_ACCESS_COLUMN_ERROR:
+        return "Failed to access column";
+    case ekSDKRES_FORMAT_COLUMN_ERROR:
+        return "Failed to change column format";
+
+    default:
+        return "Unknown error";
     }
-    return "";
 }
 
 /*---------------------------------------------------------------------------*/
+
+SheetDoc *officesdk_sheetdoc_open(const char_t *pathname, sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    SheetDoc *doc = NULL;
+    css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = nullptr;
+    cassert_no_null(pathname);
+    if (res == ekSDKRES_OK)
+    {
+        xDocument = new css::uno::Reference<css::sheet::XSpreadsheetDocument>();
+        res = i_OFFICE_SDK.OpenSheetDocument(pathname, *xDocument);
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        doc = reinterpret_cast<SheetDoc*>(xDocument);
+    }
+    else
+    {
+        if (xDocument != nullptr)
+        {
+            delete xDocument;
+            xDocument = nullptr;
+        }
+    }
+
+    ptr_assign(err, res);
+    return doc;
+}
+
+/*---------------------------------------------------------------------------*/
+
+SheetDoc *officesdk_sheetdoc_new(sdkres_t *err)
+{
+    unref(err);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheetdoc_save(SheetDoc *doc, const char_t *pathname, sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    cassert_no_null(doc);
+    cassert_no_null(pathname);
+    
+    if (res == ekSDKRES_OK)
+    {
+        css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(doc);
+        res = i_OFFICE_SDK.SaveSheetDocument(*xDocument, pathname, ekFORMAT_OPEN_OFFICE);
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheetdoc_close(SheetDoc *doc, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(doc);
+        css::uno::Reference<css::lang::XComponent> xComponent = css::uno::Reference<css::lang::XComponent>(*xDocument, css::uno::UNO_QUERY_THROW);
+        // This remove the lock file
+        xComponent->dispose();
+        delete xDocument;
+        xDocument = nullptr;
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_CLOSE_DOC_ERROR;
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_sheet(
+                    SheetDoc *doc, 
+                    uint32_t sheet_id, 
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(doc);
+        css::uno::Reference<css::sheet::XSpreadsheets> xSheets = (*xDocument)->getSheets();
+        css::uno::Reference<css::container::XIndexAccess> xIndexAccess(xSheets, css::uno::UNO_QUERY_THROW);
+        css::uno::Any item = xIndexAccess->getByIndex((sal_Int32)sheet_id);
+        xSheet = css::uno::Reference<css::sheet::XSpreadsheet>(item, css::uno::UNO_QUERY_THROW); 
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_cell(
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
+                    uint32_t col_id,
+                    uint32_t row_id,
+                    css::uno::Reference<css::table::XCell> &xCell)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        xCell = xSheet->getCellByPosition((sal_Int32)col_id, (sal_Int32)row_id);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_column(
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
+                    uint32_t col_id,
+                    css::uno::Reference<css::beans::XPropertySet> &xTableCol)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::table::XColumnRowRange> xRange(xSheet, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::table::XTableColumns> xColumns = xRange->getColumns();
+        css::uno::Any item = xColumns->getByIndex((sal_Int32)col_id);
+        xTableCol = css::uno::Reference<css::beans::XPropertySet>(item, css::uno::UNO_QUERY_THROW);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_COLUMN_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_set_cell_text(
+                    css::uno::Reference<css::table::XCell> &xCell,
+                    const char_t *text)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::text::XText> xText(xCell, css::uno::UNO_QUERY_THROW);
+        ::rtl::OUString str = i_OUStringFromUTF8(text);
+        xText->setString(str);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_format_cell(
+                    css::uno::Reference<css::table::XCell> &xCell,
+                    const char_t *font_family, 
+                    const real32_t font_size, 
+                    const bool_t bold, 
+                    const bool_t italic)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::text::XText> xText(xCell, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::text::XTextCursor> xTextCursor = xText->createTextCursor();
+        css::uno::Reference<css::beans::XPropertySet> xCursorProps = css::uno::Reference<css::beans::XPropertySet>::query(xTextCursor);
+
+        // Select all text in cell
+        xTextCursor->gotoStart(false);
+        xTextCursor->gotoEnd(true);
+        
+        // Text properties
+        ::rtl::OUString fname = i_OUStringFromUTF8(font_family);
+        css::awt::FontSlant slant = italic ? css::awt::FontSlant::FontSlant_ITALIC : css::awt::FontSlant::FontSlant_NONE;
+        float weight = bold ? css::awt::FontWeight::BOLD : css::awt::FontWeight::LIGHT;
+        xCursorProps->setPropertyValue("CharFontName", css::uno::makeAny(fname));
+        xCursorProps->setPropertyValue("CharHeight", css::uno::makeAny(font_size));
+        xCursorProps->setPropertyValue("CharPosture", css::uno::makeAny(slant));
+        xCursorProps->setPropertyValue("CharWeight", css::uno::makeAny(weight));
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_format_column(
+                    css::uno::Reference<css::beans::XPropertySet> &xTableCol,
+                    const bool_t visible, 
+                    const bool_t optimal_width, 
+                    const uint32_t width)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        xTableCol->setPropertyValue("IsVisible", css::uno::makeAny((sal_Bool)visible));
+        xTableCol->setPropertyValue("OptimalWidth", css::uno::makeAny((sal_Bool)optimal_width));
+        xTableCol->setPropertyValue("Width", css::uno::makeAny((sal_Int32)width));
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_FORMAT_COLUMN_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, const char_t *text, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(doc, sheet_id, xSheet);
+
+    if (res == ekSDKRES_OK)
+        res = i_get_cell(xSheet, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_text(xCell, text);
+
+
+    // More over text handing...
+    // https://wiki.openoffice.org/wiki/Documentation/DevGuide/FirstSteps/Common_Mechanisms_for_Text,_Tables_and_Drawings
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheetdoc_cell_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, const char_t *font_family, const real32_t font_size, const bool_t bold, const bool_t italic, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(doc, sheet_id, xSheet);
+
+    if (res == ekSDKRES_OK)
+        res = i_get_cell(xSheet, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_format_cell(xCell, font_family, font_size, bold, italic);
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheetdoc_column_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const bool_t visible, const bool_t optimal_width, const uint32_t width, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+    css::uno::Reference<css::beans::XPropertySet> xTableCol;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(doc, sheet_id, xSheet);
+
+    if (res == ekSDKRES_OK)
+        res = i_get_column(xSheet, col, xTableCol);
+
+    if (res == ekSDKRES_OK)
+        res = i_format_column(xTableCol, visible, optimal_width, width);
+    
+    ptr_assign(err, res);
+}

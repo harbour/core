@@ -3,7 +3,7 @@
 :: Set the compiler
 call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 set CMAKE_GENERATOR=Visual Studio 11 2012
-echo %LIBREOFFICE_HOME%
+:: echo %LIBREOFFICE_HOME%
 
 :: Generate GTNAP
 set mpath=%cd%
@@ -17,13 +17,13 @@ call build -b Debug
 cd %gtpath%\\tests\\cuademo\\gtnap_cualib
 echo Exemplo: %gtpath%\src\exemplo
 if not exist %gtpath%\src\exemplo mkdir %gtpath%\src\exemplo
-..\\..\\..\\..\\..\\bin\\win\\msvc64\\hbmk2.exe exemplo.hbp -debug -trace -keepc -workdir=%gtpath%\src\exemplo -o%gtpath%\build\exemplo || goto error
+..\\..\\..\\..\\..\\bin\\win\\msvc64\\hbmk2.exe -debug -trace -keepc -workdir=%gtpath%\src\exemplo -o%gtpath%\build\exemplo exemplo.hbp || goto error
 
 :: Generate hello sources
 cd %gtpath%\\tests\\hello
 echo Hello: %gtpath%\src\hello
 if not exist %gtpath%\src\hello mkdir %gtpath%\src\hello
-..\\..\\..\\..\\bin\\win\\msvc64\\hbmk2 hello.hbp -debug -trace -keepc -workdir=%gtpath%\src\hello -o%gtpath%\build\hello
+..\\..\\..\\..\\bin\\win\\msvc64\\hbmk2 -debug -trace -keepc -workdir=%gtpath%\src\hello -o%gtpath%\build\hello hello.hbp
 
 :: Generate VS solution
 cd %gtpath%
