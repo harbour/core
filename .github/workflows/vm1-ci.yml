@@ -18,7 +18,6 @@ jobs:
             version: "9.3"
           - name: openbsd
             version: "7.4"
-          - name: sunos
         compiler:
           - clang
           - gcc
@@ -30,7 +29,8 @@ jobs:
             compiler: clang
           - os: {name: openbsd}
             compiler: gcc
-          - os: {name: sunos}
+          # cross-platform-actions/actions@v0.21.1 works for FreeBSD but hangs often
+          - os: {name: freebsd}
 
     steps:
 
@@ -75,11 +75,6 @@ jobs:
               (gcc) echo ${{matrix.compiler}} ;; esac)
           EOF
 
-          tee ~/work/install_sunos_deps.sh <<EOF
-          set -ex
-          pkg install SUNWgit SUNWgcc SUNWgmake
-          EOF
-
           chmod a+x ~/work/install_*_deps.sh
 
       - name: Checkout code
@@ -93,12 +88,15 @@ jobs:
       - name: Prepare ccache using action
         uses: hendrikmuhs/ccache-action@v1.2.10
         with:
-          key: ${{ matrix.os.name }}-${{ matrix.compiler }}-${{ matrix.strictness }}-ci
+          key: ${{ matrix.os.name }}-${{ matrix.os.version }}-${{ matrix.compiler }}-${{ matrix.strictness }}-ci
           max-size: "32M"
 
       - name: Configure build shell
         run: |
           set -ex
+          case ${{matrix.os.name }} in
+            *bsd) _cpus="sysctl -n hw.ncpu" ;;
+          esac
           HB_USER_CFLAGS=""
           HB_USER_LDFLAGS=""
           case ${{matrix.strictness}} in
@@ -117,6 +115,8 @@ jobs:
           export HB_USER_CFLAGS="$HB_USER_CFLAGS"
           export HB_USER_LDFLAGS="$HB_USER_LDFLAGS"
           export HB_CCACHE=ccache
+
+          export N_CPUS="\$($_cpus)"
           EOENV
 
       - name: Generate build script
@@ -132,14 +132,14 @@ jobs:
           echo ::group::Build Harbour
           set -ex
           . ./.bashrc
-          gmake -j$(/sbin/sysctl -n hw.ncpu) \
+          gmake -j$N_CPUS \
             HB_BUILD_CONTRIBS=no \
             HB_COMPILER=${{matrix.compiler}}
 
           echo "::group::Build contribs"
           set -ex
           . ./.bashrc
-          gmake -j$(/sbin/sysctl -n hw.ncpu) \
+          gmake -j$N_CPUS \
             -C contrib \
             HB_COMPILER=${{matrix.compiler}}
 
@@ -150,7 +150,6 @@ jobs:
 
       - name: Build Harbour and contribs
         timeout-minutes: 30
-        if: matrix.os.name != 'sunos'
         uses: cross-platform-actions/action@v0.21.1
         with:
           operating_system: ${{ matrix.os.name }}
@@ -165,16 +164,3 @@ jobs:
             set -ex
             ~/work/install_${{ matrix.os.name }}_deps.sh
             . ~/work/run_build.sh
-
-      #- name: Build Harbour and contribs on SunOS
-      #  if: matrix.os.name == 'sunos'
-      #  uses: vmactions/solaris-vm@v0
-      #  with:
-      #    usesh: true
-      #    mem: 2048
-      #    prepare: |
-      #      echo "::group::Install dependencies"
-      #      set -ex
-      #      ~/work/install_${{ matrix.os.name }}_deps.sh
-      #    run: |
-      #      . ~/work/run_build.sh
