@@ -5048,8 +5048,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          SWITCH hbmk[ _HBMK_nWARN ]
          CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )         ; EXIT
-         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q -w-sig-" ) ; EXIT
-         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-sig- -w-aus- -w-ccc- -w-csu- -w-par- -w-rch- -w-ucp- -w-use- -w-prc- -w-pia-" ) ; EXIT
+         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q -w-sig" ) ; EXIT
+         // The following line differs from the line in config/win/bcc.mk because Make needs to build core, and hbmk2 needs to build contrib
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-sig -w-aus -w-ccc -w-csu -w-ovf -w-par -w-rch -w-spa -w-sus -w-pia" ) ; EXIT
          CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )           ; EXIT
          ENDSWITCH
          cOpt_CompC += " {FC} {LC}"
