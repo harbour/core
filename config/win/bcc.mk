@@ -25,9 +25,9 @@ CFLAGS += -I. -I$(HB_HOST_INC)
 CFLAGS += -q -tWM -CP437
 
 ifeq ($(HB_BUILD_WARN),no)
-   CFLAGS += -w-sig- -w-aus- -w-ccc- -w-csu- -w-par- -w-rch- -w-ucp- -w-use- -w-prc- -w-pia-
+   CFLAGS += -w-aus -w-ccc -w-csu -w-ovf -w-par -w-rch -w-spa
 else
-   CFLAGS += -w -Q -w-sig-
+   CFLAGS += -w -Q -w-sig
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
