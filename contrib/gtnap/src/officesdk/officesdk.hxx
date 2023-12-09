@@ -5,7 +5,7 @@
 
 #include <core/core.hxx>
 
-typedef struct _sheetdoc_t SheetDoc;
+typedef struct _sheet_t Sheet;
 
 typedef enum _sdkres_t
 {

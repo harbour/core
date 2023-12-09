@@ -52,36 +52,27 @@ STAT PROC TST_EDITAR_PLANILHA
 ***********************************
 
 // Open an existing spreadsheet
-LOCAL O_XLS := NAP_XLS_OPEN({|| NAP_WORK_PATH() + "/../office/empty.ods" })
+LOCAL O_XLS := NAP_XLS_OPEN( NAP_WORK_PATH() + "/../office/empty.ods" )
 
 IF OFFICE_ERROR("Abrindo a planilha")
     RETURN
 ENDIF
 
-NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, {|| "Hello World! (0,0)"})
-OFFICE_ERROR("Editando célula text")
+NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, "Hello World! (0,0)")
+NAP_XLS_CELL_FONT_FAMILY(O_XLS, 0, 0, 0, "Arial")
+NAP_XLS_CELL_FONT_SIZE(O_XLS, 0, 0, 0, 16.0)
 
-NAP_XLS_CELL_FORMAT(O_XLS, 0, 0, 0, {|| "Arial"}, 16.0, .F., .F.)
-OFFICE_ERROR("Editando célula format")
-
-NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 1, {|| "Hello World! (0,1)"})
-OFFICE_ERROR("Editando célula")
-
-NAP_XLS_CELL_FORMAT(O_XLS, 0, 0, 1, {|| "Times New Roman"}, 20.0, .T., .T.)
-OFFICE_ERROR("Editando célula format")
+NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 1, "Hello World! (0,1)")
+NAP_XLS_CELL_FONT_FAMILY(O_XLS, 0, 0, 1, "Times New Roman")
+NAP_XLS_CELL_FONT_SIZE(O_XLS, 0, 0, 1, 20.0)
+NAP_XLS_CELL_BOLD(O_XLS, 0, 0, 1, .T.)
+NAP_XLS_CELL_ITALIC(O_XLS, 0, 0, 1, .T.)
 
 NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 2, {|| "Hello World! (0,2)"})
-OFFICE_ERROR("Editando célula")
 
-NAP_XLS_COLUMN_FORMAT(O_XLS, 0, 0, .T., .F., 6000)
-OFFICE_ERROR("Editando coluna")
-
-NAP_XLS_COLUMN_FORMAT(O_XLS, 0, 1, .T., .F., 12000)
-OFFICE_ERROR("Editando coluna")
-
-// Hidden column
-NAP_XLS_COLUMN_FORMAT(O_XLS, 0, 2, .F., .F., 1000)
-OFFICE_ERROR("Editando coluna")
+NAP_XLS_COLUMN_WIDTH(O_XLS, 0, 0, 6000)
+NAP_XLS_COLUMN_WIDTH(O_XLS, 0, 1, 12000)
+NAP_XLS_COLUMN_VISIBLE(O_XLS, 0, 2, .F.)
 
 // Save an edited spreadsheet
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/edited.ods" })
