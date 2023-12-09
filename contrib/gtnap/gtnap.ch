@@ -55,3 +55,8 @@
 #define SDKRES_FORMAT_CELL_ERROR    14
 #define SDKRES_ACCESS_COLUMN_ERROR  15
 #define SDKRES_FORMAT_COLUMN_ERROR  16
+
+#define SDK_HALIGN_LEFT             0
+#define SDK_HALIGN_CENTER           1
+#define SDK_HALIGN_RIGHT            2
+

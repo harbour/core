@@ -23,6 +23,8 @@
 #include <table/XCell.hpp>
 #include <table/XTable.hpp>
 #include <table/XTableColumns.hpp>
+#include <table/CellHoriJustify.hpp>
+#include <table/CellVertJustify.hpp>
 #include <util/XMergeable.hpp>
 #include <awt/FontSlant.hpp>
 #include <awt/FontWeight.hpp>
@@ -769,7 +771,7 @@ static sdkres_t i_set_cell_text(
 
 /*---------------------------------------------------------------------------*/
 
-static sdkres_t i_set_cell_property(
+static sdkres_t i_set_cell_text_property(
                     css::uno::Reference<css::table::XCell> &xCell,
                     const char_t *prop_name,
                     const css::uno::Any &value)
@@ -788,6 +790,29 @@ static sdkres_t i_set_cell_property(
         
         ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
         xCursorProps->setPropertyValue(prop, value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_set_cell_property(
+                    css::uno::Reference<css::table::XCell> &xCell,
+                    const char_t *prop_name,
+                    const css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::beans::XPropertySet> xCellProps = css::uno::Reference<css::beans::XPropertySet>::query(xCell);        
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        xCellProps->setPropertyValue(prop, value);
     }
     catch (css::uno::Exception&)
     {
@@ -913,7 +938,7 @@ void officesdk_sheet_cell_font_family(Sheet *sheet, const uint32_t page, const u
     if (res == ekSDKRES_OK)
     {
         ::rtl::OUString fname = i_OUStringFromUTF8(font_family);
-        res = i_set_cell_property(xCell, "CharFontName", css::uno::makeAny(fname));
+        res = i_set_cell_text_property(xCell, "CharFontName", css::uno::makeAny(fname));
     }
 
     ptr_assign(err, res);
@@ -929,7 +954,7 @@ void officesdk_sheet_cell_font_size(Sheet *sheet, const uint32_t page, const uin
     res = i_doc_cell(sheet, page, col, row, xCell);
 
     if (res == ekSDKRES_OK)
-        res = i_set_cell_property(xCell, "CharHeight", css::uno::makeAny(font_size));
+        res = i_set_cell_text_property(xCell, "CharHeight", css::uno::makeAny(font_size));
 
     ptr_assign(err, res);
 }
@@ -946,7 +971,7 @@ void officesdk_sheet_cell_bold(Sheet *sheet, const uint32_t page, const uint32_t
     if (res == ekSDKRES_OK)
     {
         float weight = bold ? css::awt::FontWeight::BOLD : css::awt::FontWeight::LIGHT;
-        res = i_set_cell_property(xCell, "CharWeight", css::uno::makeAny(weight));
+        res = i_set_cell_text_property(xCell, "CharWeight", css::uno::makeAny(weight));
     }
 
     ptr_assign(err, res);
@@ -964,7 +989,37 @@ void officesdk_sheet_cell_italic(Sheet *sheet, const uint32_t page, const uint32
     if (res == ekSDKRES_OK)
     {
         css::awt::FontSlant slant = italic ? css::awt::FontSlant::FontSlant_ITALIC : css::awt::FontSlant::FontSlant_NONE;
-        res = i_set_cell_property(xCell, "CharPosture", css::uno::makeAny(slant));
+        res = i_set_cell_text_property(xCell, "CharPosture", css::uno::makeAny(slant));
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::table::CellHoriJustify just = css::table::CellHoriJustify::CellHoriJustify_LEFT;
+        switch (align) {
+        case 0:
+            just = css::table::CellHoriJustify::CellHoriJustify_LEFT;
+            break;
+        case 1:
+            just = css::table::CellHoriJustify::CellHoriJustify_CENTER;
+            break;
+        case 2:
+            just = css::table::CellHoriJustify::CellHoriJustify_RIGHT;
+            break;
+        }
+
+        res = i_set_cell_property(xCell, "HoriJustify", css::uno::makeAny(just));
     }
 
     ptr_assign(err, res);
@@ -986,7 +1041,7 @@ void officesdk_sheet_cell_merge(Sheet *sheet, const uint32_t page, const uint32_
             css::uno::Reference<css::util::XMergeable> xMergeCellRange = css::uno::Reference<css::util::XMergeable>(xCellRange, css::uno::UNO_QUERY_THROW);
             xMergeCellRange->merge(sal_True);
         }
-        catch (css::uno::Exception &e)
+        catch (css::uno::Exception&)
         {
             res = ekSDKRES_EDIT_CELL_ERROR;
         }
