@@ -186,6 +186,26 @@ NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
 NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
 NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
 
+N_Col := 0
+N_Row := 8
+NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 1, 8)
+NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_CENTER)
+NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "R E C E I T A")
+NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
+NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
+NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
+NAP_XLS_CELL_BACKCOLOR(O_XLS, N_Page, N_Col, N_Row, NAP_OFFICE_RGB(205, 205, 205))
+
+N_Col := 2
+N_Row := 8
+NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 3, 8)
+NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_CENTER)
+NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "D E S P E S A")
+NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
+NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
+NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
+NAP_XLS_CELL_BACKCOLOR(O_XLS, N_Page, N_Col, N_Row, NAP_OFFICE_RGB(205, 205, 205))
+
 // Save the spreadsheet
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_01.ods" })
 OFFICE_ERROR("Salvando a planilha")

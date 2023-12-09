@@ -4567,6 +4567,13 @@ void hb_gtnap_office_browse_doc(HB_ITEM *pathname_block)
 
 /*---------------------------------------------------------------------------*/
 
+uint32_t hb_gtnap_office_rgb(const uint8_t red, const uint8_t green, const uint8_t blue)
+{
+    return officesdk_rgb(red, green, blue);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Sheet *hb_gtnap_office_sheet_open(HB_ITEM *pathname_block)
 {
     String *pathname = hb_block_to_utf8(pathname_block);
@@ -4649,6 +4656,13 @@ void hb_gtnap_office_sheet_cell_halign(Sheet *sheet, const uint32_t page, const 
 void hb_gtnap_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align)
 {
     officesdk_sheet_cell_valign(sheet, page, col, row, align, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb)
+{
+    officesdk_sheet_cell_backcolor(sheet, page, col, row, rgb, &GTNAP_GLOBAL->last_office_error);
 }
 
 /*---------------------------------------------------------------------------*/

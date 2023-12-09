@@ -554,6 +554,13 @@ void officesdk_browse_doc(const char_t *pathname, sdkres_t *err)
 
 /*---------------------------------------------------------------------------*/
 
+uint32_t officesdk_rgb(const uint8_t red, const uint8_t green, const uint8_t blue)
+{
+    return (uint32_t)((0 << 24) | (red << 16) | (green << 8) | (blue));
+}
+
+/*---------------------------------------------------------------------------*/
+
 Sheet *officesdk_sheet_open(const char_t *pathname, sdkres_t *err)
 {
     sdkres_t res = i_OFFICE_SDK.Init();
@@ -1052,6 +1059,21 @@ void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32
 
         res = i_set_cell_property(xCell, "VertJustify", css::uno::makeAny(just));
     }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_property(xCell, "CellBackColor", css::uno::makeAny((sal_uInt32)rgb));
 
     ptr_assign(err, res);
 }

@@ -41,6 +41,17 @@ HB_FUNC( NAP_OFFICE_BROWSE_DOC )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_OFFICE_RGB )
+{
+    uint8_t red = (uint8_t)hb_parni(1);
+    uint8_t green = (uint8_t)hb_parni(2);
+    uint8_t blue = (uint8_t)hb_parni(3);
+    uint32_t rgb = hb_gtnap_office_rgb(red, green, blue);
+    hb_retni(rgb);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_OPEN )
 {
     HB_ITEM *pathname_block = hb_param(1, HB_IT_STRING | HB_IT_BLOCK);
@@ -155,6 +166,18 @@ HB_FUNC( NAP_XLS_CELL_VALIGN )
     uint32_t row = hb_parni(4);
     uint32_t align = hb_parni(5);
     hb_gtnap_office_sheet_cell_valign(sheet, page, col, row, align);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_CELL_BACKCOLOR )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    uint32_t rgb = hb_parni(5);
+    hb_gtnap_office_sheet_cell_backcolor(sheet, page, col, row, rgb);
 }
 
 /*---------------------------------------------------------------------------*/

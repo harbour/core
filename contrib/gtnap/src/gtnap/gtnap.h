@@ -149,6 +149,8 @@ extern const char_t *hb_gtnap_office_error(const uint32_t errcode);
 
 extern void hb_gtnap_office_browse_doc(HB_ITEM *pathname_block);
 
+extern uint32_t hb_gtnap_office_rgb(const uint8_t red, const uint8_t green, const uint8_t blue);
+
 extern Sheet *hb_gtnap_office_sheet_open(HB_ITEM *pathname_block);
 
 extern Sheet *hb_gtnap_office_sheet_create(void);
@@ -170,6 +172,8 @@ extern void hb_gtnap_office_sheet_cell_italic(Sheet *sheet, const uint32_t page,
 extern void hb_gtnap_office_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align);
 
 extern void hb_gtnap_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align);
+
+extern void hb_gtnap_office_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb);
 
 extern void hb_gtnap_office_sheet_cell_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row);
 
