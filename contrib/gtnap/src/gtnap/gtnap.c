@@ -4639,6 +4639,13 @@ void hb_gtnap_office_sheet_cell_italic(Sheet *sheet, const uint32_t page, const 
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_cell_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row)
+{
+    officesdk_sheet_cell_merge(sheet, page, st_col, st_row, ed_col, ed_row, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_column_visible(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t visible)
 {
     officesdk_sheet_column_visible(sheet, page, col, visible, &GTNAP_GLOBAL->last_office_error);

@@ -23,6 +23,7 @@
 #include <table/XCell.hpp>
 #include <table/XTable.hpp>
 #include <table/XTableColumns.hpp>
+#include <util/XMergeable.hpp>
 #include <awt/FontSlant.hpp>
 #include <awt/FontWeight.hpp>
 #include <iostream>
@@ -275,7 +276,7 @@ sdkres_t OfficeSdk::ConnectServer()
     this->xMultiComponentFactoryClient = multiComponentFactoryClient;
     try
     {
-        css::uno::Reference<css::bridge::XUnoUrlResolver> xResolver = css::uno::Reference<css::bridge::XUnoUrlResolver>(xInterface, css::uno::UNO_QUERY);
+        css::uno::Reference<css::bridge::XUnoUrlResolver> xResolver = css::uno::Reference<css::bridge::XUnoUrlResolver>(xInterface, css::uno::UNO_QUERY_THROW);
         xInterface = css::uno::Reference<css::uno::XInterface>(xResolver->resolve(sConnectionString), css::uno::UNO_QUERY_THROW);
     }
     catch (css::uno::Exception&)
@@ -698,6 +699,30 @@ static sdkres_t i_get_cell(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_get_range(
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
+                    uint32_t st_col,
+                    uint32_t st_row,
+                    uint32_t ed_col,
+                    uint32_t ed_row,
+                    css::uno::Reference<css::table::XCellRange> &xCellRange) 
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        xCellRange = xSheet->getCellRangeByPosition((sal_Int32)st_col, (sal_Int32)st_row, (sal_Int32)ed_col, (sal_Int32)ed_row);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_get_column(
                     css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
                     uint32_t col,
@@ -817,6 +842,29 @@ static sdkres_t i_doc_cell(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_doc_range(
+                        Sheet *sheet, 
+                        const uint32_t page, 
+                        const uint32_t st_col, 
+                        const uint32_t st_row, 
+                        const uint32_t ed_col, 
+                        const uint32_t ed_row, 
+                        css::uno::Reference<css::table::XCellRange> &xCellRange) 
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(sheet, page, xSheet);
+
+    if (res == ekSDKRES_OK)
+        res = i_get_range(xSheet, st_col, st_row, ed_col, ed_row, xCellRange);
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_doc_column(
                         Sheet *sheet, 
                         const uint32_t page, 
@@ -917,6 +965,31 @@ void officesdk_sheet_cell_italic(Sheet *sheet, const uint32_t page, const uint32
     {
         css::awt::FontSlant slant = italic ? css::awt::FontSlant::FontSlant_ITALIC : css::awt::FontSlant::FontSlant_NONE;
         res = i_set_cell_property(xCell, "CharPosture", css::uno::makeAny(slant));
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCellRange> xCellRange;
+
+    res = i_doc_range(sheet, page, st_col, st_row, ed_col, ed_row, xCellRange);
+
+    if (res == ekSDKRES_OK)
+    {
+        try 
+        {
+            css::uno::Reference<css::util::XMergeable> xMergeCellRange = css::uno::Reference<css::util::XMergeable>(xCellRange, css::uno::UNO_QUERY_THROW);
+            xMergeCellRange->merge(sal_True);
+        }
+        catch (css::uno::Exception &e)
+        {
+            res = ekSDKRES_EDIT_CELL_ERROR;
+        }
     }
 
     ptr_assign(err, res);

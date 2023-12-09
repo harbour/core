@@ -102,10 +102,18 @@ IF OFFICE_ERROR("Creando a planilha")
 ENDIF
 
 // Generate the spreadsheet data
-NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, "Hello World! (0,0)")
-NAP_XLS_CELL_FONT_FAMILY(O_XLS, 0, 0, 0, "Arial")
-NAP_XLS_CELL_FONT_SIZE(O_XLS, 0, 0, 0, 16.0)
+NAP_XLS_COLUMN_WIDTH(O_XLS, 0, 0, 8000)    // A Width
+NAP_XLS_COLUMN_WIDTH(O_XLS, 0, 1, 2200)    // B Width
+NAP_XLS_COLUMN_WIDTH(O_XLS, 0, 2, 8000)    // C Width
+NAP_XLS_COLUMN_WIDTH(O_XLS, 0, 3, 2200)    // D Width
 
+NAP_XLS_CELL_MERGE(O_XLS, 0, 0, 0, 3)
+NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, "BALANÇO GERAL")
+NAP_XLS_CELL_FONT_FAMILY(O_XLS, 0, 0, 0, "Arial")
+NAP_XLS_CELL_FONT_SIZE(O_XLS, 0, 0, 0, 10.0)
+NAP_XLS_CELL_BOLD(O_XLS, 0, 0, 0, .T.)
+
+// Save the spreadsheet
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_01.ods" })
 OFFICE_ERROR("Salvando a planilha")
 
