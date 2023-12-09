@@ -4577,6 +4577,13 @@ Sheet *hb_gtnap_office_sheet_open(HB_ITEM *pathname_block)
 
 /*---------------------------------------------------------------------------*/
 
+Sheet *hb_gtnap_office_sheet_create(void)
+{
+    return officesdk_sheet_create(&GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block)
 {
     String *pathname = hb_block_to_utf8(pathname_block);

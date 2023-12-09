@@ -50,6 +50,14 @@ HB_FUNC( NAP_XLS_OPEN )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CREATE )
+{
+    Sheet *sheet = hb_gtnap_office_sheet_create();
+    hb_retptr(sheet);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_SAVE )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

@@ -1,4 +1,5 @@
 #include "officesdk.h"
+#include <osapp/osapp.h>
 #include <core/strings.h>
 #include <osbs/bproc.h>
 #include <osbs/bthread.h>
@@ -24,8 +25,6 @@
 #include <table/XTableColumns.hpp>
 #include <awt/FontSlant.hpp>
 #include <awt/FontWeight.hpp>
-
-//#include <io/XCloseable.hpp>
 #include <iostream>
 #include <sewer/warn.hxx>
 
@@ -352,29 +351,24 @@ sdkres_t OfficeSdk::OpenSheetDocument(const char_t *url, css::uno::Reference<css
 
 sdkres_t OfficeSdk::CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument)
 {
-    unref(xDocument);
-    return ekSDKRES_NO_ENVAR;
-    // try
-    // {
-    //     css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
-    //     loadProperties[0].Name = "Hidden";
-    //     loadProperties[0].Value <<= true;
-    //     css::uno::Reference<css::lang::XComponent> xComponent = this->xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
-    //     xDocument = css::uno::Reference<css::sheet::XSpreadsheetDocument>(xComponent, css::uno::UNO_QUERY_THROW);
-    // }
-    // catch(css::uno::Exception &e)
-    // {
-    //     std::cout << "Error loading " << url << " file: " << e.Message;
-    //     res = ekSDKRES_OPEN_FILE_ERROR;
-    // }
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        // https://wiki.openoffice.org/wiki/ES/Manuales/GuiaAOO/TemasAvanzados/Macros/StarBasic/TrabajandoConOOo/TrabajandoConDocumentos
+        css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
+        loadProperties[0].Name = "Hidden";
+        loadProperties[0].Value <<= true;
+        css::uno::Reference<css::lang::XComponent> xComponent = this->xComponentLoader->loadComponentFromURL("private:factory/scalc", "_blank", 0, loadProperties);
+        xDocument = css::uno::Reference<css::sheet::XSpreadsheetDocument>(xComponent, css::uno::UNO_QUERY_THROW);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error creating new spreadsheet: " << e.Message;
+        res = ekSDKRES_CREATE_FILE_ERROR;
+    }
 
+    return res;
 }
-// Reference<XComponentLoader> xComponentLoader(xServiceManager, UNO_QUERY);
-// OUString docServiceName = OUString::createFromAscii("com.sun.star.sheet.SpreadsheetDocument");
-// Reference<XInterface> xComponent = xComponentLoader->createInstanceWithArgumentsAndContext(docServiceName, Sequence<Any>(), xContext);
-// Reference<XSpreadsheetDocument> xCalcDocument(xComponent, UNO_QUERY)
-
-
 
 /*---------------------------------------------------------------------------*/
 
@@ -521,6 +515,8 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed to connect LibreOffice server";
     case ekSDKRES_COMPONENT_LOADER:
         return "Failed to create a component loader";
+    case ekSDKRES_CREATE_FILE_ERROR:
+        return "Failed to create a new file";
     case ekSDKRES_OPEN_FILE_ERROR:
         return "Failed to open file";
     case ekSDKRES_SAVE_FILE_ERROR:
@@ -543,6 +539,14 @@ const char_t* officesdk_error(const sdkres_t code)
     default:
         return "Unknown error";
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_browse_doc(const char_t *pathname, sdkres_t *err)
+{
+    osapp_browse_file(pathname);
+    ptr_assign(err, ekSDKRES_OK);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -578,10 +582,32 @@ Sheet *officesdk_sheet_open(const char_t *pathname, sdkres_t *err)
 
 /*---------------------------------------------------------------------------*/
 
-Sheet *officesdk_sheet_new(sdkres_t *err)
+Sheet *officesdk_sheet_create(sdkres_t *err)
 {
-    unref(err);
-    return NULL;
+    sdkres_t res = i_OFFICE_SDK.Init();
+    Sheet *sheet = NULL;
+    css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = nullptr;
+    if (res == ekSDKRES_OK)
+    {
+        xDocument = new css::uno::Reference<css::sheet::XSpreadsheetDocument>();
+        res = i_OFFICE_SDK.CreateSheetDocument(*xDocument);
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        sheet = reinterpret_cast<Sheet*>(xDocument);
+    }
+    else
+    {
+        if (xDocument != nullptr)
+        {
+            delete xDocument;
+            xDocument = nullptr;
+        }
+    }
+
+    ptr_assign(err, res);
+    return sheet;
 }
 
 /*---------------------------------------------------------------------------*/

@@ -14,7 +14,7 @@ void officesdk_browse_doc(const char_t *pathname, sdkres_t *err);
 
 Sheet *officesdk_sheet_open(const char_t *pathname, sdkres_t *err);
 
-Sheet *officesdk_sheet_new(sdkres_t *err);
+Sheet *officesdk_sheet_create(sdkres_t *err);
 
 void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err);
 

@@ -16,6 +16,8 @@ ADDOPCAO V_Janela TEXTO "Exportar .odt para .pdf" ;
    ACAO TST_ODT_PARA_PDF() AJUDA "P06685"
 ADDOPCAO V_Janela TEXTO "Adicione células à planilha" ;
    ACAO TST_EDITAR_PLANILHA() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Planilha exemplo 1" ;
+   ACAO TST_PLANILHA_EXEMPLO_1() AJUDA "P06685"
 
 ATIVE(V_Janela)
 
@@ -87,3 +89,31 @@ MOSTRAR("M15566", "A planilha foi editada com sucesso.")
 // Open the result into a LibreOffice window
 NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/edited.ods")
 
+***********************************
+STAT PROC TST_PLANILHA_EXEMPLO_1
+***********************************
+// Replicate this example
+// Anexo_01_Dem_da_receita_e_despesa_segundo_as_cat_economicasMA854_u.g._Consolidado__Exercicio_2023.ods
+
+LOCAL O_XLS := NAP_XLS_CREATE()
+
+IF OFFICE_ERROR("Creando a planilha")
+    RETURN
+ENDIF
+
+// Generate the spreadsheet data
+NAP_XLS_CELL_TEXT(O_XLS, 0, 0, 0, "Hello World! (0,0)")
+NAP_XLS_CELL_FONT_FAMILY(O_XLS, 0, 0, 0, "Arial")
+NAP_XLS_CELL_FONT_SIZE(O_XLS, 0, 0, 0, 16.0)
+
+NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_01.ods" })
+OFFICE_ERROR("Salvando a planilha")
+
+// Close the spreadsheet (mandatory)
+NAP_XLS_CLOSE(O_XLS)
+OFFICE_ERROR("Fechando planilha")
+
+MOSTRAR("M15566", "A planilha foi criada com sucesso.")
+
+// Open the result into a LibreOffice window
+NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_01.ods")
