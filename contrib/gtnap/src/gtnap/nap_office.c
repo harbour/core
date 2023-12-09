@@ -147,6 +147,18 @@ HB_FUNC( NAP_XLS_CELL_HALIGN )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CELL_VALIGN )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    uint32_t align = hb_parni(5);
+    hb_gtnap_office_sheet_cell_valign(sheet, page, col, row, align);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_MERGE )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

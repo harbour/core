@@ -24,7 +24,7 @@
 #include <table/XTable.hpp>
 #include <table/XTableColumns.hpp>
 #include <table/CellHoriJustify.hpp>
-#include <table/CellVertJustify.hpp>
+#include <table/CellVertJustify2.hpp>
 #include <util/XMergeable.hpp>
 #include <awt/FontSlant.hpp>
 #include <awt/FontWeight.hpp>
@@ -1020,6 +1020,37 @@ void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32
         }
 
         res = i_set_cell_property(xCell, "HoriJustify", css::uno::makeAny(just));
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+    {
+        ::sal_Int32 just = css::table::CellVertJustify2::CENTER;
+
+        switch (align) {
+        case 0:
+            just = css::table::CellVertJustify2::TOP;
+            break;
+        case 1:
+            just = css::table::CellVertJustify2::CENTER;
+            break;
+        case 2:
+            just = css::table::CellVertJustify2::BOTTOM;
+            break;
+        }
+
+        res = i_set_cell_property(xCell, "VertJustify", css::uno::makeAny(just));
     }
 
     ptr_assign(err, res);

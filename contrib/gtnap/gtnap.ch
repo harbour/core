@@ -60,3 +60,6 @@
 #define SDK_HALIGN_CENTER           1
 #define SDK_HALIGN_RIGHT            2
 
+#define SDK_VALIGN_TOP              0
+#define SDK_VALIGN_CENTER           1
+#define SDK_VALIGN_BOTTOM           2
