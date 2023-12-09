@@ -27,6 +27,7 @@
 #include <table/CellHoriJustify.hpp>
 #include <table/CellVertJustify2.hpp>
 #include <util/XMergeable.hpp>
+#include <util/XProtectable.hpp>
 #include <awt/FontSlant.hpp>
 #include <awt/FontWeight.hpp>
 #include <iostream>
@@ -933,6 +934,36 @@ void officesdk_sheet_name(Sheet *sheet, const uint32_t page, const char_t *name,
             css::uno::Reference<css::container::XNamed> xNamed = css::uno::Reference<css::container::XNamed>(xSheet, css::uno::UNO_QUERY_THROW);
             ::rtl::OUString str = i_OUStringFromUTF8(name);
             xNamed->setName(str);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t protect, const char_t *pass, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(sheet, page, xSheet);
+    
+    if (res == ekSDKRES_OK)
+    {
+        try 
+        {
+            css::uno::Reference<css::util::XProtectable> xProtect = css::uno::Reference<css::util::XProtectable>(xSheet, css::uno::UNO_QUERY_THROW);
+            ::rtl::OUString spass = i_OUStringFromUTF8(pass);
+            if (protect == TRUE)
+                xProtect->protect(spass);
+            else
+                xProtect->unprotect(spass);
         }
         catch (css::uno::Exception&)
         {

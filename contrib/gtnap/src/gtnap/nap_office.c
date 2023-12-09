@@ -96,6 +96,17 @@ HB_FUNC( NAP_XLS_NAME )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_PROTECT )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    bool_t protect = (bool_t)hb_parl(3);
+    HB_ITEM *pass_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_sheet_protect(sheet, page, protect, pass_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_TEXT )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

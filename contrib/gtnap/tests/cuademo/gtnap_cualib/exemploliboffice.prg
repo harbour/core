@@ -207,6 +207,9 @@ NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
 NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
 NAP_XLS_CELL_BACKCOLOR(O_XLS, N_Page, N_Col, N_Row, NAP_OFFICE_RGB(205, 205, 205))
 
+// Protect the sheet
+NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
+
 // Save the spreadsheet
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_01.ods" })
 OFFICE_ERROR("Salvando a planilha")

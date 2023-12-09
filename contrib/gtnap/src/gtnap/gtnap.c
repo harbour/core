@@ -4616,6 +4616,15 @@ void hb_gtnap_office_sheet_name(Sheet *sheet, const uint32_t page, HB_ITEM *name
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t protect, HB_ITEM *pass_block)
+{
+    String *pass = hb_block_to_utf8(pass_block);
+    officesdk_sheet_protect(sheet, page, protect, tc(pass), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&pass);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *text_block)
 {
     String *text = hb_block_to_utf8(text_block);
