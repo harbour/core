@@ -33,6 +33,14 @@ HB_FUNC( NAP_OFFICE_LAST_ERROR )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_OFFICE_BROWSE_DOC )
+{
+    HB_ITEM *pathname_block = hb_param(1, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_browse_doc(pathname_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_OPEN )
 {
     HB_ITEM *pathname_block = hb_param(1, HB_IT_STRING | HB_IT_BLOCK);

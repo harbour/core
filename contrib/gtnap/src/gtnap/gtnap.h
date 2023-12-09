@@ -147,6 +147,8 @@ extern uint32_t hb_gtnap_office_last_error(void);
 
 extern const char_t *hb_gtnap_office_error(const uint32_t errcode);
 
+extern void hb_gtnap_office_browse_doc(HB_ITEM *pathname_block);
+
 extern Sheet *hb_gtnap_office_sheet_open(HB_ITEM *pathname_block);
 
 extern void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block);

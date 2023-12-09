@@ -84,3 +84,6 @@ OFFICE_ERROR("Fechando planilha")
 
 MOSTRAR("M15566", "A planilha foi editada com sucesso.")
 
+// Open the result into a LibreOffice window
+NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/edited.ods")
+

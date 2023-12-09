@@ -4558,6 +4558,15 @@ const char_t *hb_gtnap_office_error(const uint32_t errcode)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_browse_doc(HB_ITEM *pathname_block)
+{
+    String *pathname = hb_block_to_utf8(pathname_block);
+    officesdk_browse_doc(tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&pathname);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Sheet *hb_gtnap_office_sheet_open(HB_ITEM *pathname_block)
 {
     String *pathname = hb_block_to_utf8(pathname_block);
