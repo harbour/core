@@ -104,6 +104,7 @@ IF OFFICE_ERROR("Creando a planilha")
 ENDIF
 
 // Generate the spreadsheet data
+NAP_XLS_NAME(O_XLS, N_Page, "DEMOSTRAÇAO RECEITA E DESPESA")
 NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 0, 8000)    // A Width
 NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 1, 2200)    // B Width
 NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 2, 8000)    // C Width

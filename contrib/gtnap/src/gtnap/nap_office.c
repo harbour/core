@@ -86,6 +86,16 @@ HB_FUNC( NAP_XLS_CLOSE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_NAME )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    HB_ITEM *name_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_sheet_name(sheet, page, name_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_TEXT )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

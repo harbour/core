@@ -4607,6 +4607,15 @@ void hb_gtnap_office_sheet_close(Sheet *sheet)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_name(Sheet *sheet, const uint32_t page, HB_ITEM *name_block)
+{
+    String *name = hb_block_to_utf8(name_block);
+    officesdk_sheet_name(sheet, page, tc(name), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&name);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *text_block)
 {
     String *text = hb_block_to_utf8(text_block);
