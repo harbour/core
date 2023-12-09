@@ -8,8 +8,8 @@
 
 HB_FUNC( NAP_OFFICE_TEXT_TO_PDF )
 {
-    HB_ITEM *src_block = hb_param(1, HB_IT_BLOCK);
-    HB_ITEM *dest_block = hb_param(2, HB_IT_BLOCK);
+    HB_ITEM *src_block = hb_param(1, HB_IT_STRING | HB_IT_BLOCK);
+    HB_ITEM *dest_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
     uint32_t id = hb_gtnap_office_text_to_pdf(src_block, dest_block);
     hb_retni(id);
 }
@@ -35,7 +35,7 @@ HB_FUNC( NAP_OFFICE_LAST_ERROR )
 
 HB_FUNC( NAP_XLS_OPEN )
 {
-    HB_ITEM *pathname_block = hb_param(1, HB_IT_BLOCK);
+    HB_ITEM *pathname_block = hb_param(1, HB_IT_STRING | HB_IT_BLOCK);
     SheetDoc *doc = hb_gtnap_office_sheetdoc_open(pathname_block);
     hb_retptr(doc);
 }
@@ -45,7 +45,7 @@ HB_FUNC( NAP_XLS_OPEN )
 HB_FUNC( NAP_XLS_SAVE )
 {
     SheetDoc *doc = (SheetDoc*)hb_parptr(1);
-    HB_ITEM *pathname_block = hb_param(2, HB_IT_BLOCK);
+    HB_ITEM *pathname_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
     hb_gtnap_office_sheetdoc_save(doc, pathname_block);
 }
 
@@ -65,7 +65,7 @@ HB_FUNC( NAP_XLS_CELL_TEXT )
     uint32_t sheet_id = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
-    HB_ITEM *text_block = hb_param(5, HB_IT_BLOCK);
+    HB_ITEM *text_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK);
     hb_gtnap_office_sheetdoc_cell_text(doc, sheet_id, col, row, text_block);
 }
 
@@ -77,7 +77,7 @@ HB_FUNC( NAP_XLS_CELL_FORMAT )
     uint32_t sheet_id = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
-    HB_ITEM *ffamily_block = hb_param(5, HB_IT_BLOCK);
+    HB_ITEM *ffamily_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK);
     real32_t fsize = (real32_t)hb_parnd(6);
     bool_t bold = (bool_t)hb_parl(7);
     bool_t italic = (bool_t)hb_parl(8);

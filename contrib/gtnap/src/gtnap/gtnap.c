@@ -4671,9 +4671,25 @@ uint32_t hb_gtnap_cell_height(void)
 
 extern String *hb_block_to_utf8(HB_ITEM *item)
 {
-    PHB_ITEM ritem = hb_itemDo(item, 0);
-    String *str = i_item_to_utf8_string(ritem);
-    hb_itemRelease(ritem);
+    String *str = NULL;
+
+    if (HB_ITEM_TYPE(item) == HB_IT_STRING)
+    {
+        str = i_item_to_utf8_string(item);
+    }
+    else if (HB_ITEM_TYPE(item) == HB_IT_BLOCK)
+    {
+        PHB_ITEM ritem = hb_itemDo(item, 0);
+        cassert(HB_ITEM_TYPE(item) == HB_IT_BLOCK);
+        str = i_item_to_utf8_string(ritem);
+        hb_itemRelease(ritem);
+    }
+    else
+    {
+        cassert_msg(FALSE, "Unknown block type");
+        str = str_c("");
+    }
+
     return str;
 }
 
