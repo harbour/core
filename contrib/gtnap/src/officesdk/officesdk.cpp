@@ -244,10 +244,10 @@ sdkres_t OfficeSdk::WakeUpServer()
 
     switch(pt) {
     case ekWINDOWS:
-        connect = "soffice \"--accept=socket,host=localhost,port=2083;urp;StarOffice.ServiceManager\" --invisible";
+        connect = "soffice \"--accept=socket,host=localhost,port=2083;urp;StarOffice.ServiceManager\" --nodefault --nologo";
         break;
     case ekLINUX:
-        connect = "libreoffice \"--accept=socket,host=0,port=2083;urp;\" --invisible";
+        connect = "libreoffice \"--accept=socket,host=0,port=2083;urp;\" --nodefault --nologo";
         break;
     case ekIOS:
     case ekMACOS:
