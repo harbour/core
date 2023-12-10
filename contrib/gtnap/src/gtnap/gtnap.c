@@ -4634,6 +4634,13 @@ void hb_gtnap_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const ui
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value)
+{
+    officesdk_sheet_cell_value(sheet, page, col, row, value, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_cell_font_family(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *ffamily_block)
 {
     String *ffamily = hb_block_to_utf8(ffamily_block);

@@ -780,6 +780,26 @@ static sdkres_t i_set_cell_text(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_set_cell_value(
+                    css::uno::Reference<css::table::XCell> &xCell,
+                    const real64_t value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        xCell->setValue((double)value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_set_cell_text_property(
                     css::uno::Reference<css::table::XCell> &xCell,
                     const char_t *prop_name,
@@ -988,6 +1008,21 @@ void officesdk_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t
 
     // More over text handing...
     // https://wiki.openoffice.org/wiki/Documentation/DevGuide/FirstSteps/Common_Mechanisms_for_Text,_Tables_and_Drawings
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_value(xCell, value);
 
     ptr_assign(err, res);
 }

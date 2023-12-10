@@ -119,6 +119,18 @@ HB_FUNC( NAP_XLS_CELL_TEXT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CELL_VALUE )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    real64_t value = hb_parnd(5);
+    hb_gtnap_office_sheet_cell_value(sheet, page, col, row, value);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_FONT_FAMILY )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
