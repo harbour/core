@@ -17,6 +17,8 @@
 #include <frame/Desktop.hpp>
 #include <frame/XComponentLoader.hpp>
 #include <frame/XStorable.hpp>
+#include <i18n/NumberFormatIndex.hpp>
+#include <lang/Locale.hpp>
 #include <lang/XMultiComponentFactory.hpp>
 #include <text/XTextDocument.hpp>
 #include <sheet/XSpreadsheetDocument.hpp>
@@ -28,6 +30,8 @@
 #include <table/CellVertJustify2.hpp>
 #include <util/XMergeable.hpp>
 #include <util/XProtectable.hpp>
+#include <util/XNumberFormatsSupplier.hpp>
+#include <util/XNumberFormatTypes.hpp>
 #include <awt/FontSlant.hpp>
 #include <awt/FontWeight.hpp>
 #include <iostream>
@@ -64,7 +68,6 @@ public:
     css::uno::Reference<css::lang::XMultiComponentFactory> xMultiComponentFactoryClient;
 
     css::uno::Reference<css::frame::XDesktop2> xComponentLoader;
-
 };
 
 /*---------------------------------------------------------------------------*/
@@ -629,7 +632,7 @@ void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err)
     sdkres_t res = i_OFFICE_SDK.Init();
     cassert_no_null(sheet);
     cassert_no_null(pathname);
-    
+
     if (res == ekSDKRES_OK)
     {
         css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
@@ -664,8 +667,8 @@ void officesdk_sheet_close(Sheet *sheet, sdkres_t *err)
 /*---------------------------------------------------------------------------*/
 
 static sdkres_t i_get_sheet(
-                    Sheet *sheet, 
-                    uint32_t page, 
+                    Sheet *sheet,
+                    uint32_t page,
                     css::uno::Reference<css::sheet::XSpreadsheet> &xSheet)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -676,7 +679,7 @@ static sdkres_t i_get_sheet(
         css::uno::Reference<css::sheet::XSpreadsheets> xSheets = (*xDocument)->getSheets();
         css::uno::Reference<css::container::XIndexAccess> xIndexAccess(xSheets, css::uno::UNO_QUERY_THROW);
         css::uno::Any item = xIndexAccess->getByIndex((sal_Int32)page);
-        xSheet = css::uno::Reference<css::sheet::XSpreadsheet>(item, css::uno::UNO_QUERY_THROW); 
+        xSheet = css::uno::Reference<css::sheet::XSpreadsheet>(item, css::uno::UNO_QUERY_THROW);
     }
     catch (css::uno::Exception&)
     {
@@ -716,7 +719,7 @@ static sdkres_t i_get_range(
                     uint32_t st_row,
                     uint32_t ed_col,
                     uint32_t ed_row,
-                    css::uno::Reference<css::table::XCellRange> &xCellRange) 
+                    css::uno::Reference<css::table::XCellRange> &xCellRange)
 {
     sdkres_t res = ekSDKRES_OK;
 
@@ -816,7 +819,7 @@ static sdkres_t i_set_cell_text_property(
         // Select all content in cell
         xTextCursor->gotoStart(false);
         xTextCursor->gotoEnd(true);
-        
+
         ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
         xCursorProps->setPropertyValue(prop, value);
     }
@@ -839,7 +842,7 @@ static sdkres_t i_set_cell_property(
 
     try
     {
-        css::uno::Reference<css::beans::XPropertySet> xCellProps = css::uno::Reference<css::beans::XPropertySet>::query(xCell);        
+        css::uno::Reference<css::beans::XPropertySet> xCellProps = css::uno::Reference<css::beans::XPropertySet>::query(xCell);
         ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
         xCellProps->setPropertyValue(prop, value);
     }
@@ -876,10 +879,10 @@ static sdkres_t i_set_column_property(
 /*---------------------------------------------------------------------------*/
 
 static sdkres_t i_doc_cell(
-                        Sheet *sheet, 
-                        const uint32_t page, 
-                        const uint32_t col, 
-                        const uint32_t row, 
+                        Sheet *sheet,
+                        const uint32_t page,
+                        const uint32_t col,
+                        const uint32_t row,
                         css::uno::Reference<css::table::XCell> &xCell)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -897,13 +900,13 @@ static sdkres_t i_doc_cell(
 /*---------------------------------------------------------------------------*/
 
 static sdkres_t i_doc_range(
-                        Sheet *sheet, 
-                        const uint32_t page, 
-                        const uint32_t st_col, 
-                        const uint32_t st_row, 
-                        const uint32_t ed_col, 
-                        const uint32_t ed_row, 
-                        css::uno::Reference<css::table::XCellRange> &xCellRange) 
+                        Sheet *sheet,
+                        const uint32_t page,
+                        const uint32_t st_col,
+                        const uint32_t st_row,
+                        const uint32_t ed_col,
+                        const uint32_t ed_row,
+                        css::uno::Reference<css::table::XCellRange> &xCellRange)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
@@ -920,9 +923,9 @@ static sdkres_t i_doc_range(
 /*---------------------------------------------------------------------------*/
 
 static sdkres_t i_doc_column(
-                        Sheet *sheet, 
-                        const uint32_t page, 
-                        const uint32_t col, 
+                        Sheet *sheet,
+                        const uint32_t page,
+                        const uint32_t col,
                         css::uno::Reference<css::beans::XPropertySet> &xTableCol)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -939,6 +942,52 @@ static sdkres_t i_doc_column(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_doc_locale(
+                        Sheet *sheet,
+                        css::lang::Locale &xLocale)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
+        css::uno::Reference<css::beans::XPropertySet> xProp = css::uno::Reference<css::beans::XPropertySet>(*xDocument, css::uno::UNO_QUERY_THROW);
+        css::uno::Any item = xProp->getPropertyValue("CharLocale");
+        item >>= xLocale;
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_doc_number_formats(
+                        Sheet *sheet,
+                        css::uno::Reference<css::util::XNumberFormatTypes> &xFormats)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
+        css::uno::Reference<css::util::XNumberFormatsSupplier> xFormatsSupplier(*xDocument, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<com::sun::star::util::XNumberFormats> xNumberFormats = xFormatsSupplier->getNumberFormats();
+        xFormats = css::uno::Reference<css::util::XNumberFormatTypes>(xNumberFormats, css::uno::UNO_QUERY_THROW);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheet_name(Sheet *sheet, const uint32_t page, const char_t *name, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -946,10 +995,10 @@ void officesdk_sheet_name(Sheet *sheet, const uint32_t page, const char_t *name,
 
     if (res == ekSDKRES_OK)
         res = i_get_sheet(sheet, page, xSheet);
-    
+
     if (res == ekSDKRES_OK)
     {
-        try 
+        try
         {
             css::uno::Reference<css::container::XNamed> xNamed = css::uno::Reference<css::container::XNamed>(xSheet, css::uno::UNO_QUERY_THROW);
             ::rtl::OUString str = i_OUStringFromUTF8(name);
@@ -973,10 +1022,10 @@ void officesdk_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t pro
 
     if (res == ekSDKRES_OK)
         res = i_get_sheet(sheet, page, xSheet);
-    
+
     if (res == ekSDKRES_OK)
     {
-        try 
+        try
         {
             css::uno::Reference<css::util::XProtectable> xProtect = css::uno::Reference<css::util::XProtectable>(xSheet, css::uno::UNO_QUERY_THROW);
             ::rtl::OUString spass = i_OUStringFromUTF8(pass);
@@ -1023,6 +1072,56 @@ void officesdk_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_
 
     if (res == ekSDKRES_OK)
         res = i_set_cell_value(xCell, value);
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_numformat(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const numformat_t format, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+    css::lang::Locale xLocale;
+    css::uno::Reference<css::util::XNumberFormatTypes> xFormats;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_doc_locale(sheet, xLocale);
+
+    if (res == ekSDKRES_OK)
+        res = i_doc_number_formats(sheet, xFormats);
+
+    if (res == ekSDKRES_OK)
+    {
+        sal_Int16 nformat = css::i18n::NumberFormatIndex::NUMBER_STANDARD;
+        long formatIndex = 0;
+
+        switch (format) {
+        case ekNUMFORMAT_INT:
+            nformat = css::i18n::NumberFormatIndex::NUMBER_INT;
+            break;
+        case ekNUMFORMAT_INT_1000:
+            nformat = css::i18n::NumberFormatIndex::NUMBER_1000INT;
+            break;
+        case ekNUMFORMAT_DEC2:
+            nformat = css::i18n::NumberFormatIndex::NUMBER_DEC2;
+            break;
+        case ekNUMFORMAT_DEC2_1000:
+            nformat = css::i18n::NumberFormatIndex::NUMBER_1000DEC2;
+            break;
+        case ekNUMFORMAT_PERC_INT:
+            nformat = css::i18n::NumberFormatIndex::PERCENT_INT;
+            break;
+        case ekNUMFORMAT_PERC_DEC2:
+            nformat = css::i18n::NumberFormatIndex::PERCENT_DEC2;
+            break;
+        }
+
+        formatIndex = xFormats->getStandardFormat(nformat, xLocale);
+        res = i_set_cell_property(xCell, "NumberFormat", css::uno::makeAny(formatIndex));
+    }
 
     ptr_assign(err, res);
 }
@@ -1183,7 +1282,7 @@ void officesdk_sheet_cell_merge(Sheet *sheet, const uint32_t page, const uint32_
 
     if (res == ekSDKRES_OK)
     {
-        try 
+        try
         {
             css::uno::Reference<css::util::XMergeable> xMergeCellRange = css::uno::Reference<css::util::XMergeable>(xCellRange, css::uno::UNO_QUERY_THROW);
             xMergeCellRange->merge(sal_True);

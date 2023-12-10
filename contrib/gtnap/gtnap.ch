@@ -37,8 +37,12 @@
 
 #define NAP_WINDOW_FIST_ID          10000
 
-/* Return codes for LibreOffice SDK */
 
+/*
+ * LibreOffice SDK
+ */
+
+/* Error codes for LibreOffice SDK */
 #define SDKRES_OK                   1
 #define SDKRES_NO_ENVAR             2
 #define SDKRES_PROC_KILL_FAIL       3
@@ -56,10 +60,20 @@
 #define SDKRES_ACCESS_COLUMN_ERROR  15
 #define SDKRES_FORMAT_COLUMN_ERROR  16
 
+/* Horizontal alignment for LibreOffice SDK */
 #define SDK_HALIGN_LEFT             0
 #define SDK_HALIGN_CENTER           1
 #define SDK_HALIGN_RIGHT            2
 
+/* Vertical alignment for LibreOffice SDK */
 #define SDK_VALIGN_TOP              0
 #define SDK_VALIGN_CENTER           1
 #define SDK_VALIGN_BOTTOM           2
+
+/* Number format for LibreOffice SDK */
+#define SDK_NUMFORMAT_INT           1
+#define SDK_NUMFORMAT_INT_1000      2
+#define SDK_NUMFORMAT_DEC2          3
+#define SDK_NUMFORMAT_DEC2_1000     4
+#define SDK_NUMFORMAT_PERC_INT      5
+#define SDK_NUMFORMAT_PERC_DEC2     6

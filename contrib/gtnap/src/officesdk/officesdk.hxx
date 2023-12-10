@@ -27,6 +27,16 @@ typedef enum _sdkres_t
     ekSDKRES_FORMAT_COLUMN_ERROR
 } sdkres_t;
 
+typedef enum _numformat_t
+{
+    ekNUMFORMAT_INT         = 1,
+    ekNUMFORMAT_INT_1000,    
+    ekNUMFORMAT_DEC2,
+    ekNUMFORMAT_DEC2_1000,
+    ekNUMFORMAT_PERC_INT,
+    ekNUMFORMAT_PERC_DEC2
+} numformat_t;
+
 typedef enum _fileformat_t
 {
     ekFORMAT_OPEN_OFFICE,

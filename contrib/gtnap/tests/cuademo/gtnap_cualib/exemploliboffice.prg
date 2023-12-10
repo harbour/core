@@ -211,12 +211,13 @@ N_Col := 1
 N_Row := 11
 NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_RIGHT)
 NAP_XLS_CELL_VALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_VALIGN_CENTER)
+NAP_XLS_CELL_NUMFORMAT(O_XLS, N_Page, N_Col, N_Row, SDK_NUMFORMAT_INT)
 NAP_XLS_CELL_VALUE(O_XLS, N_Page, N_Col, N_Row, 917038.94)
 NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
 NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 7)
 
 // Protect the sheet
-NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
+//NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
 
 // Save the spreadsheet
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_01.ods" })
