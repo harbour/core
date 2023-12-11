@@ -31,7 +31,7 @@ LOCAL C_ERR
 IF N_Ret == SDKRES_OK
     MOSTRAR("M15566","Exportação test.odt para .pdf realizada com sucesso.")
 ELSE
-    C_ERR := NAP_OFFICE_ERROR(N_Ret)
+    C_ERR := NAP_OFFICE_ERROR_STR(N_Ret)
     MOSTRAR("M15566","Erro ao exportar para .pdf: " + C_ERR)
 ENDIF
 
@@ -39,7 +39,7 @@ ENDIF
 STAT FUNCTION OFFICE_ERROR( C_Text )
 ***********************************
 LOCAL N_Err := NAP_OFFICE_LAST_ERROR()
-LOCAL C_Err := NAP_OFFICE_ERROR(N_Err)
+LOCAL C_Err := NAP_OFFICE_ERROR_STR(N_Err)
 LOCAL L_Err := .F.
 
 IF N_Err != SDKRES_OK

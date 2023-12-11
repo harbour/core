@@ -16,7 +16,7 @@ HB_FUNC( NAP_OFFICE_TEXT_TO_PDF )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_OFFICE_ERROR )
+HB_FUNC( NAP_OFFICE_ERROR_STR )
 {
     uint32_t errcode = hb_parni(1);
     const char_t *err = hb_gtnap_office_error(errcode);
