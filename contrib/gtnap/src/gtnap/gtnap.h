@@ -147,17 +147,49 @@ extern uint32_t hb_gtnap_office_last_error(void);
 
 extern const char_t *hb_gtnap_office_error(const uint32_t errcode);
 
-extern SheetDoc *hb_gtnap_office_sheetdoc_open(HB_ITEM *pathname_block);
+extern void hb_gtnap_office_browse_doc(HB_ITEM *pathname_block);
 
-extern void hb_gtnap_office_sheetdoc_save(SheetDoc *doc, HB_ITEM *pathname_block);
+extern uint32_t hb_gtnap_office_rgb(const uint8_t red, const uint8_t green, const uint8_t blue);
 
-extern void hb_gtnap_office_sheetdoc_close(SheetDoc *doc);
+extern Sheet *hb_gtnap_office_sheet_open(HB_ITEM *pathname_block);
 
-extern void hb_gtnap_office_sheetdoc_cell_text(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, HB_ITEM *text_block);
+extern Sheet *hb_gtnap_office_sheet_create(void);
 
-extern void hb_gtnap_office_sheetdoc_cell_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const uint32_t row, HB_ITEM *ffamily_block, const real32_t fsize, const bool_t bold, const bool_t italic);
+extern void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block);
 
-extern void hb_gtnap_office_sheetdoc_column_format(SheetDoc *doc, const uint32_t sheet_id, const uint32_t col, const bool_t visible, const bool_t optimal_width, const uint32_t width);
+extern void hb_gtnap_office_sheet_close(Sheet *sheet);
+
+extern void hb_gtnap_office_sheet_name(Sheet *sheet, const uint32_t page, HB_ITEM *name_block);
+
+extern void hb_gtnap_office_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t protect, HB_ITEM *pass_block);
+
+extern void hb_gtnap_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *text_block);
+
+extern void hb_gtnap_office_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value);
+
+extern void hb_gtnap_office_sheet_cell_numformat(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const numformat_t format);
+
+extern void hb_gtnap_office_sheet_cell_font_family(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *ffamily_block);
+
+extern void hb_gtnap_office_sheet_cell_font_size(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real32_t fsize);
+
+extern void hb_gtnap_office_sheet_cell_bold(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t bold);
+
+extern void hb_gtnap_office_sheet_cell_italic(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t italic);
+
+extern void hb_gtnap_office_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align);
+
+extern void hb_gtnap_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align);
+
+extern void hb_gtnap_office_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb);
+
+extern void hb_gtnap_office_sheet_cell_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row);
+
+extern void hb_gtnap_office_sheet_column_visible(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t visible);
+
+extern void hb_gtnap_office_sheet_column_optimal_width(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t optimal_width);
+
+extern void hb_gtnap_office_sheet_column_width(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t width);
 
 /*
  * Fran TODO: Pending refactoring

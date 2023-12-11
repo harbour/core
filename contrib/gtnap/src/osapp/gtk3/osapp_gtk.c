@@ -308,6 +308,16 @@ void osapp_open_url(const char_t *url)
 
 /*---------------------------------------------------------------------------*/
 
+void osapp_browse_file(const char_t *pathname)
+{
+    String *cmd = str_printf("libreoffice %s", pathname);
+    int t = system(tc(cmd));
+    str_destroy(&cmd);
+    unref(t);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void osapp_set_lang(OSApp *app, const char_t *lang)
 {
     unref(app);

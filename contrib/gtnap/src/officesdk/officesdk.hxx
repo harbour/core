@@ -5,7 +5,7 @@
 
 #include <core/core.hxx>
 
-typedef struct _sheetdoc_t SheetDoc;
+typedef struct _sheet_t Sheet;
 
 typedef enum _sdkres_t
 {
@@ -15,6 +15,7 @@ typedef enum _sdkres_t
     ekSDKRES_PROC_INIT_FAIL,
     ekSDKRES_CONECT_FAIL,
     ekSDKRES_COMPONENT_LOADER,
+    ekSDKRES_CREATE_FILE_ERROR,
     ekSDKRES_OPEN_FILE_ERROR,
     ekSDKRES_SAVE_FILE_ERROR,
     ekSDKRES_CLOSE_DOC_ERROR,
@@ -25,6 +26,16 @@ typedef enum _sdkres_t
     ekSDKRES_ACCESS_COLUMN_ERROR,
     ekSDKRES_FORMAT_COLUMN_ERROR
 } sdkres_t;
+
+typedef enum _numformat_t
+{
+    ekNUMFORMAT_INT         = 1,
+    ekNUMFORMAT_INT_1000,    
+    ekNUMFORMAT_DEC2,
+    ekNUMFORMAT_DEC2_1000,
+    ekNUMFORMAT_PERC_INT,
+    ekNUMFORMAT_PERC_DEC2
+} numformat_t;
 
 typedef enum _fileformat_t
 {
