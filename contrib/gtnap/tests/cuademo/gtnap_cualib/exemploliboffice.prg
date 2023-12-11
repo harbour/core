@@ -217,7 +217,7 @@ NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
 NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 7)
 
 // Protect the sheet
-//NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
+NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
 
 // Save the spreadsheet
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_01.ods" })
