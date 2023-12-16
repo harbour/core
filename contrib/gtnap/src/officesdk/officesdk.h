@@ -22,6 +22,8 @@ void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err);
 
 void officesdk_sheet_close(Sheet *sheet, sdkres_t *err);
 
+void officesdk_sheet_add(Sheet *sheet, sdkres_t *err);
+
 void officesdk_sheet_name(Sheet *sheet, const uint32_t page, const char_t *name, sdkres_t *err);
 
 void officesdk_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t protect, const char_t *pass, sdkres_t *err);

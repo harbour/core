@@ -4607,6 +4607,13 @@ void hb_gtnap_office_sheet_close(Sheet *sheet)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_add(Sheet *sheet)
+{
+    officesdk_sheet_add(sheet, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_name(Sheet *sheet, const uint32_t page, HB_ITEM *name_block)
 {
     String *name = hb_block_to_utf8(name_block);

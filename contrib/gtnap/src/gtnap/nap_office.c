@@ -86,6 +86,14 @@ HB_FUNC( NAP_XLS_CLOSE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_ADD )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    hb_gtnap_office_sheet_add(sheet);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_NAME )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

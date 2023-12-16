@@ -250,6 +250,12 @@ STAT PROC CELL_TEXT( O_XLS, N_Page, N_Col, N_Row, C_Text, N_Size, L_Bold, N_RowH
 RETURN
 
 ***********************************
+STAT PROC ADD_PAGE( O_XLS, N_Id, C_Name )
+    NAP_XLS_ADD(O_XLS)
+    NAP_XLS_NAME(O_XLS, N_Id, C_Name)
+RETURN
+
+***********************************
 STAT PROC TST_PLANILHA_EXEMPLO_2
 ***********************************
 // Replicate this example
@@ -263,8 +269,16 @@ IF OFFICE_ERROR("Creando a planilha")
     RETURN
 ENDIF
 
-// Generate the spreadsheet data
-NAP_XLS_NAME(O_XLS, N_Page, "RREO-Anexo 01")
+// Generate the spreadsheet pages
+NAP_XLS_NAME(O_XLS, 0, "RREO-Anexo 01")     // The first is allways created by an empty document
+ADD_PAGE(O_XLS, 1, "RREO-Anexo 02")
+ADD_PAGE(O_XLS, 2, "RREO-Anexo 03")
+ADD_PAGE(O_XLS, 3, "RREO-Anexo 04")
+ADD_PAGE(O_XLS, 4, "RREO-Anexo 06")
+ADD_PAGE(O_XLS, 5, "RREO-Anexo 07")
+ADD_PAGE(O_XLS, 6, "RREO-Anexo 13")
+ADD_PAGE(O_XLS, 7, "RREO-Anexo 14")
+
 NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 0, 15250)
 NAP_XLS_ROW_HEIGHT(O_XLS, N_Page, 0, 2616)
 

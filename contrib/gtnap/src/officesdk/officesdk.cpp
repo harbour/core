@@ -1059,6 +1059,31 @@ static sdkres_t i_doc_number_formats(
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_sheet_add(Sheet *sheet, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    String *defname = NULL;
+
+    try
+    {
+        css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
+        css::uno::Reference<css::sheet::XSpreadsheets> xSheets = (*xDocument)->getSheets();
+        css::uno::Reference<css::container::XIndexAccess> xIndexAccess(xSheets, css::uno::UNO_QUERY_THROW);
+        sal_Int32 n = xIndexAccess->getCount();
+        String *defname = str_printf("Sheet%d", n);
+        xSheets->insertNewByName(i_OUStringFromString(defname), (sal_Int16)n);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    str_destopt(&defname);
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheet_name(Sheet *sheet, const uint32_t page, const char_t *name, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
