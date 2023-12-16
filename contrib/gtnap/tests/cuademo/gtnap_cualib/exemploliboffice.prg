@@ -279,6 +279,15 @@ CELL_TEXT(O_XLS, N_Page, 0, 9, "Exercício: 2023", 10, .T., 0)
 CELL_TEXT(O_XLS, N_Page, 0, 10, "Periodicidade: BIMESTRAL", 10, .T., 0)
 CELL_TEXT(O_XLS, N_Page, 0, 11, "Período: 5º bimestre", 10, .T., 0)
 
+CELL_TEXT(O_XLS, N_Page, 0, 13, "Grupo: Tabela 1.0 - Balanço Orçamentário", 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 14, "Quadro: Receitas Orçamentárias", 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 15, "Rótulo: Padrão", 10, .T., 0)
+NAP_XLS_CELL_COLOR(O_XLS, N_Page, 0, 13, NAP_OFFICE_RGB(255, 255, 255))
+NAP_XLS_CELL_COLOR(O_XLS, N_Page, 0, 14, NAP_OFFICE_RGB(255, 255, 255))
+NAP_XLS_CELL_COLOR(O_XLS, N_Page, 0, 15, NAP_OFFICE_RGB(255, 255, 255))
+NAP_XLS_CELL_BACKCOLOR(O_XLS, N_Page, 0, 13, NAP_OFFICE_RGB(63, 103, 151))
+NAP_XLS_CELL_BACKCOLOR(O_XLS, N_Page, 0, 14, NAP_OFFICE_RGB(63, 103, 151))
+NAP_XLS_CELL_BACKCOLOR(O_XLS, N_Page, 0, 15, NAP_OFFICE_RGB(63, 103, 151))
 
 // NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 1, 2200)    // B Width
 // NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 2, 8000)    // C Width

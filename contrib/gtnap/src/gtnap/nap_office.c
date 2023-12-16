@@ -238,6 +238,18 @@ HB_FUNC( NAP_XLS_CELL_WRAPPED )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CELL_COLOR )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    uint32_t rgb = hb_parni(5);
+    hb_gtnap_office_sheet_cell_color(sheet, page, col, row, rgb);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_BACKCOLOR )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

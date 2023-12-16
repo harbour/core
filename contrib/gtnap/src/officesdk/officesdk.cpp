@@ -1132,7 +1132,7 @@ void officesdk_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t nc
             css::uno::Reference<css::sheet::XViewFreezable> xFreezable(xView, css::uno::UNO_QUERY_THROW);
             xFreezable->freezeAtPosition((sal_Int32)ncols, (sal_Int32)nrows);
         }
-        catch (css::uno::Exception &e)
+        catch (css::uno::Exception&)
         {
             res = ekSDKRES_ACCESS_DOC_ERROR;
         }
@@ -1365,6 +1365,21 @@ void officesdk_sheet_cell_wrapped(Sheet *sheet, const uint32_t page, const uint3
 
     if (res == ekSDKRES_OK)
         res = i_set_cell_property(xCell, "IsTextWrapped", css::uno::makeAny((sal_Bool)wrapped));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_color(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_text_property(xCell, "CharColor", css::uno::makeAny((sal_uInt32)rgb));
 
     ptr_assign(err, res);
 }
