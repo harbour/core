@@ -107,6 +107,17 @@ HB_FUNC( NAP_XLS_PROTECT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_FREEZE )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t ncols = hb_parni(3);
+    uint32_t nrows = hb_parni(4);
+    hb_gtnap_office_sheet_freeze(sheet, page, ncols, nrows);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_TEXT )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

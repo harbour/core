@@ -23,6 +23,8 @@
 #include <text/XTextDocument.hpp>
 #include <sheet/XSpreadsheetDocument.hpp>
 #include <sheet/XSpreadsheet.hpp>
+#include <sheet/XSpreadsheetView.hpp>
+#include <sheet/XViewFreezable.hpp>
 #include <table/XCell.hpp>
 #include <table/XTable.hpp>
 #include <table/XTableColumns.hpp>
@@ -1104,6 +1106,33 @@ void officesdk_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t pro
                 xProtect->unprotect(spass);
         }
         catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(sheet, page, xSheet);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::sheet::XSpreadsheetView> xView(xSheet, css::uno::UNO_QUERY_THROW);
+            css::uno::Reference<css::sheet::XViewFreezable> xFreezable(xView, css::uno::UNO_QUERY_THROW);
+            xFreezable->freezeAtPosition((sal_Int32)ncols, (sal_Int32)nrows);
+        }
+        catch (css::uno::Exception &e)
         {
             res = ekSDKRES_ACCESS_DOC_ERROR;
         }

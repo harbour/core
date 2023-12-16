@@ -4625,6 +4625,13 @@ void hb_gtnap_office_sheet_protect(Sheet *sheet, const uint32_t page, const bool
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows)
+{
+    officesdk_sheet_freeze(sheet, page, ncols, nrows, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *text_block)
 {
     String *text = hb_block_to_utf8(text_block);
