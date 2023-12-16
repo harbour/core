@@ -270,3 +270,36 @@ HB_FUNC( NAP_XLS_COLUMN_WIDTH )
     uint32_t width = hb_parni(4);
     hb_gtnap_office_sheet_column_width(sheet, page, col, width);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_ROW_VISIBLE )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t row = hb_parni(3);
+    bool_t visible = (bool_t)hb_parl(4);
+    hb_gtnap_office_sheet_row_visible(sheet, page, row, visible);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_ROW_OPTIMAL_HEIGHT )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t row = hb_parni(3);
+    bool_t optimal_height = (bool_t)hb_parl(4);
+    hb_gtnap_office_sheet_row_optimal_height(sheet, page, row, optimal_height);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_ROW_HEIGHT )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t row = hb_parni(3);
+    uint32_t height = hb_parni(4);
+    hb_gtnap_office_sheet_row_height(sheet, page, row, height);
+}

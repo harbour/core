@@ -191,6 +191,12 @@ extern void hb_gtnap_office_sheet_column_optimal_width(Sheet *sheet, const uint3
 
 extern void hb_gtnap_office_sheet_column_width(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t width);
 
+extern void hb_gtnap_office_sheet_row_visible(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t visible);
+
+extern void hb_gtnap_office_sheet_row_optimal_height(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t optimal_height);
+
+extern void hb_gtnap_office_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height);
+
 /*
  * Fran TODO: Pending refactoring
  *

@@ -543,7 +543,10 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed to access column";
     case ekSDKRES_FORMAT_COLUMN_ERROR:
         return "Failed to change column format";
-
+    case ekSDKRES_ACCESS_ROW_ERROR:
+        return "Failed to access row";
+    case ekSDKRES_FORMAT_ROW_ERROR:
+        return "Failed to change row format";
     default:
         return "Unknown error";
     }
@@ -761,6 +764,30 @@ static sdkres_t i_get_column(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_get_row(
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
+                    uint32_t row,
+                    css::uno::Reference<css::beans::XPropertySet> &xTableRow)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::table::XColumnRowRange> xRange(xSheet, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::table::XTableRows> xRows = xRange->getRows();
+        css::uno::Any item = xRows->getByIndex((sal_Int32)row);
+        xTableRow = css::uno::Reference<css::beans::XPropertySet>(item, css::uno::UNO_QUERY_THROW);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_COLUMN_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_set_cell_text(
                     css::uno::Reference<css::table::XCell> &xCell,
                     const char_t *text)
@@ -878,6 +905,28 @@ static sdkres_t i_set_column_property(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_set_row_property(
+                    css::uno::Reference<css::beans::XPropertySet> &xTableRow,
+                    const char_t *prop_name,
+                    const css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        xTableRow->setPropertyValue(prop, value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_FORMAT_ROW_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_doc_cell(
                         Sheet *sheet,
                         const uint32_t page,
@@ -936,6 +985,26 @@ static sdkres_t i_doc_column(
 
     if (res == ekSDKRES_OK)
         res = i_get_column(xSheet, col, xTableCol);
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_doc_row(
+                        Sheet *sheet,
+                        const uint32_t page,
+                        const uint32_t col,
+                        css::uno::Reference<css::beans::XPropertySet> &xTableRow)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(sheet, page, xSheet);
+
+    if (res == ekSDKRES_OK)
+        res = i_get_row(xSheet, col, xTableRow);
 
     return res;
 }
@@ -1337,6 +1406,51 @@ void officesdk_sheet_column_width(Sheet *sheet, const uint32_t page, const uint3
 
     if (res == ekSDKRES_OK)
         res = i_set_column_property(xTableCol, "Width", css::uno::makeAny((sal_Int32)width));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_row_visible(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t visible, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xTableRow;
+
+    res = i_doc_row(sheet, page, row, xTableRow);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_row_property(xTableRow, "IsVisible", css::uno::makeAny((sal_Bool)visible));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_row_optimal_height(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t optimal_height, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xTableRow;
+
+    res = i_doc_row(sheet, page, row, xTableRow);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_row_property(xTableRow, "OptimalHeight", css::uno::makeAny((sal_Bool)optimal_height));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xTableRow;
+
+    res = i_doc_row(sheet, page, row, xTableRow);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_row_property(xTableRow, "Height", css::uno::makeAny((sal_Int32)height));
 
     ptr_assign(err, res);
 }

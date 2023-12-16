@@ -4727,6 +4727,27 @@ void hb_gtnap_office_sheet_column_width(Sheet *sheet, const uint32_t page, const
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_row_visible(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t visible)
+{
+    officesdk_sheet_row_visible(sheet, page, row, visible, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_sheet_row_optimal_height(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t optimal_height)
+{
+    officesdk_sheet_row_optimal_height(sheet, page, row, optimal_height, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height)
+{
+    officesdk_sheet_row_height(sheet, page, row, height, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Font *hb_gtnap_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);
