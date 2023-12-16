@@ -1327,6 +1327,21 @@ void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_sheet_cell_wrapped(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_property(xCell, "IsTextWrapped", css::uno::makeAny((sal_Bool)wrapped));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;

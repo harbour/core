@@ -236,6 +236,20 @@ NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_01.ods")
 
 
 ***********************************
+STAT PROC CELL_TEXT( O_XLS, N_Page, N_Col, N_Row, C_Text, N_Size, L_Bold, N_RowHeight )
+    NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, C_Text)
+    NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "LucidaSansRegular")
+    NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, N_Size)
+    NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, L_Bold)
+    NAP_XLS_CELL_WRAPPED(O_XLS, N_Page, N_Col, N_Row, .T.)
+
+    IF N_RowHeight != 0
+       NAP_XLS_ROW_HEIGHT(O_XLS, N_Page, N_Row, N_RowHeight)
+    ENDIF
+
+RETURN
+
+***********************************
 STAT PROC TST_PLANILHA_EXEMPLO_2
 ***********************************
 // Replicate this example
@@ -253,6 +267,17 @@ ENDIF
 NAP_XLS_NAME(O_XLS, N_Page, "RREO-Anexo 01")
 NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 0, 15250)
 NAP_XLS_ROW_HEIGHT(O_XLS, N_Page, 0, 2616)
+
+CELL_TEXT(O_XLS, N_Page, 0, 2, "RELATÓRIO RESUMIDO DE EXECUÇÃO ORÇAMENTÁRIA", 14, .T., 715)
+CELL_TEXT(O_XLS, N_Page, 0, 3, "VERSÃO: v11", 14, .T., 715)
+CELL_TEXT(O_XLS, N_Page, 0, 4, "VIGÊNCIA: 04/01/2023", 14, .T., 715)
+CELL_TEXT(O_XLS, N_Page, 0, 6, "Ente: 2301604 - Assaré/CE", 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 7, "Poder: E - Executivo", 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 8, "Instituição: 2029 - Prefeitura Municipal de Assaré - CE", 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 9, "Exercício: 2023", 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 10, "Periodicidade: BIMESTRAL", 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 11, "Período: 5º bimestre", 10, .T., 0)
+
 
 // NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 1, 2200)    // B Width
 // NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 2, 8000)    // C Width

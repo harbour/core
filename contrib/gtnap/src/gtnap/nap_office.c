@@ -215,6 +215,18 @@ HB_FUNC( NAP_XLS_CELL_VALIGN )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CELL_WRAPPED )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    bool_t wrapped = (bool_t)hb_parl(5);
+    hb_gtnap_office_sheet_cell_wrapped(sheet, page, col, row, wrapped);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_BACKCOLOR )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
