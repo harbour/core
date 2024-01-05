@@ -270,6 +270,20 @@ HB_FUNC( NAP_XLS_CELL_BACKCOLOR )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CELL_BORDER )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    linestyle_t style = (linestyle_t)hb_parni(5);
+    uint32_t thickness = hb_parni(6);
+    uint32_t rgb = hb_parni(7);
+    hb_gtnap_office_sheet_cell_border(sheet, page, col, row, style, thickness, rgb);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_MERGE )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

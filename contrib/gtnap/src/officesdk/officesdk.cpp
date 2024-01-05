@@ -30,6 +30,9 @@
 #include <table/XTableColumns.hpp>
 #include <table/CellHoriJustify.hpp>
 #include <table/CellVertJustify2.hpp>
+#include <table/TableBorder.hpp>
+#include <table/TableBorder2.hpp>
+#include <table/BorderLineStyle.hpp>
 #include <util/XMergeable.hpp>
 #include <util/XProtectable.hpp>
 #include <util/XNumberFormatsSupplier.hpp>
@@ -1420,6 +1423,99 @@ void officesdk_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uin
 
     if (res == ekSDKRES_OK)
         res = i_set_cell_property(xCell, "CellBackColor", css::uno::makeAny((sal_uInt32)rgb));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sal_Int16 i_line_style(const linestyle_t style)
+{
+    switch(style) {
+    case ekLINE_STYLE_NONE:
+        return css::table::BorderLineStyle::NONE;
+    case ekLINE_STYLE_SOLID:
+        return css::table::BorderLineStyle::SOLID;
+    case ekLINE_STYLE_DOTTED:
+        return css::table::BorderLineStyle::DOTTED;
+    case ekLINE_STYLE_DASHED:
+        return css::table::BorderLineStyle::DASHED;
+    case ekLINE_STYLE_DOUBLE:
+        return css::table::BorderLineStyle::DOUBLE;
+    case ekLINE_STYLE_THINTHICK_SMALLGAP:
+        return css::table::BorderLineStyle::THINTHICK_SMALLGAP;
+    case ekLINE_STYLE_THINTHICK_MEDIUMGAP:
+        return css::table::BorderLineStyle::THINTHICK_MEDIUMGAP;
+    case ekLINE_STYLE_THINTHICK_LARGEGAP:
+        return css::table::BorderLineStyle::THINTHICK_LARGEGAP;
+    case ekLINE_STYLE_THICKTHIN_SMALLGAP:
+        return css::table::BorderLineStyle::THICKTHIN_SMALLGAP;
+    case ekLINE_STYLE_THICKTHIN_MEDIUMGAP:
+        return css::table::BorderLineStyle::THICKTHIN_MEDIUMGAP;
+    case ekLINE_STYLE_THICKTHIN_LARGEGAP:
+        return css::table::BorderLineStyle::THICKTHIN_LARGEGAP;
+    case ekLINE_STYLE_EMBOSSED:
+        return css::table::BorderLineStyle::EMBOSSED;
+    case ekLINE_STYLE_ENGRAVED:
+        return css::table::BorderLineStyle::ENGRAVED;
+    case ekLINE_STYLE_OUTSET:
+        return css::table::BorderLineStyle::OUTSET;
+    case ekLINE_STYLE_INSET:
+        return css::table::BorderLineStyle::INSET;
+    case ekLINE_STYLE_FINE_DASHED:
+        return css::table::BorderLineStyle::DASHED;
+    case ekLINE_STYLE_DOUBLE_THIN:
+        return css::table::BorderLineStyle::DOUBLE_THIN;
+    case ekLINE_STYLE_DASH_DOT:
+        return css::table::BorderLineStyle::DASH_DOT;
+    case ekLINE_STYLE_DASH_DOT_DOT:
+        return css::table::BorderLineStyle::DASH_DOT_DOT;
+    }
+
+    return css::table::BorderLineStyle::NONE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static css::table::BorderLine2 i_border_line(const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
+{
+    css::table::BorderLine2 border;
+    border.LineStyle = i_line_style(style);
+    border.LineWidth = (sal_uInt32)thickness;
+    border.Color = (sal_Int32)rgb;
+    return border;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static css::table::TableBorder2 i_table_border(const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
+{
+    css::table::TableBorder2 border;
+    border.LeftLine = i_border_line(style, thickness, rgb);
+    border.RightLine = i_border_line(style, thickness, rgb);
+    border.TopLine = i_border_line(style, thickness, rgb);
+    border.BottomLine = i_border_line(style, thickness, rgb);
+    border.IsLeftLineValid = sal_True;
+    border.IsRightLineValid = sal_True;
+    border.IsTopLineValid = sal_True;
+    border.IsBottomLineValid = sal_True;
+    return border;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_border(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::table::TableBorder2 border = i_table_border(style, thickness, rgb);
+        res = i_set_cell_property(xCell, "TableBorder2", css::uno::makeAny(border));
+    }
 
     ptr_assign(err, res);
 }

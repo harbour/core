@@ -77,3 +77,25 @@
 #define SDK_NUMFORMAT_DEC2_1000     4
 #define SDK_NUMFORMAT_PERC_INT      5
 #define SDK_NUMFORMAT_PERC_DEC2     6
+
+/* Line style for LibreOffice SDK */
+#define SDK_LINE_STYLE_NONE                     1
+#define SDK_LINE_STYLE_SOLID                    2
+#define SDK_LINE_STYLE_DOTTED                   3
+#define SDK_LINE_STYLE_DASHED                   4
+#define SDK_LINE_STYLE_DOUBLE                   5
+#define SDK_LINE_STYLE_THINTHICK_SMALLGAP       6
+#define SDK_LINE_STYLE_THINTHICK_MEDIUMGAP      7
+#define SDK_LINE_STYLE_THINTHICK_LARGEGAP       8
+#define SDK_LINE_STYLE_THICKTHIN_SMALLGAP       9
+#define SDK_LINE_STYLE_THICKTHIN_MEDIUMGAP      10
+#define SDK_LINE_STYLE_THICKTHIN_LARGEGAP       11
+#define SDK_LINE_STYLE_EMBOSSED                 12
+#define SDK_LINE_STYLE_ENGRAVED                 13
+#define SDK_LINE_STYLE_OUTSET                   14
+#define SDK_LINE_STYLE_INSET                    15
+#define SDK_LINE_STYLE_FINE_DASHED              16
+#define SDK_LINE_STYLE_DOUBLE_THIN              17
+#define SDK_LINE_STYLE_DASH_DOT                 18
+#define SDK_LINE_STYLE_DASH_DOT_DOT             19
+
