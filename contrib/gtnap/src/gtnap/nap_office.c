@@ -89,7 +89,8 @@ HB_FUNC( NAP_XLS_CLOSE )
 HB_FUNC( NAP_XLS_ADD )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
-    hb_gtnap_office_sheet_add(sheet);
+    uint32_t id = hb_gtnap_office_sheet_add(sheet);
+    hb_retni(id);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -234,14 +235,14 @@ HB_FUNC( NAP_XLS_CELL_VALIGN )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_WRAPPED )
+HB_FUNC( NAP_XLS_CELL_WRAP )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
     bool_t wrapped = (bool_t)hb_parl(5);
-    hb_gtnap_office_sheet_cell_wrapped(sheet, page, col, row, wrapped);
+    hb_gtnap_office_sheet_cell_wrap(sheet, page, col, row, wrapped);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -46,6 +46,19 @@ LOCAL O_XLS := NAP_XLS_OPEN({|| NAP_WORK_PATH() + "/../office/empty.ods" })
 LOCAL O_XLS := NAP_XLS_OPEN( NAP_WORK_PATH() + "/../office/empty.ods" )
 ```
 
+## Color parameters
+
+Every color parameter is an 32bit integer rgb.
+
+```
+LOCAL N_Color := NAP_OFFICE_RGB(255, 0, 0)
+
+PAR1: 0-255 red component.
+PAR2: 0-255 green component.
+PAR3: 0-255 blue component.
+RET: The color (integer value).
+```
+
 ## SpreadSheet
 
 ### Open Sheet
@@ -65,6 +78,16 @@ LOCAL O_XLS := NAP_XLS_CREATE()
 RET: The document object. Must be closed with NAP_XLS_CLOSE().
 ```
 
+### Save Sheet
+
+```
+NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/edited.ods" })
+
+PAR1: The sheet document.
+PAR2: String with the full path for the document copy.
+```
+> **Important:** It will save a copy of document, but will not close the original one.
+
 ### Close Sheet
 
 ```
@@ -75,15 +98,16 @@ PAR1: The sheet document.
 
 > **Important:** All sheets open with `NAP_XLS_OPEN` or created with `NAP_XLS_CREATE` must be closed.
 
-### Save Sheet
+### Add new pages to Sheet
 
 ```
-NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/edited.ods" })
+LOCAL N_Page := NAP_XLS_ADD(O_XLS)
 
 PAR1: The sheet document.
-PAR2: String with the full path for the document copy.
+RET: The page index (0-based).
 ```
-> **Important:** It will save a copy of document, but will not close the original one.
+
+> **Important:** `NAP_XLS_CREATE` creates a default 0-page.
 
 ### Set the page name
 
@@ -104,6 +128,17 @@ PAR1: The sheet document.
 PAR2: Page index (0-based).
 PAR3: Protect (.T.) or unprotect (.F.)
 PAR4: String with the password.
+```
+
+### Freeze first rows and columns
+
+```
+NAP_XLS_FREEZE(O_XLS, 0, 2, 0)
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Number of columns to freeze.
+PAR4: Number of rows to freeze.
 ```
 
 ### Set Cell Text
@@ -229,6 +264,30 @@ PAR5: Numeric value with vertical alignment.
 #define SDK_VALIGN_BOTTOM           2
 ```
 
+### Cell Text Wrap
+
+```
+NAP_XLS_CELL_WRAP(O_XLS, 0, 0, 0, .T.)
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Column index (0-based).
+PAR4: Row index (0-based).
+PAR: Wrap text (.T. / .F.).
+```
+
+### Cell Text Color
+
+```
+NAP_XLS_CELL_COLOR(O_XLS, 0, 0, 0, NAP_OFFICE_RGB(255, 255, 255))
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Column index (0-based).
+PAR4: Row index (0-based).
+PAR5: Color value returned by NAP_OFFICE_RGB
+```
+
 ### Cell Background color
 
 ```
@@ -238,7 +297,41 @@ PAR1: The sheet document.
 PAR2: Page index (0-based).
 PAR3: Column index (0-based).
 PAR4: Row index (0-based).
-PAR5: Value returned by NAP_OFFICE_RGB
+PAR5: Color value returned by NAP_OFFICE_RGB.
+```
+
+### Cell border
+
+```
+NAP_XLS_CELL_BORDER(O_XLS, 0, 0, 0, SDK_LINE_STYLE_SOLID, 50, NAP_OFFICE_RGB(255, 255, 255))
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Column index (0-based).
+PAR4: Row index (0-based).
+PAR5: Line style.
+PAR6: Line thickness (integer 1/100th mm)
+PAR7: Color value returned by NAP_OFFICE_RGB.
+
+#define SDK_LINE_STYLE_NONE                     1
+#define SDK_LINE_STYLE_SOLID                    2
+#define SDK_LINE_STYLE_DOTTED                   3
+#define SDK_LINE_STYLE_DASHED                   4
+#define SDK_LINE_STYLE_DOUBLE                   5
+#define SDK_LINE_STYLE_THINTHICK_SMALLGAP       6
+#define SDK_LINE_STYLE_THINTHICK_MEDIUMGAP      7
+#define SDK_LINE_STYLE_THINTHICK_LARGEGAP       8
+#define SDK_LINE_STYLE_THICKTHIN_SMALLGAP       9
+#define SDK_LINE_STYLE_THICKTHIN_MEDIUMGAP      10
+#define SDK_LINE_STYLE_THICKTHIN_LARGEGAP       11
+#define SDK_LINE_STYLE_EMBOSSED                 12
+#define SDK_LINE_STYLE_ENGRAVED                 13
+#define SDK_LINE_STYLE_OUTSET                   14
+#define SDK_LINE_STYLE_INSET                    15
+#define SDK_LINE_STYLE_FINE_DASHED              16
+#define SDK_LINE_STYLE_DOUBLE_THIN              17
+#define SDK_LINE_STYLE_DASH_DOT                 18
+#define SDK_LINE_STYLE_DASH_DOT_DOT             19
 ```
 
 ### Merge cells
@@ -287,8 +380,35 @@ PAR3: Column index (0-based).
 PAR4: Column width (integer 1/100th mm)
 ```
 
+### Row Visible
 
+```
+NAP_XLS_ROW_VISIBLE(O_XLS, 0, 0, .T.)
 
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Row index (0-based).
+PAR4: Row visible (.T. / .F.).
+```
 
+### Row Optimal Height
 
+```
+NAP_XLS_ROW_OPTIMAL_HEIGHT(O_XLS, 0, 0, .F.)
 
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Row index (0-based).
+PAR4: Row with optimal height (.T. / .F.).
+```
+
+### Row Height
+
+```
+NAP_XLS_ROW_HEIGHT(O_XLS, 0, 0, 715)
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Row index (0-based).
+PAR4: Row height (integer 1/100th mm)
+```

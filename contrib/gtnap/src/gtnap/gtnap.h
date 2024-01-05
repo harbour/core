@@ -159,7 +159,7 @@ extern void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block);
 
 extern void hb_gtnap_office_sheet_close(Sheet *sheet);
 
-extern void hb_gtnap_office_sheet_add(Sheet *sheet);
+extern uint32_t hb_gtnap_office_sheet_add(Sheet *sheet);
 
 extern void hb_gtnap_office_sheet_name(Sheet *sheet, const uint32_t page, HB_ITEM *name_block);
 
@@ -185,7 +185,7 @@ extern void hb_gtnap_office_sheet_cell_halign(Sheet *sheet, const uint32_t page,
 
 extern void hb_gtnap_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align);
 
-extern void hb_gtnap_office_sheet_cell_wrapped(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped);
+extern void hb_gtnap_office_sheet_cell_wrap(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped);
 
 extern void hb_gtnap_office_sheet_cell_color(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb);
 

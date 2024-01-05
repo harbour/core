@@ -1062,9 +1062,10 @@ static sdkres_t i_doc_number_formats(
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheet_add(Sheet *sheet, sdkres_t *err)
+uint32_t officesdk_sheet_add(Sheet *sheet, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
+    uint32_t id = UINT32_MAX;
     String *defname = NULL;
 
     try
@@ -1075,6 +1076,7 @@ void officesdk_sheet_add(Sheet *sheet, sdkres_t *err)
         sal_Int32 n = xIndexAccess->getCount();
         String *defname = str_printf("Sheet%d", n);
         xSheets->insertNewByName(i_OUStringFromString(defname), (sal_Int16)n);
+        id = (uint32_t)n;
     }
     catch (css::uno::Exception&)
     {
@@ -1083,6 +1085,7 @@ void officesdk_sheet_add(Sheet *sheet, sdkres_t *err)
 
     str_destopt(&defname);
     ptr_assign(err, res);
+    return id;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1384,7 +1387,7 @@ void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheet_cell_wrapped(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped, sdkres_t *err)
+void officesdk_sheet_cell_wrap(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::table::XCell> xCell;

@@ -241,7 +241,7 @@ STAT PROC CELL_TEXT( O_XLS, N_Page, N_Col, N_Row, C_Text, N_Size, L_Bold, N_RowH
     NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "LucidaSansRegular")
     NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, N_Size)
     NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, L_Bold)
-    NAP_XLS_CELL_WRAPPED(O_XLS, N_Page, N_Col, N_Row, .T.)
+    NAP_XLS_CELL_WRAP(O_XLS, N_Page, N_Col, N_Row, .T.)
 
     IF N_RowHeight != 0
        NAP_XLS_ROW_HEIGHT(O_XLS, N_Page, N_Row, N_RowHeight)
@@ -305,115 +305,6 @@ NAP_XLS_CELL_BACKCOLOR(O_XLS, N_Page, 0, 15, NAP_OFFICE_RGB(63, 103, 151))
 NAP_XLS_CELL_BORDER(O_XLS, N_Page, 0, 13, SDK_LINE_STYLE_SOLID, 50, NAP_OFFICE_RGB(255, 255, 255))
 NAP_XLS_CELL_BORDER(O_XLS, N_Page, 0, 14, SDK_LINE_STYLE_SOLID, 50, NAP_OFFICE_RGB(255, 255, 255))
 NAP_XLS_CELL_BORDER(O_XLS, N_Page, 0, 15, SDK_LINE_STYLE_SOLID, 50, NAP_OFFICE_RGB(255, 255, 255))
-// NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 1, 2200)    // B Width
-// NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 2, 8000)    // C Width
-// NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 3, 2200)    // D Width
-
-// N_Col := 0
-// N_Row := 0
-// NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 3, 0)
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "BALANÇO GERAL")
-// NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_CENTER)
-// NAP_XLS_CELL_VALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_VALIGN_CENTER)
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 10.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-
-// N_Col := 0
-// N_Row := 1
-// NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 1, 1)
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "Governo Municipal de São Mateus do Maranhão")
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 10.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-
-// N_Col := 2
-// N_Row := 1
-// NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 3, 1)
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "EXERCÍCIO FINANCEIRO DE 2023")
-// NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_RIGHT)
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-
-// N_Col := 0
-// N_Row := 2
-// NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 1, 2)
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "Consolidado")
-// NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_LEFT)
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 10.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-
-// N_Col := 3
-// N_Row := 2
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "Adendo II")
-// NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_LEFT)
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-
-// N_Col := 0
-// N_Row := 3
-// NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 2, 3)
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "Anexo 1, da Lei nº 4320, de 17/03/64. (Portaria SOF nº 8, de 04/02/85)")
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-
-// N_Col := 3
-// N_Row := 3
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "Em R$ 1,00")
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-
-// N_Col := 0
-// N_Row := 5
-// NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 3, 5)
-// NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_CENTER)
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "DEMONSTRAÇÃO DA RECEITA E DESPESA")
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-
-// N_Col := 0
-// N_Row := 6
-// NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 3, 6)
-// NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_CENTER)
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "SEGUNDO AS CATEGORIAS ECONÔMICAS")
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-
-// N_Col := 0
-// N_Row := 8
-// NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 1, 8)
-// NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_CENTER)
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "R E C E I T A")
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-// NAP_XLS_CELL_BACKCOLOR(O_XLS, N_Page, N_Col, N_Row, NAP_OFFICE_RGB(205, 205, 205))
-
-// N_Col := 2
-// N_Row := 8
-// NAP_XLS_CELL_MERGE(O_XLS, N_Page, N_Col, N_Row, 3, 8)
-// NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_CENTER)
-// NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, "D E S P E S A")
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 9.0)
-// NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, .T.)
-// NAP_XLS_CELL_BACKCOLOR(O_XLS, N_Page, N_Col, N_Row, NAP_OFFICE_RGB(205, 205, 205))
-
-// N_Col := 1
-// N_Row := 11
-// NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_RIGHT)
-// NAP_XLS_CELL_VALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_VALIGN_CENTER)
-// NAP_XLS_CELL_NUMFORMAT(O_XLS, N_Page, N_Col, N_Row, SDK_NUMFORMAT_INT)
-// NAP_XLS_CELL_VALUE(O_XLS, N_Page, N_Col, N_Row, 917038.94)
-// NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
-// NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 7)
 
 // Protect the sheet
 // NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")

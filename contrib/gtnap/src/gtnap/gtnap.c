@@ -4607,9 +4607,9 @@ void hb_gtnap_office_sheet_close(Sheet *sheet)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_sheet_add(Sheet *sheet)
+uint32_t hb_gtnap_office_sheet_add(Sheet *sheet)
 {
-    officesdk_sheet_add(sheet, &GTNAP_GLOBAL->last_office_error);
+    return officesdk_sheet_add(sheet, &GTNAP_GLOBAL->last_office_error);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4706,9 +4706,9 @@ void hb_gtnap_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const 
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_sheet_cell_wrapped(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped)
+void hb_gtnap_office_sheet_cell_wrap(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped)
 {
-    officesdk_sheet_cell_wrapped(sheet, page, col, row, wrapped, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_wrap(sheet, page, col, row, wrapped, &GTNAP_GLOBAL->last_office_error);
 }
 
 /*---------------------------------------------------------------------------*/
