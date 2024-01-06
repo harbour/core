@@ -300,6 +300,36 @@ PAR4: Row index (0-based).
 PAR5: Color value returned by NAP_OFFICE_RGB.
 ```
 
+### Background color for a group of cells
+
+```
+NAP_XLS_CELLS_BACKCOLOR(O_XLS, 0, 0, 0, 10, 8 NAP_OFFICE_RGB(205, 205, 205))
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Column-left index (0-based).
+PAR4: Row-top index (0-based).
+PAR5: Column-right index >= column-left.
+PAR6: Row-bottom index >= row-top.
+PAR7: Color value returned by NAP_OFFICE_RGB.
+```
+
+> **Important:** It will clean the inner grid lines.
+
+### Insert a image in cell position
+
+```
+NAP_XLS_CELL_IMAGE(O_XLS, 0, 0, 0, {|| NAP_WORK_PATH() + "/../office/ods/cell_image_01.png" })
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Column index (0-based).
+PAR4: Row index (0-based).
+PAR5: Image file path.
+```
+
+> **Important:** The image is not part of the cell (it is not an attribute). It is inserted into the document and positioned and sized in the cell frame.
+
 ### Cell border
 
 ```
@@ -337,7 +367,7 @@ PAR7: Color value returned by NAP_OFFICE_RGB.
 ### Merge cells
 
 ```
-NAP_XLS_CELL_MERGE(O_XLS, 0, 2, 8, 3, 8)
+NAP_XLS_CELLS_MERGE(O_XLS, 0, 2, 8, 3, 8)
 
 PAR1: The sheet document.
 PAR2: Page index (0-based).

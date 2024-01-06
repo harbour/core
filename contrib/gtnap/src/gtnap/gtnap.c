@@ -4727,6 +4727,13 @@ void hb_gtnap_office_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, con
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_cells_backcolor(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const uint32_t rgb)
+{
+    officesdk_sheet_cells_backcolor(sheet, page, st_col, st_row, ed_col, ed_row, rgb, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *image_path_block)
 {
     String *image_path = hb_block_to_utf8(image_path_block);
@@ -4743,9 +4750,9 @@ void hb_gtnap_office_sheet_cell_border(Sheet *sheet, const uint32_t page, const 
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_sheet_cell_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row)
+void hb_gtnap_office_sheet_cells_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row)
 {
-    officesdk_sheet_cell_merge(sheet, page, st_col, st_row, ed_col, ed_row, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cells_merge(sheet, page, st_col, st_row, ed_col, ed_row, &GTNAP_GLOBAL->last_office_error);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -80,7 +80,7 @@ public:
 
     css::uno::Reference<css::lang::XMultiComponentFactory> m_xMultiComponentFactory;
 
-    css::uno::Reference<css::frame::XDesktop2> m_xComponentLoader;    
+    css::uno::Reference<css::frame::XDesktop2> m_xComponentLoader;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -387,14 +387,14 @@ sdkres_t OfficeSdk::OpenSheetDocument(const char_t *url, css::uno::Reference<css
 /*---------------------------------------------------------------------------*/
 
 sdkres_t OfficeSdk::LoadImage(
-                        const char_t *url, 
+                        const char_t *url,
                         css::uno::Reference<css::graphic::XGraphic> &xGraphic)
 {
     sdkres_t res = ekSDKRES_OK;
     try
     {
-        css::uno::Reference<css::uno::XInterface> xInterface = this->m_xMultiComponentFactory->createInstanceWithContext("com.sun.star.graphic.GraphicProvider", this->m_xComponentContext); 
-        css::uno::Reference<css::graphic::XGraphicProvider> xGraphicProvider(xInterface, css::uno::UNO_QUERY_THROW);       
+        css::uno::Reference<css::uno::XInterface> xInterface = this->m_xMultiComponentFactory->createInstanceWithContext("com.sun.star.graphic.GraphicProvider", this->m_xComponentContext);
+        css::uno::Reference<css::graphic::XGraphicProvider> xGraphicProvider(xInterface, css::uno::UNO_QUERY_THROW);
         css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
         loadProperties[0].Name = "URL";
         loadProperties[0].Value <<= i_OUStringFileUrl(url);
@@ -937,6 +937,29 @@ static sdkres_t i_set_cell_property(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_set_cell_range_property(
+                    css::uno::Reference<css::table::XCellRange> &xCellRange,
+                    const char_t *prop_name,
+                    const css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::beans::XPropertySet> xCellProps = css::uno::Reference<css::beans::XPropertySet>::query(xCellRange);
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        xCellProps->setPropertyValue(prop, value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_get_column_property(
                     const css::uno::Reference<css::beans::XPropertySet> &xTableCol,
                     const char_t *prop_name,
@@ -1304,7 +1327,7 @@ static sdkres_t i_doc_number_formats(
 
 static sdkres_t i_create_shape(
                         css::uno::Reference<css::frame::XModel> &xModel,
-                        const char_t *shapeType, 
+                        const char_t *shapeType,
                         css::uno::Reference<css::drawing::XShape> &xShape)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -1335,7 +1358,7 @@ static sdkres_t i_get_draw_page(
     try
     {
         css::uno::Reference<css::drawing::XDrawPagesSupplier> xPagesSupplier = css::uno::Reference<css::drawing::XDrawPagesSupplier>(xModel, css::uno::UNO_QUERY_THROW);
-        css::uno::Reference<css::drawing::XDrawPages> xDrawPages = xPagesSupplier->getDrawPages(); 
+        css::uno::Reference<css::drawing::XDrawPages> xDrawPages = xPagesSupplier->getDrawPages();
         css::uno::Any item = xDrawPages->getByIndex((sal_Int32)page);
         xDrawPage = css::uno::Reference<css::drawing::XDrawPage>(item, css::uno::UNO_QUERY_THROW);
     }
@@ -1769,6 +1792,21 @@ void officesdk_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uin
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_sheet_cells_backcolor(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const uint32_t rgb, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCellRange> xCellRange;
+
+    res = i_doc_range(sheet, page, st_col, st_row, ed_col, ed_row, xCellRange);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_range_property(xCellRange, "CellBackColor", css::uno::makeAny((sal_uInt32)rgb));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *image_path, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -1776,7 +1814,7 @@ void officesdk_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_
     css::uno::Reference<css::table::XCell> xCell;
     css::uno::Reference<css::frame::XModel> xModel;
     sal_Int32 x = 0, y = 0, width = 0, height = 0;
-    
+
     res = i_get_sheet(sheet, page, xSheet);
 
     // Cell for insertion
@@ -1902,7 +1940,7 @@ void officesdk_sheet_cell_border(Sheet *sheet, const uint32_t page, const uint32
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheet_cell_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, sdkres_t *err)
+void officesdk_sheet_cells_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::table::XCellRange> xCellRange;

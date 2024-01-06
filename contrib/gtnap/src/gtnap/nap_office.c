@@ -271,6 +271,20 @@ HB_FUNC( NAP_XLS_CELL_BACKCOLOR )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CELLS_BACKCOLOR )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t st_col = hb_parni(3);
+    uint32_t st_row = hb_parni(4);
+    uint32_t ed_col = hb_parni(5);
+    uint32_t ed_row = hb_parni(6);
+    uint32_t rgb = hb_parni(7);
+    hb_gtnap_office_sheet_cells_backcolor(sheet, page, st_col, st_row, ed_col, ed_row, rgb);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_IMAGE )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
@@ -297,7 +311,7 @@ HB_FUNC( NAP_XLS_CELL_BORDER )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_MERGE )
+HB_FUNC( NAP_XLS_CELLS_MERGE )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
     uint32_t page = hb_parni(2);
@@ -305,7 +319,7 @@ HB_FUNC( NAP_XLS_CELL_MERGE )
     uint32_t st_row = hb_parni(4);
     uint32_t ed_col = hb_parni(5);
     uint32_t ed_row = hb_parni(6);
-    hb_gtnap_office_sheet_cell_merge(sheet, page, st_col, st_row, ed_col, ed_row);
+    hb_gtnap_office_sheet_cells_merge(sheet, page, st_col, st_row, ed_col, ed_row);
 }
 
 /*---------------------------------------------------------------------------*/

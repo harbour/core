@@ -191,11 +191,13 @@ extern void hb_gtnap_office_sheet_cell_color(Sheet *sheet, const uint32_t page, 
 
 extern void hb_gtnap_office_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb);
 
+extern void hb_gtnap_office_sheet_cells_backcolor(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const uint32_t rgb);
+
 extern void hb_gtnap_office_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *image_path_block);
 
 extern void hb_gtnap_office_sheet_cell_border(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb);
 
-extern void hb_gtnap_office_sheet_cell_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row);
+extern void hb_gtnap_office_sheet_cells_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row);
 
 extern void hb_gtnap_office_sheet_column_visible(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t visible);
 
