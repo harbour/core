@@ -7,27 +7,36 @@
 #include <sewer/blib.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
-
 #include <sewer/nowarn.hxx>
 #include <cppuhelper/bootstrap.hxx>
 #include <rtl/bootstrap.hxx>
 #include <container/XNamed.hpp>
 #include <beans/XPropertySet.hpp>
 #include <bridge/XUnoUrlResolver.hpp>
+#include <drawing/XDrawPageSupplier.hpp>
+#include <drawing/XDrawPagesSupplier.hpp>
 #include <frame/Desktop.hpp>
 #include <frame/XComponentLoader.hpp>
 #include <frame/XStorable.hpp>
+#include <graphic/XGraphicProvider.hpp>
 #include <i18n/NumberFormatIndex.hpp>
 #include <lang/Locale.hpp>
 #include <lang/XMultiComponentFactory.hpp>
+#include <lang/XMultiServiceFactory.hpp>
 #include <text/XTextDocument.hpp>
+#include <sheet/XCellRangeAddressable.hpp>
 #include <sheet/XSpreadsheetDocument.hpp>
 #include <sheet/XSpreadsheet.hpp>
+#include <sheet/XSpreadsheetView.hpp>
+#include <sheet/XViewFreezable.hpp>
 #include <table/XCell.hpp>
 #include <table/XTable.hpp>
 #include <table/XTableColumns.hpp>
 #include <table/CellHoriJustify.hpp>
 #include <table/CellVertJustify2.hpp>
+#include <table/TableBorder.hpp>
+#include <table/TableBorder2.hpp>
+#include <table/BorderLineStyle.hpp>
 #include <util/XMergeable.hpp>
 #include <util/XProtectable.hpp>
 #include <util/XNumberFormatsSupplier.hpp>
@@ -56,6 +65,8 @@ public:
 
     sdkres_t OpenSheetDocument(const char_t *url, css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
 
+    sdkres_t LoadImage(const char_t *url, css::uno::Reference<css::graphic::XGraphic> &xGraphic);
+
     sdkres_t CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
 
     sdkres_t SaveTextDocument(const css::uno::Reference<css::text::XTextDocument> &xDocument, const char_t *url, const fileformat_t format);
@@ -63,30 +74,56 @@ public:
     sdkres_t SaveSheetDocument(const css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument, const char_t *url, const fileformat_t format);
 
 public:
-    bool init;
+    bool m_init;
 
-    css::uno::Reference<css::lang::XMultiComponentFactory> xMultiComponentFactoryClient;
+    css::uno::Reference<css::uno::XComponentContext> m_xComponentContext;
 
-    css::uno::Reference<css::frame::XDesktop2> xComponentLoader;
+    css::uno::Reference<css::lang::XMultiComponentFactory> m_xMultiComponentFactory;
+
+    css::uno::Reference<css::frame::XDesktop2> m_xComponentLoader;
 };
 
 /*---------------------------------------------------------------------------*/
 
 OfficeSdk::OfficeSdk()
 {
-    init = false;
+    this->m_init = false;
 }
 
 /*---------------------------------------------------------------------------*/
 
 OfficeSdk::~OfficeSdk()
 {
-    if (this->xComponentLoader.get() != nullptr)
+    if (this->m_xComponentLoader.get() != nullptr)
     {
         try
         {
-            this->xComponentLoader->dispose();
-            this->xComponentLoader.set(nullptr);
+            this->m_xComponentLoader->dispose();
+            this->m_xComponentLoader.set(nullptr);
+        }
+        catch (css::uno::Exception&)
+        {
+
+        }
+    }
+
+    if (this->m_xMultiComponentFactory.get() != nullptr)
+    {
+        try
+        {
+            this->m_xMultiComponentFactory.set(nullptr);
+        }
+        catch (css::uno::Exception&)
+        {
+
+        }
+    }
+
+    if (this->m_xComponentContext.get() != nullptr)
+    {
+        try
+        {
+            this->m_xComponentContext.set(nullptr);
         }
         catch (css::uno::Exception&)
         {
@@ -95,6 +132,7 @@ OfficeSdk::~OfficeSdk()
     }
 
     this->KillLibreOffice();
+    this->m_init = false;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -151,7 +189,7 @@ static ::rtl::OUString i_OUStringFileUrl(const char_t *str)
 sdkres_t OfficeSdk::Init()
 {
     sdkres_t res = ekSDKRES_OK;
-    if (this->init == false)
+    if (this->m_init == false)
     {
         const char_t *env = blib_getenv("LIBREOFFICE_HOME");
 
@@ -203,7 +241,7 @@ sdkres_t OfficeSdk::Init()
             res = ConnectServer();
 
         if (res == ekSDKRES_OK)
-            this->init = true;
+            this->m_init = true;
     }
 
     return res;
@@ -276,32 +314,23 @@ sdkres_t OfficeSdk::WakeUpServer()
 sdkres_t OfficeSdk::ConnectServer()
 {
     sdkres_t res = ekSDKRES_OK;
-    rtl::OUString sConnectionString("uno:socket,host=localhost,port=2083;urp;StarOffice.ServiceManager");
-    css::uno::Reference<css::uno::XComponentContext> xComponentContext(cppu::defaultBootstrap_InitialComponentContext());
-    css::uno::Reference<css::lang::XMultiComponentFactory> multiComponentFactoryClient(xComponentContext->getServiceManager());
-    css::uno::Reference<css::uno::XInterface> xInterface = multiComponentFactoryClient->createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", xComponentContext);
-    this->xMultiComponentFactoryClient = multiComponentFactoryClient;
+
     try
     {
-        css::uno::Reference<css::bridge::XUnoUrlResolver> xResolver = css::uno::Reference<css::bridge::XUnoUrlResolver>(xInterface, css::uno::UNO_QUERY_THROW);
-        xInterface = css::uno::Reference<css::uno::XInterface>(xResolver->resolve(sConnectionString), css::uno::UNO_QUERY_THROW);
+        rtl::OUString sConnectionString("uno:socket,host=localhost,port=2083;urp;StarOffice.ServiceManager");
+        css::uno::Reference<css::uno::XComponentContext> xComponentContext(cppu::bootstrap());
+        css::uno::Reference<css::lang::XMultiComponentFactory> xMultiComponentFactory(xComponentContext->getServiceManager());
+        css::uno::Reference<css::uno::XInterface> xin = xMultiComponentFactory->createInstanceWithContext("com.sun.star.frame.Desktop", xComponentContext);
+        this->m_xComponentLoader = css::uno::Reference<css::frame::XDesktop2>(xin, css::uno::UNO_QUERY_THROW);
+        this->m_xMultiComponentFactory = xMultiComponentFactory;
+        this->m_xComponentContext = xComponentContext;
+
+        if (this->m_xComponentLoader.get() == nullptr)
+            res = ekSDKRES_COMPONENT_LOADER;
     }
     catch (css::uno::Exception&)
     {
         res = ekSDKRES_CONECT_FAIL;
-    }
-
-    // Try to create a component loader
-    if (res == ekSDKRES_OK)
-    {
-        css::uno::Reference<css::beans::XPropertySet> propSet = css::uno::Reference<css::beans::XPropertySet>(xInterface, css::uno::UNO_QUERY_THROW);
-        propSet->getPropertyValue("DefaultContext") >>= xComponentContext;
-        if (this->xComponentLoader.get() != nullptr)
-            this->xComponentLoader->dispose();
-
-        this->xComponentLoader = css::frame::Desktop::create(xComponentContext);
-        if (this->xComponentLoader.get() == nullptr)
-            res = ekSDKRES_COMPONENT_LOADER;
     }
 
     return res;
@@ -319,7 +348,7 @@ sdkres_t OfficeSdk::OpenTextDocument(const char_t *url, css::uno::Reference<css:
         css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
         loadProperties[0].Name = "Hidden";
         loadProperties[0].Value <<= true;
-        css::uno::Reference<css::lang::XComponent> xComponent = this->xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
+        css::uno::Reference<css::lang::XComponent> xComponent = this->m_xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
         xDocument = css::uno::Reference<css::text::XTextDocument>(xComponent, css::uno::UNO_QUERY_THROW);
     }
     catch(css::uno::Exception &e)
@@ -343,12 +372,37 @@ sdkres_t OfficeSdk::OpenSheetDocument(const char_t *url, css::uno::Reference<css
         css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
         loadProperties[0].Name = "Hidden";
         loadProperties[0].Value <<= true;
-        css::uno::Reference<css::lang::XComponent> xComponent = this->xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
+        css::uno::Reference<css::lang::XComponent> xComponent = this->m_xComponentLoader->loadComponentFromURL(docUrl, "_blank", 0, loadProperties);
         xDocument = css::uno::Reference<css::sheet::XSpreadsheetDocument>(xComponent, css::uno::UNO_QUERY_THROW);
     }
     catch(css::uno::Exception &e)
     {
         std::cout << "Error loading " << url << " file: " << e.Message;
+        res = ekSDKRES_OPEN_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+sdkres_t OfficeSdk::LoadImage(
+                        const char_t *url,
+                        css::uno::Reference<css::graphic::XGraphic> &xGraphic)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        css::uno::Reference<css::uno::XInterface> xInterface = this->m_xMultiComponentFactory->createInstanceWithContext("com.sun.star.graphic.GraphicProvider", this->m_xComponentContext);
+        css::uno::Reference<css::graphic::XGraphicProvider> xGraphicProvider(xInterface, css::uno::UNO_QUERY_THROW);
+        css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
+        loadProperties[0].Name = "URL";
+        loadProperties[0].Value <<= i_OUStringFileUrl(url);
+        xGraphic = xGraphicProvider->queryGraphic(loadProperties);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error loading image: " << e.Message;
         res = ekSDKRES_OPEN_FILE_ERROR;
     }
 
@@ -366,7 +420,7 @@ sdkres_t OfficeSdk::CreateSheetDocument(css::uno::Reference<css::sheet::XSpreads
         css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
         loadProperties[0].Name = "Hidden";
         loadProperties[0].Value <<= true;
-        css::uno::Reference<css::lang::XComponent> xComponent = this->xComponentLoader->loadComponentFromURL("private:factory/scalc", "_blank", 0, loadProperties);
+        css::uno::Reference<css::lang::XComponent> xComponent = this->m_xComponentLoader->loadComponentFromURL("private:factory/scalc", "_blank", 0, loadProperties);
         xDocument = css::uno::Reference<css::sheet::XSpreadsheetDocument>(xComponent, css::uno::UNO_QUERY_THROW);
     }
     catch(css::uno::Exception &e)
@@ -543,7 +597,10 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed to access column";
     case ekSDKRES_FORMAT_COLUMN_ERROR:
         return "Failed to change column format";
-
+    case ekSDKRES_ACCESS_ROW_ERROR:
+        return "Failed to access row";
+    case ekSDKRES_FORMAT_ROW_ERROR:
+        return "Failed to change row format";
     default:
         return "Unknown error";
     }
@@ -761,6 +818,30 @@ static sdkres_t i_get_column(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_get_row(
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
+                    uint32_t row,
+                    css::uno::Reference<css::beans::XPropertySet> &xTableRow)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::table::XColumnRowRange> xRange(xSheet, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::table::XTableRows> xRows = xRange->getRows();
+        css::uno::Any item = xRows->getByIndex((sal_Int32)row);
+        xTableRow = css::uno::Reference<css::beans::XPropertySet>(item, css::uno::UNO_QUERY_THROW);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_COLUMN_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_set_cell_text(
                     css::uno::Reference<css::table::XCell> &xCell,
                     const char_t *text)
@@ -792,6 +873,29 @@ static sdkres_t i_set_cell_value(
     try
     {
         xCell->setValue((double)value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_set_cell_formula(
+                    css::uno::Reference<css::table::XCell> &xCell,
+                    const char_t *formula)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        String *form = str_printf("=%s", formula);
+        ::rtl::OUString sformula = i_OUStringFromUTF8(tc(form));
+        xCell->setFormula(sformula);
+        str_destroy(&form);
     }
     catch (css::uno::Exception&)
     {
@@ -856,6 +960,220 @@ static sdkres_t i_set_cell_property(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_set_cell_range_property(
+                    css::uno::Reference<css::table::XCellRange> &xCellRange,
+                    const char_t *prop_name,
+                    const css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::beans::XPropertySet> xCellProps = css::uno::Reference<css::beans::XPropertySet>::query(xCellRange);
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        xCellProps->setPropertyValue(prop, value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_column_property(
+                    const css::uno::Reference<css::beans::XPropertySet> &xTableCol,
+                    const char_t *prop_name,
+                    css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        value = xTableCol->getPropertyValue(prop);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_COLUMN_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_column_width(
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
+                    const uint32_t column_id,
+                    sal_Int32 &width)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xTableCol;
+
+    res = i_get_column(xSheet, column_id, xTableCol);
+    if (res == ekSDKRES_OK)
+    {
+        css::uno::Any value;
+        res = i_get_column_property(xTableCol, "Width", value);
+        value >>= width;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_row_property(
+                    const css::uno::Reference<css::beans::XPropertySet> &xTableRow,
+                    const char_t *prop_name,
+                    css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        value = xTableRow->getPropertyValue(prop);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_ROW_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_row_height(
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
+                    const uint32_t row_id,
+                    sal_Int32 &height)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xTableRow;
+
+    res = i_get_row(xSheet, row_id, xTableRow);
+    if (res == ekSDKRES_OK)
+    {
+        css::uno::Any value;
+        res = i_get_row_property(xTableRow, "Height", value);
+        value >>= height;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_range_frame(
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
+                    css::uno::Reference<css::sheet::XCellRangeAddressable> &xRange,
+                    sal_Int32 &x,
+                    sal_Int32 &y,
+                    sal_Int32 &width,
+                    sal_Int32 &height)
+{
+    sdkres_t res = ekSDKRES_OK;
+    x = 0;
+    y = 0;
+    width = 0;
+    height = 0;
+
+    try
+    {
+        css::table::CellRangeAddress range = xRange->getRangeAddress();
+
+        if (res == ekSDKRES_OK)
+        {
+            for (uint32_t i = 0; i < (uint32_t)range.StartColumn; ++i)
+            {
+                sal_Int32 lwidth;
+                res = i_get_column_width(xSheet, i, lwidth);
+                x += lwidth;
+
+                if (res != ekSDKRES_OK)
+                    break;
+            }
+        }
+
+        if (res == ekSDKRES_OK)
+        {
+            for (uint32_t i = (uint32_t)range.StartColumn; i <= (uint32_t)range.EndColumn; ++i)
+            {
+                sal_Int32 lwidth;
+                res = i_get_column_width(xSheet, i, lwidth);
+                width += lwidth;
+
+                if (res != ekSDKRES_OK)
+                    break;
+            }
+        }
+
+        if (res == ekSDKRES_OK)
+        {
+            for (uint32_t i = 0; i < (uint32_t)range.StartRow; ++i)
+            {
+                sal_Int32 lheight;
+                res = i_get_row_height(xSheet, i, lheight);
+                y += lheight;
+
+                if (res != ekSDKRES_OK)
+                    break;
+            }
+        }
+
+        if (res == ekSDKRES_OK)
+        {
+            for (uint32_t i = (uint32_t)range.StartRow; i <= (uint32_t)range.EndRow; ++i)
+            {
+                sal_Int32 lheight;
+                res = i_get_row_height(xSheet, i, lheight);
+                height += lheight;
+
+                if (res != ekSDKRES_OK)
+                    break;
+            }
+        }
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_cell_frame(
+                    css::uno::Reference<css::sheet::XSpreadsheet> &xSheet,
+                    css::uno::Reference<css::table::XCell> &xCell,
+                    sal_Int32 &x,
+                    sal_Int32 &y,
+                    sal_Int32 &width,
+                    sal_Int32 &height)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::sheet::XCellRangeAddressable> xRange = css::uno::Reference<css::sheet::XCellRangeAddressable>(xCell, css::uno::UNO_QUERY_THROW);
+        res = i_get_range_frame(xSheet, xRange, x, y, width, height);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_set_column_property(
                     css::uno::Reference<css::beans::XPropertySet> &xTableCol,
                     const char_t *prop_name,
@@ -871,6 +1189,28 @@ static sdkres_t i_set_column_property(
     catch (css::uno::Exception&)
     {
         res = ekSDKRES_FORMAT_COLUMN_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_set_row_property(
+                    css::uno::Reference<css::beans::XPropertySet> &xTableRow,
+                    const char_t *prop_name,
+                    const css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        xTableRow->setPropertyValue(prop, value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_FORMAT_ROW_ERROR;
     }
 
     return res;
@@ -942,6 +1282,26 @@ static sdkres_t i_doc_column(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_doc_row(
+                        Sheet *sheet,
+                        const uint32_t page,
+                        const uint32_t col,
+                        css::uno::Reference<css::beans::XPropertySet> &xTableRow)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(sheet, page, xSheet);
+
+    if (res == ekSDKRES_OK)
+        res = i_get_row(xSheet, col, xTableRow);
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_doc_locale(
                         Sheet *sheet,
                         css::lang::Locale &xLocale)
@@ -984,6 +1344,131 @@ static sdkres_t i_doc_number_formats(
     }
 
     return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_create_shape(
+                        css::uno::Reference<css::frame::XModel> &xModel,
+                        const char_t *shapeType,
+                        css::uno::Reference<css::drawing::XShape> &xShape)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        ::rtl::OUString type = i_OUStringFromUTF8(shapeType);
+        css::uno::Reference<css::lang::XMultiServiceFactory> xServiceFactory(xModel, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::uno::XInterface> xInterface = xServiceFactory->createInstance(type);
+        xShape = css::uno::Reference<css::drawing::XShape>(xInterface, css::uno::UNO_QUERY_THROW);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error creating new shape: " << e.Message;
+        res = ekSDKRES_CREATE_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_draw_page(
+                        css::uno::Reference<css::frame::XModel> &xModel,
+                        const uint32_t page,
+                        css::uno::Reference<css::drawing::XDrawPage> &xDrawPage)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        css::uno::Reference<css::drawing::XDrawPagesSupplier> xPagesSupplier = css::uno::Reference<css::drawing::XDrawPagesSupplier>(xModel, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::drawing::XDrawPages> xDrawPages = xPagesSupplier->getDrawPages();
+        css::uno::Any item = xDrawPages->getByIndex((sal_Int32)page);
+        xDrawPage = css::uno::Reference<css::drawing::XDrawPage>(item, css::uno::UNO_QUERY_THROW);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_insert_image(
+                        css::uno::Reference<css::frame::XModel> &xModel,
+                        const uint32_t page,
+                        const char_t *image_path,
+                        const sal_Int32 x,
+                        const sal_Int32 y,
+                        const sal_Int32 width,
+                        const sal_Int32 height)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::drawing::XDrawPage> xDrawPage;
+        css::uno::Reference<css::graphic::XGraphic> xGraphic;
+        css::uno::Reference<css::drawing::XShape> xShape;
+
+        // Get a draw page
+        res = i_get_draw_page(xModel, page, xDrawPage);
+
+        // Get the image graphic from file
+        if (res == ekSDKRES_OK)
+            res = i_OFFICE_SDK.LoadImage(image_path, xGraphic);
+
+        // Create the shape
+        if (res == ekSDKRES_OK)
+            res = i_create_shape(xModel, "com.sun.star.drawing.GraphicObjectShape", xShape);
+
+        // Configure the shape and add the image graphic
+        if (res == ekSDKRES_OK)
+        {
+            css::uno::Reference<css::beans::XPropertySet> xProps(xShape, css::uno::UNO_QUERY_THROW);
+            xProps->setPropertyValue("Graphic", css::uno::makeAny(xGraphic));
+            xShape->setPosition(css::awt::Point(x, y));
+            xShape->setSize(css::awt::Size(width, height));
+        }
+
+        // Finally, we draw the shape in the page
+        xDrawPage->add(xShape);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t officesdk_sheet_add(Sheet *sheet, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    uint32_t id = UINT32_MAX;
+    String *defname = NULL;
+
+    try
+    {
+        css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
+        css::uno::Reference<css::sheet::XSpreadsheets> xSheets = (*xDocument)->getSheets();
+        css::uno::Reference<css::container::XIndexAccess> xIndexAccess(xSheets, css::uno::UNO_QUERY_THROW);
+        sal_Int32 n = xIndexAccess->getCount();
+        defname = str_printf("Sheet%d", n);
+        xSheets->insertNewByName(i_OUStringFromString(defname), (sal_Int16)n);
+        id = (uint32_t)n;
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    str_destopt(&defname);
+    ptr_assign(err, res);
+    return id;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1045,6 +1530,33 @@ void officesdk_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t pro
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(sheet, page, xSheet);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::sheet::XSpreadsheetView> xView(xSheet, css::uno::UNO_QUERY_THROW);
+            css::uno::Reference<css::sheet::XViewFreezable> xFreezable(xView, css::uno::UNO_QUERY_THROW);
+            xFreezable->freezeAtPosition((sal_Int32)ncols, (sal_Int32)nrows);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *text, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -1072,6 +1584,21 @@ void officesdk_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_
 
     if (res == ekSDKRES_OK)
         res = i_set_cell_value(xCell, value);
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_formula(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *formula, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_formula(xCell, formula);
 
     ptr_assign(err, res);
 }
@@ -1258,6 +1785,36 @@ void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_sheet_cell_wrap(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_property(xCell, "IsTextWrapped", css::uno::makeAny((sal_Bool)wrapped));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_color(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_text_property(xCell, "CharColor", css::uno::makeAny((sal_uInt32)rgb));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -1273,7 +1830,173 @@ void officesdk_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uin
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheet_cell_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, sdkres_t *err)
+void officesdk_sheet_cells_backcolor(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const uint32_t rgb, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCellRange> xCellRange;
+
+    res = i_doc_range(sheet, page, st_col, st_row, ed_col, ed_row, xCellRange);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_range_property(xCellRange, "CellBackColor", css::uno::makeAny((sal_uInt32)rgb));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *image_path, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+    css::uno::Reference<css::table::XCell> xCell;
+    css::uno::Reference<css::frame::XModel> xModel;
+    sal_Int32 x = 0, y = 0, width = 0, height = 0;
+
+    res = i_get_sheet(sheet, page, xSheet);
+
+    // Cell for insertion
+    if (res == ekSDKRES_OK)
+        res = i_doc_cell(sheet, page, col, row, xCell);
+
+    // The insertion frame
+    if (res == ekSDKRES_OK)
+        res = i_get_cell_frame(xSheet, xCell, x, y, width, height);
+
+    // The document model (required for creating new graphic objects)
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
+            xModel = css::uno::Reference<css::frame::XModel>(*xDocument, css::uno::UNO_QUERY_THROW);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    if (res == ekSDKRES_OK)
+        res = i_insert_image(xModel, page, image_path, x, y, width, height);
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sal_Int16 i_line_style(const linestyle_t style)
+{
+    switch(style) {
+    case ekLINE_STYLE_NONE:
+        return css::table::BorderLineStyle::NONE;
+    case ekLINE_STYLE_SOLID:
+        return css::table::BorderLineStyle::SOLID;
+    case ekLINE_STYLE_DOTTED:
+        return css::table::BorderLineStyle::DOTTED;
+    case ekLINE_STYLE_DASHED:
+        return css::table::BorderLineStyle::DASHED;
+    case ekLINE_STYLE_DOUBLE:
+        return css::table::BorderLineStyle::DOUBLE;
+    case ekLINE_STYLE_THINTHICK_SMALLGAP:
+        return css::table::BorderLineStyle::THINTHICK_SMALLGAP;
+    case ekLINE_STYLE_THINTHICK_MEDIUMGAP:
+        return css::table::BorderLineStyle::THINTHICK_MEDIUMGAP;
+    case ekLINE_STYLE_THINTHICK_LARGEGAP:
+        return css::table::BorderLineStyle::THINTHICK_LARGEGAP;
+    case ekLINE_STYLE_THICKTHIN_SMALLGAP:
+        return css::table::BorderLineStyle::THICKTHIN_SMALLGAP;
+    case ekLINE_STYLE_THICKTHIN_MEDIUMGAP:
+        return css::table::BorderLineStyle::THICKTHIN_MEDIUMGAP;
+    case ekLINE_STYLE_THICKTHIN_LARGEGAP:
+        return css::table::BorderLineStyle::THICKTHIN_LARGEGAP;
+    case ekLINE_STYLE_EMBOSSED:
+        return css::table::BorderLineStyle::EMBOSSED;
+    case ekLINE_STYLE_ENGRAVED:
+        return css::table::BorderLineStyle::ENGRAVED;
+    case ekLINE_STYLE_OUTSET:
+        return css::table::BorderLineStyle::OUTSET;
+    case ekLINE_STYLE_INSET:
+        return css::table::BorderLineStyle::INSET;
+    case ekLINE_STYLE_FINE_DASHED:
+        return css::table::BorderLineStyle::DASHED;
+    case ekLINE_STYLE_DOUBLE_THIN:
+        return css::table::BorderLineStyle::DOUBLE_THIN;
+    case ekLINE_STYLE_DASH_DOT:
+        return css::table::BorderLineStyle::DASH_DOT;
+    case ekLINE_STYLE_DASH_DOT_DOT:
+        return css::table::BorderLineStyle::DASH_DOT_DOT;
+    }
+
+    return css::table::BorderLineStyle::NONE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static css::table::BorderLine2 i_border_line(const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
+{
+    css::table::BorderLine2 border;
+    border.LineStyle = i_line_style(style);
+    border.LineWidth = (sal_uInt32)thickness;
+    border.Color = (sal_Int32)rgb;
+    return border;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static css::table::TableBorder2 i_table_border(const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
+{
+    css::table::TableBorder2 border;
+    border.LeftLine = i_border_line(style, thickness, rgb);
+    border.RightLine = i_border_line(style, thickness, rgb);
+    border.TopLine = i_border_line(style, thickness, rgb);
+    border.BottomLine = i_border_line(style, thickness, rgb);
+    border.IsLeftLineValid = sal_True;
+    border.IsRightLineValid = sal_True;
+    border.IsTopLineValid = sal_True;
+    border.IsBottomLineValid = sal_True;
+    return border;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_border(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::table::TableBorder2 border = i_table_border(style, thickness, rgb);
+        res = i_set_cell_property(xCell, "TableBorder2", css::uno::makeAny(border));
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cells_border(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCellRange> xCellRange;
+
+    res = i_doc_range(sheet, page, st_col, st_row, ed_col, ed_row, xCellRange);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::table::TableBorder2 border = i_table_border(style, thickness, rgb);
+        res = i_set_cell_range_property(xCellRange, "TableBorder2", css::uno::makeAny(border));
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cells_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::table::XCellRange> xCellRange;
@@ -1337,6 +2060,51 @@ void officesdk_sheet_column_width(Sheet *sheet, const uint32_t page, const uint3
 
     if (res == ekSDKRES_OK)
         res = i_set_column_property(xTableCol, "Width", css::uno::makeAny((sal_Int32)width));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_row_visible(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t visible, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xTableRow;
+
+    res = i_doc_row(sheet, page, row, xTableRow);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_row_property(xTableRow, "IsVisible", css::uno::makeAny((sal_Bool)visible));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_row_optimal_height(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t optimal_height, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xTableRow;
+
+    res = i_doc_row(sheet, page, row, xTableRow);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_row_property(xTableRow, "OptimalHeight", css::uno::makeAny((sal_Bool)optimal_height));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xTableRow;
+
+    res = i_doc_row(sheet, page, row, xTableRow);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_row_property(xTableRow, "Height", css::uno::makeAny((sal_Int32)height));
 
     ptr_assign(err, res);
 }

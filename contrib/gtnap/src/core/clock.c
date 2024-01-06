@@ -97,7 +97,6 @@ bool_t clock_frame(Clock *clk, real64_t *prev_frame, real64_t *curr_frame)
     {
         if (tms_new < clk->last_update_time_stamp)
         {
-            cassert(clk->last_update_time_stamp - tms_new < .5);
             tms_new = clk->last_update_time_stamp;
         }
 

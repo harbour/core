@@ -86,6 +86,15 @@ HB_FUNC( NAP_XLS_CLOSE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_ADD )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t id = hb_gtnap_office_sheet_add(sheet);
+    hb_retni(id);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_NAME )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
@@ -103,6 +112,17 @@ HB_FUNC( NAP_XLS_PROTECT )
     bool_t protect = (bool_t)hb_parl(3);
     HB_ITEM *pass_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK);
     hb_gtnap_office_sheet_protect(sheet, page, protect, pass_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_FREEZE )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t ncols = hb_parni(3);
+    uint32_t nrows = hb_parni(4);
+    hb_gtnap_office_sheet_freeze(sheet, page, ncols, nrows);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -127,6 +147,18 @@ HB_FUNC( NAP_XLS_CELL_VALUE )
     uint32_t row = hb_parni(4);
     real64_t value = hb_parnd(5);
     hb_gtnap_office_sheet_cell_value(sheet, page, col, row, value);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_CELL_FORMULA )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    HB_ITEM *formula_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_sheet_cell_formula(sheet, page, col, row, formula_block);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -215,6 +247,30 @@ HB_FUNC( NAP_XLS_CELL_VALIGN )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CELL_WRAP )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    bool_t wrapped = (bool_t)hb_parl(5);
+    hb_gtnap_office_sheet_cell_wrap(sheet, page, col, row, wrapped);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_CELL_COLOR )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    uint32_t rgb = hb_parni(5);
+    hb_gtnap_office_sheet_cell_color(sheet, page, col, row, rgb);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_BACKCOLOR )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
@@ -227,7 +283,7 @@ HB_FUNC( NAP_XLS_CELL_BACKCOLOR )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_MERGE )
+HB_FUNC( NAP_XLS_CELLS_BACKCOLOR )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
     uint32_t page = hb_parni(2);
@@ -235,7 +291,63 @@ HB_FUNC( NAP_XLS_CELL_MERGE )
     uint32_t st_row = hb_parni(4);
     uint32_t ed_col = hb_parni(5);
     uint32_t ed_row = hb_parni(6);
-    hb_gtnap_office_sheet_cell_merge(sheet, page, st_col, st_row, ed_col, ed_row);
+    uint32_t rgb = hb_parni(7);
+    hb_gtnap_office_sheet_cells_backcolor(sheet, page, st_col, st_row, ed_col, ed_row, rgb);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_CELL_IMAGE )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    HB_ITEM *image_path_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_sheet_cell_image(sheet, page, col, row, image_path_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_CELL_BORDER )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    linestyle_t style = (linestyle_t)hb_parni(5);
+    uint32_t thickness = hb_parni(6);
+    uint32_t rgb = hb_parni(7);
+    hb_gtnap_office_sheet_cell_border(sheet, page, col, row, style, thickness, rgb);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_CELLS_BORDER )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t st_col = hb_parni(3);
+    uint32_t st_row = hb_parni(4);
+    uint32_t ed_col = hb_parni(5);
+    uint32_t ed_row = hb_parni(6);
+    linestyle_t style = (linestyle_t)hb_parni(7);
+    uint32_t thickness = hb_parni(8);
+    uint32_t rgb = hb_parni(9);
+    hb_gtnap_office_sheet_cells_border(sheet, page, st_col, st_row, ed_col, ed_row, style, thickness, rgb);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_CELLS_MERGE )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t st_col = hb_parni(3);
+    uint32_t st_row = hb_parni(4);
+    uint32_t ed_col = hb_parni(5);
+    uint32_t ed_row = hb_parni(6);
+    hb_gtnap_office_sheet_cells_merge(sheet, page, st_col, st_row, ed_col, ed_row);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -269,4 +381,37 @@ HB_FUNC( NAP_XLS_COLUMN_WIDTH )
     uint32_t col = hb_parni(3);
     uint32_t width = hb_parni(4);
     hb_gtnap_office_sheet_column_width(sheet, page, col, width);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_ROW_VISIBLE )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t row = hb_parni(3);
+    bool_t visible = (bool_t)hb_parl(4);
+    hb_gtnap_office_sheet_row_visible(sheet, page, row, visible);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_ROW_OPTIMAL_HEIGHT )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t row = hb_parni(3);
+    bool_t optimal_height = (bool_t)hb_parl(4);
+    hb_gtnap_office_sheet_row_optimal_height(sheet, page, row, optimal_height);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_ROW_HEIGHT )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t row = hb_parni(3);
+    uint32_t height = hb_parni(4);
+    hb_gtnap_office_sheet_row_height(sheet, page, row, height);
 }
