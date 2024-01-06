@@ -271,6 +271,18 @@ HB_FUNC( NAP_XLS_CELL_BACKCOLOR )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CELL_IMAGE )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    HB_ITEM *image_path_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_sheet_cell_image(sheet, page, col, row, image_path_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_BORDER )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

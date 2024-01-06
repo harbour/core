@@ -993,7 +993,7 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->rows = INIT_ROWS;
     GTNAP_GLOBAL->cols = INIT_COLS;
     GTNAP_GLOBAL->windows = arrpt_create(GtNapWindow);
-    GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == HB_TRUE) ? 8 : 6;
+    GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == (HB_BOOL)HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
     GTNAP_GLOBAL->last_office_error = ENUM_MAX(sdkres_t);
 
@@ -4723,6 +4723,15 @@ void hb_gtnap_office_sheet_cell_color(Sheet *sheet, const uint32_t page, const u
 void hb_gtnap_office_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb)
 {
     officesdk_sheet_cell_backcolor(sheet, page, col, row, rgb, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *image_path_block)
+{
+    String *image_path = hb_block_to_utf8(image_path_block);
+    officesdk_sheet_cell_image(sheet, page, col, row, tc(image_path), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&image_path);
 }
 
 /*---------------------------------------------------------------------------*/
