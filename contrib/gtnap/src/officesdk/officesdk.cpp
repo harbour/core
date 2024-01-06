@@ -14,6 +14,7 @@
 #include <beans/XPropertySet.hpp>
 #include <bridge/XUnoUrlResolver.hpp>
 #include <drawing/XDrawPageSupplier.hpp>
+#include <drawing/XDrawPagesSupplier.hpp>
 #include <frame/Desktop.hpp>
 #include <frame/XComponentLoader.hpp>
 #include <frame/XStorable.hpp>
@@ -65,8 +66,6 @@ public:
     sdkres_t OpenSheetDocument(const char_t *url, css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
 
     sdkres_t LoadImage(const char_t *url, css::uno::Reference<css::graphic::XGraphic> &xGraphic);
-
-    sdkres_t CreateShape(css::uno::Reference<css::frame::XModel> &xModel, const char_t *shapeType, css::uno::Reference<css::drawing::XShape> &xShape);
 
     sdkres_t CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
 
@@ -405,30 +404,6 @@ sdkres_t OfficeSdk::LoadImage(
     {
         std::cout << "Error loading image: " << e.Message;
         res = ekSDKRES_OPEN_FILE_ERROR;
-    }
-
-    return res;
-}
-
-/*---------------------------------------------------------------------------*/
-
-sdkres_t OfficeSdk::CreateShape(
-                        css::uno::Reference<css::frame::XModel> &xModel,
-                        const char_t *shapeType, 
-                        css::uno::Reference<css::drawing::XShape> &xShape)
-{
-    sdkres_t res = ekSDKRES_OK;
-    try
-    {
-        ::rtl::OUString type = i_OUStringFromUTF8(shapeType);
-        css::uno::Reference<css::lang::XMultiServiceFactory> xServiceFactory(xModel, css::uno::UNO_QUERY_THROW);
-        css::uno::Reference<css::uno::XInterface> xInterface = xServiceFactory->createInstance(type);
-        xShape = css::uno::Reference<css::drawing::XShape>(xInterface, css::uno::UNO_QUERY_THROW);
-    }
-    catch(css::uno::Exception &e)
-    {
-        std::cout << "Error creating new shape: " << e.Message;
-        res = ekSDKRES_CREATE_FILE_ERROR;
     }
 
     return res;
@@ -1327,9 +1302,56 @@ static sdkres_t i_doc_number_formats(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_create_shape(
+                        css::uno::Reference<css::frame::XModel> &xModel,
+                        const char_t *shapeType, 
+                        css::uno::Reference<css::drawing::XShape> &xShape)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        ::rtl::OUString type = i_OUStringFromUTF8(shapeType);
+        css::uno::Reference<css::lang::XMultiServiceFactory> xServiceFactory(xModel, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::uno::XInterface> xInterface = xServiceFactory->createInstance(type);
+        xShape = css::uno::Reference<css::drawing::XShape>(xInterface, css::uno::UNO_QUERY_THROW);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error creating new shape: " << e.Message;
+        res = ekSDKRES_CREATE_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_draw_page(
+                        css::uno::Reference<css::frame::XModel> &xModel,
+                        const uint32_t page,
+                        css::uno::Reference<css::drawing::XDrawPage> &xDrawPage)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        css::uno::Reference<css::drawing::XDrawPagesSupplier> xPagesSupplier = css::uno::Reference<css::drawing::XDrawPagesSupplier>(xModel, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::drawing::XDrawPages> xDrawPages = xPagesSupplier->getDrawPages(); 
+        css::uno::Any item = xDrawPages->getByIndex((sal_Int32)page);
+        xDrawPage = css::uno::Reference<css::drawing::XDrawPage>(item, css::uno::UNO_QUERY_THROW);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_insert_image(
                         css::uno::Reference<css::frame::XModel> &xModel,
-                        css::uno::Reference<css::drawing::XDrawPageSupplier> &xPageSupplier,
+                        const uint32_t page,
                         const char_t *image_path,
                         const sal_Int32 x,
                         const sal_Int32 y,
@@ -1340,19 +1362,22 @@ static sdkres_t i_insert_image(
 
     try
     {
-        // Get a draw context
-        css::uno::Reference<css::drawing::XDrawPage> xDrawPage = xPageSupplier->getDrawPage(); 
+        css::uno::Reference<css::drawing::XDrawPage> xDrawPage;
+        css::uno::Reference<css::graphic::XGraphic> xGraphic;
         css::uno::Reference<css::drawing::XShape> xShape;
 
+        // Get a draw page
+        res = i_get_draw_page(xModel, page, xDrawPage);
+
         // Get the image graphic from file
-        css::uno::Reference<css::graphic::XGraphic> xGraphic;
-        res = i_OFFICE_SDK.LoadImage(image_path, xGraphic);
+        if (res == ekSDKRES_OK)
+            res = i_OFFICE_SDK.LoadImage(image_path, xGraphic);
 
         // Create the shape
         if (res == ekSDKRES_OK)
-            res = i_OFFICE_SDK.CreateShape(xModel, "com.sun.star.drawing.GraphicObjectShape", xShape);
+            res = i_create_shape(xModel, "com.sun.star.drawing.GraphicObjectShape", xShape);
 
-        // Configure the shape
+        // Configure the shape and add the image graphic
         if (res == ekSDKRES_OK)
         {
             css::uno::Reference<css::beans::XPropertySet> xProps(xShape, css::uno::UNO_QUERY_THROW);
@@ -1361,6 +1386,7 @@ static sdkres_t i_insert_image(
             xShape->setSize(css::awt::Size(width, height));
         }
 
+        // Finally, we draw the shape in the page
         xDrawPage->add(xShape);
     }
     catch (css::uno::Exception&)
@@ -1747,25 +1773,11 @@ void officesdk_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
-    css::uno::Reference<css::drawing::XDrawPageSupplier> xPageSupplier;
     css::uno::Reference<css::table::XCell> xCell;
     css::uno::Reference<css::frame::XModel> xModel;
     sal_Int32 x = 0, y = 0, width = 0, height = 0;
     
     res = i_get_sheet(sheet, page, xSheet);
-
-    // Drawing supplier from xSheet
-    if (res == ekSDKRES_OK)
-    {
-        try 
-        {
-            xPageSupplier = css::uno::Reference<css::drawing::XDrawPageSupplier>(xSheet, css::uno::UNO_QUERY_THROW);
-        }
-        catch (css::uno::Exception&)
-        {
-            res = ekSDKRES_ACCESS_DOC_ERROR;
-        }
-    }
 
     // Cell for insertion
     if (res == ekSDKRES_OK)
@@ -1790,7 +1802,7 @@ void officesdk_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_
     }
 
     if (res == ekSDKRES_OK)
-        res = i_insert_image(xModel, xPageSupplier, image_path, x, y, width, height);
+        res = i_insert_image(xModel, page, image_path, x, y, width, height);
 
     ptr_assign(err, res);
 }
