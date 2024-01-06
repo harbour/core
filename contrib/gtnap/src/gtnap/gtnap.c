@@ -4655,6 +4655,15 @@ void hb_gtnap_office_sheet_cell_value(Sheet *sheet, const uint32_t page, const u
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_cell_formula(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *formula_block)
+{
+    String *formula = hb_block_to_utf8(formula_block);
+    officesdk_sheet_cell_formula(sheet, page, col, row, tc(formula), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&formula);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_cell_numformat(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const numformat_t format)
 {
     officesdk_sheet_cell_numformat(sheet, page, col, row, format, &GTNAP_GLOBAL->last_office_error);

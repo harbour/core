@@ -151,6 +151,18 @@ HB_FUNC( NAP_XLS_CELL_VALUE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CELL_FORMULA )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    HB_ITEM *formula_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_sheet_cell_formula(sheet, page, col, row, formula_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_NUMFORMAT )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

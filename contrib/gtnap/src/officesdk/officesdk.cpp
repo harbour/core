@@ -884,6 +884,29 @@ static sdkres_t i_set_cell_value(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_set_cell_formula(
+                    css::uno::Reference<css::table::XCell> &xCell,
+                    const char_t *formula)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        String *form = str_printf("=%s", formula);
+        ::rtl::OUString sformula = i_OUStringFromUTF8(tc(form));
+        xCell->setFormula(sformula);
+        str_destroy(&form);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_set_cell_text_property(
                     css::uno::Reference<css::table::XCell> &xCell,
                     const char_t *prop_name,
@@ -1434,7 +1457,7 @@ uint32_t officesdk_sheet_add(Sheet *sheet, sdkres_t *err)
         css::uno::Reference<css::sheet::XSpreadsheets> xSheets = (*xDocument)->getSheets();
         css::uno::Reference<css::container::XIndexAccess> xIndexAccess(xSheets, css::uno::UNO_QUERY_THROW);
         sal_Int32 n = xIndexAccess->getCount();
-        String *defname = str_printf("Sheet%d", n);
+        defname = str_printf("Sheet%d", n);
         xSheets->insertNewByName(i_OUStringFromString(defname), (sal_Int16)n);
         id = (uint32_t)n;
     }
@@ -1561,6 +1584,21 @@ void officesdk_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_
 
     if (res == ekSDKRES_OK)
         res = i_set_cell_value(xCell, value);
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_formula(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *formula, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_formula(xCell, formula);
 
     ptr_assign(err, res);
 }

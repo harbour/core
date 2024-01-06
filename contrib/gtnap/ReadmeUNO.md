@@ -165,6 +165,18 @@ PAR4: Row index (0-based).
 PAR5: Numeric value (double).
 ```
 
+### Set Cell Formula
+
+```
+NAP_XLS_CELL_FORMULA(O_XLS, 0, 10, 8, "B22+B23")
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Column index (0-based).
+PAR4: Row index (0-based).
+PAR5: String with the formula.
+```
+
 ### Cell Numeric Format
 
 ```
