@@ -364,6 +364,24 @@ PAR7: Color value returned by NAP_OFFICE_RGB.
 #define SDK_LINE_STYLE_DASH_DOT_DOT             19
 ```
 
+### Border for a group of cells
+
+```
+NAP_XLS_CELLS_BORDER(O_XLS, 0, 0, 0, 10, 8, SDK_LINE_STYLE_SOLID, 50, NAP_OFFICE_RGB(255, 255, 255))
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Column-left index (0-based).
+PAR4: Row-top index (0-based).
+PAR5: Column-right index >= column-left.
+PAR6: Row-bottom index >= row-top.
+PAR7: Line style.
+PAR8: Line thickness (integer 1/100th mm)
+PAR9: Color value returned by NAP_OFFICE_RGB.
+```
+
+> **Important:** The inner lines will not be drawn. Only the border of entire group.
+
 ### Merge cells
 
 ```

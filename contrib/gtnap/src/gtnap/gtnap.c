@@ -4750,6 +4750,13 @@ void hb_gtnap_office_sheet_cell_border(Sheet *sheet, const uint32_t page, const 
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_cells_border(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
+{
+    officesdk_sheet_cells_border(sheet, page, st_col, st_row, ed_col, ed_row, style, thickness, rgb, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_cells_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row)
 {
     officesdk_sheet_cells_merge(sheet, page, st_col, st_row, ed_col, ed_row, &GTNAP_GLOBAL->last_office_error);

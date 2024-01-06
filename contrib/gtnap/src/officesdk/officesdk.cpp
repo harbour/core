@@ -1940,6 +1940,24 @@ void officesdk_sheet_cell_border(Sheet *sheet, const uint32_t page, const uint32
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_sheet_cells_border(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCellRange> xCellRange;
+
+    res = i_doc_range(sheet, page, st_col, st_row, ed_col, ed_row, xCellRange);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::table::TableBorder2 border = i_table_border(style, thickness, rgb);
+        res = i_set_cell_range_property(xCellRange, "TableBorder2", css::uno::makeAny(border));
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheet_cells_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
