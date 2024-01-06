@@ -269,6 +269,9 @@ IF OFFICE_ERROR("Creando a planilha")
     RETURN
 ENDIF
 
+// Remove all grid lines
+NAP_XLS_CELLS_BACKCOLOR(O_XLS, N_Page, 0, 0, 1000, 1000, NAP_OFFICE_RGB(255, 255, 255))
+
 // Generate the spreadsheet pages
 NAP_XLS_NAME(O_XLS, 0, "RREO-Anexo 01")     // The first is allways created by an empty document
 ADD_PAGE(O_XLS, 1, "RREO-Anexo 02")
