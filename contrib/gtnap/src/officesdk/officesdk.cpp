@@ -1646,7 +1646,7 @@ void officesdk_sheet_cell_numformat(Sheet *sheet, const uint32_t page, const uin
             break;
         }
 
-        formatIndex = xFormats->getStandardFormat(nformat, xLocale);
+        formatIndex = xFormats->getFormatIndex(nformat, xLocale);
         res = i_set_cell_property(xCell, "NumberFormat", css::uno::makeAny(formatIndex));
     }
 
