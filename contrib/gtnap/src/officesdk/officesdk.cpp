@@ -3,6 +3,7 @@
 #include <core/strings.h>
 #include <osbs/bproc.h>
 #include <osbs/bthread.h>
+#include <osbs/btime.h>
 #include <osbs/osbs.h>
 #include <sewer/blib.h>
 #include <sewer/cassert.h>
@@ -884,6 +885,49 @@ static sdkres_t i_set_cell_value(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_set_cell_date(
+                    css::uno::Reference<css::table::XCell> &xCell,
+                    const uint8_t day,
+                    const uint8_t month,
+                    const int16_t year)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        Date date;
+        uint64_t epoch;
+        double value;
+        date.mday = day;
+        date.month = month;
+        date.year = year;
+        date.hour = 0;
+        date.minute = 0;
+        date.second = 0;
+
+        // Number of micro-seconds from epoch to date
+        epoch = btime_to_micro(&date);
+
+        // We want seconds
+        epoch = epoch / 1000000;
+
+        // Days from epoch + 25569 offset
+        // Difference to 1/1/1970 (epoch) since 12/30/1899 (LibreOffice 0-day) in days
+        // https://unix.stackexchange.com/questions/421354/convert-epoch-time-to-human-readable-in-libreoffice-calc
+        value = (double)((epoch/(24 * 60 * 60)) + 25569);
+         
+        xCell->setValue(value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_set_cell_formula(
                     css::uno::Reference<css::table::XCell> &xCell,
                     const char_t *formula)
@@ -1590,6 +1634,21 @@ void officesdk_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_sheet_cell_date(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint8_t day, const uint8_t month, const int16_t year, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_date(xCell, day, month, year);
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheet_cell_formula(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *formula, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -1643,6 +1702,36 @@ void officesdk_sheet_cell_numformat(Sheet *sheet, const uint32_t page, const uin
             break;
         case ekNUMFORMAT_PERC_DEC2:
             nformat = css::i18n::NumberFormatIndex::PERCENT_DEC2;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DDMMM:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DDMMM;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DDMMYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DDMMYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DDMMYYYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DDMMYYYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DMMMMYYYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DMMMMYYYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DMMMYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DMMMYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DMMMYYYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DMMMYYYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_MMYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_MMYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_NNDMMMMYYYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_NNDMMMMYYYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_NNDMMMYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_NNDMMMYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_NNNNDMMMMYYYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_NNNNDMMMMYYYY;
             break;
         }
 

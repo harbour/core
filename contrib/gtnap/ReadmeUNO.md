@@ -165,6 +165,20 @@ PAR4: Row index (0-based).
 PAR5: Numeric value (double).
 ```
 
+### Set Cell Date
+
+```
+NAP_XLS_CELL_DATE(O_XLS, 0, 0, 0, 31, 10, 2023)
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Column index (0-based).
+PAR4: Row index (0-based).
+PAR5: Day.
+PAR6: Month.
+PAR7: Year.
+```
+
 ### Set Cell Formula
 
 ```
@@ -194,6 +208,17 @@ PAR5: Numeric constant with the format.
 #define SDK_NUMFORMAT_DEC2_1000     4
 #define SDK_NUMFORMAT_PERC_INT      5
 #define SDK_NUMFORMAT_PERC_DEC2     6
+
+#define SDK_NUMFORMAT_DATE_SYS_DDMMM            7
+#define SDK_NUMFORMAT_DATE_SYS_DDMMYY           8
+#define SDK_NUMFORMAT_DATE_SYS_DDMMYYYY         9
+#define SDK_NUMFORMAT_DATE_SYS_DMMMMYYYY        10
+#define SDK_NUMFORMAT_DATE_SYS_DMMMYY           11
+#define SDK_NUMFORMAT_DATE_SYS_DMMMYYYY         12
+#define SDK_NUMFORMAT_DATE_SYS_MMYY             13
+#define SDK_NUMFORMAT_DATE_SYS_NNDMMMMYYYY      14
+#define SDK_NUMFORMAT_DATE_SYS_NNDMMMYY         15
+#define SDK_NUMFORMAT_DATE_SYS_NNNNDMMMMYYYY    16
 ```
 
 ### Cell Font Family

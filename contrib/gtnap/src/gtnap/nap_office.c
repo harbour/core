@@ -151,6 +151,20 @@ HB_FUNC( NAP_XLS_CELL_VALUE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_CELL_DATE )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    uint8_t day = (uint8_t)hb_parni(5);
+    uint8_t month = (uint8_t)hb_parni(6);
+    int16_t year = (int16_t)hb_parni(7);
+    hb_gtnap_office_sheet_cell_date(sheet, page, col, row, day, month, year);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_FORMULA )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

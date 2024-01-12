@@ -78,6 +78,17 @@
 #define SDK_NUMFORMAT_PERC_INT      5
 #define SDK_NUMFORMAT_PERC_DEC2     6
 
+#define SDK_NUMFORMAT_DATE_SYS_DDMMM            7
+#define SDK_NUMFORMAT_DATE_SYS_DDMMYY           8
+#define SDK_NUMFORMAT_DATE_SYS_DDMMYYYY         9
+#define SDK_NUMFORMAT_DATE_SYS_DMMMMYYYY        10
+#define SDK_NUMFORMAT_DATE_SYS_DMMMYY           11
+#define SDK_NUMFORMAT_DATE_SYS_DMMMYYYY         12
+#define SDK_NUMFORMAT_DATE_SYS_MMYY             13
+#define SDK_NUMFORMAT_DATE_SYS_NNDMMMMYYYY      14
+#define SDK_NUMFORMAT_DATE_SYS_NNDMMMYY         15
+#define SDK_NUMFORMAT_DATE_SYS_NNNNDMMMMYYYY    16
+
 /* Line style for LibreOffice SDK */
 #define SDK_LINE_STYLE_NONE                     1
 #define SDK_LINE_STYLE_SOLID                    2
