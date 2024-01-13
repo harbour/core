@@ -279,6 +279,8 @@ ADD_PAGE(O_XLS, 5, "RREO-Anexo 07")
 ADD_PAGE(O_XLS, 6, "RREO-Anexo 13")
 ADD_PAGE(O_XLS, 7, "RREO-Anexo 14")
 
+FOR N_Page := 0 TO 7
+
 // Remove all grid lines
 NAP_XLS_CELLS_BACKCOLOR(O_XLS, N_Page, 0, 0, 1000, 1000, NAP_OFFICE_RGB(255, 255, 255))
 
@@ -287,15 +289,15 @@ NAP_XLS_ROW_HEIGHT(O_XLS, N_Page, 0, 2616)
 NAP_XLS_CELL_IMAGE(O_XLS, N_Page, 0, 0, {|| NAP_WORK_PATH() + "/../office/ods/cell_image_01.png" })
 
 NAP_XLS_FREEZE(O_XLS, N_Page, 1, 0)
-CELL_TEXT(O_XLS, N_Page, 0, 2, "RELATÓRIO RESUMIDO DE EXECUÇÃO ORÇAMENTÁRIA", 14, .T., 715)
-CELL_TEXT(O_XLS, N_Page, 0, 3, "VERSÃO: v11", 14, .T., 715)
-CELL_TEXT(O_XLS, N_Page, 0, 4, "VIGÊNCIA: 04/01/2023", 14, .T., 715)
-CELL_TEXT(O_XLS, N_Page, 0, 6, "Ente: 2301604 - Assaré/CE", 10, .T., 0)
-CELL_TEXT(O_XLS, N_Page, 0, 7, "Poder: E - Executivo", 10, .T., 0)
-CELL_TEXT(O_XLS, N_Page, 0, 8, "Instituição: 2029 - Prefeitura Municipal de Assaré - CE", 10, .T., 0)
-CELL_TEXT(O_XLS, N_Page, 0, 9, "Exercício: 2023", 10, .T., 0)
-CELL_TEXT(O_XLS, N_Page, 0, 10, "Periodicidade: BIMESTRAL", 10, .T., 0)
-CELL_TEXT(O_XLS, N_Page, 0, 11, "Período: 5º bimestre", 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 2, "RELATÓRIO RESUMIDO DE EXECUÇÃO ORÇAMENTÁRIA: " + hb_ntos(N_Page), 14, .T., 715)
+CELL_TEXT(O_XLS, N_Page, 0, 3, "VERSÃO: v11: " + hb_ntos(N_Page), 14, .T., 715)
+CELL_TEXT(O_XLS, N_Page, 0, 4, "VIGÊNCIA: 04/01/2023: " + hb_ntos(N_Page), 14, .T., 715)
+CELL_TEXT(O_XLS, N_Page, 0, 6, "Ente: 2301604 - Assaré/CE: " + hb_ntos(N_Page), 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 7, "Poder: E - Executivo: " + hb_ntos(N_Page), 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 8, "Instituição: 2029 - Prefeitura Municipal de Assaré - CE: " + hb_ntos(N_Page), 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 9, "Exercício: 2023: " + hb_ntos(N_Page), 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 10, "Periodicidade: BIMESTRAL: " + hb_ntos(N_Page), 10, .T., 0)
+CELL_TEXT(O_XLS, N_Page, 0, 11, "Período: 5º bimestre: " + hb_ntos(N_Page), 10, .T., 0)
 
 CELL_TEXT(O_XLS, N_Page, 0, 13, "Grupo: Tabela 1.0 - Balanço Orçamentário", 10, .T., 0)
 CELL_TEXT(O_XLS, N_Page, 0, 14, "Quadro: Receitas Orçamentárias", 10, .T., 0)
@@ -449,6 +451,8 @@ NAP_XLS_CELL_HALIGN(O_XLS, N_Page, 1, 25, SDK_HALIGN_CENTER)
 NAP_XLS_CELL_VALIGN(O_XLS, N_Page, 1, 25, SDK_VALIGN_CENTER)
 NAP_XLS_CELL_DATE(O_XLS, N_Page, 1, 25, 31, 10, 2023)
 NAP_XLS_CELL_NUMFORMAT(O_XLS, N_Page, 1, 25, SDK_NUMFORMAT_DATE_SYS_NNNNDMMMMYYYY)
+
+NEXT
 
 // Protect the sheet
 // NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
