@@ -8,6 +8,8 @@
 #include <sewer/blib.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
+#include <sewer/unicode.h>
+
 #include <sewer/nowarn.hxx>
 #include <cppuhelper/bootstrap.hxx>
 #include <rtl/bootstrap.hxx>
@@ -183,6 +185,22 @@ static ::rtl::OUString i_OUStringFileUrl(const char_t *str)
     ::rtl::OUString ostr = i_OUStringFromString(url);
     str_destroy(&url);
     return ostr;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static String *i_StringFromOUString(const ::rtl::OUString &ostr)
+{
+    sal_Int32 l = ostr.getLength();
+    const sal_Unicode *b = ostr.getStr();
+    uint32_t nbytes = 0, nused = 0;
+    String *str = NULL;
+    cassert(sizeof(sal_Unicode) == 2);
+    nbytes = unicode_convers_nbytes_n((const char_t*)b, (uint32_t)l * sizeof(sal_Unicode), ekUTF16, ekUTF8);
+    str = str_reserve(nbytes);
+    nused = unicode_convers((const char_t*)b, tcc(str), ekUTF16, ekUTF8, nbytes);
+    cassert(nused == nbytes);
+    return str;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1611,6 +1629,73 @@ void officesdk_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t nc
     }
 
     ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_column_id(const uint32_t col, char_t *id, const uint32_t n)
+{
+    const uint32_t n_ascii = 26;
+    uint32_t temp = col;
+    uint32_t i = 0;
+
+    for (;i < n - 1;)
+    {
+        id[i] = 'A' + (char_t)(temp % n_ascii);
+        i += 1;
+
+        if (temp < n_ascii)
+        {
+            id[i] = '\0';
+            break;
+        }
+        else
+        {
+            temp -= n_ascii;
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+String *officesdk_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+    ::rtl::OUString pageName;
+    String *str = NULL;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(sheet, page, xSheet);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::container::XNamed> xNamed = css::uno::Reference<css::container::XNamed>(xSheet, css::uno::UNO_QUERY_THROW);
+            pageName = xNamed->getName();
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        char_t col_id[64];
+        String *page_id = i_StringFromOUString(pageName);
+        i_column_id(col, col_id, sizeof(col_id));
+        str = str_printf("$'%s'.%s%d", tc(page_id), col_id, row + 1);
+        str_destroy(&page_id);
+    }
+    else
+    {
+        str = str_c("");
+    }
+
+    ptr_assign(err, res);
+    return str;
 }
 
 /*---------------------------------------------------------------------------*/

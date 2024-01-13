@@ -264,6 +264,7 @@ STAT PROC TST_PLANILHA_EXEMPLO_2
 LOCAL O_XLS := NAP_XLS_CREATE()
 LOCAL N_Page := 0
 LOCAL N_Col, N_Row, N_Cont
+LOCAL C_Formula := ""
 
 IF OFFICE_ERROR("Creando a planilha")
     RETURN
@@ -463,8 +464,20 @@ NAP_XLS_CELL_VALUE(O_XLS, 4, 0, 28, 829.00)
 NAP_XLS_CELL_VALUE(O_XLS, 5, 0, 28, -100.99)
 NAP_XLS_CELL_VALUE(O_XLS, 6, 0, 28, 43.74)
 NAP_XLS_CELL_VALUE(O_XLS, 7, 0, 28, 600.64)
-
 NAP_XLS_CELL_FORMULA(O_XLS, 0, 0, 29, "$'RREO-Anexo 01'.A29+$'RREO-Anexo 02'.A29+$'RREO-Anexo 03'.A29+$'RREO-Anexo 04'.A29+$'RREO-Anexo 06'.A29+$'RREO-Anexo 07'.A29+$'RREO-Anexo 13'.A29+$'RREO-Anexo 14'.A29")
+
+// Compose the same formula using cell references
+C_Formula:=""
+
+FOR N_Page := 0 TO 7
+    C_Formula += NAP_CELL_REF(O_XLS, N_Page, 0, 28)
+    IF N_Page < 7
+        C_Formula += "+"
+    ENDIF
+NEXT
+NAP_XLS_CELL_FORMULA(O_XLS, 0, 0, 30, C_Formula)
+
+
 
 // Protect the sheet
 // NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")

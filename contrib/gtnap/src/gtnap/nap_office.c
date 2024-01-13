@@ -136,6 +136,18 @@ HB_FUNC( NAP_XLS_FREEZE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CELL_REF )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    const char_t *ref = hb_gtnap_office_cell_ref(sheet, page, col, row);
+    hb_retc(ref);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_TEXT )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

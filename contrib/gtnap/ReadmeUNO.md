@@ -141,6 +141,18 @@ PAR3: Number of columns to freeze.
 PAR4: Number of rows to freeze.
 ```
 
+### Get Cell Reference for formulas
+
+```
+C_Ref := NAP_XLS_CELL_REF(O_XLS, 0, 0, 28)
+
+PAR1: The sheet document.
+PAR2: Page index (0-based).
+PAR3: Column index (0-based).
+PAR4: Row index (0-based).
+RET: A string with the cell reference "$'RREO-Anexo 01'.A29"
+```
+
 ### Set Cell Text
 
 ```

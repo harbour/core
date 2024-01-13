@@ -169,6 +169,8 @@ extern void hb_gtnap_office_sheet_protect(Sheet *sheet, const uint32_t page, con
 
 extern void hb_gtnap_office_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows);
 
+extern const char_t *hb_gtnap_office_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row);
+
 extern void hb_gtnap_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *text_block);
 
 extern void hb_gtnap_office_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value);
