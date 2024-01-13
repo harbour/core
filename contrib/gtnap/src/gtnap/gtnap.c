@@ -4613,6 +4613,19 @@ void hb_gtnap_office_sheet_pdf(Sheet *sheet, HB_ITEM *pathname_block)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block)
+{
+    String *filename = hb_block_to_utf8(filename_block);
+    String *printer = hb_block_to_utf8(printer_block);
+    String *pages = hb_block_to_utf8(pages_block);
+    officesdk_sheet_print(sheet, tc(filename), tc(printer), orient, format, paper_width, paper_height, num_copies, collate_copies, tc(pages), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&filename);
+    str_destroy(&printer);
+    str_destroy(&pages);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_close(Sheet *sheet)
 {
     officesdk_sheet_close(sheet, &GTNAP_GLOBAL->last_office_error);

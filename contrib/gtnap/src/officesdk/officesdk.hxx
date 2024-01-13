@@ -26,7 +26,9 @@ typedef enum _sdkres_t
     ekSDKRES_ACCESS_COLUMN_ERROR,
     ekSDKRES_FORMAT_COLUMN_ERROR,
     ekSDKRES_ACCESS_ROW_ERROR,
-    ekSDKRES_FORMAT_ROW_ERROR
+    ekSDKRES_FORMAT_ROW_ERROR,
+    ekSDKRES_PRINTER_CONFIG_ERROR,
+    ekSDKRES_PRINT_ERROR
 } sdkres_t;
 
 typedef enum _numformat_t
@@ -76,8 +78,27 @@ typedef enum _linestyle_t
 
 typedef enum _fileformat_t
 {
-    ekFORMAT_OPEN_OFFICE,
+    ekFORMAT_OPEN_OFFICE = 1,
     ekFORMAT_PDF
 } fileformat_t;
+
+typedef enum _paperorient_t
+{
+    ekPAPERORIENT_PORTRAIT = 1,
+    ekPAPERORIENT_LANSCAPE
+} paperorient_t;
+
+typedef enum _paperformat_t
+{
+    ekPAPERFORMAT_A3 = 1,
+    ekPAPERFORMAT_A4,
+    ekPAPERFORMAT_A5,
+    ekPAPERFORMAT_B4,
+    ekPAPERFORMAT_B5,
+    ekPAPERFORMAT_LETTER,
+    ekPAPERFORMAT_LEGAL,
+    ekPAPERFORMAT_TABLOID,
+    ekPAPERFORMAT_USER
+} paperformat_t;
 
 #endif

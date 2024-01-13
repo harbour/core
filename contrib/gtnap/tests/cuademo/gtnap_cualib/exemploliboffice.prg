@@ -490,6 +490,11 @@ OFFICE_ERROR("Salvando a planilha")
 NAP_XLS_PDF(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_02.pdf" })
 OFFICE_ERROR("Exportando para PDF")
 
+// Print spreadsheet
+NAP_XLS_PRINT(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Print_03.pdf" }, "", SDK_PAPER_ORIENT_PORTRAIT, SDK_PAPER_FORMAT_A4, 0, 0, 1, .F., "1-")
+//NAP_XLS_PRINT(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Print_02.pdf" }, "Microsoft Print to PDF", SDK_PAPER_ORIENT_LANSCAPE, SDK_PAPER_FORMAT_USER, 30000, 60000, 1, .F., "")
+OFFICE_ERROR("Imprimindo a planilha")
+
 // Close the spreadsheet (mandatory)
 NAP_XLS_CLOSE(O_XLS)
 OFFICE_ERROR("Fechando planilha")

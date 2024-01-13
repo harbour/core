@@ -159,6 +159,8 @@ extern void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block);
 
 extern void hb_gtnap_office_sheet_pdf(Sheet *sheet, HB_ITEM *pathname_block);
 
+extern void hb_gtnap_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block);
+
 extern void hb_gtnap_office_sheet_close(Sheet *sheet);
 
 extern uint32_t hb_gtnap_office_sheet_add(Sheet *sheet);

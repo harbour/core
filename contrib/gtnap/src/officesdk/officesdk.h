@@ -22,6 +22,8 @@ void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err);
 
 void officesdk_sheet_pdf(Sheet *sheet, const char_t *pathname, sdkres_t *err);
 
+void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err);
+
 void officesdk_sheet_close(Sheet *sheet, sdkres_t *err);
 
 uint32_t officesdk_sheet_add(Sheet *sheet, sdkres_t *err);

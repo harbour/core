@@ -32,6 +32,8 @@ The numeric error codes are in `gtnap.ch`
 #define SDKRES_FORMAT_CELL_ERROR    14
 #define SDKRES_ACCESS_COLUMN_ERROR  15
 #define SDKRES_FORMAT_COLUMN_ERROR  16
+#define SDKRES_PRINTER_CONFIG_ERROR 17
+#define SDKRES_PRINT_ERROR          18
 ```
 
 ## String parameters
@@ -87,6 +89,35 @@ PAR1: The sheet document.
 PAR2: String with the full path for the document copy.
 ```
 > **Important:** It will save a copy of document, but will not close the original one.
+
+
+### Export Sheet to PDF
+
+```
+NAP_XLS_PDF(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_02.pdf" })
+
+PAR1: The sheet document.
+PAR2: String with the full path for the PDF file.
+```
+
+> **Important:** It will save a copy of document, but will not close the original one.
+
+### Print the Sheet
+
+```
+NAP_XLS_PRINT(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Print_03.pdf" }, "Microsoft Print to PDF", SDK_PAPER_ORIENT_PORTRAIT, SDK_PAPER_FORMAT_A4, 0, 0, 1, .F., "1-")
+
+PAR1: The sheet document.
+PAR2: String with the full path for printed file (if prints to file).
+PAR3: Printer name. If empty, it will use the default printer.
+PAR4: Paper orientation. If 0 it will use the default option.
+PAR5: Paper format. If 0 it will use the default option.
+PAR6: Paper width, if we use SDK_PAPER_FORMAT_USER (integer 1/100th mm).
+PAR7: Paper height, if we use SDK_PAPER_FORMAT_USER (integer 1/100th mm).
+PAR8: Number of copies.
+PAR9: Collapse copies (.T. / .F.).
+PAR10: String with the pages to print in dialog format ("1-", "1-4;9", etc)
+```
 
 ### Close Sheet
 
