@@ -685,7 +685,7 @@ Sheet *officesdk_sheet_create(sdkres_t *err)
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err)
+static void i_sheet_save(Sheet *sheet, const char_t *pathname, const fileformat_t format, sdkres_t *err)
 {
     sdkres_t res = i_OFFICE_SDK.Init();
     cassert_no_null(sheet);
@@ -694,10 +694,24 @@ void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err)
     if (res == ekSDKRES_OK)
     {
         css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
-        res = i_OFFICE_SDK.SaveSheetDocument(*xDocument, pathname, ekFORMAT_OPEN_OFFICE);
+        res = i_OFFICE_SDK.SaveSheetDocument(*xDocument, pathname, format);
     }
 
     ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err)
+{
+    i_sheet_save(sheet, pathname, ekFORMAT_OPEN_OFFICE, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_pdf(Sheet *sheet, const char_t *pathname, sdkres_t *err)
+{
+    i_sheet_save(sheet, pathname, ekFORMAT_PDF, err);
 }
 
 /*---------------------------------------------------------------------------*/

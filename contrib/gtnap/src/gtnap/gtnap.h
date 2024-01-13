@@ -157,6 +157,8 @@ extern Sheet *hb_gtnap_office_sheet_create(void);
 
 extern void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block);
 
+extern void hb_gtnap_office_sheet_pdf(Sheet *sheet, HB_ITEM *pathname_block);
+
 extern void hb_gtnap_office_sheet_close(Sheet *sheet);
 
 extern uint32_t hb_gtnap_office_sheet_add(Sheet *sheet);

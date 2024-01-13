@@ -78,6 +78,15 @@ HB_FUNC( NAP_XLS_SAVE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_PDF )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    HB_ITEM *pathname_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_sheet_pdf(sheet, pathname_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CLOSE )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);

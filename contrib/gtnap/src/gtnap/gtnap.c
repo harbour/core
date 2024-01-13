@@ -4600,6 +4600,15 @@ void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_sheet_pdf(Sheet *sheet, HB_ITEM *pathname_block)
+{
+    String *pathname = hb_block_to_utf8(pathname_block);
+    officesdk_sheet_pdf(sheet, tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&pathname);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_sheet_close(Sheet *sheet)
 {
     officesdk_sheet_close(sheet, &GTNAP_GLOBAL->last_office_error);

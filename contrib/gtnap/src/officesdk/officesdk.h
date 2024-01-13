@@ -20,6 +20,8 @@ Sheet *officesdk_sheet_create(sdkres_t *err);
 
 void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err);
 
+void officesdk_sheet_pdf(Sheet *sheet, const char_t *pathname, sdkres_t *err);
+
 void officesdk_sheet_close(Sheet *sheet, sdkres_t *err);
 
 uint32_t officesdk_sheet_add(Sheet *sheet, sdkres_t *err);

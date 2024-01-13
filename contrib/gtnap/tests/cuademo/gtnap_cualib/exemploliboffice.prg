@@ -461,6 +461,10 @@ NEXT
 NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_02.ods" })
 OFFICE_ERROR("Salvando a planilha")
 
+// Export to PDF
+NAP_XLS_PDF(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_02.pdf" })
+OFFICE_ERROR("Exportando para PDF")
+
 // Close the spreadsheet (mandatory)
 NAP_XLS_CLOSE(O_XLS)
 OFFICE_ERROR("Fechando planilha")
