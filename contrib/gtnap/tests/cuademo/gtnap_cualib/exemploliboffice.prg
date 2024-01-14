@@ -515,8 +515,32 @@ STAT PROC Text3(O_XLS, N_Page, N_Col, N_Row, C_Text, N_HAlign, N_Size, L_Bold)
     NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, L_Bold)
 
 ***********************************
+STAT PROC Value3(O_XLS, N_Page, N_Col, N_Row, N_Value, N_Size, L_Bold)
+    NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Times New Roman")
+    NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, N_Size)
+    NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, SDK_HALIGN_RIGHT)
+    NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, L_Bold)
+    NAP_XLS_CELL_NUMFORMAT(O_XLS, N_Page, N_Col, N_Row, SDK_NUMFORMAT_DEC2_1000)
+    NAP_XLS_CELL_VALUE(O_XLS, N_Page, N_Col, N_Row, N_Value)
+
+***********************************
 STAT PROC Head3(O_XLS, N_Page, N_Col, N_Row, C_Text)
     Text3(O_XLS, N_Page, N_Col, N_Row, C_Text, SDK_HALIGN_CENTER, 10, .T.)
+
+***********************************
+STAT PROC Title3(O_XLS, N_Page, N_Col, N_Row, C_Text)
+    Text3(O_XLS, N_Page, N_Col, N_Row, C_Text, SDK_HALIGN_LEFT, 10, .F.)
+
+***********************************
+STAT PROC TitleB3(O_XLS, N_Page, N_Col, N_Row, C_Text)
+    Text3(O_XLS, N_Page, N_Col, N_Row, C_Text, SDK_HALIGN_LEFT, 10, .T.)
+
+***********************************
+STAT PROC DataRow3(O_XLS, N_Page, N_Col, N_Row, V_Data)
+    LOCAL N_Cont, N := LEN(V_Data)
+    FOR N_Cont := 1 TO N
+        Value3(O_XLS, N_Page, N_Col + N_Cont - 1, N_Row, V_Data[N_Cont], 8, .F.)
+    NEXT
 
 ***********************************
 STAT PROC TST_PLANILHA_EXEMPLO_3
@@ -578,6 +602,37 @@ Head3(O_XLS, N_Page, 13, 11, "12 MESES)")
 Head3(O_XLS, N_Page, 14, 9, "PREVISAO")
 Head3(O_XLS, N_Page, 14, 10, "ATUALIZADA")
 Head3(O_XLS, N_Page, 14, 11, "<EXERCICIO>")
+
+TitleB3(O_XLS, N_Page, 0, 12, "RECEITAS CORRENTES (I)")
+Title3(O_XLS, N_Page, 0, 13, "  Impostos, Taxas e Contribuições de Melhoria")
+Title3(O_XLS, N_Page, 0, 14, "      IPTU")
+Title3(O_XLS, N_Page, 0, 15, "      ISS")
+Title3(O_XLS, N_Page, 0, 16, "      ITBI")
+Title3(O_XLS, N_Page, 0, 17, "      IRRF")
+Title3(O_XLS, N_Page, 0, 18, "    Outros Impostos, Taxas e Contribuições de Melhoria")
+Title3(O_XLS, N_Page, 0, 19, "  Contribuições")
+Title3(O_XLS, N_Page, 0, 20, "  Receita Patrimonial")
+Title3(O_XLS, N_Page, 0, 21, "      Rendimentos de Aplicação Financeira")
+Title3(O_XLS, N_Page, 0, 22, "      Outras Receitas Patrimoniais")
+Title3(O_XLS, N_Page, 0, 23, "  Receita Agropecuária")
+Title3(O_XLS, N_Page, 0, 24, "  Receita Industrial")
+Title3(O_XLS, N_Page, 0, 25, "  Receita de Serviços")
+Title3(O_XLS, N_Page, 0, 26, "  Transferências Correntes")
+Title3(O_XLS, N_Page, 0, 27, "      Cota-Parte do FPM")
+Title3(O_XLS, N_Page, 0, 28, "      Cota-Parte do ICMS")
+Title3(O_XLS, N_Page, 0, 29, "      Cota-Parte do IPVA")
+Title3(O_XLS, N_Page, 0, 30, "      Cota-Parte do ITR")
+Title3(O_XLS, N_Page, 0, 31, "      Transferências da LC 61/1989")
+Title3(O_XLS, N_Page, 0, 32, "      Transferências do FUNDEB")
+Title3(O_XLS, N_Page, 0, 33, "      Outras Transferências Correntes")
+Title3(O_XLS, N_Page, 0, 34, "  Outras Receitas Correntes")
+TitleB3(O_XLS, N_Page, 0, 35, "DEDUÇÕES (II)")
+Title3(O_XLS, N_Page, 0, 36, "  Contrib. do Servidor para o Plano de Previdência")
+Title3(O_XLS, N_Page, 0, 37, "  Compensação Financ. entre Regimes Previdência")
+Title3(O_XLS, N_Page, 0, 38, "  Rendimentos de Aplicações de Recursos Previdenciários")
+Title3(O_XLS, N_Page, 0, 39, "  Dedução de Receita para Formação do FUNDEB")
+
+DataRow3(O_XLS, N_Page, 1, 12, {4193635.48, 3692660.69, 4676720.23, 4292836.84, 4972625.01, 4161792.35, 3664558.29, 3608630.96, 4407983.35, 5639442.57, 5077716.60, 4950347.71, 53338950.08, 53598740.65})
 
 // Protect the sheet
 // NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
