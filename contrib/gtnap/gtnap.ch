@@ -43,22 +43,24 @@
  */
 
 /* Error codes for LibreOffice SDK */
-#define SDKRES_OK                   1
-#define SDKRES_NO_ENVAR             2
-#define SDKRES_PROC_KILL_FAIL       3
-#define SDKRES_PROC_INIT_FAIL       4
-#define SDKRES_CONECT_FAIL          5
-#define SDKRES_COMPONENT_LOADER     6
-#define SDKRES_CREATE_FILE_ERROR    7
-#define SDKRES_OPEN_FILE_ERROR      8
-#define SDKRES_SAVE_FILE_ERROR      9
-#define SDKRES_CLOSE_DOC_ERROR      10
-#define SDKRES_ACCESS_DOC_ERROR     11
-#define SDKRES_ACCESS_CELL_ERROR    12
-#define SDKRES_EDIT_CELL_ERROR      13
-#define SDKRES_FORMAT_CELL_ERROR    14
-#define SDKRES_ACCESS_COLUMN_ERROR  15
-#define SDKRES_FORMAT_COLUMN_ERROR  16
+#define SDKRES_OK                       1
+#define SDKRES_NO_ENVAR                 2
+#define SDKRES_PROC_KILL_FAIL           3
+#define SDKRES_PROC_INIT_FAIL           4
+#define SDKRES_CONECT_FAIL              5
+#define SDKRES_COMPONENT_LOADER         6
+#define SDKRES_CREATE_FILE_ERROR        7
+#define SDKRES_OPEN_FILE_ERROR          8
+#define SDKRES_SAVE_FILE_ERROR          9
+#define SDKRES_CLOSE_DOC_ERROR          10
+#define SDKRES_ACCESS_DOC_ERROR         11
+#define SDKRES_ACCESS_CELL_ERROR        12
+#define SDKRES_EDIT_CELL_ERROR          13
+#define SDKRES_FORMAT_CELL_ERROR        14
+#define SDKRES_ACCESS_COLUMN_ERROR      15
+#define SDKRES_FORMAT_COLUMN_ERROR      16
+#define SDKRES_PRINTER_CONFIG_ERROR     17
+#define SDKRES_PRINT_ERROR              18
 
 /* Horizontal alignment for LibreOffice SDK */
 #define SDK_HALIGN_LEFT             0
@@ -77,6 +79,17 @@
 #define SDK_NUMFORMAT_DEC2_1000     4
 #define SDK_NUMFORMAT_PERC_INT      5
 #define SDK_NUMFORMAT_PERC_DEC2     6
+
+#define SDK_NUMFORMAT_DATE_SYS_DDMMM            7
+#define SDK_NUMFORMAT_DATE_SYS_DDMMYY           8
+#define SDK_NUMFORMAT_DATE_SYS_DDMMYYYY         9
+#define SDK_NUMFORMAT_DATE_SYS_DMMMMYYYY        10
+#define SDK_NUMFORMAT_DATE_SYS_DMMMYY           11
+#define SDK_NUMFORMAT_DATE_SYS_DMMMYYYY         12
+#define SDK_NUMFORMAT_DATE_SYS_MMYY             13
+#define SDK_NUMFORMAT_DATE_SYS_NNDMMMMYYYY      14
+#define SDK_NUMFORMAT_DATE_SYS_NNDMMMYY         15
+#define SDK_NUMFORMAT_DATE_SYS_NNNNDMMMMYYYY    16
 
 /* Line style for LibreOffice SDK */
 #define SDK_LINE_STYLE_NONE                     1
@@ -99,3 +112,17 @@
 #define SDK_LINE_STYLE_DASH_DOT                 18
 #define SDK_LINE_STYLE_DASH_DOT_DOT             19
 
+/* Printer paper orientation */
+#define SDK_PAPER_ORIENT_PORTRAIT               1
+#define SDK_PAPER_ORIENT_LANSCAPE               2
+
+/* Printer paper format */
+#define SDK_PAPER_FORMAT_A3                     1
+#define SDK_PAPER_FORMAT_A4                     2
+#define SDK_PAPER_FORMAT_A5                     3
+#define SDK_PAPER_FORMAT_B4                     4
+#define SDK_PAPER_FORMAT_B5                     5
+#define SDK_PAPER_FORMAT_LETTER                 6
+#define SDK_PAPER_FORMAT_LEGAL                  7
+#define SDK_PAPER_FORMAT_TABLOID                8
+#define SDK_PAPER_FORMAT_USER                   9

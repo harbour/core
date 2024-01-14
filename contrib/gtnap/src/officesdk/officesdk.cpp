@@ -3,10 +3,13 @@
 #include <core/strings.h>
 #include <osbs/bproc.h>
 #include <osbs/bthread.h>
+#include <osbs/btime.h>
 #include <osbs/osbs.h>
 #include <sewer/blib.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
+#include <sewer/unicode.h>
+
 #include <sewer/nowarn.hxx>
 #include <cppuhelper/bootstrap.hxx>
 #include <rtl/bootstrap.hxx>
@@ -41,6 +44,9 @@
 #include <util/XProtectable.hpp>
 #include <util/XNumberFormatsSupplier.hpp>
 #include <util/XNumberFormatTypes.hpp>
+#include <view/XPrintable.hpp>
+#include <view/PaperOrientation.hpp>
+#include <view/PaperFormat.hpp>
 #include <awt/FontSlant.hpp>
 #include <awt/FontWeight.hpp>
 #include <iostream>
@@ -182,6 +188,22 @@ static ::rtl::OUString i_OUStringFileUrl(const char_t *str)
     ::rtl::OUString ostr = i_OUStringFromString(url);
     str_destroy(&url);
     return ostr;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static String *i_StringFromOUString(const ::rtl::OUString &ostr)
+{
+    sal_Int32 l = ostr.getLength();
+    const sal_Unicode *b = ostr.getStr();
+    uint32_t nbytes = 0, nused = 0;
+    String *str = NULL;
+    cassert(sizeof(sal_Unicode) == 2);
+    nbytes = unicode_convers_nbytes_n((const char_t*)b, (uint32_t)l * sizeof(sal_Unicode), ekUTF16, ekUTF8);
+    str = str_reserve(nbytes);
+    nused = unicode_convers((const char_t*)b, tcc(str), ekUTF16, ekUTF8, nbytes);
+    cassert(nused == nbytes);
+    return str;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -601,6 +623,10 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed to access row";
     case ekSDKRES_FORMAT_ROW_ERROR:
         return "Failed to change row format";
+    case ekSDKRES_PRINTER_CONFIG_ERROR:
+        return "Error in printer configuration";
+    case ekSDKRES_PRINT_ERROR:
+        return "Error when printing a document";
     default:
         return "Unknown error";
     }
@@ -684,7 +710,7 @@ Sheet *officesdk_sheet_create(sdkres_t *err)
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err)
+static void i_sheet_save(Sheet *sheet, const char_t *pathname, const fileformat_t format, sdkres_t *err)
 {
     sdkres_t res = i_OFFICE_SDK.Init();
     cassert_no_null(sheet);
@@ -693,7 +719,203 @@ void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err)
     if (res == ekSDKRES_OK)
     {
         css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
-        res = i_OFFICE_SDK.SaveSheetDocument(*xDocument, pathname, ekFORMAT_OPEN_OFFICE);
+        res = i_OFFICE_SDK.SaveSheetDocument(*xDocument, pathname, format);
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err)
+{
+    i_sheet_save(sheet, pathname, ekFORMAT_OPEN_OFFICE, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_pdf(Sheet *sheet, const char_t *pathname, sdkres_t *err)
+{
+    i_sheet_save(sheet, pathname, ekFORMAT_PDF, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static css::view::PaperOrientation i_paper_orient(const paperorient_t orient)
+{
+    switch(orient) {
+    case ekPAPERORIENT_PORTRAIT:
+        return css::view::PaperOrientation::PaperOrientation_PORTRAIT;
+    case ekPAPERORIENT_LANSCAPE:
+        return css::view::PaperOrientation::PaperOrientation_LANDSCAPE;
+    }
+
+    return (css::view::PaperOrientation)SAL_MAX_ENUM;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static css::view::PaperFormat i_paper_format(const paperformat_t format)
+{
+    switch(format) {
+    case ekPAPERFORMAT_A3:
+        return css::view::PaperFormat::PaperFormat_A3;
+    case ekPAPERFORMAT_A4:
+        return css::view::PaperFormat::PaperFormat_A4;
+    case ekPAPERFORMAT_A5:
+        return css::view::PaperFormat::PaperFormat_A5;
+    case ekPAPERFORMAT_B4:
+        return css::view::PaperFormat::PaperFormat_B4;
+    case ekPAPERFORMAT_B5:
+        return css::view::PaperFormat::PaperFormat_B5;
+    case ekPAPERFORMAT_LETTER:
+        return css::view::PaperFormat::PaperFormat_LETTER;
+    case ekPAPERFORMAT_LEGAL:
+        return css::view::PaperFormat::PaperFormat_LEGAL;
+    case ekPAPERFORMAT_TABLOID:
+        return css::view::PaperFormat::PaperFormat_TABLOID;
+    case ekPAPERFORMAT_USER:
+        return css::view::PaperFormat::PaperFormat_USER;
+    }
+
+    return (css::view::PaperFormat)SAL_MAX_ENUM;
+}
+
+/*---------------------------------------------------------------------------*/
+
+// https://wiki.documentfoundation.org/Documentation/DevGuide/Spreadsheet_Documents#Printer_and_Print_Job_Settings
+void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    css::uno::Reference<css::view::XPrintable> xPrintable;
+    cassert_no_null(sheet);
+
+    if (res == ekSDKRES_OK)
+    {
+        try 
+        {
+            css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
+            xPrintable = css::uno::Reference<css::view::XPrintable>(*xDocument, css::uno::UNO_QUERY_THROW);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    // Configure the printer
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Sequence<css::beans::PropertyValue> printerProps = xPrintable->getPrinter();
+            css::uno::Sequence<css::beans::PropertyValue> newPrinterProps(printerProps.getLength());
+
+            for (sal_Int32 i = 0; i < printerProps.getLength(); ++i)
+            {
+                bool isChanged = false;
+                const ::rtl::OUString name = printerProps[i].Name;
+                newPrinterProps[i].Name = name;
+
+                // Change the default printer name
+                if (name.equalsAscii("Name"))
+                {
+                    if (str_empty_c(printer) == FALSE)
+                    {
+                        ::rtl::OUString value = i_OUStringFromUTF8(printer);
+                        newPrinterProps[i].Value <<= value;
+                        isChanged = true;
+                    }
+                }
+
+                // Change the default paper orientation
+                else if (name.equalsAscii("PaperOrientation"))
+                {
+                    css::view::PaperOrientation norient = i_paper_orient(orient);
+                    if (norient != SAL_MAX_ENUM)
+                    {
+                        newPrinterProps[i].Value <<= norient;
+                        isChanged = true;
+                    }
+                }
+
+                // Change the default paper format
+                else if (name.equalsAscii("PaperFormat"))
+                {
+                    css::view::PaperFormat nformat = i_paper_format(format);
+                    if (nformat != SAL_MAX_ENUM)
+                    {
+                        newPrinterProps[i].Value <<= nformat;
+                        isChanged = true;
+                    }
+                }
+
+                // Change the default paper size
+                else if (name.equalsAscii("PaperSize"))
+                {
+                    if (format == ekPAPERFORMAT_USER && paper_width > 0 && paper_height > 0)
+                    {
+                        css::awt::Size size((sal_Int32)paper_width, (sal_Int32)paper_height);
+                        newPrinterProps[i].Value <<= size;
+                        isChanged = true;
+                    }
+                }
+
+                // Leave the default value
+                if (!isChanged)
+                    newPrinterProps[i].Value <<= printerProps[i].Value;
+            }
+
+            xPrintable->setPrinter(newPrinterProps);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_PRINTER_CONFIG_ERROR;
+        }
+    }
+
+    // Configure the printing
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            // num_copies, collate_copies
+            sal_Int32 nprops = 2, n = 0;
+            if (str_empty_c(filename) == FALSE)
+                nprops += 1;
+            if (str_empty_c(pages) == FALSE)
+                nprops += 1;
+
+            css::uno::Sequence<css::beans::PropertyValue> printProps(nprops);
+            printProps[n].Name = "CopyCount";
+            printProps[n].Value <<= (sal_Int16)num_copies;
+            n += 1;
+            printProps[n].Name = "Collate";
+            printProps[n].Value <<= (sal_Bool)collate_copies;
+            n += 1;
+            if (str_empty_c(filename) == FALSE)
+            {
+                ::rtl::OUString value = i_OUStringFromUTF8(filename);
+                printProps[n].Name = "FileName";
+                printProps[n].Value <<= value;
+                n += 1;
+            }
+
+            if (str_empty_c(pages) == FALSE)
+            {
+                ::rtl::OUString value = i_OUStringFromUTF8(pages);
+                printProps[n].Name = "Pages";
+                printProps[n].Value <<= value;
+                n += 1;
+            }
+
+            cassert(n == nprops);
+            xPrintable->print(printProps);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_PRINT_ERROR;
+        }
     }
 
     ptr_assign(err, res);
@@ -873,6 +1095,49 @@ static sdkres_t i_set_cell_value(
     try
     {
         xCell->setValue((double)value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_EDIT_CELL_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_set_cell_date(
+                    css::uno::Reference<css::table::XCell> &xCell,
+                    const uint8_t day,
+                    const uint8_t month,
+                    const int16_t year)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        Date date;
+        uint64_t epoch;
+        double value;
+        date.mday = day;
+        date.month = month;
+        date.year = year;
+        date.hour = 0;
+        date.minute = 0;
+        date.second = 0;
+
+        // Number of micro-seconds from epoch to date
+        epoch = btime_to_micro(&date);
+
+        // We want seconds
+        epoch = epoch / 1000000;
+
+        // Days from epoch + 25569 offset
+        // Difference to 1/1/1970 (epoch) since 12/30/1899 (LibreOffice 0-day) in days
+        // https://unix.stackexchange.com/questions/421354/convert-epoch-time-to-human-readable-in-libreoffice-calc
+        value = (double)((epoch/(24 * 60 * 60)) + 25569);
+         
+        xCell->setValue(value);
     }
     catch (css::uno::Exception&)
     {
@@ -1557,6 +1822,73 @@ void officesdk_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t nc
 
 /*---------------------------------------------------------------------------*/
 
+static void i_column_id(const uint32_t col, char_t *id, const uint32_t n)
+{
+    const uint32_t n_ascii = 26;
+    uint32_t temp = col;
+    uint32_t i = 0;
+
+    for (;i < n - 1;)
+    {
+        id[i] = 'A' + (char_t)(temp % n_ascii);
+        i += 1;
+
+        if (temp < n_ascii)
+        {
+            id[i] = '\0';
+            break;
+        }
+        else
+        {
+            temp -= n_ascii;
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+String *officesdk_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
+    ::rtl::OUString pageName;
+    String *str = NULL;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_sheet(sheet, page, xSheet);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::container::XNamed> xNamed = css::uno::Reference<css::container::XNamed>(xSheet, css::uno::UNO_QUERY_THROW);
+            pageName = xNamed->getName();
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        char_t col_id[64];
+        String *page_id = i_StringFromOUString(pageName);
+        i_column_id(col, col_id, sizeof(col_id));
+        str = str_printf("$'%s'.%s%d", tc(page_id), col_id, row + 1);
+        str_destroy(&page_id);
+    }
+    else
+    {
+        str = str_c("");
+    }
+
+    ptr_assign(err, res);
+    return str;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *text, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -1584,6 +1916,21 @@ void officesdk_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_
 
     if (res == ekSDKRES_OK)
         res = i_set_cell_value(xCell, value);
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_date(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint8_t day, const uint8_t month, const int16_t year, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::table::XCell> xCell;
+
+    res = i_doc_cell(sheet, page, col, row, xCell);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_cell_date(xCell, day, month, year);
 
     ptr_assign(err, res);
 }
@@ -1644,9 +1991,39 @@ void officesdk_sheet_cell_numformat(Sheet *sheet, const uint32_t page, const uin
         case ekNUMFORMAT_PERC_DEC2:
             nformat = css::i18n::NumberFormatIndex::PERCENT_DEC2;
             break;
+        case ekNUMFORMAT_DATE_SYS_DDMMM:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DDMMM;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DDMMYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DDMMYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DDMMYYYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DDMMYYYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DMMMMYYYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DMMMMYYYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DMMMYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DMMMYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_DMMMYYYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_DMMMYYYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_MMYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_MMYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_NNDMMMMYYYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_NNDMMMMYYYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_NNDMMMYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_NNDMMMYY;
+            break;
+        case ekNUMFORMAT_DATE_SYS_NNNNDMMMMYYYY:
+            nformat = css::i18n::NumberFormatIndex::DATE_SYS_NNNNDMMMMYYYY;
+            break;
         }
 
-        formatIndex = xFormats->getStandardFormat(nformat, xLocale);
+        formatIndex = xFormats->getFormatIndex(nformat, xLocale);
         res = i_set_cell_property(xCell, "NumberFormat", css::uno::makeAny(formatIndex));
     }
 

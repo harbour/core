@@ -157,6 +157,10 @@ extern Sheet *hb_gtnap_office_sheet_create(void);
 
 extern void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block);
 
+extern void hb_gtnap_office_sheet_pdf(Sheet *sheet, HB_ITEM *pathname_block);
+
+extern void hb_gtnap_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block);
+
 extern void hb_gtnap_office_sheet_close(Sheet *sheet);
 
 extern uint32_t hb_gtnap_office_sheet_add(Sheet *sheet);
@@ -167,9 +171,13 @@ extern void hb_gtnap_office_sheet_protect(Sheet *sheet, const uint32_t page, con
 
 extern void hb_gtnap_office_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows);
 
+extern const char_t *hb_gtnap_office_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row);
+
 extern void hb_gtnap_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *text_block);
 
 extern void hb_gtnap_office_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value);
+
+extern void hb_gtnap_office_sheet_cell_date(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint8_t day, const uint8_t month, const int16_t year);
 
 extern void hb_gtnap_office_sheet_cell_formula(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *formula_block);
 

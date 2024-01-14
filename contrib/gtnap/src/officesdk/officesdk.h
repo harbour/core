@@ -20,6 +20,10 @@ Sheet *officesdk_sheet_create(sdkres_t *err);
 
 void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err);
 
+void officesdk_sheet_pdf(Sheet *sheet, const char_t *pathname, sdkres_t *err);
+
+void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err);
+
 void officesdk_sheet_close(Sheet *sheet, sdkres_t *err);
 
 uint32_t officesdk_sheet_add(Sheet *sheet, sdkres_t *err);
@@ -30,9 +34,13 @@ void officesdk_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t pro
 
 void officesdk_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows, sdkres_t *err);
 
+String *officesdk_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, sdkres_t *err);
+
 void officesdk_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *text, sdkres_t *err);
 
 void officesdk_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value, sdkres_t *err);
+
+void officesdk_sheet_cell_date(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint8_t day, const uint8_t month, const int16_t year, sdkres_t *err);
 
 void officesdk_sheet_cell_formula(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *formula, sdkres_t *err);
 

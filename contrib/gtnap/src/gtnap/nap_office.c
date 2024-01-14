@@ -78,6 +78,32 @@ HB_FUNC( NAP_XLS_SAVE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_XLS_PDF )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    HB_ITEM *pathname_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_sheet_pdf(sheet, pathname_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_PRINT )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    HB_ITEM *filename_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
+    HB_ITEM *printer_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
+    paperorient_t orient = (paperorient_t)hb_parni(4);
+    paperformat_t format = (paperformat_t)hb_parni(5);
+    uint32_t paper_width = hb_parni(6);
+    uint32_t paper_height = hb_parni(7);
+    uint32_t num_copies = hb_parni(8);
+    bool_t collate_copies = (bool_t)hb_parl(9);
+    HB_ITEM *pages_block = hb_param(10, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_sheet_print(sheet, filename_block, printer_block, orient, format, paper_width, paper_height, num_copies, collate_copies, pages_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CLOSE )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
@@ -127,6 +153,18 @@ HB_FUNC( NAP_XLS_FREEZE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_CELL_REF )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    const char_t *ref = hb_gtnap_office_cell_ref(sheet, page, col, row);
+    hb_retc(ref);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_XLS_CELL_TEXT )
 {
     Sheet *sheet = (Sheet*)hb_parptr(1);
@@ -147,6 +185,20 @@ HB_FUNC( NAP_XLS_CELL_VALUE )
     uint32_t row = hb_parni(4);
     real64_t value = hb_parnd(5);
     hb_gtnap_office_sheet_cell_value(sheet, page, col, row, value);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_XLS_CELL_DATE )
+{
+    Sheet *sheet = (Sheet*)hb_parptr(1);
+    uint32_t page = hb_parni(2);
+    uint32_t col = hb_parni(3);
+    uint32_t row = hb_parni(4);
+    uint8_t day = (uint8_t)hb_parni(5);
+    uint8_t month = (uint8_t)hb_parni(6);
+    int16_t year = (int16_t)hb_parni(7);
+    hb_gtnap_office_sheet_cell_date(sheet, page, col, row, day, month, year);
 }
 
 /*---------------------------------------------------------------------------*/
