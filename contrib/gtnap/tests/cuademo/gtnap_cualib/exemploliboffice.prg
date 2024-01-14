@@ -714,7 +714,7 @@ STAT PROC TST_PLANILHA_EXEMPLO_4
 LOCAL O_XLS := NAP_XLS_CREATE()
 LOCAL N_Page := 0
 LOCAL N_Col, N_Row, N_Cont
-LOCAL C_Formula := ""
+LOCAL C_Text := ""
 
 IF OFFICE_ERROR("Creando a planilha")
     RETURN
@@ -738,10 +738,15 @@ NEXT
 FOR N_Cont := 0 TO 15
     NAP_XLS_CELLS_MERGE(O_XLS, N_Page, 0, N_Cont, 6, N_Cont)
 NEXT
-NAP_XLS_CELLS_MERGE(O_XLS, N_Page, 0, 16, 6, 27)
 
 // Background color
 NAP_XLS_CELLS_BACKCOLOR(O_XLS, N_Page, 0, 0, 6, 0, NAP_OFFICE_RGB(255, 255, 0))
+
+// Borders
+NAP_XLS_CELLS_BORDER(O_XLS, N_Page, 0, 0, 6, 0, SDK_LINE_STYLE_SOLID, 25, NAP_OFFICE_RGB(0, 0, 0))
+NAP_XLS_CELLS_BORDER(O_XLS, N_Page, 0, 1, 6, 2, SDK_LINE_STYLE_SOLID, 25, NAP_OFFICE_RGB(0, 0, 0))
+NAP_XLS_CELLS_BORDER(O_XLS, N_Page, 0, 3, 6, 8, SDK_LINE_STYLE_SOLID, 25, NAP_OFFICE_RGB(0, 0, 0))
+NAP_XLS_CELLS_BORDER(O_XLS, N_Page, 0, 9, 6, 15, SDK_LINE_STYLE_SOLID, 25, NAP_OFFICE_RGB(0, 0, 0))
 
 // Text
 Text4(O_XLS, N_Page, 0, 0, "PREENCHER OS CAMPOS EM CINZA - NÃO ALTERAR A ESTRUTURA DA PLANILHA", SDK_HALIGN_CENTER, 8, .T.)
@@ -755,6 +760,34 @@ Text4(O_XLS, N_Page, 0, 10, "   NOME: CONSTRUTORA LAZIO EIRRELI", SDK_HALIGN_LEF
 Text4(O_XLS, N_Page, 0, 11, "   ENDEREÇO : AV SANTOS DUMONT 1740 SALA 105", SDK_HALIGN_LEFT, 8, .T.)
 Text4(O_XLS, N_Page, 0, 12, "   BAIRRO : ALDEOTA   CIDADE : Fortaleza - CE", SDK_HALIGN_LEFT, 8, .T.)
 Text4(O_XLS, N_Page, 0, 13, "   CNPJ : 10.697.540/0001-20", SDK_HALIGN_LEFT, 8, .T.)
+
+
+C_Text := ""
+C_Text += "O município de Limoeiro do Norte, solicita que seja fornecido os preços unitários e totais do(s) item(ns) abaixo especificado(s), para fins de levantamento preliminar de preços e verificação da modalidade de licitação cabível."
+C_Text += "" // Newlinne
+C_Text += "Sua resposta, de acordo com os preceitos legais, integrará um processo administrativo de compras, reservando-se a entidade, o direito de adquirir apenas parte do(s) item(ns) discriminado(s), ou rejeitar todos, desde que haja conveniência para o município de Limoeiro do Norte."
+C_Text += "" // Newline
+C_Text += "Limoeiro do Norte, 29 de Novembro de 2023"
+C_Text += "" // Newline
+C_Text += "                   ------------------------------------------------------------"
+C_Text += "" // Newline
+C_Text += "                   CAMILA MARIA MAIA"
+C_Text += "" // Newline
+C_Text += "                   Responsável "
+
+NAP_XLS_CELLS_MERGE(O_XLS, N_Page, 0, 16, 6, 27)
+NAP_XLS_CELL_WRAP(O_XLS, N_Page, 0, 16, .T.)
+NAP_XLS_CELL_VALIGN(O_XLS, N_Page, 0, 16, SDK_VALIGN_CENTER)
+Text4(O_XLS, N_Page, 0, 16, C_Text, SDK_HALIGN_LEFT, 8, .F.)
+
+// Text4(O_XLS, N_Page, 0, 16, "O município de Limoeiro do Norte, solicita que seja fornecido os preços unitários e totais do(s) item(ns) abaixo especificado(s), para fins de levantamento preliminar de preços e verificação da modalidade de licitação cabível.", SDK_HALIGN_LEFT, 8, .F.)
+// Text4(O_XLS, N_Page, 1, 21, "Sua resposta, de acordo com os preceitos legais, integrará um processo administrativo de compras, reservando-se a entidade, o direito de adquirir apenas parte do(s) item(ns) discriminado(s), ou rejeitar todos, desde que haja conveniência para o município de Limoeiro do Norte.", SDK_HALIGN_LEFT, 8, .F.)
+// Text4(O_XLS, N_Page, 1, 23, "Limoeiro do Norte, 29 de Novembro de 2023", SDK_HALIGN_LEFT, 8, .F.)
+// Text4(O_XLS, N_Page, 1, 25, "                   ------------------------------------------------------------", SDK_HALIGN_LEFT, 8, .F.)
+// Text4(O_XLS, N_Page, 1, 26, "                   CAMILA MARIA MAIA", SDK_HALIGN_LEFT, 8, .F.)
+// Text4(O_XLS, N_Page, 1, 27, "                   Responsável ", SDK_HALIGN_LEFT, 8, .F.)
+
+
 
 // Protect the sheet
 // NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
