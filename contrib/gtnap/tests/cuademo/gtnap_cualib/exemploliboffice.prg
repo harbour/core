@@ -20,6 +20,8 @@ ADDOPCAO V_Janela TEXTO "Planilha exemplo 1" ;
    ACAO TST_PLANILHA_EXEMPLO_1() AJUDA "P06685"
 ADDOPCAO V_Janela TEXTO "Planilha exemplo 2" ;
     ACAO TST_PLANILHA_EXEMPLO_2() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Planilha exemplo 3" ;
+    ACAO TST_PLANILHA_EXEMPLO_3() AJUDA "P06685"
 
 ATIVE(V_Janela)
 
@@ -478,7 +480,6 @@ NEXT
 NAP_XLS_CELL_FORMULA(O_XLS, 0, 0, 30, C_Formula)
 
 
-
 // Protect the sheet
 // NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
 
@@ -503,3 +504,98 @@ MOSTRAR("M15566", "A planilha foi criada com sucesso.")
 
 // Open the result into a LibreOffice window
 NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_02.ods")
+
+
+***********************************
+STAT PROC Text3(O_XLS, N_Page, N_Col, N_Row, C_Text, N_HAlign, N_Size, L_Bold)
+    NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, C_Text)
+    NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Times New Roman")
+    NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, N_Size)
+    NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, N_HAlign)
+    NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, L_Bold)
+
+***********************************
+STAT PROC Head3(O_XLS, N_Page, N_Col, N_Row, C_Text)
+    Text3(O_XLS, N_Page, N_Col, N_Row, C_Text, SDK_HALIGN_CENTER, 10, .T.)
+
+***********************************
+STAT PROC TST_PLANILHA_EXEMPLO_3
+***********************************
+// Replicate this example
+// RREO_CE05J_01012023_A_28022023.xls
+
+LOCAL O_XLS := NAP_XLS_CREATE()
+LOCAL N_Page := 0
+LOCAL N_Col, N_Row, N_Cont
+LOCAL C_Formula := ""
+
+IF OFFICE_ERROR("Creando a planilha")
+    RETURN
+ENDIF
+
+NAP_XLS_NAME(O_XLS, 0, "Anexo 3 - RCL Municípios")
+
+// Remove all grid lines
+NAP_XLS_CELLS_BACKCOLOR(O_XLS, N_Page, 0, 0, 1000, 1000, NAP_OFFICE_RGB(255, 255, 255))
+
+// Column widths
+NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 0, 10973)
+FOR N_Cont := 1 TO 12
+    NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, N_Cont, 2337)
+NEXT
+NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 13, 2642)
+NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 14, 2642)
+
+// Row heights
+FOR N_Cont := 1 TO 11
+    NAP_XLS_ROW_HEIGHT(O_XLS, N_Page, N_Cont, 406)
+NEXT
+FOR N_Cont := 12 TO 39
+    NAP_XLS_ROW_HEIGHT(O_XLS, N_Page, N_Cont, 508)
+NEXT
+
+// Gray headers
+NAP_XLS_CELLS_BACKCOLOR(O_XLS, N_Page, 0, 9, 14, 11, NAP_OFFICE_RGB(217, 217, 217))
+NAP_XLS_CELLS_MERGE(O_XLS, N_Page, 1, 9, 12, 10)
+Head3(O_XLS, N_Page, 0, 10, "ESPECIFICAÇÃO")
+Head3(O_XLS, N_Page, 1, 9, "EVOLUÇÃO DA RECEITA REALIZADA NOS ÚLTIMOS 12 MESES")
+NAP_XLS_CELL_VALIGN(O_XLS, N_Page, 1, 9, SDK_VALIGN_CENTER)
+Head3(O_XLS, N_Page, 1, 11, "Mar/2022")
+Head3(O_XLS, N_Page, 2, 11, "Abr/2022")
+Head3(O_XLS, N_Page, 3, 11, "Mai/2022")
+Head3(O_XLS, N_Page, 4, 11, "Jun/2022")
+Head3(O_XLS, N_Page, 5, 11, "Jul/2022")
+Head3(O_XLS, N_Page, 6, 11, "Ago/2022")
+Head3(O_XLS, N_Page, 7, 11, "Set/2022")
+Head3(O_XLS, N_Page, 8, 11, "Out/2022")
+Head3(O_XLS, N_Page, 9, 11, "Nov/2022")
+Head3(O_XLS, N_Page, 10, 11, "Dez/2022")
+Head3(O_XLS, N_Page, 11, 11, "Jan/2023")
+Head3(O_XLS, N_Page, 12, 11, "Feb/2023")
+Head3(O_XLS, N_Page, 13, 9, "TOTAL")
+Head3(O_XLS, N_Page, 13, 10, "(ULTIMOS")
+Head3(O_XLS, N_Page, 13, 11, "12 MESES)")
+Head3(O_XLS, N_Page, 14, 9, "PREVISAO")
+Head3(O_XLS, N_Page, 14, 10, "ATUALIZADA")
+Head3(O_XLS, N_Page, 14, 11, "<EXERCICIO>")
+
+// Protect the sheet
+// NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
+
+// Save the spreadsheet
+NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_03.ods" })
+OFFICE_ERROR("Salvando a planilha")
+
+// Export to PDF
+NAP_XLS_PDF(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_03.pdf" })
+OFFICE_ERROR("Exportando para PDF")
+
+// Close the spreadsheet (mandatory)
+NAP_XLS_CLOSE(O_XLS)
+OFFICE_ERROR("Fechando planilha")
+
+MOSTRAR("M15566", "A planilha foi criada com sucesso.")
+
+// Open the result into a LibreOffice window
+NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_03.ods")
+
