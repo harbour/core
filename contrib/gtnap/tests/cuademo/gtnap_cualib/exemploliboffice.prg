@@ -22,6 +22,8 @@ ADDOPCAO V_Janela TEXTO "Planilha exemplo 2" ;
     ACAO TST_PLANILHA_EXEMPLO_2() AJUDA "P06685"
 ADDOPCAO V_Janela TEXTO "Planilha exemplo 3" ;
     ACAO TST_PLANILHA_EXEMPLO_3() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Planilha exemplo 4" ;
+    ACAO TST_PLANILHA_EXEMPLO_4() AJUDA "P06685"
 
 ATIVE(V_Janela)
 
@@ -694,4 +696,84 @@ MOSTRAR("M15566", "A planilha foi criada com sucesso.")
 
 // Open the result into a LibreOffice window
 NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_03.ods")
+
+***********************************
+STAT PROC Text4(O_XLS, N_Page, N_Col, N_Row, C_Text, N_HAlign, N_Size, L_Bold)
+    NAP_XLS_CELL_TEXT(O_XLS, N_Page, N_Col, N_Row, C_Text)
+    NAP_XLS_CELL_FONT_FAMILY(O_XLS, N_Page, N_Col, N_Row, "Arial")
+    NAP_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, N_Size)
+    NAP_XLS_CELL_HALIGN(O_XLS, N_Page, N_Col, N_Row, N_HAlign)
+    NAP_XLS_CELL_BOLD(O_XLS, N_Page, N_Col, N_Row, L_Bold)
+
+***********************************
+STAT PROC TST_PLANILHA_EXEMPLO_4
+***********************************
+// Replicate this example
+// ce05g_Limoeiro_do_Norte_20231129001_027018_CONSTRUTORA_LAZIO_EIRRELI.xls
+
+LOCAL O_XLS := NAP_XLS_CREATE()
+LOCAL N_Page := 0
+LOCAL N_Col, N_Row, N_Cont
+LOCAL C_Formula := ""
+
+IF OFFICE_ERROR("Creando a planilha")
+    RETURN
+ENDIF
+
+// Column widths
+NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 0, 900)
+NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 1, 11000)
+NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 2, 2010)
+NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 3, 2490)
+NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 4, 1804)
+NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 5, 2010)
+NAP_XLS_COLUMN_WIDTH(O_XLS, N_Page, 6, 2110)
+
+// Row heights
+FOR N_Cont := 0 TO 43
+    NAP_XLS_ROW_HEIGHT(O_XLS, N_Page, N_Cont, 458)
+NEXT
+
+// Merge Cells
+FOR N_Cont := 0 TO 15
+    NAP_XLS_CELLS_MERGE(O_XLS, N_Page, 0, N_Cont, 6, N_Cont)
+NEXT
+NAP_XLS_CELLS_MERGE(O_XLS, N_Page, 0, 16, 6, 27)
+
+// Background color
+NAP_XLS_CELLS_BACKCOLOR(O_XLS, N_Page, 0, 0, 6, 0, NAP_OFFICE_RGB(255, 255, 0))
+
+// Text
+Text4(O_XLS, N_Page, 0, 0, "PREENCHER OS CAMPOS EM CINZA - NÃO ALTERAR A ESTRUTURA DA PLANILHA", SDK_HALIGN_CENTER, 8, .T.)
+Text4(O_XLS, N_Page, 0, 1, "Solicitação de cotação de preços", SDK_HALIGN_CENTER, 12, .T.)
+Text4(O_XLS, N_Page, 0, 2, "Cotação de preços No: 20231129001", SDK_HALIGN_CENTER, 10, .T.)
+Text4(O_XLS, N_Page, 0, 3, "Prefeitura Municipal de Limoeiro do Norte", SDK_HALIGN_LEFT, 8, .T.)
+Text4(O_XLS, N_Page, 0, 5, "RESPONSÁVEL :", SDK_HALIGN_LEFT, 8, .T.)
+Text4(O_XLS, N_Page, 0, 6, "    NOME: CAMILA MARIA MAIA", SDK_HALIGN_LEFT, 8, .T.)
+Text4(O_XLS, N_Page, 0, 9, "PROPONENTE :", SDK_HALIGN_LEFT, 8, .T.)
+Text4(O_XLS, N_Page, 0, 10, "   NOME: CONSTRUTORA LAZIO EIRRELI", SDK_HALIGN_LEFT, 8, .T.)
+Text4(O_XLS, N_Page, 0, 11, "   ENDEREÇO : AV SANTOS DUMONT 1740 SALA 105", SDK_HALIGN_LEFT, 8, .T.)
+Text4(O_XLS, N_Page, 0, 12, "   BAIRRO : ALDEOTA   CIDADE : Fortaleza - CE", SDK_HALIGN_LEFT, 8, .T.)
+Text4(O_XLS, N_Page, 0, 13, "   CNPJ : 10.697.540/0001-20", SDK_HALIGN_LEFT, 8, .T.)
+
+// Protect the sheet
+// NAP_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
+
+// Save the spreadsheet
+NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_04.ods" })
+OFFICE_ERROR("Salvando a planilha")
+
+// Export to PDF
+NAP_XLS_PDF(O_XLS, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_04.pdf" })
+OFFICE_ERROR("Exportando para PDF")
+
+// Close the spreadsheet (mandatory)
+NAP_XLS_CLOSE(O_XLS)
+OFFICE_ERROR("Fechando planilha")
+
+MOSTRAR("M15566", "A planilha foi criada com sucesso.")
+
+// Open the result into a LibreOffice window
+NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_04.ods")
+
 
