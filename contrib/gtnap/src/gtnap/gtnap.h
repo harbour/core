@@ -151,6 +151,8 @@ extern void hb_gtnap_office_browse_doc(HB_ITEM *pathname_block);
 
 extern uint32_t hb_gtnap_office_rgb(const uint8_t red, const uint8_t green, const uint8_t blue);
 
+/* LibreOffice spreadsheets (SCalc) */
+
 extern Sheet *hb_gtnap_office_sheet_open(HB_ITEM *pathname_block);
 
 extern Sheet *hb_gtnap_office_sheet_create(void);
@@ -159,7 +161,7 @@ extern void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block);
 
 extern void hb_gtnap_office_sheet_pdf(Sheet *sheet, HB_ITEM *pathname_block);
 
-extern void hb_gtnap_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block);
+extern void hb_gtnap_office_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block);
 
 extern void hb_gtnap_office_sheet_close(Sheet *sheet);
 
@@ -222,6 +224,20 @@ extern void hb_gtnap_office_sheet_row_visible(Sheet *sheet, const uint32_t page,
 extern void hb_gtnap_office_sheet_row_optimal_height(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t optimal_height);
 
 extern void hb_gtnap_office_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height);
+
+/* LibreOffice text documents (Writer) */
+
+extern Writer *hb_gtnap_office_writer_open(HB_ITEM *pathname_block);
+
+extern Writer *hb_gtnap_office_writer_create(void);
+
+extern void hb_gtnap_office_writer_save(Writer *writer, HB_ITEM *pathname_block);
+
+extern void hb_gtnap_office_writer_pdf(Writer *writer, HB_ITEM *pathname_block);
+
+extern void hb_gtnap_office_writer_print(Writer *writer, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block);
+
+extern void hb_gtnap_office_writer_close(Writer *writer);
 
 /*
  * Fran TODO: Pending refactoring

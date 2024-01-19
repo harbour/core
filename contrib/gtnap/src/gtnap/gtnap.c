@@ -12,6 +12,8 @@
 #include <osapp/osmain.h>
 #include <gui/drawctrl.inl>
 #include <officesdk/officesdk.h>
+#include <officesdk/sheetsdk.h>
+#include <officesdk/writersdk.h>
 
 #include "hbapiitm.h"
 #include "hbapirdd.h"
@@ -542,7 +544,7 @@ static void i_gtnap_destroy(GtNap **gtnap)
     font_destroy(&(*gtnap)->reduced_font);
     str_destroy(&(*gtnap)->title);
     str_destroy(&(*gtnap)->working_path);
-    str_destopt(&(*gtnap)->last_cell_ref);    
+    str_destopt(&(*gtnap)->last_cell_ref);
     officesdk_finish();
     heap_delete(&(*gtnap), GtNap);
 }
@@ -4613,7 +4615,7 @@ void hb_gtnap_office_sheet_pdf(Sheet *sheet, HB_ITEM *pathname_block)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block)
+void hb_gtnap_office_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block)
 {
     String *filename = hb_block_to_utf8(filename_block);
     String *printer = hb_block_to_utf8(printer_block);
@@ -4853,6 +4855,61 @@ void hb_gtnap_office_sheet_row_optimal_height(Sheet *sheet, const uint32_t page,
 void hb_gtnap_office_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height)
 {
     officesdk_sheet_row_height(sheet, page, row, height, &GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+Writer *hb_gtnap_office_writer_open(HB_ITEM *pathname_block)
+{
+    String *pathname = hb_block_to_utf8(pathname_block);
+    Writer *writer = officesdk_writer_open(tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&pathname);
+    return writer;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Writer *hb_gtnap_office_writer_create(void)
+{
+    return officesdk_writer_create(&GTNAP_GLOBAL->last_office_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_save(Writer *writer, HB_ITEM *pathname_block)
+{
+    String *pathname = hb_block_to_utf8(pathname_block);
+    officesdk_writer_save(writer, tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&pathname);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_pdf(Writer *writer, HB_ITEM *pathname_block)
+{
+    String *pathname = hb_block_to_utf8(pathname_block);
+    officesdk_writer_pdf(writer, tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&pathname);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_print(Writer *writer, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block)
+{
+    String *filename = hb_block_to_utf8(filename_block);
+    String *printer = hb_block_to_utf8(printer_block);
+    String *pages = hb_block_to_utf8(pages_block);
+    officesdk_writer_print(writer, tc(filename), tc(printer), orient, format, paper_width, paper_height, num_copies, collate_copies, tc(pages), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&filename);
+    str_destroy(&printer);
+    str_destroy(&pages);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_close(Writer *writer)
+{
+    officesdk_writer_close(writer, &GTNAP_GLOBAL->last_office_error);
 }
 
 /*---------------------------------------------------------------------------*/

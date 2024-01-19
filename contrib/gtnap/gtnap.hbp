@@ -51,4 +51,6 @@ src/gtnap/nap_tableview.c
 src/gtnap/nap_textview.c
 src/gtnap/nap_window.c
 src/gtnap/nap_office.c
+src/gtnap/nap_sheet.c
+src/gtnap/nap_writer.c
 

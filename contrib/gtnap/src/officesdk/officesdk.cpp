@@ -1,4 +1,6 @@
 #include "officesdk.h"
+#include "sheetsdk.h"
+#include "writersdk.h"
 #include <osapp/osapp.h>
 #include <core/strings.h>
 #include <osbs/bproc.h>
@@ -72,6 +74,8 @@ public:
     sdkres_t OpenSheetDocument(const char_t *url, css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
 
     sdkres_t LoadImage(const char_t *url, css::uno::Reference<css::graphic::XGraphic> &xGraphic);
+
+    sdkres_t CreateTextDocument(css::uno::Reference<css::text::XTextDocument> &xDocument);
 
     sdkres_t CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
 
@@ -426,6 +430,29 @@ sdkres_t OfficeSdk::LoadImage(
     {
         std::cout << "Error loading image: " << e.Message;
         res = ekSDKRES_OPEN_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+sdkres_t OfficeSdk::CreateTextDocument(css::uno::Reference<css::text::XTextDocument> &xDocument)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        // https://wiki.openoffice.org/wiki/ES/Manuales/GuiaAOO/TemasAvanzados/Macros/StarBasic/TrabajandoConOOo/TrabajandoConDocumentos
+        css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
+        loadProperties[0].Name = "Hidden";
+        loadProperties[0].Value <<= true;
+        css::uno::Reference<css::lang::XComponent> xComponent = this->m_xComponentLoader->loadComponentFromURL("private:factory/swriter", "_blank", 0, loadProperties);
+        xDocument = css::uno::Reference<css::text::XTextDocument>(xComponent, css::uno::UNO_QUERY_THROW);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error creating new text document: " << e.Message;
+        res = ekSDKRES_CREATE_FILE_ERROR;
     }
 
     return res;
@@ -792,7 +819,7 @@ void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *p
 
     if (res == ekSDKRES_OK)
     {
-        try 
+        try
         {
             css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
             xPrintable = css::uno::Reference<css::view::XPrintable>(*xDocument, css::uno::UNO_QUERY_THROW);
@@ -1136,7 +1163,7 @@ static sdkres_t i_set_cell_date(
         // Difference to 1/1/1970 (epoch) since 12/30/1899 (LibreOffice 0-day) in days
         // https://unix.stackexchange.com/questions/421354/convert-epoch-time-to-human-readable-in-libreoffice-calc
         value = (double)((epoch/(24 * 60 * 60)) + 25569);
-         
+
         xCell->setValue(value);
     }
     catch (css::uno::Exception&)
@@ -2485,3 +2512,137 @@ void officesdk_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_
 
     ptr_assign(err, res);
 }
+
+/*---------------------------------------------------------------------------*/
+
+Writer *officesdk_writer_open(const char_t *pathname, sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    Writer *writer = NULL;
+    css::uno::Reference<css::text::XTextDocument> *xDocument = nullptr;
+    cassert_no_null(pathname);
+    if (res == ekSDKRES_OK)
+    {
+        xDocument = new css::uno::Reference<css::text::XTextDocument>();
+        res = i_OFFICE_SDK.OpenTextDocument(pathname, *xDocument);
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        writer = reinterpret_cast<Writer*>(xDocument);
+    }
+    else
+    {
+        if (xDocument != nullptr)
+        {
+            delete xDocument;
+            xDocument = nullptr;
+        }
+    }
+
+    ptr_assign(err, res);
+    return writer;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Writer *officesdk_writer_create(sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    Writer *writer = NULL;
+    css::uno::Reference<css::text::XTextDocument> *xDocument = nullptr;
+    if (res == ekSDKRES_OK)
+    {
+        xDocument = new css::uno::Reference<css::text::XTextDocument>();
+        res = i_OFFICE_SDK.CreateTextDocument(*xDocument);
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        writer = reinterpret_cast<Writer*>(xDocument);
+    }
+    else
+    {
+        if (xDocument != nullptr)
+        {
+            delete xDocument;
+            xDocument = nullptr;
+        }
+    }
+
+    ptr_assign(err, res);
+    return writer;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_writer_save(Writer *writer, const char_t *pathname, const fileformat_t format, sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    cassert_no_null(writer);
+    cassert_no_null(pathname);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+        res = i_OFFICE_SDK.SaveTextDocument(*xDocument, pathname, format);
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_save(Writer *writer, const char_t *pathname, sdkres_t *err)
+{
+    i_writer_save(writer, pathname, ekFORMAT_OPEN_OFFICE, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_pdf(Writer *writer, const char_t *pathname, sdkres_t *err)
+{
+    i_writer_save(writer, pathname, ekFORMAT_PDF, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_print(Writer *writer, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
+{
+    unref(writer);
+    unref(filename);
+    unref(printer);
+    unref(orient);
+    unref(format);
+    unref(paper_width);
+    unref(paper_height);
+    unref(num_copies);
+    unref(collate_copies);
+    unref(pages);
+    unref(err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_close(Writer *writer, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+        css::uno::Reference<css::lang::XComponent> xComponent = css::uno::Reference<css::lang::XComponent>(*xDocument, css::uno::UNO_QUERY_THROW);
+        // This remove the lock file
+        xComponent->dispose();
+        delete xDocument;
+        xDocument = nullptr;
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_CLOSE_DOC_ERROR;
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
