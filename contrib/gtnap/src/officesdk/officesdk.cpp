@@ -2646,3 +2646,49 @@ void officesdk_writer_close(Writer *writer, sdkres_t *err)
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_get_text(
+                    Writer *writer,
+                    css::uno::Reference<css::text::XText> &xText)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+        xText = (*xDocument)->getText();
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert(Writer *writer, const char_t *text, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextCursor> xTextCursor = xText->createTextCursor();
+            css::uno::Reference<css::text::XTextRange> xTextRange = xTextCursor->getEnd();
+            ::rtl::OUString str = i_OUStringFromUTF8(text);
+            xText->insertString(xTextRange, str, sal_False);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_EDIT_CELL_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}

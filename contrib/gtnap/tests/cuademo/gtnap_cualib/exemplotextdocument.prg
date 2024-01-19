@@ -18,16 +18,41 @@ ADDOPCAO V_Janela TEXTO "Create simple text document" ;
 ATIVE(V_Janela)
 
 ***********************************
-STAT PROC TST_CREATE_DOCUMENT
+STAT FUNCTION OFFICE_ERROR( C_Text )
 ***********************************
-LOCAL V_Janela
-LOCAL N_Ret := NAP_OFFICE_TEXT_TO_PDF({|| NAP_WORK_PATH() + "/../office/test.odt" }, {|| NAP_WORK_PATH() + "/../office/test.pdf" })
-LOCAL C_ERR
+LOCAL N_Err := NAP_OFFICE_LAST_ERROR()
+LOCAL C_Err := NAP_OFFICE_ERROR_STR(N_Err)
+LOCAL L_Err := .F.
 
-IF N_Ret == SDKRES_OK
-    MOSTRAR("M15566","Exportação test.odt para .pdf realizada com sucesso.")
-ELSE
-    C_ERR := NAP_OFFICE_ERROR_STR(N_Ret)
-    MOSTRAR("M15566","Erro ao exportar para .pdf: " + C_ERR)
+IF N_Err != SDKRES_OK
+    MOSTRAR("M15566", C_Text + ": " + C_Err)
+    L_Err = .T.
 ENDIF
 
+RETURN L_Err
+
+***********************************
+STAT PROC TST_CREATE_DOCUMENT
+***********************************
+// Just a simple example to create a text document
+
+LOCAL O_DOC := NAP_DOC_CREATE()
+
+IF OFFICE_ERROR("Erro ao criar documento de texto")
+    RETURN
+ENDIF
+
+NAP_DOC_INSERT(O_DOC, "Hello World! Hello Create LibreOffice text document.")
+
+// Save the document
+NAP_DOC_SAVE(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_Text_01.odt" })
+OFFICE_ERROR("Erro ao salvar documento de texto")
+
+// Close the document (mandatory)
+NAP_DOC_CLOSE(O_DOC)
+OFFICE_ERROR("Erro ao fechar o documento de texto")
+
+MOSTRAR("M15566", "O documento de texto foi criado com sucesso.")
+
+// Open the result into a LibreOffice window
+NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_Text_01.odt")

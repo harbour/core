@@ -4914,6 +4914,15 @@ void hb_gtnap_office_writer_close(Writer *writer)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_writer_insert(Writer *writer, HB_ITEM *text_block)
+{
+    String *text = hb_block_to_utf8(text_block);
+    officesdk_writer_insert(writer, tc(text), &GTNAP_GLOBAL->last_office_error);
+    str_destroy(&text);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Font *hb_gtnap_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);

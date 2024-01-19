@@ -17,4 +17,6 @@ void officesdk_writer_print(Writer *writer, const char_t *filename, const char_t
 
 void officesdk_writer_close(Writer *writer, sdkres_t *err);
 
+void officesdk_writer_insert(Writer *writer, const char_t *text, sdkres_t *err);
+
 __END_C

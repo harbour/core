@@ -239,6 +239,8 @@ extern void hb_gtnap_office_writer_print(Writer *writer, HB_ITEM *filename_block
 
 extern void hb_gtnap_office_writer_close(Writer *writer);
 
+extern void hb_gtnap_office_writer_insert(Writer *writer, HB_ITEM *text_block);
+
 /*
  * Fran TODO: Pending refactoring
  *

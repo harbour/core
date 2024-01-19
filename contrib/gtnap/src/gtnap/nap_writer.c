@@ -63,3 +63,12 @@ HB_FUNC( NAP_DOC_CLOSE )
     Writer *writer = (Writer*)hb_parptr(1);
     hb_gtnap_office_writer_close(writer);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_INSERT )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    HB_ITEM *text_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_writer_insert(writer, text_block);
+}
