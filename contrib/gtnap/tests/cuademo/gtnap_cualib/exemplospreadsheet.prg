@@ -3,7 +3,7 @@
 #INCLUDE "gtnap.ch"
 
 ***********************
-PROC EXEMPLO_LIBOFFICE
+PROC EXEMPLO_PLANILHA
 ***********************
 LOCAL V_Janela
 
