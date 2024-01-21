@@ -21,7 +21,8 @@ exemplodbf.prg
 exemplovetor.prg
 exemplotextomemoria.prg
 exemplotextoarquivo.prg
-exemploliboffice.prg
+exemplospreadsheet.prg
+exemplotextdocument.prg
 acentos.prg
 arqtexto.prg
 entrada.prg

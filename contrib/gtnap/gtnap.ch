@@ -59,18 +59,23 @@
 #define SDKRES_FORMAT_CELL_ERROR        14
 #define SDKRES_ACCESS_COLUMN_ERROR      15
 #define SDKRES_FORMAT_COLUMN_ERROR      16
-#define SDKRES_PRINTER_CONFIG_ERROR     17
-#define SDKRES_PRINT_ERROR              18
+#define SDKRES_ACCESS_ROW_ERROR         17
+#define SDKRES_FORMAT_ROW_ERROR         18
+#define SDKRES_TEXT_PROPERTY_ERROR      19
+#define SDKRES_TEXT_ADD_ERROR           20
+#define SDKRES_PRINTER_CONFIG_ERROR     21
+#define SDKRES_PRINT_ERROR              22
 
 /* Horizontal alignment for LibreOffice SDK */
-#define SDK_HALIGN_LEFT             0
-#define SDK_HALIGN_CENTER           1
-#define SDK_HALIGN_RIGHT            2
+#define SDK_HALIGN_LEFT             1
+#define SDK_HALIGN_CENTER           2
+#define SDK_HALIGN_RIGHT            3
+#define SDK_HALIGN_JUSTIFY          4
 
 /* Vertical alignment for LibreOffice SDK */
-#define SDK_VALIGN_TOP              0
-#define SDK_VALIGN_CENTER           1
-#define SDK_VALIGN_BOTTOM           2
+#define SDK_VALIGN_TOP              1
+#define SDK_VALIGN_CENTER           2
+#define SDK_VALIGN_BOTTOM           3
 
 /* Number format for LibreOffice SDK */
 #define SDK_NUMFORMAT_INT           1

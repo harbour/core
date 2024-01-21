@@ -5,7 +5,10 @@
 
 #include <core/core.hxx>
 
+typedef struct _write_t Writer;
 typedef struct _sheet_t Sheet;
+typedef struct _ddraw_t Draw;
+typedef struct _acces_t Access;
 
 typedef enum _sdkres_t
 {
@@ -27,14 +30,31 @@ typedef enum _sdkres_t
     ekSDKRES_FORMAT_COLUMN_ERROR,
     ekSDKRES_ACCESS_ROW_ERROR,
     ekSDKRES_FORMAT_ROW_ERROR,
+    ekSDKRES_TEXT_PROPERTY_ERROR,
+    ekSDKRES_TEXT_ADD_ERROR,
     ekSDKRES_PRINTER_CONFIG_ERROR,
     ekSDKRES_PRINT_ERROR
 } sdkres_t;
 
+typedef enum _halign_t
+{
+    ekHALIGN_LEFT               = 1,
+    ekHALIGN_CENTER,
+    ekHALIGN_RIGHT,
+    ekHALIGN_JUSTIFY
+} halign_t;
+
+typedef enum _valign_t
+{
+    ekVALIGN_TOP                = 1,
+    ekVALIGN_CENTER,
+    ekVALIGN_BOTTOM
+} valign_t;
+
 typedef enum _numformat_t
 {
     ekNUMFORMAT_INT         = 1,
-    ekNUMFORMAT_INT_1000,    
+    ekNUMFORMAT_INT_1000,
     ekNUMFORMAT_DEC2,
     ekNUMFORMAT_DEC2_1000,
     ekNUMFORMAT_PERC_INT,
@@ -68,7 +88,7 @@ typedef enum _linestyle_t
     ekLINE_STYLE_THICKTHIN_LARGEGAP,
     ekLINE_STYLE_EMBOSSED,
     ekLINE_STYLE_ENGRAVED,
-    ekLINE_STYLE_OUTSET, 
+    ekLINE_STYLE_OUTSET,
     ekLINE_STYLE_INSET,
     ekLINE_STYLE_FINE_DASHED,
     ekLINE_STYLE_DOUBLE_THIN,

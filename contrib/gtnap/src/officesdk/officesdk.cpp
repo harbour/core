@@ -1,4 +1,6 @@
 #include "officesdk.h"
+#include "sheetsdk.h"
+#include "writersdk.h"
 #include <osapp/osapp.h>
 #include <core/strings.h>
 #include <osbs/bproc.h>
@@ -40,10 +42,14 @@
 #include <table/TableBorder.hpp>
 #include <table/TableBorder2.hpp>
 #include <table/BorderLineStyle.hpp>
+#include <text/ControlCharacter.hpp>
 #include <util/XMergeable.hpp>
 #include <util/XProtectable.hpp>
 #include <util/XNumberFormatsSupplier.hpp>
 #include <util/XNumberFormatTypes.hpp>
+#include <style/ParagraphAdjust.hpp>
+#include <style/LineSpacing.hpp>
+#include <style/LineSpacingMode.hpp>
 #include <view/XPrintable.hpp>
 #include <view/PaperOrientation.hpp>
 #include <view/PaperFormat.hpp>
@@ -72,6 +78,8 @@ public:
     sdkres_t OpenSheetDocument(const char_t *url, css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
 
     sdkres_t LoadImage(const char_t *url, css::uno::Reference<css::graphic::XGraphic> &xGraphic);
+
+    sdkres_t CreateTextDocument(css::uno::Reference<css::text::XTextDocument> &xDocument);
 
     sdkres_t CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument);
 
@@ -433,6 +441,29 @@ sdkres_t OfficeSdk::LoadImage(
 
 /*---------------------------------------------------------------------------*/
 
+sdkres_t OfficeSdk::CreateTextDocument(css::uno::Reference<css::text::XTextDocument> &xDocument)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        // https://wiki.openoffice.org/wiki/ES/Manuales/GuiaAOO/TemasAvanzados/Macros/StarBasic/TrabajandoConOOo/TrabajandoConDocumentos
+        css::uno::Sequence<css::beans::PropertyValue> loadProperties(1);
+        loadProperties[0].Name = "Hidden";
+        loadProperties[0].Value <<= true;
+        css::uno::Reference<css::lang::XComponent> xComponent = this->m_xComponentLoader->loadComponentFromURL("private:factory/swriter", "_blank", 0, loadProperties);
+        xDocument = css::uno::Reference<css::text::XTextDocument>(xComponent, css::uno::UNO_QUERY_THROW);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error creating new text document: " << e.Message;
+        res = ekSDKRES_CREATE_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 sdkres_t OfficeSdk::CreateSheetDocument(css::uno::Reference<css::sheet::XSpreadsheetDocument> &xDocument)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -623,6 +654,10 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed to access row";
     case ekSDKRES_FORMAT_ROW_ERROR:
         return "Failed to change row format";
+    case ekSDKRES_TEXT_PROPERTY_ERROR:
+        return "Failed setting text properties";
+    case ekSDKRES_TEXT_ADD_ERROR:
+        return "Failed adding text";
     case ekSDKRES_PRINTER_CONFIG_ERROR:
         return "Error in printer configuration";
     case ekSDKRES_PRINT_ERROR:
@@ -792,7 +827,7 @@ void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *p
 
     if (res == ekSDKRES_OK)
     {
-        try 
+        try
         {
             css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
             xPrintable = css::uno::Reference<css::view::XPrintable>(*xDocument, css::uno::UNO_QUERY_THROW);
@@ -1136,7 +1171,7 @@ static sdkres_t i_set_cell_date(
         // Difference to 1/1/1970 (epoch) since 12/30/1899 (LibreOffice 0-day) in days
         // https://unix.stackexchange.com/questions/421354/convert-epoch-time-to-human-readable-in-libreoffice-calc
         value = (double)((epoch/(24 * 60 * 60)) + 25569);
-         
+
         xCell->setValue(value);
     }
     catch (css::uno::Exception&)
@@ -2101,7 +2136,7 @@ void officesdk_sheet_cell_italic(Sheet *sheet, const uint32_t page, const uint32
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align, sdkres_t *err)
+void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const halign_t align, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::table::XCell> xCell;
@@ -2112,14 +2147,17 @@ void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32
     {
         css::table::CellHoriJustify just = css::table::CellHoriJustify::CellHoriJustify_LEFT;
         switch (align) {
-        case 0:
+        case ekHALIGN_LEFT:
             just = css::table::CellHoriJustify::CellHoriJustify_LEFT;
             break;
-        case 1:
+        case ekHALIGN_CENTER:
             just = css::table::CellHoriJustify::CellHoriJustify_CENTER;
             break;
-        case 2:
+        case ekHALIGN_RIGHT:
             just = css::table::CellHoriJustify::CellHoriJustify_RIGHT;
+            break;
+        case ekHALIGN_JUSTIFY:
+            just = css::table::CellHoriJustify::CellHoriJustify_LEFT;
             break;
         }
 
@@ -2131,7 +2169,7 @@ void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align, sdkres_t *err)
+void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const valign_t align, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::table::XCell> xCell;
@@ -2143,13 +2181,13 @@ void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32
         ::sal_Int32 just = css::table::CellVertJustify2::CENTER;
 
         switch (align) {
-        case 0:
+        case ekVALIGN_TOP:
             just = css::table::CellVertJustify2::TOP;
             break;
-        case 1:
+        case ekVALIGN_CENTER:
             just = css::table::CellVertJustify2::CENTER;
             break;
-        case 2:
+        case ekVALIGN_BOTTOM:
             just = css::table::CellVertJustify2::BOTTOM;
             break;
         }
@@ -2484,4 +2522,375 @@ void officesdk_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_
         res = i_set_row_property(xTableRow, "Height", css::uno::makeAny((sal_Int32)height));
 
     ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+Writer *officesdk_writer_open(const char_t *pathname, sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    Writer *writer = NULL;
+    css::uno::Reference<css::text::XTextDocument> *xDocument = nullptr;
+    cassert_no_null(pathname);
+    if (res == ekSDKRES_OK)
+    {
+        xDocument = new css::uno::Reference<css::text::XTextDocument>();
+        res = i_OFFICE_SDK.OpenTextDocument(pathname, *xDocument);
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        writer = reinterpret_cast<Writer*>(xDocument);
+    }
+    else
+    {
+        if (xDocument != nullptr)
+        {
+            delete xDocument;
+            xDocument = nullptr;
+        }
+    }
+
+    ptr_assign(err, res);
+    return writer;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Writer *officesdk_writer_create(sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    Writer *writer = NULL;
+    css::uno::Reference<css::text::XTextDocument> *xDocument = nullptr;
+    if (res == ekSDKRES_OK)
+    {
+        xDocument = new css::uno::Reference<css::text::XTextDocument>();
+        res = i_OFFICE_SDK.CreateTextDocument(*xDocument);
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        writer = reinterpret_cast<Writer*>(xDocument);
+    }
+    else
+    {
+        if (xDocument != nullptr)
+        {
+            delete xDocument;
+            xDocument = nullptr;
+        }
+    }
+
+    ptr_assign(err, res);
+    return writer;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_writer_save(Writer *writer, const char_t *pathname, const fileformat_t format, sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    cassert_no_null(writer);
+    cassert_no_null(pathname);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+        res = i_OFFICE_SDK.SaveTextDocument(*xDocument, pathname, format);
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_save(Writer *writer, const char_t *pathname, sdkres_t *err)
+{
+    i_writer_save(writer, pathname, ekFORMAT_OPEN_OFFICE, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_pdf(Writer *writer, const char_t *pathname, sdkres_t *err)
+{
+    i_writer_save(writer, pathname, ekFORMAT_PDF, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_print(Writer *writer, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
+{
+    unref(writer);
+    unref(filename);
+    unref(printer);
+    unref(orient);
+    unref(format);
+    unref(paper_width);
+    unref(paper_height);
+    unref(num_copies);
+    unref(collate_copies);
+    unref(pages);
+    unref(err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_close(Writer *writer, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+        css::uno::Reference<css::lang::XComponent> xComponent = css::uno::Reference<css::lang::XComponent>(*xDocument, css::uno::UNO_QUERY_THROW);
+        // This remove the lock file
+        xComponent->dispose();
+        delete xDocument;
+        xDocument = nullptr;
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_CLOSE_DOC_ERROR;
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_text(
+                    Writer *writer,
+                    css::uno::Reference<css::text::XText> &xText)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+        xText = (*xDocument)->getText();
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_set_text_property(
+                    css::uno::Reference<css::text::XText> &xText,
+                    const char_t *prop_name,
+                    const css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
+        css::uno::Reference<css::beans::XPropertySet> xTextProperties(xTextRange, css::uno::UNO_QUERY_THROW);
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        xTextProperties->setPropertyValue(prop, value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_TEXT_PROPERTY_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_font_family(Writer *writer, const char_t *font_family, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK && str_empty_c(font_family) == FALSE)
+    {
+        ::rtl::OUString fname = i_OUStringFromUTF8(font_family);
+        res = i_set_text_property(xText, "CharFontName", css::uno::makeAny(fname));
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_font_size(Writer *writer, const real32_t font_size, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK && font_size > 0)
+        res = i_set_text_property(xText, "CharHeight", css::uno::makeAny(font_size));
+   
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_bold(Writer *writer, const bool_t bold, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        float weight = bold ? css::awt::FontWeight::BOLD : css::awt::FontWeight::LIGHT;
+        res = i_set_text_property(xText, "CharWeight", css::uno::makeAny(weight));
+    }
+   
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_italic(Writer *writer, const bool_t italic, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::awt::FontSlant slant = italic ? css::awt::FontSlant::FontSlant_ITALIC : css::awt::FontSlant::FontSlant_NONE;
+        res = i_set_text_property(xText, "CharPosture", css::uno::makeAny(slant));
+    }
+   
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_halign(Writer *writer, const halign_t align, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::style::ParagraphAdjust adjust = css::style::ParagraphAdjust::ParagraphAdjust_LEFT;
+        switch(align) {
+        case ekHALIGN_LEFT:
+            adjust = css::style::ParagraphAdjust::ParagraphAdjust_LEFT;
+            break;
+        case ekHALIGN_CENTER:
+            adjust = css::style::ParagraphAdjust::ParagraphAdjust_CENTER;
+            break;
+        case ekHALIGN_RIGHT:
+            adjust = css::style::ParagraphAdjust::ParagraphAdjust_RIGHT;
+            break;
+        case ekHALIGN_JUSTIFY:
+            adjust = css::style::ParagraphAdjust::ParagraphAdjust_BLOCK;
+            break;
+        }
+
+        res = i_set_text_property(xText, "ParaAdjust", css::uno::makeAny(adjust));
+    }
+   
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_lspacing(Writer *writer, const uint32_t height, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::style::LineSpacing spacing;
+        spacing.Mode = css::style::LineSpacingMode::FIX;
+        spacing.Height = (sal_Int16)height;
+        res = i_set_text_property(xText, "ParaLineSpacing", css::uno::makeAny(spacing));
+    }
+   
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_text(Writer *writer, const char_t *text, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
+            ::rtl::OUString str = i_OUStringFromUTF8(text);
+            xText->insertString(xTextRange, str, sal_False);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_TEXT_ADD_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_insert_control_character(Writer *writer, sal_Int16 ctrlchar, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
+            xText->insertControlCharacter(xTextRange, ctrlchar, sal_False);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_TEXT_ADD_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_new_line(Writer *writer, sdkres_t *err)
+{
+    i_insert_control_character(writer, css::text::ControlCharacter::LINE_BREAK, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_break(Writer *writer, sdkres_t *err)
+{
+    i_insert_control_character(writer, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
 }
