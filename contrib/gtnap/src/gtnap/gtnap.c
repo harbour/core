@@ -4960,6 +4960,13 @@ void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_writer_new_line(Writer *writer)
+{
+    officesdk_writer_new_line(writer, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Font *hb_gtnap_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);

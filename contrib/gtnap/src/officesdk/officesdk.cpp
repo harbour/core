@@ -2684,8 +2684,7 @@ static sdkres_t i_set_text_property(
 
     try
     {
-        css::uno::Reference<css::text::XTextCursor> xTextCursor = xText->createTextCursor();
-        css::uno::Reference<css::text::XTextRange> xTextRange = xTextCursor->getEnd();
+        css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
         css::uno::Reference<css::beans::XPropertySet> xTextProperties(xTextRange, css::uno::UNO_QUERY_THROW);
         ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
         xTextProperties->setPropertyValue(prop, value);
@@ -2819,10 +2818,36 @@ void officesdk_writer_insert_text(Writer *writer, const char_t *text, sdkres_t *
     {
         try
         {
-            css::uno::Reference<css::text::XTextCursor> xTextCursor = xText->createTextCursor();
-            css::uno::Reference<css::text::XTextRange> xTextRange = xTextCursor->getEnd();
+            css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
             ::rtl::OUString str = i_OUStringFromUTF8(text);
             xText->insertString(xTextRange, str, sal_False);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_TEXT_ADD_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_new_line(Writer *writer, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
+            xText->insertString(xTextRange, "\n", sal_False);
+
         }
         catch (css::uno::Exception&)
         {

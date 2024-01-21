@@ -29,4 +29,6 @@ void officesdk_writer_halign(Writer *writer, const halign_t align, sdkres_t *err
 
 void officesdk_writer_insert_text(Writer *writer, const char_t *text, sdkres_t *err);
 
+void officesdk_writer_new_line(Writer *writer, sdkres_t *err);
+
 __END_C

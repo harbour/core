@@ -117,3 +117,11 @@ HB_FUNC( NAP_DOC_INSERT_TEXT )
     HB_ITEM *text_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
     hb_gtnap_office_writer_insert_text(writer, text_block);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_NEW_LINE )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    hb_gtnap_office_writer_new_line(writer);
+}
