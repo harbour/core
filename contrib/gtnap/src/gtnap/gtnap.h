@@ -249,6 +249,8 @@ extern void hb_gtnap_office_writer_italic(Writer *writer, const bool_t italic);
 
 extern void hb_gtnap_office_writer_halign(Writer *writer, const halign_t align);
 
+extern void hb_gtnap_office_writer_lspacing(Writer *writer, const uint32_t height);
+
 extern void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block);
 
 extern void hb_gtnap_office_writer_new_line(Writer *writer);

@@ -4951,6 +4951,13 @@ void hb_gtnap_office_writer_halign(Writer *writer, const halign_t align)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_writer_lspacing(Writer *writer, const uint32_t height)
+{
+    officesdk_writer_lspacing(writer, height, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block)
 {
     String *text = hb_block_to_utf8(text_block);

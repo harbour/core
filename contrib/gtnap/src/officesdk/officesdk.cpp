@@ -47,6 +47,8 @@
 #include <util/XNumberFormatsSupplier.hpp>
 #include <util/XNumberFormatTypes.hpp>
 #include <style/ParagraphAdjust.hpp>
+#include <style/LineSpacing.hpp>
+#include <style/LineSpacingMode.hpp>
 #include <view/XPrintable.hpp>
 #include <view/PaperOrientation.hpp>
 #include <view/PaperFormat.hpp>
@@ -2799,6 +2801,27 @@ void officesdk_writer_halign(Writer *writer, const halign_t align, sdkres_t *err
         }
 
         res = i_set_text_property(xText, "ParaAdjust", css::uno::makeAny(adjust));
+    }
+   
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_lspacing(Writer *writer, const uint32_t height, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::style::LineSpacing spacing;
+        spacing.Mode = css::style::LineSpacingMode::FIX;
+        spacing.Height = (sal_Int16)height;
+        res = i_set_text_property(xText, "ParaLineSpacing", css::uno::makeAny(spacing));
     }
    
     ptr_assign(err, res);

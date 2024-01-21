@@ -111,6 +111,15 @@ HB_FUNC( NAP_DOC_HALIGN )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_DOC_LSPACING )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    uint32_t height = hb_parni(2);
+    hb_gtnap_office_writer_lspacing(writer, height);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_DOC_INSERT_TEXT )
 {
     Writer *writer = (Writer*)hb_parptr(1);

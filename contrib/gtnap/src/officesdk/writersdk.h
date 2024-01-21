@@ -27,6 +27,8 @@ void officesdk_writer_italic(Writer *writer, const bool_t italic, sdkres_t *err)
 
 void officesdk_writer_halign(Writer *writer, const halign_t align, sdkres_t *err);
 
+void officesdk_writer_lspacing(Writer *writer, const uint32_t height, sdkres_t *err);
+
 void officesdk_writer_insert_text(Writer *writer, const char_t *text, sdkres_t *err);
 
 void officesdk_writer_new_line(Writer *writer, sdkres_t *err);
