@@ -239,7 +239,15 @@ extern void hb_gtnap_office_writer_print(Writer *writer, HB_ITEM *filename_block
 
 extern void hb_gtnap_office_writer_close(Writer *writer);
 
-extern void hb_gtnap_office_writer_insert(Writer *writer, HB_ITEM *text_block);
+extern void hb_gtnap_office_writer_font_family(Writer *writer, HB_ITEM *ffamily_block);
+
+extern void hb_gtnap_office_writer_font_size(Writer *writer, const real32_t fsize);
+
+extern void hb_gtnap_office_writer_bold(Writer *writer, const bool_t bold);
+
+extern void hb_gtnap_office_writer_italic(Writer *writer, const bool_t italic);
+
+extern void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block);
 
 /*
  * Fran TODO: Pending refactoring

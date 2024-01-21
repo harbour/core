@@ -12,8 +12,8 @@ CUA20 @ 15,20,30,70 JANELA V_Janela ;
      AJUDA "T?????"
 
 ESPECIALIZE V_Janela MENU
-ADDOPCAO V_Janela TEXTO "Create simple text document" ;
-   ACAO TST_CREATE_DOCUMENT() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Create R00236.pdf" ;
+   ACAO TST_CREATE_DOCUMENT1() AJUDA "P06685"
 
 ATIVE(V_Janela)
 
@@ -32,9 +32,9 @@ ENDIF
 RETURN L_Err
 
 ***********************************
-STAT PROC TST_CREATE_DOCUMENT
+STAT PROC TST_CREATE_DOCUMENT1
 ***********************************
-// Just a simple example to create a text document
+// R00236.pdf
 
 LOCAL O_DOC := NAP_DOC_CREATE()
 
@@ -42,11 +42,17 @@ IF OFFICE_ERROR("Erro ao criar documento de texto")
     RETURN
 ENDIF
 
-NAP_DOC_INSERT(O_DOC, "Hello World! Hello Create LibreOffice text document.")
+NAP_DOC_FONT_FAMILY(O_DOC, "LucidaConsole")
+NAP_DOC_FONT_SIZE(O_DOC, 12.0)
+NAP_DOC_INSERT_TEXT(O_DOC, "PREFEITURA MUNICIPAL DE MACAPÁ")
 
 // Save the document
-NAP_DOC_SAVE(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_Text_01.odt" })
+NAP_DOC_SAVE(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R00236.odt" })
 OFFICE_ERROR("Erro ao salvar documento de texto")
+
+// Export to PDF
+NAP_DOC_PDF(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R00236.pdf" })
+OFFICE_ERROR("Exportando para PDF")
 
 // Close the document (mandatory)
 NAP_DOC_CLOSE(O_DOC)
@@ -55,4 +61,4 @@ OFFICE_ERROR("Erro ao fechar o documento de texto")
 MOSTRAR("M15566", "O documento de texto foi criado com sucesso.")
 
 // Open the result into a LibreOffice window
-NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_Text_01.odt")
+NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R00236.odt")

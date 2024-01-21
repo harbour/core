@@ -650,6 +650,10 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed to access row";
     case ekSDKRES_FORMAT_ROW_ERROR:
         return "Failed to change row format";
+    case ekSDKRES_TEXT_PROPERTY_ERROR:
+        return "Failed setting text properties";
+    case ekSDKRES_TEXT_ADD_ERROR:
+        return "Failed adding text";
     case ekSDKRES_PRINTER_CONFIG_ERROR:
         return "Error in printer configuration";
     case ekSDKRES_PRINT_ERROR:
@@ -2667,7 +2671,105 @@ static sdkres_t i_get_text(
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_insert(Writer *writer, const char_t *text, sdkres_t *err)
+static sdkres_t i_set_text_property(
+                    css::uno::Reference<css::text::XText> &xText,
+                    const char_t *prop_name,
+                    const css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::text::XTextCursor> xTextCursor = xText->createTextCursor();
+        css::uno::Reference<css::text::XTextRange> xTextRange = xTextCursor->getEnd();
+        css::uno::Reference<css::beans::XPropertySet> xTextProperties(xTextRange, css::uno::UNO_QUERY_THROW);
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        xTextProperties->setPropertyValue(prop, value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_TEXT_PROPERTY_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_font_family(Writer *writer, const char_t *font_family, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK && str_empty_c(font_family) == FALSE)
+    {
+        ::rtl::OUString fname = i_OUStringFromUTF8(font_family);
+        res = i_set_text_property(xText, "CharFontName", css::uno::makeAny(fname));
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_font_size(Writer *writer, const real32_t font_size, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK && font_size > 0)
+        res = i_set_text_property(xText, "CharHeight", css::uno::makeAny(font_size));
+   
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_bold(Writer *writer, const bool_t bold, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        float weight = bold ? css::awt::FontWeight::BOLD : css::awt::FontWeight::LIGHT;
+        res = i_set_text_property(xText, "CharWeight", css::uno::makeAny(weight));
+    }
+   
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_italic(Writer *writer, const bool_t italic, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::awt::FontSlant slant = italic ? css::awt::FontSlant::FontSlant_ITALIC : css::awt::FontSlant::FontSlant_NONE;
+        res = i_set_text_property(xText, "CharPosture", css::uno::makeAny(slant));
+    }
+   
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_text(Writer *writer, const char_t *text, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
@@ -2686,7 +2788,7 @@ void officesdk_writer_insert(Writer *writer, const char_t *text, sdkres_t *err)
         }
         catch (css::uno::Exception&)
         {
-            res = ekSDKRES_EDIT_CELL_ERROR;
+            res = ekSDKRES_TEXT_ADD_ERROR;
         }
     }
 

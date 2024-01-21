@@ -17,6 +17,14 @@ void officesdk_writer_print(Writer *writer, const char_t *filename, const char_t
 
 void officesdk_writer_close(Writer *writer, sdkres_t *err);
 
-void officesdk_writer_insert(Writer *writer, const char_t *text, sdkres_t *err);
+void officesdk_writer_font_family(Writer *writer, const char_t *font_family, sdkres_t *err);
+
+void officesdk_writer_font_size(Writer *writer, const real32_t font_size, sdkres_t *err);
+
+void officesdk_writer_bold(Writer *writer, const bool_t bold, sdkres_t *err);
+
+void officesdk_writer_italic(Writer *writer, const bool_t italic, sdkres_t *err);
+
+void officesdk_writer_insert_text(Writer *writer, const char_t *text, sdkres_t *err);
 
 __END_C

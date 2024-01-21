@@ -188,8 +188,8 @@ struct _gtnap_t
     GtNapWindow *modal_time_window;
     ArrPt(GtNapWindow) *windows;
 
-    String *last_cell_ref;
-    sdkres_t last_office_error;
+    String *office_last_cell_ref;
+    sdkres_t office_last_error;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -544,7 +544,7 @@ static void i_gtnap_destroy(GtNap **gtnap)
     font_destroy(&(*gtnap)->reduced_font);
     str_destroy(&(*gtnap)->title);
     str_destroy(&(*gtnap)->working_path);
-    str_destopt(&(*gtnap)->last_cell_ref);
+    str_destopt(&(*gtnap)->office_last_cell_ref);
     officesdk_finish();
     heap_delete(&(*gtnap), GtNap);
 }
@@ -1000,8 +1000,8 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->windows = arrpt_create(GtNapWindow);
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == (HB_BOOL)HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
-    GTNAP_GLOBAL->last_cell_ref = NULL;
-    GTNAP_GLOBAL->last_office_error = ENUM_MAX(sdkres_t);
+    GTNAP_GLOBAL->office_last_cell_ref = NULL;
+    GTNAP_GLOBAL->office_last_error = ENUM_MAX(sdkres_t);
 
     {
         char_t path[512];
@@ -4552,7 +4552,7 @@ uint32_t hb_gtnap_office_text_to_pdf(HB_ITEM *src_block, HB_ITEM *dest_block)
 
 uint32_t hb_gtnap_office_last_error(void)
 {
-    return (uint32_t)GTNAP_GLOBAL->last_office_error;
+    return (uint32_t)GTNAP_GLOBAL->office_last_error;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4567,7 +4567,7 @@ const char_t *hb_gtnap_office_error(const uint32_t errcode)
 void hb_gtnap_office_browse_doc(HB_ITEM *pathname_block)
 {
     String *pathname = hb_block_to_utf8(pathname_block);
-    officesdk_browse_doc(tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    officesdk_browse_doc(tc(pathname), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&pathname);
 }
 
@@ -4583,7 +4583,7 @@ uint32_t hb_gtnap_office_rgb(const uint8_t red, const uint8_t green, const uint8
 Sheet *hb_gtnap_office_sheet_open(HB_ITEM *pathname_block)
 {
     String *pathname = hb_block_to_utf8(pathname_block);
-    Sheet *sheet = officesdk_sheet_open(tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    Sheet *sheet = officesdk_sheet_open(tc(pathname), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&pathname);
     return sheet;
 }
@@ -4592,7 +4592,7 @@ Sheet *hb_gtnap_office_sheet_open(HB_ITEM *pathname_block)
 
 Sheet *hb_gtnap_office_sheet_create(void)
 {
-    return officesdk_sheet_create(&GTNAP_GLOBAL->last_office_error);
+    return officesdk_sheet_create(&GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4600,7 +4600,7 @@ Sheet *hb_gtnap_office_sheet_create(void)
 void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block)
 {
     String *pathname = hb_block_to_utf8(pathname_block);
-    officesdk_sheet_save(sheet, tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_save(sheet, tc(pathname), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&pathname);
 }
 
@@ -4609,7 +4609,7 @@ void hb_gtnap_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block)
 void hb_gtnap_office_sheet_pdf(Sheet *sheet, HB_ITEM *pathname_block)
 {
     String *pathname = hb_block_to_utf8(pathname_block);
-    officesdk_sheet_pdf(sheet, tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_pdf(sheet, tc(pathname), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&pathname);
 }
 
@@ -4620,7 +4620,7 @@ void hb_gtnap_office_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM 
     String *filename = hb_block_to_utf8(filename_block);
     String *printer = hb_block_to_utf8(printer_block);
     String *pages = hb_block_to_utf8(pages_block);
-    officesdk_sheet_print(sheet, tc(filename), tc(printer), orient, format, paper_width, paper_height, num_copies, collate_copies, tc(pages), &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_print(sheet, tc(filename), tc(printer), orient, format, paper_width, paper_height, num_copies, collate_copies, tc(pages), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&filename);
     str_destroy(&printer);
     str_destroy(&pages);
@@ -4630,14 +4630,14 @@ void hb_gtnap_office_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM 
 
 void hb_gtnap_office_sheet_close(Sheet *sheet)
 {
-    officesdk_sheet_close(sheet, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_close(sheet, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 uint32_t hb_gtnap_office_sheet_add(Sheet *sheet)
 {
-    return officesdk_sheet_add(sheet, &GTNAP_GLOBAL->last_office_error);
+    return officesdk_sheet_add(sheet, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4645,7 +4645,7 @@ uint32_t hb_gtnap_office_sheet_add(Sheet *sheet)
 void hb_gtnap_office_sheet_name(Sheet *sheet, const uint32_t page, HB_ITEM *name_block)
 {
     String *name = hb_block_to_utf8(name_block);
-    officesdk_sheet_name(sheet, page, tc(name), &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_name(sheet, page, tc(name), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&name);
 }
 
@@ -4654,7 +4654,7 @@ void hb_gtnap_office_sheet_name(Sheet *sheet, const uint32_t page, HB_ITEM *name
 void hb_gtnap_office_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t protect, HB_ITEM *pass_block)
 {
     String *pass = hb_block_to_utf8(pass_block);
-    officesdk_sheet_protect(sheet, page, protect, tc(pass), &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_protect(sheet, page, protect, tc(pass), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&pass);
 }
 
@@ -4662,16 +4662,16 @@ void hb_gtnap_office_sheet_protect(Sheet *sheet, const uint32_t page, const bool
 
 void hb_gtnap_office_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows)
 {
-    officesdk_sheet_freeze(sheet, page, ncols, nrows, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_freeze(sheet, page, ncols, nrows, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 const char_t *hb_gtnap_office_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row)
 {
-    str_destopt(&GTNAP_GLOBAL->last_cell_ref);
-    GTNAP_GLOBAL->last_cell_ref = officesdk_sheet_cell_ref(sheet, page, col, row, &GTNAP_GLOBAL->last_office_error);
-    return tc(GTNAP_GLOBAL->last_cell_ref);
+    str_destopt(&GTNAP_GLOBAL->office_last_cell_ref);
+    GTNAP_GLOBAL->office_last_cell_ref = officesdk_sheet_cell_ref(sheet, page, col, row, &GTNAP_GLOBAL->office_last_error);
+    return tc(GTNAP_GLOBAL->office_last_cell_ref);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4679,7 +4679,7 @@ const char_t *hb_gtnap_office_cell_ref(Sheet *sheet, const uint32_t page, const 
 void hb_gtnap_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *text_block)
 {
     String *text = hb_block_to_utf8(text_block);
-    officesdk_sheet_cell_text(sheet, page, col, row, tc(text), &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_text(sheet, page, col, row, tc(text), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&text);
 }
 
@@ -4687,14 +4687,14 @@ void hb_gtnap_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const ui
 
 void hb_gtnap_office_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value)
 {
-    officesdk_sheet_cell_value(sheet, page, col, row, value, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_value(sheet, page, col, row, value, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cell_date(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint8_t day, const uint8_t month, const int16_t year)
 {
-    officesdk_sheet_cell_date(sheet, page, col, row, day, month, year, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_date(sheet, page, col, row, day, month, year, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4702,7 +4702,7 @@ void hb_gtnap_office_sheet_cell_date(Sheet *sheet, const uint32_t page, const ui
 void hb_gtnap_office_sheet_cell_formula(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *formula_block)
 {
     String *formula = hb_block_to_utf8(formula_block);
-    officesdk_sheet_cell_formula(sheet, page, col, row, tc(formula), &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_formula(sheet, page, col, row, tc(formula), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&formula);
 }
 
@@ -4710,7 +4710,7 @@ void hb_gtnap_office_sheet_cell_formula(Sheet *sheet, const uint32_t page, const
 
 void hb_gtnap_office_sheet_cell_numformat(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const numformat_t format)
 {
-    officesdk_sheet_cell_numformat(sheet, page, col, row, format, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_numformat(sheet, page, col, row, format, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4718,7 +4718,7 @@ void hb_gtnap_office_sheet_cell_numformat(Sheet *sheet, const uint32_t page, con
 void hb_gtnap_office_sheet_cell_font_family(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *ffamily_block)
 {
     String *ffamily = hb_block_to_utf8(ffamily_block);
-    officesdk_sheet_cell_font_family(sheet, page, col, row, tc(ffamily), &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_font_family(sheet, page, col, row, tc(ffamily), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&ffamily);
 }
 
@@ -4726,63 +4726,63 @@ void hb_gtnap_office_sheet_cell_font_family(Sheet *sheet, const uint32_t page, c
 
 void hb_gtnap_office_sheet_cell_font_size(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real32_t fsize)
 {
-    officesdk_sheet_cell_font_size(sheet, page, col, row, fsize, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_font_size(sheet, page, col, row, fsize, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cell_bold(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t bold)
 {
-    officesdk_sheet_cell_bold(sheet, page, col, row, bold, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_bold(sheet, page, col, row, bold, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cell_italic(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t italic)
 {
-    officesdk_sheet_cell_italic(sheet, page, col, row, italic, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_italic(sheet, page, col, row, italic, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align)
 {
-    officesdk_sheet_cell_halign(sheet, page, col, row, align, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_halign(sheet, page, col, row, align, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align)
 {
-    officesdk_sheet_cell_valign(sheet, page, col, row, align, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_valign(sheet, page, col, row, align, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cell_wrap(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped)
 {
-    officesdk_sheet_cell_wrap(sheet, page, col, row, wrapped, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_wrap(sheet, page, col, row, wrapped, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cell_color(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb)
 {
-    officesdk_sheet_cell_color(sheet, page, col, row, rgb, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_color(sheet, page, col, row, rgb, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb)
 {
-    officesdk_sheet_cell_backcolor(sheet, page, col, row, rgb, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_backcolor(sheet, page, col, row, rgb, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cells_backcolor(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const uint32_t rgb)
 {
-    officesdk_sheet_cells_backcolor(sheet, page, st_col, st_row, ed_col, ed_row, rgb, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cells_backcolor(sheet, page, st_col, st_row, ed_col, ed_row, rgb, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4790,7 +4790,7 @@ void hb_gtnap_office_sheet_cells_backcolor(Sheet *sheet, const uint32_t page, co
 void hb_gtnap_office_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *image_path_block)
 {
     String *image_path = hb_block_to_utf8(image_path_block);
-    officesdk_sheet_cell_image(sheet, page, col, row, tc(image_path), &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_image(sheet, page, col, row, tc(image_path), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&image_path);
 }
 
@@ -4798,63 +4798,63 @@ void hb_gtnap_office_sheet_cell_image(Sheet *sheet, const uint32_t page, const u
 
 void hb_gtnap_office_sheet_cell_border(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
 {
-    officesdk_sheet_cell_border(sheet, page, col, row, style, thickness, rgb, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cell_border(sheet, page, col, row, style, thickness, rgb, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cells_border(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
 {
-    officesdk_sheet_cells_border(sheet, page, st_col, st_row, ed_col, ed_row, style, thickness, rgb, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cells_border(sheet, page, st_col, st_row, ed_col, ed_row, style, thickness, rgb, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_cells_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row)
 {
-    officesdk_sheet_cells_merge(sheet, page, st_col, st_row, ed_col, ed_row, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_cells_merge(sheet, page, st_col, st_row, ed_col, ed_row, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_column_visible(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t visible)
 {
-    officesdk_sheet_column_visible(sheet, page, col, visible, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_column_visible(sheet, page, col, visible, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_column_optimal_width(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t optimal_width)
 {
-    officesdk_sheet_column_optimal_width(sheet, page, col, optimal_width, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_column_optimal_width(sheet, page, col, optimal_width, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_column_width(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t width)
 {
-    officesdk_sheet_column_width(sheet, page, col, width, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_column_width(sheet, page, col, width, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_row_visible(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t visible)
 {
-    officesdk_sheet_row_visible(sheet, page, row, visible, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_row_visible(sheet, page, row, visible, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_row_optimal_height(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t optimal_height)
 {
-    officesdk_sheet_row_optimal_height(sheet, page, row, optimal_height, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_row_optimal_height(sheet, page, row, optimal_height, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height)
 {
-    officesdk_sheet_row_height(sheet, page, row, height, &GTNAP_GLOBAL->last_office_error);
+    officesdk_sheet_row_height(sheet, page, row, height, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4862,7 +4862,7 @@ void hb_gtnap_office_sheet_row_height(Sheet *sheet, const uint32_t page, const u
 Writer *hb_gtnap_office_writer_open(HB_ITEM *pathname_block)
 {
     String *pathname = hb_block_to_utf8(pathname_block);
-    Writer *writer = officesdk_writer_open(tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    Writer *writer = officesdk_writer_open(tc(pathname), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&pathname);
     return writer;
 }
@@ -4871,7 +4871,7 @@ Writer *hb_gtnap_office_writer_open(HB_ITEM *pathname_block)
 
 Writer *hb_gtnap_office_writer_create(void)
 {
-    return officesdk_writer_create(&GTNAP_GLOBAL->last_office_error);
+    return officesdk_writer_create(&GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4879,7 +4879,7 @@ Writer *hb_gtnap_office_writer_create(void)
 void hb_gtnap_office_writer_save(Writer *writer, HB_ITEM *pathname_block)
 {
     String *pathname = hb_block_to_utf8(pathname_block);
-    officesdk_writer_save(writer, tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    officesdk_writer_save(writer, tc(pathname), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&pathname);
 }
 
@@ -4888,7 +4888,7 @@ void hb_gtnap_office_writer_save(Writer *writer, HB_ITEM *pathname_block)
 void hb_gtnap_office_writer_pdf(Writer *writer, HB_ITEM *pathname_block)
 {
     String *pathname = hb_block_to_utf8(pathname_block);
-    officesdk_writer_pdf(writer, tc(pathname), &GTNAP_GLOBAL->last_office_error);
+    officesdk_writer_pdf(writer, tc(pathname), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&pathname);
 }
 
@@ -4899,7 +4899,7 @@ void hb_gtnap_office_writer_print(Writer *writer, HB_ITEM *filename_block, HB_IT
     String *filename = hb_block_to_utf8(filename_block);
     String *printer = hb_block_to_utf8(printer_block);
     String *pages = hb_block_to_utf8(pages_block);
-    officesdk_writer_print(writer, tc(filename), tc(printer), orient, format, paper_width, paper_height, num_copies, collate_copies, tc(pages), &GTNAP_GLOBAL->last_office_error);
+    officesdk_writer_print(writer, tc(filename), tc(printer), orient, format, paper_width, paper_height, num_copies, collate_copies, tc(pages), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&filename);
     str_destroy(&printer);
     str_destroy(&pages);
@@ -4909,15 +4909,45 @@ void hb_gtnap_office_writer_print(Writer *writer, HB_ITEM *filename_block, HB_IT
 
 void hb_gtnap_office_writer_close(Writer *writer)
 {
-    officesdk_writer_close(writer, &GTNAP_GLOBAL->last_office_error);
+    officesdk_writer_close(writer, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_writer_insert(Writer *writer, HB_ITEM *text_block)
+void hb_gtnap_office_writer_font_family(Writer *writer, HB_ITEM *ffamily_block)
+{
+    String *ffamily = hb_block_to_utf8(ffamily_block);
+    officesdk_writer_font_family(writer, tc(ffamily), &GTNAP_GLOBAL->office_last_error);
+    str_destroy(&ffamily);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_font_size(Writer *writer, const real32_t fsize)
+{
+    officesdk_writer_font_size(writer, fsize, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_bold(Writer *writer, const bool_t bold)
+{
+    officesdk_writer_bold(writer, bold, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_italic(Writer *writer, const bool_t italic)
+{
+    officesdk_writer_italic(writer, italic, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block)
 {
     String *text = hb_block_to_utf8(text_block);
-    officesdk_writer_insert(writer, tc(text), &GTNAP_GLOBAL->last_office_error);
+    officesdk_writer_insert_text(writer, tc(text), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&text);
 }
 

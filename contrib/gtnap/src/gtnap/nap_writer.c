@@ -66,9 +66,45 @@ HB_FUNC( NAP_DOC_CLOSE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_DOC_INSERT )
+HB_FUNC( NAP_DOC_FONT_FAMILY )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    HB_ITEM *ffamily_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_writer_font_family(writer, ffamily_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_FONT_SIZE )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    real32_t fsize = (real32_t)hb_parnd(2);
+    hb_gtnap_office_writer_font_size(writer, fsize);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_BOLD )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    bool_t bold = (bool_t)hb_parl(2);
+    hb_gtnap_office_writer_bold(writer, bold);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_ITALIC )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    bool_t italic = (bool_t)hb_parl(2);
+    hb_gtnap_office_writer_italic(writer, italic);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_INSERT_TEXT )
 {
     Writer *writer = (Writer*)hb_parptr(1);
     HB_ITEM *text_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
-    hb_gtnap_office_writer_insert(writer, text_block);
+    hb_gtnap_office_writer_insert_text(writer, text_block);
 }
