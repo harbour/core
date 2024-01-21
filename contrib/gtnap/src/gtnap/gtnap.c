@@ -4974,6 +4974,13 @@ void hb_gtnap_office_writer_new_line(Writer *writer)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_writer_page_break(Writer *writer)
+{
+    officesdk_writer_page_break(writer, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Font *hb_gtnap_font(void)
 {
     cassert_no_null(GTNAP_GLOBAL);

@@ -134,3 +134,11 @@ HB_FUNC( NAP_DOC_NEW_LINE )
     Writer *writer = (Writer*)hb_parptr(1);
     hb_gtnap_office_writer_new_line(writer);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_PAGE_BREAK )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    hb_gtnap_office_writer_page_break(writer);
+}

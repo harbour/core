@@ -255,6 +255,8 @@ extern void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_blo
 
 extern void hb_gtnap_office_writer_new_line(Writer *writer);
 
+extern void hb_gtnap_office_writer_page_break(Writer *writer);
+
 /*
  * Fran TODO: Pending refactoring
  *

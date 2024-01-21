@@ -42,6 +42,7 @@
 #include <table/TableBorder.hpp>
 #include <table/TableBorder2.hpp>
 #include <table/BorderLineStyle.hpp>
+#include <text/ControlCharacter.hpp>
 #include <util/XMergeable.hpp>
 #include <util/XProtectable.hpp>
 #include <util/XNumberFormatsSupplier.hpp>
@@ -2856,7 +2857,7 @@ void officesdk_writer_insert_text(Writer *writer, const char_t *text, sdkres_t *
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_new_line(Writer *writer, sdkres_t *err)
+static void i_insert_control_character(Writer *writer, sal_Int16 ctrlchar, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
@@ -2869,8 +2870,7 @@ void officesdk_writer_new_line(Writer *writer, sdkres_t *err)
         try
         {
             css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
-            xText->insertString(xTextRange, "\n", sal_False);
-
+            xText->insertControlCharacter(xTextRange, ctrlchar, sal_False);
         }
         catch (css::uno::Exception&)
         {
@@ -2879,4 +2879,18 @@ void officesdk_writer_new_line(Writer *writer, sdkres_t *err)
     }
 
     ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_new_line(Writer *writer, sdkres_t *err)
+{
+    i_insert_control_character(writer, css::text::ControlCharacter::LINE_BREAK, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_break(Writer *writer, sdkres_t *err)
+{
+    i_insert_control_character(writer, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
 }

@@ -242,6 +242,13 @@ DOCUMENT1_TABLINE(O_DOC, {"12-Educação", "", "", "", "", ""}, V_Tabs)
 DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 1815115.00, 1969475.00, 2137728.00, 2321124.00, 8243442.00}, V_Tabs)
 DOCUMENT1_TABLINE(O_DOC, {"   125-Normalização e Fiscalização", 15000.00, 20000.00, 25000.00, 30000.00, 90000.00}, V_Tabs)
 DOCUMENT1_TABLINE(O_DOC, {"   306-Alimentação e Nutrição", 514044.00, 560308.00, 610735.00, 665702.00, 2350789.00}, V_Tabs)
+NAP_DOC_PAGE_BREAK(O_DOC)
+
+// Page 2 (TODO)
+DOCUMENT1_HEADER(O_DOC, 2, N_Width, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"01-Legislativa", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   031-Ação Legislativa", 2015410.00, 2196797.00, 2394509.00, 2610014.00, 9216730.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
 
 // Save the document
 NAP_DOC_SAVE(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/R00688-PPA.odt" })
