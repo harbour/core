@@ -193,9 +193,9 @@ extern void hb_gtnap_office_sheet_cell_bold(Sheet *sheet, const uint32_t page, c
 
 extern void hb_gtnap_office_sheet_cell_italic(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t italic);
 
-extern void hb_gtnap_office_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align);
+extern void hb_gtnap_office_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const halign_t align);
 
-extern void hb_gtnap_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align);
+extern void hb_gtnap_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const valign_t align);
 
 extern void hb_gtnap_office_sheet_cell_wrap(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped);
 
@@ -246,6 +246,8 @@ extern void hb_gtnap_office_writer_font_size(Writer *writer, const real32_t fsiz
 extern void hb_gtnap_office_writer_bold(Writer *writer, const bool_t bold);
 
 extern void hb_gtnap_office_writer_italic(Writer *writer, const bool_t italic);
+
+extern void hb_gtnap_office_writer_halign(Writer *writer, const halign_t align);
 
 extern void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block);
 

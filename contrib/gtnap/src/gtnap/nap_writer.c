@@ -102,6 +102,15 @@ HB_FUNC( NAP_DOC_ITALIC )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_DOC_HALIGN )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    halign_t align = (halign_t)hb_parni(2);
+    hb_gtnap_office_writer_halign(writer, align);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_DOC_INSERT_TEXT )
 {
     Writer *writer = (Writer*)hb_parptr(1);

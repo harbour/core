@@ -331,9 +331,10 @@ PAR3: Column index (0-based).
 PAR4: Row index (0-based).
 PAR5: Numeric value with horizontal alignment.
 
-#define SDK_HALIGN_LEFT             0
-#define SDK_HALIGN_CENTER           1
-#define SDK_HALIGN_RIGHT            2
+#define SDK_HALIGN_LEFT             1
+#define SDK_HALIGN_CENTER           2
+#define SDK_HALIGN_RIGHT            3
+#define SDK_HALIGN_JUSTIFY          4
 ```
 
 ### Cell Vertical Alignment
@@ -347,9 +348,9 @@ PAR3: Column index (0-based).
 PAR4: Row index (0-based).
 PAR5: Numeric value with vertical alignment.
 
-#define SDK_VALIGN_TOP              0
-#define SDK_VALIGN_CENTER           1
-#define SDK_VALIGN_BOTTOM           2
+#define SDK_VALIGN_TOP              1
+#define SDK_VALIGN_CENTER           2
+#define SDK_VALIGN_BOTTOM           3
 ```
 
 ### Cell Text Wrap

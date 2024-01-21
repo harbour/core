@@ -46,6 +46,7 @@
 #include <util/XProtectable.hpp>
 #include <util/XNumberFormatsSupplier.hpp>
 #include <util/XNumberFormatTypes.hpp>
+#include <style/ParagraphAdjust.hpp>
 #include <view/XPrintable.hpp>
 #include <view/PaperOrientation.hpp>
 #include <view/PaperFormat.hpp>
@@ -2132,7 +2133,7 @@ void officesdk_sheet_cell_italic(Sheet *sheet, const uint32_t page, const uint32
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align, sdkres_t *err)
+void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const halign_t align, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::table::XCell> xCell;
@@ -2143,14 +2144,17 @@ void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32
     {
         css::table::CellHoriJustify just = css::table::CellHoriJustify::CellHoriJustify_LEFT;
         switch (align) {
-        case 0:
+        case ekHALIGN_LEFT:
             just = css::table::CellHoriJustify::CellHoriJustify_LEFT;
             break;
-        case 1:
+        case ekHALIGN_CENTER:
             just = css::table::CellHoriJustify::CellHoriJustify_CENTER;
             break;
-        case 2:
+        case ekHALIGN_RIGHT:
             just = css::table::CellHoriJustify::CellHoriJustify_RIGHT;
+            break;
+        case ekHALIGN_JUSTIFY:
+            just = css::table::CellHoriJustify::CellHoriJustify_LEFT;
             break;
         }
 
@@ -2162,7 +2166,7 @@ void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align, sdkres_t *err)
+void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const valign_t align, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::table::XCell> xCell;
@@ -2174,13 +2178,13 @@ void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32
         ::sal_Int32 just = css::table::CellVertJustify2::CENTER;
 
         switch (align) {
-        case 0:
+        case ekVALIGN_TOP:
             just = css::table::CellVertJustify2::TOP;
             break;
-        case 1:
+        case ekVALIGN_CENTER:
             just = css::table::CellVertJustify2::CENTER;
             break;
-        case 2:
+        case ekVALIGN_BOTTOM:
             just = css::table::CellVertJustify2::BOTTOM;
             break;
         }
@@ -2762,6 +2766,40 @@ void officesdk_writer_italic(Writer *writer, const bool_t italic, sdkres_t *err)
     {
         css::awt::FontSlant slant = italic ? css::awt::FontSlant::FontSlant_ITALIC : css::awt::FontSlant::FontSlant_NONE;
         res = i_set_text_property(xText, "CharPosture", css::uno::makeAny(slant));
+    }
+   
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_halign(Writer *writer, const halign_t align, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+    {
+        css::style::ParagraphAdjust adjust = css::style::ParagraphAdjust::ParagraphAdjust_LEFT;
+        switch(align) {
+        case ekHALIGN_LEFT:
+            adjust = css::style::ParagraphAdjust::ParagraphAdjust_LEFT;
+            break;
+        case ekHALIGN_CENTER:
+            adjust = css::style::ParagraphAdjust::ParagraphAdjust_CENTER;
+            break;
+        case ekHALIGN_RIGHT:
+            adjust = css::style::ParagraphAdjust::ParagraphAdjust_RIGHT;
+            break;
+        case ekHALIGN_JUSTIFY:
+            adjust = css::style::ParagraphAdjust::ParagraphAdjust_BLOCK;
+            break;
+        }
+
+        res = i_set_text_property(xText, "ParaAdjust", css::uno::makeAny(adjust));
     }
    
     ptr_assign(err, res);

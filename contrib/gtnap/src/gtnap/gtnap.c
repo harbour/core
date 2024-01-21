@@ -4745,14 +4745,14 @@ void hb_gtnap_office_sheet_cell_italic(Sheet *sheet, const uint32_t page, const 
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align)
+void hb_gtnap_office_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const halign_t align)
 {
     officesdk_sheet_cell_halign(sheet, page, col, row, align, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t align)
+void hb_gtnap_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const valign_t align)
 {
     officesdk_sheet_cell_valign(sheet, page, col, row, align, &GTNAP_GLOBAL->office_last_error);
 }
@@ -4940,6 +4940,13 @@ void hb_gtnap_office_writer_bold(Writer *writer, const bool_t bold)
 void hb_gtnap_office_writer_italic(Writer *writer, const bool_t italic)
 {
     officesdk_writer_italic(writer, italic, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_halign(Writer *writer, const halign_t align)
+{
+    officesdk_writer_halign(writer, align, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/

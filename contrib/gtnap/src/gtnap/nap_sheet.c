@@ -235,7 +235,7 @@ HB_FUNC( NAP_XLS_CELL_HALIGN )
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
-    uint32_t align = hb_parni(5);
+    halign_t align = (halign_t)hb_parni(5);
     hb_gtnap_office_sheet_cell_halign(sheet, page, col, row, align);
 }
 
@@ -247,7 +247,7 @@ HB_FUNC( NAP_XLS_CELL_VALIGN )
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
-    uint32_t align = hb_parni(5);
+    valign_t align = (valign_t)hb_parni(5);
     hb_gtnap_office_sheet_cell_valign(sheet, page, col, row, align);
 }
 

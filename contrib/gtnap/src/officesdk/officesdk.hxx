@@ -36,6 +36,21 @@ typedef enum _sdkres_t
     ekSDKRES_PRINT_ERROR
 } sdkres_t;
 
+typedef enum _halign_t
+{
+    ekHALIGN_LEFT               = 1,
+    ekHALIGN_CENTER,
+    ekHALIGN_RIGHT,
+    ekHALIGN_JUSTIFY
+} halign_t;
+
+typedef enum _valign_t
+{
+    ekVALIGN_TOP                = 1,
+    ekVALIGN_CENTER,
+    ekVALIGN_BOTTOM
+} valign_t;
+
 typedef enum _numformat_t
 {
     ekNUMFORMAT_INT         = 1,
