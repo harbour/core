@@ -51,6 +51,8 @@
 #include <style/BreakType.hpp>
 #include <style/LineSpacing.hpp>
 #include <style/LineSpacingMode.hpp>
+#include <style/XStyle.hpp>
+#include <style/XStyleFamiliesSupplier.hpp>
 #include <view/XPrintable.hpp>
 #include <view/PaperOrientation.hpp>
 #include <view/PaperFormat.hpp>
@@ -659,6 +661,8 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed setting text properties";
     case ekSDKRES_TEXT_ADD_ERROR:
         return "Failed adding text";
+    case ekSDKRES_PAGE_PROPERTY_ERROR:
+        return "Failed setting page style property";
     case ekSDKRES_PRINTER_CONFIG_ERROR:
         return "Error in printer configuration";
     case ekSDKRES_PRINT_ERROR:
@@ -2679,6 +2683,46 @@ static sdkres_t i_get_text(
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_get_style(
+                    Writer *writer,
+                    css::uno::Reference<css::beans::XPropertySet> &xPageStyle)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+        css::uno::Reference<css::style::XStyleFamiliesSupplier> xStyleFamiliesSupplier(*xDocument, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::container::XNameAccess> xStyles = xStyleFamiliesSupplier->getStyleFamilies();
+        css::uno::Any styleFamily = xStyles->getByName("PageStyles");
+        css::uno::Reference<css::container::XNameAccess> xPageStyles(styleFamily, css::uno::UNO_QUERY_THROW);
+        css::uno::Any styleElement = xPageStyles->hasByName("Standard") ? xPageStyles->getByName("Standard") : xPageStyles->getByName("Default");
+        css::uno::Reference<css::style::XStyle> xStyle(styleElement, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::beans::XPropertySet> xProperties(xStyle, css::uno::UNO_QUERY_THROW);
+        xPageStyle = xProperties;
+        /*
+         * Just for Debug
+         *
+            css::uno::Reference<css::beans::XPropertySetInfo> info = xProperties->getPropertySetInfo();
+            css::uno::Sequence<css::beans::Property> props = info->getProperties();
+            ::rtl::OUString str;
+            for (sal_Int32 i = 0; i < props.getLength(); ++i)
+            {
+                str = props.getConstArray()[i].Name;
+            }
+         *
+         */
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_set_text_property(
                     css::uno::Reference<css::text::XText> &xText,
                     const char_t *prop_name,
@@ -2699,6 +2743,44 @@ static sdkres_t i_set_text_property(
     }
 
     return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_set_page_property(
+                    css::uno::Reference<css::beans::XPropertySet> xPageStyle,
+                    const char_t *prop_name,
+                    const css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        xPageStyle->setPropertyValue(prop, value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_PAGE_PROPERTY_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_header_show(Writer *writer, const bool_t show, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_style(writer, xPageStyle);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderIsOn", css::uno::makeAny((sal_Bool)show));
+
+    ptr_assign(err, res);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -66,6 +66,15 @@ HB_FUNC( NAP_DOC_CLOSE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_DOC_PAGE_HEADER_SHOW )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    bool_t show = (bool_t)hb_parl(2);
+    hb_gtnap_office_writer_page_header_show(writer, show);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_DOC_FONT_FAMILY )
 {
     Writer *writer = (Writer*)hb_parptr(1);

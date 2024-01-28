@@ -4914,6 +4914,13 @@ void hb_gtnap_office_writer_close(Writer *writer)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_writer_page_header_show(Writer *writer, const bool_t show)
+{
+    officesdk_writer_page_header_show(writer, show, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_writer_font_family(Writer *writer, HB_ITEM *ffamily_block)
 {
     String *ffamily = hb_block_to_utf8(ffamily_block);

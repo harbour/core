@@ -63,8 +63,9 @@
 #define SDKRES_FORMAT_ROW_ERROR         18
 #define SDKRES_TEXT_PROPERTY_ERROR      19
 #define SDKRES_TEXT_ADD_ERROR           20
-#define SDKRES_PRINTER_CONFIG_ERROR     21
-#define SDKRES_PRINT_ERROR              22
+#define SDKRES_PAGE_PROPERTY_ERROR      21
+#define SDKRES_PRINTER_CONFIG_ERROR     22
+#define SDKRES_PRINT_ERROR              23
 
 /* Horizontal alignment for LibreOffice SDK */
 #define SDK_HALIGN_LEFT             1

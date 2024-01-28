@@ -239,6 +239,8 @@ extern void hb_gtnap_office_writer_print(Writer *writer, HB_ITEM *filename_block
 
 extern void hb_gtnap_office_writer_close(Writer *writer);
 
+extern void hb_gtnap_office_writer_page_header_show(Writer *writer, const bool_t show);
+
 extern void hb_gtnap_office_writer_font_family(Writer *writer, HB_ITEM *ffamily_block);
 
 extern void hb_gtnap_office_writer_font_size(Writer *writer, const real32_t fsize);
