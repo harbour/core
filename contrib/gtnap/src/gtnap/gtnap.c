@@ -4967,10 +4967,22 @@ void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_writer_insert_dash(Writer *writer)
+void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n)
 {
-    char_t dash[4] = {0xE2, 0x80, 0x94, 0};
-    officesdk_writer_insert_text(writer, dash, &GTNAP_GLOBAL->office_last_error);
+    char_t dash[3] = {0xE2, 0x80, 0x94};
+    char_t *dashes = heap_new_n(n*3+1, char_t);
+    char_t *it = dashes;
+    uint32_t i = 0;
+    for (i = 0; i < n; ++i)
+    {
+        *it++ = dash[0];
+        *it++ = dash[1];
+        *it++ = dash[2];
+    }
+    *it = 0;
+
+    officesdk_writer_insert_text(writer, dashes, &GTNAP_GLOBAL->office_last_error);
+    heap_delete_n(&dashes, n*3+1, char_t);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -132,7 +132,10 @@ HB_FUNC( NAP_DOC_INSERT_TEXT )
 HB_FUNC( NAP_DOC_INSERT_DASH )
 {
     Writer *writer = (Writer*)hb_parptr(1);
-    hb_gtnap_office_writer_insert_dash(writer);
+    uint32_t n = hb_parni(2);
+    if (n == 0)
+        n = 1;
+    hb_gtnap_office_writer_insert_dash(writer, n);
 }
 
 /*---------------------------------------------------------------------------*/

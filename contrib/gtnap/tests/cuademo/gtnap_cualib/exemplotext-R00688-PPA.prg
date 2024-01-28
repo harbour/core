@@ -47,11 +47,7 @@ STAT FUNC PAGINA_TEXT(N_Page)
 ********************************
 STAT PROC SEPARATOR_LINE(O_DOC, N_Size)
 ********************************
-    LOCAL N_Cont := 1
-
-    FOR N_Cont:= 1 TO N_Size
-        NAP_DOC_INSERT_DASH(O_DOC)
-    NEXT
+    NAP_DOC_INSERT_DASH(O_DOC, N_Size)
 
 ********************************
 STAT FUNC INDETERMINATE(N_Size)
