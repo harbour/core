@@ -129,6 +129,14 @@ HB_FUNC( NAP_DOC_INSERT_TEXT )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_DOC_INSERT_DASH )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    hb_gtnap_office_writer_insert_dash(writer);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_DOC_NEW_LINE )
 {
     Writer *writer = (Writer*)hb_parptr(1);

@@ -45,16 +45,13 @@ STAT FUNC PAGINA_TEXT(N_Page)
     RETURN "Página : " + hb_ntos(N_Page)
 
 ********************************
-STAT FUNC SEPARATOR_LINE(N_Size)
+STAT PROC SEPARATOR_LINE(O_DOC, N_Size)
 ********************************
-    LOCAL C_STR := ""
     LOCAL N_Cont := 1
 
     FOR N_Cont:= 1 TO N_Size
-        C_STR += "-"
+        NAP_DOC_INSERT_DASH(O_DOC)
     NEXT
-
-    RETURN C_STR
 
 ********************************
 STAT FUNC INDETERMINATE(N_Size)
@@ -111,7 +108,7 @@ STAT FUNC COMPOSE_TABLINE(V_Tabs, V_Values)
         IF VALTYPE(V_Values[N_Cont]) == "C"
             C_Field := V_Values[N_Cont]
         ELSEIF VALTYPE(V_Values[N_Cont]) == "N"
-            C_Field := Transform(V_Values[N_Cont], "@B 9999999")
+            C_Field := Transform(V_Values[N_Cont], "99,999,999.99")
         ENDIF
 
         N_Field_width := LEN(C_Field)
@@ -141,25 +138,22 @@ STAT PROC DOCUMENT1_HEADER(O_DOC, N_Page, N_Width, V_Tabs)
 ***********************************************************
     LOCAL C_Line1 := COMPOSE_LINE({"Ceará", 52, "PPA 2022-2025"})
     LOCAL C_Line2 := COMPOSE_LINE({"Governo Municipal de Piquet Carneiro", 12, "DESPESAS POR FUNÇÃO E SUBFUNÇÃO", 30, PAGINA_TEXT(N_Page)})
-    LOCAL C_Line3 := SEPARATOR_LINE(N_Width)
-    LOCAL C_Line4 := COMPOSE_TABLINE(V_Tabs, {"FUNÇÃO/SUBFUNÇÃO", "Valor 2022", "Valor 2023", "Valor 2024", "Valor 2025", "Total"})
-    LOCAL C_Line5 := SEPARATOR_LINE(N_Width)
+    LOCAL C_Line3 := COMPOSE_TABLINE(V_Tabs, {"FUNÇÃO/SUBFUNÇÃO", "Valor 2022", "Valor 2023", "Valor 2024", "Valor 2025", "Total"})
     NAP_DOC_INSERT_TEXT(O_DOC, C_Line1)
     NAP_DOC_NEW_LINE(O_DOC)
     NAP_DOC_INSERT_TEXT(O_DOC, C_Line2)
     NAP_DOC_NEW_LINE(O_DOC)
+    SEPARATOR_LINE(O_DOC, N_Width)
+    NAP_DOC_NEW_LINE(O_DOC)
     NAP_DOC_INSERT_TEXT(O_DOC, C_Line3)
     NAP_DOC_NEW_LINE(O_DOC)
-    NAP_DOC_INSERT_TEXT(O_DOC, C_Line4)
-    NAP_DOC_NEW_LINE(O_DOC)
-    NAP_DOC_INSERT_TEXT(O_DOC, C_Line5)
+    SEPARATOR_LINE(O_DOC, N_Width)
     NAP_DOC_NEW_LINE(O_DOC)
 
 ********************************************
 STAT PROC DOCUMENT1_SEPARATOR(O_DOC, N_Width)
 ********************************************
-    LOCAL C_Line := SEPARATOR_LINE(N_Width)
-    NAP_DOC_INSERT_TEXT(O_DOC, C_Line)
+    SEPARATOR_LINE(O_DOC, N_Width)
     NAP_DOC_NEW_LINE(O_DOC)
 
 ***********************************************************

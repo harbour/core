@@ -4967,6 +4967,14 @@ void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_writer_insert_dash(Writer *writer)
+{
+    char_t dash[4] = {0xE2, 0x80, 0x94, 0};
+    officesdk_writer_insert_text(writer, dash, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_writer_new_line(Writer *writer)
 {
     officesdk_writer_new_line(writer, &GTNAP_GLOBAL->office_last_error);

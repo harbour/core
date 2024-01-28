@@ -253,6 +253,8 @@ extern void hb_gtnap_office_writer_lspacing(Writer *writer, const uint32_t heigh
 
 extern void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block);
 
+extern void hb_gtnap_office_writer_insert_dash(Writer *writer);
+
 extern void hb_gtnap_office_writer_new_line(Writer *writer);
 
 extern void hb_gtnap_office_writer_page_break(Writer *writer);
