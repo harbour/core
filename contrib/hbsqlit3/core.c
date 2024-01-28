@@ -1830,7 +1830,7 @@ static int trace_handler( unsigned uType, void *cbTraceHandler, void * p, void *
       {
          case SQLITE_TRACE_STMT:
             hb_vmPushPointer( p );
-            hb_vmPushString( x, strlen( x ) );
+            hb_vmPushString( ( const char * ) x, strlen( ( char * ) x ) );
             hb_vmSend( 3 );
             break;
          case SQLITE_TRACE_PROFILE:
@@ -1849,7 +1849,7 @@ static int trace_handler( unsigned uType, void *cbTraceHandler, void * p, void *
             HB_SQLITE3 * hbsqlite3 = ( HB_SQLITE3 * ) hb_xgrabz( sizeof( HB_SQLITE3 ) );
             HB_SYMBOL_UNUSED( x );
 
-            hbsqlite3->db = p;
+            hbsqlite3->db = ( sqlite3 * ) p;
             hb_sqlite3_itemPut( pItem, hbsqlite3, HB_SQLITE3_DB );
             hb_vmPush( pItem );
             hb_vmSend( 2 );

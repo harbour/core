@@ -1231,7 +1231,11 @@ HB_FUNC( FI_ROTATECLASSIC )
       FIBITMAP * dib   = hb_FIBITMAP_par( 1 );
       double     angle = hb_parnd( 2 );
 
+#if FREEIMAGE_MAJOR_VERSION > 3 || ( FREEIMAGE_MAJOR_VERSION >= 3 && FREEIMAGE_MINOR_VERSION >= 18 )
+      hb_FIBITMAP_ret( FreeImage_Rotate( dib, angle, NULL ), HB_TRUE );
+#else
       hb_FIBITMAP_ret( FreeImage_RotateClassic( dib, angle ), HB_TRUE );
+#endif
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

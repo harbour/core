@@ -169,8 +169,10 @@
    declarations in OpenSSL prior 0.9.8 */
 #if OPENSSL_VERSION_NUMBER < 0x0090800fL
    #define HB_SSL_CONST
+   #define HB_SSL_CONST_BYTE( x )   ( ( unsigned char * ) ( x ) )
 #else
-   #define HB_SSL_CONST const
+   #define HB_SSL_CONST             const
+   #define HB_SSL_CONST_BYTE( x )   ( ( const unsigned char * ) ( x ) )
 #endif
 
 HB_EXTERN_BEGIN
