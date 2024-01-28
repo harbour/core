@@ -48,6 +48,7 @@
 #include <util/XNumberFormatsSupplier.hpp>
 #include <util/XNumberFormatTypes.hpp>
 #include <style/ParagraphAdjust.hpp>
+#include <style/BreakType.hpp>
 #include <style/LineSpacing.hpp>
 #include <style/LineSpacingMode.hpp>
 #include <view/XPrintable.hpp>
@@ -2864,6 +2865,9 @@ static void i_insert_control_character(Writer *writer, sal_Int16 ctrlchar, sdkre
 
     if (res == ekSDKRES_OK)
         res = i_get_text(writer, xText);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_text_property(xText, "BreakType", css::uno::makeAny(css::style::BreakType::BreakType_PAGE_AFTER));
 
     if (res == ekSDKRES_OK)
     {
