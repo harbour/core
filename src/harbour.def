@@ -3290,6 +3290,7 @@ hb_socketItemGet
 hb_socketItemPut
 hb_socketListen
 hb_socketLocalAddr
+hb_socketNToHS
 hb_socketOpen
 hb_socketParam
 hb_socketRecv

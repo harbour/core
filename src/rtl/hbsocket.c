@@ -435,6 +435,15 @@ int hb_socketInit( void ) { return -1; }
 
 void hb_socketCleanup( void ) { ; }
 
+HB_U16 hb_socketNToHS( HB_U16 netshort )
+{
+#if defined( HB_LITTLE_ENDIAN )
+   return HB_SWAP_UINT16( netshort );
+#else
+   return netshort;
+#endif
+}
+
 int hb_socketGetAddrFamily( const void * pSockAddr, unsigned len )
 {
    HB_SYMBOL_UNUSED( pSockAddr );
