@@ -636,6 +636,20 @@ PAR1: The text document.
 PAR2: Show/hide the page header (.T. / .F.).
 ```
 
+### Page header margins
+
+```
+NAP_DOC_PAGE_HEADER_MARGINS(O_DOC, 254, 280, 508, 102, .T., .T.)
+
+PAR1: The text document.
+PAR2: Header left margin (integer 1/100th mm).
+PAR3: Header right margin (integer 1/100th mm).
+PAR4: Header-body distance (integer 1/100th mm).
+PAR5: Header height (integer 1/100th mm).
+PAR6: Dynamic header-body distance (.T. / .F.).
+PAR7: Dynamic header height (.T. / .F.).
+```
+
 ### Page margins
 
 ```

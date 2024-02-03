@@ -2785,6 +2785,37 @@ void officesdk_writer_page_header_show(Writer *writer, const bool_t show, sdkres
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_writer_page_header_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_style(writer, xPageStyle);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderLeftMargin", css::uno::makeAny((sal_Int32)left));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderRightMargin", css::uno::makeAny((sal_Int32)right));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderBodyDistance", css::uno::makeAny((sal_Int32)spacing));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderHeight", css::uno::makeAny((sal_Int32)height));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderDynamicSpacing", css::uno::makeAny((sal_Bool)dynamic_spacing));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderIsDynamicHeight", css::uno::makeAny((sal_Bool)dynamic_height));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_writer_page_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;

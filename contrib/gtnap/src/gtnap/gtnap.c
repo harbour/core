@@ -4921,6 +4921,13 @@ void hb_gtnap_office_writer_page_header_show(Writer *writer, const bool_t show)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_writer_page_header_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height)
+{
+    officesdk_writer_page_header_margins(writer, left, right, spacing, height, dynamic_spacing, dynamic_height, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_writer_page_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter)
 {
     officesdk_writer_page_margins(writer, left, right, top, bottom, gutter, &GTNAP_GLOBAL->office_last_error);

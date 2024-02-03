@@ -241,6 +241,8 @@ extern void hb_gtnap_office_writer_close(Writer *writer);
 
 extern void hb_gtnap_office_writer_page_header_show(Writer *writer, const bool_t show);
 
+extern void hb_gtnap_office_writer_page_header_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height);
+
 extern void hb_gtnap_office_writer_page_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter);
 
 extern void hb_gtnap_office_writer_font_family(Writer *writer, HB_ITEM *ffamily_block);

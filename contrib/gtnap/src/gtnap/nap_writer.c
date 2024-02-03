@@ -75,6 +75,20 @@ HB_FUNC( NAP_DOC_PAGE_HEADER_SHOW )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_DOC_PAGE_HEADER_MARGINS )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    uint32_t left = hb_parni(2);
+    uint32_t right = hb_parni(3);
+    uint32_t spacing = hb_parni(4);
+    uint32_t height = hb_parni(5);
+    bool_t dynamic_spacing = (bool_t)hb_parl(6);
+    bool_t dynamic_height = (bool_t)hb_parl(7);
+    hb_gtnap_office_writer_page_header_margins(writer, left, right, spacing, height, dynamic_spacing, dynamic_height);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_DOC_PAGE_MARGINS )
 {
     Writer *writer = (Writer*)hb_parptr(1);
