@@ -650,6 +650,29 @@ PAR6: Dynamic header-body distance (.T. / .F.).
 PAR7: Dynamic header height (.T. / .F.).
 ```
 
+### Page footer show/hide
+
+```
+NAP_DOC_PAGE_FOOTER_SHOW(O_DOC, .T.)
+
+PAR1: The text document.
+PAR2: Show/hide the page footer (.T. / .F.).
+```
+
+### Page footer margins
+
+```
+NAP_DOC_PAGE_FOOTER_MARGINS(O_DOC, 254, 280, 508, 102, .T., .T.)
+
+PAR1: The text document.
+PAR2: Footer left margin (integer 1/100th mm).
+PAR3: Footer right margin (integer 1/100th mm).
+PAR4: Footer-body distance (integer 1/100th mm).
+PAR5: Footer height (integer 1/100th mm).
+PAR6: Dynamic footer-body distance (.T. / .F.).
+PAR7: Dynamic footer height (.T. / .F.).
+```
+
 ### Page margins
 
 ```

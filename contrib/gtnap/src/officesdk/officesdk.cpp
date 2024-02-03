@@ -2816,6 +2816,53 @@ void officesdk_writer_page_header_margins(Writer *writer, const uint32_t left, c
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_writer_page_footer_show(Writer *writer, const bool_t show, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_style(writer, xPageStyle);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterIsOn", css::uno::makeAny((sal_Bool)show));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_footer_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_style(writer, xPageStyle);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterLeftMargin", css::uno::makeAny((sal_Int32)left));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterRightMargin", css::uno::makeAny((sal_Int32)right));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterBodyDistance", css::uno::makeAny((sal_Int32)spacing));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterHeight", css::uno::makeAny((sal_Int32)height));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterDynamicSpacing", css::uno::makeAny((sal_Bool)dynamic_spacing));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterIsDynamicHeight", css::uno::makeAny((sal_Bool)dynamic_height));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_writer_page_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
