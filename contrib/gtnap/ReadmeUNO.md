@@ -636,6 +636,19 @@ PAR1: The text document.
 PAR2: Show/hide the page header (.T. / .F.).
 ```
 
+### Page margins
+
+```
+NAP_DOC_PAGE_MARGINS(O_DOC, 2819, 178, 1270, 533, 0)
+
+PAR1: The text document.
+PAR2: Left margin (integer 1/100th mm).
+PAR3: Right margin (integer 1/100th mm).
+PAR4: Top margin (integer 1/100th mm).
+PAR5: Bottom margin (integer 1/100th mm).
+PAR6: Gutter margin (integer 1/100th mm).
+```
+
 ### Text Font Family
 
 ```

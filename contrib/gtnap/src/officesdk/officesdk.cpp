@@ -2785,6 +2785,34 @@ void officesdk_writer_page_header_show(Writer *writer, const bool_t show, sdkres
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_writer_page_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_style(writer, xPageStyle);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "LeftMargin", css::uno::makeAny((sal_Int32)left));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "RightMargin", css::uno::makeAny((sal_Int32)right));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "TopMargin", css::uno::makeAny((sal_Int32)top));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "BottomMargin", css::uno::makeAny((sal_Int32)bottom));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "GutterMargin", css::uno::makeAny((sal_Int32)gutter));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_writer_font_family(Writer *writer, const char_t *font_family, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;

@@ -4921,6 +4921,13 @@ void hb_gtnap_office_writer_page_header_show(Writer *writer, const bool_t show)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_writer_page_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter)
+{
+    officesdk_writer_page_margins(writer, left, right, top, bottom, gutter, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_writer_font_family(Writer *writer, HB_ITEM *ffamily_block)
 {
     String *ffamily = hb_block_to_utf8(ffamily_block);
