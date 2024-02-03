@@ -125,6 +125,15 @@ HB_FUNC( NAP_DOC_PAGE_MARGINS )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_DOC_TEXT_SPACE )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    textspace_t space = (textspace_t)hb_parni(2);
+    hb_gtnap_office_writer_text_space(writer, space);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_DOC_FONT_FAMILY )
 {
     Writer *writer = (Writer*)hb_parptr(1);

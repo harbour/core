@@ -118,6 +118,11 @@
 #define SDK_LINE_STYLE_DASH_DOT                 18
 #define SDK_LINE_STYLE_DASH_DOT_DOT             19
 
+/* Text space for text documents */
+#define SDK_TEXT_SPACE_HEADER                   1
+#define SDK_TEXT_SPACE_FOOTER                   2
+#define SDK_TEXT_SPACE_PAGE                     3
+
 /* Printer paper orientation */
 #define SDK_PAPER_ORIENT_PORTRAIT               1
 #define SDK_PAPER_ORIENT_LANSCAPE               2

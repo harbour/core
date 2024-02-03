@@ -686,6 +686,21 @@ PAR5: Bottom margin (integer 1/100th mm).
 PAR6: Gutter margin (integer 1/100th mm).
 ```
 
+### Select Text Space
+
+```
+NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_FOOTER)
+
+PAR1: The text document.
+PAR2: Text space.
+
+#define SDK_TEXT_SPACE_HEADER                   1
+#define SDK_TEXT_SPACE_FOOTER                   2
+#define SDK_TEXT_SPACE_PAGE                     3
+```
+
+A text space redirects all subsequent text commands to a specific space (Page, Header or Footer). Each space is independent and is not affected by properties set in other spaces. By default `SDK_TEXT_SPACE_PAGE`. Commands related to font properties, paragraphs, and text insertion will only affect the currently active space.
+
 ### Text Font Family
 
 ```

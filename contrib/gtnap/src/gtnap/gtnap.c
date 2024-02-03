@@ -188,6 +188,7 @@ struct _gtnap_t
     GtNapWindow *modal_time_window;
     ArrPt(GtNapWindow) *windows;
 
+    textspace_t office_text_space;
     String *office_last_cell_ref;
     sdkres_t office_last_error;
 };
@@ -1000,6 +1001,7 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->windows = arrpt_create(GtNapWindow);
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == (HB_BOOL)HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
+    GTNAP_GLOBAL->office_text_space = ekTEXT_SPACE_PAGE;
     GTNAP_GLOBAL->office_last_cell_ref = NULL;
     GTNAP_GLOBAL->office_last_error = ENUM_MAX(sdkres_t);
 
@@ -4949,10 +4951,19 @@ void hb_gtnap_office_writer_page_margins(Writer *writer, const uint32_t left, co
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_writer_text_space(Writer *writer, const textspace_t space)
+{
+    /* TODO: Writer cache if we have several DOC at same time */
+    unref(writer);
+    GTNAP_GLOBAL->office_text_space = space;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_writer_font_family(Writer *writer, HB_ITEM *ffamily_block)
 {
     String *ffamily = hb_block_to_utf8(ffamily_block);
-    officesdk_writer_font_family(writer, tc(ffamily), &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_font_family(writer, GTNAP_GLOBAL->office_text_space, tc(ffamily), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&ffamily);
 }
 
@@ -4960,35 +4971,35 @@ void hb_gtnap_office_writer_font_family(Writer *writer, HB_ITEM *ffamily_block)
 
 void hb_gtnap_office_writer_font_size(Writer *writer, const real32_t fsize)
 {
-    officesdk_writer_font_size(writer, fsize, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_font_size(writer, GTNAP_GLOBAL->office_text_space, fsize, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_writer_bold(Writer *writer, const bool_t bold)
 {
-    officesdk_writer_bold(writer, bold, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_bold(writer, GTNAP_GLOBAL->office_text_space, bold, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_writer_italic(Writer *writer, const bool_t italic)
 {
-    officesdk_writer_italic(writer, italic, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_italic(writer, GTNAP_GLOBAL->office_text_space, italic, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_writer_halign(Writer *writer, const halign_t align)
 {
-    officesdk_writer_halign(writer, align, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_halign(writer, GTNAP_GLOBAL->office_text_space, align, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_office_writer_lspacing(Writer *writer, const uint32_t height)
 {
-    officesdk_writer_lspacing(writer, height, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_lspacing(writer, GTNAP_GLOBAL->office_text_space, height, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4996,7 +5007,7 @@ void hb_gtnap_office_writer_lspacing(Writer *writer, const uint32_t height)
 void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block)
 {
     String *text = hb_block_to_utf8(text_block);
-    officesdk_writer_insert_text(writer, tc(text), &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_insert_text(writer, GTNAP_GLOBAL->office_text_space, tc(text), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&text);
 }
 
@@ -5016,7 +5027,7 @@ void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n)
     }
     *it = 0;
 
-    officesdk_writer_insert_text(writer, dashes, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_insert_text(writer, GTNAP_GLOBAL->office_text_space, dashes, &GTNAP_GLOBAL->office_last_error);
     heap_delete_n(&dashes, n*3+1, char_t);
 }
 
@@ -5024,7 +5035,7 @@ void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n)
 
 void hb_gtnap_office_writer_new_line(Writer *writer)
 {
-    officesdk_writer_new_line(writer, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_new_line(writer, GTNAP_GLOBAL->office_text_space, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/

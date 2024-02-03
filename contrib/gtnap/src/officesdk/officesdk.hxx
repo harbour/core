@@ -103,6 +103,13 @@ typedef enum _fileformat_t
     ekFORMAT_PDF
 } fileformat_t;
 
+typedef enum _textspace_t
+{
+    ekTEXT_SPACE_HEADER = 1,
+    ekTEXT_SPACE_FOOTER,
+    ekTEXT_SPACE_PAGE
+} textspace_t;
+
 typedef enum _paperorient_t
 {
     ekPAPERORIENT_PORTRAIT = 1,
