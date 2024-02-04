@@ -8,6 +8,7 @@
 #include <osbs/btime.h>
 #include <osbs/osbs.h>
 #include <sewer/blib.h>
+#include <sewer/bstd.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
 #include <sewer/unicode.h>
@@ -43,13 +44,18 @@
 #include <table/TableBorder2.hpp>
 #include <table/BorderLineStyle.hpp>
 #include <text/ControlCharacter.hpp>
+#include <text/XTextContent.hpp>
+#include <text/TextContentAnchorType.hpp>
 #include <util/XMergeable.hpp>
 #include <util/XProtectable.hpp>
 #include <util/XNumberFormatsSupplier.hpp>
 #include <util/XNumberFormatTypes.hpp>
 #include <style/ParagraphAdjust.hpp>
+#include <style/BreakType.hpp>
 #include <style/LineSpacing.hpp>
 #include <style/LineSpacingMode.hpp>
+#include <style/XStyle.hpp>
+#include <style/XStyleFamiliesSupplier.hpp>
 #include <view/XPrintable.hpp>
 #include <view/PaperOrientation.hpp>
 #include <view/PaperFormat.hpp>
@@ -658,6 +664,8 @@ const char_t* officesdk_error(const sdkres_t code)
         return "Failed setting text properties";
     case ekSDKRES_TEXT_ADD_ERROR:
         return "Failed adding text";
+    case ekSDKRES_PAGE_PROPERTY_ERROR:
+        return "Failed setting page style property";
     case ekSDKRES_PRINTER_CONFIG_ERROR:
         return "Error in printer configuration";
     case ekSDKRES_PRINT_ERROR:
@@ -819,24 +827,19 @@ static css::view::PaperFormat i_paper_format(const paperformat_t format)
 /*---------------------------------------------------------------------------*/
 
 // https://wiki.documentfoundation.org/Documentation/DevGuide/Spreadsheet_Documents#Printer_and_Print_Job_Settings
-void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
+static sdkres_t i_xprintable_print(
+                            css::uno::Reference<css::view::XPrintable> &xPrintable, 
+                            const char_t *filename, 
+                            const char_t *printer, 
+                            const paperorient_t orient, 
+                            const paperformat_t format, 
+                            const uint32_t paper_width, 
+                            const uint32_t paper_height, 
+                            const uint32_t num_copies, 
+                            const bool_t collate_copies, 
+                            const char_t *pages)
 {
-    sdkres_t res = i_OFFICE_SDK.Init();
-    css::uno::Reference<css::view::XPrintable> xPrintable;
-    cassert_no_null(sheet);
-
-    if (res == ekSDKRES_OK)
-    {
-        try
-        {
-            css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
-            xPrintable = css::uno::Reference<css::view::XPrintable>(*xDocument, css::uno::UNO_QUERY_THROW);
-        }
-        catch (css::uno::Exception&)
-        {
-            res = ekSDKRES_ACCESS_DOC_ERROR;
-        }
-    }
+    sdkres_t res = ekSDKRES_OK;
 
     // Configure the printer
     if (res == ekSDKRES_OK)
@@ -953,6 +956,31 @@ void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *p
         }
     }
 
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    css::uno::Reference<css::view::XPrintable> xPrintable;
+    cassert_no_null(sheet);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
+            xPrintable = css::uno::Reference<css::view::XPrintable>(*xDocument, css::uno::UNO_QUERY_THROW);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    res = i_xprintable_print(xPrintable, filename, printer, orient, format, paper_width, paper_height, num_copies, collate_copies, pages);
     ptr_assign(err, res);
 }
 
@@ -2620,17 +2648,25 @@ void officesdk_writer_pdf(Writer *writer, const char_t *pathname, sdkres_t *err)
 
 void officesdk_writer_print(Writer *writer, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
 {
-    unref(writer);
-    unref(filename);
-    unref(printer);
-    unref(orient);
-    unref(format);
-    unref(paper_width);
-    unref(paper_height);
-    unref(num_copies);
-    unref(collate_copies);
-    unref(pages);
-    unref(err);
+    sdkres_t res = i_OFFICE_SDK.Init();
+    css::uno::Reference<css::view::XPrintable> xPrintable;
+    cassert_no_null(writer);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+            xPrintable = css::uno::Reference<css::view::XPrintable>(*xDocument, css::uno::UNO_QUERY_THROW);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    res = i_xprintable_print(xPrintable, filename, printer, orient, format, paper_width, paper_height, num_copies, collate_copies, pages);
+    ptr_assign(err, res);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2657,8 +2693,69 @@ void officesdk_writer_close(Writer *writer, sdkres_t *err)
 
 /*---------------------------------------------------------------------------*/
 
+static sdkres_t i_get_style(
+                    Writer *writer,
+                    css::uno::Reference<css::beans::XPropertySet> &xPageStyle)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+        css::uno::Reference<css::style::XStyleFamiliesSupplier> xStyleFamiliesSupplier(*xDocument, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::container::XNameAccess> xStyles = xStyleFamiliesSupplier->getStyleFamilies();
+        css::uno::Any styleFamily = xStyles->getByName("PageStyles");
+        css::uno::Reference<css::container::XNameAccess> xPageStyles(styleFamily, css::uno::UNO_QUERY_THROW);
+        css::uno::Any styleElement = xPageStyles->hasByName("Standard") ? xPageStyles->getByName("Standard") : xPageStyles->getByName("Default");
+        css::uno::Reference<css::style::XStyle> xStyle(styleElement, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::beans::XPropertySet> xProperties(xStyle, css::uno::UNO_QUERY_THROW);
+        xPageStyle = xProperties;
+        //Just for Debug
+        //css::uno::Reference<css::beans::XPropertySetInfo> info = xProperties->getPropertySetInfo();
+        //css::uno::Sequence<css::beans::Property> props = info->getProperties();
+        //for (sal_Int32 i = 0; i < props.getLength(); ++i)
+        //{
+        //    ::rtl::OUString ostr = props.getConstArray()[i].Name;
+        //    String *str = i_StringFromOUString(ostr);
+        //    bstd_printf("%s\n", tc(str));
+        //    str_destroy(&str);
+        //}
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_ACCESS_DOC_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_get_page_property(
+                    css::uno::Reference<css::beans::XPropertySet> xPageStyle,
+                    const char_t *prop_name,
+                    css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        value = xPageStyle->getPropertyValue(prop);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_PAGE_PROPERTY_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static sdkres_t i_get_text(
                     Writer *writer,
+                    const textspace_t space,
                     css::uno::Reference<css::text::XText> &xText)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -2666,7 +2763,34 @@ static sdkres_t i_get_text(
     try
     {
         css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
-        xText = (*xDocument)->getText();
+        if (space == ekTEXT_SPACE_PAGE)
+        {
+            xText = (*xDocument)->getText();
+        }
+        else
+        {
+            css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+            css::uno::Any textValue;
+
+            if (res == ekSDKRES_OK)
+                res = i_get_style(writer, xPageStyle);
+
+            if (res == ekSDKRES_OK)
+            {
+                if (space == ekTEXT_SPACE_HEADER)
+                {
+                    res = i_get_page_property(xPageStyle, "HeaderText", textValue);
+                }
+                else
+                {
+                    cassert(space == ekTEXT_SPACE_FOOTER);
+                    res = i_get_page_property(xPageStyle, "FooterText", textValue);
+                }
+            }
+
+            if (res == ekSDKRES_OK)
+                textValue >>= xText;
+        }
     }
     catch (css::uno::Exception&)
     {
@@ -2702,13 +2826,157 @@ static sdkres_t i_set_text_property(
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_font_family(Writer *writer, const char_t *font_family, sdkres_t *err)
+static sdkres_t i_set_page_property(
+                    css::uno::Reference<css::beans::XPropertySet> xPageStyle,
+                    const char_t *prop_name,
+                    const css::uno::Any &value)
+{
+    sdkres_t res = ekSDKRES_OK;
+
+    try
+    {
+        ::rtl::OUString prop = i_OUStringFromUTF8(prop_name);
+        xPageStyle->setPropertyValue(prop, value);
+    }
+    catch (css::uno::Exception&)
+    {
+        res = ekSDKRES_PAGE_PROPERTY_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_header_show(Writer *writer, const bool_t show, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_style(writer, xPageStyle);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderIsOn", css::uno::makeAny((sal_Bool)show));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_header_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_style(writer, xPageStyle);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderLeftMargin", css::uno::makeAny((sal_Int32)left));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderRightMargin", css::uno::makeAny((sal_Int32)right));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderBodyDistance", css::uno::makeAny((sal_Int32)spacing));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderHeight", css::uno::makeAny((sal_Int32)height));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderDynamicSpacing", css::uno::makeAny((sal_Bool)dynamic_spacing));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "HeaderIsDynamicHeight", css::uno::makeAny((sal_Bool)dynamic_height));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_footer_show(Writer *writer, const bool_t show, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_style(writer, xPageStyle);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterIsOn", css::uno::makeAny((sal_Bool)show));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_footer_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_style(writer, xPageStyle);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterLeftMargin", css::uno::makeAny((sal_Int32)left));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterRightMargin", css::uno::makeAny((sal_Int32)right));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterBodyDistance", css::uno::makeAny((sal_Int32)spacing));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterHeight", css::uno::makeAny((sal_Int32)height));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterDynamicSpacing", css::uno::makeAny((sal_Bool)dynamic_spacing));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "FooterIsDynamicHeight", css::uno::makeAny((sal_Bool)dynamic_height));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::beans::XPropertySet> xPageStyle;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_style(writer, xPageStyle);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "LeftMargin", css::uno::makeAny((sal_Int32)left));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "RightMargin", css::uno::makeAny((sal_Int32)right));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "TopMargin", css::uno::makeAny((sal_Int32)top));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "BottomMargin", css::uno::makeAny((sal_Int32)bottom));
+
+    if (res == ekSDKRES_OK)
+        res = i_set_page_property(xPageStyle, "GutterMargin", css::uno::makeAny((sal_Int32)gutter));
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_font_family(Writer *writer, const textspace_t space, const char_t *font_family, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
 
     if (res == ekSDKRES_OK)
-        res = i_get_text(writer, xText);
+        res = i_get_text(writer, space, xText);
 
     if (res == ekSDKRES_OK && str_empty_c(font_family) == FALSE)
     {
@@ -2721,13 +2989,13 @@ void officesdk_writer_font_family(Writer *writer, const char_t *font_family, sdk
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_font_size(Writer *writer, const real32_t font_size, sdkres_t *err)
+void officesdk_writer_font_size(Writer *writer, const textspace_t space, const real32_t font_size, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
 
     if (res == ekSDKRES_OK)
-        res = i_get_text(writer, xText);
+        res = i_get_text(writer, space, xText);
 
     if (res == ekSDKRES_OK && font_size > 0)
         res = i_set_text_property(xText, "CharHeight", css::uno::makeAny(font_size));
@@ -2737,13 +3005,13 @@ void officesdk_writer_font_size(Writer *writer, const real32_t font_size, sdkres
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_bold(Writer *writer, const bool_t bold, sdkres_t *err)
+void officesdk_writer_bold(Writer *writer, const textspace_t space, const bool_t bold, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
 
     if (res == ekSDKRES_OK)
-        res = i_get_text(writer, xText);
+        res = i_get_text(writer, space, xText);
 
     if (res == ekSDKRES_OK)
     {
@@ -2756,13 +3024,13 @@ void officesdk_writer_bold(Writer *writer, const bool_t bold, sdkres_t *err)
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_italic(Writer *writer, const bool_t italic, sdkres_t *err)
+void officesdk_writer_italic(Writer *writer, const textspace_t space, const bool_t italic, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
 
     if (res == ekSDKRES_OK)
-        res = i_get_text(writer, xText);
+        res = i_get_text(writer, space, xText);
 
     if (res == ekSDKRES_OK)
     {
@@ -2775,13 +3043,13 @@ void officesdk_writer_italic(Writer *writer, const bool_t italic, sdkres_t *err)
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_halign(Writer *writer, const halign_t align, sdkres_t *err)
+void officesdk_writer_halign(Writer *writer, const textspace_t space, const halign_t align, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
 
     if (res == ekSDKRES_OK)
-        res = i_get_text(writer, xText);
+        res = i_get_text(writer, space, xText);
 
     if (res == ekSDKRES_OK)
     {
@@ -2809,13 +3077,13 @@ void officesdk_writer_halign(Writer *writer, const halign_t align, sdkres_t *err
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_lspacing(Writer *writer, const uint32_t height, sdkres_t *err)
+void officesdk_writer_lspacing(Writer *writer, const textspace_t space, const uint32_t height, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
 
     if (res == ekSDKRES_OK)
-        res = i_get_text(writer, xText);
+        res = i_get_text(writer, space, xText);
 
     if (res == ekSDKRES_OK)
     {
@@ -2830,13 +3098,13 @@ void officesdk_writer_lspacing(Writer *writer, const uint32_t height, sdkres_t *
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_insert_text(Writer *writer, const char_t *text, sdkres_t *err)
+void officesdk_writer_insert_text(Writer *writer, const textspace_t space, const char_t *text, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
 
     if (res == ekSDKRES_OK)
-        res = i_get_text(writer, xText);
+        res = i_get_text(writer, space, xText);
 
     if (res == ekSDKRES_OK)
     {
@@ -2857,13 +3125,131 @@ void officesdk_writer_insert_text(Writer *writer, const char_t *text, sdkres_t *
 
 /*---------------------------------------------------------------------------*/
 
-static void i_insert_control_character(Writer *writer, sal_Int16 ctrlchar, sdkres_t *err)
+static sdkres_t i_create_text_content(
+                        css::uno::Reference<css::frame::XModel> &xModel,
+                        const char_t *contentType,
+                        css::uno::Reference<css::text::XTextContent> &xTextContent)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        ::rtl::OUString type = i_OUStringFromUTF8(contentType);
+        css::uno::Reference<css::lang::XMultiServiceFactory> xServiceFactory(xModel, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::uno::XInterface> xInterface = xServiceFactory->createInstance(type);
+        xTextContent = css::uno::Reference<css::text::XTextContent>(xInterface, css::uno::UNO_QUERY_THROW);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error creating new text content: " << e.Message;
+        res = ekSDKRES_CREATE_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const anchortype_t anchor, const uint32_t width, const uint32_t height, const char_t *image_path, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+    css::uno::Reference<css::frame::XModel> xModel;
+    css::uno::Reference<css::graphic::XGraphic> xGraphic;
+    css::uno::Reference<css::text::XTextContent> xTextContent;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, space, xText);
+
+    // The document model (required for creating new graphic objects)
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+            xModel = css::uno::Reference<css::frame::XModel>(*xDocument, css::uno::UNO_QUERY_THROW);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    // Get the image graphic from file
+    if (res == ekSDKRES_OK)
+        res = i_OFFICE_SDK.LoadImage(image_path, xGraphic);
+
+    // Create the text content object
+    if (res == ekSDKRES_OK)
+        res = i_create_text_content(xModel, "com.sun.star.text.TextGraphicObject", xTextContent);
+
+    // Configure the text object and add the image graphic
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::beans::XPropertySet> xProps(xTextContent, css::uno::UNO_QUERY_THROW);
+            css::text::TextContentAnchorType anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AS_CHARACTER;
+            switch (anchor) {
+            case ekANCHOR_AT_PARAGRAPH:
+                anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AT_PARAGRAPH;
+                break;
+            case ekANCHOR_AS_CHARACTER:
+                anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AS_CHARACTER;
+                break;
+            case ekANCHOR_AT_PAGE:
+                anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AT_PAGE;
+                break;
+            case ekANCHOR_AT_FRAME:
+                anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AT_FRAME;
+                break;
+            case ekANCHOR_AT_CHARACTER:
+                anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AT_CHARACTER;
+                break;
+            }
+
+            xProps->setPropertyValue("Graphic", css::uno::makeAny(xGraphic));
+            xProps->setPropertyValue("AnchorType", css::uno::makeAny(anchorType));
+
+            if (width != 0 && height != 0)
+            {
+                css::uno::Reference<css::drawing::XShape> xShape(xTextContent, css::uno::UNO_QUERY_THROW);
+                xShape->setSize(css::awt::Size((sal_Int32)width, (sal_Int32)height));
+            }
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
+            xText->insertTextContent(xTextRange, xTextContent, sal_False);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_TEXT_ADD_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_insert_control_character(Writer *writer, const textspace_t space, sal_Int16 ctrlchar, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
 
     if (res == ekSDKRES_OK)
-        res = i_get_text(writer, xText);
+        res = i_get_text(writer, space, xText);
+
+    if (res == ekSDKRES_OK)
+        res = i_set_text_property(xText, "BreakType", css::uno::makeAny(css::style::BreakType::BreakType_PAGE_AFTER));
 
     if (res == ekSDKRES_OK)
     {
@@ -2883,14 +3269,14 @@ static void i_insert_control_character(Writer *writer, sal_Int16 ctrlchar, sdkre
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_new_line(Writer *writer, sdkres_t *err)
+void officesdk_writer_new_line(Writer *writer, const textspace_t space, sdkres_t *err)
 {
-    i_insert_control_character(writer, css::text::ControlCharacter::LINE_BREAK, err);
+    i_insert_control_character(writer, space, css::text::ControlCharacter::LINE_BREAK, err);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void officesdk_writer_page_break(Writer *writer, sdkres_t *err)
 {
-    i_insert_control_character(writer, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
+    i_insert_control_character(writer, ekTEXT_SPACE_PAGE, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
 }

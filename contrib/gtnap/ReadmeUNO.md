@@ -40,8 +40,9 @@ The numeric error codes are in `gtnap.ch`
 #define SDKRES_FORMAT_ROW_ERROR         18
 #define SDKRES_TEXT_PROPERTY_ERROR      19
 #define SDKRES_TEXT_ADD_ERROR           20
-#define SDKRES_PRINTER_CONFIG_ERROR     21
-#define SDKRES_PRINT_ERROR              22
+#define SDKRES_PAGE_PROPERTY_ERROR      21
+#define SDKRES_PRINTER_CONFIG_ERROR     22
+#define SDKRES_PRINT_ERROR              23
 ```
 
 ## String parameters
@@ -96,6 +97,7 @@ NAP_XLS_SAVE(O_XLS, {|| NAP_WORK_PATH() + "/../office/edited.ods" })
 PAR1: The sheet document.
 PAR2: String with the full path for the document copy.
 ```
+
 > **Important:** It will save a copy of document, but will not close the original one.
 
 
@@ -109,6 +111,7 @@ PAR2: String with the full path for the PDF file.
 ```
 
 > **Important:** It will save a copy of document, but will not close the original one.
+
 
 ### Print the Sheet
 
@@ -137,6 +140,7 @@ PAR1: The sheet document.
 
 > **Important:** All sheets open with `NAP_XLS_OPEN` or created with `NAP_XLS_CREATE` must be closed.
 
+
 ### Add new pages to Sheet
 
 ```
@@ -147,6 +151,7 @@ RET: The page index (0-based).
 ```
 
 > **Important:** `NAP_XLS_CREATE` creates a default 0-page.
+
 
 ### Set the page name
 
@@ -405,6 +410,7 @@ PAR7: Color value returned by NAP_OFFICE_RGB.
 
 > **Important:** It will clean the inner grid lines.
 
+
 ### Insert a image in cell position
 
 ```
@@ -470,6 +476,7 @@ PAR9: Color value returned by NAP_OFFICE_RGB.
 ```
 
 > **Important:** The inner lines will not be drawn. Only the border of entire group.
+
 
 ### Merge cells
 
@@ -552,5 +559,278 @@ PAR4: Row height (integer 1/100th mm)
 
 ## TextDocument
 
-### TODO: Add documentation
+### Open TextDocument
 
+```
+LOCAL O_DOC := NAP_DOC_OPEN({|| NAP_WORK_PATH() + "/../office/empty.ods" })
+
+PAR1: String with the full path for the document.
+RET: The document object. Must be closed with NAP_DOC_CLOSE().
+```
+
+### Create an empty TextDocument
+
+```
+LOCAL O_DOC := NAP_DOC_CREATE()
+
+RET: The document object. Must be closed with NAP_DOC_CLOSE().
+```
+
+### Save TextDocument
+
+```
+NAP_DOC_SAVE(O_DOC, {|| NAP_WORK_PATH() + "/../office/edited.odt" })
+
+PAR1: The text document.
+PAR2: String with the full path for the document copy.
+```
+> **Important:** It will save a copy of document, but will not close the original one.
+
+
+### Export TextDocument to PDF
+
+```
+NAP_DOC_PDF(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/ExempleText_02.pdf" })
+
+PAR1: The text document.
+PAR2: String with the full path for the PDF file.
+```
+
+> **Important:** It will save a copy of document, but will not close the original one.
+
+
+### Print the TextDocument
+
+```
+NAP_DOC_PRINT(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/PrintText_03.pdf" }, "Microsoft Print to PDF", SDK_PAPER_ORIENT_PORTRAIT, SDK_PAPER_FORMAT_A4, 0, 0, 1, .F., "1-")
+
+PAR1: The text document.
+PAR2: String with the full path for printed file (if prints to file).
+PAR3: Printer name. If empty, it will use the default printer.
+PAR4: Paper orientation. If 0 it will use the default option.
+PAR5: Paper format. If 0 it will use the default option.
+PAR6: Paper width, if we use SDK_PAPER_FORMAT_USER (integer 1/100th mm).
+PAR7: Paper height, if we use SDK_PAPER_FORMAT_USER (integer 1/100th mm).
+PAR8: Number of copies.
+PAR9: Collapse copies (.T. / .F.).
+PAR10: String with the pages to print in dialog format ("1-", "1-4;9", etc)
+```
+
+### Close TextDocument
+
+```
+NAP_DOC_CLOSE(O_DOC)
+
+PAR1: The text document.
+```
+
+> **Important:** All documents opened with `NAP_DOC_OPEN` or created with `NAP_DOC_CREATE` must be closed.
+
+
+### Page header show/hide
+
+```
+NAP_DOC_PAGE_HEADER_SHOW(O_DOC, .T.)
+
+PAR1: The text document.
+PAR2: Show/hide the page header (.T. / .F.).
+```
+
+### Page header margins
+
+```
+NAP_DOC_PAGE_HEADER_MARGINS(O_DOC, 254, 280, 508, 102, .T., .T.)
+
+PAR1: The text document.
+PAR2: Header left margin (integer 1/100th mm).
+PAR3: Header right margin (integer 1/100th mm).
+PAR4: Header-body distance (integer 1/100th mm).
+PAR5: Header height (integer 1/100th mm).
+PAR6: Dynamic header-body distance (.T. / .F.).
+PAR7: Dynamic header height (.T. / .F.).
+```
+
+### Page footer show/hide
+
+```
+NAP_DOC_PAGE_FOOTER_SHOW(O_DOC, .T.)
+
+PAR1: The text document.
+PAR2: Show/hide the page footer (.T. / .F.).
+```
+
+### Page footer margins
+
+```
+NAP_DOC_PAGE_FOOTER_MARGINS(O_DOC, 254, 280, 508, 102, .T., .T.)
+
+PAR1: The text document.
+PAR2: Footer left margin (integer 1/100th mm).
+PAR3: Footer right margin (integer 1/100th mm).
+PAR4: Footer-body distance (integer 1/100th mm).
+PAR5: Footer height (integer 1/100th mm).
+PAR6: Dynamic footer-body distance (.T. / .F.).
+PAR7: Dynamic footer height (.T. / .F.).
+```
+
+### Page margins
+
+```
+NAP_DOC_PAGE_MARGINS(O_DOC, 2819, 178, 1270, 533, 0)
+
+PAR1: The text document.
+PAR2: Left margin (integer 1/100th mm).
+PAR3: Right margin (integer 1/100th mm).
+PAR4: Top margin (integer 1/100th mm).
+PAR5: Bottom margin (integer 1/100th mm).
+PAR6: Gutter margin (integer 1/100th mm).
+```
+
+### Select Text Space
+
+```
+NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_FOOTER)
+
+PAR1: The text document.
+PAR2: Text space.
+
+#define SDK_TEXT_SPACE_HEADER                   1
+#define SDK_TEXT_SPACE_FOOTER                   2
+#define SDK_TEXT_SPACE_PAGE                     3
+```
+
+A text space redirects all subsequent text commands to a specific space (Page, Header or Footer). Each space is independent and is not affected by properties set in other spaces. By default `SDK_TEXT_SPACE_PAGE`. Commands related to font properties, paragraphs, and text insertion will only affect the currently active space.
+
+### Text Font Family
+
+```
+NAP_DOC_FONT_FAMILY(O_DOC, "Arial")
+
+PAR1: The text document.
+PAR2: String with the font family.
+```
+
+> **Important:** This function will affect the next text added to the document.
+
+
+### Text Font Size
+
+```
+NAP_DOC_FONT_SIZE(O_DOC, 9.0)
+
+PAR1: The text document.
+PAR2: Font size (height). Double value.
+```
+
+> **Important:** This function will affect the next text added to the document.
+
+
+### Text Bold
+
+```
+NAP_DOC_BOLD(O_DOC, .T.)
+
+PAR1: The text document.
+PAR2: Font weight. Bold (.T.) or Normal (.F.).
+```
+
+> **Important:** This function will affect the next text added to the document.
+
+
+### Text Italic
+
+```
+NAP_DOC_ITALIC(O_DOC, .T.)
+
+PAR1: The text document.
+PAR2: Font style. Italic (.T.) or Normal (.F.).
+```
+> **Important:** This function will affect the next text added to the document.
+
+
+### Paragraph Alignment
+
+```
+NAP_DOC_HALIGN(O_DOC, SDK_HALIGN_RIGHT)
+
+PAR1: The text document.
+PAR2: Numeric value with horizontal alignment.
+
+#define SDK_HALIGN_LEFT             1
+#define SDK_HALIGN_CENTER           2
+#define SDK_HALIGN_RIGHT            3
+#define SDK_HALIGN_JUSTIFY          4
+```
+
+> **Important:** This function will affect the next text added to the document.
+
+
+### Paragraph inter-line spacing
+
+```
+NAP_DOC_LSPACING(O_DOC, 330)
+
+PAR1: The text document.
+PAR2: Spacing (integer 1/100th mm).
+```
+
+> **Important:** This function will affect the next text added to the document.
+
+
+### Insert text into document
+
+```
+NAP_DOC_INSERT_TEXT(O_DOC, "This is a new text")
+
+PAR1: The text document.
+PAR2: String with the text to insert.
+```
+
+> **Important:** The text will added at the end of document, using previously established properties.
+
+
+### Insert dashes
+
+```
+NAP_DOC_INSERT_DASH(O_DOC, 130)
+
+PAR1: The text document.
+PAR2: Number of dashes to insert.
+```
+
+> **Important:** Will add a string of special character '-', useful to create separator lines.
+
+
+### Insert image into text
+
+```
+NAP_DOC_INSERT_IMAGE(O_DOC, SDK_ANCHOR_AS_CHARACTER, 2000, 2000, "macapa.png")
+
+PAR1: The text document.
+PAR2: Type of anchor.
+PAR3: Image width. 0 for original size.
+PAR4: Image height. 0 for original size.
+PAR5: String with the full path to the image.
+
+#define SDK_ANCHOR_AT_PARAGRAPH                 1
+#define SDK_ANCHOR_AS_CHARACTER                 2
+#define SDK_ANCHOR_AT_PAGE                      3
+#define SDK_ANCHOR_AT_FRAME                     4
+#define SDK_ANCHOR_AT_CHARACTER                 5
+```
+
+### Insert a line break
+
+```
+NAP_DOC_NEW_LINE(O_DOC)
+
+PAR1: The text document.
+```
+
+### Insert a page break
+
+```
+NAP_DOC_PAGE_BREAK(O_DOC)
+
+PAR1: The text document.
+```

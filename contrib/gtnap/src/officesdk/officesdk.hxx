@@ -32,6 +32,7 @@ typedef enum _sdkres_t
     ekSDKRES_FORMAT_ROW_ERROR,
     ekSDKRES_TEXT_PROPERTY_ERROR,
     ekSDKRES_TEXT_ADD_ERROR,
+    ekSDKRES_PAGE_PROPERTY_ERROR,
     ekSDKRES_PRINTER_CONFIG_ERROR,
     ekSDKRES_PRINT_ERROR
 } sdkres_t;
@@ -101,6 +102,22 @@ typedef enum _fileformat_t
     ekFORMAT_OPEN_OFFICE = 1,
     ekFORMAT_PDF
 } fileformat_t;
+
+typedef enum _textspace_t
+{
+    ekTEXT_SPACE_HEADER = 1,
+    ekTEXT_SPACE_FOOTER,
+    ekTEXT_SPACE_PAGE
+} textspace_t;
+
+typedef enum _anchortype_t
+{
+    ekANCHOR_AT_PARAGRAPH = 1,
+    ekANCHOR_AS_CHARACTER,
+    ekANCHOR_AT_PAGE,
+    ekANCHOR_AT_FRAME,
+    ekANCHOR_AT_CHARACTER
+} anchortype_t;
 
 typedef enum _paperorient_t
 {

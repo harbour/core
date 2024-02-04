@@ -66,6 +66,74 @@ HB_FUNC( NAP_DOC_CLOSE )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_DOC_PAGE_HEADER_SHOW )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    bool_t show = (bool_t)hb_parl(2);
+    hb_gtnap_office_writer_page_header_show(writer, show);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_PAGE_HEADER_MARGINS )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    uint32_t left = hb_parni(2);
+    uint32_t right = hb_parni(3);
+    uint32_t spacing = hb_parni(4);
+    uint32_t height = hb_parni(5);
+    bool_t dynamic_spacing = (bool_t)hb_parl(6);
+    bool_t dynamic_height = (bool_t)hb_parl(7);
+    hb_gtnap_office_writer_page_header_margins(writer, left, right, spacing, height, dynamic_spacing, dynamic_height);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_PAGE_FOOTER_SHOW )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    bool_t show = (bool_t)hb_parl(2);
+    hb_gtnap_office_writer_page_footer_show(writer, show);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_PAGE_FOOTER_MARGINS )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    uint32_t left = hb_parni(2);
+    uint32_t right = hb_parni(3);
+    uint32_t spacing = hb_parni(4);
+    uint32_t height = hb_parni(5);
+    bool_t dynamic_spacing = (bool_t)hb_parl(6);
+    bool_t dynamic_height = (bool_t)hb_parl(7);
+    hb_gtnap_office_writer_page_footer_margins(writer, left, right, spacing, height, dynamic_spacing, dynamic_height);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_PAGE_MARGINS )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    uint32_t left = hb_parni(2);
+    uint32_t right = hb_parni(3);
+    uint32_t top = hb_parni(4);
+    uint32_t bottom = hb_parni(5);
+    uint32_t gutter = hb_parni(6);
+    hb_gtnap_office_writer_page_margins(writer, left, right, top, bottom, gutter);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_TEXT_SPACE )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    textspace_t space = (textspace_t)hb_parni(2);
+    hb_gtnap_office_writer_text_space(writer, space);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_DOC_FONT_FAMILY )
 {
     Writer *writer = (Writer*)hb_parptr(1);
@@ -125,6 +193,29 @@ HB_FUNC( NAP_DOC_INSERT_TEXT )
     Writer *writer = (Writer*)hb_parptr(1);
     HB_ITEM *text_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
     hb_gtnap_office_writer_insert_text(writer, text_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_INSERT_DASH )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    uint32_t n = hb_parni(2);
+    if (n == 0)
+        n = 1;
+    hb_gtnap_office_writer_insert_dash(writer, n);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_INSERT_IMAGE )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    anchortype_t anchor = (anchortype_t)hb_parni(2);
+    uint32_t width = hb_parni(3);
+    uint32_t height = hb_parni(4);
+    HB_ITEM *image_path_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_writer_insert_image(writer, anchor, width, height, image_path_block);
 }
 
 /*---------------------------------------------------------------------------*/

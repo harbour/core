@@ -63,8 +63,9 @@
 #define SDKRES_FORMAT_ROW_ERROR         18
 #define SDKRES_TEXT_PROPERTY_ERROR      19
 #define SDKRES_TEXT_ADD_ERROR           20
-#define SDKRES_PRINTER_CONFIG_ERROR     21
-#define SDKRES_PRINT_ERROR              22
+#define SDKRES_PAGE_PROPERTY_ERROR      21
+#define SDKRES_PRINTER_CONFIG_ERROR     22
+#define SDKRES_PRINT_ERROR              23
 
 /* Horizontal alignment for LibreOffice SDK */
 #define SDK_HALIGN_LEFT             1
@@ -116,6 +117,18 @@
 #define SDK_LINE_STYLE_DOUBLE_THIN              17
 #define SDK_LINE_STYLE_DASH_DOT                 18
 #define SDK_LINE_STYLE_DASH_DOT_DOT             19
+
+/* Text space for text documents */
+#define SDK_TEXT_SPACE_HEADER                   1
+#define SDK_TEXT_SPACE_FOOTER                   2
+#define SDK_TEXT_SPACE_PAGE                     3
+
+/* Anchor for text graphic objects */
+#define SDK_ANCHOR_AT_PARAGRAPH                 1
+#define SDK_ANCHOR_AS_CHARACTER                 2
+#define SDK_ANCHOR_AT_PAGE                      3
+#define SDK_ANCHOR_AT_FRAME                     4
+#define SDK_ANCHOR_AT_CHARACTER                 5
 
 /* Printer paper orientation */
 #define SDK_PAPER_ORIENT_PORTRAIT               1
