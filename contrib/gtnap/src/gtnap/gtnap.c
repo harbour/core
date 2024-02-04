@@ -5015,7 +5015,7 @@ void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block)
 
 void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n)
 {
-    char_t dash[3] = {0xE2, 0x80, 0x94};
+    uint8_t dash[3] = {0xE2, 0x80, 0x94};
     char_t *dashes = heap_new_n(n*3+1, char_t);
     char_t *it = dashes;
     uint32_t i = 0;
