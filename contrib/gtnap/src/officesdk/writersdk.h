@@ -41,6 +41,8 @@ void officesdk_writer_lspacing(Writer *writer, const textspace_t space, const ui
 
 void officesdk_writer_insert_text(Writer *writer, const textspace_t space, const char_t *text, sdkres_t *err);
 
+void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const char_t *image_path, sdkres_t *err);
+
 void officesdk_writer_new_line(Writer *writer, const textspace_t space, sdkres_t *err);
 
 void officesdk_writer_page_break(Writer *writer, sdkres_t *err);

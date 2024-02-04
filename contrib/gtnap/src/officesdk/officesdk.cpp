@@ -44,6 +44,8 @@
 #include <table/TableBorder2.hpp>
 #include <table/BorderLineStyle.hpp>
 #include <text/ControlCharacter.hpp>
+#include <text/XTextContent.hpp>
+#include <text/TextContentAnchorType.hpp>
 #include <util/XMergeable.hpp>
 #include <util/XProtectable.hpp>
 #include <util/XNumberFormatsSupplier.hpp>
@@ -2646,7 +2648,6 @@ void officesdk_writer_pdf(Writer *writer, const char_t *pathname, sdkres_t *err)
 
 void officesdk_writer_print(Writer *writer, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
 {
-{
     sdkres_t res = i_OFFICE_SDK.Init();
     css::uno::Reference<css::view::XPrintable> xPrintable;
     cassert_no_null(writer);
@@ -2666,7 +2667,6 @@ void officesdk_writer_print(Writer *writer, const char_t *filename, const char_t
 
     res = i_xprintable_print(xPrintable, filename, printer, orient, format, paper_width, paper_height, num_copies, collate_copies, pages);
     ptr_assign(err, res);
-}
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3113,6 +3113,107 @@ void officesdk_writer_insert_text(Writer *writer, const textspace_t space, const
             css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
             ::rtl::OUString str = i_OUStringFromUTF8(text);
             xText->insertString(xTextRange, str, sal_False);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_TEXT_ADD_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static sdkres_t i_create_text_content(
+                        css::uno::Reference<css::frame::XModel> &xModel,
+                        const char_t *contentType,
+                        css::uno::Reference<css::text::XTextContent> &xTextContent)
+{
+    sdkres_t res = ekSDKRES_OK;
+    try
+    {
+        ::rtl::OUString type = i_OUStringFromUTF8(contentType);
+        css::uno::Reference<css::lang::XMultiServiceFactory> xServiceFactory(xModel, css::uno::UNO_QUERY_THROW);
+        css::uno::Reference<css::uno::XInterface> xInterface = xServiceFactory->createInstance(type);
+        xTextContent = css::uno::Reference<css::text::XTextContent>(xInterface, css::uno::UNO_QUERY_THROW);
+    }
+    catch(css::uno::Exception &e)
+    {
+        std::cout << "Error creating new text content: " << e.Message;
+        res = ekSDKRES_CREATE_FILE_ERROR;
+    }
+
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const char_t *image_path, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+    css::uno::Reference<css::frame::XModel> xModel;
+
+
+    css::uno::Reference<css::graphic::XGraphic> xGraphic;
+    css::uno::Reference<css::text::XTextContent> xTextContent;
+    //css::uno::Reference<css::drawing::XShape> xShape;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, space, xText);
+
+    // The document model (required for creating new graphic objects)
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+            xModel = css::uno::Reference<css::frame::XModel>(*xDocument, css::uno::UNO_QUERY_THROW);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    // Get the image graphic from file
+    if (res == ekSDKRES_OK)
+        res = i_OFFICE_SDK.LoadImage(image_path, xGraphic);
+
+    // Create the text content object
+    if (res == ekSDKRES_OK)
+        res = i_create_text_content(xModel, "com.sun.star.text.TextGraphicObject", xTextContent);
+
+    // Create the shape
+    //if (res == ekSDKRES_OK)
+        //res = i_create_shape(xText, "com.sun.star.drawing.GraphicObjectShape", xShape);
+
+    // Configure the text object and add the image graphic
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::beans::XPropertySet> xProps(xTextContent, css::uno::UNO_QUERY_THROW);
+            css::uno::Reference<css::drawing::XShape> xShape(xTextContent, css::uno::UNO_QUERY_THROW);
+
+            xProps->setPropertyValue("Graphic", css::uno::makeAny(xGraphic));
+            xProps->setPropertyValue("AnchorType", css::uno::makeAny(css::text::TextContentAnchorType::TextContentAnchorType_AS_CHARACTER));
+            xProps->setPropertyValue("ActualSize", css::uno::makeAny(css::awt::Size(500, 500)));
+            xShape->setSize(css::awt::Size(5000, 5000));
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
+            xText->insertTextContent(xTextRange, xTextContent, sal_False);
         }
         catch (css::uno::Exception&)
         {

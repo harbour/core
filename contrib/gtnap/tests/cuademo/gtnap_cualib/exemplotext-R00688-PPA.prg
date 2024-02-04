@@ -182,8 +182,9 @@ NAP_DOC_PAGE_FOOTER_SHOW(O_DOC, .T.)
 NAP_DOC_PAGE_FOOTER_MARGINS(O_DOC, 354, 380, 608, 202, .T., .T.)
 NAP_DOC_PAGE_MARGINS(O_DOC, 2819, 178, 1270, 533, 0)
 
-// Write text into header
+// Write image and text into header
 NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_HEADER)
+NAP_DOC_INSERT_IMAGE(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods/macapa.png"} )
 NAP_DOC_FONT_FAMILY(O_DOC, "Courier New")
 NAP_DOC_FONT_SIZE(O_DOC, 16.0)
 NAP_DOC_INSERT_TEXT(O_DOC, "First line in HEADER")

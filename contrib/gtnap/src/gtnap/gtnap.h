@@ -267,6 +267,8 @@ extern void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_blo
 
 extern void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n);
 
+extern void hb_gtnap_office_writer_insert_image(Writer *writer, HB_ITEM *image_path_block);
+
 extern void hb_gtnap_office_writer_new_line(Writer *writer);
 
 extern void hb_gtnap_office_writer_page_break(Writer *writer);

@@ -5033,6 +5033,15 @@ void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_office_writer_insert_image(Writer *writer, HB_ITEM *image_path_block)
+{
+    String *image_path = hb_block_to_utf8(image_path_block);
+    officesdk_writer_insert_image(writer, GTNAP_GLOBAL->office_text_space, tc(image_path), &GTNAP_GLOBAL->office_last_error);
+    str_destroy(&image_path);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_office_writer_new_line(Writer *writer)
 {
     officesdk_writer_new_line(writer, GTNAP_GLOBAL->office_text_space, &GTNAP_GLOBAL->office_last_error);

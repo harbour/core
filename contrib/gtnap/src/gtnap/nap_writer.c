@@ -208,6 +208,15 @@ HB_FUNC( NAP_DOC_INSERT_DASH )
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC( NAP_DOC_INSERT_IMAGE )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    HB_ITEM *image_path_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_writer_insert_image(writer, image_path_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC( NAP_DOC_NEW_LINE )
 {
     Writer *writer = (Writer*)hb_parptr(1);
