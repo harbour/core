@@ -123,6 +123,13 @@
 #define SDK_TEXT_SPACE_FOOTER                   2
 #define SDK_TEXT_SPACE_PAGE                     3
 
+/* Anchor for text graphic objects */
+#define SDK_ANCHOR_AT_PARAGRAPH                 1
+#define SDK_ANCHOR_AS_CHARACTER                 2
+#define SDK_ANCHOR_AT_PAGE                      3
+#define SDK_ANCHOR_AT_FRAME                     4
+#define SDK_ANCHOR_AT_CHARACTER                 5
+
 /* Printer paper orientation */
 #define SDK_PAPER_ORIENT_PORTRAIT               1
 #define SDK_PAPER_ORIENT_LANSCAPE               2

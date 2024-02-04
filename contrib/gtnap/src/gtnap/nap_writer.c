@@ -211,8 +211,11 @@ HB_FUNC( NAP_DOC_INSERT_DASH )
 HB_FUNC( NAP_DOC_INSERT_IMAGE )
 {
     Writer *writer = (Writer*)hb_parptr(1);
-    HB_ITEM *image_path_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
-    hb_gtnap_office_writer_insert_image(writer, image_path_block);
+    anchortype_t anchor = (anchortype_t)hb_parni(2);
+    uint32_t width = hb_parni(3);
+    uint32_t height = hb_parni(4);
+    HB_ITEM *image_path_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_writer_insert_image(writer, anchor, width, height, image_path_block);
 }
 
 /*---------------------------------------------------------------------------*/

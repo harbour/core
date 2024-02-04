@@ -110,6 +110,15 @@ typedef enum _textspace_t
     ekTEXT_SPACE_PAGE
 } textspace_t;
 
+typedef enum _anchortype_t
+{
+    ekANCHOR_AT_PARAGRAPH = 1,
+    ekANCHOR_AS_CHARACTER,
+    ekANCHOR_AT_PAGE,
+    ekANCHOR_AT_FRAME,
+    ekANCHOR_AT_CHARACTER
+} anchortype_t;
+
 typedef enum _paperorient_t
 {
     ekPAPERORIENT_PORTRAIT = 1,

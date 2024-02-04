@@ -3149,16 +3149,13 @@ static sdkres_t i_create_text_content(
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const char_t *image_path, sdkres_t *err)
+void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const anchortype_t anchor, const uint32_t width, const uint32_t height, const char_t *image_path, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
     css::uno::Reference<css::frame::XModel> xModel;
-
-
     css::uno::Reference<css::graphic::XGraphic> xGraphic;
     css::uno::Reference<css::text::XTextContent> xTextContent;
-    //css::uno::Reference<css::drawing::XShape> xShape;
 
     if (res == ekSDKRES_OK)
         res = i_get_text(writer, space, xText);
@@ -3185,22 +3182,39 @@ void officesdk_writer_insert_image(Writer *writer, const textspace_t space, cons
     if (res == ekSDKRES_OK)
         res = i_create_text_content(xModel, "com.sun.star.text.TextGraphicObject", xTextContent);
 
-    // Create the shape
-    //if (res == ekSDKRES_OK)
-        //res = i_create_shape(xText, "com.sun.star.drawing.GraphicObjectShape", xShape);
-
     // Configure the text object and add the image graphic
     if (res == ekSDKRES_OK)
     {
         try
         {
             css::uno::Reference<css::beans::XPropertySet> xProps(xTextContent, css::uno::UNO_QUERY_THROW);
-            css::uno::Reference<css::drawing::XShape> xShape(xTextContent, css::uno::UNO_QUERY_THROW);
+            css::text::TextContentAnchorType anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AS_CHARACTER;
+            switch (anchor) {
+            case ekANCHOR_AT_PARAGRAPH:
+                anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AT_PARAGRAPH;
+                break;
+            case ekANCHOR_AS_CHARACTER:
+                anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AS_CHARACTER;
+                break;
+            case ekANCHOR_AT_PAGE:
+                anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AT_PAGE;
+                break;
+            case ekANCHOR_AT_FRAME:
+                anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AT_FRAME;
+                break;
+            case ekANCHOR_AT_CHARACTER:
+                anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AT_CHARACTER;
+                break;
+            }
 
             xProps->setPropertyValue("Graphic", css::uno::makeAny(xGraphic));
-            xProps->setPropertyValue("AnchorType", css::uno::makeAny(css::text::TextContentAnchorType::TextContentAnchorType_AS_CHARACTER));
-            xProps->setPropertyValue("ActualSize", css::uno::makeAny(css::awt::Size(500, 500)));
-            xShape->setSize(css::awt::Size(5000, 5000));
+            xProps->setPropertyValue("AnchorType", css::uno::makeAny(anchorType));
+
+            if (width != 0 && height != 0)
+            {
+                css::uno::Reference<css::drawing::XShape> xShape(xTextContent, css::uno::UNO_QUERY_THROW);
+                xShape->setSize(css::awt::Size((sal_Int32)width, (sal_Int32)height));
+            }
         }
         catch (css::uno::Exception&)
         {
