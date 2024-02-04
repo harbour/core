@@ -8,6 +8,7 @@
 #include <osbs/btime.h>
 #include <osbs/osbs.h>
 #include <sewer/blib.h>
+#include <sewer/bstd.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
 #include <sewer/unicode.h>
@@ -824,24 +825,19 @@ static css::view::PaperFormat i_paper_format(const paperformat_t format)
 /*---------------------------------------------------------------------------*/
 
 // https://wiki.documentfoundation.org/Documentation/DevGuide/Spreadsheet_Documents#Printer_and_Print_Job_Settings
-void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
+static sdkres_t i_xprintable_print(
+                            css::uno::Reference<css::view::XPrintable> &xPrintable, 
+                            const char_t *filename, 
+                            const char_t *printer, 
+                            const paperorient_t orient, 
+                            const paperformat_t format, 
+                            const uint32_t paper_width, 
+                            const uint32_t paper_height, 
+                            const uint32_t num_copies, 
+                            const bool_t collate_copies, 
+                            const char_t *pages)
 {
-    sdkres_t res = i_OFFICE_SDK.Init();
-    css::uno::Reference<css::view::XPrintable> xPrintable;
-    cassert_no_null(sheet);
-
-    if (res == ekSDKRES_OK)
-    {
-        try
-        {
-            css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
-            xPrintable = css::uno::Reference<css::view::XPrintable>(*xDocument, css::uno::UNO_QUERY_THROW);
-        }
-        catch (css::uno::Exception&)
-        {
-            res = ekSDKRES_ACCESS_DOC_ERROR;
-        }
-    }
+    sdkres_t res = ekSDKRES_OK;
 
     // Configure the printer
     if (res == ekSDKRES_OK)
@@ -958,6 +954,31 @@ void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *p
         }
     }
 
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    css::uno::Reference<css::view::XPrintable> xPrintable;
+    cassert_no_null(sheet);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::sheet::XSpreadsheetDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::sheet::XSpreadsheetDocument>*>(sheet);
+            xPrintable = css::uno::Reference<css::view::XPrintable>(*xDocument, css::uno::UNO_QUERY_THROW);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    res = i_xprintable_print(xPrintable, filename, printer, orient, format, paper_width, paper_height, num_copies, collate_copies, pages);
     ptr_assign(err, res);
 }
 
@@ -2625,17 +2646,27 @@ void officesdk_writer_pdf(Writer *writer, const char_t *pathname, sdkres_t *err)
 
 void officesdk_writer_print(Writer *writer, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
 {
-    unref(writer);
-    unref(filename);
-    unref(printer);
-    unref(orient);
-    unref(format);
-    unref(paper_width);
-    unref(paper_height);
-    unref(num_copies);
-    unref(collate_copies);
-    unref(pages);
-    unref(err);
+{
+    sdkres_t res = i_OFFICE_SDK.Init();
+    css::uno::Reference<css::view::XPrintable> xPrintable;
+    cassert_no_null(writer);
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+            xPrintable = css::uno::Reference<css::view::XPrintable>(*xDocument, css::uno::UNO_QUERY_THROW);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    res = i_xprintable_print(xPrintable, filename, printer, orient, format, paper_width, paper_height, num_copies, collate_copies, pages);
+    ptr_assign(err, res);
+}
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2679,18 +2710,16 @@ static sdkres_t i_get_style(
         css::uno::Reference<css::style::XStyle> xStyle(styleElement, css::uno::UNO_QUERY_THROW);
         css::uno::Reference<css::beans::XPropertySet> xProperties(xStyle, css::uno::UNO_QUERY_THROW);
         xPageStyle = xProperties;
-        /*
-         * Just for Debug
-         *
-            css::uno::Reference<css::beans::XPropertySetInfo> info = xProperties->getPropertySetInfo();
-            css::uno::Sequence<css::beans::Property> props = info->getProperties();
-            ::rtl::OUString str;
-            for (sal_Int32 i = 0; i < props.getLength(); ++i)
-            {
-                str = props.getConstArray()[i].Name;
-            }
-         *
-         */
+        //Just for Debug
+        //css::uno::Reference<css::beans::XPropertySetInfo> info = xProperties->getPropertySetInfo();
+        //css::uno::Sequence<css::beans::Property> props = info->getProperties();
+        //for (sal_Int32 i = 0; i < props.getLength(); ++i)
+        //{
+        //    ::rtl::OUString ostr = props.getConstArray()[i].Name;
+        //    String *str = i_StringFromOUString(ostr);
+        //    bstd_printf("%s\n", tc(str));
+        //    str_destroy(&str);
+        //}
     }
     catch (css::uno::Exception&)
     {

@@ -376,6 +376,9 @@ OFFICE_ERROR("Erro ao salvar documento de texto")
 NAP_DOC_PDF(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/R00688-PPA.pdf" })
 OFFICE_ERROR("Exportando para PDF")
 
+// Print the doc
+NAP_DOC_PRINT(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/R00688-PPA-Printer.pdf" }, "", SDK_PAPER_ORIENT_LANSCAPE, SDK_PAPER_FORMAT_LETTER, 0, 0, 1, .F., "1-")
+
 // Close the document (mandatory)
 NAP_DOC_CLOSE(O_DOC)
 OFFICE_ERROR("Erro ao fechar o documento de texto")
