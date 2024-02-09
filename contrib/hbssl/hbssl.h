@@ -51,6 +51,11 @@
 #include "hbapierr.h"
 #include "hbsocket.h"
 
+/* pacify OpenSSL 3.0 depreciated warnings until we update the code */
+#ifndef OPENSSL_API_COMPAT
+   #define OPENSSL_API_COMPAT 10200
+#endif
+
 #if defined( HB_OS_WIN )
    #if ! defined( HB_OPENSSL_STATIC )
       #define OPENSSL_OPT_WINDLL

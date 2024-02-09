@@ -108,7 +108,8 @@
 #define HB_CURLOPT_TRANSFERTEXT               53  /* transfer data in text/ASCII format */
 #define HB_CURLOPT_PUT                        54  /* HTTP PUT */
 #define HB_CURLOPT_PROGRESSFUNCTION           56
-#define HB_CURLOPT_PROGRESSDATA               57
+#define HB_CURLOPT_PROGRESSDATA               HB_CURLOPT_XFERINFODATA
+#define HB_CURLOPT_XFERINFODATA               57
 #define HB_CURLOPT_AUTOREFERER                58
 #define HB_CURLOPT_PROXYPORT                  59
 #define HB_CURLOPT_POSTFIELDSIZE              60
@@ -125,8 +126,8 @@
 #define HB_CURLOPT_CLOSEPOLICY                72
 #define HB_CURLOPT_FRESH_CONNECT              74
 #define HB_CURLOPT_FORBID_REUSE               75
-#define HB_CURLOPT_RANDOM_FILE                76
-#define HB_CURLOPT_EGDSOCKET                  77
+#define HB_CURLOPT_RANDOM_FILE                76  /* Deprecated in 7.84.0. It serves no purpose anymore. */
+#define HB_CURLOPT_EGDSOCKET                  77  /* Deprecated in 7.84.0. It serves no purpose anymore. */
 #define HB_CURLOPT_CONNECTTIMEOUT             78
 #define HB_CURLOPT_HEADERFUNCTION             79
 #define HB_CURLOPT_HTTPGET                    80
@@ -254,6 +255,11 @@
 #define HB_CURLOPT_TCP_KEEPINTVL              206
 #define HB_CURLOPT_MAIL_AUTH                  207
 #define HB_CURLOPT_MAXLIFETIME_CONN           208
+#define HB_CURLOPT_XFERINFOFUNCTION           219
+#define HB_CURLOPT_PROXY_SERVICE_NAME         235
+#define HB_CURLOPT_MIMEPOST                   269
+#define HB_CURLOPT_PROTOCOLS_STR              318
+#define HB_CURLOPT_REDIR_PROTOCOLS_STR        319
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_PROGRESSBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
@@ -401,6 +407,11 @@
 #define HB_CURLPROTO_RTMPTE                   hb_bitShift( 1, 22 )
 #define HB_CURLPROTO_RTMPS                    hb_bitShift( 1, 23 )
 #define HB_CURLPROTO_RTMPTS                   hb_bitShift( 1, 24 )
+#define HB_CURLPROTO_GOPHER                   hb_bitShift( 1, 25 )
+#define HB_CURLPROTO_SMB                      hb_bitShift( 1, 26 )
+#define HB_CURLPROTO_SMBS                     hb_bitShift( 1, 27 )
+#define HB_CURLPROTO_MQTT                     hb_bitShift( 1, 28 )
+#define HB_CURLPROTO_GOPHERS                  hb_bitShift( 1, 29 )
 #define HB_CURLPROTO_ALL                      hb_bitNot( 0 )
 
 /* curl_easy_pause() parameters. They can be combined with hb_bitOr(). */
@@ -463,6 +474,15 @@
 #define HB_CURLINFO_PRIMARY_PORT              40
 #define HB_CURLINFO_LOCAL_IP                  41
 #define HB_CURLINFO_LOCAL_PORT                42
+#define HB_CURLINFO_SOCKET                    0x500000
+#define HB_CURLINFO_ACTIVESOCKET              ( HB_CURLINFO_SOCKET + 44 )
+#define HB_CURLINFO_OFF_T                     0x600000
+#define HB_CURLINFO_SIZE_UPLOAD_T             ( HB_CURLINFO_OFF_T + 7 )
+#define HB_CURLINFO_SIZE_DOWNLOAD_T           ( HB_CURLINFO_OFF_T + 8 )
+#define HB_CURLINFO_SPEED_DOWNLOAD_T          ( HB_CURLINFO_OFF_T + 9 )
+#define HB_CURLINFO_SPEED_UPLOAD_T            ( HB_CURLINFO_OFF_T + 10 )
+#define HB_CURLINFO_CONTENT_LENGTH_DOWNLOAD_T ( HB_CURLINFO_OFF_T + 15 )
+#define HB_CURLINFO_CONTENT_LENGTH_UPLOAD_T   ( HB_CURLINFO_OFF_T + 16 )
 
 /* curl result codes. */
 
