@@ -46,6 +46,9 @@
 #include <text/ControlCharacter.hpp>
 #include <text/XTextContent.hpp>
 #include <text/TextContentAnchorType.hpp>
+#include <text/XTextField.hpp>
+#include <text/XTextFieldsSupplier.hpp>
+#include <text/PageNumberType.hpp>
 #include <util/XMergeable.hpp>
 #include <util/XProtectable.hpp>
 #include <util/XNumberFormatsSupplier.hpp>
@@ -56,6 +59,7 @@
 #include <style/LineSpacingMode.hpp>
 #include <style/XStyle.hpp>
 #include <style/XStyleFamiliesSupplier.hpp>
+#include <style/NumberingType.hpp>
 #include <view/XPrintable.hpp>
 #include <view/PaperOrientation.hpp>
 #include <view/PaperFormat.hpp>
@@ -3240,6 +3244,68 @@ void officesdk_writer_insert_image(Writer *writer, const textspace_t space, cons
 
 /*---------------------------------------------------------------------------*/
 
+void officesdk_writer_insert_page_number(Writer *writer, const textspace_t space, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+    css::uno::Reference<css::frame::XModel> xModel;
+    css::uno::Reference<css::text::XTextContent> xTextContent;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, space, xText);
+
+    // The document model (required for creating new text field objects)
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+            xModel = css::uno::Reference<css::frame::XModel>(*xDocument, css::uno::UNO_QUERY_THROW);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    // Create the text content object
+    if (res == ekSDKRES_OK)
+        res = i_create_text_content(xModel, "com.sun.star.text.TextField.PageNumber", xTextContent);
+
+    // Configure the text object and add the image graphic
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::beans::XPropertySet> xProps(xTextContent, css::uno::UNO_QUERY_THROW);
+            sal_Int16 numberType = css::style::NumberingType::ARABIC;
+            xProps->setPropertyValue("NumberingType", css::uno::makeAny(numberType));
+            xProps->setPropertyValue("SubType", css::uno::makeAny(css::text::PageNumberType::PageNumberType_CURRENT));
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
+            xText->insertTextContent(xTextRange, xTextContent, sal_False);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_TEXT_ADD_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_insert_control_character(Writer *writer, const textspace_t space, sal_Int16 ctrlchar, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -3269,14 +3335,14 @@ static void i_insert_control_character(Writer *writer, const textspace_t space, 
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_new_line(Writer *writer, const textspace_t space, sdkres_t *err)
+void officesdk_writer_insert_new_line(Writer *writer, const textspace_t space, sdkres_t *err)
 {
     i_insert_control_character(writer, space, css::text::ControlCharacter::LINE_BREAK, err);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_page_break(Writer *writer, sdkres_t *err)
+void officesdk_writer_insert_page_break(Writer *writer, sdkres_t *err)
 {
     i_insert_control_character(writer, ekTEXT_SPACE_PAGE, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
 }

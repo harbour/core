@@ -43,8 +43,10 @@ void officesdk_writer_insert_text(Writer *writer, const textspace_t space, const
 
 void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const anchortype_t anchor, const uint32_t width, const uint32_t height, const char_t *image_path, sdkres_t *err);
 
-void officesdk_writer_new_line(Writer *writer, const textspace_t space, sdkres_t *err);
+void officesdk_writer_insert_page_number(Writer *writer, const textspace_t space, sdkres_t *err);
 
-void officesdk_writer_page_break(Writer *writer, sdkres_t *err);
+void officesdk_writer_insert_new_line(Writer *writer, const textspace_t space, sdkres_t *err);
+
+void officesdk_writer_insert_page_break(Writer *writer, sdkres_t *err);
 
 __END_C

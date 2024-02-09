@@ -5042,16 +5042,23 @@ void hb_gtnap_office_writer_insert_image(Writer *writer, const anchortype_t anch
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_writer_new_line(Writer *writer)
+void hb_gtnap_office_writer_insert_page_number(Writer *writer)
 {
-    officesdk_writer_new_line(writer, GTNAP_GLOBAL->office_text_space, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_insert_page_number(writer, GTNAP_GLOBAL->office_text_space, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_writer_page_break(Writer *writer)
+void hb_gtnap_office_writer_insert_new_line(Writer *writer)
 {
-    officesdk_writer_page_break(writer, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_insert_new_line(writer, GTNAP_GLOBAL->office_text_space, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_insert_page_break(Writer *writer)
+{
+    officesdk_writer_insert_page_break(writer, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/

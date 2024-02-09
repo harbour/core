@@ -220,16 +220,24 @@ HB_FUNC( NAP_DOC_INSERT_IMAGE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_DOC_NEW_LINE )
+HB_FUNC( NAP_DOC_INSERT_PAGE_NUMBER )
 {
     Writer *writer = (Writer*)hb_parptr(1);
-    hb_gtnap_office_writer_new_line(writer);
+    hb_gtnap_office_writer_insert_page_number(writer);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_DOC_PAGE_BREAK )
+HB_FUNC( NAP_DOC_INSERT_NEW_LINE )
 {
     Writer *writer = (Writer*)hb_parptr(1);
-    hb_gtnap_office_writer_page_break(writer);
+    hb_gtnap_office_writer_insert_new_line(writer);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_INSERT_PAGE_BREAK )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    hb_gtnap_office_writer_insert_page_break(writer);
 }
