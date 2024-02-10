@@ -3,7 +3,7 @@
 #INCLUDE "gtnap.ch"
 
 ***********************************
-STAT PROC DOC_LINE(O_DOC, C_Line)
+PROC DOC_LINE(O_DOC, C_Line)
 ***********************************
     NAP_DOC_INSERT_TEXT(O_DOC, C_Line)
     NAP_DOC_INSERT_NEW_LINE(O_DOC)
