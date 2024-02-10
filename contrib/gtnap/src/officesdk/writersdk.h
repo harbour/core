@@ -35,9 +35,9 @@ void officesdk_writer_bold(Writer *writer, const textspace_t space, const bool_t
 
 void officesdk_writer_italic(Writer *writer, const textspace_t space, const bool_t italic, sdkres_t *err);
 
-void officesdk_writer_halign(Writer *writer, const textspace_t space, const halign_t align, sdkres_t *err);
+void officesdk_writer_paragraph_halign(Writer *writer, const textspace_t space, const halign_t align, sdkres_t *err);
 
-void officesdk_writer_lspacing(Writer *writer, const textspace_t space, const uint32_t height, sdkres_t *err);
+void officesdk_writer_paragraph_lspacing(Writer *writer, const textspace_t space, const uint32_t height, sdkres_t *err);
 
 void officesdk_writer_insert_text(Writer *writer, const textspace_t space, const char_t *text, sdkres_t *err);
 
@@ -46,6 +46,8 @@ void officesdk_writer_insert_image(Writer *writer, const textspace_t space, cons
 void officesdk_writer_insert_page_number(Writer *writer, const textspace_t space, sdkres_t *err);
 
 void officesdk_writer_insert_new_line(Writer *writer, const textspace_t space, sdkres_t *err);
+
+void officesdk_writer_insert_paragraph(Writer *writer, sdkres_t *err);
 
 void officesdk_writer_insert_page_break(Writer *writer, sdkres_t *err);
 

@@ -751,7 +751,7 @@ PAR2: Font style. Italic (.T.) or Normal (.F.).
 ### Paragraph Alignment
 
 ```
-NAP_DOC_HALIGN(O_DOC, SDK_HALIGN_RIGHT)
+NAP_DOC_PARAGRAPH_HALIGN(O_DOC, SDK_HALIGN_RIGHT)
 
 PAR1: The text document.
 PAR2: Numeric value with horizontal alignment.
@@ -768,7 +768,7 @@ PAR2: Numeric value with horizontal alignment.
 ### Paragraph inter-line spacing
 
 ```
-NAP_DOC_LSPACING(O_DOC, 330)
+NAP_DOC_PARAGRAPH_LSPACING(O_DOC, 330)
 
 PAR1: The text document.
 PAR2: Spacing (integer 1/100th mm).

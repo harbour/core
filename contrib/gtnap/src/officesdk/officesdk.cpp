@@ -3047,7 +3047,7 @@ void officesdk_writer_italic(Writer *writer, const textspace_t space, const bool
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_halign(Writer *writer, const textspace_t space, const halign_t align, sdkres_t *err)
+void officesdk_writer_paragraph_halign(Writer *writer, const textspace_t space, const halign_t align, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
@@ -3081,7 +3081,7 @@ void officesdk_writer_halign(Writer *writer, const textspace_t space, const hali
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_lspacing(Writer *writer, const textspace_t space, const uint32_t height, sdkres_t *err)
+void officesdk_writer_paragraph_lspacing(Writer *writer, const textspace_t space, const uint32_t height, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
@@ -3306,7 +3306,7 @@ void officesdk_writer_insert_page_number(Writer *writer, const textspace_t space
 
 /*---------------------------------------------------------------------------*/
 
-static void i_insert_control_character(Writer *writer, const textspace_t space, sal_Int16 ctrlchar, sdkres_t *err)
+static void i_insert_control_character(Writer *writer, const textspace_t space, const css::style::BreakType &breakType, sal_Int16 ctrlchar, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
@@ -3315,7 +3315,10 @@ static void i_insert_control_character(Writer *writer, const textspace_t space, 
         res = i_get_text(writer, space, xText);
 
     if (res == ekSDKRES_OK)
-        res = i_set_text_property(xText, "BreakType", css::uno::makeAny(css::style::BreakType::BreakType_PAGE_AFTER));
+    {
+        if (breakType != css::style::BreakType::BreakType_MAKE_FIXED_SIZE)
+            res = i_set_text_property(xText, "BreakType", css::uno::makeAny(breakType));
+    }
 
     if (res == ekSDKRES_OK)
     {
@@ -3337,12 +3340,19 @@ static void i_insert_control_character(Writer *writer, const textspace_t space, 
 
 void officesdk_writer_insert_new_line(Writer *writer, const textspace_t space, sdkres_t *err)
 {
-    i_insert_control_character(writer, space, css::text::ControlCharacter::LINE_BREAK, err);
+    i_insert_control_character(writer, space, css::style::BreakType::BreakType_MAKE_FIXED_SIZE, css::text::ControlCharacter::LINE_BREAK, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_paragraph(Writer *writer, sdkres_t *err)
+{
+    i_insert_control_character(writer, ekTEXT_SPACE_PAGE, css::style::BreakType::BreakType_NONE, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void officesdk_writer_insert_page_break(Writer *writer, sdkres_t *err)
 {
-    i_insert_control_character(writer, ekTEXT_SPACE_PAGE, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
+    i_insert_control_character(writer, ekTEXT_SPACE_PAGE, css::style::BreakType::BreakType_PAGE_AFTER, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
 }

@@ -170,20 +170,20 @@ HB_FUNC( NAP_DOC_ITALIC )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_DOC_HALIGN )
+HB_FUNC( NAP_DOC_PARAGRAPH_HALIGN )
 {
     Writer *writer = (Writer*)hb_parptr(1);
     halign_t align = (halign_t)hb_parni(2);
-    hb_gtnap_office_writer_halign(writer, align);
+    hb_gtnap_office_writer_paragraph_halign(writer, align);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_DOC_LSPACING )
+HB_FUNC( NAP_DOC_PARAGRAPH_LSPACING )
 {
     Writer *writer = (Writer*)hb_parptr(1);
     uint32_t height = hb_parni(2);
-    hb_gtnap_office_writer_lspacing(writer, height);
+    hb_gtnap_office_writer_paragraph_lspacing(writer, height);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -232,6 +232,14 @@ HB_FUNC( NAP_DOC_INSERT_NEW_LINE )
 {
     Writer *writer = (Writer*)hb_parptr(1);
     hb_gtnap_office_writer_insert_new_line(writer);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_INSERT_PARAGRAPH )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    hb_gtnap_office_writer_insert_paragraph(writer);
 }
 
 /*---------------------------------------------------------------------------*/
