@@ -1204,7 +1204,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   if( hb_curl->mime || nLen > 0 )
                   {
                      if( ! hb_curl->mime )
-                        hb_curl->mime = curl_easy_init();
+                        hb_curl->mime = curl_mime_init( hb_curl->curl );
 
                      for( nPos = 1; nPos <= nLen; ++nPos )
                      {
