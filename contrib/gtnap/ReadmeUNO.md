@@ -819,10 +819,21 @@ PAR5: String with the full path to the image.
 #define SDK_ANCHOR_AT_CHARACTER                 5
 ```
 
+### Insert page number into text
+
+```
+NAP_DOC_INSERT_PAGE_NUMBER(O_DOC)
+
+PAR1: The text document.
+```
+
+> Will insert a text field with current attributes that automatically show the page number.
+
+
 ### Insert a line break
 
 ```
-NAP_DOC_NEW_LINE(O_DOC)
+NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 PAR1: The text document.
 ```
@@ -830,7 +841,7 @@ PAR1: The text document.
 ### Insert a page break
 
 ```
-NAP_DOC_PAGE_BREAK(O_DOC)
+NAP_DOC_INSERT_PAGE_BREAK(O_DOC)
 
 PAR1: The text document.
 ```

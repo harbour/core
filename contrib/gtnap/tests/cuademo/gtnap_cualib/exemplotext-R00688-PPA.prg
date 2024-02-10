@@ -13,14 +13,16 @@ CUA20 @ 15,20,30,70 JANELA V_Janela ;
 
 ESPECIALIZE V_Janela MENU
 ADDOPCAO V_Janela TEXTO "Create R00688-PPA.pdf" ;
-    ACAO TST_CREATE_DOCUMENT1() AJUDA "P06685"
- ADDOPCAO V_Janela TEXTO "Create R00236.pdf" ;
-   ACAO TST_CREATE_DOCUMENT2() AJUDA "P06685"
+    ACAO TST_R00688() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Create R00236.pdf" ;
+    ACAO TST_R00236() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Create R00044.pdf" ;
+    ACAO TST_R00044() AJUDA "P06685"
 
 ATIVE(V_Janela)
 
 *************************************
-STAT FUNCTION OFFICE_ERROR( C_Text )
+FUNCTION OFFICE_ERROR( C_Text )
 *************************************
 LOCAL N_Err := NAP_OFFICE_LAST_ERROR()
 LOCAL C_Err := NAP_OFFICE_ERROR_STR(N_Err)
@@ -34,7 +36,7 @@ ENDIF
 RETURN L_Err
 
 ******************************
-STAT FUNC PAGINA_TEXT(N_Page)
+FUNC PAGINA_TEXT(N_Page)
 ******************************
     IF N_Page < 10
         RETURN "Página : 00" + hb_ntos(N_Page)
@@ -45,12 +47,12 @@ STAT FUNC PAGINA_TEXT(N_Page)
     RETURN "Página : " + hb_ntos(N_Page)
 
 ********************************
-STAT PROC SEPARATOR_LINE(O_DOC, N_Size)
+PROC SEPARATOR_LINE(O_DOC, N_Size)
 ********************************
     NAP_DOC_INSERT_DASH(O_DOC, N_Size)
 
 ********************************
-STAT FUNC INDETERMINATE(N_Size)
+FUNC INDETERMINATE(N_Size)
 ********************************
     LOCAL C_STR := ""
     LOCAL N_Cont := 1
@@ -62,7 +64,7 @@ STAT FUNC INDETERMINATE(N_Size)
     RETURN C_STR
 
 ********************************
-STAT FUNC UNKNOWN(N_Size)
+FUNC UNKNOWN(N_Size)
 ********************************
     LOCAL C_STR := ""
     LOCAL N_Cont := 1
@@ -74,7 +76,7 @@ STAT FUNC UNKNOWN(N_Size)
     RETURN C_STR
 
 ********************************
-STAT FUNC COMPOSE_LINE(V_Line)
+FUNC COMPOSE_LINE(V_Line)
 ********************************
     LOCAL C_STR := ""
     LOCAL N_Cont := 1
@@ -90,7 +92,7 @@ STAT FUNC COMPOSE_LINE(V_Line)
     RETURN C_STR
 
 ********************************
-STAT FUNC COMPOSE_TABLINE(V_Tabs, V_Values)
+FUNC COMPOSE_TABLINE(V_Tabs, V_Values)
 ********************************
     LOCAL C_STR := ""
     LOCAL C_Field := ""
@@ -147,23 +149,21 @@ STAT PROC DOCUMENT1_HEADER(O_DOC, N_Page, N_Width, V_Tabs)
     NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 ********************************************
-STAT PROC DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+PROC DOCUMENT1_SEPARATOR(O_DOC, N_Width)
 ********************************************
     SEPARATOR_LINE(O_DOC, N_Width)
     NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 ***********************************************************
-STAT PROC DOCUMENT1_TABLINE(O_DOC, V_Values, V_Tabs)
+PROC DOCUMENT1_TABLINE(O_DOC, V_Values, V_Tabs)
 ***********************************************************
     LOCAL C_Line := COMPOSE_TABLINE(V_Tabs, V_Values)
     NAP_DOC_INSERT_TEXT(O_DOC, C_Line)
     NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 ***********************************
-STAT PROC TST_CREATE_DOCUMENT1
+STAT PROC TST_R00688
 ***********************************
-// R00688-PPA.pdf
-
 LOCAL O_DOC := NAP_DOC_CREATE()
 
 // Total chars by line
@@ -391,37 +391,3 @@ MOSTRAR("M15566", "O documento de texto foi criado com sucesso.")
 
 // Open the result into a LibreOffice window
 NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/R00688-PPA.odt")
-
-
-***********************************
-STAT PROC TST_CREATE_DOCUMENT2
-***********************************
-// R00236.pdf
-
-LOCAL O_DOC := NAP_DOC_CREATE()
-
-IF OFFICE_ERROR("Erro ao criar documento de texto")
-    RETURN
-ENDIF
-
-NAP_DOC_FONT_FAMILY(O_DOC, "LucidaConsole")
-NAP_DOC_FONT_SIZE(O_DOC, 12.0)
-NAP_DOC_HALIGN(O_DOC, SDK_HALIGN_CENTER)
-NAP_DOC_INSERT_TEXT(O_DOC, "PREFEITURA MUNICIPAL DE MACAPÁ")
-
-// Save the document
-NAP_DOC_SAVE(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R00236.odt" })
-OFFICE_ERROR("Erro ao salvar documento de texto")
-
-// Export to PDF
-NAP_DOC_PDF(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R00236.pdf" })
-OFFICE_ERROR("Exportando para PDF")
-
-// Close the document (mandatory)
-NAP_DOC_CLOSE(O_DOC)
-OFFICE_ERROR("Erro ao fechar o documento de texto")
-
-MOSTRAR("M15566", "O documento de texto foi criado com sucesso.")
-
-// Open the result into a LibreOffice window
-NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R00236.odt")
