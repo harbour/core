@@ -30,6 +30,8 @@
 #include <lang/XMultiComponentFactory.hpp>
 #include <lang/XMultiServiceFactory.hpp>
 #include <text/XTextDocument.hpp>
+#include <text/HoriOrientation.hpp>
+#include <text/VertOrientation.hpp>
 #include <sheet/XCellRangeAddressable.hpp>
 #include <sheet/XSpreadsheetDocument.hpp>
 #include <sheet/XSpreadsheet.hpp>
@@ -3153,7 +3155,7 @@ static sdkres_t i_create_text_content(
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const anchortype_t anchor, const uint32_t width, const uint32_t height, const char_t *image_path, sdkres_t *err)
+void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const anchortype_t anchor, const uint32_t width, const uint32_t height, const halign_t halign, const valign_t valign, const char_t *image_path, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
@@ -3193,6 +3195,9 @@ void officesdk_writer_insert_image(Writer *writer, const textspace_t space, cons
         {
             css::uno::Reference<css::beans::XPropertySet> xProps(xTextContent, css::uno::UNO_QUERY_THROW);
             css::text::TextContentAnchorType anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AS_CHARACTER;
+            sal_Int16 horient = css::text::HoriOrientation::LEFT;
+            sal_Int16 vorient = css::text::VertOrientation::CENTER;
+
             switch (anchor) {
             case ekANCHOR_AT_PARAGRAPH:
                 anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AT_PARAGRAPH;
@@ -3211,8 +3216,37 @@ void officesdk_writer_insert_image(Writer *writer, const textspace_t space, cons
                 break;
             }
 
+            switch(halign) {
+            case ekHALIGN_LEFT:
+                horient = css::text::HoriOrientation::LEFT;
+                break;
+            case ekHALIGN_CENTER:
+                horient = css::text::HoriOrientation::CENTER;
+                break;
+            case ekHALIGN_RIGHT:
+                horient = css::text::HoriOrientation::RIGHT;
+                break;
+            case ekHALIGN_JUSTIFY:
+                horient = css::text::HoriOrientation::LEFT;
+                break;
+            }
+
+            switch(valign) {
+            case ekVALIGN_TOP:
+                vorient = css::text::VertOrientation::TOP;
+                break;
+            case ekVALIGN_CENTER:
+                vorient = css::text::VertOrientation::CENTER;
+                break;
+            case ekVALIGN_BOTTOM:
+                vorient = css::text::VertOrientation::BOTTOM;
+                break;
+            }
+
             xProps->setPropertyValue("Graphic", css::uno::makeAny(xGraphic));
             xProps->setPropertyValue("AnchorType", css::uno::makeAny(anchorType));
+            xProps->setPropertyValue("HoriOrient", css::uno::makeAny(horient));
+            xProps->setPropertyValue("VertOrient", css::uno::makeAny(vorient));
 
             if (width != 0 && height != 0)
             {

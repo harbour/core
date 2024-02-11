@@ -267,7 +267,7 @@ extern void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_blo
 
 extern void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n);
 
-extern void hb_gtnap_office_writer_insert_image(Writer *writer, const anchortype_t anchor, const uint32_t width, const uint32_t height, HB_ITEM *image_path_block);
+extern void hb_gtnap_office_writer_insert_image(Writer *writer, const anchortype_t anchor, const uint32_t width, const uint32_t height, const halign_t halign, const valign_t valign, HB_ITEM *image_path_block);
 
 extern void hb_gtnap_office_writer_insert_page_number(Writer *writer);
 

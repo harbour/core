@@ -214,8 +214,10 @@ HB_FUNC( NAP_DOC_INSERT_IMAGE )
     anchortype_t anchor = (anchortype_t)hb_parni(2);
     uint32_t width = hb_parni(3);
     uint32_t height = hb_parni(4);
-    HB_ITEM *image_path_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK);
-    hb_gtnap_office_writer_insert_image(writer, anchor, width, height, image_path_block);
+    halign_t halign = (halign_t)hb_parni(5);
+    valign_t valign = (valign_t)hb_parni(6);
+    HB_ITEM *image_path_block = hb_param(7, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_writer_insert_image(writer, anchor, width, height, halign, valign, image_path_block);
 }
 
 /*---------------------------------------------------------------------------*/

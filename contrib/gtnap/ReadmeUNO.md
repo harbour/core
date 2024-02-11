@@ -804,19 +804,30 @@ PAR2: Number of dashes to insert.
 ### Insert image into text
 
 ```
-NAP_DOC_INSERT_IMAGE(O_DOC, SDK_ANCHOR_AS_CHARACTER, 2000, 2000, "macapa.png")
+NAP_DOC_INSERT_IMAGE(O_DOC, SDK_ANCHOR_AS_CHARACTER, 2000, 2000, SDK_HALIGN_LEFT, SDK_VALIGN_CENTER, "macapa.png")
 
 PAR1: The text document.
 PAR2: Type of anchor.
 PAR3: Image width. 0 for original size.
 PAR4: Image height. 0 for original size.
-PAR5: String with the full path to the image.
+PAR5: Numeric value with horizontal alignment.
+PAR6: Numeric value with vertical alignment.
+PAR7: String with the full path to the image.
 
 #define SDK_ANCHOR_AT_PARAGRAPH                 1
 #define SDK_ANCHOR_AS_CHARACTER                 2
 #define SDK_ANCHOR_AT_PAGE                      3
 #define SDK_ANCHOR_AT_FRAME                     4
 #define SDK_ANCHOR_AT_CHARACTER                 5
+
+#define SDK_HALIGN_LEFT             1
+#define SDK_HALIGN_CENTER           2
+#define SDK_HALIGN_RIGHT            3
+#define SDK_HALIGN_JUSTIFY          4
+
+#define SDK_VALIGN_TOP              1
+#define SDK_VALIGN_CENTER           2
+#define SDK_VALIGN_BOTTOM           3
 ```
 
 ### Insert page number into text
