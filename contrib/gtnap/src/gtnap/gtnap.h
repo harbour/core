@@ -259,19 +259,23 @@ extern void hb_gtnap_office_writer_bold(Writer *writer, const bool_t bold);
 
 extern void hb_gtnap_office_writer_italic(Writer *writer, const bool_t italic);
 
-extern void hb_gtnap_office_writer_halign(Writer *writer, const halign_t align);
+extern void hb_gtnap_office_writer_paragraph_halign(Writer *writer, const halign_t align);
 
-extern void hb_gtnap_office_writer_lspacing(Writer *writer, const uint32_t height);
+extern void hb_gtnap_office_writer_paragraph_lspacing(Writer *writer, const uint32_t height);
 
 extern void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block);
 
 extern void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n);
 
-extern void hb_gtnap_office_writer_insert_image(Writer *writer, const anchortype_t anchor, const uint32_t width, const uint32_t height, HB_ITEM *image_path_block);
+extern void hb_gtnap_office_writer_insert_image(Writer *writer, const anchortype_t anchor, const uint32_t width, const uint32_t height, const halign_t halign, const valign_t valign, HB_ITEM *image_path_block);
 
-extern void hb_gtnap_office_writer_new_line(Writer *writer);
+extern void hb_gtnap_office_writer_insert_page_number(Writer *writer);
 
-extern void hb_gtnap_office_writer_page_break(Writer *writer);
+extern void hb_gtnap_office_writer_insert_new_line(Writer *writer);
+
+extern void hb_gtnap_office_writer_insert_paragraph(Writer *writer);
+
+extern void hb_gtnap_office_writer_insert_page_break(Writer *writer);
 
 /*
  * Fran TODO: Pending refactoring

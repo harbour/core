@@ -4990,16 +4990,16 @@ void hb_gtnap_office_writer_italic(Writer *writer, const bool_t italic)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_writer_halign(Writer *writer, const halign_t align)
+void hb_gtnap_office_writer_paragraph_halign(Writer *writer, const halign_t align)
 {
-    officesdk_writer_halign(writer, GTNAP_GLOBAL->office_text_space, align, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_paragraph_halign(writer, GTNAP_GLOBAL->office_text_space, align, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_writer_lspacing(Writer *writer, const uint32_t height)
+void hb_gtnap_office_writer_paragraph_lspacing(Writer *writer, const uint32_t height)
 {
-    officesdk_writer_lspacing(writer, GTNAP_GLOBAL->office_text_space, height, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_paragraph_lspacing(writer, GTNAP_GLOBAL->office_text_space, height, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5033,25 +5033,39 @@ void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_writer_insert_image(Writer *writer, const anchortype_t anchor, const uint32_t width, const uint32_t height, HB_ITEM *image_path_block)
+void hb_gtnap_office_writer_insert_image(Writer *writer, const anchortype_t anchor, const uint32_t width, const uint32_t height, const halign_t halign, const valign_t valign, HB_ITEM *image_path_block)
 {
     String *image_path = hb_block_to_utf8(image_path_block);
-    officesdk_writer_insert_image(writer, GTNAP_GLOBAL->office_text_space, anchor, width, height, tc(image_path), &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_insert_image(writer, GTNAP_GLOBAL->office_text_space, anchor, width, height, halign, valign, tc(image_path), &GTNAP_GLOBAL->office_last_error);
     str_destroy(&image_path);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_writer_new_line(Writer *writer)
+void hb_gtnap_office_writer_insert_page_number(Writer *writer)
 {
-    officesdk_writer_new_line(writer, GTNAP_GLOBAL->office_text_space, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_insert_page_number(writer, GTNAP_GLOBAL->office_text_space, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_office_writer_page_break(Writer *writer)
+void hb_gtnap_office_writer_insert_new_line(Writer *writer)
 {
-    officesdk_writer_page_break(writer, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_insert_new_line(writer, GTNAP_GLOBAL->office_text_space, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_insert_paragraph(Writer *writer)
+{
+    officesdk_writer_insert_paragraph(writer, GTNAP_GLOBAL->office_text_space, &GTNAP_GLOBAL->office_last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_office_writer_insert_page_break(Writer *writer)
+{
+    officesdk_writer_insert_page_break(writer, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -170,20 +170,20 @@ HB_FUNC( NAP_DOC_ITALIC )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_DOC_HALIGN )
+HB_FUNC( NAP_DOC_PARAGRAPH_HALIGN )
 {
     Writer *writer = (Writer*)hb_parptr(1);
     halign_t align = (halign_t)hb_parni(2);
-    hb_gtnap_office_writer_halign(writer, align);
+    hb_gtnap_office_writer_paragraph_halign(writer, align);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_DOC_LSPACING )
+HB_FUNC( NAP_DOC_PARAGRAPH_LSPACING )
 {
     Writer *writer = (Writer*)hb_parptr(1);
     uint32_t height = hb_parni(2);
-    hb_gtnap_office_writer_lspacing(writer, height);
+    hb_gtnap_office_writer_paragraph_lspacing(writer, height);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -214,22 +214,40 @@ HB_FUNC( NAP_DOC_INSERT_IMAGE )
     anchortype_t anchor = (anchortype_t)hb_parni(2);
     uint32_t width = hb_parni(3);
     uint32_t height = hb_parni(4);
-    HB_ITEM *image_path_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK);
-    hb_gtnap_office_writer_insert_image(writer, anchor, width, height, image_path_block);
+    halign_t halign = (halign_t)hb_parni(5);
+    valign_t valign = (valign_t)hb_parni(6);
+    HB_ITEM *image_path_block = hb_param(7, HB_IT_STRING | HB_IT_BLOCK);
+    hb_gtnap_office_writer_insert_image(writer, anchor, width, height, halign, valign, image_path_block);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_DOC_NEW_LINE )
+HB_FUNC( NAP_DOC_INSERT_PAGE_NUMBER )
 {
     Writer *writer = (Writer*)hb_parptr(1);
-    hb_gtnap_office_writer_new_line(writer);
+    hb_gtnap_office_writer_insert_page_number(writer);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_DOC_PAGE_BREAK )
+HB_FUNC( NAP_DOC_INSERT_NEW_LINE )
 {
     Writer *writer = (Writer*)hb_parptr(1);
-    hb_gtnap_office_writer_page_break(writer);
+    hb_gtnap_office_writer_insert_new_line(writer);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_INSERT_PARAGRAPH )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    hb_gtnap_office_writer_insert_paragraph(writer);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DOC_INSERT_PAGE_BREAK )
+{
+    Writer *writer = (Writer*)hb_parptr(1);
+    hb_gtnap_office_writer_insert_page_break(writer);
 }

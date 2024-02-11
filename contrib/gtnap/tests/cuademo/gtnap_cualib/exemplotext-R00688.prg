@@ -12,15 +12,23 @@ CUA20 @ 15,20,30,70 JANELA V_Janela ;
      AJUDA "T?????"
 
 ESPECIALIZE V_Janela MENU
-ADDOPCAO V_Janela TEXTO "Create R00688-PPA.pdf" ;
-    ACAO TST_CREATE_DOCUMENT1() AJUDA "P06685"
- ADDOPCAO V_Janela TEXTO "Create R00236.pdf" ;
-   ACAO TST_CREATE_DOCUMENT2() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Create R00688" ;
+    ACAO TST_R00688() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Create R00044" ;
+    ACAO TST_R00044() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Create R00234" ;
+    ACAO TST_R00234() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Create R00948" ;
+    ACAO TST_R00948() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Create R02680" ;
+    ACAO TST_R02680() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Create R00236" ;
+    ACAO TST_R00236() AJUDA "P06685"
 
 ATIVE(V_Janela)
 
 *************************************
-STAT FUNCTION OFFICE_ERROR( C_Text )
+FUNCTION OFFICE_ERROR( C_Text )
 *************************************
 LOCAL N_Err := NAP_OFFICE_LAST_ERROR()
 LOCAL C_Err := NAP_OFFICE_ERROR_STR(N_Err)
@@ -34,7 +42,7 @@ ENDIF
 RETURN L_Err
 
 ******************************
-STAT FUNC PAGINA_TEXT(N_Page)
+FUNC PAGINA_TEXT(N_Page)
 ******************************
     IF N_Page < 10
         RETURN "Página : 00" + hb_ntos(N_Page)
@@ -45,12 +53,21 @@ STAT FUNC PAGINA_TEXT(N_Page)
     RETURN "Página : " + hb_ntos(N_Page)
 
 ********************************
-STAT PROC SEPARATOR_LINE(O_DOC, N_Size)
+PROC SEPARATOR_LINE(O_DOC, N_Size)
 ********************************
     NAP_DOC_INSERT_DASH(O_DOC, N_Size)
 
 ********************************
-STAT FUNC INDETERMINATE(N_Size)
+PROC SEPARATOR_LINE2(O_DOC, N_Size)
+********************************
+LOCAL N_Cont := 1
+    FOR N_Cont:= 1 TO N_Size/2
+        NAP_DOC_INSERT_DASH(O_DOC, 1)
+        NAP_DOC_INSERT_TEXT(O_DOC, " ")
+    NEXT
+
+********************************
+FUNC INDETERMINATE(N_Size)
 ********************************
     LOCAL C_STR := ""
     LOCAL N_Cont := 1
@@ -62,7 +79,7 @@ STAT FUNC INDETERMINATE(N_Size)
     RETURN C_STR
 
 ********************************
-STAT FUNC UNKNOWN(N_Size)
+FUNC UNKNOWN(N_Size)
 ********************************
     LOCAL C_STR := ""
     LOCAL N_Cont := 1
@@ -74,7 +91,7 @@ STAT FUNC UNKNOWN(N_Size)
     RETURN C_STR
 
 ********************************
-STAT FUNC COMPOSE_LINE(V_Line)
+FUNC COMPOSE_LINE(V_Line)
 ********************************
     LOCAL C_STR := ""
     LOCAL N_Cont := 1
@@ -90,7 +107,7 @@ STAT FUNC COMPOSE_LINE(V_Line)
     RETURN C_STR
 
 ********************************
-STAT FUNC COMPOSE_TABLINE(V_Tabs, V_Values)
+FUNC COMPOSE_TABLINE(V_Tabs, V_Values)
 ********************************
     LOCAL C_STR := ""
     LOCAL C_Field := ""
@@ -136,34 +153,38 @@ STAT PROC DOCUMENT1_HEADER(O_DOC, N_Page, N_Width, V_Tabs)
     LOCAL C_Line2 := COMPOSE_LINE({"Governo Municipal de Piquet Carneiro", 12, "DESPESAS POR FUNÇÃO E SUBFUNÇÃO", 30, PAGINA_TEXT(N_Page)})
     LOCAL C_Line3 := COMPOSE_TABLINE(V_Tabs, {"FUNÇÃO/SUBFUNÇÃO", "Valor 2022", "Valor 2023", "Valor 2024", "Valor 2025", "Total"})
     NAP_DOC_INSERT_TEXT(O_DOC, C_Line1)
-    NAP_DOC_NEW_LINE(O_DOC)
+    NAP_DOC_INSERT_NEW_LINE(O_DOC)
     NAP_DOC_INSERT_TEXT(O_DOC, C_Line2)
-    NAP_DOC_NEW_LINE(O_DOC)
+    NAP_DOC_INSERT_NEW_LINE(O_DOC)
     SEPARATOR_LINE(O_DOC, N_Width)
-    NAP_DOC_NEW_LINE(O_DOC)
+    NAP_DOC_INSERT_NEW_LINE(O_DOC)
     NAP_DOC_INSERT_TEXT(O_DOC, C_Line3)
-    NAP_DOC_NEW_LINE(O_DOC)
+    NAP_DOC_INSERT_NEW_LINE(O_DOC)
     SEPARATOR_LINE(O_DOC, N_Width)
-    NAP_DOC_NEW_LINE(O_DOC)
+    NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 ********************************************
-STAT PROC DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+PROC DOCUMENT1_SEPARATOR(O_DOC, N_Width)
 ********************************************
     SEPARATOR_LINE(O_DOC, N_Width)
-    NAP_DOC_NEW_LINE(O_DOC)
+    NAP_DOC_INSERT_NEW_LINE(O_DOC)
+
+********************************************
+PROC DOCUMENT2_SEPARATOR(O_DOC, N_Width)
+********************************************
+    SEPARATOR_LINE2(O_DOC, N_Width)
+    NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 ***********************************************************
-STAT PROC DOCUMENT1_TABLINE(O_DOC, V_Values, V_Tabs)
+PROC DOCUMENT1_TABLINE(O_DOC, V_Values, V_Tabs)
 ***********************************************************
     LOCAL C_Line := COMPOSE_TABLINE(V_Tabs, V_Values)
     NAP_DOC_INSERT_TEXT(O_DOC, C_Line)
-    NAP_DOC_NEW_LINE(O_DOC)
+    NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 ***********************************
-STAT PROC TST_CREATE_DOCUMENT1
+STAT PROC TST_R00688
 ***********************************
-// R00688-PPA.pdf
-
 LOCAL O_DOC := NAP_DOC_CREATE()
 
 // Total chars by line
@@ -186,12 +207,12 @@ NAP_DOC_PAGE_MARGINS(O_DOC, 2819, 178, 1270, 533, 0)
 NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_HEADER)
 NAP_DOC_FONT_FAMILY(O_DOC, "Courier New")
 NAP_DOC_FONT_SIZE(O_DOC, 16.0)
-NAP_DOC_INSERT_IMAGE(O_DOC, SDK_ANCHOR_AS_CHARACTER, 2000, 2000, {|| NAP_WORK_PATH() + "/../office/ods/macapa.png"} )
-NAP_DOC_NEW_LINE(O_DOC)
+NAP_DOC_INSERT_IMAGE(O_DOC, SDK_ANCHOR_AS_CHARACTER, 2000, 2000, SDK_HALIGN_LEFT, SDK_VALIGN_CENTER, {|| NAP_WORK_PATH() + "/../office/ods/macapa.png"} )
+NAP_DOC_INSERT_NEW_LINE(O_DOC)
 NAP_DOC_INSERT_TEXT(O_DOC, "First line in HEADER")
-NAP_DOC_NEW_LINE(O_DOC)
+NAP_DOC_INSERT_NEW_LINE(O_DOC)
 NAP_DOC_INSERT_TEXT(O_DOC, "Second line in HEADER")
-NAP_DOC_NEW_LINE(O_DOC)
+NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 // Write text into footer
 NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_FOOTER)
@@ -199,15 +220,15 @@ NAP_DOC_FONT_FAMILY(O_DOC, "Courier New")
 NAP_DOC_FONT_SIZE(O_DOC, 16.0)
 NAP_DOC_BOLD(O_DOC, .T.)
 NAP_DOC_INSERT_TEXT(O_DOC, "First line in FOOTER")
-NAP_DOC_NEW_LINE(O_DOC)
+NAP_DOC_INSERT_NEW_LINE(O_DOC)
 NAP_DOC_INSERT_TEXT(O_DOC, "Second line in FOOTER")
-NAP_DOC_NEW_LINE(O_DOC)
+NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 // Write text into page
 NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_PAGE)
 NAP_DOC_FONT_FAMILY(O_DOC, "Courier New")
 NAP_DOC_FONT_SIZE(O_DOC, 6.0)
-NAP_DOC_LSPACING(O_DOC, 330)
+NAP_DOC_PARAGRAPH_LSPACING(O_DOC, 330)
 
 // Page 1
 DOCUMENT1_HEADER(O_DOC, 1, N_Width, V_Tabs)
@@ -261,7 +282,7 @@ DOCUMENT1_TABLINE(O_DOC, {"12-Educação", "", "", "", "", ""}, V_Tabs)
 DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 1815115.00, 1969475.00, 2137728.00, 2321124.00, 8243442.00}, V_Tabs)
 DOCUMENT1_TABLINE(O_DOC, {"   125-Normalização e Fiscalização", 15000.00, 20000.00, 25000.00, 30000.00, 90000.00}, V_Tabs)
 DOCUMENT1_TABLINE(O_DOC, {"   306-Alimentação e Nutrição", 514044.00, 560308.00, 610735.00, 665702.00, 2350789.00}, V_Tabs)
-NAP_DOC_PAGE_BREAK(O_DOC)
+NAP_DOC_INSERT_PAGE_BREAK(O_DOC)
 
 // Page 2
 DOCUMENT1_HEADER(O_DOC, 2, N_Width, V_Tabs)
@@ -316,7 +337,7 @@ DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 25000.00,  25000.00,  25000.00,  25000.
 DOCUMENT1_SEPARATOR(O_DOC, N_Width)
 DOCUMENT1_TABLINE(O_DOC, {"20-Agricultura", "", "", "", "", ""}, V_Tabs)
 DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 467600.00, 544300.00, 584300.00, 627900.00, 2224100.00}, V_Tabs)
-NAP_DOC_PAGE_BREAK(O_DOC)
+NAP_DOC_INSERT_PAGE_BREAK(O_DOC)
 
 // Page 3
 DOCUMENT1_HEADER(O_DOC, 3, N_Width, V_Tabs)
@@ -389,37 +410,3 @@ MOSTRAR("M15566", "O documento de texto foi criado com sucesso.")
 
 // Open the result into a LibreOffice window
 NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/R00688-PPA.odt")
-
-
-***********************************
-STAT PROC TST_CREATE_DOCUMENT2
-***********************************
-// R00236.pdf
-
-LOCAL O_DOC := NAP_DOC_CREATE()
-
-IF OFFICE_ERROR("Erro ao criar documento de texto")
-    RETURN
-ENDIF
-
-NAP_DOC_FONT_FAMILY(O_DOC, "LucidaConsole")
-NAP_DOC_FONT_SIZE(O_DOC, 12.0)
-NAP_DOC_HALIGN(O_DOC, SDK_HALIGN_CENTER)
-NAP_DOC_INSERT_TEXT(O_DOC, "PREFEITURA MUNICIPAL DE MACAPÁ")
-
-// Save the document
-NAP_DOC_SAVE(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R00236.odt" })
-OFFICE_ERROR("Erro ao salvar documento de texto")
-
-// Export to PDF
-NAP_DOC_PDF(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R00236.pdf" })
-OFFICE_ERROR("Exportando para PDF")
-
-// Close the document (mandatory)
-NAP_DOC_CLOSE(O_DOC)
-OFFICE_ERROR("Erro ao fechar o documento de texto")
-
-MOSTRAR("M15566", "O documento de texto foi criado com sucesso.")
-
-// Open the result into a LibreOffice window
-NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R00236.odt")

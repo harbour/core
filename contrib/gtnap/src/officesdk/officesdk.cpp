@@ -30,6 +30,8 @@
 #include <lang/XMultiComponentFactory.hpp>
 #include <lang/XMultiServiceFactory.hpp>
 #include <text/XTextDocument.hpp>
+#include <text/HoriOrientation.hpp>
+#include <text/VertOrientation.hpp>
 #include <sheet/XCellRangeAddressable.hpp>
 #include <sheet/XSpreadsheetDocument.hpp>
 #include <sheet/XSpreadsheet.hpp>
@@ -46,6 +48,9 @@
 #include <text/ControlCharacter.hpp>
 #include <text/XTextContent.hpp>
 #include <text/TextContentAnchorType.hpp>
+#include <text/XTextField.hpp>
+#include <text/XTextFieldsSupplier.hpp>
+#include <text/PageNumberType.hpp>
 #include <util/XMergeable.hpp>
 #include <util/XProtectable.hpp>
 #include <util/XNumberFormatsSupplier.hpp>
@@ -56,6 +61,7 @@
 #include <style/LineSpacingMode.hpp>
 #include <style/XStyle.hpp>
 #include <style/XStyleFamiliesSupplier.hpp>
+#include <style/NumberingType.hpp>
 #include <view/XPrintable.hpp>
 #include <view/PaperOrientation.hpp>
 #include <view/PaperFormat.hpp>
@@ -3043,7 +3049,7 @@ void officesdk_writer_italic(Writer *writer, const textspace_t space, const bool
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_halign(Writer *writer, const textspace_t space, const halign_t align, sdkres_t *err)
+void officesdk_writer_paragraph_halign(Writer *writer, const textspace_t space, const halign_t align, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
@@ -3077,7 +3083,7 @@ void officesdk_writer_halign(Writer *writer, const textspace_t space, const hali
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_lspacing(Writer *writer, const textspace_t space, const uint32_t height, sdkres_t *err)
+void officesdk_writer_paragraph_lspacing(Writer *writer, const textspace_t space, const uint32_t height, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
@@ -3149,7 +3155,7 @@ static sdkres_t i_create_text_content(
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const anchortype_t anchor, const uint32_t width, const uint32_t height, const char_t *image_path, sdkres_t *err)
+void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const anchortype_t anchor, const uint32_t width, const uint32_t height, const halign_t halign, const valign_t valign, const char_t *image_path, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
@@ -3189,6 +3195,9 @@ void officesdk_writer_insert_image(Writer *writer, const textspace_t space, cons
         {
             css::uno::Reference<css::beans::XPropertySet> xProps(xTextContent, css::uno::UNO_QUERY_THROW);
             css::text::TextContentAnchorType anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AS_CHARACTER;
+            sal_Int16 horient = css::text::HoriOrientation::LEFT;
+            sal_Int16 vorient = css::text::VertOrientation::CENTER;
+
             switch (anchor) {
             case ekANCHOR_AT_PARAGRAPH:
                 anchorType = css::text::TextContentAnchorType::TextContentAnchorType_AT_PARAGRAPH;
@@ -3207,8 +3216,37 @@ void officesdk_writer_insert_image(Writer *writer, const textspace_t space, cons
                 break;
             }
 
+            switch(halign) {
+            case ekHALIGN_LEFT:
+                horient = css::text::HoriOrientation::LEFT;
+                break;
+            case ekHALIGN_CENTER:
+                horient = css::text::HoriOrientation::CENTER;
+                break;
+            case ekHALIGN_RIGHT:
+                horient = css::text::HoriOrientation::RIGHT;
+                break;
+            case ekHALIGN_JUSTIFY:
+                horient = css::text::HoriOrientation::LEFT;
+                break;
+            }
+
+            switch(valign) {
+            case ekVALIGN_TOP:
+                vorient = css::text::VertOrientation::TOP;
+                break;
+            case ekVALIGN_CENTER:
+                vorient = css::text::VertOrientation::CENTER;
+                break;
+            case ekVALIGN_BOTTOM:
+                vorient = css::text::VertOrientation::BOTTOM;
+                break;
+            }
+
             xProps->setPropertyValue("Graphic", css::uno::makeAny(xGraphic));
             xProps->setPropertyValue("AnchorType", css::uno::makeAny(anchorType));
+            xProps->setPropertyValue("HoriOrient", css::uno::makeAny(horient));
+            xProps->setPropertyValue("VertOrient", css::uno::makeAny(vorient));
 
             if (width != 0 && height != 0)
             {
@@ -3240,7 +3278,69 @@ void officesdk_writer_insert_image(Writer *writer, const textspace_t space, cons
 
 /*---------------------------------------------------------------------------*/
 
-static void i_insert_control_character(Writer *writer, const textspace_t space, sal_Int16 ctrlchar, sdkres_t *err)
+void officesdk_writer_insert_page_number(Writer *writer, const textspace_t space, sdkres_t *err)
+{
+    sdkres_t res = ekSDKRES_OK;
+    css::uno::Reference<css::text::XText> xText;
+    css::uno::Reference<css::frame::XModel> xModel;
+    css::uno::Reference<css::text::XTextContent> xTextContent;
+
+    if (res == ekSDKRES_OK)
+        res = i_get_text(writer, space, xText);
+
+    // The document model (required for creating new text field objects)
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextDocument> *xDocument = reinterpret_cast<css::uno::Reference<css::text::XTextDocument>*>(writer);
+            xModel = css::uno::Reference<css::frame::XModel>(*xDocument, css::uno::UNO_QUERY_THROW);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    // Create the text content object
+    if (res == ekSDKRES_OK)
+        res = i_create_text_content(xModel, "com.sun.star.text.TextField.PageNumber", xTextContent);
+
+    // Configure the text object and add the image graphic
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::beans::XPropertySet> xProps(xTextContent, css::uno::UNO_QUERY_THROW);
+            sal_Int16 numberType = css::style::NumberingType::ARABIC;
+            xProps->setPropertyValue("NumberingType", css::uno::makeAny(numberType));
+            xProps->setPropertyValue("SubType", css::uno::makeAny(css::text::PageNumberType::PageNumberType_CURRENT));
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_ACCESS_DOC_ERROR;
+        }
+    }
+
+    if (res == ekSDKRES_OK)
+    {
+        try
+        {
+            css::uno::Reference<css::text::XTextRange> xTextRange = xText->getEnd();
+            xText->insertTextContent(xTextRange, xTextContent, sal_False);
+        }
+        catch (css::uno::Exception&)
+        {
+            res = ekSDKRES_TEXT_ADD_ERROR;
+        }
+    }
+
+    ptr_assign(err, res);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_insert_control_character(Writer *writer, const textspace_t space, const css::style::BreakType &breakType, sal_Int16 ctrlchar, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::text::XText> xText;
@@ -3249,7 +3349,10 @@ static void i_insert_control_character(Writer *writer, const textspace_t space, 
         res = i_get_text(writer, space, xText);
 
     if (res == ekSDKRES_OK)
-        res = i_set_text_property(xText, "BreakType", css::uno::makeAny(css::style::BreakType::BreakType_PAGE_AFTER));
+    {
+        if (breakType != css::style::BreakType::BreakType_MAKE_FIXED_SIZE)
+            res = i_set_text_property(xText, "BreakType", css::uno::makeAny(breakType));
+    }
 
     if (res == ekSDKRES_OK)
     {
@@ -3269,14 +3372,21 @@ static void i_insert_control_character(Writer *writer, const textspace_t space, 
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_new_line(Writer *writer, const textspace_t space, sdkres_t *err)
+void officesdk_writer_insert_new_line(Writer *writer, const textspace_t space, sdkres_t *err)
 {
-    i_insert_control_character(writer, space, css::text::ControlCharacter::LINE_BREAK, err);
+    i_insert_control_character(writer, space, css::style::BreakType::BreakType_MAKE_FIXED_SIZE, css::text::ControlCharacter::LINE_BREAK, err);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_page_break(Writer *writer, sdkres_t *err)
+void officesdk_writer_insert_paragraph(Writer *writer, const textspace_t space, sdkres_t *err)
 {
-    i_insert_control_character(writer, ekTEXT_SPACE_PAGE, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
+    i_insert_control_character(writer, space, css::style::BreakType::BreakType_NONE, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_page_break(Writer *writer, sdkres_t *err)
+{
+    i_insert_control_character(writer, ekTEXT_SPACE_PAGE, css::style::BreakType::BreakType_PAGE_AFTER, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
 }

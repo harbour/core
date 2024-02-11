@@ -751,7 +751,7 @@ PAR2: Font style. Italic (.T.) or Normal (.F.).
 ### Paragraph Alignment
 
 ```
-NAP_DOC_HALIGN(O_DOC, SDK_HALIGN_RIGHT)
+NAP_DOC_PARAGRAPH_HALIGN(O_DOC, SDK_HALIGN_RIGHT)
 
 PAR1: The text document.
 PAR2: Numeric value with horizontal alignment.
@@ -768,7 +768,7 @@ PAR2: Numeric value with horizontal alignment.
 ### Paragraph inter-line spacing
 
 ```
-NAP_DOC_LSPACING(O_DOC, 330)
+NAP_DOC_PARAGRAPH_LSPACING(O_DOC, 330)
 
 PAR1: The text document.
 PAR2: Spacing (integer 1/100th mm).
@@ -804,25 +804,47 @@ PAR2: Number of dashes to insert.
 ### Insert image into text
 
 ```
-NAP_DOC_INSERT_IMAGE(O_DOC, SDK_ANCHOR_AS_CHARACTER, 2000, 2000, "macapa.png")
+NAP_DOC_INSERT_IMAGE(O_DOC, SDK_ANCHOR_AS_CHARACTER, 2000, 2000, SDK_HALIGN_LEFT, SDK_VALIGN_CENTER, "macapa.png")
 
 PAR1: The text document.
 PAR2: Type of anchor.
 PAR3: Image width. 0 for original size.
 PAR4: Image height. 0 for original size.
-PAR5: String with the full path to the image.
+PAR5: Numeric value with horizontal alignment.
+PAR6: Numeric value with vertical alignment.
+PAR7: String with the full path to the image.
 
 #define SDK_ANCHOR_AT_PARAGRAPH                 1
 #define SDK_ANCHOR_AS_CHARACTER                 2
 #define SDK_ANCHOR_AT_PAGE                      3
 #define SDK_ANCHOR_AT_FRAME                     4
 #define SDK_ANCHOR_AT_CHARACTER                 5
+
+#define SDK_HALIGN_LEFT             1
+#define SDK_HALIGN_CENTER           2
+#define SDK_HALIGN_RIGHT            3
+#define SDK_HALIGN_JUSTIFY          4
+
+#define SDK_VALIGN_TOP              1
+#define SDK_VALIGN_CENTER           2
+#define SDK_VALIGN_BOTTOM           3
 ```
+
+### Insert page number into text
+
+```
+NAP_DOC_INSERT_PAGE_NUMBER(O_DOC)
+
+PAR1: The text document.
+```
+
+> Will insert a text field with current attributes that automatically show the page number.
+
 
 ### Insert a line break
 
 ```
-NAP_DOC_NEW_LINE(O_DOC)
+NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 PAR1: The text document.
 ```
@@ -830,7 +852,7 @@ PAR1: The text document.
 ### Insert a page break
 
 ```
-NAP_DOC_PAGE_BREAK(O_DOC)
+NAP_DOC_INSERT_PAGE_BREAK(O_DOC)
 
 PAR1: The text document.
 ```
