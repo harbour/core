@@ -20,6 +20,8 @@ ADDOPCAO V_Janela TEXTO "Create R00234" ;
     ACAO TST_R00234() AJUDA "P06685"
 ADDOPCAO V_Janela TEXTO "Create R00948" ;
     ACAO TST_R00948() AJUDA "P06685"
+ADDOPCAO V_Janela TEXTO "Create R02680" ;
+    ACAO TST_R02680() AJUDA "P06685"
 ADDOPCAO V_Janela TEXTO "Create R00236" ;
     ACAO TST_R00236() AJUDA "P06685"
 
@@ -54,6 +56,15 @@ FUNC PAGINA_TEXT(N_Page)
 PROC SEPARATOR_LINE(O_DOC, N_Size)
 ********************************
     NAP_DOC_INSERT_DASH(O_DOC, N_Size)
+
+********************************
+PROC SEPARATOR_LINE2(O_DOC, N_Size)
+********************************
+LOCAL N_Cont := 1
+    FOR N_Cont:= 1 TO N_Size/2
+        NAP_DOC_INSERT_DASH(O_DOC, 1)
+        NAP_DOC_INSERT_TEXT(O_DOC, " ")
+    NEXT
 
 ********************************
 FUNC INDETERMINATE(N_Size)
@@ -156,6 +167,12 @@ STAT PROC DOCUMENT1_HEADER(O_DOC, N_Page, N_Width, V_Tabs)
 PROC DOCUMENT1_SEPARATOR(O_DOC, N_Width)
 ********************************************
     SEPARATOR_LINE(O_DOC, N_Width)
+    NAP_DOC_INSERT_NEW_LINE(O_DOC)
+
+********************************************
+PROC DOCUMENT2_SEPARATOR(O_DOC, N_Width)
+********************************************
+    SEPARATOR_LINE2(O_DOC, N_Width)
     NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 ***********************************************************
