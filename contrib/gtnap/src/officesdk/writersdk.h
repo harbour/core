@@ -47,7 +47,7 @@ void officesdk_writer_insert_page_number(Writer *writer, const textspace_t space
 
 void officesdk_writer_insert_new_line(Writer *writer, const textspace_t space, sdkres_t *err);
 
-void officesdk_writer_insert_paragraph(Writer *writer, sdkres_t *err);
+void officesdk_writer_insert_paragraph(Writer *writer, const textspace_t space, sdkres_t *err);
 
 void officesdk_writer_insert_page_break(Writer *writer, sdkres_t *err);
 

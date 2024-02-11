@@ -3379,9 +3379,9 @@ void officesdk_writer_insert_new_line(Writer *writer, const textspace_t space, s
 
 /*---------------------------------------------------------------------------*/
 
-void officesdk_writer_insert_paragraph(Writer *writer, sdkres_t *err)
+void officesdk_writer_insert_paragraph(Writer *writer, const textspace_t space, sdkres_t *err)
 {
-    i_insert_control_character(writer, ekTEXT_SPACE_PAGE, css::style::BreakType::BreakType_NONE, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
+    i_insert_control_character(writer, space, css::style::BreakType::BreakType_NONE, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
 }
 
 /*---------------------------------------------------------------------------*/

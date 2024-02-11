@@ -5058,7 +5058,7 @@ void hb_gtnap_office_writer_insert_new_line(Writer *writer)
 
 void hb_gtnap_office_writer_insert_paragraph(Writer *writer)
 {
-    officesdk_writer_insert_paragraph(writer, &GTNAP_GLOBAL->office_last_error);
+    officesdk_writer_insert_paragraph(writer, GTNAP_GLOBAL->office_text_space, &GTNAP_GLOBAL->office_last_error);
 }
 
 /*---------------------------------------------------------------------------*/
