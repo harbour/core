@@ -1,5 +1,14 @@
---- sqlite3.orig/sqlite3.c	2023-11-24 14:33:56.000000000 +0100
-+++ sqlite3/sqlite3.c	2023-12-07 21:33:32.000000000 +0100
+--- sqlite3.orig/sqlite3.c	2024-02-12 21:32:10.804005193 +0100
++++ sqlite3/sqlite3.c	2024-02-12 21:26:49.931101008 +0100
+@@ -13915,7 +13915,7 @@
+ ** Macros to hint to the compiler that a function should or should not be
+ ** inlined.
+ */
+-#if defined(__GNUC__)
++#if defined(__GNUC__) && __GNUC__>=3
+ #  define SQLITE_NOINLINE  __attribute__((noinline))
+ #  define SQLITE_INLINE    __attribute__((always_inline)) inline
+ #elif defined(_MSC_VER) && _MSC_VER>=1310
 @@ -34853,6 +34853,17 @@
    return h;
  }

@@ -396,7 +396,7 @@ const char * hb_langGetItem( const char * pszID, int iIndex )
 {
    PHB_LANG lang;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_langGetItem(%s,%i)", pszID, iIndex ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langGetItem(%s,%i)", pszID ? pszID : "(null)", iIndex ) );
 
    lang = pszID ? hb_langFind( pszID ) : hb_vmLang();
    if( lang && iIndex >= 0 && iIndex < HB_LANG_ITEM_MAX_ )

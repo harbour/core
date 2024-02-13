@@ -110,7 +110,7 @@ HB_UINT hb_errGetProcLine( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutProcLine( PHB_ITEM pError, HB_UINT uiProcLine )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_errPutProcLine(%p, %hu)", pError, uiProcLine ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_errPutProcLine(%p, %u)", pError, uiProcLine ) );
 
    if( hb_arrayLen( pError ) < s_nErrProcName )
       s_xhbErrorResize( pError );

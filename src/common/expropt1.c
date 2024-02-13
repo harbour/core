@@ -454,7 +454,7 @@ PHB_EXPR hb_compExprNewCodeBlock( char * string, HB_SIZE nLen, int iFlags, HB_CO
 {
    PHB_EXPR pExpr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprNewCodeBlock(%s,%" HB_PFS "u,%d,%p)", string, nLen, iFlags, ( void * ) HB_COMP_PARAM ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprNewCodeBlock(%s,%" HB_PFS "u,%d,%p)", string ? string : "(null)", nLen, iFlags, ( void * ) HB_COMP_PARAM ) );
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_CODEBLOCK );
 

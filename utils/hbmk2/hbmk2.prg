@@ -9130,7 +9130,9 @@ STATIC PROCEDURE dep_try_detection( hbmk, dep )
 
    IF ! dep[ _HBMKDEP_lDetected ]
       dep_postprocess_one( hbmk, dep )
-      IF dep[ _HBMKDEP_cControl ] == "local" .OR. ! dep_try_pkg_detection( hbmk, dep )
+      IF dep[ _HBMKDEP_cControl ] == "local" .OR. ;
+         ( ! Empty( dep[ _HBMKDEP_aINCPATH ] ) .AND. dep[ _HBMKDEP_aINCPATH ][ 1 ] == dep[ _HBMKDEP_cControl ] ) .OR. ;
+         ! dep_try_pkg_detection( hbmk, dep )
          dep_try_header_detection( hbmk, dep )
       ENDIF
       dep[ _HBMKDEP_lDetected ] := .T.
