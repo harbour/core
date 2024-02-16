@@ -1774,20 +1774,14 @@ static HB_ERRCODE hb_waSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
 /*
  * Compile a character expression.
  */
-static HB_ERRCODE hb_waCompile( AREAP pArea, const char * pExpr )
+static HB_ERRCODE hb_waCompile( AREAP pArea, const char * szExpr )
 {
-   PHB_MACRO pMacro;
+   HB_TRACE( HB_TR_DEBUG, ( "hb_waCompile(%p, %p)", ( void * ) pArea, ( const void * ) szExpr ) );
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_waCompile(%p, %p)", ( void * ) pArea, ( const void * ) pExpr ) );
+   if( ! pArea->valResult )
+      pArea->valResult = hb_itemNew( NULL );
 
-   pMacro = hb_macroCompile( pExpr );
-   if( pMacro )
-   {
-      pArea->valResult = hb_itemPutPtr( pArea->valResult, ( void * ) pMacro );
-      return HB_SUCCESS;
-   }
-   else
-      return HB_FAILURE;
+   return hb_vmCompileMacro( szExpr, pArea->valResult ) ? HB_SUCCESS : HB_FAILURE;
 }
 
 /*

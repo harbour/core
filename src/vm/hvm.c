@@ -6315,6 +6315,8 @@ PHB_ITEM hb_vmEvalBlockOrMacro( PHB_ITEM pItem )
  */
 void hb_vmDestroyBlockOrMacro( PHB_ITEM pItem )
 {
+   HB_TRACE( HB_TR_DEBUG, ( "hb_vmDestroyBlockOrMacro(%p)", ( void * ) pItem ) );
+
    if( HB_IS_POINTER( pItem ) )
    {
       PHB_MACRO pMacro = ( PHB_MACRO ) hb_itemGetPtr( pItem );
@@ -6322,6 +6324,24 @@ void hb_vmDestroyBlockOrMacro( PHB_ITEM pItem )
          hb_macroDelete( pMacro );
    }
    hb_itemRelease( pItem );
+}
+
+/*
+ * compile given expression and return macro pointer item or NULL
+ */
+PHB_ITEM hb_vmCompileMacro( const char * szExpr, PHB_ITEM pDest )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_vmCompileMacro(%s,%p)", szExpr, pDest ) );
+
+   if( szExpr )
+   {
+      PHB_MACRO pMacro = hb_macroCompile( szExpr );
+      if( pMacro )
+         return hb_itemPutPtr( pDest, ( void * ) pMacro );
+   }
+   if( pDest )
+      hb_itemClear( pDest );
+   return NULL;
 }
 
 

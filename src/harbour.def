@@ -909,6 +909,7 @@ HB_FUN_HB_MUTEXSUBSCRIBENOW
 HB_FUN_HB_MUTEXUNLOCK
 HB_FUN_HB_MVRESTORE
 HB_FUN_HB_MVSAVE
+HB_FUN_HB_NTOC
 HB_FUN_HB_NTOCOLOR
 HB_FUN_HB_NTOHOUR
 HB_FUN_HB_NTOMIN
@@ -2387,6 +2388,7 @@ hb_dbg_vmVarGCount
 hb_dbg_vmVarGGet
 hb_dbg_vmVarLGet
 hb_dbg_vmVarSGet
+hb_dblToStr
 hb_dynCall
 hb_dynsymAreaHandle
 hb_dynsymEval
@@ -2497,6 +2499,7 @@ hb_fileLockTest
 hb_fileMove
 hb_filePOpen
 hb_fileParam
+hb_fileParamGet
 hb_fileRead
 hb_fileReadAt
 hb_fileRegisterFull
@@ -2521,6 +2524,7 @@ hb_fsBaseDirBuff
 hb_fsChDir
 hb_fsChDrv
 hb_fsClose
+hb_fsCloseRaw
 hb_fsCommit
 hb_fsCopy
 hb_fsCreate
@@ -2692,6 +2696,7 @@ hb_gtSetKeyCP
 hb_gtSetMode
 hb_gtSetPos
 hb_gtSetSnowFlag
+hb_gtSleep
 hb_gtStartupInit
 hb_gtSuspend
 hb_gtSwap
@@ -2703,7 +2708,12 @@ hb_gtWriteAt
 hb_gtWriteCon
 hb_gt_Base
 hb_gt_BaseFree
+hb_gt_BaseLock
+hb_gt_BaseUnlock
 hb_gt_ItemBase
+hb_gt_dos_keyCodeTranslate
+hb_gt_getClipboard
+hb_gt_setClipboard
 hb_gt_winapi_getClipboard
 hb_gt_winapi_getKbdState
 hb_gt_winapi_setClipboard
@@ -2799,9 +2809,11 @@ hb_itemDo
 hb_itemDoC
 hb_itemEqual
 hb_itemFreeC
+hb_itemFreeCRef
 hb_itemGetC
 hb_itemGetCLen
 hb_itemGetCPtr
+hb_itemGetCRef
 hb_itemGetDL
 hb_itemGetDS
 hb_itemGetL
@@ -2927,6 +2939,7 @@ hb_lppSendLen
 hb_lppSetLimit
 hb_macroGetType
 hb_macroGetValue
+hb_macroTextValue
 hb_mathGetErrMode
 hb_mathGetError
 hb_mathGetHandler
@@ -2981,10 +2994,12 @@ hb_osEncodeCP
 hb_osStrDecode
 hb_osStrDecode2
 hb_osStrEncode
+hb_osStrEncode2
 hb_osStrEncodeN
 hb_osStrU16Decode
 hb_osStrU16Decode2
 hb_osStrU16Encode
+hb_osStrU16Encode2
 hb_osStrU16EncodeN
 hb_osUseCP
 hb_param
@@ -3540,6 +3555,7 @@ hb_vmAtExit
 hb_vmAtInit
 hb_vmAtQuit
 hb_vmCDP
+hb_vmCompileMacro
 hb_vmDestroyBlockOrMacro
 hb_vmDo
 hb_vmEvalBlock

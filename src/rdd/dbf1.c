@@ -277,7 +277,7 @@ static int hb_dbfNextValueStep( DBFAREAP pArea, HB_USHORT uiField, int iStep )
    return iPrevStep;
 }
 
-void hb_dbfTransCheckCounters( LPDBTRANSINFO lpdbTransInfo )
+static void hb_dbfTransCheckCounters( LPDBTRANSINFO lpdbTransInfo )
 {
    HB_BOOL fCopyCtr = HB_TRUE;
    HB_USHORT uiCount, uiDest;

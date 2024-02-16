@@ -152,6 +152,7 @@ extern HB_EXPORT PHB_ITEM hb_vmEvalBlock( PHB_ITEM pBlockItem ); /* executes pas
 extern HB_EXPORT PHB_ITEM hb_vmEvalBlockV( PHB_ITEM pBlockItem, HB_ULONG ulArgCount, ... );
 extern HB_EXPORT PHB_ITEM hb_vmEvalBlockOrMacro( PHB_ITEM pItem ); /* executes codeblock or macro pointed by given item */
 extern HB_EXPORT void     hb_vmDestroyBlockOrMacro( PHB_ITEM pItem ); /* destroy codeblock or macro in given item */
+extern HB_EXPORT PHB_ITEM hb_vmCompileMacro( const char * szExpr, PHB_ITEM pDest ); /* compile given expression and return macro pointer item or NULL */
 
 /* Push */
 extern HB_EXPORT void     hb_vmPush( PHB_ITEM pItem );     /* pushes a generic item onto the stack */

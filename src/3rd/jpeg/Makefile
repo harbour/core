@@ -85,7 +85,7 @@ ifeq ($(filter $(HB_COMPILER),<>),)
    include $(TOP)$(ROOT)config/detfun.mk
 
    ifneq ($(HB_HAS_JPEG_LOCAL),)
-      ifeq ($(HB_COMPILER),poccarm)
+      ifeq ($(HB_PLATFORM),wce)
          HB_CFLAGS += -DNO_GETENV
       endif
 

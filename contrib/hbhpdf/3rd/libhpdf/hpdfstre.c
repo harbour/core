@@ -20,6 +20,8 @@
 
 #ifndef UNDER_CE
 #include <errno.h>
+#else
+#include <windows.h>
 #endif
 #ifndef HPDF_UNUSED
 #define HPDF_UNUSED(a) ((void)(a))

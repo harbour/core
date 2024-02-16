@@ -1135,7 +1135,7 @@ typedef void * PHB_MACRO;
 extern HB_EXPORT void         hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags ); /* retrieve results of a macro expansion */
 extern           void         hb_macroSetValue( PHB_ITEM pItem, int flags ); /* assign a value to a macro-expression item */
 extern           void         hb_macroPushReference( PHB_ITEM pItem ); /* push reference to given expression */
-extern           void         hb_macroTextValue( PHB_ITEM pItem ); /* macro text substitution */
+extern HB_EXPORT void         hb_macroTextValue( PHB_ITEM pItem ); /* macro text substitution */
 extern           void         hb_macroPushSymbol( PHB_ITEM pItem ); /* handle a macro function calls, e.g. var := &macro() */
 extern           void         hb_macroRun( PHB_MACRO pMacro ); /* executes pcode compiled by macro compiler */
 extern           PHB_MACRO    hb_macroCompile( const char * szString ); /* compile a string and return a pcode buffer */
