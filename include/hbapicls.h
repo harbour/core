@@ -119,7 +119,7 @@ extern HB_EXPORT HB_USHORT  hb_clsFindClass( const char * szClass, const char * 
 
 /* object management */
 extern HB_EXPORT HB_USHORT  hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */
-extern HB_EXPORT HB_USHORT  hb_objSetClass( PHB_ITEM pItem, const char * szClass, const char * szFunc );    /* get object class handle using class name and class function name */
+extern HB_EXPORT HB_USHORT  hb_objSetClass( PHB_ITEM pItem, const char * szClass, const char * szFunc );    /* set object class handle using class name and class function name */
 extern HB_EXPORT const char * hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
 extern HB_EXPORT const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szString  ); /* retrieves an object class name for a specific message */
 

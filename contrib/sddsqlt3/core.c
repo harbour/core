@@ -458,7 +458,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
 #ifdef HB_SQLT3_MAP_DECLARED_EMULATED
             sqlite3DeclStru( st, uiIndex, &uiRetLen, NULL );
 #endif
-            dbFieldInfo.uiLen = ( HB_USHORT ) HB_MAX( nSize, uiRetLen );
+            dbFieldInfo.uiLen = ( HB_USHORT ) HB_MAX( nSize, ( HB_SIZE ) uiRetLen );
             pStr = ( char * ) hb_xgrab( ( HB_SIZE ) dbFieldInfo.uiLen + 1 );
             memset( pStr, ' ', dbFieldInfo.uiLen );
             hb_itemPutCLPtr( pItem, pStr, dbFieldInfo.uiLen );

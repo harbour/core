@@ -2867,6 +2867,27 @@ char * hb_osStrEncodeN( const char * pszName, HB_SIZE nLen )
    return hb_strndup( pszName, nLen );
 }
 
+char * hb_osStrEncode2( const char * pszName, char * pszBuffer, HB_SIZE nSize )
+{
+   if( hb_vmIsReady() )
+   {
+      HB_STACK_TLS_PRELOAD
+      PHB_CODEPAGE cdpOS = ( PHB_CODEPAGE ) hb_stackSetStruct()->hb_set_oscp;
+      if( cdpOS )
+      {
+         PHB_CODEPAGE cdpHost = hb_vmCDP();
+         if( cdpHost && cdpHost != cdpOS )
+         {
+            pszBuffer[ nSize ] = 0;
+            hb_cdpnDup2( pszName, strlen( pszName ), pszBuffer, &nSize, cdpHost, cdpOS );
+            return pszBuffer;
+         }
+      }
+   }
+
+   return hb_strncpy( pszBuffer, pszName, nSize );
+}
+
 char * hb_osStrDecode( const char * pszName )
 {
    if( hb_vmIsReady() )
@@ -2946,6 +2967,22 @@ HB_WCHAR * hb_osStrU16EncodeN( const char * pszName, HB_SIZE nLen )
    }
 
    return hb_mbntowc( pszName, nLen ); /* No HVM stack */
+}
+
+HB_WCHAR * hb_osStrU16Encode2( const char * pszName, HB_WCHAR * pszBufferW, HB_SIZE nSize )
+{
+   if( hb_vmIsReady() )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp )
+      {
+         hb_cdpStrToU16( cdp, HB_CDP_ENDIAN_NATIVE, pszName, strlen( pszName ), pszBufferW, nSize + 1 );
+         pszBufferW[ nSize ] = 0;
+         return pszBufferW;
+      }
+   }
+   hb_mbntowccpy( pszBufferW, pszName, nSize ); /* No HVM stack */
+   return pszBufferW;
 }
 
 char * hb_osStrU16Decode( const HB_WCHAR * pszNameW )

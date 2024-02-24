@@ -181,6 +181,13 @@
 #define HB_X509_V_ERR_UNNESTED_RESOURCE                     44
 #define HB_X509_V_ERR_APPLICATION_VERIFICATION              50
 
+#define HB_RSA_PKCS1_PADDING                                1
+#define HB_RSA_SSLV23_PADDING                               2
+#define HB_RSA_NO_PADDING                                   3
+#define HB_RSA_PKCS1_OAEP_PADDING                           4
+#define HB_RSA_X931_PADDING                                 5
+#define HB_RSA_PKCS1_PSS_PADDING                            6
+
 #define HB_EVP_MD_UNSUPPORTED                               ( -1 )
 #define HB_EVP_MD_MD_NULL                                   0
 #define HB_EVP_MD_MD2                                       1
@@ -301,6 +308,31 @@
 #define HB_EVP_CIPHER_SEED_CFB128                           96
 #define HB_EVP_CIPHER_SEED_CFB                              97
 #define HB_EVP_CIPHER_SEED_OFB                              98
+
+#define HB_EVP_PKEY_NONE                                    0
+#define HB_EVP_PKEY_RSA                                     6
+#define HB_EVP_PKEY_RSA2                                    19
+#define HB_EVP_PKEY_RSA_PSS                                 912
+#define HB_EVP_PKEY_DSA                                     116
+#define HB_EVP_PKEY_DSA1                                    67
+#define HB_EVP_PKEY_DSA2                                    66
+#define HB_EVP_PKEY_DSA3                                    113
+#define HB_EVP_PKEY_DSA4                                    70
+#define HB_EVP_PKEY_DH                                      28
+#define HB_EVP_PKEY_DHX                                     920
+#define HB_EVP_PKEY_EC                                      408
+#define HB_EVP_PKEY_SM2                                     1172
+#define HB_EVP_PKEY_HMAC                                    855
+#define HB_EVP_PKEY_CMAC                                    894
+#define HB_EVP_PKEY_SCRYPT                                  973
+#define HB_EVP_PKEY_TLS1_PRF                                1021
+#define HB_EVP_PKEY_HKDF                                    1036
+#define HB_EVP_PKEY_POLY1305                                1061
+#define HB_EVP_PKEY_SIPHASH                                 1062
+#define HB_EVP_PKEY_X25519                                  1034
+#define HB_EVP_PKEY_ED25519                                 1087
+#define HB_EVP_PKEY_X448                                    1035
+#define HB_EVP_PKEY_ED448                                   1088
 
 #define HB_BIO_METHOD_UNSUPPORTED                           ( -1 )
 #define HB_BIO_METHOD_S_NULL                                0

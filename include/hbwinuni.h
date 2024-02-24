@@ -81,16 +81,17 @@
    #define HB_FSNAMECONV( fname, pfree )         ( ( LPCTSTR ) ( *( pfree ) = hb_fsNameConvU16( fname ) ) )
    #define HB_CHARDUP( str )                     hb_osStrU16Encode( str )
    #define HB_CHARDUPN( str, len )               hb_osStrU16EncodeN( str, len )
+   #define HB_CHARDUP2( str, buf, len )          hb_osStrU16Encode2( str, buf, len )
    #define HB_OSSTRDUP( str )                    hb_osStrU16Decode( str )
    #define HB_OSSTRDUP2( str, buf, len )         hb_osStrU16Decode2( str, buf, len )
    #define HB_WINAPI_SYSTEM( cmd )               _wsystem( cmd )
    #define HB_WINAPI_KERNEL32_DLL()              ( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) )
    #if defined( HB_OS_WIN_CE )
-      #define HB_WINAPI_GETPROCADDRESS( h, n )   GetProcAddress( h, TEXT( n ) )
-      #define HB_WINAPI_GETPROCADDRESST( h, n )  GetProcAddress( h, TEXT( n ) TEXT( "W" ) )
+      #define HB_WINAPI_GETPROCADDRESS( h, n )   ( void * ) GetProcAddress( h, TEXT( n ) )
+      #define HB_WINAPI_GETPROCADDRESST( h, n )  ( void * ) GetProcAddress( h, TEXT( n ) TEXT( "W" ) )
    #else
-      #define HB_WINAPI_GETPROCADDRESS( h, n )   GetProcAddress( h, n )
-      #define HB_WINAPI_GETPROCADDRESST( h, n )  GetProcAddress( h, n "W" )
+      #define HB_WINAPI_GETPROCADDRESS( h, n )   ( void * ) GetProcAddress( h, n )
+      #define HB_WINAPI_GETPROCADDRESST( h, n )  ( void * ) GetProcAddress( h, n "W" )
    #endif
 #else
    #define HB_PARSTR( n, h, len )                hb_parstr( n, hb_setGetOSCP(), h, len )
@@ -120,12 +121,13 @@
    #define HB_FSNAMECONV( fname, pfree )         hb_fsNameConv( fname, pfree )
    #define HB_CHARDUP( str )                     hb_osStrEncode( str )
    #define HB_CHARDUPN( str, len )               hb_osStrEncodeN( str, len )
+   #define HB_CHARDUP2( str, buf, len )          hb_osStrEncode2( str, buf, len )
    #define HB_OSSTRDUP( str )                    hb_osStrDecode( str )
    #define HB_OSSTRDUP2( str, buf, len )         hb_osStrDecode2( str, buf, len )
    #define HB_WINAPI_SYSTEM( cmd )               system( cmd )
    #define HB_WINAPI_KERNEL32_DLL()              ( TEXT( "kernel32.dll" ) )
-   #define HB_WINAPI_GETPROCADDRESS( h, n )      GetProcAddress( h, n )
-   #define HB_WINAPI_GETPROCADDRESST( h, n )     GetProcAddress( h, n "A" )
+   #define HB_WINAPI_GETPROCADDRESS( h, n )      ( void * ) GetProcAddress( h, n )
+   #define HB_WINAPI_GETPROCADDRESST( h, n )     ( void * ) GetProcAddress( h, n "A" )
 #endif
 
 #endif /* HB_OS_WIN */

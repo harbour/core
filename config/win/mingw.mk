@@ -16,7 +16,7 @@ ifneq ($(HB_COMPILER),mingw64)
    endif
 endif
 
-CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
+CC := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
 CC_IN := -c
 CC_OUT := -o
 
@@ -76,6 +76,13 @@ endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
+endif
+
+ifeq ($(HB_COMPILER),mingw64)
+   # Newer MinGW-W64 versions (10+, IIRC) need this to opt out of C99 format
+   # string emulation and keep our format strings compatible among the
+   # different Windows compilers
+   CFLAGS += -D__USE_MINGW_ANSI_STDIO=0
 endif
 
 RC := $(HB_CCPATH)$(HB_CCPREFIX)windres

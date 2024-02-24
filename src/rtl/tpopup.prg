@@ -93,7 +93,7 @@ CREATE CLASS PopupMenu FUNCTION HBPopupMenu
    METHOD top( nTop ) SETGET
    METHOD width() SETGET
 
-   METHOD New( nTop, nLeft, nBottom, nRight ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( nTop, nLeft, nBottom, nRight ) /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -601,7 +601,7 @@ METHOD top( nTop ) CLASS PopupMenu
 METHOD width() CLASS PopupMenu
    RETURN ::nWidth
 
-METHOD New( nTop, nLeft, nBottom, nRight ) CLASS PopupMenu
+METHOD Init( nTop, nLeft, nBottom, nRight ) CLASS PopupMenu
 
    LOCAL cColor
 

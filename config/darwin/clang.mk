@@ -49,9 +49,6 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-# Force the compatibility with macOS High Sierra and higher
-CFLAGS += -mmacosx-version-min=10.13
-
 # It's to avoid warning message generated when 'long double' is used
 # remove it if you have newer compiler version
 #CFLAGS += -Wno-long-double

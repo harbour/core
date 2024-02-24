@@ -140,8 +140,7 @@ HB_FUNC( DISKSPACE )
          lpPath[ 2 ] = TEXT( '\\' );
          lpPath[ 3 ] = TEXT( '\0' );
 
-#if defined( HB_OS_WIN_CE )
-
+#if defined( HB_OS_WIN_CE ) || defined( HB_OS_WIN_64 )
          bError = ! GetDiskFreeSpaceEx( lpPath,
                                         ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
                                         ( PULARGE_INTEGER ) &i64TotalBytes,

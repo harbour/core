@@ -121,14 +121,21 @@ HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 
 #if defined( HB_OS_WIN )
    {
-      LPTSTR lpName = HB_CHARDUP( szName ), lpBuffer;
+      TCHAR lpNameBuffer[ 64 ], lpDestBuffer[ HB_PATH_MAX ];
+      LPTSTR lpName = lpNameBuffer, lpBuffer = lpDestBuffer;
 
-      if( szBuffer != NULL || nSize > 0 )
-         lpBuffer = ( LPTSTR ) hb_xgrab( nSize * sizeof( TCHAR ) );
-      else
+      if( szBuffer == NULL || nSize == 0 )
          lpBuffer = NULL;
+      else if( ( HB_SIZE ) nSize > HB_SIZEOFARRAY( lpDestBuffer ) )
+         lpBuffer = ( LPTSTR ) hb_xgrab( nSize * sizeof( TCHAR ) );
+
+      if( strlen( szName ) >= HB_SIZEOFARRAY( lpNameBuffer ) )
+         lpName = HB_CHARDUP( szName );
 
       fRetVal = GetEnvironmentVariable( lpName, lpBuffer, nSize ) != 0;
+
+      if( lpName != lpNameBuffer )
+         hb_xfree( lpName );
 
       if( lpBuffer )
       {
@@ -137,9 +144,9 @@ HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
             lpBuffer[ nSize - 1 ] = TEXT( '\0' );
             HB_OSSTRDUP2( lpBuffer, szBuffer, nSize - 1 );
          }
-         hb_xfree( lpBuffer );
+         if( lpBuffer != lpDestBuffer )
+            hb_xfree( lpBuffer );
       }
-      hb_xfree( lpName );
    }
 #elif defined( HB_OS_OS2 )
    {

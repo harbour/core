@@ -762,7 +762,7 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, HB_BOOL bEmpty )
 
 /*                   An Alternative to WndProc Callbacks                */
 
-BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
+UINT_PTR CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
    HB_BOOL  bret  = HB_FALSE;
    HB_BOOL  binit = HB_FALSE;
@@ -862,7 +862,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    cf.rgbColors   = RGB( 0, 0, 0 );
 
    cf.lCustData = ( HB_PTRUINT ) hb_param( 2, HB_IT_BLOCK );
-   cf.lpfnHook  = ( LPCFHOOKPROC ) WvgDialogProcChooseFont;
+   cf.lpfnHook  = WvgDialogProcChooseFont;
 
    cf.lpTemplateName = ( LPTSTR ) NULL;
    cf.hInstance      = ( HINSTANCE ) NULL;

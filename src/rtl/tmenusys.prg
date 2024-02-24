@@ -68,7 +68,7 @@ CREATE CLASS HBMenuSys
    EXPORTED:
 
    METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList )
-   METHOD New( oMenu )
+   METHOD Init( oMenu )
 
    PROTECTED:
 
@@ -599,7 +599,7 @@ METHOD GetMsgArray() CLASS HBMenuSys
 
 /* --- */
 
-METHOD New( oMenu ) CLASS HBMenuSys
+METHOD Init( oMenu ) CLASS HBMenuSys
 
    ::oMenu := oMenu
 

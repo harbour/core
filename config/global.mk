@@ -440,6 +440,9 @@ else
    ifneq ($(findstring Power,$(_UNAME_M)),)
       HB_HOST_CPU := ppc
    else
+   ifneq ($(findstring arm64,$(_UNAME_M)),)
+      HB_HOST_CPU := arm64
+   else
    ifneq ($(findstring arm,$(_UNAME_M)),)
       HB_HOST_CPU := arm
    else
@@ -475,6 +478,7 @@ else
    else
    ifneq ($(findstring BePC,$(_UNAME_M)),)
       HB_HOST_CPU := x86
+   endif
    endif
    endif
    endif

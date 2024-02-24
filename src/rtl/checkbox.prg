@@ -86,7 +86,7 @@ CREATE CLASS CheckBox FUNCTION HBCheckBox
    METHOD style( cStyle ) SETGET
    METHOD typeOut() SETGET
 
-   METHOD New( nRow, nCol, cCaption ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( nRow, nCol, cCaption ) /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -318,7 +318,7 @@ METHOD style( cStyle ) CLASS CheckBox
 METHOD typeOut() CLASS CheckBox
    RETURN .F.
 
-METHOD New( nRow, nCol, cCaption ) CLASS CheckBox
+METHOD Init( nRow, nCol, cCaption ) CLASS CheckBox
 
    LOCAL cColor
 

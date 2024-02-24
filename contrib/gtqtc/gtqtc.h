@@ -63,18 +63,31 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
-#include <QtCore/QBasicTimer>
+#include <QtCore/QTimer>
 
-#if QT_VERSION <= 0x040900
-#include <QtGui/QApplication>
-#include <QtGui/QMainWindow>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QWidget>
-#else
+#if QT_VERSION >= 0x050000
+#include <QtGui/QScreen>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QAbstractButton>
+#include <QtWidgets/QAction>
+#ifdef HB_QT_SOUND
+  #include <QtMultimedia/QSound>
+#endif
+#else
+#include <QtGui/QApplication>
+#include <QtGui/QMainWindow>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QWidget>
+#include <QtGui/QMessageBox>
+#include <QtGui/QAbstractButton>
+#include <QtGui/QAction>
+#ifdef HB_QT_SOUND
+  #include <QtGui/QSound>
+#endif
 #endif
 
 #include "hbapi.h"
@@ -328,6 +341,7 @@ typedef struct
    HB_BOOL     fMinimized;                   /* enter/leave maximize (e.g. as icon in TaskBar) mode */
    HB_BOOL     fFullScreen;                  /* enable/disable fullscreen mode */
    HB_BOOL     fSelectCopy;                  /* allow marking texts by mouse left button with shift */
+   HB_BOOL     fMsgAlert;                    /* redirect Alert() calls to QMessageBox */
    HB_BOOL     fRepaint;                     /* force internal image repainting */
 
    int         iResizeMode;                  /* Sets the resizing mode either to FONT or ROWS */
@@ -358,7 +372,7 @@ public:
    void setFontSize( int iFH, int iFW );
    void setImageSize( void );
    void copySelection( void );
-   void repaintChars( const QRect & rect );
+   void repaintChars( const QRect & rx );
 
 protected:
    void inputMethodEvent( QInputMethodEvent * evt );
@@ -380,18 +394,18 @@ protected:
 
 class QTCWindow : public QMainWindow
 {
-    Q_OBJECT
+   Q_OBJECT
 
 public:
-    QTCWindow( PHB_GTQTC pQTC );
-    virtual ~QTCWindow( void );
+   QTCWindow( PHB_GTQTC pQTC );
+   virtual ~QTCWindow( void );
 
-    QTConsole * qConsole;
-    void setWindowSize( void );
-    void setResizing( void );
+   QTConsole * qConsole;
+   void setWindowSize( void );
+   void setResizing( void );
 
 protected:
-    void closeEvent( QCloseEvent * evt );
+   void closeEvent( QCloseEvent * evt );
 };
 
 #endif /* HB_QTC_H_ */

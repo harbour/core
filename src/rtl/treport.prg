@@ -156,7 +156,7 @@ CREATE CLASS HBReportForm
    VAR cOffsetsBuff   AS STRING
    VAR cLengthsBuff   AS STRING
 
-   METHOD New( cFrmName AS STRING, ;
+   METHOD Init( cFrmName AS STRING, ;
       lPrinter AS LOGICAL, ;
       cAltFile AS STRING, ;
       lNoConsole AS LOGICAL, ;
@@ -180,7 +180,7 @@ CREATE CLASS HBReportForm
 
 ENDCLASS
 
-METHOD PROCEDURE New( cFrmName AS STRING, ;
+METHOD Init( cFrmName AS STRING, ;
       lPrinter AS LOGICAL, ;
       cAltFile AS STRING, ;
       lNoConsole AS LOGICAL, ;
@@ -421,7 +421,7 @@ METHOD PROCEDURE New( cFrmName AS STRING, ;
       BREAK xBreakVal
    ENDIF
 
-   RETURN
+   RETURN Self
 
 METHOD PrintIt( cString AS STRING ) CLASS HBReportForm
 
@@ -532,7 +532,7 @@ METHOD ReportHeader() CLASS HBReportForm
 
    RETURN Self
 
-METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
+METHOD ExecuteReport() CLASS HBReportForm
 
    LOCAL aRecordHeader  := {}          // Header for the current record
    LOCAL aRecordToPrint := {}          // Current record to print
@@ -822,7 +822,7 @@ METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
       ENDIF
    ENDIF    // Was this a summary report?
 
-   RETURN
+   RETURN Self
 
 METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 
@@ -1217,11 +1217,11 @@ STATIC FUNCTION MakeAStr( uVar, cType )
 
    RETURN "INVALID EXPRESSION"
 
-PROCEDURE __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;
+FUNCTION __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lPlain, cHeading, ;
       lBEject, lSummary )
 
    HBReportForm():New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nRecord, ;
       lRest, lPlain, cHeading, lBEject, lSummary )
 
-   RETURN
+   RETURN NIL

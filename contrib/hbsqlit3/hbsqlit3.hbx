@@ -72,6 +72,7 @@ DYNAMIC sqlite3_compileoption_get
 DYNAMIC sqlite3_compileoption_used
 DYNAMIC sqlite3_complete
 DYNAMIC sqlite3_create_function
+DYNAMIC sqlite3_db_filename
 DYNAMIC sqlite3_db_status
 DYNAMIC sqlite3_enable_load_extension
 DYNAMIC sqlite3_enable_shared_cache
@@ -79,6 +80,7 @@ DYNAMIC sqlite3_errcode
 DYNAMIC sqlite3_errmsg
 DYNAMIC sqlite3_errstr
 DYNAMIC sqlite3_exec
+DYNAMIC sqlite3_expanded_sql
 DYNAMIC sqlite3_extended_errcode
 DYNAMIC sqlite3_extended_result_codes
 DYNAMIC sqlite3_file_to_buff
@@ -108,6 +110,7 @@ DYNAMIC sqlite3_sleep
 DYNAMIC sqlite3_sourceid
 DYNAMIC sqlite3_sql
 DYNAMIC sqlite3_status
+DYNAMIC sqlite3_status64
 DYNAMIC sqlite3_step
 DYNAMIC sqlite3_stmt_readonly
 DYNAMIC sqlite3_stmt_status
@@ -116,6 +119,7 @@ DYNAMIC sqlite3_temp_directory
 DYNAMIC sqlite3_threadsafe
 DYNAMIC sqlite3_total_changes
 DYNAMIC sqlite3_trace
+DYNAMIC sqlite3_trace_v2
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBSQLIT3__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

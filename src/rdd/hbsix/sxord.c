@@ -720,7 +720,7 @@ HB_FUNC( SX_WILDSEEK )
       }
       else
          SELF_GOTO( pArea, 0 );
-      hb_itemReturnRelease( Info.itmResult );
+      hb_itemRelease( Info.itmResult );
    }
 
    hb_retl( fFound );

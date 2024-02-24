@@ -45,6 +45,7 @@ xhbctbit.c
 xhbdate.c
 xhbenum.c
 xhberrc.c
+xhberror.c
 xhbfs.c
 xhbfunc.c
 xhbgt.c

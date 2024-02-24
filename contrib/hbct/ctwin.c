@@ -1947,7 +1947,7 @@ static HB_BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
          iWindow = pCTW->pWindowMap[ lIndex ];
 #if 0
          /* When window with shadow is closed CT3 restores attributes
-          * which existed before shadow was displayed. In some application
+          * which existed before shadow was displayed. In an application
           * which switches to window 0 for pass-throw output it causes that
           * wrong attributes appears after this operation. In Harbour it's
           * fixed so such problem do not exist. Anyhow some code may switch
