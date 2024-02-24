@@ -1,3 +1,8 @@
+#------------------------------------------------------------------------------
+# This is part of NAppGUI build system
+# See README.md and LICENSE.txt
+#------------------------------------------------------------------------------
+
 # CMake Visual Studio additional Warnings
 # This file is part of NAppGUI-SDK project
 # See README.txt and LICENSE.txt
@@ -9,7 +14,6 @@
 #  We don't use -Wall for compile problems in VS2017
 # https://developercommunity.visualstudio.com/content/problem/174539/objbaseh-error-when-compiling-with-permissive-and.html
 #
-
 #------------------------------------------------------------------------------
 
 macro(removeFlag list flag)
@@ -29,8 +33,15 @@ macro(nap_msvc_flags runtimeLib)
     removeFlag(CMAKE_CXX_FLAGS "/EHsc")
 
     # C Runtime library (static/dynamic)
+    set(RTFLAGS "/MDd;/MTd;/MD;/MT")
     foreach(config ${CMAKE_CONFIGURATION_TYPES})
         string(TOUPPER ${config} config)
+
+        # Remove previous C Runtime library configs
+        foreach(flag ${RTFLAGS})
+            removeFlag(CMAKE_CXX_FLAGS_${config} "${flag}")
+            removeFlag(CMAKE_C_FLAGS_${config} "${flag}")
+        endforeach()
 
         if (${runtimeLib} STREQUAL "static")
             if (${config} STREQUAL "DEBUG")

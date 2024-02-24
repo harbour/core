@@ -1,6 +1,7 @@
-# Tools needed to build projects based on NAppGUI
-# This file is part of NAppGUI-SDK project
-# See README.txt and LICENSE.txt
+#------------------------------------------------------------------------------
+# This is part of NAppGUI build system
+# See README.md and LICENSE.txt
+#------------------------------------------------------------------------------
 
 function(nap_generate_tools)
 
@@ -8,7 +9,8 @@ function(nap_generate_tools)
         message(FATAL_ERROR "NAPPGUI_ROOT_PATH is not set.")
     endif()
 
-    set(TOOLS_BUILD_DIR "${NAPPGUI_ROOT_PATH}/tools/build")
+    set(TOOLS_SRC_DIR "${NAPPGUI_ROOT_PATH}/tools")
+    set(TOOLS_BUILD_DIR "${CMAKE_BINARY_DIR}/tools/build")
 
     set(NAPPGUI_NRC "${TOOLS_BUILD_DIR}/Debug/bin/nrc${CMAKE_EXECUTABLE_SUFFIX}")
     file(TO_NATIVE_PATH \"${NAPPGUI_NRC}\" NAPPGUI_NRC)
@@ -25,23 +27,13 @@ function(nap_generate_tools)
         if (isMultiConfig)
             set(CMAKE_BUILD_OPTS "--config Debug")
         endif()
-        # if (WIN32)
-        #     set(CMAKE_CONFIG_OPTS "")
-        #     set(CMAKE_BUILD_OPTS "--config Debug")
-        # elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-        #     message(FATAL_ERROR "TODO!!!!!!!!!!!!!!!!!!!")
-        #     set(CMAKE_CONFIG_OPTS "-DCMAKE_BUILD_TYPE=Debug")
-        #     set(CMAKE_BUILD_OPTS "--config Debug")
-        # elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-        #     set(CMAKE_CONFIG_OPTS "-DCMAKE_BUILD_TYPE=Debug")
-        # endif()
 
         # CMake configure
         execute_process(
                     COMMAND ${CMAKE_COMMAND}
                     "-E" chdir "${TOOLS_BUILD_DIR}"
                     ${CMAKE_COMMAND} "-G" "${CMAKE_GENERATOR}" "-DNAPPGUI_ROOT_PATH=${NAPPGUI_ROOT_PATH}"
-                    ".."
+                    ${TOOLS_SRC_DIR}
                     RESULT_VARIABLE CMakeConfigResult
                     OUTPUT_VARIABLE CMakeConfigOutput
                     ERROR_VARIABLE CMakeConfigError)

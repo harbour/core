@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,15 +11,16 @@
 /* Gtk Widgets common functions */
 
 #include "oscontrol.inl"
+#include "oscontrol_gtk.inl"
 #include "osgui.inl"
 #include "osgui_gtk.inl"
-#include "osbutton.inl"
-#include "oscombo.inl"
-#include "osedit.inl"
-#include "ospopup.inl"
-#include "ostext.inl"
-#include "osview.inl"
-#include "oswindow.inl"
+#include "osbutton_gtk.inl"
+#include "oscombo_gtk.inl"
+#include "osedit_gtk.inl"
+#include "ospopup_gtk.inl"
+#include "ostext_gtk.inl"
+#include "osview_gtk.inl"
+#include "oswindow_gtk.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
 #include <core/stream.h>
@@ -64,6 +65,10 @@ void _oscontrol_init(OSControl *control, const gui_type_t type, GtkWidget *widge
     g_signal_connect(focus_widget, "focus-out-event", G_CALLBACK(i_OnFocusOut), (gpointer)control);
     g_object_ref(control->widget);
     g_object_set_data(G_OBJECT(control->widget), "OSControl", control);
+
+    if (control->widget != focus_widget)
+        g_object_set_data(G_OBJECT(focus_widget), "OSControl", control);
+
     gtk_widget_hide(control->widget);
     unref(show);
     /*    if (show == TRUE)
@@ -74,8 +79,6 @@ void _oscontrol_init(OSControl *control, const gui_type_t type, GtkWidget *widge
 }
 
 /*---------------------------------------------------------------------------*/
-
-#if defined(__ASSERTS__)
 
 static void i_count(GtkWidget *widget, gpointer data)
 {
@@ -95,6 +98,8 @@ static uint32_t i_num_children(GtkContainer *container)
 
 /*---------------------------------------------------------------------------*/
 
+#if defined(__ASSERTS__)
+
 static void i_OnDestroy(GtkWidget *obj, OSControl *control)
 {
     unref(obj);
@@ -104,6 +109,7 @@ static void i_OnDestroy(GtkWidget *obj, OSControl *control)
         control->is_alive = FALSE;
     }
 }
+
 #endif
 
 /*---------------------------------------------------------------------------*/
@@ -122,8 +128,9 @@ void _oscontrol_destroy(OSControl *control)
 #endif
 
     g_object_unref(control->widget);
+
 #if defined(__ASSERTS__)
-    cassert(control->is_alive == FALSE);
+    /*cassert(control->is_alive == FALSE);*/
 #endif
 }
 
@@ -136,6 +143,9 @@ void _oscontrol_set_focus(OSControl *control)
     {
     case ekGUI_TYPE_EDITBOX:
         _osedit_set_focus((OSEdit *)control);
+        break;
+    case ekGUI_TYPE_POPUP:
+        _ospopup_set_focus(OSPopUpPtr(control));
         break;
     case ekGUI_TYPE_COMBOBOX:
         _oscombo_set_focus((OSCombo *)control);
@@ -235,7 +245,7 @@ void _oscontrol_text_bounds(const OSControl *control, PangoLayout *layout, const
     unref(control);
     /*
     data.layout = kPANGO_LAYOUT;
-    _osgui_text_bounds(&data, text, refwidth, width, height);
+    osgui_text_bounds(&data, text, refwidth, width, height);
     */
 }
 
@@ -260,19 +270,24 @@ void _oscontrol_set_enabled(OSControl *control, const bool_t is_enabled)
 
 /*---------------------------------------------------------------------------*/
 
+static __INLINE void i_widget_allocation(GtkWidget *widget, GtkAllocation *alloc)
+{
+#if GTK_CHECK_VERSION(3, 20, 0)
+    gtk_widget_get_allocated_size(widget, alloc, NULL);
+#else
+    gtk_widget_get_allocation(widget, alloc);
+#endif
+}
+
+/*---------------------------------------------------------------------------*/
+
 void _oscontrol_get_origin(const OSControl *control, real32_t *x, real32_t *y)
 {
     GtkAllocation alloc;
     cassert_no_null(control);
     cassert_no_null(x);
     cassert_no_null(y);
-
-#if GTK_CHECK_VERSION(3, 20, 0)
-    gtk_widget_get_allocated_size(control->widget, &alloc, NULL);
-#else
-    gtk_widget_get_allocation(control->widget, &alloc);
-#endif
-
+    i_widget_allocation(control->widget, &alloc);
     *x = (real32_t)alloc.x;
     *y = (real32_t)alloc.y;
 }
@@ -332,13 +347,88 @@ void _oscontrol_attach_to_parent(OSControl *control, GtkWidget *parent_widget)
 
 void _oscontrol_detach_from_parent(OSControl *control, GtkWidget *parent_widget)
 {
+    cassert_no_null(control);
+    _oscontrol_widget_detach(control->widget, parent_widget);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_widget_detach(GtkWidget *widget, GtkWidget *parent_widget)
+{
 #if defined(__ASSERTS__)
     uint32_t c = i_num_children(GTK_CONTAINER(parent_widget));
     cassert(c > 0);
 #endif
-    cassert_no_null(control);
-    gtk_container_remove(GTK_CONTAINER(parent_widget), control->widget);
+    gtk_container_remove(GTK_CONTAINER(parent_widget), widget);
     cassert(i_num_children(GTK_CONTAINER(parent_widget)) == c - 1);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t _oscontrol_num_children(GtkContainer *container)
+{
+    cassert_no_null(container);
+    return i_num_children(container);
+}
+
+/*---------------------------------------------------------------------------*/
+
+GtkWidget *_oscontrol_get_child(GtkContainer *container, const uint32_t index)
+{
+    GList *children = NULL;
+    uint32_t i = 0;
+    cassert_no_null(container);
+    children = gtk_container_get_children(container);
+    for (i = 0; i < index; ++i)
+    {
+        cassert_no_null(children);
+        children = children->next;
+    }
+
+    cassert_no_null(children);
+    return (GtkWidget *)children->data;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t _oscontrol_widget_mouse_over(GtkWidget *widget, GdkEvent *event)
+{
+    double x, y;
+    if (gdk_event_get_coords(event, &x, &y) == TRUE)
+    {
+        GtkAllocation alloc;
+        gint event_x = (gint)x;
+        gint event_y = (gint)y;
+        i_widget_allocation(widget, &alloc);
+
+        if (event_x >= alloc.x && event_x <= alloc.x + alloc.width && event_y >= alloc.y && event_y <= alloc.y + alloc.height)
+        {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t _oscontrol_widget_mouse_over_right(GtkWidget *widget, GdkEvent *event, gint right_px)
+{
+    double x, y;
+    if (gdk_event_get_coords(event, &x, &y) == TRUE)
+    {
+        GtkAllocation alloc;
+        gint event_x = (gint)x;
+        gint event_y = (gint)y;
+        i_widget_allocation(widget, &alloc);
+
+        if (event_x >= alloc.x + alloc.width - right_px && event_x <= alloc.x + alloc.width && event_y >= alloc.y && event_y <= alloc.y + alloc.height)
+        {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -358,6 +448,15 @@ void _oscontrol_widget_set_provider(GtkWidget *widget, const char_t *css, GtkCss
     gtk_style_context_add_provider(c, GTK_STYLE_PROVIDER(p), GTK_STYLE_PROVIDER_PRIORITY_USER);
     g_object_unref(p);
     ptr_assign(css_prov, p);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscontrol_widget_add_provider(GtkWidget *widget, GtkCssProvider *css_prov)
+{
+    GtkStyleContext *c = gtk_widget_get_style_context(widget);
+    cassert_no_null(css_prov);
+    gtk_style_context_add_provider(c, GTK_STYLE_PROVIDER(css_prov), GTK_STYLE_PROVIDER_PRIORITY_USER);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -493,13 +592,7 @@ void _oscontrol_widget_size(GtkWidget *widget, real32_t *width, real32_t *height
     cassert_no_null(widget);
     cassert_no_null(width);
     cassert_no_null(height);
-
-#if GTK_CHECK_VERSION(3, 20, 0)
-    gtk_widget_get_allocated_size(widget, &alloc, NULL);
-#else
-    gtk_widget_get_allocation(widget, &alloc);
-#endif
-
+    i_widget_allocation(widget, &alloc);
     *width = (real32_t)alloc.width;
     *height = (real32_t)alloc.height;
 }
@@ -583,7 +676,7 @@ OSControl *oscontrol_parent(const OSControl *control)
     cassert_no_null(control);
     parentWidget = gtk_widget_get_parent(control->widget);
     /*const gchar *ptype = G_OBJECT_TYPE_NAME(parentWidget);*/
-    parent = (OSControl*)g_object_get_data(G_OBJECT(parentWidget), "OSControl");
+    parent = (OSControl *)g_object_get_data(G_OBJECT(parentWidget), "OSControl");
     return parent;
 }
 
@@ -614,25 +707,25 @@ OSWidget *oscontrol_focus_widget(const OSControl *control)
 
     case ekGUI_TYPE_SLIDER:
     case ekGUI_TYPE_UPDOWN:
-        return (OSWidget*)control->widget;
+        return (OSWidget *)control->widget;
 
     case ekGUI_TYPE_TEXTVIEW:
-        return (OSWidget*)_ostext_focus((OSText *)control);
+        return (OSWidget *)_ostext_focus((OSText *)control);
 
     case ekGUI_TYPE_CUSTOMVIEW:
-        return (OSWidget*)_osview_focus((OSView *)control);
+        return (OSWidget *)_osview_focus((OSView *)control);
 
     case ekGUI_TYPE_EDITBOX:
-        return (OSWidget*)_osedit_focus((OSEdit *)control);
+        return (OSWidget *)_osedit_focus((OSEdit *)control);
 
     case ekGUI_TYPE_BUTTON:
-        return (OSWidget*)_osbutton_focus((OSButton *)control);
+        return (OSWidget *)_osbutton_focus((OSButton *)control);
 
     case ekGUI_TYPE_POPUP:
-        return (OSWidget*)_ospopup_focus((OSPopUp *)control);
+        return (OSWidget *)_ospopup_focus((OSPopUp *)control);
 
     case ekGUI_TYPE_COMBOBOX:
-        return (OSWidget*)_oscombo_focus((OSCombo *)control);
+        return (OSWidget *)_oscombo_focus((OSCombo *)control);
 
     case ekGUI_TYPE_TABLEVIEW:
     case ekGUI_TYPE_TREEVIEW:
@@ -651,27 +744,10 @@ OSWidget *oscontrol_focus_widget(const OSControl *control)
 
 /*---------------------------------------------------------------------------*/
 
-OSWidget *oscontrol_widget_get_focus(OSWindow *window)
-{
-    cassert_no_null(window);
-    return (OSWidget*)gtk_window_get_focus(GTK_WINDOW(((OSControl*)window)->widget));
-}
-
-/*---------------------------------------------------------------------------*/
-
-void oscontrol_widget_set_focus(OSWidget *widget, OSWindow *window)
-{
-    cassert_no_null(widget);
-    unref(window);
-    gtk_widget_grab_focus((GtkWidget*)widget);
-}
-
-/*---------------------------------------------------------------------------*/
-
 bool_t oscontrol_widget_visible(const OSWidget *widget)
 {
     cassert_no_null(widget);
-    return (bool_t)gtk_widget_get_visible((GtkWidget*)widget);
+    return (bool_t)gtk_widget_get_visible((GtkWidget *)widget);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -679,7 +755,5 @@ bool_t oscontrol_widget_visible(const OSWidget *widget)
 bool_t oscontrol_widget_enable(const OSWidget *widget)
 {
     cassert_no_null(widget);
-    return (bool_t)gtk_widget_is_sensitive((GtkWidget*)widget);
+    return (bool_t)gtk_widget_is_sensitive((GtkWidget *)widget);
 }
-
-

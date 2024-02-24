@@ -1,10 +1,15 @@
+#------------------------------------------------------------------------------
+# This is part of NAppGUI build system
+# See README.md and LICENSE.txt
+#------------------------------------------------------------------------------
+
 macro(nap_apple_clang_flags)
 
     # Warnings
     # Clang 14.0.3.14030022 not support -Wno-extended-offsetof
     set(FLAGS "-Wall -Wextra -pedantic -fPIE -Wno-long-long -Wno-overlength-strings -Wno-newline-eof")
 
-    if (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER "4.2.9999")
+    if (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER "5.99.9999")
     	set(FLAGS "${FLAGS} -Wno-undefined-var-template")
     endif()
 

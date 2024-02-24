@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -105,7 +105,7 @@ static void i_image_transform(T2Df *t2d, const gui_scale_t scale, const real32_t
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnRedraw(View *view, Event *e)
+static void i_OnDraw(View *view, Event *e)
 {
     VImgData *data = NULL;
     const EvDraw *params = NULL;
@@ -135,6 +135,15 @@ static void i_OnRedraw(View *view, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnAcceptFocus(View *view, Event *e)
+{
+    bool_t *r = event_result(e, bool_t);
+    unref(view);
+    *r = FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 ImageView *imageview_create(void)
 {
     VImgData *data = heap_new0(VImgData);
@@ -146,7 +155,8 @@ ImageView *imageview_create(void)
     view_data(view, &data, i_destroy_data, VImgData);
     _view_set_subtype(view, "ImageView");
     view_size(view, size);
-    view_OnDraw(view, listener(view, i_OnRedraw, View));
+    view_OnDraw(view, listener(view, i_OnDraw, View));
+    view_OnAcceptFocus(view, listener(view, i_OnAcceptFocus, View));
     view_OnImage(view, (FPtr_set_image)imageview_image);
     return (ImageView *)view;
 }

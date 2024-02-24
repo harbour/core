@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -69,10 +69,10 @@ byte_t *bmem_aligned_malloc(const uint32_t size, const uint32_t align)
     {
         /* Allocates a bigger buffer for alignment purpose, and stores the original allocated
            address just before the aligned buffer for a later call to free */
-        void *alloc_mem = malloc((size_t)(size + (align - 1) + sizeof(void *)));
-        mem = ((byte_t *)alloc_mem) + sizeof(void *);
+        void *alloc_mem = malloc((size_t)(size + (align - 1) + sizeofptr));
+        mem = ((byte_t *)alloc_mem) + sizeofptr;
         mem += (align - ((size_t)mem & (align - 1)) & (align - 1));
-        ((void **)mem)[-1] = alloc_mem;
+        (void **)mem[-1] = alloc_mem;
     }
 #endif
 
@@ -116,7 +116,7 @@ void bmem_free(byte_t *mem)
     free((void *)mem);
 #else
     {
-        void *memp = ((void **)mem)[-1];
+        void *memp = (void **)mem[-1];
         free(memp);
     }
 #endif

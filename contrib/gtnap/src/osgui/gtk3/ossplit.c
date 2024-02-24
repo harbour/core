@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,13 +11,13 @@
 /* Operating System split view */
 
 #include "ossplit.h"
-#include "ossplit.inl"
-#include "ospanel.inl"
-#include "ostext.inl"
-#include "osview.inl"
-#include "osgui_gtk.inl"
-#include "oscontrol.inl"
 #include "oslistener.inl"
+#include "ossplit_gtk.inl"
+#include "ospanel_gtk.inl"
+#include "ostext_gtk.inl"
+#include "osview_gtk.inl"
+#include "osgui_gtk.inl"
+#include "oscontrol_gtk.inl"
 #include <geom2d/r2d.h>
 #include <core/event.h>
 #include <core/heap.h>
@@ -110,6 +110,8 @@ static gboolean i_OnMove(GtkWidget *widget, GdkEventMotion *event, OSSplit *view
             i_mouse_pos(widget, event, &params.x, &params.y);
             params.button = ekGUI_MOUSE_LEFT;
             params.count = 0;
+            params.modifiers = 0;
+            params.tag = 0;
             listener_event(view->OnDrag, ekGUI_EVENT_DRAG, view, &params, NULL, OSSplit, EvMouse, void);
         }
     }
@@ -286,15 +288,6 @@ void ossplit_origin(const OSSplit *view, real32_t *x, real32_t *y)
 void ossplit_frame(OSSplit *view, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     _oscontrol_set_frame((OSControl *)view, x, y, width, height);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _ossplit_detach_and_destroy(OSSplit **view, OSPanel *panel)
-{
-    cassert_no_null(view);
-    ossplit_detach(*view, panel);
-    ossplit_destroy(view);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -42,7 +42,7 @@ void bmutex_close(Mutex **mutex)
     int ret;
     cassert_no_null(mutex);
     cassert_no_null(*mutex);
-    mem = *((void **)mutex);
+    mem = *(void **)mutex;
     ret = pthread_mutex_destroy((pthread_mutex_t *)(*mutex));
     cassert_unref(ret == 0, ret);
     free(mem);

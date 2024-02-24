@@ -326,7 +326,6 @@ const char_t *_component_type(const GuiComponent *component);
 void *_component_ositem(const GuiComponent *component);
 void _panel_compose(Panel *panel, const S2Df *required_size, S2Df *final_size);
 void _panel_locate(Panel *panel);
-void _panel_detach_components(Panel *panel);
 void _window_taborder(Window *window, void *ositem);
 void _window_focus(Window *window, GuiComponent *component);
 void _panel_content_size(Panel *panel, const real32_t width, const real32_t height);
@@ -414,10 +413,6 @@ static void i_destroy_gtobject(GtNapWindow *gtwin, const uint32_t index)
 
     if (gtwin->is_configured == TRUE)
     {
-        const char_t *type = _component_type(gtobj->component);
-        if (str_equ_c(type, "Panel") == TRUE)
-            _panel_detach_components((Panel*)gtobj->component);
-
         if (gtobj->in_scroll == TRUE)
             _component_detach_from_panel((GuiComponent*)gtwin->scrolled_panel, gtobj->component);
         else
@@ -1432,7 +1427,7 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
     i_update_harbour_from_edit_text(gtobj);
 
     /* If we move to a control above of current editbox --> Not perform validations, just move */
-    if (i_move_focus_above(gtobj, p->ptr1) == TRUE)
+    if (i_move_focus_above(gtobj, p->next_ctrl) == TRUE)
         return;
 
     /* The editbox has a validation code block */
@@ -3038,7 +3033,7 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t pwid, const ui
                 gtobj_focus = i_get_first_focus(gtwin);
 
             if (gtobj_focus != NULL)
-                _window_focus(gtwin->window, gtobj_focus->component);
+                window_focus(gtwin->window, (GuiControl*)gtobj_focus->component);
         }
 
         cassert(gtwin->window != NULL);
@@ -3575,7 +3570,8 @@ void hb_gtnap_textview_caret(const uint32_t wid, const uint32_t id, const int64_
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TEXTVIEW);
-    textview_move_caret((TextView*)obj->component, pos);
+    textview_select((TextView*)obj->component, (int32_t)pos, (int32_t)pos);
+    textview_scroll_caret((TextView*)obj->component);
 }
 
 /*---------------------------------------------------------------------------*/

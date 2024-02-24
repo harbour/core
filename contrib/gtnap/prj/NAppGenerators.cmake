@@ -1,3 +1,7 @@
+#------------------------------------------------------------------------------
+# This is part of NAppGUI build system
+# See README.md and LICENSE.txt
+#------------------------------------------------------------------------------
 
 function(nap_generator_multiconfig _ret)
 

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -26,7 +26,7 @@ typedef enum _state_t
 
 /*---------------------------------------------------------------------------*/
 
-void tfilter_number(const char_t* src, char_t* dest, const uint32_t size, const uint32_t num_decimals, const bool_t allow_negatives)
+void tfilter_number(const char_t *src, char_t *dest, const uint32_t size, const uint32_t num_decimals, const bool_t allow_negatives)
 {
     uint32_t csize, i = 0;
     uint32_t codepoint = unicode_to_u32b(src, ekUTF8, &csize);
@@ -127,7 +127,7 @@ void tfilter_number(const char_t* src, char_t* dest, const uint32_t size, const 
 
 /*---------------------------------------------------------------------------*/
 
-static void i_overwrite_mode(const char_t* src, char_t* dest, const uint32_t size, const bool_t deleted, uint32_t* cpos)
+static void i_overwrite_mode(const char_t *src, char_t *dest, const uint32_t size, const bool_t deleted, uint32_t *cpos)
 {
     cassert_no_null(cpos);
 
@@ -179,7 +179,7 @@ static void i_overwrite_mode(const char_t* src, char_t* dest, const uint32_t siz
 
 /*---------------------------------------------------------------------------*/
 
-void tfilter_date(const char_t* src, char_t* dest, const uint32_t size, const char_t* pattern, const uint32_t cpos, const bool_t deleted, uint32_t* ncpos)
+void tfilter_date(const char_t *src, char_t *dest, const uint32_t size, const char_t *pattern, const uint32_t cpos, const bool_t deleted, uint32_t *ncpos)
 {
     cassert_no_null(ncpos);
     unref(pattern);
@@ -189,7 +189,7 @@ void tfilter_date(const char_t* src, char_t* dest, const uint32_t size, const ch
 
 /*---------------------------------------------------------------------------*/
 
-Date tfilter_to_date(const char_t* text, const char_t* pattern)
+Date tfilter_to_date(const char_t *text, const char_t *pattern)
 {
     Date date = kDATE_NULL;
     uint32_t n = str_len_c(text);

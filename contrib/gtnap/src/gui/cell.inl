@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -45,5 +45,3 @@ void _cell_upd_increment(Cell *cell, const bool_t pos);
 bool_t _cell_enabled(const Cell *cell);
 
 __END_C
-
-ArrStFuncs(Cell);

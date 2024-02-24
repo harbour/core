@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,14 +11,14 @@
 /* Operating System native combo box */
 
 #include "oscombo.h"
-#include "oscombo.inl"
+#include "oscombo_win.inl"
 #include "osgui.inl"
 #include "osgui_win.inl"
-#include "oscontrol.inl"
+#include "oscontrol_win.inl"
 #include "osimglist.inl"
-#include "ospanel.inl"
+#include "ospanel_win.inl"
 #include "ostooltip.inl"
-#include "oswindow.inl"
+#include "oswindow_win.inl"
 #include <draw2d/font.h>
 #include <core/event.h>
 #include <core/heap.h>
@@ -40,6 +40,7 @@ struct _oscombo_t
     HWND edit_hwnd;
     HWND tooltip_combo;
     HWND tooltip_edit;
+    WNDPROC def_combo_proc;
     WNDPROC def_edit_proc;
     OSImgList *image_list;
     COLORREF color;
@@ -87,25 +88,9 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
     case WM_ERASEBKGND:
         return 1;
 
-        //case WM_NCCALCSIZE:
-        //    _osgui_nccalcsize(hwnd, wParam, lParam, FALSE, &combo->border);
-        //    return CallWindowProc(combo->control.def_wnd_proc, hwnd, uMsg, wParam, lParam);
-
-        //case WM_NCPAINT:
-        //    CallWindowProc(combo->control.def_wnd_proc, hwnd, uMsg, wParam, lParam);
-        //    return _osgui_ncpaint(hwnd, &combo->border);
-
-    case WM_SETFOCUS:
-        _oswindow_store_focus((OSControl *)combo);
-        break;
-
     case WM_LBUTTONDOWN:
-        if (_oswindow_can_mouse_down((OSControl *)combo) == TRUE)
-            break;
-        return 0;
-
     case WM_LBUTTONDBLCLK:
-        if (_oswindow_can_mouse_down((OSControl *)combo) == TRUE)
+        if (_oswindow_mouse_down(OSControlPtr(combo)) == TRUE)
             break;
         return 0;
 
@@ -140,6 +125,25 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
 /*---------------------------------------------------------------------------*/
 
+static LRESULT CALLBACK i_ComboWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    OSCombo *combo = (OSCombo *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    cassert_no_null(combo);
+
+    switch (uMsg)
+    {
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONDBLCLK:
+        if (_oswindow_mouse_down(OSControlPtr(combo)) == TRUE)
+            break;
+        return 0;
+    }
+
+    return combo->def_combo_proc(hwnd, uMsg, wParam, lParam);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static LRESULT CALLBACK i_EditWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     OSCombo *combo = (OSCombo *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
@@ -147,6 +151,12 @@ static LRESULT CALLBACK i_EditWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARA
 
     switch (uMsg)
     {
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONDBLCLK:
+        if (_oswindow_mouse_down(OSControlPtr(combo)) == TRUE)
+            break;
+        return 0;
+
     case WM_SETFOCUS:
         if (combo->OnFocus != NULL)
         {
@@ -186,15 +196,17 @@ OSCombo *oscombo_create(const uint32_t flags)
     OSCombo *combo = heap_new0(OSCombo);
     combo->control.type = ekGUI_TYPE_COMBOBOX;
     _oscontrol_init((OSControl *)combo, PARAM(dwExStyle, WS_EX_NOPARENTNOTIFY | CBES_EX_NOSIZELIMIT), WS_CHILD | WS_CLIPSIBLINGS | CBS_DROPDOWN, WC_COMBOBOXEX, 0, 0, i_WndProc, kDEFAULT_PARENT_WINDOW);
-    combo->font = _osgui_create_default_font();
+    combo->font = osgui_create_default_font();
     combo->launch_event = TRUE;
     combo->combo_hwnd = (HWND)SendMessage(combo->control.hwnd, CBEM_GETCOMBOCONTROL, (WPARAM)0, (LPARAM)0);
     combo->edit_hwnd = (HWND)SendMessage(combo->control.hwnd, CBEM_GETEDITCONTROL, (WPARAM)0, (LPARAM)0);
+    combo->def_combo_proc = (WNDPROC)SetWindowLongPtr(combo->combo_hwnd, GWLP_WNDPROC, (LONG_PTR)i_ComboWndProc);
     combo->def_edit_proc = (WNDPROC)SetWindowLongPtr(combo->edit_hwnd, GWLP_WNDPROC, (LONG_PTR)i_EditWndProc);
+    SetWindowLongPtr(combo->combo_hwnd, GWLP_USERDATA, (LONG_PTR)combo);
+    SetWindowLongPtr(combo->edit_hwnd, GWLP_USERDATA, (LONG_PTR)combo);
     combo->image_list = _osimglist_create(16);
     combo->color = UINT32_MAX;
     combo->bgcolor = UINT32_MAX;
-    SetWindowLongPtr(combo->edit_hwnd, GWLP_USERDATA, (LONG_PTR)combo);
     _oscontrol_set_font((OSControl *)combo, combo->font);
     unref(flags);
     return combo;
@@ -378,32 +390,6 @@ static int i_img_index(HWND hwnd, OSImgList *imglist, const Image *image)
 
 /*---------------------------------------------------------------------------*/
 
-void _oscombo_set_list_height(HWND hwnd, HWND combo_hwnd, const uint32_t image_height, uint32_t num_elems)
-{
-    uint32_t height = ((14 * HIWORD(GetDialogBaseUnits())) / 8) - 4;
-    //uint32_t num_elems = (uint32_t)SendMessage(hwnd, CB_GETCOUNT, (WPARAM)0, (LPARAM)0);
-    uint32_t line_height = (uint32_t)SendMessage(hwnd, CB_GETITEMHEIGHT, (WPARAM) /*-1*/ 0, (LPARAM)0);
-    RECT rect;
-
-    //if (num_elems == 0)
-    //    num_elems = 1;
-    //else if (num_elems > 10)
-    //    num_elems = 10;
-
-    GetClientRect(hwnd, &rect);
-
-    if (image_height != UINT32_MAX)
-    {
-        if (line_height < image_height + 4)
-            line_height = image_height + 4;
-    }
-
-    height += (num_elems /* - 1*/) * line_height;
-    SetWindowPos(combo_hwnd, NULL, 0, 0, rect.right - rect.left, height, SWP_NOMOVE | SWP_NOZORDER);
-}
-
-/*---------------------------------------------------------------------------*/
-
 void oscombo_elem(OSCombo *combo, const ctrl_op_t op, const uint32_t index, const char_t *text, const Image *image)
 {
     cassert_no_null(combo);
@@ -516,15 +502,6 @@ void oscombo_frame(OSCombo *combo, const real32_t x, const real32_t y, const rea
         num_elems = 10;
 
     _oscombo_set_list_height(combo->control.hwnd, combo->combo_hwnd, _osimglist_height(combo->image_list), num_elems);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscombo_detach_and_destroy(OSCombo **combo, OSPanel *panel)
-{
-    cassert_no_null(combo);
-    oscombo_detach(*combo, panel);
-    oscombo_destroy(combo);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -682,4 +659,30 @@ void _oscombo_elem(HWND hwnd, OSImgList *imglist, const ctrl_op_t op, const uint
         LRESULT res = SendMessage(hwnd, CBEM_DELETEITEM, (WPARAM)index, (LPARAM)0);
         cassert_unref(res != CB_ERR, res);
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _oscombo_set_list_height(HWND hwnd, HWND combo_hwnd, const uint32_t image_height, uint32_t num_elems)
+{
+    uint32_t height = ((14 * HIWORD(GetDialogBaseUnits())) / 8) - 4;
+    //uint32_t num_elems = (uint32_t)SendMessage(hwnd, CB_GETCOUNT, (WPARAM)0, (LPARAM)0);
+    uint32_t line_height = (uint32_t)SendMessage(hwnd, CB_GETITEMHEIGHT, (WPARAM) /*-1*/ 0, (LPARAM)0);
+    RECT rect;
+
+    //if (num_elems == 0)
+    //    num_elems = 1;
+    //else if (num_elems > 10)
+    //    num_elems = 10;
+
+    GetClientRect(hwnd, &rect);
+
+    if (image_height != UINT32_MAX)
+    {
+        if (line_height < image_height + 4)
+            line_height = image_height + 4;
+    }
+
+    height += (num_elems /* - 1*/) * line_height;
+    SetWindowPos(combo_hwnd, NULL, 0, 0, rect.right - rect.left, height, SWP_NOMOVE | SWP_NOZORDER);
 }

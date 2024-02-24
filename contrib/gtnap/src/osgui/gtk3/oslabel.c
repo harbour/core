@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -13,10 +13,10 @@
 #include "oslabel.h"
 #include "oslabel.inl"
 #include "osgui.inl"
-#include "osgui_gtk.inl"
-#include "oscontrol.inl"
 #include "oslistener.inl"
-#include "ospanel.inl"
+#include "osgui_gtk.inl"
+#include "oscontrol_gtk.inl"
+#include "ospanel_gtk.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
 #include <core/event.h>
@@ -60,6 +60,8 @@ static gboolean i_OnEnter(GtkWidget *widget, GdkEventCrossing *event, OSLabel *l
         params.ly = params.y;
         params.button = ENUM_MAX(gui_mouse_t);
         params.count = 0;
+        params.modifiers = 0;
+        params.tag = 0;
         listener_event(label->OnMouseEnter, ekGUI_EVENT_ENTER, label, &params, NULL, OSLabel, EvMouse, void);
     }
 
@@ -191,7 +193,7 @@ OSLabel *oslabel_create(const uint32_t flags)
     _oscontrol_init(&label->control, ekGUI_TYPE_LABEL, widget, widget, TRUE);
     label->label = gtk_label_new(NULL);
     label->text = str_c("");
-    label->font = _osgui_create_default_font();
+    label->font = osgui_create_default_font();
     label->_color = kCOLOR_DEFAULT;
     gtk_label_set_use_markup(GTK_LABEL(label->label), TRUE);
     gtk_widget_show(label->label);
@@ -448,15 +450,7 @@ void oslabel_frame(OSLabel *label, const real32_t x, const real32_t y, const rea
 #if GTK_CHECK_VERSION(3, 10, 0)
     /* Internal label doesn't need resize */
 #else
+    cassert_no_null(label);
     gtk_widget_set_size_request(label->label, (gint)width, (gint)height);
 #endif
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oslabel_detach_and_destroy(OSLabel **label, OSPanel *panel)
-{
-    cassert_no_null(label);
-    oslabel_detach(*label, panel);
-    oslabel_destroy(label);
 }

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,13 +10,13 @@
 
 /* Operating System split view */
 
-#include "osgui_osx.inl"
-#include "ossplit.inl"
 #include "ossplit.h"
+#include "osgui_osx.inl"
+#include "ossplit_osx.inl"
+#include "oscontrol_osx.inl"
+#include "ospanel_osx.inl"
 #include "osgui.inl"
-#include "oscontrol.inl"
 #include "oslistener.inl"
-#include "ospanel.inl"
 #include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -132,19 +132,19 @@ static NSCursor *i_cursor(NSView *view, NSPoint *pt_window)
 
 - (void)mouseDragged:(NSEvent*)theEvent
 {
-    // Called whenever graphics state updated (such as window resize)
-    // OpenGL rendering is not synchronous with other rendering on the OSX.
-    // Therefore, call disableScreenUpdatesUntilFlush so the window server
-    // doesn't render non-OpenGL content in the window asynchronously from
-    // OpenGL content, which could cause flickering.  (non-OpenGL content
-    // includes the title bar and drawing done by the app with other APIs)
+    /* Called whenever graphics state updated (such as window resize)
+     * OpenGL rendering is not synchronous with other rendering on the OSX.
+     * Therefore, call disableScreenUpdatesUntilFlush so the window server
+     * doesn't render non-OpenGL content in the window asynchronously from
+     * OpenGL content, which could cause flickering.  (non-OpenGL content
+     * includes the title bar and drawing done by the app with other APIs) */
     NSWindow *window = [self window];
     if (window != nil)
         [window disableScreenUpdatesUntilFlush];
 
     if (self->left_button == TRUE)
     {
-        _oslistener_mouse_dragged2(self, theEvent, ekGUI_MOUSE_LEFT, self->OnDrag);
+        _oslistener_mouse_dragged2(self, theEvent, ekGUI_MOUSE_LEFT, NULL, self->OnDrag);
         [window disableCursorRects];
         if (split_get_type(self->flags) == ekSPLIT_HORZ)
             [[NSCursor resizeUpDownCursor] set];
@@ -240,8 +240,9 @@ static BOOL i_exists_subview(OSXSplitView *view, NSView *subview)
 {
     NSArray *subviews = [view subviews];
     NSUInteger count = [subviews count];
+    NSUInteger i = 0;
     cassert(count <= 2);
-    for (NSUInteger i = 0; i < count; ++i)
+    for (i = 0; i < count; ++i)
     {
         if ([subviews objectAtIndex:i] == subview)
             return YES;

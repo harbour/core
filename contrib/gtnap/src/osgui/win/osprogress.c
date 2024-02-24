@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,8 +12,8 @@
 
 #include "osprogress.h"
 #include "osgui_win.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
+#include "oscontrol_win.inl"
+#include "ospanel_win.inl"
 #include <core/heap.h>
 #include <sewer/cassert.h>
 
@@ -167,13 +167,4 @@ void osprogress_origin(const OSProgress *progress, real32_t *x, real32_t *y)
 void osprogress_frame(OSProgress *progress, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     _oscontrol_set_frame((OSControl *)progress, x, y, width, height);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osprogress_detach_and_destroy(OSProgress **progress, OSPanel *panel)
-{
-    cassert_no_null(progress);
-    osprogress_detach(*progress, panel);
-    osprogress_destroy(progress);
 }

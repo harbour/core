@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,12 +10,12 @@
 
 /* Operating System native updown */
 
-#include "osgui_osx.inl"
 #include "osupdown.h"
-#include "osupdown.inl"
-#include "osgui.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
+#include "osupdown_osx.inl"
+#include "oscontrol_osx.inl"
+#include "osgui_osx.inl"
+#include "ospanel_osx.inl"
+#include "oswindow_osx.inl"
 #include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -55,6 +55,18 @@
         listener_event(self->OnClick, ekGUI_EVENT_UPDOWN, (OSUpDown*)self, &params, NULL, OSUpDown, EvButton, void);
         self->value = lvalue;
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void) mouseDown:(NSEvent*)theEvent
+{
+    if (_oswindow_mouse_down((OSControl*)self) == TRUE)
+    {
+        [super mouseDown:theEvent];
+    }
+
+    _oswindow_restore_focus([self window]);
 }
 
 @end
@@ -163,13 +175,4 @@ void osupdown_frame(OSUpDown *updown, const real32_t x, const real32_t y, const 
 BOOL _osupdown_is(NSView *view)
 {
     return [view isKindOfClass:[OSXUpDown class]];
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osupdown_detach_and_destroy(OSUpDown **updown, OSPanel *panel)
-{
-    cassert_no_null(updown);
-    osupdown_detach(*updown, panel);
-    osupdown_destroy(updown);
 }

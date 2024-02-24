@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -87,7 +87,7 @@ static __INLINE void i_destroy_node_data(
     if (func_destroy_key != NULL)
     {
         void **key = (void **)i_NODE_DATA(node);
-        cassert(ksize == sizeof(void *));
+        cassert(ksize == sizeofptr);
         func_destroy_key(key);
     }
 
@@ -101,7 +101,7 @@ static __INLINE void i_destroy_node_data(
     {
         void **data = (void **)(i_NODE_DATA(node) + ksize);
 #if defined(__ASSERTS__)
-        cassert(esize == sizeof(void *));
+        cassert(esize == sizeofptr);
 #endif
         func_destroy(data);
     }
@@ -152,7 +152,7 @@ RBTree *rbtree_create(FPtr_compare func_compare, const uint16_t esize, const uin
     tree->func_compare = func_compare;
     tree->elems = 0;
     tree->esize = esize;
-    tree->ksize = ksize > 0 ? ksize + ksize % sizeof(void *) : ksize; /* Node element alignment */
+    tree->ksize = ksize > 0 ? ksize + ksize % sizeofptr : ksize; /* Node element alignment */
     tree->root = NULL;
     tree->it.path_size = 0;
     tree->it.path_alloc = 8;
@@ -688,7 +688,7 @@ byte_t *rbtree_insert(RBTree *tree, const void *key, FPtr_copy func_key_copy)
         if (func_key_copy != NULL)
         {
             void **dkey = (void **)i_NODE_DATA(new_node);
-            cassert(tree->ksize == sizeof(void *));
+            cassert(tree->ksize == sizeofptr);
             *dkey = func_key_copy(key);
         }
         else if (tree->ksize > 0)
@@ -1221,7 +1221,7 @@ bool_t rbtree_check(const RBTree *tree)
     {
         uint32_t max_theoric_depth = i_log2(tree->elems + 1);
         max_theoric_depth <<= 1;
-        cassert(max_depth < max_theoric_depth);
+        cassert_unref(max_depth < max_theoric_depth, max_theoric_depth);
         cassert(max_depth >> 1 <= min_depth);
     }
 

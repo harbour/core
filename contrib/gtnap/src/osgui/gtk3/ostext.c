@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,11 +12,11 @@
 
 #include "ostext.h"
 #include "ostext.inl"
-#include "osglobals.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
-#include "ossplit.inl"
-#include "oswindow.inl"
+#include "osglobals_gtk.inl"
+#include "oscontrol_gtk.inl"
+#include "ospanel_gtk.inl"
+#include "ossplit_gtk.inl"
+#include "oswindow_gtk.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
 #include <core/event.h>
@@ -45,7 +45,6 @@ struct _ostext_t
     GtkTextTag *tag_attribs;
     bool_t global_attribs;
     bool_t launch_event;
-    int64_t scroll_pos;
     GtkWidget *tview;
     GtkTextBuffer *buffer;
     gchar *text_cache;
@@ -53,6 +52,7 @@ struct _ostext_t
     GtkCssProvider *colorcss;
     GtkCssProvider *bgcolorcss;
     GtkCssProvider *pgcolorcss;
+    GtkCssProvider *border_color;
     OSControl *capture;
     Listener *OnFilter;
     Listener *OnFocus;
@@ -80,7 +80,7 @@ static real32_t i_device_to_pixels(void)
 static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSText *view)
 {
     unref(widget);
-    if (_oswindow_can_mouse_down((OSControl *)view) == TRUE)
+    if (_oswindow_mouse_down((OSControl *)view) == TRUE)
     {
         if (view->capture != NULL)
         {
@@ -167,6 +167,8 @@ OSText *ostext_create(const uint32_t flags)
     GtkWidget *focus = NULL;
     unref(flags);
     view->tview = gtk_text_view_new();
+    view->select_start = INT32_MAX;
+    view->select_end = INT32_MAX;
 
     /* A parent widget can "capture" the mouse */
     {
@@ -193,10 +195,15 @@ OSText *ostext_create(const uint32_t flags)
     /* Creating the frame (border) view */
     {
         GtkWidget *frame = gtk_frame_new(NULL);
+        String *css = osglobals_frame_focus_css();
         cassert(gtk_widget_get_has_window(frame) == FALSE);
         gtk_container_add(GTK_CONTAINER(frame), top);
         gtk_widget_show(top);
+        view->border_color = gtk_css_provider_new();
+        gtk_css_provider_load_from_data(view->border_color, tc(css), -1, NULL);
         g_object_set_data(G_OBJECT(scrolled), "OSControl", &view->control);
+        gtk_widget_set_state_flags(frame, GTK_STATE_FLAG_FOCUSED, FALSE);
+        str_destroy(&css);
         top = frame;
     }
 
@@ -233,7 +240,14 @@ void ostext_destroy(OSText **view)
     listener_destroy(&(*view)->OnFilter);
     listener_destroy(&(*view)->OnFocus);
     gtk_container_remove(GTK_CONTAINER(i_scrolled_window(*view)), (*view)->tview);
-    _oscontrol_destroy(*(OSControl **)view);
+
+    if ((*view)->border_color != NULL)
+    {
+        cassert(GTK_IS_FRAME((*view)->control.widget));
+        _oscontrol_widget_remove_provider((*view)->control.widget, (*view)->border_color);
+        g_object_unref((*view)->border_color);
+        (*view)->border_color = NULL;
+    }
 
     if ((*view)->text_cache != NULL)
     {
@@ -241,6 +255,7 @@ void ostext_destroy(OSText **view)
         (*view)->text_cache = NULL;
     }
 
+    _oscontrol_destroy(*(OSControl **)view);
     heap_delete(view, OSText);
 }
 
@@ -530,22 +545,55 @@ void ostext_set_rtf(OSText *view, Stream *rtf_in)
 
 /*---------------------------------------------------------------------------*/
 
-static gboolean i_scroll_to_pos(OSText *view)
+static void i_iter(GtkTextBuffer *buffer, const int32_t pos, GtkTextIter *iter)
 {
-    GtkTextIter iter;
-    cassert_no_null(view);
-
-    if (view->scroll_pos >= 0)
+    if (pos >= 0)
     {
-        gtk_text_buffer_get_start_iter(view->buffer, &iter);
-        gtk_text_iter_forward_chars(&iter, (gint)view->scroll_pos);
+        gtk_text_buffer_get_start_iter(buffer, iter);
+        gtk_text_iter_forward_chars(iter, (gint)pos);
     }
     else
     {
-        gtk_text_buffer_get_end_iter(view->buffer, &iter);
+        gtk_text_buffer_get_end_iter(buffer, iter);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static gboolean i_select(OSText *view)
+{
+    cassert_no_null(view);
+    if (view->select_start != INT32_MAX)
+    {
+        GtkTextBuffer *buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view->tview));
+        GtkTextIter st_iter;
+        GtkTextIter ed_iter;
+        cassert(view->select_start >= -1);
+        cassert(view->select_end >= -1);
+        i_iter(buffer, view->select_start, &st_iter);
+        i_iter(buffer, view->select_end, &ed_iter);
+        gtk_text_buffer_select_range(buffer, &st_iter, &ed_iter);
+        view->select_start = INT32_MAX;
+        view->select_end = INT32_MAX;
     }
 
-    gtk_text_buffer_select_range(view->buffer, &iter, &iter);
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static gboolean i_scroll_to_caret(OSText *view)
+{
+    GtkTextIter iter;
+    GValue gval = G_VALUE_INIT;
+    gint pos;
+    cassert_no_null(view);
+    g_value_init(&gval, G_TYPE_INT);
+    g_object_get_property(G_OBJECT(view->buffer), "cursor-position", &gval);
+    pos = g_value_get_int(&gval);
+    g_value_unset(&gval);
+    gtk_text_buffer_get_start_iter(view->buffer, &iter);
+    gtk_text_iter_forward_chars(&iter, pos);
     gtk_text_view_scroll_to_iter(GTK_TEXT_VIEW(view->tview), &iter, 0, TRUE, 0.5, 0.5);
     return FALSE;
 }
@@ -687,10 +735,17 @@ void ostext_property(OSText *view, const gui_prop_t prop, const void *value)
         break;
     }
 
-    case ekGUI_PROP_VSCROLL:
+    case ekGUI_PROP_SELECT: {
+        int32_t *range = (int32_t *)value;
+        view->select_start = range[0];
+        view->select_end = range[1];
+        g_idle_add((GSourceFunc)i_select, view);
+        break;
+    }
+
+    case ekGUI_PROP_SCROLL:
         /* https://discourse.gnome.org/t/gtk-text-view-scroll-to-iter-does-not-scroll-to-the-desired-position/4257 */
-        view->scroll_pos = *(int64_t *)value;
-        g_idle_add((GSourceFunc)i_scroll_to_pos, view);
+        g_idle_add((GSourceFunc)i_scroll_to_caret, view);
         break;
 
         cassert_default();
@@ -827,25 +882,19 @@ void ostext_frame(OSText *view, const real32_t x, const real32_t y, const real32
 
 /*---------------------------------------------------------------------------*/
 
-void _ostext_detach_and_destroy(OSText **view, OSPanel *panel)
-{
-    cassert_no_null(view);
-    ostext_detach(*view, panel);
-    ostext_destroy(view);
-}
-
-/*---------------------------------------------------------------------------*/
-
 void _ostext_set_focus(OSText *view)
 {
     cassert_no_null(view);
-    if (_oswindow_can_edit_focus_events((OSControl *)view) == TRUE)
+    if (view->OnFocus != NULL)
     {
-        if (view->OnFocus != NULL)
-        {
-            bool_t params = TRUE;
-            listener_event(view->OnFocus, ekGUI_EVENT_FOCUS, view, &params, NULL, OSText, bool_t, void);
-        }
+        bool_t params = TRUE;
+        listener_event(view->OnFocus, ekGUI_EVENT_FOCUS, view, &params, NULL, OSText, bool_t, void);
+    }
+
+    if (view->border_color != NULL)
+    {
+        cassert(GTK_IS_FRAME(view->control.widget));
+        _oscontrol_widget_add_provider(view->control.widget, view->border_color);
     }
 }
 
@@ -854,13 +903,16 @@ void _ostext_set_focus(OSText *view)
 void _ostext_unset_focus(OSText *view)
 {
     cassert_no_null(view);
-    if (_oswindow_can_edit_focus_events((OSControl *)view) == TRUE)
+    if (view->OnFocus != NULL)
     {
-        if (view->OnFocus != NULL)
-        {
-            bool_t params = FALSE;
-            listener_event(view->OnFocus, ekGUI_EVENT_FOCUS, view, &params, NULL, OSText, bool_t, void);
-        }
+        bool_t params = FALSE;
+        listener_event(view->OnFocus, ekGUI_EVENT_FOCUS, view, &params, NULL, OSText, bool_t, void);
+    }
+
+    if (view->border_color != NULL)
+    {
+        cassert(GTK_IS_FRAME(view->control.widget));
+        _oscontrol_widget_remove_provider(view->control.widget, view->border_color);
     }
 }
 

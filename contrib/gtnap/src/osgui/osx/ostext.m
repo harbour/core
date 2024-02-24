@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,12 +12,12 @@
 
 #include "osgui_osx.inl"
 #include "ostext.h"
-#include "ostext.inl"
+#include "ostext_osx.inl"
+#include "oscontrol_osx.inl"
+#include "ospanel_osx.inl"
+#include "oswindow_osx.inl"
 #include "osgui.inl"
-#include "oscontrol.inl"
 #include "oscolor.inl"
-#include "ospanel.inl"
-
 #include <draw2d/color.h>
 #include <core/event.h>
 #include <core/heap.h>
@@ -45,6 +45,8 @@
     NSMutableDictionary *dict;
     BOOL is_editable;
     BOOL is_opaque;
+    Listener *OnFilter;
+    Listener *OnFocus;
 }
 @end
 
@@ -62,6 +64,36 @@
 - (void)drawRect:(NSRect)rect
 {
     [super drawRect:rect];
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void)keyDown:(NSEvent*)theEvent
+{
+    if (_oswindow_key_down(OSControlPtr(self), theEvent) == FALSE)
+        [super keyDown:theEvent];
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void) mouseDown:(NSEvent*)theEvent
+{
+    if (_oswindow_mouse_down((OSControl*)self->scroll) == TRUE)
+        [super mouseDown:theEvent];
+}
+
+/*---------------------------------------------------------------------------*/
+
+-(void)drawFocusRingMask
+{
+    NSRectFill([self bounds]);
+}
+
+/*---------------------------------------------------------------------------*/
+
+-(NSRect)focusRingMaskBounds
+{
+    return [self bounds];
 }
 
 @end
@@ -125,6 +157,8 @@ OSText *ostext_create(const uint32_t flags)
     view->pspacing = REAL32_MAX;
     view->pafter = REAL32_MAX;
     view->pbefore = REAL32_MAX;
+    view->OnFilter = NULL;
+    view->OnFocus = NULL;
     [view->scroll setDocumentView:view];
     [view->scroll setHasVerticalScroller:YES];
     [view->scroll setHasHorizontalScroller:YES];
@@ -151,6 +185,11 @@ OSText *ostext_create(const uint32_t flags)
         [view->dict setValue:color forKey:NSForegroundColorAttributeName];
     }
 
+    /* OSText allways have border */
+    {
+        [view setFocusRingType:NSFocusRingTypeExterior];
+    }
+
     return (OSText*)view->scroll;
 }
 
@@ -167,6 +206,8 @@ void ostext_destroy(OSText **view)
     cassert_no_null(delegate);
     [lview->dict release];
     listener_destroy(&delegate->OnTextChange_listener);
+    listener_destroy(&lview->OnFocus);
+    listener_destroy(&lview->OnFilter);
     [lview setDelegate:nil];
     [delegate release];
     [lview release];
@@ -175,37 +216,20 @@ void ostext_destroy(OSText **view)
 
 /*---------------------------------------------------------------------------*/
 
-//static __INLINE OSXTextViewDelegate *i_get_delegate(OSText *view)
-//{
-//    cassert_no_null(view);
-//    return [(OSXTextView*)[(NSScrollView*)view documentView] delegate];
-//}
-
-// /*---------------------------------------------------------------------------*/
-
-// void ostext_OnTextChange(OSText *view, Listener *listener)
-// {
-//     OSXTextViewDelegate *delegate = i_get_delegate(view);
-//     cassert_no_null(delegate);
-//     listener_update(&delegate->OnTextChange_listener, listener);
-// }
-
-/*---------------------------------------------------------------------------*/
-
 void ostext_OnFilter(OSText *view, Listener *listener)
 {
-    unref(view);
-    unref(listener);
-    cassert(FALSE);
+    OSXTextView *lview = [(NSScrollView*)view documentView];
+    cassert_no_null(view);
+    listener_update(&lview->OnFilter, listener);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void ostext_OnFocus(OSText *view, Listener *listener)
 {
-    unref(view);
-    unref(listener);
-    cassert(FALSE);
+    OSXTextView *lview = [(NSScrollView*)view documentView];
+    cassert_no_null(view);
+    listener_update(&lview->OnFocus, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -322,7 +346,7 @@ static NSFont *i_font_create(const char_t *family, const real32_t size, const ui
     NSFont *nsfont = nil;
     cassert(size > 0.f);
 
-    // Unitialized font attribs
+    /* Unitialized font attribs */
     if (str_empty_c(family) == TRUE)
         return nil;
 
@@ -375,7 +399,7 @@ static void i_change_paragraph(OSXTextView *lview)
 {
     cassert_no_null(lview);
 
-    // Unitialized paragraph attribs
+    /* Unitialized paragraph attribs */
     if (lview->palign == ENUM_MAX(align_t))
         return;
 
@@ -439,7 +463,7 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
     {
         NSColor *color = nil;
         if (*(color_t*)value == kCOLOR_TRANSPARENT)
-            color = oscolor_NSColor(1); // ekSYS_LABEL
+            color = oscolor_NSColor(1); /* ekSYS_LABEL */
         else
             color = oscolor_NSColor(*(color_t*)value);
         [lview->dict setValue:color forKey:NSForegroundColorAttributeName];
@@ -498,7 +522,10 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
         }
         break;
 
-    case ekGUI_PROP_VSCROLL:
+    case ekGUI_PROP_SELECT:
+        break;
+
+    case ekGUI_PROP_SCROLL:
     {
         NSRange edrange = NSMakeRange([[lview string] length], 0);
         [lview scrollRangeToVisible:edrange];
@@ -627,14 +654,3 @@ BOOL _ostext_is(NSView *view)
         return [[(NSScrollView*)view documentView] isKindOfClass:[OSXTextView class]];
     return FALSE;
 }
-
-/*---------------------------------------------------------------------------*/
-
-void _ostext_detach_and_destroy(OSText **view, OSPanel *panel)
-{
-    cassert_no_null(view);
-    ostext_detach(*view, panel);
-    ostext_destroy(view);
-}
-
-

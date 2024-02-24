@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -181,7 +181,7 @@ const char_t *osfont_family(const char_t *family)
 void osfont_metrics(const OSFont *font, real32_t *internal_leading, real32_t *cell_size)
 {
     NSFont *nsfont = (NSFont*)font;
-	//NSRect rect = [nsfont boundingRectForFont];
+	/*NSRect rect = [nsfont boundingRectForFont];*/
     CGFloat ascender = [nsfont ascender];
     CGFloat descender = - [nsfont descender];
     CGFloat leading = [nsfont leading];

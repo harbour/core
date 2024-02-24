@@ -1,6 +1,7 @@
-# CMake build compilers script
-# This file is part of NAppGUI-SDK project
-# See README.txt and LICENSE.txt
+#------------------------------------------------------------------------------
+# This is part of NAppGUI build system
+# See README.md and LICENSE.txt
+#------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
 
@@ -27,6 +28,8 @@ endif()
 # Compiler Settings for all targets in the solution
 #------------------------------------------------------------------------------
 macro(nap_config_compiler)
+
+include(${NAPPGUI_ROOT_PATH}/prj/NAppUtils.cmake)
 
 if (WIN32)
 
@@ -108,8 +111,8 @@ elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     # Print BaseSDK/Deployment messages
     nap_macos_sdk_name("${CMAKE_BASE_OSX_SDK}" baseSDKName)
     nap_macos_sdk_name("${CMAKE_OSX_DEPLOYMENT_TARGET}" deploySDKName)
-    message(STATUS "* Base OSX: ${CMAKE_BASE_OSX_SDK}-${baseSDKName}")
-    message(STATUS "* Deployment target OSX: ${CMAKE_OSX_DEPLOYMENT_TARGET}-${deploySDKName}")
+    nap_build_opt("Base OSX" "${CMAKE_BASE_OSX_SDK}-${baseSDKName}")
+    nap_build_opt("Deployment target OSX" "${CMAKE_OSX_DEPLOYMENT_TARGET}-${deploySDKName}")
 
     # Invalid deployment target
     if (CMAKE_OSX_DEPLOYMENT_TARGET VERSION_GREATER CMAKE_BASE_OSX_SDK)
@@ -129,191 +132,34 @@ elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     endif()
     nap_osx_build_arch(${CMAKE_ARCHITECTURE} CMAKE_OSX_ARCHITECTURES)
 
-    # if (${CMAKE_OSX_ARCHITECTURES} STREQUAL "i386")
-    #     set(CMAKE_ARCHITECTURE x86)
-    # elseif (${CMAKE_OSX_ARCHITECTURES} STREQUAL "x86_64")
-    #     set(CMAKE_ARCHITECTURE x64)
-    # elseif (${CMAKE_OSX_ARCHITECTURES} STREQUAL "arm64")
-    #     set(CMAKE_ARCHITECTURE arm)
-    # endif()
-
-    # # Build architecture
-    # set(CMAKE_OSX_ARCHITECTURES ${CMAKE_HOST_SYSTEM_PROCESSOR} CACHE STRING "Build architecture")
-    # if (NOT CMAKE_OSX_ARCHITECTURES)
-    #     set(CMAKE_OSX_ARCHITECTURES ${CMAKE_HOST_SYSTEM_PROCESSOR})
-    # endif()
-
-    # message(STATUS "- Build architecture: ${CMAKE_OSX_ARCHITECTURES}")
-
-
-
-    # message("CMAKE_HOST_SYSTEM_PROCESSOR: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
-
-
-    # # Get the current machine BaseSDK
-    # execute_process(COMMAND bash -c "sw_vers -productVersion" OUTPUT_VARIABLE macOSVersion)
-    # if (NOT macOSVersion)
-    #     message(FATAL_ERROR "Can't find macOS Version (sw_vers)")
-    # endif()
-    # string(REPLACE "\n" "" macOSVersion ${macOSVersion})
-
-    # Base SDK and Deployment Target (minimum OSX support)
-    # set(CMAKE_BASE_OSX_SDK ${macOSVersion})
-
-
-    # message(STATUS "- Deployment Target: ${CMAKE_OSX_DEPLOYMENT_TARGET}-${OSX_SDK_NAME}")
-
-
-    # CMAKE_OSX_DEPLOYMENT_TARGET
-    # set(CMAKE_BASE_OSX_SDK CACHE)
     if (${CMAKE_CXX_COMPILER_ID} STREQUAL "AppleClang")
-
         include(${NAPPGUI_ROOT_PATH}/prj/NAppAppleClang.cmake)
         nap_apple_clang_flags()
-        # message("OYE!!!!:CMAKE_OSX_SYSROOT: ${CMAKE_OSX_SYSROOT}")
-        # message("OYE!!!!:CMAKE_OSX_DEPLOYMENT_TARGET: ${CMAKE_OSX_DEPLOYMENT_TARGET}")
-        # message("OYE!!!!:BASE_OSX_SDK: ${CMAKE_BASE_OSX_SDK}")
-        # message("OYE!!!!:XCODE_VERSION: ${XCODE_VERSION}")
 
+    elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+        include(${NAPPGUI_ROOT_PATH}/prj/NAppGCC.cmake)
+
+        # GCC Version
+        if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.2)
+            message(FATAL_ERROR "GCC 4.2 is the minimum supported version in macOS.")
+        endif()
+
+        nap_gcc_flags("")
+    
     else()
         message (FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 
     endif()
 
     if(CMAKE_GENERATOR STREQUAL "Xcode")
-        message(STATUS "* Xcode version: ${XCODE_VERSION}")
+        nap_build_opt("Xcode version" "${XCODE_VERSION}")
     endif()
-
-    # set(OSX_SYSROOT ${CMAKE_OSX_SYSROOT})
-    # unset(CMAKE_EXECUTABLE_FORMAT CACHE)
-    # unset(CMAKE_OSX_ARCHITECTURES CACHE)
-    # unset(CMAKE_OSX_SYSROOT CACHE)
-    # unset(CMAKE_OSX_DEPLOYMENT_TARGET CACHE)
-    # unset(CMAKE_BUILD_TYPE CACHE)
-    # unset(CMAKE_INSTALL_PREFIX CACHE)
-
-    # NOT UNCOMMENT AFFECTS PROJECT CONFIG
-    #unset(CMAKE_AR CACHE)
-    #unset(CMAKE_CXX_FLAGS CACHE)
-    #unset(CMAKE_CXX_FLAGS_DEBUG CACHE)
-    #unset(CMAKE_CXX_FLAGS_MINSIZEREL CACHE)
-    #unset(CMAKE_CXX_FLAGS_RELEASE CACHE)
-    #unset(CMAKE_CXX_FLAGS_RELWITHDEBINFO CACHE)
-    #unset(CMAKE_C_FLAGS CACHE)
-    #unset(CMAKE_C_FLAGS_DEBUG CACHE)
-    #unset(CMAKE_C_FLAGS_MINSIZEREL CACHE)
-    #unset(CMAKE_C_FLAGS_RELEASE CACHE)
-    #unset(CMAKE_C_FLAGS_RELWITHDEBINFO CACHE)
-    #unset(CMAKE_EXE_LINKER_FLAGS CACHE)
-    #unset(CMAKE_EXE_LINKER_FLAGS_DEBUG CACHE)
-    #unset(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL CACHE)
-    #unset(CMAKE_EXE_LINKER_FLAGS_RELEASE CACHE)
-    #unset(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO CACHE)
-    #set(CMAKE_EXE_LINKER_FLAGS "")
-    #set(CMAKE_EXE_LINKER_FLAGS_DEBUG "")
-    #set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "")
-    #set(CMAKE_EXE_LINKER_FLAGS_RELEASE "")
-    #set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "")
-    #unset(CMAKE_MODULE_LINKER_FLAGS CACHE)
-    #unset(CMAKE_MODULE_LINKER_FLAGS_DEBUG CACHE)
-    #unset(CMAKE_MODULE_LINKER_FLAGS_MINSIZEREL CACHE)
-    #unset(CMAKE_MODULE_LINKER_FLAGS_RELEASE CACHE)
-    #unset(CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO CACHE)
-    #unset(CMAKE_SHARED_LINKER_FLAGS CACHE)
-    #unset(CMAKE_SHARED_LINKER_FLAGS_DEBUG CACHE)
-    #unset(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL CACHE)
-    #unset(CMAKE_SHARED_LINKER_FLAGS_RELEASE CACHE)
-    #unset(CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO CACHE)
-    #unset(CMAKE_INSTALL_NAME_TOOL CACHE)
-    #unset(CMAKE_LINKER CACHE)
-    #unset(CMAKE_MAKE_PROGRAM CACHE)
-    #unset(CMAKE_NM CACHE)
-    #unset(CMAKE_OBJCOPY CACHE)
-    #unset(CMAKE_OBJDUMP CACHE)
-    #unset(CMAKE_RANLIB CACHE)
-    #unset(CMAKE_SKIP_INSTALL_RPATH CACHE)
-    #unset(CMAKE_SKIP_RPATH CACHE)
-    #unset(CMAKE_STRIP CACHE)
-    #unset(CMAKE_VERBOSE_MAKEFILE CACHE)
-    #unset(CMAKE_USE_RELATIVE_PATHS CACHE)
-
-    # set(CMAKE_OSX_SYSROOT ${OSX_SYSROOT})
-
-    # Xcode version, base SDK and deployment target
-    # checkXcodeVersion()
-    # message(${CMAKE_OSX_DEPLOYMENT_TARGET})
-
-    # osxSDKName(${BASE_OSX_SDK} OSX_SDK_NAME)
-    # message(STATUS "- Xcode: ${XCODE_VERSION} SDK: ${BASE_OSX_SDK}-${OSX_SDK_NAME}")
-    # message(STATUS "- Deployment Target: ${CMAKE_OSX_DEPLOYMENT_TARGET}-${OSX_SDK_NAME}")
-
-    # # Deployment target
-    # set(CMAKE_OSX_DEPLOYMENT_TARGET ${CMAKE_DEPLOYMENT_TARGET})
-    # osxSDKName(${CMAKE_OSX_DEPLOYMENT_TARGET} OSX_SDK_NAME)
-    # set(CMAKE_COMPILER_TOOLSET sdk${CMAKE_OSX_DEPLOYMENT_TARGET})
-    # string(REPLACE "." "_" CMAKE_COMPILER_TOOLSET ${CMAKE_COMPILER_TOOLSET})
-    # message(STATUS "- Deployment Target: ${CMAKE_OSX_DEPLOYMENT_TARGET}-${OSX_SDK_NAME}")
-
-    # if (CMAKE_CXX_FLAGS STREQUAL "/EHsc")
-    #     string(REGEX REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-    # endif()
-
-    # # Set Global Properties (for root Xcode solution)
-    # list(LENGTH IDE_PROPERTIES NUM_PROPS)
-	# math(EXPR PROP_TOTAL "${NUM_PROPS} - 1")
-    # foreach(PROP_INDEX RANGE 0 ${PROP_TOTAL} 2)
-    #     math(EXPR PROP_NEXT "${PROP_INDEX} + 1")
-    #     list(GET IDE_PROPERTIES ${PROP_INDEX} LOOP_PROPERTY)
-    #     list(GET IDE_PROPERTIES ${PROP_NEXT} LOOP_VALUE)
-    #     set(CMAKE_${LOOP_PROPERTY} ${LOOP_VALUE})
-    #     #message(CMAKE_${LOOP_PROPERTY} ${LOOP_VALUE})
-    # endforeach()
-    # set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf")
-
-    # # Build architecture
-    # set(CMAKE_OSX_ARCHITECTURES ${CMAKE_ARCHITECTURE})
-    # if (${CMAKE_OSX_ARCHITECTURES} STREQUAL "i386")
-    #     set(CMAKE_ARCHITECTURE x86)
-    # elseif (${CMAKE_OSX_ARCHITECTURES} STREQUAL "x86_64")
-    #     set(CMAKE_ARCHITECTURE x64)
-    # elseif (${CMAKE_OSX_ARCHITECTURES} STREQUAL "arm64")
-    #     set(CMAKE_ARCHITECTURE arm)
-    # endif()
-    # message(STATUS "- Build architecture: ${CMAKE_OSX_ARCHITECTURES}")
-
-    # # Host architecture
-    # message(FATAL_ERROR "FUERA HOST_ARCH!!!!!!")
-    # set(HOST_ARCH ${CMAKE_HOST_SYSTEM_PROCESSOR})
-
-    # if (${HOST_ARCH} STREQUAL "i386")
-    #     set(CMAKE_HOST_ARCHITECTURE x86)
-    # elseif (${HOST_ARCH} STREQUAL "x86_64")
-    #     set(CMAKE_HOST_ARCHITECTURE x64)
-    # elseif (${HOST_ARCH} STREQUAL "arm64")
-    #     set(CMAKE_HOST_ARCHITECTURE arm64)
-    # else()
-    #     message("- Unknown host architecture")
-    # endif()
-    # message(STATUS "- Host architecture: ${HOST_ARCH}")
-
-    # # Package tool
-	# # set(CMAKE_PACKAGE FALSE CACHE BOOL "Pack executables On/Off")
-    # # set(CMAKE_PACKAGE_PATH "" CACHE PATH "Path to generated packages")
-    # # set(CMAKE_PACKAGE_GEN "DragNDrop" CACHE STRING "Package generator utility")
-    # # set_property(CACHE CMAKE_PACKAGE_GEN PROPERTY STRINGS "DragNDrop;TGZ")
 
     # Libraries
     set(COCOA_LIB ${CMAKE_OSX_SYSROOT}/System/Library/Frameworks/Cocoa.framework)
     if (CMAKE_OSX_DEPLOYMENT_TARGET VERSION_GREATER 11.9999)
-        # string(COMPARE GREATER_EQUAL ${CMAKE_OSX_DEPLOYMENT_TARGET} "12.0" USE_UTTYPE)
-        # if (USE_UTTYPE)
         set(COCOA_LIB ${COCOA_LIB};${CMAKE_OSX_SYSROOT}/System/Library/Frameworks/UniformTypeIdentifiers.framework)
     endif()
-
-    # NRC executable permissions
-    # set(NRC_FILE ${CMAKE_PRJ_PATH}/script/osx/${NAPPGUI_HOST}/nrc)
-    # file(TO_NATIVE_PATH \"${NRC_FILE}\" NRC_FILE)
-    # execute_process(COMMAND "chmod" "+x" "${NRC_FILE}")
 
 # Linux configuration
 #------------------------------------------------------------------------------
@@ -326,9 +172,9 @@ elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     unset(LSB_RELEASE CACHE)
 
     if (LSB_RELEASE_ID_SHORT AND LSB_RELEASE_VERSION_SHORT)
-        message(STATUS "* Linux Platform: ${LSB_RELEASE_ID_SHORT} ${LSB_RELEASE_VERSION_SHORT}")
+        nap_build_opt("Linux Platform" "${LSB_RELEASE_ID_SHORT} ${LSB_RELEASE_VERSION_SHORT}")
     else()
-        message(STATUS "* Linux Platform: Unknown (lsb_release fail)")
+        nap_build_opt("Linux Platform" "Unknown (lsb_release fail)")
     endif()
 
     # Host architecture
@@ -366,11 +212,9 @@ elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 
     # GCC Compiler is used
     if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-
         include(${NAPPGUI_ROOT_PATH}/prj/NAppGCC.cmake)
 
         # GCC Version
-        # message(STATUS "* GCC compiler: ${CMAKE_CXX_COMPILER_VERSION}")
         if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6)
             message(FATAL_ERROR "GCC 4.6 is the minimum supported version in Linux.")
         endif()
@@ -384,11 +228,9 @@ elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 
     # Clang Compiler is used
     elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-
         include(${NAPPGUI_ROOT_PATH}/prj/NAppClang.cmake)
 
         # Clang Version
-        # message(STATUS "* Clang compiler: ${CMAKE_CXX_COMPILER_VERSION}")
         if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.0)
             message(FATAL_ERROR "Clang 3.0 is the minimum supported version in Linux.")
         endif()
@@ -410,10 +252,10 @@ elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     set_property(CACHE CMAKE_TOOLKIT PROPERTY STRINGS "GTK3;None")
 
     if (${CMAKE_TOOLKIT} STREQUAL "None")
-        message(STATUS "* Toolkit: None (command line projects only).")
+        nap_build_opt("Toolkit" "None (command line projects only).")
 
     elseif (${CMAKE_TOOLKIT} STREQUAL "GTK3")
-        message(STATUS "* Toolkit: Gtk+3")
+        nap_build_opt("Toolkit" "GTK+3")
         set(CMAKE_COMPILER_TOOLSET ${CMAKE_COMPILER_TOOLSET}_gtk3)
 
     else()

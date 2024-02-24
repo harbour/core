@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -16,6 +16,8 @@
 __EXTERN_C
 
 _gui_api ListBox *listbox_create(void);
+
+_gui_api void listbox_OnDown(ListBox *listbox, Listener *listener);
 
 _gui_api void listbox_OnSelect(ListBox *listbox, Listener *listener);
 

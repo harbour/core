@@ -1,10 +1,20 @@
+#------------------------------------------------------------------------------
+# This is part of NAppGUI build system
+# See README.md and LICENSE.txt
+#------------------------------------------------------------------------------
 
 # Get macOS name from SDK
 # https://ss64.com/osx/sw_vers.html
 
 #
 # Values for 'CMAKE_OSX_DEPLOYMENT_TARGET'
-# 13.1      # Ventura
+# 14.0      # Sonoma
+# 13.6      # Ventura
+# 13.5
+# 13.4
+# 13.3
+# 13.2
+# 13.1
 # 13.0
 # 12.4      # Monterey
 # 12.3
@@ -32,8 +42,12 @@
 #------------------------------------------------------------------------------
 
 function(nap_macos_sdk_name sdkVersion _ret)
+    # 14 = "Sonoma"
+    if (sdkVersion VERSION_GREATER "13.9999")
+        set(${_ret} "Sonoma" PARENT_SCOPE)
+
     # 13 = "Ventura"
-    if (sdkVersion VERSION_GREATER "12.9999")
+    elseif (sdkVersion VERSION_GREATER "12.9999")
         set(${_ret} "Ventura" PARENT_SCOPE)
 
     # 12 = "Monterey"

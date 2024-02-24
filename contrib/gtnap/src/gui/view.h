@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -18,6 +18,8 @@ __EXTERN_C
 _gui_api View *view_create(void);
 
 _gui_api View *view_scroll(void);
+
+_gui_api View *view_custom(const bool_t scroll, const bool_t border);
 
 _gui_api void view_data_imp(View *view, void **data, FPtr_destroy func_destroy_data);
 
@@ -52,6 +54,10 @@ _gui_api void view_OnKeyDown(View *view, Listener *listener);
 _gui_api void view_OnKeyUp(View *view, Listener *listener);
 
 _gui_api void view_OnFocus(View *view, Listener *listener);
+
+_gui_api void view_OnResignFocus(View *view, Listener *listener);
+
+_gui_api void view_OnAcceptFocus(View *view, Listener *listener);
 
 _gui_api void view_OnScroll(View *view, Listener *listener);
 

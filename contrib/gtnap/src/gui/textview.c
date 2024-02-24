@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -328,23 +328,36 @@ void textview_scroll_visible(TextView *view, const bool_t horizontal, const bool
 
 /*---------------------------------------------------------------------------*/
 
-void textview_move_caret(TextView *view, const int64_t pos)
-{
-    int64_t scroll = pos;
-    cassert_no_null(view);
-    cassert_no_null(view->component.context);
-    cassert_no_nullf(view->component.context->func_text_set_prop);
-    view->component.context->func_text_set_prop(view->component.ositem, ekGUI_PROP_VSCROLL, (void *)&scroll);
-}
-
-/*---------------------------------------------------------------------------*/
-
 void textview_editable(TextView *view, const bool_t is_editable)
 {
     cassert_no_null(view);
     cassert_no_null(view->component.context);
     cassert_no_nullf(view->component.context->func_text_set_editable);
     view->component.context->func_text_set_editable(view->component.ositem, is_editable);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void textview_select(TextView *view, const int32_t start, const int32_t end)
+{
+    int32_t range[2];
+    range[0] = start;
+    range[1] = end;
+    cassert_no_null(view);
+    cassert_no_null(view->component.context);
+    cassert_no_nullf(view->component.context->func_text_set_prop);
+    view->component.context->func_text_set_prop(view->component.ositem, ekGUI_PROP_SELECT, (void *)range);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void textview_scroll_caret(TextView *view)
+{
+    uint32_t nonused = 0;
+    cassert_no_null(view);
+    cassert_no_null(view->component.context);
+    cassert_no_nullf(view->component.context->func_text_set_prop);
+    view->component.context->func_text_set_prop(view->component.ositem, ekGUI_PROP_SCROLL, &nonused);
 }
 
 /*---------------------------------------------------------------------------*/

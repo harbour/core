@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,11 +11,11 @@
 /* Operating System native updown */
 
 #include "osupdown.h"
-#include "osupdown.inl"
+#include "osupdown_win.inl"
 #include "osgui_win.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
+#include "oscontrol_win.inl"
+#include "ospanel_win.inl"
+#include "oswindow_win.inl"
 #include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -56,17 +56,9 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
     case WM_ERASEBKGND:
         return 1;
 
-    case WM_SETFOCUS:
-        _oswindow_store_focus((OSControl *)updown);
-        break;
-
     case WM_LBUTTONDOWN:
-        if (_oswindow_can_mouse_down((OSControl *)updown) == TRUE)
-            break;
-        return 0;
-
     case WM_LBUTTONDBLCLK:
-        if (_oswindow_can_mouse_down((OSControl *)updown) == TRUE)
+        if (_oswindow_mouse_down(OSControlPtr(updown)) == TRUE)
             break;
         return 0;
 
@@ -195,15 +187,6 @@ void osupdown_origin(const OSUpDown *updown, real32_t *x, real32_t *y)
 void osupdown_frame(OSUpDown *updown, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     _oscontrol_set_frame((OSControl *)updown, x, y, width, height);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osupdown_detach_and_destroy(OSUpDown **updown, OSPanel *panel)
-{
-    cassert_no_null(updown);
-    osupdown_detach(*updown, panel);
-    osupdown_destroy(updown);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,12 +11,12 @@
 /* Operating System native text view */
 
 #include "ostext.h"
-#include "ostext.inl"
+#include "ostext_win.inl"
 #include "osgui.inl"
 #include "osgui_win.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
+#include "oscontrol_win.inl"
+#include "ospanel_win.inl"
+#include "oswindow_win.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
 #include <core/event.h>
@@ -79,7 +79,7 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
     }
 
     case WM_SETFOCUS:
-        if (_oswindow_in_tablist((OSControl *)view) == TRUE)
+        if (view->launch_event == TRUE)
         {
             if (view->OnFocus != NULL)
             {
@@ -88,12 +88,11 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
             }
 
             RedrawWindow(hwnd, NULL, NULL, RDW_FRAME | RDW_INVALIDATE);
-            break;
         }
-        return 0;
+        break;
 
     case WM_KILLFOCUS:
-        if (_oswindow_in_tablist((OSControl *)view) == TRUE)
+        if (view->launch_event == TRUE)
         {
             if (view->OnFocus != NULL)
             {
@@ -111,12 +110,8 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
         break;
 
     case WM_LBUTTONDOWN:
-        if (_oswindow_can_mouse_down((OSControl *)view) == TRUE)
-            break;
-        return 0;
-
     case WM_LBUTTONDBLCLK:
-        if (_oswindow_can_mouse_down((OSControl *)view) == TRUE)
+        if (_oswindow_mouse_down(OSControlPtr(view)) == TRUE)
             break;
         return 0;
     }
@@ -317,7 +312,9 @@ void ostext_set_rtf(OSText *view, Stream *rtf_in)
     cassert_no_null(view);
     es.pfnCallback = i_set_rtf;
     es.dwCookie = (DWORD_PTR)rtf_in;
+    view->launch_event = FALSE;
     SendMessage(view->control.hwnd, EM_STREAMIN, SF_RTF, (LPARAM)&es);
+    view->launch_event = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -417,22 +414,32 @@ void ostext_property(OSText *view, const gui_prop_t prop, const void *value)
         view->dySpaceBefore = (LONG)(20 /*kTWIPS_PER_PIXEL*/ * *((real32_t *)value) /** (real32_t)kLOG_PIXY / 72.f*/);
         break;
 
-    case ekGUI_PROP_VSCROLL: {
-        int64_t pos = *(int64_t *)value;
-        CHARRANGE cr;
+    case ekGUI_PROP_SELECT: {
+        int32_t *range = (int32_t *)value;
+        int32_t platform_st, platform_ed;
+        osgui_select_text(range[0], range[1], &platform_st, &platform_ed);
 
-        if (pos < 0)
         {
-            cr.cpMin = -1;
-            cr.cpMax = -1;
-        }
-        else
-        {
-            cr.cpMin = (LONG)pos;
-            cr.cpMax = (LONG)pos;
+            HWND focus = GetFocus();
+            bool_t prev = view->launch_event;
+            view->launch_event = FALSE;
+            SetFocus(view->control.hwnd);
+            SendMessage(view->control.hwnd, EM_SETSEL, (WPARAM)platform_st, (LPARAM)platform_ed);
+            SetFocus(focus);
+            view->launch_event = prev;
         }
 
-        SendMessage(view->control.hwnd, EM_EXSETSEL, 0, (LPARAM)&cr);
+        break;
+    }
+
+    case ekGUI_PROP_SCROLL: {
+        HWND focus = GetFocus();
+        bool_t prev = view->launch_event;
+        view->launch_event = FALSE;
+        SetFocus(view->control.hwnd);
+        SendMessage(view->control.hwnd, EM_SCROLLCARET, 0, 0);
+        SetFocus(focus);
+        view->launch_event = prev;
         break;
     }
 
@@ -656,15 +663,6 @@ void ostext_origin(const OSText *view, real32_t *x, real32_t *y)
 void ostext_frame(OSText *view, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     _oscontrol_set_frame((OSControl *)view, x, y, width, height);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _ostext_detach_and_destroy(OSText **view, OSPanel *panel)
-{
-    cassert_no_null(view);
-    ostext_detach(*view, panel);
-    ostext_destroy(view);
 }
 
 /*---------------------------------------------------------------------------*/

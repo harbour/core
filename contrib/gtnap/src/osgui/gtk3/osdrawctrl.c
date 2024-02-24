@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,7 +11,7 @@
 /* Drawing custom GUI controls */
 
 #include "osdrawctrl.h"
-#include "osglobals.inl"
+#include "osglobals_gtk.inl"
 #include <draw2d/draw.h>
 #include <draw2d/dctxh.h>
 #include <draw2d/font.h>
@@ -72,18 +72,11 @@ void osdrawctrl_clear(DCtx *ctx, const int32_t x, const int32_t y, const uint32_
 {
     GtkStyleContext *c = osglobals_entry_context();
     cairo_t *cairo = (cairo_t *)dctx_native(ctx);
-    real32_t offset_x, offset_y;
-    const double i_CORNER_OFFSET = 10;
-    unref(nonused);
-    dctx_offset(ctx, &offset_x, &offset_y);
-    cairo_save(cairo);
-    cairo_rectangle(cairo, (double)x + offset_x, (double)y + offset_y, (double)width, (double)height);
-    cairo_clip(cairo);
     gtk_style_context_save(c);
     gtk_style_context_set_state(c, GTK_STATE_FLAG_NORMAL);
-    gtk_render_background(c, cairo, (gdouble)x + offset_x - i_CORNER_OFFSET, (gdouble)y + offset_y - i_CORNER_OFFSET, (gdouble)width + 2 * i_CORNER_OFFSET, (gdouble)height + 2 * i_CORNER_OFFSET);
+    gtk_render_background(c, cairo, (gdouble)x, (gdouble)y, (gdouble)width, (gdouble)height);
     gtk_style_context_restore(c);
-    cairo_restore(cairo);
+    unref(nonused);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -245,52 +238,55 @@ void osdrawctrl_focus(DCtx *ctx, const int32_t x, const int32_t y, const uint32_
 
 void osdrawctrl_line(DCtx *ctx, const int32_t x0, const int32_t y0, const int32_t x1, const int32_t y1)
 {
-    draw_lineimp(ctx, (real32_t)x0, (real32_t)y0, (real32_t)x1, (real32_t)y1, TRUE);
+    draw_line_imp(ctx, (real32_t)x0, (real32_t)y0, (real32_t)x1, (real32_t)y1, TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osdrawctrl_text(DCtx *ctx, const char_t *text, const int32_t x, const int32_t y, const ctrl_state_t state)
 {
-    color_t color = 0;
+    color_t color = dctx_text_color(ctx);
     ellipsis_t ellipsis = dctx_text_trim(ctx);
 
-    switch (state)
+    if (color == kCOLOR_TRANSPARENT)
     {
-    case ekCTRL_STATE_NORMAL:
-        color = osglobals_text_color();
-        break;
+        switch (state)
+        {
+        case ekCTRL_STATE_NORMAL:
+            color = osglobals_text_color();
+            break;
 
-    case ekCTRL_STATE_BKNORMAL:
-        color = osglobals_textbackdrop_color();
-        break;
+        case ekCTRL_STATE_BKNORMAL:
+            color = osglobals_textbackdrop_color();
+            break;
 
-    case ekCTRL_STATE_HOT:
-        color = osglobals_hottext_color();
-        break;
+        case ekCTRL_STATE_HOT:
+            color = osglobals_hottext_color();
+            break;
 
-    case ekCTRL_STATE_BKHOT:
-        color = osglobals_hottextbackdrop_color();
-        break;
+        case ekCTRL_STATE_BKHOT:
+            color = osglobals_hottextbackdrop_color();
+            break;
 
-    case ekCTRL_STATE_PRESSED:
-        color = osglobals_seltext_color();
-        break;
+        case ekCTRL_STATE_PRESSED:
+            color = osglobals_seltext_color();
+            break;
 
-    case ekCTRL_STATE_BKPRESSED:
-        color = osglobals_seltextbackdrop_color();
-        break;
+        case ekCTRL_STATE_BKPRESSED:
+            color = osglobals_seltextbackdrop_color();
+            break;
 
-    case ekCTRL_STATE_DISABLED:
-        color = osglobals_text_color();
-        break;
+        case ekCTRL_STATE_DISABLED:
+            color = osglobals_text_color();
+            break;
 
-        cassert_default();
+            cassert_default();
+        }
     }
 
     draw_text_color(ctx, color);
     draw_text_trim(ctx, ekELLIPEND);
-    dctx_text_raster(ctx, text, x, y);
+    draw_text_raster(ctx, text, x, y);
     draw_text_trim(ctx, ellipsis);
 }
 

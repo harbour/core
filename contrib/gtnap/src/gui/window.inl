@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -20,24 +20,16 @@ void *_window_ositem(Window *window);
 
 bool_t _window_is_visible(const Window *window);
 
+Panel *_window_main_panel(Window *window);
+
 #if defined(__DESKTOP__)
 
 void _window_taborder(Window *window, void *ositem);
-
-void _window_tabstop(Window *window, const bool_t next);
 
 #endif
 
 void _window_locale(Window *window);
 
 gui_role_t _window_role(const Window *window);
-
-V2Df _window_get_origin(const Window *window);
-
-S2Df _window_get_size(const Window *window);
-
-void _window_focus(Window *window, GuiComponent *component);
-
-void window_launch_overlay(Window *window, Window *parent_window);
 
 __END_C

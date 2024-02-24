@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -43,6 +43,10 @@ _osgui_api void osview_OnKeyDown(OSView *view, Listener *listener);
 _osgui_api void osview_OnKeyUp(OSView *view, Listener *listener);
 
 _osgui_api void osview_OnFocus(OSView *view, Listener *listener);
+
+_osgui_api void osview_OnResignFocus(OSView *view, Listener *listener);
+
+_osgui_api void osview_OnAcceptFocus(OSView *view, Listener *listener);
 
 _osgui_api void osview_OnScroll(OSView *view, Listener *listener);
 

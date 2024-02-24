@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -106,6 +106,26 @@ typedef enum _gui_scale_t
     ekGUI_SCALE_ASPECTDW
 } gui_scale_t;
 
+typedef enum _gui_scroll_t
+{
+    ekGUI_SCROLL_BEGIN = 1,
+    ekGUI_SCROLL_END,
+    ekGUI_SCROLL_STEP_LEFT,
+    ekGUI_SCROLL_STEP_RIGHT,
+    ekGUI_SCROLL_PAGE_LEFT,
+    ekGUI_SCROLL_PAGE_RIGHT,
+    ekGUI_SCROLL_THUMB
+} gui_scroll_t;
+
+typedef enum _gui_focus_t
+{
+    ekGUI_FOCUS_CHANGED = 1,
+    ekGUI_FOCUS_KEEP,
+    ekGUI_FOCUS_NO_NEXT,
+    ekGUI_FOCUS_NO_RESIGN,
+    ekGUI_FOCUS_NO_ACCEPT
+} gui_focus_t;
+
 typedef enum _gui_event_t
 {
     ekGUI_EVENT_LABEL = 0x400,
@@ -116,6 +136,8 @@ typedef enum _gui_event_t
     ekGUI_EVENT_UPDOWN,
     ekGUI_EVENT_TXTFILTER,
     ekGUI_EVENT_TXTCHANGE,
+    ekGUI_EVENT_FOCUS_RESIGN,
+    ekGUI_EVENT_FOCUS_ACCEPT,
     ekGUI_EVENT_FOCUS,
     ekGUI_EVENT_MENU,
     ekGUI_EVENT_DRAW,
@@ -147,7 +169,6 @@ typedef enum _gui_event_t
     ekGUI_EVENT_TBL_SEL,
     ekGUI_EVENT_TBL_HEADCLICK,
     ekGUI_EVENT_TBL_ROWCLICK,
-
     ekGUI_EVENT_IDLE
 } gui_event_t;
 
@@ -213,7 +234,8 @@ typedef enum _gui_prop_t
     ekGUI_PROP_LSPACING,
     ekGUI_PROP_BFPARSPACE,
     ekGUI_PROP_AFPARSPACE,
-    ekGUI_PROP_VSCROLL
+    ekGUI_PROP_SELECT,
+    ekGUI_PROP_SCROLL
 } gui_prop_t;
 
 typedef enum _clipboard_t
@@ -438,6 +460,10 @@ typedef uint32_t (*FPtr_gctx_set_ptr2)(void *item, void *ptr);
 #define FUNC_CHECK_GCTX_SET_PTR2(func, type, ptr_type) \
     (void)((uint32_t(*)(type *, ptr_type *))func == func)
 
+typedef enum_t (*FPtr_gctx_set_ptr3)(void *item, void *ptr);
+#define FUNC_CHECK_GCTX_SET_PTR3(func, type, ptr_type, enum_type) \
+    (void)((enum_type(*)(type *, ptr_type *))func == func)
+
 typedef void (*FPtr_gctx_set_cptr)(void *item, const void *ptr);
 #define FUNC_CHECK_GCTX_SET_CPTR(func, type, ptr_type) \
     (void)((void (*)(type *, const ptr_type *))func == func)
@@ -461,6 +487,10 @@ typedef void (*FPtr_gctx_set_real32)(void *item, const real32_t value);
 typedef void (*FPtr_gctx_set_enum)(void *item, const enum_t value);
 #define FUNC_CHECK_GCTX_SET_ENUM(func, type, type_enum) \
     (void)((void (*)(type *, const type_enum))func == func)
+
+typedef enum_t (*FPtr_gctx_set_enum2)(void *item, const bool_t);
+#define FUNC_CHECK_GCTX_SET_ENUM2(func, type, type_enum) \
+    (void)((type_enum(*)(type *, const bool_t))func == func)
 
 typedef void (*FPtr_gctx_set_elem)(void *item, const ctrl_op_t op, const uint32_t index, const char_t *text, const Image *data);
 #define FUNC_CHECK_GCTX_SET_ELEM(func, type) \
@@ -734,6 +764,8 @@ struct _guictx_t
     FPtr_gctx_set_listener func_view_OnKeyDown;
     FPtr_gctx_set_listener func_view_OnKeyUp;
     FPtr_gctx_set_listener func_view_OnFocus;
+    FPtr_gctx_set_listener func_view_OnResignFocus;
+    FPtr_gctx_set_listener func_view_OnAcceptFocus;
     FPtr_gctx_set_listener func_view_OnScroll;
     FPtr_gctx_set_listener func_view_OnTouchTap;
     FPtr_gctx_set_listener func_view_OnTouchStartDrag;
@@ -794,9 +826,10 @@ struct _guictx_t
     FPtr_gctx_set_bool func_window_enable_mouse_events;
     FPtr_gctx_set_hotkey func_window_hotkey;
     FPtr_gctx_set_ptr func_window_set_taborder;
-    FPtr_gctx_set_bool func_window_tabstop;
     FPtr_gctx_set_bool func_window_tabcycle;
-    FPtr_gctx_set_ptr func_window_set_focus;
+    FPtr_gctx_set_enum2 func_window_tabstop;
+    FPtr_gctx_set_ptr3 func_window_set_focus;
+    FPtr_gctx_get_ptr func_window_get_focus;
     FPtr_gctx_set_ptr func_attach_main_panel_to_window;
     FPtr_gctx_set_ptr func_detach_main_panel_from_window;
     FPtr_gctx_set_ptr func_attach_window_to_window;
@@ -865,7 +898,7 @@ struct _evtext_t
     const char_t *text;
     uint32_t cpos;
     int32_t len;
-    void *ptr1;
+    void *next_ctrl;
 };
 
 #define kTEXTFILTER_SIZE 4096
@@ -894,6 +927,8 @@ struct _evmouse_t
     real32_t ly;
     gui_mouse_t button;
     uint32_t count;
+    uint32_t modifiers;
+    uint32_t tag;
 };
 
 struct _evwheel_t
@@ -932,14 +967,14 @@ struct _evmenu_t
 {
     uint32_t index;
     gui_state_t state;
-    const char_t *str;
+    const char_t *text;
 };
 
 struct _evscroll_t
 {
     gui_orient_t orient;
-    uint32_t origin;
-    real32_t pos;
+    gui_scroll_t scroll;
+    real32_t cpos;
 };
 
 struct _evtbpos_t

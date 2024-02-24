@@ -1,4 +1,7 @@
 #------------------------------------------------------------------------------
+# This is part of NAppGUI build system
+# See README.md and LICENSE.txt
+#------------------------------------------------------------------------------
 
 set(NAP_TARGET_PUBLIC_HEADER_EXTENSION "*.h;*.hxx;*.hpp;*.def")
 set(NAP_TARGET_HEADER_EXTENSION "${NAP_TARGET_PUBLIC_HEADER_EXTENSION};*.inl;*.ixx;*.ipp")
@@ -18,6 +21,13 @@ endif()
 if (NOT NAPPGUI_ROOT_PATH)
     message(FATAL_ERROR "NAPPGUI_ROOT_PATH is not set.")
 endif()
+
+# Defines required by NAppGUI-based targets after installation
+set(NAPPGUI_INSTALL_DEFINES "${CMAKE_BINARY_DIR}/NAppGUITargetsDefines.txt")
+if(EXISTS "${NAPPGUI_INSTALL_DEFINES}")
+    file(REMOVE "${NAPPGUI_INSTALL_DEFINES}")
+endif()
+file(WRITE "${NAPPGUI_INSTALL_DEFINES}" "")
 
 #------------------------------------------------------------------------------
 
@@ -530,7 +540,6 @@ function(nap_install_resource_packs targetName targetType sourceDir nrcMode)
 
 endfunction()
 
-
 #------------------------------------------------------------------------------
 
 function(nap_target_relpath targetSrcDir _ret)
@@ -594,8 +603,6 @@ endfunction()
 function(nap_exists_dependency targetName libName _ret)
 
     set(${_ret} "NO" PARENT_SCOPE)
-    # targetSourceDir(${targetName} targetDir)
-    # targetSourceDir(${libName} libDir)
 
     if (${targetName} STREQUAL "${libName}")
         set(${_ret} "YES" PARENT_SCOPE)
@@ -604,15 +611,6 @@ function(nap_exists_dependency targetName libName _ret)
 
     foreach(depend ${${targetName}_LINKDEPENDS})
 
-        # if (depend MATCHES "__STATIC_LIB__*")
-        #     string(SUBSTRING ${depend} 14 -1 dependName)
-        # elseif(depend MATCHES "__DYNAMIC_LIB__*")
-        #     string(SUBSTRING ${depend} 15 -1 dependName)
-        # else()
-        #     set(dependName ${depend})
-        # endif()
-
-        # targetSourceDir(${dependName} dependDir)
         if (${depend} STREQUAL "${libName}")
             set(${_ret} "YES" PARENT_SCOPE)
             return()
@@ -666,8 +664,18 @@ function(nap_link_with_libraries targetName firstLevelDepends)
 
     # Target should link with GTK3
     if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+        if (NOT CMAKE_TOOLKIT)
+            message(FATAL_ERROR "CMAKE_TOOLKIT is not set")
+        endif()
+
         if (${CMAKE_TOOLKIT} STREQUAL "GTK3")
-            nap_exists_dependency(${targetName} "draw2d" _depends)
+            if (NOT NAPPGUI_IS_PACKAGE)
+                nap_exists_dependency(${targetName} "draw2d" _depends)
+            else()
+                set(_depends False)
+            endif()
+
+            # The target has to link with GTK+3
             if (_depends)
                 # Use the package PkgConfig to detect GTK+ headers/library files
                 find_package(PkgConfig REQUIRED)
@@ -692,8 +700,14 @@ function(nap_link_with_libraries targetName firstLevelDepends)
 
     # Target should link with Cocoa
     if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-        nap_exists_dependency(${targetName} "draw2d" _depends1)
-        nap_exists_dependency(${targetName} "inet" _depends2)
+        if (NOT NAPPGUI_IS_PACKAGE)
+            nap_exists_dependency(${targetName} "draw2d" _depends1)
+            nap_exists_dependency(${targetName} "inet" _depends2)
+        else()
+            set(_depends1 False)
+            set(_depends1 False)
+        endif()
+
         if (_depends1 OR _depends2)
             if (NOT ${TARGET_TYPE} STREQUAL "STATIC_LIBRARY")
     			target_link_libraries(${targetName} ${COCOA_LIB})
@@ -749,9 +763,13 @@ function(nap_target targetName targetType dependList nrcMode)
         string(TOUPPER ${targetPathUpper} targetPathUpper)
         set_property(TARGET ${targetName} APPEND PROPERTY COMPILE_DEFINITIONS NAPPGUI_${targetPathUpper}_EXPORT_DLL)
 
+        # Append import for use in NAppGUI-based future targets
+        file(APPEND "${NAPPGUI_INSTALL_DEFINES}" "NAPPGUI_${targetPathUpper}_IMPORT_DLL\n")
+
         # Clang, GNU, Intel, MSVC
         if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	        target_compile_options(${targetName} PUBLIC "-fPIC;-fvisibility=hidden")
+            set_target_properties(${targetName} PROPERTIES LINK_FLAGS "-fPIC")
         endif()
 
         # Install the public headers
@@ -788,21 +806,6 @@ function(nap_target targetName targetType dependList nrcMode)
 
     endif()
 
-    # if (CMAKE_TARGET_COMPILER_OPTIONS)
-    #     message("EHHHHHHHHHHHHH!!!! ${CMAKE_TARGET_COMPILER_OPTIONS}")
-    #     set_target_properties(${targetName} PROPERTIES COMPILE_OPTIONS "${CMAKE_TARGET_COMPILER_OPTIONS}")
-    # endif()
-
-    # if (CMAKE_TARGET_LINKER_OPTIONS)
-    #     message("EH22222222222222!!!! ${CMAKE_TARGET_LINKER_OPTIONS}")
-    #     set_target_properties(${targetName} PROPERTIES LINKER_FLAGS "${CMAKE_TARGET_LINKER_OPTIONS}")
-    # endif()
-
-    # IDE Properties for TARGET
-    # if (IDE_PROPERTIES)
-    #     set_target_properties(${targetName} PROPERTIES ${IDE_PROPERTIES})
-    # endif()
-
     # Output directories for generated binaries
     foreach(config ${CMAKE_CONFIGURATION_TYPES})
         string(TOUPPER ${config} configUpper)
@@ -812,37 +815,37 @@ function(nap_target targetName targetType dependList nrcMode)
     endforeach()
 
     # Install binaries and headers
-    set(RTPERM "OWNER_READ;OWNER_WRITE;OWNER_EXECUTE;GROUP_READ;GROUP_EXECUTE;WORLD_READ;WORLD_EXECUTE")
     get_filename_component(targetPathSingle ${targetPath} NAME)
-    install(TARGETS ${targetName}
-                LIBRARY DESTINATION "bin" PERMISSIONS ${RTPERM}
-                RUNTIME DESTINATION "bin" PERMISSIONS ${RTPERM}
-                ARCHIVE DESTINATION "lib" PERMISSIONS ${RTPERM}
+    install(TARGETS ${targetName} EXPORT nappgui-targets
+                LIBRARY DESTINATION "bin" PERMISSIONS ${INSTALL_PERM}
+                RUNTIME DESTINATION "bin" PERMISSIONS ${INSTALL_PERM}
+                ARCHIVE DESTINATION "lib" PERMISSIONS ${INSTALL_PERM}
                 BUNDLE DESTINATION "bin"
-                PUBLIC_HEADER DESTINATION "inc/${targetPathSingle}"                    )
+                PUBLIC_HEADER DESTINATION "inc/${targetPathSingle}")
 
     # Install the .pdb files
     if (targetType STREQUAL STATIC_LIB)
-        install(FILES "$<TARGET_FILE_DIR:${targetName}>/${targetName}.pdb" DESTINATION "lib" PERMISSIONS ${RTPERM} OPTIONAL)
+        install(FILES "$<TARGET_FILE_DIR:${targetName}>/${targetName}.pdb" DESTINATION "lib" PERMISSIONS ${INSTALL_PERM} OPTIONAL)
     else()
-        install(FILES "$<TARGET_FILE_DIR:${targetName}>/${targetName}.pdb" DESTINATION "bin" PERMISSIONS ${RTPERM} OPTIONAL)
+        install(FILES "$<TARGET_FILE_DIR:${targetName}>/${targetName}.pdb" DESTINATION "bin" PERMISSIONS ${INSTALL_PERM} OPTIONAL)
     endif()
 
     # Install the .exp files
-    # install(FILES "$<TARGET_LINKER_FILE_DIR:${targetName}>/${targetName}.exp" CONFIGURATIONS "${config}" DESTINATION "lib/${config}" PERMISSIONS ${RTPERM} OPTIONAL)
+    # install(FILES "$<TARGET_LINKER_FILE_DIR:${targetName}>/${targetName}.exp" CONFIGURATIONS "${config}" DESTINATION "lib/${config}" PERMISSIONS ${INSTALL_PERM} OPTIONAL)
 
     # Install resource packs
     nap_install_resource_packs(${targetName} ${targetType} ${CMAKE_CURRENT_SOURCE_DIR} ${nrcMode})
 
     # Target Definitions
-	set_property(TARGET ${targetName} APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:Debug>:CMAKE_DEBUG>)
-    set_property(TARGET ${targetName} APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:Release>:CMAKE_RELEASE>)
-    set_property(TARGET ${targetName} APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:ReleaseWithAssert>:CMAKE_RELEASEWITHASSERT>)
+    foreach(config ${CMAKE_CONFIGURATION_TYPES})
+        string(TOUPPER ${config} configUpper)
+        set_property(TARGET ${targetName} APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:${config}>:CMAKE_${configUpper}>)
+    endforeach()
 
     if (WIN32)
         # Visual Studio 2005/2008 doesn't have <stdint.h>
         if(MSVC_VERSION EQUAL 1500 OR MSVC_VERSION LESS 1500)
-            target_include_directories(${targetName} PUBLIC ${CMAKE_PRJ_PATH}/depend)
+            target_include_directories(${targetName} PUBLIC $<BUILD_INTERFACE:${CMAKE_PRJ_PATH}/depend>)
         endif()
 
         # Platform toolset macro
@@ -863,18 +866,28 @@ function(nap_target targetName targetType dependList nrcMode)
                 # Use the package PkgConfig to detect GTK+ headers/library files
                 find_package(PkgConfig REQUIRED)
                 pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-                target_include_directories(${targetName} PUBLIC ${GTK3_INCLUDE_DIRS})
+                foreach(dir ${GTK3_INCLUDE_DIRS})
+                    target_include_directories(${targetName} PUBLIC $<BUILD_INTERFACE:${dir}>)
+                endforeach()
                 set_target_properties(${targetName} PROPERTIES COMPILE_FLAGS "-D__GTK3_TOOLKIT__")
             endif()
         endif()
     endif()
 
-    # TARGET local directory include
-    target_include_directories(${targetName} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+    # Build TARGET local and /src directory include
+    target_include_directories(${targetName} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+
+    if (NOT NAPPGUI_IS_PACKAGE)
+        target_include_directories(${targetName} PUBLIC $<BUILD_INTERFACE:${NAPPGUI_ROOT_PATH}/src>)
+    endif()
+
+    # Installed TARGET local and 'inc' directory include
+    target_include_directories(${targetName} PUBLIC $<INSTALL_INTERFACE:inc>)
+    target_include_directories(${targetName} PUBLIC $<INSTALL_INTERFACE:inc/${targetPathSingle}>)
 
     # Include dir for target generated resources
     if (resIncludeDir)
-        target_include_directories(${targetName} PUBLIC ${resIncludeDir})
+        target_include_directories(${targetName} PUBLIC $<BUILD_INTERFACE:${resIncludeDir}>)
     endif()
 
     # Target dependency for compile order
@@ -918,9 +931,10 @@ function(nap_command_app appName dependList nrcMode)
 
     if (WIN32)
         nap_target("${appName}" WIN_CONSOLE "${dependList}" ${nrcMode})
-        set_target_properties(${appName} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
-        set_target_properties(${appName} PROPERTIES LINK_FLAGS_RELASE "/SUBSYSTEM:CONSOLE")
-        set_target_properties(${appName} PROPERTIES LINK_FLAGS_RELEASEWITHASSERT "/SUBSYSTEM:CONSOLE")
+        foreach(config ${CMAKE_CONFIGURATION_TYPES})
+            string(TOUPPER ${config} configUpper)
+            set_target_properties(${appName} PROPERTIES LINK_FLAGS_${configUpper} "/SUBSYSTEM:CONSOLE")
+        endforeach()
 
     elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
         nap_target("${appName}" APPLE_CONSOLE "${dependList}" ${nrcMode})
@@ -934,10 +948,7 @@ function(nap_command_app appName dependList nrcMode)
     endif()
 
     nap_link_with_libraries(${appName} "${dependList}")
-    # targetOptions(${appName} "${options}")
     nap_target_rpath(${appName} NO "")
-
-    # targetRPath(${appName} NO "")
 
 endfunction()
 
@@ -945,14 +956,12 @@ endfunction()
 
 function(nap_desktop_app appName dependList nrcMode)
 
-    # readPackFile()
-    # set(dependencies "")
-    # list(APPEND dependencies "${dependList}")
 	if (WIN32)
         nap_target(${appName} WIN_DESKTOP "${dependList}" ${nrcMode})
-		set_target_properties(${appName} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
-		set_target_properties(${appName} PROPERTIES LINK_FLAGS_RELASE "/SUBSYSTEM:WINDOWS")
-		set_target_properties(${appName} PROPERTIES LINK_FLAGS_RELASEWITHASSERT "/SUBSYSTEM:WINDOWS")
+        foreach(config ${CMAKE_CONFIGURATION_TYPES})
+            string(TOUPPER ${config} configUpper)
+            set_target_properties(${appName} PROPERTIES LINK_FLAGS_${configUpper} "/SUBSYSTEM:WINDOWS")
+        endforeach()
         set(macOSBundle NO)
 
     elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
@@ -974,11 +983,7 @@ function(nap_desktop_app appName dependList nrcMode)
         set(macOSBundle YES)
 
     elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-
         nap_target("${appName}" LINUX_DESKTOP "${dependList}" ${nrcMode})
-        # file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
-        # set_target_properties(${bundleName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
-        # linuxBundle(${appName} "${dependencies}")
         set(macOSBundle NO)
 
     else()
@@ -987,12 +992,6 @@ function(nap_desktop_app appName dependList nrcMode)
 	endif()
 
     nap_link_with_libraries(${appName} "${dependList}")
-    # targetLinkWithLibraries(${appName} "${dependencies}")
-    # targetOptions(${appName} "${options}")
     nap_target_rpath(${appName} ${macOSBundle} "")
-
-    # if (${CMAKE_PACKAGE})
-    #     processInstaller(${appName})
-    # endif()
 
 endfunction()

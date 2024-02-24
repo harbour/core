@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,14 +12,15 @@
 
 #include "osbutton.h"
 #include "osbutton.inl"
+#include "osbutton_win.inl"
 #include "osgui.inl"
 #include "osgui_win.inl"
+#include "oscontrol_win.inl"
+#include "osdrawctrl_win.inl"
+#include "ospanel_win.inl"
+#include "oswindow_win.inl"
 #include "osimg.inl"
-#include "oscontrol.inl"
 #include "osstyleXP.inl"
-#include "osdrawctrl.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
 #include <draw2d/font.h>
 #include <draw2d/image.h>
 #include <core/event.h>
@@ -47,7 +48,6 @@ struct _osbutton_t
 };
 
 static HWND i_LAST_FOCUS = NULL;
-static HWND i_RESTORE_FOCUS = NULL;
 static double i_LAST_FOCUS_TIME = 0.;
 #define i_TIME_SEC(microseconds) ((real64_t)microseconds / 1000000.)
 
@@ -229,12 +229,6 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
             i_LAST_FOCUS = NULL;
         }
 
-        /* If a button that is not in the tablist is clicked, it will take the focus,
-           removing the focus from the current focused control */
-        if (_oswindow_in_tablist((OSControl *)button) == FALSE)
-            i_RESTORE_FOCUS = (HWND)wParam;
-        else
-            _oswindow_store_focus((OSControl *)button);
         break;
 
     case WM_KILLFOCUS:
@@ -245,17 +239,8 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
     case WM_LBUTTONDOWN:
     case WM_LBUTTONDBLCLK:
-        if (_oswindow_in_tablist((OSControl *)button) == FALSE)
-        {
-            _oswindow_lock_edit_focus_events((OSControl *)button);
+        if (_oswindow_mouse_down(OSControlPtr(button)) == TRUE)
             break;
-        }
-        else
-        {
-            if (_oswindow_can_mouse_down((OSControl *)button) == TRUE)
-                break;
-        }
-
         return 0;
     }
 
@@ -333,9 +318,9 @@ OSButton *osbutton_create(const uint32_t flags)
 
     _oscontrol_init((OSControl *)button, PARAM(dwExStyle, WS_EX_NOPARENTNOTIFY), i_style(flags, ekCENTER), L"button", 0, 0, i_WndProc, kDEFAULT_PARENT_WINDOW);
 
-    if (_osgui_button_text_allowed(flags) == TRUE)
+    if (osbutton_text_allowed(flags) == TRUE)
     {
-        button->font = _osgui_create_default_font();
+        button->font = osgui_create_default_font();
         _oscontrol_set_font((OSControl *)button, button->font);
     }
 
@@ -368,12 +353,12 @@ void osbutton_OnClick(OSButton *button, Listener *listener)
 void osbutton_text(OSButton *button, const char_t *text)
 {
     cassert_no_null(button);
-    cassert(_osgui_button_text_allowed(button->flags) == TRUE);
+    cassert(osbutton_text_allowed(button->flags) == TRUE);
     _oscontrol_set_text((OSControl *)button, text);
 
     /* Update key accelerator from text */
     {
-        vkey_t key = _osgui_vkey_from_text(text);
+        vkey_t key = osgui_vkey_from_text(text);
 
         if (button->key == ENUM_MAX(vkey_t))
         {
@@ -415,7 +400,7 @@ static void i_set_image(HWND hwnd, const Image *image)
 void osbutton_font(OSButton *button, const Font *font)
 {
     cassert_no_null(button);
-    cassert(_osgui_button_text_allowed(button->flags) == TRUE);
+    cassert(osbutton_text_allowed(button->flags) == TRUE);
     _oscontrol_update_font((OSControl *)button, &button->font, font);
 }
 
@@ -425,7 +410,7 @@ void osbutton_align(OSButton *button, const align_t align)
 {
     DWORD dwStyle = 0;
     cassert_no_null(button);
-    cassert(_osgui_button_text_allowed(button->flags) == TRUE);
+    cassert(osbutton_text_allowed(button->flags) == TRUE);
     dwStyle = i_style(button->flags, align);
     SetWindowLongPtr(button->control.hwnd, GWL_STYLE, dwStyle);
 }
@@ -435,7 +420,7 @@ void osbutton_align(OSButton *button, const align_t align)
 void osbutton_image(OSButton *button, const Image *image)
 {
     cassert_no_null(button);
-    cassert(_osgui_button_image_allowed(button->flags) == TRUE);
+    cassert(osbutton_image_allowed(button->flags) == TRUE);
     ptr_destopt(image_destroy, &button->image, Image);
     if (button_get_type(button->flags) == ekBUTTON_PUSH)
     {
@@ -635,7 +620,6 @@ void osbutton_attach(OSButton *button, OSPanel *panel)
 
 void osbutton_detach(OSButton *button, OSPanel *panel)
 {
-    _oswindow_unset_defbutton((OSControl *)button);
     _ospanel_detach_control(panel, (OSControl *)button);
 }
 
@@ -679,15 +663,6 @@ void osbutton_frame(OSButton *button, const real32_t x, const real32_t y, const 
 
 /*---------------------------------------------------------------------------*/
 
-void _osbutton_detach_and_destroy(OSButton **button, OSPanel *panel)
-{
-    cassert_no_null(button);
-    osbutton_detach(*button, panel);
-    osbutton_destroy(button);
-}
-
-/*---------------------------------------------------------------------------*/
-
 void _osbutton_command(OSButton *button, WPARAM wParam, const bool_t restore_focus)
 {
     cassert_no_null(button);
@@ -719,17 +694,8 @@ void _osbutton_command(OSButton *button, WPARAM wParam, const bool_t restore_foc
             listener_event(button->OnClick, ekGUI_EVENT_BUTTON, button, &params, NULL, OSButton, EvButton, void);
         }
 
-        if (button->is_default == FALSE && button_get_type(button->flags) == ekBUTTON_PUSH)
-            _osbutton_unset_default(button);
-
-        if (i_RESTORE_FOCUS != NULL)
-        {
-            if (restore_focus == TRUE)
-                SetFocus(i_RESTORE_FOCUS);
-            i_RESTORE_FOCUS = NULL;
-
-            _oswindow_unlock_edit_focus_events((OSControl *)button);
-        }
+        _oswindow_release_transient_focus(OSControlPtr(button));
+        unref(restore_focus);
     }
 }
 
@@ -752,38 +718,24 @@ void _osbutton_toggle(OSButton *button)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t _osbutton_is_pushbutton(const OSButton *button)
+void osbutton_set_default(OSButton *button, const bool_t is_default)
 {
     cassert_no_null(button);
-    return (bool_t)(button_get_type(button->flags) == ekBUTTON_PUSH);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osbutton_set_default(OSButton *button)
-{
-    cassert_no_null(button);
-    cassert(button_get_type(button->flags) == ekBUTTON_PUSH);
+    if (button_get_type(button->flags) == ekBUTTON_PUSH)
     {
         LONG style = GetWindowLong(button->control.hwnd, GWL_STYLE);
-        style |= BS_DEFPUSHBUTTON;
+
+        if (is_default == TRUE)
+            style |= BS_DEFPUSHBUTTON;
+        else
+            style &= ~BS_DEFPUSHBUTTON;
+
         SetWindowLong(button->control.hwnd, GWL_STYLE, style);
         InvalidateRect(button->control.hwnd, NULL, TRUE);
-        button->is_default = TRUE;
+        button->is_default = is_default;
     }
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osbutton_unset_default(OSButton *button)
-{
-    cassert_no_null(button);
-    cassert(button_get_type(button->flags) == ekBUTTON_PUSH);
+    else
     {
-        LONG style = GetWindowLong(button->control.hwnd, GWL_STYLE);
-        style &= ~BS_DEFPUSHBUTTON;
-        SetWindowLong(button->control.hwnd, GWL_STYLE, style);
-        InvalidateRect(button->control.hwnd, NULL, TRUE);
         button->is_default = FALSE;
     }
 }

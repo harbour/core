@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,15 +15,45 @@
 
 __EXTERN_C
 
-_gui_api void *cell_control_imp(Cell *cell, const char_t *type);
+_gui_api bool_t cell_empty(Cell *cell);
+
+_gui_api GuiControl *cell_control(Cell *cell);
+
+_gui_api Label *cell_label(Cell *cell);
+
+_gui_api Button *cell_button(Cell *cell);
+
+_gui_api PopUp *cell_popup(Cell *cell);
+
+_gui_api Edit *cell_edit(Cell *cell);
+
+_gui_api Combo *cell_combo(Cell *cell);
+
+_gui_api ListBox *cell_listbox(Cell *cell);
+
+_gui_api UpDown *cell_updown(Cell *cell);
+
+_gui_api Slider *cell_slider(Cell *cell);
+
+_gui_api Progress *cell_progress(Cell *cell);
+
+_gui_api View *cell_view(Cell *cell);
+
+_gui_api TextView *cell_textview(Cell *cell);
+
+_gui_api ImageView *cell_imageview(Cell *cell);
+
+_gui_api TableView *cell_tableview(Cell *cell);
+
+_gui_api SplitView *cell_splitview(Cell *cell);
+
+_gui_api Panel *cell_panel(Cell *cell);
 
 _gui_api Layout *cell_layout(Cell *cell);
 
 _gui_api void cell_enabled(Cell *cell, const bool_t enabled);
 
 _gui_api void cell_visible(Cell *cell, const bool_t visible);
-
-_gui_api void cell_focus(Cell *cell);
 
 _gui_api void cell_padding(Cell *cell, const real32_t pall);
 
@@ -41,51 +71,6 @@ _gui_api void cell_dbind_imp(
     const uint16_t msize);
 
 __END_C
-
-#define cell_label(cell) \
-    (Label *)cell_control_imp(cell, "Label")
-
-#define cell_button(cell) \
-    (Button *)cell_control_imp(cell, "Button")
-
-#define cell_popup(cell) \
-    (PopUp *)cell_control_imp(cell, "PopUp")
-
-#define cell_edit(cell) \
-    (Edit *)cell_control_imp(cell, "Edit")
-
-#define cell_combo(cell) \
-    (Combo *)cell_control_imp(cell, "Combo")
-
-#define cell_listbox(cell) \
-    (ListBox *)cell_control_imp(cell, "ListBox")
-
-#define cell_updown(cell) \
-    (UpDown *)cell_control_imp(cell, "UpDown")
-
-#define cell_slider(cell) \
-    (Slider *)cell_control_imp(cell, "Slider")
-
-#define cell_progress(cell) \
-    (Progress *)cell_control_imp(cell, "Progress")
-
-#define cell_view(cell) \
-    (View *)cell_control_imp(cell, "View")
-
-#define cell_textview(cell) \
-    (TextView *)cell_control_imp(cell, "TextView")
-
-#define cell_imageview(cell) \
-    (ImageView *)cell_control_imp(cell, "ImageView")
-
-#define cell_tableview(cell) \
-    (TableView *)cell_control_imp(cell, "TableView")
-
-#define cell_splitview(cell) \
-    (SplitView *)cell_control_imp(cell, "SplitView")
-
-#define cell_panel(cell) \
-    (Panel *)cell_control_imp(cell, "Panel")
 
 #define cell_dbind(cell, type, mtype, mname)             \
     (                                                    \

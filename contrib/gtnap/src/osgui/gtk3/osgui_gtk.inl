@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -28,11 +28,11 @@ void _osgui_ew_resize_cursor(GtkWidget *widget);
 
 void _osgui_default_cursor(GtkWidget *widget);
 
-const char_t *_osgui_underline_gtk_text(const char_t *text, char_t *buff, const uint32_t size);
+uint32_t _osgui_underline_gtk_text(const char_t *text, char_t *buff, const uint32_t size);
 
-void _osgui_pre_initialize(void);
+vkey_t _osgui_vkey(const guint keyval);
 
-bool_t _osgui_is_pre_initialized(void);
+uint32_t _osgui_modifiers(const guint state);
 
 extern const guint kVIRTUAL_KEY[];
 

@@ -19,36 +19,30 @@ set(CMAKE_SHARED_LINKER_FLAGS_RELEASEWITHASSERT ${CMAKE_SHARED_LINKER_FLAGS_RELE
 set(NAPPGUI_SHARED False CACHE BOOL "Build NAppGUI shared libraries.")
 set(NAPPGUI_DEMO True CACHE BOOL "Build NAppGUI demo examples.")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(INSTALL_PERM "OWNER_READ;OWNER_WRITE;OWNER_EXECUTE;GROUP_READ;GROUP_EXECUTE;WORLD_READ;WORLD_EXECUTE")
 
 # Welcome
 string(TIMESTAMP CURRENT_YEAR %Y)
 include(${NAPPGUI_ROOT_PATH}/prj/NAppVersion.cmake)
+include(${NAPPGUI_ROOT_PATH}/prj/NAppUtils.cmake)
 message (STATUS "---------------------------------------------")
 message (STATUS "NAppGUI Cross-Platform SDK")
 message (STATUS "2015-${CURRENT_YEAR} Francisco Garcia Collado")
 message (STATUS "MIT License")
 message (STATUS "---------------------------------------------")
-message (STATUS "* Version: ${NAPPGUI_MAJOR}.${NAPPGUI_MINOR}.${NAPPGUI_PATCH}.${NAPPGUI_BUILD}")
-
-# Build options
-message (STATUS "* Generator: ${CMAKE_GENERATOR}")
-
-if (NAPPGUI_SHARED)
-    message (STATUS "* Build shared: True")
-else()
-    message (STATUS "* Build shared: False")
-endif()
+nap_build_opt("Version" "${NAPPGUI_MAJOR}.${NAPPGUI_MINOR}.${NAPPGUI_PATCH}.${NAPPGUI_BUILD}")
+nap_build_opt("Generator" "${CMAKE_GENERATOR}")
+nap_build_opt("Build shared" "${NAPPGUI_SHARED}")
 
 # Config compiler
 include(${NAPPGUI_ROOT_PATH}/prj/NAppCompilers.cmake)
 nap_config_compiler()
-message (STATUS "* Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
-message (STATUS "* Build type: ${CMAKE_BUILD_TYPE}")
-message (STATUS "* Build arch: ${CMAKE_ARCHITECTURE}")
-message (STATUS "* Host arch: ${CMAKE_HOST_ARCHITECTURE}")
-message (STATUS "* PackageID: ${CMAKE_PACKAGE_ID}")
-# message (STATUS "* CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
-# message (STATUS "* CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+nap_build_opt("Compiler" "${CMAKE_CXX_COMPILER_ID}")
+nap_build_opt("Compiler Vers" "${CMAKE_CXX_COMPILER_VERSION}")
+nap_build_opt("Build type" "${CMAKE_BUILD_TYPE}")
+nap_build_opt("Build arch" "${CMAKE_ARCHITECTURE}")
+nap_build_opt("Host arch" "${CMAKE_HOST_ARCHITECTURE}")
+nap_build_opt("PackageID" "${CMAKE_PACKAGE_ID}")
 message (STATUS "---------------------------------------------")
 
 # Tools required to generate NAppGUI projets ('nrc')

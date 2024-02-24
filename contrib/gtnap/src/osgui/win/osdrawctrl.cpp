@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,7 +12,7 @@
 
 #include "osimg.inl"
 #include "osdrawctrl.h"
-#include "osdrawctrl.inl"
+#include "osdrawctrl_win.inl"
 #include "osstyleXP.inl"
 #include <draw2d/color.h>
 #include <draw2d/dctxh.h>
@@ -113,11 +113,13 @@ ctrl_msel_t osdrawctrl_multisel(const DCtx *ctx, const vkey_t key)
 void osdrawctrl_clear(DCtx *ctx, const int32_t x, const int32_t y, const uint32_t width, const uint32_t height, const enum_t nonused)
 {
     RECT rect;
-    dctx_set_raster_mode(ctx);
-    rect.left = (LONG)x;
-    rect.top = (LONG)y;
-    rect.right = (LONG)(x + width);
-    rect.bottom = (LONG)(y + height);
+    real32_t offset_x = 0, offset_y = 0;
+    draw_set_raster_mode(ctx);
+    dctx_offset(ctx, &offset_x, &offset_y);
+    rect.left = (LONG)x + (LONG)offset_x;
+    rect.top = (LONG)y + (LONG)offset_y;
+    rect.right = rect.left + (LONG)width;
+    rect.bottom = rect.top + (LONG)height;
     FillRect((HDC)dctx_native(ctx), &rect, GetSysColorBrush(COLOR_WINDOW));
     unref(nonused);
 }
@@ -216,7 +218,7 @@ void osdrawctrl_header(DCtx *ctx, const int32_t x, const int32_t y, const uint32
     RECT rect;
     real32_t offset_x = 0, offset_y = 0;
     int istate = i_header_state(state);
-    dctx_set_raster_mode(ctx);
+    draw_set_raster_mode(ctx);
     dctx_offset(ctx, &offset_x, &offset_y);
     rect.left = (LONG)x + (LONG)offset_x + 1;
     rect.top = (LONG)y + (LONG)offset_y;
@@ -242,7 +244,7 @@ void osdrawctrl_indicator(DCtx *ctx, const int32_t x, const int32_t y, const uin
         real32_t offset_x = 0, offset_y = 0;
         HTHEME theme = i_header_theme(ctx);
         SIZE sz = i_sort_size(ctx);
-        dctx_set_raster_mode(ctx);
+        draw_set_raster_mode(ctx);
         dctx_offset(ctx, &offset_x, &offset_y);
         rect.left = (LONG)x + (LONG)offset_x + 1;
         rect.top = (LONG)y + (LONG)offset_y + 1;
@@ -260,7 +262,7 @@ void osdrawctrl_fill(DCtx *ctx, const int32_t x, const int32_t y, const uint32_t
     RECT rect;
     real32_t offset_x = 0, offset_y = 0;
     int istate = i_list_state(state);
-    dctx_set_raster_mode(ctx);
+    draw_set_raster_mode(ctx);
     dctx_offset(ctx, &offset_x, &offset_y);
     rect.left = (LONG)x + (LONG)offset_x;
     rect.top = (LONG)y + (LONG)offset_y;
@@ -276,7 +278,7 @@ void osdrawctrl_focus(DCtx *ctx, const int32_t x, const int32_t y, const uint32_
     RECT rect;
     real32_t offset_x = 0, offset_y = 0;
     unref(state);
-    dctx_set_raster_mode(ctx);
+    draw_set_raster_mode(ctx);
     dctx_offset(ctx, &offset_x, &offset_y);
     rect.left = (LONG)x + (LONG)offset_x;
     rect.top = (LONG)y + (LONG)offset_y;
@@ -292,7 +294,7 @@ void osdrawctrl_line(DCtx *ctx, const int32_t x0, const int32_t y0, const int32_
     HDC hdc = NULL;
     real32_t offset_x = 0, offset_y = 0;
     cassert_no_null(ctx);
-    dctx_set_raster_mode(ctx);
+    draw_set_raster_mode(ctx);
     dctx_offset(ctx, &offset_x, &offset_y);
     hdc = (HDC)dctx_native(ctx);
     MoveToEx(hdc, (int)(x0 + offset_x), (int)(y0 + offset_y), NULL);
@@ -311,7 +313,7 @@ void osdrawctrl_text(DCtx *ctx, const char_t *text, const int32_t x, const int32
     WCHAR wtext[1024];
     UINT format = DT_SINGLELINE | DT_END_ELLIPSIS;
 
-    dctx_set_raster_mode(ctx);
+    draw_set_raster_mode(ctx);
     dctx_offset(ctx, &offset_x, &offset_y);
 
     // For GDI-based raster text in bitmap context, we have to 'delete' the GDI object
@@ -360,7 +362,7 @@ void osdrawctrl_image(DCtx *ctx, const Image *image, const int32_t x, const int3
     HDC memhdc = NULL;
     LONG width, height;
     unref(state);
-    dctx_set_raster_mode(ctx);
+    draw_set_raster_mode(ctx);
     dctx_offset(ctx, &offset_x, &offset_y);
     hbitmap = osimg_hbitmap_cache(image, (COLORREF)dctx_background_color(ctx), &width, &height);
     memhdc = CreateCompatibleDC(hdc);
@@ -378,7 +380,7 @@ void osdrawctrl_checkbox(DCtx *ctx, const int32_t x, const int32_t y, const uint
     real32_t offset_x = 0, offset_y = 0;
     HDC hdc = (HDC)dctx_native(ctx);
 
-    dctx_set_raster_mode(ctx);
+    draw_set_raster_mode(ctx);
     dctx_offset(ctx, &offset_x, &offset_y);
 
     switch (state)
@@ -423,7 +425,7 @@ void osdrawctrl_uncheckbox(DCtx *ctx, const int32_t x, const int32_t y, const ui
     real32_t offset_x = 0, offset_y = 0;
     HDC hdc = (HDC)dctx_native(ctx);
 
-    dctx_set_raster_mode(ctx);
+    draw_set_raster_mode(ctx);
     dctx_offset(ctx, &offset_x, &offset_y);
 
     switch (state)

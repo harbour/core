@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,14 +11,13 @@
 /* Windows controls commons */
 
 #include "oscontrol.inl"
-#include "osctrl.inl"
+#include "oscontrol_win.inl"
 #include "osgui.inl"
 #include "osgui_win.inl"
+#include "oscombo_win.inl"
+#include "ospanel_win.inl"
+#include "ospopup_win.inl"
 #include "ostooltip.inl"
-#include "oscombo.inl"
-#include "ospanel.inl"
-#include "ospopup.inl"
-#include "oswindow.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
 #include <core/heap.h>
@@ -227,7 +226,7 @@ void _oscontrol_text_bounds(const OSControl *control, const char_t *text, const 
     data.hdc = GetDC(control->hwnd);
     current_font = (HFONT)SelectObject(data.hdc, (HFONT)font_native(font));
     cassert_no_null(current_font);
-    _osgui_text_bounds(&data, text, refwidth, width, height);
+    osgui_text_bounds(&data, text, refwidth, width, height);
     SelectObject(data.hdc, current_font);
     ret = ReleaseDC(NULL, data.hdc);
     cassert_unref(ret == 1, ret);
@@ -258,21 +257,6 @@ void _oscontrol_get_origin(const OSControl *control, real32_t *x, real32_t *y)
     cassert_no_null(y);
     *x = (real32_t)control->x;
     *y = (real32_t)control->y;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscontrol_get_origin_in_screen(const OSControl *control, real32_t *x, real32_t *y)
-{
-    BOOL ret;
-    RECT rect;
-    cassert_no_null(control);
-    cassert_no_null(x);
-    cassert_no_null(y);
-    ret = GetWindowRect(control->hwnd, &rect);
-    cassert_unref(ret != 0, ret);
-    *x = (real32_t)rect.left;
-    *y = (real32_t)rect.top;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -499,7 +483,7 @@ OSControl *oscontrol_parent(const OSControl *control)
     OSControl *parent = NULL;
     cassert_no_null(control);
     parentHWND = GetParent(control->hwnd);
-    parent = (OSControl*)GetWindowLongPtr(parentHWND, GWLP_USERDATA);
+    parent = (OSControl *)GetWindowLongPtr(parentHWND, GWLP_USERDATA);
     return parent;
 }
 
@@ -534,13 +518,13 @@ OSWidget *oscontrol_focus_widget(const OSControl *control)
     case ekGUI_TYPE_TEXTVIEW:
     case ekGUI_TYPE_UPDOWN:
     case ekGUI_TYPE_CUSTOMVIEW:
-        return (OSWidget*)control->hwnd;
+        return (OSWidget *)control->hwnd;
 
     case ekGUI_TYPE_POPUP:
-        return (OSWidget*)_ospopup_focus((OSPopUp *)control);
+        return (OSWidget *)_ospopup_focus((OSPopUp *)control);
 
     case ekGUI_TYPE_COMBOBOX:
-        return (OSWidget*)_oscombo_focus((OSCombo *)control);
+        return (OSWidget *)_oscombo_focus((OSCombo *)control);
 
     case ekGUI_TYPE_TABLEVIEW:
     case ekGUI_TYPE_TREEVIEW:
@@ -551,27 +535,10 @@ OSWidget *oscontrol_focus_widget(const OSControl *control)
     case ekGUI_TYPE_HEADER:
     case ekGUI_TYPE_WINDOW:
     case ekGUI_TYPE_TOOLBAR:
-    cassert_default();
+        cassert_default();
     }
 
     return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-OSWidget *oscontrol_widget_get_focus(OSWindow *window)
-{
-    unref(window);
-    return (OSWidget*)GetFocus();
-}
-
-/*---------------------------------------------------------------------------*/
-
-void oscontrol_widget_set_focus(OSWidget *widget, OSWindow *window)
-{
-    cassert_no_null(widget);
-    unref(window);
-    SetFocus((HWND)widget);
 }
 
 /*---------------------------------------------------------------------------*/

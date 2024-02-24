@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -67,13 +67,13 @@ void osbs_start(void)
         cassert((1 == 1) == TRUE);
         cassert((1 != 1) == FALSE);
 #if defined(__x86__)
-        cassert(sizeof(void *) == 4);
+        cassert(sizeofptr == 4);
 #elif defined(__x64__)
-        cassert(sizeof(void *) == 8);
+        cassert(sizeofptr == 8);
 #elif defined(__ARM__)
-        cassert(sizeof(void *) == 4);
+        cassert(sizeofptr == 4);
 #elif defined(__ARM64__)
-        cassert(sizeof(void *) == 8);
+        cassert(sizeofptr == 8);
 #endif
 
         i_NUM_USERS = 1;

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -20,6 +20,3 @@ _draw2d_api void draw2d_start(void);
 _draw2d_api void draw2d_finish(void);
 
 __END_C
-
-#define resid_image(resid) \
-    (const Image*)(resid)

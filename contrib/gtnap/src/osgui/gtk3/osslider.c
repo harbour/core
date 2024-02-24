@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -14,9 +14,9 @@
 #include "osslider.inl"
 #include "osgui.inl"
 #include "osgui_gtk.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
+#include "oscontrol_gtk.inl"
+#include "ospanel_gtk.inl"
+#include "oswindow_gtk.inl"
 #include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -63,6 +63,18 @@ static gboolean i_OnMoved(GtkRange *range, GtkScrollType step, double value, OSS
 
 /*---------------------------------------------------------------------------*/
 
+static gboolean i_OnPressed(GtkWidget *widget, GdkEvent *event, OSSlider *slider)
+{
+    cassert_no_null(slider);
+    unref(widget);
+    unref(event);
+    if (_oswindow_mouse_down(OSControlPtr(slider)) == TRUE)
+        return FALSE;
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 OSSlider *osslider_create(const uint32_t flags)
 {
     OSSlider *slider = heap_new0(OSSlider);
@@ -70,6 +82,7 @@ OSSlider *osslider_create(const uint32_t flags)
     GtkWidget *widget = gtk_scale_new_with_range(o, 0., 1., 0.1);
     gtk_scale_set_draw_value(GTK_SCALE(widget), FALSE);
     gtk_range_set_increments(GTK_RANGE(widget), .1, .1);
+    g_signal_connect(widget, "button-press-event", G_CALLBACK(i_OnPressed), (gpointer)slider);
     g_signal_connect(widget, "change-value", G_CALLBACK(i_OnMoved), (gpointer)slider);
 
     /*
@@ -226,13 +239,4 @@ void osslider_origin(const OSSlider *slider, real32_t *x, real32_t *y)
 void osslider_frame(OSSlider *slider, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     _oscontrol_set_frame((OSControl *)slider, x, y, width, height);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osslider_detach_and_destroy(OSSlider **slider, OSPanel *panel)
-{
-    cassert_no_null(slider);
-    osslider_detach(*slider, panel);
-    osslider_destroy(slider);
 }

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,10 +11,11 @@
 /* Operating System label */
 
 #include "oslabel.h"
+#include "oslabel_win.inl"
 #include "osgui.inl"
 #include "osgui_win.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
+#include "oscontrol_win.inl"
+#include "ospanel_win.inl"
 #include <draw2d/font.h>
 #include <core/event.h>
 #include <core/heap.h>
@@ -119,6 +120,8 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
                 params.ly = params.y;
                 params.button = ENUM_MAX(gui_mouse_t);
                 params.count = 0;
+                params.modifiers = 0;
+                params.tag = 0;
                 listener_event(label->OnMouseEnter, ekGUI_EVENT_ENTER, label, &params, NULL, OSLabel, EvMouse, void);
             }
         }
@@ -138,7 +141,7 @@ OSLabel *oslabel_create(const uint32_t flags)
     dwStyle = i_style(ekLEFT, ekELLIPNONE);
     label = heap_new0(OSLabel);
     label->control.type = ekGUI_TYPE_LABEL;
-    label->font = _osgui_create_default_font();
+    label->font = osgui_create_default_font();
     label->mouse_inside = FALSE;
     label->align = ekLEFT;
     label->ellipsis = ekELLIPNONE;
@@ -303,15 +306,6 @@ void oslabel_origin(const OSLabel *label, real32_t *x, real32_t *y)
 void oslabel_frame(OSLabel *label, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     _oscontrol_set_frame((OSControl *)label, x, y, width, height);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oslabel_detach_and_destroy(OSLabel **label, OSPanel *panel)
-{
-    cassert_no_null(label);
-    oslabel_detach(*label, panel);
-    oslabel_destroy(label);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -9,7 +9,7 @@
  */
 
 /* This header will restore ALL warnings from 'nowarn.hxx' */
-/* USE ONLY FOR THIRD PARTY HEADERS, NOT IN PROYECT FILES */
+/* USE ONLY FOR THIRD PARTY HEADERS, NOT FOR PROJECT ONES */
 /* #include "nowarn.hxx"    Disable all warnings */
 /* #include <gdiplus.h>     Include third party header */
 /* #include "warn.hxx"      Restore all warnings */
@@ -33,7 +33,14 @@
 #endif
 
 #if defined(__GNUC__)
+
+#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
+/* Was added in GCC 4.6 */
 #pragma GCC diagnostic pop
+#else
+#pragma GCC diagnostic warning "-Wall"
+#endif
+
 #endif
 
 #if defined(__clang__)

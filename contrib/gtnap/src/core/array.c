@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -110,7 +110,7 @@ Array *array_copy(const Array *array, FPtr_scopy func_copy, const char_t *type)
         const byte_t *src = array->data;
         uint32_t i = 0;
         for (i = 0; i < array->elems; ++i, dest += array->esize, src += array->esize)
-            func_copy((void *)dest, (void *)src);
+            func_copy((void *)dest, (const void *)src);
     }
     else
     {
@@ -128,7 +128,7 @@ Array *array_copy_ptr(const Array *array, FPtr_copy func_copy, const char_t *typ
 
     cassert_no_null(array);
     cassert_no_nullf(func_copy);
-    cassert(array->esize == sizeof(void *));
+    cassert(array->esize == sizeofptr);
 
     data = heap_malloc(array->nallocs * array->esize, "ArrayData");
 
@@ -138,7 +138,7 @@ Array *array_copy_ptr(const Array *array, FPtr_copy func_copy, const char_t *typ
         for (i = 0; i < array->elems; ++i)
         {
             void *elem = func_copy(*(const void **)(array->data + i * array->esize));
-            *((void **)(data + i * array->esize)) = elem;
+            *(void **)(data + i * array->esize) = elem;
         }
     }
     else
@@ -160,11 +160,11 @@ static Array *i_read_array(Stream *stream, const uint16_t esize, FPtr_read func_
     {
         register uint32_t i;
         cassert(func_read_init == NULL);
-        cassert(esize == sizeof(void *));
+        cassert(esize == sizeofptr);
         for (i = 0; i < elems; ++i)
         {
             void *elem = func_read(stream);
-            *((void **)(array->data + i * esize)) = elem;
+            *(void **)(array->data + i * esize) = elem;
         }
     }
     else
@@ -189,7 +189,7 @@ Array *array_read(Stream *stream, const uint16_t esize, FPtr_read_init func_read
 
 Array *array_read_ptr(Stream *stream, FPtr_read func_read, const char_t *type)
 {
-    return i_read_array(stream, sizeof(void *), func_read, NULL, type);
+    return i_read_array(stream, sizeofptr, func_read, NULL, type);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -302,7 +302,7 @@ void array_clear_ptr(Array *array, FPtr_destroy func_destroy)
 static const void *i_get_ptr_elem(const byte_t *data, const uint32_t elem_id, const uint32_t esize)
 {
     cassert_no_null(data);
-    cassert(esize == sizeof(void *));
+    cassert(esize == sizeofptr);
     return *(const void **)(data + elem_id * esize);
 }
 
@@ -501,7 +501,7 @@ void array_join(Array *dest, const Array *src, FPtr_scopy func_copy)
         {
             uint32_t i = 0;
             for (i = 0; i < src->elems; ++i, bdest += dest->esize, bsrc += src->esize)
-                func_copy((void *)bdest, (void *)bsrc);
+                func_copy((void *)bdest, (const void *)bsrc);
         }
         else
         {
@@ -534,7 +534,7 @@ void array_join_ptr(Array *dest, const Array *src, FPtr_copy func_copy)
             for (i = 0; i < src->elems; ++i, bdest += dest->esize, bsrc += src->esize)
             {
                 void *elem = func_copy(*(const void **)bsrc);
-                *((void **)bdest) = elem;
+                *(void **)bdest = elem;
             }
         }
         else
@@ -590,7 +590,7 @@ void array_delete_ptr(Array *array, const uint32_t pos, const uint32_t n, FPtr_d
     cassert_no_null(array);
     cassert(n > 0);
     cassert(pos + n <= array->elems);
-    cassert(array->esize == sizeof(void *));
+    cassert(array->esize == sizeofptr);
     if (func_destroy != NULL)
     {
         byte_t *data = array->data + pos * array->esize;
@@ -629,7 +629,7 @@ void array_pop_ptr(Array *array, FPtr_destroy func_destroy)
 {
     cassert_no_null(array);
     cassert(array->elems > 0);
-    cassert(array->esize == sizeof(void *));
+    cassert(array->esize == sizeofptr);
     if (func_destroy != NULL)
     {
         byte_t *data = array->data + (array->elems - 1) * array->esize;
@@ -711,7 +711,7 @@ uint32_t array_find_ptr(const Array *array, const void *elem)
     const void **data;
     register uint32_t i;
     cassert_no_null(array);
-    cassert(array->esize == sizeof(void *));
+    cassert(array->esize == sizeofptr);
     cassert_no_null(elem);
     data = (const void **)array->data;
     for (i = 0; i < array->elems; ++i, ++data)
@@ -798,7 +798,7 @@ typedef struct i_compare_key
 
 static int i_compare_dkey(const void *elem, const void *key, i_CompareKey *cmp)
 {
-    return cmp->func_compare(*((void **)elem), key);
+    return cmp->func_compare(*(void **)elem, key);
 }
 
 /*---------------------------------------------------------------------------*/

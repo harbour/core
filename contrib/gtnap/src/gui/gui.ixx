@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -24,6 +24,7 @@ enum _gievent_t
 typedef struct _line_t Line;
 typedef union _tag_t Tag;
 typedef struct _gui_component_t GuiComponent;
+typedef struct _scrollview_t ScrollView;
 typedef struct _colitem_t ColItem;
 typedef struct _evtransition_t EvTransition;
 typedef struct _evbind_t EvBind;
@@ -96,5 +97,8 @@ struct _evbind_t
     uint16_t offset_edit;
     uint16_t size_edit;
 };
+
+#define GuiComponentPtr(ptr) ((GuiComponent *)(ptr))
+#define ViewPtr(ptr) ((View *)(ptr))
 
 #endif

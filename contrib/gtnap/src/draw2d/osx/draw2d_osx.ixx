@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -40,6 +40,7 @@ struct _dctx_t
     CGAffineTransform gradient_matrix;
     color_t skcolor;
     color_t fillcolor;
+    color_t text_color;
     color_t gradient_colors[MAX_COLORS];
     real32_t gradient_stops[MAX_COLORS];
     uint32_t gradient_n;
@@ -68,6 +69,8 @@ struct _dctx_t
     bool_t cartesian_system;
     bool_t raster_mode;
     bool_t line_fill;
+    void *data;
+    FPtr_destroy func_destroy_data;
 };
 
 struct _measurestr_t

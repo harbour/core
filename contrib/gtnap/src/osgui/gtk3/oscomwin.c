@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -13,7 +13,7 @@
 #include "oscomwin.h"
 #include "osgui.inl"
 #include "osgui_gtk.inl"
-#include "oscontrol.inl"
+#include "oscontrol_gtk.inl"
 #include <draw2d/color.h>
 #include <core/event.h>
 #include <core/strings.h>

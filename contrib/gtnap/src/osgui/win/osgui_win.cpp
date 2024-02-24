@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,9 +12,9 @@
 
 #include "osgui.inl"
 #include "osgui_win.inl"
-#include "osmenu.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
+#include "osmenu_win.inl"
+#include "ospanel_win.inl"
+#include "oswindow_win.inl"
 #include "osstyleXP.inl"
 #include <core/arrst.h>
 #include <core/core.h>
@@ -177,6 +177,12 @@ static ArrSt(ACCEL) *i_ACCELERATORS = NULL;
 static ArrSt(HWND) *i_HWND_ACCELERATORS = NULL;
 static HACCEL i_ACCEL_TABLE = NULL;
 static uint16_t i_GLOBAL_MENU_ID = 20;
+
+typedef HRESULT(__stdcall *DWMGETWINDOWATTRIBUTE)(HWND hwnd, DWORD dwAttribute, PVOID pvAttribute, DWORD cbAttribute);
+static HMODULE i_DWMAPIDLL = NULL;
+static DWMGETWINDOWATTRIBUTE i_DwmGetWindowAttribute = NULL;
+#define DWMWA_EXTENDED_FRAME_BOUNDS 9
+
 HWND kDEFAULT_PARENT_WINDOW = NULL;
 HCURSOR kNORMAL_ARROW_CURSOR = NULL;
 HCURSOR kSIZING_HORIZONTAL_CURSOR = NULL;
@@ -383,7 +389,59 @@ LRESULT _osgui_ncpaint(HWND hwnd, const RECT *border, HBRUSH padding_bgcolor)
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_start_imp(void)
+void _osgui_frame_without_shadows(const HWND hwnd, RECT *rect)
+{
+    if (i_DwmGetWindowAttribute != NULL)
+    {
+        HRESULT ok = i_DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, (PVOID)rect, sizeof(RECT));
+        if (ok == S_OK)
+            return;
+    }
+
+    {
+        BOOL ret = GetWindowRect(hwnd, rect);
+        cassert_unref(ret != 0, ret);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+vkey_t _osgui_vkey(const WORD key)
+{
+    register uint32_t i, n = kNUM_VKEYS;
+    register const WORD *keys = kVIRTUAL_KEY;
+    for (i = 0; i < n; ++i)
+    {
+        if (keys[i] == key)
+            return (vkey_t)i;
+    }
+    return ENUM_MAX(vkey_t);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t _osgui_modifiers(void)
+{
+    uint32_t modifiers = 0;
+
+    if ((GetAsyncKeyState(VK_LSHIFT) & 0x8000) || (GetAsyncKeyState(VK_RSHIFT) & 0x8000))
+        modifiers |= ekMKEY_SHIFT;
+
+    if ((GetAsyncKeyState(VK_LCONTROL) & 0x8000) || (GetAsyncKeyState(VK_RCONTROL) & 0x8000))
+        modifiers |= ekMKEY_CONTROL;
+
+    if ((GetAsyncKeyState(VK_LMENU) & 0x8000) || (GetAsyncKeyState(VK_RMENU) & 0x8000))
+        modifiers |= ekMKEY_ALT;
+
+    if ((GetAsyncKeyState(VK_LWIN) & 0x8000) || (GetAsyncKeyState(VK_RWIN) & 0x8000))
+        modifiers |= ekMKEY_COMMAND;
+
+    return modifiers;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void osgui_start_imp(void)
 {
     /* Application instance */
     cassert(i_INSTANCE == NULL);
@@ -405,6 +463,14 @@ void _osgui_start_imp(void)
         ok = InitCommonControlsEx(&commctrl);
         cassert_unref(ok == TRUE, ok);
     }
+
+    /* XP Styles */
+    osstyleXP_init();
+
+    /* Support for frame without shadows (dwmapi.dll not available in XP) */
+    i_DWMAPIDLL = LoadLibrary(L"dwmapi.dll");
+    if (i_DWMAPIDLL != NULL)
+        i_DwmGetWindowAttribute = cast_func_ptr(GetProcAddress(i_DWMAPIDLL, "DwmGetWindowAttribute"), DWMGETWINDOWATTRIBUTE);
 
     /* GDI Plus */
     /* OJO!!! guiplus de inicia en OSDRAW */
@@ -473,7 +539,7 @@ void _osgui_start_imp(void)
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_finish_imp(void)
+void osgui_finish_imp(void)
 {
     /* Accelerators */
     if (i_ACCEL_TABLE != NULL)
@@ -514,6 +580,13 @@ void _osgui_finish_imp(void)
         ret = UnregisterClass(kWINDOW_CLASS, NULL);
         cassert(ret != 0);
     }
+
+    /* Conditional support for frame without shadows (dwmapi.dll not available in XP) */
+    if (i_DWMAPIDLL != NULL)
+        FreeLibrary(i_DWMAPIDLL);
+
+    /* XP Styles */
+    osstyleXP_remove();
 
     /* Brushes and pens */
     DeleteObject(kCHESSBOARD_BRUSH);
@@ -717,7 +790,25 @@ HWND _osgui_hwnd_accelerator(WORD cmd)
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_attach_menubar(OSWindow *window, OSMenu *menu)
+void osgui_select_text(const int32_t st, const int32_t ed, int32_t *platform_st, int32_t *platform_ed)
+{
+    cassert_no_null(platform_st);
+    cassert_no_null(platform_ed);
+    if (st == -1 && ed == -1)
+    {
+        *platform_st = INT32_MAX;
+        *platform_ed = INT32_MAX;
+    }
+    else
+    {
+        *platform_st = st;
+        *platform_ed = ed;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void osgui_attach_menubar(OSWindow *window, OSMenu *menu)
 {
     HMENU hmenu = _osmenu_menubar(menu, window);
     _oswindow_set_menubar(window, hmenu);
@@ -725,7 +816,7 @@ void _osgui_attach_menubar(OSWindow *window, OSMenu *menu)
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_detach_menubar(OSWindow *window, OSMenu *menu)
+void osgui_detach_menubar(OSWindow *window, OSMenu *menu)
 {
     HMENU hmenu = _osmenu_menubar_unlink(menu, window);
     _oswindow_unset_menubar(window, hmenu);
@@ -733,7 +824,7 @@ void _osgui_detach_menubar(OSWindow *window, OSMenu *menu)
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_change_menubar(OSWindow *window, OSMenu *previous_menu, OSMenu *new_menu)
+void osgui_change_menubar(OSWindow *window, OSMenu *previous_menu, OSMenu *new_menu)
 {
     HMENU prev_hmenu = _osmenu_menubar_unlink(previous_menu, window);
     HMENU new_hmenu = _osmenu_menubar(new_menu, window);
@@ -742,14 +833,29 @@ void _osgui_change_menubar(OSWindow *window, OSMenu *previous_menu, OSMenu *new_
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_message_loop(void)
+void osgui_message_loop_imp(void)
 {
     _oswindow_message_loop(NULL);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_word_size(StringSizeData *data, const char_t *word, real32_t *width, real32_t *height)
+bool_t osgui_is_pre_initialized_imp(void)
+{
+    cassert(FALSE);
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void osgui_pre_initialize_imp(void)
+{
+    cassert(FALSE);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void osgui_word_size(StringSizeData *data, const char_t *word, real32_t *width, real32_t *height)
 {
     SIZE word_size;
     uint32_t num_chars = 0, num_bytes = 0;
@@ -766,5 +872,3 @@ void _osgui_word_size(StringSizeData *data, const char_t *word, real32_t *width,
     *width = (real32_t)word_size.cx;
     *height = (real32_t)word_size.cy;
 }
-
-

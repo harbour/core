@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,9 +12,11 @@
 
 #include "osslider.h"
 #include "osslider.inl"
+#include "osslider_osx.inl"
+#include "oscontrol_osx.inl"
+#include "ospanel_osx.inl"
+#include "oswindow_osx.inl"
 #include "osgui.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
 #include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -73,6 +75,14 @@
 -(BOOL)becomeFirstResponder
 {
     return YES;
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void) mouseDown:(NSEvent*)theEvent
+{
+    if (_oswindow_mouse_down((OSControl*)self) == TRUE)
+        [super mouseDown:theEvent];
 }
 
 @end
@@ -153,7 +163,6 @@ void osslider_tooltip(OSSlider *slider, const char_t *text)
 
 void osslider_tickmarks(OSSlider *slider, const uint32_t num_tickmarks, const bool_t tickmarks_at_left_top)
 {
-    //NSSize size = NSMakeSize(0.f, 0.f);
     cassert_no_null(slider);
     cassert(num_tickmarks > 0);
     unref(slider);
@@ -179,14 +188,16 @@ void osslider_tickmarks(OSSlider *slider, const uint32_t num_tickmarks, const bo
 
     [(OSXSlider*)slider setFrameSize:size];
 */
-//    [(OSXSlider*)slider setNumberOfTickMarks:(NSInteger)num_tickmarks];
-//    [(OSXSlider*)slider setAllowsTickMarkValuesOnly:NO];
-//
-//#if defined (MAC_OS_X_VERSION_10_12) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_12
-//    [(OSXSlider*)slider setTickMarkPosition:(tickmarks_at_left_top == TRUE) ? NSTickMarkPositionAbove : NSTickMarkPositionBelow];
-//#else
-//    [(OSXSlider*)slider setTickMarkPosition:(tickmarks_at_left_top == TRUE) ? NSTickMarkAbove : NSTickMarkBelow];
-//#endif
+/*
+   [(OSXSlider*)slider setNumberOfTickMarks:(NSInteger)num_tickmarks];
+   [(OSXSlider*)slider setAllowsTickMarkValuesOnly:NO];
+
+#if defined (MAC_OS_X_VERSION_10_12) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_12
+    [(OSXSlider*)slider setTickMarkPosition:(tickmarks_at_left_top == TRUE) ? NSTickMarkPositionAbove : NSTickMarkPositionBelow];
+#else
+    [(OSXSlider*)slider setTickMarkPosition:(tickmarks_at_left_top == TRUE) ? NSTickMarkAbove : NSTickMarkBelow];
+#endif
+*/
 }
 
 /*---------------------------------------------------------------------------*/
@@ -303,13 +314,4 @@ void osslider_frame(OSSlider *slider, const real32_t x, const real32_t y, const 
 BOOL _osslider_is(NSView *view)
 {
     return [view isKindOfClass:[OSXSlider class]];
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osslider_detach_and_destroy(OSSlider **slider, OSPanel *panel)
-{
-    cassert_no_null(slider);
-    osslider_detach(*slider, panel);
-    osslider_destroy(slider);
 }

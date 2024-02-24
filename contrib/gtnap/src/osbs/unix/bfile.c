@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -57,14 +57,6 @@ struct _dir_t
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t bfile_dir_work(char_t *pathname, const uint32_t size)
-{
-    getcwd(pathname, size);
-    return 0;
-}
-
-/*---------------------------------------------------------------------------*/
-
 bool_t bfile_dir_create(const char_t *pathname, ferror_t *error)
 {
     int res = mkdir((const char *)pathname, (mode_t)(S_IRUSR | S_IWUSR | S_IXUSR));
@@ -103,7 +95,7 @@ bool_t bfile_dir_create(const char_t *pathname, ferror_t *error)
 
 /*---------------------------------------------------------------------------*/
 
-#define i_PATHNAME(dir) ((char *)((char_t *)(dir) + sizeof(DIR *) + sizeof(uint32_t)))
+#define i_PATHNAME(dir) (char *)((char_t *)(dir) + sizeof(DIR *) + sizeof(uint32_t))
 
 /*---------------------------------------------------------------------------*/
 

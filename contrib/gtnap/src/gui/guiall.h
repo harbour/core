@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -17,6 +17,7 @@
 #include "edit.h"
 #include "globals.h"
 #include "gui.h"
+#include "guicontrol.h"
 #include "imageview.h"
 #include "label.h"
 #include "layout.h"

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -13,9 +13,9 @@
 #include "ossplit.h"
 #include "osgui.inl"
 #include "osgui_win.inl"
-#include "oscontrol.inl"
+#include "oscontrol_win.inl"
 #include "oslistener.inl"
-#include "ospanel.inl"
+#include "ospanel_win.inl"
 #include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -127,6 +127,8 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
             params.ly = params.y;
             params.button = ekLEFT;
             params.count = 0;
+            params.modifiers = 0;
+            params.tag = 0;
             listener_event(split->OnDrag, ekGUI_EVENT_DRAG, split, &params, NULL, OSSplit, EvMouse, void);
             split->launch_OnDrag = FALSE;
         }
@@ -155,7 +157,7 @@ void ossplit_destroy(OSSplit **view)
 {
     cassert_no_null(view);
     cassert_no_null(*view);
-    cassert(_oscontrol_num_children((OSControl*)(*view)) == 0);
+    cassert(_oscontrol_num_children((OSControl *)(*view)) == 0);
     listener_destroy(&(*view)->OnDrag);
     _oscontrol_destroy(&(*view)->control);
     heap_delete(view, OSSplit);
