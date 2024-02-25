@@ -2,7 +2,6 @@
 :: GTNAP build script
 ::
 :: build -b [Debug/Release] -a [x64|Win32] [-noliboff]
-::
 :: [-noliboff] Optional flag to disable the LibreOffice support
 ::
 

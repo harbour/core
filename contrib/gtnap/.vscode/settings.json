@@ -6,7 +6,8 @@
 
     "cmake.configureArgs": [
         "-DCMAKE_BUILD_CONFIG=Debug",
-        "-DGTNAP_DEVELOPER_MODE=Yes"
+        "-DGTNAP_DEVELOPER_MODE=Yes",
+        "-DGTNAP_LIBREOFFICE=Yes"
     ],
     "files.associations": {
         "*.txs": "html",

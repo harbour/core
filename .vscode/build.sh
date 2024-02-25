@@ -20,7 +20,11 @@ cd ./contrib/gtnap
 gtpath=$(pwd)
 echo GTNAP path: $gtpath
 echo HBMK path: $HBMK_PATH
-bash ./build.sh -b Debug || exit 1
+if [ "$(uname)" == "Darwin" ]; then
+    bash ./build.sh -b Debug -noliboff || exit 1
+else
+    bash ./build.sh -b Debug || exit 1
+fi
 
 # Generate exemplo sources
 cd $gtpath/tests/cuademo/gtnap_cualib
@@ -49,7 +53,7 @@ fi
 
 cd $gtpath/build-dev
 if [ "$(uname)" == "Darwin" ]; then
-    cmake -G Xcode .. -DGTNAP_DEVELOPER_MODE=ON
+    cmake -G Xcode .. -DGTNAP_DEVELOPER_MODE=ON -DGTNAP_LIBREOFFICE=OFF
 else
-    cmake .. -DGTNAP_DEVELOPER_MODE=ON
+    cmake .. -DGTNAP_DEVELOPER_MODE=ON -DGTNAP_LIBREOFFICE=ON
 fi
