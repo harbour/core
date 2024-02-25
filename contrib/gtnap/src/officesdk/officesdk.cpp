@@ -1,16 +1,19 @@
 #include "officesdk.h"
 #include "sheetsdk.h"
 #include "writersdk.h"
-#include <osapp/osapp.h>
 #include <core/strings.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
+
+#ifdef GTNAP_LIBREOFFICE
+
+#include <osapp/osapp.h>
 #include <osbs/bproc.h>
 #include <osbs/bthread.h>
 #include <osbs/btime.h>
 #include <osbs/osbs.h>
 #include <sewer/blib.h>
 #include <sewer/bstd.h>
-#include <sewer/cassert.h>
-#include <sewer/ptr.h>
 #include <sewer/unicode.h>
 
 #include <sewer/nowarn.hxx>
@@ -3390,3 +3393,707 @@ void officesdk_writer_insert_page_break(Writer *writer, sdkres_t *err)
 {
     i_insert_control_character(writer, ekTEXT_SPACE_PAGE, css::style::BreakType::BreakType_PAGE_AFTER, css::text::ControlCharacter::APPEND_PARAGRAPH, err);
 }
+
+#else   /* !GTNAP_LIBREOFFICE */
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_finish(void)
+{
+}
+
+/*---------------------------------------------------------------------------*/
+
+sdkres_t officesdk_text_to_pdf(const char_t *src_pathname, const char_t *dest_pathname)
+{
+    unref(src_pathname);
+    unref(dest_pathname);
+    return ekSDKRES_OK;
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t* officesdk_error(const sdkres_t code)
+{
+    unref(code);
+    return "";
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_browse_doc(const char_t *pathname, sdkres_t *err)
+{
+    unref(pathname);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t officesdk_rgb(const uint8_t red, const uint8_t green, const uint8_t blue)
+{
+    unref(red);
+    unref(green);
+    unref(blue);
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Sheet *officesdk_sheet_open(const char_t *pathname, sdkres_t *err)
+{
+    unref(pathname);
+    ptr_assign(err, ekSDKRES_OK);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Sheet *officesdk_sheet_create(sdkres_t *err)
+{
+    ptr_assign(err, ekSDKRES_OK);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_save(Sheet *sheet, const char_t *pathname, sdkres_t *err)
+{
+    unref(sheet);
+    unref(pathname);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_pdf(Sheet *sheet, const char_t *pathname, sdkres_t *err)
+{
+    unref(sheet);
+    unref(pathname);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_print(Sheet *sheet, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
+{
+    unref(sheet);
+    unref(filename);
+    unref(printer);
+    unref(orient);
+    unref(format);
+    unref(paper_width);
+    unref(paper_height);
+    unref(num_copies);
+    unref(collate_copies);
+    unref(pages);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_close(Sheet *sheet, sdkres_t *err)
+{
+    unref(sheet);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t officesdk_sheet_add(Sheet *sheet, sdkres_t *err)
+{
+    unref(sheet);
+    ptr_assign(err, ekSDKRES_OK);
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_name(Sheet *sheet, const uint32_t page, const char_t *name, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(name);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t protect, const char_t *pass, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(protect);
+    unref(pass);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(ncols);
+    unref(nrows);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+String *officesdk_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    ptr_assign(err, ekSDKRES_OK);
+    return str_c("");
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *text, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(text);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(value);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_date(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint8_t day, const uint8_t month, const int16_t year, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(day);
+    unref(month);
+    unref(year);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_formula(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *formula, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(formula);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_numformat(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const numformat_t format, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(format);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_font_family(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *font_family, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(font_family);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_font_size(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real32_t font_size, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(font_size);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_bold(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t bold, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(bold);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_italic(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t italic, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(italic);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const halign_t align, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(align);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const valign_t align, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(align);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_wrap(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(wrapped);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_color(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(rgb);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(rgb);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cells_backcolor(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const uint32_t rgb, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(st_col);
+    unref(st_row);
+    unref(ed_col);
+    unref(ed_row);
+    unref(rgb);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *image_path, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(image_path);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cell_border(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(row);
+    unref(style);
+    unref(thickness);
+    unref(rgb);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cells_border(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(st_col);
+    unref(st_row);
+    unref(ed_col);
+    unref(ed_row);
+    unref(style);
+    unref(thickness);
+    unref(rgb);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_cells_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(st_col);
+    unref(st_row);
+    unref(ed_col);
+    unref(ed_row);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_column_visible(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t visible, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(visible);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_column_optimal_width(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t optimal_width, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(optimal_width);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_column_width(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t width, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(col);
+    unref(width);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_row_visible(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t visible, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(row);
+    unref(visible);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_row_optimal_height(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t optimal_height, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(row);
+    unref(optimal_height);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height, sdkres_t *err)
+{
+    unref(sheet);
+    unref(page);
+    unref(row);
+    unref(height);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+Writer *officesdk_writer_open(const char_t *pathname, sdkres_t *err)
+{
+    unref(pathname);
+    ptr_assign(err, ekSDKRES_OK);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Writer *officesdk_writer_create(sdkres_t *err)
+{
+    ptr_assign(err, ekSDKRES_OK);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_save(Writer *writer, const char_t *pathname, sdkres_t *err)
+{
+    unref(writer);
+    unref(pathname);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_pdf(Writer *writer, const char_t *pathname, sdkres_t *err)
+{
+    unref(writer);
+    unref(pathname);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_print(Writer *writer, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err)
+{
+    unref(writer);
+    unref(filename);
+    unref(printer);
+    unref(orient);
+    unref(format);
+    unref(paper_width);
+    unref(paper_height);
+    unref(num_copies);
+    unref(collate_copies);
+    unref(pages);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_close(Writer *writer, sdkres_t *err)
+{
+    unref(writer);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_header_show(Writer *writer, const bool_t show, sdkres_t *err)
+{
+    unref(writer);
+    unref(show);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_header_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height, sdkres_t *err)
+{
+    unref(writer);
+    unref(left);
+    unref(right);
+    unref(spacing);
+    unref(height);
+    unref(dynamic_spacing);
+    unref(dynamic_height);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_footer_show(Writer *writer, const bool_t show, sdkres_t *err)
+{
+    unref(writer);
+    unref(show);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_footer_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height, sdkres_t *err)
+{
+    unref(writer);
+    unref(left);
+    unref(right);
+    unref(spacing);
+    unref(height);
+    unref(dynamic_spacing);
+    unref(dynamic_height);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_page_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter, sdkres_t *err)
+{
+    unref(writer);
+    unref(left);
+    unref(right);
+    unref(top);
+    unref(bottom);
+    unref(gutter);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_font_family(Writer *writer, const textspace_t space, const char_t *font_family, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    unref(font_family);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_font_size(Writer *writer, const textspace_t space, const real32_t font_size, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    unref(font_size);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_bold(Writer *writer, const textspace_t space, const bool_t bold, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    unref(bold);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_italic(Writer *writer, const textspace_t space, const bool_t italic, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    unref(italic);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_paragraph_halign(Writer *writer, const textspace_t space, const halign_t align, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    unref(align);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_paragraph_lspacing(Writer *writer, const textspace_t space, const uint32_t height, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    unref(height);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_text(Writer *writer, const textspace_t space, const char_t *text, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    unref(text);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_image(Writer *writer, const textspace_t space, const anchortype_t anchor, const uint32_t width, const uint32_t height, const halign_t halign, const valign_t valign, const char_t *image_path, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    unref(anchor);
+    unref(width);
+    unref(height);
+    unref(halign);
+    unref(valign);
+    unref(image_path);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_page_number(Writer *writer, const textspace_t space, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_new_line(Writer *writer, const textspace_t space, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_paragraph(Writer *writer, const textspace_t space, sdkres_t *err)
+{
+    unref(writer);
+    unref(space);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void officesdk_writer_insert_page_break(Writer *writer, sdkres_t *err)
+{
+    unref(writer);
+    ptr_assign(err, ekSDKRES_OK);
+}
+
+/*---------------------------------------------------------------------------*/
+
+#endif  /* GTNAP_LIBREOFFICE */

@@ -43,6 +43,7 @@ nap_build_opt("Build type" "${CMAKE_BUILD_TYPE}")
 nap_build_opt("Build arch" "${CMAKE_ARCHITECTURE}")
 nap_build_opt("Host arch" "${CMAKE_HOST_ARCHITECTURE}")
 nap_build_opt("PackageID" "${CMAKE_PACKAGE_ID}")
+nap_build_opt("LibreOffice support" "${GTNAP_LIBREOFFICE}")
 message (STATUS "---------------------------------------------")
 
 # Tools required to generate NAppGUI projets ('nrc')
@@ -64,6 +65,11 @@ if (GTNAP_DEVELOPER_MODE)
         addFlag(CMAKE_CXX_FLAGS_DEBUG "/MT")
         addFlag(CMAKE_C_FLAGS_DEBUG "/MT")
     endif()
+endif()
+
+# Enable the support for LibreOffice in source code
+if (GTNAP_LIBREOFFICE)
+    add_definitions("-DGTNAP_LIBREOFFICE")
 endif()
 
 foreach (target ${ALL_TARGETS})
@@ -105,20 +111,23 @@ if (GTNAP_DEVELOPER_MODE)
 
     add_subdirectory("src/gtnap")
 
-    # Libreoffice link libraries
-    set(LOROOT "$ENV{LIBREOFFICE_HOME}")
+    if (GTNAP_LIBREOFFICE)
+        # Libreoffice link libraries
+        set(LOROOT "$ENV{LIBREOFFICE_HOME}")
 
-    if (NOT LOROOT)
-        message(FATAL_ERROR "LIBREOFFICE_HOME environment variable is required to compile GTNAP")
-    endif()
+        if (NOT LOROOT)
+            message(FATAL_ERROR "LIBREOFFICE_HOME environment variable is required to compile GTNAP")
+        endif()
 
-    if (WIN32)
-        set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
-        file(TO_NATIVE_PATH \"${LIBREOFFICE_LIB_PATH}\" LIBREOFFICE_LIB_PATH)
-        set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
-    else()
-        set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
-        set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
+        if (WIN32)
+            set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
+            file(TO_NATIVE_PATH \"${LIBREOFFICE_LIB_PATH}\" LIBREOFFICE_LIB_PATH)
+            set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
+        else()
+            set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
+            set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
+        endif()
+
     endif()
 
     # Example applications
