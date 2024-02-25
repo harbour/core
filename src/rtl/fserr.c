@@ -128,6 +128,7 @@ static HB_ERRCODE hb_WinToDosError( DWORD dwError )
    {
       case ERROR_PRIVILEGE_NOT_HELD:
       case ERROR_ALREADY_EXISTS:          return 5;
+      case ERROR_INVALID_NAME:
       case ERROR_FILE_NOT_FOUND:          return 2;
       case ERROR_PATH_NOT_FOUND:          return 3;
       case ERROR_TOO_MANY_OPEN_FILES:     return 4;

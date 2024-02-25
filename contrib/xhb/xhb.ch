@@ -78,6 +78,8 @@
    #xtranslate AllTrim( [<x,...>] )              => xhb_AllTrim( <x> )
 
    /* _SET_TRACE* / TraceLog() */
+   #command SET TRACE <x:ON,OFF,&>               => xhb_SetTrace( <(x)> )
+   #command SET TRACE (<x>)                      => xhb_SetTrace( <x> )
    #xtranslate Set( _SET_TRACE [,<x,...>] )      => xhb_SetTrace( <x> )
    #xtranslate Set( _SET_TRACEFILE [,<x,...>] )  => xhb_SetTraceFile( <x> )
    #xtranslate Set( _SET_TRACESTACK [,<x,...>] ) => xhb_SetTraceStack( <x> )

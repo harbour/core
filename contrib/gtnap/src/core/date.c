@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -268,87 +268,3 @@ String *date_format(const Date *date, const char_t *format)
     else
         return str_printf("%04d/%02d/%02d-%02d:%02d:%02d", date->year, date->month, date->mday, date->hour, date->minute, date->second);
 }
-
-// /*---------------------------------------------------------------------------*/
-
-// String *date_DD_MM_YYYY_HH_MM_SS(const Date *date)
-// {
-//     cassert_no_null(date);
-//     return str_printf("%02d/%02d/%04d-%02d:%02d:%02d", date->mday, date->month, date->year, date->hour, date->minute, date->second);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// String *date_YYYY_MM_DD_HH_MM_SS(const Date *date)
-// {
-//     cassert_no_null(date);
-//     return str_printf("%04d/%02d/%02d-%02d:%02d:%02d", date->year, date->month, date->mday, date->hour, date->minute, date->second);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// const char_t *date_month_en(const month_t month)
-// {
-//     switch (month) {
-//     case ekJANUARY:
-//         return "January";
-//     case ekFEBRUARY:
-//         return "February";
-//     case ekMARCH:
-//         return "March";
-//     case ekAPRIL:
-//         return "April";
-//     case ekMAY:
-//         return "May";
-//     case ekJUNE:
-//         return "June";
-//     case ekJULY:
-//         return "July";
-//     case ekAUGUST:
-//         return "August";
-//     case ekSEPTEMBER:
-//         return "September";
-//     case ekOCTOBER:
-//         return "October";
-//     case ekNOVEMBER:
-//         return "November";
-//     case ekDECEMBER:
-//         return "December";
-//     cassert_default();
-//     }
-//     return "";
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// const char_t *date_month_es(const month_t month)
-// {
-//     switch (month) {
-//     case ekJANUARY:
-//         return "Enero";
-//     case ekFEBRUARY:
-//         return "Febrero";
-//     case ekMARCH:
-//         return "Marzo";
-//     case ekAPRIL:
-//         return "Abril";
-//     case ekMAY:
-//         return "Mayo";
-//     case ekJUNE:
-//         return "Junio";
-//     case ekJULY:
-//         return "Julio";
-//     case ekAUGUST:
-//         return "Agosto";
-//     case ekSEPTEMBER:
-//         return "Septiembre";
-//     case ekOCTOBER:
-//         return "Octubre";
-//     case ekNOVEMBER:
-//         return "Noviembre";
-//     case ekDECEMBER:
-//         return "Diciembre";
-//     cassert_default();
-//     }
-//     return "";
-// }

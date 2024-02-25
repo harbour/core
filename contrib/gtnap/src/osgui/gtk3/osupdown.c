@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -13,10 +13,10 @@
 #include "osupdown.h"
 #include "osupdown.inl"
 #include "osgui.inl"
-#include "osglobals.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
+#include "osglobals_gtk.inl"
+#include "oscontrol_gtk.inl"
+#include "ospanel_gtk.inl"
+#include "oswindow_gtk.inl"
 #include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -104,39 +104,43 @@ static void i_OnClick(OSUpDown *updown, const uint32_t index)
 
 static gboolean i_OnPress(GtkWidget *widget, GdkEventButton *event, OSUpDown *updown)
 {
-    int w = gtk_widget_get_allocated_height(widget);
-    int h = gtk_widget_get_allocated_height(widget);
-    cassert_no_null(updown);
-    if (event->x < 0 || event->x > w || event->y < 0 || event->y > h)
+    if (_oswindow_mouse_down(OSControlPtr(updown)) == TRUE)
     {
-        updown->state = ekNORMAL;
-    }
-    else if (event->y < h / 2)
-    {
-        if (event->type == GDK_BUTTON_RELEASE)
+        int w = gtk_widget_get_allocated_height(widget);
+        int h = gtk_widget_get_allocated_height(widget);
+        cassert_no_null(updown);
+        if (event->x < 0 || event->x > w || event->y < 0 || event->y > h)
         {
-            updown->state = ekUP_HOVER;
+            updown->state = ekNORMAL;
+        }
+        else if (event->y < h / 2)
+        {
+            if (event->type == GDK_BUTTON_RELEASE)
+            {
+                updown->state = ekUP_HOVER;
+            }
+            else
+            {
+                updown->state = ekUP_CLICK;
+                i_OnClick(updown, 0);
+            }
         }
         else
         {
-            updown->state = ekUP_CLICK;
-            i_OnClick(updown, 0);
+            if (event->type == GDK_BUTTON_RELEASE)
+            {
+                updown->state = ekDOWN_HOVER;
+            }
+            else
+            {
+                updown->state = ekDOWN_CLICK;
+                i_OnClick(updown, 1);
+            }
         }
-    }
-    else
-    {
-        if (event->type == GDK_BUTTON_RELEASE)
-        {
-            updown->state = ekDOWN_HOVER;
-        }
-        else
-        {
-            updown->state = ekDOWN_CLICK;
-            i_OnClick(updown, 1);
-        }
+
+        gtk_widget_queue_draw(widget);
     }
 
-    gtk_widget_queue_draw(widget);
     return TRUE;
 }
 
@@ -265,13 +269,4 @@ void osupdown_origin(const OSUpDown *updown, real32_t *x, real32_t *y)
 void osupdown_frame(OSUpDown *updown, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     _oscontrol_set_frame((OSControl *)updown, x, y, width, height);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osupdown_detach_and_destroy(OSUpDown **updown, OSPanel *panel)
-{
-    cassert_no_null(updown);
-    osupdown_detach(*updown, panel);
-    osupdown_destroy(updown);
 }

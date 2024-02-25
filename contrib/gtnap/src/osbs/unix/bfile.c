@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -103,7 +103,7 @@ bool_t bfile_dir_create(const char_t *pathname, ferror_t *error)
 
 /*---------------------------------------------------------------------------*/
 
-#define i_PATHNAME(dir) ((char *)((char_t *)(dir) + sizeof(DIR *) + sizeof(uint32_t)))
+#define i_PATHNAME(dir) (char *)((char_t *)(dir) + sizeof(DIR *) + sizeof(uint32_t))
 
 /*---------------------------------------------------------------------------*/
 

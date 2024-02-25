@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -63,9 +63,9 @@ void core_start(void)
 
         i_NUM_USERS = 1;
 #if defined(__APPLE__) || defined(__LINUX__)
-        cassert(sizeof(EventHandler) == 2 * sizeof(void *));
+        cassert(sizeof(EventHandler) == 2 * sizeofptr);
 #else
-        cassert(sizeof(EventHandler) == sizeof(void *));
+        cassert(sizeof(EventHandler) == sizeofptr);
 #endif
     }
     else

@@ -51,68 +51,116 @@
 #include "hbthread.h"
 
 #if defined( HB_OS_WIN )
-   #include <windows.h>
-#endif
 
-#if 0
+#include <windows.h>
 
-static PHB_SYMB s_xHbFunc = NULL;
+static PHB_SYMB s_pFuncSymbol = NULL;
+static PHB_DYNS s_pHbCStructDyn = NULL;
+static PHB_DYNS s_pBufferMsg = NULL;
 
 LONG WINAPI PRGUnhandledExceptionFilter( EXCEPTION_POINTERS * ExceptionInfo )
 {
-   if( s_xHbFunc )
+   LONG lResult = EXCEPTION_CONTINUE_SEARCH;
+
+   if( s_pFuncSymbol && hb_vmRequestReenter() )
    {
-      HB_ITEM  Exception;
-      PHB_DYNS pDyn = hb_dynsymFind( "HB_CSTRUCTURE" );
+      PHB_ITEM pException = NULL;
+      HB_USHORT uiParams = 0;
 
-      Exception.type = HB_IT_NIL;
-
-      if( pDyn )
+      if( s_pHbCStructDyn )
       {
-         hb_vmPushSymbol( pDyn->pSymbol );
+         hb_vmPushSymbol( hb_dynsymSymbol( s_pHbCStructDyn ) );
          hb_vmPushNil();
-         hb_itemPushStaticString( "EXCEPTION_POINTERS", 18 );
+         hb_vmPushStringPcode( "EXCEPTION_POINTERS", 18 );
          hb_vmPushLong( 8 );
          hb_vmDo( 2 );
-
-         if( hb_stackReturnItem()->type == HB_IT_OBJECT )
+         if( HB_IS_OBJECT( hb_stackReturnItem() ) )
          {
-            HB_ITEM_NEW( Buffer );
-            HB_ITEM Adopt;
-
-            hb_itemMove( &Exception, hb_stackReturnItem() );
-
-            hb_itemPutCLStatic( &Buffer, ( char * ) ExceptionInfo, sizeof( EXCEPTION_POINTERS ) );
-
-            Adopt.type = HB_IT_LOGICAL;
-            Adopt.item.asLogical.value = HB_FALSE;
-
-            hb_objSendMsg( &Exception, "Buffer", 2, &Buffer, &Adopt );
+            pException = hb_itemNew( hb_stackReturnItem() );
+            if( s_pBufferMsg )
+            {
+               hb_vmPushDynSym( s_pBufferMsg );
+               hb_vmPush( pException );
+               if( ( ( const char * ) ExceptionInfo )[ sizeof( EXCEPTION_POINTERS ) ] == '\0' )
+                  hb_itemPutCLConst( hb_stackAllocItem(), ( const char * ) ExceptionInfo, sizeof( EXCEPTION_POINTERS ) );
+               else
+                  hb_itemPutCL( hb_stackAllocItem(), ( const char * ) ExceptionInfo, sizeof( EXCEPTION_POINTERS ) );
+               hb_vmPushLogical( HB_FALSE );
+               hb_vmSend( 2 );
+            }
          }
       }
 
-      hb_vmPushSymbol( s_xHbFunc );
+      hb_vmPushSymbol( s_pFuncSymbol );
       hb_vmPushNil();
-      hb_itemPushForward( &Exception );
-      hb_vmDo( 1 );
+      if( pException )
+      {
+         hb_vmPush( pException );
+         hb_itemRelease( pException );
+         uiParams = 1;
+      }
+      hb_vmDo( uiParams );
+      lResult = hb_parnldef( -1, EXCEPTION_CONTINUE_SEARCH );
+
+      hb_vmRequestRestore();
    }
 
-   return hb_itemGetNL( hb_stackReturnItem() );
+   return lResult;
 }
-
 #endif
 
 HB_FUNC( SETUNHANDLEDEXCEPTIONFILTER )
 {
-#if 0
-   LPTOP_LEVEL_EXCEPTION_FILTER pDefaultHandler;
+#if defined( HB_OS_WIN )
+   LPTOP_LEVEL_EXCEPTION_FILTER pDefaultHandler = NULL;
+   PHB_ITEM pFuncItm = hb_param( 1, HB_IT_ANY );
+   PHB_SYMB pFuncSym = s_pFuncSymbol;
 
-   s_xHbFunc = ( PHB_SYMB ) hb_parptr( 1 );
+   if( pFuncItm && HB_IS_SYMBOL( pFuncItm ) )
+   {
+      s_pFuncSymbol = hb_itemGetSymbol( pFuncItm );
+      pDefaultHandler = PRGUnhandledExceptionFilter;
+      /* intentionally no protection for repeated initialization,
+       * it's possible that HB_CSTRUCTURE() has been loaded from
+       * dynamic library [druzus]
+       */
+      if( s_pHbCStructDyn == NULL )
+      {
+         PHB_DYNS pDyn = hb_dynsymFind( "HB_CSTRUCTURE" );
+         if( pDyn && hb_dynsymIsFunction( pDyn ) )
+         {
+            s_pHbCStructDyn = pDyn;
+            if( s_pBufferMsg == NULL )
+               s_pBufferMsg = hb_dynsymFind( "BUFFER" );
+         }
+      }
+   }
+   else
+   {
+      s_pFuncSymbol = NULL;
+      if( pFuncItm && HB_IS_POINTER( pFuncItm ) )
+      {
+         pDefaultHandler = ( LPTOP_LEVEL_EXCEPTION_FILTER ) hb_itemGetPtr( pFuncItm );
+         if( pDefaultHandler == PRGUnhandledExceptionFilter )
+            pDefaultHandler = NULL;
+      }
+   }
 
-   pDefaultHandler = SetUnhandledExceptionFilter( PRGUnhandledExceptionFilter );
+   pDefaultHandler = SetUnhandledExceptionFilter( pDefaultHandler );
 
-   hb_retptr( pDefaultHandler );
+   if( pFuncSym )
+      hb_itemPutSymbol( hb_stackReturnItem(), pFuncSym );
+   else if( pDefaultHandler )
+      hb_retptr( ( void * ) pDefaultHandler );
+   /* else hb_ret(); -> NIL is default */
 #endif
-   /* Dummy in Harbour */
-   hb_retnl( 0 );
+}
+
+HB_FUNC( SETERRORMODE )
+{
+#if defined( HB_OS_WIN )
+   hb_retni( SetErrorMode( hb_parni( 1 ) ) );
+#else
+   hb_retni( 0 );
+#endif
 }

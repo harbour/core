@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,13 +11,15 @@
 /* GTK System globals */
 
 #include "osglobals.h"
-#include "osglobals.inl"
-#include "oscontrol.inl"
+#include "osglobals_gtk.inl"
+#include "oscontrol_gtk.inl"
 #include <draw2d/color.h>
 #include <draw2d/image.h>
 #include <core/event.h>
 #include <core/heap.h>
 #include <core/strings.h>
+#include <core/stream.h>
+#include <osbs/log.h>
 #include <sewer/cassert.h>
 #include <sewer/unicode.h>
 
@@ -25,6 +27,7 @@
 #error This file is only for GTK Toolkit
 #endif
 
+static const char_t *i_HIGH_TEXT = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 static bool_t i_IMPOSTOR_MAPPED = FALSE;
 static GtkWidget *kWINDOW = NULL;
 static GtkWidget *kLABEL = NULL;
@@ -34,9 +37,9 @@ static GtkWidget *kCHECK[10] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
 static GtkWidget *kSEPARATOR = NULL;
 static GtkWidget *kLINKBUTTON = NULL;
 static GtkWidget *kPROGRESSBAR = NULL;
-static GtkWidget *kSCROLL = NULL;
 static GtkWidget *kFRAME = NULL;
 static GtkWidget *kTABLE = NULL;
+static GtkWidget *kSCROLLED = NULL;
 static GtkWidget *kHEADER = NULL;
 static GtkWidget *kRESTORE_FOCUS_WINDOW = NULL;
 static GtkWidget *kRESTORE_FOCUS_WIDGET = NULL;
@@ -44,8 +47,6 @@ static GdkPixbuf *kCHECKSBITMAP = NULL;
 static uint32_t kCHECK_WIDTH = 0;
 static uint32_t kCHECK_HEIGHT = 0;
 static uint32_t kENTRY_HEIGHT = 0;
-static uint32_t kSCROLL_WIDTH = 0;
-static uint32_t kSCROLL_HEIGHT = 0;
 static uint32_t kPROGRESS_HEIGHT = 0;
 static bool_t kDARK_MODE = FALSE;
 static color_t kLABEL_COLOR = 0;
@@ -53,6 +54,7 @@ static color_t kVIEW_COLOR = 0;
 static color_t kLINE_COLOR = 0;
 static color_t kLINK_COLOR = 0;
 static color_t kBORD_COLOR = 0;
+static color_t kBORDFOCUS_COLOR = 0;
 static color_t kTEXT_COLOR = 0;
 static color_t kSELTX_COLOR = 0;
 static color_t kHOTTX_COLOR = 0;
@@ -62,6 +64,7 @@ static color_t kHOTTXBACKDROP_COLOR = 0;
 static String *kCSS_ENTRY = NULL;
 static String *kCSS_BUTTON = NULL;
 static String *kCSS_COMBOBOX = NULL;
+static String *kCSS_FRAME = NULL;
 static String *kCSS_TEXTVIEW = NULL;
 static String *kCSS_TEXTVIEWTEXT = NULL;
 
@@ -182,33 +185,66 @@ static color_t i_backcolor_prop(GtkWidget *widget, GtkStateFlags flags)
 
 /*---------------------------------------------------------------------------*/
 
+/* Useful debug code to save GdkPixbuf to file  */
+/* #include <draw2d/image.inl>
+static gboolean i_encode(const gchar *data, gsize size, GError **error, gpointer stream)
+{
+   stm_write((Stream*)stream, (const byte_t*)data, (uint32_t)size);
+   unref(error);
+   return TRUE;
+}
+
+static void i_pixbuf_save(GdkPixbuf *pixbuf, const char *type, Stream *stm)
+{
+   gboolean ok = FALSE;
+   ok = gdk_pixbuf_save_to_callback(pixbuf, i_encode, (gpointer)stm, type, NULL, NULL);
+   cassert_unref(ok == TRUE, ok);
+}
+*/
+
+/*---------------------------------------------------------------------------*/
+
 /* Trying to consistently get the color of the frame (border, line),
 reading the CSS properties, is a kind of impossible mission.
 So we draw a frame and get the color. We start with the row in the middle,
 to avoid roundness and transparencies in the corner. */
-static color_t i_frame_color(void)
+static color_t i_frame_color(GtkWidget *widget, const uint32_t size, const bool_t middle_i, const bool_t middle_j)
 {
-    register uint32_t i, j, size = 20;
+    register uint32_t i = 0, j = 0;
     cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size, size);
     cairo_t *cairo = cairo_create(surface);
     GdkPixbuf *bitmap = NULL;
     uint32_t *buffer = NULL;
     color_t col = 0;
-    gtk_widget_draw(kFRAME, cairo);
+    gtk_widget_draw(widget, cairo);
     bitmap = gdk_pixbuf_get_from_surface(surface, 0, 0, size, size);
     cassert(gdk_pixbuf_get_rowstride(bitmap) % 4 == 0);
     buffer = (uint32_t *)gdk_pixbuf_get_pixels(bitmap);
 
-    for (i = 0; i < size && col == 0; ++i)
-        for (j = size / 2; j < size && col == 0; ++j)
+    if (middle_i == TRUE)
+        i = size / 2;
+    if (middle_j == TRUE)
+        j = size / 2;
+
+    for (; i < size && col == 0; ++i)
+        for (; j < size && col == 0; ++j)
         {
             if (buffer[j * size + i] != 0)
                 col = buffer[j * size + i];
         }
 
+    /*
+    {
+        Stream *stm = stm_to_file("/home/fran/Desktop/frame.png", NULL);
+        i_pixbuf_save(bitmap, "png", stm);
+        stm_close(&stm);
+    }
+    */
+
     cairo_surface_destroy(surface);
     cairo_destroy(cairo);
     g_object_unref(bitmap);
+
     return col;
 }
 
@@ -221,7 +257,8 @@ static void i_precompute_colors(void)
     cassert(i_IMPOSTOR_MAPPED == TRUE);
     kLABEL_COLOR = i_color_prop(kLABEL, "color", GTK_STATE_FLAG_ACTIVE);
     kVIEW_COLOR = i_color_prop(kWINDOW, "background-color", GTK_STATE_FLAG_NORMAL);
-    kLINE_COLOR = i_frame_color();
+    kLINE_COLOR = i_frame_color(kFRAME, 20, FALSE, TRUE);
+    kBORDFOCUS_COLOR = i_frame_color(kPROGRESSBAR, kPROGRESS_HEIGHT, TRUE, TRUE);
     kLINK_COLOR = i_color_prop(gtk_bin_get_child(GTK_BIN(kLINKBUTTON)), "color", GTK_STATE_FLAG_ACTIVE);
     kBORD_COLOR = kLINE_COLOR;
     kTEXT_COLOR = i_color_prop(kTABLE, "color", GTK_STATE_FLAG_NORMAL);
@@ -230,32 +267,11 @@ static void i_precompute_colors(void)
     kTEXTBACKDROP_COLOR = i_color_prop(kTABLE, "color", GTK_STATE_FLAG_NORMAL | GTK_STATE_FLAG_BACKDROP);
     kSELTXBACKDROP_COLOR = i_color_prop(kTABLE, "color", GTK_STATE_FLAG_SELECTED | GTK_STATE_FLAG_BACKDROP);
     kHOTTXBACKDROP_COLOR = i_color_prop(kTABLE, "color", GTK_STATE_FLAG_PRELIGHT | GTK_STATE_FLAG_BACKDROP);
-
     r = (real32_t)((uint8_t)(kVIEW_COLOR) / 255.f);
     g = (real32_t)((uint8_t)(kVIEW_COLOR >> 8) / 255.f);
     b = (real32_t)((uint8_t)(kVIEW_COLOR >> 16) / 255.f);
     kDARK_MODE = (.21 * r + .72 * g + .07 * b) < .5 ? TRUE : FALSE;
 }
-
-/* Useful debug code to save GdkPixbuf to file  */
-/*---------------------------------------------------------------------------*/
-
-/* #include "stream.h"
-static gboolean i_encode(const gchar *data, gsize size, GError **error, gpointer stream)
-{
-   stm_write((Stream*)stream, (const byte_t*)data, (uint32_t)size);
-   unref(error);
-   return TRUE;
-} */
-
-/*---------------------------------------------------------------------------*/
-
-/* static void i_pixbuf_save(GdkPixbuf *pixbuf, const char *type, Stream *stm)
-{
-   gboolean ok = FALSE;
-   ok = gdk_pixbuf_save_to_callback(pixbuf, i_encode, (gpointer)stm, type, NULL, NULL);
-   cassert_unref(ok == TRUE, ok);
-} */
 
 /*---------------------------------------------------------------------------*/
 
@@ -282,16 +298,66 @@ static void i_precompute_checks(void)
     kCHECKSBITMAP = gdk_pixbuf_get_from_surface(surface, 0, 0, 10 * mwidth, mheight);
 
     /*
-    #include "stream.h"
-    #include "image.inl"
     Stream *stm = stm_to_file("/home/fran/Desktop/check.png", NULL);
     i_pixbuf_save(kCHECKSBITMAP, "png", stm);
     stm_close(&stm);
- */
+    */
 
     cairo_surface_destroy(surface);
     cairo_destroy(cairo);
 }
+
+/*---------------------------------------------------------------------------*/
+
+/*
+static gboolean on_scrollbar_enter(GtkWidget *widget, GdkEventCrossing *event, gpointer user_data) {
+    GtkRequisition minimum_size;
+    GtkRequisition natural_size;
+    //gtk_widget_set_state_flags(scroll, GTK_STATE_FLAG_PRELIGHT, FALSE);
+    gtk_widget_get_preferred_size (widget, &minimum_size, &natural_size);
+
+    g_print("Widget entró\n");
+    return FALSE;
+}
+
+static GtkWidget *WIDGET = NULL;
+static GdkEvent *EVENT  = NULL;
+
+static gboolean i_select(void *obj)
+{
+    gdk_event_put(EVENT);
+
+//    gtk_widget_event(WIDGET, EVENT);
+    return FALSE;
+}
+
+static void simulate_enter_notify_event(GtkWidget *widget)
+{
+    GdkEvent *event;
+
+    g_signal_connect(widget, "enter-notify-event", G_CALLBACK(on_scrollbar_enter), NULL);
+
+    // Crear un evento de enter-notify
+    event = gdk_event_new(GDK_ENTER_NOTIFY);
+
+    // Configurar el evento para el widget específico
+    event->crossing.window = gtk_widget_get_window(widget);
+    event->crossing.send_event = TRUE;
+    event->crossing.subwindow = NULL;
+    event->crossing.time = GDK_CURRENT_TIME;
+    WIDGET = widget;
+    EVENT = event;
+
+    // Simular el evento
+    //gdk_event_put(event);
+    g_idle_add((GSourceFunc)i_select, NULL);
+
+    // on_idle
+    // gtk_widget_event(widget, event);
+    // Liberar la memoria del evento
+    //g_free(event);
+}
+*/
 
 /*---------------------------------------------------------------------------*/
 
@@ -305,8 +371,6 @@ static gboolean i_OnWindowDamage(GtkWidget *widget, GdkEventExpose *event, gpoin
         return FALSE;
 
     i_IMPOSTOR_MAPPED = TRUE;
-    i_precompute_colors();
-    i_precompute_checks();
 
     {
         real32_t width, height;
@@ -319,28 +383,23 @@ static gboolean i_OnWindowDamage(GtkWidget *widget, GdkEventExpose *event, gpoin
         unref(width);
     }
 
+    i_precompute_colors();
+    i_precompute_checks();
+
+    /*
+        TODO: Scrollbars size
+    {
+        GtkWidget *scroll = gtk_scrolled_window_get_vscrollbar(kSCROLLED);
+        simulate_enter_notify_event(scroll);
+
+    }
+    */
+
     cassert(kHEADER == NULL);
 
     {
         GtkTreeViewColumn *column = gtk_tree_view_get_column(GTK_TREE_VIEW(kTABLE), 0);
         kHEADER = gtk_tree_view_column_get_button(GTK_TREE_VIEW_COLUMN(column));
-    }
-
-    {
-        GtkAllocation halloc, valloc;
-        GtkWidget *hscroll = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(kSCROLL));
-        GtkWidget *vscroll = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(kSCROLL));
-
-#if GTK_CHECK_VERSION(3, 20, 0)
-        gtk_widget_get_allocated_size(hscroll, &halloc, NULL);
-        gtk_widget_get_allocated_size(vscroll, &valloc, NULL);
-#else
-        gtk_widget_get_allocation(hscroll, &halloc);
-        gtk_widget_get_allocation(vscroll, &valloc);
-#endif
-
-        kSCROLL_WIDTH = valloc.width;
-        kSCROLL_HEIGHT = halloc.height;
     }
 
     gtk_widget_hide(widget);
@@ -356,12 +415,12 @@ static void i_impostor_window(void)
     GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     GtkWidget *hbox1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     GtkWidget *hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    GtkWidget *scroll = gtk_scrolled_window_new(NULL, NULL);
-    GtkWidget *text = gtk_text_view_new();
+    GtkWidget *tview = gtk_text_view_new();
     GtkCellRenderer *renderer = NULL;
     GtkTreeViewColumn *column1 = NULL;
     GtkTreeViewColumn *column2 = NULL;
     GtkListStore *store = NULL;
+    GtkTextBuffer *tbuffer = NULL;
     cassert(kWINDOW == NULL);
     kWINDOW = gtk_offscreen_window_new();
     /*kWINDOW = gtk_window_new(GTK_WINDOW_TOPLEVEL);*/
@@ -371,14 +430,17 @@ static void i_impostor_window(void)
     kSEPARATOR = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
     kLINKBUTTON = gtk_link_button_new_with_label("", "__LINK__");
     kPROGRESSBAR = gtk_progress_bar_new();
-    kSCROLL = scroll;
     kFRAME = gtk_frame_new(NULL);
     kTABLE = gtk_tree_view_new();
+    kSCROLLED = gtk_scrolled_window_new(NULL, NULL);
+    tbuffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tview));
+    gtk_text_buffer_set_text(tbuffer, i_HIGH_TEXT, -1);
+    gtk_container_add(GTK_CONTAINER(kSCROLLED), tview);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(kPROGRESSBAR), 1.);
     gtk_container_add(GTK_CONTAINER(kFRAME), kTABLE);
     renderer = gtk_cell_renderer_text_new();
     column1 = gtk_tree_view_column_new_with_attributes("Column1", renderer, "text", 0, NULL);
     column2 = gtk_tree_view_column_new_with_attributes("Column2", renderer, "text", 0, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), GTK_POLICY_ALWAYS, GTK_POLICY_ALWAYS);
     gtk_tree_view_append_column(GTK_TREE_VIEW(kTABLE), column1);
     gtk_tree_view_append_column(GTK_TREE_VIEW(kTABLE), column2);
     gtk_tree_view_column_set_sizing(GTK_TREE_VIEW_COLUMN(column1), GTK_TREE_VIEW_COLUMN_FIXED);
@@ -400,7 +462,6 @@ static void i_impostor_window(void)
     kCHECK[7] = gtk_check_button_new();
     kCHECK[8] = gtk_check_button_new();
     kCHECK[9] = gtk_check_button_new();
-    gtk_container_add(GTK_CONTAINER(scroll), text);
     gtk_container_add(GTK_CONTAINER(kWINDOW), vbox);
     gtk_box_pack_start(GTK_BOX(hbox1), kCHECK[0], FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox1), kCHECK[1], FALSE, FALSE, 0);
@@ -421,7 +482,7 @@ static void i_impostor_window(void)
     gtk_box_pack_start(GTK_BOX(vbox), kLINKBUTTON, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vbox), kPROGRESSBAR, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vbox), kFRAME, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox), scroll, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox), kSCROLLED, TRUE, TRUE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(kCHECK[0]), FALSE);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(kCHECK[1]), FALSE);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(kCHECK[2]), FALSE);
@@ -507,7 +568,6 @@ void osglobals_resolution(const void *non_used, real32_t *width, real32_t *heigh
     cassert_no_null(width);
     cassert_no_null(height);
 #if GTK_CHECK_VERSION(3, 22, 0)
-
     {
         GdkDisplay *display = gdk_display_get_default();
         GdkMonitor *primary_monitor = gdk_display_get_primary_monitor(display);
@@ -516,7 +576,6 @@ void osglobals_resolution(const void *non_used, real32_t *width, real32_t *heigh
         *width = (real32_t)monitor_geometry.width;
         *height = (real32_t)monitor_geometry.height;
     }
-
 #else
     *width = (real32_t)gdk_screen_width();
     *height = (real32_t)gdk_screen_height();
@@ -527,10 +586,30 @@ void osglobals_resolution(const void *non_used, real32_t *width, real32_t *heigh
 
 void osglobals_mouse_position(const void *non_used, real32_t *x, real32_t *y)
 {
-    cassert(FALSE);
+    /* https://stackoverflow.com/questions/55213291/query-cursor-position-with-gtk */
+    gint ix, iy;
+    GdkDisplay *display = gdk_display_get_default();
+    GdkWindow *window = NULL;
+    GdkDevice *mouse_device = NULL;
+    cassert_no_null(x);
+    cassert_no_null(y);
     unref(non_used);
-    unref(x);
-    unref(y);
+#if GTK_CHECK_VERSION(3, 20, 0)
+    {
+        GdkSeat *seat = gdk_display_get_default_seat(display);
+        mouse_device = gdk_seat_get_pointer(seat);
+    }
+#else
+    {
+        GdkDeviceManager *devman = gdk_display_get_device_manager(display);
+        mouse_device = gdk_device_manager_get_client_pointer(devman);
+    }
+#endif
+
+    window = gdk_display_get_default_group(display);
+    gdk_window_get_device_position(window, mouse_device, &ix, &iy, NULL);
+    *x = (real32_t)ix;
+    *y = (real32_t)iy;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -625,7 +704,7 @@ void osglobals_transitions(void *nonused, const real64_t prtime, const real64_t 
 
 /*---------------------------------------------------------------------------*/
 
-static gboolean i_onidle_listener(Listener *listener)
+static gboolean i_OnIdle(Listener *listener)
 {
     listener_event(listener, ekGUI_EVENT_IDLE, NULL, NULL, NULL, void, void, void);
     listener_destroy(&listener);
@@ -637,7 +716,7 @@ static gboolean i_onidle_listener(Listener *listener)
 void osglobals_OnIdle(void *nonused, Listener *listener)
 {
     unref(nonused);
-    g_idle_add((GSourceFunc)i_onidle_listener, listener);
+    g_idle_add((GSourceFunc)i_OnIdle, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -728,6 +807,42 @@ static void i_jump_next_section(char **pcss)
 
 /*---------------------------------------------------------------------------*/
 
+static bool_t i_section(const char_t *sect, const char_t *str, uint32_t *n)
+{
+    const char_t *st = sect;
+    cassert_no_null(sect);
+    cassert_no_null(str);
+    cassert_no_null(n);
+
+    if (*sect == 0)
+        return FALSE;
+
+    /* Allowed start characters */
+    if (*sect == '.')
+        sect++;
+
+    /* Section name must fit required name */
+    for (; *str != 0; ++str, ++sect)
+    {
+        if (*sect == 0)
+            return FALSE;
+
+        if (unicode_tolower((uint32_t)*sect) != unicode_tolower((uint32_t)*str))
+            return FALSE;
+    }
+
+    /* Valid final characters in section */
+    if (*sect == 0 || *sect == '.' || *sect == ':' || *sect == ' ')
+    {
+        *n = (uint32_t)(sect - st);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 /*
    GTK3 changes, depending on the version, the css keys of the widgets
    ('entry', '.entry', ...). We are looking for the keys in this particular version,
@@ -752,9 +867,19 @@ static void i_parse_gtk_theme(void)
     if (prov != NULL)
         css_data = gtk_css_provider_to_string(prov);
     else
-        css_data = "";
+        css_data = (char *)"";
 
     pcss = css_data;
+
+    /*
+     * Save a copy of theme.css
+    {
+        #include <core/hfile.h>
+        String *str = str_c(css_data);
+        hfile_from_string("/home/fran/Desktop/app_css_export.css", str, NULL);
+        str_destroy(&str);
+    }
+    */
 
     for (;;)
     {
@@ -763,54 +888,53 @@ static void i_parse_gtk_theme(void)
 
         if (section != NULL)
         {
+            uint32_t sect_n = 0;
             str_copy_cn(csect, sizeof(csect), section, nsection);
             csect[nsection] = '\0';
 
             if (kCSS_ENTRY == NULL)
             {
-                if (str_equ_nocase(csect, "entry") == TRUE ||
-                    str_equ_nocase(csect, ".entry") == TRUE)
+                if (i_section(csect, "entry", &sect_n) == TRUE)
                 {
-                    kCSS_ENTRY = str_c(csect);
+                    kCSS_ENTRY = str_cn(csect, sect_n);
                 }
             }
 
             if (kCSS_BUTTON == NULL)
             {
-                if (str_equ_nocase(csect, "button") == TRUE ||
-                    str_equ_nocase(csect, ".button") == TRUE)
-                {
-                    kCSS_BUTTON = str_c(csect);
-                }
+                if (i_section(csect, "button", &sect_n) == TRUE)
+                    kCSS_BUTTON = str_cn(csect, sect_n);
             }
 
             if (kCSS_COMBOBOX == NULL)
             {
-                if (str_equ_nocase(csect, "combobox") == TRUE ||
-                    str_equ_nocase(csect, "GtkComboBox") == TRUE)
-                {
-                    kCSS_COMBOBOX = str_c(csect);
-                }
+                if (i_section(csect, "combobox", &sect_n) == TRUE)
+                    kCSS_COMBOBOX = str_cn(csect, sect_n);
+                else if (i_section(csect, "GtkComboBox", &sect_n) == TRUE)
+                    kCSS_COMBOBOX = str_cn(csect, sect_n);
+            }
+
+            if (kCSS_FRAME == NULL)
+            {
+                if (i_section(csect, "frame", &sect_n) == TRUE)
+                    kCSS_FRAME = str_cn(csect, sect_n);
             }
 
             if (kCSS_TEXTVIEW == NULL)
             {
-                if (str_equ_nocase(csect, "textview") == TRUE ||
-                    str_equ_nocase(csect, "GtkTextView") == TRUE)
-                {
-                    kCSS_TEXTVIEW = str_c(csect);
-                }
+                if (i_section(csect, "textview", &sect_n) == TRUE)
+                    kCSS_TEXTVIEW = str_cn(csect, sect_n);
+                else if (i_section(csect, "GtkTextView", &sect_n) == TRUE)
+                    kCSS_TEXTVIEW = str_cn(csect, sect_n);
             }
 
             if (kCSS_TEXTVIEWTEXT == NULL)
             {
-                if (str_equ_nocase(csect, "textview text") == TRUE)
-                {
-                    kCSS_TEXTVIEWTEXT = str_c(csect);
-                }
+                if (i_section(csect, "textview text", &sect_n) == TRUE)
+                    kCSS_TEXTVIEWTEXT = str_cn(csect, sect_n);
             }
 
-            if (kCSS_ENTRY == NULL || kCSS_BUTTON == NULL || kCSS_COMBOBOX == NULL || kCSS_TEXTVIEW == NULL || kCSS_TEXTVIEWTEXT == NULL)
+            if (kCSS_ENTRY == NULL || kCSS_BUTTON == NULL || kCSS_COMBOBOX == NULL || kCSS_FRAME == NULL || kCSS_TEXTVIEW == NULL || kCSS_TEXTVIEWTEXT == NULL)
                 i_jump_next_section(&pcss);
             else
                 break;
@@ -850,6 +974,18 @@ static void i_parse_gtk_theme(void)
 
     if (kCSS_TEXTVIEWTEXT == NULL && kCSS_TEXTVIEW != NULL)
         kCSS_TEXTVIEWTEXT = str_copy(kCSS_TEXTVIEW);
+
+    if (kCSS_ENTRY == NULL)
+        log_printf("No kCSS_ENTRY found in css theme");
+
+    if (kCSS_BUTTON == NULL)
+        log_printf("No kCSS_BUTTON found in css theme");
+
+    if (kCSS_COMBOBOX == NULL)
+        log_printf("No kCSS_COMBOBOX found in css theme");
+
+    if (kCSS_FRAME == NULL)
+        log_printf("No kCSS_FRAME found in css theme");
 
     g_free(theme_name);
     g_free(css_data);
@@ -894,6 +1030,7 @@ void osglobals_finish(void)
     str_destopt(&kCSS_ENTRY);
     str_destopt(&kCSS_BUTTON);
     str_destopt(&kCSS_COMBOBOX);
+    str_destopt(&kCSS_FRAME);
     str_destopt(&kCSS_TEXTVIEW);
     str_destopt(&kCSS_TEXTVIEWTEXT);
 }
@@ -963,6 +1100,7 @@ GtkStyleContext *osglobals_table_context(void)
 
 const char_t *osglobals_css_entry(void)
 {
+    cassert(str_empty(kCSS_ENTRY) == FALSE);
     return tc(kCSS_ENTRY);
 }
 
@@ -970,6 +1108,7 @@ const char_t *osglobals_css_entry(void)
 
 const char_t *osglobals_css_button(void)
 {
+    cassert(str_empty(kCSS_BUTTON) == FALSE);
     return tc(kCSS_BUTTON);
 }
 
@@ -977,6 +1116,7 @@ const char_t *osglobals_css_button(void)
 
 const char_t *osglobals_css_combobox(void)
 {
+    cassert(str_empty(kCSS_COMBOBOX) == FALSE);
     return tc(kCSS_COMBOBOX);
 }
 
@@ -1083,24 +1223,41 @@ uint32_t osglobals_progress_height(void)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t osglobals_scroll_width(void)
-{
-    return kSCROLL_WIDTH;
-}
-
-/*---------------------------------------------------------------------------*/
-
-uint32_t osglobals_scroll_height(void)
-{
-    return kSCROLL_HEIGHT;
-}
-
-/*---------------------------------------------------------------------------*/
-
 GdkPixbuf *osglobals_checks_bitmap(void)
 {
     cassert(kCHECKSBITMAP != NULL);
     return kCHECKSBITMAP;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_write_rgb(Stream *stm, const char_t *prop, const color_t color)
+{
+    uint8_t r, g, b;
+    color_get_rgb(color, &r, &g, &b);
+    stm_printf(stm, "%s: rgb(%d, %d, %d);", prop, r, g, b);
+}
+
+/*---------------------------------------------------------------------------*/
+
+String *osglobals_frame_focus_css(void)
+{
+    Stream *stm = stm_memory(1024);
+    String *str = NULL;
+    stm_printf(stm, "%s > border {", tc(kCSS_FRAME));
+    i_write_rgb(stm, "border-left-color", kBORDFOCUS_COLOR);
+    i_write_rgb(stm, "border-right-color", kBORDFOCUS_COLOR);
+    i_write_rgb(stm, "border-top-color", kBORDFOCUS_COLOR);
+    i_write_rgb(stm, "border-bottom-color", kBORDFOCUS_COLOR);
+    stm_printf(stm, "} %s {", tc(kCSS_FRAME));
+    i_write_rgb(stm, "border-left-color", kBORDFOCUS_COLOR);
+    i_write_rgb(stm, "border-right-color", kBORDFOCUS_COLOR);
+    i_write_rgb(stm, "border-top-color", kBORDFOCUS_COLOR);
+    i_write_rgb(stm, "border-bottom-color", kBORDFOCUS_COLOR);
+    stm_printf(stm, "}");
+    str = stm_str(stm);
+    stm_close(&stm);
+    return str;
 }
 
 /*---------------------------------------------------------------------------*/

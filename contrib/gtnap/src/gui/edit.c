@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,6 +15,8 @@
 #include "cell.inl"
 #include "component.inl"
 #include "gui.inl"
+#include "panel.inl"
+#include "window.inl"
 #include <geom2d/s2d.h>
 #include <draw2d/color.h>
 #include <draw2d/font.h>
@@ -122,6 +124,15 @@ static void i_OnChange(Edit *edit, Event *e)
 
     if (edit->OnChange != NULL)
     {
+        Window *window = _component_window((GuiComponent *)edit);
+        Panel *panel = _window_main_panel(window);
+
+        if (p->next_ctrl != NULL)
+        {
+            ((EvText *)p)->next_ctrl = (void *)_panel_find_component(panel, (void *)p->next_ctrl);
+            cassert_no_null(p->next_ctrl);
+        }
+
         listener_pass_event(edit->OnChange, e, edit, Edit);
     }
 }

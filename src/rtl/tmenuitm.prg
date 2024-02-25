@@ -76,7 +76,7 @@ CREATE CLASS MenuItem FUNCTION HBMenuItem
 
    METHOD isPopUp()
 
-   METHOD New( cCaption, boData, nShortcut, cMessage, nID ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( cCaption, boData, nShortcut, cMessage, nID ) /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -171,7 +171,7 @@ METHOD style( cStyle ) CLASS MenuItem
 METHOD isPopUp() CLASS MenuItem
    RETURN HB_ISOBJECT( ::data ) .AND. IS_IN( ::data:ClassName(), "POPUPMENU|HB_POPUPMENU" )
 
-METHOD New( cCaption, boData, nShortcut, cMessage, nID ) CLASS MenuItem
+METHOD Init( cCaption, boData, nShortcut, cMessage, nID ) CLASS MenuItem
 
    ::data      := boData
    ::nID       := hb_defaultValue( nID, 0 )

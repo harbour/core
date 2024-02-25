@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -21,9 +21,9 @@ _gui_api SplitView *splitview_vertical(void);
 
 _gui_api void splitview_size(SplitView *split, const S2Df size);
 
-_gui_api void splitview_view(SplitView *split, View *view);
+_gui_api void splitview_view(SplitView *split, View *view, const bool_t tabstop);
 
-_gui_api void splitview_text(SplitView *split, TextView *view);
+_gui_api void splitview_text(SplitView *split, TextView *view, const bool_t tabstop);
 
 _gui_api void splitview_split(SplitView *split, SplitView *child);
 

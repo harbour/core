@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -104,7 +104,7 @@
 #define arrst_sort_ex(array, func_compare, data, type, dtype) \
     ((void)((data) == (dtype *)(data)),                       \
      FUNC_CHECK_COMPARE_EX(func_compare, type, dtype),        \
-     arrst_##type##_sort_ex(array, (FPtr_compare_ex)func_compare, (void *)(data)))
+     arrst_##type##_sort_ex(array, (FPtr_compare_ex)func_compare, (void *)data))
 
 #define arrst_search(array, func_compare, key, pos, type, ktype) \
     ((void)((key) == (ktype *)(key)),                            \

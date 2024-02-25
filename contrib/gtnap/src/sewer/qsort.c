@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -22,7 +22,7 @@ typedef void (*i_SWAP)(char *a, char *b, uint32_t size);
 
 static __INLINE void i_SWAP_ALIGN(char *a, char *b, uint32_t size)
 {
-    register uint32_t n1 = size / (uint32_t)sizeof(void *);
+    register uint32_t n1 = size / (uint32_t)sizeofptr;
     register uint32_t i;
     register void **_a = (void **)a;
     register void **_b = (void **)b;
@@ -40,8 +40,8 @@ static __INLINE void i_SWAP_ALIGN(char *a, char *b, uint32_t size)
 static __INLINE void i_SWAP_PTR(char *a, char *b, uint32_t size)
 {
     register void *swap = *(void **)a;
-    *((void **)a) = *((void **)b);
-    *((void **)b) = swap;
+    *(void **)a = *(void **)b;
+    *(void **)b = swap;
     unref(size);
 }
 
@@ -49,7 +49,7 @@ static __INLINE void i_SWAP_PTR(char *a, char *b, uint32_t size)
 
 static __INLINE void i_SWAP_GENERAL(char *a, char *b, uint32_t size)
 {
-    register uint32_t n1 = size / (uint32_t)sizeof(void *);
+    register uint32_t n1 = size / (uint32_t)sizeofptr;
     register uint32_t i;
     register void **_a = (void **)a;
     register void **_b = (void **)b;
@@ -62,9 +62,9 @@ static __INLINE void i_SWAP_GENERAL(char *a, char *b, uint32_t size)
         *_b = swap;
     }
 
-    a += n1 * sizeof(void *);
-    b += n1 * sizeof(void *);
-    n1 = size % (uint32_t)sizeof(void *);
+    a += n1 * sizeofptr;
+    b += n1 * sizeofptr;
+    n1 = size % (uint32_t)sizeofptr;
     for (i = 0; i < n1; ++i, ++a, ++b)
     {
         swapc = *a;
@@ -162,9 +162,9 @@ void _qsort_ex(const void *data, const uint32_t total_elems, const uint32_t size
     if (total_elems == 0)
         return;
 
-    if (sizeof_elem == sizeof(void *))
+    if (sizeof_elem == sizeofptr)
         SWAP_FUNC = i_SWAP_PTR;
-    else if (sizeof_elem % (uint32_t)sizeof(void *) == 0)
+    else if (sizeof_elem % (uint32_t)sizeofptr == 0)
         SWAP_FUNC = i_SWAP_ALIGN;
     else
         SWAP_FUNC = i_SWAP_GENERAL;

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -14,12 +14,12 @@
 #include "ospopup.inl"
 #include "osgui.inl"
 #include "osgui_win.inl"
-#include "oscontrol.inl"
-#include "oscombo.inl"
+#include "oscontrol_win.inl"
+#include "oscombo_win.inl"
+#include "ospanel_win.inl"
+#include "oswindow_win.inl"
 #include "osimglist.inl"
-#include "ospanel.inl"
 #include "ostooltip.inl"
-#include "oswindow.inl"
 #include <draw2d/font.h>
 #include <core/event.h>
 #include <core/heap.h>
@@ -34,6 +34,7 @@ struct _ospopup_t
     OSControl control;
     Font *font;
     HWND combo_hwnd;
+    WNDPROC def_combo_proc;
     uint32_t list_num_elems;
     OSImgList *image_list;
     Listener *OnSelect;
@@ -56,17 +57,9 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
             return 0;
         break;
 
-    case WM_SETFOCUS:
-        _oswindow_store_focus((OSControl *)popup);
-        break;
-
     case WM_LBUTTONDOWN:
-        if (_oswindow_can_mouse_down((OSControl *)popup) == TRUE)
-            break;
-        return 0;
-
     case WM_LBUTTONDBLCLK:
-        if (_oswindow_can_mouse_down((OSControl *)popup) == TRUE)
+        if (_oswindow_mouse_down(OSControlPtr(popup)) == TRUE)
             break;
         return 0;
     }
@@ -76,9 +69,21 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE DWORD i_style(void)
+static LRESULT CALLBACK i_ComboWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    return WS_CHILD | WS_CLIPSIBLINGS | CBS_DROPDOWNLIST;
+    OSPopUp *popup = (OSPopUp *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    cassert_no_null(popup);
+
+    switch (uMsg)
+    {
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONDBLCLK:
+        if (_oswindow_mouse_down(OSControlPtr(popup)) == TRUE)
+            break;
+        return 0;
+    }
+
+    return popup->def_combo_proc(hwnd, uMsg, wParam, lParam);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -86,17 +91,18 @@ static __INLINE DWORD i_style(void)
 OSPopUp *ospopup_create(const uint32_t flags)
 {
     OSPopUp *popup = NULL;
-    DWORD dwStyle = 0;
+    DWORD dwStyle = WS_CHILD | WS_CLIPSIBLINGS | CBS_DROPDOWNLIST;
+    unref(flags);
     popup = heap_new0(OSPopUp);
-    dwStyle = i_style();
     popup->control.type = ekGUI_TYPE_POPUP;
     _oscontrol_init((OSControl *)popup, PARAM(dwExStyle, WS_EX_NOPARENTNOTIFY | CBES_EX_NOSIZELIMIT), dwStyle, WC_COMBOBOXEX, 0, 120, i_WndProc, kDEFAULT_PARENT_WINDOW);
-    popup->font = _osgui_create_default_font();
+    popup->font = osgui_create_default_font();
     popup->combo_hwnd = (HWND)SendMessage(popup->control.hwnd, CBEM_GETCOMBOCONTROL, (WPARAM)0, (LPARAM)0);
+    popup->def_combo_proc = (WNDPROC)SetWindowLongPtr(popup->combo_hwnd, GWLP_WNDPROC, (LONG_PTR)i_ComboWndProc);
+    SetWindowLongPtr(popup->combo_hwnd, GWLP_USERDATA, (LONG_PTR)popup);
     popup->image_list = _osimglist_create(16);
     popup->list_num_elems = 5;
     _oscontrol_set_font((OSControl *)popup, popup->font);
-    unref(flags);
     return popup;
 }
 
@@ -247,15 +253,6 @@ void ospopup_frame(OSPopUp *popup, const real32_t x, const real32_t y, const rea
 {
     _oscontrol_set_frame((OSControl *)popup, x, y, width, height);
     _oscombo_set_list_height(popup->control.hwnd, popup->combo_hwnd, _osimglist_height(popup->image_list), popup->list_num_elems);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _ospopup_detach_and_destroy(OSPopUp **popup, OSPanel *panel)
-{
-    cassert_no_null(popup);
-    ospopup_detach(*popup, panel);
-    ospopup_destroy(popup);
 }
 
 /*---------------------------------------------------------------------------*/

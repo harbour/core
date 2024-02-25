@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -421,7 +421,7 @@ static bool_t i_parse_value(i_Parser *parser, const DBind *dbind, dtype_t type, 
             return TRUE;
 
         case ekDTYPE_OBJECT_PTR:
-            *((void **)object) = NULL;
+            *(void **)object = NULL;
             return TRUE;
 
         case ekDTYPE_STRING_PTR:
@@ -659,7 +659,7 @@ static bool_t i_parse_value(i_Parser *parser, const DBind *dbind, dtype_t type, 
         {
             cassert(*(Array **)object != NULL);
             cassert(array_size(*(Array **)object) == 0);
-            cassert(sizeof(void *) == array_esize(*(Array **)object));
+            cassert(sizeofptr == array_esize(*(Array **)object));
             return i_parse_arrptr(parser, subtype, *(Array **)object);
         }
 
@@ -1028,7 +1028,7 @@ static void i_write_arrpt(Stream *stm, const Array *array, const char_t *type)
         stm_writef(stm, "[ ");
         if (atype == ekDTYPE_STRING)
         {
-            for (i = 0; i < n; ++i, data += sizeof(void *))
+            for (i = 0; i < n; ++i, data += sizeofptr)
             {
                 i_write_string(stm, *(String **)data);
                 if (i < n - 1)
@@ -1037,7 +1037,7 @@ static void i_write_arrpt(Stream *stm, const Array *array, const char_t *type)
         }
         else if (atype == ekDTYPE_OBJECT)
         {
-            for (i = 0; i < n; ++i, data += sizeof(void *))
+            for (i = 0; i < n; ++i, data += sizeofptr)
             {
                 i_write_object(stm, *(const void **)data, stype);
                 if (i < n - 1)
@@ -1046,7 +1046,7 @@ static void i_write_arrpt(Stream *stm, const Array *array, const char_t *type)
         }
         else if (atype == ekDTYPE_OBJECT_OPAQUE)
         {
-            for (i = 0; i < n; ++i, data += sizeof(void *))
+            for (i = 0; i < n; ++i, data += sizeofptr)
             {
                 i_write_opaque(stm, *(const void **)data, stype);
                 if (i < n - 1)

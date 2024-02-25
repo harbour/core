@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,11 +11,11 @@
 /* Operating System native combo box */
 
 #include "oscombo.h"
-#include "oscombo.inl"
+#include "oscombo_osx.inl"
+#include "oscontrol_osx.inl"
+#include "ospanel_osx.inl"
+#include "oswindow_osx.inl"
 #include "osgui.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
 #include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -108,25 +108,29 @@
 
     {
         unsigned int whyEnd = [[[notification userInfo] objectForKey:@"NSTextMovement"] unsignedIntValue];
-        NSView *nextView = nil;
+        NSWindow *window = [self window];
 
         if (whyEnd == NSReturnTextMovement)
         {
-            [[self window] keyDown:(NSEvent*)231];
-            nextView = self;
+            [window keyDown:(NSEvent*)231];
         }
         else if (whyEnd == NSTabTextMovement)
         {
-            nextView = [self nextValidKeyView];
+            _oswindow_next_tabstop(window);
         }
         else if (whyEnd == NSBacktabTextMovement)
         {
-            nextView = [self previousValidKeyView];
+            _oswindow_prev_tabstop(window);
         }
-
-        if (nextView != nil)
-            [[self window] makeFirstResponder:nextView];
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void) mouseDown:(NSEvent*)theEvent
+{
+    if (_oswindow_mouse_down((OSControl*)self) == TRUE)
+        [super mouseDown:theEvent];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -178,8 +182,8 @@ OSCombo *oscombo_create(const uint32_t flags)
     cell = [combo cell];
     [cell setStringValue:@""];
     _oscontrol_cell_set_control_size(cell, ekGUI_SIZE_REGULAR);
-    //[combo setTarget:combo];
-    //[combo setAction:@selector(onSelectionChange:)];
+    /*[combo setTarget:combo];*/
+    /*[combo setAction:@selector(onSelectionChange:)];*/
     [combo setUsesDataSource:NO];
     [combo setEditable:YES];
     [combo setSelectable:YES];
@@ -415,6 +419,7 @@ void oscombo_origin(const OSCombo *combo, real32_t *x, real32_t *y)
 void oscombo_frame(OSCombo *combo, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     _oscontrol_set_frame((NSView*)combo, x, y, width, height);
+    [(NSView*)combo setNeedsDisplay:YES];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -422,13 +427,4 @@ void oscombo_frame(OSCombo *combo, const real32_t x, const real32_t y, const rea
 BOOL _oscombo_is(NSView *view)
 {
     return [view isKindOfClass:[OSXCombo class]];
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oscombo_detach_and_destroy(OSCombo **combo, OSPanel *panel)
-{
-    cassert_no_null(combo);
-    oscombo_detach(*combo, panel);
-    oscombo_destroy(combo);
 }

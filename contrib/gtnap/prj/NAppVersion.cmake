@@ -1,3 +1,7 @@
+#------------------------------------------------------------------------------
+# This is part of NAppGUI build system
+# See README.md and LICENSE.txt
+#------------------------------------------------------------------------------
 # SDK version
 # This file is part of NAppGUI-SDK project
 # See README.txt and LICENSE.txt

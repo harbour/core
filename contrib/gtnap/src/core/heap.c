@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -190,7 +190,7 @@ static byte_t *i_malloc(i_Memory *memory, const uint32_t size, const uint32_t al
     cassert_no_null(memory->current_page);
 
     /* Block can be stored by paged allocator */
-    if (__TRUE_EXPECTED(size + align + sizeof(i_Page) + sizeof(void *) < memory->page_size))
+    if (__TRUE_EXPECTED(size + align + sizeof(i_Page) + sizeofptr < memory->page_size))
     {
         register uint32_t mod = memory->current_page->offset % align;
         register uint32_t offset = memory->current_page->offset;
@@ -199,16 +199,16 @@ static byte_t *i_malloc(i_Memory *memory, const uint32_t size, const uint32_t al
             offset += align - mod;
 
         /* Block can't be stored in current page */
-        if (offset + size + sizeof(void *) >= memory->page_size)
+        if (offset + size + sizeofptr >= memory->page_size)
         {
             i_new_page(memory->page_size, &memory->current_page, &memory->std_pages_alloc);
             offset = memory->current_page->offset + (memory->current_page->offset % align);
         }
 
-        cassert(offset + size + sizeof(void *) < memory->page_size);
+        cassert(offset + size + sizeofptr < memory->page_size);
         memory->current_page->num_allocs += 1;
         memory->current_page->used_memory += size;
-        memory->current_page->offset = offset + size + (uint32_t)sizeof(void *);
+        memory->current_page->offset = offset + size + (uint32_t)sizeofptr;
         mem = (byte_t *)memory->current_page + offset;
         *((void **)(mem + size)) = (void *)memory->current_page;
     }
@@ -235,7 +235,7 @@ static void i_free(i_Memory *memory, byte_t *mem, const uint32_t size, const uin
 #endif
 
     /* Block was stored by paged allocator */
-    if (__TRUE_EXPECTED(size + align + sizeof(i_Page) + sizeof(void *) < memory->page_size))
+    if (__TRUE_EXPECTED(size + align + sizeof(i_Page) + sizeofptr < memory->page_size))
     {
         i_Page *page = (i_Page *)*((void **)(mem + size));
         cassert_no_null(page);
@@ -286,7 +286,7 @@ static byte_t *i_realloc(i_Memory *memory, byte_t *prev_mem, const uint32_t size
     cassert_no_null(memory->current_page);
 
     /* Some of new/previous block can be/is stored in paged allocator */
-    if (__TRUE_EXPECTED((prev_size + align + sizeof(i_Page) + sizeof(void *) < memory->page_size) || (size + align + sizeof(i_Page) + sizeof(void *) < memory->page_size)))
+    if (__TRUE_EXPECTED((prev_size + align + sizeof(i_Page) + sizeofptr < memory->page_size) || (size + align + sizeof(i_Page) + sizeofptr < memory->page_size)))
     {
         register uint32_t min_size;
         mem = i_malloc(memory, size, align);
@@ -591,14 +591,14 @@ bool_t heap_leaks(void)
 
 byte_t *heap_malloc_imp(const uint32_t size, const char_t *name, const bool_t equal_sized)
 {
-    return i_malloc_imp(size, sizeof(void *), name, equal_sized);
+    return i_malloc_imp(size, sizeofptr, name, equal_sized);
 }
 
 /*---------------------------------------------------------------------------*/
 
 byte_t *heap_calloc_imp(const uint32_t size, const char_t *name, const bool_t equal_sized)
 {
-    byte_t *new_mem = i_malloc_imp(size, sizeof(void *), name, equal_sized);
+    byte_t *new_mem = i_malloc_imp(size, sizeofptr, name, equal_sized);
     bmem_set_zero(new_mem, size);
     return new_mem;
 }
@@ -669,7 +669,7 @@ static __INLINE byte_t *i_realloc_imp(byte_t *mem, const uint32_t size, const ui
 
 byte_t *heap_realloc(byte_t *mem, const uint32_t size, const uint32_t new_size, const char_t *name)
 {
-    return i_realloc_imp(mem, size, new_size, sizeof(void *), name);
+    return i_realloc_imp(mem, size, new_size, sizeofptr, name);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -713,7 +713,7 @@ void heap_free(byte_t **mem, const uint32_t size, const char_t *name)
 
     mem_ptr = *mem;
     *mem = NULL;
-    i_free(&i_MEMORY, mem_ptr, size, sizeof(void *));
+    i_free(&i_MEMORY, mem_ptr, size, sizeofptr);
 
     i_MEMORY.num_deallocs += 1;
     i_MEMORY.total_bytes_deallocated += size;

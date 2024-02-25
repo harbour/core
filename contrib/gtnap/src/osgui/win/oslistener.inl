@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -24,21 +24,16 @@ void oslistener_draw(OSControl *sender, DCtx *ctx, const real32_t width, const r
 
 void oslistener_mouse_exit(OSControl *sender, ViewListeners *listeners);
 
-void oslistener_mouse_moved(OSControl *sender, WPARAM event_wParam, const real32_t x, const real32_t y, const OSScroll *scroll, ViewListeners *listeners);
+void oslistener_mouse_moved(OSControl *sender, WPARAM event_wParam, const real32_t x, const real32_t y, const OSScrolls *scroll, ViewListeners *listeners);
 
-void oslistener_mouse_down(OSControl *sender, const gui_mouse_t button, const real32_t x, const real32_t y, const OSScroll *scroll, ViewListeners *listeners);
+void oslistener_mouse_down(OSControl *sender, const gui_mouse_t button, const real32_t x, const real32_t y, const OSScrolls *scroll, ViewListeners *listeners);
 
-void oslistener_mouse_up(OSControl *sender, const gui_mouse_t button, const real32_t x, const real32_t y, const OSScroll *scroll, ViewListeners *listeners);
+void oslistener_mouse_up(OSControl *sender, const gui_mouse_t button, const real32_t x, const real32_t y, const OSScrolls *scroll, ViewListeners *listeners);
 
-void oslistener_whell(OSControl *sender, WPARAM event_wParam, LPARAM event_lParam, const OSScroll *scroll, ViewListeners *listeners);
+void oslistener_whell(OSControl *sender, WPARAM event_wParam, LPARAM event_lParam, const OSScrolls *scroll, ViewListeners *listeners);
 
 bool_t oslistener_key_down(OSControl *sender, WPARAM wParam, LPARAM lParam, ViewListeners *listeners);
 
 bool_t oslistener_key_up(OSControl *sender, WPARAM wParam, LPARAM lParam, ViewListeners *listeners);
-
-/*
-void _oslistener_key_flags_changed(const HWND view, UINT event_uMsg, WPARAM event_wParam, LPARAM event_lParam, ViewListeners *listeners);
-
-*/
 
 __END_C

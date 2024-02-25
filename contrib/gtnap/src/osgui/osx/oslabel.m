@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,9 +11,10 @@
 /* Cocoa text label */
 
 #include "oslabel.h"
-#include "oslabel.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
+#include "oslabel_osx.inl"
+#include "oslistener.inl"
+#include "oscontrol_osx.inl"
+#include "ospanel_osx.inl"
 #include <geom2d/t2d.h>
 #include <draw2d/color.h>
 #include <draw2d/dctx.h>
@@ -37,6 +38,7 @@
     DCtx *ctx;
     String *text;
     uint32_t flags;
+    color_t color;
     color_t bgcolor;
     NSTrackingArea *tracking_area;
     Listener *OnClick;
@@ -53,14 +55,17 @@
 
 - (void) mouseEntered:(NSEvent*)theEvent
 {
-    unref(theEvent);
+    cassert_no_null(theEvent);
     if (self->OnMouseEntered != NULL)
     {
         EvMouse params;
-        params.x = 1e8f;
-        params.y = 1e8f;
+        _oslistener_mouse_position_in_view_coordinates(self, [theEvent locationInWindow], &params.x, &params.y);
+        params.lx = params.x;
+        params.ly = params.y;
         params.button = ENUM_MAX(gui_mouse_t);
         params.count = 0;
+        params.modifiers = 0;
+        params.tag = 0;
         listener_event(self->OnMouseEntered, ekGUI_EVENT_ENTER, (OSLabel*)self, &params, NULL, OSLabel, EvMouse, void);
     }
 }
@@ -83,7 +88,6 @@
     {
         EvText params;
         params.text = NULL;
-        params.cpos = 0;
         listener_event(self->OnClick, ekGUI_EVENT_LABEL, (OSLabel*)self, &params, NULL, OSLabel, EvText, void);
     }
 }
@@ -104,11 +108,16 @@
     cassert_no_null(self->ctx);
     nscontext = [NSGraphicsContext currentContext];
     dctx_set_gcontext(self->ctx, nscontext, (uint32_t)rect.size.width, (uint32_t)rect.size.height, 0, 0, 0, FALSE);
-    if (self->bgcolor != kCOLOR_TRANSPARENT)
+    if (self->bgcolor != kCOLOR_DEFAULT)
     {
         draw_fill_color(self->ctx, self->bgcolor);
         draw_rect(self->ctx, ekFILL, 0, 0, (real32_t)rect.size.width, (real32_t)rect.size.height);
     }
+
+    if (self->color != kCOLOR_DEFAULT)
+        draw_text_color(self->ctx, color);
+    else
+        draw_text_color(self->ctx, ekSYSCOLOR_LABEL);
 
     switch (label_get_type(self->flags))
     {
@@ -138,10 +147,10 @@ OSLabel *oslabel_create(const uint32_t flags)
     label->flags = flags;
     dctx_set_flipped(label->ctx, (bool_t)[label isFlipped]);
     label->text = str_c("");
-    label->bgcolor = kCOLOR_TRANSPARENT;
-    //draw_font(label->ctx, kFONT_DEFAULT);
+    label->color = kCOLOR_DEFAULT;
+    label->bgcolor = kCOLOR_DEFAULT;
+    /*draw_font(label->ctx, kFONT_DEFAULT);*/
     draw_text_align(label->ctx, ekLEFT, ekTOP);
-    draw_text_color(label->ctx, ekSYSCOLOR_LABEL);
     draw_text_width(label->ctx, -1);
     draw_text_halign(label->ctx, ekLEFT);
     label->tracking_area = nil;
@@ -302,7 +311,7 @@ void oslabel_color(OSLabel *label, const color_t color)
 {
     OSXLabel *llabel = (OSXLabel*)label;
     cassert_no_null(llabel);
-    draw_text_color(llabel->ctx, color);
+    llabel->color = color;
     [llabel setNeedsDisplay:YES];
 }
 
@@ -377,6 +386,7 @@ void oslabel_frame(OSLabel *label, const real32_t x, const real32_t y, const rea
     _oscontrol_set_frame(llabel, x, y, width, height);
     draw_text_width(llabel->ctx, width);
     i_update_tracking_area((OSXLabel*)label);
+    [llabel setNeedsDisplay:YES];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -384,13 +394,4 @@ void oslabel_frame(OSLabel *label, const real32_t x, const real32_t y, const rea
 BOOL _oslabel_is(NSView *view)
 {
     return [view isKindOfClass:[OSXLabel class]];
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _oslabel_detach_and_destroy(OSLabel **label, OSPanel *panel)
-{
-    cassert_no_null(label);
-    oslabel_detach(*label, panel);
-    oslabel_destroy(label);
 }

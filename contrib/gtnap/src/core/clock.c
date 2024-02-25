@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -97,7 +97,8 @@ bool_t clock_frame(Clock *clk, real64_t *prev_frame, real64_t *curr_frame)
     {
         if (tms_new < clk->last_update_time_stamp)
         {
-            tms_new = clk->last_update_time_stamp;
+            clk->last_update_time_stamp = tms_new;
+            clk->last_event_time_stamp = tms_new;
         }
 
         cassert(clk->last_update_time_stamp >= clk->last_event_time_stamp);

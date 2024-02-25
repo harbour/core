@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -40,8 +40,6 @@ void _component_taborder(GuiComponent *component, Window *window);
 void _component_visible(GuiComponent *component, const bool_t visible);
 
 void _component_enabled(GuiComponent *component, const bool_t enabled);
-
-void _component_get_global_origin(const GuiComponent *component, V2Df *origin);
 
 void _component_get_origin(const GuiComponent *component, V2Df *origin);
 

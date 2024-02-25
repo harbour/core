@@ -1,6 +1,8 @@
 ::
 :: GTNAP build script
-:: build -b [Debug/Release]
+::
+:: build -b [Debug/Release] -a [x64|Win32] [-noliboff]
+:: [-noliboff] Optional flag to disable the LibreOffice support
 ::
 
 @echo off
@@ -12,6 +14,7 @@ set HBMK_PATH=..\\..\\bin\\win\\msvc64
 set BUILD=Debug
 set ARCH=x64
 set "CWD=%cd%"
+set LIBREOFFICE=ON
 
 :: AMD64 IA64 x86
 IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" GOTO endprocessor
@@ -23,6 +26,7 @@ set ARCH=Win32
 IF "%~1"=="" GOTO endparse
 IF "%~1"=="-b" GOTO build
 IF "%~1"=="-a" GOTO arch
+IF "%~1"=="-noliboff" GOTO noliboff
 SHIFT
 GOTO parse
 
@@ -36,6 +40,11 @@ SHIFT
 set ARCH=%~1
 GOTO parse
 
+:noliboff
+set LIBREOFFICE=OFF
+SHIFT
+GOTO parse
+
 :endparse
 
 ::
@@ -47,13 +56,14 @@ echo Main path: %CWD%
 echo Architecture: %ARCH%
 echo Build type: %BUILD%
 echo HBMK_PATH: %HBMK_PATH%
+echo LIBREOFFICE: %LIBREOFFICE%
 echo ---------------------------
 
 ::
 :: Build NAppGUI from sources
 ::
-call cmake -S %CWD% -B %CWD%\build -A%ARCH% || goto error_cmake
-call cmake --build %CWD%\build --config %BUILD%  || goto error_build
+call cmake -S %CWD% -B %CWD%\build -A%ARCH% -DGTNAP_LIBREOFFICE=%LIBREOFFICE% || goto error_cmake
+call cmake --build %CWD%\build --config %BUILD% || goto error_build
 
 ::
 :: Build GTNAP

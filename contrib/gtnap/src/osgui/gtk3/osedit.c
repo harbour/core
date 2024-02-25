@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -13,11 +13,10 @@
 #include "osedit.h"
 #include "osedit.inl"
 #include "osgui.inl"
-#include "osglobals.inl"
-#include "osctrl.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
+#include "osglobals_gtk.inl"
+#include "oscontrol_gtk.inl"
+#include "ospanel_gtk.inl"
+#include "oswindow_gtk.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
 #include <core/event.h>
@@ -264,17 +263,12 @@ static __INLINE bool_t i_with_focus(const OSEdit *edit)
 static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSEdit *edit)
 {
     unref(widget);
-    unref(event);
-    if (i_with_focus(edit) == TRUE)
-    {
-        return FALSE;
-    }
-    else
-    {
-        if (_oswindow_can_mouse_down((OSControl *)edit) == TRUE)
-            return FALSE;
+    cassert_no_null(event);
+    if (_oswindow_mouse_down(OSControlPtr(edit)) == FALSE)
         return TRUE;
-    }
+
+    /* Propagate the event */
+    return FALSE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -282,7 +276,7 @@ static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSEdit *ed
 OSEdit *osedit_create(const edit_flag_t flags)
 {
     OSEdit *edit = heap_new0(OSEdit);
-    Font *font = _osgui_create_default_font();
+    Font *font = osgui_create_default_font();
     GtkWidget *widget = NULL;
     edit->flags = flags;
     edit->select_start = INT32_MAX;
@@ -318,6 +312,7 @@ OSEdit *osedit_create(const edit_flag_t flags)
         widget = gtk_scrolled_window_new(NULL, NULL);
         gtk_container_add(GTK_CONTAINER(widget), edit->tview);
         g_signal_connect(G_OBJECT(edit->tview), "draw", G_CALLBACK(i_DrawBackground), (gpointer)edit);
+        g_signal_connect(G_OBJECT(edit->tview), "button-press-event", G_CALLBACK(i_OnPressed), (gpointer)edit);
         gtk_widget_show(edit->tview);
         gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(edit->tview), GTK_WRAP_WORD_CHAR);
         osglobals_register_entry(&padding);
@@ -361,7 +356,8 @@ void osedit_destroy(OSEdit **edit)
 
     /* Remove all pending idle funcions */
     while (g_idle_remove_by_data(*edit))
-        ;
+    {
+    }
 
     if ((*edit)->tview != NULL)
     {
@@ -682,7 +678,11 @@ void osedit_vpadding(OSEdit *edit, const real32_t padding)
     uint32_t mpad = (uint32_t)((padding / 2) + .5f);
     char_t css[256];
     cassert_no_null(edit);
+#if GTK_CHECK_VERSION(3, 22, 0)
     bstd_sprintf(css, sizeof(css), "%s {padding-top:%dpx;padding-bottom:%dpx;min-height:0px}", entry, mpad, mpad);
+#else
+    bstd_sprintf(css, sizeof(css), "%s {padding-top:%dpx;padding-bottom:%dpx}", entry, mpad, mpad);
+#endif
     _oscontrol_widget_set_css(edit->control.widget, css);
 }
 
@@ -808,33 +808,27 @@ void osedit_frame(OSEdit *edit, const real32_t x, const real32_t y, const real32
 void _osedit_set_focus(OSEdit *edit)
 {
     cassert_no_null(edit);
-    if (edit->in_validate == TRUE)
-        return;
-
-    if (_oswindow_can_edit_focus_events((OSControl *)edit) == TRUE)
+    if (edit->OnFocus != NULL)
     {
-        if (edit->OnFocus != NULL)
-        {
-            bool_t params = TRUE;
-            listener_event(edit->OnFocus, ekGUI_EVENT_FOCUS, edit, &params, NULL, OSEdit, bool_t, void);
-        }
-
-        if (edit->select_start == INT32_MAX)
-        {
-            if (BIT_TEST(edit->flags, ekEDIT_AUTOSEL) == TRUE)
-            {
-                edit->select_start = 0;
-                edit->select_end = -1;
-            }
-            else
-            {
-                edit->select_start = 0;
-                edit->select_end = 0;
-            }
-        }
-
-        g_idle_add((GSourceFunc)i_select, edit);
+        bool_t params = TRUE;
+        listener_event(edit->OnFocus, ekGUI_EVENT_FOCUS, edit, &params, NULL, OSEdit, bool_t, void);
     }
+
+    if (edit->select_start == INT32_MAX)
+    {
+        if (BIT_TEST(edit->flags, ekEDIT_AUTOSEL) == TRUE)
+        {
+            edit->select_start = 0;
+            edit->select_end = -1;
+        }
+        else
+        {
+            edit->select_start = 0;
+            edit->select_end = 0;
+        }
+    }
+
+    g_idle_add((GSourceFunc)i_select, edit);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -877,28 +871,21 @@ static void i_cache_selection(OSEdit *edit, const bool_t deselect)
 void _osedit_unset_focus(OSEdit *edit)
 {
     cassert_no_null(edit);
-    if (edit->in_validate == TRUE)
-        return;
+    i_cache_selection((OSEdit *)edit, TRUE);
 
-    if (_oswindow_can_edit_focus_events((OSControl *)edit) == TRUE)
+    if (edit->OnFocus != NULL)
     {
-        i_cache_selection((OSEdit *)edit, TRUE);
-
-        if (edit->OnFocus != NULL)
-        {
-            bool_t params = FALSE;
-            listener_event(edit->OnFocus, ekGUI_EVENT_FOCUS, edit, &params, NULL, OSEdit, bool_t, void);
-        }
+        bool_t params = FALSE;
+        listener_event(edit->OnFocus, ekGUI_EVENT_FOCUS, edit, &params, NULL, OSEdit, bool_t, void);
     }
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _osedit_detach_and_destroy(OSEdit **edit, OSPanel *panel)
+bool_t _osedit_autosel(const OSEdit *edit)
 {
     cassert_no_null(edit);
-    osedit_detach(*edit, panel);
-    osedit_destroy(edit);
+    return BIT_TEST(edit->flags, ekEDIT_AUTOSEL);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -913,34 +900,24 @@ GtkWidget *_osedit_focus(OSEdit *edit)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t osedit_validate(const OSEdit *edit, const OSControl *next_control)
+bool_t osedit_resign_focus(const OSEdit *edit, const OSControl *next_control)
 {
     bool_t lost_focus = TRUE;
     cassert_no_null(edit);
-
-    if (_oswindow_can_edit_focus_events((OSControl *)edit) == TRUE)
+    ((OSEdit *)edit)->in_validate = TRUE;
+    if (edit->launch_event == TRUE && gtk_widget_is_sensitive(edit->control.widget) && edit->OnChange != NULL)
     {
-        ((OSEdit *)edit)->in_validate = TRUE;
-
-        if (edit->launch_event == TRUE && gtk_widget_is_sensitive(edit->control.widget) && edit->OnChange != NULL)
-        {
-            EvText params;
-            bool_t allocated;
-            /* The OnChange event can lost focus (p.e: launching a modal window) */
-            i_cache_selection((OSEdit *)edit, TRUE);
-            params.text = (const char_t *)i_text(edit, &allocated);
-            params.ptr1 = (void *)next_control;
-            listener_event(edit->OnChange, ekGUI_EVENT_TXTCHANGE, edit, &params, &lost_focus, OSEdit, EvText, bool_t);
-            if (allocated)
-                g_free((gchar *)params.text);
-        }
-
-        ((OSEdit *)edit)->in_validate = FALSE;
-    }
-    else
-    {
-        lost_focus = FALSE;
+        EvText params;
+        bool_t allocated;
+        /* The OnChange event can lost focus (p.e: launching a modal window) */
+        i_cache_selection((OSEdit *)edit, TRUE);
+        params.text = (const char_t *)i_text(edit, &allocated);
+        params.next_ctrl = (void *)next_control;
+        listener_event(edit->OnChange, ekGUI_EVENT_TXTCHANGE, edit, &params, &lost_focus, OSEdit, EvText, bool_t);
+        if (allocated)
+            g_free((gchar *)params.text);
     }
 
+    ((OSEdit *)edit)->in_validate = FALSE;
     return lost_focus;
 }

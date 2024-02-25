@@ -77,9 +77,9 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://www.pcre.org/
-# VER    8.34
-# URL    ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.34.tar.gz
+# ORIGIN https://www.pcre.org/
+# VER    8.45
+# URL    https://sourceforge.net/projects/pcre/files/pcre/8.45/pcre-8.45.tar.gz/download
 # DIFF   pcre.diff
 #
 # MAP    LICENCE
@@ -113,9 +113,11 @@ endif
 # MAP    sljit/sljitExecAllocator.c     sjexeca.c
 # MAP    sljit/sljitLir.c               sjlir.c
 # MAP    sljit/sljitLir.h               sjlir.h
-# MAP    sljit/sljitNativeARM_Thumb2.c  sjarmth2.c
-# MAP    sljit/sljitNativeARM_v5.c      sjarmv5.c
+# MAP    sljit/sljitNativeARM_32.c      sjarm32.c
+# MAP    sljit/sljitNativeARM_64.c      sjarm64.c
+# MAP    sljit/sljitNativeARM_T2_32.c   sjarmth2.c
 # MAP    sljit/sljitNativeMIPS_32.c     sjmips32.c
+# MAP    sljit/sljitNativeMIPS_64.c     sjmips64.c
 # MAP    sljit/sljitNativeMIPS_common.c sjmipsc.c
 # MAP    sljit/sljitNativePPC_32.c      sjppc32.c
 # MAP    sljit/sljitNativePPC_64.c      sjppc64.c
@@ -123,4 +125,6 @@ endif
 # MAP    sljit/sljitNativeX86_32.c      sjx8632.c
 # MAP    sljit/sljitNativeX86_64.c      sjx8664.c
 # MAP    sljit/sljitNativeX86_common.c  sjx86c.c
+# MAP    sljit/sljitNativeSPARC_32.c    sjsprc32.c
+# MAP    sljit/sljitNativeSPARC_common.c sjsparcc.c
 # MAP    sljit/sljitUtils.c             sjutils.c

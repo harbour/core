@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,8 +11,8 @@
 /* Operating System native menu item */
 
 #include "osmenuitem.h"
-#include "osmenuitem.inl"
-#include "osmenu.inl"
+#include "osmenuitem_win.inl"
+#include "osmenu_win.inl"
 #include "osgui_win.inl"
 #include "osimg.inl"
 #include <core/heap.h>
@@ -587,7 +587,7 @@ void _osmenuitem_click(OSMenuItem *item, UINT id, UINT type, UINT state)
         EvMenu params;
         params.index = UINT32_MAX;
         params.state = i_state(type, state);
-        params.str = NULL;
+        params.text = NULL;
         listener_event(item->OnClick, ekGUI_EVENT_MENU, item, &params, NULL, OSMenuItem, EvMenu, void);
     }
 }

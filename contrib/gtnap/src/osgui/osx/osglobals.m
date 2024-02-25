@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -14,9 +14,11 @@
 #include "osglobals.h"
 #include "osglobals.inl"
 #include "oscolor.inl"
-#include "oscontrol.inl"
+#include "oscontrol_osx.inl"
 #include <draw2d/color.h>
 #include <draw2d/image.h>
+#include <core/arrpt.h>
+#include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
 
@@ -24,13 +26,24 @@
 #error This file is only for OSX
 #endif
 
+@interface OSXHeader : NSView
+{
+@public
+    NSTableHeaderCell *cell;
+    BOOL highlight;
+}
+@end
+
 static NSImage *i_UNCHECKBOX_NORMAL_IMAGE = nil;
 static NSImage *i_UNCHECKBOX_PRESSED_IMAGE = nil;
 static NSImage *i_UNCHECKBOX_DISABLE_IMAGE = nil;
 static NSImage *i_CHECKBOX_NORMAL_IMAGE = nil;
 static NSImage *i_CHECKBOX_PRESSED_IMAGE = nil;
 static NSImage *i_CHECKBOX_DISABLE_IMAGE = nil;
+static NSImage *i_HEADER_NORMAL_IMAGE = nil;
+static NSImage *i_HEADER_PRESSED_IMAGE = nil;
 static NSRect i_CHECKBOX_RECT;
+static NSRect i_HEADER_RECT;
 static CGFloat i_TEXT_COLOR[4];
 static CGFloat i_SELTX_COLOR[4];
 static CGFloat i_HOTTX_COLOR[4];
@@ -43,7 +56,24 @@ static CGFloat i_HOTBG_COLOR[4];
 static CGFloat i_BACKBACKDROP_COLOR[4];
 static CGFloat i_SELBGBACKDROP_COLOR[4];
 static CGFloat i_HOTBGBACKDROP_COLOR[4];
+static color_t i_GRID_COLOR;
+static color_t i_FOCUS_COLOR;
 static bool_t i_DARK_MODE = FALSE;
+static ArrPt(Listener) *i_ONIDLES = NULL;
+DeclPt(Listener);
+
+/*---------------------------------------------------------------------------*/
+
+@implementation OSXHeader
+
+- (void)drawRect:(NSRect)rect
+{
+    if (self->highlight == YES)
+        [self->cell highlight:YES withFrame:rect inView:self];
+    else
+	    [self->cell drawWithFrame:rect inView:self];
+}
+@end
 
 /*---------------------------------------------------------------------------*/
 
@@ -54,39 +84,49 @@ static bool_t i_DARK_MODE = FALSE;
 static void i_theme_colors(void)
 {
     CGFloat r, g, b, a;
+
     oscolor_NSColor_rgba([NSColor windowBackgroundColor], &r, &g, &b, &a);
     i_DARK_MODE = (.21 * r + .72 * g + .07 * b) < .5 ? TRUE : FALSE;
 
-    if (i_DARK_MODE == TRUE)
-    {
-        i_SET_COLOR(i_TEXT_COLOR, .86, .86, .86, 1);
-        i_SET_COLOR(i_SELTX_COLOR, .86, .86, .86, 1);
-        i_SET_COLOR(i_HOTTX_COLOR, .86, .86, .86, 1);
-        i_SET_COLOR(i_TEXTBACKDROP_COLOR, .86, .86, .86, 1);
-        i_SET_COLOR(i_SELTXBACKDROP_COLOR, .86, .86, .86, 1);
-        i_SET_COLOR(i_HOTTXBACKDROP_COLOR, .86, .86, .86, 1);
-        i_SET_COLOR(i_BACK_COLOR, r, g, b, 1);
-        i_SET_COLOR(i_SELBG_COLOR, .14, .35, .79, 1);
-        i_SET_COLOR(i_HOTBG_COLOR, r, g, b, 1);
-        i_SET_COLOR(i_BACKBACKDROP_COLOR, r, g, b, 1);
-        i_SET_COLOR(i_SELBGBACKDROP_COLOR, .27, .27, .27, 1);
-        i_SET_COLOR(i_HOTBGBACKDROP_COLOR, r, g, b, 1);
-    }
-    else
-    {
-        i_SET_COLOR(i_TEXT_COLOR, 0, 0, 0, 1);
-        i_SET_COLOR(i_SELTX_COLOR, 1, 1, 1, 1);
-        i_SET_COLOR(i_HOTTX_COLOR, 0, 0, 0, 1);
-        i_SET_COLOR(i_TEXTBACKDROP_COLOR, 0, 0, 0, 1);
-        i_SET_COLOR(i_SELTXBACKDROP_COLOR, 0, 0, 0, 1);
-        i_SET_COLOR(i_HOTTXBACKDROP_COLOR, 0, 0, 0, 1);
-        i_SET_COLOR(i_BACK_COLOR, r, g, b, 1);
-        i_SET_COLOR(i_SELBG_COLOR, .2, .447, .855, 1);
-        i_SET_COLOR(i_HOTBG_COLOR, .95, .96, .98, 1);
-        i_SET_COLOR(i_BACKBACKDROP_COLOR, r, g, b, 1);
-        i_SET_COLOR(i_SELBGBACKDROP_COLOR, .827, .827, .827, 1);
-        i_SET_COLOR(i_HOTBGBACKDROP_COLOR, .95, .96, .98, 1);
-    }
+    /* Text color (normal, selected, mouse over) */
+    oscolor_NSColor_rgba_v([NSColor controlTextColor], i_TEXT_COLOR);
+    oscolor_NSColor_rgba_v([NSColor selectedControlTextColor], i_SELTX_COLOR);
+    oscolor_NSColor_rgba_v([NSColor controlTextColor], i_HOTTX_COLOR);
+
+    /* Text color in not active windows (normal, selected, mouse over) */
+    oscolor_NSColor_rgba_v([NSColor controlTextColor], i_TEXTBACKDROP_COLOR);
+
+    #if defined (MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14
+    oscolor_NSColor_rgba_v([NSColor unemphasizedSelectedTextColor], i_SELTXBACKDROP_COLOR);
+    #else
+    oscolor_NSColor_rgba_v([NSColor controlTextColor], i_SELTXBACKDROP_COLOR);
+    #endif
+
+    oscolor_NSColor_rgba_v([NSColor controlTextColor], i_HOTTXBACKDROP_COLOR);
+
+    /* Text background color (normal, selected, mouse over */
+    oscolor_NSColor_rgba_v([NSColor controlColor], i_BACK_COLOR);
+    oscolor_NSColor_rgba_v([NSColor selectedControlColor], i_SELBG_COLOR);
+    oscolor_NSColor_rgba_v([NSColor controlColor], i_HOTBG_COLOR);
+
+    /* Text background color in not active windows (normal, selected, mouse over */
+    oscolor_NSColor_rgba_v([NSColor controlColor], i_BACKBACKDROP_COLOR);
+    #if defined (MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14
+    oscolor_NSColor_rgba_v([NSColor unemphasizedSelectedTextBackgroundColor], i_SELBGBACKDROP_COLOR);
+    #else
+    oscolor_NSColor_rgba_v([NSColor controlColor], i_SELBGBACKDROP_COLOR);
+    #endif
+    oscolor_NSColor_rgba_v([NSColor controlColor], i_HOTBGBACKDROP_COLOR);
+
+    /* Color for grids */
+    #if defined (MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14
+    i_GRID_COLOR = oscolor_from_NSColor([NSColor separatorColor]);
+    #else
+    i_GRID_COLOR = oscolor_from_NSColor([NSColor gridColor]);
+    #endif
+    
+    /* Focus ring color */
+    i_FOCUS_COLOR = oscolor_from_NSColor([NSColor keyboardFocusIndicatorColor]);
 
     unref(a);
 }
@@ -124,7 +164,7 @@ static NSImage *i_image_from_view(NSView *view, NSRect *pixrect)
     [image addRepresentation:irep];
     [image setSize:rect.size];
 
-    // Locate the exact frame of pixels block
+    /* Locate the exact frame of pixels block */
     if (pixrect != NULL)
     {
         NSInteger w = [irep pixelsWide];
@@ -134,13 +174,14 @@ static NSImage *i_image_from_view(NSView *view, NSRect *pixrect)
         unsigned char *pixplanes[5] = {NULL, NULL, NULL, NULL, NULL};
         uint32_t *buffer = NULL;
         CGFloat scale = w / rect.size.width;
+        NSInteger i= 0, j = 0;
         cassert([irep bitsPerPixel] == 32);
         [irep getBitmapDataPlanes:pixplanes];
         buffer = (uint32_t*)pixplanes[0];
 
-        for (NSInteger j = 0; j < h; ++j)
+        for (j = 0; j < h; ++j)
         {
-            for (NSInteger i = 0; i < w; ++i)
+            for (i = 0; i < w; ++i)
             {
                 if (buffer[i] != 0)
                 {
@@ -168,7 +209,7 @@ static NSImage *i_image_from_view(NSView *view, NSRect *pixrect)
 static void i_init_checkbox(void)
 {
     NSInteger width = 30, height = 30;
-    NSButton *button = [[NSButton alloc] initWithFrame:NSMakeRect(0.0, 0.0, width, height)];
+    NSButton *button = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, (CGFloat)width, (CGFloat)height)];
     cassert(i_UNCHECKBOX_NORMAL_IMAGE == nil);
     cassert(i_UNCHECKBOX_PRESSED_IMAGE == nil);
     cassert(i_UNCHECKBOX_DISABLE_IMAGE == nil);
@@ -235,10 +276,10 @@ color_t osglobals_color(const syscolor_t *color)
 	#endif
 
     case ekSYSCOLOR_VIEW:
-		return oscolor_from_NSColor([NSColor windowBackgroundColor]);
+		return oscolor_from_NSColor([NSColor controlBackgroundColor]);
 
     case ekSYSCOLOR_LINE:
-		return oscolor_from_NSColor([NSColor gridColor]);
+		return i_GRID_COLOR;
 
     case ekSYSCOLOR_LINK:
 	#if defined (MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14
@@ -248,10 +289,12 @@ color_t osglobals_color(const syscolor_t *color)
 	#endif
 
     case ekSYSCOLOR_BORDER:
-		return oscolor_from_NSColor([NSColor gridColor]);
+        return i_GRID_COLOR;
 
 	cassert_default();
     }
+
+    return kCOLOR_BLACK;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -359,6 +402,15 @@ void osglobals_transitions(void *nonused, const real64_t prtime, const real64_t 
     unref(nonused);
     unref(prtime);
     unref(crtime);
+    if (i_ONIDLES != NULL)
+    {
+        if (arrpt_size(i_ONIDLES, Listener) > 0)
+        {
+            Listener *listener = arrpt_first(i_ONIDLES, Listener);
+            listener_event(listener, ekGUI_EVENT_IDLE, NULL, NULL, NULL, void, void, void);
+            arrpt_delete(i_ONIDLES, 0, listener_destroy, Listener);
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -366,13 +418,16 @@ void osglobals_transitions(void *nonused, const real64_t prtime, const real64_t 
 void osglobals_OnIdle(void *nonused, Listener *listener)
 {
     unref(nonused);
-    unref(listener);
+    if (i_ONIDLES == NULL)
+        i_ONIDLES = arrpt_create(Listener);
+    arrpt_append(i_ONIDLES, listener, Listener);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osglobals_init(void)
 {
+    oscolor_init();
 	i_theme_colors();
 }
 
@@ -399,9 +454,25 @@ static void i_destroy_checkbox(void)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_destroy_header(void)
+{
+    if (i_HEADER_NORMAL_IMAGE != nil)
+    {
+        [i_HEADER_NORMAL_IMAGE release];
+        [i_HEADER_PRESSED_IMAGE release];
+        i_HEADER_NORMAL_IMAGE = nil;
+        i_HEADER_PRESSED_IMAGE = nil;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void osglobals_finish(void)
 {
+    oscolor_finish();
     i_destroy_checkbox();
+    i_destroy_header();
+    arrpt_destopt(&i_ONIDLES, listener_destroy, Listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -438,6 +509,32 @@ NSRect osglobals_check_rect(void)
 	if (i_UNCHECKBOX_NORMAL_IMAGE == nil)
         i_init_checkbox();
 	return i_CHECKBOX_RECT;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_init_header(void)
+{
+    OSXHeader *view = [[OSXHeader alloc] initWithFrame:NSMakeRect(0, 0, 100, 50)];
+    view->cell = [[NSTableHeaderCell alloc] init];
+   	cassert(i_HEADER_NORMAL_IMAGE == nil);
+    cassert(i_HEADER_PRESSED_IMAGE == nil);
+    [view->cell setTitle:@""];
+    view->highlight = NO;
+	i_HEADER_NORMAL_IMAGE = i_image_from_view(view, &i_HEADER_RECT);
+    view->highlight = YES;
+    i_HEADER_PRESSED_IMAGE = i_image_from_view(view, nil);
+    [view->cell release];
+    [view release];
+}
+
+/*---------------------------------------------------------------------------*/
+
+NSRect osglobals_header_rect(void)
+{
+    if (i_HEADER_NORMAL_IMAGE == nil)
+        i_init_header();
+    return i_HEADER_RECT;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -487,6 +584,19 @@ NSImage *osglobals_checkbox_image(const bool_t pressed, const ctrl_state_t state
     }
 
     return i_CHECKBOX_NORMAL_IMAGE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+NSImage *osglobals_header_image(const bool_t pressed)
+{
+	if (i_HEADER_NORMAL_IMAGE == nil)
+        i_init_header();
+
+    if (pressed == TRUE)
+        return i_HEADER_PRESSED_IMAGE;
+    else
+        return i_HEADER_NORMAL_IMAGE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -575,8 +685,16 @@ const CGFloat *osglobals_selbgbackdrop_color(void)
 
 /*---------------------------------------------------------------------------*/
 
+color_t osglobals_focus_color(void)
+{
+    return i_FOCUS_COLOR;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void osglobals_theme_changed(void)
 {
 	i_theme_colors();
     i_destroy_checkbox();
+    i_destroy_header();
 }

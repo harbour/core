@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -260,6 +260,16 @@ uint32_t popup_get_selected(const PopUp *popup)
     cassert_no_null(popup->component.context);
     cassert_no_nullf(popup->component.context->func_popup_get_selected);
     return popup->component.context->func_popup_get_selected(popup->component.ositem);
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *popup_get_text(const PopUp *popup, const uint32_t index)
+{
+    const PElem *elem = NULL;
+    cassert_no_null(popup);
+    elem = arrst_get_const(popup->elems, index, PElem);
+    return tc(elem->text);
 }
 
 /*---------------------------------------------------------------------------*/

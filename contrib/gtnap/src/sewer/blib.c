@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -85,7 +85,7 @@ void blib_strcat(char_t *dest, const uint32_t size, const char_t *src)
         size_t len2 = strlen(src);
         if (len2 >= size - len)
             len2 = size - len - 1;
-        memcpy((char *)dest + len, (const char *)src, (size_t)len2);
+        memcpy((char *)(dest + len), (const char *)src, (size_t)len2);
         dest[len + len2] = '\0';
     }
 }
@@ -402,11 +402,17 @@ bool_t blib_bsearch_ex(const byte_t *array, const byte_t *key, const uint32_t ne
 
 /*---------------------------------------------------------------------------*/
 
+#if defined(_MSC_VER)
+#pragma warning(disable : 4996)
+#endif
 const char_t *blib_getenv(const char_t *name)
 {
     cassert_no_null(name);
     return (const char_t *)getenv((const char *)name);
 }
+#if defined(_MSC_VER)
+#pragma warning(default : 4996)
+#endif
 
 /*---------------------------------------------------------------------------*/
 

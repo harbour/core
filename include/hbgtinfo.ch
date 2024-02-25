@@ -152,6 +152,8 @@
 #define HB_GTI_MINIMIZED        75  /* Get/Set Window's Minimized status (supported by: GTQTC, GTXWC) */
 #define HB_GTI_QUICKEDIT        76  /* Enable/Disable quick edit mode (supported by: GTWVT) */
 #define HB_GTI_SYSMENUADD       77  /* Add item to window system menu with keycode to generate when selected (supported by: GTWVT) */
+#define HB_GTI_MSGBOX           78  /* Display native MessageBox (supported by: GTQTC) */
+#define HB_GTI_SOUND            79  /* play sound file (supported by: GTQTC) */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1

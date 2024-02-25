@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -84,12 +84,12 @@ static void i_options(Socket *sock, const SockOpt *opts)
        #endif
 
        {
-           int sok = setsockopt((SOCKET_ID)(intptr_t)sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
+           int sok = setsockopt((SOCKET_ID)(intptr_t)sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)(&timeout), sizeof(timeout));
            cassert_unref(sok == 0, sok);
        }
 
        {
-           int sok = setsockopt((SOCKET_ID)(intptr_t)sock, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
+           int sok = setsockopt((SOCKET_ID)(intptr_t)sock, SOL_SOCKET, SO_SNDTIMEO, (const char*)(&timeout), sizeof(timeout));
            cassert_unref(sok == 0, sok);
        }
    }
@@ -267,7 +267,7 @@ Socket *bsocket_server(const uint16_t port, const uint32_t max_connect, serror_t
     {
         int reuseaddr = 1;
         int sok = SOCKET_FAIL;
-        sok = setsockopt(skID, SOL_SOCKET, SO_REUSEADDR, (const char *)&reuseaddr, sizeof(reuseaddr));
+        sok = setsockopt(skID, SOL_SOCKET, SO_REUSEADDR, (const char *)(&reuseaddr), sizeof(reuseaddr));
         cassert_unref(sok == 0, sok);
     }
 
@@ -415,7 +415,7 @@ void bsocket_read_timeout(Socket *sock, const uint32_t timeout_ms)
     int ret = 0;
     timeout.tv_sec = timeout_ms / 1000;
     timeout.tv_usec = (timeout_ms % 1000) * 1000;
-    ret = setsockopt((SOCKET_ID)(intptr_t)sock, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
+    ret = setsockopt((SOCKET_ID)(intptr_t)sock, SOL_SOCKET, SO_RCVTIMEO, (const char *)(&timeout), sizeof(timeout));
     cassert_unref(ret == 0, ret);
 }
 
@@ -427,7 +427,7 @@ void bsocket_write_timeout(Socket *sock, const uint32_t timeout_ms)
     int ret = 0;
     timeout.tv_sec = timeout_ms / 1000;
     timeout.tv_usec = (timeout_ms % 1000) * 1000;
-    ret = setsockopt((SOCKET_ID)(intptr_t)sock, SOL_SOCKET, SO_SNDTIMEO, (const char *)&timeout, sizeof(timeout));
+    ret = setsockopt((SOCKET_ID)(intptr_t)sock, SOL_SOCKET, SO_SNDTIMEO, (const char *)(&timeout), sizeof(timeout));
     cassert_unref(ret == 0, ret);
 }
 
@@ -497,7 +497,7 @@ bool_t bsocket_write(Socket *lsocket, const byte_t *data, const uint32_t size, u
     {
         SSIZE_T num_wbytes = 0;
         cassert((int)size > lwsize);
-        num_wbytes = send((SOCKET_ID)(intptr_t)lsocket, (const char *)data, (SIZE_T)((long)size - (long)lwsize), 0);
+        num_wbytes = send((SOCKET_ID)(intptr_t)lsocket, (const char *)(data), (SIZE_T)((long)size - (long)lwsize), 0);
         if (num_wbytes > 0)
         {
             lwsize += num_wbytes;

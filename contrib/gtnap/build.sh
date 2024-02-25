@@ -2,7 +2,8 @@
 
 #
 # GTNAP build script
-# build -b [Debug/Release]
+# build -b [Debug/Release] [-noliboff]
+# [-noliboff] Optional flag to disable the LibreOffice support
 #
 
 #
@@ -10,6 +11,7 @@
 #
 HBMK_PATH=../../bin/linux/gcc
 BUILD=Debug
+LIBREOFFICE=ON
 CWD=$(pwd)
 
 if [ "$(uname)" == "Darwin" ]; then
@@ -30,6 +32,10 @@ while [[ $# -gt 0 ]]; do
       shift
       shift
       ;;
+    -noliboff)
+      LIBREOFFICE=OFF
+      shift
+      ;;
     -*|--*)
       shift
       ;;
@@ -42,8 +48,9 @@ done
 echo ---------------------------
 echo Generating GTNAP
 echo Main path: $CWD
-echo HBMK path: $HBMK_PATH
 echo Build type: $BUILD
+echo HBMK path: $HBMK_PATH
+echo LIBREOFFICE: $LIBREOFFICE
 echo ---------------------------
 
 #
@@ -52,10 +59,10 @@ echo ---------------------------
 mkdir -p build
 cd build
 if [ "$(uname)" == "Darwin" ]; then
-    cmake -G Xcode .. -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 || exit 1
+    cmake -G Xcode .. -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 -DGTNAP_LIBREOFFICE=$LIBREOFFICE || exit 1
     xcodebuild -configuration $BUILD || exit 1
 else
-    cmake  .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
+    cmake  .. -DCMAKE_BUILD_TYPE=$BUILD -DGTNAP_LIBREOFFICE=$LIBREOFFICE || exit 1
     make -j 4 || exit 1
 fi
 

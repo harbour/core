@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,11 +12,11 @@
 
 #include "osgui.inl"
 #include "osgui_gtk.inl"
-#include "oscontrol.inl"
-#include "osglobals.inl"
-#include "ospanel.inl"
-#include "osmenu.inl"
-#include "oswindow.inl"
+#include "oscontrol_gtk.inl"
+#include "osglobals_gtk.inl"
+#include "ospanel_gtk.inl"
+#include "osmenu_gtk.inl"
+#include "oswindow_gtk.inl"
 #include <draw2d/dctxh.h>
 #include <draw2d/image.h>
 #include <core/arrpt.h>
@@ -175,13 +175,13 @@ uint32_t kNUM_VKEYS = sizeof(kVIRTUAL_KEY) / sizeof(guint);
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_start_imp(void)
+void osgui_start_imp(void)
 {
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_finish_imp(void)
+void osgui_finish_imp(void)
 {
     osglobals_finish();
 
@@ -204,7 +204,7 @@ void _osgui_finish_imp(void)
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_word_size(StringSizeData *data, const char_t *word, real32_t *width, real32_t *height)
+void osgui_word_size(StringSizeData *data, const char_t *word, real32_t *width, real32_t *height)
 {
     int w, h;
     cassert_no_null(data);
@@ -218,7 +218,7 @@ void _osgui_word_size(StringSizeData *data, const char_t *word, real32_t *width,
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_attach_menubar(OSWindow *window, OSMenu *menu)
+void osgui_attach_menubar(OSWindow *window, OSMenu *menu)
 {
     _osmenu_menubar(menu, window);
     _oswindow_set_menubar(window, menu);
@@ -226,7 +226,7 @@ void _osgui_attach_menubar(OSWindow *window, OSMenu *menu)
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_detach_menubar(OSWindow *window, OSMenu *menu)
+void osgui_detach_menubar(OSWindow *window, OSMenu *menu)
 {
     _osmenu_menubar_unlink(menu, window);
     _oswindow_unset_menubar(window, menu);
@@ -234,7 +234,7 @@ void _osgui_detach_menubar(OSWindow *window, OSMenu *menu)
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_change_menubar(OSWindow *window, OSMenu *previous_menu, OSMenu *new_menu)
+void osgui_change_menubar(OSWindow *window, OSMenu *previous_menu, OSMenu *new_menu)
 {
     unref(window);
     unref(previous_menu);
@@ -244,7 +244,7 @@ void _osgui_change_menubar(OSWindow *window, OSMenu *previous_menu, OSMenu *new_
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_message_loop(void)
+void osgui_message_loop_imp(void)
 {
     cassert(FALSE);
 }
@@ -318,56 +318,170 @@ void _osgui_default_cursor(GtkWidget *widget)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *_osgui_underline_gtk_text(const char_t *text, char_t *buff, const uint32_t size)
+uint32_t _osgui_underline_gtk_text(const char_t *text, char_t *buff, const uint32_t size)
 {
     uint32_t i = 0;
-    bool_t prev_underline = FALSE;
+    uint32_t last_underline = UINT32_MAX;
     cassert_no_null(text);
     cassert_no_null(buff);
     while (*text != 0 && i < size - 1)
     {
-        /* In GTK, we need a second underline to print '_' character in mnemonics */
-        if (prev_underline == TRUE)
+        if (*text == '&')
         {
-            buff[i] = '_';
-            i += 1;
-            prev_underline = FALSE;
-        }
-        else
-        {
-            if (*text == '&')
+            /* Double '&' just write one */
+            if (*(text + 1) == '&')
             {
-                buff[i] = '_';
+                buff[i] = '&';
+                text += 2;
                 i += 1;
-                text += 1;
-                prev_underline = FALSE;
             }
-            else if (*text == '_')
+            /* Last '&' in the string is not taken into account */
+            else if (*(text + 1) == 0)
             {
-                buff[i] = '_';
-                i += 1;
                 text += 1;
-                prev_underline = TRUE;
             }
+            /* Single '&' store the position */
             else
             {
-                buff[i] = *text;
-                i += 1;
+                last_underline = i;
                 text += 1;
-                prev_underline = FALSE;
             }
         }
+        /* We need to write double '_'_' for GTK interpret a single '_' */
+        else if (*text == '_')
+        {
+            if (i < size - 2)
+            {
+                buff[i] = '_';
+                buff[i + 1] = '_';
+                i += 2;
+            }
+
+            text += 1;
+        }
+        /* Other character */
+        else
+        {
+            buff[i] = *text;
+            i += 1;
+            text += 1;
+        }
+    }
+
+    /* We need to add an underline un this position */
+    if (last_underline != UINT32_MAX)
+    {
+        uint32_t j;
+        for (j = i; j > last_underline; --j)
+            buff[j] = buff[j - 1];
+
+        buff[last_underline] = '_';
+
+        if (i < size - 2)
+            i += 1;
     }
 
     /* There is plenty of space for copy (these are texts on buttons). */
     cassert(i < size - 1);
     buff[i] = 0;
-    return buff;
+
+    return last_underline;
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _osgui_pre_initialize(void)
+vkey_t _osgui_vkey(guint kval)
+{
+    vkey_t key = ENUM_MAX(vkey_t);
+    uint32_t i, n = kNUM_VKEYS;
+    const guint *keys = kVIRTUAL_KEY;
+
+    /* Letter events as uppercase */
+    if (kval >= 97 && kval <= 122)
+    {
+        kval -= 32;
+    }
+    else
+        switch (kval)
+        {
+        case GDK_KEY_KP_Home:
+            kval = GDK_KEY_Home;
+            break;
+        case GDK_KEY_KP_Left:
+            kval = GDK_KEY_Left;
+            break;
+        case GDK_KEY_KP_Up:
+            kval = GDK_KEY_Up;
+            break;
+        case GDK_KEY_KP_Right:
+            kval = GDK_KEY_Right;
+            break;
+        case GDK_KEY_KP_Down:
+            kval = GDK_KEY_Down;
+            break;
+        case GDK_KEY_KP_Page_Up:
+            kval = GDK_KEY_Page_Up;
+            break;
+        case GDK_KEY_KP_Page_Down:
+            kval = GDK_KEY_Page_Down;
+            break;
+        case GDK_KEY_KP_End:
+            kval = GDK_KEY_End;
+            break;
+        case GDK_KEY_KP_Begin:
+            kval = GDK_KEY_Begin;
+            break;
+        case GDK_KEY_KP_Insert:
+            kval = GDK_KEY_Insert;
+            break;
+        case GDK_KEY_KP_Delete:
+            kval = GDK_KEY_Delete;
+            break;
+        }
+
+    for (i = 0; i < n; ++i)
+    {
+        if (keys[i] == kval)
+        {
+            key = (vkey_t)i;
+            break;
+        }
+    }
+
+    return key;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t _osgui_modifiers(const guint state)
+{
+    uint32_t modifiers = 0;
+
+    if (state & GDK_SHIFT_MASK)
+        modifiers |= ekMKEY_SHIFT;
+
+    if (state & GDK_CONTROL_MASK)
+        modifiers |= ekMKEY_CONTROL;
+
+    if (state & GDK_MOD1_MASK)
+        modifiers |= ekMKEY_ALT;
+
+    if (state & GDK_MOD4_MASK)
+        modifiers |= ekMKEY_COMMAND;
+
+    return modifiers;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t osgui_is_pre_initialized_imp(void)
+{
+    return osglobals_impostor_mapped();
+}
+
+/*---------------------------------------------------------------------------*/
+
+void osgui_pre_initialize_imp(void)
 {
     PangoFontMap *fontmap = pango_cairo_font_map_get_default();
     real32_t dpi = (real32_t)pango_cairo_font_map_get_resolution((PangoCairoFontMap *)fontmap);
@@ -390,11 +504,4 @@ void _osgui_pre_initialize(void)
     }
 
     osglobals_init();
-}
-
-/*---------------------------------------------------------------------------*/
-
-bool_t _osgui_is_pre_initialized(void)
-{
-    return osglobals_impostor_mapped();
 }

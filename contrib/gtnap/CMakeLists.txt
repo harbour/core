@@ -19,36 +19,31 @@ set(CMAKE_SHARED_LINKER_FLAGS_RELEASEWITHASSERT ${CMAKE_SHARED_LINKER_FLAGS_RELE
 set(NAPPGUI_SHARED False CACHE BOOL "Build NAppGUI shared libraries.")
 set(NAPPGUI_DEMO True CACHE BOOL "Build NAppGUI demo examples.")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(INSTALL_PERM "OWNER_READ;OWNER_WRITE;OWNER_EXECUTE;GROUP_READ;GROUP_EXECUTE;WORLD_READ;WORLD_EXECUTE")
 
 # Welcome
 string(TIMESTAMP CURRENT_YEAR %Y)
 include(${NAPPGUI_ROOT_PATH}/prj/NAppVersion.cmake)
+include(${NAPPGUI_ROOT_PATH}/prj/NAppUtils.cmake)
 message (STATUS "---------------------------------------------")
 message (STATUS "NAppGUI Cross-Platform SDK")
 message (STATUS "2015-${CURRENT_YEAR} Francisco Garcia Collado")
 message (STATUS "MIT License")
 message (STATUS "---------------------------------------------")
-message (STATUS "* Version: ${NAPPGUI_MAJOR}.${NAPPGUI_MINOR}.${NAPPGUI_PATCH}.${NAPPGUI_BUILD}")
-
-# Build options
-message (STATUS "* Generator: ${CMAKE_GENERATOR}")
-
-if (NAPPGUI_SHARED)
-    message (STATUS "* Build shared: True")
-else()
-    message (STATUS "* Build shared: False")
-endif()
+nap_build_opt("Version" "${NAPPGUI_MAJOR}.${NAPPGUI_MINOR}.${NAPPGUI_PATCH}.${NAPPGUI_BUILD}")
+nap_build_opt("Generator" "${CMAKE_GENERATOR}")
+nap_build_opt("Build shared" "${NAPPGUI_SHARED}")
 
 # Config compiler
 include(${NAPPGUI_ROOT_PATH}/prj/NAppCompilers.cmake)
 nap_config_compiler()
-message (STATUS "* Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
-message (STATUS "* Build type: ${CMAKE_BUILD_TYPE}")
-message (STATUS "* Build arch: ${CMAKE_ARCHITECTURE}")
-message (STATUS "* Host arch: ${CMAKE_HOST_ARCHITECTURE}")
-message (STATUS "* PackageID: ${CMAKE_PACKAGE_ID}")
-# message (STATUS "* CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
-# message (STATUS "* CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+nap_build_opt("Compiler" "${CMAKE_CXX_COMPILER_ID}")
+nap_build_opt("Compiler Vers" "${CMAKE_CXX_COMPILER_VERSION}")
+nap_build_opt("Build type" "${CMAKE_BUILD_TYPE}")
+nap_build_opt("Build arch" "${CMAKE_ARCHITECTURE}")
+nap_build_opt("Host arch" "${CMAKE_HOST_ARCHITECTURE}")
+nap_build_opt("PackageID" "${CMAKE_PACKAGE_ID}")
+nap_build_opt("LibreOffice support" "${GTNAP_LIBREOFFICE}")
 message (STATUS "---------------------------------------------")
 
 # Tools required to generate NAppGUI projets ('nrc')
@@ -70,6 +65,11 @@ if (GTNAP_DEVELOPER_MODE)
         addFlag(CMAKE_CXX_FLAGS_DEBUG "/MT")
         addFlag(CMAKE_C_FLAGS_DEBUG "/MT")
     endif()
+endif()
+
+# Enable the support for LibreOffice in source code
+if (GTNAP_LIBREOFFICE)
+    add_definitions("-DGTNAP_LIBREOFFICE")
 endif()
 
 foreach (target ${ALL_TARGETS})
@@ -98,7 +98,7 @@ if (GTNAP_DEVELOPER_MODE)
         set(HARBOUR_LIBS ${HARBOUR_LIBS} "gtcgi;gtpca;gtstd;gttrm;hbrtl")
     endif()
     set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbrdd;hbuddall;hbusrrdd;rddntx;hbrtl;rddcdx;rddnsx;rddfpt;hbrdd")
-    set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbhsx;hbsix;hbmacro;hbcplr;hbpp;hbcommon")
+    set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbhsx;hbsix;hbmacro;hbcplr;hbpp;hbcommon;hbvm")
 
     if (WIN32)
         set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/win/msvc64)
@@ -111,20 +111,23 @@ if (GTNAP_DEVELOPER_MODE)
 
     add_subdirectory("src/gtnap")
 
-    # Libreoffice link libraries
-    set(LOROOT "$ENV{LIBREOFFICE_HOME}")
+    if (GTNAP_LIBREOFFICE)
+        # Libreoffice link libraries
+        set(LOROOT "$ENV{LIBREOFFICE_HOME}")
 
-    if (NOT LOROOT)
-        message(FATAL_ERROR "LIBREOFFICE_HOME environment variable is required to compile GTNAP")
-    endif()
+        if (NOT LOROOT)
+            message(FATAL_ERROR "LIBREOFFICE_HOME environment variable is required to compile GTNAP")
+        endif()
 
-    if (WIN32)
-        set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
-        file(TO_NATIVE_PATH \"${LIBREOFFICE_LIB_PATH}\" LIBREOFFICE_LIB_PATH)
-        set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
-    else()
-        set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
-        set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
+        if (WIN32)
+            set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
+            file(TO_NATIVE_PATH \"${LIBREOFFICE_LIB_PATH}\" LIBREOFFICE_LIB_PATH)
+            set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
+        else()
+            set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
+            set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
+        endif()
+
     endif()
 
     # Example applications

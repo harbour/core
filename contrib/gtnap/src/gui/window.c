@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -13,7 +13,9 @@
 #include "window.h"
 #include "window.inl"
 #include "gui.inl"
+#include "guicontrol.h"
 #include "button.inl"
+#include "cell.inl"
 #include "component.inl"
 #include "layout.inl"
 #include "layout.h"
@@ -53,8 +55,17 @@ static void i_detach_main_panel(Panel *main_panel, void *window_renderable_item,
     panel_component = _panel_get_component(main_panel);
     cassert_no_null(panel_component);
     func_detach_main_panel_from_window(window_renderable_item, panel_component->ositem);
-    _panel_detach_components(main_panel);
     _panel_window(main_panel, NULL);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static __INLINE Panel *i_main_panel(const Window *window)
+{
+    GuiControl *control = NULL;
+    cassert_no_null(window);
+    control = layout_control(window->main_layout, 0, 0);
+    return guicontrol_panel(control);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -75,7 +86,7 @@ static void i_destroy(Window **window)
 
     if ((*window)->main_layout != NULL)
     {
-        Panel *main_panel = layout_get_panel((*window)->main_layout, 0, 0);
+        Panel *main_panel = i_main_panel(*window);
 
 /* Prevent flickering in Windows because the main panel new parent will be
         set to NULL (Desktop HWND) when is detached from this window. */
@@ -238,7 +249,10 @@ static void i_OnWindowClose(Window *window, Event *event)
         break;
 
     case ekGUI_CLOSE_DEACT:
-        closed = FALSE;
+        *event_result(event, bool_t) = TRUE;
+        if (window->OnClose != NULL)
+            listener_pass_event(window->OnClose, event, window, Window);
+        closed = *event_result(event, bool_t);
         break;
 
         cassert_default();
@@ -310,7 +324,7 @@ static void i_attach_main_layout(Window *window, const S2Df *content_size, Layou
     cassert_no_nullf(window->context->func_attach_main_panel_to_window);
     cassert_no_null(layout);
     window->main_layout = *layout;
-    main_panel = layout_get_panel(window->main_layout, 0, 0);
+    main_panel = i_main_panel(window);
     _panel_window(main_panel, window);
     panel_component = _panel_get_component(main_panel);
     cassert_no_null(panel_component);
@@ -339,12 +353,36 @@ void window_panel(Window *window, Panel *panel)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_update_listener(
+    Window *window,
+    Listener **listener,
+    Listener *new_listener,
+    FPtr_event_handler func_event_handler,
+    FPtr_gctx_set_listener func_set_listener)
+{
+    Listener *renderable_listener = NULL;
+    cassert_no_null(window);
+    cassert_no_null(listener);
+    cassert_no_nullf(func_set_listener);
+
+    if (new_listener != NULL)
+    {
+        cassert_no_nullf(func_event_handler);
+        renderable_listener = obj_listener_imp(window, func_event_handler);
+    }
+
+    func_set_listener(window->ositem, renderable_listener);
+    listener_update(listener, new_listener);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void window_OnMoved(Window *window, Listener *listener)
 {
-    component_update_listener(
-        window, &window->OnMoved, listener, i_OnWindowMoved,
-        window->context->func_window_OnMoved,
-        Window);
+    i_update_listener(
+        window, &window->OnMoved, listener,
+        (FPtr_event_handler)i_OnWindowMoved,
+        window->context->func_window_OnMoved);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -454,18 +492,16 @@ void window_hide(Window *window)
 
 /*---------------------------------------------------------------------------*/
 
-void window_launch_overlay(Window *window, Window *parent_window)
+void window_overlay(Window *window, Window *parent)
 {
     if (window->visible == FALSE)
     {
-        void *renderable_window = NULL;
         cassert_no_null(window->context);
         cassert_no_nullf(window->context->func_window_launch);
-        cassert_no_null(parent_window);
-        renderable_window = _window_ositem(parent_window);
+        cassert_no_null(parent);
         window->visible = TRUE;
         window->role = ekGUI_ROLE_OVERLAY;
-        window->context->func_window_launch(window->ositem, renderable_window);
+        window->context->func_window_launch(window->ositem, parent->ositem);
     }
 }
 
@@ -515,22 +551,12 @@ void window_hotkey(Window *window, const vkey_t key, const uint32_t modifiers, L
 
 /*---------------------------------------------------------------------------*/
 
-void window_next_tabstop(Window *window)
+void window_clear_hotkeys(Window *window)
 {
     cassert_no_null(window);
     cassert_no_null(window->context);
-    cassert_no_nullf(window->context->func_window_tabstop);
-    window->context->func_window_tabstop(window->ositem, TRUE);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void window_previous_tabstop(Window *window)
-{
-    cassert_no_null(window);
-    cassert_no_null(window->context);
-    cassert_no_nullf(window->context->func_window_tabstop);
-    window->context->func_window_tabstop(window->ositem, FALSE);
+    cassert_no_nullf(window->context->func_window_hotkey);
+    window->context->func_window_hotkey(window->ositem, ENUM_MAX(vkey_t), 0, NULL);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -545,12 +571,51 @@ void window_cycle_tabstop(Window *window, const bool_t cycle)
 
 /*---------------------------------------------------------------------------*/
 
-void _window_tabstop(Window *window, const bool_t next)
+gui_focus_t window_next_tabstop(Window *window)
 {
     cassert_no_null(window);
     cassert_no_null(window->context);
     cassert_no_nullf(window->context->func_window_tabstop);
-    window->context->func_window_tabstop(window->ositem, next);
+    return (gui_focus_t)window->context->func_window_tabstop(window->ositem, TRUE);
+}
+
+/*---------------------------------------------------------------------------*/
+
+gui_focus_t window_previous_tabstop(Window *window)
+{
+    cassert_no_null(window);
+    cassert_no_null(window->context);
+    cassert_no_nullf(window->context->func_window_tabstop);
+    return (gui_focus_t)window->context->func_window_tabstop(window->ositem, FALSE);
+}
+
+/*---------------------------------------------------------------------------*/
+
+gui_focus_t window_focus(Window *window, GuiControl *control)
+{
+    GuiComponent *component = (GuiComponent *)control;
+    cassert_no_null(component);
+    cassert_no_null(component->context);
+    return (gui_focus_t)component->context->func_window_set_focus(window->ositem, component->ositem);
+}
+
+/*---------------------------------------------------------------------------*/
+
+GuiControl *window_get_focus(Window *window)
+{
+    void *ositem = NULL;
+    GuiComponent *component = NULL;
+    cassert_no_null(window);
+    cassert_no_null(window->context);
+    ositem = window->context->func_window_get_focus(window->ositem);
+
+    if (ositem != NULL)
+    {
+        Panel *main_panel = i_main_panel(window);
+        component = _panel_find_component(main_panel, ositem);
+    }
+
+    return (GuiControl *)component;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -676,18 +741,13 @@ void window_size(Window *window, const S2Df size)
 V2Df window_get_origin(const Window *window)
 {
     V2Df origin;
+    origin.x = REAL32_MAX;
+    origin.y = REAL32_MAX;
     cassert_no_null(window);
     cassert_no_null(window->context);
     cassert_no_nullf(window->context->func_window_get_origin_in_screen_coordinates);
     window->context->func_window_get_origin_in_screen_coordinates(window->ositem, &origin.x, &origin.y);
     return origin;
-}
-
-/*---------------------------------------------------------------------------*/
-
-V2Df _window_get_origin(const Window *window)
-{
-    return window_get_origin(window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -704,34 +764,74 @@ S2Df window_get_size(const Window *window)
 
 /*---------------------------------------------------------------------------*/
 
-S2Df _window_get_size(const Window *window)
-{
-    return window_get_size(window);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _window_focus(Window *window, GuiComponent *component)
-{
-    cassert_no_null(window);
-    cassert_no_null(component);
-    cassert_no_null(window->context);
-    cassert_no_nullf(window->context->func_window_set_focus);
-    window->context->func_window_set_focus(window->ositem, component->ositem);
-}
-
-/*---------------------------------------------------------------------------*/
-
 S2Df window_get_client_size(const Window *window)
 {
     Panel *panel = NULL;
     GuiComponent *component = NULL;
     S2Df size;
     cassert_no_null(window);
-    panel = layout_get_panel(window->main_layout, 0, 0);
+    panel = i_main_panel(window);
     component = _panel_get_component(panel);
     window->context->func_get_size[ekGUI_TYPE_PANEL](component->ositem, &size.width, &size.height);
     return size;
+}
+
+/*---------------------------------------------------------------------------*/
+
+#if defined __ASSERTS__
+static bool_t i_in_active_layout(const Window *window, const GuiComponent *component)
+{
+    Panel *panel = i_main_panel(window);
+    return _panel_in_active_layout(panel, component);
+}
+#endif
+
+/*---------------------------------------------------------------------------*/
+
+R2Df window_control_frame(const Window *window, const GuiControl *control)
+{
+    R2Df r2d;
+    GuiComponent *component = (GuiComponent *)control;
+    Cell *cell = NULL;
+    cassert_no_null(window);
+    cassert_no_null(component);
+    cassert(_component_window(component) == window);
+    cassert(i_in_active_layout(window, component) == TRUE);
+    _component_get_origin(component, &r2d.pos);
+    _component_get_size(component, &r2d.size);
+    cell = component->parent;
+    for (; cell != NULL;)
+    {
+        V2Df panel_pos;
+        Layout *layout = _cell_parent(cell);
+        Panel *panel = _layout_panel(layout);
+        if (panel != NULL)
+        {
+            GuiComponent *panel_component = (GuiComponent *)panel;
+            _component_get_origin(panel_component, &panel_pos);
+            r2d.pos.x += panel_pos.x;
+            r2d.pos.y += panel_pos.y;
+            cell = panel_component->parent;
+        }
+        else
+        {
+            cell = NULL;
+        }
+    }
+
+    return r2d;
+}
+
+/*---------------------------------------------------------------------------*/
+
+V2Df window_client_to_screen(const Window *window, const V2Df point)
+{
+    V2Df origin = point;
+    cassert_no_null(window);
+    cassert_no_null(window->context);
+    cassert_no_nullf(window->context->func_window_get_origin_in_screen_coordinates);
+    window->context->func_window_get_origin_in_screen_coordinates(window->ositem, &origin.x, &origin.y);
+    return origin;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -780,7 +880,7 @@ void _window_locale(Window *window)
 {
     Panel *main_panel = NULL;
     cassert_no_null(window);
-    main_panel = layout_get_panel(window->main_layout, 0, 0);
+    main_panel = i_main_panel(window);
     _panel_locale(main_panel);
     if (window->titleid != NULL)
     {
@@ -807,7 +907,7 @@ void _window_update(Window *window)
     if (window->flags & ekWINDOW_RESIZE)
     {
         S2Df current_panel_size;
-        Panel *main_panel = layout_get_panel(window->main_layout, 0, 0);
+        Panel *main_panel = i_main_panel(window);
         GuiComponent *component = _panel_get_component(main_panel);
         window->context->func_get_size[ekGUI_TYPE_PANEL](component->ositem, &current_panel_size.width, &current_panel_size.height);
         i_main_layout_compose(window, &current_panel_size);
@@ -832,6 +932,13 @@ bool_t _window_is_visible(const Window *window)
 {
     cassert_no_null(window);
     return (bool_t)window->visible;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Panel *_window_main_panel(Window *window)
+{
+    return i_main_panel(window);
 }
 
 /*---------------------------------------------------------------------------*/

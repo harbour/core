@@ -73,14 +73,23 @@ FUNCTION CStrToVal( cExp, cType )
       RETURN hb_HexToNum( cExp )
 
    CASE "D"
-      IF cExp[ 3 ] >= "0" .AND. cExp[ 3 ] <= "9" .AND. cExp[ 5 ] >= "0" .AND. cExp[ 5 ] <= "9"
+      IF IsDigit( SubStr( cExp, 3, 1 ) ) .AND. IsDigit( SubStr( cExp, 5, 1 ) )
          RETURN hb_SToD( cExp )
       ELSE
          RETURN CToD( cExp )
       ENDIF
 
+   CASE "T"
+      IF IsDigit( SubStr( cExp, 3, 1 ) ) .AND. ;
+         IsDigit( SubStr( cExp, 5, 1 ) ) .AND. ;
+         IsDigit( SubStr( cExp, 7, 1 ) )
+         RETURN hb_SToT( cExp )
+      ELSE
+         RETURN hb_StrToTS( cExp )
+      ENDIF
+
    CASE "L"
-      RETURN iif( cExp[ 1 ] == "T" .OR. cExp[ 1 ] == "Y" .OR. cExp[ 2 ] == "T" .OR. cExp[ 2 ] == "Y", .T., .F. )
+      RETURN SubStr( cExp, 1, 1 ) $ "TY" .OR. SubStr( cExp, 2, 1 ) $ "TY"
 
    CASE "N"
       RETURN Val( cExp )
@@ -134,11 +143,11 @@ FUNCTION StringToLiteral( cString )
 
 //
 
-FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
+FUNCTION ValToPrg( xVal, cName, nPad, hRefs )
 
-   LOCAL aVar, cRet, cPad, nObj
+   LOCAL aVar, cRet, cPad, cRef, pRef
 
-   // TraceLog( xVal, cName, nPad, aObjs )
+   // TraceLog( xVal, cName, nPad, hRefs )
 
    SWITCH ValType( xVal )
    CASE "C"
@@ -147,6 +156,9 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
    CASE "D"
       RETURN "hb_SToD( '" + DToS( xVal ) + "' )"
 
+   CASE "T"
+      RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
+
    CASE "L"
       RETURN iif( xVal, ".T.", ".F." )
 
@@ -154,20 +166,19 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       RETURN hb_ntos( xVal )
 
    CASE "A"
+      pRef := __vmItemId( xVal )
       IF cName == NIL
          nPad := 0
          cName := "M->__ValToPrg_Array"
-         aObjs := {}
+         hRefs := { => }
          cRet  := cName + " := "
+      ELSEIF ! ( cRef := hb_HGetDef( hRefs, pRef ) ) == NIL
+         RETURN cRef + " /* Cyclic */"
       ELSE
-         IF ( nObj := AScan( aObjs, {| a | hb_ArrayId( a[ 1 ] ) == hb_ArrayId( xVal ) } ) ) > 0
-            RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
-         ENDIF
-
          cRet := ""
       ENDIF
 
-      AAdd( aObjs, { xVal, cName } )
+      hRefs[ pRef ] := cName
 
       cRet  += "Array(" + hb_ntos( Len( xVal ) ) + ")" + CRLF
 
@@ -175,56 +186,69 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       cPad  := Space( nPad )
 
       FOR EACH aVar IN xVal
-         cRet += cPad + cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "] := " + ValToPrg( aVar, cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "]", nPad, aObjs ) + CRLF
+         cRef := cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "]"
+         cRet += cPad + cRef + " := " + ValToPrg( aVar, cRef, nPad, hRefs )
+         IF ! Right( cRet, Len( CRLF ) ) == CRLF
+            cRet += CRLF
+         ENDIF
       NEXT
 
       nPad -= 3
-
       RETURN cRet
 
    CASE "H"
-      IF Empty( xVal )
-         cRet := "hb_Hash()"
+      pRef := __vmItemId( xVal )
+      IF cName == NIL
+         nPad := 0
+         cName := "M->__ValToPrg_Hash"
+         hRefs := { => }
+         cRet  := cName + " := "
+      ELSEIF ! ( cRef := hb_HGetDef( hRefs, pRef ) ) == NIL
+         RETURN cRef + " /* Cyclic */"
       ELSE
-         cRet := "{ "
-         FOR EACH aVar IN xVal
-            IF aVar:__enumIndex() != 1
-               cRet += ", "
-            ENDIF
-            cRet += ValToPrg( aVar:__enumKey() )
-            cRet += " => "
-            cRet += ValToPrg( aVar )
-         NEXT
-         cRet += " }"
+         cRet := ""
       ENDIF
 
+      hRefs[ pRef ] := cName
+
+      cRet  += "{ => }" + CRLF
+
+      nPad += 3
+      cPad  := Space( nPad )
+
+      FOR EACH aVar IN xVal
+         cRef := cName + "[" + ValToPrg( aVar:__EnumKey() ) + "]"
+         cRet += cPad + cRef + " := " + ValToPrg( aVar, cRef, nPad, hRefs )
+         IF ! Right( cRet, Len( CRLF ) ) == CRLF
+            cRet += CRLF
+         ENDIF
+      NEXT
+
+      nPad -= 3
       RETURN cRet
 
-      /* There is no support for codeblock serialization */
-#if 0
    CASE "B"
-      RETURN ValToPrgExp( xVal )
-#endif
+      /* There is no support for codeblock serialization */
+      RETURN "{|| /* block */ }"
 
    CASE "P"
       RETURN "0x" + hb_NumToHex( xVal )
 
    CASE "O"
       /* TODO: Use HBPersistent() when avialable! */
+      pRef := __vmItemId( xVal )
       IF cName == NIL
          cName := "M->__ValToPrg_Object"
          nPad := 0
-         aObjs := {}
+         hRefs := { => }
          cRet  := cName + " := "
+      ELSEIF ! ( cRef := hb_HGetDef( hRefs, pRef ) ) == NIL
+         RETURN cRef + " /* Cyclic */"
       ELSE
-         IF ( nObj := AScan( aObjs, {| a | hb_ArrayId( a[ 1 ] ) == hb_ArrayId( xVal ) } ) ) > 0
-            RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
-         ENDIF
-
          cRet := ""
       ENDIF
 
-      AAdd( aObjs, { xVal, cName } )
+      hRefs[ pRef ] := cName
 
       cRet += xVal:ClassName + "():New()" + CRLF
 
@@ -232,7 +256,11 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       cPad := Space( nPad )
 
       FOR EACH aVar IN __objGetValueList( xVal )
-         cRet += cPad + cName + ":" + aVar[ 1 ] + " := " + ValToPrg( aVar[ 2 ], cName + ":" + aVar[ 1 ], nPad, aObjs ) + CRLF
+         cRef := cName + ":" + aVar[ 1 ]
+         cRet += cPad + cRef + " := " + ValToPrg( aVar[ 2 ], cRef, nPad, hRefs )
+         IF ! Right( cRet, Len( CRLF ) ) == CRLF
+            cRet += CRLF
+         ENDIF
       NEXT
 
       nPad -= 3
@@ -243,7 +271,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       IF xVal == NIL
          cRet := "NIL"
       ELSE
-         Throw( xhb_ErrorNew( "VALTOPRG", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
+         Throw( xhb_ErrorNew( "VALTOPRG", 0, 3103, ProcName(), "Unsupported type: " + ValType( xVal ), { xVal } ) )
       ENDIF
    ENDSWITCH
 
@@ -303,21 +331,60 @@ FUNCTION ValToDate( xVal )
       RETURN ValToDate( Eval( xVal ) )
 
    CASE "C"
-      IF SubStr( DToS( xVal ), 3, 1 ) >= "0" .AND. ;
-         SubStr( DToS( xVal ), 3, 1 ) <= "9" .AND. ;
-         SubStr( DToS( xVal ), 5, 1 ) >= "0" .AND. ;
-         SubStr( DToS( xVal ), 5, 1 ) <= "9"
-         RETURN hb_SToD( xVal )
-      ELSE
-         RETURN CToD( xVal )
-      ENDIF
+      RETURN iif( IsDigit( SubStr( xVal, 3, 1 ) ) .AND. ;
+                  IsDigit( SubStr( xVal, 5, 1 ) ), hb_SToD( xVal ), ;
+                                                   CToD( xVal ) )
 
    CASE "D"
       RETURN xVal
 
+   CASE "T"
+      RETURN hb_TToD( xVal )
+
    CASE "N"
+      RETURN d"1900-01-01" + xVal
+
    CASE "P"
-      RETURN 0d19000101 + xVal
+      RETURN d"1900-01-01" + hb_HexToNum( hb_NumToHex( xVal ) )
+
+   OTHERWISE
+      Throw( xhb_ErrorNew( "VALTODATE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
+   ENDSWITCH
+
+   RETURN hb_SToD()
+
+//
+
+FUNCTION ValToTimeStamp( xVal )
+
+   SWITCH ValType( xVal )
+   CASE "A"
+   CASE "H"
+   CASE "L"
+   CASE "O"
+   CASE "U"
+      EXIT
+
+   CASE "B"
+      RETURN ValToTimeStamp( Eval( xVal ) )
+
+   CASE "C"
+      RETURN iif( IsDigit( SubStr( xVal, 3, 1 ) ) .AND. ;
+                  IsDigit( SubStr( xVal, 5, 1 ) ) .AND. ;
+                  IsDigit( SubStr( xVal, 7, 1 ) ), hb_SToT( xVal ), ;
+                                                   hb_StrToTS( xVal ) )
+
+   CASE "D"
+      RETURN hb_DToT( xVal )
+
+   CASE "T"
+      RETURN xVal
+
+   CASE "N"
+      RETURN t"1900-01-01" + xVal
+
+   CASE "P"
+      RETURN t"1900-01-01" + hb_HexToNum( hb_NumToHex( xVal ) )
 
    OTHERWISE
       Throw( xhb_ErrorNew( "VALTODATE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
@@ -342,6 +409,7 @@ FUNCTION ValToLogical( xVal )
    SWITCH ValType( xVal )
    CASE "A"
    CASE "D"
+   CASE "T"
    CASE "H"
    CASE "N"
    CASE "O"
@@ -389,6 +457,7 @@ FUNCTION ValToNumber( xVal )
       RETURN Val( xVal )
 
    CASE "D"
+   CASE "T"
       RETURN xVal - 0d19000101
 
    CASE "L"
@@ -431,6 +500,10 @@ FUNCTION ValToObject( xVal )
 
    CASE "D"
       ENABLE TYPE CLASS DATE
+      EXIT
+
+   CASE "T"
+      ENABLE TYPE CLASS TIMESTAMP
       EXIT
 
    CASE "H"
@@ -478,6 +551,9 @@ FUNCTION ValToType( xVal, cType )
 
    CASE "D"
       RETURN ValToDate( xVal )
+
+   CASE "T"
+      RETURN ValToTimeStamp( xVal )
 
    CASE "H"
       RETURN ValToHash( xVal )

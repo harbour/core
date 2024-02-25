@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -24,7 +24,7 @@ typedef enum _gui_notif_t
     ekGUI_NOTIF_MENU_DESTROY
 } gui_notif_t;
 
-typedef struct _control_t Control;
+typedef struct _guicontrol_t GuiControl;
 typedef struct _label_t Label;
 typedef struct _button_t Button;
 typedef struct _popup_t PopUp;

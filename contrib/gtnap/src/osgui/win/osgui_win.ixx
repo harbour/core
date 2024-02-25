@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -35,7 +35,6 @@
 typedef struct _view_listeners_t ViewListeners;
 typedef struct _osimgdata_t OSImgData;
 typedef struct _osimglist_t OSImgList;
-typedef struct _osscroll_t OSScroll;
 typedef struct _osdraw_t OSDraw;
 
 struct _view_listeners_t
@@ -67,8 +66,8 @@ struct _oscontrol_t
     HWND tooltip_hwnd;
     WNDPROC def_wnd_proc;
 
-	/* HWND does not save the coordinates of the child with respect to the parent. 
-	   They can be calculated with 'MapWindowPoints', but it does not work correctly 
+    /* HWND does not save the coordinates of the child with respect to the parent.
+	   They can be calculated with 'MapWindowPoints', but it does not work correctly
 	   on scrolling panels. */
     int32_t x;
     int32_t y;

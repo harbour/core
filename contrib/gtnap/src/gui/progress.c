@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -25,6 +25,8 @@ struct _progress_t
     real32_t min_value;
     real32_t max_value;
 };
+
+static const real32_t i_PROGRESS_DEFAULT_WIDTH = 100;
 
 /*---------------------------------------------------------------------------*/
 
@@ -139,7 +141,7 @@ void _progress_dimension(Progress *progress, const uint32_t i, real32_t *dim0, r
     cassert_no_null(dim1);
     if (i == 0)
     {
-        *dim0 = 100.f;
+        *dim0 = i_PROGRESS_DEFAULT_WIDTH;
     }
     else
     {

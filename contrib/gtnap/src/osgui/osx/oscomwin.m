@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,7 +12,7 @@
 
 #include "oscomwin.h"
 #include "oscomwin.inl"
-#include "oscontrol.inl"
+#include "oscontrol_osx.inl"
 #include <core/event.h>
 #include <core/strings.h>
 #include <sewer/cassert.h>
@@ -249,7 +249,7 @@ void oscomwin_color(OSWindow *parent, const char_t *title, const real32_t x, con
     [panel setTarget:i_COLOR_CHOOSE];
     [panel setAction:@selector(onColorChange:)];
 
-    //[NSColorPanel setPickerMode:NSColorPanelModeRGB];
+    /*[NSColorPanel setPickerMode:NSColorPanelModeRGB];*/
     [panel setColor:_oscontrol_color(current)];
     [panel setShowsAlpha:YES];
 
@@ -295,6 +295,7 @@ void oscomwin_color(OSWindow *parent, const char_t *title, const real32_t x, con
 
 
 
+/* 
 //    ret = [NSApp runModalForWindow:panel];
 
 //#if defined (MAC_OS_X_VERSION_10_9) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
@@ -315,7 +316,7 @@ void oscomwin_color(OSWindow *parent, const char_t *title, const real32_t x, con
 //            return NULL;
 //    }
 //    #endif
-
+ */
     unref(parent);
     unref(title);
     unref(x);

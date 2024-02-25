@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -98,12 +98,15 @@ Label *label_multiline(void)
 
 static void i_OnClick(Label *label, Event *event)
 {
-    const EvText *params = NULL;
+    EvText *params = NULL;
     cassert_no_null(label);
     cassert_no_null(label->OnClick);
-    params = event_params(event, EvText);
+    params = (EvText *)event_params(event, EvText);
     cassert(params->text == NULL);
-    ((EvText *)params)->text = tc(label->text);
+    params->text = tc(label->text);
+    params->cpos = 0;
+    params->len = 0;
+    params->next_ctrl = NULL;
     listener_pass_event(label->OnClick, event, label, Label);
 }
 

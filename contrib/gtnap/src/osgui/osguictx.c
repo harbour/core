@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -36,9 +36,7 @@
 
 GuiCtx *osguictx(void)
 {
-    GuiCtx *context;
-
-    context = guictx_create();
+    GuiCtx *context = guictx_create();
 
     guictx_append_label_manager(
         context,
@@ -230,6 +228,8 @@ GuiCtx *osguictx(void)
         osview_OnKeyDown,
         osview_OnKeyUp,
         osview_OnFocus,
+        osview_OnResignFocus,
+        osview_OnAcceptFocus,
         osview_OnScroll,
         NULL, /* osview_OnTouchTap, */
         NULL, /* osview_OnTouchStartDrag, */
@@ -330,9 +330,10 @@ GuiCtx *osguictx(void)
         oswindow_enable_mouse_events,
         oswindow_hotkey,
         oswindow_taborder,
-        oswindow_tabstop,
         oswindow_tabcycle,
+        oswindow_tabstop,
         oswindow_focus,
+        oswindow_get_focus,
         oswindow_attach_panel,
         oswindow_detach_panel,
         oswindow_attach_window,

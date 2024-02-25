@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -578,7 +578,7 @@ static dtype_t i_data_type(const char_t *mtypei, String **subtype, uint16_t *siz
             StBind *stbind = i_find_stbind(tc(lsubtype), NULL);
             if (stbind != NULL)
             {
-                ptr_assign(size, sizeof(void *));
+                ptr_assign(size, sizeofptr);
 
                 if (subtype != NULL)
                     *subtype = lsubtype;
@@ -592,7 +592,7 @@ static dtype_t i_data_type(const char_t *mtypei, String **subtype, uint16_t *siz
                 }
                 else
                 {
-                    cassert(stbind->size == sizeof(void *));
+                    cassert(stbind->size == sizeofptr);
                     return ekDTYPE_OBJECT_OPAQUE;
                 }
             }
@@ -619,7 +619,7 @@ static dtype_t i_data_type(const char_t *mtypei, String **subtype, uint16_t *siz
                 }
                 else
                 {
-                    cassert(stbind->size == sizeof(void *));
+                    cassert(stbind->size == sizeofptr);
                     return ekDTYPE_OBJECT_OPAQUE;
                 }
             }
@@ -1012,7 +1012,7 @@ void dbind_opaque_imp(
     stbind = heap_new0(StBind);
     arrpt_insert(i_DATABIND.stbinds, index, stbind, StBind);
     stbind->type = str_c(type);
-    stbind->size = sizeof(void *);
+    stbind->size = sizeofptr;
     stbind->members = NULL;
     stbind->func_data = func_data;
     stbind->func_buffer = func_buffer;
@@ -1098,7 +1098,7 @@ static void i_init_object(byte_t *data, const StBind *stbind, const uint16_t siz
         const char_t *subtype = i_subtype_str(member);
         Array **array = (Array **)(data + member->offset);
         str_cat_c(atype, 128, subtype);
-        *array = array_create(sizeof(void *), atype);
+        *array = array_create(sizeofptr, atype);
         break;
     }
 
@@ -1189,7 +1189,7 @@ byte_t *dbind_create_imp(const char_t *type)
     case ekDTYPE_ARRPTR: {
         char_t atype[128] = ARRPT;
         str_cat_c(atype, 128, tc(subtype));
-        data = (byte_t *)array_create(sizeof(void *), atype);
+        data = (byte_t *)array_create(sizeofptr, atype);
         break;
     }
 
@@ -1386,8 +1386,8 @@ static void i_destroy_arrpt(Array **array, const char_t *type)
             StBind *stbind = i_find_stbind(tc(subtype), NULL);
             byte_t *data = array_all(*array);
             uint32_t i, n = array_size(*array);
-            cassert(sizeof(void *) == array_esize(*array));
-            for (i = 0; i < n; ++i, data += sizeof(void *))
+            cassert(sizeofptr == array_esize(*array));
+            for (i = 0; i < n; ++i, data += sizeofptr)
                 i_destroy_object((byte_t **)data, stbind, size);
             str_cat_c(atype, 128, tc(subtype));
             array_destroy(array, NULL, atype);
@@ -1822,7 +1822,7 @@ static bool_t i_read_value(Stream *stm, DBind *dbind, dtype_t type, const char_t
     case ekDTYPE_ARRPTR:
         cassert(*(Array **)data != NULL);
         cassert(array_size(*(Array **)data) == 0);
-        cassert(sizeof(void *) == array_esize(*(Array **)data));
+        cassert(sizeofptr == array_esize(*(Array **)data));
         return i_read_arrpt(stm, subtype, *(Array **)data);
 
     case ekDTYPE_OBJECT:
@@ -1901,7 +1901,7 @@ static void *i_create_type(Stream *stm, const char_t *type)
         Array *array;
         cassert_msg(i_find_stbind(tc(subtype), NULL) != NULL, "DBind unknown type");
         str_cat_c(atype, 128, tc(subtype));
-        array = array_create(sizeof(void *), atype);
+        array = array_create(sizeofptr, atype);
         if (i_read_arrpt(stm, tc(subtype), array) == TRUE)
         {
             obj = (byte_t *)array;
@@ -2094,17 +2094,17 @@ static void i_write_arrpt(Stream *stm, const Array *array, const char_t *type)
         stm_write_u32(stm, n);
         if (atype == ekDTYPE_STRING)
         {
-            for (i = 0; i < n; ++i, data += sizeof(void *))
+            for (i = 0; i < n; ++i, data += sizeofptr)
                 str_write(stm, *(String **)data);
         }
         else if (atype == ekDTYPE_OBJECT)
         {
-            for (i = 0; i < n; ++i, data += sizeof(void *))
+            for (i = 0; i < n; ++i, data += sizeofptr)
                 i_write_object(stm, *(const void **)data, stype);
         }
         else if (atype == ekDTYPE_OBJECT_OPAQUE)
         {
-            for (i = 0; i < n; ++i, data += sizeof(void *))
+            for (i = 0; i < n; ++i, data += sizeofptr)
                 i_write_opaque(stm, *(const void **)data, stype);
         }
         else

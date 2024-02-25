@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -14,7 +14,7 @@
 #include "oscontrol.inl"
 #include "osgui.inl"
 #include "osgui_win.inl"
-#include "osscroll.inl"
+#include "osscrolls.inl"
 #include <core/event.h>
 #include <osbs/btime.h>
 #include <sewer/bmem.h>
@@ -100,7 +100,7 @@ void oslistener_mouse_exit(OSControl *sender, ViewListeners *listeners)
 
 /*---------------------------------------------------------------------------*/
 
-void oslistener_mouse_moved(OSControl *sender, WPARAM event_wParam, const real32_t x, const real32_t y, const OSScroll *scroll, ViewListeners *listeners)
+void oslistener_mouse_moved(OSControl *sender, WPARAM event_wParam, const real32_t x, const real32_t y, const OSScrolls *scroll, ViewListeners *listeners)
 {
     cassert_no_null(listeners);
     cassert_no_null(sender);
@@ -117,12 +117,14 @@ void oslistener_mouse_moved(OSControl *sender, WPARAM event_wParam, const real32
         if ((event_wParam & MK_MBUTTON) && listeners->button != ekGUI_MOUSE_MIDDLE)
             return;
 
-        params.x = x + (scroll ? osscroll_x_pos(scroll) : 0);
-        params.y = y + (scroll ? osscroll_y_pos(scroll) : 0);
+        params.x = x + (scroll ? osscrolls_x_pos(scroll) : 0);
+        params.y = y + (scroll ? osscrolls_y_pos(scroll) : 0);
         params.lx = x;
         params.ly = y;
         params.button = listeners->button;
         params.count = 0;
+        params.modifiers = _osgui_modifiers();
+        params.tag = 0;
 
         if (listeners->button != ENUM_MAX(gui_mouse_t))
         {
@@ -159,7 +161,7 @@ void oslistener_mouse_moved(OSControl *sender, WPARAM event_wParam, const real32
 
 /*---------------------------------------------------------------------------*/
 
-void oslistener_mouse_down(OSControl *sender, const gui_mouse_t button, const real32_t x, const real32_t y, const OSScroll *scroll, ViewListeners *listeners)
+void oslistener_mouse_down(OSControl *sender, const gui_mouse_t button, const real32_t x, const real32_t y, const OSScrolls *scroll, ViewListeners *listeners)
 {
     cassert_no_null(listeners);
     cassert_no_null(sender);
@@ -175,12 +177,14 @@ void oslistener_mouse_down(OSControl *sender, const gui_mouse_t button, const re
         if (listeners->OnDown != NULL)
         {
             EvMouse params;
-            params.x = x + (scroll ? osscroll_x_pos(scroll) : 0);
-            params.y = y + (scroll ? osscroll_y_pos(scroll) : 0);
+            params.x = x + (scroll ? osscrolls_x_pos(scroll) : 0);
+            params.y = y + (scroll ? osscrolls_y_pos(scroll) : 0);
             params.lx = x;
             params.ly = y;
             params.button = button;
             params.count = 0;
+            params.modifiers = _osgui_modifiers();
+            params.tag = 0;
             listener_event(listeners->OnDown, ekGUI_EVENT_DOWN, sender, &params, NULL, OSControl, EvMouse, void);
         }
     }
@@ -188,19 +192,21 @@ void oslistener_mouse_down(OSControl *sender, const gui_mouse_t button, const re
 
 /*---------------------------------------------------------------------------*/
 
-void oslistener_mouse_up(OSControl *sender, const gui_mouse_t button, const real32_t x, const real32_t y, const OSScroll *scroll, ViewListeners *listeners)
+void oslistener_mouse_up(OSControl *sender, const gui_mouse_t button, const real32_t x, const real32_t y, const OSScrolls *scroll, ViewListeners *listeners)
 {
     cassert_no_null(listeners);
     cassert_no_null(sender);
     if (listeners->enabled == TRUE)
     {
         EvMouse params;
-        params.x = x + (scroll ? osscroll_x_pos(scroll) : 0);
-        params.y = y + (scroll ? osscroll_y_pos(scroll) : 0);
+        params.x = x + (scroll ? osscrolls_x_pos(scroll) : 0);
+        params.y = y + (scroll ? osscrolls_y_pos(scroll) : 0);
         params.lx = x;
         params.ly = y;
         params.button = button;
         params.count = 0;
+        params.modifiers = _osgui_modifiers();
+        params.tag = 0;
 
         {
             BOOL ok = ReleaseCapture();
@@ -227,7 +233,7 @@ void oslistener_mouse_up(OSControl *sender, const gui_mouse_t button, const real
 
 /*---------------------------------------------------------------------------*/
 
-void oslistener_whell(OSControl *sender, WPARAM event_wParam, LPARAM event_lParam, const OSScroll *scroll, ViewListeners *listeners)
+void oslistener_whell(OSControl *sender, WPARAM event_wParam, LPARAM event_lParam, const OSScrolls *scroll, ViewListeners *listeners)
 {
     cassert_no_null(listeners);
     cassert_no_null(sender);
@@ -244,8 +250,8 @@ void oslistener_whell(OSControl *sender, WPARAM event_wParam, LPARAM event_lPara
             point.y = spoint.y;
             ok = ScreenToClient(sender->hwnd, &point);
             cassert_unref(ok == TRUE, ok);
-            params.x = (real32_t)point.x + (scroll ? osscroll_x_pos(scroll) : 0);
-            params.y = (real32_t)point.y + (scroll ? osscroll_y_pos(scroll) : 0);
+            params.x = (real32_t)point.x + (scroll ? osscrolls_x_pos(scroll) : 0);
+            params.y = (real32_t)point.y + (scroll ? osscrolls_y_pos(scroll) : 0);
             params.dx = 0;
             params.dy = (real32_t)(GET_WHEEL_DELTA_WPARAM(event_wParam) / WHEEL_DELTA);
             params.dz = 0;
@@ -289,22 +295,14 @@ static bool_t i_key_event(OSControl *sender, const uint32_t type, WPARAM wParam,
         }
         else
         {
-            register uint32_t i, n = kNUM_VKEYS;
-            register const WORD *keys = kVIRTUAL_KEY;
-            for (i = 0; i < n; ++i)
-            {
-                if (keys[i] == wParam)
-                {
-                    key = (vkey_t)i;
-                    break;
-                }
-            }
+            key = _osgui_vkey((WORD)wParam);
         }
 
         if (key != ENUM_MAX(vkey_t))
         {
             EvKey params;
             params.key = key;
+            params.modifiers = _osgui_modifiers();
             listener_event(listener, type, sender, &params, NULL, OSControl, EvKey, void);
             return TRUE;
         }
@@ -328,27 +326,3 @@ bool_t oslistener_key_up(OSControl *sender, WPARAM wParam, LPARAM lParam, ViewLi
     cassert_no_null(listeners);
     return i_key_event(sender, ekGUI_EVENT_KEYUP, wParam, lParam, listeners->OnKeyUp);
 }
-
-/*---------------------------------------------------------------------------*/
-
-//void oslistener_key_flags_changed(const NSView *view, NSEvent *theEvent, ViewListeners *listeners)
-//{
-//    cassert_no_null(listeners);
-//    cassert_no_null(theEvent);
-//    if (listeners->enabled == YES)
-//    {
-//        NSUInteger flags;
-//        BOOL alt_down, control_down;
-//        flags = [theEvent modifierFlags];
-//        alt_down = (BOOL)((flags & NSAlternateKeyMask) == NSAlternateKeyMask);
-//        control_down = (BOOL)((flags & NSControlKeyMask) == NSControlKeyMask);
-//        if (alt_down == YES && listeners->OnKeyDown.object != NULL)
-//            i_launch_key_event(view, ekGUI_EVENT_KEYDOWN, ekGUI_KEY_ALT, &listeners->OnKeyDown);
-//        if (alt_down == NO && listeners->OnKeyUp.object != NULL)
-//            i_launch_key_event(view, ekGUI_EVENT_KEYUP, ekGUI_KEY_ALT, &listeners->OnKeyUp);
-//        if (control_down == YES && listeners->OnKeyDown.object != NULL)
-//            i_launch_key_event(view, ekGUI_EVENT_KEYDOWN, ekGUI_KEY_CONTROL, &listeners->OnKeyDown);
-//        if (control_down == NO && listeners->OnKeyUp.object != NULL)
-//            i_launch_key_event(view, ekGUI_EVENT_KEYUP, ekGUI_KEY_CONTROL, &listeners->OnKeyUp);
-//    }
-//}

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -71,6 +71,9 @@
 #define arrpt_insert(array, pos, value, type) \
     (*(const type **)arrpt_##type##_insert(array, pos, 1)) = (value)
 
+#define arrpt_insert_n(array, pos, n, type) \
+    arrpt_##type##_insert(array, pos, n)
+
 #define arrpt_join(dest, src, func_copy, type) \
     arrpt_##type##_join(dest, src, func_copy)
 
@@ -86,7 +89,7 @@
 #define arrpt_sort_ex(array, func_compare, data, type, dtype) \
     ((void)((data) == (dtype *)(data)),                       \
      FUNC_CHECK_COMPARE_EX(func_compare, type, dtype),        \
-     arrpt_##type##_sort_ex(array, (FPtr_compare_ex)func_compare, (void *)(data)))
+     arrpt_##type##_sort_ex(array, (FPtr_compare_ex)func_compare, (void *)data))
 
 #define arrpt_find(array, elem, type) \
     arrpt_##type##_find(array, elem)

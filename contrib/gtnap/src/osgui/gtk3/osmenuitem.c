@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,10 +11,10 @@
 /* Operating System native menu item */
 
 #include "osmenuitem.h"
-#include "osmenuitem.inl"
-#include "osmenu.inl"
-#include "oscontrol.inl"
 #include "osgui.inl"
+#include "osmenuitem_gtk.inl"
+#include "osmenu_gtk.inl"
+#include "oscontrol_gtk.inl"
 #include "osgui_gtk.inl"
 #include <draw2d/image.h>
 #include <core/event.h>
@@ -178,7 +178,7 @@ static void i_OnClick(GtkMenuItem *widget, OSMenuItem *item)
         EvMenu params;
         params.index = UINT32_MAX;
         params.state = ekGUI_ON;
-        params.str = NULL;
+        params.text = NULL;
         listener_event(item->OnClick, ekGUI_EVENT_MENU, item, &params, NULL, OSMenuItem, EvMenu, void);
     }
 }

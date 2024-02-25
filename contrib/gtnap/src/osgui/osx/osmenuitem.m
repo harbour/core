@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -194,7 +194,7 @@ static gui_state_t i_state(const NSInteger state)
         EvMenu params;
         params.index = UINT32_MAX;
         params.state = i_state([(OSXMenuItem*)sender state]);
-        params.str = NULL;
+        params.text = NULL;
         listener_event(((OSXMenuItem*)sender)->OnClick, ekGUI_EVENT_MENU, (OSMenuItem*)sender, &params, NULL, OSMenuItem, EvMenu, void);
     }
 }
@@ -425,7 +425,7 @@ void osmenuitem_submenu(OSMenuItem *item, OSMenu *menu)
     retain_count = [(NSMenu*)menu retainCount];
     [itemp setSubmenu:(NSMenu*)menu];
     [(NSMenu*)menu setTitle:[itemp title]];
-    cassert([(NSMenu*)menu retainCount] == retain_count + 1);
+    cassert_unref([(NSMenu*)menu retainCount] == retain_count + 1, retain_count);
 }
 
 /*---------------------------------------------------------------------------*/

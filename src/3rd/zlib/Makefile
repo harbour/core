@@ -55,8 +55,8 @@ else
 endif
 
 # ORIGIN http://zlib.net/
-# VER    1.2.11
-# URL    https://github.com/madler/zlib/archive/v1.2.11.zip
+# VER    1.3
+# URL    https://zlib.net/zlib-1.3.tar.xz
 # DIFF   zlib.diff
 #
 # MAP    README

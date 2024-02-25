@@ -85,7 +85,7 @@ CREATE CLASS RadioButtn FUNCTION HBRadioButton
    METHOD sBlock( bSBlock ) SETGET
    METHOD style( cStyle ) SETGET
 
-   METHOD New( nRow, nCol, cCaption, cData )  /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( nRow, nCol, cCaption, cData )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -315,7 +315,7 @@ METHOD style( cStyle ) CLASS RadioButtn
 
    RETURN ::cStyle
 
-METHOD New( nRow, nCol, cCaption, cData ) CLASS RadioButtn
+METHOD Init( nRow, nCol, cCaption, cData ) CLASS RadioButtn
 
    LOCAL cColor
 

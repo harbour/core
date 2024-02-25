@@ -22,7 +22,7 @@ AR_RULE = ( $(AR) -static \
 
 DY_OUT := -o$(subst x,x, )
 
-DY_RULE = $(DY) -dynamiclib -flat_namespace $(DFLAGS) \
+DY_RULE = $(DY) -dynamiclib $(DFLAGS) \
    -install_name "$(DYN_NAME_NVR)" \
    -compatibility_version $(HB_VER_MAJOR).$(HB_VER_MINOR) \
    -current_version $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE) \

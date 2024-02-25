@@ -46,6 +46,8 @@
 
 #require "hbsqlit3"
 
+#include "fileio.ch"
+
 #define TRACE
 #define TABLE_SQL "CREATE TABLE t1( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER )"
 
@@ -86,12 +88,34 @@ PROCEDURE t2()
    LOCAL nCCount, nCType, nI, nJ
    LOCAL aCType :=  { "SQLITE_INTEGER", "SQLITE_FLOAT", "SQLITE_TEXT", "SQLITE_BLOB", "SQLITE_NULL" }
    LOCAL aTable
+#ifdef TRACE
+   LOCAL hTraceFile, hProfileFile
+#endif
 
    IF ! Empty( db )
 
 #ifdef TRACE
-      sqlite3_profile( db, .T. )
-      sqlite3_trace( db, .T. )
+      IF sqlite3_libversion_number() < 3014000
+         sqlite3_profile( db, .T. )
+         sqlite3_trace( db, .T. )
+      ELSE
+         hTraceFile := FOpen( "hbsq3_tr.log", FO_READWRITE + HB_FO_CREAT )
+         FSeek( hTraceFile, 0, FS_END )
+         hProfileFile := FOpen( "hbsq3_pr.log", FO_READWRITE + HB_FO_CREAT )
+         FSeek( hProfileFile, 0, FS_END )
+         sqlite3_trace_v2( db, SQLITE_TRACE_STMT + SQLITE_TRACE_PROFILE, {| nMask, pStmt, x |
+            IF nMask == SQLITE_TRACE_STMT
+               IF hb_LeftEq( x, "--" )
+                  FWrite( hTraceFile, x + hb_eol() )
+               ELSE
+                  FWrite( hTraceFile, sqlite3_expanded_sql( pStmt ) + hb_eol() )
+               ENDIF
+            ELSEIF nMask == SQLITE_TRACE_PROFILE
+               FWrite( hProfileFile, sqlite3_expanded_sql( pStmt ) + " - " + hb_NToS( x ) + hb_eol() )
+            ENDIF
+            RETURN 0
+         } )
+      ENDIF
 #endif
       sqlite3_exec( db, "PRAGMA auto_vacuum=0" )
       sqlite3_exec( db, "PRAGMA page_size=4096" )

@@ -52,6 +52,16 @@
 
 HB_EXTERN_BEGIN
 
+/* functions in xhberror.c */
+extern HB_EXPORT const char * hb_errGetProcName( PHB_ITEM pError );
+extern HB_EXPORT PHB_ITEM hb_errPutProcName( PHB_ITEM pError, const char * szProcName );
+extern HB_EXPORT HB_UINT hb_errGetProcLine( PHB_ITEM pError );
+extern HB_EXPORT PHB_ITEM hb_errPutProcLine( PHB_ITEM pError, HB_UINT uiProcLine );
+extern HB_EXPORT const char * hb_errGetModuleName( PHB_ITEM pError );
+extern HB_EXPORT PHB_ITEM hb_errPutModuleName( PHB_ITEM pError, const char * szModuleName );
+extern HB_EXPORT PHB_ITEM hb_errGetCallStack( PHB_ITEM pError );
+extern HB_EXPORT PHB_ITEM hb_errPutCallStack( PHB_ITEM pError, PHB_ITEM pCallStack );
+
 /* functions in hboutdbg.c */
 extern HB_EXPORT HB_BOOL hb_OutDebugName( PHB_ITEM pName );
 extern HB_EXPORT void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen );

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -20,13 +20,17 @@ void _panel_destroy_all(Panel **panel);
 
 void _panel_attach_component(Panel *panel, GuiComponent *component);
 
-void _panel_detach_components(Panel *panel);
-
 void _panel_destroy_component(Panel *panel, GuiComponent *component);
 
 void _panel_hide_all(Panel *panel);
 
 GuiComponent *_panel_get_component(Panel *panel);
+
+GuiComponent *_panel_find_component(Panel *panel, void *ositem);
+
+bool_t _panel_in_active_layout(const Panel *panel, const GuiComponent *component);
+
+Layout *_panel_active_layout(const Panel *panel);
 
 void _panel_invalidate_layout(Panel *panel, Layout *layout);
 
@@ -49,9 +53,5 @@ void _panel_locate(Panel *panel);
 void _panel_locale(Panel *panel);
 
 ArrPt(Layout) * _panel_layouts(const Panel *panel);
-
-bool_t _panel_with_scroll(const Panel *panel);
-
-void _panel_content_size(Panel *panel, const real32_t width, const real32_t height);
 
 __END_C

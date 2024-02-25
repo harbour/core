@@ -100,8 +100,8 @@ CREATE CLASS HBLabelForm
    VAR lOneMoreBand AS LOGICAL INIT .T.
    VAR nCurrentCol  AS NUMERIC // The current column in the band
 
-   METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
-               bWhile, nNext, nRecord, lRest, lSample )
+   METHOD Init( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+                bWhile, nNext, nRecord, lRest, lSample )
 
    METHOD ExecuteLabel()
    METHOD SampleLabels()
@@ -109,8 +109,8 @@ CREATE CLASS HBLabelForm
 
 ENDCLASS
 
-METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
-      bWhile, nNext, nRecord, lRest, lSample ) CLASS HBLabelForm
+METHOD Init( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+             bWhile, nNext, nRecord, lRest, lSample ) CLASS HBLabelForm
 
    LOCAL lPrintOn := .F.               // PRINTER status
    LOCAL lConsoleOn                    // CONSOLE status

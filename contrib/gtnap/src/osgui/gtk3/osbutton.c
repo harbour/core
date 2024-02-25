@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -13,11 +13,12 @@
 #include "osbutton.h"
 #include "osbutton.inl"
 #include "osgui.inl"
+#include "osbutton_gtk.inl"
 #include "osgui_gtk.inl"
-#include "osglobals.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
+#include "osglobals_gtk.inl"
+#include "oscontrol_gtk.inl"
+#include "ospanel_gtk.inl"
+#include "oswindow_gtk.inl"
 #include <draw2d/font.h>
 #include <draw2d/image.h>
 #include <core/event.h>
@@ -103,7 +104,7 @@ static void i_OnClick(GtkWidget *widget, OSButton *button)
         listener_event(button->OnClick, ekGUI_EVENT_BUTTON, button, &params, NULL, OSButton, EvButton, void);
     }
 
-    _oswindow_unlock_edit_focus_events((OSControl *)button);
+    _oswindow_release_transient_focus(OSControlPtr(button));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -130,17 +131,9 @@ static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSButton *
 {
     unref(widget);
     unref(event);
-    if (_oswindow_in_tablist((OSControl *)button) == FALSE)
-    {
-        _oswindow_lock_edit_focus_events((OSControl *)button);
+    if (_oswindow_mouse_down(OSControlPtr(button)) == TRUE)
         return FALSE;
-    }
-    else
-    {
-        if (_oswindow_can_mouse_down((OSControl *)button) == TRUE)
-            return FALSE;
-        return TRUE;
-    }
+    return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -203,10 +196,10 @@ OSButton *osbutton_create(const button_flag_t flags)
     g_signal_connect(G_OBJECT(widget), "clicked", G_CALLBACK(i_OnClick), (gpointer)button);
     _oscontrol_init(&button->control, ekGUI_TYPE_BUTTON, widget, focus_widget, FALSE);
 
-    if (_osgui_button_text_allowed(flags) == TRUE)
+    if (osbutton_text_allowed(flags) == TRUE)
     {
         const char_t *cssbut = osglobals_css_button();
-        button->font = _osgui_create_default_font();
+        button->font = osgui_create_default_font();
         _oscontrol_widget_font(button->control.widget, cssbut, button->font, &button->pfont);
     }
 
@@ -255,7 +248,7 @@ void osbutton_text(OSButton *button, const char_t *text)
 {
     char_t tbuff[256];
     cassert_no_null(button);
-    cassert(_osgui_button_text_allowed(button->flags) == TRUE);
+    cassert(osbutton_text_allowed(button->flags) == TRUE);
     _osgui_underline_gtk_text(text, tbuff, sizeof(tbuff));
     gtk_button_set_label(GTK_BUTTON(button->control.widget), tbuff);
 }
@@ -274,7 +267,7 @@ void osbutton_font(OSButton *button, const Font *font)
 {
     const char_t *cssbut = osglobals_css_button();
     cassert_no_null(button);
-    cassert(_osgui_button_text_allowed(button->flags) == TRUE);
+    cassert(osbutton_text_allowed(button->flags) == TRUE);
     _oscontrol_widget_remove_provider(button->control.widget, button->pfont);
     _oscontrol_widget_font(button->control.widget, cssbut, font, &button->pfont);
 }
@@ -284,7 +277,7 @@ void osbutton_font(OSButton *button, const Font *font)
 void osbutton_align(OSButton *button, const align_t align)
 {
     cassert_no_null(button);
-    cassert(_osgui_button_text_allowed(button->flags) == TRUE);
+    cassert(osbutton_text_allowed(button->flags) == TRUE);
     _oscontrol_set_halign((OSControl *)button, align);
 }
 
@@ -416,7 +409,11 @@ void osbutton_vpadding(OSButton *button, const real32_t padding)
         const char_t *cssbut = osglobals_css_button();
         uint32_t mpad = (uint32_t)((padding / 2) + .5f);
         char_t css[256];
+#if GTK_CHECK_VERSION(3, 22, 0)
         bstd_sprintf(css, sizeof(css), "%s {padding-top:%dpx;padding-bottom:%dpx;padding-left:4px;padding-right:4px;min-height:0}", cssbut, mpad, mpad);
+#else
+        bstd_sprintf(css, sizeof(css), "%s {padding-top:%dpx;padding-bottom:%dpx;padding-left:4px;padding-right:4px}", cssbut, mpad, mpad);
+#endif
         _oscontrol_widget_set_css(button->control.widget, css);
     }
 }
@@ -475,7 +472,6 @@ void osbutton_attach(OSButton *button, OSPanel *panel)
 
 void osbutton_detach(OSButton *button, OSPanel *panel)
 {
-    _oswindow_unset_defbutton((OSControl *)button);
     _ospanel_detach_control(panel, (OSControl *)button);
 }
 
@@ -516,15 +512,6 @@ void osbutton_frame(OSButton *button, const real32_t x, const real32_t y, const 
 
 /*---------------------------------------------------------------------------*/
 
-void _osbutton_detach_and_destroy(OSButton **button, OSPanel *panel)
-{
-    cassert_no_null(button);
-    osbutton_detach(*button, panel);
-    osbutton_destroy(button);
-}
-
-/*---------------------------------------------------------------------------*/
-
 GtkWidget *_osbutton_focus(OSButton *button)
 {
     cassert_no_null(button);
@@ -557,7 +544,7 @@ void _osbutton_command(OSButton *button)
 
 /*---------------------------------------------------------------------------*/
 
-void _osbutton_default(OSButton *button, const bool_t is_default)
+void osbutton_set_default(OSButton *button, const bool_t is_default)
 {
     cassert_no_null(button);
     if (button_get_type(button->flags) == ekBUTTON_PUSH)

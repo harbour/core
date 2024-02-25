@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,10 +12,14 @@
 
 #include "osview.h"
 #include "osview.inl"
+#include "osview_osx.inl"
 #include "osgui.inl"
-#include "oscontrol.inl"
 #include "oslistener.inl"
-#include "ospanel.inl"
+#include "osscrolls.inl"
+#include "osscroll_osx.inl"
+#include "oscontrol_osx.inl"
+#include "ospanel_osx.inl"
+#include "oswindow_osx.inl"
 #include <draw2d/dctxh.h>
 #include <core/event.h>
 #include <core/heap.h>
@@ -32,13 +36,15 @@
 @interface OSXView : NSView
 {
 @public
-    NSScrollView *scroll;
+    OSScrolls *scroll;
     DCtx *ctx;
     uint32_t flags;
     NSTrackingArea *tracking_area;
     ViewListeners listeners;
+    OSDraw osdraw;
     Listener *OnFocus;
-    Listener *OnNotify;
+    Listener *OnResignFocus;
+    Listener *OnAcceptFocus;
     Listener *OnOverlay;
     BOOL mouse_inside;
 }
@@ -46,88 +52,67 @@
 
 /*---------------------------------------------------------------------------*/
 
-// static CGContextRef i_CGContext(NSGraphicsContext *nscontext)
-// {
-// #if defined (MAC_OS_X_VERSION_10_10) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10
-//     return [nscontext CGContext];
-// #else
-//     return (CGContextRef)[nscontext graphicsPort];
-// #endif
-// }
-
-/*---------------------------------------------------------------------------*/
-
 @implementation OSXView
 
 /*---------------------------------------------------------------------------*/
 
-static void i_area_expand(EvDraw *params, const real32_t area_width, const real32_t area_height)
+-(void)drawFocusRingMask
 {
-    static const real32_t i_EXPAND_MARGIN = 300;
-
-    params->x -= i_EXPAND_MARGIN;
-    params->y -= i_EXPAND_MARGIN;
-    params->width += 2 * i_EXPAND_MARGIN;
-    params->height += 2 * i_EXPAND_MARGIN;
-
-    if (params->x < 0)
-        params->x = 0;
-
-    if (params->y < 0)
-        params->y = 0;
-
-    if (params->x + params->width > area_width)
-        params->width = area_width - params->x;
-
-    if (params->y + params->height > area_height)
-        params->height = area_height - params->y;
+    NSRectFill([self bounds]);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) drawRect:(NSRect)rect
+-(NSRect)focusRingMaskBounds
+{
+    return [self bounds];
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void)drawRect:(NSRect)rect
 {
     if (self->listeners.OnDraw != NULL)
     {
         EvDraw params;
+        rect = [self frame];
         params.ctx = NULL;
+        params.x = 0;
+        params.y = 0;
+        params.width = (real32_t)rect.size.width;
+        params.height = (real32_t)rect.size.height;
 
-        if (self->scroll != nil)
+        if (self->scroll != NULL)
         {
-            NSRect vrect = [self->scroll documentVisibleRect];
-            rect = [self frame];
-            params.x = (real32_t)vrect.origin.x;
-            params.y = (real32_t)vrect.origin.y;
-            params.width = (real32_t)vrect.size.width;
-            params.height = (real32_t)vrect.size.height;
-            i_area_expand(&params, (real32_t)rect.size.width, (real32_t)rect.size.height);
-        }
-        else
-        {
-            rect = [self frame];
-            params.x = 0;
-            params.y = 0;
-            params.width = (real32_t)rect.size.width;
-            params.height = (real32_t)rect.size.height;
+            params.x = (real32_t)osscrolls_x_pos(self->scroll);
+            params.y = (real32_t)osscrolls_y_pos(self->scroll);
         }
 
         if ((self->flags & ekVIEW_OPENGL) == 0)
         {
             NSGraphicsContext *nscontext;
-            // CGContextRef cgcontext;
 
             if (self->ctx == NULL)
             {
                 self->ctx = dctx_create();
                 dctx_set_flipped(self->ctx, (bool_t)[self isFlipped]);
+                dctx_data(self->ctx, &self->osdraw, NULL, OSDraw);
             }
 
             params.ctx = self->ctx;
             nscontext = [NSGraphicsContext currentContext];
-            // cgcontext = i_CGContext(nscontext);
-            dctx_set_gcontext(self->ctx, nscontext, (uint32_t)rect.size.width, (uint32_t)rect.size.height, 0, 0, 0, TRUE);
+            dctx_set_gcontext(self->ctx, nscontext, (uint32_t)rect.size.width, (uint32_t)rect.size.height, params.x, params.y, 0, TRUE);
             listener_event(self->listeners.OnDraw, ekGUI_EVENT_DRAW, (OSView*)self, &params, NULL, OSView, EvDraw, void);
             dctx_unset_gcontext(self->ctx);
+
+            if (self->OnOverlay != NULL)
+            {
+                params.x = 0;
+                params.y = 0;
+                dctx_set_gcontext(self->ctx, nscontext, (uint32_t)rect.size.width, (uint32_t)rect.size.height, 0, 0, 0, TRUE);
+                listener_event(self->OnOverlay, ekGUI_EVENT_OVERLAY, (OSView*)self, &params, NULL, OSView, EvDraw, void);
+                dctx_unset_gcontext(self->ctx);
+            }
         }
         else
         {
@@ -171,30 +156,22 @@ static void i_area_expand(EvDraw *params, const real32_t area_width, const real3
 
 /*---------------------------------------------------------------------------*/
 
-- (BOOL) mouseDownCanMoveWindow
+- (BOOL)mouseDownCanMoveWindow
 {
     return NO;
 }
 
 /*---------------------------------------------------------------------------*/
 
-//- (BOOL) acceptsFirstMouse:(NSEvent*)theEvent
-//{
-//    unref(theEvent);
-//    return NO;
-//}
-
-/*---------------------------------------------------------------------------*/
-
-- (void) mouseEntered:(NSEvent*)theEvent
+- (void)mouseEntered:(NSEvent*)theEvent
 {
     self->mouse_inside = YES;
-    _oslistener_mouse_enter(self, theEvent, &self->listeners);
+    _oslistener_mouse_enter(self, theEvent, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) mouseExited:(NSEvent*)theEvent
+- (void)mouseExited:(NSEvent*)theEvent
 {
     unref(theEvent);
     self->mouse_inside = NO;
@@ -203,108 +180,104 @@ static void i_area_expand(EvDraw *params, const real32_t area_width, const real3
 
 /*---------------------------------------------------------------------------*/
 
-- (void) mouseMoved:(NSEvent*)theEvent
+- (void)mouseMoved:(NSEvent*)theEvent
 {
     if (self->mouse_inside == YES)
-        _oslistener_mouse_moved(self, theEvent, &self->listeners);
+        _oslistener_mouse_moved(self, theEvent, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) mouseDown:(NSEvent*)theEvent
+- (void)mouseDown:(NSEvent*)theEvent
 {
-    _oslistener_mouse_down(self, theEvent, ekGUI_MOUSE_LEFT, &self->listeners);
+    if (_oswindow_mouse_down(OSControlPtr(self)) == TRUE)
+        _oslistener_mouse_down(self, theEvent, ekGUI_MOUSE_LEFT, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) rightMouseDown:(NSEvent*)theEvent
+- (void)rightMouseDown:(NSEvent*)theEvent
 {
-    _oslistener_mouse_down(self, theEvent, ekGUI_MOUSE_RIGHT, &self->listeners);
+    if (_oswindow_mouse_down(OSControlPtr(self)) == TRUE)
+        _oslistener_mouse_down(self, theEvent, ekGUI_MOUSE_RIGHT, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) otherMouseDown:(NSEvent*)theEvent
+- (void)otherMouseDown:(NSEvent*)theEvent
 {
-    _oslistener_mouse_down(self, theEvent, ekGUI_MOUSE_MIDDLE, &self->listeners);
+    if (_oswindow_mouse_down(OSControlPtr(self)) == TRUE)
+        _oslistener_mouse_down(self, theEvent, ekGUI_MOUSE_MIDDLE, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) mouseUp:(NSEvent*)theEvent
+- (void)mouseUp:(NSEvent*)theEvent
 {
-    _oslistener_mouse_up(self, theEvent, ekGUI_MOUSE_LEFT, &self->listeners);
+    _oslistener_mouse_up(self, theEvent, ekGUI_MOUSE_LEFT, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) rightMouseUp:(NSEvent*)theEvent
+- (void)rightMouseUp:(NSEvent*)theEvent
 {
-    _oslistener_mouse_up(self, theEvent, ekGUI_MOUSE_RIGHT, &self->listeners);
+    _oslistener_mouse_up(self, theEvent, ekGUI_MOUSE_RIGHT, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) otherMouseUp:(NSEvent*)theEvent
+- (void)otherMouseUp:(NSEvent*)theEvent
 {
-    _oslistener_mouse_up(self, theEvent, ekGUI_MOUSE_MIDDLE, &self->listeners);
+    _oslistener_mouse_up(self, theEvent, ekGUI_MOUSE_MIDDLE, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) mouseDragged:(NSEvent*)theEvent
+- (void)mouseDragged:(NSEvent*)theEvent
 {
-    _oslistener_mouse_dragged(self, theEvent, ekGUI_MOUSE_LEFT, &self->listeners);
+    _oslistener_mouse_dragged(self, theEvent, ekGUI_MOUSE_LEFT, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) rightMouseDragged:(NSEvent*)theEvent
+- (void)rightMouseDragged:(NSEvent*)theEvent
 {
-    _oslistener_mouse_dragged(self, theEvent, ekGUI_MOUSE_RIGHT, &self->listeners);
+    _oslistener_mouse_dragged(self, theEvent, ekGUI_MOUSE_RIGHT, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) otherMouseDragged:(NSEvent*)theEvent
+- (void)otherMouseDragged:(NSEvent*)theEvent
 {
-    _oslistener_mouse_dragged(self, theEvent, ekGUI_MOUSE_MIDDLE, &self->listeners);
+    _oslistener_mouse_dragged(self, theEvent, ekGUI_MOUSE_MIDDLE, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) scrollWheel:(NSEvent*)theEvent
+- (void)scrollWheel:(NSEvent*)theEvent
 {
     if (self->scroll != nil)
-        [self->scroll scrollWheel:theEvent];
-    _oslistener_scroll_whell(self, theEvent, &self->listeners);
+    {
+        gui_scroll_t ev = osscroll_wheel_event(theEvent);
+        if (ev != ENUM_MAX(gui_scroll_t))
+            _osview_scroll_event(self, ekGUI_VERTICAL, ev);
+    }
+
+    _oslistener_scroll_whell(self, theEvent, self->scroll, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) keyDown:(NSEvent*)theEvent
+- (void)keyDown:(NSEvent*)theEvent
 {
-    unsigned short code = [theEvent keyCode];
-    if (code == kVK_Tab || code == kVK_Escape)
-    {
-        [super keyDown:theEvent];
-        return;
-    }
-
-    _oslistener_key_down(self, theEvent, &self->listeners);
+    if (_oswindow_key_down(OSControlPtr(self), theEvent) == FALSE)
+        _oslistener_key_down(self, theEvent, &self->listeners);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) keyUp:(NSEvent*)theEvent
+- (void)keyUp:(NSEvent*)theEvent
 {
-    unsigned short code = [theEvent keyCode];
-    if (code == kVK_Tab || code == kVK_Escape)
-    {
-        [super keyUp:theEvent];
-        return;
-    }
     _oslistener_key_up(self, theEvent, &self->listeners);
 }
 
@@ -342,38 +315,40 @@ static void i_area_expand(EvDraw *params, const real32_t area_width, const real3
 
 OSView *osview_create(const uint32_t flags)
 {
-    OSXView *view = nil;
+    OSXView *view = [[OSXView alloc] initWithFrame:NSZeroRect];
     heap_auditor_add("OSXView");
-    view = [[OSXView alloc] initWithFrame:NSZeroRect];
+    _oscontrol_init(view);
     view->flags = flags;
     view->ctx = NULL;
     view->tracking_area = NULL;
-    view->OnNotify = NULL;
     view->OnFocus = NULL;
+    view->OnResignFocus = NULL;
+    view->OnAcceptFocus = NULL;
     view->OnOverlay = NULL;
     view->mouse_inside = NO;
+    view->osdraw.view = view;
     _oslistener_init(&view->listeners);
+
+    /* https://developer.apple.com/documentation/macos-release-notes/appkit-release-notes-for-macos-14#NSView */
+#if defined (MAC_OS_VERSION_14_0) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_14
+    [view setClipsToBounds:YES];
+#endif
 
     if (flags & ekVIEW_HSCROLL || flags & ekVIEW_VSCROLL)
     {
-        NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSZeroRect];
-        [view setHidden:NO];
-        [scroll setHidden:YES];
-        [scroll setDrawsBackground:NO];
-        [scroll setDocumentView:view];
-        [scroll setHasHorizontalScroller:(flags & ekVIEW_HSCROLL) ? YES : NO];
-        [scroll setHasVerticalScroller:(flags & ekVIEW_VSCROLL) ? YES : NO];
-        [scroll setAutohidesScrollers:YES];
-        [scroll setBorderType:(flags & ekVIEW_BORDER) ? NSGrooveBorder : NSNoBorder];
-        view->scroll = scroll;
-        return (OSView*)scroll;
+        view->scroll = osscrolls_create(OSControlPtr(view), (bool_t)(flags & ekVIEW_HSCROLL) != 0, (bool_t)(flags & ekVIEW_VSCROLL) != 0);
     }
     else
     {
-        [view setHidden:YES];
         view->scroll = nil;
-        return (OSView*)view;
     }
+
+    if (flags & ekVIEW_BORDER)
+        [view setFocusRingType:NSFocusRingTypeExterior];
+    else
+        [view setFocusRingType:NSFocusRingTypeNone];
+
+    return (OSView*)view;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -385,14 +360,7 @@ static OSXView *i_get_view(const OSView *view)
     {
         return (OSXView*)view;
     }
-    else if([(NSView*)view isKindOfClass:[NSScrollView class]])
-    {
-        NSScrollView *scroll = (NSScrollView*)view;
-        NSView *dview = [scroll documentView];
-        if([(NSView*)dview isKindOfClass:[OSXView class]])
-            return (OSXView*)dview;
-    }
-    
+
     return nil;
 }
 
@@ -401,14 +369,14 @@ static OSXView *i_get_view(const OSView *view)
 void osview_destroy(OSView **view)
 {
     OSXView *lview = nil;
-    NSScrollView *scroll = nil;
     cassert_no_null(view);
     lview = i_get_view(*view);
     cassert_no_null(lview);
-    
+
     _oslistener_release(&lview->listeners);
-    listener_destroy(&lview->OnNotify);
     listener_destroy(&lview->OnFocus);
+    listener_destroy(&lview->OnResignFocus);
+    listener_destroy(&lview->OnAcceptFocus);
     listener_destroy(&lview->OnOverlay);
 
     if (lview->tracking_area != nil)
@@ -420,12 +388,10 @@ void osview_destroy(OSView **view)
     if (lview->ctx != NULL)
         dctx_destroy(&lview->ctx);
 
-    scroll = lview->scroll;
+    if (lview->scroll != NULL)
+        osscrolls_destroy(&lview->scroll);
+
     [lview release];
-
-    if (scroll != nil)
-        [scroll release];
-
     *view = NULL;
     heap_auditor_delete("OSXView");
 }
@@ -468,37 +434,49 @@ static bool_t i_needs_tracking_area(OSXView *view)
 
 static void i_update_tracking_area(OSXView *view)
 {
-    bool_t with_area = i_needs_tracking_area(view);
-    NSUInteger options = NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveAlways | NSTrackingInVisibleRect;
-    if (view->tracking_area != nil && with_area == TRUE)
+    NSSize track_size = [view frame].size;
+    if (track_size.width > 0 && track_size.height > 0)
     {
-        NSSize required_size = [view frame].size;
-        NSSize current_size = [view->tracking_area rect].size;
-        if (NSEqualSizes(required_size, current_size) == NO)
+        bool_t with_area = i_needs_tracking_area(view);
+        NSUInteger options = NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveAlways | NSTrackingInVisibleRect;
+
+        /* Tracking area shouldn't have effect in scrollbars */
+        if (view->scroll != NULL)
         {
+            track_size.width -= (CGFloat)osscrolls_bar_width(view->scroll, TRUE);
+            track_size.height -= (CGFloat)osscrolls_bar_height(view->scroll, TRUE);
+        }
+
+        /* Updated the current area */
+        if (view->tracking_area != nil && with_area == TRUE)
+        {
+            NSSize current_size = [view->tracking_area rect].size;
+
+            if (NSEqualSizes(track_size, current_size) == NO)
+            {
+                [view removeTrackingArea:view->tracking_area];
+                [view->tracking_area release];
+                view->tracking_area = [[NSTrackingArea alloc] initWithRect:NSMakeRect(0, 0, track_size.width, track_size.height) options:(NSTrackingAreaOptions)options owner:view userInfo:nil];
+                [view addTrackingArea:view->tracking_area];
+                cassert([[view trackingAreas] count] == 1);
+            }
+        }
+        /* Delete the area, not necessary */
+        else if (view->tracking_area != nil)
+        {
+            cassert(with_area == FALSE);
             [view removeTrackingArea:view->tracking_area];
             [view->tracking_area release];
-            view->tracking_area = [[NSTrackingArea alloc] initWithRect:NSMakeRect(0.f, 0.f, required_size.width, required_size.height) options:(NSTrackingAreaOptions)options owner:view userInfo:nil];
+            view->tracking_area = nil;
+        }
+        /* Create one area */
+        else if (with_area == TRUE)
+        {
+            cassert(view->tracking_area == nil);
+            view->tracking_area = [[NSTrackingArea alloc] initWithRect:NSMakeRect(0, 0, track_size.width, track_size.height) options:(NSTrackingAreaOptions)options owner:view userInfo:nil];
             [view addTrackingArea:view->tracking_area];
             cassert([[view trackingAreas] count] == 1);
         }
-
-        return;
-    }
-
-    if (view->tracking_area != nil)
-    {
-        [view removeTrackingArea:view->tracking_area];
-        [view->tracking_area release];
-        view->tracking_area = nil;
-    }
-
-    if (with_area == TRUE)
-    {
-        NSSize size = [view frame].size;
-        view->tracking_area = [[NSTrackingArea alloc] initWithRect:NSMakeRect(0.f, 0.f, size.width, size.height) options:(NSTrackingAreaOptions)options owner:view userInfo:nil];
-        [view addTrackingArea:view->tracking_area];
-        cassert([[view trackingAreas] count] == 1);
     }
 }
 
@@ -607,116 +585,75 @@ void osview_OnFocus(OSView *view, Listener *listener)
 
 /*---------------------------------------------------------------------------*/
 
-void osview_OnNotify(OSView *view, Listener *listener)
+void osview_OnResignFocus(OSView *view, Listener *listener)
 {
     OSXView *lview = i_get_view(view);
     cassert_no_null(lview);
-    listener_update(&lview->OnNotify, listener);
+    listener_update(&lview->OnResignFocus, listener);
 }
 
 /*---------------------------------------------------------------------------*/
 
-//void osview_launch_OnMouseMovedEvent(OSView *view)
-//{
-//    NSPoint mouse_position;
-//    cassert_no_null(view);
-//#if defined (MAC_OS_X_VERSION_10_7) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
-//    {
-//        NSRect rect;
-//        rect.origin = [NSEvent mouseLocation];
-//        rect.size = NSMakeSize(0.f, 0.f);
-//        rect = [[(OSXView*)view window] convertRectFromScreen:rect];
-//        mouse_position = rect.origin;
-//    }
-//#else
-//    mouse_position = [[(OSXView*)view window] convertScreenToBase:[NSEvent mouseLocation]];
-//#endif
-//    _oslistener_mouse_moved((OSXView*)view, &mouse_position, /*ekEVENT_SOURCE_SOFTWARE,*/0, &((OSXView*)view)->listeners);
-//}
+void osview_OnAcceptFocus(OSView *view, Listener *listener)
+{
+    OSXView *lview = i_get_view(view);
+    cassert_no_null(lview);
+    listener_update(&lview->OnAcceptFocus, listener);
+}
 
 /*---------------------------------------------------------------------------*/
 
-//void osview_set_event_source(OSView *view, const enum gui_event_t event_type, const /*enum event_source_t*/uint32_t event_source)
-//{
-//    cassert_no_null(view);
-//    cassert([(OSXView*)view isKindOfClass:[OSXView class]] == YES);
-//    switch(event_type)
-//    {
-//        case ekGUI_EVENT_MOUSE_MOVED:
-//            ((OSXView*)view)->listeners.OnMouseMoved_event_source = event_source;
-//            break;
-//            cassert_default();
-//    }
-//}
+void osview_OnScroll(OSView *view, Listener *listener)
+{
+    OSXView *lview = i_get_view(view);
+    cassert_no_null(lview);
+    osscrolls_OnScroll(lview->scroll, listener);
+}
 
 /*---------------------------------------------------------------------------*/
 
 void osview_scroll(OSView *view, const real32_t x, const real32_t y)
 {
-    // https://stackoverflow.com/questions/5834056/how-i-set-the-default-position-of-a-nsscroll-view
-    NSScrollView *scroll = (NSScrollView*)view;
-    NSPoint pointToScrollTo = NSMakePoint((CGFloat)x, (CGFloat)y);
-    cassert([(NSView*)view isKindOfClass:[NSScrollView class]]);
-    [[scroll contentView] scrollToPoint: pointToScrollTo];
-    [scroll reflectScrolledClipView: [scroll contentView]];
+    OSXView *lview = i_get_view(view);
+    cassert_no_null(lview);
+    osscrolls_set(lview->scroll, x >= 0 ? (uint32_t)x : UINT32_MAX, y >= 0 ? (uint32_t)y : UINT32_MAX, FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_scroll_get(const OSView *view, real32_t *x, real32_t *y)
 {
-    NSScrollView *scroll = (NSScrollView*)view;
-    NSRect rect;
-    cassert([(NSView*)view isKindOfClass:[NSScrollView class]]);
-    cassert_no_null(x);
-    cassert_no_null(y);
-    rect = [scroll documentVisibleRect];
-    *x = (real32_t)rect.origin.x;
-    *y = (real32_t)rect.origin.y;
+    OSXView *lview = i_get_view(view);
+    cassert_no_null(lview);
+
+    if (x != NULL)
+        *x = (real32_t)osscrolls_x_pos(lview->scroll);
+
+    if (y != NULL)
+        *y = (real32_t)osscrolls_y_pos(lview->scroll);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_scroller_size(const OSView *view, real32_t *width, real32_t *height)
 {
-    NSScrollView *scroll = (NSScrollView*)view;
-    cassert([(NSView*)view isKindOfClass:[NSScrollView class]]);
+    OSXView *lview = i_get_view(view);
+    cassert_no_null(lview);
 
-    if (width)
-    {
-        NSScroller *scroller = [scroll verticalScroller];
-        *width = 0;
-        if (scroller != nil)
-		{
-	#if defined (MAC_OS_X_VERSION_10_7) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
-			if ([scroller scrollerStyle] == NSScrollerStyleLegacy)
-	#endif
-				*width = (real32_t)[scroller frame].size.width;
-		}
-    }
+    if (width != NULL)
+        *width = (real32_t)osscrolls_bar_width(lview->scroll, TRUE);
 
-    if (height)
-    {
-        NSScroller *scroller = [scroll horizontalScroller];
-        *height = 0;
-        if (scroller != nil)
-		{
-	#if defined (MAC_OS_X_VERSION_10_7) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
-			if ([scroller scrollerStyle] == NSScrollerStyleLegacy)
-	#endif
-				*height = (real32_t)[scroller frame].size.height;
-		}
-    }
+    if (height != NULL)
+        *height = (real32_t)osscrolls_bar_height(lview->scroll, TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osview_scroller_visible(OSView *view, const bool_t horizontal, const bool_t vertical)
 {
-    unref(view);
-    unref(horizontal);
-    unref(vertical);
-    cassert(FALSE);
+    OSXView *lview = i_get_view(view);
+    cassert_no_null(lview);
+    osscrolls_visible(lview->scroll, horizontal, vertical);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -725,18 +662,7 @@ void osview_content_size(OSView *view, const real32_t width, const real32_t heig
 {
     OSXView *lview = i_get_view(view);
     cassert_no_null(lview);
-    cassert([(NSView*)view isKindOfClass:[NSScrollView class]]);
-    cassert(lview == [(NSScrollView*)view documentView]);
-    unref(line_width);
-    unref(line_height);
-    if (lview->tracking_area != nil)
-    {
-        [lview removeTrackingArea:lview->tracking_area];
-        [lview->tracking_area release];
-        lview->tracking_area = nil;
-    }
-
-    [lview setFrame:NSMakeRect(0, 0, (CGFloat)width, (CGFloat)height)];
+    osscrolls_content_size(lview->scroll, (uint32_t)width, (uint32_t)height, (uint32_t)line_width, (uint32_t)line_height);
     i_update_tracking_area(lview);
 }
 
@@ -795,10 +721,7 @@ void osview_visible(OSView *view, const bool_t is_visible)
 {
     OSXView *lview = i_get_view(view);
     cassert_no_null(lview);
-    if (lview->scroll != nil)
-        _oscontrol_set_visible(lview->scroll, is_visible);
-    else
-        _oscontrol_set_visible(lview, is_visible);
+    _oscontrol_set_visible(lview, is_visible);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -830,9 +753,37 @@ void osview_frame(OSView *view, const real32_t x, const real32_t y, const real32
 {
     OSXView *lview = i_get_view(view);
     cassert_no_null(lview);
-    _oscontrol_set_frame((NSView*)view, x, y, width, height);
+    _oscontrol_set_frame((NSView*)lview, x, y, width, height);
+
+    if (lview->scroll)
+        osscrolls_control_size(lview->scroll, (uint32_t)width, (uint32_t)height);
+
     i_update_tracking_area(lview);
     [lview setNeedsDisplay:YES];
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t osview_resign_focus(const OSView *view, const OSControl *next_control)
+{
+    OSXView *lview = i_get_view(view);
+    bool_t resign = TRUE;
+    cassert_no_null(lview);
+    if (lview->OnResignFocus != NULL)
+        listener_event(lview->OnResignFocus, ekGUI_EVENT_FOCUS_RESIGN, view, (void*)next_control, &resign, OSView, void, bool_t);
+    return resign;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t osview_accept_focus(const OSView *view)
+{
+    OSXView *lview = i_get_view(view);
+    bool_t accept = TRUE;
+    cassert_no_null(view);
+    if (lview->OnAcceptFocus != NULL)
+        listener_event(lview->OnAcceptFocus, ekGUI_EVENT_FOCUS_ACCEPT, view, NULL, &accept, OSView, void, bool_t);
+    return accept;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -857,15 +808,6 @@ void _osview_OnFocus(NSView *view, const bool_t focus)
 
 /*---------------------------------------------------------------------------*/
 
-void _osview_detach_and_destroy(OSView **view, OSPanel *panel)
-{
-    cassert_no_null(view);
-    osview_detach(*view, panel);
-    osview_destroy(view);
-}
-
-/*---------------------------------------------------------------------------*/
-
 NSView *_osview_focus(NSView *view)
 {
     OSXView *lview = i_get_view((OSView*)view);
@@ -873,7 +815,17 @@ NSView *_osview_focus(NSView *view)
     return (NSView*)lview;
 }
 
+/*---------------------------------------------------------------------------*/
 
+void _osview_scroll_event(NSView *view, const gui_orient_t orient, const gui_scroll_t event)
+{
+    OSXView *lview = (OSXView*)view;
+    cassert_no_null(lview);
+    cassert_no_null(lview->scroll);
+    cassert([view isKindOfClass:[OSXView class]]);
+    if (osscrolls_event(lview->scroll, orient, event, FALSE) == TRUE)
+        [lview setNeedsDisplay:YES];
+}
 
 /*
 // DRAG SUPPORT

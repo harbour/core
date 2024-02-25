@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -864,6 +864,8 @@ void guictx_append_view_manager_imp(
     FPtr_gctx_set_listener func_view_OnKeyDown,
     FPtr_gctx_set_listener func_view_OnKeyUp,
     FPtr_gctx_set_listener func_view_OnFocus,
+    FPtr_gctx_set_listener func_view_OnResignFocus,
+    FPtr_gctx_set_listener func_view_OnAcceptFocus,
     FPtr_gctx_set_listener func_view_OnScroll,
     FPtr_gctx_set_listener func_view_OnTouchTap,
     FPtr_gctx_set_listener func_view_OnTouchStartDrag,
@@ -905,6 +907,8 @@ void guictx_append_view_manager_imp(
     cassert(context->func_view_OnKeyDown == NULL);
     cassert(context->func_view_OnKeyUp == NULL);
     cassert(context->func_view_OnFocus == NULL);
+    cassert(context->func_view_OnResignFocus == NULL);
+    cassert(context->func_view_OnAcceptFocus == NULL);
     cassert(context->func_view_OnScroll == NULL);
     cassert(context->func_view_OnTouchTap == NULL);
     cassert(context->func_view_OnTouchStartDrag == NULL);
@@ -946,6 +950,8 @@ void guictx_append_view_manager_imp(
     cassert_no_nullf(func_view_OnKeyUp);
     cassert_no_nullf(func_view_OnScroll);
     cassert_no_nullf(func_view_OnFocus);
+    cassert_no_nullf(func_view_OnResignFocus);
+    cassert_no_nullf(func_view_OnAcceptFocus);
     cassert_no_nullf(func_view_scroll);
     cassert_no_nullf(func_view_scroll_get);
     cassert_no_nullf(func_view_scroller_size);
@@ -976,6 +982,8 @@ void guictx_append_view_manager_imp(
     context->func_view_OnKeyDown = func_view_OnKeyDown;
     context->func_view_OnKeyUp = func_view_OnKeyUp;
     context->func_view_OnFocus = func_view_OnFocus;
+    context->func_view_OnResignFocus = func_view_OnResignFocus;
+    context->func_view_OnAcceptFocus = func_view_OnAcceptFocus;
     context->func_view_OnScroll = func_view_OnScroll;
     context->func_view_OnTouchTap = func_view_OnTouchTap;
     context->func_view_OnTouchStartDrag = func_view_OnTouchStartDrag;
@@ -1164,9 +1172,10 @@ void guictx_append_window_manager_imp(
     FPtr_gctx_set_bool func_window_enable_mouse_events,
     FPtr_gctx_set_hotkey func_window_hotkey,
     FPtr_gctx_set_ptr func_window_set_taborder,
-    FPtr_gctx_set_bool func_window_tabstop,
     FPtr_gctx_set_bool func_window_tabcycle,
-    FPtr_gctx_set_ptr func_window_set_focus,
+    FPtr_gctx_set_enum2 func_window_tabstop,
+    FPtr_gctx_set_ptr3 func_window_set_focus,
+    FPtr_gctx_get_ptr func_window_get_focus,
     FPtr_gctx_set_ptr func_attach_main_panel_to_window,
     FPtr_gctx_set_ptr func_detach_main_panel_from_window,
     FPtr_gctx_set_ptr func_attach_window_to_window,
@@ -1198,9 +1207,10 @@ void guictx_append_window_manager_imp(
     cassert(context->func_window_enable_mouse_events == NULL);
     cassert(context->func_window_hotkey == NULL);
     cassert(context->func_window_set_taborder == NULL);
-    cassert(context->func_window_tabstop == NULL);
     cassert(context->func_window_tabcycle == NULL);
+    cassert(context->func_window_tabstop == NULL);
     cassert(context->func_window_set_focus == NULL);
+    cassert(context->func_window_get_focus == NULL);
     cassert(context->func_attach_main_panel_to_window == NULL);
     cassert(context->func_detach_main_panel_from_window == NULL);
     cassert(context->func_attach_window_to_window == NULL);
@@ -1230,9 +1240,10 @@ void guictx_append_window_manager_imp(
     cassert_no_nullf(func_window_enable_mouse_events);
     cassert_no_nullf(func_window_hotkey);
     cassert_no_nullf(func_window_set_taborder);
-    cassert_no_nullf(func_window_tabstop);
     cassert_no_nullf(func_window_tabcycle);
+    cassert_no_nullf(func_window_tabstop);
     cassert_no_nullf(func_window_set_focus);
+    cassert_no_nullf(func_window_get_focus);
     cassert_no_nullf(func_attach_main_panel_to_window);
     cassert_no_nullf(func_detach_main_panel_from_window);
     cassert_no_nullf(func_attach_window_to_window);
@@ -1262,9 +1273,10 @@ void guictx_append_window_manager_imp(
     context->func_window_enable_mouse_events = func_window_enable_mouse_events;
     context->func_window_hotkey = func_window_hotkey;
     context->func_window_set_taborder = func_window_set_taborder;
-    context->func_window_tabstop = func_window_tabstop;
     context->func_window_tabcycle = func_window_tabcycle;
+    context->func_window_tabstop = func_window_tabstop;
     context->func_window_set_focus = func_window_set_focus;
+    context->func_window_get_focus = func_window_get_focus;
     context->func_attach_main_panel_to_window = func_attach_main_panel_to_window;
     context->func_detach_main_panel_from_window = func_detach_main_panel_from_window;
     context->func_attach_window_to_window = func_attach_window_to_window;

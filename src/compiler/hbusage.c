@@ -209,7 +209,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Jose Lalin (dezac corevia.com)\n"
          "Klas Engwall (harbour engwall.com)\n"
          "Kwon, Oh-Chul (ohchul fivetech.net)\n"
-         "Lailton Fernando Mariano (lailton harbour.com.br)\n"
+         "Lailton Fernando Mariano (lailton harbour.page)\n"
          "Leslee Griffith (les.griffith vantagesystems.ca)\n"
          "Lorenzo Fiorini (lorenzo.fiorini gmail com)\n"
          "Luis Krause Mantilla (lkrausem shaw.ca)\n"

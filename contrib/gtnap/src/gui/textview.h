@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -55,9 +55,11 @@ _gui_api void textview_afspace(TextView *view, const real32_t space);
 
 _gui_api void textview_scroll_visible(TextView *view, const bool_t horizontal, const bool_t vertical);
 
-_gui_api void textview_move_caret(TextView *view, const int64_t pos);
-
 _gui_api void textview_editable(TextView *view, const bool_t is_editable);
+
+_gui_api void textview_select(TextView *view, const int32_t start, const int32_t end);
+
+_gui_api void textview_scroll_caret(TextView *view);
 
 _gui_api const char_t *textview_get_text(const TextView *view);
 

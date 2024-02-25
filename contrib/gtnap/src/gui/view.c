@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -46,6 +46,8 @@ struct _view_t
     Listener *OnKeyDown;
     Listener *OnKeyUp;
     Listener *OnFocus;
+    Listener *OnResignFocus;
+    Listener *OnAcceptFocus;
     Listener *OnScroll;
     KeyBuf *keybuf;
     void *data;
@@ -200,6 +202,33 @@ static void i_OnFocus(View *view, Event *event)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnResignFocus(View *view, Event *event)
+{
+    Window *window = _component_window((GuiComponent *)view);
+    Panel *panel = _window_main_panel(window);
+    void *p = event_params(event, void);
+    GuiControl *next_ctrl = NULL;
+    bool_t *res = event_result(event, bool_t);
+
+    if (p != NULL)
+    {
+        next_ctrl = (GuiControl *)_panel_find_component(panel, p);
+        cassert_no_null(next_ctrl);
+    }
+
+    listener_event(view->OnResignFocus, ekGUI_EVENT_FOCUS_RESIGN, view, next_ctrl, res, View, GuiControl, bool_t);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnAcceptFocus(View *view, Event *event)
+{
+    cassert_no_null(view);
+    listener_pass_event(view->OnAcceptFocus, event, view, View);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnScroll(View *view, Event *event)
 {
     cassert_no_null(view);
@@ -240,6 +269,18 @@ View *view_create(void)
 View *view_scroll(void)
 {
     return i_create(ekVIEW_HSCROLL | ekVIEW_VSCROLL);
+}
+
+/*---------------------------------------------------------------------------*/
+
+View *view_custom(const bool_t scroll, const bool_t border)
+{
+    uint32_t flags = 0;
+    if (scroll == TRUE)
+        flags |= ekVIEW_HSCROLL | ekVIEW_VSCROLL;
+    if (border == TRUE)
+        flags |= ekVIEW_BORDER;
+    return i_create(flags);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -296,6 +337,8 @@ void _view_destroy(View **view)
     listener_destroy(&(*view)->OnKeyDown);
     listener_destroy(&(*view)->OnKeyUp);
     listener_destroy(&(*view)->OnFocus);
+    listener_destroy(&(*view)->OnResignFocus);
+    listener_destroy(&(*view)->OnAcceptFocus);
     listener_destroy(&(*view)->OnScroll);
     _gui_delete_transition(*view, View);
     obj_delete(view, View);
@@ -414,6 +457,20 @@ void view_OnFocus(View *view, Listener *listener)
 
 /*---------------------------------------------------------------------------*/
 
+void view_OnResignFocus(View *view, Listener *listener)
+{
+    component_update_listener(view, &view->OnResignFocus, listener, i_OnResignFocus, view->component.context->func_view_OnResignFocus, View);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void view_OnAcceptFocus(View *view, Listener *listener)
+{
+    component_update_listener(view, &view->OnAcceptFocus, listener, i_OnAcceptFocus, view->component.context->func_view_OnAcceptFocus, View);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void view_OnScroll(View *view, Listener *listener)
 {
     component_update_listener(view, &view->OnScroll, listener, i_OnScroll, view->component.context->func_view_OnScroll, View);
@@ -489,35 +546,10 @@ void _view_OnResize(View *view, const S2Df *size)
 
 /*---------------------------------------------------------------------------*/
 
-void view_screen_rect(const View *view, R2Df *rect)
-{
-    cassert_no_null(view);
-    cassert_no_null(rect);
-    _component_get_global_origin((const GuiComponent *)view, &rect->pos);
-    _component_get_size((const GuiComponent *)view, &rect->size);
-}
-
-/*---------------------------------------------------------------------------*/
-
-GuiCtx *_view_context(View *view)
-{
-    cassert_no_null(view);
-    return view->component.context;
-}
-
-/*---------------------------------------------------------------------------*/
-
 Cell *_view_cell(View *view)
 {
     cassert_no_null(view);
     return view->component.parent;
-}
-
-/*---------------------------------------------------------------------------*/
-
-Window *_view_window(View *view)
-{
-    return _component_window((GuiComponent *)view);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -139,8 +139,8 @@
    #xcommand _HB_CLASS  <name> <name> =>
    #xcommand _HB_MEMBER <name>        =>
    #xcommand DECLARE    <*decl*>      =>
-   #xtranslate AS <type>              =>
-   #xtranslate AS CLASS <name>        =>
+   #xtranslate AS <!type!>            =>
+   #xtranslate AS CLASS <!name!>      =>
 #endif
 
 /* should we inherit from HBObject class by default ? */

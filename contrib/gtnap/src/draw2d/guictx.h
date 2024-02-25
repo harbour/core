@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -829,6 +829,8 @@ _draw2d_api void guictx_append_view_manager_imp(
     FPtr_gctx_set_listener func_view_OnKeyDown,
     FPtr_gctx_set_listener func_view_OnKeyUp,
     FPtr_gctx_set_listener func_view_OnFocus,
+    FPtr_gctx_set_listener func_view_OnResignFocus,
+    FPtr_gctx_set_listener func_view_OnAcceptFocus,
     FPtr_gctx_set_listener func_view_OnScroll,
     FPtr_gctx_set_listener func_view_OnTouchTap,
     FPtr_gctx_set_listener func_view_OnTouchStartDrag,
@@ -870,6 +872,8 @@ _draw2d_api void guictx_append_view_manager_imp(
     func_view_OnKeyDown,                                                             \
     func_view_OnKeyUp,                                                               \
     func_view_OnFocus,                                                               \
+    func_view_OnResignFocus,                                                         \
+    func_view_OnAcceptFocus,                                                         \
     func_view_OnScroll,                                                              \
     func_view_OnTouchTap,                                                            \
     func_view_OnTouchStartDrag,                                                      \
@@ -911,6 +915,8 @@ _draw2d_api void guictx_append_view_manager_imp(
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnKeyDown, view_type),                \
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnKeyUp, view_type),                  \
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnFocus, view_type),                  \
+        FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnResignFocus, view_type),            \
+        FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnAcceptFocus, view_type),            \
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnScroll, view_type),                 \
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnTouchTap, view_type),               \
         FUNC_CHECK_GCTX_SET_LISTENER(func_view_OnTouchStartDrag, view_type),         \
@@ -935,6 +941,7 @@ _draw2d_api void guictx_append_view_manager_imp(
         FUNC_CHECK_GCTX_GET2_REAL32(func_view_get_size, view_type),                  \
         FUNC_CHECK_GCTX_GET2_REAL32(func_view_get_origin, view_type),                \
         FUNC_CHECK_GCTX_SET4_REAL32(func_view_set_frame, view_type),                 \
+        FUNC_CHECK_GCTX_SET4_REAL32(func_view_set_frame, view_type),                 \
         guictx_append_view_manager_imp(                                              \
             context,                                                                 \
             (FPtr_gctx_create)func_view_create,                                      \
@@ -952,6 +959,8 @@ _draw2d_api void guictx_append_view_manager_imp(
             (FPtr_gctx_set_listener)func_view_OnKeyDown,                             \
             (FPtr_gctx_set_listener)func_view_OnKeyUp,                               \
             (FPtr_gctx_set_listener)func_view_OnFocus,                               \
+            (FPtr_gctx_set_listener)func_view_OnResignFocus,                         \
+            (FPtr_gctx_set_listener)func_view_OnAcceptFocus,                         \
             (FPtr_gctx_set_listener)func_view_OnScroll,                              \
             (FPtr_gctx_set_listener)func_view_OnTouchTap,                            \
             (FPtr_gctx_set_listener)func_view_OnTouchStartDrag,                      \
@@ -1054,9 +1063,10 @@ _draw2d_api void guictx_append_window_manager_imp(
     FPtr_gctx_set_bool func_window_enable_mouse_events,
     FPtr_gctx_set_hotkey func_window_hotkey,
     FPtr_gctx_set_ptr func_window_set_taborder,
-    FPtr_gctx_set_bool func_window_tabstop,
     FPtr_gctx_set_bool func_window_tabcycle,
-    FPtr_gctx_set_ptr func_window_set_focus,
+    FPtr_gctx_set_enum2 func_window_tabstop,
+    FPtr_gctx_set_ptr3 func_window_set_focus,
+    FPtr_gctx_get_ptr func_window_get_focus,
     FPtr_gctx_set_ptr func_attach_main_panel_to_window,
     FPtr_gctx_set_ptr func_detach_main_panel_from_window,
     FPtr_gctx_set_ptr func_attach_window_to_window,
@@ -1088,9 +1098,10 @@ _draw2d_api void guictx_append_window_manager_imp(
     func_window_enable_mouse_events,                                                            \
     func_window_hotkey,                                                                         \
     func_window_set_taborder,                                                                   \
-    func_window_tabstop,                                                                        \
     func_window_tabcycle,                                                                       \
+    func_window_tabstop,                                                                        \
     func_window_set_focus,                                                                      \
+    func_window_get_focus,                                                                      \
     func_attach_main_panel_to_window,                                                           \
     func_detach_main_panel_from_window,                                                         \
     func_attach_window_to_window,                                                               \
@@ -1122,9 +1133,10 @@ _draw2d_api void guictx_append_window_manager_imp(
         FUNC_CHECK_GCTX_SET_BOOL(func_window_enable_mouse_events, window_type),                 \
         FUNC_CHECK_GCTX_SET_HOTKEY(func_window_hotkey, window_type),                            \
         FUNC_CHECK_GCTX_SET_PTR(func_window_set_taborder, window_type, OSControl),              \
-        FUNC_CHECK_GCTX_SET_BOOL(func_window_tabstop, window_type),                             \
         FUNC_CHECK_GCTX_SET_BOOL(func_window_tabcycle, window_type),                            \
-        FUNC_CHECK_GCTX_SET_PTR(func_window_set_focus, window_type, OSControl),                 \
+        FUNC_CHECK_GCTX_SET_ENUM2(func_window_tabstop, window_type, gui_focus_t),               \
+        FUNC_CHECK_GCTX_SET_PTR3(func_window_set_focus, window_type, OSControl, gui_focus_t),   \
+        FUNC_CHECK_GCTX_GET_PTR(func_window_get_focus, window_type, OSControl),                 \
         FUNC_CHECK_GCTX_SET_PTR(func_attach_main_panel_to_window, window_type, panel_type),     \
         FUNC_CHECK_GCTX_SET_PTR(func_detach_main_panel_from_window, window_type, panel_type),   \
         FUNC_CHECK_GCTX_SET_PTR(func_attach_window_to_window, window_type, window_type),        \
@@ -1156,9 +1168,10 @@ _draw2d_api void guictx_append_window_manager_imp(
             (FPtr_gctx_set_bool)func_window_enable_mouse_events,                                \
             (FPtr_gctx_set_hotkey)func_window_hotkey,                                           \
             (FPtr_gctx_set_ptr)func_window_set_taborder,                                        \
-            (FPtr_gctx_set_bool)func_window_tabstop,                                            \
             (FPtr_gctx_set_bool)func_window_tabcycle,                                           \
-            (FPtr_gctx_set_ptr)func_window_set_focus,                                           \
+            (FPtr_gctx_set_enum2)func_window_tabstop,                                           \
+            (FPtr_gctx_set_ptr3)func_window_set_focus,                                          \
+            (FPtr_gctx_get_ptr)func_window_get_focus,                                           \
             (FPtr_gctx_set_ptr)func_attach_main_panel_to_window,                                \
             (FPtr_gctx_set_ptr)func_detach_main_panel_from_window,                              \
             (FPtr_gctx_set_ptr)func_attach_window_to_window,                                    \

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -34,5 +34,7 @@ _gui_api void popup_list_height(PopUp *popup, const uint32_t elems);
 _gui_api void popup_selected(PopUp *popup, const uint32_t index);
 
 _gui_api uint32_t popup_get_selected(const PopUp *popup);
+
+_gui_api const char_t *popup_get_text(const PopUp *popup, const uint32_t index);
 
 __END_C

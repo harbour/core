@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -33,6 +33,12 @@ HWND _osgui_hwnd_accelerator(WORD cmd);
 LRESULT _osgui_nccalcsize(HWND hwnd, WPARAM wParam, LPARAM lParam, bool_t expand, INT ypadding, RECT *border);
 
 LRESULT _osgui_ncpaint(HWND hwnd, const RECT *border, HBRUSH padding_bgcolor);
+
+void _osgui_frame_without_shadows(const HWND hwnd, RECT *rect);
+
+vkey_t _osgui_vkey(const WORD key);
+
+uint32_t _osgui_modifiers(void);
 
 extern const WORD kVIRTUAL_KEY[];
 extern uint32_t kNUM_VKEYS;

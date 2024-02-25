@@ -83,7 +83,7 @@ CREATE CLASS TopBarMenu FUNCTION HBTopBarMenu
    METHOD right( nRight ) SETGET
    METHOD row( nRow ) SETGET
 
-   METHOD New( nRow, nLeft, nRight )                /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( nRow, nLeft, nRight )                /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -416,7 +416,7 @@ METHOD row( nRow ) CLASS TopBarMenu
 
 /* -------------------------------------------- */
 
-METHOD New( nRow, nLeft, nRight ) CLASS TopBarMenu
+METHOD Init( nRow, nLeft, nRight ) CLASS TopBarMenu
 
    LOCAL cColor
 

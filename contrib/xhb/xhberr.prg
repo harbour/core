@@ -212,7 +212,7 @@ STATIC FUNCTION xhb_DefError( oError )
    ? cMessage
 
    ?
-   ? "Error at ...:", ProcName() + "(" + hb_ntos( ProcLine() ) + ") in Module:", ProcFile()
+   ? "Error at ...:", err_ProcName( oError, 3 ) + "(" + hb_ntos( err_ProcLine( oError, 3 ) ) + ") in Module:", err_ModuleName( oError, 3 )
    n := 2
    WHILE ! Empty( ProcName( ++n ) )
       ? "Called from :", ProcName( n ) + ;
@@ -268,7 +268,7 @@ STATIC FUNCTION ErrorMessage( oError )
 
    RETURN cMessage
 
-STATIC FUNCTION LogError( oerr )
+STATIC FUNCTION LogError( oErr )
 
    LOCAL cScreen
    LOCAL cLogFile    := s_cErrorLog       // error log file name
@@ -493,7 +493,7 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, "" )
       FWriteLine( nHandle, "Subsystem Call ....: " + oErr:subsystem() )
       FWriteLine( nHandle, "System Code .......: " + strvalue( oErr:suBcode() ) )
-      FWriteLine( nHandle, "Default Status ....: " + strvalue( oerr:candefault() ) )
+      FWriteLine( nHandle, "Default Status ....: " + strvalue( oErr:candefault() ) )
       FWriteLine( nHandle, "Description .......: " + oErr:description() )
       FWriteLine( nHandle, "Operation .........: " + oErr:operation() )
       FWriteLine( nHandle, "Arguments .........: " + Arguments( oErr ) )
@@ -512,7 +512,7 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, " Trace Through:" )
       FWriteLine( nHandle, "----------------" )
 
-      FWriteLine( nHandle, PadR( ProcName(), 21 ) + " : " + Transform( ProcLine(), "999,999" ) + " in Module: " + ProcFile() )
+      FWriteLine( nHandle, PadR( err_ProcName( oErr, 3 ), 21 ) + " : " + Transform( err_ProcLine( oErr, 3 ), "999,999" ) + " in Module: " + err_ModuleName( oErr, 3 ) )
 
       nCount := 3
       WHILE ! Empty( ProcName( ++nCount ) )
@@ -670,64 +670,3 @@ PROCEDURE __MinimalErrorHandler( oError )
    QUIT
 
    RETURN
-
-FUNCTION xhb_ErrorNew( cSubSystem, nGenCode, nSubCode, ;
-      cOperation, cDescription, aArgs, ;
-      cModuleName, cProcName, nProcLine )
-
-   LOCAL oError := ErrorNew()
-   LOCAL aStack, n
-
-   IF HB_ISSTRING( cSubSystem )
-      oError:SubSystem := cSubSystem
-   ENDIF
-   IF HB_ISNUMERIC( nGenCode )
-      oError:GenCode := nGenCode
-   ENDIF
-   IF HB_ISNUMERIC( nSubCode )
-      oError:SubCode := nSubCode
-   ENDIF
-   IF HB_ISSTRING( cOperation )
-      oError:Operation := cOperation
-   ENDIF
-   IF HB_ISSTRING( cDescription )
-      oError:Description := cDescription
-   ENDIF
-   IF HB_ISARRAY( aArgs )
-      oError:Args := aArgs
-   ENDIF
-
-   IF __objHasMsg( oError, "MODULENAME" )
-      IF HB_ISSTRING( cModuleName )
-         oError:ModuleName := cModuleName
-      ELSE
-         oError:ModuleName := ProcFile( 1 )
-      ENDIF
-   ENDIF
-
-   IF __objHasMsg( oError, "PROCNAME" )
-      IF HB_ISSTRING( cProcName )
-         oError:ProcName := cProcName
-      ELSE
-         oError:ProcName := ProcName( 1 )
-      ENDIF
-   ENDIF
-
-   IF __objHasMsg( oError, "PROCLINE" )
-      IF HB_ISNUMERIC( nProcLine )
-         oError:ProcLine := nProcLine
-      ELSE
-         oError:ProcLine := ProcLine( 1 )
-      ENDIF
-   ENDIF
-
-   IF __objHasMsg( oError, "AASTACK" )
-      aStack := {}
-      n := 0
-      WHILE ! Empty( ProcName( ++n ) )
-         AAdd( aStack, { ProcFile( n ), ProcName( n ), ProcLine( n ) } )
-      ENDDO
-      oError:aAStack := aStack
-   ENDIF
-
-   RETURN oError

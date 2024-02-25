@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -20,7 +20,7 @@ void _layout_attach_to_panel(Layout *layout, Panel *panel);
 
 Panel *_layout_panel(const Layout *layout);
 
-Layout *_layout_search_component(const Layout *layout, const GuiComponent *component);
+Layout *_layout_search_component(const Layout *layout, const GuiComponent *component, const bool_t in_subpanels);
 
 bool_t _layout_search_layout(const Layout *layout, Layout *sublayout);
 
@@ -38,7 +38,7 @@ void _layout_taborder(const Layout *layout, Window *window);
 
 void _layout_dbind_update(Layout *layout, const DBind *dbind);
 
-ArrSt(Cell) * _layout_cells(Layout *layout);
+ArrPt(Cell) * _layout_cells(Layout *layout);
 
 void _layout_notif(Layout *layout, void **obj, const char_t **obj_type, Listener **listener);
 

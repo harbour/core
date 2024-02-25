@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,10 +11,10 @@
 /* Operating System native progress indicator */
 
 #include "osprogress.h"
-#include "osprogress.inl"
+#include "osprogress_osx.inl"
+#include "oscontrol_osx.inl"
+#include "ospanel_osx.inl"
 #include "osgui.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
 #include <core/heap.h>
 #include <sewer/cassert.h>
 
@@ -38,8 +38,6 @@
 @end
 
 /*---------------------------------------------------------------------------*/
-
-//static const CGFloat i_BAR_HEIGHT[] = {10.f, 16.f, 16.f};
 
 #if defined (MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14
 #define STYLE_BAR NSProgressIndicatorStyleBar
@@ -107,7 +105,6 @@ real32_t osprogress_thickness(const OSProgress *progress, const gui_size_t size)
     unref(progress);
     cassert_unref(size == ekGUI_SIZE_REGULAR, size);
     return 16;
-//    return (real32_t)i_BAR_HEIGHT[size];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -166,13 +163,3 @@ BOOL _osprogress_is(NSView *view)
 {
     return [view isKindOfClass:[OSXProgress class]];
 }
-
-/*---------------------------------------------------------------------------*/
-
-void _osprogress_detach_and_destroy(OSProgress **progress, OSPanel *panel)
-{
-    cassert_no_null(progress);
-    osprogress_detach(*progress, panel);
-    osprogress_destroy(progress);
-}
-

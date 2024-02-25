@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,22 +11,12 @@
 /* Operating System native panel */
 
 #include "ospanel.h"
-#include "ospanel.inl"
-#include "ossplit.inl"
 #include "osgui.inl"
-#include "osgui_gtk.inl"
-#include "osctrl.inl"
 #include "oscontrol.inl"
-#include "oslabel.inl"
-#include "osbutton.inl"
-#include "ospopup.inl"
-#include "osedit.inl"
-#include "oscombo.inl"
-#include "osslider.inl"
-#include "osupdown.inl"
-#include "osprogress.inl"
-#include "ostext.inl"
-#include "osview.inl"
+#include "osgui_gtk.inl"
+#include "ospanel_gtk.inl"
+#include "oscontrol_gtk.inl"
+#include "ossplit_gtk.inl"
 #include <draw2d/color.h>
 #include <core/arrst.h>
 #include <core/heap.h>
@@ -54,6 +44,7 @@ struct _ospanel_t
     OSControl control;
     OSControl *capture;
     GtkWidget *layout;
+    GtkWidget *scroll;
     GtkAdjustment *hadjust;
     GtkAdjustment *vadjust;
     ArrSt(Area) * areas;
@@ -148,24 +139,24 @@ OSPanel *ospanel_create(const uint32_t flags)
 
     if (flags & ekVIEW_HSCROLL || flags & ekVIEW_VSCROLL)
     {
-        GtkWidget *scroll = gtk_scrolled_window_new(NULL, NULL);
+        panel->scroll = gtk_scrolled_window_new(NULL, NULL);
         gtk_widget_show(panel->layout);
-        gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-        gtk_container_add(GTK_CONTAINER(scroll), panel->layout);
+        gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(panel->scroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+        gtk_container_add(GTK_CONTAINER(panel->scroll), panel->layout);
 
         /* A parent widget can "capture" the mouse */
         {
-            GtkWidget *vscroll = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(scroll));
-            GtkWidget *hscroll = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(scroll));
+            GtkWidget *vscroll = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(panel->scroll));
+            GtkWidget *hscroll = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(panel->scroll));
             g_signal_connect(G_OBJECT(vscroll), "button-press-event", G_CALLBACK(i_OnPressed), panel);
             g_signal_connect(G_OBJECT(hscroll), "button-press-event", G_CALLBACK(i_OnPressed), panel);
-            g_signal_connect(G_OBJECT(scroll), "button-press-event", G_CALLBACK(i_OnPressed), panel);
+            g_signal_connect(G_OBJECT(panel->scroll), "button-press-event", G_CALLBACK(i_OnPressed), panel);
         }
 
-        panel->hadjust = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(scroll));
-        panel->vadjust = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scroll));
-        top = scroll;
-        focus = scroll;
+        panel->hadjust = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(panel->scroll));
+        panel->vadjust = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(panel->scroll));
+        top = panel->scroll;
+        focus = panel->scroll;
     }
 
     /* Creating the frame (border) view */
@@ -242,12 +233,17 @@ void ospanel_scroller_size(const OSPanel *panel, real32_t *width, real32_t *heig
 {
     cassert_no_null(panel);
 
-    /* In GTK scrollbars are overlapping */
     if (width != NULL)
-        *width = 0;
+    {
+        GtkWidget *vscroll = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(panel->scroll));
+        *width = (real32_t)gtk_widget_get_allocated_width(vscroll);
+    }
 
     if (height != NULL)
-        *height = 0;
+    {
+        GtkWidget *hscroll = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(panel->scroll));
+        *height = (real32_t)gtk_widget_get_allocated_height(hscroll);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -333,57 +329,9 @@ void ospanel_position(OSPanel *panel, const real32_t x, const real32_t y)
 
 static void i_destroy_child(GtkWidget *widget, gpointer data)
 {
-    OSPanel *panel = (OSPanel *)data;
-    OSControl *control = (OSControl *)g_object_get_data(G_OBJECT(widget), "OSControl");
-    cassert_no_null(control);
-    switch (control->type)
-    {
-    case ekGUI_TYPE_LABEL:
-        _oslabel_detach_and_destroy((OSLabel **)&control, panel);
-        break;
-    case ekGUI_TYPE_BUTTON:
-        _osbutton_detach_and_destroy((OSButton **)&control, panel);
-        break;
-    case ekGUI_TYPE_POPUP:
-        _ospopup_detach_and_destroy((OSPopUp **)&control, panel);
-        break;
-    case ekGUI_TYPE_EDITBOX:
-        _osedit_detach_and_destroy((OSEdit **)&control, panel);
-        break;
-    case ekGUI_TYPE_COMBOBOX:
-        _oscombo_detach_and_destroy((OSCombo **)&control, panel);
-        break;
-    case ekGUI_TYPE_SLIDER:
-        _osslider_detach_and_destroy((OSSlider **)&control, panel);
-        break;
-    case ekGUI_TYPE_UPDOWN:
-        _osupdown_detach_and_destroy((OSUpDown **)&control, panel);
-        break;
-    case ekGUI_TYPE_PROGRESS:
-        _osprogress_detach_and_destroy((OSProgress **)&control, panel);
-        break;
-    case ekGUI_TYPE_TEXTVIEW:
-        _ostext_detach_and_destroy((OSText **)&control, panel);
-        break;
-    case ekGUI_TYPE_CUSTOMVIEW:
-        _osview_detach_and_destroy((OSView **)&control, panel);
-        break;
-    case ekGUI_TYPE_PANEL:
-        ospanel_detach((OSPanel *)control, panel);
-        _ospanel_destroy((OSPanel **)&control);
-        break;
-    case ekGUI_TYPE_SPLITVIEW:
-        _ossplit_detach_and_destroy((OSSplit **)&control, panel);
-        break;
-    case ekGUI_TYPE_TABLEVIEW:
-    case ekGUI_TYPE_TREEVIEW:
-    case ekGUI_TYPE_BOXVIEW:
-    case ekGUI_TYPE_LINE:
-    case ekGUI_TYPE_HEADER:
-    case ekGUI_TYPE_WINDOW:
-    case ekGUI_TYPE_TOOLBAR:
-        cassert_default();
-    }
+    OSPanel *panel = OSPanelPtr(data);
+    OSControl *control = OSControlPtr(g_object_get_data(G_OBJECT(widget), "OSControl"));
+    oscontrol_detach_and_destroy(&control, panel);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -470,5 +418,3 @@ void ospanel_scroll_frame(const OSPanel *panel, OSFrame *rect)
     rect->right = rect->left + (int32_t)w;
     rect->bottom = rect->top + (int32_t)h;
 }
-
-

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,11 +11,11 @@
 /* Operating System native slider */
 
 #include "osslider.h"
-#include "osslider.inl"
+#include "osslider_win.inl"
 #include "osgui_win.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
+#include "oscontrol_win.inl"
+#include "ospanel_win.inl"
+#include "oswindow_win.inl"
 #include <core/event.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -53,17 +53,9 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
     case WM_ERASEBKGND:
         return 1;
 
-    case WM_SETFOCUS:
-        _oswindow_store_focus((OSControl *)slider);
-        break;
-
     case WM_LBUTTONDOWN:
-        if (_oswindow_can_mouse_down((OSControl *)slider) == TRUE)
-            break;
-        return 0;
-
     case WM_LBUTTONDBLCLK:
-        if (_oswindow_can_mouse_down((OSControl *)slider) == TRUE)
+        if (_oswindow_mouse_down(OSControlPtr(slider)) == TRUE)
             break;
         return 0;
 
@@ -263,15 +255,6 @@ void osslider_origin(const OSSlider *slider, real32_t *x, real32_t *y)
 void osslider_frame(OSSlider *slider, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     _oscontrol_set_frame((OSControl *)slider, x, y, width, height);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osslider_detach_and_destroy(OSSlider **slider, OSPanel *panel)
-{
-    cassert_no_null(slider);
-    osslider_detach(*slider, panel);
-    osslider_destroy(slider);
 }
 
 /*---------------------------------------------------------------------------*/

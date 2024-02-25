@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -425,7 +425,7 @@ static NSBitmapImageFileType i_codec(const codec_t codec)
 
 bool_t osimage_available_codec(const OSImage *image, const codec_t codec)
 {
-    // macOS supports all codec_t formats
+    /* macOS supports all codec_t formats */
     unref(image);
     unref(codec);
     return TRUE;

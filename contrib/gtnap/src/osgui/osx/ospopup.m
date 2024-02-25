@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,10 +11,11 @@
 /* Operating System native popup button */
 
 #include "ospopup.h"
-#include "ospopup.inl"
+#include "ospopup_osx.inl"
+#include "oscontrol_osx.inl"
+#include "ospanel_osx.inl"
+#include "oswindow_osx.inl"
 #include "osgui.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
 #include <draw2d/image.h>
 #include <core/event.h>
 #include <core/heap.h>
@@ -52,6 +53,14 @@
         params.text = NULL; /*(const char_t*)[[self titleOfSelectedItem] UTF8String];*/
         listener_event(self->OnSelect_listener, ekGUI_EVENT_POPUP, (OSPopUp*)sender, &params, NULL, OSPopUp, EvButton, void);
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void) mouseDown:(NSEvent*)theEvent
+{
+    if (_oswindow_mouse_down((OSControl*)self) == TRUE)
+        [super mouseDown:theEvent];
 }
 
 @end
@@ -196,7 +205,6 @@ void ospopup_list_height(OSPopUp *popup, const uint32_t num_elems)
 {
     unref(popup);
     unref(num_elems);
-    //cassert(FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -292,13 +300,4 @@ void ospopup_frame(OSPopUp *popup, const real32_t x, const real32_t y, const rea
 BOOL _ospopup_is(NSView *view)
 {
     return [view isKindOfClass:[OSXPopUp class]];
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _ospopup_detach_and_destroy(OSPopUp **popup, OSPanel *panel)
-{
-    cassert_no_null(popup);
-    ospopup_detach(*popup, panel);
-    ospopup_destroy(popup);
 }

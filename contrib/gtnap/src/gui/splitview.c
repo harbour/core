@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -36,6 +36,8 @@ struct _splitview_t
     real32_t div_thick;
     GuiComponent *child1;
     GuiComponent *child2;
+    bool_t child1_tabstop;
+    bool_t child2_tabstop;
     real32_t chid1_dim[2];
     real32_t chid2_dim[2];
 };
@@ -263,18 +265,20 @@ SplitView *splitview_vertical(void)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_add_child(SplitView *split, GuiComponent *component)
+static void i_add_child(SplitView *split, GuiComponent *component, const bool_t tabstop)
 {
     cassert_no_null(split);
     cassert_no_null(component);
     if (split->child1 == NULL)
     {
         split->child1 = component;
+        split->child1_tabstop = tabstop;
     }
     else
     {
         cassert(split->child2 == NULL);
         split->child2 = component;
+        split->child2_tabstop = tabstop;
     }
 
     split->component.context->func_split_attach_control(split->component.ositem, component->ositem);
@@ -290,30 +294,30 @@ void splitview_size(SplitView *split, const S2Df size)
 
 /*---------------------------------------------------------------------------*/
 
-void splitview_view(SplitView *split, View *view)
+void splitview_view(SplitView *split, View *view, const bool_t tabstop)
 {
-    i_add_child(split, (GuiComponent *)view);
+    i_add_child(split, (GuiComponent *)view, tabstop);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void splitview_text(SplitView *split, TextView *view)
+void splitview_text(SplitView *split, TextView *view, const bool_t tabstop)
 {
-    i_add_child(split, (GuiComponent *)view);
+    i_add_child(split, (GuiComponent *)view, tabstop);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void splitview_split(SplitView *split, SplitView *child)
 {
-    i_add_child(split, (GuiComponent *)child);
+    i_add_child(split, (GuiComponent *)child, TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void splitview_panel(SplitView *split, Panel *panel)
 {
-    i_add_child(split, (GuiComponent *)panel);
+    i_add_child(split, (GuiComponent *)panel, TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -445,9 +449,9 @@ void _splitview_expand(SplitView *split, const uint32_t di, const real32_t curre
 void _splitview_taborder(const SplitView *split, Window *window)
 {
     cassert_no_null(split);
-    if (split->child1 != NULL)
+    if (split->child1 != NULL && split->child1_tabstop == TRUE)
         _component_taborder(split->child1, window);
-    if (split->child2 != NULL)
+    if (split->child2 != NULL && split->child2_tabstop == TRUE)
         _component_taborder(split->child2, window);
 }
 

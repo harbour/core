@@ -4132,7 +4132,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          AAddNotEmpty( hbmk[ _HBMK_aOPTCPPX ], gcc_opt_lngcpp_fill( hbmk ) )
          cBin_Dyn := cBin_CompC
          IF hbmk[ _HBMK_cPLAT ] == "darwin"
-            cOpt_Dyn := "-dynamiclib -o {OD} -flat_namespace -undefined dynamic_lookup {FD} {DL} {LO} {LS}" /* NOTE: -single_module is now the default in ld/libtool. */
+            cOpt_Dyn := "-dynamiclib -o {OD} {FD} {DL} {LO} {LS}" /* NOTE: -single_module is now the default in ld/libtool. */
          ELSE
             cOpt_Dyn := "-shared -o {OD} {LO} {FD} {DL} {LS}"
          ENDIF
@@ -4394,6 +4394,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             EXIT
          CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )                 ; EXIT
          ENDSWITCH
+
+         IF hbmk[ _HBMK_cCOMP ] == "mingw64"
+            // Newer MinGW-W64 versions (10+, IIRC) need this to opt out of C99 format
+            // string emulation and keep our format strings compatible among the
+            // different Windows compilers
+            cOpt_CompC += " -D__USE_MINGW_ANSI_STDIO=0"
+         ENDIF
+
          IF hbmk[ _HBMK_lHARDEN ]
             IF hbmk[ _HBMK_cPLAT ] == "win"
                /* It is also supported by official mingw 4.4.x and mingw64 4.4.x,
@@ -5049,8 +5057,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          SWITCH hbmk[ _HBMK_nWARN ]
          CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )         ; EXIT
-         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q -w-sig-" ) ; EXIT
-         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-sig- -w-aus- -w-ccc- -w-csu- -w-par- -w-rch- -w-ucp- -w-use- -w-prc- -w-pia-" ) ; EXIT
+         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q -w-sig" ) ; EXIT
+         // The following line differs from the line in config/win/bcc.mk because Make needs to build core, and hbmk2 needs to build contrib
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-sig -w-aus -w-ccc -w-csu -w-ovf -w-par -w-rch -w-spa -w-sus -w-pia" ) ; EXIT
          CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )           ; EXIT
          ENDSWITCH
          cOpt_CompC += " {FC} {LC}"

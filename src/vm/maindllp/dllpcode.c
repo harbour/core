@@ -136,10 +136,10 @@ PHB_FUNC hb_dllGetProcAddress( const char * szProcName )
          {
 #if defined( HB_OS_WIN_CE )
             LPCTSTR s_lpGetProcAddr = TEXT( "_dll_hb_vmProcAddress" );
-            s_pProcGet = ( HB_PROC_GET ) GetProcAddress( s_hModule, s_lpGetProcAddr + i );
+            s_pProcGet = ( HB_PROC_GET ) ( void * ) GetProcAddress( s_hModule, s_lpGetProcAddr + i );
 #else
             static const char * s_szGetProcAddr = "_dll_hb_vmProcAddress";
-            s_pProcGet = ( HB_PROC_GET ) GetProcAddress( s_hModule, s_szGetProcAddr + i );
+            s_pProcGet = ( HB_PROC_GET ) ( void * ) GetProcAddress( s_hModule, s_szGetProcAddr + i );
 #endif
          }
          while( s_pProcGet == NULL && ( i -= i == 4 ? 3 : 1 ) >= 0 );

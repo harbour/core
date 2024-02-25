@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -14,10 +14,9 @@
 #include "osedit.inl"
 #include "oscolor.inl"
 #include "osgui.inl"
-#include "osctrl.inl"
-#include "oscontrol.inl"
-#include "ospanel.inl"
-#include "oswindow.inl"
+#include "oscontrol_osx.inl"
+#include "ospanel_osx.inl"
+#include "oswindow_osx.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
 #include <core/event.h>
@@ -190,6 +189,12 @@ static void OSX_becomeFirstResponder(OSXEdit *edit, NSTextField *field)
         NSWindow *window = [field window];
         NSText *text = [window fieldEditor:YES forObject:field];
 
+        if (edit->OnFocus != NULL)
+        {
+            bool_t params = TRUE;
+            listener_event(edit->OnFocus, ekGUI_EVENT_FOCUS, (OSEdit*)edit, &params, NULL, OSEdit, bool_t, void);
+        }
+
         if (BIT_TEST(edit->flags, ekEDIT_AUTOSEL) == TRUE)
         {
             [text selectAll:nil];
@@ -198,12 +203,6 @@ static void OSX_becomeFirstResponder(OSXEdit *edit, NSTextField *field)
         {
             NSRange range = [text selectedRange];
             [text setSelectedRange:NSMakeRange(range.length, 0)];
-        }
-
-        if (edit->OnFocus != NULL)
-        {
-            bool_t params = TRUE;
-            listener_event(edit->OnFocus, ekGUI_EVENT_FOCUS, (OSEdit*)edit, &params, NULL, OSEdit, bool_t, void);
         }
     }
 }
@@ -238,49 +237,28 @@ static void OSX_textDidChange(OSXEdit *edit, NSTextField *field)
 
 /*---------------------------------------------------------------------------*/
 
-static void OSX_textDidEndEditing(OSXEdit *edit, NSTextField *field, NSNotification *notification)
+static void OSX_textDidEndEditing(OSXEdit *edit, NSNotification *notification)
 {
-    cassert_no_null(field);
-    if ([field isEnabled] == YES)
+    unsigned int whyEnd = [[[notification userInfo] objectForKey:@"NSTextMovement"] unsignedIntValue];
+    NSWindow *window = [edit window];
+
+    if (edit->OnFocus != NULL)
     {
-        NSWindow *window = [field window];
+        bool_t params = FALSE;
+        listener_event(edit->OnFocus, ekGUI_EVENT_FOCUS, (OSEdit*)edit, &params, NULL, OSEdit, bool_t, void);
+    }
 
-        if (edit->OnChange != NULL && _oswindow_in_destroy(window) == NO)
-        {
-            EvText params;
-            params.text = (const char_t*)[[field stringValue] UTF8String];
-            listener_event(edit->OnChange, ekGUI_EVENT_TXTCHANGE, (OSEdit*)edit, &params, NULL, OSEdit, EvText, void);
-        }
-
-        [window endEditingFor:field];
-
-        if (edit->OnFocus != NULL)
-        {
-            bool_t params = FALSE;
-            listener_event(edit->OnFocus, ekGUI_EVENT_FOCUS, (OSEdit*)edit, &params, NULL, OSEdit, bool_t, void);
-        }
-
-        {
-            unsigned int whyEnd = [[[notification userInfo] objectForKey:@"NSTextMovement"] unsignedIntValue];
-            NSView *nextView = nil;
-
-            if (whyEnd == NSReturnTextMovement)
-            {
-                [[edit window] keyDown:(NSEvent*)231];
-                nextView = edit;
-            }
-            else if (whyEnd == NSTabTextMovement)
-            {
-                nextView = [edit nextValidKeyView];
-            }
-            else if (whyEnd == NSBacktabTextMovement)
-            {
-                nextView = [edit previousValidKeyView];
-            }
-
-            if (nextView != nil)
-                [[edit window] makeFirstResponder:nextView];
-        }
+    if (whyEnd == NSReturnTextMovement)
+    {
+        [window keyDown:(NSEvent*)231];
+    }
+    else if (whyEnd == NSTabTextMovement)
+    {
+        _oswindow_next_tabstop(window);
+    }
+    else if (whyEnd == NSBacktabTextMovement)
+    {
+        _oswindow_prev_tabstop(window);
     }
 }
 
@@ -292,8 +270,9 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSTextField *field, NSNotificat
 
 -(BOOL)becomeFirstResponder
 {
+    [super becomeFirstResponder];
     OSX_becomeFirstResponder((OSXEdit*)self->parent, self);
-    return [super becomeFirstResponder];
+    return YES;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -315,7 +294,15 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSTextField *field, NSNotificat
 
 - (void)textDidEndEditing:(NSNotification*)notification
 {
-    OSX_textDidEndEditing((OSXEdit*)self->parent, self, notification);
+    OSX_textDidEndEditing((OSXEdit*)self->parent, notification);
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void)mouseDown:(NSEvent*)theEvent
+{
+    if (_oswindow_mouse_down((OSControl*)self->parent) == TRUE)
+        [super mouseDown:theEvent];
 }
 
 @end
@@ -328,8 +315,9 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSTextField *field, NSNotificat
 
 -(BOOL)becomeFirstResponder
 {
+    [super becomeFirstResponder];
     OSX_becomeFirstResponder((OSXEdit*)self->parent, self);
-    return [super becomeFirstResponder];
+    return YES;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -351,7 +339,15 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSTextField *field, NSNotificat
 
 - (void)textDidEndEditing:(NSNotification*)notification
 {
-    OSX_textDidEndEditing((OSXEdit*)self->parent, self, notification);
+    OSX_textDidEndEditing((OSXEdit*)self->parent, notification);
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void)mouseDown:(NSEvent*)theEvent
+{
+    if (_oswindow_mouse_down((OSControl*)self->parent) == TRUE)
+        [super mouseDown:theEvent];
 }
 
 @end
@@ -611,7 +607,6 @@ void osedit_select(OSEdit *edit, const int32_t start, const int32_t end)
     unref(edit);
     unref(start);
     unref(end);
-    cassert(FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -680,7 +675,6 @@ void osedit_clipboard(OSEdit *edit, const clipboard_t clipboard)
 {
     unref(edit);
     unref(clipboard);
-    cassert(FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -754,6 +748,32 @@ void osedit_frame(OSEdit *edit, const real32_t x, const real32_t y, const real32
     cassert_no_null(ledit);
     _oscontrol_set_frame((NSView*)ledit, x, y, width, height);
     _oscontrol_set_frame((NSView*)ledit->field, 0, 0, width, height);
+    [ledit setNeedsDisplay:YES];
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t osedit_resign_focus(const OSEdit *edit, const OSControl *next_control)
+{
+    OSXEdit *ledit = (OSXEdit*)edit;
+    NSWindow *window = [ledit window];
+    bool_t resign = TRUE;
+    cassert_no_null(ledit);
+
+    if (ledit->OnChange != NULL && _oswindow_in_destroy(window) == NO)
+    {
+        EvText params;
+        params.text = (const char_t*)[[ledit->field stringValue] UTF8String];
+        params.next_ctrl = (void*)next_control;
+        listener_event(ledit->OnChange, ekGUI_EVENT_TXTCHANGE, edit, &params, &resign, OSEdit, EvText, bool_t);
+    }
+
+    if (resign == TRUE)
+        [window endEditingFor:ledit];
+    else
+        [window makeFirstResponder:ledit];
+
+    return resign;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -761,23 +781,4 @@ void osedit_frame(OSEdit *edit, const real32_t x, const real32_t y, const real32
 BOOL _osedit_is(NSView *view)
 {
     return [view isKindOfClass:[OSXEdit class]];
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _osedit_detach_and_destroy(OSEdit **edit, OSPanel *panel)
-{
-    cassert_no_null(edit);
-    osedit_detach(*edit, panel);
-    osedit_destroy(edit);
-}
-
-/*---------------------------------------------------------------------------*/
-
-bool_t osedit_validate(const OSEdit *edit, const OSControl *next_control)
-{
-    unref(edit);
-    unref(next_control);
-    cassert(FALSE);
-    return FALSE;
 }

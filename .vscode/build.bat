@@ -27,7 +27,7 @@ if not exist %gtpath%\src\hello mkdir %gtpath%\src\hello
 
 :: Generate VS solution
 cd %gtpath%
-cmake -S . -B build-dev -Ax64 -DCMAKE_WARN_VS11=OFF -DGTNAP_DEVELOPER_MODE=ON
+cmake -S . -B build-dev -Ax64 -DCMAKE_WARN_VS11=OFF -DGTNAP_DEVELOPER_MODE=ON -DGTNAP_LIBREOFFICE=ON
 goto end
 
 @REM :: Run exemplo

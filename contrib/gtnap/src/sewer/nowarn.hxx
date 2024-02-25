@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -41,7 +41,11 @@
 
 #if defined(__GNUC__)
 
+#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
+/* Was added in GCC 4.6 */
 #pragma GCC diagnostic push
+#endif
+
 #pragma GCC diagnostic ignored "-Wall"
 
 #if (__GNUC__ >= 5)

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -380,14 +380,14 @@ static void i_precompute_system_colors(void)
 
 void gui_update(void)
 {
+    i_precompute_system_colors();
+
     arrpt_foreach(window, i_WINDOWS, Window)
         _window_update(window);
     arrpt_end();
 
     if (i_ONTHEME != NULL)
         listener_event(i_ONTHEME, 0, NULL, NULL, NULL, void, void, void);
-
-    i_precompute_system_colors();
 }
 
 /*---------------------------------------------------------------------------*/

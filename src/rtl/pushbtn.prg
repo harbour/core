@@ -91,7 +91,7 @@ CREATE CLASS PushButton FUNCTION HBPushButton
    METHOD typeOut() SETGET
    METHOD style( cStyle ) SETGET
 
-   METHOD New( nRow, nCol, cCaption ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD Init( nRow, nCol, cCaption ) /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -331,7 +331,7 @@ METHOD style( cStyle ) CLASS PushButton
 
    RETURN ::cStyle
 
-METHOD New( nRow, nCol, cCaption ) CLASS PushButton
+METHOD Init( nRow, nCol, cCaption ) CLASS PushButton
 
    LOCAL cColor
 

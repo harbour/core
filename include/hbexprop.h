@@ -179,6 +179,7 @@ extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceLT( PHB_EXPR pSelf, HB_COMP_DECL 
 extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceEQ( PHB_EXPR pSelf, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceAnd( PHB_EXPR pSelf, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceOr( PHB_EXPR pSelf, HB_COMP_DECL );
+extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceNot( PHB_EXPR pSelf, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprReduceIIF( PHB_EXPR, HB_COMP_DECL );
 
 extern HB_EXPORT_INT HB_BOOL hb_compExprReduceAT( PHB_EXPR, HB_COMP_DECL );
