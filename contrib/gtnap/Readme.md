@@ -15,6 +15,12 @@ https://github.com/frang75/nappgui_src
    - [In Windows](#icon-in-windows)
    - [In Linux](#icon-in-linux)
 * [GTNap developer mode](#gtnap-developer-mode)
+   - [Step 1. Compile Harbour](#step-1-compile-harbour)
+   - [Step 2. Generate exemplo C files](#step-2-generate-exemplo-c-files)
+   - [Step 3. Debugging using Visual Studio (Windows)](#step-3-debugging-using-visual-studio-windows)
+   - [Step 4. Debugging using VSCode (Linux)](#step-4-debugging-using-vscode-linux)
+   - [Step 5. Debugging using Xcode (macOS)](#step-5-debugging-using-xcode-macos)
+   - 
 * [GTNap design](#gtnap-design)
 * [GTNap Log](#gtnap-log)
 
@@ -272,8 +278,7 @@ Just adding `-gtnap` flag into your `.hbp` project file.
 
 ![gtnap_win](https://user-images.githubusercontent.com/42999199/235419502-456ce304-62cf-4559-b84f-964e20a763d3.png)
 ![gtnap_linux](https://user-images.githubusercontent.com/42999199/235419548-0ef049d8-6c51-45e2-be4d-393a58c1f07a.png)
-![gt_win](https://user-images.githubusercontent.com/42999199/235419608-10188d35-8283-4419-89e2-76def4a13cb4.png)
-![gtrtrm_linux](https://user-images.githubusercontent.com/42999199/235419619-9dd0093e-bdd5-4ae8-aac1-1a3b55f96125.png)
+![gtnap_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/99a37caf-4167-4b75-87c5-8c5ca4756e5a)
 
 ## Application ICON
 
@@ -562,9 +567,18 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
     ```
 * Go to the generated `build-dev` folder and open the `NAppGUI.xcodeproj` with the Xcode solution.
 
+   ![build_dev_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/59ff03f7-40a3-4142-a479-09270d6ad598)
+
 * Go to Product->Scheme->Edit scheme:
     - Arguments (+): `--hb:gtnap`
     - Options->Working directory: `/Users/fran/harbour_nappgui/contrib/gtnap/tests/cuademo/gtnap_cualib`
+
+    ![arguments](https://github.com/frang75/harbour_nappgui/assets/42999199/8b836c01-93c8-4265-bd67-fc20324e3419)
+    ![working_dir](https://github.com/frang75/harbour_nappgui/assets/42999199/0e176163-0e8c-44b7-99e6-9c6fc4eb772e)
+
+* Select `exemplo` in target selector and press the Play button. This will launch the exemplo executable in Debug mode. You will be able to set breakpoints in any NAppGUI, GTNap or example source file, inspect variables, step by step, etc.
+
+   ![debug_xcode](https://github.com/frang75/harbour_nappgui/assets/42999199/6a20067b-bcd7-4d16-ba5f-c3c18b177fb0)
 
 ## GTNap design
 
