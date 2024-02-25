@@ -410,6 +410,19 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
     ../../../../../bin/linux/gcc/hbmk2 exemplo.hbp -debug -trace -keepc -workdir=../../../src/exemplo -o../../../build/exemplo exemplo.hbp
     ```
 
+* In macOS:
+
+    ```
+    # Go to exemplo folder
+    cd contrib/gtnap/tests/cuademo/gtnap_cualib
+
+    # Create exemplo folder in /src
+    mkdir ../../../src/exemplo
+
+    # Build exemplo preserving hbmk2 generated C files
+    ../../../../../bin/darwin/clang/hbmk2 exemplo.hbp -debug -trace -keepc -workdir=../../../src/exemplo -o../../../build/exemplo exemplo.hbp
+    ```
+
 ### Step 3. Debugging using Visual Studio (Windows)
 
 * Open a terminal
@@ -422,7 +435,7 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
     "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
 
     :: Generate the solution
-    cmake -S src -B build-dev -DCMAKE_WARN_VS11=OFF -DGTNAP_DEVELOPER_MODE=ON
+    cmake -S . -B build-dev -DCMAKE_WARN_VS11=OFF -DGTNAP_DEVELOPER_MODE=ON -DGTNAP_LIBREOFFICE=YES
 
 
     -- Building for: Visual Studio 11 2012
@@ -457,7 +470,9 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
 
    ![build_solution](https://user-images.githubusercontent.com/42999199/235441823-26ad4413-43ec-4e23-a291-1fec9c4ad75d.png)
 
-* In Solution Explorer, right click over `exemplo` project, then `Properties`, `Debugging`, `Command Arguments`: `--hb:gtnap`.
+* In Solution Explorer, right click over `exemplo` project, then `Properties`, `Debugging`:
+    - `Command Arguments`: `--hb:gtnap`.
+    - `Working Directory`: `C:\harbour_nappgui\contrib\gtnap\tests\cuademo\gtnap_cualib`.
 
 * Right click again over `exemplo`: `Set as Statup Project`.
 
@@ -508,6 +523,48 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
 * **Run and Debug:** button at VSCode left panel and Exemplo. This will launch the exemplo executable in Debug mode. You will be able to set breakpoints in any NAppGUI, GTNap or example source file, inspect variables, step by step, etc.
 
    ![debug_vscode](https://user-images.githubusercontent.com/42999199/235436730-8df78930-7aad-487a-a79a-f79d00363931.png)
+
+### Step 5. Debugging using Xcode (macOS)
+
+* Open a terminal
+
+    ```
+    # Goto gtnap folder
+    cd contrib/gtnap
+
+    # Generate the solution
+    cmake -G Xcode -S . -B build-dev -DGTNAP_DEVELOPER_MODE=ON -DGTNAP_LIBREOFFICE=NO
+
+
+    -- The C compiler identification is AppleClang 14.0.3.14030022
+    -- The CXX compiler identification is AppleClang 14.0.3.14030022
+    -- Detecting C compiler ABI info
+    -- Detecting C compiler ABI info - done
+    -- Check for working C compiler: /Volumes/SSD/Xcode14/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang - skipped
+    -- Detecting C compile features
+    -- Detecting C compile features - done
+    -- Detecting CXX compiler ABI info
+    -- Detecting CXX compiler ABI info - done
+    -- Check for working CXX compiler: /Volumes/SSD/Xcode14/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ - skipped
+    -- Detecting CXX compile features
+    -- Detecting CXX compile features - done
+    -- ---------------------------------------------
+    -- NAppGUI Cross-Platform SDK
+    -- 2015-2024 Francisco Garcia Collado
+    -- MIT License
+    -- ---------------------------------------------
+    -- * Version: 1.4.1.4920
+    -- * Generator: Xcode
+    -- * Build shared: False
+    -- * Base OSX: 13.3-Ventura
+    -- * Deployment target OSX: 13.3-Ventura
+    ...
+    ```
+* Go to the generated `build-dev` folder and open the `NAppGUI.xcodeproj` with the Xcode solution.
+
+* Go to Product->Scheme->Edit scheme:
+    - Arguments (+): `--hb:gtnap`
+    - Options->Working directory: `/Users/fran/harbour_nappgui/contrib/gtnap/tests/cuademo/gtnap_cualib`
 
 ## GTNap design
 
