@@ -20,7 +20,6 @@ https://github.com/frang75/nappgui_src
    - [Step 3. Debugging using Visual Studio (Windows)](#step-3-debugging-using-visual-studio-windows)
    - [Step 4. Debugging using VSCode (Linux)](#step-4-debugging-using-vscode-linux)
    - [Step 5. Debugging using Xcode (macOS)](#step-5-debugging-using-xcode-macos)
-   - 
 * [GTNap design](#gtnap-design)
 * [GTNap Log](#gtnap-log)
 
