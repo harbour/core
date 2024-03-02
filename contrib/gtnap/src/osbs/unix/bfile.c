@@ -61,7 +61,7 @@ uint32_t bfile_dir_work(char_t *pathname, const uint32_t size)
 {
     const char *buff = getcwd(pathname, size);
     if (buff != NULL)
-        return strlen(pathname) + 1;
+        return (uint32_t)(strlen(pathname) + 1);
     return 0;
 }
 
