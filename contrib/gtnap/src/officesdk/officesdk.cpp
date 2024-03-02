@@ -225,7 +225,7 @@ static String *i_StringFromOUString(const ::rtl::OUString &ostr)
     nbytes = unicode_convers_nbytes_n((const char_t*)b, (uint32_t)l * sizeof(sal_Unicode), ekUTF16, ekUTF8);
     str = str_reserve(nbytes);
     nused = unicode_convers((const char_t*)b, tcc(str), ekUTF16, ekUTF8, nbytes);
-    cassert(nused == nbytes);
+    cassert_unref(nused == nbytes, nused);
     return str;
 }
 
@@ -837,15 +837,15 @@ static css::view::PaperFormat i_paper_format(const paperformat_t format)
 
 // https://wiki.documentfoundation.org/Documentation/DevGuide/Spreadsheet_Documents#Printer_and_Print_Job_Settings
 static sdkres_t i_xprintable_print(
-                            css::uno::Reference<css::view::XPrintable> &xPrintable, 
-                            const char_t *filename, 
-                            const char_t *printer, 
-                            const paperorient_t orient, 
-                            const paperformat_t format, 
-                            const uint32_t paper_width, 
-                            const uint32_t paper_height, 
-                            const uint32_t num_copies, 
-                            const bool_t collate_copies, 
+                            css::uno::Reference<css::view::XPrintable> &xPrintable,
+                            const char_t *filename,
+                            const char_t *printer,
+                            const paperorient_t orient,
+                            const paperformat_t format,
+                            const uint32_t paper_width,
+                            const uint32_t paper_height,
+                            const uint32_t num_copies,
+                            const bool_t collate_copies,
                             const char_t *pages)
 {
     sdkres_t res = ekSDKRES_OK;
@@ -3008,7 +3008,7 @@ void officesdk_writer_font_size(Writer *writer, const textspace_t space, const r
 
     if (res == ekSDKRES_OK && font_size > 0)
         res = i_set_text_property(xText, "CharHeight", css::uno::makeAny(font_size));
-   
+
     ptr_assign(err, res);
 }
 
@@ -3027,7 +3027,7 @@ void officesdk_writer_bold(Writer *writer, const textspace_t space, const bool_t
         float weight = bold ? css::awt::FontWeight::BOLD : css::awt::FontWeight::LIGHT;
         res = i_set_text_property(xText, "CharWeight", css::uno::makeAny(weight));
     }
-   
+
     ptr_assign(err, res);
 }
 
@@ -3046,7 +3046,7 @@ void officesdk_writer_italic(Writer *writer, const textspace_t space, const bool
         css::awt::FontSlant slant = italic ? css::awt::FontSlant::FontSlant_ITALIC : css::awt::FontSlant::FontSlant_NONE;
         res = i_set_text_property(xText, "CharPosture", css::uno::makeAny(slant));
     }
-   
+
     ptr_assign(err, res);
 }
 
@@ -3080,7 +3080,7 @@ void officesdk_writer_paragraph_halign(Writer *writer, const textspace_t space, 
 
         res = i_set_text_property(xText, "ParaAdjust", css::uno::makeAny(adjust));
     }
-   
+
     ptr_assign(err, res);
 }
 
@@ -3101,7 +3101,7 @@ void officesdk_writer_paragraph_lspacing(Writer *writer, const textspace_t space
         spacing.Height = (sal_Int16)height;
         res = i_set_text_property(xText, "ParaLineSpacing", css::uno::makeAny(spacing));
     }
-   
+
     ptr_assign(err, res);
 }
 

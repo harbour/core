@@ -2317,8 +2317,8 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
 
     gtwin->panel = panel_custom(FALSE, FALSE, gtwin->border);
 
-    //if (gtwin->toolbar != NULL)
-    //    gtwin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size;
+    /*if (gtwin->toolbar != NULL)
+          gtwin->panel_size.height += (real32_t)GTNAP_GLOBAL->cell_y_size; */
 
     panel_size(gtwin->panel, gtwin->panel_size);
     panel_layout(gtwin->panel, layout);

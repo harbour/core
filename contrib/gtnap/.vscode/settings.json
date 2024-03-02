@@ -5,9 +5,9 @@
     "cmake.buildDirectory": "${workspaceFolder}/build-dev",
 
     "cmake.configureArgs": [
-        "-DCMAKE_BUILD_CONFIG=Debug",
-        "-DGTNAP_DEVELOPER_MODE=Yes",
-        "-DGTNAP_LIBREOFFICE=Yes"
+        "-DCMAKE_BUILD_TYPE:STRING=Release",
+        "-DGTNAP_DEVELOPER_MODE:BOOL=Yes",
+        "-DGTNAP_LIBREOFFICE:BOOL=Yes"
     ],
     "files.associations": {
         "*.txs": "html",
