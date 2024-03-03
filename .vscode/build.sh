@@ -7,7 +7,7 @@ HBMK_PATH=bin/linux/gcc/hbmk2
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
     HBMK_PATH=bin/darwin/clang/hbmk2
-    export MACOSX_DEPLOYMENT_TARGET=10.13
+    export MACOSX_DEPLOYMENT_TARGET=10.15
 # elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 #     # Do something under GNU/Linux platform
 # elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then

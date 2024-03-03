@@ -119,7 +119,14 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const uint32_t 
     }
     else if (str_equ_c(family, "__MONOSPACE__") == TRUE)
     {
+#if defined (MAC_OS_X_VERSION_10_15) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_15
+        if (style & ekFBOLD)
+            nsfont = [NSFont monospacedSystemFontOfSize:(CGFloat)size weight:NSFontWeightBold];
+        else
+            nsfont = [NSFont monospacedSystemFontOfSize:(CGFloat)size weight:NSFontWeightLight];
+#else
         name = "Courier New";
+#endif
     }
     else
     {
@@ -168,7 +175,7 @@ const char_t *osfont_family(const char_t *family)
     }
     else if (str_equ_c(family, "__MONOSPACE__") == TRUE)
     {
-        return "Courier New";
+        return "__MONOSPACE__";
     }
     else
     {
