@@ -3,7 +3,7 @@
 
 __EXTERN_C
 
-Panel *nap_menu_create(const bool_t autoclose);
+Panel *nap_menu_create(const bool_t autoclose, const Font *font, const real32_t cell_x_size, const real32_t cell_y_size);
 
 void nap_menu_add(Panel *panel, Window *window, HB_ITEM *text_block, HB_ITEM *click_block, const uint32_t hotkey_pos);
 

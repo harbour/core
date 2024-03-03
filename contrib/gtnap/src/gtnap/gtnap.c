@@ -68,9 +68,9 @@ struct _gtnap_key_t
 
 struct _gtnap_column_t
 {
-    uint32_t fixed_width;
-    uint32_t width;
+    uint32_t fixed_chars;
     uint32_t header_lines;
+    real32_t widthf;
     align_t align;
     String *title;
     HB_ITEM *block;
@@ -78,8 +78,8 @@ struct _gtnap_column_t
 
 struct _gtnap_toolbar_t
 {
-    uint32_t button_width;
-    uint32_t height;
+    real32_t button_widthf;
+    real32_t heightf;
     ArrPt(GuiComponent) *items;
 };
 
@@ -178,11 +178,11 @@ struct _gtnap_t
     String *working_path;
     uint32_t rows;
     uint32_t cols;
-    uint32_t cell_x_size;
-    uint32_t cell_y_size;
-    uint32_t label_y_size;
-    uint32_t button_y_size;
-    uint32_t edit_y_size;
+    real32_t cell_x_sizef;
+    real32_t cell_y_sizef;
+    real32_t label_y_sizef;
+    real32_t button_y_sizef;
+    real32_t edit_y_sizef;
     uint64_t modal_timestamp;
     uint32_t modal_delay_seconds;
     GtNapWindow *modal_time_window;
@@ -774,8 +774,8 @@ static real32_t i_edit_vpadding(void)
 
 static void i_compute_cell_size(GtNap *gtnap)
 {
-    uint32_t bh = 0, eh = 0;
-    uint32_t fw = 0, fh = 0;
+    real32_t bh = 0, eh = 0;
+    real32_t fw = 0, fh = 0;
 
     cassert_no_null(gtnap);
 
@@ -796,38 +796,38 @@ static void i_compute_cell_size(GtNap *gtnap)
         panel_layout(panel, layout);
         window_panel(window, panel);
         window_show(window);
-        bh = (uint32_t)button_get_height(button);
-        eh = (uint32_t)edit_get_height(edit);
+        bh = button_get_height(button);
+        eh = edit_get_height(edit);
         window_destroy(&window);
     }
 
     {
         real32_t w, h;
-        font_extents(gtnap->global_font, "OOOOOO", -1, &w, &h);
-        fw = (uint32_t)w;
-        fh = (uint32_t)h;
+        font_extents(gtnap->global_font, "exibicao/edicao de texto em memoria", -1, &w, &h);
+        fw = w / 35.f;
+        fh = h;
     }
 
-    gtnap->cell_x_size = fw / 6;
+    gtnap->cell_x_sizef = fw;
 
     /* Cell height will be the higher of labels, buttons and edits */
-    gtnap->cell_y_size = fh;
-    gtnap->label_y_size = fh;
-    gtnap->button_y_size = bh;
-    gtnap->edit_y_size = eh;
+    gtnap->cell_y_sizef = fh;
+    gtnap->label_y_sizef = fh;
+    gtnap->button_y_sizef = bh;
+    gtnap->edit_y_sizef = eh;
 
-    if (bh > gtnap->cell_y_size)
-        gtnap->cell_y_size = bh;
+    if (bh > gtnap->cell_y_sizef)
+        gtnap->cell_y_sizef = bh;
 
-    if (eh > gtnap->cell_y_size)
-        gtnap->cell_y_size = eh;
+    if (eh > gtnap->cell_y_sizef)
+        gtnap->cell_y_sizef = eh;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_compute_font_size(const uint32_t max_width, const uint32_t max_height, GtNap *gtnap)
+static void i_compute_font_size(const real32_t max_width, const real32_t max_height, GtNap *gtnap)
 {
-    real32_t font_size = (real32_t)(max_height / (gtnap->rows + 5));
+    real32_t font_size = max_height / (real32_t)(gtnap->rows + 5);
 
     for(;;)
     {
@@ -835,14 +835,14 @@ static void i_compute_font_size(const uint32_t max_width, const uint32_t max_hei
         i_compute_cell_size(gtnap);
 
         /* The total width exceeds the screen limits */
-        if (gtnap->cell_x_size * gtnap->cols > max_width)
+        if (gtnap->cell_x_sizef * gtnap->cols > max_width)
         {
             font_size -= 1;
             continue;
         }
 
         /* The total height exceeds the screen limits */
-        if (gtnap->cell_y_size * gtnap->rows > max_height)
+        if (gtnap->cell_y_sizef * gtnap->rows > max_height)
         {
             font_size -= 1;
             continue;
@@ -1048,7 +1048,7 @@ static GtNap *i_gtnap_create(void)
 
     globals_resolution(&screen);
     screen.height -= 50;        /* Margin for Dock or Taskbars */
-    i_compute_font_size((uint32_t)screen.width, (uint32_t)screen.height, GTNAP_GLOBAL);
+    i_compute_font_size(screen.width, screen.height, GTNAP_GLOBAL);
     i_init_colors();
 
     {
@@ -1105,7 +1105,7 @@ static S2Df i_scroll_content_size(const ArrPt(GtNapObject) *objects)
         }
     arrpt_end();
 
-    return s2df((max_x - min_x) + GTNAP_GLOBAL->cell_x_size, (max_y - min_y) + GTNAP_GLOBAL->cell_y_size);
+    return s2df((max_x - min_x) + GTNAP_GLOBAL->cell_x_sizef, (max_y - min_y) + GTNAP_GLOBAL->cell_y_sizef);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1129,25 +1129,25 @@ static void i_attach_to_panel(ArrPt(GtNapObject) *objects, Panel *main_panel, Pa
             {
                 switch(type) {
                 case ekOBJ_LABEL:
-                    pos.y += (real32_t)toolbar->height;
-                    if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->label_y_size)
-                        pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->label_y_size) / 2);
+                    pos.y += toolbar->heightf;
+                    if (GTNAP_GLOBAL->cell_y_sizef > GTNAP_GLOBAL->label_y_sizef)
+                        pos.y += (GTNAP_GLOBAL->cell_y_sizef - GTNAP_GLOBAL->label_y_sizef) / 2.f;
                     break;
 
                 case ekOBJ_EDIT:
-                    pos.y += (real32_t)toolbar->height;
-                    if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->edit_y_size)
-                        pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->edit_y_size) / 2);
+                    pos.y += toolbar->heightf;
+                    if (GTNAP_GLOBAL->cell_y_sizef > GTNAP_GLOBAL->edit_y_sizef)
+                        pos.y += (GTNAP_GLOBAL->cell_y_sizef - GTNAP_GLOBAL->edit_y_sizef) / 2.f;
 
                     if (object->in_scroll == TRUE)
                     {
-                        object->size.width -= GTNAP_GLOBAL->cell_x_size;
+                        object->size.width -= GTNAP_GLOBAL->cell_x_sizef;
                     }
                     break;
 
                 case ekOBJ_IMAGE:
                 case ekOBJ_MENU:
-                    pos.y += (real32_t)toolbar->height;
+                    pos.y += toolbar->heightf;
                     break;
                 case ekOBJ_TABLEVIEW:
                 case ekOBJ_TEXTVIEW:
@@ -1156,11 +1156,11 @@ static void i_attach_to_panel(ArrPt(GtNapObject) *objects, Panel *main_panel, Pa
                     if (object->editBoxIndexForButton != UINT32_MAX)
                     {
                         /* The same as related editbox */
-                        pos.y += (real32_t)toolbar->height;
+                        pos.y += toolbar->heightf;
                     }
 
-                    if (GTNAP_GLOBAL->cell_y_size > GTNAP_GLOBAL->button_y_size)
-                        pos.y += (real32_t)((GTNAP_GLOBAL->cell_y_size - GTNAP_GLOBAL->button_y_size) / 2);
+                    if (GTNAP_GLOBAL->cell_y_sizef > GTNAP_GLOBAL->button_y_sizef)
+                        pos.y += (GTNAP_GLOBAL->cell_y_sizef - GTNAP_GLOBAL->button_y_sizef) / 2.f;
                     break;
                 cassert_default();
                 }
@@ -1186,9 +1186,9 @@ static void i_attach_toolbar_to_panel(const GtNapToolbar *toolbar, Panel *panel)
     {
         V2Df p1, p2;
         S2Df s1, s2;
-        real32_t bsize = (real32_t)(toolbar->button_width + 4);
+        real32_t bsize = toolbar->button_widthf + 4.f;
         p1.x = 0;
-        p1.y = ((real32_t)toolbar->height - bsize) / 2.f;
+        p1.y = (toolbar->heightf - bsize) / 2.f;
         p2.x = 0;
         p2.y = p1.y;
         s1.width = bsize;
@@ -1389,7 +1389,7 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
     /* Text has been updated */
     if (nchars != UINT32_MAX)
     {
-        obj->size.width = (real32_t)(nchars * GTNAP_GLOBAL->cell_x_size);
+        obj->size.width = (real32_t)nchars * GTNAP_GLOBAL->cell_x_sizef;
         if (obj->gtwin->is_configured == TRUE)
             _component_set_frame(obj->component, &obj->pos, &obj->size);
     }
@@ -2150,7 +2150,7 @@ static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
             uint32_t len;
             hb_itemCopyStrUTF8(ritem, (char*)buffer, (HB_SIZE)sizeof(buffer));
             len = unicode_nchars(buffer, ekUTF8);
-            mes_obj->size.width = (real32_t)(len * GTNAP_GLOBAL->cell_x_size);
+            mes_obj->size.width = (real32_t)len * GTNAP_GLOBAL->cell_x_sizef;
             _component_set_frame(mes_obj->component, &mes_obj->pos, &mes_obj->size);
             label_text((Label*)mes_obj->component, buffer);
         }
@@ -2370,10 +2370,10 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         S2Df csize = i_scroll_content_size(gtwin->objects);
         int32_t cell_x = gtwin->scroll_left - gtwin->left;
         int32_t cell_y = gtwin->scroll_top - gtwin->top;
-        real32_t pos_x = (real32_t)(cell_x * GTNAP_GLOBAL->cell_x_size);
-        real32_t pos_y = (real32_t)(cell_y * GTNAP_GLOBAL->cell_y_size);
-        real32_t width = (real32_t)((gtwin->scroll_right - gtwin->scroll_left + 3) * GTNAP_GLOBAL->cell_x_size);
-        real32_t height = (real32_t)((gtwin->scroll_bottom - gtwin->scroll_top + 1) * GTNAP_GLOBAL->cell_y_size);
+        real32_t pos_x = (real32_t)cell_x * GTNAP_GLOBAL->cell_x_sizef;
+        real32_t pos_y = (real32_t)cell_y * GTNAP_GLOBAL->cell_y_sizef;
+        real32_t width = (real32_t)(gtwin->scroll_right - gtwin->scroll_left + 3) * GTNAP_GLOBAL->cell_x_sizef;
+        real32_t height = (real32_t)(gtwin->scroll_bottom - gtwin->scroll_top + 1) * GTNAP_GLOBAL->cell_y_sizef;
         V2Df pos = v2df(pos_x, pos_y);
         S2Df size = s2df(width, height);
         _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)panel);
@@ -2436,8 +2436,8 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
                 V2Df pos;
                 int32_t cell_x = embgtwin->left - gtwin->left;
                 int32_t cell_y = embgtwin->top - gtwin->top;
-                pos.x = (real32_t)(cell_x * GTNAP_GLOBAL->cell_x_size);
-                pos.y = (real32_t)(cell_y * GTNAP_GLOBAL->cell_y_size);
+                pos.x = (real32_t)cell_x * GTNAP_GLOBAL->cell_x_sizef;
+                pos.y = (real32_t)cell_y * GTNAP_GLOBAL->cell_y_sizef;
                 i_gtwin_configure(gtnap, embgtwin, gtwin);
                 _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)embgtwin->panel);
                 _component_set_frame((GuiComponent*)embgtwin->panel, &pos, &embgtwin->panel_size);
@@ -2572,7 +2572,7 @@ static void i_OnTerminalClose(GtNapWindow *gtwin, Event *e)
 uint32_t hb_gtnap_width(void)
 {
     cassert_no_null(GTNAP_GLOBAL);
-    return GTNAP_GLOBAL->cell_x_size * GTNAP_GLOBAL->cols;
+    return (uint32_t)(GTNAP_GLOBAL->cell_x_sizef * GTNAP_GLOBAL->cols);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2580,7 +2580,7 @@ uint32_t hb_gtnap_width(void)
 uint32_t hb_gtnap_height(void)
 {
     cassert_no_null(GTNAP_GLOBAL);
-    return GTNAP_GLOBAL->cell_y_size * GTNAP_GLOBAL->rows;
+    return (uint32_t)(GTNAP_GLOBAL->cell_y_sizef * GTNAP_GLOBAL->rows);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2704,8 +2704,8 @@ static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t
     gtwin->default_button = UINT32_MAX;
     gtwin->objects = arrpt_create(GtNapObject);
     gtwin->callbacks = arrpt_create(GtNapCallback);
-    gtwin->panel_size.width = (real32_t)(gtnap->cell_x_size * (gtwin->right - gtwin->left + 1));
-    gtwin->panel_size.height = (real32_t)(gtnap->cell_y_size * (gtwin->bottom - gtwin->top + 1));
+    gtwin->panel_size.width = gtnap->cell_x_sizef * (real32_t)(gtwin->right - gtwin->left + 1);
+    gtwin->panel_size.height = gtnap->cell_y_sizef * (real32_t)(gtwin->bottom - gtwin->top + 1);
     arrpt_append(gtnap->windows, gtwin, GtNapWindow);
     return gtwin;
 }
@@ -3179,8 +3179,8 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t pwid, const ui
             }
         }
 
-        pos.x = (real32_t)(gtwin->left * GTNAP_GLOBAL->cell_x_size);
-        pos.y = (real32_t)(gtwin->top * GTNAP_GLOBAL->cell_y_size);
+        pos.x = (real32_t)gtwin->left * GTNAP_GLOBAL->cell_x_sizef;
+        pos.y = (real32_t)gtwin->top * GTNAP_GLOBAL->cell_y_sizef;
 
         if (arrpt_size(GTNAP_GLOBAL->windows, GtNapWindow) > 0)
         {
@@ -3254,7 +3254,7 @@ void hb_gtnap_window_stop_modal(const uint32_t wid, const uint32_t result)
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_add_object(const objtype_t type, const int32_t top, const int32_t left, const uint32_t cell_x_size, const uint32_t cell_y_size, const S2Df *size, const bool_t in_scroll, GuiComponent *component, GtNapWindow *gtwin)
+static uint32_t i_add_object(const objtype_t type, const int32_t top, const int32_t left, const real32_t cell_x_sizef, const real32_t cell_y_sizef, const S2Df *size, const bool_t in_scroll, GuiComponent *component, GtNapWindow *gtwin)
 {
     uint32_t id;
     GtNapObject *obj = NULL;
@@ -3267,8 +3267,8 @@ static uint32_t i_add_object(const objtype_t type, const int32_t top, const int3
     obj->top = top;
     obj->left = left;
     obj->component = component;
-    obj->pos.x = (real32_t)(left * (int32_t)cell_x_size);
-    obj->pos.y = (real32_t)(top * (int32_t)cell_y_size);
+    obj->pos.x = (real32_t)left * cell_x_sizef;
+    obj->pos.y = (real32_t)top * cell_y_sizef;
     obj->size = *size;
     obj->is_last_edit = FALSE;
     obj->in_scroll = in_scroll;
@@ -3287,9 +3287,9 @@ static uint32_t i_add_label(const int32_t top, const int32_t left, const bool_t 
     S2Df size;
     cassert_no_null(gtnap);
     label_font(label, gtnap->global_font);
-    size.width = (real32_t)(1 * gtnap->cell_x_size);
-    size.height = (real32_t)gtnap->label_y_size;
-    return i_add_object(ekOBJ_LABEL, top, left, gtnap->cell_x_size, gtnap->cell_y_size, &size, in_scroll, (GuiComponent*)label, gtwin);
+    size.width = gtnap->cell_x_sizef;
+    size.height = gtnap->label_y_sizef;
+    return i_add_object(ekOBJ_LABEL, top, left, gtnap->cell_x_sizef, gtnap->cell_y_sizef, &size, in_scroll, (GuiComponent*)label, gtwin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3365,8 +3365,8 @@ void hb_gtnap_label_update(const uint32_t wid, const uint32_t id, const int32_t 
         }
     }
 
-    gtobj->pos.x = (real32_t)((left - gtwin->left) * (int32_t)GTNAP_GLOBAL->cell_x_size);
-    gtobj->pos.y = (real32_t)((top - gtwin->top) * (int32_t)GTNAP_GLOBAL->cell_y_size);
+    gtobj->pos.x = (real32_t)(left - gtwin->left) * GTNAP_GLOBAL->cell_x_sizef;
+    gtobj->pos.y = (real32_t)(top - gtwin->top) * GTNAP_GLOBAL->cell_y_sizef;
 
     i_set_label_text(gtobj, NULL);
 }
@@ -3458,9 +3458,9 @@ uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t le
     button_font(button, GTNAP_GLOBAL->reduced_font);
     button_vpadding(button, i_button_vpadding());
     cassert(bottom == top);
-    size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->button_y_size);
-    id = i_add_object(ekOBJ_BUTTON, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)button, gtwin);
+    size.width = (real32_t)(right - left + 1) * GTNAP_GLOBAL->cell_x_sizef;
+    size.height = (real32_t)(bottom - top + 1) * GTNAP_GLOBAL->button_y_sizef;
+    id = i_add_object(ekOBJ_BUTTON, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)button, gtwin);
 
     if (text_block != NULL)
     {
@@ -3512,11 +3512,11 @@ uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t lef
         listener = i_gtnap_listener(click_block, INT32_MAX, autoclose_id, gtwin, i_OnImageClick);
         view_OnClick((View*)view, listener);
         imageview_scale(view, ekGUI_SCALE_AUTO);
-        size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
-        size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
+        size.width = (real32_t)(right - left + 1) * GTNAP_GLOBAL->cell_x_sizef;
+        size.height = (real32_t)(bottom - top + 1) * GTNAP_GLOBAL->cell_y_sizef;
         imageview_image(view, image);
         image_destroy(&image);
-        return i_add_object(ekOBJ_IMAGE, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)view, gtwin);
+        return i_add_object(ekOBJ_IMAGE, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)view, gtwin);
     }
 
     return UINT32_MAX;
@@ -3534,9 +3534,9 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
     cassert_no_null(gtwin);
     edit_font(edit, GTNAP_GLOBAL->reduced_font);
     edit_vpadding(edit, i_edit_vpadding());
-    size.width = (real32_t)((width + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)GTNAP_GLOBAL->edit_y_size;
-    id = i_add_object(ekOBJ_EDIT, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)edit, gtwin);
+    size.width = (real32_t)(width + 1) * GTNAP_GLOBAL->cell_x_sizef;
+    size.height = GTNAP_GLOBAL->edit_y_sizef;
+    id = i_add_object(ekOBJ_EDIT, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)edit, gtwin);
     obj = arrpt_last(gtwin->objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_EDIT);
@@ -3700,9 +3700,9 @@ uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t 
     cassert_no_null(gtwin);
     textview_family(view, font_family(GTNAP_GLOBAL->global_font));
     textview_fsize(view, font_size(GTNAP_GLOBAL->global_font));
-    size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
-    id = i_add_object(ekOBJ_TEXTVIEW, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)view, gtwin);
+    size.width = (real32_t)(right - left + 1) * GTNAP_GLOBAL->cell_x_sizef;
+    size.height = (real32_t)(bottom - top + 1) * GTNAP_GLOBAL->cell_y_sizef;
+    id = i_add_object(ekOBJ_TEXTVIEW, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)view, gtwin);
     obj = arrpt_last(gtwin->objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_TEXTVIEW);
@@ -3848,15 +3848,15 @@ void hb_gtnap_textview_hotkey(uint32_t wid, uint32_t id, int32_t key)
 uint32_t hb_gtnap_menu(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t autoclose, const bool_t in_scroll)
 {
     GtNapWindow *gtwin = i_gtwin(GTNAP_GLOBAL, wid);
-    Panel *panel = nap_menu_create(autoclose);
+    Panel *panel = nap_menu_create(autoclose, GTNAP_GLOBAL->global_font, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef);
     S2Df size, final_size;
     uint32_t id = UINT32_MAX;
     cassert_no_null(gtwin);
-    size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
+    size.width = (real32_t)(right - left + 1) * GTNAP_GLOBAL->cell_x_sizef;
+    size.height = (real32_t)(bottom - top + 1) * GTNAP_GLOBAL->cell_y_sizef;
     _panel_compose(panel, &size, &final_size);
     _panel_locate(panel);
-    id = i_add_object(ekOBJ_MENU, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)panel, gtwin);
+    id = i_add_object(ekOBJ_MENU, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)panel, gtwin);
     return id;
 }
 
@@ -3954,16 +3954,16 @@ uint32_t hb_gtnap_tableview(const uint32_t wid, const int32_t top, const int32_t
     cassert(gtwin->gtarea == NULL);
     tableview_font(view, GTNAP_GLOBAL->global_font);
     tableview_multisel(view, multisel, multisel);
-    size.width = (real32_t)((right - left + 1) * GTNAP_GLOBAL->cell_x_size);
-    size.height = (real32_t)((bottom - top + 1) * GTNAP_GLOBAL->cell_y_size);
-    id = i_add_object(ekOBJ_TABLEVIEW, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_size, GTNAP_GLOBAL->cell_y_size, &size, in_scroll, (GuiComponent*)view, gtwin);
+    size.width = (real32_t)(right - left + 1) * GTNAP_GLOBAL->cell_x_sizef;
+    size.height = (real32_t)(bottom - top + 1) * GTNAP_GLOBAL->cell_y_sizef;
+    id = i_add_object(ekOBJ_TABLEVIEW, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)view, gtwin);
     obj = arrpt_last(gtwin->objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_TABLEVIEW);
     obj->multisel = multisel;
     obj->autoclose = autoclose;
     tableview_OnRowClick(view, listener(obj, i_OnTableRowClick, GtNapObject));
-    tableview_row_height(view, (real32_t)GTNAP_GLOBAL->cell_y_size);
+    tableview_row_height(view, GTNAP_GLOBAL->cell_y_sizef);
     tableview_hkey_scroll(view, TRUE, 0.f);
     return id;
 }
@@ -3988,15 +3988,15 @@ static uint32_t i_header_char_width(const char_t *title, uint32_t *nlines)
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_col_width(const uint32_t fixed_width, const uint32_t str_width, const GtNap *gtnap)
+static real32_t i_col_widthf(const uint32_t fixed_chars, const uint32_t str_chars, const GtNap *gtnap)
 {
-    uint32_t cwidth = fixed_width;
+    uint32_t cwidth = fixed_chars;
     cassert_no_null(gtnap);
 
     if (cwidth == 0)
-        cwidth = str_width;
+        cwidth = str_chars;
 
-    return (cwidth + 1) * gtnap->cell_x_size;
+    return (real32_t)(cwidth + 1) * gtnap->cell_x_sizef;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4032,8 +4032,8 @@ void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint
 
     str_repl_c(tcc(col->title), ";", "\n");
     hnchars = i_header_char_width(tc(col->title), &col->header_lines);
-    col->fixed_width = width;
-    col->width = i_col_width(col->fixed_width, hnchars, GTNAP_GLOBAL);
+    col->fixed_chars = width;
+    col->widthf = i_col_widthf(col->fixed_chars, hnchars, GTNAP_GLOBAL);
     col->align = ekLEFT;
     col->block = hb_itemNew(eval_block);
 
@@ -4043,9 +4043,9 @@ void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint
     arrst_end();
 
     tableview_header_title((TableView*)obj->component, cid, tc(col->title));
-    tableview_column_width((TableView*)obj->component, cid, (real32_t)col->width);
+    tableview_column_width((TableView*)obj->component, cid, col->widthf);
     tableview_header_align((TableView*)obj->component, cid, col->align);
-    tableview_header_height((TableView*)obj->component, (real32_t)(nlines * GTNAP_GLOBAL->cell_y_size));
+    tableview_header_height((TableView*)obj->component, (real32_t)nlines * GTNAP_GLOBAL->cell_y_sizef);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4186,18 +4186,19 @@ static const char_t *i_area_eval_field(GtNapArea *gtarea, const uint32_t field_i
 static void i_area_column_width(GtNapArea *gtarea, const uint32_t col, const char_t *text)
 {
     GtNapColumn *column = NULL;
-    uint32_t nchars, width;
+    uint32_t nchars = 0;
+    real32_t width = 0;
     cassert_no_null(gtarea);
     cassert_no_null(gtarea->gtobj);
     cassert(gtarea->gtobj->type == ekOBJ_TABLEVIEW);
     column = arrst_get(gtarea->gtobj->columns, col, GtNapColumn);
     nchars = unicode_nchars(text, ekUTF8);
-    width = i_col_width(column->fixed_width, nchars, GTNAP_GLOBAL);
+    width = i_col_widthf(column->fixed_chars, nchars, GTNAP_GLOBAL);
 
-    if (width > column->width)
+    if (width > column->widthf)
     {
-        column->width = width;
-        tableview_column_width((TableView*)gtarea->gtobj->component, col, (real32_t)column->width);
+        column->widthf = width;
+        tableview_column_width((TableView*)gtarea->gtobj->component, col, column->widthf);
     }
 }
 
@@ -4654,8 +4655,8 @@ void hb_gtnap_toolbar(const uint32_t wid, const uint32_t image_pixels)
     cassert(gtwin->toolbar == NULL);
     gtwin->toolbar = heap_new0(GtNapToolbar);
     gtwin->toolbar->items = arrpt_create(GuiComponent);
-    gtwin->toolbar->button_width = image_pixels;
-    gtwin->toolbar->height = GTNAP_GLOBAL->cell_y_size * 2;
+    gtwin->toolbar->button_widthf = (real32_t)image_pixels;
+    gtwin->toolbar->heightf = GTNAP_GLOBAL->cell_y_sizef * 2.f;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4675,7 +4676,7 @@ void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const c
         uint32_t image_size = UINT32_MAX;
         cassert_no_null(gtwin);
         cassert_no_null(gtwin->toolbar);
-        image_size = gtwin->toolbar->button_width;
+        image_size = (uint32_t)gtwin->toolbar->button_widthf;
         if (image_width(image) != image_size || image_height(image) != image_size)
         {
             Image *scaled = image_scale(image, image_size, image_size);
@@ -5235,14 +5236,6 @@ void hb_gtnap_office_writer_insert_page_break(Writer *writer)
 
 /*---------------------------------------------------------------------------*/
 
-Font *hb_gtnap_font(void)
-{
-    cassert_no_null(GTNAP_GLOBAL);
-    return GTNAP_GLOBAL->global_font;
-}
-
-/*---------------------------------------------------------------------------*/
-
 void hb_gtnap_cualib_init_log(void)
 {
     osbs_start();
@@ -5284,13 +5277,6 @@ uint32_t hb_gtnap_cualib_window_current_edit(void)
         }
     arrpt_end();
     return UINT32_MAX;
-}
-
-/*---------------------------------------------------------------------------*/
-
-uint32_t hb_gtnap_cell_height(void)
-{
-    return GTNAP_GLOBAL->cell_y_size;
 }
 
 /*---------------------------------------------------------------------------*/
