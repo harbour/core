@@ -29,6 +29,38 @@ extern int32_t hb_gtnap_inkey(const vkey_t vkey);
 
 extern const char_t *hb_gtnap_working_path(void);
 
+extern color_t hb_gtnap_color_black(void);
+
+extern color_t hb_gtnap_color_blue(void);
+
+extern color_t hb_gtnap_color_green(void);
+
+extern color_t hb_gtnap_color_cyan(void);
+
+extern color_t hb_gtnap_color_red(void);
+
+extern color_t hb_gtnap_color_magenta(void);
+
+extern color_t hb_gtnap_color_brown(void);
+
+extern color_t hb_gtnap_color_white(void);
+
+extern color_t hb_gtnap_color_light_gray(void);
+
+extern color_t hb_gtnap_color_bright_blue(void);
+
+extern color_t hb_gtnap_color_bright_green(void);
+
+extern color_t hb_gtnap_color_bright_cyan(void);
+
+extern color_t hb_gtnap_color_bright_red(void);
+
+extern color_t hb_gtnap_color_bright_magenta(void);
+
+extern color_t hb_gtnap_color_yellow(void);
+
+extern color_t hb_gtnap_color_bright_white(void);
+
 extern uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const char_t *title, const bool_t close_return, const bool_t close_esc, const bool_t minimize_button, const bool_t buttons_navigation);
 
 extern uint32_t hb_gtnap_window_embedded(const uint32_t wid, const int32_t top, const int32_t left, const int32_t bottom, const int32_t right, const bool_t border);

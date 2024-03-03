@@ -30,70 +30,128 @@ HB_FUNC( NAP_COLOR_RGBA )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_COLOR_TRANSPARENT )
-{
-    hb_retni(kCOLOR_TRANSPARENT);
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_COLOR_DEFAULT )
-{
-    hb_retni(kCOLOR_DEFAULT);
-}
-
-/*---------------------------------------------------------------------------*/
-
 HB_FUNC( NAP_COLOR_BLACK )
 {
-    hb_retni(kCOLOR_BLACK);
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_COLOR_WHITE )
-{
-    hb_retni(kCOLOR_WHITE);
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_COLOR_RED )
-{
-    hb_retni(kCOLOR_RED);
-}
-
-/*---------------------------------------------------------------------------*/
-
-HB_FUNC( NAP_COLOR_GREEN )
-{
-    hb_retni(kCOLOR_GREEN);
+    color_t c = hb_gtnap_color_black();
+    hb_retni(c);
 }
 
 /*---------------------------------------------------------------------------*/
 
 HB_FUNC( NAP_COLOR_BLUE )
 {
-    hb_retni(kCOLOR_BLUE);
+    color_t c = hb_gtnap_color_blue();
+    hb_retni(c);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_COLOR_YELLOW )
+HB_FUNC( NAP_COLOR_GREEN )
 {
-    hb_retni(kCOLOR_YELLOW);
+    color_t c = hb_gtnap_color_green();
+    hb_retni(c);
 }
 
 /*---------------------------------------------------------------------------*/
 
 HB_FUNC( NAP_COLOR_CYAN )
 {
-    hb_retni(kCOLOR_CYAN);
+    color_t c = hb_gtnap_color_cyan();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_RED )
+{
+    color_t c = hb_gtnap_color_red();
+    hb_retni(c);
 }
 
 /*---------------------------------------------------------------------------*/
 
 HB_FUNC( NAP_COLOR_MAGENTA )
 {
-    hb_retni(kCOLOR_MAGENTA);
+    color_t c = hb_gtnap_color_magenta();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_BROWN )
+{
+    color_t c = hb_gtnap_color_brown();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_WHITE )
+{
+    color_t c = hb_gtnap_color_white();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_LIGHT_GRAY )
+{
+    color_t c = hb_gtnap_color_light_gray();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_BRIGHT_BLUE )
+{
+    color_t c = hb_gtnap_color_bright_blue();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_BRIGHT_GREEN )
+{
+    color_t c = hb_gtnap_color_bright_green();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_BRIGHT_CYAN )
+{
+    color_t c = hb_gtnap_color_bright_cyan();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_BRIGHT_RED )
+{
+    color_t c = hb_gtnap_color_bright_red();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_BRIGHT_MAGENTA )
+{
+    color_t c = hb_gtnap_color_bright_magenta();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_YELLOW )
+{
+    color_t c = hb_gtnap_color_yellow();
+    hb_retni(c);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_COLOR_BRIGHT_WHITE )
+{
+    color_t c = hb_gtnap_color_bright_white();
+    hb_retni(c);
 }

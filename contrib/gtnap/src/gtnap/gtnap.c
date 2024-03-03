@@ -964,24 +964,64 @@ static uint8_t i_utf8_to_cp_char(const uint32_t codepoint)
 
 /*---------------------------------------------------------------------------*/
 
+/*
+ * https://gogh-co.github.io/Gogh/
+ * Dark mode: Breeze
+ * Light mode: Clrs
+ */
 static void i_init_colors(void)
 {
-    i_COLORS[COL_BLACK] = color_rgb(0x0, 0x0, 0x0);
-    i_COLORS[COL_BLUE] = color_rgb(0x0, 0x0, 0x85);
-    i_COLORS[COL_GREEN] = color_rgb(0x0, 0x85, 0x0);
-    i_COLORS[COL_CYAN] = color_rgb(0x0, 0x85, 0x85);
-    i_COLORS[COL_RED] = color_rgb(0x85, 0x0, 0x0);
-    i_COLORS[COL_MAGENTA] = color_rgb(0x85, 0x0, 0x85);
-    i_COLORS[COL_BROWN] = color_rgb(0x85, 0x85, 0x0);
-    i_COLORS[COL_WHITE] = color_rgb(0xC6, 0xC6, 0xC6);
-    i_COLORS[COL_LIGHT_GRAY] = color_rgb(0x60, 0x60, 0x60);
-    i_COLORS[COL_BRIGHT_BLUE] = color_rgb(0x00, 0x00, 0xFF);
-    i_COLORS[COL_BRIGHT_GREEN] = color_rgb(0x60, 0xFF, 0x60);
-    i_COLORS[COL_BRIGHT_CYAN] = color_rgb(0x60, 0xFF, 0xFF);
-    i_COLORS[COL_BRIGHT_RED] = color_rgb(0xF8, 0x00, 0x26);
-    i_COLORS[COL_BRIGHT_MAGENTA] = color_rgb(0xFF, 0x60, 0xFF);
-    i_COLORS[COL_YELLOW] = color_rgb(0xFF, 0xFF, 0x00);
-    i_COLORS[COL_BRIGHT_WHITE] = color_rgb(0xFF, 0xFF, 0xFF);
+    /* In dark mode, black and white are inverted */
+    color_t DARK_COL_BLACK = color_html("#FCFCFC");
+    color_t DARK_COL_BLUE = color_html("#1D99F3");
+    color_t DARK_COL_GREEN = color_html("#11D116");
+    color_t DARK_COL_CYAN = color_html("#1ABC9C");
+    color_t DARK_COL_RED = color_html("#ED1515");
+    color_t DARK_COL_MAGENTA = color_html("#9B59B6");
+    color_t DARK_COL_BROWN = color_html("#F67400");
+    color_t DARK_COL_WHITE = color_html("#232627");
+    color_t DARK_COL_LIGHT_GRAY = color_html("#FFFFFF");
+    color_t DARK_COL_BRIGHT_BLUE = color_html("#3DAEE9");
+    color_t DARK_COL_BRIGHT_GREEN = color_html("#1CDC9A");
+    color_t DARK_COL_BRIGHT_CYAN = color_html("#3DAEE9");
+    color_t DARK_COL_BRIGHT_RED = color_html("#C0392B");
+    color_t DARK_COL_BRIGHT_MAGENTA = color_html("#8E44AD");
+    color_t DARK_COL_YELLOW = color_html("#FDBC4B");
+    color_t DARK_COL_BRIGHT_WHITE = color_html("#7F8C8D");
+
+    color_t LIGHT_COL_BLACK = color_html("#000000");
+    color_t LIGHT_COL_BLUE = color_html("#135CD0");
+    color_t LIGHT_COL_GREEN = color_html("#328A5D");
+    color_t LIGHT_COL_CYAN = color_html("#33C3C1");
+    color_t LIGHT_COL_RED = color_html("#F8282A");
+    color_t LIGHT_COL_MAGENTA = color_html("#9F00BD");
+    color_t LIGHT_COL_BROWN = color_html("#FA701D");
+    color_t LIGHT_COL_WHITE = color_html("#B3B3B3");
+    color_t LIGHT_COL_LIGHT_GRAY = color_html("#555753");
+    color_t LIGHT_COL_BRIGHT_BLUE = color_html("#1670FF");
+    color_t LIGHT_COL_BRIGHT_GREEN = color_html("#2CC631");
+    color_t LIGHT_COL_BRIGHT_CYAN = color_html("#3AD5CE");
+    color_t LIGHT_COL_BRIGHT_RED = color_html("#FB0416");
+    color_t LIGHT_COL_BRIGHT_MAGENTA = color_html("#E900B0");
+    color_t LIGHT_COL_YELLOW = color_html("#FDD727");
+    color_t LIGHT_COL_BRIGHT_WHITE = color_html("#EEEEEC");
+
+    i_COLORS[COL_BLACK] = gui_alt_color(LIGHT_COL_BLACK, DARK_COL_BLACK);
+    i_COLORS[COL_BLUE] = gui_alt_color(LIGHT_COL_BLUE, DARK_COL_BLUE);
+    i_COLORS[COL_GREEN] = gui_alt_color(LIGHT_COL_GREEN, DARK_COL_GREEN);
+    i_COLORS[COL_CYAN] = gui_alt_color(LIGHT_COL_CYAN, DARK_COL_CYAN);
+    i_COLORS[COL_RED] = gui_alt_color(LIGHT_COL_RED, DARK_COL_RED);
+    i_COLORS[COL_MAGENTA] = gui_alt_color(LIGHT_COL_MAGENTA, DARK_COL_MAGENTA);
+    i_COLORS[COL_BROWN] = gui_alt_color(LIGHT_COL_BROWN, DARK_COL_BROWN);
+    i_COLORS[COL_WHITE] = gui_alt_color(LIGHT_COL_WHITE, DARK_COL_WHITE);
+    i_COLORS[COL_LIGHT_GRAY] = gui_alt_color(LIGHT_COL_LIGHT_GRAY, DARK_COL_LIGHT_GRAY);
+    i_COLORS[COL_BRIGHT_BLUE] = gui_alt_color(LIGHT_COL_BRIGHT_BLUE, DARK_COL_BRIGHT_BLUE);
+    i_COLORS[COL_BRIGHT_GREEN] = gui_alt_color(LIGHT_COL_BRIGHT_GREEN, DARK_COL_BRIGHT_GREEN);
+    i_COLORS[COL_BRIGHT_CYAN] = gui_alt_color(LIGHT_COL_BRIGHT_CYAN, DARK_COL_BRIGHT_CYAN);
+    i_COLORS[COL_BRIGHT_RED] = gui_alt_color(LIGHT_COL_BRIGHT_RED, DARK_COL_BRIGHT_RED);
+    i_COLORS[COL_BRIGHT_MAGENTA] = gui_alt_color(LIGHT_COL_BRIGHT_MAGENTA, DARK_COL_BRIGHT_MAGENTA);
+    i_COLORS[COL_YELLOW] = gui_alt_color(LIGHT_COL_YELLOW, DARK_COL_YELLOW);
+    i_COLORS[COL_BRIGHT_WHITE] = gui_alt_color(LIGHT_COL_BRIGHT_WHITE, DARK_COL_BRIGHT_WHITE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2672,9 +2712,138 @@ static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t
 
 /*---------------------------------------------------------------------------*/
 
-extern const char_t *hb_gtnap_working_path(void)
+const char_t *hb_gtnap_working_path(void)
 {
     return tc(GTNAP_GLOBAL->working_path);
+}
+
+/*---------------------------------------------------------------------------*/
+
+#define COL_GREEN           2
+#define COL_CYAN            3
+#define COL_RED             4
+#define COL_MAGENTA         5
+#define COL_BROWN           6
+#define COL_WHITE           7
+#define COL_LIGHT_GRAY      8
+#define COL_BRIGHT_BLUE     9
+#define COL_BRIGHT_GREEN    10
+#define COL_BRIGHT_CYAN     11
+#define COL_BRIGHT_RED      12
+#define COL_BRIGHT_MAGENTA  13
+#define COL_YELLOW          14
+#define COL_BRIGHT_WHITE    15
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_black(void)
+{
+    return i_COLORS[COL_BLACK];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_blue(void)
+{
+    return i_COLORS[COL_BLUE];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_green(void)
+{
+    return i_COLORS[COL_GREEN];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_cyan(void)
+{
+    return i_COLORS[COL_CYAN];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_red(void)
+{
+    return i_COLORS[COL_RED];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_magenta(void)
+{
+    return i_COLORS[COL_MAGENTA];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_brown(void)
+{
+    return i_COLORS[COL_BROWN];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_white(void)
+{
+    return i_COLORS[COL_WHITE];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_light_gray(void)
+{
+    return i_COLORS[COL_LIGHT_GRAY];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_bright_blue(void)
+{
+    return i_COLORS[COL_BRIGHT_BLUE];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_bright_green(void)
+{
+    return i_COLORS[COL_BRIGHT_GREEN];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_bright_cyan(void)
+{
+    return i_COLORS[COL_BRIGHT_CYAN];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_bright_red(void)
+{
+    return i_COLORS[COL_BRIGHT_RED];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_bright_magenta(void)
+{
+    return i_COLORS[COL_BRIGHT_MAGENTA];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_yellow(void)
+{
+    return i_COLORS[COL_YELLOW];
+}
+
+/*---------------------------------------------------------------------------*/
+
+color_t hb_gtnap_color_bright_white(void)
+{
+    return i_COLORS[COL_BRIGHT_WHITE];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5126,7 +5295,7 @@ uint32_t hb_gtnap_cell_height(void)
 
 /*---------------------------------------------------------------------------*/
 
-extern String *hb_block_to_utf8(HB_ITEM *item)
+String *hb_block_to_utf8(HB_ITEM *item)
 {
     String *str = NULL;
 
