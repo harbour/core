@@ -747,19 +747,7 @@ HB_FUNC( DBSELECTAREA )
                iNewArea = ( int ) hb_dynsymAreaHandle( pSymAlias->pDynSym );
          }
       }
-      /*
-       * NOTE: iNewArea >= HB_RDD_MAX_AREA_NUM used intentionally
-       * In Clipper area 65535 is reserved for "M" alias [druzus]
-       */
-      if( iNewArea < 1 || iNewArea >= HB_RDD_MAX_AREA_NUM )
-      {
-         if( hb_rddSelectFirstAvailable() != HB_SUCCESS )
-            hb_rddSelectWorkAreaNumber( 0 );
-      }
-      else
-      {
-         hb_rddSelectWorkAreaNumber( iNewArea );
-      }
+      hb_rddSelectWorkAreaNumber( iNewArea );
    }
 }
 

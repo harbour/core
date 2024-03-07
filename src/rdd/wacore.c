@@ -500,10 +500,11 @@ HB_ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
    HB_TRACE( HB_TR_DEBUG, ( "hb_rddSelectWorkAreaNumber(%d)", iArea ) );
 
    pRddInfo = hb_stackRDD();
-   if( iArea < 1 || iArea > HB_RDD_MAX_AREA_NUM )
-      HB_SET_WA( 0 );
-   else
+
+   if( iArea >= 1 && iArea <= HB_RDD_MAX_AREA_NUM )
       HB_SET_WA( ( HB_AREANO ) iArea );
+   else if( hb_rddSelectFirstAvailable() != HB_SUCCESS )
+      HB_SET_WA( 0 );
 
    return ( pRddInfo->pCurrArea == NULL ) ? HB_FAILURE : HB_SUCCESS;
 }

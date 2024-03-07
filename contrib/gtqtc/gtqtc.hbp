@@ -24,6 +24,7 @@
 -deppkgname=qt5:qt5
 -depkeyhead=qt5:QtCore/QJsonObject
 -depcontrol=qt5:${HB_WITH_QT}
+{HB_BUILD_3RDEXT='no'}-depoptional=qt5:no
 -depoptional=qt5:yes
 -depincpath=qt5:/usr/include/x86_64-linux-gnu/qt5{linux}
 -depincpath=qt5:/usr/local/opt/qt5/include{darwin}
