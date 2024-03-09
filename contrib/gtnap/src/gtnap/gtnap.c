@@ -316,7 +316,6 @@ __EXTERN_C
  * These are internal, non-documented functions of NAppGUI.
  * They are used for direct handling of widgets, avoiding the 'layout' layer.
  */
-void _component_attach_to_panel(GuiComponent *panel_component, GuiComponent *child_component);
 void _component_detach_from_panel(GuiComponent *panel_component, GuiComponent *child_component);
 void _component_set_frame(GuiComponent *component, const V2Df *origin, const S2Df *size);
 void _component_visible(GuiComponent *component, const bool_t visible);
@@ -324,6 +323,8 @@ void _component_destroy(GuiComponent **component);
 void _component_taborder(GuiComponent *component, Window *window);
 const char_t *_component_type(const GuiComponent *component);
 void *_component_ositem(const GuiComponent *component);
+void _panel_attach_component(Panel *panel, GuiComponent *component);
+void _panel_destroy_component(Panel *panel, GuiComponent *component);
 void _panel_compose(Panel *panel, const S2Df *required_size, S2Df *final_size);
 void _panel_locate(Panel *panel);
 void _window_taborder(Window *window, void *ositem);
@@ -376,9 +377,9 @@ static void i_remove_toolbar(GtNapToolbar *toolbar, Panel *panel, const bool_t i
             GuiComponent *ditem = item;
 
             if (is_configured == TRUE)
-                _component_detach_from_panel((GuiComponent*)panel, item);
-
-            _component_destroy(&ditem);
+                _panel_destroy_component(panel, ditem);
+            else                
+                _component_destroy(&ditem);
         }
     arrpt_end();
     arrpt_destroy(&toolbar->items, NULL, GuiComponent);
@@ -414,12 +415,14 @@ static void i_destroy_gtobject(GtNapWindow *gtwin, const uint32_t index)
     if (gtwin->is_configured == TRUE)
     {
         if (gtobj->in_scroll == TRUE)
-            _component_detach_from_panel((GuiComponent*)gtwin->scrolled_panel, gtobj->component);
+            _panel_destroy_component(gtwin->scrolled_panel, gtobj->component);
         else
-            _component_detach_from_panel((GuiComponent*)gtwin->panel, gtobj->component);
+            _panel_destroy_component(gtwin->panel, gtobj->component);
     }
-
-    _component_destroy(&gtobj->component);
+    else
+    {
+        _component_destroy(&gtobj->component);
+    }
 
     str_destopt(&gtobj->text);
 
@@ -476,9 +479,9 @@ static void i_destroy_gtwin(GtNapWindow **dgtwin)
         _component_visible((GuiComponent*)gtwin->scrolled_panel, FALSE);
 
         if (gtwin->is_configured == TRUE)
-            _component_detach_from_panel((GuiComponent*)gtwin->panel, (GuiComponent*)gtwin->scrolled_panel);
-
-        _component_destroy((GuiComponent**)&gtwin->scrolled_panel);
+            _panel_destroy_component(gtwin->panel, (GuiComponent*)gtwin->scrolled_panel);
+        else
+            _component_destroy((GuiComponent**)&gtwin->scrolled_panel);
     }
 
     if (gtwin->toolbar != NULL)
@@ -1119,9 +1122,9 @@ static void i_attach_to_panel(ArrPt(GtNapObject) *objects, Panel *main_panel, Pa
             V2Df pos = object->pos;
 
             if (object->in_scroll == TRUE)
-                _component_attach_to_panel((GuiComponent*)scroll_panel, object->component);
+                _panel_attach_component(scroll_panel, object->component);
             else
-                _component_attach_to_panel((GuiComponent*)main_panel, object->component);
+                _panel_attach_component(main_panel, object->component);
 
             _component_visible(object->component, FALSE);
 
@@ -1200,7 +1203,7 @@ static void i_attach_toolbar_to_panel(const GtNapToolbar *toolbar, Panel *panel)
             if (item != NULL)
             {
                 const char_t *type = _component_type(item);
-                _component_attach_to_panel((GuiComponent*)panel, item);
+                _panel_attach_component(panel, item);
                 _component_visible(item, FALSE);
                 if (str_equ_c(type, "Button") == TRUE)
                 {
@@ -2376,7 +2379,7 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         real32_t height = (real32_t)(gtwin->scroll_bottom - gtwin->scroll_top + 1) * GTNAP_GLOBAL->cell_y_sizef;
         V2Df pos = v2df(pos_x, pos_y);
         S2Df size = s2df(width, height);
-        _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)panel);
+        _panel_attach_component(gtwin->panel, (GuiComponent*)panel);
         _component_set_frame((GuiComponent*)panel, &pos, &size);
         _component_visible((GuiComponent*)panel, FALSE);
         _panel_content_size(panel, csize.width, csize.height);
@@ -2439,7 +2442,7 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
                 pos.x = (real32_t)cell_x * GTNAP_GLOBAL->cell_x_sizef;
                 pos.y = (real32_t)cell_y * GTNAP_GLOBAL->cell_y_sizef;
                 i_gtwin_configure(gtnap, embgtwin, gtwin);
-                _component_attach_to_panel((GuiComponent*)gtwin->panel, (GuiComponent*)embgtwin->panel);
+                _panel_attach_component(gtwin->panel, (GuiComponent*)embgtwin->panel);
                 _component_set_frame((GuiComponent*)embgtwin->panel, &pos, &embgtwin->panel_size);
                 _component_visible((GuiComponent*)embgtwin->panel, TRUE);
             }

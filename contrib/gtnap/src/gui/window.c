@@ -799,7 +799,7 @@ R2Df window_control_frame(const Window *window, const GuiControl *control)
     cassert(i_in_active_layout(window, component) == TRUE);
     _component_get_origin(component, &r2d.pos);
     _component_get_size(component, &r2d.size);
-    cell = component->parent;
+    cell = _component_cell(component);
     for (; cell != NULL;)
     {
         V2Df panel_pos;
@@ -811,7 +811,7 @@ R2Df window_control_frame(const Window *window, const GuiControl *control)
             _component_get_origin(panel_component, &panel_pos);
             r2d.pos.x += panel_pos.x;
             r2d.pos.y += panel_pos.y;
-            cell = panel_component->parent;
+            cell = _component_cell(panel_component);
         }
         else
         {

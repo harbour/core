@@ -549,7 +549,7 @@ void _view_OnResize(View *view, const S2Df *size)
 Cell *_view_cell(View *view)
 {
     cassert_no_null(view);
-    return view->component.parent;
+    return _component_cell(&view->component);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -582,22 +582,6 @@ void view_OnImage(View *view, FPtr_set_image func_image)
 {
     cassert_no_null(view);
     view->func_image = func_image;
-}
-
-/*---------------------------------------------------------------------------*/
-
-bool_t view_enabled(const View *view)
-{
-    cassert_no_null(view);
-    return _cell_enabled(view->component.parent);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void view_upd_uint32(View *view, const uint32_t value)
-{
-    cassert_no_null(view);
-    _cell_upd_uint32(view->component.parent, value);
 }
 
 /*---------------------------------------------------------------------------*/
