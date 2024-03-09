@@ -14,6 +14,8 @@
 #include "nap_menu.inl"
 #include "hbapiitm.h"
 #include "nappgui.h"
+#include <gui/drawctrl.inl>
+#include <gui/view.inl>
 
 typedef struct _menuopt_t MenuOpt;
 typedef struct _menuvert_t MenuVert;
@@ -74,9 +76,7 @@ __EXTERN_C
 
 Window *_component_window(const GuiComponent *component);
 void _component_visible(GuiComponent *component, const bool_t visible);
-void _component_set_frame(GuiComponent *component, const V2Df *origin, const S2Df *size);
 void _component_taborder(GuiComponent *component, Window *window);
-void drawctrl_text(DCtx *ctx, const char_t *text, const int32_t x, const int32_t y, const enum_t state);
 
 __END_C
 
@@ -181,7 +181,7 @@ static void i_OnDown(Panel *panel, Event *e)
             menu->selected = sel;
             menu->launch_sel = TRUE;
         }
-        
+
         view_update(menu->view);
     }
 }
@@ -385,7 +385,7 @@ Panel *nap_menu_create(const bool_t autoclose, const Font *font, const real32_t 
 {
     Panel *panel = panel_create();
     Layout *layout = layout_create(1,1);
-    View *view = view_scroll();
+    View *view = _view_create(ekVIEW_HSCROLL | ekVIEW_VSCROLL | ekVIEW_CONTROL);
     MenuVert *menu = i_create();
     menu->font = font;
     menu->cell_x_sizef = cell_x_size;
