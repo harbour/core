@@ -2383,9 +2383,6 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     i_attach_to_panel(gtwin->objects, gtwin->panel, scroll_panel, &offset, ekOBJ_IMAGE, gtwin->toolbar);
     i_attach_toolbar_to_panel(gtwin->toolbar, gtwin->panel);
 
-    if (scroll_panel != NULL)
-        _component_visible((GuiComponent*)scroll_panel, TRUE);
-
     /* We are in a main (not embedded) window */
     if (gtwin->window != NULL)
     {
@@ -2403,6 +2400,9 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     i_component_tabstop(gtwin->objects, main_gtwin->window, ekOBJ_BUTTON);
     i_component_tabstop(gtwin->objects, main_gtwin->window, ekOBJ_LABEL);
     i_component_tabstop(gtwin->objects, main_gtwin->window, ekOBJ_IMAGE);
+
+    if (scroll_panel != NULL)
+        _component_visible((GuiComponent*)scroll_panel, TRUE);
 
     if (gtwin->window != NULL)
     {

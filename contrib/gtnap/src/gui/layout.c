@@ -1648,13 +1648,15 @@ void _layout_dimension(Layout *layout, const uint32_t di, real32_t *dim0, real32
     cells = arrpt_all(layout->cells_dim[di], Cell);
 
     arrst_foreach(dim, layout->lines_dim[di], i_LineDim)
+    {
         size += dim->margin;
-    i_line_compose(dim, di, cells, layout->dim_num_elems[di]);
-    size += dim->size;
-    cells += layout->dim_num_elems[di];
+        i_line_compose(dim, di, cells, layout->dim_num_elems[di]);
+        size += dim->size;
+        cells += layout->dim_num_elems[di];
+    }
     arrst_end()
 
-        size += layout->dim_margin[di];
+    size += layout->dim_margin[di];
 
     if (di == 0)
         *dim0 = size;

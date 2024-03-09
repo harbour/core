@@ -423,13 +423,16 @@ Window *_panel_get_window(Panel *panel)
 
 Cell *_panel_get_component_cell(Panel *panel, const GuiComponent *component)
 {
-    Layout *layout = NULL;
     Cell *cell = NULL;
     cassert_no_null(panel);
     cassert(panel->active_layout == panel->visible_layout);
     cassert(arrpt_find(panel->children, component, GuiComponent) != UINT32_MAX);
-    layout = arrpt_get(panel->layouts, panel->active_layout, Layout);
-    _layout_search_component(layout, component, &cell, FALSE);
+    if (panel->active_layout != UINT32_MAX)
+    {
+        Layout *layout = arrpt_get(panel->layouts, panel->active_layout, Layout);
+        _layout_search_component(layout, component, &cell, FALSE);
+    }
+
     return cell;
 }
 
@@ -443,12 +446,16 @@ static void i_activate_layout(const ArrPt(Layout) * layouts, ArrPt(GuiComponent)
     _layout_components(layout, layout_components);
 
     /* Show or hide component depending if is in active layout */
-    arrpt_foreach(component, children, GuiComponent) if (arrpt_find(layout_components, component, GuiComponent) != UINT32_MAX)
-        _component_visible(component, TRUE);
-    else _component_visible(component, FALSE);
+    arrpt_foreach(component, children, GuiComponent)
+    {
+        if (arrpt_find(layout_components, component, GuiComponent) != UINT32_MAX)
+            _component_visible(component, TRUE);
+        else 
+            _component_visible(component, FALSE);
+    }
     arrpt_end()
 
-        arrpt_destroy(&layout_components, NULL, GuiComponent);
+    arrpt_destroy(&layout_components, NULL, GuiComponent);
 }
 
 /*---------------------------------------------------------------------------*/
