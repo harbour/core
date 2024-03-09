@@ -379,7 +379,7 @@ static void i_remove_toolbar(GtNapToolbar *toolbar, Panel *panel, const bool_t i
 
             if (is_configured == TRUE)
                 _panel_destroy_component(panel, ditem);
-            else                
+            else
                 _component_destroy(&ditem);
         }
     arrpt_end();
@@ -1400,18 +1400,6 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
 
 /*---------------------------------------------------------------------------*/
 
-static GuiComponent *i_find_component(GtNapWindow *gtwin, void *ositem)
-{
-    cassert_no_null(gtwin);
-    arrpt_foreach(obj, gtwin->objects, GtNapObject)
-        if (_component_ositem(obj->component) == ositem)
-            return obj->component;
-    arrpt_end();
-    return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
 static void i_stop_modal(GtNap *gtnap, GtNapWindow *gtwin, const uint32_t retcode)
 {
     unref(gtnap);
@@ -1491,7 +1479,7 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
         if (obj->type == ekOBJ_LABEL)
             i_set_label_text(obj, NULL);
     arrpt_end();
-    
+
     /* If user have pressed the [ESC] key, we leave the stop for that event */
     if (gtwin->is_closed_by_esc == FALSE)
     {
