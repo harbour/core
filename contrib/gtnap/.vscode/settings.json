@@ -5,7 +5,6 @@
     "cmake.buildDirectory": "${workspaceFolder}/build-dev",
 
     "cmake.configureArgs": [
-        "-DCMAKE_BUILD_TYPE:STRING=Release",
         "-DGTNAP_DEVELOPER_MODE:BOOL=Yes",
         "-DGTNAP_LIBREOFFICE:BOOL=Yes"
     ],

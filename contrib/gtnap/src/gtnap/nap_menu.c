@@ -118,17 +118,22 @@ static void i_OnDraw(Panel *panel, Event *e)
     MenuVert *menu = panel_get_data(panel, MenuVert);
     real32_t xpos = 0, ypos = 0;
     draw_font(p->ctx, menu->font);
-    draw_text_color(p->ctx, kCOLOR_DEFAULT);
     draw_line_color(p->ctx, gui_label_color());
 
     arrst_foreach(opt, menu->opts, MenuOpt)
 
         real32_t yoffset = (menu->row_heightf - opt->size.height) / 2.f;
 
+        draw_text_color(p->ctx, kCOLOR_DEFAULT);
         if (opt_i == menu->selected)
         {
             drawctrl_fill(p->ctx, (int32_t)xpos, (int32_t)ypos, (uint32_t)menu->control_widthf, (uint32_t)menu->row_heightf, ekCTRL_STATE_PRESSED);
             drawctrl_focus(p->ctx, (int32_t)xpos, (int32_t)ypos, (uint32_t)menu->control_widthf, (uint32_t)menu->row_heightf, ekCTRL_STATE_PRESSED);
+            drawctrl_text(p->ctx, tc(opt->text), (int32_t)(xpos + menu->cell_x_sizef), (int32_t)(ypos + yoffset), ekCTRL_STATE_PRESSED);
+        }
+        else
+        {
+            drawctrl_text(p->ctx, tc(opt->text), (int32_t)(xpos + menu->cell_x_sizef), (int32_t)(ypos + yoffset), ekCTRL_STATE_NORMAL);
         }
 
         if (opt_i == menu->mouse_row)
@@ -136,8 +141,6 @@ static void i_OnDraw(Panel *panel, Event *e)
             real32_t stx = xpos + menu->cell_x_sizef;
             draw_line(p->ctx, stx, ypos + opt->size.height - 1, stx + opt->size.width, ypos + opt->size.height);
         }
-
-        drawctrl_text(p->ctx, tc(opt->text), (int32_t)(xpos + menu->cell_x_sizef), (int32_t)(ypos + yoffset), ekCTRL_STATE_NORMAL);
 
         if (opt->kpos != UINT32_MAX)
         {
