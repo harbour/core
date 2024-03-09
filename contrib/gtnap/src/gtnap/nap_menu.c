@@ -19,7 +19,6 @@
 
 typedef struct _menuopt_t MenuOpt;
 typedef struct _menuvert_t MenuVert;
-typedef struct _gui_component_t GuiComponent;
 
 struct _menuopt_t
 {
