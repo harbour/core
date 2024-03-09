@@ -50,6 +50,8 @@ _osgui_api gui_focus_t oswindow_focus(OSWindow *window, OSControl *control);
 
 _osgui_api OSControl *oswindow_get_focus(const OSWindow *window);
 
+_osgui_api gui_tab_t oswindow_tabmotion(const OSWindow *window);
+
 _osgui_api void oswindow_attach_panel(OSWindow *window, OSPanel *panel);
 
 _osgui_api void oswindow_detach_panel(OSWindow *window, OSPanel *panel);

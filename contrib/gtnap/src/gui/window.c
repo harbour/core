@@ -620,6 +620,15 @@ GuiControl *window_get_focus(Window *window)
 
 /*---------------------------------------------------------------------------*/
 
+gui_tab_t window_tabmotion(const Window *window)
+{
+    cassert_no_null(window);
+    cassert_no_null(window->context);
+    return (gui_tab_t)window->context->func_window_tabmotion(window->ositem);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void window_update(Window *window)
 {
     _window_update(window);

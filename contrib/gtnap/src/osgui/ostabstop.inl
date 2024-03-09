@@ -28,13 +28,15 @@ bool_t ostabstop_can_close_window(OSTabStop *tabstop);
 
 void ostabstop_list_add(OSTabStop *tabstop, OSControl *control);
 
-gui_focus_t ostabstop_next(OSTabStop *tabstop);
+gui_focus_t ostabstop_next(OSTabStop *tabstop, const bool_t from_key);
 
-gui_focus_t ostabstop_prev(OSTabStop *tabstop);
+gui_focus_t ostabstop_prev(OSTabStop *tabstop, const bool_t from_key);
 
 gui_focus_t ostabstop_move(OSTabStop *tabstop, OSControl *control);
 
 gui_focus_t ostabstop_restore(OSTabStop *tabstop);
+
+gui_tab_t ostabstop_motion(const OSTabStop *tabstop);
 
 bool_t ostabstop_mouse_down(OSTabStop *tabstop, OSControl *control);
 

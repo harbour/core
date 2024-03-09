@@ -126,6 +126,17 @@ typedef enum _gui_focus_t
     ekGUI_FOCUS_NO_ACCEPT
 } gui_focus_t;
 
+typedef enum _gui_tab_t
+{
+    ekGUI_TAB_NO = 1,
+    ekGUI_TAB_KEY,
+    ekGUI_TAB_BACKKEY,
+    ekGUI_TAB_NEXT,
+    ekGUI_TAB_PREV,
+    ekGUI_TAB_MOVE,
+    ekGUI_TAB_RESTORE
+} gui_tab_t;
+
 typedef enum _gui_event_t
 {
     ekGUI_EVENT_LABEL = 0x400,
@@ -830,6 +841,7 @@ struct _guictx_t
     FPtr_gctx_set_enum2 func_window_tabstop;
     FPtr_gctx_set_ptr3 func_window_set_focus;
     FPtr_gctx_get_ptr func_window_get_focus;
+    FPtr_gctx_get_enum func_window_tabmotion;
     FPtr_gctx_set_ptr func_attach_main_panel_to_window;
     FPtr_gctx_set_ptr func_detach_main_panel_from_window;
     FPtr_gctx_set_ptr func_attach_window_to_window;

@@ -773,9 +773,9 @@ gui_focus_t oswindow_tabstop(OSWindow *window, const bool_t next)
 {
     cassert_no_null(window);
     if (next == TRUE)
-        return ostabstop_next(&window->tabstop);
+        return ostabstop_next(&window->tabstop, FALSE);
     else
-        return ostabstop_prev(&window->tabstop);
+        return ostabstop_prev(&window->tabstop, FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -794,6 +794,14 @@ OSControl *oswindow_get_focus(const OSWindow *window)
 {
     cassert_no_null(window);
     return window->tabstop.current;
+}
+
+/*---------------------------------------------------------------------------*/
+
+gui_tab_t oswindow_tabmotion(const OSWindow *window)
+{
+    cassert_no_null(window);
+    return ostabstop_motion(&window->tabstop);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1246,9 +1254,9 @@ static BOOL i_IsDialogMessage(HWND hDlg, LPMSG lpMsg)
                     SHORT rshif_state = GetAsyncKeyState(VK_RSHIFT);
                     BOOL previous = ((0x8000 & lshif_state) != 0) || ((0x8000 & rshif_state) != 0);
                     if (previous == TRUE)
-                        ostabstop_prev(&window->tabstop);
+                        ostabstop_prev(&window->tabstop, TRUE);
                     else
-                        ostabstop_next(&window->tabstop);
+                        ostabstop_next(&window->tabstop, TRUE);
                     return TRUE;
                 }
             }
