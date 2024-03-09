@@ -48,7 +48,7 @@ USE ../dados/cotacao NEW SHARED
 SET INDEX TO ../dados/cotacao
 GOTO TOP
 // Fran: We force to start at 21th visible register (just for testing)
-SKIP 21
+//SKIP 21
 
 CUA20 @ 01,41,MAXROW()-2,MAXCOL()-30 JANELA V_Janela ;
     TITU "Browse de arquivo DBF" ;
