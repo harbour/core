@@ -60,8 +60,6 @@ LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
 
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 LDFLAGS += $(LIBPATHS)
-LDFLAGS += -mmacosx-version-min=10.13
-CFLAGS += -mmacosx-version-min=10.13
 
 DY := $(CC)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))

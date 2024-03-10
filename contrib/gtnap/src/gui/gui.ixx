@@ -60,7 +60,7 @@ struct _gui_component_t
     Object object;
     GuiCtx *context;
     gui_type_t type;
-    Cell *parent;
+	Panel *panel;
     Tag tag;
     void *ositem;
 };

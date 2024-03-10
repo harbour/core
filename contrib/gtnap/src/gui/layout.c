@@ -353,7 +353,6 @@ static Cell *i_set_component(Layout *layout, GuiComponent *component, const uint
     if (layout->panel != NULL)
         _panel_attach_component(layout->panel, component);
 
-    component->parent = cell;
     cell->type = i_ekCOMPONENT;
     if (cell->dim[0].align == ENUM_MAX(align_t))
         cell->dim[0].align = halign;
@@ -1358,46 +1357,49 @@ Panel *_layout_panel(const Layout *layout)
 
 /*---------------------------------------------------------------------------*/
 
-Layout *_layout_search_component(const Layout *layout, const GuiComponent *component, const bool_t in_subpanels)
+Layout *_layout_search_component(const Layout *layout, const GuiComponent *component, Cell **in_cell, const bool_t in_subpanels)
 {
     Layout *find_layout = NULL;
     cassert_no_null(layout);
     cassert_no_null(layout->panel);
 
     arrpt_foreach(cell, layout->cells, Cell)
+    {
         /* In Layout destroy process, can be found NULL-Cells */
         if (cell != NULL)
-    {
-        if (cell->type == i_ekCOMPONENT)
         {
-            cassert_no_null(cell->content.component);
-            if (cell->content.component == component)
+            if (cell->type == i_ekCOMPONENT)
             {
-                find_layout = (Layout *)layout;
-                break;
-            }
-
-            if (in_subpanels == TRUE)
-            {
-                if (cell->content.component->type == ekGUI_TYPE_PANEL)
+                cassert_no_null(cell->content.component);
+                if (cell->content.component == component)
                 {
-                    Panel *panel = (Panel *)cell->content.component;
-                    find_layout = _panel_active_layout(panel);
-                    if (find_layout != NULL)
-                        break;
+                    find_layout = (Layout *)layout;
+                    ptr_assign(in_cell, cell);
+                    break;
+                }
+
+                if (in_subpanels == TRUE)
+                {
+                    if (cell->content.component->type == ekGUI_TYPE_PANEL)
+                    {
+                        Panel *panel = (Panel *)cell->content.component;
+                        find_layout = _panel_active_layout(panel);
+                        if (find_layout != NULL)
+                            break;
+                    }
                 }
             }
-        }
-        else if (cell->type == i_ekLAYOUT)
-        {
-            find_layout = _layout_search_component(cell->content.layout, component, in_subpanels);
-            if (find_layout != NULL)
-                break;
+            else if (cell->type == i_ekLAYOUT)
+            {
+                find_layout = _layout_search_component(cell->content.layout, component, in_cell, in_subpanels);
+                if (find_layout != NULL)
+                    break;
+            }
         }
     }
     arrpt_end()
 
-        return find_layout;
+    return find_layout;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1646,13 +1648,15 @@ void _layout_dimension(Layout *layout, const uint32_t di, real32_t *dim0, real32
     cells = arrpt_all(layout->cells_dim[di], Cell);
 
     arrst_foreach(dim, layout->lines_dim[di], i_LineDim)
+    {
         size += dim->margin;
-    i_line_compose(dim, di, cells, layout->dim_num_elems[di]);
-    size += dim->size;
-    cells += layout->dim_num_elems[di];
+        i_line_compose(dim, di, cells, layout->dim_num_elems[di]);
+        size += dim->size;
+        cells += layout->dim_num_elems[di];
+    }
     arrst_end()
 
-        size += layout->dim_margin[di];
+    size += layout->dim_margin[di];
 
     if (di == 0)
         *dim0 = size;
@@ -2470,9 +2474,10 @@ void _cell_set_radio(Cell *on_cell)
 {
     cassert_no_null(on_cell);
     cassert_no_null(on_cell->parent);
-    arrpt_foreach(cell, on_cell->parent->cells, Cell) if (cell->type == i_ekCOMPONENT && cell->content.component->type == ekGUI_TYPE_BUTTON && _button_is_radio((const Button *)cell->content.component))
+    arrpt_foreach(cell, on_cell->parent->cells, Cell)
     {
-        _button_radio_state((Button *)cell->content.component, (cell == on_cell) ? ekGUI_ON : ekGUI_OFF);
+        if (cell->type == i_ekCOMPONENT && cell->content.component->type == ekGUI_TYPE_BUTTON && _button_is_radio((const Button *)cell->content.component))
+            _button_radio_state((Button *)cell->content.component, (cell == on_cell) ? ekGUI_ON : ekGUI_OFF);
     }
     arrpt_end()
 }
@@ -2561,14 +2566,7 @@ static Layout *i_cell_obj(Cell *cell, void **obj, Layout **layout_notif)
     /* No object data --> Go up to parent panel layout */
     while (layout->stbind == NULL)
     {
-        GuiComponent *component = _panel_get_component(layout->panel);
-
-        /* Main panel */
-        if (component->parent == NULL)
-            break;
-
-        layout = component->parent->parent;
-
+        layout = _panel_active_layout(layout->panel);        
         while (layout->stbind == NULL && layout->parent != NULL)
             layout = layout->parent->parent;
     }

@@ -3,6 +3,10 @@ set(TARGET_NAME officesdk)
 nap_library(${TARGET_NAME} "core" NO NRC_NONE)
 target_include_directories(${TARGET_NAME} PUBLIC "..")
 
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+    target_compile_options(${TARGET_NAME} PUBLIC "-Wno-inline")
+endif()
+
 if (GTNAP_LIBREOFFICE)
 
     set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 11)

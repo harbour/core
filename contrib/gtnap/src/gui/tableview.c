@@ -350,7 +350,6 @@ static void i_OnDraw(TableView *view, Event *e)
         uint32_t fill_width = scrollview_content_width(data->sview);
         uint32_t i, j;
 
-        fill_width -= scrollview_scrollbar_width(data->sview);
         fill_width -= i_DOCUMENT_RIGHT_MARGIN;
 
         if (data->head_visible == TRUE)
@@ -800,7 +799,7 @@ static void i_document_size(TableView *view, TData *data)
     }
     else
     {
-        theight = scrollview_content_width(data->sview);
+        theight = scrollview_content_height(data->sview);
     }
 
     if (update == TRUE)

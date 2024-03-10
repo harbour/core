@@ -188,12 +188,12 @@ static gboolean i_OnKeyPress(GtkWidget *widget, GdkEventKey *event, OSWindow *wi
     switch (key)
     {
     case GDK_KEY_Tab:
-        ostabstop_next(&window->tabstop);
+        ostabstop_next(&window->tabstop, TRUE);
         return TRUE;
 
     /* https://mail.gnome.org/archives/gtk-list/1999-August/msg00127.html */
     case GDK_KEY_ISO_Left_Tab:
-        ostabstop_prev(&window->tabstop);
+        ostabstop_prev(&window->tabstop, TRUE);
         return TRUE;
 
     case GDK_KEY_Escape:
@@ -502,9 +502,9 @@ gui_focus_t oswindow_tabstop(OSWindow *window, const bool_t next)
 {
     cassert_no_null(window);
     if (next == TRUE)
-        return ostabstop_next(&window->tabstop);
+        return ostabstop_next(&window->tabstop, FALSE);
     else
-        return ostabstop_prev(&window->tabstop);
+        return ostabstop_prev(&window->tabstop, FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -522,6 +522,14 @@ OSControl *oswindow_get_focus(const OSWindow *window)
 {
     cassert_no_null(window);
     return window->tabstop.current;
+}
+
+/*---------------------------------------------------------------------------*/
+
+gui_tab_t oswindow_tabmotion(const OSWindow *window)
+{
+    cassert_no_null(window);
+    return ostabstop_motion(&window->tabstop);
 }
 
 /*---------------------------------------------------------------------------*/

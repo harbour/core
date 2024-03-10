@@ -225,10 +225,51 @@ Check Xcode is working:
 /Applications/Xcode.app/Contents/Developer
 ```
 
-Then, compile gtnap (same as Linux)
+> **Important:** On macOS, before compile Harbour and GTNap, **we must** set the `MACOSX_DEPLOYMENT_TARGET` environment variable, in order to establish the minimum version of macOS where our GTNAP applications will run.
+
 ```
+export MACOSX_DEPLOYMENT_TARGET=14.0      # Sonoma
+export MACOSX_DEPLOYMENT_TARGET=13.6      # Ventura
+export MACOSX_DEPLOYMENT_TARGET=13.5
+export MACOSX_DEPLOYMENT_TARGET=13.4
+export MACOSX_DEPLOYMENT_TARGET=13.3
+export MACOSX_DEPLOYMENT_TARGET=13.2
+export MACOSX_DEPLOYMENT_TARGET=13.1
+export MACOSX_DEPLOYMENT_TARGET=13.0
+export MACOSX_DEPLOYMENT_TARGET=12.4      # Monterey
+export MACOSX_DEPLOYMENT_TARGET=12.3
+export MACOSX_DEPLOYMENT_TARGET=12.2
+export MACOSX_DEPLOYMENT_TARGET=12.1
+export MACOSX_DEPLOYMENT_TARGET=12.0
+export MACOSX_DEPLOYMENT_TARGET=11.5      # Big Sur
+export MACOSX_DEPLOYMENT_TARGET=11.4
+export MACOSX_DEPLOYMENT_TARGET=11.3
+export MACOSX_DEPLOYMENT_TARGET=11.2
+export MACOSX_DEPLOYMENT_TARGET=11.1
+export MACOSX_DEPLOYMENT_TARGET=11.0
+export MACOSX_DEPLOYMENT_TARGET=10.15     # Catalina
+export MACOSX_DEPLOYMENT_TARGET=10.14     # Mojave
+export MACOSX_DEPLOYMENT_TARGET=10.13     # High Sierra
+export MACOSX_DEPLOYMENT_TARGET=10.12     # Sierra
+...
+It is not recommended to compile for lower systems.
+```
+
+> **Important:** GTNap, has been tested with `MACOSX_DEPLOYMENT_TARGET=10.13`.
+
+Then, compile Harbour and gtnap
+```
+# Main repo folder
+cd harbour_nappgui
+
+# Set the minimum macOS
+export MACOSX_DEPLOYMENT_TARGET=10.13
+
+# Compile Harbour
+make
+
 # Goto gtnap folder
-cd contrib/gtnap
+cd ./contrib/gtnap
 
 # Just build
 # -noliboff Disable the LibreOffice support in GTNAP (optional)
@@ -561,7 +602,7 @@ cuademo-example is a Harbour application. We need the `*.c` files that `hbmk2` g
     -- * Generator: Xcode
     -- * Build shared: False
     -- * Base OSX: 13.3-Ventura
-    -- * Deployment target OSX: 13.3-Ventura
+    -- * Deployment target OSX: 10.13-High Sierra
     ...
     ```
 * Go to the generated `build-dev` folder and open the `NAppGUI.xcodeproj` with the Xcode solution.

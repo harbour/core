@@ -30,6 +30,7 @@ void ostabstop_init(OSTabStop *tabstop, OSWindow *window)
     cassert_no_null(tabstop);
     tabstop->tablist = arrpt_create(OSControl);
     tabstop->tabindex = UINT32_MAX;
+    tabstop->motion = ekGUI_TAB_NO;
     tabstop->window = window;
     tabstop->current = NULL;
     tabstop->transient = NULL;
@@ -44,6 +45,7 @@ void ostabstop_remove(OSTabStop *tabstop)
     cassert_no_null(tabstop);
     arrpt_destroy(&tabstop->tablist, NULL, OSControl);
     tabstop->tabindex = UINT32_MAX;
+    tabstop->motion = ekGUI_TAB_NO;
     tabstop->current = NULL;
     tabstop->transient = NULL;
     tabstop->defbutton = NULL;
@@ -246,13 +248,17 @@ static OSControl *i_effective_focus(OSTabStop *tabstop, OSControl *control, cons
 
 /*---------------------------------------------------------------------------*/
 
-static gui_focus_t i_try_change_focus(OSTabStop *tabstop, OSControl *control, const bool_t forward)
+static gui_focus_t i_try_change_focus(OSTabStop *tabstop, OSControl *control, const gui_tab_t motion, const bool_t forward)
 {
     gui_focus_t fstate = ENUM_MAX(gui_focus_t);
-    OSControl *focus = i_get_focus(tabstop);
-    OSControl *next_control = i_effective_focus(tabstop, control, forward);
+    OSControl *focus = NULL;
+    OSControl *next_control = NULL;
     bool_t resign = TRUE;
     cassert_no_null(tabstop);
+
+    tabstop->motion = motion;
+    focus = i_get_focus(tabstop);
+    next_control = i_effective_focus(tabstop, control, forward);
 
     /*
      * 'focus' and 'next_control' can be the same but,
@@ -299,12 +305,13 @@ static gui_focus_t i_try_change_focus(OSTabStop *tabstop, OSControl *control, co
     }
 
     cassert(fstate != ENUM_MAX(gui_focus_t));
+    tabstop->motion = ekGUI_TAB_NO;
     return fstate;
 }
 
 /*---------------------------------------------------------------------------*/
 
-gui_focus_t ostabstop_next(OSTabStop *tabstop)
+gui_focus_t ostabstop_next(OSTabStop *tabstop, const bool_t from_key)
 {
     OSControl *focus = i_get_focus(tabstop);
     uint32_t tabindex = focus ? i_tabindex(tabstop, focus) : UINT32_MAX;
@@ -341,7 +348,8 @@ gui_focus_t ostabstop_next(OSTabStop *tabstop)
     if (next_tabindex != UINT32_MAX)
     {
         OSControl *next_control = arrpt_get(tabstop->tablist, next_tabindex, OSControl);
-        return i_try_change_focus(tabstop, next_control, TRUE);
+        gui_tab_t motion = from_key ? ekGUI_TAB_KEY : ekGUI_TAB_NEXT;
+        return i_try_change_focus(tabstop, next_control, motion, TRUE);
     }
 
     /* We don't know what the next control is */
@@ -350,7 +358,7 @@ gui_focus_t ostabstop_next(OSTabStop *tabstop)
 
 /*---------------------------------------------------------------------------*/
 
-gui_focus_t ostabstop_prev(OSTabStop *tabstop)
+gui_focus_t ostabstop_prev(OSTabStop *tabstop, const bool_t from_key)
 {
     OSControl *focus = i_get_focus(tabstop);
     uint32_t tabindex = focus ? i_tabindex(tabstop, focus) : UINT32_MAX;
@@ -387,7 +395,8 @@ gui_focus_t ostabstop_prev(OSTabStop *tabstop)
     if (prev_tabindex != UINT32_MAX)
     {
         OSControl *prev_control = arrpt_get(tabstop->tablist, prev_tabindex, OSControl);
-        return i_try_change_focus(tabstop, prev_control, FALSE);
+        gui_tab_t motion = from_key ? ekGUI_TAB_BACKKEY : ekGUI_TAB_PREV;
+        return i_try_change_focus(tabstop, prev_control, motion, FALSE);
     }
 
     /* We don't know what the previous control is */
@@ -398,7 +407,7 @@ gui_focus_t ostabstop_prev(OSTabStop *tabstop)
 
 gui_focus_t ostabstop_move(OSTabStop *tabstop, OSControl *control)
 {
-    return i_try_change_focus(tabstop, control, TRUE);
+    return i_try_change_focus(tabstop, control, ekGUI_TAB_MOVE, TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -415,9 +424,17 @@ gui_focus_t ostabstop_restore(OSTabStop *tabstop)
     }
 
     if (control != NULL)
-        return i_try_change_focus(tabstop, control, TRUE);
+        return i_try_change_focus(tabstop, control, ekGUI_TAB_RESTORE, TRUE);
 
     return ekGUI_FOCUS_NO_NEXT;
+}
+
+/*---------------------------------------------------------------------------*/
+
+gui_tab_t ostabstop_motion(const OSTabStop *tabstop)
+{
+    cassert_no_null(tabstop);
+    return tabstop->motion;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -428,7 +445,7 @@ bool_t ostabstop_mouse_down(OSTabStop *tabstop, OSControl *control)
     /* Click over focused control allways is accepted */
     if (tabstop->current != control)
     {
-        gui_focus_t fstate = i_try_change_focus(tabstop, control, TRUE);
+        gui_focus_t fstate = i_try_change_focus(tabstop, control, ekGUI_TAB_MOVE, TRUE);
         switch (fstate)
         {
         case ekGUI_FOCUS_NO_RESIGN: {

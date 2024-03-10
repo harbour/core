@@ -14,10 +14,11 @@
 #include "nap_menu.inl"
 #include "hbapiitm.h"
 #include "nappgui.h"
+#include <gui/drawctrl.inl>
+#include <gui/view.inl>
 
 typedef struct _menuopt_t MenuOpt;
 typedef struct _menuvert_t MenuVert;
-typedef struct _gui_component_t GuiComponent;
 
 struct _menuopt_t
 {
@@ -33,15 +34,15 @@ struct _menuvert_t
 {
     Window *window;
     View *view;
-    Font *font;
+    const Font *font;
     Layout *layout;
     uint32_t mouse_row;
-    uint32_t row_height;
+    real32_t row_heightf;
     real32_t total_height;
-    uint32_t control_width;
-    uint32_t control_height;
-    real32_t cell_x_size;
-    real32_t cell_y_size;
+    real32_t control_widthf;
+    real32_t control_heightf;
+    real32_t cell_x_sizef;
+    real32_t cell_y_sizef;
     ArrSt(MenuOpt) *opts;
     uint32_t selected;
     bool_t launch_sel;
@@ -74,9 +75,7 @@ __EXTERN_C
 
 Window *_component_window(const GuiComponent *component);
 void _component_visible(GuiComponent *component, const bool_t visible);
-void _component_set_frame(GuiComponent *component, const V2Df *origin, const S2Df *size);
 void _component_taborder(GuiComponent *component, Window *window);
-void drawctrl_text(DCtx *ctx, const char_t *text, const int32_t x, const int32_t y, const enum_t state);
 
 __END_C
 
@@ -119,38 +118,38 @@ static void i_OnDraw(Panel *panel, Event *e)
     MenuVert *menu = panel_get_data(panel, MenuVert);
     real32_t xpos = 0, ypos = 0;
     draw_font(p->ctx, menu->font);
+    draw_line_color(p->ctx, gui_label_color());
+
     arrst_foreach(opt, menu->opts, MenuOpt)
 
-        real32_t yoffset = ((real32_t)menu->row_height - opt->size.height) / 2.f;
+        real32_t yoffset = (menu->row_heightf - opt->size.height) / 2.f;
 
+        draw_text_color(p->ctx, kCOLOR_DEFAULT);
         if (opt_i == menu->selected)
         {
-            draw_fill_color(p->ctx, kCOLOR_CYAN);
-            draw_rect(p->ctx, ekFILL, xpos, ypos, (real32_t)menu->control_width, (real32_t)menu->row_height /* opt->size.height*/);
-
-            /* To be removed, just for debug
-            draw_line_color(p->ctx, kCOLOR_RED);
-            draw_rect(p->ctx, ekSTROKE, 0, 0, p->width - 1, menu->total_height - 1);
-            */
+            drawctrl_fill(p->ctx, (int32_t)xpos, (int32_t)ypos, (uint32_t)menu->control_widthf, (uint32_t)menu->row_heightf, ekCTRL_STATE_PRESSED);
+            drawctrl_focus(p->ctx, (int32_t)xpos, (int32_t)ypos, (uint32_t)menu->control_widthf, (uint32_t)menu->row_heightf, ekCTRL_STATE_PRESSED);
+            drawctrl_text(p->ctx, tc(opt->text), (int32_t)(xpos + menu->cell_x_sizef), (int32_t)(ypos + yoffset), ekCTRL_STATE_PRESSED);
+        }
+        else
+        {
+            drawctrl_text(p->ctx, tc(opt->text), (int32_t)(xpos + menu->cell_x_sizef), (int32_t)(ypos + yoffset), ekCTRL_STATE_NORMAL);
         }
 
         if (opt_i == menu->mouse_row)
         {
-            real32_t stx = xpos + menu->cell_x_size;
-            draw_line_color(p->ctx, kCOLOR_BLACK);
-            draw_line(p->ctx, stx, ypos + opt->size.height - 1, stx + opt->size.width, ypos + opt->size.height - 1);
+            real32_t stx = xpos + menu->cell_x_sizef;
+            draw_line(p->ctx, stx, ypos + opt->size.height - 1, stx + opt->size.width, ypos + opt->size.height);
         }
-
-        drawctrl_text(p->ctx, tc(opt->text), (uint32_t)(xpos + menu->cell_x_size), (uint32_t)(ypos + yoffset), (enum_t)0);
 
         if (opt->kpos != UINT32_MAX)
         {
-            real32_t stx = xpos + ((opt->kpos + 1) * menu->cell_x_size);
-            real32_t edx = stx + menu->cell_x_size;
+            real32_t stx = (xpos + (opt->kpos + 1)) * menu->cell_x_sizef;
+            real32_t edx = stx + menu->cell_x_sizef;
             draw_line(p->ctx, stx, ypos + opt->size.height - 1, edx, ypos + opt->size.height - 1);
         }
 
-        ypos += menu->row_height;
+        ypos += menu->row_heightf;
 
     arrst_end();
 
@@ -163,7 +162,7 @@ static void i_OnMove(Panel *panel, Event *e)
 {
     const EvMouse *p = event_params(e, EvMouse);
     MenuVert *menu = panel_get_data(panel, MenuVert);
-    menu->mouse_row = (uint32_t)p->y / menu->row_height;
+    menu->mouse_row = (uint32_t)(p->y / menu->row_heightf);
     view_update(menu->view);
 }
 
@@ -177,14 +176,14 @@ static void i_OnDown(Panel *panel, Event *e)
 
     if (n > 0 && p->button == ekGUI_MOUSE_LEFT)
     {
-        uint32_t y = (uint32_t)p->y;
-        uint32_t sel = y / menu->row_height;
+        uint32_t sel = (uint32_t)(p->y / menu->row_heightf);
 
-        if (sel >= n)
-            sel = n - 1;
+        if (sel < n)
+        {
+            menu->selected = sel;
+            menu->launch_sel = TRUE;
+        }
 
-        menu->selected = sel;
-        menu->launch_sel = TRUE;
         view_update(menu->view);
     }
 }
@@ -255,7 +254,7 @@ static void i_update_sel_top(MenuVert *menu)
 
     if (scroll_pos.y > 0)
     {
-        real32_t ypos = (real32_t)(menu->selected * menu->row_height);
+        real32_t ypos = (real32_t)menu->selected * menu->row_heightf;
         if (scroll_pos.y > ypos)
             view_scroll_y(menu->view, ypos);
     }
@@ -268,14 +267,14 @@ static void i_update_sel_top(MenuVert *menu)
 static void i_update_sel_bottom(MenuVert *menu)
 {
     V2Df scroll_pos;
-    uint32_t ypos = (menu->selected + 1) * menu->row_height;
+    real32_t ypos = (real32_t)(menu->selected + 1) * menu->row_heightf;
     real32_t scroll_height = 0;
 
     view_viewport(menu->view, &scroll_pos, NULL);
 
     view_scroll_size(menu->view, NULL, &scroll_height);
-    if (scroll_pos.y + menu->control_height - scroll_height < ypos)
-        view_scroll_y(menu->view, (real32_t)ypos - (real32_t)menu->control_height + scroll_height);
+    if (scroll_pos.y + menu->control_heightf - scroll_height < ypos)
+        view_scroll_y(menu->view, ypos - menu->control_heightf + scroll_height);
 
     view_update(menu->view);
 }
@@ -317,7 +316,7 @@ static void i_OnKeyDown(Panel *panel, Event *e)
         {
             if (menu->selected > 0)
             {
-                uint32_t num_visible = menu->control_height / menu->row_height;
+                uint32_t num_visible = (uint32_t)(menu->control_heightf / menu->row_heightf);
                 if (menu->selected > num_visible)
                     menu->selected -= num_visible;
                 else
@@ -332,7 +331,7 @@ static void i_OnKeyDown(Panel *panel, Event *e)
         {
             if (menu->selected < n - 1)
             {
-                uint32_t num_visible = menu->control_height / menu->row_height;
+                uint32_t num_visible = (uint32_t)(menu->control_heightf / menu->row_heightf);
                 menu->selected += num_visible;
                 if (menu->selected >= n)
                     menu->selected = n - 1;
@@ -363,12 +362,12 @@ static void i_view_size(MenuVert *menu)
         if (opt->size.width > width)
             width = opt->size.width;
 
-        height += menu->row_height;
+        height += menu->row_heightf;
 
     arrst_end();
 
     menu->total_height = height;
-    view_content_size(menu->view, s2df((real32_t)menu->control_width, height + 1), s2df(0, (real32_t)menu->row_height));
+    view_content_size(menu->view, s2df(menu->control_widthf, height), s2df(0, menu->row_heightf));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -377,26 +376,25 @@ static void i_OnSize(Panel *panel, Event *e)
 {
     MenuVert *menu = panel_get_data(panel, MenuVert);
     const EvSize *p = event_params(e, EvSize);
-    menu->control_width = (uint32_t)p->width;
-    menu->control_height = (uint32_t)p->height;
+    menu->control_widthf = p->width;
+    menu->control_heightf = p->height;
     i_view_size(menu);
 }
 
 /*---------------------------------------------------------------------------*/
 
-Panel *nap_menu_create(const bool_t autoclose)
+Panel *nap_menu_create(const bool_t autoclose, const Font *font, const real32_t cell_x_size, const real32_t cell_y_size)
 {
     Panel *panel = panel_create();
     Layout *layout = layout_create(1,1);
-    View *view = view_scroll();
+    View *view = _view_create(ekVIEW_HSCROLL | ekVIEW_VSCROLL | ekVIEW_CONTROL);
     MenuVert *menu = i_create();
-    uint32_t cell_y_size = hb_gtnap_cell_height();
-    menu->font = hb_gtnap_font();
-    font_extents(menu->font, "OOOOOO", -1, &menu->cell_x_size, &menu->cell_y_size);
-    menu->cell_x_size /= 6;
+    menu->font = font;
+    menu->cell_x_sizef = cell_x_size;
+    menu->cell_y_sizef = cell_y_size;
     menu->layout = layout;
     menu->view = view;
-    menu->row_height = max_u32((uint32_t)bmath_ceilf(font_height(menu->font)), cell_y_size);
+    menu->row_heightf = cell_y_size;
     menu->selected = 0;
     menu->mouse_row = UINT32_MAX;
     menu->launch_sel = FALSE;
@@ -446,8 +444,8 @@ static void i_OnHotKey(MenuVert *menu, Event *e)
             view_viewport(menu->view, &pos, &size);
             mtop = pos.y;
             mbottom = pos.y + size.height;
-            otop = (real32_t)(opt_i * menu->row_height);
-            obottom = (real32_t)((opt_i + 1) * menu->row_height);
+            otop = (real32_t)opt_i * menu->row_heightf;
+            obottom = (real32_t)(opt_i + 1) * menu->row_heightf;
 
             if (mtop > otop)
                 view_scroll_y(menu->view, otop);

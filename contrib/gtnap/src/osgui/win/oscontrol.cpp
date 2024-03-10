@@ -292,10 +292,6 @@ void _oscontrol_set_frame(OSControl *control, const real32_t x, const real32_t y
     OSControl *parent = NULL;
     int scroll_x = 0, scroll_y = 0;
     cassert_no_null(control);
-    cassert(floorf(x) == x);
-    cassert(floorf(y) == y);
-    cassert(floorf(width) == width);
-    cassert(floorf(height) == height);
 
     parent = (OSControl *)GetWindowLongPtr(GetParent(control->hwnd), GWLP_USERDATA);
     if (parent != NULL && parent->type == ekGUI_TYPE_PANEL)
