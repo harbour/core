@@ -254,11 +254,11 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSNotification *notification)
     }
     else if (whyEnd == NSTabTextMovement)
     {
-        _oswindow_next_tabstop(window);
+        _oswindow_next_tabstop(window, TRUE);
     }
     else if (whyEnd == NSBacktabTextMovement)
     {
-        _oswindow_prev_tabstop(window);
+        _oswindow_prev_tabstop(window, TRUE);
     }
 }
 

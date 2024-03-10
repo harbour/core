@@ -334,9 +334,9 @@ static void i_OnFocus(NSResponder *resp, const bool_t focus)
 #endif
 
         if (previous == YES)
-            ostabstop_prev(&self->tabstop);
+            ostabstop_prev(&self->tabstop, TRUE);
         else
-            ostabstop_next(&self->tabstop);
+            ostabstop_next(&self->tabstop, TRUE);
 
         return YES;
     }
@@ -667,9 +667,9 @@ gui_focus_t oswindow_tabstop(OSWindow *window, const bool_t next)
     cassert_no_null(window);
     cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     if (next == TRUE)
-        return ostabstop_next(&windowp->tabstop);
+        return ostabstop_next(&windowp->tabstop, FALSE);
     else
-        return ostabstop_prev(&windowp->tabstop);
+        return ostabstop_prev(&windowp->tabstop, FALSE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -690,6 +690,15 @@ OSControl *oswindow_get_focus(const OSWindow *window)
     cassert_no_null(window);
     cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
     return windowp->tabstop.current;
+}
+
+/*---------------------------------------------------------------------------*/
+
+gui_tab_t oswindow_tabmotion(const OSWindow *window)
+{
+    OSXWindow *windowp = (OSXWindow*)window;
+    cassert_no_null(window);
+    return ostabstop_motion(&windowp->tabstop);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1109,22 +1118,22 @@ NSView *_oswindow_main_view(OSWindow *window)
 
 /*---------------------------------------------------------------------------*/
 
-void _oswindow_next_tabstop(NSWindow *window)
+void _oswindow_next_tabstop(NSWindow *window, const bool_t keypress)
 {
     OSXWindow *windowp = (OSXWindow*)window;
     cassert_no_null(window);
     cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
-    ostabstop_next(&windowp->tabstop);
+    ostabstop_next(&windowp->tabstop, keypress);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _oswindow_prev_tabstop(NSWindow *window)
+void _oswindow_prev_tabstop(NSWindow *window, const bool_t keypress)
 {
     OSXWindow *windowp = (OSXWindow*)window;
     cassert_no_null(window);
     cassert([(NSResponder*)window isKindOfClass:[OSXWindow class]] == YES);
-    ostabstop_prev(&windowp->tabstop);
+    ostabstop_prev(&windowp->tabstop, keypress);
 }
 
 /*---------------------------------------------------------------------------*/
