@@ -53,7 +53,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#include "wvtwin.ch"
+#include "gtwvg.ch"
 
 #define K_LBUTTONPRESSED        1021
 #define K_RBUTTONPRESSED        1022

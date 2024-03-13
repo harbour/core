@@ -4,6 +4,7 @@
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
 #include "hbver.ch"
+#include "gtwvg.ch"
 
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
 

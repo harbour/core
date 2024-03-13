@@ -2,6 +2,7 @@
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "gtwvg.ch"
 
 // WvtSetObjects() array structure
 #define WVT_OBJ_TYPE               1
