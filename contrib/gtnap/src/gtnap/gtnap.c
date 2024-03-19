@@ -157,6 +157,7 @@ struct _gtnap_window_t
     GtNapToolbar *toolbar;
     GtNapArea *gtarea;
     uint32_t num_rows;
+    ArrPt(GuiComponent) *tabstops;
     ArrPt(GtNapObject) *objects;
     ArrPt(GtNapCallback) *callbacks;
 };
@@ -324,6 +325,7 @@ void _component_taborder(GuiComponent *component, Window *window);
 const char_t *_component_type(const GuiComponent *component);
 void *_component_ositem(const GuiComponent *component);
 void _panel_attach_component(Panel *panel, GuiComponent *component);
+void _panel_dettach_component(Panel *panel, GuiComponent *component);
 void _panel_destroy_component(Panel *panel, GuiComponent *component);
 void _panel_compose(Panel *panel, const S2Df *required_size, S2Df *final_size);
 void _panel_locate(Panel *panel);
@@ -513,6 +515,7 @@ static void i_destroy_gtwin(GtNapWindow **dgtwin)
     }
 
     cassert(arrpt_size(gtwin->objects, GtNapObject) == 0);
+    arrpt_destroy(&gtwin->tabstops, NULL, GuiComponent);
     arrpt_destroy(&gtwin->objects, NULL, GtNapObject);
     arrpt_destroy(&gtwin->callbacks, i_destroy_callback, GtNapCallback);
 
@@ -1226,7 +1229,7 @@ static void i_attach_toolbar_to_panel(const GtNapToolbar *toolbar, Panel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_component_tabstop(ArrPt(GtNapObject) *objects, Window *window, const objtype_t type)
+static void i_component_tabstop(ArrPt(GtNapObject) *objects, Window *window, ArrPt(GuiComponent) *tabstops, const objtype_t type)
 {
     arrpt_foreach(object, objects, GtNapObject)
         if (object->type == type)
@@ -1242,12 +1245,16 @@ static void i_component_tabstop(ArrPt(GtNapObject) *objects, Window *window, con
                    _component_taborder(object->component, window); */
                 break;
             case ekOBJ_MENU:
-                nap_menuvert_taborder((Panel*)object->component, window);
+            {
+                View *view = nap_menuvert_view((Panel*)object->component);
+                nap_menuvert_window((Panel*)object->component, window);
+                arrpt_append(tabstops, (GuiComponent*)view, GuiComponent);
                 break;
+            }
             case ekOBJ_TABLEVIEW:
             case ekOBJ_TEXTVIEW:
             case ekOBJ_EDIT:
-                _component_taborder(object->component, window);
+                arrpt_append(tabstops, object->component, GuiComponent);
                 break;
             cassert_default();
             }
@@ -1257,10 +1264,12 @@ static void i_component_tabstop(ArrPt(GtNapObject) *objects, Window *window, con
 
 /*---------------------------------------------------------------------------*/
 
-static void i_toolbar_tabstop(GtNapToolbar *toolbar)
+static void i_toolbar_tabstop(GtNapToolbar *toolbar, ArrPt(GuiComponent) *tabstops)
 {
     if (toolbar != NULL)
     {
+        /* At the moment, toolbar buttons not have tabstop */
+        unref(tabstops);
         arrpt_foreach(item, toolbar->items, GuiComponent)
             if (item != NULL)
                 _component_visible(item, TRUE);
@@ -2361,26 +2370,27 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     if (gtwin->window != NULL)
     {
         cassert(gtwin == main_gtwin);
+        cassert(gtwin->parent_id == UINT32_MAX);
+        /* Add the window main panel */
         window_panel(gtwin->window, gtwin->panel);
-
-        /* Begin tab-stops order */
-        _window_taborder(gtwin->window, NULL);
+        /* Clear the tabstop list */
+        arrpt_clear(gtwin->tabstops, NULL, GuiComponent);
     }
 
-    i_component_tabstop(gtwin->objects, main_gtwin->window, ekOBJ_MENU);
-    i_component_tabstop(gtwin->objects, main_gtwin->window, ekOBJ_TABLEVIEW);
-    i_component_tabstop(gtwin->objects, main_gtwin->window, ekOBJ_TEXTVIEW);
-    i_component_tabstop(gtwin->objects, main_gtwin->window, ekOBJ_EDIT);
-    i_component_tabstop(gtwin->objects, main_gtwin->window, ekOBJ_BUTTON);
-    i_component_tabstop(gtwin->objects, main_gtwin->window, ekOBJ_LABEL);
-    i_component_tabstop(gtwin->objects, main_gtwin->window, ekOBJ_IMAGE);
+    i_component_tabstop(gtwin->objects, main_gtwin->window, main_gtwin->tabstops, ekOBJ_MENU);
+    i_component_tabstop(gtwin->objects, main_gtwin->window, main_gtwin->tabstops, ekOBJ_TABLEVIEW);
+    i_component_tabstop(gtwin->objects, main_gtwin->window, main_gtwin->tabstops, ekOBJ_TEXTVIEW);
+    i_component_tabstop(gtwin->objects, main_gtwin->window, main_gtwin->tabstops, ekOBJ_EDIT);
+    i_component_tabstop(gtwin->objects, main_gtwin->window, main_gtwin->tabstops, ekOBJ_BUTTON);
+    i_component_tabstop(gtwin->objects, main_gtwin->window, main_gtwin->tabstops, ekOBJ_LABEL);
+    i_component_tabstop(gtwin->objects, main_gtwin->window, main_gtwin->tabstops, ekOBJ_IMAGE);
 
     if (scroll_panel != NULL)
         _component_visible((GuiComponent*)scroll_panel, TRUE);
 
     if (gtwin->window != NULL)
     {
-        i_toolbar_tabstop(gtwin->toolbar);
+        i_toolbar_tabstop(gtwin->toolbar, main_gtwin->tabstops);
     }
     else
     {
@@ -2388,9 +2398,12 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         cassert(gtwin->toolbar == NULL);
     }
 
-    /* Configure the child (embedded) windows as subpanels */
+    /* We are in a main window */
     if (gtwin->parent_id == UINT32_MAX)
     {
+        cassert(gtwin == main_gtwin);
+
+        /* Configure the child (embedded) windows as subpanels */
         arrpt_forback(embgtwin, gtnap->windows, GtNapWindow)
             if (embgtwin->parent_id == gtwin->id)
             {
@@ -2405,6 +2418,13 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
                 _component_visible((GuiComponent*)embgtwin->panel, TRUE);
             }
         arrpt_end();
+
+        /* At this point the main window (with embedded windows) is complete.
+         * We begin the tabstop configuration */
+        _window_taborder(gtwin->window, NULL);
+        arrpt_foreach(component, gtwin->tabstops, GuiComponent)
+            _component_taborder(component, gtwin->window);
+        arrpt_end()
     }
 
     /* Allow navigation between edit controls with arrows and return */
@@ -2663,6 +2683,7 @@ static GtNapWindow *i_new_window(GtNap *gtnap, uint32_t parent_id, const int32_t
     gtwin->scroll_right = INT32_MIN;
     gtwin->message_label_id = UINT32_MAX;
     gtwin->default_button = UINT32_MAX;
+    gtwin->tabstops = arrpt_create(GuiComponent);
     gtwin->objects = arrpt_create(GtNapObject);
     gtwin->callbacks = arrpt_create(GtNapCallback);
     gtwin->panel_size.width = gtnap->cell_x_sizef * (real32_t)(gtwin->right - gtwin->left + 1);
@@ -2867,8 +2888,7 @@ static void i_dettach_embedded(GtNap *gtnap, GtNapWindow *gtwin)
                 if (gtwin->parent_id == maingtwin->id)
                 {
                     cassert(maingtwin->is_configured == TRUE);
-                    _component_visible((GuiComponent*)gtwin->panel, FALSE);
-                    _component_detach_from_panel((GuiComponent*)maingtwin->panel, (GuiComponent*)gtwin->panel);
+                    _panel_dettach_component(maingtwin->panel, (GuiComponent*)gtwin->panel);
                     break;
                 }
             arrpt_end()
