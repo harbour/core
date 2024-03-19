@@ -204,19 +204,8 @@ static void i_OnFocus(View *view, Event *event)
 
 static void i_OnResignFocus(View *view, Event *event)
 {
-    Window *window = _component_window((GuiComponent *)view);
-    Panel *panel = _window_main_panel(window);
-    void *p = event_params(event, void);
-    GuiControl *next_ctrl = NULL;
-    bool_t *res = event_result(event, bool_t);
-
-    if (p != NULL)
-    {
-        next_ctrl = (GuiControl *)_panel_find_component(panel, p);
-        cassert_no_null(next_ctrl);
-    }
-
-    listener_event(view->OnResignFocus, ekGUI_EVENT_FOCUS_RESIGN, view, next_ctrl, res, View, GuiControl, bool_t);
+    cassert_no_null(view);
+    listener_pass_event(view->OnResignFocus, event, view, View);
 }
 
 /*---------------------------------------------------------------------------*/

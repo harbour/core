@@ -23,26 +23,24 @@
 OSButton *oswindow_apply_default_button(OSWindow *window, OSButton *button)
 {
     OSButton *effective = NULL;
-    ArrPt(OSControl) *controls = oswindow_all_controls(window);
-
-    arrpt_foreach(control, controls, OSControl)
-    {
-        cassert_no_null(control);
-        if (oscontrol_type(control) == ekGUI_TYPE_BUTTON)
+    const ArrPt(OSControl) *controls = oswindow_get_all_controls(window);
+    arrpt_foreach_const(control, controls, OSControl)
         {
-            OSButton *nbutton = OSButtonPtr(control);
-            bool_t is_default = (bool_t)(nbutton == button);
-            osbutton_set_default(OSButtonPtr(control), is_default);
-            if (is_default == TRUE)
+            cassert_no_null(control);
+            if (oscontrol_type(control) == ekGUI_TYPE_BUTTON)
             {
-                cassert(effective == NULL);
-                effective = nbutton;
+                OSButton *nbutton = OSButtonPtr(control);
+                bool_t is_default = (bool_t)(nbutton == button);
+                osbutton_set_default(OSButtonPtr(control), is_default);
+                if (is_default == TRUE)
+                {
+                    cassert(effective == NULL);
+                    effective = nbutton;
+                }
             }
         }
-    }
-    arrpt_end();
+    arrpt_end()
 
-    arrpt_destroy(&controls, NULL, OSControl);
     return effective;
 }
 
@@ -55,7 +53,7 @@ static void i_remove_hotkey(OSHotKey *hotkey)
 
 /*---------------------------------------------------------------------------*/
 
-void oswindow_hotkey_destroy(ArrSt(OSHotKey) * *hotkeys)
+void oswindow_hotkey_destroy(ArrSt(OSHotKey) **hotkeys)
 {
     cassert_no_null(hotkeys);
     arrst_destopt(hotkeys, i_remove_hotkey, OSHotKey);
@@ -63,7 +61,7 @@ void oswindow_hotkey_destroy(ArrSt(OSHotKey) * *hotkeys)
 
 /*---------------------------------------------------------------------------*/
 
-void oswindow_hotkey_set(ArrSt(OSHotKey) * *hotkeys, const vkey_t key, const uint32_t modifiers, Listener *listener)
+void oswindow_hotkey_set(ArrSt(OSHotKey) **hotkeys, const vkey_t key, const uint32_t modifiers, Listener *listener)
 {
     cassert_no_null(hotkeys);
     if (key != ENUM_MAX(vkey_t))
@@ -76,7 +74,6 @@ void oswindow_hotkey_set(ArrSt(OSHotKey) * *hotkeys, const vkey_t key, const uin
 
         /* Update the hotkey(if exists) */
         arrst_foreach(hotkey, *hotkeys, OSHotKey)
-        {
             if (hotkey->key == key && hotkey->modifiers == modifiers)
             {
                 exists = TRUE;
@@ -86,8 +83,7 @@ void oswindow_hotkey_set(ArrSt(OSHotKey) * *hotkeys, const vkey_t key, const uin
                     remove = hotkey_i;
                 break;
             }
-        }
-        arrst_end();
+        arrst_end()
 
         if (exists == FALSE)
         {
@@ -115,12 +111,11 @@ void oswindow_hotkey_set(ArrSt(OSHotKey) * *hotkeys, const vkey_t key, const uin
 
 /*---------------------------------------------------------------------------*/
 
-bool_t oswindow_hotkey_process(OSWindow *window, ArrSt(OSHotKey) * hotkeys, const vkey_t key, const uint32_t modifiers)
+bool_t oswindow_hotkey_process(OSWindow *window, ArrSt(OSHotKey) *hotkeys, const vkey_t key, const uint32_t modifiers)
 {
     if (hotkeys != NULL)
     {
         arrst_foreach(hotkey, hotkeys, OSHotKey)
-        {
             if (key == hotkey->key && modifiers == hotkey->modifiers)
             {
                 EvKey params;
@@ -130,8 +125,7 @@ bool_t oswindow_hotkey_process(OSWindow *window, ArrSt(OSHotKey) * hotkeys, cons
                 listener_event(hotkey->listener, ekGUI_EVENT_KEYDOWN, window, &params, NULL, OSWindow, EvKey, void);
                 return TRUE;
             }
-        }
-        arrst_end();
+        arrst_end()
     }
 
     return FALSE;

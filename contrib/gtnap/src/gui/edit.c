@@ -128,17 +128,7 @@ static void i_OnChange(Edit *edit, Event *e)
         _cell_upd_string(cell, p->text);
 
     if (edit->OnChange != NULL)
-    {
-        if (p->next_ctrl != NULL)
-        {
-            Window *window = _component_window((GuiComponent *)edit);
-            Panel *panel = _window_main_panel(window);
-            ((EvText *)p)->next_ctrl = (void *)_panel_find_component(panel, (void *)p->next_ctrl);
-            cassert_no_null(p->next_ctrl);
-        }
-
         listener_pass_event(edit->OnChange, e, edit, Edit);
-    }
 }
 
 /*---------------------------------------------------------------------------*/

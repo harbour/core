@@ -47,7 +47,7 @@ struct _ospanel_t
     GtkWidget *scroll;
     GtkAdjustment *hadjust;
     GtkAdjustment *vadjust;
-    ArrSt(Area) * areas;
+    ArrSt(Area) *areas;
 };
 
 DeclSt(Area);
@@ -75,30 +75,31 @@ static gboolean i_OnDraw(GtkWidget *widget, cairo_t *cr, OSPanel *panel)
         cairo_translate(cr, -(double)x, -(double)y);
     }
 
-    arrst_foreach(area, panel->areas, Area) if (area->bgcolor != kCOLOR_TRANSPARENT)
-    {
-        real32_t r, g, b, a;
-        color_get_rgbaf(area->bgcolor, &r, &g, &b, &a);
-        cairo_set_source_rgba(cr, (double)r, (double)g, (double)b, (double)a);
-        cairo_rectangle(cr, (double)area->x, (double)area->y, (double)area->w, (double)area->h);
-        cairo_fill(cr);
-    }
+    arrst_foreach(area, panel->areas, Area)
+        if (area->bgcolor != kCOLOR_TRANSPARENT)
+        {
+            real32_t r, g, b, a;
+            color_get_rgbaf(area->bgcolor, &r, &g, &b, &a);
+            cairo_set_source_rgba(cr, (double)r, (double)g, (double)b, (double)a);
+            cairo_rectangle(cr, (double)area->x, (double)area->y, (double)area->w, (double)area->h);
+            cairo_fill(cr);
+        }
 
-    if (area->skcolor != kCOLOR_TRANSPARENT)
-    {
-        real32_t r, g, b, a;
-        cairo_antialias_t ca;
-        color_get_rgbaf(area->skcolor, &r, &g, &b, &a);
-        cairo_set_source_rgba(cr, (double)r, (double)g, (double)b, (double)a);
-        cairo_set_line_width(cr, 1.);
-        ca = cairo_get_antialias(cr);
-        cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
-        cairo_rectangle(cr, (double)area->x + 1, (double)area->y + 1, (double)area->w - 1, (double)area->h - 1);
-        cairo_stroke(cr);
-        cairo_set_antialias(cr, ca);
-    }
+        if (area->skcolor != kCOLOR_TRANSPARENT)
+        {
+            real32_t r, g, b, a;
+            cairo_antialias_t ca;
+            color_get_rgbaf(area->skcolor, &r, &g, &b, &a);
+            cairo_set_source_rgba(cr, (double)r, (double)g, (double)b, (double)a);
+            cairo_set_line_width(cr, 1.);
+            ca = cairo_get_antialias(cr);
+            cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
+            cairo_rectangle(cr, (double)area->x + 1, (double)area->y + 1, (double)area->w - 1, (double)area->h - 1);
+            cairo_stroke(cr);
+            cairo_set_antialias(cr, ca);
+        }
+    arrst_end()
 
-    arrst_end();
     cairo_restore(cr);
     return FALSE;
 }
@@ -200,12 +201,13 @@ void ospanel_area(OSPanel *panel, void *obj, const color_t bgcolor, const color_
         if (panel->areas == NULL)
             panel->areas = arrst_create(Area);
 
-        arrst_foreach(larea, panel->areas, Area) if (larea->obj == obj)
-        {
-            area = larea;
-            break;
-        }
-        arrst_end();
+        arrst_foreach(larea, panel->areas, Area)
+            if (larea->obj == obj)
+            {
+                area = larea;
+                break;
+            }
+        arrst_end()
 
         if (area == NULL)
         {

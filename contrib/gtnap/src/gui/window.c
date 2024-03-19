@@ -152,7 +152,8 @@ static void i_OnWindowResize(Window *window, Event *e)
 
     switch (event_type(e))
     {
-    case ekGUI_EVENT_WND_SIZING: {
+    case ekGUI_EVENT_WND_SIZING:
+    {
         S2Df reqsize;
         S2Df finsize;
         EvSize *result = event_result(e, EvSize);
@@ -165,7 +166,8 @@ static void i_OnWindowResize(Window *window, Event *e)
         break;
     }
 
-    case ekGUI_EVENT_WND_SIZE: {
+    case ekGUI_EVENT_WND_SIZE:
+    {
         _layout_locate(window->main_layout);
         if (window->OnResize != NULL)
             listener_pass_event(window->OnResize, e, window, Window);
@@ -620,11 +622,24 @@ GuiControl *window_get_focus(Window *window)
 
 /*---------------------------------------------------------------------------*/
 
-gui_tab_t window_tabmotion(const Window *window)
+void window_focus_info(const Window *window, FocusInfo *info)
 {
+    void *next = NULL;
     cassert_no_null(window);
     cassert_no_null(window->context);
-    return (gui_tab_t)window->context->func_window_tabmotion(window->ositem);
+    cassert_no_null(info);
+    info->action = (gui_tab_t)window->context->func_window_info_focus(window->ositem, &next);
+
+    if (next != NULL)
+    {
+        Panel *panel = i_main_panel(window);
+        info->next = (GuiControl *)_panel_find_component(panel, next);
+        cassert_no_null(info->next);
+    }
+    else
+    {
+        info->next = NULL;
+    }
 }
 
 /*---------------------------------------------------------------------------*/

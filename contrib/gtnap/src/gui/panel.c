@@ -29,7 +29,7 @@ struct _panel_t
 {
     GuiComponent component;
     Window *window;
-    ArrPt(Layout) * layouts;
+    ArrPt(Layout) *layouts;
     uint32_t visible_layout;
     uint32_t active_layout;
     uint32_t flags;
@@ -38,7 +38,7 @@ struct _panel_t
     S2Df content_size;
     void *data;
     FPtr_destroy func_destroy_data;
-    ArrPt(GuiComponent) * children;
+    ArrPt(GuiComponent) *children;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -251,8 +251,32 @@ static void i_hide_component(GuiComponent *component)
     {
         arrpt_foreach(child, panels[i]->children, GuiComponent)
             i_hide_component(child);
-        arrpt_end();
+        arrpt_end()
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+/* 
+ * This function is not used in a general Layout-based composer.
+ * Is required for out-of-the-box uses of NAppGUI (eg. GTNAP)
+ */
+void _panel_dettach_component(Panel *panel, GuiComponent *component)
+{
+    uint32_t index = UINT32_MAX;
+    cassert_no_null(panel);
+    cassert_no_null(component);
+
+    /* Prevent flickering in Windows because destroyed component new parent
+        will be set to NULL (Desktop HWND) when is detached from this panel. */
+#if defined(__WINDOWS__)
+    i_hide_component(component);
+#endif
+
+    _component_set_parent_window(component, NULL);
+    _component_detach_from_panel(&panel->component, component);
+    index = arrpt_find(panel->children, component, GuiComponent);
+    arrpt_delete(panel->children, index, NULL, GuiComponent);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -265,7 +289,6 @@ void _panel_destroy_component(Panel *panel, GuiComponent *component)
 
     /* Check if component exists in any panel layout */
     arrpt_foreach(layout, panel->layouts, Layout)
-    {
         /* Avoid previously destroyed layouts */
         if (layout != NULL)
         {
@@ -275,7 +298,6 @@ void _panel_destroy_component(Panel *panel, GuiComponent *component)
                 break;
             }
         }
-    }
     arrpt_end()
 
     if (exists == FALSE)
@@ -334,8 +356,7 @@ GuiComponent *_panel_find_component(Panel *panel, void *ositem)
 {
     cassert_no_null(panel);
     arrpt_foreach(component, panel->children, GuiComponent)
-    {
-        if (component->ositem == ositem) 
+        if (component->ositem == ositem)
             return component;
 
         if (component->type == ekGUI_TYPE_PANEL)
@@ -344,8 +365,7 @@ GuiComponent *_panel_find_component(Panel *panel, void *ositem)
             if (child != NULL)
                 return child;
         }
-    }
-    arrpt_end();
+    arrpt_end()
 
     return NULL;
 }
@@ -425,7 +445,6 @@ Cell *_panel_get_component_cell(Panel *panel, const GuiComponent *component)
 {
     Cell *cell = NULL;
     cassert_no_null(panel);
-    cassert(panel->active_layout == panel->visible_layout);
     cassert(arrpt_find(panel->children, component, GuiComponent) != UINT32_MAX);
     if (panel->active_layout != UINT32_MAX)
     {
@@ -438,7 +457,7 @@ Cell *_panel_get_component_cell(Panel *panel, const GuiComponent *component)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_activate_layout(const ArrPt(Layout) * layouts, ArrPt(GuiComponent) * children, const uint32_t active_layout)
+static void i_activate_layout(const ArrPt(Layout) *layouts, ArrPt(GuiComponent) *children, const uint32_t active_layout)
 {
     const Layout *layout = arrpt_get_const(layouts, active_layout, Layout);
     ArrPt(GuiComponent) *layout_components = arrpt_create(GuiComponent);
@@ -447,12 +466,10 @@ static void i_activate_layout(const ArrPt(Layout) * layouts, ArrPt(GuiComponent)
 
     /* Show or hide component depending if is in active layout */
     arrpt_foreach(component, children, GuiComponent)
-    {
         if (arrpt_find(layout_components, component, GuiComponent) != UINT32_MAX)
             _component_visible(component, TRUE);
-        else 
+        else
             _component_visible(component, FALSE);
-    }
     arrpt_end()
 
     arrpt_destroy(&layout_components, NULL, GuiComponent);
@@ -613,22 +630,17 @@ void _panel_locale(Panel *panel)
     cassert_no_null(panel);
     arrpt_foreach(child, panel->children, GuiComponent)
         _component_locale(child);
-    arrpt_end();
+    arrpt_end()
 }
 
 /*---------------------------------------------------------------------------*/
 
-ArrPt(Layout) * _panel_layouts(const Panel *panel)
+ArrPt(Layout) *_panel_layouts(const Panel *panel)
 {
     cassert_no_null(panel);
     return panel->layouts;
 }
 
-/*
-*
-* GTNAP Specific
-*
-*/
 /*---------------------------------------------------------------------------*/
 
 void _panel_content_size(Panel *panel, const real32_t width, const real32_t height)

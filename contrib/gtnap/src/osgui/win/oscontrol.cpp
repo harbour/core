@@ -517,10 +517,10 @@ OSWidget *oscontrol_focus_widget(const OSControl *control)
         return (OSWidget *)control->hwnd;
 
     case ekGUI_TYPE_POPUP:
-        return (OSWidget *)_ospopup_focus((OSPopUp *)control);
+        return (OSWidget *)_ospopup_focus_widget((OSPopUp *)control);
 
     case ekGUI_TYPE_COMBOBOX:
-        return (OSWidget *)_oscombo_focus((OSCombo *)control);
+        return (OSWidget *)_oscombo_focus_widget((OSCombo *)control);
 
     case ekGUI_TYPE_TABLEVIEW:
     case ekGUI_TYPE_TREEVIEW:

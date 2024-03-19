@@ -506,11 +506,18 @@ void nap_menu_add(Panel *panel, Window *window, HB_ITEM *text_block, HB_ITEM *cl
 
 /*---------------------------------------------------------------------------*/
 
-void nap_menuvert_taborder(Panel *panel, Window *window)
+View *nap_menuvert_view(Panel *panel)
+{
+    MenuVert *menu = panel_get_data(panel, MenuVert);
+    return menu->view;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void nap_menuvert_window(Panel *panel, Window *window)
 {
     MenuVert *menu = panel_get_data(panel, MenuVert);
     menu->window = window;
-    _component_taborder((GuiComponent*)menu->view, window);
 }
 
 /*---------------------------------------------------------------------------*/

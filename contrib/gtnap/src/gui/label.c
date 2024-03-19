@@ -31,6 +31,7 @@ struct _label_t
     GuiComponent component;
     S2Df size;
     ResId textid;
+    String *size_text;
     String *text;
     uint32_t flags;
     align_t halign;
@@ -52,6 +53,7 @@ void _label_destroy(Label **label)
     _component_destroy_imp(&(*label)->component);
     listener_destroy(&(*label)->OnClick);
     str_destroy(&(*label)->text);
+    str_destopt(&(*label)->size_text);
     font_destroy(&(*label)->font);
     ptr_destopt(font_destroy, &(*label)->over_font, Font);
     obj_delete(label, Label);
@@ -106,7 +108,6 @@ static void i_OnClick(Label *label, Event *event)
     params->text = tc(label->text);
     params->cpos = 0;
     params->len = 0;
-    params->next_ctrl = NULL;
     listener_pass_event(label->OnClick, event, label, Label);
 }
 
@@ -190,6 +191,14 @@ void label_text(Label *label, const char_t *text)
 
 /*---------------------------------------------------------------------------*/
 
+void label_size_text(Label *label, const char_t *text)
+{
+    cassert_no_null(label);
+    str_upd(&label->size_text, text);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void label_font(Label *label, const Font *font)
 {
     cassert_no_null(label);
@@ -261,7 +270,8 @@ void _label_dimension(Label *label, const uint32_t i, real32_t *dim0, real32_t *
     cassert_no_null(dim1);
     if (i == 0)
     {
-        label->component.context->func_label_bounds(label->component.ositem, tc(label->text), -1.f, &label->size.width, &label->size.height);
+        const char_t *size_text = str_empty(label->size_text) ? tc(label->text) : tc(label->size_text);
+        label->component.context->func_label_bounds(label->component.ositem, size_text, -1.f, &label->size.width, &label->size.height);
         *dim0 = label->size.width;
     }
     else
@@ -272,9 +282,11 @@ void _label_dimension(Label *label, const uint32_t i, real32_t *dim0, real32_t *
         case ekLABEL_SINGLE:
             *dim1 = label->size.height;
             break;
-        case ekLABEL_MULTI: {
+        case ekLABEL_MULTI:
+        {
             real32_t width = 0.f;
-            label->component.context->func_label_bounds(label->component.ositem, tc(label->text), *dim0, &width, dim1);
+            const char_t *size_text = str_empty(label->size_text) ? tc(label->text) : tc(label->size_text);
+            label->component.context->func_label_bounds(label->component.ositem, size_text, *dim0, &width, dim1);
             break;
         }
             cassert_default();

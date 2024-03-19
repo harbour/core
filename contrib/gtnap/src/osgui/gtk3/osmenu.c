@@ -33,7 +33,7 @@ struct _osmenu_t
     gint popup_y;
 #endif
     OSMenuItem *parent;
-    ArrPt(OSMenuItem) * items;
+    ArrPt(OSMenuItem) *items;
 #if defined(__ASSERTS__)
     bool_t is_alive;
 #endif
@@ -200,9 +200,9 @@ static void i_remove_all_items(OSMenu *menu)
     cassert(arrpt_size(menu->items, OSMenuItem) == i_num_children(GTK_CONTAINER(menu->widget)));
     arrpt_foreach(item, menu->items, OSMenuItem)
         GtkWidget *widget = _osmenuitem_widget(item);
-    g_object_ref(widget);
-    gtk_container_remove(GTK_CONTAINER(menu->widget), widget);
-    arrpt_end();
+        g_object_ref(widget);
+        gtk_container_remove(GTK_CONTAINER(menu->widget), widget);
+    arrpt_end()
     cassert(i_num_children(GTK_CONTAINER(menu->widget)) == 0);
 }
 
@@ -214,9 +214,9 @@ static void i_add_all_items_to_bar(OSMenu *menu)
     cassert_no_null(menu->widget);
     arrpt_foreach(item, menu->items, OSMenuItem)
         GtkWidget *widget = _osmenuitem_bar_widget(item);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu->widget), widget);
-    g_object_unref(widget);
-    arrpt_end();
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu->widget), widget);
+        g_object_unref(widget);
+    arrpt_end()
 }
 
 /*---------------------------------------------------------------------------*/
@@ -283,7 +283,7 @@ void _osmenu_set_accel(OSMenu *menu, GtkAccelGroup *accel)
     cassert_no_null(menu);
     arrpt_foreach(item, menu->items, OSMenuItem)
         _osmenuitem_set_accel(item, accel);
-    arrpt_end();
+    arrpt_end()
 }
 
 /*---------------------------------------------------------------------------*/
@@ -293,5 +293,5 @@ void _osmenu_unset_accel(OSMenu *menu, GtkAccelGroup *accel)
     cassert_no_null(menu);
     arrpt_foreach(item, menu->items, OSMenuItem)
         _osmenuitem_unset_accel(item, accel);
-    arrpt_end();
+    arrpt_end()
 }

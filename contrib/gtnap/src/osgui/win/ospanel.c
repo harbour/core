@@ -54,7 +54,7 @@ struct _ospanel_t
     HBITMAP dbuffer;
     uint32_t flags;
     RECT border;
-    ArrSt(Area) * areas;
+    ArrSt(Area) *areas;
 };
 
 DeclSt(Area);
@@ -91,7 +91,7 @@ static __INLINE void i_area(HDC hdc, const Area *area)
 
 /*---------------------------------------------------------------------------*/
 
-static HBRUSH i_brush(OSControl *control, const ArrSt(Area) * areas, COLORREF *c)
+static HBRUSH i_brush(OSControl *control, const ArrSt(Area) *areas, COLORREF *c)
 {
     OSFrame rect;
     RECT rc;
@@ -101,19 +101,19 @@ static HBRUSH i_brush(OSControl *control, const ArrSt(Area) * areas, COLORREF *c
     rc.top = rect.top;
     rc.bottom = rect.bottom;
 
-    arrst_foreach_const(area, areas, Area)
-    {
-        RECT inter;
-        if (IntersectRect(&inter, &area->rect, &rc) == TRUE)
+    arrst_forback_const(area, areas, Area)
         {
-            if (area->bgbrush != NULL)
+            RECT inter;
+            if (IntersectRect(&inter, &area->rect, &rc) == TRUE)
             {
-                ptr_assign(c, area->bgcolor);
-                return area->bgbrush;
+                if (area->bgbrush != NULL)
+                {
+                    ptr_assign(c, area->bgcolor);
+                    return area->bgbrush;
+                }
             }
         }
-    }
-    arrst_end();
+    arrst_end()
     return NULL;
 }
 
@@ -126,7 +126,8 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
     switch (uMsg)
     {
-    case WM_COMMAND: {
+    case WM_COMMAND:
+    {
         OSControl *control = (OSControl *)GetWindowLongPtr((HWND)lParam, GWLP_USERDATA);
         cassert_no_null(control);
         switch (control->type)
@@ -197,15 +198,20 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
     case WM_NCPAINT:
         if (panel->flags & ekVIEW_BORDER)
-            _osgui_ncpaint(hwnd, &panel->border, NULL);
+        {
+            bool_t focused = (bool_t)(GetFocus() == hwnd);
+            _osgui_ncpaint(hwnd, focused, &panel->border, NULL);
+        }
         break;
 
-    case WM_MEASUREITEM: {
+    case WM_MEASUREITEM:
+    {
         cassert(FALSE);
         break;
     }
 
-    case WM_NOTIFY: {
+    case WM_NOTIFY:
+    {
         const NMHDR *nmhdr = (const NMHDR *)lParam;
         OSControl *control = (OSControl *)GetWindowLongPtr(nmhdr->hwndFrom, GWLP_USERDATA);
         cassert_no_null(control);
@@ -219,7 +225,8 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
     case WM_PRINTCLIENT:
         return 0;
 
-    case WM_CTLCOLORSTATIC: {
+    case WM_CTLCOLORSTATIC:
+    {
         HBRUSH defbrush = (HBRUSH)CallWindowProc(panel->control.def_wnd_proc, hwnd, uMsg, wParam, lParam);
         OSControl *control = (OSControl *)GetWindowLongPtr((HWND)lParam, GWLP_USERDATA);
         if (control != NULL)
@@ -256,7 +263,8 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
         return (LRESULT)defbrush;
     }
 
-    case WM_CTLCOLOREDIT: {
+    case WM_CTLCOLOREDIT:
+    {
         HBRUSH defbrush = (HBRUSH)CallWindowProc(panel->control.def_wnd_proc, hwnd, uMsg, wParam, lParam);
         OSControl *control = (OSControl *)GetWindowLongPtr((HWND)lParam, GWLP_USERDATA);
         HDC hdc = (HDC)wParam;
@@ -286,7 +294,8 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
         return (LRESULT)defbrush;
     }
 
-    case WM_CTLCOLORBTN: {
+    case WM_CTLCOLORBTN:
+    {
         OSControl *control = (OSControl *)GetWindowLongPtr((HWND)lParam, GWLP_USERDATA);
         cassert_unref(control->type != ekGUI_TYPE_COMBOBOX, control);
         break;
@@ -417,12 +426,13 @@ void ospanel_area(OSPanel *panel, void *obj, const color_t bgcolor, const color_
         if (panel->areas == NULL)
             panel->areas = arrst_create(Area);
 
-        arrst_foreach(larea, panel->areas, Area) if (larea->obj == obj)
-        {
-            area = larea;
-            break;
-        }
-        arrst_end();
+        arrst_foreach(larea, panel->areas, Area)
+            if (larea->obj == obj)
+            {
+                area = larea;
+                break;
+            }
+        arrst_end()
 
         if (area == NULL)
         {

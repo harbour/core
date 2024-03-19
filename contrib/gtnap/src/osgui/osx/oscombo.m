@@ -25,9 +25,8 @@
 
 @interface OSXCombo : NSComboBox
 {
-    @public
+  @public
     OSTextAttr attrs;
-    BOOL is_editing;
     Listener *OnFilter;
     Listener *OnChange;
     Listener *OnFocus;
@@ -41,20 +40,7 @@
 
 /*---------------------------------------------------------------------------*/
 
--(BOOL)becomeFirstResponder
-{
-    if ([self isEnabled] == YES && self->OnFocus != NULL)
-    {
-        bool_t params = TRUE;
-        listener_event(self->OnFocus, ekGUI_EVENT_FOCUS, (OSCombo*)self, &params, NULL, OSCombo, bool_t, void);
-    }
-
-    return [super becomeFirstResponder];
-}
-
-/*---------------------------------------------------------------------------*/
-
-- (void) textDidChange:(NSNotification*)notification
+- (void)textDidChange:(NSNotification *)notification
 {
     unref(notification);
     if ([self isEnabled] == YES && self->OnFilter != NULL)
@@ -62,13 +48,13 @@
         EvText params;
         EvTextFilter result;
         NSText *text = NULL;
-        params.text = (const char_t*)[[self stringValue] UTF8String];
+        params.text = (const char_t *)[[self stringValue] UTF8String];
         text = [[self window] fieldEditor:YES forObject:self];
         params.cpos = (uint32_t)[text selectedRange].location;
         result.apply = FALSE;
         result.text[0] = '\0';
         result.cpos = UINT32_MAX;
-        listener_event(self->OnFilter, ekGUI_EVENT_TXTFILTER, (OSCombo*)self, &params, &result, OSCombo, EvText, EvTextFilter);
+        listener_event(self->OnFilter, ekGUI_EVENT_TXTFILTER, (OSCombo *)self, &params, &result, OSCombo, EvText, EvTextFilter);
 
         if (result.apply == TRUE)
             _oscontrol_set_text(self, &self->attrs, result.text);
@@ -77,59 +63,35 @@
             [text setSelectedRange:NSMakeRange((NSUInteger)result.cpos, 0)];
         else
             [text setSelectedRange:NSMakeRange((NSUInteger)params.cpos, 0)];
-
-        self->is_editing = YES;
     }
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) textDidEndEditing:(NSNotification*)notification
+- (void)textDidEndEditing:(NSNotification *)notification
 {
-    unref(notification);
-    if ([self isEnabled] == YES
-        && self->is_editing == YES
-        && self->OnChange != NULL
-        && _oswindow_in_destroy([self window]) == NO)
+    unsigned int whyEnd = [[[notification userInfo] objectForKey:@"NSTextMovement"] unsignedIntValue];
+    NSWindow *window = [self window];
+
+    if (whyEnd == NSReturnTextMovement)
     {
-        EvText params;
-        params.text = (const char_t*)[[self stringValue] UTF8String];
-        listener_event(self->OnChange, ekGUI_EVENT_TXTCHANGE, (OSCombo*)self, &params, NULL, OSCombo, EvText, void);
+        [window keyDown:(NSEvent *)231];
     }
-
-    [[self window] endEditingFor:nil];
-    self->is_editing = NO;
-
-    if ([self isEnabled] == YES && self->OnFocus != NULL)
+    else if (whyEnd == NSTabTextMovement)
     {
-        bool_t params = FALSE;
-        listener_event(self->OnFocus, ekGUI_EVENT_FOCUS, (OSCombo*)self, &params, NULL, OSCombo, bool_t, void);
+        _oswindow_next_tabstop(window, TRUE);
     }
-
+    else if (whyEnd == NSBacktabTextMovement)
     {
-        unsigned int whyEnd = [[[notification userInfo] objectForKey:@"NSTextMovement"] unsignedIntValue];
-        NSWindow *window = [self window];
-
-        if (whyEnd == NSReturnTextMovement)
-        {
-            [window keyDown:(NSEvent*)231];
-        }
-        else if (whyEnd == NSTabTextMovement)
-        {
-            _oswindow_next_tabstop(window, TRUE);
-        }
-        else if (whyEnd == NSBacktabTextMovement)
-        {
-            _oswindow_prev_tabstop(window, TRUE);
-        }
+        _oswindow_prev_tabstop(window, TRUE);
     }
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void) mouseDown:(NSEvent*)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
-    if (_oswindow_mouse_down((OSControl*)self) == TRUE)
+    if (_oswindow_mouse_down((OSControl *)self) == TRUE)
         [super mouseDown:theEvent];
 }
 
@@ -170,7 +132,6 @@ OSCombo *oscombo_create(const uint32_t flags)
     unref(flags);
     heap_auditor_add("OSXCombo");
     combo = [[OSXCombo alloc] initWithFrame:NSZeroRect];
-    combo->is_editing = NO;
     combo->OnFilter = NULL;
     combo->OnChange = NULL;
     combo->OnFocus = NULL;
@@ -189,7 +150,7 @@ OSCombo *oscombo_create(const uint32_t flags)
     [combo setSelectable:YES];
     [combo setHasVerticalScroller:YES];
     [combo setNumberOfVisibleItems:10];
-    return (OSCombo*)combo;
+    return (OSCombo *)combo;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -198,7 +159,7 @@ void oscombo_destroy(OSCombo **combo)
 {
     OSXCombo *lcombo = nil;
     cassert_no_null(combo);
-    lcombo = (OSXCombo*)*combo;
+    lcombo = (OSXCombo *)*combo;
     cassert_no_null(lcombo);
     listener_destroy(&lcombo->OnFilter);
     listener_destroy(&lcombo->OnChange);
@@ -215,7 +176,7 @@ void oscombo_destroy(OSCombo **combo)
 void oscombo_OnFilter(OSCombo *combo, Listener *listener)
 {
     cassert_no_null(combo);
-    listener_update(&((OSXCombo*)combo)->OnFilter, listener);
+    listener_update(&((OSXCombo *)combo)->OnFilter, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -223,7 +184,7 @@ void oscombo_OnFilter(OSCombo *combo, Listener *listener)
 void oscombo_OnChange(OSCombo *combo, Listener *listener)
 {
     cassert_no_null(combo);
-    listener_update(&((OSXCombo*)combo)->OnChange, listener);
+    listener_update(&((OSXCombo *)combo)->OnChange, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -231,7 +192,7 @@ void oscombo_OnChange(OSCombo *combo, Listener *listener)
 void oscombo_OnFocus(OSCombo *combo, Listener *listener)
 {
     cassert_no_null(combo);
-    listener_update(&((OSXCombo*)combo)->OnFocus, listener);
+    listener_update(&((OSXCombo *)combo)->OnFocus, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -239,35 +200,35 @@ void oscombo_OnFocus(OSCombo *combo, Listener *listener)
 void oscombo_OnSelect(OSCombo *combo, Listener *listener)
 {
     cassert_no_null(combo);
-    listener_update(&((OSXCombo*)combo)->OnSelect, listener);
+    listener_update(&((OSXCombo *)combo)->OnSelect, listener);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void oscombo_text(OSCombo *combo, const char_t *text)
 {
-    _oscontrol_set_text((OSXCombo*)combo, &((OSXCombo*)combo)->attrs, text);
+    _oscontrol_set_text((OSXCombo *)combo, &((OSXCombo *)combo)->attrs, text);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void oscombo_tooltip(OSCombo *combo, const char_t *text)
 {
-    _oscontrol_tooltip_set((OSXCombo*)combo, text);
+    _oscontrol_tooltip_set((OSXCombo *)combo, text);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void oscombo_font(OSCombo *combo, const Font *font)
 {
-    _oscontrol_set_font((OSXCombo*)combo, &((OSXCombo*)combo)->attrs, font);
+    _oscontrol_set_font((OSXCombo *)combo, &((OSXCombo *)combo)->attrs, font);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void oscombo_align(OSCombo *combo, const align_t align)
 {
-    _oscontrol_set_align((OSXCombo*)combo, &((OSXCombo*)combo)->attrs, align);
+    _oscontrol_set_align((OSXCombo *)combo, &((OSXCombo *)combo)->attrs, align);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -284,7 +245,7 @@ void oscombo_passmode(OSCombo *combo, const bool_t passmode)
 
 void oscombo_color(OSCombo *combo, const color_t color)
 {
-    _oscontrol_set_text_color((OSXCombo*)combo, &((OSXCombo*)combo)->attrs, color);
+    _oscontrol_set_text_color((OSXCombo *)combo, &((OSXCombo *)combo)->attrs, color);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -297,7 +258,7 @@ void oscombo_bgcolor(OSCombo *combo, const color_t color)
         nscolor = _oscontrol_color(color);
     else
         nscolor = [NSColor textBackgroundColor];
-    [(OSXCombo*)combo setBackgroundColor:nscolor];
+    [(OSXCombo *)combo setBackgroundColor:nscolor];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -308,28 +269,29 @@ void oscombo_elem(OSCombo *combo, const ctrl_op_t op, const uint32_t idx, const 
     unref(image);
     if (op != ekCTRL_OP_DEL)
     {
-        NSString *str = [[NSString alloc] initWithUTF8String:(const char*)text];
+        NSString *str = [[NSString alloc] initWithUTF8String:(const char *)text];
 
-        switch (op) {
+        switch (op)
+        {
         case ekCTRL_OP_ADD:
-            [(NSComboBox*)combo addItemWithObjectValue:str];
+            [(NSComboBox *)combo addItemWithObjectValue:str];
             break;
         case ekCTRL_OP_INS:
-            [(NSComboBox*)combo insertItemWithObjectValue:str atIndex:(NSInteger)idx];
+            [(NSComboBox *)combo insertItemWithObjectValue:str atIndex:(NSInteger)idx];
             break;
         case ekCTRL_OP_SET:
-            [(NSComboBox*)combo removeItemAtIndex:(NSInteger)idx];
-            [(NSComboBox*)combo insertItemWithObjectValue:str atIndex:(NSInteger)idx];
+            [(NSComboBox *)combo removeItemAtIndex:(NSInteger)idx];
+            [(NSComboBox *)combo insertItemWithObjectValue:str atIndex:(NSInteger)idx];
             break;
         case ekCTRL_OP_DEL:
-        cassert_default();
+            cassert_default();
         }
 
         [str release];
     }
     else
     {
-        [(NSComboBox*)combo removeItemAtIndex:(NSInteger)idx];
+        [(NSComboBox *)combo removeItemAtIndex:(NSInteger)idx];
     }
 }
 
@@ -340,13 +302,13 @@ void oscombo_selected(OSCombo *combo, const uint32_t idx)
     cassert_no_null(combo);
     if (idx == UINT32_MAX)
     {
-        NSInteger selected = [(OSXCombo*)combo indexOfSelectedItem];
+        NSInteger selected = [(OSXCombo *)combo indexOfSelectedItem];
         if (selected != -1)
-            [(OSXCombo*)combo deselectItemAtIndex:selected];
+            [(OSXCombo *)combo deselectItemAtIndex:selected];
     }
     else
     {
-        [(OSXCombo*)combo selectItemAtIndex:(NSInteger)idx];
+        [(OSXCombo *)combo selectItemAtIndex:(NSInteger)idx];
     }
 }
 
@@ -355,7 +317,7 @@ void oscombo_selected(OSCombo *combo, const uint32_t idx)
 uint32_t oscombo_get_selected(const OSCombo *combo)
 {
     cassert_no_null(combo);
-    return (uint32_t)[(OSXCombo*)combo indexOfSelectedItem];
+    return (uint32_t)[(OSXCombo *)combo indexOfSelectedItem];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -365,7 +327,7 @@ void oscombo_bounds(const OSCombo *combo, const real32_t refwidth, real32_t *wid
     cassert_no_null(combo);
     cassert_no_null(width);
     cassert_no_null(height);
-    _oscontrol_text_bounds(((OSXCombo*)combo)->attrs.font, "OO", -1.f, width, height);
+    _oscontrol_text_bounds(((OSXCombo *)combo)->attrs.font, "OO", -1.f, width, height);
     *width = refwidth;
     *height = 27.f;
 }
@@ -374,28 +336,28 @@ void oscombo_bounds(const OSCombo *combo, const real32_t refwidth, real32_t *wid
 
 void oscombo_attach(OSCombo *combo, OSPanel *panel)
 {
-    _ospanel_attach_control(panel, (NSView*)combo);
+    _ospanel_attach_control(panel, (NSView *)combo);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void oscombo_detach(OSCombo *combo, OSPanel *panel)
 {
-    _ospanel_detach_control(panel, (NSView*)combo);
+    _ospanel_detach_control(panel, (NSView *)combo);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void oscombo_visible(OSCombo *combo, const bool_t is_visible)
 {
-    _oscontrol_set_visible((NSView*)combo, is_visible);
+    _oscontrol_set_visible((NSView *)combo, is_visible);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void oscombo_enabled(OSCombo *combo, const bool_t is_enabled)
 {
-    OSXCombo *lcombo = (OSXCombo*)combo;
+    OSXCombo *lcombo = (OSXCombo *)combo;
     _oscontrol_set_enabled(lcombo, is_enabled);
     _oscontrol_set_text_color(lcombo, &lcombo->attrs, lcombo->attrs.color);
 }
@@ -404,22 +366,55 @@ void oscombo_enabled(OSCombo *combo, const bool_t is_enabled)
 
 void oscombo_size(const OSCombo *combo, real32_t *width, real32_t *height)
 {
-    _oscontrol_get_size((NSView*)combo, width, height);
+    _oscontrol_get_size((NSView *)combo, width, height);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void oscombo_origin(const OSCombo *combo, real32_t *x, real32_t *y)
 {
-    _oscontrol_get_origin((NSView*)combo, x, y);
+    _oscontrol_get_origin((NSView *)combo, x, y);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void oscombo_frame(OSCombo *combo, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
-    _oscontrol_set_frame((NSView*)combo, x, y, width, height);
-    [(NSView*)combo setNeedsDisplay:YES];
+    _oscontrol_set_frame((NSView *)combo, x, y, width, height);
+    [(NSView *)combo setNeedsDisplay:YES];
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t oscombo_resign_focus(const OSCombo *combo)
+{
+    bool_t lost_focus = TRUE;
+    OSXCombo *lcombo = (OSXCombo *)combo;
+    cassert_no_null(lcombo);
+    if (lcombo->OnChange != NULL && _oswindow_in_destroy([lcombo window]) == NO)
+    {
+        EvText params;
+        params.text = (const char_t *)[[lcombo stringValue] UTF8String];
+        listener_event(lcombo->OnChange, ekGUI_EVENT_TXTCHANGE, combo, &params, &lost_focus, OSCombo, EvText, bool_t);
+    }
+
+    return lost_focus;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void oscombo_focus(OSCombo *combo, const bool_t focus)
+{
+    OSXCombo *lcombo = (OSXCombo *)combo;
+    cassert_no_null(lcombo);
+    if (lcombo->OnFocus != NULL)
+    {
+        bool_t params = focus;
+        listener_event(lcombo->OnFocus, ekGUI_EVENT_FOCUS, combo, &params, NULL, OSCombo, bool_t, void);
+    }
+
+    if (focus == FALSE)
+        [[lcombo window] endEditingFor:nil];
 }
 
 /*---------------------------------------------------------------------------*/

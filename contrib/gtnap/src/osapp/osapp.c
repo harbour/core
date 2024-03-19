@@ -87,7 +87,7 @@ struct i_app_t
     FPtr_app_update func_update;
     FPtr_gctx_call func_async_call;
     String *locale;
-    ArrPt(i_Task) * scheduler;
+    ArrPt(i_Task) *scheduler;
 };
 
 DeclSt(i_Task);
@@ -170,38 +170,39 @@ static uint32_t i_dispatch_task(i_Task *task)
 /*---------------------------------------------------------------------------*/
 
 /* This function runs in the MAIN thread */
-static void i_scheduler_cycle(ArrPt(i_Task) * scheduler, const real64_t crtime)
+static void i_scheduler_cycle(ArrPt(i_Task) *scheduler, const real64_t crtime)
 {
     i_Task *deleted_task = NULL;
 
-    arrpt_foreach(task, scheduler, i_Task) if (task->state == i_ekSTATE_WAITING)
-    {
-        cassert(task->thread == NULL);
-        task->thread = bthread_create(i_dispatch_task, task, i_Task);
-        task->lastupd = crtime;
-    }
-    else if (task->state == i_ekSTATE_RUNNING)
-    {
-        if (task->func_update != NULL)
+    arrpt_foreach(task, scheduler, i_Task)
+        if (task->state == i_ekSTATE_WAITING)
         {
-            if (crtime - task->lastupd > task->updtime)
+            cassert(task->thread == NULL);
+            task->thread = bthread_create(i_dispatch_task, task, i_Task);
+            task->lastupd = crtime;
+        }
+        else if (task->state == i_ekSTATE_RUNNING)
+        {
+            if (task->func_update != NULL)
             {
-                task->func_update(task->data);
-                task->lastupd = crtime;
+                if (crtime - task->lastupd > task->updtime)
+                {
+                    task->func_update(task->data);
+                    task->lastupd = crtime;
+                }
             }
         }
-    }
-    else if (task->state == i_ekSTATE_FINISH)
-    {
-        if (deleted_task == NULL)
+        else if (task->state == i_ekSTATE_FINISH)
         {
-            uint32_t rvalue = bthread_wait(task->thread);
-            if (task->func_end != NULL)
-                task->func_end(task->data, rvalue);
-            deleted_task = task;
+            if (deleted_task == NULL)
+            {
+                uint32_t rvalue = bthread_wait(task->thread);
+                if (task->func_end != NULL)
+                    task->func_end(task->data, rvalue);
+                deleted_task = task;
+            }
         }
-    }
-    arrpt_end();
+    arrpt_end()
 
     if (deleted_task != NULL)
     {
@@ -277,21 +278,24 @@ static void i_OnNotification(void *sender, Event *e)
 
     switch (type)
     {
-    case ekGUI_NOTIF_LANGUAGE: {
+    case ekGUI_NOTIF_LANGUAGE:
+    {
         const char_t *params = event_params(e, char_t);
         osapp_set_lang(app->osapp, params);
         osgui_redraw_menubar();
         break;
     }
 
-    case ekGUI_NOTIF_WIN_DESTROY: {
+    case ekGUI_NOTIF_WIN_DESTROY:
+    {
         const Window *window = event_params(e, Window);
         OSWindow *oswindow = (OSWindow *)window_imp(window);
         osgui_unset_menubar(NULL, oswindow);
         break;
     }
 
-    case ekGUI_NOTIF_MENU_DESTROY: {
+    case ekGUI_NOTIF_MENU_DESTROY:
+    {
         const Menu *menu = event_params(e, Menu);
         OSMenu *osmenu = (OSMenu *)menu_imp(menu);
         osgui_unset_menubar(osmenu, NULL);

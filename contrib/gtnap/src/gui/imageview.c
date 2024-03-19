@@ -207,7 +207,7 @@ void imageview_image(ImageView *view, const Image *image)
     cassert_no_null(data);
     if (data->image != limage)
     {
-        Cell *cell = _component_cell((GuiComponent*)view);
+        Cell *cell = _component_cell((GuiComponent *)view);
         ptr_destopt(image_destroy, &data->image, Image);
         data->image = ptr_copyopt(image_copy, limage, Image);
         data->frame = UINT32_MAX;

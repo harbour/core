@@ -219,16 +219,16 @@ void gui_language(const char_t *lang)
     arrpt_clear(i_PACKS, respack_destroy, ResPack);
     arrst_foreach(func_pack, i_FUNC_PACKS, FPtr_respack)
         ResPack *pack = (*func_pack)(lang);
-    arrpt_append(i_PACKS, pack, ResPack);
-    arrpt_end();
+        arrpt_append(i_PACKS, pack, ResPack);
+    arrpt_end()
 
     arrpt_foreach(menu, i_MENUS, Menu)
         _menu_locale(menu);
-    arrpt_end();
+    arrpt_end()
 
     arrpt_foreach(window, i_WINDOWS, Window)
         _window_locale(window);
-    arrpt_end();
+    arrpt_end()
 
     if (i_ONNOTIF != NULL)
         listener_event(i_ONNOTIF, ekGUI_NOTIF_LANGUAGE, NULL, lang, NULL, void, char_t, void);
@@ -372,8 +372,8 @@ static void i_precompute_system_colors(void)
 
     arrst_foreach(alt, i_ALTCOLORS, ColorAlt)
         cassert(kFIRST_COLOR_ALT + alt_i <= 0xFFFF);
-    color_indexed((uint16_t)(kFIRST_COLOR_ALT + alt_i), i_DARK_MODE ? alt->dark : alt->light);
-    arrst_end();
+        color_indexed((uint16_t)(kFIRST_COLOR_ALT + alt_i), i_DARK_MODE ? alt->dark : alt->light);
+    arrst_end()
 }
 
 /*---------------------------------------------------------------------------*/
@@ -384,7 +384,7 @@ void gui_update(void)
 
     arrpt_foreach(window, i_WINDOWS, Window)
         _window_update(window);
-    arrpt_end();
+    arrpt_end()
 
     if (i_ONTHEME != NULL)
         listener_event(i_ONTHEME, 0, NULL, NULL, NULL, void, void, void);
@@ -459,8 +459,10 @@ bool_t evbind_modify_imp(Event *e, const char_t *type, const uint16_t size, cons
 
 Window *_gui_main_window(void)
 {
-    arrpt_foreach(window, i_WINDOWS, Window) if (_window_role(window) == ekGUI_ROLE_MAIN) return window;
-    arrpt_end();
+    arrpt_foreach(window, i_WINDOWS, Window)
+        if (_window_role(window) == ekGUI_ROLE_MAIN)
+            return window;
+    arrpt_end()
     return NULL;
 }
 
@@ -517,11 +519,12 @@ bool_t _gui_update_font(Font **font, Font **alt_font, const Font *new_font)
 
 void _gui_add_transition_imp(void *owner, Listener *listener)
 {
-    arrst_foreach(transition, i_TRANSITIONS, Transition) if (transition->owner == owner)
-    {
-        cassert(FALSE);
-        return;
-    }
+    arrst_foreach(transition, i_TRANSITIONS, Transition)
+        if (transition->owner == owner)
+        {
+            cassert(FALSE);
+            return;
+        }
     arrst_end()
 
     {
@@ -535,11 +538,12 @@ void _gui_add_transition_imp(void *owner, Listener *listener)
 
 void _gui_delete_transition_imp(void *owner)
 {
-    arrst_foreach(transition, i_TRANSITIONS, Transition) if (transition->owner == owner)
-    {
-        arrst_delete(i_TRANSITIONS, transition_i, i_remove_transition, Transition);
-        return;
-    }
+    arrst_foreach(transition, i_TRANSITIONS, Transition)
+        if (transition->owner == owner)
+        {
+            arrst_delete(i_TRANSITIONS, transition_i, i_remove_transition, Transition);
+            return;
+        }
     arrst_end()
 }
 
@@ -636,10 +640,12 @@ const Image *_gui_respack_image(const ResId id, ResId *store_id)
 
 const Cursor *_gui_cursor(const gui_cursor_t cursor, const Image *image, const real32_t hot_x, const real32_t hot_y)
 {
-    arrst_foreach(curs, i_CURSORS, CurIcon) if (cursor == ekGUI_CURSOR_USER && curs->image == image) return curs->cursor;
-    if (cursor != ekGUI_CURSOR_USER && cursor == curs->type)
-        return curs->cursor;
-    arrst_end();
+    arrst_foreach(curs, i_CURSORS, CurIcon)
+        if (cursor == ekGUI_CURSOR_USER && curs->image == image)
+            return curs->cursor;
+        if (cursor != ekGUI_CURSOR_USER && cursor == curs->type)
+            return curs->cursor;
+    arrst_end()
 
     {
         CurIcon *newcur = arrst_new(i_CURSORS, CurIcon);
@@ -989,7 +995,7 @@ static void i_OnInfoClick(void *unused, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_info_buttons_layout(const ArrPt(String) * buttons, const uint32_t defindex, Button **defbutton)
+static Layout *i_info_buttons_layout(const ArrPt(String) *buttons, const uint32_t defindex, Button **defbutton)
 {
     uint32_t i, n = arrpt_size(buttons, String);
     Layout *layout = layout_create(n, 1);
@@ -1016,7 +1022,7 @@ static Layout *i_info_buttons_layout(const ArrPt(String) * buttons, const uint32
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t gui_info_window(const bool_t fatal, const char_t *msg, const char_t *caption, const char_t *detail, const char_t *file, const uint32_t line, const ArrPt(String) * buttons, const uint32_t defindex)
+uint32_t gui_info_window(const bool_t fatal, const char_t *msg, const char_t *caption, const char_t *detail, const char_t *file, const uint32_t line, const ArrPt(String) *buttons, const uint32_t defindex)
 {
     ResPack *pack = res_gui_respack("");
     Button *defbutton = NULL;

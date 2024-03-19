@@ -45,7 +45,7 @@ struct _column_t
 {
     ctype_t type;
     ResId head_textid;
-    ArrPt(String) * head_text;
+    ArrPt(String) *head_text;
     Font *font;
     uint32_t width;
     uint32_t yoffset;
@@ -62,8 +62,8 @@ struct _tdata_t
     ScrollView *sview;
     Font *font;
     Font *head_font;
-    ArrSt(Column) * columns;
-    ArrSt(uint32_t) * selected;
+    ArrSt(Column) *columns;
+    ArrSt(uint32_t) *selected;
     align_t focus_align;
     uint32_t num_rows;
     uint32_t focus_row;
@@ -235,7 +235,7 @@ static uint32_t i_num_visible_rows(const uint32_t view_height, const uint32_t he
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_freezed_width(const ArrSt(Column) * columns, const uint32_t freeze_col_id)
+static uint32_t i_freezed_width(const ArrSt(Column) *columns, const uint32_t freeze_col_id)
 {
     uint32_t width = 0;
 
@@ -252,7 +252,7 @@ static uint32_t i_freezed_width(const ArrSt(Column) * columns, const uint32_t fr
 
 /*---------------------------------------------------------------------------*/
 
-static void i_visible_cols(const ArrSt(Column) * columns, const uint32_t freeze_width, const uint32_t freeze_col_id, const uint32_t stx, const uint32_t width, uint32_t *stcol, uint32_t *edcol, uint32_t *x)
+static void i_visible_cols(const ArrSt(Column) *columns, const uint32_t freeze_width, const uint32_t freeze_col_id, const uint32_t stx, const uint32_t width, uint32_t *stcol, uint32_t *edcol, uint32_t *x)
 {
     uint32_t lx = 0, st = UINT32_MAX, ed = UINT32_MAX;
     cassert_no_null(stcol);
@@ -260,29 +260,29 @@ static void i_visible_cols(const ArrSt(Column) * columns, const uint32_t freeze_
     cassert_no_null(x);
 
     arrst_foreach_const(col, columns, Column)
-
-        if (st == UINT32_MAX)
-    {
-        /* The column is completely to the left of the visible area */
-        if (lx + col->width > stx + freeze_width)
         {
-            if (freeze_col_id == UINT32_MAX || freeze_col_id < col_i)
+            if (st == UINT32_MAX)
             {
-                st = col_i;
-                *x = lx;
+                /* The column is completely to the left of the visible area */
+                if (lx + col->width > stx + freeze_width)
+                {
+                    if (freeze_col_id == UINT32_MAX || freeze_col_id < col_i)
+                    {
+                        st = col_i;
+                        *x = lx;
+                    }
+                }
             }
+            else if (lx > stx + width)
+            {
+                /* The column is completely to the right of the visible area */
+                ed = col_i;
+                break;
+            }
+
+            lx += col->width;
         }
-    }
-    else if (lx > stx + width)
-    {
-        /* The column is completely to the right of the visible area */
-        ed = col_i;
-        break;
-    }
-
-    lx += col->width;
-
-    arrst_end();
+    arrst_end()
 
     if (st == UINT32_MAX)
     {
@@ -306,7 +306,7 @@ static int i_uint32_cmp(const uint32_t *u1, const uint32_t *u2)
 
 /*---------------------------------------------------------------------------*/
 
-static bool_t i_row_is_selected(const ArrSt(uint32_t) * selected, const uint32_t row)
+static bool_t i_row_is_selected(const ArrSt(uint32_t) *selected, const uint32_t row)
 {
     const uint32_t *elem = arrst_bsearch_const(selected, i_uint32_cmp, &row, NULL, uint32_t, uint32_t);
     return (bool_t)(elem != NULL);
@@ -586,9 +586,9 @@ static void i_draw_header(DCtx *ctx, const TData *data, const Column *col, const
 
         arrpt_foreach_const(text, col->head_text, String)
             draw_text_color(ctx, kCOLOR_DEFAULT);
-        drawctrl_text(ctx, tc(text), tx, ty, data->focused ? ekCTRL_STATE_NORMAL : ekCTRL_STATE_BKNORMAL);
-        ty += data->head_line_height;
-        arrpt_end();
+            drawctrl_text(ctx, tc(text), tx, ty, data->focused ? ekCTRL_STATE_NORMAL : ekCTRL_STATE_BKNORMAL);
+            ty += data->head_line_height;
+        arrpt_end()
 
         if (col->indicator != 0)
             drawctrl_indicator(ctx, x, 0, col->width, data->head_height, col->indicator);
@@ -669,7 +669,8 @@ static uint32_t i_col_height(const Column *col)
     cassert_no_null(col);
     switch (col->type)
     {
-    case ekCTYPE_TEXT: {
+    case ekCTYPE_TEXT:
+    {
         uint32_t height = i_font_height(col->font);
         height += drawctrl_row_padding(NULL);
         return height;
@@ -688,7 +689,8 @@ static void i_col_y_offset(Column *col, const uint32_t row_height)
     cassert_no_null(col);
     switch (col->type)
     {
-    case ekCTYPE_TEXT: {
+    case ekCTYPE_TEXT:
+    {
         uint32_t height = i_font_height(col->font);
         col->yoffset = (row_height - height) / 2;
         break;
@@ -707,9 +709,9 @@ static void i_head_height(TData *data)
 
     arrst_foreach_const(col, data->columns, Column)
         uint32_t n = arrpt_size(col->head_text, String);
-    if (n > num_lines)
-        num_lines = n;
-    arrst_end();
+        if (n > num_lines)
+            num_lines = n;
+    arrst_end()
 
     if (data->head_height_forced != UINT32_MAX)
     {
@@ -736,9 +738,9 @@ static void i_row_height(TData *data)
         data->row_height = 0;
         arrst_foreach(col, data->columns, Column)
             uint32_t height = i_col_height(col);
-        if (height > data->row_height)
-            data->row_height = height;
-        arrst_end();
+            if (height > data->row_height)
+                data->row_height = height;
+        arrst_end()
 
         /* Fix crash if no column defined */
         if (data->row_height == 0)
@@ -754,7 +756,7 @@ static void i_row_height(TData *data)
 
     arrst_foreach(col, data->columns, Column)
         i_col_y_offset(col, data->row_height);
-    arrst_end();
+    arrst_end()
 }
 
 /*---------------------------------------------------------------------------*/
@@ -771,7 +773,7 @@ static void i_document_size(TableView *view, TData *data)
     {
         arrst_foreach(col, data->columns, Column)
             twidth += col->width;
-        arrst_end();
+        arrst_end()
 
         twidth += i_DOCUMENT_RIGHT_MARGIN;
         data->recompute_width = FALSE;
@@ -825,7 +827,8 @@ static void i_scroll_to_row(TData *data, const uint32_t row, const align_t align
         ypos = row * data->row_height;
         break;
 
-    case ekCENTER: {
+    case ekCENTER:
+    {
         uint32_t offset = 0;
         ypos = (row + 1) * data->row_height + i_BOTTOM_PADDING;
 
@@ -1065,7 +1068,7 @@ static void i_OnFocus(TableView *view, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static bool_t i_is_only_selected(const ArrSt(uint32_t) * selected, const uint32_t row)
+static bool_t i_is_only_selected(const ArrSt(uint32_t) *selected, const uint32_t row)
 {
     if (arrst_size(selected, uint32_t) != 1)
         return FALSE;
@@ -1278,12 +1281,12 @@ static void i_left_scroll(TData *data)
         arrst_foreach(col, data->columns, Column)
             uint32_t ncscroll = cscroll + col->width;
 
-        /* This is the left-most visible column --> Jump to column begin */
-        if (scroll_x <= ncscroll)
-            break;
+            /* This is the left-most visible column --> Jump to column begin */
+            if (scroll_x <= ncscroll)
+                break;
 
-        cscroll = ncscroll;
-        arrst_end();
+            cscroll = ncscroll;
+        arrst_end()
 
         scrollview_scroll_x(data->sview, cscroll, TRUE);
     }
@@ -1308,13 +1311,13 @@ static void i_right_scroll(TData *data)
 
         arrst_foreach(col, data->columns, Column)
             uint32_t ncscroll = cscroll + col->width;
-        cscroll = ncscroll;
+            cscroll = ncscroll;
 
-        /* This is the right-most visible column --> Jump to column end */
-        if (scroll_x < ncscroll)
-            break;
+            /* This is the right-most visible column --> Jump to column end */
+            if (scroll_x < ncscroll)
+                break;
 
-        arrst_end();
+        arrst_end()
 
         scrollview_scroll_x(data->sview, cscroll, TRUE);
     }
@@ -1623,7 +1626,7 @@ void tableview_font(TableView *view, const Font *font)
 
     arrst_foreach(col, data->columns, Column)
         updated |= _gui_update_font(&col->font, NULL, font);
-    arrst_end();
+    arrst_end()
 
     if (updated == TRUE)
     {
@@ -1644,7 +1647,7 @@ void tableview_size(TableView *view, S2Df size)
 
 /*---------------------------------------------------------------------------*/
 
-static ArrPt(String) * i_default_col_text(const uint32_t col_i)
+static ArrPt(String) *i_default_col_text(const uint32_t col_i)
 {
     ArrPt(String) *texts = arrpt_create(String);
     String *text = str_printf("Column %d", col_i);
@@ -1916,7 +1919,7 @@ void tableview_grid(TableView *view, const bool_t hlines, const bool_t vlines)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_delete_out_bounds(ArrSt(uint32_t) * selected, const uint32_t bound)
+static void i_delete_out_bounds(ArrSt(uint32_t) *selected, const uint32_t bound)
 {
     uint32_t i, n = arrst_size(selected, uint32_t);
     for (i = 0; i < n;)
@@ -2070,7 +2073,7 @@ void tableview_deselect_all(TableView *view)
 
 /*---------------------------------------------------------------------------*/
 
-const ArrSt(uint32_t) * tableview_selected(const TableView *view)
+const ArrSt(uint32_t) *tableview_selected(const TableView *view)
 {
     TData *data = view_get_data((View *)view, TData);
     return data->selected;
