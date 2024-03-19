@@ -3173,21 +3173,6 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t pwid, const ui
             pos.y += ppos.y;
         }
 
-        /* Check if a first control has to be focused */
-        {
-            GtNapObject *gtobj_focus = NULL;
-
-            if (embgtwin != NULL)
-                gtobj_focus = i_get_first_focus(embgtwin);
-            else if (i_gtwin_has_embedded(GTNAP_GLOBAL, gtwin->id) == TRUE)
-                gtobj_focus = i_get_first_focus(gtwin);
-            else
-                gtobj_focus = i_get_first_focus(gtwin);
-
-            if (gtobj_focus != NULL)
-                window_focus(gtwin->window, (GuiControl*)gtobj_focus->component);
-        }
-
         cassert(gtwin->window != NULL);
         /* Allow arrows/intro in TextView */
         if (embgtwin != NULL && i_num_texts(embgtwin) > 0)
