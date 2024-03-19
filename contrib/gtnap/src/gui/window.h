@@ -53,7 +53,7 @@ _gui_api gui_focus_t window_focus(Window *window, GuiControl *control);
 
 _gui_api GuiControl *window_get_focus(Window *window);
 
-_gui_api gui_tab_t window_tabmotion(const Window *window);
+_gui_api void window_focus_info(const Window *window, FocusInfo *info);
 
 _gui_api void window_update(Window *window);
 

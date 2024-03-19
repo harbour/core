@@ -20,7 +20,7 @@ void ostabstop_remove(OSTabStop *tabstop);
 
 bool_t ostabstop_in_tablist(const OSTabStop *tabstop, const OSControl *control);
 
-bool_t ostabstop_resign_focus(OSTabStop *tabstop, const OSControl *control, const OSControl *next_control);
+bool_t ostabstop_resign_focus(OSTabStop *tabstop, const OSControl *control);
 
 bool_t ostabstop_accept_focus(OSTabStop *tabstop, const OSControl *control);
 
@@ -36,7 +36,7 @@ gui_focus_t ostabstop_move(OSTabStop *tabstop, OSControl *control);
 
 gui_focus_t ostabstop_restore(OSTabStop *tabstop);
 
-gui_tab_t ostabstop_motion(const OSTabStop *tabstop);
+gui_tab_t ostabstop_info_focus(const OSTabStop *tabstop, void **next_ctrl);
 
 bool_t ostabstop_mouse_down(OSTabStop *tabstop, OSControl *control);
 

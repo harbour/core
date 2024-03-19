@@ -57,7 +57,7 @@ _gui_api void gui_OnNotification(Listener *listener);
 
 _gui_api void gui_OnIdle(Listener *listener);
 
-_gui_api uint32_t gui_info_window(const bool_t fatal, const char_t *msg, const char_t *caption, const char_t *detail, const char_t *file, const uint32_t line, const ArrPt(String) * buttons, const uint32_t defindex);
+_gui_api uint32_t gui_info_window(const bool_t fatal, const char_t *msg, const char_t *caption, const char_t *detail, const char_t *file, const uint32_t line, const ArrPt(String) *buttons, const uint32_t defindex);
 
 _gui_api void *evbind_object_imp(Event *e, const char_t *type);
 
@@ -68,14 +68,14 @@ __END_C
 #define evbind_object(e, type) \
     (type *)evbind_object_imp(e, (const char_t *)#type)
 
-#define evbind_modify(e, type, mtype, mname)             \
-    (                                                    \
-        CHECK_STRUCT_MEMBER_TYPE(type, mname, mtype),    \
-        evbind_modify_imp(                               \
-            e,                                           \
-            (const char_t *)#type,                       \
-            (uint16_t)sizeof(type),                      \
-            (const char_t *)#mname,                      \
-            (const char_t *)#mtype,                      \
+#define evbind_modify(e, type, mtype, mname) \
+    ( \
+        CHECK_STRUCT_MEMBER_TYPE(type, mname, mtype), \
+        evbind_modify_imp( \
+            e, \
+            (const char_t *)#type, \
+            (uint16_t)sizeof(type), \
+            (const char_t *)#mname, \
+            (const char_t *)#mtype, \
             (uint16_t)STRUCT_MEMBER_OFFSET(type, mname), \
             (uint16_t)STRUCT_MEMBER_SIZE(type, mname)))

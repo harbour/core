@@ -105,7 +105,6 @@ struct _gtnap_object_t
     bool_t is_last_edit;
     bool_t in_scroll;
     bool_t can_auto_lista;
-    bool_t in_change_event;
     bool_t has_focus;
     uint32_t max_chars;
     uint32_t editBoxIndexForButton;
@@ -1414,21 +1413,17 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
 {
     const EvText *p = event_params(e, EvText);
     GtNapWindow *gtwin = NULL;
+    FocusInfo finfo;
 
     cassert_no_null(gtobj);
     cassert(gtobj->type == ekOBJ_EDIT);
     gtwin = gtobj->gtwin;
     cassert_no_null(gtwin);
+    window_focus_info(gtwin->window, &finfo);
 
     /* Current window is in close process by 'window_stop_modal'. Validations should not be performed */
     if (gtwin->modal_window_alive == FALSE)
         return;
-
-    /* Avoid nested change events */
-    if (gtobj->in_change_event == TRUE)
-        return;
-
-    gtobj->in_change_event = TRUE;
 
     /* Update Harbour with the content of the EditBox */
     i_update_harbour_from_edit_text(gtobj);
@@ -1448,7 +1443,6 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
         {
             bool_t *r = event_result(e, bool_t);
             *r = FALSE;
-            gtobj->in_change_event = FALSE;
             return;
         }
     }
@@ -1468,7 +1462,6 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
                 ritem = hb_itemDo(gtwin->error_date_block, 0);
                 hb_itemRelease(ritem);
                 *r = FALSE;
-                gtobj->in_change_event = FALSE;
                 return;
             }
         }
@@ -1486,33 +1479,26 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
         /* The last editbox has lost the focus --> Close the window */
         if (gtobj->is_last_edit == TRUE)
         {
-            /* The focus has not moved to previous control */
-            if ((GuiControl*)p->next_ctrl == (GuiControl*)gtobj->component)
+            /* The user has explicity intro the editbox value */
+            if (finfo.action == ekGUI_TAB_KEY || finfo.action == ekGUI_TAB_NEXT)
             {
-                gui_tab_t motion = window_tabmotion(gtwin->window);
-                /* The user has explicity intro the editbox value */
-                if (motion == ekGUI_TAB_KEY || motion == ekGUI_TAB_NEXT)
+                bool_t close = TRUE;
+
+                /* We have asociated a confirmation block */
+                if (gtwin->confirm_block != NULL)
                 {
-                    bool_t close = TRUE;
-
-                    /* We have asociated a confirmation block */
-                    if (gtwin->confirm_block != NULL)
-                    {
-                        PHB_ITEM ritem = hb_itemDo(gtwin->confirm_block, 0);
-                        HB_TYPE type = HB_ITEM_TYPE(ritem);
-                        cassert_unref(type == HB_IT_LOGICAL, type);
-                        close = (bool_t)hb_itemGetL(ritem);
-                        hb_itemRelease(ritem);
-                    }
-
-                    if (close == TRUE)
-                        i_stop_modal(GTNAP_GLOBAL, gtwin, NAP_MODAL_LAST_INPUT);
+                    PHB_ITEM ritem = hb_itemDo(gtwin->confirm_block, 0);
+                    HB_TYPE type = HB_ITEM_TYPE(ritem);
+                    cassert_unref(type == HB_IT_LOGICAL, type);
+                    close = (bool_t)hb_itemGetL(ritem);
+                    hb_itemRelease(ritem);
                 }
+
+                if (close == TRUE)
+                    i_stop_modal(GTNAP_GLOBAL, gtwin, NAP_MODAL_LAST_INPUT);
             }
         }
     }
-
-    gtobj->in_change_event = FALSE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3250,7 +3236,6 @@ static uint32_t i_add_object(const objtype_t type, const int32_t top, const int3
     obj->is_last_edit = FALSE;
     obj->in_scroll = in_scroll;
     obj->can_auto_lista = TRUE;
-    obj->in_change_event = FALSE;
     obj->has_focus = FALSE;
     obj->editBoxIndexForButton = UINT32_MAX;
     obj->gtwin = gtwin;

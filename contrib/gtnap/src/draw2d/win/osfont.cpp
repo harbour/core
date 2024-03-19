@@ -205,23 +205,20 @@ void osfont_destroy(OSFont **font)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *osfont_family(const char_t *family)
+String *osfont_family_name(const OSFont *font)
 {
-    if (str_equ_c(family, "__SYSTEM__") == TRUE)
+    HFONT hfont = (HFONT)font;
+    LOGFONT lf;
+    cassert_no_null(hfont);
+
+    if (GetObject(hfont, sizeof(LOGFONT), &lf) == sizeof(LOGFONT))
     {
-        NONCLIENTMETRICS metrics;
-        i_metrics(&metrics);
-        unicode_convers((const char_t *)metrics.lfMessageFont.lfFaceName, i_FAMILY, ekUTF16, ekUTF8, sizeof(i_FAMILY));
-        return i_FAMILY;
+        char_t faceName[LF_FACESIZE];
+        unicode_convers((const char_t *)lf.lfFaceName, faceName, ekUTF16, ekUTF8, sizeof(faceName));
+        return str_c(faceName);
     }
-    else if (str_equ_c(family, "__MONOSPACE__") == TRUE)
-    {
-        return "Courier New";
-    }
-    else
-    {
-        return family;
-    }
+
+    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -352,8 +349,10 @@ bool_t font_exists_family(const char_t *family)
 
     if (font_callback.exists == FALSE && kUSER_FONTS != NULL)
     {
-        arrst_foreach(font, kUSER_FONTS, UserFont) if (str_equ(font->name, family) == TRUE) return TRUE;
-        arrst_end();
+        arrst_foreach(font, kUSER_FONTS, UserFont)
+            if (str_equ(font->name, family) == TRUE)
+                return TRUE;
+        arrst_end()
     }
 
     return font_callback.exists;
@@ -363,7 +362,7 @@ bool_t font_exists_family(const char_t *family)
 
 typedef struct _font_installed_t
 {
-    ArrPt(String) * font_families;
+    ArrPt(String) *font_families;
 } i_FontInstalled;
 
 /*---------------------------------------------------------------------------*/
@@ -389,7 +388,7 @@ static int CALLBACK i_font_families(const LOGFONT *lpelf, const TEXTMETRIC *lpnt
 
 /*---------------------------------------------------------------------------*/
 
-ArrPt(String) * font_installed_families(void)
+ArrPt(String) *font_installed_families(void)
 {
     HWND hwnd = GetDesktopWindow();
     HDC hdc = GetDC(hwnd);

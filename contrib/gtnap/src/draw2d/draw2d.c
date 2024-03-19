@@ -46,8 +46,8 @@ DeclSt(IColor);
 #define i_WORD_TYPE_TEXT 3
 
 static uint32_t i_NUM_USERS = 0;
-static ArrPt(String) * i_FONT_FAMILIES;
-static ArrSt(IColor) * i_INDEXED_COLORS;
+static ArrPt(String) *i_FONT_FAMILIES;
+static ArrSt(IColor) *i_INDEXED_COLORS;
 
 /*---------------------------------------------------------------------------*/
 
@@ -112,8 +112,10 @@ void draw2d_finish(void)
 
 uint32_t draw2d_register_font(const char_t *font_family)
 {
-    arrpt_foreach(family, i_FONT_FAMILIES, String) if (str_cmp(family, font_family) == 0) return family_i;
-    arrpt_end();
+    arrpt_foreach(family, i_FONT_FAMILIES, String)
+        if (str_cmp(family, font_family) == 0)
+            return family_i;
+    arrpt_end()
 
     if (font_exists_family(font_family) == TRUE)
     {
@@ -133,7 +135,7 @@ uint32_t draw2d_register_font(const char_t *font_family)
 const char_t *draw2d_font_family(const uint32_t family)
 {
     const String *font_family = arrpt_get(i_FONT_FAMILIES, family, String);
-    return osfont_family(tc(font_family));
+    return tc(font_family);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -145,11 +147,12 @@ color_t color_indexed(const uint16_t index, const color_t color)
 
     cassert((uint8_t)(color >> 24) != 0);
 
-    arrst_foreach(ic, i_INDEXED_COLORS, IColor) if (index == ic->index)
-    {
-        ic->color = color;
-        return color;
-    }
+    arrst_foreach(ic, i_INDEXED_COLORS, IColor)
+        if (index == ic->index)
+        {
+            ic->color = color;
+            return color;
+        }
     arrst_end()
 
     {
@@ -167,10 +170,12 @@ color_t draw2d_get_indexed_color(const uint16_t index)
     if (index == 0)
         return kCOLOR_DEFAULT;
 
-    arrst_foreach(ic, i_INDEXED_COLORS, IColor) if (ic->index == index) return ic->color;
+    arrst_foreach(ic, i_INDEXED_COLORS, IColor)
+        if (ic->index == index)
+            return ic->color;
     arrst_end()
 
-        cassert(FALSE);
+    cassert(FALSE);
     return kCOLOR_DEFAULT;
 }
 
@@ -339,7 +344,8 @@ void draw2d_extents_imp(void *data, FPtr_word_extents func_word_extents, const b
             }
             break;
 
-        case i_WORD_TYPE_TEXT: {
+        case i_WORD_TYPE_TEXT:
+        {
             char_t word[256];
             real32_t word_width = 0.f, word_height = 0.f;
             register uint32_t size = (uint32_t)(next_text - ctext);

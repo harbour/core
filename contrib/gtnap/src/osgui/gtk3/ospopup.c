@@ -42,8 +42,8 @@ struct _ospopup_t
     GtkCssProvider *font;
     bool_t launch_event;
     Listener *OnSelect;
-    ArrPt(String) * texts;
-    ArrPt(Image) * images;
+    ArrPt(String) *texts;
+    ArrPt(Image) *images;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -336,15 +336,8 @@ void ospopup_frame(OSPopUp *popup, const real32_t x, const real32_t y, const rea
 
 /*---------------------------------------------------------------------------*/
 
-GtkWidget *_ospopup_focus(OSPopUp *popup)
+GtkWidget *_ospopup_focus_widget(OSPopUp *popup)
 {
     cassert_no_null(popup);
     return popup->button;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void _ospopup_set_focus(OSPopUp *popup)
-{
-    unref(popup);
 }

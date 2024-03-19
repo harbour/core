@@ -118,9 +118,10 @@ static void i_OnClick(Button *button, Event *event)
 
     switch (button_get_type(button->flags))
     {
-    case ekBUTTON_RADIO: {
+    case ekBUTTON_RADIO:
+    {
         Cell *ccell = _component_cell(&button->component);
-        if (ccell != NULL) 
+        if (ccell != NULL)
         {
             Cell *cell = _cell_radio_dbind_cell(ccell);
             params->index = _cell_radio_index(ccell);
@@ -143,7 +144,8 @@ static void i_OnClick(Button *button, Event *event)
         break;
     }
 
-    case ekBUTTON_CHECK3: {
+    case ekBUTTON_CHECK3:
+    {
         Cell *cell = _component_cell(&button->component);
         if (cell != NULL)
         {
@@ -529,7 +531,8 @@ void _button_uint32(Button *button, const uint32_t value)
         button_state(button, value == 0 ? ekGUI_OFF : ekGUI_ON);
         break;
 
-    case ekBUTTON_CHECK3: {
+    case ekBUTTON_CHECK3:
+    {
         gui_state_t st = ekGUI_MIXED;
         if (value == 0)
             st = ekGUI_OFF;

@@ -24,7 +24,7 @@
 #include <core/strings.h>
 #include <sewer/cassert.h>
 
-#if !defined (__MACOS__)
+#if !defined(__MACOS__)
 #error This file is only for OSX
 #endif
 
@@ -32,8 +32,8 @@
 
 @interface OSXTextFieldCell : NSTextFieldCell
 {
-	@public
-	NSView *parent;
+  @public
+    NSView *parent;
 }
 
 @end
@@ -42,8 +42,8 @@
 
 @interface OSXSecureTextFieldCell : NSSecureTextFieldCell
 {
-@public
-	NSView *parent;
+  @public
+    NSView *parent;
 }
 @end
 
@@ -51,7 +51,7 @@
 
 @interface OSXTextField : NSTextField
 {
-    @public
+  @public
     NSView *parent;
 }
 @end
@@ -60,7 +60,7 @@
 
 @interface OSXSecureTextField : NSSecureTextField
 {
-    @public
+  @public
     NSView *parent;
 }
 @end
@@ -69,7 +69,7 @@
 
 @interface OSXEdit : NSView
 {
-    @public
+  @public
     NSTextField *field;
     uint32_t flags;
     uint32_t vpadding;
@@ -86,14 +86,14 @@
 
 @implementation OSXEdit
 
--(BOOL)acceptsFirstResponder
+- (BOOL)acceptsFirstResponder
 {
-    return [self->field acceptsFirstResponder];
+    return YES;
 }
 
 /*---------------------------------------------------------------------------*/
 
--(BOOL)makeFirstResponder:(NSResponder*)responder
+- (BOOL)makeFirstResponder:(NSResponder *)responder
 {
     unref(responder);
     return YES;
@@ -101,7 +101,7 @@
 
 /*---------------------------------------------------------------------------*/
 
--(BOOL)becomeFirstResponder
+- (BOOL)becomeFirstResponder
 {
     return [self->field becomeFirstResponder];
 }
@@ -121,25 +121,25 @@
 
 /*---------------------------------------------------------------------------*/
 
-- (void)selectWithFrame:(NSRect)frame inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
+- (void)selectWithFrame:(NSRect)frame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
-    frame.origin.y += ((OSXEdit*)parent)->wpadding;
-	[super selectWithFrame:frame inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
+    frame.origin.y += ((OSXEdit *)parent)->wpadding;
+    [super selectWithFrame:frame inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void)editWithFrame:(NSRect)frame inView:(NSView *)controlView editor:(NSText*)textObj delegate:(id)anObject event:(NSEvent*)theEvent
+- (void)editWithFrame:(NSRect)frame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent
 {
-    frame.origin.y += ((OSXEdit*)parent)->wpadding;
-	[super editWithFrame:frame inView:controlView editor:textObj delegate:anObject event:theEvent];
+    frame.origin.y += ((OSXEdit *)parent)->wpadding;
+    [super editWithFrame:frame inView:controlView editor:textObj delegate:anObject event:theEvent];
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void)drawInteriorWithFrame:(NSRect)frame inView:(NSView*)controlView
+- (void)drawInteriorWithFrame:(NSRect)frame inView:(NSView *)controlView
 {
-    frame.origin.y += ((OSXEdit*)parent)->wpadding;
+    frame.origin.y += ((OSXEdit *)parent)->wpadding;
     [super drawInteriorWithFrame:frame inView:controlView];
 }
 
@@ -153,59 +153,31 @@
 
 /*---------------------------------------------------------------------------*/
 
-- (void)selectWithFrame:(NSRect)frame inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
+- (void)selectWithFrame:(NSRect)frame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
-    frame.origin.y += ((OSXEdit*)parent)->wpadding;
-	[super selectWithFrame:frame inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
+    frame.origin.y += ((OSXEdit *)parent)->wpadding;
+    [super selectWithFrame:frame inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void)editWithFrame:(NSRect)frame inView:(NSView *)controlView editor:(NSText*)textObj delegate:(id)anObject event:(NSEvent*)theEvent
+- (void)editWithFrame:(NSRect)frame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent
 {
-    frame.origin.y += ((OSXEdit*)parent)->wpadding;
-	[super editWithFrame:frame inView:controlView editor:textObj delegate:anObject event:theEvent];
+    frame.origin.y += ((OSXEdit *)parent)->wpadding;
+    [super editWithFrame:frame inView:controlView editor:textObj delegate:anObject event:theEvent];
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void)drawInteriorWithFrame:(NSRect)frame inView:(NSView*)controlView
+- (void)drawInteriorWithFrame:(NSRect)frame inView:(NSView *)controlView
 {
-    frame.origin.y += ((OSXEdit*)parent)->wpadding;
+    frame.origin.y += ((OSXEdit *)parent)->wpadding;
     [super drawInteriorWithFrame:frame inView:controlView];
 }
 
 /*---------------------------------------------------------------------------*/
 
 @end
-
-/*---------------------------------------------------------------------------*/
-
-static void OSX_becomeFirstResponder(OSXEdit *edit, NSTextField *field)
-{
-    cassert_no_null(field);
-    if ([field isEnabled] == YES)
-    {
-        NSWindow *window = [field window];
-        NSText *text = [window fieldEditor:YES forObject:field];
-
-        if (edit->OnFocus != NULL)
-        {
-            bool_t params = TRUE;
-            listener_event(edit->OnFocus, ekGUI_EVENT_FOCUS, (OSEdit*)edit, &params, NULL, OSEdit, bool_t, void);
-        }
-
-        if (BIT_TEST(edit->flags, ekEDIT_AUTOSEL) == TRUE)
-        {
-            [text selectAll:nil];
-        }
-        else
-        {
-            NSRange range = [text selectedRange];
-            [text setSelectedRange:NSMakeRange(range.length, 0)];
-        }
-    }
-}
 
 /*---------------------------------------------------------------------------*/
 
@@ -217,13 +189,13 @@ static void OSX_textDidChange(OSXEdit *edit, NSTextField *field)
         EvTextFilter result;
         NSWindow *window = [field window];
         NSText *text = NULL;
-        params.text = (const char_t*)[[field stringValue] UTF8String];
+        params.text = (const char_t *)[[field stringValue] UTF8String];
         text = [window fieldEditor:YES forObject:field];
         params.cpos = (uint32_t)[text selectedRange].location;
         result.apply = FALSE;
         result.text[0] = '\0';
         result.cpos = UINT32_MAX;
-        listener_event(edit->OnFilter, ekGUI_EVENT_TXTFILTER, (OSEdit*)edit, &params, &result, OSEdit, EvText, EvTextFilter);
+        listener_event(edit->OnFilter, ekGUI_EVENT_TXTFILTER, (OSEdit *)edit, &params, &result, OSEdit, EvText, EvTextFilter);
 
         if (result.apply == TRUE)
             _oscontrol_set_text(field, &edit->attrs, result.text);
@@ -241,16 +213,9 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSNotification *notification)
 {
     unsigned int whyEnd = [[[notification userInfo] objectForKey:@"NSTextMovement"] unsignedIntValue];
     NSWindow *window = [edit window];
-
-    if (edit->OnFocus != NULL)
-    {
-        bool_t params = FALSE;
-        listener_event(edit->OnFocus, ekGUI_EVENT_FOCUS, (OSEdit*)edit, &params, NULL, OSEdit, bool_t, void);
-    }
-
     if (whyEnd == NSReturnTextMovement)
     {
-        [window keyDown:(NSEvent*)231];
+        [window keyDown:(NSEvent *)231];
     }
     else if (whyEnd == NSTabTextMovement)
     {
@@ -268,15 +233,6 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSNotification *notification)
 
 /*---------------------------------------------------------------------------*/
 
--(BOOL)becomeFirstResponder
-{
-    [super becomeFirstResponder];
-    OSX_becomeFirstResponder((OSXEdit*)self->parent, self);
-    return YES;
-}
-
-/*---------------------------------------------------------------------------*/
-
 - (BOOL)resignFirstResponder
 {
     return YES;
@@ -284,24 +240,32 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSNotification *notification)
 
 /*---------------------------------------------------------------------------*/
 
-- (void)textDidChange:(NSNotification*)notification
+- (BOOL)becomeFirstResponder
+{
+    [super becomeFirstResponder];
+    return YES;
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void)textDidChange:(NSNotification *)notification
 {
     unref(notification);
-    OSX_textDidChange((OSXEdit*)self->parent, self);
+    OSX_textDidChange((OSXEdit *)self->parent, self);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void)textDidEndEditing:(NSNotification*)notification
+- (void)textDidEndEditing:(NSNotification *)notification
 {
-    OSX_textDidEndEditing((OSXEdit*)self->parent, notification);
+    OSX_textDidEndEditing((OSXEdit *)self->parent, notification);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void)mouseDown:(NSEvent*)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
-    if (_oswindow_mouse_down((OSControl*)self->parent) == TRUE)
+    if (_oswindow_mouse_down((OSControl *)self->parent) == TRUE)
         [super mouseDown:theEvent];
 }
 
@@ -313,15 +277,6 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSNotification *notification)
 
 /*---------------------------------------------------------------------------*/
 
--(BOOL)becomeFirstResponder
-{
-    [super becomeFirstResponder];
-    OSX_becomeFirstResponder((OSXEdit*)self->parent, self);
-    return YES;
-}
-
-/*---------------------------------------------------------------------------*/
-
 - (BOOL)resignFirstResponder
 {
     return YES;
@@ -329,24 +284,32 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSNotification *notification)
 
 /*---------------------------------------------------------------------------*/
 
-- (void)textDidChange:(NSNotification*)notification
+- (BOOL)becomeFirstResponder
+{
+    [super becomeFirstResponder];
+    return YES;
+}
+
+/*---------------------------------------------------------------------------*/
+
+- (void)textDidChange:(NSNotification *)notification
 {
     unref(notification);
-    OSX_textDidChange((OSXEdit*)self->parent, self);
+    OSX_textDidChange((OSXEdit *)self->parent, self);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void)textDidEndEditing:(NSNotification*)notification
+- (void)textDidEndEditing:(NSNotification *)notification
 {
-    OSX_textDidEndEditing((OSXEdit*)self->parent, notification);
+    OSX_textDidEndEditing((OSXEdit *)self->parent, notification);
 }
 
 /*---------------------------------------------------------------------------*/
 
-- (void)mouseDown:(NSEvent*)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
-    if (_oswindow_mouse_down((OSControl*)self->parent) == TRUE)
+    if (_oswindow_mouse_down((OSControl *)self->parent) == TRUE)
         [super mouseDown:theEvent];
 }
 
@@ -357,14 +320,14 @@ static void OSX_textDidEndEditing(OSXEdit *edit, NSNotification *notification)
 static void i_update_cell(OSXEdit *edit)
 {
     NSCell *cell = [edit->field cell];
-	if ([(NSObject*)cell isKindOfClass:[OSXTextFieldCell class]] == YES)
+    if ([(NSObject *)cell isKindOfClass:[OSXTextFieldCell class]] == YES)
     {
-        ((OSXTextFieldCell*)cell)->parent = edit;
+        ((OSXTextFieldCell *)cell)->parent = edit;
     }
-	else
+    else
     {
-		cassert([(NSObject*)cell isKindOfClass:[OSXSecureTextFieldCell class]] == YES);
-        ((OSXSecureTextFieldCell*)cell)->parent = edit;
+        cassert([(NSObject *)cell isKindOfClass:[OSXSecureTextFieldCell class]] == YES);
+        ((OSXSecureTextFieldCell *)cell)->parent = edit;
     }
 }
 
@@ -437,11 +400,11 @@ OSEdit *osedit_create(const uint32_t flags)
     [edit->field setStringValue:@""];
     [edit->field setAlignment:_oscontrol_text_alignment(ekLEFT)];
     _oscontrol_set_align(edit->field, &edit->attrs, ekLEFT);
-    _oscontrol_set_font(edit->field,  &edit->attrs, edit->attrs.font);
-    #if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
+    _oscontrol_set_font(edit->field, &edit->attrs, edit->attrs.font);
+#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
     [[edit->field cell] setUsesSingleLineMode:((flags & 1) == 1) ? NO : YES];
-    #endif
-    return (OSEdit*)edit;
+#endif
+    return (OSEdit *)edit;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -450,7 +413,7 @@ void osedit_destroy(OSEdit **edit)
 {
     OSXEdit *ledit = nil;
     cassert_no_null(edit);
-    ledit = *((OSXEdit**)edit);
+    ledit = *((OSXEdit **)edit);
     cassert_no_null(ledit);
     listener_destroy(&ledit->OnFilter);
     listener_destroy(&ledit->OnChange);
@@ -466,8 +429,8 @@ void osedit_destroy(OSEdit **edit)
 void osedit_OnFilter(OSEdit *edit, Listener *listener)
 {
     cassert_no_null(edit);
-    cassert([(NSObject*)edit isKindOfClass:[OSXEdit class]] == YES);
-    listener_update(&((OSXEdit*)edit)->OnFilter, listener);
+    cassert([(NSObject *)edit isKindOfClass:[OSXEdit class]] == YES);
+    listener_update(&((OSXEdit *)edit)->OnFilter, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -475,8 +438,8 @@ void osedit_OnFilter(OSEdit *edit, Listener *listener)
 void osedit_OnChange(OSEdit *edit, Listener *listener)
 {
     cassert_no_null(edit);
-    cassert([(NSObject*)edit isKindOfClass:[OSXEdit class]] == YES);
-    listener_update(&((OSXEdit*)edit)->OnChange, listener);
+    cassert([(NSObject *)edit isKindOfClass:[OSXEdit class]] == YES);
+    listener_update(&((OSXEdit *)edit)->OnChange, listener);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -484,15 +447,15 @@ void osedit_OnChange(OSEdit *edit, Listener *listener)
 void osedit_OnFocus(OSEdit *edit, Listener *listener)
 {
     cassert_no_null(edit);
-    cassert([(NSObject*)edit isKindOfClass:[OSXEdit class]] == YES);
-    listener_update(&((OSXEdit*)edit)->OnFocus, listener);
+    cassert([(NSObject *)edit isKindOfClass:[OSXEdit class]] == YES);
+    listener_update(&((OSXEdit *)edit)->OnFocus, listener);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osedit_text(OSEdit *edit, const char_t *text)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     _oscontrol_set_text(ledit->field, &ledit->attrs, text);
 }
@@ -501,7 +464,7 @@ void osedit_text(OSEdit *edit, const char_t *text)
 
 void osedit_tooltip(OSEdit *edit, const char_t *text)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     _oscontrol_tooltip_set(ledit->field, text);
 }
@@ -510,7 +473,7 @@ void osedit_tooltip(OSEdit *edit, const char_t *text)
 
 void osedit_font(OSEdit *edit, const Font *font)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     _oscontrol_set_font(ledit->field, &ledit->attrs, font);
     i_update_vpadding(ledit);
@@ -520,7 +483,7 @@ void osedit_font(OSEdit *edit, const Font *font)
 
 void osedit_align(OSEdit *edit, const align_t align)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     [ledit->field setAlignment:_oscontrol_text_alignment(align)];
     _oscontrol_set_align(ledit->field, &ledit->attrs, align);
@@ -530,7 +493,7 @@ void osedit_align(OSEdit *edit, const align_t align)
 
 void osedit_passmode(OSEdit *edit, const bool_t passmode)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     NSTextField *field = nil;
     cassert_no_null(ledit);
     if (passmode == TRUE)
@@ -567,11 +530,11 @@ void osedit_passmode(OSEdit *edit, const bool_t passmode)
         _oscontrol_set_font(field, &ledit->attrs, ledit->attrs.font);
         _oscontrol_set_text_color(field, &ledit->attrs, ledit->attrs.color);
         _oscontrol_set_align(field, &ledit->attrs, ledit->attrs.align);
-        _oscontrol_set_text(field, &ledit->attrs, (const char_t*)[text UTF8String]);
+        _oscontrol_set_text(field, &ledit->attrs, (const char_t *)[text UTF8String]);
         _oscontrol_detach_from_parent(ledit->field, ledit);
-		#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
+#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
         [[field cell] setUsesSingleLineMode:((ledit->flags & 1) == 1) ? NO : YES];
-		#endif
+#endif
         [ledit->field release];
         ledit->field = field;
         [ledit addSubview:field];
@@ -583,7 +546,7 @@ void osedit_passmode(OSEdit *edit, const bool_t passmode)
 
 void osedit_editable(OSEdit *edit, const bool_t is_editable)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     [ledit->field setEditable:is_editable == TRUE ? YES : NO];
 }
@@ -592,7 +555,7 @@ void osedit_editable(OSEdit *edit, const bool_t is_editable)
 
 void osedit_autoselect(OSEdit *edit, const bool_t autoselect)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     if (autoselect == TRUE)
         BIT_SET(ledit->flags, ekEDIT_AUTOSEL);
@@ -613,7 +576,7 @@ void osedit_select(OSEdit *edit, const int32_t start, const int32_t end)
 
 void osedit_color(OSEdit *edit, const color_t color)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     _oscontrol_set_text_color(ledit->field, &ledit->attrs, color);
 }
@@ -623,7 +586,7 @@ void osedit_color(OSEdit *edit, const color_t color)
 void osedit_bgcolor(OSEdit *edit, const color_t color)
 {
     NSColor *nscolor = color != 0 ? oscolor_NSColor(color) : [NSColor textBackgroundColor];
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     [ledit->field setBackgroundColor:nscolor];
 }
@@ -632,7 +595,7 @@ void osedit_bgcolor(OSEdit *edit, const color_t color)
 
 void osedit_vpadding(OSEdit *edit, const real32_t padding)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     cassert(padding >= 0);
     ledit->vpadding = (uint32_t)padding;
@@ -643,7 +606,7 @@ void osedit_vpadding(OSEdit *edit, const real32_t padding)
 
 void osedit_bounds(const OSEdit *edit, const real32_t refwidth, const uint32_t lines, real32_t *width, real32_t *height)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     cassert_no_null(width);
     cassert_no_null(height);
@@ -681,21 +644,21 @@ void osedit_clipboard(OSEdit *edit, const clipboard_t clipboard)
 
 void osedit_attach(OSEdit *edit, OSPanel *panel)
 {
-    _ospanel_attach_control(panel, (NSView*)edit);
+    _ospanel_attach_control(panel, (NSView *)edit);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osedit_detach(OSEdit *edit, OSPanel *panel)
 {
-    _ospanel_detach_control(panel, (NSView*)edit);
+    _ospanel_detach_control(panel, (NSView *)edit);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osedit_visible(OSEdit *edit, const bool_t is_visible)
 {
-    _oscontrol_set_visible((NSView*)edit, is_visible);
+    _oscontrol_set_visible((NSView *)edit, is_visible);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -705,16 +668,14 @@ static bool_t i_has_focus(id control)
 {
     NSWindow *window = [control window];
     id first = [window firstResponder];
-    return (bool_t)([first isKindOfClass:[NSTextView class]]
-    && [window fieldEditor:NO forObject:nil] != nil
-    && (first == control || [first delegate] == control));
+    return (bool_t)([first isKindOfClass:[NSTextView class]] && [window fieldEditor:NO forObject:nil] != nil && (first == control || [first delegate] == control));
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osedit_enabled(OSEdit *edit, const bool_t is_enabled)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
     if (is_enabled == FALSE)
     {
@@ -730,32 +691,32 @@ void osedit_enabled(OSEdit *edit, const bool_t is_enabled)
 
 void osedit_size(const OSEdit *edit, real32_t *width, real32_t *height)
 {
-    _oscontrol_get_size((NSView*)edit, width, height);
+    _oscontrol_get_size((NSView *)edit, width, height);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osedit_origin(const OSEdit *edit, real32_t *x, real32_t *y)
 {
-    _oscontrol_get_origin((NSView*)edit, x, y);
+    _oscontrol_get_origin((NSView *)edit, x, y);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void osedit_frame(OSEdit *edit, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
-    _oscontrol_set_frame((NSView*)ledit, x, y, width, height);
-    _oscontrol_set_frame((NSView*)ledit->field, 0, 0, width, height);
+    _oscontrol_set_frame((NSView *)ledit, x, y, width, height);
+    _oscontrol_set_frame((NSView *)ledit->field, 0, 0, width, height);
     [ledit setNeedsDisplay:YES];
 }
 
 /*---------------------------------------------------------------------------*/
 
-bool_t osedit_resign_focus(const OSEdit *edit, const OSControl *next_control)
+bool_t osedit_resign_focus(const OSEdit *edit)
 {
-    OSXEdit *ledit = (OSXEdit*)edit;
+    OSXEdit *ledit = (OSXEdit *)edit;
     NSWindow *window = [ledit window];
     bool_t resign = TRUE;
     cassert_no_null(ledit);
@@ -763,8 +724,7 @@ bool_t osedit_resign_focus(const OSEdit *edit, const OSControl *next_control)
     if (ledit->OnChange != NULL && _oswindow_in_destroy(window) == NO)
     {
         EvText params;
-        params.text = (const char_t*)[[ledit->field stringValue] UTF8String];
-        params.next_ctrl = (void*)next_control;
+        params.text = (const char_t *)[[ledit->field stringValue] UTF8String];
         listener_event(ledit->OnChange, ekGUI_EVENT_TXTCHANGE, edit, &params, &resign, OSEdit, EvText, bool_t);
     }
 
@@ -774,6 +734,39 @@ bool_t osedit_resign_focus(const OSEdit *edit, const OSControl *next_control)
         [window makeFirstResponder:ledit];
 
     return resign;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void osedit_focus(OSEdit *edit, const bool_t focus)
+{
+    OSXEdit *ledit = (OSXEdit *)edit;
+    cassert_no_null(ledit);
+
+    if (ledit->OnFocus != NULL)
+    {
+        bool_t params = focus;
+        listener_event(ledit->OnFocus, ekGUI_EVENT_FOCUS, edit, &params, NULL, OSEdit, bool_t, void);
+    }
+
+    if (focus == TRUE)
+    {
+        if ([ledit->field isEnabled] == YES)
+        {
+            NSWindow *window = [ledit->field window];
+            NSText *text = [window fieldEditor:YES forObject:ledit->field];
+
+            if (BIT_TEST(ledit->flags, ekEDIT_AUTOSEL) == TRUE)
+            {
+                [text selectAll:nil];
+            }
+            else
+            {
+                NSRange range = [text selectedRange];
+                [text setSelectedRange:NSMakeRange(range.length, 0)];
+            }
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/
