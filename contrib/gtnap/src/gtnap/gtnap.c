@@ -579,18 +579,6 @@ static uint32_t i_gtwin_index(GtNap *gtnap, const uint32_t wid)
 
 /*---------------------------------------------------------------------------*/
 
-static bool_t i_gtwin_has_embedded(GtNap *gtnap, const uint32_t wid)
-{
-    cassert_no_null(gtnap);
-    arrpt_foreach(gtwin, gtnap->windows, GtNapWindow)
-        if (gtwin->parent_id == wid)
-            return TRUE;
-    arrpt_end()
-    return FALSE;
-}
-
-/*---------------------------------------------------------------------------*/
-
 static Window *i_effective_window(GtNapWindow *gtwin, GtNap *gtnap)
 {
     cassert_no_null(gtwin);
@@ -3100,28 +3088,6 @@ void hb_gtnap_window_undo(const uint32_t wid)
         else if (gtobj->type == ekOBJ_TEXTVIEW)
             i_set_view_text(gtobj);
     }
-}
-
-/*---------------------------------------------------------------------------*/
-
-static GtNapObject *i_get_first_focus(GtNapWindow *gtwin)
-{
-    cassert_no_null(gtwin);
-    arrpt_foreach(gtobj, gtwin->objects, GtNapObject)
-        switch(gtobj->type) {
-        case ekOBJ_EDIT:
-        case ekOBJ_TABLEVIEW:
-        case ekOBJ_TEXTVIEW:
-            return gtobj;
-        case ekOBJ_LABEL:
-        case ekOBJ_BUTTON:
-        case ekOBJ_MENU:
-        case ekOBJ_IMAGE:
-            break;
-        }
-    arrpt_end();
-
-    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
