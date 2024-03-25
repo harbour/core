@@ -51,7 +51,7 @@ hbct.hbc
 
 # Harbour compiler options
 -m -a -w -es2 -ql
--b{DEBUG}
+-b{debug}
 -d_TESTE{DEBUG}
 -z
 

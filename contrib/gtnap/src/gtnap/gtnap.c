@@ -154,6 +154,7 @@ struct _gtnap_window_t
     S2Df panel_size;
     Panel *panel;
     Panel *scrolled_panel;
+    View *canvas;
     GtNapToolbar *toolbar;
     GtNapArea *gtarea;
     uint32_t num_rows;
@@ -476,6 +477,14 @@ static void i_destroy_gtwin(GtNapWindow **dgtwin)
             i_destroy_gtobject(gtwin, 0);
     }
 
+    if (gtwin->canvas != NULL)
+    {
+        _component_visible((GuiComponent*)gtwin->canvas, FALSE);
+
+        if (gtwin->is_configured == TRUE)
+            _panel_destroy_component(gtwin->panel, (GuiComponent*)gtwin->canvas);
+    }
+
     if (gtwin->scrolled_panel != NULL)
     {
         _component_visible((GuiComponent*)gtwin->scrolled_panel, FALSE);
@@ -540,7 +549,6 @@ static void i_gtnap_destroy(GtNap **gtnap)
     cassert_no_null(gtnap);
     cassert_no_null(*gtnap);
     cassert(*gtnap == GTNAP_GLOBAL);
-    cassert(arrpt_size((*gtnap)->windows, GtNapWindow) == 0);
     arrpt_destroy(&(*gtnap)->windows, i_destroy_gtwin, GtNapWindow);
     font_destroy(&(*gtnap)->global_font);
     font_destroy(&(*gtnap)->reduced_font);
@@ -1055,6 +1063,14 @@ static GtNap *i_gtnap_create(void)
     INIT_CODEBLOCK = NULL;
 
     return GTNAP_GLOBAL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnCanvasDraw(GtNapWindow *gtwin, Event *e)
+{
+    unref(gtwin);
+    unref(e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2321,6 +2337,25 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     panel_size(gtwin->panel, gtwin->panel_size);
     panel_layout(gtwin->panel, layout);
 
+    /* Create the view canvas*/
+    {
+        V2Df pos = kV2D_ZEROf;
+        S2Df size = gtwin->panel_size;
+        cassert(gtwin->canvas == NULL);
+
+        if (gtwin->toolbar != NULL)
+        {
+            pos.y += gtwin->toolbar->heightf;
+            size.height -= gtwin->toolbar->heightf;
+        }
+
+        gtwin->canvas = view_create();
+        view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
+        _panel_attach_component(gtwin->panel, (GuiComponent*)gtwin->canvas);
+        _component_set_frame((GuiComponent*)gtwin->canvas, &pos, &size);
+        _component_visible((GuiComponent*)gtwin->canvas, TRUE);
+    }
+
     if (i_with_scroll_panel(gtwin) == TRUE)
     {
         /* We add a subpanel to window main panel to implement the scroll area */
@@ -2464,7 +2499,7 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
 
 static void i_gtnap_update(GtNap *gtnap, const real64_t prtime, const real64_t ctime)
 {
-    cassert(gtnap == NULL);
+    cassert(gtnap == NULL || gtnap == GTNAP_GLOBAL);
     gtnap = GTNAP_GLOBAL;
     cassert_no_null(gtnap);
     unref(prtime);
@@ -5252,6 +5287,7 @@ static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 static void hb_gtnap_Unlock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5262,6 +5298,7 @@ static void hb_gtnap_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFile
     HB_SYMBOL_UNUSED( hFilenoStdin );
     HB_SYMBOL_UNUSED( hFilenoStdout );
     HB_SYMBOL_UNUSED( hFilenoStderr );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5269,6 +5306,7 @@ static void hb_gtnap_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFile
 static void hb_gtnap_Exit( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5309,6 +5347,7 @@ static void hb_gtnap_ExposeArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, i
     HB_SYMBOL_UNUSED( iLeft );
     HB_SYMBOL_UNUSED( iBottom );
     HB_SYMBOL_UNUSED( iRight );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5465,6 +5504,7 @@ static void hb_gtnap_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
     HB_SYMBOL_UNUSED( iBottom );
     HB_SYMBOL_UNUSED( iRight );
     HB_SYMBOL_UNUSED( pBuffer );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5477,6 +5517,7 @@ static void hb_gtnap_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
     HB_SYMBOL_UNUSED( iBottom );
     HB_SYMBOL_UNUSED( iRight );
     HB_SYMBOL_UNUSED( pBuffer );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5503,6 +5544,7 @@ static void hb_gtnap_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, HB_B
     HB_SYMBOL_UNUSED( bAttr );
     HB_SYMBOL_UNUSED( usChar );
     HB_SYMBOL_UNUSED( ulLen );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5535,6 +5577,7 @@ static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom,
     HB_SYMBOL_UNUSED( iBottom );
     HB_SYMBOL_UNUSED( iRight );
     HB_SYMBOL_UNUSED( bColor );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5589,6 +5632,7 @@ static void hb_gtnap_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRig
     HB_SYMBOL_UNUSED( iRight );
     HB_SYMBOL_UNUSED( pbyFrame );
     HB_SYMBOL_UNUSED( bColor );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5601,6 +5645,7 @@ static void hb_gtnap_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight, HB_
     HB_SYMBOL_UNUSED( iRight );
     HB_SYMBOL_UNUSED( bChar );
     HB_SYMBOL_UNUSED( bColor );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5613,6 +5658,7 @@ static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, HB_U
     HB_SYMBOL_UNUSED( iBottom );
     HB_SYMBOL_UNUSED( bChar );
     HB_SYMBOL_UNUSED( bColor );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5629,6 +5675,7 @@ static void hb_gtnap_SetBlink( PHB_GT pGT, HB_BOOL bBlink )
 {
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( bBlink );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5674,6 +5721,7 @@ static void hb_gtnap_Tone( PHB_GT pGT, double dFrequency, double dDuration )
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( dFrequency );
     HB_SYMBOL_UNUSED( dDuration );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5745,6 +5793,7 @@ static int hb_gtnap_Alert( PHB_GT pGT, PHB_ITEM message, PHB_ITEM options, int a
 static void hb_gtnap_mouse_Init( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5752,6 +5801,7 @@ static void hb_gtnap_mouse_Init( PHB_GT pGT )
 static void hb_gtnap_mouse_Exit( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5820,6 +5870,7 @@ static void hb_gtnap_gfxText( PHB_GT pGT, int iTop, int iLeft, const char * cBuf
     HB_SYMBOL_UNUSED( iColor );
     HB_SYMBOL_UNUSED( iSize );
     HB_SYMBOL_UNUSED( iWidth );
+    cassert(TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
