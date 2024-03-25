@@ -1069,8 +1069,9 @@ static GtNap *i_gtnap_create(void)
 
 static void i_OnCanvasDraw(GtNapWindow *gtwin, Event *e)
 {
+    const EvDraw *p = event_params(e, EvDraw);
+    draw_clear(p->ctx, kCOLOR_CYAN);
     unref(gtwin);
-    unref(e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2353,7 +2354,8 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
         _panel_attach_component(gtwin->panel, (GuiComponent*)gtwin->canvas);
         _component_set_frame((GuiComponent*)gtwin->canvas, &pos, &size);
-        _component_visible((GuiComponent*)gtwin->canvas, TRUE);
+        _component_visible((GuiComponent*)gtwin->canvas, FALSE);
+        view_update(gtwin->canvas);
     }
 
     if (i_with_scroll_panel(gtwin) == TRUE)
@@ -2449,6 +2451,8 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
             _component_taborder(component, gtwin->window);
         arrpt_end()
     }
+
+    _component_visible((GuiComponent*)gtwin->canvas, TRUE);
 
     /* Allow navigation between edit controls with arrows and return */
     if (i_num_edits(gtwin) > 0)
@@ -5355,7 +5359,9 @@ static void hb_gtnap_ExposeArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, i
 static int hb_gtnap_MaxCol( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    return GTNAP_GLOBAL->cols - 1;
+    if (GTNAP_GLOBAL != NULL)
+        return GTNAP_GLOBAL->cols - 1;
+    return 1;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5363,7 +5369,9 @@ static int hb_gtnap_MaxCol( PHB_GT pGT )
 static int hb_gtnap_MaxRow( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    return GTNAP_GLOBAL->rows - 1;
+    if (GTNAP_GLOBAL != NULL)
+        return GTNAP_GLOBAL->rows - 1;
+    return 1;
 }
 
 /*---------------------------------------------------------------------------*/
