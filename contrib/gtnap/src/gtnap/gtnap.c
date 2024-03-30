@@ -8,6 +8,7 @@
 #include "gtnap.inl"
 #include "gtnap.ch"
 #include "nap_menu.inl"
+#include "nap_debugger.inl"
 #include "nappgui.h"
 #include <osapp/osmain.h>
 #include <gui/drawctrl.inl>
@@ -5681,8 +5682,66 @@ static void hb_gtnap_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
     HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iType );
-    HB_SYMBOL_UNUSED( pInfo );
+    switch (iType) {
+    case HB_GTI_GETWIN:
+        /* Its setting a new window */
+        if (pInfo->pNewVal != NULL)
+        {
+            HB_TYPE type = HB_ITEM_TYPE(pInfo->pNewVal);
+            if (type == HB_IT_ARRAY)
+            {
+                HB_SIZE n = hb_arrayLen(pInfo->pNewVal);
+                if (n == 5)
+                {
+                    PHB_ITEM wname = hb_arrayGetItemPtr(pInfo->pNewVal, 1 );
+                    if (HB_ITEM_TYPE(wname) == HB_IT_STRING)
+                    {
+                        char_t utf8[STATIC_TEXT_SIZE];
+                        hb_itemCopyStrUTF8(wname, utf8, sizeof(utf8));
+                        if (str_equ_c(utf8, "Debugger") == TRUE)
+                        {
+                            PHB_ITEM wtop = hb_arrayGetItemPtr(pInfo->pNewVal, 2 );
+                            PHB_ITEM wleft = hb_arrayGetItemPtr(pInfo->pNewVal, 3 );
+                            PHB_ITEM wbottom = hb_arrayGetItemPtr(pInfo->pNewVal, 4 );
+                            PHB_ITEM wright = hb_arrayGetItemPtr(pInfo->pNewVal, 5 );
+                            uint32_t ncols = 0, nrows = 0;
+                            cassert(HB_ITEM_TYPE(wtop) == HB_IT_INTEGER);
+                            cassert(HB_ITEM_TYPE(wleft) == HB_IT_INTEGER);
+                            cassert(HB_ITEM_TYPE(wbottom) == HB_IT_INTEGER);
+                            cassert(HB_ITEM_TYPE(wright) == HB_IT_INTEGER);
+                            ncols = hb_itemGetNI(wright) - hb_itemGetNI(wleft) + 1;
+                            nrows = hb_itemGetNI(wbottom) - hb_itemGetNI(wtop) + 1;
+                            // TODO
+                            // GtNapDebugger *nap_debugger_create(const uint32_t nrows, const uint32_t ncols);
+                        }
+                        else
+                        {
+                            /* TODO: Review this window class */
+                            cassert(FALSE);
+                        }
+                    }
+                    else
+                    {
+                        /* TODO: Review this window class */
+                        cassert(FALSE);
+                    }
+                }
+                else
+                {
+                    /* TODO: Review this window class */
+                    cassert(FALSE);
+                }
+            }
+        }
+        /* Its asking for the current new window */
+        else
+        {
+            cassert(pInfo->pResult == NULL);
+            pInfo->pResult = hb_itemPutNI( pInfo->pResult, 6667788 );
+        }
+        break;
+    }
+
     return TRUE;
 }
 
