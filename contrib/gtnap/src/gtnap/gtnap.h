@@ -19,6 +19,8 @@ extern void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32
 
 extern void hb_gtnap_log(const char_t *text);
 
+extern void hb_gtnap_debug(HB_ITEM *debugger_block);
+
 extern uint32_t hb_gtnap_width(void);
 
 extern uint32_t hb_gtnap_height(void);

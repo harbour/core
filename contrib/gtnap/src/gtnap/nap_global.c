@@ -78,3 +78,11 @@ HB_FUNC( NAP_CRASH )
 {
     cassert_no_null(NULL);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC( NAP_DEBUG )
+{
+    PHB_ITEM debugger_block = hb_param(1, HB_IT_BLOCK);
+    hb_gtnap_debug(debugger_block);
+}
