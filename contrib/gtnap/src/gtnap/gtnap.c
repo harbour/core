@@ -1023,6 +1023,17 @@ static void i_init_colors(void)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_harbour_thread(GtNap *gtnap)
+{
+    PHB_ITEM ritem = hb_itemDo(INIT_CODEBLOCK, 0);
+    hb_itemRelease(ritem);
+    hb_itemRelease(INIT_CODEBLOCK);
+    INIT_CODEBLOCK = NULL;
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
@@ -1048,14 +1059,8 @@ static GtNap *i_gtnap_create(void)
     i_compute_font_size(screen.width, screen.height, GTNAP_GLOBAL);
     i_init_colors();
 
-    {
-        PHB_ITEM ritem = hb_itemDo(INIT_CODEBLOCK, 0);
-        hb_itemRelease(ritem);
-        hb_itemRelease(INIT_CODEBLOCK);
-    }
-
-    INIT_TITLE[0] = 0;
-    INIT_CODEBLOCK = NULL;
+    GTNAP_GLOBAL->debug_thread = bthread_create(i_harbour_thread, GTNAP_GLOBAL, GtNap);
+    //INIT_TITLE[0] = 0;
 
     return GTNAP_GLOBAL;
 }
@@ -2467,7 +2472,7 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
 
 static void i_gtnap_update(GtNap *gtnap, const real64_t prtime, const real64_t ctime)
 {
-    cassert(gtnap == NULL);
+    //cassert(gtnap == NULL);
     gtnap = GTNAP_GLOBAL;
     cassert_no_null(gtnap);
     unref(prtime);
@@ -2559,7 +2564,8 @@ void hb_gtnap_debug(HB_ITEM *debugger_block)
     cassert_no_null(GTNAP_GLOBAL);
     cassert(GTNAP_GLOBAL->debug_thread == NULL);
     block = hb_itemNew(debugger_block);
-    GTNAP_GLOBAL->debug_thread = bthread_create(i_debug_thread, block, HB_ITEM);    
+    i_debug_thread(block);
+    //GTNAP_GLOBAL->debug_thread = bthread_create(i_debug_thread, block, HB_ITEM);    
 }
 
 /*---------------------------------------------------------------------------*/
