@@ -8,6 +8,7 @@
 #include "gtnap.inl"
 #include "gtnap.ch"
 #include "nap_menu.inl"
+#include "nap_debugger.inl"
 #include "nappgui.h"
 #include <osapp/osmain.h>
 #include <gui/drawctrl.inl>
@@ -189,6 +190,7 @@ struct _gtnap_t
     uint32_t modal_delay_seconds;
     GtNapWindow *modal_time_window;
     ArrPt(GtNapWindow) *windows;
+    Thread *debug_thread;
 
     textspace_t office_text_space;
     String *office_last_cell_ref;
@@ -1028,6 +1030,18 @@ static void i_init_colors(void)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_harbour_thread(GtNap *gtnap)
+{
+    PHB_ITEM ritem = hb_itemDo(INIT_CODEBLOCK, 0);
+    hb_itemRelease(ritem);
+    hb_itemRelease(INIT_CODEBLOCK);
+    INIT_CODEBLOCK = NULL;
+    unref(gtnap);
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
@@ -1053,14 +1067,8 @@ static GtNap *i_gtnap_create(void)
     i_compute_font_size(screen.width, screen.height, GTNAP_GLOBAL);
     i_init_colors();
 
-    {
-        PHB_ITEM ritem = hb_itemDo(INIT_CODEBLOCK, 0);
-        hb_itemRelease(ritem);
-        hb_itemRelease(INIT_CODEBLOCK);
-    }
-
-    INIT_TITLE[0] = 0;
-    INIT_CODEBLOCK = NULL;
+    GTNAP_GLOBAL->debug_thread = bthread_create(i_harbour_thread, GTNAP_GLOBAL, GtNap);
+    //INIT_TITLE[0] = 0;
 
     return GTNAP_GLOBAL;
 }
@@ -2577,6 +2585,30 @@ static void i_OnTerminalClose(GtNapWindow *gtwin, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_debug_thread(HB_ITEM *block)
+{
+    PHB_ITEM ritem = hb_itemDo(block, 0);
+    HB_TYPE type = HB_ITEM_TYPE(ritem);
+    cassert(type == HB_IT_LOGICAL);
+    hb_itemRelease(ritem);
+    hb_itemRelease(block);
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_debug(HB_ITEM *debugger_block)
+{
+    HB_ITEM *block = NULL;
+    cassert_no_null(GTNAP_GLOBAL);
+    cassert(GTNAP_GLOBAL->debug_thread == NULL);
+    block = hb_itemNew(debugger_block);
+    i_debug_thread(block);
+    //GTNAP_GLOBAL->debug_thread = bthread_create(i_debug_thread, block, HB_ITEM);    
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t hb_gtnap_width(void)
 {
     cassert_no_null(GTNAP_GLOBAL);
@@ -2861,6 +2893,7 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
 {
     GtNapWindow *gtwin = i_new_window(GTNAP_GLOBAL, UINT32_MAX, top, left, bottom, right, FALSE);
     uint32_t flags = i_window_flags(close_return, close_esc, minimize_button);
+    log_printf("--> hb_gtnap_window");
     gtwin->window = window_create(flags);
     gtwin->buttons_navigation = buttons_navigation;
 
@@ -3137,6 +3170,7 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t pwid, const ui
     GtNapWindow *pgtwin = pwid > 0 ? i_gtwin(GTNAP_GLOBAL, pwid) : NULL;
     GtNapWindow *embgtwin = NULL;
     cassert_no_null(gtwin);
+    log_printf("hb_gtnap_window_modal");
 
     /* An embedded window can't be launched as modal. We must launch the parent */
     if (gtwin->parent_id != UINT32_MAX)
@@ -5283,6 +5317,7 @@ String *hb_block_to_utf8(HB_ITEM *item)
 static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
+    log_printf("LOCK");
     return TRUE;
 }
 
@@ -5291,7 +5326,7 @@ static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 static void hb_gtnap_Unlock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    cassert(TRUE);
+    log_printf("-- UNLOCK");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5499,6 +5534,7 @@ static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_
     HB_SYMBOL_UNUSED( bColor );
     HB_SYMBOL_UNUSED( bAttr );
     HB_SYMBOL_UNUSED( usChar );
+    log_printf("hb_gtnap_PutChar: %c", usChar);
     return TRUE;
 }
 
@@ -5532,12 +5568,15 @@ static void hb_gtnap_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
 
 static int hb_gtnap_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const char * pText, HB_SIZE ulLen )
 {
+    char_t utf8[STATIC_TEXT_SIZE];
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( iRow );
     HB_SYMBOL_UNUSED( iCol );
     HB_SYMBOL_UNUSED( bColor );
     HB_SYMBOL_UNUSED( pText );
     HB_SYMBOL_UNUSED( ulLen );
+    i_cp_to_utf8(pText, utf8, sizeof32(utf8));
+    log_printf("hb_gtnap_PutText: %s", utf8);
     return 0;
 }
 
@@ -5641,6 +5680,7 @@ static void hb_gtnap_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRig
     HB_SYMBOL_UNUSED( pbyFrame );
     HB_SYMBOL_UNUSED( bColor );
     cassert(TRUE);
+    log_printf("hb_gtnap_Box %d %d %d %d", iTop, iLeft, iBottom, iRight);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5737,8 +5777,72 @@ static void hb_gtnap_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
     HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iType );
-    HB_SYMBOL_UNUSED( pInfo );
+    switch (iType) {
+    case HB_GTI_GETWIN:
+        /* Its setting a new window */
+        if (pInfo->pNewVal != NULL)
+        {
+            HB_TYPE type = HB_ITEM_TYPE(pInfo->pNewVal);
+            if (type == HB_IT_ARRAY)
+            {
+                HB_SIZE n = hb_arrayLen(pInfo->pNewVal);
+                if (n == 5)
+                {
+                    PHB_ITEM wname = hb_arrayGetItemPtr(pInfo->pNewVal, 1 );
+                    if (HB_ITEM_TYPE(wname) == HB_IT_STRING)
+                    {
+                        char_t utf8[STATIC_TEXT_SIZE];
+                        hb_itemCopyStrUTF8(wname, utf8, sizeof(utf8));
+                        if (str_equ_c(utf8, "Debugger") == TRUE)
+                        {
+                            PHB_ITEM wtop = hb_arrayGetItemPtr(pInfo->pNewVal, 2 );
+                            PHB_ITEM wleft = hb_arrayGetItemPtr(pInfo->pNewVal, 3 );
+                            PHB_ITEM wbottom = hb_arrayGetItemPtr(pInfo->pNewVal, 4 );
+                            PHB_ITEM wright = hb_arrayGetItemPtr(pInfo->pNewVal, 5 );
+                            uint32_t ncols = 0, nrows = 0;
+                            cassert(HB_ITEM_TYPE(wtop) == HB_IT_INTEGER);
+                            cassert(HB_ITEM_TYPE(wleft) == HB_IT_INTEGER);
+                            cassert(HB_ITEM_TYPE(wbottom) == HB_IT_INTEGER);
+                            cassert(HB_ITEM_TYPE(wright) == HB_IT_INTEGER);
+                            ncols = hb_itemGetNI(wright) - hb_itemGetNI(wleft) + 1;
+                            nrows = hb_itemGetNI(wbottom) - hb_itemGetNI(wtop) + 1;
+                            // TODO
+                            // GtNapDebugger *nap_debugger_create(const uint32_t nrows, const uint32_t ncols);
+                        }
+                        else
+                        {
+                            /* TODO: Review this window class */
+                            cassert(FALSE);
+                        }
+                    }
+                    else
+                    {
+                        /* TODO: Review this window class */
+                        cassert(FALSE);
+                    }
+                }
+                else
+                {
+                    /* TODO: Review this window class */
+                    cassert(FALSE);
+                }
+            }
+        }
+        /* Its asking for the current new window */
+        else
+        {
+            cassert(pInfo->pResult == NULL);
+            pInfo->pResult = hb_itemPutNI( pInfo->pResult, 6667788 );
+        }
+        break;
+
+      case HB_GTI_COMPATBUFFER:
+        pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+        break;
+
+    cassert_default();
+    }
+
     return TRUE;
 }
 
@@ -5795,6 +5899,18 @@ static int hb_gtnap_Alert( PHB_GT pGT, PHB_ITEM message, PHB_ITEM options, int a
 
     return ret + 1;
 }
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_ReadKey( PHB_GT pGT, int iEventMask )
+{
+   int iKey = 0;
+   unref(pGT);
+   unref(iEventMask);
+   log_printf("hb_gtnap_ReadKey");
+   return iKey;
+}
+
 
 /*---------------------------------------------------------------------------*/
 
@@ -5977,7 +6093,8 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->SetKeyCP = NULL; */
 
     /* keyboard */
-    /* pFuncTable->ReadKey = NULL;
+    pFuncTable->ReadKey = hb_gtnap_ReadKey;
+    /*
     pFuncTable->InkeyGet = NULL;
     pFuncTable->InkeyPut = NULL;
     pFuncTable->InkeyIns = NULL;

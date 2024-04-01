@@ -41,6 +41,7 @@ tbrowsesubclass.prg
 stubs.prg
 inkey_.prg
 texto.prg
+altd.prg
 
 # Icon
 {allmsvc}exemplo.rc
