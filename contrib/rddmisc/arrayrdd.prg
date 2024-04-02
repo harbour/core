@@ -585,7 +585,7 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
             aWAData[ WADATA_ORDRECNO ] := 0
             nResult := AR_GOTO( nWA, 0 )
          ELSE
-            aWAData[ WADATA_ORDRECNO ] := Len( ATail( aIndexes[ nIndex ][ INDEX_RECORDS ] ) )
+            aWAData[ WADATA_ORDRECNO ] := Len(  aIndexes[ nIndex ][ INDEX_RECORDS ] ) 
             nResult := AR_GOTO( nWA, ATail( aIndexes[ nIndex ][ INDEX_RECORDS ] )[ INDEXKEY_RECORD ] )
          ENDIF
       ELSE
@@ -1057,6 +1057,7 @@ STATIC FUNCTION AR_ZAP( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
    LOCAL aOpenInfo := aWAData[ WADATA_OPENINFO ]
+   LOCAL aIndexes := aDBFData[ DATABASE_INDEX ]
    LOCAL oError
 
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d", nWA ) )
@@ -1084,6 +1085,7 @@ STATIC FUNCTION AR_ZAP( nWA )
    /* empty records */
    aDBFData[ DATABASE_RECORDS ] := {}
    aDBFData[ DATABASE_RECINFO ] := {}
+   AEval( aIndexes, {| aIndex | ASize( aIndex[ INDEX_RECORDS ],0 ) } )
 
    /* move to 0 recno */
    AR_GOTO( nWA, 0 )
@@ -1319,6 +1321,9 @@ STATIC FUNCTION AR_ORDINFO( nWA, nMsg, aOrderInfo )
    ENDSWITCH
 
    SWITCH nMsg
+   CASE DBOI_NUMBER
+      aOrderInfo[ UR_ORI_RESULT ] := nIndex
+      EXIT
    CASE DBOI_EXPRESSION
       IF nIndex < 1 .OR. Empty( aIndexes ) .OR. nIndex > Len( aIndexes[ nIndex ] )
          aOrderInfo[ UR_ORI_RESULT ] := ""
@@ -1327,7 +1332,7 @@ STATIC FUNCTION AR_ORDINFO( nWA, nMsg, aOrderInfo )
       ENDIF
       EXIT
    CASE DBOI_POSITION
-      IF nIndex < 1 .OR. Empty( aIndexes ) .OR. nIndex > Len( aIndexes[ nIndex ] ) .OR. Empty( aIndexes[ nIndex ][ INDEX_RECORDS ] ) .OR. aWAData[ WADATA_ORDRECNO ] == 0
+      IF nIndex < 1 .OR. Empty( aIndexes ) .OR. nIndex > Len( aIndexes ) .OR. Empty( aIndexes[ nIndex ][ INDEX_RECORDS ] ) .OR. aWAData[ WADATA_ORDRECNO ] == 0
          aOrderInfo[ UR_ORI_RESULT ] := 0
       ELSE
          IF aIndexes[ nIndex ][ INDEX_RECORDS ][ aWAData[ WADATA_ORDRECNO ] ][ INDEXKEY_RECORD ] != aWAData[ WADATA_RECNO ]
