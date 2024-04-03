@@ -140,6 +140,7 @@ typedef struct _ADSAREA_
    HB_BOOL fShared;               /* Shared file */
    HB_BOOL fReadonly;             /* Read only file */
    HB_BOOL fFLocked;              /* HB_TRUE if file is locked */
+   HB_BOOL fOEM;                  /* HB_TRUE jezeli bez konwersji */
 
    int iFileType;                 /* adt/cdx/ntx/vfp */
 
@@ -192,28 +193,31 @@ extern void       hb_ads_setIndexPageSize( int iIndexPageSize );
 extern HB_ERRCODE hb_adsCloseCursor( ADSAREAP pArea );
 extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
 
+extern HB_BOOL hb_ads_bOEM;
+
 #ifdef ADS_USE_OEM_TRANSLATION
-   extern HB_BOOL hb_ads_bOEM;
+
    extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE nLen );
    extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE nLen );
    extern void    hb_adsOemAnsiFree( char * pcString );
-
-   /* NOTE: Undocumented ACE function. */
-   UNSIGNED32 ENTRYPOINT AdsSetFieldRaw( ADSHANDLE   hObj,
-                                         UNSIGNED8 * pucFldName,
-                                         UNSIGNED8 * pucBuf,
-                                         UNSIGNED32  ulLen );
-
-   /* NOTE: Undocumented ACE function. */
-   UNSIGNED32 ENTRYPOINT AdsGetFieldRaw( ADSHANDLE    hTbl,
-                                         UNSIGNED8 *  pucFldName,
-                                         UNSIGNED8 *  pucBuf,
-                                         UNSIGNED32 * pulLen );
 
 #else
 #  define hb_adsOemToAnsi( s, l )  ( ( char * ) HB_UNCONST( s ) )
 #  define hb_adsAnsiToOem( s, l )  ( ( char * ) HB_UNCONST( s ) )
 #  define hb_adsOemAnsiFree( s )
 #endif
+
+
+/* NOTE: Undocumented ACE function. */
+UNSIGNED32 ENTRYPOINT AdsSetFieldRaw( ADSHANDLE   hObj,
+                                      UNSIGNED8 * pucFldName,
+                                      UNSIGNED8 * pucBuf,
+                                      UNSIGNED32  ulLen );
+
+/* NOTE: Undocumented ACE function. */
+UNSIGNED32 ENTRYPOINT AdsGetFieldRaw( ADSHANDLE    hTbl,
+                                      UNSIGNED8 *  pucFldName,
+                                      UNSIGNED8 *  pucBuf,
+                                      UNSIGNED32 * pulLen );
 
 HB_EXTERN_END
