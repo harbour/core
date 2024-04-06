@@ -12,6 +12,7 @@
 # Flags
 -cflag={allmsvc}-D_WINDOWS
 -cflag={gcc&debug}-g
+-cflag={gcc}-std=c++98
 -cflag={debug}-DCMAKE_DEBUG
 -cflag={nodebug}-DCMAKE_RELEASE
 
