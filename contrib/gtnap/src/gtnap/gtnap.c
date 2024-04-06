@@ -142,7 +142,6 @@ struct _gtnap_window_t
     HB_ITEM *confirm_block;
     HB_ITEM *desist_block;
     HB_ITEM *error_date_block;
-    uint16_t *text_buffer;
     bool_t is_configured;
     bool_t is_closed_by_esc;
     bool_t modal_window_alive;
@@ -508,13 +507,6 @@ static void i_destroy_gtwin(GtNapWindow **dgtwin)
 
     if (gtwin->error_date_block != NULL)
         hb_itemRelease(gtwin->error_date_block);
-
-    if (gtwin->text_buffer != NULL)
-    {
-        uint32_t cwidth = gtwin->right - gtwin->left + 1;
-        uint32_t cheight = gtwin->bottom - gtwin->top + 1;
-        heap_free((byte_t**)&gtwin->text_buffer, cwidth * cheight * sizeof(uint16_t), "gtwin_textbuffer");
-    }
 
     cassert(arrpt_size(gtwin->objects, GtNapObject) == 0);
     arrpt_destroy(&gtwin->tabstops, NULL, GuiComponent);
@@ -2594,15 +2586,6 @@ void hb_gtnap_terminal(void)
     hb_gtnap_window(0, 0, gtnap->rows - 1, gtnap->cols - 1, tc(gtnap->title), FALSE, TRUE, TRUE, FALSE);
     gtwin = i_current_gtwin(gtnap);
     i_gtwin_configure(gtnap, gtwin, gtwin);
-
-    {
-        uint32_t cwidth = gtwin->right - gtwin->left + 1;
-        uint32_t cheight = gtwin->bottom - gtwin->top + 1;
-        cassert(gtwin->text_buffer == NULL);
-        gtwin->text_buffer = (uint16_t*)heap_malloc(cwidth * cheight * sizeof(uint16_t), "gtwin_textbuffer");
-        bmem_set_zero((byte_t*)gtwin->text_buffer, cwidth * cheight * sizeof(uint16_t));
-    }
-
     window_OnClose(gtwin->window, listener(gtwin, i_OnTerminalClose, GtNapWindow));
     window_show(gtwin->window);
 }
