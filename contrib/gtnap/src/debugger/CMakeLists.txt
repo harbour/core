@@ -1,0 +1,1 @@
+nap_desktop_app(GTNapDeb "osapp" NRC_NONE)
