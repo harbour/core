@@ -155,7 +155,6 @@ struct _gtnap_window_t
     S2Df panel_size;
     Panel *panel;
     Panel *scrolled_panel;
-    View *canvas;
     GtNapToolbar *toolbar;
     GtNapArea *gtarea;
     uint32_t num_rows;
@@ -179,6 +178,7 @@ struct _gtnap_t
     uint8_t date_chars;
     String *title;
     String *working_path;
+    String *debugger_path;
     uint32_t rows;
     uint32_t cols;
     real32_t cell_x_sizef;
@@ -190,7 +190,6 @@ struct _gtnap_t
     uint32_t modal_delay_seconds;
     GtNapWindow *modal_time_window;
     ArrPt(GtNapWindow) *windows;
-    Thread *debug_thread;
 
     textspace_t office_text_space;
     String *office_last_cell_ref;
@@ -479,14 +478,6 @@ static void i_destroy_gtwin(GtNapWindow **dgtwin)
             i_destroy_gtobject(gtwin, 0);
     }
 
-    if (gtwin->canvas != NULL)
-    {
-        _component_visible((GuiComponent*)gtwin->canvas, FALSE);
-
-        if (gtwin->is_configured == TRUE)
-            _panel_destroy_component(gtwin->panel, (GuiComponent*)gtwin->canvas);
-    }
-
     if (gtwin->scrolled_panel != NULL)
     {
         _component_visible((GuiComponent*)gtwin->scrolled_panel, FALSE);
@@ -556,6 +547,7 @@ static void i_gtnap_destroy(GtNap **gtnap)
     font_destroy(&(*gtnap)->reduced_font);
     str_destroy(&(*gtnap)->title);
     str_destroy(&(*gtnap)->working_path);
+    str_destroy(&(*gtnap)->debugger_path);
     str_destopt(&(*gtnap)->office_last_cell_ref);
     officesdk_finish();
     heap_delete(&(*gtnap), GtNap);
@@ -1062,24 +1054,27 @@ static GtNap *i_gtnap_create(void)
         GTNAP_GLOBAL->working_path = str_c(path);
     }
 
+ #if defined(__DEBUG__)
+     GTNAP_GLOBAL->debugger_path = str_cpath("%s/Debug/bin/gtnapdeb", BINARY_DIR);
+ #else
+     GTNAP_GLOBAL->debugger_path = str_cpath("%s/Release/bin/gtnapdeb", BINARY_DIR);
+ #endif
+
     globals_resolution(&screen);
     screen.height -= 50;        /* Margin for Dock or Taskbars */
     i_compute_font_size(screen.width, screen.height, GTNAP_GLOBAL);
     i_init_colors();
 
-    GTNAP_GLOBAL->debug_thread = bthread_create(i_harbour_thread, GTNAP_GLOBAL, GtNap);
-    //INIT_TITLE[0] = 0;
+    {
+        PHB_ITEM ritem = hb_itemDo(INIT_CODEBLOCK, 0);
+        hb_itemRelease(ritem);
+        hb_itemRelease(INIT_CODEBLOCK);
+    }
+
+    INIT_TITLE[0] = 0;
+    INIT_CODEBLOCK = NULL;
 
     return GTNAP_GLOBAL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_OnCanvasDraw(GtNapWindow *gtwin, Event *e)
-{
-    const EvDraw *p = event_params(e, EvDraw);
-    draw_clear(p->ctx, kCOLOR_CYAN);
-    unref(gtwin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2346,26 +2341,6 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     panel_size(gtwin->panel, gtwin->panel_size);
     panel_layout(gtwin->panel, layout);
 
-    /* Create the view canvas*/
-    {
-        V2Df pos = kV2D_ZEROf;
-        S2Df size = gtwin->panel_size;
-        cassert(gtwin->canvas == NULL);
-
-        if (gtwin->toolbar != NULL)
-        {
-            pos.y += gtwin->toolbar->heightf;
-            size.height -= gtwin->toolbar->heightf;
-        }
-
-        gtwin->canvas = view_create();
-        view_OnDraw(gtwin->canvas, listener(gtwin, i_OnCanvasDraw, GtNapWindow));
-        _panel_attach_component(gtwin->panel, (GuiComponent*)gtwin->canvas);
-        _component_set_frame((GuiComponent*)gtwin->canvas, &pos, &size);
-        _component_visible((GuiComponent*)gtwin->canvas, FALSE);
-        view_update(gtwin->canvas);
-    }
-
     if (i_with_scroll_panel(gtwin) == TRUE)
     {
         /* We add a subpanel to window main panel to implement the scroll area */
@@ -2459,8 +2434,6 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
             _component_taborder(component, gtwin->window);
         arrpt_end()
     }
-
-    _component_visible((GuiComponent*)gtwin->canvas, TRUE);
 
     /* Allow navigation between edit controls with arrows and return */
     if (i_num_edits(gtwin) > 0)
@@ -2593,18 +2566,6 @@ static uint32_t i_debug_thread(HB_ITEM *block)
     hb_itemRelease(ritem);
     hb_itemRelease(block);
     return 0;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void hb_gtnap_debug(HB_ITEM *debugger_block)
-{
-    HB_ITEM *block = NULL;
-    cassert_no_null(GTNAP_GLOBAL);
-    cassert(GTNAP_GLOBAL->debug_thread == NULL);
-    block = hb_itemNew(debugger_block);
-    i_debug_thread(block);
-    //GTNAP_GLOBAL->debug_thread = bthread_create(i_debug_thread, block, HB_ITEM);    
 }
 
 /*---------------------------------------------------------------------------*/
