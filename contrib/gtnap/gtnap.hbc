@@ -12,9 +12,9 @@ incpaths=.
 {allmsvc&debug}ldflags=/NODEFAULTLIB:LIBCMT.lib
 
 # NAppGUI & LibreOffice link libraries
-{allmsvc}libs=officesdk osapp gui osgui draw2d geom2d core osbs sewer icppu icppuhelper ipurpenvhelper isal isalhelper
-{linux}libs=officesdk osapp gui osgui draw2d geom2d core osbs sewer pthread uno_sal uno_cppu uno_cppuhelpergcc3 uno_salhelpergcc3 unoidllo xmlreaderlo reglo mergedlo gtk-3 gdk-3 pangocairo-1.0 cairo gdk_pixbuf-2.0 pango-1.0 gio-2.0 glib-2.0 gobject-2.0
-{darwin}libs=officesdk osapp gui osgui draw2d geom2d core osbs sewer
+{allmsvc}libs=officesdk deblib osapp gui osgui draw2d geom2d core osbs sewer icppu icppuhelper ipurpenvhelper isal isalhelper
+{linux}libs=officesdk deblib osapp gui osgui draw2d geom2d core osbs sewer pthread uno_sal uno_cppu uno_cppuhelpergcc3 uno_salhelpergcc3 unoidllo xmlreaderlo reglo mergedlo gtk-3 gdk-3 pangocairo-1.0 cairo gdk_pixbuf-2.0 pango-1.0 gio-2.0 glib-2.0 gobject-2.0
+{darwin}libs=officesdk deblib osapp gui osgui draw2d geom2d core osbs sewer
 
 # The GTNAP-based executables will run in macOS High Sierra and higher
 {darwin}ldflags=-mmacosx-version-min=10.13

@@ -190,7 +190,7 @@ struct _gtnap_t
     uint32_t modal_delay_seconds;
     GtNapWindow *modal_time_window;
     ArrPt(GtNapWindow) *windows;
-
+    GtNapDebugger *debugger;
     textspace_t office_text_space;
     String *office_last_cell_ref;
     sdkres_t office_last_error;
@@ -5767,8 +5767,8 @@ static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                             cassert(HB_ITEM_TYPE(wright) == HB_IT_INTEGER);
                             ncols = hb_itemGetNI(wright) - hb_itemGetNI(wleft) + 1;
                             nrows = hb_itemGetNI(wbottom) - hb_itemGetNI(wtop) + 1;
-                            // TODO
-                            // GtNapDebugger *nap_debugger_create(const uint32_t nrows, const uint32_t ncols);
+                            cassert(GTNAP_GLOBAL->debugger == NULL);
+                            GTNAP_GLOBAL->debugger = nap_debugger_create(tc(GTNAP_GLOBAL->debugger_path), nrows, ncols);
                         }
                         else
                         {
