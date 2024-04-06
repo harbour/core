@@ -5261,7 +5261,6 @@ String *hb_block_to_utf8(HB_ITEM *item)
 static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("LOCK");
     return TRUE;
 }
 
@@ -5270,7 +5269,6 @@ static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
 static void hb_gtnap_Unlock( PHB_GT pGT )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("-- UNLOCK");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5470,15 +5468,23 @@ static HB_BOOL hb_gtnap_GetChar( PHB_GT pGT, int iRow, int iCol, int * pbColor, 
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_hb_codepoint(HB_USHORT usChar)
+{
+    return (uint32_t)usChar;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
     HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iRow );
-    HB_SYMBOL_UNUSED( iCol );
-    HB_SYMBOL_UNUSED( bColor );
-    HB_SYMBOL_UNUSED( bAttr );
-    HB_SYMBOL_UNUSED( usChar );
-    log_printf("hb_gtnap_PutChar: %c", usChar);
+    //log_printf("hb_gtnap_PutChar: %c", usChar);
+    if (GTNAP_GLOBAL->debugger != NULL)
+    {
+        uint32_t codepoint = i_hb_codepoint(usChar);
+        nap_debugger_putchar(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, codepoint, (uint32_t)bColor, (byte_t)bAttr); 
+    }
+
     return TRUE;
 }
 
@@ -5851,7 +5857,7 @@ static int hb_gtnap_ReadKey( PHB_GT pGT, int iEventMask )
    int iKey = 0;
    unref(pGT);
    unref(iEventMask);
-   log_printf("hb_gtnap_ReadKey");
+   //log_printf("hb_gtnap_ReadKey");
    return iKey;
 }
 

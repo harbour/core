@@ -11,5 +11,7 @@ GtNapDebugger *nap_debugger_create(const char_t *path, const uint32_t nrows, con
 
 void nap_debugger_destroy(GtNapDebugger **debug);
 
+void nap_debugger_putchar(GtNapDebugger *debug, const uint32_t row, const uint32_t col, const uint32_t codepoint, const uint32_t color, const byte_t attrib); 
+
 __END_C
 
