@@ -2,6 +2,7 @@
 
 #include "deblib.h"
 #include <core/stream.h>
+#include <core/strings.h>
 #include <sewer/cassert.h>
 #include <sewer/unicode.h>
 
@@ -28,6 +29,22 @@ void deblib_send_putchar(Stream *stm, const uint32_t row, const uint32_t col, co
 
 /*---------------------------------------------------------------------------*/
 
+void deblib_send_puttext(Stream *stm, const uint32_t row, const uint32_t col, const uint32_t color, const char_t *utf8)
+{
+    uint32_t len = str_len_c(utf8);
+    if (len > 0)
+    {
+        stm_write_enum(stm, ekMSG_PUTTEXT, msg_type_t);
+        stm_write_u32(stm, row);
+        stm_write_u32(stm, col);
+        stm_write_u32(stm, color);
+        stm_write_u32(stm, len);
+        stm_write(stm, (const byte_t*)utf8, len);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void deblib_recv_message(Stream *stm, DebMsg *msg)
 {
     cassert_no_null(msg);
@@ -37,6 +54,7 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         msg->row = stm_read_u32(stm);
         msg->col = stm_read_u32(stm);
         break;
+
     case ekMSG_PUTCHAR:
     {
         uint32_t codepoint, nbytes;
@@ -47,6 +65,20 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         msg->attrib = (byte_t)stm_read_u8(stm);
         nbytes = unicode_to_char(codepoint, msg->utf8, ekUTF8);
         msg->utf8[nbytes] = 0;
+        break;
+    }
+
+    case ekMSG_PUTTEXT:
+    {
+        uint32_t len;
+        msg->row = stm_read_u32(stm);
+        msg->col = stm_read_u32(stm);
+        msg->color = stm_read_u32(stm);
+        len = stm_read_u32(stm);
+        cassert(len > 0);
+        cassert(len < MAX_UTF8_SIZE);
+        stm_read(stm, (byte_t*)msg->utf8, len);
+        msg->utf8[len] = 0;
         break;
     }
 

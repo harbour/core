@@ -8,6 +8,8 @@ void deblib_send_resolution(Stream *stm, const uint32_t num_rows, const uint32_t
 
 void deblib_send_putchar(Stream *stm, const uint32_t row, const uint32_t col, const uint32_t codepoint, const uint32_t color, const byte_t attrib);
 
+void deblib_send_puttext(Stream *stm, const uint32_t row, const uint32_t col, const uint32_t color, const char_t *utf8);
+
 void deblib_recv_message(Stream *stm, DebMsg *msg);
 
 __END_C

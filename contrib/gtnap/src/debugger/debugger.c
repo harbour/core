@@ -33,8 +33,8 @@ struct _app_t
 /*---------------------------------------------------------------------------*/
 
 static uint16_t kSERVER_PORT = 3555;
-static uint32_t i_DEFAULT_COLS = 78;
-static uint32_t i_DEFAULT_ROWS = 23;
+static uint32_t i_DEFAULT_COLS = 110;
+static uint32_t i_DEFAULT_ROWS = 35;
 
 /*---------------------------------------------------------------------------*/
 
@@ -68,7 +68,7 @@ static void i_OnDraw(App *app, Event *e)
      */
    // bmutex_lock(app->mutex);
     bchar = app->text_buffer;
-    log_printf("i_OnDraw()");
+    //log_printf("i_OnDraw()");
 
     for (i = 0; i < app->nrows; ++i)
     {
@@ -79,7 +79,7 @@ static void i_OnDraw(App *app, Event *e)
             if (bchar->utf8[0] != 0)
             {
                 draw_text(p->ctx, bchar->utf8, x, y);
-                log_printf("(%d, %d) %s", j, i, bchar->utf8);
+                //log_printf("(%d, %d) %s", j, i, bchar->utf8);
             }
         }
     }
@@ -95,7 +95,7 @@ static Panel *i_panel(App *app)
     View *view = view_create();
     TextView *text = textview_create();
     view_OnDraw(view, listener(app, i_OnDraw, App));
-    app->font = font_monospace(20, 0);
+    app->font = font_monospace(font_regular_size(), 0);
     app->text = text;
     app->view = view;
     font_extents(app->font, "OOOO", -1, &app->cell_width, &app->cell_height);
@@ -105,7 +105,7 @@ static Panel *i_panel(App *app)
 
     layout_view(layout, view, 0, 0);
     layout_textview(layout, text, 1, 0);
-    layout_hsize(layout, 1, 200);
+    layout_hsize(layout, 1, 400);
     //layout_margin(layout, 5);
     //layout_vmargin(layout, 0, 5);
     //layout_vmargin(layout, 1, 5);
@@ -151,11 +151,11 @@ static void i_set_size(App *app, const DebMsg *msg)
     log = str_printf("ekMSG_SET_SIZE Rows: %d, Cols: %d", nrows, ncols);
     i_log(app, &log);
 
-    if (app->nrows != nrows || app->ncols != ncols)
-    {
-        i_update_text_buffer(app, nrows, ncols);
-        view_update(app->view);
-    }
+    //if (app->nrows != nrows || app->ncols != ncols)
+    //{
+    //    i_update_text_buffer(app, nrows, ncols);
+    //    view_update(app->view);
+    //}
 }
 
 /*---------------------------------------------------------------------------*/
@@ -168,12 +168,51 @@ static void i_putchar(App *app, const DebMsg *msg)
     cassert_no_null(msg);
     log = str_printf("ekMSG_PUTCHAR Row: %d, Col: %d, Char: '%s', Color: %d, Attrib: %d", msg->row, msg->col, msg->utf8, msg->color, msg->attrib);
     i_log(app, &log);
-
+    cassert(msg->row < app->nrows);
+    cassert(msg->col < app->ncols);
     bmutex_lock(app->mutex);
     bchar = app->text_buffer + (msg->row * app->ncols + msg->col);
     str_copy_c(bchar->utf8, sizeof(bchar->utf8), msg->utf8);
     bchar->color = msg->color;
     bchar->attrib = msg->attrib;
+    bmutex_unlock(app->mutex);
+    view_update(app->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_puttext(App *app, const DebMsg *msg)
+{
+    String *log = NULL;
+    BufChar *bchar = NULL;
+    const char_t *text = NULL;
+    uint32_t codepoint, nbytes, col;
+    cassert_no_null(app);
+    cassert_no_null(msg);
+    log = str_printf("ekMSG_PUTTEXT Row: %d, Col: %d, Color: %d, Text: '%s'", msg->row, msg->col, msg->color, msg->utf8);
+    i_log(app, &log);
+    col = msg->col;
+    //log_printf("ROW: %d", msg->row);
+    cassert(msg->row < app->nrows);
+    text = msg->utf8;
+    bmutex_lock(app->mutex);
+    bchar = app->text_buffer + (msg->row * app->ncols + msg->col);
+    codepoint = unicode_to_u32b(text, ekUTF8, &nbytes);
+
+    while(codepoint != 0)
+    {
+        uint32_t nb = unicode_to_char(codepoint, bchar->utf8, ekUTF8);
+        cassert_unref(nb == nbytes, nbytes);
+        //log_printf("COL: %d", col);
+        cassert_unref(col < app->ncols, col);
+        bchar->utf8[nb] = 0;
+        bchar->color = msg->color;
+        bchar->attrib = 0;
+        text += nb;
+        bchar += 1;
+        col += 1;
+        codepoint = unicode_to_u32b(text, ekUTF8, &nbytes);
+    }
     bmutex_unlock(app->mutex);
     view_update(app->view);
 }
@@ -223,6 +262,9 @@ static uint32_t i_protocol_thread(App *app)
                         break;
                     case ekMSG_PUTCHAR:
                         i_putchar(app, &msg);
+                        break;
+                    case ekMSG_PUTTEXT:
+                        i_puttext(app, &msg);
                         break;
                     default:
                         i_unknown(app, &msg);

@@ -5527,6 +5527,12 @@ static int hb_gtnap_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const c
     HB_SYMBOL_UNUSED( ulLen );
     i_cp_to_utf8(pText, utf8, sizeof32(utf8));
     log_printf("hb_gtnap_PutText: %s", utf8);
+
+    if (GTNAP_GLOBAL->debugger != NULL)
+    {
+        nap_debugger_puttext(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, (uint32_t)bColor, utf8); 
+    }
+
     return 0;
 }
 

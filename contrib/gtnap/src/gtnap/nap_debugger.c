@@ -50,3 +50,10 @@ void nap_debugger_putchar(GtNapDebugger *debug, const uint32_t row, const uint32
 }
 
 /*---------------------------------------------------------------------------*/
+
+void nap_debugger_puttext(GtNapDebugger *debug, const uint32_t row, const uint32_t col, const uint32_t color, const char_t *utf8)
+{
+    cassert_no_null(debug);
+    if (debug->stream != NULL)
+        deblib_send_puttext(debug->stream, row, col, color, utf8);
+}
