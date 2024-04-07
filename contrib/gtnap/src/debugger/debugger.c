@@ -30,6 +30,97 @@ struct _app_t
     real32_t cell_height;
 };
 
+static color_t i_COLORS[16];
+
+#define COL_BLACK           0
+#define COL_BLUE            1
+#define COL_GREEN           2
+#define COL_CYAN            3
+#define COL_RED             4
+#define COL_MAGENTA         5
+#define COL_BROWN           6
+#define COL_WHITE           7
+#define COL_LIGHT_GRAY      8
+#define COL_BRIGHT_BLUE     9
+#define COL_BRIGHT_GREEN    10
+#define COL_BRIGHT_CYAN     11
+#define COL_BRIGHT_RED      12
+#define COL_BRIGHT_MAGENTA  13
+#define COL_YELLOW          14
+#define COL_BRIGHT_WHITE    15
+
+static void i_init_colors(void)
+{
+    /* In dark mode, black and white are inverted */
+    //color_t DARK_COL_BLACK = color_html("#FCFCFC");
+    //color_t DARK_COL_BLUE = color_html("#1D99F3");
+    //color_t DARK_COL_GREEN = color_html("#11D116");
+    //color_t DARK_COL_CYAN = color_html("#1ABC9C");
+    //color_t DARK_COL_RED = color_html("#ED1515");
+    //color_t DARK_COL_MAGENTA = color_html("#9B59B6");
+    //color_t DARK_COL_BROWN = color_html("#F67400");
+    //color_t DARK_COL_WHITE = color_html("#232627");
+    //color_t DARK_COL_LIGHT_GRAY = color_html("#FFFFFF");
+    //color_t DARK_COL_BRIGHT_BLUE = color_html("#3DAEE9");
+    //color_t DARK_COL_BRIGHT_GREEN = color_html("#1CDC9A");
+    //color_t DARK_COL_BRIGHT_CYAN = color_html("#3DAEE9");
+    //color_t DARK_COL_BRIGHT_RED = color_html("#C0392B");
+    //color_t DARK_COL_BRIGHT_MAGENTA = color_html("#8E44AD");
+    //color_t DARK_COL_YELLOW = color_html("#FDBC4B");
+    //color_t DARK_COL_BRIGHT_WHITE = color_html("#7F8C8D");
+
+    color_t LIGHT_COL_BLACK = color_html("#000000");
+    color_t LIGHT_COL_BLUE = color_html("#135CD0");
+    color_t LIGHT_COL_GREEN = color_html("#328A5D");
+    color_t LIGHT_COL_CYAN = color_html("#33C3C1");
+    color_t LIGHT_COL_RED = color_html("#F8282A");
+    color_t LIGHT_COL_MAGENTA = color_html("#9F00BD");
+    color_t LIGHT_COL_BROWN = color_html("#FA701D");
+    color_t LIGHT_COL_WHITE = color_html("#B3B3B3");
+    color_t LIGHT_COL_LIGHT_GRAY = color_html("#555753");
+    color_t LIGHT_COL_BRIGHT_BLUE = color_html("#1670FF");
+    color_t LIGHT_COL_BRIGHT_GREEN = color_html("#2CC631");
+    color_t LIGHT_COL_BRIGHT_CYAN = color_html("#00FFFF");
+    color_t LIGHT_COL_BRIGHT_RED = color_html("#FB0416");
+    color_t LIGHT_COL_BRIGHT_MAGENTA = color_html("#E900B0");
+    color_t LIGHT_COL_YELLOW = color_html("#FDD727");
+    color_t LIGHT_COL_BRIGHT_WHITE = color_html("#EEEEEC");
+
+        i_COLORS[COL_BLACK] = LIGHT_COL_BLACK;
+    i_COLORS[COL_BLUE] = LIGHT_COL_BLUE;
+    i_COLORS[COL_GREEN] = LIGHT_COL_GREEN;
+    i_COLORS[COL_CYAN] = LIGHT_COL_CYAN;
+    i_COLORS[COL_RED] = LIGHT_COL_RED;
+    i_COLORS[COL_MAGENTA] = LIGHT_COL_MAGENTA;
+    i_COLORS[COL_BROWN] = LIGHT_COL_BROWN;
+    i_COLORS[COL_WHITE] = LIGHT_COL_WHITE;
+    i_COLORS[COL_LIGHT_GRAY] = LIGHT_COL_LIGHT_GRAY;
+    i_COLORS[COL_BRIGHT_BLUE] = LIGHT_COL_BRIGHT_BLUE;
+    i_COLORS[COL_BRIGHT_GREEN] = LIGHT_COL_BRIGHT_GREEN;
+    i_COLORS[COL_BRIGHT_CYAN] = LIGHT_COL_BRIGHT_CYAN;
+    i_COLORS[COL_BRIGHT_RED] = LIGHT_COL_BRIGHT_RED;
+    i_COLORS[COL_BRIGHT_MAGENTA] = LIGHT_COL_BRIGHT_MAGENTA;
+    i_COLORS[COL_YELLOW] = LIGHT_COL_YELLOW;
+    i_COLORS[COL_BRIGHT_WHITE] = LIGHT_COL_BRIGHT_WHITE;
+
+    //i_COLORS[COL_BLACK] = gui_alt_color(LIGHT_COL_BLACK, DARK_COL_BLACK);
+    //i_COLORS[COL_BLUE] = gui_alt_color(LIGHT_COL_BLUE, DARK_COL_BLUE);
+    //i_COLORS[COL_GREEN] = gui_alt_color(LIGHT_COL_GREEN, DARK_COL_GREEN);
+    //i_COLORS[COL_CYAN] = gui_alt_color(LIGHT_COL_CYAN, DARK_COL_CYAN);
+    //i_COLORS[COL_RED] = gui_alt_color(LIGHT_COL_RED, DARK_COL_RED);
+    //i_COLORS[COL_MAGENTA] = gui_alt_color(LIGHT_COL_MAGENTA, DARK_COL_MAGENTA);
+    //i_COLORS[COL_BROWN] = gui_alt_color(LIGHT_COL_BROWN, DARK_COL_BROWN);
+    //i_COLORS[COL_WHITE] = gui_alt_color(LIGHT_COL_WHITE, DARK_COL_WHITE);
+    //i_COLORS[COL_LIGHT_GRAY] = gui_alt_color(LIGHT_COL_LIGHT_GRAY, DARK_COL_LIGHT_GRAY);
+    //i_COLORS[COL_BRIGHT_BLUE] = gui_alt_color(LIGHT_COL_BRIGHT_BLUE, DARK_COL_BRIGHT_BLUE);
+    //i_COLORS[COL_BRIGHT_GREEN] = gui_alt_color(LIGHT_COL_BRIGHT_GREEN, DARK_COL_BRIGHT_GREEN);
+    //i_COLORS[COL_BRIGHT_CYAN] = gui_alt_color(LIGHT_COL_BRIGHT_CYAN, DARK_COL_BRIGHT_CYAN);
+    //i_COLORS[COL_BRIGHT_RED] = gui_alt_color(LIGHT_COL_BRIGHT_RED, DARK_COL_BRIGHT_RED);
+    //i_COLORS[COL_BRIGHT_MAGENTA] = gui_alt_color(LIGHT_COL_BRIGHT_MAGENTA, DARK_COL_BRIGHT_MAGENTA);
+    //i_COLORS[COL_YELLOW] = gui_alt_color(LIGHT_COL_YELLOW, DARK_COL_YELLOW);
+    //i_COLORS[COL_BRIGHT_WHITE] = gui_alt_color(LIGHT_COL_BRIGHT_WHITE, DARK_COL_BRIGHT_WHITE);
+}
+
 /*---------------------------------------------------------------------------*/
 
 static uint16_t kSERVER_PORT = 3555;
@@ -66,7 +157,7 @@ static void i_OnDraw(App *app, Event *e)
     /* Access to text_buffer in mutual exclusion
      * Can be modified by secondary (socket listen thread) 
      */
-   // bmutex_lock(app->mutex);
+   //bmutex_lock(app->mutex);
     bchar = app->text_buffer;
     //log_printf("i_OnDraw()");
 
@@ -78,6 +169,16 @@ static void i_OnDraw(App *app, Event *e)
             real32_t x = j * app->cell_width;
             if (bchar->utf8[0] != 0)
             {
+                int fore = bchar->color & 0x000F;
+                int back = ( bchar->color & 0x00F0 ) >> 4;
+                color_t cfore = i_COLORS[fore];
+                color_t cback = i_COLORS[back];
+
+                draw_text_color(p->ctx, cfore);
+                draw_fill_color(p->ctx, cback);
+
+
+                draw_rect(p->ctx, ekFILL, x+1, y, app->cell_width, app->cell_height);
                 draw_text(p->ctx, bchar->utf8, x, y);
                 //log_printf("(%d, %d) %s", j, i, bchar->utf8);
             }
@@ -295,6 +396,8 @@ static App *i_create(void)
     Panel *panel = i_panel(app);
     app->print_log = TRUE;
     log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
+    i_init_colors();
+
     app->window = window_create(ekWINDOW_STD);
     window_panel(app->window, panel);
     window_title(app->window, "GTNap Debugger");
