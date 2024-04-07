@@ -17,6 +17,21 @@ void deblib_send_resolution(Stream *stm, const uint32_t num_rows, const uint32_t
 
 /*---------------------------------------------------------------------------*/
 
+void deblib_send_scroll(Stream *stm, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const uint32_t row, const uint32_t col, const uint32_t codepoint, const uint32_t color)
+{
+    stm_write_enum(stm, ekMSG_SCROLL, msg_type_t);
+    stm_write_u32(stm, top);
+    stm_write_u32(stm, left);
+    stm_write_u32(stm, bottom);
+    stm_write_u32(stm, right);
+    stm_write_u32(stm, row);
+    stm_write_u32(stm, col);
+    stm_write_u32(stm, codepoint);
+    stm_write_u32(stm, color);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void deblib_send_putchar(Stream *stm, const uint32_t row, const uint32_t col, const uint32_t codepoint, const uint32_t color, const byte_t attrib)
 {
     stm_write_enum(stm, ekMSG_PUTCHAR, msg_type_t);
@@ -45,6 +60,14 @@ void deblib_send_puttext(Stream *stm, const uint32_t row, const uint32_t col, co
 
 /*---------------------------------------------------------------------------*/
 
+static uint32_t i_stm_read_codepoint(Stream *stm)
+{
+    uint32_t codepoint = stm_read_u32(stm);
+    return codepoint == 0 ? ' ' : codepoint;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void deblib_recv_message(Stream *stm, DebMsg *msg)
 {
     cassert_no_null(msg);
@@ -55,12 +78,28 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         msg->col = stm_read_u32(stm);
         break;
 
+    case ekMSG_SCROLL:
+    {
+        uint32_t codepoint, nbytes;
+        msg->top = stm_read_u32(stm);
+        msg->left = stm_read_u32(stm);
+        msg->bottom = stm_read_u32(stm);
+        msg->right = stm_read_u32(stm);
+        msg->row = stm_read_u32(stm);
+        msg->col = stm_read_u32(stm);
+        codepoint = i_stm_read_codepoint(stm);
+        msg->color = stm_read_u32(stm);
+        nbytes = unicode_to_char(codepoint, msg->utf8, ekUTF8);
+        msg->utf8[nbytes] = 0;
+        break;
+    }
+
     case ekMSG_PUTCHAR:
     {
         uint32_t codepoint, nbytes;
         msg->row = stm_read_u32(stm);
         msg->col = stm_read_u32(stm);
-        codepoint = stm_read_u32(stm);
+        codepoint = i_stm_read_codepoint(stm);
         msg->color = stm_read_u32(stm);
         msg->attrib = (byte_t)stm_read_u8(stm);
         nbytes = unicode_to_char(codepoint, msg->utf8, ekUTF8);

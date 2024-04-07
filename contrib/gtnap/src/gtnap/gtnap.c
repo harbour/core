@@ -5478,7 +5478,7 @@ static uint32_t i_hb_codepoint(HB_USHORT usChar)
 static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
     HB_SYMBOL_UNUSED( pGT );
-    //log_printf("hb_gtnap_PutChar: %c", usChar);
+    log_printf("hb_gtnap_PutChar: %c", usChar);
     if (GTNAP_GLOBAL->debugger != NULL)
     {
         uint32_t codepoint = i_hb_codepoint(usChar);
@@ -5580,6 +5580,7 @@ static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom,
     HB_SYMBOL_UNUSED( iBottom );
     HB_SYMBOL_UNUSED( iRight );
     HB_SYMBOL_UNUSED( bColor );
+    log_printf("hb_gtnap_SetAttribute");
     cassert(TRUE);
 }
 
@@ -5587,38 +5588,40 @@ static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom,
 
 static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, HB_USHORT bChar, int iRows, int iCols )
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( iRight );
-    HB_SYMBOL_UNUSED( bColor );
-    HB_SYMBOL_UNUSED( bChar );
-    HB_SYMBOL_UNUSED( iRows );
-    HB_SYMBOL_UNUSED( iCols );
+    log_printf("hb_gtnap_Scroll (%d, %d, %d, %d) (%d-'%d') (%d-%d)", iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols);
 
-    if (gtwin != NULL)
+    if (GTNAP_GLOBAL->debugger != NULL)
     {
-        uint32_t i, n;
-        /*
-           FRAN: The scroll, at the moment, delete all texts
-           Improve taking into account the input rectangle
-           Take into account if a real scroll exists (iRows > 0 || iCols > 0)
-        */
-        n = arrpt_size(gtwin->objects, GtNapObject);
-        for (i = 0; i < n; )
+        uint32_t codepoint = i_hb_codepoint(bChar);
+        nap_debugger_scroll(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (uint32_t)iRows, (uint32_t)iCols, codepoint, (uint32_t)bColor);
+    }
+    else
+    {
+        GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+
+        if (gtwin != NULL)
         {
-            GtNapObject *object = arrpt_get(gtwin->objects, i, GtNapObject);
-            const char_t *type = _component_type(object->component);
-            if (str_equ_c(type, "Label") == TRUE)
+            uint32_t i, n;
+            /*
+               FRAN: The scroll, at the moment, delete all texts
+               Improve taking into account the input rectangle
+               Take into account if a real scroll exists (iRows > 0 || iCols > 0)
+            */
+            n = arrpt_size(gtwin->objects, GtNapObject);
+            for (i = 0; i < n; )
             {
-                i_destroy_gtobject(gtwin, i);
-                n -= 1;
-            }
-            else
-            {
-                i += 1;
+                GtNapObject *object = arrpt_get(gtwin->objects, i, GtNapObject);
+                const char_t *type = _component_type(object->component);
+                if (str_equ_c(type, "Label") == TRUE)
+                {
+                    i_destroy_gtobject(gtwin, i);
+                    n -= 1;
+                }
+                else
+                {
+                    i += 1;
+                }
             }
         }
     }
@@ -5650,6 +5653,7 @@ static void hb_gtnap_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight, HB_
     HB_SYMBOL_UNUSED( bChar );
     HB_SYMBOL_UNUSED( bColor );
     cassert(TRUE);
+    log_printf("hb_gtnap_HorizLine");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5663,6 +5667,7 @@ static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, HB_U
     HB_SYMBOL_UNUSED( bChar );
     HB_SYMBOL_UNUSED( bColor );
     cassert(TRUE);
+    log_printf("hb_gtnap_VertLine");
 }
 
 /*---------------------------------------------------------------------------*/

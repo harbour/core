@@ -261,6 +261,34 @@ static void i_set_size(App *app, const DebMsg *msg)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_scroll(App *app, const DebMsg *msg)
+{
+    String *log = NULL;
+    uint32_t i, j;
+    cassert_no_null(app);
+    cassert_no_null(msg);
+    log = str_printf("ekMSG_SCROLL Top: %d, Left: %d, Bottom: %d, Right: %d, Char: '%s', Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->utf8, msg->color);
+    i_log(app, &log);
+
+    bmutex_lock(app->mutex);
+    for (i = msg->top; i <= msg->bottom; ++i)
+    {
+        for (j = msg->left; j <= msg->right; ++j)
+        {
+            BufChar *bchar = app->text_buffer + (i * app->ncols + j);
+            cassert(i < app->nrows);
+            cassert(j < app->ncols);
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), msg->utf8);
+            bchar->color = msg->color;
+            bchar->attrib = 0;
+        }
+    }
+    bmutex_unlock(app->mutex);
+    view_update(app->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_putchar(App *app, const DebMsg *msg)
 {
     String *log = NULL;
@@ -360,6 +388,9 @@ static uint32_t i_protocol_thread(App *app)
                     switch (msg.type) {
                     case ekMSG_SET_SIZE:
                         i_set_size(app, &msg);
+                        break;
+                    case ekMSG_SCROLL:
+                        i_scroll(app, &msg);
                         break;
                     case ekMSG_PUTCHAR:
                         i_putchar(app, &msg);
