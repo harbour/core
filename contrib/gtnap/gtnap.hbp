@@ -14,6 +14,7 @@
 -cflag={gcc&debug}-g
 -cflag={debug}-DCMAKE_DEBUG
 -cflag={nodebug}-DCMAKE_RELEASE
+-cflag=-DBINARY_DIR=\"build\"
 
 # Output
 {debug}-obuild/Debug/lib/${hb_name}
