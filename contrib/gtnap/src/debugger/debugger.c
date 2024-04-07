@@ -289,6 +289,96 @@ static void i_scroll(App *app, const DebMsg *msg)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_box(App *app, const DebMsg *msg)
+{
+    String *log = NULL;
+    uint32_t i, j;
+    cassert_no_null(app);
+    cassert_no_null(msg);
+    log = str_printf("ekMSG_BOX Top: %d, Left: %d, Bottom: %d, Right: %d, Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->color);
+    i_log(app, &log);
+
+    bmutex_lock(app->mutex);
+    for (i = msg->top + 1; i <= msg->bottom - 1; ++i)
+    {
+        /* Left edge */
+        {
+            BufChar *bchar = app->text_buffer + (i * app->ncols + msg->left);
+            cassert(i < app->nrows);
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "│");
+            bchar->color = msg->color;
+            bchar->attrib = 0;
+        }
+
+        /* Right edge */
+        {
+            BufChar *bchar = app->text_buffer + (i * app->ncols + msg->right);
+            cassert(i < app->nrows);
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "│");
+            bchar->color = msg->color;
+            bchar->attrib = 0;
+        }
+    }
+
+    for (j = msg->left + 1; j <= msg->right - 1; ++j)
+    {
+        /* Top edge */
+        {
+            BufChar *bchar = app->text_buffer + (msg->top * app->ncols + j);
+            cassert(j < app->ncols);
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "─");
+            bchar->color = msg->color;
+            bchar->attrib = 0;
+        }
+
+        /* Bottom edge */
+        {
+            BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + j);
+            cassert(j < app->ncols);
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "─");
+            bchar->color = msg->color;
+            bchar->attrib = 0;
+        }
+    }
+
+    /* Top-left corner */
+    {
+        BufChar *bchar = app->text_buffer + (msg->top * app->ncols + msg->left);
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┌");
+        bchar->color = msg->color;
+        bchar->attrib = 0;
+    }
+
+    /* Top-right corner */
+    {
+        BufChar *bchar = app->text_buffer + (msg->top * app->ncols + msg->right);
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┐");
+        bchar->color = msg->color;
+        bchar->attrib = 0;
+    }
+
+    /* Bottom-left corner */
+    {
+        BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + msg->left);
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "└");
+        bchar->color = msg->color;
+        bchar->attrib = 0;
+    }
+
+    /* Bottom-right corner */
+    {
+        BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + msg->right);
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┘");
+        bchar->color = msg->color;
+        bchar->attrib = 0;
+    }
+
+    bmutex_unlock(app->mutex);
+    view_update(app->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_putchar(App *app, const DebMsg *msg)
 {
     String *log = NULL;
@@ -391,6 +481,9 @@ static uint32_t i_protocol_thread(App *app)
                         break;
                     case ekMSG_SCROLL:
                         i_scroll(app, &msg);
+                        break;
+                    case ekMSG_BOX:
+                        i_box(app, &msg);
                         break;
                     case ekMSG_PUTCHAR:
                         i_putchar(app, &msg);

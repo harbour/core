@@ -32,6 +32,18 @@ void deblib_send_scroll(Stream *stm, const uint32_t top, const uint32_t left, co
 
 /*---------------------------------------------------------------------------*/
 
+void deblib_send_box(Stream *stm, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const uint32_t color)
+{
+    stm_write_enum(stm, ekMSG_BOX, msg_type_t);
+    stm_write_u32(stm, top);
+    stm_write_u32(stm, left);
+    stm_write_u32(stm, bottom);
+    stm_write_u32(stm, right);
+    stm_write_u32(stm, color);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void deblib_send_putchar(Stream *stm, const uint32_t row, const uint32_t col, const uint32_t codepoint, const uint32_t color, const byte_t attrib)
 {
     stm_write_enum(stm, ekMSG_PUTCHAR, msg_type_t);
@@ -93,6 +105,14 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         msg->utf8[nbytes] = 0;
         break;
     }
+
+    case ekMSG_BOX:
+        msg->top = stm_read_u32(stm);
+        msg->left = stm_read_u32(stm);
+        msg->bottom = stm_read_u32(stm);
+        msg->right = stm_read_u32(stm);
+        msg->color = stm_read_u32(stm);
+        break;
 
     case ekMSG_PUTCHAR:
     {
