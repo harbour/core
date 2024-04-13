@@ -152,15 +152,9 @@ static void i_OnDraw(App *app, Event *e)
     BufChar *bchar = NULL;
     uint32_t i, j;
     cassert_no_null(app);
-    draw_font(p->ctx, app->font);
-
-    /* Access to text_buffer in mutual exclusion
-     * Can be modified by secondary (socket listen thread) 
-     */
-   //bmutex_lock(app->mutex);
     bchar = app->text_buffer;
-    //log_printf("i_OnDraw()");
 
+    draw_font(p->ctx, app->font);
     for (i = 0; i < app->nrows; ++i)
     {
         real32_t y = i * app->cell_height;
@@ -173,18 +167,13 @@ static void i_OnDraw(App *app, Event *e)
                 int back = ( bchar->color & 0x00F0 ) >> 4;
                 color_t cfore = i_COLORS[fore];
                 color_t cback = i_COLORS[back];
-
                 draw_text_color(p->ctx, cfore);
                 draw_fill_color(p->ctx, cback);
-
-
-                draw_rect(p->ctx, ekFILL, x+1, y, app->cell_width, app->cell_height);
+                draw_rect(p->ctx, ekFILL, x + 2, y, app->cell_width + 1, app->cell_height + 1);
                 draw_text(p->ctx, bchar->utf8, x, y);
-                //log_printf("(%d, %d) %s", j, i, bchar->utf8);
             }
         }
     }
-    //bmutex_unlock(app->mutex);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -202,14 +191,9 @@ static Panel *i_panel(App *app)
     font_extents(app->font, "OOOO", -1, &app->cell_width, &app->cell_height);
     app->cell_width /= 4;
     i_update_text_buffer(app, i_DEFAULT_ROWS, i_DEFAULT_COLS);
-
-
     layout_view(layout, view, 0, 0);
     layout_textview(layout, text, 1, 0);
     layout_hsize(layout, 1, 400);
-    //layout_margin(layout, 5);
-    //layout_vmargin(layout, 0, 5);
-    //layout_vmargin(layout, 1, 5);
     panel_layout(panel, layout);
     return panel;
 }
@@ -229,13 +213,13 @@ static void i_log(App *app, String **str)
 {
     cassert_no_null(app);
     cassert_no_null(str);
-    bmutex_lock(app->mutex);
     if (app->print_log == TRUE)
     {
+        bmutex_lock(app->mutex);
         textview_writef(app->text, tc(*str));
         textview_writef(app->text, "\n");
+        bmutex_unlock(app->mutex);
     }
-    bmutex_unlock(app->mutex);
     str_destroy(str);
 }
 
@@ -243,18 +227,18 @@ static void i_log(App *app, String **str)
 
 static void i_set_size(App *app, const DebMsg *msg)
 {
-    String *log = NULL;
-    uint32_t nrows, ncols;
     cassert_no_null(app);
     cassert_no_null(msg);
-    nrows = msg->row;
-    ncols = msg->col;
-    log = str_printf("ekMSG_SET_SIZE Rows: %d, Cols: %d", nrows, ncols);
-    i_log(app, &log);
 
-    //if (app->nrows != nrows || app->ncols != ncols)
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("ekMSG_SET_SIZE Rows: %d, Cols: %d", msg->row, msg->col);
+        i_log(app, &log);
+    }
+
+    //if (app->nrows != msg->row || app->ncols != msg->col)
     //{
-    //    i_update_text_buffer(app, nrows, ncols);
+    //    i_update_text_buffer(app, msg->row, msg->col);
     //    view_update(app->view);
     //}
 }
@@ -263,12 +247,15 @@ static void i_set_size(App *app, const DebMsg *msg)
 
 static void i_scroll(App *app, const DebMsg *msg)
 {
-    String *log = NULL;
     uint32_t i, j;
     cassert_no_null(app);
     cassert_no_null(msg);
-    log = str_printf("ekMSG_SCROLL Top: %d, Left: %d, Bottom: %d, Right: %d, Char: '%s', Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->utf8, msg->color);
-    i_log(app, &log);
+
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("ekMSG_SCROLL Top: %d, Left: %d, Bottom: %d, Right: %d, Char: '%s', Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->utf8, msg->color);
+        i_log(app, &log);
+    }
 
     bmutex_lock(app->mutex);
     for (i = msg->top; i <= msg->bottom; ++i)
@@ -291,12 +278,15 @@ static void i_scroll(App *app, const DebMsg *msg)
 
 static void i_box(App *app, const DebMsg *msg)
 {
-    String *log = NULL;
     uint32_t i, j;
     cassert_no_null(app);
     cassert_no_null(msg);
-    log = str_printf("ekMSG_BOX Top: %d, Left: %d, Bottom: %d, Right: %d, Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->color);
-    i_log(app, &log);
+
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("ekMSG_BOX Top: %d, Left: %d, Bottom: %d, Right: %d, Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->color);
+        i_log(app, &log);
+    }
 
     bmutex_lock(app->mutex);
     for (i = msg->top + 1; i <= msg->bottom - 1; ++i)
@@ -381,12 +371,16 @@ static void i_box(App *app, const DebMsg *msg)
 
 static void i_putchar(App *app, const DebMsg *msg)
 {
-    String *log = NULL;
     BufChar *bchar = NULL;
     cassert_no_null(app);
     cassert_no_null(msg);
-    log = str_printf("ekMSG_PUTCHAR Row: %d, Col: %d, Char: '%s', Color: %d, Attrib: %d", msg->row, msg->col, msg->utf8, msg->color, msg->attrib);
-    i_log(app, &log);
+
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("ekMSG_PUTCHAR Row: %d, Col: %d, Char: '%s', Color: %d, Attrib: %d", msg->row, msg->col, msg->utf8, msg->color, msg->attrib);
+        i_log(app, &log);
+    }
+
     cassert(msg->row < app->nrows);
     cassert(msg->col < app->ncols);
     bmutex_lock(app->mutex);
@@ -402,17 +396,20 @@ static void i_putchar(App *app, const DebMsg *msg)
 
 static void i_puttext(App *app, const DebMsg *msg)
 {
-    String *log = NULL;
     BufChar *bchar = NULL;
     const char_t *text = NULL;
     uint32_t codepoint, nbytes, col;
     cassert_no_null(app);
     cassert_no_null(msg);
-    log = str_printf("ekMSG_PUTTEXT Row: %d, Col: %d, Color: %d, Text: '%s'", msg->row, msg->col, msg->color, msg->utf8);
-    i_log(app, &log);
-    col = msg->col;
-    //log_printf("ROW: %d", msg->row);
     cassert(msg->row < app->nrows);
+    
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("ekMSG_PUTTEXT Row: %d, Col: %d, Color: %d, Text: '%s'", msg->row, msg->col, msg->color, msg->utf8);
+        i_log(app, &log);
+    }
+
+    col = msg->col;
     text = msg->utf8;
     bmutex_lock(app->mutex);
     bchar = app->text_buffer + (msg->row * app->ncols + msg->col);
@@ -422,7 +419,6 @@ static void i_puttext(App *app, const DebMsg *msg)
     {
         uint32_t nb = unicode_to_char(codepoint, bchar->utf8, ekUTF8);
         cassert_unref(nb == nbytes, nbytes);
-        //log_printf("COL: %d", col);
         cassert_unref(col < app->ncols, col);
         bchar->utf8[nb] = 0;
         bchar->color = msg->color;
@@ -440,11 +436,14 @@ static void i_puttext(App *app, const DebMsg *msg)
 
 static void i_unknown(App *app, const DebMsg *msg)
 {
-    String *log = NULL;
     cassert_no_null(app);
     cassert_no_null(msg);
-    log = str_printf("Unknown msg: %d", msg->type);
-    i_log(app, &log);
+
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("Unknown msg: %d", msg->type);
+        i_log(app, &log);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -466,10 +465,14 @@ static uint32_t i_protocol_thread(App *app)
             {
                 uint32_t ip;
                 uint16_t port;
-                String *str = NULL;
                 bsocket_remote_ip(income_sock, &ip, &port);
-                str = str_printf("Incomming connect from: %s:%d", bsocket_ip_str(ip), port);
-                i_log(app, &str);
+
+                if (app->print_log == TRUE)
+                {
+                    String *log = str_printf("Incomming connect from: %s:%d", bsocket_ip_str(ip), port);
+                    i_log(app, &log);
+                }
+
                 for(;;)
                 {
                     DebMsg msg;
@@ -518,8 +521,7 @@ static App *i_create(void)
 {
     App *app = heap_new0(App);
     Panel *panel = i_panel(app);
-    app->print_log = TRUE;
-    log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
+    app->print_log = FALSE;
     i_init_colors();
 
     app->window = window_create(ekWINDOW_STD);
@@ -530,7 +532,6 @@ static App *i_create(void)
     window_show(app->window);
     app->mutex = bmutex_create();
     app->protocol_thread = bthread_create(i_protocol_thread, app, App);
-    //i_protocol_thread(app);
     return app;
 }
 
