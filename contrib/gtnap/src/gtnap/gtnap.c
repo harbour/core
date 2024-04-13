@@ -5764,7 +5764,9 @@ static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                             ncols = hb_itemGetNI(wright) - hb_itemGetNI(wleft) + 1;
                             nrows = hb_itemGetNI(wbottom) - hb_itemGetNI(wtop) + 1;
                             cassert(GTNAP_GLOBAL->debugger == NULL);
-                            GTNAP_GLOBAL->debugger = nap_debugger_create(tc(GTNAP_GLOBAL->debugger_path), nrows, ncols);
+                            unref(ncols);
+                            unref(nrows);
+                            GTNAP_GLOBAL->debugger = nap_debugger_create(tc(GTNAP_GLOBAL->debugger_path), GTNAP_GLOBAL->rows, GTNAP_GLOBAL->cols);
                         }
                         else
                         {

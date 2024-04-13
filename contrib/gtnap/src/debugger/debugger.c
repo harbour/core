@@ -124,8 +124,8 @@ static void i_init_colors(void)
 /*---------------------------------------------------------------------------*/
 
 static uint16_t kSERVER_PORT = 3555;
-static uint32_t i_DEFAULT_COLS = 110;
-static uint32_t i_DEFAULT_ROWS = 35;
+static uint32_t i_DEFAULT_COLS = 80;
+static uint32_t i_DEFAULT_ROWS = 25;
 
 /*---------------------------------------------------------------------------*/
 
@@ -138,7 +138,9 @@ static void i_update_text_buffer(App *app, const uint32_t nrows, const uint32_t 
     app->nrows = nrows;
     app->ncols = ncols;
     app->text_buffer = heap_new_n0(app->nrows * app->ncols, BufChar);
-    view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
+
+    if (app->view != NULL)
+        view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
 
     if (app->window != NULL)
         window_update(app->window);
@@ -190,7 +192,6 @@ static Panel *i_panel(App *app)
     app->view = view;
     font_extents(app->font, "OOOO", -1, &app->cell_width, &app->cell_height);
     app->cell_width /= 4;
-    i_update_text_buffer(app, i_DEFAULT_ROWS, i_DEFAULT_COLS);
     layout_view(layout, view, 0, 0);
     layout_textview(layout, text, 1, 0);
     layout_hsize(layout, 1, 400);
@@ -517,13 +518,49 @@ static uint32_t i_protocol_thread(App *app)
 
 /*---------------------------------------------------------------------------*/
 
-static App *i_create(void)
+static App *i_app(void)
 {
     App *app = heap_new0(App);
+    uint32_t nrows = UINT32_MAX, ncols = UINT32_MAX;
+    uint32_t argc = osapp_argc();
+
+    /* Parse arguments */
+    if (argc == 3)
+    {
+        char_t argv[128];
+        bool_t err1, err2;
+        osapp_argv(1, argv, sizeof(argv));
+        nrows = str_to_u32(argv, 10, &err1);
+        osapp_argv(2, argv, sizeof(argv));
+        ncols = str_to_u32(argv, 10, &err2);
+        if (err1 == TRUE || err2 == TRUE)
+        {
+            nrows = UINT32_MAX;
+            ncols = UINT32_MAX;
+        }
+    }
+
+    if (ncols == UINT32_MAX || nrows == UINT32_MAX)
+    {
+        nrows = i_DEFAULT_ROWS;
+        ncols = i_DEFAULT_COLS;
+    }
+
+    i_update_text_buffer(app, nrows, ncols);
+    return app;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static App *i_create(void)
+{
+    App *app = i_app();
     Panel *panel = i_panel(app);
     app->print_log = FALSE;
+    log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
     i_init_colors();
-
+    view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
+    log_printf("APP: Rows: %d Cols: %d", app->nrows, app->ncols);
     app->window = window_create(ekWINDOW_STD);
     window_panel(app->window, panel);
     window_title(app->window, "GTNap Debugger");
