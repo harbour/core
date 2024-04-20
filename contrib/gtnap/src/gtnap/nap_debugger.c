@@ -136,6 +136,20 @@ static __INLINE int32_t i_key_letter(int32_t ctrl, int32_t alt, int32_t shift, i
 
 /*---------------------------------------------------------------------------*/
 
+static __INLINE int32_t i_key_function(int32_t ctrl, int32_t alt, int32_t shift, int32_t normal, uint32_t modifiers)
+{
+    if (modifiers & ekMKEY_CONTROL)
+        return ctrl;
+    if (modifiers & ekMKEY_ALT)
+        return alt;
+    if (modifiers & ekMKEY_SHIFT)
+        return shift;
+    else
+        return normal;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
 {
     unref(modifiers);
@@ -366,6 +380,42 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
         if (modifiers & ekMKEY_ALT)
             return K_ALT_PERIOD;
         return '.';
+
+    case ekKEY_F1:
+        return i_key_function(K_CTRL_F1, K_ALT_F1, K_SH_F1, K_F1, modifiers);
+
+    case ekKEY_F2:
+        return i_key_function(K_CTRL_F2, K_ALT_F2, K_SH_F2, K_F2, modifiers);
+
+    case ekKEY_F3:
+        return i_key_function(K_CTRL_F3, K_ALT_F3, K_SH_F3, K_F3, modifiers);
+
+    case ekKEY_F4:
+        return i_key_function(K_CTRL_F4, K_ALT_F4, K_SH_F4, K_F4, modifiers);
+
+    case ekKEY_F5:
+        return i_key_function(K_CTRL_F5, K_ALT_F5, K_SH_F5, K_F5, modifiers);
+
+    case ekKEY_F6:
+        return i_key_function(K_CTRL_F6, K_ALT_F6, K_SH_F6, K_F6, modifiers);
+
+    case ekKEY_F7:
+        return i_key_function(K_CTRL_F7, K_ALT_F7, K_SH_F7, K_F7, modifiers);
+
+    case ekKEY_F8:
+        return i_key_function(K_CTRL_F8, K_ALT_F8, K_SH_F8, K_F8, modifiers);
+
+    case ekKEY_F9:
+        return i_key_function(K_CTRL_F9, K_ALT_F9, K_SH_F9, K_F9, modifiers);
+
+    case ekKEY_F10:
+        return i_key_function(K_CTRL_F10, K_ALT_F10, K_SH_F10, K_F10, modifiers);
+
+    case ekKEY_F11:
+        return i_key_function(K_CTRL_F11, K_ALT_F11, K_SH_F11, K_F11, modifiers);
+
+    case ekKEY_F12:
+        return i_key_function(K_CTRL_F12, K_ALT_F12, K_SH_F12, K_F12, modifiers);
 
     case ekKEY_A:
         return i_key_letter(K_CTRL_A, K_ALT_A, 'A', 'a', modifiers);
