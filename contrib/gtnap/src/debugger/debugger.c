@@ -428,15 +428,53 @@ static void i_save(App *app, const DebMsg *msg, Stream *stm)
 
     for(i = msg->top; i <= msg->bottom; ++i)
     {
-        const BufChar *bchar = app->text_buffer + i * app->ncols + msg->col;
+        const BufChar *bchar = app->text_buffer + i * app->ncols + msg->left;
         cassert(i < app->nrows);
         for (j = msg->left; j <= msg->right; ++j, ++bchar)
         {
-            byte_t cell[2];
-            cell[0] = bchar->utf8[0];
-            cell[1] = (byte_t)bchar->color;
+            uint32_t codepoint = unicode_to_u32(bchar->utf8, ekUTF8);
+            uint8_t color = (uint8_t)bchar->color;
             cassert(j < app->ncols);
-            stm_write(stm, cell, 2);
+            if (codepoint > 0xFFFF)
+                codepoint = '?';
+            stm_write_u16(stm, (uint16_t)codepoint);
+            stm_write_u8(stm, color);
+        }
+    }
+
+    bmutex_unlock(app->mutex);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_rest(App *app, const DebMsg *msg, Stream *stm)
+{
+    uint32_t i, j;
+    cassert_no_null(app);
+    cassert_no_null(msg);
+    cassert(msg->row < app->nrows);
+    
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("ekMSG_REST Top: %d, Left: %d, Bottom: %d, Right: %d", msg->top, msg->left, msg->bottom, msg->right);
+        i_log(app, &log);
+    }
+
+    bmutex_lock(app->mutex);
+
+    for(i = msg->top; i <= msg->bottom; ++i)
+    {
+        BufChar *bchar = app->text_buffer + i * app->ncols + msg->left;
+        cassert(i < app->nrows);
+        for (j = msg->left; j <= msg->right; ++j, ++bchar)
+        {
+            uint32_t codepoint = stm_read_u16(stm);
+            uint8_t color = stm_read_u8(stm);
+            uint32_t nb = 0;
+            cassert(j < app->ncols);
+            nb = unicode_to_char(codepoint, bchar->utf8, ekUTF8);
+            bchar->utf8[nb] = 0;
+            bchar->color = color;
         }
     }
 
@@ -561,6 +599,10 @@ static uint32_t i_protocol_thread(App *app)
 
                         case ekMSG_SAVE:
                             i_save(app, &msg, stm);
+                            break;
+
+                        case ekMSG_REST:
+                            i_rest(app, &msg, stm);
                             break;
 
                         case ekMSG_READ_KEY:

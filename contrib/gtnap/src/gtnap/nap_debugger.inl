@@ -25,6 +25,8 @@ void nap_debugger_puttext(GtNapDebugger *debug, const uint32_t row, const uint32
 
 void nap_debugger_save(GtNapDebugger *debug, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, byte_t *buffer);
 
+void nap_debugger_rest(GtNapDebugger *debug, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const byte_t *buffer);
+
 int32_t nap_debugger_read_key(GtNapDebugger *debug); 
 
 __END_C

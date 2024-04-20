@@ -19,6 +19,7 @@ typedef enum _msg_type_t
     ekMSG_PUTCHAR,
     ekMSG_PUTTEXT,
     ekMSG_SAVE,
+    ekMSG_REST,
     ekMSG_READ_KEY,
     ekMSG_CLOSE
 } msg_type_t;

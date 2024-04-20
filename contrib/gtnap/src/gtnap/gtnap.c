@@ -5415,13 +5415,9 @@ static void hb_gtnap_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
 static void hb_gtnap_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const void * pBuffer )
 {
     HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( iRight );
-    HB_SYMBOL_UNUSED( pBuffer );
     log_printf("hb_gtnap_Rest (%d %d %d %d)", iTop, iLeft, iBottom, iRight);
-    cassert(TRUE);
+    if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
+        nap_debugger_rest(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (const byte_t*)pBuffer);
 }
 
 /*---------------------------------------------------------------------------*/

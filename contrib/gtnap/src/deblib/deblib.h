@@ -20,6 +20,8 @@ void deblib_send_puttext(Stream *stm, const uint32_t row, const uint32_t col, co
 
 void deblib_send_save(Stream *stm, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, byte_t *buffer);
 
+void deblib_send_rest(Stream *stm, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const byte_t *buffer);
+
 void deblib_read_key(Stream *stm, vkey_t *key, uint32_t *modifiers);
 
 void deblib_close(Stream *stm);
