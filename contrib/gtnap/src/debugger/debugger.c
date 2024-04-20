@@ -31,7 +31,11 @@ struct _app_t
     cursor_t cursor_type;
     uint32_t cursor_row;
     uint32_t cursor_col;
+    bool_t cursor_draw;
+    real64_t last_redraw;
 };
+
+static const real64_t i_BLINK_INTERVAL = 0.4;
 
 static color_t i_COLORS[16];
 
@@ -179,6 +183,26 @@ static void i_OnDraw(App *app, Event *e)
             }
         }
     }
+
+    if (app->cursor_draw == TRUE)
+    {
+        if (app->cursor_row < app->nrows && app->cursor_col < app->ncols)
+        {
+            real32_t x = app->cursor_col * app->cell_width;
+            real32_t y = app->cursor_row * app->cell_height;
+            color_t cfore = i_COLORS[COL_WHITE];
+            color_t cback = i_COLORS[COL_BLACK];
+            bchar = app->text_buffer + (app->cursor_row * app->ncols) + app->cursor_col;
+            draw_fill_color(p->ctx, cback);
+            draw_rect(p->ctx, ekFILL, x+1, y, app->cell_width + 1, app->cell_height + 1);
+
+            if (bchar->utf8[0] != 0)
+            {
+                draw_text_color(p->ctx, cfore);
+                draw_text(p->ctx, bchar->utf8, x, y);
+            }
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -275,7 +299,6 @@ static void i_scroll(App *app, const DebMsg *msg)
         }
     }
     bmutex_unlock(app->mutex);
-    view_update(app->view);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -368,7 +391,6 @@ static void i_box(App *app, const DebMsg *msg)
     }
 
     bmutex_unlock(app->mutex);
-    view_update(app->view);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -433,7 +455,6 @@ static void i_putchar(App *app, const DebMsg *msg)
     bchar->color = msg->color;
     bchar->attrib = msg->attrib;
     bmutex_unlock(app->mutex);
-    view_update(app->view);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -473,7 +494,6 @@ static void i_puttext(App *app, const DebMsg *msg)
         codepoint = unicode_to_u32b(text, ekUTF8, &nbytes);
     }
     bmutex_unlock(app->mutex);
-    view_update(app->view);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -599,6 +619,9 @@ static App *i_app(void)
     app->cursor_type = ekCURSOR_NONE;
     app->cursor_row = UINT32_MAX;
     app->cursor_col = UINT32_MAX;
+    app->cursor_draw = FALSE;
+    app->last_redraw = -1;
+
     return app;
 }
 
@@ -608,7 +631,7 @@ static App *i_create(void)
 {
     App *app = i_app();
     Panel *panel = i_panel(app);
-    app->print_log = TRUE;
+    app->print_log = FALSE;
     log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
     i_init_colors();
     view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
@@ -626,6 +649,17 @@ static App *i_create(void)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_update(App *app, const real64_t prtime, const real64_t ctime)
+{
+    cassert_no_null(app);
+    unref(prtime);
+    unref(ctime);
+    app->cursor_draw = !app->cursor_draw;
+    view_update(app->view);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_destroy(App **app)
 {
     window_destroy(&(*app)->window);
@@ -635,4 +669,4 @@ static void i_destroy(App **app)
 /*---------------------------------------------------------------------------*/
 
 #include "osmain.h"
-osmain(i_create, i_destroy, "", App)
+osmain_sync(i_BLINK_INTERVAL, i_create, i_destroy, i_update, "", App)
