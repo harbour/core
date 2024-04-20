@@ -1017,18 +1017,6 @@ static void i_init_colors(void)
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_harbour_thread(GtNap *gtnap)
-{
-    PHB_ITEM ritem = hb_itemDo(INIT_CODEBLOCK, 0);
-    hb_itemRelease(ritem);
-    hb_itemRelease(INIT_CODEBLOCK);
-    INIT_CODEBLOCK = NULL;
-    unref(gtnap);
-    return 0;
-}
-
-/*---------------------------------------------------------------------------*/
-
 static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
@@ -2549,18 +2537,6 @@ static void i_OnTerminalClose(GtNapWindow *gtwin, Event *e)
     unref(gtwin);
     unref(e);
     osapp_finish();
-}
-
-/*---------------------------------------------------------------------------*/
-
-static uint32_t i_debug_thread(HB_ITEM *block)
-{
-    PHB_ITEM ritem = hb_itemDo(block, 0);
-    HB_TYPE type = HB_ITEM_TYPE(ritem);
-    cassert(type == HB_IT_LOGICAL);
-    hb_itemRelease(ritem);
-    hb_itemRelease(block);
-    return 0;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5828,9 +5804,14 @@ static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                 /* Close the debugger process */
                 if (wid == i_MAIN_WINDOW_HASH)
                 {
+                    GtNapWindow *gtwin = NULL;
                     cassert_no_null(GTNAP_GLOBAL->debugger);
                     if (GTNAP_GLOBAL->debugger != NULL)
                         nap_debugger_destroy(&GTNAP_GLOBAL->debugger);
+
+                    gtwin = i_current_gtwin(GTNAP_GLOBAL);
+                    if (gtwin != NULL)
+                        window_show(gtwin->window);
                 }
                 else
                 {
