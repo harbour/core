@@ -24,6 +24,7 @@ struct _app_t
     Mutex *mutex;
     Thread *protocol_thread;
     BufChar *text_buffer;
+    KeyBuf *keyboard_buffer;
     uint32_t ncols;
     uint32_t nrows;
     real32_t cell_width;
@@ -221,6 +222,8 @@ static Panel *i_panel(App *app)
     app->cell_width /= 4;
     layout_view(layout, view, 0, 0);
     layout_textview(layout, text, 1, 0);
+    layout_tabstop(layout, 0, 0, TRUE);
+    layout_tabstop(layout, 1, 0, FALSE);
     layout_hsize(layout, 1, 400);
     panel_layout(panel, layout);
     return panel;
@@ -498,6 +501,45 @@ static void i_puttext(App *app, const DebMsg *msg)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_read_key(App *app, DebMsg *msg)
+{
+    uint32_t i = 0;
+    cassert_no_null(app);
+    cassert_no_null(msg);
+    msg->key = ENUM_MAX(vkey_t);
+    msg->modifiers = 0;
+
+    for (i = 0; i < kKEY_MAX; ++i)
+    {
+        if (keybuf_pressed(app->keyboard_buffer, (vkey_t)i) == TRUE)
+        {
+            switch ((vkey_t)i) {
+            case ekKEY_LSHIFT:
+            case ekKEY_RSHIFT:
+                msg->modifiers |= ekMKEY_SHIFT;
+                break;
+            case ekKEY_LCTRL:
+            case ekKEY_RCTRL:
+                msg->modifiers |= ekMKEY_CONTROL;
+                break;
+            case ekKEY_LALT:
+            case ekKEY_RALT:
+                msg->modifiers |= ekMKEY_ALT;
+                break;
+            case ekKEY_LWIN:
+            case ekKEY_RWIN:
+                msg->modifiers |= ekMKEY_COMMAND;
+                break;
+            default:
+                if (msg->key == ENUM_MAX(vkey_t))
+                    msg->key = (vkey_t)i;
+            }
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_unknown(App *app, const DebMsg *msg)
 {
     cassert_no_null(app);
@@ -564,6 +606,11 @@ static uint32_t i_protocol_thread(App *app)
                     case ekMSG_PUTTEXT:
                         i_puttext(app, &msg);
                         break;
+                    case ekMSG_READ_KEY:
+                        i_read_key(app, &msg);
+                        stm_write_enum(stm, msg.key, vkey_t);
+                        stm_write_u32(stm, msg.modifiers);
+                        break;
                     default:
                         i_unknown(app, &msg);
                     }
@@ -616,6 +663,7 @@ static App *i_app(void)
     }
 
     i_update_text_buffer(app, nrows, ncols);
+    app->keyboard_buffer = keybuf_create();
     app->cursor_type = ekCURSOR_NONE;
     app->cursor_row = UINT32_MAX;
     app->cursor_col = UINT32_MAX;
@@ -635,6 +683,7 @@ static App *i_create(void)
     log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
     i_init_colors();
     view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
+    view_keybuf(app->view, app->keyboard_buffer);
     log_printf("APP: Rows: %d Cols: %d", app->nrows, app->ncols);
     app->window = window_create(ekWINDOW_STD);
     window_panel(app->window, panel);
@@ -662,6 +711,9 @@ static void i_update(App *app, const real64_t prtime, const real64_t ctime)
 
 static void i_destroy(App **app)
 {
+    cassert_no_null(app);
+    cassert_no_null(*app);
+    keybuf_destroy(&(*app)->keyboard_buffer);
     window_destroy(&(*app)->window);
     heap_delete(app, App);
 }

@@ -23,5 +23,7 @@ void nap_debugger_putchar(GtNapDebugger *debug, const uint32_t row, const uint32
 
 void nap_debugger_puttext(GtNapDebugger *debug, const uint32_t row, const uint32_t col, const uint32_t color, const char_t *utf8); 
 
+int32_t nap_debugger_read_key(GtNapDebugger *debug); 
+
 __END_C
 

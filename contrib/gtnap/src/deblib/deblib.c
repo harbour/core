@@ -89,6 +89,17 @@ void deblib_send_puttext(Stream *stm, const uint32_t row, const uint32_t col, co
 
 /*---------------------------------------------------------------------------*/
 
+void deblib_read_key(Stream *stm, vkey_t *key, uint32_t *modifiers)
+{
+    cassert_no_null(key);
+    cassert_no_null(modifiers);
+    stm_write_enum(stm, ekMSG_READ_KEY, msg_type_t);
+    *key = stm_read_enum(stm, vkey_t);
+    *modifiers = stm_read_u32(stm);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static uint32_t i_stm_read_codepoint(Stream *stm)
 {
     uint32_t codepoint = stm_read_u32(stm);
@@ -166,6 +177,9 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         msg->utf8[len] = 0;
         break;
     }
+
+    case ekMSG_READ_KEY:
+        break;
 
     cassert_default();
     }

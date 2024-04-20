@@ -6,6 +6,7 @@
 
 #include "nap_debugger.inl"
 #include <deblib/deblib.h>
+#include "inkey.ch"
 #include "setcurs.ch"
 #include "nappgui.h"
 
@@ -117,4 +118,49 @@ void nap_debugger_puttext(GtNapDebugger *debug, const uint32_t row, const uint32
     cassert_no_null(debug);
     if (debug->stream != NULL)
         deblib_send_puttext(debug->stream, row, col, color, utf8);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
+{
+    unref(modifiers);
+    switch(vkey) {
+    case ekKEY_LEFT:
+        return K_LEFT;
+    case ekKEY_RIGHT:
+        return K_RIGHT;
+    case ekKEY_DOWN:
+        return K_DOWN;
+    case ekKEY_UP:
+        return K_UP;
+
+    }
+
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+int32_t nap_debugger_read_key(GtNapDebugger *debug)
+{
+    int32_t key = 0;
+    cassert_no_null(debug);
+    if (debug->stream != NULL)
+    {
+        vkey_t vkey = ENUM_MAX(vkey_t);
+        uint32_t modifiers = UINT32_MAX;
+        deblib_read_key(debug->stream, &vkey, &modifiers);
+        key = i_vkey_to_hb(vkey, modifiers);
+
+        ///* TODO: Convert to Harbour key value */
+        //log_printf("VKEY: %d", vkey);
+        //log_printf("MODIFIERS: %d", modifiers);
+
+       
+        //if (vkey == ENUM_MAX(vkey_t))
+        //    key = 0;
+    }
+
+    return key;
 }

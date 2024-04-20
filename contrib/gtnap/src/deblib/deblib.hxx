@@ -17,7 +17,8 @@ typedef enum _msg_type_t
     ekMSG_CURSOR,
     ekMSG_SET_POS,
     ekMSG_PUTCHAR,
-    ekMSG_PUTTEXT
+    ekMSG_PUTTEXT,
+    ekMSG_READ_KEY
 } msg_type_t;
 
 typedef enum _cursor_t
@@ -40,6 +41,8 @@ struct _debmsg_t
     uint32_t col;
     uint32_t color;
     byte_t attrib;
+    vkey_t key;
+    uint32_t modifiers;
     char_t utf8[MAX_UTF8_SIZE];
 };
 

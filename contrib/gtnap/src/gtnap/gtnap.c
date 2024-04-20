@@ -5880,11 +5880,15 @@ static int hb_gtnap_Alert( PHB_GT pGT, PHB_ITEM message, PHB_ITEM options, int a
 
 static int hb_gtnap_ReadKey( PHB_GT pGT, int iEventMask )
 {
-   int iKey = 0;
-   unref(pGT);
-   unref(iEventMask);
-   //log_printf("hb_gtnap_ReadKey");
-   return iKey;
+    int iKey = 0;
+    unref(pGT);
+    unref(iEventMask);
+    log_printf("hb_gtnap_ReadKey");
+
+    if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
+        iKey = (int)nap_debugger_read_key(GTNAP_GLOBAL->debugger);
+
+    return iKey;
 }
 
 
