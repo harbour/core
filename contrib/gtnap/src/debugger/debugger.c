@@ -36,7 +36,7 @@ struct _app_t
     real64_t last_redraw;
 };
 
-static const real64_t i_BLINK_INTERVAL = 0.4;
+static const real64_t i_BLINK_INTERVAL = 0.2;
 
 static color_t i_COLORS[16];
 

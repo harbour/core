@@ -127,14 +127,60 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
     unref(modifiers);
     switch(vkey) {
     case ekKEY_LEFT:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_LEFT;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_LEFT;
         return K_LEFT;
+
     case ekKEY_RIGHT:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_RIGHT;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_RIGHT;
         return K_RIGHT;
+
     case ekKEY_DOWN:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_DOWN;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_DOWN;
         return K_DOWN;
+
     case ekKEY_UP:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_UP;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_UP;
         return K_UP;
 
+    case ekKEY_HOME:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_HOME;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_HOME;
+        return K_HOME;
+
+    case ekKEY_END:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_END;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_END;
+        return K_END;
+
+    case ekKEY_PAGEUP:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_PGUP;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_PGUP;
+        return K_PGUP;
+
+    case ekKEY_PAGEDOWN:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_PGDN;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_PGDN;
+        return K_PGDN;
     }
 
     return 0;
