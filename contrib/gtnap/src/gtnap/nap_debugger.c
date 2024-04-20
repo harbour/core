@@ -347,6 +347,26 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
         else
             return K_TAB;
 
+    case ekKEY_BSLASH:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_BACKSLASH;
+        return '\\';
+
+    case ekKEY_MINUS:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_MINUS;
+        return '-';
+
+    case ekKEY_COMMA:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_COMMA;
+        return ',';
+
+    case ekKEY_PERIOD:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_PERIOD;
+        return '.';
+
     case ekKEY_A:
         return i_key_letter(K_CTRL_A, K_ALT_A, 'A', 'a', modifiers);
 
