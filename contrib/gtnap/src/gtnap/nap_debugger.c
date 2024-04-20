@@ -122,6 +122,20 @@ void nap_debugger_puttext(GtNapDebugger *debug, const uint32_t row, const uint32
 
 /*---------------------------------------------------------------------------*/
 
+static __INLINE int32_t i_key_letter(int32_t ctrl, int32_t alt, int32_t shift, int32_t normal, uint32_t modifiers)
+{
+    if (modifiers & ekMKEY_CONTROL)
+        return ctrl;
+    if (modifiers & ekMKEY_ALT)
+        return alt;
+    if (modifiers & ekMKEY_SHIFT)
+        return shift;
+    else
+        return normal;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
 {
     unref(modifiers);
@@ -305,6 +319,83 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
         else
             return K_TAB;
 
+    case ekKEY_A:
+        return i_key_letter(K_CTRL_A, K_ALT_A, 'A', 'a', modifiers);
+
+    case ekKEY_B:
+        return i_key_letter(K_CTRL_B, K_ALT_B, 'B', 'b', modifiers);
+
+    case ekKEY_C:
+        return i_key_letter(K_CTRL_C, K_ALT_C, 'C', 'c', modifiers);
+
+    case ekKEY_D:
+        return i_key_letter(K_CTRL_D, K_ALT_D, 'D', 'd', modifiers);
+
+    case ekKEY_E:
+        return i_key_letter(K_CTRL_E, K_ALT_E, 'E', 'e', modifiers);
+
+    case ekKEY_F:
+        return i_key_letter(K_CTRL_F, K_ALT_F, 'F', 'f', modifiers);
+
+    case ekKEY_G:
+        return i_key_letter(K_CTRL_G, K_ALT_G, 'G', 'g', modifiers);
+
+    case ekKEY_H:
+        return i_key_letter(K_CTRL_H, K_ALT_H, 'H', 'h', modifiers);
+
+    case ekKEY_I:
+        return i_key_letter(K_CTRL_I, K_ALT_I, 'I', 'i', modifiers);
+
+    case ekKEY_J:
+        return i_key_letter(K_CTRL_J, K_ALT_J, 'J', 'j', modifiers);
+
+    case ekKEY_K:
+        return i_key_letter(K_CTRL_K, K_ALT_K, 'K', 'k', modifiers);
+
+    case ekKEY_L:
+        return i_key_letter(K_CTRL_L, K_ALT_L, 'L', 'l', modifiers);
+
+    case ekKEY_M:
+        return i_key_letter(K_CTRL_M, K_ALT_M, 'M', 'm', modifiers);
+
+    case ekKEY_N:
+        return i_key_letter(K_CTRL_N, K_ALT_N, 'N', 'n', modifiers);
+
+    case ekKEY_O:
+        return i_key_letter(K_CTRL_O, K_ALT_O, 'O', 'o', modifiers);
+
+    case ekKEY_P:
+        return i_key_letter(K_CTRL_P, K_ALT_P, 'P', 'p', modifiers);
+
+    case ekKEY_Q:
+        return i_key_letter(K_CTRL_Q, K_ALT_Q, 'Q', 'q', modifiers);
+
+    case ekKEY_R:
+        return i_key_letter(K_CTRL_R, K_ALT_R, 'R', 'r', modifiers);
+
+    case ekKEY_S:
+        return i_key_letter(K_CTRL_S, K_ALT_S, 'S', 's', modifiers);
+
+    case ekKEY_T:
+        return i_key_letter(K_CTRL_T, K_ALT_T, 'T', 't', modifiers);
+
+    case ekKEY_U:
+        return i_key_letter(K_CTRL_U, K_ALT_U, 'U', 'u', modifiers);
+
+    case ekKEY_V:
+        return i_key_letter(K_CTRL_V, K_ALT_V, 'V', 'v', modifiers);
+
+    case ekKEY_W:
+        return i_key_letter(K_CTRL_W, K_ALT_W, 'W', 'w', modifiers);
+
+    case ekKEY_X:
+        return i_key_letter(K_CTRL_X, K_ALT_X, 'X', 'x', modifiers);
+
+    case ekKEY_Y:
+        return i_key_letter(K_CTRL_Y, K_ALT_Y, 'Y', 'y', modifiers);
+
+    case ekKEY_Z:
+        return i_key_letter(K_CTRL_Z, K_ALT_Z, 'Z', 'z', modifiers);
     }
 
     /* 
