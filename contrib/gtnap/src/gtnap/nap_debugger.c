@@ -200,6 +200,36 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
             return K_CTRL_QUESTION;
         return '?';
 
+    case ekKEY_NUM0:
+        return '0';
+
+    case ekKEY_NUM1:
+        return '1';
+
+    case ekKEY_NUM2:
+        return '2';
+
+    case ekKEY_NUM3:
+        return '3';
+
+    case ekKEY_NUM4:
+        return '4';
+
+    case ekKEY_NUM6:
+        return '6';
+
+    case ekKEY_NUM7:
+        return '7';
+
+    case ekKEY_NUM8:
+        return '8';
+
+    case ekKEY_NUM9:
+        return '9';
+
+    case ekKEY_NUMDECIMAL:
+        return '.';
+
     case ekKEY_NUM5:
         if (modifiers & ekMKEY_CONTROL)
             return KP_CTRL_5;
