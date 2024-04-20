@@ -12,6 +12,8 @@ void deblib_send_box(Stream *stm, const uint32_t top, const uint32_t left, const
 
 void deblib_send_cursor(Stream *stm, const cursor_t cursor);
 
+void deblib_send_set_pos(Stream *stm, const uint32_t row, const uint32_t col);
+
 void deblib_send_putchar(Stream *stm, const uint32_t row, const uint32_t col, const uint32_t codepoint, const uint32_t color, const byte_t attrib);
 
 void deblib_send_puttext(Stream *stm, const uint32_t row, const uint32_t col, const uint32_t color, const char_t *utf8);

@@ -5375,14 +5375,21 @@ static HB_BOOL hb_gtnap_CheckPos( PHB_GT pGT, int iRow, int iCol, long * plIndex
 static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
     HB_SYMBOL_UNUSED( pGT );
+    log_printf("hb_gtnap_SetPos: (%d,%d)", iRow, iCol);
     if (GTNAP_GLOBAL != NULL)
     {
-        GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-        log_printf("hb_gtnap_SetPos: (%d,%d)", iRow, iCol);
-        if (gtwin != NULL)
+        if (GTNAP_GLOBAL->debugger != NULL)
         {
-            gtwin->cursor_row = (int32_t)iRow;
-            gtwin->cursor_col = (int32_t)iCol;
+            nap_debugger_set_pos(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol);
+        }
+        else
+        {
+            GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+            if (gtwin != NULL)
+            {
+                gtwin->cursor_row = (int32_t)iRow;
+                gtwin->cursor_col = (int32_t)iCol;
+            }
         }
     }
 }

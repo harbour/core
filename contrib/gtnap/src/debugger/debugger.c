@@ -28,7 +28,9 @@ struct _app_t
     uint32_t nrows;
     real32_t cell_width;
     real32_t cell_height;
-    cursor_t cursor;
+    cursor_t cursor_type;
+    uint32_t cursor_row;
+    uint32_t cursor_col;
 };
 
 static color_t i_COLORS[16];
@@ -386,7 +388,26 @@ static void i_cursor(App *app, const DebMsg *msg)
     }
 
     bmutex_lock(app->mutex);
-    app->cursor = cursor;
+    app->cursor_type = cursor;
+    bmutex_unlock(app->mutex);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_set_pos(App *app, const DebMsg *msg)
+{
+    cassert_no_null(app);
+    cassert_no_null(msg);
+
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("ekMSG_SET_POS: (%d, %d)", msg->row, msg->col);
+        i_log(app, &log);
+    }
+
+    bmutex_lock(app->mutex);
+    app->cursor_row = msg->row;
+    app->cursor_col = msg->col;
     bmutex_unlock(app->mutex);
 }
 
@@ -514,6 +535,9 @@ static uint32_t i_protocol_thread(App *app)
                     case ekMSG_CURSOR:
                         i_cursor(app, &msg);
                         break;
+                    case ekMSG_SET_POS:
+                        i_set_pos(app, &msg);
+                        break;
                     case ekMSG_PUTCHAR:
                         i_putchar(app, &msg);
                         break;
@@ -572,6 +596,9 @@ static App *i_app(void)
     }
 
     i_update_text_buffer(app, nrows, ncols);
+    app->cursor_type = ekCURSOR_NONE;
+    app->cursor_row = UINT32_MAX;
+    app->cursor_col = UINT32_MAX;
     return app;
 }
 

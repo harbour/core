@@ -52,6 +52,15 @@ void deblib_send_cursor(Stream *stm, const cursor_t cursor)
 
 /*---------------------------------------------------------------------------*/
 
+void deblib_send_set_pos(Stream *stm, const uint32_t row, const uint32_t col)
+{
+    stm_write_enum(stm, ekMSG_SET_POS, msg_type_t);
+    stm_write_u32(stm, row);
+    stm_write_u32(stm, col);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void deblib_send_putchar(Stream *stm, const uint32_t row, const uint32_t col, const uint32_t codepoint, const uint32_t color, const byte_t attrib)
 {
     stm_write_enum(stm, ekMSG_PUTCHAR, msg_type_t);
@@ -124,6 +133,11 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
 
     case ekMSG_CURSOR:
         msg->attrib = (byte_t)stm_read_enum(stm, cursor_t);
+        break;
+
+    case ekMSG_SET_POS:
+        msg->row = stm_read_u32(stm);
+        msg->col = stm_read_u32(stm);
         break;
 
     case ekMSG_PUTCHAR:
