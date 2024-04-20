@@ -214,42 +214,70 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
             return K_CTRL_QUESTION;
         return '?';
 
+    case ekKEY_0:
     case ekKEY_NUM0:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_0;
         return '0';
 
+    case ekKEY_1:
     case ekKEY_NUM1:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_1;
         return '1';
 
+    case ekKEY_2:
     case ekKEY_NUM2:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_2;
         return '2';
 
+    case ekKEY_3:
     case ekKEY_NUM3:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_3;
         return '3';
 
+    case ekKEY_4:
     case ekKEY_NUM4:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_4;
         return '4';
 
-    case ekKEY_NUM6:
-        return '6';
-
-    case ekKEY_NUM7:
-        return '7';
-
-    case ekKEY_NUM8:
-        return '8';
-
-    case ekKEY_NUM9:
-        return '9';
-
-    case ekKEY_NUMDECIMAL:
-        return '.';
-
+    case ekKEY_5:
     case ekKEY_NUM5:
         if (modifiers & ekMKEY_CONTROL)
             return KP_CTRL_5;
         if (modifiers & ekMKEY_ALT)
             return KP_ALT_5;
-        return KP_CENTER;
+        return '5'; /* KP_CENTER */
+
+    case ekKEY_6:
+    case ekKEY_NUM6:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_6;
+        return '6';
+
+    case ekKEY_7:
+    case ekKEY_NUM7:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_7;
+        return '7';
+
+    case ekKEY_8:
+    case ekKEY_NUM8:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_8;
+        return '8';
+
+    case ekKEY_9:
+    case ekKEY_NUM9:
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_9;
+        return '9';
+
+    case ekKEY_NUMDECIMAL:
+        return '.';
 
     case ekKEY_NUMRET:
         if (modifiers & ekMKEY_ALT)
