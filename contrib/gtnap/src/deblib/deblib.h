@@ -26,4 +26,8 @@ void deblib_recv_message(Stream *stm, DebMsg *msg);
 
 const char_t *deblib_cursor_str(const cursor_t cursor);
 
+void deblib_init_colors(color_t *colors);
+
+extern uint16_t kDEBLIB_SERVER_PORT;
+
 __END_C

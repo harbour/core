@@ -1,10 +1,16 @@
 /* Debugger library */
 
 #include "deblib.h"
+#include <gui/gui.h>
+#include <draw2d/color.h>
 #include <core/stream.h>
 #include <core/strings.h>
 #include <sewer/cassert.h>
 #include <sewer/unicode.h>
+
+/*---------------------------------------------------------------------------*/
+
+uint16_t kDEBLIB_SERVER_PORT = 3555;
 
 /*---------------------------------------------------------------------------*/
 
@@ -214,4 +220,66 @@ const char_t *deblib_cursor_str(const cursor_t cursor)
     }
 
     return "";
+}
+
+/*---------------------------------------------------------------------------*/
+/*
+ * https://gogh-co.github.io/Gogh/
+ * Dark mode: Breeze
+ * Light mode: Clrs
+ */
+void deblib_init_colors(color_t *colors)
+{
+    /* In dark mode, black and white are inverted */
+    color_t DARK_COL_BLACK = color_html("#FCFCFC");
+    color_t DARK_COL_BLUE = color_html("#1D99F3");
+    color_t DARK_COL_GREEN = color_html("#11D116");
+    color_t DARK_COL_CYAN = color_html("#1ABC9C");
+    color_t DARK_COL_RED = color_html("#ED1515");
+    color_t DARK_COL_MAGENTA = color_html("#9B59B6");
+    color_t DARK_COL_BROWN = color_html("#F67400");
+    color_t DARK_COL_WHITE = color_html("#232627");
+    color_t DARK_COL_LIGHT_GRAY = color_html("#FFFFFF");
+    color_t DARK_COL_BRIGHT_BLUE = color_html("#3DAEE9");
+    color_t DARK_COL_BRIGHT_GREEN = color_html("#1CDC9A");
+    color_t DARK_COL_BRIGHT_CYAN = color_html("#3DAEE9");
+    color_t DARK_COL_BRIGHT_RED = color_html("#C0392B");
+    color_t DARK_COL_BRIGHT_MAGENTA = color_html("#8E44AD");
+    color_t DARK_COL_YELLOW = color_html("#FDBC4B");
+    color_t DARK_COL_BRIGHT_WHITE = color_html("#7F8C8D");
+
+    color_t LIGHT_COL_BLACK = color_html("#000000");
+    color_t LIGHT_COL_BLUE = color_html("#135CD0");
+    color_t LIGHT_COL_GREEN = color_html("#328A5D");
+    color_t LIGHT_COL_CYAN = color_html("#33C3C1");
+    color_t LIGHT_COL_RED = color_html("#F8282A");
+    color_t LIGHT_COL_MAGENTA = color_html("#9F00BD");
+    color_t LIGHT_COL_BROWN = color_html("#FA701D");
+    color_t LIGHT_COL_WHITE = color_html("#B3B3B3");
+    color_t LIGHT_COL_LIGHT_GRAY = color_html("#555753");
+    color_t LIGHT_COL_BRIGHT_BLUE = color_html("#1670FF");
+    color_t LIGHT_COL_BRIGHT_GREEN = color_html("#2CC631");
+    color_t LIGHT_COL_BRIGHT_CYAN = color_html("#00FFFF");
+    color_t LIGHT_COL_BRIGHT_RED = color_html("#FB0416");
+    color_t LIGHT_COL_BRIGHT_MAGENTA = color_html("#E900B0");
+    color_t LIGHT_COL_YELLOW = color_html("#FDD727");
+    color_t LIGHT_COL_BRIGHT_WHITE = color_html("#EEEEEC");
+
+    cassert_no_null(colors);
+    colors[COL_BLACK] = gui_alt_color(LIGHT_COL_BLACK, DARK_COL_BLACK);
+    colors[COL_BLUE] = gui_alt_color(LIGHT_COL_BLUE, DARK_COL_BLUE);
+    colors[COL_GREEN] = gui_alt_color(LIGHT_COL_GREEN, DARK_COL_GREEN);
+    colors[COL_CYAN] = gui_alt_color(LIGHT_COL_CYAN, DARK_COL_CYAN);
+    colors[COL_RED] = gui_alt_color(LIGHT_COL_RED, DARK_COL_RED);
+    colors[COL_MAGENTA] = gui_alt_color(LIGHT_COL_MAGENTA, DARK_COL_MAGENTA);
+    colors[COL_BROWN] = gui_alt_color(LIGHT_COL_BROWN, DARK_COL_BROWN);
+    colors[COL_WHITE] = gui_alt_color(LIGHT_COL_WHITE, DARK_COL_WHITE);
+    colors[COL_LIGHT_GRAY] = gui_alt_color(LIGHT_COL_LIGHT_GRAY, DARK_COL_LIGHT_GRAY);
+    colors[COL_BRIGHT_BLUE] = gui_alt_color(LIGHT_COL_BRIGHT_BLUE, DARK_COL_BRIGHT_BLUE);
+    colors[COL_BRIGHT_GREEN] = gui_alt_color(LIGHT_COL_BRIGHT_GREEN, DARK_COL_BRIGHT_GREEN);
+    colors[COL_BRIGHT_CYAN] = gui_alt_color(LIGHT_COL_BRIGHT_CYAN, DARK_COL_BRIGHT_CYAN);
+    colors[COL_BRIGHT_RED] = gui_alt_color(LIGHT_COL_BRIGHT_RED, DARK_COL_BRIGHT_RED);
+    colors[COL_BRIGHT_MAGENTA] = gui_alt_color(LIGHT_COL_BRIGHT_MAGENTA, DARK_COL_BRIGHT_MAGENTA);
+    colors[COL_YELLOW] = gui_alt_color(LIGHT_COL_YELLOW, DARK_COL_YELLOW);
+    colors[COL_BRIGHT_WHITE] = gui_alt_color(LIGHT_COL_BRIGHT_WHITE, DARK_COL_BRIGHT_WHITE);
 }

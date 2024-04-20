@@ -28,7 +28,7 @@ GtNapDebugger *nap_debugger_create(const char_t *path, const uint32_t nrows, con
     debug->proc = bproc_exec(tc(cmd), NULL);
     bthread_sleep(100);
 
-    socket = bsocket_connect(ip, 3555, 0, NULL);
+    socket = bsocket_connect(ip, kDEBLIB_SERVER_PORT, 0, NULL);
     if (socket != NULL)
         debug->stream = stm_socket(socket);
 
