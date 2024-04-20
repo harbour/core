@@ -28,6 +28,7 @@ struct _app_t
     uint32_t nrows;
     real32_t cell_width;
     real32_t cell_height;
+    cursor_t cursor;
 };
 
 static color_t i_COLORS[16];
@@ -370,6 +371,27 @@ static void i_box(App *app, const DebMsg *msg)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_cursor(App *app, const DebMsg *msg)
+{
+    cursor_t cursor = ENUM_MAX(cursor_t);
+    cassert_no_null(app);
+    cassert_no_null(msg);
+
+    cursor = (cursor_t)msg->attrib;
+
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("ekMSG_CURSOR Type: %s", deblib_cursor_str(cursor));
+        i_log(app, &log);
+    }
+
+    bmutex_lock(app->mutex);
+    app->cursor = cursor;
+    bmutex_unlock(app->mutex);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_putchar(App *app, const DebMsg *msg)
 {
     BufChar *bchar = NULL;
@@ -489,6 +511,9 @@ static uint32_t i_protocol_thread(App *app)
                     case ekMSG_BOX:
                         i_box(app, &msg);
                         break;
+                    case ekMSG_CURSOR:
+                        i_cursor(app, &msg);
+                        break;
                     case ekMSG_PUTCHAR:
                         i_putchar(app, &msg);
                         break;
@@ -556,7 +581,7 @@ static App *i_create(void)
 {
     App *app = i_app();
     Panel *panel = i_panel(app);
-    app->print_log = FALSE;
+    app->print_log = TRUE;
     log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
     i_init_colors();
     view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));

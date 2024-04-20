@@ -5315,8 +5315,16 @@ static HB_BOOL hb_gtnap_SetMode( PHB_GT pGT, int iRow, int iCol )
 static void hb_gtnap_GetSize( PHB_GT pGT, int * piRows, int  * piCols )
 {
     HB_SYMBOL_UNUSED( pGT );
-    *piRows = (int)GTNAP_GLOBAL->rows;
-    *piCols = (int)GTNAP_GLOBAL->cols;
+    if (GTNAP_GLOBAL != NULL)
+    {
+        *piRows = (int)GTNAP_GLOBAL->rows;
+        *piCols = (int)GTNAP_GLOBAL->cols;
+    }
+    else
+    {
+        *piRows = 0;
+        *piCols = 0;
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5366,12 +5374,16 @@ static HB_BOOL hb_gtnap_CheckPos( PHB_GT pGT, int iRow, int iCol, long * plIndex
 
 static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
-    if (gtwin != NULL)
+    if (GTNAP_GLOBAL != NULL)
     {
-        gtwin->cursor_row = (int32_t)iRow;
-        gtwin->cursor_col = (int32_t)iCol;
+        GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+        log_printf("hb_gtnap_SetPos: (%d,%d)", iRow, iCol);
+        if (gtwin != NULL)
+        {
+            gtwin->cursor_row = (int32_t)iRow;
+            gtwin->cursor_col = (int32_t)iCol;
+        }
     }
 }
 
@@ -5379,17 +5391,20 @@ static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
 
 static void hb_gtnap_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
-    if (gtwin != NULL)
+    if (GTNAP_GLOBAL != NULL)
     {
-        *piRow = (int)gtwin->cursor_row;
-        *piCol = (int)gtwin->cursor_col;
-    }
-    else
-    {
-        *piRow = 0;
-        *piCol = 0;
+        GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+        if (gtwin != NULL)
+        {
+            *piRow = (int)gtwin->cursor_row;
+            *piCol = (int)gtwin->cursor_col;
+        }
+        else
+        {
+            *piRow = 0;
+            *piCol = 0;
+        }
     }
 }
 
@@ -5414,21 +5429,9 @@ static int hb_gtnap_GetCursorStyle( PHB_GT pGT )
 static void hb_gtnap_SetCursorStyle( PHB_GT pGT, int iStyle )
 {
     HB_SYMBOL_UNUSED( pGT );
-
-    switch( iStyle )
-    {
-        case SC_NONE:
-            break;
-        case SC_INSERT:
-            break;
-        case SC_SPECIAL1:
-            break;
-        case SC_SPECIAL2:
-            break;
-        case SC_NORMAL:
-        default:
-            break;
-    }
+    log_printf("hb_gtnap_SetCursorStyle: %d", iStyle);
+    if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
+        nap_debugger_cursor(GTNAP_GLOBAL->debugger, (uint32_t)iStyle);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5479,7 +5482,7 @@ static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_
 {
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_PutChar: %c", usChar);
-    if (GTNAP_GLOBAL->debugger != NULL)
+    if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
     {
         uint32_t codepoint = i_hb_codepoint(usChar);
         nap_debugger_putchar(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, codepoint, (uint32_t)bColor, (byte_t)bAttr);
@@ -5528,7 +5531,7 @@ static int hb_gtnap_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const c
     i_cp_to_utf8(pText, utf8, sizeof32(utf8));
     log_printf("hb_gtnap_PutText: %s", utf8);
 
-    if (GTNAP_GLOBAL->debugger != NULL)
+    if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
     {
         nap_debugger_puttext(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, (uint32_t)bColor, utf8);
     }
@@ -5554,18 +5557,21 @@ static void hb_gtnap_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, HB_B
 
 static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText, HB_SIZE ulLength )
 {
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( ulLength );
-    if (gtwin != NULL)
+    if (GTNAP_GLOBAL != NULL)
     {
-        i_add_label(iRow - gtwin->top, iCol - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
-        if (pText != NULL)
+        GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+        if (gtwin != NULL)
         {
-            GtNapObject *obj = arrpt_last(gtwin->objects, GtNapObject);
-            char_t utf8[STATIC_TEXT_SIZE];
-            i_cp_to_utf8(pText, utf8, sizeof32(utf8));
-            i_set_label_text(obj, utf8);
+            i_add_label(iRow - gtwin->top, iCol - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
+            if (pText != NULL)
+            {
+                GtNapObject *obj = arrpt_last(gtwin->objects, GtNapObject);
+                char_t utf8[STATIC_TEXT_SIZE];
+                i_cp_to_utf8(pText, utf8, sizeof32(utf8));
+                i_set_label_text(obj, utf8);
+            }
         }
     }
 }
@@ -5591,36 +5597,39 @@ static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int i
     HB_SYMBOL_UNUSED( pGT );
     log_printf("hb_gtnap_Scroll (%d, %d, %d, %d) (%d-'%d') (%d-%d)", iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols);
 
-    if (GTNAP_GLOBAL->debugger != NULL)
+    if (GTNAP_GLOBAL != NULL)
     {
-        uint32_t codepoint = i_hb_codepoint(bChar);
-        nap_debugger_scroll(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (uint32_t)iRows, (uint32_t)iCols, codepoint, (uint32_t)bColor);
-    }
-    else
-    {
-        GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-
-        if (gtwin != NULL)
+        if (GTNAP_GLOBAL->debugger != NULL)
         {
-            uint32_t i, n;
-            /*
-               FRAN: The scroll, at the moment, delete all texts
-               Improve taking into account the input rectangle
-               Take into account if a real scroll exists (iRows > 0 || iCols > 0)
-            */
-            n = arrpt_size(gtwin->objects, GtNapObject);
-            for (i = 0; i < n; )
+            uint32_t codepoint = i_hb_codepoint(bChar);
+            nap_debugger_scroll(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (uint32_t)iRows, (uint32_t)iCols, codepoint, (uint32_t)bColor);
+        }
+        else
+        {
+            GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+
+            if (gtwin != NULL)
             {
-                GtNapObject *object = arrpt_get(gtwin->objects, i, GtNapObject);
-                const char_t *type = _component_type(object->component);
-                if (str_equ_c(type, "Label") == TRUE)
+                uint32_t i, n;
+                /*
+                   FRAN: The scroll, at the moment, delete all texts
+                   Improve taking into account the input rectangle
+                   Take into account if a real scroll exists (iRows > 0 || iCols > 0)
+                */
+                n = arrpt_size(gtwin->objects, GtNapObject);
+                for (i = 0; i < n; )
                 {
-                    i_destroy_gtobject(gtwin, i);
-                    n -= 1;
-                }
-                else
-                {
-                    i += 1;
+                    GtNapObject *object = arrpt_get(gtwin->objects, i, GtNapObject);
+                    const char_t *type = _component_type(object->component);
+                    if (str_equ_c(type, "Label") == TRUE)
+                    {
+                        i_destroy_gtobject(gtwin, i);
+                        n -= 1;
+                    }
+                    else
+                    {
+                        i += 1;
+                    }
                 }
             }
         }
@@ -5634,7 +5643,7 @@ static void hb_gtnap_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRig
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( pbyFrame );
     log_printf("hb_gtnap_Box (%d %d %d %d) %d '%s'", iTop, iLeft, iBottom, iRight, bColor, pbyFrame);
-    if (GTNAP_GLOBAL->debugger != NULL)
+    if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_box(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (uint32_t)bColor);
 }
 
@@ -5680,6 +5689,7 @@ static void hb_gtnap_SetBlink( PHB_GT pGT, HB_BOOL bBlink )
 {
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( bBlink );
+    log_printf("hb_gtnap_SetBlink: %d", bBlink);
     cassert(TRUE);
 }
 

@@ -6,6 +6,7 @@
 
 #include "nap_debugger.inl"
 #include <deblib/deblib.h>
+#include "setcurs.ch"
 #include "nappgui.h"
 
 struct _gtnap_debugger_t
@@ -56,6 +57,39 @@ void nap_debugger_box(GtNapDebugger *debug, const uint32_t top, const uint32_t l
     cassert_no_null(debug);
     if (debug->stream != NULL)
         deblib_send_box(debug->stream, top, left, bottom, right, color);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static cursor_t i_cursor(const uint32_t style)
+{
+    switch( style ) {
+    case SC_NONE:
+        return ekCURSOR_NONE;
+    case SC_NORMAL:
+        return ekCURSOR_NORMAL;
+    case SC_INSERT:
+        return ekCURSOR_INSERT;
+    case SC_SPECIAL1:
+        return ekCURSOR_SPECIAL1;
+    case SC_SPECIAL2:
+        return ekCURSOR_SPECIAL2;
+    cassert_default();
+    }
+
+    return ekCURSOR_NORMAL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void nap_debugger_cursor(GtNapDebugger *debug, const uint32_t style)
+{
+    cassert_no_null(debug);
+    if (debug->stream != NULL) 
+    {
+        cursor_t cursor = i_cursor(style);
+        deblib_send_cursor(debug->stream, cursor);
+    }
 }
 
 /*---------------------------------------------------------------------------*/

@@ -14,9 +14,19 @@ typedef enum _msg_type_t
     ekMSG_SET_SIZE = 10000,
     ekMSG_SCROLL,
     ekMSG_BOX,
+    ekMSG_CURSOR,
     ekMSG_PUTCHAR,
     ekMSG_PUTTEXT
 } msg_type_t;
+
+typedef enum _cursor_t
+{
+    ekCURSOR_NONE = 1,
+    ekCURSOR_NORMAL,
+    ekCURSOR_INSERT,
+    ekCURSOR_SPECIAL1,
+    ekCURSOR_SPECIAL2
+} cursor_t;
 
 struct _debmsg_t
 {

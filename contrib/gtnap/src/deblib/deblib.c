@@ -44,6 +44,14 @@ void deblib_send_box(Stream *stm, const uint32_t top, const uint32_t left, const
 
 /*---------------------------------------------------------------------------*/
 
+void deblib_send_cursor(Stream *stm, const cursor_t cursor)
+{
+    stm_write_enum(stm, ekMSG_CURSOR, msg_type_t);
+    stm_write_enum(stm, cursor, cursor_t);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void deblib_send_putchar(Stream *stm, const uint32_t row, const uint32_t col, const uint32_t codepoint, const uint32_t color, const byte_t attrib)
 {
     stm_write_enum(stm, ekMSG_PUTCHAR, msg_type_t);
@@ -114,6 +122,10 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         msg->color = stm_read_u32(stm);
         break;
 
+    case ekMSG_CURSOR:
+        msg->attrib = (byte_t)stm_read_enum(stm, cursor_t);
+        break;
+
     case ekMSG_PUTCHAR:
     {
         uint32_t codepoint, nbytes;
@@ -143,4 +155,25 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
 
     cassert_default();
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *deblib_cursor_str(const cursor_t cursor)
+{
+    switch(cursor) {
+    case ekCURSOR_NONE:
+        return "CURSOR_NONE";
+    case ekCURSOR_NORMAL:
+        return "CURSOR_NORMAL";
+    case ekCURSOR_INSERT:
+        return "CURSOR_INSERT";
+    case ekCURSOR_SPECIAL1:
+        return "CURSOR_SPECIAL1";
+    case ekCURSOR_SPECIAL2:
+        return "CURSOR_SPECIAL2";
+    cassert_default();
+    }
+
+    return "";
 }
