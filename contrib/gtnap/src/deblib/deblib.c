@@ -100,6 +100,13 @@ void deblib_read_key(Stream *stm, vkey_t *key, uint32_t *modifiers)
 
 /*---------------------------------------------------------------------------*/
 
+void deblib_close(Stream *stm)
+{
+    stm_write_enum(stm, ekMSG_CLOSE, msg_type_t);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static uint32_t i_stm_read_codepoint(Stream *stm)
 {
     uint32_t codepoint = stm_read_u32(stm);
@@ -179,6 +186,9 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
     }
 
     case ekMSG_READ_KEY:
+        break;
+
+    case ekMSG_CLOSE:
         break;
 
     cassert_default();

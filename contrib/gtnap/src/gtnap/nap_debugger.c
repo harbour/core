@@ -13,7 +13,6 @@
 struct _gtnap_debugger_t
 {
     Proc *proc;
-    Socket *socket;
     Stream *stream;
 };
 
@@ -24,12 +23,14 @@ GtNapDebugger *nap_debugger_create(const char_t *path, const uint32_t nrows, con
     GtNapDebugger *debug = heap_new(GtNapDebugger);
     uint32_t ip = bsocket_url_ip("localhost", NULL);
     String *cmd = str_cpath("%s %d %d", path, nrows, ncols);
+    Socket *socket = NULL;
+
     debug->proc = bproc_exec(tc(cmd), NULL);
     bthread_sleep(100);
 
-    debug->socket = bsocket_connect(ip, 3555, 0, NULL);
-    if (debug->socket != NULL)
-        debug->stream = stm_socket(debug->socket);
+    socket = bsocket_connect(ip, 3555, 0, NULL);
+    if (socket != NULL)
+        debug->stream = stm_socket(socket);
 
     str_destroy(&cmd);
     return debug;
@@ -39,6 +40,15 @@ GtNapDebugger *nap_debugger_create(const char_t *path, const uint32_t nrows, con
 
 void nap_debugger_destroy(GtNapDebugger **debug)
 {
+    cassert_no_null(debug);
+    cassert_no_null(*debug);
+
+    if ((*debug)->stream != NULL)
+    {
+        deblib_close((*debug)->stream);
+        stm_close(&(*debug)->stream);
+    }
+
     heap_delete(debug, GtNapDebugger);
 }
 

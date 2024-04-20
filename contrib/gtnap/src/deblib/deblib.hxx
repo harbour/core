@@ -18,7 +18,8 @@ typedef enum _msg_type_t
     ekMSG_SET_POS,
     ekMSG_PUTCHAR,
     ekMSG_PUTTEXT,
-    ekMSG_READ_KEY
+    ekMSG_READ_KEY,
+    ekMSG_CLOSE
 } msg_type_t;
 
 typedef enum _cursor_t

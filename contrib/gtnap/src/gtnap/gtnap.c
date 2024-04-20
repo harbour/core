@@ -310,6 +310,9 @@ static const GtNapKey KEYMAPS[] = {
 
 static color_t i_COLORS[16];
 
+/* Identify the main window in a debugging process */
+static const uint32_t i_MAIN_WINDOW_HASH = 0xABCD4628;
+
 /*---------------------------------------------------------------------------*/
 
 __EXTERN_C
@@ -5808,11 +5811,47 @@ static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
         else
         {
             cassert(pInfo->pResult == NULL);
-            pInfo->pResult = hb_itemPutNI( pInfo->pResult, 6667788 );
+            pInfo->pResult = hb_itemPutNI(pInfo->pResult, i_MAIN_WINDOW_HASH);
         }
         break;
 
-      case HB_GTI_COMPATBUFFER:
+    case HB_GTI_SETWIN:
+        /* Recovering current window --> Destroy the debugger */
+        if (pInfo->pNewVal != NULL)
+        {
+            HB_TYPE type = HB_ITEM_TYPE(pInfo->pNewVal);
+            switch (type) {
+            case HB_IT_INTEGER:
+            case HB_IT_LONG:
+            {
+                uint32_t wid = hb_itemGetNI(pInfo->pNewVal);
+                /* Close the debugger process */
+                if (wid == i_MAIN_WINDOW_HASH)
+                {
+                    cassert_no_null(GTNAP_GLOBAL->debugger);
+                    if (GTNAP_GLOBAL->debugger != NULL)
+                        nap_debugger_destroy(&GTNAP_GLOBAL->debugger);
+                }
+                else
+                {
+                    /* TODO: Review this window ID */
+                    cassert(FALSE);
+                }
+
+                break;
+            }
+
+            cassert_default();
+            }
+        }
+        else
+        {
+            /* TODO: Review parameter value */
+            cassert(FALSE);
+        }
+        break;
+
+    case HB_GTI_COMPATBUFFER:
         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
         break;
 

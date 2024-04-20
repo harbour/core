@@ -20,6 +20,8 @@ void deblib_send_puttext(Stream *stm, const uint32_t row, const uint32_t col, co
 
 void deblib_read_key(Stream *stm, vkey_t *key, uint32_t *modifiers);
 
+void deblib_close(Stream *stm);
+
 void deblib_recv_message(Stream *stm, DebMsg *msg);
 
 const char_t *deblib_cursor_str(const cursor_t cursor);

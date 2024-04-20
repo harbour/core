@@ -233,9 +233,9 @@ static Panel *i_panel(App *app)
 
 static void i_OnClose(App *app, Event *e)
 {
-    osapp_finish();
+    bool_t *r = event_result(e, bool_t);
+    *r = FALSE;
     unref(app);
-    unref(e);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -581,48 +581,62 @@ static uint32_t i_protocol_thread(App *app)
 
                 for(;;)
                 {
-                    DebMsg msg;
-                    deblib_recv_message(stm, &msg);
+                    if (app->alive == TRUE)
+                    {
+                        DebMsg msg;
+                        deblib_recv_message(stm, &msg);
                     
-                    switch (msg.type) {
-                    case ekMSG_SET_SIZE:
-                        i_set_size(app, &msg);
-                        break;
-                    case ekMSG_SCROLL:
-                        i_scroll(app, &msg);
-                        break;
-                    case ekMSG_BOX:
-                        i_box(app, &msg);
-                        break;
-                    case ekMSG_CURSOR:
-                        i_cursor(app, &msg);
-                        break;
-                    case ekMSG_SET_POS:
-                        i_set_pos(app, &msg);
-                        break;
-                    case ekMSG_PUTCHAR:
-                        i_putchar(app, &msg);
-                        break;
-                    case ekMSG_PUTTEXT:
-                        i_puttext(app, &msg);
-                        break;
-                    case ekMSG_READ_KEY:
-                        i_read_key(app, &msg);
-                        stm_write_enum(stm, msg.key, vkey_t);
-                        stm_write_u32(stm, msg.modifiers);
-                        break;
-                    default:
-                        i_unknown(app, &msg);
-                    }
+                        switch (msg.type) {
+                        case ekMSG_SET_SIZE:
+                            i_set_size(app, &msg);
+                            break;
 
-                    if (msg.type == 12000)
+                        case ekMSG_SCROLL:
+                            i_scroll(app, &msg);
+                            break;
+
+                        case ekMSG_BOX:
+                            i_box(app, &msg);
+                            break;
+
+                        case ekMSG_CURSOR:
+                            i_cursor(app, &msg);
+                            break;
+
+                        case ekMSG_SET_POS:
+                            i_set_pos(app, &msg);
+                            break;
+
+                        case ekMSG_PUTCHAR:
+                            i_putchar(app, &msg);
+                            break;
+
+                        case ekMSG_PUTTEXT:
+                            i_puttext(app, &msg);
+                            break;
+
+                        case ekMSG_READ_KEY:
+                            i_read_key(app, &msg);
+                            stm_write_enum(stm, msg.key, vkey_t);
+                            stm_write_u32(stm, msg.modifiers);
+                            break;
+
+                        case ekMSG_CLOSE:
+                            app->alive = FALSE;
+                            break;
+
+                        default:
+                            i_unknown(app, &msg);
+                        }
+                    }
+                    else
+                    {
                         break;
+                    }
                 }
 
                 stm_close(&stm);
             }
-
-            bsocket_close(&income_sock);
         }
 
         bsocket_close(&server_sock);
@@ -664,6 +678,7 @@ static App *i_app(void)
 
     i_update_text_buffer(app, nrows, ncols);
     app->keyboard_buffer = keybuf_create();
+    app->alive = TRUE;
     app->cursor_type = ekCURSOR_NONE;
     app->cursor_row = UINT32_MAX;
     app->cursor_col = UINT32_MAX;
@@ -684,7 +699,6 @@ static App *i_create(void)
     i_init_colors();
     view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
     view_keybuf(app->view, app->keyboard_buffer);
-    log_printf("APP: Rows: %d Cols: %d", app->nrows, app->ncols);
     app->window = window_create(ekWINDOW_STD);
     window_panel(app->window, panel);
     window_title(app->window, "GTNap Debugger");
@@ -703,8 +717,15 @@ static void i_update(App *app, const real64_t prtime, const real64_t ctime)
     cassert_no_null(app);
     unref(prtime);
     unref(ctime);
-    app->cursor_draw = !app->cursor_draw;
-    view_update(app->view);
+    if (app->alive == TRUE)
+    {
+        app->cursor_draw = !app->cursor_draw;
+        view_update(app->view);
+    }
+    else
+    {
+        osapp_finish();
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -713,6 +734,11 @@ static void i_destroy(App **app)
 {
     cassert_no_null(app);
     cassert_no_null(*app);
+    bthread_wait((*app)->protocol_thread);
+    bthread_close(&(*app)->protocol_thread);
+    bmutex_close(&(*app)->mutex);
+    font_destroy(&(*app)->font);
+    heap_delete_n(&(*app)->text_buffer, (*app)->nrows * (*app)->ncols, BufChar);
     keybuf_destroy(&(*app)->keyboard_buffer);
     window_destroy(&(*app)->window);
     heap_delete(app, App);
