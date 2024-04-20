@@ -181,8 +181,70 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
         if (modifiers & ekMKEY_ALT)
             return K_ALT_PGDN;
         return K_PGDN;
+
+    case ekKEY_RETURN:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_RETURN;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_RETURN;
+        return K_RETURN;
+
+    case ekKEY_SPACE:
+        return K_SPACE;
+
+    case ekKEY_ESCAPE:
+        return K_ESC;
+
+    case ekKEY_QUEST:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_QUESTION;
+        return '?';
+
+    case ekKEY_NUM5:
+        if (modifiers & ekMKEY_CONTROL)
+            return KP_CTRL_5;
+        if (modifiers & ekMKEY_ALT)
+            return KP_ALT_5;
+        return KP_CENTER;
+
+    case ekKEY_NUMRET:
+        if (modifiers & ekMKEY_ALT)
+            return KP_ALT_ENTER;
+        return K_RETURN;
+
+    case ekKEY_NUMDIV:
+        if (modifiers & ekMKEY_CONTROL)
+            return KP_CTRL_SLASH;
+        if (modifiers & ekMKEY_ALT)
+            return KP_ALT_SLASH;
+        return '/';
+
+    case ekKEY_NUMMULT:
+        if (modifiers & ekMKEY_CONTROL)
+            return KP_CTRL_ASTERISK;
+        if (modifiers & ekMKEY_ALT)
+            return KP_ALT_ASTERISK;
+        return '*';
+
+    case ekKEY_NUMADD:
+        if (modifiers & ekMKEY_CONTROL)
+            return KP_CTRL_PLUS;
+        if (modifiers & ekMKEY_ALT)
+            return KP_ALT_PLUS;
+        return '+';
+
+    case ekKEY_NUMMINUS:
+        if (modifiers & ekMKEY_CONTROL)
+            return KP_CTRL_MINUS;
+        if (modifiers & ekMKEY_ALT)
+            return KP_ALT_MINUS;
+        return '-';
     }
 
+    /* 
+     * Non-procesed inkey codes 
+     * K_CTRL_PRTSCR
+     */
     return 0;
 }
 
