@@ -269,6 +269,42 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
         if (modifiers & ekMKEY_ALT)
             return KP_ALT_MINUS;
         return '-';
+
+    case ekKEY_INSERT:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_INS;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_INS;
+        return K_INS;
+
+    case ekKEY_SUPR:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_DEL;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_DEL;
+        return K_DEL;
+
+    case ekKEY_BACK:
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_BS;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_BS;
+        if (modifiers & ekMKEY_SHIFT)
+            return K_SH_BS;
+        return K_BS;
+
+    case ekKEY_TAB:
+        if ((modifiers & ekMKEY_CONTROL) && (modifiers & ekMKEY_SHIFT))
+            return K_CTRL_SH_TAB;
+        if (modifiers & ekMKEY_CONTROL)
+            return K_CTRL_TAB;
+        if (modifiers & ekMKEY_SHIFT)
+            return K_SH_TAB;
+        if (modifiers & ekMKEY_ALT)
+            return K_ALT_TAB;
+        else
+            return K_TAB;
+
     }
 
     /* 
