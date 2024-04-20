@@ -95,7 +95,7 @@ static void i_OnDraw(App *app, Event *e)
         }
     }
 
-    if (app->cursor_draw == TRUE)
+    if (app->cursor_draw == TRUE && app->cursor_type != ekCURSOR_NONE)
     {
         if (app->cursor_row < app->nrows && app->cursor_col < app->ncols)
         {
@@ -411,6 +411,40 @@ static void i_puttext(App *app, const DebMsg *msg)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_save(App *app, const DebMsg *msg, Stream *stm)
+{
+    uint32_t i, j;
+    cassert_no_null(app);
+    cassert_no_null(msg);
+    cassert(msg->row < app->nrows);
+    
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("ekMSG_SAVE Top: %d, Left: %d, Bottom: %d, Right: %d", msg->top, msg->left, msg->bottom, msg->right);
+        i_log(app, &log);
+    }
+
+    bmutex_lock(app->mutex);
+
+    for(i = msg->top; i <= msg->bottom; ++i)
+    {
+        const BufChar *bchar = app->text_buffer + i * app->ncols + msg->col;
+        cassert(i < app->nrows);
+        for (j = msg->left; j <= msg->right; ++j, ++bchar)
+        {
+            byte_t cell[2];
+            cell[0] = bchar->utf8[0];
+            cell[1] = (byte_t)bchar->color;
+            cassert(j < app->ncols);
+            stm_write(stm, cell, 2);
+        }
+    }
+
+    bmutex_unlock(app->mutex);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_read_key(App *app, DebMsg *msg)
 {
     uint32_t i = 0;
@@ -523,6 +557,10 @@ static uint32_t i_protocol_thread(App *app)
 
                         case ekMSG_PUTTEXT:
                             i_puttext(app, &msg);
+                            break;
+
+                        case ekMSG_SAVE:
+                            i_save(app, &msg, stm);
                             break;
 
                         case ekMSG_READ_KEY:

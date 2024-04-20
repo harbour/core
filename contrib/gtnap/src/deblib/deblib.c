@@ -95,6 +95,20 @@ void deblib_send_puttext(Stream *stm, const uint32_t row, const uint32_t col, co
 
 /*---------------------------------------------------------------------------*/
 
+void deblib_send_save(Stream *stm, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, byte_t *buffer)
+{
+    uint32_t i, n = (bottom - top + 1) * (right - left + 1);
+    stm_write_enum(stm, ekMSG_SAVE, msg_type_t);
+    stm_write_u32(stm, top);
+    stm_write_u32(stm, left);
+    stm_write_u32(stm, bottom);
+    stm_write_u32(stm, right);
+    /* 2 bytes each cell (char, color) */
+    stm_read(stm, buffer, n * 2);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void deblib_read_key(Stream *stm, vkey_t *key, uint32_t *modifiers)
 {
     cassert_no_null(key);
@@ -190,6 +204,13 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         msg->utf8[len] = 0;
         break;
     }
+
+    case ekMSG_SAVE:
+        msg->top = stm_read_u32(stm);
+        msg->left = stm_read_u32(stm);
+        msg->bottom = stm_read_u32(stm);
+        msg->right = stm_read_u32(stm);
+        break;
 
     case ekMSG_READ_KEY:
         break;

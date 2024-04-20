@@ -132,6 +132,15 @@ void nap_debugger_puttext(GtNapDebugger *debug, const uint32_t row, const uint32
 
 /*---------------------------------------------------------------------------*/
 
+void nap_debugger_save(GtNapDebugger *debug, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, byte_t *buffer)
+{
+    cassert_no_null(debug);
+    if (debug->stream != NULL)
+        deblib_send_save(debug->stream, top, left, bottom, right, buffer);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static __INLINE int32_t i_key_letter(int32_t ctrl, int32_t alt, int32_t shift, int32_t normal, uint32_t modifiers)
 {
     if (modifiers & ekMKEY_CONTROL)

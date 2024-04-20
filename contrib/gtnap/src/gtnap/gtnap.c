@@ -5405,12 +5405,9 @@ static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_
 static void hb_gtnap_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, void * pBuffer )
 {
     HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( iRight );
-    HB_SYMBOL_UNUSED( pBuffer );
-    cassert(TRUE);
+    log_printf("hb_gtnap_Save (%d %d %d %d)", iTop, iLeft, iBottom, iRight);
+    if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
+        nap_debugger_save(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (byte_t*)pBuffer);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5423,6 +5420,7 @@ static void hb_gtnap_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
     HB_SYMBOL_UNUSED( iBottom );
     HB_SYMBOL_UNUSED( iRight );
     HB_SYMBOL_UNUSED( pBuffer );
+    log_printf("hb_gtnap_Rest (%d %d %d %d)", iTop, iLeft, iBottom, iRight);
     cassert(TRUE);
 }
 
@@ -5826,7 +5824,7 @@ static int hb_gtnap_ReadKey( PHB_GT pGT, int iEventMask )
     int iKey = 0;
     unref(pGT);
     unref(iEventMask);
-    log_printf("hb_gtnap_ReadKey");
+    //log_printf("hb_gtnap_ReadKey");
 
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         iKey = (int)nap_debugger_read_key(GTNAP_GLOBAL->debugger);
