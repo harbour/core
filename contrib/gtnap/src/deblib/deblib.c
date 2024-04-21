@@ -168,7 +168,7 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         msg->row = stm_read_u32(stm);
         msg->col = stm_read_u32(stm);
         codepoint = i_stm_read_codepoint(stm);
-        msg->color = stm_read_u32(stm);
+        msg->colorb = (byte_t)stm_read_u32(stm);
         nbytes = unicode_to_char(codepoint, msg->utf8, ekUTF8);
         msg->utf8[nbytes] = 0;
         break;
@@ -179,7 +179,7 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         msg->left = stm_read_u32(stm);
         msg->bottom = stm_read_u32(stm);
         msg->right = stm_read_u32(stm);
-        msg->color = stm_read_u32(stm);
+        msg->colorb = (byte_t)stm_read_u32(stm);
         break;
 
     case ekMSG_CURSOR:
@@ -197,7 +197,7 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         msg->row = stm_read_u32(stm);
         msg->col = stm_read_u32(stm);
         codepoint = i_stm_read_codepoint(stm);
-        msg->color = stm_read_u32(stm);
+        msg->colorb = (byte_t)stm_read_u32(stm);
         msg->attrib = (byte_t)stm_read_u8(stm);
         nbytes = unicode_to_char(codepoint, msg->utf8, ekUTF8);
         msg->utf8[nbytes] = 0;
@@ -209,7 +209,7 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
         uint32_t len;
         msg->row = stm_read_u32(stm);
         msg->col = stm_read_u32(stm);
-        msg->color = stm_read_u32(stm);
+        msg->colorb = (byte_t)stm_read_u32(stm);
         len = stm_read_u32(stm);
         cassert(len > 0);
         cassert(len < MAX_UTF8_SIZE);

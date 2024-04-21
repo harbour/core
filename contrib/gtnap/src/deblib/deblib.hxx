@@ -42,7 +42,7 @@ struct _debmsg_t
     uint32_t right;
     uint32_t row;
     uint32_t col;
-    uint32_t color;
+    byte_t colorb;
     byte_t attrib;
     vkey_t key;
     uint32_t modifiers;

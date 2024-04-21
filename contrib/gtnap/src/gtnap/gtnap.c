@@ -5722,9 +5722,8 @@ static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                 if (wid == i_MAIN_WINDOW_HASH)
                 {
                     GtNapWindow *gtwin = NULL;
-                    cassert_no_null(GTNAP_GLOBAL->debugger);
-                    if (GTNAP_GLOBAL->debugger != NULL)
-                        nap_debugger_destroy(&GTNAP_GLOBAL->debugger);
+                    //if (GTNAP_GLOBAL->debugger != NULL)
+                    //    nap_debugger_destroy(&GTNAP_GLOBAL->debugger);
 
                     gtwin = i_current_gtwin(GTNAP_GLOBAL);
                     if (gtwin != NULL)

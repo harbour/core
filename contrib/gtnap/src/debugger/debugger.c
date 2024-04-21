@@ -9,7 +9,7 @@ typedef struct _app_t App;
 struct _bufchar_t
 {
     char_t utf8[5];
-    uint32_t color;
+    byte_t colorb;
     byte_t attrib;
 };
 
@@ -24,7 +24,8 @@ struct _app_t
     Mutex *mutex;
     Thread *protocol_thread;
     BufChar *text_buffer;
-    KeyBuf *keyboard_buffer;
+    vkey_t key_pressed;
+    uint32_t key_modifiers;
     uint32_t ncols;
     uint32_t nrows;
     real32_t cell_width;
@@ -42,8 +43,6 @@ static const real64_t i_BLINK_INTERVAL = 0.2;
 static color_t i_COLORS[16];
 static uint32_t i_DEFAULT_COLS = 80;
 static uint32_t i_DEFAULT_ROWS = 25;
-
-/*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 
@@ -73,7 +72,7 @@ static void i_OnDraw(App *app, Event *e)
     uint32_t i, j;
     cassert_no_null(app);
     bchar = app->text_buffer;
-
+    bmutex_lock(app->mutex);
     draw_font(p->ctx, app->font);
     for (i = 0; i < app->nrows; ++i)
     {
@@ -83,8 +82,8 @@ static void i_OnDraw(App *app, Event *e)
             real32_t x = j * app->cell_width;
             if (bchar->utf8[0] != 0)
             {
-                int fore = bchar->color & 0x000F;
-                int back = ( bchar->color & 0x00F0 ) >> 4;
+                byte_t fore = bchar->colorb & 0x0F;
+                byte_t back = ( bchar->colorb & 0xF0 ) >> 4;
                 color_t cfore = i_COLORS[fore];
                 color_t cback = i_COLORS[back];
                 draw_text_color(p->ctx, cfore);
@@ -114,6 +113,26 @@ static void i_OnDraw(App *app, Event *e)
             }
         }
     }
+    bmutex_unlock(app->mutex);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnKeyDown(App *app, Event *e)
+{
+    const EvKey *p = event_params(e, EvKey);
+    cassert_no_null(app);
+    app->key_pressed = p->key;
+    app->key_modifiers = p->modifiers;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnKeyUp(App *app, Event *e)
+{
+    const EvKey *p = event_params(e, EvKey);
+    cassert_no_null(app);
+    app->key_modifiers = p->modifiers;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -125,6 +144,8 @@ static Panel *i_panel(App *app)
     View *view = view_create();
     TextView *text = textview_create();
     view_OnDraw(view, listener(app, i_OnDraw, App));
+    view_OnKeyDown(view, listener(app, i_OnKeyDown, App));
+    view_OnKeyUp(view, listener(app, i_OnKeyUp, App));
     app->font = font_monospace(font_regular_size(), 0);
     app->text = text;
     app->view = view;
@@ -135,6 +156,7 @@ static Panel *i_panel(App *app)
     layout_tabstop(layout, 0, 0, TRUE);
     layout_tabstop(layout, 1, 0, FALSE);
     layout_hsize(layout, 1, 400);
+    layout_show_col(layout, 1, FALSE);
     panel_layout(panel, layout);
     return panel;
 }
@@ -194,7 +216,7 @@ static void i_scroll(App *app, const DebMsg *msg)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_SCROLL Top: %d, Left: %d, Bottom: %d, Right: %d, Char: '%s', Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->utf8, msg->color);
+        String *log = str_printf("ekMSG_SCROLL Top: %d, Left: %d, Bottom: %d, Right: %d, Char: '%s', Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->utf8, msg->colorb);
         i_log(app, &log);
     }
 
@@ -207,7 +229,7 @@ static void i_scroll(App *app, const DebMsg *msg)
             cassert(i < app->nrows);
             cassert(j < app->ncols);
             str_copy_c(bchar->utf8, sizeof(bchar->utf8), msg->utf8);
-            bchar->color = msg->color;
+            bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
     }
@@ -224,7 +246,7 @@ static void i_box(App *app, const DebMsg *msg)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_BOX Top: %d, Left: %d, Bottom: %d, Right: %d, Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->color);
+        String *log = str_printf("ekMSG_BOX Top: %d, Left: %d, Bottom: %d, Right: %d, Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->colorb);
         i_log(app, &log);
     }
 
@@ -236,7 +258,7 @@ static void i_box(App *app, const DebMsg *msg)
             BufChar *bchar = app->text_buffer + (i * app->ncols + msg->left);
             cassert(i < app->nrows);
             str_copy_c(bchar->utf8, sizeof(bchar->utf8), "│");
-            bchar->color = msg->color;
+            bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
 
@@ -245,7 +267,7 @@ static void i_box(App *app, const DebMsg *msg)
             BufChar *bchar = app->text_buffer + (i * app->ncols + msg->right);
             cassert(i < app->nrows);
             str_copy_c(bchar->utf8, sizeof(bchar->utf8), "│");
-            bchar->color = msg->color;
+            bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
     }
@@ -257,7 +279,7 @@ static void i_box(App *app, const DebMsg *msg)
             BufChar *bchar = app->text_buffer + (msg->top * app->ncols + j);
             cassert(j < app->ncols);
             str_copy_c(bchar->utf8, sizeof(bchar->utf8), "─");
-            bchar->color = msg->color;
+            bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
 
@@ -266,7 +288,7 @@ static void i_box(App *app, const DebMsg *msg)
             BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + j);
             cassert(j < app->ncols);
             str_copy_c(bchar->utf8, sizeof(bchar->utf8), "─");
-            bchar->color = msg->color;
+            bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
     }
@@ -275,7 +297,7 @@ static void i_box(App *app, const DebMsg *msg)
     {
         BufChar *bchar = app->text_buffer + (msg->top * app->ncols + msg->left);
         str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┌");
-        bchar->color = msg->color;
+        bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
 
@@ -283,7 +305,7 @@ static void i_box(App *app, const DebMsg *msg)
     {
         BufChar *bchar = app->text_buffer + (msg->top * app->ncols + msg->right);
         str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┐");
-        bchar->color = msg->color;
+        bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
 
@@ -291,7 +313,7 @@ static void i_box(App *app, const DebMsg *msg)
     {
         BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + msg->left);
         str_copy_c(bchar->utf8, sizeof(bchar->utf8), "└");
-        bchar->color = msg->color;
+        bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
 
@@ -299,7 +321,7 @@ static void i_box(App *app, const DebMsg *msg)
     {
         BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + msg->right);
         str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┘");
-        bchar->color = msg->color;
+        bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
 
@@ -356,7 +378,7 @@ static void i_putchar(App *app, const DebMsg *msg)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_PUTCHAR Row: %d, Col: %d, Char: '%s', Color: %d, Attrib: %d", msg->row, msg->col, msg->utf8, msg->color, msg->attrib);
+        String *log = str_printf("ekMSG_PUTCHAR Row: %d, Col: %d, Char: '%s', Color: %d, Attrib: %d", msg->row, msg->col, msg->utf8, msg->colorb, msg->attrib);
         i_log(app, &log);
     }
 
@@ -365,7 +387,7 @@ static void i_putchar(App *app, const DebMsg *msg)
     bmutex_lock(app->mutex);
     bchar = app->text_buffer + (msg->row * app->ncols + msg->col);
     str_copy_c(bchar->utf8, sizeof(bchar->utf8), msg->utf8);
-    bchar->color = msg->color;
+    bchar->colorb = msg->colorb;
     bchar->attrib = msg->attrib;
     bmutex_unlock(app->mutex);
 }
@@ -383,7 +405,7 @@ static void i_puttext(App *app, const DebMsg *msg)
     
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_PUTTEXT Row: %d, Col: %d, Color: %d, Text: '%s'", msg->row, msg->col, msg->color, msg->utf8);
+        String *log = str_printf("ekMSG_PUTTEXT Row: %d, Col: %d, Color: %d, Text: '%s'", msg->row, msg->col, msg->colorb, msg->utf8);
         i_log(app, &log);
     }
 
@@ -399,7 +421,7 @@ static void i_puttext(App *app, const DebMsg *msg)
         cassert_unref(nb == nbytes, nbytes);
         cassert_unref(col < app->ncols, col);
         bchar->utf8[nb] = 0;
-        bchar->color = msg->color;
+        bchar->colorb = msg->colorb;
         bchar->attrib = 0;
         text += nb;
         bchar += 1;
@@ -433,7 +455,7 @@ static void i_save(App *app, const DebMsg *msg, Stream *stm)
         for (j = msg->left; j <= msg->right; ++j, ++bchar)
         {
             uint32_t codepoint = unicode_to_u32(bchar->utf8, ekUTF8);
-            uint8_t color = (uint8_t)bchar->color;
+            uint8_t color = (uint8_t)bchar->colorb;
             cassert(j < app->ncols);
             if (codepoint > 0xFFFF)
                 codepoint = '?';
@@ -474,7 +496,7 @@ static void i_rest(App *app, const DebMsg *msg, Stream *stm)
             cassert(j < app->ncols);
             nb = unicode_to_char(codepoint, bchar->utf8, ekUTF8);
             bchar->utf8[nb] = 0;
-            bchar->color = color;
+            bchar->colorb = color;
         }
     }
 
@@ -485,39 +507,11 @@ static void i_rest(App *app, const DebMsg *msg, Stream *stm)
 
 static void i_read_key(App *app, DebMsg *msg)
 {
-    uint32_t i = 0;
     cassert_no_null(app);
     cassert_no_null(msg);
-    msg->key = ENUM_MAX(vkey_t);
-    msg->modifiers = 0;
-
-    for (i = 0; i < kKEY_MAX; ++i)
-    {
-        if (keybuf_pressed(app->keyboard_buffer, (vkey_t)i) == TRUE)
-        {
-            switch ((vkey_t)i) {
-            case ekKEY_LSHIFT:
-            case ekKEY_RSHIFT:
-                msg->modifiers |= ekMKEY_SHIFT;
-                break;
-            case ekKEY_LCTRL:
-            case ekKEY_RCTRL:
-                msg->modifiers |= ekMKEY_CONTROL;
-                break;
-            case ekKEY_LALT:
-            case ekKEY_RALT:
-                msg->modifiers |= ekMKEY_ALT;
-                break;
-            case ekKEY_LWIN:
-            case ekKEY_RWIN:
-                msg->modifiers |= ekMKEY_COMMAND;
-                break;
-            default:
-                if (msg->key == ENUM_MAX(vkey_t))
-                    msg->key = (vkey_t)i;
-            }
-        }
-    }
+    msg->key = app->key_pressed;
+    msg->modifiers = app->key_modifiers;
+    app->key_pressed = ENUM_MAX(vkey_t);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -667,7 +661,8 @@ static App *i_app(void)
     }
 
     i_update_text_buffer(app, nrows, ncols);
-    app->keyboard_buffer = keybuf_create();
+    app->key_pressed = ENUM_MAX(vkey_t);
+    app->key_modifiers = 0;
     app->alive = TRUE;
     app->cursor_type = ekCURSOR_NONE;
     app->cursor_row = UINT32_MAX;
@@ -688,7 +683,6 @@ static App *i_create(void)
     log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
     deblib_init_colors(i_COLORS);
     view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
-    view_keybuf(app->view, app->keyboard_buffer);
     app->window = window_create(ekWINDOW_STD);
     window_panel(app->window, panel);
     window_title(app->window, "GTNap Debugger");
@@ -729,7 +723,6 @@ static void i_destroy(App **app)
     bmutex_close(&(*app)->mutex);
     font_destroy(&(*app)->font);
     heap_delete_n(&(*app)->text_buffer, (*app)->nrows * (*app)->ncols, BufChar);
-    keybuf_destroy(&(*app)->keyboard_buffer);
     window_destroy(&(*app)->window);
     heap_delete(app, App);
 }
