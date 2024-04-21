@@ -43,6 +43,7 @@ src/gtnap/gtnap.c
 src/gtnap/nap_button.c
 src/gtnap/nap_color.c
 src/gtnap/nap_cualib.c
+src/gtnap/nap_debugger.c
 src/gtnap/nap_edit.c
 src/gtnap/nap_global.c
 src/gtnap/nap_image.c

@@ -1,1 +1,1 @@
-nap_library(deblib "core" NO NRC_NONE)
+nap_library(deblib "gui" NO NRC_NONE)
