@@ -198,6 +198,10 @@ struct _gtnap_t
 
 /*---------------------------------------------------------------------------*/
 
+#define STRINGIZE(x) #x
+
+/*---------------------------------------------------------------------------*/
+
 DeclPt(GtNapCallback);
 DeclSt(GtNapColumn);
 DeclPt(GtNapArea);
@@ -961,9 +965,9 @@ static GtNap *i_gtnap_create(void)
     }
 
  #if defined(__DEBUG__)
-     GTNAP_GLOBAL->debugger_path = str_cpath("%s/Debug/bin/gtnapdeb", BINARY_DIR);
+     GTNAP_GLOBAL->debugger_path = str_cpath("%s/Debug/bin/gtnapdeb", STRINGIZE(BINARY_DIR));
  #else
-     GTNAP_GLOBAL->debugger_path = str_cpath("%s/Release/bin/gtnapdeb", BINARY_DIR);
+     GTNAP_GLOBAL->debugger_path = str_cpath("%s/Release/bin/gtnapdeb", STRINGIZE(BINARY_DIR));
  #endif
 
     globals_resolution(&screen);

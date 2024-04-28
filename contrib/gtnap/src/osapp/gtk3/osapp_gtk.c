@@ -19,6 +19,7 @@
 #include <osbs/bfile.h>
 #include <sewer/bmem.h>
 #include <sewer/cassert.h>
+#include <sewer/unicode.h>
 #include <stdlib.h>
 #include <locale.h>
 

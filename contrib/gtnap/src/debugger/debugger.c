@@ -199,11 +199,11 @@ static void i_set_size(App *app, const DebMsg *msg)
         i_log(app, &log);
     }
 
-    //if (app->nrows != msg->row || app->ncols != msg->col)
-    //{
-    //    i_update_text_buffer(app, msg->row, msg->col);
-    //    view_update(app->view);
-    //}
+    if (app->nrows != msg->row || app->ncols != msg->col)
+    {
+       i_update_text_buffer(app, msg->row, msg->col);
+       view_update(app->view);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -402,7 +402,7 @@ static void i_puttext(App *app, const DebMsg *msg)
     cassert_no_null(app);
     cassert_no_null(msg);
     cassert(msg->row < app->nrows);
-    
+
     if (app->print_log == TRUE)
     {
         String *log = str_printf("ekMSG_PUTTEXT Row: %d, Col: %d, Color: %d, Text: '%s'", msg->row, msg->col, msg->colorb, msg->utf8);
@@ -439,7 +439,7 @@ static void i_save(App *app, const DebMsg *msg, Stream *stm)
     cassert_no_null(app);
     cassert_no_null(msg);
     cassert(msg->row < app->nrows);
-    
+
     if (app->print_log == TRUE)
     {
         String *log = str_printf("ekMSG_SAVE Top: %d, Left: %d, Bottom: %d, Right: %d", msg->top, msg->left, msg->bottom, msg->right);
@@ -475,7 +475,7 @@ static void i_rest(App *app, const DebMsg *msg, Stream *stm)
     cassert_no_null(app);
     cassert_no_null(msg);
     cassert(msg->row < app->nrows);
-    
+
     if (app->print_log == TRUE)
     {
         String *log = str_printf("ekMSG_REST Top: %d, Left: %d, Bottom: %d, Right: %d", msg->top, msg->left, msg->bottom, msg->right);
@@ -561,7 +561,7 @@ static uint32_t i_protocol_thread(App *app)
                     {
                         DebMsg msg;
                         deblib_recv_message(stm, &msg);
-                    
+
                         switch (msg.type) {
                         case ekMSG_SET_SIZE:
                             i_set_size(app, &msg);

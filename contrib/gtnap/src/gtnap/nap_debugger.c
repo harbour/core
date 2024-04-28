@@ -96,7 +96,7 @@ static cursor_t i_cursor(const uint32_t style)
 void nap_debugger_cursor(GtNapDebugger *debug, const uint32_t style)
 {
     cassert_no_null(debug);
-    if (debug->stream != NULL) 
+    if (debug->stream != NULL)
     {
         cursor_t cursor = i_cursor(style);
         deblib_send_cursor(debug->stream, cursor);
@@ -108,7 +108,7 @@ void nap_debugger_cursor(GtNapDebugger *debug, const uint32_t style)
 void nap_debugger_set_pos(GtNapDebugger *debug, const uint32_t row, const uint32_t col)
 {
     cassert_no_null(debug);
-    if (debug->stream != NULL) 
+    if (debug->stream != NULL)
         deblib_send_set_pos(debug->stream, row, col);
 }
 
@@ -522,10 +522,40 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
 
     case ekKEY_Z:
         return i_key_letter(K_CTRL_Z, K_ALT_Z, 'Z', 'z', modifiers);
+
+    case ekKEY_UNDEF:
+    case ekKEY_RCURLY:
+    case ekKEY_LCURLY:
+    case ekKEY_SEMICOLON:
+    case ekKEY_GTLT:
+    case ekKEY_F17:
+    case ekKEY_NUMLOCK:
+    case ekKEY_F18:
+    case ekKEY_F19:
+    case ekKEY_NUMEQUAL:
+    case ekKEY_F13:
+    case ekKEY_F16:
+    case ekKEY_F14:
+    case ekKEY_F15:
+    case ekKEY_LSHIFT:
+    case ekKEY_RSHIFT:
+    case ekKEY_LCTRL:
+    case ekKEY_RCTRL:
+    case ekKEY_LALT:
+    case ekKEY_RALT:
+    case ekKEY_EXCLAM:
+    case ekKEY_MENU:
+    case ekKEY_LWIN:
+    case ekKEY_RWIN:
+    case ekKEY_CAPS:
+    case ekKEY_TILDE:
+    case ekKEY_GRAVE:
+    case ekKEY_PLUS:
+        break;
     }
 
-    /* 
-     * Non-procesed inkey codes 
+    /*
+     * Non-procesed inkey codes
      * K_CTRL_PRTSCR
      */
     return 0;
@@ -548,7 +578,7 @@ int32_t nap_debugger_read_key(GtNapDebugger *debug)
         //log_printf("VKEY: %d", vkey);
         //log_printf("MODIFIERS: %d", modifiers);
 
-       
+
         //if (vkey == ENUM_MAX(vkey_t))
         //    key = 0;
     }
