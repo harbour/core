@@ -199,6 +199,7 @@ struct _gtnap_t
 /*---------------------------------------------------------------------------*/
 
 #define STRINGIZE(x) #x
+#define STRINGIZE_VALUE_OF(x) STRINGIZE(x)
 
 /*---------------------------------------------------------------------------*/
 
@@ -965,11 +966,12 @@ static GtNap *i_gtnap_create(void)
     }
 
  #if defined(__DEBUG__)
-     GTNAP_GLOBAL->debugger_path = str_cpath("%s/Debug/bin/gtnapdeb", STRINGIZE(BINARY_DIR));
+     GTNAP_GLOBAL->debugger_path = str_cpath("%s/build/Debug/bin/gtnapdeb", STRINGIZE_VALUE_OF(GTNAP_DIR));
  #else
-     GTNAP_GLOBAL->debugger_path = str_cpath("%s/Release/bin/gtnapdeb", STRINGIZE(BINARY_DIR));
+     GTNAP_GLOBAL->debugger_path = str_cpath("%s/build/Release/bin/gtnapdeb", STRINGIZE_VALUE_OF(GTNAP_DIR));
  #endif
 
+    log_printf("%s", tc(GTNAP_GLOBAL->debugger_path));
     globals_resolution(&screen);
     screen.height -= 50;        /* Margin for Dock or Taskbars */
     i_compute_font_size(screen.width, screen.height, GTNAP_GLOBAL);

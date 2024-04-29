@@ -573,14 +573,6 @@ int32_t nap_debugger_read_key(GtNapDebugger *debug)
         uint32_t modifiers = UINT32_MAX;
         deblib_read_key(debug->stream, &vkey, &modifiers);
         key = i_vkey_to_hb(vkey, modifiers);
-
-        ///* TODO: Convert to Harbour key value */
-        //log_printf("VKEY: %d", vkey);
-        //log_printf("MODIFIERS: %d", modifiers);
-
-
-        //if (vkey == ENUM_MAX(vkey_t))
-        //    key = 0;
     }
 
     return key;

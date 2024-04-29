@@ -680,7 +680,7 @@ static App *i_create(void)
     App *app = i_app();
     Panel *panel = i_panel(app);
     app->print_log = FALSE;
-    log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
+    log_file("/home/fran/Desktop/debugger_log.txt");
     deblib_init_colors(i_COLORS);
     view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
     app->window = window_create(ekWINDOW_STD);
