@@ -640,6 +640,7 @@ static App *i_app(void)
     App *app = heap_new0(App);
     uint32_t nrows = UINT32_MAX, ncols = UINT32_MAX;
     uint32_t argc = osapp_argc();
+    log_printf("argc: %d", argc);
 
     /* Parse arguments */
     if (argc == 3)
@@ -647,8 +648,10 @@ static App *i_app(void)
         char_t argv[128];
         bool_t err1, err2;
         osapp_argv(1, argv, sizeof(argv));
+        log_printf("argv[1]: %s", argv);
         nrows = str_to_u32(argv, 10, &err1);
         osapp_argv(2, argv, sizeof(argv));
+        log_printf("argv[2]: %s", argv);
         ncols = str_to_u32(argv, 10, &err2);
         if (err1 == TRUE || err2 == TRUE)
         {
