@@ -156,7 +156,7 @@ static Panel *i_panel(App *app)
     layout_tabstop(layout, 0, 0, TRUE);
     layout_tabstop(layout, 1, 0, FALSE);
     layout_hsize(layout, 1, 400);
-    layout_show_col(layout, 1, FALSE);
+    layout_show_col(layout, 1, app->print_log);
     panel_layout(panel, layout);
     return panel;
 }
@@ -176,6 +176,7 @@ static void i_log(App *app, String **str)
 {
     cassert_no_null(app);
     cassert_no_null(str);
+    log_printf("%s", tc(*str));
     if (app->print_log == TRUE)
     {
         bmutex_lock(app->mutex);
@@ -536,13 +537,15 @@ static uint32_t i_protocol_thread(App *app)
     heap_start_mt();
 
     server_sock = bsocket_server(kDEBLIB_SERVER_PORT, 32, NULL);
-
+    log_printf("Created server socket:%p %d", server_sock, kDEBLIB_SERVER_PORT);
     if (server_sock != NULL)
     {
         Socket *income_sock = bsocket_accept(server_sock, 0, NULL);
+        log_printf("Created income socket:%p", income_sock);
         if (income_sock != NULL)
         {
             Stream *stm = stm_socket(income_sock);
+            log_printf("Created stream:%p", stm);
             if (stm != NULL)
             {
                 uint32_t ip;
@@ -654,6 +657,7 @@ static App *i_app(void)
         }
     }
 
+    log_printf("Stating: nrows: %d ncols: %d", nrows, ncols);
     if (ncols == UINT32_MAX || nrows == UINT32_MAX)
     {
         nrows = i_DEFAULT_ROWS;
@@ -669,7 +673,7 @@ static App *i_app(void)
     app->cursor_col = UINT32_MAX;
     app->cursor_draw = FALSE;
     app->last_redraw = -1;
-
+    app->print_log = TRUE;
     return app;
 }
 
@@ -677,21 +681,24 @@ static App *i_app(void)
 
 static App *i_create(void)
 {
-    App *app = i_app();
-    Panel *panel = i_panel(app);
-    app->print_log = FALSE;
     log_file("/home/fran/Desktop/debugger_log.txt");
-    deblib_init_colors(i_COLORS);
-    view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
-    app->window = window_create(ekWINDOW_STD);
-    window_panel(app->window, panel);
-    window_title(app->window, "GTNap Debugger");
-    window_origin(app->window, v2df(500, 200));
-    window_OnClose(app->window, listener(app, i_OnClose, App));
-    window_show(app->window);
-    app->mutex = bmutex_create();
-    app->protocol_thread = bthread_create(i_protocol_thread, app, App);
-    return app;
+    log_printf("Eh!!!!!!!!!!!!!!!1 log");
+
+    {
+        App *app = i_app();
+        Panel *panel = i_panel(app);
+        deblib_init_colors(i_COLORS);
+        view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
+        app->window = window_create(ekWINDOW_STD);
+        window_panel(app->window, panel);
+        window_title(app->window, "GTNap Debugger");
+        window_origin(app->window, v2df(500, 200));
+        window_OnClose(app->window, listener(app, i_OnClose, App));
+        window_show(app->window);
+        app->mutex = bmutex_create();
+        app->protocol_thread = bthread_create(i_protocol_thread, app, App);
+        return app;
+    }
 }
 
 /*---------------------------------------------------------------------------*/

@@ -948,6 +948,8 @@ static uint8_t i_utf8_to_cp_char(const uint32_t codepoint)
 static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
+    const char_t *build_dir = NULL;
+    const char_t *build_cfg = NULL;
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->title = i_cp_to_utf8_string(INIT_TITLE);
     GTNAP_GLOBAL->rows = INIT_ROWS;
@@ -965,12 +967,19 @@ static GtNap *i_gtnap_create(void)
         GTNAP_GLOBAL->working_path = str_c(path);
     }
 
+#if defined(GTNAP_DEVELOPER_MODE)
+    build_dir = "build-dev";
+#else
+    build_dir = "build";
+#endif
+
  #if defined(__DEBUG__)
-     GTNAP_GLOBAL->debugger_path = str_cpath("%s/build/Debug/bin/gtnapdeb", STRINGIZE_VALUE_OF(GTNAP_DIR));
+     build_cfg = "Debug";
  #else
-     GTNAP_GLOBAL->debugger_path = str_cpath("%s/build/Release/bin/gtnapdeb", STRINGIZE_VALUE_OF(GTNAP_DIR));
+     build_cfg = "Release";
  #endif
 
+    GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/%s/bin/gtnapdeb", STRINGIZE_VALUE_OF(GTNAP_DIR), build_dir, build_cfg);
     log_printf("%s", tc(GTNAP_GLOBAL->debugger_path));
     globals_resolution(&screen);
     screen.height -= 50;        /* Margin for Dock or Taskbars */

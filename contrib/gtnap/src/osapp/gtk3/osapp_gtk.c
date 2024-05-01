@@ -263,7 +263,7 @@ void osapp_run(OSApp *app)
     cassert(app->with_run_loop == TRUE);
     signal_id = g_signal_connect(app->gtk_app, "activate", G_CALLBACK(i_OnActivate), (gpointer)app);
     cassert_unref(signal_id > 0, signal_id);
-    status = g_application_run(G_APPLICATION(app->gtk_app), app->argc, app->argv);
+    status = g_application_run(G_APPLICATION(app->gtk_app), 0, NULL);
     unref(status);
     app->func_OnExecutionEnd();
 }
