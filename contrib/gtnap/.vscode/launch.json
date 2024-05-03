@@ -16,7 +16,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build-dev/Debug/bin/gtnapdeb",
-            "args": ["100", "35"],
+            "args": ["35", "100"],
             "cwd": "${workspaceFolder}/tests/cuademo/gtnap_cualib"
         }
     ]
