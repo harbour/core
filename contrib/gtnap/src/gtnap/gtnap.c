@@ -967,17 +967,11 @@ static GtNap *i_gtnap_create(void)
      build_cfg = "Release";
  #endif
 
-    // GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/%s/bin/gtnapdeb", GTNAP_DIR, build_dir, build_cfg);
-    // //GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/%s/bin/gtnapdeb", STRINGIZE_VALUE_OF(GTNAP_DIR), build_dir, build_cfg);
-    // //GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/%s/bin/gtnapdeb", STRINGIZE(GTNAP_DIR), build_dir, build_cfg);
-    //log_file("C:\\Users\\Fran\\Desktop\\gtnap_log.txt");
     {
         const char_t *debpath = deblib_path();
         GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/bin/gtnapdeb", debpath, build_cfg);
     }
 
-
-    //log_printf("%s", tc(GTNAP_GLOBAL->debugger_path));
     globals_resolution(&screen);
     screen.height -= 50;        /* Margin for Dock or Taskbars */
     i_compute_font_size(screen.width, screen.height, GTNAP_GLOBAL);
@@ -5104,8 +5098,6 @@ void hb_gtnap_office_writer_insert_page_break(Writer *writer)
 void hb_gtnap_cualib_init_log(void)
 {
     osbs_start();
-    // log_output(FALSE, FALSE);
-    // log_file("C:\\Users\\USUARIO\\AppData\\Roaming\\exemplo\\log2.txt");
 }
 
 /*---------------------------------------------------------------------------*/
