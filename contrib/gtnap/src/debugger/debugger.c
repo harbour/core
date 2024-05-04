@@ -87,7 +87,6 @@ static void i_OnDraw(App *app, Event *e)
     BufChar *bchar = NULL;
     uint32_t i, j;
     cassert_no_null(app);
-    //log_printf("Begin draw");
     bchar = app->text_buffer;
     i_lock(app);
     draw_font(p->ctx, app->font);
@@ -199,10 +198,10 @@ static void i_log(App *app, String **str)
     if (app->print_log == TRUE)
     {
         log_printf("%s", tc(*str));
-        // i_lock(app);
-        // textview_writef(app->text, tc(*str));
-        // textview_writef(app->text, "\n");
-        // i_unlock(app);
+        /* i_lock(app);
+         textview_writef(app->text, tc(*str));
+         textview_writef(app->text, "\n");
+         i_unlock(app); */
     }
     str_destroy(str);
 }
