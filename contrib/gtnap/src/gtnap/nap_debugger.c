@@ -26,7 +26,9 @@ GtNapDebugger *nap_debugger_create(const char_t *path, const uint32_t nrows, con
     Socket *socket = NULL;
 
     debug->proc = bproc_exec(tc(cmd), NULL);
-    bthread_sleep(100);
+    if (debug->proc != NULL)
+        bproc_close(&debug->proc);
+    bthread_sleep(500);
 
     socket = bsocket_connect(ip, kDEBLIB_SERVER_PORT, 0, NULL);
     if (socket != NULL)
@@ -96,7 +98,7 @@ static cursor_t i_cursor(const uint32_t style)
 void nap_debugger_cursor(GtNapDebugger *debug, const uint32_t style)
 {
     cassert_no_null(debug);
-    if (debug->stream != NULL) 
+    if (debug->stream != NULL)
     {
         cursor_t cursor = i_cursor(style);
         deblib_send_cursor(debug->stream, cursor);
@@ -108,7 +110,7 @@ void nap_debugger_cursor(GtNapDebugger *debug, const uint32_t style)
 void nap_debugger_set_pos(GtNapDebugger *debug, const uint32_t row, const uint32_t col)
 {
     cassert_no_null(debug);
-    if (debug->stream != NULL) 
+    if (debug->stream != NULL)
         deblib_send_set_pos(debug->stream, row, col);
 }
 
@@ -350,8 +352,6 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
     case ekKEY_NUMMINUS:
         if (modifiers & ekMKEY_CONTROL)
             return KP_CTRL_MINUS;
-        if (modifiers & ekMKEY_ALT)
-            return KP_ALT_MINUS;
         return '-';
 
     case ekKEY_INSERT:
@@ -396,7 +396,9 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
 
     case ekKEY_MINUS:
         if (modifiers & ekMKEY_ALT)
-            return K_ALT_MINUS;
+            return /*K_ALT_MINUS*/'_';
+        if (modifiers & ekMKEY_SHIFT)
+            return '_';
         return '-';
 
     case ekKEY_COMMA:
@@ -522,10 +524,40 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
 
     case ekKEY_Z:
         return i_key_letter(K_CTRL_Z, K_ALT_Z, 'Z', 'z', modifiers);
+
+    case ekKEY_UNDEF:
+    case ekKEY_RCURLY:
+    case ekKEY_LCURLY:
+    case ekKEY_SEMICOLON:
+    case ekKEY_GTLT:
+    case ekKEY_F17:
+    case ekKEY_NUMLOCK:
+    case ekKEY_F18:
+    case ekKEY_F19:
+    case ekKEY_NUMEQUAL:
+    case ekKEY_F13:
+    case ekKEY_F16:
+    case ekKEY_F14:
+    case ekKEY_F15:
+    case ekKEY_LSHIFT:
+    case ekKEY_RSHIFT:
+    case ekKEY_LCTRL:
+    case ekKEY_RCTRL:
+    case ekKEY_LALT:
+    case ekKEY_RALT:
+    case ekKEY_EXCLAM:
+    case ekKEY_MENU:
+    case ekKEY_LWIN:
+    case ekKEY_RWIN:
+    case ekKEY_CAPS:
+    case ekKEY_TILDE:
+    case ekKEY_GRAVE:
+    case ekKEY_PLUS:
+        break;
     }
 
-    /* 
-     * Non-procesed inkey codes 
+    /*
+     * Non-procesed inkey codes
      * K_CTRL_PRTSCR
      */
     return 0;
@@ -536,21 +568,28 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
 int32_t nap_debugger_read_key(GtNapDebugger *debug)
 {
     int32_t key = 0;
+    //static int v = 0;
     cassert_no_null(debug);
     if (debug->stream != NULL)
     {
+        // if (v % 40 == 0)
+        //     key = K_DOWN;
+        // else if (v % 20 == 0)
+        //     key = K_UP;
+        // else
+        //     key = 0;
+        // v+=1;
         vkey_t vkey = ENUM_MAX(vkey_t);
         uint32_t modifiers = UINT32_MAX;
         deblib_read_key(debug->stream, &vkey, &modifiers);
-        key = i_vkey_to_hb(vkey, modifiers);
-
-        ///* TODO: Convert to Harbour key value */
-        //log_printf("VKEY: %d", vkey);
-        //log_printf("MODIFIERS: %d", modifiers);
-
-       
-        //if (vkey == ENUM_MAX(vkey_t))
-        //    key = 0;
+        if (vkey != ENUM_MAX(vkey_t))
+            key = i_vkey_to_hb(vkey, modifiers);
+        else
+            key = 0;
+    }
+    else
+    {
+        key = K_ALT_X;
     }
 
     return key;

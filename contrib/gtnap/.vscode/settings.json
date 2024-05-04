@@ -15,6 +15,8 @@
         "osedit.inl": "c",
         "ostext.inl": "c",
         "*.hdl": "cpp",
-        "*.def": "cpp"
+        "*.def": "cpp",
+        "unicode.h": "c",
+        "*.ch": "c"
     }
 }

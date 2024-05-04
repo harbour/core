@@ -5,12 +5,20 @@
 #include <draw2d/color.h>
 #include <core/stream.h>
 #include <core/strings.h>
+#include <osbs/log.h>
 #include <sewer/cassert.h>
 #include <sewer/unicode.h>
 
 /*---------------------------------------------------------------------------*/
 
 uint16_t kDEBLIB_SERVER_PORT = 3555;
+
+/*---------------------------------------------------------------------------*/
+
+const char_t* deblib_path(void)
+{
+    return DEBUGGER_PATH;
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -237,8 +245,42 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
     case ekMSG_CLOSE:
         break;
 
+    default:
+        break;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *deblib_msg_str(const msg_type_t msg)
+{
+    switch(msg) {
+    case ekMSG_SET_SIZE:
+        return "ekMSG_SET_SIZE";
+    case ekMSG_SCROLL:
+        return "ekMSG_SCROLL";
+    case ekMSG_BOX:
+        return "ekMSG_BOX";
+    case ekMSG_CURSOR:
+        return "ekMSG_CURSOR";
+    case ekMSG_SET_POS:
+        return "ekMSG_SET_POS";
+    case ekMSG_PUTCHAR:
+        return "ekMSG_PUTCHAR";
+    case ekMSG_PUTTEXT:
+        return "ekMSG_PUTTEXT";
+    case ekMSG_SAVE:
+        return "ekMSG_SAVE";
+    case ekMSG_REST:
+        return "ekMSG_REST";
+    case ekMSG_READ_KEY:
+        return "ekMSG_READ_KEY";
+    case ekMSG_CLOSE:
+        return "ekMSG_CLOSE";
     cassert_default();
     }
+
+    return "";
 }
 
 /*---------------------------------------------------------------------------*/

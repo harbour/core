@@ -943,6 +943,7 @@ static uint8_t i_utf8_to_cp_char(const uint32_t codepoint)
 static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
+    const char_t *build_cfg = NULL;
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->title = i_cp_to_utf8_string(INIT_TITLE);
     GTNAP_GLOBAL->rows = INIT_ROWS;
@@ -961,10 +962,15 @@ static GtNap *i_gtnap_create(void)
     }
 
  #if defined(__DEBUG__)
-     GTNAP_GLOBAL->debugger_path = str_cpath("%s/Debug/bin/gtnapdeb", BINARY_DIR);
+     build_cfg = "Debug";
  #else
-     GTNAP_GLOBAL->debugger_path = str_cpath("%s/Release/bin/gtnapdeb", BINARY_DIR);
+     build_cfg = "Release";
  #endif
+
+    {
+        const char_t *debpath = deblib_path();
+        GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/bin/gtnapdeb", debpath, build_cfg);
+    }
 
     globals_resolution(&screen);
     screen.height -= 50;        /* Margin for Dock or Taskbars */
@@ -5092,8 +5098,6 @@ void hb_gtnap_office_writer_insert_page_break(Writer *writer)
 void hb_gtnap_cualib_init_log(void)
 {
     osbs_start();
-    log_output(FALSE, FALSE);
-    log_file("C:\\Users\\USUARIO\\AppData\\Roaming\\exemplo\\log2.txt");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5277,7 +5281,7 @@ static HB_BOOL hb_gtnap_CheckPos( PHB_GT pGT, int iRow, int iCol, long * plIndex
 static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_SetPos: (%d,%d)", iRow, iCol);
+    //log_printf("hb_gtnap_SetPos: (%d,%d)", iRow, iCol);
     if (GTNAP_GLOBAL != NULL)
     {
         if (GTNAP_GLOBAL->debugger != NULL)
@@ -5338,7 +5342,7 @@ static int hb_gtnap_GetCursorStyle( PHB_GT pGT )
 static void hb_gtnap_SetCursorStyle( PHB_GT pGT, int iStyle )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_SetCursorStyle: %d", iStyle);
+    //log_printf("hb_gtnap_SetCursorStyle: %d", iStyle);
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_cursor(GTNAP_GLOBAL->debugger, (uint32_t)iStyle);
 }
@@ -5390,10 +5394,11 @@ static uint32_t i_hb_codepoint(HB_USHORT usChar)
 static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_PutChar: %c", usChar);
+    //log_printf("hb_gtnap_PutChar: %c", usChar);
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
     {
         uint32_t codepoint = i_hb_codepoint(usChar);
+        //codepoint = 'A';
         nap_debugger_putchar(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, codepoint, (byte_t)bColor, (byte_t)bAttr);
     }
 
@@ -5405,7 +5410,7 @@ static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_
 static void hb_gtnap_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, void * pBuffer )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_Save (%d %d %d %d)", iTop, iLeft, iBottom, iRight);
+    //log_printf("hb_gtnap_Save (%d %d %d %d)", iTop, iLeft, iBottom, iRight);
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_save(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (byte_t*)pBuffer);
 }
@@ -5415,7 +5420,7 @@ static void hb_gtnap_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
 static void hb_gtnap_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const void * pBuffer )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_Rest (%d %d %d %d)", iTop, iLeft, iBottom, iRight);
+    //log_printf("hb_gtnap_Rest (%d %d %d %d)", iTop, iLeft, iBottom, iRight);
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_rest(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (const byte_t*)pBuffer);
 }
@@ -5432,7 +5437,8 @@ static int hb_gtnap_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const c
     HB_SYMBOL_UNUSED( pText );
     HB_SYMBOL_UNUSED( ulLen );
     i_cp_to_utf8(pText, utf8, sizeof32(utf8));
-    log_printf("hb_gtnap_PutText: %s", utf8);
+    //str_copy_c(utf8, sizeof(utf8), "Hello");
+    //log_printf("hb_gtnap_PutText: %s", utf8);
 
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_puttext(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, (byte_t)bColor, utf8);
@@ -5487,7 +5493,7 @@ static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom,
     HB_SYMBOL_UNUSED( iBottom );
     HB_SYMBOL_UNUSED( iRight );
     HB_SYMBOL_UNUSED( bColor );
-    log_printf("hb_gtnap_SetAttribute");
+    //log_printf("hb_gtnap_SetAttribute");
     cassert(TRUE);
 }
 
@@ -5496,7 +5502,7 @@ static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom,
 static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, HB_USHORT bChar, int iRows, int iCols )
 {
     HB_SYMBOL_UNUSED( pGT );
-    log_printf("hb_gtnap_Scroll (%d, %d, %d, %d) (%d-'%d') (%d-%d)", iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols);
+    //log_printf("hb_gtnap_Scroll (%d, %d, %d, %d) (%d-'%d') (%d-%d)", iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols);
 
     if (GTNAP_GLOBAL != NULL)
     {
@@ -5543,7 +5549,7 @@ static void hb_gtnap_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRig
 {
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( pbyFrame );
-    log_printf("hb_gtnap_Box (%d %d %d %d) %d '%s'", iTop, iLeft, iBottom, iRight, bColor, pbyFrame);
+    //log_printf("hb_gtnap_Box (%d %d %d %d) %d '%s'", iTop, iLeft, iBottom, iRight, bColor, pbyFrame);
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_box(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (byte_t)bColor);
 }
@@ -5559,7 +5565,7 @@ static void hb_gtnap_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight, HB_
     HB_SYMBOL_UNUSED( bChar );
     HB_SYMBOL_UNUSED( bColor );
     cassert(TRUE);
-    log_printf("hb_gtnap_HorizLine");
+    //log_printf("hb_gtnap_HorizLine");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5573,7 +5579,7 @@ static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, HB_U
     HB_SYMBOL_UNUSED( bChar );
     HB_SYMBOL_UNUSED( bColor );
     cassert(TRUE);
-    log_printf("hb_gtnap_VertLine");
+    //log_printf("hb_gtnap_VertLine");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5590,7 +5596,7 @@ static void hb_gtnap_SetBlink( PHB_GT pGT, HB_BOOL bBlink )
 {
     HB_SYMBOL_UNUSED( pGT );
     HB_SYMBOL_UNUSED( bBlink );
-    log_printf("hb_gtnap_SetBlink: %d", bBlink);
+    //log_printf("hb_gtnap_SetBlink: %d", bBlink);
     cassert(TRUE);
 }
 

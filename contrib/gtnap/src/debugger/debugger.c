@@ -1,4 +1,4 @@
-/* NAppGUI Hello World */
+/* GTNAP Debugger Window */
 
 #include <deblib/deblib.h>
 #include <nappgui.h>
@@ -65,6 +65,22 @@ static void i_update_text_buffer(App *app, const uint32_t nrows, const uint32_t 
 
 /*---------------------------------------------------------------------------*/
 
+static void i_lock(App *app)
+{
+    cassert_no_null(app);
+    bmutex_lock(app->mutex);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_unlock(App *app)
+{
+    cassert_no_null(app);
+    bmutex_unlock(app->mutex);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnDraw(App *app, Event *e)
 {
     const EvDraw *p = event_params(e, EvDraw);
@@ -72,7 +88,7 @@ static void i_OnDraw(App *app, Event *e)
     uint32_t i, j;
     cassert_no_null(app);
     bchar = app->text_buffer;
-    bmutex_lock(app->mutex);
+    i_lock(app);
     draw_font(p->ctx, app->font);
     for (i = 0; i < app->nrows; ++i)
     {
@@ -113,7 +129,7 @@ static void i_OnDraw(App *app, Event *e)
             }
         }
     }
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -122,7 +138,10 @@ static void i_OnKeyDown(App *app, Event *e)
 {
     const EvKey *p = event_params(e, EvKey);
     cassert_no_null(app);
-    app->key_pressed = p->key;
+    if (p->key == ekKEY_LSHIFT || p->key == ekKEY_RSHIFT)
+        app->key_pressed = ENUM_MAX(vkey_t);
+    else
+        app->key_pressed = p->key;
     app->key_modifiers = p->modifiers;
 }
 
@@ -156,7 +175,7 @@ static Panel *i_panel(App *app)
     layout_tabstop(layout, 0, 0, TRUE);
     layout_tabstop(layout, 1, 0, FALSE);
     layout_hsize(layout, 1, 400);
-    layout_show_col(layout, 1, FALSE);
+    layout_show_col(layout, 1, app->print_log);
     panel_layout(panel, layout);
     return panel;
 }
@@ -178,10 +197,11 @@ static void i_log(App *app, String **str)
     cassert_no_null(str);
     if (app->print_log == TRUE)
     {
-        bmutex_lock(app->mutex);
-        textview_writef(app->text, tc(*str));
-        textview_writef(app->text, "\n");
-        bmutex_unlock(app->mutex);
+        log_printf("%s", tc(*str));
+        /* i_lock(app);
+         textview_writef(app->text, tc(*str));
+         textview_writef(app->text, "\n");
+         i_unlock(app); */
     }
     str_destroy(str);
 }
@@ -195,15 +215,15 @@ static void i_set_size(App *app, const DebMsg *msg)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_SET_SIZE Rows: %d, Cols: %d", msg->row, msg->col);
+        String *log = str_printf("%s Rows: %d, Cols: %d", deblib_msg_str(msg->type), msg->row, msg->col);
         i_log(app, &log);
     }
 
-    //if (app->nrows != msg->row || app->ncols != msg->col)
-    //{
-    //    i_update_text_buffer(app, msg->row, msg->col);
-    //    view_update(app->view);
-    //}
+    if (app->nrows != msg->row || app->ncols != msg->col)
+    {
+       i_update_text_buffer(app, msg->row, msg->col);
+       view_update(app->view);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -216,11 +236,11 @@ static void i_scroll(App *app, const DebMsg *msg)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_SCROLL Top: %d, Left: %d, Bottom: %d, Right: %d, Char: '%s', Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->utf8, msg->colorb);
+        String *log = str_printf("%s Top: %d, Left: %d, Bottom: %d, Right: %d, Char: '%s', Color: %d", deblib_msg_str(msg->type), msg->top, msg->left, msg->bottom, msg->right, msg->utf8, msg->colorb);
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
     for (i = msg->top; i <= msg->bottom; ++i)
     {
         for (j = msg->left; j <= msg->right; ++j)
@@ -233,7 +253,7 @@ static void i_scroll(App *app, const DebMsg *msg)
             bchar->attrib = 0;
         }
     }
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -246,11 +266,11 @@ static void i_box(App *app, const DebMsg *msg)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_BOX Top: %d, Left: %d, Bottom: %d, Right: %d, Color: %d", msg->top, msg->left, msg->bottom, msg->right, msg->colorb);
+        String *log = str_printf("%s Top: %d, Left: %d, Bottom: %d, Right: %d, Color: %d", deblib_msg_str(msg->type), msg->top, msg->left, msg->bottom, msg->right, msg->colorb);
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
     for (i = msg->top + 1; i <= msg->bottom - 1; ++i)
     {
         /* Left edge */
@@ -304,7 +324,7 @@ static void i_box(App *app, const DebMsg *msg)
     /* Top-right corner */
     {
         BufChar *bchar = app->text_buffer + (msg->top * app->ncols + msg->right);
-        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┐");
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┝");
         bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
@@ -325,7 +345,7 @@ static void i_box(App *app, const DebMsg *msg)
         bchar->attrib = 0;
     }
 
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -340,13 +360,13 @@ static void i_cursor(App *app, const DebMsg *msg)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_CURSOR Type: %s", deblib_cursor_str(cursor));
+        String *log = str_printf("%s Type: %s", deblib_msg_str(msg->type), deblib_cursor_str(cursor));
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
     app->cursor_type = cursor;
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -358,14 +378,14 @@ static void i_set_pos(App *app, const DebMsg *msg)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_SET_POS: (%d, %d)", msg->row, msg->col);
+        String *log = str_printf("%s (%d, %d)", deblib_msg_str(msg->type), msg->row, msg->col);
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
     app->cursor_row = msg->row;
     app->cursor_col = msg->col;
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -378,18 +398,18 @@ static void i_putchar(App *app, const DebMsg *msg)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_PUTCHAR Row: %d, Col: %d, Char: '%s', Color: %d, Attrib: %d", msg->row, msg->col, msg->utf8, msg->colorb, msg->attrib);
+        String *log = str_printf("%s Row: %d, Col: %d, Char: '%s', Color: %d, Attrib: %d", deblib_msg_str(msg->type), msg->row, msg->col, msg->utf8, msg->colorb, msg->attrib);
         i_log(app, &log);
     }
 
     cassert(msg->row < app->nrows);
     cassert(msg->col < app->ncols);
-    bmutex_lock(app->mutex);
+    i_lock(app);
     bchar = app->text_buffer + (msg->row * app->ncols + msg->col);
     str_copy_c(bchar->utf8, sizeof(bchar->utf8), msg->utf8);
     bchar->colorb = msg->colorb;
     bchar->attrib = msg->attrib;
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -402,16 +422,16 @@ static void i_puttext(App *app, const DebMsg *msg)
     cassert_no_null(app);
     cassert_no_null(msg);
     cassert(msg->row < app->nrows);
-    
+
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_PUTTEXT Row: %d, Col: %d, Color: %d, Text: '%s'", msg->row, msg->col, msg->colorb, msg->utf8);
+        String *log = str_printf("%s Row: %d, Col: %d, Color: %d, Text: '%s'", deblib_msg_str(msg->type), msg->row, msg->col, msg->colorb, msg->utf8);
         i_log(app, &log);
     }
 
     col = msg->col;
     text = msg->utf8;
-    bmutex_lock(app->mutex);
+    i_lock(app);
     bchar = app->text_buffer + (msg->row * app->ncols + msg->col);
     codepoint = unicode_to_u32b(text, ekUTF8, &nbytes);
 
@@ -428,7 +448,7 @@ static void i_puttext(App *app, const DebMsg *msg)
         col += 1;
         codepoint = unicode_to_u32b(text, ekUTF8, &nbytes);
     }
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -439,14 +459,14 @@ static void i_save(App *app, const DebMsg *msg, Stream *stm)
     cassert_no_null(app);
     cassert_no_null(msg);
     cassert(msg->row < app->nrows);
-    
+
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_SAVE Top: %d, Left: %d, Bottom: %d, Right: %d", msg->top, msg->left, msg->bottom, msg->right);
+        String *log = str_printf("%s Top: %d, Left: %d, Bottom: %d, Right: %d", deblib_msg_str(msg->type), msg->top, msg->left, msg->bottom, msg->right);
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
 
     for(i = msg->top; i <= msg->bottom; ++i)
     {
@@ -464,7 +484,7 @@ static void i_save(App *app, const DebMsg *msg, Stream *stm)
         }
     }
 
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -475,14 +495,14 @@ static void i_rest(App *app, const DebMsg *msg, Stream *stm)
     cassert_no_null(app);
     cassert_no_null(msg);
     cassert(msg->row < app->nrows);
-    
+
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("ekMSG_REST Top: %d, Left: %d, Bottom: %d, Right: %d", msg->top, msg->left, msg->bottom, msg->right);
+        String *log = str_printf("%s Top: %d, Left: %d, Bottom: %d, Right: %d", deblib_msg_str(msg->type), msg->top, msg->left, msg->bottom, msg->right);
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
 
     for(i = msg->top; i <= msg->bottom; ++i)
     {
@@ -500,7 +520,7 @@ static void i_rest(App *app, const DebMsg *msg, Stream *stm)
         }
     }
 
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -512,6 +532,12 @@ static void i_read_key(App *app, DebMsg *msg)
     msg->key = app->key_pressed;
     msg->modifiers = app->key_modifiers;
     app->key_pressed = ENUM_MAX(vkey_t);
+
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("%s Key: %d, Modif: %d", deblib_msg_str(msg->type), (int)msg->key, msg->modifiers);
+        i_log(app, &log);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -537,9 +563,22 @@ static uint32_t i_protocol_thread(App *app)
 
     server_sock = bsocket_server(kDEBLIB_SERVER_PORT, 32, NULL);
 
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("Created server socket:%p %d", (void*)server_sock, kDEBLIB_SERVER_PORT);
+        i_log(app, &log);
+    }
+
     if (server_sock != NULL)
     {
         Socket *income_sock = bsocket_accept(server_sock, 0, NULL);
+
+        if (app->print_log == TRUE)
+        {
+            String *log = str_printf("Created income socket:%p", (void*)income_sock);
+            i_log(app, &log);
+        }
+
         if (income_sock != NULL)
         {
             Stream *stm = stm_socket(income_sock);
@@ -561,7 +600,13 @@ static uint32_t i_protocol_thread(App *app)
                     {
                         DebMsg msg;
                         deblib_recv_message(stm, &msg);
-                    
+
+                        if (app->print_log == TRUE)
+                        {
+                            String *log = str_printf("RECV Socket: %s", deblib_msg_str(msg.type));
+                            i_log(app, &log);
+                        }
+
                         switch (msg.type) {
                         case ekMSG_SET_SIZE:
                             i_set_size(app, &msg);
@@ -611,6 +656,13 @@ static uint32_t i_protocol_thread(App *app)
 
                         default:
                             i_unknown(app, &msg);
+                            app->alive = FALSE;
+                        }
+
+                        if (app->print_log == TRUE)
+                        {
+                            String *log = str_printf("END Socket: %s", deblib_msg_str(msg.type));
+                            i_log(app, &log);
                         }
                     }
                     else
@@ -637,6 +689,10 @@ static App *i_app(void)
     App *app = heap_new0(App);
     uint32_t nrows = UINT32_MAX, ncols = UINT32_MAX;
     uint32_t argc = osapp_argc();
+    app->print_log = FALSE;
+
+    if (app->print_log == TRUE)
+        log_printf("argc: %d", argc);
 
     /* Parse arguments */
     if (argc == 3)
@@ -644,8 +700,14 @@ static App *i_app(void)
         char_t argv[128];
         bool_t err1, err2;
         osapp_argv(1, argv, sizeof(argv));
+        if (app->print_log == TRUE)
+            log_printf("argv[1]: %s", argv);
+
         nrows = str_to_u32(argv, 10, &err1);
         osapp_argv(2, argv, sizeof(argv));
+        if (app->print_log == TRUE)
+            log_printf("argv[2]: %s", argv);
+
         ncols = str_to_u32(argv, 10, &err2);
         if (err1 == TRUE || err2 == TRUE)
         {
@@ -653,6 +715,9 @@ static App *i_app(void)
             ncols = UINT32_MAX;
         }
     }
+
+    if (app->print_log == TRUE)
+        log_printf("Starting debugger: nrows: %d ncols: %d", nrows, ncols);
 
     if (ncols == UINT32_MAX || nrows == UINT32_MAX)
     {
@@ -669,29 +734,42 @@ static App *i_app(void)
     app->cursor_col = UINT32_MAX;
     app->cursor_draw = FALSE;
     app->last_redraw = -1;
-
     return app;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_assert(void *item, const uint32_t group, const char_t *caption, const char_t *detail, const char_t *file, const uint32_t line)
+{
+    unref(item);
+    log_printf("cassert group: %d, caption: %s, detail: %s, file: %s, line: %d", group, caption, detail, file, line);
 }
 
 /*---------------------------------------------------------------------------*/
 
 static App *i_create(void)
 {
-    App *app = i_app();
-    Panel *panel = i_panel(app);
-    app->print_log = FALSE;
+#if defined (__LINUX__)
+    log_file("/home/fran/Desktop/debugger_log.txt");
+#elif defined (__WINDOWS__)
     log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
-    deblib_init_colors(i_COLORS);
-    view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
-    app->window = window_create(ekWINDOW_STD);
-    window_panel(app->window, panel);
-    window_title(app->window, "GTNap Debugger");
-    window_origin(app->window, v2df(500, 200));
-    window_OnClose(app->window, listener(app, i_OnClose, App));
-    window_show(app->window);
-    app->mutex = bmutex_create();
-    app->protocol_thread = bthread_create(i_protocol_thread, app, App);
-    return app;
+#endif
+    {
+        App *app = i_app();
+        Panel *panel = i_panel(app);
+        cassert_set_func((void*)app, i_assert);
+        deblib_init_colors(i_COLORS);
+        view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
+        app->window = window_create(ekWINDOW_STD);
+        window_panel(app->window, panel);
+        window_title(app->window, "GTNap Debugger");
+        window_origin(app->window, v2df(500, 200));
+        window_OnClose(app->window, listener(app, i_OnClose, App));
+        window_show(app->window);
+        app->mutex = bmutex_create();
+        app->protocol_thread = bthread_create(i_protocol_thread, app, App);
+        return app;
+    }
 }
 
 /*---------------------------------------------------------------------------*/

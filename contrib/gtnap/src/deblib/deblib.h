@@ -4,6 +4,8 @@
 
 __EXTERN_C
 
+const char_t* deblib_path(void);
+
 void deblib_send_resolution(Stream *stm, const uint32_t num_rows, const uint32_t num_cols);
 
 void deblib_send_scroll(Stream *stm, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const uint32_t row, const uint32_t col, const uint32_t codepoint, const byte_t color);
@@ -27,6 +29,8 @@ void deblib_read_key(Stream *stm, vkey_t *key, uint32_t *modifiers);
 void deblib_close(Stream *stm);
 
 void deblib_recv_message(Stream *stm, DebMsg *msg);
+
+const char_t *deblib_msg_str(const msg_type_t msg);
 
 const char_t *deblib_cursor_str(const cursor_t cursor);
 
