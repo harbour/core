@@ -12,13 +12,12 @@
 /*---------------------------------------------------------------------------*/
 
 uint16_t kDEBLIB_SERVER_PORT = 3555;
-static bool_t i_VERBOSE = FALSE;
 
 /*---------------------------------------------------------------------------*/
 
-void deblib_verbose(const bool_t verbose)
+const char_t* deblib_path(void)
 {
-    i_VERBOSE = verbose;
+    return DEBUGGER_PATH;
 }
 
 /*---------------------------------------------------------------------------*/

@@ -4,7 +4,7 @@
 
 __EXTERN_C
 
-void deblib_verbose(const bool_t verbose);
+const char_t* deblib_path(void);
 
 void deblib_send_resolution(Stream *stm, const uint32_t num_rows, const uint32_t num_cols);
 
