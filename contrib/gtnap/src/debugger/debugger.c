@@ -750,8 +750,11 @@ static void i_assert(void *item, const uint32_t group, const char_t *caption, co
 
 static App *i_create(void)
 {
+#if defined (__LINUX__)
     log_file("/home/fran/Desktop/debugger_log.txt");
-
+#elif defined (__WINDOWS__)
+    log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
+#endif
     {
         App *app = i_app();
         Panel *panel = i_panel(app);
