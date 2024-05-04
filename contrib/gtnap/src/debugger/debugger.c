@@ -65,14 +65,31 @@ static void i_update_text_buffer(App *app, const uint32_t nrows, const uint32_t 
 
 /*---------------------------------------------------------------------------*/
 
+static void i_lock(App *app)
+{
+    cassert_no_null(app);
+    bmutex_lock(app->mutex);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_unlock(App *app)
+{
+    cassert_no_null(app);
+    bmutex_unlock(app->mutex);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnDraw(App *app, Event *e)
 {
     const EvDraw *p = event_params(e, EvDraw);
     BufChar *bchar = NULL;
     uint32_t i, j;
     cassert_no_null(app);
+    //log_printf("Begin draw");
     bchar = app->text_buffer;
-    bmutex_lock(app->mutex);
+    i_lock(app);
     draw_font(p->ctx, app->font);
     for (i = 0; i < app->nrows; ++i)
     {
@@ -113,7 +130,7 @@ static void i_OnDraw(App *app, Event *e)
             }
         }
     }
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -179,10 +196,10 @@ static void i_log(App *app, String **str)
     if (app->print_log == TRUE)
     {
         log_printf("%s", tc(*str));
-        // bmutex_lock(app->mutex);
+        // i_lock(app);
         // textview_writef(app->text, tc(*str));
         // textview_writef(app->text, "\n");
-        // bmutex_unlock(app->mutex);
+        // i_unlock(app);
     }
     str_destroy(str);
 }
@@ -221,7 +238,7 @@ static void i_scroll(App *app, const DebMsg *msg)
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
     for (i = msg->top; i <= msg->bottom; ++i)
     {
         for (j = msg->left; j <= msg->right; ++j)
@@ -234,7 +251,7 @@ static void i_scroll(App *app, const DebMsg *msg)
             bchar->attrib = 0;
         }
     }
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -251,7 +268,7 @@ static void i_box(App *app, const DebMsg *msg)
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
     for (i = msg->top + 1; i <= msg->bottom - 1; ++i)
     {
         /* Left edge */
@@ -326,7 +343,7 @@ static void i_box(App *app, const DebMsg *msg)
         bchar->attrib = 0;
     }
 
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -345,9 +362,9 @@ static void i_cursor(App *app, const DebMsg *msg)
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
     app->cursor_type = cursor;
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -363,10 +380,10 @@ static void i_set_pos(App *app, const DebMsg *msg)
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
     app->cursor_row = msg->row;
     app->cursor_col = msg->col;
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -385,12 +402,12 @@ static void i_putchar(App *app, const DebMsg *msg)
 
     cassert(msg->row < app->nrows);
     cassert(msg->col < app->ncols);
-    bmutex_lock(app->mutex);
+    i_lock(app);
     bchar = app->text_buffer + (msg->row * app->ncols + msg->col);
     str_copy_c(bchar->utf8, sizeof(bchar->utf8), msg->utf8);
     bchar->colorb = msg->colorb;
     bchar->attrib = msg->attrib;
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -412,7 +429,7 @@ static void i_puttext(App *app, const DebMsg *msg)
 
     col = msg->col;
     text = msg->utf8;
-    bmutex_lock(app->mutex);
+    i_lock(app);
     bchar = app->text_buffer + (msg->row * app->ncols + msg->col);
     codepoint = unicode_to_u32b(text, ekUTF8, &nbytes);
 
@@ -429,7 +446,7 @@ static void i_puttext(App *app, const DebMsg *msg)
         col += 1;
         codepoint = unicode_to_u32b(text, ekUTF8, &nbytes);
     }
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -447,7 +464,7 @@ static void i_save(App *app, const DebMsg *msg, Stream *stm)
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
 
     for(i = msg->top; i <= msg->bottom; ++i)
     {
@@ -465,7 +482,7 @@ static void i_save(App *app, const DebMsg *msg, Stream *stm)
         }
     }
 
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -483,7 +500,7 @@ static void i_rest(App *app, const DebMsg *msg, Stream *stm)
         i_log(app, &log);
     }
 
-    bmutex_lock(app->mutex);
+    i_lock(app);
 
     for(i = msg->top; i <= msg->bottom; ++i)
     {
@@ -501,7 +518,7 @@ static void i_rest(App *app, const DebMsg *msg, Stream *stm)
         }
     }
 
-    bmutex_unlock(app->mutex);
+    i_unlock(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -637,6 +654,7 @@ static uint32_t i_protocol_thread(App *app)
 
                         default:
                             i_unknown(app, &msg);
+                            app->alive = FALSE;
                         }
 
                         if (app->print_log == TRUE)
@@ -669,7 +687,7 @@ static App *i_app(void)
     App *app = heap_new0(App);
     uint32_t nrows = UINT32_MAX, ncols = UINT32_MAX;
     uint32_t argc = osapp_argc();
-    app->print_log = TRUE;
+    app->print_log = FALSE;
 
     if (app->print_log == TRUE)
         log_printf("argc: %d", argc);
@@ -721,6 +739,7 @@ static App *i_app(void)
 
 static void i_assert(void *item, const uint32_t group, const char_t *caption, const char_t *detail, const char_t *file, const uint32_t line)
 {
+    unref(item);
     log_printf("cassert group: %d, caption: %s, detail: %s, file: %s, line: %d", group, caption, detail, file, line);
 }
 

@@ -246,7 +246,8 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
     case ekMSG_CLOSE:
         break;
 
-    cassert_default();
+    default:
+        break;
     }
 }
 

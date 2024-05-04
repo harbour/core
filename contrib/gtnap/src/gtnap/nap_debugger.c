@@ -26,6 +26,8 @@ GtNapDebugger *nap_debugger_create(const char_t *path, const uint32_t nrows, con
     Socket *socket = NULL;
 
     debug->proc = bproc_exec(tc(cmd), NULL);
+    if (debug->proc != NULL)
+        bproc_close(&debug->proc);
     bthread_sleep(500);
 
     socket = bsocket_connect(ip, kDEBLIB_SERVER_PORT, 0, NULL);
@@ -566,9 +568,17 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
 int32_t nap_debugger_read_key(GtNapDebugger *debug)
 {
     int32_t key = 0;
+    //static int v = 0;
     cassert_no_null(debug);
     if (debug->stream != NULL)
     {
+        // if (v % 40 == 0)
+        //     key = K_DOWN;
+        // else if (v % 20 == 0)
+        //     key = K_UP;
+        // else
+        //     key = 0;
+        // v+=1;
         vkey_t vkey = ENUM_MAX(vkey_t);
         uint32_t modifiers = UINT32_MAX;
         deblib_read_key(debug->stream, &vkey, &modifiers);

@@ -5409,7 +5409,7 @@ static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
     {
         uint32_t codepoint = i_hb_codepoint(usChar);
-        codepoint = 'A';
+        //codepoint = 'A';
         nap_debugger_putchar(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, codepoint, (byte_t)bColor, (byte_t)bAttr);
     }
 
@@ -5447,8 +5447,8 @@ static int hb_gtnap_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const c
     HB_SYMBOL_UNUSED( bColor );
     HB_SYMBOL_UNUSED( pText );
     HB_SYMBOL_UNUSED( ulLen );
-    //i_cp_to_utf8(pText, utf8, sizeof32(utf8));
-    str_copy_c(utf8, sizeof(utf8), "Hello");
+    i_cp_to_utf8(pText, utf8, sizeof32(utf8));
+    //str_copy_c(utf8, sizeof(utf8), "Hello");
     log_printf("hb_gtnap_PutText: %s", utf8);
 
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
