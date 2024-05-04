@@ -333,7 +333,7 @@ build.bat -b Debug -a x64
 bash ./build.sh -b Debug
 ```
 
-In addition to `gtnap.lib`, this will create the `/build/Debug/bin/gtnapdeb` executable that will be invoked by GTNap when the time comes. To use the debugger, just add the `AltD()` command anywhere in the Harbour code:
+In addition to `gtnap.lib`, the build script will create the `/build/Debug/bin/gtnapdeb` executable that will be invoked by GTNap when the time comes. To use the debugger, just add the `AltD()` command anywhere in the Harbour code:
 
 ```
 CUA20 @ 18,40,26,90 JANELA V_JANELA ;
@@ -342,13 +342,17 @@ CUA20 @ 18,40,26,90 JANELA V_JANELA ;
 *
 AltD()
 ESPECIALIZE V_JANELA MENU ROLAVERTICAL
-ADDOPCAO V_JANELA TEXTO "#Opção 1" ;
-    ACAO MOSTRAR("M?????","Foi escolhida a opção 1") AJUDA "P06723"
-ADDOPCAO V_JANELA TEXTO "Opção #2" ;
-    ACAO MOSTRAR("M?????","Foi escolhida a opção 2") AJUDA "P06725"
+ADDOPCAO V_JANELA TEXTO "#OpÃ§Ã£o 1" ;
+    ACAO MOSTRAR("M?????","Foi escolhida a opÃ§Ã£o 1") AJUDA "P06723"
+ADDOPCAO V_JANELA TEXTO "OpÃ§Ã£o #2" ;
+    ACAO MOSTRAR("M?????","Foi escolhida a opÃ§Ã£o 2") AJUDA "P06725"
 ```
 
-GTNap will stop the execution at this point and launch the Debugger.
+GTNap will stop the execution at this point and launch the Debugger. Because GTNap provides a bypass to the built-in debugger, the debugging commands will be the same as in text mode.
+
+![debugger](https://github.com/frang75/harbour_nappgui/assets/42999199/3c080fd6-4e71-4c02-b02b-31e79d490ef1)
+
+![debugger_process](https://github.com/frang75/harbour_nappgui/assets/42999199/6718de3b-1b14-48cc-b22c-715fdb2104e7)
 
 ## Application ICON
 
