@@ -352,8 +352,6 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
     case ekKEY_NUMMINUS:
         if (modifiers & ekMKEY_CONTROL)
             return KP_CTRL_MINUS;
-        if (modifiers & ekMKEY_ALT)
-            return KP_ALT_MINUS;
         return '-';
 
     case ekKEY_INSERT:
@@ -398,7 +396,9 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
 
     case ekKEY_MINUS:
         if (modifiers & ekMKEY_ALT)
-            return K_ALT_MINUS;
+            return /*K_ALT_MINUS*/'_';
+        if (modifiers & ekMKEY_SHIFT)
+            return '_';
         return '-';
 
     case ekKEY_COMMA:
@@ -582,7 +582,10 @@ int32_t nap_debugger_read_key(GtNapDebugger *debug)
         vkey_t vkey = ENUM_MAX(vkey_t);
         uint32_t modifiers = UINT32_MAX;
         deblib_read_key(debug->stream, &vkey, &modifiers);
-        key = i_vkey_to_hb(vkey, modifiers);
+        if (vkey != ENUM_MAX(vkey_t))
+            key = i_vkey_to_hb(vkey, modifiers);
+        else
+            key = 0;
     }
     else
     {

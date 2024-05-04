@@ -139,7 +139,10 @@ static void i_OnKeyDown(App *app, Event *e)
 {
     const EvKey *p = event_params(e, EvKey);
     cassert_no_null(app);
-    app->key_pressed = p->key;
+    if (p->key == ekKEY_LSHIFT || p->key == ekKEY_RSHIFT)
+        app->key_pressed = ENUM_MAX(vkey_t);
+    else
+        app->key_pressed = p->key;
     app->key_modifiers = p->modifiers;
 }
 
