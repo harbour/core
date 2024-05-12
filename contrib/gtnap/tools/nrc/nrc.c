@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -46,7 +46,7 @@ static int i_version(void)
 
 /*---------------------------------------------------------------------------*/
 
-static int i_result(ArrPt(String) * *warnings, ArrPt(String) * *errors, const bool_t regenerated)
+static int i_result(ArrPt(String) **warnings, ArrPt(String) **errors, const bool_t regenerated)
 {
     int ret = regenerated ? SUCCESS : SUCCESS_UPTODATE;
     cassert_no_null(warnings);
@@ -54,11 +54,11 @@ static int i_result(ArrPt(String) * *warnings, ArrPt(String) * *errors, const bo
 
     arrpt_foreach(error, *errors, String)
         log_printf("[ERROR] %s", tc(error));
-    arrpt_end();
+    arrpt_end()
 
     arrpt_foreach(warning, *warnings, String)
         log_printf("[WARNING] %s", tc(warning));
-    arrpt_end();
+    arrpt_end()
 
     if (arrpt_size(*errors, String) > 0)
         ret = WITH_ERRORS;

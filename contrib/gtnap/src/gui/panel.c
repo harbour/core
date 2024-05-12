@@ -257,7 +257,7 @@ static void i_hide_component(GuiComponent *component)
 
 /*---------------------------------------------------------------------------*/
 
-/* 
+/*
  * This function is not used in a general Layout-based composer.
  * Is required for out-of-the-box uses of NAppGUI (eg. GTNAP)
  */

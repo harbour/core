@@ -101,7 +101,8 @@ static gboolean i_OnClose(GtkWidget *widget, GdkEvent *event, OSWindow *window)
     cassert_no_null(window);
     cassert_unref(window->control.widget == widget, widget);
     unref(event);
-    return (gboolean)i_close(window, ekGUI_CLOSE_BUTTON);
+    i_close(window, ekGUI_CLOSE_BUTTON);
+    return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -241,7 +242,7 @@ static gboolean i_OnKeyPress(GtkWidget *widget, GdkEventKey *event, OSWindow *wi
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE GtkWidget *i_gtk_window(const uint32_t flags)
+static ___INLINE GtkWidget *i_gtk_window(const uint32_t flags)
 {
     GtkWidget *window = NULL;
     if (flags & ekWINDOW_OFFSCREEN)
@@ -916,7 +917,7 @@ void _oswindow_unset_focus(OSWindow *window)
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE OSWindow *i_root(GtkWidget *widget)
+static ___INLINE OSWindow *i_root(GtkWidget *widget)
 {
     GtkWidget *root_widget = NULL;
     cassert_no_null(widget);

@@ -247,8 +247,12 @@ macro(nap_gcc_warns)
     # Disable flags
     # In future try to adapt NAppGUI to remove these flags, making the code more robust
     set(CFLAGS "${CFLAGS} -Wno-bad-function-cast -Wno-missing-prototypes -Wno-missing-declarations")
-    set(FLAGS "${FLAGS} -Wno-long-long -Wno-overlength-strings -Wno-aggregate-return -Wno-cast-qual -Wno-padded -Wno-switch-default -Wno-conversion -Wno-float-equal -Wno-format-nonliteral -Wno-switch-enum -Wno-redundant-decls -Wno-shadow -Wno-undef -Wno-missing-noreturn -Wno-stack-protector -Wno-missing-include-dirs")
+    set(FLAGS "${FLAGS} -Wno-long-long -Wno-overlength-strings -Wno-aggregate-return -Wno-cast-qual -Wno-padded -Wno-switch-default -Wno-conversion -Wno-float-equal -Wno-format-nonliteral -Wno-switch-enum -Wno-redundant-decls -Wno-shadow -Wno-undef -Wno-missing-noreturn -Wno-stack-protector -Wno-missing-include-dirs -Wno-cast-align")
     set(CXXFLAGS "${CXXFLAGS} -Wnon-virtual-dtor -Woverloaded-virtual")
+
+    if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+        set(FLAGS "${FLAGS} -Wno-unreachable-code")
+    endif()
 
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${FLAGS} ${CFLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAGS} ${CXXFLAGS}")
