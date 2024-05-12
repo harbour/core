@@ -12,7 +12,7 @@ typedef struct _acces_t Access;
 
 typedef enum _sdkres_t
 {
-    ekSDKRES_OK     = 1,
+    ekSDKRES_OK = 1,
     ekSDKRES_NO_ENVAR,
     ekSDKRES_PROC_KILL_FAIL,
     ekSDKRES_PROC_INIT_FAIL,
@@ -39,7 +39,7 @@ typedef enum _sdkres_t
 
 typedef enum _halign_t
 {
-    ekHALIGN_LEFT               = 1,
+    ekHALIGN_LEFT = 1,
     ekHALIGN_CENTER,
     ekHALIGN_RIGHT,
     ekHALIGN_JUSTIFY
@@ -47,14 +47,14 @@ typedef enum _halign_t
 
 typedef enum _valign_t
 {
-    ekVALIGN_TOP                = 1,
+    ekVALIGN_TOP = 1,
     ekVALIGN_CENTER,
     ekVALIGN_BOTTOM
 } valign_t;
 
 typedef enum _numformat_t
 {
-    ekNUMFORMAT_INT         = 1,
+    ekNUMFORMAT_INT = 1,
     ekNUMFORMAT_INT_1000,
     ekNUMFORMAT_DEC2,
     ekNUMFORMAT_DEC2_1000,

@@ -6,7 +6,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_OPEN )
+HB_FUNC(NAP_XLS_OPEN)
 {
     HB_ITEM *pathname_block = hb_param(1, HB_IT_STRING | HB_IT_BLOCK);
     Sheet *sheet = hb_gtnap_office_sheet_open(pathname_block);
@@ -15,7 +15,7 @@ HB_FUNC( NAP_XLS_OPEN )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CREATE )
+HB_FUNC(NAP_XLS_CREATE)
 {
     Sheet *sheet = hb_gtnap_office_sheet_create();
     hb_retptr(sheet);
@@ -23,27 +23,27 @@ HB_FUNC( NAP_XLS_CREATE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_SAVE )
+HB_FUNC(NAP_XLS_SAVE)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     HB_ITEM *pathname_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
     hb_gtnap_office_sheet_save(sheet, pathname_block);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_PDF )
+HB_FUNC(NAP_XLS_PDF)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     HB_ITEM *pathname_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
     hb_gtnap_office_sheet_pdf(sheet, pathname_block);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_PRINT )
+HB_FUNC(NAP_XLS_PRINT)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     HB_ITEM *filename_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
     HB_ITEM *printer_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
     paperorient_t orient = (paperorient_t)hb_parni(4);
@@ -58,26 +58,26 @@ HB_FUNC( NAP_XLS_PRINT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CLOSE )
+HB_FUNC(NAP_XLS_CLOSE)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     hb_gtnap_office_sheet_close(sheet);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_ADD )
+HB_FUNC(NAP_XLS_ADD)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t id = hb_gtnap_office_sheet_add(sheet);
     hb_retni(id);
 }
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_NAME )
+HB_FUNC(NAP_XLS_NAME)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     HB_ITEM *name_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
     hb_gtnap_office_sheet_name(sheet, page, name_block);
@@ -85,9 +85,9 @@ HB_FUNC( NAP_XLS_NAME )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_PROTECT )
+HB_FUNC(NAP_XLS_PROTECT)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     bool_t protect = (bool_t)hb_parl(3);
     HB_ITEM *pass_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK);
@@ -96,9 +96,9 @@ HB_FUNC( NAP_XLS_PROTECT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_FREEZE )
+HB_FUNC(NAP_XLS_FREEZE)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t ncols = hb_parni(3);
     uint32_t nrows = hb_parni(4);
@@ -107,9 +107,9 @@ HB_FUNC( NAP_XLS_FREEZE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_CELL_REF )
+HB_FUNC(NAP_CELL_REF)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -119,9 +119,9 @@ HB_FUNC( NAP_CELL_REF )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_TEXT )
+HB_FUNC(NAP_XLS_CELL_TEXT)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -131,9 +131,9 @@ HB_FUNC( NAP_XLS_CELL_TEXT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_VALUE )
+HB_FUNC(NAP_XLS_CELL_VALUE)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -143,9 +143,9 @@ HB_FUNC( NAP_XLS_CELL_VALUE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_DATE )
+HB_FUNC(NAP_XLS_CELL_DATE)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -157,9 +157,9 @@ HB_FUNC( NAP_XLS_CELL_DATE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_FORMULA )
+HB_FUNC(NAP_XLS_CELL_FORMULA)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -169,9 +169,9 @@ HB_FUNC( NAP_XLS_CELL_FORMULA )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_NUMFORMAT )
+HB_FUNC(NAP_XLS_CELL_NUMFORMAT)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -181,9 +181,9 @@ HB_FUNC( NAP_XLS_CELL_NUMFORMAT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_FONT_FAMILY )
+HB_FUNC(NAP_XLS_CELL_FONT_FAMILY)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -193,9 +193,9 @@ HB_FUNC( NAP_XLS_CELL_FONT_FAMILY )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_FONT_SIZE )
+HB_FUNC(NAP_XLS_CELL_FONT_SIZE)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -205,9 +205,9 @@ HB_FUNC( NAP_XLS_CELL_FONT_SIZE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_BOLD )
+HB_FUNC(NAP_XLS_CELL_BOLD)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -217,9 +217,9 @@ HB_FUNC( NAP_XLS_CELL_BOLD )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_ITALIC )
+HB_FUNC(NAP_XLS_CELL_ITALIC)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -229,9 +229,9 @@ HB_FUNC( NAP_XLS_CELL_ITALIC )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_HALIGN )
+HB_FUNC(NAP_XLS_CELL_HALIGN)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -241,9 +241,9 @@ HB_FUNC( NAP_XLS_CELL_HALIGN )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_VALIGN )
+HB_FUNC(NAP_XLS_CELL_VALIGN)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -253,9 +253,9 @@ HB_FUNC( NAP_XLS_CELL_VALIGN )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_WRAP )
+HB_FUNC(NAP_XLS_CELL_WRAP)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -265,9 +265,9 @@ HB_FUNC( NAP_XLS_CELL_WRAP )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_COLOR )
+HB_FUNC(NAP_XLS_CELL_COLOR)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -277,9 +277,9 @@ HB_FUNC( NAP_XLS_CELL_COLOR )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_BACKCOLOR )
+HB_FUNC(NAP_XLS_CELL_BACKCOLOR)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -289,9 +289,9 @@ HB_FUNC( NAP_XLS_CELL_BACKCOLOR )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELLS_BACKCOLOR )
+HB_FUNC(NAP_XLS_CELLS_BACKCOLOR)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t st_col = hb_parni(3);
     uint32_t st_row = hb_parni(4);
@@ -303,9 +303,9 @@ HB_FUNC( NAP_XLS_CELLS_BACKCOLOR )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_IMAGE )
+HB_FUNC(NAP_XLS_CELL_IMAGE)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -315,9 +315,9 @@ HB_FUNC( NAP_XLS_CELL_IMAGE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELL_BORDER )
+HB_FUNC(NAP_XLS_CELL_BORDER)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
@@ -329,9 +329,9 @@ HB_FUNC( NAP_XLS_CELL_BORDER )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELLS_BORDER )
+HB_FUNC(NAP_XLS_CELLS_BORDER)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t st_col = hb_parni(3);
     uint32_t st_row = hb_parni(4);
@@ -345,9 +345,9 @@ HB_FUNC( NAP_XLS_CELLS_BORDER )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_CELLS_MERGE )
+HB_FUNC(NAP_XLS_CELLS_MERGE)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t st_col = hb_parni(3);
     uint32_t st_row = hb_parni(4);
@@ -358,9 +358,9 @@ HB_FUNC( NAP_XLS_CELLS_MERGE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_COLUMN_VISIBLE )
+HB_FUNC(NAP_XLS_COLUMN_VISIBLE)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     bool_t visible = (bool_t)hb_parl(4);
@@ -369,9 +369,9 @@ HB_FUNC( NAP_XLS_COLUMN_VISIBLE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_COLUMN_OPTIMAL_WIDTH )
+HB_FUNC(NAP_XLS_COLUMN_OPTIMAL_WIDTH)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     bool_t optimal_width = (bool_t)hb_parl(4);
@@ -380,9 +380,9 @@ HB_FUNC( NAP_XLS_COLUMN_OPTIMAL_WIDTH )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_COLUMN_WIDTH )
+HB_FUNC(NAP_XLS_COLUMN_WIDTH)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t width = hb_parni(4);
@@ -391,9 +391,9 @@ HB_FUNC( NAP_XLS_COLUMN_WIDTH )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_ROW_VISIBLE )
+HB_FUNC(NAP_XLS_ROW_VISIBLE)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t row = hb_parni(3);
     bool_t visible = (bool_t)hb_parl(4);
@@ -402,9 +402,9 @@ HB_FUNC( NAP_XLS_ROW_VISIBLE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_ROW_OPTIMAL_HEIGHT )
+HB_FUNC(NAP_XLS_ROW_OPTIMAL_HEIGHT)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t row = hb_parni(3);
     bool_t optimal_height = (bool_t)hb_parl(4);
@@ -413,9 +413,9 @@ HB_FUNC( NAP_XLS_ROW_OPTIMAL_HEIGHT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_XLS_ROW_HEIGHT )
+HB_FUNC(NAP_XLS_ROW_HEIGHT)
 {
-    Sheet *sheet = (Sheet*)hb_parptr(1);
+    Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t row = hb_parni(3);
     uint32_t height = hb_parni(4);

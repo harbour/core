@@ -32,7 +32,7 @@ typedef struct _gtnap_geom_t GtNapGeom;
 typedef struct _gtnap_window_t GtNapWindow;
 typedef struct _gtnap_t GtNap;
 
-typedef void(*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
+typedef void (*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
 
 typedef enum _objtype_t
 {
@@ -61,7 +61,7 @@ struct _gtnap_callback_t
 
 struct _gtnap_key_t
 {
-    int32_t key;    /* inkey.ch */
+    int32_t key; /* inkey.ch */
     vkey_t vkey;
     uint32_t modifiers;
 };
@@ -86,9 +86,9 @@ struct _gtnap_toolbar_t
 struct _gtnap_area_t
 {
     AREA *area;
-    HB_ULONG cache_recno;           /* Store the DB recno while table drawing */
+    HB_ULONG cache_recno; /* Store the DB recno while table drawing */
     GtNapObject *gtobj;
-    ArrSt(uint32_t) *records;       /* Records visible in table (index, deleted, filters) */
+    ArrSt(uint32_t) *records; /* Records visible in table (index, deleted, filters) */
     HB_ITEM *while_block;
 };
 
@@ -206,106 +206,105 @@ DeclPt(GuiComponent);
 /*---------------------------------------------------------------------------*/
 
 static const GtNapKey KEYMAPS[] = {
-    { K_F1, ekKEY_F1, 0 },
-    { K_F2, ekKEY_F2, 0 },
-    { K_F3, ekKEY_F3, 0 },
-    { K_F4, ekKEY_F4, 0 },
-    { K_F5, ekKEY_F5, 0 },
-    { K_F6, ekKEY_F6, 0 },
-    { K_F7, ekKEY_F7, 0 },
-    { K_F8, ekKEY_F8, 0 },
-    { K_F9, ekKEY_F9, 0 },
-    { K_F10, ekKEY_F10, 0 },
-    { K_F11, ekKEY_F11, 0 },
-    { K_F12, ekKEY_F12, 0 },
+    {K_F1, ekKEY_F1, 0},
+    {K_F2, ekKEY_F2, 0},
+    {K_F3, ekKEY_F3, 0},
+    {K_F4, ekKEY_F4, 0},
+    {K_F5, ekKEY_F5, 0},
+    {K_F6, ekKEY_F6, 0},
+    {K_F7, ekKEY_F7, 0},
+    {K_F8, ekKEY_F8, 0},
+    {K_F9, ekKEY_F9, 0},
+    {K_F10, ekKEY_F10, 0},
+    {K_F11, ekKEY_F11, 0},
+    {K_F12, ekKEY_F12, 0},
 
-    { K_ENTER, ekKEY_RETURN, 0 },
-    { K_SPACE, ekKEY_SPACE, 0},
+    {K_ENTER, ekKEY_RETURN, 0},
+    {K_SPACE, ekKEY_SPACE, 0},
 
-    { 'a', ekKEY_A, 0},
-    { 'b', ekKEY_B, 0},
-    { 'c', ekKEY_C, 0},
-    { 'd', ekKEY_D, 0},
-    { 'e', ekKEY_E, 0},
-    { 'f', ekKEY_F, 0},
-    { 'g', ekKEY_G, 0},
-    { 'h', ekKEY_H, 0},
-    { 'i', ekKEY_I, 0},
-    { 'j', ekKEY_J, 0},
-    { 'k', ekKEY_K, 0},
-    { 'l', ekKEY_L, 0},
-    { 'm', ekKEY_M, 0},
-    { 'n', ekKEY_N, 0},
-    { 'o', ekKEY_O, 0},
-    { 'p', ekKEY_P, 0},
-    { 'q', ekKEY_Q, 0},
-    { 'r', ekKEY_R, 0},
-    { 's', ekKEY_S, 0},
-    { 't', ekKEY_T, 0},
-    { 'u', ekKEY_U, 0},
-    { 'v', ekKEY_V, 0},
-    { 'w', ekKEY_W, 0},
-    { 'x', ekKEY_X, 0},
-    { 'y', ekKEY_Y, 0},
-    { 'z', ekKEY_Z, 0},
+    {'a', ekKEY_A, 0},
+    {'b', ekKEY_B, 0},
+    {'c', ekKEY_C, 0},
+    {'d', ekKEY_D, 0},
+    {'e', ekKEY_E, 0},
+    {'f', ekKEY_F, 0},
+    {'g', ekKEY_G, 0},
+    {'h', ekKEY_H, 0},
+    {'i', ekKEY_I, 0},
+    {'j', ekKEY_J, 0},
+    {'k', ekKEY_K, 0},
+    {'l', ekKEY_L, 0},
+    {'m', ekKEY_M, 0},
+    {'n', ekKEY_N, 0},
+    {'o', ekKEY_O, 0},
+    {'p', ekKEY_P, 0},
+    {'q', ekKEY_Q, 0},
+    {'r', ekKEY_R, 0},
+    {'s', ekKEY_S, 0},
+    {'t', ekKEY_T, 0},
+    {'u', ekKEY_U, 0},
+    {'v', ekKEY_V, 0},
+    {'w', ekKEY_W, 0},
+    {'x', ekKEY_X, 0},
+    {'y', ekKEY_Y, 0},
+    {'z', ekKEY_Z, 0},
 
-    { 'A', ekKEY_A, 0},
-    { 'B', ekKEY_B, 0},
-    { 'C', ekKEY_C, 0},
-    { 'D', ekKEY_D, 0},
-    { 'E', ekKEY_E, 0},
-    { 'F', ekKEY_F, 0},
-    { 'G', ekKEY_G, 0},
-    { 'H', ekKEY_H, 0},
-    { 'I', ekKEY_I, 0},
-    { 'J', ekKEY_J, 0},
-    { 'K', ekKEY_K, 0},
-    { 'L', ekKEY_L, 0},
-    { 'M', ekKEY_M, 0},
-    { 'N', ekKEY_N, 0},
-    { 'O', ekKEY_O, 0},
-    { 'P', ekKEY_P, 0},
-    { 'Q', ekKEY_Q, 0},
-    { 'R', ekKEY_R, 0},
-    { 'S', ekKEY_S, 0},
-    { 'T', ekKEY_T, 0},
-    { 'U', ekKEY_U, 0},
-    { 'V', ekKEY_V, 0},
-    { 'W', ekKEY_W, 0},
-    { 'X', ekKEY_X, 0},
-    { 'Y', ekKEY_Y, 0},
-    { 'Z', ekKEY_Z, 0},
+    {'A', ekKEY_A, 0},
+    {'B', ekKEY_B, 0},
+    {'C', ekKEY_C, 0},
+    {'D', ekKEY_D, 0},
+    {'E', ekKEY_E, 0},
+    {'F', ekKEY_F, 0},
+    {'G', ekKEY_G, 0},
+    {'H', ekKEY_H, 0},
+    {'I', ekKEY_I, 0},
+    {'J', ekKEY_J, 0},
+    {'K', ekKEY_K, 0},
+    {'L', ekKEY_L, 0},
+    {'M', ekKEY_M, 0},
+    {'N', ekKEY_N, 0},
+    {'O', ekKEY_O, 0},
+    {'P', ekKEY_P, 0},
+    {'Q', ekKEY_Q, 0},
+    {'R', ekKEY_R, 0},
+    {'S', ekKEY_S, 0},
+    {'T', ekKEY_T, 0},
+    {'U', ekKEY_U, 0},
+    {'V', ekKEY_V, 0},
+    {'W', ekKEY_W, 0},
+    {'X', ekKEY_X, 0},
+    {'Y', ekKEY_Y, 0},
+    {'Z', ekKEY_Z, 0},
 
-    { '0', ekKEY_0, 0},
-    { '1', ekKEY_1, 0},
-    { '2', ekKEY_2, 0},
-    { '3', ekKEY_3, 0},
-    { '4', ekKEY_4, 0},
-    { '5', ekKEY_5, 0},
-    { '6', ekKEY_6, 0},
-    { '7', ekKEY_7, 0},
-    { '8', ekKEY_8, 0},
-    { '9', ekKEY_9, 0}
-};
+    {'0', ekKEY_0, 0},
+    {'1', ekKEY_1, 0},
+    {'2', ekKEY_2, 0},
+    {'3', ekKEY_3, 0},
+    {'4', ekKEY_4, 0},
+    {'5', ekKEY_5, 0},
+    {'6', ekKEY_6, 0},
+    {'7', ekKEY_7, 0},
+    {'8', ekKEY_8, 0},
+    {'9', ekKEY_9, 0}};
 
 /*---------------------------------------------------------------------------*/
 
-#define COL_BLACK           0
-#define COL_BLUE            1
-#define COL_GREEN           2
-#define COL_CYAN            3
-#define COL_RED             4
-#define COL_MAGENTA         5
-#define COL_BROWN           6
-#define COL_WHITE           7
-#define COL_LIGHT_GRAY      8
-#define COL_BRIGHT_BLUE     9
-#define COL_BRIGHT_GREEN    10
-#define COL_BRIGHT_CYAN     11
-#define COL_BRIGHT_RED      12
-#define COL_BRIGHT_MAGENTA  13
-#define COL_YELLOW          14
-#define COL_BRIGHT_WHITE    15
+#define COL_BLACK 0
+#define COL_BLUE 1
+#define COL_GREEN 2
+#define COL_CYAN 3
+#define COL_RED 4
+#define COL_MAGENTA 5
+#define COL_BROWN 6
+#define COL_WHITE 7
+#define COL_LIGHT_GRAY 8
+#define COL_BRIGHT_BLUE 9
+#define COL_BRIGHT_GREEN 10
+#define COL_BRIGHT_CYAN 11
+#define COL_BRIGHT_RED 12
+#define COL_BRIGHT_MAGENTA 13
+#define COL_YELLOW 14
+#define COL_BRIGHT_WHITE 15
 
 static color_t i_COLORS[16];
 
@@ -344,7 +343,7 @@ static PHB_ITEM INIT_CODEBLOCK = NULL;
 static uint32_t INIT_ROWS = 0;
 static uint32_t INIT_COLS = 0;
 
-#define STATIC_TEXT_SIZE    1024
+#define STATIC_TEXT_SIZE 1024
 char_t TEMP_BUFFER[STATIC_TEXT_SIZE];
 
 /*---------------------------------------------------------------------------*/
@@ -478,12 +477,12 @@ static void i_destroy_gtwin(GtNapWindow **dgtwin)
 
     if (gtwin->scrolled_panel != NULL)
     {
-        _component_visible((GuiComponent*)gtwin->scrolled_panel, FALSE);
+        _component_visible((GuiComponent *)gtwin->scrolled_panel, FALSE);
 
         if (gtwin->is_configured == TRUE)
-            _panel_destroy_component(gtwin->panel, (GuiComponent*)gtwin->scrolled_panel);
+            _panel_destroy_component(gtwin->panel, (GuiComponent *)gtwin->scrolled_panel);
         else
-            _component_destroy((GuiComponent**)&gtwin->scrolled_panel);
+            _component_destroy((GuiComponent **)&gtwin->scrolled_panel);
     }
 
     if (gtwin->toolbar != NULL)
@@ -511,7 +510,7 @@ static void i_destroy_gtwin(GtNapWindow **dgtwin)
     {
         uint32_t cwidth = gtwin->right - gtwin->left + 1;
         uint32_t cheight = gtwin->bottom - gtwin->top + 1;
-        heap_free((byte_t**)&gtwin->text_buffer, cwidth * cheight * sizeof(uint16_t), "gtwin_textbuffer");
+        heap_free((byte_t **)&gtwin->text_buffer, cwidth * cheight * sizeof(uint16_t), "gtwin_textbuffer");
     }
 
     cassert(arrpt_size(gtwin->objects, GtNapObject) == 0);
@@ -527,7 +526,7 @@ static void i_destroy_gtwin(GtNapWindow **dgtwin)
     {
         cassert(gtwin->window == NULL);
         if (gtwin->panel != NULL)
-            _component_destroy((GuiComponent**)&gtwin->panel);
+            _component_destroy((GuiComponent **)&gtwin->panel);
     }
 
     heap_delete(dgtwin, GtNapWindow);
@@ -627,11 +626,10 @@ static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 static GtNapWindow *i_current_main_gtwin(GtNap *gtnap)
 {
     cassert_no_null(gtnap);
-    arrpt_forback(gtwin, gtnap->windows, GtNapWindow)
-        if (gtwin->parent_id == UINT32_MAX)
-            return gtwin;
-    arrpt_end();
-    return NULL;
+    arrpt_forback(gtwin, gtnap->windows, GtNapWindow) if (gtwin->parent_id == UINT32_MAX) return gtwin;
+arrpt_end
+();
+return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -719,7 +717,7 @@ static void i_set_defbutton(GtNapWindow *gtwin)
 {
     GtNapObject *button = i_get_button(gtwin, gtwin->default_button);
     if (button != NULL)
-        window_defbutton(gtwin->window, (Button*)button->component);
+        window_defbutton(gtwin->window, (Button *)button->component);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -823,7 +821,7 @@ static void i_compute_font_size(const real32_t max_width, const real32_t max_hei
 {
     real32_t font_size = max_height / (real32_t)(gtnap->rows + 5);
 
-    for(;;)
+    for (;;)
     {
         i_create_fonts(font_size, gtnap);
         i_compute_cell_size(gtnap);
@@ -852,7 +850,7 @@ static uint32_t i_remove_utf8_CR(char_t *utf8)
 {
     /* Remove the Carriage Return (CR) character (NAppGUI doesn't like) */
     uint32_t i = 0, j = 0;
-    for(; utf8[i] != 0;)
+    for (; utf8[i] != 0;)
     {
         if (utf8[i] != 13)
         {
@@ -872,7 +870,7 @@ static uint32_t i_remove_utf8_CR(char_t *utf8)
 static uint32_t i_item_to_utf8(HB_ITEM *item, char_t *utf8, const uint32_t size)
 {
     cassert(HB_ITEM_TYPE(item) == HB_IT_STRING);
-    hb_itemCopyStrUTF8(item, (char*)utf8, (HB_SIZE)size);
+    hb_itemCopyStrUTF8(item, (char *)utf8, (HB_SIZE)size);
     return i_remove_utf8_CR(utf8);
 }
 
@@ -898,7 +896,7 @@ static uint32_t i_cp_to_utf8(const char_t *cp_str, char_t *utf8, const uint32_t 
     HB_CODEPAGE *cp = hb_vmCDP();
     cassert_no_null(cp_str);
     cassert_no_null(utf8);
-    hb_cdpStrToUTF8(cp, (const char*)cp_str, (HB_SIZE)str_len_c(cp_str), (char*)utf8, (HB_SIZE)size);
+    hb_cdpStrToUTF8(cp, (const char *)cp_str, (HB_SIZE)str_len_c(cp_str), (char *)utf8, (HB_SIZE)size);
     return i_remove_utf8_CR(utf8);
 }
 
@@ -1041,7 +1039,7 @@ static GtNap *i_gtnap_create(void)
     }
 
     globals_resolution(&screen);
-    screen.height -= 50;        /* Margin for Dock or Taskbars */
+    screen.height -= 50; /* Margin for Dock or Taskbars */
     i_compute_font_size(screen.width, screen.height, GTNAP_GLOBAL);
     i_init_colors();
 
@@ -1121,7 +1119,8 @@ static void i_attach_to_panel(ArrPt(GtNapObject) *objects, Panel *main_panel, Pa
 
             if (toolbar != NULL)
             {
-                switch(type) {
+                switch (type)
+                {
                 case ekOBJ_LABEL:
                     pos.y += toolbar->heightf;
                     if (GTNAP_GLOBAL->cell_y_sizef > GTNAP_GLOBAL->label_y_sizef)
@@ -1156,7 +1155,7 @@ static void i_attach_to_panel(ArrPt(GtNapObject) *objects, Panel *main_panel, Pa
                     if (GTNAP_GLOBAL->cell_y_sizef > GTNAP_GLOBAL->button_y_sizef)
                         pos.y += (GTNAP_GLOBAL->cell_y_sizef - GTNAP_GLOBAL->button_y_sizef) / 2.f;
                     break;
-                cassert_default();
+                    cassert_default();
                 }
             }
 
@@ -1224,7 +1223,8 @@ static void i_component_tabstop(ArrPt(GtNapObject) *objects, Window *window, Arr
         {
             _component_visible(object->component, TRUE);
 
-            switch(object->type) {
+            switch (object->type)
+            {
             case ekOBJ_LABEL:
             case ekOBJ_IMAGE:
                 break;
@@ -1234,9 +1234,9 @@ static void i_component_tabstop(ArrPt(GtNapObject) *objects, Window *window, Arr
                 break;
             case ekOBJ_MENU:
             {
-                View *view = nap_menuvert_view((Panel*)object->component);
-                nap_menuvert_window((Panel*)object->component, window);
-                arrpt_append(tabstops, (GuiComponent*)view, GuiComponent);
+                View *view = nap_menuvert_view((Panel *)object->component);
+                nap_menuvert_window((Panel *)object->component, window);
+                arrpt_append(tabstops, (GuiComponent *)view, GuiComponent);
                 break;
             }
             case ekOBJ_TABLEVIEW:
@@ -1244,7 +1244,7 @@ static void i_component_tabstop(ArrPt(GtNapObject) *objects, Window *window, Arr
             case ekOBJ_EDIT:
                 arrpt_append(tabstops, object->component, GuiComponent);
                 break;
-            cassert_default();
+                cassert_default();
             }
         }
     arrpt_end();
@@ -1321,7 +1321,7 @@ static void i_update_harbour_from_edit_text(const GtNapObject *gtobj)
     if (gtobj->get_set_block != NULL)
     {
         PHB_ITEM pItem = NULL;
-        const char_t *text = edit_get_text((Edit*)gtobj->component);
+        const char_t *text = edit_get_text((Edit *)gtobj->component);
 
         if (gtobj->dtype == ekTYPE_CHARACTER)
         {
@@ -1362,12 +1362,12 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
     if (utf8_text != NULL)
     {
         nchars = unicode_nchars(utf8_text, ekUTF8);
-        label_text((Label*)obj->component, utf8_text);
+        label_text((Label *)obj->component, utf8_text);
     }
     else if (obj->text != NULL)
     {
         nchars = str_nchars(obj->text);
-        label_text((Label*)obj->component, tc(obj->text));
+        label_text((Label *)obj->component, tc(obj->text));
     }
     else if (obj->text_block != NULL)
     {
@@ -1379,7 +1379,7 @@ static void i_set_label_text(GtNapObject *obj, const char_t *utf8_text)
             char_t buffer[STATIC_TEXT_SIZE];
             i_item_to_utf8(ritem, buffer, sizeof32(buffer));
             nchars = unicode_nchars(buffer, ekUTF8);
-            label_text((Label*)obj->component, buffer);
+            label_text((Label *)obj->component, buffer);
         }
 
         hb_itemRelease(ritem);
@@ -1535,10 +1535,11 @@ static void i_get_edit_text(const GtNapObject *obj, char_t *utf8, const uint32_t
     {
         PHB_ITEM ritem = hb_itemDo(obj->get_set_block, 0);
         HB_TYPE type = HB_ITEM_TYPE(ritem);
-        switch (type) {
+        switch (type)
+        {
         case HB_IT_STRING:
             cassert(obj->dtype == ekTYPE_CHARACTER);
-            hb_itemCopyStrUTF8(ritem, (char*)utf8, (HB_SIZE)size);
+            hb_itemCopyStrUTF8(ritem, (char *)utf8, (HB_SIZE)size);
             break;
 
         case HB_IT_DATE:
@@ -1621,7 +1622,7 @@ static int32_t i_filter_number(const EvText *text, EvTextFilter *filter)
         uint32_t dsize = sizeof(filter->text);
         uint32_t i = 0, cpos = text->cpos;
         uint32_t back = 0;
-        for(;;)
+        for (;;)
         {
             uint32_t nb;
             uint32_t c = unicode_to_u32b(src, ekUTF8, &nb);
@@ -1659,7 +1660,6 @@ static int32_t i_filter_number(const EvText *text, EvTextFilter *filter)
     }
 
     return len;
-
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1731,7 +1731,7 @@ static void i_filter_overwrite(const EvText *text, EvTextFilter *filter, const u
         {
             const char_t *d = filter->text;
             i_jump_nchars(&d, max_chars);
-            *((char_t*)d) = '\0';
+            *((char_t *)d) = '\0';
 
             if (filter->cpos > max_chars)
                 filter->cpos = max_chars;
@@ -1748,7 +1748,7 @@ static void i_filter_date(const EvText *text, EvTextFilter *filter, const char_t
     uint32_t dsize = sizeof(filter->text);
     uint32_t i = 0;
     uint32_t cpos = text->cpos;
-    for(;;)
+    for (;;)
     {
         uint32_t nbf;
         bool_t sep = FALSE;
@@ -1761,7 +1761,7 @@ static void i_filter_date(const EvText *text, EvTextFilter *filter, const char_t
             break;
 
         /* Digit position */
-        if(f == 'd' || f == 'D' || f == 'm' || f == 'M' || f == 'y' || f == 'Y')
+        if (f == 'd' || f == 'D' || f == 'm' || f == 'M' || f == 'y' || f == 'Y')
         {
             uint32_t nb;
             uint32_t d = unicode_to_u32b(src, ekUTF8, &nb);
@@ -2106,11 +2106,11 @@ static void i_set_edit_message(GtNapObject *obj, GtNapObject *mes_obj)
         {
             char_t buffer[1024];
             uint32_t len;
-            hb_itemCopyStrUTF8(ritem, (char*)buffer, (HB_SIZE)sizeof(buffer));
+            hb_itemCopyStrUTF8(ritem, (char *)buffer, (HB_SIZE)sizeof(buffer));
             len = unicode_nchars(buffer, ekUTF8);
             mes_obj->size.width = (real32_t)len * GTNAP_GLOBAL->cell_x_sizef;
             _component_set_frame(mes_obj->component, &mes_obj->pos, &mes_obj->size);
-            label_text((Label*)mes_obj->component, buffer);
+            label_text((Label *)mes_obj->component, buffer);
         }
         else
         {
@@ -2128,7 +2128,7 @@ static void i_set_edit_text(const GtNapObject *obj)
     char_t buffer[STATIC_TEXT_SIZE];
     cassert_no_null(obj);
     i_get_edit_text(obj, buffer, sizeof(buffer));
-    edit_text((Edit*)obj->component, buffer);
+    edit_text((Edit *)obj->component, buffer);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2137,12 +2137,12 @@ static void i_set_view_text(const GtNapObject *obj)
 {
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TEXTVIEW);
-    textview_clear((TextView*)obj->component);
+    textview_clear((TextView *)obj->component);
     if (obj->get_set_block != NULL)
     {
         PHB_ITEM ritem = hb_itemDo(obj->get_set_block, 0);
         String *str = i_item_to_utf8_string(ritem);
-        textview_writef((TextView*)obj->component, tc(str));
+        textview_writef((TextView *)obj->component, tc(str));
         hb_itemRelease(ritem);
         str_destroy(&str);
     }
@@ -2166,7 +2166,7 @@ static void i_launch_wizard(GtNapWindow *gtwin, GtNapObject *obj)
     {
         cassert(type == HB_IT_STRING);
         hb_itemCopyStrUTF8(ritem, temp, sizeof(temp));
-        edit_text((Edit*)obj->component, temp);
+        edit_text((Edit *)obj->component, temp);
     }
 
     hb_itemRelease(ritem);
@@ -2252,7 +2252,7 @@ static void i_OnEditFocus(GtNapObject *gtobj, Event *e)
                 i_set_edit_text(gtobj);
         }
 
-        edit_select((Edit*)gtobj->component, 0, 0);
+        edit_select((Edit *)gtobj->component, 0, 0);
 
         if (gtobj->can_auto_lista == TRUE && gtobj->auto_block != NULL && gtobj->wizard_block != NULL)
         {
@@ -2334,9 +2334,9 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         real32_t height = (real32_t)(gtwin->scroll_bottom - gtwin->scroll_top + 1) * GTNAP_GLOBAL->cell_y_sizef;
         V2Df pos = v2df(pos_x, pos_y);
         S2Df size = s2df(width, height);
-        _panel_attach_component(gtwin->panel, (GuiComponent*)panel);
-        _component_set_frame((GuiComponent*)panel, &pos, &size);
-        _component_visible((GuiComponent*)panel, FALSE);
+        _panel_attach_component(gtwin->panel, (GuiComponent *)panel);
+        _component_set_frame((GuiComponent *)panel, &pos, &size);
+        _component_visible((GuiComponent *)panel, FALSE);
         _panel_content_size(panel, csize.width, csize.height);
         offset.x = -pos.x;
         offset.y = -pos.y;
@@ -2374,7 +2374,7 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
     i_component_tabstop(gtwin->objects, main_gtwin->window, main_gtwin->tabstops, ekOBJ_IMAGE);
 
     if (scroll_panel != NULL)
-        _component_visible((GuiComponent*)scroll_panel, TRUE);
+        _component_visible((GuiComponent *)scroll_panel, TRUE);
 
     if (gtwin->window != NULL)
     {
@@ -2392,72 +2392,72 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         cassert(gtwin == main_gtwin);
 
         /* Configure the child (embedded) windows as subpanels */
-        arrpt_forback(embgtwin, gtnap->windows, GtNapWindow)
-            if (embgtwin->parent_id == gtwin->id)
-            {
-                V2Df pos;
-                int32_t cell_x = embgtwin->left - gtwin->left;
-                int32_t cell_y = embgtwin->top - gtwin->top;
-                pos.x = (real32_t)cell_x * GTNAP_GLOBAL->cell_x_sizef;
-                pos.y = (real32_t)cell_y * GTNAP_GLOBAL->cell_y_sizef;
-                i_gtwin_configure(gtnap, embgtwin, gtwin);
-                _panel_attach_component(gtwin->panel, (GuiComponent*)embgtwin->panel);
-                _component_set_frame((GuiComponent*)embgtwin->panel, &pos, &embgtwin->panel_size);
-                _component_visible((GuiComponent*)embgtwin->panel, TRUE);
-            }
-        arrpt_end();
-
-        /* At this point the main window (with embedded windows) is complete.
-         * We begin the tabstop configuration */
-        _window_taborder(gtwin->window, NULL);
-        arrpt_foreach(component, gtwin->tabstops, GuiComponent)
-            _component_taborder(component, gtwin->window);
-        arrpt_end()
-    }
-
-    /* Allow navigation between edit controls with arrows and return */
-    if (i_num_edits(gtwin) > 0)
-    {
-        /* At the moment, embedded windows with edits is not allowed */
-        GtNapObject *last_edit = NULL;
-
-        arrpt_foreach(obj, gtwin->objects, GtNapObject)
-            if (obj->type == ekOBJ_EDIT)
-            {
-                edit_OnChange((Edit*)obj->component, listener(obj, i_OnEditChange, GtNapObject));
-                edit_OnFilter((Edit*)obj->component, listener(obj, i_OnEditFilter, GtNapObject));
-                edit_OnFocus((Edit*)obj->component, listener(obj, i_OnEditFocus, GtNapObject));
-                obj->is_last_edit = FALSE;
-                last_edit = obj;
-            }
-        arrpt_end();
-
-        cassert_no_null(last_edit);
-        last_edit->is_last_edit = TRUE;
-    }
-
-    /* Allow TextView listeners */
-    arrpt_foreach(obj, gtwin->objects, GtNapObject)
-        if (obj->type == ekOBJ_TEXTVIEW)
+        arrpt_forback(embgtwin, gtnap->windows, GtNapWindow) if (embgtwin->parent_id == gtwin->id)
         {
-            textview_OnFocus((TextView*)obj->component, listener(obj, i_OnTextFocus, GtNapObject));
-            if (obj->keyfilter_block != NULL)
-                textview_OnFilter((TextView*)obj->component, listener(obj, i_OnTextFilter, GtNapObject));
+            V2Df pos;
+            int32_t cell_x = embgtwin->left - gtwin->left;
+            int32_t cell_y = embgtwin->top - gtwin->top;
+            pos.x = (real32_t)cell_x * GTNAP_GLOBAL->cell_x_sizef;
+            pos.y = (real32_t)cell_y * GTNAP_GLOBAL->cell_y_sizef;
+            i_gtwin_configure(gtnap, embgtwin, gtwin);
+            _panel_attach_component(gtwin->panel, (GuiComponent *)embgtwin->panel);
+            _component_set_frame((GuiComponent *)embgtwin->panel, &pos, &embgtwin->panel_size);
+            _component_visible((GuiComponent *)embgtwin->panel, TRUE);
+        }
+arrpt_end
+();
+
+/* At this point the main window (with embedded windows) is complete.
+ * We begin the tabstop configuration */
+_window_taborder(gtwin->window, NULL);
+arrpt_foreach(component, gtwin->tabstops, GuiComponent)
+    _component_taborder(component, gtwin->window);
+arrpt_end()
+}
+
+/* Allow navigation between edit controls with arrows and return */
+if (i_num_edits(gtwin) > 0)
+{
+    /* At the moment, embedded windows with edits is not allowed */
+    GtNapObject *last_edit = NULL;
+
+    arrpt_foreach(obj, gtwin->objects, GtNapObject)
+        if (obj->type == ekOBJ_EDIT)
+        {
+            edit_OnChange((Edit *)obj->component, listener(obj, i_OnEditChange, GtNapObject));
+            edit_OnFilter((Edit *)obj->component, listener(obj, i_OnEditFilter, GtNapObject));
+            edit_OnFocus((Edit *)obj->component, listener(obj, i_OnEditFocus, GtNapObject));
+            obj->is_last_edit = FALSE;
+            last_edit = obj;
         }
     arrpt_end();
 
-    if (gtwin->buttons_navigation == TRUE)
-    {
-        if (i_num_buttons(gtwin) > 1)
-        {
-            /* At the moment, embedded windows with button navigation is not allowed */
-            cassert(gtwin->window != NULL);
-            window_hotkey(gtwin->window, ekKEY_LEFT, 0, listener(gtwin, i_OnLeftButton, GtNapWindow));
-            window_hotkey(gtwin->window, ekKEY_RIGHT, 0, listener(gtwin, i_OnRightButton, GtNapWindow));
-        }
-    }
+    cassert_no_null(last_edit);
+    last_edit->is_last_edit = TRUE;
+}
 
-    gtwin->is_configured = TRUE;
+/* Allow TextView listeners */
+arrpt_foreach(obj, gtwin->objects, GtNapObject)
+    if (obj->type == ekOBJ_TEXTVIEW)
+    {
+        textview_OnFocus((TextView *)obj->component, listener(obj, i_OnTextFocus, GtNapObject));
+        if (obj->keyfilter_block != NULL)
+            textview_OnFilter((TextView *)obj->component, listener(obj, i_OnTextFilter, GtNapObject));
+    }
+arrpt_end();
+
+if (gtwin->buttons_navigation == TRUE)
+{
+    if (i_num_buttons(gtwin) > 1)
+    {
+        /* At the moment, embedded windows with button navigation is not allowed */
+        cassert(gtwin->window != NULL);
+        window_hotkey(gtwin->window, ekKEY_LEFT, 0, listener(gtwin, i_OnLeftButton, GtNapWindow));
+        window_hotkey(gtwin->window, ekKEY_RIGHT, 0, listener(gtwin, i_OnRightButton, GtNapWindow));
+    }
+}
+
+gtwin->is_configured = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2501,7 +2501,7 @@ void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32_t cols
 {
     void *hInstance = NULL;
 
-#if defined( HB_OS_WIN )
+#if defined(HB_OS_WIN)
     hb_winmainArgGet(&hInstance, NULL, NULL);
 #endif
 
@@ -2511,11 +2511,11 @@ void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32_t cols
     INIT_COLS = cols;
 
     osmain_imp(
-                0, NULL, hInstance, 0.5f,
-                (FPtr_app_create)i_gtnap_create,
-                (FPtr_app_update)i_gtnap_update,
-                (FPtr_destroy)i_gtnap_destroy,
-                (char_t*)"");
+        0, NULL, hInstance, 0.5f,
+        (FPtr_app_create)i_gtnap_create,
+        (FPtr_app_update)i_gtnap_update,
+        (FPtr_destroy)i_gtnap_destroy,
+        (char_t *)"");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2567,8 +2567,8 @@ void hb_gtnap_terminal(void)
         uint32_t cwidth = gtwin->right - gtwin->left + 1;
         uint32_t cheight = gtwin->bottom - gtwin->top + 1;
         cassert(gtwin->text_buffer == NULL);
-        gtwin->text_buffer = (uint16_t*)heap_malloc(cwidth * cheight * sizeof(uint16_t), "gtwin_textbuffer");
-        bmem_set_zero((byte_t*)gtwin->text_buffer, cwidth * cheight * sizeof(uint16_t));
+        gtwin->text_buffer = (uint16_t *)heap_malloc(cwidth * cheight * sizeof(uint16_t), "gtwin_textbuffer");
+        bmem_set_zero((byte_t *)gtwin->text_buffer, cwidth * cheight * sizeof(uint16_t));
     }
 
     window_OnClose(gtwin->window, listener(gtwin, i_OnTerminalClose, GtNapWindow));
@@ -2591,7 +2591,7 @@ int32_t hb_gtnap_inkey(const vkey_t vkey)
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE uint32_t i_window_flags(const bool_t close_return, const bool_t close_esc, const bool_t minimize_button)
+static ___INLINE uint32_t i_window_flags(const bool_t close_return, const bool_t close_esc, const bool_t minimize_button)
 {
     uint32_t flags = ekWINDOW_TITLE | ekWINDOW_CLOSE | ekWINDOW_MODAL_NOHIDE;
 
@@ -2632,7 +2632,7 @@ static uint32_t i_get_window_id(GtNap *gtnap)
 {
     uint32_t id = NAP_WINDOW_FIST_ID;
     bool_t found = FALSE;
-    while(!found)
+    while (!found)
     {
         bool_t valid_id = TRUE;
         arrpt_foreach_const(gtwin, gtnap->windows, GtNapWindow)
@@ -2689,20 +2689,20 @@ const char_t *hb_gtnap_working_path(void)
 
 /*---------------------------------------------------------------------------*/
 
-#define COL_GREEN           2
-#define COL_CYAN            3
-#define COL_RED             4
-#define COL_MAGENTA         5
-#define COL_BROWN           6
-#define COL_WHITE           7
-#define COL_LIGHT_GRAY      8
-#define COL_BRIGHT_BLUE     9
-#define COL_BRIGHT_GREEN    10
-#define COL_BRIGHT_CYAN     11
-#define COL_BRIGHT_RED      12
-#define COL_BRIGHT_MAGENTA  13
-#define COL_YELLOW          14
-#define COL_BRIGHT_WHITE    15
+#define COL_GREEN 2
+#define COL_CYAN 3
+#define COL_RED 4
+#define COL_MAGENTA 5
+#define COL_BROWN 6
+#define COL_WHITE 7
+#define COL_LIGHT_GRAY 8
+#define COL_BRIGHT_BLUE 9
+#define COL_BRIGHT_GREEN 10
+#define COL_BRIGHT_CYAN 11
+#define COL_BRIGHT_RED 12
+#define COL_BRIGHT_MAGENTA 13
+#define COL_YELLOW 14
+#define COL_BRIGHT_WHITE 15
 
 /*---------------------------------------------------------------------------*/
 
@@ -2864,8 +2864,8 @@ static void i_dettach_embedded(GtNap *gtnap, GtNapWindow *gtwin)
                 if (embgtwin->parent_id == gtwin->id)
                 {
                     cassert(embgtwin->is_configured == TRUE);
-                    _component_visible((GuiComponent*)embgtwin->panel, FALSE);
-                    _component_detach_from_panel((GuiComponent*)gtwin->panel, (GuiComponent*)embgtwin->panel);
+                    _component_visible((GuiComponent *)embgtwin->panel, FALSE);
+                    _component_detach_from_panel((GuiComponent *)gtwin->panel, (GuiComponent *)embgtwin->panel);
                 }
             arrpt_end()
         }
@@ -2876,7 +2876,7 @@ static void i_dettach_embedded(GtNap *gtnap, GtNapWindow *gtwin)
                 if (gtwin->parent_id == maingtwin->id)
                 {
                     cassert(maingtwin->is_configured == TRUE);
-                    _panel_dettach_component(maingtwin->panel, (GuiComponent*)gtwin->panel);
+                    _panel_dettach_component(maingtwin->panel, (GuiComponent *)gtwin->panel);
                     break;
                 }
             arrpt_end()
@@ -3039,9 +3039,9 @@ void hb_gtnap_window_copy(const uint32_t wid)
     if (gtobj != NULL)
     {
         if (gtobj->type == ekOBJ_EDIT)
-            edit_copy((Edit*)gtobj->component);
+            edit_copy((Edit *)gtobj->component);
         else if (gtobj->type == ekOBJ_TEXTVIEW)
-            textview_copy((TextView*)gtobj->component);
+            textview_copy((TextView *)gtobj->component);
     }
 }
 
@@ -3054,9 +3054,9 @@ void hb_gtnap_window_paste(const uint32_t wid)
     if (gtobj != NULL)
     {
         if (gtobj->type == ekOBJ_EDIT)
-            edit_paste((Edit*)gtobj->component);
+            edit_paste((Edit *)gtobj->component);
         else if (gtobj->type == ekOBJ_TEXTVIEW)
-            textview_paste((TextView*)gtobj->component);
+            textview_paste((TextView *)gtobj->component);
     }
 }
 
@@ -3069,9 +3069,9 @@ void hb_gtnap_window_cut(const uint32_t wid)
     if (gtobj != NULL)
     {
         if (gtobj->type == ekOBJ_EDIT)
-            edit_cut((Edit*)gtobj->component);
+            edit_cut((Edit *)gtobj->component);
         else if (gtobj->type == ekOBJ_TEXTVIEW)
-            textview_cut((TextView*)gtobj->component);
+            textview_cut((TextView *)gtobj->component);
     }
 }
 
@@ -3223,7 +3223,7 @@ static uint32_t i_add_label(const int32_t top, const int32_t left, const bool_t 
     label_font(label, gtnap->global_font);
     size.width = gtnap->cell_x_sizef;
     size.height = gtnap->label_y_sizef;
-    return i_add_object(ekOBJ_LABEL, top, left, gtnap->cell_x_sizef, gtnap->cell_y_sizef, &size, in_scroll, (GuiComponent*)label, gtwin);
+    return i_add_object(ekOBJ_LABEL, top, left, gtnap->cell_x_sizef, gtnap->cell_y_sizef, &size, in_scroll, (GuiComponent *)label, gtwin);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3312,7 +3312,7 @@ void hb_gtnap_label_fgcolor(const uint32_t wid, const uint32_t id, const color_t
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_LABEL);
-    label_color((Label*)obj->component, color);
+    label_color((Label *)obj->component, color);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3322,7 +3322,7 @@ void hb_gtnap_label_bgcolor(const uint32_t wid, const uint32_t id, const color_t
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_LABEL);
-    label_bgcolor((Label*)obj->component, color);
+    label_bgcolor((Label *)obj->component, color);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3331,14 +3331,14 @@ void hb_gtnap_label_color(const uint32_t wid, const uint32_t id, const char_t *h
 {
     int attr = hb_gtColorToN(hb_color);
     int fore = attr & 0x000F;
-    int back = ( attr & 0x00F0 ) >> 4;
+    int back = (attr & 0x00F0) >> 4;
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_LABEL);
     cassert(fore < 16);
     cassert(back < 16);
-    label_color((Label*)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
-    label_bgcolor((Label*)obj->component, (back != COL_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
+    label_color((Label *)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
+    label_bgcolor((Label *)obj->component, (back != COL_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3370,7 +3370,7 @@ static void i_set_button_text(GtNapObject *obj)
         char_t utf8[STATIC_TEXT_SIZE];
         cassert(HB_ITEM_TYPE(ritem) == HB_IT_STRING);
         i_item_to_utf8(ritem, utf8, sizeof32(utf8));
-        button_text((Button*)obj->component, utf8);
+        button_text((Button *)obj->component, utf8);
         hb_itemRelease(ritem);
     }
 }
@@ -3394,7 +3394,7 @@ uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t le
     cassert(bottom == top);
     size.width = (real32_t)(right - left + 1) * GTNAP_GLOBAL->cell_x_sizef;
     size.height = (real32_t)(bottom - top + 1) * GTNAP_GLOBAL->button_y_sizef;
-    id = i_add_object(ekOBJ_BUTTON, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)button, gtwin);
+    id = i_add_object(ekOBJ_BUTTON, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent *)button, gtwin);
 
     if (text_block != NULL)
     {
@@ -3444,13 +3444,13 @@ uint32_t hb_gtnap_image(const uint32_t wid, const int32_t top, const int32_t lef
         cassert_no_null(gtwin);
         view = imageview_create();
         listener = i_gtnap_listener(click_block, INT32_MAX, autoclose_id, gtwin, i_OnImageClick);
-        view_OnClick((View*)view, listener);
+        view_OnClick((View *)view, listener);
         imageview_scale(view, ekGUI_SCALE_AUTO);
         size.width = (real32_t)(right - left + 1) * GTNAP_GLOBAL->cell_x_sizef;
         size.height = (real32_t)(bottom - top + 1) * GTNAP_GLOBAL->cell_y_sizef;
         imageview_image(view, image);
         image_destroy(&image);
-        return i_add_object(ekOBJ_IMAGE, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)view, gtwin);
+        return i_add_object(ekOBJ_IMAGE, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent *)view, gtwin);
     }
 
     return UINT32_MAX;
@@ -3470,7 +3470,7 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
     edit_vpadding(edit, i_edit_vpadding());
     size.width = (real32_t)(width + 1) * GTNAP_GLOBAL->cell_x_sizef;
     size.height = GTNAP_GLOBAL->edit_y_sizef;
-    id = i_add_object(ekOBJ_EDIT, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)edit, gtwin);
+    id = i_add_object(ekOBJ_EDIT, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent *)edit, gtwin);
     obj = arrpt_last(gtwin->objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_EDIT);
@@ -3518,7 +3518,7 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
 
 void hb_gtnap_edit_color(const uint32_t wid, const uint32_t id, const char_t *hb_color)
 {
-    ArrPt(String) *hbcols = str_splits(hb_color, ",", TRUE);
+    ArrPt(String) *hbcols = str_splits(hb_color, ",", TRUE, FALSE);
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_EDIT);
@@ -3528,11 +3528,11 @@ void hb_gtnap_edit_color(const uint32_t wid, const uint32_t id, const char_t *hb
         const String *c = arrpt_get_const(hbcols, 0, String);
         int attr = hb_gtColorToN(tc(c));
         int fore = attr & 0x000F;
-        int back = ( attr & 0x00F0 ) >> 4;
+        int back = (attr & 0x00F0) >> 4;
         cassert(fore < 16);
         cassert(back < 16);
-        edit_color((Edit*)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
-        edit_bgcolor((Edit*)obj->component, (back != COL_BRIGHT_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
+        edit_color((Edit *)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
+        edit_bgcolor((Edit *)obj->component, (back != COL_BRIGHT_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
     }
 
     if (arrpt_size(hbcols, String) > 1)
@@ -3540,11 +3540,11 @@ void hb_gtnap_edit_color(const uint32_t wid, const uint32_t id, const char_t *hb
         const String *c = arrpt_get_const(hbcols, 1, String);
         int attr = hb_gtColorToN(tc(c));
         int fore = attr & 0x000F;
-        int back = ( attr & 0x00F0 ) >> 4;
+        int back = (attr & 0x00F0) >> 4;
         cassert(fore < 16);
         cassert(back < 16);
-        edit_color_focus((Edit*)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
-        edit_bgcolor_focus((Edit*)obj->component, (back != COL_BRIGHT_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
+        edit_color_focus((Edit *)obj->component, (fore != COL_BLACK) ? i_COLORS[fore] : kCOLOR_DEFAULT);
+        edit_bgcolor_focus((Edit *)obj->component, (back != COL_BRIGHT_WHITE) ? i_COLORS[back] : kCOLOR_DEFAULT);
     }
 
     arrpt_destroy(&hbcols, str_destroy, String);
@@ -3607,13 +3607,13 @@ void hb_gtnap_edit_wizard(const uint32_t wid, const uint32_t id, const uint32_t 
         cassert(bobj->type == ekOBJ_BUTTON);
         listener = i_gtnap_listener(NULL, id, UINT32_MAX, bobj->gtwin, i_OnWizardButton);
         bobj->editBoxIndexForButton = id;
-        button_OnClick((Button*)bobj->component, listener);
+        button_OnClick((Button *)bobj->component, listener);
 
         {
             char_t text[8];
             uint32_t b = unicode_to_char(0x25BE, text, ekUTF8);
             text[b] = '\0';
-            button_text((Button*)bobj->component, text);
+            button_text((Button *)bobj->component, text);
         }
     }
 
@@ -3636,7 +3636,7 @@ uint32_t hb_gtnap_textview(const uint32_t wid, const int32_t top, const int32_t 
     textview_fsize(view, font_size(GTNAP_GLOBAL->global_font));
     size.width = (real32_t)(right - left + 1) * GTNAP_GLOBAL->cell_x_sizef;
     size.height = (real32_t)(bottom - top + 1) * GTNAP_GLOBAL->cell_y_sizef;
-    id = i_add_object(ekOBJ_TEXTVIEW, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)view, gtwin);
+    id = i_add_object(ekOBJ_TEXTVIEW, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent *)view, gtwin);
     obj = arrpt_last(gtwin->objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_TEXTVIEW);
@@ -3663,7 +3663,7 @@ void hb_gtnap_textview_scroll(const uint32_t wid, const uint32_t id, const bool_
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TEXTVIEW);
-    textview_scroll_visible((TextView*)obj->component, horizontal, vertical);
+    textview_scroll_visible((TextView *)obj->component, horizontal, vertical);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3673,8 +3673,8 @@ void hb_gtnap_textview_caret(const uint32_t wid, const uint32_t id, const int64_
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TEXTVIEW);
-    textview_select((TextView*)obj->component, (int32_t)pos, (int32_t)pos);
-    textview_scroll_caret((TextView*)obj->component);
+    textview_select((TextView *)obj->component, (int32_t)pos, (int32_t)pos);
+    textview_scroll_caret((TextView *)obj->component);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3695,7 +3695,7 @@ static void i_OnTextConfirm(GtNapObject *gtobj, Event *e)
 
         /* Overwrite the Harbour variable with the current TextView text (for validation) */
         {
-            const char_t *utf8 = textview_get_text((const TextView*)gtobj->component);
+            const char_t *utf8 = textview_get_text((const TextView *)gtobj->component);
             String *cpstr = i_utf8_to_cp_string(utf8);
             HB_ITEM *item = hb_itemPutC(NULL, tc(cpstr));
 
@@ -3759,7 +3759,7 @@ void hb_gtnap_textview_button(const uint32_t wid, const uint32_t id, const uint3
     cassert_no_null(bobj);
     cassert(obj->type == ekOBJ_TEXTVIEW);
     cassert(bobj->type == ekOBJ_BUTTON);
-    button_OnClick((Button*)bobj->component, listener(obj, i_OnTextConfirm, GtNapObject));
+    button_OnClick((Button *)bobj->component, listener(obj, i_OnTextConfirm, GtNapObject));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3790,7 +3790,7 @@ uint32_t hb_gtnap_menu(const uint32_t wid, const int32_t top, const int32_t left
     size.height = (real32_t)(bottom - top + 1) * GTNAP_GLOBAL->cell_y_sizef;
     _panel_compose(panel, &size, &final_size);
     _panel_locate(panel);
-    id = i_add_object(ekOBJ_MENU, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)panel, gtwin);
+    id = i_add_object(ekOBJ_MENU, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent *)panel, gtwin);
     return id;
 }
 
@@ -3802,7 +3802,7 @@ void hb_gtnap_menu_add(const uint32_t wid, uint32_t id, HB_ITEM *text_block, HB_
     cassert_no_null(gtobj);
     cassert_no_null(gtobj->gtwin);
     cassert(gtobj->type == ekOBJ_MENU);
-    nap_menu_add((Panel*)gtobj->component, gtobj->gtwin->window, text_block, click_block, kpos);
+    nap_menu_add((Panel *)gtobj->component, gtobj->gtwin->window, text_block, click_block, kpos);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3812,7 +3812,7 @@ uint32_t hb_gtnap_menu_selected(const uint32_t wid, uint32_t id)
     GtNapObject *gtobj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(gtobj);
     cassert(gtobj->type == ekOBJ_MENU);
-    return nap_menu_selected((Panel*)gtobj->component);
+    return nap_menu_selected((Panel *)gtobj->component);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3848,9 +3848,9 @@ static void i_OnTableRowClick(GtNapObject *gtobj, Event *e)
         /* The row has not been selected in click --> We force the selection */
         if (p->sel == FALSE)
         {
-            const ArrSt(uint32_t) *sel = tableview_selected((TableView*)gtobj->component);
-            i_toogle_sel((TableView*)gtobj->component, sel, p->row);
-            tableview_update((TableView*)gtobj->component);
+            const ArrSt(uint32_t) *sel = tableview_selected((TableView *)gtobj->component);
+            i_toogle_sel((TableView *)gtobj->component, sel, p->row);
+            tableview_update((TableView *)gtobj->component);
         }
     }
     else if (gtobj->autoclose == TRUE)
@@ -3890,7 +3890,7 @@ uint32_t hb_gtnap_tableview(const uint32_t wid, const int32_t top, const int32_t
     tableview_multisel(view, multisel, multisel);
     size.width = (real32_t)(right - left + 1) * GTNAP_GLOBAL->cell_x_sizef;
     size.height = (real32_t)(bottom - top + 1) * GTNAP_GLOBAL->cell_y_sizef;
-    id = i_add_object(ekOBJ_TABLEVIEW, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent*)view, gtwin);
+    id = i_add_object(ekOBJ_TABLEVIEW, top - gtwin->top, left - gtwin->left, GTNAP_GLOBAL->cell_x_sizef, GTNAP_GLOBAL->cell_y_sizef, &size, in_scroll, (GuiComponent *)view, gtwin);
     obj = arrpt_last(gtwin->objects, GtNapObject);
     cassert_no_null(obj);
     cassert(obj->type = ekOBJ_TABLEVIEW);
@@ -3907,7 +3907,7 @@ uint32_t hb_gtnap_tableview(const uint32_t wid, const int32_t top, const int32_t
 static uint32_t i_header_char_width(const char_t *title, uint32_t *nlines)
 {
     uint32_t nchars = 0;
-    ArrPt(String) *strs = str_splits(title, "\n", TRUE);
+    ArrPt(String) *strs = str_splits(title, "\n", TRUE, FALSE);
     cassert_no_null(nlines);
     *nlines = arrpt_size(strs, String);
     arrpt_foreach_const(str, strs, String)
@@ -3948,7 +3948,7 @@ void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint
     if (obj->columns == NULL)
         obj->columns = arrst_create(GtNapColumn);
 
-    cid = tableview_new_column_text((TableView*)obj->component);
+    cid = tableview_new_column_text((TableView *)obj->component);
     cassert(cid == arrst_size(obj->columns, GtNapColumn));
 
     col = arrst_new(obj->columns, GtNapColumn);
@@ -3976,10 +3976,10 @@ void hb_gtnap_tableview_column(const uint32_t wid, const uint32_t id, const uint
             nlines = c->header_lines;
     arrst_end();
 
-    tableview_header_title((TableView*)obj->component, cid, tc(col->title));
-    tableview_column_width((TableView*)obj->component, cid, col->widthf);
-    tableview_header_align((TableView*)obj->component, cid, col->align);
-    tableview_header_height((TableView*)obj->component, (real32_t)nlines * GTNAP_GLOBAL->cell_y_sizef);
+    tableview_header_title((TableView *)obj->component, cid, tc(col->title));
+    tableview_column_width((TableView *)obj->component, cid, col->widthf);
+    tableview_header_align((TableView *)obj->component, cid, col->align);
+    tableview_header_height((TableView *)obj->component, (real32_t)nlines * GTNAP_GLOBAL->cell_y_sizef);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3989,7 +3989,7 @@ void hb_gtnap_tableview_scroll(const uint32_t wid, const uint32_t id, const bool
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    tableview_scroll_visible((TableView*)obj->component, horizontal, vertical);
+    tableview_scroll_visible((TableView *)obj->component, horizontal, vertical);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3999,7 +3999,7 @@ void hb_gtnap_tableview_grid(const uint32_t wid, const uint32_t id, const bool_t
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    tableview_grid((TableView*)obj->component, hlines, vlines);
+    tableview_grid((TableView *)obj->component, hlines, vlines);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4009,7 +4009,7 @@ void hb_gtnap_tableview_header(const uint32_t wid, const uint32_t id, const bool
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    tableview_header_visible((TableView*)obj->component, visible);
+    tableview_header_visible((TableView *)obj->component, visible);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4020,7 +4020,7 @@ void hb_gtnap_tableview_freeze(const uint32_t wid, const uint32_t id, const uint
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
     cassert(col_id > 0);
-    tableview_column_freeze((TableView*)obj->component, col_id - 1);
+    tableview_column_freeze((TableView *)obj->component, col_id - 1);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4041,7 +4041,8 @@ static void i_hbitem_to_char(HB_ITEM *item, char_t *buffer, const uint32_t size)
     HB_TYPE type = HB_ITEM_TYPE(item);
     buffer[0] = '\0';
 
-    switch(type) {
+    switch (type)
+    {
     case HB_IT_STRING:
         hb_itemCopyStrUTF8(item, buffer, size);
         break;
@@ -4132,7 +4133,7 @@ static void i_area_column_width(GtNapArea *gtarea, const uint32_t col, const cha
     if (width > column->widthf)
     {
         column->widthf = width;
-        tableview_column_width((TableView*)gtarea->gtobj->component, col, column->widthf);
+        tableview_column_width((TableView *)gtarea->gtobj->component, col, column->widthf);
     }
 }
 
@@ -4143,7 +4144,8 @@ static void i_OnTableAreaData(GtNapArea *gtarea, Event *e)
     uint32_t etype = event_type(e);
     cassert_no_null(gtarea);
 
-    switch(etype) {
+    switch (etype)
+    {
     case ekGUI_EVENT_TBL_BEGIN:
         SELF_RECNO(gtarea->area, &gtarea->cache_recno);
         break;
@@ -4212,7 +4214,7 @@ void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM
         i_destroy_area(&gtwin->gtarea);
 
     gtwin->gtarea = i_create_area();
-    gtwin->gtarea->area = (AREA*)hb_rddGetCurrentWorkAreaPointer();
+    gtwin->gtarea->area = (AREA *)hb_rddGetCurrentWorkAreaPointer();
     gtwin->gtarea->gtobj = obj;
 
     if (while_block != NULL)
@@ -4220,8 +4222,8 @@ void hb_gtnap_tableview_bind_area(const uint32_t wid, const uint32_t id, HB_ITEM
     else
         gtwin->gtarea->while_block = NULL;
 
-    tableview_OnData((TableView*)obj->component, listener(gtwin->gtarea, i_OnTableAreaData, GtNapArea));
-    tableview_OnSelect((TableView*)obj->component, listener(gtwin->gtarea, i_OnTableAreaRowSelect, GtNapArea));
+    tableview_OnData((TableView *)obj->component, listener(gtwin->gtarea, i_OnTableAreaData, GtNapArea));
+    tableview_OnSelect((TableView *)obj->component, listener(gtwin->gtarea, i_OnTableAreaRowSelect, GtNapArea));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4265,7 +4267,8 @@ static void i_OnTableData(GtNapObject *gtobj, Event *e)
     cassert(gtobj->type == ekOBJ_TABLEVIEW);
     cassert_no_null(gtobj->gtwin);
 
-    switch(etype) {
+    switch (etype)
+    {
     case ekGUI_EVENT_TBL_BEGIN:
         break;
 
@@ -4303,8 +4306,8 @@ void hb_gtnap_tableview_bind_data(const uint32_t wid, const uint32_t id, const u
     gtwin = obj->gtwin;
     cassert_no_null(gtwin);
     gtwin->num_rows = num_rows;
-    tableview_OnData((TableView*)obj->component, listener(obj, i_OnTableData, GtNapObject));
-    tableview_OnSelect((TableView*)obj->component, NULL);
+    tableview_OnData((TableView *)obj->component, listener(obj, i_OnTableData, GtNapObject));
+    tableview_OnSelect((TableView *)obj->component, NULL);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4314,7 +4317,7 @@ void hb_gtnap_tableview_deselect_all(const uint32_t wid, const uint32_t id)
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    tableview_deselect_all((TableView*)obj->component);
+    tableview_deselect_all((TableView *)obj->component);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4324,8 +4327,8 @@ void hb_gtnap_tableview_select_row(const uint32_t wid, const uint32_t id, const 
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    tableview_select((TableView*)obj->component, &row_id, 1);
-    tableview_update((TableView*)obj->component);
+    tableview_select((TableView *)obj->component, &row_id, 1);
+    tableview_update((TableView *)obj->component);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4336,9 +4339,9 @@ void hb_gtnap_tableview_toggle_row(const uint32_t wid, const uint32_t id, const 
     const ArrSt(uint32_t) *sel = NULL;
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    sel = tableview_selected((TableView*)obj->component);
-    i_toogle_sel((TableView*)obj->component, sel, row_id);
-    tableview_update((TableView*)obj->component);
+    sel = tableview_selected((TableView *)obj->component);
+    i_toogle_sel((TableView *)obj->component, sel, row_id);
+    tableview_update((TableView *)obj->component);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4348,7 +4351,7 @@ const ArrSt(uint32_t) *hb_gtnap_tableview_selected_rows(const uint32_t wid, cons
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    return tableview_selected((TableView*)obj->component);
+    return tableview_selected((TableView *)obj->component);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4359,7 +4362,7 @@ uint32_t hb_gtnap_tableview_focus_row(const uint32_t wid, const uint32_t id)
     uint32_t focused;
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    focused = tableview_get_focus_row((TableView*)obj->component);
+    focused = tableview_get_focus_row((TableView *)obj->component);
     return focused;
 }
 
@@ -4421,7 +4424,7 @@ void hb_gtnap_tableview_refresh_current(const uint32_t wid, const uint32_t id)
     GtNapObject *obj = i_gtobj(GTNAP_GLOBAL, wid, id);
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
-    tableview_update((TableView*)obj->component);
+    tableview_update((TableView *)obj->component);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4495,10 +4498,10 @@ static void i_area_select_row(GtNapArea *gtarea)
     cassert_no_null(gtarea);
     cassert_no_null(gtarea->gtobj);
     cassert(gtarea->gtobj->type == ekOBJ_TABLEVIEW);
-    view = (TableView*)gtarea->gtobj->component;
+    view = (TableView *)gtarea->gtobj->component;
 
     /* Current selected */
-    SELF_RECNO( gtarea->area, &ulCurRec );
+    SELF_RECNO(gtarea->area, &ulCurRec);
 
     sel_row = i_row_from_recno(gtarea, (uint32_t)ulCurRec);
 
@@ -4566,7 +4569,7 @@ void hb_gtnap_tableview_refresh_all(const uint32_t wid, const uint32_t id)
     cassert_no_null(obj);
     cassert(obj->type == ekOBJ_TABLEVIEW);
     gtwin = obj->gtwin;
-    view = (TableView*)obj->component;
+    view = (TableView *)obj->component;
     cassert_no_null(gtwin);
     if (gtwin->gtarea != NULL && view != NULL)
     {
@@ -4622,7 +4625,7 @@ void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, const c
         button_OnClick(button, listener);
         i_cp_to_utf8(tooltip, utf8, sizeof(utf8));
         button_tooltip(button, utf8);
-        arrpt_append(gtwin->toolbar->items, (GuiComponent*)button, GuiComponent);
+        arrpt_append(gtwin->toolbar->items, (GuiComponent *)button, GuiComponent);
         image_destroy(&image);
     }
 }
@@ -4635,7 +4638,7 @@ void hb_gtnap_toolbar_separator(const uint32_t wid)
     View *separator = _view_create(ekVIEW_BORDER | ekVIEW_CONTROL);
     cassert_no_null(gtwin);
     cassert_no_null(gtwin->toolbar);
-    arrpt_append(gtwin->toolbar->items, (GuiComponent*)separator, GuiComponent);
+    arrpt_append(gtwin->toolbar->items, (GuiComponent *)separator, GuiComponent);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5116,7 +5119,7 @@ void hb_gtnap_office_writer_insert_text(Writer *writer, HB_ITEM *text_block)
 void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n)
 {
     uint8_t dash[3] = {0xE2, 0x80, 0x94};
-    char_t *dashes = heap_new_n(n*3+1, char_t);
+    char_t *dashes = heap_new_n(n * 3 + 1, char_t);
     char_t *it = dashes;
     uint32_t i = 0;
     for (i = 0; i < n; ++i)
@@ -5128,7 +5131,7 @@ void hb_gtnap_office_writer_insert_dash(Writer *writer, const uint32_t n)
     *it = 0;
 
     officesdk_writer_insert_text(writer, GTNAP_GLOBAL->office_text_space, dashes, &GTNAP_GLOBAL->office_last_error);
-    heap_delete_n(&dashes, n*3+1, char_t);
+    heap_delete_n(&dashes, n * 3 + 1, char_t);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5187,7 +5190,6 @@ void hb_gtnap_cualib_default_button(const uint32_t nDefault)
     gtwin->default_button = nDefault - 1;
 }
 
-
 /*---------------------------------------------------------------------------*/
 
 void hb_gtnap_cualib_window_f4_lista(void)
@@ -5241,109 +5243,109 @@ String *hb_block_to_utf8(HB_ITEM *item)
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_Lock( PHB_GT pGT )
+static HB_BOOL hb_gtnap_Lock(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Unlock( PHB_GT pGT )
+static void hb_gtnap_Unlock(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
+static void hb_gtnap_Init(PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( hFilenoStdin );
-    HB_SYMBOL_UNUSED( hFilenoStdout );
-    HB_SYMBOL_UNUSED( hFilenoStderr );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(hFilenoStdin);
+    HB_SYMBOL_UNUSED(hFilenoStdout);
+    HB_SYMBOL_UNUSED(hFilenoStderr);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Exit( PHB_GT pGT )
+static void hb_gtnap_Exit(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_Resize( PHB_GT pGT, int iRow, int iCol )
+static HB_BOOL hb_gtnap_Resize(PHB_GT pGT, int iRow, int iCol)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iRow );
-    HB_SYMBOL_UNUSED( iCol );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iRow);
+    HB_SYMBOL_UNUSED(iCol);
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_SetMode( PHB_GT pGT, int iRow, int iCol )
+static HB_BOOL hb_gtnap_SetMode(PHB_GT pGT, int iRow, int iCol)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iRow );
-    HB_SYMBOL_UNUSED( iCol );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iRow);
+    HB_SYMBOL_UNUSED(iCol);
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_GetSize( PHB_GT pGT, int * piRows, int  * piCols )
+static void hb_gtnap_GetSize(PHB_GT pGT, int *piRows, int *piCols)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     *piRows = (int)GTNAP_GLOBAL->rows;
     *piCols = (int)GTNAP_GLOBAL->cols;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_ExposeArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight )
+static void hb_gtnap_ExposeArea(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( iRight );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iTop);
+    HB_SYMBOL_UNUSED(iLeft);
+    HB_SYMBOL_UNUSED(iBottom);
+    HB_SYMBOL_UNUSED(iRight);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_MaxCol( PHB_GT pGT )
+static int hb_gtnap_MaxCol(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return GTNAP_GLOBAL->cols - 1;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_MaxRow( PHB_GT pGT )
+static int hb_gtnap_MaxRow(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return GTNAP_GLOBAL->rows - 1;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_CheckPos( PHB_GT pGT, int iRow, int iCol, long * plIndex )
+static HB_BOOL hb_gtnap_CheckPos(PHB_GT pGT, int iRow, int iCol, long *plIndex)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iRow );
-    HB_SYMBOL_UNUSED( iCol );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iRow);
+    HB_SYMBOL_UNUSED(iCol);
     *plIndex = 0;
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
+static void hb_gtnap_SetPos(PHB_GT pGT, int iRow, int iCol)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     if (gtwin != NULL)
     {
         gtwin->cursor_row = (int32_t)iRow;
@@ -5353,10 +5355,10 @@ static void hb_gtnap_SetPos( PHB_GT pGT, int iRow, int iCol )
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_GetPos( PHB_GT pGT, int * piRow, int * piCol )
+static void hb_gtnap_GetPos(PHB_GT pGT, int *piRow, int *piCol)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     if (gtwin != NULL)
     {
         *piRow = (int)gtwin->cursor_row;
@@ -5371,71 +5373,71 @@ static void hb_gtnap_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_IsColor( PHB_GT pGT )
+static HB_BOOL hb_gtnap_IsColor(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_GetCursorStyle( PHB_GT pGT )
+static int hb_gtnap_GetCursorStyle(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return SC_NORMAL;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_SetCursorStyle( PHB_GT pGT, int iStyle )
+static void hb_gtnap_SetCursorStyle(PHB_GT pGT, int iStyle)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
 
-    switch( iStyle )
+    switch (iStyle)
     {
-        case SC_NONE:
-            break;
-        case SC_INSERT:
-            break;
-        case SC_SPECIAL1:
-            break;
-        case SC_SPECIAL2:
-            break;
-        case SC_NORMAL:
-        default:
-            break;
+    case SC_NONE:
+        break;
+    case SC_INSERT:
+        break;
+    case SC_SPECIAL1:
+        break;
+    case SC_SPECIAL2:
+        break;
+    case SC_NORMAL:
+    default:
+        break;
     }
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_DispBegin( PHB_GT pGT )
+static void hb_gtnap_DispBegin(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_DispEnd( PHB_GT pGT )
+static void hb_gtnap_DispEnd(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_DispCount( PHB_GT pGT )
+static int hb_gtnap_DispCount(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return 0;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_GetChar( PHB_GT pGT, int iRow, int iCol, int * pbColor, HB_BYTE * pbAttr, HB_USHORT * pusChar )
+static HB_BOOL hb_gtnap_GetChar(PHB_GT pGT, int iRow, int iCol, int *pbColor, HB_BYTE *pbAttr, HB_USHORT *pusChar)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iCol );
-    HB_SYMBOL_UNUSED( iRow );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iCol);
+    HB_SYMBOL_UNUSED(iRow);
     *pbColor = 0;
     *pbAttr = 0;
     *pusChar = 65;
@@ -5444,74 +5446,74 @@ static HB_BOOL hb_gtnap_GetChar( PHB_GT pGT, int iRow, int iCol, int * pbColor, 
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_PutChar( PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar )
+static HB_BOOL hb_gtnap_PutChar(PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iRow );
-    HB_SYMBOL_UNUSED( iCol );
-    HB_SYMBOL_UNUSED( bColor );
-    HB_SYMBOL_UNUSED( bAttr );
-    HB_SYMBOL_UNUSED( usChar );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iRow);
+    HB_SYMBOL_UNUSED(iCol);
+    HB_SYMBOL_UNUSED(bColor);
+    HB_SYMBOL_UNUSED(bAttr);
+    HB_SYMBOL_UNUSED(usChar);
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, void * pBuffer )
+static void hb_gtnap_Save(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, void *pBuffer)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( iRight );
-    HB_SYMBOL_UNUSED( pBuffer );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iTop);
+    HB_SYMBOL_UNUSED(iLeft);
+    HB_SYMBOL_UNUSED(iBottom);
+    HB_SYMBOL_UNUSED(iRight);
+    HB_SYMBOL_UNUSED(pBuffer);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const void * pBuffer )
+static void hb_gtnap_Rest(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const void *pBuffer)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( iRight );
-    HB_SYMBOL_UNUSED( pBuffer );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iTop);
+    HB_SYMBOL_UNUSED(iLeft);
+    HB_SYMBOL_UNUSED(iBottom);
+    HB_SYMBOL_UNUSED(iRight);
+    HB_SYMBOL_UNUSED(pBuffer);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const char * pText, HB_SIZE ulLen )
+static int hb_gtnap_PutText(PHB_GT pGT, int iRow, int iCol, int bColor, const char *pText, HB_SIZE ulLen)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iRow );
-    HB_SYMBOL_UNUSED( iCol );
-    HB_SYMBOL_UNUSED( bColor );
-    HB_SYMBOL_UNUSED( pText );
-    HB_SYMBOL_UNUSED( ulLen );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iRow);
+    HB_SYMBOL_UNUSED(iCol);
+    HB_SYMBOL_UNUSED(bColor);
+    HB_SYMBOL_UNUSED(pText);
+    HB_SYMBOL_UNUSED(ulLen);
     return 0;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar, HB_SIZE ulLen )
+static void hb_gtnap_Replicate(PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar, HB_SIZE ulLen)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iRow );
-    HB_SYMBOL_UNUSED( iCol );
-    HB_SYMBOL_UNUSED( bColor );
-    HB_SYMBOL_UNUSED( bAttr );
-    HB_SYMBOL_UNUSED( usChar );
-    HB_SYMBOL_UNUSED( ulLen );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iRow);
+    HB_SYMBOL_UNUSED(iCol);
+    HB_SYMBOL_UNUSED(bColor);
+    HB_SYMBOL_UNUSED(bAttr);
+    HB_SYMBOL_UNUSED(usChar);
+    HB_SYMBOL_UNUSED(ulLen);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText, HB_SIZE ulLength )
+static void hb_gtnap_WriteAt(PHB_GT pGT, int iRow, int iCol, const char *pText, HB_SIZE ulLength)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( ulLength );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(ulLength);
     if (gtwin != NULL)
     {
         i_add_label(iRow - gtwin->top, iCol - gtwin->left, FALSE, gtwin, GTNAP_GLOBAL);
@@ -5527,30 +5529,30 @@ static void hb_gtnap_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * pText
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor )
+static void hb_gtnap_SetAttribute(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( iRight );
-    HB_SYMBOL_UNUSED( bColor );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iTop);
+    HB_SYMBOL_UNUSED(iLeft);
+    HB_SYMBOL_UNUSED(iBottom);
+    HB_SYMBOL_UNUSED(iRight);
+    HB_SYMBOL_UNUSED(bColor);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, HB_USHORT bChar, int iRows, int iCols )
+static void hb_gtnap_Scroll(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, HB_USHORT bChar, int iRows, int iCols)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( iRight );
-    HB_SYMBOL_UNUSED( bColor );
-    HB_SYMBOL_UNUSED( bChar );
-    HB_SYMBOL_UNUSED( iRows );
-    HB_SYMBOL_UNUSED( iCols );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iTop);
+    HB_SYMBOL_UNUSED(iLeft);
+    HB_SYMBOL_UNUSED(iBottom);
+    HB_SYMBOL_UNUSED(iRight);
+    HB_SYMBOL_UNUSED(bColor);
+    HB_SYMBOL_UNUSED(bChar);
+    HB_SYMBOL_UNUSED(iRows);
+    HB_SYMBOL_UNUSED(iCols);
 
     if (gtwin != NULL)
     {
@@ -5561,7 +5563,7 @@ static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int i
            Take into account if a real scroll exists (iRows > 0 || iCols > 0)
         */
         n = arrpt_size(gtwin->objects, GtNapObject);
-        for (i = 0; i < n; )
+        for (i = 0; i < n;)
         {
             GtNapObject *object = arrpt_get(gtwin->objects, i, GtNapObject);
             const char_t *type = _component_type(object->component);
@@ -5580,73 +5582,73 @@ static void hb_gtnap_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int i
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const char * pbyFrame, int bColor )
+static void hb_gtnap_Box(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const char *pbyFrame, int bColor)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( iRight );
-    HB_SYMBOL_UNUSED( pbyFrame );
-    HB_SYMBOL_UNUSED( bColor );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iTop);
+    HB_SYMBOL_UNUSED(iLeft);
+    HB_SYMBOL_UNUSED(iBottom);
+    HB_SYMBOL_UNUSED(iRight);
+    HB_SYMBOL_UNUSED(pbyFrame);
+    HB_SYMBOL_UNUSED(bColor);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight, HB_USHORT bChar, int bColor )
+static void hb_gtnap_HorizLine(PHB_GT pGT, int iRow, int iLeft, int iRight, HB_USHORT bChar, int bColor)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iRow );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iRight );
-    HB_SYMBOL_UNUSED( bChar );
-    HB_SYMBOL_UNUSED( bColor );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iRow);
+    HB_SYMBOL_UNUSED(iLeft);
+    HB_SYMBOL_UNUSED(iRight);
+    HB_SYMBOL_UNUSED(bChar);
+    HB_SYMBOL_UNUSED(bColor);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, HB_USHORT bChar, int bColor )
+static void hb_gtnap_VertLine(PHB_GT pGT, int iCol, int iTop, int iBottom, HB_USHORT bChar, int bColor)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iCol );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( bChar );
-    HB_SYMBOL_UNUSED( bColor );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iCol);
+    HB_SYMBOL_UNUSED(iTop);
+    HB_SYMBOL_UNUSED(iBottom);
+    HB_SYMBOL_UNUSED(bChar);
+    HB_SYMBOL_UNUSED(bColor);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_GetBlink( PHB_GT pGT )
+static HB_BOOL hb_gtnap_GetBlink(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_SetBlink( PHB_GT pGT, HB_BOOL bBlink )
+static void hb_gtnap_SetBlink(PHB_GT pGT, HB_BOOL bBlink)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( bBlink );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(bBlink);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static const char * hb_gtnap_Version( PHB_GT pGT, int iType )
+static const char *hb_gtnap_Version(PHB_GT pGT, int iType)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    if( iType == 0 )
-        return HB_GT_DRVNAME( HB_GT_NAME );
+    HB_SYMBOL_UNUSED(pGT);
+    if (iType == 0)
+        return HB_GT_DRVNAME(HB_GT_NAME);
 
     return "Harbour Terminal: GTNAP";
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
+static void hb_gtnap_OutStd(PHB_GT pGT, const char *pbyStr, HB_SIZE ulLen)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     if (pbyStr != NULL && ulLen > 0)
         log_printf("hb_gtnap_OutStd(%s (%d))", pbyStr, (int)ulLen);
     else
@@ -5655,9 +5657,9 @@ static void hb_gtnap_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_OutErr( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
+static void hb_gtnap_OutErr(PHB_GT pGT, const char *pbyStr, HB_SIZE ulLen)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     if (pbyStr != NULL && ulLen > 0)
     {
         char_t utf8[STATIC_TEXT_SIZE];
@@ -5668,36 +5670,36 @@ static void hb_gtnap_OutErr( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_Tone( PHB_GT pGT, double dFrequency, double dDuration )
+static void hb_gtnap_Tone(PHB_GT pGT, double dFrequency, double dDuration)
 {
     /* dDuration is in 'Ticks' (18.2 per second) */
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( dFrequency );
-    HB_SYMBOL_UNUSED( dDuration );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(dFrequency);
+    HB_SYMBOL_UNUSED(dDuration);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+static HB_BOOL hb_gtnap_Info(PHB_GT pGT, int iType, PHB_GT_INFO pInfo)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iType );
-    HB_SYMBOL_UNUSED( pInfo );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iType);
+    HB_SYMBOL_UNUSED(pInfo);
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_Alert( PHB_GT pGT, PHB_ITEM message, PHB_ITEM options, int a, int b, double c )
+static int hb_gtnap_Alert(PHB_GT pGT, PHB_ITEM message, PHB_ITEM options, int a, int b, double c)
 {
     String *msg = NULL;
     ArrPt(String) *opts = NULL;
     uint32_t ret = 0;
 
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( a );
-    HB_SYMBOL_UNUSED( b );
-    HB_SYMBOL_UNUSED( c );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(a);
+    HB_SYMBOL_UNUSED(b);
+    HB_SYMBOL_UNUSED(c);
 
     if (HB_ITEM_TYPE(message) == HB_IT_STRING)
     {
@@ -5742,89 +5744,89 @@ static int hb_gtnap_Alert( PHB_GT pGT, PHB_ITEM message, PHB_ITEM options, int a
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_mouse_Init( PHB_GT pGT )
+static void hb_gtnap_mouse_Init(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_mouse_Exit( PHB_GT pGT )
+static void hb_gtnap_mouse_Exit(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_mouse_IsPresent( PHB_GT pGT )
+static HB_BOOL hb_gtnap_mouse_IsPresent(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_mouse_Col( PHB_GT pGT )
+static int hb_gtnap_mouse_Col(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return 1;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_mouse_Row( PHB_GT pGT )
+static int hb_gtnap_mouse_Row(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return 1;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_mouse_CountButton( PHB_GT pGT )
+static int hb_gtnap_mouse_CountButton(PHB_GT pGT)
 {
-    HB_SYMBOL_UNUSED( pGT );
+    HB_SYMBOL_UNUSED(pGT);
     return 3;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_mouse_ButtonState( PHB_GT pGT, int iButton )
+static HB_BOOL hb_gtnap_mouse_ButtonState(PHB_GT pGT, int iButton)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iButton );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iButton);
     return FALSE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_gfxPrimitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
+static int hb_gtnap_gfxPrimitive(PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iType );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( iBottom );
-    HB_SYMBOL_UNUSED( iRight );
-    HB_SYMBOL_UNUSED( iColor );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iType);
+    HB_SYMBOL_UNUSED(iTop);
+    HB_SYMBOL_UNUSED(iLeft);
+    HB_SYMBOL_UNUSED(iBottom);
+    HB_SYMBOL_UNUSED(iRight);
+    HB_SYMBOL_UNUSED(iColor);
     return 1;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_gfxText( PHB_GT pGT, int iTop, int iLeft, const char * cBuf, int iColor, int iSize, int iWidth )
+static void hb_gtnap_gfxText(PHB_GT pGT, int iTop, int iLeft, const char *cBuf, int iColor, int iSize, int iWidth)
 {
-    HB_SYMBOL_UNUSED( pGT );
-    HB_SYMBOL_UNUSED( iTop );
-    HB_SYMBOL_UNUSED( iLeft );
-    HB_SYMBOL_UNUSED( cBuf );
-    HB_SYMBOL_UNUSED( iColor );
-    HB_SYMBOL_UNUSED( iSize );
-    HB_SYMBOL_UNUSED( iWidth );
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iTop);
+    HB_SYMBOL_UNUSED(iLeft);
+    HB_SYMBOL_UNUSED(cBuf);
+    HB_SYMBOL_UNUSED(iColor);
+    HB_SYMBOL_UNUSED(iSize);
+    HB_SYMBOL_UNUSED(iWidth);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+static HB_BOOL hb_gt_FuncInit(PHB_GT_FUNCS pFuncTable)
 {
     pFuncTable->Lock = hb_gtnap_Lock;
     pFuncTable->Unlock = hb_gtnap_Unlock;
@@ -5850,7 +5852,7 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->MaxRow = hb_gtnap_MaxRow;
     pFuncTable->CheckPos = hb_gtnap_CheckPos;
     pFuncTable->SetPos = hb_gtnap_SetPos;
-    pFuncTable->GetPos =  hb_gtnap_GetPos;
+    pFuncTable->GetPos = hb_gtnap_GetPos;
     pFuncTable->IsColor = hb_gtnap_IsColor;
     /* pFuncTable->GetColorStr = NULL;
     pFuncTable->SetColorStr = NULL;
@@ -5896,7 +5898,7 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->BoxD = NULL;
     pFuncTable->BoxS = NULL;
     pFuncTable->HorizLine = hb_gtnap_HorizLine;
-    pFuncTable->VertLine  = hb_gtnap_VertLine;
+    pFuncTable->VertLine = hb_gtnap_VertLine;
     pFuncTable->GetBlink = hb_gtnap_GetBlink;
     pFuncTable->SetBlink = hb_gtnap_SetBlink;
     /* pFuncTable->SetSnowFlag = NULL; */
@@ -5960,14 +5962,14 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
     pFuncTable->GfxText = hb_gtnap_gfxText;
     pFuncTable->WhoCares = NULL;
 
-   return TRUE;
+    return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
 static int s_GtId;
 static HB_GT_FUNCS SuperTable;
-#define HB_GTSUPER   ( &SuperTable )
-#define HB_GTID_PTR  ( &s_GtId )
+#define HB_GTSUPER (&SuperTable)
+#define HB_GTID_PTR (&s_GtId)
 
 #include "hbgtreg.h"

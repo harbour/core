@@ -7,7 +7,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TEXTVIEW )
+HB_FUNC(NAP_TEXTVIEW)
 {
     uint32_t wid = hb_parni(1);
     int32_t top = hb_parni(2);
@@ -24,7 +24,7 @@ HB_FUNC( NAP_TEXTVIEW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TEXTVIEW_SCROLL )
+HB_FUNC(NAP_TEXTVIEW_SCROLL)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -35,7 +35,7 @@ HB_FUNC( NAP_TEXTVIEW_SCROLL )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TEXTVIEW_CARET )
+HB_FUNC(NAP_TEXTVIEW_CARET)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -45,7 +45,7 @@ HB_FUNC( NAP_TEXTVIEW_CARET )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TEXTVIEW_BUTTON )
+HB_FUNC(NAP_TEXTVIEW_BUTTON)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -55,7 +55,7 @@ HB_FUNC( NAP_TEXTVIEW_BUTTON )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TEXTVIEW_HOTKEY )
+HB_FUNC(NAP_TEXTVIEW_HOTKEY)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);

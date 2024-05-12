@@ -4,9 +4,9 @@
 */
 
 /*
-* objeto MENU VERTICAL
-*
-*/
+ * objeto MENU VERTICAL
+ *
+ */
 
 #include "gtnap.h"
 #include "gtnap.inl"
@@ -60,14 +60,12 @@ static const vkey_t KEY_ASCII_TABLE[] = {
     ekKEY_M, ekKEY_N, ekKEY_O, ekKEY_P,
     ekKEY_Q, ekKEY_R, ekKEY_S, ekKEY_T,
     ekKEY_U, ekKEY_V, ekKEY_W, ekKEY_X,
-    ekKEY_Y, ekKEY_Z
-};
+    ekKEY_Y, ekKEY_Z};
 
 static const vkey_t KEY_ASCII_NUMBERS[] = {
     ekKEY_0, ekKEY_1, ekKEY_2, ekKEY_3,
     ekKEY_4, ekKEY_5, ekKEY_6, ekKEY_7,
-    ekKEY_8, ekKEY_9
-};
+    ekKEY_8, ekKEY_9};
 
 /*---------------------------------------------------------------------------*/
 
@@ -226,7 +224,7 @@ static void i_run_option(MenuVert *menu)
     {
         Window *window = menu->window;
         if (window == NULL)
-            window = _component_window((const GuiComponent*)menu->view);
+            window = _component_window((const GuiComponent *)menu->view);
         window_stop_modal(window, NAP_MODAL_MENU_AUTOCLOSE + 1 + menu->selected);
     }
 }
@@ -386,7 +384,7 @@ static void i_OnSize(Panel *panel, Event *e)
 Panel *nap_menu_create(const bool_t autoclose, const Font *font, const real32_t cell_x_size, const real32_t cell_y_size)
 {
     Panel *panel = panel_create();
-    Layout *layout = layout_create(1,1);
+    Layout *layout = layout_create(1, 1);
     View *view = _view_create(ekVIEW_HSCROLL | ekVIEW_VSCROLL | ekVIEW_CONTROL);
     MenuVert *menu = i_create();
     menu->font = font;
@@ -406,7 +404,7 @@ Panel *nap_menu_create(const bool_t autoclose, const Font *font, const real32_t 
     view_OnExit(view, listener(panel, i_OnExit, Panel));
     view_OnUp(view, listener(panel, i_OnUp, Panel));
     view_OnKeyDown(view, listener(panel, i_OnKeyDown, Panel));
-    _component_visible((GuiComponent*)view, TRUE);
+    _component_visible((GuiComponent *)view, TRUE);
     panel_data(panel, &menu, i_destroy, MenuVert);
     layout_view(layout, view, 0, 0);
     layout_tabstop(layout, 0, 0, TRUE);
@@ -420,7 +418,7 @@ static uint32_t i_codepoint(const char_t *str, const uint32_t pos)
 {
     uint32_t i = 0;
     const char_t *it = str;
-    while(i != pos)
+    while (i != pos)
     {
         it = unicode_next(it, ekUTF8);
         i += 1;
@@ -531,7 +529,7 @@ uint32_t nap_menu_selected(Panel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_MENU )
+HB_FUNC(NAP_MENU)
 {
     uint32_t wid = hb_parni(1);
     int32_t top = hb_parni(2);
@@ -546,7 +544,7 @@ HB_FUNC( NAP_MENU )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_MENU_ADD )
+HB_FUNC(NAP_MENU_ADD)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -558,7 +556,7 @@ HB_FUNC( NAP_MENU_ADD )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_MENU_SELECTED )
+HB_FUNC(NAP_MENU_SELECTED)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);

@@ -7,7 +7,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_LABEL )
+HB_FUNC(NAP_LABEL)
 {
     uint32_t wid = hb_parni(1);
     int32_t top = hb_parni(2);
@@ -20,7 +20,7 @@ HB_FUNC( NAP_LABEL )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_LABEL_MESSAGE )
+HB_FUNC(NAP_LABEL_MESSAGE)
 {
     uint32_t wid = hb_parni(1);
     int32_t top = hb_parni(2);
@@ -32,7 +32,7 @@ HB_FUNC( NAP_LABEL_MESSAGE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_LABEL_UPDATE )
+HB_FUNC(NAP_LABEL_UPDATE)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -44,7 +44,7 @@ HB_FUNC( NAP_LABEL_UPDATE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_LABEL_FGCOLOR )
+HB_FUNC(NAP_LABEL_FGCOLOR)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -54,7 +54,7 @@ HB_FUNC( NAP_LABEL_FGCOLOR )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_LABEL_BGCOLOR )
+HB_FUNC(NAP_LABEL_BGCOLOR)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -64,7 +64,7 @@ HB_FUNC( NAP_LABEL_BGCOLOR )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_LABEL_COLOR )
+HB_FUNC(NAP_LABEL_COLOR)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
