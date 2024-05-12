@@ -4,7 +4,7 @@ nap_library(${TARGET_NAME} "core" NO NRC_NONE)
 target_include_directories(${TARGET_NAME} PUBLIC "..")
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    target_compile_options(${TARGET_NAME} PUBLIC "-Wno-inline")
+    target_compile_options(${TARGET_NAME} PUBLIC "-Wno-inline" "-Wno-attributes")
 endif()
 
 if (GTNAP_LIBREOFFICE)
@@ -24,7 +24,11 @@ if (GTNAP_LIBREOFFICE)
     target_link_directories(${TARGET_NAME} PRIVATE ${LOROOT}/program ${LOROOT}/sdk/lib)
 
     if (NOT WIN32)
-        add_definitions(-DLINUX)
+        target_compile_definitions(${TARGET_NAME} PUBLIC -DLINUX)
+    endif()
+
+    if (CMAKE_GENERATOR MATCHES "MinGW Makefiles")
+        target_compile_definitions(${TARGET_NAME} PUBLIC -DSAL_UNX)
     endif()
 
     # Generate the LibreOffice-SDK C++ headers
@@ -32,9 +36,6 @@ if (GTNAP_LIBREOFFICE)
         set(CPPUMAKER ${LOROOT}/sdk/bin/cppumaker)
         set(CPPTYPES ${LOROOT}/program/types.rdb)
         set(CPPOFFAPI ${LOROOT}/program/types/offapi.rdb)
-        file(TO_NATIVE_PATH \"${CPPUMAKER}\" CPPUMAKER)
-        file(TO_NATIVE_PATH \"${CPPTYPES}\" CPPTYPES)
-        file(TO_NATIVE_PATH \"${CPPOFFAPI}\" CPPOFFAPI)
         execute_process(COMMAND "${CPPUMAKER}" "-Gc" "-O${CMAKE_CURRENT_BINARY_DIR}" "${CPPTYPES}" "${CPPOFFAPI}" RESULT_VARIABLE RES_VAR OUTPUT_VARIABLE OUT_VAR ERROR_VARIABLE ERR_VAR)
 
         if (NOT "${RES_VAR}" STREQUAL "0")
