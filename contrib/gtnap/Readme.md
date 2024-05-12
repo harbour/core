@@ -5,8 +5,9 @@ https://github.com/frang75/nappgui_src
 
 * [Installing CMake](#installing-cmake)
 * [LibreOffice-SDK support](#libreoffice-sdk-support)
+* [Build Harbour](#build-harbour)
 * [Build GTNap](#build-gtnap)
-   - [In Windows](#in-windows)
+   - [In Windows with VisualStudio](#in-windows-with-visualstudio)
    - [In Linux](#in-linux)
    - [In macOS](#in-macos)
 * [Using GTNap](#using-gtnap)
@@ -27,12 +28,14 @@ https://github.com/frang75/nappgui_src
 
 For building GTNap CMake tool is necessary:
 
-* In Windows:
+### CMake in Windows
+
     * Download from https://cmake.org/download/
     * Select **Add CMake to the system PATH for all users** when installing.
     ![cmake_win](https://user-images.githubusercontent.com/42999199/235419286-0a6101f4-b43b-4e40-a3cb-c585fe908185.png)
 
-* In Linux:
+### CMake in Linux
+
     * `sudo apt-get install cmake cmake-gui`
 
    * Open a terminal/cmd and check if cmake works:
@@ -41,7 +44,8 @@ For building GTNap CMake tool is necessary:
       cmake version 3.10.2
       ```
 
-* In macOS:
+### CMake in macOS
+
     * Download from https://cmake.org/download/
     * Move `CMake.app` to `/Applications` folder.
     * By default, CMake does not configure command line access on macOS. You can create symbolic links with `sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install`.
@@ -59,63 +63,133 @@ As of November 23, GTNAP adds support for the LibreOffice-SDK, in order to add c
 
 > **Important:** Its possible disable the LibreOffice support when build GTNAP, using the `-noliboff` option in build script. See [Build GTNap](#build-gtnap).
 
-* In Windows:
-    * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
-      ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
+### LibreOffice-SDK in Windows
 
-    * Install the LibreOffice-SDK package. This installation is **required ONLY for compile GTNAP in development machines**.
-      > **Important:** LibreOffice-SDK is available in 32-bit and 64-bit versions. You will need to compile GTNAP in 32 or 64 bits depending on the version of LibreOffice. It is not possible to mix 32 and 64 libraries in the same executable. **By default, GTNAP will be compiled in 64bit in Windows**.
+* Install the LibreOffice package. This installation is **required on both development machines and user machines**.
+    ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
 
-      > **Important:** The SDK version must be the same as LibreOffice application.
+* Install the LibreOffice-SDK package. This installation is **required ONLY for compile GTNAP in development machines**.
+    > **Important:** LibreOffice-SDK is available in 32-bit and 64-bit versions. You will need to compile GTNAP in 32 or 64 bits depending on the version of LibreOffice. It is not possible to mix 32 and 64 libraries in the same executable. **By default, GTNAP will be compiled in 64bit in Windows**.
 
-      ![download_libreoffice_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/4821de74-7e38-486a-94f6-ffd59d0f14a0)
+    > **Important:** The SDK version must be the same as LibreOffice application.
 
-    * Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `C:\Program Files\LibreOffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime.
+    ![download_libreoffice_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/4821de74-7e38-486a-94f6-ffd59d0f14a0)
 
-      ![envvar_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/3ad38b78-9214-4567-94b8-94dcf926848f)
+* Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `C:\Program Files\LibreOffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime.
 
-   * Add `%LIBREOFFICE_HOME%/program` path to `PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice .DLLs must be accesible and located.
+    ![envvar_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/3ad38b78-9214-4567-94b8-94dcf926848f)
 
-      ![path_envvar](https://github.com/frang75/harbour_nappgui/assets/42999199/d0215a5e-8569-4dca-a313-f765ada84080)
+* Add `%LIBREOFFICE_HOME%/program` path to `PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice .DLLs must be accesible and located.
+
+    ![path_envvar](https://github.com/frang75/harbour_nappgui/assets/42999199/d0215a5e-8569-4dca-a313-f765ada84080)
 
 
-* In Linux:
-    * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
-        ```
-        sudo apt-get install libreoffice
-        ```
-    * Install the LibreOffice development libraries. This installation is **required ONLY for compile GTNAP in development machines**.
-        ```
-        sudo apt-get install libreoffice-dev
+### LibreOffice-SDK in Linux
 
-        # Optional, not mandatory for compile
-        sudo apt-get install libreoffice-dev-doc
-        ```
-    * Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `/usr/lib/libreoffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime. It is recommended to define this variable in the `.bashrc` so that it is always present.
-        ```
-        nano .bashrc
-        # Add at the end
-        export LIBREOFFICE_HOME=/usr/lib/libreoffice
-        # Ctrl+X to save
-        source .bashrc
-        cd $LIBREOFFICE_HOME
-        ls
-        CREDITS.fodt  NOTICE  presets  program  sdk  share
-        ```
+* Install the LibreOffice package. This installation is **required on both development machines and user machines**.
+    ```
+    sudo apt-get install libreoffice
+    ```
+* Install the LibreOffice development libraries. This installation is **required ONLY for compile GTNAP in development machines**.
+    ```
+    sudo apt-get install libreoffice-dev
 
-   * Add `$LIBREOFFICE_HOME$/program` path to `LD_LIBRARY_PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice shared libraries `.so` must be accesible and located.
-        ```
-        # Add at the end of .bashrc
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH$:$LIBREOFFICE_HOME$/program
-        ```
+    # Optional, not mandatory for compile
+    sudo apt-get install libreoffice-dev-doc
+    ```
+* Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `/usr/lib/libreoffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime. It is recommended to define this variable in the `.bashrc` so that it is always present.
+    ```
+    nano .bashrc
+    # Add at the end
+    export LIBREOFFICE_HOME=/usr/lib/libreoffice
+    # Ctrl+X to save
+    source .bashrc
+    cd $LIBREOFFICE_HOME
+    ls
+    CREDITS.fodt  NOTICE  presets  program  sdk  share
+    ```
 
-> **Important:** GTNAP-based programs will not be able to compile or run if LibreOffice is not correctly installed.
+* Add `$LIBREOFFICE_HOME$/program` path to `LD_LIBRARY_PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice shared libraries `.so` must be accesible and located.
+    ```
+    # Add at the end of .bashrc
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH$:$LIBREOFFICE_HOME$/program
+    ```
+
+### About LibreOffice-SDK
+
+> **Important:** GTNAP-based programs can disable the LibreOffice support using `-noliboff` flag in build script.
 
 > **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`, `C:\Program Files\LibreOffice`
 
 > **Important:** The first time a GTNAP program uses a LibreOffice function, an instance of the LibreOffice application will be started invisibly (`soffice.bin` process). This first call will have a small delay due to the initialization of the process. It is imperative that LibreOffice is running in order to use the SDK from C++/Harbour/GTNAP.
 
 > **Important:** A new directory has been created for the LibreOffice example files (read/write) `/tests/cuademo/office`.
+
+## Build Harbour
+
+### Build Harbour in Windows Visual Studio
+
+```
+:: Set the Visual Studio 64bit compiler
+"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+
+:: Go to main folder of harbour working copy
+cd harbour_nappgui
+
+win-make
+
+! Building Harbour 3.2.0dev from source - https://harbour.github.io
+! MAKE: win-make 4.1 sh.exe
+! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
+! HB_PLATFORM: win (x86_64) (auto-detected)
+! HB_COMPILER: msvc64 (v1700) (auto-detected: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/BIN/amd64/)
+! Component: 'zlib' found in C:/harbour_nappgui/src/3rd/zlib (local)
+! Component: 'pcre' found in C:/harbour_nappgui/src/3rd/pcre (local)
+...
+```
+
+### Build Harbour in Linux
+
+```
+# Go to main folder of harbour working copy
+cd harbour_nappgui
+
+make
+
+! Building Harbour 3.2.0dev from source - https://harbour.github.io
+! MAKE: make 4.1 /bin/sh
+! HB_HOST_PLAT: linux (x86_64)  HB_SHELL: sh
+! LD_LIBRARY_PATH: /home/fran/harbour_nappgui/lib/linux/gcc:
+! HB_PLATFORM: linux (x86_64) (auto-detected)
+! HB_COMPILER: gcc (auto-detected: /usr/bin/)
+...
+```
+
+### Build Harbour in macOS
+```
+# Go to main folder of harbour working copy
+cd harbour_nappgui
+
+make
+
+! Building Harbour 3.2.0dev from source - https://harbour.github.io
+! MAKE: /Applications/Xcode.app/Contents/Developer/usr/bin/make 3.81 /bin/sh
+! HB_HOST_PLAT: darwin (x86_64)  HB_SHELL: sh
+! LD_LIBRARY_PATH: /Users/fran/harbour_nappgui/lib/darwin/clang:
+! HB_PLATFORM: darwin (x86_64) (auto-detected)
+! HB_COMPILER: clang (auto-detected: /usr/bin/)
+! HB_HOST_PKGM: homebrew
+! Component: 'zlib' found in /Users/fran/harbour_nappgui/src/3rd/zlib (local)
+! Component: 'pcre' found in /Users/fran/harbour_nappgui/src/3rd/pcre (local)
+! Component: 'gpm' not supported on darwin platform
+! Component: 'slang' not found
+! Component: 'curses' not found
+! Component: 'x11' not found
+! Component: 'wattcp/watt-32' not supported on darwin platform
+! HB_INSTALL_PREFIX automatically set to: /opt/harbour
+! GIT_REVISION: 0a1c79204d
+...
+```
 
 ## Build GTNap
 
@@ -143,7 +217,7 @@ Readme.md           This documentation.
 ReadmeUNO.md        LibreOffice Harbour functions documentation.
 ```
 
-### In Windows
+### In Windows with VisualStudio
 
 > **Important:** The MSVC compiler used by Harbour `hbmk2` is configured using the `vcvarsall.bat` script of the specific version of Visual Studio we are going to use. To configure the compiler in CMake, we must set the `CMAKE_GENERATOR` environment variable to the same version as `vcvarsall.bat`.
 ```
@@ -361,69 +435,9 @@ Using the NAppGUI build system, based on CMake, it is possible to create a singl
 
 ### Step 1. Compile Harbour
 
+Compile Harbour as we seen in previos sections.
+
 **To use developer mode, harbour needs to be recompiled, as a new -keepc option has been introduced in hbmk2.**
-
-* In Windows:
-    ```
-    :: Set the Visual Studio 64bit compiler
-    "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
-
-    :: Go to main folder of harbour working copy
-    cd harbour_nappgui
-
-    win-make
-
-    ! Building Harbour 3.2.0dev from source - https://harbour.github.io
-    ! MAKE: win-make 4.1 sh.exe
-    ! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
-    ! HB_PLATFORM: win (x86_64) (auto-detected)
-    ! HB_COMPILER: msvc64 (v1700) (auto-detected: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/BIN/amd64/)
-    ! Component: 'zlib' found in C:/harbour_nappgui/src/3rd/zlib (local)
-    ! Component: 'pcre' found in C:/harbour_nappgui/src/3rd/pcre (local)
-    ...
-    ```
-
-* In Linux:
-    ```
-    # Go to main folder of harbour working copy
-    cd harbour_nappgui
-
-    make
-
-    ! Building Harbour 3.2.0dev from source - https://harbour.github.io
-    ! MAKE: make 4.1 /bin/sh
-    ! HB_HOST_PLAT: linux (x86_64)  HB_SHELL: sh
-    ! LD_LIBRARY_PATH: /home/fran/harbour_nappgui/lib/linux/gcc:
-    ! HB_PLATFORM: linux (x86_64) (auto-detected)
-    ! HB_COMPILER: gcc (auto-detected: /usr/bin/)
-    ...
-    ```
-
-* In macOS:
-    ```
-    # Go to main folder of harbour working copy
-    cd harbour_nappgui
-
-    make
-
-    ! Building Harbour 3.2.0dev from source - https://harbour.github.io
-    ! MAKE: /Applications/Xcode.app/Contents/Developer/usr/bin/make 3.81 /bin/sh
-    ! HB_HOST_PLAT: darwin (x86_64)  HB_SHELL: sh
-    ! LD_LIBRARY_PATH: /Users/fran/harbour_nappgui/lib/darwin/clang:
-    ! HB_PLATFORM: darwin (x86_64) (auto-detected)
-    ! HB_COMPILER: clang (auto-detected: /usr/bin/)
-    ! HB_HOST_PKGM: homebrew
-    ! Component: 'zlib' found in /Users/fran/harbour_nappgui/src/3rd/zlib (local)
-    ! Component: 'pcre' found in /Users/fran/harbour_nappgui/src/3rd/pcre (local)
-    ! Component: 'gpm' not supported on darwin platform
-    ! Component: 'slang' not found
-    ! Component: 'curses' not found
-    ! Component: 'x11' not found
-    ! Component: 'wattcp/watt-32' not supported on darwin platform
-    ! HB_INSTALL_PREFIX automatically set to: /opt/harbour
-    ! GIT_REVISION: 0a1c79204d
-    ...
-    ```
 
 ### Step 2. Generate exemplo C files
 
