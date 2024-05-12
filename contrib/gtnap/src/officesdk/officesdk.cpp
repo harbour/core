@@ -1798,7 +1798,7 @@ uint32_t officesdk_sheet_add(Sheet *sheet, sdkres_t *err)
         css::uno::Reference<css::sheet::XSpreadsheets> xSheets = (*xDocument)->getSheets();
         css::uno::Reference<css::container::XIndexAccess> xIndexAccess(xSheets, css::uno::UNO_QUERY_THROW);
         sal_Int32 n = xIndexAccess->getCount();
-        defname = str_printf("Sheet%d", n);
+        defname = str_printf("Sheet%d", (uint32_t)n);
         xSheets->insertNewByName(i_OUStringFromString(defname), (sal_Int16)n);
         id = (uint32_t)n;
     }

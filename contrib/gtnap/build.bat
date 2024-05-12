@@ -95,43 +95,43 @@ goto cmake
 call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build -DGTNAP_LIBREOFFICE=%LIBREOFFICE% || goto error_cmake
 call cmake --build %CWD%\build %CMAKE_BUILD% || goto error_build
 
-@REM ::
-@REM :: Build GTNAP
-@REM ::
-@REM set HBMK_PATH=..\\..\\bin\\win\\%COMPILER%
-@REM set HBMK_FLAGS=
+::
+:: Build GTNAP
+::
+set HBMK_PATH=..\\..\\bin\\win\\%COMPILER%
+set HBMK_FLAGS=
 
-@REM IF "%BUILD%"=="Debug" GOTO hbmk2_debug
-@REM goto hbmk2
+IF "%BUILD%"=="Debug" GOTO hbmk2_debug
+goto hbmk2
 
-@REM :hbmk2_debug
-@REM set HBMK_FLAGS=-debug
+:hbmk2_debug
+set HBMK_FLAGS=-debug
 
-@REM hbmk2:
-@REM call %HBMK_PATH%\\hbmk2.exe -comp=%COMPILER% %HBMK_FLAGS% %CWD%\src\gtnap\gtnap.hbp || goto error_gtnap
+hbmk2:
+call %HBMK_PATH%\\hbmk2.exe -comp=%COMPILER% %HBMK_FLAGS% %CWD%\src\gtnap\gtnap.hbp || goto error_gtnap
 
-@REM echo ---------------------------
-@REM echo GTNAP build succeed
-@REM echo ---------------------------
-@REM goto end
+echo ---------------------------
+echo GTNAP build succeed
+echo ---------------------------
+goto end
 
-@REM ::
-@REM :: Errors
-@REM ::
-@REM :error_compiler
-@REM echo Unknown compiler
-@REM exit 1
+::
+:: Errors
+::
+:error_compiler
+echo Unknown compiler
+exit 1
 
-@REM :error_cmake
-@REM echo Error in NAppGUI CMake generate
-@REM exit 1
+:error_cmake
+echo Error in NAppGUI CMake generate
+exit 1
 
-@REM :error_build
-@REM echo Error building NAppGUI
-@REM exit 1
+:error_build
+echo Error building NAppGUI
+exit 1
 
-@REM :error_gtnap
-@REM echo Error building GTNAP
-@REM exit 1
+:error_gtnap
+echo Error building GTNAP
+exit 1
 
-@REM :end
+:end
