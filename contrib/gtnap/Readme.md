@@ -6,6 +6,10 @@ https://github.com/frang75/nappgui_src
 * [Installing CMake](#installing-cmake)
 * [LibreOffice-SDK support](#libreoffice-sdk-support)
 * [Build Harbour](#build-harbour)
+    - [Build Harbour in Windows Visual Studio](#build-harbour-in-windows-visual-studio)
+    - [Build Harbour in Windows MinGW](#build-harbour-in-windows-mingw)
+    - [Build Harbour in Linux](#build-harbour-in-linux)
+    - [Build Harbour in macOS](#build-harbour-in-macos)
 * [Build GTNap](#build-gtnap)
    - [In Windows with VisualStudio](#in-windows-with-visualstudio)
    - [In Linux](#in-linux)
@@ -136,13 +140,32 @@ As of November 23, GTNAP adds support for the LibreOffice-SDK, in order to add c
 :: Go to main folder of harbour working copy
 cd harbour_nappgui
 
-win-make
+win-make HB_COMPILER=msvc
 
 ! Building Harbour 3.2.0dev from source - https://harbour.github.io
 ! MAKE: win-make 4.1 sh.exe
 ! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
 ! HB_PLATFORM: win (x86_64) (auto-detected)
-! HB_COMPILER: msvc64 (v1700) (auto-detected: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/BIN/amd64/)
+! HB_COMPILER: msvc64 (v1700)
+! Component: 'zlib' found in C:/harbour_nappgui/src/3rd/zlib (local)
+! Component: 'pcre' found in C:/harbour_nappgui/src/3rd/pcre (local)
+...
+```
+
+### Build Harbour in Windows MinGW
+
+```
+:: Go to main folder of harbour working copy
+cd harbour_nappgui
+
+win-make HB_COMPILER=mingw64
+
+C:\harbour_nappgui>win-make HB_COMPILER=mingw64
+! Building Harbour 3.2.0dev from source - https://harbour.github.io
+! MAKE: win-make 4.1 sh.exe
+! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
+! HB_PLATFORM: win (x86_64) (auto-detected)
+! HB_COMPILER: mingw64
 ! Component: 'zlib' found in C:/harbour_nappgui/src/3rd/zlib (local)
 ! Component: 'pcre' found in C:/harbour_nappgui/src/3rd/pcre (local)
 ...
@@ -166,6 +189,7 @@ make
 ```
 
 ### Build Harbour in macOS
+
 ```
 # Go to main folder of harbour working copy
 cd harbour_nappgui
