@@ -17,15 +17,6 @@ set BUILD=Debug
 set "CWD=%cd%"
 set LIBREOFFICE=ON
 
-::set HBMK_PATH=..\\..\\bin\\win\\msvc64
-::set ARCH=x64
-
-:: AMD64 IA64 x86
-@REM IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" GOTO endprocessor
-@REM set HBMK_PATH=..\\..\\bin\\win\\msvc
-@REM set ARCH=Win32
-@REM :endprocessor
-
 :parse
 IF "%~1"=="" GOTO endparse
 IF "%~1"=="-b" GOTO build
@@ -43,11 +34,6 @@ GOTO parse
 SHIFT
 set COMPILER=%~1
 GOTO parse
-
-@REM :arch
-@REM SHIFT
-@REM set ARCH=%~1
-@REM GOTO parse
 
 :noliboff
 set LIBREOFFICE=OFF

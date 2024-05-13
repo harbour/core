@@ -5,15 +5,20 @@ https://github.com/frang75/nappgui_src
 
 * [Installing CMake](#installing-cmake)
 * [LibreOffice-SDK support](#libreoffice-sdk-support)
+* [Installing Visual Studio](#installing-visual-studio)
+* [Installing MinGW GCC](#installing-mingw-gcc)
+* [Installing GCC in Linux](#installing-gcc-in-linux)
+* [Installing Xcode in macOS](#installing-xcode-in-macos)
 * [Build Harbour](#build-harbour)
     - [Build Harbour in Windows Visual Studio](#build-harbour-in-windows-visual-studio)
     - [Build Harbour in Windows MinGW](#build-harbour-in-windows-mingw)
     - [Build Harbour in Linux](#build-harbour-in-linux)
     - [Build Harbour in macOS](#build-harbour-in-macos)
 * [Build GTNap](#build-gtnap)
-   - [In Windows with VisualStudio](#in-windows-with-visualstudio)
-   - [In Linux](#in-linux)
-   - [In macOS](#in-macos)
+    - [In Windows with MinGW](#in-windows-with-mingw)
+    - [In Windows with VisualStudio](#in-windows-with-visualstudio)
+    - [In Linux with GCC](#in-linux-with-gcc)
+    - [In macOS with Xcode](#in-macos-with-xcode)
 * [Using GTNap](#using-gtnap)
 * [Compile and run CUADEMO example](#compile-and-run-cuademo-example)
 * [Application ICON](#application-icon)
@@ -129,6 +134,84 @@ As of November 23, GTNAP adds support for the LibreOffice-SDK, in order to add c
 
 > **Important:** A new directory has been created for the LibreOffice example files (read/write) `/tests/cuademo/office`.
 
+## Installing Visual Studio
+
+To use the `msvc`/`msvc64` compilers we need to install Visual Studio environment. Microsoft offers the free [Community](https://visualstudio.microsoft.com/vs/) version since VS2017. Because C++11 standard is required for LibreOffice support we need, at least, Visual Studio 2012.
+
+Once installed, `msvc` compilers are not directly accesible by command line. We need to run `vcvarsall.bat` script, installed in different locations depending on each version. For example, in Visual Studio 2012.
+
+```
+:: Set the Visual Studio 64bit compiler
+"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+
+:: Check compiler is working
+C:>cl
+Microsoft (R) C/C++ Optimizing Compiler Version 17.00.61030 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+:: MSBuild tools is working
+C:>msbuild
+Microsoft (R) Build Engine version 4.8.9037.0
+[Microsoft .NET Framework, version 4.0.30319.42000]
+Copyright (C) Microsoft Corporation. All rights reserved.
+```
+
+## Installing MinGW GCC
+
+MinGW is a project that provides a native Windows version of the GCC compiler. There are different ways to install it, but the most direct is through the MYSYS2 environment.
+
+* Download and install MSYS2 from [here](https://www.msys2.org). By default, is installed in `C:\msys64`.
+* Open a MSYS2 terminal and write `pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain` to install the MinGW/GCC compiler.
+* Open the **Environment Variables** editor and add: `C:\msys64\mingw64\bin` and `\msys64\ucrt64\bin` folders to PATH environment variable.
+* If everything went well, open a `cmd` and type these commands to see if MinGW is active.
+
+```
+:: MinGW Make is working
+C:>mingw32-make
+mingw32-make: *** No targets specified and no makefile found.  Stop.
+
+:: MinGW gcc compiler is working
+C:>gcc --version
+gcc (Rev6, Built by MSYS2 project) 13.2.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.```
+```
+
+## Installing GCC in Linux
+
+```
+# Install GCC compiler and build tools
+:~$ sudo apt-get install build-essential
+
+# Check make tool is working
+:~$ make --version
+GNU Make 4.3
+Built for x86_64-pc-linux-gnu
+
+# Check gcc compiler is working
+~$ gcc --version
+gcc (Ubuntu 13.2.0-23ubuntu4) 13.2.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+```
+
+## Installing Xcode in macOS
+
+Xcode provides the `AppleClang` compiler and build tools for macOS. Download and install it from Apple website [here](https://developer.apple.com/xcode/).
+![xcode_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/cf140563-49df-4c3f-acef-24149fda9382)
+
+```
+# Check build tools is working
+user@host% xcodebuild -version
+Xcode 12.5.1
+Build version 12E507
+
+# Check clang compiler is working
+user@host% clang --version
+Apple clang version 12.0.5 (clang-1205.0.22.11)
+Target: x86_64-apple-darwin20.6.0
+```
+
 ## Build Harbour
 
 ### Build Harbour in Windows Visual Studio
@@ -140,7 +223,7 @@ As of November 23, GTNAP adds support for the LibreOffice-SDK, in order to add c
 :: Go to main folder of harbour working copy
 cd harbour_nappgui
 
-win-make HB_COMPILER=msvc
+win-make HB_COMPILER=msvc64
 
 ! Building Harbour 3.2.0dev from source - https://harbour.github.io
 ! MAKE: win-make 4.1 sh.exe
@@ -194,6 +277,9 @@ make
 # Go to main folder of harbour working copy
 cd harbour_nappgui
 
+# Set the minimum macOS version
+export MACOSX_DEPLOYMENT_TARGET=10.13
+
 make
 
 ! Building Harbour 3.2.0dev from source - https://harbour.github.io
@@ -241,6 +327,27 @@ Readme.md           This documentation.
 ReadmeUNO.md        LibreOffice Harbour functions documentation.
 ```
 
+### In Windows with MinGW
+
+`build.bat` script allows to compile GTNAP using VisualStudio `msvc64` compiler or MinGW `mingw64` compiler.
+
+```
+:: Goto gtnap folder
+cd contrib\gtnap
+
+:: Just build
+build.bat -b [Debug|Release] -comp mingw64 [-noliboff]
+
+:: default Debug
+:: -noliboff Disable the LibreOffice support in GTNAP (optional)
+```
+
+This will generate several static libraries:
+
+* The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
+* The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
+* The LibreOffice wrapper library `libofficesdk.a` in `build/[Debug|Release]/lib` folder.
+
 ### In Windows with VisualStudio
 
 > **Important:** The MSVC compiler used by Harbour `hbmk2` is configured using the `vcvarsall.bat` script of the specific version of Visual Studio we are going to use. To configure the compiler in CMake, we must set the `CMAKE_GENERATOR` environment variable to the same version as `vcvarsall.bat`.
@@ -272,11 +379,10 @@ set CMAKE_GENERATOR=Visual Studio 11 2012
 "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 
 :: Just build
+build.bat -b [Debug|Release] -comp msvc64 [-noliboff]
+
 :: default Debug
-:: default x64 (on x64 Windows SO)
-:: default Win32 (on x86 Windows SO)
 :: -noliboff Disable the LibreOffice support in GTNAP (optional)
-build.bat -b [Debug|Release] -a [x64|Win32] [-noliboff]
 ```
 
 This will generate several static libraries:
@@ -285,7 +391,7 @@ This will generate several static libraries:
 * The NAppGUI libraries: `sewer.lib`, `osbs.lib`, `core.lib`, `geom2d.lib`, `draw2d.lib`, `osgui.lib`, `gui.lib`, `osapp.lib`, `inet.lib` in `build/[Debug|Release]/lib` folder.
 * The LibreOffice wrapper library `officesdk.lib` in `build/[Debug|Release]/lib` folder.
 
-### In Linux
+### In Linux with GCC
 
 First of all, install the required development libraries:
 
@@ -311,17 +417,7 @@ This will generate several static libraries:
 * The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
 * The LibreOffice wrapper library `libofficesdk.a` in `build/[Debug|Release]/lib` folder.
 
-### In macOS
-
-First of all, install Xcode.
-
-![xcode_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/cf140563-49df-4c3f-acef-24149fda9382)
-
-Check Xcode is working:
-```
-% xcode-select -p
-/Applications/Xcode.app/Contents/Developer
-```
+### In macOS with Xcode
 
 > **Important:** On macOS, before compile Harbour and GTNap, **we must** set the `MACOSX_DEPLOYMENT_TARGET` environment variable, in order to establish the minimum version of macOS where our GTNAP applications will run.
 
@@ -357,17 +453,11 @@ It is not recommended to compile for lower systems.
 
 Then, compile Harbour and gtnap
 ```
-# Main repo folder
-cd harbour_nappgui
-
 # Set the minimum macOS
 export MACOSX_DEPLOYMENT_TARGET=10.13
 
-# Compile Harbour
-make
-
 # Goto gtnap folder
-cd ./contrib/gtnap
+cd contrib/gtnap
 
 # Just build
 # -noliboff Disable the LibreOffice support in GTNAP (optional)
@@ -385,14 +475,23 @@ Just adding `-gtnap` flag into your `.hbp` project file.
 
 ## Compile and run CUADEMO example
 
-- To compile in Windows:
+- To compile in Windows with MinGW:
+   ```
+   :: Use -debug option or omit for release version
+   cd contrib\gtnap\tests\cuademo\gtnap_cualib
+   ..\..\..\..\..\bin\win\mingw64\hbmk2.exe [-debug] -comp=mingw64 exemplo.hbp
+   exemplo --hb:gtnap
+   exemplo --hb:gtwin
+   ```
+
+- To compile in Windows with VisualStudio:
    ```
    :: Set 64bit compiler
    "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 
    :: Use -debug option or omit for release version
    cd contrib\gtnap\tests\cuademo\gtnap_cualib
-   ..\..\..\..\..\bin\win\msvc64\hbmk2.exe [-debug] exemplo.hbp
+   ..\..\..\..\..\bin\win\msvc64\hbmk2.exe [-debug] -comp=msvc64 exemplo.hbp
    exemplo --hb:gtnap
    exemplo --hb:gtwin
    ```
