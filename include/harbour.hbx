@@ -945,6 +945,7 @@ DYNAMIC hb_vfClose
 DYNAMIC hb_vfCommit
 DYNAMIC hb_vfConfig
 DYNAMIC hb_vfCopyFile
+DYNAMIC hb_vfCopyFileEx
 DYNAMIC hb_vfDirectory
 DYNAMIC hb_vfDirBuild
 DYNAMIC hb_vfDirExists

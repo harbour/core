@@ -185,7 +185,7 @@ HB_BOOL hb_fileCopyEx( const char * pszSource, const char * pszDest, HB_SIZE nBu
             long lJulian, lMillisec;
 
             if( hb_fileTimeGet( pszSource, &lJulian, &lMillisec ) )
-               hb_fileTimeSet( hb_parcx( 1 ), lJulian, lMillisec );
+               hb_fileTimeSet( pszDest, lJulian, lMillisec );
          }
       }
       hb_fsSetError( errCode );

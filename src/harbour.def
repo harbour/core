@@ -1138,6 +1138,7 @@ HB_FUN_HB_VFCLOSE
 HB_FUN_HB_VFCOMMIT
 HB_FUN_HB_VFCONFIG
 HB_FUN_HB_VFCOPYFILE
+HB_FUN_HB_VFCOPYFILEEX
 HB_FUN_HB_VFDIRBUILD
 HB_FUN_HB_VFDIRECTORY
 HB_FUN_HB_VFDIREXISTS
@@ -2469,6 +2470,7 @@ hb_fileClose
 hb_fileCommit
 hb_fileConfigure
 hb_fileCopy
+hb_fileCopyEx
 hb_fileCreateTemp
 hb_fileCreateTempEx
 hb_fileDelete
