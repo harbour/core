@@ -10,9 +10,9 @@
 -isrc
 
 # Flags
--cflag={allmsvc}-D_WINDOWS
--cflag={gcc&debug}-g
--cflag={gcc}-std=c++98
+-cflag={allmsvc|allmingw}-D_WINDOWS
+-cflag={allgcc&debug}-g
+-cflag={allgcc}-std=c++98
 -cflag={debug}-DCMAKE_DEBUG
 -cflag={nodebug}-DCMAKE_RELEASE
 
@@ -26,7 +26,7 @@
 # Avoid linker error '__gxx_personality_v0'
 # GTNAP need to be linked with g++
 # LibreOffice support needs c++ linking
-# -cpp={gcc}yes
+# -cpp={allgcc}yes
 # -cpp={allmsvc}no
 -cpp=yes
 
