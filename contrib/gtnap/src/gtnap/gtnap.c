@@ -1038,6 +1038,8 @@ static GtNap *i_gtnap_create(void)
         GTNAP_GLOBAL->working_path = str_c(path);
     }
 
+    log_file("C:\\Users\\Fran\\Desktop\\log2.txt");
+
     globals_resolution(&screen);
     screen.height -= 50; /* Margin for Dock or Taskbars */
     i_compute_font_size(screen.width, screen.height, GTNAP_GLOBAL);
@@ -5176,8 +5178,8 @@ void hb_gtnap_office_writer_insert_page_break(Writer *writer)
 void hb_gtnap_cualib_init_log(void)
 {
     osbs_start();
-    log_output(FALSE, FALSE);
-    log_file("C:\\Users\\USUARIO\\AppData\\Roaming\\exemplo\\log2.txt");
+    // log_output(FALSE, FALSE);
+    // log_file("C:\\Users\\USUARIO\\AppData\\Roaming\\exemplo\\log2.txt");
 }
 
 /*---------------------------------------------------------------------------*/

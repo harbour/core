@@ -9,6 +9,7 @@
 
 #include <osapp/osapp.h>
 #include <osbs/bproc.h>
+#include <osbs/dlib.h>
 #include <osbs/bthread.h>
 #include <osbs/btime.h>
 #include <osbs/osbs.h>
@@ -355,14 +356,25 @@ sdkres_t OfficeSdk::WakeUpServer()
 
 /*---------------------------------------------------------------------------*/
 
+typedef css::uno::Reference<css::uno::XComponentContext> (*FPtr_bootstrap)(void);
+
+/*---------------------------------------------------------------------------*/
+
 sdkres_t OfficeSdk::ConnectServer()
 {
     sdkres_t res = ekSDKRES_OK;
 
     try
     {
-        rtl::OUString sConnectionString("uno:socket,host=localhost,port=2083;urp;StarOffice.ServiceManager");
+#if defined(__MINGW64__) || defined(__MINGW32__)
+        /* #if defined(__WINDOWS__) */
+        DLib *dll = dlib_open(NULL, "cppuhelper3MSC");
+        FPtr_bootstrap fBoot = dlib_proc(dll, "?bootstrap@cppu@@YA?AV?$Reference@VXComponentContext@uno@star@sun@com@@@uno@star@sun@com@@XZ", FPtr_bootstrap);
+        css::uno::Reference<css::uno::XComponentContext> xComponentContext(fBoot());
+        dlib_close(&dll);
+#else
         css::uno::Reference<css::uno::XComponentContext> xComponentContext(cppu::bootstrap());
+#endif
         css::uno::Reference<css::lang::XMultiComponentFactory> xMultiComponentFactory(xComponentContext->getServiceManager());
         css::uno::Reference<css::uno::XInterface> xin = xMultiComponentFactory->createInstanceWithContext("com.sun.star.frame.Desktop", xComponentContext);
         this->m_xComponentLoader = css::uno::Reference<css::frame::XDesktop2>(xin, css::uno::UNO_QUERY_THROW);

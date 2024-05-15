@@ -11,19 +11,19 @@ echo Main path: %mpath%
 cd .\\contrib\\gtnap
 set gtpath=%cd%
 echo GTNAP path: %gtpath%
-call build -b Debug
+call build -b Debug -comp msvc64
 
 :: Generate exemplo sources
 cd %gtpath%\\tests\\cuademo\\gtnap_cualib
 echo Exemplo: %gtpath%\src\exemplo
 if not exist %gtpath%\src\exemplo mkdir %gtpath%\src\exemplo
-..\\..\\..\\..\\..\\bin\\win\\msvc64\\hbmk2.exe -debug -trace -keepc -workdir=%gtpath%\src\exemplo -o%gtpath%\build\exemplo exemplo.hbp || goto error
+..\\..\\..\\..\\..\\bin\\win\\msvc64\\hbmk2.exe -debug -comp=msvc64 -trace -keepc -workdir=%gtpath%\src\exemplo -o%gtpath%\build\exemplo exemplo.hbp || goto error
 
 :: Generate hello sources
 cd %gtpath%\\tests\\hello
 echo Hello: %gtpath%\src\hello
 if not exist %gtpath%\src\hello mkdir %gtpath%\src\hello
-..\\..\\..\\..\\bin\\win\\msvc64\\hbmk2 -debug -trace -keepc -workdir=%gtpath%\src\hello -o%gtpath%\build\hello hello.hbp
+..\\..\\..\\..\\bin\\win\\msvc64\\hbmk2 -debug -comp=msvc64 -trace -keepc -workdir=%gtpath%\src\hello -o%gtpath%\build\hello hello.hbp
 
 :: Generate VS solution
 cd %gtpath%

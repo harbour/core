@@ -2,9 +2,11 @@
 
 incpaths=.
 
-# NAppGUI library paths
-{!debug&!darwin}libpaths=build/Release/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib
-{debug&!darwin}libpaths=build/Debug/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib
+# NAppGUI library
+{!debug&!darwin&!allmingw}libpaths=build/Release/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib
+{debug&!darwin&!allmingw}libpaths=build/Debug/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib
+{debug&allmingw}libpaths=build/Debug/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib
+{!debug&allmingw}libpaths=build/Release/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib
 {debug&darwin}libpaths=build build/Debug/lib ${LIBREOFFICE_HOME}/program ${LIBREOFFICE_HOME}/sdk/lib /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks
 
 # NAppGUI uses static-linked 'LIBCMTD.lib' in Debug (sewer.lib)
@@ -12,7 +14,8 @@ incpaths=.
 {allmsvc&debug}ldflags=/NODEFAULTLIB:LIBCMT.lib
 
 # NAppGUI & LibreOffice link libraries
-{allmsvc|allmingw}libs=officesdk osapp gui osgui draw2d geom2d core osbs sewer gdiplus shlwapi uxtheme icppu icppuhelper ipurpenvhelper isal isalhelper
+{allmsvc}libs=officesdk osapp gui osgui draw2d geom2d core osbs sewer gdiplus shlwapi uxtheme icppu icppuhelper ipurpenvhelper isal isalhelper
+{allmingw}libs=officesdk osapp gui osgui draw2d geom2d core osbs sewer gdiplus shlwapi uxtheme cppu3 sal3 bootstraplo icppu icppuhelper ipurpenvhelper isal isalhelper cppuhelper3MSC
 {linux}libs=officesdk osapp gui osgui draw2d geom2d core osbs sewer pthread uno_sal uno_cppu uno_cppuhelpergcc3 uno_salhelpergcc3 unoidllo xmlreaderlo reglo mergedlo gtk-3 gdk-3 pangocairo-1.0 cairo gdk_pixbuf-2.0 pango-1.0 gio-2.0 glib-2.0 gobject-2.0
 {darwin}libs=officesdk osapp gui osgui draw2d geom2d core osbs sewer
 

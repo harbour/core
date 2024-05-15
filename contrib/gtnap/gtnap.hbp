@@ -11,6 +11,8 @@
 
 # Flags
 -cflag={allmsvc|allmingw}-D_WINDOWS
+-cflag={allmingw}-DUNICODE
+-cflag={allmingw}-D_UNICODE
 -cflag={allgcc&debug}-g
 -cflag={allgcc}-std=c++98
 -cflag={debug}-DCMAKE_DEBUG
