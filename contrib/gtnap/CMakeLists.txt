@@ -3,6 +3,8 @@
 # Copyright (C) 2018 Francisco García Collado
 # MIT License (See LICENSE.txt)
 #------------------------------------------------------------------------------
+# cmake -G "MinGW Makefiles" -S . -B build-dev -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Debug -DGTNAP_DEVELOPER_MODE=ON -DGTNAP_LIBREOFFICE=ON
+
 cmake_minimum_required(VERSION 3.0)
 project(NAppGUI)
 
@@ -130,7 +132,11 @@ if (GTNAP_DEVELOPER_MODE)
 
         if (WIN32)
             set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
-            file(TO_NATIVE_PATH \"${LIBREOFFICE_LIB_PATH}\" LIBREOFFICE_LIB_PATH)
+            if(CMAKE_GENERATOR MATCHES "MinGW Makefiles")
+                STRING(REGEX REPLACE "\\\\" "/" LIBREOFFICE_LIB_PATH ${LIBREOFFICE_LIB_PATH})
+            else()
+                file(TO_NATIVE_PATH \"${LIBREOFFICE_LIB_PATH}\" LIBREOFFICE_LIB_PATH)
+            endif()
             set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
         else()
             set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")

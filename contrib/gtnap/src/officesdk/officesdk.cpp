@@ -368,17 +368,16 @@ sdkres_t OfficeSdk::ConnectServer()
     try
     {
 #if defined(__MINGW64__) || defined(__MINGW32__)
-        /* #if defined(__WINDOWS__) */
+        // Runtime access to cppu::bootstrap()
         DLib *dll = dlib_open(NULL, "cppuhelper3MSC");
         FPtr_bootstrap fBoot = dlib_proc(dll, "?bootstrap@cppu@@YA?AV?$Reference@VXComponentContext@uno@star@sun@com@@@uno@star@sun@com@@XZ", FPtr_bootstrap);
-        log_printf("DLL cppuhelper3MSC: %p", (void *)dll);
-        log_printf("bootstrap method: %p", (void *)fBoot);
         css::uno::Reference<css::uno::XComponentContext> xComponentContext(fBoot());
-        log_printf("XComponentContext: %p", (void *)xComponentContext.get());
         dlib_close(&dll);
 #else
         css::uno::Reference<css::uno::XComponentContext> xComponentContext(cppu::bootstrap());
 #endif
+        // CRASH!!!! First ACCESS to LibreOffice object
+        xComponentContext->getServiceManager();
         css::uno::Reference<css::lang::XMultiComponentFactory> xMultiComponentFactory(xComponentContext->getServiceManager());
         css::uno::Reference<css::uno::XInterface> xin = xMultiComponentFactory->createInstanceWithContext("com.sun.star.frame.Desktop", xComponentContext);
         this->m_xComponentLoader = css::uno::Reference<css::frame::XDesktop2>(xin, css::uno::UNO_QUERY_THROW);

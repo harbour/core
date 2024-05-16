@@ -7,7 +7,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build-dev/Debug/bin/exemplo",
             "args": ["--hb:gtnap"],
-            "environment": [{ "name": "LIBREOFFICE_HOME", "value": "/usr/lib/libreoffice" },
+            "environment": [{ "name": "LIBREOFFICE_HOME", "value": "C:/Program Files/LibreOffice" },
                             { "name": "LD_LIBRARY_PATH", "value": "/usr/lib/libreoffice/program"}],
             "cwd": "${workspaceFolder}/tests/cuademo/gtnap_cualib"
         }
