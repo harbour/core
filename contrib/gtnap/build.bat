@@ -64,13 +64,13 @@ goto error_compiler
 
 :config_mingw64
 :: Mono-configuration build system
-set CMAKE_ARGS=-G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%BUILD%
+set CMAKE_ARGS=-G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=%BUILD%
 set CMAKE_BUILD=-j 4
 goto cmake
 
 :config_msvc64:
 :: Multi-configuration build system
-set CMAKE_ARGS=-Ax64
+set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
 set CMAKE_BUILD=--config %BUILD%
 goto cmake
 
