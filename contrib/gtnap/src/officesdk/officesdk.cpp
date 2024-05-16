@@ -13,6 +13,7 @@
 #include <osbs/bthread.h>
 #include <osbs/btime.h>
 #include <osbs/osbs.h>
+#include <osbs/log.h>
 #include <sewer/blib.h>
 #include <sewer/bstd.h>
 #include <sewer/unicode.h>
@@ -370,7 +371,10 @@ sdkres_t OfficeSdk::ConnectServer()
         /* #if defined(__WINDOWS__) */
         DLib *dll = dlib_open(NULL, "cppuhelper3MSC");
         FPtr_bootstrap fBoot = dlib_proc(dll, "?bootstrap@cppu@@YA?AV?$Reference@VXComponentContext@uno@star@sun@com@@@uno@star@sun@com@@XZ", FPtr_bootstrap);
+        log_printf("DLL cppuhelper3MSC: %p", (void *)dll);
+        log_printf("bootstrap method: %p", (void *)fBoot);
         css::uno::Reference<css::uno::XComponentContext> xComponentContext(fBoot());
+        log_printf("XComponentContext: %p", (void *)xComponentContext.get());
         dlib_close(&dll);
 #else
         css::uno::Reference<css::uno::XComponentContext> xComponentContext(cppu::bootstrap());
