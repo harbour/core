@@ -1,0 +1,22 @@
+/*
+ * LibreOffice C-Wrapper
+ * 2024 - Francisco Garcia Collado
+ */
+
+#if defined(__GNUC__)
+#if defined(OFFICESDK_EXPORT_DLL)
+#define _office_api __attribute__((visibility("default")))
+#else
+#define _office_api
+#endif
+#elif defined(_MSC_VER)
+#if defined(OFFICESDK_IMPORT_DLL)
+#define _office_api __declspec(dllimport)
+#elif defined(OFFICESDK_EXPORT_DLL)
+#define _office_api __declspec(dllexport)
+#else
+#define _office_api
+#endif
+#else
+#error Unknown compiler
+#endif
