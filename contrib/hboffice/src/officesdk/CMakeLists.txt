@@ -7,50 +7,48 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
     target_compile_options(${TARGET_NAME} PUBLIC "-Wno-inline" "-Wno-attributes")
 endif()
 
-if (GTNAP_LIBREOFFICE)
+set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 11)
+set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
-    set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 11)
-    set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
+set(LOROOT "$ENV{LIBREOFFICE_HOME}")
 
-    set(LOROOT "$ENV{LIBREOFFICE_HOME}")
+if (LOROOT)
+    message("- LIBREOFFICE_HOME: ${LOROOT}")
+else()
+    message(FATAL_ERROR "LIBREOFFICE_HOME environment variable is required to compile ${TARGET_NAME}")
+endif()
 
-    if (LOROOT)
-        message("- LIBREOFFICE_HOME: ${LOROOT}")
-    else()
-        message(FATAL_ERROR "LIBREOFFICE_HOME environment variable is required to compile GTNAP")
+target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/com/sun/star ${LOROOT}/sdk/include)
+# target_link_directories(${TARGET_NAME} PRIVATE ${LOROOT}/program ${LOROOT}/sdk/lib)
+
+if (WIN32)
+    if (NOT CMAKE_GENERATOR MATCHES "Visual Studio")
+        message(FATAL_ERROR "Visual Studio is required to compile ${TARGET_NAME} in Windows")
     endif()
+else()
+    target_compile_definitions(${TARGET_NAME} PUBLIC -DLINUX)
+endif()
 
-    target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/com/sun/star ${LOROOT}/sdk/include)
-    target_link_directories(${TARGET_NAME} PRIVATE ${LOROOT}/program ${LOROOT}/sdk/lib)
+# Generate the LibreOffice-SDK C++ headers
+# from SDK *.rdb files
+IF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/com/sun/star")
+    set(CPPUMAKER ${LOROOT}/sdk/bin/cppumaker)
+    set(CPPTYPES ${LOROOT}/program/types.rdb)
+    set(CPPOFFAPI ${LOROOT}/program/types/offapi.rdb)
+    execute_process(COMMAND "${CPPUMAKER}" "-Gc" "-O${CMAKE_CURRENT_BINARY_DIR}" "${CPPTYPES}" "${CPPOFFAPI}" RESULT_VARIABLE RES_VAR OUTPUT_VARIABLE OUT_VAR ERROR_VARIABLE ERR_VAR)
 
-    if (NOT WIN32)
-        target_compile_definitions(${TARGET_NAME} PUBLIC -DLINUX)
-    endif()
+    if (NOT "${RES_VAR}" STREQUAL "0")
+        message("CPPUMAKER RES: ${RES_VAR}")
 
-    if (CMAKE_GENERATOR MATCHES "MinGW Makefiles")
-        target_compile_definitions(${TARGET_NAME} PUBLIC -DSAL_UNX)
-    endif()
-
-    # Generate the LibreOffice-SDK C++ headers
-    IF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/com/sun/star")
-        set(CPPUMAKER ${LOROOT}/sdk/bin/cppumaker)
-        set(CPPTYPES ${LOROOT}/program/types.rdb)
-        set(CPPOFFAPI ${LOROOT}/program/types/offapi.rdb)
-        execute_process(COMMAND "${CPPUMAKER}" "-Gc" "-O${CMAKE_CURRENT_BINARY_DIR}" "${CPPTYPES}" "${CPPOFFAPI}" RESULT_VARIABLE RES_VAR OUTPUT_VARIABLE OUT_VAR ERROR_VARIABLE ERR_VAR)
-
-        if (NOT "${RES_VAR}" STREQUAL "0")
-            message("CPPUMAKER RES: ${RES_VAR}")
-
-            if (OUT_VAR)
-                message("CPPUMAKER OUT: ${OUT_VAR}")
-            endif()
-
-            if (ERR_VAR)
-                message("CPPUMAKER ERR: ${ERR_VAR}")
-            endif()
-
-            message(FATAL_ERROR "Error generating LibreOffice C++ header files")
+        if (OUT_VAR)
+            message("CPPUMAKER OUT: ${OUT_VAR}")
         endif()
 
+        if (ERR_VAR)
+            message("CPPUMAKER ERR: ${ERR_VAR}")
+        endif()
+
+        message(FATAL_ERROR "Error generating LibreOffice C++ header files")
     endif()
+
 endif()
