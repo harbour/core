@@ -15,7 +15,7 @@
 ::
 set OPERATION=dll
 set COMPILER=mingw64
-set BUILD=Debug
+set BUILD=Release
 set "CWD=%cd%"
 
 :parse
