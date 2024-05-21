@@ -67,12 +67,11 @@ IF "%OPERATION%"=="lib" GOTO generate_lib
 goto error_operation
 
 :generate_dll
-set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DLIBREOFFICE_DLL
+set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DLIBREOFFICE_DLL=YES
 set CMAKE_BUILD=--config %BUILD%
 call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build-dll || goto error_cmake
 call cmake --build %CWD%\build-dll %CMAKE_BUILD% || goto error_build
 goto end
-
 
 ::
 :: Configure compiler and cmake
@@ -128,22 +127,27 @@ goto end
 ::
 :error_compiler
 echo Unknown compiler
-exit 1
+goto end
+:: exit 1
 
 :error_cmake
 echo Error in NAppGUI CMake generate
-exit 1
+goto end
+:: exit 1
 
 :error_build
 echo Error building NAppGUI
-exit 1
+goto end
+:: exit 1
 
 :error_gtnap
 echo Error building GTNAP
-exit 1
+goto end
+:: exit 1
 
 :error_operation
 echo Invalid operation '%OPERATION%'
-exit 1
+goto end
+:: exit 1
 
 :end

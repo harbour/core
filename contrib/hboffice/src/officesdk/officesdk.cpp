@@ -5,7 +5,6 @@
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
 
-#include <osapp/osapp.h>
 #include <osbs/bproc.h>
 #include <osbs/dlib.h>
 #include <osbs/bthread.h>
@@ -72,6 +71,12 @@
 #include <awt/FontWeight.hpp>
 #include <iostream>
 #include <sewer/warn.hxx>
+
+#if defined(__WINDOWS__)
+#include <sewer/nowarn.hxx>
+#include <Windows.h>
+#include <sewer/warn.hxx>
+#endif
 
 class OfficeSdk
 {
@@ -701,9 +706,38 @@ const char_t *officesdk_error(const sdkres_t code)
 
 /*---------------------------------------------------------------------------*/
 
+#if defined(__LINUX__)
+
+static void i_browse_file(const char_t *pathname)
+{
+    String *cmd = str_printf("libreoffice %s", pathname);
+    int t = system(tc(cmd));
+    str_destroy(&cmd);
+    unref(t);
+}
+
+/*---------------------------------------------------------------------------*/
+
+#elif defined(__WINDOWS__)
+
+/*---------------------------------------------------------------------------*/
+
+static void i_browse_file(const char_t *pathname)
+{
+    WCHAR wpathname[512];
+    uint32_t num_bytes = 0;
+    num_bytes = unicode_convers(pathname, (char_t *)wpathname, ekUTF8, ekUTF16, sizeof(wpathname));
+    cassert(num_bytes < sizeof(wpathname));
+    ShellExecute(NULL, L"open", wpathname, NULL, NULL, SW_RESTORE);
+}
+
+#endif
+
+/*---------------------------------------------------------------------------*/
+
 void officesdk_browse_doc(const char_t *pathname, sdkres_t *err)
 {
-    osapp_browse_file(pathname);
+    i_browse_file(pathname);
     ptr_assign(err, ekSDKRES_OK);
 }
 

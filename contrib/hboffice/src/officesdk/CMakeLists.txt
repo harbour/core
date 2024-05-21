@@ -19,7 +19,6 @@ else()
 endif()
 
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/com/sun/star ${LOROOT}/sdk/include)
-# target_link_directories(${TARGET_NAME} PRIVATE ${LOROOT}/program ${LOROOT}/sdk/lib)
 
 if (WIN32)
     if (NOT CMAKE_GENERATOR MATCHES "Visual Studio")
@@ -52,3 +51,18 @@ IF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/com/sun/star")
     endif()
 
 endif()
+
+# Link with the LibreOffice libraries
+if (WIN32)
+    set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
+    set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
+else()
+    set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
+    set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
+endif()
+
+foreach(lib ${LIBREOFFICE_LIBS})
+    find_library(LIB_NAME_${lib} NAMES ${lib} PATHS ${LIBREOFFICE_LIB_PATH})
+    target_link_libraries(${TARGET_NAME} ${LIB_NAME_${lib}})
+endforeach()
+
