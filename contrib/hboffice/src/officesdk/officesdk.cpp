@@ -628,27 +628,6 @@ void officesdk_finish(void)
 
 /*---------------------------------------------------------------------------*/
 
-sdkres_t officesdk_text_to_pdf(const char_t *src_pathname, const char_t *dest_pathname)
-{
-    sdkres_t res = ekSDKRES_OK;
-    css::uno::Reference<css::text::XTextDocument> xDocument;
-    cassert_no_null(src_pathname);
-    cassert_no_null(dest_pathname);
-    res = i_OFFICE_SDK.Init();
-    if (res == ekSDKRES_OK)
-        res = i_OFFICE_SDK.OpenTextDocument(src_pathname, xDocument);
-
-    if (res == ekSDKRES_OK)
-        res = i_OFFICE_SDK.SaveTextDocument(xDocument, dest_pathname, ekFORMAT_PDF);
-
-    if (xDocument.get() != nullptr)
-        xDocument->dispose();
-
-    return res;
-}
-
-/*---------------------------------------------------------------------------*/
-
 const char_t *officesdk_error(const sdkres_t code)
 {
     switch (code)

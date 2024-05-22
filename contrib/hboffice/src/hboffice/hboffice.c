@@ -20,13 +20,155 @@
 // #include "hbdate.h"
 // #include "hbset.h"
 
+typedef struct _hbofficefuncs_t HBOfficeFuncs;
 typedef struct _hboffice_t HBOffice;
+typedef struct _string_t String;
+/*---------------------------------------------------------------------------*/
+
+/* LibreOffice SDK C mapping for runtime symbol loading */
+typedef void (*FPtr_officesdk_finish)(void);
+typedef const char_t *(*FPtr_officesdk_error)(const sdkres_t code);
+typedef void (*FPtr_officesdk_browse_doc)(const char_t *pathname, sdkres_t *err);
+typedef uint32_t (*FPtr_officesdk_rgb)(const uint8_t red, const uint8_t green, const uint8_t blue);
+
+/* LibreOffice Writter mapping */
+typedef Writer *(*FPtr_officesdk_writer_open)(const char_t *pathname, sdkres_t *err);
+typedef Writer *(*FPtr_officesdk_writer_create)(sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_save)(Writer *writer, const char_t *pathname, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_pdf)(Writer *writer, const char_t *pathname, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_print)(Writer *writer, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_close)(Writer *writer, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_page_header_show)(Writer *writer, const bool_t show, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_page_header_margins)(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_page_footer_show)(Writer *writer, const bool_t show, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_page_footer_margins)(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_page_margins)(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_font_family)(Writer *writer, const textspace_t space, const char_t *font_family, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_font_size)(Writer *writer, const textspace_t space, const real32_t font_size, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_bold)(Writer *writer, const textspace_t space, const bool_t bold, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_italic)(Writer *writer, const textspace_t space, const bool_t italic, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_paragraph_halign)(Writer *writer, const textspace_t space, const halign_t align, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_paragraph_lspacing)(Writer *writer, const textspace_t space, const uint32_t height, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_insert_text)(Writer *writer, const textspace_t space, const char_t *text, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_insert_image)(Writer *writer, const textspace_t space, const anchortype_t anchor, const uint32_t width, const uint32_t height, const halign_t halign, const valign_t valign, const char_t *image_path, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_insert_page_number)(Writer *writer, const textspace_t space, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_insert_new_line)(Writer *writer, const textspace_t space, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_insert_paragraph)(Writer *writer, const textspace_t space, sdkres_t *err);
+typedef void (*FPtr_officesdk_writer_insert_page_break)(Writer *writer, sdkres_t *err);
+
+/* LibreOffice Calc mapping */
+typedef Sheet *(*FPtr_officesdk_sheet_open)(const char_t *pathname, sdkres_t *err);
+typedef Sheet *(*FPtr_officesdk_sheet_create)(sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_save)(Sheet *sheet, const char_t *pathname, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_pdf)(Sheet *sheet, const char_t *pathname, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_print)(Sheet *sheet, const char_t *filename, const char_t *printer, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, const char_t *pages, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_close)(Sheet *sheet, sdkres_t *err);
+typedef uint32_t (*FPtr_officesdk_sheet_add)(Sheet *sheet, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_name)(Sheet *sheet, const uint32_t page, const char_t *name, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_protect)(Sheet *sheet, const uint32_t page, const bool_t protect, const char_t *pass, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_freeze)(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows, sdkres_t *err);
+typedef String *(FPtr_officesdk_sheet_cell_ref)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_text)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *text, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_value)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_date)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint8_t day, const uint8_t month, const int16_t year, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_formula)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *formula, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_numformat)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const numformat_t format, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_font_family)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *font_family, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_font_size)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real32_t font_size, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_bold)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t bold, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_italic)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t italic, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_halign)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const halign_t align, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_valign)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const valign_t align, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_wrap)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_color)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_backcolor)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cells_backcolor)(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const uint32_t rgb, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_image)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *image_path, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cell_border)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cells_border)(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_cells_merge)(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_column_visible)(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t visible, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_column_optimal_width)(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t optimal_width, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_column_width)(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t width, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_row_visible)(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t visible, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_row_visible)(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t visible, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_row_optimal_height)(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t optimal_height, sdkres_t *err);
+typedef void (*FPtr_officesdk_sheet_row_height)(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height, sdkres_t *err);
+
+struct _hbofficefuncs_t
+{
+    FPtr_officesdk_finish func_officesdk_finish;
+    FPtr_officesdk_error func_officesdk_error;
+    FPtr_officesdk_browse_doc func_officesdk_browse_doc;
+    FPtr_officesdk_rgb func_officesdk_rgb;
+    FPtr_officesdk_writer_open func_officesdk_writer_open;
+    FPtr_officesdk_writer_create func_officesdk_writer_create;
+    FPtr_officesdk_writer_save func_officesdk_writer_save;
+    FPtr_officesdk_writer_pdf func_officesdk_writer_pdf;
+    FPtr_officesdk_writer_print func_officesdk_writer_print;
+    FPtr_officesdk_writer_close func_officesdk_writer_close;
+    FPtr_officesdk_writer_page_header_show func_officesdk_writer_page_header_show;
+    FPtr_officesdk_writer_page_header_margins func_officesdk_writer_page_header_margins;
+    FPtr_officesdk_writer_page_footer_show func_officesdk_writer_page_footer_show;
+    FPtr_officesdk_writer_page_footer_margins func_officesdk_writer_page_footer_margins;
+    FPtr_officesdk_writer_page_margins func_officesdk_writer_page_margins;
+    FPtr_officesdk_writer_font_family func_officesdk_writer_font_family;
+    FPtr_officesdk_writer_font_size func_officesdk_writer_font_size;
+    FPtr_officesdk_writer_bold func_officesdk_writer_bold;
+    FPtr_officesdk_writer_italic func_officesdk_writer_italic;
+    FPtr_officesdk_writer_paragraph_halign func_officesdk_writer_paragraph_halign;
+    FPtr_officesdk_writer_paragraph_lspacing func_officesdk_writer_paragraph_lspacing;
+    FPtr_officesdk_writer_insert_text func_officesdk_writer_insert_text;
+    FPtr_officesdk_writer_insert_image func_officesdk_writer_insert_image;
+    FPtr_officesdk_writer_insert_page_number func_officesdk_writer_insert_page_number;
+    FPtr_officesdk_writer_insert_new_line func_officesdk_writer_insert_new_line;
+    FPtr_officesdk_writer_insert_paragraph func_officesdk_writer_insert_paragraph;
+    FPtr_officesdk_writer_insert_page_break func_officesdk_writer_insert_page_break;
+    FPtr_officesdk_sheet_open func_officesdk_sheet_open;
+    FPtr_officesdk_sheet_create func_officesdk_sheet_create;
+    FPtr_officesdk_sheet_save func_officesdk_sheet_save;
+    FPtr_officesdk_sheet_pdf func_officesdk_sheet_pdf;
+    FPtr_officesdk_sheet_print func_officesdk_sheet_print;
+    FPtr_officesdk_sheet_close func_officesdk_sheet_close;
+    FPtr_officesdk_sheet_add func_officesdk_sheet_add;
+    FPtr_officesdk_sheet_name func_officesdk_sheet_name;
+    FPtr_officesdk_sheet_protect func_officesdk_sheet_protect;
+    FPtr_officesdk_sheet_freeze func_officesdk_sheet_freeze;
+    FPtr_officesdk_sheet_cell_ref func_officesdk_sheet_cell_ref;
+    FPtr_officesdk_sheet_cell_text func_officesdk_sheet_cell_text;
+    FPtr_officesdk_sheet_cell_value func_officesdk_sheet_cell_value;
+    FPtr_officesdk_sheet_cell_date func_officesdk_sheet_cell_date;
+    FPtr_officesdk_sheet_cell_formula func_officesdk_sheet_cell_formula;
+    FPtr_officesdk_sheet_cell_numformat func_officesdk_sheet_cell_numformat;
+    FPtr_officesdk_sheet_cell_font_family func_officesdk_sheet_cell_font_family;
+    FPtr_officesdk_sheet_cell_font_size func_officesdk_sheet_cell_font_size;
+    FPtr_officesdk_sheet_cell_bold func_officesdk_sheet_cell_bold;
+    FPtr_officesdk_sheet_cell_italic func_officesdk_sheet_cell_italic;
+    FPtr_officesdk_sheet_cell_halign func_officesdk_sheet_cell_halign;
+    FPtr_officesdk_sheet_cell_valign func_officesdk_sheet_cell_valign;
+    FPtr_officesdk_sheet_cell_wrap func_officesdk_sheet_cell_wrap;
+    FPtr_officesdk_sheet_cell_color func_officesdk_sheet_cell_color;
+    FPtr_officesdk_sheet_cell_backcolor func_officesdk_sheet_cell_backcolor;
+    FPtr_officesdk_sheet_cells_backcolor func_officesdk_sheet_cells_backcolor;
+    FPtr_officesdk_sheet_cell_image func_officesdk_sheet_cell_image;
+    FPtr_officesdk_sheet_cell_border func_officesdk_sheet_cell_border;
+    FPtr_officesdk_sheet_cells_border func_officesdk_sheet_cells_border;
+    FPtr_officesdk_sheet_cells_merge func_officesdk_sheet_cells_merge;
+    FPtr_officesdk_sheet_column_visible func_officesdk_sheet_column_visible;
+    FPtr_officesdk_sheet_column_optimal_width func_officesdk_sheet_column_optimal_width;
+    FPtr_officesdk_sheet_column_width func_officesdk_sheet_column_width;
+    FPtr_officesdk_sheet_row_visible func_officesdk_sheet_row_visible;
+    FPtr_officesdk_sheet_row_visible func_officesdk_sheet_row_visible;
+    FPtr_officesdk_sheet_row_optimal_height func_officesdk_sheet_row_optimal_height;
+    FPtr_officesdk_sheet_row_height func_officesdk_sheet_row_height;
+};
 
 struct _hboffice_t
 {
     textspace_t text_space;
     String *last_cell_ref;
     sdkres_t last_error;
+    HBOfficeFuncs funcs;
 };
 
 /*---------------------------------------------------------------------------*/
