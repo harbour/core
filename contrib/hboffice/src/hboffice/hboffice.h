@@ -12,11 +12,9 @@
 
 HB_EXTERN_BEGIN
 
-extern void hb_office_init(void);
+extern bool_t hb_office_init(void);
 
 extern void hb_office_finish(void);
-
-extern uint32_t hb_office_text_to_pdf(HB_ITEM *src_block, HB_ITEM *dest_block);
 
 extern uint32_t hb_office_last_error(void);
 
