@@ -95,7 +95,7 @@ set CMAKE_GENERATOR=Visual Studio 17 2022
 build.dat -dll -b Release
 ```
 
-This script will generate the dll in `/build-dll/Release/bin` folder.
+This script will generate the dll in `/build/Release/bin` folder.
 
 If you have installed other Visual Studio version change the `CMAKE_GENERATOR` value:
 

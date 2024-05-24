@@ -29,6 +29,7 @@ GOTO parse
 
 :dll
 set OPERATION=dll
+set COMPILER=msvc64
 SHIFT
 GOTO parse
 
@@ -66,43 +67,50 @@ IF "%OPERATION%"=="dll" GOTO generate_dll
 IF "%OPERATION%"=="lib" GOTO generate_lib
 goto error_operation
 
+::
+:: Generate dynamic library
+::
 :generate_dll
-set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DLIBREOFFICE_DLL=YES
+set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DCMAKE_WARN_VS11=OFF -DLIBREOFFICE_DLL=YES
 set CMAKE_BUILD=--config %BUILD%
-call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build-dll || goto error_cmake
-call cmake --build %CWD%\build-dll %CMAKE_BUILD% || goto error_build
+call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build || goto error_cmake
+call cmake --build %CWD%\build %CMAKE_BUILD% || goto error_build
+echo ---------------------------
+echo OFFICESDK DLL build succeed
+echo ---------------------------
 goto end
 
 ::
-:: Configure compiler and cmake
+:: Generate static library
 ::
-set CMAKE_ARGS=
-set CMAKE_BUILD=
-IF "%COMPILER%"=="mingw64" GOTO config_mingw64
-IF "%COMPILER%"=="msvc64" GOTO config_msvc64
-goto error_compiler
+:generate_lib
+@REM set CMAKE_ARGS=
+@REM set CMAKE_BUILD=
+@REM IF "%COMPILER%"=="mingw64" GOTO config_mingw64
+@REM IF "%COMPILER%"=="msvc64" GOTO config_msvc64
+@REM goto error_compiler
+@REM CMAKE_WARN_VS11=OFF
+@REM :config_mingw64
+@REM :: Mono-configuration build system
+@REM set CMAKE_ARGS=-G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=%BUILD%
+@REM set CMAKE_BUILD=-j 4
+@REM goto cmake
 
-:config_mingw64
-:: Mono-configuration build system
-set CMAKE_ARGS=-G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=%BUILD%
-set CMAKE_BUILD=-j 4
-goto cmake
+@REM :config_msvc64:
+@REM :: Multi-configuration build system
+@REM set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
+@REM set CMAKE_BUILD=--config %BUILD%
+@REM goto cmake
 
-:config_msvc64:
-:: Multi-configuration build system
-set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
-set CMAKE_BUILD=--config %BUILD%
-goto cmake
+@REM ::
+@REM :: Build NAppGUI from sources
+@REM ::
+@REM :cmake
+@REM call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build -DGTNAP_LIBREOFFICE=%LIBREOFFICE% || goto error_cmake
+@REM call cmake --build %CWD%\build %CMAKE_BUILD% || goto error_build
 
 ::
-:: Build NAppGUI from sources
-::
-:cmake
-call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build -DGTNAP_LIBREOFFICE=%LIBREOFFICE% || goto error_cmake
-call cmake --build %CWD%\build %CMAKE_BUILD% || goto error_build
-
-::
-:: Build GTNAP
+:: Build hboffice
 ::
 set HBMK_PATH=..\\..\\bin\\win\\%COMPILER%
 set HBMK_FLAGS=
@@ -115,10 +123,10 @@ set HBMK_FLAGS=-debug
 
 :hbmk2
 echo HBMK HOME: %HBMK_PATH%
-call %HBMK_PATH%\\hbmk2.exe -comp=%COMPILER% %HBMK_FLAGS% %CWD%\src\gtnap\gtnap.hbp || goto error_gtnap
+call %HBMK_PATH%\\hbmk2.exe -comp=%COMPILER% %HBMK_FLAGS% %CWD%\src\hboffice\hboffice.hbp || goto error_hboffice
 
 echo ---------------------------
-echo GTNAP build succeed
+echo HBOFFICE LIB build succeed
 echo ---------------------------
 goto end
 
@@ -140,8 +148,8 @@ echo Error building NAppGUI
 goto end
 :: exit 1
 
-:error_gtnap
-echo Error building GTNAP
+:error_hboffice
+echo Error building HBOFFICE
 goto end
 :: exit 1
 
