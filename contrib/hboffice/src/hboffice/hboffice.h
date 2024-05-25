@@ -24,8 +24,6 @@ extern void hb_office_browse_doc(HB_ITEM *pathname_block);
 
 extern uint32_t hb_office_rgb(const uint8_t red, const uint8_t green, const uint8_t blue);
 
-/* LibreOffice spreadsheets (SCalc) */
-
 extern Sheet *hb_office_sheet_open(HB_ITEM *pathname_block);
 
 extern Sheet *hb_office_sheet_create(void);
@@ -98,57 +96,55 @@ extern void hb_office_sheet_row_optimal_height(Sheet *sheet, const uint32_t page
 
 extern void hb_office_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height);
 
-// /* LibreOffice text documents (Writer) */
+extern Writer *hb_office_writer_open(HB_ITEM *pathname_block);
 
-// extern Writer *hb_office_writer_open(HB_ITEM *pathname_block);
+extern Writer *hb_office_writer_create(void);
 
-// extern Writer *hb_office_writer_create(void);
+extern void hb_office_writer_save(Writer *writer, HB_ITEM *pathname_block);
 
-// extern void hb_office_writer_save(Writer *writer, HB_ITEM *pathname_block);
+extern void hb_office_writer_pdf(Writer *writer, HB_ITEM *pathname_block);
 
-// extern void hb_office_writer_pdf(Writer *writer, HB_ITEM *pathname_block);
+extern void hb_office_writer_print(Writer *writer, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block);
 
-// extern void hb_office_writer_print(Writer *writer, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block);
+extern void hb_office_writer_close(Writer *writer);
 
-// extern void hb_office_writer_close(Writer *writer);
+extern void hb_office_writer_page_header_show(Writer *writer, const bool_t show);
 
-// extern void hb_office_writer_page_header_show(Writer *writer, const bool_t show);
+extern void hb_office_writer_page_header_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height);
 
-// extern void hb_office_writer_page_header_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height);
+extern void hb_office_writer_page_footer_show(Writer *writer, const bool_t show);
 
-// extern void hb_office_writer_page_footer_show(Writer *writer, const bool_t show);
+extern void hb_office_writer_page_footer_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height);
 
-// extern void hb_office_writer_page_footer_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t spacing, const uint32_t height, const bool_t dynamic_spacing, const bool_t dynamic_height);
+extern void hb_office_writer_page_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter);
 
-// extern void hb_office_writer_page_margins(Writer *writer, const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom, const uint32_t gutter);
+extern void hb_office_writer_text_space(Writer *writer, const textspace_t space);
 
-// extern void hb_office_writer_text_space(Writer *writer, const textspace_t space);
+extern void hb_office_writer_font_family(Writer *writer, HB_ITEM *ffamily_block);
 
-// extern void hb_office_writer_font_family(Writer *writer, HB_ITEM *ffamily_block);
+extern void hb_office_writer_font_size(Writer *writer, const real32_t fsize);
 
-// extern void hb_office_writer_font_size(Writer *writer, const real32_t fsize);
+extern void hb_office_writer_bold(Writer *writer, const bool_t bold);
 
-// extern void hb_office_writer_bold(Writer *writer, const bool_t bold);
+extern void hb_office_writer_italic(Writer *writer, const bool_t italic);
 
-// extern void hb_office_writer_italic(Writer *writer, const bool_t italic);
+extern void hb_office_writer_paragraph_halign(Writer *writer, const halign_t align);
 
-// extern void hb_office_writer_paragraph_halign(Writer *writer, const halign_t align);
+extern void hb_office_writer_paragraph_lspacing(Writer *writer, const uint32_t height);
 
-// extern void hb_office_writer_paragraph_lspacing(Writer *writer, const uint32_t height);
+extern void hb_office_writer_insert_text(Writer *writer, HB_ITEM *text_block);
 
-// extern void hb_office_writer_insert_text(Writer *writer, HB_ITEM *text_block);
+extern void hb_office_writer_insert_dash(Writer *writer, const uint32_t n);
 
-// extern void hb_office_writer_insert_dash(Writer *writer, const uint32_t n);
+extern void hb_office_writer_insert_image(Writer *writer, const anchortype_t anchor, const uint32_t width, const uint32_t height, const halign_t halign, const valign_t valign, HB_ITEM *image_path_block);
 
-// extern void hb_office_writer_insert_image(Writer *writer, const anchortype_t anchor, const uint32_t width, const uint32_t height, const halign_t halign, const valign_t valign, HB_ITEM *image_path_block);
+extern void hb_office_writer_insert_page_number(Writer *writer);
 
-// extern void hb_office_writer_insert_page_number(Writer *writer);
+extern void hb_office_writer_insert_new_line(Writer *writer);
 
-// extern void hb_office_writer_insert_new_line(Writer *writer);
+extern void hb_office_writer_insert_paragraph(Writer *writer);
 
-// extern void hb_office_writer_insert_paragraph(Writer *writer);
-
-// extern void hb_office_writer_insert_page_break(Writer *writer);
+extern void hb_office_writer_insert_page_break(Writer *writer);
 
 HB_EXTERN_END
 
