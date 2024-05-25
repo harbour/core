@@ -1,4 +1,5 @@
 :: Build HBOFFICE development solution (Windows)
+:: WIP More things to do
 @echo off
 echo ------------------------
 echo HBOFFICE Developer mode

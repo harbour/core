@@ -1,20 +1,7 @@
 # hboffice options for projects that use it
 
-incpaths=. ..
-
+incpaths=.
 {!debug}libpaths=build/Release/lib build/Release/bin
 {debug}libpaths=build/Debug/lib build/Debug/bin
-
 libs=officesdk hboffice
-
-
-# NAppGUI uses static-linked 'LIBCMTD.lib' in Debug (sewer.lib)
-# This line avoid conflicts with 'LIBCMT.lib' in Debug mode
-# {allmsvc&debug}ldflags=/NODEFAULTLIB:LIBCMT.lib
-
-# officesdk static link is compiler portable
-#libs=officesdk hboffice sdfds
-
 cpp=yes
-#gt=${hb_name}
-#gui=no
