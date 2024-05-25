@@ -391,7 +391,7 @@ uint32_t hb_office_last_error(void)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *hb_office_error(const uint32_t errcode)
+const char_t *hb_office_error_str(const uint32_t errcode)
 {
     return officesdk_error((sdkres_t)errcode);
     // if (HBOFFICE_GLOBAL.init && HBOFFICE_GLOBAL.with_funcs)
