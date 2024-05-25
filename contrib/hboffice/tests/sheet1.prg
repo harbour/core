@@ -37,9 +37,10 @@ hb_LangSelect("pt_BR","PTISO")
 
 HBOFFICE_INIT()
 
+? "JAJAJAJ" + CurDir()
 O_XLS := HBOFFICE_XLS_CREATE()
 
-IF OFFICE_ERROR("Creando a planilha")
+IF OFFICE_ERROR("ERROR Creando a planilha")
     RETURN
 ENDIF
 
@@ -160,12 +161,16 @@ HBOFFICE_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 7)
 HBOFFICE_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
 
 // Save the spreadsheet
-HBOFFICE_XLS_SAVE(O_XLS, "C:\harbour_nappgui\contrib\hboffice\sheet1.ods")
-OFFICE_ERROR("Salvando a planilha")
+HBOFFICE_XLS_SAVE(O_XLS, DiskName() + ":\" + CurDir() + "\result\sheet1.ods")
+IF OFFICE_ERROR("ERROR Salvando a planilha")
+    RETURN
+ENDIF
 
 // Close the spreadsheet (mandatory)
 HBOFFICE_XLS_CLOSE(O_XLS)
-OFFICE_ERROR("Fechando planilha")
+IF OFFICE_ERROR("ERROR Fechando planilha")
+    RETURN
+ENDIF
 
 ? "A planilha foi criada com sucesso."
 

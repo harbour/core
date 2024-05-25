@@ -6,16 +6,22 @@
     - [Installation in Linux](#installation-in-linux)
     - [Installation in macOS](#installation-in-macos)
     - [About LibreOffice-SDK](#about-libreoffice-sdk)
+* [Build hboffice](#build-hboffice)
+    - [Build hboffice in Windows](#build-hboffice-in-windows)
+    - [More about build hboffice in Windows](#more-about-build-hboffice-in-windows)
+* [hboffice examples](#hboffice-examples)
 
 ## Introduction
 
 **hboffice** is a project to use the LibreOffice-SDK in Harbour projects. It is an incomplete API, since the LibreOffice SDK is very extensive. It provides high-level functions in C that hide the complexity of using the SDK directly in C++. This C API is easily portable to Harbour.
 
-Compiling the project generates two binaries.
+Compiling the project generates three binaries.
 
 * **officesdk.dll**/**libofficesdk.so**: Dynamic library that contains the C API and the link to LibreOffice. In this way the links with LibreOffice-SDK are not propagated. On Windows, it must be compiled with Visual Studio (MinGW is not supported).
 
-* **officesdk.lib**/**libofficesdk.a**: Static library that contains the Harbour wrapper and symbol loading at runtime. You can use any compiler (MSVC, MingGW, GCC, etc).
+* **officesdk.lib**: (Only in Windows) Static library with the .dll exported symbols.
+
+* **hboffice.lib**/**libhboffice.a**: Static library that contains the Harbour wrapper. You can use any compiler (MSVC, MingGW, GCC, etc).
 
 ## Installation of LibreOffice
 
@@ -87,15 +93,35 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
 
 ### Build hboffice in Windows
 
-First step generate **officesdk.dll**
+First step generate **officesdk.dll**:
 
 ```
 cd contrib/hboffice
 set CMAKE_GENERATOR=Visual Studio 17 2022
-build.dat -dll -b Release
+build.bat -dll -b Release
+
+:: Full command
+build.bat -dll -b [Release|Debug]
 ```
 
-This script will generate the dll in `/build/Release/bin` folder.
+Then, generate the **hboffice.lib**:
+
+```
+build.dat -lib -comp mingw64 -b Release
+
+:: Full command
+build.dat -lib -comp [mingw64|msvc64] -b [Release|Debug]
+```
+
+After these two steps, you will have:
+* `officesdk.dll` in `/build/Release/bin` folder.
+* `officesdk.lib` and `hboffice.lib` in `/build/Release/lib` folder.
+
+### More about build hboffice in Windows
+
+> **Important:** To build the dynamic library `officesdk.dll` is **imperative to use Visual Studio**.
+
+To build `hboffice.lib` you can use Visual Studio or MinGW, depending on the compiler you use to generate the final executables.
 
 If you have installed other Visual Studio version change the `CMAKE_GENERATOR` value:
 
@@ -110,5 +136,9 @@ set CMAKE_GENERATOR=Visual Studio 11 2012
 
 > **Important:** Because LibreOffice-SDK requires C++11, you need, at least, Visual Studio 2012.
 
-> **Important:** The **officesdk.dll** does not support other Windows compiler (like MinGW).
-
+> **Important:** If you want compile `hboffice.lib` with Visual Studio, you have to set up the compiler. Harbour cannot find it automatically.
+```
+:: Setup Visual Studio accesible by Harbour
+:: This command depends on Visual Studio specific version/installation.
+"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+```

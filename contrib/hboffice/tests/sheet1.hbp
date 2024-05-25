@@ -1,23 +1,4 @@
 
 -beep
-#-hbexe
-#-std
-# Libraries
-
-# GT
-#-gtnap
-#-gtwin{allmsvc}
-#-gttrm{gcc}
-
-
-# Sources
 sheet1.prg
-
 hboffice.hbc
-
-# Harbour compiler options
-# -m -a -w -es2 -ql
-# -b{DEBUG}
-# -d_TESTE{DEBUG}
-# -z
-
