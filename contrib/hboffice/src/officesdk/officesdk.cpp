@@ -628,7 +628,7 @@ void officesdk_finish(void)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *officesdk_error(const sdkres_t code)
+const char_t *officesdk_error_str(const sdkres_t code)
 {
     switch (code)
     {
@@ -1949,12 +1949,11 @@ static void i_column_id(const uint32_t col, char_t *id, const uint32_t n)
 
 /*---------------------------------------------------------------------------*/
 
-String *officesdk_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, sdkres_t *err)
+void officesdk_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, char_t *cellref, const uint32_t refsize, sdkres_t *err)
 {
     sdkres_t res = ekSDKRES_OK;
     css::uno::Reference<css::sheet::XSpreadsheet> xSheet;
     ::rtl::OUString pageName;
-    String *str = NULL;
 
     if (res == ekSDKRES_OK)
         res = i_get_sheet(sheet, page, xSheet);
@@ -1977,16 +1976,11 @@ String *officesdk_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32
         char_t col_id[64];
         String *page_id = i_StringFromOUString(pageName);
         i_column_id(col, col_id, sizeof(col_id));
-        str = str_printf("$'%s'.%s%d", tc(page_id), col_id, row + 1);
+        bstd_sprintf(cellref, refsize, "$'%s'.%s%d", tc(page_id), col_id, row + 1);
         str_destroy(&page_id);
-    }
-    else
-    {
-        str = str_c("");
     }
 
     ptr_assign(err, res);
-    return str;
 }
 
 /*---------------------------------------------------------------------------*/

@@ -30,7 +30,7 @@ _office_api void officesdk_sheet_protect(Sheet *sheet, const uint32_t page, cons
 
 _office_api void officesdk_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows, sdkres_t *err);
 
-_office_api String *officesdk_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, sdkres_t *err);
+_office_api void officesdk_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, char_t *cellref, const uint32_t refsize, sdkres_t *err);
 
 _office_api void officesdk_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const char_t *text, sdkres_t *err);
 

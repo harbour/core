@@ -393,7 +393,9 @@ uint32_t hb_office_last_error(void)
 
 const char_t *hb_office_error_str(const uint32_t errcode)
 {
-    return officesdk_error((sdkres_t)errcode);
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        return officesdk_error_str((sdkres_t)errcode);
+    return "";
     // if (HBOFFICE_GLOBAL.init && HBOFFICE_GLOBAL.with_funcs)
     //     return HBOFFICE_GLOBAL.funcs.func_officesdk_error((sdkres_t)errcode);
     // return "";
@@ -403,9 +405,12 @@ const char_t *hb_office_error_str(const uint32_t errcode)
 
 void hb_office_browse_doc(HB_ITEM *pathname_block)
 {
-    char_t *pathname = i_block_to_utf8(pathname_block);
-    officesdk_browse_doc(pathname, &HBOFFICE_GLOBAL.last_error);
-    i_destroy_utf8(&pathname);
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *pathname = i_block_to_utf8(pathname_block);
+        officesdk_browse_doc(pathname, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&pathname);
+    }
 
     // if (HBOFFICE_GLOBAL.init && HBOFFICE_GLOBAL.with_funcs)
     // {
@@ -419,7 +424,9 @@ void hb_office_browse_doc(HB_ITEM *pathname_block)
 
 uint32_t hb_office_rgb(const uint8_t red, const uint8_t green, const uint8_t blue)
 {
-    return officesdk_rgb(red, green, blue);
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        return officesdk_rgb(red, green, blue);
+    return 0;
     // if (HBOFFICE_GLOBAL.init && HBOFFICE_GLOBAL.with_funcs)
     //     return HBOFFICE_GLOBAL.funcs.func_officesdk_rgb(red, green, blue);
     // return 0;
@@ -427,293 +434,353 @@ uint32_t hb_office_rgb(const uint8_t red, const uint8_t green, const uint8_t blu
 
 /*---------------------------------------------------------------------------*/
 
-// Sheet *hb_office_sheet_open(HB_ITEM *pathname_block)
-// {
-//     if (HBOFFICE_GLOBAL.init && HBOFFICE_GLOBAL.with_funcs)
-//     {
-//         char_t *pathname = i_block_to_utf8(pathname_block);
-//         Sheet *sheet = HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_open(tc(pathname), &GTNAP_GLOBAL->office_last_error);
-//         str_destroy(&pathname);
-//         return sheet;
-//     }
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// Sheet *hb_office_sheet_create(void)
-// {
-//     return HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_create(&GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block)
-// {
-//     String *pathname = hb_block_to_utf8(pathname_block);
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_save(sheet, tc(pathname), &GTNAP_GLOBAL->office_last_error);
-//     str_destroy(&pathname);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_pdf(Sheet *sheet, HB_ITEM *pathname_block)
-// {
-//     String *pathname = hb_block_to_utf8(pathname_block);
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_pdf(sheet, tc(pathname), &GTNAP_GLOBAL->office_last_error);
-//     str_destroy(&pathname);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block)
-// {
-//     String *filename = hb_block_to_utf8(filename_block);
-//     String *printer = hb_block_to_utf8(printer_block);
-//     String *pages = hb_block_to_utf8(pages_block);
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_print(sheet, tc(filename), tc(printer), orient, format, paper_width, paper_height, num_copies, collate_copies, tc(pages), &GTNAP_GLOBAL->office_last_error);
-//     str_destroy(&filename);
-//     str_destroy(&printer);
-//     str_destroy(&pages);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_close(Sheet *sheet)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_close(sheet, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// uint32_t hb_office_sheet_add(Sheet *sheet)
-// {
-//     return HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_add(sheet, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_name(Sheet *sheet, const uint32_t page, HB_ITEM *name_block)
-// {
-//     String *name = hb_block_to_utf8(name_block);
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_name(sheet, page, tc(name), &GTNAP_GLOBAL->office_last_error);
-//     str_destroy(&name);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t protect, HB_ITEM *pass_block)
-// {
-//     String *pass = hb_block_to_utf8(pass_block);
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_protect(sheet, page, protect, tc(pass), &GTNAP_GLOBAL->office_last_error);
-//     str_destroy(&pass);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_freeze(sheet, page, ncols, nrows, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// const char_t *hb_office_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row)
-// {
-//     str_destopt(&GTNAP_GLOBAL->office_last_cell_ref);
-//     GTNAP_GLOBAL->office_last_cell_ref = HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_ref(sheet, page, col, row, &GTNAP_GLOBAL->office_last_error);
-//     return tc(GTNAP_GLOBAL->office_last_cell_ref);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *text_block)
-// {
-//     String *text = hb_block_to_utf8(text_block);
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_text(sheet, page, col, row, tc(text), &GTNAP_GLOBAL->office_last_error);
-//     str_destroy(&text);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_value(sheet, page, col, row, value, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_date(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint8_t day, const uint8_t month, const int16_t year)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_date(sheet, page, col, row, day, month, year, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_formula(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *formula_block)
-// {
-//     String *formula = hb_block_to_utf8(formula_block);
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_formula(sheet, page, col, row, tc(formula), &GTNAP_GLOBAL->office_last_error);
-//     str_destroy(&formula);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_numformat(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const numformat_t format)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_numformat(sheet, page, col, row, format, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_font_family(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *ffamily_block)
-// {
-//     String *ffamily = hb_block_to_utf8(ffamily_block);
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_font_family(sheet, page, col, row, tc(ffamily), &GTNAP_GLOBAL->office_last_error);
-//     str_destroy(&ffamily);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_font_size(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real32_t fsize)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_font_size(sheet, page, col, row, fsize, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_bold(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t bold)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_bold(sheet, page, col, row, bold, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_italic(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t italic)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_italic(sheet, page, col, row, italic, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const halign_t align)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_halign(sheet, page, col, row, align, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const valign_t align)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_valign(sheet, page, col, row, align, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_wrap(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_wrap(sheet, page, col, row, wrapped, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_color(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_color(sheet, page, col, row, rgb, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_backcolor(sheet, page, col, row, rgb, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cells_backcolor(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const uint32_t rgb)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cells_backcolor(sheet, page, st_col, st_row, ed_col, ed_row, rgb, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *image_path_block)
-// {
-//     String *image_path = hb_block_to_utf8(image_path_block);
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_image(sheet, page, col, row, tc(image_path), &GTNAP_GLOBAL->office_last_error);
-//     str_destroy(&image_path);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cell_border(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cell_border(sheet, page, col, row, style, thickness, rgb, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cells_border(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cells_border(sheet, page, st_col, st_row, ed_col, ed_row, style, thickness, rgb, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_cells_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_cells_merge(sheet, page, st_col, st_row, ed_col, ed_row, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_column_visible(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t visible)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_column_visible(sheet, page, col, visible, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_column_optimal_width(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t optimal_width)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_column_optimal_width(sheet, page, col, optimal_width, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_column_width(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t width)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_column_width(sheet, page, col, width, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_row_visible(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t visible)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_row_visible(sheet, page, row, visible, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_row_optimal_height(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t optimal_height)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_row_optimal_height(sheet, page, row, optimal_height, &GTNAP_GLOBAL->office_last_error);
-// }
-
-// /*---------------------------------------------------------------------------*/
-
-// void hb_office_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height)
-// {
-//     HBOFFICE_GLOBAL.funcs.func_officesdk_sheet_row_height(sheet, page, row, height, &GTNAP_GLOBAL->office_last_error);
-// }
+Sheet *hb_office_sheet_open(HB_ITEM *pathname_block)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *pathname = i_block_to_utf8(pathname_block);
+        Sheet *sheet = officesdk_sheet_open(pathname, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&pathname);
+        return sheet;
+    }
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Sheet *hb_office_sheet_create(void)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        return officesdk_sheet_create(&HBOFFICE_GLOBAL.last_error);
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_save(Sheet *sheet, HB_ITEM *pathname_block)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *pathname = i_block_to_utf8(pathname_block);
+        officesdk_sheet_save(sheet, pathname, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&pathname);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_pdf(Sheet *sheet, HB_ITEM *pathname_block)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *pathname = i_block_to_utf8(pathname_block);
+        officesdk_sheet_pdf(sheet, pathname, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&pathname);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_print(Sheet *sheet, HB_ITEM *filename_block, HB_ITEM *printer_block, const paperorient_t orient, const paperformat_t format, const uint32_t paper_width, const uint32_t paper_height, const uint32_t num_copies, const bool_t collate_copies, HB_ITEM *pages_block)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *filename = i_block_to_utf8(filename_block);
+        char_t *printer = i_block_to_utf8(printer_block);
+        char_t *pages = i_block_to_utf8(pages_block);
+        officesdk_sheet_print(sheet, filename, printer, orient, format, paper_width, paper_height, num_copies, collate_copies, pages, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&filename);
+        i_destroy_utf8(&printer);
+        i_destroy_utf8(&pages);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_close(Sheet *sheet)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_close(sheet, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t hb_office_sheet_add(Sheet *sheet)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        return officesdk_sheet_add(sheet, &HBOFFICE_GLOBAL.last_error);
+    return UINT32_MAX;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_name(Sheet *sheet, const uint32_t page, HB_ITEM *name_block)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *name = i_block_to_utf8(name_block);
+        officesdk_sheet_name(sheet, page, name, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&name);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_protect(Sheet *sheet, const uint32_t page, const bool_t protect, HB_ITEM *pass_block)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *pass = i_block_to_utf8(pass_block);
+        officesdk_sheet_protect(sheet, page, protect, pass, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&pass);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_freeze(sheet, page, ncols, nrows, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *hb_office_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        officesdk_sheet_cell_ref(sheet, page, col, row, HBOFFICE_GLOBAL.last_cell_ref, sizeof(HBOFFICE_GLOBAL.last_cell_ref), &HBOFFICE_GLOBAL.last_error);
+        return HBOFFICE_GLOBAL.last_cell_ref;
+    }
+
+    return "";
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *text_block)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *text = i_block_to_utf8(text_block);
+        officesdk_sheet_cell_text(sheet, page, col, row, text, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&text);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_value(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real64_t value)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_value(sheet, page, col, row, value, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_date(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint8_t day, const uint8_t month, const int16_t year)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_date(sheet, page, col, row, day, month, year, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_formula(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *formula_block)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *formula = i_block_to_utf8(formula_block);
+        officesdk_sheet_cell_formula(sheet, page, col, row, formula, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&formula);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_numformat(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const numformat_t format)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_numformat(sheet, page, col, row, format, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_font_family(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *ffamily_block)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *ffamily = i_block_to_utf8(ffamily_block);
+        officesdk_sheet_cell_font_family(sheet, page, col, row, ffamily, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&ffamily);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_font_size(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const real32_t fsize)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_font_size(sheet, page, col, row, fsize, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_bold(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t bold)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_bold(sheet, page, col, row, bold, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_italic(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t italic)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_italic(sheet, page, col, row, italic, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_halign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const halign_t align)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_halign(sheet, page, col, row, align, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_valign(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const valign_t align)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_valign(sheet, page, col, row, align, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_wrap(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const bool_t wrapped)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_wrap(sheet, page, col, row, wrapped, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_color(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_color(sheet, page, col, row, rgb, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_backcolor(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const uint32_t rgb)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_backcolor(sheet, page, col, row, rgb, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cells_backcolor(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const uint32_t rgb)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cells_backcolor(sheet, page, st_col, st_row, ed_col, ed_row, rgb, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_image(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *image_path_block)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+    {
+        char_t *image_path = i_block_to_utf8(image_path_block);
+        officesdk_sheet_cell_image(sheet, page, col, row, image_path, &HBOFFICE_GLOBAL.last_error);
+        i_destroy_utf8(&image_path);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cell_border(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cell_border(sheet, page, col, row, style, thickness, rgb, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cells_border(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row, const linestyle_t style, const uint32_t thickness, const uint32_t rgb)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cells_border(sheet, page, st_col, st_row, ed_col, ed_row, style, thickness, rgb, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_cells_merge(Sheet *sheet, const uint32_t page, const uint32_t st_col, const uint32_t st_row, const uint32_t ed_col, const uint32_t ed_row)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_cells_merge(sheet, page, st_col, st_row, ed_col, ed_row, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_column_visible(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t visible)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_column_visible(sheet, page, col, visible, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_column_optimal_width(Sheet *sheet, const uint32_t page, const uint32_t col, const bool_t optimal_width)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_column_optimal_width(sheet, page, col, optimal_width, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_column_width(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t width)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_column_width(sheet, page, col, width, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_row_visible(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t visible)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_row_visible(sheet, page, row, visible, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_row_optimal_height(Sheet *sheet, const uint32_t page, const uint32_t row, const bool_t optimal_height)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_row_optimal_height(sheet, page, row, optimal_height, &HBOFFICE_GLOBAL.last_error);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_office_sheet_row_height(Sheet *sheet, const uint32_t page, const uint32_t row, const uint32_t height)
+{
+    if (HBOFFICE_GLOBAL.init == TRUE)
+        officesdk_sheet_row_height(sheet, page, row, height, &HBOFFICE_GLOBAL.last_error);
+}
 
 // /*---------------------------------------------------------------------------*/
 
 // Writer *hb_office_writer_open(HB_ITEM *pathname_block)
 // {
-//     String *pathname = hb_block_to_utf8(pathname_block);
+//     String *pathname = i_block_to_utf8(pathname_block);
 //     Writer *writer = HBOFFICE_GLOBAL.funcs.func_officesdk_writer_open(tc(pathname), &GTNAP_GLOBAL->office_last_error);
-//     str_destroy(&pathname);
+//     i_destroy_utf8(&pathname);
 //     return writer;
 // }
 
@@ -728,7 +795,7 @@ uint32_t hb_office_rgb(const uint8_t red, const uint8_t green, const uint8_t blu
 
 // void hb_office_writer_save(Writer *writer, HB_ITEM *pathname_block)
 // {
-//     String *pathname = hb_block_to_utf8(pathname_block);
+//     String *pathname = i_block_to_utf8(pathname_block);
 //     HBOFFICE_GLOBAL.funcs.func_officesdk_writer_save(writer, tc(pathname), &GTNAP_GLOBAL->office_last_error);
 //     str_destroy(&pathname);
 // }

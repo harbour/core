@@ -9,7 +9,7 @@ __EXTERN_C
 
 _office_api void officesdk_finish(void);
 
-_office_api const char_t *officesdk_error(const sdkres_t code);
+_office_api const char_t *officesdk_error_str(const sdkres_t code);
 
 _office_api void officesdk_browse_doc(const char_t *pathname, sdkres_t *err);
 
