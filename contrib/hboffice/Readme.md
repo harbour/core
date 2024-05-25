@@ -107,15 +107,15 @@ build.bat -dll -b [Release|Debug]
 Then, generate the **hboffice.lib**:
 
 ```
-build.dat -lib -comp mingw64 -b Release
+build.bat -lib -comp mingw64 -b Release
 
 :: Full command
-build.dat -lib -comp [mingw64|msvc64] -b [Release|Debug]
+build.bat -lib -comp [mingw64|msvc64] -b [Release|Debug]
 ```
 
 After these two steps, you will have:
 * `officesdk.dll` in `/build/Release/bin` folder.
-* `officesdk.lib` and `hboffice.lib` in `/build/Release/lib` folder.
+* `officesdk.lib` and `hboffice.lib/libhboffice.a` in `/build/Release/lib` folder.
 
 ### More about build hboffice in Windows
 
@@ -141,4 +141,20 @@ set CMAKE_GENERATOR=Visual Studio 11 2012
 :: Setup Visual Studio accesible by Harbour
 :: This command depends on Visual Studio specific version/installation.
 "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+```
+
+## hboffice examples
+
+In the `/hboffice/tests` folder there are different examples of use. To run them:
+
+* Copy `/build/Release/bin/officesdk.dll` into `/tests`.
+* Compile and run one of the examples (e.g. `sheet1.prg`)
+* The results documents will be saved in `/tests/result`.
+```
+:: In Windows
+cd \contrib\hboffice\tests
+..\..\..\bin\win\mingw64\hbmk2 sheet1.prg hboffice.hbc -comp=mingw64
+
+:: Just run
+sheet1.exe
 ```

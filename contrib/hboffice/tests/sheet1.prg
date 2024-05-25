@@ -1,14 +1,19 @@
-// Typical welcome message
+// Office example 'sheet1'
 // From \contrib\hboffice\tests
-// ..\..\..\bin\win\mingw64\hbmk2 sheet1.prg -comp=mingw64
-
-// Replicate this example
-// Anexo_01_Dem_da_receita_e_despesa_segundo_as_cat_economicasMA854_u.g._Consolidado__Exercicio_2023.ods
-
+// ..\..\..\bin\win\mingw64\hbmk2 sheet1.prg hboffice.hbc -comp=mingw64
 #include "hboffice.ch"
 
 REQUEST HB_CODEPAGE_PTISO
 REQUEST HB_LANG_PT_BR
+
+***********************************
+STAT FUNCTION FULL_PATH( C_FileName )
+***********************************
+#if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+    return DiskName() + ":\" + CurDir() + "\result\" + C_FileName
+#else
+    return CurDir() + "\result\" + C_FileName
+#endif
 
 ***********************************
 STAT FUNCTION OFFICE_ERROR( C_Text )
@@ -31,13 +36,16 @@ PROCEDURE Main()
 LOCAL O_XLS := NIL
 LOCAL N_Page := 0
 LOCAL N_Col, N_Row
+LOCAL C_File := FULL_PATH("sheet1.ods")
+LOCAL C_PDF := FULL_PATH("sheet1.pdf")
 
 hb_cdpSelect("PTISO")
 hb_LangSelect("pt_BR","PTISO")
 
 HBOFFICE_INIT()
 
-? "JAJAJAJ" + CurDir()
+? "Creating office example: " + C_File
+
 O_XLS := HBOFFICE_XLS_CREATE()
 
 IF OFFICE_ERROR("ERROR Creando a planilha")
@@ -161,8 +169,14 @@ HBOFFICE_XLS_CELL_FONT_SIZE(O_XLS, N_Page, N_Col, N_Row, 7)
 HBOFFICE_XLS_PROTECT(O_XLS, N_Page, .T., "ASDF01234")
 
 // Save the spreadsheet
-HBOFFICE_XLS_SAVE(O_XLS, DiskName() + ":\" + CurDir() + "\result\sheet1.ods")
+HBOFFICE_XLS_SAVE(O_XLS, C_File)
 IF OFFICE_ERROR("ERROR Salvando a planilha")
+    RETURN
+ENDIF
+
+// Save the pdf
+HBOFFICE_XLS_PDF(O_XLS, C_PDF)
+IF OFFICE_ERROR("Erro ao salvar PDF")
     RETURN
 ENDIF
 
@@ -175,7 +189,7 @@ ENDIF
 ? "A planilha foi criada com sucesso."
 
 // Open the result into a LibreOffice window
-//HBOFFICE_BROWSE_DOC("sheet1.ods")
+HBOFFICE_BROWSE_DOC(C_File)
 
 HBOFFICE_FINISH()
 RETURN
