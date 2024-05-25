@@ -1,0 +1,422 @@
+// Office example 'doc1'
+// From \contrib\hboffice\tests
+// ..\..\..\bin\win\mingw64\hbmk2 doc2.prg hboffice.hbc -comp=mingw64
+// ../../../bin/linux/gcc/hbmk2 doc2.prg hboffice.hbc
+#include "hboffice.ch"
+
+REQUEST HB_CODEPAGE_PTISO
+REQUEST HB_LANG_PT_BR
+
+***********************************
+STAT FUNCTION FULL_PATH( C_FileName )
+***********************************
+#if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+    return DiskName() + ":\" + CurDir() + "\result\" + C_FileName
+#else
+    return "/" + CurDir() + "/result/" + C_FileName
+#endif
+
+***********************************
+STAT FUNCTION FULL_RESOURCE( C_FileName )
+***********************************
+#if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
+    return DiskName() + ":\" + CurDir() + "\" + C_FileName
+#else
+    return "/" + CurDir() + "/" + C_FileName
+#endif
+
+***********************************
+STAT FUNCTION OFFICE_ERROR( C_Text )
+***********************************
+LOCAL N_Err := HBOFFICE_LAST_ERROR()
+LOCAL C_Err := HBOFFICE_ERROR_STR(N_Err)
+LOCAL L_Err := .F.
+
+IF N_Err != HBOFFICE_RES_OK
+    ? C_Text + ": " + C_Err
+    L_Err = .T.
+ENDIF
+
+RETURN L_Err
+
+******************************
+FUNC PAGINA_TEXT(N_Page)
+******************************
+IF N_Page < 10
+    RETURN "Página : 00" + hb_ntos(N_Page)
+ELSEIF N_Page < 100
+    RETURN "Página : 0" + hb_ntos(N_Page)
+ENDIF
+
+RETURN "Página : " + hb_ntos(N_Page)
+
+********************************
+PROC SEPARATOR_LINE(O_DOC, N_Size)
+********************************
+HBOFFICE_DOC_INSERT_DASH(O_DOC, N_Size)
+
+********************************
+PROC SEPARATOR_LINE2(O_DOC, N_Size)
+********************************
+LOCAL N_Cont := 1
+FOR N_Cont:= 1 TO N_Size/2
+    HBOFFICE_DOC_INSERT_DASH(O_DOC, 1)
+    HBOFFICE_DOC_INSERT_TEXT(O_DOC, " ")
+NEXT
+
+********************************
+FUNC INDETERMINATE(N_Size)
+********************************
+LOCAL C_STR := ""
+LOCAL N_Cont := 1
+
+FOR N_Cont:= 1 TO N_Size
+    C_STR += "#"
+NEXT
+
+RETURN C_STR
+
+********************************
+FUNC UNKNOWN(N_Size)
+********************************
+LOCAL C_STR := ""
+LOCAL N_Cont := 1
+
+FOR N_Cont:= 1 TO N_Size
+    C_STR += "?"
+NEXT
+
+RETURN C_STR
+
+********************************
+FUNC COMPOSE_LINE(V_Line)
+********************************
+LOCAL C_STR := ""
+LOCAL N_Cont := 1
+
+FOR N_Cont := 1 TO LEN(V_Line)
+    IF VALTYPE(V_Line[N_Cont]) == "C"
+        C_STR += V_Line[N_Cont]
+    ELSEIF VALTYPE(V_Line[N_Cont]) == "N"
+        C_STR += SPACE(V_Line[N_Cont])
+    ENDIF
+NEXT
+
+RETURN C_STR
+
+********************************
+FUNC COMPOSE_TABLINE(V_Tabs, V_Values)
+********************************
+LOCAL C_STR := ""
+LOCAL C_Field := ""
+LOCAL N_Field_width := 0
+LOCAL N_Cont := 1
+LOCAL N_Width, N_Align
+
+FOR N_Cont := 1 TO LEN(V_Values)
+    N_Width := V_Tabs[(N_Cont * 2) - 1]
+    N_Align := V_Tabs[N_Cont * 2]
+    IF VALTYPE(V_Values[N_Cont]) == "C"
+        C_Field := V_Values[N_Cont]
+    ELSEIF VALTYPE(V_Values[N_Cont]) == "N"
+        C_Field := Transform(V_Values[N_Cont], "999,999,999.99")
+    ENDIF
+
+    N_Field_width := LEN(C_Field)
+
+    // Write the data in its column
+    IF N_Field_width <= N_Width
+        IF N_Align == HBOFFICE_HALIGN_LEFT
+            C_STR += C_Field
+            C_STR += SPACE(N_Width - N_Field_width)
+        ELSEIF N_Align == HBOFFICE_HALIGN_RIGHT
+            C_STR += SPACE(N_Width - N_Field_width)
+            C_STR += C_Field
+        ELSE
+            C_STR += UNKNOWN(N_Width)
+        ENDIF
+
+    // Data is wider than column
+    ELSE
+        C_STR += INDETERMINATE(N_Width)
+    ENDIF
+NEXT
+
+RETURN C_STR
+
+***********************************************************
+STAT PROC DOCUMENT1_HEADER(O_DOC, N_Page, N_Width, V_Tabs)
+***********************************************************
+LOCAL C_Line1 := COMPOSE_LINE({"Ceará", 52, "PPA 2022-2025"})
+LOCAL C_Line2 := COMPOSE_LINE({"Governo Municipal de Piquet Carneiro", 12, "DESPESAS POR FUNÇÃO E SUBFUNÇÃO", 30, PAGINA_TEXT(N_Page)})
+LOCAL C_Line3 := COMPOSE_TABLINE(V_Tabs, {"FUNÇÃO/SUBFUNÇÃO", "Valor 2022", "Valor 2023", "Valor 2024", "Valor 2025", "Total"})
+HBOFFICE_DOC_INSERT_TEXT(O_DOC, C_Line1)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+HBOFFICE_DOC_INSERT_TEXT(O_DOC, C_Line2)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+SEPARATOR_LINE(O_DOC, N_Width)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+HBOFFICE_DOC_INSERT_TEXT(O_DOC, C_Line3)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+SEPARATOR_LINE(O_DOC, N_Width)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+
+********************************************
+PROC DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+********************************************
+SEPARATOR_LINE(O_DOC, N_Width)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+
+***********************************************************
+PROC DOCUMENT1_TABLINE(O_DOC, V_Values, V_Tabs)
+***********************************************************
+LOCAL C_Line := COMPOSE_TABLINE(V_Tabs, V_Values)
+HBOFFICE_DOC_INSERT_TEXT(O_DOC, C_Line)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+
+
+***********************************
+PROCEDURE Main()
+***********************************
+LOCAL O_DOC := NIL
+LOCAL N_Page := 0
+LOCAL N_Col, N_Row
+LOCAL C_File := FULL_PATH("doc2.odt")
+LOCAL C_PDF := FULL_PATH("doc2.pdf")
+
+// Total chars by line
+LOCAL N_Width := 130
+
+// Field tabulations
+LOCAL V_Tabs := {42, HBOFFICE_HALIGN_LEFT, 16, HBOFFICE_HALIGN_RIGHT, 18, HBOFFICE_HALIGN_RIGHT, 18, HBOFFICE_HALIGN_RIGHT, 18, HBOFFICE_HALIGN_RIGHT, 18, HBOFFICE_HALIGN_RIGHT}
+LOCAL C_Line := ""
+
+hb_cdpSelect("PTISO")
+hb_LangSelect("pt_BR","PTISO")
+
+HBOFFICE_INIT()
+
+? "Creating office example: " + C_File
+
+O_DOC := HBOFFICE_DOC_CREATE()
+
+IF OFFICE_ERROR("Erro ao criar documento de texto")
+    RETURN
+ENDIF
+
+HBOFFICE_DOC_PAGE_HEADER_SHOW(O_DOC, .T.)
+HBOFFICE_DOC_PAGE_HEADER_MARGINS(O_DOC, 254, 280, 508, 102, .T., .T.)
+HBOFFICE_DOC_PAGE_FOOTER_SHOW(O_DOC, .T.)
+HBOFFICE_DOC_PAGE_FOOTER_MARGINS(O_DOC, 354, 380, 608, 202, .T., .T.)
+HBOFFICE_DOC_PAGE_MARGINS(O_DOC, 2819, 178, 1270, 533, 0)
+
+// Write image and text into header
+HBOFFICE_DOC_TEXT_SPACE(O_DOC, HBOFFICE_TEXT_SPACE_HEADER)
+HBOFFICE_DOC_FONT_FAMILY(O_DOC, "Courier New")
+HBOFFICE_DOC_FONT_SIZE(O_DOC, 16.0)
+HBOFFICE_DOC_INSERT_IMAGE(O_DOC, HBOFFICE_ANCHOR_AS_CHARACTER, 2000, 2000, HBOFFICE_HALIGN_LEFT, HBOFFICE_VALIGN_CENTER, {|| FULL_RESOURCE("macapa.png") } )
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+HBOFFICE_DOC_INSERT_TEXT(O_DOC, "First line in HEADER")
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+HBOFFICE_DOC_INSERT_TEXT(O_DOC, "Second line in HEADER")
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+
+// Write text into footer
+HBOFFICE_DOC_TEXT_SPACE(O_DOC, HBOFFICE_TEXT_SPACE_FOOTER)
+HBOFFICE_DOC_FONT_FAMILY(O_DOC, "Courier New")
+HBOFFICE_DOC_FONT_SIZE(O_DOC, 16.0)
+HBOFFICE_DOC_BOLD(O_DOC, .T.)
+HBOFFICE_DOC_INSERT_TEXT(O_DOC, "First line in FOOTER")
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+HBOFFICE_DOC_INSERT_TEXT(O_DOC, "Second line in FOOTER")
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+
+// Write text into page
+HBOFFICE_DOC_TEXT_SPACE(O_DOC, HBOFFICE_TEXT_SPACE_PAGE)
+HBOFFICE_DOC_FONT_FAMILY(O_DOC, "Courier New")
+HBOFFICE_DOC_FONT_SIZE(O_DOC, 6.0)
+HBOFFICE_DOC_PARAGRAPH_LSPACING(O_DOC, 330)
+
+// Page 1
+DOCUMENT1_HEADER(O_DOC, 1, N_Width, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"01-Legislativa", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   031-Ação Legislativa", 2015410.00, 2196797.00, 2394509.00, 2610014.00, 9216730.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 2015410.00, 2196797.00, 2394509.00, 2610014.00, 9216730.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"04-Administração", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 4299393.00, 4717653.00, 5130657.00, 5604100.00, 19751803.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   123-Administração Financeira", 70300.00, 83100.00, 90600.00, 98800.00, 342800.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   124-Controle Interno", 130800.00, 142570.00, 155400.00, 169390.00, 598160.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   128-Formação de Recursos Humanos", 25000.00, 25000.00, 25000.00, 25000.00, 100000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   131-Comunicação Social", 163500.00, 178200.00, 194200.00, 211700.00, 747600.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 4688993.00, 5146523.00,  5595857.00,  6108990.00, 21540363.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"06-Segurança Pública", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 30000.00, 35000.00, 40000.00, 45000.00, 150000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   181-Policiamento", 52000.00, 65000.00, 78000.00, 90000.00, 285000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 82000.00, 100000.00, 118000.00, 135000.00, 435000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"08-Assistência Social", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 1408000.00, 1525720.00, 1654035.00, 1793898.00, 6381653.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   125-Normalização e Fiscalização", 35000.00, 45000.00, 55000.00, 65000.00, 200000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   241-Assistência ao Idoso", 115000.00, 115000.00, 115000.00, 115000.00, 460000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   242-Assistência ao Portador de Defici", 40000.00, 40000.00, 40000.00, 40000.00, 160000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   243-Assistência à Criança e ao Adoles", 448700.00, 492845.00, 541159.00, 666037.00, 2148741.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   244-Assistência Comunitária", 835760.00, 905253.00, 981822.00, 1066189.00, 3789024.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 2882460.00, 3123818.00, 3387016.00, 3746124.00, 13139418.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"09-Previdência Social", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   272-Previdência do Regime Estatutário", 348800.00, 380100.00, 414400.00, 451700.00, 1595000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 348800.00, 380100.00, 414400.00, 451700.00, 1595000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"10-Saúde", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 4533985.00, 5109009.00, 5754513.00, 6478763.00, 21876270.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   125-Normalização e Fiscalização", 15000.00, 20000.00, 25000.00, 30000.00, 90000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   301-Atenção Básica", 6265700.00, 6827113.00, 7440517.00, 8108361.00, 28641691.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   302-Assistência Hospitalar e Ambulato", 3923300.00, 4253897.00, 4614249.00, 5007030.00, 17798476.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   303-Suporte Profilático e Terapêutico", 51800.00, 53762.00, 55901.00, 58232.00, 219695.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   305-Vigilância Epidemiológica", 1090000.00, 1188080.00, 1295028.00, 1411582.00, 4984690.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   306-Alimentação e Nutrição", 20000.00, 20000.00, 20000.00, 20000.00, 80000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   481-Habitação Rural", 81676.00, 211479.00, 362647.00, 540795.00, 1196597.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 15981461.00, 17683340.00, 19567855.00, 21654763.00, 74887419.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"12-Educação", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 1815115.00, 1969475.00, 2137728.00, 2321124.00, 8243442.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   125-Normalização e Fiscalização", 15000.00, 20000.00, 25000.00, 30000.00, 90000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   306-Alimentação e Nutrição", 514044.00, 560308.00, 610735.00, 665702.00, 2350789.00}, V_Tabs)
+HBOFFICE_DOC_INSERT_PAGE_BREAK(O_DOC)
+
+// Page 2
+DOCUMENT1_HEADER(O_DOC, 2, N_Width, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    361-Ensino Fundamental", 12958496.00, 14250349.00, 15671167.00, 17233992.00, 60114004.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    362-Ensino Médio", 177125.00, 193066.00, 210442.00, 229382.00, 810015.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    364-Ensino Superior", 65400.00, 71286.00, 77702.00, 84695.00, 299083.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    365-Educação Infantil", 1178962.00, 1302817.00, 1438796.00, 1588134.00, 5508709.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    366-Educação de Jovens e Adultos", 442420.00, 516917.00, 602070.00, 698975.00, 2260382.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    367-Educação Especial", 10000.00, 10000.00, 10000.00, 10000.00, 40000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 17176562.00, 18894218.00, 20783640.00, 22862004.00, 79716424.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"13-Cultura", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 271800.00, 53700.00, 375900.00, 428200.00, 1129600.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   392-Difusão Cultural", 637700.00, 642600.00, 648800.00, 658300.00, 2587400.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   812-Desporto Comunitário", 20000.00, 220000.00,  20000.00, 20000.00, 280000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 929500.00, 916300.00, 1044700.00, 1106500.00, 3997000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"15-Urbanismo", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 1944000.00, 2200900.00, 2472000.00, 2758500.00, 9375400.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   451-Infra Estrutura Urbana", 450000.00, 550000.00, 650000.00, 750000.00, 2400000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   452-Serviços Urbanos", 1881800.00, 2067800.00, 2265100.00, 2477800.00, 8692500.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 4275800.00, 4818700.00, 5387100.00, 5986300.00, 20467900.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"16-Habitação", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   482-Habitação Urbana", 300000.00, 400000.00, 500000.00, 600000.00, 1800000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 300000.00, 400000.00, 500000.00, 600000.00, 1800000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"17-Saneamento", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   511-Saneamento Básico Rural", 220000.00, 270000.00, 300000.00, 380000.00, 1170000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   512-Saneamento Básico Urbano", 350000.00, 470000.00, 580000.00, 690000.00, 2090000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   544-Recursos Hídricos", 112000.00, 122000.00, 135200.00, 140000.00, 509200.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 682000.00, 862000.00, 1015200.00, 1210000.00, 3769200.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"18-Gestão Ambiental", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 414200.00, 438400.00, 464800.00, 493600.00, 1811000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   125-Normalização e Fiscalização", 10000.00,  10000.00,  10000.00,  10000.00,  40000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   541-Preservação e Conservação Ambient", 738100.00, 795900.00, 859000.00, 927800.00, 3320800.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   542-Controle Ambiental", 52000.00,  62000.00,  72000.00,  82000.00, 268000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   543-Recuperação de Áreas Degradadas", 30000.00,  40000.00,  50000.00,  60000.00, 180000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 1244300.00, 1346300.00, 1455800.00, 1573400.00, 5619800.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"19-Ciência e Tecnologia", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   573-Difusão do Conhecimento Científic", 25000.00,  25000.00,  25000.00,  25000.00, 100000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"   SUBTOTAL", 25000.00,  25000.00,  25000.00,  25000.00, 100000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"20-Agricultura", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"   122-Administração Geral", 467600.00, 544300.00, 584300.00, 627900.00, 2224100.00}, V_Tabs)
+HBOFFICE_DOC_INSERT_PAGE_BREAK(O_DOC)
+
+// Page 3
+DOCUMENT1_HEADER(O_DOC, 3, N_Width, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    125-Normalização e Fiscalização", 20000.00, 20000.00,  20000.00,  20000.00, 80000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    544-Recursos Hídricos", 145000.00, 150000.00, 155000.00, 165000.00, 615000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    605-Abastecimento", 66300.00,  67800.00, 69400.00, 71100.00, 274600.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    607-Irrigação", 150000.00, 150000.00, 150000.00, 150000.00, 600000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    608-Promoção da Produção Agropecuária", 1188900.00, 1294200.00, 1408400.00, 1532500.00, 5424000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    609-Defesa Agropecuária", 80000.00,  80000.00, 80000.00, 80000.00, 320000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"    SUBTOTAL", 2117800.00, 2306300.00, 2467100.00, 2646500.00, 9537700.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"22-Indústria", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    661-Promoção Industrial", 50000.00, 50000.00, 50000.00, 50000.00, 200000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"    SUBTOTAL", 50000.00, 50000.00, 50000.00, 50000.00, 200000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"23-Comércio e Serviços", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    692-Comercialização", 125000.00, 132000.00, 141000.00, 179000.00, 577000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"    SUBTOTAL", 125000.00, 132000.00, 141000.00, 179000.00, 577000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"25-Energia", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    752-Energia Elétrica", 486732.00, 525405.00, 567946.00, 614740.00, 2194823.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"    SUBTOTAL", 486732.00, 525405.00, 567946.00, 614740.00, 2194823.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"26-Transporte", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    782-Transporte Rodoviário", 540000.00, 565000.00, 590000.00, 615000.00, 2310000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"SUBTOTAL", 540000.00, 565000.00, 590000.00, 615000.00, 2310000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"27-Desporto e Lazer", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    811-Desporto de Rendimento", 250000.00, 270000.00, 292000.00, 300000.00, 1112000.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    812-Desporto Comunitário", 1282162.00, 1319577.00, 1409393.00, 1501132.00, 5512264.00}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    813-Lazer", 40000.00,  40000.00,  40000.00,  40000.00, 160000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"    SUBTOTAL", 1572162.00, 1629577.00, 1741393.00, 1841132.00, 6784264.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"28-Encargos Especiais", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    843-Serviço da Dívida Interna", 800000.00, 850000.00, 900000.00, 950000.00, 3500000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"    SUBTOTAL", 800000.00, 850000.00, 900000.00, 950000.00, 3500000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"99-Reserva de Contingência", "", "", "", "", ""}, V_Tabs)
+DOCUMENT1_TABLINE(O_DOC, {"    999-Reserva de Contingência", 450000.00, 500000.00, 550000.00, 600000.00, 2100000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"    SUBTOTAL", 450000.00, 500000.00, 550000.00, 600000.00, 2100000.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+DOCUMENT1_TABLINE(O_DOC, {"TOTAL FUNÇÃO", 56773980.00, 62451378.00, 68696516.00, 75566167.00, 263488041.00}, V_Tabs)
+DOCUMENT1_SEPARATOR(O_DOC, N_Width)
+
+// Save the document
+HBOFFICE_DOC_SAVE(O_DOC, C_File)
+IF OFFICE_ERROR("Erro ao salvar o documento")
+    RETURN
+ENDIF
+
+// Save the pdf
+HBOFFICE_DOC_PDF(O_DOC, C_PDF)
+IF OFFICE_ERROR("Erro ao salvar PDF")
+    RETURN
+ENDIF
+
+// Close the document (mandatory)
+HBOFFICE_DOC_CLOSE(O_DOC)
+IF OFFICE_ERROR("Erro ao fechar o documento")
+    RETURN
+ENDIF
+
+? "Documento criado com sucesso."
+
+HBOFFICE_FINISH()
+RETURN

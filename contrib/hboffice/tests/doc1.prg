@@ -42,7 +42,7 @@ PROCEDURE Main()
 LOCAL O_DOC := NIL
 LOCAL N_Page := 0
 LOCAL N_Col, N_Row
-LOCAL C_File := FULL_PATH("doc1.ods")
+LOCAL C_File := FULL_PATH("doc1.odt")
 LOCAL C_PDF := FULL_PATH("doc1.pdf")
 
 // Total chars by line
