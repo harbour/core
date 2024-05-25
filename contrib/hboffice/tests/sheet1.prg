@@ -12,7 +12,7 @@ STAT FUNCTION FULL_PATH( C_FileName )
 #if defined(__PLATFORM__WINDOWS) || defined(__PLATFORM__Windows)
     return DiskName() + ":\" + CurDir() + "\result\" + C_FileName
 #else
-    return CurDir() + "\result\" + C_FileName
+    return "/" + CurDir() + "/result/" + C_FileName
 #endif
 
 ***********************************
@@ -187,9 +187,6 @@ IF OFFICE_ERROR("ERROR Fechando planilha")
 ENDIF
 
 ? "A planilha foi criada com sucesso."
-
-// Open the result into a LibreOffice window
-HBOFFICE_BROWSE_DOC(C_File)
 
 HBOFFICE_FINISH()
 RETURN

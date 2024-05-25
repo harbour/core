@@ -173,14 +173,29 @@ After these two steps, you will have:
 
 In the `/hboffice/tests` folder there are different examples of use. To run them:
 
-* Copy `/build/Release/bin/officesdk.dll` into `/tests`.
+* Windows: Copy `/build/Release/bin/officesdk.dll` into `/tests`.
+* Linux: Copy `/build/Release/bin/libofficesdk.so` into `/tests`.
 * Compile and run one of the examples (e.g. `sheet1.prg`)
 * The results documents will be saved in `/tests/result`.
+
 ```
 :: In Windows
 cd \contrib\hboffice\tests
+copy ..\build\Release\bin\officesdk.dll
 ..\..\..\bin\win\mingw64\hbmk2 sheet1.prg hboffice.hbc -comp=mingw64
 
 :: Just run
 sheet1.exe
 ```
+
+```
+# In Linux
+cd /contrib/hboffice/tests
+cp ../build/Release/bin/libofficesdk.so .
+../../../bin/linux/gcc/hbmk2 sheet1.prg hboffice.hbc
+
+# Just run
+./sheet1
+```
+
+> **Important:** Dynamic libraries `officesdk.dll` or `libofficesdk.so` must be distributed with final executables and must be installed in the same folder.
