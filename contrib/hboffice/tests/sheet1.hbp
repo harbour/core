@@ -1,7 +1,7 @@
 
 -beep
--hbexe
--std
+#-hbexe
+#-std
 # Libraries
 
 # GT
@@ -9,13 +9,12 @@
 #-gtwin{allmsvc}
 #-gttrm{gcc}
 
-hboffice.hbc
 
 # Sources
 sheet1.prg
 
+hboffice.hbc
 
-HBOFFICE_INIT
 # Harbour compiler options
 # -m -a -w -es2 -ql
 # -b{DEBUG}

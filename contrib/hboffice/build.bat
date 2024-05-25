@@ -71,7 +71,7 @@ goto error_operation
 :: Generate dynamic library
 ::
 :generate_dll
-set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DCMAKE_WARN_VS11=OFF -DLIBREOFFICE_DLL=YES
+set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DCMAKE_WARN_VS11=OFF
 set CMAKE_BUILD=--config %BUILD%
 call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build || goto error_cmake
 call cmake --build %CWD%\build %CMAKE_BUILD% || goto error_build

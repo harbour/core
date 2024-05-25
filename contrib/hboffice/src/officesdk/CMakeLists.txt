@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 set(TARGET_NAME officesdk)
-nap_library(${TARGET_NAME} "core" YES NRC_NONE)
+
+if (HBOFFICE_DEVELOPER_MODE)
+    set(OFFICESDK_SHARED NO)
+else()
+    set(OFFICESDK_SHARED YES)
+endif()
+
+nap_library(${TARGET_NAME} "core" ${OFFICESDK_SHARED} NRC_NONE)
 target_include_directories(${TARGET_NAME} PUBLIC "..")
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
@@ -53,16 +60,17 @@ IF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/com/sun/star")
 endif()
 
 # Link with the LibreOffice libraries
-if (WIN32)
-    set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
-    set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
-else()
-    set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
-    set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
+if (OFFICESDK_SHARED)
+    if (WIN32)
+        set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
+        set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
+    else()
+        set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
+        set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
+    endif()
+
+    foreach(lib ${LIBREOFFICE_LIBS})
+        find_library(LIB_NAME_${lib} NAMES ${lib} PATHS ${LIBREOFFICE_LIB_PATH})
+        target_link_libraries(${TARGET_NAME} ${LIB_NAME_${lib}})
+    endforeach()
 endif()
-
-foreach(lib ${LIBREOFFICE_LIBS})
-    find_library(LIB_NAME_${lib} NAMES ${lib} PATHS ${LIBREOFFICE_LIB_PATH})
-    target_link_libraries(${TARGET_NAME} ${LIB_NAME_${lib}})
-endforeach()
-

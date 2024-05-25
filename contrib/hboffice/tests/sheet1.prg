@@ -32,6 +32,9 @@ LOCAL O_XLS := NIL
 LOCAL N_Page := 0
 LOCAL N_Col, N_Row
 
+hb_cdpSelect("PTISO")
+hb_LangSelect("pt_BR","PTISO")
+
 HBOFFICE_INIT()
 
 O_XLS := HBOFFICE_XLS_CREATE()
