@@ -1,45 +1,37 @@
-#!/bin/sh
+#!/bin/bash
 
 #
-# GTNAP build script
-# build -b [Debug/Release] [-noliboff]
-# [-noliboff] Optional flag to disable the LibreOffice support
+# HBOffice build script
 #
+# Will generate the libhboffice.so with the LibreOffice C-Wrapper.
+# build -dll -b [Debug|Release]
+#
+# Will generate the hboffice.lib with the Harbour wrapper and runtime dll loader.
+# Visual Studio (msvc64) or MinGW (mingw64) allowed
+# build -lib -b [Debug|Release] -comp [mingw64|msvc64]
 
 #
 # Input parameters
 #
-HBMK_PATH=../../bin/linux/gcc
-BUILD=Debug
-LIBREOFFICE=ON
+OPERATION=dll
+COMPILER=gcc
+BUILD=Release
 CWD=$(pwd)
 
-if [ "$(uname)" == "Darwin" ]; then
-    # Do something under Mac OS X platform
-    HBMK_PATH=../../bin/darwin/clang
-    if [[ -z "${MACOSX_DEPLOYMENT_TARGET}" ]]; then
-        echo "MACOSX_DEPLOYMENT_TARGET is not set. Please set this environment variable before build."
-        exit 1
-    fi
-
-
-# elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-#     # Do something under GNU/Linux platform
-# elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
-#     # Do something under 32 bits Windows NT platform
-# elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
-#     # Do something under 64 bits Windows NT platform
-fi
 
 while [[ $# -gt 0 ]]; do
   case $1 in
+    -dll)
+      OPERATION=dll
+      shift
+      ;;
+    -lib)
+      OPERATION=lib
+      shift
+      ;;
     -b)
       BUILD="$2"
       shift
-      shift
-      ;;
-    -noliboff)
-      LIBREOFFICE=OFF
       shift
       ;;
     -*|--*)
@@ -52,40 +44,46 @@ done
 # Beginning
 #
 echo ---------------------------
-echo Generating GTNAP
+echo Generating LibreOffice
 echo Main path: $CWD
 echo Build type: $BUILD
-echo HBMK path: $HBMK_PATH
-if [ "$(uname)" == "Darwin" ]; then
-echo MACOSX_DEPLOYMENT_TARGET: ${MACOSX_DEPLOYMENT_TARGET}
-fi
-echo LIBREOFFICE: $LIBREOFFICE
+echo COMPILER: $COMPILER
+echo OPERATION: $OPERATION
 echo ---------------------------
 
-#
-# Build NAppGUI from sources
-#
 mkdir -p build
-cd build
-if [ "$(uname)" == "Darwin" ]; then
-    cmake -G Xcode .. -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} -DGTNAP_LIBREOFFICE=$LIBREOFFICE || exit 1
-    xcodebuild -configuration $BUILD || exit 1
-else
-    cmake  .. -DCMAKE_BUILD_TYPE=$BUILD -DGTNAP_LIBREOFFICE=$LIBREOFFICE || exit 1
+
+#
+# Generate dynamic library
+#
+if [ $OPERATION == "dll" ]; then
+    cd build
+    cmake .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
     make -j 4 || exit 1
-fi
+    echo ---------------------------
+    echo OFFICESDK DLL build succeed
+    echo ---------------------------
 
 #
-# Build GTNAP
+# Generate static library
 #
-cd $CWD
+elif [ $OPERATION == "lib" ]; then
+    HBMK_PATH=../../bin/linux/$COMPILER
+    HBMK_FLAGS=
 
-if [ $BUILD == "Debug" ]; then
-    $HBMK_PATH/hbmk2 -debug ./src/gtnap/gtnap.hbp || exit 1
+    if [ $BUILD == "Debug" ]; then
+        HBMK_FLAGS=-debug
+    fi
+
+    $HBMK_PATH/hbmk2 $HBMK_FLAGS $CWD/src/hboffice/hboffice.hbp || exit 1
+    echo ---------------------------
+    echo HBOFFICE LIB build succeed
+    echo ---------------------------
+
 else
-    $HBMK_PATH/hbmk2 ./src/gtnap/gtnap.hbp || exit 1
+    echo Invalid operation $OPERATION
+    exit 1
+
 fi
 
-echo ---------------------------
-echo GTNAP build succeed
-echo ---------------------------
+cd $CWD

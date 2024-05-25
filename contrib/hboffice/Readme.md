@@ -9,6 +9,7 @@
 * [Build hboffice](#build-hboffice)
     - [Build hboffice in Windows](#build-hboffice-in-windows)
     - [More about build hboffice in Windows](#more-about-build-hboffice-in-windows)
+    - [Build hboffice in Linux](#build-hboffice-in-linux)
 * [hboffice examples](#hboffice-examples)
 
 ## Introduction
@@ -17,7 +18,7 @@
 
 Compiling the project generates three binaries.
 
-* **officesdk.dll**/**libofficesdk.so**: Dynamic library that contains the C API and the link to LibreOffice. In this way the links with LibreOffice-SDK are not propagated. On Windows, it must be compiled with Visual Studio (MinGW is not supported).
+* **officesdk.dll**/**libofficesdk.so**: Dynamic library that contains the C API and the linkage to LibreOffice. In this way the links with LibreOffice-SDK are not propagated. On Windows, it must be compiled with Visual Studio (MinGW is not supported).
 
 * **officesdk.lib**: (Only in Windows) Static library with the .dll exported symbols.
 
@@ -142,6 +143,31 @@ set CMAKE_GENERATOR=Visual Studio 11 2012
 :: This command depends on Visual Studio specific version/installation.
 "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 ```
+
+### Build hboffice in Linux
+
+First step generate **libofficesdk.so**:
+
+```
+cd contrib/hboffice
+./build.sh -dll -b Release
+
+:: Full command
+./build.sh -dll -b [Release|Debug]
+```
+
+Then, generate the **libhboffice.a**:
+
+```
+./build.sh -lib -b Release
+
+:: Full command
+./build.sh -lib -b [Release|Debug]
+```
+
+After these two steps, you will have:
+* `libofficesdk.so` in `/build/Release/bin` folder.
+* `libhboffice.a` in `/build/Release/lib` folder.
 
 ## hboffice examples
 

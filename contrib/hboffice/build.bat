@@ -84,34 +84,6 @@ goto end
 :: Generate static library
 ::
 :generate_lib
-@REM set CMAKE_ARGS=
-@REM set CMAKE_BUILD=
-@REM IF "%COMPILER%"=="mingw64" GOTO config_mingw64
-@REM IF "%COMPILER%"=="msvc64" GOTO config_msvc64
-@REM goto error_compiler
-@REM CMAKE_WARN_VS11=OFF
-@REM :config_mingw64
-@REM :: Mono-configuration build system
-@REM set CMAKE_ARGS=-G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=%BUILD%
-@REM set CMAKE_BUILD=-j 4
-@REM goto cmake
-
-@REM :config_msvc64:
-@REM :: Multi-configuration build system
-@REM set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
-@REM set CMAKE_BUILD=--config %BUILD%
-@REM goto cmake
-
-@REM ::
-@REM :: Build NAppGUI from sources
-@REM ::
-@REM :cmake
-@REM call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build -DGTNAP_LIBREOFFICE=%LIBREOFFICE% || goto error_cmake
-@REM call cmake --build %CWD%\build %CMAKE_BUILD% || goto error_build
-
-::
-:: Build hboffice
-::
 set HBMK_PATH=..\\..\\bin\\win\\%COMPILER%
 set HBMK_FLAGS=
 
@@ -136,26 +108,21 @@ goto end
 :error_compiler
 echo Unknown compiler
 goto end
-:: exit 1
 
 :error_cmake
 echo Error in NAppGUI CMake generate
 goto end
-:: exit 1
 
 :error_build
 echo Error building NAppGUI
 goto end
-:: exit 1
 
 :error_hboffice
 echo Error building HBOFFICE
 goto end
-:: exit 1
 
 :error_operation
 echo Invalid operation '%OPERATION%'
 goto end
-:: exit 1
 
 :end
