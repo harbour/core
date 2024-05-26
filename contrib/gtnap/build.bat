@@ -1,10 +1,9 @@
 ::
 :: GTNAP build script
 ::
-:: build -b [Debug|Release] -comp [mingw64|msvc64] [-noliboff]
-:: Debug is default configuration
+:: build -b [Debug|Release] -comp [mingw64|msvc64]
+:: Release is default configuration
 :: mingw64 is default compiler
-:: [-noliboff] Optional flag to disable the LibreOffice support
 ::
 
 @echo off
@@ -13,15 +12,13 @@
 :: Input parameters
 ::
 set COMPILER=mingw64
-set BUILD=Debug
+set BUILD=Release
 set "CWD=%cd%"
-set LIBREOFFICE=ON
 
 :parse
 IF "%~1"=="" GOTO endparse
 IF "%~1"=="-b" GOTO build
 IF "%~1"=="-comp" GOTO compiler
-IF "%~1"=="-noliboff" GOTO noliboff
 SHIFT
 GOTO parse
 
@@ -35,11 +32,6 @@ SHIFT
 set COMPILER=%~1
 GOTO parse
 
-:noliboff
-set LIBREOFFICE=OFF
-SHIFT
-GOTO parse
-
 :endparse
 
 ::
@@ -50,7 +42,6 @@ echo Generating GTNAP
 echo Main path: %CWD%
 echo Build type: %BUILD%
 echo COMPILER: %COMPILER%
-echo LIBREOFFICE: %LIBREOFFICE%
 echo ---------------------------
 
 ::
@@ -78,7 +69,7 @@ goto cmake
 :: Build NAppGUI from sources
 ::
 :cmake
-call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build -DGTNAP_LIBREOFFICE=%LIBREOFFICE% || goto error_cmake
+call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build || goto error_cmake
 call cmake --build %CWD%\build %CMAKE_BUILD% || goto error_build
 
 ::
@@ -107,18 +98,18 @@ goto end
 ::
 :error_compiler
 echo Unknown compiler
-exit 1
+goto end
 
 :error_cmake
 echo Error in NAppGUI CMake generate
-exit 1
+goto end
 
 :error_build
 echo Error building NAppGUI
-exit 1
+goto end
 
 :error_gtnap
 echo Error building GTNAP
-exit 1
+goto end
 
 :end

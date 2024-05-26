@@ -6,6 +6,7 @@
     - [Installation in Linux](#installation-in-linux)
     - [Installation in macOS](#installation-in-macos)
     - [About LibreOffice-SDK](#about-libreoffice-sdk)
+* [Installation of CMake](#installation-of-cmake)
 * [Build hboffice](#build-hboffice)
     - [Build hboffice in Windows](#build-hboffice-in-windows)
     - [More about build hboffice in Windows](#more-about-build-hboffice-in-windows)
@@ -48,7 +49,6 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
 
     ![path_envvar](https://github.com/frang75/harbour_nappgui/assets/42999199/d0215a5e-8569-4dca-a313-f765ada84080)
 
-
 ### Installation in Linux
 
 * Install the LibreOffice package. This installation is **required on both development machines and final user machines**.
@@ -89,6 +89,15 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
 > **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`, `C:\Program Files\LibreOffice`
 
 > **Important:** The first time a hboffice program uses a LibreOffice function, an instance of the LibreOffice application will be started invisibly (`soffice.bin` process). This first call will have a small delay due to the initialization of the process. It is imperative that LibreOffice is running in order to use the SDK from Harbour.
+
+## Installation of CMake
+
+In order to compile HBOFFICE you need to have [CMake](https://cmake.org/download) installed and accessible from the command line.
+
+```
+:~/$ cmake --version
+cmake version 3.10.2
+```
 
 ## Build hboffice
 

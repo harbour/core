@@ -68,75 +68,11 @@ For building GTNap CMake tool is necessary:
 
 ## LibreOffice-SDK support
 
-As of November 23, GTNAP adds support for the LibreOffice-SDK, in order to add capabilities for editing documents from Harbour. It is necessary to **correctly install the LibreOffice package**, both on the development machines and on the client machines.
-
-> **Important:** Its possible disable the LibreOffice support when build GTNAP, using the `-noliboff` option in build script. See [Build GTNap](#build-gtnap).
-
-### LibreOffice-SDK in Windows
-
-* Install the LibreOffice package. This installation is **required on both development machines and user machines**.
-    ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
-
-* Install the LibreOffice-SDK package. This installation is **required ONLY for compile GTNAP in development machines**.
-    > **Important:** LibreOffice-SDK is available in 32-bit and 64-bit versions. You will need to compile GTNAP in 32 or 64 bits depending on the version of LibreOffice. It is not possible to mix 32 and 64 libraries in the same executable. **By default, GTNAP will be compiled in 64bit in Windows**.
-
-    > **Important:** The SDK version must be the same as LibreOffice application.
-
-    ![download_libreoffice_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/4821de74-7e38-486a-94f6-ffd59d0f14a0)
-
-* Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `C:\Program Files\LibreOffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime.
-
-    ![envvar_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/3ad38b78-9214-4567-94b8-94dcf926848f)
-
-* Add `%LIBREOFFICE_HOME%/program` path to `PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice .DLLs must be accesible and located.
-
-    ![path_envvar](https://github.com/frang75/harbour_nappgui/assets/42999199/d0215a5e-8569-4dca-a313-f765ada84080)
-
-
-### LibreOffice-SDK in Linux
-
-* Install the LibreOffice package. This installation is **required on both development machines and user machines**.
-    ```
-    sudo apt-get install libreoffice
-    ```
-* Install the LibreOffice development libraries. This installation is **required ONLY for compile GTNAP in development machines**.
-    ```
-    sudo apt-get install libreoffice-dev
-
-    # Optional, not mandatory for compile
-    sudo apt-get install libreoffice-dev-doc
-    ```
-* Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `/usr/lib/libreoffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime. It is recommended to define this variable in the `.bashrc` so that it is always present.
-    ```
-    nano .bashrc
-    # Add at the end
-    export LIBREOFFICE_HOME=/usr/lib/libreoffice
-    # Ctrl+X to save
-    source .bashrc
-    cd $LIBREOFFICE_HOME
-    ls
-    CREDITS.fodt  NOTICE  presets  program  sdk  share
-    ```
-
-* Add `$LIBREOFFICE_HOME$/program` path to `LD_LIBRARY_PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice shared libraries `.so` must be accesible and located.
-    ```
-    # Add at the end of .bashrc
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH$:$LIBREOFFICE_HOME$/program
-    ```
-
-### About LibreOffice-SDK
-
-> **Important:** GTNAP-based programs can disable the LibreOffice support using `-noliboff` flag in build script.
-
-> **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`, `C:\Program Files\LibreOffice`
-
-> **Important:** The first time a GTNAP program uses a LibreOffice function, an instance of the LibreOffice application will be started invisibly (`soffice.bin` process). This first call will have a small delay due to the initialization of the process. It is imperative that LibreOffice is running in order to use the SDK from C++/Harbour/GTNAP.
-
-> **Important:** A new directory has been created for the LibreOffice example files (read/write) `/tests/cuademo/office`.
+LibreOffice support has been removed from GTNAP to a new project. Go [HBOFFICE](../hboffice/Readme.md) for details about to use this library in Harbour applications.
 
 ## Installing Visual Studio
 
-To use the `msvc`/`msvc64` compilers we need to install Visual Studio environment. Microsoft offers the free [Community](https://visualstudio.microsoft.com/vs/) version since VS2017. Because C++11 standard is required for LibreOffice support we need, at least, Visual Studio 2012.
+To use the `msvc`/`msvc64` compilers we need to install Visual Studio environment. Microsoft offers the free [Community](https://visualstudio.microsoft.com/vs/) version since VS2017.
 
 Once installed, `msvc` compilers are not directly accesible by command line. We need to run `vcvarsall.bat` script, installed in different locations depending on each version. For example, in Visual Studio 2012.
 
@@ -310,7 +246,6 @@ The `/contrib/gtnap` project consists of several files and folders:
 /resources          Files used in development debug.
 /src                Source code.
 /src/gtnap          GTNAP terminal source.
-/src/officesdk      LibreOffice wrapper source.
 /src/**             NAppGUI libraries source.
 /tests              Testing and examples.
 /tests/cuademo      Cuademo example application.
@@ -324,7 +259,6 @@ gtnap.hbc           Options for proyects that use GTNap.
 gtnap.hbp           GTNap project for hbmk2.
 gtnap.hbx           GTNap symbol file, autogenerated by hbmk2.
 Readme.md           This documentation.
-ReadmeUNO.md        LibreOffice Harbour functions documentation.
 ```
 
 ### In Windows with MinGW
@@ -336,17 +270,13 @@ ReadmeUNO.md        LibreOffice Harbour functions documentation.
 cd contrib\gtnap
 
 :: Just build
-build.bat -b [Debug|Release] -comp mingw64 [-noliboff]
-
-:: default Debug
-:: -noliboff Disable the LibreOffice support in GTNAP (optional)
+build.bat -b [Debug|Release] -comp mingw64
 ```
 
 This will generate several static libraries:
 
 * The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
-* The LibreOffice wrapper library `libofficesdk.a` in `build/[Debug|Release]/lib` folder.
 
 ### In Windows with VisualStudio
 
@@ -379,17 +309,13 @@ set CMAKE_GENERATOR=Visual Studio 11 2012
 "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 
 :: Just build
-build.bat -b [Debug|Release] -comp msvc64 [-noliboff]
-
-:: default Debug
-:: -noliboff Disable the LibreOffice support in GTNAP (optional)
+build.bat -b [Debug|Release] -comp msvc64
 ```
 
 This will generate several static libraries:
 
 * The GT library: `gtnap.lib` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `sewer.lib`, `osbs.lib`, `core.lib`, `geom2d.lib`, `draw2d.lib`, `osgui.lib`, `gui.lib`, `osapp.lib`, `inet.lib` in `build/[Debug|Release]/lib` folder.
-* The LibreOffice wrapper library `officesdk.lib` in `build/[Debug|Release]/lib` folder.
 
 ### In Linux with GCC
 
@@ -407,15 +333,13 @@ Then, compile gtnap
 cd contrib/gtnap
 
 # Just build
-# -noliboff Disable the LibreOffice support in GTNAP (optional)
-bash ./build.sh -b [Debug|Release] [-noliboff]
+bash ./build.sh -b [Debug|Release]
 ```
 
 This will generate several static libraries:
 
 * The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
-* The LibreOffice wrapper library `libofficesdk.a` in `build/[Debug|Release]/lib` folder.
 
 ### In macOS with Xcode
 
@@ -460,8 +384,7 @@ export MACOSX_DEPLOYMENT_TARGET=10.13
 cd contrib/gtnap
 
 # Just build
-# -noliboff Disable the LibreOffice support in GTNAP (optional)
-bash ./build.sh -b [Debug|Release] [-noliboff]
+bash ./build.sh -b [Debug|Release]
 ```
 
 This will generate several static libraries:
