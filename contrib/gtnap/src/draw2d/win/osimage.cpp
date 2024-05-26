@@ -96,10 +96,10 @@ typedef struct _argb_t
 /*---------------------------------------------------------------------------*/
 
 #define ARGB(r, g, b, a) \
-    ((uint32_t)((((a)&0xff) << 24) | (((r)&0xff) << 16) | (((g)&0xff) << 8) | ((b)&0xff)))
+    ((uint32_t)((((a) & 0xff) << 24) | (((r) & 0xff) << 16) | (((g) & 0xff) << 8) | ((b) & 0xff)))
 
 #define ABGR(r, g, b, a) \
-    ((uint32_t)((((a)&0xff) << 24) | (((b)&0xff) << 16) | (((g)&0xff) << 8) | ((r)&0xff)))
+    ((uint32_t)((((a) & 0xff) << 24) | (((b) & 0xff) << 16) | (((g) & 0xff) << 8) | ((r) & 0xff)))
 
 /*---------------------------------------------------------------------------*/
 
@@ -234,7 +234,7 @@ OSImage *osimage_create_from_type(const char_t *file_type)
         DWORD_PTR ok;
         Gdiplus::Bitmap *bitmap = NULL;
         ok = SHGetFileInfo(wextension, dwFileAttributes, &psfi, sizeof(psfi), SHGFI_ICON | SHGFI_SMALLICON /*SHGFI_ICON | SHGFI_LARGEICON */ | SHGFI_USEFILEATTRIBUTES);
-        cassert(ok != 0);
+        cassert_unref(ok != 0, ok);
         bitmap = Gdiplus::Bitmap::FromHICON(psfi.hIcon);
 
         {
@@ -767,7 +767,7 @@ void osimage_write(const OSImage *image, const codec_t codec, Stream *stm)
 
     stream = i_kSHCreateMemStream(NULL, 0);
     status = bitmap->Save(stream, &clsid, NULL);
-    cassert(status == Gdiplus::Ok);
+    cassert_unref(status == Gdiplus::Ok, status);
 
     {
         STATSTG stats;
@@ -783,14 +783,14 @@ void osimage_write(const OSImage *image, const codec_t codec, Stream *stm)
         HRESULT res;
         offset.QuadPart = 0L;
         res = stream->Seek(offset, SEEK_SET, NULL);
-        cassert(res == S_OK);
+        cassert_unref(res == S_OK, res);
     }
 
     {
         ULONG readed;
         HRESULT res;
         res = stream->Read((void *)data, (ULONG)size, &readed);
-        cassert(res == S_OK);
+        cassert_unref(res == S_OK, res);
         cassert(readed == (ULONG)size);
     }
 
