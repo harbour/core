@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2023 Francisco Garcia Collado
+ * 2015-2024 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -14,6 +14,6 @@
 
 __EXTERN_C
 
-void msgparser_process(const char_t *filepath, const char_t *file_data, const uint32_t file_size, ArrPt(String) * *ids, ArrPt(String) * *texts, ArrPt(String) * errors);
+void msgparser_process(const char_t *filepath, const char_t *file_data, const uint32_t file_size, ArrPt(String) **ids, ArrPt(String) **texts, ArrPt(String) *errors);
 
 __END_C

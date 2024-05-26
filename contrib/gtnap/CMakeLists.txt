@@ -3,6 +3,8 @@
 # Copyright (C) 2018 Francisco García Collado
 # MIT License (See LICENSE.txt)
 #------------------------------------------------------------------------------
+# cmake -G "MinGW Makefiles" -S . -B build-dev -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Debug -DGTNAP_DEVELOPER_MODE=ON
+
 cmake_minimum_required(VERSION 3.0)
 project(NAppGUI)
 
@@ -43,7 +45,6 @@ nap_build_opt("Build type" "${CMAKE_BUILD_TYPE}")
 nap_build_opt("Build arch" "${CMAKE_ARCHITECTURE}")
 nap_build_opt("Host arch" "${CMAKE_HOST_ARCHITECTURE}")
 nap_build_opt("PackageID" "${CMAKE_PACKAGE_ID}")
-nap_build_opt("LibreOffice support" "${GTNAP_LIBREOFFICE}")
 message (STATUS "---------------------------------------------")
 
 # Tools required to generate NAppGUI projets ('nrc')
@@ -58,18 +59,15 @@ include(${NAPPGUI_ROOT_PATH}/CMakeTargets.cmake)
 # Configure C runtime library (avoid link with debug versions)
 if (GTNAP_DEVELOPER_MODE)
     if (WIN32)
-        removeFlag(CMAKE_CXX_FLAGS_DEBUG "/MTd")
-        removeFlag(CMAKE_CXX_FLAGS_DEBUG "/MDd")
-        removeFlag(CMAKE_C_FLAGS_DEBUG "/MTd")
-        removeFlag(CMAKE_C_FLAGS_DEBUG "/MDd")
-        addFlag(CMAKE_CXX_FLAGS_DEBUG "/MT")
-        addFlag(CMAKE_C_FLAGS_DEBUG "/MT")
+        if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+            removeFlag(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+            removeFlag(CMAKE_CXX_FLAGS_DEBUG "/MDd")
+            removeFlag(CMAKE_C_FLAGS_DEBUG "/MTd")
+            removeFlag(CMAKE_C_FLAGS_DEBUG "/MDd")
+            addFlag(CMAKE_CXX_FLAGS_DEBUG "/MT")
+            addFlag(CMAKE_C_FLAGS_DEBUG "/MT")
+        endif()
     endif()
-endif()
-
-# Enable the support for LibreOffice in source code
-if (GTNAP_LIBREOFFICE)
-    add_definitions("-DGTNAP_LIBREOFFICE")
 endif()
 
 foreach (target ${ALL_TARGETS})
@@ -83,10 +81,12 @@ if (GTNAP_DEVELOPER_MODE)
     set(HARBOUR_ROOT_PATH ${GTNAP_PATH}/../..)
 
     if (WIN32)
-        string(REGEX REPLACE "/w44668" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-        string(REGEX REPLACE "/w44255" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-        string(REGEX REPLACE "/w44668" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-        string(REGEX REPLACE "/w44255" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+            string(REGEX REPLACE "/w44668" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+            string(REGEX REPLACE "/w44255" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+            string(REGEX REPLACE "/w44668" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+            string(REGEX REPLACE "/w44255" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        endif()
     endif()
 
     # Link with Harbour libraries
@@ -101,7 +101,12 @@ if (GTNAP_DEVELOPER_MODE)
     set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbhsx;hbsix;hbmacro;hbcplr;hbpp;hbcommon;hbvm")
 
     if (WIN32)
-        set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/win/msvc64)
+        if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+            set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/win/msvc64)
+        elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+            set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/win/mingw64)
+        endif()
+
         set(HARBOUR_LIBS ${HARBOUR_LIBS} "winmm;gtwin")
     elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
         set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/darwin/clang)
@@ -110,25 +115,6 @@ if (GTNAP_DEVELOPER_MODE)
     endif()
 
     add_subdirectory("src/gtnap")
-
-    if (GTNAP_LIBREOFFICE)
-        # Libreoffice link libraries
-        set(LOROOT "$ENV{LIBREOFFICE_HOME}")
-
-        if (NOT LOROOT)
-            message(FATAL_ERROR "LIBREOFFICE_HOME environment variable is required to compile GTNAP")
-        endif()
-
-        if (WIN32)
-            set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
-            file(TO_NATIVE_PATH \"${LIBREOFFICE_LIB_PATH}\" LIBREOFFICE_LIB_PATH)
-            set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
-        else()
-            set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
-            set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
-        endif()
-
-    endif()
 
     # Example applications
     file(COPY "${GTNAP_PATH}/resources/CMakeLists.txt" DESTINATION "${GTNAP_PATH}/src/exemplo")

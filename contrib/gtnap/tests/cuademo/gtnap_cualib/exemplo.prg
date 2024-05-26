@@ -38,6 +38,9 @@ RDDINFO(RDDI_MEMOTYPE,1)
 SETCOLOR(_COR2_PADRAO)
 MSETCURSOR( .T. )
 
+// LibreOffice initialization
+HBOFFICE_INIT()
+
 //
 // Event-driven applications (especially GTK+3 and macOS-Cocoa) cannot be started directly from main().
 // They need to set up an event execution loop and other internal structures. In GTNAP based applications,
@@ -105,6 +108,8 @@ SET CURSOR ON
 IF HB_GTVERSION()=="NAP"
     NAP_EXIT()
 ENDIF
+
+HBOFFICE_FINISH()
 
 QUIT
 

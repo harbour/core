@@ -9,7 +9,10 @@
         "gui.hxx": "c",
         "*.ixx": "c",
         "iostream": "cpp",
-        "*.hdl": "cpp"
+        "*.hdl": "cpp",
+        "cassert.h": "c",
+        "gtnap.h": "c",
+        "hboffice.h": "c"
     },
     "files.encoding": "windows1252",
     "cmake.sourceDirectory": "C:/harbour_nappgui/contrib/gtnap/tests/unotest"

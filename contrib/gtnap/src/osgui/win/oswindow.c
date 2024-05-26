@@ -417,7 +417,7 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
             rect.right = LOWORD(lParam);
             rect.bottom = HIWORD(lParam);
             ok = AdjustWindowRectEx(&rect, window->dwStyle, window->bMenu, window->dwExStyle);
-            cassert(ok != 0);
+            cassert_unref(ok != 0, ok);
             i_resizing(window, 1, &rect);
         }
 
@@ -763,30 +763,34 @@ void oswindow_detach_panel(OSWindow *window, OSPanel *panel)
 
 void oswindow_attach_window(OSWindow *parent_window, OSWindow *child_window)
 {
-    //HWND prevParent = 0;
     unref(parent_window);
     unref(child_window);
-    /*prevParent = SetParent(child_window->control.hwnd, parent_window->control.hwnd);
+    /*
+    HWND prevParent = 0;
+    prevParent = SetParent(child_window->control.hwnd, parent_window->control.hwnd);
     unref(prevParent);
-    prevParent = GetParent(child_window->control.hwnd);*/
-    //SetWindowLong(child_window->control.hwnd, GWL_STYLE, child_window->dwStyle | WS_CHILD);
-    //SetWindowLong(child_window->control.hwnd, GWL_EXSTYLE, child_window->dwExStyle);
-    //oswindow_set_z_order(child_window, parent_window);
+    prevParent = GetParent(child_window->control.hwnd);
+    SetWindowLong(child_window->control.hwnd, GWL_STYLE, child_window->dwStyle | WS_CHILD);
+    SetWindowLong(child_window->control.hwnd, GWL_EXSTYLE, child_window->dwExStyle);
+    oswindow_set_z_order(child_window, parent_window);
+    */
 }
 
 /*---------------------------------------------------------------------------*/
 
 void oswindow_detach_window(OSWindow *parent_window, OSWindow *child_window)
 {
-    //HWND prevParent = 0;
     unref(parent_window);
     unref(child_window);
-    /* cassert_no_null(parent_window);
-	cassert_no_null(child_window);
+    /*
+    HWND prevParent = 0;
+    cassert_no_null(parent_window);
+    cassert_no_null(child_window);
     prevParent = SetParent(child_window->control.hwnd, GetDesktopWindow());
-    cassert(prevParent == parent_window->control.hwnd);*/
-    /*SetWindowLong(child_window->control.hwnd, GWL_STYLE, child_window->dwStyle);
-    SetWindowLong(child_window->control.hwnd, GWL_EXSTYLE, child_window->dwExStyle);*/
+    cassert(prevParent == parent_window->control.hwnd);
+    SetWindowLong(child_window->control.hwnd, GWL_STYLE, child_window->dwStyle);
+    SetWindowLong(child_window->control.hwnd, GWL_EXSTYLE, child_window->dwExStyle);
+    */
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1112,7 +1116,7 @@ void _oswindow_change_menubar(OSWindow *window, HMENU prev_hmenu, HMENU new_hmen
     cassert(window->bMenu == TRUE);
     cassert(GetMenu(window->control.hwnd) == prev_hmenu);
     ok = SetMenu(window->control.hwnd, new_hmenu);
-    cassert(ok == TRUE);
+    cassert_unref(ok == TRUE, ok);
     cassert(GetMenu(window->control.hwnd) == new_hmenu);
 }
 
@@ -1334,7 +1338,7 @@ uint32_t _oswindow_message_loop(OSWindow *window)
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE OSWindow *i_root(HWND hwnd)
+static ___INLINE OSWindow *i_root(HWND hwnd)
 {
     HWND root_hwnd = NULL;
     cassert_no_null(hwnd);

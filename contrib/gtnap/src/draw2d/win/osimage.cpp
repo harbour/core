@@ -29,10 +29,11 @@
 #error This file is only for WINDOWS
 #endif
 
+#include <sewer/nowarn.hxx>
 #include "shlwapi.h"
+#include <sewer/warn.hxx>
+
 #include "draw2d_win.ixx"
-#pragma comment(lib, "gdiplus.lib")
-#pragma comment(lib, "Shlwapi.lib")
 
 typedef IStream *(__stdcall *fnSHCreateMemStream)(const BYTE *pInit, UINT cbInit);
 static fnSHCreateMemStream i_kSHCreateMemStream = NULL;
@@ -47,19 +48,30 @@ struct _osimage_t
 
 void osimage_alloc_globals(void)
 {
-    // The SHCreateMemStream function has existed since Windows 2000, but was only added to the header files
-    // in Windows Vista. To use this function in Windows 2000 and Windows XP, we need to explicitly load it
-    // from the DLL. SHCreateMemStream creates a COM stream object from an array of bytes in local memory.
-    // To use it on earlier systems, you must call it directly from the Shlwapi.dll file as ordinal 12.
-    HMODULE libShlWapi;
-    libShlWapi = LoadLibrary(L"shlwapi.dll");
+    /*
+    The SHCreateMemStream function has existed since Windows 2000, but was only added to the header files
+    in Windows Vista. To use this function in Windows 2000 and Windows XP, we need to explicitly load it
+    from the DLL. SHCreateMemStream creates a COM stream object from an array of bytes in local memory.
+    To use it on earlier systems, you must call it directly from the Shlwapi.dll file as ordinal 12.
+    */
+    HMODULE libShlWapi = LoadLibrary(L"shlwapi.dll");
     cassert_no_null(libShlWapi);
     Gdiplus::GdiplusStartupInput startup;
     Gdiplus::GdiplusStartup(&i_GDIPLUSTOKEN, &startup, NULL);
+#if defined(_MSC_VER)
 #pragma warning(disable : 4191)
+#endif
+#if defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
     i_kSHCreateMemStream = (fnSHCreateMemStream)GetProcAddress(libShlWapi, (LPCSTR)12);
+#if defined(_MSC_VER)
 #pragma warning(default : 4191)
-    cassert_no_null(i_kSHCreateMemStream);
+#endif
+#if defined(__GNUC__)
+#pragma GCC diagnostic warning "-Wcast-function-type"
+#endif
+    cassert_no_nullf(i_kSHCreateMemStream);
     FreeLibrary(libShlWapi);
 }
 
@@ -84,10 +96,10 @@ typedef struct _argb_t
 /*---------------------------------------------------------------------------*/
 
 #define ARGB(r, g, b, a) \
-    ((uint32_t)((((a)&0xff) << 24) | (((r)&0xff) << 16) | (((g)&0xff) << 8) | ((b)&0xff)))
+    ((uint32_t)((((a) & 0xff) << 24) | (((r) & 0xff) << 16) | (((g) & 0xff) << 8) | ((b) & 0xff)))
 
 #define ABGR(r, g, b, a) \
-    ((uint32_t)((((a)&0xff) << 24) | (((b)&0xff) << 16) | (((g)&0xff) << 8) | ((r)&0xff)))
+    ((uint32_t)((((a) & 0xff) << 24) | (((b) & 0xff) << 16) | (((g) & 0xff) << 8) | ((r) & 0xff)))
 
 /*---------------------------------------------------------------------------*/
 
@@ -222,7 +234,7 @@ OSImage *osimage_create_from_type(const char_t *file_type)
         DWORD_PTR ok;
         Gdiplus::Bitmap *bitmap = NULL;
         ok = SHGetFileInfo(wextension, dwFileAttributes, &psfi, sizeof(psfi), SHGFI_ICON | SHGFI_SMALLICON /*SHGFI_ICON | SHGFI_LARGEICON */ | SHGFI_USEFILEATTRIBUTES);
-        cassert(ok != 0);
+        cassert_unref(ok != 0, ok);
         bitmap = Gdiplus::Bitmap::FromHICON(psfi.hIcon);
 
         {
@@ -273,11 +285,11 @@ OSImage *osimage_from_context(DCtx **ctx)
     bitmap = (*ctx)->bitmap;
     cassert_no_null(bitmap);
 
-    //if (ctx->format == ekGRAY8)
-    //    ctx->bitmap->SetPalette(_dctx_8bpp_grayscale_palette());
+    // if (ctx->format == ekGRAY8)
+    //     ctx->bitmap->SetPalette(_dctx_8bpp_grayscale_palette());
 
     // Optimal grayscale
-    //if (/*(*ctx)->format == ekGRAY4 ||*/ (*ctx)->format == ekGRAY8)
+    // if (/*(*ctx)->format == ekGRAY4 ||*/ (*ctx)->format == ekGRAY8)
     //{
     //    INT psize = (*ctx)->bitmap->GetPaletteSize();
     //    Gdiplus::ColorPalette *palette = (Gdiplus::ColorPalette*)heap_malloc((uint32_t)psize, "ImageImpPalette");
@@ -753,18 +765,12 @@ void osimage_write(const OSImage *image, const codec_t codec, Stream *stm)
     if (i_get_encoder(codec, &clsid) == FALSE)
         return;
 
-#if _MSC_VER > 1400
-    // Check with euroval 'testfit'
-    stream = SHCreateMemStream(NULL, 0);
-#else
     stream = i_kSHCreateMemStream(NULL, 0);
-#endif
-
-    status = bitmap->Save(stream, &clsid);
-    cassert(status == Gdiplus::Ok);
+    status = bitmap->Save(stream, &clsid, NULL);
+    cassert_unref(status == Gdiplus::Ok, status);
 
     {
-        STATSTG stats = {0};
+        STATSTG stats;
         stream->Stat(&stats, 0);
         cassert(stats.cbSize.QuadPart <= 0xFFFFFFFF);
         size = (uint32_t)stats.cbSize.QuadPart;
@@ -777,14 +783,14 @@ void osimage_write(const OSImage *image, const codec_t codec, Stream *stm)
         HRESULT res;
         offset.QuadPart = 0L;
         res = stream->Seek(offset, SEEK_SET, NULL);
-        cassert(res == S_OK);
+        cassert_unref(res == S_OK, res);
     }
 
     {
         ULONG readed;
         HRESULT res;
         res = stream->Read((void *)data, (ULONG)size, &readed);
-        cassert(res == S_OK);
+        cassert_unref(res == S_OK, res);
         cassert(readed == (ULONG)size);
     }
 

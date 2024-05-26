@@ -1,0 +1,7 @@
+# hboffice options for projects that use it
+
+incpaths=.
+{!debug}libpaths=build/Release/lib build/Release/bin
+{debug}libpaths=build/Debug/lib build/Debug/bin
+libs=officesdk hboffice
+cpp=yes

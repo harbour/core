@@ -43,7 +43,6 @@ struct _ossplit_t
 static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     OSSplit *split = (OSSplit *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-    static int IC = 0;
     cassert_no_null(split);
 
     switch (uMsg)
@@ -120,19 +119,21 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
     case WM_SIZE:
         if (split->launch_OnDrag == TRUE)
         {
-            EvMouse params;
-            cassert(split->OnDrag != NULL);
-            cassert(split->left_button == TRUE);
-            params.x = (real32_t)split->mouse_pos.x;
-            params.y = (real32_t)split->mouse_pos.y;
-            params.lx = params.x;
-            params.ly = params.y;
-            params.button = ekLEFT;
-            params.count = 0;
-            params.modifiers = 0;
-            params.tag = 0;
-            listener_event(split->OnDrag, ekGUI_EVENT_DRAG, split, &params, NULL, OSSplit, EvMouse, void);
-            split->launch_OnDrag = FALSE;
+            if (split->left_button == TRUE)
+            {
+                EvMouse params;
+                cassert(split->OnDrag != NULL);
+                params.x = (real32_t)split->mouse_pos.x;
+                params.y = (real32_t)split->mouse_pos.y;
+                params.lx = params.x;
+                params.ly = params.y;
+                params.button = ekGUI_MOUSE_LEFT;
+                params.count = 0;
+                params.modifiers = 0;
+                params.tag = 0;
+                listener_event(split->OnDrag, ekGUI_EVENT_DRAG, split, &params, NULL, OSSplit, EvMouse, void);
+                split->launch_OnDrag = FALSE;
+            }
         }
 
         break;

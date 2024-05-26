@@ -326,7 +326,7 @@ void osmain_imp(
     FPtr_app_create func_create,
     FPtr_app_update func_update,
     FPtr_destroy func_destroy,
-    char_t *options)
+    const char_t *options)
 {
     i_App *app = NULL;
     void *pool = NULL;
@@ -372,6 +372,22 @@ void osmain_imp(
 void osapp_finish(void)
 {
     i_terminate();
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t osapp_argc(void)
+{
+    i_App *app = osapp_listener(i_App);
+    return osapp_argc_imp(app->osapp);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t osapp_argv(const uint32_t index, char_t *argv, const uint32_t size)
+{
+    i_App *app = osapp_listener(i_App);
+    return osapp_argv_imp(app->osapp, index, argv, size);
 }
 
 /*---------------------------------------------------------------------------*/

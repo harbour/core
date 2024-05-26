@@ -73,7 +73,8 @@ struct _oshttp_t
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics
 {
     NSArray *ar = [metrics transactionMetrics];
-
+    unref(session);
+    unref(task);
     for (NSURLSessionTaskTransactionMetrics *tr in ar)
     {
         NSString *str = [tr networkProtocolName];
@@ -181,7 +182,7 @@ void oshttp_destroy(OSHttp **http)
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE bool_t i_reserved_header(const char_t *header)
+static ___INLINE bool_t i_reserved_header(const char_t *header)
 {
     if (str_equ_nocase(header, "content-length") == TRUE)
         return TRUE;
@@ -377,9 +378,9 @@ static void i_request(OSHttp *http, NSString *verb, const char_t *path, const by
         cassert(size == 0);
     }
 
-#if defined(MAC_OS_X_VERSION_10_9) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
+#if defined(MAC_OS_X_VERSION_10_11) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_11
     {
-        // Synchronous request
+        /* Synchronous request */
         bool_t end = FALSE;
         NSURLSessionTask *task = nil;
         http->delegate->auto_redirect = auto_redirect;

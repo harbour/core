@@ -1,52 +1,53 @@
 /* encoding: cp850 */
 #INCLUDE "cua.ch"
 #INCLUDE "gtnap.ch"
+#INCLUDE "hboffice.ch"
 
 ***********************************************************
 STAT PROC DOCUMENT3_HEADER(O_DOC, N_Page)
 ***********************************************************
-    NAP_DOC_INSERT_TEXT(O_DOC, "Ceará")
-    NAP_DOC_INSERT_NEW_LINE(O_DOC)
-    NAP_DOC_INSERT_TEXT(O_DOC, "Governo Municipal de Piquet Carneiro                              ")
-    NAP_DOC_INSERT_TEXT(O_DOC, PAGINA_TEXT(N_Page))
-    NAP_DOC_INSERT_NEW_LINE(O_DOC)
-    NAP_DOC_INSERT_TEXT(O_DOC, "Relatório de bens depreciados")
-    NAP_DOC_INSERT_NEW_LINE(O_DOC)
+    HBOFFICE_DOC_INSERT_TEXT(O_DOC, "Ceará")
+    HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+    HBOFFICE_DOC_INSERT_TEXT(O_DOC, "Governo Municipal de Piquet Carneiro                              ")
+    HBOFFICE_DOC_INSERT_TEXT(O_DOC, PAGINA_TEXT(N_Page))
+    HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+    HBOFFICE_DOC_INSERT_TEXT(O_DOC, "Relatório de bens depreciados")
+    HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
 
 ***********************************
 PROC TST_R02680
 ***********************************
-LOCAL O_DOC := NAP_DOC_CREATE()
+LOCAL O_DOC := HBOFFICE_DOC_CREATE()
 LOCAL N_Page := 1
 LOCAL N_Width := 80
-LOCAL V_Tabs := {7, SDK_HALIGN_LEFT, 42, SDK_HALIGN_LEFT, 14, SDK_HALIGN_RIGHT, 17, SDK_HALIGN_RIGHT}
+LOCAL V_Tabs := {7, HBOFFICE_HALIGN_LEFT, 42, HBOFFICE_HALIGN_LEFT, 14, HBOFFICE_HALIGN_RIGHT, 17, HBOFFICE_HALIGN_RIGHT}
 
 IF OFFICE_ERROR("Erro ao criar documento de texto")
     RETURN
 ENDIF
 
 // Header, footer and page margins config
-NAP_DOC_PAGE_HEADER_SHOW(O_DOC, .T.)
-NAP_DOC_PAGE_HEADER_MARGINS(O_DOC, 254, 280, 508, 102, .T., .T.)
-NAP_DOC_PAGE_FOOTER_SHOW(O_DOC, .T.)
-NAP_DOC_PAGE_FOOTER_MARGINS(O_DOC, 354, 380, 608, 202, .T., .T.)
-NAP_DOC_PAGE_MARGINS(O_DOC, 2819, 178, 1270, 533, 0)
+HBOFFICE_DOC_PAGE_HEADER_SHOW(O_DOC, .T.)
+HBOFFICE_DOC_PAGE_HEADER_MARGINS(O_DOC, 254, 280, 508, 102, .T., .T.)
+HBOFFICE_DOC_PAGE_FOOTER_SHOW(O_DOC, .T.)
+HBOFFICE_DOC_PAGE_FOOTER_MARGINS(O_DOC, 354, 380, 608, 202, .T., .T.)
+HBOFFICE_DOC_PAGE_MARGINS(O_DOC, 2819, 178, 1270, 533, 0)
 
 // Create and empty header with some line breaks
-NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_HEADER)
-NAP_DOC_FONT_FAMILY(O_DOC, "Times New Roman")
-NAP_DOC_FONT_SIZE(O_DOC, 10.0)
-NAP_DOC_INSERT_NEW_LINE(O_DOC)
-NAP_DOC_INSERT_NEW_LINE(O_DOC)
-NAP_DOC_INSERT_NEW_LINE(O_DOC)
-NAP_DOC_INSERT_NEW_LINE(O_DOC)
-NAP_DOC_INSERT_NEW_LINE(O_DOC)
+HBOFFICE_DOC_TEXT_SPACE(O_DOC, HBOFFICE_TEXT_SPACE_HEADER)
+HBOFFICE_DOC_FONT_FAMILY(O_DOC, "Times New Roman")
+HBOFFICE_DOC_FONT_SIZE(O_DOC, 10.0)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
+HBOFFICE_DOC_INSERT_NEW_LINE(O_DOC)
 
 // Set the text space to main page
-NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_PAGE)
-NAP_DOC_FONT_FAMILY(O_DOC, "Courier New")
-NAP_DOC_FONT_SIZE(O_DOC, 10.0)
-NAP_DOC_PARAGRAPH_LSPACING(O_DOC, 330)
+HBOFFICE_DOC_TEXT_SPACE(O_DOC, HBOFFICE_TEXT_SPACE_PAGE)
+HBOFFICE_DOC_FONT_FAMILY(O_DOC, "Courier New")
+HBOFFICE_DOC_FONT_SIZE(O_DOC, 10.0)
+HBOFFICE_DOC_PARAGRAPH_LSPACING(O_DOC, 330)
 
 // Page 1
 DOCUMENT3_HEADER(O_DOC, N_Page)
@@ -109,7 +110,7 @@ DOC_LINE(O_DOC, "Data de inic. deprec.: 01/07/2015       Valor Liq. contábil__: 
 DOC_LINE(O_DOC, "Vida útil____________:  10 ano(s).      Depreciação acumulada: R$         3,75")
 DOCUMENT2_SEPARATOR(O_DOC, N_Width)
 DOC_LINE(O_DOC, "Patrimônio___________: GALERIA BIÊNIO 1999 A 2000")
-NAP_DOC_INSERT_PAGE_BREAK(O_DOC)
+HBOFFICE_DOC_INSERT_PAGE_BREAK(O_DOC)
 
 // Page 2
 N_Page := 2
@@ -173,22 +174,22 @@ DOC_LINE(O_DOC, "Tombamento nº________: 10000105         Data de aquisição____: 
 DOC_LINE(O_DOC, "Data tombamento______: 11/09/2015       Valor residual_______: R$        85,00")
 DOC_LINE(O_DOC, "Data de inic. deprec.: 01/10/2015       Valor Liq. contábil__: R$       231,14")
 DOC_LINE(O_DOC, "Vida útil____________:  10 ano(s).      Depreciação acumulada: R$         6,38")
-NAP_DOC_INSERT_PAGE_BREAK(O_DOC)
+HBOFFICE_DOC_INSERT_PAGE_BREAK(O_DOC)
 
 
 // Save the document
-NAP_DOC_SAVE(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R02680.odt" })
+HBOFFICE_DOC_SAVE(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R02680.odt" })
 OFFICE_ERROR("Erro ao salvar documento de texto")
 
 // Export to PDF
-NAP_DOC_PDF(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R02680.pdf" })
+HBOFFICE_DOC_PDF(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R02680.pdf" })
 OFFICE_ERROR("Exportando para PDF")
 
 // Close the document (mandatory)
-NAP_DOC_CLOSE(O_DOC)
+HBOFFICE_DOC_CLOSE(O_DOC)
 OFFICE_ERROR("Erro ao fechar o documento de texto")
 
 MOSTRAR("M15566", "O documento de texto foi criado com sucesso.")
 
 // Open the result into a LibreOffice window
-NAP_OFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R02680.odt")
+HBOFFICE_BROWSE_DOC(NAP_WORK_PATH() + "/../office/ods_gen/Exemple_R02680.odt")

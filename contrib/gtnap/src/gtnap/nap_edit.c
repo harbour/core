@@ -7,7 +7,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_EDIT )
+HB_FUNC(NAP_EDIT)
 {
     uint32_t wid = hb_parni(1);
     int32_t top = hb_parni(2);
@@ -27,7 +27,7 @@ HB_FUNC( NAP_EDIT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_EDIT_COLOR )
+HB_FUNC(NAP_EDIT_COLOR)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -37,7 +37,7 @@ HB_FUNC( NAP_EDIT_COLOR )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_EDIT_WIZARD )
+HB_FUNC(NAP_EDIT_WIZARD)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);

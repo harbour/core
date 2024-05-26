@@ -26,10 +26,6 @@
 #error This file is only for Windows
 #endif
 
-#pragma comment(lib, "gdiplus.lib")
-#pragma comment(lib, "Shlwapi.lib")
-#pragma comment(lib, "comctl32.lib")
-
 #include <sewer/nowarn.hxx>
 #include <Commctrl.h>
 #include <Richedit.h>
@@ -224,7 +220,7 @@ static void i_registry_custom_window_class(void)
     {
         ATOM ret = 0;
         ret = RegisterClassEx(&wc);
-        cassert(ret != 0);
+        cassert_unref(ret != 0, ret);
     }
 }
 
@@ -578,7 +574,7 @@ void osgui_finish_imp(void)
     {
         BOOL ret = 0;
         ret = UnregisterClass(kWINDOW_CLASS, NULL);
-        cassert(ret != 0);
+        cassert_unref(ret != 0, ret);
     }
 
     /* Conditional support for frame without shadows (dwmapi.dll not available in XP) */
@@ -758,7 +754,7 @@ void _osgui_change_accelerator(BYTE fVirt, WORD key, WORD cmd)
         }
     arrst_end()
 
-    cassert(i < arrst_size(i_ACCELERATORS, ACCEL));
+    cassert_unref(i < arrst_size(i_ACCELERATORS, ACCEL), i);
     cassert_no_null(i_ACCEL_TABLE);
     ok = DestroyAcceleratorTable(i_ACCEL_TABLE);
     cassert_unref(ok == TRUE, ok);
@@ -869,9 +865,9 @@ void osgui_word_size(StringSizeData *data, const char_t *word, real32_t *width, 
     cassert_no_null(height);
     num_chars = unicode_nchars(word, ekUTF8);
     num_bytes = unicode_convers(word, (char_t *)wword, ekUTF8, ekUTF16, sizeof(wword));
-    cassert(num_bytes < sizeof(wword));
+    cassert_unref(num_bytes < sizeof(wword), num_bytes);
     ret = GetTextExtentPoint32(data->hdc, wword, (int)num_chars, &word_size);
-    cassert(ret != 0);
+    cassert_unref(ret != 0, ret);
     *width = (real32_t)word_size.cx;
     *height = (real32_t)word_size.cy;
 }

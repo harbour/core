@@ -10,7 +10,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW )
+HB_FUNC(NAP_TABLEVIEW)
 {
     uint32_t wid = hb_parni(1);
     int32_t top = hb_parni(2);
@@ -26,7 +26,7 @@ HB_FUNC( NAP_TABLEVIEW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_COLUMN )
+HB_FUNC(NAP_TABLEVIEW_COLUMN)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -38,7 +38,7 @@ HB_FUNC( NAP_TABLEVIEW_COLUMN )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_SCROLL )
+HB_FUNC(NAP_TABLEVIEW_SCROLL)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -49,7 +49,7 @@ HB_FUNC( NAP_TABLEVIEW_SCROLL )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_GRID )
+HB_FUNC(NAP_TABLEVIEW_GRID)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -60,7 +60,7 @@ HB_FUNC( NAP_TABLEVIEW_GRID )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_HEADER )
+HB_FUNC(NAP_TABLEVIEW_HEADER)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -70,7 +70,7 @@ HB_FUNC( NAP_TABLEVIEW_HEADER )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_FREEZE )
+HB_FUNC(NAP_TABLEVIEW_FREEZE)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -80,7 +80,7 @@ HB_FUNC( NAP_TABLEVIEW_FREEZE )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_BIND_AREA )
+HB_FUNC(NAP_TABLEVIEW_BIND_AREA)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -90,7 +90,7 @@ HB_FUNC( NAP_TABLEVIEW_BIND_AREA )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_BIND_DATA )
+HB_FUNC(NAP_TABLEVIEW_BIND_DATA)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -100,7 +100,7 @@ HB_FUNC( NAP_TABLEVIEW_BIND_DATA )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_DESELECT_ALL )
+HB_FUNC(NAP_TABLEVIEW_DESELECT_ALL)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -109,7 +109,7 @@ HB_FUNC( NAP_TABLEVIEW_DESELECT_ALL )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_SELECT_ROW )
+HB_FUNC(NAP_TABLEVIEW_SELECT_ROW)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -120,7 +120,7 @@ HB_FUNC( NAP_TABLEVIEW_SELECT_ROW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_TOGGLE_ROW )
+HB_FUNC(NAP_TABLEVIEW_TOGGLE_ROW)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -131,7 +131,7 @@ HB_FUNC( NAP_TABLEVIEW_TOGGLE_ROW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_SELECTED_ROWS )
+HB_FUNC(NAP_TABLEVIEW_SELECTED_ROWS)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -145,7 +145,7 @@ HB_FUNC( NAP_TABLEVIEW_SELECTED_ROWS )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_FOCUS_ROW )
+HB_FUNC(NAP_TABLEVIEW_FOCUS_ROW)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -155,7 +155,7 @@ HB_FUNC( NAP_TABLEVIEW_FOCUS_ROW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_RECNO_FROM_ROW )
+HB_FUNC(NAP_TABLEVIEW_RECNO_FROM_ROW)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -168,7 +168,7 @@ HB_FUNC( NAP_TABLEVIEW_RECNO_FROM_ROW )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_ROW_FROM_RECNO )
+HB_FUNC(NAP_TABLEVIEW_ROW_FROM_RECNO)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -180,7 +180,7 @@ HB_FUNC( NAP_TABLEVIEW_ROW_FROM_RECNO )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_REFRESH_CURRENT )
+HB_FUNC(NAP_TABLEVIEW_REFRESH_CURRENT)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);
@@ -189,7 +189,7 @@ HB_FUNC( NAP_TABLEVIEW_REFRESH_CURRENT )
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_TABLEVIEW_REFRESH_ALL )
+HB_FUNC(NAP_TABLEVIEW_REFRESH_ALL)
 {
     uint32_t wid = hb_parni(1);
     uint32_t id = hb_parni(2);

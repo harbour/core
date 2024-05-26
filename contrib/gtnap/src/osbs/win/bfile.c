@@ -379,7 +379,7 @@ File *bfile_open(const char_t *pathname, const file_mode_t mode, ferror_t *error
             ptr_assign(error, ekFOK);
 
 #if defined(__x64__)
-            // Avoid warning C4306: 'type cast' : conversion from 'HFILE' to 'File *' of greater size
+            /* Avoid warning C4306: 'type cast' : conversion from 'HFILE' to 'File *' of greater size */
             return (File *)(uint64_t)file;
 #else
             return (File *)file;
@@ -406,7 +406,7 @@ void bfile_close(File **file)
     cassert_no_null(file);
     cassert_no_null(*file);
     ok = CloseHandle((HANDLE)*file);
-    cassert(ok != 0);
+    cassert_unref(ok != 0, ok);
     _osbs_file_dealloc();
     *file = NULL;
 }

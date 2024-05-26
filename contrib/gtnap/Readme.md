@@ -4,11 +4,20 @@ Harbour cross-platform video subsystem using NAppGUI-SDK
 https://github.com/frang75/nappgui_src
 
 * [Installing CMake](#installing-cmake)
-* [LibreOffice-SDK support](#libreoffice-sdk-support)
+* [Installing Visual Studio](#installing-visual-studio)
+* [Installing MinGW GCC](#installing-mingw-gcc)
+* [Installing GCC in Linux](#installing-gcc-in-linux)
+* [Installing Xcode in macOS](#installing-xcode-in-macos)
+* [Build Harbour](#build-harbour)
+    - [Build Harbour in Windows Visual Studio](#build-harbour-in-windows-visual-studio)
+    - [Build Harbour in Windows MinGW](#build-harbour-in-windows-mingw)
+    - [Build Harbour in Linux](#build-harbour-in-linux)
+    - [Build Harbour in macOS](#build-harbour-in-macos)
 * [Build GTNap](#build-gtnap)
-   - [In Windows](#in-windows)
-   - [In Linux](#in-linux)
-   - [In macOS](#in-macos)
+    - [In Windows with MinGW](#in-windows-with-mingw)
+    - [In Windows with VisualStudio](#in-windows-with-visualstudio)
+    - [In Linux with GCC](#in-linux-with-gcc)
+    - [In macOS with Xcode](#in-macos-with-xcode)
 * [Using GTNap](#using-gtnap)
 * [Compile and run CUADEMO example](#compile-and-run-cuademo-example)
 * [Application ICON](#application-icon)
@@ -27,12 +36,14 @@ https://github.com/frang75/nappgui_src
 
 For building GTNap CMake tool is necessary:
 
-* In Windows:
+### CMake in Windows
+
     * Download from https://cmake.org/download/
     * Select **Add CMake to the system PATH for all users** when installing.
     ![cmake_win](https://user-images.githubusercontent.com/42999199/235419286-0a6101f4-b43b-4e40-a3cb-c585fe908185.png)
 
-* In Linux:
+### CMake in Linux
+
     * `sudo apt-get install cmake cmake-gui`
 
    * Open a terminal/cmd and check if cmake works:
@@ -41,7 +52,8 @@ For building GTNap CMake tool is necessary:
       cmake version 3.10.2
       ```
 
-* In macOS:
+### CMake in macOS
+
     * Download from https://cmake.org/download/
     * Move `CMake.app` to `/Applications` folder.
     * By default, CMake does not configure command line access on macOS. You can create symbolic links with `sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install`.
@@ -53,69 +65,172 @@ For building GTNap CMake tool is necessary:
       cmake version 3.21.4
       ```
 
-## LibreOffice-SDK support
+## Installing Visual Studio
 
-As of November 23, GTNAP adds support for the LibreOffice-SDK, in order to add capabilities for editing documents from Harbour. It is necessary to **correctly install the LibreOffice package**, both on the development machines and on the client machines.
+To use the `msvc`/`msvc64` compilers we need to install Visual Studio environment. Microsoft offers the free [Community](https://visualstudio.microsoft.com/vs/) version since VS2017.
 
-> **Important:** Its possible disable the LibreOffice support when build GTNAP, using the `-noliboff` option in build script. See [Build GTNap](#build-gtnap).
+Once installed, `msvc` compilers are not directly accesible by command line. We need to run `vcvarsall.bat` script, installed in different locations depending on each version. For example, in Visual Studio 2012.
 
-* In Windows:
-    * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
-      ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
+```
+:: Set the Visual Studio 64bit compiler
+"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 
-    * Install the LibreOffice-SDK package. This installation is **required ONLY for compile GTNAP in development machines**.
-      > **Important:** LibreOffice-SDK is available in 32-bit and 64-bit versions. You will need to compile GTNAP in 32 or 64 bits depending on the version of LibreOffice. It is not possible to mix 32 and 64 libraries in the same executable. **By default, GTNAP will be compiled in 64bit in Windows**.
+:: Check compiler is working
+C:>cl
+Microsoft (R) C/C++ Optimizing Compiler Version 17.00.61030 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
 
-      > **Important:** The SDK version must be the same as LibreOffice application.
+:: MSBuild tools is working
+C:>msbuild
+Microsoft (R) Build Engine version 4.8.9037.0
+[Microsoft .NET Framework, version 4.0.30319.42000]
+Copyright (C) Microsoft Corporation. All rights reserved.
+```
 
-      ![download_libreoffice_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/4821de74-7e38-486a-94f6-ffd59d0f14a0)
+## Installing MinGW GCC
 
-    * Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `C:\Program Files\LibreOffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime.
+MinGW is a project that provides a native Windows version of the GCC compiler. There are different ways to install it, but the most direct is through the MYSYS2 environment.
 
-      ![envvar_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/3ad38b78-9214-4567-94b8-94dcf926848f)
+* Download and install MSYS2 from [here](https://www.msys2.org). By default, is installed in `C:\msys64`.
+* Open a MSYS2 terminal and write `pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain` to install the MinGW/GCC compiler.
+* Open the **Environment Variables** editor and add: `C:\msys64\mingw64\bin` and `\msys64\ucrt64\bin` folders to PATH environment variable.
+* If everything went well, open a `cmd` and type these commands to see if MinGW is active.
 
-   * Add `%LIBREOFFICE_HOME%/program` path to `PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice .DLLs must be accesible and located.
+```
+:: MinGW Make is working
+C:>mingw32-make
+mingw32-make: *** No targets specified and no makefile found.  Stop.
 
-      ![path_envvar](https://github.com/frang75/harbour_nappgui/assets/42999199/d0215a5e-8569-4dca-a313-f765ada84080)
+:: MinGW gcc compiler is working
+C:>gcc --version
+gcc (Rev6, Built by MSYS2 project) 13.2.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.```
+```
 
+## Installing GCC in Linux
 
-* In Linux:
-    * Install the LibreOffice package. This installation is **required on both development machines and user machines**.
-        ```
-        sudo apt-get install libreoffice
-        ```
-    * Install the LibreOffice development libraries. This installation is **required ONLY for compile GTNAP in development machines**.
-        ```
-        sudo apt-get install libreoffice-dev
+```
+# Install GCC compiler and build tools
+:~$ sudo apt-get install build-essential
 
-        # Optional, not mandatory for compile
-        sudo apt-get install libreoffice-dev-doc
-        ```
-    * Set the `LIBREOFFICE_HOME` environment variable with the path to the LibreOffice home directory (usually `/usr/lib/libreoffice`). This environment variable is required both to compile the program and to run it on the user's machines. GTNAP will connect to the LibreOffice program at runtime. It is recommended to define this variable in the `.bashrc` so that it is always present.
-        ```
-        nano .bashrc
-        # Add at the end
-        export LIBREOFFICE_HOME=/usr/lib/libreoffice
-        # Ctrl+X to save
-        source .bashrc
-        cd $LIBREOFFICE_HOME
-        ls
-        CREDITS.fodt  NOTICE  presets  program  sdk  share
-        ```
+# Check make tool is working
+:~$ make --version
+GNU Make 4.3
+Built for x86_64-pc-linux-gnu
 
-   * Add `$LIBREOFFICE_HOME$/program` path to `LD_LIBRARY_PATH` environment variable. In order to run `exemplo` or any GTNAP-based application, LibreOffice shared libraries `.so` must be accesible and located.
-        ```
-        # Add at the end of .bashrc
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH$:$LIBREOFFICE_HOME$/program
-        ```
+# Check gcc compiler is working
+~$ gcc --version
+gcc (Ubuntu 13.2.0-23ubuntu4) 13.2.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+```
 
-> **Important:** GTNAP-based programs will not be able to compile or run if LibreOffice is not correctly installed.
+## Installing Xcode in macOS
 
-> **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`, `C:\Program Files\LibreOffice`
+Xcode provides the `AppleClang` compiler and build tools for macOS. Download and install it from Apple website [here](https://developer.apple.com/xcode/).
+![xcode_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/cf140563-49df-4c3f-acef-24149fda9382)
 
-> **Important:** The first time a GTNAP program uses a LibreOffice function, an instance of the LibreOffice application will be started invisibly (`soffice.bin` process). This first call will have a small delay due to the initialization of the process. It is imperative that LibreOffice is running in order to use the SDK from C++/Harbour/GTNAP.
+```
+# Check build tools is working
+user@host% xcodebuild -version
+Xcode 12.5.1
+Build version 12E507
 
-> **Important:** A new directory has been created for the LibreOffice example files (read/write) `/tests/cuademo/office`.
+# Check clang compiler is working
+user@host% clang --version
+Apple clang version 12.0.5 (clang-1205.0.22.11)
+Target: x86_64-apple-darwin20.6.0
+```
+
+## Build Harbour
+
+### Build Harbour in Windows Visual Studio
+
+```
+:: Set the Visual Studio 64bit compiler
+"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+
+:: Go to main folder of harbour working copy
+cd harbour_nappgui
+
+win-make HB_COMPILER=msvc64
+
+! Building Harbour 3.2.0dev from source - https://harbour.github.io
+! MAKE: win-make 4.1 sh.exe
+! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
+! HB_PLATFORM: win (x86_64) (auto-detected)
+! HB_COMPILER: msvc64 (v1700)
+! Component: 'zlib' found in C:/harbour_nappgui/src/3rd/zlib (local)
+! Component: 'pcre' found in C:/harbour_nappgui/src/3rd/pcre (local)
+...
+```
+
+### Build Harbour in Windows MinGW
+
+```
+:: Go to main folder of harbour working copy
+cd harbour_nappgui
+
+win-make HB_COMPILER=mingw64
+
+C:\harbour_nappgui>win-make HB_COMPILER=mingw64
+! Building Harbour 3.2.0dev from source - https://harbour.github.io
+! MAKE: win-make 4.1 sh.exe
+! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
+! HB_PLATFORM: win (x86_64) (auto-detected)
+! HB_COMPILER: mingw64
+! Component: 'zlib' found in C:/harbour_nappgui/src/3rd/zlib (local)
+! Component: 'pcre' found in C:/harbour_nappgui/src/3rd/pcre (local)
+...
+```
+
+### Build Harbour in Linux
+
+```
+# Go to main folder of harbour working copy
+cd harbour_nappgui
+
+make
+
+! Building Harbour 3.2.0dev from source - https://harbour.github.io
+! MAKE: make 4.1 /bin/sh
+! HB_HOST_PLAT: linux (x86_64)  HB_SHELL: sh
+! LD_LIBRARY_PATH: /home/fran/harbour_nappgui/lib/linux/gcc:
+! HB_PLATFORM: linux (x86_64) (auto-detected)
+! HB_COMPILER: gcc (auto-detected: /usr/bin/)
+...
+```
+
+### Build Harbour in macOS
+
+```
+# Go to main folder of harbour working copy
+cd harbour_nappgui
+
+# Set the minimum macOS version
+export MACOSX_DEPLOYMENT_TARGET=10.13
+
+make
+
+! Building Harbour 3.2.0dev from source - https://harbour.github.io
+! MAKE: /Applications/Xcode.app/Contents/Developer/usr/bin/make 3.81 /bin/sh
+! HB_HOST_PLAT: darwin (x86_64)  HB_SHELL: sh
+! LD_LIBRARY_PATH: /Users/fran/harbour_nappgui/lib/darwin/clang:
+! HB_PLATFORM: darwin (x86_64) (auto-detected)
+! HB_COMPILER: clang (auto-detected: /usr/bin/)
+! HB_HOST_PKGM: homebrew
+! Component: 'zlib' found in /Users/fran/harbour_nappgui/src/3rd/zlib (local)
+! Component: 'pcre' found in /Users/fran/harbour_nappgui/src/3rd/pcre (local)
+! Component: 'gpm' not supported on darwin platform
+! Component: 'slang' not found
+! Component: 'curses' not found
+! Component: 'x11' not found
+! Component: 'wattcp/watt-32' not supported on darwin platform
+! HB_INSTALL_PREFIX automatically set to: /opt/harbour
+! GIT_REVISION: 0a1c79204d
+...
+```
 
 ## Build GTNap
 
@@ -126,7 +241,6 @@ The `/contrib/gtnap` project consists of several files and folders:
 /resources          Files used in development debug.
 /src                Source code.
 /src/gtnap          GTNAP terminal source.
-/src/officesdk      LibreOffice wrapper source.
 /src/**             NAppGUI libraries source.
 /tests              Testing and examples.
 /tests/cuademo      Cuademo example application.
@@ -140,10 +254,26 @@ gtnap.hbc           Options for proyects that use GTNap.
 gtnap.hbp           GTNap project for hbmk2.
 gtnap.hbx           GTNap symbol file, autogenerated by hbmk2.
 Readme.md           This documentation.
-ReadmeUNO.md        LibreOffice Harbour functions documentation.
 ```
 
-### In Windows
+### In Windows with MinGW
+
+`build.bat` script allows to compile GTNAP using VisualStudio `msvc64` compiler or MinGW `mingw64` compiler.
+
+```
+:: Goto gtnap folder
+cd contrib\gtnap
+
+:: Just build
+build.bat -b [Debug|Release] -comp mingw64
+```
+
+This will generate several static libraries:
+
+* The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
+* The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
+
+### In Windows with VisualStudio
 
 > **Important:** The MSVC compiler used by Harbour `hbmk2` is configured using the `vcvarsall.bat` script of the specific version of Visual Studio we are going to use. To configure the compiler in CMake, we must set the `CMAKE_GENERATOR` environment variable to the same version as `vcvarsall.bat`.
 ```
@@ -174,20 +304,15 @@ set CMAKE_GENERATOR=Visual Studio 11 2012
 "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 
 :: Just build
-:: default Debug
-:: default x64 (on x64 Windows SO)
-:: default Win32 (on x86 Windows SO)
-:: -noliboff Disable the LibreOffice support in GTNAP (optional)
-build.bat -b [Debug|Release] -a [x64|Win32] [-noliboff]
+build.bat -b [Debug|Release] -comp msvc64
 ```
 
 This will generate several static libraries:
 
 * The GT library: `gtnap.lib` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `sewer.lib`, `osbs.lib`, `core.lib`, `geom2d.lib`, `draw2d.lib`, `osgui.lib`, `gui.lib`, `osapp.lib`, `inet.lib` in `build/[Debug|Release]/lib` folder.
-* The LibreOffice wrapper library `officesdk.lib` in `build/[Debug|Release]/lib` folder.
 
-### In Linux
+### In Linux with GCC
 
 First of all, install the required development libraries:
 
@@ -203,27 +328,15 @@ Then, compile gtnap
 cd contrib/gtnap
 
 # Just build
-# -noliboff Disable the LibreOffice support in GTNAP (optional)
-bash ./build.sh -b [Debug|Release] [-noliboff]
+bash ./build.sh -b [Debug|Release]
 ```
 
 This will generate several static libraries:
 
 * The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
-* The LibreOffice wrapper library `libofficesdk.a` in `build/[Debug|Release]/lib` folder.
 
-### In macOS
-
-First of all, install Xcode.
-
-![xcode_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/cf140563-49df-4c3f-acef-24149fda9382)
-
-Check Xcode is working:
-```
-% xcode-select -p
-/Applications/Xcode.app/Contents/Developer
-```
+### In macOS with Xcode
 
 > **Important:** On macOS, before compile Harbour and GTNap, **we must** set the `MACOSX_DEPLOYMENT_TARGET` environment variable, in order to establish the minimum version of macOS where our GTNAP applications will run.
 
@@ -259,21 +372,14 @@ It is not recommended to compile for lower systems.
 
 Then, compile Harbour and gtnap
 ```
-# Main repo folder
-cd harbour_nappgui
-
 # Set the minimum macOS
 export MACOSX_DEPLOYMENT_TARGET=10.13
 
-# Compile Harbour
-make
-
 # Goto gtnap folder
-cd ./contrib/gtnap
+cd contrib/gtnap
 
 # Just build
-# -noliboff Disable the LibreOffice support in GTNAP (optional)
-bash ./build.sh -b [Debug|Release] [-noliboff]
+bash ./build.sh -b [Debug|Release]
 ```
 
 This will generate several static libraries:
@@ -287,14 +393,23 @@ Just adding `-gtnap` flag into your `.hbp` project file.
 
 ## Compile and run CUADEMO example
 
-- To compile in Windows:
+- To compile in Windows with MinGW:
+   ```
+   :: Use -debug option or omit for release version
+   cd contrib\gtnap\tests\cuademo\gtnap_cualib
+   ..\..\..\..\..\bin\win\mingw64\hbmk2.exe [-debug] -comp=mingw64 exemplo.hbp
+   exemplo --hb:gtnap
+   exemplo --hb:gtwin
+   ```
+
+- To compile in Windows with VisualStudio:
    ```
    :: Set 64bit compiler
    "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
 
    :: Use -debug option or omit for release version
    cd contrib\gtnap\tests\cuademo\gtnap_cualib
-   ..\..\..\..\..\bin\win\msvc64\hbmk2.exe [-debug] exemplo.hbp
+   ..\..\..\..\..\bin\win\msvc64\hbmk2.exe [-debug] -comp=msvc64 exemplo.hbp
    exemplo --hb:gtnap
    exemplo --hb:gtwin
    ```
@@ -361,69 +476,9 @@ Using the NAppGUI build system, based on CMake, it is possible to create a singl
 
 ### Step 1. Compile Harbour
 
+Compile Harbour as we seen in previos sections.
+
 **To use developer mode, harbour needs to be recompiled, as a new -keepc option has been introduced in hbmk2.**
-
-* In Windows:
-    ```
-    :: Set the Visual Studio 64bit compiler
-    "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
-
-    :: Go to main folder of harbour working copy
-    cd harbour_nappgui
-
-    win-make
-
-    ! Building Harbour 3.2.0dev from source - https://harbour.github.io
-    ! MAKE: win-make 4.1 sh.exe
-    ! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
-    ! HB_PLATFORM: win (x86_64) (auto-detected)
-    ! HB_COMPILER: msvc64 (v1700) (auto-detected: C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/BIN/amd64/)
-    ! Component: 'zlib' found in C:/harbour_nappgui/src/3rd/zlib (local)
-    ! Component: 'pcre' found in C:/harbour_nappgui/src/3rd/pcre (local)
-    ...
-    ```
-
-* In Linux:
-    ```
-    # Go to main folder of harbour working copy
-    cd harbour_nappgui
-
-    make
-
-    ! Building Harbour 3.2.0dev from source - https://harbour.github.io
-    ! MAKE: make 4.1 /bin/sh
-    ! HB_HOST_PLAT: linux (x86_64)  HB_SHELL: sh
-    ! LD_LIBRARY_PATH: /home/fran/harbour_nappgui/lib/linux/gcc:
-    ! HB_PLATFORM: linux (x86_64) (auto-detected)
-    ! HB_COMPILER: gcc (auto-detected: /usr/bin/)
-    ...
-    ```
-
-* In macOS:
-    ```
-    # Go to main folder of harbour working copy
-    cd harbour_nappgui
-
-    make
-
-    ! Building Harbour 3.2.0dev from source - https://harbour.github.io
-    ! MAKE: /Applications/Xcode.app/Contents/Developer/usr/bin/make 3.81 /bin/sh
-    ! HB_HOST_PLAT: darwin (x86_64)  HB_SHELL: sh
-    ! LD_LIBRARY_PATH: /Users/fran/harbour_nappgui/lib/darwin/clang:
-    ! HB_PLATFORM: darwin (x86_64) (auto-detected)
-    ! HB_COMPILER: clang (auto-detected: /usr/bin/)
-    ! HB_HOST_PKGM: homebrew
-    ! Component: 'zlib' found in /Users/fran/harbour_nappgui/src/3rd/zlib (local)
-    ! Component: 'pcre' found in /Users/fran/harbour_nappgui/src/3rd/pcre (local)
-    ! Component: 'gpm' not supported on darwin platform
-    ! Component: 'slang' not found
-    ! Component: 'curses' not found
-    ! Component: 'x11' not found
-    ! Component: 'wattcp/watt-32' not supported on darwin platform
-    ! HB_INSTALL_PREFIX automatically set to: /opt/harbour
-    ! GIT_REVISION: 0a1c79204d
-    ...
-    ```
 
 ### Step 2. Generate exemplo C files
 

@@ -25,6 +25,7 @@
 #include <draw2d/image.h>
 #include <core/event.h>
 #include <core/heap.h>
+#include <osbs/osbs.h>
 #include <osbs/btime.h>
 #include <sewer/bmath.h>
 #include <sewer/cassert.h>
@@ -92,7 +93,16 @@ static void i_draw_flat_button(HWND hwnd, const Image *image)
             state = TS_NORMAL;
         }
 
-        osstyleXP_DrawThemeBackground(hwnd, hdc, TP_BUTTON, state, TRUE, &rect, &border);
+        /* WindowsXP draws nothing in TS_NORMAL (doesn't erase background) */
+        if (osbs_windows() > ekWIN_XP3 || state != TS_NORMAL)
+        {
+            osstyleXP_DrawThemeBackground(hwnd, hdc, TP_BUTTON, state, TRUE, &rect, &border);
+        }
+        else
+        {
+            HBRUSH brush = GetSysColorBrush(COLOR_BTNFACE);
+            FillRect(hdc, &rect, brush);
+        }
     }
     else
     {
@@ -638,8 +648,7 @@ void osbutton_enabled(OSButton *button, const bool_t enabled)
 {
     _oscontrol_set_enabled((OSControl *)button, enabled);
     if (button->flags == ekBUTTON_FLAT || button->flags == ekBUTTON_FLATGLE)
-        ;
-    InvalidateRect(button->control.hwnd, NULL, FALSE);
+        InvalidateRect(button->control.hwnd, NULL, FALSE);
 }
 
 /*---------------------------------------------------------------------------*/

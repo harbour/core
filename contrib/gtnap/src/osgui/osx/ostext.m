@@ -19,6 +19,7 @@
 #include "osgui.inl"
 #include "oscolor.inl"
 #include <draw2d/color.h>
+#include <draw2d/font.h>
 #include <core/event.h>
 #include <core/heap.h>
 #include <core/strings.h>
@@ -305,42 +306,6 @@ void ostext_set_rtf(OSText *view, Stream *rtf_in)
 
 /*---------------------------------------------------------------------------*/
 
-static NSFont *i_convent_to_italic(NSFont *font, const CGFloat height, NSFontManager *font_manager)
-{
-    NSFont *italic_font = nil;
-    NSFontTraitMask fontTraits = (NSFontTraitMask)0;
-    cassert_no_null(font);
-
-    italic_font = [font_manager convertFont:font toHaveTrait:NSItalicFontMask];
-    fontTraits = [font_manager traitsOfFont:italic_font];
-
-    if ((fontTraits & NSItalicFontMask) == 0)
-    {
-        NSAffineTransform *font_transform = [NSAffineTransform transform];
-        [font_transform scaleBy:height];
-
-        {
-            NSAffineTransformStruct data;
-            NSAffineTransform *italic_transform = nil;
-            data.m11 = 1.f;
-            data.m12 = 0.f;
-            data.m21 = -tanf(/*italic_angle*/ -10.f * 0.017453292519943f);
-            data.m22 = 1.f;
-            data.tX = 0.f;
-            data.tY = 0.f;
-            italic_transform = [NSAffineTransform transform];
-            [italic_transform setTransformStruct:data];
-            [font_transform appendTransform:italic_transform];
-        }
-
-        italic_font = [NSFont fontWithDescriptor:[italic_font fontDescriptor] textTransform:font_transform];
-    }
-
-    return italic_font;
-}
-
-/*---------------------------------------------------------------------------*/
-
 static NSFont *i_font_create(const char_t *family, const real32_t size, const uint32_t style)
 {
     NSFont *nsfont = nil;
@@ -357,20 +322,9 @@ static NSFont *i_font_create(const char_t *family, const real32_t size, const ui
         return nil;
 
     {
-        NSFontManager *fontManager = [NSFontManager sharedFontManager];
-        NSString *ffamily = [NSString stringWithUTF8String:family];
-        NSUInteger mask = (style & ekFBOLD) ? NSBoldFontMask : 0;
-        nsfont = [fontManager fontWithFamily:ffamily traits:(NSFontTraitMask)mask weight:5 size:(CGFloat)size];
-        cassert_fatal_msg(nsfont != nil, "Font is not available on this computer.");
-    }
-
-    if (nsfont != nil)
-    {
-        if (style & ekFITALIC)
-        {
-            NSFontManager *fontManager = [NSFontManager sharedFontManager];
-            nsfont = i_convent_to_italic(nsfont, (CGFloat)size, fontManager);
-        }
+        Font *font = font_create(family, size, style);
+        nsfont = (NSFont *)font_native(font);
+        font_destroy(&font);
     }
 
     return nsfont;
@@ -424,7 +378,7 @@ static void i_change_paragraph(OSXTextView *lview)
 
 /*---------------------------------------------------------------------------*/
 
-void ostext_property(OSText *view, const gui_prop_t param, const void *value)
+void ostext_property(OSText *view, const gui_text_t param, const void *value)
 {
     OSXTextView *lview = nil;
     cassert_no_null(view);
@@ -433,7 +387,7 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
 
     switch (param)
     {
-    case ekGUI_PROP_FAMILY:
+    case ekGUI_TEXT_FAMILY:
         if (str_equ_c(lview->ffamily, (const char_t *)value) == FALSE)
         {
             str_copy_c(lview->ffamily, sizeof(lview->ffamily), (const char_t *)value);
@@ -441,10 +395,10 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
         }
         break;
 
-    case ekGUI_PROP_UNITS:
+    case ekGUI_TEXT_UNITS:
         break;
 
-    case ekGUI_PROP_SIZE:
+    case ekGUI_TEXT_SIZE:
         if (lview->fsize != *((real32_t *)value))
         {
             lview->fsize = *((real32_t *)value);
@@ -452,7 +406,7 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
         }
         break;
 
-    case ekGUI_PROP_STYLE:
+    case ekGUI_TEXT_STYLE:
         if (lview->fstyle != *((uint32_t *)value))
         {
             lview->fstyle = *((uint32_t *)value);
@@ -460,7 +414,7 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
         }
         break;
 
-    case ekGUI_PROP_COLOR:
+    case ekGUI_TEXT_COLOR:
     {
         NSColor *color = nil;
         if (*(color_t *)value == kCOLOR_TRANSPARENT)
@@ -471,14 +425,14 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
         break;
     }
 
-    case ekGUI_PROP_BGCOLOR:
+    case ekGUI_TEXT_BGCOLOR:
     {
         NSColor *color = oscolor_NSColor(*(color_t *)value);
         [lview->dict setValue:color forKey:NSBackgroundColorAttributeName];
         break;
     }
 
-    case ekGUI_PROP_PGCOLOR:
+    case ekGUI_TEXT_PGCOLOR:
         if (*(color_t *)value != kCOLOR_TRANSPARENT)
         {
             NSColor *color = oscolor_NSColor(*(color_t *)value);
@@ -491,7 +445,7 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
         }
         break;
 
-    case ekGUI_PROP_PARALIGN:
+    case ekGUI_TEXT_PARALIGN:
         if (lview->palign != *((align_t *)value))
         {
             lview->palign = *((align_t *)value);
@@ -499,7 +453,7 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
         }
         break;
 
-    case ekGUI_PROP_LSPACING:
+    case ekGUI_TEXT_LSPACING:
         if (lview->pspacing != *((real32_t *)value))
         {
             lview->pspacing = *((real32_t *)value);
@@ -507,7 +461,7 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
         }
         break;
 
-    case ekGUI_PROP_AFPARSPACE:
+    case ekGUI_TEXT_AFPARSPACE:
         if (lview->pafter != *((real32_t *)value))
         {
             lview->pafter = *((real32_t *)value);
@@ -515,7 +469,7 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
         }
         break;
 
-    case ekGUI_PROP_BFPARSPACE:
+    case ekGUI_TEXT_BFPARSPACE:
         if (lview->pbefore != *((real32_t *)value))
         {
             lview->pbefore = *((real32_t *)value);
@@ -523,10 +477,10 @@ void ostext_property(OSText *view, const gui_prop_t param, const void *value)
         }
         break;
 
-    case ekGUI_PROP_SELECT:
+    case ekGUI_TEXT_SELECT:
         break;
 
-    case ekGUI_PROP_SCROLL:
+    case ekGUI_TEXT_SCROLL:
     {
         NSRange edrange = NSMakeRange([[lview string] length], 0);
         [lview scrollRangeToVisible:edrange];
@@ -564,7 +518,7 @@ const char_t *ostext_get_text(const OSText *view)
 
 void ostext_scroller_visible(OSText *view, const bool_t horizontal, const bool_t vertical)
 {
-    NSScrollView *sview = (NSScrollView*)view;
+    NSScrollView *sview = (NSScrollView *)view;
     cassert_no_null(sview);
     [sview setHasHorizontalScroller:(BOOL)horizontal];
     [sview setHasVerticalScroller:(BOOL)vertical];

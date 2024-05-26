@@ -7,7 +7,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC( NAP_BUTTON )
+HB_FUNC(NAP_BUTTON)
 {
     uint32_t wid = hb_parni(1);
     int32_t top = hb_parni(2);

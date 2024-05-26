@@ -11,7 +11,6 @@ set(CMAKE_BUILD_TYPE "Debug" CACHE INTERNAL "Build type" FORCE)
 include(${NAPPGUI_ROOT_PATH}/prj/NAppCompilers.cmake)
 nap_config_compiler()
 
-include(${NAPPGUI_ROOT_PATH}/prj/NAppVersion.cmake)
 include(${NAPPGUI_ROOT_PATH}/prj/NAppTarget.cmake)
 set(NAPPGUI_SHARED False)
 add_subdirectory(../src/sewer sewer_bin)

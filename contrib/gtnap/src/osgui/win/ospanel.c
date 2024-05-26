@@ -70,7 +70,7 @@ static void i_remove_area(Area *area)
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE void i_area(HDC hdc, const Area *area)
+static ___INLINE void i_area(HDC hdc, const Area *area)
 {
     cassert_no_null(area);
     if (area->bgbrush != NULL)
@@ -396,7 +396,7 @@ void ospanel_destroy(OSPanel **panel)
         ok = DeleteDC((*panel)->memhdc);
         cassert(ok != 0);
         ok = DeleteObject((*panel)->dbuffer);
-        cassert(ok != 0);
+        cassert_unref(ok != 0, ok);
     }
     else
     {
@@ -594,7 +594,7 @@ void _ospanel_resize_double_buffer(OSPanel *panel, LONG width, LONG height)
         BOOL ok = FALSE;
         cassert(panel->dbuffer != NULL);
         ok = DeleteObject(panel->dbuffer);
-        cassert(ok != 0);
+        cassert_unref(ok != 0, ok);
     }
 
     panel->dbuffer = CreateCompatibleBitmap(hdc, (int)width, (int)height);

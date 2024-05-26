@@ -1,8 +1,9 @@
 ::
 :: GTNAP build script
 ::
-:: build -b [Debug/Release] -a [x64|Win32] [-noliboff]
-:: [-noliboff] Optional flag to disable the LibreOffice support
+:: build -b [Debug|Release] -comp [mingw64|msvc64]
+:: Release is default configuration
+:: mingw64 is default compiler
 ::
 
 @echo off
@@ -10,23 +11,15 @@
 ::
 :: Input parameters
 ::
-set HBMK_PATH=..\\..\\bin\\win\\msvc64
-set BUILD=Debug
-set ARCH=x64
+set COMPILER=mingw64
+set BUILD=Release
 set "CWD=%cd%"
-set LIBREOFFICE=ON
-
-:: AMD64 IA64 x86
-IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" GOTO endprocessor
-set HBMK_PATH=..\\..\\bin\\win\\msvc
-set ARCH=Win32
-:endprocessor
+set HBMK_PATH=..\\..\\bin\\win\\%COMPILER%
 
 :parse
 IF "%~1"=="" GOTO endparse
 IF "%~1"=="-b" GOTO build
-IF "%~1"=="-a" GOTO arch
-IF "%~1"=="-noliboff" GOTO noliboff
+IF "%~1"=="-comp" GOTO compiler
 SHIFT
 GOTO parse
 
@@ -35,14 +28,9 @@ SHIFT
 set BUILD=%~1
 GOTO parse
 
-:arch
+:compiler
 SHIFT
-set ARCH=%~1
-GOTO parse
-
-:noliboff
-set LIBREOFFICE=OFF
-SHIFT
+set COMPILER=%~1
 GOTO parse
 
 :endparse
@@ -53,28 +41,53 @@ GOTO parse
 echo ---------------------------
 echo Generating GTNAP
 echo Main path: %CWD%
-echo Architecture: %ARCH%
 echo Build type: %BUILD%
-echo HBMK_PATH: %HBMK_PATH%
-echo LIBREOFFICE: %LIBREOFFICE%
+echo COMPILER: %COMPILER%
+echo HBMK path: %HBMK_PATH%
 echo ---------------------------
+
+::
+:: Configure compiler and cmake
+::
+set CMAKE_ARGS=
+set CMAKE_BUILD=
+IF "%COMPILER%"=="mingw64" GOTO config_mingw64
+IF "%COMPILER%"=="msvc64" GOTO config_msvc64
+goto error_compiler
+
+:config_mingw64
+:: Mono-configuration build system
+set CMAKE_ARGS=-G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=%BUILD%
+set CMAKE_BUILD=-j 4
+goto cmake
+
+:config_msvc64:
+:: Multi-configuration build system
+set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
+set CMAKE_BUILD=--config %BUILD%
+goto cmake
 
 ::
 :: Build NAppGUI from sources
 ::
-call cmake -S %CWD% -B %CWD%\build -A%ARCH% -DGTNAP_LIBREOFFICE=%LIBREOFFICE% || goto error_cmake
-call cmake --build %CWD%\build --config %BUILD% || goto error_build
+:cmake
+call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build || goto error_cmake
+call cmake --build %CWD%\build %CMAKE_BUILD% || goto error_build
 
 ::
 :: Build GTNAP
 ::
+set HBMK_FLAGS=
+
 IF "%BUILD%"=="Debug" GOTO hbmk2_debug
-call %HBMK_PATH%\\hbmk2.exe %CWD%\src\gtnap\gtnap.hbp || goto error_gtnap
-GOTO hbmk2_end
+goto hbmk2
 
 :hbmk2_debug
-call %HBMK_PATH%\\hbmk2.exe -debug %CWD%\src\gtnap\gtnap.hbp || goto error_gtnap
-:hbmk2_end
+set HBMK_FLAGS=-debug
+
+:hbmk2
+echo HBMK HOME: %HBMK_PATH%
+call %HBMK_PATH%\\hbmk2.exe -comp=%COMPILER% %HBMK_FLAGS% %CWD%\src\gtnap\gtnap.hbp || goto error_gtnap
 
 echo ---------------------------
 echo GTNAP build succeed
@@ -84,16 +97,20 @@ goto end
 ::
 :: Errors
 ::
+:error_compiler
+echo Unknown compiler
+goto end
+
 :error_cmake
 echo Error in NAppGUI CMake generate
-exit 1
+goto end
 
 :error_build
 echo Error building NAppGUI
-exit 1
+goto end
 
 :error_gtnap
 echo Error building GTNAP
-exit 1
+goto end
 
 :end
