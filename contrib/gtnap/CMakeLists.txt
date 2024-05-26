@@ -3,7 +3,7 @@
 # Copyright (C) 2018 Francisco García Collado
 # MIT License (See LICENSE.txt)
 #------------------------------------------------------------------------------
-# cmake -G "MinGW Makefiles" -S . -B build-dev -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Debug -DGTNAP_DEVELOPER_MODE=ON -DGTNAP_LIBREOFFICE=ON
+# cmake -G "MinGW Makefiles" -S . -B build-dev -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Debug -DGTNAP_DEVELOPER_MODE=ON
 
 cmake_minimum_required(VERSION 3.0)
 project(NAppGUI)
@@ -45,7 +45,6 @@ nap_build_opt("Build type" "${CMAKE_BUILD_TYPE}")
 nap_build_opt("Build arch" "${CMAKE_ARCHITECTURE}")
 nap_build_opt("Host arch" "${CMAKE_HOST_ARCHITECTURE}")
 nap_build_opt("PackageID" "${CMAKE_PACKAGE_ID}")
-nap_build_opt("LibreOffice support" "${GTNAP_LIBREOFFICE}")
 message (STATUS "---------------------------------------------")
 
 # Tools required to generate NAppGUI projets ('nrc')
@@ -69,11 +68,6 @@ if (GTNAP_DEVELOPER_MODE)
             addFlag(CMAKE_C_FLAGS_DEBUG "/MT")
         endif()
     endif()
-endif()
-
-# Enable the support for LibreOffice in source code
-if (GTNAP_LIBREOFFICE)
-    add_definitions("-DGTNAP_LIBREOFFICE")
 endif()
 
 foreach (target ${ALL_TARGETS})
@@ -121,29 +115,6 @@ if (GTNAP_DEVELOPER_MODE)
     endif()
 
     add_subdirectory("src/gtnap")
-
-    if (GTNAP_LIBREOFFICE)
-        # Libreoffice link libraries
-        set(LOROOT "$ENV{LIBREOFFICE_HOME}")
-
-        if (NOT LOROOT)
-            message(FATAL_ERROR "LIBREOFFICE_HOME environment variable is required to compile GTNAP")
-        endif()
-
-        if (WIN32)
-            set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
-            if(CMAKE_GENERATOR MATCHES "MinGW Makefiles")
-                STRING(REGEX REPLACE "\\\\" "/" LIBREOFFICE_LIB_PATH ${LIBREOFFICE_LIB_PATH})
-            else()
-                file(TO_NATIVE_PATH \"${LIBREOFFICE_LIB_PATH}\" LIBREOFFICE_LIB_PATH)
-            endif()
-            set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
-        else()
-            set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
-            set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
-        endif()
-
-    endif()
 
     # Example applications
     file(COPY "${GTNAP_PATH}/resources/CMakeLists.txt" DESTINATION "${GTNAP_PATH}/src/exemplo")

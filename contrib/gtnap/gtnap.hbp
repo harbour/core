@@ -25,20 +25,10 @@
 # Fran: Whats that? -w3 == Warning level   -es2???
 -w3 -es2
 
-# Avoid linker error '__gxx_personality_v0'
-# GTNAP need to be linked with g++
-# LibreOffice support needs c++ linking
-# -cpp={allgcc}yes
-# -cpp={allmsvc}no
 -cpp=yes
 
 # Create Harbour header
 -hbx=${hb_name}.hbx
-
-# TODO: Disabled UNICODE until this code gets support for it.
-# -winuni- Fran: At the moment I only comment, to remember this option in the future.
-# Fran: Perfect, for the moment only Windows. I want to see the error when I compile on Linux/macOS
-# "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform. See gtnap.hbp -stop"
 
 # Files
 src/gtnap/gtnap.c
@@ -53,7 +43,3 @@ src/gtnap/nap_menu.c
 src/gtnap/nap_tableview.c
 src/gtnap/nap_textview.c
 src/gtnap/nap_window.c
-src/gtnap/nap_office.c
-src/gtnap/nap_sheet.c
-src/gtnap/nap_writer.c
-
