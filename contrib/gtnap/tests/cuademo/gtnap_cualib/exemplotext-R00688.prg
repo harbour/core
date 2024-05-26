@@ -1,6 +1,7 @@
 /* encoding: cp850 */
 #INCLUDE "cua.ch"
 #INCLUDE "gtnap.ch"
+#INCLUDE "hboffice.ch"
 
 ****************************
 PROC EXEMPLO_TEXT_DOCUMENT
@@ -30,11 +31,11 @@ ATIVE(V_Janela)
 *************************************
 FUNCTION OFFICE_ERROR( C_Text )
 *************************************
-LOCAL N_Err := NAP_OFFICE_LAST_ERROR()
-LOCAL C_Err := NAP_OFFICE_ERROR_STR(N_Err)
+LOCAL N_Err := HBOFFICE_LAST_ERROR()
+LOCAL C_Err := HBOFFICE_ERROR_STR(N_Err)
 LOCAL L_Err := .F.
 
-IF N_Err != SDKRES_OK
+IF N_Err != HBOFFICE_RES_OK
     MOSTRAR("M15566", C_Text + ": " + C_Err)
     L_Err = .T.
 ENDIF
@@ -128,10 +129,10 @@ FUNC COMPOSE_TABLINE(V_Tabs, V_Values)
 
         // Write the data in its column
         IF N_Field_width <= N_Width
-            IF N_Align == SDK_HALIGN_LEFT
+            IF N_Align == HBOFFICE_HALIGN_LEFT
                 C_STR += C_Field
                 C_STR += SPACE(N_Width - N_Field_width)
-            ELSEIF N_Align == SDK_HALIGN_RIGHT
+            ELSEIF N_Align == HBOFFICE_HALIGN_RIGHT
                 C_STR += SPACE(N_Width - N_Field_width)
                 C_STR += C_Field
             ELSE
@@ -191,7 +192,7 @@ LOCAL O_DOC := NAP_DOC_CREATE()
 LOCAL N_Width := 130
 
 // Field tabulations
-LOCAL V_Tabs := {42, SDK_HALIGN_LEFT, 16, SDK_HALIGN_RIGHT, 18, SDK_HALIGN_RIGHT, 18, SDK_HALIGN_RIGHT, 18, SDK_HALIGN_RIGHT, 18, SDK_HALIGN_RIGHT}
+LOCAL V_Tabs := {42, HBOFFICE_HALIGN_LEFT, 16, HBOFFICE_HALIGN_RIGHT, 18, HBOFFICE_HALIGN_RIGHT, 18, HBOFFICE_HALIGN_RIGHT, 18, HBOFFICE_HALIGN_RIGHT, 18, HBOFFICE_HALIGN_RIGHT}
 
 IF OFFICE_ERROR("Erro ao criar documento de texto")
     RETURN
@@ -204,10 +205,10 @@ NAP_DOC_PAGE_FOOTER_MARGINS(O_DOC, 354, 380, 608, 202, .T., .T.)
 NAP_DOC_PAGE_MARGINS(O_DOC, 2819, 178, 1270, 533, 0)
 
 // Write image and text into header
-NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_HEADER)
+NAP_DOC_TEXT_SPACE(O_DOC, HBOFFICE_TEXT_SPACE_HEADER)
 NAP_DOC_FONT_FAMILY(O_DOC, "Courier New")
 NAP_DOC_FONT_SIZE(O_DOC, 16.0)
-NAP_DOC_INSERT_IMAGE(O_DOC, SDK_ANCHOR_AS_CHARACTER, 2000, 2000, SDK_HALIGN_LEFT, SDK_VALIGN_CENTER, {|| NAP_WORK_PATH() + "/../office/ods/macapa.png"} )
+NAP_DOC_INSERT_IMAGE(O_DOC, HBOFFICE_ANCHOR_AS_CHARACTER, 2000, 2000, HBOFFICE_HALIGN_LEFT, HBOFFICE_VALIGN_CENTER, {|| NAP_WORK_PATH() + "/../office/ods/macapa.png"} )
 NAP_DOC_INSERT_NEW_LINE(O_DOC)
 NAP_DOC_INSERT_TEXT(O_DOC, "First line in HEADER")
 NAP_DOC_INSERT_NEW_LINE(O_DOC)
@@ -215,7 +216,7 @@ NAP_DOC_INSERT_TEXT(O_DOC, "Second line in HEADER")
 NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 // Write text into footer
-NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_FOOTER)
+NAP_DOC_TEXT_SPACE(O_DOC, HBOFFICE_TEXT_SPACE_FOOTER)
 NAP_DOC_FONT_FAMILY(O_DOC, "Courier New")
 NAP_DOC_FONT_SIZE(O_DOC, 16.0)
 NAP_DOC_BOLD(O_DOC, .T.)
@@ -225,7 +226,7 @@ NAP_DOC_INSERT_TEXT(O_DOC, "Second line in FOOTER")
 NAP_DOC_INSERT_NEW_LINE(O_DOC)
 
 // Write text into page
-NAP_DOC_TEXT_SPACE(O_DOC, SDK_TEXT_SPACE_PAGE)
+NAP_DOC_TEXT_SPACE(O_DOC, HBOFFICE_TEXT_SPACE_PAGE)
 NAP_DOC_FONT_FAMILY(O_DOC, "Courier New")
 NAP_DOC_FONT_SIZE(O_DOC, 6.0)
 NAP_DOC_PARAGRAPH_LSPACING(O_DOC, 330)
@@ -400,7 +401,7 @@ NAP_DOC_PDF(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/R00688-PPA.pdf" })
 OFFICE_ERROR("Exportando para PDF")
 
 // Print the doc
-NAP_DOC_PRINT(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/R00688-PPA-Printer.pdf" }, "", SDK_PAPER_ORIENT_LANSCAPE, SDK_PAPER_FORMAT_LETTER, 0, 0, 1, .F., "1-")
+NAP_DOC_PRINT(O_DOC, {|| NAP_WORK_PATH() + "/../office/ods_gen/R00688-PPA-Printer.pdf" }, "", HBOFFICE_PAPER_ORIENT_LANSCAPE, HBOFFICE_PAPER_FORMAT_LETTER, 0, 0, 1, .F., "1-")
 
 // Close the document (mandatory)
 NAP_DOC_CLOSE(O_DOC)
