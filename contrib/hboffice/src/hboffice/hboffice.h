@@ -44,7 +44,7 @@ extern void hb_office_sheet_protect(Sheet *sheet, const uint32_t page, const boo
 
 extern void hb_office_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t ncols, const uint32_t nrows);
 
-extern const char_t *hb_office_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row);
+extern const char_t *hb_office_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row);
 
 extern void hb_office_sheet_cell_text(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row, HB_ITEM *text_block);
 

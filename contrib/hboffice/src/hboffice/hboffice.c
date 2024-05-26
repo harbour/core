@@ -274,7 +274,7 @@ void hb_office_sheet_freeze(Sheet *sheet, const uint32_t page, const uint32_t nc
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *hb_office_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row)
+const char_t *hb_office_sheet_cell_ref(Sheet *sheet, const uint32_t page, const uint32_t col, const uint32_t row)
 {
     if (HBOFFICE_GLOBAL.init == TRUE)
     {

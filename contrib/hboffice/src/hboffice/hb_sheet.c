@@ -108,13 +108,13 @@ HB_FUNC(HBOFFICE_XLS_FREEZE)
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC(HBOFFICE_CELL_REF)
+HB_FUNC(HBOFFICE_XLS_CELL_REF)
 {
     Sheet *sheet = (Sheet *)hb_parptr(1);
     uint32_t page = hb_parni(2);
     uint32_t col = hb_parni(3);
     uint32_t row = hb_parni(4);
-    const char_t *ref = hb_office_cell_ref(sheet, page, col, row);
+    const char_t *ref = hb_office_sheet_cell_ref(sheet, page, col, row);
     hb_retc(ref);
 }
 

@@ -282,7 +282,7 @@ HBOFFICE_XLS_CELL_FORMULA(O_XLS, 0, 0, 29, "$'RREO-Anexo 01'.A29+$'RREO-Anexo 02
 C_Formula:=""
 
 FOR N_Page := 0 TO 7
-    C_Formula += HBOFFICE_CELL_REF(O_XLS, N_Page, 0, 28)
+    C_Formula += HBOFFICE_XLS_CELL_REF(O_XLS, N_Page, 0, 28)
     IF N_Page < 7
         C_Formula += "+"
     ENDIF
