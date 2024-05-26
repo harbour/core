@@ -60,6 +60,9 @@ if [ $OPERATION == "dll" ]; then
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
     make -j 4 || exit 1
+    rm $BUILD/lib/*core*
+    rm $BUILD/lib/*osbs*
+    rm $BUILD/lib/*sewer*
     echo ---------------------------
     echo OFFICESDK DLL build succeed
     echo ---------------------------

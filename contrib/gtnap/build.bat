@@ -14,6 +14,7 @@
 set COMPILER=mingw64
 set BUILD=Release
 set "CWD=%cd%"
+set HBMK_PATH=..\\..\\bin\\win\\%COMPILER%
 
 :parse
 IF "%~1"=="" GOTO endparse
@@ -42,6 +43,7 @@ echo Generating GTNAP
 echo Main path: %CWD%
 echo Build type: %BUILD%
 echo COMPILER: %COMPILER%
+echo HBMK path: %HBMK_PATH%
 echo ---------------------------
 
 ::
@@ -75,7 +77,6 @@ call cmake --build %CWD%\build %CMAKE_BUILD% || goto error_build
 ::
 :: Build GTNAP
 ::
-set HBMK_PATH=..\\..\\bin\\win\\%COMPILER%
 set HBMK_FLAGS=
 
 IF "%BUILD%"=="Debug" GOTO hbmk2_debug
