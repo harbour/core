@@ -75,6 +75,10 @@ set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DCMAKE_WARN_
 set CMAKE_BUILD=--config %BUILD%
 call cmake %CMAKE_ARGS% -S %CWD% -B %CWD%\build || goto error_cmake
 call cmake --build %CWD%\build %CMAKE_BUILD% || goto error_build
+del %CWD%\build\%BUILD%\lib\core.*
+del %CWD%\build\%BUILD%\lib\osbs.*
+del %CWD%\build\%BUILD%\lib\sewer.*
+
 echo ---------------------------
 echo OFFICESDK DLL build succeed
 echo ---------------------------
