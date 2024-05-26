@@ -4,7 +4,6 @@ Harbour cross-platform video subsystem using NAppGUI-SDK
 https://github.com/frang75/nappgui_src
 
 * [Installing CMake](#installing-cmake)
-* [LibreOffice-SDK support](#libreoffice-sdk-support)
 * [Installing Visual Studio](#installing-visual-studio)
 * [Installing MinGW GCC](#installing-mingw-gcc)
 * [Installing GCC in Linux](#installing-gcc-in-linux)
@@ -65,10 +64,6 @@ For building GTNap CMake tool is necessary:
       % cmake --version
       cmake version 3.21.4
       ```
-
-## LibreOffice-SDK support
-
-LibreOffice support has been removed from GTNAP to a new project. Go [HBOFFICE](../hboffice/Readme.md) for details about to use this library in Harbour applications.
 
 ## Installing Visual Studio
 
