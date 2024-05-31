@@ -103,11 +103,11 @@
    $ONELINER$
       Appends a new record to a database file.
    $SYNTAX$
-      dbAppend( [<lLock>] ) --> NIL
+      dbAppend( [<lUnlockAll>] ) --> lSuccess
    $ARGUMENTS$
-      <lLock> Toggle to release record locks
+      <lUnlockAll> Toggle to release record locks
    $RETURNS$
-      dbAppend() always returns NIL
+      dbAppend() returns a logical true (.T.) if append was successful
    $DESCRIPTION$
       This function add a new record to the end of the database
       in the selected or aliased work area. All fields in that
@@ -122,13 +122,13 @@
       operation: It attempts to lock the newly added record. If
       the database file is currently locked or if a locking assignment
       is made to `LastRec() + 1`, NetErr() will return a logical true (.T.)
-      immediately after the dbAppend() function. This function does
-      not unlock the locked records.
+      immediately after the dbAppend() function. Also by default this
+      function does unlock previously locked records.
 
-      If <lLock> is passed a logical true (.T.) value, it will
-      release the record locks, which allows the application to maintain
-      multiple record locks during an appending operation. The
-      default for this parameter is a logical false (.F.).
+      If <lUnlockAll> is passed a logical true (.T.) value, it will
+      release the record locks. The default for this parameter is
+      a logical true (.T.). To maintain multiple record locks during
+      an appending operation explicitly specify logical false (.F.).
    $EXAMPLES$
       LOCAL cName := "Harbour", nAge := 15
       USE test
