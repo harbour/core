@@ -13,6 +13,8 @@
 -cflag={allmsvc|allmingw}-D_WINDOWS
 -cflag={allmingw}-DUNICODE
 -cflag={allmingw}-D_UNICODE
+-cflag={mingw64}-D_M_AMD64
+-cflag={mingw}-D_M_IX86
 -cflag={allgcc&debug}-g
 -cflag={allgcc}-std=c++98
 -cflag={debug}-DCMAKE_DEBUG
