@@ -4,10 +4,6 @@
     "cmake.sourceDirectory": "${workspaceFolder}",
     "cmake.buildDirectory": "${workspaceFolder}/build-dev",
 
-    "cmake.configureArgs": [
-        "-DGTNAP_DEVELOPER_MODE:BOOL=Yes",
-        "-DGTNAP_LIBREOFFICE:BOOL=Yes"
-    ],
     "files.associations": {
         "*.txs": "html",
         "*.ixx": "c",
