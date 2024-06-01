@@ -36,6 +36,9 @@ obj
 .DS_Store
 *.bak
 
+# build
+/build
+
 # exceptions
 !libunicows.a
 !unicows.lib

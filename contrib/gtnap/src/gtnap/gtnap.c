@@ -1370,10 +1370,10 @@ static void i_OnEditChange(GtNapObject *gtobj, Event *e)
     {
         if (gtwin->error_date_block != NULL)
         {
-            long r = hb_dateUnformat(p->text, hb_setGetDateFormat());
+            long date_ok = hb_dateUnformat(p->text, hb_setGetDateFormat());
 
             /* Date invalid --> The editbox keep the focus and event finish here */
-            if (r == 0)
+            if (date_ok == 0)
             {
                 PHB_ITEM ritem = NULL;
                 bool_t *r = event_result(e, bool_t);
@@ -4741,6 +4741,7 @@ static HB_BOOL hb_gtnap_CheckPos(PHB_GT pGT, int iRow, int iCol, long *plIndex)
 
 static void hb_gtnap_SetPos(PHB_GT pGT, int iRow, int iCol)
 {
+    HB_SYMBOL_UNUSED(pGT);
     if (GTNAP_GLOBAL != NULL)
     {
         if (GTNAP_GLOBAL->debugger != NULL)
@@ -4839,6 +4840,13 @@ static HB_BOOL hb_gtnap_GetChar(PHB_GT pGT, int iRow, int iCol, int *pbColor, HB
     *pbAttr = 0;
     *pusChar = 65;
     return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static uint32_t i_hb_codepoint(HB_USHORT usChar)
+{
+    return (uint32_t)usChar;
 }
 
 /*---------------------------------------------------------------------------*/

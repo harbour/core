@@ -152,7 +152,7 @@ void nap_debugger_rest(GtNapDebugger *debug, const uint32_t top, const uint32_t 
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE int32_t i_key_letter(int32_t ctrl, int32_t alt, int32_t shift, int32_t normal, uint32_t modifiers)
+static ___INLINE int32_t i_key_letter(int32_t ctrl, int32_t alt, int32_t shift, int32_t normal, uint32_t modifiers)
 {
     if (modifiers & ekMKEY_CONTROL)
         return ctrl;
@@ -166,7 +166,7 @@ static __INLINE int32_t i_key_letter(int32_t ctrl, int32_t alt, int32_t shift, i
 
 /*---------------------------------------------------------------------------*/
 
-static __INLINE int32_t i_key_function(int32_t ctrl, int32_t alt, int32_t shift, int32_t normal, uint32_t modifiers)
+static ___INLINE int32_t i_key_function(int32_t ctrl, int32_t alt, int32_t shift, int32_t normal, uint32_t modifiers)
 {
     if (modifiers & ekMKEY_CONTROL)
         return ctrl;

@@ -15,5 +15,5 @@
         "hboffice.h": "c"
     },
     "files.encoding": "windows1252",
-    "cmake.sourceDirectory": "C:/harbour_nappgui/contrib/gtnap/tests/unotest"
+    "cmake.sourceDirectory": "C:/harbour_nappgui"
 }
