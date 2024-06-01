@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 3.0)
 project(Exemplo)
 
 # Globals
+set(LOROOT "$ENV{LIBREOFFICE_HOME}")
 set(HARBOUR_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 set(NAPPGUI_ROOT_PATH ${HARBOUR_ROOT_PATH}/contrib/gtnap)
 set(GTNAP_ROOT_PATH ${HARBOUR_ROOT_PATH}/contrib/gtnap)
@@ -37,20 +38,78 @@ nap_build_opt("Host arch" "${CMAKE_HOST_ARCHITECTURE}")
 nap_build_opt("PackageID" "${CMAKE_PACKAGE_ID}")
 message (STATUS "---------------------------------------------")
 
-# Avoid warning
+# Avoid warnings
 if (WIN32)
     if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         string(REGEX REPLACE "/w44668" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
         string(REGEX REPLACE "/w44255" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
         string(REGEX REPLACE "/w44668" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
         string(REGEX REPLACE "/w44255" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        removeFlag(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+        removeFlag(CMAKE_CXX_FLAGS_DEBUG "/MDd")
+        removeFlag(CMAKE_C_FLAGS_DEBUG "/MTd")
+        removeFlag(CMAKE_C_FLAGS_DEBUG "/MDd")
+        addFlag(CMAKE_CXX_FLAGS_DEBUG "/MT")
+        addFlag(CMAKE_C_FLAGS_DEBUG "/MT")
     endif()
+
 endif()
 
 # Tools required to generate NAppGUI projets ('nrc')
 # They need to be compiled before NAppGUI configure/generate
 include(${NAPPGUI_ROOT_PATH}/prj/NAppGenerateTools.cmake)
 nap_generate_tools()
+
+# Generate C executable targets for .hbp
+include(nap-dev/HarbourTools.cmake)
+harbour_to_c_exe("exemplo" "${GTNAP_ROOT_PATH}/src/exemplo" "${GTNAP_ROOT_PATH}/tests/cuademo/gtnap_cualib/exemplo.hbp")
+# message(" - Generating 'exemplo' C files")
+# file(REMOVE_RECURSE ${GTNAP_ROOT_PATH}/src/exemplo)
+# file(MAKE_DIRECTORY ${GTNAP_ROOT_PATH}/src/exemplo)
+# if (WIN32)
+#     if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+#         set(HBMK2_COMPILER msvc64)
+#         set(HBMK2_COMMAND ${HARBOUR_ROOT_PATH}/bin/win/${HBMK2_COMPILER}/hbmk2.exe)
+#     else()
+#         message(FATAL_ERROR "Compiler not supported")
+#     endif()
+# else()
+#     message(FATAL_ERROR "Platform not supported")
+# endif()
+
+# # @REM :: Generate exemplo sources
+# # @REM cd %gtpath%\\tests\\cuademo\\gtnap_cualib
+# # @REM echo Exemplo: %gtpath%\src\exemplo
+# # @REM if not exist %gtpath%\src\exemplo mkdir %gtpath%\src\exemplo
+# # @REM ..\\..\\..\\..\\..\\bin\\win\\%DEBUG_COMPILER%\\hbmk2.exe -debug -comp=%DEBUG_COMPILER% -keepc -workdir=%gtpath%\src\exemplo -o%gtpath%\build\exemplo exemplo.hbp || goto error_exemplo
+
+#         # CMake configure
+#         execute_process(
+#                     COMMAND
+#                     ${CMAKE_COMMAND} "-E" chdir "${GTNAP_ROOT_PATH}/tests/cuademo/gtnap_cualib"
+#                     ${HBMK2_COMMAND}
+#                     "-debug"
+#                     "-comp=${HBMK2_COMPILER}"
+#                     "-keepc"
+#                     "-workdir=${GTNAP_ROOT_PATH}/src/exemplo"
+#                     "-o${CMAKE_BINARY_DIR}/exemplo"
+#                     "exemplo.hbp"
+#                     # "-E" chdir "${TOOLS_BUILD_DIR}"
+#                     # ${CMAKE_COMMAND} "-G" "${CMAKE_GENERATOR}"
+#                     # "-DNAPPGUI_ROOT_PATH=${NAPPGUI_ROOT_PATH}"
+#                     # "-DNAPPGUI_MAJOR=${NAPPGUI_MAJOR}"
+#                     # "-DNAPPGUI_MINOR=${NAPPGUI_MINOR}"
+#                     # "-DNAPPGUI_PATCH=${NAPPGUI_PATCH}"
+#                     # "-DNAPPGUI_BUILD=${NAPPGUI_BUILD}"
+#                     # ${TOOLS_SRC_DIR}
+#                     RESULT_VARIABLE HBMKResult
+#                     OUTPUT_VARIABLE HBMKOutput
+#                     ERROR_VARIABLE HBMKError)
+
+# message("!!!!!!!!!!!HBMKResult: ${HBMKResult}")
+# message("!!!!!!!!!!!HBMKOutput: ${HBMKOutput}")
+# message("!!!!!!!!!!!HBMKError: ${HBMKError}")
+
 
 # Generate targets
 include(${NAPPGUI_ROOT_PATH}/prj/NAppTarget.cmake)
@@ -76,6 +135,49 @@ add_subdirectory(${NAPPGUI_ROOT_PATH}/src/gtnap)
 # HBOffice
 add_subdirectory(${HBOFFICE_ROOT_PATH}/src/officesdk)
 add_subdirectory(${HBOFFICE_ROOT_PATH}/src/hboffice)
+
+# Add the Harbour executable projects
+set(EXECUTABLE_NAME "exemplo")
+add_subdirectory("${GTNAP_ROOT_PATH}/src/exemplo")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # message("HARBOUR ${HARBOUR_ROOT_PATH}")
