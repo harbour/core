@@ -10,6 +10,14 @@
             "environment": [{ "name": "LIBREOFFICE_HOME", "value": "C:/Program Files/LibreOffice" },
                             { "name": "LD_LIBRARY_PATH", "value": "/usr/lib/libreoffice/program"}],
             "cwd": "${workspaceFolder}/tests/cuademo/gtnap_cualib"
+        },
+        {
+            "name": "Debugger",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build-dev/Debug/bin/gtnapdeb",
+            "args": ["35", "100"],
+            "cwd": "${workspaceFolder}/tests/cuademo/gtnap_cualib"
         }
     ]
 }

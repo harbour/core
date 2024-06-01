@@ -115,7 +115,8 @@ static bool_t i_pipes(HANDLE *pipes)
 
 static bool_t i_exec(const char_t *command, HANDLE *pipes, PROCESS_INFORMATION *info)
 {
-    WCHAR commandw[1024] = L"cmd /c ";
+    //WCHAR commandw[1024] = L"cmd /c ";
+    WCHAR commandw[1024] = L"";
     STARTUPINFO stinfo;
     uint32_t size;
     cassert_no_null(pipes);
@@ -126,7 +127,7 @@ static bool_t i_exec(const char_t *command, HANDLE *pipes, PROCESS_INFORMATION *
     stinfo.hStdOutput = pipes[STDOUT_WRITE_CHILD];
     stinfo.hStdError = pipes[STDERR_WRITE_CHILD];
     stinfo.dwFlags |= STARTF_USESTDHANDLES;
-    size = unicode_convers(command, (char_t *)(commandw + 7), ekUTF8, ekUTF16, (1024 - 7) * sizeof(WCHAR));
+    size = unicode_convers(command, (char_t *)(commandw), ekUTF8, ekUTF16, (1024 - 7) * sizeof(WCHAR));
     if (size < (1024 - 7) * sizeof(WCHAR))
     {
         BOOL ok = CreateProcess(NULL, commandw, NULL, NULL, TRUE, 0, NULL, NULL, &stinfo, info);

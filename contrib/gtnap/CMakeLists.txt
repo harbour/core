@@ -77,6 +77,7 @@ endforeach()
 # If we are in dev mode, 'gtnap' and 'exemplo' target will be built in same solution
 if (GTNAP_DEVELOPER_MODE)
     message(STATUS "- GTNAP Developer mode")
+    add_definitions("-DGTNAP_DEVELOPER_MODE")
     set(GTNAP_PATH ${CMAKE_CURRENT_SOURCE_DIR})
     set(HARBOUR_ROOT_PATH ${GTNAP_PATH}/../..)
 
