@@ -539,6 +539,16 @@ cmake -S . -B build -A x64
 
 ### Linux developer mode
 
+```
+# In /harbour_nappgui
+cmake -S . -B build
+cmake --build build
+```
+
+* Open VSCode and `/habour_nappgui` folder (main path).
+
+* Go to `Run and Debug` and select `Exemplo`:
+
 ### macOS developer mode
 
 ## GTNap design
