@@ -2,6 +2,40 @@
 # Full Exemplo Development solution
 # 2024 Francisco Garcia Collado
 #------------------------------------------------------------------------------
+# Build process in Windows with MinGW
+# ===================================
+# # HbOffice
+# cd contrib\hboffice
+# build.bat -dll -b Release  # Visual Studio required
+# build.bat -lib -comp mingw64 -b Release
+
+# # GTNap
+# cd contrib\gtnap
+# build.bat -b Release -comp mingw64
+
+# # exemplo
+# Important!!! Copy officesdk.dll from \hboffice\build\Release\bin to \gtnap\tests\cuademo\gtnap_cualib
+# cd contrib\gtnap\tests\cuademo\gtnap_cualib
+# ..\..\..\..\..\bin\win\mingw64\hbmk2.exe -comp=mingw64 exemplo.hbp
+# .\exemplo --hb:gtnap
+
+
+# Build process in Linux with GCC
+# ================================
+# # HbOffice
+# cd contrib/hboffice
+# ./build.sh -dll -b Release
+# ./build.sh -lib -b Release
+
+# # GTNap
+# cd contrib/gtnap
+# ./build.sh -b Release
+
+# # exemplo
+# Important!!! Copy libofficesdk.so from \hboffice\build\Release\bin to \gtnap\tests\cuademo\gtnap_cualib
+# ../../../../../bin/linux/gcc/hbmk2 exemplo.hbp
+# ./exemplo --hb:gtnap
+
 cmake_minimum_required(VERSION 3.0)
 project(Exemplo)
 
