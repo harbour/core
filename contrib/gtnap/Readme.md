@@ -549,6 +549,9 @@ cmake --build build
 
 * Go to `Run and Debug` and select `Exemplo`:
 
+    ![debug_vscode_linux](https://github.com/frang75/harbour_nappgui/assets/42999199/20c7ce47-a6eb-4132-8c45-be8c2b9543a2)
+
+
 ### macOS developer mode
 
 ## GTNap design
