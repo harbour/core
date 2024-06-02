@@ -19,8 +19,17 @@ if (WIN32)
     else()
         message(FATAL_ERROR "Compiler not supported")
     endif()
+
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(HBMK2_COMPILER gcc)
+    set(HBMK2_COMMAND ${HARBOUR_ROOT_PATH}/bin/linux/${HBMK2_COMPILER}/hbmk2)
+
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+    message(FATAL_ERROR "Platform not supported")
+
 else()
     message(FATAL_ERROR "Platform not supported")
+
 endif()
 
 # Launch HBMK2 over .hbp

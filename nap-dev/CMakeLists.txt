@@ -43,12 +43,18 @@ if (WIN32)
         set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/win/mingw64)
     endif()
     set(LIBREOFFICE_LIB_PATH ${LOROOT}/sdk/lib)
+
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/linux/gcc)
+    set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
+
 elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/darwin/clang)
     set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
+
 else()
-    set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/linux/gcc)
-    set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
+    message(FATAL_ERROR "Platform not supported")
+
 endif()
 
 # Link executable with Harbour libs

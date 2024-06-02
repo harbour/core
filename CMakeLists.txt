@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 3.0)
 project(Exemplo)
 
 # Globals
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE INTERNAL "Configuration Types" FORCE)
 set(LOROOT "$ENV{LIBREOFFICE_HOME}")
 set(HARBOUR_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 set(NAPPGUI_ROOT_PATH ${HARBOUR_ROOT_PATH}/contrib/gtnap)

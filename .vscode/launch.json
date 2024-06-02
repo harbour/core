@@ -5,19 +5,19 @@
             "name": "Exemplo",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build-dev/Debug/bin/exemplo",
+            "program": "${workspaceFolder}/build/Debug/bin/exemplo",
             "args": ["--hb:gtnap"],
             "environment": [{ "name": "LIBREOFFICE_HOME", "value": "C:/Program Files/LibreOffice" },
                             { "name": "LD_LIBRARY_PATH", "value": "/usr/lib/libreoffice/program"}],
-            "cwd": "${workspaceFolder}/tests/cuademo/gtnap_cualib"
+            "cwd": "${workspaceFolder}/contrib/gtnap/tests/cuademo/gtnap_cualib"
         },
         {
             "name": "Debugger",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build-dev/Debug/bin/gtnapdeb",
+            "program": "${workspaceFolder}/build/Debug/bin/gtnapdeb",
             "args": ["35", "100"],
-            "cwd": "${workspaceFolder}/tests/cuademo/gtnap_cualib"
+            "cwd": "${workspaceFolder}/contrib/gtnap/tests/cuademo/gtnap_cualib"
         }
     ]
 }
