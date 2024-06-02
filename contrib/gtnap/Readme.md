@@ -22,8 +22,8 @@ https://github.com/frang75/nappgui_src
 * [Compile and run CUADEMO example](#compile-and-run-cuademo-example)
 * [Harbour debugging](#harbour-debugging)
 * [Application ICON](#application-icon)
-   - [In Windows](#icon-in-windows)
-   - [In Linux](#icon-in-linux)
+   - [Icon in Windows (and manifest)](#icon-in-windows-and-manifest)
+   - [Icon in Linux](#icon-in-linux)
 * [GTNap developer mode](#gtnap-developer-mode)
    - [Windows developer mode](#windows-developer-mode)
    - [Linux developer mode](#linux-developer-mode)
@@ -479,12 +479,35 @@ Create two `.ico` files with transparent backgrounds. One of 48x48 (Linux) and a
 
 ![image](https://github.com/frang75/harbour_nappgui/assets/42999199/bbe22a2f-6c86-43fc-9bca-64ddf6ee2532)
 
-### Icon in Windows
+### Icon in Windows (and manifest)
 
 Create a `*.rc` file with the application name in the same code directory `example.rc`. The content of this file should point to the location of the icon:
+
 ```
 APPLICATION_ICON ICON "..\\icon256.ico"
 ```
+
+> **Important:** Using the MinGW compiler is also necessary add the application manifest to the `*.rc` file.
+
+* Create a `Application.manifest` file with this content into `/contrib/gtnap/tests/cuademo`
+    ```
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+        <assemblyIdentity version="1.0.0.0" processorArchitecture="*" name="exemplo.application" type="win32" />
+        <description>Your application description here.</description>
+        <dependency>
+            <dependentAssembly>
+                <assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls" version="6.0.0.0" processorArchitecture="*" publicKeyToken="6595b64144ccf1df" language="*" />
+            </dependentAssembly>
+        </dependency>
+    </assembly>
+    ```
+
+* Add this line to `exemplo.rc`
+    ```
+    APPLICATION_ICON ICON "..\\icon256.ico"
+    1 24 "..\\Application.manifest"
+    ```
 
 Add the `*.rc` to your `*.hbp` so that it compiles with the rest of the source files (for MSVC only).
 ```
@@ -494,7 +517,7 @@ inkey_.prg
 texto.prg
 
 # Icon
-{allmsvc}exemplo.rc
+{allmsvc|allmingw}exemplo.rc
 ```
 ![application_icon_win](https://github.com/frang75/harbour_nappgui/assets/42999199/7455ccb8-08f9-4e59-93cc-d1fca0806ea5)
 

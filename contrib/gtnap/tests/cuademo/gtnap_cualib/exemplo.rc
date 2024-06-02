@@ -1,1 +1,2 @@
 APPLICATION_ICON ICON "..\\icon256.ico"
+1 24 "..\\Application.manifest"

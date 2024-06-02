@@ -9,7 +9,7 @@
 
 # GT
 -gtnap
--gtwin{allmsvc}
+-gtwin{allmsvc|allmingw}
 -gttrm{gcc}
 
 # Sources
@@ -43,7 +43,7 @@ inkey_.prg
 texto.prg
 
 # Icon
-{allmsvc}exemplo.rc
+{allmsvc|allmingw}exemplo.rc
 
 # Libraries
 hboffice.hbc
