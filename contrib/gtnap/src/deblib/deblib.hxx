@@ -16,6 +16,7 @@ typedef enum _msg_type_t
     ekMSG_BOX,
     ekMSG_CURSOR,
     ekMSG_SET_POS,
+    ekMSG_GET_POS,
     ekMSG_PUTCHAR,
     ekMSG_PUTTEXT,
     ekMSG_SAVE,

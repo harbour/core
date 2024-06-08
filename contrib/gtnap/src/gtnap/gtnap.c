@@ -4742,6 +4742,7 @@ static HB_BOOL hb_gtnap_CheckPos(PHB_GT pGT, int iRow, int iCol, long *plIndex)
 static void hb_gtnap_SetPos(PHB_GT pGT, int iRow, int iCol)
 {
     HB_SYMBOL_UNUSED(pGT);
+    log_printf("hb_gtnap_SetPos (%d, %d)", iRow, iCol);
     if (GTNAP_GLOBAL != NULL)
     {
         if (GTNAP_GLOBAL->debugger != NULL)
@@ -4767,18 +4768,29 @@ static void hb_gtnap_GetPos(PHB_GT pGT, int *piRow, int *piCol)
     HB_SYMBOL_UNUSED(pGT);
     if (GTNAP_GLOBAL != NULL)
     {
-        GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-        if (gtwin != NULL)
+        if (GTNAP_GLOBAL->debugger != NULL)
         {
-            *piRow = (int)gtwin->cursor_row;
-            *piCol = (int)gtwin->cursor_col;
+            uint32_t row, col;
+            nap_debugger_get_pos(GTNAP_GLOBAL->debugger, &row, &col);
+            *piRow = (int)row;
+            *piCol = (int)col;
         }
         else
         {
-            *piRow = 0;
-            *piCol = 0;
+            GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+            if (gtwin != NULL)
+            {
+                *piRow = (int)gtwin->cursor_row;
+                *piCol = (int)gtwin->cursor_col;
+            }
+            else
+            {
+                *piRow = 0;
+                *piCol = 0;
+            }
         }
     }
+    log_printf("hb_gtnap_GetPos (%d,%d)", *piRow, *piCol);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4854,7 +4866,7 @@ static uint32_t i_hb_codepoint(HB_USHORT usChar)
 static HB_BOOL hb_gtnap_PutChar(PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar)
 {
     HB_SYMBOL_UNUSED(pGT);
-    // log_printf("hb_gtnap_PutChar: %c", usChar);
+    log_printf("hb_gtnap_PutChar (%d, %d): %c", iRow, iCol, usChar);
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
     {
         uint32_t codepoint = i_hb_codepoint(usChar);
@@ -4898,7 +4910,7 @@ static int hb_gtnap_PutText(PHB_GT pGT, int iRow, int iCol, int bColor, const ch
     HB_SYMBOL_UNUSED(ulLen);
     i_cp_to_utf8(pText, utf8, sizeof32(utf8));
     // str_copy_c(utf8, sizeof(utf8), "Hello");
-    // log_printf("hb_gtnap_PutText: %s", utf8);
+    log_printf("hb_gtnap_PutText (%d, %d): %s", iRow, iCol, utf8);
 
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_puttext(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, (byte_t)bColor, utf8);

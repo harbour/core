@@ -75,6 +75,17 @@ void deblib_send_set_pos(Stream *stm, const uint32_t row, const uint32_t col)
 
 /*---------------------------------------------------------------------------*/
 
+void deblib_send_get_pos(Stream *stm, uint32_t *row, uint32_t *col)
+{
+    cassert_no_null(row);
+    cassert_no_null(col);
+    stm_write_enum(stm, ekMSG_GET_POS, msg_type_t);
+    *row = stm_read_u32(stm);
+    *col = stm_read_u32(stm);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void deblib_send_putchar(Stream *stm, const uint32_t row, const uint32_t col, const uint32_t codepoint, const byte_t color, const byte_t attrib)
 {
     stm_write_enum(stm, ekMSG_PUTCHAR, msg_type_t);
@@ -196,6 +207,9 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
     case ekMSG_SET_POS:
         msg->row = stm_read_u32(stm);
         msg->col = stm_read_u32(stm);
+        break;
+
+    case ekMSG_GET_POS:
         break;
 
     case ekMSG_PUTCHAR:

@@ -116,6 +116,24 @@ void nap_debugger_set_pos(GtNapDebugger *debug, const uint32_t row, const uint32
 
 /*---------------------------------------------------------------------------*/
 
+void nap_debugger_get_pos(GtNapDebugger *debug, uint32_t *row, uint32_t *col)
+{
+    cassert_no_null(debug);
+    if (debug->stream != NULL)
+    {
+        deblib_send_get_pos(debug->stream, row, col);
+    }
+    else
+    {
+        cassert_no_null(row);
+        cassert_no_null(col);
+        *row = 0;
+        *col = 0;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void nap_debugger_putchar(GtNapDebugger *debug, const uint32_t row, const uint32_t col, const uint32_t codepoint, const byte_t color, const byte_t attrib)
 {
     cassert_no_null(debug);

@@ -390,6 +390,25 @@ static void i_set_pos(App *app, const DebMsg *msg)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_get_pos(App *app, DebMsg *msg)
+{
+    cassert_no_null(app);
+    cassert_no_null(msg);
+
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("%s (%d, %d)", deblib_msg_str(msg->type), msg->row, msg->col);
+        i_log(app, &log);
+    }
+
+    i_lock(app);
+    msg->row = app->cursor_row;
+    msg->col = app->cursor_col;
+    i_unlock(app);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_putchar(App *app, const DebMsg *msg)
 {
     BufChar *bchar = NULL;
@@ -626,6 +645,12 @@ static uint32_t i_protocol_thread(App *app)
 
                         case ekMSG_SET_POS:
                             i_set_pos(app, &msg);
+                            break;
+
+                        case ekMSG_GET_POS:
+                            i_get_pos(app, &msg);
+                            stm_write_u32(stm, msg.row);
+                            stm_write_u32(stm, msg.col);
                             break;
 
                         case ekMSG_PUTCHAR:

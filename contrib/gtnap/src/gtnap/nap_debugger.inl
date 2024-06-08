@@ -19,6 +19,8 @@ void nap_debugger_cursor(GtNapDebugger *debug, const uint32_t style);
 
 void nap_debugger_set_pos(GtNapDebugger *debug, const uint32_t row, const uint32_t col);
 
+void nap_debugger_get_pos(GtNapDebugger *debug, uint32_t *row, uint32_t *col);
+
 void nap_debugger_putchar(GtNapDebugger *debug, const uint32_t row, const uint32_t col, const uint32_t codepoint, const byte_t color, const byte_t attrib); 
 
 void nap_debugger_puttext(GtNapDebugger *debug, const uint32_t row, const uint32_t col, const byte_t color, const char_t *utf8); 

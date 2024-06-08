@@ -74,7 +74,7 @@
 -- Hide monitor window when all monitor options hidden      | [WORKING-SP49](6) | [WORKING-SP49](6) |                   |
 -- Navigate monitor vars when this window is selected       | [WORKING-SP49]    | [WORKING-SP49]    |                   |
 -- Select monitor var using [Enter] and detailed info       | [WORKING-SP49](7) | [WORKING-SP49](7) |                   |
-
+-- Select monitor var using [Enter] and detailed info       | [FIXED-SP53](7)   | [FIXED-SP53](7)   |                   |
 -------------------------------------------------------------------------------------------------------------------------
 -- CALLSTACK WINDOW --
 -------------------------------------------------------------------------------------------------------------------------
@@ -104,6 +104,7 @@
 -- VIEW MENU --
 -------------------------------------------------------------------------------------------------------------------------
 -- Sets                                                     | [WORKING-SP49](3) | [WORKING-SP49](3) |                   |
+-- Sets                                                     | [FIXED-SP53]      | [FIXED-SP53]      |                   |
 -- WorkAreas [F6]                                           |                   |                   |                   |
 -- App Screen [F4]                                          |                   |                   |                   |
 -- CallStack                                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
@@ -150,6 +151,7 @@
 -- Menu Bar                                                 | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
 -- mono Display                                             | [WORKING-SP49]    | [WORKING-SP49]    |                   |
 -- Colors                                                   | [WORKING-SP49](3) | [WORKING-SP49](3) |                   |
+-- Colors                                                   | [FIXED-SP53]      | [FIXED-SP53]      |                   |
 -- Tab Width                                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
 -- Path for Files                                           | [WORKING-SP49]    | [WORKING-SP49]    |                   |
 -- Run at startup                                           |                   |                   |                   |
@@ -225,9 +227,9 @@
 
 - (1) In GTNAP when you press ALT+D the code is not in Harbour part (is in GUI part)
 - (2) The Debugger process is generated in /build/[Debug/Release]/bin/gtnapdeb and referenced in GTNAP through gtnap.hbp
-- (3) Display is working but editing location is wrong
+- (3) Display is working but editing location is wrong. Fixed in Sprint-53
 - (4) Working from Window menu, but not using [TAB] [Sh+TAB]
 - (5) Working but the command characters are not show
 - (6) Working but the code window is not totally restored
-- (7) Working but object editing location is wrong
+- (7) Working but object editing location is wrong. Fixed in Sprint-53
 - (8) Character '?' not detected in Linux
