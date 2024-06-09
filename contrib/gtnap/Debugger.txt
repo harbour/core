@@ -1,0 +1,235 @@
+## GTNAP Debugger WIP
+
+- Basic Features
+- Keys
+- Windows
+- Menus
+- Commands
+
+-------------------------------------------------------------------------------------------------------------------------
+|     GTNap Debugger Task                                   |    Windows        |     Linux         |     macOS         |
+-------------------------------------------------------------------------------------------------------------------------
+-- BASIC FEATURES --                                        |                                                           |
+-------------------------------------------------------------------------------------------------------------------------
+-- Launch the Debugger pressing [Alt+D] in app              | [NOT_POSSIBLE](1) | [NOT_POSSIBLE](1) |                   |
+-- Launch the Debugger when AltD() command in code          | [WORKING-SP49](2) | [WORKING-SP49](2) |                   |
+-- Display menu [Alt+Letter] and select option [Up] [Dn]    | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Menu select option pressing first letter                 | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Menu navigation [Lf] [Rt]                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Box drawing                                              | With artifacts    | With artifacts    |                   |
+-- Menu check                                               | Wrong character   | Wrong character   |                   |
+-- Cursor drawing                                           | Not all modes     | Not all modes     |                   |
+-- Active window double border                              |                   |                   |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- KEYS --                                                  |                                                           |
+-------------------------------------------------------------------------------------------------------------------------
+-- [F1] Help                                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- [F2] Zoom active window                                  | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+-- [F3] Retype last command                                 | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- [F4] View application user screen                        |                   |                   |                   |
+-- [F5] Go (Run application)                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- [F6] View work areas screen                              |                   |                   |                   |
+-- [F7] Run to cursor line                                  | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- [F8] Step                                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- [F9] Set breakpoint on cursor line                       | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- [F10] Trace                                              | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- [TAB]/[SHIFT]+[TAB] Change the active window             |                   |                   |                   |
+-- [ALT+G] Grow active window                               | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+-- [ALT+S] Shrink active window                             | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+-- [ALT+U] Move border between Command and Code Up          | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- [ALT+D] Move border between Command and Code Down        | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- [ALT+X] Exit                                             | [WORKING-SP53]    | [WORKING-SP53]    |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- CODE WINDOW --                                           |                                                           |
+-------------------------------------------------------------------------------------------------------------------------
+-- Code navigation [Up] [Dn] [Lf] [Rt] [PgUp] [PgDn]        | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Code navigation [Home] [End] [CtrlPgUp] [CtrlPgDn]       | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Highlight current line                                   | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Highlight break point line                               | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- COMMAND WINDOW --
+-------------------------------------------------------------------------------------------------------------------------
+-- Command window type characters                           | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- Command execute [Enter]                                  | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- Command retype last [F3]                                 | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- Command window show cursor (when active)                 | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- Command window [Up] [Dn] recall commands                 | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- WATCH WINDOW --
+-------------------------------------------------------------------------------------------------------------------------
+-- Show watch window when watch or tracepoint created       | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Hide watch window all watch/tracepoint deleted           | [WORKING-SP49](6) | [WORKING-SP49](6) |                   |
+-- Navigate watch points when this window is selected       | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Select watch point using [Enter]                         | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Delete watch/trace point using menu                      | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- MONITOR WINDOW --
+-------------------------------------------------------------------------------------------------------------------------
+-- Show monitor window when some monitor option selected    | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Hide monitor window when all monitor options hidden      | [WORKING-SP49](6) | [WORKING-SP49](6) |                   |
+-- Navigate monitor vars when this window is selected       | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Select monitor var using [Enter] and detailed info       | [WORKING-SP49](7) | [WORKING-SP49](7) |                   |
+-- Select monitor var using [Enter] and detailed info       | [FIXED-SP53](7)   | [FIXED-SP53](7)   |                   |
+-------------------------------------------------------------------------------------------------------------------------
+-- CALLSTACK WINDOW --
+-------------------------------------------------------------------------------------------------------------------------
+-- Show callstack window from menu                          | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Hide callstack window from menu                          | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Navigate callstack window [Up] [Dn] when selected        | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Code/Monitor windows adapts to selected stack frame      | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- FILE MENU --
+-------------------------------------------------------------------------------------------------------------------------
+-- Open                                                     | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Resume                                                   | [WORKING-SP53]    | [WORKING-SP53]    |                   |
+-- OS Shell                                                 | [WORKING-SP53]    | [WORKING-SP53]    |                   |
+-- Exit [Alt+X]                                             | [WORKING-SP53]    | [WORKING-SP53]    |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- LOCATE MENU --
+-------------------------------------------------------------------------------------------------------------------------
+-- Find                                                     | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Next                                                     | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Previous                                                 | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Goto Line                                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Case sensitive                                           | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- VIEW MENU --
+-------------------------------------------------------------------------------------------------------------------------
+-- Sets                                                     | [WORKING-SP49](3) | [WORKING-SP49](3) |                   |
+-- Sets                                                     | [FIXED-SP53]      | [FIXED-SP53]      |                   |
+-- WorkAreas [F6]                                           |                   |                   |                   |
+-- App Screen [F4]                                          |                   |                   |                   |
+-- CallStack                                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- RUN MENU --
+-------------------------------------------------------------------------------------------------------------------------
+-- Animate                                                  |                   |                   |                   |
+-- Step [F8]                                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Trace [F10]                                              | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Go [F5]                                                  | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- to Cursor [F7]                                           | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Next routine [Ctrl+F5]                                   |                   |                   |                   |
+-- sPeed                                                    |                   |                   |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- POINT MENU --
+-------------------------------------------------------------------------------------------------------------------------
+-- Watchpoint                                               | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Tracepoint                                               | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Breakpoint [F9]                                          | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Delete                                                   | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- MONITOR MENU --
+-------------------------------------------------------------------------------------------------------------------------
+-- Public                                                   | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Private                                                  | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Static                                                   | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Local                                                    | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Global                                                   | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- All                                                      | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Show all globals                                         | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- sOrt                                                     | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- OPTIONS MENU --
+-------------------------------------------------------------------------------------------------------------------------
+-- Preprocesed Code                                         |                   |                   |                   |
+-- Line Numbers                                             | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Exchange Screens                                         | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+-- swap on Input                                            | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+-- codeBlock Trace                                          |                   |                   |                   |
+-- Menu Bar                                                 | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+-- mono Display                                             | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Colors                                                   | [WORKING-SP49](3) | [WORKING-SP49](3) |                   |
+-- Colors                                                   | [FIXED-SP53]      | [FIXED-SP53]      |                   |
+-- Tab Width                                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Path for Files                                           | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Run at startup                                           |                   |                   |                   |
+-- Save Settings                                            |                   |                   |                   |
+-- Restore Settings                                         |                   |                   |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- WINDOW MENU --
+-------------------------------------------------------------------------------------------------------------------------
+-- Next [TAB]                                               | [WORKING-SP49](4) | [WORKING-SP49](4) |                   |
+-- Prev [Sh+TAB]                                            | [WORKING-SP49](4) | [WORKING-SP49](4) |                   |
+-- Move                                                     | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+-- Size                                                     | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+-- Zoom                                                     | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+-- Iconize                                                  | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+-- Tile                                                     | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- HELP MENU --
+-------------------------------------------------------------------------------------------------------------------------
+-- About Help                                               | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Keys                                                     | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Windows                                                  | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Menus                                                    | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+-- Commands                                                 | [WORKING-SP49]    | [WORKING-SP49]    |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- COMMANDS --
+-------------------------------------------------------------------------------------------------------------------------
+-- Menu commands (e.g. 'M Pr' - 'M All')                    | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- ? command                                                | [WORKING-SP49](5) | (8)               |                   |
+-- ?? command                                               | [WORKING-SP49](5) | (8)               |                   |
+-- ANIMATE                                                  | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- BP                                                       | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- CALLSTACK                                                | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- DELETE                                                   | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- DOS                                                      |                   |                   |                   |
+-- FIND                                                     | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- GO                                                       | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- GOTO                                                     | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- HELP                                                     | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- INPUT                                                    | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- LIST                                                     | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- NEXT                                                     | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- NUM                                                      | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- OUTPUT                                                   |                   |                   |                   |
+-- PREV                                                     | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- QUIT                                                     |                   |                   |                   |
+-- RESTART                                                  |                   |                   |                   |
+-- RESUME                                                   |                   |                   |                   |
+-- SPEED                                                    |                   |                   |                   |
+-- STEP                                                     | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- TP                                                       | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- VIEW                                                     | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+-- WP                                                       | [WORKING-SP49](5) | [WORKING-SP49](5) |                   |
+
+-------------------------------------------------------------------------------------------------------------------------
+-- USER EXPERIENCE --
+-------------------------------------------------------------------------------------------------------------------------
+-- Avoid drawing flickering                                 |                   |                   |                   |
+-- Improve keyboard latency (lag)                           |                   |                   |                   |
+-- Draw window shadows                                      |                   |                   |                   |
+-- Mouse support for debugger                               |                   |                   |                   |
+-- Debugger alert in debugger (not in GTNAP window)         |                   |                   |                   |
+-- Avoid BEEP in Windows when press ALT+Key                 |                   |                   |                   |
+-- Underscore character '_' not detected (Linux)            |                   |                   |                   |
+-------------------------------------------------------------------------------------------------------------------------
+
+[NOT_POSSIBLE]    - Not technically possible.
+[NOT_IMPLEMENTED] - This feature is not implemented by Harbour debugger.
+[WORKING-SP??]    - Feature implemented and tested in Sprint-??
+[            ]    - Not implemented or not tested yet
+
+- (1) In GTNAP when you press ALT+D the code is not in Harbour part (is in GUI part)
+- (2) The Debugger process is generated in /build/[Debug/Release]/bin/gtnapdeb and referenced in GTNAP through gtnap.hbp
+- (3) Display is working but editing location is wrong. Fixed in Sprint-53
+- (4) Working from Window menu, but not using [TAB] [Sh+TAB]
+- (5) Working but the command characters are not show. WIP.
+- (6) Working but the code window is not totally restored
+- (7) Working but object editing location is wrong. Fixed in Sprint-53
+- (8) Character '?' not detected in Linux

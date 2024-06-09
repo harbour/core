@@ -9,7 +9,7 @@
 
 # GT
 -gtnap
--gtwin{allmsvc}
+-gtwin{allmsvc|allmingw}
 -gttrm{gcc}
 
 # Sources
@@ -43,7 +43,7 @@ inkey_.prg
 texto.prg
 
 # Icon
-{allmsvc}exemplo.rc
+{allmsvc|allmingw}exemplo.rc
 
 # Libraries
 hboffice.hbc
@@ -52,7 +52,7 @@ hbct.hbc
 
 # Harbour compiler options
 -m -a -w -es2 -ql
--b{DEBUG}
+-b{debug}
 -d_TESTE{DEBUG}
 -z
 

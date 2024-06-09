@@ -19,4 +19,10 @@ ENDIF
 
 ? "Hello, world!"
 
-QUIT
+IF HB_GTVERSION()=="NAP"
+ELSE
+    DO WHILE .T.
+    ENDDO
+ENDIF
+
+RETURN

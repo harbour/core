@@ -3,7 +3,7 @@
     TODO: More info
 */
 
-#include <gui/gui.hxx>
+#include "gtnap.ixx"
 
 __EXTERN_C
 

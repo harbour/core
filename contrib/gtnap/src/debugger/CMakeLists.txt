@@ -1,0 +1,1 @@
+nap_desktop_app(gtnapdeb "osapp;deblib" NRC_NONE)

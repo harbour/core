@@ -38,6 +38,7 @@ endif()
 # Generate the LibreOffice-SDK C++ headers
 # from SDK *.rdb files
 IF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/com/sun/star")
+    message("- Generating LibreOffice C++ headers with cppumaker")
     set(CPPUMAKER ${LOROOT}/sdk/bin/cppumaker)
     set(CPPTYPES ${LOROOT}/program/types.rdb)
     set(CPPOFFAPI ${LOROOT}/program/types/offapi.rdb)

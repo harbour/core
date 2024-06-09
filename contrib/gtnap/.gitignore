@@ -5,3 +5,5 @@
 /tests/cuademo/gtnap_cualib/exemplo
 /tools/build
 /tests/unotest/test.pdf
+
+!/tests/cuademo/Application.manifest
