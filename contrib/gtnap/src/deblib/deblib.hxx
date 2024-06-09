@@ -12,6 +12,7 @@ typedef struct _debmsg_t DebMsg;
 typedef enum _msg_type_t
 {
     ekMSG_SET_SIZE = 10000,
+    ekMSG_SHOW,
     ekMSG_SCROLL,
     ekMSG_BOX,
     ekMSG_CURSOR,
@@ -37,6 +38,7 @@ typedef enum _cursor_t
 struct _debmsg_t
 {
     msg_type_t type;
+    bool_t show;
     uint32_t top;
     uint32_t left;
     uint32_t bottom;

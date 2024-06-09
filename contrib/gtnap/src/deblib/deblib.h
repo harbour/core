@@ -8,6 +8,8 @@ const char_t* deblib_path(void);
 
 void deblib_send_resolution(Stream *stm, const uint32_t num_rows, const uint32_t num_cols);
 
+void deblib_send_show(Stream *stm, const bool_t show);
+
 void deblib_send_scroll(Stream *stm, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const uint32_t row, const uint32_t col, const uint32_t codepoint, const byte_t color);
 
 void deblib_send_box(Stream *stm, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const byte_t color);

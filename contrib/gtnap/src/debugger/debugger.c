@@ -228,6 +228,25 @@ static void i_set_size(App *app, const DebMsg *msg)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_show(App *app, const DebMsg *msg)
+{
+    cassert_no_null(app);
+    cassert_no_null(msg);
+
+    if (app->print_log == TRUE)
+    {
+        String *log = str_printf("%s %d", deblib_msg_str(msg->type), msg->show);
+        i_log(app, &log);
+    }
+
+    if (msg->show == TRUE)
+        window_show(app->window);
+    else
+        window_hide(app->window);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_scroll(App *app, const DebMsg *msg)
 {
     uint32_t i, j;
@@ -625,16 +644,20 @@ static uint32_t i_protocol_thread(App *app)
 
                         if (app->print_log == TRUE)
                         {
-                            //if (msg.type != ekMSG_READ_KEY)
-                            //{
-                            //    String *log = str_printf("RECV Socket: %s", deblib_msg_str(msg.type));
-                            //    i_log(app, &log);
-                            //}
+                            /*if (msg.type != ekMSG_READ_KEY)
+                            {
+                                String *log = str_printf("RECV Socket: %s", deblib_msg_str(msg.type));
+                                i_log(app, &log);
+                            } */
                         }
 
                         switch (msg.type) {
                         case ekMSG_SET_SIZE:
                             i_set_size(app, &msg);
+                            break;
+
+                        case ekMSG_SHOW:
+                            i_show(app, &msg);
                             break;
 
                         case ekMSG_SCROLL:
@@ -694,8 +717,8 @@ static uint32_t i_protocol_thread(App *app)
                         {
                             if (msg.type != ekMSG_READ_KEY)
                             {
-                                //String *log = str_printf("END Socket: %s", deblib_msg_str(msg.type));
-                                //i_log(app, &log);
+                                /*String *log = str_printf("END Socket: %s", deblib_msg_str(msg.type));
+                                i_log(app, &log); */
                             }
                         }
                     }

@@ -31,6 +31,14 @@ void deblib_send_resolution(Stream *stm, const uint32_t num_rows, const uint32_t
 
 /*---------------------------------------------------------------------------*/
 
+void deblib_send_show(Stream *stm, const bool_t show)
+{
+    stm_write_enum(stm, ekMSG_SHOW, msg_type_t);
+    stm_write_bool(stm, show);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void deblib_send_scroll(Stream *stm, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const uint32_t row, const uint32_t col, const uint32_t codepoint, const byte_t color)
 {
     stm_write_enum(stm, ekMSG_SCROLL, msg_type_t);
@@ -174,6 +182,10 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
     case ekMSG_SET_SIZE:
         msg->row = stm_read_u32(stm);
         msg->col = stm_read_u32(stm);
+        break;
+
+    case ekMSG_SHOW:
+        msg->show = stm_read_bool(stm);
         break;
 
     case ekMSG_SCROLL:

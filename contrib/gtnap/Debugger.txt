@@ -34,12 +34,12 @@
 -- [F8] Step                                                | [WORKING-SP49]    | [WORKING-SP49]    |                   |
 -- [F9] Set breakpoint on cursor line                       | [WORKING-SP49]    | [WORKING-SP49]    |                   |
 -- [F10] Trace                                              | [WORKING-SP49]    | [WORKING-SP49]    |                   |
--- [TAB]/[SHIT]+[TAB] Change the active window              |                   |                   |                   |
+-- [TAB]/[SHIFT]+[TAB] Change the active window             |                   |                   |                   |
 -- [ALT+G] Grow active window                               | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
 -- [ALT+S] Shrink active window                             | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |                   |
 -- [ALT+U] Move border between Command and Code Up          | [WORKING-SP49]    | [WORKING-SP49]    |                   |
 -- [ALT+D] Move border between Command and Code Down        | [WORKING-SP49]    | [WORKING-SP49]    |                   |
--- [ALT+X] Exit                                             |                   |                   |                   |
+-- [ALT+X] Exit                                             | [WORKING-SP53]    | [WORKING-SP53]    |                   |
 
 -------------------------------------------------------------------------------------------------------------------------
 -- CODE WINDOW --                                           |                                                           |
@@ -87,9 +87,9 @@
 -- FILE MENU --
 -------------------------------------------------------------------------------------------------------------------------
 -- Open                                                     | [WORKING-SP49]    | [WORKING-SP49]    |                   |
--- Resume                                                   |                   |                   |                   |
--- OS Shell                                                 |                   |                   |                   |
--- Exit [Alt+X]                                             |                   |                   |                   |
+-- Resume                                                   | [WORKING-SP53]    | [WORKING-SP53]    |                   |
+-- OS Shell                                                 | [WORKING-SP53]    | [WORKING-SP53]    |                   |
+-- Exit [Alt+X]                                             | [WORKING-SP53]    | [WORKING-SP53]    |                   |
 
 -------------------------------------------------------------------------------------------------------------------------
 -- LOCATE MENU --
@@ -229,7 +229,7 @@
 - (2) The Debugger process is generated in /build/[Debug/Release]/bin/gtnapdeb and referenced in GTNAP through gtnap.hbp
 - (3) Display is working but editing location is wrong. Fixed in Sprint-53
 - (4) Working from Window menu, but not using [TAB] [Sh+TAB]
-- (5) Working but the command characters are not show
+- (5) Working but the command characters are not show. WIP.
 - (6) Working but the code window is not totally restored
 - (7) Working but object editing location is wrong. Fixed in Sprint-53
 - (8) Character '?' not detected in Linux

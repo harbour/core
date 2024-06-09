@@ -56,6 +56,15 @@ void nap_debugger_destroy(GtNapDebugger **debug)
 
 /*---------------------------------------------------------------------------*/
 
+void nap_debugger_show(GtNapDebugger *debug, const bool_t show)
+{
+    cassert_no_null(debug);
+    if (debug->stream != NULL)
+        deblib_send_show(debug->stream, show);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void nap_debugger_scroll(GtNapDebugger *debug, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const uint32_t row, const uint32_t col, const uint32_t codepoint, const byte_t color)
 {
     cassert_no_null(debug);

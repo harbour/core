@@ -11,6 +11,8 @@ GtNapDebugger *nap_debugger_create(const char_t *path, const uint32_t nrows, con
 
 void nap_debugger_destroy(GtNapDebugger **debug);
 
+void nap_debugger_show(GtNapDebugger *debug, const bool_t show);
+
 void nap_debugger_scroll(GtNapDebugger *debug, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const uint32_t row, const uint32_t col, const uint32_t codepoint, const byte_t color);
 
 void nap_debugger_box(GtNapDebugger *debug, const uint32_t top, const uint32_t left, const uint32_t bottom, const uint32_t right, const byte_t color);
