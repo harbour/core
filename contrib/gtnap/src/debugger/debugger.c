@@ -554,8 +554,11 @@ static void i_read_key(App *app, DebMsg *msg)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("%s Key: %d, Modif: %d", deblib_msg_str(msg->type), (int)msg->key, msg->modifiers);
-        i_log(app, &log);
+        if (msg->key != ENUM_MAX(vkey_t))
+        {
+            String *log = str_printf("%s Key: %d, Modif: %d", deblib_msg_str(msg->type), (int)msg->key, msg->modifiers);
+            i_log(app, &log);
+        }
     }
 }
 
@@ -622,8 +625,11 @@ static uint32_t i_protocol_thread(App *app)
 
                         if (app->print_log == TRUE)
                         {
-                            String *log = str_printf("RECV Socket: %s", deblib_msg_str(msg.type));
-                            i_log(app, &log);
+                            //if (msg.type != ekMSG_READ_KEY)
+                            //{
+                            //    String *log = str_printf("RECV Socket: %s", deblib_msg_str(msg.type));
+                            //    i_log(app, &log);
+                            //}
                         }
 
                         switch (msg.type) {
@@ -686,8 +692,11 @@ static uint32_t i_protocol_thread(App *app)
 
                         if (app->print_log == TRUE)
                         {
-                            String *log = str_printf("END Socket: %s", deblib_msg_str(msg.type));
-                            i_log(app, &log);
+                            if (msg.type != ekMSG_READ_KEY)
+                            {
+                                //String *log = str_printf("END Socket: %s", deblib_msg_str(msg.type));
+                                //i_log(app, &log);
+                            }
                         }
                     }
                     else
@@ -714,7 +723,7 @@ static App *i_app(void)
     App *app = heap_new0(App);
     uint32_t nrows = UINT32_MAX, ncols = UINT32_MAX;
     uint32_t argc = osapp_argc();
-    app->print_log = FALSE;
+    app->print_log = TRUE;
 
     if (app->print_log == TRUE)
         log_printf("argc: %d", argc);
