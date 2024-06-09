@@ -4915,7 +4915,7 @@ static int hb_gtnap_PutText(PHB_GT pGT, int iRow, int iCol, int bColor, const ch
     HB_SYMBOL_UNUSED(pText);
     HB_SYMBOL_UNUSED(ulLen);
     i_cp_to_utf8(pText, utf8, sizeof32(utf8));
-    log_printf("hb_gtnap_PutText (%d, %d): '%s' - %d", iRow, iCol, pText, ulLen);
+    log_printf("hb_gtnap_PutText (%d, %d): '%s' - %d", iRow, iCol, pText, (int)ulLen);
 
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_puttext(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, (byte_t)bColor, utf8);
@@ -5207,7 +5207,7 @@ static HB_BOOL hb_gtnap_Info(PHB_GT pGT, int iType, PHB_GT_INFO pInfo)
         else
         {
             cassert(pInfo->pResult == NULL);
-            if (GTNAP_GLOBAL->debugger != NULL && GTNAP_GLOBAL->debugger_visible == TRUE) 
+            if (GTNAP_GLOBAL->debugger != NULL && GTNAP_GLOBAL->debugger_visible == TRUE)
                 pInfo->pResult = hb_itemPutNI(pInfo->pResult, i_DEBUGGER_WINDOW_HASH);
             else
                 pInfo->pResult = hb_itemPutNI(pInfo->pResult, i_MAIN_WINDOW_HASH);
@@ -5269,21 +5269,21 @@ static HB_BOOL hb_gtnap_Info(PHB_GT pGT, int iType, PHB_GT_INFO pInfo)
         pInfo->pResult = hb_itemPutL(pInfo->pResult, TRUE);
         break;
 
-      case HB_GTI_BOXCP:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult,
-                                       pGT->cdpBox ? pGT->cdpBox->id : NULL );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
-            if( hb_itemGetCLen( pInfo->pNewVal ) > 0 )
+    case HB_GTI_BOXCP:
+        pInfo->pResult = hb_itemPutC(pInfo->pResult,
+                                     pGT->cdpBox ? pGT->cdpBox->id : NULL);
+        if (hb_itemType(pInfo->pNewVal) & HB_IT_STRING)
+        {
+            if (hb_itemGetCLen(pInfo->pNewVal) > 0)
             {
-               PHB_CODEPAGE cdpBox = hb_cdpFind( hb_itemGetCPtr( pInfo->pNewVal ) );
-               if( cdpBox )
-                  pGT->cdpBox = cdpBox;
+                PHB_CODEPAGE cdpBox = hb_cdpFind(hb_itemGetCPtr(pInfo->pNewVal));
+                if (cdpBox)
+                    pGT->cdpBox = cdpBox;
             }
             else
-               pGT->cdpBox = NULL;
-         }
-         break;
+                pGT->cdpBox = NULL;
+        }
+        break;
 
         cassert_default();
     }
@@ -5494,7 +5494,7 @@ static HB_BOOL hb_gt_FuncInit(PHB_GT_FUNCS pFuncTable)
     pFuncTable->GetScrCursor = NULL;
     pFuncTable->GetScrChar = NULL;
     pFuncTable->PutScrChar = NULL;
-    pFuncTable->GetScrUC = NULL; 
+    pFuncTable->GetScrUC = NULL;
     pFuncTable->DispBegin = hb_gtnap_DispBegin;
     pFuncTable->DispEnd = hb_gtnap_DispEnd;
     pFuncTable->DispCount = hb_gtnap_DispCount;
@@ -5504,7 +5504,7 @@ static HB_BOOL hb_gt_FuncInit(PHB_GT_FUNCS pFuncTable)
     pFuncTable->Save = hb_gtnap_Save;
     pFuncTable->Rest = hb_gtnap_Rest;
     pFuncTable->PutText = hb_gtnap_PutText;
-    pFuncTable->PutTextW = hb_gtnap_PutTextW; 
+    pFuncTable->PutTextW = hb_gtnap_PutTextW;
     pFuncTable->Replicate = hb_gtnap_Replicate;
     pFuncTable->WriteAt = hb_gtnap_WriteAt;
     /* pFuncTable->WriteAtW = NULL;

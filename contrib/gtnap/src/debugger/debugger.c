@@ -99,7 +99,7 @@ static void i_OnDraw(App *app, Event *e)
             if (bchar->utf8[0] != 0)
             {
                 byte_t fore = bchar->colorb & 0x0F;
-                byte_t back = ( bchar->colorb & 0xF0 ) >> 4;
+                byte_t back = (bchar->colorb & 0xF0) >> 4;
                 color_t cfore = i_COLORS[fore];
                 color_t cback = i_COLORS[back];
                 draw_text_color(p->ctx, cfore);
@@ -120,7 +120,7 @@ static void i_OnDraw(App *app, Event *e)
             color_t cback = i_COLORS[COL_BLACK];
             bchar = app->text_buffer + (app->cursor_row * app->ncols) + app->cursor_col;
             draw_fill_color(p->ctx, cback);
-            draw_rect(p->ctx, ekFILL, x+1, y, app->cell_width + 1, app->cell_height + 1);
+            draw_rect(p->ctx, ekFILL, x + 1, y, app->cell_width + 1, app->cell_height + 1);
 
             if (bchar->utf8[0] != 0)
             {
@@ -221,8 +221,8 @@ static void i_set_size(App *app, const DebMsg *msg)
 
     if (app->nrows != msg->row || app->ncols != msg->col)
     {
-       i_update_text_buffer(app, msg->row, msg->col);
-       view_update(app->view);
+        i_update_text_buffer(app, msg->row, msg->col);
+        view_update(app->view);
     }
 }
 
@@ -473,7 +473,7 @@ static void i_puttext(App *app, const DebMsg *msg)
     bchar = app->text_buffer + (msg->row * app->ncols + msg->col);
     codepoint = unicode_to_u32b(text, ekUTF8, &nbytes);
 
-    while(codepoint != 0)
+    while (codepoint != 0)
     {
         uint32_t nb = unicode_to_char(codepoint, bchar->utf8, ekUTF8);
         cassert_unref(nb == nbytes, nbytes);
@@ -506,7 +506,7 @@ static void i_save(App *app, const DebMsg *msg, Stream *stm)
 
     i_lock(app);
 
-    for(i = msg->top; i <= msg->bottom; ++i)
+    for (i = msg->top; i <= msg->bottom; ++i)
     {
         const BufChar *bchar = app->text_buffer + i * app->ncols + msg->left;
         cassert(i < app->nrows);
@@ -542,7 +542,7 @@ static void i_rest(App *app, const DebMsg *msg, Stream *stm)
 
     i_lock(app);
 
-    for(i = msg->top; i <= msg->bottom; ++i)
+    for (i = msg->top; i <= msg->bottom; ++i)
     {
         BufChar *bchar = app->text_buffer + i * app->ncols + msg->left;
         cassert(i < app->nrows);
@@ -606,7 +606,7 @@ static uint32_t i_protocol_thread(App *app)
 
     if (app->print_log == TRUE)
     {
-        String *log = str_printf("Created server socket:%p %d", (void*)server_sock, kDEBLIB_SERVER_PORT);
+        String *log = str_printf("Created server socket:%p %d", (void *)server_sock, kDEBLIB_SERVER_PORT);
         i_log(app, &log);
     }
 
@@ -616,7 +616,7 @@ static uint32_t i_protocol_thread(App *app)
 
         if (app->print_log == TRUE)
         {
-            String *log = str_printf("Created income socket:%p", (void*)income_sock);
+            String *log = str_printf("Created income socket:%p", (void *)income_sock);
             i_log(app, &log);
         }
 
@@ -635,7 +635,7 @@ static uint32_t i_protocol_thread(App *app)
                     i_log(app, &log);
                 }
 
-                for(;;)
+                for (;;)
                 {
                     if (app->alive == TRUE)
                     {
@@ -651,7 +651,8 @@ static uint32_t i_protocol_thread(App *app)
                             } */
                         }
 
-                        switch (msg.type) {
+                        switch (msg.type)
+                        {
                         case ekMSG_SET_SIZE:
                             i_set_size(app, &msg);
                             break;
@@ -746,7 +747,16 @@ static App *i_app(void)
     App *app = heap_new0(App);
     uint32_t nrows = UINT32_MAX, ncols = UINT32_MAX;
     uint32_t argc = osapp_argc();
-    app->print_log = TRUE;
+    app->print_log = FALSE;
+
+    if (app->print_log == TRUE)
+    {
+#if defined(__LINUX__)
+        log_file("/home/fran/Desktop/debugger_log.txt");
+#elif defined(__WINDOWS__)
+        log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
+#endif
+    }
 
     if (app->print_log == TRUE)
         log_printf("argc: %d", argc);
@@ -806,15 +816,10 @@ static void i_assert(void *item, const uint32_t group, const char_t *caption, co
 
 static App *i_create(void)
 {
-#if defined (__LINUX__)
-    log_file("/home/fran/Desktop/debugger_log.txt");
-#elif defined (__WINDOWS__)
-    log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
-#endif
     {
         App *app = i_app();
         Panel *panel = i_panel(app);
-        cassert_set_func((void*)app, i_assert);
+        cassert_set_func((void *)app, i_assert);
         deblib_init_colors(i_COLORS);
         view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
         app->window = window_create(ekWINDOW_STD);
