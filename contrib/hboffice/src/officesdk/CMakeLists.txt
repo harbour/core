@@ -25,13 +25,23 @@ else()
     message(FATAL_ERROR "LIBREOFFICE_HOME environment variable is required to compile ${TARGET_NAME}")
 endif()
 
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+    set(LOSDKROOT "$ENV{LIBREOFFICE_SDK}")
+    if (LOSDKROOT)
+        message("- LIBREOFFICE_SDK: ${LOSDKROOT}")
+    else()
+        message(FATAL_ERROR "LIBREOFFICE_SDK environment variable is required to compile ${TARGET_NAME}")
+    endif()
+endif()
+
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/com/sun/star ${LOROOT}/sdk/include)
 
 if (WIN32)
     if (NOT CMAKE_GENERATOR MATCHES "Visual Studio")
         message(FATAL_ERROR "Visual Studio is required to compile ${TARGET_NAME} in Windows")
     endif()
-else()
+elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     target_compile_definitions(${TARGET_NAME} PUBLIC -DLINUX)
 endif()
 
@@ -39,9 +49,19 @@ endif()
 # from SDK *.rdb files
 IF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/com/sun/star")
     message("- Generating LibreOffice C++ headers with cppumaker")
-    set(CPPUMAKER ${LOROOT}/sdk/bin/cppumaker)
-    set(CPPTYPES ${LOROOT}/program/types.rdb)
-    set(CPPOFFAPI ${LOROOT}/program/types/offapi.rdb)
+    # In macOS the SDK is installed in different location than LibreOffice.app bundle
+    if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+        set(CPPUMAKER ${LOSDKROOT}/bin/cppumaker)
+        set(CPPTYPES ${LOROOT}/Contents/Resources/ure/share/misc/types.rdb)
+        set(CPPOFFAPI ${LOROOT}/Contents/Resources/types/offapi.rdb)
+
+    # In Windows/Linux the SDK is installed in a LibreOffice subfolder
+    else()
+        set(CPPUMAKER ${LOROOT}/sdk/bin/cppumaker)
+        set(CPPTYPES ${LOROOT}/program/types.rdb)
+        set(CPPOFFAPI ${LOROOT}/program/types/offapi.rdb)
+    endif()
+
     execute_process(COMMAND "${CPPUMAKER}" "-Gc" "-O${CMAKE_CURRENT_BINARY_DIR}" "${CPPTYPES}" "${CPPOFFAPI}" RESULT_VARIABLE RES_VAR OUTPUT_VARIABLE OUT_VAR ERROR_VARIABLE ERR_VAR)
 
     if (NOT "${RES_VAR}" STREQUAL "0")

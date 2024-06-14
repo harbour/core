@@ -18,6 +18,9 @@ COMPILER=gcc
 BUILD=Release
 CWD=$(pwd)
 
+if [ "$(uname)" == "Darwin" ]; then
+    COMPILER=clang
+fi
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -58,8 +61,14 @@ mkdir -p build
 #
 if [ $OPERATION == "dll" ]; then
     cd build
-    cmake .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
-    make -j 4 || exit 1
+    if [ "$(uname)" == "Darwin" ]; then
+        cmake -G Xcode .. || exit 1
+        xcodebuild || exit 1
+    else
+        cmake .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
+        make -j 4 || exit 1
+    fi
+
     rm $BUILD/lib/*core*
     rm $BUILD/lib/*osbs*
     rm $BUILD/lib/*sewer*

@@ -82,7 +82,28 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
 
 ### Installation in macOS
 
-**TODO**
+* Download and install the [LibreOffice.app](https://www.libreoffice.org/download/download-libreoffice/) bundle, typically in the `/Applications` directory. This installation is **required on both development machines and final user machines**.
+    ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
+
+* Download the LibreOffice-SDK package. This installation is **required ONLY for compile hboffice in development machines**.
+    The LibreOffice-SDK.dmg just include a folder. Move this folder wherever you want. In this case, to `/Applications/libreoffice-sdk`.
+    ![download_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
+    ![move_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
+
+* Set the `LIBREOFFICE_HOME` environment variable with the path to the `LibreOffice.app` bundle (usually `/Applications/LibreOffice.app`). This environment variable is required both to compile the program and to run it on the user's machines. hboffice will connect to the LibreOffice program at runtime.
+
+* Add `$LIBREOFFICE_HOME$/Contents/Frameworks` path to `DYLD_LIBRARY_PATH` environment variable. In order to run any hboffice-based application, LibreOffice shared libraries `.dylib` must be accesible and located.
+
+* Set the `LIBREOFFICE_SDK` environment variable with the path to the LibreOffice-SDK folder (`/Applications/libreoffice-sdk` in this example). It is recommended to define all these environment variables in the `.zshrc` so that it is always present.
+    ```
+    nano .zshrc
+
+    # All machines (dev and production)
+    export LIBREOFFICE_HOME=/Applications/LibreOffice.app
+    export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$LIBREOFFICE_HOME/Contents/Frameworks
+    # Only in dev machines
+    export LIBREOFFICE_SDK=/Applications/libreoffice-sdk
+    ```
 
 ### About LibreOffice-SDK
 
@@ -177,6 +198,17 @@ Then, generate the **libhboffice.a**:
 After these two steps, you will have:
 * `libofficesdk.so` in `/build/Release/bin` folder.
 * `libhboffice.a` in `/build/Release/lib` folder.
+
+### Build hboffice in macOS
+
+> **Important:** Xcode is required to build in macOS.
+```
+% xcodebuild -version
+Xcode 14.3.1
+Build version 14E300c
+```
+
+First step generate **libofficesdk.dylib**:
 
 ## hboffice examples
 
