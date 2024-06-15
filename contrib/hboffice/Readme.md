@@ -85,13 +85,14 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
 ### Installation in macOS
 
 * Download and install the [LibreOffice.app](https://www.libreoffice.org/download/download-libreoffice/) bundle, typically in the `/Applications` directory. This installation is **required on both development machines and final user machines**.
-    ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
+    ![libreoffice_download_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/1c0bae9a-6751-4ebc-9cc1-463bee184492)
+    ![libreoffice_macos_app](https://github.com/frang75/harbour_nappgui/assets/42999199/5b04ca49-d54c-43a9-9db6-b72c9f7dfc1c)
 
 * Download the LibreOffice-SDK package. This installation is **required ONLY for compile hboffice in development machines**.
     The `LibreOffice-SDK.dmg` just include a folder. Move this folder wherever you want. In our case, to `/Applications/libreoffice-sdk`.
-    ![download_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
-    ![move_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
-
+    ![libreoffice_sdk_download_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/756e5a57-446f-46c4-b53c-c87739a1f599)
+    ![libreoffice_sdk_install_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/6d332b5b-862b-4730-809a-afbffcb3942a)
+    
 * Set the `LIBREOFFICE_HOME` environment variable with the path to the `LibreOffice.app` bundle (usually `/Applications/LibreOffice.app`). This environment variable is required both to compile the program and to run it on the user's machines. hboffice will connect to the LibreOffice program at runtime.
 
 * Add `$LIBREOFFICE_HOME$/Contents/Frameworks` path to `DYLD_LIBRARY_PATH` environment variable. In order to run any hboffice-based application, LibreOffice shared libraries `.dylib` must be accesible and located.
