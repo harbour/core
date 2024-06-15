@@ -577,6 +577,23 @@ cmake --build build
 
 ### macOS developer mode
 
+```
+:: In /harbour_nappgui
+cmake -G Xcode -S . -B build
+```
+
+* It will generate a Xcode project in `/build` folder. Open it.
+
+* Select `exemplo` project, and then `Product->Scheme->Edit Scheme`. In `Debugging`:
+    * Arguments Passed On Launch: `--hb:gtnap`
+    * Environment variables: `DYLD_LIBRARY_PATH` --> `/Applications/LibreOffice.app/Contents/Frameworks` (or the path of your LibreOffice installation).
+    * Options, Working Directory: `/Users/fran/harbour_nappgui/contrib/gtnap/tests/cuademo/gtnap_cualib` (the full path of `gtnap_cualib` in your system).
+
+* Press `[PLAY]` button or `Product->Run`.
+
+   ![debug_visual_studio](https://user-images.githubusercontent.com/42999199/235441869-da3fd867-8a35-4554-a526-4775c0b84f0b.png)
+
+
 ## GTNap design
 
 GTNAP has been designed with two modes of operation in mind:
