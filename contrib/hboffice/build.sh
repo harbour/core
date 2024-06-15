@@ -54,17 +54,17 @@ echo COMPILER: $COMPILER
 echo OPERATION: $OPERATION
 echo ---------------------------
 
-mkdir -p build
-
 #
 # Generate dynamic library
 #
 if [ $OPERATION == "dll" ]; then
-    cd build
     if [ "$(uname)" == "Darwin" ]; then
-        cmake -G Xcode .. || exit 1
-        xcodebuild || exit 1
+        cmake -G Xcode -S . -B build || exit 1
+        cmake --build build --config $BUILD || exit 1
+        cd build
     else
+        mkdir -p build
+        cd build
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
         make -j 4 || exit 1
     fi

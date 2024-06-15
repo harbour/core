@@ -105,6 +105,17 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
     export LIBREOFFICE_SDK=/Applications/libreoffice-sdk
     ```
 
+* Go to `$LIBREOFFICE_HOME$/Contents/Frameworks` and create the symbolic links for these libraries. The final version of library `.3` can differ in your installation.
+    ```
+    /Applications/LibreOffice.app/Contents/Frameworks
+
+    ln -s libuno_cppu.dylib.3 libuno_cppu.dylib
+    ln -s libuno_cppuhelpergcc3.dylib.3 libuno_cppuhelpergcc3.dylib
+    ln -s libuno_purpenvhelpergcc3.dylib.3 libuno_purpenvhelpergcc3.dylib
+    ln -s libuno_sal.dylib.3 libuno_sal.dylib
+    ln -s libuno_salhelpergcc3.dylib.3 libuno_salhelpergcc3.dylib
+    ```
+
 ### About LibreOffice-SDK
 
 > **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`, `C:\Program Files\LibreOffice`

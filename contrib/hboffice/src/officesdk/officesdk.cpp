@@ -675,7 +675,7 @@ const char_t *officesdk_error_str(const sdkres_t code)
 
 /*---------------------------------------------------------------------------*/
 
-#if defined(__LINUX__)
+#if defined(__LINUX__) || defined(__MACOS__)
 
 static void i_browse_file(const char_t *pathname)
 {
