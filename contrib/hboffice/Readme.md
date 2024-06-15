@@ -225,7 +225,7 @@ Build version 14E300c
 
 First step generate **libofficesdk.dylib**:
 
-> **Important:** In order to avoid linker warnings, use the same `MACOSX_DEPLOYMENT_TARGET` as when building Harbour.
+> **Important:** In order to avoid linker warnings, use the same `MACOSX_DEPLOYMENT_TARGET` as when building Harbour. More [here](../gtnap/Readme.md#build-harbour-in-macos).
 
 ```
 cd contrib/hboffice
@@ -256,6 +256,7 @@ In the `/hboffice/tests` folder there are different examples of use. To run them
 
 * Windows: Copy `/build/Release/bin/officesdk.dll` into `/tests`.
 * Linux: Copy `/build/Release/bin/libofficesdk.so` into `/tests`.
+* macOS: Copy `/build/Release/bin/libofficesdk.dylib` into `/tests`.
 * Compile and run one of the examples (e.g. `sheet1.prg`)
 * The results documents will be saved in `/tests/result`.
 
@@ -275,6 +276,16 @@ cd /contrib/hboffice/tests
 cp ../build/Release/bin/libofficesdk.so .
 ../../../bin/linux/gcc/hbmk2 sheet1.prg hboffice.hbc
 
+# Just run
+./sheet1
+```
+
+```
+# In macOS
+cd /contrib/hboffice/tests
+cp ../build/Release/bin/libofficesdk.dylib .
+../../../bin/darwin/clang/hbmk2 sheet1.prg hboffice.hbc
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$(pwd)
 # Just run
 ./sheet1
 ```
