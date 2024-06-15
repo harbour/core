@@ -14,11 +14,13 @@
 # Input parameters
 #
 OPERATION=dll
+PLATFORM=linux
 COMPILER=gcc
 BUILD=Release
 CWD=$(pwd)
 
 if [ "$(uname)" == "Darwin" ]; then
+    PLATFORM=darwin
     COMPILER=clang
 fi
 
@@ -50,6 +52,7 @@ echo ---------------------------
 echo Generating LibreOffice
 echo Main path: $CWD
 echo Build type: $BUILD
+echo PLATFORM: $PLATFORM
 echo COMPILER: $COMPILER
 echo OPERATION: $OPERATION
 echo ---------------------------
@@ -80,7 +83,7 @@ if [ $OPERATION == "dll" ]; then
 # Generate static library
 #
 elif [ $OPERATION == "lib" ]; then
-    HBMK_PATH=../../bin/linux/$COMPILER
+    HBMK_PATH=../../bin/$PLATFORM/$COMPILER
     HBMK_FLAGS=
 
     if [ $BUILD == "Debug" ]; then

@@ -102,7 +102,6 @@ if (OFFICESDK_SHARED)
         set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
     endif()
 
-    message("!!!!!!! LIBREOFFICE_LIB_PATH: ${LIBREOFFICE_LIB_PATH}")
     foreach(lib ${LIBREOFFICE_LIBS})
         find_library(LIB_NAME_${lib} NAMES ${lib} PATHS ${LIBREOFFICE_LIB_PATH})
         target_link_libraries(${TARGET_NAME} ${LIB_NAME_${lib}})

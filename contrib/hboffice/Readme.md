@@ -11,19 +11,21 @@
     - [Build hboffice in Windows](#build-hboffice-in-windows)
     - [More about build hboffice in Windows](#more-about-build-hboffice-in-windows)
     - [Build hboffice in Linux](#build-hboffice-in-linux)
+    - [Build hboffice in macOS](#build-hboffice-in-macos)
+
 * [hboffice examples](#hboffice-examples)
 
 ## Introduction
 
 **hboffice** is a project to use the LibreOffice-SDK in Harbour projects. It is an incomplete API, since the LibreOffice SDK is very extensive. It provides high-level functions in C that hide the complexity of using the SDK directly in C++. This C API is easily portable to Harbour.
 
-Compiling the project generates three binaries.
+Compiling the project generates two or three binaries.
 
-* **officesdk.dll**/**libofficesdk.so**: Dynamic library that contains the C API and the linkage to LibreOffice. In this way the links with LibreOffice-SDK are not propagated. On Windows, it must be compiled with Visual Studio (MinGW is not supported).
+* **officesdk.dll**/**libofficesdk.so**/**libofficesdk.dylib**: Dynamic library that contains the C API and the linkage to LibreOffice. In this way the links with LibreOffice-SDK are not propagated. On Windows, it must be compiled with Visual Studio (MinGW is not supported).
 
 * **officesdk.lib**: (Only in Windows) Static library with the .dll exported symbols.
 
-* **hboffice.lib**/**libhboffice.a**: Static library that contains the Harbour wrapper. You can use any compiler (MSVC, MingGW, GCC, etc).
+* **hboffice.lib**/**libhboffice.a**: Static library that contains the Harbour wrapper. You can use any compiler (MSVC, MingGW, GCC, Clang, etc).
 
 ## Installation of LibreOffice
 
@@ -86,7 +88,7 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
     ![download_libreoffice](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
 
 * Download the LibreOffice-SDK package. This installation is **required ONLY for compile hboffice in development machines**.
-    The LibreOffice-SDK.dmg just include a folder. Move this folder wherever you want. In this case, to `/Applications/libreoffice-sdk`.
+    The `LibreOffice-SDK.dmg` just include a folder. Move this folder wherever you want. In our case, to `/Applications/libreoffice-sdk`.
     ![download_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
     ![move_sdk](https://github.com/frang75/harbour_nappgui/assets/42999199/c410187b-3f27-473e-b756-4dce9b91fecd)
 
@@ -105,7 +107,7 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
     export LIBREOFFICE_SDK=/Applications/libreoffice-sdk
     ```
 
-* Go to `$LIBREOFFICE_HOME$/Contents/Frameworks` and create the symbolic links for these libraries. The final version of library `.3` can differ in your installation.
+* Go to `$LIBREOFFICE_HOME$/Contents/Frameworks` and create the symbolic links for these libraries. The final version of library `.3` can differ in your installation **required ONLY for compile hboffice in development machines**.
     ```
     /Applications/LibreOffice.app/Contents/Frameworks
 
@@ -118,7 +120,9 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
 
 ### About LibreOffice-SDK
 
-> **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `/usr/lib/libreoffice`, `C:\Program Files\LibreOffice`
+> **Important:** The `LIBREOFFICE_HOME` environment variable must be set and pointing to the LibreOffice home directory. e.g. `C:\Program Files\LibreOffice`, `/usr/lib/libreoffice`, `/Applications/LibreOffice.app`.
+
+> **Important:** The `LIBREOFFICE_SDK` environment variable only is required on macOS development machines.
 
 > **Important:** The first time a hboffice program uses a LibreOffice function, an instance of the LibreOffice application will be started invisibly (`soffice.bin` process). This first call will have a small delay due to the initialization of the process. It is imperative that LibreOffice is running in order to use the SDK from Harbour.
 
@@ -220,6 +224,31 @@ Build version 14E300c
 ```
 
 First step generate **libofficesdk.dylib**:
+
+> **Important:** In order to avoid linker warnings, use the same `MACOSX_DEPLOYMENT_TARGET` as when building Harbour.
+
+```
+cd contrib/hboffice
+export MACOSX_DEPLOYMENT_TARGET=10.13
+./build.sh -dll -b Release
+
+:: Full command
+./build.sh -dll -b [Release|Debug]
+```
+
+Then, generate the **libhboffice.a**:
+
+```
+./build.sh -lib -b Release
+
+:: Full command
+./build.sh -lib -b [Release|Debug]
+```
+
+After these two steps, you will have:
+* `libofficesdk.dylib` in `/build/Release/bin` folder.
+* `libhboffice.a` in `/build/Release/lib` folder.
+
 
 ## hboffice examples
 
