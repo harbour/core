@@ -25,7 +25,8 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     set(HBMK2_COMMAND ${HARBOUR_ROOT_PATH}/bin/linux/${HBMK2_COMPILER}/hbmk2)
 
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-    message(FATAL_ERROR "Platform not supported")
+    set(HBMK2_COMPILER clang)
+    set(HBMK2_COMMAND ${HARBOUR_ROOT_PATH}/bin/darwin/${HBMK2_COMPILER}/hbmk2)
 
 else()
     message(FATAL_ERROR "Platform not supported")

@@ -92,7 +92,7 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
     The `LibreOffice-SDK.dmg` just include a folder. Move this folder wherever you want. In our case, to `/Applications/libreoffice-sdk`.
     ![libreoffice_sdk_download_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/756e5a57-446f-46c4-b53c-c87739a1f599)
     ![libreoffice_sdk_install_macos](https://github.com/frang75/harbour_nappgui/assets/42999199/6d332b5b-862b-4730-809a-afbffcb3942a)
-    
+
 * Set the `LIBREOFFICE_HOME` environment variable with the path to the `LibreOffice.app` bundle (usually `/Applications/LibreOffice.app`). This environment variable is required both to compile the program and to run it on the user's machines. hboffice will connect to the LibreOffice program at runtime.
 
 * Add `$LIBREOFFICE_HOME$/Contents/Frameworks` path to `DYLD_LIBRARY_PATH` environment variable. In order to run any hboffice-based application, LibreOffice shared libraries `.dylib` must be accesible and located.
@@ -291,4 +291,4 @@ export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$(pwd)
 ./sheet1
 ```
 
-> **Important:** Dynamic libraries `officesdk.dll` or `libofficesdk.so` must be distributed with final executables and must be installed in the same folder.
+> **Important:** Dynamic libraries `officesdk.dll`, `libofficesdk.so` or `libofficesdk.dylib` must be distributed with final executables and must be installed in the same folder.
