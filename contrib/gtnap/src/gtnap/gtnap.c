@@ -960,7 +960,11 @@ static GtNap *i_gtnap_create(void)
 
     {
         const char_t *debpath = deblib_path();
+#if defined (__MACOS__)
+        GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/bin/gtnapdeb.app/Contents/MacOS/gtnapdeb", debpath, build_cfg);
+#else
         GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/bin/gtnapdeb", debpath, build_cfg);
+#endif
         GTNAP_GLOBAL->debugger_visible = FALSE;
         GTNAP_GLOBAL->debugger = NULL;
     }
