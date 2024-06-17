@@ -595,9 +595,9 @@ cmake -G Xcode -S . -B build
        - `DYLD_LIBRARY_PATH` --> `/Applications/LibreOffice.app/Contents/Frameworks` (or the path of your LibreOffice installation).
     * Options, Working Directory: `/Users/fran/harbour_nappgui/contrib/gtnap/tests/cuademo/gtnap_cualib` (the full path of `gtnap_cualib` in your system).
 
-  ![xcode_scheme](https://github.com/frang75/harbour_nappgui/assets/42999199/f4b6204f-95d9-4f63-a486-21bfa5873020)
+      ![xcode_scheme](https://github.com/frang75/harbour_nappgui/assets/42999199/fe244c0c-d95e-4df6-b20a-8080a37757c1)
 
-  ![xcode_scheme_2](https://github.com/frang75/harbour_nappgui/assets/42999199/3e962c68-9532-4749-9235-0aeeb4c37c72)
+      ![xcode_scheme_2](https://github.com/frang75/harbour_nappgui/assets/42999199/3e962c68-9532-4749-9235-0aeeb4c37c72)
 
 * Press `[PLAY]` button or `Product->Run`.
 
