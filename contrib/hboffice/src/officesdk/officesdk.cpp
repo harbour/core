@@ -312,6 +312,7 @@ sdkres_t OfficeSdk::KillLibreOffice()
 {
     sdkres_t res = ekSDKRES_OK;
     const char_t *kill = NULL;
+    Proc *proc = NULL;
     platform_t pt = osbs_platform();
     
     switch (pt)
@@ -329,10 +330,13 @@ sdkres_t OfficeSdk::KillLibreOffice()
         cassert_default();
     }
 
-    int ret = blib_system("gcc");
-    if (ret != 0)
-        res = ekSDKRES_PROC_KILL_FAIL;
+    proc = bproc_exec(kill, NULL);
 
+    if (proc != NULL)
+        bproc_close(&proc);
+    else
+        res = ekSDKRES_PROC_KILL_FAIL;
+    
     return res;
 }
 

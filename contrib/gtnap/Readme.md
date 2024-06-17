@@ -585,16 +585,18 @@ cmake -G Xcode -S . -B build
 * It will generate a Xcode project in `/build` folder. Open it.
 
 * Select `exemplo` project.
-  
+
   ![xcode_select_project](https://github.com/frang75/harbour_nappgui/assets/42999199/63df349c-3c17-402f-ad26-27e1c943cb44)
 
 * Then `Product->Scheme->Edit Scheme`. In `Debugging`:
     * Arguments Passed On Launch: `--hb:gtnap`
-    * Environment variables: `DYLD_LIBRARY_PATH` --> `/Applications/LibreOffice.app/Contents/Frameworks` (or the path of your LibreOffice installation).
+    * Environment variables:
+       - `LIBREOFFICE_HOME` --> `/Applications/LibreOffice.app`
+       - `DYLD_LIBRARY_PATH` --> `/Applications/LibreOffice.app/Contents/Frameworks` (or the path of your LibreOffice installation).
     * Options, Working Directory: `/Users/fran/harbour_nappgui/contrib/gtnap/tests/cuademo/gtnap_cualib` (the full path of `gtnap_cualib` in your system).
-      
+
   ![xcode_scheme](https://github.com/frang75/harbour_nappgui/assets/42999199/f4b6204f-95d9-4f63-a486-21bfa5873020)
-  
+
   ![xcode_scheme_2](https://github.com/frang75/harbour_nappgui/assets/42999199/3e962c68-9532-4749-9235-0aeeb4c37c72)
 
 * Press `[PLAY]` button or `Product->Run`.

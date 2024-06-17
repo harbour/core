@@ -13,6 +13,8 @@
 #include <osapp/osmain.h>
 #include <gui/drawctrl.inl>
 #include <deblib/deblib.h>
+#include <sewer/blib.h>
+#include <sewer/cassert.h>
 
 #include "hbapiitm.h"
 #include "hbapirdd.h"
@@ -938,6 +940,7 @@ static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
     const char_t *build_cfg = NULL;
+    const char_t *epath = NULL;
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->title = i_cp_to_utf8_string(INIT_TITLE);
     GTNAP_GLOBAL->rows = INIT_ROWS;
@@ -946,7 +949,16 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == (HB_BOOL)HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
 
-    int ret = blib_system("ps -A");
+    {
+        const char_t *cpath = blib_getenv("PATH");
+        String *npath = str_printf("%s:/Applications/LibreOffice.app/Contents/MacOS", cpath);
+        blib_setenv("PATH", tc(npath));
+        str_destroy(&npath);
+    }
+    
+    epath = blib_getenv("PATH");
+    bstd_printf("%s\n", epath);
+
 
     {
         char_t path[512];

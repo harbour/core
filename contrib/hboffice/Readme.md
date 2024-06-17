@@ -108,6 +108,13 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
     export LIBREOFFICE_SDK=/Applications/libreoffice-sdk
     ```
 
+* Go to `$LIBREOFFICE_HOME$/Contents/MacOS` and create a symbolic link for `soffice` executable.  **required on both development machines and final user machines**. The bootstrap process looks for `libreoffice` executable.
+    ```
+    /Applications/LibreOffice.app/Contents/MacOS
+
+    ln -s soffice libreoffice
+    ```
+
 * Go to `$LIBREOFFICE_HOME$/Contents/Frameworks` and create the symbolic links for these libraries. The final version of library `.3` can differ in your installation **required ONLY for compile hboffice in development machines**.
     ```
     /Applications/LibreOffice.app/Contents/Frameworks

@@ -410,17 +410,19 @@ const char_t *blib_getenv(const char_t *name)
     cassert_no_null(name);
     return (const char_t *)getenv((const char *)name);
 }
-#if defined(_MSC_VER)
-#pragma warning(default : 4996)
-#endif
 
 /*---------------------------------------------------------------------------*/
 
-int blib_system(const char_t *command)
+int blib_setenv(const char_t *name, const char_t *value)
 {
-    cassert_no_null(command);
-    return system(cast_const(command, char));
+    cassert_no_null(name);
+    cassert_no_null(value);
+    return setenv(name, value, 1);
 }
+
+#if defined(_MSC_VER)
+#pragma warning(default : 4996)
+#endif
 
 /*---------------------------------------------------------------------------*/
 
