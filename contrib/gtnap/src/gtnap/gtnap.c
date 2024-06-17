@@ -946,6 +946,8 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == (HB_BOOL)HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
 
+    int ret = blib_system("ps -A");
+
     {
         char_t path[512];
         bfile_dir_work(path, sizeof(path));

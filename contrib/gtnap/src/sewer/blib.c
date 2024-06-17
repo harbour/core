@@ -416,6 +416,14 @@ const char_t *blib_getenv(const char_t *name)
 
 /*---------------------------------------------------------------------------*/
 
+int blib_system(const char_t *command)
+{
+    cassert_no_null(command);
+    return system(cast_const(command, char));
+}
+
+/*---------------------------------------------------------------------------*/
+
 void blib_atexit(void (*func)(void))
 {
     _sewer_atexit(func);

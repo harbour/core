@@ -128,42 +128,45 @@ OfficeSdk::OfficeSdk()
 
 OfficeSdk::~OfficeSdk()
 {
-    if (this->m_xComponentLoader.get() != nullptr)
+    if (this->m_init == true)
     {
-        try
+        if (this->m_xComponentLoader.get() != nullptr)
         {
-            this->m_xComponentLoader->dispose();
-            this->m_xComponentLoader.set(nullptr);
+            try
+            {
+                this->m_xComponentLoader->dispose();
+                this->m_xComponentLoader.set(nullptr);
+            }
+            catch (css::uno::Exception &)
+            {
+            }
         }
-        catch (css::uno::Exception &)
+        
+        if (this->m_xMultiComponentFactory.get() != nullptr)
         {
+            try
+            {
+                this->m_xMultiComponentFactory.set(nullptr);
+            }
+            catch (css::uno::Exception &)
+            {
+            }
         }
+        
+        if (this->m_xComponentContext.get() != nullptr)
+        {
+            try
+            {
+                this->m_xComponentContext.set(nullptr);
+            }
+            catch (css::uno::Exception &)
+            {
+            }
+        }
+        
+        this->KillLibreOffice();
+        this->m_init = false;
     }
-
-    if (this->m_xMultiComponentFactory.get() != nullptr)
-    {
-        try
-        {
-            this->m_xMultiComponentFactory.set(nullptr);
-        }
-        catch (css::uno::Exception &)
-        {
-        }
-    }
-
-    if (this->m_xComponentContext.get() != nullptr)
-    {
-        try
-        {
-            this->m_xComponentContext.set(nullptr);
-        }
-        catch (css::uno::Exception &)
-        {
-        }
-    }
-
-    this->KillLibreOffice();
-    this->m_init = false;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -239,6 +242,7 @@ sdkres_t OfficeSdk::Init()
     if (this->m_init == false)
     {
         const char_t *env = blib_getenv("LIBREOFFICE_HOME");
+        //const char_t *env2 = blib_getenv("PATH");
 
         // Check the LIBREOFFICE_HOME environment variable
         if (str_empty_c(env) == TRUE)
@@ -251,13 +255,21 @@ sdkres_t OfficeSdk::Init()
             String *boots = NULL;
 
             {
+            #if defined (__MACOS__)
+                String *path = str_path(ekLINUX, "%s/Contents/Resources/types/offapi.rdb", env);
+            #else
                 String *path = str_path(ekLINUX, "%s/program/types/offapi.rdb", env);
+            #endif
                 types = i_file_url(tc(path));
                 str_destroy(&path);
             }
 
             {
+            #if defined (__MACOS__)
+                String *path = str_path(ekLINUX, "vnd.sun.star.pathname:%s/Contents/Resources/fundamentalrc", env);
+            #else
                 String *path = str_path(ekLINUX, "vnd.sun.star.pathname:%s/program/fundamentalrc", env);
+            #endif
                 boots = i_url_spaces(tc(path));
                 str_destroy(&path);
             }
@@ -272,16 +284,16 @@ sdkres_t OfficeSdk::Init()
         if (res == ekSDKRES_OK)
             res = KillLibreOffice();
 
-        if (res == ekSDKRES_OK)
-            bthread_sleep(1000);
-
-        // WakeUp LibreOffice
-        if (res == ekSDKRES_OK)
-            res = WakeUpServer();
-
-        // Wait a little to LibreOffice wake up
-        if (res == ekSDKRES_OK)
-            bthread_sleep(2000);
+//        if (res == ekSDKRES_OK)
+//            bthread_sleep(1000);
+//
+//        // WakeUp LibreOffice
+//        if (res == ekSDKRES_OK)
+//            res = WakeUpServer();
+//
+//        // Wait a little to LibreOffice wake up
+//        if (res == ekSDKRES_OK)
+//            bthread_sleep(2000);
 
         // Connect to LibreOffice instance
         if (res == ekSDKRES_OK)
@@ -300,9 +312,8 @@ sdkres_t OfficeSdk::KillLibreOffice()
 {
     sdkres_t res = ekSDKRES_OK;
     const char_t *kill = NULL;
-    Proc *proc = NULL;
     platform_t pt = osbs_platform();
-
+    
     switch (pt)
     {
     case ekWINDOWS:
@@ -311,16 +322,15 @@ sdkres_t OfficeSdk::KillLibreOffice()
     case ekLINUX:
         kill = "killall soffice.bin";
         break;
-    case ekIOS:
     case ekMACOS:
+        kill = "killall soffice";
+        break;
+    case ekIOS:
         cassert_default();
     }
 
-    proc = bproc_exec(kill, NULL);
-
-    if (proc != NULL)
-        bproc_close(&proc);
-    else
+    int ret = blib_system("gcc");
+    if (ret != 0)
         res = ekSDKRES_PROC_KILL_FAIL;
 
     return res;
@@ -331,36 +341,45 @@ sdkres_t OfficeSdk::KillLibreOffice()
 sdkres_t OfficeSdk::WakeUpServer()
 {
     sdkres_t res = ekSDKRES_OK;
-    const char_t *connect = NULL;
+    String *connect = NULL;
     Proc *proc = NULL;
     platform_t pt = osbs_platform();
-
+    
     switch (pt)
     {
     case ekWINDOWS:
-        connect = "soffice \"--accept=socket,host=localhost,port=2083;urp;StarOffice.ServiceManager\" --nodefault --nologo";
+        connect = str_c("soffice \"--accept=socket,host=localhost,port=2083;urp;StarOffice.ServiceManager\" --nodefault --nologo");
         break;
     case ekLINUX:
-        connect = "libreoffice \"--accept=socket,host=0,port=2083;urp;\" --nodefault --nologo";
+        connect = str_c("libreoffice \"--accept=socket,host=0,port=2083;urp;\" --nodefault --nologo");
         break;
-    case ekIOS:
     case ekMACOS:
+    {
+        const char_t *env = blib_getenv("LIBREOFFICE_HOME");
+        connect = str_printf("%s/Contents/MacOS/soffice --accept=\"socket,host=localhost,port=2083;urp;StarOffice.ServiceManager\" --nodefault --nologo &", env);
+        break;
+    }
+    case ekIOS:
         cassert_default();
     }
 
-    proc = bproc_exec(connect, NULL);
+    // /Applications/LibreOffice.app/Content/MacOS/soffice --accept="socket,host=localhost,port=2083;urp;StarOffice.ServiceManager" --nodefault --nologo
+    // /Applications/LibreOffice.app/Contents/MacOS/soffice "--accept=socket,host=localhost,port=2083;urp;StarOffice.ServiceManager" --nodefault --nologo
+    // /Applications/LibreOffice.app/Contents/MacOS/soffice --accept="socket,host=localhost,port=2083;urp;StarOffice.ServiceManager" --nodefault --nologo
+    proc = bproc_exec(tc(connect), NULL);
 
     if (proc != NULL)
-        bproc_close(&proc);
+    {
+        //bproc_close(&proc);
+    }
     else
+    {
         res = ekSDKRES_PROC_INIT_FAIL;
-
+    }
+    
+    str_destroy(&connect);
     return res;
 }
-
-/*---------------------------------------------------------------------------*/
-
-typedef css::uno::Reference<css::uno::XComponentContext> (*FPtr_bootstrap)(void);
 
 /*---------------------------------------------------------------------------*/
 
@@ -370,6 +389,7 @@ sdkres_t OfficeSdk::ConnectServer()
 
     try
     {
+        // https://wiki.openoffice.org/wiki/Uno/Binary/Spec/Bootstrapping
         css::uno::Reference<css::uno::XComponentContext> xComponentContext(cppu::bootstrap());
         css::uno::Reference<css::lang::XMultiComponentFactory> xMultiComponentFactory(xComponentContext->getServiceManager());
         css::uno::Reference<css::uno::XInterface> xin = xMultiComponentFactory->createInstanceWithContext("com.sun.star.frame.Desktop", xComponentContext);
@@ -379,6 +399,13 @@ sdkres_t OfficeSdk::ConnectServer()
 
         if (this->m_xComponentLoader.get() == nullptr)
             res = ekSDKRES_COMPONENT_LOADER;
+    }
+    catch (cppu::BootstrapException &exc)
+    {
+        ::rtl::OUString msg = exc.getMessage();
+        String *str = i_StringFromOUString(msg);
+        str_destroy(&str);
+        res = ekSDKRES_CONECT_FAIL;
     }
     catch (css::uno::Exception &)
     {
