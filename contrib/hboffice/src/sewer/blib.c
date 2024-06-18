@@ -410,10 +410,7 @@ const char_t *blib_getenv(const char_t *name)
     char *value = NULL;
     cassert_no_null(name);
     value = getenv(cast_const(name, char));
-    if (value != NULL)
-        return cast_const(value, char_t);
-    else
-        return "";
+    return cast_const(value, char_t);
 }
 
 /*---------------------------------------------------------------------------*/

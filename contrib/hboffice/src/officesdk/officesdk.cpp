@@ -141,7 +141,7 @@ OfficeSdk::~OfficeSdk()
             {
             }
         }
-        
+
         if (this->m_xMultiComponentFactory.get() != nullptr)
         {
             try
@@ -152,7 +152,7 @@ OfficeSdk::~OfficeSdk()
             {
             }
         }
-        
+
         if (this->m_xComponentContext.get() != nullptr)
         {
             try
@@ -163,7 +163,7 @@ OfficeSdk::~OfficeSdk()
             {
             }
         }
-        
+
         this->KillLibreOffice();
         this->m_init = false;
         core_finish();
@@ -243,7 +243,7 @@ sdkres_t OfficeSdk::Init()
     if (this->m_init == false)
     {
         const char_t *chome = NULL;
-        
+
         core_start();
         chome = blib_getenv("LIBREOFFICE_HOME");
 
@@ -251,16 +251,23 @@ sdkres_t OfficeSdk::Init()
         if (str_empty_c(chome) == TRUE)
             res = ekSDKRES_NO_ENVAR;
 
-    #if defined (__MACOS__)
+#if defined(__MACOS__)
         // The libreoffice process path must to be in PATH envvar
         if (res == ekSDKRES_OK)
         {
             const char_t *cpath = blib_getenv("PATH");
-            String *npath = str_printf("%s:%s/Contents/MacOS", cpath, chome);
-            blib_setenv("PATH", tc(npath));
-            str_destroy(&npath);
+            if (str_empty_c(cpath) == FALSE)
+            {
+                String *npath = str_printf("%s:%s/Contents/MacOS", cpath, chome);
+                blib_setenv("PATH", tc(npath));
+                str_destroy(&npath);
+            }
+            else
+            {
+                res = ekSDKRES_NO_ENVAR;
+            }
         }
-    #endif
+#endif
 
         // Apache UNO global variables
         if (res == ekSDKRES_OK)
@@ -269,21 +276,21 @@ sdkres_t OfficeSdk::Init()
             String *boots = NULL;
 
             {
-            #if defined (__MACOS__)
+#if defined(__MACOS__)
                 String *path = str_path(ekLINUX, "%s/Contents/Resources/types/offapi.rdb", chome);
-            #else
+#else
                 String *path = str_path(ekLINUX, "%s/program/types/offapi.rdb", chome);
-            #endif
+#endif
                 types = i_file_url(tc(path));
                 str_destroy(&path);
             }
 
             {
-            #if defined (__MACOS__)
+#if defined(__MACOS__)
                 String *path = str_path(ekLINUX, "vnd.sun.star.pathname:%s/Contents/Resources/fundamentalrc", chome);
-            #else
+#else
                 String *path = str_path(ekLINUX, "vnd.sun.star.pathname:%s/program/fundamentalrc", chome);
-            #endif
+#endif
                 boots = i_url_spaces(tc(path));
                 str_destroy(&path);
             }
@@ -313,7 +320,7 @@ sdkres_t OfficeSdk::Init()
         if (res == ekSDKRES_OK)
             bthread_sleep(2000);
         */
-        
+
         // Connect to LibreOffice instance
         if (res == ekSDKRES_OK)
             res = ConnectServer();
@@ -333,7 +340,7 @@ sdkres_t OfficeSdk::KillLibreOffice()
     const char_t *kill = NULL;
     Proc *proc = NULL;
     platform_t pt = osbs_platform();
-    
+
     switch (pt)
     {
     case ekWINDOWS:
@@ -355,7 +362,7 @@ sdkres_t OfficeSdk::KillLibreOffice()
         bproc_close(&proc);
     else
         res = ekSDKRES_PROC_KILL_FAIL;
-    
+
     return res;
 }
 
@@ -367,7 +374,7 @@ sdkres_t OfficeSdk::WakeUpServer()
     String *connect = NULL;
     Proc *proc = NULL;
     platform_t pt = osbs_platform();
-    
+
     switch (pt)
     {
     case ekWINDOWS:
@@ -393,13 +400,13 @@ sdkres_t OfficeSdk::WakeUpServer()
 
     if (proc != NULL)
     {
-        //bproc_close(&proc);
+        // bproc_close(&proc);
     }
     else
     {
         res = ekSDKRES_PROC_INIT_FAIL;
     }
-    
+
     str_destroy(&connect);
     return res;
 }
