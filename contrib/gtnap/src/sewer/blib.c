@@ -422,7 +422,11 @@ int blib_setenv(const char_t *name, const char_t *value)
 {
     cassert_no_null(name);
     cassert_no_null(value);
+#if defined(_MSC_VER)
+    return (int)_putenv_s(cast_const(name, char), cast_const(value, char));
+#else
     return setenv(cast_const(name, char), cast_const(value, char), 1);
+#endif
 }
 
 #if defined(_MSC_VER)

@@ -940,7 +940,6 @@ static GtNap *i_gtnap_create(void)
 {
     S2Df screen;
     const char_t *build_cfg = NULL;
-    const char_t *epath = NULL;
     GTNAP_GLOBAL = heap_new0(GtNap);
     GTNAP_GLOBAL->title = i_cp_to_utf8_string(INIT_TITLE);
     GTNAP_GLOBAL->rows = INIT_ROWS;
