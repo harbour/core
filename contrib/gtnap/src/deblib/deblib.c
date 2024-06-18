@@ -12,12 +12,23 @@
 /*---------------------------------------------------------------------------*/
 
 uint16_t kDEBLIB_SERVER_PORT = 3555;
+uint32_t kDEBLIB_HANDSHAKE = 0x12AD6790;
 
 /*---------------------------------------------------------------------------*/
 
 const char_t* deblib_path(void)
 {
     return DEBUGGER_PATH;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t deblib_send_connect(Stream *stm)
+{
+    uint32_t val;
+    stm_write_enum(stm, ekMSG_CONNECT, msg_type_t);
+    val = stm_read_u32(stm);
+    return (bool_t)(val == kDEBLIB_HANDSHAKE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -179,6 +190,9 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
     cassert_no_null(msg);
     msg->type = stm_read_enum(stm, msg_type_t);
     switch (msg->type) {
+    case ekMSG_CONNECT:
+        break;
+            
     case ekMSG_SET_SIZE:
         msg->row = stm_read_u32(stm);
         msg->col = stm_read_u32(stm);
@@ -281,6 +295,8 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
 const char_t *deblib_msg_str(const msg_type_t msg)
 {
     switch(msg) {
+    case ekMSG_CONNECT:
+        return "ekMSG_CONNECT";
     case ekMSG_SET_SIZE:
         return "ekMSG_SET_SIZE";
     case ekMSG_SCROLL:

@@ -11,7 +11,8 @@ typedef struct _debmsg_t DebMsg;
 
 typedef enum _msg_type_t
 {
-    ekMSG_SET_SIZE = 10000,
+    ekMSG_CONNECT = 10000,
+    ekMSG_SET_SIZE,
     ekMSG_SHOW,
     ekMSG_SCROLL,
     ekMSG_BOX,

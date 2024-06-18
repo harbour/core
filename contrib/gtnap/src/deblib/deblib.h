@@ -6,6 +6,8 @@ __EXTERN_C
 
 const char_t* deblib_path(void);
 
+bool_t deblib_send_connect(Stream *stm);
+
 void deblib_send_resolution(Stream *stm, const uint32_t num_rows, const uint32_t num_cols);
 
 void deblib_send_show(Stream *stm, const bool_t show);
@@ -41,5 +43,7 @@ const char_t *deblib_cursor_str(const cursor_t cursor);
 void deblib_init_colors(color_t *colors);
 
 extern uint16_t kDEBLIB_SERVER_PORT;
+
+extern uint32_t kDEBLIB_HANDSHAKE;
 
 __END_C

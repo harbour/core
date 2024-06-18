@@ -628,7 +628,6 @@ static uint32_t i_protocol_thread(App *app)
                 uint32_t ip;
                 uint16_t port;
                 bsocket_remote_ip(income_sock, &ip, &port);
-
                 if (app->print_log == TRUE)
                 {
                     String *log = str_printf("Incomming connect from: %s:%d", bsocket_ip_str(ip), port);
@@ -644,15 +643,19 @@ static uint32_t i_protocol_thread(App *app)
 
                         if (app->print_log == TRUE)
                         {
-                            /*if (msg.type != ekMSG_READ_KEY)
+                            if (msg.type != ekMSG_READ_KEY)
                             {
                                 String *log = str_printf("RECV Socket: %s", deblib_msg_str(msg.type));
                                 i_log(app, &log);
-                            } */
+                            }
                         }
 
                         switch (msg.type)
                         {
+                        case ekMSG_CONNECT:
+                            stm_write_u32(stm, kDEBLIB_HANDSHAKE);
+                            break;
+
                         case ekMSG_SET_SIZE:
                             i_set_size(app, &msg);
                             break;
@@ -718,8 +721,8 @@ static uint32_t i_protocol_thread(App *app)
                         {
                             if (msg.type != ekMSG_READ_KEY)
                             {
-                                /*String *log = str_printf("END Socket: %s", deblib_msg_str(msg.type));
-                                i_log(app, &log); */
+                                String *log = str_printf("END Socket: %s", deblib_msg_str(msg.type));
+                                i_log(app, &log);
                             }
                         }
                     }
@@ -755,6 +758,8 @@ static App *i_app(void)
         log_file("/home/fran/Desktop/debugger_log.txt");
 #elif defined(__WINDOWS__)
         log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
+#elif defined(__MACOS__)
+        log_file("/Users/fran/Desktop/debugger_log.txt");
 #endif
     }
 
@@ -816,22 +821,20 @@ static void i_assert(void *item, const uint32_t group, const char_t *caption, co
 
 static App *i_create(void)
 {
-    {
-        App *app = i_app();
-        Panel *panel = i_panel(app);
-        cassert_set_func((void *)app, i_assert);
-        deblib_init_colors(i_COLORS);
-        view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
-        app->window = window_create(ekWINDOW_STD);
-        window_panel(app->window, panel);
-        window_title(app->window, "GTNap Debugger");
-        window_origin(app->window, v2df(500, 200));
-        window_OnClose(app->window, listener(app, i_OnClose, App));
-        window_show(app->window);
-        app->mutex = bmutex_create();
-        app->protocol_thread = bthread_create(i_protocol_thread, app, App);
-        return app;
-    }
+    App *app = i_app();
+    Panel *panel = i_panel(app);
+    cassert_set_func((void *)app, i_assert);
+    deblib_init_colors(i_COLORS);
+    view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
+    app->window = window_create(ekWINDOW_STD);
+    window_panel(app->window, panel);
+    window_title(app->window, "GTNap Debugger");
+    window_origin(app->window, v2df(500, 200));
+    window_OnClose(app->window, listener(app, i_OnClose, App));
+    window_show(app->window);
+    app->mutex = bmutex_create();
+    app->protocol_thread = bthread_create(i_protocol_thread, app, App);
+    return app;
 }
 
 /*---------------------------------------------------------------------------*/
