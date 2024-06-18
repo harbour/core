@@ -76,10 +76,10 @@ It is necessary to **correctly install the LibreOffice package**, both on the de
     CREDITS.fodt  NOTICE  presets  program  sdk  share
     ```
 
-* Add `$LIBREOFFICE_HOME$/program` path to `LD_LIBRARY_PATH` environment variable. In order to run any hboffice-based application, LibreOffice shared libraries `.so` must be accesible and located.
+* Add `$LIBREOFFICE_HOME/program` path to `LD_LIBRARY_PATH` environment variable. In order to run any hboffice-based application, LibreOffice shared libraries `.so` must be accesible and located.
     ```
     # Add at the end of .bashrc
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH$:$LIBREOFFICE_HOME$/program
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LIBREOFFICE_HOME/program
     ```
 
 ### Installation in macOS

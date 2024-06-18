@@ -950,17 +950,6 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
 
     {
-        const char_t *cpath = blib_getenv("PATH");
-        String *npath = str_printf("%s:/Applications/LibreOffice.app/Contents/MacOS", cpath);
-        blib_setenv("PATH", tc(npath));
-        str_destroy(&npath);
-    }
-    
-    epath = blib_getenv("PATH");
-    bstd_printf("%s\n", epath);
-
-
-    {
         char_t path[512];
         bfile_dir_work(path, sizeof(path));
         GTNAP_GLOBAL->working_path = str_c(path);

@@ -1,10 +1,8 @@
 #include "officesdk.h"
 #include "sheetsdk.h"
 #include "writersdk.h"
+#include <core/core.h>
 #include <core/strings.h>
-#include <sewer/cassert.h>
-#include <sewer/ptr.h>
-
 #include <osbs/bproc.h>
 #include <osbs/dlib.h>
 #include <osbs/bthread.h>
@@ -13,6 +11,8 @@
 #include <osbs/log.h>
 #include <sewer/blib.h>
 #include <sewer/bstd.h>
+#include <sewer/cassert.h>
+#include <sewer/ptr.h>
 #include <sewer/unicode.h>
 
 #include <sewer/nowarn.hxx>
@@ -166,6 +166,7 @@ OfficeSdk::~OfficeSdk()
         
         this->KillLibreOffice();
         this->m_init = false;
+        core_finish();
     }
 }
 
@@ -241,12 +242,25 @@ sdkres_t OfficeSdk::Init()
     sdkres_t res = ekSDKRES_OK;
     if (this->m_init == false)
     {
-        const char_t *env = blib_getenv("LIBREOFFICE_HOME");
-        //const char_t *env2 = blib_getenv("PATH");
+        const char_t *chome = NULL;
+        
+        core_start();
+        chome = blib_getenv("LIBREOFFICE_HOME");
 
         // Check the LIBREOFFICE_HOME environment variable
-        if (str_empty_c(env) == TRUE)
+        if (str_empty_c(chome) == TRUE)
             res = ekSDKRES_NO_ENVAR;
+
+    #if defined (__MACOS__)
+        // The libreoffice process path must to be in PATH envvar
+        if (res == ekSDKRES_OK)
+        {
+            const char_t *cpath = blib_getenv("PATH");
+            String *npath = str_printf("%s:%s/Contents/MacOS", cpath, chome);
+            blib_setenv("PATH", tc(npath));
+            str_destroy(&npath);
+        }
+    #endif
 
         // Apache UNO global variables
         if (res == ekSDKRES_OK)
@@ -256,9 +270,9 @@ sdkres_t OfficeSdk::Init()
 
             {
             #if defined (__MACOS__)
-                String *path = str_path(ekLINUX, "%s/Contents/Resources/types/offapi.rdb", env);
+                String *path = str_path(ekLINUX, "%s/Contents/Resources/types/offapi.rdb", chome);
             #else
-                String *path = str_path(ekLINUX, "%s/program/types/offapi.rdb", env);
+                String *path = str_path(ekLINUX, "%s/program/types/offapi.rdb", chome);
             #endif
                 types = i_file_url(tc(path));
                 str_destroy(&path);
@@ -266,9 +280,9 @@ sdkres_t OfficeSdk::Init()
 
             {
             #if defined (__MACOS__)
-                String *path = str_path(ekLINUX, "vnd.sun.star.pathname:%s/Contents/Resources/fundamentalrc", env);
+                String *path = str_path(ekLINUX, "vnd.sun.star.pathname:%s/Contents/Resources/fundamentalrc", chome);
             #else
-                String *path = str_path(ekLINUX, "vnd.sun.star.pathname:%s/program/fundamentalrc", env);
+                String *path = str_path(ekLINUX, "vnd.sun.star.pathname:%s/program/fundamentalrc", chome);
             #endif
                 boots = i_url_spaces(tc(path));
                 str_destroy(&path);
@@ -284,17 +298,22 @@ sdkres_t OfficeSdk::Init()
         if (res == ekSDKRES_OK)
             res = KillLibreOffice();
 
-//        if (res == ekSDKRES_OK)
-//            bthread_sleep(1000);
-//
-//        // WakeUp LibreOffice
-//        if (res == ekSDKRES_OK)
-//            res = WakeUpServer();
-//
-//        // Wait a little to LibreOffice wake up
-//        if (res == ekSDKRES_OK)
-//            bthread_sleep(2000);
+        // The LibreOffice server is wake up by
+        // cppu::bootstrap() in ConnectServer()
+        // Avoid launch LibreOffice by ourselves
+        /*
+        if (res == ekSDKRES_OK)
+            bthread_sleep(1000);
 
+        // WakeUp LibreOffice
+        if (res == ekSDKRES_OK)
+            res = WakeUpServer();
+
+        // Wait a little to LibreOffice wake up
+        if (res == ekSDKRES_OK)
+            bthread_sleep(2000);
+        */
+        
         // Connect to LibreOffice instance
         if (res == ekSDKRES_OK)
             res = ConnectServer();
@@ -360,7 +379,7 @@ sdkres_t OfficeSdk::WakeUpServer()
     case ekMACOS:
     {
         const char_t *env = blib_getenv("LIBREOFFICE_HOME");
-        connect = str_printf("%s/Contents/MacOS/soffice --accept=\"socket,host=localhost,port=2083;urp;StarOffice.ServiceManager\" --nodefault --nologo &", env);
+        connect = str_printf("%s/Contents/MacOS/soffice --accept=\"socket,host=localhost,port=2083;urp;StarOffice.ServiceManager\" --nodefault --nologo", env);
         break;
     }
     case ekIOS:
