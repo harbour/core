@@ -5151,8 +5151,6 @@ static HB_BOOL hb_gtnap_Info(PHB_GT pGT, int iType, PHB_GT_INFO pInfo)
                             PHB_ITEM wbottom = hb_arrayGetItemPtr(pInfo->pNewVal, 4);
                             PHB_ITEM wright = hb_arrayGetItemPtr(pInfo->pNewVal, 5);
                             uint32_t ncols = 0, nrows = 0;
-                            GtNapWindow *win = i_current_gtwin(GTNAP_GLOBAL);
-                            window_hide(win->window);
                             cassert(HB_ITEM_TYPE(wtop) == HB_IT_INTEGER);
                             cassert(HB_ITEM_TYPE(wleft) == HB_IT_INTEGER);
                             cassert(HB_ITEM_TYPE(wbottom) == HB_IT_INTEGER);

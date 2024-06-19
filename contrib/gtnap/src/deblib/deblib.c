@@ -373,13 +373,13 @@ void deblib_init_colors(color_t *colors)
     color_t DARK_COL_BRIGHT_WHITE = color_html("#7F8C8D");
 
     color_t LIGHT_COL_BLACK = color_html("#000000");
-    color_t LIGHT_COL_BLUE = color_html("#135CD0");
+    color_t LIGHT_COL_BLUE = color_html("#0037DA");
     color_t LIGHT_COL_GREEN = color_html("#328A5D");
-    color_t LIGHT_COL_CYAN = color_html("#33C3C1");
-    color_t LIGHT_COL_RED = color_html("#F8282A");
+    color_t LIGHT_COL_CYAN = color_html("#3A96DD");
+    color_t LIGHT_COL_RED = color_html("#C6361F");
     color_t LIGHT_COL_MAGENTA = color_html("#9F00BD");
     color_t LIGHT_COL_BROWN = color_html("#FA701D");
-    color_t LIGHT_COL_WHITE = color_html("#B3B3B3");
+    color_t LIGHT_COL_WHITE = color_html("#CCCCCC");
     color_t LIGHT_COL_LIGHT_GRAY = color_html("#555753");
     color_t LIGHT_COL_BRIGHT_BLUE = color_html("#1670FF");
     color_t LIGHT_COL_BRIGHT_GREEN = color_html("#2CC631");
