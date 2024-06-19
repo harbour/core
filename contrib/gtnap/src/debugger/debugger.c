@@ -43,6 +43,12 @@ static const real64_t i_BLINK_INTERVAL = 0.2;
 static color_t i_COLORS[16];
 static uint32_t i_DEFAULT_COLS = 80;
 static uint32_t i_DEFAULT_ROWS = 25;
+static char_t i_BOX_HORT_SINGLE[8];
+static char_t i_BOX_VERT_SINGLE[8];
+static char_t i_BOX_TOP_LEFT_SINGLE[8];
+static char_t i_BOX_TOP_RIGHT_SINGLE[8];
+static char_t i_BOX_DOWN_LEFT_SINGLE[8];
+static char_t i_BOX_DOWN_RIGHT_SINGLE[8];
 
 /*---------------------------------------------------------------------------*/
 
@@ -296,7 +302,7 @@ static void i_box(App *app, const DebMsg *msg)
         {
             BufChar *bchar = app->text_buffer + (i * app->ncols + msg->left);
             cassert(i < app->nrows);
-            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "│");
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_VERT_SINGLE);
             bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
@@ -305,7 +311,7 @@ static void i_box(App *app, const DebMsg *msg)
         {
             BufChar *bchar = app->text_buffer + (i * app->ncols + msg->right);
             cassert(i < app->nrows);
-            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "│");
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_VERT_SINGLE);
             bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
@@ -317,7 +323,7 @@ static void i_box(App *app, const DebMsg *msg)
         {
             BufChar *bchar = app->text_buffer + (msg->top * app->ncols + j);
             cassert(j < app->ncols);
-            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "─");
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_HORT_SINGLE);
             bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
@@ -326,7 +332,7 @@ static void i_box(App *app, const DebMsg *msg)
         {
             BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + j);
             cassert(j < app->ncols);
-            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "─");
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_HORT_SINGLE);
             bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
@@ -335,7 +341,7 @@ static void i_box(App *app, const DebMsg *msg)
     /* Top-left corner */
     {
         BufChar *bchar = app->text_buffer + (msg->top * app->ncols + msg->left);
-        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┌");
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_TOP_LEFT_SINGLE);
         bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
@@ -343,7 +349,7 @@ static void i_box(App *app, const DebMsg *msg)
     /* Top-right corner */
     {
         BufChar *bchar = app->text_buffer + (msg->top * app->ncols + msg->right);
-        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┝");
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_TOP_RIGHT_SINGLE);
         bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
@@ -351,7 +357,7 @@ static void i_box(App *app, const DebMsg *msg)
     /* Bottom-left corner */
     {
         BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + msg->left);
-        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "└");
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_DOWN_LEFT_SINGLE);
         bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
@@ -359,7 +365,7 @@ static void i_box(App *app, const DebMsg *msg)
     /* Bottom-right corner */
     {
         BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + msg->right);
-        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┘");
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_DOWN_RIGHT_SINGLE);
         bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
@@ -806,6 +812,15 @@ static App *i_app(void)
     app->cursor_col = UINT32_MAX;
     app->cursor_draw = FALSE;
     app->last_redraw = -1;
+
+    /* Set Unicode characters for box drawing */
+    unicode_to_char(0x2501, i_BOX_HORT_SINGLE, ekUTF8);
+    unicode_to_char(0x2503, i_BOX_VERT_SINGLE, ekUTF8);
+    unicode_to_char(0x250F, i_BOX_TOP_LEFT_SINGLE, ekUTF8);
+    unicode_to_char(0x2513, i_BOX_TOP_RIGHT_SINGLE, ekUTF8);
+    unicode_to_char(0x2517, i_BOX_DOWN_LEFT_SINGLE, ekUTF8);
+    unicode_to_char(0x251B, i_BOX_DOWN_RIGHT_SINGLE, ekUTF8);
+
     return app;
 }
 
