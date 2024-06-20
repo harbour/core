@@ -161,6 +161,7 @@ CREATE CLASS TBrowse
    METHOD message( cMessage ) SETGET            // get/set character string displayed on status bar
 #endif
 
+   VAR    cSepColor  AS CHARACTER               // heading/column/footer separator color
    METHOD nTop( nTop ) SETGET                   // get/set top row number for the TBrowse display
    METHOD nLeft( nLeft ) SETGET                 // get/set leftmost column for the TBrowse display
    METHOD nBottom( nBottom ) SETGET             // get/set bottom row number for the TBrowse display
@@ -441,7 +442,7 @@ METHOD dispFrames() CLASS TBrowse
    DispBegin()
 
    IF ::lInvalid .AND. ! Empty( ::cBorder )
-      hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cBorder, ::colorValue( _TBC_CLR_STANDARD ) )
+      hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cBorder, hb_DefaultValue( ::cSepColor, ::colorValue( _TBC_CLR_STANDARD ) ) )
    ENDIF
 
    IF ::nHeadHeight > 0
@@ -451,11 +452,11 @@ METHOD dispFrames() CLASS TBrowse
    ENDIF
    IF ::lHeadSep
       _DISP_FHSEP( ::n_Top + ::nHeadHeight, _TBCI_HEADSEP, ;
-                   ::colorValue( _TBC_CLR_STANDARD ), ::aColData )
+                   hb_DefaultValue( ::cSepColor, ::colorValue( _TBC_CLR_STANDARD ) ), ::aColData )
    ENDIF
    IF ::lFootSep
       _DISP_FHSEP( ::n_Bottom - ::nFootHeight, _TBCI_FOOTSEP, ;
-                   ::colorValue( _TBC_CLR_STANDARD ), ::aColData )
+                   hb_DefaultValue( ::cSepColor, ::colorValue( _TBC_CLR_STANDARD ) ), ::aColData )
    ENDIF
    IF ::nFootHeight > 0
       _DISP_FHNAME( ::n_Bottom - ::nFootHeight + 1, ::nFootHeight, ::n_Left, ::n_Right, _TBCI_FOOTING, ;
@@ -495,7 +496,7 @@ METHOD dispRow( nRow ) CLASS TBrowse
                lFirst := .F.
             ELSEIF aCol[ _TBCI_SEPWIDTH ] > 0
                hb_DispOutAtBox( nRowPos, aCol[ _TBCI_COLPOS ] - aCol[ _TBCI_FROZENSPACE ], ;
-                                aCol[ _TBCI_COLSEP ], cStdColor )
+                                aCol[ _TBCI_COLSEP ], hb_DefaultValue( ::cSepColor, cStdColor ) )
                nColPos += aCol[ _TBCI_SEPWIDTH ]
             ENDIF
             nColPos += aCol[ _TBCI_CELLPOS ]
