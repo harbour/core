@@ -13,6 +13,7 @@
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
 #include "hbver.ch"
+#include "gtwvg.ch"
 
 #define K_MOVING                1001
 

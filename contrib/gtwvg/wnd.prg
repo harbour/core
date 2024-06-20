@@ -52,9 +52,7 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-#include "hbgtwvg.ch"
-#include "wvtwin.ch"
-#include "wvgparts.ch"
+#include "gtwvg.ch"
 
 /* To Switch Over from ASCALLBACK() to SET/GET_Prop() calls */
 #if 0

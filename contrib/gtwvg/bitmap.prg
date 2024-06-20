@@ -52,9 +52,7 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-#include "hbgtwvg.ch"
-#include "wvtwin.ch"
-#include "wvgparts.ch"
+#include "gtwvg.ch"
 
 CREATE CLASS WvgBitmap
 
