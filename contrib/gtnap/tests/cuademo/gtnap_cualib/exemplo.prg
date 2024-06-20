@@ -69,6 +69,8 @@ LOCAL L_FechouComAutoclose, V_Janela
 PRIVATE INFO_VERSAO := {"99","9","999","999",;
                         "99","9","999","999"}
 
+hb_DispBox( 0, 1, 2, 2, HB_B_DOUBLE_UNI, 0 )
+
 CUA20 @ 00,00,MAXROW(),MAXCOL() JANELA V_Janela ;
      TITULO "Escolha o tipo de janela" SUBTITULO "%T";
      AJUDA "T?????"
