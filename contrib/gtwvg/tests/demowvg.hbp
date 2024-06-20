@@ -1,0 +1,12 @@
+demowvg.prg
+_activex.prg
+_cuigdlg.prg
+_dyndlgs.prg
+_modal.prg
+_tbrowse.prg
+_utils.prg
+_wvtcls.prg
+_xbp.prg
+
+-w3 -es2
+gtwvg.hbc
