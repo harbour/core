@@ -127,7 +127,6 @@ static bool_t i_exec(const char_t *command, int *pipes, pid_t *pid)
         close(pipes[STDERR_READ_PARENT]);
 
         execlp("bash", "bash", "-c", command, NULL);
-        printf("Fails errno: %d", errno);
         cassert_msg(FALSE, "It's a zombie!");
         return FALSE;
     }
