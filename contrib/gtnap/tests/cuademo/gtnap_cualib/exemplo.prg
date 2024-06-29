@@ -2,6 +2,7 @@
 #INCLUDE "ord.ch"
 #INCLUDE "inkey.ch"
 #INCLUDE "cua.ch"
+// #INCLUDE "box.ch"
 
 // Desativar na "cuademo", para página de código ser a padrão Windows/Linux
 // REQUEST HB_CODEPAGE_PT850
@@ -38,6 +39,8 @@ RDDINFO(RDDI_MEMOTYPE,1)
 SETCOLOR(_COR2_PADRAO)
 MSETCURSOR( .T. )
 
+// hb_DispBox( 0, 1, 2, 2, HB_B_DOUBLE_UNI, 0 )
+
 // LibreOffice initialization
 HBOFFICE_INIT()
 
@@ -68,8 +71,6 @@ LOCAL L_FechouComAutoclose, V_Janela
 
 PRIVATE INFO_VERSAO := {"99","9","999","999",;
                         "99","9","999","999"}
-
-hb_DispBox( 0, 1, 2, 2, HB_B_DOUBLE_UNI, 0 )
 
 CUA20 @ 00,00,MAXROW(),MAXCOL() JANELA V_Janela ;
      TITULO "Escolha o tipo de janela" SUBTITULO "%T";

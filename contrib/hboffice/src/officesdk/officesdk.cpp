@@ -305,21 +305,19 @@ sdkres_t OfficeSdk::Init()
         if (res == ekSDKRES_OK)
             res = KillLibreOffice();
 
-        // The LibreOffice server is wake up by
-        // cppu::bootstrap() in ConnectServer()
-        // Avoid launch LibreOffice by ourselves
-        /*
         if (res == ekSDKRES_OK)
             bthread_sleep(1000);
 
-        // WakeUp LibreOffice
-        if (res == ekSDKRES_OK)
-            res = WakeUpServer();
+        // The LibreOffice server is waked up by
+        // cppu::bootstrap() in ConnectServer()
+        // Avoid launch LibreOffice by ourselves
+        //// WakeUp LibreOffice
+        //if (res == ekSDKRES_OK)
+        //    res = WakeUpServer();
 
-        // Wait a little to LibreOffice wake up
-        if (res == ekSDKRES_OK)
-            bthread_sleep(2000);
-        */
+        //// Wait a little to LibreOffice wake up
+        //if (res == ekSDKRES_OK)
+        //    bthread_sleep(2000);
 
         // Connect to LibreOffice instance
         if (res == ekSDKRES_OK)
