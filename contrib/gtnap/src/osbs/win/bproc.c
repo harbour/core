@@ -115,8 +115,7 @@ static bool_t i_pipes(HANDLE *pipes)
 
 static bool_t i_exec(const char_t *command, HANDLE *pipes, PROCESS_INFORMATION *info)
 {
-    //WCHAR commandw[1024] = L"cmd /c ";
-    WCHAR commandw[1024] = L"";
+    WCHAR commandw[1024] = L"cmd /c ";
     STARTUPINFO stinfo;
     uint32_t size;
     cassert_no_null(pipes);

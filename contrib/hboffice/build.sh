@@ -14,10 +14,15 @@
 # Input parameters
 #
 OPERATION=dll
+PLATFORM=linux
 COMPILER=gcc
 BUILD=Release
 CWD=$(pwd)
 
+if [ "$(uname)" == "Darwin" ]; then
+    PLATFORM=darwin
+    COMPILER=clang
+fi
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -47,19 +52,26 @@ echo ---------------------------
 echo Generating LibreOffice
 echo Main path: $CWD
 echo Build type: $BUILD
+echo PLATFORM: $PLATFORM
 echo COMPILER: $COMPILER
 echo OPERATION: $OPERATION
 echo ---------------------------
-
-mkdir -p build
 
 #
 # Generate dynamic library
 #
 if [ $OPERATION == "dll" ]; then
-    cd build
-    cmake .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
-    make -j 4 || exit 1
+    if [ "$(uname)" == "Darwin" ]; then
+        cmake -G Xcode -S . -B build || exit 1
+        cmake --build build --config $BUILD || exit 1
+        cd build
+    else
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
+        make -j 4 || exit 1
+    fi
+
     rm $BUILD/lib/*core*
     rm $BUILD/lib/*osbs*
     rm $BUILD/lib/*sewer*
@@ -71,7 +83,7 @@ if [ $OPERATION == "dll" ]; then
 # Generate static library
 #
 elif [ $OPERATION == "lib" ]; then
-    HBMK_PATH=../../bin/linux/$COMPILER
+    HBMK_PATH=../../bin/$PLATFORM/$COMPILER
     HBMK_FLAGS=
 
     if [ $BUILD == "Debug" ]; then

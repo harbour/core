@@ -43,6 +43,12 @@ static const real64_t i_BLINK_INTERVAL = 0.2;
 static color_t i_COLORS[16];
 static uint32_t i_DEFAULT_COLS = 80;
 static uint32_t i_DEFAULT_ROWS = 25;
+static char_t i_BOX_HORT_SINGLE[8];
+static char_t i_BOX_VERT_SINGLE[8];
+static char_t i_BOX_TOP_LEFT_SINGLE[8];
+static char_t i_BOX_TOP_RIGHT_SINGLE[8];
+static char_t i_BOX_DOWN_LEFT_SINGLE[8];
+static char_t i_BOX_DOWN_RIGHT_SINGLE[8];
 
 /*---------------------------------------------------------------------------*/
 
@@ -296,7 +302,7 @@ static void i_box(App *app, const DebMsg *msg)
         {
             BufChar *bchar = app->text_buffer + (i * app->ncols + msg->left);
             cassert(i < app->nrows);
-            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "│");
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_VERT_SINGLE);
             bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
@@ -305,7 +311,7 @@ static void i_box(App *app, const DebMsg *msg)
         {
             BufChar *bchar = app->text_buffer + (i * app->ncols + msg->right);
             cassert(i < app->nrows);
-            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "│");
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_VERT_SINGLE);
             bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
@@ -317,7 +323,7 @@ static void i_box(App *app, const DebMsg *msg)
         {
             BufChar *bchar = app->text_buffer + (msg->top * app->ncols + j);
             cassert(j < app->ncols);
-            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "─");
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_HORT_SINGLE);
             bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
@@ -326,7 +332,7 @@ static void i_box(App *app, const DebMsg *msg)
         {
             BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + j);
             cassert(j < app->ncols);
-            str_copy_c(bchar->utf8, sizeof(bchar->utf8), "─");
+            str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_HORT_SINGLE);
             bchar->colorb = msg->colorb;
             bchar->attrib = 0;
         }
@@ -335,7 +341,7 @@ static void i_box(App *app, const DebMsg *msg)
     /* Top-left corner */
     {
         BufChar *bchar = app->text_buffer + (msg->top * app->ncols + msg->left);
-        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┌");
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_TOP_LEFT_SINGLE);
         bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
@@ -343,7 +349,7 @@ static void i_box(App *app, const DebMsg *msg)
     /* Top-right corner */
     {
         BufChar *bchar = app->text_buffer + (msg->top * app->ncols + msg->right);
-        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┝");
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_TOP_RIGHT_SINGLE);
         bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
@@ -351,7 +357,7 @@ static void i_box(App *app, const DebMsg *msg)
     /* Bottom-left corner */
     {
         BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + msg->left);
-        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "└");
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_DOWN_LEFT_SINGLE);
         bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
@@ -359,7 +365,7 @@ static void i_box(App *app, const DebMsg *msg)
     /* Bottom-right corner */
     {
         BufChar *bchar = app->text_buffer + (msg->bottom * app->ncols + msg->right);
-        str_copy_c(bchar->utf8, sizeof(bchar->utf8), "┘");
+        str_copy_c(bchar->utf8, sizeof(bchar->utf8), i_BOX_DOWN_RIGHT_SINGLE);
         bchar->colorb = msg->colorb;
         bchar->attrib = 0;
     }
@@ -628,7 +634,6 @@ static uint32_t i_protocol_thread(App *app)
                 uint32_t ip;
                 uint16_t port;
                 bsocket_remote_ip(income_sock, &ip, &port);
-
                 if (app->print_log == TRUE)
                 {
                     String *log = str_printf("Incomming connect from: %s:%d", bsocket_ip_str(ip), port);
@@ -644,15 +649,19 @@ static uint32_t i_protocol_thread(App *app)
 
                         if (app->print_log == TRUE)
                         {
-                            /*if (msg.type != ekMSG_READ_KEY)
+                            if (msg.type != ekMSG_READ_KEY)
                             {
                                 String *log = str_printf("RECV Socket: %s", deblib_msg_str(msg.type));
                                 i_log(app, &log);
-                            } */
+                            }
                         }
 
                         switch (msg.type)
                         {
+                        case ekMSG_CONNECT:
+                            stm_write_u32(stm, kDEBLIB_HANDSHAKE);
+                            break;
+
                         case ekMSG_SET_SIZE:
                             i_set_size(app, &msg);
                             break;
@@ -718,8 +727,8 @@ static uint32_t i_protocol_thread(App *app)
                         {
                             if (msg.type != ekMSG_READ_KEY)
                             {
-                                /*String *log = str_printf("END Socket: %s", deblib_msg_str(msg.type));
-                                i_log(app, &log); */
+                                String *log = str_printf("END Socket: %s", deblib_msg_str(msg.type));
+                                i_log(app, &log);
                             }
                         }
                     }
@@ -755,6 +764,8 @@ static App *i_app(void)
         log_file("/home/fran/Desktop/debugger_log.txt");
 #elif defined(__WINDOWS__)
         log_file("C:\\Users\\Fran\\Desktop\\debugger_log.txt");
+#elif defined(__MACOS__)
+        log_file("/Users/fran/Desktop/debugger_log.txt");
 #endif
     }
 
@@ -801,6 +812,15 @@ static App *i_app(void)
     app->cursor_col = UINT32_MAX;
     app->cursor_draw = FALSE;
     app->last_redraw = -1;
+
+    /* Set Unicode characters for box drawing */
+    unicode_to_char(0x2501, i_BOX_HORT_SINGLE, ekUTF8);
+    unicode_to_char(0x2503, i_BOX_VERT_SINGLE, ekUTF8);
+    unicode_to_char(0x250F, i_BOX_TOP_LEFT_SINGLE, ekUTF8);
+    unicode_to_char(0x2513, i_BOX_TOP_RIGHT_SINGLE, ekUTF8);
+    unicode_to_char(0x2517, i_BOX_DOWN_LEFT_SINGLE, ekUTF8);
+    unicode_to_char(0x251B, i_BOX_DOWN_RIGHT_SINGLE, ekUTF8);
+
     return app;
 }
 
@@ -816,22 +836,20 @@ static void i_assert(void *item, const uint32_t group, const char_t *caption, co
 
 static App *i_create(void)
 {
-    {
-        App *app = i_app();
-        Panel *panel = i_panel(app);
-        cassert_set_func((void *)app, i_assert);
-        deblib_init_colors(i_COLORS);
-        view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
-        app->window = window_create(ekWINDOW_STD);
-        window_panel(app->window, panel);
-        window_title(app->window, "GTNap Debugger");
-        window_origin(app->window, v2df(500, 200));
-        window_OnClose(app->window, listener(app, i_OnClose, App));
-        window_show(app->window);
-        app->mutex = bmutex_create();
-        app->protocol_thread = bthread_create(i_protocol_thread, app, App);
-        return app;
-    }
+    App *app = i_app();
+    Panel *panel = i_panel(app);
+    cassert_set_func((void *)app, i_assert);
+    deblib_init_colors(i_COLORS);
+    view_size(app->view, s2df(app->ncols * app->cell_width, app->nrows * app->cell_height));
+    app->window = window_create(ekWINDOW_STD);
+    window_panel(app->window, panel);
+    window_title(app->window, "GTNap Debugger");
+    window_origin(app->window, v2df(500, 200));
+    window_OnClose(app->window, listener(app, i_OnClose, App));
+    window_show(app->window);
+    app->mutex = bmutex_create();
+    app->protocol_thread = bthread_create(i_protocol_thread, app, App);
+    return app;
 }
 
 /*---------------------------------------------------------------------------*/

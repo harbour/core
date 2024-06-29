@@ -13,6 +13,8 @@
 #include <osapp/osmain.h>
 #include <gui/drawctrl.inl>
 #include <deblib/deblib.h>
+#include <sewer/blib.h>
+#include <sewer/cassert.h>
 
 #include "hbapiitm.h"
 #include "hbapirdd.h"
@@ -289,6 +291,8 @@ static const GtNapKey KEYMAPS[] = {
 /* Identify the main window in a debugging process */
 static const uint32_t i_MAIN_WINDOW_HASH = 1234567;
 static const uint32_t i_DEBUGGER_WINDOW_HASH = 7654321;
+static const bool_t i_LOG_HBFUNCS = FALSE;
+static const bool_t i_FULL_HBFUNCS = FALSE;
 
 /* Harbour colors sensible to light/dark themes */
 static color_t i_COLORS[16];
@@ -960,7 +964,11 @@ static GtNap *i_gtnap_create(void)
 
     {
         const char_t *debpath = deblib_path();
+#if defined(__MACOS__)
+        GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/bin/gtnapdeb.app/Contents/MacOS/gtnapdeb", debpath, build_cfg);
+#else
         GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/bin/gtnapdeb", debpath, build_cfg);
+#endif
         GTNAP_GLOBAL->debugger_visible = FALSE;
         GTNAP_GLOBAL->debugger = NULL;
     }
@@ -2740,7 +2748,6 @@ uint32_t hb_gtnap_window(const int32_t top, const int32_t left, const int32_t bo
 {
     GtNapWindow *gtwin = i_new_window(GTNAP_GLOBAL, UINT32_MAX, top, left, bottom, right, FALSE);
     uint32_t flags = i_window_flags(close_return, close_esc, minimize_button);
-    log_printf("--> hb_gtnap_window");
     gtwin->window = window_create(flags);
     gtwin->buttons_navigation = buttons_navigation;
 
@@ -3017,7 +3024,6 @@ uint32_t hb_gtnap_window_modal(const uint32_t wid, const uint32_t pwid, const ui
     GtNapWindow *pgtwin = pwid > 0 ? i_gtwin(GTNAP_GLOBAL, pwid) : NULL;
     GtNapWindow *embgtwin = NULL;
     cassert_no_null(gtwin);
-    log_printf("hb_gtnap_window_modal");
 
     /* An embedded window can't be launched as modal. We must launch the parent */
     if (gtwin->parent_id != UINT32_MAX)
@@ -4631,9 +4637,18 @@ String *hb_block_to_utf8(HB_ITEM *item)
 
 /*---------------------------------------------------------------------------*/
 
+static int s_GtId;
+static HB_GT_FUNCS SuperTable;
+#define HB_GTSUPER (&SuperTable)
+#define HB_GTID_PTR (&s_GtId)
+
+/*---------------------------------------------------------------------------*/
+
 static HB_BOOL hb_gtnap_Lock(PHB_GT pGT)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Lock");
     return TRUE;
 }
 
@@ -4642,6 +4657,8 @@ static HB_BOOL hb_gtnap_Lock(PHB_GT pGT)
 static void hb_gtnap_Unlock(PHB_GT pGT)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Unlock");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4652,7 +4669,15 @@ static void hb_gtnap_Init(PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilen
     HB_SYMBOL_UNUSED(hFilenoStdin);
     HB_SYMBOL_UNUSED(hFilenoStdout);
     HB_SYMBOL_UNUSED(hFilenoStderr);
-    cassert(TRUE);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Init");
+
+    /*
+   //HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   //HB_GTSELF_RESIZE( pGT, 35, 110);
+   //HB_GTSELF_SETFLAG( pGT, HB_GTI_REDRAWMAX, 1 );
+   //HB_GTSELF_SEMICOLD( pGT );
+   */
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4660,7 +4685,38 @@ static void hb_gtnap_Init(PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilen
 static void hb_gtnap_Exit(PHB_GT pGT)
 {
     HB_SYMBOL_UNUSED(pGT);
-    cassert(TRUE);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Exit");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void *hb_gtnap_New(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_New");
+    return HB_GTSUPER_NEW(pGT);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Free(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Free");
+    HB_GTSUPER_FREE(pGT);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Mark(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Mark");
+    HB_GTSUPER_MARK(pGT);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4668,8 +4724,8 @@ static void hb_gtnap_Exit(PHB_GT pGT)
 static HB_BOOL hb_gtnap_Resize(PHB_GT pGT, int iRow, int iCol)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iRow);
-    HB_SYMBOL_UNUSED(iCol);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Resize: %d, %d", iRow, iCol);
     return TRUE;
 }
 
@@ -4678,8 +4734,8 @@ static HB_BOOL hb_gtnap_Resize(PHB_GT pGT, int iRow, int iCol)
 static HB_BOOL hb_gtnap_SetMode(PHB_GT pGT, int iRow, int iCol)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iRow);
-    HB_SYMBOL_UNUSED(iCol);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetMode: %d, %d", iRow, iCol);
     return TRUE;
 }
 
@@ -4698,6 +4754,27 @@ static void hb_gtnap_GetSize(PHB_GT pGT, int *piRows, int *piCols)
         *piRows = 0;
         *piCols = 0;
     }
+
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetSize: %d, %d", *piRows, *piCols);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_SemiCold(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SemiCold");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_ColdArea(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_ColdArea %d, %d, %d, %d", iTop, iLeft, iBottom, iRight);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4705,31 +4782,101 @@ static void hb_gtnap_GetSize(PHB_GT pGT, int *piRows, int *piCols)
 static void hb_gtnap_ExposeArea(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iTop);
-    HB_SYMBOL_UNUSED(iLeft);
-    HB_SYMBOL_UNUSED(iBottom);
-    HB_SYMBOL_UNUSED(iRight);
-    cassert(TRUE);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_ExposeArea %d, %d, %d, %d", iTop, iLeft, iBottom, iRight);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_ScrollArea(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int iColor, HB_USHORT usChar, int iRows, int iCols)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_ScrollArea %d, %d, %d, %d, %d, %d, %d, %d", iTop, iLeft, iBottom, iRight, iColor, usChar, iRows, iCols);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_TouchLine(PHB_GT pGT, int iRow)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_TouchLine %d", iRow);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_TouchCell(PHB_GT pGT, int iRow, int iCol)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_TouchCell %d %d", iRow, iCol);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Redraw(PHB_GT pGT, int iRow, int iCol, int iSize)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Redraw %d %d %d", iRow, iCol, iSize);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_RedrawDiff(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_RedrawDiff");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Refresh(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Refresh");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Flush(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Flush");
 }
 
 /*---------------------------------------------------------------------------*/
 
 static int hb_gtnap_MaxCol(PHB_GT pGT)
 {
+    int maxcol = 0;
     HB_SYMBOL_UNUSED(pGT);
     if (GTNAP_GLOBAL != NULL)
-        return GTNAP_GLOBAL->cols - 1;
-    return 1;
+        maxcol = GTNAP_GLOBAL->cols - 1;
+
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MaxCol %d", maxcol);
+
+    return maxcol;
 }
 
 /*---------------------------------------------------------------------------*/
 
 static int hb_gtnap_MaxRow(PHB_GT pGT)
 {
+    int maxrow = 0;
     HB_SYMBOL_UNUSED(pGT);
     if (GTNAP_GLOBAL != NULL)
-        return GTNAP_GLOBAL->rows - 1;
-    return 1;
+        maxrow = GTNAP_GLOBAL->rows - 1;
+
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MaxRow %d", maxrow);
+
+    return maxrow;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4737,9 +4884,9 @@ static int hb_gtnap_MaxRow(PHB_GT pGT)
 static HB_BOOL hb_gtnap_CheckPos(PHB_GT pGT, int iRow, int iCol, long *plIndex)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iRow);
-    HB_SYMBOL_UNUSED(iCol);
     *plIndex = 0;
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_CheckPos %d %d %d", iRow, iCol, (int)*plIndex);
     return TRUE;
 }
 
@@ -4748,7 +4895,9 @@ static HB_BOOL hb_gtnap_CheckPos(PHB_GT pGT, int iRow, int iCol, long *plIndex)
 static void hb_gtnap_SetPos(PHB_GT pGT, int iRow, int iCol)
 {
     HB_SYMBOL_UNUSED(pGT);
-    log_printf("hb_gtnap_SetPos (%d, %d)", iRow, iCol);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetPos %d %d", iRow, iCol);
+
     if (GTNAP_GLOBAL != NULL)
     {
         if (GTNAP_GLOBAL->debugger != NULL)
@@ -4796,7 +4945,9 @@ static void hb_gtnap_GetPos(PHB_GT pGT, int *piRow, int *piCol)
             }
         }
     }
-    log_printf("hb_gtnap_GetPos (%d,%d)", *piRow, *piCol);
+
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetPos %d %d", *piRow, *piCol);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4804,15 +4955,141 @@ static void hb_gtnap_GetPos(PHB_GT pGT, int *piRow, int *piCol)
 static HB_BOOL hb_gtnap_IsColor(PHB_GT pGT)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_IsColor");
     return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_GetColorStr(PHB_GT pGT, char *pszColorString)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(pszColorString);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetColorStr");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_SetColorStr(PHB_GT pGT, const char *szColorString)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetColorStr %s", szColorString);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_ColorSelect(PHB_GT pGT, int iColorIndex)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_ColorSelect %d", iColorIndex);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_GetColor(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetColor");
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_ColorNum(PHB_GT pGT, const char *szColorString)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_ColorNum %s", szColorString);
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_ColorsToString(PHB_GT pGT, int *pColors, int iColorCount, char *pszColorString, int iBufSize)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(pColors);
+    HB_SYMBOL_UNUSED(iColorCount);
+    HB_SYMBOL_UNUSED(pszColorString);
+    HB_SYMBOL_UNUSED(iBufSize);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_ColorsToString");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_StringToColors(PHB_GT pGT, const char *szColorString, int **pColorsPtr, int *piColorCount)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(szColorString);
+    HB_SYMBOL_UNUSED(pColorsPtr);
+    HB_SYMBOL_UNUSED(piColorCount);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_StringToColors");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_GetColorData(PHB_GT pGT, int **pColorsPtr, int *piColorCount, int *piColorIndex)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(pColorsPtr);
+    HB_SYMBOL_UNUSED(piColorCount);
+    HB_SYMBOL_UNUSED(piColorIndex);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetColorData");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_GetClearColor(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetClearColor");
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_SetClearColor(PHB_GT pGT, int iColor)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetClearColor %d", iColor);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_USHORT hb_gtnap_GetClearChar(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetClearChar");
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_SetClearChar(PHB_GT pGT, HB_USHORT usChar)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetClearChar %d", usChar);
 }
 
 /*---------------------------------------------------------------------------*/
 
 static int hb_gtnap_GetCursorStyle(PHB_GT pGT)
 {
-    log_printf("hb_gtnap_GetCursorStyle: ");
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetCursorStyle");
     return SC_NONE;
 }
 
@@ -4821,9 +5098,60 @@ static int hb_gtnap_GetCursorStyle(PHB_GT pGT)
 static void hb_gtnap_SetCursorStyle(PHB_GT pGT, int iStyle)
 {
     HB_SYMBOL_UNUSED(pGT);
-    log_printf("hb_gtnap_SetCursorStyle: %d", iStyle);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetCursorStyle %d", iStyle);
+
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_cursor(GTNAP_GLOBAL->debugger, (uint32_t)iStyle);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_GetScrCursor(PHB_GT pGT, int *piRow, int *piCol, int *piStyle)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(piRow);
+    HB_SYMBOL_UNUSED(piCol);
+    HB_SYMBOL_UNUSED(piStyle);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetScrCursor");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_GetScrChar(PHB_GT pGT, int iRow, int iCol, int *piColor, HB_BYTE *pbAttr, HB_USHORT *pusChar)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(piColor);
+    HB_SYMBOL_UNUSED(pbAttr);
+    HB_SYMBOL_UNUSED(pusChar);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetScrChar %d, %d", iRow, iCol);
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_PutScrChar(PHB_GT pGT, int iRow, int iCol, int iColor, HB_BYTE bAttr, HB_USHORT usChar)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_PutScrChar %d, %d, %d, %d, %d", iRow, iCol, iColor, bAttr, usChar);
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_GetScrUC(PHB_GT pGT, int iRow, int iCol, int *piColor, HB_BYTE *pbAttr, HB_UCHAR *puChar, HB_BOOL fTerm)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(piColor);
+    HB_SYMBOL_UNUSED(pbAttr);
+    HB_SYMBOL_UNUSED(puChar);
+    HB_SYMBOL_UNUSED(fTerm);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetScrUC %d, %d", iRow, iCol);
+    return HB_TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4831,6 +5159,8 @@ static void hb_gtnap_SetCursorStyle(PHB_GT pGT, int iStyle)
 static void hb_gtnap_DispBegin(PHB_GT pGT)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_DispBegin");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4838,6 +5168,8 @@ static void hb_gtnap_DispBegin(PHB_GT pGT)
 static void hb_gtnap_DispEnd(PHB_GT pGT)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_DispEnd");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4845,6 +5177,8 @@ static void hb_gtnap_DispEnd(PHB_GT pGT)
 static int hb_gtnap_DispCount(PHB_GT pGT)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_DispCount");
     return 0;
 }
 
@@ -4858,6 +5192,8 @@ static HB_BOOL hb_gtnap_GetChar(PHB_GT pGT, int iRow, int iCol, int *pbColor, HB
     *pbColor = 0;
     *pbAttr = 0;
     *pusChar = 65;
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetChar");
     return TRUE;
 }
 
@@ -4873,14 +5209,26 @@ static uint32_t i_hb_codepoint(HB_USHORT usChar)
 static HB_BOOL hb_gtnap_PutChar(PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar)
 {
     HB_SYMBOL_UNUSED(pGT);
-    log_printf("hb_gtnap_PutChar (%d, %d): %c", iRow, iCol, usChar);
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
     {
         uint32_t codepoint = i_hb_codepoint(usChar);
         nap_debugger_putchar(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, codepoint, (byte_t)bColor, (byte_t)bAttr);
     }
 
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_PutChar %d %d %d %d %d", iRow, iCol, bColor, bAttr, usChar);
+
     return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static long hb_gtnap_RectSize(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_RectSize %d %d %d %d", iTop, iLeft, iBottom, iRight);
+    return 0;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4888,7 +5236,9 @@ static HB_BOOL hb_gtnap_PutChar(PHB_GT pGT, int iRow, int iCol, int bColor, HB_B
 static void hb_gtnap_Save(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, void *pBuffer)
 {
     HB_SYMBOL_UNUSED(pGT);
-    /* log_printf("hb_gtnap_Save (%d %d %d %d)", iTop, iLeft, iBottom, iRight); */
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Save %d %d %d %d", iTop, iLeft, iBottom, iRight);
+
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_save(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (byte_t *)pBuffer);
 }
@@ -4898,7 +5248,9 @@ static void hb_gtnap_Save(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRig
 static void hb_gtnap_Rest(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const void *pBuffer)
 {
     HB_SYMBOL_UNUSED(pGT);
-    /* log_printf("hb_gtnap_Rest (%d %d %d %d)", iTop, iLeft, iBottom, iRight); */
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Rest %d %d %d %d", iTop, iLeft, iBottom, iRight);
+
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_rest(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (const byte_t *)pBuffer);
 }
@@ -4915,10 +5267,12 @@ static int hb_gtnap_PutText(PHB_GT pGT, int iRow, int iCol, int bColor, const ch
     HB_SYMBOL_UNUSED(pText);
     HB_SYMBOL_UNUSED(ulLen);
     i_cp_to_utf8(pText, utf8, sizeof32(utf8));
-    log_printf("hb_gtnap_PutText (%d, %d): '%s' - %d", iRow, iCol, pText, (int)ulLen);
 
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_puttext(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, (byte_t)bColor, utf8);
+
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_PutText %d %d", iRow, iCol);
 
     return 0;
 }
@@ -4927,18 +5281,12 @@ static int hb_gtnap_PutText(PHB_GT pGT, int iRow, int iCol, int bColor, const ch
 
 static int hb_gtnap_PutTextW(PHB_GT pGT, int iRow, int iCol, int bColor, const HB_WCHAR *pText, HB_SIZE ulLen)
 {
-    /*char_t utf8[STATIC_TEXT_SIZE];*/
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iRow);
-    HB_SYMBOL_UNUSED(iCol);
     HB_SYMBOL_UNUSED(bColor);
     HB_SYMBOL_UNUSED(pText);
     HB_SYMBOL_UNUSED(ulLen);
-    /*log_printf("hb_gtnap_PutTextW (%d, %d): '%s' - %d", iRow, iCol, utf8, ulLen);*/
-
-    /*if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
-        nap_debugger_puttext(GTNAP_GLOBAL->debugger, (uint32_t)iRow, (uint32_t)iCol, (byte_t)bColor, utf8);*/
-
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_PutTextW %d %d", iRow, iCol);
     return 0;
 }
 
@@ -4946,15 +5294,13 @@ static int hb_gtnap_PutTextW(PHB_GT pGT, int iRow, int iCol, int bColor, const H
 
 static void hb_gtnap_Replicate(PHB_GT pGT, int iRow, int iCol, int bColor, HB_BYTE bAttr, HB_USHORT usChar, HB_SIZE ulLen)
 {
-    log_printf("hb_gtnap_Replicate");
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iRow);
-    HB_SYMBOL_UNUSED(iCol);
     HB_SYMBOL_UNUSED(bColor);
     HB_SYMBOL_UNUSED(bAttr);
     HB_SYMBOL_UNUSED(usChar);
     HB_SYMBOL_UNUSED(ulLen);
-    cassert(TRUE);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Replicate %d %d", iRow, iCol);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4963,6 +5309,10 @@ static void hb_gtnap_WriteAt(PHB_GT pGT, int iRow, int iCol, const char *pText, 
 {
     HB_SYMBOL_UNUSED(pGT);
     HB_SYMBOL_UNUSED(ulLength);
+
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_WriteAt %d %d", iRow, iCol);
+
     if (GTNAP_GLOBAL != NULL)
     {
         GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
@@ -4982,15 +5332,77 @@ static void hb_gtnap_WriteAt(PHB_GT pGT, int iRow, int iCol, const char *pText, 
 
 /*---------------------------------------------------------------------------*/
 
+static void hb_gtnap_WriteAtW(PHB_GT pGT, int iRow, int iCol, const HB_WCHAR *szText, HB_SIZE nLength)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(szText);
+    HB_SYMBOL_UNUSED(nLength);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_WriteAtW %d %d", iRow, iCol);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Write(PHB_GT pGT, const char *szText, HB_SIZE nLength)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(szText);
+    HB_SYMBOL_UNUSED(nLength);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Write");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_WriteW(PHB_GT pGT, const HB_WCHAR *szText, HB_SIZE nLength)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(szText);
+    HB_SYMBOL_UNUSED(nLength);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_WriteW");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_WriteCon(PHB_GT pGT, const char *szText, HB_SIZE nLength)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(szText);
+    HB_SYMBOL_UNUSED(nLength);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_WriteCon");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_WriteConW(PHB_GT pGT, const HB_WCHAR *szText, HB_SIZE nLength)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(szText);
+    HB_SYMBOL_UNUSED(nLength);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_WriteConW");
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void hb_gtnap_SetAttribute(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iTop);
-    HB_SYMBOL_UNUSED(iLeft);
-    HB_SYMBOL_UNUSED(iBottom);
-    HB_SYMBOL_UNUSED(iRight);
     HB_SYMBOL_UNUSED(bColor);
-    cassert(TRUE);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetAttribute %d %d %d %d", iTop, iLeft, iBottom, iRight);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_DrawShadow(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int iColor)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iColor);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_DrawShadow %d %d %d %d", iTop, iLeft, iBottom, iRight);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -4998,7 +5410,8 @@ static void hb_gtnap_SetAttribute(PHB_GT pGT, int iTop, int iLeft, int iBottom, 
 static void hb_gtnap_Scroll(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, HB_USHORT bChar, int iRows, int iCols)
 {
     HB_SYMBOL_UNUSED(pGT);
-    /* log_printf("hb_gtnap_Scroll (%d, %d, %d, %d) (%d-'%d') (%d-%d)", iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols); */
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Scroll %d %d %d %d", iTop, iLeft, iBottom, iRight);
 
     if (GTNAP_GLOBAL != NULL)
     {
@@ -5041,13 +5454,59 @@ static void hb_gtnap_Scroll(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 
 /*---------------------------------------------------------------------------*/
 
+static void hb_gtnap_ScrollUp(PHB_GT pGT, int iRows, int iColor, HB_USHORT usChar)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iColor);
+    HB_SYMBOL_UNUSED(usChar);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_ScrollUp %d", iRows);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void hb_gtnap_Box(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const char *pbyFrame, int bColor)
 {
     HB_SYMBOL_UNUSED(pGT);
     HB_SYMBOL_UNUSED(pbyFrame);
-    /* log_printf("hb_gtnap_Box (%d %d %d %d) %d '%s'", iTop, iLeft, iBottom, iRight, bColor, pbyFrame); */
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Box %d %d %d %d (%s)", iTop, iLeft, iBottom, iRight, pbyFrame);
+
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         nap_debugger_box(GTNAP_GLOBAL->debugger, (uint32_t)iTop, (uint32_t)iLeft, (uint32_t)iBottom, (uint32_t)iRight, (byte_t)bColor);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_BoxW(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const HB_WCHAR *szFrame, int iColor)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(szFrame);
+    HB_SYMBOL_UNUSED(iColor);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_BoxW %d %d %d %d", iTop, iLeft, iBottom, iRight);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_BoxD(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const char *szFrame, int iColor)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(szFrame);
+    HB_SYMBOL_UNUSED(iColor);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_BoxD %d %d %d %d", iTop, iLeft, iBottom, iRight);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_BoxS(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const char *szFrame, int iColor)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(szFrame);
+    HB_SYMBOL_UNUSED(iColor);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_BoxS %d %d %d %d", iTop, iLeft, iBottom, iRight);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5055,13 +5514,10 @@ static void hb_gtnap_Box(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRigh
 static void hb_gtnap_HorizLine(PHB_GT pGT, int iRow, int iLeft, int iRight, HB_USHORT bChar, int bColor)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iRow);
-    HB_SYMBOL_UNUSED(iLeft);
-    HB_SYMBOL_UNUSED(iRight);
     HB_SYMBOL_UNUSED(bChar);
     HB_SYMBOL_UNUSED(bColor);
-    cassert(TRUE);
-    /* log_printf("hb_gtnap_HorizLine"); */
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_HorizLine %d %d %d", iRow, iLeft, iRight);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5069,13 +5525,10 @@ static void hb_gtnap_HorizLine(PHB_GT pGT, int iRow, int iLeft, int iRight, HB_U
 static void hb_gtnap_VertLine(PHB_GT pGT, int iCol, int iTop, int iBottom, HB_USHORT bChar, int bColor)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iCol);
-    HB_SYMBOL_UNUSED(iTop);
-    HB_SYMBOL_UNUSED(iBottom);
     HB_SYMBOL_UNUSED(bChar);
     HB_SYMBOL_UNUSED(bColor);
-    cassert(TRUE);
-    /* log_printf("hb_gtnap_VertLine"); */
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_VertLine %d %d %d", iCol, iTop, iBottom);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5083,6 +5536,8 @@ static void hb_gtnap_VertLine(PHB_GT pGT, int iCol, int iTop, int iBottom, HB_US
 static HB_BOOL hb_gtnap_GetBlink(PHB_GT pGT)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_GetBlink");
     return TRUE;
 }
 
@@ -5091,9 +5546,18 @@ static HB_BOOL hb_gtnap_GetBlink(PHB_GT pGT)
 static void hb_gtnap_SetBlink(PHB_GT pGT, HB_BOOL bBlink)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(bBlink);
-    /* log_printf("hb_gtnap_SetBlink: %d", bBlink); */
-    cassert(TRUE);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetBlink %d", bBlink);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_SetSnowFlag(PHB_GT pGT, HB_BOOL fNoSnow)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(fNoSnow);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetSnowFlag");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5101,6 +5565,9 @@ static void hb_gtnap_SetBlink(PHB_GT pGT, HB_BOOL bBlink)
 static const char *hb_gtnap_Version(PHB_GT pGT, int iType)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Version %d", iType);
+
     if (iType == 0)
         return HB_GT_DRVNAME(HB_GT_NAME);
 
@@ -5109,13 +5576,52 @@ static const char *hb_gtnap_Version(PHB_GT pGT, int iType)
 
 /*---------------------------------------------------------------------------*/
 
+static HB_BOOL hb_gtnap_Suspend(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Suspend");
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_Resume(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Resume");
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_PreExt(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_PreExt");
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_PostExt(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_PostExt");
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void hb_gtnap_OutStd(PHB_GT pGT, const char *pbyStr, HB_SIZE ulLen)
 {
     HB_SYMBOL_UNUSED(pGT);
-    if (pbyStr != NULL && ulLen > 0)
-        log_printf("hb_gtnap_OutStd(%s (%d))", pbyStr, (int)ulLen);
-    else
-        log_printf("hb_gtnap_OutStd(empty)");
+    HB_SYMBOL_UNUSED(pbyStr);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_OutStd %d", (int)ulLen);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5123,11 +5629,13 @@ static void hb_gtnap_OutStd(PHB_GT pGT, const char *pbyStr, HB_SIZE ulLen)
 static void hb_gtnap_OutErr(PHB_GT pGT, const char *pbyStr, HB_SIZE ulLen)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_OutErr '%s' (%d)", pbyStr, (int)ulLen);
+
     if (pbyStr != NULL && ulLen > 0)
     {
         char_t utf8[STATIC_TEXT_SIZE];
         i_cp_to_utf8(pbyStr, utf8, sizeof32(utf8));
-        log_printf("%s", utf8);
     }
 }
 
@@ -5137,9 +5645,17 @@ static void hb_gtnap_Tone(PHB_GT pGT, double dFrequency, double dDuration)
 {
     /* dDuration is in 'Ticks' (18.2 per second) */
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(dFrequency);
-    HB_SYMBOL_UNUSED(dDuration);
-    cassert(TRUE);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Tone %f %f", dFrequency, dDuration);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_Bell(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Bell");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5147,6 +5663,9 @@ static void hb_gtnap_Tone(PHB_GT pGT, double dFrequency, double dDuration)
 static HB_BOOL hb_gtnap_Info(PHB_GT pGT, int iType, PHB_GT_INFO pInfo)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Info %d", iType);
+
     switch (iType)
     {
     case HB_GTI_GETWIN:
@@ -5300,9 +5819,9 @@ static int hb_gtnap_Alert(PHB_GT pGT, PHB_ITEM message, PHB_ITEM options, int a,
     uint32_t ret = 0;
 
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(a);
-    HB_SYMBOL_UNUSED(b);
-    HB_SYMBOL_UNUSED(c);
+
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_Alert %d %d %f", a, b, c);
 
     if (HB_ITEM_TYPE(message) == HB_IT_STRING)
     {
@@ -5347,76 +5866,384 @@ static int hb_gtnap_Alert(PHB_GT pGT, PHB_ITEM message, PHB_ITEM options, int a,
 
 /*---------------------------------------------------------------------------*/
 
+static int hb_gtnap_SetFlag(PHB_GT pGT, int iType, int iNewValue)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iNewValue);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetFlag %d", iType);
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_SetDispCP(PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, HB_BOOL fBox)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(pszTermCDP);
+    HB_SYMBOL_UNUSED(pszHostCDP);
+    HB_SYMBOL_UNUSED(fBox);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetDispCP");
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_SetKeyCP(PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(pszTermCDP);
+    HB_SYMBOL_UNUSED(pszHostCDP);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_SetKeyCP");
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static int hb_gtnap_ReadKey(PHB_GT pGT, int iEventMask)
 {
     int iKey = 0;
-    unref(pGT);
-    unref(iEventMask);
+    HB_SYMBOL_UNUSED(pGT);
+
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_ReadKey %d", iEventMask);
 
     if (GTNAP_GLOBAL != NULL && GTNAP_GLOBAL->debugger != NULL)
         iKey = (int)nap_debugger_read_key(GTNAP_GLOBAL->debugger);
-
-    if (iKey != 0 && iKey > 32 && iKey < 128)
-        log_printf("hb_gtnap_ReadKey: (%c-%d)", (char)iKey, iKey);
 
     return iKey;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_mouse_Init(PHB_GT pGT)
+static int hb_gtnap_InkeyGet(PHB_GT pGT, HB_BOOL fWait, double dSeconds, int iEventMask)
 {
     HB_SYMBOL_UNUSED(pGT);
-    cassert(TRUE);
+    HB_SYMBOL_UNUSED(fWait);
+    HB_SYMBOL_UNUSED(dSeconds);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_InkeyGet %d", iEventMask);
+    return 0;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void hb_gtnap_mouse_Exit(PHB_GT pGT)
+static void hb_gtnap_InkeyPut(PHB_GT pGT, int iKey)
 {
     HB_SYMBOL_UNUSED(pGT);
-    cassert(TRUE);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_InkeyPut %d", iKey);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_mouse_IsPresent(PHB_GT pGT)
+static void hb_gtnap_InkeyIns(PHB_GT pGT, int iKey)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_InkeyIns %d", iKey);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_InkeyLast(PHB_GT pGT, int iEventMask)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_InkeyLast %d", iEventMask);
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_InkeyNext(PHB_GT pGT, int iEventMask)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_InkeyNext %d", iEventMask);
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_InkeyPoll(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_InkeyPoll");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_InkeySetText(PHB_GT pGT, const char *szText, HB_SIZE nLen, HB_BOOL fEol)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(szText);
+    HB_SYMBOL_UNUSED(fEol);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_InkeySetText %d", (int)nLen);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_InkeySetLast(PHB_GT pGT, int iKey)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_InkeySetLast %d", iKey);
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_InkeyReset(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_InkeyReset");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_InkeyExit(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_InkeyExit");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_MouseInit(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseInit");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_MouseExit(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseExit");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_MouseIsPresent(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseIsPresent");
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_mouse_Col(PHB_GT pGT)
+static void hb_gtnap_MouseShow(PHB_GT pGT)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseShow");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_MouseHide(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseHide");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_MouseGetCursor(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseGetCursor");
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_MouseSetCursor(PHB_GT pGT, HB_BOOL fVisible)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(fVisible);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseSetCursor");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_MouseCol(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseCol");
     return 1;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_mouse_Row(PHB_GT pGT)
+static int hb_gtnap_MouseRow(PHB_GT pGT)
 {
     HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseRow");
     return 1;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static int hb_gtnap_mouse_CountButton(PHB_GT pGT)
+static void hb_gtnap_MouseGetPos(PHB_GT pGT, int *piRow, int *piCol)
 {
     HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(piRow);
+    HB_SYMBOL_UNUSED(piCol);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseGetPos");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_MouseSetPos(PHB_GT pGT, int iRow, int iCol)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseSetPos %d %d", iRow, iCol);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_MouseSetBounds(PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseSetBounds %d %d %d %d", iTop, iLeft, iBottom, iRight);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_MouseGetBounds(PHB_GT pGT, int *piTop, int *piLeft, int *piBottom, int *piRight)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(piTop);
+    HB_SYMBOL_UNUSED(piLeft);
+    HB_SYMBOL_UNUSED(piBottom);
+    HB_SYMBOL_UNUSED(piRight);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseGetBounds");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_MouseStorageSize(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseStorageSize");
+    return 1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_MouseSaveState(PHB_GT pGT, void *pBuffer)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(pBuffer);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseSaveState");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_MouseRestoreState(PHB_GT pGT, const void *pBuffer)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(pBuffer);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseRestoreState");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_MouseGetDoubleClickSpeed(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseGetDoubleClickSpeed");
+    return 1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_MouseSetDoubleClickSpeed(PHB_GT pGT, int iSpeed)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(iSpeed);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseSetDoubleClickSpeed");
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_MouseCountButton(PHB_GT pGT)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseCountButton");
     return 3;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static HB_BOOL hb_gtnap_mouse_ButtonState(PHB_GT pGT, int iButton)
+static HB_BOOL hb_gtnap_MouseButtonState(PHB_GT pGT, int iButton)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iButton);
-    return FALSE;
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseButtonState %d", iButton);
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_MouseButtonPressed(PHB_GT pGT, int iButton, int *piRow, int *piCol)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(piRow);
+    HB_SYMBOL_UNUSED(piCol);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseButtonPressed %d", iButton);
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static HB_BOOL hb_gtnap_MouseButtonReleased(PHB_GT pGT, int iButton, int *piRow, int *piCol)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(piRow);
+    HB_SYMBOL_UNUSED(piCol);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseButtonReleased %d", iButton);
+    return HB_TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static int hb_gtnap_MouseReadKey(PHB_GT pGT, int iEventMask)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_MouseReadKey %d", iEventMask);
+    return 0;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5424,12 +6251,10 @@ static HB_BOOL hb_gtnap_mouse_ButtonState(PHB_GT pGT, int iButton)
 static int hb_gtnap_gfxPrimitive(PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iType);
-    HB_SYMBOL_UNUSED(iTop);
-    HB_SYMBOL_UNUSED(iLeft);
-    HB_SYMBOL_UNUSED(iBottom);
-    HB_SYMBOL_UNUSED(iRight);
     HB_SYMBOL_UNUSED(iColor);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_gfxPrimitive (%d) %d %d %d %d", iType, iTop, iLeft, iBottom, iRight);
+
     return 1;
 }
 
@@ -5438,13 +6263,22 @@ static int hb_gtnap_gfxPrimitive(PHB_GT pGT, int iType, int iTop, int iLeft, int
 static void hb_gtnap_gfxText(PHB_GT pGT, int iTop, int iLeft, const char *cBuf, int iColor, int iSize, int iWidth)
 {
     HB_SYMBOL_UNUSED(pGT);
-    HB_SYMBOL_UNUSED(iTop);
-    HB_SYMBOL_UNUSED(iLeft);
     HB_SYMBOL_UNUSED(cBuf);
     HB_SYMBOL_UNUSED(iColor);
     HB_SYMBOL_UNUSED(iSize);
     HB_SYMBOL_UNUSED(iWidth);
-    cassert(TRUE);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_gfxText %d %d", iTop, iLeft);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void hb_gtnap_WhoCares(PHB_GT pGT, void *pCargo)
+{
+    HB_SYMBOL_UNUSED(pGT);
+    HB_SYMBOL_UNUSED(pCargo);
+    if (i_LOG_HBFUNCS == TRUE)
+        log_printf("hb_gtnap_WhoCares");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -5455,144 +6289,213 @@ static HB_BOOL hb_gt_FuncInit(PHB_GT_FUNCS pFuncTable)
     pFuncTable->Unlock = hb_gtnap_Unlock;
     pFuncTable->Init = hb_gtnap_Init;
     pFuncTable->Exit = hb_gtnap_Exit;
-    /* pFuncTable->New = NULL;
-       pFuncTable->Free = NULL;
-       pFuncTable->Mark = NULL; */
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->New = hb_gtnap_New;
+        pFuncTable->Free = hb_gtnap_Free;
+        pFuncTable->Mark = hb_gtnap_Mark;
+    }
+
     pFuncTable->Resize = hb_gtnap_Resize;
     pFuncTable->SetMode = hb_gtnap_SetMode;
     pFuncTable->GetSize = hb_gtnap_GetSize;
-    pFuncTable->SemiCold = NULL;
-    pFuncTable->ColdArea = NULL;
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->SemiCold = hb_gtnap_SemiCold;
+        pFuncTable->ColdArea = hb_gtnap_ColdArea;
+    }
+
     pFuncTable->ExposeArea = hb_gtnap_ExposeArea;
-    /* pFuncTable->ScrollArea = NULL;
-    pFuncTable->TouchLine = NULL;
-    pFuncTable->TouchCell = NULL;
-    pFuncTable->Redraw = NULL;
-    pFuncTable->RedrawDiff = NULL;
-    pFuncTable->Refresh = NULL;
-    pFuncTable->Flush = NULL; */
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->ScrollArea = hb_gtnap_ScrollArea;
+        pFuncTable->TouchLine = hb_gtnap_TouchLine;
+        pFuncTable->TouchCell = hb_gtnap_TouchCell;
+        pFuncTable->Redraw = hb_gtnap_Redraw;
+        pFuncTable->RedrawDiff = hb_gtnap_RedrawDiff;
+        pFuncTable->Refresh = hb_gtnap_Refresh;
+        pFuncTable->Flush = hb_gtnap_Flush;
+    }
+
     pFuncTable->MaxCol = hb_gtnap_MaxCol;
     pFuncTable->MaxRow = hb_gtnap_MaxRow;
     pFuncTable->CheckPos = hb_gtnap_CheckPos;
     pFuncTable->SetPos = hb_gtnap_SetPos;
     pFuncTable->GetPos = hb_gtnap_GetPos;
     pFuncTable->IsColor = hb_gtnap_IsColor;
-    /* pFuncTable->GetColorStr = NULL;
-    pFuncTable->SetColorStr = NULL;
-    pFuncTable->ColorSelect = NULL;
-    pFuncTable->GetColor = NULL;
-    pFuncTable->ColorNum = NULL;
-    pFuncTable->ColorsToString = NULL;
-    pFuncTable->StringToColors = NULL;
-    pFuncTable->GetColorData = NULL;
-    pFuncTable->GetClearColor = NULL;
-    pFuncTable->SetClearColor = NULL;
-    pFuncTable->GetClearChar = NULL;
-    pFuncTable->SetClearChar = NULL; */
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->GetColorStr = hb_gtnap_GetColorStr;
+        pFuncTable->SetColorStr = hb_gtnap_SetColorStr;
+        pFuncTable->ColorSelect = hb_gtnap_ColorSelect;
+        pFuncTable->GetColor = hb_gtnap_GetColor;
+        pFuncTable->ColorNum = hb_gtnap_ColorNum;
+        pFuncTable->ColorsToString = hb_gtnap_ColorsToString;
+        pFuncTable->StringToColors = hb_gtnap_StringToColors;
+        pFuncTable->GetColorData = hb_gtnap_GetColorData;
+        pFuncTable->GetClearColor = hb_gtnap_GetClearColor;
+        pFuncTable->SetClearColor = hb_gtnap_SetClearColor;
+        pFuncTable->GetClearChar = hb_gtnap_GetClearChar;
+        pFuncTable->SetClearChar = hb_gtnap_SetClearChar;
+    }
+
     pFuncTable->GetCursorStyle = hb_gtnap_GetCursorStyle;
     pFuncTable->SetCursorStyle = hb_gtnap_SetCursorStyle;
-    pFuncTable->GetScrCursor = NULL;
-    pFuncTable->GetScrChar = NULL;
-    pFuncTable->PutScrChar = NULL;
-    pFuncTable->GetScrUC = NULL;
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->GetScrCursor = hb_gtnap_GetScrCursor;
+        pFuncTable->GetScrChar = hb_gtnap_GetScrChar;
+        pFuncTable->PutScrChar = hb_gtnap_PutScrChar;
+        pFuncTable->GetScrUC = hb_gtnap_GetScrUC;
+    }
+
     pFuncTable->DispBegin = hb_gtnap_DispBegin;
     pFuncTable->DispEnd = hb_gtnap_DispEnd;
     pFuncTable->DispCount = hb_gtnap_DispCount;
     pFuncTable->GetChar = hb_gtnap_GetChar;
     pFuncTable->PutChar = hb_gtnap_PutChar;
-    /* pFuncTable->RectSize = NULL; */
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->RectSize = hb_gtnap_RectSize;
+    }
+
     pFuncTable->Save = hb_gtnap_Save;
     pFuncTable->Rest = hb_gtnap_Rest;
     pFuncTable->PutText = hb_gtnap_PutText;
     pFuncTable->PutTextW = hb_gtnap_PutTextW;
     pFuncTable->Replicate = hb_gtnap_Replicate;
     pFuncTable->WriteAt = hb_gtnap_WriteAt;
-    /* pFuncTable->WriteAtW = NULL;
-    pFuncTable->Write = NULL;
-    pFuncTable->WriteW = NULL;
-    pFuncTable->WriteCon = NULL;
-    pFuncTable->WriteConW = NULL; */
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->WriteAtW = hb_gtnap_WriteAtW;
+        pFuncTable->Write = hb_gtnap_Write;
+        pFuncTable->WriteW = hb_gtnap_WriteW;
+        pFuncTable->WriteCon = hb_gtnap_WriteCon;
+        pFuncTable->WriteConW = hb_gtnap_WriteConW;
+        pFuncTable->DrawShadow = hb_gtnap_DrawShadow;
+        pFuncTable->ScrollUp = hb_gtnap_ScrollUp;
+    }
+
     pFuncTable->SetAttribute = hb_gtnap_SetAttribute;
-    /* pFuncTable->DrawShadow = NULL; */
     pFuncTable->Scroll = hb_gtnap_Scroll;
-    /* pFuncTable->ScrollUp = NULL; */
     pFuncTable->Box = hb_gtnap_Box;
-    pFuncTable->BoxW = NULL;
-    pFuncTable->BoxD = NULL;
-    pFuncTable->BoxS = NULL;
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->BoxW = hb_gtnap_BoxW;
+        pFuncTable->BoxD = hb_gtnap_BoxD;
+        pFuncTable->BoxS = hb_gtnap_BoxS;
+    }
+
     pFuncTable->HorizLine = hb_gtnap_HorizLine;
     pFuncTable->VertLine = hb_gtnap_VertLine;
     pFuncTable->GetBlink = hb_gtnap_GetBlink;
     pFuncTable->SetBlink = hb_gtnap_SetBlink;
-    /* pFuncTable->SetSnowFlag = NULL; */
     pFuncTable->Version = hb_gtnap_Version;
-    /* pFuncTable->Suspend = NULL;
-    pFuncTable->Resume = NULL;
-    pFuncTable->PreExt = NULL;
-    pFuncTable->PostExt = NULL; */
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->SetSnowFlag = hb_gtnap_SetSnowFlag;
+        pFuncTable->Suspend = hb_gtnap_Suspend;
+        pFuncTable->Resume = hb_gtnap_Resume;
+        pFuncTable->PreExt = hb_gtnap_PreExt;
+        pFuncTable->PostExt = hb_gtnap_PostExt;
+    }
+
     pFuncTable->OutStd = hb_gtnap_OutStd;
     pFuncTable->OutErr = hb_gtnap_OutErr;
     pFuncTable->Tone = hb_gtnap_Tone;
-    pFuncTable->Bell = NULL;
     pFuncTable->Info = hb_gtnap_Info;
     pFuncTable->Alert = hb_gtnap_Alert;
-    pFuncTable->SetFlag = NULL;
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->Bell = hb_gtnap_Bell;
+        pFuncTable->SetFlag = hb_gtnap_SetFlag;
+    }
 
     /* internationalization */
-    /* pFuncTable->SetDispCP = NULL;
-    pFuncTable->SetKeyCP = NULL; */
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->SetDispCP = hb_gtnap_SetDispCP;
+        pFuncTable->SetKeyCP = hb_gtnap_SetKeyCP;
+    }
 
     /* keyboard */
     pFuncTable->ReadKey = hb_gtnap_ReadKey;
-    /* pFuncTable->InkeyGet = NULL;
-    pFuncTable->InkeyPut = NULL;
-    pFuncTable->InkeyIns = NULL;
-    pFuncTable->InkeyLast = NULL;
-    pFuncTable->InkeyNext = NULL;
-    pFuncTable->InkeyPoll = NULL;
-    pFuncTable->InkeySetText = NULL;
-    pFuncTable->InkeySetLast = NULL;
-    pFuncTable->InkeyReset = NULL;
-    pFuncTable->InkeyExit = NULL; */
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->InkeyGet = hb_gtnap_InkeyGet;
+        pFuncTable->InkeyPut = hb_gtnap_InkeyPut;
+        pFuncTable->InkeyIns = hb_gtnap_InkeyIns;
+        pFuncTable->InkeyLast = hb_gtnap_InkeyLast;
+        pFuncTable->InkeyNext = hb_gtnap_InkeyNext;
+        pFuncTable->InkeyPoll = hb_gtnap_InkeyPoll;
+        pFuncTable->InkeySetText = hb_gtnap_InkeySetText;
+        pFuncTable->InkeySetLast = hb_gtnap_InkeySetLast;
+        pFuncTable->InkeyReset = hb_gtnap_InkeyReset;
+        pFuncTable->InkeyExit = hb_gtnap_InkeyExit;
+    }
 
     /* mouse */
-    pFuncTable->MouseInit = hb_gtnap_mouse_Init;
-    pFuncTable->MouseExit = hb_gtnap_mouse_Exit;
-    pFuncTable->MouseIsPresent = hb_gtnap_mouse_IsPresent;
-    /* pFuncTable->MouseShow = NULL;
-    pFuncTable->MouseHide = NULL;
-    pFuncTable->MouseGetCursor = NULL;
-    pFuncTable->MouseSetCursor = NULL; */
-    pFuncTable->MouseCol = hb_gtnap_mouse_Col;
-    pFuncTable->MouseRow = hb_gtnap_mouse_Row;
-    /* pFuncTable->MouseGetPos = NULL;
-    pFuncTable->MouseSetPos = NULL;
-    pFuncTable->MouseSetBounds = NULL;
-    pFuncTable->MouseGetBounds = NULL;
-    pFuncTable->MouseStorageSize = NULL;
-    pFuncTable->MouseSaveState = NULL;
-    pFuncTable->MouseRestoreState = NULL;
-    pFuncTable->MouseGetDoubleClickSpeed = NULL;
-    pFuncTable->MouseSetDoubleClickSpeed = NULL; */
-    pFuncTable->MouseCountButton = hb_gtnap_mouse_CountButton;
-    pFuncTable->MouseButtonState = hb_gtnap_mouse_ButtonState;
-    /* pFuncTable->MouseButtonPressed = NULL;
-    pFuncTable->MouseButtonReleased = NULL;
-    pFuncTable->MouseReadKey = NULL; */
+    pFuncTable->MouseInit = hb_gtnap_MouseInit;
+    pFuncTable->MouseExit = hb_gtnap_MouseExit;
+    pFuncTable->MouseIsPresent = hb_gtnap_MouseIsPresent;
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->MouseShow = hb_gtnap_MouseShow;
+        pFuncTable->MouseHide = hb_gtnap_MouseHide;
+        pFuncTable->MouseGetCursor = hb_gtnap_MouseGetCursor;
+        pFuncTable->MouseSetCursor = hb_gtnap_MouseSetCursor;
+    }
+
+    pFuncTable->MouseCol = hb_gtnap_MouseCol;
+    pFuncTable->MouseRow = hb_gtnap_MouseRow;
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->MouseGetPos = hb_gtnap_MouseGetPos;
+        pFuncTable->MouseSetPos = hb_gtnap_MouseSetPos;
+        pFuncTable->MouseSetBounds = hb_gtnap_MouseSetBounds;
+        pFuncTable->MouseGetBounds = hb_gtnap_MouseGetBounds;
+        pFuncTable->MouseStorageSize = hb_gtnap_MouseStorageSize;
+        pFuncTable->MouseSaveState = hb_gtnap_MouseSaveState;
+        pFuncTable->MouseRestoreState = hb_gtnap_MouseRestoreState;
+        pFuncTable->MouseGetDoubleClickSpeed = hb_gtnap_MouseGetDoubleClickSpeed;
+        pFuncTable->MouseSetDoubleClickSpeed = hb_gtnap_MouseSetDoubleClickSpeed;
+    }
+
+    pFuncTable->MouseCountButton = hb_gtnap_MouseCountButton;
+    pFuncTable->MouseButtonState = hb_gtnap_MouseButtonState;
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->MouseButtonPressed = hb_gtnap_MouseButtonPressed;
+        pFuncTable->MouseButtonReleased = hb_gtnap_MouseButtonReleased;
+        pFuncTable->MouseReadKey = hb_gtnap_MouseReadKey;
+    }
 
     /* Graphics API */
     pFuncTable->GfxPrimitive = hb_gtnap_gfxPrimitive;
     pFuncTable->GfxText = hb_gtnap_gfxText;
-    pFuncTable->WhoCares = NULL;
+
+    if (i_FULL_HBFUNCS)
+    {
+        pFuncTable->WhoCares = hb_gtnap_WhoCares;
+    }
 
     return TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
-
-static int s_GtId;
-static HB_GT_FUNCS SuperTable;
-#define HB_GTSUPER (&SuperTable)
-#define HB_GTID_PTR (&s_GtId)
 
 #include "hbgtreg.h"

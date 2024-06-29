@@ -7,12 +7,17 @@
 -i.
 -isrc
 
+# Avoid linker error '__gxx_personality_v0'
+# GTNAP need to be linked with g++
+# LibreOffice support needs c++ linking
+-cpp=yes
+
 # Flags
 -cflag={allmsvc|allmingw}-D_WINDOWS
 -cflag={allmingw}-DUNICODE
 -cflag={allmingw}-D_UNICODE
 -cflag={allgcc&debug}-g
--cflag={allgcc}-std=c++98
+-cflag={allgcc&!darwin}-std=c++98
 -cflag={debug}-DCMAKE_DEBUG
 -cflag={nodebug}-DCMAKE_RELEASE
 
@@ -21,11 +26,6 @@
 {nodebug}-obuild/Release/lib/${hb_name}
 
 -w3 -es2
-
-# Avoid linker error '__gxx_personality_v0'
-# GTNAP need to be linked with g++
-# LibreOffice support needs c++ linking
--cpp=yes
 
 # Create Harbour header
 -hbx=${hb_name}.hbx

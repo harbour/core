@@ -31,8 +31,10 @@ set(HARBOUR_LIBS ${HARBOUR_LIBS} "hbhsx;hbsix;hbmacro;hbcplr;hbpp;hbcommon;hbvm"
 set(LIBREOFFICE_LIBS "")
 if (WIN32)
     set(LIBREOFFICE_LIBS "icppu;icppuhelper;ipurpenvhelper;isal;isalhelper")
-else()
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     set(LIBREOFFICE_LIBS "uno_sal;uno_cppu;uno_cppuhelpergcc3;uno_salhelpergcc3;unoidllo;xmlreaderlo;reglo;mergedlo")
+elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+    set(LIBREOFFICE_LIBS "uno_cppu;uno_cppuhelpergcc3;uno_purpenvhelpergcc3;uno_sal;uno_salhelpergcc3")
 endif()
 
 # LibPaths
@@ -50,7 +52,7 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 
 elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     set(HARBOUR_LIB_PATH ${HARBOUR_ROOT_PATH}/lib/darwin/clang)
-    set(LIBREOFFICE_LIB_PATH "${LOROOT}/program;${LOROOT}/sdk/lib")
+    set(LIBREOFFICE_LIB_PATH "${LOROOT}/Contents/Frameworks")
 
 else()
     message(FATAL_ERROR "Platform not supported")

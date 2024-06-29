@@ -407,9 +407,25 @@ bool_t blib_bsearch_ex(const byte_t *array, const byte_t *key, const uint32_t ne
 #endif
 const char_t *blib_getenv(const char_t *name)
 {
+    char *value = NULL;
     cassert_no_null(name);
-    return (const char_t *)getenv((const char *)name);
+    value = getenv(cast_const(name, char));
+    return cast_const(value, char_t);
 }
+
+/*---------------------------------------------------------------------------*/
+
+int blib_setenv(const char_t *name, const char_t *value)
+{
+    cassert_no_null(name);
+    cassert_no_null(value);
+#if defined(__WINDOWS__)
+    return (int)_putenv_s(cast_const(name, char), cast_const(value, char));
+#else
+    return setenv(cast_const(name, char), cast_const(value, char), 1);
+#endif
+}
+
 #if defined(_MSC_VER)
 #pragma warning(default : 4996)
 #endif

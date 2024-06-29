@@ -2,6 +2,7 @@
 #INCLUDE "ord.ch"
 #INCLUDE "inkey.ch"
 #INCLUDE "cua.ch"
+// #INCLUDE "box.ch"
 
 // Desativar na "cuademo", para página de código ser a padrão Windows/Linux
 // REQUEST HB_CODEPAGE_PT850
@@ -37,6 +38,8 @@ RDDINFO(RDDI_MEMOTYPE,1)
 #DEFINE _COR2_PADRAO   "N/W,N/BG*,N,,N/W*"
 SETCOLOR(_COR2_PADRAO)
 MSETCURSOR( .T. )
+
+// hb_DispBox( 0, 1, 2, 2, HB_B_DOUBLE_UNI, 0 )
 
 // LibreOffice initialization
 HBOFFICE_INIT()

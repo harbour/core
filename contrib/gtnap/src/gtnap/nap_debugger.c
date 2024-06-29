@@ -18,21 +18,39 @@ struct _gtnap_debugger_t
 
 /*---------------------------------------------------------------------------*/
 
+static Stream *i_connect(void)
+{
+    /* Handshake with debugger server */
+    uint32_t ip = bsocket_url_ip("localhost", NULL);
+    Socket *socket = NULL;
+    Stream *stm = NULL;
+    bool_t ok = FALSE;
+    
+    while (socket == NULL)
+        socket = bsocket_connect(ip, kDEBLIB_SERVER_PORT, 0, NULL);
+    
+    stm = stm_socket(socket);
+    while (ok == FALSE)
+        ok = deblib_send_connect(stm);
+    
+    return stm;
+}
+
+/*---------------------------------------------------------------------------*/
+
 GtNapDebugger *nap_debugger_create(const char_t *path, const uint32_t nrows, const uint32_t ncols)
 {
     GtNapDebugger *debug = heap_new(GtNapDebugger);
-    uint32_t ip = bsocket_url_ip("localhost", NULL);
     String *cmd = str_cpath("%s %d %d", path, nrows, ncols);
-    Socket *socket = NULL;
 
-    debug->proc = bproc_exec(tc(cmd), NULL);
-    if (debug->proc != NULL)
-        bproc_close(&debug->proc);
     bthread_sleep(2000);
-
-    socket = bsocket_connect(ip, kDEBLIB_SERVER_PORT, 0, NULL);
-    if (socket != NULL)
-        debug->stream = stm_socket(socket);
+    debug->proc = bproc_exec(tc(cmd), NULL);
+    
+    if (debug->proc != NULL)
+    {
+        debug->stream = i_connect();
+        bproc_close(&debug->proc);
+    }
 
     str_destroy(&cmd);
     return debug;
@@ -50,6 +68,9 @@ void nap_debugger_destroy(GtNapDebugger **debug)
         deblib_close((*debug)->stream);
         stm_close(&(*debug)->stream);
     }
+
+    if ((*debug)->proc != NULL)
+        bproc_close(&(*debug)->proc);
 
     heap_delete(debug, GtNapDebugger);
 }

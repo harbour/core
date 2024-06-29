@@ -12,12 +12,23 @@
 /*---------------------------------------------------------------------------*/
 
 uint16_t kDEBLIB_SERVER_PORT = 3555;
+uint32_t kDEBLIB_HANDSHAKE = 0x12AD6790;
 
 /*---------------------------------------------------------------------------*/
 
 const char_t* deblib_path(void)
 {
     return DEBUGGER_PATH;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t deblib_send_connect(Stream *stm)
+{
+    uint32_t val;
+    stm_write_enum(stm, ekMSG_CONNECT, msg_type_t);
+    val = stm_read_u32(stm);
+    return (bool_t)(val == kDEBLIB_HANDSHAKE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -179,6 +190,9 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
     cassert_no_null(msg);
     msg->type = stm_read_enum(stm, msg_type_t);
     switch (msg->type) {
+    case ekMSG_CONNECT:
+        break;
+            
     case ekMSG_SET_SIZE:
         msg->row = stm_read_u32(stm);
         msg->col = stm_read_u32(stm);
@@ -281,6 +295,8 @@ void deblib_recv_message(Stream *stm, DebMsg *msg)
 const char_t *deblib_msg_str(const msg_type_t msg)
 {
     switch(msg) {
+    case ekMSG_CONNECT:
+        return "ekMSG_CONNECT";
     case ekMSG_SET_SIZE:
         return "ekMSG_SET_SIZE";
     case ekMSG_SCROLL:
@@ -331,22 +347,17 @@ const char_t *deblib_cursor_str(const cursor_t cursor)
 }
 
 /*---------------------------------------------------------------------------*/
-/*
- * https://gogh-co.github.io/Gogh/
- * Dark mode: Breeze
- * Light mode: Clrs
- */
+
 void deblib_init_colors(color_t *colors)
 {
-    /* In dark mode, black and white are inverted */
-    color_t DARK_COL_BLACK = color_html("#FCFCFC");
-    color_t DARK_COL_BLUE = color_html("#1D99F3");
+    color_t DARK_COL_BLACK = color_rgb(200, 200, 200);
+    color_t DARK_COL_BLUE = color_html("#00FFFF");
     color_t DARK_COL_GREEN = color_html("#11D116");
-    color_t DARK_COL_CYAN = color_html("#1ABC9C");
+    color_t DARK_COL_CYAN = color_html("#008B8B");
     color_t DARK_COL_RED = color_html("#ED1515");
     color_t DARK_COL_MAGENTA = color_html("#9B59B6");
     color_t DARK_COL_BROWN = color_html("#F67400");
-    color_t DARK_COL_WHITE = color_html("#232627");
+    color_t DARK_COL_WHITE = color_rgb(50, 50, 50);
     color_t DARK_COL_LIGHT_GRAY = color_html("#FFFFFF");
     color_t DARK_COL_BRIGHT_BLUE = color_html("#3DAEE9");
     color_t DARK_COL_BRIGHT_GREEN = color_html("#1CDC9A");
@@ -354,16 +365,16 @@ void deblib_init_colors(color_t *colors)
     color_t DARK_COL_BRIGHT_RED = color_html("#C0392B");
     color_t DARK_COL_BRIGHT_MAGENTA = color_html("#8E44AD");
     color_t DARK_COL_YELLOW = color_html("#FDBC4B");
-    color_t DARK_COL_BRIGHT_WHITE = color_html("#7F8C8D");
+    color_t DARK_COL_BRIGHT_WHITE = color_rgb(40, 40, 40);
 
     color_t LIGHT_COL_BLACK = color_html("#000000");
-    color_t LIGHT_COL_BLUE = color_html("#135CD0");
+    color_t LIGHT_COL_BLUE = color_html("#0037DA");
     color_t LIGHT_COL_GREEN = color_html("#328A5D");
-    color_t LIGHT_COL_CYAN = color_html("#33C3C1");
-    color_t LIGHT_COL_RED = color_html("#F8282A");
+    color_t LIGHT_COL_CYAN = color_html("#3A96DD");
+    color_t LIGHT_COL_RED = color_html("#C6361F");
     color_t LIGHT_COL_MAGENTA = color_html("#9F00BD");
     color_t LIGHT_COL_BROWN = color_html("#FA701D");
-    color_t LIGHT_COL_WHITE = color_html("#B3B3B3");
+    color_t LIGHT_COL_WHITE = color_html("#CCCCCC");
     color_t LIGHT_COL_LIGHT_GRAY = color_html("#555753");
     color_t LIGHT_COL_BRIGHT_BLUE = color_html("#1670FF");
     color_t LIGHT_COL_BRIGHT_GREEN = color_html("#2CC631");

@@ -6,6 +6,7 @@ incpaths=.
 {!debug&!darwin}libpaths=build/Release/lib
 {debug&!darwin}libpaths=build/Debug/lib
 {debug&darwin}libpaths=build build/Debug/lib /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks
+{!debug&darwin}libpaths=build build/Release/lib /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks
 
 # NAppGUI uses static-linked 'LIBCMTD.lib' in Debug (sewer.lib)
 # This line avoid conflicts with 'LIBCMT.lib' in Debug mode
