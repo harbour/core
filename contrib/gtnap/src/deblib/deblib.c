@@ -347,22 +347,17 @@ const char_t *deblib_cursor_str(const cursor_t cursor)
 }
 
 /*---------------------------------------------------------------------------*/
-/*
- * https://gogh-co.github.io/Gogh/
- * Dark mode: Breeze
- * Light mode: Clrs
- */
+
 void deblib_init_colors(color_t *colors)
 {
-    /* In dark mode, black and white are inverted */
-    color_t DARK_COL_BLACK = color_html("#FCFCFC");
-    color_t DARK_COL_BLUE = color_html("#1D99F3");
+    color_t DARK_COL_BLACK = color_rgb(200, 200, 200);
+    color_t DARK_COL_BLUE = color_html("#00FFFF");
     color_t DARK_COL_GREEN = color_html("#11D116");
-    color_t DARK_COL_CYAN = color_html("#1ABC9C");
+    color_t DARK_COL_CYAN = color_html("#008B8B");
     color_t DARK_COL_RED = color_html("#ED1515");
     color_t DARK_COL_MAGENTA = color_html("#9B59B6");
     color_t DARK_COL_BROWN = color_html("#F67400");
-    color_t DARK_COL_WHITE = color_html("#232627");
+    color_t DARK_COL_WHITE = color_rgb(50, 50, 50);
     color_t DARK_COL_LIGHT_GRAY = color_html("#FFFFFF");
     color_t DARK_COL_BRIGHT_BLUE = color_html("#3DAEE9");
     color_t DARK_COL_BRIGHT_GREEN = color_html("#1CDC9A");
@@ -370,7 +365,7 @@ void deblib_init_colors(color_t *colors)
     color_t DARK_COL_BRIGHT_RED = color_html("#C0392B");
     color_t DARK_COL_BRIGHT_MAGENTA = color_html("#8E44AD");
     color_t DARK_COL_YELLOW = color_html("#FDBC4B");
-    color_t DARK_COL_BRIGHT_WHITE = color_html("#7F8C8D");
+    color_t DARK_COL_BRIGHT_WHITE = color_rgb(40, 40, 40);
 
     color_t LIGHT_COL_BLACK = color_html("#000000");
     color_t LIGHT_COL_BLUE = color_html("#0037DA");
