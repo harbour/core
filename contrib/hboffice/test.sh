@@ -11,12 +11,24 @@ rm -rf build
 cd tests
 rf -rf result
 rm -rf doc1 doc2 sheet1 sheet2
-rm *.so
-cp ../build/Release/bin/libofficesdk.so .
-../../../bin/linux/gcc/hbmk2 sheet1.prg hboffice.hbc
-../../../bin/linux/gcc/hbmk2 sheet2.prg hboffice.hbc
-../../../bin/linux/gcc/hbmk2 doc1.prg hboffice.hbc
-../../../bin/linux/gcc/hbmk2 doc2.prg hboffice.hbc
+
+if [ "$(uname)" == "Darwin" ]; then
+    rm *.dylib
+    cp ../build/Release/bin/libofficesdk.dylib .
+    ../../../bin/darwin/clang/hbmk2 sheet1.prg hboffice.hbc
+    ../../../bin/darwin/clang/hbmk2 sheet2.prg hboffice.hbc
+    ../../../bin/darwin/clang/hbmk2 doc1.prg hboffice.hbc
+    ../../../bin/darwin/clang/hbmk2 doc2.prg hboffice.hbc
+    export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$(pwd)
+else
+    rm *.so
+    cp ../build/Release/bin/libofficesdk.so .
+    ../../../bin/linux/gcc/hbmk2 sheet1.prg hboffice.hbc
+    ../../../bin/linux/gcc/hbmk2 sheet2.prg hboffice.hbc
+    ../../../bin/linux/gcc/hbmk2 doc1.prg hboffice.hbc
+    ../../../bin/linux/gcc/hbmk2 doc2.prg hboffice.hbc
+fi
+
 ./sheet1
 ./sheet2
 ./doc1
