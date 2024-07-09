@@ -25,14 +25,14 @@ static Stream *i_connect(void)
     Socket *socket = NULL;
     Stream *stm = NULL;
     bool_t ok = FALSE;
-    
+
     while (socket == NULL)
         socket = bsocket_connect(ip, kDEBLIB_SERVER_PORT, 0, NULL);
-    
+
     stm = stm_socket(socket);
     while (ok == FALSE)
         ok = deblib_send_connect(stm);
-    
+
     return stm;
 }
 
@@ -45,7 +45,7 @@ GtNapDebugger *nap_debugger_create(const char_t *path, const uint32_t nrows, con
 
     bthread_sleep(2000);
     debug->proc = bproc_exec(tc(cmd), NULL);
-    
+
     if (debug->proc != NULL)
     {
         debug->stream = i_connect();
@@ -616,17 +616,9 @@ static int32_t i_vkey_to_hb(const vkey_t vkey, const uint32_t modifiers)
 int32_t nap_debugger_read_key(GtNapDebugger *debug)
 {
     int32_t key = 0;
-    //static int v = 0;
     cassert_no_null(debug);
     if (debug->stream != NULL)
     {
-        // if (v % 40 == 0)
-        //     key = K_DOWN;
-        // else if (v % 20 == 0)
-        //     key = K_UP;
-        // else
-        //     key = 0;
-        // v+=1;
         vkey_t vkey = ENUM_MAX(vkey_t);
         uint32_t modifiers = UINT32_MAX;
         deblib_read_key(debug->stream, &vkey, &modifiers);
