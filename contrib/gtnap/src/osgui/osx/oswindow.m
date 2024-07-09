@@ -56,6 +56,7 @@
     OSTabStop tabstop;
     ArrSt(OSHotKey) *hotkeys;
     OSXText *text_editor;
+    NSView *current_focus;
 }
 @end
 
@@ -83,7 +84,7 @@
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if (_oswindow_key_down(OSControlPtr(self), theEvent) == FALSE)
+    if (_oswindow_key_down(cast(self, OSControl), theEvent) == FALSE)
         [super keyDown:theEvent];
 }
 
@@ -347,7 +348,7 @@ static bool_t i_close(OSXWindowDelegate *delegate, OSXWindow *window, const gui_
         {
             vkey_t vkey = osgui_vkey([theEvent keyCode]);
             uint32_t modifiers = osgui_modifiers((NSUInteger)[theEvent modifierFlags]);
-            if (oswindow_hotkey_process(OSWindowPtr(self), self->hotkeys, vkey, modifiers) == TRUE)
+            if (oswindow_hotkey_process(cast(self, OSWindow), self->hotkeys, vkey, modifiers) == TRUE)
                 return YES;
         }
     }
@@ -423,6 +424,7 @@ OSWindow *oswindow_create(const uint32_t flags)
     window->alpha = .5f;
     window->hotkeys = NULL;
     window->text_editor = nil;
+    window->current_focus = nil;
     ostabstop_init(&window->tabstop, (OSWindow *)window);
     heap_auditor_add("OSXWindowDelegate");
     delegate = [OSXWindowDelegate alloc];
@@ -993,12 +995,15 @@ void oswindow_widget_set_focus(OSWindow *window, OSWidget *widget)
 {
     OSXWindow *windowp = (OSXWindow *)window;
     NSView *view = (NSView *)widget;
-    BOOL ok = NO;
     cassert_no_null(window);
     cassert([(NSResponder *)window isKindOfClass:[OSXWindow class]] == YES);
     cassert([(NSResponder *)widget isKindOfClass:[NSView class]] == YES);
-    ok = [windowp makeFirstResponder:view];
-    cassert_unref(ok == YES, ok);
+    if (windowp->current_focus != view)
+    {
+        BOOL ok = [windowp makeFirstResponder:view];
+        cassert_unref(ok == YES, ok);
+        windowp->current_focus = view;
+    }
 }
 
 /*---------------------------------------------------------------------------*/

@@ -131,10 +131,10 @@ static const char_t *i_KEY_TEXT[] =
         "F2",  /*ekKEY_F2              = 90*/
         "End", /*ekKEY_END             = 91*/
         "F1",  /*ekKEY_F1              = 92*/
-        "↝", /*ekKEY_LEFT            = 93*/
-        "→", /*ekKEY_RIGHT           = 94*/
-        "↓", /*ekKEY_DOWN            = 95*/
-        "↑"  /*ekKEY_UP              = 96*/
+        "←",   /*ekKEY_LEFT            = 93*/
+        "→",   /*ekKEY_RIGHT           = 94*/
+        "↓",   /*ekKEY_DOWN            = 95*/
+        "↑"    /*ekKEY_UP              = 96*/
 };
 
 struct _osmenuitem_t
