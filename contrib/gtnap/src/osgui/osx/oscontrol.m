@@ -27,6 +27,7 @@
 #include "ostext_osx.inl"
 #include "osupdown_osx.inl"
 #include "osview_osx.inl"
+#include "osweb_osx.inl"
 #include "oswindow_osx.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
@@ -302,8 +303,8 @@ void _oscontrol_remove_textattr(OSTextAttr *attr)
 
 static void i_update_text(NSControl *control, const OSTextAttr *attrs, NSString *str)
 {
-    register NSCell *cell = [control cell];
-    register uint32_t fstyle = font_style(attrs->font);
+    NSCell *cell = [control cell];
+    uint32_t fstyle = font_style(attrs->font);
 
     cassert_no_null(control);
     cassert_no_null(attrs);
@@ -410,19 +411,19 @@ void _oscontrol_detach_from_parent(NSView *control, NSView *parent)
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_set_visible(NSView *object, const bool_t is_visible)
+void _oscontrol_set_visible(NSView *object, const bool_t visible)
 {
     cassert_no_null(object);
-    [object setHidden:!(BOOL)is_visible];
+    [object setHidden:!(BOOL)visible];
 }
 
 /*---------------------------------------------------------------------------*/
 
-void _oscontrol_set_enabled(NSControl *object, const bool_t is_enabled)
+void _oscontrol_set_enabled(NSControl *object, const bool_t enabled)
 {
     cassert_no_null(object);
-    if ([object isEnabled] != (BOOL)is_enabled)
-        [object setEnabled:(BOOL)is_enabled];
+    if ([object isEnabled] != (BOOL)enabled)
+        [object setEnabled:(BOOL)enabled];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -589,6 +590,9 @@ static gui_type_t i_oscontrol_type(NSView *object)
     if (_ostext_is(object) == YES)
         return ekGUI_TYPE_TEXTVIEW;
 
+    if (_osweb_is(object) == YES)
+        return ekGUI_TYPE_WEBVIEW;
+
     if (_ossplit_is(object) == YES)
         return ekGUI_TYPE_SPLITVIEW;
 
@@ -608,7 +612,7 @@ OSControl *_oscontrol_from_nsview(NSView *object)
 {
     gui_type_t type = i_oscontrol_type(object);
     if (type != ENUM_MAX(gui_type_t))
-        return OSControlPtr(object);
+        return cast(object, OSControl);
     return NULL;
 }
 
@@ -647,6 +651,14 @@ void oscontrol_frame(const OSControl *control, OSFrame *rect)
     rect->top = (int32_t)y;
     rect->right = rect->left + (int32_t)w;
     rect->bottom = rect->top + (int32_t)h;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void oscontrol_set_can_focus(OSControl *control, const bool_t can_focus)
+{
+    unref(control);
+    unref(can_focus);
 }
 
 /*---------------------------------------------------------------------------*/

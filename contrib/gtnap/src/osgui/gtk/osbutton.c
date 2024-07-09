@@ -13,9 +13,9 @@
 #include "osbutton.h"
 #include "osbutton.inl"
 #include "osgui.inl"
-#include "osbutton_gtk.inl"
 #include "osgui_gtk.inl"
 #include "osglobals_gtk.inl"
+#include "osbutton_gtk.inl"
 #include "oscontrol_gtk.inl"
 #include "ospanel_gtk.inl"
 #include "oswindow_gtk.inl"
@@ -106,7 +106,7 @@ static void i_OnClick(GtkWidget *widget, OSButton *button)
         listener_event(button->OnClick, ekGUI_EVENT_BUTTON, button, &params, NULL, OSButton, EvButton, void);
     }
 
-    _oswindow_release_transient_focus(OSControlPtr(button));
+    _oswindow_release_transient_focus(cast(button, OSControl));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -133,7 +133,7 @@ static gboolean i_OnPressed(GtkWidget *widget, GdkEventButton *event, OSButton *
 {
     unref(widget);
     unref(event);
-    if (_oswindow_mouse_down(OSControlPtr(button)) == TRUE)
+    if (_oswindow_mouse_down(cast(button, OSControl)) == TRUE)
         return FALSE;
     return TRUE;
 }
@@ -147,6 +147,22 @@ static gboolean i_OnPushDraw(GtkWidget *widget, cairo_t *cr, OSButton *button)
     if (button->is_default == TRUE)
         gtk_widget_set_state_flags(widget, GTK_STATE_FLAG_PRELIGHT | GTK_STATE_FLAG_FOCUSED, FALSE);
     return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_flat_button_zero_padding(GtkWidget *widget)
+{
+    {
+        const char_t *cssbut = osglobals_css_button();
+        char_t css[256];
+#if GTK_CHECK_VERSION(3, 22, 0)
+        bstd_sprintf(css, sizeof(css), "%s {padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;min-height:0}", cssbut);
+#else
+        bstd_sprintf(css, sizeof(css), "%s {padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px}", cssbut);
+#endif
+        _oscontrol_widget_set_css(widget, css);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -170,11 +186,13 @@ OSButton *osbutton_create(const uint32_t flags)
     case ekBUTTON_FLAT:
         widget = (GtkWidget *)gtk_tool_button_new(NULL, NULL);
         focus_widget = gtk_bin_get_child(GTK_BIN(widget));
+        i_flat_button_zero_padding(focus_widget);
         break;
 
     case ekBUTTON_FLATGLE:
         widget = (GtkWidget *)gtk_toggle_tool_button_new();
         focus_widget = gtk_bin_get_child(GTK_BIN(widget));
+        i_flat_button_zero_padding(focus_widget);
         break;
 
     case ekBUTTON_RADIO:
@@ -434,12 +452,10 @@ void osbutton_bounds(const OSButton *button, const char_t *text, const real32_t 
     case ekBUTTON_PUSH:
     {
         GtkRequisition s;
-        real32_t tw, th;
         cassert_unref(i_equal_button_label(button, text) == TRUE, text);
         gtk_widget_set_size_request(button->control.widget, -1, -1);
         gtk_widget_get_preferred_size(button->control.widget, &s, NULL);
-        _oscontrol_text_bounds(&button->control, NULL, "O", button->font, -1, &tw, &th);
-        *width = (real32_t)s.width + 2 * tw;
+        *width = (real32_t)s.width;
         *height = (real32_t)s.height;
         break;
     }
@@ -482,16 +498,16 @@ void osbutton_detach(OSButton *button, OSPanel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-void osbutton_visible(OSButton *button, const bool_t is_visible)
+void osbutton_visible(OSButton *button, const bool_t visible)
 {
-    _oscontrol_set_visible((OSControl *)button, is_visible);
+    _oscontrol_set_visible((OSControl *)button, visible);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void osbutton_enabled(OSButton *button, const bool_t is_enabled)
+void osbutton_enabled(OSButton *button, const bool_t enabled)
 {
-    _oscontrol_set_enabled((OSControl *)button, is_enabled);
+    _oscontrol_set_enabled((OSControl *)button, enabled);
 }
 
 /*---------------------------------------------------------------------------*/

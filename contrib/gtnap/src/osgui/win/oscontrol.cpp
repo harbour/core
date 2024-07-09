@@ -14,9 +14,11 @@
 #include "oscontrol_win.inl"
 #include "osgui.inl"
 #include "osgui_win.inl"
+#include "osbutton_win.inl"
 #include "oscombo_win.inl"
 #include "ospanel_win.inl"
 #include "ospopup_win.inl"
+#include "osweb_win.inl"
 #include "ostooltip.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
@@ -139,7 +141,7 @@ char_t *_oscontrol_get_text(const OSControl *control, uint32_t *tsize)
     control_text = (char_t *)heap_malloc(*tsize, "OSControlGetText");
 
     {
-        register uint32_t bytes = unicode_convers((const char_t *)wtext, control_text, kWINDOWS_UNICODE, ekUTF8, *tsize);
+        uint32_t bytes = unicode_convers((const char_t *)wtext, control_text, kWINDOWS_UNICODE, ekUTF8, *tsize);
         cassert_unref(bytes == *tsize, bytes);
     }
 
@@ -170,7 +172,7 @@ void _oscontrol_set_text(OSControl *control, const char_t *text)
     }
 
     {
-        register uint32_t bytes = unicode_convers(text, (char_t *)wtext, ekUTF8, kWINDOWS_UNICODE, num_chars * sizeof(WCHAR));
+        uint32_t bytes = unicode_convers(text, (char_t *)wtext, ekUTF8, kWINDOWS_UNICODE, num_chars * sizeof(WCHAR));
         cassert_unref(bytes == num_chars * sizeof(WCHAR), bytes);
     }
 
@@ -435,7 +437,7 @@ color_t _oscontrol_from_colorref(const COLORREF color)
 
 void _oscontrol_update_brush(const color_t color, HBRUSH *brush, COLORREF *colorref)
 {
-    register COLORREF cf;
+    COLORREF cf;
     cassert_no_null(brush);
     if (*brush != NULL)
     {
@@ -499,6 +501,15 @@ void oscontrol_frame(const OSControl *control, OSFrame *rect)
 
 /*---------------------------------------------------------------------------*/
 
+void oscontrol_set_can_focus(OSControl *control, const bool_t can_focus)
+{
+    cassert_no_null(control);
+    if (control->type == ekGUI_TYPE_BUTTON)
+        _osbutton_set_can_focus(cast(control, OSButton), can_focus);
+}
+
+/*---------------------------------------------------------------------------*/
+
 OSWidget *oscontrol_focus_widget(const OSControl *control)
 {
     cassert_no_null(control);
@@ -522,7 +533,9 @@ OSWidget *oscontrol_focus_widget(const OSControl *control)
     case ekGUI_TYPE_COMBOBOX:
         return (OSWidget *)_oscombo_focus_widget((OSCombo *)control);
 
-    case ekGUI_TYPE_TABLEVIEW:
+    case ekGUI_TYPE_WEBVIEW:
+        return (OSWidget *)_osweb_focus_widget((OSWeb *)control);
+
     case ekGUI_TYPE_TREEVIEW:
     case ekGUI_TYPE_BOXVIEW:
     case ekGUI_TYPE_SPLITVIEW:

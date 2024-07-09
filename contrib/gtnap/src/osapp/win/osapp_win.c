@@ -250,17 +250,6 @@ void osapp_open_url(const char_t *url)
 
 /*---------------------------------------------------------------------------*/
 
-void osapp_browse_file(const char_t *pathname)
-{
-    WCHAR wpathname[512];
-    uint32_t num_bytes = 0;
-    num_bytes = unicode_convers(pathname, (char_t *)wpathname, ekUTF8, ekUTF16, sizeof(wpathname));
-    cassert_unref(num_bytes < sizeof(wpathname), num_bytes);
-    ShellExecute(NULL, L"open", wpathname, NULL, NULL, SW_RESTORE);
-}
-
-/*---------------------------------------------------------------------------*/
-
 void osapp_set_lang(OSApp *app, const char_t *lang)
 {
     unref(app);

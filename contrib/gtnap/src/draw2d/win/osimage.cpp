@@ -96,10 +96,10 @@ typedef struct _argb_t
 /*---------------------------------------------------------------------------*/
 
 #define ARGB(r, g, b, a) \
-    ((uint32_t)((((a) & 0xff) << 24) | (((r) & 0xff) << 16) | (((g) & 0xff) << 8) | ((b) & 0xff)))
+    ((uint32_t)((((a)&0xff) << 24) | (((r)&0xff) << 16) | (((g)&0xff) << 8) | ((b)&0xff)))
 
 #define ABGR(r, g, b, a) \
-    ((uint32_t)((((a) & 0xff) << 24) | (((b) & 0xff) << 16) | (((g) & 0xff) << 8) | ((r) & 0xff)))
+    ((uint32_t)((((a)&0xff) << 24) | (((b)&0xff) << 16) | (((g)&0xff) << 8) | ((r)&0xff)))
 
 /*---------------------------------------------------------------------------*/
 
@@ -386,7 +386,7 @@ static void i_indexed_info(Gdiplus::Bitmap *bitmap, pixformat_t *format, Pixbuf 
         color_t *color = palette_colors(palette);
         Gdiplus::PixelFormat pf = bitmap->GetPixelFormat();
         Gdiplus::BitmapData data;
-        register uint32_t i;
+        uint32_t i;
         uint32_t ibpp = 8;
 
         for (i = 0; i < pal->Count; ++i)

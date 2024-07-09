@@ -16,6 +16,7 @@
 #include "oscontrol_gtk.inl"
 #include "ospanel_gtk.inl"
 #include "ossplit_gtk.inl"
+#include "ostext_gtk.inl"
 #include "oswindow_gtk.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
@@ -850,18 +851,18 @@ void ostext_detach(OSText *view, OSPanel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-void ostext_visible(OSText *view, const bool_t is_visible)
+void ostext_visible(OSText *view, const bool_t visible)
 {
     cassert_no_null(view);
-    _oscontrol_set_visible((OSControl *)view, is_visible);
+    _oscontrol_set_visible((OSControl *)view, visible);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void ostext_enabled(OSText *view, const bool_t is_enabled)
+void ostext_enabled(OSText *view, const bool_t enabled)
 {
     cassert_no_null(view);
-    _oscontrol_set_enabled((OSControl *)view, is_enabled);
+    _oscontrol_set_enabled((OSControl *)view, enabled);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -904,6 +905,24 @@ void ostext_focus(OSText *view, const bool_t focus)
             _oscontrol_widget_add_provider(view->control.widget, view->border_color);
         else
             _oscontrol_widget_remove_provider(view->control.widget, view->border_color);
+    }
+
+    if (focus == TRUE)
+    {
+        /* Select */
+        g_idle_add((GSourceFunc)i_select, view);
+    }
+    else
+    {
+        /* Cache the current selection and deselect */
+        GtkTextIter start, end;
+        GtkTextBuffer *tbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view->tview));
+        GtkTextIter iter;
+        gtk_text_buffer_get_selection_bounds(tbuf, &start, &end);
+        view->select_start = (int32_t)gtk_text_iter_get_offset(&start);
+        view->select_end = (int32_t)gtk_text_iter_get_offset(&end);
+        gtk_text_buffer_get_start_iter(tbuf, &iter);
+        gtk_text_buffer_select_range(tbuf, &iter, &iter);
     }
 }
 

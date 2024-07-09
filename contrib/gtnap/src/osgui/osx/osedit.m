@@ -71,9 +71,11 @@
 {
   @public
     NSTextField *field;
+    NSText *editor;
     uint32_t flags;
     uint32_t vpadding;
     real32_t rpadding;
+    NSRange select;
     CGFloat wpadding;
     OSTextAttr attrs;
     Listener *OnFilter;
@@ -187,11 +189,9 @@ static void OSX_textDidChange(OSXEdit *edit, NSTextField *field)
     {
         EvText params;
         EvTextFilter result;
-        NSWindow *window = [field window];
-        NSText *text = NULL;
         params.text = (const char_t *)[[field stringValue] UTF8String];
-        text = [window fieldEditor:YES forObject:field];
-        params.cpos = (uint32_t)[text selectedRange].location;
+        params.cpos = (uint32_t)[edit->editor selectedRange].location;
+        params.len = INT32_MAX;
         result.apply = FALSE;
         result.text[0] = '\0';
         result.cpos = UINT32_MAX;
@@ -201,9 +201,9 @@ static void OSX_textDidChange(OSXEdit *edit, NSTextField *field)
             _oscontrol_set_text(field, &edit->attrs, result.text);
 
         if (result.cpos != UINT32_MAX)
-            [text setSelectedRange:NSMakeRange((NSUInteger)result.cpos, 0)];
+            [edit->editor setSelectedRange:NSMakeRange((NSUInteger)result.cpos, 0)];
         else
-            [text setSelectedRange:NSMakeRange((NSUInteger)params.cpos, 0)];
+            [edit->editor setSelectedRange:NSMakeRange((NSUInteger)params.cpos, 0)];
     }
 }
 
@@ -212,7 +212,12 @@ static void OSX_textDidChange(OSXEdit *edit, NSTextField *field)
 static void OSX_textDidEndEditing(OSXEdit *edit, NSNotification *notification)
 {
     unsigned int whyEnd = [[[notification userInfo] objectForKey:@"NSTextMovement"] unsignedIntValue];
+    OSXEdit *ledit = (OSXEdit *)edit;
     NSWindow *window = [edit window];
+
+    ledit->select = [ledit->editor selectedRange];
+    [ledit->editor setSelectedRange:NSMakeRange(0, 0)];
+
     if (whyEnd == NSReturnTextMovement)
     {
         [window keyDown:(NSEvent *)231];
@@ -381,8 +386,10 @@ OSEdit *osedit_create(const uint32_t flags)
     edit = [[OSXEdit alloc] initWithFrame:NSZeroRect];
     field = [[OSXTextField alloc] initWithFrame:NSZeroRect];
     [field setCell:[[OSXTextFieldCell alloc] init]];
+    edit->editor = nil;
     edit->flags = flags;
     edit->vpadding = UINT32_MAX;
+    edit->select = NSMakeRange(0, 0);
     edit->OnFilter = NULL;
     edit->OnChange = NULL;
     edit->OnFocus = NULL;
@@ -565,11 +572,56 @@ void osedit_autoselect(OSEdit *edit, const bool_t autoselect)
 
 /*---------------------------------------------------------------------------*/
 
+/* http://alienryderflex.com/hasFocus.html */
+static bool_t i_has_focus(id control)
+{
+    NSWindow *window = [control window];
+    id first = [window firstResponder];
+    return (bool_t)([first isKindOfClass:[NSTextView class]] && [window fieldEditor:NO forObject:nil] != nil && (first == control || [first delegate] == control));
+}
+
+/*---------------------------------------------------------------------------*/
+
 void osedit_select(OSEdit *edit, const int32_t start, const int32_t end)
 {
-    unref(edit);
-    unref(start);
-    unref(end);
+    OSXEdit *ledit = (OSXEdit *)edit;
+    cassert_no_null(ledit);
+    /* Deselect all text */
+    if (start == -1 && end == 0)
+    {
+        ledit->select = NSMakeRange(0, 0);
+    }
+    /* Deselect all text and caret to the end */
+    else if (start == -1 && end == -1)
+    {
+        ledit->select = NSMakeRange(NSUIntegerMax, 0);
+    }
+    /* Select all text and caret to the end */
+    else if (start == 0 && end == -1)
+    {
+        ledit->select = NSMakeRange(0, NSUIntegerMax);
+    }
+    /* Select from position to the end */
+    else if (start > 0 && end == -1)
+    {
+        ledit->select = NSMakeRange(start, NSIntegerMax);
+    }
+    /* Deselect all and move the caret */
+    else if (start == end)
+    {
+        ledit->select = NSMakeRange(start, 0);
+    }
+    /* Select from start to end */
+    else
+    {
+        ledit->select = NSMakeRange(start, end - start);
+    }
+
+    if (i_has_focus(ledit->field) == TRUE)
+    {
+        cassert_no_null(ledit->editor);
+        [ledit->editor setSelectedRange:ledit->select];
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -618,7 +670,7 @@ void osedit_bounds(const OSEdit *edit, const real32_t refwidth, const uint32_t l
     }
     else
     {
-        register uint32_t i;
+        uint32_t i;
         char_t text[256] = "";
         cassert(edit_get_type(ledit->flags) == ekEDIT_MULTI);
         cassert(lines < 100);
@@ -636,8 +688,23 @@ void osedit_bounds(const OSEdit *edit, const real32_t refwidth, const uint32_t l
 
 void osedit_clipboard(OSEdit *edit, const clipboard_t clipboard)
 {
-    unref(edit);
-    unref(clipboard);
+    OSXEdit *ledit = (OSXEdit *)edit;
+    cassert_no_null(ledit);
+    if (ledit->editor != nil)
+    {
+        switch (clipboard)
+        {
+        case ekCLIPBOARD_COPY:
+            [ledit->editor copy:ledit->editor];
+            break;
+        case ekCLIPBOARD_CUT:
+            [ledit->editor cut:ledit->editor];
+            break;
+        case ekCLIPBOARD_PASTE:
+            [ledit->editor paste:ledit->editor];
+            break;
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -656,34 +723,24 @@ void osedit_detach(OSEdit *edit, OSPanel *panel)
 
 /*---------------------------------------------------------------------------*/
 
-void osedit_visible(OSEdit *edit, const bool_t is_visible)
+void osedit_visible(OSEdit *edit, const bool_t visible)
 {
-    _oscontrol_set_visible((NSView *)edit, is_visible);
+    _oscontrol_set_visible((NSView *)edit, visible);
 }
 
 /*---------------------------------------------------------------------------*/
 
-/* http://alienryderflex.com/hasFocus.html */
-static bool_t i_has_focus(id control)
-{
-    NSWindow *window = [control window];
-    id first = [window firstResponder];
-    return (bool_t)([first isKindOfClass:[NSTextView class]] && [window fieldEditor:NO forObject:nil] != nil && (first == control || [first delegate] == control));
-}
-
-/*---------------------------------------------------------------------------*/
-
-void osedit_enabled(OSEdit *edit, const bool_t is_enabled)
+void osedit_enabled(OSEdit *edit, const bool_t enabled)
 {
     OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
-    if (is_enabled == FALSE)
+    if (enabled == FALSE)
     {
         if (i_has_focus(ledit->field) == TRUE)
             [[ledit->field window] endEditingFor:ledit->field];
     }
 
-    _oscontrol_set_enabled(ledit->field, is_enabled);
+    _oscontrol_set_enabled(ledit->field, enabled);
     _oscontrol_set_text_color(ledit->field, &ledit->attrs, ledit->attrs.color);
 }
 
@@ -720,7 +777,6 @@ bool_t osedit_resign_focus(const OSEdit *edit)
     NSWindow *window = [ledit window];
     bool_t resign = TRUE;
     cassert_no_null(ledit);
-
     if (ledit->OnChange != NULL && _oswindow_in_destroy(window) == NO)
     {
         EvText params;
@@ -742,7 +798,6 @@ void osedit_focus(OSEdit *edit, const bool_t focus)
 {
     OSXEdit *ledit = (OSXEdit *)edit;
     cassert_no_null(ledit);
-
     if (ledit->OnFocus != NULL)
     {
         bool_t params = focus;
@@ -754,18 +809,21 @@ void osedit_focus(OSEdit *edit, const bool_t focus)
         if ([ledit->field isEnabled] == YES)
         {
             NSWindow *window = [ledit->field window];
-            NSText *text = [window fieldEditor:YES forObject:ledit->field];
+            ledit->editor = [window fieldEditor:YES forObject:ledit->field];
 
             if (BIT_TEST(ledit->flags, ekEDIT_AUTOSEL) == TRUE)
             {
-                [text selectAll:nil];
+                [ledit->editor selectAll:nil];
             }
             else
             {
-                NSRange range = [text selectedRange];
-                [text setSelectedRange:NSMakeRange(range.length, 0)];
+                [ledit->editor setSelectedRange:ledit->select];
             }
         }
+    }
+    else
+    {
+        ledit->editor = nil;
     }
 }
 

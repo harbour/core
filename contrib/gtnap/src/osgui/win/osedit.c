@@ -76,7 +76,7 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
     case WM_LBUTTONDOWN:
     case WM_LBUTTONDBLCLK:
-        if (_oswindow_mouse_down(OSControlPtr(edit)) == TRUE)
+        if (_oswindow_mouse_down(cast(edit, OSControl)) == TRUE)
             break;
         return 0;
     }
@@ -330,7 +330,7 @@ void osedit_bounds(const OSEdit *edit, const real32_t refwidth, const uint32_t l
     }
     else
     {
-        register uint32_t i;
+        uint32_t i;
         char_t text[256] = "";
         cassert(edit_get_type(edit->flags) == ekEDIT_MULTI);
         cassert(lines < 100);

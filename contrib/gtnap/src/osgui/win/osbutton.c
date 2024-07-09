@@ -40,6 +40,7 @@ struct _osbutton_t
     OSControl control;
     uint32_t flags;
     bool_t is_default;
+    bool_t can_focus;
     uint16_t id;
     vkey_t key;
     Font *font;
@@ -227,18 +228,22 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
         return 0;
 
     case WM_SETFOCUS:
-        if (button_get_type(button->flags) == ekBUTTON_RADIO)
-        {
-            uint64_t microseconds;
-            microseconds = btime_now();
-            i_LAST_FOCUS = button->control.hwnd;
-            i_LAST_FOCUS_TIME = i_TIME_SEC(microseconds);
-        }
-        else
-        {
-            i_LAST_FOCUS = NULL;
-        }
+        if (button->can_focus == FALSE)
+            return 0;
 
+        {
+            if (button_get_type(button->flags) == ekBUTTON_RADIO)
+            {
+                uint64_t microseconds;
+                microseconds = btime_now();
+                i_LAST_FOCUS = button->control.hwnd;
+                i_LAST_FOCUS_TIME = i_TIME_SEC(microseconds);
+            }
+            else
+            {
+                i_LAST_FOCUS = NULL;
+            }
+        }
         break;
 
     case WM_KILLFOCUS:
@@ -249,7 +254,7 @@ static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
     case WM_LBUTTONDOWN:
     case WM_LBUTTONDBLCLK:
-        if (_oswindow_mouse_down(OSControlPtr(button)) == TRUE)
+        if (_oswindow_mouse_down(cast(button, OSControl)) == TRUE)
             break;
         return 0;
     }
@@ -322,6 +327,7 @@ OSButton *osbutton_create(const uint32_t flags)
     button->control.type = ekGUI_TYPE_BUTTON;
     button->flags = flags;
     button->is_default = FALSE;
+    button->can_focus = TRUE;
     button->vpadding = UINT32_MAX;
     button->key = ENUM_MAX(vkey_t);
     button->id = _osgui_unique_child_id();
@@ -511,7 +517,7 @@ static gui_state_t i_get_state(const button_flag_t flags, HWND hwnd)
     case ekBUTTON_RADIO:
     case ekBUTTON_FLATGLE:
     {
-        register LRESULT state = SendMessage(hwnd, BM_GETCHECK, (WPARAM)0, (LPARAM)0);
+        LRESULT state = SendMessage(hwnd, BM_GETCHECK, (WPARAM)0, (LPARAM)0);
         if (state == BST_CHECKED)
         {
             return ekGUI_ON;
@@ -705,7 +711,7 @@ void _osbutton_command(OSButton *button, WPARAM wParam, const bool_t restore_foc
             listener_event(button->OnClick, ekGUI_EVENT_BUTTON, button, &params, NULL, OSButton, EvButton, void);
         }
 
-        _oswindow_release_transient_focus(OSControlPtr(button));
+        _oswindow_release_transient_focus(cast(button, OSControl));
         unref(restore_focus);
     }
 }
@@ -725,6 +731,14 @@ void _osbutton_toggle(OSButton *button)
 
         osbutton_state(button, state);
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void _osbutton_set_can_focus(OSButton *button, const bool_t can_focus)
+{
+    cassert_no_null(button);
+    button->can_focus = can_focus;
 }
 
 /*---------------------------------------------------------------------------*/
