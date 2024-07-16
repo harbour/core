@@ -26,6 +26,10 @@ bool_t ostabstop_accept_focus(OSTabStop *tabstop, const OSControl *control);
 
 bool_t ostabstop_can_close_window(OSTabStop *tabstop);
 
+bool_t ostabstop_capture_return(OSTabStop *tabstop);
+
+bool_t ostabstop_capture_tab(OSTabStop *tabstop);
+
 void ostabstop_list_add(OSTabStop *tabstop, OSControl *control);
 
 gui_focus_t ostabstop_next(OSTabStop *tabstop, const bool_t from_key);

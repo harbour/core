@@ -1183,28 +1183,42 @@ static BOOL i_IsDialogMessage(HWND hDlg, LPMSG lpMsg)
             {
                 if (window->control.hwnd == hDlg)
                 {
-                    SHORT lshif_state = GetAsyncKeyState(VK_LSHIFT);
-                    SHORT rshif_state = GetAsyncKeyState(VK_RSHIFT);
-                    BOOL previous = ((0x8000 & lshif_state) != 0) || ((0x8000 & rshif_state) != 0);
-                    if (previous == TRUE)
-                        ostabstop_prev(&window->tabstop, TRUE);
+                    if (ostabstop_capture_tab(&window->tabstop) == FALSE)
+                    {
+                        SHORT lshif_state = GetAsyncKeyState(VK_LSHIFT);
+                        SHORT rshif_state = GetAsyncKeyState(VK_RSHIFT);
+                        BOOL previous = ((0x8000 & lshif_state) != 0) || ((0x8000 & rshif_state) != 0);
+                        if (previous == TRUE)
+                            ostabstop_prev(&window->tabstop, TRUE);
+                        else
+                            ostabstop_next(&window->tabstop, TRUE);
+                        return TRUE;
+                    }
                     else
-                        ostabstop_next(&window->tabstop, TRUE);
-                    return TRUE;
+                    {
+                        return FALSE;
+                    }
                 }
             }
             else if (lpMsg->wParam == VK_RETURN)
             {
-                bool_t def = i_press_defbutton(window);
-
-                if (window->flags & ekWINDOW_RETURN)
+                if (ostabstop_capture_return(&window->tabstop) == FALSE)
                 {
-                    i_close(window, ekGUI_CLOSE_INTRO);
-                    return TRUE;
-                }
+                    bool_t def = i_press_defbutton(window);
 
-                if (def == TRUE)
-                    return TRUE;
+                    if (window->flags & ekWINDOW_RETURN)
+                    {
+                        i_close(window, ekGUI_CLOSE_INTRO);
+                        return TRUE;
+                    }
+
+                    if (def == TRUE)
+                        return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
             }
             else if (lpMsg->wParam == VK_ESCAPE)
             {

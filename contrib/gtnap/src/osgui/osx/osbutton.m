@@ -52,6 +52,7 @@
     uint32_t flags;
     uint32_t vpadding;
     OSTextAttr attrs;
+    NSString *keyEquivalent;
     Listener *OnClick;
 }
 @end
@@ -59,6 +60,29 @@
 /*---------------------------------------------------------------------------*/
 
 @implementation OSXButton
+
+/*---------------------------------------------------------------------------*/
+
+/* From Mountain Lion to HighSierra render focus issue */
+#if (defined MAC_OS_X_VERSION_10_7 && MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_7) || (!defined MAC_OS_X_VERSION_10_7) || (defined(MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14)
+#else
+- (void)drawRect:(NSRect)rect
+{
+    [super drawRect:rect];
+    if ([[self window] firstResponder] == self)
+    {
+        NSSetFocusRingStyle(NSFocusRingOnly);
+        if (button_get_type(self->flags) == ekBUTTON_FLAT || button_get_type(self->flags) == ekBUTTON_FLATGLE)
+        {
+            rect.origin.x += 2;
+            rect.origin.y += 2;
+            rect.size.width -= 4;
+            rect.size.height -= 4;
+        }
+        NSRectFill(rect);
+    }
+}
+#endif
 
 /*---------------------------------------------------------------------------*/
 
@@ -566,10 +590,10 @@ static NSRect i_pushbutton_cell_frame(NSRect rect, const gui_size_t size)
     }
     else if (button_get_type(self->flags) == ekBUTTON_FLAT || button_get_type(self->flags) == ekBUTTON_FLATGLE)
     {
-        cellFrame.origin.x -= 2.f;
-        cellFrame.origin.y -= 2.f;
-        cellFrame.size.width += 4.f;
-        cellFrame.size.height += 4.f;
+        cellFrame.origin.x -= 1.f;
+        cellFrame.origin.y -= 1.f;
+        cellFrame.size.width += 2.f;
+        cellFrame.size.height += 2.f;
     }
 
     [super drawWithFrame:cellFrame inView:controlView];
@@ -771,6 +795,12 @@ static void i_recompute_button_action(OSXButton *button, NSView *parent_view)
 #define RADIO_BUTTON NSRadioButton
 #endif
 
+#if defined(MAC_OS_X_VERSION_10_12) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_12
+#define KEY_MODIFIER_OPTION NSEventModifierFlagCommand
+#else
+#define KEY_MODIFIER_OPTION NSCommandKeyMask
+#endif
+
 static void i_set_button_type(OSXButton *button, OSXButtonCell *cell, const uint32_t flags)
 {
     switch (button_get_type(flags))
@@ -842,6 +872,7 @@ OSButton *osbutton_create(const uint32_t flags)
     [button setCell:cell];
     [button setTarget:button];
     [button setAction:@selector(onClickButton:)];
+    button->keyEquivalent = nil;
     i_set_button_type(button, cell, flags);
 
     if (osbutton_text_allowed(flags) == TRUE)
@@ -850,7 +881,7 @@ OSButton *osbutton_create(const uint32_t flags)
         _oscontrol_set_align(button, &button->attrs, ekCENTER);
         _oscontrol_set_font(button, &button->attrs, button->attrs.font);
         cell->size = osgui_size_font(font_size(button->attrs.font));
-        [cell setStringValue:@""];
+        _oscontrol_set_text(button, &button->attrs, "");
         _oscontrol_size_from_font(cell, button->attrs.font);
     }
     else
@@ -874,6 +905,10 @@ void osbutton_destroy(OSButton **button)
     listener_destroy(&buttonp->OnClick);
     _oscontrol_remove_textattr(&buttonp->attrs);
     cell = [buttonp cell];
+
+    if (buttonp->keyEquivalent != nil)
+        [buttonp->keyEquivalent release];
+
     ptr_destopt(image_destroy, &cell->image, Image);
     [cell release];
     [buttonp release];
@@ -896,20 +931,25 @@ void osbutton_text(OSButton *button, const char_t *text)
 {
     OSXButton *lbutton = (OSXButton *)button;
     char_t tbuff[256];
-    uint32_t key_equivalent = UINT32_MAX;
     cassert_no_null(lbutton);
     cassert(osbutton_text_allowed(lbutton->flags) == TRUE);
-    key_equivalent = osgui_key_equivalent_text(text, tbuff, sizeof(tbuff));
+    lbutton->attrs.mark = osgui_key_equivalent_text(text, tbuff, sizeof(tbuff));
     _oscontrol_set_text(lbutton, &lbutton->attrs, tbuff);
-    if (key_equivalent != UINT32_MAX)
+
+    if (lbutton->keyEquivalent != nil)
     {
-        /*
-         TODO
-        unichar c = (unichar)unicode_tolower((uint32_t)tbuff[key_equivalent]);
-        NSString *str = [NSString stringWithCharacters:&c length:1];
-        [lbutton setKeyEquivalent:str];
-        [lbutton setKeyEquivalentModifierMask:NSEventModifierFlagOption];
-         */
+        [lbutton->keyEquivalent release];
+        lbutton->keyEquivalent = nil;
+    }
+
+    if (lbutton->attrs.mark != UINT32_MAX)
+    {
+        const char_t *pos = unicode_move(tbuff, lbutton->attrs.mark, ekUTF8);
+        uint32_t cp = unicode_to_u32(pos, ekUTF8);
+        unichar c = (unichar)unicode_tolower(cp);
+        lbutton->keyEquivalent = [[NSString alloc] initWithCharacters:&c length:1];
+        [lbutton setKeyEquivalent:lbutton->keyEquivalent];
+        [lbutton setKeyEquivalentModifierMask:KEY_MODIFIER_OPTION];
     }
 }
 
@@ -1090,7 +1130,12 @@ void osbutton_bounds(const OSButton *button, const char_t *text, const real32_t 
     case ekBUTTON_RADIO:
     {
         OSXButtonCell *cell = [lbutton cell];
-        static const real32_t i_CHECK_TEXT_SEP = 5.f;
+#if (defined MAC_OS_X_VERSION_10_7 && MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_7) || (defined(MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14)
+        static const real32_t i_CHECK_TEXT_SEP = 6.f;
+#else
+        /* Inexplicable crash in HighSierra and lowers */
+        static const real32_t i_CHECK_TEXT_SEP = 8.f;
+#endif
         _oscontrol_text_bounds(lbutton->attrs.font, text, -1.f, width, height);
         switch (cell->size)
         {
@@ -1206,7 +1251,19 @@ void osbutton_set_default(OSButton *button, const bool_t is_default)
     OSXButton *lbutton = (OSXButton *)button;
     cassert_no_null(lbutton);
     if (is_default == TRUE)
+    {
         [lbutton setKeyEquivalent:@"\r"];
+    }
     else
-        [lbutton setKeyEquivalent:@""];
+    {
+        if (lbutton->keyEquivalent != nil)
+        {
+            [lbutton setKeyEquivalent:lbutton->keyEquivalent];
+            [lbutton setKeyEquivalentModifierMask:KEY_MODIFIER_OPTION];
+        }
+        else
+        {
+            [lbutton setKeyEquivalent:@""];
+        }
+    }
 }

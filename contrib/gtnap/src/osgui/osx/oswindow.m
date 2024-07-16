@@ -299,38 +299,52 @@ static bool_t i_close(OSXWindowDelegate *delegate, OSXWindow *window, const gui_
 
     if (code == kVK_Tab)
     {
-        BOOL previous = NO;
+        if (ostabstop_capture_tab(&self->tabstop) == FALSE)
+        {
+            BOOL previous = NO;
 
 #if defined(MAC_OS_X_VERSION_10_12) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_12
-        NSEventModifierFlags flgs = [theEvent modifierFlags];
-        previous = (flgs & NSEventModifierFlagShift) != 0;
+            NSEventModifierFlags flgs = [theEvent modifierFlags];
+            previous = (flgs & NSEventModifierFlagShift) != 0;
 #else
-        NSUInteger flgs = [theEvent modifierFlags];
-        previous = (flgs & NSShiftKeyMask) != 0;
+            NSUInteger flgs = [theEvent modifierFlags];
+            previous = (flgs & NSShiftKeyMask) != 0;
 #endif
 
-        if (previous == YES)
-            ostabstop_prev(&self->tabstop, TRUE);
-        else
-            ostabstop_next(&self->tabstop, TRUE);
+            if (previous == YES)
+                ostabstop_prev(&self->tabstop, TRUE);
+            else
+                ostabstop_next(&self->tabstop, TRUE);
 
-        return YES;
+            return YES;
+        }
+        else
+        {
+            return NO;
+        }
     }
 
     else if (code == kVK_Return || code == kVK_ANSI_KeypadEnter)
     {
-        BOOL def = _osbutton_OnIntro((NSResponder *)self->tabstop.defbutton);
-
-        if (self->flags & ekWINDOW_RETURN)
+        if (ostabstop_capture_return(&self->tabstop) == FALSE)
         {
-            if (i_close([self delegate], self, ekGUI_CLOSE_INTRO) == TRUE)
-                [self orderOut:nil];
+            BOOL def = _osbutton_OnIntro((NSResponder *)self->tabstop.defbutton);
 
-            return YES;
+            if (self->flags & ekWINDOW_RETURN)
+            {
+                if (i_close([self delegate], self, ekGUI_CLOSE_INTRO) == TRUE)
+                    [self orderOut:nil];
+
+                return YES;
+            }
+
+            if (def == YES)
+                return YES;
         }
-
-        if (def == YES)
-            return YES;
+        else
+        {
+            return NO;
+        }
     }
 
     else if (code == kVK_Escape)
@@ -1002,6 +1016,23 @@ void oswindow_widget_set_focus(OSWindow *window, OSWidget *widget)
     {
         BOOL ok = [windowp makeFirstResponder:view];
         cassert_unref(ok == YES, ok);
+
+#if (defined MAC_OS_X_VERSION_10_6 && MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_6) || (defined(MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14)
+#else
+        /* Clean rest of previous focus ring */
+        if (windowp->current_focus != nil)
+        {
+            if (_osbutton_is(windowp->current_focus) || _osedit_is(windowp->current_focus) || _ostext_is(windowp->current_focus))
+            {
+                NSView *s = [windowp->current_focus superview];
+                NSView *ss = [s superview];
+                [s setNeedsDisplay:YES];
+                if (ss != nil)
+                    [ss setNeedsDisplay:YES];
+            }
+        }
+#endif
+
         windowp->current_focus = view;
     }
 }
