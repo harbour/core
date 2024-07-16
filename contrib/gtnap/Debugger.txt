@@ -34,7 +34,7 @@
 -- [F8] Step                                                | [WORKING-SP49]    | [WORKING-SP49]    | [WORKING-SP54]    |
 -- [F9] Set breakpoint on cursor line                       | [WORKING-SP49]    | [WORKING-SP49]    | [WORKING-SP54]    |
 -- [F10] Trace                                              | [WORKING-SP49]    | [WORKING-SP49]    | [WORKING-SP54]    |
--- [TAB]/[SHIFT]+[TAB] Change the active window             |                   |                   |                   |
+-- [TAB]/[SHIFT]+[TAB] Change the active window             | [WORKING-SP56]    | [WORKING-SP56]    | [WORKING-SP56]    |
 -- [ALT+G] Grow active window                               | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |
 -- [ALT+S] Shrink active window                             | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |
 -- [ALT+U] Move border between Command and Code Up          | [WORKING-SP49]    | [WORKING-SP49]    | [WORKING-SP54]    |
@@ -162,7 +162,9 @@
 -- WINDOW MENU --
 -------------------------------------------------------------------------------------------------------------------------
 -- Next [TAB]                                               | [WORKING-SP49](4) | [WORKING-SP49](4) | [WORKING-SP54](4) |
+                                                            | [WORKING-SP56]    | [WORKING-SP56]    | [WORKING-SP56]    |
 -- Prev [Sh+TAB]                                            | [WORKING-SP49](4) | [WORKING-SP49](4) | [WORKING-SP54](4) |
+                                                            | [WORKING-SP56]    | [WORKING-SP56]    | [WORKING-SP56]    |
 -- Move                                                     | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |
 -- Size                                                     | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |
 -- Zoom                                                     | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] | [NOT_IMPLEMENTED] |
@@ -228,7 +230,7 @@
 - (1) In GTNAP when you press ALT+D the code is not in Harbour part (is in GUI part).
 - (2) The Debugger process is generated in /build/[Debug/Release]/bin/gtnapdeb and referenced in GTNAP through gtnap.hbp.
 - (3) Display is working but editing location is wrong. Fixed in Sprint-53.
-- (4) Working from Window menu, but not using [TAB] [Sh+TAB].
+- (4) Working from Window menu, but not using [TAB] [Sh+TAB]. Working in Sprint-56.
 - (5) Working but the command characters are not show. WIP.
 - (6) Working but the code window is not totally restored.
 - (7) Working but object editing location is wrong. Fixed in Sprint-53.

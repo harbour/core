@@ -171,6 +171,7 @@ static Panel *i_panel(App *app)
     view_OnDraw(view, listener(app, i_OnDraw, App));
     view_OnKeyDown(view, listener(app, i_OnKeyDown, App));
     view_OnKeyUp(view, listener(app, i_OnKeyUp, App));
+    view_allow_tab(view, TRUE);
     app->font = font_monospace(font_regular_size(), 0);
     app->text = text;
     app->view = view;
