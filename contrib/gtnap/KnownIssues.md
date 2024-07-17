@@ -16,3 +16,25 @@ hb_LangSelect("pt_BR","PTISO")
 Command characters in debugger CMD windows are not shown while tipping. But when we press enter the command works.
 
 ![Image](https://github.com/user-attachments/assets/b6174a47-0b07-482c-b57d-77eb3289fdf8)
+
+
+## [Linux-GTK]-Buttons mnemonics underline
+
+The buttons ONLY show the shortcut underscore when press [ALT] key (Linux-GTK). On Windows and macOS, the underscores are always visible.
+
+![Image](https://github.com/user-attachments/assets/f421ef2e-7deb-4e34-ad4c-1cfcd89ae13b)
+
+![Image](https://github.com/user-attachments/assets/6931ffd2-684e-4195-b48a-75efb54e10f3)
+
+![Image](https://github.com/user-attachments/assets/ca2003f6-c6cc-4f53-9a69-104268d0446f)
+
+
+## [Linux-GTK] Remove minimize button.
+
+Find a way to remove/disable the minimize button in a Linux/GTK window. In Windows and macOS minimize button is hidden correctly.
+
+![Image](https://github.com/user-attachments/assets/ed96c469-dfdf-4a66-b928-fe0bfb577c48)
+
+![Image](https://github.com/user-attachments/assets/3ff97e1a-eac8-4e85-be5b-547fdc68c275)
+
+![Image](https://github.com/user-attachments/assets/4ca4e15c-0da4-47b9-b5a2-a9b942736c0d)
