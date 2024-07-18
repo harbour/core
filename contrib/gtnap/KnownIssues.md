@@ -38,3 +38,11 @@ Find a way to remove/disable the minimize button in a Linux/GTK window. In Windo
 ![Image](https://github.com/user-attachments/assets/3ff97e1a-eac8-4e85-be5b-547fdc68c275)
 
 ![Image](https://github.com/user-attachments/assets/4ca4e15c-0da4-47b9-b5a2-a9b942736c0d)
+
+## [macOS] MODAL_NO_HIDE doesn't work properly
+
+Because the use of modal windows in CUALIB, a recently stoped modal window must continue being visible. I can make this work on Windows/Linux, but not in macOS. The Window is closed for a while and then reopen. Its not  affect to the correct program execution, its a visual effect.
+
+![Image](https://github.com/user-attachments/assets/46654823-8ec6-4d46-9afc-c2ce24bc3e27)
+
+ 
