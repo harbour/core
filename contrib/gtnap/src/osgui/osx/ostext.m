@@ -33,6 +33,17 @@
 
 /*---------------------------------------------------------------------------*/
 
+#if defined(MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14
+#else
+@interface OSXScrollView : NSScrollView
+{
+    uint32_t dummy;
+}
+@end
+#endif
+
+/*---------------------------------------------------------------------------*/
+
 @interface OSXTextView : NSTextView
 {
   @public
@@ -47,13 +58,47 @@
     NSMutableDictionary *dict;
     NSRange select;
     uint32_t num_chars;
-    BOOL has_focus;
+    BOOL focused;
+    BOOL focus_draw;
     BOOL is_editable;
     BOOL is_opaque;
+    BOOL is_wrap_mode;
     Listener *OnFilter;
     Listener *OnFocus;
 }
 @end
+
+/*---------------------------------------------------------------------------*/
+
+#if defined(MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14
+#else
+@implementation OSXScrollView
+
+/* Draw focus ring in older mac OSX */
+- (void)drawRect:(NSRect)rect
+{
+    OSXTextView *view = [self documentView];
+    [super drawRect:rect];
+
+    if (view->focused == YES)
+    {
+        /* Avoid draw focus ring over scrollbars */
+        if (view->focus_draw == YES)
+        {
+            NSRect r = [self bounds];
+            r.origin.x += 1;
+            r.origin.y += 1;
+            r.size.width -= 2;
+            r.size.height -= 2;
+            NSSetFocusRingStyle(NSFocusRingOnly);
+            NSRectFill(r);
+            view->focus_draw = NO;
+        }
+    }
+}
+
+@end
+#endif
 
 /*---------------------------------------------------------------------------*/
 
@@ -62,13 +107,6 @@
 - (void)dealloc
 {
     [super dealloc];
-}
-
-/*---------------------------------------------------------------------------*/
-
-- (void)drawRect:(NSRect)rect
-{
-    [super drawRect:rect];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -148,6 +186,7 @@ static void i_replace_seltext(OSXTextView *lview, NSRange range, const char_t *t
 @interface OSXTextViewDelegate : NSObject
 #endif
 {
+    uint32_t dummy;
 }
 
 @end
@@ -229,6 +268,40 @@ static void i_replace_seltext(OSXTextView *lview, NSRange range, const char_t *t
 @end
 
 /*---------------------------------------------------------------------------*/
+/* https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/TextUILayer/Tasks/TextInScrollView.html#//apple_ref/doc/uid/20000938-CJBBIAAF */
+static void i_set_wrap_mode(OSXTextView *view, const BOOL wrap)
+{
+    NSSize csize;
+    cassert_no_null(view);
+    cassert([view enclosingScrollView] == view->scroll);
+    [view->scroll setHasVerticalScroller:YES];
+    [view->scroll setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    [view->scroll setAutohidesScrollers:YES];
+    csize = [view->scroll contentSize];
+    [view setFrameSize:csize];
+    [view setVerticallyResizable:YES];
+    [view setMinSize:NSMakeSize(0.0, csize.height)];
+    [view setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
+
+    if (wrap == YES)
+    {
+        [view->scroll setHasHorizontalScroller:NO];
+        [view setHorizontallyResizable:NO];
+        [view setAutoresizingMask:NSViewWidthSizable];
+        [[view textContainer] setContainerSize:NSMakeSize(csize.width, FLT_MAX)];
+        [[view textContainer] setWidthTracksTextView:YES];
+    }
+    else
+    {
+        [view->scroll setHasHorizontalScroller:YES];
+        [view setHorizontallyResizable:YES];
+        [view setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
+        [[view textContainer] setContainerSize:NSMakeSize(FLT_MAX, FLT_MAX)];
+        [[view textContainer] setWidthTracksTextView:NO];
+    }
+}
+
+/*---------------------------------------------------------------------------*/
 
 OSText *ostext_create(const uint32_t flags)
 {
@@ -237,8 +310,14 @@ OSText *ostext_create(const uint32_t flags)
     heap_auditor_add("OSXTextView");
     view->is_editable = NO;
     view->is_opaque = YES;
-    view->has_focus = NO;
+    view->focused = NO;
+    view->focus_draw = NO;
+    view->is_wrap_mode = YES;
+#if defined(MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14
     view->scroll = [[NSScrollView alloc] initWithFrame:NSZeroRect];
+#else
+    view->scroll = [[OSXScrollView alloc] initWithFrame:NSZeroRect];
+#endif
     view->dict = [[NSMutableDictionary alloc] init];
     view->ffamily[0] = '\0';
     view->fsize = REAL32_MAX;
@@ -252,13 +331,11 @@ OSText *ostext_create(const uint32_t flags)
     view->OnFilter = NULL;
     view->OnFocus = NULL;
     [view->scroll setDocumentView:view];
-    [view->scroll setHasVerticalScroller:YES];
-    [view->scroll setHasHorizontalScroller:YES];
-    [view->scroll setAutohidesScrollers:YES];
     [view->scroll setBorderType:NSBezelBorder];
     [view->scroll setHidden:YES];
     [view setEditable:view->is_editable];
     [view setRichText:YES];
+    i_set_wrap_mode(view, view->is_wrap_mode);
 
 #if defined(MAC_OS_X_VERSION_10_6) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_6
     [view setAutomaticTextReplacementEnabled:NO];
@@ -278,7 +355,7 @@ OSText *ostext_create(const uint32_t flags)
 
     /* OSText allways have border */
     {
-        [view setFocusRingType:NSFocusRingTypeExterior];
+        [view->scroll setFocusRingType:NSFocusRingTypeExterior];
     }
 
     return (OSText *)view->scroll;
@@ -603,7 +680,7 @@ void ostext_property(OSText *view, const gui_text_t param, const void *value)
             lview->select = NSMakeRange(start, end - start);
         }
 
-        if (lview->has_focus)
+        if (lview->focused)
         {
             [lview setSelectedRange:lview->select];
         }
@@ -614,6 +691,17 @@ void ostext_property(OSText *view, const gui_text_t param, const void *value)
     case ekGUI_TEXT_SCROLL:
         [lview scrollRangeToVisible:[lview selectedRange]];
         break;
+
+    case ekGUI_TEXT_WRAP_MODE:
+    {
+        bool_t wrap = *cast(value, bool_t);
+        if ((BOOL)wrap != lview->is_wrap_mode)
+        {
+            lview->is_wrap_mode = (BOOL)wrap;
+            i_set_wrap_mode(lview, lview->is_wrap_mode);
+        }
+        break;
+    }
 
         cassert_default();
     }
@@ -734,11 +822,9 @@ void ostext_origin(const OSText *view, real32_t *x, real32_t *y)
 void ostext_frame(OSText *view, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
     OSXTextView *lview;
-    NSRect view_rect;
     lview = [(NSScrollView *)view documentView];
     _oscontrol_set_frame((NSView *)view, x, y, width, height);
-    view_rect = [(NSScrollView *)view documentVisibleRect];
-    [lview setFrame:view_rect];
+    i_set_wrap_mode(lview, lview->is_wrap_mode);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -749,7 +835,8 @@ void ostext_focus(OSText *view, const bool_t focus)
     cassert_no_null(view);
     lview = [(NSScrollView *)view documentView];
     cassert_no_null(lview);
-    lview->has_focus = (BOOL)focus;
+    lview->focused = (BOOL)focus;
+    lview->focus_draw = YES;
 
     if (lview->OnFocus != NULL)
     {
@@ -766,6 +853,22 @@ void ostext_focus(OSText *view, const bool_t focus)
         lview->select = [lview selectedRange];
         [lview setSelectedRange:NSMakeRange(0, 0)];
     }
+
+#if defined(MAC_OS_X_VERSION_10_14) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_14
+#else
+    [lview->scroll setNeedsDisplay:YES];
+#endif
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t ostext_capture_return(const OSText *view)
+{
+    OSXTextView *lview;
+    cassert_no_null(view);
+    lview = [(NSScrollView *)view documentView];
+    cassert_no_null(lview);
+    return lview->is_editable;
 }
 
 /*---------------------------------------------------------------------------*/
