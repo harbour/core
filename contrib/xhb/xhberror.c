@@ -342,7 +342,7 @@ static void xhb_errRedefineClass( void * cargo )
          PHB_DYNS pDynSym = hb_dynsymFind( "ERRORNEW" );
          if( pDynSym )
          {
-            pDynSym->pSymbol = &s_symErrorNew;
+            pDynSym->pSymbol->value.pFunPtr = s_symErrorNew.value.pFunPtr;
             hb_vmSetDynFunc( pDynSym );
          }
       }

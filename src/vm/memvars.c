@@ -569,6 +569,27 @@ static PHB_DYNS hb_memvarFindSymbol( const char * szArg, HB_SIZE nLen )
    return pDynSym;
 }
 
+static PHB_DYNS hb_memvarGetSymbol( PHB_ITEM pItem )
+{
+   PHB_DYNS pDynSym = NULL;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetSymbol(%p)", pItem ) );
+
+   if( pItem )
+   {
+      if( HB_IS_STRING( pItem ) )
+         pDynSym = hb_memvarFindSymbol( pItem->item.asString.value,
+                                        pItem->item.asString.length );
+      else if( HB_IS_SYMBOL( pItem ) )
+      {
+         pDynSym = pItem->item.asSymbol.value->pDynSym;
+         if( pDynSym == NULL )
+            pDynSym = hb_dynsymFind( pItem->item.asSymbol.value->szName );
+      }
+   }
+   return pDynSym;
+}
+
 char * hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pnLen )
 {
    PHB_DYNS pDynVar;
@@ -624,11 +645,11 @@ void hb_memvarCreateFromItem( PHB_ITEM pMemvar, int iScope, PHB_ITEM pValue )
 
    /* find dynamic symbol or create one */
    if( HB_IS_SYMBOL( pMemvar ) )
-#if 0
-      pDynVar = hb_dynsymGet( pMemvar->item.asSymbol.value->szName );
-#else
+   {
       pDynVar = pMemvar->item.asSymbol.value->pDynSym;
-#endif
+      if( pDynVar == NULL )
+         pDynVar = hb_dynsymGet( pMemvar->item.asSymbol.value->szName );
+   }
    else if( HB_IS_STRING( pMemvar ) )
       pDynVar = hb_dynsymGet( pMemvar->item.asString.value );
 
@@ -688,42 +709,40 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, int iScope, PHB_ITEM
  */
 static void hb_memvarRelease( PHB_ITEM pMemvar )
 {
+   PHB_DYNS pDynSymbol;
+
    HB_TRACE( HB_TR_DEBUG, ( "hb_memvarRelease(%p)", ( void * ) pMemvar ) );
 
-   if( HB_IS_STRING( pMemvar ) )
+   pDynSymbol = hb_memvarGetSymbol( pMemvar );
+
+   if( pDynSymbol && hb_dynsymGetMemvar( pDynSymbol ) )
    {
-      PHB_DYNS pDynSymbol = hb_memvarFindSymbol( pMemvar->item.asString.value,
-                                                 pMemvar->item.asString.length );
+      HB_STACK_TLS_PRELOAD
+      HB_SIZE nBase = hb_stackGetPrivateStack()->count;
 
-      if( pDynSymbol && hb_dynsymGetMemvar( pDynSymbol ) )
+      /* Find the variable with a requested name that is currently visible
+       * Start from the top of the stack.
+       */
+      while( nBase > 0 )
       {
-         HB_STACK_TLS_PRELOAD
-         HB_SIZE nBase = hb_stackGetPrivateStack()->count;
-
-         /* Find the variable with a requested name that is currently visible
-          * Start from the top of the stack.
-          */
-         while( nBase > 0 )
+         if( pDynSymbol == hb_stackGetPrivateStack()->stack[ --nBase ].pDynSym )
          {
-            if( pDynSymbol == hb_stackGetPrivateStack()->stack[ --nBase ].pDynSym )
-            {
-               /* reset current value to NIL - the overridden variables will be
-                * visible after exit from current procedure
-                */
-               pMemvar = hb_dynsymGetMemvar( pDynSymbol );
-               if( pMemvar )
-                  hb_itemClear( pMemvar );
-               return;
-            }
+            /* reset current value to NIL - the overridden variables will be
+             * visible after exit from current procedure
+             */
+            pMemvar = hb_dynsymGetMemvar( pDynSymbol );
+            if( pMemvar )
+               hb_itemClear( pMemvar );
+            return;
          }
-
-         /* No match found for PRIVATEs - it's PUBLIC so let's remove it.
-          */
-         hb_memvarDetachDynSym( pDynSymbol, NULL );
       }
+
+      /* No match found for PRIVATEs - it's PUBLIC so let's remove it.
+       */
+      hb_memvarDetachDynSym( pDynSymbol, NULL );
    }
-   else
-      hb_errRT_BASE( EG_ARG, 3008, NULL, "RELEASE", HB_ERR_ARGS_BASEPARAMS );
+   else if( ( HB_ITEM_TYPERAW( pMemvar ) & ( HB_IT_STRING | HB_IT_SYMBOL ) ) == 0 )
+      hb_errRT_BASE( EG_ARG, 3008, NULL, "RELEASE", 1, pMemvar );
 }
 
 
@@ -1186,11 +1205,17 @@ HB_FUNC( __MVSCOPE )
 
    if( hb_pcount() )
    {
-      PHB_ITEM pVarName = hb_param( 1, HB_IT_STRING );
+      PHB_ITEM pVarName = hb_param( 1, HB_IT_STRING | HB_IT_SYMBOL );
 
       if( pVarName )
-         iMemvar = hb_memvarScope( pVarName->item.asString.value,
-                                   pVarName->item.asString.length );
+      {
+         PHB_DYNS pDynVar = hb_memvarGetSymbol( pVarName );
+
+         if( pDynVar )
+            iMemvar = hb_memvarScopeGet( pDynVar );
+         else
+            iMemvar = HB_MV_NOT_FOUND;
+      }
    }
 
    hb_retni( iMemvar );
@@ -1234,19 +1259,18 @@ HB_FUNC( __MVEXIST )
    HB_STACK_TLS_PRELOAD
    PHB_DYNS pDyn;
 
-   pDyn = hb_memvarFindSymbol( hb_parc( 1 ), hb_parclen( 1 ) );
+   pDyn = hb_memvarGetSymbol( hb_param( 1, HB_IT_STRING | HB_IT_SYMBOL ) );
    hb_retl( pDyn && hb_dynsymGetMemvar( pDyn ) );
 }
 
 HB_FUNC( __MVGET )
 {
-   PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pName = hb_param( 1, HB_IT_STRING | HB_IT_SYMBOL );
 
    if( pName )
    {
       HB_STACK_TLS_PRELOAD
-      PHB_DYNS pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
-                                              pName->item.asString.length );
+      PHB_DYNS pDynVar = hb_memvarGetSymbol( pName );
 
       if( pDynVar )
       {
@@ -1264,12 +1288,14 @@ HB_FUNC( __MVGET )
          PHB_ITEM pError;
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
-                                NULL, pName->item.asString.value, 0, EF_CANRETRY );
+                                NULL, HB_IS_STRING( pName ) ?
+                                      pName->item.asString.value :
+                                      pName->item.asSymbol.value->szName,
+                                0, EF_CANRETRY );
 
          while( hb_errLaunch( pError ) == E_RETRY )
          {
-            pDynVar = hb_memvarFindSymbol( hb_itemGetCPtr( pName ),
-                                           hb_itemGetCLen( pName ) );
+            pDynVar = hb_memvarGetSymbol( pName );
             if( pDynVar )
             {
                PHB_ITEM pValue = hb_stackAllocItem();
@@ -1295,14 +1321,13 @@ HB_FUNC( __MVGET )
 
 HB_FUNC( __MVGETDEF )
 {
-   PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pName = hb_param( 1, HB_IT_STRING | HB_IT_SYMBOL );
 
    if( pName )
    {
       HB_STACK_TLS_PRELOAD
       PHB_ITEM pMemvar;
-      PHB_DYNS pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
-                                              pName->item.asString.length );
+      PHB_DYNS pDynVar = hb_memvarGetSymbol( pName );
 
       if( pDynVar && ( pMemvar = hb_dynsymGetMemvar( pDynVar ) ) != NULL )
          hb_itemReturn( HB_IS_BYREF( pMemvar ) ? hb_itemUnRef( pMemvar ) :
@@ -1316,15 +1341,14 @@ HB_FUNC( __MVGETDEF )
 
 HB_FUNC( __MVPUT )
 {
-   PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pName = hb_param( 1, HB_IT_STRING | HB_IT_SYMBOL );
    PHB_ITEM pValue = hb_paramError( 2 );
 
    if( pName )
    {
       /* the first parameter is a string with not empty variable name
        */
-      PHB_DYNS pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
-                                              pName->item.asString.length );
+      PHB_DYNS pDynVar = hb_memvarGetSymbol( pName );
       if( pDynVar )
       {
          /* variable was declared somewhere - assign a new value
@@ -1336,7 +1360,10 @@ HB_FUNC( __MVPUT )
          /* attempt to assign a value to undeclared variable
           * create the PRIVATE one
           */
-         hb_memvarCreateFromDynSymbol( hb_dynsymGet( pName->item.asString.value ), HB_VSCOMP_PRIVATE, pValue );
+         hb_memvarCreateFromDynSymbol( hb_dynsymGet( HB_IS_STRING( pName ) ?
+                                                     pName->item.asString.value :
+                                                     pName->item.asSymbol.value->szName ),
+                                       HB_VSCOMP_PRIVATE, pValue );
       }
       hb_memvarUpdatePrivatesBase();
       hb_itemReturn( pValue );
@@ -1344,7 +1371,7 @@ HB_FUNC( __MVPUT )
    else
    {
       /* either the first parameter is not specified or it has a wrong type
-       * (it must be a string)
+       * (it must be a string or symbol)
        * This is not a critical error - we can continue normal processing
        */
       PHB_ITEM pRetValue = hb_errRT_BASE_Subst( EG_ARG, 3010, NULL, NULL, HB_ERR_ARGS_BASEPARAMS );
