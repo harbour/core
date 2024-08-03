@@ -43,6 +43,10 @@ cmake --install build --config Release
 
 cmake -G "Visual Studio 15 2017" -S . -B build -A x64
 
+## AWS hello with MinGW
+
+cmake -G "MinGW Makefiles" -S . -B build
+
 ## AWS hello with GCC Linux
 
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
