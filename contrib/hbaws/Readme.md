@@ -1,5 +1,44 @@
 # Harbour AWS wrapper (hbaws)
 
+## Introduction
+
+**hbaws** is a project that allows us to connect to Amazon Web Services (AWS) directly from Harbour. At the moment, only some features of the S3 service are accessible, but this may be expanded in the future. It provides high-level functions in C that hide the complexity of HTTP requests. This C API is easily portable to Harbour.
+
+## Installation of AWS-SDK-C++
+
+**hbaws** communicates with Amazon servers through the AWS-SDK-CPP, a project maintained by Amazon that encapsulates the complexity of making calls by directly attacking the REST-API. The first step is to download the AWS-SDK code from GitHub and compile it. This task has been automated using two scripts: `awssdk.bat`(Windows) and `awssdk.sh` (Linux/macOS).
+
+- Download and install Git if not present in your development machine. Access to Git from the command line should be possible.
+    ```
+    :$ git --version
+    git version 2.25.1
+    ```
+
+- Set the `AWS_SDK_ROOT` environment variable. This path will be used to download and compile the code, as well as to install the headers and binaries once they are generated. E.g: `C:\aws-sdk` (Windows) or `/home/fran/aws-sdk` (Linux).
+
+- Windows:
+    ```
+    cd contrib\hbaws
+    awssdk -b [Debug|Release] -comp [mingw64|msvc64]
+    ```
+
+- Linux:
+    ```
+    cd contrib/hbaws
+    awssdk -b [Debug|Release]
+    ```
+
+- > **Important:** The first time you run the script, it can be take several minutes. AWS-SDK-CPP is a heavy source project (> 1Gb). The sources will be installed in `$AWS_SDK_ROOT/src` and will be maintained after compilation. Once the AWS-SDK is successfully generated, you can delete this folder.
+
+- If the script runs successfully, you will have the AWS-SDK headers and libraries in `$AWS_SDK_ROOT/$COMPILER/$BUILD`.
+
+
+
+
+
+
+# Legacy DOCU
+
 ## Download AWS-SDK repo
 
 git clone --recurse-submodules https://github.com/aws/aws-sdk-cpp
