@@ -47,6 +47,7 @@ echo Build type: %BUILD%
 echo COMPILER: %COMPILER%
 echo ---------------------------
 
+:: Check 'AWS_SDK_ROOT'
 IF "%AWS_SDK_ROOT%"=="" GOTO error_no_root
 
 :download_aws
