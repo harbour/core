@@ -40,10 +40,9 @@ set(CMAKE_PREFIX_PATH "${AWSROOT}/lib/aws-c-event-stream" ${CMAKE_PREFIX_PATH})
 set(CMAKE_PREFIX_PATH "${AWSROOT}/lib/aws-checksums" ${CMAKE_PREFIX_PATH})
 set(CMAKE_PREFIX_PATH "${AWSROOT}/lib/aws-c-s3" ${CMAKE_PREFIX_PATH})
 
-# if (WIN32)
-# else()
-#     set(CMAKE_PREFIX_PATH "${AWSROOT}/lib/s2n" ${CMAKE_PREFIX_PATH})
-# endif()
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(CMAKE_PREFIX_PATH "${AWSROOT}/lib/s2n" ${CMAKE_PREFIX_PATH})
+endif()
 
 find_package(AWSSDK REQUIRED COMPONENTS s3)
 
