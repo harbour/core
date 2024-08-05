@@ -32,6 +32,8 @@
 
 - If the script runs successfully, you will have the AWS-SDK headers and libraries in `$AWS_SDK_ROOT/$COMPILER/$BUILD`.
 
+    ![aws-sdk-builds](https://github.com/user-attachments/assets/7dc7dce0-7d34-4095-b137-b372cc941ff7)
+
 
 
 
