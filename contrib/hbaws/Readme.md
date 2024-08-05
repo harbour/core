@@ -20,11 +20,33 @@ cmake --install build --config=Release
 
 **Compilation fails with MinGW**
 
-cmake -G "MinGW Makefiles" -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:\Users\Fran\Desktop\aws-install" -DBUILD_ONLY="s3" -DENABLE_ZLIB_REQUEST_COMPRESSION=OFF -DENABLE_TESTING=OFF -DAWS_SDK_WARNINGS_ARE_ERRORS=OFF
+cmake -G "MinGW Makefiles" -S . -B ../build -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:\aws-sdk" -DBUILD_ONLY="s3" -DENABLE_ZLIB_REQUEST_COMPRESSION=OFF -DENABLE_TESTING=OFF -DAWS_SDK_WARNINGS_ARE_ERRORS=OFF -DBUILD_SHARED_LIBS=OFF
 
-cmake --build build
+cmake --build ../build
 
-cmake --install build --config=Release
+cmake --install ../build --config Release
+
+
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+    ${MINGW_PREFIX}/bin/cmake.exe \
+      -G "Ninja" \
+      "${_extra_config[@]}" \
+      -DBUILD_SHARED_LIBS=OFF \
+      -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+      -DCMAKE_PREFIX_PATH="${MINGW_PREFIX}" \
+      -DCMAKE_MODULE_PATH="${MINGW_PREFIX}"/lib/cmake \
+      -DAWS_SDK_WARNINGS_ARE_ERRORS=OFF \
+      -DBUILD_ONLY="config;identity-management;lambda;s3;sts;transfer" \
+      -DENABLE_UNITY_BUILD=ON \
+      -DENABLE_TESTING=OFF \
+      -DBUILD_DEPS=OFF \
+      -DPYTHON_EXECUTABLE=${MINGW_PREFIX}/bin/python \
+      ../${_realname}-${pkgver}
+
+
+
+
+
 
 ## Build AWS-SDK with GCC Linux
 
@@ -45,7 +67,7 @@ cmake -G "Visual Studio 15 2017" -S . -B build -A x64
 
 ## AWS hello with MinGW
 
-cmake -G "MinGW Makefiles" -S . -B build
+cmake -G "MinGW Makefiles" -S . -B build -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
 
 ## AWS hello with GCC Linux
 

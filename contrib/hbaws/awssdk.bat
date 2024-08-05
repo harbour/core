@@ -45,22 +45,22 @@ IF "%AWS_SDK_ROOT%"=="" GOTO error_no_root
 
 :download_aws
 IF exist %AWS_SDK_ROOT%\src goto check_aws
-git clone --recurse-submodules https://github.com/aws/aws-sdk-cpp %AWS_SDK_ROOT%\src
+git clone --recurse-submodules --depth 1 --branch 1.11.271 https://github.com/aws/aws-sdk-cpp %AWS_SDK_ROOT%\src
 
 :check_aws
 cd %AWS_SDK_ROOT%\src
 call git status > NUL || goto error_no_git
 
 :build
-IF exist %AWS_SDK_ROOT%\build rmdir /s /q %AWS_SDK_ROOT%\build
+@REM IF exist %AWS_SDK_ROOT%\build rmdir /s /q %AWS_SDK_ROOT%\build
 
-call cmake -S %AWS_SDK_ROOT%\src -B %AWS_SDK_ROOT%\build -DCMAKE_INSTALL_PREFIX=%AWS_SDK_ROOT% -DBUILD_ONLY="s3" -DENABLE_TESTING=OFF -DENABLE_ZLIB_REQUEST_COMPRESSION=OFF -DAWS_SDK_WARNINGS_ARE_ERRORS=OFF -DBUILD_SHARED_LIBS=OFF -A x64 || goto error_cmake
+@REM call cmake -S %AWS_SDK_ROOT%\src -B %AWS_SDK_ROOT%\build -DCMAKE_INSTALL_PREFIX=%AWS_SDK_ROOT% -DBUILD_ONLY="s3" -DENABLE_TESTING=OFF -DENABLE_ZLIB_REQUEST_COMPRESSION=OFF -DAWS_SDK_WARNINGS_ARE_ERRORS=OFF -DBUILD_SHARED_LIBS=OFF -A x64 || goto error_cmake
 
-call cmake --build %AWS_SDK_ROOT%\build --config %BUILD% || goto error_build
+@REM call cmake --build %AWS_SDK_ROOT%\build --config %BUILD% || goto error_build
 
-call cmake --install %AWS_SDK_ROOT%\build --config %BUILD% || goto error_install
+@REM call cmake --install %AWS_SDK_ROOT%\build --config %BUILD% || goto error_install
 
-echo INSTALL SUCCESS
+@REM echo INSTALL SUCCESS
 
 
 goto end
