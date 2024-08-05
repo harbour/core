@@ -67,7 +67,7 @@ cmake -G "Visual Studio 15 2017" -S . -B build -A x64
 
 ## AWS hello with MinGW
 
-cmake -G "MinGW Makefiles" -S . -B build -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
+cmake -G "MinGW Makefiles" -S . -B build -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release
 
 ## AWS hello with GCC Linux
 
