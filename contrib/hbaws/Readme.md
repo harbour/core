@@ -16,6 +16,7 @@
 
 - Set the `AWS_SDK_ROOT` environment variable. This path will be used to download and compile the code, as well as to install the headers and binaries once they are generated. E.g: `C:\aws-sdk` (Windows) or `/home/fran/aws-sdk` (Linux).
 
+"%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 - Windows:
     ```
     cd contrib\hbaws

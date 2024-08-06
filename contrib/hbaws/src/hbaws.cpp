@@ -31,7 +31,9 @@ static HBAWS HBAWS_GLOBAL = {0, nullptr};
 
 int hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *credentials_block)
 {
-    if (HBAWS_GLOBAL.init == FALSE)
+    (void)(access_key_block);
+    (void)(credentials_block);
+    if (HBAWS_GLOBAL.init == 0)
     {
         HBAWS_GLOBAL.aws_options = new Aws::SDKOptions;
         Aws::InitAPI(*HBAWS_GLOBAL.aws_options);

@@ -6,20 +6,22 @@
 # Include directories
 -i.
 -isrc
+-i{allmingw&debug}${AWS_SDK_ROOT}\mingw64\Debug\include
+-i{allmingw&!debug}${AWS_SDK_ROOT}\mingw64\Release\include
+-i{allmsvc&debug}${AWS_SDK_ROOT}\msvc64\Debug\include
+-i{allmsvc&!debug}${AWS_SDK_ROOT}\msvc64\Release\include
 
 # Avoid linker error '__gxx_personality_v0'
-# GTNAP need to be linked with g++
-# LibreOffice support needs c++ linking
 -cpp=yes
 
 # Flags
 -cflag={allmsvc|allmingw}-D_WINDOWS
--cflag={allmingw}-DUNICODE
--cflag={allmingw}-D_UNICODE
+# -cflag={allmingw}-DUNICODE
+# -cflag={allmingw}-D_UNICODE
 -cflag={allgcc&debug}-g
 -cflag={allgcc&!darwin}-std=c++11
--cflag={debug}-DCMAKE_DEBUG
--cflag={nodebug}-DCMAKE_RELEASE
+# -cflag={debug}-DCMAKE_DEBUG
+# -cflag={nodebug}-DCMAKE_RELEASE
 
 # Output
 {debug}-obuild/Debug/lib/${hb_name}
