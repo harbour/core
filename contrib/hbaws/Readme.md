@@ -8,15 +8,26 @@
 
 **hbaws** communicates with Amazon servers through the AWS-SDK-CPP, a project maintained by Amazon that encapsulates the complexity of making calls by directly attacking the REST-API. The first step is to download the AWS-SDK code from GitHub and compile it. This task has been automated using two scripts: `awssdk.bat`(Windows) and `awssdk.sh` (Linux/macOS).
 
-- Download and install Git if not present in your development machine. Access to Git from the command line should be possible.
+- Download and install Git if not present in your development machine. Access to Git from the command line is required.
     ```
     :$ git --version
     git version 2.25.1
     ```
 
+- Download and install CMake if not present in your development machine. Access to CMake from the command line is required.
+    ```
+    :$ cmake --version
+    cmake version 3.25.2
+    ```
+
+- In **Linux system** you have to install the development packages of **libcurl** and **libssl**. E.g: In a Debian-based system:
+    ```
+    sudo apt-get install libcurl-dev
+    sudo apt-get install libssl-dev
+    ```
+
 - Set the `AWS_SDK_ROOT` environment variable. This path will be used to download and compile the code, as well as to install the headers and binaries once they are generated. E.g: `C:\aws-sdk` (Windows) or `/home/fran/aws-sdk` (Linux).
 
-"%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 - Windows:
     ```
     cd contrib\hbaws
@@ -29,13 +40,20 @@
     awssdk -b [Debug|Release]
     ```
 
-- > **Important:** The first time you run the script, it can be take several minutes. AWS-SDK-CPP is a heavy source project (> 1Gb). The sources will be installed in `$AWS_SDK_ROOT/src` and will be maintained after compilation. Once the AWS-SDK is successfully generated, you can delete this folder.
+- > **Important:** The first time you run the script, it can be take several minutes. AWS-SDK-CPP is a heavy source project (> 1.5Gb).
 
-- If the script runs successfully, you will have the AWS-SDK headers and libraries in `$AWS_SDK_ROOT/$COMPILER/$BUILD`.
+- > **Important:** Several different builds can be done from same source code: E.g: `$AWS_SDK_ROOT/mingw64/Debug`, `$AWS_SDK_ROOT/msvc64/Release`, etc.
+
+- > **Important:** The AWS-SDK-CPP source code will be `$AWS_SDK_ROOT/src` and will be keep after compilation. Once the AWS-SDK is successfully generated, you can delete this folder.
+
+- If the `awssdk` script runs successfully, you will have the AWS-SDK headers and libraries in `$AWS_SDK_ROOT/$COMPILER/$BUILD`.
 
     ![aws-sdk-builds](https://github.com/user-attachments/assets/7dc7dce0-7d34-4095-b137-b372cc941ff7)
 
+## Build HBAWS
 
+
+"%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 
 
