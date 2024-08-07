@@ -11,13 +11,11 @@
 
 HB_EXTERN_BEGIN
 
-extern int hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *credentials_block);
+extern int hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block);
 
 extern void hb_aws_finish(void);
 
-extern int hb_aws_last_error(void);
-
-extern const char *hb_aws_error_str(const int errcode);
+extern const char *hb_aws_last_error(void);
 
 HB_EXTERN_END
 

@@ -25,7 +25,7 @@ else()
 
 endif()
 
-set(AWSROOT ${AWSROOT}/Release)
+set(AWSROOT ${AWSROOT}/Debug)
 set(CMAKE_PREFIX_PATH "${AWSROOT}/lib/cmake" ${CMAKE_PREFIX_PATH})
 set(CMAKE_PREFIX_PATH "${AWSROOT}/lib/aws-crt-cpp" ${CMAKE_PREFIX_PATH})
 set(CMAKE_PREFIX_PATH "${AWSROOT}/lib/aws-c-http" ${CMAKE_PREFIX_PATH})

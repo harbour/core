@@ -1,7 +1,7 @@
 # hbaws options for projects that use it
 
 incpaths=.
-{!debug}libpaths=build/Release/lib build/Release/bin
-{debug}libpaths=build/Debug/lib build/Debug/bin
-libs=officesdk hboffice
+{!debug}libpaths=build/Release/lib ${AWS_SDK_ROOT}/mingw64/Release/lib
+{debug}libpaths=build/Debug/lib
+libs=hbaws aws-cpp-sdk-s3 aws-cpp-sdk-core
 cpp=yes

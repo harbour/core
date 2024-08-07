@@ -56,6 +56,10 @@
 "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 
+### Some errors
+- The AWS Access Key Id you provided does not exist in our records.
+- The request signature we calculated does not match the signature you provided. Check your key and signing method.
+
 
 
 # Legacy DOCU
