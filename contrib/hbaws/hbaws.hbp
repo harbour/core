@@ -1,0 +1,32 @@
+# hbaws build options
+
+-hblib
+-inc
+
+# Include directories
+-i.
+-isrc
+-i{allmingw&debug}${AWS_SDK_ROOT}/mingw64/Debug/include
+-i{allmingw&!debug}${AWS_SDK_ROOT}/mingw64/Release/include
+-i{allmsvc&debug}${AWS_SDK_ROOT}/msvc64/Debug/include
+-i{allmsvc&!debug}${AWS_SDK_ROOT}/msvc64/Release/include
+
+# Avoid linker error '__gxx_personality_v0'
+-cpp=yes
+
+# Flags
+-cflag={allgcc&debug}-g
+-cflag={allgcc&!darwin}-std=c++11
+
+# Output
+{debug}-obuild/Debug/lib/${hb_name}
+{nodebug}-obuild/Release/lib/${hb_name}
+
+-w3 -es2
+
+# Create Harbour header
+-hbx=${hb_name}.hbx
+
+# Files
+src/hbaws.cpp
+src/hb_aws.c
