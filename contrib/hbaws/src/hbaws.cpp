@@ -8,6 +8,7 @@
 #include <aws/core/auth/AWSCredentials.h>
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/ListBucketsResult.h>
+#include <aws/s3/model/ListObjectsV2Request.h>
 
 #include "hbapiitm.h"
 #include "hbapistr.h"
@@ -18,6 +19,7 @@ struct HBAWS
     Aws::SDKOptions *aws_options;
     Aws::S3::S3Client *s3_client;
     Aws::String aws_last_error;
+    const Aws::Vector<Aws::S3::Model::Object> *aws_objects;
 
     HBAWS()
         : init(false), aws_options(nullptr), s3_client(nullptr)
@@ -101,15 +103,14 @@ static void i_destroy_utf8(char **str)
 
 int hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block)
 {
-    int ok = 1;
-
     if (HBAWS_GLOBAL.init == false)
     {
+        bool ok = true;
         HBAWS_GLOBAL.aws_options = new Aws::SDKOptions;
         Aws::InitAPI(*HBAWS_GLOBAL.aws_options);
 
         // Create the s3 client with the credentials
-        if (ok)
+        if (ok == true)
         {
             char *access_key = i_block_to_utf8(access_key_block);
             char *secret = i_block_to_utf8(secret_block);
@@ -123,36 +124,36 @@ int hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block)
             if (HBAWS_GLOBAL.s3_client == nullptr)
             {
                 HBAWS_GLOBAL.aws_last_error = Aws::String("Error creating Aws::S3Client");
-                ok = 0;
+                ok = false;
             }
         }
 
         // Just check if connection is done
-        if (ok)
+        if (ok == true)
         {
             Aws::S3::Model::ListBucketsOutcome res = HBAWS_GLOBAL.s3_client->ListBuckets();
             if (!res.IsSuccess())
             {
                 HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
-                ok = 0;
+                ok = false;
             }
         }
 
-        if (ok)
+        if (ok == true)
         {
             HBAWS_GLOBAL.init = true;
             HBAWS_GLOBAL.aws_last_error = "";
         }
     }
 
-    return ok;
+    return HBAWS_GLOBAL.init ? 1 : 0;
 }
 
 /*---------------------------------------------------------------------------*/
 
 void hb_aws_finish(void)
 {
-    if (HBAWS_GLOBAL.init == 1)
+    if (HBAWS_GLOBAL.init == true)
     {
         if (HBAWS_GLOBAL.s3_client != nullptr)
         {
@@ -167,7 +168,7 @@ void hb_aws_finish(void)
             HBAWS_GLOBAL.aws_options = nullptr;
         }
 
-        HBAWS_GLOBAL.init = 0;
+        HBAWS_GLOBAL.init = false;
     }
 }
 
@@ -177,3 +178,55 @@ const char *hb_aws_last_error(void)
 {
     return HBAWS_GLOBAL.aws_last_error.c_str();
 }
+
+/*---------------------------------------------------------------------------*/
+
+int hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block, const S3Obj **objects, int *size)
+{
+    bool ok = true;
+    if (HBAWS_GLOBAL.init == true)
+    {
+        char *bucket = i_block_to_utf8(bucket_block);
+        char *prefix = i_block_to_utf8(prefix_block);
+        Aws::String str_bucket(bucket);
+        Aws::String str_prefix(prefix);
+        Aws::S3::Model::ListObjectsV2Request request;
+        // TODO: Use prefix
+        request.SetBucket(str_bucket);
+        i_destroy_utf8(&bucket);
+        i_destroy_utf8(&prefix);
+
+        Aws::S3::Model::ListObjectsV2Outcome res = HBAWS_GLOBAL.s3_client->ListObjectsV2(request);
+
+        if (res.IsSuccess())
+        {
+            const Aws::S3::Model::ListObjectsV2Result &result = res.GetResult();
+            std::cout << "Archivos en el bucket '" << str_bucket << "':" << std::endl;
+            const Aws::Vector<Aws::S3::Model::Object> &contents = result.GetContents();
+            HBAWS_GLOBAL.aws_objects = &contents;
+            for (const auto &object : result.GetContents())
+            {
+                std::cout << "* " << object.GetKey() << std::endl;
+            }
+
+            ok = true;
+        }
+        else
+        {
+            HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
+            ok = false;
+        }
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_last_error = "HBAWS not initialized";
+        *size = 0;
+        ok = false;
+    }
+
+    return ok ? 1 : 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+// const char *hb_aws_s3_key(const S3Obj *object)

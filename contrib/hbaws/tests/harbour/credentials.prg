@@ -1,7 +1,9 @@
 
 FUNCTION AWS_AccessKey()
-    RETURN ("--------------")
+    RETURN ("---------------------------")
 
 FUNCTION AWS_Secret()
-    RETURN ("--------------")
+    RETURN ("---------------------------")
 
+FUNCTION AWS_Bucket()
+    RETURN ("---------------------------")

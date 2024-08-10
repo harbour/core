@@ -24,7 +24,12 @@ IF L_OK == .F.
     RETURN
 ENDIF
 
-? "OK"
+L_OK := HBAWS_S3_LIST(AWS_Bucket(), "")
+
+IF L_OK == .F.
+    ? "Error in S3 List: " + HBAWS_LAST_ERROR()
+    RETURN
+ENDIF
 
 HBAWS_FINISH()
 RETURN

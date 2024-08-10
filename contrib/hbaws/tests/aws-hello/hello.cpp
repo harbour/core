@@ -2,6 +2,7 @@
 #include <aws/core/auth/AWSCredentials.h>
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/ListBucketsResult.h>
+#include <aws/s3/model/ListObjectsV2Request.h>
 #include <iostream>
 #include <chrono>
 
@@ -14,6 +15,7 @@ int main()
         Aws::String access_key_id = "XXX";
         Aws::String secret_access_key = "XXX";
         Aws::Auth::AWSCredentials credentials(access_key_id, secret_access_key);
+                Aws::S3::Model::ListObjectsV2Request request;
 
         auto start = std::chrono::high_resolution_clock::now();
         std::cout << "Hello HBAWS World!" << std::endl;
