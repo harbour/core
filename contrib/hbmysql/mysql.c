@@ -58,6 +58,15 @@
 
 #include "mysql.h"
 
+/* NOTE: Patricio Díaz (padiazg) suggested this change for Alpine Linux builds 
+         where MariaDB is only avaiable.
+*/
+#if !defined( MYSQL_PORT )
+    #if defined( MARIADB_PORT )
+        #define MYSQL_PORT MARIADB_PORT
+    #endif
+#endif
+
 /* NOTE: OS/2 EMX port of MySQL needs libmysqlclient.a from 3.21.33b build
          which has ST and MT versions of client library. I'm using ST version
          since Harbour is single threaded.
