@@ -48,7 +48,7 @@ HB_FUNC(HBAWS_S3_LIST_ALL)
         {
             PHB_ITEM item = hb_itemArrayNew(13);
             hb_arraySetC(item, 1, hb_aws_s3_key(objects, i));
-            hb_arraySetNI(item, 2, 2);
+            hb_arraySetNL(item, 2, hb_aws_s3_content_size(objects, i));
             hb_arraySetNI(item, 3, 3);
             hb_arraySetNI(item, 4, 4);
             hb_arraySetNI(item, 5, 5);

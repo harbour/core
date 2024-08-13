@@ -243,3 +243,11 @@ const char *hb_aws_s3_key(const S3Objs *objs, int i)
     const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
     return (*awsObjs)[i].GetKey().c_str();
 }
+
+/*---------------------------------------------------------------------------*/
+
+extern long long hb_aws_s3_content_size(const S3Objs *objs, int i)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    return (*awsObjs)[i].GetSize();
+}

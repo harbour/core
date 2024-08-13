@@ -35,7 +35,8 @@ IF Len(V_OBJS) != 0
     FOR N_Cont := 1 TO LEN(V_OBJS)
         V_Item := V_OBJS[N_Cont]
         ? "ITEM: " + hb_ntos(N_Cont)
-        ? " * " + V_Item[1]
+        ? " * S3Key: " + V_Item[OBJ_S3KEY]
+        ? " * ContentSize: " + hb_ntos(V_Item[OBJ_CONTENT_SIZE])
     NEXT
 ELSE
     IF LEN(C_ERR)==0
