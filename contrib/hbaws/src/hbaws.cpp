@@ -101,6 +101,16 @@ static void i_destroy_utf8(char **str)
 
 /*---------------------------------------------------------------------------*/
 
+static Aws::String i_AwsString(HB_ITEM *block)
+{
+    char *str = i_block_to_utf8(block);
+    Aws::String aws_str(str);
+    i_destroy_utf8(&str);
+    return aws_str;
+}
+
+/*---------------------------------------------------------------------------*/
+
 int hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block)
 {
     if (HBAWS_GLOBAL.init == false)
@@ -112,14 +122,10 @@ int hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block)
         // Create the s3 client with the credentials
         if (ok == true)
         {
-            char *access_key = i_block_to_utf8(access_key_block);
-            char *secret = i_block_to_utf8(secret_block);
-            Aws::String str_access(access_key);
-            Aws::String str_secret(secret);
+            Aws::String str_access = i_AwsString(access_key_block);
+            Aws::String str_secret = i_AwsString(secret_block);
             Aws::Auth::AWSCredentials credentials(str_access, str_secret);
             HBAWS_GLOBAL.s3_client = new Aws::S3::S3Client(credentials);
-            i_destroy_utf8(&access_key);
-            i_destroy_utf8(&secret);
 
             if (HBAWS_GLOBAL.s3_client == nullptr)
             {
@@ -186,17 +192,15 @@ int hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block, const S3Obj **o
     bool ok = true;
     if (HBAWS_GLOBAL.init == true)
     {
-        char *bucket = i_block_to_utf8(bucket_block);
-        char *prefix = i_block_to_utf8(prefix_block);
-        Aws::String str_bucket(bucket);
-        Aws::String str_prefix(prefix);
-        Aws::S3::Model::ListObjectsV2Request request;
+        Aws::String str_bucket = i_AwsString(bucket_block);
+        Aws::String str_prefix = i_AwsString(prefix_block);
+        Aws::S3::Model::ListObjectsV2Request *request = new Aws::S3::Model::ListObjectsV2Request;
+        request->SetBucket(str_bucket);
         // TODO: Use prefix
-        request.SetBucket(str_bucket);
-        i_destroy_utf8(&bucket);
-        i_destroy_utf8(&prefix);
 
-        Aws::S3::Model::ListObjectsV2Outcome res = HBAWS_GLOBAL.s3_client->ListObjectsV2(request);
+        Aws::S3::Model::ListObjectsV2Outcome res = HBAWS_GLOBAL.s3_client->ListObjectsV2(*request);
+        delete request;
+        request = nullptr;
 
         if (res.IsSuccess())
         {
