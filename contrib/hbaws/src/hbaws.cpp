@@ -19,7 +19,7 @@ struct HBAWS
     Aws::SDKOptions *aws_options;
     Aws::S3::S3Client *s3_client;
     Aws::String aws_last_error;
-    const Aws::Vector<Aws::S3::Model::Object> *aws_objects;
+    Aws::Vector<Aws::S3::Model::Object> aws_objects;
 
     HBAWS()
         : init(false), aws_options(nullptr), s3_client(nullptr)
@@ -187,32 +187,27 @@ const char *hb_aws_last_error(void)
 
 /*---------------------------------------------------------------------------*/
 
-int hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block, const S3Obj **objects, int *size)
+const S3Objs *hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block)
 {
     bool ok = true;
     if (HBAWS_GLOBAL.init == true)
     {
         Aws::String str_bucket = i_AwsString(bucket_block);
         Aws::String str_prefix = i_AwsString(prefix_block);
-        Aws::S3::Model::ListObjectsV2Request *request = new Aws::S3::Model::ListObjectsV2Request;
-        request->SetBucket(str_bucket);
-        // TODO: Use prefix
+        Aws::S3::Model::ListObjectsV2Outcome res;
 
-        Aws::S3::Model::ListObjectsV2Outcome res = HBAWS_GLOBAL.s3_client->ListObjectsV2(*request);
-        delete request;
-        request = nullptr;
+        {
+            Aws::S3::Model::ListObjectsV2Request *request = new Aws::S3::Model::ListObjectsV2Request;
+            request->SetBucket(str_bucket);
+            // TODO: Use prefix
+            res = HBAWS_GLOBAL.s3_client->ListObjectsV2(*request);
+            delete request;
+        }
 
         if (res.IsSuccess())
         {
             const Aws::S3::Model::ListObjectsV2Result &result = res.GetResult();
-            std::cout << "Archivos en el bucket '" << str_bucket << "':" << std::endl;
-            const Aws::Vector<Aws::S3::Model::Object> &contents = result.GetContents();
-            HBAWS_GLOBAL.aws_objects = &contents;
-            for (const auto &object : result.GetContents())
-            {
-                std::cout << "* " << object.GetKey() << std::endl;
-            }
-
+            HBAWS_GLOBAL.aws_objects = result.GetContents();
             ok = true;
         }
         else
@@ -224,13 +219,27 @@ int hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block, const S3Obj **o
     else
     {
         HBAWS_GLOBAL.aws_last_error = "HBAWS not initialized";
-        *size = 0;
         ok = false;
     }
 
-    return ok ? 1 : 0;
+    if (ok)
+        return reinterpret_cast<S3Objs *>(&HBAWS_GLOBAL.aws_objects);
+    else
+        return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
 
-// const char *hb_aws_s3_key(const S3Obj *object)
+int hb_aws_s3_size(const S3Objs *objs)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    return static_cast<int>(awsObjs->size());
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char *hb_aws_s3_key(const S3Objs *objs, int i)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    return (*awsObjs)[i].GetKey().c_str();
+}

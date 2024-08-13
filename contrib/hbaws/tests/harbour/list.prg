@@ -11,6 +11,9 @@ PROCEDURE Main()
 ***********************************
 LOCAL L_OK := .F.
 LOCAL C_ERR := ""
+LOCAL V_OBJS := {}
+LOCAL V_ITEM := {}
+LOCAL N_CONT := 1
 
 hb_cdpSelect("PTISO")
 hb_LangSelect("pt_BR","PTISO")
@@ -24,11 +27,22 @@ IF L_OK == .F.
     RETURN
 ENDIF
 
-L_OK := HBAWS_S3_LIST(AWS_Bucket(), "")
+? "Running HBAWS_S3_LIST_ALL"
+V_OBJS := HBAWS_S3_LIST_ALL(C_ERR, AWS_Bucket(), "")
 
-IF L_OK == .F.
-    ? "Error in S3 List: " + HBAWS_LAST_ERROR()
-    RETURN
+IF Len(V_OBJS) != 0
+    ? "Num Files found: " + hb_ntos(LEN(V_OBJS))
+    FOR N_Cont := 1 TO LEN(V_OBJS)
+        V_Item := V_OBJS[N_Cont]
+        ? "ITEM: " + hb_ntos(N_Cont)
+        ? " * " + V_Item[1]
+    NEXT
+ELSE
+    IF LEN(C_ERR)==0
+        ? "No files found"
+    ELSE
+        ? "Error: " + C_ERR
+    ENDIF
 ENDIF
 
 HBAWS_FINISH()

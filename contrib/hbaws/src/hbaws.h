@@ -9,7 +9,7 @@
 #include "hbvmint.h"
 #include "hbgtcore.h"
 
-typedef struct _s3_obj_t S3Obj;
+typedef struct _s3_objs_t S3Objs;
 
 HB_EXTERN_BEGIN
 
@@ -19,9 +19,11 @@ extern void hb_aws_finish(void);
 
 extern const char *hb_aws_last_error(void);
 
-extern int hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block, const S3Obj **objects, int *size);
+extern const S3Objs *hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block);
 
-extern const char *hb_aws_s3_key(const S3Obj *object);
+extern int hb_aws_s3_size(const S3Objs *objs);
+
+extern const char *hb_aws_s3_key(const S3Objs *objs, int i);
 
 HB_EXTERN_END
 
