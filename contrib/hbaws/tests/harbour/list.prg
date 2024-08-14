@@ -28,7 +28,7 @@ IF L_OK == .F.
 ENDIF
 
 ? "Running HBAWS_S3_LIST_ALL"
-V_OBJS := HBAWS_S3_LIST_ALL(C_ERR, AWS_Bucket(), "")
+V_OBJS := HBAWS_S3_LIST_ALL(@C_ERR, AWS_Bucket(), "")
 
 IF Len(V_OBJS) != 0
     ? "Num Files found: " + hb_ntos(LEN(V_OBJS))
@@ -37,6 +37,9 @@ IF Len(V_OBJS) != 0
         ? "ITEM: " + hb_ntos(N_Cont)
         ? " * S3Key: " + V_Item[OBJ_S3KEY]
         ? " * ContentSize: " + hb_ntos(V_Item[OBJ_CONTENT_SIZE])
+        ? " * ContentType: " + V_Item[OBJ_CONTENT_TYPE]
+        ? " * Date: " + DToC(V_Item[OBJ_DATE])
+        ? " * Time: " + V_Item[OBJ_TIME]
     NEXT
 ELSE
     IF LEN(C_ERR)==0

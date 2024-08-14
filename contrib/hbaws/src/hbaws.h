@@ -27,6 +27,12 @@ extern const char *hb_aws_s3_key(const S3Objs *objs, int i);
 
 extern long long hb_aws_s3_content_size(const S3Objs *objs, int i);
 
+extern const char *hb_aws_s3_content_type(const S3Objs *objs, int i);
+
+extern const char *hb_aws_s3_date(const S3Objs *objs, int i);
+
+extern const char *hb_aws_s3_time(const S3Objs *objs, int i);
+
 HB_EXTERN_END
 
 #endif

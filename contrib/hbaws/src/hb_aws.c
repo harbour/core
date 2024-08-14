@@ -4,7 +4,9 @@
  */
 
 #include "hbaws.h"
+#include "hbaws.ch"
 #include "hbapiitm.h"
+#include "hbset.h"
 
 /*---------------------------------------------------------------------------*/
 
@@ -47,11 +49,11 @@ HB_FUNC(HBAWS_S3_LIST_ALL)
         for (int i = 0; i < size; ++i)
         {
             PHB_ITEM item = hb_itemArrayNew(13);
-            hb_arraySetC(item, 1, hb_aws_s3_key(objects, i));
-            hb_arraySetNL(item, 2, hb_aws_s3_content_size(objects, i));
-            hb_arraySetNI(item, 3, 3);
-            hb_arraySetNI(item, 4, 4);
-            hb_arraySetNI(item, 5, 5);
+            hb_arraySetC(item, OBJ_S3KEY, hb_aws_s3_key(objects, i));
+            hb_arraySetNL(item, OBJ_CONTENT_SIZE, hb_aws_s3_content_size(objects, i));
+            hb_arraySetC(item, OBJ_CONTENT_TYPE, hb_aws_s3_content_type(objects, i));
+            hb_arraySetDS(item, OBJ_DATE, hb_aws_s3_date(objects, i));
+            hb_arraySetC(item, OBJ_TIME, hb_aws_s3_time(objects, i));
             hb_arraySetNI(item, 6, 6);
             hb_arraySetNI(item, 7, 7);
             hb_arraySetNI(item, 8, 8);
