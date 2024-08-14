@@ -400,3 +400,47 @@ const char *hb_aws_s3_restore_timezone(const S3Objs *objs, int i)
 
     return HBAWS_GLOBAL.aws_temp_conv.c_str();
 }
+
+/*---------------------------------------------------------------------------*/
+
+static Aws::String i_ChecksumAlgorithm(const Aws::S3::Model::ChecksumAlgorithm &alg)
+{
+    switch (alg)
+    {
+    case Aws::S3::Model::ChecksumAlgorithm::NOT_SET:
+        return "NOT_SET";
+    case Aws::S3::Model::ChecksumAlgorithm::CRC32:
+        return "CRC32";
+    case Aws::S3::Model::ChecksumAlgorithm::CRC32C:
+        return "CRC32C";
+    case Aws::S3::Model::ChecksumAlgorithm::SHA1:
+        return "SHA1";
+    case Aws::S3::Model::ChecksumAlgorithm::SHA256:
+        return "SHA256";
+    }
+
+    return "UNKNOWN";
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char *hb_aws_s3_checksum_algorithm(const S3Objs *objs, int i)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    const Aws::Vector<Aws::S3::Model::ChecksumAlgorithm> &algs = (*awsObjs)[i].GetChecksumAlgorithm();
+    Aws::S3::Model::ChecksumAlgorithm alg = Aws::S3::Model::ChecksumAlgorithm::NOT_SET;
+    if (algs.size() > 0)
+        alg = algs[0];
+    // HBAWS_GLOBAL.aws_temp_conv = Aws::S3::Model::ChecksumAlgorithmMapper::GetNameForChecksumAlgorithm(alg);
+    HBAWS_GLOBAL.aws_temp_conv = i_ChecksumAlgorithm(alg);
+    return HBAWS_GLOBAL.aws_temp_conv.c_str();
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char *hb_aws_s3_etag(const S3Objs *objs, int i)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    HBAWS_GLOBAL.aws_temp_conv = (*awsObjs)[i].GetETag();
+    return HBAWS_GLOBAL.aws_temp_conv.c_str();
+}

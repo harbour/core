@@ -46,6 +46,8 @@ IF Len(V_OBJS) != 0
         ? " * RestoreDate: " + DToC(V_Item[OBJ_RESTORE_DATE])
         ? " * RestoreTime: " + V_Item[OBJ_RESTORE_TIME]
         ? " * RestoreTimeZone: " + V_Item[OBJ_RESTORE_TIMEZONE]
+        ? " * ChecksumAlgorithm: " + V_Item[OBJ_CHECKSUM_ALGORITHM]
+        ? " * ETag: " + V_Item[OBJ_ETAG]
     NEXT
 ELSE
     IF LEN(C_ERR)==0

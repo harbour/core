@@ -60,8 +60,8 @@ HB_FUNC(HBAWS_S3_LIST_ALL)
             hb_arraySetDS(item, OBJ_RESTORE_DATE, hb_aws_s3_restore_date(objects, i));
             hb_arraySetC(item, OBJ_RESTORE_TIME, hb_aws_s3_restore_time(objects, i));
             hb_arraySetC(item, OBJ_RESTORE_TIMEZONE, hb_aws_s3_restore_timezone(objects, i));
-            hb_arraySetNI(item, 12, 12);
-            hb_arraySetNI(item, 13, 13);
+            hb_arraySetC(item, OBJ_CHECKSUM_ALGORITHM, hb_aws_s3_checksum_algorithm(objects, i));
+            hb_arraySetC(item, OBJ_ETAG, hb_aws_s3_etag(objects, i));
             hb_arraySet(ret, i + 1, item);
         }
 

@@ -45,6 +45,10 @@ extern const char *hb_aws_s3_restore_time(const S3Objs *objs, int i);
 
 extern const char *hb_aws_s3_restore_timezone(const S3Objs *objs, int i);
 
+extern const char *hb_aws_s3_checksum_algorithm(const S3Objs *objs, int i);
+
+extern const char *hb_aws_s3_etag(const S3Objs *objs, int i);
+
 HB_EXTERN_END
 
 #endif
