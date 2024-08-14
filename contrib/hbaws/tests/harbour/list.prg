@@ -40,6 +40,12 @@ IF Len(V_OBJS) != 0
         ? " * ContentType: " + V_Item[OBJ_CONTENT_TYPE]
         ? " * Date: " + DToC(V_Item[OBJ_DATE])
         ? " * Time: " + V_Item[OBJ_TIME]
+        ? " * TimeZone: " + V_Item[OBJ_TIMEZONE]
+        ? " * StorageClass: " + V_Item[OBJ_STORAGE_CLASS]
+        ? " * IsRestore: " + hb_ValToStr(V_Item[OBJ_IS_RESTORE])
+        ? " * RestoreDate: " + DToC(V_Item[OBJ_RESTORE_DATE])
+        ? " * RestoreTime: " + V_Item[OBJ_RESTORE_TIME]
+        ? " * RestoreTimeZone: " + V_Item[OBJ_RESTORE_TIMEZONE]
     NEXT
 ELSE
     IF LEN(C_ERR)==0

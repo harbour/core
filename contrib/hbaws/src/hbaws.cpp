@@ -289,6 +289,13 @@ static Aws::String i_time(const Aws::Utils::DateTime &dateTime)
 
 /*---------------------------------------------------------------------------*/
 
+static Aws::String i_timezone(const Aws::Utils::DateTime &dateTime)
+{
+    return dateTime.ToLocalTimeString("%Z");
+}
+
+/*---------------------------------------------------------------------------*/
+
 const char *
 hb_aws_s3_date(const S3Objs *objs, int i)
 {
@@ -305,5 +312,91 @@ const char *hb_aws_s3_time(const S3Objs *objs, int i)
     const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
     const Aws::Utils::DateTime &dateTime = (*awsObjs)[i].GetLastModified();
     HBAWS_GLOBAL.aws_temp_conv = i_time(dateTime);
+    return HBAWS_GLOBAL.aws_temp_conv.c_str();
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char *hb_aws_s3_timezone(const S3Objs *objs, int i)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    const Aws::Utils::DateTime &dateTime = (*awsObjs)[i].GetLastModified();
+    HBAWS_GLOBAL.aws_temp_conv = i_timezone(dateTime);
+    return HBAWS_GLOBAL.aws_temp_conv.c_str();
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char *hb_aws_s3_storage_class(const S3Objs *objs, int i)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    const Aws::S3::Model::ObjectStorageClass &storage = (*awsObjs)[i].GetStorageClass();
+    HBAWS_GLOBAL.aws_temp_conv = Aws::S3::Model::ObjectStorageClassMapper::GetNameForObjectStorageClass(storage);
+    return HBAWS_GLOBAL.aws_temp_conv.c_str();
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_BOOL hb_aws_s3_is_restore(const S3Objs *objs, int i)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    const Aws::S3::Model::RestoreStatus &restore = (*awsObjs)[i].GetRestoreStatus();
+    return static_cast<HB_BOOL>(restore.GetIsRestoreInProgress());
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char *hb_aws_s3_restore_date(const S3Objs *objs, int i)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    const Aws::S3::Model::RestoreStatus &restore = (*awsObjs)[i].GetRestoreStatus();
+    if (restore.RestoreExpiryDateHasBeenSet())
+    {
+        const Aws::Utils::DateTime &dateTime = restore.GetRestoreExpiryDate();
+        HBAWS_GLOBAL.aws_temp_conv = i_date(dateTime);
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_temp_conv = "";
+    }
+
+    return HBAWS_GLOBAL.aws_temp_conv.c_str();
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char *hb_aws_s3_restore_time(const S3Objs *objs, int i)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    const Aws::S3::Model::RestoreStatus &restore = (*awsObjs)[i].GetRestoreStatus();
+    if (restore.RestoreExpiryDateHasBeenSet())
+    {
+        const Aws::Utils::DateTime &dateTime = restore.GetRestoreExpiryDate();
+        HBAWS_GLOBAL.aws_temp_conv = i_time(dateTime);
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_temp_conv = "";
+    }
+
+    return HBAWS_GLOBAL.aws_temp_conv.c_str();
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char *hb_aws_s3_restore_timezone(const S3Objs *objs, int i)
+{
+    const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
+    const Aws::S3::Model::RestoreStatus &restore = (*awsObjs)[i].GetRestoreStatus();
+    if (restore.RestoreExpiryDateHasBeenSet())
+    {
+        const Aws::Utils::DateTime &dateTime = restore.GetRestoreExpiryDate();
+        HBAWS_GLOBAL.aws_temp_conv = i_timezone(dateTime);
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_temp_conv = "";
+    }
+
     return HBAWS_GLOBAL.aws_temp_conv.c_str();
 }

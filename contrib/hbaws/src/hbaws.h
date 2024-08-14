@@ -33,6 +33,18 @@ extern const char *hb_aws_s3_date(const S3Objs *objs, int i);
 
 extern const char *hb_aws_s3_time(const S3Objs *objs, int i);
 
+extern const char *hb_aws_s3_timezone(const S3Objs *objs, int i);
+
+extern const char *hb_aws_s3_storage_class(const S3Objs *objs, int i);
+
+extern HB_BOOL hb_aws_s3_is_restore(const S3Objs *objs, int i);
+
+extern const char *hb_aws_s3_restore_date(const S3Objs *objs, int i);
+
+extern const char *hb_aws_s3_restore_time(const S3Objs *objs, int i);
+
+extern const char *hb_aws_s3_restore_timezone(const S3Objs *objs, int i);
+
 HB_EXTERN_END
 
 #endif
