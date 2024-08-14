@@ -202,7 +202,7 @@ const S3Objs *hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block)
         {
             Aws::S3::Model::ListObjectsV2Request *request = new Aws::S3::Model::ListObjectsV2Request;
             request->SetBucket(str_bucket);
-            // TODO: Use prefix
+            request->SetPrefix(str_prefix);
             res = HBAWS_GLOBAL.s3_client->ListObjectsV2(*request);
             delete request;
         }

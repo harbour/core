@@ -11,6 +11,7 @@ PROCEDURE Main()
 ***********************************
 LOCAL L_OK := .F.
 LOCAL C_ERR := ""
+LOCAL C_PREFIX := ""
 LOCAL V_OBJS := {}
 LOCAL V_ITEM := {}
 LOCAL N_CONT := 1
@@ -27,8 +28,9 @@ IF L_OK == .F.
     RETURN
 ENDIF
 
-? "Running HBAWS_S3_LIST_ALL"
-V_OBJS := HBAWS_S3_LIST_ALL(@C_ERR, AWS_Bucket(), "")
+C_PREFIX := "apiged"
+? "Running 'HBAWS_S3_LIST_ALL' in bucket '" + AWS_Bucket() + "' with prefix '" + C_PREFIX + "'"
+V_OBJS := HBAWS_S3_LIST_ALL(@C_ERR, AWS_Bucket(), C_PREFIX)
 
 IF Len(V_OBJS) != 0
     ? "Num Files found: " + hb_ntos(LEN(V_OBJS))
