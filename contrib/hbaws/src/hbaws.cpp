@@ -190,33 +190,55 @@ const char *hb_aws_last_error(void)
 
 /*---------------------------------------------------------------------------*/
 
-const S3Objs *hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block)
+static Aws::S3::Model::ListObjectsV2Outcome i_list_request(const Aws::String &bucket, const Aws::String &prefix, const Aws::String &continuation_token, const Aws::String &start_after, int max_keys)
+{
+    Aws::S3::Model::ListObjectsV2Request *request = new Aws::S3::Model::ListObjectsV2Request;
+    request->SetBucket(bucket);
+    request->SetPrefix(prefix);
+
+    if (!continuation_token.empty())
+        request->SetContinuationToken(continuation_token);
+
+    if (!start_after.empty())
+        request->SetStartAfter(start_after);
+
+    request->SetMaxKeys(std::min(max_keys, 1000));
+
+    Aws::S3::Model::ListObjectsV2Outcome res = HBAWS_GLOBAL.s3_client->ListObjectsV2(*request);
+    delete request;
+    return res;
+}
+
+/*---------------------------------------------------------------------------*/
+
+const S3Objs *hb_aws_s3_list_all(HB_ITEM *bucket_block, HB_ITEM *prefix_block)
 {
     bool ok = true;
     if (HBAWS_GLOBAL.init == true)
     {
-        Aws::String str_bucket = i_AwsString(bucket_block);
-        Aws::String str_prefix = i_AwsString(prefix_block);
-        Aws::S3::Model::ListObjectsV2Outcome res;
+        Aws::String bucket = i_AwsString(bucket_block);
+        Aws::String prefix = i_AwsString(prefix_block);
+        Aws::String continuation_token = "";
+        bool is_truncated = true;
+        HBAWS_GLOBAL.aws_objects.clear();
 
+        while (is_truncated && ok)
         {
-            Aws::S3::Model::ListObjectsV2Request *request = new Aws::S3::Model::ListObjectsV2Request;
-            request->SetBucket(str_bucket);
-            request->SetPrefix(str_prefix);
-            res = HBAWS_GLOBAL.s3_client->ListObjectsV2(*request);
-            delete request;
-        }
+            Aws::S3::Model::ListObjectsV2Outcome res = i_list_request(bucket, prefix, continuation_token, "", 1000);
 
-        if (res.IsSuccess())
-        {
-            const Aws::S3::Model::ListObjectsV2Result &result = res.GetResult();
-            HBAWS_GLOBAL.aws_objects = result.GetContents();
-            ok = true;
-        }
-        else
-        {
-            HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
-            ok = false;
+            if (res.IsSuccess())
+            {
+                const Aws::S3::Model::ListObjectsV2Result &result = res.GetResult();
+                const Aws::Vector<Aws::S3::Model::Object> &objs = result.GetContents();
+                HBAWS_GLOBAL.aws_objects.insert(HBAWS_GLOBAL.aws_objects.end(), objs.begin(), objs.end());
+                continuation_token = result.GetNextContinuationToken();
+                is_truncated = result.GetIsTruncated();
+            }
+            else
+            {
+                HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
+                ok = false;
+            }
         }
     }
     else
@@ -226,9 +248,14 @@ const S3Objs *hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block)
     }
 
     if (ok)
+    {
         return reinterpret_cast<S3Objs *>(&HBAWS_GLOBAL.aws_objects);
+    }
     else
+    {
+        HBAWS_GLOBAL.aws_objects.clear();
         return NULL;
+    }
 }
 
 /*---------------------------------------------------------------------------*/

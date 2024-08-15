@@ -1,6 +1,7 @@
-// HBAWS example 'list'
+// HBAWS example 'listall'
 // From \contrib\hbaws\tests\harbour
-// ..\..\..\..\bin\win\mingw64\hbmk2 list.prg credentials.prg hbaws.hbc -comp=mingw64
+// List all content of a AWS bucket, breaking the 1000 items limit.
+// ..\..\..\..\bin\win\mingw64\hbmk2 listall.prg credentials.prg hbaws.hbc -comp=mingw64
 #include "hbaws.ch"
 
 REQUEST HB_CODEPAGE_PTISO
@@ -28,7 +29,7 @@ IF L_OK == .F.
     RETURN
 ENDIF
 
-C_PREFIX := "apiged"
+C_PREFIX := ""
 ? "Running 'HBAWS_S3_LIST_ALL' in bucket '" + AWS_Bucket() + "' with prefix '" + C_PREFIX + "'"
 V_OBJS := HBAWS_S3_LIST_ALL(@C_ERR, AWS_Bucket(), C_PREFIX)
 

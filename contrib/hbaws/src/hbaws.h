@@ -19,7 +19,7 @@ extern void hb_aws_finish(void);
 
 extern const char *hb_aws_last_error(void);
 
-extern const S3Objs *hb_aws_s3_list(HB_ITEM *bucket_block, HB_ITEM *prefix_block);
+extern const S3Objs *hb_aws_s3_list_all(HB_ITEM *bucket_block, HB_ITEM *prefix_block);
 
 extern int hb_aws_s3_size(const S3Objs *objs);
 
