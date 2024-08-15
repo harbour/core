@@ -10,6 +10,10 @@
     - [Build HBAWS with MSVC](#build-hbaws-with-msvc)
     - [Build HBAWS with GCC Linux](#build-hbaws-with-gcc-linux)
 * [HBAWS examples](#hbaws-examples)
+* [Reference guide](#reference-guide)
+    - [HBAWS initialization](#hbaws-initialization)
+    - [HBAWS finish](#hbaws-finish)
+    - [HBAWS_S3_LIST_ALL](#hbaws_s3_list_all)
 
 ## Introduction
 
@@ -125,6 +129,60 @@ Some examples have been provided in `contrib/hbaws/tests/harbour`.
     ..\..\..\..\bin\win\mingw64\hbmk2 listall.prg credentials.prg hbaws.hbc -comp=mingw64
     ```
 
+## Reference guide
+
+### HBAWS initialization
+
+This function must be call before any other. It remember the session. Only one call is required.
+
+```
+LOCAL L_OK := HBAWS_INIT(@C_ERR, C_AccessKey, C_Secret)
+
+PAR1: Reference string to store the error message (if any).
+PAR2: Access key.
+PAR3: Secret.
+RET: .T. if connection with AWS can be performed. If .F., in C_ERR will be stored the error.
+```
+
+### HBAWS finish
+
+This function must be called before the program terminates or calls to AWS are no longer needed.
+
+```
+HBAWS_FINISH()
+
+No parameters neither return value.
+```
+
+### HBAWS_S3_LIST_ALL
+
+Return a list of ALL files in the bucket, breaking the AWS 1000 items limit.
+
+```
+LOCAL V_OBJS := HBAWS_S3_LIST_ALL(@C_ERR, C_BUCKET, C_PREFIX)
+
+PAR1: Reference string to store the error message (if any).
+PAR2: Bucket where the list will be performed.
+PAR3: Filter prefix.
+RET: A vector of vectors with all objects. { {Obj1}, {Obj2}, ..., {ObjN} }.
+
+* If error, will return an empty vector and C_ERR will contain the error message.
+
+* Every inner {Obj} vector has this info:
+  - S3Key: Obj[OBJ_S3KEY]
+  - ContentSize: hb_ntos(Obj[OBJ_CONTENT_SIZE])
+  - ContentType: Obj[OBJ_CONTENT_TYPE]
+  - Date: DToC(Obj[OBJ_DATE])
+  - Time: Obj[OBJ_TIME]
+  - TimeZone: Obj[OBJ_TIMEZONE]
+  - StorageClass: Obj[OBJ_STORAGE_CLASS]
+  - IsRestore: hb_ValToStr(Obj[OBJ_IS_RESTORE])
+  - RestoreDate: DToC(Obj[OBJ_RESTORE_DATE])
+  - RestoreTime: Obj[OBJ_RESTORE_TIME]
+  - RestoreTimeZone: Obj[OBJ_RESTORE_TIMEZONE]
+  - ChecksumAlgorithm: Obj[OBJ_CHECKSUM_ALGORITHM]
+  - ETag: Obj[OBJ_ETAG]
+```
 
 # Legacy DOCU (To be removed)
 

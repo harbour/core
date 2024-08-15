@@ -114,7 +114,7 @@ static Aws::String i_AwsString(HB_ITEM *block)
 
 /*---------------------------------------------------------------------------*/
 
-int hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block)
+HB_BOOL hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block)
 {
     if (HBAWS_GLOBAL.init == false)
     {
@@ -155,7 +155,7 @@ int hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block)
         }
     }
 
-    return HBAWS_GLOBAL.init ? 1 : 0;
+    return static_cast<HB_BOOL>(HBAWS_GLOBAL.init);
 }
 
 /*---------------------------------------------------------------------------*/

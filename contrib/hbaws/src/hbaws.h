@@ -13,7 +13,7 @@ typedef struct _s3_objs_t S3Objs;
 
 HB_EXTERN_BEGIN
 
-extern int hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block);
+extern HB_BOOL hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block);
 
 extern void hb_aws_finish(void);
 

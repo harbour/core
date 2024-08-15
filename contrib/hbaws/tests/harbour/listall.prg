@@ -20,12 +20,12 @@ LOCAL N_CONT := 1
 hb_cdpSelect("PTISO")
 hb_LangSelect("pt_BR","PTISO")
 
-? "Running AWS 'list' example"
+? "Running AWS 'listall' example"
 ? "Initializing AWS client"
-L_OK := HBAWS_INIT(AWS_AccessKey(), AWS_Secret())
+L_OK := HBAWS_INIT(@C_ERR, AWS_AccessKey(), AWS_Secret())
 
 IF L_OK == .F.
-    ? "Error init AWS: " + HBAWS_LAST_ERROR()
+    ? "Error init AWS: " + C_ERR
     RETURN
 ENDIF
 
