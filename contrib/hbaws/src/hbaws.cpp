@@ -471,3 +471,19 @@ const char *hb_aws_s3_etag(const S3Objs *objs, int i)
     HBAWS_GLOBAL.aws_temp_conv = (*awsObjs)[i].GetETag();
     return HBAWS_GLOBAL.aws_temp_conv.c_str();
 }
+
+#if defined(_MSC_VER)
+
+#define stdin (__acrt_iob_func(0))
+#define stdout (__acrt_iob_func(1))
+#define stderr (__acrt_iob_func(2))
+FILE _iob[3];
+extern "C" FILE *__cdecl __iob_func(void)
+{
+    _iob[0] = *stdin;
+    _iob[1] = *stdout;
+    _iob[2] = *stderr;
+    return _iob;
+}
+
+#endif

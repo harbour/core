@@ -16,7 +16,7 @@ HB_FUNC(HBAWS_INIT)
     HB_ITEM *secret_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
     HB_BOOL ret = hb_aws_init(access_key_block, secret_block);
 
-    if (ret == HB_TRUE)
+    if (ret)
         hb_storc("", 1);
     else
         hb_storc(hb_aws_last_error(), 1);
@@ -48,7 +48,7 @@ HB_FUNC(HBAWS_S3_LIST_ALL)
         {
             PHB_ITEM item = hb_itemArrayNew(13);
             hb_arraySetC(item, OBJ_S3KEY, hb_aws_s3_key(objects, i));
-            hb_arraySetNL(item, OBJ_CONTENT_SIZE, hb_aws_s3_content_size(objects, i));
+            hb_arraySetNL(item, OBJ_CONTENT_SIZE, (long)hb_aws_s3_content_size(objects, i));
             hb_arraySetC(item, OBJ_CONTENT_TYPE, hb_aws_s3_content_type(objects, i));
             hb_arraySetDS(item, OBJ_DATE, hb_aws_s3_date(objects, i));
             hb_arraySetC(item, OBJ_TIME, hb_aws_s3_time(objects, i));
