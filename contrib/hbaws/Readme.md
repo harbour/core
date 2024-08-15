@@ -5,6 +5,8 @@
     - [AWS-SDK with MinGW](#aws-sdk-with-mingw)
     - [AWS-SDK with MSVC](#aws-sdk-with-msvc)
     - [AWS-SDK with GCC Linux](#aws-sdk-with-gcc-linux)
+    - [AWS-SDK result](#aws-sdk-result)
+
 * [Build HBAWS](#build-hbaws)
     - [Build HBAWS with MinGW](#build-hbaws-with-mingw)
     - [Build HBAWS with MSVC](#build-hbaws-with-msvc)
@@ -79,13 +81,13 @@ awssdk -b [Debug|Release]
 
 If the `awssdk` script runs successfully, you will have the AWS-SDK headers and libraries in `$AWS_SDK_ROOT/$COMPILER/$BUILD`.
 
-![aws-sdk-builds](https://github.com/user-attachments/assets/7dc7dce0-7d34-4095-b137-b372cc941ff7)
-
 > **Important:** The first time you run the `awssdk` script, it can be take several minutes. AWS-SDK-CPP is a heavy source project (> 1.5Gb).
 
 > **Important:** Several different builds can be done from same source code: E.g: `$AWS_SDK_ROOT/mingw64/Debug`, `$AWS_SDK_ROOT/msvc64/Release`, etc.
 
 > **Important:** The AWS-SDK-CPP source code will be `$AWS_SDK_ROOT/src` and will not be deleted after compilation. Once the AWS-SDK is successfully generated, you can remove this folder.
+
+> **Important:** The AWS-SDK dynamic libraries must be re-distributed with the Harbour executables. You will find them in the `/bin` folder of each installation. See the [HBAWS examples](#hbaws-examples) section.
 
 ## Build HBAWS
 
@@ -122,6 +124,14 @@ TODO
 Some examples have been provided in `contrib/hbaws/tests/harbour`.
 
 > **Important:** Before running examples, open the `credentials.prg` and fill the required data.
+
+> **Important:** AWS-SDK DLLs must be accesible by the executables.
+
+    # Windows MinGW
+    set PATH=%AWS_SDK_ROOT%\mingw64\Release\bin;%PATH%.
+
+    # Windows MSVC
+    set PATH=%AWS_SDK_ROOT%\msvc64\Release\bin;%PATH%.
 
 * `listall`: Use of `HBAWS_S3_LIST_ALL` function.
     ```
