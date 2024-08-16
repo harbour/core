@@ -76,12 +76,11 @@ static char *i_item_to_utf8_string(HB_ITEM *item)
 static char *i_block_to_utf8(HB_ITEM *item)
 {
     char *str = NULL;
-
-    if (HB_ITEM_TYPE(item) == HB_IT_STRING)
+    if (item && HB_ITEM_TYPE(item) == HB_IT_STRING)
     {
         str = i_item_to_utf8_string(item);
     }
-    else if (HB_ITEM_TYPE(item) == HB_IT_BLOCK)
+    else if (item && HB_ITEM_TYPE(item) == HB_IT_BLOCK)
     {
         PHB_ITEM ritem = hb_itemDo(item, 0);
         str = i_item_to_utf8_string(ritem);

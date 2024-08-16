@@ -12,8 +12,8 @@
 
 HB_FUNC(HBAWS_INIT)
 {
-    HB_ITEM *access_key_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
-    HB_ITEM *secret_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
+    HB_ITEM *access_key_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *secret_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
     HB_BOOL ret = hb_aws_init(access_key_block, secret_block);
 
     if (ret)
@@ -75,8 +75,8 @@ static void i_object_list(const S3Objs *objects, int error_pos)
 
 HB_FUNC(HBAWS_S3_LIST_ALL)
 {
-    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
-    HB_ITEM *prefix_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *prefix_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
     const S3Objs *objects = hb_aws_s3_list_all(bucket_block, prefix_block);
     i_object_list(objects, 1);
 }
@@ -85,11 +85,11 @@ HB_FUNC(HBAWS_S3_LIST_ALL)
 
 HB_FUNC(HBAWS_S3_LIST_PAGINATED)
 {
-    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
-    HB_ITEM *prefix_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
-    HB_ITEM *start_after_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK);
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *prefix_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *start_after_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
     int max_keys = hb_parni(5);
-    HB_ITEM *continuation_token_block = hb_param(6, HB_IT_STRING | HB_IT_BLOCK);
+    HB_ITEM *continuation_token_block = hb_param(6, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
     const char *next_continuation_token = NULL;
     const S3Objs *objects = hb_aws_s3_list_page(bucket_block, prefix_block, start_after_block, continuation_token_block, max_keys, &next_continuation_token);
 
