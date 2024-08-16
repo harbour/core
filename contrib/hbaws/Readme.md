@@ -87,7 +87,10 @@ If the `awssdk` script runs successfully, you will have the AWS-SDK headers and 
 
 > **Important:** The AWS-SDK-CPP source code will be `$AWS_SDK_ROOT/src` and will not be deleted after compilation. Once the AWS-SDK is successfully generated, you can remove this folder.
 
-> **Important:** The AWS-SDK dynamic libraries must be re-distributed with the Harbour executables. You will find them in the `/bin` folder of each installation. See the [HBAWS examples](#hbaws-examples) section.
+> **Important:** The AWS-SDK dynamic libraries must be re-distributed with the Harbour-based executables. You will find them in the `/bin` folder of each installation. See the [HBAWS examples](#hbaws-examples) section.
+
+![awssdk_dlls](https://github.com/user-attachments/assets/697e5470-a848-412d-a31b-119633cc4e56)
+
 
 ## Build HBAWS
 
