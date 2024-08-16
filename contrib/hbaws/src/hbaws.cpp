@@ -9,6 +9,8 @@
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/ListBucketsResult.h>
 #include <aws/s3/model/ListObjectsV2Request.h>
+#include <fstream>
+#include <ios>
 
 #include "hbapiitm.h"
 #include "hbapistr.h"
@@ -257,6 +259,15 @@ const S3Objs *hb_aws_s3_list_all(HB_ITEM *bucket_block, HB_ITEM *prefix_block)
         return NULL;
     }
 }
+
+/*---------------------------------------------------------------------------*/
+
+// static std::ofstream i_open_log()
+// {
+//     std::ofstream file;
+//     file.open("C:\\Users\\Fran\\Desktop\\log.txt", std::ios::app);
+//     return file;
+// }
 
 /*---------------------------------------------------------------------------*/
 

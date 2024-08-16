@@ -131,10 +131,10 @@ Some examples have been provided in `contrib/hbaws/tests/harbour`.
 > **Important:** AWS-SDK DLLs must be accesible by the executables.
 
     # Windows MinGW
-    set PATH=%AWS_SDK_ROOT%\mingw64\Release\bin;%PATH%.
+    set PATH=%AWS_SDK_ROOT%\mingw64\Release\bin;%PATH%
 
     # Windows MSVC
-    set PATH=%AWS_SDK_ROOT%\msvc64\Release\bin;%PATH%.
+    set PATH=%AWS_SDK_ROOT%\msvc64\Release\bin;%PATH%
 
 * `listall`: Use of `HBAWS_S3_LIST_ALL` function.
     ```

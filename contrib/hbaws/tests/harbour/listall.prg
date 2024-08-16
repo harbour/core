@@ -2,6 +2,7 @@
 // From \contrib\hbaws\tests\harbour
 // List all content of a AWS bucket, breaking the 1000 items limit.
 // ..\..\..\..\bin\win\mingw64\hbmk2 listall.prg credentials.prg hbaws.hbc -comp=mingw64
+// ..\..\..\..\bin\win\msvc64\hbmk2 listall.prg credentials.prg hbaws.hbc -comp=msvc64
 #include "hbaws.ch"
 
 REQUEST HB_CODEPAGE_PTISO
@@ -39,18 +40,18 @@ IF Len(V_OBJS) != 0
         V_Item := V_OBJS[N_Cont]
         ? "ITEM: " + hb_ntos(N_Cont)
         ? " * S3Key: " + V_Item[OBJ_S3KEY]
-        ? " * ContentSize: " + hb_ntos(V_Item[OBJ_CONTENT_SIZE])
-        ? " * ContentType: " + V_Item[OBJ_CONTENT_TYPE]
-        ? " * Date: " + DToC(V_Item[OBJ_DATE])
-        ? " * Time: " + V_Item[OBJ_TIME]
-        ? " * TimeZone: " + V_Item[OBJ_TIMEZONE]
-        ? " * StorageClass: " + V_Item[OBJ_STORAGE_CLASS]
-        ? " * IsRestore: " + hb_ValToStr(V_Item[OBJ_IS_RESTORE])
-        ? " * RestoreDate: " + DToC(V_Item[OBJ_RESTORE_DATE])
-        ? " * RestoreTime: " + V_Item[OBJ_RESTORE_TIME]
-        ? " * RestoreTimeZone: " + V_Item[OBJ_RESTORE_TIMEZONE]
-        ? " * ChecksumAlgorithm: " + V_Item[OBJ_CHECKSUM_ALGORITHM]
-        ? " * ETag: " + V_Item[OBJ_ETAG]
+        // ? " * ContentSize: " + hb_ntos(V_Item[OBJ_CONTENT_SIZE])
+        // ? " * ContentType: " + V_Item[OBJ_CONTENT_TYPE]
+        // ? " * Date: " + DToC(V_Item[OBJ_DATE])
+        // ? " * Time: " + V_Item[OBJ_TIME]
+        // ? " * TimeZone: " + V_Item[OBJ_TIMEZONE]
+        // ? " * StorageClass: " + V_Item[OBJ_STORAGE_CLASS]
+        // ? " * IsRestore: " + hb_ValToStr(V_Item[OBJ_IS_RESTORE])
+        // ? " * RestoreDate: " + DToC(V_Item[OBJ_RESTORE_DATE])
+        // ? " * RestoreTime: " + V_Item[OBJ_RESTORE_TIME]
+        // ? " * RestoreTimeZone: " + V_Item[OBJ_RESTORE_TIMEZONE]
+        // ? " * ChecksumAlgorithm: " + V_Item[OBJ_CHECKSUM_ALGORITHM]
+        // ? " * ETag: " + V_Item[OBJ_ETAG]
     NEXT
 ELSE
     IF LEN(C_ERR)==0
