@@ -13,9 +13,10 @@
     - [Build HBAWS with GCC Linux](#build-hbaws-with-gcc-linux)
 * [HBAWS examples](#hbaws-examples)
 * [Reference guide](#reference-guide)
-    - [HBAWS initialization](#hbaws-initialization)
-    - [HBAWS finish](#hbaws-finish)
+    - [HBAWS_INIT](#hbaws_init)
+    - [HBAWS_FINISH](#hbaws_finish)
     - [HBAWS_S3_LIST_ALL](#hbaws_s3_list_all)
+    - [HBAWS_S3_LIST_PAGINATED](#hbaws_s3_list_paginated)
 
 ## Introduction
 
@@ -140,11 +141,19 @@ Some examples have been provided in `contrib/hbaws/tests/harbour`.
     ```
     cd contrib\hbaws\tests\harbour
     ..\..\..\..\bin\win\mingw64\hbmk2 listall.prg credentials.prg hbaws.hbc -comp=mingw64
+    ..\..\..\..\bin\win\msvc64\hbmk2 listall.prg credentials.prg hbaws.hbc -comp=msvc64
+    ```
+
+* `listpage`: Use of `HBAWS_S3_LIST_PAGINATED` function.
+    ```
+    cd contrib\hbaws\tests\harbour
+    ..\..\..\..\bin\win\mingw64\hbmk2 listpage.prg credentials.prg hbaws.hbc -comp=mingw64
+    ..\..\..\..\bin\win\msvc64\hbmk2 listpage.prg credentials.prg hbaws.hbc -comp=msvc64
     ```
 
 ## Reference guide
 
-### HBAWS initialization
+### HBAWS_INIT
 
 This function must be call before any other. It remember the session. Only one call is required.
 
@@ -157,7 +166,7 @@ PAR3: Secret.
 RET: .T. if connection with AWS can be performed. If .F., in C_ERR will be stored the error.
 ```
 
-### HBAWS finish
+### HBAWS_FINISH
 
 This function must be called before the program terminates or calls to AWS are no longer needed.
 
@@ -176,10 +185,10 @@ LOCAL V_OBJS := HBAWS_S3_LIST_ALL(@C_ERR, C_BUCKET, C_PREFIX)
 
 PAR1: Reference string to store the error message (if any).
 PAR2: Bucket where the list will be performed.
-PAR3: Filter prefix.
+PAR3: Filter prefix (optional, allow NIL or empty string).
 RET: A vector of vectors with all objects. { {Obj1}, {Obj2}, ..., {ObjN} }.
 
-* If error, will return an empty vector and C_ERR will contain the error message.
+* If error, will return an empty vector {} and C_ERR will contain the error message.
 
 * Every inner {Obj} vector has this info:
   - S3Key: Obj[OBJ_S3KEY]
@@ -195,6 +204,26 @@ RET: A vector of vectors with all objects. { {Obj1}, {Obj2}, ..., {ObjN} }.
   - RestoreTimeZone: Obj[OBJ_RESTORE_TIMEZONE]
   - ChecksumAlgorithm: Obj[OBJ_CHECKSUM_ALGORITHM]
   - ETag: Obj[OBJ_ETAG]
+```
+
+### HBAWS_S3_PAGINATED
+
+Return a single page of the list files in the bucket, returning a continuation token for a possible next call.
+
+```
+LOCAL V_OBJS := HBAWS_S3_LIST_PAGINATED(@C_ERR, C_BUCKET, C_PREFIX, C_START_AFTER, N_MAX_KEYS, C_CONTINUATION_TOKEN, @C_NEXT_CONTINUATION_TOKEN)
+
+PAR1: Reference string to store the error message (if any).
+PAR2: Bucket where the list will be performed.
+PAR3: Filter prefix (optional, allow NIL or empty string).
+PAR4: Object key for begin the search (optional, allow NIL or empty string).
+PAR5: Maximum number of objects returned. If >1000, the page will be limited to 1000.
+PAR6: Previous continuation token. If NIL of empty the search will start by the beginning.
+PAR6: Reference string to store the next continuation token for possible next call. If no more pages, NIL will be stored.
+RET: A vector of vectors with all objects in the page. { {Obj1}, {Obj2}, ..., {ObjN} }.
+
+* If error, will return an empty vector {} and C_ERR will contain the error message.
+* Every inner {Obj} vector has the same info as HBAWS_S3_LIST_ALL.
 ```
 
 # Legacy DOCU (To be removed)
