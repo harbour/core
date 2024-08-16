@@ -260,6 +260,56 @@ const S3Objs *hb_aws_s3_list_all(HB_ITEM *bucket_block, HB_ITEM *prefix_block)
 
 /*---------------------------------------------------------------------------*/
 
+const S3Objs *hb_aws_s3_list_page(HB_ITEM *bucket_block, HB_ITEM *prefix_block, HB_ITEM *start_after_block, HB_ITEM *continuation_token_block, int max_keys, const char **next_continuation_token)
+{
+    bool ok = true;
+    if (HBAWS_GLOBAL.init == true)
+    {
+        Aws::String bucket = i_AwsString(bucket_block);
+        Aws::String prefix = i_AwsString(prefix_block);
+        Aws::String start_after = i_AwsString(start_after_block);
+        Aws::String continuation_token = i_AwsString(continuation_token_block);
+        HBAWS_GLOBAL.aws_objects.clear();
+
+        Aws::S3::Model::ListObjectsV2Outcome res = i_list_request(bucket, prefix, continuation_token, start_after, max_keys);
+
+        if (res.IsSuccess())
+        {
+            const Aws::S3::Model::ListObjectsV2Result &result = res.GetResult();
+            const Aws::Vector<Aws::S3::Model::Object> &objs = result.GetContents();
+            HBAWS_GLOBAL.aws_objects.insert(HBAWS_GLOBAL.aws_objects.end(), objs.begin(), objs.end());
+            if (result.GetIsTruncated())
+                HBAWS_GLOBAL.aws_temp_conv = result.GetNextContinuationToken();
+            else
+                HBAWS_GLOBAL.aws_temp_conv = "";
+        }
+        else
+        {
+            HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
+            ok = false;
+        }
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_last_error = "HBAWS not initialized";
+        ok = false;
+    }
+
+    if (ok)
+    {
+        *next_continuation_token = HBAWS_GLOBAL.aws_temp_conv.c_str();
+        return reinterpret_cast<S3Objs *>(&HBAWS_GLOBAL.aws_objects);
+    }
+    else
+    {
+        *next_continuation_token = "";
+        HBAWS_GLOBAL.aws_objects.clear();
+        return NULL;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 int hb_aws_s3_size(const S3Objs *objs)
 {
     const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
@@ -430,27 +480,6 @@ const char *hb_aws_s3_restore_timezone(const S3Objs *objs, int i)
 
 /*---------------------------------------------------------------------------*/
 
-static Aws::String i_ChecksumAlgorithm(const Aws::S3::Model::ChecksumAlgorithm &alg)
-{
-    switch (alg)
-    {
-    case Aws::S3::Model::ChecksumAlgorithm::NOT_SET:
-        return "NOT_SET";
-    case Aws::S3::Model::ChecksumAlgorithm::CRC32:
-        return "CRC32";
-    case Aws::S3::Model::ChecksumAlgorithm::CRC32C:
-        return "CRC32C";
-    case Aws::S3::Model::ChecksumAlgorithm::SHA1:
-        return "SHA1";
-    case Aws::S3::Model::ChecksumAlgorithm::SHA256:
-        return "SHA256";
-    }
-
-    return "UNKNOWN";
-}
-
-/*---------------------------------------------------------------------------*/
-
 const char *hb_aws_s3_checksum_algorithm(const S3Objs *objs, int i)
 {
     const Aws::Vector<Aws::S3::Model::Object> *awsObjs = reinterpret_cast<const Aws::Vector<Aws::S3::Model::Object> *>(objs);
@@ -458,8 +487,7 @@ const char *hb_aws_s3_checksum_algorithm(const S3Objs *objs, int i)
     Aws::S3::Model::ChecksumAlgorithm alg = Aws::S3::Model::ChecksumAlgorithm::NOT_SET;
     if (algs.size() > 0)
         alg = algs[0];
-    // HBAWS_GLOBAL.aws_temp_conv = Aws::S3::Model::ChecksumAlgorithmMapper::GetNameForChecksumAlgorithm(alg);
-    HBAWS_GLOBAL.aws_temp_conv = i_ChecksumAlgorithm(alg);
+    HBAWS_GLOBAL.aws_temp_conv = Aws::S3::Model::ChecksumAlgorithmMapper::GetNameForChecksumAlgorithm(alg);
     return HBAWS_GLOBAL.aws_temp_conv.c_str();
 }
 

@@ -33,13 +33,9 @@ HB_FUNC(HBAWS_FINISH)
 
 /*---------------------------------------------------------------------------*/
 
-HB_FUNC(HBAWS_S3_LIST_ALL)
+static void i_object_list(const S3Objs *objects, int error_pos)
 {
-    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
-    HB_ITEM *prefix_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
-    const S3Objs *objects = hb_aws_s3_list_all(bucket_block, prefix_block);
     PHB_ITEM ret = NULL;
-
     if (objects != NULL)
     {
         int size = hb_aws_s3_size(objects);
@@ -64,13 +60,43 @@ HB_FUNC(HBAWS_S3_LIST_ALL)
         }
 
         // No error
-        hb_storc("", 1);
+        hb_storc("", error_pos);
     }
     else
     {
         ret = hb_itemArrayNew(0);
-        hb_storc(hb_aws_last_error(), 1);
+        hb_storc(hb_aws_last_error(), error_pos);
     }
 
     hb_itemReturnRelease(ret);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC(HBAWS_S3_LIST_ALL)
+{
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
+    HB_ITEM *prefix_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
+    const S3Objs *objects = hb_aws_s3_list_all(bucket_block, prefix_block);
+    i_object_list(objects, 1);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC(HBAWS_S3_LIST_PAGINATED)
+{
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK);
+    HB_ITEM *prefix_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK);
+    HB_ITEM *start_after_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK);
+    int max_keys = hb_parni(5);
+    HB_ITEM *continuation_token_block = hb_param(6, HB_IT_STRING | HB_IT_BLOCK);
+    const char *next_continuation_token = NULL;
+    const S3Objs *objects = hb_aws_s3_list_page(bucket_block, prefix_block, start_after_block, continuation_token_block, max_keys, &next_continuation_token);
+
+    if (objects == NULL || strcmp(next_continuation_token, "") == 0)
+        hb_stor(7); // NIL
+    else
+        hb_storc(next_continuation_token, 7);
+
+    i_object_list(objects, 1);
 }
