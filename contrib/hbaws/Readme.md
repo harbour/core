@@ -105,6 +105,8 @@ set AWS_SDK_ROOT=C:\aws-sdk
 build -b [Debug|Release] -comp mingw64
 ```
 
+The `libhbaws.a` will be generated in `hbaws\build\[Debug|Release]\lib`.
+
 ### Build HBAWS with MSVC
 
 The HBMK2 system needs access to MSVC compilers (cl). To do this, you need to run the corresponding script according to the version of VisualStudio installed. For example, for VS 2017.
@@ -118,6 +120,8 @@ cd contrib\hbaws
 set AWS_SDK_ROOT=C:\aws-sdk
 build -b [Debug|Release] -comp msvc64
 ```
+
+The `hbaws.lib` will be generated in `hbaws\build\[Debug|Release]\lib`.
 
 ### Build HBAWS with GCC Linux
 
