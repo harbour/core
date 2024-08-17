@@ -3,6 +3,7 @@
 // List the content of a AWS bucket page by page, using continuation tokens.
 // ..\..\..\..\bin\win\mingw64\hbmk2 listpage.prg credentials.prg hbaws.hbc -comp=mingw64
 // ..\..\..\..\bin\win\msvc64\hbmk2 listpage.prg credentials.prg hbaws.hbc -comp=msvc64
+// ../../../../bin/linux/gcc/hbmk2 listpage.prg credentials.prg hbaws.hbc
 #include "hbaws.ch"
 
 REQUEST HB_CODEPAGE_PTISO

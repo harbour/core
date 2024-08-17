@@ -75,7 +75,7 @@ awssdk -b [Debug|Release] -comp msvc64
 ```
 AWS_SDK_ROOT=/home/user/aws-sdk
 cd contrib/hbaws
-awssdk -b [Debug|Release]
+./awssdk -b [Debug|Release]
 ```
 
 ### AWS-SDK result
@@ -90,8 +90,10 @@ If the `awssdk` script runs successfully, you will have the AWS-SDK headers and 
 
 > **Important:** The AWS-SDK dynamic libraries must be re-distributed with the Harbour-based executables. You will find them in the `/bin` folder of each installation. See the [HBAWS examples](#hbaws-examples) section.
 
+**Windows redistributables DLLs** in `/bin` folder.
 ![awssdk_dlls](https://github.com/user-attachments/assets/697e5470-a848-412d-a31b-119633cc4e56)
 
+**Linux redistributables .so** in `/lib` folder.
 
 ## Build HBAWS
 
@@ -125,7 +127,13 @@ The `hbaws.lib` will be generated in `hbaws\build\[Debug|Release]\lib`.
 
 ### Build HBAWS with GCC Linux
 
-TODO
+```
+cd contrib/hbaws
+export AWS_SDK_ROOT=/home/user/aws-sdk
+build -b [Debug|Release]
+```
+
+The `libhbaws.a` will be generated in `hbaws/build/[Debug|Release]/lib`.
 
 ## HBAWS examples
 
@@ -141,11 +149,15 @@ Some examples have been provided in `contrib/hbaws/tests/harbour`.
     # Windows MSVC
     set PATH=%AWS_SDK_ROOT%\msvc64\Release\bin;%PATH%
 
+    # Linux GCC
+    export LD_LIBRARY_PATH=$AWS_SDK_ROOT/gcc/Release/lib:$LD_LIBRARY_PATH
+
 * `listall`: Use of `HBAWS_S3_LIST_ALL` function.
     ```
     cd contrib\hbaws\tests\harbour
     ..\..\..\..\bin\win\mingw64\hbmk2 listall.prg credentials.prg hbaws.hbc -comp=mingw64
     ..\..\..\..\bin\win\msvc64\hbmk2 listall.prg credentials.prg hbaws.hbc -comp=msvc64
+    ../../../../bin/linux/gcc/hbmk2 listall.prg credentials.prg hbaws.hbc
     ```
 
 * `listpage`: Use of `HBAWS_S3_LIST_PAGINATED` function.
@@ -153,6 +165,7 @@ Some examples have been provided in `contrib/hbaws/tests/harbour`.
     cd contrib\hbaws\tests\harbour
     ..\..\..\..\bin\win\mingw64\hbmk2 listpage.prg credentials.prg hbaws.hbc -comp=mingw64
     ..\..\..\..\bin\win\msvc64\hbmk2 listpage.prg credentials.prg hbaws.hbc -comp=msvc64
+    ../../../../bin/linux/gcc/hbmk2 listpage.prg credentials.prg hbaws.hbc
     ```
 
 ## Reference guide

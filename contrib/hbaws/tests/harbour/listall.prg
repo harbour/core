@@ -3,6 +3,7 @@
 // List all content of a AWS bucket, breaking the 1000 items limit.
 // ..\..\..\..\bin\win\mingw64\hbmk2 listall.prg credentials.prg hbaws.hbc -comp=mingw64
 // ..\..\..\..\bin\win\msvc64\hbmk2 listall.prg credentials.prg hbaws.hbc -comp=msvc64
+// ../../../../bin/linux/gcc/hbmk2 listall.prg credentials.prg hbaws.hbc
 #include "hbaws.ch"
 
 REQUEST HB_CODEPAGE_PTISO
