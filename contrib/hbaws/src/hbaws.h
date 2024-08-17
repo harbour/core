@@ -23,6 +23,8 @@ extern const S3Objs *hb_aws_s3_list_all(HB_ITEM *bucket_block, HB_ITEM *prefix_b
 
 extern const S3Objs *hb_aws_s3_list_page(HB_ITEM *bucket_block, HB_ITEM *prefix_block, HB_ITEM *start_after_block, HB_ITEM *continuation_token_block, int max_keys, const char **next_continuation_token);
 
+extern HB_BOOL hb_aws_s3_download(HB_ITEM *bucket_block, HB_ITEM *key_block, HB_ITEM *local_file_block);
+
 extern int hb_aws_s3_size(const S3Objs *objs);
 
 extern const char *hb_aws_s3_key(const S3Objs *objs, int i);

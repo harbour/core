@@ -171,6 +171,14 @@ Some examples have been provided in `contrib/hbaws/tests/harbour`.
     ../../../../bin/linux/gcc/hbmk2 listpage.prg credentials.prg hbaws.hbc
     ```
 
+* `download`: Use of `HBAWS_S3_DOWNLOAD` function.
+    ```
+    cd contrib\hbaws\tests\harbour
+    ..\..\..\..\bin\win\mingw64\hbmk2 download.prg credentials.prg hbaws.hbc -comp=mingw64
+    ..\..\..\..\bin\win\msvc64\hbmk2 download.prg credentials.prg hbaws.hbc -comp=msvc64
+    ../../../../bin/linux/gcc/hbmk2 download.prg credentials.prg hbaws.hbc
+    ```
+
 ## Reference guide
 
 ### HBAWS_INIT
@@ -226,7 +234,7 @@ RET: A vector of vectors with all objects. { {Obj1}, {Obj2}, ..., {ObjN} }.
   - ETag: Obj[OBJ_ETAG]
 ```
 
-### HBAWS_S3_PAGINATED
+### HBAWS_S3_LIST_PAGINATED
 
 Return a single page of the list files in the bucket, returning a continuation token for a possible next call.
 
@@ -244,6 +252,20 @@ RET: A vector of vectors with all objects in the page. { {Obj1}, {Obj2}, ..., {O
 
 * If error, will return an empty vector {} and C_ERR will contain the error message.
 * Every inner {Obj} vector has the same info as HBAWS_S3_LIST_ALL.
+```
+
+### HBAWS_S3_DOWNLOAD
+
+Download a file from a AWS-S3 bucket.
+
+```
+LOCAL L_OK := HBAWS_S3_DOWNLOAD(@C_ERR, C_BUCKET, C_KEY, C_LOCAL_FILE)
+
+PAR1: Reference string to store the error message (if any).
+PAR2: Bucket to download from.
+PAR3: The key of the file to download.
+PAR3: The local path where the file will be saved.
+RET: .T. if download is success or .F. if error.
 ```
 
 # Legacy DOCU (To be removed)

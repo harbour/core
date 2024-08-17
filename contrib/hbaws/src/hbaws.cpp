@@ -9,6 +9,7 @@
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/ListBucketsResult.h>
 #include <aws/s3/model/ListObjectsV2Request.h>
+#include <aws/s3/model/GetObjectRequest.h>
 #include <fstream>
 #include <ios>
 
@@ -316,6 +317,57 @@ const S3Objs *hb_aws_s3_list_page(HB_ITEM *bucket_block, HB_ITEM *prefix_block, 
         HBAWS_GLOBAL.aws_objects.clear();
         return NULL;
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_BOOL hb_aws_s3_download(HB_ITEM *bucket_block, HB_ITEM *key_block, HB_ITEM *local_file_block)
+{
+    bool ok = true;
+    if (HBAWS_GLOBAL.init == true)
+    {
+        Aws::String bucket = i_AwsString(bucket_block);
+        Aws::String key = i_AwsString(key_block);
+        Aws::String local_file = i_AwsString(local_file_block);
+        Aws::S3::Model::GetObjectOutcome res;
+
+        {
+            Aws::S3::Model::GetObjectRequest *request = new Aws::S3::Model::GetObjectRequest;
+            request->SetBucket(bucket);
+            request->SetKey(key);
+            res = HBAWS_GLOBAL.s3_client->GetObject(*request);
+            delete request;
+        }
+
+        if (res.IsSuccess())
+        {
+            Aws::OFStream file;
+            file.open(local_file.c_str(), std::ios::out | std::ios::binary);
+            if (file)
+            {
+                const Aws::S3::Model::GetObjectResult &objRes = res.GetResult();
+                file << objRes.GetBody().rdbuf();
+                file.close();
+            }
+            else
+            {
+                HBAWS_GLOBAL.aws_last_error = "Error creating '" + local_file + "' file.";
+                ok = false;
+            }
+        }
+        else
+        {
+            HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
+            ok = false;
+        }
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_last_error = "HBAWS not initialized";
+        ok = false;
+    }
+
+    return static_cast<HB_BOOL>(ok);
 }
 
 /*---------------------------------------------------------------------------*/
