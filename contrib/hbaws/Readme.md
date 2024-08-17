@@ -24,7 +24,7 @@
 
 ## Installation of AWS-SDK-C++
 
-**hbaws** communicates with Amazon servers through the AWS-SDK-CPP, a project maintained by Amazon that encapsulates the complexity of making calls using the REST-API. The first step is to download the AWS-SDK code from GitHub and compile it. This task has been automated using two scripts: `awssdk.bat`(Windows) and `awssdk.sh` (Linux/macOS).
+**hbaws** communicates with Amazon servers through the AWS-SDK-CPP, a project maintained by Amazon that encapsulates the complexity of making calls using the REST-API. The first step is to download the AWS-SDK code from GitHub and compile it. This task has been automated using two scripts: `awssdk.bat` (Windows) and `awssdk.sh` (Linux/macOS).
 
 - Download and install Git if not present in your machine. Access to Git from the command line is required.
     ```
@@ -91,9 +91,12 @@ If the `awssdk` script runs successfully, you will have the AWS-SDK headers and 
 > **Important:** The AWS-SDK dynamic libraries must be re-distributed with the Harbour-based executables. You will find them in the `/bin` folder of each installation. See the [HBAWS examples](#hbaws-examples) section.
 
 **Windows redistributables DLLs** in `/bin` folder.
+
 ![awssdk_dlls](https://github.com/user-attachments/assets/697e5470-a848-412d-a31b-119633cc4e56)
 
 **Linux redistributables .so** in `/lib` folder.
+
+![linux_aws_so](https://github.com/user-attachments/assets/d8529946-c9a0-4ee1-b576-fa05a26c6514)
 
 ## Build HBAWS
 
