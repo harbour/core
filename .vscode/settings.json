@@ -13,7 +13,10 @@
         "cassert.h": "c",
         "gtnap.h": "c",
         "hboffice.h": "c",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "xlocale": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp"
     },
     "files.encoding": "windows1252",
     "cmake.sourceDirectory": "C:/harbour_nappgui"

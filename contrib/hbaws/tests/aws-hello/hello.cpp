@@ -12,9 +12,9 @@ int main()
 
     Aws::InitAPI(options);
     {
-        Aws::String access_key_id = "--------------";
-        Aws::String secret_access_key = "-------------------";
-        Aws::String bucket = "-------------";
+        Aws::String access_key_id = "----------------";
+        Aws::String secret_access_key = "--------------";
+        Aws::String bucket = "----------------";
         Aws::Auth::AWSCredentials credentials(access_key_id, secret_access_key);
 
         auto start = std::chrono::high_resolution_clock::now();
@@ -43,11 +43,10 @@ int main()
             }
         }
 
+        Aws::S3::Model::ListObjectsV2Request *request = new Aws::S3::Model::ListObjectsV2Request;
+        request->SetBucket(bucket);
 
-        Aws::S3::Model::ListObjectsV2Request request;
-        request.SetBucket(bucket);
-
-        Aws::S3::Model::ListObjectsV2Outcome res = s3_client.ListObjectsV2(request);
+        Aws::S3::Model::ListObjectsV2Outcome res = s3_client.ListObjectsV2(*request);
 
         if (res.IsSuccess())
         {
@@ -60,9 +59,8 @@ int main()
             }
         }
 
-
+        delete request;
     }
-
 
     Aws::ShutdownAPI(options);
     return 0;

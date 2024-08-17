@@ -1,1 +1,7 @@
 **/build
+**/build2
+
+# Binaries
+listall
+listpage
+download
