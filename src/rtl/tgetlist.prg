@@ -864,7 +864,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
          CASE ::nHitCode == HTCAPTION
             oGUI:Select()
          CASE ::nHitCode == HTCLIENT
-            oGUI:Select( K_LBUTTONDOWN )
+            oGUI:Select()
          CASE ::nHitCode == HTDROPBUTTON
             oGUI:Open()
          CASE ::nHitCode >= HTSCROLLFIRST .AND. ;
