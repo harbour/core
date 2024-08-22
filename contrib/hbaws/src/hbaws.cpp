@@ -9,6 +9,7 @@
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/ListBucketsResult.h>
 #include <aws/s3/model/ListObjectsV2Request.h>
+#include <aws/s3/model/PutObjectRequest.h>
 #include <aws/s3/model/GetObjectRequest.h>
 #include <fstream>
 #include <ios>
@@ -317,6 +318,91 @@ const S3Objs *hb_aws_s3_list_page(HB_ITEM *bucket_block, HB_ITEM *prefix_block, 
         HBAWS_GLOBAL.aws_objects.clear();
         return NULL;
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Aws::S3::Model::StorageClass i_storage_class(const S3StorageClass storage)
+{
+    switch (storage)
+    {
+    case ekSTORAGE_STANDARD:
+        return Aws::S3::Model::StorageClass::STANDARD;
+    case ekSTORAGE_REDUCED_REDUNDANCY:
+        return Aws::S3::Model::StorageClass::REDUCED_REDUNDANCY;
+    case ekSTORAGE_STANDARD_IA:
+        return Aws::S3::Model::StorageClass::STANDARD_IA;
+    case ekSTORAGE_ONEZONE_IA:
+        return Aws::S3::Model::StorageClass::ONEZONE_IA;
+    case ekSTORAGE_INTELLIGENT_TIERING:
+        return Aws::S3::Model::StorageClass::INTELLIGENT_TIERING;
+    case ekSTORAGE_GLACIER:
+        return Aws::S3::Model::StorageClass::GLACIER;
+    case ekSTORAGE_DEEP_ARCHIVE:
+        return Aws::S3::Model::StorageClass::DEEP_ARCHIVE;
+    case ekSTORAGE_OUTPOSTS:
+        return Aws::S3::Model::StorageClass::OUTPOSTS;
+    case ekSTORAGE_GLACIER_IR:
+        return Aws::S3::Model::StorageClass::GLACIER_IR;
+    case ekSTORAGE_SNOW:
+        return Aws::S3::Model::StorageClass::SNOW;
+    case ekSTORAGE_EXPRESS_ONEZONE:
+        return Aws::S3::Model::StorageClass::EXPRESS_ONEZONE;
+    }
+
+    return Aws::S3::Model::StorageClass::STANDARD;
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_BOOL hb_aws_s3_upload_simple(HB_ITEM *bucket_block, HB_ITEM *local_file_block, HB_ITEM *remote_key_block, HB_ITEM *content_type_block, const S3StorageClass storage)
+{
+    bool ok = true;
+    if (HBAWS_GLOBAL.init == true)
+    {
+        Aws::String bucket = i_AwsString(bucket_block);
+        Aws::String local_file = i_AwsString(local_file_block);
+        Aws::String remote_key = i_AwsString(remote_key_block);
+        Aws::String content_type = i_AwsString(content_type_block);
+
+        std::shared_ptr<Aws::IOStream> data = Aws::MakeShared<Aws::FStream>("hb_aws_s3_upload_simple", local_file.c_str(), std::ios_base::in | std::ios_base::binary);
+        if (!data->fail())
+        {
+            Aws::S3::Model::PutObjectOutcome res;
+
+            {
+                Aws::S3::Model::PutObjectRequest *request = new Aws::S3::Model::PutObjectRequest;
+                request->SetBucket(bucket);
+                request->SetKey(remote_key);
+                request->SetContentType(content_type);
+                request->SetStorageClass(i_storage_class(storage));
+                request->SetBody(data);
+                res = HBAWS_GLOBAL.s3_client->PutObject(*request);
+                delete request;
+            }
+
+            if (res.IsSuccess())
+            {
+            }
+            else
+            {
+                HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
+                ok = false;
+            }
+        }
+        else
+        {
+            HBAWS_GLOBAL.aws_last_error = "Error trying to read '" + local_file + "'";
+            ok = false;
+        }
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_last_error = "HBAWS not initialized";
+        ok = false;
+    }
+
+    return static_cast<HB_BOOL>(ok);
 }
 
 /*---------------------------------------------------------------------------*/
