@@ -269,12 +269,12 @@ const S3Objs *hb_aws_s3_list_all(HB_ITEM *bucket_block, HB_ITEM *prefix_block)
 
 /*---------------------------------------------------------------------------*/
 
-static std::ofstream i_open_log()
-{
-    std::ofstream file;
-    file.open("C:\\Users\\Fran\\Desktop\\log.txt", std::ios::app);
-    return file;
-}
+// static std::ofstream i_open_log()
+// {
+//     std::ofstream file;
+//     file.open("C:\\Users\\Fran\\Desktop\\log.txt", std::ios::app);
+//     return file;
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -413,7 +413,7 @@ HB_BOOL hb_aws_s3_upload_simple(HB_ITEM *bucket_block, HB_ITEM *local_file_block
 HB_BOOL hb_aws_s3_upload_multipart(HB_ITEM *bucket_block, HB_ITEM *local_file_block, HB_ITEM *remote_key_block, HB_ITEM *content_type_block, const s3_storage_class_t storage, uint32_t chunk_size, uint32_t num_retries)
 {
     bool ok = true;
-    std::ofstream log = i_open_log();
+    // std::ofstream log = i_open_log();
     if (HBAWS_GLOBAL.init == true)
     {
         Aws::String bucket = i_AwsString(bucket_block);
@@ -459,7 +459,7 @@ HB_BOOL hb_aws_s3_upload_multipart(HB_ITEM *bucket_block, HB_ITEM *local_file_bl
             }
             else
             {
-                log << "Fail in 'Aws::S3::Model::CreateMultipartUploadOutcome'" << std::endl;
+                // log << "Fail in 'Aws::S3::Model::CreateMultipartUploadOutcome'" << std::endl;
                 HBAWS_GLOBAL.aws_last_error = upload_res.GetError().GetMessage();
                 ok = false;
             }
@@ -512,11 +512,11 @@ HB_BOOL hb_aws_s3_upload_multipart(HB_ITEM *bucket_block, HB_ITEM *local_file_bl
                         completed_part.SetPartNumber(part_number);
                         completed_part.SetETag(res_part.GetResult().GetETag());
                         completed_parts.emplace_back(completed_part);
-                        log << "Ok uploaded part '" << part_number << "' of '" << bytes_read << "' bytes" << std::endl;
+                        // log << "Ok uploaded part '" << part_number << "' of '" << bytes_read << "' bytes" << std::endl;
                     }
                     else
                     {
-                        log << "Fail in 'Aws::S3::Model::UploadPartOutcome'" << std::endl;
+                        // log << "Fail in 'Aws::S3::Model::UploadPartOutcome'" << std::endl;
                         HBAWS_GLOBAL.aws_last_error = res_part.GetError().GetMessage();
                         ok = false;
                         abort_upload = true;
@@ -550,7 +550,7 @@ HB_BOOL hb_aws_s3_upload_multipart(HB_ITEM *bucket_block, HB_ITEM *local_file_bl
 
             if (!complete_res.IsSuccess())
             {
-                log << "Fail in 'Aws::S3::Model::CompleteMultipartUploadOutcome'" << std::endl;
+                // log << "Fail in 'Aws::S3::Model::CompleteMultipartUploadOutcome'" << std::endl;
                 HBAWS_GLOBAL.aws_last_error = complete_res.GetError().GetMessage();
                 ok = false;
             }
@@ -561,7 +561,7 @@ HB_BOOL hb_aws_s3_upload_multipart(HB_ITEM *bucket_block, HB_ITEM *local_file_bl
         if (abort_upload)
         {
             Aws::S3::Model::AbortMultipartUploadOutcome abort_res;
-            log << "Aborting upload" << std::endl;
+            // log << "Aborting upload" << std::endl;
 
             {
                 Aws::S3::Model::AbortMultipartUploadRequest *abort_request = new Aws::S3::Model::AbortMultipartUploadRequest;
@@ -588,7 +588,7 @@ HB_BOOL hb_aws_s3_upload_multipart(HB_ITEM *bucket_block, HB_ITEM *local_file_bl
         ok = false;
     }
 
-    log.close();
+    // log.close();
     return static_cast<HB_BOOL>(ok);
 }
 

@@ -18,6 +18,7 @@
     - [HBAWS_S3_LIST_ALL](#hbaws_s3_list_all)
     - [HBAWS_S3_LIST_PAGINATED](#hbaws_s3_list_paginated)
     - [HBAWS_S3_UPLOAD_SIMPLE](#hbaws_s3_upload_simple)
+    - [HBAWS_S3_UPLOAD_MULTIPART](#hbaws_s3_upload_multipart)
     - [HBAWS_S3_DOWNLOAD](#hbaws_s3_download)
 
 ## Introduction
@@ -291,6 +292,26 @@ The Storage class values are defined in 'hbaws.ch'
 #define STORAGE_GLACIER_IR 9
 #define STORAGE_SNOW 10
 #define STORAGE_EXPRESS_ONEZONE 11
+```
+
+### HBAWS_S3_UPLOAD_MULTIPART
+
+Upload a file to AWS-S3 bucket using a multipart request model. Use this function for really big files.
+
+```
+LOCAL L_OK := HBAWS_S3_UPLOAD_MULTIPART(@C_ERR, C_BUCKET, C_LOCAL_FILE, C_KEY, C_CONTENT_TYPE, N_STORAGE, N_CHUNK_SIZE, N_REQUESTS)
+
+PAR1: Reference string to store the error message (if any).
+PAR2: Bucket name to upload.
+PAR3: The local path with the file to be uploaded.
+PAR4: The key of the uploaded file in AWS-S3.
+PAR5: The mime content-type. E.g: "image/svg+xml"
+PAR6: Storage class numeric value.
+PAR7: Amount of BYTES to upload in each single request. AWS establish, at least, 5Mb (5 * 1024 * 1024). If this parameter is smaller, will be omitted and 5Mb will be set.
+PAR8: Number of retries if any single part upload fails.
+RET: .T. if upload is success or .F. if error.
+
+IMPORTANT: If upload fail, 'AbortMultipartUpload()' will be called to clean any part of file in AWS-S3 caches.
 ```
 
 ### HBAWS_S3_DOWNLOAD
