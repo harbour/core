@@ -529,32 +529,6 @@ HB_BOOL hb_aws_s3_upload_multipart(HB_ITEM *bucket_block, HB_ITEM *local_file_bl
             delete[] file_buffer;
         }
 
-        // At least one part has failed to upload.
-        // We abort the operation and free resources in AWS.
-        if (abort_upload)
-        {
-            Aws::S3::Model::AbortMultipartUploadOutcome abort_res;
-            log << "Aborting upload" << std::endl;
-
-            {
-                Aws::S3::Model::AbortMultipartUploadRequest *abort_request = new Aws::S3::Model::AbortMultipartUploadRequest;
-                abort_request->SetBucket(bucket);
-                abort_request->SetKey(remote_key);
-                abort_request->SetUploadId(upload_id);
-                abort_res = HBAWS_GLOBAL.s3_client->AbortMultipartUpload(*abort_request);
-                delete abort_request;
-            }
-
-            // At the moment, we don't inform about abort result.
-            // In last error we return the cause of upload part fail.
-            if (abort_res.IsSuccess())
-            {
-            }
-            else
-            {
-            }
-        }
-
         // And finally complete the multipart upload operation
         if (ok)
         {
@@ -579,6 +553,32 @@ HB_BOOL hb_aws_s3_upload_multipart(HB_ITEM *bucket_block, HB_ITEM *local_file_bl
                 log << "Fail in 'Aws::S3::Model::CompleteMultipartUploadOutcome'" << std::endl;
                 HBAWS_GLOBAL.aws_last_error = complete_res.GetError().GetMessage();
                 ok = false;
+            }
+        }
+
+        // At least one part has failed to upload.
+        // We abort the operation and free resources in AWS.
+        if (abort_upload)
+        {
+            Aws::S3::Model::AbortMultipartUploadOutcome abort_res;
+            log << "Aborting upload" << std::endl;
+
+            {
+                Aws::S3::Model::AbortMultipartUploadRequest *abort_request = new Aws::S3::Model::AbortMultipartUploadRequest;
+                abort_request->SetBucket(bucket);
+                abort_request->SetKey(remote_key);
+                abort_request->SetUploadId(upload_id);
+                abort_res = HBAWS_GLOBAL.s3_client->AbortMultipartUpload(*abort_request);
+                delete abort_request;
+            }
+
+            // At the moment, we don't inform about abort result.
+            // In last error we return the cause of upload part fail.
+            if (abort_res.IsSuccess())
+            {
+            }
+            else
+            {
             }
         }
     }

@@ -42,8 +42,8 @@ IF L_OK == .F.
 ENDIF
 
 // Put the file to upload in 'hbaws/tests/harbour/upload'
-C_LOCAL_FILE := LOCAL_FILE("upload/OpenGL.zip")
-C_KEY := "upload/OpenGL.zip"
+C_LOCAL_FILE := LOCAL_FILE("upload/ubuntu-22.04-desktop-amd64.iso")
+C_KEY := "upload/ubuntu-22.04-desktop-amd64.iso"
 C_CONTENT_TYPE := "application/zip"
 N_CHUNK_SIZE := 1024 * 1024  // In bytes
 N_RETRIES := 2
