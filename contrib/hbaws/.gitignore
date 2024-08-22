@@ -5,3 +5,6 @@
 listall
 listpage
 download
+
+# Tests binaries
+tests/harbour/upload
