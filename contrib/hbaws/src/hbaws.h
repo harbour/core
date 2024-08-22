@@ -11,9 +11,9 @@
 
 typedef struct _s3_objs_t S3Objs;
 
-typedef enum _S3StorageClass
+typedef enum _s3_storage_class_t
 {
-    ekSTORAGE_STANDARD,
+    ekSTORAGE_STANDARD = 1,
     ekSTORAGE_REDUCED_REDUNDANCY,
     ekSTORAGE_STANDARD_IA,
     ekSTORAGE_ONEZONE_IA,
@@ -24,7 +24,7 @@ typedef enum _S3StorageClass
     ekSTORAGE_GLACIER_IR,
     ekSTORAGE_SNOW,
     ekSTORAGE_EXPRESS_ONEZONE
-} S3StorageClass;
+} s3_storage_class_t;
 
 HB_EXTERN_BEGIN
 
@@ -38,7 +38,7 @@ extern const S3Objs *hb_aws_s3_list_all(HB_ITEM *bucket_block, HB_ITEM *prefix_b
 
 extern const S3Objs *hb_aws_s3_list_page(HB_ITEM *bucket_block, HB_ITEM *prefix_block, HB_ITEM *start_after_block, HB_ITEM *continuation_token_block, int max_keys, const char **next_continuation_token);
 
-extern HB_BOOL hb_aws_s3_upload_simple(HB_ITEM *bucket_block, HB_ITEM *local_file_block, HB_ITEM *remote_key_block, HB_ITEM *content_type_block, const S3StorageClass storage);
+extern HB_BOOL hb_aws_s3_upload_simple(HB_ITEM *bucket_block, HB_ITEM *local_file_block, HB_ITEM *remote_key_block, HB_ITEM *content_type_block, const s3_storage_class_t storage);
 
 extern HB_BOOL hb_aws_s3_download(HB_ITEM *bucket_block, HB_ITEM *key_block, HB_ITEM *local_file_block);
 

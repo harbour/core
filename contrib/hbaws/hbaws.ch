@@ -3,6 +3,8 @@
  * 2024 - Francisco Garcia Collado
  */
 
+// Vector indices for S3 object properties
+// 'HBAWS_S3_LIST_ALL', 'HBAWS_S3_LIST_PAGINATED'
 #define OBJ_S3KEY 1
 #define OBJ_CONTENT_SIZE 2
 #define OBJ_CONTENT_TYPE 3
@@ -16,3 +18,16 @@
 #define OBJ_RESTORE_TIMEZONE 11
 #define OBJ_CHECKSUM_ALGORITHM 12
 #define OBJ_ETAG 13
+
+// StorageClass enum values
+#define STORAGE_STANDARD 1
+#define STORAGE_REDUCED_REDUNDANCY 2
+#define STORAGE_STANDARD_IA 3
+#define STORAGE_ONEZONE_IA 4
+#define STORAGE_INTELLIGENT_TIERING 5
+#define STORAGE_GLACIER 6
+#define STORAGE_DEEP_ARCHIVE 7
+#define STORAGE_OUTPOSTS 8
+#define STORAGE_GLACIER_IR 9
+#define STORAGE_SNOW 10
+#define STORAGE_EXPRESS_ONEZONE 11

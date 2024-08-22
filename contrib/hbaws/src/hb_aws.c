@@ -103,6 +103,25 @@ HB_FUNC(HBAWS_S3_LIST_PAGINATED)
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC(HBAWS_S3_UPLOAD_SIMPLE)
+{
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *local_file_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *remote_key_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *content_type_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    s3_storage_class_t storage = (s3_storage_class_t)hb_parni(6);
+    HB_BOOL ok = hb_aws_s3_upload_simple(bucket_block, local_file_block, remote_key_block, content_type_block, storage);
+
+    if (ok)
+        hb_storc("", 1);
+    else
+        hb_storc(hb_aws_last_error(), 1);
+
+    hb_retl(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC(HBAWS_S3_DOWNLOAD)
 {
     HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);

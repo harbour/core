@@ -322,7 +322,7 @@ const S3Objs *hb_aws_s3_list_page(HB_ITEM *bucket_block, HB_ITEM *prefix_block, 
 
 /*---------------------------------------------------------------------------*/
 
-static Aws::S3::Model::StorageClass i_storage_class(const S3StorageClass storage)
+static Aws::S3::Model::StorageClass i_storage_class(const s3_storage_class_t storage)
 {
     switch (storage)
     {
@@ -355,7 +355,7 @@ static Aws::S3::Model::StorageClass i_storage_class(const S3StorageClass storage
 
 /*---------------------------------------------------------------------------*/
 
-HB_BOOL hb_aws_s3_upload_simple(HB_ITEM *bucket_block, HB_ITEM *local_file_block, HB_ITEM *remote_key_block, HB_ITEM *content_type_block, const S3StorageClass storage)
+HB_BOOL hb_aws_s3_upload_simple(HB_ITEM *bucket_block, HB_ITEM *local_file_block, HB_ITEM *remote_key_block, HB_ITEM *content_type_block, const s3_storage_class_t storage)
 {
     bool ok = true;
     if (HBAWS_GLOBAL.init == true)
