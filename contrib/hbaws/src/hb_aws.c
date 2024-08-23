@@ -199,3 +199,19 @@ HB_FUNC(HBAWS_S3_DOWNLOAD)
 
     hb_retl(ok);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC(HBAWS_S3_DELETE)
+{
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *key_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_BOOL ok = hb_aws_s3_delete(bucket_block, key_block);
+
+    if (ok)
+        hb_storc("", 1);
+    else
+        hb_storc(hb_aws_last_error(), 1);
+
+    hb_retl(ok);
+}
