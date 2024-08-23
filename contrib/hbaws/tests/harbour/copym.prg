@@ -32,8 +32,8 @@ IF L_OK == .F.
     RETURN
 ENDIF
 
-C_SRC_KEY := "upload/ubuntu-22.04-desktop-amd64.iso"
-C_DEST_KEY := "copy/ubuntu-22.04-desktop-amd64.iso"
+C_SRC_KEY := "upload/OpenGL.zip"
+C_DEST_KEY := "copy/OpenGL.zip"
 C_DEST_CONTENT_TYPE := "application/zip"
 N_CHUNK_SIZE := 1024 * 1024  // In bytes
 N_RETRIES := 2
