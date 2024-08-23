@@ -19,6 +19,7 @@
     - [HBAWS_S3_LIST_PAGINATED](#hbaws_s3_list_paginated)
     - [HBAWS_S3_UPLOAD_SIMPLE](#hbaws_s3_upload_simple)
     - [HBAWS_S3_UPLOAD_MULTIPART](#hbaws_s3_upload_multipart)
+    - [HBAWS_S3_COPY_SIMPLE](#hbaws_s3_copy_simple)
     - [HBAWS_S3_DOWNLOAD](#hbaws_s3_download)
 
 ## Introduction
@@ -182,6 +183,22 @@ Some examples have been provided in `contrib/hbaws/tests/harbour`.
     ../../../../bin/linux/gcc/hbmk2 upload.prg credentials.prg hbaws.hbc
     ```
 
+* `uploadm`: Use of `HBAWS_S3_UPLOAD_MULTIPART` function.
+    ```
+    cd contrib\hbaws\tests\harbour
+    ..\..\..\..\bin\win\mingw64\hbmk2 uploadm.prg credentials.prg hbaws.hbc -comp=mingw64
+    ..\..\..\..\bin\win\msvc64\hbmk2 uploadm.prg credentials.prg hbaws.hbc -comp=msvc64
+    ../../../../bin/linux/gcc/hbmk2 uploadm.prg credentials.prg hbaws.hbc
+    ```
+
+* `copy`: Use of `HBAWS_S3_COPY_SIMPLE` function.
+    ```
+    cd contrib\hbaws\tests\harbour
+    ..\..\..\..\bin\win\mingw64\hbmk2 copy.prg credentials.prg hbaws.hbc -comp=mingw64
+    ..\..\..\..\bin\win\msvc64\hbmk2 copy.prg credentials.prg hbaws.hbc -comp=msvc64
+    ../../../../bin/linux/gcc/hbmk2 copy.prg credentials.prg hbaws.hbc
+    ```
+
 * `download`: Use of `HBAWS_S3_DOWNLOAD` function.
     ```
     cd contrib\hbaws\tests\harbour
@@ -312,6 +329,23 @@ PAR8: Number of retries if any single part upload fails.
 RET: .T. if upload is success or .F. if error.
 
 IMPORTANT: If upload fail, 'AbortMultipartUpload()' will be called to clean any part of file in AWS-S3 caches.
+```
+
+### HBAWS_S3_COPY_SIMPLE
+
+Copy a file from a AWS-S3 bucket to another bucket. Use user registered in `HBAWS_INIT()` should have read permissions for `source` file and write permissions for `destiny` bucket.
+
+```
+LOCAL L_OK := HBAWS_S3_COPY_SIMPLE(@C_ERR, C_SRC_BUCKET, C_SRC_KEY, C_DEST_BUCKET, C_DEST_KEY, C_DEST_CONTENT_TYPE, N_DEST_STORAGE)
+
+PAR1: Reference string to store the error message (if any).
+PAR2: Source bucket name.
+PAR3: Source key.
+PAR4: Destiny bucket name.
+PAR5: Destiny key.
+PAR6: Content type for destiny file.
+PAR7: Storage class for destiny file.
+RET: .T. if copy is success or .F. if error.
 ```
 
 ### HBAWS_S3_DOWNLOAD
