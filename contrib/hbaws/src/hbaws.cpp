@@ -15,7 +15,9 @@
 #include <aws/s3/model/AbortMultipartUploadRequest.h>
 #include <aws/s3/model/CompleteMultipartUploadRequest.h>
 #include <aws/s3/model/CopyObjectRequest.h>
+#include <aws/s3/model/HeadObjectRequest.h>
 #include <aws/s3/model/UploadPartRequest.h>
+#include <aws/s3/model/UploadPartCopyRequest.h>
 #include <aws/s3/model/GetObjectRequest.h>
 #include <fstream>
 #include <ios>
@@ -270,12 +272,12 @@ const S3Objs *hb_aws_s3_list_all(HB_ITEM *bucket_block, HB_ITEM *prefix_block)
 
 /*---------------------------------------------------------------------------*/
 
-// static std::ofstream i_open_log()
-// {
-//     std::ofstream file;
-//     file.open("C:\\Users\\Fran\\Desktop\\log.txt", std::ios::app);
-//     return file;
-// }
+static std::ofstream i_open_log()
+{
+    std::ofstream file;
+    file.open("C:\\Users\\Fran\\Desktop\\log.txt", std::ios::app);
+    return file;
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -630,6 +632,202 @@ HB_BOOL hb_aws_s3_copy_simple(HB_ITEM *src_bucket_block, HB_ITEM *src_key_block,
         ok = false;
     }
 
+    return static_cast<HB_BOOL>(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_BOOL hb_aws_s3_copy_multipart(HB_ITEM *src_bucket_block, HB_ITEM *src_key_block, HB_ITEM *dest_bucket_block, HB_ITEM *dest_key_block, HB_ITEM *dest_content_type_block, const s3_storage_class_t dest_storage, uint32_t chunk_size, uint32_t num_retries)
+{
+    bool ok = true;
+    std::ofstream log = i_open_log();
+    if (HBAWS_GLOBAL.init == true)
+    {
+        Aws::String src_bucket = i_AwsString(src_bucket_block);
+        Aws::String src_key = i_AwsString(src_key_block);
+        Aws::String dest_bucket = i_AwsString(dest_bucket_block);
+        Aws::String dest_key = i_AwsString(dest_key_block);
+        Aws::String dest_content_type = i_AwsString(dest_content_type_block);
+        std::vector<Aws::S3::Model::CompletedPart> completed_parts;
+        Aws::String upload_id;
+        uint64_t object_size = 0;
+        bool abort_upload = false;
+
+        if (chunk_size < MIN_AWS_S3_MULTIPART_SIZE)
+            chunk_size = MIN_AWS_S3_MULTIPART_SIZE;
+
+        if (num_retries == 0)
+            num_retries = 1;
+
+        // Get the size of source file
+        if (ok)
+        {
+            Aws::S3::Model::HeadObjectOutcome head_res;
+
+            {
+                Aws::S3::Model::HeadObjectRequest *head_request = new Aws::S3::Model::HeadObjectRequest;
+                head_request->SetBucket(src_bucket);
+                head_request->SetKey(src_key);
+                head_res = HBAWS_GLOBAL.s3_client->HeadObject(*head_request);
+                delete head_request;
+            }
+
+            if (head_res.IsSuccess())
+            {
+                object_size = head_res.GetResult().GetContentLength();
+                log << "Source object size: " << object_size << std::endl;
+            }
+            else
+            {
+                log << "Fail in 'Aws::S3::Model::HeadObjectRequest'" << std::endl;
+                HBAWS_GLOBAL.aws_last_error = head_res.GetError().GetMessage();
+                ok = false;
+            }
+        }
+
+        // Create multipart upload request (same as UPLOAD_MULTIPART)
+        if (ok)
+        {
+            Aws::S3::Model::CreateMultipartUploadOutcome upload_res;
+
+            {
+                Aws::S3::Model::CreateMultipartUploadRequest *upload_request = new Aws::S3::Model::CreateMultipartUploadRequest;
+                upload_request->SetBucket(dest_bucket);
+                upload_request->SetKey(dest_key);
+                upload_request->SetContentType(dest_content_type);
+                upload_request->SetStorageClass(i_storage_class(dest_storage));
+                upload_res = HBAWS_GLOBAL.s3_client->CreateMultipartUpload(*upload_request);
+                delete upload_request;
+            }
+
+            if (upload_res.IsSuccess())
+            {
+                upload_id = upload_res.GetResult().GetUploadId();
+            }
+            else
+            {
+                log << "Fail in 'Aws::S3::Model::CreateMultipartUploadOutcome'" << std::endl;
+                HBAWS_GLOBAL.aws_last_error = upload_res.GetError().GetMessage();
+                ok = false;
+            }
+        }
+
+        if (ok)
+        {
+            int part_number = 1;
+            uint64_t file_position = 0;
+
+            while (ok && file_position < object_size)
+            {
+                Aws::S3::Model::UploadPartCopyOutcome res_part;
+                uint64_t file_chunk_end = file_position + chunk_size;
+                if (file_chunk_end > object_size)
+                    file_chunk_end = object_size;
+
+                {
+                    Aws::S3::Model::UploadPartCopyRequest *upload_part_request = new Aws::S3::Model::UploadPartCopyRequest;
+                    uint32_t retries = 0;
+                    upload_part_request->SetBucket(dest_bucket);
+                    upload_part_request->SetKey(dest_key);
+                    upload_part_request->SetUploadId(upload_id);
+                    upload_part_request->SetPartNumber(part_number);
+                    upload_part_request->SetCopySource(src_bucket + "/" + src_key);
+                    upload_part_request->SetCopySourceRange("bytes=" + std::to_string(file_position) + "-" + std::to_string(file_chunk_end - 1));
+
+                    // Number of retries
+                    while (retries < num_retries)
+                    {
+                        res_part = HBAWS_GLOBAL.s3_client->UploadPartCopy(*upload_part_request);
+                        if (res_part.IsSuccess())
+                            break;
+                        else
+                            retries += 1;
+                    }
+
+                    delete upload_part_request;
+                }
+
+                if (res_part.IsSuccess())
+                {
+                    Aws::S3::Model::CompletedPart completed_part;
+                    completed_part.SetPartNumber(part_number);
+                    completed_part.SetETag(res_part.GetResult().GetCopyPartResult().GetETag());
+                    completed_parts.emplace_back(completed_part);
+                    log << "Ok uploaded part '" << part_number << "' from byte '" << file_position << "' to byte '" << file_chunk_end - 1 << "'" << std::endl;
+                }
+                else
+                {
+                    log << "Fail in 'Aws::S3::Model::UploadPartCopyOutcome'" << std::endl;
+                    HBAWS_GLOBAL.aws_last_error = res_part.GetError().GetMessage();
+                    ok = false;
+                    abort_upload = true;
+                }
+
+                file_position = file_chunk_end;
+                part_number++;
+            }
+        }
+
+        // And finally complete the multipart upload operation (same as UPLOAD_MULTIPART)
+        if (ok)
+        {
+            Aws::S3::Model::CompleteMultipartUploadOutcome complete_res;
+
+            {
+                Aws::S3::Model::CompleteMultipartUploadRequest *complete_request = new Aws::S3::Model::CompleteMultipartUploadRequest;
+                complete_request->SetBucket(dest_bucket);
+                complete_request->SetKey(dest_key);
+                complete_request->SetUploadId(upload_id);
+
+                Aws::S3::Model::CompletedMultipartUpload completed_upload;
+                completed_upload.SetParts(completed_parts);
+                complete_request->SetMultipartUpload(completed_upload);
+
+                complete_res = HBAWS_GLOBAL.s3_client->CompleteMultipartUpload(*complete_request);
+                delete complete_request;
+            }
+
+            if (!complete_res.IsSuccess())
+            {
+                log << "Fail in 'Aws::S3::Model::CompleteMultipartUploadOutcome'" << std::endl;
+                HBAWS_GLOBAL.aws_last_error = complete_res.GetError().GetMessage();
+                ok = false;
+            }
+        }
+
+        // At least one part has failed to upload.
+        // We abort the operation and free resources in AWS.
+        if (abort_upload)
+        {
+            Aws::S3::Model::AbortMultipartUploadOutcome abort_res;
+            log << "Aborting upload" << std::endl;
+
+            {
+                Aws::S3::Model::AbortMultipartUploadRequest *abort_request = new Aws::S3::Model::AbortMultipartUploadRequest;
+                abort_request->SetBucket(dest_bucket);
+                abort_request->SetKey(dest_key);
+                abort_request->SetUploadId(upload_id);
+                abort_res = HBAWS_GLOBAL.s3_client->AbortMultipartUpload(*abort_request);
+                delete abort_request;
+            }
+
+            // At the moment, we don't inform about abort result.
+            // In last error we return the cause of upload part fail.
+            if (abort_res.IsSuccess())
+            {
+            }
+            else
+            {
+            }
+        }
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_last_error = "HBAWS not initialized";
+        ok = false;
+    }
+
+    log.close();
     return static_cast<HB_BOOL>(ok);
 }
 
