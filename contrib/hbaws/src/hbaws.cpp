@@ -14,6 +14,7 @@
 #include <aws/s3/model/CreateMultipartUploadRequest.h>
 #include <aws/s3/model/AbortMultipartUploadRequest.h>
 #include <aws/s3/model/CompleteMultipartUploadRequest.h>
+#include <aws/s3/model/CopyObjectRequest.h>
 #include <aws/s3/model/UploadPartRequest.h>
 #include <aws/s3/model/GetObjectRequest.h>
 #include <fstream>
@@ -589,6 +590,46 @@ HB_BOOL hb_aws_s3_upload_multipart(HB_ITEM *bucket_block, HB_ITEM *local_file_bl
     }
 
     // log.close();
+    return static_cast<HB_BOOL>(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_BOOL hb_aws_s3_copy_simple(HB_ITEM *src_bucket_block, HB_ITEM *src_key_block, HB_ITEM *dest_bucket_block, HB_ITEM *dest_key_block, HB_ITEM *dest_content_type_block, const s3_storage_class_t dest_storage)
+{
+    bool ok = true;
+    if (HBAWS_GLOBAL.init == true)
+    {
+        Aws::String src_bucket = i_AwsString(src_bucket_block);
+        Aws::String src_key = i_AwsString(src_key_block);
+        Aws::String dest_bucket = i_AwsString(dest_bucket_block);
+        Aws::String dest_key = i_AwsString(dest_key_block);
+        Aws::String dest_content_type = i_AwsString(dest_content_type_block);
+        Aws::S3::Model::CopyObjectOutcome res;
+
+        {
+            Aws::S3::Model::CopyObjectRequest *request = new Aws::S3::Model::CopyObjectRequest;
+            request->SetCopySource(src_bucket + "/" + src_key);
+            request->SetBucket(dest_bucket);
+            request->SetKey(dest_key);
+            request->SetContentType(dest_content_type);
+            request->SetStorageClass(i_storage_class(dest_storage));
+            res = HBAWS_GLOBAL.s3_client->CopyObject(*request);
+            delete request;
+        }
+
+        if (!res.IsSuccess())
+        {
+            HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
+            ok = false;
+        }
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_last_error = "HBAWS not initialized";
+        ok = false;
+    }
+
     return static_cast<HB_BOOL>(ok);
 }
 
