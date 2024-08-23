@@ -22,6 +22,7 @@
     - [HBAWS_S3_COPY_SIMPLE](#hbaws_s3_copy_simple)
     - [HBAWS_S3_COPY_MULTIPART](#hbaws_s3_copy_multipart)
     - [HBAWS_S3_DOWNLOAD](#hbaws_s3_download)
+    - [HBAWS_S3_DELETE](#hbaws_s3_delete)
 
 ## Introduction
 
@@ -216,6 +217,14 @@ Some examples have been provided in `contrib/hbaws/tests/harbour`.
     ../../../../bin/linux/gcc/hbmk2 download.prg credentials.prg hbaws.hbc
     ```
 
+* `delete`: Use of `HBAWS_S3_DELETE` function.
+    ```
+    cd contrib\hbaws\tests\harbour
+    ..\..\..\..\bin\win\mingw64\hbmk2 delete.prg credentials.prg hbaws.hbc -comp=mingw64
+    ..\..\..\..\bin\win\msvc64\hbmk2 delete.prg credentials.prg hbaws.hbc -comp=msvc64
+    ../../../../bin/linux/gcc/hbmk2 delete.prg credentials.prg hbaws.hbc
+    ```
+
 ## Reference guide
 
 ### HBAWS_INIT
@@ -391,6 +400,21 @@ PAR3: The key of the file to download.
 PAR4: The local path where the file will be saved.
 RET: .T. if download is success or .F. if error.
 ```
+
+### HBAWS_S3_DELETE
+
+Delete a file from a AWS-S3 bucket.
+
+```
+LOCAL L_OK := HBAWS_S3_DELETE(@C_ERR, C_BUCKET, C_KEY)
+
+PAR1: Reference string to store the error message (if any).
+PAR2: Bucket to delete from.
+PAR3: The key of the file to delete.
+RET: .T. if delete is success or .F. if error.
+```
+
+IMPORTANT: If the file doesn't exists in the bucket, will return .T.
 
 # Legacy DOCU (To be removed)
 
