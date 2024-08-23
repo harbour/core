@@ -19,6 +19,7 @@
 #include <aws/s3/model/UploadPartRequest.h>
 #include <aws/s3/model/UploadPartCopyRequest.h>
 #include <aws/s3/model/GetObjectRequest.h>
+#include <aws/s3/model/DeleteObjectRequest.h>
 #include <fstream>
 #include <ios>
 
@@ -868,6 +869,40 @@ HB_BOOL hb_aws_s3_download(HB_ITEM *bucket_block, HB_ITEM *key_block, HB_ITEM *l
             }
         }
         else
+        {
+            HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
+            ok = false;
+        }
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_last_error = "HBAWS not initialized";
+        ok = false;
+    }
+
+    return static_cast<HB_BOOL>(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_BOOL hb_aws_s3_delete(HB_ITEM *bucket_block, HB_ITEM *key_block)
+{
+    bool ok = true;
+    if (HBAWS_GLOBAL.init == true)
+    {
+        Aws::String bucket = i_AwsString(bucket_block);
+        Aws::String key = i_AwsString(key_block);
+        Aws::S3::Model::DeleteObjectOutcome res;
+
+        {
+            Aws::S3::Model::DeleteObjectRequest *request = new Aws::S3::Model::DeleteObjectRequest;
+            request->SetBucket(bucket);
+            request->SetKey(key);
+            res = HBAWS_GLOBAL.s3_client->DeleteObject(*request);
+            delete request;
+        }
+
+        if (!res.IsSuccess())
         {
             HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
             ok = false;

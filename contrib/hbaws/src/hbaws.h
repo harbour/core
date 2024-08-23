@@ -48,6 +48,8 @@ extern HB_BOOL hb_aws_s3_copy_multipart(HB_ITEM *src_bucket_block, HB_ITEM *src_
 
 extern HB_BOOL hb_aws_s3_download(HB_ITEM *bucket_block, HB_ITEM *key_block, HB_ITEM *local_file_block);
 
+extern HB_BOOL hb_aws_s3_delete(HB_ITEM *bucket_block, HB_ITEM *key_block);
+
 extern int hb_aws_s3_size(const S3Objs *objs);
 
 extern const char *hb_aws_s3_key(const S3Objs *objs, int i);
