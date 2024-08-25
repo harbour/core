@@ -20,6 +20,7 @@
 #include <aws/s3/model/UploadPartCopyRequest.h>
 #include <aws/s3/model/GetObjectRequest.h>
 #include <aws/s3/model/DeleteObjectRequest.h>
+#include <aws/s3/model/RestoreObjectRequest.h>
 #include <fstream>
 #include <ios>
 
@@ -899,6 +900,61 @@ HB_BOOL hb_aws_s3_delete(HB_ITEM *bucket_block, HB_ITEM *key_block)
             request->SetBucket(bucket);
             request->SetKey(key);
             res = HBAWS_GLOBAL.s3_client->DeleteObject(*request);
+            delete request;
+        }
+
+        if (!res.IsSuccess())
+        {
+            HBAWS_GLOBAL.aws_last_error = res.GetError().GetMessage();
+            ok = false;
+        }
+    }
+    else
+    {
+        HBAWS_GLOBAL.aws_last_error = "HBAWS not initialized";
+        ok = false;
+    }
+
+    return static_cast<HB_BOOL>(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Aws::S3::Model::Tier i_tier(const s3_tier_t tier)
+{
+    switch (tier)
+    {
+    case ekTIER_STANDARD:
+        return Aws::S3::Model::Tier::Standard;
+    case ekTIER_BULK:
+        return Aws::S3::Model::Tier::Bulk;
+    case ekTIER_EXPEDITED:
+        return Aws::S3::Model::Tier::Expedited;
+    }
+    return Aws::S3::Model::Tier::Standard;
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_BOOL hb_aws_s3_restore(HB_ITEM *bucket_block, HB_ITEM *key_block, const int num_days, const s3_tier_t tier)
+{
+    bool ok = true;
+    if (HBAWS_GLOBAL.init == true)
+    {
+        Aws::String bucket = i_AwsString(bucket_block);
+        Aws::String key = i_AwsString(key_block);
+        Aws::S3::Model::Tier stier = i_tier(tier);
+        Aws::S3::Model::RestoreObjectOutcome res;
+
+        {
+            Aws::S3::Model::RestoreObjectRequest *request = new Aws::S3::Model::RestoreObjectRequest;
+            Aws::S3::Model::RestoreRequest settings;
+            request->SetBucket(bucket);
+            request->SetKey(key);
+            settings.SetDays(num_days);
+            settings.SetTier(stier);
+            request->SetRestoreRequest(settings);
+            res = HBAWS_GLOBAL.s3_client->RestoreObject(*request);
             delete request;
         }
 

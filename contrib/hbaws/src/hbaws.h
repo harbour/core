@@ -26,6 +26,13 @@ typedef enum _s3_storage_class_t
     ekSTORAGE_EXPRESS_ONEZONE
 } s3_storage_class_t;
 
+typedef enum _s3_tier_t
+{
+    ekTIER_STANDARD,
+    ekTIER_BULK,
+    ekTIER_EXPEDITED
+} s3_tier_t;
+
 HB_EXTERN_BEGIN
 
 extern HB_BOOL hb_aws_init(HB_ITEM *access_key_block, HB_ITEM *secret_block);
@@ -49,6 +56,8 @@ extern HB_BOOL hb_aws_s3_copy_multipart(HB_ITEM *src_bucket_block, HB_ITEM *src_
 extern HB_BOOL hb_aws_s3_download(HB_ITEM *bucket_block, HB_ITEM *key_block, HB_ITEM *local_file_block);
 
 extern HB_BOOL hb_aws_s3_delete(HB_ITEM *bucket_block, HB_ITEM *key_block);
+
+extern HB_BOOL hb_aws_s3_restore(HB_ITEM *bucket_block, HB_ITEM *key_block, const int num_days, const s3_tier_t tier);
 
 extern int hb_aws_s3_size(const S3Objs *objs);
 
