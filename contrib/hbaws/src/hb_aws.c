@@ -103,12 +103,128 @@ HB_FUNC(HBAWS_S3_LIST_PAGINATED)
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC(HBAWS_S3_UPLOAD_SIMPLE)
+{
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *local_file_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *remote_key_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *content_type_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    s3_storage_class_t storage = (s3_storage_class_t)hb_parni(6);
+    HB_BOOL ok = hb_aws_s3_upload_simple(bucket_block, local_file_block, remote_key_block, content_type_block, storage);
+
+    if (ok)
+        hb_storc("", 1);
+    else
+        hb_storc(hb_aws_last_error(), 1);
+
+    hb_retl(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC(HBAWS_S3_UPLOAD_MULTIPART)
+{
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *local_file_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *remote_key_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *content_type_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    s3_storage_class_t storage = (s3_storage_class_t)hb_parni(6);
+    uint32_t chunk_size = hb_parni(7);
+    uint32_t num_retries = hb_parni(8);
+    HB_BOOL ok = hb_aws_s3_upload_multipart(bucket_block, local_file_block, remote_key_block, content_type_block, storage, chunk_size, num_retries);
+
+    if (ok)
+        hb_storc("", 1);
+    else
+        hb_storc(hb_aws_last_error(), 1);
+
+    hb_retl(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC(HBAWS_S3_COPY_SIMPLE)
+{
+    HB_ITEM *src_bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *src_key_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *dest_bucket_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *dest_key_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *dest_content_type_block = hb_param(6, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    s3_storage_class_t dest_storage = (s3_storage_class_t)hb_parni(7);
+    HB_BOOL ok = hb_aws_s3_copy_simple(src_bucket_block, src_key_block, dest_bucket_block, dest_key_block, dest_content_type_block, dest_storage);
+
+    if (ok)
+        hb_storc("", 1);
+    else
+        hb_storc(hb_aws_last_error(), 1);
+
+    hb_retl(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC(HBAWS_S3_COPY_MULTIPART)
+{
+    HB_ITEM *src_bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *src_key_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *dest_bucket_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *dest_key_block = hb_param(5, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *dest_content_type_block = hb_param(6, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    s3_storage_class_t dest_storage = (s3_storage_class_t)hb_parni(7);
+    uint32_t chunk_size = hb_parni(8);
+    uint32_t num_retries = hb_parni(9);
+    HB_BOOL ok = hb_aws_s3_copy_multipart(src_bucket_block, src_key_block, dest_bucket_block, dest_key_block, dest_content_type_block, dest_storage, chunk_size, num_retries);
+
+    if (ok)
+        hb_storc("", 1);
+    else
+        hb_storc(hb_aws_last_error(), 1);
+
+    hb_retl(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC(HBAWS_S3_DOWNLOAD)
 {
     HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
     HB_ITEM *key_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
     HB_ITEM *local_file_block = hb_param(4, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
     HB_BOOL ok = hb_aws_s3_download(bucket_block, key_block, local_file_block);
+
+    if (ok)
+        hb_storc("", 1);
+    else
+        hb_storc(hb_aws_last_error(), 1);
+
+    hb_retl(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC(HBAWS_S3_DELETE)
+{
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *key_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_BOOL ok = hb_aws_s3_delete(bucket_block, key_block);
+
+    if (ok)
+        hb_storc("", 1);
+    else
+        hb_storc(hb_aws_last_error(), 1);
+
+    hb_retl(ok);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC(HBAWS_S3_RESTORE)
+{
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *key_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    int num_days = hb_parni(4);
+    s3_tier_t tier = (s3_tier_t)hb_parni(5);
+    HB_BOOL ok = hb_aws_s3_restore(bucket_block, key_block, num_days, tier);
 
     if (ok)
         hb_storc("", 1);

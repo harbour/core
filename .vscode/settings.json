@@ -16,7 +16,8 @@
         "chrono": "cpp",
         "xlocale": "cpp",
         "xstring": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "memory": "cpp"
     },
     "files.encoding": "windows1252",
     "cmake.sourceDirectory": "C:/harbour_nappgui"
