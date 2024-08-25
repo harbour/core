@@ -23,6 +23,7 @@
     - [HBAWS_S3_COPY_MULTIPART](#hbaws_s3_copy_multipart)
     - [HBAWS_S3_DOWNLOAD](#hbaws_s3_download)
     - [HBAWS_S3_DELETE](#hbaws_s3_delete)
+    - [HBAWS_S3_RESTORE](#hbaws_s3_restore)
 
 ## Introduction
 
@@ -225,6 +226,14 @@ Some examples have been provided in `contrib/hbaws/tests/harbour`.
     ../../../../bin/linux/gcc/hbmk2 delete.prg credentials.prg hbaws.hbc
     ```
 
+* `restore`: Use of `HBAWS_S3_RESTORE` function.
+    ```
+    cd contrib\hbaws\tests\harbour
+    ..\..\..\..\bin\win\mingw64\hbmk2 restore.prg credentials.prg hbaws.hbc -comp=mingw64
+    ..\..\..\..\bin\win\msvc64\hbmk2 restore.prg credentials.prg hbaws.hbc -comp=msvc64
+    ../../../../bin/linux/gcc/hbmk2 restore.prg credentials.prg hbaws.hbc
+    ```
+
 ## Reference guide
 
 ### HBAWS_INIT
@@ -415,6 +424,26 @@ RET: .T. if delete is success or .F. if error.
 ```
 
 IMPORTANT: If the file doesn't exists in the bucket, will return .T.
+
+### HBAWS_S3_RESTORE
+
+Restore a file from a AWS-S3 bucket.
+
+```
+LOCAL L_OK := HBAWS_S3_RESTORE(@C_ERR, C_BUCKET, C_KEY, N_NUM_DAYS, N_TIER)
+
+PAR1: Reference string to store the error message (if any).
+PAR2: Bucket to restore from.
+PAR3: The key of the file to restore.
+PAR4: Number of days to restore.
+PAR5: Tier.
+RET: .T. if restore is success or .F. if error.
+```
+
+The Tier values are defined in 'hbaws.ch'
+#define TIER_STANDARD 1
+#define TIER_BULK 2
+#define TIER_EXPEDITED 3
 
 # Legacy DOCU (To be removed)
 
