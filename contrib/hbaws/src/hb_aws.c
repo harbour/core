@@ -215,3 +215,21 @@ HB_FUNC(HBAWS_S3_DELETE)
 
     hb_retl(ok);
 }
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC(HBAWS_S3_RESTORE)
+{
+    HB_ITEM *bucket_block = hb_param(2, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    HB_ITEM *key_block = hb_param(3, HB_IT_STRING | HB_IT_BLOCK | HB_IT_NIL);
+    int num_days = hb_parni(4);
+    s3_tier_t tier = (s3_tier_t)hb_parni(5);
+    HB_BOOL ok = hb_aws_s3_restore(bucket_block, key_block, num_days, tier);
+
+    if (ok)
+        hb_storc("", 1);
+    else
+        hb_storc(hb_aws_last_error(), 1);
+
+    hb_retl(ok);
+}

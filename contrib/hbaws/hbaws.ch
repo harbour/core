@@ -31,3 +31,8 @@
 #define STORAGE_GLACIER_IR 9
 #define STORAGE_SNOW 10
 #define STORAGE_EXPRESS_ONEZONE 11
+
+// Tier enum values
+#define TIER_STANDARD 1
+#define TIER_BULK 2
+#define TIER_EXPEDITED 3

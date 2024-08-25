@@ -28,7 +28,7 @@ typedef enum _s3_storage_class_t
 
 typedef enum _s3_tier_t
 {
-    ekTIER_STANDARD,
+    ekTIER_STANDARD = 1,
     ekTIER_BULK,
     ekTIER_EXPEDITED
 } s3_tier_t;
