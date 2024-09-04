@@ -3,13 +3,15 @@
 El objetivo de este documento es realizar una introducción y planificación de la herramienta GTNAP-Designer para el diseño visual de formularios y ventanas de interfaz. En principio, esta pretende ser un "clon" del QT-Designer con algunas diferencias:
 
 * GTNAP-Designer creará formularios compatibles con NAppGUI-SDK.
-* Se podrán exportar los resultados a un archivo `.prg`, en lenguaje **Harbour** y compilable por `hbmk2`.
+* Se podrán exportar los resultados a un archivo `.prg`, en lenguaje **Harbour**, por tanto, compilable por `hbmk2`.
 * Los formularios serán multiplataforma (Windows, macOS, Linux) y respetarán el look&feel nativo de cada sistema: Colores, Tipografías, Temas, etc.
 
 **QT-Designer**
+
 ![QT-Designer](images/qtdesigner.png)
 
 **GTNAP-Designer**
+
 ![GTNAP-Designer](images/gtnapdesigner.png)
 
 ## Planificación
@@ -23,50 +25,67 @@ El desarrollo de una herramienta de este tipo goza de cierta dificultad y es fá
 
 ## Fase 1: Operativa básica
 
-**Importante** En esta fase el diseño interactivo será un poco tosco. Lo principal es poder crear formularios e importarlos en Harbour.
+> **Importante** En esta fase se creará una herramienta básica, con limitadas funcionalidades gráficas e interactivas. El principal objetivo será poder componer formularios básicos y exportarlos a Harbour.
 
-* Layout principal de la aplicación con tres áreas bien marcadas (igual que QtDesigner):
+Tras concluir esta fase tendremos:
+
+* Aplicación de escritorio cuya ventana estará dividida en tres áreas bien delimitadas (igual que QtDesigner):
     * Parte izquierda: Zona widgets, donde están los elementos que podemos utilizar para el diseño.
     * Parte central: Canvas de dibujo. Donde diseñaremos los formularios.
-    * Parte derecha: Inspector de propiedades.
+    * Parte derecha: Inspector de objetos y propiedades.
 
-* Elementos básicos de diseño:
+* Elementos incluidos (de momento):
     * Layout (Solo grid de momento). El grid permite crear VerticalLayout y HorizontalLayout.
     * Label.
     * Button.
     * CheckBox.
     * EditBox.
 
-* Editor multi-formulario. En lugar de abrir formularios uno a uno, el editor permitirá tener varios de ellos y alternar entre ellos. Algo así como "open folder" abrirá todos los formularios existentes en una carpeta.
+* Editor multi-formulario. En lugar de cargar formularios uno a uno, el editor permitirá tener varios abiertos y alternar entre ellos. Algo así como la opción "open folder" de algunos editores que cargará a la vez todos los formularios existentes en una misma carpeta.
 
-* Archivo de diseño (.ui). Archivo del formulario que puede abrirse con el editor. Seguramente en formato JSON.
+* Archivo de diseño **(.ui)**. Archivo con el diseño del formulario que puede abrirse con el editor. Seguramente en formato JSON.
 
-* Exportar a Harbour. Generar un archivo .prg con el código capaz de crear el formulario en tiempo de ejecución.
+* Exportar a Harbour. Generar un archivo **.prg** con el código capaz de crear el formulario en tiempo de ejecución.
 
-* Comunicación con el formulario: El programa Harbour que crea el formulario debe ser capaz de comunicarse con él: Detectar si se ha pulsado un botón, obtener el texto de un EditBox, etc.
+* Comunicación con el formulario: El programa Harbour que crea el formulario debe ser capaz de vincularse con los controles en tiempo de ejecución: Detectar si se ha pulsado un botón, obtener el texto de un EditBox, etc.
 
-### Fase 1: Sprints
+**Diseño de GTNAP-Designer (primera fase)**
 
-* Sprint 1: Crear el cuerpo de la aplicación. Ventanas, layouts, etc.
+![Layout](images/layout.png)
 
-* Sprint 2: Posicionar layout y sublayouts en el canvas.
 
-* Sprint 3: Añadir Label al canvas.
+### Fase 1: Estimación de Sprints (12)
 
-* Sprint 4: Añadir Button y CheckBox al canvas.
+* **Sprint 1:** Crear el cuerpo de la aplicación. Ventanas, paneles, layouts y controles.
 
-* Sprint 5: Poder grabar en disco los diseños. Funcionalidad multi-formulario.
+* **Sprint 2:** Crear en el canvas la jerarquía de layouts y sublayouts.
 
-* Sprint 6: Editar propiedades de layout.
+* **Sprint 3:** Añadir Label al canvas. Aquí se implementará código común para interactuar con los diferentes controles.
 
-* Sprint 7: Editar propiedades de controles (1).
+* **Sprint 4:** Añadir Button y CheckBox al canvas.
 
-* Sprint 8: Editar propiedades de controles (2).
+* **Sprint 5:** Añadir EditBox al canvas.
 
-* Sprint 9: Exportar a Harbour .prg (1).
+* **Sprint 6:** Poder grabar en disco los diseños. Lista de formularios.
 
-* Sprint 10: Exportar a Harbour .prg (2).
+* **Sprint 7:** Object Inspector. Reflejar la jerarquía de objetos en el panel de la derecha.
 
-* Sprint 11: Integración runtime con Harbour (1).
+* **Sprint 8:** Property Editor. Poder editar el objeto seleccionado en el Object Inspector.
 
-* Sprint 12: Integración runtime con Harbour (2).
+* **Sprint 9:** Exportar a Harbour .prg (1). Generar código Harbour compilable a partir del diseño del formulario. Este código reproducirá el formulario en tiempo de ejecución.
+
+* **Sprint 10:** Exportar a Harbour .prg (2). Es posible que esta tarea ocupe dos sprints.
+
+* **Sprint 11:** Integración runtime con Harbour (1). Aquí se definirá una librería para poder interactuar con los formularios en tiempo de ejecución. Por ejemplo:
+    ```
+    // This function is defined in the .prg
+    // automatically generated by GTNAP-Designer
+    O_Form := NAP_ASPECT_CUSTOMER_ADDRESS_FORM()
+
+    // These functions are defined in GTNAP-FORMS library
+    // and used in the application for interact with the form.
+    NAP_FORM_ON_BUTTON_CLICK(O_Form, "button1", {|| ShowMessage("Clicked")})
+    NAP_FORM_GET_EDIT_TEXT(O_Form, "editCustomerName", @C_CustomerName)
+    ```
+
+* **Sprint 12:** Integración runtime con Harbour (2). Es posible que esta tarea ocupe dos sprints.
