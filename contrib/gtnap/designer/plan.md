@@ -1,10 +1,10 @@
 # GTNAP Designer
 
-El objetivo de este documento es realizar una introducción y planificación de la herramienta GTNAP-Designer para el diseño visual de formularios y ventanas de interfaz. En principio, esta pretende ser un "clon" del QT-Designer con algunas diferencias:
+El objetivo de este documento es realizar una introducción y primera planificación de la herramienta GTNAP-Designer para el diseño visual de formularios y ventanas de interfaz. En principio, esta herramienta pretende ser un "clon" del QT-Designer con algunas diferencias:
 
 * GTNAP-Designer creará formularios compatibles con NAppGUI-SDK.
 * Se podrán exportar los resultados a un archivo `.prg`, en lenguaje **Harbour**, por tanto, compilable por `hbmk2`.
-* Los formularios serán multiplataforma (Windows, macOS, Linux) y respetarán el _look&feel_ nativo de cada sistema: Colores, Tipografías, Temas, etc.
+* Los formularios generados serán multiplataforma (Windows, macOS, Linux) y respetarán el _look&feel_ nativo de cada sistema: Colores, Tipografías, Temas, etc.
 
 **QT-Designer**
 
@@ -19,7 +19,7 @@ El objetivo de este documento es realizar una introducción y planificación de 
 El desarrollo de una herramienta de este tipo goza de cierta dificultad y es fácil de incurrir en retrasos y callejones sin salida por no delimitar bien los objetivos y funcionalidades. Por esta razón dividiremos el desarrollo en 4 fases:
 
 * Operativa básica (12 Sprints).
-* Componentes avanzados (8 Sprints).
+* Componentes avanzados (12 Sprints).
 * Funciones avanzadas de edición.
 * Formularios redimensionables.
 
@@ -34,8 +34,8 @@ Tras concluir esta fase tendremos:
     * Parte central: Canvas de dibujo. Donde diseñaremos los formularios.
     * Parte derecha: Inspector de objetos y propiedades.
 
-* Elementos incluidos (de momento):
-    * Layout (Solo grid de momento). El grid permite crear VerticalLayout y HorizontalLayout.
+* Elementos incluidos en fase 1:
+    * Layout (GridLayout de momento). El grid permite crear VerticalLayout y HorizontalLayout.
     * Label.
     * Button.
     * CheckBox.
@@ -49,7 +49,7 @@ Tras concluir esta fase tendremos:
 
 * Comunicación con el formulario: La aplicación final debe ser capaz de acceder al formulario en tiempo de ejecución: Detectar si se ha pulsado un botón, obtener el texto de un EditBox, etc.
 
-**Diseño de GTNAP-Designer (primera fase)**
+**Diseño de GTNAP-Designer (Fase 1)**
 
 ![Layout](images/layout.png)
 
@@ -102,7 +102,7 @@ En esta fase ampliaremos el catálogo de widgets. Aprovecharemos la implementaci
 
 * Control TreeView. Añadir a la tabla la capacidad de trabajar con árboles.
 
-* Radio Button. Conjunto de radio botones, donde solo uno de ellos puede estar seleccionado. [Link](https://nappgui.com/en/gui/button.html#h1).
+* Radio Group. Conjunto de radio botones, donde solo uno de ellos puede estar seleccionado. [Link](https://nappgui.com/en/gui/button.html#h1).
 
 * Control Slider y Progress. [Link](https://nappgui.com/en/gui/slider.html). [Link](https://nappgui.com/en/gui/progress.html).
 
@@ -114,9 +114,19 @@ En esta fase ampliaremos el catálogo de widgets. Aprovecharemos la implementaci
 
 * Control WebView. Vista Web. [Link](https://nappgui.com/en/gui/webview.html).
 
-* Vista de dibujo y vista OpenGL. **Por el momento descartados**. Habría que estudiar como implementar el API de dibujo en Harbour. [Link](https://nappgui.com/en/gui/view.html). [Link](https://nappgui.com/en/ogl3d/ogl3d.html).
+* Formularios interiores. Poder integrar un formulario previamente diseñado como parte de otro formulario más grande.
 
-### Fase 2: Estimación de Sprints (10)
+* Vista de dibujo y vista OpenGL. **Por el momento NO IMPLEMENTADOS**. Habría que estudiar como implementar el API de dibujo en Harbour. [Link](https://nappgui.com/en/gui/view.html). [Link](https://nappgui.com/en/ogl3d/ogl3d.html).
+
+**Todos los widgets (Fase 1 y fase 2)**
+
+![Layout](images/widgets.png)
+
+**Formularios interiores**
+
+![Layout](images/inner_form.png)
+
+### Fase 2: Estimación de Sprints (12)
 
 * **Sprint 1:** Implementación del TextView. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
 
@@ -124,7 +134,7 @@ En esta fase ampliaremos el catálogo de widgets. Aprovecharemos la implementaci
 
 * **Sprint 3 y 4:** Implementación del TableView. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour. Este componente es más complicado de integrar, debido a la configuración de las columnas.
 
-* **Sprint 5:** Radio buttons. Añadir controles, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
+* **Sprint 5:** Radio buttons. Se generan en grupo (mínimo 2) con su propio layout horizontal o vertical. Añadir controles, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
 
 * **Sprint 6:** Sliders y progress. Añadir controles, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
 
@@ -135,6 +145,8 @@ En esta fase ampliaremos el catálogo de widgets. Aprovecharemos la implementaci
 * **Sprint 9:** ListBox. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
 
 * **Sprint 10:** WebView. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
+
+* **Sprint 11 y 12:** Formularios interiores. Posibilidad de seleccionar un formulario previo desde el editor. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
 
 ## Fase 3: Funciones avanzadas de edición
 
