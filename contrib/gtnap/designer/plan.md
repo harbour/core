@@ -1,6 +1,6 @@
 # GTNAP Designer
 
-El objetivo de este documento es realizar una introducción y primera planificación de la herramienta GTNAP-Designer para el diseño visual de formularios y ventanas de interfaz. En principio, esta herramienta pretende ser un "clon" del QT-Designer con algunas diferencias:
+El objetivo de este documento es realizar una introducción y primera planificación de la herramienta GTNAP-Designer para el diseño visual de formularios y ventanas en interfaces de usuario. En principio, esta herramienta pretende ser un "clon" del QT-Designer con algunas diferencias:
 
 * GTNAP-Designer creará formularios compatibles con NAppGUI-SDK.
 * Se podrán exportar los resultados a un archivo `.prg`, en lenguaje **Harbour**, por tanto, compilable por `hbmk2`.
@@ -16,16 +16,17 @@ El objetivo de este documento es realizar una introducción y primera planificac
 
 ## Planificación
 
-El desarrollo de una herramienta de este tipo goza de cierta dificultad y es fácil de incurrir en retrasos y callejones sin salida por no delimitar bien los objetivos y funcionalidades. Por esta razón dividiremos el desarrollo en 4 fases:
+El desarrollo de una herramienta de este tipo goza de cierta dificultad y es fácil de incurrir en retrasos y callejones sin salida por no delimitar bien los objetivos y funcionalidades. Por esta razón dividiremos el desarrollo en diferentes fases:
 
 * Operativa básica (12 Sprints).
 * Componentes avanzados (12 Sprints).
-* Funciones avanzadas de edición.
+* Funciones avanzadas de edición (9 Sprints).
+* Embellecimiento (3 Sprints).
 * Formularios redimensionables.
 
 ## Fase 1: Operativa básica
 
-> **Importante** En esta fase se creará una herramienta básica, con limitadas funcionalidades gráficas e interactivas. El principal objetivo será poder componer formularios básicos y exportarlos a Harbour.
+> **Importante** En esta fase se creará una versión inicial y básica de la herramienta, con limitadas funcionalidades de edición. El principal objetivo será poder componer formularios básicos y exportarlos a Harbour.
 
 Tras concluir esta fase tendremos:
 
@@ -150,14 +151,37 @@ En esta fase ampliaremos el catálogo de widgets. Aprovecharemos la implementaci
 
 ## Fase 3: Funciones avanzadas de edición
 
-Ya con la aplicación lista para crear y editar cualquier tipo de formulario, nos centraremos en mejorar la herramienta de diseño. Las funcionalidades a implementar en esta fase serán:
+Ya con una aplicación totalmente operativa lista para crear y editar cualquier tipo de formulario, nos centraremos en mejorar la usabilidad del programa. Las funcionalidades a implementar en esta fase serán:
 
 * Selección múltiple. Poder seleccionar varios objetos con el ratón o pulsando [Ctrl+click].
 
 * Portapapeles: Copy, Paste, Cut.
+    * Copiar en el portapapeles del sistema, los objetos gráficos seleccionados.
+    * Definir estructuras de comunicación.
+    * Pegar los objetos gráficos en una celda vacía del layout.
+    * Copiar y pegar los textos de propiedades (por ejemplo, el texto del botón).
+    * Función cut de los objetos seleccionados.
+    * Función remove de los objetos seleccionados.
 
 * Undo/Redo: Capacidad de deshacer y rehacer los cambios.
+    * Definir que tipos de operaciones pueden ser deshechas.
+    * Crear las estructuras de datos del Undo/Redo.
+    * Implementación.
 
 * Drag'N'Drop. Poder arrastrar widgets desde la vista izquierda al área del canvas y vincularlos con una celda del layout.
+    * Implementar el soporte Drag'N'Drop en Windows, macOS, Linux.
+    * Implementar el arrastre de widgets desde el panel izquierdo al canvas.
 
-* Mejorar iconos.
+**Selección múltiple**
+
+![Layout](images/multisel.png)
+
+### Fase 3: Estimación de Sprints (9)
+
+* **Sprint 1:** Selección múltiple de objetos.
+
+* **Sprint 2 y 3:** Implementación del portapapeles. Copiar y pegar los objetos seleccionados.
+
+* **Sprint 4, 5, 6:** Undo/Redo.
+
+* **Sprint 7, 8, 9:** Drag'N'Drop support.
