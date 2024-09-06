@@ -1,10 +1,12 @@
 # GTNAP Designer
 
-El objetivo de este documento es realizar una introducción y primera planificación de la herramienta GTNAP-Designer para el diseño visual de formularios y ventanas en interfaces de usuario. En principio, esta herramienta pretende ser un "clon" del QT-Designer con algunas diferencias:
+El objetivo de este documento es realizar una introducción y primera planificación de la herramienta GTNAP-Designer para el diseño visual de formularios y ventanas. En principio, esta herramienta pretende ser un "clon" del QT-Designer con algunas diferencias:
 
 * GTNAP-Designer creará formularios compatibles con NAppGUI-SDK.
 * Se podrán exportar los resultados a un archivo `.prg`, en lenguaje **Harbour**, por tanto, compilable por `hbmk2`.
 * Los formularios generados serán multiplataforma (Windows, macOS, Linux) y respetarán el _look&feel_ nativo de cada sistema: Colores, Tipografías, Temas, etc.
+
+> **Importante:** En este documento se ha intentado realizar una estimación a futuro de todo el desglose de tareas y tiempos que se requerirán para completar con éxito el proyecto. Estos plazos pueden verse afectados por decisiones que se vayan tomando sobre la marcha, a medida que el proyecto se está desarrollando.
 
 **QT-Designer**
 
@@ -21,8 +23,7 @@ El desarrollo de una herramienta de este tipo goza de cierta dificultad y es fá
 * Operativa básica (12 Sprints).
 * Componentes avanzados (12 Sprints).
 * Funciones avanzadas de edición (9 Sprints).
-* Embellecimiento (3 Sprints).
-* Formularios redimensionables.
+* Formularios redimensionables (5 Sprints).
 
 ## Fase 1: Operativa básica
 
@@ -176,6 +177,10 @@ Ya con una aplicación totalmente operativa lista para crear y editar cualquier 
 
 ![Layout](images/multisel.png)
 
+**Soporte Drag'N'Drop**
+
+![Layout](images/dragndrop.png)
+
 ### Fase 3: Estimación de Sprints (9)
 
 * **Sprint 1:** Selección múltiple de objetos.
@@ -185,3 +190,29 @@ Ya con una aplicación totalmente operativa lista para crear y editar cualquier 
 * **Sprint 4, 5, 6:** Undo/Redo.
 
 * **Sprint 7, 8, 9:** Drag'N'Drop support.
+
+## Fase 4: Formularios redimensionables
+
+Hasta ahora, todos los formularios que podemos diseñar tienen un tamaño fijo. Es posible que queramos hacerlos re-dimensionables utilizando el botón de maximizar o arrastrando los bordes de la ventana. Esto exige añadir nuevas propiedades a los layout y sus celdas con el fin de controlar de forma recursiva como se adaptarán los controles al cambio de tamaño. Mas información [Aquí](https://nappgui.com/en/gui/layout.html#h5) y [Aquí](https://nappgui.com/en/demo/die.html#h4).
+
+* Añadir al Property Editor aquellas propiedades necesarias para manejar el cambio de tamaño.
+
+* Crear una "vista previa" capaz de aceptar el redimensionado de la ventana.
+
+* Modificar el archivo **(*.ui)** para que acepte estas nuevas propiedades.
+
+* Modificar el exportador a **(*.prg)** para que genere los formularios re-dimensionables.
+
+* Añadir a la librería GTNAP-Forms las nuevas funciones para manejar el re-dimensionado.
+
+### Fase 4: Estimación de Sprints (5)
+
+* Sprint 1: Añadir nuevas propiedades al Property Editor.
+
+* Sprint 2: Crear la "vista previa" re-dimensionable.
+
+* Sprint 3: Modificar el **(*.ui)**.
+
+* Sprint 4: Modificar el exportador a **(*.prg)**.
+
+* Sprint 5: Modificar la librería GTNAP-Forms.
