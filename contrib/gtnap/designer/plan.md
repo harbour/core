@@ -53,7 +53,7 @@ Tras concluir esta fase tendremos:
 
 **Diseño de GTNAP-Designer (Fase 1)**
 
-![Layout](images/layout.png)
+![layout](images/layout.png)
 
 
 ### Fase 1: Estimación de Sprints (12)
@@ -122,11 +122,11 @@ En esta fase ampliaremos el catálogo de widgets. Aprovecharemos la implementaci
 
 **Todos los widgets (Fase 1 y fase 2)**
 
-![Layout](images/widgets.png)
+![all_widgets](images/widgets.png)
 
 **Formularios interiores**
 
-![Layout](images/inner_form.png)
+![inner_form](images/inner_form.png)
 
 ### Fase 2: Estimación de Sprints (12)
 
@@ -175,11 +175,11 @@ Ya con una aplicación totalmente operativa lista para crear y editar cualquier 
 
 **Selección múltiple**
 
-![Layout](images/multisel.png)
+![multisel](images/multisel.png)
 
 **Soporte Drag'N'Drop**
 
-![Layout](images/dragndrop.png)
+![dragndrop](images/dragndrop.png)
 
 ### Fase 3: Estimación de Sprints (9)
 
@@ -204,6 +204,10 @@ Hasta ahora, todos los formularios que podemos diseñar tienen un tamaño fijo. 
 * Modificar el exportador a **(*.prg)** para que genere los formularios re-dimensionables.
 
 * Añadir a la librería GTNAP-Forms las nuevas funciones para manejar el re-dimensionado.
+
+**Redimensionado de formularios**
+
+![resizing](images/resize.png)
 
 ### Fase 4: Estimación de Sprints (5)
 
