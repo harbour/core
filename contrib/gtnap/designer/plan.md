@@ -1,12 +1,12 @@
 # GTNAP Designer
 
-El objetivo de este documento es realizar una introducción y primera planificación de la herramienta GTNAP-Designer para el diseño visual de formularios y ventanas. En principio, esta herramienta pretende ser un "clon" del QT-Designer con algunas diferencias:
+The objective of this document is to introduce and first plan the GTNAP-Designer tool for the visual design of forms and windows. In principle, this tool is intended to be a "clone" of QT-Designer with some differences:
 
-* GTNAP-Designer creará formularios compatibles con NAppGUI-SDK.
-* Se podrán exportar los resultados a un archivo `.prg`, en lenguaje **Harbour**, por tanto, compilable por `hbmk2`.
-* Los formularios generados serán multiplataforma (Windows, macOS, Linux) y respetarán el _look&feel_ nativo de cada sistema: Colores, Tipografías, Temas, etc.
+* GTNAP-Designer will create forms compatible with NAppGUI-SDK.
+* The results can be exported to a `.prg` file, in **Harbour** language, therefore compilable by `hbmk2`.
+* The generated forms will be cross-platform (Windows, macOS, Linux) and will respect the native _look&Feel_ of each system: Colors, Fonts, Themes, etc.
 
-> **Importante:** En este documento se ha intentado realizar una estimación a futuro de todo el desglose de tareas y tiempos que se requerirán para completar con éxito el proyecto. Estos plazos pueden verse afectados por decisiones que se vayan tomando sobre la marcha, a medida que el proyecto se está desarrollando.
+> **Important:** This document has attempted to estimate all the tasks and times that will be required to successfully complete the project. These deadlines may be affected by decisions that are made on the fly, as the project is developing.
 
 **QT-Designer**
 
@@ -16,69 +16,54 @@ El objetivo de este documento es realizar una introducción y primera planificac
 
 ![GTNAP-Designer](images/gtnapdesigner.png)
 
-## Planificación
+## Planning
 
-El desarrollo de una herramienta de este tipo goza de cierta dificultad y es fácil de incurrir en retrasos y callejones sin salida por no delimitar bien los objetivos y funcionalidades. Por esta razón dividiremos el desarrollo en diferentes fases:
+The development of a tool of this type is somewhat difficult and it is easy to run into delays and dead ends due to not clearly defining the objectives and functionalities. For this reason we will divide the development into different phases:
 
-* Operativa básica (12 Sprints).
-* Componentes avanzados (12 Sprints).
-* Funciones avanzadas de edición (9 Sprints).
-* Formularios redimensionables (5 Sprints).
+* Basic operation (12 Sprints).
+* Advanced components (12 Sprints).
+* Advanced editing features (9 Sprints).
+* Resizable forms (5 Sprints).
 
-## Fase 1: Operativa básica
+## Phase 1: Basic Operation
 
-> **Importante** En esta fase se creará una versión inicial y básica de la herramienta, con limitadas funcionalidades de edición. El principal objetivo será poder componer formularios básicos y exportarlos a Harbour.
+> **Important** In this phase, an initial and basic version of the tool will be created, with limited editing functionalities. The main objective will be to be able to compose basic forms and export them to Harbour.
 
-Tras concluir esta fase tendremos:
+After completing this phase we will have:
 
-* Aplicación de escritorio cuya ventana estará dividida en tres áreas bien delimitadas (igual que QtDesigner):
-    * Parte izquierda: Zona widgets, donde están los elementos que podemos utilizar para el diseño.
-    * Parte central: Canvas de dibujo. Donde diseñaremos los formularios.
-    * Parte derecha: Inspector de objetos y propiedades.
-
-* Elementos incluidos en fase 1:
-    * Layout (GridLayout de momento). El grid permite crear VerticalLayout y HorizontalLayout.
+* Desktop application whose window will be divided into three well-defined areas (same as QtDesigner):
+    * Left side: Widgets area, where the elements that we can use for the design are.
+    * Central part: Drawing canvas. Where we will design the forms.
+    * Right side: Object and properties inspector.
+* Elements included in phase 1:
+    * Layout (GridLayout at the moment). The grid allows you to create VerticalLayout and HorizontalLayout.
     * Label.
     * Button.
     * CheckBox.
     * EditBox.
+* Multi-form editor. Instead of loading forms one by one, the editor will allow you to have multiple files open and switch between them. Something like the "open folder" option of some editors that will load all existing forms in the same folder at the same time.
+* Design file **(.ui)**. File with the design of the form that can be opened with the editor. Probably in JSON format.
+* Export to Harbour. Generate a **.prg** file with the Harbour code capable of creating the form at runtime.
+* Communication with the form: The final application must be able to access the form at runtime: Detect if a button has been pressed, obtain the text from an EditBox, etc.
 
-* Editor multi-formulario. En lugar de cargar formularios uno a uno, el editor permitirá tener varios archivos abiertos y alternar entre ellos. Algo así como la opción "open folder" de algunos editores que cargará a la vez todos los formularios existentes en una misma carpeta.
-
-* Archivo de diseño **(.ui)**. Archivo con el diseño del formulario que puede abrirse con el editor. Seguramente en formato JSON.
-
-* Exportar a Harbour. Generar un archivo **.prg** con el código Harbour capaz de crear el formulario en tiempo de ejecución.
-
-* Comunicación con el formulario: La aplicación final debe ser capaz de acceder al formulario en tiempo de ejecución: Detectar si se ha pulsado un botón, obtener el texto de un EditBox, etc.
-
-**Diseño de GTNAP-Designer (Fase 1)**
+**GTNAP-Designer Design (Phase 1)**
 
 ![layout](images/layout.png)
 
 
-### Fase 1: Estimación de Sprints (12)
+### Phase 1: Sprint Estimation (12)
 
-* **Sprint 1:** Crear el cuerpo de la aplicación. Ventanas, paneles, layouts y controles.
-
-* **Sprint 2:** Crear en el canvas la jerarquía de layouts y sublayouts.
-
-* **Sprint 3:** Añadir Label al canvas. Aquí se implementará código común para interactuar con los diferentes controles.
-
-* **Sprint 4:** Añadir Button y CheckBox al canvas.
-
-* **Sprint 5:** Añadir EditBox al canvas.
-
-* **Sprint 6:** Poder grabar en disco los diseños. Lista de formularios.
-
-* **Sprint 7:** Object Inspector. Reflejar la jerarquía de objetos en el panel de la derecha.
-
-* **Sprint 8:** Property Editor. Poder editar el objeto seleccionado en el Object Inspector.
-
-* **Sprint 9:** Exportar a Harbour .prg (1). Generar código Harbour compilable a partir del diseño del formulario. Este código reproducirá el formulario en tiempo de ejecución.
-
-* **Sprint 10:** Exportar a Harbour .prg (2). Es posible que esta tarea ocupe dos sprints.
-
-* **Sprint 11:** Integración runtime con Harbour (1). Aquí se definirá una librería para poder interactuar con los formularios en tiempo de ejecución. Por ejemplo:
+* **Sprint 1:** Create the body of the application. Windows, panels, layouts and controls.
+* **Sprint 2:** Create the hierarchy of layouts and sublayouts on the canvas.
+* **Sprint 3:** Add Label to the canvas. Here common code will be implemented to interact with the different controls.
+* **Sprint 4:** Add Button and CheckBox to the canvas.
+* **Sprint 5:** Add EditBox to the canvas.
+* **Sprint 6:** Be able to save designs to disk. List of forms.
+* **Sprint 7:** Object Inspector. Mirror the object hierarchy in the right panel.
+* **Sprint 8:** Property Editor. Be able to edit the selected object in the Object Inspector.
+* **Sprint 9:** Export to Harbour .prg (1). Generate compileable Harbour code from the form design. This code will reproduce the form at runtime.
+* **Sprint 10:** Export to Harbour .prg (2). This task may take up two sprints.
+* **Sprint 11:** Runtime integration with Harbour (1). Here a library will be defined to be able to interact with the forms at runtime. For example:
     ```
     // This function is defined in the .prg
     // automatically generated by GTNAP-Designer
@@ -89,134 +74,101 @@ Tras concluir esta fase tendremos:
     NAP_FORM_ON_BUTTON_CLICK(O_Form, "button1", {|| ShowMessage("Clicked")})
     NAP_FORM_GET_EDIT_TEXT(O_Form, "editCustomerName", @C_CustomerName)
     ```
+* **Sprint 12:** Runtime integration with Harbour (2). This task may take up two sprints.
 
-* **Sprint 12:** Integración runtime con Harbour (2). Es posible que esta tarea ocupe dos sprints.
+## Phase 2: Advanced Components
 
-## Fase 2: Componentes avanzados
+In this phase we will expand the widget catalog. We will take advantage of the basic implementation to enrich the forms with additional controls:
 
-En esta fase ampliaremos el catálogo de widgets. Aprovecharemos la implementación básica para enriquecer los formularios con controles adicionales:
+* TextView control. To edit long texts and, optionally, apply formats (Font, bold, sizes, etc.). [Link](https://nappgui.com/en/gui/textview.html).
+* ImageView control. Be able to insert images into forms. [Link](https://nappgui.com/en/gui/imageview.html).
+* TableView control. Add tables and configure their columns (width, resize, header, etc.). [Link](https://nappgui.com/en/gui/tableview.html).
+* TreeView control. Add to the table the ability to work with trees.
+* Radio Group. Set of radio buttons, where only one of them can be selected. [Link](https://nappgui.com/en/gui/button.html#h1).
+* Slider control. [Link](https://nappgui.com/en/gui/slider.html).
+* Progress control. [Link](https://nappgui.com/en/gui/progress.html).
+* PopUp control. Button with drop-down menu. [Link](https://nappgui.com/en/gui/popup.html).
+* ComboBox control. Edit box with dropdown menu. [Link](https://nappgui.com/en/gui/combo.html).
+* ListBox control. List box with optional icons and/or checkbox. [Link](https://nappgui.com/en/gui/listbox.html).
+* WebView control. Insert a web browser into the form. [Link](https://nappgui.com/en/gui/webview.html).
+* Interior forms. Being able to integrate a previously designed form as part of another larger form.
+* Drawing view and OpenGL view. **NOT IMPLEMENTED AT THE MOMENT**. It would be necessary to study how to implement the drawing API in Harbour. [Link](https://nappgui.com/en/gui/view.html). [Link](https://nappgui.com/en/ogl3d/ogl3d.html).
 
-* Control TextView. Para editar textos largos y, opcionalmente, aplicar formatos (Fuente, negrita, tamaños, etc). [Link](https://nappgui.com/en/gui/textview.html).
-
-* Control ImageView. Poder insertar imágenes en los formularios. [Link](https://nappgui.com/en/gui/imageview.html).
-
-* Control TableView. Añadir tablas y configurar sus columnas (ancho, redimensión, cabecera, etc). [Link](https://nappgui.com/en/gui/tableview.html).
-
-* Control TreeView. Añadir a la tabla la capacidad de trabajar con árboles.
-
-* Radio Group. Conjunto de radio botones, donde solo uno de ellos puede estar seleccionado. [Link](https://nappgui.com/en/gui/button.html#h1).
-
-* Control Slider y Progress. [Link](https://nappgui.com/en/gui/slider.html). [Link](https://nappgui.com/en/gui/progress.html).
-
-* Control PopUp. Botón con menú desplegable. [Link](https://nappgui.com/en/gui/popup.html).
-
-* Control ComboBox. Cuadro de edición con menú desplegable. [Link](https://nappgui.com/en/gui/combo.html).
-
-* Control ListBox. Cuadro de lista con iconos y/o checkbox opcionales. [Link](https://nappgui.com/en/gui/listbox.html).
-
-* Control WebView. Vista Web. [Link](https://nappgui.com/en/gui/webview.html).
-
-* Formularios interiores. Poder integrar un formulario previamente diseñado como parte de otro formulario más grande.
-
-* Vista de dibujo y vista OpenGL. **Por el momento NO IMPLEMENTADOS**. Habría que estudiar como implementar el API de dibujo en Harbour. [Link](https://nappgui.com/en/gui/view.html). [Link](https://nappgui.com/en/ogl3d/ogl3d.html).
-
-**Todos los widgets (Fase 1 y fase 2)**
+**All widgets (Phase 1 and Phase 2)**
 
 ![all_widgets](images/widgets.png)
 
-**Formularios interiores**
+**Interior forms**
 
 ![inner_form](images/inner_form.png)
 
-### Fase 2: Estimación de Sprints (12)
+### Phase 2: Sprint Estimation (12)
 
-* **Sprint 1:** Implementación del TextView. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
+* **Sprint 1:** TextView implementation. Add control, add support for **(.iu)** file and Harbour exporter.
+* **Sprint 2:** ImageView implementation. Add control, add support for **(.iu)** file and Harbour exporter.
+* **Sprint 3 and 4:** TableView implementation. Add control, add support for **(.iu)** file and Harbour exporter. This component is more complicated to integrate, due to the configuration of the columns. Also, we integrate the TreeView mode.
+* **Sprint 5:** Radio buttons. They are generated in groups (minimum 2) with their own horizontal or vertical layout. Add controls, add support for **(.iu)** file and Harbour exporter.
+* **Sprint 6:** Sliders and progress. Add controls, add support for **(.iu)** file and Harbour exporter.
+* **Sprint 7:** Popup. Add control, add support for **(.iu)** file and Harbour exporter.
+* **Sprint 8:** ComboBox. Add control, add support for **(.iu)** file and Harbour exporter.
+* **Sprint 9:** ListBox. Add control, add support for **(.iu)** file and Harbour exporter.
+* **Sprint 10:** WebView. Add control, add support for **(.iu)** file and Harbour exporter.
+* **Sprint 11 and 12:** Inner forms. Possibility of selecting a previous form from the editor. Add control, add support for **(.iu)** file and Harbour exporter.
 
-* **Sprint 2:** Implementación del ImageView. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
+## Phase 3: Advanced editing features
 
-* **Sprint 3 y 4:** Implementación del TableView. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour. Este componente es más complicado de integrar, debido a la configuración de las columnas.
+Now with a fully operational application ready to create and edit any type of form, we will focus on improving the usability of the program. The functionalities to be implemented in this phase will be:
 
-* **Sprint 5:** Radio buttons. Se generan en grupo (mínimo 2) con su propio layout horizontal o vertical. Añadir controles, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
+* Multiple selection. Be able to select multiple objects with the mouse or by pressing [Ctrl+click].
+* Clipboard: Copy, Paste, Cut.
+    * Copy the selected graphic objects to the system clipboard.
+    * Define communication structures.
+    * Paste the graphic objects in an empty cell of the layout.
+    * Copy and paste property texts (e.g. button text).
+    * Cut function for selected objects.
+    * Remove function from selected objects.
+* Undo/Redo: Ability to undo and redo changes.
+    * Define what types of operations can be undone.
+    * Create the Undo/Redo data structures.
+    * Implementation.
+* Drag'N'Drop. Being able to drag widgets from the left view to the canvas area and link them to a layout cell.
+    * Implement Drag'N'Drop support on Windows, macOS, Linux.
+    * Implement dragging widgets from the left panel to the canvas.
 
-* **Sprint 6:** Sliders y progress. Añadir controles, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
-
-* **Sprint 7:** Popup. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
-
-* **Sprint 8:** ComboBox. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
-
-* **Sprint 9:** ListBox. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
-
-* **Sprint 10:** WebView. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
-
-* **Sprint 11 y 12:** Formularios interiores. Posibilidad de seleccionar un formulario previo desde el editor. Añadir control, añadir soporte al archivo **(.iu)** y al exportador de Harbour.
-
-## Fase 3: Funciones avanzadas de edición
-
-Ya con una aplicación totalmente operativa lista para crear y editar cualquier tipo de formulario, nos centraremos en mejorar la usabilidad del programa. Las funcionalidades a implementar en esta fase serán:
-
-* Selección múltiple. Poder seleccionar varios objetos con el ratón o pulsando [Ctrl+click].
-
-* Portapapeles: Copy, Paste, Cut.
-    * Copiar en el portapapeles del sistema, los objetos gráficos seleccionados.
-    * Definir estructuras de comunicación.
-    * Pegar los objetos gráficos en una celda vacía del layout.
-    * Copiar y pegar los textos de propiedades (por ejemplo, el texto del botón).
-    * Función cut de los objetos seleccionados.
-    * Función remove de los objetos seleccionados.
-
-* Undo/Redo: Capacidad de deshacer y rehacer los cambios.
-    * Definir que tipos de operaciones pueden ser deshechas.
-    * Crear las estructuras de datos del Undo/Redo.
-    * Implementación.
-
-* Drag'N'Drop. Poder arrastrar widgets desde la vista izquierda al área del canvas y vincularlos con una celda del layout.
-    * Implementar el soporte Drag'N'Drop en Windows, macOS, Linux.
-    * Implementar el arrastre de widgets desde el panel izquierdo al canvas.
-
-**Selección múltiple**
+**Multiple selection**
 
 ![multisel](images/multisel.png)
 
-**Soporte Drag'N'Drop**
+**Drag'N'Drop support**
 
 ![dragndrop](images/dragndrop.png)
 
-### Fase 3: Estimación de Sprints (9)
+### Phase 3: Sprint Estimation (9)
 
-* **Sprint 1:** Selección múltiple de objetos.
-
-* **Sprint 2 y 3:** Implementación del portapapeles. Copiar y pegar los objetos seleccionados.
-
+* **Sprint 1:** Multiple selection of objects.
+* **Sprint 2 and 3:** Clipboard implementation. Copy, paste and cut the selected objects.
 * **Sprint 4, 5, 6:** Undo/Redo.
-
 * **Sprint 7, 8, 9:** Drag'N'Drop support.
 
-## Fase 4: Formularios redimensionables
+## Phase 4: Resizable forms
 
-Hasta ahora, todos los formularios que podemos diseñar tienen un tamaño fijo. Es posible que queramos hacerlos re-dimensionables utilizando el botón de maximizar o arrastrando los bordes de la ventana. Esto exige añadir nuevas propiedades a los layout y sus celdas con el fin de controlar de forma recursiva como se adaptarán los controles al cambio de tamaño. Mas información [Aquí](https://nappgui.com/en/gui/layout.html#h5) y [Aquí](https://nappgui.com/en/demo/die.html#h4).
+Until now, all the forms we can design have a fixed size. We may want to make them re-sizable by using the maximize button or dragging the window borders. This requires adding new properties to the layout and its cells in order to recursively manage how the controls will adapt to the size change. More information [Here](https://nappgui.com/en/gui/layout.html#h5) and [Here](https://nappgui.com/en/demo/die.html#h4).
 
-* Añadir al Property Editor aquellas propiedades necesarias para manejar el cambio de tamaño.
+* Add to the Property Editor those properties necessary to handle the size change.
+* Create a "preview" capable of accepting window resizing.
+* Modify the **(*.ui)** file to accept these new properties.
+* Modify the exporter to **(*.prg)** so that it generates the re-sizable forms.
+* Add new functions to handle re-sizing to the GTNAP-Forms library.
 
-* Crear una "vista previa" capaz de aceptar el redimensionado de la ventana.
-
-* Modificar el archivo **(*.ui)** para que acepte estas nuevas propiedades.
-
-* Modificar el exportador a **(*.prg)** para que genere los formularios re-dimensionables.
-
-* Añadir a la librería GTNAP-Forms las nuevas funciones para manejar el re-dimensionado.
-
-**Redimensionado de formularios**
+**Resizing of forms**
 
 ![resizing](images/resize.png)
 
-### Fase 4: Estimación de Sprints (5)
+### Phase 4: Sprint Estimation (5)
 
-* Sprint 1: Añadir nuevas propiedades al Property Editor.
+* Sprint 1: Add new properties to the Property Editor.
+* Sprint 2: Create the re-sizable "preview".
+* Sprint 3: Modify the **(*.ui)**.
+* Sprint 4: Change the exporter to **(*.prg)**.
+* Sprint 5: Modify the GTNAP-Forms library.
 
-* Sprint 2: Crear la "vista previa" re-dimensionable.
-
-* Sprint 3: Modificar el **(*.ui)**.
-
-* Sprint 4: Modificar el exportador a **(*.prg)**.
-
-* Sprint 5: Modificar la librería GTNAP-Forms.
