@@ -802,13 +802,11 @@ bool_t osedit_resign_focus(const OSEdit *edit)
         listener_event(ledit->OnChange, ekGUI_EVENT_TXTCHANGE, edit, &params, &resign, OSEdit, EvText, bool_t);
     }
 
-    /*
     if (resign == TRUE)
         [window endEditingFor:ledit];
     else
         [window makeFirstResponder:ledit];
-    */
-    
+
     return resign;
 }
 
