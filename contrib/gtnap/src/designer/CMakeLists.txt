@@ -1,0 +1,1 @@
+nap_desktop_app(Designer "osapp" NRC_NONE)
