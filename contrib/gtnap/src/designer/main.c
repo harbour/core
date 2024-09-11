@@ -22,6 +22,35 @@ static void i_OnButton(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static Layout *i_main_layout(App *app)
+{
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = i_tools_layout(app);
+    Layout *layout3 = i_middle_layout(app);
+    Layout *layout4 = i_statusbar_layout(app);
+    layout_layout(layout1, layout2, 0, 0);
+    layout_layout(layout1, layout3, 0, 1);
+    layout_layout(layout1, layout4, 0, 2);
+
+    /* 
+     * All the vertical expansion will be done in the middle layout
+     * tools_layout (top) and statusbar_layout (bottom) will preserve 
+     * the 'natural' height 
+     */
+    layout_vexpand(layout1, 1);
+
+    /* A vertical margins between middle and (controls, info) */
+    layout_vmargin(layout1, 0, 5);
+    layout_vmargin(layout1, 1, 5);
+
+    /* A border margin for all layout edges */
+    layout_margin(layout1, 5);
+
+    return layout1;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Panel *i_panel(App *app)
 {
     Panel *panel = panel_create();
