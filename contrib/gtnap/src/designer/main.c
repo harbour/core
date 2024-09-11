@@ -79,5 +79,14 @@ static void i_destroy(App **app)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_update(App *app, const real64_t prtime, const real64_t ctime)
+{
+    unref(app);
+    unref(prtime);
+    unref(ctime);
+}
+
+/*---------------------------------------------------------------------------*/
+
 #include "osmain.h"
-osmain(i_create, i_destroy, "", App)
+osmain_sync(0.1, i_create, i_destroy, i_update, "", App)
