@@ -1104,6 +1104,10 @@ char * hb_verCompiler( void )
       hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
    #endif
 
+   #if ! defined( HB_CPU_X86 ) && ! defined( HB_CPU_X86_64 )
+      #define __HB_ARCH_VERSION /* add string supplement for "non-classic" architectures */
+   #endif
+
    iVerMajor = _MSC_VER / 100;
    iVerMinor = _MSC_VER % 100;
 
@@ -1313,7 +1317,10 @@ char * hb_verCompiler( void )
    hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
 #endif
 
-   #if defined( HB_ARCH_16BIT )
+   #if defined( __HB_ARCH_VERSION )
+      hb_strncat( pszCompiler, " ",         COMPILER_BUF_SIZE - 1 );
+      hb_strncat( pszCompiler, hb_verCPU(), COMPILER_BUF_SIZE - 1 );
+   #elif defined( HB_ARCH_16BIT )
       hb_strncat( pszCompiler, " (16-bit)", COMPILER_BUF_SIZE - 1 );
    #elif defined( HB_ARCH_32BIT )
       hb_strncat( pszCompiler, " (32-bit)", COMPILER_BUF_SIZE - 1 );

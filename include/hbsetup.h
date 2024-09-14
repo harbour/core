@@ -152,7 +152,8 @@
    #define HB_CPU_X86_64
 
 #elif defined( __arm64__ ) || \
-      defined( __aarch64__ )
+      defined( __aarch64__ ) || \
+      defined( _M_ARM64 )
    #define HB_CPU_ARM_64
 
 #elif defined( __arm__ ) || \

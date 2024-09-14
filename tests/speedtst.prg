@@ -745,6 +745,9 @@ return
 #ifdef __HARBOUR__
 #ifndef __XHARBOUR__
    static function spd_cpu()
+   if right( hb_compiler(), len( spd_cpu() ) ) == spd_cpu()
+      return ""
+   endif
    return hb_version( HB_VERSION_CPU )
 #endif
 #endif
