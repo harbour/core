@@ -8,25 +8,17 @@ typedef struct _app_t App;
 struct _app_t
 {
     Window *window;
-    TextView *text;
-    uint32_t clicks;
     View *canvas;
+    Label *status_label;
+    Label *cells_label;
+    Progress *progress;
 };
-
-/*---------------------------------------------------------------------------*/
-
-static void i_OnButton(App *app, Event *e)
-{
-    textview_printf(app->text, "Button click (%d)\n", app->clicks);
-    app->clicks += 1;
-    unref(e);
-}
 
 /*---------------------------------------------------------------------------*/
 
 static Layout *i_tools_layout(App *app, ResPack *pack)
 {
-    Layout *layout = layout_create(8, 1);
+    Layout *layout = layout_create(9, 1);
     Button *button1 = button_flat();
     Button *button2 = button_flat();
     Button *button3 = button_flat();
@@ -35,10 +27,10 @@ static Layout *i_tools_layout(App *app, ResPack *pack)
     Button *button6 = button_flat();
     Button *button7 = button_flat();
     Button *button8 = button_flat();
-    button_image(button1, image_from_resource(pack, FOLDER32_PNG));
-    button_image(button2, image_from_resource(pack, DISK32_PNG));
-    button_image(button3, image_from_resource(pack, EDIT32_PNG));
-    button_image(button4, image_from_resource(pack, SEARCH32_PNG));
+    button_image(button1, image_from_resource(pack, FOLDER24_PNG));
+    button_image(button2, image_from_resource(pack, DISK24_PNG));
+    button_image(button3, image_from_resource(pack, EDIT24_PNG));
+    button_image(button4, image_from_resource(pack, SEARCH24_PNG));
     button_image(button5, image_from_resource(pack, PLUS24_PNG));
     button_image(button6, image_from_resource(pack, PLUS24_PNG));
     button_image(button7, image_from_resource(pack, ERROR24_PNG));
@@ -47,10 +39,11 @@ static Layout *i_tools_layout(App *app, ResPack *pack)
     layout_button(layout, button2, 1, 0);
     layout_button(layout, button3, 2, 0);
     layout_button(layout, button4, 3, 0);
-    layout_button(layout, button5, 4, 0);
-    layout_button(layout, button6, 5, 0);
-    layout_button(layout, button7, 6, 0);
-    layout_button(layout, button8, 7, 0);
+    layout_button(layout, button5, 5, 0);
+    layout_button(layout, button6, 6, 0);
+    layout_button(layout, button7, 7, 0);
+    layout_button(layout, button8, 8, 0);
+    layout_hexpand(layout, 4);
     unref(app);
     return layout;
 }
@@ -78,6 +71,12 @@ static Layout *i_widgets_layout(App *app)
     layout_button(layout, radio4, 0, 3);
     layout_button(layout, radio5, 0, 4);
     layout_button(layout, radio6, 0, 5);
+    layout_vmargin(layout, 0, 5);
+    layout_vmargin(layout, 1, 5);
+    layout_vmargin(layout, 2, 5);
+    layout_vmargin(layout, 3, 5);
+    layout_vmargin(layout, 4, 5);
+    unref(app);
     return layout;
 }
 
@@ -85,7 +84,7 @@ static Layout *i_widgets_layout(App *app)
 
 static Layout *i_left_layout(App *app)
 {
-    Layout *layout1 = layout_create(1, 6);
+    Layout *layout1 = layout_create(1, 5);
     Layout *layout2 = i_widgets_layout(app);
     Label *label1 = label_create();
     Label *label2 = label_create();
@@ -111,12 +110,12 @@ static Layout *i_left_layout(App *app)
     layout_listbox(layout1, list1, 0, 1);
     layout_layout(layout1, layout2, 0, 3);
 
-    /* Vertical margin between a label and the above listbox */
-    layout_vmargin(layout1, 1, 5);
-    layout_vmargin(layout1, 3, 5);
+    layout_valign(layout1, 0, 3, ekTOP);
 
-    /* The vertical expansion will be distributed equally between listboxes */
-    layout_vexpand3(layout1, 1, 3, 5, .33f, .33f);
+    layout_vmargin(layout1, 1, 5);
+    layout_vmargin(layout1, 2, 5);
+
+    layout_vexpand2(layout1, 1, 4, .75f);
 
     return layout1;
 }
@@ -138,6 +137,8 @@ static Layout *i_right_layout(App *app)
     layout_label(layout, label1, 0, 0);
     layout_label(layout, label2, 0, 2);
     layout_tableview(layout, table, 0, 1);
+    layout_vexpand2(layout, 1, 3, .5f);
+    unref(app);
     return layout;
 }
 
@@ -170,6 +171,35 @@ static Layout *i_middle_layout(App *app)
 
 /*---------------------------------------------------------------------------*/
 
+static Layout *i_statusbar_layout(App *app)
+{
+    Layout *layout = layout_create(4, 1);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Progress *progress = progress_create();
+
+    label_align(label2, ekRIGHT);
+
+    layout_label(layout, label1, 0, 0);
+    layout_label(layout, label2, 3, 0);
+    layout_progress(layout, progress, 1, 0);
+    layout_hmargin(layout, 0, 10);
+
+    /* All the horizontal expansion will be done in empty column-cell(2) */
+    layout_hexpand(layout, 2);
+
+    label_text(label1, "status-1");
+    label_text(label2, "status-2");
+
+    /* Keep the controls for futher updates */
+    app->status_label = label1;
+    app->cells_label = label2;
+    app->progress = progress;
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_main_layout(App *app, ResPack *pack)
 {
     Layout *layout1 = layout_create(1, 3);
@@ -179,7 +209,7 @@ static Layout *i_main_layout(App *app, ResPack *pack)
     layout_layout(layout1, layout2, 0, 0);
     layout_layout(layout1, layout3, 0, 1);
     layout_layout(layout1, layout4, 0, 2);
-
+    //layout_halign(layout1, 0, 0, ekJUSTIFY);
     /* 
      * All the vertical expansion will be done in the middle layout
      * tools_layout (top) and statusbar_layout (bottom) will preserve 
@@ -199,25 +229,10 @@ static Layout *i_main_layout(App *app, ResPack *pack)
 
 /*---------------------------------------------------------------------------*/
 
-static Panel *i_panel(App *app)
+static Panel *i_panel(App *app, ResPack *pack)
 {
     Panel *panel = panel_create();
-    Layout *layout = layout_create(1, 3);
-    Label *label = label_create();
-    Button *button = button_push();
-    TextView *text = textview_create();
-    app->text = text;
-    label_text(label, "Hello!, I'm a label");
-    button_text(button, "Click Me!");
-    button_OnClick(button, listener(app, i_OnButton, App));
-    layout_label(layout, label, 0, 0);
-    layout_button(layout, button, 0, 1);
-    layout_textview(layout, text, 0, 2);
-    layout_hsize(layout, 0, 250);
-    layout_vsize(layout, 2, 100);
-    layout_margin(layout, 5);
-    layout_vmargin(layout, 0, 5);
-    layout_vmargin(layout, 1, 5);
+    Layout *layout = i_main_layout(app, pack);
     panel_layout(panel, layout);
     return panel;
 }
@@ -237,10 +252,10 @@ static App *i_create(void)
 {
     App *app = heap_new0(App);
     ResPack *pack = res_designer_respack("");
-    Panel *panel = i_panel(app);
-    app->window = window_create(ekWINDOW_STD);
+    Panel *panel = i_panel(app, pack);
+    app->window = window_create(ekWINDOW_STDRES);
     window_panel(app->window, panel);
-    window_title(app->window, "Hello, World!");
+    window_title(app->window, "GTNAP Designer");
     window_origin(app->window, v2df(500, 200));
     window_OnClose(app->window, listener(app, i_OnClose, App));
     window_show(app->window);
