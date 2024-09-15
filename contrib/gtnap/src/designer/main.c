@@ -1,6 +1,7 @@
-/* NAppGUI Hello World */
+/* NAppGUI Designer */
 
 #include <nappgui.h>
+#include "res_designer.h"
 
 typedef struct _app_t App;
 
@@ -22,10 +23,43 @@ static void i_OnButton(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_main_layout(App *app)
+static Layout *i_tools_layout(App *app, ResPack *pack)
+{
+    Layout *layout = layout_create(8, 1);
+    Button *button1 = button_flat();
+    Button *button2 = button_flat();
+    Button *button3 = button_flat();
+    Button *button4 = button_flat();
+    Button *button5 = button_flat();
+    Button *button6 = button_flat();
+    Button *button7 = button_flat();
+    Button *button8 = button_flat();
+    button_image(button1, image_from_resource(pack, FOLDER32_PNG));
+    button_image(button2, image_from_resource(pack, DISK32_PNG));
+    button_image(button3, image_from_resource(pack, EDIT32_PNG));
+    button_image(button4, image_from_resource(pack, SEARCH32_PNG));
+    button_image(button5, image_from_resource(pack, PLUS24_PNG));
+    button_image(button6, image_from_resource(pack, PLUS24_PNG));
+    button_image(button7, image_from_resource(pack, ERROR24_PNG));
+    button_image(button8, image_from_resource(pack, ERROR24_PNG));
+    layout_button(layout, button1, 0, 0);
+    layout_button(layout, button2, 1, 0);
+    layout_button(layout, button3, 2, 0);
+    layout_button(layout, button4, 3, 0);
+    layout_button(layout, button5, 4, 0);
+    layout_button(layout, button6, 5, 0);
+    layout_button(layout, button7, 6, 0);
+    layout_button(layout, button8, 7, 0);
+    unref(app);
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_main_layout(App *app, ResPack *pack)
 {
     Layout *layout1 = layout_create(1, 3);
-    Layout *layout2 = i_tools_layout(app);
+    Layout *layout2 = i_tools_layout(app, pack);
     Layout *layout3 = i_middle_layout(app);
     Layout *layout4 = i_statusbar_layout(app);
     layout_layout(layout1, layout2, 0, 0);
@@ -88,6 +122,7 @@ static void i_OnClose(App *app, Event *e)
 static App *i_create(void)
 {
     App *app = heap_new0(App);
+    ResPack *pack = res_designer_respack("");
     Panel *panel = i_panel(app);
     app->window = window_create(ekWINDOW_STD);
     window_panel(app->window, panel);
@@ -95,6 +130,7 @@ static App *i_create(void)
     window_origin(app->window, v2df(500, 200));
     window_OnClose(app->window, listener(app, i_OnClose, App));
     window_show(app->window);
+    respack_destroy(&pack);
     return app;
 }
 
