@@ -57,10 +57,76 @@ static Layout *i_tools_layout(App *app, ResPack *pack)
 
 /*---------------------------------------------------------------------------*/
 
+static Layout *i_widgets_layout(App *app)
+{
+    Layout *layout = layout_create(1, 6);
+    Button *radio1 = button_radio();
+    Button *radio2 = button_radio();
+    Button *radio3 = button_radio();
+    Button *radio4 = button_radio();
+    Button *radio5 = button_radio();
+    Button *radio6 = button_radio();
+    button_text(radio1, "None");
+    button_text(radio2, "Grid layout");
+    button_text(radio3, "Label");
+    button_text(radio4, "Button");
+    button_text(radio5, "Checkbox");
+    button_text(radio6, "Editbox");
+    layout_button(layout, radio1, 0, 0);
+    layout_button(layout, radio2, 0, 1);
+    layout_button(layout, radio3, 0, 2);
+    layout_button(layout, radio4, 0, 3);
+    layout_button(layout, radio5, 0, 4);
+    layout_button(layout, radio6, 0, 5);
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_left_layout(App *app)
+{
+    Layout *layout1 = layout_create(1, 6);
+    Layout *layout2 = i_widgets_layout(app);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    ListBox *list1 = listbox_create();
+    label_text(label1, "Forms");
+    label_text(label2, "Widgets");
+    listbox_add_elem(list1, "Form 1", NULL);
+    listbox_add_elem(list1, "Form 2", NULL);
+    listbox_add_elem(list1, "Form 3", NULL);
+    listbox_add_elem(list1, "Form 4", NULL);
+    listbox_add_elem(list1, "Form 5", NULL);
+    listbox_add_elem(list1, "Table", NULL);
+    listbox_add_elem(list1, "View", NULL);
+    listbox_add_elem(list1, "Edit 1", NULL);
+    listbox_add_elem(list1, "Edit 2", NULL);
+    listbox_select(list1, 0, TRUE);
+
+    /* Natural size of listboxes */
+    listbox_size(list1, s2df(150, 100));
+
+    layout_label(layout1, label1, 0, 0);
+    layout_label(layout1, label2, 0, 2);
+    layout_listbox(layout1, list1, 0, 1);
+    layout_layout(layout1, layout2, 0, 3);
+
+    /* Vertical margin between a label and the above listbox */
+    layout_vmargin(layout1, 1, 5);
+    layout_vmargin(layout1, 3, 5);
+
+    /* The vertical expansion will be distributed equally between listboxes */
+    layout_vexpand3(layout1, 1, 3, 5, .33f, .33f);
+
+    return layout1;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_middle_layout(App *app)
 {
     Layout *layout1 = layout_create(3, 1);
-    Layout *layout2 = i_list_layout(app);
+    Layout *layout2 = i_left_layout(app);
     Layout *layout3 = i_table_layout(app);
     View *view = view_scroll();
     view_size(view, s2df(450, 200));
