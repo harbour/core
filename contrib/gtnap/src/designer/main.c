@@ -123,11 +123,31 @@ static Layout *i_left_layout(App *app)
 
 /*---------------------------------------------------------------------------*/
 
+static Layout *i_right_layout(App *app)
+{
+    Layout *layout = layout_create(1, 4);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    TableView *table = tableview_create();
+    label_text(label1, "Object inspector");
+    label_text(label2, "Property editor");
+    tableview_new_column_text(table);
+    tableview_size(table, s2df(150, 200));
+    tableview_column_width(table, 0, 120);
+    tableview_update(table);
+    layout_label(layout, label1, 0, 0);
+    layout_label(layout, label2, 0, 2);
+    layout_tableview(layout, table, 0, 1);
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_middle_layout(App *app)
 {
     Layout *layout1 = layout_create(3, 1);
     Layout *layout2 = i_left_layout(app);
-    Layout *layout3 = i_table_layout(app);
+    Layout *layout3 = i_right_layout(app);
     View *view = view_scroll();
     view_size(view, s2df(450, 200));
     layout_layout(layout1, layout2, 0, 0);
