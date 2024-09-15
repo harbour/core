@@ -1,4 +1,4 @@
-/* NAppGUI Designer */
+/* NAppGUI Designer main */
 
 #include <nappgui.h>
 #include "res_designer.h"
@@ -138,6 +138,7 @@ static Layout *i_right_layout(App *app)
     layout_label(layout, label2, 0, 2);
     layout_tableview(layout, table, 0, 1);
     layout_vexpand2(layout, 1, 3, .5f);
+    layout_vmargin(layout, 1, 5.f);
     unref(app);
     return layout;
 }
@@ -222,11 +223,11 @@ static Layout *i_main_layout(App *app, ResPack *pack)
     layout_layout(layout1, layout2, 0, 0);
     layout_layout(layout1, layout3, 0, 1);
     layout_layout(layout1, layout4, 0, 2);
-    //layout_halign(layout1, 0, 0, ekJUSTIFY);
-    /* 
+    // layout_halign(layout1, 0, 0, ekJUSTIFY);
+    /*
      * All the vertical expansion will be done in the middle layout
-     * tools_layout (top) and statusbar_layout (bottom) will preserve 
-     * the 'natural' height 
+     * tools_layout (top) and statusbar_layout (bottom) will preserve
+     * the 'natural' height
      */
     layout_vexpand(layout1, 1);
 
