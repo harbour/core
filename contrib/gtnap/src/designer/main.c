@@ -144,6 +144,18 @@ static Layout *i_right_layout(App *app)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnDraw(App *app, Event *e)
+{
+    const EvDraw *p = event_params(e, EvDraw);
+    Font *font = font_system(30, 0);
+    draw_clear(p->ctx, kCOLOR_YELLOW);
+    draw_font(p->ctx, font);
+    draw_text(p->ctx, "--> CANVAS <--", 0, 0);
+    font_destroy(&font);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_middle_layout(App *app)
 {
     Layout *layout1 = layout_create(3, 1);
@@ -151,6 +163,7 @@ static Layout *i_middle_layout(App *app)
     Layout *layout3 = i_right_layout(app);
     View *view = view_scroll();
     view_size(view, s2df(450, 200));
+    view_OnDraw(view, listener(app, i_OnDraw, App));
     layout_layout(layout1, layout2, 0, 0);
     layout_view(layout1, view, 1, 0);
     layout_layout(layout1, layout3, 2, 0);
