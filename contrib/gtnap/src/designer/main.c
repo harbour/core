@@ -10,6 +10,7 @@ struct _app_t
     Window *window;
     TextView *text;
     uint32_t clicks;
+    View *canvas;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -52,6 +53,33 @@ static Layout *i_tools_layout(App *app, ResPack *pack)
     layout_button(layout, button8, 7, 0);
     unref(app);
     return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_middle_layout(App *app)
+{
+    Layout *layout1 = layout_create(3, 1);
+    Layout *layout2 = i_list_layout(app);
+    Layout *layout3 = i_table_layout(app);
+    View *view = view_scroll();
+    view_size(view, s2df(450, 200));
+    layout_layout(layout1, layout2, 0, 0);
+    layout_view(layout1, view, 1, 0);
+    layout_layout(layout1, layout3, 2, 0);
+
+    /* Add the view to tabstop list */
+    layout_tabstop(layout1, 1, 0, TRUE);
+
+    /* A small horizontal margin between view cell and list (left) table (right) layouts */
+    layout_hmargin(layout1, 0, 3);
+    layout_hmargin(layout1, 1, 3);
+
+    /* All the horizontal expansion will be done in the middle cell (view)
+       list_layout (left) and table_layout (right) will preserve the 'natural' width */
+    layout_hexpand(layout1, 1);
+    app->canvas = view;
+    return layout1;
 }
 
 /*---------------------------------------------------------------------------*/
