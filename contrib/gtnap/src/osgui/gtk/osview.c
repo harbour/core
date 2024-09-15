@@ -41,8 +41,6 @@ struct _osview_t
     GtkWidget *darea;
     OSScrolls *scroll;
     OSControl *capture;
-    real32_t area_width;
-    real32_t area_height;
     real32_t clip_width;
     real32_t clip_height;
     ViewListeners listeners;
@@ -123,11 +121,9 @@ static gboolean i_OnDraw(GtkWidget *widget, cairo_t *cr, OSView *view)
         EvDraw params;
         params.x = 0;
         params.y = 0;
-        params.width = (real32_t)view->area_width;
-        params.height = (real32_t)view->area_height;
+        params.width = view->clip_width;
+        params.height = view->clip_height;
         params.ctx = NULL;
-        cassert(view->area_width == view->clip_width);
-        cassert(view->area_height == view->clip_height);
         _oslistener_redraw((OSControl *)view, &params, &view->listeners);
     }
 
@@ -575,7 +571,7 @@ void osview_OnScroll(OSView *view, Listener *listener)
 void osview_allow_key(OSView *view, const vkey_t key, const uint32_t value)
 {
     cassert_no_null(view);
-    cassert(key == ekKEY_TAB);
+    cassert_unref(key == ekKEY_TAB, key);
     cassert(value == 0 || value == 1);
     view->allow_tab = (bool_t)value;
 }
@@ -625,17 +621,6 @@ void osview_scroller_visible(OSView *view, const bool_t horizontal, const bool_t
 void osview_content_size(OSView *view, const real32_t width, const real32_t height, const real32_t line_width, const real32_t line_height)
 {
     cassert_no_null(view);
-    if (GTK_IS_FRAME(view->control.widget) == TRUE)
-    {
-        view->area_width = width - i_FRAME_HPADDING;
-        view->area_height = height - i_FRAME_VPADDING;
-    }
-    else
-    {
-        view->area_width = width;
-        view->area_height = height;
-    }
-
     osscrolls_content_size(view->scroll, (uint32_t)width, (uint32_t)height, (uint32_t)line_width, (uint32_t)line_height);
 }
 
