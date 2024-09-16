@@ -2,6 +2,8 @@
 
 #include <nappgui.h>
 #include "res_designer.h"
+#include "dlabel.h"
+#include "dlayout.h"
 
 typedef struct _app_t App;
 
@@ -13,6 +15,38 @@ struct _app_t
     Label *cells_label;
     Progress *progress;
 };
+
+/*---------------------------------------------------------------------------*/
+
+static void i_dbind(void)
+{
+    /* Registration of editable structures */
+    dbind_enum(celltype_t, ekCELL_TYPE_EMPTY, "");
+    dbind_enum(celltype_t, ekCELL_TYPE_LABEL, "");
+    dbind_enum(celltype_t, ekCELL_TYPE_LAYOUT, "");
+    dbind_enum(align_t, ekLEFT, "");
+    dbind_enum(align_t, ekTOP, "");
+    dbind_enum(align_t, ekCENTER, "");
+    dbind_enum(align_t, ekRIGHT, "");
+    dbind_enum(align_t, ekBOTTOM, "");
+    dbind_enum(align_t, ekJUSTIFY, "");
+    dbind(DLabel, String*, text);
+    dbind(DColumn, real32_t, margin_right);
+    dbind(DRow, real32_t, margin_bottom);
+    dbind(DCell, celltype_t, type);
+    dbind(DCell, align_t, halign);
+    dbind(DCell, align_t, valign);
+    dbind(DLayout, real32_t, margin_left);
+    dbind(DLayout, real32_t, margin_top);
+    dbind(DLayout, ArrSt(DColumn)*, cols);
+    dbind(DLayout, ArrSt(DRow)*, rows);
+    dbind(DLayout, ArrSt(DCell)*, cells);
+
+    /* Don't move, we must first declare the inner struct */
+    dbind(DCellContent, DLabel*, label);
+    dbind(DCellContent, DLayout*, layout);
+    dbind(DCell, DCellContent, content);
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -153,6 +187,7 @@ static void i_OnDraw(App *app, Event *e)
     draw_font(p->ctx, font);
     draw_text(p->ctx, "--> CANVAS <--", 0, 0);
     font_destroy(&font);
+    unref(app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -262,12 +297,22 @@ static void i_OnClose(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static App *i_create(void)
+static App *i_app(void)
 {
     App *app = heap_new0(App);
+    i_dbind();
+    return app;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static App *i_create(void)
+{
+    App *app = i_app();
     ResPack *pack = res_designer_respack("");
     Panel *panel = i_panel(app, pack);
     app->window = window_create(ekWINDOW_STDRES);
+
     window_panel(app->window, panel);
     window_title(app->window, "GTNAP Designer");
     window_origin(app->window, v2df(500, 200));
