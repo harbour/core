@@ -1,4 +1,4 @@
-/* Design layout */
+/* Design layout (editable parameters) */
 
 #include "designer.hxx"
 
