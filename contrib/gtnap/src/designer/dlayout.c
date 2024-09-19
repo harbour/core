@@ -3,6 +3,7 @@
 #include "dlayout.h"
 #include <core/arrst.h>
 #include <core/dbind.h>
+#include <sewer/bmem.h>
 #include <sewer/cassert.h>
 
 /*---------------------------------------------------------------------------*/
@@ -47,6 +48,7 @@ static void i_remove_cell(DCell *cell)
 static void i_init_empty_cell(DCell *cell)
 {
     cassert_no_null(cell);
+    bmem_zero(cell, DCell);
     cell->type = ekCELL_TYPE_EMPTY;
     cell->halign = ekLEFT;
     cell->valign = ekTOP;
@@ -196,3 +198,21 @@ void dlayout_remove_row(DLayout *layout, const uint32_t row)
     arrst_delete(layout->rows, row, i_remove_row, DRow);
 }
 
+/*---------------------------------------------------------------------------*/
+
+void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col, const uint32_t row)
+{
+    uint32_t i, ncols = 0;
+    DCell *cell = NULL;
+    cassert_no_null(layout);
+    cassert_no_null(sublayout);
+    ncols = arrst_size(layout->cols, DColumn);
+    i = row * ncols + col;
+    cell = arrst_get(layout->cells, i, DCell);
+    i_remove_cell(cell);
+    i_init_empty_cell(cell);
+    cell->type = ekCELL_TYPE_LAYOUT;
+    cell->content.layout = sublayout;
+    cell->valign = ekJUSTIFY;
+    cell->halign = ekJUSTIFY;
+}
