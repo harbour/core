@@ -10,6 +10,7 @@
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "gtwvg.ch"
 
 PROCEDURE Main()
 

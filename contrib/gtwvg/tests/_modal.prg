@@ -3,6 +3,7 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 #include "setcurs.ch"
+#include "gtwvg.ch"
 
 #xuntranslate Alert( =>
 

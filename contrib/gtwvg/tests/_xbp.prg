@@ -3,6 +3,7 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 #include "hbver.ch"
+#include "gtwvg.ch"
 
 #define MUSIC_WAITON          {800, 1600}
 
