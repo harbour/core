@@ -2,4 +2,7 @@
 
 #include "designer.hxx"
 
-DLayout *dform_with_buttons_right(void);
+DForm *dform_first_example(void);
+
+void dform_destroy(DForm **form);
+

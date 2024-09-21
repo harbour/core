@@ -11,6 +11,7 @@ typedef struct _drow_t DRow;
 typedef struct _dcell_t DCell;
 typedef struct _dcell_content_t DCellContent;
 typedef struct _dlayout_t DLayout;
+typedef struct _dform_t DForm;
 
 typedef enum _celltype_t
 {
