@@ -1,6 +1,9 @@
 /* Design layout (editable parameters) */
 
 #include "dlayout.h"
+#include <gui/label.h>
+#include <gui/layout.h>
+#include <draw2d/color.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
 #include <sewer/bmem.h>
@@ -215,4 +218,105 @@ void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col,
     cell->content.layout = sublayout;
     cell->valign = ekJUSTIFY;
     cell->halign = ekJUSTIFY;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static color_t i_color(void)
+{
+    static uint32_t index = 0;
+    switch(index++ % 3) {
+    case 0:
+        return kCOLOR_RED;
+    case 1:
+        return kCOLOR_BLUE;
+    case 2:
+        return kCOLOR_GREEN;
+    cassert_default();
+    }
+
+    return kCOLOR_DEFAULT;
+}
+
+/*---------------------------------------------------------------------------*/
+
+Layout *dlayout_gui_layout(const DLayout *layout)
+{
+    uint32_t ncols = 0, nrows = 0;
+    Layout *glayout = NULL;
+    cassert_no_null(layout);
+    ncols = arrst_size(layout->cols, DColumn);
+    nrows = arrst_size(layout->rows, DRow);
+    glayout = layout_create(ncols, nrows);
+
+    /* Layout border margins */
+    {
+        real32_t mt = layout->margin_top;
+        real32_t ml = layout->margin_left;
+        real32_t mr = 0;
+        real32_t mb = 0;
+
+        {
+            const DColumn *col = arrst_get_const(layout->cols, ncols - 1, DColumn);
+            const DRow *row = arrst_get_const(layout->rows, nrows - 1, DRow);
+            mr = col->margin_right;
+            mb = row->margin_bottom;
+        }
+
+        layout_margin4(glayout, mt, mr, mb, ml);
+    }
+
+    /* Inter-column margins */
+    {
+        uint32_t i = 0;
+        for (i = 0; i < ncols - 1; ++i)
+        {
+            const DColumn *col = arrst_get_const(layout->cols, i, DColumn);
+            layout_hmargin(glayout, i, col->margin_right);
+        }
+    }
+
+    /* Inter-row margins */
+    {
+        uint32_t i = 0;
+        for (i = 0; i < nrows - 1; ++i)
+        {
+            const DRow *row = arrst_get_const(layout->rows, i, DRow);
+            layout_vmargin(glayout, i, row->margin_bottom);
+        }
+    }
+
+    /* Cells */
+    {
+        uint32_t i, j;
+        const DCell *cells = arrst_all_const(layout->cells, DCell);
+        for (j = 0; j < nrows; ++j)
+        {
+            for(i = 0; i < ncols; ++i)
+            {
+                switch(cells->type) {
+                case ekCELL_TYPE_EMPTY:
+                    break;
+
+                /* TODO */
+                case ekCELL_TYPE_LABEL:
+                    cassert(FALSE);
+                    break;
+
+                case ekCELL_TYPE_LAYOUT:
+                {
+                    Layout *gsublayout = dlayout_gui_layout(cells->content.layout);
+                    layout_layout(glayout, gsublayout, i, j);
+                    break;
+                }
+
+                }
+
+                cells += 1;
+            }
+        }
+    }
+
+    layout_bgcolor(glayout, i_color());
+    return glayout;
 }

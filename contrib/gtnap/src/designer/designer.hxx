@@ -28,11 +28,17 @@ struct _dlabel_t
 struct _dcolumn_t
 {
     real32_t margin_right;
+
+    /* Non-editable properties */
+    real32_t width;
 };
 
 struct _drow_t
 {
     real32_t margin_bottom;
+
+    /* Non-editable properties */
+    real32_t height;
 };
 
 struct _dcell_content_t

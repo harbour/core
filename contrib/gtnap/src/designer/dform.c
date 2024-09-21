@@ -2,6 +2,7 @@
 
 #include "dform.h"
 #include "dlayout.h"
+#include <gui/panel.h>
 #include <core/dbind.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -9,6 +10,8 @@
 struct _dform_t
 {
     DLayout *dlayout;
+    Layout *layout;
+    Panel *panel;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -32,5 +35,20 @@ void dform_destroy(DForm **form)
     cassert_no_null(form);
     cassert_no_null(*form);
     dlayout_destroy(&(*form)->dlayout);
+    /* Layout and Panel will be destroyed in host window */
     heap_delete(form, DForm);
 }
+
+/*---------------------------------------------------------------------------*/
+
+Panel *dform_panel(DForm *form)
+{
+    cassert_no_null(form);
+    cassert(form->layout == NULL);
+    cassert(form->panel == NULL);
+    form->layout = dlayout_gui_layout(form->dlayout);
+    form->panel = panel_create();
+    panel_layout(form->panel, form->layout);
+    return form->panel;
+}
+

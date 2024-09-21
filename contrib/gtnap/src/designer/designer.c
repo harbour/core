@@ -11,10 +11,12 @@ typedef struct _app_t App;
 struct _app_t
 {
     Window *window;
-    View *canvas;
     Label *status_label;
     Label *cells_label;
     Progress *progress;
+
+    View *canvas;
+    Layout *canvas_layout;
 
     /* Editing forms */
     DForm *form;
@@ -196,20 +198,28 @@ static void i_OnDraw(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static Layout *i_canvas_layout(App *app)
+{
+    Layout *layout = layout_create(1, 2);
+    View *view = view_scroll();
+    view_size(view, s2df(450, 200));
+    view_OnDraw(view, listener(app, i_OnDraw, App));
+    layout_view(layout, view, 0, 0);
+    app->canvas = view;
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_middle_layout(App *app)
 {
     Layout *layout1 = layout_create(3, 1);
     Layout *layout2 = i_left_layout(app);
-    Layout *layout3 = i_right_layout(app);
-    View *view = view_scroll();
-    view_size(view, s2df(450, 200));
-    view_OnDraw(view, listener(app, i_OnDraw, App));
+    Layout *layout3 = i_canvas_layout(app);
+    Layout *layout4 = i_right_layout(app);
     layout_layout(layout1, layout2, 0, 0);
-    layout_view(layout1, view, 1, 0);
-    layout_layout(layout1, layout3, 2, 0);
-
-    /* Add the view to tabstop list */
-    layout_tabstop(layout1, 1, 0, TRUE);
+    layout_layout(layout1, layout3, 1, 0);
+    layout_layout(layout1, layout4, 2, 0);
 
     /* A small horizontal margin between view cell and list (left) table (right) layouts */
     layout_hmargin(layout1, 0, 3);
@@ -218,7 +228,7 @@ static Layout *i_middle_layout(App *app)
     /* All the horizontal expansion will be done in the middle cell (view)
        list_layout (left) and table_layout (right) will preserve the 'natural' width */
     layout_hexpand(layout1, 1);
-    app->canvas = view;
+    app->canvas_layout = layout3;
     return layout1;
 }
 
@@ -312,9 +322,12 @@ static App *i_app(void)
 
 static void i_init_forms(App *app)
 {
+    Panel *panel = NULL;
     cassert_no_null(app);
     cassert(app->form == NULL);
     app->form = dform_first_example();
+    panel = dform_panel(app->form);
+    layout_panel_replace(app->canvas_layout, panel, 0, 1);
 }
 
 /*---------------------------------------------------------------------------*/
