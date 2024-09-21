@@ -57,3 +57,10 @@ Panel *dform_panel(DForm *form)
     return form->panel;
 }
 
+/*---------------------------------------------------------------------------*/
+
+void dform_synchro_visual(DForm *form)
+{
+    cassert_no_null(form);
+    dlayout_synchro_visual(form->dlayout, form->layout);
+}

@@ -3,6 +3,7 @@
 #include "dlayout.h"
 #include <gui/label.h>
 #include <gui/layout.h>
+#include <gui/layouth.h>
 #include <draw2d/color.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
@@ -377,4 +378,66 @@ Layout *dlayout_gui_layout(const DLayout *layout)
 
     layout_bgcolor(glayout, i_color());
     return glayout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_synchro_visual(DLayout *layout, const Layout *glayout)
+{
+    uint32_t ncols = 0, nrows = 0;
+    cassert_no_null(layout);
+    ncols = arrst_size(layout->cols, DColumn);
+    nrows = arrst_size(layout->rows, DRow);
+
+    /* Layout column width */
+    {
+        uint32_t i = 0;
+        for (i = 0; i < ncols; ++i)
+        {
+            DColumn *col = arrst_get(layout->cols, i, DColumn);
+            col->width = layout_get_hsize(glayout, i);
+        }
+    }
+
+    /* Layout row height */
+    {
+        uint32_t i = 0;
+        for (i = 0; i < nrows; ++i)
+        {
+            DRow *row = arrst_get(layout->rows, i, DRow);
+            row->height = layout_get_vsize(glayout, i);
+        }
+    }
+
+    /* Cells */
+    {
+        uint32_t i, j;
+        DCell *cells = arrst_all(layout->cells, DCell);
+        for (j = 0; j < nrows; ++j)
+        {
+            for(i = 0; i < ncols; ++i)
+            {
+                switch(cells->type) {
+                case ekCELL_TYPE_EMPTY:
+                    break;
+
+                /* TODO */
+                case ekCELL_TYPE_LABEL:
+                    cassert(FALSE);
+                    break;
+
+                case ekCELL_TYPE_LAYOUT:
+                {
+                    DLayout *sublayout = cells->content.layout;
+                    Layout *subglayout = layout_get_layout(cast(glayout, Layout), i, j);
+                    dlayout_synchro_visual(sublayout, subglayout);
+                    break;
+                }
+
+                }
+
+                cells += 1;
+            }
+        }
+    }
 }
