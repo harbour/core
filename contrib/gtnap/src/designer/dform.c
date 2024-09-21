@@ -21,7 +21,7 @@ DForm *dform_first_example(void)
     DLayout *layout3 = dlayout_create(2, 1);
     dlayout_add_layout(layout3, layout1, 0, 0);
     dlayout_add_layout(layout3, layout2, 1, 0);
-    form->dlayout = layout1;
+    form->dlayout = layout3;
     return form;
 }
 

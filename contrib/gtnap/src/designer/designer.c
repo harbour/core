@@ -4,6 +4,7 @@
 #include "res_designer.h"
 #include "dlabel.h"
 #include "dlayout.h"
+#include "dform.h"
 
 typedef struct _app_t App;
 
@@ -14,6 +15,9 @@ struct _app_t
     Label *status_label;
     Label *cells_label;
     Progress *progress;
+
+    /* Editing forms */
+    DForm *form;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -306,19 +310,28 @@ static App *i_app(void)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_init_forms(App *app)
+{
+    cassert_no_null(app);
+    cassert(app->form == NULL);
+    app->form = dform_first_example();
+}
+
+/*---------------------------------------------------------------------------*/
+
 static App *i_create(void)
 {
     App *app = i_app();
     ResPack *pack = res_designer_respack("");
     Panel *panel = i_panel(app, pack);
     app->window = window_create(ekWINDOW_STDRES);
-
     window_panel(app->window, panel);
     window_title(app->window, "GTNAP Designer");
     window_origin(app->window, v2df(500, 200));
     window_OnClose(app->window, listener(app, i_OnClose, App));
     window_show(app->window);
     respack_destroy(&pack);
+    i_init_forms(app);
     return app;
 }
 
@@ -326,6 +339,9 @@ static App *i_create(void)
 
 static void i_destroy(App **app)
 {
+    cassert_no_null(app);
+    cassert_no_null(*app);
+    dform_destroy(&(*app)->form);
     window_destroy(&(*app)->window);
     heap_delete(app, App);
 }
