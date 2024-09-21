@@ -24,6 +24,11 @@ DForm *dform_first_example(void)
     DLayout *layout3 = dlayout_create(2, 1);
     dlayout_add_layout(layout3, layout1, 0, 0);
     dlayout_add_layout(layout3, layout2, 1, 0);
+    dlayout_margin_left(layout3, 10);
+    dlayout_margin_top(layout3, 10);
+    dlayout_margin_right(layout3, 10);
+    dlayout_margin_bottom(layout3, 10);
+    dlayout_margin_col(layout3, 0, 5);
     form->dlayout = layout3;
     return form;
 }

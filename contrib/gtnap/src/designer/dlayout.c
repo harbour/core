@@ -107,6 +107,64 @@ void dlayout_destroy(DLayout **layout)
 
 /*---------------------------------------------------------------------------*/
 
+void dlayout_margin_top(DLayout *layout, const real32_t margin)
+{
+    cassert_no_null(layout);
+    layout->margin_top = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_margin_bottom(DLayout *layout, const real32_t margin)
+{
+    DRow *row = NULL;
+    cassert_no_null(layout);
+    row = arrst_last(layout->rows, DRow);
+    row->margin_bottom = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_margin_left(DLayout *layout, const real32_t margin)
+{
+    cassert_no_null(layout);
+    layout->margin_left = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_margin_right(DLayout *layout, const real32_t margin)
+{
+    DColumn *col = NULL;
+    cassert_no_null(layout);
+    col = arrst_last(layout->cols, DColumn);
+    col->margin_right = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_margin_col(DLayout *layout, const uint32_t col, const real32_t margin)
+{
+    DColumn *dcol = NULL;
+    cassert_no_null(layout);
+    cassert(col < arrst_size(layout->cols, DColumn) - 1);
+    dcol= arrst_get(layout->cols, col, DColumn);
+    dcol->margin_right = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_margin_row(DLayout *layout, const uint32_t row, const real32_t margin)
+{
+    DRow *drow = NULL;
+    cassert_no_null(layout);
+    cassert(row < arrst_size(layout->rows, DRow) - 1);
+    drow = arrst_get(layout->rows, row, DRow);
+    drow->margin_bottom = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dlayout_insert_col(DLayout *layout, const uint32_t col)
 {
     uint32_t ncols = 0, nrows = 0, i = 0;
