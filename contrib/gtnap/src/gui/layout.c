@@ -11,6 +11,7 @@
 /* Layouts */
 
 #include "layout.h"
+#include "layouth.h"
 #include "layout.inl"
 #include "cell.h"
 #include "cell.inl"
@@ -585,6 +586,13 @@ void layout_panel_replace(Layout *layout, Panel *panel, const uint32_t col, cons
     {
         i_set_component(layout, GuiComponentPtr(panel), col, row, ekJUSTIFY, ekJUSTIFY);
         cassert(cell->tabstop == TRUE);
+
+        if (layout->panel != NULL)
+        {
+            Window *parent_window = _panel_get_window(layout->panel);
+            _component_set_parent_window(GuiComponentPtr(panel), parent_window);
+            layout_update(layout);
+        }
     }
     else
     {
@@ -1018,6 +1026,7 @@ void layout_vsize(Layout *layout, const uint32_t row, const real32_t height)
     cassert_no_null(layout);
     cassert_msg(height >= 0.f, "Row 'height' must be positive.");
     dim = arrst_get(layout->lines_dim[1], row, i_LineDim);
+    cassert_no_null(dim);
     dim->forced_size = height;
 }
 
@@ -1348,6 +1357,28 @@ void layout_dbind_update_imp(Layout *layout, const char_t *type, const uint16_t 
     cassert_unref(dbind_offset(dbind) == moffset, moffset);
     cassert_unref(dbind_sizeof(dbind) == msize, msize);
     _layout_dbind_update(layout, dbind);
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t layout_get_hsize(const Layout *layout, const uint32_t col)
+{
+    i_LineDim *dim = NULL;
+    cassert_no_null(layout);
+    dim = arrst_get(layout->lines_dim[0], col, i_LineDim);
+    cassert_no_null(dim);
+    return dim->size;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t layout_get_vsize(const Layout *layout, const uint32_t row)
+{
+    i_LineDim *dim = NULL;
+    cassert_no_null(layout);
+    dim = arrst_get(layout->lines_dim[1], row, i_LineDim);
+    cassert_no_null(dim);
+    return dim->size;
 }
 
 /*---------------------------------------------------------------------------*/

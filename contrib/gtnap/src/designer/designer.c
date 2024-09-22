@@ -2,17 +2,57 @@
 
 #include <nappgui.h>
 #include "res_designer.h"
+#include "dlabel.h"
+#include "dlayout.h"
+#include "dform.h"
 
 typedef struct _app_t App;
 
 struct _app_t
 {
     Window *window;
-    View *canvas;
     Label *status_label;
     Label *cells_label;
     Progress *progress;
+
+    View *canvas;
+    Layout *canvas_layout;
+
+    /* Editing forms */
+    DForm *form;
 };
+
+/*---------------------------------------------------------------------------*/
+
+static void i_dbind(void)
+{
+    /* Registration of editable structures */
+    dbind_enum(celltype_t, ekCELL_TYPE_EMPTY, "");
+    dbind_enum(celltype_t, ekCELL_TYPE_LABEL, "");
+    dbind_enum(celltype_t, ekCELL_TYPE_LAYOUT, "");
+    dbind_enum(align_t, ekLEFT, "");
+    dbind_enum(align_t, ekTOP, "");
+    dbind_enum(align_t, ekCENTER, "");
+    dbind_enum(align_t, ekRIGHT, "");
+    dbind_enum(align_t, ekBOTTOM, "");
+    dbind_enum(align_t, ekJUSTIFY, "");
+    dbind(DLabel, String*, text);
+    dbind(DColumn, real32_t, margin_right);
+    dbind(DRow, real32_t, margin_bottom);
+    dbind(DCell, celltype_t, type);
+    dbind(DCell, align_t, halign);
+    dbind(DCell, align_t, valign);
+    dbind(DLayout, real32_t, margin_left);
+    dbind(DLayout, real32_t, margin_top);
+    dbind(DLayout, ArrSt(DColumn)*, cols);
+    dbind(DLayout, ArrSt(DRow)*, rows);
+    dbind(DLayout, ArrSt(DCell)*, cells);
+
+    /* Don't move, we must first declare the inner struct */
+    dbind(DCellContent, DLabel*, label);
+    dbind(DCellContent, DLayout*, layout);
+    dbind(DCell, DCellContent, content);
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -148,11 +188,69 @@ static Layout *i_right_layout(App *app)
 static void i_OnDraw(App *app, Event *e)
 {
     const EvDraw *p = event_params(e, EvDraw);
-    Font *font = font_system(30, 0);
+    cassert_no_null(app);
+    //Font *font = font_system(30, 0);
     draw_clear(p->ctx, kCOLOR_YELLOW);
-    draw_font(p->ctx, font);
-    draw_text(p->ctx, "--> CANVAS <--", 0, 0);
-    font_destroy(&font);
+
+    if (app->form != NULL)
+    {
+        dform_draw(app->form, p->ctx);
+    }
+    //draw_font(p->ctx, font);
+    //draw_text(p->ctx, "--> CANVAS <--", 0, 0);
+    //font_destroy(&font);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnMove(App *app, Event *e)
+{
+    const EvMouse *p = event_params(e, EvMouse);
+    cassert_no_null(app);
+    if (app->form != NULL)
+    {
+        if (dform_OnMove(app->form, p->x, p->y) == TRUE)
+            view_update(app->canvas);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnExit(App *app, Event *e)
+{
+    cassert_no_null(app);
+    unref(e);
+    if (app->form != NULL)
+    {
+        if (dform_OnExit(app->form) == TRUE)
+            view_update(app->canvas);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnSize(App *app, Event *e)
+{       
+    cassert_no_null(app);
+    unref(e);
+    if (app->form != NULL)
+        dform_synchro_visual(app->form);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_canvas_layout(App *app)
+{
+    Layout *layout = layout_create(1, 2);
+    View *view = view_scroll();
+    view_size(view, s2df(450, 200));
+    view_OnDraw(view, listener(app, i_OnDraw, App));
+    view_OnMove(view, listener(app, i_OnMove, App));
+    view_OnExit(view, listener(app, i_OnExit, App));
+    view_OnSize(view, listener(app, i_OnSize, App));
+    layout_view(layout, view, 0, 0);
+    app->canvas = view;
+    return layout;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -161,16 +259,11 @@ static Layout *i_middle_layout(App *app)
 {
     Layout *layout1 = layout_create(3, 1);
     Layout *layout2 = i_left_layout(app);
-    Layout *layout3 = i_right_layout(app);
-    View *view = view_scroll();
-    view_size(view, s2df(450, 200));
-    view_OnDraw(view, listener(app, i_OnDraw, App));
+    Layout *layout3 = i_canvas_layout(app);
+    Layout *layout4 = i_right_layout(app);
     layout_layout(layout1, layout2, 0, 0);
-    layout_view(layout1, view, 1, 0);
-    layout_layout(layout1, layout3, 2, 0);
-
-    /* Add the view to tabstop list */
-    layout_tabstop(layout1, 1, 0, TRUE);
+    layout_layout(layout1, layout3, 1, 0);
+    layout_layout(layout1, layout4, 2, 0);
 
     /* A small horizontal margin between view cell and list (left) table (right) layouts */
     layout_hmargin(layout1, 0, 3);
@@ -179,7 +272,7 @@ static Layout *i_middle_layout(App *app)
     /* All the horizontal expansion will be done in the middle cell (view)
        list_layout (left) and table_layout (right) will preserve the 'natural' width */
     layout_hexpand(layout1, 1);
-    app->canvas = view;
+    app->canvas_layout = layout3;
     return layout1;
 }
 
@@ -262,9 +355,31 @@ static void i_OnClose(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static App *i_create(void)
+static App *i_app(void)
 {
     App *app = heap_new0(App);
+    i_dbind();
+    return app;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_init_forms(App *app)
+{
+    Panel *panel = NULL;
+    cassert_no_null(app);
+    cassert(app->form == NULL);
+    app->form = dform_first_example();
+    panel = dform_panel(app->form);
+    layout_panel_replace(app->canvas_layout, panel, 0, 1);
+    dform_synchro_visual(app->form);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static App *i_create(void)
+{
+    App *app = i_app();
     ResPack *pack = res_designer_respack("");
     Panel *panel = i_panel(app, pack);
     app->window = window_create(ekWINDOW_STDRES);
@@ -274,6 +389,7 @@ static App *i_create(void)
     window_OnClose(app->window, listener(app, i_OnClose, App));
     window_show(app->window);
     respack_destroy(&pack);
+    i_init_forms(app);
     return app;
 }
 
@@ -281,6 +397,9 @@ static App *i_create(void)
 
 static void i_destroy(App **app)
 {
+    cassert_no_null(app);
+    cassert_no_null(*app);
+    dform_destroy(&(*app)->form);
     window_destroy(&(*app)->window);
     heap_delete(app, App);
 }
