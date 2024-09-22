@@ -594,9 +594,64 @@ void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t
 
 /*---------------------------------------------------------------------------*/
 
-void dlayout_draw(const DLayout *layout, DCtx *ctx)
+static R2Df i_get_rect(const DLayout *layout, const DSelect *sel)
 {
     cassert_no_null(layout);
+    cassert_no_null(sel);
+    cassert(layout == sel->layout);
+    switch(sel->elem) {
+    case ekLAYELEM_MARGIN_LEFT:
+        return layout->rect_left;
+
+    case ekLAYELEM_MARGIN_TOP:
+        return layout->rect_top;
+
+    case ekLAYELEM_MARGIN_RIGHT:
+    {
+        const DColumn *col = arrst_last_const(layout->cols, DColumn);
+        return col->margin_rect;
+    }
+    
+    case ekLAYELEM_MARGIN_BOTTOM:
+    {
+        const DRow *row = arrst_last_const(layout->rows, DRow);
+        return row->margin_rect;
+    }
+
+    case ekLAYELEM_MARGIN_COLUMN:
+    {
+        const DColumn *col = arrst_get_const(layout->cols, sel->col, DColumn);
+        return col->margin_rect;
+    }
+    
+    case ekLAYELEM_MARGIN_ROW:
+    {
+        const DRow *row = arrst_get_const(layout->rows, sel->row, DRow);
+        return row->margin_rect;
+    }
+
+    case ekLAYELEM_CELL:
+    {
+        uint32_t ncols = arrst_size(layout->cols, DColumn);
+        uint32_t pos = sel->row * ncols + sel->col;
+        const DCell *cell = arrst_get_const(layout->cells, pos, DCell);
+        return cell->rect;
+    }
+
+    }
+
+    return kR2D_ZEROf;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_draw(const DLayout *layout, const DSelect *sel, DCtx *ctx)
+{
+    cassert_no_null(layout);
+    cassert_no_null(sel);
+
+    draw_fill_color(ctx, kCOLOR_BLACK);
+
     draw_r2df(ctx, ekFILL, &layout->rect_left);
     draw_r2df(ctx, ekFILL, &layout->rect_top);
 
@@ -617,8 +672,16 @@ void dlayout_draw(const DLayout *layout, DCtx *ctx)
             cassert(FALSE);
             break;
         case ekCELL_TYPE_LAYOUT:
-            dlayout_draw(cell->content.layout, ctx);
+            dlayout_draw(cell->content.layout, sel, ctx);
             break;
         }
     arrst_end()
+
+    /* This layout has a selected element */
+    if (sel->layout == layout)
+    {
+        R2Df rect = i_get_rect(layout, sel);
+        draw_fill_color(ctx, kCOLOR_RED);
+        draw_r2df(ctx, ekFILL, &rect);
+    }
 }

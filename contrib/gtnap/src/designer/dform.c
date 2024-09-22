@@ -110,8 +110,23 @@ bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
 
 /*---------------------------------------------------------------------------*/
 
+bool_t dform_OnExit(DForm *form)
+{
+    DSelect sel;
+    bool_t equ = TRUE;
+    sel.layout = NULL;
+    sel.elem = ENUM_MAX(layelem_t);
+    sel.col = UINT32_MAX;
+    sel.row = UINT32_MAX;
+    equ = i_sel_equ(&form->select, &sel);
+    form->select = sel;
+    return !equ;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_draw(const DForm *form, DCtx *ctx)
 {
     cassert_no_null(form);
-    dlayout_draw(form->dlayout, ctx);
+    dlayout_draw(form->dlayout, &form->select, ctx);
 }

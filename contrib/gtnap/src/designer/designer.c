@@ -216,6 +216,19 @@ static void i_OnMove(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnExit(App *app, Event *e)
+{
+    cassert_no_null(app);
+    unref(e);
+    if (app->form != NULL)
+    {
+        if (dform_OnExit(app->form) == TRUE)
+            view_update(app->canvas);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnSize(App *app, Event *e)
 {       
     cassert_no_null(app);
@@ -233,6 +246,7 @@ static Layout *i_canvas_layout(App *app)
     view_size(view, s2df(450, 200));
     view_OnDraw(view, listener(app, i_OnDraw, App));
     view_OnMove(view, listener(app, i_OnMove, App));
+    view_OnExit(view, listener(app, i_OnExit, App));
     view_OnSize(view, listener(app, i_OnSize, App));
     layout_view(layout, view, 0, 0);
     app->canvas = view;
