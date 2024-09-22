@@ -12,6 +12,7 @@ typedef struct _dcell_t DCell;
 typedef struct _dcell_content_t DCellContent;
 typedef struct _dlayout_t DLayout;
 typedef struct _dform_t DForm;
+typedef struct _dselect_t DSelect;
 
 typedef enum _celltype_t
 {
@@ -19,6 +20,17 @@ typedef enum _celltype_t
     ekCELL_TYPE_LABEL,
     ekCELL_TYPE_LAYOUT
 } celltype_t;
+
+typedef enum _layelem_t
+{
+    ekLAYELEM_MARGIN_LEFT,
+    ekLAYELEM_MARGIN_TOP,
+    ekLAYELEM_MARGIN_RIGHT,
+    ekLAYELEM_MARGIN_BOTTOM,
+    ekLAYELEM_MARGIN_COLUMN,
+    ekLAYELEM_MARGIN_ROW,
+    ekLAYELEM_CELL
+} layelem_t;
 
 struct _dlabel_t
 {
@@ -69,8 +81,17 @@ struct _dlayout_t
     ArrSt(DCell) *cells;
 
     /* Non-editable properties */
+    R2Df rect;
     R2Df rect_left;
     R2Df rect_top;
+};
+
+struct _dselect_t
+{
+    DLayout *layout;
+    layelem_t elem;
+    uint32_t col;
+    uint32_t row;
 };
 
 DeclSt(DColumn);

@@ -12,6 +12,7 @@ struct _dform_t
 {
     DLayout *dlayout;
     Layout *layout;
+    DSelect select;
     Panel *panel;
 };
 
@@ -73,6 +74,38 @@ void dform_synchro_visual(DForm *form)
 {
     cassert_no_null(form);
     dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static bool_t i_sel_equ(const DSelect *sel1, const DSelect *sel2)
+{
+    cassert_no_null(sel1);
+    cassert_no_null(sel2);
+    if (sel1->layout != sel2->layout)
+        return FALSE;
+
+    if (sel1->layout == NULL && sel2->layout == NULL)
+        return TRUE;
+
+    if (sel1->elem == sel2->elem 
+        && sel1->col == sel2->col
+        && sel1->row == sel2->row)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
+{
+    DSelect sel;
+    bool_t equ = TRUE;
+    dlayout_elem_at_pos(form->dlayout, mouse_x, mouse_y, &sel);
+    equ = i_sel_equ(&form->select, &sel);
+    form->select = sel;
+    return !equ;
 }
 
 /*---------------------------------------------------------------------------*/

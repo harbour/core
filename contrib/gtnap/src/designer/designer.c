@@ -203,6 +203,19 @@ static void i_OnDraw(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnMove(App *app, Event *e)
+{
+    const EvMouse *p = event_params(e, EvMouse);
+    cassert_no_null(app);
+    if (app->form != NULL)
+    {
+        if (dform_OnMove(app->form, p->x, p->y) == TRUE)
+            view_update(app->canvas);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnSize(App *app, Event *e)
 {       
     cassert_no_null(app);
@@ -219,6 +232,7 @@ static Layout *i_canvas_layout(App *app)
     View *view = view_scroll();
     view_size(view, s2df(450, 200));
     view_OnDraw(view, listener(app, i_OnDraw, App));
+    view_OnMove(view, listener(app, i_OnMove, App));
     view_OnSize(view, listener(app, i_OnSize, App));
     layout_view(layout, view, 0, 0);
     app->canvas = view;

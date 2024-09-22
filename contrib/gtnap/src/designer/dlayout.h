@@ -34,4 +34,6 @@ Layout *dlayout_gui_layout(const DLayout *layout);
 /* Compute the visual rectangles of each layout element */
 void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df origin);
 
+void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t y, DSelect *sel);
+
 void dlayout_draw(const DLayout *layout, DCtx *ctx);

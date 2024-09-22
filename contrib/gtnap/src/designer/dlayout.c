@@ -429,6 +429,9 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
             total_height = inner_height + layout->margin_top + row[j].margin_bottom;
     }
 
+    /* Global layout rectangle */
+    layout->rect = r2df(origin.x, origin.y, total_width, total_height);
+
     /* Compute the margin rectangles */
     layout->rect_left = r2df(origin.x, origin.y, layout->margin_left, total_height);
     layout->rect_top = r2df(origin.x, origin.y, total_width, layout->margin_top);
@@ -488,6 +491,105 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
             y += row[j].margin_bottom;
         }
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t y, DSelect *sel)
+{
+    cassert_no_null(layout); 
+    cassert_no_null(sel);
+
+    if (r2d_containsf(&layout->rect, x, y) == FALSE)
+    {
+        sel->layout = NULL;
+        sel->elem = ENUM_MAX(layelem_t);
+        sel->col = UINT32_MAX;
+        sel->row = UINT32_MAX;
+        return;
+    }
+
+    if (r2d_containsf(&layout->rect_left, x, y) == TRUE)
+    {
+        sel->layout = cast(layout, DLayout);
+        sel->elem = ekLAYELEM_MARGIN_LEFT;
+        sel->col = UINT32_MAX;
+        sel->row = UINT32_MAX;
+        return;
+    }
+
+    if (r2d_containsf(&layout->rect_top, x, y) == TRUE)
+    {
+        sel->layout = cast(layout, DLayout);
+        sel->elem = ekLAYELEM_MARGIN_TOP;
+        sel->col = UINT32_MAX;
+        sel->row = UINT32_MAX;
+        return;
+    }
+
+    arrst_foreach_const(col, layout->cols, DColumn)
+        if (r2d_containsf(&col->margin_rect, x, y) == TRUE)
+        {
+            sel->layout = cast(layout, DLayout);
+            sel->row = UINT32_MAX;
+
+            if (col_i == col_total - 1)
+            {
+                sel->elem = ekLAYELEM_MARGIN_RIGHT;
+                sel->col = UINT32_MAX;
+            }
+            else
+            {
+                sel->elem = ekLAYELEM_MARGIN_COLUMN;
+                sel->col = col_i;
+            }
+            return;
+        }
+    arrst_end()
+
+    arrst_foreach_const(row, layout->rows, DRow)
+        if (r2d_containsf(&row->margin_rect, x, y) == TRUE)
+        {
+            sel->layout = cast(layout, DLayout);
+            sel->col = UINT32_MAX;
+
+            if (row_i == row_total - 1)
+            {
+                sel->elem = ekLAYELEM_MARGIN_BOTTOM;
+                sel->row = UINT32_MAX;
+            }
+            else
+            {
+                sel->elem = ekLAYELEM_MARGIN_ROW;
+                sel->row = row_i;
+            }
+            return;
+        }
+    arrst_end()
+
+    arrst_foreach_const(cell, layout->cells, DCell)
+        if (r2d_containsf(&cell->rect, x, y) == TRUE)
+        {
+            switch(cell->type) {
+            case ekCELL_TYPE_EMPTY:
+            case ekCELL_TYPE_LABEL:
+            {
+                uint32_t ncols = arrst_size(layout->cols, DColumn);
+                sel->layout = cast(layout, DLayout);
+                sel->elem = ekLAYELEM_CELL;
+                sel->col = cell_i % ncols;
+                sel->row = cell_i / ncols;
+                break;
+            }
+            
+            case ekCELL_TYPE_LAYOUT:
+                dlayout_elem_at_pos(cell->content.layout, x, y, sel);
+                break;
+            }
+
+            return;
+        }
+    arrst_end()
 }
 
 /*---------------------------------------------------------------------------*/
