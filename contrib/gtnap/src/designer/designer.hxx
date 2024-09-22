@@ -31,6 +31,7 @@ struct _dcolumn_t
 
     /* Non-editable properties */
     real32_t width;
+    R2Df margin_rect;
 };
 
 struct _drow_t
@@ -39,6 +40,7 @@ struct _drow_t
 
     /* Non-editable properties */
     real32_t height;
+    R2Df margin_rect;
 };
 
 struct _dcell_content_t
@@ -53,6 +55,9 @@ struct _dcell_t
     DCellContent content;
     align_t halign;
     align_t valign;
+
+    /* Non-editable properties */
+    R2Df rect;
 };
 
 struct _dlayout_t
@@ -62,6 +67,10 @@ struct _dlayout_t
     ArrSt(DColumn) *cols;
     ArrSt(DRow) *rows;
     ArrSt(DCell) *cells;
+
+    /* Non-editable properties */
+    R2Df rect_left;
+    R2Df rect_top;
 };
 
 DeclSt(DColumn);

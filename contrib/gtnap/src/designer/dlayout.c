@@ -4,9 +4,11 @@
 #include <gui/label.h>
 #include <gui/layout.h>
 #include <gui/layouth.h>
+#include <geom2d/r2d.h>
 #include <geom2d/v2d.h>
 #include <draw2d/color.h>
 #include <draw2d/draw.h>
+#include <draw2d/drawg.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
 #include <sewer/bmem.h>
@@ -384,42 +386,81 @@ Layout *dlayout_gui_layout(const DLayout *layout)
 
 /*---------------------------------------------------------------------------*/
 
-void dlayout_synchro_visual(DLayout *layout, const Layout *glayout)
+void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df origin)
 {
-    uint32_t ncols = 0, nrows = 0;
+    DColumn *col = NULL;
+    DRow *row = NULL;
+    DCell *cell = NULL;
+    uint32_t ncols, nrows, i, j;
+    real32_t total_width = 0, total_height = 0;
+    real32_t inner_width = 0, inner_height = 0;
+    real32_t x, y;
+
     cassert_no_null(layout);
-    ncols = arrst_size(layout->cols, DColumn);
-    nrows = arrst_size(layout->rows, DRow);
+    col = arrst_all(layout->cols, DColumn);
+    row = arrst_all(layout->rows, DRow);
+    cell = arrst_all(layout->cells, DCell);
+    ncols = arrst_size(layout->cols, DColumn); 
+    nrows = arrst_size(layout->rows, DRow); 
 
-    /* Layout column width */
+    /* Compute the columns width and total layout widths */
+    total_width = 0;
+    inner_width = 0;
+    for (i = 0; i < ncols; ++i)
     {
-        uint32_t i = 0;
-        for (i = 0; i < ncols; ++i)
-        {
-            DColumn *col = arrst_get(layout->cols, i, DColumn);
-            col->width = layout_get_hsize(glayout, i);
-        }
+        col[i].width = layout_get_hsize(glayout, i);
+        inner_width += col[i].width;
+        if (i < ncols - 1)
+            inner_width += col[i].margin_right;
+        else
+            total_width = inner_width + layout->margin_left + col[i].margin_right;
     }
 
-    /* Layout row height */
+    /* Compute the rows height and total layout heights */
+    total_height = 0;
+    inner_height = 0;
+    for (j = 0; j < nrows; ++j)
     {
-        uint32_t i = 0;
-        for (i = 0; i < nrows; ++i)
-        {
-            DRow *row = arrst_get(layout->rows, i, DRow);
-            row->height = layout_get_vsize(glayout, i);
-        }
+        row[j].height = layout_get_vsize(glayout, j);
+        inner_height += row[j].height;
+        if (j < nrows - 1)
+            inner_height += row[j].margin_bottom;
+        else
+            total_height = inner_height + layout->margin_top + row[j].margin_bottom;
     }
 
-    /* Cells */
+    /* Compute the margin rectangles */
+    layout->rect_left = r2df(origin.x, origin.y, layout->margin_left, total_height);
+    layout->rect_top = r2df(origin.x, origin.y, total_width, layout->margin_top);
+
+    x = origin.x + layout->margin_left;
+    for (i = 0; i < ncols; ++i)
     {
-        uint32_t i, j;
-        DCell *cells = arrst_all(layout->cells, DCell);
+        x += col[i].width;
+        col[i].margin_rect = r2df(x, origin.y, col[i].margin_right, total_height);
+        x += col[i].margin_right;
+    }
+
+    y = origin.y + layout->margin_top;
+    for (j = 0; j < nrows; ++j)
+    {
+        y += row[j].height;
+        row[j].margin_rect = r2df(origin.x, y, total_width, row[j].margin_bottom);
+        y += row[j].margin_bottom;
+    }
+
+    /* Compute the cells rectangles */
+    {
+        DCell *dcell = cell;
+        y = origin.y + layout->margin_top;
+
         for (j = 0; j < nrows; ++j)
         {
+            x = origin.x + layout->margin_left;
             for(i = 0; i < ncols; ++i)
             {
-                switch(cells->type) {
+                dcell->rect = r2df(x, y, col[i].width, row[j].height);
+                switch(dcell->type) {
                 case ekCELL_TYPE_EMPTY:
                     break;
 
@@ -430,115 +471,52 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout)
 
                 case ekCELL_TYPE_LAYOUT:
                 {
-                    DLayout *sublayout = cells->content.layout;
+                    DLayout *sublayout = dcell->content.layout;
                     Layout *subglayout = layout_get_layout(cast(glayout, Layout), i, j);
-                    dlayout_synchro_visual(sublayout, subglayout);
+                    dlayout_synchro_visual(sublayout, subglayout, v2df(x, y));
                     break;
                 }
 
                 }
 
-                cells += 1;
-            }
-        }
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_draw(const DLayout *layout, DCtx *ctx, const V2Df origin)
-{
-    const DColumn *col = NULL;
-    const DRow *row = NULL;
-    const DCell *cell = NULL;
-    uint32_t ncols, nrows, i, j;
-    real32_t x1, x2, x3, x4;
-    real32_t y1, y2, y3, y4;
-    real32_t x, y;
-    cassert_no_null(layout);
-
-    col = arrst_all_const(layout->cols, DColumn);
-    row = arrst_all_const(layout->rows, DRow);
-    cell = arrst_all_const(layout->cells, DCell);
-    ncols = arrst_size(layout->cols, DColumn); 
-    nrows = arrst_size(layout->rows, DRow); 
-    x1 = origin.x;
-    x2 = x1 + layout->margin_left;
-    x3 = x2;
-    x4 = x3;
-    y1 = origin.y;
-    y2 = y1 + layout->margin_top;
-    y3 = y2;
-    y4 = y3;
-
-    for (i = 0; i < ncols; ++i)
-    {
-        x3 += col[i].width;
-        if (i < ncols - 1)
-            x3 += col[i].margin_right;
-        else 
-            x4 = x3 + col[i].margin_right;
-    }
-
-    for (j = 0; j < nrows; ++j)
-    {
-        y3 += row->height;
-        if (j < nrows - 1)
-            y3 += row[j].margin_bottom;
-        else 
-            y4 = y3 + row[j].margin_bottom;
-    }
-
-    /* Draw borders */
-    draw_rect(ctx, ekFILL, x1, y1, x4 - x1, y2 - y1);   /* Top */
-    draw_rect(ctx, ekFILL, x1, y3, x4 - x1, y4 - y3);   /* Bottom */
-    draw_rect(ctx, ekFILL, x1, y1, x2 - x1, y4 - y1);   /* Left */
-    draw_rect(ctx, ekFILL, x3, y1, x4 - x3, y4 - y1);   /* Right */
-
-    /* Draw inner columns */
-    x = x2;
-    for (i = 0; i < ncols - 1; ++i)
-    {
-        x += col[i].width;
-        draw_rect(ctx, ekFILL, x, y2, col->margin_right, y3 - y2);
-    }
-
-    /* Draw inner rows */
-    y = y2;
-    for (j = 0; j < nrows - 1; ++j)
-    {
-        y += row[j].height;
-        draw_rect(ctx, ekFILL, x2, y, x3 - x2, row->margin_bottom);
-    }
-
-    /* Draw inner cells */
-    {
-        const DCell *dcell = cell;
-        y = y2;
-        for (j = 0; j < nrows; ++j)
-        {
-            x = x2;
-            for(i = 0; i < ncols; ++i)
-            {
-                switch(dcell->type) {
-                case ekCELL_TYPE_EMPTY:
-                    break;
-                case ekCELL_TYPE_LABEL:
-                    /* TODO */
-                    cassert(FALSE);
-                    break;
-                case ekCELL_TYPE_LAYOUT:
-                    dlayout_draw(dcell->content.layout, ctx, v2df(x, y));
-                    break;
-                }
-
+                dcell += 1;
                 x += col[i].width;
                 x += col[i].margin_right;
-                dcell += 1;
             }
 
             y += row[j].height;
             y += row[j].margin_bottom;
         }
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_draw(const DLayout *layout, DCtx *ctx)
+{
+    cassert_no_null(layout);
+    draw_r2df(ctx, ekFILL, &layout->rect_left);
+    draw_r2df(ctx, ekFILL, &layout->rect_top);
+
+    arrst_foreach_const(col, layout->cols, DColumn)
+        draw_r2df(ctx, ekFILL, &col->margin_rect);
+    arrst_end()
+
+    arrst_foreach_const(row, layout->rows, DRow)
+        draw_r2df(ctx, ekFILL, &row->margin_rect);
+    arrst_end()
+
+    arrst_foreach_const(cell, layout->cells, DCell)
+        switch(cell->type) {
+        case ekCELL_TYPE_EMPTY:
+            break;
+        case ekCELL_TYPE_LABEL:
+            /* TODO */
+            cassert(FALSE);
+            break;
+        case ekCELL_TYPE_LAYOUT:
+            dlayout_draw(cell->content.layout, ctx);
+            break;
+        }
+    arrst_end()
 }

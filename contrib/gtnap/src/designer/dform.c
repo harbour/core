@@ -72,7 +72,7 @@ Panel *dform_panel(DForm *form)
 void dform_synchro_visual(DForm *form)
 {
     cassert_no_null(form);
-    dlayout_synchro_visual(form->dlayout, form->layout);
+    dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -80,5 +80,5 @@ void dform_synchro_visual(DForm *form)
 void dform_draw(const DForm *form, DCtx *ctx)
 {
     cassert_no_null(form);
-    dlayout_draw(form->dlayout, ctx, kV2D_ZEROf);
+    dlayout_draw(form->dlayout, ctx);
 }

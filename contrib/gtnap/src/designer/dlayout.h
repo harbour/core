@@ -31,7 +31,7 @@ void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col,
 /* Create a real GUI layout from editable layout properties */
 Layout *dlayout_gui_layout(const DLayout *layout);
 
-/* Synchornize visual properties from a real gui layout */
-void dlayout_synchro_visual(DLayout *layout, const Layout *glayout);
+/* Compute the visual rectangles of each layout element */
+void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df origin);
 
-void dlayout_draw(const DLayout *layout, DCtx *ctx, const V2Df origin);
+void dlayout_draw(const DLayout *layout, DCtx *ctx);
