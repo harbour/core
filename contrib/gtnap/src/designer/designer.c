@@ -188,12 +188,27 @@ static Layout *i_right_layout(App *app)
 static void i_OnDraw(App *app, Event *e)
 {
     const EvDraw *p = event_params(e, EvDraw);
-    Font *font = font_system(30, 0);
+    cassert_no_null(app);
+    //Font *font = font_system(30, 0);
     draw_clear(p->ctx, kCOLOR_YELLOW);
-    draw_font(p->ctx, font);
-    draw_text(p->ctx, "--> CANVAS <--", 0, 0);
-    font_destroy(&font);
-    unref(app);
+
+    if (app->form != NULL)
+    {
+        dform_draw(app->form, p->ctx);
+    }
+    //draw_font(p->ctx, font);
+    //draw_text(p->ctx, "--> CANVAS <--", 0, 0);
+    //font_destroy(&font);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnSize(App *app, Event *e)
+{       
+    cassert_no_null(app);
+    unref(e);
+    if (app->form != NULL)
+        dform_synchro_visual(app->form);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -204,6 +219,7 @@ static Layout *i_canvas_layout(App *app)
     View *view = view_scroll();
     view_size(view, s2df(450, 200));
     view_OnDraw(view, listener(app, i_OnDraw, App));
+    view_OnSize(view, listener(app, i_OnSize, App));
     layout_view(layout, view, 0, 0);
     app->canvas = view;
     return layout;

@@ -4,7 +4,9 @@
 #include <gui/label.h>
 #include <gui/layout.h>
 #include <gui/layouth.h>
+#include <geom2d/v2d.h>
 #include <draw2d/color.h>
+#include <draw2d/draw.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
 #include <sewer/bmem.h>
@@ -438,6 +440,105 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout)
 
                 cells += 1;
             }
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_draw(const DLayout *layout, DCtx *ctx, const V2Df origin)
+{
+    const DColumn *col = NULL;
+    const DRow *row = NULL;
+    const DCell *cell = NULL;
+    uint32_t ncols, nrows, i, j;
+    real32_t x1, x2, x3, x4;
+    real32_t y1, y2, y3, y4;
+    real32_t x, y;
+    cassert_no_null(layout);
+
+    col = arrst_all_const(layout->cols, DColumn);
+    row = arrst_all_const(layout->rows, DRow);
+    cell = arrst_all_const(layout->cells, DCell);
+    ncols = arrst_size(layout->cols, DColumn); 
+    nrows = arrst_size(layout->rows, DRow); 
+    x1 = origin.x;
+    x2 = x1 + layout->margin_left;
+    x3 = x2;
+    x4 = x3;
+    y1 = origin.y;
+    y2 = y1 + layout->margin_top;
+    y3 = y2;
+    y4 = y3;
+
+    for (i = 0; i < ncols; ++i)
+    {
+        x3 += col[i].width;
+        if (i < ncols - 1)
+            x3 += col[i].margin_right;
+        else 
+            x4 = x3 + col[i].margin_right;
+    }
+
+    for (j = 0; j < nrows; ++j)
+    {
+        y3 += row->height;
+        if (j < nrows - 1)
+            y3 += row[j].margin_bottom;
+        else 
+            y4 = y3 + row[j].margin_bottom;
+    }
+
+    /* Draw borders */
+    draw_rect(ctx, ekFILL, x1, y1, x4 - x1, y2 - y1);   /* Top */
+    draw_rect(ctx, ekFILL, x1, y3, x4 - x1, y4 - y3);   /* Bottom */
+    draw_rect(ctx, ekFILL, x1, y1, x2 - x1, y4 - y1);   /* Left */
+    draw_rect(ctx, ekFILL, x3, y1, x4 - x3, y4 - y1);   /* Right */
+
+    /* Draw inner columns */
+    x = x2;
+    for (i = 0; i < ncols - 1; ++i)
+    {
+        x += col[i].width;
+        draw_rect(ctx, ekFILL, x, y2, col->margin_right, y3 - y2);
+    }
+
+    /* Draw inner rows */
+    y = y2;
+    for (j = 0; j < nrows - 1; ++j)
+    {
+        y += row[j].height;
+        draw_rect(ctx, ekFILL, x2, y, x3 - x2, row->margin_bottom);
+    }
+
+    /* Draw inner cells */
+    {
+        const DCell *dcell = cell;
+        y = y2;
+        for (j = 0; j < nrows; ++j)
+        {
+            x = x2;
+            for(i = 0; i < ncols; ++i)
+            {
+                switch(dcell->type) {
+                case ekCELL_TYPE_EMPTY:
+                    break;
+                case ekCELL_TYPE_LABEL:
+                    /* TODO */
+                    cassert(FALSE);
+                    break;
+                case ekCELL_TYPE_LAYOUT:
+                    dlayout_draw(dcell->content.layout, ctx, v2df(x, y));
+                    break;
+                }
+
+                x += col[i].width;
+                x += col[i].margin_right;
+                dcell += 1;
+            }
+
+            y += row[j].height;
+            y += row[j].margin_bottom;
         }
     }
 }
