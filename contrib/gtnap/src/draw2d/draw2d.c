@@ -48,6 +48,7 @@ DeclSt(IColor);
 static uint32_t i_NUM_USERS = 0;
 static ArrPt(String) *i_FONT_FAMILIES;
 static ArrSt(IColor) *i_INDEXED_COLORS;
+static String *i_USER_MONOSPACE_FONT_FAMILY = NULL;
 static String *i_MONOSPACE_FONT_FAMILY = NULL;
 
 /*---------------------------------------------------------------------------*/
@@ -100,6 +101,7 @@ void draw2d_finish(void)
         dbind_opaque_destroy("Image");
         arrpt_destroy(&i_FONT_FAMILIES, str_destroy, String);
         arrst_destroy(&i_INDEXED_COLORS, NULL, IColor);
+        str_destopt(&i_USER_MONOSPACE_FONT_FAMILY);
         str_destopt(&i_MONOSPACE_FONT_FAMILY);
         osfont_dealloc_globals();
         osimage_dealloc_globals();
@@ -108,6 +110,14 @@ void draw2d_finish(void)
     }
 
     i_NUM_USERS -= 1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void draw2d_user_monospace_family(const char_t *family)
+{
+    str_upd(&i_USER_MONOSPACE_FONT_FAMILY, family);
+    str_destopt(&i_MONOSPACE_FONT_FAMILY);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -401,6 +411,13 @@ const char_t *draw2d_monospace_family(const char_t **desired_fonts, const uint32
     {
         uint32_t i = 0;
         ArrPt(String) *installed_fonts = font_installed_families();
+
+        if (str_empty(i_USER_MONOSPACE_FONT_FAMILY) == FALSE)
+        {
+            if (arrpt_bsearch_const(installed_fonts, str_cmp, tc(i_USER_MONOSPACE_FONT_FAMILY), NULL, String, char_t) != NULL)
+                i_MONOSPACE_FONT_FAMILY = str_copy(i_USER_MONOSPACE_FONT_FAMILY);
+        }
+
         for (i = 0; i < n && i_MONOSPACE_FONT_FAMILY == NULL; ++i)
         {
             if (arrpt_bsearch_const(installed_fonts, str_cmp, desired_fonts[i], NULL, String, char_t) != NULL)
