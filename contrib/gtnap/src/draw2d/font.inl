@@ -18,7 +18,7 @@ void osfont_alloc_globals(void);
 
 void osfont_dealloc_globals(void);
 
-OSFont *osfont_create(const char_t *family, const real32_t size, const uint32_t style);
+OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const uint32_t style);
 
 void osfont_destroy(OSFont **font);
 

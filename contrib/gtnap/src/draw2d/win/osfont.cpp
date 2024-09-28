@@ -166,7 +166,7 @@ static const char_t *i_monospace_font_family(void)
 
 /*---------------------------------------------------------------------------*/
 
-OSFont *osfont_create(const char_t *family, const real32_t size, const uint32_t style)
+OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const uint32_t style)
 {
     const char_t *face_name = NULL;
     WCHAR face_namew[LF_FULLFACESIZE];
@@ -199,7 +199,7 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const uint32_t 
 
     hfont = CreateFont(
         nHeight,
-        PARAM(nWidth, 0),
+        PARAM(nWidth, width >= 0 ? (int)width : 0),
         PARAM(nEscapement, 0),
         PARAM(nOrientation, 0),
         (style & ekFBOLD) == ekFBOLD ? FW_BOLD : FW_MEDIUM,

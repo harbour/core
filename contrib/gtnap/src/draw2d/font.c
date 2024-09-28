@@ -15,6 +15,7 @@
 #include "draw2d.inl"
 #include <core/heap.h>
 #include <core/strings.h>
+#include <sewer/bmath.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
 
@@ -24,6 +25,7 @@ struct _font_t
     uint32_t family;
     uint32_t style;
     real32_t size;
+    real32_t width;
     real32_t cell_size;
     real32_t leading;
     real32_t ascent;
@@ -40,12 +42,13 @@ struct _font_t
 
 /*---------------------------------------------------------------------------*/
 
-static Font *i_create_font(const uint32_t family, const real32_t size, const uint32_t style)
+static Font *i_create_font(const uint32_t family, const real32_t size, const real32_t width, const uint32_t style)
 {
     Font *font = heap_new(Font);
     font->num_instances = 1;
     font->family = family;
     font->size = size;
+    font->width = width;
     font->style = style;
     font->cell_size = -1;
     font->leading = -1;
@@ -83,21 +86,21 @@ void font_destroy(Font **font)
 Font *font_create(const char_t *family, const real32_t size, const uint32_t style)
 {
     uint32_t ffamily = draw2d_register_font(family);
-    return i_create_font(ffamily, size, style);
+    return i_create_font(ffamily, size, -1, style);
 }
 
 /*---------------------------------------------------------------------------*/
 
 Font *font_system(const real32_t size, const uint32_t style)
 {
-    return i_create_font((uint32_t)ekFONT_FAMILY_SYSTEM, size, style);
+    return i_create_font((uint32_t)ekFONT_FAMILY_SYSTEM, size, -1, style);
 }
 
 /*---------------------------------------------------------------------------*/
 
 Font *font_monospace(const real32_t size, const uint32_t style)
 {
-    return i_create_font((uint32_t)ekFONT_FAMILY_MONOSPACE, size, style);
+    return i_create_font((uint32_t)ekFONT_FAMILY_MONOSPACE, size, -1, style);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -105,7 +108,7 @@ Font *font_monospace(const real32_t size, const uint32_t style)
 Font *font_with_style(const Font *font, const uint32_t style)
 {
     cassert_no_null(font);
-    return i_create_font(font->family, font->size, style);
+    return i_create_font(font->family, font->size, font->width, style);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -140,7 +143,7 @@ static ___INLINE void i_osfont(Font *font)
     if (font->osfont == NULL)
     {
         const char_t *fname = draw2d_font_family(font->family);
-        font->osfont = osfont_create(fname, font->size, font->style);
+        font->osfont = osfont_create(fname, font->size, font->width, font->style);
     }
 }
 
@@ -230,6 +233,19 @@ uint32_t font_style(const Font *font)
 {
     cassert_no_null(font);
     return font->style;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void font_set_width(Font *font, real32_t width)
+{
+    cassert_no_null(font);
+    if (bmath_absf(font->width - width) > 0.01f)
+    {
+        font->width = width;
+        if (font->osfont != NULL)
+            osfont_destroy(&font->osfont);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
