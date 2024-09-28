@@ -243,6 +243,13 @@ void font_extents(const Font *font, const char_t *text, const real32_t refwidth,
 
 /*---------------------------------------------------------------------------*/
 
+void font_preferred_monospace(const char_t *family)
+{
+    draw2d_preferred_monospace(family);
+}
+
+/*---------------------------------------------------------------------------*/
+
 const void *font_native(const Font *font)
 {
     cassert_no_null(font);

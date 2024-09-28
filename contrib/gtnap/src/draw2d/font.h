@@ -59,6 +59,8 @@ _draw2d_api ArrPt(String) *font_installed_families(void);
 
 _draw2d_api ArrPt(String) *font_installed_monospace(void);
 
+_draw2d_api void font_preferred_monospace(const char_t *family);
+
 _draw2d_api const void *font_native(const Font *font);
 
 __END_C

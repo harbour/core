@@ -114,14 +114,6 @@ void draw2d_finish(void)
 
 /*---------------------------------------------------------------------------*/
 
-void draw2d_user_monospace_family(const char_t *family)
-{
-    str_upd(&i_USER_MONOSPACE_FONT_FAMILY, family);
-    str_destopt(&i_MONOSPACE_FONT_FAMILY);
-}
-
-/*---------------------------------------------------------------------------*/
-
 uint32_t draw2d_register_font(const char_t *font_family)
 {
     /* Check if font name is a system font */
@@ -432,4 +424,12 @@ const char_t *draw2d_monospace_family(const char_t **desired_fonts, const uint32
     }
 
     return tc(i_MONOSPACE_FONT_FAMILY);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void draw2d_preferred_monospace(const char_t *family)
+{
+    str_upd(&i_USER_MONOSPACE_FONT_FAMILY, family);
+    str_destopt(&i_MONOSPACE_FONT_FAMILY);
 }

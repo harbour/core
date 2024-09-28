@@ -951,7 +951,7 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
 
 #if defined (__WINDOWS__)
-    draw2d_user_monospace_family("Courier New");
+    font_preferred_monospace("Courier New");
 #endif
 
     {
