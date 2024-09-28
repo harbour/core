@@ -27,6 +27,9 @@ arrst_foreach_const(.*)|\
 arrst_forback(.*)|\
 arrst_forback_const(.*)|\
 arrpt_foreach(.*)|\
+arrpt_foreach_const(.*)|\
+arrpt_forback(.*)|\
+arrpt_forback_const(.*)|\
 stm_lines(.*)|\
 setst_foreach(.*)|\
 setst_foreach_const(.*)|\
