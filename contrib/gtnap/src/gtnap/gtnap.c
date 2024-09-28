@@ -737,8 +737,8 @@ static void i_create_fonts2(const real32_t size, const real32_t width, GtNap *gt
     cassert_no_null(gtnap);
     ptr_destopt(font_destroy, &gtnap->global_font, Font);
     ptr_destopt(font_destroy, &gtnap->reduced_font, Font);
-    gtnap->global_font = font_monospace(size, 0);
-    gtnap->reduced_font = font_monospace(rsize, 0);
+    gtnap->global_font = font_monospace(size, ekFCELL);
+    gtnap->reduced_font = font_monospace(rsize, ekFCELL);
     font_set_width(gtnap->global_font, width);
     font_set_width(gtnap->reduced_font, rwidth);
 }

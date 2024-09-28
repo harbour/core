@@ -124,20 +124,21 @@ real32_t font_mini_size(void)
 
 static int i_font_height(const real32_t size, const uint32_t style)
 {
+    int height = 0;
     if ((style & ekFPOINTS) == ekFPOINTS)
     {
-        return -(int)((size * (real32_t)kLOG_PIXY) / 72.f);
+        height = -(int)((size * (real32_t)kLOG_PIXY) / 72.f);
     }
-    /* else if ((style & ekFCELL) == ekFCELL)
-    {
-         return (int)size;
-    }
-    */
     else
     {
         cassert((style & ekFPIXELS) == ekFPIXELS);
-        return -(int)size;
+        height = -(int)size;
     }
+
+    if ((style & ekFCELL) == ekFCELL)
+        height = -height;
+
+    return height;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -198,7 +199,7 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t 
     nHeight = i_font_height(size, style);
 
     hfont = CreateFont(
-        - nHeight,
+        nHeight,
         PARAM(nWidth, width >= 0 ? (int)width : 0),
         PARAM(nEscapement, 0),
         PARAM(nOrientation, 0),
