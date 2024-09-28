@@ -198,7 +198,7 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t 
     nHeight = i_font_height(size, style);
 
     hfont = CreateFont(
-        nHeight,
+        - nHeight,
         PARAM(nWidth, width >= 0 ? (int)width : 0),
         PARAM(nEscapement, 0),
         PARAM(nOrientation, 0),

@@ -730,6 +730,21 @@ static void i_create_fonts(const real32_t size, GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_create_fonts2(const real32_t size, const real32_t width, GtNap *gtnap)
+{
+    real32_t rsize = bmath_ceilf(size * .8f);
+    real32_t rwidth = bmath_ceilf(width * .8f);
+    cassert_no_null(gtnap);
+    ptr_destopt(font_destroy, &gtnap->global_font, Font);
+    ptr_destopt(font_destroy, &gtnap->reduced_font, Font);
+    gtnap->global_font = font_monospace(size, 0);
+    gtnap->reduced_font = font_monospace(rsize, 0);
+    font_set_width(gtnap->global_font, width);
+    font_set_width(gtnap->reduced_font, rwidth);
+}
+
+/*---------------------------------------------------------------------------*/
+
 /* Change this value to make buttons higher */
 static real32_t i_button_vpadding(void)
 {
@@ -777,8 +792,9 @@ static void i_compute_cell_size(GtNap *gtnap)
 
     {
         real32_t w, h;
-        font_extents(gtnap->global_font, "exibicao/edicao de texto em memoria", -1, &w, &h);
-        fw = w / 35.f;
+        const char_t *reftext = "exibicao/edicao de texto em memoria";
+        font_extents(gtnap->global_font, reftext, -1, &w, &h);
+        fw = w / str_len_c(reftext);
         fh = h;
     }
 
@@ -824,6 +840,271 @@ static void i_compute_font_size(const real32_t max_width, const real32_t max_hei
 
         break;
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+/* 
+ * This function to select the font size has been cloned from original
+ * 'cuademo::outros.prg', working under GTWVW.
+ */
+static void i_compute_font_size2(const real32_t screen_width, const real32_t screen_height, GtNap *gtnap)
+{
+    real32_t N_HeightMin = 0;   /* altura  mínima que, com certeza, cabe na menor resolução */
+    real32_t N_WidthMin = 0;    /* largura mínima que, com certeza, cabe na menor resolução */
+    real32_t N_HeightMax = 0;   /* altura  máxima que ultrapassa a maior resolução */
+    real32_t N_WidthMax = 0;    /* largura máxima que ultrapassa a maior resolução */
+    real32_t N_HeightTemp = 0;
+    real32_t N_WidthTemp = 0;
+    const char_t *C_Fonte = NULL;
+
+    /*
+     * Resoluções mais comuns:
+     * N_ScreenHeight   N_ScreenWidth
+     *    >= 1024         >= 1680    
+     *    >= 1024         >= 1440    
+     *    >= 1024         >= 1280    
+     *    >=  960         >= 1280    
+     *    >=  864         >= 1152    
+     *    >=  768         >= 1024   
+     *    >=  600         >= 1024   (NetBooks)
+     *    >=  600         >=  800   (SuperVGA) 
+     *
+     */
+    if (screen_height <= 600)
+    {
+        /*
+         * Testes práticos mostraram que, em resolução vertical baixa (altura),
+         * o fonte "Courier New" apresenta um serrilhado que torna a leitura das letras
+         * difícil. Nesta situação, o "Lucida Console" tem aparência bem melhor.
+         */
+
+        /* 
+         * Lucida Console não está presente no Linux ou macOS. Nestes casos, 
+         * deixamos a fonte monoespaçada como padrão.
+         */
+#if defined (__WINDOWS__)
+         C_Fonte = "Lucida Console";
+#else 
+         C_Fonte = NULL;
+#endif
+    }
+    else
+    {
+        /*
+         * Já em resolução vertical alta, o "Courier New" não apresenta mais
+         * o serrilhado, e tem aparência melhor.
+         * A desvantagem do "Lucida Console", neste caso, é que fica muito largo,
+         * com aparência pesada e feia.
+         */
+
+        /* 
+         * "Courier New" está presente em praticamente todos os sistemas, incluindo
+         * Linux e macOS. Se não estiver presente, a fonte monoespaçada padrão será 
+         * selecionada.
+         */
+         C_Fonte = "Courier New";
+    }
+
+    if (C_Fonte != NULL)
+        font_preferred_monospace(C_Fonte);
+
+    /*
+     * - Os valores abaixo foram obtidos por via prática, num computador com
+     *   Windows 7 e resolução 600 x 800 (SuperVGA)
+     * - Isto é importante, porque a SetMode() só consegue funcionar se o
+     *   fonte escolhido efetivamente couber na resolução e tamanhos especificados
+     *
+     * Usar o valores mínimos para permitir que a SetMode() mude a quantidade de
+     * linhas para 35 e colunas para 110, até mesmo na resolução 600 X 800
+     */
+    N_HeightMin = 6.f;
+    N_WidthMin  = 5.f;
+
+      //*
+      //Wvw_SetFont(,C_Fonte,N_HeightMin,N_WidthMin)
+      //Wvw_PBSetFont(,C_Fonte,N_HeightMin,N_WidthMin)
+      //WVW_SetDefLineSpacing( 4 )  // todo o sistema (novas janelas)
+      //WVW_SetLineSpacing( 0, 4 )  // tela "default" do GTWVW
+      //SetMode(N_QtLin,N_QtCol)
+      //IF L_Verbose
+      //   ALERT("Com height mínimo "+LTRIM(STR(N_HeightMin))+" e width mínimo "+;
+      //         LTRIM(STR(N_WidthMin))+;
+      //         " cabem "+LTRIM(STR(WVW_MAXMAXROW())) +" rows e "+;
+      //         LTRIM(STR(WVW_MAXMAXCOL()))+" cols")
+      //ENDIF                 
+      //ASSUME MAXROW() == N_QtLin-1
+      //ASSUME MAXCOL() == N_QtCol-1
+      //IF L_Verbose
+      //   ALERT("Tela mudada para "+LTRIM(STR(N_QtLin))+" linhas "+;
+      //         LTRIM(STR(N_QtCol))+" colunas")
+      //ENDIF
+
+    /*
+     * Usar os valores máximos para ir reduzindo o tamanho até que 
+     * caiba na resolução da tela (a maior tela até agora foi a 1024 x 1860)
+     */
+    N_HeightMax = 24.f + 1.f;    // em teste real, só coube 23
+    N_WidthMax  = 15.f + 1.f;    // em teste real, só coube 15
+
+    /*
+     * Setar a maior altura de fonte possível, que ainda caiba 35 linhas.
+     * Se WVW_MAXMAXROW() continuar com o mesmo valor, é porque não coube
+     * na tela, sendo necessário reduzir ainda mais a altura do fonte.
+     */
+    i_create_fonts2(N_HeightMax, -1, gtnap);
+    i_compute_cell_size(gtnap);
+    N_HeightTemp = N_HeightMax;
+    for (;;)
+    {
+        /* The font computed by the system has not the desired height */
+        if (gtnap->cell_y_sizef - N_HeightMax > 0.7f)
+        {
+            N_HeightTemp -= 1;
+            i_create_fonts2(N_HeightTemp, -1, gtnap);
+            i_compute_cell_size(gtnap);
+        }
+        /* The total height exceeds the screen limits */
+        else if (gtnap->cell_y_sizef * gtnap->rows > screen_height 
+            && N_HeightMax > N_HeightMin)
+        {
+            N_HeightMax -= 1.f;
+            N_HeightTemp -= N_HeightMax;
+            i_create_fonts2(N_HeightMax, -1, gtnap);
+            i_compute_cell_size(gtnap);
+        }
+        else
+        {
+            break;
+        }
+    }
+
+      //N_MaxMaxRow := WVW_MAXMAXROW()
+      //Wvw_SetFont(,C_Fonte,N_HeightMax)
+      //Wvw_PBSetFont(,C_Fonte,N_HeightMax)
+      //IF L_Verbose
+      //   ALERT("Com height "+LTRIM(STR(N_HeightMax))+;
+      //         " cabe "+LTRIM(STR(WVW_MAXMAXROW()))+" rows" )
+      //ENDIF                 
+      //DO WHILE WVW_MAXMAXROW() == N_MaxMaxRow .AND. ;
+      //         N_HeightMax > N_HeightMin
+      //   N_HeightMax--
+      //   Wvw_SetFont(,C_Fonte,N_HeightMax)
+      //   Wvw_PBSetFont(,C_Fonte,N_HeightMax)
+      //   IF L_Verbose
+      //      ALERT("Com height "+LTRIM(STR(N_HeightMax))+;
+      //            " cabe "+LTRIM(STR(WVW_MAXMAXROW()))+" rows" )
+      //   ENDIF                 
+      //ENDDO
+      //IF L_Verbose
+      //   ALERT("O height final foi "+LTRIM(STR(N_HeightMax)))
+      //ENDIF   
+
+    /*
+     * Setar a maior largura de fonte possível, que ainda caiba 110 colunas.
+     * Se WVW_MAXMAXCOL() continuar com o mesmo valor, é porque não coube
+     * na tela, sendo necessário reduzir ainda mais a largura do fonte.
+     */
+    i_create_fonts2(N_HeightMax, N_WidthMax, gtnap);
+    i_compute_cell_size(gtnap);
+    N_WidthTemp = N_WidthMax;
+
+    for (;;)
+    {
+
+        /* The font computed by the system has not the desired width */
+        if (gtnap->cell_x_sizef - N_WidthMax > 0.7f)
+        {
+            N_WidthTemp -= 1;
+            i_create_fonts2(N_HeightMax, N_WidthTemp, gtnap);
+            i_compute_cell_size(gtnap);
+        }
+        /* The total width exceeds the screen limits */
+        else if (gtnap->cell_x_sizef * gtnap->cols > screen_width
+            && N_WidthMax > N_WidthMin)
+        {
+            N_WidthMax -= 1.f;
+            N_WidthTemp = N_WidthMax;
+            i_create_fonts2(N_HeightMax, N_WidthMax, gtnap);
+            i_compute_cell_size(gtnap);
+        }
+        else
+        {
+            break;
+        }
+    }
+   //   N_MaxMaxCol := WVW_MAXMAXCOL()
+   //   Wvw_SetFont(,C_Fonte,N_HeightMax,N_WidthMax)
+   //   Wvw_PBSetFont(,C_Fonte,N_HeightMax,N_WidthMax)
+   //   IF L_Verbose
+   //      ALERT("Com width "+LTRIM(STR(N_WidthMax))+;
+   //            " cabe "+LTRIM(STR(WVW_MAXMAXCOL()))+" cols" )
+   //   ENDIF                 
+   //   DO WHILE WVW_MAXMAXCOL() == N_MaxMaxCol .AND. ;
+   //            N_WidthMax > N_WidthMin
+   //      N_WidthMax--
+   //      Wvw_SetFont(,C_Fonte,N_HeightMax,N_WidthMax)
+   //      Wvw_PBSetFont(,C_Fonte,N_HeightMax,N_WidthMax)
+   //      IF L_Verbose
+   //         ALERT("Com width "+LTRIM(STR(N_WidthMax))+;
+   //               " cabe "+LTRIM(STR(WVW_MAXMAXCOL()))+" cols")
+   //      ENDIF                 
+   //   ENDDO
+   //   IF L_Verbose
+   //      ALERT("O width final foi "+LTRIM(STR(N_WidthMax)))
+   //   ENDIF   
+   //   ASSUME WVW_MAXMAXROW() >= N_QtLin-1
+   //   ASSUME WVW_MAXMAXCOL() >= N_QtCol-1
+   //   *
+   //   /*
+   //   * USAR ESTE TRECHO DE CÓDIGO SÓ EM AMBIENTE DE TESTE E NO CASO DE
+   //   * MUDANÇA DE FONTE, OU MUDANÇA DE TAMANHO MÍNIMO DE RESULUÇÃO.
+   //   #INCLUDE "intercep.ch"
+   //   *
+   //   DBCREATE_T(ASPECTMP()+"testfont.dbf",;
+   //              {{"HEIGHT"   ,"N", 3,0},;
+   //               {"WIDTH"    ,"N", 3,0},;
+   //               {"HEIGHT_OK","L", 1,0},;
+   //               {"WIDTH_OK" ,"L", 1,0},;
+   //               {"MAXMAXROW","N", 3,0},;
+   //               {"MAXMAXCOL","N", 3,0}})
+   //   *
+   //   USE_T A19276 TABLE (ASPECTMP()+"testfont.dbf") CANINSERT EXCLUSIVE FINALUSE
+   //   PRIVATE N_HEIGHT
+   //   FOR N_HEIGHT := 5 TO 35
+   //      PRIVATE N_WIDTH
+   //      PRIVATE N_MaxMaxRow_OLD := WVW_MAXMAXROW()
+   //      FOR N_WIDTH := 4 TO 25
+   //          PRIVATE N_MaxMaxCol_OLD := WVW_MAXMAXCOL()
+   //          *
+   //          Wvw_SetFont(,C_Fonte,N_HEIGHT,N_WIDTH)
+   //          WVW_SetDefLineSpacing( 4 )  // todo o sistema (novas janelas)
+   //          WVW_SetLineSpacing( 0, 4 )  // tela "default" do GTWVW
+   //          SetMode(N_QtLin,N_QtCol)
+   //          *
+   //          ASSUME MAXROW() == N_QtLin-1
+   //          ASSUME MAXCOL() == N_QtCol-1
+   //          *
+   //          TESTFONT->(APP_REG())
+   //          ALIAS TESTFONT REPL HEIGHT     WITH N_HEIGHT
+   //          ALIAS TESTFONT REPL WIDTH      WITH N_WIDTH
+   //          IF WVW_MAXMAXROW() # N_MaxMaxRow_OLD
+   //             ALIAS TESTFONT REPL HEIGHT_OK WITH .T.
+   //          ENDIF
+   //          IF WVW_MAXMAXCOL() # N_MaxMaxCol_OLD      
+   //             ALIAS TESTFONT REPL WIDTH_OK WITH .T.
+   //          ENDIF   
+   //          ALIAS TESTFONT REPL MAXMAXROW  WITH WVW_MAXMAXROW()
+   //          ALIAS TESTFONT REPL MAXMAXCOL  WITH WVW_MAXMAXCOL()
+   //          UNLOCK
+   //      NEXT
+   //   NEXT   
+   //   CLOSE TESTFONT
+   //   */
+   //   
+   //RETURN NIL
+
+
 }
 
 /*---------------------------------------------------------------------------*/
@@ -950,9 +1231,9 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == (HB_BOOL)HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
 
-#if defined (__WINDOWS__)
-    font_preferred_monospace("Courier New");
-#endif
+//#if defined (__WINDOWS__)
+//    font_preferred_monospace("Courier New");
+//#endif
 
     {
         char_t path[512];
@@ -978,8 +1259,7 @@ static GtNap *i_gtnap_create(void)
     }
 
     globals_resolution(&screen);
-    screen.height -= 50; /* Margin for Dock or Taskbars */
-    i_compute_font_size(screen.width, screen.height, GTNAP_GLOBAL);
+    i_compute_font_size2(screen.width, screen.height, GTNAP_GLOBAL);
     deblib_init_colors(i_COLORS);
 
     {
