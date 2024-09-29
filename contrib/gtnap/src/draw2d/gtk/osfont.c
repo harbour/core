@@ -19,9 +19,6 @@
 #include <core/strings.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
-#if defined(__ASSERTS__)
-#include <sewer/bmath.h>
-#endif
 
 #if !defined(__GTK3__)
 #error This file is only for GTK Toolkit
