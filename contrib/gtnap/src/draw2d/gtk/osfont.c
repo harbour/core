@@ -122,11 +122,12 @@ static const char_t *i_monospace_font_family(void)
 
 /*---------------------------------------------------------------------------*/
 
-OSFont *osfont_create(const char_t *family, const real32_t size, const uint32_t style)
+OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const uint32_t style)
 {
     const char_t *name = NULL;
     gint psize = 0;
     PangoFontDescription *font = NULL;
+    unref(width);
 
     if (str_equ_c(family, "__SYSTEM__") == TRUE)
     {
@@ -148,6 +149,7 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const uint32_t 
     pango_font_description_set_size(font, psize);
     pango_font_description_set_style(font, (style & ekFITALIC) == ekFITALIC ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL);
     pango_font_description_set_weight(font, (style & ekFBOLD) == ekFBOLD ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL);
+    pango_font_description_set_stretch(font, PANGO_STRETCH_EXTRA_EXPANDED);
     heap_auditor_add("PangoFontDescription");
     return cast(font, OSFont);
 }
@@ -176,6 +178,15 @@ void osfont_extents(const OSFont *font, const char_t *text, const real32_t refwi
     }
 
     pango_layout_set_font_description(i_LAYOUT, cast(font, PangoFontDescription));
+        // {
+        //     PangoMatrix matrix = PANGO_MATRIX_INIT;
+        //     PangoContext *context = pango_layout_get_context(i_LAYOUT);
+        //     pango_matrix_rotate(&matrix, 10);
+
+        //     //pango_matrix_scale(&matrix, 0.8, 1.0);  // Escalar solo en ancho
+        //     pango_context_set_matrix(context, &matrix);
+        // }
+
     pango_layout_set_text(i_LAYOUT, (const char *)text, -1);
     pango_layout_set_width(i_LAYOUT, refwidth < 0 ? -1 : (int)(refwidth * PANGO_SCALE));
     pango_layout_get_pixel_size(i_LAYOUT, &w, &h);

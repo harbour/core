@@ -561,6 +561,15 @@ void draw_font(DCtx *ctx, const Font *font)
         {
             const PangoFontDescription *fdesc = (PangoFontDescription *)font_native(ctx->font);
             pango_layout_set_font_description(ctx->layout, fdesc);
+
+            // {
+            // PangoMatrix matrix = PANGO_MATRIX_INIT;
+            //     PangoContext *context = pango_layout_get_context(ctx->layout);
+            //     pango_matrix_rotate(&matrix, 10);
+            //     //pango_matrix_scale(&matrix, 0.8, 1.0);  // Escalar solo en ancho
+            //     pango_context_set_matrix(context, &matrix);
+            // }
+
         }
     }
 }
@@ -589,6 +598,16 @@ static void i_begin_text(DCtx *ctx, const char_t *text, const real32_t x, const 
         fdesc = (PangoFontDescription *)font_native(ctx->font);
         ctx->layout = pango_cairo_create_layout(ctx->cairo);
         pango_layout_set_font_description(ctx->layout, fdesc);
+
+        // {
+        //     PangoMatrix matrix = PANGO_MATRIX_INIT;
+        //     PangoContext *context = pango_layout_get_context(ctx->layout);
+        //     pango_matrix_rotate(&matrix, 10);
+
+        //     //pango_matrix_scale(&matrix, 0.8, 1.0);  // Escalar solo en ancho
+        //     pango_context_set_matrix(context, &matrix);
+        // }
+
     }
 
     pango_layout_set_text(ctx->layout, (const char *)text, -1);
@@ -783,6 +802,16 @@ void draw_text_extents(DCtx *ctx, const char_t *text, const real32_t refwidth, r
         fdesc = (PangoFontDescription *)font_native(ctx->font);
         ctx->layout = pango_cairo_create_layout(ctx->cairo);
         pango_layout_set_font_description(ctx->layout, fdesc);
+
+        // {
+        //     PangoMatrix matrix = PANGO_MATRIX_INIT;
+        //     PangoContext *context = pango_layout_get_context(ctx->layout);
+        //     pango_matrix_rotate(&matrix, 10);
+
+        //     //pango_matrix_scale(&matrix, 0.8, 1.0);  // Escalar solo en ancho
+        //     pango_context_set_matrix(context, &matrix);
+        // }
+
     }
 
     pango_layout_set_text(ctx->layout, (const char *)text, -1);
