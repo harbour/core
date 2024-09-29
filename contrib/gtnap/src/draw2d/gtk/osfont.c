@@ -19,9 +19,6 @@
 #include <core/strings.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
-#if defined(__ASSERTS__)
-#include <sewer/bmath.h>
-#endif
 
 #if !defined(__GTK3__)
 #error This file is only for GTK Toolkit
@@ -119,7 +116,7 @@ static gint i_font_size(const real32_t size, const uint32_t style)
 
 static const char_t *i_monospace_font_family(void)
 {
-    const char_t *desired_fonts[] = {"DejaVu Sans Mono", "Ubuntu Mono", "Courier New"};
+    const char_t *desired_fonts[] = {"Ubuntu Mono", "DejaVu Sans Mono", "Courier New"};
     return draw2d_monospace_family(desired_fonts, sizeof(desired_fonts) / sizeof(const char_t *));
 }
 
