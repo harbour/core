@@ -125,33 +125,14 @@ static const char_t *i_monospace_font_family(void)
 
 /*---------------------------------------------------------------------------*/
 
-/*
-static gint i_scale_size_to_cell(const real32_t size, const uint32_t style, PangoFontDescription *font)
+static gint i_scale_size_to_cell(const real32_t size, const int pango_size, PangoFontDescription *font)
 {
-    real32_t cursize = size;
     real32_t cell_size = 1e8f;
     gint new_pango_size = 0;
-    while (cell_size > size)
-    {
-        cursize -= 1;
-        new_pango_size = i_font_size(cursize, style);
-        pango_font_description_set_size(font, new_pango_size);
-        pango_font_description_set_style(font, (style & ekFITALIC) == ekFITALIC ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL);
-        pango_font_description_set_weight(font, (style & ekFBOLD) == ekFBOLD ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL);
-        osfont_extents(cast_const(font, OSFont), "REFTEXT", -1, NULL, &cell_size);
-    }
-
+    osfont_extents(cast(font, OSFont), "REFTEXT", -1, NULL, &cell_size);
+    new_pango_size = (gint)((size * (real32_t)pango_size) / cell_size);
     return new_pango_size;
-    // new_pango_size = (gint)((cell_size * (real32_t)pango_size) / cur_cell_size);
-    // cassert(new_pango_size < pango_size);
-    // pango_font_description_set_size(font, new_pango_size);
-
-    // #if defined(__ASSERTS__)
-    //     osfont_extents(cast_const(font, OSFont), "REFTEXT", -1, NULL, &cur_cell_size);
-    //     cassert(bmath_absf(cur_cell_size - cell_size) < 1.f);
-    // #endif
 }
-*/
 
 /*---------------------------------------------------------------------------*/
 
@@ -183,18 +164,11 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t 
     pango_font_description_set_style(font, (style & ekFITALIC) == ekFITALIC ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL);
     pango_font_description_set_weight(font, (style & ekFBOLD) == ekFBOLD ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL);
 
-    /*
     if ((style & ekFCELL) == ekFCELL)
     {
-        gint s = i_scale_size_to_cell(size, style, font);
-        pango_font_description_free(font);
-        font = pango_font_description_new();
-        pango_font_description_set_family(font, name);
+        gint s = i_scale_size_to_cell(size, psize, font);
         pango_font_description_set_size(font, s);
-        pango_font_description_set_style(font, (style & ekFITALIC) == ekFITALIC ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL);
-        pango_font_description_set_weight(font, (style & ekFBOLD) == ekFBOLD ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL);
     }
-*/
 
     heap_auditor_add("PangoFontDescription");
     return cast(font, OSFont);
@@ -224,18 +198,6 @@ void osfont_extents(const OSFont *font, const char_t *text, const real32_t refwi
     }
 
     pango_layout_set_font_description(i_LAYOUT, cast(font, PangoFontDescription));
-
-    /*
-    // {
-    //     PangoMatrix matrix = PANGO_MATRIX_INIT;
-    //     PangoContext *context = pango_layout_get_context(i_LAYOUT);
-    //     pango_matrix_rotate(&matrix, 10);
-
-    //     //pango_matrix_scale(&matrix, 0.8, 1.0);  // Escalar solo en ancho
-    //     pango_context_set_matrix(context, &matrix);
-    // }
-*/
-
     pango_layout_set_text(i_LAYOUT, (const char *)text, -1);
     pango_layout_set_width(i_LAYOUT, refwidth < 0 ? -1 : (int)(refwidth * PANGO_SCALE));
     pango_layout_get_pixel_size(i_LAYOUT, &w, &h);
