@@ -21,6 +21,7 @@
 #include "draw.inl"
 #include <core/arrpt.h>
 #include <core/strings.h>
+#include <sewer/bmath.h>
 #include <sewer/cassert.h>
 
 #if !defined(__MACOS__)
@@ -86,21 +87,42 @@ static const char_t *i_monospace_font_family(void)
 }
 
 /*---------------------------------------------------------------------------*/
-
-static NSFont *i_convent_to_italic(NSFont *font, const CGFloat height, NSFontManager *font_manager)
+/*
+ * This funtion apply two transforms:
+ *  - A shear if itatic is required.
+ *  - A x-scale if we need a char width different that font defaults.
+ */
+static NSFont *i_font_transform(NSFont *font, const CGFloat scale_x, const CGFloat height, const BOOL italic, NSFontManager *font_manager)
 {
-    NSFont *italic_font = nil;
-    NSFontTraitMask fontTraits = (NSFontTraitMask)0;
+    NSFont *tfont = nil;
+    BOOL with_italic = NO;
     cassert_no_null(font);
 
-    italic_font = [font_manager convertFont:font toHaveTrait:NSItalicFontMask];
-    fontTraits = [font_manager traitsOfFont:italic_font];
-
-    if ((fontTraits & NSItalicFontMask) == 0)
+    if (italic == YES)
+    {
+        /* The NSFontManager can apply the italic without affine */
+        NSFontTraitMask traits = 0;
+        tfont = [font_manager convertFont:font toHaveTrait:NSItalicFontMask];
+        traits = [font_manager traitsOfFont:tfont];
+        if ((traits & NSItalicFontMask) == NSItalicFontMask)
+            with_italic = YES;
+    }
+    else
+    {
+        tfont = font;
+    }
+    
+    /* We have to apply an affine transform to text */
+    if ((italic == YES && with_italic == NO)
+        || fabs((double)scale_x - 1) > 0.01)
     {
         NSAffineTransform *font_transform = [NSAffineTransform transform];
-        [font_transform scaleBy:height];
+        
+        /* Apply the x-scale */
+        [font_transform scaleXBy:scale_x * height yBy:height];
 
+        /* Italic is required, but don't apply by FontManager */
+        if (italic == YES && with_italic == NO)
         {
             NSAffineTransformStruct data;
             NSAffineTransform *italic_transform = nil;
@@ -115,20 +137,32 @@ static NSFont *i_convent_to_italic(NSFont *font, const CGFloat height, NSFontMan
             [font_transform appendTransform:italic_transform];
         }
 
-        italic_font = [NSFont fontWithDescriptor:[italic_font fontDescriptor] textTransform:font_transform];
+        tfont = [NSFont fontWithDescriptor:[tfont fontDescriptor] textTransform:font_transform];
     }
 
-    return italic_font;
+    return tfont;
 }
 
 /*---------------------------------------------------------------------------*/
 
-OSFont *osfont_create(const char_t *family, const real32_t size, const uint32_t style)
+static real32_t i_width_scale(NSFont *font, const real32_t width)
+{
+    const char_t *reftext = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    real32_t twidth = 0, theight = 0;
+    osfont_extents(cast(font, OSFont), reftext, -1, &twidth, &theight);
+    twidth /= str_len_c(reftext);
+    unref(theight);
+    return width / twidth;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static NSFont *i_nsfont(const char_t *family, const real32_t size, const uint32_t style)
 {
     const char_t *name = NULL;
     NSFont *nsfont = nil;
     cassert(size > 0.f);
-
+    
     if (str_equ_c(family, "__SYSTEM__") == TRUE)
     {
         if (style & ekFBOLD)
@@ -160,15 +194,47 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const uint32_t 
         NSUInteger mask = (style & ekFBOLD) ? NSBoldFontMask : 0;
         nsfont = [fontManager fontWithFamily:ffamily traits:(NSFontTraitMask)mask weight:5 size:(CGFloat)size];
     }
+    
+    return nsfont;
+}
 
+/*---------------------------------------------------------------------------*/
+
+static real32_t i_cell_size(NSFont *font, const real32_t size)
+{
+    const char_t *reftext = "ABCDEabcde";
+    real32_t twidth = 0, theight = 0;
+    real32_t scale = 0;
+    osfont_extents(cast(font, OSFont), reftext, -1, &twidth, &theight);
+    scale = size / theight;
+    return bmath_floorf(size * scale);
+}
+
+/*---------------------------------------------------------------------------*/
+
+OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const uint32_t style)
+{
+    real32_t esize = size;
+    NSFont *nsfont = i_nsfont(family, esize, style);
     cassert_fatal_msg(nsfont != nil, "Font is not available on this computer.");
 
+    if ((style & ekFCELL) == ekFCELL)
+    {
+        esize = i_cell_size(nsfont, esize);
+        nsfont = i_nsfont(family, esize, style);
+    }
+        
     if (nsfont != nil)
     {
-        if (style & ekFITALIC)
+        BOOL with_italic = (style & ekFITALIC) == ekFITALIC;
+        real32_t scale_x = 1.f;
+        if (width > 0)
+            scale_x = i_width_scale(nsfont, width);
+
+        if (with_italic || fabsf(scale_x - 1) > 0.01)
         {
-            NSFontManager *fontManager = [NSFontManager sharedFontManager];
-            nsfont = i_convent_to_italic(nsfont, (CGFloat)size, fontManager);
+            NSFontManager *manager = [NSFontManager sharedFontManager];
+            nsfont = i_font_transform(nsfont, (CGFloat)scale_x, (CGFloat)esize, with_italic, manager);
         }
 
         [nsfont retain];

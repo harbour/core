@@ -172,7 +172,8 @@ struct _gtnap_modal_t
 struct _gtnap_t
 {
     Font *global_font;
-    Font *reduced_font;
+    Font *button_font;
+    Font *edit_font;
     uint8_t date_digits;
     uint8_t date_chars;
     String *title;
@@ -296,6 +297,8 @@ static const bool_t i_FULL_HBFUNCS = FALSE;
 
 /* Harbour colors sensible to light/dark themes */
 static color_t i_COLORS[16];
+
+static const real32_t i_FONT_SIZE_DIFF = 0.7f;
 
 /*---------------------------------------------------------------------------*/
 
@@ -523,7 +526,8 @@ static void i_gtnap_destroy(GtNap **gtnap)
     cassert(*gtnap == GTNAP_GLOBAL);
     arrpt_destroy(&(*gtnap)->windows, i_destroy_gtwin, GtNapWindow);
     font_destroy(&(*gtnap)->global_font);
-    font_destroy(&(*gtnap)->reduced_font);
+    font_destroy(&(*gtnap)->button_font);
+    font_destroy(&(*gtnap)->edit_font);
     str_destroy(&(*gtnap)->title);
     str_destroy(&(*gtnap)->working_path);
     str_destroy(&(*gtnap)->debugger_path);
@@ -608,10 +612,11 @@ static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 static GtNapWindow *i_current_main_gtwin(GtNap *gtnap)
 {
     cassert_no_null(gtnap);
-    arrpt_forback(gtwin, gtnap->windows, GtNapWindow) if (gtwin->parent_id == UINT32_MAX) return gtwin;
-arrpt_end
-();
-return NULL;
+    arrpt_forback(gtwin, gtnap->windows, GtNapWindow)
+        if (gtwin->parent_id == UINT32_MAX)
+            return gtwin;
+    arrpt_end()
+    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -718,18 +723,6 @@ static Listener *i_gtnap_listener(HB_ITEM *block, const int32_t key, const uint3
 
 /*---------------------------------------------------------------------------*/
 
-static void i_create_fonts(const real32_t size, GtNap *gtnap)
-{
-    real32_t rsize = bmath_ceilf(size * .9f);
-    cassert_no_null(gtnap);
-    ptr_destopt(font_destroy, &gtnap->global_font, Font);
-    ptr_destopt(font_destroy, &gtnap->reduced_font, Font);
-    gtnap->global_font = font_monospace(size, 0);
-    gtnap->reduced_font = font_monospace(rsize, 0);
-}
-
-/*---------------------------------------------------------------------------*/
-
 /* Change this value to make buttons higher */
 static real32_t i_button_vpadding(void)
 {
@@ -746,83 +739,251 @@ static real32_t i_edit_vpadding(void)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_compute_cell_size(GtNap *gtnap)
+static real32_t i_button_size(const Font *font)
 {
-    real32_t bh = 0, eh = 0;
-    real32_t fw = 0, fh = 0;
-
-    cassert_no_null(gtnap);
-
-    /* Create an impostor window, only for measure the real height of buttons and edits */
-    {
-        Panel *panel = panel_create();
-        Button *button = button_push();
-        Edit *edit = edit_create();
-        Window *window = window_create(ekWINDOW_STD | ekWINDOW_OFFSCREEN);
-        Layout *layout = layout_create(1, 2);
-        button_text(button, "DEMO");
-        button_font(button, gtnap->reduced_font);
-        button_vpadding(button, i_button_vpadding());
-        edit_font(edit, gtnap->reduced_font);
-        edit_vpadding(edit, i_edit_vpadding());
-        layout_button(layout, button, 0, 0);
-        layout_edit(layout, edit, 0, 1);
-        panel_layout(panel, layout);
-        window_panel(window, panel);
-        window_show(window);
-        bh = button_get_height(button);
-        eh = edit_get_height(edit);
-        window_destroy(&window);
-    }
-
-    {
-        real32_t w, h;
-        font_extents(gtnap->global_font, "exibicao/edicao de texto em memoria", -1, &w, &h);
-        fw = w / 35.f;
-        fh = h;
-    }
-
-    gtnap->cell_x_sizef = fw;
-
-    /* Cell height will be the higher of labels, buttons and edits */
-    gtnap->cell_y_sizef = fh;
-    gtnap->label_y_sizef = fh;
-    gtnap->button_y_sizef = bh;
-    gtnap->edit_y_sizef = eh;
-
-    if (bh > gtnap->cell_y_sizef)
-        gtnap->cell_y_sizef = bh;
-
-    if (eh > gtnap->cell_y_sizef)
-        gtnap->cell_y_sizef = eh;
+    /* Create an impostor window, only for measure the real height of buttons */
+    real32_t bh = 0;
+    Panel *panel = panel_create();
+    Button *button = button_push();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_OFFSCREEN);
+    Layout *layout = layout_create(1, 1);
+    button_text(button, "DEMO");
+    button_font(button, font);
+    button_vpadding(button, i_button_vpadding());
+    layout_button(layout, button, 0, 0);
+    panel_layout(panel, layout);
+    window_panel(window, panel);
+    window_show(window);
+    bh = button_get_height(button);
+    window_destroy(&window);
+    return bh;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_compute_font_size(const real32_t max_width, const real32_t max_height, GtNap *gtnap)
+static real32_t i_edit_size(const Font *font)
 {
-    real32_t font_size = max_height / (real32_t)(gtnap->rows + 5);
+    /* Create an impostor window, only for measure the real height of editbox */
+    real32_t eh = 0;
+    Panel *panel = panel_create();
+    Edit *edit = edit_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_OFFSCREEN);
+    Layout *layout = layout_create(1, 1);
+    edit_font(edit, font);
+    edit_vpadding(edit, i_edit_vpadding());
+    layout_edit(layout, edit, 0, 0);
+    panel_layout(panel, layout);
+    window_panel(window, panel);
+    window_show(window);
+    eh = edit_get_height(edit);
+    window_destroy(&window);
+    return eh;
+}
 
+/*---------------------------------------------------------------------------*/
+
+static void i_compute_cell_size(GtNap *gtnap, const real32_t size, const real32_t width)
+{
+    real32_t fw = 0, fh = 0;
+    real32_t bs = 0, es = 0;
+    real32_t bh = 0, eh = 0;
+
+    cassert_no_null(gtnap);
+    ptr_destopt(font_destroy, &gtnap->global_font, Font);
+    gtnap->global_font = font_monospace(size, ekFCELL);
+    font_set_width(gtnap->global_font, width);
+
+    /* Compute the real size of a cell, based on font */
+    {
+        real32_t w, h;
+        const char_t *reftext = "exibicao/edicao de texto em memoria";
+        font_extents(gtnap->global_font, reftext, -1, &w, &h);
+        fw = w / str_len_c(reftext);
+        fh = h;
+    }
+
+    /*
+     * We need to set a font size for buttons, where the button
+     * height doesn't exceed the cell height
+     */
+    bs = size;
+    bh = 1e8f;
+    while (bh - fh > i_FONT_SIZE_DIFF)
+    {
+        bs -= 1;
+        ptr_destopt(font_destroy, &gtnap->button_font, Font);
+        gtnap->button_font = font_monospace(bs, ekFCELL);
+        bh = i_button_size(gtnap->button_font);
+    }
+
+    /*
+     * We need to set a font size for edits, where the edit
+     * height doesn't exceed the cell height
+     */
+    es = size;
+    eh = 1e8f;
+    while (eh - fh > i_FONT_SIZE_DIFF)
+    {
+        es -= 1;
+        ptr_destopt(font_destroy, &gtnap->edit_font, Font);
+        gtnap->edit_font = font_monospace(es, ekFCELL);
+        eh = i_edit_size(gtnap->edit_font);
+    }
+
+    /* Final cell sizes */
+    gtnap->cell_x_sizef = fw;
+    gtnap->cell_y_sizef = fh;
+    gtnap->label_y_sizef = fh;
+    gtnap->button_y_sizef = bh;
+    gtnap->edit_y_sizef = eh;
+    cassert(gtnap->label_y_sizef <= gtnap->cell_y_sizef);
+    cassert(gtnap->button_y_sizef <= gtnap->cell_y_sizef);
+    cassert(gtnap->edit_y_sizef <= gtnap->cell_y_sizef);
+}
+
+/*---------------------------------------------------------------------------*/
+
+/*
+ * This function to select the font size has been cloned from original
+ * 'cuademo::outros.prg', working under GTWVW.
+ */
+static void i_compute_font_size(const real32_t screen_width, const real32_t screen_height, GtNap *gtnap)
+{
+    real32_t N_HeightMin = 0; /* altura  mínima que, com certeza, cabe na menor resolução */
+    real32_t N_WidthMin = 0;  /* largura mínima que, com certeza, cabe na menor resolução */
+    real32_t N_HeightMax = 0; /* altura  máxima que ultrapassa a maior resolução */
+    real32_t N_WidthMax = 0;  /* largura máxima que ultrapassa a maior resolução */
+    real32_t N_HeightTemp = 0;
+    real32_t N_WidthTemp = 0;
+    const char_t *C_Fonte = NULL;
+
+    /*
+     * Resoluções mais comuns:
+     * N_ScreenHeight   N_ScreenWidth
+     *    >= 1024         >= 1680
+     *    >= 1024         >= 1440
+     *    >= 1024         >= 1280
+     *    >=  960         >= 1280
+     *    >=  864         >= 1152
+     *    >=  768         >= 1024
+     *    >=  600         >= 1024   (NetBooks)
+     *    >=  600         >=  800   (SuperVGA)
+     *
+     */
+    if (screen_height <= 600)
+    {
+        /*
+         * Testes práticos mostraram que, em resolução vertical baixa (altura),
+         * o fonte "Courier New" apresenta um serrilhado que torna a leitura das letras
+         * difícil. Nesta situação, o "Lucida Console" tem aparência bem melhor.
+         */
+
+        /*
+         * Lucida Console não está presente no Linux ou macOS. Nestes casos,
+         * deixamos a fonte monoespaçada como padrão.
+         */
+#if defined(__WINDOWS__)
+        C_Fonte = "Lucida Console";
+#else
+        C_Fonte = NULL;
+#endif
+    }
+    else
+    {
+        /*
+         * Já em resolução vertical alta, o "Courier New" não apresenta mais
+         * o serrilhado, e tem aparência melhor.
+         * A desvantagem do "Lucida Console", neste caso, é que fica muito largo,
+         * com aparência pesada e feia.
+         */
+
+        /*
+         * "Courier New" está presente em praticamente todos os sistemas, incluindo
+         * Linux e macOS. Se não estiver presente, a fonte monoespaçada padrão será
+         * selecionada.
+         */
+        C_Fonte = "Courier New";
+    }
+
+    if (C_Fonte != NULL)
+        font_preferred_monospace(C_Fonte);
+
+    /*
+     * - Os valores abaixo foram obtidos por via prática, num computador com
+     *   Windows 7 e resolução 600 x 800 (SuperVGA)
+     * - Isto é importante, porque a SetMode() só consegue funcionar se o
+     *   fonte escolhido efetivamente couber na resolução e tamanhos especificados
+     *
+     * Usar o valores mínimos para permitir que a SetMode() mude a quantidade de
+     * linhas para 35 e colunas para 110, até mesmo na resolução 600 X 800
+     */
+    N_HeightMin = 6.f;
+    N_WidthMin = 5.f;
+
+    /*
+     * Usar os valores máximos para ir reduzindo o tamanho até que
+     * caiba na resolução da tela (a maior tela até agora foi a 1024 x 1860)
+     */
+    N_HeightMax = 24.f + 1.f; /* em teste real, só coube 23 */
+    N_WidthMax = 15.f + 1.f;  /* em teste real, só coube 15 */
+
+    /*
+     * Setar a maior altura de fonte possível, que ainda caiba 35 linhas.
+     * Se WVW_MAXMAXROW() continuar com o mesmo valor, é porque não coube
+     * na tela, sendo necessário reduzir ainda mais a altura do fonte.
+     */
+    i_compute_cell_size(gtnap, N_HeightMax, -1);
+    N_HeightTemp = N_HeightMax;
     for (;;)
     {
-        i_create_fonts(font_size, gtnap);
-        i_compute_cell_size(gtnap);
-
-        /* The total width exceeds the screen limits */
-        if (gtnap->cell_x_sizef * gtnap->cols > max_width)
+        /* The font computed by the system has not the desired height */
+        if (gtnap->cell_y_sizef - N_HeightMax > i_FONT_SIZE_DIFF)
         {
-            font_size -= 1;
-            continue;
+            N_HeightTemp -= 1;
+            i_compute_cell_size(gtnap, N_HeightTemp, -1);
         }
-
         /* The total height exceeds the screen limits */
-        if (gtnap->cell_y_sizef * gtnap->rows > max_height)
+        else if (gtnap->cell_y_sizef * gtnap->rows > screen_height && N_HeightMax > N_HeightMin)
         {
-            font_size -= 1;
-            continue;
+            N_HeightMax -= 1.f;
+            N_HeightTemp -= N_HeightMax;
+            i_compute_cell_size(gtnap, N_HeightMax, -1);
         }
-
-        break;
+        else
+        {
+            break;
+        }
+    }
+    
+    if (N_HeightTemp < N_HeightMax)
+        N_HeightMax = N_HeightTemp;
+    
+    /*
+     * Setar a maior largura de fonte possível, que ainda caiba 110 colunas.
+     * Se WVW_MAXMAXCOL() continuar com o mesmo valor, é porque não coube
+     * na tela, sendo necessário reduzir ainda mais a largura do fonte.
+     */
+    i_compute_cell_size(gtnap, N_HeightMax, N_WidthMax);
+    N_WidthTemp = N_WidthMax;
+    for (;;)
+    {
+        /* The font computed by the system has not the desired width */
+        if (gtnap->cell_x_sizef - N_WidthMax > i_FONT_SIZE_DIFF)
+        {
+            N_WidthTemp -= 1;
+            i_compute_cell_size(gtnap, N_HeightMax, N_WidthTemp);
+        }
+        /* The total width exceeds the screen limits */
+        else if (gtnap->cell_x_sizef * gtnap->cols > screen_width && N_WidthMax > N_WidthMin)
+        {
+            N_WidthMax -= 1.f;
+            N_WidthTemp = N_WidthMax;
+            i_compute_cell_size(gtnap, N_HeightMax, N_WidthMax);
+        }
+        else
+        {
+            break;
+        }
     }
 }
 
@@ -950,10 +1111,6 @@ static GtNap *i_gtnap_create(void)
     GTNAP_GLOBAL->date_digits = (hb_setGetCentury() == (HB_BOOL)HB_TRUE) ? 8 : 6;
     GTNAP_GLOBAL->date_chars = GTNAP_GLOBAL->date_digits + 2;
 
-#if defined (__WINDOWS__)
-    draw2d_user_monospace_family("Courier New");
-#endif
-
     {
         char_t path[512];
         bfile_dir_work(path, sizeof(path));
@@ -978,7 +1135,6 @@ static GtNap *i_gtnap_create(void)
     }
 
     globals_resolution(&screen);
-    screen.height -= 50; /* Margin for Dock or Taskbars */
     i_compute_font_size(screen.width, screen.height, GTNAP_GLOBAL);
     deblib_init_colors(i_COLORS);
 
@@ -2331,72 +2487,72 @@ static void i_gtwin_configure(GtNap *gtnap, GtNapWindow *gtwin, GtNapWindow *mai
         cassert(gtwin == main_gtwin);
 
         /* Configure the child (embedded) windows as subpanels */
-        arrpt_forback(embgtwin, gtnap->windows, GtNapWindow) if (embgtwin->parent_id == gtwin->id)
-        {
-            V2Df pos;
-            int32_t cell_x = embgtwin->left - gtwin->left;
-            int32_t cell_y = embgtwin->top - gtwin->top;
-            pos.x = (real32_t)cell_x * GTNAP_GLOBAL->cell_x_sizef;
-            pos.y = (real32_t)cell_y * GTNAP_GLOBAL->cell_y_sizef;
-            i_gtwin_configure(gtnap, embgtwin, gtwin);
-            _panel_attach_component(gtwin->panel, (GuiComponent *)embgtwin->panel);
-            _component_set_frame((GuiComponent *)embgtwin->panel, &pos, &embgtwin->panel_size);
-            _component_visible((GuiComponent *)embgtwin->panel, TRUE);
-        }
-arrpt_end
-();
+        arrpt_forback(embgtwin, gtnap->windows, GtNapWindow)
+            if (embgtwin->parent_id == gtwin->id)
+            {
+                V2Df pos;
+                int32_t cell_x = embgtwin->left - gtwin->left;
+                int32_t cell_y = embgtwin->top - gtwin->top;
+                pos.x = (real32_t)cell_x * GTNAP_GLOBAL->cell_x_sizef;
+                pos.y = (real32_t)cell_y * GTNAP_GLOBAL->cell_y_sizef;
+                i_gtwin_configure(gtnap, embgtwin, gtwin);
+                _panel_attach_component(gtwin->panel, (GuiComponent *)embgtwin->panel);
+                _component_set_frame((GuiComponent *)embgtwin->panel, &pos, &embgtwin->panel_size);
+                _component_visible((GuiComponent *)embgtwin->panel, TRUE);
+            }
+        arrpt_end();
 
-/* At this point the main window (with embedded windows) is complete.
- * We begin the tabstop configuration */
-_window_taborder(gtwin->window, NULL);
-arrpt_foreach(component, gtwin->tabstops, GuiComponent)
-    _component_taborder(component, gtwin->window);
-arrpt_end()
-}
+        /* At this point the main window (with embedded windows) is complete.
+         * We begin the tabstop configuration */
+        _window_taborder(gtwin->window, NULL);
+        arrpt_foreach(component, gtwin->tabstops, GuiComponent)
+            _component_taborder(component, gtwin->window);
+        arrpt_end()
+    }
 
-/* Allow navigation between edit controls with arrows and return */
-if (i_num_edits(gtwin) > 0)
-{
-    /* At the moment, embedded windows with edits is not allowed */
-    GtNapObject *last_edit = NULL;
+    /* Allow navigation between edit controls with arrows and return */
+    if (i_num_edits(gtwin) > 0)
+    {
+        /* At the moment, embedded windows with edits is not allowed */
+        GtNapObject *last_edit = NULL;
 
+        arrpt_foreach(obj, gtwin->objects, GtNapObject)
+            if (obj->type == ekOBJ_EDIT)
+            {
+                edit_OnChange((Edit *)obj->component, listener(obj, i_OnEditChange, GtNapObject));
+                edit_OnFilter((Edit *)obj->component, listener(obj, i_OnEditFilter, GtNapObject));
+                edit_OnFocus((Edit *)obj->component, listener(obj, i_OnEditFocus, GtNapObject));
+                obj->is_last_edit = FALSE;
+                last_edit = obj;
+            }
+        arrpt_end();
+
+        cassert_no_null(last_edit);
+        last_edit->is_last_edit = TRUE;
+    }
+
+    /* Allow TextView listeners */
     arrpt_foreach(obj, gtwin->objects, GtNapObject)
-        if (obj->type == ekOBJ_EDIT)
+        if (obj->type == ekOBJ_TEXTVIEW)
         {
-            edit_OnChange((Edit *)obj->component, listener(obj, i_OnEditChange, GtNapObject));
-            edit_OnFilter((Edit *)obj->component, listener(obj, i_OnEditFilter, GtNapObject));
-            edit_OnFocus((Edit *)obj->component, listener(obj, i_OnEditFocus, GtNapObject));
-            obj->is_last_edit = FALSE;
-            last_edit = obj;
+            textview_OnFocus((TextView *)obj->component, listener(obj, i_OnTextFocus, GtNapObject));
+            if (obj->keyfilter_block != NULL)
+                textview_OnFilter((TextView *)obj->component, listener(obj, i_OnTextFilter, GtNapObject));
         }
     arrpt_end();
 
-    cassert_no_null(last_edit);
-    last_edit->is_last_edit = TRUE;
-}
-
-/* Allow TextView listeners */
-arrpt_foreach(obj, gtwin->objects, GtNapObject)
-    if (obj->type == ekOBJ_TEXTVIEW)
+    if (gtwin->buttons_navigation == TRUE)
     {
-        textview_OnFocus((TextView *)obj->component, listener(obj, i_OnTextFocus, GtNapObject));
-        if (obj->keyfilter_block != NULL)
-            textview_OnFilter((TextView *)obj->component, listener(obj, i_OnTextFilter, GtNapObject));
+        if (i_num_buttons(gtwin) > 1)
+        {
+            /* At the moment, embedded windows with button navigation is not allowed */
+            cassert(gtwin->window != NULL);
+            window_hotkey(gtwin->window, ekKEY_LEFT, 0, listener(gtwin, i_OnLeftButton, GtNapWindow));
+            window_hotkey(gtwin->window, ekKEY_RIGHT, 0, listener(gtwin, i_OnRightButton, GtNapWindow));
+        }
     }
-arrpt_end();
 
-if (gtwin->buttons_navigation == TRUE)
-{
-    if (i_num_buttons(gtwin) > 1)
-    {
-        /* At the moment, embedded windows with button navigation is not allowed */
-        cassert(gtwin->window != NULL);
-        window_hotkey(gtwin->window, ekKEY_LEFT, 0, listener(gtwin, i_OnLeftButton, GtNapWindow));
-        window_hotkey(gtwin->window, ekKEY_RIGHT, 0, listener(gtwin, i_OnRightButton, GtNapWindow));
-    }
-}
-
-gtwin->is_configured = TRUE;
+    gtwin->is_configured = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -3319,7 +3475,7 @@ uint32_t hb_gtnap_button(const uint32_t wid, const int32_t top, const int32_t le
     button = button_push();
     listener = i_gtnap_listener(click_block, INT32_MAX, autoclose_id, gtwin, i_OnButtonClick);
     button_OnClick(button, listener);
-    button_font(button, GTNAP_GLOBAL->reduced_font);
+    button_font(button, GTNAP_GLOBAL->button_font);
     button_vpadding(button, i_button_vpadding());
     cassert(bottom == top);
     size.width = (real32_t)(right - left + 1) * GTNAP_GLOBAL->cell_x_sizef;
@@ -3396,7 +3552,7 @@ uint32_t hb_gtnap_edit(const uint32_t wid, const int32_t top, const int32_t left
     uint32_t id = UINT32_MAX;
     GtNapObject *obj = NULL;
     cassert_no_null(gtwin);
-    edit_font(edit, GTNAP_GLOBAL->reduced_font);
+    edit_font(edit, GTNAP_GLOBAL->edit_font);
     edit_vpadding(edit, i_edit_vpadding());
     size.width = (real32_t)(width + 1) * GTNAP_GLOBAL->cell_x_sizef;
     size.height = GTNAP_GLOBAL->edit_y_sizef;

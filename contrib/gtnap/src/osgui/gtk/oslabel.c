@@ -46,6 +46,10 @@ struct _oslabel_t
 
 /*---------------------------------------------------------------------------*/
 
+static real32_t i_PANGO_TO_PIXELS = -1;
+
+/*---------------------------------------------------------------------------*/
+
 static gboolean i_OnEnter(GtkWidget *widget, GdkEventCrossing *event, OSLabel *label)
 {
     unref(widget);
@@ -100,17 +104,32 @@ static gboolean i_OnClick(GtkWidget *widget, GdkEventButton *event, OSLabel *lab
 
 /*---------------------------------------------------------------------------*/
 
-static uint32_t i_font_px(const real32_t fsize, const uint32_t fstyle)
+/* Cloned from osfont */
+static real32_t i_device_to_pixels(void)
+{
+    if (i_PANGO_TO_PIXELS < 0)
+    {
+        /* This object is owned by Pango and must not be freed */
+        PangoFontMap *fontmap = pango_cairo_font_map_get_default();
+        real32_t dpi = (real32_t)pango_cairo_font_map_get_resolution(cast(fontmap, PangoCairoFontMap));
+        i_PANGO_TO_PIXELS = (dpi / 72.f) / PANGO_SCALE;
+    }
+
+    return i_PANGO_TO_PIXELS;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static real32_t i_pango_size_to_pixels(const int32_t pango_size, const uint32_t fstyle)
 {
     if ((fstyle & ekFPOINTS) == ekFPOINTS)
     {
-        PangoFontMap *fontmap = pango_cairo_font_map_get_default();
-        real32_t dpi = (real32_t)pango_cairo_font_map_get_resolution((PangoCairoFontMap *)fontmap);
-        return (uint32_t)(fsize / (dpi / 72.f));
+        return (real32_t)pango_size / (real32_t)PANGO_SCALE;
     }
     else
     {
-        return (uint32_t)fsize;
+        cassert((fstyle & ekFPIXELS) == ekFPIXELS);
+        return (real32_t)pango_size * (real32_t)i_device_to_pixels();
     }
 }
 
@@ -120,9 +139,9 @@ static void i_set_text(OSLabel *label)
 {
     PangoFontDescription *fdesc = (PangoFontDescription *)font_native(label->font);
     const char *family = pango_font_description_get_family(fdesc);
-    real32_t fsize = font_size(label->font);
+    gint psize = pango_font_description_get_size(fdesc);
     uint32_t fstyle = font_style(label->font);
-    real32_t fpoints = i_font_px(fsize, fstyle);
+    real32_t fpoints = i_pango_size_to_pixels(psize, fstyle);
     String *format = str_printf("<span font_desc=\"%s %.2fpx\"", family, fpoints);
 
     if (fstyle & ekFITALIC)

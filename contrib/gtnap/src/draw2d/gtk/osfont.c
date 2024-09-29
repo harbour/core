@@ -122,11 +122,23 @@ static const char_t *i_monospace_font_family(void)
 
 /*---------------------------------------------------------------------------*/
 
-OSFont *osfont_create(const char_t *family, const real32_t size, const uint32_t style)
+static gint i_scale_size_to_cell(const real32_t size, const int pango_size, PangoFontDescription *font)
+{
+    real32_t cell_size = 1e8f;
+    gint new_pango_size = 0;
+    osfont_extents(cast(font, OSFont), "REFTEXT", -1, NULL, &cell_size);
+    new_pango_size = (gint)((size * (real32_t)pango_size) / cell_size);
+    return new_pango_size;
+}
+
+/*---------------------------------------------------------------------------*/
+
+OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const uint32_t style)
 {
     const char_t *name = NULL;
     gint psize = 0;
     PangoFontDescription *font = NULL;
+    unref(width);
 
     if (str_equ_c(family, "__SYSTEM__") == TRUE)
     {
@@ -148,6 +160,13 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const uint32_t 
     pango_font_description_set_size(font, psize);
     pango_font_description_set_style(font, (style & ekFITALIC) == ekFITALIC ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL);
     pango_font_description_set_weight(font, (style & ekFBOLD) == ekFBOLD ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL);
+
+    if ((style & ekFCELL) == ekFCELL)
+    {
+        gint s = i_scale_size_to_cell(size, psize, font);
+        pango_font_description_set_size(font, s);
+    }
+
     heap_auditor_add("PangoFontDescription");
     return cast(font, OSFont);
 }
