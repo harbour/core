@@ -924,7 +924,7 @@ static void i_compute_font_size(const real32_t screen_width, const real32_t scre
      * Usar os valores máximos para ir reduzindo o tamanho até que
      * caiba na resolução da tela (a maior tela até agora foi a 1024 x 1860)
      */
-    N_HeightMax = 23.f + 1.f; /* em teste real, só coube 23 */
+    N_HeightMax = 24.f + 1.f; /* em teste real, só coube 23 */
     N_WidthMax = 15.f + 1.f;  /* em teste real, só coube 15 */
 
     /*
