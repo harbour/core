@@ -428,6 +428,16 @@ const char_t *draw2d_monospace_family(const char_t **desired_fonts, const uint32
 
 /*---------------------------------------------------------------------------*/
 
+const char_t *draw2d_get_preferred_monospace(void)
+{
+    if (i_USER_MONOSPACE_FONT_FAMILY != NULL)
+        return tc(i_USER_MONOSPACE_FONT_FAMILY);
+    else
+        return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void draw2d_preferred_monospace(const char_t *family)
 {
     str_upd(&i_USER_MONOSPACE_FONT_FAMILY, family);

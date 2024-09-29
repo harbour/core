@@ -72,15 +72,9 @@ static const char_t *i_monospace_font_family(void)
 {
     if (i_MONOSPACE_FONT_FAMILY == NULL)
     {
-        /* From Catalina, we have a system predefined monospace font */
-#if defined(MAC_OS_X_VERSION_10_15) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_15
-        cassert(FALSE);
-        return NULL;
-#else
         const char_t *desired_fonts[] = {"SF Mono", "Menlo", "Monaco", "Andale Mono", "Courier New"};
         const char_t *monofont = draw2d_monospace_family(desired_fonts, sizeof(desired_fonts) / sizeof(const char_t *));
         i_MONOSPACE_FONT_FAMILY = str_c(monofont);
-#endif
     }
 
     return tc(i_MONOSPACE_FONT_FAMILY);
@@ -174,13 +168,17 @@ static NSFont *i_nsfont(const char_t *family, const real32_t size, const uint32_
     {
         /* From Catalina, we have a system predefined monospace font */
 #if defined(MAC_OS_X_VERSION_10_15) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_15
-        if (style & ekFBOLD)
-            nsfont = [NSFont monospacedSystemFontOfSize:(CGFloat)size weight:NSFontWeightBold];
-        else
-            nsfont = [NSFont monospacedSystemFontOfSize:(CGFloat)size weight:NSFontWeightLight];
-#else
-        name = i_monospace_font_family();
+        if (draw2d_get_preferred_monospace() == NULL)
+        {
+            if (style & ekFBOLD)
+                nsfont = [NSFont monospacedSystemFontOfSize:(CGFloat)size weight:NSFontWeightBold];
+            else
+                nsfont = [NSFont monospacedSystemFontOfSize:(CGFloat)size weight:NSFontWeightLight];
+        }
 #endif
+     
+        if (nsfont == nil)
+            name = i_monospace_font_family();
     }
     else
     {
