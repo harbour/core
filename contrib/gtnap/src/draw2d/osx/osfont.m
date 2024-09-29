@@ -21,6 +21,7 @@
 #include "draw.inl"
 #include <core/arrpt.h>
 #include <core/strings.h>
+#include <sewer/bmath.h>
 #include <sewer/cassert.h>
 
 #if !defined(__MACOS__)
@@ -156,12 +157,11 @@ static real32_t i_width_scale(NSFont *font, const real32_t width)
 
 /*---------------------------------------------------------------------------*/
 
-OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const uint32_t style)
+static NSFont *i_nsfont(const char_t *family, const real32_t size, const uint32_t style)
 {
     const char_t *name = NULL;
     NSFont *nsfont = nil;
     cassert(size > 0.f);
-    unref(width);
     
     if (str_equ_c(family, "__SYSTEM__") == TRUE)
     {
@@ -194,9 +194,36 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t 
         NSUInteger mask = (style & ekFBOLD) ? NSBoldFontMask : 0;
         nsfont = [fontManager fontWithFamily:ffamily traits:(NSFontTraitMask)mask weight:5 size:(CGFloat)size];
     }
+    
+    return nsfont;
+}
 
+/*---------------------------------------------------------------------------*/
+
+static real32_t i_cell_size(NSFont *font, const real32_t size)
+{
+    const char_t *reftext = "ABCDEabcde";
+    real32_t twidth = 0, theight = 0;
+    real32_t scale = 0;
+    osfont_extents(cast(font, OSFont), reftext, -1, &twidth, &theight);
+    scale = size / theight;
+    return bmath_floorf(size * scale);
+}
+
+/*---------------------------------------------------------------------------*/
+
+OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const uint32_t style)
+{
+    real32_t esize = size;
+    NSFont *nsfont = i_nsfont(family, esize, style);
     cassert_fatal_msg(nsfont != nil, "Font is not available on this computer.");
 
+    if ((style & ekFCELL) == ekFCELL)
+    {
+        esize = i_cell_size(nsfont, esize);
+        nsfont = i_nsfont(family, esize, style);
+    }
+        
     if (nsfont != nil)
     {
         BOOL with_italic = (style & ekFITALIC) == ekFITALIC;
@@ -207,7 +234,7 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t 
         if (with_italic || fabsf(scale_x - 1) > 0.01)
         {
             NSFontManager *manager = [NSFontManager sharedFontManager];
-            nsfont = i_font_transform(nsfont, (CGFloat)scale_x, (CGFloat)size, with_italic, manager);
+            nsfont = i_font_transform(nsfont, (CGFloat)scale_x, (CGFloat)esize, with_italic, manager);
         }
 
         [nsfont retain];
