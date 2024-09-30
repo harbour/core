@@ -43,6 +43,10 @@ _draw2d_api real32_t font_size(const Font *font);
 
 _draw2d_api real32_t font_height(const Font *font);
 
+_draw2d_api real32_t font_width(const Font *font);
+
+_draw2d_api real32_t font_xscale(const Font *font);
+
 _draw2d_api real32_t font_ascent(const Font *font);
 
 _draw2d_api real32_t font_descent(const Font *font);

@@ -1129,6 +1129,18 @@ static GtNap *i_gtnap_create(void)
 #endif
 
     {
+        Font *f = font_monospace(30, 0);
+        Font *f2 = font_with_width(f, 24);
+        real32_t w1 = font_width(f);
+        real32_t w2 = font_width(f2);
+        real32_t s1 = font_xscale(f);
+        real32_t s2 = font_xscale(f2);
+        font_destroy(&f);
+        font_destroy(&f2);
+        w1+=1;
+    }
+
+    {
         const char_t *debpath = deblib_path();
 #if defined(__MACOS__)
         GTNAP_GLOBAL->debugger_path = str_cpath("%s/%s/bin/gtnapdeb.app/Contents/MacOS/gtnapdeb", debpath, build_cfg);
