@@ -203,6 +203,40 @@ static void i_set_bg_color(OSLabel *label, const color_t color)
 #endif
 }
 
+static gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
+{
+    GtkAllocation allocation;
+    gtk_widget_get_allocation(widget, &allocation);
+
+    cairo_set_source_rgb(cr, 0.9, 0.9, 0.9);
+    cairo_rectangle(cr, 0, 0, allocation.width, allocation.height);
+    cairo_fill(cr);
+
+    GtkWidgetClass *klass = GTK_WIDGET_GET_CLASS(widget);
+    if (klass->draw)
+    {
+        cairo_matrix_t matrix;
+        matrix.xx = 1.5;
+        matrix.yx = 0;
+        matrix.xy = 0;
+        matrix.yy = 1;
+        matrix.x0 = 0;
+        matrix.y0 = 0;
+        cairo_save(cr);
+        cairo_transform(cr, &matrix);
+
+        klass->draw(widget, cr);
+        cairo_restore(cr);
+    }
+
+    cairo_set_source_rgb(cr, 1, 0, 0);
+    cairo_set_line_width(cr, 2);
+    cairo_rectangle(cr, 0, 0, allocation.width, allocation.height);
+    cairo_stroke(cr);
+
+    return TRUE;
+}
+
 /*---------------------------------------------------------------------------*/
 
 OSLabel *oslabel_create(const uint32_t flags)
@@ -215,6 +249,7 @@ OSLabel *oslabel_create(const uint32_t flags)
     label->font = osgui_create_default_font();
     label->_color = kCOLOR_DEFAULT;
     gtk_label_set_use_markup(GTK_LABEL(label->label), TRUE);
+    g_signal_connect(G_OBJECT(label->label), "draw", G_CALLBACK(on_draw), NULL);
     gtk_widget_show(label->label);
     gtk_container_add(GTK_CONTAINER(widget), label->label);
     gtk_label_set_line_wrap(GTK_LABEL(label->label), label_get_type(flags) == ekLABEL_MULTI ? TRUE : FALSE);
