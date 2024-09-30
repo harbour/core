@@ -23,6 +23,8 @@ _draw2d_api Font *font_monospace(const real32_t size, const uint32_t style);
 
 _draw2d_api Font *font_with_style(const Font *font, const uint32_t style);
 
+_draw2d_api Font *font_with_width(const Font *font, const real32_t width);
+
 _draw2d_api Font *font_copy(const Font *font);
 
 _draw2d_api void font_destroy(Font **font);
@@ -50,8 +52,6 @@ _draw2d_api real32_t font_leading(const Font *font);
 _draw2d_api bool_t font_is_monospace(const Font *font);
 
 _draw2d_api uint32_t font_style(const Font *font);
-
-_draw2d_api void font_set_width(Font *font, real32_t width);
 
 _draw2d_api void font_extents(const Font *font, const char_t *text, const real32_t refwidth, real32_t *width, real32_t *height);
 

@@ -15,7 +15,6 @@
 #include "draw2d.inl"
 #include <core/heap.h>
 #include <core/strings.h>
-#include <sewer/bmath.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
 
@@ -109,6 +108,14 @@ Font *font_with_style(const Font *font, const uint32_t style)
 {
     cassert_no_null(font);
     return i_create_font(font->family, font->size, font->width, style);
+}
+
+/*---------------------------------------------------------------------------*/
+
+Font *font_with_width(const Font *font, const real32_t width)
+{
+    cassert_no_null(font);
+    return i_create_font(font->family, font->size, width, font->style);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -233,19 +240,6 @@ uint32_t font_style(const Font *font)
 {
     cassert_no_null(font);
     return font->style;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void font_set_width(Font *font, real32_t width)
-{
-    cassert_no_null(font);
-    if (bmath_absf(font->width - width) > 0.01f)
-    {
-        font->width = width;
-        if (font->osfont != NULL)
-            osfont_destroy(&font->osfont);
-    }
 }
 
 /*---------------------------------------------------------------------------*/
