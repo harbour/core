@@ -25,6 +25,8 @@ _draw2d_api Font *font_with_style(const Font *font, const uint32_t style);
 
 _draw2d_api Font *font_with_width(const Font *font, const real32_t width);
 
+_draw2d_api Font *font_with_xscale(const Font *font, const real32_t scale);
+
 _draw2d_api Font *font_copy(const Font *font);
 
 _draw2d_api void font_destroy(Font **font);

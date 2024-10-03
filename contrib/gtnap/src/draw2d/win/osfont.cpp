@@ -167,7 +167,7 @@ static const char_t *i_monospace_font_family(void)
 
 /*---------------------------------------------------------------------------*/
 
-OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const uint32_t style)
+OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const real32_t xscale, const uint32_t style)
 {
     const char_t *face_name = NULL;
     WCHAR face_namew[LF_FULLFACESIZE];
@@ -176,6 +176,7 @@ OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t 
 
     cassert_no_null(family);
     cassert(size > 0.f);
+    unref(xscale);
 
     if (str_equ_c(family, "__SYSTEM__") == TRUE)
     {
@@ -271,7 +272,7 @@ font_family_t osfont_system(const char_t *family)
 
 /*---------------------------------------------------------------------------*/
 
-void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, bool_t *monospace)
+void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, real32_t *avg_width, bool_t *monospace)
 {
     HWND hwnd = GetDesktopWindow();
     HDC hdc = GetDC(hwnd);
@@ -291,6 +292,15 @@ void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, r
 
     if (cell_size != NULL)
         *cell_size = (real32_t)lptm.tmHeight;
+
+    if (avg_width != NULL)
+    {
+        uint32_t len = 0;
+        real32_t w = 0, h = 0;
+        const char_t *str = draw2d_str_avg_char_width(&len);
+        osfont_extents(font, str, -1, &w, &h);
+        *avg_width = w / len;
+    }
 
     if (monospace != NULL)
     {
