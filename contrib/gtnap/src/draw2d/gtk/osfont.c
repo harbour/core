@@ -133,12 +133,18 @@ static gint i_scale_size_to_cell(const real32_t size, const int pango_size, Pang
 
 /*---------------------------------------------------------------------------*/
 
-OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const uint32_t style)
+OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const real32_t xscale, const uint32_t style)
 {
     const char_t *name = NULL;
     gint psize = 0;
     PangoFontDescription *font = NULL;
+
+    /*
+     * In Pango, font width or scale is not assigned as PangoFontDescription property
+     * With be use as scale factor in Cairo contexts by font_xscale()
+     */
     unref(width);
+    unref(xscale);
 
     if (str_equ_c(family, "__SYSTEM__") == TRUE)
     {
@@ -265,7 +271,7 @@ static bool_t i_is_monospace(PangoFontMap *fontmap, const PangoFontDescription *
 
 /*---------------------------------------------------------------------------*/
 
-void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, bool_t *monospace)
+void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, real32_t *avg_width, bool_t *monospace)
 {
     /* This object is owned by Pango and must not be freed */
     PangoFontMap *fontmap = pango_cairo_font_map_get_default();
@@ -283,19 +289,22 @@ void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, r
     if (descent != NULL)
         *descent = (real32_t)(pango_font_metrics_get_descent(metrics) / PANGO_SCALE);
 
-    if (leading != NULL)
+    /* We need to get a real text measure */
+    if (leading != NULL || cell_size != NULL || avg_width != NULL)
     {
         real32_t width, height;
-        osfont_extents(font, "O", -1, &width, &height);
-        unref(width);
-        *leading = height - size;
-    }
+        uint32_t len;
+        const char_t *str = draw2d_str_avg_char_width(&len);
+        osfont_extents(font, str, -1, &width, &height);
 
-    if (cell_size != NULL)
-    {
-        real32_t width;
-        osfont_extents(font, "O", -1, &width, cell_size);
-        unref(width);
+        if (leading != NULL)
+            *leading = height - size;
+
+        if (cell_size != NULL)
+            *cell_size = height;
+
+        if (avg_width != NULL)
+            *avg_width = width / len;
     }
 
     if (monospace != NULL)
