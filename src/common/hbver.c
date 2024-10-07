@@ -1064,6 +1064,10 @@ char * hb_verCompiler( void )
    iVerMinor = __clang_minor__;
    iVerPatch = __clang_patchlevel__;
 
+   #if ! defined( HB_CPU_X86 ) && ! defined( HB_CPU_X86_64 )
+      #define __HB_ARCH_VERSION /* add string supplement for "non-classic" architectures */
+   #endif
+
 #elif defined( __clang__ )
 
    pszName = "LLVM/Clang C";
@@ -1304,13 +1308,23 @@ char * hb_verCompiler( void )
       hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE - 1 );
 
 #if defined( __clang_version__ )
-   if( strstr( __clang_version__, "(" ) )
-      /* "2.0 (trunk 103176)" -> "(trunk 103176)" */
-      hb_snprintf( szSub, sizeof( szSub ), " %s", strstr( __clang_version__, "(" ) );
-   else
-      hb_snprintf( szSub, sizeof( szSub ), " (%s)", __clang_version__ );
-   hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
+   #if defined( __clang_major__ )
+      /* prevent dups like "LLVM/Clang C 18.1.8 (18.1.8 )" */
+      hb_snprintf( szSub, sizeof( szSub ), "%d.%d.%d ", iVerMajor, iVerMinor, iVerPatch );
+      if( ! strstr( szSub, __clang_version__ ) )
+      {
+   #endif
+         if( strstr( __clang_version__, "(" ) )
+            /* "2.0 (trunk 103176)" -> "(trunk 103176)" */
+            hb_snprintf( szSub, sizeof( szSub ), " %s", strstr( __clang_version__, "(" ) );
+         else
+            hb_snprintf( szSub, sizeof( szSub ), " (%s)", __clang_version__ );
+         hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
+   #if defined( __clang_major__ )
+      }
+   #endif
 #endif
+
 
 #if defined( __DJGPP__ )
    hb_snprintf( szSub, sizeof( szSub ), " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );

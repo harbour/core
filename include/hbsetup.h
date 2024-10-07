@@ -148,7 +148,7 @@
       defined( __x86_64 ) || \
       defined( _M_AMD64 ) || \
       defined( _M_X64 ) || \
-      defined( __MINGW64__ )
+      ( defined( __MINGW64__ ) && ! defined( __aarch64__ ) )
    #define HB_CPU_X86_64
 
 #elif defined( __arm64__ ) || \

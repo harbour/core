@@ -1939,6 +1939,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          { {|| FindInSamePath( "x86_64-w64-mingw32-gcc.exe", "gcc" ) }, "mingw64" }, ; /* mingw-w64 TDM build */
          { {|| FindInPath( "x86_64-w64-mingw32-gcc"  ) }, "mingw64", "x86_64-w64-mingw32-" }, ; /* mingw-w64 build */
          { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] ) }, "mingw" }, ;
+         { {|| FindInPath( "aarch64-w64-mingw32-clang" ) }, "clang" }, ; /* MSYS2 or mingw-w64 clang */
+         { {|| FindInPath( "x86_64-w64-mingw32-clang" ) }, "clang" }, ; /* MSYS2 or mingw-w64 clang */
+         { {|| FindInPath( "lldb-vscode.exe" ) }, "clang" }, ; /* Visual Studio Build Tools */
          { {|| iif( Empty( GetEnv( "WATCOM" ) ), ;
                     NIL, ;
                     FindInPath( "wcc386" ) ) }, "watcom" }, ;
@@ -3909,28 +3912,29 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       /* Command macros:
 
-         {LC}     list of C files
-         {LR}     list of resource source files (Windows specific)
-         {LS}     list of resource binary files (Windows specific)
-         {LO}     list of object files
-         {LA}     list of object archive (.a) files
-         {LL}     list of lib files
-         {LF}     list of lib files (as flag)
-         {LB}     list of lib files with paths
-         {FC}     flags for C compiler (user + automatic)
-         {FL}     flags for linker (user + automatic)
-         {FS}     flags for code sign tool
-         {UT}     url for timestamp (code sign tool)
-         {OW}     working dir (when in -inc mode)
-         {OD}     output dir
-         {OO}     output object (when in -hbcmp mode)
-         {OE}     output executable
-         {OM}     output map name
-         {OI}     output implib name
-         {DB}     dir for binaries
-         {DI}     dir for includes
-         {DL}     dirs for libs
-         {SCRIPT} save command-line to script and pass it to command as @<filename>
+         {LC}        list of C files
+         {LR}        list of resource source files (Windows specific)
+         {LS}        list of resource binary files (Windows specific)
+         {LO}        list of object files
+         {LA}        list of object archive (.a) files
+         {LL}        list of lib files
+         {LF}        list of lib files (as flag)
+         {LB}        list of lib files with paths
+         {FC}        flags for C compiler (user + automatic)
+         {FL}        flags for linker (user + automatic)
+         {FS}        flags for code sign tool
+         {UT}        url for timestamp (code sign tool)
+         {OW}        working dir (when in -inc mode)
+         {OD}        output dir
+         {OO}        output object (when in -hbcmp mode)
+         {OE}        output executable
+         {OM}        output map name
+         {OI}        output implib name
+         {DB}        dir for binaries
+         {DI}        dir for includes
+         {DL}        dirs for libs
+         {SCRIPT}    save command-line to script and pass it to command as @<filename>
+         {ESCAPE_BS} escape backslashes in script
        */
 
       /* Assemble library list */
@@ -4361,6 +4365,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          CASE hbmk[ _HBMK_cCOMP ] == "clang"
             cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "clang++" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ]
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "clang" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ] )
+            IF hb_fileExists( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) + "hbrtl.lib" ) /* selfcheck if clang ld emits .lib extension */
+               cLibLibPrefix := ""
+               cLibLibExt := ".lib"
+            ENDIF
          CASE hbmk[ _HBMK_cCOMP ] == "tcc"
             cBin_CompCPP := "tcc.exe"
             cBin_CompC := cBin_CompCPP
@@ -4427,7 +4435,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          AAddNotEmpty( hbmk[ _HBMK_aOPTCPPX ], gcc_opt_lngcpp_fill( hbmk ) )
          cBin_Dyn := cBin_CompC
          cOpt_Dyn := "-shared -o {OD} {LO} {FD} {IM} {DL} {LS}"
-         IF ! hbmk[ _HBMK_cCOMP ] == "tcc"
+         IF hbmk[ _HBMK_cCOMP ] == "clang"
+            cOpt_Dyn += "{SCRIPT}{ESCAPE_BS}"
+         ELSEIF ! hbmk[ _HBMK_cCOMP ] == "tcc"
             cOpt_Dyn += "{SCRIPT_MINGW}"
          ENDIF
          cBin_Link := cBin_CompC
@@ -4435,9 +4445,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_gcc( hbmk, hbmk[ _HBMK_cCCPREFIX ] + "dlltool" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ] + " {FI} -d {ID} -l {OL}", cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := "-L"
          cLibPathSep := " "
-         cLibLibExt := ".a"
+         IF cLibLibExt == ""
+            cLibLibExt := ".a"
+         ENDIF
          cImpLibExt := cLibLibExt
-         IF hbmk[ _HBMK_cCOMP ] == "tcc"
+         IF hbmk[ _HBMK_cCOMP ] == "clang"
+            cBin_Lib := "llvm-ar.exe"
+         ELSEIF hbmk[ _HBMK_cCOMP ] == "tcc"
             cBin_Lib := "tiny_libmaker.exe"
          ELSE
             cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCEXT ]
@@ -4487,8 +4501,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,-Map,{OM}" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--out-implib,{OI}" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--out-implib,{OI}" )
+            IF ( ! hbmk[ _HBMK_cCOMP ] == "clang" .OR. ; /* selfcheck if clang ld is MinGW style */
+                 ! hb_fileExists( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) + "hbrtl.lib" ) )
+               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--out-implib,{OI}" )
+               AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--out-implib,{OI}" )
+            ELSE /* clang using lld-link on Windows has option similar to MS link */
+               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-implib:{OI}" )
+               AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,-implib:{OI}" )
+            ENDIF
          ENDIF
          IF l_lLIBGROUPING .AND. HBMK_ISCOMP( "mingw|mingw64|mingwarm" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} {LF} -Wl,--end-group" )
@@ -7225,6 +7245,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                /* Handle moving the whole command-line to a script, if requested. */
                IF Empty( cScriptFile ) .AND. "{SCRIPT}" $ cOpt_Dyn
+                  IF "{ESCAPE_BS}" $ cOpt_Dyn
+                     cOpt_Dyn := StrTran( cOpt_Dyn, "{ESCAPE_BS}" )
+                     cOpt_Dyn := StrTran( cOpt_Dyn, "\", "\\" )
+                  ENDIF
                   fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                   IF fhnd != F_ERROR
                      FWrite( fhnd, StrTran( cOpt_Dyn, "{SCRIPT}" ) )
