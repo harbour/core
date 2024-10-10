@@ -40,6 +40,8 @@ endif
 
 # Arbitrary pattern which we do not expect to occur in real-world path names
 substpat := !@!@
+# On the other hand a very common pattern
+chr_space := $(subst ,, )
 
 # This is not strictly necessary, but it does significantly reduce
 # the number of rules that make has to evaluate otherwise, which may give
@@ -79,6 +81,7 @@ find_in_path     = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst
 find_in_path_raw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))))))))
 find_in_path_par = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))$(HB_HOST_BIN_EXT)))))))))
 find_in_path_prw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))))))))
+dir_with_spaces  = $(subst $(substpat), ,$(dir $(subst $(chr_space),$(substpat),$(1))))
 
 # Some presets based on HB_BUILD_NAME
 ifneq ($(HB_BUILD_NAME),)
@@ -708,38 +711,89 @@ ifeq ($(HB_COMPILER),)
                                  endif
                               endif
                            else
-                              HB_COMP_PATH := $(call find_in_path,clang)
+                              HB_COMP_PATH := $(call find_in_path_raw,clang.exe)
+                              HB_COMP_PWD  := $(call dir_with_spaces,$(HB_COMP_PATH))
                               ifneq ($(HB_COMP_PATH),)
-                                 HB_COMPILER = clang
-                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))aarch64-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
+                                 HB_COMPILER := clang
+                                 ifneq ($(wildcard $(HB_COMP_PWD)aarch64-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
                                     HB_CPU := arm64
-                                    ifeq ($(HB_BUILD_NAME),)
-                                       export HB_BUILD_NAME := arm64
-                                    endif
-                                    ifneq ($(MSYSTEM),)
-                                       export MSYSTEM := CLANGARM64
-                                    endif
+                                    MSYSTEM := CLANGARM64
                                  else
-                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))x86_64-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
+                                 ifneq ($(wildcard $(HB_COMP_PWD)x86_64-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
                                     HB_CPU := x86_64
-                                    ifeq ($(HB_BUILD_NAME),)
-                                       export HB_BUILD_NAME := 64
-                                    endif
-                                    ifneq ($(MSYSTEM),)
-                                       export MSYSTEM := CLANG64
-                                    endif
+                                    MSYSTEM := CLANG64
                                  else
-                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
-                                    ifneq ($(MSYSTEM),)
-                                       export MSYSTEM := CLANG32
-                                    endif
+                                 ifneq ($(wildcard $(HB_COMP_PWD)i686-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
                                     HB_CPU := x86
+                                    MSYSTEM := CLANG32
                                  else
-                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))lldb-vscode$(HB_HOST_BIN_EXT)),)
-                                    export MSYSTEM :=
+                                 ifneq ($(findstring /VC/Tools/Llvm/ARM64/,$(HB_COMP_PATH)),)
+                                    MSYSTEM :=
+                                    HB_CPU := arm64
+                                 else
+                                 ifneq ($(findstring /VC/Tools/Llvm/x64/,$(HB_COMP_PATH)),)
+                                    MSYSTEM :=
+                                    HB_CPU := x86_64
+                                 else
+                                 ifneq ($(findstring mingw64,$(HB_COMP_PATH)),)
+                                    HB_CPU := x86_64
+                                    MSYSTEM := CLANG64
+                                 else
+                                 ifneq ($(findstring mingw32,$(HB_COMP_PATH)),)
+                                    HB_CPU := x86
+                                    MSYSTEM := CLANG32
+                                 else
+                                    MSYSTEM := $(shell clang --version)
+                                    ifneq ($(findstring x86_64-pc-windows-msvc,$(MSYSTEM)),)
+                                       MSYSTEM :=
+                                       HB_CPU := x86_64
+                                    else
+                                    ifneq ($(findstring i686-pc-windows-msvc,$(MSYSTEM)),)
+                                       MSYSTEM :=
+                                       HB_CPU := x86
+                                    else
+                                    ifneq ($(findstring aarch64-pc-windows-msvc,$(MSYSTEM)),)
+                                       MSYSTEM :=
+                                       HB_CPU := arm64
+                                    ifneq ($(findstring x86_64-w64-windows-gnu,$(MSYSTEM)),)
+                                       HB_CPU := x86_64
+                                       MSYSTEM := CLANG64
+                                    else
+                                    ifneq ($(findstring i686-w64-windows-gnu,$(MSYSTEM)),)
+                                       HB_CPU := x86
+                                       MSYSTEM := CLANG32
+                                    else
+                                    ifneq ($(findstring aarch64-w64-windows-gnu,$(MSYSTEM)),)
+                                       HB_CPU := arm64
+                                       MSYSTEM := CLANGARM64
+                                    else
+                                    ifneq ($(findstring -windows-gnu,$(MSYSTEM)),)
+                                       MSYSTEM := CLANG
+                                    else
+                                       MSYSTEM :=
+                                    endif
+                                    endif
+                                    endif
+                                    endif
+                                    endif
+                                    endif
+                                    endif
                                  endif
                                  endif
                                  endif
+                                 endif
+                                 endif
+                                 endif
+                                 endif
+                                 export MSYSTEM
+                                 ifneq ($(HB_CPU),$(HB_HOST_CPU))
+                                    ifeq ($(HB_BUILD_NAME),)
+                                       ifeq ($(HB_CPU),x86_64)
+                                          export HB_BUILD_NAME := 64
+                                       else
+                                          export HB_BUILD_NAME := HB_CPU
+                                       endif
+                                    endif
                                  endif
                               else
                                  HB_COMP_PATH := $(call find_in_path,wcc386)
@@ -1076,6 +1130,10 @@ ifeq ($(HB_COMPILER),)
       endif
       endif
       endif
+   endif
+else
+   ifneq ($(wildcard $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER)-noauto.mk),)
+      include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER)-noauto.mk
    endif
 endif
 

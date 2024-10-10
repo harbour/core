@@ -4368,6 +4368,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             IF hb_fileExists( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) + "hbrtl.lib" ) /* selfcheck if clang ld emits .lib extension */
                cLibLibPrefix := ""
                cLibLibExt := ".lib"
+               IF hbmk[ _HBMK_lGUI ]
+                  AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-subsystem:windows" )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-subsystem:console" )
+               ENDIF
             ENDIF
          CASE hbmk[ _HBMK_cCOMP ] == "tcc"
             cBin_CompCPP := "tcc.exe"
@@ -4571,6 +4576,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + hbmk[ _HBMK_cCCEXT ]
             cResExt := ".reso"
             cOpt_Res := "{FR} {IR} -O coff -o {OS}"
+            IF hbmk[ _HBMK_cCOMP ] == "clang" .AND. FindInPath( cBin_Res ) == NIL
+               IF FindInPath( cBin_Res := "llvm-" + cBin_Res ) == NIL
+                  cBin_Res := "llvm-rc"
+                  cResExt := ".res"
+                  /* codepage default in llvm-rc is confusing, a .rc file could be multi-language */
+                  cOpt_Res := "/C 1252 {FR} /FO {OS} {IR}"
+               ENDIF
+            ENDIF
+
             IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
                cBin_Res := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Res, hbmk[ _HBMK_nCmd_Esc ] )
             ENDIF

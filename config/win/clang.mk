@@ -54,6 +54,8 @@ AR := $(HB_CCPREFIX)llvm-ar
 
 AR_RULE = ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
 
+# TODO: add resource compiler detect chain in this stage: GNU windres, llvm-windres, llvm-rc
+
 DY := $(CC)
 DFLAGS += -shared $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
@@ -84,23 +86,36 @@ else
    endef
 endif
 
+TMPSPEC := @__dyn__.tmp
+
+# setting HB_USER_DFLAGS=--mingw-script[...]
+# may help to workaround if old clang + MinGW linker is in use,
+# build may fail either with too long command line or unrecognized argument
+ifneq ($(filter --mingw-script, $(HB_USER_DFLAGS)),)
+   HB_USER_DFLAGS := $(subst --mingw-script,,$(HB_USER_DFLAGS))
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
+   override define dynlib_object
+      @$(ECHO) $(ECHOQUOTE)INPUT($(subst \,/,$(file)))$(ECHOQUOTE) >> __dyn__.tmp
+   endef
+   TMPSPEC := __dyn__.tmp
+endif
+
+define create_dynlib
+   $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
+   $(foreach file,$^,$(dynlib_object))
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $(TMPSPEC) $(DLIBS) $(IMPLIBFLAGS) $(DYSTRIP) $(DYSTRIP)
+   $(dynlib_ln)
+endef
+
 # clang distributed by MS uses lld-link, libs are *.lib not lib*.a
 # in opposite MSYS/MinGW needs args to actually make an implib
 ifeq ($(MSYSTEM),)
-   define create_dynlib
-      $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
-      $(foreach file,$^,$(dynlib_object))
-      $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ @__dyn__.tmp $(DLIBS) $(DYSTRIP) $(DYSTRIP)
-      $(dynlib_ln)
-   endef
+   LDFLAGS += -Wl,-subsystem:console
+   DFLAGS += -Wl,-subsystem:console
 else
-   define create_dynlib
-      $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
-      $(foreach file,$^,$(dynlib_object))
-      $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ @__dyn__.tmp $(DLIBS) -Wl,--out-implib,$(IMP_FILE),--output-def,$(DYN_DIR)/$(basename $@).def $(DYSTRIP) $(DYSTRIP)
-      $(dynlib_ln)
-   endef
+   IMPLIBFLAGS = -Wl,--out-implib,$(IMP_FILE),--output-def,$(DYN_DIR)/$(basename $@).def
 endif
+
 
 DY_RULE = $(create_dynlib)
 
