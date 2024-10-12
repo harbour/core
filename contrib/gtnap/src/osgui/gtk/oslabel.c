@@ -57,10 +57,6 @@ struct _oslabel_t
 
 /*---------------------------------------------------------------------------*/
 
-static real32_t i_PANGO_TO_PIXELS = -1;
-
-/*---------------------------------------------------------------------------*/
-
 static gboolean i_OnEnter(GtkWidget *widget, GdkEventCrossing *event, OSLabel *label)
 {
     unref(widget);

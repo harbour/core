@@ -555,8 +555,6 @@ bool_t osgui_is_pre_initialized_imp(void)
 
 void osgui_pre_initialize_imp(void)
 {
-    PangoFontMap *fontmap = pango_cairo_font_map_get_default();
-    real32_t dpi = (real32_t)pango_cairo_font_map_get_resolution((PangoCairoFontMap *)fontmap);
     kREGISTER_ICONS = NULL;
 
     /* Set the default font */

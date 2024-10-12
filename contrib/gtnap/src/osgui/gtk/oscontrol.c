@@ -660,15 +660,6 @@ void _oscontrol_to_gdkrgba(const color_t color, GdkRGBA *gdkcolor)
 
 /*---------------------------------------------------------------------------*/
 
-// void _oscontrol_to_css_rgb(const color_t color, char_t *css, const uint32_t size)
-// {
-//     uint8_t r, g, b;
-//     color_get_rgb(color, &r, &g, &b);
-//     bstd_sprintf(css, size, "rgb(%d,%d,%d)", r, g, b);
-// }
-
-/*---------------------------------------------------------------------------*/
-
 GtkJustification _oscontrol_justification(const align_t align)
 {
     switch (align)

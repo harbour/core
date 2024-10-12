@@ -1028,6 +1028,8 @@ static void i_parse_gtk_theme(void)
 
 /*---------------------------------------------------------------------------*/
 
+#if !defined(__ASSERTS__)
+
 #if GLIB_CHECK_VERSION(2, 50, 0)
 
 static GLogWriterOutput i_null_writter(GLogLevelFlags log_level, const GLogField *fields, gsize n_fields,
@@ -1052,6 +1054,7 @@ static void i_null_writter(const gchar *log_domain, GLogLevelFlags log_level, co
     unref(user_data);
 }
 
+#endif
 #endif
 
 /*---------------------------------------------------------------------------*/

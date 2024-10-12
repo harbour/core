@@ -275,6 +275,8 @@ static GtkWidget *i_get_gtk_label(GtkWidget *widget)
             if (label != NULL)
                 return label;
         }
+
+        return NULL;
     }
     else
     {
