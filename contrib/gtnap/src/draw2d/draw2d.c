@@ -50,6 +50,8 @@ static ArrPt(String) *i_FONT_FAMILIES;
 static ArrSt(IColor) *i_INDEXED_COLORS;
 static String *i_USER_MONOSPACE_FONT_FAMILY = NULL;
 static String *i_MONOSPACE_FONT_FAMILY = NULL;
+static const char_t *i_AVG_CHAR_WIDTH = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+static uint32_t i_AVG_CHAR_WIDTH_LEN = 0;
 
 /*---------------------------------------------------------------------------*/
 
@@ -84,6 +86,7 @@ void draw2d_start(void)
         }
 
         i_INDEXED_COLORS = arrst_create(IColor);
+        i_AVG_CHAR_WIDTH_LEN = str_len_c(i_AVG_CHAR_WIDTH);
         dbind_opaque(Image, image_from_data, NULL, image_copy, NULL, image_write, image_destroy);
     }
 
@@ -110,6 +113,14 @@ void draw2d_finish(void)
     }
 
     i_NUM_USERS -= 1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void draw2d_preferred_monospace(const char_t *family)
+{
+    str_upd(&i_USER_MONOSPACE_FONT_FAMILY, family);
+    str_destopt(&i_MONOSPACE_FONT_FAMILY);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -438,8 +449,9 @@ const char_t *draw2d_get_preferred_monospace(void)
 
 /*---------------------------------------------------------------------------*/
 
-void draw2d_preferred_monospace(const char_t *family)
+const char_t *draw2d_str_avg_char_width(uint32_t *len)
 {
-    str_upd(&i_USER_MONOSPACE_FONT_FAMILY, family);
-    str_destopt(&i_MONOSPACE_FONT_FAMILY);
+    cassert_no_null(len);
+    *len = i_AVG_CHAR_WIDTH_LEN;
+    return i_AVG_CHAR_WIDTH;
 }

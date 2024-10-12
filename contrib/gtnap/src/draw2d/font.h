@@ -23,6 +23,10 @@ _draw2d_api Font *font_monospace(const real32_t size, const uint32_t style);
 
 _draw2d_api Font *font_with_style(const Font *font, const uint32_t style);
 
+_draw2d_api Font *font_with_width(const Font *font, const real32_t width);
+
+_draw2d_api Font *font_with_xscale(const Font *font, const real32_t scale);
+
 _draw2d_api Font *font_copy(const Font *font);
 
 _draw2d_api void font_destroy(Font **font);
@@ -41,6 +45,10 @@ _draw2d_api real32_t font_size(const Font *font);
 
 _draw2d_api real32_t font_height(const Font *font);
 
+_draw2d_api real32_t font_width(const Font *font);
+
+_draw2d_api real32_t font_xscale(const Font *font);
+
 _draw2d_api real32_t font_ascent(const Font *font);
 
 _draw2d_api real32_t font_descent(const Font *font);
@@ -51,8 +59,6 @@ _draw2d_api bool_t font_is_monospace(const Font *font);
 
 _draw2d_api uint32_t font_style(const Font *font);
 
-_draw2d_api void font_set_width(Font *font, real32_t width);
-
 _draw2d_api void font_extents(const Font *font, const char_t *text, const real32_t refwidth, real32_t *width, real32_t *height);
 
 _draw2d_api bool_t font_exists_family(const char_t *family);
@@ -60,8 +66,6 @@ _draw2d_api bool_t font_exists_family(const char_t *family);
 _draw2d_api ArrPt(String) *font_installed_families(void);
 
 _draw2d_api ArrPt(String) *font_installed_monospace(void);
-
-_draw2d_api void font_preferred_monospace(const char_t *family);
 
 _draw2d_api const void *font_native(const Font *font);
 

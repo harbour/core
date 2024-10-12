@@ -41,12 +41,10 @@ struct _osview_t
     GtkWidget *darea;
     OSScrolls *scroll;
     OSControl *capture;
-    real32_t area_width;
-    real32_t area_height;
     real32_t clip_width;
     real32_t clip_height;
     ViewListeners listeners;
-    GtkCssProvider *border_color;
+    GtkCssProvider *css_bdcolor;
     bool_t allow_tab;
     Listener *OnFocus;
     Listener *OnResignFocus;
@@ -123,11 +121,9 @@ static gboolean i_OnDraw(GtkWidget *widget, cairo_t *cr, OSView *view)
         EvDraw params;
         params.x = 0;
         params.y = 0;
-        params.width = (real32_t)view->area_width;
-        params.height = (real32_t)view->area_height;
+        params.width = view->clip_width;
+        params.height = view->clip_height;
         params.ctx = NULL;
-        cassert(view->area_width == view->clip_width);
-        cassert(view->area_height == view->clip_height);
         _oslistener_redraw((OSControl *)view, &params, &view->listeners);
     }
 
@@ -358,13 +354,16 @@ OSView *osview_create(const uint32_t flags)
     if (flags & ekVIEW_BORDER)
     {
         GtkWidget *frame = gtk_frame_new(NULL);
-        String *css = osglobals_frame_focus_css();
         cassert(gtk_widget_get_has_window(frame) == FALSE);
         gtk_container_add(GTK_CONTAINER(frame), top);
         gtk_widget_show(top);
-        view->border_color = gtk_css_provider_new();
-        gtk_css_provider_load_from_data(view->border_color, tc(css), -1, NULL);
-        str_destroy(&css);
+
+        {
+            String *css = osglobals_frame_focus_css();
+            view->css_bdcolor = _oscontrol_css_provider(tc(css));
+            str_destroy(&css);
+        }
+
         top = frame;
     }
 
@@ -403,20 +402,13 @@ void osview_destroy(OSView **view)
     listener_destroy(&(*view)->OnAcceptFocus);
     listener_destroy(&(*view)->OnOverlay);
 
-    if ((*view)->border_color != NULL)
-    {
-        cassert(GTK_IS_FRAME((*view)->control.widget));
-        _oscontrol_widget_remove_provider((*view)->control.widget, (*view)->border_color);
-        g_object_unref((*view)->border_color);
-        (*view)->border_color = NULL;
-    }
-
     if ((*view)->ctx != NULL)
         dctx_destroy(&(*view)->ctx);
 
     if ((*view)->scroll != NULL)
         osscrolls_destroy(&(*view)->scroll);
 
+    _oscontrol_destroy_css_provider(&(*view)->css_bdcolor);
     _oscontrol_destroy(*(OSControl **)view);
     heap_delete(view, OSView);
 }
@@ -575,7 +567,7 @@ void osview_OnScroll(OSView *view, Listener *listener)
 void osview_allow_key(OSView *view, const vkey_t key, const uint32_t value)
 {
     cassert_no_null(view);
-    cassert(key == ekKEY_TAB);
+    cassert_unref(key == ekKEY_TAB, key);
     cassert(value == 0 || value == 1);
     view->allow_tab = (bool_t)value;
 }
@@ -625,17 +617,6 @@ void osview_scroller_visible(OSView *view, const bool_t horizontal, const bool_t
 void osview_content_size(OSView *view, const real32_t width, const real32_t height, const real32_t line_width, const real32_t line_height)
 {
     cassert_no_null(view);
-    if (GTK_IS_FRAME(view->control.widget) == TRUE)
-    {
-        view->area_width = width - i_FRAME_HPADDING;
-        view->area_height = height - i_FRAME_VPADDING;
-    }
-    else
-    {
-        view->area_width = width;
-        view->area_height = height;
-    }
-
     osscrolls_content_size(view->scroll, (uint32_t)width, (uint32_t)height, (uint32_t)line_width, (uint32_t)line_height);
 }
 
@@ -805,13 +786,13 @@ void osview_focus(OSView *view, const bool_t focus)
         listener_event(view->OnFocus, ekGUI_EVENT_FOCUS, view, &params, NULL, OSView, bool_t, void);
     }
 
-    if (view->border_color != NULL)
+    if (view->css_bdcolor != NULL)
     {
         cassert(GTK_IS_FRAME(view->control.widget));
         if (focus == TRUE)
-            _oscontrol_widget_add_provider(view->control.widget, view->border_color);
+            _oscontrol_add_css_provider(view->control.widget, view->css_bdcolor);
         else
-            _oscontrol_widget_remove_provider(view->control.widget, view->border_color);
+            _oscontrol_remove_css_provider(view->control.widget, view->css_bdcolor);
     }
 }
 

@@ -43,17 +43,19 @@ struct _ostext_t
     gint afspace_px;
     int32_t select_start;
     int32_t select_end;
+    bool_t show_select;
     GtkTextTag *tag_attribs;
+    GtkTextTag *def_attribs;
     bool_t global_attribs;
     bool_t launch_event;
     GtkWidget *tview;
     GtkTextBuffer *buffer;
     gchar *text_cache;
-    GtkCssProvider *fontcss;
-    GtkCssProvider *colorcss;
-    GtkCssProvider *bgcolorcss;
-    GtkCssProvider *pgcolorcss;
-    GtkCssProvider *border_color;
+    GtkCssProvider *css_font;
+    GtkCssProvider *css_color;
+    GtkCssProvider *css_bgcolor;
+    GtkCssProvider *css_pgcolor;
+    GtkCssProvider *css_bdcolor;
     OSControl *capture;
     Listener *OnFilter;
     Listener *OnFocus;
@@ -146,6 +148,20 @@ static void i_OnBufferInsert(GtkTextBuffer *buffer, GtkTextIter *location, gchar
     cassert_no_null(view);
     cassert_unref(view->buffer == buffer, buffer);
     i_OnFilter(view, location, (const char_t *)text, (int32_t)len);
+
+    /* Set the default attribs to new writted text */
+    if (view->def_attribs != NULL)
+    {
+        GtkTextIter start, end;
+        start = *location;
+        gtk_text_iter_backward_chars(&start, len);
+        end = *location;
+
+        /* Only apply defaults if text is writted at beginning or end.
+         * In between, will be applied the current format */
+        if (gtk_text_iter_is_start(&start) == TRUE || gtk_text_iter_is_end(&end) == TRUE)
+            gtk_text_buffer_apply_tag(view->buffer, view->def_attribs, &start, &end);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -162,7 +178,7 @@ static void i_OnBufferDelete(GtkTextBuffer *buffer, GtkTextIter *start, GtkTextI
 
 static void i_set_wrap_mode(GtkWidget *tview, const bool_t wrap)
 {
-    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(tview), wrap == TRUE ? GTK_WRAP_WORD : GTK_WRAP_NONE);
+    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(tview), wrap == TRUE ? GTK_WRAP_WORD_CHAR : GTK_WRAP_NONE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -177,6 +193,7 @@ OSText *ostext_create(const uint32_t flags)
     view->tview = gtk_text_view_new();
     view->select_start = INT32_MAX;
     view->select_end = INT32_MAX;
+    view->show_select = FALSE;
 
     /* A parent widget can "capture" the mouse */
     {
@@ -204,15 +221,18 @@ OSText *ostext_create(const uint32_t flags)
     /* Creating the frame (border) view */
     {
         GtkWidget *frame = gtk_frame_new(NULL);
-        String *css = osglobals_frame_focus_css();
         cassert(gtk_widget_get_has_window(frame) == FALSE);
         gtk_container_add(GTK_CONTAINER(frame), top);
         gtk_widget_show(top);
-        view->border_color = gtk_css_provider_new();
-        gtk_css_provider_load_from_data(view->border_color, tc(css), -1, NULL);
+
+        {
+            String *css = osglobals_frame_focus_css();
+            view->css_bdcolor = _oscontrol_css_provider(tc(css));
+            str_destroy(&css);
+        }
+
         g_object_set_data(G_OBJECT(scrolled), "OSControl", &view->control);
         gtk_widget_set_state_flags(frame, GTK_STATE_FLAG_FOCUSED, FALSE);
-        str_destroy(&css);
         top = frame;
     }
 
@@ -250,20 +270,17 @@ void ostext_destroy(OSText **view)
     listener_destroy(&(*view)->OnFocus);
     gtk_container_remove(GTK_CONTAINER(i_scrolled_window(*view)), (*view)->tview);
 
-    if ((*view)->border_color != NULL)
-    {
-        cassert(GTK_IS_FRAME((*view)->control.widget));
-        _oscontrol_widget_remove_provider((*view)->control.widget, (*view)->border_color);
-        g_object_unref((*view)->border_color);
-        (*view)->border_color = NULL;
-    }
-
     if ((*view)->text_cache != NULL)
     {
         g_free((*view)->text_cache);
         (*view)->text_cache = NULL;
     }
 
+    _oscontrol_destroy_css_provider(&(*view)->css_font);
+    _oscontrol_destroy_css_provider(&(*view)->css_color);
+    _oscontrol_destroy_css_provider(&(*view)->css_bgcolor);
+    _oscontrol_destroy_css_provider(&(*view)->css_pgcolor);
+    _oscontrol_destroy_css_provider(&(*view)->css_bdcolor);
     _oscontrol_destroy(*(OSControl **)view);
     heap_delete(view, OSText);
 }
@@ -445,33 +462,10 @@ static GtkTextTag *i_tag_attribs(OSText *view)
 
 static void i_global_attribs(OSText *view)
 {
-    const char_t *csstype = osglobals_css_textview();
-
-    if (view->fontcss != NULL)
-    {
-        _oscontrol_widget_remove_provider(view->tview, view->fontcss);
-        view->fontcss = NULL;
-    }
-
-    if (view->colorcss != NULL)
-    {
-        _oscontrol_widget_remove_provider(view->tview, view->colorcss);
-        view->colorcss = NULL;
-    }
-
-    if (view->bgcolorcss != NULL)
-    {
-        _oscontrol_widget_remove_provider(view->tview, view->bgcolorcss);
-        view->bgcolorcss = NULL;
-    }
-
-    _oscontrol_widget_font_desc(view->tview, csstype, view->ffamily, view->fsize, view->fstyle, &view->fontcss);
-
-    if (view->color != kCOLOR_DEFAULT)
-        _oscontrol_widget_color(view->tview, csstype, view->color, &view->colorcss);
-
-    if (view->bgcolor != kCOLOR_DEFAULT)
-        _oscontrol_widget_bg_color(view->tview, csstype, view->bgcolor, &view->bgcolorcss);
+    const char_t *cssobj = osglobals_css_textview();
+    _oscontrol_update_css_font_desc(view->tview, cssobj, view->ffamily, view->fsize, view->fstyle, &view->css_font);
+    _oscontrol_update_css_color(view->tview, cssobj, view->color, &view->css_color);
+    _oscontrol_update_css_bgcolor(view->tview, cssobj, view->bgcolor, &view->css_bgcolor);
 
     {
         GtkJustification justif = _oscontrol_justification(view->align);
@@ -526,6 +520,71 @@ void ostext_insert_text(OSText *view, const char_t *text)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_apply_all(OSText *view)
+{
+    GtkTextIter start, end;
+    cassert_no_null(view);
+
+    if (view->tag_attribs == NULL)
+        view->tag_attribs = i_tag_attribs(view);
+
+    view->def_attribs = view->tag_attribs;
+    gtk_text_buffer_get_start_iter(view->buffer, &start);
+    gtk_text_buffer_get_end_iter(view->buffer, &end);
+    gtk_text_buffer_remove_all_tags(view->buffer, &start, &end);
+    gtk_text_buffer_apply_tag(view->buffer, view->tag_attribs, &start, &end);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_iter(GtkTextBuffer *buffer, const int32_t pos, GtkTextIter *iter)
+{
+    if (pos >= 0)
+    {
+        gtk_text_buffer_get_start_iter(buffer, iter);
+        gtk_text_iter_forward_chars(iter, (gint)pos);
+    }
+    else
+    {
+        gtk_text_buffer_get_end_iter(buffer, iter);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_apply_sel(OSText *view)
+{
+    GtkTextIter start, end;
+    bool_t apply = FALSE;
+    cassert_no_null(view);
+
+    if (view->tag_attribs == NULL)
+        view->tag_attribs = i_tag_attribs(view);
+
+    if (gtk_widget_has_focus(GTK_WIDGET(view->control.widget)))
+    {
+        gtk_text_buffer_get_selection_bounds(view->buffer, &start, &end);
+        apply = TRUE;
+    }
+    else
+    {
+        if (view->select_start != INT32_MAX)
+        {
+            i_iter(view->buffer, view->select_start, &start);
+            i_iter(view->buffer, view->select_end, &end);
+            apply = TRUE;
+        }
+    }
+
+    if (apply == TRUE)
+    {
+        gtk_text_buffer_remove_all_tags(view->buffer, &start, &end);
+        gtk_text_buffer_apply_tag(view->buffer, view->tag_attribs, &start, &end);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void ostext_set_text(OSText *view, const char_t *text)
 {
     GtkTextBuffer *buffer;
@@ -550,21 +609,6 @@ void ostext_set_rtf(OSText *view, Stream *rtf_in)
 {
     unref(view);
     unref(rtf_in);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_iter(GtkTextBuffer *buffer, const int32_t pos, GtkTextIter *iter)
-{
-    if (pos >= 0)
-    {
-        gtk_text_buffer_get_start_iter(buffer, iter);
-        gtk_text_iter_forward_chars(iter, (gint)pos);
-    }
-    else
-    {
-        gtk_text_buffer_get_end_iter(buffer, iter);
-    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -682,15 +726,11 @@ void ostext_property(OSText *view, const gui_text_t prop, const void *value)
         break;
 
     case ekGUI_TEXT_PGCOLOR:
-        if (view->pgcolorcss != NULL)
-        {
-            _oscontrol_widget_remove_provider(view->tview, view->pgcolorcss);
-            view->pgcolorcss = NULL;
-        }
-
-        if (*(color_t *)value != kCOLOR_DEFAULT)
-            _oscontrol_widget_bg_color(view->tview, "textview", *(color_t *)value, &view->pgcolorcss);
+    {
+        const char_t *cssobj = osglobals_css_textview();
+        _oscontrol_update_css_bgcolor(view->tview, cssobj, *(color_t *)value, &view->css_pgcolor);
         break;
+    }
 
     case ekGUI_TEXT_PARALIGN:
         if (view->align != *((align_t *)value))
@@ -749,12 +789,27 @@ void ostext_property(OSText *view, const gui_text_t prop, const void *value)
         break;
     }
 
+    case ekGUI_TEXT_APPLY_ALL:
+        i_apply_all(view);
+        break;
+
+    case ekGUI_TEXT_APPLY_SEL:
+        i_apply_sel(view);
+        break;
+
     case ekGUI_TEXT_SELECT:
     {
         int32_t *range = (int32_t *)value;
         view->select_start = range[0];
         view->select_end = range[1];
         g_idle_add((GSourceFunc)i_select, view);
+        break;
+    }
+
+    case ekGUI_TEXT_SHOW_SELECT:
+    {
+        bool_t show = *(bool_t *)value;
+        view->show_select = show;
         break;
     }
 
@@ -912,13 +967,13 @@ void ostext_focus(OSText *view, const bool_t focus)
         listener_event(view->OnFocus, ekGUI_EVENT_FOCUS, view, &params, NULL, OSText, bool_t, void);
     }
 
-    if (view->border_color != NULL)
+    if (view->css_bdcolor != NULL)
     {
         cassert(GTK_IS_FRAME(view->control.widget));
         if (focus == TRUE)
-            _oscontrol_widget_add_provider(view->control.widget, view->border_color);
+            _oscontrol_add_css_provider(view->control.widget, view->css_bdcolor);
         else
-            _oscontrol_widget_remove_provider(view->control.widget, view->border_color);
+            _oscontrol_remove_css_provider(view->control.widget, view->css_bdcolor);
     }
 
     if (focus == TRUE)
@@ -928,15 +983,20 @@ void ostext_focus(OSText *view, const bool_t focus)
     }
     else
     {
-        /* Cache the current selection and deselect */
+        /* Cache the current selection */
         GtkTextIter start, end;
         GtkTextBuffer *tbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view->tview));
         GtkTextIter iter;
         gtk_text_buffer_get_selection_bounds(tbuf, &start, &end);
         view->select_start = (int32_t)gtk_text_iter_get_offset(&start);
         view->select_end = (int32_t)gtk_text_iter_get_offset(&end);
-        gtk_text_buffer_get_start_iter(tbuf, &iter);
-        gtk_text_buffer_select_range(tbuf, &iter, &iter);
+
+        /* Deselect */
+        if (view->show_select == FALSE)
+        {
+            gtk_text_buffer_get_start_iter(tbuf, &iter);
+            gtk_text_buffer_select_range(tbuf, &iter, &iter);
+        }
     }
 }
 

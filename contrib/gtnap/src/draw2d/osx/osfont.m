@@ -30,11 +30,26 @@
 
 static String *i_SYSTEM_FONT_FAMILY = NULL;
 static String *i_MONOSPACE_FONT_FAMILY = NULL;
+static bool_t i_SYSTEM_FONT_REDUCED = FALSE;
 
 /*---------------------------------------------------------------------------*/
 
 void osfont_alloc_globals(void)
 {
+    /*
+     * I don't know why, in some newer macOS the system default font
+     * has a great font scaling by default. This affect when apply font
+     * transform, necessary for some fonts italic shear and x-scaling.
+     * This code detects if the system font has this big scaling
+     */
+    real32_t xscale = 1.1f;
+    OSFont *font = osfont_create("__SYSTEM__", font_regular_size(), -1, xscale, 0);
+    real32_t w, h;
+    osfont_extents(font, "OO", -1, xscale, &w, &h);
+    osfont_destroy(&font);
+    unref(w);
+    if (h > 40)
+        i_SYSTEM_FONT_REDUCED = TRUE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -86,7 +101,7 @@ static const char_t *i_monospace_font_family(void)
  *  - A shear if itatic is required.
  *  - A x-scale if we need a char width different that font defaults.
  */
-static NSFont *i_font_transform(NSFont *font, const CGFloat scale_x, const CGFloat height, const BOOL italic, NSFontManager *font_manager)
+static NSFont *i_font_transform(NSFont *font, const CGFloat xscale, const CGFloat height, const BOOL italic, NSFontManager *font_manager)
 {
     NSFont *tfont = nil;
     BOOL with_italic = NO;
@@ -105,15 +120,14 @@ static NSFont *i_font_transform(NSFont *font, const CGFloat scale_x, const CGFlo
     {
         tfont = font;
     }
-    
+
     /* We have to apply an affine transform to text */
-    if ((italic == YES && with_italic == NO)
-        || fabs((double)scale_x - 1) > 0.01)
+    if ((italic == YES && with_italic == NO) || (xscale > 0 && fabs((double)xscale - 1) > 0.01))
     {
         NSAffineTransform *font_transform = [NSAffineTransform transform];
-        
+
         /* Apply the x-scale */
-        [font_transform scaleXBy:scale_x * height yBy:height];
+        [font_transform scaleXBy:xscale * height yBy:height];
 
         /* Italic is required, but don't apply by FontManager */
         if (italic == YES && with_italic == NO)
@@ -139,24 +153,12 @@ static NSFont *i_font_transform(NSFont *font, const CGFloat scale_x, const CGFlo
 
 /*---------------------------------------------------------------------------*/
 
-static real32_t i_width_scale(NSFont *font, const real32_t width)
-{
-    const char_t *reftext = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    real32_t twidth = 0, theight = 0;
-    osfont_extents(cast(font, OSFont), reftext, -1, &twidth, &theight);
-    twidth /= str_len_c(reftext);
-    unref(theight);
-    return width / twidth;
-}
-
-/*---------------------------------------------------------------------------*/
-
 static NSFont *i_nsfont(const char_t *family, const real32_t size, const uint32_t style)
 {
     const char_t *name = NULL;
     NSFont *nsfont = nil;
     cassert(size > 0.f);
-    
+
     if (str_equ_c(family, "__SYSTEM__") == TRUE)
     {
         if (style & ekFBOLD)
@@ -176,7 +178,7 @@ static NSFont *i_nsfont(const char_t *family, const real32_t size, const uint32_
                 nsfont = [NSFont monospacedSystemFontOfSize:(CGFloat)size weight:NSFontWeightLight];
         }
 #endif
-     
+
         if (nsfont == nil)
             name = i_monospace_font_family();
     }
@@ -192,7 +194,7 @@ static NSFont *i_nsfont(const char_t *family, const real32_t size, const uint32_
         NSUInteger mask = (style & ekFBOLD) ? NSBoldFontMask : 0;
         nsfont = [fontManager fontWithFamily:ffamily traits:(NSFontTraitMask)mask weight:5 size:(CGFloat)size];
     }
-    
+
     return nsfont;
 }
 
@@ -203,36 +205,35 @@ static real32_t i_cell_size(NSFont *font, const real32_t size)
     const char_t *reftext = "ABCDEabcde";
     real32_t twidth = 0, theight = 0;
     real32_t scale = 0;
-    osfont_extents(cast(font, OSFont), reftext, -1, &twidth, &theight);
+    osfont_extents(cast(font, OSFont), reftext, 1, -1, &twidth, &theight);
     scale = size / theight;
     return bmath_floorf(size * scale);
 }
 
 /*---------------------------------------------------------------------------*/
 
-OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const uint32_t style)
+OSFont *osfont_create(const char_t *family, const real32_t size, const real32_t width, const real32_t xscale, const uint32_t style)
 {
     real32_t esize = size;
     NSFont *nsfont = i_nsfont(family, esize, style);
     cassert_fatal_msg(nsfont != nil, "Font is not available on this computer.");
+    unref(width);
 
     if ((style & ekFCELL) == ekFCELL)
     {
         esize = i_cell_size(nsfont, esize);
         nsfont = i_nsfont(family, esize, style);
     }
-        
+
     if (nsfont != nil)
     {
         BOOL with_italic = (style & ekFITALIC) == ekFITALIC;
-        real32_t scale_x = 1.f;
-        if (width > 0)
-            scale_x = i_width_scale(nsfont, width);
-
-        if (with_italic || fabsf(scale_x - 1) > 0.01)
+        if (with_italic || (xscale > 0 && fabsf(xscale - 1) > 0.01))
         {
             NSFontManager *manager = [NSFontManager sharedFontManager];
-            nsfont = i_font_transform(nsfont, (CGFloat)scale_x, (CGFloat)esize, with_italic, manager);
+            if (str_equ_c(family, "__SYSTEM__") == TRUE && i_SYSTEM_FONT_REDUCED == TRUE)
+                esize /= size;
+            nsfont = i_font_transform(nsfont, (CGFloat)xscale, (CGFloat)esize, with_italic, manager);
         }
 
         [nsfont retain];
@@ -295,7 +296,7 @@ font_family_t osfont_system(const char_t *family)
 
 /*---------------------------------------------------------------------------*/
 
-void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, bool_t *monospace)
+void osfont_metrics(const OSFont *font, const real32_t size, const real32_t xscale, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, real32_t *avg_width, bool_t *monospace)
 {
     NSFont *nsfont = cast(font, NSFont);
 
@@ -305,19 +306,22 @@ void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, r
     if (descent != NULL)
         *descent = (real32_t) - [nsfont descender];
 
-    if (leading != NULL)
+    /* We need to get a real text measure */
+    if (leading != NULL || cell_size != NULL || avg_width != NULL)
     {
         real32_t width, height;
-        osfont_extents(font, "O", -1, &width, &height);
-        unref(width);
-        *leading = height - size;
-    }
+        uint32_t len;
+        const char_t *str = draw2d_str_avg_char_width(&len);
+        osfont_extents(font, str, xscale, -1, &width, &height);
 
-    if (cell_size != NULL)
-    {
-        real32_t width;
-        osfont_extents(font, "O", -1, &width, cell_size);
-        unref(width);
+        if (leading != NULL)
+            *leading = height - size;
+
+        if (cell_size != NULL)
+            *cell_size = height;
+
+        if (avg_width != NULL)
+            *avg_width = width / len;
     }
 
     if (monospace != NULL)
@@ -326,7 +330,7 @@ void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, r
 
 /*---------------------------------------------------------------------------*/
 
-void osfont_extents(const OSFont *font, const char_t *text, const real32_t refwidth, real32_t *width, real32_t *height)
+void osfont_extents(const OSFont *font, const char_t *text, const real32_t xscale, const real32_t refwidth, real32_t *width, real32_t *height)
 {
     id objects[1];
     id keys[1];
@@ -334,6 +338,7 @@ void osfont_extents(const OSFont *font, const char_t *text, const real32_t refwi
     NSUInteger count = sizeof(objects) / sizeof(id);
     cassert_no_null(font);
     cassert(count == 1);
+    unref(xscale);
     objects[0] = cast(font, NSFont);
     keys[0] = NSFontAttributeName;
     data.dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys count:count];

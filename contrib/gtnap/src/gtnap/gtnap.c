@@ -791,7 +791,12 @@ static void i_compute_cell_size(GtNap *gtnap, const real32_t size, const real32_
     cassert_no_null(gtnap);
     ptr_destopt(font_destroy, &gtnap->global_font, Font);
     gtnap->global_font = font_monospace(size, ekFCELL);
-    font_set_width(gtnap->global_font, width);
+    if (width > 0)
+    {
+        Font *font = font_with_width(gtnap->global_font, width);
+        font_destroy(&gtnap->global_font);
+        gtnap->global_font = font;
+    }
 
     /* Compute the real size of a cell, based on font */
     {
@@ -906,7 +911,7 @@ static void i_compute_font_size(const real32_t screen_width, const real32_t scre
     }
 
     if (C_Fonte != NULL)
-        font_preferred_monospace(C_Fonte);
+        draw2d_preferred_monospace(C_Fonte);
 
     /*
      * - Os valores abaixo foram obtidos por via prática, num computador com
