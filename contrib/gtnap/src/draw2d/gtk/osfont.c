@@ -60,6 +60,14 @@ void osfont_dealloc_globals(void)
 
 /*---------------------------------------------------------------------------*/
 
+static const char_t *i_monospace_font_family(void)
+{
+    const char_t *desired_fonts[] = {"Ubuntu Mono", "DejaVu Sans Mono", "Courier New"};
+    return draw2d_monospace_family(desired_fonts, sizeof(desired_fonts) / sizeof(const char_t *));
+}
+
+/*---------------------------------------------------------------------------*/
+
 static real32_t i_device_to_pixels(void)
 {
     if (i_PANGO_TO_PIXELS < 0)
@@ -71,30 +79,6 @@ static real32_t i_device_to_pixels(void)
     }
 
     return i_PANGO_TO_PIXELS;
-}
-
-/*---------------------------------------------------------------------------*/
-
-real32_t font_regular_size(void)
-{
-    cassert(i_SYSTEM_FONT_FAMILY != NULL);
-    return kFONT_REGULAR_SIZE;
-}
-
-/*---------------------------------------------------------------------------*/
-
-real32_t font_small_size(void)
-{
-    cassert(i_SYSTEM_FONT_FAMILY != NULL);
-    return kFONT_SMALL_SIZE;
-}
-
-/*---------------------------------------------------------------------------*/
-
-real32_t font_mini_size(void)
-{
-    cassert(i_SYSTEM_FONT_FAMILY != NULL);
-    return kFONT_MINI_SIZE;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -114,19 +98,11 @@ static gint i_font_size(const real32_t size, const uint32_t style)
 
 /*---------------------------------------------------------------------------*/
 
-static const char_t *i_monospace_font_family(void)
-{
-    const char_t *desired_fonts[] = {"Ubuntu Mono", "DejaVu Sans Mono", "Courier New"};
-    return draw2d_monospace_family(desired_fonts, sizeof(desired_fonts) / sizeof(const char_t *));
-}
-
-/*---------------------------------------------------------------------------*/
-
 static gint i_scale_size_to_cell(const real32_t size, const int pango_size, PangoFontDescription *font)
 {
     real32_t cell_size = 1e8f;
     gint new_pango_size = 0;
-    osfont_extents(cast(font, OSFont), "REFTEXT", -1, NULL, &cell_size);
+    osfont_extents(cast(font, OSFont), "REFTEXT", 1, -1, NULL, &cell_size);
     new_pango_size = (gint)((size * (real32_t)pango_size) / cell_size);
     return new_pango_size;
 }
@@ -190,34 +166,6 @@ void osfont_destroy(OSFont **font)
 
 /*---------------------------------------------------------------------------*/
 
-void osfont_extents(const OSFont *font, const char_t *text, const real32_t refwidth, real32_t *width, real32_t *height)
-{
-    int w, h;
-    cassert_no_null(font);
-    if (i_CAIRO == NULL)
-    {
-        i_CAIRO = cairo_create(NULL);
-        i_LAYOUT = pango_cairo_create_layout(i_CAIRO);
-    }
-
-    pango_layout_set_font_description(i_LAYOUT, cast(font, PangoFontDescription));
-    pango_layout_set_text(i_LAYOUT, (const char *)text, -1);
-    pango_layout_set_width(i_LAYOUT, refwidth < 0 ? -1 : (int)(refwidth * PANGO_SCALE));
-    pango_layout_get_pixel_size(i_LAYOUT, &w, &h);
-    ptr_assign(width, (real32_t)w);
-    ptr_assign(height, (real32_t)h);
-}
-
-/*---------------------------------------------------------------------------*/
-
-const void *osfont_native(const OSFont *font)
-{
-    cassert_no_null(font);
-    return cast(font, void);
-}
-
-/*---------------------------------------------------------------------------*/
-
 String *osfont_family_name(const OSFont *font)
 {
     const PangoFontDescription *ffont = cast_const(font, PangoFontDescription);
@@ -271,7 +219,7 @@ static bool_t i_is_monospace(PangoFontMap *fontmap, const PangoFontDescription *
 
 /*---------------------------------------------------------------------------*/
 
-void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, real32_t *avg_width, bool_t *monospace)
+void osfont_metrics(const OSFont *font, const real32_t size, const real32_t xscale, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, real32_t *avg_width, bool_t *monospace)
 {
     /* This object is owned by Pango and must not be freed */
     PangoFontMap *fontmap = pango_cairo_font_map_get_default();
@@ -295,7 +243,7 @@ void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, r
         real32_t width, height;
         uint32_t len;
         const char_t *str = draw2d_str_avg_char_width(&len);
-        osfont_extents(font, str, -1, &width, &height);
+        osfont_extents(font, str, xscale, -1, &width, &height);
 
         if (leading != NULL)
             *leading = height - size;
@@ -313,6 +261,58 @@ void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, r
     g_object_unref(context);
     g_object_unref(ffont);
     pango_font_metrics_unref(metrics);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void osfont_extents(const OSFont *font, const char_t *text, const real32_t xscale, const real32_t refwidth, real32_t *width, real32_t *height)
+{
+    int w, h;
+    cassert_no_null(font);
+    if (i_CAIRO == NULL)
+    {
+        i_CAIRO = cairo_create(NULL);
+        i_LAYOUT = pango_cairo_create_layout(i_CAIRO);
+    }
+
+    pango_layout_set_font_description(i_LAYOUT, cast(font, PangoFontDescription));
+    pango_layout_set_text(i_LAYOUT, (const char *)text, -1);
+    pango_layout_set_width(i_LAYOUT, refwidth < 0 ? -1 : (int)((refwidth / xscale) * PANGO_SCALE));
+    pango_layout_get_pixel_size(i_LAYOUT, &w, &h);
+    ptr_assign(width, (real32_t)w * xscale);
+    ptr_assign(height, (real32_t)h);
+}
+
+/*---------------------------------------------------------------------------*/
+
+const void *osfont_native(const OSFont *font)
+{
+    cassert_no_null(font);
+    return cast(font, void);
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t font_regular_size(void)
+{
+    cassert(i_SYSTEM_FONT_FAMILY != NULL);
+    return kFONT_REGULAR_SIZE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t font_small_size(void)
+{
+    cassert(i_SYSTEM_FONT_FAMILY != NULL);
+    return kFONT_SMALL_SIZE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t font_mini_size(void)
+{
+    cassert(i_SYSTEM_FONT_FAMILY != NULL);
+    return kFONT_MINI_SIZE;
 }
 
 /*---------------------------------------------------------------------------*/

@@ -26,9 +26,9 @@ String *osfont_family_name(const OSFont *font);
 
 font_family_t osfont_system(const char_t *family);
 
-void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, real32_t *avg_width, bool_t *monospace);
+void osfont_metrics(const OSFont *font, const real32_t size, const real32_t xscale, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, real32_t *avg_width, bool_t *monospace);
 
-void osfont_extents(const OSFont *font, const char_t *text, const real32_t refwidth, real32_t *width, real32_t *height);
+void osfont_extents(const OSFont *font, const char_t *text, const real32_t xscale, const real32_t refwidth, real32_t *width, real32_t *height);
 
 const void *osfont_native(const OSFont *font);
 

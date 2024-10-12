@@ -25,7 +25,7 @@ struct _font_t
     uint32_t family;
     uint32_t style;
     real32_t size;
-    real32_t x_scale;
+    real32_t xscale;
     real32_t cell_size;
     real32_t leading;
     real32_t ascent;
@@ -50,7 +50,7 @@ static Font *i_create_font(const uint32_t family, const real32_t size, const uin
     font->family = family;
     font->size = size;
     font->style = style;
-    font->x_scale = 1;
+    font->xscale = 1;
     font->cell_size = -1;
     font->leading = -1;
     font->ascent = -1;
@@ -83,7 +83,7 @@ static ___INLINE void i_metrics(Font *font)
     if (font->metrics == FALSE)
     {
         i_osfont(font);
-        osfont_metrics(font->osfont, font->size, &font->ascent, &font->descent, &font->leading, &font->cell_size, &font->avg_width, &font->monospace);
+        osfont_metrics(font->osfont, font->size, font->xscale, &font->ascent, &font->descent, &font->leading, &font->cell_size, &font->avg_width, &font->monospace);
         font->metrics = TRUE;
     }
 }
@@ -149,17 +149,17 @@ Font *font_with_width(const Font *font, const real32_t width)
     cassert(width > 0);
 
     /* The incomming font is scaled */
-    if (bmath_absf(font_nscaled->x_scale - 1.f) > 0.01f)
+    if (bmath_absf(font_nscaled->xscale - 1.f) > 0.01f)
         font_nscaled = i_create_font(font->family, font->size, font->style);
 
     i_metrics(font_nscaled);
     cassert(font_nscaled->avg_width > 0);
 
     font_scaled = i_create_font(font_nscaled->family, font_nscaled->size, font_nscaled->style);
-    font_scaled->x_scale = width / font_nscaled->avg_width;
+    font_scaled->xscale = width / font_nscaled->avg_width;
     cassert(font_scaled->osfont == NULL);
     fname = draw2d_font_family(font_scaled->family);
-    font_scaled->osfont = osfont_create(fname, font_scaled->size, width, font_scaled->x_scale, font_scaled->style);
+    font_scaled->osfont = osfont_create(fname, font_scaled->size, width, font_scaled->xscale, font_scaled->style);
 
     if (font_nscaled != font)
         font_destroy(&font_nscaled);
@@ -179,18 +179,18 @@ Font *font_with_xscale(const Font *font, const real32_t scale)
     cassert(scale > 0);
 
     /* The incomming font is scaled */
-    if (bmath_absf(font_nscaled->x_scale - 1.f) > 0.01f)
+    if (bmath_absf(font_nscaled->xscale - 1.f) > 0.01f)
         font_nscaled = i_create_font(font->family, font->size, font->style);
 
     i_metrics(font_nscaled);
     cassert(font_nscaled->avg_width > 0);
 
     font_scaled = i_create_font(font_nscaled->family, font_nscaled->size, font_nscaled->style);
-    font_scaled->x_scale = scale;
+    font_scaled->xscale = scale;
     width = font_nscaled->avg_width * scale;
     cassert(font_scaled->osfont == NULL);
     fname = draw2d_font_family(font_scaled->family);
-    font_scaled->osfont = osfont_create(fname, font_scaled->size, width, font_scaled->x_scale, font_scaled->style);
+    font_scaled->osfont = osfont_create(fname, font_scaled->size, width, font_scaled->xscale, font_scaled->style);
 
     if (font_nscaled != font)
         font_destroy(&font_nscaled);
@@ -217,7 +217,7 @@ bool_t font_equals(const Font *font1, const Font *font2)
         return FALSE;
     if (i_abs(font1->size - font2->size) > 0.0001f)
         return FALSE;
-    if (i_abs(font1->x_scale - font2->x_scale) > 0.01f)
+    if (i_abs(font1->xscale - font2->xscale) > 0.01f)
         return FALSE;
     if (font1->style != font2->style)
         return FALSE;
@@ -260,15 +260,7 @@ real32_t font_height(const Font *font)
 real32_t font_width(const Font *font)
 {
     cassert_no_null(font);
-    if (font->avg_width < 0)
-    {
-        uint32_t len = 0;
-        const char_t *reftext = draw2d_str_avg_char_width(&len);
-        real32_t w, h;
-        font_extents(font, reftext, -1, &w, &h);
-        cast(font, Font)->avg_width = w / len;
-    }
-
+    i_metrics(cast(font, Font));
     return font->avg_width;
 }
 
@@ -277,7 +269,7 @@ real32_t font_width(const Font *font)
 real32_t font_xscale(const Font *font)
 {
     cassert_no_null(font);
-    return font->x_scale;
+    return font->xscale;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -330,14 +322,7 @@ void font_extents(const Font *font, const char_t *text, const real32_t refwidth,
 {
     cassert_no_null(font);
     i_osfont(cast(font, Font));
-    osfont_extents(font->osfont, text, refwidth, width, height);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void font_preferred_monospace(const char_t *family)
-{
-    draw2d_preferred_monospace(family);
+    osfont_extents(font->osfont, text, font->xscale, refwidth, width, height);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -911,7 +911,7 @@ static void i_compute_font_size(const real32_t screen_width, const real32_t scre
     }
 
     if (C_Fonte != NULL)
-        font_preferred_monospace(C_Fonte);
+        draw2d_preferred_monospace(C_Fonte);
 
     /*
      * - Os valores abaixo foram obtidos por via prática, num computador com
@@ -1127,22 +1127,6 @@ static GtNap *i_gtnap_create(void)
 #else
     build_cfg = "Release";
 #endif
-
-    {
-        Font *f = font_monospace(30, 0);
-        Font *f2 = font_with_width(f, 24);
-        Font *f3 = font_with_xscale(f, 1.5f);
-        real32_t w1 = font_width(f);
-        real32_t w2 = font_width(f2);
-        real32_t w3 = font_width(f2);
-        real32_t s1 = font_xscale(f);
-        real32_t s2 = font_xscale(f2);
-        real32_t s3 = font_xscale(f2);
-        font_destroy(&f);
-        font_destroy(&f2);
-        font_destroy(&f3);
-        w1+=1;
-    }
 
     {
         const char_t *debpath = deblib_path();

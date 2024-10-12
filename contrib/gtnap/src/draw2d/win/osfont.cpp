@@ -92,36 +92,6 @@ static void i_metrics(NONCLIENTMETRICS *metrics)
 
 /*---------------------------------------------------------------------------*/
 
-real32_t font_regular_size(void)
-{
-    NONCLIENTMETRICS metrics;
-    i_metrics(&metrics);
-    cassert(metrics.lfMessageFont.lfHeight < 0);
-    return -(real32_t)metrics.lfMessageFont.lfHeight;
-}
-
-/*---------------------------------------------------------------------------*/
-
-real32_t font_small_size(void)
-{
-    NONCLIENTMETRICS metrics;
-    i_metrics(&metrics);
-    cassert(metrics.lfMessageFont.lfHeight < 0);
-    return -(real32_t)(metrics.lfMessageFont.lfHeight + 2);
-}
-
-/*---------------------------------------------------------------------------*/
-
-real32_t font_mini_size(void)
-{
-    NONCLIENTMETRICS metrics;
-    i_metrics(&metrics);
-    cassert(metrics.lfMessageFont.lfHeight < 0);
-    return -(real32_t)(metrics.lfMessageFont.lfHeight + 4);
-}
-
-/*---------------------------------------------------------------------------*/
-
 static int i_font_height(const real32_t size, const uint32_t style)
 {
     int height = 0;
@@ -272,7 +242,7 @@ font_family_t osfont_system(const char_t *family)
 
 /*---------------------------------------------------------------------------*/
 
-void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, real32_t *avg_width, bool_t *monospace)
+void osfont_metrics(const OSFont *font, const real32_t size, const real32_t xscale, real32_t *ascent, real32_t *descent, real32_t *leading, real32_t *cell_size, real32_t *avg_width, bool_t *monospace)
 {
     HWND hwnd = GetDesktopWindow();
     HDC hdc = GetDC(hwnd);
@@ -298,7 +268,7 @@ void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, r
         uint32_t len = 0;
         real32_t w = 0, h = 0;
         const char_t *str = draw2d_str_avg_char_width(&len);
-        osfont_extents(font, str, -1, &w, &h);
+        osfont_extents(font, str, xscale, -1, &w, &h);
         *avg_width = w / len;
     }
 
@@ -321,11 +291,12 @@ void osfont_metrics(const OSFont *font, const real32_t size, real32_t *ascent, r
 
 /*---------------------------------------------------------------------------*/
 
-void osfont_extents(const OSFont *font, const char_t *text, const real32_t refwidth, real32_t *width, real32_t *height)
+void osfont_extents(const OSFont *font, const char_t *text, const real32_t xscale, const real32_t refwidth, real32_t *width, real32_t *height)
 {
     MeasureStr data;
     HGDIOBJ cfont = NULL;
     int ret = 0;
+    unref(xscale);
     data.hdc = GetDC(NULL);
     cfont = SelectObject(data.hdc, (HFONT)font);
     draw2d_extents(&data, draw_word_extents, TRUE, text, refwidth, width, height, MeasureStr);
@@ -340,6 +311,36 @@ const void *osfont_native(const OSFont *font)
 {
     cassert_no_null(font);
     return (HFONT)font;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t font_regular_size(void)
+{
+    NONCLIENTMETRICS metrics;
+    i_metrics(&metrics);
+    cassert(metrics.lfMessageFont.lfHeight < 0);
+    return -(real32_t)metrics.lfMessageFont.lfHeight;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t font_small_size(void)
+{
+    NONCLIENTMETRICS metrics;
+    i_metrics(&metrics);
+    cassert(metrics.lfMessageFont.lfHeight < 0);
+    return -(real32_t)(metrics.lfMessageFont.lfHeight + 2);
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t font_mini_size(void)
+{
+    NONCLIENTMETRICS metrics;
+    i_metrics(&metrics);
+    cassert(metrics.lfMessageFont.lfHeight < 0);
+    return -(real32_t)(metrics.lfMessageFont.lfHeight + 4);
 }
 
 /*---------------------------------------------------------------------------*/

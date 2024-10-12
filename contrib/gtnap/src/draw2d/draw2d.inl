@@ -26,8 +26,6 @@ const char_t *draw2d_monospace_family(const char_t **desired_fonts, const uint32
 
 const char_t *draw2d_get_preferred_monospace(void);
 
-void draw2d_preferred_monospace(const char_t *family);
-
 const char_t *draw2d_str_avg_char_width(uint32_t *len);
 
 __END_C

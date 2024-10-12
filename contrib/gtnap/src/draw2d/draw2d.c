@@ -117,6 +117,14 @@ void draw2d_finish(void)
 
 /*---------------------------------------------------------------------------*/
 
+void draw2d_preferred_monospace(const char_t *family)
+{
+    str_upd(&i_USER_MONOSPACE_FONT_FAMILY, family);
+    str_destopt(&i_MONOSPACE_FONT_FAMILY);
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t draw2d_register_font(const char_t *font_family)
 {
     /* Check if font name is a system font */
@@ -441,18 +449,9 @@ const char_t *draw2d_get_preferred_monospace(void)
 
 /*---------------------------------------------------------------------------*/
 
-void draw2d_preferred_monospace(const char_t *family)
-{
-    str_upd(&i_USER_MONOSPACE_FONT_FAMILY, family);
-    str_destopt(&i_MONOSPACE_FONT_FAMILY);
-}
-
-/*---------------------------------------------------------------------------*/
-
 const char_t *draw2d_str_avg_char_width(uint32_t *len)
 {
     cassert_no_null(len);
     *len = i_AVG_CHAR_WIDTH_LEN;
     return i_AVG_CHAR_WIDTH;
 }
-
