@@ -4440,7 +4440,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          AAddNotEmpty( hbmk[ _HBMK_aOPTCPPX ], gcc_opt_lngcpp_fill( hbmk ) )
          cBin_Dyn := cBin_CompC
          cOpt_Dyn := "-shared -o {OD} {LO} {FD} {IM} {DL} {LS}"
-         IF hbmk[ _HBMK_cCOMP ] == "clang"
+         IF "--script-mingw" $ GetEnv("HB_USER_FIXES")
+            cOpt_Dyn += "{SCRIPT_MINGW}"
+         ELSEIF hbmk[ _HBMK_cCOMP ] == "clang"
             cOpt_Dyn += "{SCRIPT}{ESCAPE_BS}"
          ELSEIF ! hbmk[ _HBMK_cCOMP ] == "tcc"
             cOpt_Dyn += "{SCRIPT_MINGW}"

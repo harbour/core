@@ -234,6 +234,11 @@ HB_FUNC( HB_OSISWIN10 )
    hb_retl( hb_iswin10() );
 }
 
+HB_FUNC( HB_OSISWIN11 )
+{
+   hb_retl( hb_iswin11() );
+}
+
 HB_FUNC( HB_OSISWINCE )
 {
    hb_retl( hb_iswince() );

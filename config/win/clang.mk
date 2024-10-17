@@ -88,14 +88,14 @@ endif
 
 TMPSPEC := @__dyn__.tmp
 
-# setting HB_USER_DFLAGS=--mingw-script[...]
+# setting HB_USER_FIXES=--mingw-script[...]
 # may help to workaround if old clang + MinGW linker is in use,
 # build may fail either with too long command line or unrecognized argument
-ifneq ($(filter --mingw-script, $(HB_USER_DFLAGS)),)
-   HB_USER_DFLAGS := $(subst --mingw-script,,$(HB_USER_DFLAGS))
+ifneq ($(filter --mingw-script, $(HB_USER_FIXES)),)
    # NOTE: The empty line directly before 'endef' HAS TO exist!
    override define dynlib_object
       @$(ECHO) $(ECHOQUOTE)INPUT($(subst \,/,$(file)))$(ECHOQUOTE) >> __dyn__.tmp
+
    endef
    TMPSPEC := __dyn__.tmp
 endif

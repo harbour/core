@@ -14,12 +14,15 @@ jobs:
         compiler:
           - bcc
           - mingw64
+          - clang
         cpu:
           - x86
           - x86_64
         exclude:
           - compiler: bcc
             cpu: x86_64
+          - compiler: clang
+            cpu: x86
         strictness:
           - "normal"
           - "strict"
@@ -37,6 +40,9 @@ jobs:
               (x86_64) echo MINGWxx="MINGW64"
                        echo "msys_cpu=${{matrix.cpu}}" ;;
             esac
+            case ${{matrix.compiler}} in
+              (clang)  echo MINGWxx="CLANG64" ;;
+            esac
           } >> $GITHUB_ENV
 
       - name: Install packages
@@ -44,6 +50,7 @@ jobs:
         with:
           msystem: ${{ env.MINGWxx }}
           location: d:/
+          update: true
           install: >
             mingw-w64-${{ env.msys_cpu }}-ccache
             mingw-w64-${{ env.msys_cpu }}-gcc
@@ -52,16 +59,21 @@ jobs:
             mingw-w64-${{ env.msys_cpu }}-bzip2
             mingw-w64-${{ env.msys_cpu }}-cairo
             mingw-w64-${{ env.msys_cpu }}-curl
-            mingw-w64-${{ env.msys_cpu }}-firebird2-git
             mingw-w64-${{ env.msys_cpu }}-libgd
             mingw-w64-${{ env.msys_cpu }}-ghostscript
-            mingw-w64-${{ env.msys_cpu }}-libmariadbclient
             mingw-w64-${{ env.msys_cpu }}-openssl
-            mingw-w64-${{ env.msys_cpu }}-postgresql
             mingw-w64-${{ env.msys_cpu }}-qt5-base
 
           # Dependencies for disabled contribs:
           #  mingw-w64-${{ env.msys_cpu }}-freeimage
+
+      - name: 'Add packages available on 64-bit hosts only'
+        if: matrix.cpu != 'x86'
+        shell: msys2 {0}
+        run: |
+          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-postgresql
+          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-libmariadbclient
+          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-firebird
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -87,6 +99,17 @@ jobs:
           set -ex
           HB_USER_CFLAGS=""
           HB_USER_LDFLAGS=""
+
+          case ${{matrix.compiler}} in
+            (clang)
+               pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-clang
+               PATH="$PATH:/mingw64/bin/"
+               tee ./.bashrc <<EOMCLPTH
+          export PATH="\$PATH:/mingw64/bin/" # add ccache location
+          EOMCLPTH
+               ;;
+          esac
+
           case ${{matrix.strictness}} in
             normal) ;;
             strict) case ${{matrix.compiler}} in
@@ -95,7 +118,7 @@ jobs:
                       (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror -Wno-error=deprecated-declarations" ;;
                     esac ;;
           esac
-          tee ./.bashrc <<EOENV
+          tee -a ./.bashrc <<EOENV
           # These contribs do not build on any platform
           export HB_BUILD_CONTRIBS="no hbfimage"  # incompatible with freeimage 3.18+
 
