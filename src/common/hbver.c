@@ -414,7 +414,15 @@ static void s_hb_winVerInit( void )
                memory, though build number is there only on Win10 and up.
                https://www.geoffchappell.com/studies/windows/km/ntoskrnl/inc/api/ntexapi_x/kuser_shared_data/index.htm */
 
-      s_iWinNT = ( int ) * ( PULONG ) ( 0x7FFE0000 + 0x0260 );
+      MEMORY_BASIC_INFORMATION minfo;
+      minfo.Protect = 0;
+      if( VirtualQuery( ( void * ) 0x7FFE0000, &minfo, sizeof( minfo ) ) &&
+          ( minfo.Protect & ( PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY |
+            PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY ) ) &&
+          ! ( minfo.Protect & ( PAGE_GUARD | PAGE_NOACCESS ) ) )
+         s_iWinNT = ( int ) * ( PULONG ) ( 0x7FFE0000 + 0x0260 );
+      else
+         s_iWinNT = 1; /* unknown NT emulator */
 
       /* COMPAT: this seems much simpler than dyn-calling GetVersionEx
                  or WDK RtlGetVersion (having in mind deprecation warnings,
