@@ -11,6 +11,7 @@
 #include <draw2d/drawg.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
+#include <core/strings.h>
 #include <sewer/bmem.h>
 #include <sewer/cassert.h>
 
@@ -285,6 +286,25 @@ void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col,
 
 /*---------------------------------------------------------------------------*/
 
+void dlayout_add_label(DLayout *layout, DLabel *label, const uint32_t col, const uint32_t row)
+{
+    uint32_t i, ncols = 0;
+    DCell *cell = NULL;
+    cassert_no_null(layout);
+    cassert_no_null(label);
+    ncols = arrst_size(layout->cols, DColumn);
+    i = row * ncols + col;
+    cell = arrst_get(layout->cells, i, DCell);
+    i_remove_cell(cell);
+    i_init_empty_cell(cell);
+    cell->type = ekCELL_TYPE_LABEL;
+    cell->content.label = label;
+    cell->valign = ekLEFT;
+    cell->halign = ekCENTER;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static color_t i_color(void)
 {
     static uint32_t index = 0;
@@ -361,10 +381,14 @@ Layout *dlayout_gui_layout(const DLayout *layout)
                 case ekCELL_TYPE_EMPTY:
                     break;
 
-                /* TODO */
                 case ekCELL_TYPE_LABEL:
-                    cassert(FALSE);
+                {
+                    DLabel *dlabel = cells->content.label;
+                    Label *glabel = label_create();
+                    label_text(glabel, tc(dlabel->text));
+                    layout_label(glayout, glabel, i, j);
                     break;
+                }
 
                 case ekCELL_TYPE_LAYOUT:
                 {
@@ -467,9 +491,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                 case ekCELL_TYPE_EMPTY:
                     break;
 
-                /* TODO */
                 case ekCELL_TYPE_LABEL:
-                    cassert(FALSE);
                     break;
 
                 case ekCELL_TYPE_LAYOUT:
@@ -668,8 +690,7 @@ void dlayout_draw(const DLayout *layout, const DSelect *sel, DCtx *ctx)
         case ekCELL_TYPE_EMPTY:
             break;
         case ekCELL_TYPE_LABEL:
-            /* TODO */
-            cassert(FALSE);
+            draw_text(ctx, tc(cell->content.label->text), cell->rect.pos.x, cell->rect.pos.y);
             break;
         case ekCELL_TYPE_LAYOUT:
             dlayout_draw(cell->content.layout, sel, ctx);

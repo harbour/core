@@ -2,6 +2,7 @@
 
 #include "dform.h"
 #include "dlayout.h"
+#include "dlabel.h"
 #include <gui/panel.h>
 #include <geom2d/v2d.h>
 #include <core/dbind.h>
@@ -24,6 +25,9 @@ DForm *dform_first_example(void)
     DLayout *layout1 = dlayout_create(2, 6);
     DLayout *layout2 = dlayout_create(1, 4);
     DLayout *layout3 = dlayout_create(2, 1);
+    DLabel *label = dlabel_create();
+    dlabel_text(label, "This is a label");
+    //dlayout_add_label(layout1, label, 0, 0);
     dlayout_add_layout(layout3, layout1, 0, 0);
     dlayout_add_layout(layout3, layout2, 1, 0);
     dlayout_margin_col(layout1, 0, 5);

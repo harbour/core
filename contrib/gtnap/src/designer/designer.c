@@ -370,7 +370,7 @@ static void i_init_forms(App *app)
     cassert_no_null(app);
     cassert(app->form == NULL);
     app->form = dform_first_example();
-    panel = dform_panel(app->form);
+    panel = dform_panel(app->form);   
     layout_panel_replace(app->canvas_layout, panel, 0, 1);
     dform_synchro_visual(app->form);
 }
