@@ -1735,7 +1735,10 @@ static bool_t i_line_expand(real32_t *size, const uint32_t di, Cell **cell, cons
 
         /* A col/row can not be narrowed below what is allowed in a cell. */
         if (cell[i]->dim[di].size > *size)
+        {
             *size = cell[i]->dim[di].size;
+            return FALSE;
+        }
     }
 
     return TRUE;
@@ -1754,7 +1757,9 @@ void _layout_expand(Layout *layout, const uint32_t di, const real32_t current_si
 
     arrst_foreach(edim, layout->lines_dim[di], i_LineDim)
         while (i_line_expand(&edim->size, di, cells, layout->dim_num_elems[di]) == FALSE)
-            ;
+        {
+        }
+
         *final_size += edim->size;
         *final_size += edim->margin;
         cells += layout->dim_num_elems[di];

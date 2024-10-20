@@ -241,7 +241,7 @@ static void i_OnSize(App *app, Event *e)
 
 static Layout *i_canvas_layout(App *app)
 {
-    Layout *layout = layout_create(1, 2);
+    Layout *layout = layout_create(1, 1);
     View *view = view_scroll();
     view_size(view, s2df(450, 200));
     view_OnDraw(view, listener(app, i_OnDraw, App));
@@ -366,12 +366,10 @@ static App *i_app(void)
 
 static void i_init_forms(App *app)
 {
-    Panel *panel = NULL;
     cassert_no_null(app);
     cassert(app->form == NULL);
     app->form = dform_first_example();
-    panel = dform_panel(app->form);
-    layout_panel_replace(app->canvas_layout, panel, 0, 1);
+    dform_compose(app->form);
     dform_synchro_visual(app->form);
 }
 

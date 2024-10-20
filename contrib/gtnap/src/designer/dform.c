@@ -4,7 +4,9 @@
 #include "dlayout.h"
 #include "dlabel.h"
 #include <gui/panel.h>
+#include <gui/panel.inl>
 #include <geom2d/v2d.h>
+#include <geom2d/s2d.h>
 #include <core/dbind.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -25,8 +27,8 @@ DForm *dform_first_example(void)
     DLayout *layout1 = dlayout_create(2, 6);
     DLayout *layout2 = dlayout_create(1, 4);
     DLayout *layout3 = dlayout_create(2, 1);
-    DLabel *label = dlabel_create();
-    dlabel_text(label, "This is a label");
+    //DLabel *label = dlabel_create();
+    //dlabel_text(label, "This is a label");
     //dlayout_add_label(layout1, label, 0, 0);
     dlayout_add_layout(layout3, layout1, 0, 0);
     dlayout_add_layout(layout3, layout2, 1, 0);
@@ -55,21 +57,28 @@ void dform_destroy(DForm **form)
     cassert_no_null(form);
     cassert_no_null(*form);
     dlayout_destroy(&(*form)->dlayout);
-    /* Layout and Panel will be destroyed in host window */
+
+    if ((*form)->panel != NULL)
+    {
+        cassert((*form)->layout != NULL);
+        _panel_destroy(&(*form)->panel);
+    }
+
     heap_delete(form, DForm);
 }
 
 /*---------------------------------------------------------------------------*/
 
-Panel *dform_panel(DForm *form)
+void dform_compose(DForm *form)
 {
+    S2Df fsize = kS2D_ZEROf;
     cassert_no_null(form);
     cassert(form->layout == NULL);
     cassert(form->panel == NULL);
     form->layout = dlayout_gui_layout(form->dlayout);
     form->panel = panel_create();
     panel_layout(form->panel, form->layout);
-    return form->panel;
+    _panel_compose(form->panel, NULL, &fsize);
 }
 
 /*---------------------------------------------------------------------------*/
