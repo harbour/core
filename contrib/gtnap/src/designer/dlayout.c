@@ -2,7 +2,9 @@
 
 #include "dlayout.h"
 #include <gui/label.h>
+#include <gui/labelh.h>
 #include <gui/layout.h>
+#include <gui/cell.h>
 #include <gui/layouth.h>
 #include <geom2d/r2d.h>
 #include <geom2d/v2d.h>
@@ -14,6 +16,9 @@
 #include <core/strings.h>
 #include <sewer/bmem.h>
 #include <sewer/cassert.h>
+
+static real32_t i_EMPTY_CELL_WIDTH = 40;
+static real32_t i_EMPTY_CELL_HEIGHT = 20;
 
 /*---------------------------------------------------------------------------*/
 
@@ -377,14 +382,18 @@ Layout *dlayout_gui_layout(const DLayout *layout)
         {
             for(i = 0; i < ncols; ++i)
             {
+                Cell *gcell = layout_cell(glayout, i, j);
+
                 switch(cells->type) {
                 case ekCELL_TYPE_EMPTY:
+                    cell_force_size(gcell, i_EMPTY_CELL_WIDTH, i_EMPTY_CELL_HEIGHT);
                     break;
 
                 case ekCELL_TYPE_LABEL:
                 {
                     DLabel *dlabel = cells->content.label;
                     Label *glabel = label_create();
+                    cell_force_size(gcell, 0, 0);
                     label_text(glabel, tc(dlabel->text));
                     layout_label(glayout, glabel, i, j);
                     break;
@@ -393,6 +402,7 @@ Layout *dlayout_gui_layout(const DLayout *layout)
                 case ekCELL_TYPE_LAYOUT:
                 {
                     Layout *gsublayout = dlayout_gui_layout(cells->content.layout);
+                    cell_force_size(gcell, 0, 0);
                     layout_layout(glayout, gsublayout, i, j);
                     break;
                 }
@@ -667,13 +677,18 @@ static R2Df i_get_rect(const DLayout *layout, const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
-void dlayout_draw(const DLayout *layout, const DSelect *sel, DCtx *ctx)
+void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *sel, DCtx *ctx)
 {
+    uint32_t ncols, nrows, i, j;
+    const DCell *cell = NULL;
     cassert_no_null(layout);
     cassert_no_null(sel);
 
-    draw_fill_color(ctx, kCOLOR_BLACK);
+    ncols = arrst_size(layout->cols, DColumn); 
+    nrows = arrst_size(layout->rows, DRow); 
+    cell = arrst_all_const(layout->cells, DCell);
 
+    draw_fill_color(ctx, kCOLOR_BLACK);
     draw_r2df(ctx, ekFILL, &layout->rect_left);
     draw_r2df(ctx, ekFILL, &layout->rect_top);
 
@@ -685,18 +700,33 @@ void dlayout_draw(const DLayout *layout, const DSelect *sel, DCtx *ctx)
         draw_r2df(ctx, ekFILL, &row->margin_rect);
     arrst_end()
 
-    arrst_foreach_const(cell, layout->cells, DCell)
-        switch(cell->type) {
-        case ekCELL_TYPE_EMPTY:
-            break;
-        case ekCELL_TYPE_LABEL:
-            draw_text(ctx, tc(cell->content.label->text), cell->rect.pos.x, cell->rect.pos.y);
-            break;
-        case ekCELL_TYPE_LAYOUT:
-            dlayout_draw(cell->content.layout, sel, ctx);
-            break;
+    for (j = 0; j < nrows; ++j)
+    {
+        for (i = 0; i < ncols; ++i)
+        {
+            Cell *gcell = layout_cell(cast(glayout, Layout), i, j);
+            switch(cell->type) {
+            case ekCELL_TYPE_EMPTY:
+                break;
+            case ekCELL_TYPE_LABEL:
+            {
+                const Label *glabel = cell_label(gcell);
+                const Font *gfont = label_get_font(glabel);
+                draw_font(ctx, gfont);
+                draw_text(ctx, tc(cell->content.label->text), cell->rect.pos.x, cell->rect.pos.y);
+                break;
+            }
+            case ekCELL_TYPE_LAYOUT:
+            {
+                Layout *chid_glayout = cell_layout(gcell);
+                dlayout_draw(cell->content.layout, chid_glayout, sel, ctx);
+                break;
+            }
+            }
+
+            cell += 1;
         }
-    arrst_end()
+    }
 
     /* This layout has a selected element */
     if (sel->layout == layout)

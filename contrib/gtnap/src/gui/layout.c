@@ -1572,8 +1572,18 @@ static void i_line_compose(i_LineDim *dim, const uint32_t di, Cell **cell, const
                 }
                 else
                 {
-                    if (cell[i]->dim[di].size > forced_size)
+                    switch (cell[i]->type)
+                    {
+                    case i_ekCOMPONENT:
+                    case i_ekLAYOUT:
+                        if (cell[i]->dim[di].size > forced_size)
+                            cell[i]->dim[di].size = forced_size;
+                        break;
+
+                    case i_ekEMPTY:
                         cell[i]->dim[di].size = forced_size;
+                        break;
+                    }
                 }
             }
         }
@@ -2331,6 +2341,15 @@ void cell_padding4(Cell *cell, const real32_t pt, const real32_t pr, const real3
     cell->dim[0].padding_before = pr;
     cell->dim[1].padding_after = pt;
     cell->dim[1].padding_before = pb;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void cell_force_size(Cell *cell, const real32_t width, const real32_t height)
+{
+    cassert_no_null(cell);
+    cell->dim[0].forced_size = width;
+    cell->dim[1].forced_size = height;
 }
 
 /*---------------------------------------------------------------------------*/

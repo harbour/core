@@ -208,6 +208,14 @@ void label_font(Label *label, const Font *font)
 
 /*---------------------------------------------------------------------------*/
 
+const Font *label_get_font(const Label *label)
+{
+    cassert_no_null(label);
+    return label->font;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void label_style_over(Label *label, const uint32_t fstyle)
 {
     cassert_no_null(label);

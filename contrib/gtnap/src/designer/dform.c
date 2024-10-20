@@ -27,9 +27,12 @@ DForm *dform_first_example(void)
     DLayout *layout1 = dlayout_create(2, 6);
     DLayout *layout2 = dlayout_create(1, 4);
     DLayout *layout3 = dlayout_create(2, 1);
-    //DLabel *label = dlabel_create();
-    //dlabel_text(label, "This is a label");
-    //dlayout_add_label(layout1, label, 0, 0);
+    DLabel *label1 = dlabel_create();
+    DLabel *label2 = dlabel_create();
+    dlabel_text(label1, "This is a label");
+    dlabel_text(label2, "And other");
+    dlayout_add_label(layout1, label1, 0, 0);
+    dlayout_add_label(layout1, label2, 1, 0);
     dlayout_add_layout(layout3, layout1, 0, 0);
     dlayout_add_layout(layout3, layout2, 1, 0);
     dlayout_margin_col(layout1, 0, 5);
@@ -141,5 +144,5 @@ bool_t dform_OnExit(DForm *form)
 void dform_draw(const DForm *form, DCtx *ctx)
 {
     cassert_no_null(form);
-    dlayout_draw(form->dlayout, &form->select, ctx);
+    dlayout_draw(form->dlayout, form->layout, &form->select, ctx);
 }
