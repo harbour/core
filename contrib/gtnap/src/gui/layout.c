@@ -1643,12 +1643,28 @@ static void i_dimension_resize(ArrSt(i_LineDim) *dim, const real32_t current_siz
         else
             increment = bmath_roundf(diff * edim->resize_percent);
 
-        edim->size += increment;
-        total += increment;
+        /* 
+         * In borderline cases, with diff approx to 0, it may be that 
+         * the distribution of pixels between cells exceeds the required amount,
+         * due to rounding errors. This can cause an infinite recursion and 
+         * overflow in i_line_expand(), by having cells with size < 0.
+         */
+        if (diff > 0 && total + increment > diff)
+            increment = diff - total;
+        else if (diff < 0 && total + increment < diff)
+            increment = diff - total;
 
-        if (edim->size < 0)
+        /* 
+         * This is an extreme case. The cell (width or height) cannot be 
+         * reduced to less than 0 pixels. This can occur when there are 
+         * many empty cells.
+         */
+        if (edim->size + increment > 0)
+            edim->size += increment;
+        else 
             edim->size = 0;
 
+        total += increment;
         cassert(edim->size >= 0);
     arrst_end()
 
@@ -1719,10 +1735,7 @@ static bool_t i_line_expand(real32_t *size, const uint32_t di, Cell **cell, cons
 
         /* A col/row can not be narrowed below what is allowed in a cell. */
         if (cell[i]->dim[di].size > *size)
-        {
             *size = cell[i]->dim[di].size;
-            return FALSE;
-        }
     }
 
     return TRUE;
@@ -1734,6 +1747,7 @@ void _layout_expand(Layout *layout, const uint32_t di, const real32_t current_si
 {
     Cell **cells = NULL;
     cassert_no_null(layout);
+
     i_dimension_resize(layout->lines_dim[di], current_size, required_size);
     cells = arrpt_all(layout->cells_dim[di], Cell);
     *final_size = 0.f;
