@@ -15,7 +15,7 @@ struct _dform_t
 {
     DLayout *dlayout;
     Layout *layout;
-    DSelect select;
+    DSelect hover;
     Panel *panel;
 };
 
@@ -119,8 +119,8 @@ bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
     DSelect sel;
     bool_t equ = TRUE;
     dlayout_elem_at_pos(form->dlayout, mouse_x, mouse_y, &sel);
-    equ = i_sel_equ(&form->select, &sel);
-    form->select = sel;
+    equ = i_sel_equ(&form->hover, &sel);
+    form->hover = sel;
     return !equ;
 }
 
@@ -134,15 +134,15 @@ bool_t dform_OnExit(DForm *form)
     sel.elem = ENUM_MAX(layelem_t);
     sel.col = UINT32_MAX;
     sel.row = UINT32_MAX;
-    equ = i_sel_equ(&form->select, &sel);
-    form->select = sel;
+    equ = i_sel_equ(&form->hover, &sel);
+    form->hover = sel;
     return !equ;
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dform_draw(const DForm *form, DCtx *ctx)
+void dform_draw(const DForm *form, const Image *add_icon, DCtx *ctx)
 {
     cassert_no_null(form);
-    dlayout_draw(form->dlayout, form->layout, &form->select, ctx);
+    dlayout_draw(form->dlayout, form->layout, &form->hover, NULL, add_icon, ctx);
 }

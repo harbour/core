@@ -17,6 +17,12 @@ struct _app_t
 
     View *canvas;
     Layout *canvas_layout;
+    Layout *main_layout;
+
+    /* GUI Bindings */
+    uint8_t sel_widget;
+
+    Image *add_icon;
 
     /* Editing forms */
     DForm *form;
@@ -52,6 +58,9 @@ static void i_dbind(void)
     dbind(DCellContent, DLabel*, label);
     dbind(DCellContent, DLayout*, layout);
     dbind(DCell, DCellContent, content);
+
+    /* GUI */
+    dbind(App, uint8_t, sel_widget);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -99,7 +108,7 @@ static Layout *i_widgets_layout(App *app)
     Button *radio4 = button_radio();
     Button *radio5 = button_radio();
     Button *radio6 = button_radio();
-    button_text(radio1, "None");
+    button_text(radio1, "Select");
     button_text(radio2, "Grid layout");
     button_text(radio3, "Label");
     button_text(radio4, "Button");
@@ -115,7 +124,7 @@ static Layout *i_widgets_layout(App *app)
     layout_vmargin(layout, 1, 5);
     layout_vmargin(layout, 2, 5);
     layout_vmargin(layout, 3, 5);
-    layout_vmargin(layout, 4, 5);
+    layout_vmargin(layout, 4, 5);    
     unref(app);
     return layout;
 }
@@ -151,11 +160,11 @@ static Layout *i_left_layout(App *app)
     layout_layout(layout1, layout2, 0, 3);
 
     layout_valign(layout1, 0, 3, ekTOP);
-
     layout_vmargin(layout1, 1, 5);
     layout_vmargin(layout1, 2, 5);
-
     layout_vexpand2(layout1, 1, 4, .75f);
+
+    cell_dbind(layout_cell(layout1, 0, 3), App, uint8_t, sel_widget);
 
     return layout1;
 }
@@ -194,7 +203,7 @@ static void i_OnDraw(App *app, Event *e)
 
     if (app->form != NULL)
     {
-        dform_draw(app->form, p->ctx);
+        dform_draw(app->form, app->add_icon, p->ctx);
     }
     //draw_font(p->ctx, font);
     //draw_text(p->ctx, "--> CANVAS <--", 0, 0);
@@ -330,7 +339,6 @@ static Layout *i_main_layout(App *app, ResPack *pack)
 
     /* A border margin for all layout edges */
     layout_margin(layout1, 5);
-
     return layout1;
 }
 
@@ -340,6 +348,7 @@ static Panel *i_panel(App *app, ResPack *pack)
 {
     Panel *panel = panel_create();
     Layout *layout = i_main_layout(app, pack);
+    app->main_layout = layout;
     panel_layout(panel, layout);
     return panel;
 }
@@ -355,10 +364,12 @@ static void i_OnClose(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static App *i_app(void)
+static App *i_app(ResPack *pack)
 {
     App *app = heap_new0(App);
     i_dbind();
+    app->sel_widget = 0;
+    app->add_icon = image_copy(image_from_resource(pack, PLUS16_PNG));
     return app;
 }
 
@@ -377,8 +388,8 @@ static void i_init_forms(App *app)
 
 static App *i_create(void)
 {
-    App *app = i_app();
     ResPack *pack = res_designer_respack("");
+    App *app = i_app(pack);
     Panel *panel = i_panel(app, pack);
     app->window = window_create(ekWINDOW_STDRES);
     window_panel(app->window, panel);
@@ -386,6 +397,8 @@ static App *i_create(void)
     window_origin(app->window, v2df(500, 200));
     window_OnClose(app->window, listener(app, i_OnClose, App));
     window_show(app->window);
+    layout_dbind(app->main_layout, NULL, App);
+    layout_dbind_obj(app->main_layout, app, App);
     respack_destroy(&pack);
     i_init_forms(app);
     return app;
@@ -397,6 +410,7 @@ static void i_destroy(App **app)
 {
     cassert_no_null(app);
     cassert_no_null(*app);
+    image_destroy(&(*app)->add_icon);
     dform_destroy(&(*app)->form);
     window_destroy(&(*app)->window);
     heap_delete(app, App);

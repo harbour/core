@@ -5,12 +5,14 @@
 #include <gui/labelh.h>
 #include <gui/layout.h>
 #include <gui/cell.h>
+#include <gui/drawctrl.inl>
 #include <gui/layouth.h>
 #include <geom2d/r2d.h>
 #include <geom2d/v2d.h>
 #include <draw2d/color.h>
 #include <draw2d/draw.h>
 #include <draw2d/drawg.h>
+#include <draw2d/image.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
 #include <core/strings.h>
@@ -677,49 +679,71 @@ static R2Df i_get_rect(const DLayout *layout, const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
-void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *sel, DCtx *ctx)
+static bool_t i_is_cell_sel(const DSelect *sel, const DLayout *layout, const uint32_t col, const uint32_t row)
+{
+    cassert_no_null(sel);
+    if (sel->layout != layout)
+        return FALSE;
+    if (sel->elem != ekLAYELEM_CELL)
+        return FALSE;
+    if (sel->col != col)
+        return FALSE;
+    if (sel->row != row)
+        return FALSE;
+    return TRUE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *hover, const DSelect *sel, const Image *add_icon, DCtx *ctx)
 {
     uint32_t ncols, nrows, i, j;
     const DCell *cell = NULL;
     cassert_no_null(layout);
-    cassert_no_null(sel);
+    cassert_no_null(hover);
 
     ncols = arrst_size(layout->cols, DColumn); 
     nrows = arrst_size(layout->rows, DRow); 
     cell = arrst_all_const(layout->cells, DCell);
 
+    draw_line_color(ctx, kCOLOR_BLACK);
     draw_fill_color(ctx, kCOLOR_BLACK);
-    draw_r2df(ctx, ekFILL, &layout->rect_left);
-    draw_r2df(ctx, ekFILL, &layout->rect_top);
+    draw_r2df(ctx, ekSTROKE, &layout->rect);
+    //draw_r2df(ctx, ekFILL, &layout->rect_left);
+    //draw_r2df(ctx, ekFILL, &layout->rect_top);
 
-    arrst_foreach_const(col, layout->cols, DColumn)
-        draw_r2df(ctx, ekFILL, &col->margin_rect);
-    arrst_end()
+    //arrst_foreach_const(col, layout->cols, DColumn)
+    //    draw_r2df(ctx, ekFILL, &col->margin_rect);
+    //arrst_end()
 
-    arrst_foreach_const(row, layout->rows, DRow)
-        draw_r2df(ctx, ekFILL, &row->margin_rect);
-    arrst_end()
+    //arrst_foreach_const(row, layout->rows, DRow)
+    //    draw_r2df(ctx, ekFILL, &row->margin_rect);
+    //arrst_end()
 
     for (j = 0; j < nrows; ++j)
     {
         for (i = 0; i < ncols; ++i)
         {
             Cell *gcell = layout_cell(cast(glayout, Layout), i, j);
+            draw_r2df(ctx, ekSTROKE, &cell->rect);
             switch(cell->type) {
             case ekCELL_TYPE_EMPTY:
                 break;
             case ekCELL_TYPE_LABEL:
             {
+                color_t color = i_is_cell_sel(hover, layout, i, j) ? kCOLOR_RED : kCOLOR_BLACK;
                 const Label *glabel = cell_label(gcell);
                 const Font *gfont = label_get_font(glabel);
                 draw_font(ctx, gfont);
-                draw_text(ctx, tc(cell->content.label->text), cell->rect.pos.x, cell->rect.pos.y);
+                draw_text_color(ctx, color);
+                drawctrl_text(ctx, tc(cell->content.label->text), (int32_t)cell->rect.pos.x, (int32_t)cell->rect.pos.y, ekCTRL_STATE_NORMAL);
+                //draw_text(ctx, tc(cell->content.label->text), cell->rect.pos.x, cell->rect.pos.y);
                 break;
             }
             case ekCELL_TYPE_LAYOUT:
             {
                 Layout *chid_glayout = cell_layout(gcell);
-                dlayout_draw(cell->content.layout, chid_glayout, sel, ctx);
+                dlayout_draw(cell->content.layout, chid_glayout, hover, sel, add_icon, ctx);
                 break;
             }
             }
@@ -729,10 +753,30 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *s
     }
 
     /* This layout has a selected element */
-    if (sel->layout == layout)
+    if (hover->layout == layout)
     {
-        R2Df rect = i_get_rect(layout, sel);
-        draw_fill_color(ctx, kCOLOR_RED);
-        draw_r2df(ctx, ekFILL, &rect);
+        R2Df rect = i_get_rect(layout, hover);
+        if (hover->elem != ekLAYELEM_CELL)
+        {
+            draw_line_color(ctx, kCOLOR_RED);
+            draw_r2df(ctx, ekSTROKE, &rect);
+            //draw_fill_color(ctx, kCOLOR_RED);
+            //draw_r2df(ctx, ekFILL, &rect);
+        }
+        else
+        {
+            uint32_t pos = hover->row * ncols + hover->col;
+            const DCell *dcell = arrst_get_const(layout->cells, pos, DCell);
+            draw_line_color(ctx, kCOLOR_RED);
+            draw_r2df(ctx, ekSTROKE, &rect);
+            if (dcell->type == ekCELL_TYPE_EMPTY)
+            {
+                uint32_t iw = image_width(add_icon);
+                uint32_t ih = image_height(add_icon);
+                real32_t x = rect.pos.x + (rect.size.width - iw) / 2;
+                real32_t y = rect.pos.y + (rect.size.height - ih) / 2;
+                draw_image(ctx, add_icon, x, y);
+            }
+        }
     }
 }
