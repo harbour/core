@@ -752,7 +752,7 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
         }
     }
 
-    /* This layout has a selected element */
+    /* This layout has the hover element */
     if (hover->layout == layout)
     {
         R2Df rect = i_get_rect(layout, hover);
@@ -778,5 +778,25 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
                 draw_image(ctx, add_icon, x, y);
             }
         }
+    }
+
+    /* This layout has the selected element */
+    if (sel->layout == layout)
+    {
+        R2Df rect = i_get_rect(layout, sel);
+        real32_t rsize = 5;
+        real32_t x1 = rect.pos.x;
+        real32_t x2 = rect.pos.x + rect.size.width;
+        real32_t y1 = rect.pos.y;
+        real32_t y2 = rect.pos.y + rect.size.height;
+        draw_fill_color(ctx, color_rgb(0, 40, 85));
+        draw_rect(ctx, ekFILL, x1, y1, rsize, rsize);
+        draw_rect(ctx, ekFILL, x2 - rsize, y1, rsize, rsize);
+        draw_rect(ctx, ekFILL, x1, y2 - rsize, rsize, rsize);
+        draw_rect(ctx, ekFILL, x2 - rsize, y2 - rsize, rsize, rsize);
+        draw_rect(ctx, ekFILL, (x1 + x2 - rsize) / 2, y1, rsize, rsize);
+        draw_rect(ctx, ekFILL, (x1 + x2 - rsize) / 2, y2 - rsize, rsize, rsize);
+        draw_rect(ctx, ekFILL, x1, (y1 + y2 - rsize) / 2, rsize, rsize);
+        draw_rect(ctx, ekFILL, x2 - rsize, (y1 + y2 - rsize) / 2, rsize, rsize);
     }
 }

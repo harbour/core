@@ -16,6 +16,7 @@ struct _dform_t
     DLayout *dlayout;
     Layout *layout;
     DSelect hover;
+    DSelect sel;
     Panel *panel;
 };
 
@@ -116,12 +117,32 @@ static bool_t i_sel_equ(const DSelect *sel1, const DSelect *sel2)
 
 bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
 {
-    DSelect sel;
+    DSelect hover;
     bool_t equ = TRUE;
-    dlayout_elem_at_pos(form->dlayout, mouse_x, mouse_y, &sel);
-    equ = i_sel_equ(&form->hover, &sel);
-    form->hover = sel;
+    dlayout_elem_at_pos(form->dlayout, mouse_x, mouse_y, &hover);
+    equ = i_sel_equ(&form->hover, &hover);
+    form->hover = hover;
     return !equ;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t dform_OnClick(DForm *form, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
+{
+    if (button == ekGUI_MOUSE_LEFT)
+    {
+        DSelect sel;
+        bool_t equ = TRUE;
+        dlayout_elem_at_pos(form->dlayout, mouse_x, mouse_y, &sel);
+        cassert(i_sel_equ(&form->hover, &sel) == TRUE);
+        equ = i_sel_equ(&form->sel, &sel);
+        form->sel = sel;
+        return !equ;
+    }
+    else
+    {
+        return FALSE;
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -144,5 +165,5 @@ bool_t dform_OnExit(DForm *form)
 void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon, DCtx *ctx)
 {
     cassert_no_null(form);
-    dlayout_draw(form->dlayout, form->layout, &form->hover, NULL, swidget, add_icon, ctx);
+    dlayout_draw(form->dlayout, form->layout, &form->hover, &form->sel, swidget, add_icon, ctx);
 }

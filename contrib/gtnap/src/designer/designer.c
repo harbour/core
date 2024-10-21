@@ -242,6 +242,19 @@ static void i_OnExit(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnClick(App *app, Event *e)
+{
+    cassert_no_null(app);
+    if (app->form != NULL)
+    {
+        const EvMouse *p = event_params(e, EvMouse);
+        if (dform_OnClick(app->form, p->x, p->y, p->button) == TRUE)
+            view_update(app->canvas);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnSize(App *app, Event *e)
 {       
     cassert_no_null(app);
@@ -260,6 +273,7 @@ static Layout *i_canvas_layout(App *app)
     view_OnDraw(view, listener(app, i_OnDraw, App));
     view_OnMove(view, listener(app, i_OnMove, App));
     view_OnExit(view, listener(app, i_OnExit, App));
+    view_OnClick(view, listener(app, i_OnClick, App));
     view_OnSize(view, listener(app, i_OnSize, App));
     layout_view(layout, view, 0, 0);
     app->canvas = view;
