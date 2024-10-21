@@ -38,4 +38,4 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
 
 void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t y, DSelect *sel);
 
-void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *hover, const DSelect *sel, const Image *add_icon, DCtx *ctx);
+void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *hover, const DSelect *sel, const widget_t swidget, const Image *add_icon, DCtx *ctx);

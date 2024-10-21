@@ -20,8 +20,7 @@ struct _app_t
     Layout *main_layout;
 
     /* GUI Bindings */
-    uint8_t sel_widget;
-
+    widget_t swidget;
     Image *add_icon;
 
     /* Editing forms */
@@ -60,7 +59,13 @@ static void i_dbind(void)
     dbind(DCell, DCellContent, content);
 
     /* GUI */
-    dbind(App, uint8_t, sel_widget);
+    dbind_enum(widget_t, ekWIDGET_SELECT, "");
+    dbind_enum(widget_t, ekWIDGET_GRID_LAYOUT, "");
+    dbind_enum(widget_t, ekWIDGET_LABEL, "");
+    dbind_enum(widget_t, ekWIDGET_BUTTON, "");
+    dbind_enum(widget_t, ekWIDGET_CHECKBOX, "");
+    dbind_enum(widget_t, ekWIDGET_EDITBOX, "");
+    dbind(App, widget_t, swidget);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -164,8 +169,7 @@ static Layout *i_left_layout(App *app)
     layout_vmargin(layout1, 2, 5);
     layout_vexpand2(layout1, 1, 4, .75f);
 
-    cell_dbind(layout_cell(layout1, 0, 3), App, uint8_t, sel_widget);
-
+    cell_dbind(layout_cell(layout1, 0, 3), App, widget_t, swidget);
     return layout1;
 }
 
@@ -203,7 +207,7 @@ static void i_OnDraw(App *app, Event *e)
 
     if (app->form != NULL)
     {
-        dform_draw(app->form, app->add_icon, p->ctx);
+        dform_draw(app->form, app->swidget, app->add_icon, p->ctx);
     }
     //draw_font(p->ctx, font);
     //draw_text(p->ctx, "--> CANVAS <--", 0, 0);
@@ -368,7 +372,7 @@ static App *i_app(ResPack *pack)
 {
     App *app = heap_new0(App);
     i_dbind();
-    app->sel_widget = 0;
+    app->swidget = ekWIDGET_SELECT;
     app->add_icon = image_copy(image_from_resource(pack, PLUS16_PNG));
     return app;
 }

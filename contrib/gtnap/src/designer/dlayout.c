@@ -695,7 +695,7 @@ static bool_t i_is_cell_sel(const DSelect *sel, const DLayout *layout, const uin
 
 /*---------------------------------------------------------------------------*/
 
-void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *hover, const DSelect *sel, const Image *add_icon, DCtx *ctx)
+void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *hover, const DSelect *sel, const widget_t swidget, const Image *add_icon, DCtx *ctx)
 {
     uint32_t ncols, nrows, i, j;
     const DCell *cell = NULL;
@@ -743,7 +743,7 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
             case ekCELL_TYPE_LAYOUT:
             {
                 Layout *chid_glayout = cell_layout(gcell);
-                dlayout_draw(cell->content.layout, chid_glayout, hover, sel, add_icon, ctx);
+                dlayout_draw(cell->content.layout, chid_glayout, hover, sel, swidget, add_icon, ctx);
                 break;
             }
             }
@@ -769,7 +769,7 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
             const DCell *dcell = arrst_get_const(layout->cells, pos, DCell);
             draw_line_color(ctx, kCOLOR_RED);
             draw_r2df(ctx, ekSTROKE, &rect);
-            if (dcell->type == ekCELL_TYPE_EMPTY)
+            if (dcell->type == ekCELL_TYPE_EMPTY && swidget != ekWIDGET_SELECT)
             {
                 uint32_t iw = image_width(add_icon);
                 uint32_t ih = image_height(add_icon);

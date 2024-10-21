@@ -14,6 +14,16 @@ typedef struct _dlayout_t DLayout;
 typedef struct _dform_t DForm;
 typedef struct _dselect_t DSelect;
 
+typedef enum _widget_t
+{
+    ekWIDGET_SELECT = 0,
+    ekWIDGET_GRID_LAYOUT,
+    ekWIDGET_LABEL,
+    ekWIDGET_BUTTON,
+    ekWIDGET_CHECKBOX,
+    ekWIDGET_EDITBOX
+} widget_t;
+
 typedef enum _celltype_t
 {
     ekCELL_TYPE_EMPTY,

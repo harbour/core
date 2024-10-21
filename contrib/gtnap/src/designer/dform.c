@@ -141,8 +141,8 @@ bool_t dform_OnExit(DForm *form)
 
 /*---------------------------------------------------------------------------*/
 
-void dform_draw(const DForm *form, const Image *add_icon, DCtx *ctx)
+void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon, DCtx *ctx)
 {
     cassert_no_null(form);
-    dlayout_draw(form->dlayout, form->layout, &form->hover, NULL, add_icon, ctx);
+    dlayout_draw(form->dlayout, form->layout, &form->hover, NULL, swidget, add_icon, ctx);
 }
