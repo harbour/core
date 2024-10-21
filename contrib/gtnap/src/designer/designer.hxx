@@ -108,5 +108,4 @@ DeclSt(DColumn);
 DeclSt(DRow);
 DeclSt(DCell);
 
-#endif 
-
+#endif

@@ -330,6 +330,37 @@ static color_t i_color(void)
 
 /*---------------------------------------------------------------------------*/
 
+static ___INLINE DCell *i_cell(DLayout *layout, const uint32_t col, const uint32_t row)
+{
+    uint32_t ncols = UINT32_MAX;
+    uint32_t pos = UINT32_MAX;
+    cassert_no_null(layout);
+    ncols = arrst_size(layout->cols, DColumn);
+    pos = row * ncols + col;
+    return arrst_get(layout->cells, pos, DCell);
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t dlayout_empty_cell(const DSelect *sel)
+{
+    cassert_no_null(sel);
+    if (sel->layout != NULL)
+    {
+        if (sel->elem == ekLAYELEM_CELL)
+        {
+            const DCell *cell = i_cell(sel->layout, sel->col, sel->row);
+            cassert_no_null(cell);
+            if (cell->type == ekCELL_TYPE_EMPTY)
+                return TRUE;
+        }
+    }
+        
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 Layout *dlayout_gui_layout(const DLayout *layout)
 {
     uint32_t ncols = 0, nrows = 0;

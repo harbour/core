@@ -3,8 +3,11 @@
 #include "dform.h"
 #include "dlayout.h"
 #include "dlabel.h"
+#include "dialogs.h"
+#include <gui/guicontrol.h>
 #include <gui/panel.h>
 #include <gui/panel.inl>
+#include <gui/window.h>
 #include <geom2d/v2d.h>
 #include <geom2d/s2d.h>
 #include <core/dbind.h>
@@ -127,7 +130,7 @@ bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t dform_OnClick(DForm *form, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
+bool_t dform_OnClick(DForm *form, Window *window, View *canvas, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
 {
     if (button == ekGUI_MOUSE_LEFT)
     {
@@ -136,6 +139,19 @@ bool_t dform_OnClick(DForm *form, const real32_t mouse_x, const real32_t mouse_y
         dlayout_elem_at_pos(form->dlayout, mouse_x, mouse_y, &sel);
         cassert(i_sel_equ(&form->hover, &sel) == TRUE);
         equ = i_sel_equ(&form->sel, &sel);
+
+        if (dlayout_empty_cell(&form->sel) == TRUE)
+        {
+            if (widget == ekWIDGET_LABEL)
+            {
+                R2Df frame = window_control_frame(window, guicontrol(canvas));
+                V2Df origin = window_client_to_screen(window, frame.pos);
+                origin.x += mouse_x;
+                origin.y += mouse_y;
+                dialog_new_label(window, origin, NULL);
+            }
+        }
+
         form->sel = sel;
         return !equ;
     }

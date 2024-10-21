@@ -248,7 +248,7 @@ static void i_OnClick(App *app, Event *e)
     if (app->form != NULL)
     {
         const EvMouse *p = event_params(e, EvMouse);
-        if (dform_OnClick(app->form, p->x, p->y, p->button) == TRUE)
+        if (dform_OnClick(app->form, app->window, app->canvas, app->swidget, p->x, p->y, p->button) == TRUE)
             view_update(app->canvas);
     }
 }
