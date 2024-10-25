@@ -496,7 +496,7 @@ FUNCTION hb_ZipDeleteFiles( cFileName, acFiles )
    ENDIF
 
    FOR EACH cFileToProc IN acFiles
-      lRetVal := lRetVal .AND. hb_zipDeleteFile( cFileName, cFileToProc )
+      lRetVal := lRetVal .AND. ( hb_zipDeleteFile( cFileName, cFileToProc ) == UNZ_OK )
    NEXT
 
    RETURN lRetVal
