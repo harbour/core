@@ -5,6 +5,7 @@
 #include "dlabel.h"
 #include "dlayout.h"
 #include "dform.h"
+#include "dialogs.h"
 #include "propedit.h"
 
 typedef struct _app_t App;
@@ -391,6 +392,7 @@ static App *i_app(ResPack *pack)
 {
     App *app = heap_new0(App);
     i_dbind();
+    dialog_dbind();
     app->swidget = ekWIDGET_SELECT;
     app->add_icon = image_copy(image_from_resource(pack, PLUS16_PNG));
     return app;

@@ -171,12 +171,10 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *propedit, const widget_
                     label_text(label, tc(dlabel->text));
                     dlayout_add_label(sel.layout, dlabel, sel.col, sel.row);
                     layout_label(layout, label, sel.col, sel.row);
-                    //--------------------------- TO form_compose()
                     cell_force_size(cell, 0, 0);
                     _panel_compose(form->panel, NULL, &fsize);
                     dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
                     propedit_set(propedit, form, &sel);
-                    //----------------------------
                     form->sel = sel;
                     return TRUE;
                 }
@@ -185,6 +183,61 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *propedit, const widget_
                     return FALSE;
                 }
             }
+
+            case ekWIDGET_GRID_LAYOUT:
+            {
+                DLayout *dsublayout = dialog_new_layout(window, &sel);
+                if (dsublayout != NULL)
+                {
+                    /*
+                    * 1) Add the sublayout into design layout.
+                    * 2) Add the sublayout into real GUI layout.
+                    * 3) Disable the empty cell 'forced' size
+                    * 4) Update the GUI panel to recompute the GUI.
+                    * 5) Synchro design layout with real GUI layout.
+                    * 6) Update the drawing (return TRUE).
+                    */
+                    //uint32_t i, ncols = dlayout_ncols(dsublayout);
+                    //uint32_t j, nrows = dlayout_nrows(dsublayout);
+                    //real32_t mt = dlayout_get_margin_top(dsublayout);
+                    //real32_t mb = dlayout_get_margin_bottom(dsublayout);
+                    //real32_t ml = dlayout_get_margin_left(dsublayout);
+                    //real32_t mr = dlayout_get_margin_right(dsublayout);
+                    Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
+                    Layout *sublayout = dlayout_gui_layout(dsublayout);
+                    Cell *cell = layout_cell(layout, sel.col, sel.row);
+                    S2Df fsize;
+
+                    ///* GUI layout borders and margins from design layout */
+                    //layout_margin4(sublayout, mt, mr, mb, ml);
+
+                    //for (i = 0; i < ncols - 1; ++i)
+                    //{
+                    //    real32_t mcol = dlayout_get_margin_col(dsublayout, i);
+                    //    layout_hmargin(sublayout, i, mcol);
+                    //}
+
+                    //for (j = 0; j < nrows - 1; ++j)
+                    //{
+                    //    real32_t mrow = dlayout_get_margin_row(dsublayout, j);
+                    //    layout_vmargin(sublayout, j, mrow);
+                    //}
+
+                    dlayout_add_layout(sel.layout, dsublayout, sel.col, sel.row);
+                    layout_layout(layout, sublayout, sel.col, sel.row);
+                    cell_force_size(cell, 0, 0);
+                    _panel_compose(form->panel, NULL, &fsize);
+                    dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
+                    propedit_set(propedit, form, &sel);
+                    form->sel = sel;
+                    return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
+            }
+
 
             default:
                 break;

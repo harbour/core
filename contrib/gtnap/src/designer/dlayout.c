@@ -448,7 +448,6 @@ Layout *dlayout_gui_layout(const DLayout *layout)
                 {
                     DLabel *dlabel = cells->content.label;
                     Label *glabel = label_create();
-                    cell_force_size(gcell, 0, 0);
                     label_text(glabel, tc(dlabel->text));
                     layout_label(glayout, glabel, i, j);
                     break;
@@ -457,7 +456,6 @@ Layout *dlayout_gui_layout(const DLayout *layout)
                 case ekCELL_TYPE_LAYOUT:
                 {
                     Layout *gsublayout = dlayout_gui_layout(cells->content.layout);
-                    cell_force_size(gcell, 0, 0);
                     layout_layout(glayout, gsublayout, i, j);
                     break;
                 }
@@ -633,6 +631,64 @@ uint32_t dlayout_nrows(const DLayout *layout)
 {
     cassert_no_null(layout);
     return arrst_size(layout->rows, DRow); 
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t dlayout_get_margin_top(const DLayout *layout)
+{
+    cassert_no_null(layout);
+    return layout->margin_top;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t dlayout_get_margin_bottom(const DLayout *layout)
+{
+    DRow *row = NULL;
+    cassert_no_null(layout);
+    row = arrst_last(layout->rows, DRow);
+    return row->margin_bottom;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t dlayout_get_margin_left(const DLayout *layout)
+{
+    cassert_no_null(layout);
+    return layout->margin_left;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t dlayout_get_margin_right(const DLayout *layout)
+{
+    DColumn *col = NULL;
+    cassert_no_null(layout);
+    col = arrst_last(layout->cols, DColumn);
+    return col->margin_right;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t dlayout_get_margin_col(const DLayout *layout, const uint32_t col)
+{
+    DColumn *dcol = NULL;
+    cassert_no_null(layout);
+    cassert(col < arrst_size(layout->cols, DColumn) - 1);
+    dcol= arrst_get(layout->cols, col, DColumn);
+    return dcol->margin_right;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t dlayout_get_margin_row(const DLayout *layout, const uint32_t row)
+{
+    DRow *drow = NULL;
+    cassert_no_null(layout);
+    cassert(row < arrst_size(layout->rows, DRow) - 1);
+    drow = arrst_get(layout->rows, row, DRow);
+    return drow->margin_bottom;
 }
 
 /*---------------------------------------------------------------------------*/

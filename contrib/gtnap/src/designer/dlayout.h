@@ -48,6 +48,18 @@ uint32_t dlayout_ncols(const DLayout *layout);
 
 uint32_t dlayout_nrows(const DLayout *layout);
 
+real32_t dlayout_get_margin_top(const DLayout *layout);
+
+real32_t dlayout_get_margin_bottom(const DLayout *layout);
+
+real32_t dlayout_get_margin_left(const DLayout *layout);
+
+real32_t dlayout_get_margin_right(const DLayout *layout);
+
+real32_t dlayout_get_margin_col(const DLayout *layout, const uint32_t col);
+
+real32_t dlayout_get_margin_row(const DLayout *layout, const uint32_t row);
+
 void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t y, DSelect *sel);
 
 void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *hover, const DSelect *sel, const widget_t swidget, const Image *add_icon, DCtx *ctx);
