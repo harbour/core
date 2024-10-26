@@ -633,63 +633,63 @@ uint32_t dlayout_nrows(const DLayout *layout)
     return arrst_size(layout->rows, DRow); 
 }
 
-/*---------------------------------------------------------------------------*/
-
-real32_t dlayout_get_margin_top(const DLayout *layout)
-{
-    cassert_no_null(layout);
-    return layout->margin_top;
-}
-
-/*---------------------------------------------------------------------------*/
-
-real32_t dlayout_get_margin_bottom(const DLayout *layout)
-{
-    DRow *row = NULL;
-    cassert_no_null(layout);
-    row = arrst_last(layout->rows, DRow);
-    return row->margin_bottom;
-}
-
-/*---------------------------------------------------------------------------*/
-
-real32_t dlayout_get_margin_left(const DLayout *layout)
-{
-    cassert_no_null(layout);
-    return layout->margin_left;
-}
-
-/*---------------------------------------------------------------------------*/
-
-real32_t dlayout_get_margin_right(const DLayout *layout)
-{
-    DColumn *col = NULL;
-    cassert_no_null(layout);
-    col = arrst_last(layout->cols, DColumn);
-    return col->margin_right;
-}
-
-/*---------------------------------------------------------------------------*/
-
-real32_t dlayout_get_margin_col(const DLayout *layout, const uint32_t col)
-{
-    DColumn *dcol = NULL;
-    cassert_no_null(layout);
-    cassert(col < arrst_size(layout->cols, DColumn) - 1);
-    dcol= arrst_get(layout->cols, col, DColumn);
-    return dcol->margin_right;
-}
-
-/*---------------------------------------------------------------------------*/
-
-real32_t dlayout_get_margin_row(const DLayout *layout, const uint32_t row)
-{
-    DRow *drow = NULL;
-    cassert_no_null(layout);
-    cassert(row < arrst_size(layout->rows, DRow) - 1);
-    drow = arrst_get(layout->rows, row, DRow);
-    return drow->margin_bottom;
-}
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_top(const DLayout *layout)
+//{
+//    cassert_no_null(layout);
+//    return layout->margin_top;
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_bottom(const DLayout *layout)
+//{
+//    DRow *row = NULL;
+//    cassert_no_null(layout);
+//    row = arrst_last(layout->rows, DRow);
+//    return row->margin_bottom;
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_left(const DLayout *layout)
+//{
+//    cassert_no_null(layout);
+//    return layout->margin_left;
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_right(const DLayout *layout)
+//{
+//    DColumn *col = NULL;
+//    cassert_no_null(layout);
+//    col = arrst_last(layout->cols, DColumn);
+//    return col->margin_right;
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_col(const DLayout *layout, const uint32_t col)
+//{
+//    DColumn *dcol = NULL;
+//    cassert_no_null(layout);
+//    cassert(col < arrst_size(layout->cols, DColumn) - 1);
+//    dcol= arrst_get(layout->cols, col, DColumn);
+//    return dcol->margin_right;
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_row(const DLayout *layout, const uint32_t row)
+//{
+//    DRow *drow = NULL;
+//    cassert_no_null(layout);
+//    cassert(row < arrst_size(layout->rows, DRow) - 1);
+//    drow = arrst_get(layout->rows, row, DRow);
+//    return drow->margin_bottom;
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -920,10 +920,11 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
     if (hover->layout == layout)
     {
         R2Df rect = i_get_rect(layout, hover);
+        draw_line_color(ctx, kCOLOR_RED);
         if (hover->elem != ekLAYELEM_CELL)
         {
-            draw_line_color(ctx, kCOLOR_RED);
             draw_r2df(ctx, ekSTROKE, &rect);
+            draw_line_color(ctx, kCOLOR_BLACK);
             //draw_fill_color(ctx, kCOLOR_RED);
             //draw_r2df(ctx, ekFILL, &rect);
         }
@@ -931,7 +932,6 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
         {
             uint32_t pos = hover->row * ncols + hover->col;
             const DCell *dcell = arrst_get_const(layout->cells, pos, DCell);
-            draw_line_color(ctx, kCOLOR_RED);
             draw_r2df(ctx, ekSTROKE, &rect);
             if (dcell->type == ekCELL_TYPE_EMPTY && swidget != ekWIDGET_SELECT)
             {
@@ -942,6 +942,7 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
                 draw_image(ctx, add_icon, x, y);
             }
         }
+        draw_line_color(ctx, kCOLOR_BLACK);
     }
 
     /* This layout has the selected element */
