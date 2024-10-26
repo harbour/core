@@ -5,6 +5,7 @@
 #include "dlabel.h"
 #include "dlayout.h"
 #include "dform.h"
+#include "propedit.h"
 
 typedef struct _app_t App;
 
@@ -182,15 +183,18 @@ static Layout *i_right_layout(App *app)
     Label *label1 = label_create();
     Label *label2 = label_create();
     TableView *table = tableview_create();
+    Panel *panel = propedit_create();
     label_text(label1, "Object inspector");
     label_text(label2, "Property editor");
     tableview_new_column_text(table);
     tableview_size(table, s2df(150, 200));
     tableview_column_width(table, 0, 120);
     tableview_update(table);
+    panel_size(panel, s2df(150, 200));
     layout_label(layout, label1, 0, 0);
-    layout_label(layout, label2, 0, 2);
     layout_tableview(layout, table, 0, 1);
+    layout_label(layout, label2, 0, 2);
+    layout_panel(layout, panel, 0, 3);
     layout_vexpand2(layout, 1, 3, .5f);
     layout_vmargin(layout, 1, 5.f);
     unref(app);
@@ -249,7 +253,7 @@ static void i_OnClick(App *app, Event *e)
     if (app->form != NULL)
     {
         const EvMouse *p = event_params(e, EvMouse);
-        if (dform_OnClick(app->form, app->window, app->canvas, app->swidget, p->x, p->y, p->button) == TRUE)
+        if (dform_OnClick(app->form, app->window, app->swidget, p->x, p->y, p->button) == TRUE)
             view_update(app->canvas);
     }
 }

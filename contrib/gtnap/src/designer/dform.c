@@ -137,7 +137,7 @@ bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t dform_OnClick(DForm *form, Window *window, View *canvas, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
+bool_t dform_OnClick(DForm *form, Window *window, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
 {
     cassert_no_null(form);
     if (button == ekGUI_MOUSE_LEFT)
