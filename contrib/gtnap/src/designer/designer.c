@@ -19,6 +19,7 @@ struct _app_t
     View *canvas;
     Layout *canvas_layout;
     Layout *main_layout;
+    Panel *propedit;
 
     /* GUI Bindings */
     widget_t swidget;
@@ -183,7 +184,8 @@ static Layout *i_right_layout(App *app)
     Label *label1 = label_create();
     Label *label2 = label_create();
     TableView *table = tableview_create();
-    Panel *panel = propedit_create();
+    Panel *panel = propedit_create(app->canvas);
+    cassert_no_null(app);
     label_text(label1, "Object inspector");
     label_text(label2, "Property editor");
     tableview_new_column_text(table);
@@ -197,7 +199,7 @@ static Layout *i_right_layout(App *app)
     layout_panel(layout, panel, 0, 3);
     layout_vexpand2(layout, 1, 3, .5f);
     layout_vmargin(layout, 1, 5.f);
-    unref(app);
+    app->propedit = panel;
     return layout;
 }
 
@@ -253,7 +255,7 @@ static void i_OnClick(App *app, Event *e)
     if (app->form != NULL)
     {
         const EvMouse *p = event_params(e, EvMouse);
-        if (dform_OnClick(app->form, app->window, app->swidget, p->x, p->y, p->button) == TRUE)
+        if (dform_OnClick(app->form, app->window, app->propedit, app->swidget, p->x, p->y, p->button) == TRUE)
             view_update(app->canvas);
     }
 }
@@ -262,10 +264,8 @@ static void i_OnClick(App *app, Event *e)
 
 static void i_OnSize(App *app, Event *e)
 {       
-    cassert_no_null(app);
+    unref(app);
     unref(e);
-    if (app->form != NULL)
-        dform_synchro_visual(app->form);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -404,7 +404,6 @@ static void i_init_forms(App *app)
     cassert(app->form == NULL);
     app->form = dform_first_example();
     dform_compose(app->form);
-    dform_synchro_visual(app->form);
 }
 
 /*---------------------------------------------------------------------------*/

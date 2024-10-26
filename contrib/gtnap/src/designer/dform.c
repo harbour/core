@@ -4,6 +4,7 @@
 #include "dlayout.h"
 #include "dlabel.h"
 #include "dialogs.h"
+#include "propedit.h"
 #include <gui/guicontrol.h>
 #include <gui/label.h>
 #include <gui/layout.h>
@@ -85,21 +86,21 @@ void dform_destroy(DForm **form)
 
 void dform_compose(DForm *form)
 {
+    /*
+    * 1) Recompute the GUI form for update lastest changes.
+    * 2) Synchro design form with GUI controls and sizes.
+    */
     S2Df fsize = kS2D_ZEROf;
     cassert_no_null(form);
-    cassert(form->layout == NULL);
-    cassert(form->panel == NULL);
-    form->layout = dlayout_gui_layout(form->dlayout);
-    form->panel = panel_create();
-    panel_layout(form->panel, form->layout);
+    if (form->layout == NULL)
+    {
+        cassert(form->panel == NULL);
+        form->layout = dlayout_gui_layout(form->dlayout);
+        form->panel = panel_create();
+        panel_layout(form->panel, form->layout);
+    }
+
     _panel_compose(form->panel, NULL, &fsize);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dform_synchro_visual(DForm *form)
-{
-    cassert_no_null(form);
     dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
 }
 
@@ -137,7 +138,7 @@ bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t dform_OnClick(DForm *form, Window *window, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
+bool_t dform_OnClick(DForm *form, Window *window, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
 {
     cassert_no_null(form);
     if (button == ekGUI_MOUSE_LEFT)
@@ -167,14 +168,15 @@ bool_t dform_OnClick(DForm *form, Window *window, const widget_t widget, const r
                     Label *label = label_create();
                     Cell *cell = layout_cell(layout, sel.col, sel.row);
                     S2Df fsize;
-                    cassert(dlayout_ncols(sel.layout) == layout_ncols(layout));
-                    cassert(dlayout_nrows(sel.layout) == layout_nrows(layout));
                     label_text(label, tc(dlabel->text));
                     dlayout_add_label(sel.layout, dlabel, sel.col, sel.row);
                     layout_label(layout, label, sel.col, sel.row);
+                    //--------------------------- TO form_compose()
                     cell_force_size(cell, 0, 0);
                     _panel_compose(form->panel, NULL, &fsize);
                     dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
+                    propedit_set(propedit, form, &sel);
+                    //----------------------------
                     form->sel = sel;
                     return TRUE;
                 }
@@ -192,6 +194,7 @@ bool_t dform_OnClick(DForm *form, Window *window, const widget_t widget, const r
         /* No new component added, just select */
         {
             bool_t equ = i_sel_equ(&form->sel, &sel);
+            propedit_set(propedit, form, &sel);
             form->sel = sel;
             return !equ;
         }
@@ -215,6 +218,29 @@ bool_t dform_OnExit(DForm *form)
     equ = i_sel_equ(&form->hover, &sel);
     form->hover = sel;
     return !equ;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_update_cell_text(DForm *form, const DSelect *sel, const char_t *text)
+{
+    DCell *cell = dlayout_cell(sel);
+    Layout *layout = NULL;
+    cassert_no_null(form);
+    cassert_no_null(cell);
+    layout = dlayout_search_layout(form->dlayout, form->layout, sel->layout);
+
+    if (cell->type == ekCELL_TYPE_LABEL)
+    {
+        Label *label = layout_get_label(layout, sel->col, sel->row);
+        dlabel_text(cell->content.label, text);
+        label_text(label, text);
+    }
+    else
+    {
+        /* At the moment, only Label can update the text */
+        cassert(FALSE);
+    }
 }
 
 /*---------------------------------------------------------------------------*/

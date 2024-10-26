@@ -369,6 +369,20 @@ bool_t dlayout_empty_cell(const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
+DCell *dlayout_cell(const DSelect *sel)
+{
+    cassert_no_null(sel);
+    if (sel->layout != NULL)
+    {
+        if (sel->elem == ekLAYELEM_CELL)
+            return i_cell(sel->layout, sel->col, sel->row);
+    }
+        
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
 Layout *dlayout_gui_layout(const DLayout *layout)
 {
     uint32_t ncols = 0, nrows = 0;
@@ -599,6 +613,8 @@ Layout *dlayout_search_layout(DLayout *layout, Layout *glayout, DLayout *require
     }
     else
     {
+        cassert(dlayout_ncols(layout) == layout_ncols(glayout));
+        cassert(dlayout_nrows(layout) == layout_nrows(glayout));
         return glayout;
     }
 }
