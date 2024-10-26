@@ -47,6 +47,7 @@ static void i_dbind(void)
     dbind(DCell, celltype_t, type);
     dbind(DCell, align_t, halign);
     dbind(DCell, align_t, valign);
+    dbind(DLayout, String*, name);
     dbind(DLayout, real32_t, margin_left);
     dbind(DLayout, real32_t, margin_top);
     dbind(DLayout, ArrSt(DColumn)*, cols);

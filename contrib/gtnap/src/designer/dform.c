@@ -5,6 +5,8 @@
 #include "dlabel.h"
 #include "dialogs.h"
 #include <gui/guicontrol.h>
+#include <gui/label.h>
+#include <gui/layout.h>
 #include <gui/panel.h>
 #include <gui/panel.inl>
 #include <gui/window.h>
@@ -12,6 +14,7 @@
 #include <geom2d/s2d.h>
 #include <core/dbind.h>
 #include <core/heap.h>
+#include <core/strings.h>
 #include <sewer/cassert.h>
 
 struct _dform_t
@@ -33,6 +36,9 @@ DForm *dform_first_example(void)
     DLayout *layout3 = dlayout_create(2, 1);
     DLabel *label1 = dlabel_create();
     DLabel *label2 = dlabel_create();
+    dlayout_set_name(layout1, "Left grid");
+    dlayout_set_name(layout2, "Right grid");
+    dlayout_set_name(layout3, "Main grid");
     dlabel_text(label1, "This is a label");
     dlabel_text(label2, "And other");
     dlayout_add_label(layout1, label1, 0, 0);
@@ -132,28 +138,56 @@ bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
 
 bool_t dform_OnClick(DForm *form, Window *window, View *canvas, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
 {
+    cassert_no_null(form);
     if (button == ekGUI_MOUSE_LEFT)
     {
         DSelect sel;
-        bool_t equ = TRUE;
         dlayout_elem_at_pos(form->dlayout, mouse_x, mouse_y, &sel);
         cassert(i_sel_equ(&form->hover, &sel) == TRUE);
-        equ = i_sel_equ(&form->sel, &sel);
 
-        if (dlayout_empty_cell(&form->sel) == TRUE)
+        if (dlayout_empty_cell(&sel) == TRUE)
         {
             if (widget == ekWIDGET_LABEL)
             {
-                R2Df frame = window_control_frame(window, guicontrol(canvas));
-                V2Df origin = window_client_to_screen(window, frame.pos);
-                origin.x += mouse_x;
-                origin.y += mouse_y;
-                dialog_new_label(window, origin, NULL);
+                DLabel *dlabel = dialog_new_label(window, &sel);
+                if (dlabel != NULL)
+                {
+                    /*
+                    * 1) Add the label into design layout.
+                    * 2) Add the label into real GUI layout.
+                    * 3) Update the GUI panel to recompute the GUI.
+                    * 4) Synchro design layout with real GUI layout.
+                    * 5) Update the drawing (return TRUE).
+                    */
+                    Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
+                    Label *label = label_create();
+                    cassert(dlayout_ncols(sel.layout) == layout_ncols(layout));
+                    cassert(dlayout_nrows(sel.layout) == layout_nrows(layout));
+                    label_text(label, tc(dlabel->text));
+                    dlayout_add_label(sel.layout, dlabel, sel.col, sel.row);
+                    layout_label(layout, label, sel.col, sel.row);
+                    panel_update(form->panel);
+                    dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
+                    form->sel = sel;
+                    return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
             }
-        }
 
-        form->sel = sel;
-        return !equ;
+            /* TODO */
+            cassert(FALSE);
+            return FALSE;
+        }
+        /* Non-empty cell --> Select */
+        else
+        {
+            bool_t equ = i_sel_equ(&form->sel, &sel);
+            form->sel = sel;
+            return !equ;
+        }
     }
     else
     {

@@ -84,6 +84,7 @@ struct _dcell_t
 
 struct _dlayout_t
 {
+    String *name;
     real32_t margin_left;
     real32_t margin_top;
     ArrSt(DColumn) *cols;

@@ -120,6 +120,14 @@ void dlayout_destroy(DLayout **layout)
 
 /*---------------------------------------------------------------------------*/
 
+void dlayout_set_name(DLayout *layout, const char_t *name)
+{
+    cassert_no_null(layout);
+    str_upd(&layout->name, name);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dlayout_margin_top(DLayout *layout, const real32_t margin)
 {
     cassert_no_null(layout);
@@ -556,6 +564,59 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
             y += row[j].margin_bottom;
         }
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+Layout *dlayout_search_layout(DLayout *layout, Layout *glayout, DLayout *required)
+{
+    cassert_no_null(layout);
+    if (layout != required)
+    {
+        DCell *cell = arrst_all(layout->cells, DCell);
+        uint32_t ncols = arrst_size(layout->cols, DColumn); 
+        uint32_t nrows = arrst_size(layout->rows, DRow); 
+        uint32_t i, j;
+
+        for (j = 0; j < nrows; ++j)
+        {
+            for(i = 0; i < ncols; ++i)
+            {
+                if (cell->type == ekCELL_TYPE_LAYOUT)
+                {
+                    DLayout *sublayout = cell->content.layout;
+                    Layout *subglayout = layout_get_layout(cast(glayout, Layout), i, j);
+                    Layout *fglayout = dlayout_search_layout(sublayout, subglayout, required);
+                    if (fglayout != NULL)
+                        return fglayout;
+                }
+
+                cell += 1;
+            }
+        }
+
+        return NULL;
+    }
+    else
+    {
+        return glayout;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t dlayout_ncols(const DLayout *layout)
+{
+    cassert_no_null(layout);
+    return arrst_size(layout->cols, DColumn); 
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t dlayout_nrows(const DLayout *layout)
+{
+    cassert_no_null(layout);
+    return arrst_size(layout->rows, DRow); 
 }
 
 /*---------------------------------------------------------------------------*/
