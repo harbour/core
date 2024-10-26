@@ -2,17 +2,25 @@
 
 #include "dlayout.h"
 #include <gui/label.h>
+#include <gui/labelh.h>
 #include <gui/layout.h>
 #include <gui/layouth.h>
+#include <gui/cell.h>
+#include <gui/drawctrl.inl>
 #include <geom2d/r2d.h>
 #include <geom2d/v2d.h>
 #include <draw2d/color.h>
 #include <draw2d/draw.h>
 #include <draw2d/drawg.h>
+#include <draw2d/image.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
+#include <core/strings.h>
 #include <sewer/bmem.h>
 #include <sewer/cassert.h>
+
+static real32_t i_EMPTY_CELL_WIDTH = 40;
+static real32_t i_EMPTY_CELL_HEIGHT = 20;
 
 /*---------------------------------------------------------------------------*/
 
@@ -108,6 +116,14 @@ DLayout *dlayout_create(const uint32_t ncols, const uint32_t nrows)
 void dlayout_destroy(DLayout **layout)
 {
     dbind_destroy(layout, DLayout);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_set_name(DLayout *layout, const char_t *name)
+{
+    cassert_no_null(layout);
+    str_upd(&layout->name, name);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -285,6 +301,25 @@ void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col,
 
 /*---------------------------------------------------------------------------*/
 
+void dlayout_add_label(DLayout *layout, DLabel *label, const uint32_t col, const uint32_t row)
+{
+    uint32_t i, ncols = 0;
+    DCell *cell = NULL;
+    cassert_no_null(layout);
+    cassert_no_null(label);
+    ncols = arrst_size(layout->cols, DColumn);
+    i = row * ncols + col;
+    cell = arrst_get(layout->cells, i, DCell);
+    i_remove_cell(cell);
+    i_init_empty_cell(cell);
+    cell->type = ekCELL_TYPE_LABEL;
+    cell->content.label = label;
+    cell->valign = ekLEFT;
+    cell->halign = ekCENTER;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static color_t i_color(void)
 {
     static uint32_t index = 0;
@@ -299,6 +334,51 @@ static color_t i_color(void)
     }
 
     return kCOLOR_DEFAULT;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static ___INLINE DCell *i_cell(DLayout *layout, const uint32_t col, const uint32_t row)
+{
+    uint32_t ncols = UINT32_MAX;
+    uint32_t pos = UINT32_MAX;
+    cassert_no_null(layout);
+    ncols = arrst_size(layout->cols, DColumn);
+    pos = row * ncols + col;
+    return arrst_get(layout->cells, pos, DCell);
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t dlayout_empty_cell(const DSelect *sel)
+{
+    cassert_no_null(sel);
+    if (sel->layout != NULL)
+    {
+        if (sel->elem == ekLAYELEM_CELL)
+        {
+            const DCell *cell = i_cell(sel->layout, sel->col, sel->row);
+            cassert_no_null(cell);
+            if (cell->type == ekCELL_TYPE_EMPTY)
+                return TRUE;
+        }
+    }
+        
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+DCell *dlayout_cell(const DSelect *sel)
+{
+    cassert_no_null(sel);
+    if (sel->layout != NULL)
+    {
+        if (sel->elem == ekLAYELEM_CELL)
+            return i_cell(sel->layout, sel->col, sel->row);
+    }
+        
+    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -357,14 +437,21 @@ Layout *dlayout_gui_layout(const DLayout *layout)
         {
             for(i = 0; i < ncols; ++i)
             {
+                Cell *gcell = layout_cell(glayout, i, j);
+
                 switch(cells->type) {
                 case ekCELL_TYPE_EMPTY:
+                    cell_force_size(gcell, i_EMPTY_CELL_WIDTH, i_EMPTY_CELL_HEIGHT);
                     break;
 
-                /* TODO */
                 case ekCELL_TYPE_LABEL:
-                    cassert(FALSE);
+                {
+                    DLabel *dlabel = cells->content.label;
+                    Label *glabel = label_create();
+                    label_text(glabel, tc(dlabel->text));
+                    layout_label(glayout, glabel, i, j);
                     break;
+                }
 
                 case ekCELL_TYPE_LAYOUT:
                 {
@@ -467,9 +554,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                 case ekCELL_TYPE_EMPTY:
                     break;
 
-                /* TODO */
                 case ekCELL_TYPE_LABEL:
-                    cassert(FALSE);
                     break;
 
                 case ekCELL_TYPE_LAYOUT:
@@ -492,6 +577,119 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
         }
     }
 }
+
+/*---------------------------------------------------------------------------*/
+
+Layout *dlayout_search_layout(DLayout *layout, Layout *glayout, DLayout *required)
+{
+    cassert_no_null(layout);
+    if (layout != required)
+    {
+        DCell *cell = arrst_all(layout->cells, DCell);
+        uint32_t ncols = arrst_size(layout->cols, DColumn); 
+        uint32_t nrows = arrst_size(layout->rows, DRow); 
+        uint32_t i, j;
+
+        for (j = 0; j < nrows; ++j)
+        {
+            for(i = 0; i < ncols; ++i)
+            {
+                if (cell->type == ekCELL_TYPE_LAYOUT)
+                {
+                    DLayout *sublayout = cell->content.layout;
+                    Layout *subglayout = layout_get_layout(cast(glayout, Layout), i, j);
+                    Layout *fglayout = dlayout_search_layout(sublayout, subglayout, required);
+                    if (fglayout != NULL)
+                        return fglayout;
+                }
+
+                cell += 1;
+            }
+        }
+
+        return NULL;
+    }
+    else
+    {
+        cassert(dlayout_ncols(layout) == layout_ncols(glayout));
+        cassert(dlayout_nrows(layout) == layout_nrows(glayout));
+        return glayout;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t dlayout_ncols(const DLayout *layout)
+{
+    cassert_no_null(layout);
+    return arrst_size(layout->cols, DColumn); 
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t dlayout_nrows(const DLayout *layout)
+{
+    cassert_no_null(layout);
+    return arrst_size(layout->rows, DRow); 
+}
+
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_top(const DLayout *layout)
+//{
+//    cassert_no_null(layout);
+//    return layout->margin_top;
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_bottom(const DLayout *layout)
+//{
+//    DRow *row = NULL;
+//    cassert_no_null(layout);
+//    row = arrst_last(layout->rows, DRow);
+//    return row->margin_bottom;
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_left(const DLayout *layout)
+//{
+//    cassert_no_null(layout);
+//    return layout->margin_left;
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_right(const DLayout *layout)
+//{
+//    DColumn *col = NULL;
+//    cassert_no_null(layout);
+//    col = arrst_last(layout->cols, DColumn);
+//    return col->margin_right;
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_col(const DLayout *layout, const uint32_t col)
+//{
+//    DColumn *dcol = NULL;
+//    cassert_no_null(layout);
+//    cassert(col < arrst_size(layout->cols, DColumn) - 1);
+//    dcol= arrst_get(layout->cols, col, DColumn);
+//    return dcol->margin_right;
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//real32_t dlayout_get_margin_row(const DLayout *layout, const uint32_t row)
+//{
+//    DRow *drow = NULL;
+//    cassert_no_null(layout);
+//    cassert(row < arrst_size(layout->rows, DRow) - 1);
+//    drow = arrst_get(layout->rows, row, DRow);
+//    return drow->margin_bottom;
+//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -645,43 +843,125 @@ static R2Df i_get_rect(const DLayout *layout, const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
-void dlayout_draw(const DLayout *layout, const DSelect *sel, DCtx *ctx)
+static bool_t i_is_cell_sel(const DSelect *sel, const DLayout *layout, const uint32_t col, const uint32_t row)
 {
-    cassert_no_null(layout);
     cassert_no_null(sel);
+    if (sel->layout != layout)
+        return FALSE;
+    if (sel->elem != ekLAYELEM_CELL)
+        return FALSE;
+    if (sel->col != col)
+        return FALSE;
+    if (sel->row != row)
+        return FALSE;
+    return TRUE;
+}
 
+/*---------------------------------------------------------------------------*/
+
+void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *hover, const DSelect *sel, const widget_t swidget, const Image *add_icon, DCtx *ctx)
+{
+    uint32_t ncols, nrows, i, j;
+    const DCell *cell = NULL;
+    cassert_no_null(layout);
+    cassert_no_null(hover);
+
+    ncols = arrst_size(layout->cols, DColumn); 
+    nrows = arrst_size(layout->rows, DRow); 
+    cell = arrst_all_const(layout->cells, DCell);
+
+    draw_line_color(ctx, kCOLOR_BLACK);
     draw_fill_color(ctx, kCOLOR_BLACK);
+    draw_r2df(ctx, ekSTROKE, &layout->rect);
+    //draw_r2df(ctx, ekFILL, &layout->rect_left);
+    //draw_r2df(ctx, ekFILL, &layout->rect_top);
 
-    draw_r2df(ctx, ekFILL, &layout->rect_left);
-    draw_r2df(ctx, ekFILL, &layout->rect_top);
+    //arrst_foreach_const(col, layout->cols, DColumn)
+    //    draw_r2df(ctx, ekFILL, &col->margin_rect);
+    //arrst_end()
 
-    arrst_foreach_const(col, layout->cols, DColumn)
-        draw_r2df(ctx, ekFILL, &col->margin_rect);
-    arrst_end()
+    //arrst_foreach_const(row, layout->rows, DRow)
+    //    draw_r2df(ctx, ekFILL, &row->margin_rect);
+    //arrst_end()
 
-    arrst_foreach_const(row, layout->rows, DRow)
-        draw_r2df(ctx, ekFILL, &row->margin_rect);
-    arrst_end()
+    for (j = 0; j < nrows; ++j)
+    {
+        for (i = 0; i < ncols; ++i)
+        {
+            Cell *gcell = layout_cell(cast(glayout, Layout), i, j);
+            draw_r2df(ctx, ekSTROKE, &cell->rect);
+            switch(cell->type) {
+            case ekCELL_TYPE_EMPTY:
+                break;
+            case ekCELL_TYPE_LABEL:
+            {
+                color_t color = i_is_cell_sel(hover, layout, i, j) ? kCOLOR_RED : kCOLOR_BLACK;
+                const Label *glabel = cell_label(gcell);
+                const Font *gfont = label_get_font(glabel);
+                draw_font(ctx, gfont);
+                draw_text_color(ctx, color);
+                drawctrl_text(ctx, tc(cell->content.label->text), (int32_t)cell->rect.pos.x, (int32_t)cell->rect.pos.y, ekCTRL_STATE_NORMAL);
+                //draw_text(ctx, tc(cell->content.label->text), cell->rect.pos.x, cell->rect.pos.y);
+                break;
+            }
+            case ekCELL_TYPE_LAYOUT:
+            {
+                Layout *chid_glayout = cell_layout(gcell);
+                dlayout_draw(cell->content.layout, chid_glayout, hover, sel, swidget, add_icon, ctx);
+                break;
+            }
+            }
 
-    arrst_foreach_const(cell, layout->cells, DCell)
-        switch(cell->type) {
-        case ekCELL_TYPE_EMPTY:
-            break;
-        case ekCELL_TYPE_LABEL:
-            /* TODO */
-            cassert(FALSE);
-            break;
-        case ekCELL_TYPE_LAYOUT:
-            dlayout_draw(cell->content.layout, sel, ctx);
-            break;
+            cell += 1;
         }
-    arrst_end()
+    }
 
-    /* This layout has a selected element */
+    /* This layout has the hover element */
+    if (hover->layout == layout)
+    {
+        R2Df rect = i_get_rect(layout, hover);
+        draw_line_color(ctx, kCOLOR_RED);
+        if (hover->elem != ekLAYELEM_CELL)
+        {
+            draw_r2df(ctx, ekSTROKE, &rect);
+            draw_line_color(ctx, kCOLOR_BLACK);
+            //draw_fill_color(ctx, kCOLOR_RED);
+            //draw_r2df(ctx, ekFILL, &rect);
+        }
+        else
+        {
+            uint32_t pos = hover->row * ncols + hover->col;
+            const DCell *dcell = arrst_get_const(layout->cells, pos, DCell);
+            draw_r2df(ctx, ekSTROKE, &rect);
+            if (dcell->type == ekCELL_TYPE_EMPTY && swidget != ekWIDGET_SELECT)
+            {
+                uint32_t iw = image_width(add_icon);
+                uint32_t ih = image_height(add_icon);
+                real32_t x = rect.pos.x + (rect.size.width - iw) / 2;
+                real32_t y = rect.pos.y + (rect.size.height - ih) / 2;
+                draw_image(ctx, add_icon, x, y);
+            }
+        }
+        draw_line_color(ctx, kCOLOR_BLACK);
+    }
+
+    /* This layout has the selected element */
     if (sel->layout == layout)
     {
         R2Df rect = i_get_rect(layout, sel);
-        draw_fill_color(ctx, kCOLOR_RED);
-        draw_r2df(ctx, ekFILL, &rect);
+        real32_t rsize = 5;
+        real32_t x1 = rect.pos.x;
+        real32_t x2 = rect.pos.x + rect.size.width;
+        real32_t y1 = rect.pos.y;
+        real32_t y2 = rect.pos.y + rect.size.height;
+        draw_fill_color(ctx, color_rgb(0, 40, 85));
+        draw_rect(ctx, ekFILL, x1, y1, rsize, rsize);
+        draw_rect(ctx, ekFILL, x2 - rsize, y1, rsize, rsize);
+        draw_rect(ctx, ekFILL, x1, y2 - rsize, rsize, rsize);
+        draw_rect(ctx, ekFILL, x2 - rsize, y2 - rsize, rsize, rsize);
+        draw_rect(ctx, ekFILL, (x1 + x2 - rsize) / 2, y1, rsize, rsize);
+        draw_rect(ctx, ekFILL, (x1 + x2 - rsize) / 2, y2 - rsize, rsize, rsize);
+        draw_rect(ctx, ekFILL, x1, (y1 + y2 - rsize) / 2, rsize, rsize);
+        draw_rect(ctx, ekFILL, x2 - rsize, (y1 + y2 - rsize) / 2, rsize, rsize);
     }
 }

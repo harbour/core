@@ -6,13 +6,15 @@ DForm *dform_first_example(void);
 
 void dform_destroy(DForm **form);
 
-Panel *dform_panel(DForm *form);
-
-void dform_synchro_visual(DForm *form);
+void dform_compose(DForm *form);
 
 bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y);
 
+bool_t dform_OnClick(DForm *form, Window *window, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button);
+
 bool_t dform_OnExit(DForm *form);
 
-void dform_draw(const DForm *form, DCtx *ctx);
+void dform_update_cell_text(DForm *form, const DSelect *sel, const char_t *text);
+
+void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon, DCtx *ctx);
 
