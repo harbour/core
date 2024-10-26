@@ -4,9 +4,9 @@
 #include <gui/label.h>
 #include <gui/labelh.h>
 #include <gui/layout.h>
+#include <gui/layouth.h>
 #include <gui/cell.h>
 #include <gui/drawctrl.inl>
-#include <gui/layouth.h>
 #include <geom2d/r2d.h>
 #include <geom2d/v2d.h>
 #include <draw2d/color.h>

@@ -7,6 +7,7 @@
 #include <gui/guicontrol.h>
 #include <gui/label.h>
 #include <gui/layout.h>
+#include <gui/layouth.h>
 #include <gui/panel.h>
 #include <gui/panel.inl>
 #include <gui/window.h>
@@ -143,11 +144,13 @@ bool_t dform_OnClick(DForm *form, Window *window, View *canvas, const widget_t w
     {
         DSelect sel;
         dlayout_elem_at_pos(form->dlayout, mouse_x, mouse_y, &sel);
-        cassert(i_sel_equ(&form->hover, &sel) == TRUE);
-
         if (dlayout_empty_cell(&sel) == TRUE)
         {
-            if (widget == ekWIDGET_LABEL)
+            switch(widget) {
+            case ekWIDGET_SELECT:
+                break;
+
+            case ekWIDGET_LABEL:
             {
                 DLabel *dlabel = dialog_new_label(window, &sel);
                 if (dlabel != NULL)
@@ -155,18 +158,22 @@ bool_t dform_OnClick(DForm *form, Window *window, View *canvas, const widget_t w
                     /*
                     * 1) Add the label into design layout.
                     * 2) Add the label into real GUI layout.
-                    * 3) Update the GUI panel to recompute the GUI.
-                    * 4) Synchro design layout with real GUI layout.
-                    * 5) Update the drawing (return TRUE).
+                    * 3) Disable the empty cell 'forced' size
+                    * 4) Update the GUI panel to recompute the GUI.
+                    * 5) Synchro design layout with real GUI layout.
+                    * 6) Update the drawing (return TRUE).
                     */
                     Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
                     Label *label = label_create();
+                    Cell *cell = layout_cell(layout, sel.col, sel.row);
+                    S2Df fsize;
                     cassert(dlayout_ncols(sel.layout) == layout_ncols(layout));
                     cassert(dlayout_nrows(sel.layout) == layout_nrows(layout));
                     label_text(label, tc(dlabel->text));
                     dlayout_add_label(sel.layout, dlabel, sel.col, sel.row);
                     layout_label(layout, label, sel.col, sel.row);
-                    panel_update(form->panel);
+                    cell_force_size(cell, 0, 0);
+                    _panel_compose(form->panel, NULL, &fsize);
                     dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
                     form->sel = sel;
                     return TRUE;
@@ -177,12 +184,12 @@ bool_t dform_OnClick(DForm *form, Window *window, View *canvas, const widget_t w
                 }
             }
 
-            /* TODO */
-            cassert(FALSE);
-            return FALSE;
+            default:
+                break;
+            }
         }
-        /* Non-empty cell --> Select */
-        else
+
+        /* No new component added, just select */
         {
             bool_t equ = i_sel_equ(&form->sel, &sel);
             form->sel = sel;
