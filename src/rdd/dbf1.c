@@ -2193,12 +2193,14 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
                   nLen = pField->uiLen;
             }
             if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+            {
                pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                                     &nLen, pArea->area.cdPage, hb_vmCDP() );
-            else
-               pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
-
-            hb_itemPutCLPtr( pItem, pszVal, nLen );
+               hb_itemPutCLPtr( pItem, pszVal, nLen );
+               break;
+            }
+            pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
+            hb_itemPutCL( pItem, pszVal, nLen );
          }
          break;
 
