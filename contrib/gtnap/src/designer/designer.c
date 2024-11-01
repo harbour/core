@@ -54,6 +54,8 @@ static void i_dbind(void)
     dbind(DLayout, String *, name);
     dbind(DLayout, real32_t, margin_left);
     dbind(DLayout, real32_t, margin_top);
+    dbind(DLayout, real32_t, margin_right);
+    dbind(DLayout, real32_t, margin_bottom);
     dbind(DLayout, ArrSt(DColumn) *, cols);
     dbind(DLayout, ArrSt(DRow) *, rows);
     dbind(DLayout, ArrSt(DCell) *, cells);

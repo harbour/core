@@ -128,24 +128,6 @@ void dlayout_name(DLayout *layout, const char_t *name)
 
 /*---------------------------------------------------------------------------*/
 
-void dlayout_margin_top(DLayout *layout, const real32_t margin)
-{
-    cassert_no_null(layout);
-    layout->margin_top = margin;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_margin_bottom(DLayout *layout, const real32_t margin)
-{
-    DRow *row = NULL;
-    cassert_no_null(layout);
-    row = arrst_last(layout->rows, DRow);
-    row->margin_bottom = margin;
-}
-
-/*---------------------------------------------------------------------------*/
-
 void dlayout_margin_left(DLayout *layout, const real32_t margin)
 {
     cassert_no_null(layout);
@@ -154,12 +136,26 @@ void dlayout_margin_left(DLayout *layout, const real32_t margin)
 
 /*---------------------------------------------------------------------------*/
 
+void dlayout_margin_top(DLayout *layout, const real32_t margin)
+{
+    cassert_no_null(layout);
+    layout->margin_top = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dlayout_margin_right(DLayout *layout, const real32_t margin)
 {
-    DColumn *col = NULL;
     cassert_no_null(layout);
-    col = arrst_last(layout->cols, DColumn);
-    col->margin_right = margin;
+    layout->margin_right = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_margin_bottom(DLayout *layout, const real32_t margin)
+{
+    cassert_no_null(layout);
+    layout->margin_bottom = margin;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -393,21 +389,7 @@ Layout *dlayout_gui_layout(const DLayout *layout)
     glayout = layout_create(ncols, nrows);
 
     /* Layout border margins */
-    {
-        real32_t mt = layout->margin_top;
-        real32_t ml = layout->margin_left;
-        real32_t mr = 0;
-        real32_t mb = 0;
-
-        {
-            const DColumn *col = arrst_get_const(layout->cols, ncols - 1, DColumn);
-            const DRow *row = arrst_get_const(layout->rows, nrows - 1, DRow);
-            mr = col->margin_right;
-            mb = row->margin_bottom;
-        }
-
-        layout_margin4(glayout, mt, mr, mb, ml);
-    }
+    layout_margin4(glayout, layout->margin_top, layout->margin_right, layout->margin_bottom, layout->margin_left);
 
     /* Inter-column margins */
     {
@@ -500,7 +482,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
         if (i < ncols - 1)
             inner_width += col[i].margin_right;
         else
-            total_width = inner_width + layout->margin_left + col[i].margin_right;
+            total_width = inner_width + layout->margin_left + layout->margin_right;
     }
 
     /* Compute the rows height and total layout heights */
@@ -513,16 +495,14 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
         if (j < nrows - 1)
             inner_height += row[j].margin_bottom;
         else
-            total_height = inner_height + layout->margin_top + row[j].margin_bottom;
+            total_height = inner_height + layout->margin_top + layout->margin_bottom;
     }
 
     /* Global layout rectangle */
     layout->rect = r2df(origin.x, origin.y, total_width, total_height);
 
-    /* Compute the margin rectangles */
+    /* Compute the vertical rectangles */
     layout->rect_left = r2df(origin.x, origin.y, layout->margin_left, total_height);
-    layout->rect_top = r2df(origin.x, origin.y, total_width, layout->margin_top);
-
     x = origin.x + layout->margin_left;
     for (i = 0; i < ncols; ++i)
     {
@@ -530,7 +510,10 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
         col[i].margin_rect = r2df(x, origin.y, col[i].margin_right, total_height);
         x += col[i].margin_right;
     }
+    layout->rect_right = r2df(x, origin.y, layout->margin_right, total_height);
 
+    /* Compute the horizontal rectangles */
+    layout->rect_top = r2df(origin.x, origin.y, total_width, layout->margin_top);
     y = origin.y + layout->margin_top;
     for (j = 0; j < nrows; ++j)
     {
@@ -538,6 +521,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
         row[j].margin_rect = r2df(origin.x, y, total_width, row[j].margin_bottom);
         y += row[j].margin_bottom;
     }
+    layout->rect_bottom = r2df(origin.x, y, total_width, layout->margin_bottom);
 
     /* Compute the cells rectangles */
     {
@@ -718,43 +702,49 @@ void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t
             return;
         }
 
-        arrst_foreach_const(col, layout->cols, DColumn)
-            if (r2d_containsf(&col->margin_rect, x, y) == TRUE)
-            {
-                sel->layout = cast(layout, DLayout);
-                sel->row = UINT32_MAX;
+        if (r2d_containsf(&layout->rect_right, x, y) == TRUE)
+        {
+            sel->layout = cast(layout, DLayout);
+            sel->elem = ekLAYELEM_MARGIN_RIGHT;
+            sel->col = UINT32_MAX;
+            sel->row = UINT32_MAX;
+            return;
+        }
 
-                if (col_i == col_total - 1)
+        if (r2d_containsf(&layout->rect_bottom, x, y) == TRUE)
+        {
+            sel->layout = cast(layout, DLayout);
+            sel->elem = ekLAYELEM_MARGIN_BOTTOM;
+            sel->col = UINT32_MAX;
+            sel->row = UINT32_MAX;
+            return;
+        }
+
+        arrst_foreach_const(col, layout->cols, DColumn)
+            if (col_i < col_total - 1)
+            {
+                if (r2d_containsf(&col->margin_rect, x, y) == TRUE)
                 {
-                    sel->elem = ekLAYELEM_MARGIN_RIGHT;
-                    sel->col = UINT32_MAX;
-                }
-                else
-                {
+                    sel->layout = cast(layout, DLayout);
                     sel->elem = ekLAYELEM_MARGIN_COLUMN;
                     sel->col = col_i;
+                    sel->row = UINT32_MAX;
+                    return;
                 }
-                return;
             }
         arrst_end()
 
         arrst_foreach_const(row, layout->rows, DRow)
-            if (r2d_containsf(&row->margin_rect, x, y) == TRUE)
+            if (row_i < row_total - 1)
             {
-                sel->layout = cast(layout, DLayout);
-                sel->col = UINT32_MAX;
-
-                if (row_i == row_total - 1)
+                if (r2d_containsf(&row->margin_rect, x, y) == TRUE)
                 {
-                    sel->elem = ekLAYELEM_MARGIN_BOTTOM;
-                    sel->row = UINT32_MAX;
-                }
-                else
-                {
+                    sel->layout = cast(layout, DLayout);
                     sel->elem = ekLAYELEM_MARGIN_ROW;
+                    sel->col = UINT32_MAX;
                     sel->row = row_i;
+                    return;
                 }
-                return;
             }
         arrst_end()
 
@@ -798,16 +788,10 @@ static R2Df i_get_rect(const DLayout *layout, const DSelect *sel)
         return layout->rect_top;
 
     case ekLAYELEM_MARGIN_RIGHT:
-    {
-        const DColumn *col = arrst_last_const(layout->cols, DColumn);
-        return col->margin_rect;
-    }
-    
+        return layout->rect_right;
+
     case ekLAYELEM_MARGIN_BOTTOM:
-    {
-        const DRow *row = arrst_last_const(layout->rows, DRow);
-        return row->margin_rect;
-    }
+        return layout->rect_bottom;
 
     case ekLAYELEM_MARGIN_COLUMN:
     {

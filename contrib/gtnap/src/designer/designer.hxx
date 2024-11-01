@@ -76,9 +76,9 @@ struct _dcell_content_t
 struct _dcell_t
 {
     celltype_t type;
-    DCellContent content;
     align_t halign;
     align_t valign;
+    DCellContent content;
 
     /* Non-editable properties */
     R2Df rect;
@@ -89,6 +89,8 @@ struct _dlayout_t
     String *name;
     real32_t margin_left;
     real32_t margin_top;
+    real32_t margin_right;
+    real32_t margin_bottom;
     ArrSt(DColumn) *cols;
     ArrSt(DRow) *rows;
     ArrSt(DCell) *cells;
@@ -97,6 +99,8 @@ struct _dlayout_t
     R2Df rect;
     R2Df rect_left;
     R2Df rect_top;
+    R2Df rect_right;
+    R2Df rect_bottom;
 };
 
 struct _dselect_t

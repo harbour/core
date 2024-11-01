@@ -8,13 +8,13 @@ void dlayout_destroy(DLayout **layout);
 
 void dlayout_name(DLayout *layout, const char_t *name);
 
-void dlayout_margin_top(DLayout *layout, const real32_t margin);
-
-void dlayout_margin_bottom(DLayout *layout, const real32_t margin);
-
 void dlayout_margin_left(DLayout *layout, const real32_t margin);
 
+void dlayout_margin_top(DLayout *layout, const real32_t margin);
+
 void dlayout_margin_right(DLayout *layout, const real32_t margin);
+
+void dlayout_margin_bottom(DLayout *layout, const real32_t margin);
 
 void dlayout_margin_col(DLayout *layout, const uint32_t col, const real32_t margin);
 

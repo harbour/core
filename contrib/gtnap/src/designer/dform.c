@@ -59,6 +59,27 @@ static void i_set_layout_name(DForm *form, DLayout *dlayout)
 
 /*---------------------------------------------------------------------------*/
 
+//DForm *dform_first_example(void)
+//{
+//    DForm *form = heap_new0(DForm);
+//    DLayout *layout1 = dlayout_create(3, 3);
+//    dlayout_margin_col(layout1, 0, 5);
+//    dlayout_margin_col(layout1, 1, 5);
+//    dlayout_margin_row(layout1, 0, 5);
+//    dlayout_margin_row(layout1, 1, 5);
+//    dlayout_margin_left(layout1, 10);
+//    dlayout_margin_top(layout1, 10);
+//    dlayout_margin_right(layout1, 10);
+//    dlayout_margin_bottom(layout1, 10);
+//    form->dlayout = layout1;
+//    form->temp_path = arrst_create(DSelect);
+//    form->sel_path = arrst_create(DSelect);
+//    i_set_layout_name(form, layout1);
+//    return form;
+//}
+
+/*---------------------------------------------------------------------------*/
+
 DForm *dform_first_example(void)
 {
     DForm *form = heap_new0(DForm);
