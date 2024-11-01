@@ -35,6 +35,7 @@ struct _inspectdata_t
     Designer *app;
     DForm *form;
     TableView *table;
+    uint32_t nrows;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -72,9 +73,10 @@ static void i_OnTableData(InspectData *data, Event *e)
     {
         uint32_t *n = event_result(e, uint32_t);
         if (data->form != NULL)
-            *n = dform_selpath_size(data->form);
+            data->nrows = dform_selpath_size(data->form);
         else
-            *n = 0;
+            data->nrows = 0;
+        *n = data->nrows;
         break;
     }
 
@@ -122,5 +124,21 @@ void inspect_set(Panel *panel, DForm *form)
     InspectData *data = panel_get_data(panel, InspectData);
     cassert_no_null(data);
     data->form = form;
+    tableview_update(data->table);
+    if (data->nrows > 0)
+    {
+        uint32_t sel = data->nrows - 1;
+        tableview_select(data->table, &sel, 1);
+        tableview_focus_row(data->table, sel, ekBOTTOM);
+
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void inspect_update(Panel *panel)
+{
+    InspectData *data = panel_get_data(panel, InspectData);
+    cassert_no_null(data);
     tableview_update(data->table);
 }

@@ -284,7 +284,10 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     cell_force_size(cell, 0, 0);
                     _panel_compose(form->panel, NULL, &fsize);
                     dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
+
+                    i_elem_at_mouse(form->dlayout, mouse_x, mouse_y, form->sel_path, &sel);
                     propedit_set(propedit, form, &sel);
+                    inspect_set(inspect, form);
                     form->sel = sel;
                     return TRUE;
                 }
@@ -331,7 +334,7 @@ bool_t dform_OnExit(DForm *form)
 
 /*---------------------------------------------------------------------------*/
 
-void dform_update_cell_text(DForm *form, const DSelect *sel, const char_t *text)
+void dform_synchro_cell_text(DForm *form, const DSelect *sel)
 {
     DCell *cell = dlayout_cell(sel);
     Layout *layout = NULL;
@@ -342,8 +345,7 @@ void dform_update_cell_text(DForm *form, const DSelect *sel, const char_t *text)
     if (cell->type == ekCELL_TYPE_LABEL)
     {
         Label *label = layout_get_label(layout, sel->col, sel->row);
-        dlabel_text(cell->content.label, text);
-        label_text(label, text);
+        label_text(label, tc(cell->content.label->text));
     }
     else
     {
