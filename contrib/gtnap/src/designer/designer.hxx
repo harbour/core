@@ -43,6 +43,22 @@ typedef enum _layelem_t
     ekLAYELEM_CELL
 } layelem_t;
 
+typedef enum _halign_t
+{
+    ekHALIGN_LEFT,
+    ekHALIGN_CENTER,
+    ekHALIGN_RIGHT,
+    ekHALIGN_JUSTIFY
+} halign_t;
+
+typedef enum _valign_t
+{
+    ekVALIGN_TOP,
+    ekVALIGN_CENTER,
+    ekVALIGN_BOTTOM,
+    ekVALIGN_JUSTIFY
+} valign_t;
+
 struct _dlabel_t
 {
     String *name;
@@ -76,8 +92,8 @@ struct _dcell_content_t
 struct _dcell_t
 {
     celltype_t type;
-    align_t halign;
-    align_t valign;
+    halign_t halign;
+    valign_t valign;
     DCellContent content;
 
     /* Non-editable properties */

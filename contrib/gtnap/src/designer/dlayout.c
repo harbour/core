@@ -66,8 +66,8 @@ static void i_init_empty_cell(DCell *cell)
     cassert_no_null(cell);
     bmem_zero(cell, DCell);
     cell->type = ekCELL_TYPE_EMPTY;
-    cell->halign = ekLEFT;
-    cell->valign = ekTOP;
+    cell->halign = ekHALIGN_LEFT;
+    cell->valign = ekVALIGN_TOP;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -290,9 +290,9 @@ void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col,
     i_remove_cell(cell);
     i_init_empty_cell(cell);
     cell->type = ekCELL_TYPE_LAYOUT;
+    cell->halign = ekHALIGN_JUSTIFY;
+    cell->valign = ekVALIGN_JUSTIFY;
     cell->content.layout = sublayout;
-    cell->valign = ekJUSTIFY;
-    cell->halign = ekJUSTIFY;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -309,9 +309,9 @@ void dlayout_add_label(DLayout *layout, DLabel *label, const uint32_t col, const
     i_remove_cell(cell);
     i_init_empty_cell(cell);
     cell->type = ekCELL_TYPE_LABEL;
+    cell->halign = ekHALIGN_LEFT;
+    cell->valign = ekVALIGN_CENTER;
     cell->content.label = label;
-    cell->valign = ekLEFT;
-    cell->halign = ekCENTER;
 }
 
 /*---------------------------------------------------------------------------*/
