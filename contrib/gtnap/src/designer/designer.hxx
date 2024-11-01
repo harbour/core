@@ -45,6 +45,7 @@ typedef enum _layelem_t
 
 struct _dlabel_t
 {
+    String *name;
     String *text;
 };
 

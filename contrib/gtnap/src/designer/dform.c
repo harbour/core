@@ -4,6 +4,7 @@
 #include "dlayout.h"
 #include "dlabel.h"
 #include "dialogs.h"
+#include "inspect.h"
 #include "propedit.h"
 #include <gui/guicontrol.h>
 #include <gui/label.h>
@@ -18,6 +19,7 @@
 #include <core/dbind.h>
 #include <core/heap.h>
 #include <core/strings.h>
+#include <sewer/bstd.h>
 #include <sewer/cassert.h>
 
 struct _dform_t
@@ -29,7 +31,31 @@ struct _dform_t
     ArrSt(DSelect) *temp_path;
     ArrSt(DSelect) *sel_path;
     Panel *panel;
+    uint32_t object_id;
+    char_t temp_id[128];
 };
+
+/*---------------------------------------------------------------------------*/
+
+static void i_set_label_name(DForm *form, DLabel *dlabel)
+{
+    char_t name[64];
+    cassert_no_null(form);
+    bstd_sprintf(name, sizeof(name), "label%d", form->object_id);
+    dlabel_name(dlabel, name);
+    form->object_id += 1;    
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_set_layout_name(DForm *form, DLayout *dlayout)
+{
+    char_t name[64];
+    cassert_no_null(form);
+    bstd_sprintf(name, sizeof(name), "layout%d", form->object_id);
+    dlayout_name(dlayout, name);
+    form->object_id += 1;    
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -41,9 +67,6 @@ DForm *dform_first_example(void)
     DLayout *layout3 = dlayout_create(2, 1);
     DLabel *label1 = dlabel_create();
     DLabel *label2 = dlabel_create();
-    dlayout_set_name(layout1, "Left grid");
-    dlayout_set_name(layout2, "Right grid");
-    dlayout_set_name(layout3, "Main grid");
     dlabel_text(label1, "This is a label");
     dlabel_text(label2, "And other");
     dlayout_add_label(layout1, label1, 0, 0);
@@ -67,6 +90,11 @@ DForm *dform_first_example(void)
     form->dlayout = layout3;
     form->temp_path = arrst_create(DSelect);
     form->sel_path = arrst_create(DSelect);
+    i_set_label_name(form, label1);
+    i_set_label_name(form, label2);
+    i_set_layout_name(form, layout1);
+    i_set_layout_name(form, layout2);
+    i_set_layout_name(form, layout3);
     return form;
 }
 
@@ -164,13 +192,14 @@ bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t dform_OnClick(DForm *form, Window *window, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
+bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
 {
     cassert_no_null(form);
     if (button == ekGUI_MOUSE_LEFT)
     {
         DSelect sel;
         i_elem_at_mouse(form->dlayout, mouse_x, mouse_y, form->sel_path, &sel);
+        inspect_set(inspect, form);
         if (dlayout_empty_cell(&sel) == TRUE)
         {
             switch(widget) {
@@ -194,6 +223,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *propedit, const widget_
                     Label *label = label_create();
                     Cell *cell = layout_cell(layout, sel.col, sel.row);
                     S2Df fsize;
+                    i_set_label_name(form, dlabel);
                     label_text(label, tc(dlabel->text));
                     dlayout_add_label(sel.layout, dlabel, sel.col, sel.row);
                     layout_label(layout, label, sel.col, sel.row);
@@ -248,7 +278,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *propedit, const widget_
                     //    real32_t mrow = dlayout_get_margin_row(dsublayout, j);
                     //    layout_vmargin(sublayout, j, mrow);
                     //}
-
+                    i_set_layout_name(form, dsublayout);
                     dlayout_add_layout(sel.layout, dsublayout, sel.col, sel.row);
                     layout_layout(layout, sublayout, sel.col, sel.row);
                     cell_force_size(cell, 0, 0);
@@ -334,7 +364,19 @@ void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon
 
 uint32_t dform_selpath_size(const DForm *form)
 {
+    uint32_t n = 0;
     cassert_no_null(form);
+    n = arrst_size(form->sel_path, DSelect);    
+    if (n > 0)
+    {
+        const DSelect *last = arrst_last_const(form->sel_path, DSelect);
+        cassert(last->layout != NULL);
+        if (last->elem == ekLAYELEM_CELL)
+            return n * 2 + 1;
+        else
+            return (n - 1) * 2 + 1;
+    }
+    
     return 0;
 }
 
@@ -342,8 +384,65 @@ uint32_t dform_selpath_size(const DForm *form)
 
 const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const uint32_t row)
 {
+    uint32_t i, n = 0;
     cassert_no_null(form);
-    unref(col);
-    unref(row);
+    i = row / 2;
+    n = arrst_size(form->sel_path, DSelect);    
+    cassert(n > 0);
+    cassert(col <= 1);
+
+    /* This is the final (leaf) component */
+    if (i == n)
+    {
+        const DSelect *sel = arrst_last_const(form->sel_path, DSelect);
+        const DCell *cell = dlayout_cell(sel);
+        switch(cell->type)
+        {
+        case ekCELL_TYPE_EMPTY:
+            if (col == 0)
+                return "empty";
+            else
+                return "EmptyCell";
+
+        case ekCELL_TYPE_LABEL:
+            if (col == 0)
+                return tc(cell->content.label->name);
+            else
+                return "Label";
+
+        case ekCELL_TYPE_LAYOUT:
+        cassert_default();
+        }
+    }
+    /* Inner Layout/Cell path nodes */
+    else
+    {
+        const DSelect *sel = arrst_get_const(form->sel_path, i, DSelect);
+
+        /* Even rows == layout */
+        if (row % 2 == 0)
+        {
+            if (col == 0)
+                return tc(sel->layout->name);
+            else
+                return "Layout";
+        }
+        /* Odd rows == cell */
+        else
+        {
+            cassert(sel->elem == ekLAYELEM_CELL);
+            if (col == 0)
+            {
+                bstd_sprintf(cast(form, DForm)->temp_id, sizeof(form->temp_id), "cell%d_%d", sel->col, sel->row);
+                return form->temp_id;
+            }
+            else
+            {
+                return "Cell";
+            }
+        }
+    }
+
     return "";
 }
+

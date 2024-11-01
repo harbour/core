@@ -102,8 +102,12 @@ Panel *inspect_create(Designer *app)
     Panel *panel = panel_create();
     data->table = table;
     tableview_new_column_text(table);
+    tableview_new_column_text(table);
+    tableview_column_width(table, 0, 80);
+    tableview_column_width(table, 1, 80);
+    tableview_header_title(table, 0, "Object");
+    tableview_header_title(table, 1, "Type");
     tableview_OnData(table, listener(data, i_OnTableData, InspectData));
-    tableview_column_width(table, 0, 120);
     tableview_update(table);
     layout_tableview(layout, table, 0, 0);
     panel_layout(panel, layout);
@@ -115,6 +119,8 @@ Panel *inspect_create(Designer *app)
 
 void inspect_set(Panel *panel, DForm *form)
 {
-    unref(panel);
-    unref(form);
+    InspectData *data = panel_get_data(panel, InspectData);
+    cassert_no_null(data);
+    data->form = form;
+    tableview_update(data->table);
 }

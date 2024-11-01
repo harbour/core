@@ -10,7 +10,7 @@ void dform_compose(DForm *form);
 
 bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y);
 
-bool_t dform_OnClick(DForm *form, Window *window, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button);
+bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button);
 
 bool_t dform_OnExit(DForm *form);
 

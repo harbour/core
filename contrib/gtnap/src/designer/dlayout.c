@@ -120,7 +120,7 @@ void dlayout_destroy(DLayout **layout)
 
 /*---------------------------------------------------------------------------*/
 
-void dlayout_set_name(DLayout *layout, const char_t *name)
+void dlayout_name(DLayout *layout, const char_t *name)
 {
     cassert_no_null(layout);
     str_upd(&layout->name, name);
@@ -761,18 +761,17 @@ void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t
         arrst_foreach_const(cell, layout->cells, DCell)
             if (r2d_containsf(&cell->rect, x, y) == TRUE)
             {
+                uint32_t ncols = arrst_size(layout->cols, DColumn);
+                sel->layout = cast(layout, DLayout);
+                sel->elem = ekLAYELEM_CELL;
+                sel->col = cell_i % ncols;
+                sel->row = cell_i / ncols;
+
                 switch(cell->type) {
                 case ekCELL_TYPE_EMPTY:
                 case ekCELL_TYPE_LABEL:
-                {
-                    uint32_t ncols = arrst_size(layout->cols, DColumn);
-                    sel->layout = cast(layout, DLayout);
-                    sel->elem = ekLAYELEM_CELL;
-                    sel->col = cell_i % ncols;
-                    sel->row = cell_i / ncols;
                     break;
-                }
-            
+           
                 case ekCELL_TYPE_LAYOUT:
                     dlayout_elem_at_pos(cell->content.layout, x, y, selpath);
                     break;

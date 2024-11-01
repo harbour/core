@@ -44,6 +44,7 @@ static void i_dbind(void)
     dbind_enum(align_t, ekRIGHT, "");
     dbind_enum(align_t, ekBOTTOM, "");
     dbind_enum(align_t, ekJUSTIFY, "");
+    dbind(DLabel, String *, name);
     dbind(DLabel, String *, text);
     dbind(DColumn, real32_t, margin_right);
     dbind(DRow, real32_t, margin_bottom);
@@ -254,7 +255,7 @@ static void i_OnClick(Designer *app, Event *e)
     if (app->form != NULL)
     {
         const EvMouse *p = event_params(e, EvMouse);
-        if (dform_OnClick(app->form, app->window, app->propedit, app->swidget, p->x, p->y, p->button) == TRUE)
+        if (dform_OnClick(app->form, app->window, app->inspect, app->propedit, app->swidget, p->x, p->y, p->button) == TRUE)
             view_update(app->canvas);
     }
 }

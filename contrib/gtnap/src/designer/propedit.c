@@ -27,9 +27,9 @@
 //#include <sewer/bmem.h>
 #include <sewer/cassert.h>
 
-typedef struct _paneldata_t PanelData;
+typedef struct _propdata_t PropData;
 
-struct _paneldata_t
+struct _propdata_t
 {
     DSelect sel;
     Designer *app;
@@ -58,7 +58,7 @@ static Layout *i_empty_cell_layout(void)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnFilter(PanelData *data, Event *e)
+static void i_OnFilter(PropData *data, Event *e)
 {
     const EvText *p = event_params(e, EvText);
     cassert_no_null(data);
@@ -69,14 +69,14 @@ static void i_OnFilter(PanelData *data, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_label_layout(PanelData *data)
+static Layout *i_label_layout(PropData *data)
 {
     Layout *layout = layout_create(2, 1);
     Label *label = label_create();
     Edit *edit = edit_create();
     cassert_no_null(data);
     label_text(label, "Text");
-    edit_OnFilter(edit, listener(data, i_OnFilter, PanelData));
+    edit_OnFilter(edit, listener(data, i_OnFilter, PropData));
     layout_label(layout, label, 0, 0);
     layout_edit(layout, edit, 1, 0);
     layout_hmargin(layout, 0, 5);
@@ -87,25 +87,25 @@ static Layout *i_label_layout(PanelData *data)
 
 /*---------------------------------------------------------------------------*/
 
-static PanelData *i_data(Designer *app)
+static PropData *i_data(Designer *app)
 {
-    PanelData *data = heap_new0(PanelData);
+    PropData *data = heap_new0(PropData);
     data->app = app;
     return data;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_destroy_data(PanelData **data)
+static void i_destroy_data(PropData **data)
 {
-    heap_delete(data, PanelData);
+    heap_delete(data, PropData);
 }
 
 /*---------------------------------------------------------------------------*/
 
 Panel *propedit_create(Designer *app)
 {
-    PanelData *data = i_data(app);
+    PropData *data = i_data(app);
     Layout *layout0 = i_no_sel_layout();
     Layout *layout1 = i_empty_cell_layout();
     Layout *layout2 = i_label_layout(data);
@@ -113,7 +113,7 @@ Panel *propedit_create(Designer *app)
     panel_layout(panel, layout0);
     panel_layout(panel, layout1);
     panel_layout(panel, layout2);
-    panel_data(panel, &data, i_destroy_data, PanelData);
+    panel_data(panel, &data, i_destroy_data, PropData);
     panel_visible_layout(panel, 0);
     return panel;
 }
@@ -122,7 +122,7 @@ Panel *propedit_create(Designer *app)
 
 void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
 {
-    PanelData *data = panel_get_data(panel, PanelData);
+    PropData *data = panel_get_data(panel, PropData);
     cassert_no_null(sel);
     data->form = form;
     data->sel = *sel;
