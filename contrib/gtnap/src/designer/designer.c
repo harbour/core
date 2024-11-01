@@ -1,4 +1,4 @@
-/* NAppGUI Designer main */
+/* NAppGUI Designer Application */
 
 #include <nappgui.h>
 #include "res_designer.h"
@@ -7,10 +7,9 @@
 #include "dform.h"
 #include "dialogs.h"
 #include "propedit.h"
+#include "inspect.h"
 
-typedef struct _app_t App;
-
-struct _app_t
+struct _desiger_t
 {
     Window *window;
     Label *status_label;
@@ -20,6 +19,7 @@ struct _app_t
     View *canvas;
     Layout *canvas_layout;
     Layout *main_layout;
+    Panel *inspect;
     Panel *propedit;
 
     /* GUI Bindings */
@@ -44,22 +44,22 @@ static void i_dbind(void)
     dbind_enum(align_t, ekRIGHT, "");
     dbind_enum(align_t, ekBOTTOM, "");
     dbind_enum(align_t, ekJUSTIFY, "");
-    dbind(DLabel, String*, text);
+    dbind(DLabel, String *, text);
     dbind(DColumn, real32_t, margin_right);
     dbind(DRow, real32_t, margin_bottom);
     dbind(DCell, celltype_t, type);
     dbind(DCell, align_t, halign);
     dbind(DCell, align_t, valign);
-    dbind(DLayout, String*, name);
+    dbind(DLayout, String *, name);
     dbind(DLayout, real32_t, margin_left);
     dbind(DLayout, real32_t, margin_top);
-    dbind(DLayout, ArrSt(DColumn)*, cols);
-    dbind(DLayout, ArrSt(DRow)*, rows);
-    dbind(DLayout, ArrSt(DCell)*, cells);
+    dbind(DLayout, ArrSt(DColumn) *, cols);
+    dbind(DLayout, ArrSt(DRow) *, rows);
+    dbind(DLayout, ArrSt(DCell) *, cells);
 
     /* Don't move, we must first declare the inner struct */
-    dbind(DCellContent, DLabel*, label);
-    dbind(DCellContent, DLayout*, layout);
+    dbind(DCellContent, DLabel *, label);
+    dbind(DCellContent, DLayout *, layout);
     dbind(DCell, DCellContent, content);
 
     /* GUI */
@@ -69,12 +69,12 @@ static void i_dbind(void)
     dbind_enum(widget_t, ekWIDGET_BUTTON, "");
     dbind_enum(widget_t, ekWIDGET_CHECKBOX, "");
     dbind_enum(widget_t, ekWIDGET_EDITBOX, "");
-    dbind(App, widget_t, swidget);
+    dbind(Designer, widget_t, swidget);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_tools_layout(App *app, ResPack *pack)
+static Layout *i_tools_layout(Designer *app, ResPack *pack)
 {
     Layout *layout = layout_create(9, 1);
     Button *button1 = button_flat();
@@ -108,7 +108,7 @@ static Layout *i_tools_layout(App *app, ResPack *pack)
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_widgets_layout(App *app)
+static Layout *i_widgets_layout(Designer *app)
 {
     Layout *layout = layout_create(1, 6);
     Button *radio1 = button_radio();
@@ -133,14 +133,14 @@ static Layout *i_widgets_layout(App *app)
     layout_vmargin(layout, 1, 5);
     layout_vmargin(layout, 2, 5);
     layout_vmargin(layout, 3, 5);
-    layout_vmargin(layout, 4, 5);    
+    layout_vmargin(layout, 4, 5);
     unref(app);
     return layout;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_left_layout(App *app)
+static Layout *i_left_layout(Designer *app)
 {
     Layout *layout1 = layout_create(1, 5);
     Layout *layout2 = i_widgets_layout(app);
@@ -173,58 +173,56 @@ static Layout *i_left_layout(App *app)
     layout_vmargin(layout1, 2, 5);
     layout_vexpand2(layout1, 1, 4, .75f);
 
-    cell_dbind(layout_cell(layout1, 0, 3), App, widget_t, swidget);
+    cell_dbind(layout_cell(layout1, 0, 3), Designer, widget_t, swidget);
     return layout1;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_right_layout(App *app)
+static Layout *i_right_layout(Designer *app)
 {
     Layout *layout = layout_create(1, 4);
     Label *label1 = label_create();
     Label *label2 = label_create();
-    TableView *table = tableview_create();
-    Panel *panel = propedit_create(app->canvas);
+    Panel *panel1 = inspect_create(app->canvas);
+    Panel *panel2 = propedit_create(app->canvas);
     cassert_no_null(app);
     label_text(label1, "Object inspector");
     label_text(label2, "Property editor");
-    tableview_new_column_text(table);
-    tableview_size(table, s2df(150, 200));
-    tableview_column_width(table, 0, 120);
-    tableview_update(table);
-    panel_size(panel, s2df(150, 200));
+    panel_size(panel1, s2df(150, 200));
+    panel_size(panel2, s2df(150, 200));
     layout_label(layout, label1, 0, 0);
-    layout_tableview(layout, table, 0, 1);
+    layout_panel(layout, panel1, 0, 1);
     layout_label(layout, label2, 0, 2);
-    layout_panel(layout, panel, 0, 3);
+    layout_panel(layout, panel2, 0, 3);
     layout_vexpand2(layout, 1, 3, .5f);
     layout_vmargin(layout, 1, 5.f);
-    app->propedit = panel;
+    app->inspect = panel1;
+    app->propedit = panel2;
     return layout;
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnDraw(App *app, Event *e)
+static void i_OnDraw(Designer *app, Event *e)
 {
     const EvDraw *p = event_params(e, EvDraw);
     cassert_no_null(app);
-    //Font *font = font_system(30, 0);
+    // Font *font = font_system(30, 0);
     draw_clear(p->ctx, kCOLOR_YELLOW);
 
     if (app->form != NULL)
     {
         dform_draw(app->form, app->swidget, app->add_icon, p->ctx);
     }
-    //draw_font(p->ctx, font);
-    //draw_text(p->ctx, "--> CANVAS <--", 0, 0);
-    //font_destroy(&font);
+    // draw_font(p->ctx, font);
+    // draw_text(p->ctx, "--> CANVAS <--", 0, 0);
+    // font_destroy(&font);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnMove(App *app, Event *e)
+static void i_OnMove(Designer *app, Event *e)
 {
     const EvMouse *p = event_params(e, EvMouse);
     cassert_no_null(app);
@@ -237,7 +235,7 @@ static void i_OnMove(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnExit(App *app, Event *e)
+static void i_OnExit(Designer *app, Event *e)
 {
     cassert_no_null(app);
     unref(e);
@@ -250,7 +248,7 @@ static void i_OnExit(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnClick(App *app, Event *e)
+static void i_OnClick(Designer *app, Event *e)
 {
     cassert_no_null(app);
     if (app->form != NULL)
@@ -263,24 +261,24 @@ static void i_OnClick(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnSize(App *app, Event *e)
-{       
+static void i_OnSize(Designer *app, Event *e)
+{
     unref(app);
     unref(e);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_canvas_layout(App *app)
+static Layout *i_canvas_layout(Designer *app)
 {
     Layout *layout = layout_create(1, 1);
     View *view = view_scroll();
     view_size(view, s2df(450, 200));
-    view_OnDraw(view, listener(app, i_OnDraw, App));
-    view_OnMove(view, listener(app, i_OnMove, App));
-    view_OnExit(view, listener(app, i_OnExit, App));
-    view_OnClick(view, listener(app, i_OnClick, App));
-    view_OnSize(view, listener(app, i_OnSize, App));
+    view_OnDraw(view, listener(app, i_OnDraw, Designer));
+    view_OnMove(view, listener(app, i_OnMove, Designer));
+    view_OnExit(view, listener(app, i_OnExit, Designer));
+    view_OnClick(view, listener(app, i_OnClick, Designer));
+    view_OnSize(view, listener(app, i_OnSize, Designer));
     layout_view(layout, view, 0, 0);
     app->canvas = view;
     return layout;
@@ -288,7 +286,7 @@ static Layout *i_canvas_layout(App *app)
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_middle_layout(App *app)
+static Layout *i_middle_layout(Designer *app)
 {
     Layout *layout1 = layout_create(3, 1);
     Layout *layout2 = i_left_layout(app);
@@ -311,7 +309,7 @@ static Layout *i_middle_layout(App *app)
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_statusbar_layout(App *app)
+static Layout *i_statusbar_layout(Designer *app)
 {
     Layout *layout = layout_create(4, 1);
     Label *label1 = label_create();
@@ -340,7 +338,7 @@ static Layout *i_statusbar_layout(App *app)
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_main_layout(App *app, ResPack *pack)
+static Layout *i_main_layout(Designer *app, ResPack *pack)
 {
     Layout *layout1 = layout_create(1, 3);
     Layout *layout2 = i_tools_layout(app, pack);
@@ -368,7 +366,7 @@ static Layout *i_main_layout(App *app, ResPack *pack)
 
 /*---------------------------------------------------------------------------*/
 
-static Panel *i_panel(App *app, ResPack *pack)
+static Panel *i_panel(Designer *app, ResPack *pack)
 {
     Panel *panel = panel_create();
     Layout *layout = i_main_layout(app, pack);
@@ -379,7 +377,7 @@ static Panel *i_panel(App *app, ResPack *pack)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnClose(App *app, Event *e)
+static void i_OnClose(Designer *app, Event *e)
 {
     osapp_finish();
     unref(app);
@@ -388,9 +386,9 @@ static void i_OnClose(App *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static App *i_app(ResPack *pack)
+static Designer *i_app(ResPack *pack)
 {
-    App *app = heap_new0(App);
+    Designer *app = heap_new0(Designer);
     i_dbind();
     dialog_dbind();
     app->swidget = ekWIDGET_SELECT;
@@ -400,7 +398,7 @@ static App *i_app(ResPack *pack)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_init_forms(App *app)
+static void i_init_forms(Designer *app)
 {
     cassert_no_null(app);
     cassert(app->form == NULL);
@@ -410,19 +408,19 @@ static void i_init_forms(App *app)
 
 /*---------------------------------------------------------------------------*/
 
-static App *i_create(void)
+static Designer *i_create(void)
 {
     ResPack *pack = res_designer_respack("");
-    App *app = i_app(pack);
+    Designer *app = i_app(pack);
     Panel *panel = i_panel(app, pack);
     app->window = window_create(ekWINDOW_STDRES);
     window_panel(app->window, panel);
     window_title(app->window, "GTNAP Designer");
     window_origin(app->window, v2df(500, 200));
-    window_OnClose(app->window, listener(app, i_OnClose, App));
+    window_OnClose(app->window, listener(app, i_OnClose, Designer));
     window_show(app->window);
-    layout_dbind(app->main_layout, NULL, App);
-    layout_dbind_obj(app->main_layout, app, App);
+    layout_dbind(app->main_layout, NULL, Designer);
+    layout_dbind_obj(app->main_layout, app, Designer);
     respack_destroy(&pack);
     i_init_forms(app);
     return app;
@@ -430,19 +428,19 @@ static App *i_create(void)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_destroy(App **app)
+static void i_destroy(Designer **app)
 {
     cassert_no_null(app);
     cassert_no_null(*app);
     image_destroy(&(*app)->add_icon);
     dform_destroy(&(*app)->form);
     window_destroy(&(*app)->window);
-    heap_delete(app, App);
+    heap_delete(app, Designer);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_update(App *app, const real64_t prtime, const real64_t ctime)
+static void i_update(Designer *app, const real64_t prtime, const real64_t ctime)
 {
     unref(app);
     unref(prtime);
@@ -452,4 +450,4 @@ static void i_update(App *app, const real64_t prtime, const real64_t ctime)
 /*---------------------------------------------------------------------------*/
 
 #include "osmain.h"
-osmain_sync(0.1, i_create, i_destroy, i_update, "", App)
+osmain_sync(0.1, i_create, i_destroy, i_update, "", Designer)
