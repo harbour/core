@@ -14,6 +14,7 @@
 #include <gui/window.h>
 #include <geom2d/v2d.h>
 #include <geom2d/s2d.h>
+#include <core/arrst.h>
 #include <core/dbind.h>
 #include <core/heap.h>
 #include <core/strings.h>
@@ -25,6 +26,8 @@ struct _dform_t
     Layout *layout;
     DSelect hover;
     DSelect sel;
+    ArrSt(DSelect) *temp_path;
+    ArrSt(DSelect) *sel_path;
     Panel *panel;
 };
 
@@ -62,6 +65,8 @@ DForm *dform_first_example(void)
     dlayout_margin_bottom(layout3, 10);
     dlayout_margin_col(layout3, 0, 5);
     form->dlayout = layout3;
+    form->temp_path = arrst_create(DSelect);
+    form->sel_path = arrst_create(DSelect);
     return form;
 }
 
@@ -72,7 +77,8 @@ void dform_destroy(DForm **form)
     cassert_no_null(form);
     cassert_no_null(*form);
     dlayout_destroy(&(*form)->dlayout);
-
+    arrst_destroy(&(*form)->temp_path, NULL, DSelect);
+    arrst_destroy(&(*form)->sel_path, NULL, DSelect);
     if ((*form)->panel != NULL)
     {
         cassert((*form)->layout != NULL);
@@ -126,11 +132,31 @@ static bool_t i_sel_equ(const DSelect *sel1, const DSelect *sel2)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_elem_at_mouse(DLayout *dlayout, const real32_t mouse_x, const real32_t mouse_y, ArrSt(DSelect) *selpath, DSelect *sel)
+{
+    cassert_no_null(sel);
+    arrst_clear(selpath, NULL, DSelect);
+    dlayout_elem_at_pos(dlayout, mouse_x, mouse_y, selpath);
+    if (arrst_size(selpath, DSelect) > 0)
+    {
+        *sel = *arrst_last(selpath, DSelect);
+    }
+    else
+    {
+        sel->layout = NULL;
+        sel->elem = ENUM_MAX(layelem_t);
+        sel->col = UINT32_MAX;
+        sel->row = UINT32_MAX;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
 {
     DSelect hover;
     bool_t equ = TRUE;
-    dlayout_elem_at_pos(form->dlayout, mouse_x, mouse_y, &hover);
+    i_elem_at_mouse(form->dlayout, mouse_x, mouse_y, form->temp_path, &hover);
     equ = i_sel_equ(&form->hover, &hover);
     form->hover = hover;
     return !equ;
@@ -144,7 +170,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *propedit, const widget_
     if (button == ekGUI_MOUSE_LEFT)
     {
         DSelect sel;
-        dlayout_elem_at_pos(form->dlayout, mouse_x, mouse_y, &sel);
+        i_elem_at_mouse(form->dlayout, mouse_x, mouse_y, form->sel_path, &sel);
         if (dlayout_empty_cell(&sel) == TRUE)
         {
             switch(widget) {

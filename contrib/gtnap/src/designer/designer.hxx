@@ -108,5 +108,6 @@ struct _dselect_t
 DeclSt(DColumn);
 DeclSt(DRow);
 DeclSt(DCell);
+DeclSt(DSelect);
 
 #endif
