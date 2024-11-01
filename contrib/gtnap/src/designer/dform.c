@@ -329,3 +329,21 @@ void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon
     cassert_no_null(form);
     dlayout_draw(form->dlayout, form->layout, &form->hover, &form->sel, swidget, add_icon, ctx);
 }
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t dform_selpath_size(const DForm *form)
+{
+    cassert_no_null(form);
+    return 0;
+}
+
+/*---------------------------------------------------------------------------*/
+
+const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const uint32_t row)
+{
+    cassert_no_null(form);
+    unref(col);
+    unref(row);
+    return "";
+}

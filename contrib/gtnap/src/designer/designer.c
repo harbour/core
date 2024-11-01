@@ -184,8 +184,8 @@ static Layout *i_right_layout(Designer *app)
     Layout *layout = layout_create(1, 4);
     Label *label1 = label_create();
     Label *label2 = label_create();
-    Panel *panel1 = inspect_create(app->canvas);
-    Panel *panel2 = propedit_create(app->canvas);
+    Panel *panel1 = inspect_create(app);
+    Panel *panel2 = propedit_create(app);
     cassert_no_null(app);
     label_text(label1, "Object inspector");
     label_text(label2, "Property editor");
@@ -445,6 +445,14 @@ static void i_update(Designer *app, const real64_t prtime, const real64_t ctime)
     unref(app);
     unref(prtime);
     unref(ctime);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void designer_canvas_update(Designer *app)
+{
+    cassert_no_null(app);
+    view_update(app->canvas);
 }
 
 /*---------------------------------------------------------------------------*/

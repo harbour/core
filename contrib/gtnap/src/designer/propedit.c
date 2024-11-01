@@ -1,6 +1,7 @@
 /* Property editor */
 
 #include "propedit.h"
+#include "designer.h"
 #include "dlayout.h"
 #include "dlabel.h"
 #include "dform.h"
@@ -31,7 +32,7 @@ typedef struct _paneldata_t PanelData;
 struct _paneldata_t
 {
     DSelect sel;
-    View *canvas;
+    Designer *app;
     DForm *form;
     Edit *edit;
 };
@@ -63,7 +64,7 @@ static void i_OnFilter(PanelData *data, Event *e)
     cassert_no_null(data);
     dform_update_cell_text(data->form, &data->sel, p->text);
     dform_compose(data->form);
-    view_update(data->canvas);
+    designer_canvas_update(data->app);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -86,10 +87,10 @@ static Layout *i_label_layout(PanelData *data)
 
 /*---------------------------------------------------------------------------*/
 
-static PanelData *i_data(View *canvas)
+static PanelData *i_data(Designer *app)
 {
     PanelData *data = heap_new0(PanelData);
-    data->canvas = canvas;
+    data->app = app;
     return data;
 }
 
@@ -102,9 +103,9 @@ static void i_destroy_data(PanelData **data)
 
 /*---------------------------------------------------------------------------*/
 
-Panel *propedit_create(View *canvas)
+Panel *propedit_create(Designer *app)
 {
-    PanelData *data = i_data(canvas);
+    PanelData *data = i_data(app);
     Layout *layout0 = i_no_sel_layout();
     Layout *layout1 = i_empty_cell_layout();
     Layout *layout2 = i_label_layout(data);

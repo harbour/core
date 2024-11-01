@@ -18,3 +18,6 @@ void dform_update_cell_text(DForm *form, const DSelect *sel, const char_t *text)
 
 void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon, DCtx *ctx);
 
+uint32_t dform_selpath_size(const DForm *form);
+
+const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const uint32_t row);

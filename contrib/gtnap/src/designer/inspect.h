@@ -2,6 +2,6 @@
 
 #include "designer.hxx"
 
-Panel *inspect_create(View *canvas);
+Panel *inspect_create(Designer *app);
 
-void inspect_set(Panel *panel, DForm *form, const ArrSt(DSelect) *selpath);
+void inspect_set(Panel *panel, DForm *form);
