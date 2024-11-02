@@ -22,6 +22,8 @@ void dform_synchro_column_margin(DForm *form, const DLayout *dlayout, const DCol
 
 void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *row);
 
+void dform_synchro_cell_halign(DForm *form, const DLayout *dlayout, const DCell *cell, const uint32_t col, const uint32_t row);
+
 void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon, DCtx *ctx);
 
 uint32_t dform_selpath_size(const DForm *form);

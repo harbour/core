@@ -386,13 +386,10 @@ void dform_synchro_cell_text(DForm *form, const DSelect *sel)
 void dform_synchro_layout_margin(DForm *form, const DLayout *dlayout)
 {
     Layout *layout = NULL;
-    S2Df fsize;
     cassert_no_null(form);
     cassert_no_null(dlayout);
     layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
     layout_margin4(layout, dlayout->margin_top, dlayout->margin_right, dlayout->margin_bottom, dlayout->margin_left);
-    _panel_compose(form->panel, NULL, &fsize);
-    dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -401,7 +398,6 @@ void dform_synchro_column_margin(DForm *form, const DLayout *dlayout, const DCol
 {
     Layout *layout = NULL;
     uint32_t i, ncols;
-    S2Df fsize;
     cassert_no_null(form);
     cassert_no_null(dlayout);
     layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
@@ -415,8 +411,6 @@ void dform_synchro_column_margin(DForm *form, const DLayout *dlayout, const DCol
 
     cassert(i < ncols);
     layout_hmargin(layout, i, column->margin_right);
-    _panel_compose(form->panel, NULL, &fsize);
-    dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -425,7 +419,6 @@ void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *r
 {
     Layout *layout = NULL;
     uint32_t j, nrows;
-    S2Df fsize;
     cassert_no_null(form);
     cassert_no_null(dlayout);
     layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
@@ -439,8 +432,56 @@ void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *r
 
     cassert(j < nrows);
     layout_vmargin(layout, j, row->margin_bottom);
-    _panel_compose(form->panel, NULL, &fsize);
-    dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static align_t i_halign(const halign_t halign)
+{
+    switch(halign) {
+    case ekHALIGN_LEFT:
+        return ekLEFT;
+    case ekHALIGN_CENTER:
+        return ekCENTER;
+    case ekHALIGN_RIGHT:
+        return ekRIGHT;
+    case ekHALIGN_JUSTIFY:
+        return ekJUSTIFY;
+    cassert_default();
+    }
+    return ekLEFT;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static align_t i_valign(const valign_t valign)
+{
+    switch(valign) {
+    case ekVALIGN_TOP:
+        return ekTOP;
+    case ekVALIGN_CENTER:
+        return ekCENTER;
+    case ekVALIGN_BOTTOM:
+        return ekBOTTOM;
+    case ekVALIGN_JUSTIFY:
+        return ekJUSTIFY;
+    cassert_default();
+    }
+    return ekTOP;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_synchro_cell_halign(DForm *form, const DLayout *dlayout, const DCell *cell, const uint32_t col, const uint32_t row)
+{
+    Layout *layout = NULL;
+    align_t align = ENUM_MAX(align_t);
+    cassert_no_null(form);
+    cassert_no_null(cell);
+    cassert(dlayout_cell(cast(dlayout, DLayout), col, row) == cell);
+    layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
+    align = i_halign(cell->halign);
+    layout_halign(layout, col, row, align);
 }
 
 /*---------------------------------------------------------------------------*/

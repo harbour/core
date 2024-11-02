@@ -1026,12 +1026,14 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
             case ekCELL_TYPE_LABEL:
             {
                 color_t color = i_is_cell_sel(hover, layout, i, j) ? kCOLOR_RED : kCOLOR_BLACK;
+                color_t bgcolor = color_rgb(225, 225, 0);
                 const Label *glabel = cell_label(gcell);
                 const Font *gfont = label_get_font(glabel);
                 draw_font(ctx, gfont);
+                draw_fill_color(ctx, bgcolor);
                 draw_text_color(ctx, color);
-                drawctrl_text(ctx, tc(cell->content.label->text), (int32_t)cell->rect.pos.x, (int32_t)cell->rect.pos.y, ekCTRL_STATE_NORMAL);
-                //draw_text(ctx, tc(cell->content.label->text), cell->rect.pos.x, cell->rect.pos.y);
+                draw_rect(ctx, ekFILL, cell->content_rect.pos.x, cell->content_rect.pos.y, cell->content_rect.size.width, cell->content_rect.size.height);
+                drawctrl_text(ctx, tc(cell->content.label->text), (int32_t)cell->content_rect.pos.x, (int32_t)cell->content_rect.pos.y, ekCTRL_STATE_NORMAL);
                 break;
             }
             case ekCELL_TYPE_LAYOUT:
