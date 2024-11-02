@@ -59,47 +59,54 @@ static Layout *i_no_sel_layout(void)
 
 /*---------------------------------------------------------------------------*/
 
+static Layout *i_value_updown_layout(void)
+{
+    Layout *layout = layout_create(2, 1);
+    Edit *edit = edit_create();
+    UpDown *updown = updown_create();
+    layout_edit(layout, edit, 0, 0);
+    layout_updown(layout, updown, 1, 0);
+    layout_hexpand(layout, 0);
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_margin_layout(void)
 {
-    Layout *layout = layout_create(3, 4);
+    Layout *layout = layout_create(2, 5);
     Label *label1 = label_create();
     Label *label2 = label_create();
     Label *label3 = label_create();
     Label *label4 = label_create();
-    Edit *edit1 = edit_create();
-    Edit *edit2 = edit_create();
-    Edit *edit3 = edit_create();
-    Edit *edit4 = edit_create();
-    UpDown *updown1 = updown_create();
-    UpDown *updown2 = updown_create();
-    UpDown *updown3 = updown_create();
-    UpDown *updown4 = updown_create();
-    label_text(label1, "Top");
-    label_text(label2, "Left");
-    label_text(label3, "Bottom");
-    label_text(label4, "Right");
+    Label *label5 = label_create();
+    Edit *edit = edit_create();
+    Layout *val1 = i_value_updown_layout();
+    Layout *val2 = i_value_updown_layout();
+    Layout *val3 = i_value_updown_layout();
+    Layout *val4 = i_value_updown_layout();
+    label_text(label1, "Name");
+    label_text(label2, "Top");
+    label_text(label3, "Left");
+    label_text(label4, "Bottom");
+    label_text(label5, "Right");
     layout_label(layout, label1, 0, 0);
     layout_label(layout, label2, 0, 1);
     layout_label(layout, label3, 0, 2);
     layout_label(layout, label4, 0, 3);
-    layout_edit(layout, edit1, 1, 0);
-    layout_edit(layout, edit2, 1, 1);
-    layout_edit(layout, edit3, 1, 2);
-    layout_edit(layout, edit4, 1, 3);
-    layout_updown(layout, updown1, 2, 0);
-    layout_updown(layout, updown2, 2, 1);
-    layout_updown(layout, updown3, 2, 2);
-    layout_updown(layout, updown4, 2, 3);
+    layout_label(layout, label5, 0, 4);
+    layout_edit(layout, edit, 1, 0);
+    layout_layout(layout, val1, 1, 1);
+    layout_layout(layout, val2, 1, 2);
+    layout_layout(layout, val3, 1, 3);
+    layout_layout(layout, val4, 1, 4);
     layout_hexpand(layout, 1);
     layout_hmargin(layout, 0, i_GRID_HMARGIN);
-    cell_dbind(layout_cell(layout, 1, 0), DLayout, real32_t, margin_left);
+    cell_dbind(layout_cell(layout, 1, 0), DLayout, String*, name);
     cell_dbind(layout_cell(layout, 1, 1), DLayout, real32_t, margin_top);
-    cell_dbind(layout_cell(layout, 1, 2), DLayout, real32_t, margin_right);
+    cell_dbind(layout_cell(layout, 1, 2), DLayout, real32_t, margin_left);
     cell_dbind(layout_cell(layout, 1, 3), DLayout, real32_t, margin_bottom);
-    cell_dbind(layout_cell(layout, 2, 0), DLayout, real32_t, margin_left);
-    cell_dbind(layout_cell(layout, 2, 1), DLayout, real32_t, margin_top);
-    cell_dbind(layout_cell(layout, 2, 2), DLayout, real32_t, margin_right);
-    cell_dbind(layout_cell(layout, 2, 3), DLayout, real32_t, margin_bottom);
+    cell_dbind(layout_cell(layout, 1, 4), DLayout, real32_t, margin_right);
     return layout;
 }
 
@@ -110,10 +117,10 @@ static void i_OnLayoutNotify(PropData *data, Event *e)
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
 
-    //if (evbind_modify(e, DLabel, String*, name) == TRUE)
-    //{
-    //    designer_inspect_update(data->app);
-    //}
+    if (evbind_modify(e, DLayout, String*, name) == TRUE)
+    {
+        designer_inspect_update(data->app);
+    }
     //else if (evbind_modify(e, DLabel, String*, text) == TRUE)
     //{
     //    dform_synchro_cell_text(data->form, &data->sel);
