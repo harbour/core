@@ -252,7 +252,8 @@ static void i_OnColumnNotify(PropData *data, Event *e)
     if (evbind_modify(e, DColumn, real32_t, margin_right) == TRUE)
     {
         DColumn *dcolumn = evbind_object(e, DColumn);
-        dform_synchro_column_margin(data->form, data->sel.layout, dcolumn);
+        uint32_t col = popup_get_selected(data->column_popup);
+        dform_synchro_column_margin(data->form, data->sel.layout, dcolumn, col);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -267,7 +268,8 @@ static void i_OnRowNotify(PropData *data, Event *e)
     if (evbind_modify(e, DRow, real32_t, margin_bottom) == TRUE)
     {
         DRow *drow = evbind_object(e, DRow);
-        dform_synchro_row_margin(data->form, data->sel.layout, drow);
+        uint32_t row = popup_get_selected(data->row_popup);
+        dform_synchro_row_margin(data->form, data->sel.layout, drow, row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -375,6 +377,13 @@ static void i_OnCellNotify(PropData *data, Event *e)
     {
         DCell *dcell = evbind_object(e, DCell);
         dform_synchro_cell_halign(data->form, data->sel.layout, dcell, data->sel.col, data->sel.row);
+        dform_compose(data->form);
+        designer_canvas_update(data->app);
+    }
+    else if (evbind_modify(e, DCell, valign_t, valign) == TRUE)
+    {
+        DCell *dcell = evbind_object(e, DCell);
+        dform_synchro_cell_valign(data->form, data->sel.layout, dcell, data->sel.col, data->sel.row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }

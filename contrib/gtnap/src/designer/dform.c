@@ -394,44 +394,26 @@ void dform_synchro_layout_margin(DForm *form, const DLayout *dlayout)
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_column_margin(DForm *form, const DLayout *dlayout, const DColumn *column)
+void dform_synchro_column_margin(DForm *form, const DLayout *dlayout, const DColumn *dcolumn, const uint32_t col)
 {
     Layout *layout = NULL;
-    uint32_t i, ncols;
     cassert_no_null(form);
-    cassert_no_null(dlayout);
+    cassert_no_null(dcolumn);
+    cassert(dlayout_column(cast(dlayout, DLayout), col) == dcolumn);
     layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
-    ncols = dlayout_ncols(dlayout);
-
-    for (i = 0; i < ncols; ++i)
-    {
-        if (dlayout_column(cast(dlayout, DLayout), i) == column)
-            break;
-    }
-
-    cassert(i < ncols);
-    layout_hmargin(layout, i, column->margin_right);
+    layout_hmargin(layout, col, dcolumn->margin_right);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *row)
+void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *drow, const uint32_t row)
 {
     Layout *layout = NULL;
-    uint32_t j, nrows;
     cassert_no_null(form);
-    cassert_no_null(dlayout);
+    cassert_no_null(drow);
+    cassert(dlayout_row(cast(dlayout, DLayout), row) == drow);
     layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
-    nrows = dlayout_nrows(dlayout);
-
-    for (j = 0; j < nrows; ++j)
-    {
-        if (dlayout_row(cast(dlayout, DLayout), j) == row)
-            break;
-    }
-
-    cassert(j < nrows);
-    layout_vmargin(layout, j, row->margin_bottom);
+    layout_vmargin(layout, row, drow->margin_bottom);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -482,6 +464,20 @@ void dform_synchro_cell_halign(DForm *form, const DLayout *dlayout, const DCell 
     layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
     align = i_halign(cell->halign);
     layout_halign(layout, col, row, align);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_synchro_cell_valign(DForm *form, const DLayout *dlayout, const DCell *cell, const uint32_t col, const uint32_t row)
+{
+    Layout *layout = NULL;
+    align_t align = ENUM_MAX(align_t);
+    cassert_no_null(form);
+    cassert_no_null(cell);
+    cassert(dlayout_cell(cast(dlayout, DLayout), col, row) == cell);
+    layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
+    align = i_valign(cell->valign);
+    layout_valign(layout, col, row, align);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -660,7 +660,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                 {
                     DLayout *sublayout = dcell->content.layout;
                     Layout *subglayout = layout_get_layout(cast(glayout, Layout), i, j);
-                    dlayout_synchro_visual(sublayout, subglayout, v2df(x, y));
+                    dlayout_synchro_visual(sublayout, subglayout, v2df(cellx, celly));
                     break;
                 }
 
