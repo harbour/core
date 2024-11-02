@@ -349,6 +349,22 @@ static ___INLINE DCell *i_cell(DLayout *layout, const uint32_t col, const uint32
 
 /*---------------------------------------------------------------------------*/
 
+DColumn *dlayout_column(DLayout *layout, const uint32_t col)
+{
+    cassert_no_null(layout);
+    return arrst_get(layout->cols, col, DColumn);
+}
+
+/*---------------------------------------------------------------------------*/
+
+DRow *dlayout_row(DLayout *layout, const uint32_t row)
+{
+    cassert_no_null(layout);
+    return arrst_get(layout->rows, row, DRow);
+}
+
+/*---------------------------------------------------------------------------*/
+
 bool_t dlayout_empty_cell(const DSelect *sel)
 {
     cassert_no_null(sel);

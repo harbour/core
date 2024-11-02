@@ -61,10 +61,12 @@ static void i_dbind(void)
     dbind(DLayout, ArrSt(DColumn) *, cols);
     dbind(DLayout, ArrSt(DRow) *, rows);
     dbind(DLayout, ArrSt(DCell) *, cells);
+    dbind_increment(DColumn, real32_t, margin_right, 1);
     dbind_increment(DLayout, real32_t, margin_left, 1);
     dbind_increment(DLayout, real32_t, margin_top, 1);
     dbind_increment(DLayout, real32_t, margin_right, 1);
     dbind_increment(DLayout, real32_t, margin_bottom, 1);
+    dbind_range(DColumn, real32_t, margin_right, 0, 100);
     dbind_range(DLayout, real32_t, margin_left, 0, 100);
     dbind_range(DLayout, real32_t, margin_top, 0, 100);
     dbind_range(DLayout, real32_t, margin_right, 0, 100);

@@ -34,6 +34,10 @@ void dlayout_add_label(DLayout *layout, DLabel *label, const uint32_t col, const
 
 bool_t dlayout_empty_cell(const DSelect *sel);
 
+DColumn *dlayout_column(DLayout *layout, const uint32_t col);
+
+DRow *dlayout_row(DLayout *layout, const uint32_t row);
+
 DCell *dlayout_cell(DLayout *layout, const uint32_t col, const uint32_t row);
 
 DCell *dlayout_cell_sel(const DSelect *sel);
