@@ -33,20 +33,8 @@ struct _dform_t
     ArrSt(DSelect) *sel_path;
     Panel *panel;
     uint32_t layout_id;
-    uint32_t object_id;
-    char_t temp_id[128];
+    uint32_t cell_id;
 };
-
-/*---------------------------------------------------------------------------*/
-
-static void i_set_cell_name(DForm *form, DCell *dcell)
-{
-    char_t name[64];
-    cassert_no_null(form);
-    bstd_sprintf(name, sizeof(name), "object%d", form->object_id);
-    dcell_name(dcell, name);
-    form->object_id += 1;    
-}
 
 /*---------------------------------------------------------------------------*/
 
@@ -70,9 +58,9 @@ static void i_layout_obj_names(DForm *form, DLayout *dlayout)
             {
                 char_t name[64];
                 DCell *dcell = dlayout_cell(dlayout, i, j);
-                bstd_sprintf(name, sizeof(name), "object%d", form->object_id);
+                bstd_sprintf(name, sizeof(name), "cell%d", form->cell_id);
                 dcell_name(dcell, name);
-                form->object_id += 1;
+                form->cell_id += 1;
             }
         }
     }
@@ -413,7 +401,7 @@ uint32_t dform_selpath_size(const DForm *form)
         const DSelect *last = arrst_last_const(form->sel_path, DSelect);
         cassert(last->layout != NULL);
         if (last->elem == ekLAYELEM_CELL)
-            return n * 2 + 1;
+            return n * 2;
         else
             return (n - 1) * 2 + 1;
     }
@@ -425,17 +413,22 @@ uint32_t dform_selpath_size(const DForm *form)
 
 const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const uint32_t row)
 {
-    uint32_t i, n = 0;
+    const DSelect *sel = NULL;
     cassert_no_null(form);
-    i = row / 2;
-    n = arrst_size(form->sel_path, DSelect);    
-    cassert(n > 0);
+    sel = arrst_get_const(form->sel_path, row / 2, DSelect);
     cassert(col <= 1);
 
-    /* This is the final (leaf) component */
-    if (i == n)
+    /* Even rows == layout */
+    if (row % 2 == 0)
     {
-        const DSelect *sel = arrst_last_const(form->sel_path, DSelect);
+        if (col == 0)
+            return tc(sel->layout->name);
+        else
+            return "Layout";
+    }
+    /* Odd rows == cell */
+    else
+    {
         const DCell *cell = dlayout_cell_sel(sel);
         if (col == 0)
         {
@@ -449,37 +442,10 @@ const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const
             case ekCELL_TYPE_EMPTY:
                 return "EmptyCell";
             case ekCELL_TYPE_LABEL:
-                return "Label";
+                return "LabelCell";
             case ekCELL_TYPE_LAYOUT:
+                return "LayoutCell";
             cassert_default();
-            }
-        }
-    }
-    /* Inner Layout/Cell path nodes */
-    else
-    {
-        const DSelect *sel = arrst_get_const(form->sel_path, i, DSelect);
-
-        /* Even rows == layout */
-        if (row % 2 == 0)
-        {
-            if (col == 0)
-                return tc(sel->layout->name);
-            else
-                return "Layout";
-        }
-        /* Odd rows == cell */
-        else
-        {
-            cassert(sel->elem == ekLAYELEM_CELL);
-            if (col == 0)
-            {
-                bstd_sprintf(cast(form, DForm)->temp_id, sizeof(form->temp_id), "cell%d_%d", sel->col, sel->row);
-                return form->temp_id;
-            }
-            else
-            {
-                return "Cell";
             }
         }
     }

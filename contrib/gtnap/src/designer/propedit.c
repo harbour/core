@@ -28,7 +28,7 @@
 #include <core/heap.h>
 //#include <core/dbind.h>
 #include <core/strings.h>
-//#include <sewer/bmem.h>
+#include <sewer/bstd.h>
 #include <sewer/cassert.h>
 
 typedef struct _propdata_t PropData;
@@ -42,6 +42,8 @@ struct _propdata_t
     Layout *layout_layout;
     Layout *cell_layout;
     Layout *label_layout;
+    Label *layout_geom_label;
+    Label *cell_geom_label;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -72,41 +74,49 @@ static Layout *i_value_updown_layout(void)
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_margin_layout(void)
+static Layout *i_margin_layout(PropData *data)
 {
-    Layout *layout = layout_create(2, 5);
+    Layout *layout = layout_create(2, 6);
     Label *label1 = label_create();
     Label *label2 = label_create();
     Label *label3 = label_create();
     Label *label4 = label_create();
     Label *label5 = label_create();
+    Label *label6 = label_create();
+    Label *label7 = label_create();
     Edit *edit = edit_create();
     Layout *val1 = i_value_updown_layout();
     Layout *val2 = i_value_updown_layout();
     Layout *val3 = i_value_updown_layout();
     Layout *val4 = i_value_updown_layout();
-    label_text(label1, "Name");
-    label_text(label2, "Top");
-    label_text(label3, "Left");
-    label_text(label4, "Bottom");
-    label_text(label5, "Right");
+    cassert_no_null(data);
+    label_text(label1, "Geom");
+    label_text(label2, "Name");
+    label_text(label3, "Top");
+    label_text(label4, "Left");
+    label_text(label5, "Bottom");
+    label_text(label6, "Right");
     layout_label(layout, label1, 0, 0);
     layout_label(layout, label2, 0, 1);
     layout_label(layout, label3, 0, 2);
     layout_label(layout, label4, 0, 3);
     layout_label(layout, label5, 0, 4);
-    layout_edit(layout, edit, 1, 0);
-    layout_layout(layout, val1, 1, 1);
-    layout_layout(layout, val2, 1, 2);
-    layout_layout(layout, val3, 1, 3);
-    layout_layout(layout, val4, 1, 4);
+    layout_label(layout, label6, 0, 5);
+    layout_label(layout, label7, 1, 0);
+    layout_edit(layout, edit, 1, 1);
+    layout_layout(layout, val1, 1, 2);
+    layout_layout(layout, val2, 1, 3);
+    layout_layout(layout, val3, 1, 4);
+    layout_layout(layout, val4, 1, 5);
+    layout_halign(layout, 1, 0, ekJUSTIFY);
     layout_hexpand(layout, 1);
     layout_hmargin(layout, 0, i_GRID_HMARGIN);
-    cell_dbind(layout_cell(layout, 1, 0), DLayout, String*, name);
-    cell_dbind(layout_cell(layout, 1, 1), DLayout, real32_t, margin_top);
-    cell_dbind(layout_cell(layout, 1, 2), DLayout, real32_t, margin_left);
-    cell_dbind(layout_cell(layout, 1, 3), DLayout, real32_t, margin_bottom);
-    cell_dbind(layout_cell(layout, 1, 4), DLayout, real32_t, margin_right);
+    data->layout_geom_label = label7;
+    cell_dbind(layout_cell(layout, 1, 1), DLayout, String*, name);
+    cell_dbind(layout_cell(layout, 1, 2), DLayout, real32_t, margin_top);
+    cell_dbind(layout_cell(layout, 1, 3), DLayout, real32_t, margin_left);
+    cell_dbind(layout_cell(layout, 1, 4), DLayout, real32_t, margin_bottom);
+    cell_dbind(layout_cell(layout, 1, 5), DLayout, real32_t, margin_right);
     return layout;
 }
 
@@ -134,7 +144,7 @@ static void i_OnLayoutNotify(PropData *data, Event *e)
 static Layout *i_layout_layout(PropData *data)
 {
     Layout *layout1 = layout_create(1, 3);
-    Layout *layout2 = i_margin_layout();
+    Layout *layout2 = i_margin_layout(data);
     Label *label = label_create();
     cassert_no_null(data);
     label_text(label, "Layout properties");
@@ -212,29 +222,37 @@ static void i_OnCellNotify(PropData *data, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_cell_props_layout(void)
+static Layout *i_cell_props_layout(PropData *data)
 {
-    Layout *layout = layout_create(2, 3);
+    Layout *layout = layout_create(2, 4);
     Label *label1 = label_create();
     Label *label2 = label_create();
     Label *label3 = label_create();
+    Label *label4 = label_create();
+    Label *label5 = label_create();
     Edit *edit = edit_create();
     PopUp *popup1 = popup_create();
     PopUp *popup2 = popup_create();
-    label_text(label1, "Name");
-    label_text(label2, "HAlign");
-    label_text(label3, "VAlign");
+    cassert_no_null(data);
+    label_text(label1, "Geom");
+    label_text(label2, "Name");
+    label_text(label3, "HAlign");
+    label_text(label4, "VAlign");
     layout_label(layout, label1, 0, 0);
     layout_label(layout, label2, 0, 1);
     layout_label(layout, label3, 0, 2);
-    layout_edit(layout, edit, 1, 0);
-    layout_popup(layout, popup1, 1, 1);
-    layout_popup(layout, popup2, 1, 2);
+    layout_label(layout, label4, 0, 3);
+    layout_label(layout, label5, 1, 0);
+    layout_edit(layout, edit, 1, 1);
+    layout_popup(layout, popup1, 1, 2);
+    layout_popup(layout, popup2, 1, 3);
+    layout_halign(layout, 1, 0, ekJUSTIFY);
     layout_hmargin(layout, 0, i_GRID_HMARGIN);
     layout_hexpand(layout, 1);
-    cell_dbind(layout_cell(layout, 1, 0), DCell, String*, name);
-    cell_dbind(layout_cell(layout, 1, 1), DCell, halign_t, halign);
-    cell_dbind(layout_cell(layout, 1, 2), DCell, valign_t, valign);
+    data->cell_geom_label = label5;
+    cell_dbind(layout_cell(layout, 1, 1), DCell, String*, name);
+    cell_dbind(layout_cell(layout, 1, 2), DCell, halign_t, halign);
+    cell_dbind(layout_cell(layout, 1, 3), DCell, valign_t, valign);
     return layout;
 }
 
@@ -258,7 +276,7 @@ static Panel *i_cell_content_panel(PropData *data)
 static Layout *i_cell_layout(PropData *data)
 {
     Layout *layout1 = layout_create(1, 4);
-    Layout *layout2 = i_cell_props_layout();
+    Layout *layout2 = i_cell_props_layout(data);
     Label *label = label_create();
     Panel *panel = i_cell_content_panel(data);
     label_text(label, "Cell properties");
@@ -315,21 +333,29 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
     cassert_no_null(sel);
     data->form = form;
     data->sel = *sel;
+    /* i_no_sel_layout */
     if (sel->layout == NULL)
     {
-        /* i_no_sel_layout */
         panel_visible_layout(panel, 0);
     }
+    /* i_layout_layout */
     else if (sel->elem != ekLAYELEM_CELL)
     {
-        /* i_layout_layout */
+        char_t text[64];
+        uint32_t ncols = dlayout_ncols(sel->layout);
+        uint32_t nrows = dlayout_nrows(sel->layout);
+        bstd_sprintf(text, sizeof(text), "%d cols x %d rows", ncols, nrows);
+        label_text(data->layout_geom_label, text);
         layout_dbind_obj(data->layout_layout, sel->layout, DLayout);
         panel_visible_layout(panel, 1);
     }
+    /* i_cell_layout */
     else
     {
-        /* i_cell_layout */
+        char_t text[64];
         DCell *cell = dlayout_cell_sel(sel);
+        bstd_sprintf(text, sizeof(text), "(%d,%d)", sel->col, sel->row);
+        label_text(data->cell_geom_label, text);
         panel_visible_layout(panel, 2);
         layout_dbind_obj(data->cell_layout, cell, DCell);
         if (cell->type == ekCELL_TYPE_EMPTY)

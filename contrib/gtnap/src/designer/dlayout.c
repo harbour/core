@@ -278,6 +278,9 @@ void dlayout_remove_row(DLayout *layout, const uint32_t row)
 
 /*---------------------------------------------------------------------------*/
 
+
+/*---------------------------------------------------------------------------*/
+
 void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col, const uint32_t row)
 {
     uint32_t i, ncols = 0;
@@ -782,6 +785,22 @@ void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t
 
 /*---------------------------------------------------------------------------*/
 
+static R2Df i_cell_rect(const DLayout *layout, const DSelect *sel)
+{
+    uint32_t ncols, pos; 
+    const DCell *cell = NULL;
+    cassert_no_null(layout);
+    cassert_no_null(sel);
+    cassert(layout == sel->layout);
+    cassert(sel->elem == ekLAYELEM_CELL);
+    ncols = arrst_size(layout->cols, DColumn);
+    pos = sel->row * ncols + sel->col;
+    cell = arrst_get_const(layout->cells, pos, DCell);
+    return cell->rect;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static R2Df i_get_rect(const DLayout *layout, const DSelect *sel)
 {
     cassert_no_null(layout);
@@ -813,12 +832,31 @@ static R2Df i_get_rect(const DLayout *layout, const DSelect *sel)
     }
 
     case ekLAYELEM_CELL:
-    {
-        uint32_t ncols = arrst_size(layout->cols, DColumn);
-        uint32_t pos = sel->row * ncols + sel->col;
-        const DCell *cell = arrst_get_const(layout->cells, pos, DCell);
-        return cell->rect;
+        return i_cell_rect(layout, sel);
+
     }
+
+    return kR2D_ZEROf;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static R2Df i_get_full_rect(const DLayout *layout, const DSelect *sel)
+{
+    cassert_no_null(layout);
+    cassert_no_null(sel);
+    cassert(layout == sel->layout);
+    switch(sel->elem) {
+    case ekLAYELEM_MARGIN_LEFT:
+    case ekLAYELEM_MARGIN_TOP:
+    case ekLAYELEM_MARGIN_RIGHT:
+    case ekLAYELEM_MARGIN_BOTTOM:
+    case ekLAYELEM_MARGIN_COLUMN:
+    case ekLAYELEM_MARGIN_ROW:
+        return layout->rect;
+
+    case ekLAYELEM_CELL:
+        return i_cell_rect(layout, sel);
 
     }
 
@@ -932,7 +970,7 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
     /* This layout has the selected element */
     if (sel->layout == layout)
     {
-        R2Df rect = i_get_rect(layout, sel);
+        R2Df rect = i_get_full_rect(layout, sel);
         real32_t rsize = 5;
         real32_t x1 = rect.pos.x;
         real32_t x2 = rect.pos.x + rect.size.width;
