@@ -574,7 +574,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
 
 /*---------------------------------------------------------------------------*/
 
-Layout *dlayout_search_layout(DLayout *layout, Layout *glayout, DLayout *required)
+Layout *dlayout_search_layout(const DLayout *layout, Layout *glayout, const DLayout *required)
 {
     cassert_no_null(layout);
     if (layout != required)

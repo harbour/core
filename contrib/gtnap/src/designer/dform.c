@@ -383,6 +383,20 @@ void dform_synchro_cell_text(DForm *form, const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
+void dform_synchro_layout_margin(DForm *form, const DLayout *dlayout)
+{
+    Layout *layout = NULL;
+    S2Df fsize;
+    cassert_no_null(form);
+    cassert_no_null(dlayout);
+    layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
+    layout_margin4(layout, dlayout->margin_top, dlayout->margin_right, dlayout->margin_bottom, dlayout->margin_left);
+    _panel_compose(form->panel, NULL, &fsize);
+    dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon, DCtx *ctx)
 {
     cassert_no_null(form);
@@ -451,5 +465,33 @@ const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const
     }
 
     return "";
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_inspect_select(DForm *form, Panel *propedit, const uint32_t row)
+{
+    const DSelect *sel = NULL;
+    cassert_no_null(form);
+    sel = arrst_get_const(form->sel_path, row / 2, DSelect);
+
+    /* Even rows == layout */
+    if (row % 2 == 0)
+    {
+        DSelect propsel;
+        propsel.layout = sel->layout;
+        propsel.elem = ekLAYELEM_MARGIN_LEFT;
+        propsel.col = UINT32_MAX;
+        propsel.row = UINT32_MAX;
+        form->sel = propsel;
+        propedit_set(propedit, form, &propsel);
+    }
+    /* Odd rows == cell */
+    else
+    {
+        cassert(sel->elem == ekLAYELEM_CELL);
+        form->sel = *sel;
+        propedit_set(propedit, form, sel);
+    }
 }
 

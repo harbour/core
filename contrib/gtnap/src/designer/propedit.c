@@ -131,12 +131,15 @@ static void i_OnLayoutNotify(PropData *data, Event *e)
     {
         designer_inspect_update(data->app);
     }
-    //else if (evbind_modify(e, DLabel, String*, text) == TRUE)
-    //{
-    //    dform_synchro_cell_text(data->form, &data->sel);
-    //    dform_compose(data->form);
-    //    designer_canvas_update(data->app);
-    //}
+    else if (evbind_modify(e, DLayout, real32_t, margin_left) == TRUE 
+        || evbind_modify(e, DLayout, real32_t, margin_top) == TRUE 
+        || evbind_modify(e, DLayout, real32_t, margin_right) == TRUE 
+        || evbind_modify(e, DLayout, real32_t, margin_bottom) == TRUE)
+    {
+        DLayout *dlayout = evbind_object(e, DLayout);
+        dform_synchro_layout_margin(data->form, dlayout);
+        designer_canvas_update(data->app);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -164,6 +167,17 @@ static Layout *i_empty_cell_layout(void)
     Layout *layout = layout_create(1, 1);
     Label *label = label_create();
     label_text(label, "Empty cell");
+    layout_label(layout, label, 0, 0);
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_layout_cell_layout(void)
+{
+    Layout *layout = layout_create(1, 1);
+    Label *label = label_create();
+    label_text(label, "Layout cell");
     layout_label(layout, label, 0, 0);
     return layout;
 }
@@ -234,7 +248,7 @@ static Layout *i_cell_props_layout(PropData *data)
     PopUp *popup1 = popup_create();
     PopUp *popup2 = popup_create();
     cassert_no_null(data);
-    label_text(label1, "Geom");
+    label_text(label1, "Coord");
     label_text(label2, "Name");
     label_text(label3, "HAlign");
     label_text(label4, "VAlign");
@@ -261,11 +275,13 @@ static Layout *i_cell_props_layout(PropData *data)
 static Panel *i_cell_content_panel(PropData *data)
 {
     Layout *layout1 = i_empty_cell_layout();
-    Layout *layout2 = i_label_layout(data);
+    Layout *layout2 = i_layout_cell_layout();
+    Layout *layout3 = i_label_layout(data);
     Panel *panel = panel_create();
     cassert_no_null(data);
     panel_layout(panel, layout1);
     panel_layout(panel, layout2);
+    panel_layout(panel, layout3);
     panel_visible_layout(panel, 0);
     data->cell_panel = panel;
     return panel;
@@ -362,10 +378,14 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
         {
             panel_visible_layout(data->cell_panel, 0);
         }
+        else if (cell->type == ekCELL_TYPE_LAYOUT)
+        {
+            panel_visible_layout(data->cell_panel, 1);
+        }
         else if (cell->type == ekCELL_TYPE_LABEL)
         {
             layout_dbind_obj(data->label_layout, cell->content.label, DLabel);
-            panel_visible_layout(data->cell_panel, 1);
+            panel_visible_layout(data->cell_panel, 2);
         }
         else
         {

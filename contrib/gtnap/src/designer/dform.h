@@ -16,8 +16,12 @@ bool_t dform_OnExit(DForm *form);
 
 void dform_synchro_cell_text(DForm *form, const DSelect *sel);
 
+void dform_synchro_layout_margin(DForm *form, const DLayout *dlayout);
+
 void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon, DCtx *ctx);
 
 uint32_t dform_selpath_size(const DForm *form);
 
 const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const uint32_t row);
+
+void dform_inspect_select(DForm *form, Panel *propedit, const uint32_t row);

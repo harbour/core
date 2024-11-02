@@ -61,6 +61,18 @@ static void i_dbind(void)
     dbind(DLayout, ArrSt(DColumn) *, cols);
     dbind(DLayout, ArrSt(DRow) *, rows);
     dbind(DLayout, ArrSt(DCell) *, cells);
+    dbind_increment(DLayout, real32_t, margin_left, 1);
+    dbind_increment(DLayout, real32_t, margin_top, 1);
+    dbind_increment(DLayout, real32_t, margin_right, 1);
+    dbind_increment(DLayout, real32_t, margin_bottom, 1);
+    dbind_range(DLayout, real32_t, margin_left, 0, 100);
+    dbind_range(DLayout, real32_t, margin_top, 0, 100);
+    dbind_range(DLayout, real32_t, margin_right, 0, 100);
+    dbind_range(DLayout, real32_t, margin_bottom, 0, 100);
+    dbind_precision(DLayout, real32_t, margin_left, 1);
+    dbind_precision(DLayout, real32_t, margin_top, 1);
+    dbind_precision(DLayout, real32_t, margin_right, 1);
+    dbind_precision(DLayout, real32_t, margin_bottom, 1);
 
     /* Don't move, we must first declare the inner struct */
     dbind(DCellContent, DLabel *, label);
@@ -202,7 +214,7 @@ static Layout *i_right_layout(Designer *app)
     layout_panel(layout, panel2, 0, 3);
     layout_vmargin(layout, 1, 5);
     layout_vmargin(layout, 2, 5);
-    layout_vexpand2(layout, 1, 3, .5f);
+    layout_vexpand(layout, 3);
     layout_vmargin(layout, 1, 5.f);
     app->inspect = panel1;
     app->propedit = panel2;
@@ -468,6 +480,15 @@ void designer_inspect_update(Designer *app)
 {
     cassert_no_null(app);
     inspect_update(app->inspect);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void designer_inspect_select(Designer *app, const uint32_t row)
+{
+    cassert_no_null(app);
+    if (app->form != NULL)
+        dform_inspect_select(app->form, app->propedit, row);
 }
 
 /*---------------------------------------------------------------------------*/

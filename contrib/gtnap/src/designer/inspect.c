@@ -1,6 +1,7 @@
 /* Object inspector */
 
 #include "inspect.h"
+#include "designer.h"
 #include "dform.h"
 //#include "dlayout.h"
 //#include "dlabel.h"
@@ -21,6 +22,7 @@
 ////#include <draw2d/draw.h>
 ////#include <draw2d/drawg.h>
 ////#include <draw2d/image.h>
+#include <core/arrst.h>
 #include <core/event.h>
 #include <core/heap.h>
 //#include <core/dbind.h>
@@ -96,6 +98,17 @@ static void i_OnTableData(InspectData *data, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnSelect(InspectData *data, Event *e)
+{
+    const EvTbSel *p = event_params(e, EvTbSel);
+    uint32_t sel = 0;
+    cassert(arrst_size(p->sel, uint32_t) == 1);
+    sel = *arrst_first_const(p->sel, uint32_t);
+    designer_inspect_select(data->app, sel);
+}
+
+/*---------------------------------------------------------------------------*/
+
 Panel *inspect_create(Designer *app)
 {
     InspectData *data = i_data(app);
@@ -110,6 +123,7 @@ Panel *inspect_create(Designer *app)
     tableview_header_title(table, 0, "Object");
     tableview_header_title(table, 1, "Type");
     tableview_OnData(table, listener(data, i_OnTableData, InspectData));
+    tableview_OnSelect(table, listener(data, i_OnSelect, InspectData));
     tableview_update(table);
     layout_tableview(layout, table, 0, 0);
     panel_layout(panel, layout);

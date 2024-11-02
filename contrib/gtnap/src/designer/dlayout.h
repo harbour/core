@@ -44,7 +44,7 @@ Layout *dlayout_gui_layout(const DLayout *layout);
 /* Compute the visual rectangles of each layout element */
 void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df origin);
 
-Layout *dlayout_search_layout(DLayout *layout, Layout *glayout, DLayout *required);
+Layout *dlayout_search_layout(const DLayout *layout, Layout *glayout, const DLayout *required);
 
 uint32_t dlayout_ncols(const DLayout *layout);
 
