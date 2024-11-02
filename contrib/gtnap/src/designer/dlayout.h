@@ -34,7 +34,9 @@ void dlayout_add_label(DLayout *layout, DLabel *label, const uint32_t col, const
 
 bool_t dlayout_empty_cell(const DSelect *sel);
 
-DCell *dlayout_cell(const DSelect *sel);
+DCell *dlayout_cell(DLayout *layout, const uint32_t col, const uint32_t row);
+
+DCell *dlayout_cell_sel(const DSelect *sel);
 
 /* Create a real GUI layout from editable layout properties */
 Layout *dlayout_gui_layout(const DLayout *layout);

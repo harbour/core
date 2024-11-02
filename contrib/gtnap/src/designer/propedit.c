@@ -157,12 +157,7 @@ static void i_OnLabelNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-
-    if (evbind_modify(e, DLabel, String*, name) == TRUE)
-    {
-        designer_inspect_update(data->app);
-    }
-    else if (evbind_modify(e, DLabel, String*, text) == TRUE)
+    if (evbind_modify(e, DLabel, String*, text) == TRUE)
     {
         dform_synchro_cell_text(data->form, &data->sel);
         dform_compose(data->form);
@@ -175,28 +170,22 @@ static void i_OnLabelNotify(PropData *data, Event *e)
 static Layout *i_label_layout(PropData *data)
 {
     Layout *layout1 = layout_create(1, 3);
-    Layout *layout2 = layout_create(2, 2);
+    Layout *layout2 = layout_create(2, 1);
     Label *label1 = label_create();
     Label *label2 = label_create();
-    Label *label3 = label_create();
-    Edit *edit1 = edit_create();
-    Edit *edit2 = edit_create();
+    Edit *edit = edit_create();
     cassert_no_null(data);
-    label_text(label1, "Name");
+    label_text(label1, "Label properties");
     label_text(label2, "Text");
-    label_text(label3, "Label properties");
-    layout_label(layout2, label1, 0, 0);
-    layout_label(layout2, label2, 0, 1);
-    layout_edit(layout2, edit1, 1, 0);
-    layout_edit(layout2, edit2, 1, 1);
-    layout_label(layout1, label3, 0, 0);
+    layout_label(layout1, label1, 0, 0);
+    layout_label(layout2, label2, 0, 0);
+    layout_edit(layout2, edit, 1, 0);
     layout_layout(layout1, layout2, 0, 1);
     layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
     layout_hmargin(layout2, 0, i_GRID_HMARGIN);
     layout_hexpand(layout2, 1);
     layout_vexpand(layout1, 2);
-    cell_dbind(layout_cell(layout2, 1, 0), DLabel, String*, name);
-    cell_dbind(layout_cell(layout2, 1, 1), DLabel, String*, text);
+    cell_dbind(layout_cell(layout2, 1, 0), DLabel, String*, text);
     layout_dbind(layout1, listener(data, i_OnLabelNotify, PropData), DLabel);
     data->label_layout = layout1;
     return layout1;
@@ -208,38 +197,37 @@ static void i_OnCellNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-
-    //if (evbind_modify(e, DLabel, String*, name) == TRUE)
-    //{
-    //    designer_inspect_update(data->app);
-    //}
-    //else if (evbind_modify(e, DLabel, String*, text) == TRUE)
-    //{
-    //    dform_synchro_cell_text(data->form, &data->sel);
-    //    dform_compose(data->form);
-    //    designer_canvas_update(data->app);
-    //}
+    if (evbind_modify(e, DCell, String*, name) == TRUE)
+    {
+        designer_inspect_update(data->app);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
 
 static Layout *i_cell_props_layout(void)
 {
-    Layout *layout = layout_create(2, 2);
+    Layout *layout = layout_create(2, 3);
     Label *label1 = label_create();
     Label *label2 = label_create();
+    Label *label3 = label_create();
+    Edit *edit = edit_create();
     PopUp *popup1 = popup_create();
     PopUp *popup2 = popup_create();
-    label_text(label1, "HAlign");
-    label_text(label2, "VAlign");
+    label_text(label1, "Name");
+    label_text(label2, "HAlign");
+    label_text(label3, "VAlign");
     layout_label(layout, label1, 0, 0);
     layout_label(layout, label2, 0, 1);
-    layout_popup(layout, popup1, 1, 0);
-    layout_popup(layout, popup2, 1, 1);
+    layout_label(layout, label3, 0, 2);
+    layout_edit(layout, edit, 1, 0);
+    layout_popup(layout, popup1, 1, 1);
+    layout_popup(layout, popup2, 1, 2);
     layout_hmargin(layout, 0, i_GRID_HMARGIN);
     layout_hexpand(layout, 1);
-    cell_dbind(layout_cell(layout, 1, 0), DCell, halign_t, halign);
-    cell_dbind(layout_cell(layout, 1, 1), DCell, valign_t, valign);
+    cell_dbind(layout_cell(layout, 1, 0), DCell, String*, name);
+    cell_dbind(layout_cell(layout, 1, 1), DCell, halign_t, halign);
+    cell_dbind(layout_cell(layout, 1, 2), DCell, valign_t, valign);
     return layout;
 }
 
@@ -334,7 +322,7 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
     else
     {
         /* i_cell_layout */
-        DCell *cell = dlayout_cell(sel);
+        DCell *cell = dlayout_cell_sel(sel);
         panel_visible_layout(panel, 2);
         layout_dbind_obj(data->cell_layout, cell, DCell);
         if (cell->type == ekCELL_TYPE_EMPTY)

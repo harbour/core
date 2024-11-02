@@ -18,14 +18,6 @@ DLabel *dlabel_create(void)
 
 /*---------------------------------------------------------------------------*/
 
-void dlabel_name(DLabel *label, const char_t *name)
-{
-    cassert_no_null(label);
-    str_upd(&label->name, name);
-}
-
-/*---------------------------------------------------------------------------*/
-
 void dlabel_text(DLabel *label, const char_t *text)
 {
     cassert_no_null(label);

@@ -61,7 +61,6 @@ typedef enum _valign_t
 
 struct _dlabel_t
 {
-    String *name;
     String *text;
 };
 
@@ -91,6 +90,7 @@ struct _dcell_content_t
 
 struct _dcell_t
 {
+    String *name;
     celltype_t type;
     halign_t halign;
     valign_t valign;

@@ -46,10 +46,10 @@ static void i_dbind(void)
     dbind_enum(valign_t, ekVALIGN_CENTER, "Center");
     dbind_enum(valign_t, ekVALIGN_BOTTOM, "Bottom");
     dbind_enum(valign_t, ekVALIGN_JUSTIFY, "Justify");
-    dbind(DLabel, String *, name);
     dbind(DLabel, String *, text);
     dbind(DColumn, real32_t, margin_right);
     dbind(DRow, real32_t, margin_bottom);
+    dbind(DCell, String *, name);
     dbind(DCell, celltype_t, type);
     dbind(DCell, halign_t, halign);
     dbind(DCell, valign_t, valign);

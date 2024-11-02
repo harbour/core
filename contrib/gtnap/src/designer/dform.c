@@ -1,6 +1,7 @@
 /* Design form */
 
 #include "dform.h"
+#include "dcell.h"
 #include "dlayout.h"
 #include "dlabel.h"
 #include "dialogs.h"
@@ -31,30 +32,50 @@ struct _dform_t
     ArrSt(DSelect) *temp_path;
     ArrSt(DSelect) *sel_path;
     Panel *panel;
+    uint32_t layout_id;
     uint32_t object_id;
     char_t temp_id[128];
 };
 
 /*---------------------------------------------------------------------------*/
 
-static void i_set_label_name(DForm *form, DLabel *dlabel)
+static void i_set_cell_name(DForm *form, DCell *dcell)
 {
     char_t name[64];
     cassert_no_null(form);
-    bstd_sprintf(name, sizeof(name), "label%d", form->object_id);
-    dlabel_name(dlabel, name);
+    bstd_sprintf(name, sizeof(name), "object%d", form->object_id);
+    dcell_name(dcell, name);
     form->object_id += 1;    
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_set_layout_name(DForm *form, DLayout *dlayout)
+static void i_layout_obj_names(DForm *form, DLayout *dlayout)
 {
-    char_t name[64];
     cassert_no_null(form);
-    bstd_sprintf(name, sizeof(name), "layout%d", form->object_id);
-    dlayout_name(dlayout, name);
-    form->object_id += 1;    
+
+    {
+        char_t name[64];
+        bstd_sprintf(name, sizeof(name), "layout%d", form->layout_id);
+        dlayout_name(dlayout, name);
+        form->layout_id += 1;
+    }
+
+    {
+        uint32_t i, ncols = dlayout_ncols(dlayout);
+        uint32_t j, nrows = dlayout_nrows(dlayout);
+        for (j = 0; j < nrows; ++j)
+        {
+            for (i = 0; i < ncols; ++i)
+            {
+                char_t name[64];
+                DCell *dcell = dlayout_cell(dlayout, i, j);
+                bstd_sprintf(name, sizeof(name), "object%d", form->object_id);
+                dcell_name(dcell, name);
+                form->object_id += 1;
+            }
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -111,11 +132,9 @@ DForm *dform_first_example(void)
     form->dlayout = layout3;
     form->temp_path = arrst_create(DSelect);
     form->sel_path = arrst_create(DSelect);
-    i_set_label_name(form, label1);
-    i_set_label_name(form, label2);
-    i_set_layout_name(form, layout1);
-    i_set_layout_name(form, layout2);
-    i_set_layout_name(form, layout3);
+    i_layout_obj_names(form, layout1);
+    i_layout_obj_names(form, layout2);
+    i_layout_obj_names(form, layout3);
     return form;
 }
 
@@ -244,7 +263,6 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     Label *label = label_create();
                     Cell *cell = layout_cell(layout, sel.col, sel.row);
                     S2Df fsize;
-                    i_set_label_name(form, dlabel);
                     label_text(label, tc(dlabel->text));
                     dlayout_add_label(sel.layout, dlabel, sel.col, sel.row);
                     layout_label(layout, label, sel.col, sel.row);
@@ -299,7 +317,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     //    real32_t mrow = dlayout_get_margin_row(dsublayout, j);
                     //    layout_vmargin(sublayout, j, mrow);
                     //}
-                    i_set_layout_name(form, dsublayout);
+                    i_layout_obj_names(form, dsublayout);
                     dlayout_add_layout(sel.layout, dsublayout, sel.col, sel.row);
                     layout_layout(layout, sublayout, sel.col, sel.row);
                     cell_force_size(cell, 0, 0);
@@ -357,7 +375,7 @@ bool_t dform_OnExit(DForm *form)
 
 void dform_synchro_cell_text(DForm *form, const DSelect *sel)
 {
-    DCell *cell = dlayout_cell(sel);
+    DCell *cell = dlayout_cell_sel(sel);
     Layout *layout = NULL;
     cassert_no_null(form);
     cassert_no_null(cell);
@@ -418,23 +436,23 @@ const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const
     if (i == n)
     {
         const DSelect *sel = arrst_last_const(form->sel_path, DSelect);
-        const DCell *cell = dlayout_cell(sel);
-        switch(cell->type)
+        const DCell *cell = dlayout_cell_sel(sel);
+        if (col == 0)
         {
-        case ekCELL_TYPE_EMPTY:
-            if (col == 0)
-                return "empty";
-            else
+            return tc(cell->name);
+        }
+        else
+        {
+            cassert(col == 1);
+            switch(cell->type)
+            {
+            case ekCELL_TYPE_EMPTY:
                 return "EmptyCell";
-
-        case ekCELL_TYPE_LABEL:
-            if (col == 0)
-                return tc(cell->content.label->name);
-            else
+            case ekCELL_TYPE_LABEL:
                 return "Label";
-
-        case ekCELL_TYPE_LAYOUT:
-        cassert_default();
+            case ekCELL_TYPE_LAYOUT:
+            cassert_default();
+            }
         }
     }
     /* Inner Layout/Cell path nodes */

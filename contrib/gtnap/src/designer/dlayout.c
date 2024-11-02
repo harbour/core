@@ -365,7 +365,14 @@ bool_t dlayout_empty_cell(const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
-DCell *dlayout_cell(const DSelect *sel)
+DCell *dlayout_cell(DLayout *layout, const uint32_t col, const uint32_t row)
+{
+    return i_cell(layout, col, row);
+}
+
+/*---------------------------------------------------------------------------*/
+
+DCell *dlayout_cell_sel(const DSelect *sel)
 {
     cassert_no_null(sel);
     if (sel->layout != NULL)
