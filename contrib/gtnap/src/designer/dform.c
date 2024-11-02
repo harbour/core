@@ -400,21 +400,45 @@ void dform_synchro_layout_margin(DForm *form, const DLayout *dlayout)
 void dform_synchro_column_margin(DForm *form, const DLayout *dlayout, const DColumn *column)
 {
     Layout *layout = NULL;
-    uint32_t col, ncols;
+    uint32_t i, ncols;
     S2Df fsize;
     cassert_no_null(form);
     cassert_no_null(dlayout);
     layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
     ncols = dlayout_ncols(dlayout);
 
-    for (col = 0; col < ncols; ++col)
+    for (i = 0; i < ncols; ++i)
     {
-        if (dlayout_column(cast(dlayout, DLayout), col) == column)
+        if (dlayout_column(cast(dlayout, DLayout), i) == column)
             break;
     }
 
-    cassert(col < ncols);
-    layout_hmargin(layout, col, column->margin_right);
+    cassert(i < ncols);
+    layout_hmargin(layout, i, column->margin_right);
+    _panel_compose(form->panel, NULL, &fsize);
+    dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *row)
+{
+    Layout *layout = NULL;
+    uint32_t j, nrows;
+    S2Df fsize;
+    cassert_no_null(form);
+    cassert_no_null(dlayout);
+    layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
+    nrows = dlayout_nrows(dlayout);
+
+    for (j = 0; j < nrows; ++j)
+    {
+        if (dlayout_row(cast(dlayout, DLayout), j) == row)
+            break;
+    }
+
+    cassert(j < nrows);
+    layout_vmargin(layout, j, row->margin_bottom);
     _panel_compose(form->panel, NULL, &fsize);
     dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
 }
