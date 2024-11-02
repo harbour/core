@@ -405,6 +405,42 @@ DCell *dlayout_cell_sel(const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
+static align_t i_halign(const halign_t halign)
+{
+    switch(halign) {
+    case ekHALIGN_LEFT:
+        return ekLEFT;
+    case ekHALIGN_CENTER:
+        return ekCENTER;
+    case ekHALIGN_RIGHT:
+        return ekRIGHT;
+    case ekHALIGN_JUSTIFY:
+        return ekJUSTIFY;
+    cassert_default();
+    }
+    return ekLEFT;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static align_t i_valign(const valign_t valign)
+{
+    switch(valign) {
+    case ekVALIGN_TOP:
+        return ekTOP;
+    case ekVALIGN_CENTER:
+        return ekCENTER;
+    case ekVALIGN_BOTTOM:
+        return ekBOTTOM;
+    case ekVALIGN_JUSTIFY:
+        return ekJUSTIFY;
+    cassert_default();
+    }
+    return ekTOP;
+}
+
+/*---------------------------------------------------------------------------*/
+
 Layout *dlayout_gui_layout(const DLayout *layout)
 {
     uint32_t ncols = 0, nrows = 0;
@@ -446,7 +482,10 @@ Layout *dlayout_gui_layout(const DLayout *layout)
             for(i = 0; i < ncols; ++i)
             {
                 Cell *gcell = layout_cell(glayout, i, j);
-
+                align_t halign = i_halign(cells->halign);
+                align_t valign = i_valign(cells->valign);
+                layout_halign(glayout, i, j, halign);
+                layout_valign(glayout, i, j, valign);
                 switch(cells->type) {
                 case ekCELL_TYPE_EMPTY:
                     cell_force_size(gcell, i_EMPTY_CELL_WIDTH, i_EMPTY_CELL_HEIGHT);
@@ -559,7 +598,57 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
             x = origin.x + layout->margin_left;
             for(i = 0; i < ncols; ++i)
             {
-                dcell->rect = r2df(x, y, col[i].width, row[j].height);
+                Cell *gcell = layout_cell(cast(glayout, Layout), i, j);
+                real32_t hsize = cell_get_hsize(gcell);
+                real32_t vsize = cell_get_vsize(gcell);
+                align_t halign = cell_get_halign(gcell);
+                align_t valign = cell_get_valign(gcell);
+                real32_t cellx = 0;
+                real32_t celly = 0;
+                cassert_no_null(gcell);
+                cassert(hsize <= col[i].width);
+                cassert(vsize <= row[j].height);
+
+                switch(halign) {
+                case ekLEFT:
+                    cassert(dcell->halign == ekHALIGN_LEFT);
+                    cellx = x;
+                    break;
+                case ekCENTER:
+                    cassert(dcell->halign == ekHALIGN_CENTER);
+                    cellx = x + (col[i].width - hsize) / 2;
+                    break;
+                case ekRIGHT:
+                    cassert(dcell->halign == ekHALIGN_RIGHT);
+                    cellx = x + (col[i].width - hsize);
+                    break;
+                case ekJUSTIFY:
+                    cassert(dcell->halign == ekHALIGN_JUSTIFY);
+                    cellx = x;
+                    break;
+                cassert_default();
+                }
+
+                switch(valign) {
+                case ekTOP:
+                    cassert(dcell->valign == ekVALIGN_TOP);
+                    celly = y;
+                    break;
+                case ekCENTER:
+                    cassert(dcell->valign == ekVALIGN_CENTER);
+                    celly = y + (row[j].height - vsize) / 2;
+                    break;
+                case ekBOTTOM:
+                    cassert(dcell->valign == ekVALIGN_BOTTOM);
+                    celly = y + (row[j].height - vsize);
+                    break;
+                case ekJUSTIFY:
+                    cassert(dcell->valign == ekVALIGN_JUSTIFY);
+                    celly = y;
+                    break;
+                cassert_default();
+                }
+
                 switch(dcell->type) {
                 case ekCELL_TYPE_EMPTY:
                     break;
@@ -575,8 +664,11 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                     break;
                 }
 
+                cassert_default();
                 }
 
+                dcell->rect = r2df(x, y, col[i].width, row[j].height);
+                dcell->content_rect = r2df(cellx, celly, hsize, vsize);
                 dcell += 1;
                 x += col[i].width;
                 x += col[i].margin_right;

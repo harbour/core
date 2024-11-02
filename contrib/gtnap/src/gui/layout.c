@@ -2354,6 +2354,38 @@ void cell_force_size(Cell *cell, const real32_t width, const real32_t height)
 
 /*---------------------------------------------------------------------------*/
 
+real32_t cell_get_hsize(const Cell *cell)
+{
+    cassert_no_null(cell);
+    return cell->dim[0].size;
+}
+
+/*---------------------------------------------------------------------------*/
+
+real32_t cell_get_vsize(const Cell *cell)
+{
+    cassert_no_null(cell);
+    return cell->dim[1].size;
+}
+
+/*---------------------------------------------------------------------------*/
+
+align_t cell_get_halign(const Cell *cell)
+{
+    cassert_no_null(cell);
+    return cell->dim[0].align;
+}
+
+/*---------------------------------------------------------------------------*/
+
+align_t cell_get_valign(const Cell *cell)
+{
+    cassert_no_null(cell);
+    return cell->dim[1].align;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_set_dbind(Cell *cell, const DBind *dbind)
 {
     cassert(cell->dbind == NULL);

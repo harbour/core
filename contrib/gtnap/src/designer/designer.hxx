@@ -98,6 +98,7 @@ struct _dcell_t
 
     /* Non-editable properties */
     R2Df rect;
+    R2Df content_rect;
 };
 
 struct _dlayout_t
