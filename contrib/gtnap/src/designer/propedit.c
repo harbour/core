@@ -46,6 +46,11 @@ struct _propdata_t
 
 /*---------------------------------------------------------------------------*/
 
+static const real32_t i_GRID_HMARGIN = 5;
+static const real32_t i_HEADER_VMARGIN = 3;
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_no_sel_layout(void)
 {
     Layout *layout = layout_create(1, 1);
@@ -85,6 +90,8 @@ static Layout *i_margin_layout(void)
     layout_updown(layout, updown2, 2, 1);
     layout_updown(layout, updown3, 2, 2);
     layout_updown(layout, updown4, 2, 3);
+    layout_hexpand(layout, 1);
+    layout_hmargin(layout, 0, i_GRID_HMARGIN);
     cell_dbind(layout_cell(layout, 1, 0), DLayout, real32_t, margin_left);
     cell_dbind(layout_cell(layout, 1, 1), DLayout, real32_t, margin_top);
     cell_dbind(layout_cell(layout, 1, 2), DLayout, real32_t, margin_right);
@@ -119,13 +126,15 @@ static void i_OnLayoutNotify(PropData *data, Event *e)
 
 static Layout *i_layout_layout(PropData *data)
 {
-    Layout *layout1 = layout_create(1, 2);
+    Layout *layout1 = layout_create(1, 3);
     Layout *layout2 = i_margin_layout();
     Label *label = label_create();
     cassert_no_null(data);
     label_text(label, "Layout properties");
     layout_label(layout1, label, 0, 0);
     layout_layout(layout1, layout2, 0, 1);
+    layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
+    layout_vexpand(layout1, 2);
     layout_dbind(layout1, listener(data, i_OnLayoutNotify, PropData), DLayout);
     data->layout_layout = layout1;
     return layout1;
@@ -182,8 +191,8 @@ static Layout *i_label_layout(PropData *data)
     layout_edit(layout2, edit2, 1, 1);
     layout_label(layout1, label3, 0, 0);
     layout_layout(layout1, layout2, 0, 1);
-    layout_vmargin(layout1, 0, 3);
-    layout_hmargin(layout2, 0, 5);
+    layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
+    layout_hmargin(layout2, 0, i_GRID_HMARGIN);
     layout_hexpand(layout2, 1);
     layout_vexpand(layout1, 2);
     cell_dbind(layout_cell(layout2, 1, 0), DLabel, String*, name);
@@ -227,6 +236,8 @@ static Layout *i_cell_props_layout(void)
     layout_label(layout, label2, 0, 1);
     layout_popup(layout, popup1, 1, 0);
     layout_popup(layout, popup2, 1, 1);
+    layout_hmargin(layout, 0, i_GRID_HMARGIN);
+    layout_hexpand(layout, 1);
     cell_dbind(layout_cell(layout, 1, 0), DCell, halign_t, halign);
     cell_dbind(layout_cell(layout, 1, 1), DCell, valign_t, valign);
     return layout;
@@ -251,7 +262,7 @@ static Panel *i_cell_content_panel(PropData *data)
 
 static Layout *i_cell_layout(PropData *data)
 {
-    Layout *layout1 = layout_create(1, 3);
+    Layout *layout1 = layout_create(1, 4);
     Layout *layout2 = i_cell_props_layout();
     Label *label = label_create();
     Panel *panel = i_cell_content_panel(data);
@@ -259,6 +270,9 @@ static Layout *i_cell_layout(PropData *data)
     layout_label(layout1, label, 0, 0);
     layout_layout(layout1, layout2, 0, 1);
     layout_panel(layout1, panel, 0, 2);
+    layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
+    layout_vmargin(layout1, 1, i_HEADER_VMARGIN);
+    layout_vexpand(layout1, 3);
     layout_dbind(layout1, listener(data, i_OnCellNotify, PropData), DCell);
     data->cell_layout = layout1;
     return layout1;
