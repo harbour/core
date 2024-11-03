@@ -2429,7 +2429,6 @@ void dbind_precision_imp(const char_t *type, const char_t *mname, const void *pr
     cassert_no_null(prec);
     switch (dbind->type)
     {
-
     case ekDTYPE_REAL32:
         dbind->attr.real32t.prec = *cast(prec, real32_t);
         dbind->attr.real32t.dec = bmath_precf(dbind->attr.real32t.prec);
