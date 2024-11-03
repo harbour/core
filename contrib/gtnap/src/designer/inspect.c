@@ -144,7 +144,6 @@ void inspect_set(Panel *panel, DForm *form)
         uint32_t sel = data->nrows - 1;
         tableview_select(data->table, &sel, 1);
         tableview_focus_row(data->table, sel, ekBOTTOM);
-
     }
 }
 

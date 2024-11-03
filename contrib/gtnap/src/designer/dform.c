@@ -286,14 +286,6 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                 DLabel *dlabel = dialog_new_label(window, &sel);
                 if (dlabel != NULL)
                 {
-                    /*
-                    * 1) Create the GUI Label.
-                    * 2) Remove previous cells in design/GUI layouts.
-                    * 3) Add label to design/GUI layouts.
-                    * 4) Synchro the cell properties.
-                    * 5) Compose the form to update the drawing.
-                    * 6) Update the property editor.
-                    */
                     Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
                     Label *label = label_create();
                     label_text(label, tc(dlabel->text));
@@ -304,6 +296,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
                     dform_compose(form);
                     propedit_set(propedit, form, &sel);
+                    inspect_set(inspect, form);
                     form->sel = sel;
                     return TRUE;
                 }
@@ -318,47 +311,15 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                 DLayout *dsublayout = dialog_new_layout(window, &sel);
                 if (dsublayout != NULL)
                 {
-                    /*
-                    * 1) Add the sublayout into design layout.
-                    * 2) Add the sublayout into real GUI layout.
-                    * 3) Disable the empty cell 'forced' size
-                    * 4) Update the GUI panel to recompute the GUI.
-                    * 5) Synchro design layout with real GUI layout.
-                    * 6) Update the drawing (return TRUE).
-                    */
-                    //uint32_t i, ncols = dlayout_ncols(dsublayout);
-                    //uint32_t j, nrows = dlayout_nrows(dsublayout);
-                    //real32_t mt = dlayout_get_margin_top(dsublayout);
-                    //real32_t mb = dlayout_get_margin_bottom(dsublayout);
-                    //real32_t ml = dlayout_get_margin_left(dsublayout);
-                    //real32_t mr = dlayout_get_margin_right(dsublayout);
                     Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
                     Layout *sublayout = dlayout_gui_layout(dsublayout);
-                    Cell *cell = layout_cell(layout, sel.col, sel.row);
-                    S2Df fsize;
-
-                    ///* GUI layout borders and margins from design layout */
-                    //layout_margin4(sublayout, mt, mr, mb, ml);
-
-                    //for (i = 0; i < ncols - 1; ++i)
-                    //{
-                    //    real32_t mcol = dlayout_get_margin_col(dsublayout, i);
-                    //    layout_hmargin(sublayout, i, mcol);
-                    //}
-
-                    //for (j = 0; j < nrows - 1; ++j)
-                    //{
-                    //    real32_t mrow = dlayout_get_margin_row(dsublayout, j);
-                    //    layout_vmargin(sublayout, j, mrow);
-                    //}
                     i_layout_obj_names(form, dsublayout);
+                    dlayout_remove_cell(sel.layout, sel.col, sel.row);
+                    layout_remove_cell(layout, sel.col, sel.row);
                     dlayout_add_layout(sel.layout, dsublayout, sel.col, sel.row);
                     layout_layout(layout, sublayout, sel.col, sel.row);
-                    cell_force_size(cell, 0, 0);
-                    _panel_compose(form->panel, NULL, &fsize);
-                    dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
-
-                    i_elem_at_mouse(form->dlayout, mouse_x, mouse_y, form->sel_path, &sel);
+                    i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
+                    dform_compose(form);
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
