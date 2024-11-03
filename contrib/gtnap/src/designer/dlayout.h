@@ -28,6 +28,8 @@ void dlayout_insert_row(DLayout *layout, const uint32_t row);
 
 void dlayout_remove_row(DLayout *layout, const uint32_t row);
 
+void dlayout_remove_cell(DLayout *layout, const uint32_t col, const uint32_t row);
+
 void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col, const uint32_t row);
 
 void dlayout_add_label(DLayout *layout, DLabel *label, const uint32_t col, const uint32_t row);
@@ -39,6 +41,8 @@ DColumn *dlayout_column(DLayout *layout, const uint32_t col);
 DRow *dlayout_row(DLayout *layout, const uint32_t row);
 
 DCell *dlayout_cell(DLayout *layout, const uint32_t col, const uint32_t row);
+
+const DCell *dlayout_ccell(const DLayout *layout, const uint32_t col, const uint32_t row);
 
 DCell *dlayout_cell_sel(const DSelect *sel);
 

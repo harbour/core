@@ -1383,6 +1383,21 @@ real32_t layout_get_vsize(const Layout *layout, const uint32_t row)
 
 /*---------------------------------------------------------------------------*/
 
+void layout_remove_cell(Layout *layout, const uint32_t col, const uint32_t row)
+{
+    Cell *cell = i_get_cell(layout, col, row);
+    i_CellDim cdim0, cdim1;
+    i_CellContent content;
+    cassert_no_null(cell);
+    i_remove_cell(cell);
+    content.empty = NULL;
+    i_init_celldim(&cdim0, 0.f, 0.f, 0.f, 0.f, ENUM_MAX(align_t));
+    i_init_celldim(&cdim1, 0.f, 0.f, 0.f, 0.f, ENUM_MAX(align_t));
+    i_init_cell(cell, i_ekEMPTY, PARAM(visible, TRUE), PARAM(enabled, TRUE), PARAM(displayed, TRUE), PARAM(tabstop, TRUE), &cdim0, &cdim1, &content, layout);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void _layout_attach_to_panel(Layout *layout, Panel *panel)
 {
     cassert_no_null(layout);

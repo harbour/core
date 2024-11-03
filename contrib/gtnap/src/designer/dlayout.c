@@ -278,20 +278,38 @@ void dlayout_remove_row(DLayout *layout, const uint32_t row)
 
 /*---------------------------------------------------------------------------*/
 
+static ___INLINE DCell *i_cell(DLayout *layout, const uint32_t col, const uint32_t row)
+{
+    uint32_t ncols = UINT32_MAX;
+    uint32_t pos = UINT32_MAX;
+    cassert_no_null(layout);
+    ncols = arrst_size(layout->cols, DColumn);
+    pos = row * ncols + col;
+    return arrst_get(layout->cells, pos, DCell);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dlayout_remove_cell(DLayout *layout, const uint32_t col, const uint32_t row)
+{
+    String *name = NULL;
+    DCell *cell = i_cell(layout, col, row);
+    cassert_no_null(cell);
+    name = str_c(tc(cell->name));
+    i_remove_cell(cell);
+    i_init_empty_cell(cell);
+    str_upd(&cell->name, tc(name));
+    str_destroy(&name);
+}
 
 /*---------------------------------------------------------------------------*/
 
 void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col, const uint32_t row)
 {
-    uint32_t i, ncols = 0;
-    DCell *cell = NULL;
-    cassert_no_null(layout);
+    DCell *cell = i_cell(layout, col, row);
+    cassert_no_null(cell);
     cassert_no_null(sublayout);
-    ncols = arrst_size(layout->cols, DColumn);
-    i = row * ncols + col;
-    cell = arrst_get(layout->cells, i, DCell);
-    i_remove_cell(cell);
-    i_init_empty_cell(cell);
+    cassert(cell->type == ekCELL_TYPE_EMPTY);
     cell->type = ekCELL_TYPE_LAYOUT;
     cell->halign = ekHALIGN_JUSTIFY;
     cell->valign = ekVALIGN_JUSTIFY;
@@ -302,15 +320,10 @@ void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col,
 
 void dlayout_add_label(DLayout *layout, DLabel *label, const uint32_t col, const uint32_t row)
 {
-    uint32_t i, ncols = 0;
-    DCell *cell = NULL;
-    cassert_no_null(layout);
+    DCell *cell = i_cell(layout, col, row);
+    cassert_no_null(cell);
     cassert_no_null(label);
-    ncols = arrst_size(layout->cols, DColumn);
-    i = row * ncols + col;
-    cell = arrst_get(layout->cells, i, DCell);
-    i_remove_cell(cell);
-    i_init_empty_cell(cell);
+    cassert(cell->type == ekCELL_TYPE_EMPTY);
     cell->type = ekCELL_TYPE_LABEL;
     cell->halign = ekHALIGN_LEFT;
     cell->valign = ekVALIGN_CENTER;
@@ -333,18 +346,6 @@ static color_t i_color(void)
     }
 
     return kCOLOR_DEFAULT;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static ___INLINE DCell *i_cell(DLayout *layout, const uint32_t col, const uint32_t row)
-{
-    uint32_t ncols = UINT32_MAX;
-    uint32_t pos = UINT32_MAX;
-    cassert_no_null(layout);
-    ncols = arrst_size(layout->cols, DColumn);
-    pos = row * ncols + col;
-    return arrst_get(layout->cells, pos, DCell);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -387,6 +388,13 @@ bool_t dlayout_empty_cell(const DSelect *sel)
 DCell *dlayout_cell(DLayout *layout, const uint32_t col, const uint32_t row)
 {
     return i_cell(layout, col, row);
+}
+
+/*---------------------------------------------------------------------------*/
+
+const DCell *dlayout_ccell(const DLayout *layout, const uint32_t col, const uint32_t row)
+{
+    return i_cell(cast(layout, DLayout), col, row);
 }
 
 /*---------------------------------------------------------------------------*/

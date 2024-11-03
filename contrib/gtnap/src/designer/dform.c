@@ -220,6 +220,53 @@ bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y)
 
 /*---------------------------------------------------------------------------*/
 
+static align_t i_halign(const halign_t halign)
+{
+    switch(halign) {
+    case ekHALIGN_LEFT:
+        return ekLEFT;
+    case ekHALIGN_CENTER:
+        return ekCENTER;
+    case ekHALIGN_RIGHT:
+        return ekRIGHT;
+    case ekHALIGN_JUSTIFY:
+        return ekJUSTIFY;
+    cassert_default();
+    }
+    return ekLEFT;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static align_t i_valign(const valign_t valign)
+{
+    switch(valign) {
+    case ekVALIGN_TOP:
+        return ekTOP;
+    case ekVALIGN_CENTER:
+        return ekCENTER;
+    case ekVALIGN_BOTTOM:
+        return ekBOTTOM;
+    case ekVALIGN_JUSTIFY:
+        return ekJUSTIFY;
+    cassert_default();
+    }
+    return ekTOP;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_synchro_cell_props(const DLayout *dlayout, Layout *layout, const uint32_t col, const uint32_t row)
+{
+    const DCell *dcell = dlayout_ccell(dlayout, col, row);
+    align_t halign = i_halign(dcell->halign);
+    align_t valign = i_valign(dcell->valign);
+    layout_halign(layout, col, row, halign);
+    layout_valign(layout, col, row, valign);
+}
+
+/*---------------------------------------------------------------------------*/
+
 bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
 {
     cassert_no_null(form);
@@ -240,23 +287,22 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                 if (dlabel != NULL)
                 {
                     /*
-                    * 1) Add the label into design layout.
-                    * 2) Add the label into real GUI layout.
-                    * 3) Disable the empty cell 'forced' size
-                    * 4) Update the GUI panel to recompute the GUI.
-                    * 5) Synchro design layout with real GUI layout.
-                    * 6) Update the drawing (return TRUE).
+                    * 1) Create the GUI Label.
+                    * 2) Remove previous cells in design/GUI layouts.
+                    * 3) Add label to design/GUI layouts.
+                    * 4) Synchro the cell properties.
+                    * 5) Compose the form to update the drawing.
+                    * 6) Update the property editor.
                     */
                     Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
                     Label *label = label_create();
-                    Cell *cell = layout_cell(layout, sel.col, sel.row);
-                    S2Df fsize;
                     label_text(label, tc(dlabel->text));
+                    dlayout_remove_cell(sel.layout, sel.col, sel.row);
+                    layout_remove_cell(layout, sel.col, sel.row);
                     dlayout_add_label(sel.layout, dlabel, sel.col, sel.row);
                     layout_label(layout, label, sel.col, sel.row);
-                    cell_force_size(cell, 0, 0);
-                    _panel_compose(form->panel, NULL, &fsize);
-                    dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
+                    i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
+                    dform_compose(form);
                     propedit_set(propedit, form, &sel);
                     form->sel = sel;
                     return TRUE;
@@ -414,42 +460,6 @@ void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *d
     cassert(dlayout_row(cast(dlayout, DLayout), row) == drow);
     layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
     layout_vmargin(layout, row, drow->margin_bottom);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static align_t i_halign(const halign_t halign)
-{
-    switch(halign) {
-    case ekHALIGN_LEFT:
-        return ekLEFT;
-    case ekHALIGN_CENTER:
-        return ekCENTER;
-    case ekHALIGN_RIGHT:
-        return ekRIGHT;
-    case ekHALIGN_JUSTIFY:
-        return ekJUSTIFY;
-    cassert_default();
-    }
-    return ekLEFT;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static align_t i_valign(const valign_t valign)
-{
-    switch(valign) {
-    case ekVALIGN_TOP:
-        return ekTOP;
-    case ekVALIGN_CENTER:
-        return ekCENTER;
-    case ekVALIGN_BOTTOM:
-        return ekBOTTOM;
-    case ekVALIGN_JUSTIFY:
-        return ekJUSTIFY;
-    cassert_default();
-    }
-    return ekTOP;
 }
 
 /*---------------------------------------------------------------------------*/
