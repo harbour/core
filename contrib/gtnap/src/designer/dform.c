@@ -8,6 +8,7 @@
 #include "inspect.h"
 #include "propedit.h"
 #include <gui/guicontrol.h>
+#include <gui/button.h>
 #include <gui/label.h>
 #include <gui/layout.h>
 #include <gui/layouth.h>
@@ -264,10 +265,10 @@ static void i_synchro_cell_props(const DLayout *dlayout, Layout *layout, const u
 
 /*---------------------------------------------------------------------------*/
 
-bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
+bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t mbutton)
 {
     cassert_no_null(form);
-    if (button == ekGUI_MOUSE_LEFT)
+    if (mbutton == ekGUI_MOUSE_LEFT)
     {
         DSelect sel;
         i_elem_at_mouse(form->dlayout, mouse_x, mouse_y, form->sel_path, &sel);
@@ -290,6 +291,31 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     layout_remove_cell(layout, sel.col, sel.row);
                     dlayout_add_label(sel.layout, dlabel, sel.col, sel.row);
                     layout_label(layout, label, sel.col, sel.row);
+                    i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
+                    dform_compose(form);
+                    propedit_set(propedit, form, &sel);
+                    inspect_set(inspect, form);
+                    form->sel = sel;
+                    return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
+            }
+
+            case ekWIDGET_BUTTON:
+            {
+                DButton *dbutton = dialog_new_button(window, &sel);
+                if (dbutton != NULL)
+                {
+                    Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
+                    Button *button = button_push();
+                    button_text(button, tc(dbutton->text));
+                    dlayout_remove_cell(sel.layout, sel.col, sel.row);
+                    layout_remove_cell(layout, sel.col, sel.row);
+                    dlayout_add_button(sel.layout, dbutton, sel.col, sel.row);
+                    layout_button(layout, button, sel.col, sel.row);
                     i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
                     dform_compose(form);
                     propedit_set(propedit, form, &sel);
@@ -378,9 +404,13 @@ void dform_synchro_cell_text(DForm *form, const DSelect *sel)
         Label *label = layout_get_label(layout, sel->col, sel->row);
         label_text(label, tc(cell->content.label->text));
     }
+    else if (cell->type == ekCELL_TYPE_BUTTON)
+    {
+        Button *button = layout_get_button(layout, sel->col, sel->row);
+        button_text(button, tc(cell->content.button->text));
+    }
     else
     {
-        /* At the moment, only Label can update the text */
         cassert(FALSE);
     }
 }
@@ -510,6 +540,8 @@ const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const
                 return "EmptyCell";
             case ekCELL_TYPE_LABEL:
                 return "LabelCell";
+            case ekCELL_TYPE_BUTTON:
+                return "ButtonCell";
             case ekCELL_TYPE_LAYOUT:
                 return "LayoutCell";
             cassert_default();

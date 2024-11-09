@@ -2,6 +2,7 @@
 
 #include "dialogs.h"
 #include "dlabel.h"
+#include "dbutton.h"
 #include "dlayout.h"
 #include <gui/button.h>
 #include <gui/cell.h>
@@ -134,6 +135,54 @@ DLabel *dialog_new_label(Window *parent, const DSelect *sel)
     window_destroy(&window);
     str_destroy(&caption);    
     return dlabel;
+}
+
+/*---------------------------------------------------------------------------*/
+
+DButton *dialog_new_button(Window *parent, const DSelect *sel)
+{
+    DialogData data;
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = layout_create(2, 1);
+    Layout *layout3 = i_ok_cancel(&data);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Edit *edit = edit_create();
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
+    String *caption = NULL;
+    DButton *dbutton = NULL;
+    uint32_t ret = 0;
+    data.edit = edit;
+    data.window = window;
+    cassert_no_null(sel);
+    cassert_no_null(sel->layout);
+    caption = str_printf("New Button widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->name));
+    label_text(label1, tc(caption));
+    label_text(label2, "Text:");
+    layout_label(layout1, label1, 0, 0);
+    layout_label(layout2, label2, 0, 0);
+    layout_edit(layout2, edit, 1, 0);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_layout(layout1, layout3, 0, 2);
+    layout_vmargin(layout1, 0, 5);
+    layout_vmargin(layout1, 1, 5);
+    panel_layout(panel, layout1);
+    window_panel(window, panel);
+    window_defbutton(window, data.defbutton);
+    i_center_window(parent, window);
+    ret = window_modal(window, parent);
+
+    if (ret == BUTTON_OK)
+    {
+        const char_t *text = edit_get_text(data.edit);
+        dbutton = dbutton_create();
+        dbutton_text(dbutton, text);
+    }
+
+    window_destroy(&window);
+    str_destroy(&caption);    
+    return dbutton;
 }
 
 /*---------------------------------------------------------------------------*/

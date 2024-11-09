@@ -1,6 +1,7 @@
 /* Design layout (editable parameters) */
 
 #include "dlayout.h"
+#include <gui/button.h>
 #include <gui/label.h>
 #include <gui/labelh.h>
 #include <gui/layout.h>
@@ -332,6 +333,20 @@ void dlayout_add_label(DLayout *layout, DLabel *label, const uint32_t col, const
 
 /*---------------------------------------------------------------------------*/
 
+void dlayout_add_button(DLayout *layout, DButton *button, const uint32_t col, const uint32_t row)
+{
+    DCell *cell = i_cell(layout, col, row);
+    cassert_no_null(cell);
+    cassert_no_null(button);
+    cassert(cell->type == ekCELL_TYPE_EMPTY);
+    cell->type = ekCELL_TYPE_BUTTON;
+    cell->halign = ekHALIGN_JUSTIFY;
+    cell->valign = ekVALIGN_CENTER;
+    cell->content.button = button;
+}
+
+/*---------------------------------------------------------------------------*/
+
 /*
 static color_t i_color(void)
 {
@@ -509,6 +524,15 @@ Layout *dlayout_gui_layout(const DLayout *layout)
                     break;
                 }
 
+                case ekCELL_TYPE_BUTTON:
+                {
+                    DButton *dbutton = cells->content.button;
+                    Button *gbutton = button_push();
+                    button_text(gbutton, tc(dbutton->text));
+                    layout_button(glayout, gbutton, i, j);
+                    break;
+                }
+
                 case ekCELL_TYPE_LAYOUT:
                 {
                     Layout *gsublayout = dlayout_gui_layout(cells->content.layout);
@@ -660,9 +684,8 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
 
                 switch(dcell->type) {
                 case ekCELL_TYPE_EMPTY:
-                    break;
-
                 case ekCELL_TYPE_LABEL:
+                case ekCELL_TYPE_BUTTON:
                     break;
 
                 case ekCELL_TYPE_LAYOUT:
@@ -887,6 +910,7 @@ void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t
                 switch(cell->type) {
                 case ekCELL_TYPE_EMPTY:
                 case ekCELL_TYPE_LABEL:
+                case ekCELL_TYPE_BUTTON:
                     break;
            
                 case ekCELL_TYPE_LAYOUT:
@@ -1045,6 +1069,11 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
                 drawctrl_text(ctx, tc(cell->content.label->text), (int32_t)cell->content_rect.pos.x, (int32_t)cell->content_rect.pos.y, ekCTRL_STATE_NORMAL);
                 break;
             }
+
+            case ekCELL_TYPE_BUTTON:
+                draw_rect(ctx, ekFILL, cell->content_rect.pos.x, cell->content_rect.pos.y, cell->content_rect.size.width, cell->content_rect.size.height);
+                break;
+
             case ekCELL_TYPE_LAYOUT:
             {
                 Layout *chid_glayout = cell_layout(gcell);

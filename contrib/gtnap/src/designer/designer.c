@@ -37,6 +37,7 @@ static void i_dbind(void)
     /* Registration of editable structures */
     dbind_enum(celltype_t, ekCELL_TYPE_EMPTY, "");
     dbind_enum(celltype_t, ekCELL_TYPE_LABEL, "");
+    dbind_enum(celltype_t, ekCELL_TYPE_BUTTON, "");
     dbind_enum(celltype_t, ekCELL_TYPE_LAYOUT, "");
     dbind_enum(halign_t, ekHALIGN_LEFT, "Left");
     dbind_enum(halign_t, ekHALIGN_CENTER, "Center");
@@ -47,6 +48,7 @@ static void i_dbind(void)
     dbind_enum(valign_t, ekVALIGN_BOTTOM, "Bottom");
     dbind_enum(valign_t, ekVALIGN_JUSTIFY, "Justify");
     dbind(DLabel, String *, text);
+    dbind(DButton, String *, text);
     dbind(DColumn, real32_t, margin_right);
     dbind(DRow, real32_t, margin_bottom);
     dbind(DCell, String *, name);
@@ -80,6 +82,7 @@ static void i_dbind(void)
 
     /* Don't move, we must first declare the inner struct */
     dbind(DCellContent, DLabel *, label);
+    dbind(DCellContent, DButton *, button);
     dbind(DCellContent, DLayout *, layout);
     dbind(DCell, DCellContent, content);
 

@@ -44,6 +44,7 @@ struct _propdata_t
     Layout *row_layout;
     Layout *cell_layout;
     Layout *label_layout;
+    Layout *button_layout;
     Cell *column_margin_cell;
     Cell *row_margin_cell;
     Label *layout_geom_label;
@@ -365,6 +366,46 @@ static Layout *i_label_layout(PropData *data)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnButtonNotify(PropData *data, Event *e)
+{
+    cassert_no_null(data);
+    cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
+    if (evbind_modify(e, DButton, String*, text) == TRUE)
+    {
+        dform_synchro_cell_text(data->form, &data->sel);
+        dform_compose(data->form);
+        designer_canvas_update(data->app);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_button_layout(PropData *data)
+{
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = layout_create(2, 1);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Edit *edit = edit_create();
+    cassert_no_null(data);
+    label_text(label1, "Button properties");
+    label_text(label2, "Text");
+    layout_label(layout1, label1, 0, 0);
+    layout_label(layout2, label2, 0, 0);
+    layout_edit(layout2, edit, 1, 0);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
+    layout_hmargin(layout2, 0, i_GRID_HMARGIN);
+    layout_hexpand(layout2, 1);
+    layout_vexpand(layout1, 2);
+    cell_dbind(layout_cell(layout2, 1, 0), DButton, String*, text);
+    layout_dbind(layout1, listener(data, i_OnButtonNotify, PropData), DButton);
+    data->button_layout = layout1;
+    return layout1;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnCellNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
@@ -432,11 +473,13 @@ static Panel *i_cell_content_panel(PropData *data)
     Layout *layout1 = i_empty_cell_layout();
     Layout *layout2 = i_layout_cell_layout();
     Layout *layout3 = i_label_layout(data);
+    Layout *layout4 = i_button_layout(data);
     Panel *panel = panel_create();
     cassert_no_null(data);
     panel_layout(panel, layout1);
     panel_layout(panel, layout2);
     panel_layout(panel, layout3);
+    panel_layout(panel, layout4);
     panel_visible_layout(panel, 0);
     data->cell_panel = panel;
     return panel;
@@ -578,6 +621,11 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
         {
             layout_dbind_obj(data->label_layout, cell->content.label, DLabel);
             panel_visible_layout(data->cell_panel, 2);
+        }
+        else if (cell->type == ekCELL_TYPE_BUTTON)
+        {
+            layout_dbind_obj(data->button_layout, cell->content.button, DButton);
+            panel_visible_layout(data->cell_panel, 3);
         }
         else
         {

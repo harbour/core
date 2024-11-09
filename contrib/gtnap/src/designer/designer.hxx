@@ -7,6 +7,7 @@
 
 typedef struct _desiger_t Designer;
 typedef struct _dlabel_t DLabel;
+typedef struct _dbutton_t DButton;
 typedef struct _dcolumn_t DColumn;
 typedef struct _drow_t DRow;
 typedef struct _dcell_t DCell;
@@ -29,6 +30,7 @@ typedef enum _celltype_t
 {
     ekCELL_TYPE_EMPTY,
     ekCELL_TYPE_LABEL,
+    ekCELL_TYPE_BUTTON,
     ekCELL_TYPE_LAYOUT
 } celltype_t;
 
@@ -64,6 +66,11 @@ struct _dlabel_t
     String *text;
 };
 
+struct _dbutton_t
+{
+    String *text;
+};
+
 struct _dcolumn_t
 {
     real32_t margin_right;
@@ -85,6 +92,7 @@ struct _drow_t
 struct _dcell_content_t
 {
     DLabel *label;
+    DButton *button;
     DLayout *layout;
 };
 
