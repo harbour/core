@@ -45,6 +45,7 @@ struct _propdata_t
     Layout *cell_layout;
     Layout *label_layout;
     Layout *button_layout;
+    Layout *check_layout;
     Cell *column_margin_cell;
     Cell *row_margin_cell;
     Label *layout_geom_label;
@@ -437,7 +438,7 @@ static Layout *i_check_layout(PropData *data)
     layout_vexpand(layout1, 2);
     cell_dbind(layout_cell(layout2, 1, 0), DCheck, String *, text);
     layout_dbind(layout1, listener(data, i_OnCheckNotify, PropData), DCheck);
-    data->button_layout = layout1;
+    data->check_layout = layout1;
     return layout1;
 }
 
@@ -447,7 +448,7 @@ static void i_OnCellNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-    if (evbind_modify(e, DCell, String *, name) == TRUE)
+    if (evbind_modify(e, DCell, String*, name) == TRUE)
     {
         designer_inspect_update(data->app);
     }
@@ -667,7 +668,7 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
         }
         else if (cell->type == ekCELL_TYPE_CHECK)
         {
-            layout_dbind_obj(data->button_layout, cell->content.check, DCheck);
+            layout_dbind_obj(data->check_layout, cell->content.check, DCheck);
             panel_visible_layout(data->cell_panel, 4);
         }
         else

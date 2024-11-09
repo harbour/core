@@ -1128,7 +1128,29 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
             }
 
             case ekCELL_TYPE_CHECK:
+            {
+                color_t color = i_is_cell_sel(hover, layout, i, j) ? kCOLOR_RED : kCOLOR_BLACK;
+                color_t bgcolor = color_rgb(225, 225, 0);
+                const Button *gcheck = cell_button(gcell);
+                const Font *gfont = button_get_font(gcheck);
+                real32_t cwidth = (real32_t)drawctrl_check_width(ctx) - 2;
+                real32_t cheight = (real32_t)drawctrl_check_height(ctx) - 2;
+                real32_t twidth, theight;
+                real32_t tx;
+                draw_font(ctx, gfont);
+                draw_line_color(ctx, color);
+                draw_text_color(ctx, color);
+                draw_fill_color(ctx, bgcolor);
+                //draw_line_width(ctx, 3);
+                font_extents(gfont, tc(cell->content.check->text), -1.f, &twidth, &theight);
+                tx = cell->content_rect.pos.x + (cell->content_rect.size.width - twidth);
+                draw_rect(ctx, ekFILL, cell->content_rect.pos.x, cell->content_rect.pos.y, cell->content_rect.size.width, cell->content_rect.size.height);
+                drawctrl_text(ctx, tc(cell->content.check->text), (int32_t)tx, (int32_t)cell->content_rect.pos.y, ekCTRL_STATE_NORMAL);
+                draw_rect(ctx, ekSTROKE, cell->content_rect.pos.x, cell->content_rect.pos.y, cwidth, cheight);
+                //draw_line_width(ctx, 1);
+                draw_line_color(ctx, kCOLOR_BLACK);
                 break;
+            }
 
             case ekCELL_TYPE_LAYOUT:
             {
