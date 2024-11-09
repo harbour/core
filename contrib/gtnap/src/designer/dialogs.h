@@ -10,4 +10,6 @@ DButton *dialog_new_button(Window *parent, const DSelect *sel);
 
 DCheck *dialog_new_check(Window *parent, const DSelect *sel);
 
+DEdit *dialog_new_edit(Window *parent, const DSelect *sel);
+
 DLayout *dialog_new_layout(Window *parent, const DSelect *sel);

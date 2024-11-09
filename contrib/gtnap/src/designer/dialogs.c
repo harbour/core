@@ -11,6 +11,7 @@
 #include <gui/label.h>
 #include <gui/layout.h>
 #include <gui/panel.h>
+#include <gui/popup.h>
 #include <gui/updown.h>
 #include <gui/window.h>
 #include <core/dbind.h>
@@ -225,6 +226,60 @@ DCheck *dialog_new_check(Window *parent, const DSelect *sel)
     window_destroy(&window);
     str_destroy(&caption);
     return dcheck;
+}
+
+/*---------------------------------------------------------------------------*/
+
+DEdit *dialog_new_edit(Window *parent, const DSelect *sel)
+{
+    DialogData data;
+    Layout *layout1 = layout_create(1, 5);
+    Layout *layout2 = layout_create(2, 1);
+    Layout *layout3 = i_ok_cancel(&data);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Button *button1 = button_check();
+    Button *button2 = button_check();
+    PopUp *popup = popup_create();
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
+    String *caption = NULL;
+    DEdit *dedit = dbind_create(DEdit);
+    uint32_t ret = 0;
+    data.window = window;
+    cassert_no_null(sel);
+    cassert_no_null(sel->layout);
+    caption = str_printf("New Editbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->name));
+    label_text(label1, tc(caption));
+    label_text(label2, "Text align");
+    button_text(button1, "Passmode");
+    button_text(button2, "Autosel");
+    layout_label(layout1, label1, 0, 0);
+    layout_button(layout1, button1, 0, 1);
+    layout_button(layout1, button2, 0, 2);
+    layout_label(layout2, label2, 0, 0);
+    layout_popup(layout2, popup, 1, 0);
+    layout_layout(layout1, layout2, 0, 3);
+    layout_layout(layout1, layout3, 0, 4);
+    layout_vmargin(layout1, 0, 5);
+    layout_vmargin(layout1, 1, 5);
+    panel_layout(panel, layout1);
+    cell_dbind(layout_cell(layout1, 0, 1), DEdit, bool_t, passmode);
+    cell_dbind(layout_cell(layout1, 0, 2), DEdit, bool_t, autosel);
+    cell_dbind(layout_cell(layout2, 1, 0), DEdit, halign_t, text_align);
+    layout_dbind(layout1, NULL, DEdit);
+    layout_dbind_obj(layout1, dedit, DEdit);
+    window_panel(window, panel);
+    window_defbutton(window, data.defbutton);
+    i_center_window(parent, window);
+    ret = window_modal(window, parent);
+
+    if (ret != BUTTON_OK)
+        dbind_destroy(&dedit, DEdit);
+
+    window_destroy(&window);
+    str_destroy(&caption);
+    return dedit;
 }
 
 /*---------------------------------------------------------------------------*/

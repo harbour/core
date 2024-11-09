@@ -1180,7 +1180,21 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
             }
 
             case ekCELL_TYPE_EDIT:
+            {
+                color_t color = i_is_cell_sel(hover, layout, i, j) ? kCOLOR_RED : kCOLOR_BLACK;
+                color_t bgcolor = color_rgb(225, 225, 0);
+                real32_t pattern[2] = {1, 2};
+                draw_line_color(ctx, color);
+                draw_fill_color(ctx, bgcolor);
+                draw_line_width(ctx, 2);
+                draw_rect(ctx, ekFILLSK, cell->content_rect.pos.x, cell->content_rect.pos.y, cell->content_rect.size.width, cell->content_rect.size.height);
+                draw_line_width(ctx, 1);
+                draw_line_dash(ctx, pattern, 2);
+                draw_rect(ctx, ekSTROKE, cell->content_rect.pos.x + 5, cell->content_rect.pos.y + 5, cell->content_rect.size.width - 10, cell->content_rect.size.height - 10);
+                draw_line_dash(ctx, NULL, 0);
+                draw_line_color(ctx, kCOLOR_BLACK);
                 break;
+            }
 
             case ekCELL_TYPE_LAYOUT:
             {

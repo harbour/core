@@ -90,6 +90,7 @@ static void i_dbind(void)
     dbind(DCellContent, DLabel *, label);
     dbind(DCellContent, DButton *, button);
     dbind(DCellContent, DCheck*, check);
+    dbind(DCellContent, DEdit*, edit);
     dbind(DCellContent, DLayout *, layout);
     dbind(DCell, DCellContent, content);
 

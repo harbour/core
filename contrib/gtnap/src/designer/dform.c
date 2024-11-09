@@ -9,6 +9,7 @@
 #include "propedit.h"
 #include <gui/guicontrol.h>
 #include <gui/button.h>
+#include <gui/edit.h>
 #include <gui/label.h>
 #include <gui/layout.h>
 #include <gui/layouth.h>
@@ -353,6 +354,36 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     return FALSE;
                 }
             }
+
+            case ekWIDGET_EDITBOX:
+            {
+                DEdit *dedit = dialog_new_edit(window, &sel);
+                if (dedit != NULL)
+                {
+                    Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
+                    Edit *edit = edit_create();
+                    align_t align = i_halign(dedit->text_align);
+                    edit_passmode(edit, dedit->passmode);
+                    edit_autoselect(edit, dedit->autosel);
+                    edit_align(edit, align);
+                    dlayout_remove_cell(sel.layout, sel.col, sel.row);
+                    layout_remove_cell(layout, sel.col, sel.row);
+                    dlayout_add_edit(sel.layout, dedit, sel.col, sel.row);
+                    layout_edit(layout, edit, sel.col, sel.row);
+                    i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
+                    dform_compose(form);
+                    propedit_set(propedit, form, &sel);
+                    inspect_set(inspect, form);
+                    form->sel = sel;
+                    return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
+            }
+
+DEdit *dialog_new_edit(Window *parent, const DSelect *sel);
 
             case ekWIDGET_GRID_LAYOUT:
             {
