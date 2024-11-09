@@ -29,7 +29,6 @@ struct _dialoglayout_t
 
 struct _dialogdata_t
 {
-    Edit *edit;
     Button *defbutton;
     Window *window;
 };
@@ -104,9 +103,8 @@ DLabel *dialog_new_label(Window *parent, const DSelect *sel)
     Panel *panel = panel_create();
     Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
     String *caption = NULL;
-    DLabel *dlabel = NULL;
+    DLabel *dlabel = dbind_create(DLabel);
     uint32_t ret = 0;
-    data.edit = edit;
     data.window = window;
     cassert_no_null(sel);
     cassert_no_null(sel->layout);
@@ -121,17 +119,16 @@ DLabel *dialog_new_label(Window *parent, const DSelect *sel)
     layout_vmargin(layout1, 0, 5);
     layout_vmargin(layout1, 1, 5);
     panel_layout(panel, layout1);
+    cell_dbind(layout_cell(layout2, 1, 0), DLabel, String*, text);
+    layout_dbind(layout1, NULL, DLabel);
+    layout_dbind_obj(layout1, dlabel, DLabel);
     window_panel(window, panel);
     window_defbutton(window, data.defbutton);
     i_center_window(parent, window);
     ret = window_modal(window, parent);
 
-    if (ret == BUTTON_OK)
-    {
-        const char_t *text = edit_get_text(data.edit);
-        dlabel = dlabel_create();
-        dlabel_text(dlabel, text);
-    }
+    if (ret != BUTTON_OK)
+        dbind_destroy(&dlabel, DLabel);
 
     window_destroy(&window);
     str_destroy(&caption);
@@ -152,9 +149,8 @@ DButton *dialog_new_button(Window *parent, const DSelect *sel)
     Panel *panel = panel_create();
     Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
     String *caption = NULL;
-    DButton *dbutton = NULL;
+    DButton *dbutton = dbind_create(DButton);
     uint32_t ret = 0;
-    data.edit = edit;
     data.window = window;
     cassert_no_null(sel);
     cassert_no_null(sel->layout);
@@ -169,17 +165,16 @@ DButton *dialog_new_button(Window *parent, const DSelect *sel)
     layout_vmargin(layout1, 0, 5);
     layout_vmargin(layout1, 1, 5);
     panel_layout(panel, layout1);
+    cell_dbind(layout_cell(layout2, 1, 0), DButton, String*, text);
+    layout_dbind(layout1, NULL, DButton);
+    layout_dbind_obj(layout1, dbutton, DButton);
     window_panel(window, panel);
     window_defbutton(window, data.defbutton);
     i_center_window(parent, window);
     ret = window_modal(window, parent);
 
-    if (ret == BUTTON_OK)
-    {
-        const char_t *text = edit_get_text(data.edit);
-        dbutton = dbutton_create();
-        dbutton_text(dbutton, text);
-    }
+    if (ret != BUTTON_OK)
+        dbind_destroy(&dbutton, DButton);
 
     window_destroy(&window);
     str_destroy(&caption);
@@ -200,9 +195,8 @@ DCheck *dialog_new_check(Window *parent, const DSelect *sel)
     Panel *panel = panel_create();
     Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
     String *caption = NULL;
-    DCheck *dcheck = NULL;
+    DCheck *dcheck = dbind_create(DCheck);
     uint32_t ret = 0;
-    data.edit = edit;
     data.window = window;
     cassert_no_null(sel);
     cassert_no_null(sel->layout);
@@ -217,17 +211,16 @@ DCheck *dialog_new_check(Window *parent, const DSelect *sel)
     layout_vmargin(layout1, 0, 5);
     layout_vmargin(layout1, 1, 5);
     panel_layout(panel, layout1);
+    cell_dbind(layout_cell(layout2, 1, 0), DCheck, String*, text);
+    layout_dbind(layout1, NULL, DCheck);
+    layout_dbind_obj(layout1, dcheck, DCheck);
     window_panel(window, panel);
     window_defbutton(window, data.defbutton);
     i_center_window(parent, window);
     ret = window_modal(window, parent);
 
-    if (ret == BUTTON_OK)
-    {
-        const char_t *text = edit_get_text(data.edit);
-        dcheck = dcheck_create();
-        dcheck_text(dcheck, text);
-    }
+    if (ret != BUTTON_OK)
+        dbind_destroy(&dcheck, DCheck);
 
     window_destroy(&window);
     str_destroy(&caption);
