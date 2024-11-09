@@ -332,6 +332,7 @@ void dlayout_add_label(DLayout *layout, DLabel *label, const uint32_t col, const
 
 /*---------------------------------------------------------------------------*/
 
+/*
 static color_t i_color(void)
 {
     static uint32_t index = 0;
@@ -346,7 +347,7 @@ static color_t i_color(void)
     }
 
     return kCOLOR_DEFAULT;
-}
+}*/
 
 /*---------------------------------------------------------------------------*/
 
@@ -522,7 +523,7 @@ Layout *dlayout_gui_layout(const DLayout *layout)
         }
     }
 
-    layout_bgcolor(glayout, i_color());
+    /*layout_bgcolor(glayout, i_color());*/
     return glayout;
 }
 

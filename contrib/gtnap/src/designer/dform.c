@@ -27,11 +27,11 @@ struct _dform_t
 {
     DLayout *dlayout;
     Layout *layout;
+    Window *window;
     DSelect hover;
     DSelect sel;
     ArrSt(DSelect) *temp_path;
     ArrSt(DSelect) *sel_path;
-    Panel *panel;
     uint32_t layout_id;
     uint32_t cell_id;
 };
@@ -135,10 +135,10 @@ void dform_destroy(DForm **form)
     dlayout_destroy(&(*form)->dlayout);
     arrst_destroy(&(*form)->temp_path, NULL, DSelect);
     arrst_destroy(&(*form)->sel_path, NULL, DSelect);
-    if ((*form)->panel != NULL)
+    if ((*form)->window != NULL)
     {
         cassert((*form)->layout != NULL);
-        _panel_destroy(&(*form)->panel);
+        window_destroy(&(*form)->window);
     }
 
     heap_delete(form, DForm);
@@ -148,21 +148,18 @@ void dform_destroy(DForm **form)
 
 void dform_compose(DForm *form)
 {
-    /*
-    * 1) Recompute the GUI form for update lastest changes.
-    * 2) Synchro design form with GUI controls and sizes.
-    */
-    S2Df fsize = kS2D_ZEROf;
     cassert_no_null(form);
     if (form->layout == NULL)
     {
-        cassert(form->panel == NULL);
+        Panel *panel = panel_create();
+        cassert(form->window == NULL);
         form->layout = dlayout_gui_layout(form->dlayout);
-        form->panel = panel_create();
-        panel_layout(form->panel, form->layout);
+        panel_layout(panel, form->layout);
+        form->window = window_create(ekWINDOW_STD);
+        window_panel(form->window, panel);
     }
 
-    _panel_compose(form->panel, NULL, &fsize);
+    window_update(form->window);
     dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
 }
 
@@ -551,3 +548,27 @@ void dform_inspect_select(DForm *form, Panel *propedit, const uint32_t row)
     }
 }
 
+/*---------------------------------------------------------------------------*/
+/* Unify with 'dialogs' code */
+static void i_center_window(const Window *parent, Window *window)
+{
+    V2Df p1 = window_get_origin(parent);
+    S2Df s1 = window_get_size(parent);
+    S2Df s2 = window_get_size(window);
+    V2Df p2;
+    p2.x = p1.x + (s1.width - s2.width) / 2;
+    p2.y = p1.y + (s1.height - s2.height) / 2;
+    window_origin(window, p2);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_simulate(DForm *form, Window *window)
+{
+    cassert_no_null(form);
+    if (form->window != NULL)
+    {
+        i_center_window(window, form->window);
+        window_modal(form->window, window);
+    }
+}

@@ -33,3 +33,5 @@ uint32_t dform_selpath_size(const DForm *form);
 const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const uint32_t row);
 
 void dform_inspect_select(DForm *form, Panel *propedit, const uint32_t row);
+
+void dform_simulate(DForm *form, Window *window);

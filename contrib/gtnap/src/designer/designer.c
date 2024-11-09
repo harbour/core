@@ -95,6 +95,16 @@ static void i_dbind(void)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnSimulateClick(Designer *app, Event *e)
+{
+    cassert_no_null(app);
+    unref(e);
+    if (app->form != NULL)
+        dform_simulate(app->form, app->window);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_tools_layout(Designer *app, ResPack *pack)
 {
     Layout *layout = layout_create(9, 1);
@@ -114,6 +124,8 @@ static Layout *i_tools_layout(Designer *app, ResPack *pack)
     button_image(button6, image_from_resource(pack, PLUS24_PNG));
     button_image(button7, image_from_resource(pack, ERROR24_PNG));
     button_image(button8, image_from_resource(pack, ERROR24_PNG));
+    button_OnClick(button4, listener(app, i_OnSimulateClick, Designer));
+    button_tooltip(button4, "Simulate form");
     layout_button(layout, button1, 0, 0);
     layout_button(layout, button2, 1, 0);
     layout_button(layout, button3, 2, 0);
