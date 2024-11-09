@@ -439,12 +439,12 @@ static void i_OnEditNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-    //if (evbind_modify(e, DCheck, String *, text) == TRUE)
-    //{
-    //    dform_synchro_cell_text(data->form, &data->sel);
-    //    dform_compose(data->form);
-    //    designer_canvas_update(data->app);
-    //}
+    if (evbind_modify(e, DEdit, bool_t, passmode) == TRUE
+    || evbind_modify(e, DEdit, bool_t, autosel) == TRUE
+    || evbind_modify(e, DEdit, halign_t, text_align) == TRUE)
+    {
+        dform_synchro_edit(data->form, &data->sel);
+    }
 }
 
 /*---------------------------------------------------------------------------*/

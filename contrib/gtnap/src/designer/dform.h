@@ -16,6 +16,8 @@ bool_t dform_OnExit(DForm *form);
 
 void dform_synchro_cell_text(DForm *form, const DSelect *sel);
 
+void dform_synchro_edit(DForm *form, const DSelect *sel);
+
 void dform_synchro_layout_margin(DForm *form, const DLayout *dlayout);
 
 void dform_synchro_column_margin(DForm *form, const DLayout *dlayout, const DColumn *dcolumn, const uint32_t col);

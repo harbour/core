@@ -383,8 +383,6 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                 }
             }
 
-DEdit *dialog_new_edit(Window *parent, const DSelect *sel);
-
             case ekWIDGET_GRID_LAYOUT:
             {
                 DLayout *dsublayout = dialog_new_layout(window, &sel);
@@ -474,6 +472,23 @@ void dform_synchro_cell_text(DForm *form, const DSelect *sel)
     {
         cassert(FALSE);
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_synchro_edit(DForm *form, const DSelect *sel)
+{
+    DCell *cell = dlayout_cell_sel(sel);
+    Layout *layout = NULL;
+    Edit *edit = NULL;
+    cassert_no_null(form);
+    cassert_no_null(cell);
+    cassert(cell->type == ekCELL_TYPE_EDIT);
+    layout = dlayout_search_layout(form->dlayout, form->layout, sel->layout);
+    edit = layout_get_edit(layout, sel->col, sel->row);
+    edit_passmode(edit, cell->content.edit->passmode);
+    edit_autoselect(edit, cell->content.edit->autosel);
+    edit_align(edit, i_halign(cell->content.edit->text_align));
 }
 
 /*---------------------------------------------------------------------------*/
