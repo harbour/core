@@ -329,6 +329,31 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                 }
             }
 
+            case ekWIDGET_CHECKBOX:
+            {
+                DCheck *dcheck = dialog_new_check(window, &sel);
+                if (dcheck != NULL)
+                {
+                    Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
+                    Button *check = button_check();
+                    button_text(check, tc(dcheck->text));
+                    dlayout_remove_cell(sel.layout, sel.col, sel.row);
+                    layout_remove_cell(layout, sel.col, sel.row);
+                    dlayout_add_check(sel.layout, dcheck, sel.col, sel.row);
+                    layout_button(layout, check, sel.col, sel.row);
+                    i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
+                    dform_compose(form);
+                    propedit_set(propedit, form, &sel);
+                    inspect_set(inspect, form);
+                    form->sel = sel;
+                    return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
+            }
+
             case ekWIDGET_GRID_LAYOUT:
             {
                 DLayout *dsublayout = dialog_new_layout(window, &sel);
@@ -405,6 +430,11 @@ void dform_synchro_cell_text(DForm *form, const DSelect *sel)
         label_text(label, tc(cell->content.label->text));
     }
     else if (cell->type == ekCELL_TYPE_BUTTON)
+    {
+        Button *button = layout_get_button(layout, sel->col, sel->row);
+        button_text(button, tc(cell->content.button->text));
+    }
+    else if (cell->type == ekCELL_TYPE_CHECK)
     {
         Button *button = layout_get_button(layout, sel->col, sel->row);
         button_text(button, tc(cell->content.button->text));
@@ -542,6 +572,8 @@ const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const
                 return "LabelCell";
             case ekCELL_TYPE_BUTTON:
                 return "ButtonCell";
+            case ekCELL_TYPE_CHECK:
+                return "CheckBoxCell";
             case ekCELL_TYPE_LAYOUT:
                 return "LayoutCell";
             cassert_default();

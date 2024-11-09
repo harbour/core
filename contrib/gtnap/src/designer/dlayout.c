@@ -168,7 +168,7 @@ void dlayout_margin_col(DLayout *layout, const uint32_t col, const real32_t marg
     DColumn *dcol = NULL;
     cassert_no_null(layout);
     cassert(col < arrst_size(layout->cols, DColumn) - 1);
-    dcol= arrst_get(layout->cols, col, DColumn);
+    dcol = arrst_get(layout->cols, col, DColumn);
     dcol->margin_right = margin;
 }
 
@@ -349,6 +349,20 @@ void dlayout_add_button(DLayout *layout, DButton *button, const uint32_t col, co
 
 /*---------------------------------------------------------------------------*/
 
+void dlayout_add_check(DLayout *layout, DCheck *check, const uint32_t col, const uint32_t row)
+{
+    DCell *cell = i_cell(layout, col, row);
+    cassert_no_null(cell);
+    cassert_no_null(check);
+    cassert(cell->type == ekCELL_TYPE_EMPTY);
+    cell->type = ekCELL_TYPE_CHECK;
+    cell->halign = ekHALIGN_LEFT;
+    cell->valign = ekVALIGN_CENTER;
+    cell->content.check = check;
+}
+
+/*---------------------------------------------------------------------------*/
+
 /*
 static color_t i_color(void)
 {
@@ -397,7 +411,7 @@ bool_t dlayout_empty_cell(const DSelect *sel)
                 return TRUE;
         }
     }
-        
+
     return FALSE;
 }
 
@@ -425,7 +439,7 @@ DCell *dlayout_cell_sel(const DSelect *sel)
         if (sel->elem == ekLAYELEM_CELL)
             return i_cell(sel->layout, sel->col, sel->row);
     }
-        
+
     return NULL;
 }
 
@@ -433,7 +447,8 @@ DCell *dlayout_cell_sel(const DSelect *sel)
 
 static align_t i_halign(const halign_t halign)
 {
-    switch(halign) {
+    switch (halign)
+    {
     case ekHALIGN_LEFT:
         return ekLEFT;
     case ekHALIGN_CENTER:
@@ -442,7 +457,7 @@ static align_t i_halign(const halign_t halign)
         return ekRIGHT;
     case ekHALIGN_JUSTIFY:
         return ekJUSTIFY;
-    cassert_default();
+        cassert_default();
     }
     return ekLEFT;
 }
@@ -451,7 +466,8 @@ static align_t i_halign(const halign_t halign)
 
 static align_t i_valign(const valign_t valign)
 {
-    switch(valign) {
+    switch (valign)
+    {
     case ekVALIGN_TOP:
         return ekTOP;
     case ekVALIGN_CENTER:
@@ -460,7 +476,7 @@ static align_t i_valign(const valign_t valign)
         return ekBOTTOM;
     case ekVALIGN_JUSTIFY:
         return ekJUSTIFY;
-    cassert_default();
+        cassert_default();
     }
     return ekTOP;
 }
@@ -505,14 +521,15 @@ Layout *dlayout_gui_layout(const DLayout *layout)
         const DCell *cells = arrst_all_const(layout->cells, DCell);
         for (j = 0; j < nrows; ++j)
         {
-            for(i = 0; i < ncols; ++i)
+            for (i = 0; i < ncols; ++i)
             {
                 Cell *gcell = layout_cell(glayout, i, j);
                 align_t halign = i_halign(cells->halign);
                 align_t valign = i_valign(cells->valign);
                 layout_halign(glayout, i, j, halign);
                 layout_valign(glayout, i, j, valign);
-                switch(cells->type) {
+                switch (cells->type)
+                {
                 case ekCELL_TYPE_EMPTY:
                     cell_force_size(gcell, i_EMPTY_CELL_WIDTH, i_EMPTY_CELL_HEIGHT);
                     break;
@@ -535,13 +552,21 @@ Layout *dlayout_gui_layout(const DLayout *layout)
                     break;
                 }
 
+                case ekCELL_TYPE_CHECK:
+                {
+                    DCheck *dcheck = cells->content.check;
+                    Button *gcheck = button_check();
+                    button_text(gcheck, tc(dcheck->text));
+                    layout_button(glayout, gcheck, i, j);
+                    break;
+                }
+
                 case ekCELL_TYPE_LAYOUT:
                 {
                     Layout *gsublayout = dlayout_gui_layout(cells->content.layout);
                     layout_layout(glayout, gsublayout, i, j);
                     break;
                 }
-
                 }
 
                 cells += 1;
@@ -569,8 +594,8 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
     col = arrst_all(layout->cols, DColumn);
     row = arrst_all(layout->rows, DRow);
     cell = arrst_all(layout->cells, DCell);
-    ncols = arrst_size(layout->cols, DColumn); 
-    nrows = arrst_size(layout->rows, DRow); 
+    ncols = arrst_size(layout->cols, DColumn);
+    nrows = arrst_size(layout->rows, DRow);
 
     /* Compute the columns width and total layout widths */
     total_width = 0;
@@ -631,7 +656,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
         for (j = 0; j < nrows; ++j)
         {
             x = origin.x + layout->margin_left;
-            for(i = 0; i < ncols; ++i)
+            for (i = 0; i < ncols; ++i)
             {
                 Cell *gcell = layout_cell(cast(glayout, Layout), i, j);
                 real32_t hsize = cell_get_hsize(gcell);
@@ -644,7 +669,8 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                 cassert(hsize <= col[i].width);
                 cassert(vsize <= row[j].height);
 
-                switch(halign) {
+                switch (halign)
+                {
                 case ekLEFT:
                     cassert(dcell->halign == ekHALIGN_LEFT);
                     cellx = x;
@@ -661,10 +687,11 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                     cassert(dcell->halign == ekHALIGN_JUSTIFY);
                     cellx = x;
                     break;
-                cassert_default();
+                    cassert_default();
                 }
 
-                switch(valign) {
+                switch (valign)
+                {
                 case ekTOP:
                     cassert(dcell->valign == ekVALIGN_TOP);
                     celly = y;
@@ -681,13 +708,15 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                     cassert(dcell->valign == ekVALIGN_JUSTIFY);
                     celly = y;
                     break;
-                cassert_default();
+                    cassert_default();
                 }
 
-                switch(dcell->type) {
+                switch (dcell->type)
+                {
                 case ekCELL_TYPE_EMPTY:
                 case ekCELL_TYPE_LABEL:
                 case ekCELL_TYPE_BUTTON:
+                case ekCELL_TYPE_CHECK:
                     break;
 
                 case ekCELL_TYPE_LAYOUT:
@@ -698,7 +727,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                     break;
                 }
 
-                cassert_default();
+                    cassert_default();
                 }
 
                 dcell->rect = r2df(x, y, col[i].width, row[j].height);
@@ -722,13 +751,13 @@ Layout *dlayout_search_layout(const DLayout *layout, Layout *glayout, const DLay
     if (layout != required)
     {
         DCell *cell = arrst_all(layout->cells, DCell);
-        uint32_t ncols = arrst_size(layout->cols, DColumn); 
-        uint32_t nrows = arrst_size(layout->rows, DRow); 
+        uint32_t ncols = arrst_size(layout->cols, DColumn);
+        uint32_t nrows = arrst_size(layout->rows, DRow);
         uint32_t i, j;
 
         for (j = 0; j < nrows; ++j)
         {
-            for(i = 0; i < ncols; ++i)
+            for (i = 0; i < ncols; ++i)
             {
                 if (cell->type == ekCELL_TYPE_LAYOUT)
                 {
@@ -758,7 +787,7 @@ Layout *dlayout_search_layout(const DLayout *layout, Layout *glayout, const DLay
 uint32_t dlayout_ncols(const DLayout *layout)
 {
     cassert_no_null(layout);
-    return arrst_size(layout->cols, DColumn); 
+    return arrst_size(layout->cols, DColumn);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -766,12 +795,12 @@ uint32_t dlayout_ncols(const DLayout *layout)
 uint32_t dlayout_nrows(const DLayout *layout)
 {
     cassert_no_null(layout);
-    return arrst_size(layout->rows, DRow); 
+    return arrst_size(layout->rows, DRow);
 }
 
 ///*---------------------------------------------------------------------------*/
 //
-//real32_t dlayout_get_margin_top(const DLayout *layout)
+// real32_t dlayout_get_margin_top(const DLayout *layout)
 //{
 //    cassert_no_null(layout);
 //    return layout->margin_top;
@@ -779,7 +808,7 @@ uint32_t dlayout_nrows(const DLayout *layout)
 //
 ///*---------------------------------------------------------------------------*/
 //
-//real32_t dlayout_get_margin_bottom(const DLayout *layout)
+// real32_t dlayout_get_margin_bottom(const DLayout *layout)
 //{
 //    DRow *row = NULL;
 //    cassert_no_null(layout);
@@ -789,7 +818,7 @@ uint32_t dlayout_nrows(const DLayout *layout)
 //
 ///*---------------------------------------------------------------------------*/
 //
-//real32_t dlayout_get_margin_left(const DLayout *layout)
+// real32_t dlayout_get_margin_left(const DLayout *layout)
 //{
 //    cassert_no_null(layout);
 //    return layout->margin_left;
@@ -797,7 +826,7 @@ uint32_t dlayout_nrows(const DLayout *layout)
 //
 ///*---------------------------------------------------------------------------*/
 //
-//real32_t dlayout_get_margin_right(const DLayout *layout)
+// real32_t dlayout_get_margin_right(const DLayout *layout)
 //{
 //    DColumn *col = NULL;
 //    cassert_no_null(layout);
@@ -807,7 +836,7 @@ uint32_t dlayout_nrows(const DLayout *layout)
 //
 ///*---------------------------------------------------------------------------*/
 //
-//real32_t dlayout_get_margin_col(const DLayout *layout, const uint32_t col)
+// real32_t dlayout_get_margin_col(const DLayout *layout, const uint32_t col)
 //{
 //    DColumn *dcol = NULL;
 //    cassert_no_null(layout);
@@ -818,7 +847,7 @@ uint32_t dlayout_nrows(const DLayout *layout)
 //
 ///*---------------------------------------------------------------------------*/
 //
-//real32_t dlayout_get_margin_row(const DLayout *layout, const uint32_t row)
+// real32_t dlayout_get_margin_row(const DLayout *layout, const uint32_t row)
 //{
 //    DRow *drow = NULL;
 //    cassert_no_null(layout);
@@ -831,7 +860,7 @@ uint32_t dlayout_nrows(const DLayout *layout)
 
 void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t y, ArrSt(DSelect) *selpath)
 {
-    cassert_no_null(layout); 
+    cassert_no_null(layout);
     if (r2d_containsf(&layout->rect, x, y) == TRUE)
     {
         DSelect *sel = arrst_new(selpath, DSelect);
@@ -909,12 +938,14 @@ void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t
                 sel->col = cell_i % ncols;
                 sel->row = cell_i / ncols;
 
-                switch(cell->type) {
+                switch (cell->type)
+                {
                 case ekCELL_TYPE_EMPTY:
                 case ekCELL_TYPE_LABEL:
                 case ekCELL_TYPE_BUTTON:
+                case ekCELL_TYPE_CHECK:
                     break;
-           
+
                 case ekCELL_TYPE_LAYOUT:
                     dlayout_elem_at_pos(cell->content.layout, x, y, selpath);
                     break;
@@ -930,7 +961,7 @@ void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t
 
 static R2Df i_cell_rect(const DLayout *layout, const DSelect *sel)
 {
-    uint32_t ncols, pos; 
+    uint32_t ncols, pos;
     const DCell *cell = NULL;
     cassert_no_null(layout);
     cassert_no_null(sel);
@@ -949,7 +980,8 @@ static R2Df i_get_rect(const DLayout *layout, const DSelect *sel)
     cassert_no_null(layout);
     cassert_no_null(sel);
     cassert(layout == sel->layout);
-    switch(sel->elem) {
+    switch (sel->elem)
+    {
     case ekLAYELEM_MARGIN_LEFT:
         return layout->rect_left;
 
@@ -967,7 +999,7 @@ static R2Df i_get_rect(const DLayout *layout, const DSelect *sel)
         const DColumn *col = arrst_get_const(layout->cols, sel->col, DColumn);
         return col->margin_rect;
     }
-    
+
     case ekLAYELEM_MARGIN_ROW:
     {
         const DRow *row = arrst_get_const(layout->rows, sel->row, DRow);
@@ -976,7 +1008,6 @@ static R2Df i_get_rect(const DLayout *layout, const DSelect *sel)
 
     case ekLAYELEM_CELL:
         return i_cell_rect(layout, sel);
-
     }
 
     return kR2D_ZEROf;
@@ -989,7 +1020,8 @@ static R2Df i_get_full_rect(const DLayout *layout, const DSelect *sel)
     cassert_no_null(layout);
     cassert_no_null(sel);
     cassert(layout == sel->layout);
-    switch(sel->elem) {
+    switch (sel->elem)
+    {
     case ekLAYELEM_MARGIN_LEFT:
     case ekLAYELEM_MARGIN_TOP:
     case ekLAYELEM_MARGIN_RIGHT:
@@ -1000,7 +1032,6 @@ static R2Df i_get_full_rect(const DLayout *layout, const DSelect *sel)
 
     case ekLAYELEM_CELL:
         return i_cell_rect(layout, sel);
-
     }
 
     return kR2D_ZEROf;
@@ -1031,23 +1062,23 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
     cassert_no_null(layout);
     cassert_no_null(hover);
 
-    ncols = arrst_size(layout->cols, DColumn); 
-    nrows = arrst_size(layout->rows, DRow); 
+    ncols = arrst_size(layout->cols, DColumn);
+    nrows = arrst_size(layout->rows, DRow);
     cell = arrst_all_const(layout->cells, DCell);
 
     draw_line_color(ctx, kCOLOR_BLACK);
     draw_fill_color(ctx, kCOLOR_BLACK);
     draw_r2df(ctx, ekSTROKE, &layout->rect);
-    //draw_r2df(ctx, ekFILL, &layout->rect_left);
-    //draw_r2df(ctx, ekFILL, &layout->rect_top);
+    // draw_r2df(ctx, ekFILL, &layout->rect_left);
+    // draw_r2df(ctx, ekFILL, &layout->rect_top);
 
-    //arrst_foreach_const(col, layout->cols, DColumn)
-    //    draw_r2df(ctx, ekFILL, &col->margin_rect);
-    //arrst_end()
+    // arrst_foreach_const(col, layout->cols, DColumn)
+    //     draw_r2df(ctx, ekFILL, &col->margin_rect);
+    // arrst_end()
 
-    //arrst_foreach_const(row, layout->rows, DRow)
-    //    draw_r2df(ctx, ekFILL, &row->margin_rect);
-    //arrst_end()
+    // arrst_foreach_const(row, layout->rows, DRow)
+    //     draw_r2df(ctx, ekFILL, &row->margin_rect);
+    // arrst_end()
 
     for (j = 0; j < nrows; ++j)
     {
@@ -1055,7 +1086,8 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
         {
             Cell *gcell = layout_cell(cast(glayout, Layout), i, j);
             draw_r2df(ctx, ekSTROKE, &cell->rect);
-            switch(cell->type) {
+            switch (cell->type)
+            {
             case ekCELL_TYPE_EMPTY:
                 break;
             case ekCELL_TYPE_LABEL:
@@ -1095,6 +1127,9 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
                 break;
             }
 
+            case ekCELL_TYPE_CHECK:
+                break;
+
             case ekCELL_TYPE_LAYOUT:
             {
                 Layout *chid_glayout = cell_layout(gcell);
@@ -1116,8 +1151,8 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
         {
             draw_r2df(ctx, ekSTROKE, &rect);
             draw_line_color(ctx, kCOLOR_BLACK);
-            //draw_fill_color(ctx, kCOLOR_RED);
-            //draw_r2df(ctx, ekFILL, &rect);
+            // draw_fill_color(ctx, kCOLOR_RED);
+            // draw_r2df(ctx, ekFILL, &rect);
         }
         else
         {
