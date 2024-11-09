@@ -11,6 +11,7 @@
 /* Label control */
 
 #include "label.h"
+#include "labelh.h"
 #include "label.inl"
 #include "component.inl"
 #include "gui.h"

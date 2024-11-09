@@ -2,6 +2,7 @@
 
 #include "dlayout.h"
 #include <gui/button.h>
+#include <gui/buttonh.h>
 #include <gui/label.h>
 #include <gui/labelh.h>
 #include <gui/layout.h>
@@ -13,6 +14,7 @@
 #include <draw2d/color.h>
 #include <draw2d/draw.h>
 #include <draw2d/drawg.h>
+#include <draw2d/font.h>
 #include <draw2d/image.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
@@ -1071,8 +1073,27 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
             }
 
             case ekCELL_TYPE_BUTTON:
-                draw_rect(ctx, ekFILL, cell->content_rect.pos.x, cell->content_rect.pos.y, cell->content_rect.size.width, cell->content_rect.size.height);
+            {
+                color_t color = i_is_cell_sel(hover, layout, i, j) ? kCOLOR_RED : kCOLOR_BLACK;
+                color_t bgcolor = color_rgb(225, 225, 0);
+                const Button *gbutton = cell_button(gcell);
+                const Font *gfont = button_get_font(gbutton);
+                real32_t twidth, theight;
+                real32_t tx, ty;
+                draw_font(ctx, gfont);
+                draw_line_color(ctx, color);
+                draw_text_color(ctx, color);
+                draw_fill_color(ctx, bgcolor);
+                draw_line_width(ctx, 3);
+                draw_rect(ctx, ekFILLSK, cell->content_rect.pos.x, cell->content_rect.pos.y, cell->content_rect.size.width, cell->content_rect.size.height);
+                draw_line_width(ctx, 1);
+                draw_line_color(ctx, kCOLOR_BLACK);
+                font_extents(gfont, tc(cell->content.button->text), -1.f, &twidth, &theight);
+                tx = cell->content_rect.pos.x + ((cell->content_rect.size.width - twidth) / 2);
+                ty = cell->content_rect.pos.y + ((cell->content_rect.size.height - theight) / 2);
+                drawctrl_text(ctx, tc(cell->content.button->text), (int32_t)tx, (int32_t)ty, ekCTRL_STATE_NORMAL);
                 break;
+            }
 
             case ekCELL_TYPE_LAYOUT:
             {
