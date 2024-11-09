@@ -38,6 +38,8 @@ void dlayout_add_button(DLayout *layout, DButton *button, const uint32_t col, co
 
 void dlayout_add_check(DLayout *layout, DCheck *check, const uint32_t col, const uint32_t row);
 
+void dlayout_add_edit(DLayout *layout, DEdit *edit, const uint32_t col, const uint32_t row);
+
 bool_t dlayout_empty_cell(const DSelect *sel);
 
 DColumn *dlayout_column(DLayout *layout, const uint32_t col);

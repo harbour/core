@@ -39,6 +39,7 @@ static void i_dbind(void)
     dbind_enum(celltype_t, ekCELL_TYPE_LABEL, "");
     dbind_enum(celltype_t, ekCELL_TYPE_BUTTON, "");
     dbind_enum(celltype_t, ekCELL_TYPE_CHECK, "");
+    dbind_enum(celltype_t, ekCELL_TYPE_EDIT, "");
     dbind_enum(celltype_t, ekCELL_TYPE_LAYOUT, "");
     dbind_enum(halign_t, ekHALIGN_LEFT, "Left");
     dbind_enum(halign_t, ekHALIGN_CENTER, "Center");
@@ -51,6 +52,9 @@ static void i_dbind(void)
     dbind(DLabel, String *, text);
     dbind(DButton, String *, text);
     dbind(DCheck, String *, text);
+    dbind(DEdit, bool_t, passmode);
+    dbind(DEdit, bool_t, autosel);
+    dbind(DEdit, halign_t, text_align);
     dbind(DColumn, real32_t, margin_right);
     dbind(DRow, real32_t, margin_bottom);
     dbind(DCell, String *, name);

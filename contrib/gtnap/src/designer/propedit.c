@@ -7,26 +7,16 @@
 #include "dform.h"
 #include <gui/gui.h>
 #include <gui/cell.h>
+#include <gui/button.h>
 #include <gui/edit.h>
 #include <gui/label.h>
-// #include <gui/labelh.h>
 #include <gui/layout.h>
-// #include <gui/layouth.h>
-// #include <gui/cell.h>
 #include <gui/panel.h>
 #include <gui/popup.h>
 #include <gui/view.h>
 #include <gui/updown.h>
-// #include <gui/drawctrl.inl>
-// #include <geom2d/r2d.h>
-// #include <geom2d/v2d.h>
-// #include <draw2d/color.h>
-// #include <draw2d/draw.h>
-// #include <draw2d/drawg.h>
-// #include <draw2d/image.h>
 #include <core/event.h>
 #include <core/heap.h>
-// #include <core/dbind.h>
 #include <core/strings.h>
 #include <sewer/bstd.h>
 #include <sewer/cassert.h>
@@ -46,6 +36,7 @@ struct _propdata_t
     Layout *label_layout;
     Layout *button_layout;
     Layout *check_layout;
+    Layout *edit_layout;
     Cell *column_margin_cell;
     Cell *row_margin_cell;
     Label *layout_geom_label;
@@ -444,6 +435,54 @@ static Layout *i_check_layout(PropData *data)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnEditNotify(PropData *data, Event *e)
+{
+    cassert_no_null(data);
+    cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
+    //if (evbind_modify(e, DCheck, String *, text) == TRUE)
+    //{
+    //    dform_synchro_cell_text(data->form, &data->sel);
+    //    dform_compose(data->form);
+    //    designer_canvas_update(data->app);
+    //}
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_edit_layout(PropData *data)
+{
+    Layout *layout1 = layout_create(1, 5);
+    Layout *layout2 = layout_create(2, 1);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Button *button1 = button_check();
+    Button *button2 = button_check();
+    PopUp *popup = popup_create();
+    cassert_no_null(data);
+    label_text(label1, "EditBox properties");
+    label_text(label2, "Text align");
+    button_text(button1, "Passmode");
+    button_text(button2, "Autosel");
+    layout_label(layout1, label1, 0, 0);
+    layout_button(layout1, button1, 0, 1);
+    layout_button(layout1, button2, 0, 2);
+    layout_label(layout2, label2, 0, 0);
+    layout_popup(layout2, popup, 1, 0);
+    layout_layout(layout1, layout2, 0, 3);
+    layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
+    layout_hmargin(layout2, 0, i_GRID_HMARGIN);
+    layout_hexpand(layout2, 1);
+    layout_vexpand(layout1, 4);
+    cell_dbind(layout_cell(layout1, 0, 1), DEdit, bool_t, passmode);
+    cell_dbind(layout_cell(layout1, 0, 2), DEdit, bool_t, autosel);
+    cell_dbind(layout_cell(layout2, 1, 0), DEdit, halign_t, text_align);
+    layout_dbind(layout1, listener(data, i_OnEditNotify, PropData), DEdit);
+    data->edit_layout = layout1;
+    return layout1;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnCellNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
@@ -513,6 +552,7 @@ static Panel *i_cell_content_panel(PropData *data)
     Layout *layout3 = i_label_layout(data);
     Layout *layout4 = i_button_layout(data);
     Layout *layout5 = i_check_layout(data);
+    Layout *layout6 = i_edit_layout(data);
     Panel *panel = panel_create();
     cassert_no_null(data);
     panel_layout(panel, layout1);
@@ -520,6 +560,7 @@ static Panel *i_cell_content_panel(PropData *data)
     panel_layout(panel, layout3);
     panel_layout(panel, layout4);
     panel_layout(panel, layout5);
+    panel_layout(panel, layout6);
     panel_visible_layout(panel, 0);
     data->cell_panel = panel;
     return panel;
@@ -670,6 +711,11 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
         {
             layout_dbind_obj(data->check_layout, cell->content.check, DCheck);
             panel_visible_layout(data->cell_panel, 4);
+        }
+        else if (cell->type == ekCELL_TYPE_EDIT)
+        {
+            layout_dbind_obj(data->edit_layout, cell->content.edit, DEdit);
+            panel_visible_layout(data->cell_panel, 5);
         }
         else
         {

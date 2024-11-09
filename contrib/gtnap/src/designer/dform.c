@@ -574,6 +574,8 @@ const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const
                 return "ButtonCell";
             case ekCELL_TYPE_CHECK:
                 return "CheckBoxCell";
+            case ekCELL_TYPE_EDIT:
+                return "EditBoxCell";
             case ekCELL_TYPE_LAYOUT:
                 return "LayoutCell";
             cassert_default();

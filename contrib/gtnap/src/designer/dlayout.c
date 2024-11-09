@@ -7,6 +7,7 @@
 #include <gui/labelh.h>
 #include <gui/layout.h>
 #include <gui/layouth.h>
+#include <gui/edit.h>
 #include <gui/cell.h>
 #include <gui/drawctrl.inl>
 #include <geom2d/r2d.h>
@@ -363,6 +364,20 @@ void dlayout_add_check(DLayout *layout, DCheck *check, const uint32_t col, const
 
 /*---------------------------------------------------------------------------*/
 
+void dlayout_add_edit(DLayout *layout, DEdit *edit, const uint32_t col, const uint32_t row)
+{
+    DCell *cell = i_cell(layout, col, row);
+    cassert_no_null(cell);
+    cassert_no_null(edit);
+    cassert(cell->type == ekCELL_TYPE_EMPTY);
+    cell->type = ekCELL_TYPE_EDIT;
+    cell->halign = ekHALIGN_JUSTIFY;
+    cell->valign = ekVALIGN_CENTER;
+    cell->content.edit = edit;
+}
+
+/*---------------------------------------------------------------------------*/
+
 /*
 static color_t i_color(void)
 {
@@ -561,6 +576,18 @@ Layout *dlayout_gui_layout(const DLayout *layout)
                     break;
                 }
 
+                case ekCELL_TYPE_EDIT:
+                {
+                    DEdit *dedit = cells->content.edit;
+                    Edit *gedit = edit_create();
+                    align_t align = i_halign(dedit->text_align);
+                    edit_passmode(gedit, dedit->passmode);
+                    edit_autoselect(gedit, dedit->autosel);
+                    edit_align(gedit, align);
+                    layout_edit(glayout, gedit, i, j);
+                    break;
+                }
+
                 case ekCELL_TYPE_LAYOUT:
                 {
                     Layout *gsublayout = dlayout_gui_layout(cells->content.layout);
@@ -717,6 +744,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                 case ekCELL_TYPE_LABEL:
                 case ekCELL_TYPE_BUTTON:
                 case ekCELL_TYPE_CHECK:
+                case ekCELL_TYPE_EDIT:
                     break;
 
                 case ekCELL_TYPE_LAYOUT:
@@ -944,6 +972,7 @@ void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t
                 case ekCELL_TYPE_LABEL:
                 case ekCELL_TYPE_BUTTON:
                 case ekCELL_TYPE_CHECK:
+                case ekCELL_TYPE_EDIT:
                     break;
 
                 case ekCELL_TYPE_LAYOUT:
@@ -1141,16 +1170,17 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
                 draw_line_color(ctx, color);
                 draw_text_color(ctx, color);
                 draw_fill_color(ctx, bgcolor);
-                //draw_line_width(ctx, 3);
                 font_extents(gfont, tc(cell->content.check->text), -1.f, &twidth, &theight);
                 tx = cell->content_rect.pos.x + (cell->content_rect.size.width - twidth);
                 draw_rect(ctx, ekFILL, cell->content_rect.pos.x, cell->content_rect.pos.y, cell->content_rect.size.width, cell->content_rect.size.height);
                 drawctrl_text(ctx, tc(cell->content.check->text), (int32_t)tx, (int32_t)cell->content_rect.pos.y, ekCTRL_STATE_NORMAL);
                 draw_rect(ctx, ekSTROKE, cell->content_rect.pos.x, cell->content_rect.pos.y, cwidth, cheight);
-                //draw_line_width(ctx, 1);
                 draw_line_color(ctx, kCOLOR_BLACK);
                 break;
             }
+
+            case ekCELL_TYPE_EDIT:
+                break;
 
             case ekCELL_TYPE_LAYOUT:
             {
