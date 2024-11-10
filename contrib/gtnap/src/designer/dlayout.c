@@ -510,25 +510,19 @@ Layout *dlayout_gui_layout(const DLayout *layout)
     /* Layout border margins */
     layout_margin4(glayout, layout->margin_top, layout->margin_right, layout->margin_bottom, layout->margin_left);
 
-    /* Inter-column margins */
-    {
-        uint32_t i = 0;
-        for (i = 0; i < ncols - 1; ++i)
-        {
-            const DColumn *col = arrst_get_const(layout->cols, i, DColumn);
-            layout_hmargin(glayout, i, col->margin_right);
-        }
-    }
+    /* Column properties */
+    arrst_foreach_const(col, layout->cols, DColumn)
+        layout_hsize(glayout, col_i, col->forced_width);
+        if (col_i < col_total - 1)
+            layout_hmargin(glayout, col_i, col->margin_right);
+    arrst_end()
 
-    /* Inter-row margins */
-    {
-        uint32_t i = 0;
-        for (i = 0; i < nrows - 1; ++i)
-        {
-            const DRow *row = arrst_get_const(layout->rows, i, DRow);
-            layout_vmargin(glayout, i, row->margin_bottom);
-        }
-    }
+    /* Row properties */
+    arrst_foreach_const(row, layout->rows, DRow)
+        layout_vsize(glayout, row_i, row->forced_height);
+        if (row_i < row_total - 1)
+            layout_vmargin(glayout, row_i, row->margin_bottom);
+    arrst_end()
 
     /* Cells */
     {

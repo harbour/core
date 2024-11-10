@@ -90,6 +90,7 @@ struct _dedit_t
 struct _dcolumn_t
 {
     real32_t margin_right;
+    real32_t forced_width;
 
     /* Non-editable properties */
     real32_t width;
@@ -99,6 +100,7 @@ struct _dcolumn_t
 struct _drow_t
 {
     real32_t margin_bottom;
+    real32_t forced_height;
 
     /* Non-editable properties */
     real32_t height;

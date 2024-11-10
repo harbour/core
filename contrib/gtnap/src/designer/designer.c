@@ -56,7 +56,9 @@ static void i_dbind(void)
     dbind(DEdit, bool_t, autosel);
     dbind(DEdit, halign_t, text_align);
     dbind(DColumn, real32_t, margin_right);
+    dbind(DColumn, real32_t, forced_width);
     dbind(DRow, real32_t, margin_bottom);
+    dbind(DRow, real32_t, forced_height);    
     dbind(DCell, String *, name);
     dbind(DCell, celltype_t, type);
     dbind(DCell, halign_t, halign);
@@ -70,13 +72,17 @@ static void i_dbind(void)
     dbind(DLayout, ArrSt(DRow) *, rows);
     dbind(DLayout, ArrSt(DCell) *, cells);
     dbind_increment(DColumn, real32_t, margin_right, 1);
+    dbind_increment(DColumn, real32_t, forced_width, 1);
     dbind_increment(DRow, real32_t, margin_bottom, 1);
+    dbind_increment(DRow, real32_t, forced_height, 1);
     dbind_increment(DLayout, real32_t, margin_left, 1);
     dbind_increment(DLayout, real32_t, margin_top, 1);
     dbind_increment(DLayout, real32_t, margin_right, 1);
     dbind_increment(DLayout, real32_t, margin_bottom, 1);
     dbind_range(DColumn, real32_t, margin_right, 0, 100);
+    dbind_range(DColumn, real32_t, forced_width, 0, 1000);
     dbind_range(DRow, real32_t, margin_bottom, 0, 100);
+    dbind_range(DRow, real32_t, forced_height, 0, 1000);
     dbind_range(DLayout, real32_t, margin_left, 0, 100);
     dbind_range(DLayout, real32_t, margin_top, 0, 100);
     dbind_range(DLayout, real32_t, margin_right, 0, 100);
@@ -85,6 +91,10 @@ static void i_dbind(void)
     dbind_precision(DLayout, real32_t, margin_top, 1);
     dbind_precision(DLayout, real32_t, margin_right, 1);
     dbind_precision(DLayout, real32_t, margin_bottom, 1);
+    dbind_precision(DColumn, real32_t, margin_right, 1);
+    dbind_precision(DColumn, real32_t, forced_width, 1);
+    dbind_precision(DRow, real32_t, margin_bottom, 1);
+    dbind_precision(DRow, real32_t, forced_height, 1);
 
     /* Don't move, we must first declare the inner struct */
     dbind(DCellContent, DLabel *, label);

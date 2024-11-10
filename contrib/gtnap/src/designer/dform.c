@@ -516,6 +516,18 @@ void dform_synchro_column_margin(DForm *form, const DLayout *dlayout, const DCol
 
 /*---------------------------------------------------------------------------*/
 
+void dform_synchro_column_width(DForm *form, const DLayout *dlayout, const DColumn *dcolumn, const uint32_t col)
+{
+    Layout *layout = NULL;
+    cassert_no_null(form);
+    cassert_no_null(dcolumn);
+    cassert(dlayout_column(cast(dlayout, DLayout), col) == dcolumn);
+    layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
+    layout_hsize(layout, col, dcolumn->forced_width);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *drow, const uint32_t row)
 {
     Layout *layout = NULL;
