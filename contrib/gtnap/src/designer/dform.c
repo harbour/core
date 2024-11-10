@@ -130,6 +130,18 @@ DForm *dform_first_example(void)
 
 /*---------------------------------------------------------------------------*/
 
+DForm *dform_empty(void)
+{
+    DForm *form = heap_new0(DForm);
+    form->dlayout = dlayout_create(1, 1);
+    form->temp_path = arrst_create(DSelect);
+    form->sel_path = arrst_create(DSelect);
+    i_layout_obj_names(form, form->dlayout);
+    return form;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_destroy(DForm **form)
 {
     cassert_no_null(form);

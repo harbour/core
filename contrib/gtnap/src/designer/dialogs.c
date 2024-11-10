@@ -345,19 +345,20 @@ DLayout *dialog_new_layout(Window *parent, const DSelect *sel)
 
     if (ret == BUTTON_OK)
     {
-        uint32_t i, j;
+        /*uint32_t i, j;*/
         cassert(diag.ncols > 0);
         cassert(diag.nrows > 0);
         dlayout = dlayout_create(diag.ncols, diag.nrows);
+
         /* Make it editable from dialog */
-        dlayout_margin_top(dlayout, 5);
-        dlayout_margin_bottom(dlayout, 5);
-        dlayout_margin_left(dlayout, 5);
-        dlayout_margin_right(dlayout, 5);
-        for (i = 0; i < diag.ncols - 1; ++i)
-            dlayout_margin_col(dlayout, i, 5);
-        for (j = 0; j < diag.nrows - 1; ++j)
-            dlayout_margin_row(dlayout, j, 5);
+        /*//dlayout_margin_top(dlayout, 5);
+        //dlayout_margin_bottom(dlayout, 5);
+        //dlayout_margin_left(dlayout, 5);
+        //dlayout_margin_right(dlayout, 5);
+        //for (i = 0; i < diag.ncols - 1; ++i)
+        //    dlayout_margin_col(dlayout, i, 5);
+        //for (j = 0; j < diag.nrows - 1; ++j)
+        //    dlayout_margin_row(dlayout, j, 5);*/
     }
 
     window_destroy(&window);

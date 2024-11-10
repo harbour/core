@@ -458,7 +458,8 @@ static void i_init_forms(Designer *app)
 {
     cassert_no_null(app);
     cassert(app->form == NULL);
-    app->form = dform_first_example();
+    /*app->form = dform_first_example();*/
+    app->form = dform_empty();
     dform_compose(app->form);
 }
 

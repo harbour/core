@@ -4,6 +4,8 @@
 
 DForm *dform_first_example(void);
 
+DForm *dform_empty(void);
+
 void dform_destroy(DForm **form);
 
 void dform_compose(DForm *form);
