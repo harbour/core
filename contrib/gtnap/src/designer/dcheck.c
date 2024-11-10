@@ -1,21 +1,21 @@
-/* Design label */
+/* Design checkbox */
 
-#include "dlabel.h"
+#include "dcheck.h"
 #include <core/dbind.h>
 #include <core/strings.h>
 #include <sewer/cassert.h>
 
 /*---------------------------------------------------------------------------*/
 
-DLabel *dlabel_create(void)
+DCheck *dcheck_create(void)
 {
-    return dbind_create(DLabel);
+    return dbind_create(DCheck);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dlabel_text(DLabel *label, const char_t *text)
+void dcheck_text(DCheck *check, const char_t *text)
 {
-    cassert_no_null(label);
-    str_upd(&label->text, text);
+    cassert_no_null(check);
+    str_upd(&check->text, text);
 }

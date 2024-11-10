@@ -7,6 +7,9 @@
 
 typedef struct _desiger_t Designer;
 typedef struct _dlabel_t DLabel;
+typedef struct _dbutton_t DButton;
+typedef struct _dcheck_t DCheck;
+typedef struct _dedit_t DEdit;
 typedef struct _dcolumn_t DColumn;
 typedef struct _drow_t DRow;
 typedef struct _dcell_t DCell;
@@ -29,6 +32,9 @@ typedef enum _celltype_t
 {
     ekCELL_TYPE_EMPTY,
     ekCELL_TYPE_LABEL,
+    ekCELL_TYPE_BUTTON,
+    ekCELL_TYPE_CHECK,
+    ekCELL_TYPE_EDIT,
     ekCELL_TYPE_LAYOUT
 } celltype_t;
 
@@ -64,9 +70,27 @@ struct _dlabel_t
     String *text;
 };
 
+struct _dbutton_t
+{
+    String *text;
+};
+
+struct _dcheck_t
+{
+    String *text;
+};
+
+struct _dedit_t
+{
+    bool_t passmode;
+    bool_t autosel;
+    halign_t text_align;
+};
+
 struct _dcolumn_t
 {
     real32_t margin_right;
+    real32_t forced_width;
 
     /* Non-editable properties */
     real32_t width;
@@ -76,6 +100,7 @@ struct _dcolumn_t
 struct _drow_t
 {
     real32_t margin_bottom;
+    real32_t forced_height;
 
     /* Non-editable properties */
     real32_t height;
@@ -85,6 +110,9 @@ struct _drow_t
 struct _dcell_content_t
 {
     DLabel *label;
+    DButton *button;
+    DCheck *check;
+    DEdit *edit;
     DLayout *layout;
 };
 

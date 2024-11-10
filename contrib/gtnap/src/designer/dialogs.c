@@ -2,6 +2,8 @@
 
 #include "dialogs.h"
 #include "dlabel.h"
+#include "dbutton.h"
+#include "dcheck.h"
 #include "dlayout.h"
 #include <gui/button.h>
 #include <gui/cell.h>
@@ -9,6 +11,7 @@
 #include <gui/label.h>
 #include <gui/layout.h>
 #include <gui/panel.h>
+#include <gui/popup.h>
 #include <gui/updown.h>
 #include <gui/window.h>
 #include <core/dbind.h>
@@ -27,13 +30,12 @@ struct _dialoglayout_t
 
 struct _dialogdata_t
 {
-    Edit *edit;
     Button *defbutton;
     Window *window;
 };
 
-#define BUTTON_OK   1000
-#define BUTTON_CANCEL   1001
+#define BUTTON_OK 1000
+#define BUTTON_CANCEL 1001
 
 /*---------------------------------------------------------------------------*/
 
@@ -102,9 +104,8 @@ DLabel *dialog_new_label(Window *parent, const DSelect *sel)
     Panel *panel = panel_create();
     Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
     String *caption = NULL;
-    DLabel *dlabel = NULL;
+    DLabel *dlabel = dbind_create(DLabel);
     uint32_t ret = 0;
-    data.edit = edit;
     data.window = window;
     cassert_no_null(sel);
     cassert_no_null(sel->layout);
@@ -119,21 +120,166 @@ DLabel *dialog_new_label(Window *parent, const DSelect *sel)
     layout_vmargin(layout1, 0, 5);
     layout_vmargin(layout1, 1, 5);
     panel_layout(panel, layout1);
+    cell_dbind(layout_cell(layout2, 1, 0), DLabel, String*, text);
+    layout_dbind(layout1, NULL, DLabel);
+    layout_dbind_obj(layout1, dlabel, DLabel);
     window_panel(window, panel);
     window_defbutton(window, data.defbutton);
     i_center_window(parent, window);
     ret = window_modal(window, parent);
 
-    if (ret == BUTTON_OK)
-    {
-        const char_t *text = edit_get_text(data.edit);
-        dlabel = dlabel_create();
-        dlabel_text(dlabel, text);
-    }
+    if (ret != BUTTON_OK)
+        dbind_destroy(&dlabel, DLabel);
 
     window_destroy(&window);
-    str_destroy(&caption);    
+    str_destroy(&caption);
     return dlabel;
+}
+
+/*---------------------------------------------------------------------------*/
+
+DButton *dialog_new_button(Window *parent, const DSelect *sel)
+{
+    DialogData data;
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = layout_create(2, 1);
+    Layout *layout3 = i_ok_cancel(&data);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Edit *edit = edit_create();
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
+    String *caption = NULL;
+    DButton *dbutton = dbind_create(DButton);
+    uint32_t ret = 0;
+    data.window = window;
+    cassert_no_null(sel);
+    cassert_no_null(sel->layout);
+    caption = str_printf("New Button widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->name));
+    label_text(label1, tc(caption));
+    label_text(label2, "Text:");
+    layout_label(layout1, label1, 0, 0);
+    layout_label(layout2, label2, 0, 0);
+    layout_edit(layout2, edit, 1, 0);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_layout(layout1, layout3, 0, 2);
+    layout_vmargin(layout1, 0, 5);
+    layout_vmargin(layout1, 1, 5);
+    panel_layout(panel, layout1);
+    cell_dbind(layout_cell(layout2, 1, 0), DButton, String*, text);
+    layout_dbind(layout1, NULL, DButton);
+    layout_dbind_obj(layout1, dbutton, DButton);
+    window_panel(window, panel);
+    window_defbutton(window, data.defbutton);
+    i_center_window(parent, window);
+    ret = window_modal(window, parent);
+
+    if (ret != BUTTON_OK)
+        dbind_destroy(&dbutton, DButton);
+
+    window_destroy(&window);
+    str_destroy(&caption);
+    return dbutton;
+}
+
+/*---------------------------------------------------------------------------*/
+
+DCheck *dialog_new_check(Window *parent, const DSelect *sel)
+{
+    DialogData data;
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = layout_create(2, 1);
+    Layout *layout3 = i_ok_cancel(&data);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Edit *edit = edit_create();
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
+    String *caption = NULL;
+    DCheck *dcheck = dbind_create(DCheck);
+    uint32_t ret = 0;
+    data.window = window;
+    cassert_no_null(sel);
+    cassert_no_null(sel->layout);
+    caption = str_printf("New Checkbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->name));
+    label_text(label1, tc(caption));
+    label_text(label2, "Text:");
+    layout_label(layout1, label1, 0, 0);
+    layout_label(layout2, label2, 0, 0);
+    layout_edit(layout2, edit, 1, 0);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_layout(layout1, layout3, 0, 2);
+    layout_vmargin(layout1, 0, 5);
+    layout_vmargin(layout1, 1, 5);
+    panel_layout(panel, layout1);
+    cell_dbind(layout_cell(layout2, 1, 0), DCheck, String*, text);
+    layout_dbind(layout1, NULL, DCheck);
+    layout_dbind_obj(layout1, dcheck, DCheck);
+    window_panel(window, panel);
+    window_defbutton(window, data.defbutton);
+    i_center_window(parent, window);
+    ret = window_modal(window, parent);
+
+    if (ret != BUTTON_OK)
+        dbind_destroy(&dcheck, DCheck);
+
+    window_destroy(&window);
+    str_destroy(&caption);
+    return dcheck;
+}
+
+/*---------------------------------------------------------------------------*/
+
+DEdit *dialog_new_edit(Window *parent, const DSelect *sel)
+{
+    DialogData data;
+    Layout *layout1 = layout_create(1, 5);
+    Layout *layout2 = layout_create(2, 1);
+    Layout *layout3 = i_ok_cancel(&data);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Button *button1 = button_check();
+    Button *button2 = button_check();
+    PopUp *popup = popup_create();
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
+    String *caption = NULL;
+    DEdit *dedit = dbind_create(DEdit);
+    uint32_t ret = 0;
+    data.window = window;
+    cassert_no_null(sel);
+    cassert_no_null(sel->layout);
+    caption = str_printf("New Editbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->name));
+    label_text(label1, tc(caption));
+    label_text(label2, "Text align");
+    button_text(button1, "Passmode");
+    button_text(button2, "Autosel");
+    layout_label(layout1, label1, 0, 0);
+    layout_button(layout1, button1, 0, 1);
+    layout_button(layout1, button2, 0, 2);
+    layout_label(layout2, label2, 0, 0);
+    layout_popup(layout2, popup, 1, 0);
+    layout_layout(layout1, layout2, 0, 3);
+    layout_layout(layout1, layout3, 0, 4);
+    layout_vmargin(layout1, 0, 5);
+    layout_vmargin(layout1, 1, 5);
+    panel_layout(panel, layout1);
+    cell_dbind(layout_cell(layout1, 0, 1), DEdit, bool_t, passmode);
+    cell_dbind(layout_cell(layout1, 0, 2), DEdit, bool_t, autosel);
+    cell_dbind(layout_cell(layout2, 1, 0), DEdit, halign_t, text_align);
+    layout_dbind(layout1, NULL, DEdit);
+    layout_dbind_obj(layout1, dedit, DEdit);
+    window_panel(window, panel);
+    window_defbutton(window, data.defbutton);
+    i_center_window(parent, window);
+    ret = window_modal(window, parent);
+
+    if (ret != BUTTON_OK)
+        dbind_destroy(&dedit, DEdit);
+
+    window_destroy(&window);
+    str_destroy(&caption);
+    return dedit;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -162,7 +308,6 @@ static Layout *i_grid_layout(void)
     layout_dbind(layout, NULL, DialogLayout);
     return layout;
 }
-
 
 /*---------------------------------------------------------------------------*/
 
@@ -200,22 +345,23 @@ DLayout *dialog_new_layout(Window *parent, const DSelect *sel)
 
     if (ret == BUTTON_OK)
     {
-        uint32_t i, j;
+        /*uint32_t i, j;*/
         cassert(diag.ncols > 0);
         cassert(diag.nrows > 0);
         dlayout = dlayout_create(diag.ncols, diag.nrows);
+
         /* Make it editable from dialog */
-        dlayout_margin_top(dlayout, 5);
-        dlayout_margin_bottom(dlayout, 5);
-        dlayout_margin_left(dlayout, 5);
-        dlayout_margin_right(dlayout, 5);
-        for (i = 0; i < diag.ncols - 1; ++i)
-            dlayout_margin_col(dlayout, i, 5);
-        for (j = 0; j < diag.nrows - 1; ++j)
-            dlayout_margin_row(dlayout, j, 5);
+        /*//dlayout_margin_top(dlayout, 5);
+        //dlayout_margin_bottom(dlayout, 5);
+        //dlayout_margin_left(dlayout, 5);
+        //dlayout_margin_right(dlayout, 5);
+        //for (i = 0; i < diag.ncols - 1; ++i)
+        //    dlayout_margin_col(dlayout, i, 5);
+        //for (j = 0; j < diag.nrows - 1; ++j)
+        //    dlayout_margin_row(dlayout, j, 5);*/
     }
 
     window_destroy(&window);
-    str_destroy(&caption);    
+    str_destroy(&caption);
     return dlayout;
 }

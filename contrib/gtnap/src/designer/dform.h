@@ -4,6 +4,8 @@
 
 DForm *dform_first_example(void);
 
+DForm *dform_empty(void);
+
 void dform_destroy(DForm **form);
 
 void dform_compose(DForm *form);
@@ -14,13 +16,21 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
 
 bool_t dform_OnExit(DForm *form);
 
+bool_t dform_OnSupr(DForm *form, Panel *inspect, Panel *propedit);
+
 void dform_synchro_cell_text(DForm *form, const DSelect *sel);
+
+void dform_synchro_edit(DForm *form, const DSelect *sel);
 
 void dform_synchro_layout_margin(DForm *form, const DLayout *dlayout);
 
 void dform_synchro_column_margin(DForm *form, const DLayout *dlayout, const DColumn *dcolumn, const uint32_t col);
 
+void dform_synchro_column_width(DForm *form, const DLayout *dlayout, const DColumn *dcolumn, const uint32_t col);
+
 void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *drow, const uint32_t row);
+
+void dform_synchro_row_height(DForm *form, const DLayout *dlayout, const DRow *drow, const uint32_t row);
 
 void dform_synchro_cell_halign(DForm *form, const DLayout *dlayout, const DCell *cell, const uint32_t col, const uint32_t row);
 
@@ -33,3 +43,5 @@ uint32_t dform_selpath_size(const DForm *form);
 const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const uint32_t row);
 
 void dform_inspect_select(DForm *form, Panel *propedit, const uint32_t row);
+
+void dform_simulate(DForm *form, Window *window);

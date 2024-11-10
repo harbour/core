@@ -19,7 +19,8 @@
         "xutility": "cpp",
         "memory": "cpp",
         "dlabel.h": "c",
-        "dialogs.h": "c"
+        "dialogs.h": "c",
+        "buttonh.h": "c"
     },
     "files.encoding": "windows1252",
     "cmake.sourceDirectory": "C:/harbour_nappgui"

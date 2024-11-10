@@ -8,6 +8,8 @@
 #include "inspect.h"
 #include "propedit.h"
 #include <gui/guicontrol.h>
+#include <gui/button.h>
+#include <gui/edit.h>
 #include <gui/label.h>
 #include <gui/layout.h>
 #include <gui/layouth.h>
@@ -27,11 +29,11 @@ struct _dform_t
 {
     DLayout *dlayout;
     Layout *layout;
+    Window *window;
     DSelect hover;
     DSelect sel;
     ArrSt(DSelect) *temp_path;
     ArrSt(DSelect) *sel_path;
-    Panel *panel;
     uint32_t layout_id;
     uint32_t cell_id;
 };
@@ -128,6 +130,18 @@ DForm *dform_first_example(void)
 
 /*---------------------------------------------------------------------------*/
 
+DForm *dform_empty(void)
+{
+    DForm *form = heap_new0(DForm);
+    form->dlayout = dlayout_create(1, 1);
+    form->temp_path = arrst_create(DSelect);
+    form->sel_path = arrst_create(DSelect);
+    i_layout_obj_names(form, form->dlayout);
+    return form;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_destroy(DForm **form)
 {
     cassert_no_null(form);
@@ -135,10 +149,10 @@ void dform_destroy(DForm **form)
     dlayout_destroy(&(*form)->dlayout);
     arrst_destroy(&(*form)->temp_path, NULL, DSelect);
     arrst_destroy(&(*form)->sel_path, NULL, DSelect);
-    if ((*form)->panel != NULL)
+    if ((*form)->window != NULL)
     {
         cassert((*form)->layout != NULL);
-        _panel_destroy(&(*form)->panel);
+        window_destroy(&(*form)->window);
     }
 
     heap_delete(form, DForm);
@@ -148,21 +162,18 @@ void dform_destroy(DForm **form)
 
 void dform_compose(DForm *form)
 {
-    /*
-    * 1) Recompute the GUI form for update lastest changes.
-    * 2) Synchro design form with GUI controls and sizes.
-    */
-    S2Df fsize = kS2D_ZEROf;
     cassert_no_null(form);
     if (form->layout == NULL)
     {
-        cassert(form->panel == NULL);
+        Panel *panel = panel_create();
+        cassert(form->window == NULL);
         form->layout = dlayout_gui_layout(form->dlayout);
-        form->panel = panel_create();
-        panel_layout(form->panel, form->layout);
+        panel_layout(panel, form->layout);
+        form->window = window_create(ekWINDOW_STD);
+        window_panel(form->window, panel);
     }
 
-    _panel_compose(form->panel, NULL, &fsize);
+    window_update(form->window);
     dlayout_synchro_visual(form->dlayout, form->layout, kV2D_ZEROf);
 }
 
@@ -267,10 +278,10 @@ static void i_synchro_cell_props(const DLayout *dlayout, Layout *layout, const u
 
 /*---------------------------------------------------------------------------*/
 
-bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button)
+bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t mbutton)
 {
     cassert_no_null(form);
-    if (button == ekGUI_MOUSE_LEFT)
+    if (mbutton == ekGUI_MOUSE_LEFT)
     {
         DSelect sel;
         i_elem_at_mouse(form->dlayout, mouse_x, mouse_y, form->sel_path, &sel);
@@ -293,6 +304,84 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     layout_remove_cell(layout, sel.col, sel.row);
                     dlayout_add_label(sel.layout, dlabel, sel.col, sel.row);
                     layout_label(layout, label, sel.col, sel.row);
+                    i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
+                    dform_compose(form);
+                    propedit_set(propedit, form, &sel);
+                    inspect_set(inspect, form);
+                    form->sel = sel;
+                    return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
+            }
+
+            case ekWIDGET_BUTTON:
+            {
+                DButton *dbutton = dialog_new_button(window, &sel);
+                if (dbutton != NULL)
+                {
+                    Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
+                    Button *button = button_push();
+                    button_text(button, tc(dbutton->text));
+                    dlayout_remove_cell(sel.layout, sel.col, sel.row);
+                    layout_remove_cell(layout, sel.col, sel.row);
+                    dlayout_add_button(sel.layout, dbutton, sel.col, sel.row);
+                    layout_button(layout, button, sel.col, sel.row);
+                    i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
+                    dform_compose(form);
+                    propedit_set(propedit, form, &sel);
+                    inspect_set(inspect, form);
+                    form->sel = sel;
+                    return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
+            }
+
+            case ekWIDGET_CHECKBOX:
+            {
+                DCheck *dcheck = dialog_new_check(window, &sel);
+                if (dcheck != NULL)
+                {
+                    Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
+                    Button *check = button_check();
+                    button_text(check, tc(dcheck->text));
+                    dlayout_remove_cell(sel.layout, sel.col, sel.row);
+                    layout_remove_cell(layout, sel.col, sel.row);
+                    dlayout_add_check(sel.layout, dcheck, sel.col, sel.row);
+                    layout_button(layout, check, sel.col, sel.row);
+                    i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
+                    dform_compose(form);
+                    propedit_set(propedit, form, &sel);
+                    inspect_set(inspect, form);
+                    form->sel = sel;
+                    return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
+            }
+
+            case ekWIDGET_EDITBOX:
+            {
+                DEdit *dedit = dialog_new_edit(window, &sel);
+                if (dedit != NULL)
+                {
+                    Layout *layout = dlayout_search_layout(form->dlayout, form->layout, sel.layout);
+                    Edit *edit = edit_create();
+                    align_t align = i_halign(dedit->text_align);
+                    edit_passmode(edit, dedit->passmode);
+                    edit_autoselect(edit, dedit->autosel);
+                    edit_align(edit, align);
+                    dlayout_remove_cell(sel.layout, sel.col, sel.row);
+                    layout_remove_cell(layout, sel.col, sel.row);
+                    dlayout_add_edit(sel.layout, dedit, sel.col, sel.row);
+                    layout_edit(layout, edit, sel.col, sel.row);
                     i_synchro_cell_props(sel.layout, layout, sel.col, sel.row);
                     dform_compose(form);
                     propedit_set(propedit, form, &sel);
@@ -368,6 +457,32 @@ bool_t dform_OnExit(DForm *form)
 
 /*---------------------------------------------------------------------------*/
 
+bool_t dform_OnSupr(DForm *form, Panel *inspect, Panel *propedit)
+{
+    cassert_no_null(form);
+    if (form->sel.layout != NULL && form->sel.elem == ekLAYELEM_CELL)
+    {
+        if (dlayout_empty_cell(&form->sel) == FALSE)
+        {
+            Layout *layout = dlayout_search_layout(form->dlayout, form->layout, form->sel.layout);
+            Cell *cell = layout_cell(layout, form->sel.col, form->sel.row);
+            dlayout_remove_cell(form->sel.layout, form->sel.col, form->sel.row);
+            layout_remove_cell(layout, form->sel.col, form->sel.row);
+            /* TODO: Use dlayout constants. Refactor */
+            cell_force_size(cell, 40, 20);
+            i_synchro_cell_props(form->sel.layout, layout, form->sel.col, form->sel.row);
+            dform_compose(form);
+            propedit_set(propedit, form, &form->sel);
+            inspect_set(inspect, form);
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_synchro_cell_text(DForm *form, const DSelect *sel)
 {
     DCell *cell = dlayout_cell_sel(sel);
@@ -381,11 +496,37 @@ void dform_synchro_cell_text(DForm *form, const DSelect *sel)
         Label *label = layout_get_label(layout, sel->col, sel->row);
         label_text(label, tc(cell->content.label->text));
     }
+    else if (cell->type == ekCELL_TYPE_BUTTON)
+    {
+        Button *button = layout_get_button(layout, sel->col, sel->row);
+        button_text(button, tc(cell->content.button->text));
+    }
+    else if (cell->type == ekCELL_TYPE_CHECK)
+    {
+        Button *button = layout_get_button(layout, sel->col, sel->row);
+        button_text(button, tc(cell->content.button->text));
+    }
     else
     {
-        /* At the moment, only Label can update the text */
         cassert(FALSE);
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_synchro_edit(DForm *form, const DSelect *sel)
+{
+    DCell *cell = dlayout_cell_sel(sel);
+    Layout *layout = NULL;
+    Edit *edit = NULL;
+    cassert_no_null(form);
+    cassert_no_null(cell);
+    cassert(cell->type == ekCELL_TYPE_EDIT);
+    layout = dlayout_search_layout(form->dlayout, form->layout, sel->layout);
+    edit = layout_get_edit(layout, sel->col, sel->row);
+    edit_passmode(edit, cell->content.edit->passmode);
+    edit_autoselect(edit, cell->content.edit->autosel);
+    edit_align(edit, i_halign(cell->content.edit->text_align));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -413,6 +554,18 @@ void dform_synchro_column_margin(DForm *form, const DLayout *dlayout, const DCol
 
 /*---------------------------------------------------------------------------*/
 
+void dform_synchro_column_width(DForm *form, const DLayout *dlayout, const DColumn *dcolumn, const uint32_t col)
+{
+    Layout *layout = NULL;
+    cassert_no_null(form);
+    cassert_no_null(dcolumn);
+    cassert(dlayout_column(cast(dlayout, DLayout), col) == dcolumn);
+    layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
+    layout_hsize(layout, col, dcolumn->forced_width);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *drow, const uint32_t row)
 {
     Layout *layout = NULL;
@@ -421,6 +574,18 @@ void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *d
     cassert(dlayout_row(cast(dlayout, DLayout), row) == drow);
     layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
     layout_vmargin(layout, row, drow->margin_bottom);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_synchro_row_height(DForm *form, const DLayout *dlayout, const DRow *drow, const uint32_t row)
+{
+    Layout *layout = NULL;
+    cassert_no_null(form);
+    cassert_no_null(drow);
+    cassert(dlayout_row(cast(dlayout, DLayout), row) == drow);
+    layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
+    layout_vsize(layout, row, drow->forced_height);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -513,6 +678,12 @@ const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const
                 return "EmptyCell";
             case ekCELL_TYPE_LABEL:
                 return "LabelCell";
+            case ekCELL_TYPE_BUTTON:
+                return "ButtonCell";
+            case ekCELL_TYPE_CHECK:
+                return "CheckBoxCell";
+            case ekCELL_TYPE_EDIT:
+                return "EditBoxCell";
             case ekCELL_TYPE_LAYOUT:
                 return "LayoutCell";
             cassert_default();
@@ -551,3 +722,27 @@ void dform_inspect_select(DForm *form, Panel *propedit, const uint32_t row)
     }
 }
 
+/*---------------------------------------------------------------------------*/
+/* Unify with 'dialogs' code */
+static void i_center_window(const Window *parent, Window *window)
+{
+    V2Df p1 = window_get_origin(parent);
+    S2Df s1 = window_get_size(parent);
+    S2Df s2 = window_get_size(window);
+    V2Df p2;
+    p2.x = p1.x + (s1.width - s2.width) / 2;
+    p2.y = p1.y + (s1.height - s2.height) / 2;
+    window_origin(window, p2);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_simulate(DForm *form, Window *window)
+{
+    cassert_no_null(form);
+    if (form->window != NULL)
+    {
+        i_center_window(window, form->window);
+        window_modal(form->window, window);
+    }
+}

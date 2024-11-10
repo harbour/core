@@ -37,6 +37,9 @@ static void i_dbind(void)
     /* Registration of editable structures */
     dbind_enum(celltype_t, ekCELL_TYPE_EMPTY, "");
     dbind_enum(celltype_t, ekCELL_TYPE_LABEL, "");
+    dbind_enum(celltype_t, ekCELL_TYPE_BUTTON, "");
+    dbind_enum(celltype_t, ekCELL_TYPE_CHECK, "");
+    dbind_enum(celltype_t, ekCELL_TYPE_EDIT, "");
     dbind_enum(celltype_t, ekCELL_TYPE_LAYOUT, "");
     dbind_enum(halign_t, ekHALIGN_LEFT, "Left");
     dbind_enum(halign_t, ekHALIGN_CENTER, "Center");
@@ -47,8 +50,15 @@ static void i_dbind(void)
     dbind_enum(valign_t, ekVALIGN_BOTTOM, "Bottom");
     dbind_enum(valign_t, ekVALIGN_JUSTIFY, "Justify");
     dbind(DLabel, String *, text);
+    dbind(DButton, String *, text);
+    dbind(DCheck, String *, text);
+    dbind(DEdit, bool_t, passmode);
+    dbind(DEdit, bool_t, autosel);
+    dbind(DEdit, halign_t, text_align);
     dbind(DColumn, real32_t, margin_right);
+    dbind(DColumn, real32_t, forced_width);
     dbind(DRow, real32_t, margin_bottom);
+    dbind(DRow, real32_t, forced_height);    
     dbind(DCell, String *, name);
     dbind(DCell, celltype_t, type);
     dbind(DCell, halign_t, halign);
@@ -62,13 +72,17 @@ static void i_dbind(void)
     dbind(DLayout, ArrSt(DRow) *, rows);
     dbind(DLayout, ArrSt(DCell) *, cells);
     dbind_increment(DColumn, real32_t, margin_right, 1);
+    dbind_increment(DColumn, real32_t, forced_width, 1);
     dbind_increment(DRow, real32_t, margin_bottom, 1);
+    dbind_increment(DRow, real32_t, forced_height, 1);
     dbind_increment(DLayout, real32_t, margin_left, 1);
     dbind_increment(DLayout, real32_t, margin_top, 1);
     dbind_increment(DLayout, real32_t, margin_right, 1);
     dbind_increment(DLayout, real32_t, margin_bottom, 1);
     dbind_range(DColumn, real32_t, margin_right, 0, 100);
+    dbind_range(DColumn, real32_t, forced_width, 0, 1000);
     dbind_range(DRow, real32_t, margin_bottom, 0, 100);
+    dbind_range(DRow, real32_t, forced_height, 0, 1000);
     dbind_range(DLayout, real32_t, margin_left, 0, 100);
     dbind_range(DLayout, real32_t, margin_top, 0, 100);
     dbind_range(DLayout, real32_t, margin_right, 0, 100);
@@ -77,9 +91,16 @@ static void i_dbind(void)
     dbind_precision(DLayout, real32_t, margin_top, 1);
     dbind_precision(DLayout, real32_t, margin_right, 1);
     dbind_precision(DLayout, real32_t, margin_bottom, 1);
+    dbind_precision(DColumn, real32_t, margin_right, 1);
+    dbind_precision(DColumn, real32_t, forced_width, 1);
+    dbind_precision(DRow, real32_t, margin_bottom, 1);
+    dbind_precision(DRow, real32_t, forced_height, 1);
 
     /* Don't move, we must first declare the inner struct */
     dbind(DCellContent, DLabel *, label);
+    dbind(DCellContent, DButton *, button);
+    dbind(DCellContent, DCheck*, check);
+    dbind(DCellContent, DEdit*, edit);
     dbind(DCellContent, DLayout *, layout);
     dbind(DCell, DCellContent, content);
 
@@ -91,6 +112,16 @@ static void i_dbind(void)
     dbind_enum(widget_t, ekWIDGET_CHECKBOX, "");
     dbind_enum(widget_t, ekWIDGET_EDITBOX, "");
     dbind(Designer, widget_t, swidget);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnSimulateClick(Designer *app, Event *e)
+{
+    cassert_no_null(app);
+    unref(e);
+    if (app->form != NULL)
+        dform_simulate(app->form, app->window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -114,6 +145,8 @@ static Layout *i_tools_layout(Designer *app, ResPack *pack)
     button_image(button6, image_from_resource(pack, PLUS24_PNG));
     button_image(button7, image_from_resource(pack, ERROR24_PNG));
     button_image(button8, image_from_resource(pack, ERROR24_PNG));
+    button_OnClick(button4, listener(app, i_OnSimulateClick, Designer));
+    button_tooltip(button4, "Simulate form");
     layout_button(layout, button1, 0, 0);
     layout_button(layout, button2, 1, 0);
     layout_button(layout, button3, 2, 0);
@@ -400,6 +433,22 @@ static Panel *i_panel(Designer *app, ResPack *pack)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnHotKey(Designer *app, Event *e)
+{
+    const EvKey *p = event_params(e, EvKey);
+    cassert_no_null(app);
+    if (p->key == ekKEY_SUPR)
+    {
+        if (app->form != NULL)
+        {
+            if (dform_OnSupr(app->form, app->inspect, app->propedit) == TRUE)
+                view_update(app->canvas);
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnClose(Designer *app, Event *e)
 {
     osapp_finish();
@@ -425,7 +474,8 @@ static void i_init_forms(Designer *app)
 {
     cassert_no_null(app);
     cassert(app->form == NULL);
-    app->form = dform_first_example();
+    /*app->form = dform_first_example();*/
+    app->form = dform_empty();
     dform_compose(app->form);
 }
 
@@ -441,6 +491,7 @@ static Designer *i_create(void)
     window_title(app->window, "GTNAP Designer");
     window_origin(app->window, v2df(500, 200));
     window_OnClose(app->window, listener(app, i_OnClose, Designer));
+    window_hotkey(app->window, ekKEY_SUPR, 0, listener(app, i_OnHotKey, Designer));
     window_show(app->window);
     layout_dbind(app->main_layout, NULL, Designer);
     layout_dbind_obj(app->main_layout, app, Designer);

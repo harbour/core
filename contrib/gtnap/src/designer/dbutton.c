@@ -1,21 +1,21 @@
-/* Design label */
+/* Design button */
 
-#include "dlabel.h"
+#include "dbutton.h"
 #include <core/dbind.h>
 #include <core/strings.h>
 #include <sewer/cassert.h>
 
 /*---------------------------------------------------------------------------*/
 
-DLabel *dlabel_create(void)
+DButton *dbutton_create(void)
 {
-    return dbind_create(DLabel);
+    return dbind_create(DButton);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dlabel_text(DLabel *label, const char_t *text)
+void dbutton_text(DButton *button, const char_t *text)
 {
-    cassert_no_null(label);
-    str_upd(&label->text, text);
+    cassert_no_null(button);
+    str_upd(&button->text, text);
 }

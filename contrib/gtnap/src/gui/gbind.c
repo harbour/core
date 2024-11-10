@@ -1389,7 +1389,8 @@ bool_t gbind_modify_data(const void *obj, const char_t *type, const uint16_t siz
             case ekDTYPE_STRING_PTR:
                 memblock = (const byte_t *)obj + offset;
                 cassert(sizeofptr == msize);
-                cassert_unref(str_equ_c(mtype, "String*") == TRUE, mtype);
+                /* TODO: Will be improved in new dbind() */
+                cassert_unref(str_equ_c(mtype, "String*") == TRUE || str_equ_c(mtype, "String *") == TRUE, mtype);
                 memsize = msize;
                 break;
 

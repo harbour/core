@@ -7,26 +7,16 @@
 #include "dform.h"
 #include <gui/gui.h>
 #include <gui/cell.h>
+#include <gui/button.h>
 #include <gui/edit.h>
 #include <gui/label.h>
-//#include <gui/labelh.h>
 #include <gui/layout.h>
-//#include <gui/layouth.h>
-//#include <gui/cell.h>
 #include <gui/panel.h>
 #include <gui/popup.h>
 #include <gui/view.h>
 #include <gui/updown.h>
-//#include <gui/drawctrl.inl>
-//#include <geom2d/r2d.h>
-//#include <geom2d/v2d.h>
-//#include <draw2d/color.h>
-//#include <draw2d/draw.h>
-//#include <draw2d/drawg.h>
-//#include <draw2d/image.h>
 #include <core/event.h>
 #include <core/heap.h>
-//#include <core/dbind.h>
 #include <core/strings.h>
 #include <sewer/bstd.h>
 #include <sewer/cassert.h>
@@ -44,6 +34,9 @@ struct _propdata_t
     Layout *row_layout;
     Layout *cell_layout;
     Layout *label_layout;
+    Layout *button_layout;
+    Layout *check_layout;
+    Layout *edit_layout;
     Cell *column_margin_cell;
     Cell *row_margin_cell;
     Label *layout_geom_label;
@@ -118,7 +111,7 @@ static Layout *i_margin_layout(PropData *data)
     layout_hexpand(layout, 1);
     layout_hmargin(layout, 0, i_GRID_HMARGIN);
     data->layout_geom_label = label7;
-    cell_dbind(layout_cell(layout, 1, 1), DLayout, String*, name);
+    cell_dbind(layout_cell(layout, 1, 1), DLayout, String *, name);
     cell_dbind(layout_cell(layout, 1, 2), DLayout, real32_t, margin_top);
     cell_dbind(layout_cell(layout, 1, 3), DLayout, real32_t, margin_left);
     cell_dbind(layout_cell(layout, 1, 4), DLayout, real32_t, margin_bottom);
@@ -135,7 +128,7 @@ static void i_set_column_obj(PropData *data, const uint32_t col)
     cassert_no_null(data);
     column = dlayout_column(data->sel.layout, col);
     ncols = dlayout_ncols(data->sel.layout);
-    layout_dbind_obj(data->column_layout, column, DColumn);    
+    layout_dbind_obj(data->column_layout, column, DColumn);
     cell_enabled(data->column_margin_cell, col < ncols - 1);
 }
 
@@ -148,7 +141,7 @@ static void i_set_row_obj(PropData *data, const uint32_t row)
     cassert_no_null(data);
     drow = dlayout_row(data->sel.layout, row);
     nrows = dlayout_nrows(data->sel.layout);
-    layout_dbind_obj(data->row_layout, drow, DRow);    
+    layout_dbind_obj(data->row_layout, drow, DRow);
     cell_enabled(data->row_margin_cell, row < nrows - 1);
 }
 
@@ -174,24 +167,30 @@ static void i_OnRowSelect(PropData *data, Event *e)
 
 static Layout *i_column_layout(PropData *data)
 {
-    Layout *layout = layout_create(2, 2);
+    Layout *layout = layout_create(2, 3);
     Label *label1 = label_create();
     Label *label2 = label_create();
+    Label *label3 = label_create();
     PopUp *popup = popup_create();
     Layout *val1 = i_value_updown_layout();
+    Layout *val2 = i_value_updown_layout();
     cassert_no_null(data);
     label_text(label1, "Column");
     label_text(label2, "CRight");
+    label_text(label3, "FWidth");
     popup_OnSelect(popup, listener(data, i_OnColumnSelect, PropData));
     layout_label(layout, label1, 0, 0);
     layout_label(layout, label2, 0, 1);
+    layout_label(layout, label3, 0, 2);
     layout_popup(layout, popup, 1, 0);
     layout_layout(layout, val1, 1, 1);
+    layout_layout(layout, val2, 1, 2);
     layout_hexpand(layout, 1);
     layout_hmargin(layout, 0, i_GRID_HMARGIN);
     data->column_popup = popup;
     data->column_margin_cell = layout_cell(layout, 1, 1);
     cell_dbind(layout_cell(layout, 1, 1), DColumn, real32_t, margin_right);
+    cell_dbind(layout_cell(layout, 1, 2), DColumn, real32_t, forced_width);
     return layout;
 }
 
@@ -199,24 +198,30 @@ static Layout *i_column_layout(PropData *data)
 
 static Layout *i_row_layout(PropData *data)
 {
-    Layout *layout = layout_create(2, 2);
+    Layout *layout = layout_create(2, 3);
     Label *label1 = label_create();
     Label *label2 = label_create();
+    Label *label3 = label_create();
     PopUp *popup = popup_create();
     Layout *val1 = i_value_updown_layout();
+    Layout *val2 = i_value_updown_layout();
     cassert_no_null(data);
     label_text(label1, "Row");
     label_text(label2, "RBottom");
+    label_text(label3, "RHeight");
     popup_OnSelect(popup, listener(data, i_OnRowSelect, PropData));
     layout_label(layout, label1, 0, 0);
     layout_label(layout, label2, 0, 1);
+    layout_label(layout, label3, 0, 2);
     layout_popup(layout, popup, 1, 0);
     layout_layout(layout, val1, 1, 1);
+    layout_layout(layout, val2, 1, 2);
     layout_hexpand(layout, 1);
     layout_hmargin(layout, 0, i_GRID_HMARGIN);
     data->row_popup = popup;
     data->row_margin_cell = layout_cell(layout, 1, 1);
     cell_dbind(layout_cell(layout, 1, 1), DRow, real32_t, margin_bottom);
+    cell_dbind(layout_cell(layout, 1, 2), DRow, real32_t, forced_height);
     return layout;
 }
 
@@ -226,14 +231,11 @@ static void i_OnLayoutNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-    if (evbind_modify(e, DLayout, String*, name) == TRUE)
+    if (evbind_modify(e, DLayout, String *, name) == TRUE)
     {
         designer_inspect_update(data->app);
     }
-    else if (evbind_modify(e, DLayout, real32_t, margin_left) == TRUE 
-        || evbind_modify(e, DLayout, real32_t, margin_top) == TRUE 
-        || evbind_modify(e, DLayout, real32_t, margin_right) == TRUE 
-        || evbind_modify(e, DLayout, real32_t, margin_bottom) == TRUE)
+    else if (evbind_modify(e, DLayout, real32_t, margin_left) == TRUE || evbind_modify(e, DLayout, real32_t, margin_top) == TRUE || evbind_modify(e, DLayout, real32_t, margin_right) == TRUE || evbind_modify(e, DLayout, real32_t, margin_bottom) == TRUE)
     {
         DLayout *dlayout = evbind_object(e, DLayout);
         cassert(dlayout == data->sel.layout);
@@ -257,6 +259,14 @@ static void i_OnColumnNotify(PropData *data, Event *e)
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
+    else if (evbind_modify(e, DColumn, real32_t, forced_width) == TRUE)
+    {
+        DColumn *dcolumn = evbind_object(e, DColumn);
+        uint32_t col = popup_get_selected(data->column_popup);
+        dform_synchro_column_width(data->form, data->sel.layout, dcolumn, col);
+        dform_compose(data->form);
+        designer_canvas_update(data->app);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -270,6 +280,14 @@ static void i_OnRowNotify(PropData *data, Event *e)
         DRow *drow = evbind_object(e, DRow);
         uint32_t row = popup_get_selected(data->row_popup);
         dform_synchro_row_margin(data->form, data->sel.layout, drow, row);
+        dform_compose(data->form);
+        designer_canvas_update(data->app);
+    }
+    else if (evbind_modify(e, DRow, real32_t, forced_height) == TRUE)
+    {
+        DRow *drow = evbind_object(e, DRow);
+        uint32_t row = popup_get_selected(data->row_popup);
+        dform_synchro_row_height(data->form, data->sel.layout, drow, row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -329,7 +347,7 @@ static void i_OnLabelNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-    if (evbind_modify(e, DLabel, String*, text) == TRUE)
+    if (evbind_modify(e, DLabel, String *, text) == TRUE)
     {
         dform_synchro_cell_text(data->form, &data->sel);
         dform_compose(data->form);
@@ -357,9 +375,137 @@ static Layout *i_label_layout(PropData *data)
     layout_hmargin(layout2, 0, i_GRID_HMARGIN);
     layout_hexpand(layout2, 1);
     layout_vexpand(layout1, 2);
-    cell_dbind(layout_cell(layout2, 1, 0), DLabel, String*, text);
+    cell_dbind(layout_cell(layout2, 1, 0), DLabel, String *, text);
     layout_dbind(layout1, listener(data, i_OnLabelNotify, PropData), DLabel);
     data->label_layout = layout1;
+    return layout1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnButtonNotify(PropData *data, Event *e)
+{
+    cassert_no_null(data);
+    cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
+    if (evbind_modify(e, DButton, String *, text) == TRUE)
+    {
+        dform_synchro_cell_text(data->form, &data->sel);
+        dform_compose(data->form);
+        designer_canvas_update(data->app);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_button_layout(PropData *data)
+{
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = layout_create(2, 1);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Edit *edit = edit_create();
+    cassert_no_null(data);
+    label_text(label1, "Button properties");
+    label_text(label2, "Text");
+    layout_label(layout1, label1, 0, 0);
+    layout_label(layout2, label2, 0, 0);
+    layout_edit(layout2, edit, 1, 0);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
+    layout_hmargin(layout2, 0, i_GRID_HMARGIN);
+    layout_hexpand(layout2, 1);
+    layout_vexpand(layout1, 2);
+    cell_dbind(layout_cell(layout2, 1, 0), DButton, String *, text);
+    layout_dbind(layout1, listener(data, i_OnButtonNotify, PropData), DButton);
+    data->button_layout = layout1;
+    return layout1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnCheckNotify(PropData *data, Event *e)
+{
+    cassert_no_null(data);
+    cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
+    if (evbind_modify(e, DCheck, String *, text) == TRUE)
+    {
+        dform_synchro_cell_text(data->form, &data->sel);
+        dform_compose(data->form);
+        designer_canvas_update(data->app);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_check_layout(PropData *data)
+{
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = layout_create(2, 1);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Edit *edit = edit_create();
+    cassert_no_null(data);
+    label_text(label1, "CheckBox properties");
+    label_text(label2, "Text");
+    layout_label(layout1, label1, 0, 0);
+    layout_label(layout2, label2, 0, 0);
+    layout_edit(layout2, edit, 1, 0);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
+    layout_hmargin(layout2, 0, i_GRID_HMARGIN);
+    layout_hexpand(layout2, 1);
+    layout_vexpand(layout1, 2);
+    cell_dbind(layout_cell(layout2, 1, 0), DCheck, String *, text);
+    layout_dbind(layout1, listener(data, i_OnCheckNotify, PropData), DCheck);
+    data->check_layout = layout1;
+    return layout1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnEditNotify(PropData *data, Event *e)
+{
+    cassert_no_null(data);
+    cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
+    if (evbind_modify(e, DEdit, bool_t, passmode) == TRUE
+    || evbind_modify(e, DEdit, bool_t, autosel) == TRUE
+    || evbind_modify(e, DEdit, halign_t, text_align) == TRUE)
+    {
+        dform_synchro_edit(data->form, &data->sel);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_edit_layout(PropData *data)
+{
+    Layout *layout1 = layout_create(1, 5);
+    Layout *layout2 = layout_create(2, 1);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Button *button1 = button_check();
+    Button *button2 = button_check();
+    PopUp *popup = popup_create();
+    cassert_no_null(data);
+    label_text(label1, "EditBox properties");
+    label_text(label2, "Text align");
+    button_text(button1, "Passmode");
+    button_text(button2, "Autosel");
+    layout_label(layout1, label1, 0, 0);
+    layout_button(layout1, button1, 0, 1);
+    layout_button(layout1, button2, 0, 2);
+    layout_label(layout2, label2, 0, 0);
+    layout_popup(layout2, popup, 1, 0);
+    layout_layout(layout1, layout2, 0, 3);
+    layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
+    layout_hmargin(layout2, 0, i_GRID_HMARGIN);
+    layout_hexpand(layout2, 1);
+    layout_vexpand(layout1, 4);
+    cell_dbind(layout_cell(layout1, 0, 1), DEdit, bool_t, passmode);
+    cell_dbind(layout_cell(layout1, 0, 2), DEdit, bool_t, autosel);
+    cell_dbind(layout_cell(layout2, 1, 0), DEdit, halign_t, text_align);
+    layout_dbind(layout1, listener(data, i_OnEditNotify, PropData), DEdit);
+    data->edit_layout = layout1;
     return layout1;
 }
 
@@ -419,7 +565,7 @@ static Layout *i_cell_props_layout(PropData *data)
     layout_hmargin(layout, 0, i_GRID_HMARGIN);
     layout_hexpand(layout, 1);
     data->cell_geom_label = label5;
-    cell_dbind(layout_cell(layout, 1, 1), DCell, String*, name);
+    cell_dbind(layout_cell(layout, 1, 1), DCell, String *, name);
     cell_dbind(layout_cell(layout, 1, 2), DCell, halign_t, halign);
     cell_dbind(layout_cell(layout, 1, 3), DCell, valign_t, valign);
     return layout;
@@ -432,11 +578,17 @@ static Panel *i_cell_content_panel(PropData *data)
     Layout *layout1 = i_empty_cell_layout();
     Layout *layout2 = i_layout_cell_layout();
     Layout *layout3 = i_label_layout(data);
+    Layout *layout4 = i_button_layout(data);
+    Layout *layout5 = i_check_layout(data);
+    Layout *layout6 = i_edit_layout(data);
     Panel *panel = panel_create();
     cassert_no_null(data);
     panel_layout(panel, layout1);
     panel_layout(panel, layout2);
     panel_layout(panel, layout3);
+    panel_layout(panel, layout4);
+    panel_layout(panel, layout5);
+    panel_layout(panel, layout6);
     panel_visible_layout(panel, 0);
     data->cell_panel = panel;
     return panel;
@@ -461,7 +613,6 @@ static Layout *i_cell_layout(PropData *data)
     data->cell_layout = layout1;
     return layout1;
 }
-
 
 /*---------------------------------------------------------------------------*/
 
@@ -521,8 +672,8 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
         /* Column selector */
         {
             uint32_t i, col = 0;
-            popup_clear(data->column_popup);        
-        
+            popup_clear(data->column_popup);
+
             for (i = 0; i < ncols; ++i)
             {
                 bstd_sprintf(text, sizeof(text), "%d", i);
@@ -539,8 +690,8 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
         /* Row selector */
         {
             uint32_t j, row = 0;
-            popup_clear(data->row_popup);        
-        
+            popup_clear(data->row_popup);
+
             for (j = 0; j < nrows; ++j)
             {
                 bstd_sprintf(text, sizeof(text), "%d", j);
@@ -578,6 +729,21 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
         {
             layout_dbind_obj(data->label_layout, cell->content.label, DLabel);
             panel_visible_layout(data->cell_panel, 2);
+        }
+        else if (cell->type == ekCELL_TYPE_BUTTON)
+        {
+            layout_dbind_obj(data->button_layout, cell->content.button, DButton);
+            panel_visible_layout(data->cell_panel, 3);
+        }
+        else if (cell->type == ekCELL_TYPE_CHECK)
+        {
+            layout_dbind_obj(data->check_layout, cell->content.check, DCheck);
+            panel_visible_layout(data->cell_panel, 4);
+        }
+        else if (cell->type == ekCELL_TYPE_EDIT)
+        {
+            layout_dbind_obj(data->edit_layout, cell->content.edit, DEdit);
+            panel_visible_layout(data->cell_panel, 5);
         }
         else
         {
