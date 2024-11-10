@@ -540,6 +540,18 @@ void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *d
 
 /*---------------------------------------------------------------------------*/
 
+void dform_synchro_row_height(DForm *form, const DLayout *dlayout, const DRow *drow, const uint32_t row)
+{
+    Layout *layout = NULL;
+    cassert_no_null(form);
+    cassert_no_null(drow);
+    cassert(dlayout_row(cast(dlayout, DLayout), row) == drow);
+    layout = dlayout_search_layout(form->dlayout, form->layout, dlayout);
+    layout_vsize(layout, row, drow->forced_height);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_synchro_cell_halign(DForm *form, const DLayout *dlayout, const DCell *cell, const uint32_t col, const uint32_t row)
 {
     Layout *layout = NULL;

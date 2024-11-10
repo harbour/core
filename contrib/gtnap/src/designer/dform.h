@@ -26,6 +26,8 @@ void dform_synchro_column_width(DForm *form, const DLayout *dlayout, const DColu
 
 void dform_synchro_row_margin(DForm *form, const DLayout *dlayout, const DRow *drow, const uint32_t row);
 
+void dform_synchro_row_height(DForm *form, const DLayout *dlayout, const DRow *drow, const uint32_t row);
+
 void dform_synchro_cell_halign(DForm *form, const DLayout *dlayout, const DCell *cell, const uint32_t col, const uint32_t row);
 
 void dform_synchro_cell_valign(DForm *form, const DLayout *dlayout, const DCell *cell, const uint32_t col, const uint32_t row);

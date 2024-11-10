@@ -198,24 +198,30 @@ static Layout *i_column_layout(PropData *data)
 
 static Layout *i_row_layout(PropData *data)
 {
-    Layout *layout = layout_create(2, 2);
+    Layout *layout = layout_create(2, 3);
     Label *label1 = label_create();
     Label *label2 = label_create();
+    Label *label3 = label_create();
     PopUp *popup = popup_create();
     Layout *val1 = i_value_updown_layout();
+    Layout *val2 = i_value_updown_layout();
     cassert_no_null(data);
     label_text(label1, "Row");
     label_text(label2, "RBottom");
+    label_text(label3, "RHeight");
     popup_OnSelect(popup, listener(data, i_OnRowSelect, PropData));
     layout_label(layout, label1, 0, 0);
     layout_label(layout, label2, 0, 1);
+    layout_label(layout, label3, 0, 2);
     layout_popup(layout, popup, 1, 0);
     layout_layout(layout, val1, 1, 1);
+    layout_layout(layout, val2, 1, 2);
     layout_hexpand(layout, 1);
     layout_hmargin(layout, 0, i_GRID_HMARGIN);
     data->row_popup = popup;
     data->row_margin_cell = layout_cell(layout, 1, 1);
     cell_dbind(layout_cell(layout, 1, 1), DRow, real32_t, margin_bottom);
+    cell_dbind(layout_cell(layout, 1, 2), DRow, real32_t, forced_height);
     return layout;
 }
 
@@ -274,6 +280,14 @@ static void i_OnRowNotify(PropData *data, Event *e)
         DRow *drow = evbind_object(e, DRow);
         uint32_t row = popup_get_selected(data->row_popup);
         dform_synchro_row_margin(data->form, data->sel.layout, drow, row);
+        dform_compose(data->form);
+        designer_canvas_update(data->app);
+    }
+    else if (evbind_modify(e, DRow, real32_t, forced_height) == TRUE)
+    {
+        DRow *drow = evbind_object(e, DRow);
+        uint32_t row = popup_get_selected(data->row_popup);
+        dform_synchro_row_height(data->form, data->sel.layout, drow, row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
