@@ -433,6 +433,22 @@ static Panel *i_panel(Designer *app, ResPack *pack)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnHotKey(Designer *app, Event *e)
+{
+    const EvKey *p = event_params(e, EvKey);
+    cassert_no_null(app);
+    if (p->key == ekKEY_SUPR)
+    {
+        if (app->form != NULL)
+        {
+            if (dform_OnSupr(app->form, app->inspect, app->propedit) == TRUE)
+                view_update(app->canvas);
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnClose(Designer *app, Event *e)
 {
     osapp_finish();
@@ -475,6 +491,7 @@ static Designer *i_create(void)
     window_title(app->window, "GTNAP Designer");
     window_origin(app->window, v2df(500, 200));
     window_OnClose(app->window, listener(app, i_OnClose, Designer));
+    window_hotkey(app->window, ekKEY_SUPR, 0, listener(app, i_OnHotKey, Designer));
     window_show(app->window);
     layout_dbind(app->main_layout, NULL, Designer);
     layout_dbind_obj(app->main_layout, app, Designer);

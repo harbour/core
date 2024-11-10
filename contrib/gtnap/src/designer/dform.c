@@ -457,6 +457,32 @@ bool_t dform_OnExit(DForm *form)
 
 /*---------------------------------------------------------------------------*/
 
+bool_t dform_OnSupr(DForm *form, Panel *inspect, Panel *propedit)
+{
+    cassert_no_null(form);
+    if (form->sel.layout != NULL && form->sel.elem == ekLAYELEM_CELL)
+    {
+        if (dlayout_empty_cell(&form->sel) == FALSE)
+        {
+            Layout *layout = dlayout_search_layout(form->dlayout, form->layout, form->sel.layout);
+            Cell *cell = layout_cell(layout, form->sel.col, form->sel.row);
+            dlayout_remove_cell(form->sel.layout, form->sel.col, form->sel.row);
+            layout_remove_cell(layout, form->sel.col, form->sel.row);
+            /* TODO: Use dlayout constants. Refactor */
+            cell_force_size(cell, 40, 20);
+            i_synchro_cell_props(form->sel.layout, layout, form->sel.col, form->sel.row);
+            dform_compose(form);
+            propedit_set(propedit, form, &form->sel);
+            inspect_set(inspect, form);
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_synchro_cell_text(DForm *form, const DSelect *sel)
 {
     DCell *cell = dlayout_cell_sel(sel);

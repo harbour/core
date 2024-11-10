@@ -16,6 +16,8 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
 
 bool_t dform_OnExit(DForm *form);
 
+bool_t dform_OnSupr(DForm *form, Panel *inspect, Panel *propedit);
+
 void dform_synchro_cell_text(DForm *form, const DSelect *sel);
 
 void dform_synchro_edit(DForm *form, const DSelect *sel);
