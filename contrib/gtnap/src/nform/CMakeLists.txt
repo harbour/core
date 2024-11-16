@@ -1,1 +1,1 @@
-nap_library(nform "core" "${NAPPGUI_SHARED}" NRC_NONE)
+nap_library(nform "gui" "${NAPPGUI_SHARED}" NRC_NONE)
