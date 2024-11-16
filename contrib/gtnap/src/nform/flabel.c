@@ -14,8 +14,8 @@ FLabel *flabel_create(void)
 
 /*---------------------------------------------------------------------------*/
 
-void flabel_text(FLabel *label, const char_t *text)
-{
-    cassert_no_null(label);
-    str_upd(&label->text, text);
-}
+//void flabel_text(FLabel *label, const char_t *text)
+//{
+//    cassert_no_null(label);
+//    str_upd(&label->text, text);
+//}

@@ -29,8 +29,8 @@ void fedit_autosel(FEdit *edit, const bool_t autosel)
 
 /*---------------------------------------------------------------------------*/
 
-void fedit_text_align(FEdit *edit, const halign_t text_align)
-{
-    cassert_no_null(edit);
-    edit->text_align = text_align;
-}
+//void fedit_text_align(FEdit *edit, const halign_t text_align)
+//{
+//    cassert_no_null(edit);
+//    edit->text_align = text_align;
+//}
