@@ -32,7 +32,10 @@ static void i_remove_cell(DCell *cell)
 {
     cassert_no_null(cell);
     if (cell->sublayout != NULL)
+    {
+        cell->sublayout->flayout = NULL;
         dlayout_destroy(&cell->sublayout);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -58,10 +61,10 @@ void dlayout_destroy(DLayout **layout)
 {
     cassert_no_null(layout);
     cassert_no_null(*layout);
-    dbind_destroy(&(*layout)->flayout, FLayout);
     arrst_destroy(&(*layout)->cols, NULL, DColumn);
     arrst_destroy(&(*layout)->rows, NULL, DRow);
     arrst_destroy(&(*layout)->cells, i_remove_cell, DCell);
+    dbind_destopt(&(*layout)->flayout, FLayout);
     heap_delete(layout, DLayout);
 }
 
@@ -131,6 +134,7 @@ void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col,
     cassert_no_null(cell);
     cassert_no_null(sublayout);
     cassert(cell->sublayout == NULL);
+    flayout_add_layout(layout->flayout, sublayout->flayout, col, row);
     cell->sublayout = sublayout;
 }
 

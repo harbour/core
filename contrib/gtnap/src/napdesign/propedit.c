@@ -315,9 +315,9 @@ static Layout *i_layout_layout(PropData *data)
     layout_layout(layout1, layout4, 0, 3);
     layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
     layout_vexpand(layout1, 4);
-    layout_dbind(layout2, listener(data, i_OnLayoutNotify, PropData), DLayout);
-    layout_dbind(layout3, listener(data, i_OnColumnNotify, PropData), DColumn);
-    layout_dbind(layout4, listener(data, i_OnRowNotify, PropData), DRow);
+    layout_dbind(layout2, listener(data, i_OnLayoutNotify, PropData), FLayout);
+    layout_dbind(layout3, listener(data, i_OnColumnNotify, PropData), FColumn);
+    layout_dbind(layout4, listener(data, i_OnRowNotify, PropData), FRow);
     data->layout_layout = layout2;
     data->column_layout = layout3;
     data->row_layout = layout4;
@@ -614,7 +614,7 @@ static Layout *i_cell_layout(PropData *data)
     layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
     layout_vmargin(layout1, 1, i_HEADER_VMARGIN);
     layout_vexpand(layout1, 3);
-    layout_dbind(layout1, listener(data, i_OnCellNotify, PropData), DCell);
+    layout_dbind(layout1, listener(data, i_OnCellNotify, PropData), FCell);
     data->cell_layout = layout1;
     return layout1;
 }
@@ -710,7 +710,7 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
             i_set_row_obj(data, row);
         }
 
-        layout_dbind_obj(data->layout_layout, sel->layout, DLayout);
+        layout_dbind_obj(data->layout_layout, sel->layout->flayout, FLayout);
         panel_visible_layout(panel, 1);
     }
     /* i_cell_layout */

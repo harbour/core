@@ -550,7 +550,7 @@ void dform_synchro_cell_text(DForm *form, const DSelect *sel)
     else if (cell->type == ekCELL_TYPE_CHECK)
     {
         Button *button = layout_get_button(layout, sel->col, sel->row);
-        button_text(button, tc(cell->widget.button->text));
+        button_text(button, tc(cell->widget.check->text));
     }
     else
     {
