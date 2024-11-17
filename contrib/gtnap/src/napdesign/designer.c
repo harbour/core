@@ -1,8 +1,8 @@
 /* NAppGUI Designer Application */
 
+#include <nform/nform.h>
 #include <nappgui.h>
 #include "res_designer.h"
-#include "dlabel.h"
 #include "dlayout.h"
 #include "dform.h"
 #include "dialogs.h"
@@ -34,77 +34,6 @@ struct _desiger_t
 
 static void i_dbind(void)
 {
-    /* Registration of editable structures */
-    dbind_enum(celltype_t, ekCELL_TYPE_EMPTY, "");
-    dbind_enum(celltype_t, ekCELL_TYPE_LABEL, "");
-    dbind_enum(celltype_t, ekCELL_TYPE_BUTTON, "");
-    dbind_enum(celltype_t, ekCELL_TYPE_CHECK, "");
-    dbind_enum(celltype_t, ekCELL_TYPE_EDIT, "");
-    dbind_enum(celltype_t, ekCELL_TYPE_LAYOUT, "");
-    dbind_enum(halign_t, ekHALIGN_LEFT, "Left");
-    dbind_enum(halign_t, ekHALIGN_CENTER, "Center");
-    dbind_enum(halign_t, ekHALIGN_RIGHT, "Right");
-    dbind_enum(halign_t, ekHALIGN_JUSTIFY, "Justify");
-    dbind_enum(valign_t, ekVALIGN_TOP, "Top");
-    dbind_enum(valign_t, ekVALIGN_CENTER, "Center");
-    dbind_enum(valign_t, ekVALIGN_BOTTOM, "Bottom");
-    dbind_enum(valign_t, ekVALIGN_JUSTIFY, "Justify");
-    dbind(DLabel, String *, text);
-    dbind(DButton, String *, text);
-    dbind(DCheck, String *, text);
-    dbind(DEdit, bool_t, passmode);
-    dbind(DEdit, bool_t, autosel);
-    dbind(DEdit, halign_t, text_align);
-    dbind(DColumn, real32_t, margin_right);
-    dbind(DColumn, real32_t, forced_width);
-    dbind(DRow, real32_t, margin_bottom);
-    dbind(DRow, real32_t, forced_height);    
-    dbind(DCell, String *, name);
-    dbind(DCell, celltype_t, type);
-    dbind(DCell, halign_t, halign);
-    dbind(DCell, valign_t, valign);
-    dbind(DLayout, String *, name);
-    dbind(DLayout, real32_t, margin_left);
-    dbind(DLayout, real32_t, margin_top);
-    dbind(DLayout, real32_t, margin_right);
-    dbind(DLayout, real32_t, margin_bottom);
-    dbind(DLayout, ArrSt(DColumn) *, cols);
-    dbind(DLayout, ArrSt(DRow) *, rows);
-    dbind(DLayout, ArrSt(DCell) *, cells);
-    dbind_increment(DColumn, real32_t, margin_right, 1);
-    dbind_increment(DColumn, real32_t, forced_width, 1);
-    dbind_increment(DRow, real32_t, margin_bottom, 1);
-    dbind_increment(DRow, real32_t, forced_height, 1);
-    dbind_increment(DLayout, real32_t, margin_left, 1);
-    dbind_increment(DLayout, real32_t, margin_top, 1);
-    dbind_increment(DLayout, real32_t, margin_right, 1);
-    dbind_increment(DLayout, real32_t, margin_bottom, 1);
-    dbind_range(DColumn, real32_t, margin_right, 0, 100);
-    dbind_range(DColumn, real32_t, forced_width, 0, 1000);
-    dbind_range(DRow, real32_t, margin_bottom, 0, 100);
-    dbind_range(DRow, real32_t, forced_height, 0, 1000);
-    dbind_range(DLayout, real32_t, margin_left, 0, 100);
-    dbind_range(DLayout, real32_t, margin_top, 0, 100);
-    dbind_range(DLayout, real32_t, margin_right, 0, 100);
-    dbind_range(DLayout, real32_t, margin_bottom, 0, 100);
-    dbind_precision(DLayout, real32_t, margin_left, 1);
-    dbind_precision(DLayout, real32_t, margin_top, 1);
-    dbind_precision(DLayout, real32_t, margin_right, 1);
-    dbind_precision(DLayout, real32_t, margin_bottom, 1);
-    dbind_precision(DColumn, real32_t, margin_right, 1);
-    dbind_precision(DColumn, real32_t, forced_width, 1);
-    dbind_precision(DRow, real32_t, margin_bottom, 1);
-    dbind_precision(DRow, real32_t, forced_height, 1);
-
-    /* Don't move, we must first declare the inner struct */
-    dbind(DCellContent, DLabel *, label);
-    dbind(DCellContent, DButton *, button);
-    dbind(DCellContent, DCheck*, check);
-    dbind(DCellContent, DEdit*, edit);
-    dbind(DCellContent, DLayout *, layout);
-    dbind(DCell, DCellContent, content);
-
-    /* GUI */
     dbind_enum(widget_t, ekWIDGET_SELECT, "");
     dbind_enum(widget_t, ekWIDGET_GRID_LAYOUT, "");
     dbind_enum(widget_t, ekWIDGET_LABEL, "");
@@ -264,16 +193,9 @@ static void i_OnDraw(Designer *app, Event *e)
 {
     const EvDraw *p = event_params(e, EvDraw);
     cassert_no_null(app);
-    // Font *font = font_system(30, 0);
     draw_clear(p->ctx, kCOLOR_YELLOW);
-
     if (app->form != NULL)
-    {
         dform_draw(app->form, app->swidget, app->add_icon, p->ctx);
-    }
-    // draw_font(p->ctx, font);
-    // draw_text(p->ctx, "--> CANVAS <--", 0, 0);
-    // font_destroy(&font);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -373,7 +295,6 @@ static Layout *i_statusbar_layout(Designer *app)
     Progress *progress = progress_create();
 
     label_align(label2, ekRIGHT);
-
     layout_label(layout, label1, 0, 0);
     layout_label(layout, label2, 3, 0);
     layout_progress(layout, progress, 1, 0);
@@ -461,6 +382,7 @@ static void i_OnClose(Designer *app, Event *e)
 static Designer *i_app(ResPack *pack)
 {
     Designer *app = heap_new0(Designer);
+    nform_start();
     i_dbind();
     dialog_dbind();
     app->swidget = ekWIDGET_SELECT;
@@ -509,6 +431,7 @@ static void i_destroy(Designer **app)
     image_destroy(&(*app)->add_icon);
     dform_destroy(&(*app)->form);
     window_destroy(&(*app)->window);
+    nform_finish();
     heap_delete(app, Designer);
 }
 

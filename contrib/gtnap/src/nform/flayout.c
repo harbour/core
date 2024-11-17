@@ -8,23 +8,10 @@
 #include <gui/layout.h>
 #include <gui/layouth.h>
 #include <gui/edit.h>
-//#include <gui/cell.h>
-//#include <gui/drawctrl.inl>
-//#include <geom2d/r2d.h>
-//#include <geom2d/v2d.h>
-//#include <draw2d/color.h>
-//#include <draw2d/draw.h>
-//#include <draw2d/drawg.h>
-//#include <draw2d/font.h>
-//#include <draw2d/image.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
 #include <core/strings.h>
-//#include <sewer/bmem.h>
 #include <sewer/cassert.h>
-
-static real32_t i_EMPTY_CELL_WIDTH = 40;
-static real32_t i_EMPTY_CELL_HEIGHT = 20;
 
 /*---------------------------------------------------------------------------*/
 
@@ -86,6 +73,60 @@ FLayout *flayout_create(const uint32_t ncols, const uint32_t nrows)
     }
 
     return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void flayout_margin_left(FLayout *layout, const real32_t margin)
+{
+    cassert_no_null(layout);
+    layout->margin_left = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void flayout_margin_top(FLayout *layout, const real32_t margin)
+{
+    cassert_no_null(layout);
+    layout->margin_top = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void flayout_margin_right(FLayout *layout, const real32_t margin)
+{
+    cassert_no_null(layout);
+    layout->margin_right = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void flayout_margin_bottom(FLayout *layout, const real32_t margin)
+{
+    cassert_no_null(layout);
+    layout->margin_bottom = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void flayout_margin_col(FLayout *layout, const uint32_t col, const real32_t margin)
+{
+    FColumn *fcol = NULL;
+    cassert_no_null(layout);
+    cassert(col < arrst_size(layout->cols, FColumn) - 1);
+    fcol = arrst_get(layout->cols, col, FColumn);
+    fcol->margin_right = margin;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void flayout_margin_row(FLayout *layout, const uint32_t row, const real32_t margin)
+{
+    FRow *frow = NULL;
+    cassert_no_null(layout);
+    cassert(row < arrst_size(layout->rows, FRow) - 1);
+    frow = arrst_get(layout->rows, row, FRow);
+    frow->margin_bottom = margin;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -364,7 +405,7 @@ static align_t i_valign(const valign_t valign)
 
 /*---------------------------------------------------------------------------*/
 
-Layout *flayout_to_gui(const FLayout *layout)
+Layout *flayout_to_gui(const FLayout *layout, const real32_t empty_width, const real32_t empty_height)
 {
     uint32_t ncols = 0, nrows = 0;
     Layout *glayout = NULL;
@@ -418,7 +459,7 @@ Layout *flayout_to_gui(const FLayout *layout)
                 switch (cells->type)
                 {
                 case ekCELL_TYPE_EMPTY:
-                    cell_force_size(gcell, i_EMPTY_CELL_WIDTH, i_EMPTY_CELL_HEIGHT);
+                    cell_force_size(gcell, empty_width, empty_height);
                     break;
 
                 case ekCELL_TYPE_LABEL:
@@ -462,7 +503,7 @@ Layout *flayout_to_gui(const FLayout *layout)
 
                 case ekCELL_TYPE_LAYOUT:
                 {
-                    Layout *gsublayout = flayout_to_gui(cells->widget.layout);
+                    Layout *gsublayout = flayout_to_gui(cells->widget.layout, empty_width, empty_height);
                     layout_layout(glayout, gsublayout, i, j);
                     break;
                 }
@@ -476,41 +517,49 @@ Layout *flayout_to_gui(const FLayout *layout)
     return glayout;
 }
 
-/*---------------------------------------------------------------------------*/
-
-Layout *flayout_gui_search(const FLayout *layout, Layout *glayout, const FLayout *wanted)
-{
-    cassert_no_null(layout);
-    if (layout != wanted)
-    {
-        const FCell *cell = arrst_all_const(layout->cells, FCell);
-        uint32_t ncols = arrst_size(layout->cols, FColumn);
-        uint32_t nrows = arrst_size(layout->rows, FRow);
-        uint32_t i, j;
-
-        for (j = 0; j < nrows; ++j)
-        {
-            for (i = 0; i < ncols; ++i)
-            {
-                if (cell->type == ekCELL_TYPE_LAYOUT)
-                {
-                    FLayout *sublayout = cell->widget.layout;
-                    Layout *subglayout = layout_get_layout(cast(glayout, Layout), i, j);
-                    Layout *fglayout = flayout_gui_search(sublayout, subglayout, wanted);
-                    if (fglayout != NULL)
-                        return fglayout;
-                }
-
-                cell += 1;
-            }
-        }
-
-        return NULL;
-    }
-    else
-    {
-        cassert(flayout_ncols(layout) == layout_ncols(glayout));
-        cassert(flayout_nrows(layout) == layout_nrows(glayout));
-        return glayout;
-    }
-}
+///*---------------------------------------------------------------------------*/
+//
+//Layout *flayout_gui_search(const FLayout *layout, Layout *glayout, const FLayout *wanted)
+//{
+//    cassert_no_null(layout);
+//    if (layout != wanted)
+//    {
+//        const FCell *cell = arrst_all_const(layout->cells, FCell);
+//        uint32_t ncols = arrst_size(layout->cols, FColumn);
+//        uint32_t nrows = arrst_size(layout->rows, FRow);
+//        uint32_t i, j;
+//
+//        for (j = 0; j < nrows; ++j)
+//        {
+//            for (i = 0; i < ncols; ++i)
+//            {
+//                if (cell->type == ekCELL_TYPE_LAYOUT)
+//                {
+//                    FLayout *sublayout = cell->widget.layout;
+//                    Layout *subglayout = layout_get_layout(cast(glayout, Layout), i, j);
+//                    Layout *fglayout = flayout_gui_search(sublayout, subglayout, wanted);
+//                    if (fglayout != NULL)
+//                        return fglayout;
+//                }
+//
+//                cell += 1;
+//            }
+//        }
+//
+//        return NULL;
+//    }
+//    else
+//    {
+//        cassert(flayout_ncols(layout) == layout_ncols(glayout));
+//        cassert(flayout_nrows(layout) == layout_nrows(glayout));
+//        return glayout;
+//    }
+//}
+//
+///*---------------------------------------------------------------------------*/
+//
+//void flayout_synchro_margin(const FLayout *layout, Layout *glayout, const FLayout *sublayout)
+//{
+//    Layout *gsublayout = flayout_gui_search(layout, glayout, sublayout);
+//    layout_margin4(gsublayout, sublayout->margin_top, sublayout->margin_right, sublayout->margin_bottom, sublayout->margin_left);
+//}

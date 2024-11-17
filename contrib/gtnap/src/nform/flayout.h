@@ -6,22 +6,18 @@ __EXTERN_C
 
 _nform_api FLayout *flayout_create(const uint32_t ncols, const uint32_t nrows);
 
-//void flayout_destroy(FLayout **layout);
-//
-//void flayout_name(FLayout *layout, const char_t *name);
-//
-//void flayout_margin_left(FLayout *layout, const real32_t margin, Layout *glayout);
-//
-//void flayout_margin_top(FLayout *layout, const real32_t margin);
-//
-//void flayout_margin_right(FLayout *layout, const real32_t margin);
-//
-//void flayout_margin_bottom(FLayout *layout, const real32_t margin);
-//
-//void flayout_margin_col(FLayout *layout, const uint32_t col, const real32_t margin);
-//
-//void flayout_margin_row(FLayout *layout, const uint32_t row, const real32_t margin);
-//
+_nform_api void flayout_margin_left(FLayout *layout, const real32_t margin);
+
+_nform_api void flayout_margin_top(FLayout *layout, const real32_t margin);
+
+_nform_api void flayout_margin_right(FLayout *layout, const real32_t margin);
+
+_nform_api void flayout_margin_bottom(FLayout *layout, const real32_t margin);
+
+_nform_api void flayout_margin_col(FLayout *layout, const uint32_t col, const real32_t margin);
+
+_nform_api void flayout_margin_row(FLayout *layout, const uint32_t row, const real32_t margin);
+
 _nform_api void flayout_insert_col(FLayout *layout, const uint32_t col);
 
 _nform_api void flayout_remove_col(FLayout *layout, const uint32_t col);
@@ -54,8 +50,10 @@ _nform_api FCell *flayout_cell(FLayout *layout, const uint32_t col, const uint32
 
 _nform_api const FCell *flayout_ccell(const FLayout *layout, const uint32_t col, const uint32_t row);
 
-_nform_api Layout *flayout_to_gui(const FLayout *layout);
+_nform_api Layout *flayout_to_gui(const FLayout *layout, const real32_t empty_width, const real32_t empty_height);
 
-_nform_api Layout *flayout_gui_search(const FLayout *layout, Layout *glayout, const FLayout *wanted);
+//_nform_api Layout *flayout_gui_search(const FLayout *layout, Layout *glayout, const FLayout *wanted);
+//
+//_nform_api void flayout_sync_margin(const FLayout *layout, Layout *glayout);
 
 __END_C

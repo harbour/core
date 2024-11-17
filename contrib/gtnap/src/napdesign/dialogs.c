@@ -1,9 +1,6 @@
 /* Dialog boxes */
 
 #include "dialogs.h"
-#include "dlabel.h"
-#include "dbutton.h"
-#include "dcheck.h"
 #include "dlayout.h"
 #include <gui/button.h>
 #include <gui/cell.h>
@@ -92,7 +89,7 @@ static Layout *i_ok_cancel(DialogData *data)
 
 /*---------------------------------------------------------------------------*/
 
-DLabel *dialog_new_label(Window *parent, const DSelect *sel)
+FLabel *dialog_new_label(Window *parent, const DSelect *sel)
 {
     DialogData data;
     Layout *layout1 = layout_create(1, 3);
@@ -104,12 +101,13 @@ DLabel *dialog_new_label(Window *parent, const DSelect *sel)
     Panel *panel = panel_create();
     Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
     String *caption = NULL;
-    DLabel *dlabel = dbind_create(DLabel);
+    FLabel *flabel = dbind_create(FLabel);
     uint32_t ret = 0;
     data.window = window;
     cassert_no_null(sel);
     cassert_no_null(sel->layout);
-    caption = str_printf("New Label widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->name));
+    cassert_no_null(sel->layout->flayout);
+    caption = str_printf("New Label widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->flayout->name));
     label_text(label1, tc(caption));
     label_text(label2, "Text:");
     layout_label(layout1, label1, 0, 0);
@@ -120,25 +118,25 @@ DLabel *dialog_new_label(Window *parent, const DSelect *sel)
     layout_vmargin(layout1, 0, 5);
     layout_vmargin(layout1, 1, 5);
     panel_layout(panel, layout1);
-    cell_dbind(layout_cell(layout2, 1, 0), DLabel, String*, text);
-    layout_dbind(layout1, NULL, DLabel);
-    layout_dbind_obj(layout1, dlabel, DLabel);
+    cell_dbind(layout_cell(layout2, 1, 0), FLabel, String*, text);
+    layout_dbind(layout1, NULL, FLabel);
+    layout_dbind_obj(layout1, flabel, FLabel);
     window_panel(window, panel);
     window_defbutton(window, data.defbutton);
     i_center_window(parent, window);
     ret = window_modal(window, parent);
 
     if (ret != BUTTON_OK)
-        dbind_destroy(&dlabel, DLabel);
+        dbind_destroy(&flabel, FLabel);
 
     window_destroy(&window);
     str_destroy(&caption);
-    return dlabel;
+    return flabel;
 }
 
 /*---------------------------------------------------------------------------*/
 
-DButton *dialog_new_button(Window *parent, const DSelect *sel)
+FButton *dialog_new_button(Window *parent, const DSelect *sel)
 {
     DialogData data;
     Layout *layout1 = layout_create(1, 3);
@@ -150,12 +148,13 @@ DButton *dialog_new_button(Window *parent, const DSelect *sel)
     Panel *panel = panel_create();
     Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
     String *caption = NULL;
-    DButton *dbutton = dbind_create(DButton);
+    FButton *fbutton = dbind_create(FButton);
     uint32_t ret = 0;
     data.window = window;
     cassert_no_null(sel);
     cassert_no_null(sel->layout);
-    caption = str_printf("New Button widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->name));
+    cassert_no_null(sel->layout->flayout);
+    caption = str_printf("New Button widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->flayout->name));
     label_text(label1, tc(caption));
     label_text(label2, "Text:");
     layout_label(layout1, label1, 0, 0);
@@ -166,25 +165,25 @@ DButton *dialog_new_button(Window *parent, const DSelect *sel)
     layout_vmargin(layout1, 0, 5);
     layout_vmargin(layout1, 1, 5);
     panel_layout(panel, layout1);
-    cell_dbind(layout_cell(layout2, 1, 0), DButton, String*, text);
-    layout_dbind(layout1, NULL, DButton);
-    layout_dbind_obj(layout1, dbutton, DButton);
+    cell_dbind(layout_cell(layout2, 1, 0), FButton, String*, text);
+    layout_dbind(layout1, NULL, FButton);
+    layout_dbind_obj(layout1, fbutton, FButton);
     window_panel(window, panel);
     window_defbutton(window, data.defbutton);
     i_center_window(parent, window);
     ret = window_modal(window, parent);
 
     if (ret != BUTTON_OK)
-        dbind_destroy(&dbutton, DButton);
+        dbind_destroy(&fbutton, FButton);
 
     window_destroy(&window);
     str_destroy(&caption);
-    return dbutton;
+    return fbutton;
 }
 
 /*---------------------------------------------------------------------------*/
 
-DCheck *dialog_new_check(Window *parent, const DSelect *sel)
+FCheck *dialog_new_check(Window *parent, const DSelect *sel)
 {
     DialogData data;
     Layout *layout1 = layout_create(1, 3);
@@ -196,12 +195,13 @@ DCheck *dialog_new_check(Window *parent, const DSelect *sel)
     Panel *panel = panel_create();
     Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
     String *caption = NULL;
-    DCheck *dcheck = dbind_create(DCheck);
+    FCheck *fcheck = dbind_create(FCheck);
     uint32_t ret = 0;
     data.window = window;
     cassert_no_null(sel);
     cassert_no_null(sel->layout);
-    caption = str_printf("New Checkbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->name));
+    cassert_no_null(sel->layout->flayout);
+    caption = str_printf("New Checkbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->flayout->name));
     label_text(label1, tc(caption));
     label_text(label2, "Text:");
     layout_label(layout1, label1, 0, 0);
@@ -212,25 +212,25 @@ DCheck *dialog_new_check(Window *parent, const DSelect *sel)
     layout_vmargin(layout1, 0, 5);
     layout_vmargin(layout1, 1, 5);
     panel_layout(panel, layout1);
-    cell_dbind(layout_cell(layout2, 1, 0), DCheck, String*, text);
-    layout_dbind(layout1, NULL, DCheck);
-    layout_dbind_obj(layout1, dcheck, DCheck);
+    cell_dbind(layout_cell(layout2, 1, 0), FCheck, String*, text);
+    layout_dbind(layout1, NULL, FCheck);
+    layout_dbind_obj(layout1, fcheck, FCheck);
     window_panel(window, panel);
     window_defbutton(window, data.defbutton);
     i_center_window(parent, window);
     ret = window_modal(window, parent);
 
     if (ret != BUTTON_OK)
-        dbind_destroy(&dcheck, DCheck);
+        dbind_destroy(&fcheck, FCheck);
 
     window_destroy(&window);
     str_destroy(&caption);
-    return dcheck;
+    return fcheck;
 }
 
 /*---------------------------------------------------------------------------*/
 
-DEdit *dialog_new_edit(Window *parent, const DSelect *sel)
+FEdit *dialog_new_edit(Window *parent, const DSelect *sel)
 {
     DialogData data;
     Layout *layout1 = layout_create(1, 5);
@@ -244,12 +244,13 @@ DEdit *dialog_new_edit(Window *parent, const DSelect *sel)
     Panel *panel = panel_create();
     Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
     String *caption = NULL;
-    DEdit *dedit = dbind_create(DEdit);
+    FEdit *fedit = dbind_create(FEdit);
     uint32_t ret = 0;
     data.window = window;
     cassert_no_null(sel);
     cassert_no_null(sel->layout);
-    caption = str_printf("New Editbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->name));
+    cassert_no_null(sel->layout->flayout);
+    caption = str_printf("New Editbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->flayout->name));
     label_text(label1, tc(caption));
     label_text(label2, "Text align");
     button_text(button1, "Passmode");
@@ -264,22 +265,22 @@ DEdit *dialog_new_edit(Window *parent, const DSelect *sel)
     layout_vmargin(layout1, 0, 5);
     layout_vmargin(layout1, 1, 5);
     panel_layout(panel, layout1);
-    cell_dbind(layout_cell(layout1, 0, 1), DEdit, bool_t, passmode);
-    cell_dbind(layout_cell(layout1, 0, 2), DEdit, bool_t, autosel);
-    cell_dbind(layout_cell(layout2, 1, 0), DEdit, halign_t, text_align);
-    layout_dbind(layout1, NULL, DEdit);
-    layout_dbind_obj(layout1, dedit, DEdit);
+    cell_dbind(layout_cell(layout1, 0, 1), FEdit, bool_t, passmode);
+    cell_dbind(layout_cell(layout1, 0, 2), FEdit, bool_t, autosel);
+    cell_dbind(layout_cell(layout2, 1, 0), FEdit, halign_t, text_align);
+    layout_dbind(layout1, NULL, FEdit);
+    layout_dbind_obj(layout1, fedit, FEdit);
     window_panel(window, panel);
     window_defbutton(window, data.defbutton);
     i_center_window(parent, window);
     ret = window_modal(window, parent);
 
     if (ret != BUTTON_OK)
-        dbind_destroy(&dedit, DEdit);
+        dbind_destroy(&fedit, FEdit);
 
     window_destroy(&window);
     str_destroy(&caption);
-    return dedit;
+    return fedit;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -327,7 +328,8 @@ DLayout *dialog_new_layout(Window *parent, const DSelect *sel)
     data.window = window;
     cassert_no_null(sel);
     cassert_no_null(sel->layout);
-    caption = str_printf("New Grid Layout in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->name));
+    cassert_no_null(sel->layout->flayout);
+    caption = str_printf("New Grid Layout in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->flayout->name));
     label_text(label, tc(caption));
     layout_label(layout1, label, 0, 0);
     layout_layout(layout1, layout2, 0, 1);

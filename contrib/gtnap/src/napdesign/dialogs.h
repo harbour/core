@@ -4,12 +4,12 @@
 
 void dialog_dbind(void);
 
-DLabel *dialog_new_label(Window *parent, const DSelect *sel);
+FLabel *dialog_new_label(Window *parent, const DSelect *sel);
 
-DButton *dialog_new_button(Window *parent, const DSelect *sel);
+FButton *dialog_new_button(Window *parent, const DSelect *sel);
 
-DCheck *dialog_new_check(Window *parent, const DSelect *sel);
+FCheck *dialog_new_check(Window *parent, const DSelect *sel);
 
-DEdit *dialog_new_edit(Window *parent, const DSelect *sel);
+FEdit *dialog_new_edit(Window *parent, const DSelect *sel);
 
 DLayout *dialog_new_layout(Window *parent, const DSelect *sel);

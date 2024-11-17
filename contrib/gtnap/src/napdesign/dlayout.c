@@ -1,6 +1,8 @@
-/* Design layout (editable parameters) */
+/* Designer layout */
 
 #include "dlayout.h"
+#include <nform/flayout.h>
+#include <gui/button.h>
 #include <gui/button.h>
 #include <gui/buttonh.h>
 #include <gui/label.h>
@@ -19,99 +21,34 @@
 #include <draw2d/image.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
+#include <core/heap.h>
 #include <core/strings.h>
 #include <sewer/bmem.h>
 #include <sewer/cassert.h>
-
-static real32_t i_EMPTY_CELL_WIDTH = 40;
-static real32_t i_EMPTY_CELL_HEIGHT = 20;
-
-/*---------------------------------------------------------------------------*/
-
-static void i_init_empty_column(DColumn *col)
-{
-    cassert_no_null(col);
-    col->margin_right = 0;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_init_empty_row(DRow *row)
-{
-    cassert_no_null(row);
-    row->margin_bottom = 0;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_remove_column(DColumn *column)
-{
-    dbind_remove(column, DColumn);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_remove_row(DRow *row)
-{
-    dbind_remove(row, DRow);
-}
 
 /*---------------------------------------------------------------------------*/
 
 static void i_remove_cell(DCell *cell)
 {
-    dbind_remove(cell, DCell);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_init_empty_cell(DCell *cell)
-{
     cassert_no_null(cell);
-    bmem_zero(cell, DCell);
-    cell->type = ekCELL_TYPE_EMPTY;
-    cell->halign = ekHALIGN_LEFT;
-    cell->valign = ekVALIGN_TOP;
+    if (cell->sublayout != NULL)
+        dlayout_destroy(&cell->sublayout);
 }
 
 /*---------------------------------------------------------------------------*/
 
 DLayout *dlayout_create(const uint32_t ncols, const uint32_t nrows)
 {
-    DLayout *layout = dbind_create(DLayout);
+    DLayout *layout = heap_new(DLayout);
+    layout->flayout = flayout_create(ncols, nrows);
+    layout->cols = arrst_create(DColumn);
+    layout->rows = arrst_create(DRow);
+    layout->cells = arrst_create(DCell);
     cassert(ncols > 0);
     cassert(nrows > 0);
-
-    /* Add columns to layout */
-    {
-        uint32_t i = 0;
-        for (i = 0; i < ncols; ++i)
-        {
-            DColumn *col = arrst_new(layout->cols, DColumn);
-            i_init_empty_column(col);
-        }
-    }
-
-    /* Add rows to layout */
-    {
-        uint32_t i = 0;
-        for (i = 0; i < nrows; ++i)
-        {
-            DRow *row = arrst_new(layout->rows, DRow);
-            i_init_empty_row(row);
-        }
-    }
-
-    /* Add cells to layout */
-    {
-        uint32_t n = ncols * nrows, i = 0;
-        for (i = 0; i < n; ++i)
-        {
-            DCell *cell = arrst_new(layout->cells, DCell);
-            i_init_empty_cell(cell);
-        }
-    }
-
+    arrst_new_n0(layout->cols, ncols, DColumn);
+    arrst_new_n0(layout->rows, nrows, DRow);
+    arrst_new_n0(layout->cells, ncols * nrows, DCell);
     return layout;
 }
 
@@ -119,165 +56,49 @@ DLayout *dlayout_create(const uint32_t ncols, const uint32_t nrows)
 
 void dlayout_destroy(DLayout **layout)
 {
-    dbind_destroy(layout, DLayout);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_name(DLayout *layout, const char_t *name)
-{
     cassert_no_null(layout);
-    str_upd(&layout->name, name);
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_margin_left(DLayout *layout, const real32_t margin)
-{
-    cassert_no_null(layout);
-    layout->margin_left = margin;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_margin_top(DLayout *layout, const real32_t margin)
-{
-    cassert_no_null(layout);
-    layout->margin_top = margin;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_margin_right(DLayout *layout, const real32_t margin)
-{
-    cassert_no_null(layout);
-    layout->margin_right = margin;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_margin_bottom(DLayout *layout, const real32_t margin)
-{
-    cassert_no_null(layout);
-    layout->margin_bottom = margin;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_margin_col(DLayout *layout, const uint32_t col, const real32_t margin)
-{
-    DColumn *dcol = NULL;
-    cassert_no_null(layout);
-    cassert(col < arrst_size(layout->cols, DColumn) - 1);
-    dcol = arrst_get(layout->cols, col, DColumn);
-    dcol->margin_right = margin;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_margin_row(DLayout *layout, const uint32_t row, const real32_t margin)
-{
-    DRow *drow = NULL;
-    cassert_no_null(layout);
-    cassert(row < arrst_size(layout->rows, DRow) - 1);
-    drow = arrst_get(layout->rows, row, DRow);
-    drow->margin_bottom = margin;
+    cassert_no_null(*layout);
+    dbind_destroy(&(*layout)->flayout, FLayout);
+    arrst_destroy(&(*layout)->cols, NULL, DColumn);
+    arrst_destroy(&(*layout)->rows, NULL, DRow);
+    arrst_destroy(&(*layout)->cells, i_remove_cell, DCell);
+    heap_delete(layout, DLayout);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void dlayout_insert_col(DLayout *layout, const uint32_t col)
 {
-    uint32_t ncols = 0, nrows = 0, i = 0;
     cassert_no_null(layout);
-    ncols = arrst_size(layout->cols, DColumn);
-    nrows = arrst_size(layout->rows, DRow);
-
-    /* Insert and init (empty) the new cells */
-    for (i = 0; i < nrows; ++i)
-    {
-        uint32_t inspos = ((ncols + 1) * i) + col;
-        DCell *cell = arrst_insert_n(layout->cells, inspos, 1, DCell);
-        i_init_empty_cell(cell);
-    }
-
-    /* Add a new column */
-    {
-        DColumn *ncol = arrst_insert_n(layout->cols, col, 1, DColumn);
-        i_init_empty_column(ncol);
-    }
+    flayout_insert_col(layout->flayout, col);
+    arrst_insert_n0(layout->cols, col, 1, DColumn);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void dlayout_remove_col(DLayout *layout, const uint32_t col)
 {
-    uint32_t ncols = 0, nrows = 0, i = 0;
     cassert_no_null(layout);
-    cassert(col < arrst_size(layout->cols, DColumn));
-    ncols = arrst_size(layout->cols, DColumn);
-    nrows = arrst_size(layout->rows, DRow);
-
-    /* Destroy the column cells */
-    for (i = 0; i < nrows; ++i)
-    {
-        uint32_t delrow = nrows - i - 1;
-        uint32_t delpos = (ncols * delrow) + col;
-        arrst_delete(layout->cells, delpos, i_remove_cell, DCell);
-    }
-
-    /* Destroy the column */
-    arrst_delete(layout->cols, col, i_remove_column, DColumn);
+    flayout_remove_col(layout->flayout, col);
+    arrst_delete(layout->cols, col, NULL, DColumn);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void dlayout_insert_row(DLayout *layout, const uint32_t row)
 {
-    uint32_t ncols = 0, nrows = 0, i = 0;
-    uint32_t inspos = 0;
-    DCell *cells = NULL;
     cassert_no_null(layout);
-    ncols = arrst_size(layout->cols, DColumn);
-    nrows = arrst_size(layout->rows, DRow);
-    /* Cells insert position */
-    inspos = row * ncols;
-    /* Cells array is in row-major order. All row cells are together in memory */
-    cells = arrst_insert_n(layout->cells, inspos, ncols, DCell);
-
-    /* Initialize the new cells (empty) */
-    for (i = 0; i < ncols; ++i)
-    {
-        i_init_empty_cell(cells + i);
-    }
-
-    /* Add a new row */
-    {
-        DRow *nrow = arrst_insert_n(layout->rows, row, 1, DRow);
-        i_init_empty_row(nrow);
-    }
+    flayout_insert_row(layout->flayout, row);
+    arrst_insert_n0(layout->rows, row, 1, DRow);
 }
 
 /*---------------------------------------------------------------------------*/
 
 void dlayout_remove_row(DLayout *layout, const uint32_t row)
 {
-    uint32_t i, ncols = 0, nrows = 0;
     cassert_no_null(layout);
-    cassert(row < arrst_size(layout->rows, DRow));
-    ncols = arrst_size(layout->cols, DColumn);
-    nrows = arrst_size(layout->rows, DRow);
-
-    /* Destroy the row cells */
-    for (i = 0; i < ncols; ++i)
-    {
-        uint32_t delcol = ncols - i - 1;
-        uint32_t delpos = (ncols * row) + delcol;
-        arrst_delete(layout->cells, delpos, i_remove_cell, DCell);
-    }
-
-    /* Destroy the row */
-    arrst_delete(layout->rows, row, i_remove_row, DRow);
+    flayout_remove_row(layout->flayout, row);
+    arrst_delete(layout->rows, row, NULL, DRow);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -296,119 +117,21 @@ static ___INLINE DCell *i_cell(DLayout *layout, const uint32_t col, const uint32
 
 void dlayout_remove_cell(DLayout *layout, const uint32_t col, const uint32_t row)
 {
-    String *name = NULL;
     DCell *cell = i_cell(layout, col, row);
     cassert_no_null(cell);
-    name = str_c(tc(cell->name));
+    flayout_remove_cell(layout->flayout, col, row);
     i_remove_cell(cell);
-    i_init_empty_cell(cell);
-    str_upd(&cell->name, tc(name));
-    str_destroy(&name);
 }
 
-/*---------------------------------------------------------------------------*/
+//*---------------------------------------------------------------------------*/
 
 void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col, const uint32_t row)
 {
     DCell *cell = i_cell(layout, col, row);
     cassert_no_null(cell);
     cassert_no_null(sublayout);
-    cassert(cell->type == ekCELL_TYPE_EMPTY);
-    cell->type = ekCELL_TYPE_LAYOUT;
-    cell->halign = ekHALIGN_JUSTIFY;
-    cell->valign = ekVALIGN_JUSTIFY;
-    cell->content.layout = sublayout;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_add_label(DLayout *layout, DLabel *label, const uint32_t col, const uint32_t row)
-{
-    DCell *cell = i_cell(layout, col, row);
-    cassert_no_null(cell);
-    cassert_no_null(label);
-    cassert(cell->type == ekCELL_TYPE_EMPTY);
-    cell->type = ekCELL_TYPE_LABEL;
-    cell->halign = ekHALIGN_LEFT;
-    cell->valign = ekVALIGN_CENTER;
-    cell->content.label = label;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_add_button(DLayout *layout, DButton *button, const uint32_t col, const uint32_t row)
-{
-    DCell *cell = i_cell(layout, col, row);
-    cassert_no_null(cell);
-    cassert_no_null(button);
-    cassert(cell->type == ekCELL_TYPE_EMPTY);
-    cell->type = ekCELL_TYPE_BUTTON;
-    cell->halign = ekHALIGN_JUSTIFY;
-    cell->valign = ekVALIGN_CENTER;
-    cell->content.button = button;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_add_check(DLayout *layout, DCheck *check, const uint32_t col, const uint32_t row)
-{
-    DCell *cell = i_cell(layout, col, row);
-    cassert_no_null(cell);
-    cassert_no_null(check);
-    cassert(cell->type == ekCELL_TYPE_EMPTY);
-    cell->type = ekCELL_TYPE_CHECK;
-    cell->halign = ekHALIGN_LEFT;
-    cell->valign = ekVALIGN_CENTER;
-    cell->content.check = check;
-}
-
-/*---------------------------------------------------------------------------*/
-
-void dlayout_add_edit(DLayout *layout, DEdit *edit, const uint32_t col, const uint32_t row)
-{
-    DCell *cell = i_cell(layout, col, row);
-    cassert_no_null(cell);
-    cassert_no_null(edit);
-    cassert(cell->type == ekCELL_TYPE_EMPTY);
-    cell->type = ekCELL_TYPE_EDIT;
-    cell->halign = ekHALIGN_JUSTIFY;
-    cell->valign = ekVALIGN_CENTER;
-    cell->content.edit = edit;
-}
-
-/*---------------------------------------------------------------------------*/
-
-/*
-static color_t i_color(void)
-{
-    static uint32_t index = 0;
-    switch(index++ % 3) {
-    case 0:
-        return kCOLOR_RED;
-    case 1:
-        return kCOLOR_BLUE;
-    case 2:
-        return kCOLOR_GREEN;
-    cassert_default();
-    }
-
-    return kCOLOR_DEFAULT;
-}*/
-
-/*---------------------------------------------------------------------------*/
-
-DColumn *dlayout_column(DLayout *layout, const uint32_t col)
-{
-    cassert_no_null(layout);
-    return arrst_get(layout->cols, col, DColumn);
-}
-
-/*---------------------------------------------------------------------------*/
-
-DRow *dlayout_row(DLayout *layout, const uint32_t row)
-{
-    cassert_no_null(layout);
-    return arrst_get(layout->rows, row, DRow);
+    cassert(cell->sublayout == NULL);
+    cell->sublayout = sublayout;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -420,7 +143,7 @@ bool_t dlayout_empty_cell(const DSelect *sel)
     {
         if (sel->elem == ekLAYELEM_CELL)
         {
-            const DCell *cell = i_cell(sel->layout, sel->col, sel->row);
+            const FCell *cell = flayout_ccell(sel->layout->flayout, sel->col, sel->row);
             cassert_no_null(cell);
             if (cell->type == ekCELL_TYPE_EMPTY)
                 return TRUE;
@@ -432,171 +155,19 @@ bool_t dlayout_empty_cell(const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
-DCell *dlayout_cell(DLayout *layout, const uint32_t col, const uint32_t row)
-{
-    return i_cell(layout, col, row);
-}
-
-/*---------------------------------------------------------------------------*/
-
-const DCell *dlayout_ccell(const DLayout *layout, const uint32_t col, const uint32_t row)
-{
-    return i_cell(cast(layout, DLayout), col, row);
-}
-
-/*---------------------------------------------------------------------------*/
-
-DCell *dlayout_cell_sel(const DSelect *sel)
+FCell *dlayout_sel_fcell(const DSelect *sel)
 {
     cassert_no_null(sel);
     if (sel->layout != NULL)
     {
         if (sel->elem == ekLAYELEM_CELL)
-            return i_cell(sel->layout, sel->col, sel->row);
-    }
-
-    return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static align_t i_halign(const halign_t halign)
-{
-    switch (halign)
-    {
-    case ekHALIGN_LEFT:
-        return ekLEFT;
-    case ekHALIGN_CENTER:
-        return ekCENTER;
-    case ekHALIGN_RIGHT:
-        return ekRIGHT;
-    case ekHALIGN_JUSTIFY:
-        return ekJUSTIFY;
-        cassert_default();
-    }
-    return ekLEFT;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static align_t i_valign(const valign_t valign)
-{
-    switch (valign)
-    {
-    case ekVALIGN_TOP:
-        return ekTOP;
-    case ekVALIGN_CENTER:
-        return ekCENTER;
-    case ekVALIGN_BOTTOM:
-        return ekBOTTOM;
-    case ekVALIGN_JUSTIFY:
-        return ekJUSTIFY;
-        cassert_default();
-    }
-    return ekTOP;
-}
-
-/*---------------------------------------------------------------------------*/
-
-Layout *dlayout_gui_layout(const DLayout *layout)
-{
-    uint32_t ncols = 0, nrows = 0;
-    Layout *glayout = NULL;
-    cassert_no_null(layout);
-    ncols = arrst_size(layout->cols, DColumn);
-    nrows = arrst_size(layout->rows, DRow);
-    glayout = layout_create(ncols, nrows);
-
-    /* Layout border margins */
-    layout_margin4(glayout, layout->margin_top, layout->margin_right, layout->margin_bottom, layout->margin_left);
-
-    /* Column properties */
-    arrst_foreach_const(col, layout->cols, DColumn)
-        layout_hsize(glayout, col_i, col->forced_width);
-        if (col_i < col_total - 1)
-            layout_hmargin(glayout, col_i, col->margin_right);
-    arrst_end()
-
-    /* Row properties */
-    arrst_foreach_const(row, layout->rows, DRow)
-        layout_vsize(glayout, row_i, row->forced_height);
-        if (row_i < row_total - 1)
-            layout_vmargin(glayout, row_i, row->margin_bottom);
-    arrst_end()
-
-    /* Cells */
-    {
-        uint32_t i, j;
-        const DCell *cells = arrst_all_const(layout->cells, DCell);
-        for (j = 0; j < nrows; ++j)
-        {
-            for (i = 0; i < ncols; ++i)
-            {
-                Cell *gcell = layout_cell(glayout, i, j);
-                align_t halign = i_halign(cells->halign);
-                align_t valign = i_valign(cells->valign);
-                layout_halign(glayout, i, j, halign);
-                layout_valign(glayout, i, j, valign);
-                switch (cells->type)
-                {
-                case ekCELL_TYPE_EMPTY:
-                    cell_force_size(gcell, i_EMPTY_CELL_WIDTH, i_EMPTY_CELL_HEIGHT);
-                    break;
-
-                case ekCELL_TYPE_LABEL:
-                {
-                    DLabel *dlabel = cells->content.label;
-                    Label *glabel = label_create();
-                    label_text(glabel, tc(dlabel->text));
-                    layout_label(glayout, glabel, i, j);
-                    break;
-                }
-
-                case ekCELL_TYPE_BUTTON:
-                {
-                    DButton *dbutton = cells->content.button;
-                    Button *gbutton = button_push();
-                    button_text(gbutton, tc(dbutton->text));
-                    layout_button(glayout, gbutton, i, j);
-                    break;
-                }
-
-                case ekCELL_TYPE_CHECK:
-                {
-                    DCheck *dcheck = cells->content.check;
-                    Button *gcheck = button_check();
-                    button_text(gcheck, tc(dcheck->text));
-                    layout_button(glayout, gcheck, i, j);
-                    break;
-                }
-
-                case ekCELL_TYPE_EDIT:
-                {
-                    DEdit *dedit = cells->content.edit;
-                    Edit *gedit = edit_create();
-                    align_t align = i_halign(dedit->text_align);
-                    edit_passmode(gedit, dedit->passmode);
-                    edit_autoselect(gedit, dedit->autosel);
-                    edit_align(gedit, align);
-                    layout_edit(glayout, gedit, i, j);
-                    break;
-                }
-
-                case ekCELL_TYPE_LAYOUT:
-                {
-                    Layout *gsublayout = dlayout_gui_layout(cells->content.layout);
-                    layout_layout(glayout, gsublayout, i, j);
-                    break;
-                }
-                }
-
-                cells += 1;
-            }
+        {        
+            cassert_no_null(sel->layout->flayout);
+            return flayout_cell(sel->layout->flayout, sel->col, sel->row);
         }
     }
 
-    /*layout_bgcolor(glayout, i_color());*/
-    return glayout;
+    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -606,6 +177,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
     DColumn *col = NULL;
     DRow *row = NULL;
     DCell *cell = NULL;
+    FLayout *flayout = NULL;
     uint32_t ncols, nrows, i, j;
     real32_t total_width = 0, total_height = 0;
     real32_t inner_width = 0, inner_height = 0;
@@ -615,20 +187,25 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
     col = arrst_all(layout->cols, DColumn);
     row = arrst_all(layout->rows, DRow);
     cell = arrst_all(layout->cells, DCell);
+    flayout = layout->flayout;
     ncols = arrst_size(layout->cols, DColumn);
     nrows = arrst_size(layout->rows, DRow);
+    cassert_no_null(flayout);
+    cassert(ncols == flayout_ncols(flayout));
+    cassert(nrows == flayout_nrows(flayout));
 
     /* Compute the columns width and total layout widths */
     total_width = 0;
     inner_width = 0;
     for (i = 0; i < ncols; ++i)
     {
+        const FColumn *fcol = flayout_column(flayout, i);
         col[i].width = layout_get_hsize(glayout, i);
         inner_width += col[i].width;
         if (i < ncols - 1)
-            inner_width += col[i].margin_right;
+            inner_width += fcol->margin_right;
         else
-            total_width = inner_width + layout->margin_left + layout->margin_right;
+            total_width = inner_width + flayout->margin_left + flayout->margin_right;
     }
 
     /* Compute the rows height and total layout heights */
@@ -636,50 +213,56 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
     inner_height = 0;
     for (j = 0; j < nrows; ++j)
     {
+        const FRow *frow = flayout_row(layout->flayout, j);
         row[j].height = layout_get_vsize(glayout, j);
         inner_height += row[j].height;
         if (j < nrows - 1)
-            inner_height += row[j].margin_bottom;
+            inner_height += frow->margin_bottom;
         else
-            total_height = inner_height + layout->margin_top + layout->margin_bottom;
+            total_height = inner_height + flayout->margin_top + flayout->margin_bottom;
     }
 
     /* Global layout rectangle */
     layout->rect = r2df(origin.x, origin.y, total_width, total_height);
 
     /* Compute the vertical rectangles */
-    layout->rect_left = r2df(origin.x, origin.y, layout->margin_left, total_height);
-    x = origin.x + layout->margin_left;
+    layout->rect_left = r2df(origin.x, origin.y, flayout->margin_left, total_height);
+    x = origin.x + flayout->margin_left;
     for (i = 0; i < ncols; ++i)
     {
+        const FColumn *fcol = flayout_column(flayout, i);
         x += col[i].width;
-        col[i].margin_rect = r2df(x, origin.y, col[i].margin_right, total_height);
-        x += col[i].margin_right;
+        col[i].margin_rect = r2df(x, origin.y, fcol->margin_right, total_height);
+        x += fcol->margin_right;
     }
-    layout->rect_right = r2df(x, origin.y, layout->margin_right, total_height);
+    layout->rect_right = r2df(x, origin.y, flayout->margin_right, total_height);
 
     /* Compute the horizontal rectangles */
-    layout->rect_top = r2df(origin.x, origin.y, total_width, layout->margin_top);
-    y = origin.y + layout->margin_top;
+    layout->rect_top = r2df(origin.x, origin.y, total_width, flayout->margin_top);
+    y = origin.y + flayout->margin_top;
     for (j = 0; j < nrows; ++j)
     {
+        const FRow *frow = flayout_row(flayout, j);
         y += row[j].height;
-        row[j].margin_rect = r2df(origin.x, y, total_width, row[j].margin_bottom);
-        y += row[j].margin_bottom;
+        row[j].margin_rect = r2df(origin.x, y, total_width, frow->margin_bottom);
+        y += frow->margin_bottom;
     }
-    layout->rect_bottom = r2df(origin.x, y, total_width, layout->margin_bottom);
+    layout->rect_bottom = r2df(origin.x, y, total_width, flayout->margin_bottom);
 
     /* Compute the cells rectangles */
     {
         DCell *dcell = cell;
-        y = origin.y + layout->margin_top;
+        y = origin.y + flayout->margin_top;
 
         for (j = 0; j < nrows; ++j)
         {
-            x = origin.x + layout->margin_left;
+            const FRow *frow = flayout_row(flayout, j);
+            x = origin.x + flayout->margin_left;
             for (i = 0; i < ncols; ++i)
             {
-                Cell *gcell = layout_cell(cast(glayout, Layout), i, j);
+                const FCell *fcell = flayout_ccell(flayout, i, j);
+                const FColumn *fcol = flayout_column(flayout, i);
+                const Cell *gcell = layout_cell(cast(glayout, Layout), i, j);
                 real32_t hsize = cell_get_hsize(gcell);
                 real32_t vsize = cell_get_vsize(gcell);
                 align_t halign = cell_get_halign(gcell);
@@ -693,19 +276,19 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                 switch (halign)
                 {
                 case ekLEFT:
-                    cassert(dcell->halign == ekHALIGN_LEFT);
+                    cassert(fcell->halign == ekHALIGN_LEFT);
                     cellx = x;
                     break;
                 case ekCENTER:
-                    cassert(dcell->halign == ekHALIGN_CENTER);
+                    cassert(fcell->halign == ekHALIGN_CENTER);
                     cellx = x + (col[i].width - hsize) / 2;
                     break;
                 case ekRIGHT:
-                    cassert(dcell->halign == ekHALIGN_RIGHT);
+                    cassert(fcell->halign == ekHALIGN_RIGHT);
                     cellx = x + (col[i].width - hsize);
                     break;
                 case ekJUSTIFY:
-                    cassert(dcell->halign == ekHALIGN_JUSTIFY);
+                    cassert(fcell->halign == ekHALIGN_JUSTIFY);
                     cellx = x;
                     break;
                     cassert_default();
@@ -714,25 +297,25 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                 switch (valign)
                 {
                 case ekTOP:
-                    cassert(dcell->valign == ekVALIGN_TOP);
+                    cassert(fcell->valign == ekVALIGN_TOP);
                     celly = y;
                     break;
                 case ekCENTER:
-                    cassert(dcell->valign == ekVALIGN_CENTER);
+                    cassert(fcell->valign == ekVALIGN_CENTER);
                     celly = y + (row[j].height - vsize) / 2;
                     break;
                 case ekBOTTOM:
-                    cassert(dcell->valign == ekVALIGN_BOTTOM);
+                    cassert(fcell->valign == ekVALIGN_BOTTOM);
                     celly = y + (row[j].height - vsize);
                     break;
                 case ekJUSTIFY:
-                    cassert(dcell->valign == ekVALIGN_JUSTIFY);
+                    cassert(fcell->valign == ekVALIGN_JUSTIFY);
                     celly = y;
                     break;
                     cassert_default();
                 }
 
-                switch (dcell->type)
+                switch (fcell->type)
                 {
                 case ekCELL_TYPE_EMPTY:
                 case ekCELL_TYPE_LABEL:
@@ -743,7 +326,7 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
 
                 case ekCELL_TYPE_LAYOUT:
                 {
-                    DLayout *sublayout = dcell->content.layout;
+                    DLayout *sublayout = dcell->sublayout;
                     Layout *subglayout = layout_get_layout(cast(glayout, Layout), i, j);
                     dlayout_synchro_visual(sublayout, subglayout, v2df(cellx, celly));
                     break;
@@ -756,127 +339,14 @@ void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df o
                 dcell->content_rect = r2df(cellx, celly, hsize, vsize);
                 dcell += 1;
                 x += col[i].width;
-                x += col[i].margin_right;
+                x += fcol->margin_right;
             }
 
             y += row[j].height;
-            y += row[j].margin_bottom;
+            y += frow->margin_bottom;
         }
     }
 }
-
-/*---------------------------------------------------------------------------*/
-
-Layout *dlayout_search_layout(const DLayout *layout, Layout *glayout, const DLayout *required)
-{
-    cassert_no_null(layout);
-    if (layout != required)
-    {
-        DCell *cell = arrst_all(layout->cells, DCell);
-        uint32_t ncols = arrst_size(layout->cols, DColumn);
-        uint32_t nrows = arrst_size(layout->rows, DRow);
-        uint32_t i, j;
-
-        for (j = 0; j < nrows; ++j)
-        {
-            for (i = 0; i < ncols; ++i)
-            {
-                if (cell->type == ekCELL_TYPE_LAYOUT)
-                {
-                    DLayout *sublayout = cell->content.layout;
-                    Layout *subglayout = layout_get_layout(cast(glayout, Layout), i, j);
-                    Layout *fglayout = dlayout_search_layout(sublayout, subglayout, required);
-                    if (fglayout != NULL)
-                        return fglayout;
-                }
-
-                cell += 1;
-            }
-        }
-
-        return NULL;
-    }
-    else
-    {
-        cassert(dlayout_ncols(layout) == layout_ncols(glayout));
-        cassert(dlayout_nrows(layout) == layout_nrows(glayout));
-        return glayout;
-    }
-}
-
-/*---------------------------------------------------------------------------*/
-
-uint32_t dlayout_ncols(const DLayout *layout)
-{
-    cassert_no_null(layout);
-    return arrst_size(layout->cols, DColumn);
-}
-
-/*---------------------------------------------------------------------------*/
-
-uint32_t dlayout_nrows(const DLayout *layout)
-{
-    cassert_no_null(layout);
-    return arrst_size(layout->rows, DRow);
-}
-
-///*---------------------------------------------------------------------------*/
-//
-// real32_t dlayout_get_margin_top(const DLayout *layout)
-//{
-//    cassert_no_null(layout);
-//    return layout->margin_top;
-//}
-//
-///*---------------------------------------------------------------------------*/
-//
-// real32_t dlayout_get_margin_bottom(const DLayout *layout)
-//{
-//    DRow *row = NULL;
-//    cassert_no_null(layout);
-//    row = arrst_last(layout->rows, DRow);
-//    return row->margin_bottom;
-//}
-//
-///*---------------------------------------------------------------------------*/
-//
-// real32_t dlayout_get_margin_left(const DLayout *layout)
-//{
-//    cassert_no_null(layout);
-//    return layout->margin_left;
-//}
-//
-///*---------------------------------------------------------------------------*/
-//
-// real32_t dlayout_get_margin_right(const DLayout *layout)
-//{
-//    DColumn *col = NULL;
-//    cassert_no_null(layout);
-//    col = arrst_last(layout->cols, DColumn);
-//    return col->margin_right;
-//}
-//
-///*---------------------------------------------------------------------------*/
-//
-// real32_t dlayout_get_margin_col(const DLayout *layout, const uint32_t col)
-//{
-//    DColumn *dcol = NULL;
-//    cassert_no_null(layout);
-//    cassert(col < arrst_size(layout->cols, DColumn) - 1);
-//    dcol= arrst_get(layout->cols, col, DColumn);
-//    return dcol->margin_right;
-//}
-//
-///*---------------------------------------------------------------------------*/
-//
-// real32_t dlayout_get_margin_row(const DLayout *layout, const uint32_t row)
-//{
-//    DRow *drow = NULL;
-//    cassert_no_null(layout);
-//    cassert(row < arrst_size(layout->rows, DRow) - 1);
-//    drow = arrst_get(layout->rows, row, DRow);
-//    return drow->margin_bottom;
-//}
 
 /*---------------------------------------------------------------------------*/
 
@@ -959,21 +429,8 @@ void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t
                 sel->elem = ekLAYELEM_CELL;
                 sel->col = cell_i % ncols;
                 sel->row = cell_i / ncols;
-
-                switch (cell->type)
-                {
-                case ekCELL_TYPE_EMPTY:
-                case ekCELL_TYPE_LABEL:
-                case ekCELL_TYPE_BUTTON:
-                case ekCELL_TYPE_CHECK:
-                case ekCELL_TYPE_EDIT:
-                    break;
-
-                case ekCELL_TYPE_LAYOUT:
-                    dlayout_elem_at_pos(cell->content.layout, x, y, selpath);
-                    break;
-                }
-
+                if (cell->sublayout != NULL)
+                    dlayout_elem_at_pos(cell->sublayout, x, y, selpath);
                 return;
             }
         arrst_end()
@@ -1107,12 +564,14 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
     {
         for (i = 0; i < ncols; ++i)
         {
+            const FCell *fcell = flayout_ccell(layout->flayout, i, j);
             Cell *gcell = layout_cell(cast(glayout, Layout), i, j);
             draw_r2df(ctx, ekSTROKE, &cell->rect);
-            switch (cell->type)
+            switch (fcell->type)
             {
             case ekCELL_TYPE_EMPTY:
                 break;
+
             case ekCELL_TYPE_LABEL:
             {
                 color_t color = i_is_cell_sel(hover, layout, i, j) ? kCOLOR_RED : kCOLOR_BLACK;
@@ -1123,7 +582,7 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
                 draw_fill_color(ctx, bgcolor);
                 draw_text_color(ctx, color);
                 draw_rect(ctx, ekFILL, cell->content_rect.pos.x, cell->content_rect.pos.y, cell->content_rect.size.width, cell->content_rect.size.height);
-                drawctrl_text(ctx, tc(cell->content.label->text), (int32_t)cell->content_rect.pos.x, (int32_t)cell->content_rect.pos.y, ekCTRL_STATE_NORMAL);
+                drawctrl_text(ctx, tc(fcell->widget.label->text), (int32_t)cell->content_rect.pos.x, (int32_t)cell->content_rect.pos.y, ekCTRL_STATE_NORMAL);
                 break;
             }
 
@@ -1143,10 +602,10 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
                 draw_rect(ctx, ekFILLSK, cell->content_rect.pos.x, cell->content_rect.pos.y, cell->content_rect.size.width, cell->content_rect.size.height);
                 draw_line_width(ctx, 1);
                 draw_line_color(ctx, kCOLOR_BLACK);
-                font_extents(gfont, tc(cell->content.button->text), -1.f, &twidth, &theight);
+                font_extents(gfont, tc(fcell->widget.button->text), -1.f, &twidth, &theight);
                 tx = cell->content_rect.pos.x + ((cell->content_rect.size.width - twidth) / 2);
                 ty = cell->content_rect.pos.y + ((cell->content_rect.size.height - theight) / 2);
-                drawctrl_text(ctx, tc(cell->content.button->text), (int32_t)tx, (int32_t)ty, ekCTRL_STATE_NORMAL);
+                drawctrl_text(ctx, tc(fcell->widget.button->text), (int32_t)tx, (int32_t)ty, ekCTRL_STATE_NORMAL);
                 break;
             }
 
@@ -1164,10 +623,10 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
                 draw_line_color(ctx, color);
                 draw_text_color(ctx, color);
                 draw_fill_color(ctx, bgcolor);
-                font_extents(gfont, tc(cell->content.check->text), -1.f, &twidth, &theight);
+                font_extents(gfont, tc(fcell->widget.check->text), -1.f, &twidth, &theight);
                 tx = cell->content_rect.pos.x + (cell->content_rect.size.width - twidth);
                 draw_rect(ctx, ekFILL, cell->content_rect.pos.x, cell->content_rect.pos.y, cell->content_rect.size.width, cell->content_rect.size.height);
-                drawctrl_text(ctx, tc(cell->content.check->text), (int32_t)tx, (int32_t)cell->content_rect.pos.y, ekCTRL_STATE_NORMAL);
+                drawctrl_text(ctx, tc(fcell->widget.check->text), (int32_t)tx, (int32_t)cell->content_rect.pos.y, ekCTRL_STATE_NORMAL);
                 draw_rect(ctx, ekSTROKE, cell->content_rect.pos.x, cell->content_rect.pos.y, cwidth, cheight);
                 draw_line_color(ctx, kCOLOR_BLACK);
                 break;
@@ -1193,7 +652,7 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
             case ekCELL_TYPE_LAYOUT:
             {
                 Layout *chid_glayout = cell_layout(gcell);
-                dlayout_draw(cell->content.layout, chid_glayout, hover, sel, swidget, add_icon, ctx);
+                dlayout_draw(cell->sublayout, chid_glayout, hover, sel, swidget, add_icon, ctx);
                 break;
             }
             }
@@ -1211,15 +670,12 @@ void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *h
         {
             draw_r2df(ctx, ekSTROKE, &rect);
             draw_line_color(ctx, kCOLOR_BLACK);
-            // draw_fill_color(ctx, kCOLOR_RED);
-            // draw_r2df(ctx, ekFILL, &rect);
         }
         else
         {
-            uint32_t pos = hover->row * ncols + hover->col;
-            const DCell *dcell = arrst_get_const(layout->cells, pos, DCell);
+            const FCell *fcell = flayout_ccell(layout->flayout, hover->col, hover->row);
             draw_r2df(ctx, ekSTROKE, &rect);
-            if (dcell->type == ekCELL_TYPE_EMPTY && swidget != ekWIDGET_SELECT)
+            if (fcell->type == ekCELL_TYPE_EMPTY && swidget != ekWIDGET_SELECT)
             {
                 uint32_t iw = image_width(add_icon);
                 uint32_t ih = image_height(add_icon);
