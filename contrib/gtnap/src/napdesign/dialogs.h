@@ -12,4 +12,4 @@ FCheck *dialog_new_check(Window *parent, const DSelect *sel);
 
 FEdit *dialog_new_edit(Window *parent, const DSelect *sel);
 
-DLayout *dialog_new_layout(Window *parent, const DSelect *sel);
+FLayout *dialog_new_layout(Window *parent, const DSelect *sel);

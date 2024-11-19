@@ -55,7 +55,6 @@ struct _dcell_t
 
 struct _dlayout_t
 {
-    FLayout *flayout;
     ArrSt(DColumn) *cols;
     ArrSt(DRow) *rows;
     ArrSt(DCell) *cells;
@@ -68,7 +67,9 @@ struct _dlayout_t
 
 struct _dselect_t
 {
-    DLayout *layout;
+    DLayout *dlayout;
+    FLayout *flayout;
+    Layout *glayout;
     layelem_t elem;
     uint32_t col;
     uint32_t row;

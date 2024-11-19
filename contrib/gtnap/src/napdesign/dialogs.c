@@ -1,7 +1,7 @@
 /* Dialog boxes */
 
 #include "dialogs.h"
-#include "dlayout.h"
+#include <nform/flayout.h>
 #include <gui/button.h>
 #include <gui/cell.h>
 #include <gui/edit.h>
@@ -105,9 +105,8 @@ FLabel *dialog_new_label(Window *parent, const DSelect *sel)
     uint32_t ret = 0;
     data.window = window;
     cassert_no_null(sel);
-    cassert_no_null(sel->layout);
-    cassert_no_null(sel->layout->flayout);
-    caption = str_printf("New Label widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->flayout->name));
+    cassert_no_null(sel->flayout);
+    caption = str_printf("New Label widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->flayout->name));
     label_text(label1, tc(caption));
     label_text(label2, "Text:");
     layout_label(layout1, label1, 0, 0);
@@ -152,9 +151,8 @@ FButton *dialog_new_button(Window *parent, const DSelect *sel)
     uint32_t ret = 0;
     data.window = window;
     cassert_no_null(sel);
-    cassert_no_null(sel->layout);
-    cassert_no_null(sel->layout->flayout);
-    caption = str_printf("New Button widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->flayout->name));
+    cassert_no_null(sel->flayout);
+    caption = str_printf("New Button widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->flayout->name));
     label_text(label1, tc(caption));
     label_text(label2, "Text:");
     layout_label(layout1, label1, 0, 0);
@@ -199,9 +197,8 @@ FCheck *dialog_new_check(Window *parent, const DSelect *sel)
     uint32_t ret = 0;
     data.window = window;
     cassert_no_null(sel);
-    cassert_no_null(sel->layout);
-    cassert_no_null(sel->layout->flayout);
-    caption = str_printf("New Checkbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->flayout->name));
+    cassert_no_null(sel->flayout);
+    caption = str_printf("New Checkbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->flayout->name));
     label_text(label1, tc(caption));
     label_text(label2, "Text:");
     layout_label(layout1, label1, 0, 0);
@@ -248,9 +245,8 @@ FEdit *dialog_new_edit(Window *parent, const DSelect *sel)
     uint32_t ret = 0;
     data.window = window;
     cassert_no_null(sel);
-    cassert_no_null(sel->layout);
-    cassert_no_null(sel->layout->flayout);
-    caption = str_printf("New Editbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->flayout->name));
+    cassert_no_null(sel->flayout);
+    caption = str_printf("New Editbox widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->flayout->name));
     label_text(label1, tc(caption));
     label_text(label2, "Text align");
     button_text(button1, "Passmode");
@@ -312,7 +308,7 @@ static Layout *i_grid_layout(void)
 
 /*---------------------------------------------------------------------------*/
 
-DLayout *dialog_new_layout(Window *parent, const DSelect *sel)
+FLayout *dialog_new_layout(Window *parent, const DSelect *sel)
 {
     DialogData data;
     DialogLayout diag;
@@ -323,13 +319,12 @@ DLayout *dialog_new_layout(Window *parent, const DSelect *sel)
     Panel *panel = panel_create();
     Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
     String *caption = NULL;
-    DLayout *dlayout = NULL;
+    FLayout *flayout = NULL;
     uint32_t ret = 0;
     data.window = window;
     cassert_no_null(sel);
-    cassert_no_null(sel->layout);
-    cassert_no_null(sel->layout->flayout);
-    caption = str_printf("New Grid Layout in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->layout->flayout->name));
+    cassert_no_null(sel->flayout);
+    caption = str_printf("New Grid Layout in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->flayout->name));
     label_text(label, tc(caption));
     layout_label(layout1, label, 0, 0);
     layout_layout(layout1, layout2, 0, 1);
@@ -347,23 +342,12 @@ DLayout *dialog_new_layout(Window *parent, const DSelect *sel)
 
     if (ret == BUTTON_OK)
     {
-        /*uint32_t i, j;*/
         cassert(diag.ncols > 0);
         cassert(diag.nrows > 0);
-        dlayout = dlayout_create(diag.ncols, diag.nrows);
-
-        /* Make it editable from dialog */
-        /*//dlayout_margin_top(dlayout, 5);
-        //dlayout_margin_bottom(dlayout, 5);
-        //dlayout_margin_left(dlayout, 5);
-        //dlayout_margin_right(dlayout, 5);
-        //for (i = 0; i < diag.ncols - 1; ++i)
-        //    dlayout_margin_col(dlayout, i, 5);
-        //for (j = 0; j < diag.nrows - 1; ++j)
-        //    dlayout_margin_row(dlayout, j, 5);*/
+        flayout = flayout_create(diag.ncols, diag.nrows);
     }
 
     window_destroy(&window);
     str_destroy(&caption);
-    return dlayout;
+    return flayout;
 }

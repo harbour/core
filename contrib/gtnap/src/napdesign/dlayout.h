@@ -4,6 +4,8 @@
 
 DLayout *dlayout_create(const uint32_t ncols, const uint32_t nrows);
 
+DLayout *dlayout_from_flayout(const FLayout *flayout);
+
 void dlayout_destroy(DLayout **layout);
 
 void dlayout_insert_col(DLayout *layout, const uint32_t col);
@@ -22,8 +24,8 @@ bool_t dlayout_empty_cell(const DSelect *sel);
 
 FCell *dlayout_sel_fcell(const DSelect *sel);
 
-void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df origin);
+void dlayout_synchro_visual(DLayout *dlayout, const Layout *glayout, const V2Df origin);
 
-void dlayout_elem_at_pos(const DLayout *layout, const real32_t x, const real32_t y, ArrSt(DSelect) *selpath);
+void dlayout_elem_at_pos(const DLayout *dlayout, const FLayout *flayout, const Layout *glayout, const real32_t x, const real32_t y, ArrSt(DSelect) *selpath);
 
-void dlayout_draw(const DLayout *layout, const Layout *glayout, const DSelect *hover, const DSelect *sel, const widget_t swidget, const Image *add_icon, DCtx *ctx);
+void dlayout_draw(const DLayout *dlayout, const FLayout *flayout, const Layout *glayout, const DSelect *hover, const DSelect *sel, const widget_t swidget, const Image *add_icon, DCtx *ctx);
