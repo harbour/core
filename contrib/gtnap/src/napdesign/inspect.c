@@ -3,31 +3,13 @@
 #include "inspect.h"
 #include "designer.h"
 #include "dform.h"
-// #include "dlayout.h"
-// #include "dlabel.h"
-// #include "dform.h"
-// #include <gui/edit.h>
-// #include <gui/label.h>
-////#include <gui/labelh.h>
 #include <gui/layout.h>
-////#include <gui/layouth.h>
-////#include <gui/cell.h>
 #include <gui/panel.h>
-// #include <gui/view.h>
 #include <gui/tableview.h>
-////#include <gui/drawctrl.inl>
-////#include <geom2d/r2d.h>
 #include <geom2d/s2d.h>
-////#include <draw2d/color.h>
-////#include <draw2d/draw.h>
-////#include <draw2d/drawg.h>
-////#include <draw2d/image.h>
 #include <core/arrst.h>
 #include <core/event.h>
 #include <core/heap.h>
-// #include <core/dbind.h>
-// #include <core/strings.h>
-// #include <sewer/bmem.h>
 #include <sewer/cassert.h>
 
 typedef struct _inspectdata_t InspectData;

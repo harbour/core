@@ -126,9 +126,8 @@ static void i_set_column_obj(PropData *data, const uint32_t col)
     FColumn *fcol = NULL;
     uint32_t ncols = 0;
     cassert_no_null(data);
-    cassert_no_null(data->sel.layout);
-    fcol = flayout_column(data->sel.layout->flayout, col);
-    ncols = flayout_ncols(data->sel.layout->flayout);
+    fcol = flayout_column(data->sel.flayout, col);
+    ncols = flayout_ncols(data->sel.flayout);
     layout_dbind_obj(data->column_layout, fcol, FColumn);
     cell_enabled(data->column_margin_cell, col < ncols - 1);
 }
@@ -140,9 +139,8 @@ static void i_set_row_obj(PropData *data, const uint32_t row)
     FRow *frow = NULL;
     uint32_t nrows = 0;
     cassert_no_null(data);
-    cassert_no_null(data->sel.layout);
-    frow = flayout_row(data->sel.layout->flayout, row);
-    nrows = flayout_nrows(data->sel.layout->flayout);
+    frow = flayout_row(data->sel.flayout, row);
+    nrows = flayout_nrows(data->sel.flayout);
     layout_dbind_obj(data->row_layout, frow, FRow);
     cell_enabled(data->row_margin_cell, row < nrows - 1);
 }
@@ -243,8 +241,8 @@ static void i_OnLayoutNotify(PropData *data, Event *e)
         || evbind_modify(e, FLayout, real32_t, margin_bottom) == TRUE)
     {
         FLayout *flayout = evbind_object(e, FLayout);
-        cassert(flayout == data->sel.layout->flayout);
-        dform_synchro_layout_margin(data->form, flayout);
+        cassert(flayout == data->sel.flayout);
+        dform_synchro_layout_margin(&data->sel);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -260,7 +258,7 @@ static void i_OnColumnNotify(PropData *data, Event *e)
     {
         FColumn *fcol = evbind_object(e, FColumn);
         uint32_t col = popup_get_selected(data->column_popup);
-        dform_synchro_column_margin(data->form, data->sel.layout->flayout, fcol, col);
+        dform_synchro_column_margin(&data->sel, fcol, col);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -268,7 +266,7 @@ static void i_OnColumnNotify(PropData *data, Event *e)
     {
         FColumn *fcol = evbind_object(e, FColumn);
         uint32_t col = popup_get_selected(data->column_popup);
-        dform_synchro_column_width(data->form, data->sel.layout->flayout, fcol, col);
+        dform_synchro_column_width(&data->sel, fcol, col);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -284,7 +282,7 @@ static void i_OnRowNotify(PropData *data, Event *e)
     {
         FRow *frow = evbind_object(e, FRow);
         uint32_t row = popup_get_selected(data->row_popup);
-        dform_synchro_row_margin(data->form, data->sel.layout->flayout, frow, row);
+        dform_synchro_row_margin(&data->sel, frow, row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -292,7 +290,7 @@ static void i_OnRowNotify(PropData *data, Event *e)
     {
         FRow *frow = evbind_object(e, FRow);
         uint32_t row = popup_get_selected(data->row_popup);
-        dform_synchro_row_height(data->form, data->sel.layout->flayout, frow, row);
+        dform_synchro_row_height(&data->sel, frow, row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -354,7 +352,7 @@ static void i_OnLabelNotify(PropData *data, Event *e)
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
     if (evbind_modify(e, FLabel, String *, text) == TRUE)
     {
-        dform_synchro_cell_text(data->form, &data->sel);
+        dform_synchro_cell_text(&data->sel);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -394,7 +392,7 @@ static void i_OnButtonNotify(PropData *data, Event *e)
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
     if (evbind_modify(e, FButton, String *, text) == TRUE)
     {
-        dform_synchro_cell_text(data->form, &data->sel);
+        dform_synchro_cell_text(&data->sel);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -434,7 +432,7 @@ static void i_OnCheckNotify(PropData *data, Event *e)
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
     if (evbind_modify(e, FCheck, String *, text) == TRUE)
     {
-        dform_synchro_cell_text(data->form, &data->sel);
+        dform_synchro_cell_text(&data->sel);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -476,7 +474,7 @@ static void i_OnEditNotify(PropData *data, Event *e)
     || evbind_modify(e, FEdit, bool_t, autosel) == TRUE
     || evbind_modify(e, FEdit, halign_t, text_align) == TRUE)
     {
-        dform_synchro_edit(data->form, &data->sel);
+        dform_synchro_edit(&data->sel);
     }
 }
 
@@ -527,14 +525,14 @@ static void i_OnCellNotify(PropData *data, Event *e)
     else if (evbind_modify(e, FCell, halign_t, halign) == TRUE)
     {
         FCell *fcell = evbind_object(e, FCell);
-        dform_synchro_cell_halign(data->form, data->sel.layout->flayout, fcell, data->sel.col, data->sel.row);
+        dform_synchro_cell_halign(&data->sel, fcell, data->sel.col, data->sel.row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
     else if (evbind_modify(e, FCell, valign_t, valign) == TRUE)
     {
         FCell *fcell = evbind_object(e, FCell);
-        dform_synchro_cell_valign(data->form, data->sel.layout->flayout, fcell, data->sel.col, data->sel.row);
+        dform_synchro_cell_valign(&data->sel, fcell, data->sel.col, data->sel.row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -661,7 +659,7 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
     data->form = form;
     data->sel = *sel;
     /* i_no_sel_layout */
-    if (sel->layout == NULL)
+    if (sel->flayout == NULL)
     {
         panel_visible_layout(panel, 0);
     }
@@ -669,8 +667,8 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
     else if (sel->elem != ekLAYELEM_CELL)
     {
         char_t text[64];
-        uint32_t ncols = flayout_ncols(sel->layout->flayout);
-        uint32_t nrows = flayout_nrows(sel->layout->flayout);
+        uint32_t ncols = flayout_ncols(sel->flayout);
+        uint32_t nrows = flayout_nrows(sel->flayout);
         bstd_sprintf(text, sizeof(text), "%d cols x %d rows", ncols, nrows);
         label_text(data->layout_geom_label, text);
 
@@ -710,7 +708,7 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
             i_set_row_obj(data, row);
         }
 
-        layout_dbind_obj(data->layout_layout, sel->layout->flayout, FLayout);
+        layout_dbind_obj(data->layout_layout, sel->flayout, FLayout);
         panel_visible_layout(panel, 1);
     }
     /* i_cell_layout */

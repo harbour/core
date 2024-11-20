@@ -18,23 +18,23 @@ bool_t dform_OnExit(DForm *form);
 
 bool_t dform_OnSupr(DForm *form, Panel *inspect, Panel *propedit);
 
-void dform_synchro_cell_text(DForm *form, const DSelect *sel);
+void dform_synchro_cell_text(const DSelect *sel);
 
-void dform_synchro_edit(DForm *form, const DSelect *sel);
+void dform_synchro_edit(const DSelect *sel);
 
-void dform_synchro_layout_margin(DForm *form, const FLayout *flayout);
+void dform_synchro_layout_margin(const DSelect *sel);
 
-void dform_synchro_column_margin(DForm *form, const FLayout *flayout, const FColumn *fcol, const uint32_t col);
+void dform_synchro_column_margin(const DSelect *sel, const FColumn *fcol, const uint32_t col);
 
-void dform_synchro_column_width(DForm *form, const FLayout *flayout, const FColumn *fcol, const uint32_t col);
+void dform_synchro_column_width(const DSelect *sel, const FColumn *fcol, const uint32_t col);
 
-void dform_synchro_row_margin(DForm *form, const FLayout *flayout, const FRow *frow, const uint32_t row);
+void dform_synchro_row_margin(const DSelect *sel, const FRow *frow, const uint32_t row);
 
-void dform_synchro_row_height(DForm *form, const FLayout *flayout, const FRow *frow, const uint32_t row);
+void dform_synchro_row_height(const DSelect *sel, const FRow *frow, const uint32_t row);
 
-void dform_synchro_cell_halign(DForm *form, const FLayout *flayout, const FCell *fcell, const uint32_t col, const uint32_t row);
+void dform_synchro_cell_halign(const DSelect *sel, const FCell *fcell, const uint32_t col, const uint32_t row);
 
-void dform_synchro_cell_valign(DForm *form, const FLayout *flayout, const FCell *fcell, const uint32_t col, const uint32_t row);
+void dform_synchro_cell_valign(const DSelect *sel, const FCell *fcell, const uint32_t col, const uint32_t row);
 
 void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon, DCtx *ctx);
 

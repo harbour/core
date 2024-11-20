@@ -36,22 +36,6 @@ static void i_remove_cell(DCell *cell)
 
 /*---------------------------------------------------------------------------*/
 
-DLayout *dlayout_create(const uint32_t ncols, const uint32_t nrows)
-{
-    DLayout *layout = heap_new(DLayout);
-    layout->cols = arrst_create(DColumn);
-    layout->rows = arrst_create(DRow);
-    layout->cells = arrst_create(DCell);
-    cassert(ncols > 0);
-    cassert(nrows > 0);
-    arrst_new_n0(layout->cols, ncols, DColumn);
-    arrst_new_n0(layout->rows, nrows, DRow);
-    arrst_new_n0(layout->cells, ncols * nrows, DCell);
-    return layout;
-}
-
-/*---------------------------------------------------------------------------*/
-
 DLayout *dlayout_from_flayout(const FLayout *flayout)
 {
     DLayout *layout = heap_new(DLayout);

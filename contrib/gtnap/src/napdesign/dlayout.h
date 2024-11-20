@@ -2,8 +2,6 @@
 
 #include "designer.hxx"
 
-DLayout *dlayout_create(const uint32_t ncols, const uint32_t nrows);
-
 DLayout *dlayout_from_flayout(const FLayout *flayout);
 
 void dlayout_destroy(DLayout **layout);
