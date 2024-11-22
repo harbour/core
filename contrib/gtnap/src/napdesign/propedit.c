@@ -715,7 +715,7 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
     else
     {
         char_t text[64];
-        FCell *cell = dlayout_sel_fcell(sel);
+        FCell *cell = dform_sel_fcell(sel);
         bstd_sprintf(text, sizeof(text), "(%d,%d)", sel->col, sel->row);
         label_text(data->cell_geom_label, text);
         panel_visible_layout(panel, 2);

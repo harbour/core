@@ -142,55 +142,6 @@ void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col,
 
 /*---------------------------------------------------------------------------*/
 
-bool_t dlayout_empty_cell(const DSelect *sel)
-{
-    cassert_no_null(sel);
-    if (sel->flayout != NULL)
-    {
-        cassert_no_null(sel->glayout);
-        cassert_no_null(sel->dlayout);
-        if (sel->elem == ekLAYELEM_CELL)
-        {
-            const FCell *cell = flayout_ccell(sel->flayout, sel->col, sel->row);
-            cassert_no_null(cell);
-            if (cell->type == ekCELL_TYPE_EMPTY)
-                return TRUE;
-        }
-    }
-    else
-    {
-        cassert(sel->glayout == NULL);
-        cassert(sel->dlayout == NULL);
-    }
-
-    return FALSE;
-}
-
-/*---------------------------------------------------------------------------*/
-
-FCell *dlayout_sel_fcell(const DSelect *sel)
-{
-    cassert_no_null(sel);
-    if (sel->flayout != NULL)
-    {
-        cassert_no_null(sel->glayout);
-        cassert_no_null(sel->dlayout);
-        if (sel->elem == ekLAYELEM_CELL)
-        {        
-            return flayout_cell(sel->flayout, sel->col, sel->row);
-        }
-    }
-    else
-    {
-        cassert(sel->glayout == NULL);
-        cassert(sel->dlayout == NULL);
-    }
-
-    return NULL;
-}
-
-/*---------------------------------------------------------------------------*/
-
 void dlayout_synchro_visual(DLayout *layout, const Layout *glayout, const V2Df origin)
 {
     DColumn *col = NULL;

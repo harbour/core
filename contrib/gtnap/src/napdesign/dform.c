@@ -262,7 +262,7 @@ static align_t i_valign(const valign_t valign)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_remove_sel_cell(const DSelect *sel)
+static void i_sel_remove_cell(const DSelect *sel)
 {
     cassert_no_null(sel);
     flayout_remove_cell(sel->flayout, sel->col, sel->row);
@@ -272,7 +272,7 @@ static void i_remove_sel_cell(const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_synchro_sel_cell(const DSelect *sel)
+static void i_sel_synchro_cell(const DSelect *sel)
 {
     const FCell *dcell = NULL;
     align_t halign = ENUM_MAX(align_t);
@@ -287,6 +287,32 @@ static void i_synchro_sel_cell(const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
+static bool_t i_sel_empty_cell(const DSelect *sel)
+{
+    cassert_no_null(sel);
+    if (sel->flayout != NULL)
+    {
+        cassert_no_null(sel->glayout);
+        cassert_no_null(sel->dlayout);
+        if (sel->elem == ekLAYELEM_CELL)
+        {
+            const FCell *cell = flayout_ccell(sel->flayout, sel->col, sel->row);
+            cassert_no_null(cell);
+            if (cell->type == ekCELL_TYPE_EMPTY)
+                return TRUE;
+        }
+    }
+    else
+    {
+        cassert(sel->glayout == NULL);
+        cassert(sel->dlayout == NULL);
+    }
+
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t mbutton)
 {
     cassert_no_null(form);
@@ -295,7 +321,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
         DSelect sel;
         i_elem_at_mouse(form->dlayout, form->flayout, form->glayout, mouse_x, mouse_y, form->sel_path, &sel);
         inspect_set(inspect, form);
-        if (dlayout_empty_cell(&sel) == TRUE)
+        if (i_sel_empty_cell(&sel) == TRUE)
         {
             cassert_no_null(form->dlayout);
             switch(widget) {
@@ -309,10 +335,10 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                 {
                     Label *label = label_create();
                     label_text(label, tc(flabel->text));
-                    i_remove_sel_cell(&sel);
+                    i_sel_remove_cell(&sel);
                     flayout_add_label(sel.flayout, flabel, sel.col, sel.row);
                     layout_label(sel.glayout, label, sel.col, sel.row);
-                    i_synchro_sel_cell(&sel);
+                    i_sel_synchro_cell(&sel);
                     dform_compose(form);
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
@@ -332,10 +358,10 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                 {
                     Button *button = button_push();
                     button_text(button, tc(fbutton->text));
-                    i_remove_sel_cell(&sel);
+                    i_sel_remove_cell(&sel);
                     flayout_add_button(sel.flayout, fbutton, sel.col, sel.row);
                     layout_button(sel.glayout, button, sel.col, sel.row);
-                    i_synchro_sel_cell(&sel);
+                    i_sel_synchro_cell(&sel);
                     dform_compose(form);
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
@@ -355,10 +381,10 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                 {
                     Button *check = button_check();
                     button_text(check, tc(fcheck->text));
-                    i_remove_sel_cell(&sel);
+                    i_sel_remove_cell(&sel);
                     flayout_add_check(sel.flayout, fcheck, sel.col, sel.row);
                     layout_button(sel.glayout, check, sel.col, sel.row);
-                    i_synchro_sel_cell(&sel);
+                    i_sel_synchro_cell(&sel);
                     dform_compose(form);
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
@@ -381,10 +407,10 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     edit_passmode(edit, fedit->passmode);
                     edit_autoselect(edit, fedit->autosel);
                     edit_align(edit, align);
-                    i_remove_sel_cell(&sel);
+                    i_sel_remove_cell(&sel);
                     flayout_add_edit(sel.flayout, fedit, sel.col, sel.row);
                     layout_edit(sel.glayout, edit, sel.col, sel.row);
-                    i_synchro_sel_cell(&sel);
+                    i_sel_synchro_cell(&sel);
                     dform_compose(form);
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
@@ -405,11 +431,11 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     DLayout *dsublayout = dlayout_from_flayout(fsublayout);
                     Layout *gsublayout = flayout_to_gui(fsublayout, i_EMPTY_CELL_WIDTH, i_EMPTY_CELL_HEIGHT);
                     i_layout_obj_names(form, fsublayout);
-                    i_remove_sel_cell(&sel);
+                    i_sel_remove_cell(&sel);
                     dlayout_add_layout(sel.dlayout, dsublayout, sel.col, sel.row);
                     flayout_add_layout(sel.flayout, fsublayout, sel.col, sel.row);
                     layout_layout(sel.glayout, gsublayout, sel.col, sel.row);
-                    i_synchro_sel_cell(&sel);
+                    i_sel_synchro_cell(&sel);
                     dform_compose(form);
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
@@ -467,15 +493,33 @@ bool_t dform_OnSupr(DForm *form, Panel *inspect, Panel *propedit)
     {
         cassert_no_null(form->sel.flayout);
         cassert_no_null(form->sel.glayout);
-        if (dlayout_empty_cell(&form->sel) == FALSE)
+        if (i_sel_empty_cell(&form->sel) == FALSE)
         {
-            Cell *cell = layout_cell(form->sel.glayout, form->sel.col, form->sel.row);
-            i_remove_sel_cell(&form->sel);
-            cell_force_size(cell, i_EMPTY_CELL_WIDTH, i_EMPTY_CELL_HEIGHT);
-            i_synchro_sel_cell(&form->sel);
-            dform_compose(form);
-            propedit_set(propedit, form, &form->sel);
-            inspect_set(inspect, form);
+            /* Remove all inspector path steps after deleted cell */
+            {
+                uint32_t n = arrst_size(form->sel_path, DSelect);
+                while (n > 0)
+                {
+                    const DSelect *last = arrst_last_const(form->sel_path, DSelect);
+                    if (i_sel_equ(&form->sel, last) == TRUE)
+                        break;
+
+                    arrst_delete(form->sel_path, n - 1, NULL, DSelect);
+                    n -= 1;
+                }
+            }
+
+            /* Remove the cell itself */
+            {
+                Cell *cell = layout_cell(form->sel.glayout, form->sel.col, form->sel.row);
+                i_sel_remove_cell(&form->sel);
+                cell_force_size(cell, i_EMPTY_CELL_WIDTH, i_EMPTY_CELL_HEIGHT);
+                i_sel_synchro_cell(&form->sel);
+                dform_compose(form);
+                propedit_set(propedit, form, &form->sel);
+                inspect_set(inspect, form);
+            }
+
             return TRUE;
         }
     }
@@ -485,9 +529,32 @@ bool_t dform_OnSupr(DForm *form, Panel *inspect, Panel *propedit)
 
 /*---------------------------------------------------------------------------*/
 
+static FCell *i_sel_fcell(const DSelect *sel)
+{
+    cassert_no_null(sel);
+    if (sel->flayout != NULL)
+    {
+        cassert_no_null(sel->glayout);
+        cassert_no_null(sel->dlayout);
+        if (sel->elem == ekLAYELEM_CELL)
+        {        
+            return flayout_cell(sel->flayout, sel->col, sel->row);
+        }
+    }
+    else
+    {
+        cassert(sel->glayout == NULL);
+        cassert(sel->dlayout == NULL);
+    }
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_synchro_cell_text(const DSelect *sel)
 {
-    FCell *cell = dlayout_sel_fcell(sel);
+    FCell *cell = i_sel_fcell(sel);
     cassert_no_null(sel);
     cassert_no_null(cell);
     if (cell->type == ekCELL_TYPE_LABEL)
@@ -515,7 +582,7 @@ void dform_synchro_cell_text(const DSelect *sel)
 
 void dform_synchro_edit(const DSelect *sel)
 {
-    FCell *cell = dlayout_sel_fcell(sel);
+    FCell *cell = i_sel_fcell(sel);
     Edit *edit = NULL;
     cassert_no_null(sel);
     cassert_no_null(cell);
@@ -601,6 +668,13 @@ void dform_synchro_cell_valign(const DSelect *sel, const FCell *fcell, const uin
 
 /*---------------------------------------------------------------------------*/
 
+FCell *dform_sel_fcell(const DSelect *sel)
+{
+    return i_sel_fcell(sel);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_draw(const DForm *form, const widget_t swidget, const Image *add_icon, DCtx *ctx)
 {
     cassert_no_null(form);
@@ -650,7 +724,7 @@ const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const
     /* Odd rows == cell */
     else
     {
-        const FCell *cell = dlayout_sel_fcell(sel);
+        const FCell *cell = i_sel_fcell(sel);
         if (col == 0)
         {
             return tc(cell->name);
