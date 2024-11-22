@@ -12,23 +12,34 @@
 struct _desiger_t
 {
     Window *window;
+    widget_t swidget;
+    String *folder_path;
+    ArrPt(DForm) *forms;
+    DForm *form_sel;
+
+    ListBox *form_list;
     Label *status_label;
     Label *cells_label;
     Progress *progress;
-
     View *canvas;
-    Layout *canvas_layout;
-    Layout *main_layout;
     Panel *inspect;
     Panel *propedit;
-
-    /* GUI Bindings */
-    widget_t swidget;
+    Layout *widgets_layout;
+    Cell *widgets_cell;
+    Cell *open_form_cell;
+    Cell *save_form_cell;
+    Cell *run_form_cell;
+    Cell *add_form_cell;
+    Cell *remove_form_cell;
+    Cell *rename_form_cell;
     Image *add_icon;
-
-    /* Editing forms */
-    DForm *form;
 };
+
+DeclPt(DForm);
+
+/*---------------------------------------------------------------------------*/
+
+static const char_t *i_FILE_EXT = "nfm";
 
 /*---------------------------------------------------------------------------*/
 
@@ -45,12 +56,93 @@ static void i_dbind(void)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_destroy_form_opt(DForm **form)
+{
+    cassert_no_null(form);
+    if (*form != NULL)
+        dform_destroy(form);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_enable_form_controls(Designer *app, const bool_t enable)
+{
+    cassert_no_null(app);
+    /*cell_enabled(app->open_form_cell, enable);*/
+    cell_enabled(app->save_form_cell, enable);
+    cell_enabled(app->run_form_cell, enable);
+    cell_enabled(app->add_form_cell, enable);
+    cell_enabled(app->remove_form_cell, enable);
+    cell_enabled(app->rename_form_cell, enable);
+    cell_enabled(app->widgets_cell, enable);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_init_forms(Designer *app, const char_t *path)
+{
+    ArrSt(DirEntry) *files = NULL;
+    ferror_t err = ekFNOPATH;
+    cassert_no_null(app);
+    if (str_empty_c(path) == FALSE)
+        files = hfile_dir_list(path, FALSE, &err);
+
+    arrpt_clear(app->forms, i_destroy_form_opt, DForm);
+    listbox_clear(app->form_list);
+
+    if (err == ekFOK)
+    {
+        arrst_foreach(file, files, DirEntry)
+            String *fil = NULL;
+            String *ext = NULL;
+            str_split_pathext(tc(file->name), NULL, &fil, &ext);
+            if (str_equ_c(tc(ext), i_FILE_EXT) == TRUE)
+            {
+                listbox_add_elem(app->form_list, tc(fil), NULL);
+                arrpt_append(app->forms, NULL, DForm);
+            }
+
+            str_destroy(&fil);
+            str_destroy(&ext);
+        arrst_end()
+        cassert(arrpt_size(app->forms, DForm) == 0);
+        str_upd(&app->folder_path, path);
+        i_enable_form_controls(app, TRUE);
+    }
+    else
+    {
+        app->form_sel = NULL;
+        i_enable_form_controls(app, FALSE);
+    }
+
+    arrst_destopt(&files, hfile_dir_entry_remove, DirEntry);
+    //return 
+    ///*app->form = dform_first_example();*/
+    //app->form = dform_empty();
+    //dform_compose(app->form);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnOpenFormClick(Designer *app, Event *e)
+{
+    const char_t *ftype = "..DIR..";
+    const char_t *folder = NULL;
+    cassert_no_null(app);
+    unref(e);
+    folder = comwin_open_file(app->window, &ftype, 1, tc(app->folder_path));
+    if (folder != NULL)
+        i_init_forms(app, folder);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnSimulateClick(Designer *app, Event *e)
 {
     cassert_no_null(app);
     unref(e);
-    if (app->form != NULL)
-        dform_simulate(app->form, app->window);
+    if (app->form_sel != NULL)
+        dform_simulate(app->form_sel, app->window);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -66,26 +158,38 @@ static Layout *i_tools_layout(Designer *app, ResPack *pack)
     Button *button6 = button_flat();
     Button *button7 = button_flat();
     Button *button8 = button_flat();
+    cassert_no_null(app);
     button_image(button1, image_from_resource(pack, FOLDER24_PNG));
     button_image(button2, image_from_resource(pack, DISK24_PNG));
-    button_image(button3, image_from_resource(pack, EDIT24_PNG));
-    button_image(button4, image_from_resource(pack, SEARCH24_PNG));
-    button_image(button5, image_from_resource(pack, PLUS24_PNG));
-    button_image(button6, image_from_resource(pack, PLUS24_PNG));
-    button_image(button7, image_from_resource(pack, ERROR24_PNG));
+    button_image(button3, image_from_resource(pack, SEARCH24_PNG));
+    button_image(button4, image_from_resource(pack, PLUS24_PNG));
+    button_image(button5, image_from_resource(pack, ERROR24_PNG));
+    button_image(button6, image_from_resource(pack, EDIT24_PNG));
+    button_image(button7, image_from_resource(pack, PLUS24_PNG));
     button_image(button8, image_from_resource(pack, ERROR24_PNG));
+    button_OnClick(button1, listener(app, i_OnOpenFormClick, Designer));
     button_OnClick(button4, listener(app, i_OnSimulateClick, Designer));
-    button_tooltip(button4, "Simulate form");
+    button_tooltip(button1, "Open forms folder");
+    button_tooltip(button2, "Save all forms");
+    button_tooltip(button3, "Simulate current form");
+    button_tooltip(button4, "Add new form");
+    button_tooltip(button5, "Remove current form");
+    button_tooltip(button6, "Rename form");
     layout_button(layout, button1, 0, 0);
     layout_button(layout, button2, 1, 0);
     layout_button(layout, button3, 2, 0);
     layout_button(layout, button4, 3, 0);
-    layout_button(layout, button5, 5, 0);
-    layout_button(layout, button6, 6, 0);
+    layout_button(layout, button5, 4, 0);
+    layout_button(layout, button6, 5, 0);
     layout_button(layout, button7, 7, 0);
     layout_button(layout, button8, 8, 0);
-    layout_hexpand(layout, 4);
-    unref(app);
+    layout_hexpand(layout, 6);
+    app->open_form_cell = layout_cell(layout, 0, 0);
+    app->save_form_cell = layout_cell(layout, 1, 0);
+    app->run_form_cell = layout_cell(layout, 2, 0);
+    app->add_form_cell = layout_cell(layout, 3, 0);
+    app->remove_form_cell = layout_cell(layout, 4, 0);
+    app->rename_form_cell = layout_cell(layout, 5, 0);
     return layout;
 }
 
@@ -130,33 +234,22 @@ static Layout *i_left_layout(Designer *app)
     Label *label1 = label_create();
     Label *label2 = label_create();
     ListBox *list1 = listbox_create();
+    cassert_no_null(app);
     label_text(label1, "Forms");
     label_text(label2, "Widgets");
-    listbox_add_elem(list1, "Form 1", NULL);
-    listbox_add_elem(list1, "Form 2", NULL);
-    listbox_add_elem(list1, "Form 3", NULL);
-    listbox_add_elem(list1, "Form 4", NULL);
-    listbox_add_elem(list1, "Form 5", NULL);
-    listbox_add_elem(list1, "Table", NULL);
-    listbox_add_elem(list1, "View", NULL);
-    listbox_add_elem(list1, "Edit 1", NULL);
-    listbox_add_elem(list1, "Edit 2", NULL);
-    listbox_select(list1, 0, TRUE);
-
-    /* Natural size of listboxes */
     listbox_size(list1, s2df(150, 100));
-
     layout_label(layout1, label1, 0, 0);
     layout_label(layout1, label2, 0, 2);
     layout_listbox(layout1, list1, 0, 1);
     layout_layout(layout1, layout2, 0, 3);
-
     layout_valign(layout1, 0, 3, ekTOP);
     layout_vmargin(layout1, 1, 5);
     layout_vmargin(layout1, 2, 5);
     layout_vexpand2(layout1, 1, 4, .75f);
-
     cell_dbind(layout_cell(layout1, 0, 3), Designer, widget_t, swidget);
+    app->form_list = list1;
+    app->widgets_cell = layout_cell(layout1, 0, 3);
+    app->widgets_layout = layout2;
     return layout1;
 }
 
@@ -194,8 +287,8 @@ static void i_OnDraw(Designer *app, Event *e)
     const EvDraw *p = event_params(e, EvDraw);
     cassert_no_null(app);
     draw_clear(p->ctx, kCOLOR_YELLOW);
-    if (app->form != NULL)
-        dform_draw(app->form, app->swidget, app->add_icon, p->ctx);
+    if (app->form_sel != NULL)
+        dform_draw(app->form_sel, app->swidget, app->add_icon, p->ctx);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -204,9 +297,9 @@ static void i_OnMove(Designer *app, Event *e)
 {
     const EvMouse *p = event_params(e, EvMouse);
     cassert_no_null(app);
-    if (app->form != NULL)
+    if (app->form_sel != NULL)
     {
-        if (dform_OnMove(app->form, p->x, p->y) == TRUE)
+        if (dform_OnMove(app->form_sel, p->x, p->y) == TRUE)
             view_update(app->canvas);
     }
 }
@@ -217,9 +310,9 @@ static void i_OnExit(Designer *app, Event *e)
 {
     cassert_no_null(app);
     unref(e);
-    if (app->form != NULL)
+    if (app->form_sel != NULL)
     {
-        if (dform_OnExit(app->form) == TRUE)
+        if (dform_OnExit(app->form_sel) == TRUE)
             view_update(app->canvas);
     }
 }
@@ -229,10 +322,10 @@ static void i_OnExit(Designer *app, Event *e)
 static void i_OnClick(Designer *app, Event *e)
 {
     cassert_no_null(app);
-    if (app->form != NULL)
+    if (app->form_sel != NULL)
     {
         const EvMouse *p = event_params(e, EvMouse);
-        if (dform_OnClick(app->form, app->window, app->inspect, app->propedit, app->swidget, p->x, p->y, p->button) == TRUE)
+        if (dform_OnClick(app->form_sel, app->window, app->inspect, app->propedit, app->swidget, p->x, p->y, p->button) == TRUE)
             view_update(app->canvas);
     }
 }
@@ -281,7 +374,6 @@ static Layout *i_middle_layout(Designer *app)
     /* All the horizontal expansion will be done in the middle cell (view)
        list_layout (left) and table_layout (right) will preserve the 'natural' width */
     layout_hexpand(layout1, 1);
-    app->canvas_layout = layout3;
     return layout1;
 }
 
@@ -347,7 +439,6 @@ static Panel *i_panel(Designer *app, ResPack *pack)
 {
     Panel *panel = panel_create();
     Layout *layout = i_main_layout(app, pack);
-    app->main_layout = layout;
     panel_layout(panel, layout);
     return panel;
 }
@@ -360,9 +451,9 @@ static void i_OnHotKey(Designer *app, Event *e)
     cassert_no_null(app);
     if (p->key == ekKEY_SUPR)
     {
-        if (app->form != NULL)
+        if (app->form_sel != NULL)
         {
-            if (dform_OnSupr(app->form, app->inspect, app->propedit) == TRUE)
+            if (dform_OnSupr(app->form_sel, app->inspect, app->propedit) == TRUE)
                 view_update(app->canvas);
         }
     }
@@ -386,19 +477,10 @@ static Designer *i_app(ResPack *pack)
     i_dbind();
     dialog_dbind();
     app->swidget = ekWIDGET_SELECT;
+    app->folder_path = str_c("");
+    app->forms = arrpt_create(DForm);
     app->add_icon = image_copy(image_from_resource(pack, PLUS16_PNG));
     return app;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_init_forms(Designer *app)
-{
-    cassert_no_null(app);
-    cassert(app->form == NULL);
-    /*app->form = dform_first_example();*/
-    app->form = dform_empty();
-    dform_compose(app->form);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -415,10 +497,10 @@ static Designer *i_create(void)
     window_OnClose(app->window, listener(app, i_OnClose, Designer));
     window_hotkey(app->window, ekKEY_SUPR, 0, listener(app, i_OnHotKey, Designer));
     window_show(app->window);
-    layout_dbind(app->main_layout, NULL, Designer);
-    layout_dbind_obj(app->main_layout, app, Designer);
+    layout_dbind(app->widgets_layout, NULL, Designer);
+    layout_dbind_obj(app->widgets_layout, app, Designer);
     respack_destroy(&pack);
-    i_init_forms(app);
+    i_init_forms(app, tc(app->folder_path));
     return app;
 }
 
@@ -428,8 +510,9 @@ static void i_destroy(Designer **app)
 {
     cassert_no_null(app);
     cassert_no_null(*app);
+    str_destroy(&(*app)->folder_path);
     image_destroy(&(*app)->add_icon);
-    dform_destroy(&(*app)->form);
+    arrpt_destroy(&(*app)->forms, i_destroy_form_opt, DForm);
     window_destroy(&(*app)->window);
     nform_finish();
     heap_delete(app, Designer);
@@ -465,8 +548,8 @@ void designer_inspect_update(Designer *app)
 void designer_inspect_select(Designer *app, const uint32_t row)
 {
     cassert_no_null(app);
-    if (app->form != NULL)
-        dform_inspect_select(app->form, app->propedit, row);
+    if (app->form_sel != NULL)
+        dform_inspect_select(app->form_sel, app->propedit, row);
 }
 
 /*---------------------------------------------------------------------------*/
