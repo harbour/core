@@ -242,7 +242,7 @@ static void i_OnLayoutNotify(PropData *data, Event *e)
     {
         FLayout *flayout = evbind_object(e, FLayout);
         cassert(flayout == data->sel.flayout);
-        dform_synchro_layout_margin(&data->sel);
+        dform_synchro_layout_margin(data->form, &data->sel);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -258,7 +258,7 @@ static void i_OnColumnNotify(PropData *data, Event *e)
     {
         FColumn *fcol = evbind_object(e, FColumn);
         uint32_t col = popup_get_selected(data->column_popup);
-        dform_synchro_column_margin(&data->sel, fcol, col);
+        dform_synchro_column_margin(data->form, &data->sel, fcol, col);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -266,7 +266,7 @@ static void i_OnColumnNotify(PropData *data, Event *e)
     {
         FColumn *fcol = evbind_object(e, FColumn);
         uint32_t col = popup_get_selected(data->column_popup);
-        dform_synchro_column_width(&data->sel, fcol, col);
+        dform_synchro_column_width(data->form, &data->sel, fcol, col);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -282,7 +282,7 @@ static void i_OnRowNotify(PropData *data, Event *e)
     {
         FRow *frow = evbind_object(e, FRow);
         uint32_t row = popup_get_selected(data->row_popup);
-        dform_synchro_row_margin(&data->sel, frow, row);
+        dform_synchro_row_margin(data->form, &data->sel, frow, row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -290,7 +290,7 @@ static void i_OnRowNotify(PropData *data, Event *e)
     {
         FRow *frow = evbind_object(e, FRow);
         uint32_t row = popup_get_selected(data->row_popup);
-        dform_synchro_row_height(&data->sel, frow, row);
+        dform_synchro_row_height(data->form, &data->sel, frow, row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -352,7 +352,7 @@ static void i_OnLabelNotify(PropData *data, Event *e)
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
     if (evbind_modify(e, FLabel, String *, text) == TRUE)
     {
-        dform_synchro_cell_text(&data->sel);
+        dform_synchro_cell_text(data->form, &data->sel);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -392,7 +392,7 @@ static void i_OnButtonNotify(PropData *data, Event *e)
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
     if (evbind_modify(e, FButton, String *, text) == TRUE)
     {
-        dform_synchro_cell_text(&data->sel);
+        dform_synchro_cell_text(data->form, &data->sel);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -432,7 +432,7 @@ static void i_OnCheckNotify(PropData *data, Event *e)
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
     if (evbind_modify(e, FCheck, String *, text) == TRUE)
     {
-        dform_synchro_cell_text(&data->sel);
+        dform_synchro_cell_text(data->form, &data->sel);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
@@ -474,7 +474,7 @@ static void i_OnEditNotify(PropData *data, Event *e)
     || evbind_modify(e, FEdit, bool_t, autosel) == TRUE
     || evbind_modify(e, FEdit, halign_t, text_align) == TRUE)
     {
-        dform_synchro_edit(&data->sel);
+        dform_synchro_edit(data->form, &data->sel);
     }
 }
 
@@ -525,14 +525,14 @@ static void i_OnCellNotify(PropData *data, Event *e)
     else if (evbind_modify(e, FCell, halign_t, halign) == TRUE)
     {
         FCell *fcell = evbind_object(e, FCell);
-        dform_synchro_cell_halign(&data->sel, fcell, data->sel.col, data->sel.row);
+        dform_synchro_cell_halign(data->form, &data->sel, fcell, data->sel.col, data->sel.row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
     else if (evbind_modify(e, FCell, valign_t, valign) == TRUE)
     {
         FCell *fcell = evbind_object(e, FCell);
-        dform_synchro_cell_valign(&data->sel, fcell, data->sel.col, data->sel.row);
+        dform_synchro_cell_valign(data->form, &data->sel, fcell, data->sel.col, data->sel.row);
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }

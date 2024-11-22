@@ -10,6 +10,8 @@ void dform_destroy(DForm **form);
 
 void dform_compose(DForm *form);
 
+bool_t dform_need_save(const DForm *form);
+
 bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y);
 
 bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedit, const widget_t widget, const real32_t mouse_x, const real32_t mouse_y, const gui_mouse_t button);
@@ -18,23 +20,23 @@ bool_t dform_OnExit(DForm *form);
 
 bool_t dform_OnSupr(DForm *form, Panel *inspect, Panel *propedit);
 
-void dform_synchro_cell_text(const DSelect *sel);
+void dform_synchro_cell_text(DForm *form, const DSelect *sel);
 
-void dform_synchro_edit(const DSelect *sel);
+void dform_synchro_edit(DForm *form, const DSelect *sel);
 
-void dform_synchro_layout_margin(const DSelect *sel);
+void dform_synchro_layout_margin(DForm *form, const DSelect *sel);
 
-void dform_synchro_column_margin(const DSelect *sel, const FColumn *fcol, const uint32_t col);
+void dform_synchro_column_margin(DForm *form, const DSelect *sel, const FColumn *fcol, const uint32_t col);
 
-void dform_synchro_column_width(const DSelect *sel, const FColumn *fcol, const uint32_t col);
+void dform_synchro_column_width(DForm *form, const DSelect *sel, const FColumn *fcol, const uint32_t col);
 
-void dform_synchro_row_margin(const DSelect *sel, const FRow *frow, const uint32_t row);
+void dform_synchro_row_margin(DForm *form, const DSelect *sel, const FRow *frow, const uint32_t row);
 
-void dform_synchro_row_height(const DSelect *sel, const FRow *frow, const uint32_t row);
+void dform_synchro_row_height(DForm *form, const DSelect *sel, const FRow *frow, const uint32_t row);
 
-void dform_synchro_cell_halign(const DSelect *sel, const FCell *fcell, const uint32_t col, const uint32_t row);
+void dform_synchro_cell_halign(DForm *form, const DSelect *sel, const FCell *fcell, const uint32_t col, const uint32_t row);
 
-void dform_synchro_cell_valign(const DSelect *sel, const FCell *fcell, const uint32_t col, const uint32_t row);
+void dform_synchro_cell_valign(DForm *form, const DSelect *sel, const FCell *fcell, const uint32_t col, const uint32_t row);
 
 FCell *dform_sel_fcell(const DSelect *sel);
 

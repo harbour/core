@@ -65,11 +65,24 @@ static void i_destroy_form_opt(DForm **form)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_enable_form_controls(Designer *app, const bool_t enable)
+static void i_update_form_controls(Designer *app, const bool_t enable)
 {
+    bool_t enable_save = FALSE;
     cassert_no_null(app);
+
+    if (enable == TRUE)
+    {
+        arrpt_foreach(form, app->forms, DForm)
+            if (form != NULL && dform_need_save(form) == TRUE)
+            {
+                enable_save = TRUE;
+                break;
+            }
+        arrpt_end();
+    }
+
     /*cell_enabled(app->open_form_cell, enable);*/
-    cell_enabled(app->save_form_cell, enable);
+    cell_enabled(app->save_form_cell, enable_save);
     cell_enabled(app->run_form_cell, enable);
     cell_enabled(app->add_form_cell, enable);
     cell_enabled(app->remove_form_cell, enable);
@@ -107,12 +120,12 @@ static void i_init_forms(Designer *app, const char_t *path)
         arrst_end()
         cassert(arrpt_size(app->forms, DForm) == 0);
         str_upd(&app->folder_path, path);
-        i_enable_form_controls(app, TRUE);
+        i_update_form_controls(app, TRUE);
     }
     else
     {
         app->form_sel = NULL;
-        i_enable_form_controls(app, FALSE);
+        i_update_form_controls(app, FALSE);
     }
 
     arrst_destopt(&files, hfile_dir_entry_remove, DirEntry);

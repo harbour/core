@@ -37,6 +37,7 @@ struct _dform_t
     ArrSt(DSelect) *sel_path;
     uint32_t layout_id;
     uint32_t cell_id;
+    bool_t need_save;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -122,6 +123,7 @@ DForm *dform_empty(void)
     form->temp_path = arrst_create(DSelect);
     form->sel_path = arrst_create(DSelect);
     i_layout_obj_names(form, form->flayout);
+    form->need_save = TRUE;
     return form;
 }
 
@@ -210,6 +212,14 @@ static void i_elem_at_mouse(DLayout *dlayout, FLayout *flayout, Layout *glayout,
         sel->col = UINT32_MAX;
         sel->row = UINT32_MAX;
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t dform_need_save(const DForm *form)
+{
+    cassert_no_null(form);
+    return form->need_save;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -343,6 +353,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
+                    form->need_save = TRUE;
                     return TRUE;
                 }
                 else
@@ -366,6 +377,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
+                    form->need_save = TRUE;
                     return TRUE;
                 }
                 else
@@ -389,6 +401,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
+                    form->need_save = TRUE;
                     return TRUE;
                 }
                 else
@@ -415,6 +428,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
+                    form->need_save = TRUE;
                     return TRUE;
                 }
                 else
@@ -440,6 +454,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
+                    form->need_save = TRUE;
                     return TRUE;
                 }
                 else
@@ -520,6 +535,7 @@ bool_t dform_OnSupr(DForm *form, Panel *inspect, Panel *propedit)
                 inspect_set(inspect, form);
             }
 
+            form->need_save = TRUE;
             return TRUE;
         }
     }
@@ -552,11 +568,13 @@ static FCell *i_sel_fcell(const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_cell_text(const DSelect *sel)
+void dform_synchro_cell_text(DForm *form, const DSelect *sel)
 {
     FCell *cell = i_sel_fcell(sel);
+    cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(cell);
+    form->need_save = TRUE;
     if (cell->type == ekCELL_TYPE_LABEL)
     {
         Label *label = layout_get_label(sel->glayout, sel->col, sel->row);
@@ -580,13 +598,15 @@ void dform_synchro_cell_text(const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_edit(const DSelect *sel)
+void dform_synchro_edit(DForm *form, const DSelect *sel)
 {
     FCell *cell = i_sel_fcell(sel);
     Edit *edit = NULL;
+    cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(cell);
     cassert(cell->type == ekCELL_TYPE_EDIT);
+    form->need_save = TRUE;
     edit = layout_get_edit(sel->glayout, sel->col, sel->row);
     edit_passmode(edit, cell->widget.edit->passmode);
     edit_autoselect(edit, cell->widget.edit->autosel);
@@ -595,73 +615,87 @@ void dform_synchro_edit(const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_layout_margin(const DSelect *sel)
+void dform_synchro_layout_margin(DForm *form, const DSelect *sel)
 {
+    cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(sel->flayout);
+    form->need_save = TRUE;
     layout_margin4(sel->glayout, sel->flayout->margin_top, sel->flayout->margin_right, sel->flayout->margin_bottom, sel->flayout->margin_left);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_column_margin(const DSelect *sel, const FColumn *fcol, const uint32_t col)
+void dform_synchro_column_margin(DForm *form, const DSelect *sel, const FColumn *fcol, const uint32_t col)
 {
+    cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(fcol);
     cassert(flayout_column(cast(sel->flayout, FLayout), col) == fcol);
+    form->need_save = TRUE;
     layout_hmargin(sel->glayout, col, fcol->margin_right);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_column_width(const DSelect *sel, const FColumn *fcol, const uint32_t col)
+void dform_synchro_column_width(DForm *form, const DSelect *sel, const FColumn *fcol, const uint32_t col)
 {
+    cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(fcol);
     cassert(flayout_column(cast(sel->flayout, FLayout), col) == fcol);
+    form->need_save = TRUE;
     layout_hsize(sel->glayout, col, fcol->forced_width);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_row_margin(const DSelect *sel, const FRow *frow, const uint32_t row)
+void dform_synchro_row_margin(DForm *form, const DSelect *sel, const FRow *frow, const uint32_t row)
 {
+    cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(frow);
     cassert(flayout_row(cast(sel->flayout, FLayout), row) == frow);
+    form->need_save = TRUE;
     layout_vmargin(sel->glayout, row, frow->margin_bottom);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_row_height(const DSelect *sel, const FRow *frow, const uint32_t row)
+void dform_synchro_row_height(DForm *form, const DSelect *sel, const FRow *frow, const uint32_t row)
 {
+    cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(frow);
     cassert(flayout_row(cast(sel->flayout, FLayout), row) == frow);
+    form->need_save = TRUE;
     layout_vsize(sel->glayout, row, frow->forced_height);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_cell_halign(const DSelect *sel, const FCell *fcell, const uint32_t col, const uint32_t row)
+void dform_synchro_cell_halign(DForm *form, const DSelect *sel, const FCell *fcell, const uint32_t col, const uint32_t row)
 {
     align_t align = ENUM_MAX(align_t);
+    cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(fcell);
     cassert(flayout_cell(cast(sel->flayout, FLayout), col, row) == fcell);
+    form->need_save = TRUE;
     align = i_halign(fcell->halign);
     layout_halign(sel->glayout, col, row, align);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dform_synchro_cell_valign(const DSelect *sel, const FCell *fcell, const uint32_t col, const uint32_t row)
+void dform_synchro_cell_valign(DForm *form, const DSelect *sel, const FCell *fcell, const uint32_t col, const uint32_t row)
 {
     align_t align = ENUM_MAX(align_t);
+    cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(fcell);
     cassert(flayout_cell(cast(sel->flayout, FLayout), col, row) == fcell);
+    form->need_save = TRUE;
     align = i_valign(fcell->valign);
     layout_valign(sel->glayout, col, row, align);
 }
