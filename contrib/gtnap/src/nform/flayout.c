@@ -10,8 +10,14 @@
 #include <gui/edit.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
+#include <core/heap.h>
+#include <core/stream.h>
 #include <core/strings.h>
 #include <sewer/cassert.h>
+
+/*---------------------------------------------------------------------------*/
+
+static uint16_t i_VERSION = 0;
 
 /*---------------------------------------------------------------------------*/
 
@@ -73,6 +79,217 @@ FLayout *flayout_create(const uint32_t ncols, const uint32_t nrows)
     }
 
     return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_read_col(Stream *stm, FColumn *col)
+{
+    cassert_no_null(col);
+    col->forced_width = stm_read_r32(stm);
+    col->margin_right = stm_read_r32(stm);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_read_row(Stream *stm, FRow *row)
+{
+    cassert_no_null(row);
+    row->forced_height = stm_read_r32(stm);
+    row->margin_bottom = stm_read_r32(stm);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static FLabel *i_read_label(Stream *stm)
+{
+    FLabel *label = heap_new0(FLabel);
+    label->text = str_read(stm);
+    return label;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static FButton *i_read_button(Stream *stm)
+{
+    FButton *button = heap_new0(FButton);
+    button->text = str_read(stm);
+    return button;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static FCheck *i_read_check(Stream *stm)
+{
+    FCheck *check = heap_new0(FCheck);
+    check->text = str_read(stm);
+    return check;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static FEdit *i_read_edit(Stream *stm)
+{
+    FEdit *edit = heap_new0(FEdit);
+    edit->passmode = stm_read_bool(stm);
+    edit->autosel = stm_read_bool(stm);
+    edit->text_align = stm_read_enum(stm, halign_t);
+    return edit;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_read_cell(Stream *stm, FCell *cell)
+{
+    cassert_no_null(cell);
+    cell->name = str_read(stm);
+    cell->type = stm_read_enum(stm, celltype_t);
+    cell->halign = stm_read_enum(stm, halign_t);
+    cell->valign = stm_read_enum(stm, valign_t);
+    switch(cell->type) {
+    case ekCELL_TYPE_EMPTY:
+        break;
+    case ekCELL_TYPE_LABEL:
+        cell->widget.label = i_read_label(stm);
+        break;
+    case ekCELL_TYPE_BUTTON:
+        cell->widget.button = i_read_button(stm);
+        break;
+    case ekCELL_TYPE_CHECK:
+        cell->widget.check = i_read_check(stm);
+        break;
+    case ekCELL_TYPE_EDIT:
+        cell->widget.edit = i_read_edit(stm);
+        break;
+    case ekCELL_TYPE_LAYOUT:
+        cell->widget.layout = flayout_read(stm);
+        break;
+    cassert_default();
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+FLayout *flayout_read(Stream *stm)
+{
+    uint16_t version = stm_read_u16(stm);
+    if (version <= i_VERSION)
+    {
+        FLayout *layout = heap_new0(FLayout);
+        layout->name = str_read(stm);
+        layout->margin_left = stm_read_r32(stm);
+        layout->margin_top = stm_read_r32(stm);
+        layout->margin_right = stm_read_r32(stm);
+        layout->margin_bottom = stm_read_r32(stm);
+        layout->cols = arrst_read(stm, i_read_col, FColumn);
+        layout->rows = arrst_read(stm, i_read_row, FRow);
+        layout->cells = arrst_read(stm, i_read_cell, FCell);
+        return layout;
+    }
+    else
+    {
+        stm_corrupt(stm);
+        return NULL;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_write_col(Stream *stm, const FColumn *col)
+{
+    cassert_no_null(col);
+    stm_write_r32(stm, col->forced_width);
+    stm_write_r32(stm, col->margin_right);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_write_row(Stream *stm, const FRow *row)
+{
+    cassert_no_null(row);
+    stm_write_r32(stm, row->forced_height);
+    stm_write_r32(stm, row->margin_bottom);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_write_label(Stream *stm, const FLabel *label)
+{
+    cassert_no_null(label);
+    str_write(stm, label->text);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_write_buttom(Stream *stm, const FButton *button)
+{
+    cassert_no_null(button);
+    str_write(stm, button->text);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_write_check(Stream *stm, const FCheck *check)
+{
+    cassert_no_null(check);
+    str_write(stm, check->text);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_write_edit(Stream *stm, const FEdit *edit)
+{
+    cassert_no_null(edit);
+    stm_write_bool(stm, edit->passmode);
+    stm_write_bool(stm, edit->autosel);
+    stm_write_enum(stm, edit->text_align, halign_t);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_write_cell(Stream *stm, const FCell *cell)
+{
+    cassert_no_null(cell);
+    str_write(stm, cell->name);
+    stm_write_enum(stm, cell->type, celltype_t);
+    stm_write_enum(stm, cell->halign, halign_t);
+    stm_write_enum(stm, cell->valign, valign_t);
+    switch(cell->type) {
+    case ekCELL_TYPE_EMPTY:
+        break;
+    case ekCELL_TYPE_LABEL:
+        i_write_label(stm, cell->widget.label);
+        break;
+    case ekCELL_TYPE_BUTTON:
+        i_write_buttom(stm, cell->widget.button);
+        break;
+    case ekCELL_TYPE_CHECK:
+        i_write_check(stm, cell->widget.check);
+        break;
+    case ekCELL_TYPE_EDIT:
+        i_write_edit(stm, cell->widget.edit);
+        break;
+    case ekCELL_TYPE_LAYOUT:
+        flayout_write(stm, cell->widget.layout);
+        break;
+    cassert_default();
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void flayout_write(Stream *stm, const FLayout *layout)
+{
+    cassert_no_null(layout);
+    stm_write_u16(stm, i_VERSION);
+    str_write(stm, layout->name);
+    stm_write_r32(stm, layout->margin_left);
+    stm_write_r32(stm, layout->margin_top);
+    stm_write_r32(stm, layout->margin_right);
+    stm_write_r32(stm, layout->margin_bottom);
+    arrst_write(stm, layout->cols, i_write_col, FColumn);
+    arrst_write(stm, layout->rows, i_write_row, FRow);
+    arrst_write(stm, layout->cells, i_write_cell, FCell);
 }
 
 /*---------------------------------------------------------------------------*/

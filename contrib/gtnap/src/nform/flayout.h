@@ -6,6 +6,10 @@ __EXTERN_C
 
 _nform_api FLayout *flayout_create(const uint32_t ncols, const uint32_t nrows);
 
+_nform_api FLayout *flayout_read(Stream *stm);
+
+_nform_api void flayout_write(Stream *stm, const FLayout *layout);
+
 _nform_api void flayout_margin_left(FLayout *layout, const real32_t margin);
 
 _nform_api void flayout_margin_top(FLayout *layout, const real32_t margin);

@@ -142,8 +142,10 @@ static void i_init_forms(Designer *app, const char_t *path)
     }
     else
     {
+        Button *button = cell_button(app->open_form_cell);
         app->form_sel = NULL;
         i_update_form_controls(app, FALSE);
+        button_tooltip(button, "Open forms folder (No path selected)");
     }
 
     arrst_destopt(&files, hfile_dir_entry_remove, DirEntry);
