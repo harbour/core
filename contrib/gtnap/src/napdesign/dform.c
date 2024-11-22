@@ -1,6 +1,7 @@
 /* Design form */
 
 #include "dform.h"
+#include "designer.h"
 #include "dlayout.h"
 #include "dialogs.h"
 #include "inspect.h"
@@ -27,6 +28,7 @@
 
 struct _dform_t
 {
+    Designer *app;
     DLayout *dlayout;
     FLayout *flayout;
     Layout *glayout;
@@ -77,6 +79,15 @@ static void i_layout_obj_names(DForm *form, FLayout *flayout)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_need_save(DForm *form)
+{
+    cassert_no_null(form);
+    form->need_save = TRUE;
+    designer_need_save(form->app);
+}
+
+/*---------------------------------------------------------------------------*/
+
 DForm *dform_first_example(void)
 {
     DForm *form = heap_new0(DForm);
@@ -116,14 +127,15 @@ DForm *dform_first_example(void)
 
 /*---------------------------------------------------------------------------*/
 
-DForm *dform_empty(void)
+DForm *dform_empty(Designer *app)
 {
     DForm *form = heap_new0(DForm);
+    form->app = app;
     form->flayout = flayout_create(1, 1);
     form->temp_path = arrst_create(DSelect);
     form->sel_path = arrst_create(DSelect);
     i_layout_obj_names(form, form->flayout);
-    form->need_save = TRUE;
+    i_need_save(form);
     return form;
 }
 
@@ -353,7 +365,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
-                    form->need_save = TRUE;
+                    i_need_save(form);
                     return TRUE;
                 }
                 else
@@ -377,7 +389,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
-                    form->need_save = TRUE;
+                    i_need_save(form);
                     return TRUE;
                 }
                 else
@@ -401,7 +413,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
-                    form->need_save = TRUE;
+                    i_need_save(form);
                     return TRUE;
                 }
                 else
@@ -428,7 +440,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
-                    form->need_save = TRUE;
+                    i_need_save(form);
                     return TRUE;
                 }
                 else
@@ -454,7 +466,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                     propedit_set(propedit, form, &sel);
                     inspect_set(inspect, form);
                     form->sel = sel;
-                    form->need_save = TRUE;
+                    i_need_save(form);
                     return TRUE;
                 }
                 else
@@ -535,7 +547,7 @@ bool_t dform_OnSupr(DForm *form, Panel *inspect, Panel *propedit)
                 inspect_set(inspect, form);
             }
 
-            form->need_save = TRUE;
+            i_need_save(form);
             return TRUE;
         }
     }
@@ -574,7 +586,7 @@ void dform_synchro_cell_text(DForm *form, const DSelect *sel)
     cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(cell);
-    form->need_save = TRUE;
+    i_need_save(form);
     if (cell->type == ekCELL_TYPE_LABEL)
     {
         Label *label = layout_get_label(sel->glayout, sel->col, sel->row);
@@ -606,7 +618,7 @@ void dform_synchro_edit(DForm *form, const DSelect *sel)
     cassert_no_null(sel);
     cassert_no_null(cell);
     cassert(cell->type == ekCELL_TYPE_EDIT);
-    form->need_save = TRUE;
+    i_need_save(form);
     edit = layout_get_edit(sel->glayout, sel->col, sel->row);
     edit_passmode(edit, cell->widget.edit->passmode);
     edit_autoselect(edit, cell->widget.edit->autosel);
@@ -620,7 +632,7 @@ void dform_synchro_layout_margin(DForm *form, const DSelect *sel)
     cassert_no_null(form);
     cassert_no_null(sel);
     cassert_no_null(sel->flayout);
-    form->need_save = TRUE;
+    i_need_save(form);
     layout_margin4(sel->glayout, sel->flayout->margin_top, sel->flayout->margin_right, sel->flayout->margin_bottom, sel->flayout->margin_left);
 }
 
@@ -632,7 +644,7 @@ void dform_synchro_column_margin(DForm *form, const DSelect *sel, const FColumn 
     cassert_no_null(sel);
     cassert_no_null(fcol);
     cassert(flayout_column(cast(sel->flayout, FLayout), col) == fcol);
-    form->need_save = TRUE;
+    i_need_save(form);
     layout_hmargin(sel->glayout, col, fcol->margin_right);
 }
 
@@ -644,7 +656,7 @@ void dform_synchro_column_width(DForm *form, const DSelect *sel, const FColumn *
     cassert_no_null(sel);
     cassert_no_null(fcol);
     cassert(flayout_column(cast(sel->flayout, FLayout), col) == fcol);
-    form->need_save = TRUE;
+    i_need_save(form);
     layout_hsize(sel->glayout, col, fcol->forced_width);
 }
 
@@ -656,7 +668,7 @@ void dform_synchro_row_margin(DForm *form, const DSelect *sel, const FRow *frow,
     cassert_no_null(sel);
     cassert_no_null(frow);
     cassert(flayout_row(cast(sel->flayout, FLayout), row) == frow);
-    form->need_save = TRUE;
+    i_need_save(form);
     layout_vmargin(sel->glayout, row, frow->margin_bottom);
 }
 
@@ -668,7 +680,7 @@ void dform_synchro_row_height(DForm *form, const DSelect *sel, const FRow *frow,
     cassert_no_null(sel);
     cassert_no_null(frow);
     cassert(flayout_row(cast(sel->flayout, FLayout), row) == frow);
-    form->need_save = TRUE;
+    i_need_save(form);
     layout_vsize(sel->glayout, row, frow->forced_height);
 }
 
@@ -681,7 +693,7 @@ void dform_synchro_cell_halign(DForm *form, const DSelect *sel, const FCell *fce
     cassert_no_null(sel);
     cassert_no_null(fcell);
     cassert(flayout_cell(cast(sel->flayout, FLayout), col, row) == fcell);
-    form->need_save = TRUE;
+    i_need_save(form);
     align = i_halign(fcell->halign);
     layout_halign(sel->glayout, col, row, align);
 }
@@ -695,7 +707,7 @@ void dform_synchro_cell_valign(DForm *form, const DSelect *sel, const FCell *fce
     cassert_no_null(sel);
     cassert_no_null(fcell);
     cassert(flayout_cell(cast(sel->flayout, FLayout), col, row) == fcell);
-    form->need_save = TRUE;
+    i_need_save(form);
     align = i_valign(fcell->valign);
     layout_valign(sel->glayout, col, row, align);
 }

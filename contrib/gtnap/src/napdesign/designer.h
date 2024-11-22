@@ -2,6 +2,8 @@
 
 #include "designer.hxx"
 
+void designer_need_save(Designer *app);
+
 void designer_canvas_update(Designer *app);
 
 void designer_inspect_update(Designer *app);

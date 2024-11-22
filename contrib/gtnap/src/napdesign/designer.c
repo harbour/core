@@ -68,6 +68,9 @@ static void i_destroy_form_opt(DForm **form)
 static void i_update_form_controls(Designer *app, const bool_t enable)
 {
     bool_t enable_save = FALSE;
+    bool_t enable_run = FALSE;
+    bool_t enable_remove = FALSE;
+    bool_t enable_rename = FALSE;
     cassert_no_null(app);
 
     if (enable == TRUE)
@@ -79,14 +82,21 @@ static void i_update_form_controls(Designer *app, const bool_t enable)
                 break;
             }
         arrpt_end();
+
+        if (app->form_sel != NULL)
+        {
+            enable_run = TRUE;
+            enable_remove = TRUE;
+            enable_rename = TRUE;
+        }
     }
 
     /*cell_enabled(app->open_form_cell, enable);*/
     cell_enabled(app->save_form_cell, enable_save);
-    cell_enabled(app->run_form_cell, enable);
+    cell_enabled(app->run_form_cell, enable_run);
     cell_enabled(app->add_form_cell, enable);
-    cell_enabled(app->remove_form_cell, enable);
-    cell_enabled(app->rename_form_cell, enable);
+    cell_enabled(app->remove_form_cell, enable_remove);
+    cell_enabled(app->rename_form_cell, enable_rename);
     cell_enabled(app->widgets_cell, enable);
 }
 
@@ -120,7 +130,15 @@ static void i_init_forms(Designer *app, const char_t *path)
         arrst_end()
         cassert(arrpt_size(app->forms, DForm) == 0);
         str_upd(&app->folder_path, path);
+        app->form_sel = NULL;
         i_update_form_controls(app, TRUE);
+
+        {
+            Button *button = cell_button(app->open_form_cell);
+            String *tooltip = str_printf("Open forms folder (%s)", tc(app->folder_path));
+            button_tooltip(button, tc(tooltip));
+            str_destroy(&tooltip);
+        }
     }
     else
     {
@@ -538,6 +556,13 @@ static void i_update(Designer *app, const real64_t prtime, const real64_t ctime)
     unref(app);
     unref(prtime);
     unref(ctime);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void designer_need_save(Designer *app)
+{
+    i_update_form_controls(app, TRUE);
 }
 
 /*---------------------------------------------------------------------------*/

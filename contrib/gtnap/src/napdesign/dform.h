@@ -4,7 +4,7 @@
 
 DForm *dform_first_example(void);
 
-DForm *dform_empty(void);
+DForm *dform_empty(Designer *app);
 
 void dform_destroy(DForm **form);
 
