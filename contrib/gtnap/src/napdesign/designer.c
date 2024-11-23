@@ -40,6 +40,7 @@ DeclPt(DForm);
 /*---------------------------------------------------------------------------*/
 
 static const char_t *i_FILE_EXT = "nfm";
+static const char_t *i_SAVE_MARK = "• ";
 
 /*---------------------------------------------------------------------------*/
 
@@ -61,6 +62,28 @@ static void i_destroy_form_opt(DForm **form)
     cassert_no_null(form);
     if (*form != NULL)
         dform_destroy(form);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_need_save_mark(ListBox *listbox, const uint32_t pos, const bool_t needs_save)
+{
+    const char_t *name = listbox_text(listbox, pos);
+    bool_t with_bullet = str_is_prefix(name, i_SAVE_MARK);
+    if (needs_save != with_bullet)
+    {
+        if (needs_save == TRUE)
+        {
+            String *nname = str_printf("%s%s", i_SAVE_MARK, name);
+            listbox_set_elem(listbox, pos, tc(nname), NULL);
+            str_destroy(&nname);
+        }
+        else
+        {
+            name += str_len_c(i_SAVE_MARK);
+            listbox_set_elem(listbox, pos, name, NULL);            
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -90,6 +113,13 @@ static void i_update_form_controls(Designer *app, const bool_t enable)
             enable_rename = TRUE;
         }
     }
+
+    arrpt_foreach(form, app->forms, DForm)
+        bool_t need_save = FALSE;
+        if (form != NULL)
+            need_save = dform_need_save(form);
+        i_need_save_mark(app->form_list, form_i, need_save);
+    arrpt_end()
 
     /*cell_enabled(app->open_form_cell, enable);*/
     cell_enabled(app->save_form_cell, enable_save);
@@ -149,10 +179,6 @@ static void i_init_forms(Designer *app, const char_t *path)
     }
 
     arrst_destopt(&files, hfile_dir_entry_remove, DirEntry);
-    //return 
-    ///*app->form = dform_first_example();*/
-    //app->form = dform_empty();
-    //dform_compose(app->form);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -180,6 +206,31 @@ static void i_OnSimulateClick(Designer *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnAddFormClick(Designer *app, Event *e)
+{
+    String *fname = NULL;
+    cassert_no_null(app);
+    unref(e);
+    fname = dialog_form_name(app->window, NULL);
+    if (str_empty(fname) == FALSE)
+    {
+        uint32_t n = listbox_count(app->form_list);
+        DForm *form = dform_empty(app);
+        dform_compose(form);
+        cassert(n == arrpt_size(app->forms, DForm));
+        listbox_add_elem(app->form_list, tc(fname), NULL);
+        listbox_select(app->form_list, n, TRUE);
+        arrpt_append(app->forms, form, DForm);
+        app->form_sel = form;
+        i_update_form_controls(app, TRUE);
+        view_update(app->canvas);
+    }
+
+    str_destroy(&fname);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_tools_layout(Designer *app, ResPack *pack)
 {
     Layout *layout = layout_create(9, 1);
@@ -201,7 +252,8 @@ static Layout *i_tools_layout(Designer *app, ResPack *pack)
     button_image(button7, image_from_resource(pack, PLUS24_PNG));
     button_image(button8, image_from_resource(pack, ERROR24_PNG));
     button_OnClick(button1, listener(app, i_OnOpenFormClick, Designer));
-    button_OnClick(button4, listener(app, i_OnSimulateClick, Designer));
+    button_OnClick(button3, listener(app, i_OnSimulateClick, Designer));
+    button_OnClick(button4, listener(app, i_OnAddFormClick, Designer));
     button_tooltip(button1, "Open forms folder");
     button_tooltip(button2, "Save all forms");
     button_tooltip(button3, "Simulate current form");

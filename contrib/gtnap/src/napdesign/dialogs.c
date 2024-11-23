@@ -29,6 +29,7 @@ struct _dialogdata_t
 {
     Button *defbutton;
     Window *window;
+    Edit *edit;
 };
 
 #define BUTTON_OK 1000
@@ -85,6 +86,58 @@ static Layout *i_ok_cancel(DialogData *data)
     layout_button(layout, button2, 1, 0);
     data->defbutton = button1;
     return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+String *dialog_form_name(Window *parent, const char_t *name)
+{
+    DialogData data;
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = layout_create(2, 1);
+    Layout *layout3 = i_ok_cancel(&data);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Edit *edit = edit_create();
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
+    String *caption = NULL;
+    uint32_t ret = 0;
+    String *fname = NULL;
+    data.window = window;
+    data.edit = edit;
+    if (str_empty_c(name) == TRUE)
+    {
+        caption = str_c("Set name for new form");
+    }
+    else
+    {
+        caption = str_c("Change the name of the form");
+        edit_text(edit, name);
+    }
+    label_text(label1, tc(caption));
+    label_text(label2, "Name:");
+    layout_label(layout1, label1, 0, 0);
+    layout_label(layout2, label2, 0, 0);
+    layout_edit(layout2, edit, 1, 0);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_layout(layout1, layout3, 0, 2);
+    layout_vmargin(layout1, 0, 5);
+    layout_vmargin(layout1, 1, 5);
+    panel_layout(panel, layout1);
+    window_panel(window, panel);
+    window_defbutton(window, data.defbutton);
+    i_center_window(parent, window);
+    ret = window_modal(window, parent);
+
+    if (ret == BUTTON_OK)
+        fname = str_c(edit_get_text(data.edit));
+    else
+        fname = str_c("");
+
+    window_destroy(&window);
+    str_destroy(&caption);
+    return fname;
 }
 
 /*---------------------------------------------------------------------------*/

@@ -4,6 +4,8 @@
 
 void dialog_dbind(void);
 
+String *dialog_form_name(Window *parent, const char_t *name);
+
 FLabel *dialog_new_label(Window *parent, const DSelect *sel);
 
 FButton *dialog_new_button(Window *parent, const DSelect *sel);
