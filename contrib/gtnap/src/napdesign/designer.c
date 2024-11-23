@@ -183,7 +183,7 @@ static void i_init_forms(Designer *app, const char_t *path)
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnOpenFormClick(Designer *app, Event *e)
+static void i_OnOpenFormsClick(Designer *app, Event *e)
 {
     const char_t *ftype = "..DIR..";
     const char_t *folder = NULL;
@@ -192,6 +192,40 @@ static void i_OnOpenFormClick(Designer *app, Event *e)
     folder = comwin_open_file(app->window, &ftype, 1, tc(app->folder_path));
     if (folder != NULL)
         i_init_forms(app, folder);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnSaveFormsClick(Designer *app, Event *e)
+{
+    cassert_no_null(app);
+    unref(e);
+    arrpt_foreach(form, app->forms, DForm)
+        bool_t need_save = FALSE;
+        if (form != NULL)
+            need_save = dform_need_save(form);
+        
+        if (need_save == TRUE)
+        {
+            const char_t *name = listbox_text(app->form_list, form_i);
+            String *path = NULL;
+            Stream *stm = NULL;
+            
+            if (str_is_prefix(name, i_SAVE_MARK) == TRUE)
+                name += str_len_c(i_SAVE_MARK);
+
+            path = str_cpath("%s/%s", tc(app->folder_path), name);
+            stm = stm_to_file(tc(path), NULL);
+            if (stm != NULL)
+            {
+                dform_write(stm, form);
+                stm_close(&stm);
+            }
+
+            str_destroy(&path);
+        }
+    arrpt_end()
+    i_update_form_controls(app, TRUE);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -245,21 +279,22 @@ static Layout *i_tools_layout(Designer *app, ResPack *pack)
     cassert_no_null(app);
     button_image(button1, image_from_resource(pack, FOLDER24_PNG));
     button_image(button2, image_from_resource(pack, DISK24_PNG));
-    button_image(button3, image_from_resource(pack, SEARCH24_PNG));
-    button_image(button4, image_from_resource(pack, PLUS24_PNG));
-    button_image(button5, image_from_resource(pack, ERROR24_PNG));
-    button_image(button6, image_from_resource(pack, EDIT24_PNG));
+    button_image(button3, image_from_resource(pack, PLUS24_PNG));
+    button_image(button4, image_from_resource(pack, EDIT24_PNG));
+    button_image(button5, image_from_resource(pack, SEARCH24_PNG));
+    button_image(button6, image_from_resource(pack, ERROR24_PNG));
     button_image(button7, image_from_resource(pack, PLUS24_PNG));
     button_image(button8, image_from_resource(pack, ERROR24_PNG));
-    button_OnClick(button1, listener(app, i_OnOpenFormClick, Designer));
-    button_OnClick(button3, listener(app, i_OnSimulateClick, Designer));
-    button_OnClick(button4, listener(app, i_OnAddFormClick, Designer));
+    button_OnClick(button1, listener(app, i_OnOpenFormsClick, Designer));
+    button_OnClick(button2, listener(app, i_OnSaveFormsClick, Designer));
+    button_OnClick(button3, listener(app, i_OnAddFormClick, Designer));
+    button_OnClick(button5, listener(app, i_OnSimulateClick, Designer));
     button_tooltip(button1, "Open forms folder");
     button_tooltip(button2, "Save all forms");
-    button_tooltip(button3, "Simulate current form");
-    button_tooltip(button4, "Add new form");
-    button_tooltip(button5, "Remove current form");
-    button_tooltip(button6, "Rename form");
+    button_tooltip(button3, "Add new form");
+    button_tooltip(button4, "Rename form");
+    button_tooltip(button5, "Simulate current form");
+    button_tooltip(button6, "Remove current form");
     layout_button(layout, button1, 0, 0);
     layout_button(layout, button2, 1, 0);
     layout_button(layout, button3, 2, 0);
@@ -271,10 +306,10 @@ static Layout *i_tools_layout(Designer *app, ResPack *pack)
     layout_hexpand(layout, 6);
     app->open_form_cell = layout_cell(layout, 0, 0);
     app->save_form_cell = layout_cell(layout, 1, 0);
-    app->run_form_cell = layout_cell(layout, 2, 0);
-    app->add_form_cell = layout_cell(layout, 3, 0);
-    app->remove_form_cell = layout_cell(layout, 4, 0);
-    app->rename_form_cell = layout_cell(layout, 5, 0);
+    app->add_form_cell = layout_cell(layout, 2, 0);
+    app->rename_form_cell = layout_cell(layout, 3, 0);
+    app->run_form_cell = layout_cell(layout, 4, 0);
+    app->remove_form_cell = layout_cell(layout, 5, 0);
     return layout;
 }
 

@@ -22,6 +22,7 @@
 #include <core/arrst.h>
 #include <core/dbind.h>
 #include <core/heap.h>
+#include <core/stream.h>
 #include <core/strings.h>
 #include <sewer/bstd.h>
 #include <sewer/cassert.h>
@@ -141,6 +142,27 @@ DForm *dform_empty(Designer *app)
 
 /*---------------------------------------------------------------------------*/
 
+DForm *dform_read(Stream *stm, Designer *app)
+{
+    FLayout *flayout = flayout_read(stm);
+    if (stm_state(stm) == ekSTOK)
+    {
+        DForm *form = heap_new0(DForm);
+        form->app = app;
+        form->flayout = flayout;
+        form->temp_path = arrst_create(DSelect);
+        form->sel_path = arrst_create(DSelect);
+        return form;
+    }
+    else
+    {
+        dbind_destopt(&flayout, FLayout);
+        return NULL;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_destroy(DForm **form)
 {
     cassert_no_null(form);
@@ -161,6 +183,15 @@ void dform_destroy(DForm **form)
     }
 
     heap_delete(form, DForm);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_write(Stream *stm, DForm *form)
+{
+    cassert_no_null(form);
+    flayout_write(stm, form->flayout);
+    form->need_save = FALSE;
 }
 
 /*---------------------------------------------------------------------------*/

@@ -6,7 +6,11 @@ DForm *dform_first_example(void);
 
 DForm *dform_empty(Designer *app);
 
+DForm *dform_read(Stream *stm, Designer *app);
+
 void dform_destroy(DForm **form);
+
+void dform_write(Stream *stm, DForm *form);
 
 void dform_compose(DForm *form);
 

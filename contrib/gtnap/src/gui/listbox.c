@@ -774,7 +774,18 @@ void listbox_set_elem(ListBox *listbox, const uint32_t index, const char_t *text
     cassert_no_null(data);
     elem = arrst_get(data->elems, index, PElem);
     ltext = _gui_respack_text(text, &elem->resid);
-    str_upd(&elem->text, ltext);
+
+    if (ltext == text)
+    {
+        /* Avoid vulnerability when incomming text is a substr of current text */
+        String *ntext = str_c(text);
+        str_upd(&elem->text, tc(ntext));
+        str_destroy(&ntext);
+    }
+    else
+    {
+        str_upd(&elem->text, ltext);
+    }
 
     if (image != NULL)
     {
