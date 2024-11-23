@@ -494,10 +494,53 @@ static void i_OnHotKey(Designer *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_save_config(const Designer *app)
+{
+    String *cfile = hfile_appdata("config.bin");
+    Stream *stm = stm_to_file(tc(cfile), NULL);
+    cassert_no_null(app);
+    if (stm != NULL)
+    {
+        stm_write_enum(stm, app->swidget, widget_t);
+        str_write(stm, app->folder_path);
+        stm_close(&stm);
+    }
+
+    str_destroy(&cfile);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_load_config(Designer *app)
+{
+    String *cfile = hfile_appdata("config.bin");
+    Stream *stm = stm_from_file(tc(cfile), NULL);
+    bool_t ok = FALSE;
+    cassert_no_null(app);
+    cassert(app->folder_path == NULL);
+    if (stm != NULL)
+    {
+        app->swidget = stm_read_enum(stm, widget_t);
+        app->folder_path = str_read(stm);
+        ok = stm_state(stm) == ekSTOK;
+        stm_close(&stm);
+    }
+
+    if (ok == FALSE)
+    {
+        app->swidget = ekWIDGET_SELECT;
+        str_upd(&app->folder_path, "");
+    }
+
+    str_destroy(&cfile);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnClose(Designer *app, Event *e)
 {
+    i_save_config(app);
     osapp_finish();
-    unref(app);
     unref(e);
 }
 
@@ -509,8 +552,7 @@ static Designer *i_app(ResPack *pack)
     nform_start();
     i_dbind();
     dialog_dbind();
-    app->swidget = ekWIDGET_SELECT;
-    app->folder_path = str_c("");
+    i_load_config(app);
     app->forms = arrpt_create(DForm);
     app->add_icon = image_copy(image_from_resource(pack, PLUS16_PNG));
     return app;
