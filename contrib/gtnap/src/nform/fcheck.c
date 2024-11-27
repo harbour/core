@@ -1,21 +1,21 @@
-/* Design button */
+/* Form checkbox */
 
-#include "dbutton.h"
+#include "fcheck.h"
 #include <core/dbind.h>
 #include <core/strings.h>
 #include <sewer/cassert.h>
 
 /*---------------------------------------------------------------------------*/
 
-DButton *dbutton_create(void)
+FCheck *fcheck_create(void)
 {
-    return dbind_create(DButton);
+    return dbind_create(FCheck);
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dbutton_text(DButton *button, const char_t *text)
-{
-    cassert_no_null(button);
-    str_upd(&button->text, text);
-}
+//void fcheck_text(FCheck *check, const char_t *text)
+//{
+//    cassert_no_null(check);
+//    str_upd(&check->text, text);
+//}

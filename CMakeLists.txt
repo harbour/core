@@ -121,7 +121,9 @@ add_subdirectory(${NAPPGUI_ROOT_PATH}/src/debugger)
 add_subdirectory(${NAPPGUI_ROOT_PATH}/src/gtnap)
 
 # GTNAP-Designer
-add_subdirectory(${NAPPGUI_ROOT_PATH}/src/designer)
+add_subdirectory(${NAPPGUI_ROOT_PATH}/src/nform)
+add_subdirectory(${NAPPGUI_ROOT_PATH}/src/napforms)
+add_subdirectory(${NAPPGUI_ROOT_PATH}/src/napdesign)
 
 # HBOffice
 add_subdirectory(${HBOFFICE_ROOT_PATH}/src/officesdk)

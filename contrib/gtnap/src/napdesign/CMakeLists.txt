@@ -1,0 +1,1 @@
+nap_desktop_app(napdesign "napforms;osapp" NRC_EMBEDDED)
