@@ -15,7 +15,7 @@ struct _desiger_t
     widget_t swidget;
     String *folder_path;
     ArrPt(DForm) *forms;
-    DForm *form_sel;
+    uint32_t sel_form;
 
     ListBox *form_list;
     Label *status_label;
@@ -98,6 +98,7 @@ static void i_update_form_controls(Designer *app, const bool_t enable)
 
     if (enable == TRUE)
     {
+        cassert(arrpt_size(app->forms, DForm) == listbox_count(app->form_list));
         arrpt_foreach(form, app->forms, DForm)
             if (form != NULL && dform_need_save(form) == TRUE)
             {
@@ -106,7 +107,7 @@ static void i_update_form_controls(Designer *app, const bool_t enable)
             }
         arrpt_end();
 
-        if (app->form_sel != NULL)
+        if (app->sel_form != UINT32_MAX)
         {
             enable_run = TRUE;
             enable_remove = TRUE;
@@ -128,6 +129,43 @@ static void i_update_form_controls(Designer *app, const bool_t enable)
     cell_enabled(app->remove_form_cell, enable_remove);
     cell_enabled(app->rename_form_cell, enable_rename);
     cell_enabled(app->widgets_cell, enable);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_open_form(Designer *app, const uint32_t index)
+{
+    DForm *form = NULL;
+    cassert_no_null(app);
+    if (index != UINT32_MAX)
+    {
+        form = arrpt_get(app->forms, index, DForm);
+        if (form == NULL)
+        {
+            const char_t *name = listbox_text(app->form_list, index);
+            String *path = str_cpath("%s/%s.%s", tc(app->folder_path), name, i_FILE_EXT);
+            Stream *stm = NULL;
+            DForm **forms = arrpt_all(app->forms, DForm);
+            cassert(str_is_prefix(name, i_SAVE_MARK) == FALSE);
+            stm = stm_from_file(tc(path), NULL);
+            if (stm != NULL)
+            {
+                form = dform_read(stm, app);
+                stm_close(&stm);            
+            }
+
+            forms[index] = form;
+            str_destroy(&path);
+        }
+
+        if (form != NULL)
+        {
+            dform_compose(form);
+            dform_set(form, app->inspect, app->propedit);
+        }
+    }
+
+    view_update(app->canvas);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -158,9 +196,19 @@ static void i_init_forms(Designer *app, const char_t *path)
             str_destroy(&fil);
             str_destroy(&ext);
         arrst_end()
-        cassert(arrpt_size(app->forms, DForm) == 0);
+
+        if (arrpt_size(app->forms, DForm) > 0)
+        {
+            i_open_form(app, app->sel_form);
+            if (app->sel_form != UINT32_MAX)
+                listbox_select(app->form_list, app->sel_form, TRUE);
+        }
+        else
+        {
+            cassert(app->sel_form == UINT32_MAX);
+        }
+
         str_upd(&app->folder_path, path);
-        app->form_sel = NULL;
         i_update_form_controls(app, TRUE);
 
         {
@@ -173,7 +221,6 @@ static void i_init_forms(Designer *app, const char_t *path)
     else
     {
         Button *button = cell_button(app->open_form_cell);
-        app->form_sel = NULL;
         i_update_form_controls(app, FALSE);
         button_tooltip(button, "Open forms folder (No path selected)");
     }
@@ -214,7 +261,7 @@ static void i_OnSaveFormsClick(Designer *app, Event *e)
             if (str_is_prefix(name, i_SAVE_MARK) == TRUE)
                 name += str_len_c(i_SAVE_MARK);
 
-            path = str_cpath("%s/%s", tc(app->folder_path), name);
+            path = str_cpath("%s/%s.%s", tc(app->folder_path), name, i_FILE_EXT);
             stm = stm_to_file(tc(path), NULL);
             if (stm != NULL)
             {
@@ -234,8 +281,11 @@ static void i_OnSimulateClick(Designer *app, Event *e)
 {
     cassert_no_null(app);
     unref(e);
-    if (app->form_sel != NULL)
-        dform_simulate(app->form_sel, app->window);
+    if (app->sel_form != UINT32_MAX)
+    {
+        DForm *form = arrpt_get(app->forms, app->sel_form, DForm);
+        dform_simulate(form, app->window);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -255,7 +305,7 @@ static void i_OnAddFormClick(Designer *app, Event *e)
         listbox_add_elem(app->form_list, tc(fname), NULL);
         listbox_select(app->form_list, n, TRUE);
         arrpt_append(app->forms, form, DForm);
-        app->form_sel = form;
+        app->sel_form = n;
         i_update_form_controls(app, TRUE);
         view_update(app->canvas);
     }
@@ -347,6 +397,17 @@ static Layout *i_widgets_layout(Designer *app)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnFormSelect(Designer *app, Event *e)
+{
+    const EvButton *p = event_params(e, EvButton);
+    cassert_no_null(app);
+    app->sel_form = p->index;
+    i_open_form(app, app->sel_form);
+    i_update_form_controls(app, TRUE);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_left_layout(Designer *app)
 {
     Layout *layout1 = layout_create(1, 5);
@@ -358,6 +419,7 @@ static Layout *i_left_layout(Designer *app)
     label_text(label1, "Forms");
     label_text(label2, "Widgets");
     listbox_size(list1, s2df(150, 100));
+    listbox_OnSelect(list1, listener(app, i_OnFormSelect, Designer));
     layout_label(layout1, label1, 0, 0);
     layout_label(layout1, label2, 0, 2);
     layout_listbox(layout1, list1, 0, 1);
@@ -407,8 +469,11 @@ static void i_OnDraw(Designer *app, Event *e)
     const EvDraw *p = event_params(e, EvDraw);
     cassert_no_null(app);
     draw_clear(p->ctx, kCOLOR_YELLOW);
-    if (app->form_sel != NULL)
-        dform_draw(app->form_sel, app->swidget, app->add_icon, p->ctx);
+    if (app->sel_form != UINT32_MAX)
+    {
+        DForm *form = arrpt_get(app->forms, app->sel_form, DForm);
+        dform_draw(form, app->swidget, app->add_icon, p->ctx);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -417,9 +482,10 @@ static void i_OnMove(Designer *app, Event *e)
 {
     const EvMouse *p = event_params(e, EvMouse);
     cassert_no_null(app);
-    if (app->form_sel != NULL)
+    if (app->sel_form != UINT32_MAX)
     {
-        if (dform_OnMove(app->form_sel, p->x, p->y) == TRUE)
+        DForm *form = arrpt_get(app->forms, app->sel_form, DForm);
+        if (dform_OnMove(form, p->x, p->y) == TRUE)
             view_update(app->canvas);
     }
 }
@@ -430,9 +496,10 @@ static void i_OnExit(Designer *app, Event *e)
 {
     cassert_no_null(app);
     unref(e);
-    if (app->form_sel != NULL)
+    if (app->sel_form != UINT32_MAX)
     {
-        if (dform_OnExit(app->form_sel) == TRUE)
+        DForm *form = arrpt_get(app->forms, app->sel_form, DForm);
+        if (dform_OnExit(form) == TRUE)
             view_update(app->canvas);
     }
 }
@@ -442,10 +509,11 @@ static void i_OnExit(Designer *app, Event *e)
 static void i_OnClick(Designer *app, Event *e)
 {
     cassert_no_null(app);
-    if (app->form_sel != NULL)
+    if (app->sel_form != UINT32_MAX)
     {
         const EvMouse *p = event_params(e, EvMouse);
-        if (dform_OnClick(app->form_sel, app->window, app->inspect, app->propedit, app->swidget, p->x, p->y, p->button) == TRUE)
+        DForm *form = arrpt_get(app->forms, app->sel_form, DForm);
+        if (dform_OnClick(form, app->window, app->inspect, app->propedit, app->swidget, p->x, p->y, p->button) == TRUE)
             view_update(app->canvas);
     }
 }
@@ -571,9 +639,10 @@ static void i_OnHotKey(Designer *app, Event *e)
     cassert_no_null(app);
     if (p->key == ekKEY_SUPR)
     {
-        if (app->form_sel != NULL)
+        if (app->sel_form != UINT32_MAX)
         {
-            if (dform_OnSupr(app->form_sel, app->inspect, app->propedit) == TRUE)
+            DForm *form = arrpt_get(app->forms, app->sel_form, DForm);
+            if (dform_OnSupr(form, app->inspect, app->propedit) == TRUE)
                 view_update(app->canvas);
         }
     }
@@ -590,6 +659,7 @@ static void i_save_config(const Designer *app)
     {
         stm_write_enum(stm, app->swidget, widget_t);
         str_write(stm, app->folder_path);
+        stm_write_u32(stm, app->sel_form);
         stm_close(&stm);
     }
 
@@ -609,6 +679,7 @@ static void i_load_config(Designer *app)
     {
         app->swidget = stm_read_enum(stm, widget_t);
         app->folder_path = str_read(stm);
+        app->sel_form = stm_read_u32(stm);
         ok = stm_state(stm) == ekSTOK;
         stm_close(&stm);
     }
@@ -617,6 +688,7 @@ static void i_load_config(Designer *app)
     {
         app->swidget = ekWIDGET_SELECT;
         str_upd(&app->folder_path, "");
+        app->sel_form = UINT32_MAX;
     }
 
     str_destroy(&cfile);
@@ -717,8 +789,11 @@ void designer_inspect_update(Designer *app)
 void designer_inspect_select(Designer *app, const uint32_t row)
 {
     cassert_no_null(app);
-    if (app->form_sel != NULL)
-        dform_inspect_select(app->form_sel, app->propedit, row);
+    if (app->sel_form != UINT32_MAX)
+    {
+        DForm *form = arrpt_get(app->forms, app->sel_form, DForm);
+        dform_inspect_select(form, app->propedit, row);
+    }
 }
 
 /*---------------------------------------------------------------------------*/

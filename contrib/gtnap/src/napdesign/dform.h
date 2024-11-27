@@ -14,6 +14,8 @@ void dform_write(Stream *stm, DForm *form);
 
 void dform_compose(DForm *form);
 
+void dform_set(DForm *form, Panel *inspect, Panel *propedit);
+
 bool_t dform_need_save(const DForm *form);
 
 bool_t dform_OnMove(DForm *form, const real32_t mouse_x, const real32_t mouse_y);

@@ -217,6 +217,15 @@ void dform_compose(DForm *form)
 
 /*---------------------------------------------------------------------------*/
 
+void dform_set(DForm *form, Panel *inspect, Panel *propedit)
+{
+    cassert_no_null(form);
+    inspect_set(inspect, form);
+    propedit_set(propedit, form, &form->sel);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static bool_t i_sel_equ(const DSelect *sel1, const DSelect *sel2)
 {
     cassert_no_null(sel1);
