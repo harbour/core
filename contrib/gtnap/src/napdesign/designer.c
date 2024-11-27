@@ -66,10 +66,28 @@ static void i_destroy_form_opt(DForm **form)
 
 /*---------------------------------------------------------------------------*/
 
+static ___INLINE const char_t *i_list_text(const ListBox *listbox, const uint32_t index)
+{
+    const char_t *name = listbox_text(listbox, index);
+    if (str_is_prefix(name, i_SAVE_MARK) == TRUE)
+        name += str_len_c(i_SAVE_MARK);
+    return name;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static ___INLINE bool_t i_with_save_mark(const ListBox *listbox, const uint32_t index)
+{
+    const char_t *name = listbox_text(listbox, index);
+    return str_is_prefix(name, i_SAVE_MARK);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_need_save_mark(ListBox *listbox, const uint32_t pos, const bool_t needs_save)
 {
-    const char_t *name = listbox_text(listbox, pos);
-    bool_t with_bullet = str_is_prefix(name, i_SAVE_MARK);
+    const char_t *name = i_list_text(listbox, pos);
+    bool_t with_bullet = i_with_save_mark(listbox, pos);
     if (needs_save != with_bullet)
     {
         if (needs_save == TRUE)
@@ -80,7 +98,6 @@ static void i_need_save_mark(ListBox *listbox, const uint32_t pos, const bool_t 
         }
         else
         {
-            name += str_len_c(i_SAVE_MARK);
             listbox_set_elem(listbox, pos, name, NULL);            
         }
     }
@@ -135,16 +152,6 @@ static void i_update_form_controls(Designer *app, const bool_t enable)
     cell_enabled(app->remove_form_cell, enable_remove);
     cell_enabled(app->rename_form_cell, enable_rename);
     cell_enabled(app->widgets_cell, enable);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static ___INLINE const char_t *i_list_text(const ListBox *listbox, const uint32_t index)
-{
-    const char_t *name = listbox_text(listbox, index);
-    if (str_is_prefix(name, i_SAVE_MARK) == TRUE)
-        name += str_len_c(i_SAVE_MARK);
-    return name;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -415,6 +422,53 @@ static void i_OnAddFormClick(Designer *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnRenameFormClick(Designer *app, Event *e)
+{
+    const char_t *name = NULL;
+    String *fname = NULL;
+    cassert_no_null(app);
+    unref(e);
+    name = i_list_text(app->form_list, app->sel_form);
+    fname = dialog_form_name(app->window, name);
+    if (str_empty(fname) == FALSE)
+    {
+        if (i_exists_form_name(app, tc(fname)) == FALSE)
+        {
+            String *oldpath = str_cpath("%s/%s.%s", tc(app->folder_path), name, i_FILE_EXT);
+            if (hfile_exists(tc(oldpath), NULL) == TRUE)
+            {
+                String *newpath = str_cpath("%s/%s.%s", tc(app->folder_path), tc(fname), i_FILE_EXT);
+                bfile_rename(tc(oldpath), tc(newpath), NULL);
+                str_destroy(&newpath);
+            }
+            
+            {
+                bool_t with_bullet = i_with_save_mark(app->form_list, app->sel_form);
+                if (with_bullet == TRUE) 
+                {
+                    String *rname = str_printf("%s%s", i_SAVE_MARK, tc(fname));
+                    listbox_set_elem(app->form_list, app->sel_form, tc(rname), NULL);
+                    str_destroy(&rname);
+                }
+                else
+                {
+                    listbox_set_elem(app->form_list, app->sel_form, tc(fname), NULL);
+                }
+            }
+
+            str_destroy(&oldpath);
+        }
+        else
+        {
+            dialog_name_already_exists(app->window, tc(fname));
+        }
+    }
+
+    str_destroy(&fname);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_tools_layout(Designer *app, ResPack *pack)
 {
     Layout *layout = layout_create(9, 1);
@@ -438,6 +492,7 @@ static Layout *i_tools_layout(Designer *app, ResPack *pack)
     button_OnClick(button1, listener(app, i_OnOpenFormsClick, Designer));
     button_OnClick(button2, listener(app, i_OnSaveFormsClick, Designer));
     button_OnClick(button3, listener(app, i_OnAddFormClick, Designer));
+    button_OnClick(button4, listener(app, i_OnRenameFormClick, Designer));
     button_OnClick(button5, listener(app, i_OnSimulateClick, Designer));
     button_OnClick(button6, listener(app, i_OnRemoveClick, Designer));
     button_tooltip(button1, "Open forms folder");
