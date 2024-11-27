@@ -17,3 +17,5 @@ FEdit *dialog_new_edit(Window *parent, const DSelect *sel);
 FLayout *dialog_new_layout(Window *parent, const DSelect *sel);
 
 uint8_t dialog_unsaved_changes(Window *parent);
+
+bool_t dialog_remove_form(Window *parent, const char_t *name);

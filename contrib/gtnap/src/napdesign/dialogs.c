@@ -72,7 +72,7 @@ static void i_OnClick(DialogData *data, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
-static Layout *i_ok_cancel(DialogData *data)
+static Layout *i_ok_cancel(DialogData *data, const bool_t ok_default)
 {
     Layout *layout = layout_create(2, 1);
     Button *button1 = button_push();
@@ -86,7 +86,10 @@ static Layout *i_ok_cancel(DialogData *data)
     button_OnClick(button2, listener(data, i_OnClick, DialogData));
     layout_button(layout, button1, 0, 0);
     layout_button(layout, button2, 1, 0);
-    data->defbutton = button1;
+    if (ok_default == TRUE)
+        data->defbutton = button1;
+    else
+        data->defbutton = button2;
     return layout;
 }
 
@@ -122,7 +125,7 @@ String *dialog_form_name(Window *parent, const char_t *name)
     DialogData data;
     Layout *layout1 = layout_create(1, 3);
     Layout *layout2 = layout_create(2, 1);
-    Layout *layout3 = i_ok_cancel(&data);
+    Layout *layout3 = i_ok_cancel(&data, TRUE);
     Label *label1 = label_create();
     Label *label2 = label_create();
     Edit *edit = edit_create();
@@ -174,7 +177,7 @@ FLabel *dialog_new_label(Window *parent, const DSelect *sel)
     DialogData data;
     Layout *layout1 = layout_create(1, 3);
     Layout *layout2 = layout_create(2, 1);
-    Layout *layout3 = i_ok_cancel(&data);
+    Layout *layout3 = i_ok_cancel(&data, TRUE);
     Label *label1 = label_create();
     Label *label2 = label_create();
     Edit *edit = edit_create();
@@ -220,7 +223,7 @@ FButton *dialog_new_button(Window *parent, const DSelect *sel)
     DialogData data;
     Layout *layout1 = layout_create(1, 3);
     Layout *layout2 = layout_create(2, 1);
-    Layout *layout3 = i_ok_cancel(&data);
+    Layout *layout3 = i_ok_cancel(&data, TRUE);
     Label *label1 = label_create();
     Label *label2 = label_create();
     Edit *edit = edit_create();
@@ -266,7 +269,7 @@ FCheck *dialog_new_check(Window *parent, const DSelect *sel)
     DialogData data;
     Layout *layout1 = layout_create(1, 3);
     Layout *layout2 = layout_create(2, 1);
-    Layout *layout3 = i_ok_cancel(&data);
+    Layout *layout3 = i_ok_cancel(&data, TRUE);
     Label *label1 = label_create();
     Label *label2 = label_create();
     Edit *edit = edit_create();
@@ -312,7 +315,7 @@ FEdit *dialog_new_edit(Window *parent, const DSelect *sel)
     DialogData data;
     Layout *layout1 = layout_create(1, 5);
     Layout *layout2 = layout_create(2, 1);
-    Layout *layout3 = i_ok_cancel(&data);
+    Layout *layout3 = i_ok_cancel(&data, TRUE);
     Label *label1 = label_create();
     Label *label2 = label_create();
     Button *button1 = button_check();
@@ -394,7 +397,7 @@ FLayout *dialog_new_layout(Window *parent, const DSelect *sel)
     DialogLayout diag;
     Layout *layout1 = layout_create(1, 3);
     Layout *layout2 = i_grid_layout();
-    Layout *layout3 = i_ok_cancel(&data);
+    Layout *layout3 = i_ok_cancel(&data, TRUE);
     Label *label = label_create();
     Panel *panel = panel_create();
     Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
@@ -464,4 +467,35 @@ uint8_t dialog_unsaved_changes(Window *parent)
     /* Cancel action */
     else
         return 2;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t dialog_remove_form(Window *parent, const char_t *name)
+{
+    DialogData data;
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = i_ok_cancel(&data, FALSE);
+    Label *label = label_create();
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
+    String *caption = NULL;
+    uint32_t ret = 0;
+    data.window = window;
+    caption = str_printf("Do you really want to delete the '%s' form?", name);
+    label_text(label, tc(caption));
+    layout_label(layout1, label, 0, 0);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_vmargin(layout1, 0, 5);
+    panel_layout(panel, layout1);
+    window_panel(window, panel);
+    window_defbutton(window, data.defbutton);
+    i_center_window(parent, window);
+    ret = window_modal(window, parent);
+    window_destroy(&window);
+    str_destroy(&caption);
+
+    if (ret == BUTTON_OK)
+        return TRUE;
+    return FALSE;
 }

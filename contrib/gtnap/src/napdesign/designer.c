@@ -320,6 +320,51 @@ static void i_OnSimulateClick(Designer *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_OnRemoveClick(Designer *app, Event *e)
+{
+    const char_t *name = NULL;
+    cassert_no_null(app);
+    unref(e);
+    name = listbox_text(app->form_list, app->sel_form);
+    if (str_is_prefix(name, i_SAVE_MARK) == TRUE)
+        name += str_len_c(i_SAVE_MARK);
+
+    if (dialog_remove_form(app->window, name) == TRUE)
+    {
+        String *path = str_cpath("%s/%s.%s", tc(app->folder_path), name, i_FILE_EXT);
+        bool_t removed = TRUE;
+
+        if (hfile_exists(tc(path), NULL) == TRUE)
+            removed = bfile_delete(tc(path), NULL);
+
+        if (removed == TRUE)
+        {
+            uint32_t n = UINT32_MAX;
+            listbox_del_elem(app->form_list, app->sel_form);
+            arrpt_delete(app->forms, app->sel_form, i_destroy_form_opt, DForm);
+            n = arrpt_size(app->forms, DForm);
+
+            if (n > 0)
+            {
+                if (app->sel_form >= n)
+                    app->sel_form = n - 1;
+                listbox_select(app->form_list, app->sel_form, TRUE);
+            }
+            else
+            {
+                app->sel_form = UINT32_MAX;
+            }
+
+            i_open_form(app, app->sel_form);
+            i_update_form_controls(app, TRUE);
+        }
+
+        str_destroy(&path);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnAddFormClick(Designer *app, Event *e)
 {
     String *fname = NULL;
@@ -369,6 +414,7 @@ static Layout *i_tools_layout(Designer *app, ResPack *pack)
     button_OnClick(button2, listener(app, i_OnSaveFormsClick, Designer));
     button_OnClick(button3, listener(app, i_OnAddFormClick, Designer));
     button_OnClick(button5, listener(app, i_OnSimulateClick, Designer));
+    button_OnClick(button6, listener(app, i_OnRemoveClick, Designer));
     button_tooltip(button1, "Open forms folder");
     button_tooltip(button2, "Save all forms");
     button_tooltip(button3, "Add new form");
