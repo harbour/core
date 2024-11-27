@@ -139,6 +139,16 @@ static void i_update_form_controls(Designer *app, const bool_t enable)
 
 /*---------------------------------------------------------------------------*/
 
+static ___INLINE const char_t *i_list_text(const ListBox *listbox, const uint32_t index)
+{
+    const char_t *name = listbox_text(listbox, index);
+    if (str_is_prefix(name, i_SAVE_MARK) == TRUE)
+        name += str_len_c(i_SAVE_MARK);
+    return name;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_open_form(Designer *app, const uint32_t index)
 {
     DForm *form = NULL;
@@ -148,11 +158,10 @@ static void i_open_form(Designer *app, const uint32_t index)
         form = arrpt_get(app->forms, index, DForm);
         if (form == NULL)
         {
-            const char_t *name = listbox_text(app->form_list, index);
+            const char_t *name = i_list_text(app->form_list, index);
             String *path = str_cpath("%s/%s.%s", tc(app->folder_path), name, i_FILE_EXT);
             Stream *stm = NULL;
             DForm **forms = arrpt_all(app->forms, DForm);
-            cassert(str_is_prefix(name, i_SAVE_MARK) == FALSE);
             stm = stm_from_file(tc(path), NULL);
             if (stm != NULL)
             {
@@ -251,15 +260,9 @@ static void i_save_forms(Designer *app)
         
         if (need_save == TRUE)
         {
-            const char_t *name = listbox_text(app->form_list, form_i);
-            String *path = NULL;
-            Stream *stm = NULL;
-            
-            if (str_is_prefix(name, i_SAVE_MARK) == TRUE)
-                name += str_len_c(i_SAVE_MARK);
-
-            path = str_cpath("%s/%s.%s", tc(app->folder_path), name, i_FILE_EXT);
-            stm = stm_to_file(tc(path), NULL);
+            const char_t *name = i_list_text(app->form_list, form_i);
+            String *path = str_cpath("%s/%s.%s", tc(app->folder_path), name, i_FILE_EXT);
+            Stream *stm = stm_to_file(tc(path), NULL);
             if (stm != NULL)
             {
                 dform_write(stm, form);
@@ -325,10 +328,7 @@ static void i_OnRemoveClick(Designer *app, Event *e)
     const char_t *name = NULL;
     cassert_no_null(app);
     unref(e);
-    name = listbox_text(app->form_list, app->sel_form);
-    if (str_is_prefix(name, i_SAVE_MARK) == TRUE)
-        name += str_len_c(i_SAVE_MARK);
-
+    name = i_list_text(app->form_list, app->sel_form);
     if (dialog_remove_form(app->window, name) == TRUE)
     {
         String *path = str_cpath("%s/%s.%s", tc(app->folder_path), name, i_FILE_EXT);
@@ -365,6 +365,24 @@ static void i_OnRemoveClick(Designer *app, Event *e)
 
 /*---------------------------------------------------------------------------*/
 
+static bool_t i_exists_form_name(Designer *app, const char_t *name)
+{
+    uint32_t i, n;
+    cassert_no_null(app);
+    n = listbox_count(app->form_list);
+    cassert(n == arrpt_size(app->forms, DForm));
+    for (i = 0; i < n; ++i)
+    {
+        const char_t *lname = i_list_text(app->form_list, i);
+        if (str_equ_c(lname, name) == TRUE)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_OnAddFormClick(Designer *app, Event *e)
 {
     String *fname = NULL;
@@ -373,16 +391,23 @@ static void i_OnAddFormClick(Designer *app, Event *e)
     fname = dialog_form_name(app->window, NULL);
     if (str_empty(fname) == FALSE)
     {
-        uint32_t n = listbox_count(app->form_list);
-        DForm *form = dform_empty(app);
-        dform_compose(form);
-        cassert(n == arrpt_size(app->forms, DForm));
-        listbox_add_elem(app->form_list, tc(fname), NULL);
-        listbox_select(app->form_list, n, TRUE);
-        arrpt_append(app->forms, form, DForm);
-        app->sel_form = n;
-        i_update_form_controls(app, TRUE);
-        view_update(app->canvas);
+        if (i_exists_form_name(app, tc(fname)) == FALSE)
+        {
+            uint32_t n = listbox_count(app->form_list);
+            DForm *form = dform_empty(app);
+            dform_compose(form);
+            cassert(n == arrpt_size(app->forms, DForm));
+            listbox_add_elem(app->form_list, tc(fname), NULL);
+            listbox_select(app->form_list, n, TRUE);
+            arrpt_append(app->forms, form, DForm);
+            app->sel_form = n;
+            i_update_form_controls(app, TRUE);
+            view_update(app->canvas);
+        }
+        else
+        {
+            dialog_name_already_exists(app->window, tc(fname));
+        }
     }
 
     str_destroy(&fname);

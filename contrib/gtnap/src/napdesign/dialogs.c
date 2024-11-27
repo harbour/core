@@ -95,6 +95,21 @@ static Layout *i_ok_cancel(DialogData *data, const bool_t ok_default)
 
 /*---------------------------------------------------------------------------*/
 
+static Layout *i_ok(DialogData *data)
+{
+    Layout *layout = layout_create(1, 1);
+    Button *button1 = button_push();
+    cassert_no_null(data);
+    button_text(button1, "Ok");
+    button_tag(button1, BUTTON_OK);
+    button_OnClick(button1, listener(data, i_OnClick, DialogData));
+    layout_button(layout, button1, 0, 0);
+    data->defbutton = button1;
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_save_buttons(DialogData *data)
 {
     Layout *layout = layout_create(3, 1);
@@ -497,5 +512,32 @@ bool_t dialog_remove_form(Window *parent, const char_t *name)
 
     if (ret == BUTTON_OK)
         return TRUE;
+
     return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dialog_name_already_exists(Window *parent, const char_t *name)
+{
+    DialogData data;
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = i_ok(&data);
+    Label *label = label_create();
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
+    String *caption = NULL;
+    data.window = window;
+    caption = str_printf("Form name '%s' already exists", name);
+    label_text(label, tc(caption));
+    layout_label(layout1, label, 0, 0);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_vmargin(layout1, 0, 5);
+    panel_layout(panel, layout1);
+    window_panel(window, panel);
+    window_defbutton(window, data.defbutton);
+    i_center_window(parent, window);
+    window_modal(window, parent);
+    window_destroy(&window);
+    str_destroy(&caption);
 }
