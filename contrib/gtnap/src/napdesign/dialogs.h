@@ -15,3 +15,5 @@ FCheck *dialog_new_check(Window *parent, const DSelect *sel);
 FEdit *dialog_new_edit(Window *parent, const DSelect *sel);
 
 FLayout *dialog_new_layout(Window *parent, const DSelect *sel);
+
+uint8_t dialog_unsaved_changes(Window *parent);

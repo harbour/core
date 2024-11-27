@@ -88,6 +88,19 @@ static void i_need_save_mark(ListBox *listbox, const uint32_t pos, const bool_t 
 
 /*---------------------------------------------------------------------------*/
 
+static bool_t i_need_save(Designer *app)
+{
+    cassert_no_null(app);
+    cassert(arrpt_size(app->forms, DForm) == listbox_count(app->form_list));
+    arrpt_foreach(form, app->forms, DForm)
+        if (form != NULL && dform_need_save(form) == TRUE)
+            return TRUE;
+    arrpt_end()
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_update_form_controls(Designer *app, const bool_t enable)
 {
     bool_t enable_save = FALSE;
@@ -98,14 +111,7 @@ static void i_update_form_controls(Designer *app, const bool_t enable)
 
     if (enable == TRUE)
     {
-        cassert(arrpt_size(app->forms, DForm) == listbox_count(app->form_list));
-        arrpt_foreach(form, app->forms, DForm)
-            if (form != NULL && dform_need_save(form) == TRUE)
-            {
-                enable_save = TRUE;
-                break;
-            }
-        arrpt_end();
+        enable_save = i_need_save(app);
 
         if (app->sel_form != UINT32_MAX)
         {
@@ -183,6 +189,9 @@ static void i_init_forms(Designer *app, const char_t *path)
 
     if (err == ekFOK)
     {
+        uint32_t n = UINT32_MAX;
+
+        str_upd(&app->folder_path, path);
         arrst_foreach(file, files, DirEntry)
             String *fil = NULL;
             String *ext = NULL;
@@ -197,18 +206,19 @@ static void i_init_forms(Designer *app, const char_t *path)
             str_destroy(&ext);
         arrst_end()
 
-        if (arrpt_size(app->forms, DForm) > 0)
+        n = arrpt_size(app->forms, DForm);
+        if (n > 0)
         {
+            if (app->sel_form > n)
+                app->sel_form = 0;
             i_open_form(app, app->sel_form);
-            if (app->sel_form != UINT32_MAX)
-                listbox_select(app->form_list, app->sel_form, TRUE);
+            listbox_select(app->form_list, app->sel_form, TRUE);
         }
         else
         {
-            cassert(app->sel_form == UINT32_MAX);
+            app->sel_form = UINT32_MAX;
         }
 
-        str_upd(&app->folder_path, path);
         i_update_form_controls(app, TRUE);
 
         {
@@ -225,28 +235,15 @@ static void i_init_forms(Designer *app, const char_t *path)
         button_tooltip(button, "Open forms folder (No path selected)");
     }
 
+    view_update(app->canvas);
     arrst_destopt(&files, hfile_dir_entry_remove, DirEntry);
 }
 
 /*---------------------------------------------------------------------------*/
 
-static void i_OnOpenFormsClick(Designer *app, Event *e)
-{
-    const char_t *ftype = "..DIR..";
-    const char_t *folder = NULL;
-    cassert_no_null(app);
-    unref(e);
-    folder = comwin_open_file(app->window, &ftype, 1, tc(app->folder_path));
-    if (folder != NULL)
-        i_init_forms(app, folder);
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void i_OnSaveFormsClick(Designer *app, Event *e)
+static void i_save_forms(Designer *app)
 {
     cassert_no_null(app);
-    unref(e);
     arrpt_foreach(form, app->forms, DForm)
         bool_t need_save = FALSE;
         if (form != NULL)
@@ -272,7 +269,40 @@ static void i_OnSaveFormsClick(Designer *app, Event *e)
             str_destroy(&path);
         }
     arrpt_end()
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnOpenFormsClick(Designer *app, Event *e)
+{
+    bool_t can_open = TRUE;
+    cassert_no_null(app);
+    unref(e);
+    if (i_need_save(app) == TRUE)
+    {
+        uint8_t ret = dialog_unsaved_changes(app->window);
+        if (ret == 1)
+            i_save_forms(app);
+        else if (ret == 2)
+            can_open = FALSE;
+    }
+
+    if (can_open == TRUE)
+    {
+        const char_t *ftype = "..DIR..";
+        const char_t *folder = comwin_open_file(app->window, &ftype, 1, tc(app->folder_path));
+        if (folder != NULL)
+            i_init_forms(app, folder);
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnSaveFormsClick(Designer *app, Event *e)
+{
+    i_save_forms(app);
     i_update_form_controls(app, TRUE);
+    unref(e);
 }
 
 /*---------------------------------------------------------------------------*/

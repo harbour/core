@@ -34,6 +34,8 @@ struct _dialogdata_t
 
 #define BUTTON_OK 1000
 #define BUTTON_CANCEL 1001
+#define BUTTON_SAVE 1002
+#define BUTTON_NO_SAVE 1003
 
 /*---------------------------------------------------------------------------*/
 
@@ -84,6 +86,31 @@ static Layout *i_ok_cancel(DialogData *data)
     button_OnClick(button2, listener(data, i_OnClick, DialogData));
     layout_button(layout, button1, 0, 0);
     layout_button(layout, button2, 1, 0);
+    data->defbutton = button1;
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_save_buttons(DialogData *data)
+{
+    Layout *layout = layout_create(3, 1);
+    Button *button1 = button_push();
+    Button *button2 = button_push();
+    Button *button3 = button_push();
+    cassert_no_null(data);
+    button_text(button1, "Save changes");
+    button_text(button2, "NO save changes");
+    button_text(button3, "Cancel");
+    button_tag(button1, BUTTON_SAVE);
+    button_tag(button2, BUTTON_NO_SAVE);
+    button_tag(button3, BUTTON_CANCEL);
+    button_OnClick(button1, listener(data, i_OnClick, DialogData));
+    button_OnClick(button2, listener(data, i_OnClick, DialogData));
+    button_OnClick(button3, listener(data, i_OnClick, DialogData));
+    layout_button(layout, button1, 0, 0);
+    layout_button(layout, button2, 1, 0);
+    layout_button(layout, button3, 2, 0);
     data->defbutton = button1;
     return layout;
 }
@@ -403,4 +430,38 @@ FLayout *dialog_new_layout(Window *parent, const DSelect *sel)
     window_destroy(&window);
     str_destroy(&caption);
     return flayout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint8_t dialog_unsaved_changes(Window *parent)
+{
+    DialogData data;
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = i_save_buttons(&data);
+    Label *label = label_multiline();
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
+    uint32_t ret = 0;
+    data.window = window;
+    label_text(label, "There are unsaved changes in your current forms.\nChange will be lost if you open another project folder.\nDo you want to save your changes?");
+    layout_label(layout1, label, 0, 0);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_vmargin(layout1, 0, 5);
+    panel_layout(panel, layout1);
+    window_panel(window, panel);
+    window_defbutton(window, data.defbutton);
+    i_center_window(parent, window);
+    ret = window_modal(window, parent);
+    window_destroy(&window);
+
+    /* Save changes */
+    if (ret == BUTTON_SAVE)
+        return 1;
+    /* Don't save changes */
+    else if (ret == BUTTON_NO_SAVE)
+        return 0;
+    /* Cancel action */
+    else
+        return 2;
 }
