@@ -8,6 +8,8 @@ _nflib_api FLayout *flayout_create(const uint32_t ncols, const uint32_t nrows);
 
 _nflib_api FLayout *flayout_read(Stream *stm);
 
+_nflib_api void flayout_destroy(FLayout **layout);
+
 _nflib_api void flayout_write(Stream *stm, const FLayout *layout);
 
 _nflib_api void flayout_margin_left(FLayout *layout, const real32_t margin);

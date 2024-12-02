@@ -14,7 +14,7 @@ static uint32_t i_NUM_USERS = 0;
 static void i_nflib_atexit(void)
 {
     if (i_NUM_USERS != 0)
-        log_printf("Error! nform is not properly closed (%d)\n", i_NUM_USERS);
+        log_printf("Error! nflib is not properly closed (%d)\n", i_NUM_USERS);
 }
 
 /*---------------------------------------------------------------------------*/

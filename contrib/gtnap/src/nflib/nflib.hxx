@@ -3,8 +3,8 @@
 #include <gui/gui.hxx>
 #include "nflib.def"
 
-#ifndef __NFORM_HXX__
-#define __NFORM_HXX__
+#ifndef __NFLIB_HXX__
+#define __NFLIB_HXX__
 
 typedef struct _flabel_t FLabel;
 typedef struct _fbutton_t FButton;

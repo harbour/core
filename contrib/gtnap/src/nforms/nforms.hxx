@@ -1,10 +1,10 @@
 /* NAppGUI forms */
 
 #include <nflib/nflib.hxx>
-#include "napforms.def"
+#include "nforms.def"
 
-#ifndef __NAPFORMS_HXX__
-#define __NAPFORMS_HXX__
+#ifndef __NFORMS_HXX__
+#define __NFORMS_HXX__
 
 typedef struct _nform_t NForm;
 

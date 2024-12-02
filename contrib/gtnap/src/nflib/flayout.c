@@ -195,6 +195,13 @@ FLayout *flayout_read(Stream *stm)
 
 /*---------------------------------------------------------------------------*/
 
+void flayout_destroy(FLayout **layout)
+{
+    dbind_destroy(layout, FLayout);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_write_col(Stream *stm, const FColumn *col)
 {
     cassert_no_null(col);
