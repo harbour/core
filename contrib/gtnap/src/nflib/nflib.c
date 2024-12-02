@@ -1,6 +1,6 @@
 /* NAppGUI forms common base */
 
-#include "nform.h"
+#include "nflib.h"
 #include <gui/gui.h>
 #include <core/dbind.h>
 #include <osbs/log.h>
@@ -11,7 +11,7 @@ static uint32_t i_NUM_USERS = 0;
 
 /*---------------------------------------------------------------------------*/
 
-static void i_nform_atexit(void)
+static void i_nflib_atexit(void)
 {
     if (i_NUM_USERS != 0)
         log_printf("Error! nform is not properly closed (%d)\n", i_NUM_USERS);
@@ -109,13 +109,13 @@ static void i_dbind(void)
 
 /*---------------------------------------------------------------------------*/
 
-void nform_start(void)
+void nflib_start(void)
 {
     if (i_NUM_USERS == 0)
     {
         gui_start();
         i_dbind();
-        blib_atexit(i_nform_atexit);
+        blib_atexit(i_nflib_atexit);
     }
 
     i_NUM_USERS += 1;
@@ -123,7 +123,7 @@ void nform_start(void)
 
 /*---------------------------------------------------------------------------*/
 
-void nform_finish(void)
+void nflib_finish(void)
 {
     cassert(i_NUM_USERS > 0);
     if (i_NUM_USERS == 1)

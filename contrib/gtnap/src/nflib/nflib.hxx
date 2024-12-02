@@ -1,7 +1,7 @@
 /* NAppGUI forms common base */
 
 #include <gui/gui.hxx>
-#include "nform.def"
+#include "nflib.def"
 
 #ifndef __NFORM_HXX__
 #define __NFORM_HXX__

@@ -1,7 +1,7 @@
 /* NAppGUI forms */
 
 #include "napforms.h"
-#include <nform/nform.h>
+#include <nflib/nflib.h>
 #include <osbs/log.h>
 #include <sewer/blib.h>
 #include <sewer/cassert.h>
@@ -22,7 +22,7 @@ void napforms_start(void)
 {
     if (i_NUM_USERS == 0)
     {
-        nform_start();
+        nflib_start();
         blib_atexit(i_napforms_atexit);
     }
 
@@ -36,7 +36,7 @@ void napforms_finish(void)
     cassert(i_NUM_USERS > 0);
     if (i_NUM_USERS == 1)
     {
-        nform_finish();
+        nflib_finish();
     }
 
     i_NUM_USERS -= 1;

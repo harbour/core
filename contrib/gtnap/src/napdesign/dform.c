@@ -6,8 +6,8 @@
 #include "dialogs.h"
 #include "inspect.h"
 #include "propedit.h"
-#include <nform/flabel.h>
-#include <nform/flayout.h>
+#include <nflib/flabel.h>
+#include <nflib/flayout.h>
 #include <gui/guicontrol.h>
 #include <gui/button.h>
 #include <gui/edit.h>

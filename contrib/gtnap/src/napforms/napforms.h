@@ -4,8 +4,8 @@
 
 __EXTERN_C
 
-_nform_api void napforms_start(void);
+_nflib_api void napforms_start(void);
 
-_nform_api void napforms_finish(void);
+_nflib_api void napforms_finish(void);
 
 __END_C

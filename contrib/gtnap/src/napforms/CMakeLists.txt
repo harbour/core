@@ -1,1 +1,1 @@
-nap_library(napforms "nform" "${NAPPGUI_SHARED}" NRC_NONE)
+nap_library(napforms "nflib" "${NAPPGUI_SHARED}" NRC_NONE)

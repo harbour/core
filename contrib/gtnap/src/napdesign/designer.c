@@ -1,6 +1,6 @@
 /* NAppGUI Designer Application */
 
-#include <nform/nform.h>
+#include <nflib/nflib.h>
 #include <nappgui.h>
 #include "res_designer.h"
 #include "dlayout.h"
@@ -864,7 +864,7 @@ static void i_OnClose(Designer *app, Event *e)
 static Designer *i_app(ResPack *pack)
 {
     Designer *app = heap_new0(Designer);
-    nform_start();
+    nflib_start();
     i_dbind();
     dialog_dbind();
     i_load_config(app);
@@ -904,7 +904,7 @@ static void i_destroy(Designer **app)
     image_destroy(&(*app)->add_icon);
     arrpt_destroy(&(*app)->forms, i_destroy_form_opt, DForm);
     window_destroy(&(*app)->window);
-    nform_finish();
+    nflib_finish();
     heap_delete(app, Designer);
 }
 

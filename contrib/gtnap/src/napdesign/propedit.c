@@ -4,7 +4,7 @@
 #include "designer.h"
 #include "dlayout.h"
 #include "dform.h"
-#include <nform/flayout.h>
+#include <nflib/flayout.h>
 #include <gui/gui.h>
 #include <gui/cell.h>
 #include <gui/button.h>
