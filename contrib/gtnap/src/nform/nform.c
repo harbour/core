@@ -3,6 +3,19 @@
 #include "nform.h"
 #include <gui/gui.h>
 #include <core/dbind.h>
+#include <osbs/log.h>
+#include <sewer/blib.h>
+#include <sewer/cassert.h>
+
+static uint32_t i_NUM_USERS = 0;
+
+/*---------------------------------------------------------------------------*/
+
+static void i_nform_atexit(void)
+{
+    if (i_NUM_USERS != 0)
+        log_printf("Error! nform is not properly closed (%d)\n", i_NUM_USERS);
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -32,7 +45,7 @@ static void i_dbind(void)
     dbind(FColumn, real32_t, margin_right);
     dbind(FColumn, real32_t, forced_width);
     dbind(FRow, real32_t, margin_bottom);
-    dbind(FRow, real32_t, forced_height);    
+    dbind(FRow, real32_t, forced_height);
     dbind(FCell, String *, name);
     dbind(FCell, celltype_t, type);
     dbind(FCell, halign_t, halign);
@@ -88,8 +101,8 @@ static void i_dbind(void)
     /* Don't move, we must first declare the inner struct */
     dbind(FWidget, FLabel *, label);
     dbind(FWidget, FButton *, button);
-    dbind(FWidget, FCheck*, check);
-    dbind(FWidget, FEdit*, edit);
+    dbind(FWidget, FCheck *, check);
+    dbind(FWidget, FEdit *, edit);
     dbind(FWidget, FLayout *, layout);
     dbind(FCell, FWidget, widget);
 }
@@ -98,14 +111,26 @@ static void i_dbind(void)
 
 void nform_start(void)
 {
-    gui_start();
-    i_dbind();
+    if (i_NUM_USERS == 0)
+    {
+        gui_start();
+        i_dbind();
+        blib_atexit(i_nform_atexit);
+    }
+
+    i_NUM_USERS += 1;
 }
 
 /*---------------------------------------------------------------------------*/
 
 void nform_finish(void)
 {
-    /* Unregister types (when dbind supports) */
-    gui_finish();
+    cassert(i_NUM_USERS > 0);
+    if (i_NUM_USERS == 1)
+    {
+        /* Unregister types (when dbind support it) */
+        gui_finish();
+    }
+
+    i_NUM_USERS -= 1;
 }
