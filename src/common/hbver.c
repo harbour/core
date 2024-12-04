@@ -86,6 +86,9 @@
    #ifndef VER_MAJORVERSION
    #define VER_MAJORVERSION  0x0000002
    #endif
+   #ifndef VER_BUILDNUMBER
+   #define VER_BUILDNUMBER   0x0000004
+   #endif
    #ifndef VER_SERVICEPACKMINOR
    #define VER_SERVICEPACKMINOR  0x0000010
    #endif

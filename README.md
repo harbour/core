@@ -1226,6 +1226,53 @@ call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
 win-make
 ```
 
+```batchfile
+rem MSVC 2022 targeting ARM64
+rem (requires preceding build for native target)
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 17.10\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64_arm64
+win-make
+```
+
+```batchfile
+rem Clang distributed by Visual Studio
+set PATH="%ProgramFiles(x86)%\Microsoft Visual Studio 17.10\BuildTools\VC\Tools\Llvm\x64\bin";%PATH%
+win-make
+```
+
+```batchfile
+rem Clang from winlibs.com
+set PATH=C:\winlibs\mingw64\bin;%PATH%
+set HB_COMPILER=clang
+win-make
+```
+
+```batchfile
+rem Clang x86_64 distributed by MSYS2 from cmd
+set PATH=C:\msys64\clang64\bin;%PATH%
+win-make
+```
+
+## on Windows ARM64 hosts
+
+```batchfile
+rem MSVC 2022 for ARM64
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 17.10\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" arm64
+rem set HB_COMPILER=msvcarm64 (may be needed if Clang is also in resulting PATH)
+win-make
+```
+
+```batchfile
+rem Clang/MS ARM64
+set PATH=%ProgramFiles%\Microsoft Visual Studio 17.10\BuildTools\VC\Tools\Llvm\ARM64\bin;%PATH%
+win-make
+```
+
+```batchfile
+rem Clang/MSYS ARM64 called from cmd
+set PATH=C:\msys64\clangarm64\bin;%PATH%
+win-make
+```
+
 ## on MS-DOS hosts
 
 ```batchfile
@@ -1572,15 +1619,16 @@ mailing list.
 * sunpro   - Sun Studio C/C++
 
 ### win
-* mingw    - MinGW GNU C 3.4.2 and above
-* mingw64  - MinGW GNU C x86-64
-* msvc     - Microsoft Visual C++
-* msvc64   - Microsoft Visual C++ x86-64
-* msvcia64 - Microsoft Visual C++ IA-64 (Itanium)
+* mingw      - MinGW GNU C 3.4.2 and above
+* mingw64    - MinGW GNU C x86-64
+* msvc       - Microsoft Visual C++
+* msvc64     - Microsoft Visual C++ x86-64
+* msvcarm    - Microsoft Visual C++ ARM
+* msvcarm64  - Microsoft Visual C++ ARM64
+* msvcia64   - Microsoft Visual C++ IA-64 (Itanium)
+* clang      - Clang (various flavours supported)
 
 ### win (partial support, some features may be missing)
-
-* clang    - Clang
 * watcom   - Open Watcom C/C++
 * bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
 * bcc64    - Embarcadero C++ 6.5 and above
@@ -1612,6 +1660,7 @@ mailing list.
  :---- | :------- | :---------------- | :---------------------------------------
        | win      | win/bcc           | x86
        | win      | win/bcc64         | x86-64
+       | win      | win/clang         | (CPU cross-builds possible: x86, x86-64, arm64)
        | win      | win/gcc           | x86
        | win      | win/global        | x86
        | win      | win/icc           | x86
@@ -1621,6 +1670,8 @@ mailing list.
        | win      | win/mingw64       | x86-64
        | win      | win/msvc          | x86
        | win      | win/msvc64        | x86-64
+       | win      | win/msvcarm       | arm
+       | win      | win/msvcarm64     | arm64
        | win      | win/msvcia64      | ia64
        | win      | win/pocc          | x86
        | win      | win/pocc64        | x86-64
