@@ -4,7 +4,7 @@
 
 __EXTERN_C
 
-_nforms_api NForm *nform_create(const byte_t *data, const uint32_t size);
+_nforms_api NForm *nform_from_data(const byte_t *data, const uint32_t size);
 
 _nforms_api NForm *nform_from_file(const char_t *pathname, ferror_t *error);
 

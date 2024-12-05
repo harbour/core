@@ -31,7 +31,7 @@ static NForm *i_from_stream(Stream **stm)
 
 /*---------------------------------------------------------------------------*/
 
-NForm *nform_create(const byte_t *data, const uint32_t size)
+NForm *nform_from_data(const byte_t *data, const uint32_t size)
 {
     Stream *stm = stm_from_block(data, size);
     return i_from_stream(&stm);
