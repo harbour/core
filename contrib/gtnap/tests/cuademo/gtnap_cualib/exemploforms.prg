@@ -21,7 +21,7 @@ ATIVE(V_JANELA)
 ********************************
 STAT PROC TST_FORM_BASICO
 ********************************
-LOCAL V_FORM
-
-
-
+LOCAL V_FORM := NAP_FORM_LOAD(DIRET_FORMS()+"Customer.nfm")
+NAP_FORM_TITLE(V_FORM, "Primeiro exemplo de formulário GTNAP")
+NAP_FORM_MODAL(V_FORM)
+NAP_FORM_DESTROY(V_FORM)

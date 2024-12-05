@@ -9,12 +9,43 @@
 #include "gtnap.ch"
 #include "nap_menu.inl"
 #include "nap_debugger.inl"
-#include "nappgui.h"
-#include <osapp/osmain.h>
-#include <gui/drawctrl.inl>
+#include <nforms/nform.h>
 #include <deblib/deblib.h>
+#include <osapp/osmain.h>
+#include <osapp/osapp.h>
+#include <gui/button.h>
+#include <gui/drawctrl.inl>
+#include <gui/edit.h>
+#include <gui/globals.h>
+#include <gui/gui.h>
+#include <gui/imageview.h>
+#include <gui/label.h>
+#include <gui/layout.h>
+#include <gui/panel.h>
+#include <gui/tableview.h>
+#include <gui/textview.h>
+#include <gui/view.h>
+#include <gui/window.h>
+#include <draw2d/color.h>
+#include <draw2d/font.h>
+#include <draw2d/image.h>
+#include <geom2d/s2d.h>
+#include <geom2d/v2d.h>
+#include <core/arrst.h>
+#include <core/arrpt.h>
+#include <core/event.h>
+#include <core/heap.h>
+#include <core/strings.h>
+#include <osbs/bfile.h>
+#include <osbs/btime.h>
+#include <osbs/log.h>
+#include <osbs/osbs.h>
+#include <sewer/bmath.h>
 #include <sewer/blib.h>
+#include <sewer/bstd.h>
 #include <sewer/cassert.h>
+#include <sewer/ptr.h>
+#include <sewer/unicode.h>
 
 #include "hbapiitm.h"
 #include "hbapirdd.h"
@@ -167,6 +198,12 @@ struct _gtnap_modal_t
     uint64_t timestamp;
     uint32_t close_seconds;
     GtNapWindow *gtwin;
+};
+
+struct _gtnap_form_t
+{
+    NForm *form;
+    Window *window;
 };
 
 struct _gtnap_t
