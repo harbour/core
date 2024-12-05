@@ -9,7 +9,6 @@
 #include <gui/gui.hxx>
 
 typedef struct _gtnap_debugger_t GtNapDebugger;
-typedef struct _gtnap_form_t GtNapForm;
 
 #endif
 

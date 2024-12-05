@@ -12,6 +12,8 @@
 #include "hbgtcore.h"
 #include <gui/gui.hxx>
 
+typedef struct _gtnap_form_t GtNapForm;
+
 HB_EXTERN_BEGIN
 
 extern void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32_t cols, HB_ITEM *begin_block);
@@ -170,10 +172,7 @@ extern void hb_gtnap_toolbar_button(const uint32_t wid, const char_t *pathname, 
 
 extern void hb_gtnap_toolbar_separator(const uint32_t wid);
 
-/*
- * Fran TODO: Pending refactoring
- *
- */
+/* Pending refactoring */
 extern void hb_gtnap_cualib_init_log(void);
 
 extern void hb_gtnap_cualib_window_f4_lista(void);
@@ -181,6 +180,15 @@ extern void hb_gtnap_cualib_window_f4_lista(void);
 extern uint32_t hb_gtnap_cualib_window_current_edit(void);
 
 extern void hb_gtnap_cualib_default_button(const uint32_t nDefault);
+/*------------------------ */
+
+extern GtNapForm *hb_gtnap_form_load(const char_t *pathname);
+
+extern void hb_gtnap_form_title(GtNapForm *form, HB_ITEM *text_block);
+
+extern void hb_gtnap_form_modal(GtNapForm *form);
+
+extern void hb_gtnap_form_destroy(GtNapForm **form);
 
 HB_EXTERN_END
 

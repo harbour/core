@@ -66,6 +66,7 @@ Window *nform_window(const NForm *form)
     layout = flayout_to_gui(form->flayout, 40.f, 20.f);
     panel = panel_create();
     window = window_create(ekWINDOW_STD);
+    panel_layout(panel, layout);
     window_panel(window, panel);
     return window;
 }

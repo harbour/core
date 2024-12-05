@@ -9,6 +9,7 @@
 #include "gtnap.ch"
 #include "nap_menu.inl"
 #include "nap_debugger.inl"
+#include <nforms/nforms.h>
 #include <nforms/nform.h>
 #include <deblib/deblib.h>
 #include <osapp/osmain.h>
@@ -203,7 +204,9 @@ struct _gtnap_modal_t
 struct _gtnap_form_t
 {
     NForm *form;
+    String *title;
     Window *window;
+    uint32_t modal_ret;
 };
 
 struct _gtnap_t
@@ -564,8 +567,11 @@ static void i_gtnap_destroy(GtNap **gtnap)
     str_destroy(&(*gtnap)->title);
     str_destroy(&(*gtnap)->working_path);
     str_destroy(&(*gtnap)->debugger_path);
+    
     if ((*gtnap)->debugger != NULL)
         nap_debugger_destroy(&(*gtnap)->debugger);
+
+    nforms_finish();
     heap_delete(&(*gtnap), GtNap);
 }
 
@@ -628,7 +634,6 @@ bool_t i_gtwin_alive(GtNapWindow *gtwin, GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
-/* TODO: TO BE REMOVED */
 static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 {
     uint32_t id = 0;
@@ -641,14 +646,16 @@ static GtNapWindow *i_current_gtwin(GtNap *gtnap)
 
 /*---------------------------------------------------------------------------*/
 
-/* TODO: TO BE REMOVED */
 static GtNapWindow *i_current_main_gtwin(GtNap *gtnap)
 {
     cassert_no_null(gtnap);
-    arrpt_forback(gtwin, gtnap->windows, GtNapWindow) if (gtwin->parent_id == UINT32_MAX) return gtwin;
-arrpt_end
-();
-return NULL;
+    arrpt_forback(gtwin, gtnap->windows, GtNapWindow)
+    {
+        if (gtwin->parent_id == UINT32_MAX)
+            return gtwin;
+    }
+    arrpt_end()
+    return NULL;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2477,6 +2484,7 @@ void hb_gtnap_init(const char_t *title, const uint32_t rows, const uint32_t cols
     hb_winmainArgGet(&hInstance, NULL, NULL);
 #endif
 
+    nforms_start();
     str_copy_c(INIT_TITLE, sizeof32(INIT_TITLE), title);
     INIT_CODEBLOCK = hb_itemNew(begin_block);
     INIT_ROWS = rows;
@@ -4613,16 +4621,6 @@ void hb_gtnap_cualib_init_log(void)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_cualib_default_button(const uint32_t nDefault)
-{
-    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
-    cassert(gtwin->default_button == UINT32_MAX);
-    cassert(nDefault > 0);
-    gtwin->default_button = nDefault - 1;
-}
-
-/*---------------------------------------------------------------------------*/
-
 void hb_gtnap_cualib_window_f4_lista(void)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
@@ -4648,6 +4646,72 @@ uint32_t hb_gtnap_cualib_window_current_edit(void)
 
 /*---------------------------------------------------------------------------*/
 
+void hb_gtnap_cualib_default_button(const uint32_t nDefault)
+{
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    cassert(gtwin->default_button == UINT32_MAX);
+    cassert(nDefault > 0);
+    gtwin->default_button = nDefault - 1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+GtNapForm *hb_gtnap_form_load(const char_t *pathname)
+{
+    NForm *form = nform_from_file(pathname, NULL);
+    if (form != NULL)
+    {
+        GtNapForm *gtform = heap_new0(GtNapForm);
+        gtform->form = form;
+        return gtform;
+    }
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_form_title(GtNapForm *form, HB_ITEM *text_block)
+{
+    String *title = hb_block_to_utf8(text_block);
+    cassert_no_null(form);
+    str_destopt(&form->title);
+    form->title = title;
+    if (form->window != NULL)
+        window_title(form->window, tc(form->title));
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_form_modal(GtNapForm *form)
+{
+    GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    cassert_no_null(form);
+    cassert_no_null(gtwin);
+    if (form->window == NULL)
+    {
+        form->window = nform_window(form->form);
+        window_title(form->window, tc(form->title));
+    }
+
+    form->modal_ret = window_modal(form->window, gtwin->window);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_form_destroy(GtNapForm **form)
+{
+    cassert_no_null(form);
+    cassert_no_null(*form);
+    if ((*form)->window != NULL)
+        window_destroy(&(*form)->window);
+    str_destopt(&(*form)->title);
+    nform_destroy(&(*form)->form);
+    heap_delete(form, GtNapForm);
+}
+
+/*---------------------------------------------------------------------------*/
+
 String *hb_block_to_utf8(HB_ITEM *item)
 {
     String *str = NULL;
@@ -4659,7 +4723,6 @@ String *hb_block_to_utf8(HB_ITEM *item)
     else if (HB_ITEM_TYPE(item) == HB_IT_BLOCK)
     {
         PHB_ITEM ritem = hb_itemDo(item, 0);
-        cassert(HB_ITEM_TYPE(item) == HB_IT_BLOCK);
         str = i_item_to_utf8_string(ritem);
         hb_itemRelease(ritem);
     }
