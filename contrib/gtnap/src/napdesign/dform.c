@@ -885,6 +885,13 @@ static void i_center_window(const Window *parent, Window *window)
 
 /*---------------------------------------------------------------------------*/
 
+void dform_set_need_save(DForm *form)
+{
+    i_need_save(form);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_simulate(DForm *form, Window *window)
 {
     cassert_no_null(form);

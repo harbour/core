@@ -10,6 +10,10 @@ _nforms_api NForm *nform_from_file(const char_t *pathname, ferror_t *error);
 
 _nforms_api void nform_destroy(NForm **form);
 
-_nforms_api Window *nform_window(const NForm *form);
+_nforms_api Window *nform_window(const NForm *form, const uint32_t flags);
+
+_nforms_api void nform_set_control_str(NForm *form, const char_t *cell_name, const char_t *value);
+
+_nforms_api void nform_set_control_bool(NForm *form, const char_t *cell_name, const bool_t value);
 
 __END_C

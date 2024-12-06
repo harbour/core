@@ -58,8 +58,6 @@ _nflib_api const FCell *flayout_ccell(const FLayout *layout, const uint32_t col,
 
 _nflib_api Layout *flayout_to_gui(const FLayout *layout, const real32_t empty_width, const real32_t empty_height);
 
-//_nflib_api Layout *flayout_gui_search(const FLayout *layout, Layout *glayout, const FLayout *wanted);
-//
-//_nflib_api void flayout_sync_margin(const FLayout *layout, Layout *glayout);
+_nflib_api GuiControl *flayout_search_gui_control(const FLayout *layout, Layout *gui_layout, const char_t *cell_name);
 
 __END_C

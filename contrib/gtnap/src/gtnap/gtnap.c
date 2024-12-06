@@ -63,6 +63,7 @@ typedef struct _gtnap_area_t GtNapArea;
 typedef struct _gtnap_object_t GtNapObject;
 typedef struct _gtnap_geom_t GtNapGeom;
 typedef struct _gtnap_window_t GtNapWindow;
+typedef struct _gtnap_bind_t GtNapBind;
 typedef struct _gtnap_t GtNap;
 
 typedef void (*FPtr_gtnap_callback)(GtNapCallback *callback, Event *event);
@@ -201,12 +202,19 @@ struct _gtnap_modal_t
     GtNapWindow *gtwin;
 };
 
+struct _gtnap_bind_t
+{
+    String *gui_id;
+    PHB_ITEM value;
+};
+
 struct _gtnap_form_t
 {
     NForm *form;
     String *title;
     Window *window;
     uint32_t modal_ret;
+    ArrSt(GtNapBind) *binds;
 };
 
 struct _gtnap_t
@@ -239,6 +247,7 @@ DeclPt(GtNapCallback);
 DeclSt(GtNapColumn);
 DeclPt(GtNapArea);
 DeclPt(GtNapObject);
+DeclSt(GtNapBind);
 DeclPt(GtNapWindow);
 DeclPt(GuiComponent);
 
@@ -4663,6 +4672,7 @@ GtNapForm *hb_gtnap_form_load(const char_t *pathname)
     {
         GtNapForm *gtform = heap_new0(GtNapForm);
         gtform->form = form;
+        gtform->binds = arrst_create(GtNapBind);
         return gtform;
     }
 
@@ -4683,17 +4693,98 @@ void hb_gtnap_form_title(GtNapForm *form, HB_ITEM *text_block)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_remove_bind(GtNapBind *bind)
+{
+    cassert_no_null(bind);
+    cassert_no_null(bind->value);
+    str_destroy(&bind->gui_id);
+    hb_itemRelease(bind->value);
+    bind->value = NULL;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_map_bind_to_form(NForm *form, const ArrSt(GtNapBind) *binds)
+{
+    arrst_foreach_const(bind, binds, GtNapBind)
+        PHB_ITEM base = NULL;
+        cassert(HB_ITEM_TYPE(bind->value) == HB_IT_BYREF);
+        base = hb_itemUnRef(bind->value);
+        if (HB_ITEM_TYPE(base) == HB_IT_STRING)
+        {
+            String *str = hb_block_to_utf8(base);
+            nform_set_control_str(form, tc(bind->gui_id), tc(str));
+            str_destroy(&str);
+        }
+        else if (HB_ITEM_TYPE(base) == HB_IT_LOGICAL)
+        {
+            HB_BOOL value = hb_itemGetL(base);
+            nform_set_control_bool(form, tc(bind->gui_id), (bool_t)value);
+        }
+    arrst_end()
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_form_dbind(GtNapForm *form, HB_ITEM *bind_block)
+{
+    HB_SIZE i, n = UINT32_MAX;
+    cassert_no_null(form);
+    cassert(HB_ITEM_TYPE(bind_block) == HB_IT_ARRAY);
+    arrst_clear(form->binds, i_remove_bind, GtNapBind);
+    n = hb_arrayLen(bind_block);
+    for (i = 1; i <= n; ++i)
+    {
+        PHB_ITEM bind_item = hb_arrayGetItemPtr(bind_block, i);
+        PHB_ITEM name_item = NULL;
+        PHB_ITEM var_item = NULL;
+        const char *gui_id = NULL;
+        GtNapBind *bind = arrst_new(form->binds, GtNapBind);
+        cassert(HB_ITEM_TYPE(bind_item) == HB_IT_ARRAY);
+        cassert(hb_arrayLen(bind_item) == 2);
+        name_item = hb_arrayGetItemPtr(bind_item, 1);
+        var_item = hb_arrayGetItemPtr(bind_item, 2);
+        cassert(HB_ITEM_TYPE(name_item) == HB_IT_STRING);
+        cassert(HB_ITEM_TYPE(var_item) == HB_IT_BYREF);
+        gui_id = hb_itemGetCPtr(name_item);
+        bind->gui_id = str_c(cast_const(gui_id, char_t));
+        bind->value = hb_itemNew(var_item);            
+    }
+
+    if (form->window != NULL)
+        i_map_bind_to_form(form->form, form->binds);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_center_window(const Window *parent, Window *window)
+{
+    V2Df p1 = window_get_origin(parent);
+    S2Df s1 = window_get_size(parent);
+    S2Df s2 = window_get_size(window);
+    V2Df p2;
+    p2.x = p1.x + (s1.width - s2.width) / 2;
+    p2.y = p1.y + (s1.height - s2.height) / 2;
+    window_origin(window, p2);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void hb_gtnap_form_modal(GtNapForm *form)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
+    GtNapWindow *mwin = i_current_main_gtwin(GTNAP_GLOBAL);
     cassert_no_null(form);
     cassert_no_null(gtwin);
+    cassert_no_null(mwin);
     if (form->window == NULL)
     {
-        form->window = nform_window(form->form);
+        form->window = nform_window(form->form, ekWINDOW_STD | ekWINDOW_RETURN | ekWINDOW_ESC);
         window_title(form->window, tc(form->title));
+        i_map_bind_to_form(form->form, form->binds);
     }
 
+    i_center_window(mwin->window, form->window);
     form->modal_ret = window_modal(form->window, gtwin->window);
 }
 

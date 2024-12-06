@@ -521,6 +521,7 @@ static void i_OnCellNotify(PropData *data, Event *e)
     if (evbind_modify(e, FCell, String*, name) == TRUE)
     {
         designer_inspect_update(data->app);
+        dform_set_need_save(data->form);
     }
     else if (evbind_modify(e, FCell, halign_t, halign) == TRUE)
     {

@@ -3,6 +3,7 @@
 #include "flayout.h"
 #include <gui/button.h>
 #include <gui/buttonh.h>
+#include <gui/cell.h>
 #include <gui/label.h>
 #include <gui/labelh.h>
 #include <gui/layout.h>
@@ -741,49 +742,54 @@ Layout *flayout_to_gui(const FLayout *layout, const real32_t empty_width, const 
     return glayout;
 }
 
-///*---------------------------------------------------------------------------*/
-//
-//Layout *flayout_gui_search(const FLayout *layout, Layout *glayout, const FLayout *wanted)
-//{
-//    cassert_no_null(layout);
-//    if (layout != wanted)
-//    {
-//        const FCell *cell = arrst_all_const(layout->cells, FCell);
-//        uint32_t ncols = arrst_size(layout->cols, FColumn);
-//        uint32_t nrows = arrst_size(layout->rows, FRow);
-//        uint32_t i, j;
-//
-//        for (j = 0; j < nrows; ++j)
-//        {
-//            for (i = 0; i < ncols; ++i)
-//            {
-//                if (cell->type == ekCELL_TYPE_LAYOUT)
-//                {
-//                    FLayout *sublayout = cell->widget.layout;
-//                    Layout *subglayout = layout_get_layout(cast(glayout, Layout), i, j);
-//                    Layout *fglayout = flayout_gui_search(sublayout, subglayout, wanted);
-//                    if (fglayout != NULL)
-//                        return fglayout;
-//                }
-//
-//                cell += 1;
-//            }
-//        }
-//
-//        return NULL;
-//    }
-//    else
-//    {
-//        cassert(flayout_ncols(layout) == layout_ncols(glayout));
-//        cassert(flayout_nrows(layout) == layout_nrows(glayout));
-//        return glayout;
-//    }
-//}
-//
-///*---------------------------------------------------------------------------*/
-//
-//void flayout_synchro_margin(const FLayout *layout, Layout *glayout, const FLayout *sublayout)
-//{
-//    Layout *gsublayout = flayout_gui_search(layout, glayout, sublayout);
-//    layout_margin4(gsublayout, sublayout->margin_top, sublayout->margin_right, sublayout->margin_bottom, sublayout->margin_left);
-//}
+/*---------------------------------------------------------------------------*/
+
+GuiControl *flayout_search_gui_control(const FLayout *layout, Layout *gui_layout, const char_t *cell_name)
+{
+    const FCell *cells = NULL;
+    uint32_t i, j, ncols = 0, nrows = 0;
+    cassert_no_null(layout);
+    cells = arrst_all_const(layout->cells, FCell);
+    ncols = arrst_size(layout->cols, FColumn);
+    nrows = arrst_size(layout->rows, FRow);
+
+    for (j = 0; j < nrows; ++j)
+    {
+        for (i = 0; i < ncols; ++i)
+        {
+            if (str_equ(cells->name, cell_name) == TRUE)
+            {
+                switch(cells->type)
+                {
+                case ekCELL_TYPE_LABEL:
+                case ekCELL_TYPE_BUTTON:
+                case ekCELL_TYPE_CHECK:
+                case ekCELL_TYPE_EDIT:
+                {
+                    Cell *gcell = layout_cell(gui_layout, i, j);
+                    return cell_control(gcell);
+                }
+
+                case ekCELL_TYPE_LAYOUT:
+                case ekCELL_TYPE_EMPTY:
+                    break;
+                cassert_default();
+                }
+            }
+
+            if (cells->type == ekCELL_TYPE_LAYOUT)
+            {
+                Cell *gcell = layout_cell(gui_layout, i, j);
+                Layout *gsub_layout = cell_layout(gcell);
+                GuiControl *control = flayout_search_gui_control(cells->widget.layout, gsub_layout, cell_name);
+                if (control != NULL)
+                    return control;
+            }
+
+            cells += 1;
+        }
+    }
+
+    return NULL;
+}
+

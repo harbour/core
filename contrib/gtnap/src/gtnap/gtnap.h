@@ -186,6 +186,8 @@ extern GtNapForm *hb_gtnap_form_load(const char_t *pathname);
 
 extern void hb_gtnap_form_title(GtNapForm *form, HB_ITEM *text_block);
 
+extern void hb_gtnap_form_dbind(GtNapForm *form, HB_ITEM *bind_block);
+
 extern void hb_gtnap_form_modal(GtNapForm *form);
 
 extern void hb_gtnap_form_destroy(GtNapForm **form);
