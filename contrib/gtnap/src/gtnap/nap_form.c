@@ -34,10 +34,29 @@ HB_FUNC(NAP_FORM_DBIND)
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC(NAP_FORM_ONCLICK)
+{
+    GtNapForm *form = cast(hb_parptr(1), GtNapForm);
+    const char_t *button_cell_name = hb_parcx(2);
+    HB_ITEM *click_block = hb_param(3, HB_IT_BLOCK);
+    hb_gtnap_form_OnClick(form, button_cell_name, click_block);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC(NAP_FORM_MODAL)
 {
     GtNapForm *form = cast(hb_parptr(1), GtNapForm);
     hb_gtnap_form_modal(form);
+}
+
+/*---------------------------------------------------------------------------*/
+
+HB_FUNC(NAP_FORM_STOP_MODAL)
+{
+    GtNapForm *form = cast(hb_parptr(1), GtNapForm);
+    uint32_t value = hb_parni(2);
+    hb_gtnap_form_stop_modal(form, value);
 }
 
 /*---------------------------------------------------------------------------*/

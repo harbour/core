@@ -16,4 +16,6 @@ _nforms_api void nform_set_control_str(NForm *form, const char_t *cell_name, con
 
 _nforms_api void nform_set_control_bool(NForm *form, const char_t *cell_name, const bool_t value);
 
+_nforms_api bool_t nform_set_listener(NForm *form, const char_t *cell_name, Listener *listener);
+
 __END_C
