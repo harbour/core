@@ -1,6 +1,6 @@
 /* NAppGUI Designer types */
 
-#include <nform/nform.hxx>
+#include <nflib/nflib.hxx>
 
 #ifndef __DESIGNER_HXX__
 #define __DESIGNER_HXX__

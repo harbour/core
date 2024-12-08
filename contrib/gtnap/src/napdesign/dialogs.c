@@ -1,7 +1,7 @@
 /* Dialog boxes */
 
 #include "dialogs.h"
-#include <nform/flayout.h>
+#include <nflib/flayout.h>
 #include <gui/button.h>
 #include <gui/cell.h>
 #include <gui/edit.h>

@@ -1,1 +1,1 @@
-nap_desktop_app(napdesign "napforms;osapp" NRC_EMBEDDED)
+nap_desktop_app(napdesign "nflib;osapp" NRC_EMBEDDED)

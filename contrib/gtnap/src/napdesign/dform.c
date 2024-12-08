@@ -6,8 +6,8 @@
 #include "dialogs.h"
 #include "inspect.h"
 #include "propedit.h"
-#include <nform/flabel.h>
-#include <nform/flayout.h>
+#include <nflib/flabel.h>
+#include <nflib/flayout.h>
 #include <gui/guicontrol.h>
 #include <gui/button.h>
 #include <gui/edit.h>
@@ -881,6 +881,13 @@ static void i_center_window(const Window *parent, Window *window)
     p2.x = p1.x + (s1.width - s2.width) / 2;
     p2.y = p1.y + (s1.height - s2.height) / 2;
     window_origin(window, p2);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_set_need_save(DForm *form)
+{
+    i_need_save(form);
 }
 
 /*---------------------------------------------------------------------------*/

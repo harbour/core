@@ -1,7 +1,7 @@
 /* Designer layout */
 
 #include "dlayout.h"
-#include <nform/flayout.h>
+#include <nflib/flayout.h>
 #include <gui/button.h>
 #include <gui/button.h>
 #include <gui/buttonh.h>

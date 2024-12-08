@@ -1,0 +1,31 @@
+/* NAppGUI forms */
+
+/* clang-format off */
+
+#if defined(NAPPGUI_SHARED)
+    #if defined(NAPPGUI_BUILD_NFORMS_LIB)
+        #define NAPPGUI_NFORMS_EXPORT_DLL
+    #else
+        #define NAPPGUI_NFORMS_IMPORT_DLL
+    #endif
+#endif
+
+#if defined(__GNUC__)
+    #if defined(NAPPGUI_NFORMS_EXPORT_DLL)
+        #define _nforms_api __attribute__((visibility("default")))
+    #else
+        #define _nforms_api
+    #endif
+#elif defined(_MSC_VER)
+    #if defined(NAPPGUI_NFORMS_IMPORT_DLL)
+        #define _nforms_api __declspec(dllimport)
+    #elif defined(NAPPGUI_NFORMS_EXPORT_DLL)
+        #define _nforms_api __declspec(dllexport)
+    #else
+        #define _nforms_api
+    #endif
+#else
+    #error Unknown compiler
+#endif
+
+/* clang-format on */
