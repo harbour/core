@@ -38,7 +38,26 @@ static void i_remove_row(FRow *row)
 
 static void i_remove_cell(FCell *cell)
 {
-    dbind_remove(cell, FCell);
+    cassert_no_null(cell);
+    str_destroy(&cell->name);
+    switch(cell->type) {
+    case ekCELL_TYPE_LABEL:
+        dbind_destroy(&cell->widget.label, FLabel);
+        break;
+    case ekCELL_TYPE_BUTTON:
+        dbind_destroy(&cell->widget.button, FButton);
+        break;
+    case ekCELL_TYPE_CHECK:
+        dbind_destroy(&cell->widget.check, FCheck);
+        break;
+    case ekCELL_TYPE_EDIT:
+        dbind_destroy(&cell->widget.edit, FEdit);
+        break;
+    case ekCELL_TYPE_LAYOUT:
+        flayout_destroy(&cell->widget.layout);
+        break;
+    }
+    /* dbind_remove(cell, FCell); */
 }
 
 /*---------------------------------------------------------------------------*/
@@ -198,7 +217,14 @@ FLayout *flayout_read(Stream *stm)
 
 void flayout_destroy(FLayout **layout)
 {
-    dbind_destroy(layout, FLayout);
+    cassert_no_null(layout);
+    str_destroy(&(*layout)->name);
+    arrst_destroy(&(*layout)->cols, i_remove_column, FColumn);
+    arrst_destroy(&(*layout)->rows, i_remove_row, FRow);
+    arrst_destroy(&(*layout)->cells, i_remove_cell, FCell);
+    heap_delete(layout, FLayout);
+    /* TODO: Change by */
+    /* dbind_destroy(layout, FLayout); */
 }
 
 /*---------------------------------------------------------------------------*/
