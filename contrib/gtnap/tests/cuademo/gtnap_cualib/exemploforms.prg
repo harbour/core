@@ -67,8 +67,8 @@ NAP_FORM_TITLE(V_FORM, "Primeiro exemplo de formulário GTNAP")
 // Write the variable values into the form controls (Edit, Buttons, etc)
 NAP_FORM_DBIND(V_FORM, V_BIND)
 // Buttons callback
-NAP_FORM_ONCLICK(V_FORM, "button_ok", {|| NAP_FORM_STOP_MODAL(1000) })
-NAP_FORM_ONCLICK(V_FORM, "button_cancel", {|| NAP_FORM_STOP_MODAL(1001) })
+NAP_FORM_ONCLICK(V_FORM, "button_ok", {|| NAP_FORM_STOP_MODAL(V_FORM, 1000) })
+NAP_FORM_ONCLICK(V_FORM, "button_cancel", {|| NAP_FORM_STOP_MODAL(V_FORM, 1001) })
 
 // Launch the form
 N_RES := NAP_FORM_MODAL(V_FORM)
@@ -83,6 +83,8 @@ ELSEIF N_RES == NAP_MODAL_ENTER
     MOSTRAR("M?????","Pressionado [Enter], dados aceitos.")
 ELSEIF N_RES == 1000
     MOSTRAR("M?????","Botão [OK] pressionado, dados aceitos.")
+ELSE
+    MOSTRAR("M?????","Valor de retorno desconhecido.")
 ENDIF
 
 NAP_FORM_DESTROY(V_FORM)

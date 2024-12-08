@@ -4833,7 +4833,7 @@ static void i_center_window(const Window *parent, Window *window)
 
 /*---------------------------------------------------------------------------*/
 
-void hb_gtnap_form_modal(GtNapForm *form)
+uint32_t hb_gtnap_form_modal(GtNapForm *form)
 {
     GtNapWindow *gtwin = i_current_gtwin(GTNAP_GLOBAL);
     GtNapWindow *mwin = i_current_main_gtwin(GTNAP_GLOBAL);
@@ -4849,6 +4849,7 @@ void hb_gtnap_form_modal(GtNapForm *form)
 
     i_center_window(mwin->window, form->window);
     form->modal_ret = window_modal(form->window, gtwin->window);
+    return form->modal_ret;
 }
 
 /*---------------------------------------------------------------------------*/
