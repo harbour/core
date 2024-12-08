@@ -119,6 +119,51 @@ void nform_set_control_bool(NForm *form, const char_t *cell_name, const bool_t v
 
 /*---------------------------------------------------------------------------*/
 
+bool_t nform_get_control_str(const NForm *form, const char_t *cell_name, const char_t **value)
+{
+    GuiControl *control = NULL;
+    cassert_no_null(form);
+    cassert_no_null(form->glayout);
+    cassert_no_null(value);
+    control = flayout_search_gui_control(form->flayout, form->glayout, cell_name);
+    if (control != NULL)
+    {
+        Edit *edit = guicontrol_edit(control);
+        if (edit != NULL)
+        {
+            *value = edit_get_text(edit);
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t nform_get_control_bool(const NForm *form, const char_t *cell_name, bool_t *value)
+{
+    GuiControl *control = NULL;
+    cassert_no_null(form);
+    cassert_no_null(form->glayout);
+    cassert_no_null(value);
+    control = flayout_search_gui_control(form->flayout, form->glayout, cell_name);
+    if (control != NULL)
+    {
+        Button *button = guicontrol_button(control);
+        if (button != NULL)
+        {
+            gui_state_t state = button_get_state(button);
+            *value = (state == ekGUI_OFF) ? FALSE : TRUE;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+/*---------------------------------------------------------------------------*/
+
 bool_t nform_set_listener(NForm *form, const char_t *cell_name, Listener *listener)
 {
     GuiControl *control = NULL;

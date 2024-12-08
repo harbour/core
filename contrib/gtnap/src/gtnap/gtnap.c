@@ -4716,9 +4716,11 @@ static void i_map_bind_to_form(NForm *form, ArrSt(GtNapBind) *binds)
     arrst_foreach(bind, binds, GtNapBind)
         if (bind->value != NULL)
         {
-            PHB_ITEM base = NULL;
-            cassert(HB_ITEM_TYPE(bind->value) == HB_IT_BYREF);
-            base = hb_itemUnRef(bind->value);
+            PHB_ITEM base = bind->value;
+
+            if (HB_ITEM_TYPE(base) == HB_IT_BYREF)
+                base = hb_itemUnRef(base);
+
             if (HB_ITEM_TYPE(base) == HB_IT_STRING)
             {
                 String *str = hb_block_to_utf8(base);
@@ -4760,7 +4762,6 @@ void hb_gtnap_form_dbind(GtNapForm *form, HB_ITEM *bind_block)
         name_item = hb_arrayGetItemPtr(bind_item, 1);
         var_item = hb_arrayGetItemPtr(bind_item, 2);
         cassert(HB_ITEM_TYPE(name_item) == HB_IT_STRING);
-        cassert(HB_ITEM_TYPE(var_item) == HB_IT_BYREF);
         gui_id = hb_itemGetCPtr(name_item);
         bind->gui_id = str_c(cast_const(gui_id, char_t));
         bind->value = hb_itemNew(var_item);            
@@ -4768,6 +4769,39 @@ void hb_gtnap_form_dbind(GtNapForm *form, HB_ITEM *bind_block)
 
     if (form->window != NULL)
         i_map_bind_to_form(form->form, form->binds);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void hb_gtnap_form_dbind_store(GtNapForm *form)
+{
+    cassert_no_null(form);
+    arrst_foreach(bind, form->binds, GtNapBind)
+        if (bind->value != NULL)
+        {
+            /* We only can save a value in HB_IT_BYREF types */
+            if (HB_ITEM_TYPE(bind->value) == HB_IT_BYREF)
+            {
+                PHB_ITEM base = hb_itemUnRef(bind->value);
+                if (HB_ITEM_TYPE(base) == HB_IT_STRING)
+                {
+                    const char_t *text = NULL;
+                    if (nform_get_control_str(form->form, tc(bind->gui_id), &text) == TRUE)
+                    {
+                        String *cpstr = i_utf8_to_cp_string(text);
+                        hb_itemPutC(base, tc(cpstr));
+                        str_destroy(&cpstr);
+                    }
+                }
+                else if (HB_ITEM_TYPE(base) == HB_IT_LOGICAL)
+                {
+                    bool_t value = FALSE;
+                    if (nform_get_control_bool(form->form, tc(bind->gui_id), &value) == TRUE)
+                        hb_itemPutL(base, value ? HB_TRUE : HB_FALSE);
+                }
+            }
+        }
+    arrst_end()
 }
 
 /*---------------------------------------------------------------------------*/

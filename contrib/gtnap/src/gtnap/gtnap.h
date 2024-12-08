@@ -188,6 +188,8 @@ extern void hb_gtnap_form_title(GtNapForm *form, HB_ITEM *text_block);
 
 extern void hb_gtnap_form_dbind(GtNapForm *form, HB_ITEM *bind_block);
 
+extern void hb_gtnap_form_dbind_store(GtNapForm *form);
+
 extern void hb_gtnap_form_OnClick(GtNapForm *form, const char_t *button_cell_name, HB_ITEM *click_block);
 
 extern uint32_t hb_gtnap_form_modal(GtNapForm *form);

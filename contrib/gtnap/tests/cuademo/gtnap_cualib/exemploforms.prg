@@ -61,6 +61,7 @@ LOCAL V_BIND := { ;
                 }
 
 LOCAL N_RES := 0
+LOCAL C_MESSAGE := ""
 
 // Window title
 NAP_FORM_TITLE(V_FORM, "Primeiro exemplo de formulário GTNAP")
@@ -73,18 +74,41 @@ NAP_FORM_ONCLICK(V_FORM, "button_cancel", {|| NAP_FORM_STOP_MODAL(V_FORM, 1001) 
 // Launch the form
 N_RES := NAP_FORM_MODAL(V_FORM)
 
-IF N_RES == NAP_MODAL_ESC
+IF N_RES == NAP_MODAL_ENTER
+    MOSTRAR("M?????","Pressionado [Enter], dados aceitos.")
+ELSEIF N_RES == 1000
+    MOSTRAR("M?????","Botão [OK] pressionado, dados aceitos.")
+ELSEIF N_RES == NAP_MODAL_ESC
     MOSTRAR("M?????","ESC pressionado, dados cancelados.")
 ELSEIF N_RES == NAP_MODAL_X_BUTTON
     MOSTRAR("M?????","Formulário fechado com [X], dados cancelados.")
 ELSEIF N_RES == 1001
     MOSTRAR("M?????","Botão [Cancelar] pressionado, dados cancelados.")
-ELSEIF N_RES == NAP_MODAL_ENTER
-    MOSTRAR("M?????","Pressionado [Enter], dados aceitos.")
-ELSEIF N_RES == 1000
-    MOSTRAR("M?????","Botão [OK] pressionado, dados aceitos.")
 ELSE
     MOSTRAR("M?????","Valor de retorno desconhecido.")
+ENDIF
+
+IF N_RES == NAP_MODAL_ENTER .OR. N_RES == 1000
+
+    // Write the values from the GUI controls to Harbour variables
+    NAP_FORM_DBIND_STORE(V_FORM)
+
+    C_MESSAGE := "C_NAME: " + C_NAME + ";" + ;
+                 "C_LAST: " + C_LAST + ";" + ;
+                 "C_ADDRESS: " + C_ADDRESS + ";" + ;
+                 "C_CITY: " + C_CITY + ";" + ;
+                 "C_PHONE: " + C_PHONE + ";" + ;
+                 "C_USER: " + C_USER + ";" + ;
+                 "C_PASS: " + C_PASS + ";" + ;
+                 "C_BANK: " + C_BANK[1] + "-" + C_BANK[2] + "-" + C_BANK[3] + "-" + C_BANK[4] + ";" + ;
+                 "C_CARD: " + C_CARD[1] + "-" + C_CARD[2] + "-" + C_CARD[3] + "-" + C_CARD[4] + "-" + C_CARD[5] + ";" + ;
+                 "L_MAIL_LIST: " + hb_ValToStr(L_MAIL_LIST) + ";" + ;
+                 "L_SECURE_PASS: " + hb_ValToStr(L_SECURE_PASS) + ";" + ;
+                 "L_SHOW_ALERTS: " + hb_ValToStr(L_SHOW_ALERTS) + ";" + ;
+                 "L_CONNECT_BANK: " + hb_ValToStr(L_CONNECT_BANK)
+
+    MOSTRAR("M?????",C_Message)
+
 ENDIF
 
 NAP_FORM_DESTROY(V_FORM)

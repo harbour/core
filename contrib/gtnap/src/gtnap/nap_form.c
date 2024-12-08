@@ -34,6 +34,14 @@ HB_FUNC(NAP_FORM_DBIND)
 
 /*---------------------------------------------------------------------------*/
 
+HB_FUNC(NAP_FORM_DBIND_STORE)
+{
+    GtNapForm *form = cast(hb_parptr(1), GtNapForm);
+    hb_gtnap_form_dbind_store(form);
+}
+
+/*---------------------------------------------------------------------------*/
+
 HB_FUNC(NAP_FORM_ONCLICK)
 {
     GtNapForm *form = cast(hb_parptr(1), GtNapForm);
