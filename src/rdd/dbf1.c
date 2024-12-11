@@ -2197,10 +2197,12 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
                pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                                     &nLen, pArea->area.cdPage, hb_vmCDP() );
                hb_itemPutCLPtr( pItem, pszVal, nLen );
-               break;
             }
-            pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
-            hb_itemPutCL( pItem, pszVal, nLen );
+            else
+            {
+               pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
+               hb_itemPutCL( pItem, pszVal, nLen );
+            }
          }
          break;
 

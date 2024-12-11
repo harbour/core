@@ -513,7 +513,7 @@
                                                 RETURN a ; }:eval( <x> )
    #xtranslate HGetAACompatibility( <x> )  => hb_HKeepOrder( <x> )
    #xtranslate HSetAACompatibility( [<x,...>] ) => {| h | ;;
-                                                   hb_HKeepOrder( h ) ;;
+                                                   hb_HKeepOrder( h, .T. ) ;;
                                                    RETURN .T. ; }:eval( <x> )
 
    /* inet*() functions */

@@ -2296,14 +2296,14 @@ static void hb_compAnnounce( HB_COMP_DECL, const char * szFunName )
    }
 }
 
-void hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName )
+void hb_compFunctionSetScope( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope )
 {
    PHB_HSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
 
    if( pSym )
    {
       if( ( pSym->cScope & ( HB_FS_DEFERRED | HB_FS_LOCAL ) ) == 0 )
-         pSym->cScope |= HB_FS_STATIC | HB_FS_LOCAL;
+         pSym->cScope |= cScope;
    }
 }
 

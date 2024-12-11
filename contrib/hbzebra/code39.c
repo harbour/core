@@ -161,6 +161,8 @@ PHB_ZEBRA hb_zebra_create_code39( const char * szCode, HB_SIZE nLen, int iFlags 
    int        i, iLen = ( int ) nLen;
    int        csum;
 
+   iLen = nLen > INT_MAX ? INT_MAX : ( int ) nLen;
+
    pZebra = hb_zebra_create();
    pZebra->iType = HB_ZEBRA_TYPE_CODE39;
 
