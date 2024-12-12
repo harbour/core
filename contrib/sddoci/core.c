@@ -80,9 +80,6 @@
    #define D_HB_ITEMPUTSTR( itm, str )              hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
    #define D_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
    #define D_HB_CHAR  HB_WCHAR
-   #ifndef ostrlen
-      #define ostrlen wcslen
-   #endif
 #else
    #define D_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
    #define D_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
@@ -90,9 +87,6 @@
    #define D_HB_ITEMPUTSTR( itm, str )              hb_itemPutStr( itm, hb_setGetOSCP(), str )
    #define D_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
    #define D_HB_CHAR  char
-   #ifndef ostrlen
-      #define ostrlen strlen
-   #endif
 #endif
 
 

@@ -53,7 +53,6 @@
 
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
-#include <QtCore/QPointer>
 
 #include <QtGui/QFont>
 #include <QtGui/QColor>
@@ -75,8 +74,6 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QAbstractButton>
 #include <QtWidgets/QAction>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QGraphicsDropShadowEffect>
 #ifdef HB_QT_SOUND
   #include <QtMultimedia/QSound>
 #endif
@@ -88,10 +85,6 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QAbstractButton>
 #include <QtGui/QAction>
-#include <QtGui/QLabel>
-#if QT_VERSION >= 0x040600
-#include <QtGui/QGraphicsDropShadowEffect>
-#endif
 #ifdef HB_QT_SOUND
   #include <QtGui/QSound>
 #endif
@@ -380,7 +373,6 @@ public:
    void setImageSize( void );
    void copySelection( void );
    void repaintChars( const QRect & rx );
-   void updateArea( const QRect & rx );
 
 protected:
    void inputMethodEvent( QInputMethodEvent * evt );
@@ -414,35 +406,6 @@ public:
 
 protected:
    void closeEvent( QCloseEvent * evt );
-};
-
-
-class QTCRegion : public QWidget
-{
-   Q_OBJECT
-
-public:
-   QTCRegion( PHB_GTQTC pStructQTC, int iTop, int iLeft, int iBottom, int iRight );
-   virtual ~QTCRegion( void );
-
-   void setPos( int iR, int iC );
-   void setSize( int iH, int iW );
-   void setColor( PHB_ITEM pColor, PHB_ITEM pShadow = NULL );
-   void setLabel( PHB_ITEM pLabel );
-   void updateSize( void );
-
-   PHB_GTQTC   pQTC;
-   QTConsole * qConsole;
-   QLabel *    label;
-
-   int iRow;
-   int iCol;
-   int iHeight;
-   int iWidth;
-   double dTxtSize;
-
-protected:
-   void paintEvent( QPaintEvent * evt );
 };
 
 #endif /* HB_QTC_H_ */
