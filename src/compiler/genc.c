@@ -67,7 +67,6 @@ static void hb_compDumpFindCFunc( HB_COMP_DECL )
                      pszCCode += 7;
                      scope |= HB_FS_STATIC;
                   }
-                  pszCCode += 13;
                   while( HB_ISSPACE( *pszCCode ) )
                      ++pszCCode;
                   if( *pszCCode == '(' )
