@@ -61,13 +61,14 @@ static void hb_compDumpFindCFunc( HB_COMP_DECL )
                if( ch == 'H' && strncmp( pszCCode, "B_FUNC", 6 ) == 0 )
                {
                   HB_SYMBOLSCOPE scope = HB_FS_LOCAL;
+                  printf( "HB_FUNC detected\n" );
                   pszCCode += 6;
                   if( strncmp( pszCCode, "_STATIC", 7 ) == 0 )
                   {
+                     printf( "HB_FUNC_STATIC detected\n" );
                      pszCCode += 7;
                      scope |= HB_FS_STATIC;
                   }
-                  pszCCode += 13;
                   while( HB_ISSPACE( *pszCCode ) )
                      ++pszCCode;
                   if( *pszCCode == '(' )
