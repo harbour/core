@@ -1428,18 +1428,18 @@ static void hb_gt_qtc_updateCursor( PHB_GTQTC pQTC )
       }
       if( pQTC->lastCursorType != SC_NONE )
       {
-         pQTC->qWnd->qConsole->update( pQTC->lastCursorCol * pQTC->cellX + pQTC->marginLeft,
-                                       pQTC->lastCursorRow * pQTC->cellY + pQTC->marginTop,
-                                       pQTC->cellX, pQTC->cellY );
+         pQTC->qWnd->qConsole->updateArea( QRect( pQTC->lastCursorCol * pQTC->cellX,
+                                                  pQTC->lastCursorRow * pQTC->cellY,
+                                                  pQTC->cellX, pQTC->cellY ) );
       }
       if( pQTC->cursorSize != 0 &&
           ( pQTC->lastCursorType == SC_NONE ||
             pQTC->lastCursorCol != pQTC->cursorCol ||
             pQTC->lastCursorRow != pQTC->cursorRow ) )
       {
-         pQTC->qWnd->qConsole->update( pQTC->cursorCol * pQTC->cellX + pQTC->marginLeft,
-                                       pQTC->cursorRow * pQTC->cellY + pQTC->marginTop,
-                                       pQTC->cellX, pQTC->cellY );
+         pQTC->qWnd->qConsole->updateArea( QRect( pQTC->cursorCol * pQTC->cellX,
+                                                  pQTC->cursorRow * pQTC->cellY,
+                                                  pQTC->cellX, pQTC->cellY ) );
       }
       pQTC->lastCursorType = cursorType;
       pQTC->lastCursorCol  = pQTC->cursorCol;
@@ -1754,6 +1754,65 @@ static int hb_gt_qtc_messageBox( PHB_GTQTC pQTC, PHB_ITEM pText, PHB_ITEM pButto
 
    return iRet;
 }
+
+/* --- */
+
+#define HB4QT_DESTRUCT              "HB4QT_DEL"
+
+static void s_widget_delete( QPointer<QWidget> ** wdgPtr )
+{
+   if( wdgPtr && *wdgPtr )
+   {
+      QWidget * wdg = **wdgPtr;
+
+      delete *wdgPtr;
+      *wdgPtr = NULL;
+
+      if( wdg && ! wdg->property( HB4QT_DESTRUCT ).isValid() )
+      {
+         wdg->hide();
+         wdg->setProperty( HB4QT_DESTRUCT, QVariant( bool( true ) ) );
+         delete wdg;
+      }
+   }
+}
+
+static HB_GARBAGE_FUNC( s_widget_destructor )
+{
+   s_widget_delete( static_cast<QPointer<QWidget>**>( Cargo ) );
+}
+
+static const HB_GC_FUNCS s_gcWidgetFuncs =
+{
+   s_widget_destructor,
+   hb_gcDummyMark
+};
+
+static PHB_ITEM hb_gt_qtc_widgetItemPut( PHB_ITEM pItem, QWidget * widget )
+{
+   QPointer<QWidget> ** pPtr =
+         static_cast<QPointer<QWidget>**>(
+                hb_gcAllocate( sizeof( QPointer<QWidget> * ), &s_gcWidgetFuncs ) );
+
+   *pPtr = new QPointer<QWidget>( widget );
+
+   return hb_itemPutPtrGC( pItem, pPtr );
+}
+
+static QWidget * hb_gt_qtc_widgetItemGet( PHB_ITEM pItem )
+{
+   QPointer<QWidget> ** pPtr = NULL;
+
+   //if( pItem && HB_IS_HASH( pItem ) )
+   //   pItem = hb4qt_hashGetItem( pItem, "PTR" );
+
+   if( pItem && HB_IS_POINTER( pItem ) )
+      pPtr = static_cast<QPointer<QWidget>**>(
+                  hb_itemGetPtrGC( pItem, &s_gcWidgetFuncs ) );
+
+   return pPtr && *pPtr ? **pPtr : NULL;
+}
+
 
 /* --- */
 
@@ -2587,6 +2646,84 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 #endif
+      case 1001:  // HB_GTI_SHADOWSET
+         if( pQTC->qWnd && ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) &&
+             hb_arrayLen( pInfo->pNewVal ) >= 4 )
+         {
+            int iTop    = hb_arrayGetNI( pInfo->pNewVal, 1 ),
+                iLeft   = hb_arrayGetNI( pInfo->pNewVal, 2 ),
+                iBottom = hb_arrayGetNI( pInfo->pNewVal, 3 ),
+                iRight  = hb_arrayGetNI( pInfo->pNewVal, 4 );
+
+            QTCRegion * region = new QTCRegion( pQTC, iTop, iLeft, iBottom, iRight );
+
+            region->setColor( hb_arrayGetItemPtr( pInfo->pNewVal, 5 ),
+                              hb_arrayGetItemPtr( pInfo->pNewVal, 6 ) );
+            region->setLabel( hb_arrayGetItemPtr( pInfo->pNewVal, 7 ) );
+
+            region->show();
+
+            pInfo->pResult = hb_gt_qtc_widgetItemPut( pInfo->pResult, region );
+
+            //printf( "iTop=%d, iLeft=%d, iBottom=%d, iRight=%d, iOffset=%d, iRadius=%d !\n",
+            //        iTop, iLeft, iBottom, iRight, iOffset, iRadius );
+         }
+         break;
+
+      case 1002:  // HB_GTI_SHADOWMOVE
+         if( pQTC->qWnd && ( hb_itemType( pInfo->pNewVal ) & HB_IT_POINTER ) &&
+             pInfo->pNewVal2 != NULL && HB_IS_ARRAY( pInfo->pNewVal2 ) &&
+             hb_arrayLen( pInfo->pNewVal2 ) >= 2 )
+         {
+            QTCRegion * region = qobject_cast<QTCRegion *>( hb_gt_qtc_widgetItemGet( pInfo->pNewVal ) );
+            if( region )
+               region->setPos( hb_arrayGetNI( pInfo->pNewVal2, 1 ),
+                               hb_arrayGetNI( pInfo->pNewVal2, 2 ) );
+         }
+         break;
+
+      case 1003:  // HB_GTI_SHADOWVISIBLE
+         iVal = 0;
+         if( pQTC->qWnd && ( hb_itemType( pInfo->pNewVal ) & HB_IT_POINTER ) )
+         {
+            QWidget * widget = hb_gt_qtc_widgetItemGet( pInfo->pNewVal );
+            if( widget )
+            {
+               iVal = widget->isVisible() ? 1 : 0;
+               if( pInfo->pNewVal2 != NULL && HB_IS_LOGICAL( pInfo->pNewVal2 ) )
+                  widget->setVisible( hb_itemGetL( pInfo->pNewVal2 ) );
+            }
+         }
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, iVal != 0 );
+         break;
+
+      case 1004:  // HB_GTI_SHADOWRAISE
+         if( pQTC->qWnd && ( hb_itemType( pInfo->pNewVal ) & HB_IT_POINTER ) )
+         {
+            QWidget * widget = hb_gt_qtc_widgetItemGet( pInfo->pNewVal );
+            if( widget )
+               widget->raise();
+         }
+         break;
+
+      case 1005:  // HB_GTI_SHADOWLOWER
+         if( pQTC->qWnd && ( hb_itemType( pInfo->pNewVal ) & HB_IT_POINTER ) )
+         {
+            QWidget * widget = hb_gt_qtc_widgetItemGet( pInfo->pNewVal );
+            if( widget )
+               widget->lower();
+         }
+         break;
+
+      case 1006:  // HB_GTI_SHADOWCOLOR
+         if( pQTC->qWnd && ( hb_itemType( pInfo->pNewVal ) & HB_IT_POINTER ) &&
+             pInfo->pNewVal2 != NULL && HB_IS_NUMERIC( pInfo->pNewVal2 ) )
+         {
+            QTCRegion * region = qobject_cast<QTCRegion *>( hb_gt_qtc_widgetItemGet( pInfo->pNewVal ) );
+            if( region )
+               region->setColor( pInfo->pNewVal2 );
+         }
+         break;
 
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
@@ -2954,6 +3091,15 @@ void QTConsole::resizeEvent( QResizeEvent * evt )
       else
          setFontSize( iHeight / pQTC->iRows, iWidth / pQTC->iCols );
 
+#if QT_VERSION >= 0x050000
+      foreach( QTCRegion * qtcRect, findChildren<QTCRegion *>( QString(), Qt::FindDirectChildrenOnly ) )
+#else
+      foreach( QTCRegion * qtcRect, findChildren<QTCRegion *>( QString() ) )
+#endif
+      {
+         qtcRect->updateSize();
+      }
+
       update();
    }
    else
@@ -3108,7 +3254,28 @@ void QTConsole::repaintChars( const QRect & rx )
       }
    }
 
-   update( rx.translated( pQTC->marginLeft, pQTC->marginTop ) );
+   //update( rx.translated( pQTC->marginLeft, pQTC->marginTop ) );
+   updateArea( rx );
+}
+
+void QTConsole::updateArea( const QRect & rx )
+{
+#if 0
+   QRect ru = rx.translated( pQTC->marginLeft, pQTC->marginTop );
+   update( ru );
+   QWidget * chld = childAt( ru.topLeft() );
+   if( chld )
+   {
+      chld->update( ru.translated( -chld->pos() ) );
+   }
+#else
+   QRect ru = rx.translated( pQTC->marginLeft, pQTC->marginTop );
+   QWidget * chld = childAt( ru.topLeft() );
+   if( chld )
+      chld->update( ru.translated( -chld->pos() ) );
+   else
+      update( ru );
+#endif
 }
 
 void QTConsole::paintEvent( QPaintEvent * evt )
@@ -3867,6 +4034,15 @@ void QTCWindow::setWindowSize( void )
       resize( qConsole->image->size() );
    }
    setResizing();
+
+#if QT_VERSION >= 0x050000
+      foreach( QTCRegion * qtcRect, qConsole->findChildren<QTCRegion *>( QString(), Qt::FindDirectChildrenOnly ) )
+#else
+      foreach( QTCRegion * qtcRect, qConsole->findChildren<QTCRegion *>( QString() ) )
+#endif
+   {
+      qtcRect->updateSize();
+   }
 }
 
 void QTCWindow::setResizing( void )
@@ -3901,6 +4077,284 @@ void QTCWindow::setResizing( void )
    {
       setFixedSize( size() );
       setSizeIncrement( 0, 0 );
+   }
+}
+
+/* --- */
+
+#if QT_VERSION >= 0x040600
+static QGraphicsDropShadowEffect * hb_gt_qtc_shadowEffect( PHB_GTQTC pQTC, PHB_ITEM pShadow )
+{
+   if( pShadow && HB_IS_ARRAY( pShadow ) )
+   {
+      int iOffset = pQTC->cellY >> 1, iRadius = 20, iVal;
+
+      if( hb_arrayGetType( pShadow, 1 ) & HB_IT_NUMERIC )
+         iOffset = hb_arrayGetNI( pShadow, 1 );
+      if( hb_arrayGetType( pShadow, 2 ) & HB_IT_NUMERIC )
+         iRadius = hb_arrayGetNI( pShadow, 2 );
+
+      QGraphicsDropShadowEffect * effect = new QGraphicsDropShadowEffect();
+      effect->setBlurRadius( iRadius );
+      effect->setXOffset( iOffset );
+      effect->setYOffset( iOffset );
+
+      if( hb_arrayGetType( pShadow, 3 ) & HB_IT_STRING )
+         effect->setColor( hb_arrayGetCPtr( pShadow, 3 ) );
+      else if( ( hb_arrayGetType( pShadow, 3 ) & HB_IT_NUMERIC ) &&
+               ( iVal = hb_arrayGetNI( pShadow, 3 ) ) >= 0 && iVal < 16 )
+         effect->setColor( pQTC->colors[ iVal ] );
+      else
+         effect->setColor( Qt::black );
+
+      return effect;
+   }
+   return NULL;
+}
+#endif
+
+QTCRegion::QTCRegion( PHB_GTQTC pStructQTC,
+                      int iTop, int iLeft, int iBottom, int iRight )
+         : QWidget( pStructQTC->qWnd->qConsole )
+{
+   // HB_GTI_SHADOWSET = 1001
+   pQTC = pStructQTC;
+   qConsole = pStructQTC->qWnd->qConsole;
+   label = NULL;
+   dTxtSize = 0;
+
+   setSize( iBottom - iTop + 1, iRight - iLeft + 1 );
+   setPos( iTop, iLeft );
+
+   setAutoFillBackground( true );
+}
+
+QTCRegion::~QTCRegion( void )
+{
+   hide();
+}
+
+void QTCRegion::setPos( int iR, int iC )
+{
+   // HB_GTI_SHADOWMOVE = 1002
+   iRow = iR;
+   iCol = iC;
+   move( iCol * pQTC->cellX + pQTC->marginLeft,
+         iRow * pQTC->cellY + pQTC->marginTop );
+}
+
+void QTCRegion::setSize( int iH, int iW )
+{
+   // HB_GTI_SHADOWSIZE
+
+   iHeight = iH;
+   iWidth = iW;
+
+   setFixedSize( iWidth * pQTC->cellX, iHeight * pQTC->cellY );
+   if( label )
+   {
+      label->resize( size() );
+      if( dTxtSize > 0 )
+      {
+         QFont fnt = label->font();
+         fnt.setPixelSize( pQTC->cellY * dTxtSize );
+         label->setFont( fnt );
+      }
+   }
+}
+
+void QTCRegion::setColor( PHB_ITEM pColor, PHB_ITEM pShadow )
+{
+   if( pColor )
+   {
+      if( HB_IS_STRING( pColor ) )
+      {
+         QPalette pal = palette();
+         pal.setColor( QPalette::Window, QColor( hb_itemGetCPtr( pColor ) ) );
+         setPalette( pal );
+      }
+      else if( HB_IS_NUMERIC( pColor ) )
+      {
+         int iVal = hb_itemGetNI( pColor );
+         if( iVal >= 0 && iVal < 256 )
+         {
+            QPalette pal = palette();
+            pal.setColor( QPalette::WindowText, pQTC->colors[ iVal & 0x0F ] );
+            pal.setColor( QPalette::Window, pQTC->colors[ ( iVal & 0xF0 ) >> 4 ] );
+            //printf( "fg=%X->%06X, bg=%X->%06X\n", iVal & 0x0F, QTC_RGB2NUM( pQTC->colors[ iVal & 0x0F ] ),
+            //                                      ( iVal & 0xF0 ) >> 4, QTC_RGB2NUM( pQTC->colors[ ( iVal & 0xF0 ) >> 4 ] ) );
+            setPalette( pal );
+         }
+      }
+   }
+
+   if( pShadow )
+   {
+#if QT_VERSION >= 0x040600
+      QGraphicsDropShadowEffect * effect = hb_gt_qtc_shadowEffect( pQTC, pShadow );
+      if( effect )
+         setGraphicsEffect( effect );
+#endif
+   }
+}
+
+void QTCRegion::setLabel( PHB_ITEM pLabel )
+{
+   if( pLabel && HB_IS_ARRAY( pLabel ) )
+   {
+      PHB_ITEM pShadow = hb_arrayGetItemPtr( pLabel, 2 );
+      double dSize = hb_arrayGetND( pLabel, 3 );
+      int iWeight = hb_arrayGetND( pLabel, 4 );
+      int iFrame = hb_arrayGetNI( pLabel, 5 );
+      QString text;
+      hb_gt_qtc_itemGetQString( hb_arrayGetItemPtr( pLabel, 1 ), &text );
+
+      if( label )
+         label->setText( text );
+      else
+      {
+         label = new QLabel( text, this );
+         label->setAlignment( Qt::AlignCenter );
+         label->setScaledContents( true );
+         label->resize( size() );
+      }
+
+      if( iFrame > 0 )
+      {
+         label->setFrameStyle( iFrame );
+         label->setMidLineWidth( 0 );
+         label->setLineWidth( 1 );
+      }
+
+      if( pShadow )
+      {
+#if QT_VERSION >= 0x040600
+         QGraphicsDropShadowEffect * effect = hb_gt_qtc_shadowEffect( pQTC, pShadow );
+         if( effect )
+            label->setGraphicsEffect( effect );
+         else if( ( effect = ( QGraphicsDropShadowEffect * ) label->graphicsEffect() ) != NULL )
+            delete effect;
+#endif
+      }
+
+      if( dSize > 0 || iWeight > 0 )
+      {
+         QFont fnt = label->font();
+
+         if( dSize > 0 )
+         {
+            dTxtSize = dSize;
+            fnt.setPixelSize( pQTC->cellY * dTxtSize );
+         }
+         if( iWeight > 0 )
+            fnt.setWeight( iWeight );
+
+         label->setFont( fnt );
+      }
+   }
+   else if( label )
+   {
+      delete label;
+      label = NULL;
+   }
+
+}
+
+void QTCRegion::updateSize( void )
+{
+   setPos( iRow, iCol );
+   setSize( iHeight, iWidth );
+}
+
+void QTCRegion::paintEvent( QPaintEvent * evt )
+{
+   QPainter painter( this );
+   int iDx = -( iCol * pQTC->cellX + pQTC->marginLeft ),
+       iDy = -( iRow * pQTC->cellY + pQTC->marginTop );
+   QRect rEvt = evt->rect().translated( -iDx, -iDy );
+
+   if( label )
+   {
+      QWidget::paintEvent( evt );
+      return;
+   }
+
+   if( rEvt.left() < pQTC->marginLeft )
+   {
+      QRect rc = rEvt;
+      rc.setRight( pQTC->marginLeft );
+      painter.fillRect( rc, QBrush( BLACK ) );
+      rEvt.setLeft( pQTC->marginLeft );
+   }
+   if( rEvt.top() < pQTC->marginTop )
+   {
+      QRect rc = rEvt;
+      rc.setBottom( pQTC->marginTop );
+      painter.fillRect( rc.translated( iDx, iDy ), QBrush( BLACK ) );
+      rEvt.setTop( pQTC->marginTop );
+   }
+   if( rEvt.right() > pQTC->marginLeft + qConsole->image->width() )
+   {
+      QRect rc = rEvt;
+      rc.setLeft( pQTC->marginLeft + qConsole->image->width() );
+      painter.fillRect( rc.translated( iDx, iDy ), QBrush( BLACK ) );
+      rEvt.setRight( pQTC->marginLeft + qConsole->image->width() - 1 );
+   }
+   if( rEvt.bottom() > pQTC->marginTop + qConsole->image->height() )
+   {
+      QRect rc = rEvt;
+      rc.setTop( pQTC->marginTop + qConsole->image->height() );
+      painter.fillRect( rc.translated( iDx, iDy ), QBrush( BLACK ) );
+      rEvt.setBottom( pQTC->marginTop + qConsole->image->height() - 1 );
+   }
+
+   painter.drawImage( rEvt.translated( iDx, iDy ), *qConsole->image, rEvt.translated( -pQTC->marginLeft, -pQTC->marginTop ) );
+
+   if( qConsole->selectMode )
+   {
+      /* Display selection */
+      QRect rSel = hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, qConsole->image, qConsole->selectRect ) );
+      if( rSel.intersects( rEvt ) )
+      {
+#if defined( HB_OS_DARWIN )
+         /* RasterOp operations are not supported in macOS */
+         rEvt &= rSel;
+         qConsole->image->invertPixels();
+         painter.drawImage( rEvt.translated( iDx, iDy ), *qConsole->image, rEvt.translated( -pQTC->marginLeft, -pQTC->marginTop ) );
+         qConsole->image->invertPixels();
+#else
+         painter.setCompositionMode( QPainter::RasterOp_SourceXorDestination );
+         painter.fillRect( rSel & rEvt, Qt::color0 );
+#endif
+      }
+   }
+   else if( pQTC->cursorType != SC_NONE && pQTC->cursorSize != 0 )
+   {
+      /* Display cursor */
+      QRect rCrs( pQTC->cursorCol * pQTC->cellX + pQTC->marginLeft,
+                  pQTC->cursorRow * pQTC->cellY + pQTC->marginTop + pQTC->cursorOffset,
+                  pQTC->cellX, pQTC->cursorSize );
+      if( rEvt.intersects( rCrs ) )
+      {
+#if defined( HB_OS_DARWIN )
+         /* RasterOp operations are not supported in macOS,
+          * use foreground cell color like hardware VGA cursor
+          */
+         HB_BYTE   bAttr;
+         HB_USHORT usChar;
+         int       iColor;
+
+         if( HB_GTSELF_GETSCRCHAR( pQTC->pGT, pQTC->cursorRow, pQTC->cursorCol,
+                                   &iColor, &bAttr, &usChar ) )
+         {
+            painter.fillRect( rCrs.translated( iDx, iDy ), pQTC->colors[ iColor & 0x0F ] );
+         }
+#else
+         painter.setCompositionMode( QPainter::RasterOp_SourceXorDestination );
+         /* TODO? use foreground cell color like hardware VGA cursor ? */
+         painter.fillRect( rCrs.translated( iDx, iDy ), Qt::color0 );
+#endif
+      }
    }
 }
 
