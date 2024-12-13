@@ -33,6 +33,8 @@ _gui_api void listbox_set_elem(ListBox *listbox, const uint32_t index, const cha
 
 _gui_api void listbox_del_elem(ListBox *listbox, const uint32_t index);
 
+_gui_api void listbox_font(ListBox *listbox, const Font *font);
+
 _gui_api void listbox_clear(ListBox *listbox);
 
 _gui_api void listbox_color(ListBox *listbox, const uint32_t index, const color_t color);

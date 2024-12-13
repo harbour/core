@@ -7,4 +7,5 @@
 /tools/build
 /tests/unotest/test.pdf
 
+!/src/debugger/res/Application.manifest
 !/tests/cuademo/Application.manifest
