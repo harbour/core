@@ -129,7 +129,7 @@ void dlayout_remove_cell(DLayout *layout, const uint32_t col, const uint32_t row
     i_remove_cell(cell);
 }
 
-//*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 void dlayout_add_layout(DLayout *layout, DLayout *sublayout, const uint32_t col, const uint32_t row)
 {
@@ -512,16 +512,6 @@ void dlayout_draw(const DLayout *dlayout, const FLayout *flayout, const Layout *
     draw_line_color(ctx, kCOLOR_BLACK);
     draw_fill_color(ctx, kCOLOR_BLACK);
     draw_r2df(ctx, ekSTROKE, &dlayout->rect);
-    // draw_r2df(ctx, ekFILL, &layout->rect_left);
-    // draw_r2df(ctx, ekFILL, &layout->rect_top);
-
-    // arrst_foreach_const(col, layout->cols, DColumn)
-    //     draw_r2df(ctx, ekFILL, &col->margin_rect);
-    // arrst_end()
-
-    // arrst_foreach_const(row, layout->rows, DRow)
-    //     draw_r2df(ctx, ekFILL, &row->margin_rect);
-    // arrst_end()
 
     for (j = 0; j < nrows; ++j)
     {

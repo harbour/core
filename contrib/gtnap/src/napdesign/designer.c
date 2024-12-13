@@ -98,7 +98,7 @@ static void i_need_save_mark(ListBox *listbox, const uint32_t pos, const bool_t 
         }
         else
         {
-            listbox_set_elem(listbox, pos, name, NULL);            
+            listbox_set_elem(listbox, pos, name, NULL);
         }
     }
 }
@@ -173,7 +173,7 @@ static void i_open_form(Designer *app, const uint32_t index)
             if (stm != NULL)
             {
                 form = dform_read(stm, app);
-                stm_close(&stm);            
+                stm_close(&stm);
             }
 
             forms[index] = form;
@@ -264,7 +264,7 @@ static void i_save_forms(Designer *app)
         bool_t need_save = FALSE;
         if (form != NULL)
             need_save = dform_need_save(form);
-        
+
         if (need_save == TRUE)
         {
             const char_t *name = i_list_text(app->form_list, form_i);
@@ -441,10 +441,10 @@ static void i_OnRenameFormClick(Designer *app, Event *e)
                 bfile_rename(tc(oldpath), tc(newpath), NULL);
                 str_destroy(&newpath);
             }
-            
+
             {
                 bool_t with_bullet = i_with_save_mark(app->form_list, app->sel_form);
-                if (with_bullet == TRUE) 
+                if (with_bullet == TRUE)
                 {
                     String *rname = str_printf("%s%s", i_SAVE_MARK, tc(fname));
                     listbox_set_elem(app->form_list, app->sel_form, tc(rname), NULL);
@@ -760,7 +760,6 @@ static Layout *i_main_layout(Designer *app, ResPack *pack)
     layout_layout(layout1, layout2, 0, 0);
     layout_layout(layout1, layout3, 0, 1);
     layout_layout(layout1, layout4, 0, 2);
-    // layout_halign(layout1, 0, 0, ekJUSTIFY);
     /*
      * All the vertical expansion will be done in the middle layout
      * tools_layout (top) and statusbar_layout (bottom) will preserve

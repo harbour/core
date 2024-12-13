@@ -235,13 +235,9 @@ static void i_OnLayoutNotify(PropData *data, Event *e)
     {
         designer_inspect_update(data->app);
     }
-    else if (evbind_modify(e, FLayout, real32_t, margin_left) == TRUE 
-        || evbind_modify(e, FLayout, real32_t, margin_top) == TRUE 
-        || evbind_modify(e, FLayout, real32_t, margin_right) == TRUE 
-        || evbind_modify(e, FLayout, real32_t, margin_bottom) == TRUE)
+    else if (evbind_modify(e, FLayout, real32_t, margin_left) == TRUE || evbind_modify(e, FLayout, real32_t, margin_top) == TRUE || evbind_modify(e, FLayout, real32_t, margin_right) == TRUE || evbind_modify(e, FLayout, real32_t, margin_bottom) == TRUE)
     {
-        FLayout *flayout = evbind_object(e, FLayout);
-        cassert(flayout == data->sel.flayout);
+        cassert(evbind_object(e, FLayout) == data->sel.flayout);
         dform_synchro_layout_margin(data->form, &data->sel);
         dform_compose(data->form);
         designer_canvas_update(data->app);
@@ -470,9 +466,7 @@ static void i_OnEditNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-    if (evbind_modify(e, FEdit, bool_t, passmode) == TRUE
-    || evbind_modify(e, FEdit, bool_t, autosel) == TRUE
-    || evbind_modify(e, FEdit, halign_t, text_align) == TRUE)
+    if (evbind_modify(e, FEdit, bool_t, passmode) == TRUE || evbind_modify(e, FEdit, bool_t, autosel) == TRUE || evbind_modify(e, FEdit, halign_t, text_align) == TRUE)
     {
         dform_synchro_edit(data->form, &data->sel);
     }
@@ -518,7 +512,7 @@ static void i_OnCellNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-    if (evbind_modify(e, FCell, String*, name) == TRUE)
+    if (evbind_modify(e, FCell, String *, name) == TRUE)
     {
         designer_inspect_update(data->app);
         dform_set_need_save(data->form);

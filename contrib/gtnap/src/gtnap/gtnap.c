@@ -27,6 +27,7 @@
 #include <gui/textview.h>
 #include <gui/view.h>
 #include <gui/window.h>
+#include <draw2d/draw2d.h>
 #include <draw2d/color.h>
 #include <draw2d/font.h>
 #include <draw2d/image.h>

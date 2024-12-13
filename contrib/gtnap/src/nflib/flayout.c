@@ -40,7 +40,8 @@ static void i_remove_cell(FCell *cell)
 {
     cassert_no_null(cell);
     str_destroy(&cell->name);
-    switch(cell->type) {
+    switch (cell->type)
+    {
     case ekCELL_TYPE_LABEL:
         dbind_destroy(&cell->widget.label, FLabel);
         break;
@@ -56,6 +57,9 @@ static void i_remove_cell(FCell *cell)
     case ekCELL_TYPE_LAYOUT:
         flayout_destroy(&cell->widget.layout);
         break;
+    case ekCELL_TYPE_EMPTY:
+        break;
+        cassert_default();
     }
     /* dbind_remove(cell, FCell); */
 }
@@ -166,7 +170,8 @@ static void i_read_cell(Stream *stm, FCell *cell)
     cell->type = stm_read_enum(stm, celltype_t);
     cell->halign = stm_read_enum(stm, halign_t);
     cell->valign = stm_read_enum(stm, valign_t);
-    switch(cell->type) {
+    switch (cell->type)
+    {
     case ekCELL_TYPE_EMPTY:
         break;
     case ekCELL_TYPE_LABEL:
@@ -184,7 +189,7 @@ static void i_read_cell(Stream *stm, FCell *cell)
     case ekCELL_TYPE_LAYOUT:
         cell->widget.layout = flayout_read(stm);
         break;
-    cassert_default();
+        cassert_default();
     }
 }
 
@@ -288,7 +293,8 @@ static void i_write_cell(Stream *stm, const FCell *cell)
     stm_write_enum(stm, cell->type, celltype_t);
     stm_write_enum(stm, cell->halign, halign_t);
     stm_write_enum(stm, cell->valign, valign_t);
-    switch(cell->type) {
+    switch (cell->type)
+    {
     case ekCELL_TYPE_EMPTY:
         break;
     case ekCELL_TYPE_LABEL:
@@ -306,7 +312,7 @@ static void i_write_cell(Stream *stm, const FCell *cell)
     case ekCELL_TYPE_LAYOUT:
         flayout_write(stm, cell->widget.layout);
         break;
-    cassert_default();
+        cassert_default();
     }
 }
 
@@ -430,12 +436,11 @@ void flayout_remove_col(FLayout *layout, const uint32_t col)
 
 void flayout_insert_row(FLayout *layout, const uint32_t row)
 {
-    uint32_t ncols = 0, nrows = 0, i = 0;
+    uint32_t ncols = 0, i = 0;
     uint32_t inspos = 0;
     FCell *cells = NULL;
     cassert_no_null(layout);
     ncols = arrst_size(layout->cols, FColumn);
-    nrows = arrst_size(layout->rows, FRow);
     /* Cells insert position */
     inspos = row * ncols;
     /* Cells array is in row-major order. All row cells are together in memory */
@@ -456,11 +461,10 @@ void flayout_insert_row(FLayout *layout, const uint32_t row)
 
 void flayout_remove_row(FLayout *layout, const uint32_t row)
 {
-    uint32_t i, ncols = 0, nrows = 0;
+    uint32_t i, ncols = 0;
     cassert_no_null(layout);
     cassert(row < arrst_size(layout->rows, FRow));
     ncols = arrst_size(layout->cols, FColumn);
-    nrows = arrst_size(layout->rows, FRow);
 
     /* Destroy the row cells */
     for (i = 0; i < ncols; ++i)
@@ -685,7 +689,7 @@ Layout *flayout_to_gui(const FLayout *layout, const real32_t empty_width, const 
     arrst_foreach_const(row, layout->rows, FRow)
         layout_vsize(glayout, row_i, row->forced_height);
         if (row_i < row_total - 1)
-        {        
+        {
             layout_vmargin(glayout, row_i, row->margin_bottom);
         }
         else
@@ -785,7 +789,7 @@ GuiControl *flayout_search_gui_control(const FLayout *layout, Layout *gui_layout
         {
             if (str_equ(cells->name, cell_name) == TRUE)
             {
-                switch(cells->type)
+                switch (cells->type)
                 {
                 case ekCELL_TYPE_LABEL:
                 case ekCELL_TYPE_BUTTON:
@@ -799,7 +803,7 @@ GuiControl *flayout_search_gui_control(const FLayout *layout, Layout *gui_layout
                 case ekCELL_TYPE_LAYOUT:
                 case ekCELL_TYPE_EMPTY:
                     break;
-                cassert_default();
+                    cassert_default();
                 }
             }
 
@@ -818,4 +822,3 @@ GuiControl *flayout_search_gui_control(const FLayout *layout, Layout *gui_layout
 
     return NULL;
 }
-

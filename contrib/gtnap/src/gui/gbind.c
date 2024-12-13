@@ -443,7 +443,7 @@ void gbind_upd_component(Cell *cell, const StBind *stbind, const DBind *dbind, v
 {
     if (dbind_get_stbind(dbind) != stbind)
         return;
-    //cassert_unref(dbind_get_stbind(dbind) == stbind, stbind);
+    /*cassert_unref(dbind_get_stbind(dbind) == stbind, stbind);*/
     if (obj != NULL)
     {
         dtype_t mtype = dbind_type(dbind);
@@ -593,7 +593,7 @@ void gbind_upd_layout(Layout *layout, const StBind *stbind, const DBind *dbind, 
 {
     if (dbind_get_stbind(dbind) != stbind)
         return;
-//    cassert_unref(dbind_get_stbind(dbind) == stbind, stbind);
+    /* cassert_unref(dbind_get_stbind(dbind) == stbind, stbind); */
     if (obj != NULL)
     {
         dtype_t mtype = dbind_type(dbind);
