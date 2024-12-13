@@ -1,7 +1,8 @@
-%pure-parser
+%define api.pure
 %parse-param { PHB_COMP pComp }
 %lex-param   { PHB_COMP pComp }
-%name-prefix "hb_comp_yy"
+%define api.prefix {hb_comp_yy}
+
 %{
 /*
  * Compiler YACC rules and actions

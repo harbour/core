@@ -33,17 +33,25 @@
 #ifndef YY_HB_COMP_YY_HARBOURY_H_INCLUDED
 # define YY_HB_COMP_YY_HARBOURY_H_INCLUDED
 /* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
+#ifndef HB_COMP_YYDEBUG
+# if defined YYDEBUG
 #if YYDEBUG
+#   define HB_COMP_YYDEBUG 1
+#  else
+#   define HB_COMP_YYDEBUG 0
+#  endif
+# else /* ! defined YYDEBUG */
+#  define HB_COMP_YYDEBUG 0
+# endif /* ! defined YYDEBUG */
+#endif  /* ! defined HB_COMP_YYDEBUG */
+#if HB_COMP_YYDEBUG
 extern int hb_comp_yydebug;
 #endif
 
 /* Token type.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
+#ifndef HB_COMP_YYTOKENTYPE
+# define HB_COMP_YYTOKENTYPE
+  enum hb_comp_yytokentype
   {
     FUNCTION = 258,
     PROCEDURE = 259,
@@ -159,11 +167,11 @@ extern int hb_comp_yydebug;
 #endif
 
 /* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE YYSTYPE;
-union YYSTYPE
+#if ! defined HB_COMP_YYSTYPE && ! defined HB_COMP_YYSTYPE_IS_DECLARED
+typedef union HB_COMP_YYSTYPE HB_COMP_YYSTYPE;
+union HB_COMP_YYSTYPE
 {
-#line 125 "harbour.y" /* yacc.c:1909  */
+#line 126 "harbour.y" /* yacc.c:1909  */
 
    const char * string; /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
@@ -202,10 +210,10 @@ union YYSTYPE
    } asCodeblock;
    PHB_VARTYPE asVarType;
 
-#line 206 "harboury.h" /* yacc.c:1909  */
+#line 214 "harboury.h" /* yacc.c:1909  */
 };
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
+# define HB_COMP_YYSTYPE_IS_TRIVIAL 1
+# define HB_COMP_YYSTYPE_IS_DECLARED 1
 #endif
 
 
