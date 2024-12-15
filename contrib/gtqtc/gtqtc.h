@@ -52,7 +52,11 @@
 #define HB_GT_NAME  QTC
 
 #include <QtCore/QThread>
-#include <QtCore/QMutex>
+#if QT_VERSION >= 0x060000
+  #include <QtCore/QRecursiveMutex>
+#else
+  #include <QtCore/QMutex>
+#endif
 
 #include <QtGui/QFont>
 #include <QtGui/QColor>
@@ -69,22 +73,26 @@
 #include <QtGui/QScreen>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QAbstractButton>
-#include <QtWidgets/QAction>
+#if QT_VERSION < 0x060000
+  #include <QtWidgets/QAction>
+  #include <QtWidgets/QDesktopWidget>
+#else
+  #include <QtGui/QAction>
+#endif
 #ifdef HB_QT_SOUND
   #include <QtMultimedia/QSound>
 #endif
 #else
 #include <QtGui/QApplication>
 #include <QtGui/QMainWindow>
-#include <QtGui/QDesktopWidget>
 #include <QtGui/QWidget>
 #include <QtGui/QMessageBox>
 #include <QtGui/QAbstractButton>
 #include <QtGui/QAction>
+#include <QtGui/QDesktopWidget>
 #ifdef HB_QT_SOUND
   #include <QtGui/QSound>
 #endif

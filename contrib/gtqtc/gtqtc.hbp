@@ -21,29 +21,39 @@
 
 -plugin=hbmk2_qtgt.hb
 
--deppkgname=qt5:qt5
--depkeyhead=qt5:QtCore/QJsonObject
--depcontrol=qt5:${HB_WITH_QT}
-{HB_BUILD_3RDEXT='no'}-depoptional=qt5:no
--depoptional=qt5:yes
--depincpath=qt5:/usr/include/x86_64-linux-gnu/qt5{linux}
--depincpath=qt5:/usr/local/opt/qt5/include{darwin}
--depincpath=qt5:/usr/local/include/qt5{bsd}
--depfinish=qt5
+-deppkgname=qt6:qt6
+-depkeyhead=qt6:QtCore/QAdoptSharedDataTag
+-depcontrol=qt6:${HB_WITH_QT}
+{HB_BUILD_3RDEXT='no'}-depoptional=qt6:no
+-depoptional=qt6:yes
+-depincpath=qt6:/usr/include/x86_64-linux-gnu/qt6{linux}
+-depincpath=qt6:/usr/local/opt/qt6/include{darwin}
+-depincpath=qt6:/usr/local/include/qt6{bsd}
+-depfinish=qt6
 
-{!HBMK_HAS_QT5&!darwin&!android}-deppkgname=qt:QtCore
-{!HBMK_HAS_QT5}-deppkgname=qt:qt4
-{!HBMK_HAS_QT5}-depkeyhead=qt:QtCore/qglobal.h
-{!HBMK_HAS_QT5}-depcontrol=qt:${HB_WITH_QT}
-{!HBMK_HAS_QT5&HB_BUILD_3RDEXT='no'}-depcontrol=qt:no
-{!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/include/qt4
-{!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/lib/qt4/include
-{!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/include
-{!HBMK_HAS_QT5&bsd}-depincpath=qt:/usr/local/include/qt4
-{!HBMK_HAS_QT5&beos}-depincpath=qt:/boot/common/include
-{!HBMK_HAS_QT5&darwin}-depincpath=qt:/Developer/qt/include
-{!HBMK_HAS_QT5&darwin}-depincpath=qt:/Library/Frameworks
-{!HBMK_HAS_QT5&darwin}-depincpath=qt:/usr/local/include
+{!HBMK_HAS_QT6}-deppkgname=qt5:qt5
+{!HBMK_HAS_QT6}-depkeyhead=qt5:QtCore/QJsonObject
+{!HBMK_HAS_QT6}-depcontrol=qt5:${HB_WITH_QT}
+{!HBMK_HAS_QT6&HB_BUILD_3RDEXT='no'}-depoptional=qt5:no
+{!HBMK_HAS_QT6}-depoptional=qt5:yes
+{!HBMK_HAS_QT6}-depincpath=qt5:/usr/include/x86_64-linux-gnu/qt5{linux}
+{!HBMK_HAS_QT6}-depincpath=qt5:/usr/local/opt/qt5/include{darwin}
+{!HBMK_HAS_QT6}-depincpath=qt5:/usr/local/include/qt5{bsd}
+{!HBMK_HAS_QT6}-depfinish=qt5
+
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}-deppkgname=qt:QtCore
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)}-deppkgname=qt:qt4
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)}-depkeyhead=qt:QtCore/qglobal.h
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)}-depcontrol=qt:${HB_WITH_QT}
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&HB_BUILD_3RDEXT='no'}-depcontrol=qt:no
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}-depincpath=qt:/usr/include/qt4
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}-depincpath=qt:/usr/lib/qt4/include
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}-depincpath=qt:/usr/include
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&bsd}-depincpath=qt:/usr/local/include/qt4
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&beos}-depincpath=qt:/boot/common/include
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&darwin}-depincpath=qt:/Developer/qt/include
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&darwin}-depincpath=qt:/Library/Frameworks
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&darwin}-depincpath=qt:/usr/local/include
 
 {HB_QT_SOUND='yes'}-cflag+=-DHB_QT_SOUND
 
