@@ -1,5 +1,13 @@
 # NAppGUI designer
 
+* [NapDesigner overview](#napdesigner-overview)
+* [Build NapDesigner](#build-napdesigner)
+* [Open project folder](#open-project-folder)
+* [Create a new form](#create-a-new-form)
+    - [Space subdivision. Adding cells](#space-subdivision-adding-cells)
+    - [Adding widgets](#adding-widgets)
+    - [Margins and maximum size](#margins-and-maximum-size)
+
 NAppGUI Designer is a visual tool for designing user interfaces (forms) graphically and interactively. These forms will be saved in files that can be loaded at runtime from Harbour, using GTNAP. It has been developed using NAppGUI-SDK and the forms it generates also use NAppGUI to run within the final application (https://nappgui.com).
 
 ## NapDesigner overview
