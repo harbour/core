@@ -663,7 +663,7 @@ bool_t bfile_delete(const char_t *filepath, ferror_t *error)
 
 bool_t bfile_rename(const char_t *current_pathname, const char_t *new_pathname, ferror_t *error)
 {
-    int res = rename(const_cast(current_pathname, char), const_cast(new_pathname, char));
+    int res = rename(cast_const(current_pathname, char), cast_const(new_pathname, char));
     if (res == 0)
     {
         ptr_assign(error, ekFOK);
@@ -711,5 +711,7 @@ bool_t bfile_rename(const char_t *current_pathname, const char_t *new_pathname, 
                 *error = ekFUNDEF;
             }
         }
+
+        return FALSE;
     }
 }
