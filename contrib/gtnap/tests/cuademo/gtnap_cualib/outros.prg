@@ -34,6 +34,16 @@ FUNCTION DIRET_BMPS(C_DIRET_NEW)
 
 /*---------------------------------------------------------------------------*/
 
+FUNCTION DIRET_FORMS(C_DIRET_NEW)
+    STATIC C_DIRET_FORMS := ""
+    LOCAL C_DIRET_ANT := C_DIRET_FORMS
+    IF C_DIRET_NEW # NIL
+        C_DIRET_FORMS := C_DIRET_NEW
+    ENDIF
+    RETURN C_DIRET_ANT
+
+/*---------------------------------------------------------------------------*/
+
 ***********************
 STAT FUNCTION Perguntar (C_Cabec_x, C_SubCabec, VC_Menu, VC_TxtBotoes, N_Default)
 ***********************

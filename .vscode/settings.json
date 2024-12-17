@@ -17,8 +17,11 @@
         "xlocale": "cpp",
         "xstring": "cpp",
         "xutility": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "dlabel.h": "c",
+        "dialogs.h": "c",
+        "buttonh.h": "c"
     },
     "files.encoding": "windows1252",
-    "cmake.sourceDirectory": "C:/harbour_nappgui"
+    "cmake.sourceDirectory": "/home/fran/harbour_nappgui"
 }

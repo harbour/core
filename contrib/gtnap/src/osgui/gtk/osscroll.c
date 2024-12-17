@@ -164,7 +164,7 @@ uint32_t osscroll_bar_width(const OSScroll *scroll)
 {
     cassert_no_null(scroll);
     cassert_unref(scroll->orient == GTK_ORIENTATION_VERTICAL, scroll);
-    return osglobals_scrollbar_height();
+    return _osglobals_scrollbar_height();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -173,7 +173,7 @@ uint32_t osscroll_bar_height(const OSScroll *scroll)
 {
     cassert_no_null(scroll);
     cassert_unref(scroll->orient == GTK_ORIENTATION_HORIZONTAL, scroll);
-    return osglobals_scrollbar_height();
+    return _osglobals_scrollbar_height();
 }
 
 /*---------------------------------------------------------------------------*/

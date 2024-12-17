@@ -359,7 +359,7 @@ OSView *osview_create(const uint32_t flags)
         gtk_widget_show(top);
 
         {
-            String *css = osglobals_frame_focus_css();
+            String *css = _osglobals_frame_focus_css();
             view->css_bdcolor = _oscontrol_css_provider(tc(css));
             str_destroy(&css);
         }

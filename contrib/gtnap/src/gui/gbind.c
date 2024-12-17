@@ -441,7 +441,9 @@ static void i_set_empty_cells(ArrPt(Cell) *cells, const DBind *dbind)
 
 void gbind_upd_component(Cell *cell, const StBind *stbind, const DBind *dbind, void *obj)
 {
-    cassert_unref(dbind_get_stbind(dbind) == stbind, stbind);
+    if (dbind_get_stbind(dbind) != stbind)
+        return;
+    /*cassert_unref(dbind_get_stbind(dbind) == stbind, stbind);*/
     if (obj != NULL)
     {
         dtype_t mtype = dbind_type(dbind);
@@ -589,7 +591,9 @@ void gbind_upd_component(Cell *cell, const StBind *stbind, const DBind *dbind, v
 
 void gbind_upd_layout(Layout *layout, const StBind *stbind, const DBind *dbind, void *obj)
 {
-    cassert_unref(dbind_get_stbind(dbind) == stbind, stbind);
+    if (dbind_get_stbind(dbind) != stbind)
+        return;
+    /* cassert_unref(dbind_get_stbind(dbind) == stbind, stbind); */
     if (obj != NULL)
     {
         dtype_t mtype = dbind_type(dbind);
@@ -1385,7 +1389,8 @@ bool_t gbind_modify_data(const void *obj, const char_t *type, const uint16_t siz
             case ekDTYPE_STRING_PTR:
                 memblock = (const byte_t *)obj + offset;
                 cassert(sizeofptr == msize);
-                cassert_unref(str_equ_c(mtype, "String*") == TRUE, mtype);
+                /* TODO: Will be improved in new dbind() */
+                cassert_unref(str_equ_c(mtype, "String*") == TRUE || str_equ_c(mtype, "String *") == TRUE, mtype);
                 memsize = msize;
                 break;
 

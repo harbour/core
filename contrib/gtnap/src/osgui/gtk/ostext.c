@@ -226,7 +226,7 @@ OSText *ostext_create(const uint32_t flags)
         gtk_widget_show(top);
 
         {
-            String *css = osglobals_frame_focus_css();
+            String *css = _osglobals_frame_focus_css();
             view->css_bdcolor = _oscontrol_css_provider(tc(css));
             str_destroy(&css);
         }
@@ -462,7 +462,7 @@ static GtkTextTag *i_tag_attribs(OSText *view)
 
 static void i_global_attribs(OSText *view)
 {
-    const char_t *cssobj = osglobals_css_textview();
+    const char_t *cssobj = _osglobals_css_textview();
     _oscontrol_update_css_font_desc(view->tview, cssobj, view->ffamily, view->fsize, view->fstyle, &view->css_font);
     _oscontrol_update_css_color(view->tview, cssobj, view->color, &view->css_color);
     _oscontrol_update_css_bgcolor(view->tview, cssobj, view->bgcolor, &view->css_bgcolor);
@@ -727,7 +727,7 @@ void ostext_property(OSText *view, const gui_text_t prop, const void *value)
 
     case ekGUI_TEXT_PGCOLOR:
     {
-        const char_t *cssobj = osglobals_css_textview();
+        const char_t *cssobj = _osglobals_css_textview();
         _oscontrol_update_css_bgcolor(view->tview, cssobj, *(color_t *)value, &view->css_pgcolor);
         break;
     }

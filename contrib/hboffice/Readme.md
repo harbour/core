@@ -151,7 +151,7 @@ First step generate **officesdk.dll**:
 
 ```
 cd contrib/hboffice
-set CMAKE_GENERATOR=Visual Studio 17 2022
+set CMAKE_GENERATOR=Visual Studio 15 2017
 build.bat -dll -b Release
 
 :: Full command
@@ -165,6 +165,10 @@ build.bat -lib -comp mingw64 -b Release
 
 :: Full command
 build.bat -lib -comp [mingw64|msvc64] -b [Release|Debug]
+
+:: Required for VisualStudio
+"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+
 ```
 
 After these two steps, you will have:

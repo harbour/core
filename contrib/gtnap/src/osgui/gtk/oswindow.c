@@ -231,7 +231,7 @@ static gboolean i_OnKeyPress(GtkWidget *widget, GdkEventKey *event, OSWindow *wi
                 if (gtk_widget_get_can_focus(bfocus) == TRUE)
                     gtk_window_set_focus(GTK_WINDOW(widget), bfocus);
                 _osbutton_command(window->tabstop.defbutton);
-                osglobals_restore_focus(widget, focus);
+                _osglobals_restore_focus(widget, focus);
             }
 
             if (window->flags & ekWINDOW_RETURN)

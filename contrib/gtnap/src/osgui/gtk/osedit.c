@@ -319,7 +319,7 @@ OSEdit *osedit_create(const uint32_t flags)
     {
     case ekEDIT_SINGLE:
     {
-        const char_t *cssobj = osglobals_css_entry();
+        const char_t *cssobj = _osglobals_css_entry();
         widget = gtk_entry_new();
         gtk_entry_set_width_chars(GTK_ENTRY(widget), 0);
         _oscontrol_update_css_padding(widget, cssobj, edit->vpadding, edit->hpadding, &edit->css_padding);
@@ -334,7 +334,7 @@ OSEdit *osedit_create(const uint32_t flags)
 
     case ekEDIT_MULTI:
     {
-        const char_t *cssobj = osglobals_css_textview();
+        const char_t *cssobj = _osglobals_css_textview();
         GtkTextBuffer *buffer = NULL;
         edit->tview = gtk_text_view_new();
         buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(edit->tview));
@@ -514,14 +514,14 @@ static void i_cssobjs(OSEdit *edit, const char_t **cssobj, GtkWidget **widget)
     {
         cassert(edit_get_type(edit->flags) == ekEDIT_MULTI);
         if (cssobj != NULL)
-            *cssobj = osglobals_css_textview();
+            *cssobj = _osglobals_css_textview();
         *widget = edit->tview;
     }
     else
     {
         cassert(edit_get_type(edit->flags) == ekEDIT_SINGLE);
         if (cssobj != NULL)
-            *cssobj = osglobals_css_entry();
+            *cssobj = _osglobals_css_entry();
         *widget = edit->control.widget;
     }
 }
@@ -649,7 +649,7 @@ void osedit_bgcolor(OSEdit *edit, const color_t color)
 {
     const char_t *cssobj = NULL;
     GtkWidget *widget = NULL;
-    cssobj = osglobals_css_entry();
+    cssobj = _osglobals_css_entry();
     i_cssobjs(edit, NULL, &widget);
     _oscontrol_update_css_bgcolor(widget, cssobj, color, &edit->css_bgcolor);
 }

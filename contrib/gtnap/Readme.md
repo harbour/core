@@ -277,6 +277,9 @@ This will generate several static libraries:
 
 * The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Debugger lib: `libdeblib.a` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Forms libs: `libnflib.a`, `libnforms.a` in `build/[Debug|Release]/lib` folder.
+* The GTNAP utilities executables: `gtnapdeb`, `napdesign` in `build/[Debug|Release]/bin` folder.
 
 ### In Windows with VisualStudio
 
@@ -299,23 +302,21 @@ set CMAKE_GENERATOR=Visual Studio 8 2005
 :: Goto gtnap folder
 cd contrib\gtnap
 
-:: Set Visual Studio 2012 CMake generator
-set CMAKE_GENERATOR=Visual Studio 11 2012
-
-:: Set Visual Studio 2012 32bit compiler for hbmk2 (msvc)
-"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
-
-:: Set Visual Studio 2012 64bit compiler for hbmk2 (msvc64)
-"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+:: Set Visual Studio 2017 CMake generator
+set CMAKE_GENERATOR=Visual Studio 15 2017
+:: Set Visual Studio 2017 64bit compiler for hbmk2 (msvc64)
+"%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 :: Just build
 build.bat -b [Debug|Release] -comp msvc64
 ```
-
 This will generate several static libraries:
 
 * The GT library: `gtnap.lib` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `sewer.lib`, `osbs.lib`, `core.lib`, `geom2d.lib`, `draw2d.lib`, `osgui.lib`, `gui.lib`, `osapp.lib`, `inet.lib` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Debugger lib: `deblib.lib` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Forms libs: `nflib.lib`, `nforms.lib` in `build/[Debug|Release]/lib` folder.
+* The GTNAP utilities executables: `gtnapdeb`, `napdesign` in `build/[Debug|Release]/bin` folder.
 
 ### In Linux with GCC
 
@@ -340,6 +341,9 @@ This will generate several static libraries:
 
 * The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
 * The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Debugger lib: `deblib.lib` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Forms libs: `nflib.lib`, `nforms.lib` in `build/[Debug|Release]/lib` folder.
+* The GTNAP utilities executables: `gtnapdeb`, `napdesign` in `build/[Debug|Release]/bin` folder.
 
 ### In macOS with Xcode
 
@@ -391,6 +395,9 @@ This will generate several static libraries:
 
 * The GT library: `libgtnap.a` in `/build` folder.
 * The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Debugger lib: `deblib.lib` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Forms libs: `nflib.lib`, `nforms.lib` in `build/[Debug|Release]/lib` folder.
+* The GTNAP utilities executables: `gtnapdeb`, `napdesign` in `build/[Debug|Release]/bin` folder.
 
 ## Using GTNap
 
