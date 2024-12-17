@@ -46,7 +46,7 @@ struct _osupdown_t
 
 static gboolean i_OnDraw(GtkWidget *widget, cairo_t *cr, OSUpDown *updown)
 {
-    GtkStyleContext *ctx = osglobals_button_context();
+    GtkStyleContext *ctx = _osglobals_button_context();
     int w = gtk_widget_get_allocated_width(widget);
     int h = gtk_widget_get_allocated_height(widget);
     GtkStateFlags upstate = gtk_widget_get_state_flags(widget);
@@ -244,7 +244,7 @@ void osupdown_enabled(OSUpDown *updown, const bool_t enabled)
 
 void osupdown_size(const OSUpDown *updown, real32_t *width, real32_t *height)
 {
-    uint32_t eheight = osglobals_entry_height();
+    uint32_t eheight = _osglobals_entry_height();
     cassert_no_null(width);
     cassert_no_null(height);
     if (eheight % 2 == 1)

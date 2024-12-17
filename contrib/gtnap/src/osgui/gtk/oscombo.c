@@ -163,7 +163,7 @@ OSCombo *oscombo_create(const uint32_t flags)
     Font *font = osgui_create_default_font();
     GtkWidget *widget = gtk_combo_box_new_with_entry();
     GtkWidget *entry = gtk_bin_get_child(GTK_BIN(widget));
-    const char_t *cssobj = osglobals_css_entry();
+    const char_t *cssobj = _osglobals_css_entry();
     cassert_unref(flags == ekCOMBO_FLAG, flags);
     cassert(GTK_IS_ENTRY(entry) == TRUE);
     combo->select_start = INT32_MAX;
@@ -313,7 +313,7 @@ void oscombo_font(OSCombo *combo, const Font *font)
     if (font_equals(combo->font, font) == FALSE)
     {
         GtkWidget *entry = gtk_bin_get_child(GTK_BIN(combo->combo));
-        const char_t *cssobj = osglobals_css_entry();
+        const char_t *cssobj = _osglobals_css_entry();
         cassert(GTK_IS_ENTRY(entry) == TRUE);
         _oscontrol_update_css_font(entry, cssobj, font, &combo->font, &combo->css_font);
         combo->fsize = (uint32_t)(font_size(font) + 2.5f);
@@ -347,7 +347,7 @@ static void i_set_color(OSCombo *combo, const color_t color)
     cassert_no_null(combo);
     cassert(GTK_IS_EVENT_BOX(combo->control.widget));
     cassert(GTK_IS_COMBO_BOX(combo->combo));
-    cssobj = osglobals_css_entry();
+    cssobj = _osglobals_css_entry();
     entry = gtk_bin_get_child(GTK_BIN(combo->combo));
     cassert(GTK_IS_ENTRY(entry) == TRUE);
     _oscontrol_update_css_color(entry, cssobj, color, &combo->css_color);

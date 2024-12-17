@@ -84,7 +84,7 @@ void osdrawctrl_clear(DCtx *ctx, const int32_t x, const int32_t y, const uint32_
 void osdrawctrl_header(DCtx *ctx, const int32_t x, const int32_t y, const uint32_t width, const uint32_t height, const ctrl_state_t state)
 {
     static const uint32_t backoffset = 10;
-    GtkStyleContext *c = osglobals_button_context();
+    GtkStyleContext *c = _osglobals_button_context();
     color_t border = osglobals_border_color();
     cairo_t *cairo = (cairo_t *)dctx_native(ctx);
     GtkStateFlags flags = 0;
@@ -302,7 +302,7 @@ void osdrawctrl_image(DCtx *ctx, const Image *image, const int32_t x, const int3
 
 static void i_draw_check(cairo_t *cairo, const int32_t x, const int32_t y, const uint32_t width, const uint32_t height, const ctrl_state_t state, const uint32_t start)
 {
-    GdkPixbuf *bitmap = osglobals_checks_bitmap();
+    GdkPixbuf *bitmap = _osglobals_checks_bitmap();
     uint32_t offset = start;
 
     switch (state)
