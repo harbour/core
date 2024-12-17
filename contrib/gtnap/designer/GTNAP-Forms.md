@@ -1,10 +1,10 @@
 # GTNAP-Forms
 
-GTNAP-Forms es un conjunto de funciones Harbour, integradas en GTNAP, que nos permiten cargar y ejecutar los formularios creados con [NapDesigner](./Readme.md).
+GTNAP-Forms is a set of Harbour functions, integrated into GTNAP, that allow us to load and run forms created with [NapDesigner](./Readme.md).
 
-## Compilar GTNAP-Forms
+## Build GTNAP-Forms
 
-GTNAP-Forms está integrado en GTNAP, ampliando su API, por lo que no tenemos que hacer nada especial para compilarlo. Tan solo correr el script de build in `contrib\gtnap`. Más información en [Build GTNAP](../Readme.md#build-gtnap).
+GTNAP-Forms is built into GTNAP, extending its API, so we don't have to do anything special to compile it. Just run the build script in `contrib\gtnap`. More information at [Build GTNAP](../Readme.md#build-gtnap).
 
 ```
 cd contrib/gtnap
@@ -15,59 +15,63 @@ build.bat -b [Debug|Release] -comp mingw64
 :: Linux/macOS
 bash ./build.sh -b [Debug|Release]
 ```
-## Cargar un formulario
+## Load a form
 
-NapDesigner crea archivos tipo `*.nfm` (NAppGUI forms) que se pueden cargar en tiempo de ejecución. En [exemploforms.prg](../tests/cuademo/gtnap_cualib/exemploforms.prg) tienes el ejemplo completo.
+NapDesigner creates `*.nfm` (NAppGUI forms) files that can be loaded at runtime. In [exemploforms.prg](../tests/cuademo/gtnap_cualib/exemploforms.prg) you have the complete example.
 
 ### NAP_FORM_LOAD
 
-Carga un formulario desde un archivo en disco.
+Load a form from a file on disk.
 
 ```
 LOCAL V_FORM := NAP_FORM_LOAD(DIRET_FORMS() + "Customer.nfm")
 
-PAR1: Ruta al archivo que contiene el formulario.
-RET: Objeto que contiene el formulario.
+PAR1: Path to the file containing the form.
+RET: Form object.
 ```
 
 ### NAP_FORM_TITLE
 
-Establece un título para la ventana del formulario.
+Set a title for the form window.
 
 ```
 NAP_FORM_TITLE(V_FORM, "Primeiro exemplo de formulário GTNAP")
 
-PAR1: Objeto formulario.
-PAR2: Cadena de texto con el título.
+PAR1: Form object.
+PAR2: Text string with the title.
 ```
 ### NAP_FORM_MODAL
 
-Lanza el formulario en modo modal.
+Launch the form in modal mode.
 
 ```
 N_RES := NAP_FORM_MODAL(V_FORM)
 
-PAR1: Objeto formulario.
-RET: Valor numérico con el resultado al cierre del formulario. Estos valores pueden ser:
-    - NAP_MODAL_ENTER (2). El formulario se ha cerrado pulsando la tecla [RETURN].
-    - NAP_MODAL_ESC (1). El formulario se ha cerrado pulsando la tecla [ESC].
-    - NAP_MODAL_X_BUTTON (3). El formulario se ha cerrado pulsando el icono [X] de la ventana.
-    - OTHER. El formulario se ha cerrado mediante NAP_FORM_STOP_MODAL
+PAR1: Form object.
+RET: Numeric value with the result at the close of the form. These values ​​can be:
+    - NAP_MODAL_ENTER (2). The form has been closed by pressing the [RETURN] key.
+    - NAP_MODAL_ESC (1). The form has been closed by pressing the [ESC] key.
+    - NAP_MODAL_X_BUTTON (3). The form has been closed by clicking the [X] icon in the window.
+    - OTHER. The form has been closed by NAP_FORM_STOP_MODAL()
 ```
 
 ### NAP_STOP_MODAL
 
-Fuerza el cierre de un formulario lanzado mediante `NAP_FORM_MODAL`. Esta función debe ser invocada por alguna función callback, como respuesta a cualquier evento GUI (por ejemplo, pulsar un botón).
+Forces a form launched via `NAP_FORM_MODAL()` to close. This function must be invoked by some callback function, in response to any GUI event (for example, pressing a button).
 
 ```
 NAP_FORM_ONCLICK(V_FORM, "button_ok", {|| NAP_FORM_STOP_MODAL(V_FORM, 1000) })
 
-PAR1: Objeto formulario.
-PAR2: Valor numérico a devolver como respuesta en NAP_FORM_MODAL.
+PAR1: Form object.
+PAR2: Numeric value to return as a response in NAP_FORM_MODAL().
 ```
-## Vinculación de datos
+## Data binding
 
-Para que el formulario sea realmente práctico, debemos poder conectar variables en la parte Harbour con los controles GUI (widgets). Para ello deberemos crear un vector de pares (id-variable). El `id` es el nombre del widget encargado de editar el valor de la `variable`.
+To make the form really practical, we need to be able to connect variables in the Harbour part to the GUI controls (widgets). The first thing is to give a unique and recognizable **ID** in NapDesign to the cells that contain the widgets that we are interested in connecting. For example, the _Editbox_ with the user's name (`edit_first_name`).
+
+![control_id](./images/control_id.png)
+
+In the Harbour part, we need to create a vector of pairs (ID-variable). The `ID` is the name of the widget previously assigned in NApDesign, which will be in charge of editing the value of the `variable`.
 
 ```
 LOCAL C_NAME := "Francisco"
@@ -109,49 +113,52 @@ LOCAL V_BIND := { ;
                 }
 ```
 
-Si la variable se proporciona por "valor" será de solo lectura. Veremos el valor de la misma en el widget, pero no se podrá grabar el valor asignado por el usuario. Para ello, pasar la variable por referencia.
+**Form running from Harbour**
+![form_running](./images/form_harbour.png)
+
+If the variable is provided by value it will be read-only. We will see its value in the widget, but the value assigned by the user cannot be recorded. To do this, pass the variable by reference.
 
 ### NAP_FORM_DBIND
 
-Vincula un vector de parejas (id-variable) con el formulario.
+Binds a vector of pairs (id-variable) to the form.
 
 ```
 NAP_FORM_DBIND(V_FORM, V_BIND)
 
-PAR1: Objeto formulario.
-PAR2: Vector de pares (id-variable)
+PAR1: Form object.
+PAR2: Pair vector (id-variable)
 ```
 
-Cuando el formulario se lance con `NAP_FORM_MODAL()`, el valor de las variables será mapeado de forma automática en los widgets. Si el usuario cambia cualquier valor, NO será grabado de vuelta hasta que llamemos a `NAP_FORM_DBIND_STORE()`.
+When the form is launched with `NAP_FORM_MODAL()`, the value of the variables will be automatically mapped to the widgets. If the user changes any value, it will NOT be written back until we call `NAP_FORM_DBIND_STORE()`.
 
 ### NAP_FORM_DBIND_STORE
 
-Graba en contenido de los widgets del formulario en las variables proporcionadas por `NAP_FORM_DBIND()`
+Writes content of form widgets in variables provided by `NAP_FORM_DBIND()`
 
 ```
 IF N_RES == NAP_MODAL_ENTER .OR. N_RES == 1000
     // Write the values from the GUI controls to Harbour variables
     NAP_FORM_DBIND_STORE(V_FORM)
 
-PAR1: Objeto formulario.
+PAR1: Form object.
 ```
 
-Si la variable se pasó por valor, será imposible grabar los cambios. Pasar una referencia a la variable para hacer de lectura/escritura.
+If the variable was passed by value, it will be impossible to record the changes. Pass a reference to the variable to make it read/write.
 
-## Eventos de botón
+## Button events
 
-Si la parte Harbour quiere realizar alguna acción si se pulsa un botón, será necesario asociar un bloque de código con el componente.
+If the Harbor part wants to perform some action if a button is pressed, it will need to associate a block of code with the component.
 
 ### NAP_FORM_ONCLICK
 
-Establece el bloque de código que se ejecutará al pulsar un botón en el formulario.
+Sets the block of code that will be executed when a button is pressed on the form.
 
 ```
 NAP_FORM_ONCLICK(V_FORM, "button_ok", {|| NAP_FORM_STOP_MODAL(V_FORM, 1000) })
 
-PAR1: Objeto formulario.
-PAR2: ID del botón.
-PAR3: Bloque de código que se ejecutará en la parte de Harbour.
+PAR1: Form object.
+PAR2: Button ID.
+PAR3: Block of code to be executed in the Harbor part.
 ```
 
-En este ejemplo, pulsar el botón tiene asociado el cierre del formulario con el código de retorno `1000`.
+In this example, clicking the button is associated with closing the form with the return code `1000`.
