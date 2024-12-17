@@ -9854,6 +9854,7 @@ STATIC FUNCTION PlugIn_make_ctx( hbmk, cState, hVars )
       "cSTATE"        => cState                     , ;
       "params"        => hbmk[ _HBMK_aPLUGINPars ]  , ;
       "vars"          => hVars                      , ;
+      "dept"          => hbmk[ _HBMK_hDEPTMACRO ]   , ;
       "cPLAT"         => hbmk[ _HBMK_cPLAT ]        , ;
       "cCOMP"         => hbmk[ _HBMK_cCOMP ]        , ;
       "nCOMPVer"      => hbmk[ _HBMK_nCOMPVer ]     , ;

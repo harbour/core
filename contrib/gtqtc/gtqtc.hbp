@@ -36,9 +36,9 @@
 {!HBMK_HAS_QT6}-depcontrol=qt5:${HB_WITH_QT}
 {!HBMK_HAS_QT6&HB_BUILD_3RDEXT='no'}-depoptional=qt5:no
 {!HBMK_HAS_QT6}-depoptional=qt5:yes
-{!HBMK_HAS_QT6}-depincpath=qt5:/usr/include/x86_64-linux-gnu/qt5{linux}
-{!HBMK_HAS_QT6}-depincpath=qt5:/usr/local/opt/qt5/include{darwin}
-{!HBMK_HAS_QT6}-depincpath=qt5:/usr/local/include/qt5{bsd}
+{!HBMK_HAS_QT6&linux}-depincpath=qt5:/usr/include/x86_64-linux-gnu/qt5
+{!HBMK_HAS_QT6&darwin}-depincpath=qt5:/usr/local/opt/qt5/include
+{!HBMK_HAS_QT6&bsd}-depincpath=qt5:/usr/local/include/qt5
 {!HBMK_HAS_QT6}-depfinish=qt5
 
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}-deppkgname=qt:QtCore
