@@ -33,7 +33,7 @@ The application executable can be found at `build/[Debug|Release]/bin/napdesign`
 
 ## Open project folder
 
-The first time the application starts we will have a blank drawing area and all the buttons are off. The first thing we have to do is click on the folder icon (📁) and select a project directory. NapDesigner allows you to edit all the forms in said directory simultaneously. We can see the current folder by placing the mouse over the icon. By clicking on any file, we will select it and see it in the drawing area.
+The first time the application starts we will have a blank drawing area and all the buttons are off. The first thing we have to do is click on the folder icon (📁) and select a project directory. NapDesigner allows you to edit all the forms in said directory simultaneously. You can use the example forms in `/contrib/gtnap/tests/cuademo/forms`. We can see the current folder by placing the mouse over the icon. By clicking on any file, we will select it and see it in the drawing area.
 
 ![openfolder](./images/openfolder.png)
 
