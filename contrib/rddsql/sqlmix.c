@@ -1597,6 +1597,11 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
          uiLen = 8;
          break;
 
+      case HB_IT_TIMESTAMP:
+         bType = '@';
+         uiLen = 26;
+         break;
+
       case HB_IT_LOGICAL:
          bType = 'L';
          uiLen = 1;
