@@ -29,6 +29,7 @@
 -depincpath=qt6:/usr/include/x86_64-linux-gnu/qt6{linux}
 -depincpath=qt6:/usr/local/opt/qt6/include{darwin}
 -depincpath=qt6:/usr/local/include/qt6{bsd}
+-depbinpath=qt6:/usr/lib/qt6/libexec{linux}
 -depfinish=qt6
 
 {!HBMK_HAS_QT6}-deppkgname=qt5:qt5
