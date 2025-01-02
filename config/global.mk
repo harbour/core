@@ -711,21 +711,23 @@ ifeq ($(HB_COMPILER),)
                                  endif
                               endif
                            else
-                              HB_COMP_PATH := $(call find_in_path_raw,clang.exe)
+                              HB_COMP_PATH := $(call find_in_path_raw,$(HB_CCPREFIX)clang$(HB_HOST_BIN_EXT))
                               HB_COMP_PWD  := $(call dir_with_spaces,$(HB_COMP_PATH))
                               ifneq ($(HB_COMP_PATH),)
                                  HB_COMPILER := clang
-                                 ifneq ($(wildcard $(HB_COMP_PWD)aarch64-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
-                                    HB_CPU := arm64
-                                    MSYSTEM := CLANGARM64
-                                 else
-                                 ifneq ($(wildcard $(HB_COMP_PWD)x86_64-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
+                                 # following $(HB_CCPREFIX)x86_64..., etc. looks wrong, but it's intentional
+                                 # the goal is to pacify this multilib env best guessing when HB_CCPREFIX= is set
+                                 ifneq ($(wildcard $(HB_COMP_PWD)$(HB_CCPREFIX)x86_64-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
                                     HB_CPU := x86_64
                                     MSYSTEM := CLANG64
                                  else
-                                 ifneq ($(wildcard $(HB_COMP_PWD)i686-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
+                                 ifneq ($(wildcard $(HB_COMP_PWD)$(HB_CCPREFIX)i686-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
                                     HB_CPU := x86
                                     MSYSTEM := CLANG32
+                                 else
+                                 ifneq ($(wildcard $(HB_COMP_PWD)$(HB_CCPREFIX)aarch64-w64-mingw32-clang$(HB_HOST_BIN_EXT)),)
+                                    HB_CPU := arm64
+                                    MSYSTEM := CLANGARM64
                                  else
                                  ifneq ($(findstring /VC/Tools/Llvm/ARM64/,$(HB_COMP_PATH)),)
                                     MSYSTEM :=
@@ -743,7 +745,7 @@ ifeq ($(HB_COMPILER),)
                                     HB_CPU := x86
                                     MSYSTEM := CLANG32
                                  else
-                                    MSYSTEM := $(shell clang --version)
+                                    MSYSTEM := $(shell $(HB_CCPREFIX)clang --version)
                                     ifneq ($(findstring x86_64-pc-windows-msvc,$(MSYSTEM)),)
                                        MSYSTEM :=
                                        HB_CPU := x86_64
@@ -755,6 +757,7 @@ ifeq ($(HB_COMPILER),)
                                     ifneq ($(findstring aarch64-pc-windows-msvc,$(MSYSTEM)),)
                                        MSYSTEM :=
                                        HB_CPU := arm64
+                                    else
                                     ifneq ($(findstring x86_64-w64-windows-gnu,$(MSYSTEM)),)
                                        HB_CPU := x86_64
                                        MSYSTEM := CLANG64
@@ -791,7 +794,7 @@ ifeq ($(HB_COMPILER),)
                                        ifeq ($(HB_CPU),x86_64)
                                           export HB_BUILD_NAME := 64
                                        else
-                                          export HB_BUILD_NAME := HB_CPU
+                                          export HB_BUILD_NAME := $(HB_CPU)
                                        endif
                                     endif
                                  endif

@@ -135,7 +135,7 @@
      5. If HB_COMPILER is not set,
         use the highest one on the priority list.
      NOTES: - Priority list: HB_CCPATH, PATH, embedded.
-            - Priority list: mingw, msvc, bcc, watcom, pocc, xcc
+            - Priority list: mingw, clang, msvc, bcc, watcom, pocc, xcc
             - Compilers of native CPU target have higher priority. (extra)
               On x86_64 Windows: msvc64, msvc, msvcia64, mingw64, mingw, ...
               On x86 Windows: msvc, msvc64, msvcia64, mingw, mingw64, ...
@@ -4458,7 +4458,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          cImpLibExt := cLibLibExt
          IF hbmk[ _HBMK_cCOMP ] == "clang"
-            cBin_Lib := "llvm-ar.exe"
+            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "llvm-ar" + hbmk[ _HBMK_cCCEXT ]
          ELSEIF hbmk[ _HBMK_cCOMP ] == "tcc"
             cBin_Lib := "tiny_libmaker.exe"
          ELSE
