@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,7 +10,7 @@
 
 /* HTTP request (Cocoa-based implementation) */
 
-#include "oshttpreq.inl"
+#include "../oshttpreq.inl"
 #include <sewer/nowarn.hxx>
 #include <Cocoa/Cocoa.h>
 #include <sewer/warn.hxx>
@@ -29,7 +29,7 @@
 /*---------------------------------------------------------------------------*/
 
 #if defined(MAC_OS_X_VERSION_10_9) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
-@interface OSXURLDelegate : NSObject <NSURLSessionDelegate, NSURLSessionDataDelegate, NSURLSessionTaskDelegate>
+@interface OSXURLDelegate : NSObject < NSURLSessionDelegate, NSURLSessionDataDelegate, NSURLSessionTaskDelegate >
 {
   @public
     OSHttp *http;
@@ -82,7 +82,7 @@ struct _oshttp_t
         {
             bmutex_lock(self->http->mutex);
             if (self->http->protocol != NULL)
-                self->http->protocol = str_c((const char_t *)[str UTF8String]);
+                self->http->protocol = str_c(cast_const([str UTF8String], char_t));
             bmutex_unlock(self->http->mutex);
         }
     }
@@ -370,7 +370,7 @@ static void i_request(OSHttp *http, NSString *verb, const char_t *path, const by
 
     if (data != NULL)
     {
-        NSData *nsdata = [NSData dataWithBytes:(const void *)data length:(NSUInteger)size];
+        NSData *nsdata = [NSData dataWithBytes:cast_const(data, void) length:(NSUInteger)size];
         [http->request setHTTPBody:nsdata];
     }
     else

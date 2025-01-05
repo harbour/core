@@ -953,5 +953,5 @@ void designer_inspect_select(Designer *app, const uint32_t row)
 
 /*---------------------------------------------------------------------------*/
 
-#include "osmain.h"
+#include <osapp/osmain.h>
 osmain_sync(0.1, i_create, i_destroy, i_update, "", Designer)

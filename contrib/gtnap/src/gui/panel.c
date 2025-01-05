@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -234,7 +234,7 @@ void _panel_attach_component(Panel *panel, GuiComponent *component)
     if (arrpt_find(panel->children, component, GuiComponent) == UINT32_MAX)
     {
         arrpt_append(panel->children, component, GuiComponent);
-        _component_attach_to_panel((GuiComponent *)panel, component);
+        _component_attach_to_panel(cast(panel, GuiComponent), component);
     }
 }
 
@@ -361,7 +361,7 @@ GuiComponent *_panel_find_component(Panel *panel, void *ositem)
 
         if (component->type == ekGUI_TYPE_PANEL)
         {
-            GuiComponent *child = _panel_find_component((Panel *)component, ositem);
+            GuiComponent *child = _panel_find_component(cast(component, Panel), ositem);
             if (child != NULL)
                 return child;
         }
@@ -398,7 +398,7 @@ void _panel_panels(const Panel *panel, uint32_t *num_panels, Panel **panels)
     cassert_no_null(num_panels);
     cassert_no_null(panels);
     *num_panels = 1;
-    panels[0] = (Panel *)panel;
+    panels[0] = cast(panel, Panel);
 }
 
 /*---------------------------------------------------------------------------*/

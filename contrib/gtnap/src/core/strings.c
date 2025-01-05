@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -579,9 +579,6 @@ void str_upd(String **str, const char_t *new_str)
     String *nstr = NULL;
 
     cassert_no_null(str);
-
-    if (tc(*str) == new_str)
-        return;
 
     if (new_str != NULL)
     {
@@ -1324,12 +1321,28 @@ uint64_t str_to_u64(const char_t *str, const uint32_t base, bool_t *error)
 
 real32_t str_to_r32(const char_t *str, bool_t *error)
 {
-    return blib_strtof(str, NULL, error);
+    char_t *end = NULL;
+    real32_t r = blib_strtof(str, &end, error);
+    if (end != NULL && end[0] != 0)
+    {
+        ptr_assign(error, TRUE);
+        return 0;
+    }
+
+    return r;
 }
 
 /*---------------------------------------------------------------------------*/
 
 real64_t str_to_r64(const char_t *str, bool_t *error)
 {
-    return blib_strtod(str, NULL, error);
+    char_t *end = NULL;
+    real64_t r = blib_strtod(str, &end, error);
+    if (end != NULL && end[0] != 0)
+    {
+        ptr_assign(error, TRUE);
+        return 0;
+    }
+
+    return r;
 }

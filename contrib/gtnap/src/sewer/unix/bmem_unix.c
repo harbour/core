@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,14 +10,14 @@
 
 /* Operating System memory support */
 
-#include "bmem.h"
-#include "bmem.inl"
+#include "../bmem.h"
+#include "../bmem.inl"
 
 #if !defined(__UNIX__)
 #error This file is for Unix/Unix-like system
 #endif
 
-#include "cassert.h"
+#include "../cassert.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -72,7 +72,7 @@ byte_t *bmem_aligned_malloc(const uint32_t size, const uint32_t align)
         void *alloc_mem = malloc((size_t)(size + (align - 1) + sizeofptr));
         mem = cast(alloc_mem, byte_t) + sizeofptr;
         mem += (align - ((size_t)mem & (align - 1)) & (align - 1));
-        (void **)mem[-1] = alloc_mem;
+        dcast(mem[-1], void) = alloc_mem;
     }
 #endif
 
@@ -116,7 +116,7 @@ void bmem_free(byte_t *mem)
     free(cast(mem, void));
 #else
     {
-        void *memp = (void **)mem[-1];
+        void *memp = dcast(mem[-1], void);
         free(memp);
     }
 #endif

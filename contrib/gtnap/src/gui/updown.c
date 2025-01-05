@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -39,7 +39,7 @@ static void i_OnClick(UpDown *updown, Event *e)
     {
         Cell *cell = _component_cell(&updown->component);
         if (cell != NULL)
-            _cell_upd_increment(cell, params->index == 0 ? TRUE : FALSE);
+            _cell_update_incr(cell, params->index == 0 ? TRUE : FALSE);
     }
 
     if (updown->OnClick != NULL)

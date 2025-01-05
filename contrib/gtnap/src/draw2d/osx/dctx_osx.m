@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -14,12 +14,11 @@
 #include <Cocoa/Cocoa.h>
 #include <sewer/warn.hxx>
 #include "draw2d_osx.ixx"
-
-#include "dctx.h"
-#include "dctxh.h"
-#include "dctx.inl"
-#include "color.h"
-#include "font.h"
+#include "../dctx.h"
+#include "../dctxh.h"
+#include "../dctx.inl"
+#include "../color.h"
+#include "../font.h"
 #include <core/heap.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
@@ -44,7 +43,7 @@ static void i_init_text_attr(DCtx *ctx)
     objects[1] = kUNDERLINE_NONE;
     objects[2] = ctx->text_parag;
     objects[3] = [NSColor blackColor];
-    objects[4] = (NSFont *)font_native(ctx->font);
+    objects[4] = cast(font_native(ctx->font), NSFont);
     keys[0] = NSUnderlineStyleAttributeName;
     keys[1] = NSStrikethroughStyleAttributeName;
     keys[2] = NSParagraphStyleAttributeName;
@@ -113,13 +112,13 @@ void dctx_set_gcontext(DCtx *ctx, void *gcontext, const uint32_t width, const ui
     unref(background);
     ctx->width = width;
     ctx->height = height;
-    ctx->context = i_CGContext((NSGraphicsContext *)gcontext);
+    ctx->context = i_CGContext(cast(gcontext, NSGraphicsContext));
     CGContextSaveGState(ctx->context);
     CGContextTranslateCTM(ctx->context, -(CGFloat)offset_x, -(CGFloat)offset_y);
     ctx->origin = CGContextGetCTM(ctx->context);
     ctx->raster_mode = FALSE;
     if (reset == TRUE)
-        dctx_init(ctx);
+        _dctx_init(ctx);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -291,7 +290,7 @@ DCtx *dctx_bitmap(const uint32_t width, const uint32_t height, const pixformat_t
     CGColorSpaceRef space = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
     byte_t *pixdata = heap_malloc(width * height * 4, "OSXBitmapContextData");
     NSGraphicsContext *nscontext = nil;
-    ctx->context = CGBitmapContextCreate((void *)pixdata, (size_t)width, (size_t)height, 8, (size_t)(width * 4), space, (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
+    ctx->context = CGBitmapContextCreate(cast(pixdata, void), (size_t)width, (size_t)height, 8, (size_t)(width * 4), space, (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
     CGColorSpaceRelease(space);
 
 #if defined(MAC_OS_X_VERSION_10_10) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10
@@ -310,13 +309,13 @@ DCtx *dctx_bitmap(const uint32_t width, const uint32_t height, const pixformat_t
     ctx->gradient_matrix = CGAffineTransformIdentity;
     CGContextConcatCTM(ctx->context, ctx->origin);
     i_init_text_attr(ctx);
-    dctx_init(ctx);
+    _dctx_init(ctx);
     return ctx;
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dctx_transform(DCtx *ctx, const T2Df *t2d, const bool_t cartesian)
+void _dctx_transform(DCtx *ctx, const T2Df *t2d, const bool_t cartesian)
 {
     CGAffineTransform transform;
     cassert_no_null(ctx);

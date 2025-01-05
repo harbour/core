@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,8 +10,8 @@
 
 /* Basic synchronization services */
 
-#include "bmutex.h"
-#include "osbs.inl"
+#include "../bmutex.h"
+#include "../osbs.inl"
 #include <sewer/cassert.h>
 
 #if !defined(__UNIX__)

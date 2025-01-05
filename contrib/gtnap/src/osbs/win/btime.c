@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,7 +10,7 @@
 
 /* Basic time services */
 
-#include "btime.h"
+#include "../btime.h"
 #include <sewer/cassert.h>
 
 #if !defined(__WINDOWS__)

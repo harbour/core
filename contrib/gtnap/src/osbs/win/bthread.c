@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,8 +10,8 @@
 
 /* Basic threading services */
 
-#include "osbs.inl"
-#include "bthread.h"
+#include "../osbs.inl"
+#include "../bthread.h"
 #include <sewer/cassert.h>
 
 #if !defined(__WINDOWS__)
@@ -26,7 +26,7 @@
 
 Thread *bthread_create_imp(FPtr_thread_main thmain, void *data)
 {
-    HANDLE thread = CreateThread(NULL, 0, cast_func_ptr(thmain, LPTHREAD_START_ROUTINE), (LPVOID)data, 0, NULL);
+    HANDLE thread = CreateThread(NULL, 0, cast_func(thmain, LPTHREAD_START_ROUTINE), (LPVOID)data, 0, NULL);
     cassert_no_null(thread);
     _osbs_thread_alloc();
     return cast(thread, Thread);

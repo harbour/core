@@ -888,5 +888,5 @@ static void i_destroy(App **app)
 
 /*---------------------------------------------------------------------------*/
 
-#include "osmain.h"
+#include <osapp/osmain.h>
 osmain_sync(i_BLINK_INTERVAL, i_create, i_destroy, i_update, "", App)

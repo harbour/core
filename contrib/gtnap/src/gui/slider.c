@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -67,7 +67,7 @@ static void i_OnSliderMoved(Slider *slider, Event *e)
     {
         Cell *cell = _component_cell(&slider->component);
         if (cell != NULL)
-            _cell_upd_norm_real32(cell, p->pos);
+            _cell_update_norm32(cell, p->pos);
     }
 
     if (slider->OnMoved != NULL)

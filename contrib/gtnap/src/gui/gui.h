@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -66,16 +66,16 @@ _gui_api bool_t evbind_modify_imp(Event *e, const char_t *type, const uint16_t s
 __END_C
 
 #define evbind_object(e, type) \
-    (type *)evbind_object_imp(e, (const char_t *)#type)
+    cast(evbind_object_imp(e, cast_const(#type, char_t)), type)
 
 #define evbind_modify(e, type, mtype, mname) \
     ( \
         CHECK_STRUCT_MEMBER_TYPE(type, mname, mtype), \
         evbind_modify_imp( \
             e, \
-            (const char_t *)#type, \
+            cast_const(#type, char_t), \
             (uint16_t)sizeof(type), \
-            (const char_t *)#mname, \
-            (const char_t *)#mtype, \
+            cast_const(#mname, char_t), \
+            cast_const(#mtype, char_t), \
             (uint16_t)STRUCT_MEMBER_OFFSET(type, mname), \
             (uint16_t)STRUCT_MEMBER_SIZE(type, mname)))

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -77,9 +77,7 @@ void blib_strcat(char_t *dest, const uint32_t size, const char_t *src)
     size_t len = 0;
     cassert_no_null(dest);
     cassert_no_null(src);
-
     len = strlen(dest);
-
     if (size > len + 1)
     {
         size_t len2 = strlen(src);
@@ -245,7 +243,7 @@ void blib_qsort(byte_t *array, const uint32_t nelems, const uint32_t size, FPtr_
 void blib_qsort_ex(const byte_t *array, const uint32_t nelems, const uint32_t size, FPtr_compare_ex func_compare, const byte_t *data)
 {
     cassert_no_nullf(func_compare);
-    _qsort_ex(cast_const(array, void), nelems, size, func_compare, (const void *)data);
+    _qsort_ex(cast_const(array, void), nelems, size, func_compare, cast_const(data, void));
 }
 
 /*---------------------------------------------------------------------------*/

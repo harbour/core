@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,10 +10,10 @@
 
 /* Fonts */
 
-#include "font.h"
-#include "font.inl"
-#include "dctxh.h"
-#include "draw2d.inl"
+#include "../font.h"
+#include "../font.inl"
+#include "../dctxh.h"
+#include "../draw2d.inl"
 #include <core/arrpt.h>
 #include <core/heap.h>
 #include <core/strings.h>
@@ -63,7 +63,7 @@ void osfont_dealloc_globals(void)
 static const char_t *i_monospace_font_family(void)
 {
     const char_t *desired_fonts[] = {"Ubuntu Mono", "DejaVu Sans Mono", "Courier New"};
-    return draw2d_monospace_family(desired_fonts, sizeof(desired_fonts) / sizeof(const char_t *));
+    return _draw2d_monospace_family(desired_fonts, sizeof(desired_fonts) / sizeof(const char_t *));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -159,7 +159,7 @@ void osfont_destroy(OSFont **font)
 {
     cassert_no_null(font);
     cassert_no_null(*font);
-    pango_font_description_free(*cast(font, PangoFontDescription *));
+    pango_font_description_free(*dcast(font, PangoFontDescription));
     heap_auditor_delete("PangoFontDescription");
     *font = NULL;
 }
@@ -242,7 +242,7 @@ void osfont_metrics(const OSFont *font, const real32_t size, const real32_t xsca
     {
         real32_t width, height;
         uint32_t len;
-        const char_t *str = draw2d_str_avg_char_width(&len);
+        const char_t *str = _draw2d_str_avg_char_width(&len);
         osfont_extents(font, str, xscale, -1, &width, &height);
 
         if (leading != NULL)
@@ -276,7 +276,7 @@ void osfont_extents(const OSFont *font, const char_t *text, const real32_t xscal
     }
 
     pango_layout_set_font_description(i_LAYOUT, cast(font, PangoFontDescription));
-    pango_layout_set_text(i_LAYOUT, (const char *)text, -1);
+    pango_layout_set_text(i_LAYOUT, cast_const(text, char), -1);
     pango_layout_set_width(i_LAYOUT, refwidth < 0 ? -1 : (int)((refwidth / xscale) * PANGO_SCALE));
     pango_layout_get_pixel_size(i_LAYOUT, &w, &h);
     ptr_assign(width, (real32_t)w * xscale);

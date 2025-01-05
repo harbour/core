@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -67,9 +67,9 @@ __END_C
 
 #define image_data(image, data, func_destroy_data, type) \
     ( \
-        (void)((type **)data == data), \
+        (void)(dcast(data, type) == data), \
         FUNC_CHECK_DESTROY(func_destroy_data, type), \
-        image_data_imp(image, (void **)data, (FPtr_destroy)func_destroy_data))
+        image_data_imp(image, dcast(data, void), (FPtr_destroy)func_destroy_data))
 
 #define image_get_data(image, type) \
-    (type *)image_get_data_imp(image)
+    cast(image_get_data_imp(image), type)

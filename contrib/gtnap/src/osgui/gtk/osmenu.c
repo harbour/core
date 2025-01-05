@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,10 +10,10 @@
 
 /* Operating System native menu */
 
-#include "osgui.inl"
 #include "osgui_gtk.inl"
 #include "osmenu_gtk.inl"
 #include "osmenuitem_gtk.inl"
+#include "../osgui.inl"
 #include <core/arrpt.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -46,7 +46,7 @@ struct _osmenu_t
 static void i_count(GtkWidget *widget, gpointer n)
 {
     unref(widget);
-    *((uint32_t *)n) += 1;
+    *cast(n, uint32_t) += 1;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -133,9 +133,9 @@ void osmenu_delete_item(OSMenu *menu, OSMenuItem *item)
 #else
 static void i_popup_pos(GtkMenu *widget, gint *x, gint *y, gboolean *push_in, gpointer user_data)
 {
-    OSMenu *menu = (OSMenu *)user_data;
+    OSMenu *menu = cast(user_data, OSMenu);
     cassert_no_null(menu);
-    cassert_unref((GtkWidget *)widget == menu->widget, widget);
+    cassert_unref(cast(widget, GtkWidget) == menu->widget, widget);
     cassert_no_null(x);
     cassert_no_null(y);
     cassert_no_null(push_in);

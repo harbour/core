@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -127,7 +127,7 @@
     static __TYPECHECK type **arrpt_##type##_insert(struct Arr##Pt##type *array, const uint32_t pos, const uint32_t n); \
     static type **arrpt_##type##_insert(struct Arr##Pt##type *array, const uint32_t pos, const uint32_t n) \
     { \
-        return dcast(array_insert(cast(array, Array), pos, n), type); \
+        return dcast(array_insert0(cast(array, Array), pos, n), type); \
     } \
 \
     static __TYPECHECK void arrpt_##type##_join(struct Arr##Pt##type *dest, const struct Arr##Pt##type *src, type *(func_copy)(const type *)); \

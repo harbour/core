@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -16,7 +16,7 @@
 #include <sewer/nowarn.hxx>
 #include <Cocoa/Cocoa.h>
 #include <sewer/warn.hxx>
-#include "draw2d.ixx"
+#include "../draw2d.ixx"
 
 #define MAX_COLORS 16
 #define MAX_RANGE 48

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -16,7 +16,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-void osweb_detach_and_destroy(OSWeb **view, OSPanel *panel)
+void _osweb_detach_and_destroy(OSWeb **view, OSPanel *panel)
 {
     cassert_no_null(view);
     osweb_detach(*view, panel);

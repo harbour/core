@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,6 +11,7 @@
 /* Button */
 
 #include "button.h"
+#include "buttonh.h"
 #include "button.inl"
 #include "component.inl"
 #include "cell.inl"
@@ -129,7 +130,7 @@ static void i_OnClick(Button *button, Event *event)
             params->index = _cell_radio_index(ccell);
 
             if (cell != NULL)
-                _cell_upd_uint32(cell, params->index);
+                _cell_update_u32(cell, params->index);
 
             if (button->OnClick == NULL)
                 sender = _cell_radio_listener(ccell);
@@ -142,7 +143,7 @@ static void i_OnClick(Button *button, Event *event)
     {
         Cell *cell = _component_cell(&button->component);
         if (cell != NULL)
-            _cell_upd_bool(cell, params->state == ekGUI_OFF ? FALSE : TRUE);
+            _cell_update_bool(cell, params->state == ekGUI_OFF ? FALSE : TRUE);
         break;
     }
 
@@ -166,7 +167,7 @@ static void i_OnClick(Button *button, Event *event)
                 cassert_default();
             }
 
-            _cell_upd_uint32(cell, v);
+            _cell_update_u32(cell, v);
         }
         break;
     }
@@ -176,9 +177,9 @@ static void i_OnClick(Button *button, Event *event)
     {
         cassert(params->text == NULL);
         if (button_get_type(button->flags) == ekBUTTON_FLATGLE && params->state == ekGUI_ON && button->talt != NULL)
-            ((EvButton *)params)->text = tc(button->talt);
+            params->text = tc(button->talt);
         else
-            ((EvButton *)params)->text = tc(button->text);
+            params->text = tc(button->text);
 
         listener_pass_event(sender->OnClick, event, sender, Button);
     }
@@ -410,8 +411,8 @@ real32_t button_get_height(const Button *button)
 {
     real32_t width, height;
     cassert_no_null(button);
-    _button_dimension((Button *)button, 0, &width, &height);
-    _button_dimension((Button *)button, 1, &width, &height);
+    _button_dimension(cast(button, Button), 0, &width, &height);
+    _button_dimension(cast(button, Button), 1, &width, &height);
     return height;
 }
 

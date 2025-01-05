@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -13,7 +13,7 @@
 #ifndef __OSGUIGTK_IXX__
 #define __OSGUIGTK_IXX__
 
-#include "osgui.ixx"
+#include "../osgui.ixx"
 
 #if !defined(__GTK3__)
 #error This file is only for GTK Toolkit

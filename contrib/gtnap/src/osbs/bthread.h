@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -33,6 +33,6 @@ __END_C
 
 #define bthread_create(thmain, data, type) \
     ( \
-        (void)(data == (type *)data), \
+        (void)(cast(data, type) == data), \
         FUNC_CHECK_THREAD_MAIN(thmain, type), \
-        bthread_create_imp((FPtr_thread_main)thmain, (void *)data))
+        bthread_create_imp((FPtr_thread_main)thmain, cast(data, void)))

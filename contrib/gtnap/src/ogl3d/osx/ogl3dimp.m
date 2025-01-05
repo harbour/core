@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,9 +10,9 @@
 
 /* OpenGL support macos */
 
-#include "glew.h"
+#include "../glew.h"
 #include <Cocoa/Cocoa.h>
-#include "ogl3d.inl"
+#include "../ogl3d.inl"
 #include <sewer/bmem.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
@@ -185,7 +185,7 @@ OGLCtx *_ogl3dimp_context(const OGLProps *props, void *view, oglerr_t *err)
 
     {
         OGLCtx *ctx = cast(bmem_malloc(sizeof(OGLCtx)), OGLCtx);
-        ctx->view = (NSView *)view;
+        ctx->view = cast(view, NSView);
         ctx->nsgl = nsgl;
         ctx->glew = glew;
         i_set_opengl(ctx->view);

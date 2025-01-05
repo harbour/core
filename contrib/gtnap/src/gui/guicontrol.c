@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -73,7 +73,7 @@ ListBox *guicontrol_listbox(GuiControl *control)
     GuiComponent *component = cast(control, GuiComponent);
     if (component != NULL && component->type == ekGUI_TYPE_CUSTOMVIEW)
     {
-        if (str_equ_c(_view_subtype((View *)component), "ListBox") == TRUE)
+        if (str_equ_c(_view_subtype(cast(component, View)), "ListBox") == TRUE)
             return cast(component, ListBox);
     }
     return NULL;

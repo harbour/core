@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,7 +10,7 @@
 
 /* HTTP request (LibCURL-based implementation) */
 
-#include "oshttpreq.inl"
+#include "../oshttpreq.inl"
 #include <core/arrst.h>
 #include <core/heap.h>
 #include <core/stream.h>

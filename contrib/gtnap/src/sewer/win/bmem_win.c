@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,15 +10,15 @@
 
 /* Basic memory system */
 
-#include "bmem.h"
-#include "bmem.inl"
-#include "cassert.h"
+#include "../bmem.h"
+#include "../bmem.inl"
+#include "../cassert.h"
 
 #if !defined(__WINDOWS__)
 #error This file is for Windows
 #endif
 
-#include "nowarn.hxx"
+#include "../nowarn.hxx"
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
@@ -35,7 +35,7 @@
 #endif
 #endif
 
-#include "nowarn.hxx"
+#include "../nowarn.hxx"
 
 #if defined(__MEMORY_SUBSYTEM_CHECKING__)
 
@@ -188,7 +188,7 @@ byte_t *bmem_aligned_realloc(byte_t *mem, const uint32_t size, const uint32_t ne
     i_mem_append(new_mem);
 #endif
     cassert((mem != NULL) && ((intptr_t)mem % align) == 0);
-    return (byte_t *)new_mem;
+    return cast(new_mem, byte_t);
 }
 
 /*---------------------------------------------------------------------------*/

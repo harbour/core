@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -12,14 +12,14 @@
 
 #include "osgui_osx.ixx"
 
-void oscolor_init(void);
+void _oscolor_init(void);
 
-void oscolor_finish(void);
+void _oscolor_finish(void);
 
-color_t oscolor_from_NSColor(NSColor *color);
+color_t _oscolor_from_NSColor(NSColor *color);
 
-void oscolor_NSColor_rgba(NSColor *color, CGFloat *r, CGFloat *g, CGFloat *b, CGFloat *a);
+void _oscolor_NSColor_rgba(NSColor *color, CGFloat *r, CGFloat *g, CGFloat *b, CGFloat *a);
 
-void oscolor_NSColor_rgba_v(NSColor *color, CGFloat *rgba);
+void _oscolor_NSColor_rgba_v(NSColor *color, CGFloat *rgba);
 
-NSColor *oscolor_NSColor(const color_t color);
+NSColor *_oscolor_NSColor(const color_t color);

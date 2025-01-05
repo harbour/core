@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -16,10 +16,10 @@
 #include "obb2d.hpp"
 #include "col2d.ipp"
 
-template <typename real>
+template < typename real >
 struct OBB2DI
 {
-    static SATPoly<real> *(*sat_poly)(const OBB2D<real> *obb);
+    static SATPoly< real > *(*sat_poly)(const OBB2D< real > *obb);
 };
 
 #endif
