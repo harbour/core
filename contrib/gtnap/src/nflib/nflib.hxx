@@ -10,6 +10,7 @@ typedef struct _flabel_t FLabel;
 typedef struct _fbutton_t FButton;
 typedef struct _fcheck_t FCheck;
 typedef struct _fedit_t FEdit;
+typedef struct _ftext_t FText;
 typedef struct _fcolumn_t FColumn;
 typedef struct _frow_t FRow;
 /* Must be a union (when dbind supports) */
@@ -24,7 +25,8 @@ typedef enum _celltype_t
     ekCELL_TYPE_BUTTON,
     ekCELL_TYPE_CHECK,
     ekCELL_TYPE_EDIT,
-    ekCELL_TYPE_LAYOUT
+    ekCELL_TYPE_LAYOUT,
+    ekCELL_TYPE_TEXT
 } celltype_t;
 
 typedef enum _halign_t
@@ -51,6 +53,7 @@ struct _flabel_t
 struct _fbutton_t
 {
     String *text;
+    real32_t min_width;
 };
 
 struct _fcheck_t
@@ -59,6 +62,13 @@ struct _fcheck_t
 };
 
 struct _fedit_t
+{
+    bool_t passmode;
+    bool_t autosel;
+    halign_t text_align;
+};
+
+struct _ftext_t
 {
     bool_t passmode;
     bool_t autosel;

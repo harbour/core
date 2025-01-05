@@ -167,7 +167,7 @@ void dform_destroy(DForm **form)
 {
     cassert_no_null(form);
     cassert_no_null(*form);
-    dbind_destroy(&(*form)->flayout, FLayout);
+    flayout_destroy(&(*form)->flayout);
     arrst_destroy(&(*form)->temp_path, NULL, DSelect);
     arrst_destroy(&(*form)->sel_path, NULL, DSelect);
     if ((*form)->window != NULL)
@@ -646,6 +646,21 @@ void dform_synchro_cell_text(DForm *form, const DSelect *sel)
     {
         cassert(FALSE);
     }
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_synchro_button(DForm *form, const DSelect *sel)
+{
+    FCell *cell = i_sel_fcell(sel);
+    Button *button = NULL;
+    cassert_no_null(form);
+    cassert_no_null(sel);
+    cassert_no_null(cell);
+    cassert(cell->type == ekCELL_TYPE_BUTTON);
+    i_need_save(form);
+    button = layout_get_button(sel->glayout, sel->col, sel->row);
+    button_min_width(button, cell->widget.button->min_width);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -38,6 +38,7 @@ static void i_dbind(void)
     dbind_enum(valign_t, ekVALIGN_JUSTIFY, "Justify");
     dbind(FLabel, String *, text);
     dbind(FButton, String *, text);
+    dbind(FButton, real32_t, min_width);
     dbind(FCheck, String *, text);
     dbind(FEdit, bool_t, passmode);
     dbind(FEdit, bool_t, autosel);
@@ -76,6 +77,10 @@ static void i_dbind(void)
     dbind_range(FRow, real32_t, forced_height, 0, 1000);
     dbind_precision(FRow, real32_t, margin_bottom, 1);
     dbind_precision(FRow, real32_t, forced_height, 1);
+
+    dbind_default(FButton, real32_t, min_width, 0);
+    dbind_increment(FButton, real32_t, min_width, 1);
+    dbind_precision(FButton, real32_t, min_width, 1);
 
     dbind_default(FCell, celltype_t, type, ekCELL_TYPE_EMPTY);
     dbind_default(FCell, halign_t, halign, ekHALIGN_LEFT);

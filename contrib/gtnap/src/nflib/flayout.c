@@ -18,7 +18,8 @@
 
 /*---------------------------------------------------------------------------*/
 
-static uint16_t i_VERSION = 0;
+static uint16_t i_VERSION = 1;
+static uint16_t i_STM_VERSION = 0;
 
 /*---------------------------------------------------------------------------*/
 
@@ -138,6 +139,8 @@ static FButton *i_read_button(Stream *stm)
 {
     FButton *button = heap_new0(FButton);
     button->text = str_read(stm);
+    if (i_STM_VERSION >= 1)
+        button->min_width = stm_read_r32(stm);
     return button;
 }
 
@@ -197,8 +200,8 @@ static void i_read_cell(Stream *stm, FCell *cell)
 
 FLayout *flayout_read(Stream *stm)
 {
-    uint16_t version = stm_read_u16(stm);
-    if (version <= i_VERSION)
+    i_STM_VERSION = stm_read_u16(stm);
+    if (i_STM_VERSION <= i_VERSION)
     {
         FLayout *layout = heap_new0(FLayout);
         layout->name = str_read(stm);
@@ -264,6 +267,7 @@ static void i_write_buttom(Stream *stm, const FButton *button)
 {
     cassert_no_null(button);
     str_write(stm, button->text);
+    stm_write_r32(stm, button->min_width);
 }
 
 /*---------------------------------------------------------------------------*/

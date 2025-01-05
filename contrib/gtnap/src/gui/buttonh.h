@@ -14,6 +14,4 @@
 
 __EXTERN_C
 
-const Font *button_get_font(const Button *button);
-
 __END_C
