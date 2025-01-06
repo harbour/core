@@ -496,6 +496,7 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                 if (ftext != NULL)
                 {
                     TextView *text = textview_create();
+                    textview_editable(text, !ftext->read_only);
                     textview_size(text, s2df(ftext->min_width, ftext->min_height));
                     i_sel_remove_cell(&sel);
                     flayout_add_text(sel.flayout, ftext, sel.col, sel.row);
@@ -718,6 +719,7 @@ void dform_synchro_text(DForm *form, const DSelect *sel)
     cassert(cell->type == ekCELL_TYPE_TEXT);
     i_need_save(form);
     text = layout_get_textview(sel->glayout, sel->col, sel->row);
+    textview_editable(text, !cell->widget.text->read_only);
     textview_size(text, s2df(cell->widget.text->min_width, cell->widget.text->min_height));
 }
 

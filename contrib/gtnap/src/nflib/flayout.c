@@ -182,6 +182,7 @@ static FEdit *i_read_edit(Stream *stm)
 static FText *i_read_text(Stream *stm)
 {
     FText *text = heap_new0(FText);
+    text->read_only = stm_read_bool(stm);
     text->min_width = stm_read_r32(stm);
     text->min_height = stm_read_r32(stm);
     return text;
@@ -320,6 +321,7 @@ static void i_write_edit(Stream *stm, const FEdit *edit)
 static void i_write_text(Stream *stm, const FText *text)
 {
     cassert_no_null(text);
+    stm_write_bool(stm, text->read_only);
     stm_write_r32(stm, text->min_width);
     stm_write_r32(stm, text->min_height);
 }
@@ -542,7 +544,7 @@ void flayout_remove_cell(FLayout *layout, const uint32_t col, const uint32_t row
     cassert_no_null(cell);
     name = str_c(tc(cell->name));
     dbind_remove(cell, FCell);
-    dbind_init(cell, FCell);
+    cell->type = ekCELL_TYPE_EMPTY;
     str_upd(&cell->name, tc(name));
     str_destroy(&name);
 }
@@ -817,6 +819,7 @@ Layout *flayout_to_gui(const FLayout *layout, const real32_t empty_width, const 
                 {
                     FText *ftext = cells->widget.text;
                     TextView *gtext = textview_create();
+                    textview_editable(gtext, !ftext->read_only);
                     textview_size(gtext, s2df(ftext->min_width, ftext->min_height));
                     layout_textview(glayout, gtext, i, j);
                     break;

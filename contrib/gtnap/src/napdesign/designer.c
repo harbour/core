@@ -226,7 +226,7 @@ static void i_init_forms(Designer *app, const char_t *path)
         n = arrpt_size(app->forms, DForm);
         if (n > 0)
         {
-            if (app->sel_form > n)
+            if (app->sel_form >= n)
                 app->sel_form = 0;
             i_open_form(app, app->sel_form);
             listbox_select(app->form_list, app->sel_form, TRUE);

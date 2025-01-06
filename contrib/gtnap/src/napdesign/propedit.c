@@ -540,12 +540,18 @@ static void i_OnTextNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-    if (evbind_modify(e, FText, real32_t, min_width) == TRUE
+    if (evbind_modify(e, FText, bool_t, read_only) == TRUE
+        || evbind_modify(e, FText, real32_t, min_width) == TRUE
         || evbind_modify(e, FText, real32_t, min_height) == TRUE)
     {
         dform_synchro_text(data->form, &data->sel);
-        dform_compose(data->form);
-        designer_canvas_update(data->app);
+
+        if (evbind_modify(e, FText, real32_t, min_width) == TRUE
+            || evbind_modify(e, FText, real32_t, min_height) == TRUE)
+        {
+            dform_compose(data->form);
+            designer_canvas_update(data->app);
+        }
     }
 }
 
@@ -553,10 +559,11 @@ static void i_OnTextNotify(PropData *data, Event *e)
 
 static Layout *i_text_layout(PropData *data)
 {
-    Layout *layout1 = layout_create(1, 3);
+    Layout *layout1 = layout_create(1, 4);
     Layout *layout2 = layout_create(2, 2);
     Layout *layout3 = i_value_updown_layout();
     Layout *layout4 = i_value_updown_layout();
+    Button *button1 = button_check();
     Label *label1 = label_create();
     Label *label2 = label_create();
     Label *label3 = label_create();
@@ -564,16 +571,19 @@ static Layout *i_text_layout(PropData *data)
     label_text(label1, "TextView properties");
     label_text(label2, "MWidth");
     label_text(label3, "MHeight");
+    button_text(button1, "Read only");
     layout_label(layout1, label1, 0, 0);
+    layout_button(layout1, button1, 0, 1);
     layout_label(layout2, label2, 0, 0);
     layout_label(layout2, label3, 0, 1);
     layout_layout(layout2, layout3, 1, 0);
     layout_layout(layout2, layout4, 1, 1);
-    layout_layout(layout1, layout2, 0, 1);
+    layout_layout(layout1, layout2, 0, 2);
     layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
     layout_hmargin(layout2, 0, i_GRID_HMARGIN);
     layout_hexpand(layout2, 1);
-    layout_vexpand(layout1, 2);
+    layout_vexpand(layout1, 3);
+    cell_dbind(layout_cell(layout1, 0, 1), FText, bool_t, read_only);
     cell_dbind(layout_cell(layout2, 1, 0), FText, real32_t, min_width);
     cell_dbind(layout_cell(layout2, 1, 1), FText, real32_t, min_height);
     layout_dbind(layout1, listener(data, i_OnTextNotify, PropData), FText);

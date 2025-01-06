@@ -74,6 +74,7 @@ struct _fedit_t
 
 struct _ftext_t
 {
+    bool_t read_only;
     real32_t min_width;
     real32_t min_height;
 };
