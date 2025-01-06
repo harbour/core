@@ -66,6 +66,7 @@ struct _fedit_t
     bool_t passmode;
     bool_t autosel;
     halign_t text_align;
+    real32_t min_width;
 };
 
 struct _ftext_t

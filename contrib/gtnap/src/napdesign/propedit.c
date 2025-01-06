@@ -478,9 +478,18 @@ static void i_OnEditNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-    if (evbind_modify(e, FEdit, bool_t, passmode) == TRUE || evbind_modify(e, FEdit, bool_t, autosel) == TRUE || evbind_modify(e, FEdit, halign_t, text_align) == TRUE)
+    if (evbind_modify(e, FEdit, bool_t, passmode) == TRUE 
+        || evbind_modify(e, FEdit, bool_t, autosel) == TRUE 
+        || evbind_modify(e, FEdit, halign_t, text_align) == TRUE
+        || evbind_modify(e, FEdit, real32_t, min_width) == TRUE)
     {
         dform_synchro_edit(data->form, &data->sel);
+
+        if (evbind_modify(e, FEdit, real32_t, min_width) == TRUE)
+        {
+            dform_compose(data->form);
+            designer_canvas_update(data->app);
+        }
     }
 }
 
@@ -489,23 +498,28 @@ static void i_OnEditNotify(PropData *data, Event *e)
 static Layout *i_edit_layout(PropData *data)
 {
     Layout *layout1 = layout_create(1, 5);
-    Layout *layout2 = layout_create(2, 1);
+    Layout *layout2 = layout_create(2, 2);
+    Layout *layout3 = i_value_updown_layout();
     Label *label1 = label_create();
     Label *label2 = label_create();
+    Label *label3 = label_create();
     Button *button1 = button_check();
     Button *button2 = button_check();
     PopUp *popup = popup_create();
     cassert_no_null(data);
     label_text(label1, "EditBox properties");
     label_text(label2, "Text align");
+    label_text(label3, "MWidth");
     button_text(button1, "Passmode");
     button_text(button2, "Autosel");
     layout_label(layout1, label1, 0, 0);
     layout_button(layout1, button1, 0, 1);
     layout_button(layout1, button2, 0, 2);
     layout_label(layout2, label2, 0, 0);
+    layout_label(layout2, label3, 0, 1);
     layout_popup(layout2, popup, 1, 0);
     layout_layout(layout1, layout2, 0, 3);
+    layout_layout(layout2, layout3, 1, 1);
     layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
     layout_hmargin(layout2, 0, i_GRID_HMARGIN);
     layout_hexpand(layout2, 1);
@@ -513,6 +527,7 @@ static Layout *i_edit_layout(PropData *data)
     cell_dbind(layout_cell(layout1, 0, 1), FEdit, bool_t, passmode);
     cell_dbind(layout_cell(layout1, 0, 2), FEdit, bool_t, autosel);
     cell_dbind(layout_cell(layout2, 1, 0), FEdit, halign_t, text_align);
+    cell_dbind(layout_cell(layout2, 1, 1), FEdit, real32_t, min_width);
     layout_dbind(layout1, listener(data, i_OnEditNotify, PropData), FEdit);
     data->edit_layout = layout1;
     return layout1;

@@ -43,6 +43,7 @@ static void i_dbind(void)
     dbind(FEdit, bool_t, passmode);
     dbind(FEdit, bool_t, autosel);
     dbind(FEdit, halign_t, text_align);
+    dbind(FEdit, real32_t, min_width);
     dbind(FColumn, real32_t, margin_right);
     dbind(FColumn, real32_t, forced_width);
     dbind(FRow, real32_t, margin_bottom);
@@ -81,6 +82,12 @@ static void i_dbind(void)
     dbind_default(FButton, real32_t, min_width, 0);
     dbind_increment(FButton, real32_t, min_width, 1);
     dbind_precision(FButton, real32_t, min_width, 1);
+    dbind_range(FButton, real32_t, min_width, 10, 1000);
+
+    dbind_default(FEdit, real32_t, min_width, 100);
+    dbind_increment(FEdit, real32_t, min_width, 1);
+    dbind_precision(FEdit, real32_t, min_width, 1);
+    dbind_range(FEdit, real32_t, min_width, 10, 1000);
 
     dbind_default(FCell, celltype_t, type, ekCELL_TYPE_EMPTY);
     dbind_default(FCell, halign_t, halign, ekHALIGN_LEFT);

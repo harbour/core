@@ -678,6 +678,7 @@ void dform_synchro_edit(DForm *form, const DSelect *sel)
     edit_passmode(edit, cell->widget.edit->passmode);
     edit_autoselect(edit, cell->widget.edit->autosel);
     edit_align(edit, i_halign(cell->widget.edit->text_align));
+    edit_min_width(edit, cell->widget.edit->min_width);
 }
 
 /*---------------------------------------------------------------------------*/

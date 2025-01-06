@@ -18,7 +18,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-static uint16_t i_VERSION = 1;
+static uint16_t i_VERSION = 2;
 static uint16_t i_STM_VERSION = 0;
 
 /*---------------------------------------------------------------------------*/
@@ -141,6 +141,8 @@ static FButton *i_read_button(Stream *stm)
     button->text = str_read(stm);
     if (i_STM_VERSION >= 1)
         button->min_width = stm_read_r32(stm);
+    else
+        button->min_width = 0;
     return button;
 }
 
@@ -161,6 +163,12 @@ static FEdit *i_read_edit(Stream *stm)
     edit->passmode = stm_read_bool(stm);
     edit->autosel = stm_read_bool(stm);
     edit->text_align = stm_read_enum(stm, halign_t);
+
+    if (i_STM_VERSION >= 2)
+        edit->min_width = stm_read_r32(stm);
+    else
+        edit->min_width = 100;
+
     return edit;
 }
 
@@ -286,6 +294,7 @@ static void i_write_edit(Stream *stm, const FEdit *edit)
     stm_write_bool(stm, edit->passmode);
     stm_write_bool(stm, edit->autosel);
     stm_write_enum(stm, edit->text_align, halign_t);
+    stm_write_r32(stm, edit->min_width);
 }
 
 /*---------------------------------------------------------------------------*/
