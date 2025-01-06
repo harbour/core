@@ -32,6 +32,8 @@ void dform_synchro_button(DForm *form, const DSelect *sel);
 
 void dform_synchro_edit(DForm *form, const DSelect *sel);
 
+void dform_synchro_text(DForm *form, const DSelect *sel);
+
 void dform_synchro_layout_margin(DForm *form, const DSelect *sel);
 
 void dform_synchro_column_margin(DForm *form, const DSelect *sel, const FColumn *fcol, const uint32_t col);

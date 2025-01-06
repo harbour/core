@@ -602,6 +602,23 @@ void dlayout_draw(const DLayout *dlayout, const FLayout *flayout, const Layout *
                 break;
             }
 
+            case ekCELL_TYPE_TEXT:
+            {
+                color_t color = i_is_cell_sel(hover, dlayout, i, j) ? kCOLOR_RED : kCOLOR_BLACK;
+                color_t bgcolor = color_rgb(225, 225, 0);
+                real32_t pattern[2] = {1, 2};
+                draw_line_color(ctx, color);
+                draw_fill_color(ctx, bgcolor);
+                draw_line_width(ctx, 2);
+                draw_rect(ctx, ekFILLSK, dcell->content_rect.pos.x, dcell->content_rect.pos.y, dcell->content_rect.size.width, dcell->content_rect.size.height);
+                draw_line_width(ctx, 1);
+                draw_line_dash(ctx, pattern, 2);
+                draw_rect(ctx, ekSTROKE, dcell->content_rect.pos.x + 5, dcell->content_rect.pos.y + 5, dcell->content_rect.size.width - 10, dcell->content_rect.size.height - 10);
+                draw_line_dash(ctx, NULL, 0);
+                draw_line_color(ctx, kCOLOR_BLACK);
+                break;
+            }
+    
             case ekCELL_TYPE_LAYOUT:
             {
                 Layout *gsublayout = cell_layout(gcell);

@@ -379,6 +379,71 @@ FEdit *dialog_new_edit(Window *parent, const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
+static Layout *i_value_updown_layout(void)
+{
+    Layout *layout = layout_create(2, 1);
+    Edit *edit = edit_create();
+    UpDown *updown = updown_create();
+    layout_edit(layout, edit, 0, 0);
+    layout_updown(layout, updown, 1, 0);
+    layout_hexpand(layout, 0);
+    return layout;
+}
+
+/*---------------------------------------------------------------------------*/
+
+FText *dialog_new_text(Window *parent, const DSelect *sel)
+{
+    DialogData data;
+    Layout *layout1 = layout_create(1, 3);
+    Layout *layout2 = layout_create(2, 2);
+    Layout *layout3 = i_value_updown_layout();
+    Layout *layout4 = i_value_updown_layout();
+    Layout *layout5 = i_ok_cancel(&data, TRUE);
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Label *label3 = label_create();
+    Panel *panel = panel_create();
+    Window *window = window_create(ekWINDOW_STD | ekWINDOW_ESC);
+    String *caption = NULL;
+    FText *ftext = dbind_create(FText);
+    uint32_t ret = 0;
+    data.window = window;
+    cassert_no_null(sel);
+    cassert_no_null(sel->flayout);
+    caption = str_printf("New TextView widget in (%d, %d) of '%s'", sel->col, sel->row, tc(sel->flayout->name));
+    label_text(label1, tc(caption));
+    label_text(label2, "Min width");
+    label_text(label3, "Min height");
+    layout_label(layout1, label1, 0, 0);
+    layout_label(layout2, label2, 0, 0);
+    layout_label(layout2, label3, 0, 1);
+    layout_layout(layout2, layout3, 1, 0);
+    layout_layout(layout2, layout4, 1, 1);
+    layout_layout(layout1, layout2, 0, 1);
+    layout_layout(layout1, layout5, 0, 2);
+    layout_vmargin(layout1, 0, 5);
+    layout_vmargin(layout1, 0, 5);
+    panel_layout(panel, layout1);
+    cell_dbind(layout_cell(layout2, 1, 0), FText, real32_t, min_width);
+    cell_dbind(layout_cell(layout2, 1, 1), FText, real32_t, min_height);
+    layout_dbind(layout1, NULL, FText);
+    layout_dbind_obj(layout1, ftext, FText);
+    window_panel(window, panel);
+    window_defbutton(window, data.defbutton);
+    i_center_window(parent, window);
+    ret = window_modal(window, parent);
+
+    if (ret != BUTTON_OK)
+        dbind_destroy(&ftext, FText);
+
+    window_destroy(&window);
+    str_destroy(&caption);
+    return ftext;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static Layout *i_grid_layout(void)
 {
     Layout *layout = layout_create(3, 2);

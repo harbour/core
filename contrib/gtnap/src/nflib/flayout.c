@@ -9,6 +9,8 @@
 #include <gui/layout.h>
 #include <gui/layouth.h>
 #include <gui/edit.h>
+#include <gui/textview.h>
+#include <geom2d/s2d.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
 #include <core/heap.h>
@@ -54,6 +56,9 @@ static void i_remove_cell(FCell *cell)
         break;
     case ekCELL_TYPE_EDIT:
         dbind_destroy(&cell->widget.edit, FEdit);
+        break;
+    case ekCELL_TYPE_TEXT:
+        dbind_destroy(&cell->widget.text, FText);
         break;
     case ekCELL_TYPE_LAYOUT:
         flayout_destroy(&cell->widget.layout);
@@ -174,6 +179,16 @@ static FEdit *i_read_edit(Stream *stm)
 
 /*---------------------------------------------------------------------------*/
 
+static FText *i_read_text(Stream *stm)
+{
+    FText *text = heap_new0(FText);
+    text->min_width = stm_read_r32(stm);
+    text->min_height = stm_read_r32(stm);
+    return text;
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_read_cell(Stream *stm, FCell *cell)
 {
     cassert_no_null(cell);
@@ -196,6 +211,9 @@ static void i_read_cell(Stream *stm, FCell *cell)
         break;
     case ekCELL_TYPE_EDIT:
         cell->widget.edit = i_read_edit(stm);
+        break;
+    case ekCELL_TYPE_TEXT:
+        cell->widget.text = i_read_text(stm);
         break;
     case ekCELL_TYPE_LAYOUT:
         cell->widget.layout = flayout_read(stm);
@@ -299,6 +317,15 @@ static void i_write_edit(Stream *stm, const FEdit *edit)
 
 /*---------------------------------------------------------------------------*/
 
+static void i_write_text(Stream *stm, const FText *text)
+{
+    cassert_no_null(text);
+    stm_write_r32(stm, text->min_width);
+    stm_write_r32(stm, text->min_height);
+}
+
+/*---------------------------------------------------------------------------*/
+
 static void i_write_cell(Stream *stm, const FCell *cell)
 {
     cassert_no_null(cell);
@@ -321,6 +348,9 @@ static void i_write_cell(Stream *stm, const FCell *cell)
         break;
     case ekCELL_TYPE_EDIT:
         i_write_edit(stm, cell->widget.edit);
+        break;
+    case ekCELL_TYPE_TEXT:
+        i_write_text(stm, cell->widget.text);
         break;
     case ekCELL_TYPE_LAYOUT:
         flayout_write(stm, cell->widget.layout);
@@ -589,6 +619,20 @@ void flayout_add_edit(FLayout *layout, FEdit *edit, const uint32_t col, const ui
 
 /*---------------------------------------------------------------------------*/
 
+void flayout_add_text(FLayout *layout, FText *text, const uint32_t col, const uint32_t row)
+{
+    FCell *cell = i_cell(layout, col, row);
+    cassert_no_null(cell);
+    cassert_no_null(text);
+    cassert(cell->type == ekCELL_TYPE_EMPTY);
+    cell->type = ekCELL_TYPE_TEXT;
+    cell->halign = ekHALIGN_JUSTIFY;
+    cell->valign = ekHALIGN_JUSTIFY;
+    cell->widget.text = text;
+}
+
+/*---------------------------------------------------------------------------*/
+
 uint32_t flayout_ncols(const FLayout *layout)
 {
     cassert_no_null(layout);
@@ -769,6 +813,15 @@ Layout *flayout_to_gui(const FLayout *layout, const real32_t empty_width, const 
                     break;
                 }
 
+                case ekCELL_TYPE_TEXT:
+                {
+                    FText *ftext = cells->widget.text;
+                    TextView *gtext = textview_create();
+                    textview_size(gtext, s2df(ftext->min_width, ftext->min_height));
+                    layout_textview(glayout, gtext, i, j);
+                    break;
+                }
+
                 case ekCELL_TYPE_LAYOUT:
                 {
                     Layout *gsublayout = flayout_to_gui(cells->widget.layout, empty_width, empty_height);
@@ -808,6 +861,7 @@ GuiControl *flayout_search_gui_control(const FLayout *layout, Layout *gui_layout
                 case ekCELL_TYPE_BUTTON:
                 case ekCELL_TYPE_CHECK:
                 case ekCELL_TYPE_EDIT:
+                case ekCELL_TYPE_TEXT:
                 {
                     Cell *gcell = layout_cell(gui_layout, i, j);
                     return cell_control(gcell);

@@ -18,6 +18,7 @@ typedef struct _fwidget_t FWidget;
 typedef struct _fcell_t FCell;
 typedef struct _flayout_t FLayout;
 
+/* Don't change the order. Add new values to end */
 typedef enum _celltype_t
 {
     ekCELL_TYPE_EMPTY,
@@ -29,6 +30,7 @@ typedef enum _celltype_t
     ekCELL_TYPE_TEXT
 } celltype_t;
 
+/* Don't change the order. Add new values to end */
 typedef enum _halign_t
 {
     ekHALIGN_LEFT,
@@ -37,6 +39,7 @@ typedef enum _halign_t
     ekHALIGN_JUSTIFY
 } halign_t;
 
+/* Don't change the order. Add new values to end */
 typedef enum _valign_t
 {
     ekVALIGN_TOP,
@@ -71,9 +74,8 @@ struct _fedit_t
 
 struct _ftext_t
 {
-    bool_t passmode;
-    bool_t autosel;
-    halign_t text_align;
+    real32_t min_width;
+    real32_t min_height;
 };
 
 struct _fcolumn_t
@@ -94,6 +96,7 @@ struct _fwidget_t
     FButton *button;
     FCheck *check;
     FEdit *edit;
+    FText *text;
     FLayout *layout;
 };
 
