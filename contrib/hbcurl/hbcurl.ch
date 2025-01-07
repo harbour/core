@@ -295,6 +295,11 @@
 
 /* HB_CURLOPT_SSL_OPTIONS values */
 #define HB_CURLSSLOPT_ALLOW_BEAST             hb_bitShift( 1, 0 )
+#define HB_CURLSSLOPT_NO_REVOKE               hb_bitShift( 1, 1 )
+#define HB_CURLSSLOPT_NO_PARTIALCHAIN         hb_bitShift( 1, 2 )
+#define HB_CURLSSLOPT_REVOKE_BEST_EFFORT      hb_bitShift( 1, 3 )
+#define HB_CURLSSLOPT_NATIVE_CA               hb_bitShift( 1, 4 )
+#define HB_CURLSSLOPT_AUTO_CLIENT_CERT        hb_bitShift( 1, 5 )
 
 /* HB_CURLOPT_HTTPAUTH option */
 #define HB_CURLAUTH_NONE                      0                    /* nothing */
@@ -604,6 +609,8 @@
 #define HB_CURLMSG_RESP_RESPONSE_CODE           2 /* curl_easy_getinfo( msg->easy_handle, CURLINFO_RESPONSE_CODE ) */
 #define HB_CURLMSG_RESP_MSG                     3 /* CURLMSG  */
 #define HB_CURLMSG_RESP_RESULT                  4 /* CURLcode */
-#define HB_CURLMSG_RESP_LAST                    HB_CURLMSG_RESP_RESULT
+#define HB_CURLMSG_RESP_HANDLE                  5 /* handle to original curl_easy_init */
+#define HB_CURLMSG_RESP_HPOS                    6 /* position in handle <array> passed to curl_multi_info_read(, <array> ) */
+#define HB_CURLMSG_RESP_LAST                    HB_CURLMSG_RESP_HPOS
 
 #endif /* HBCURL_CH_ */

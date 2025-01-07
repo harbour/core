@@ -127,6 +127,16 @@ typedef struct _HB_CURL
 
 } HB_CURL, * PHB_CURL;
 
+/* Multi interface */
+/* --------------- */
+
+#if LIBCURL_VERSION_NUM >= 0x070906
+typedef struct _HB_CURLM
+{
+   CURLM * curlm;
+
+} HB_CURLM, * PHB_CURLM;
+#endif
 
 /* functions to keep passed string values accessible even if HVM
  * destroy them. It's necessary for old CURL versions which do not
@@ -2499,19 +2509,10 @@ HB_FUNC( CURL_GETDATE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* Multi interface */
-/* ----------------- */
+/* Multi interface Constructor/Destructor */
+/* -------------------------------------- */
 
-typedef struct _HB_CURLM
-{
-   CURLM * curlm;
-
-} HB_CURLM, * PHB_CURLM;
-
-
-/* Constructor/Destructor */
-/* ---------------------- */
-
+#if LIBCURL_VERSION_NUM >= 0x070906
 static void PHB_CURLM_free( PHB_CURLM hb_curlm )
 {
    curl_multi_cleanup( hb_curlm->curlm );
@@ -2574,18 +2575,21 @@ static PHB_CURLM PHB_CURLM_par( int iParam )
 
    return ph ? ( PHB_CURLM ) *ph : NULL;
 }
+#endif
 
-/* Harbour interface */
-/* ----------------- */
-
+/* Harbour multi interface */
+/* ----------------------- */
 
 HB_FUNC( CURL_MULTI_INIT )
 {
+#if LIBCURL_VERSION_NUM >= 0x070906
    PHB_CURLM_ret( );
+#endif
 }
 
 HB_FUNC( CURL_MULTI_CLEANUP )
 {
+#if LIBCURL_VERSION_NUM >= 0x070906
    if( PHB_CURLM_is( 1 ) )
    {
       void ** ph = ( void ** ) hb_parptrGC( &s_gcCURLMFuncs, 1 );
@@ -2598,11 +2602,13 @@ HB_FUNC( CURL_MULTI_CLEANUP )
       }
    }
    else
+#endif
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CURL_MULTI_ADD_HANDLE )
 {
+#if LIBCURL_VERSION_NUM >= 0x070906
    if( PHB_CURLM_is( 1 ) && PHB_CURL_is( 2 ) )
    {
       PHB_CURLM hb_curlm = PHB_CURLM_par( 1 );
@@ -2611,11 +2617,13 @@ HB_FUNC( CURL_MULTI_ADD_HANDLE )
       hb_retnl( hb_curlm && hb_curl ? ( long ) curl_multi_add_handle( hb_curlm->curlm, hb_curl->curl) : HB_CURLM_INTERNAL_ERROR );
    }
    else
+#endif
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CURL_MULTI_REMOVE_HANDLE )
 {
+#if LIBCURL_VERSION_NUM >= 0x070906
    if( PHB_CURLM_is( 1 ) && PHB_CURL_is( 2 ) )
    {
       PHB_CURLM hb_curlm = PHB_CURLM_par( 1 );
@@ -2624,18 +2632,20 @@ HB_FUNC( CURL_MULTI_REMOVE_HANDLE )
       hb_retnl( hb_curlm && hb_curl ? ( long ) curl_multi_remove_handle( hb_curlm->curlm, hb_curl->curl) : HB_CURLM_INTERNAL_ERROR );
    }
    else
+#endif
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CURL_MULTI_PERFORM )
 {
+#if LIBCURL_VERSION_NUM >= 0x070906
    if( PHB_CURLM_is( 1 ) && HB_ISBYREF( 2 ) )
    {
 
       CURLMcode res = ( CURLMcode ) HB_CURLM_INTERNAL_ERROR;
       PHB_CURLM hb_curlm = PHB_CURLM_par( 1 );
 
-      if ( hb_curlm )
+      if( hb_curlm )
       {
          int running_handles = 0;
          res = curl_multi_perform( hb_curlm->curlm, &running_handles);
@@ -2646,18 +2656,20 @@ HB_FUNC( CURL_MULTI_PERFORM )
 
    }
    else
+#endif
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CURL_MULTI_POLL )
 {
+#if LIBCURL_VERSION_NUM >= 0x074200
    if( PHB_CURLM_is( 1 ) && HB_ISNUM( 2 ) )
    {
 
       CURLMcode res = ( CURLMcode ) HB_CURLM_INTERNAL_ERROR;
       PHB_CURLM hb_curlm = PHB_CURLM_par( 1 );
 
-      if ( hb_curlm )
+      if( hb_curlm )
       {
          res = curl_multi_poll(  hb_curlm->curlm,
                           NULL,
@@ -2670,41 +2682,60 @@ HB_FUNC( CURL_MULTI_POLL )
 
    }
    else
+#endif
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
 HB_FUNC( CURL_MULTI_INFO_READ )
 {
+#if LIBCURL_VERSION_NUM >= 0x070906
    if( PHB_CURLM_is( 1 ) )
    {
 
       PHB_ITEM pReturn = NULL;
       PHB_CURLM hb_curlm = PHB_CURLM_par( 1 );
 
-      if ( hb_curlm )
+      if( hb_curlm )
       {
          int msgs_in_queue = 0;
+         long response_code   = 0;
+         struct CURLMsg * msg = curl_multi_info_read(  hb_curlm->curlm, &msgs_in_queue );
 
-         struct CURLMsg *msg = curl_multi_info_read(  hb_curlm->curlm, &msgs_in_queue );
-         if ( msg )
+         if( msg && curl_easy_getinfo( msg->easy_handle, CURLINFO_RESPONSE_CODE, &response_code ) == CURLE_OK )
          {
-
-            CURLcode res     = ( CURLcode ) HB_CURLE_ERROR;
-            long   response_code   = 0;
-            res = curl_easy_getinfo( msg->easy_handle, CURLINFO_RESPONSE_CODE, &response_code );
-
+            PHB_ITEM pHandles = hb_param( 2, HB_IT_ARRAY );
             pReturn = hb_itemArrayNew( HB_CURLMSG_RESP_LAST );
 
             hb_arraySetNL( pReturn, HB_CURLMSG_RESP_LEN, ( long ) msgs_in_queue );
             hb_arraySetNL( pReturn, HB_CURLMSG_RESP_RESPONSE_CODE, ( long ) response_code );
             hb_arraySetNL( pReturn, HB_CURLMSG_RESP_MSG, ( long ) msg->msg );
             hb_arraySetNL( pReturn, HB_CURLMSG_RESP_RESULT, ( long ) msg->data.result );
+            hb_arraySetNI( pReturn, HB_CURLMSG_RESP_HPOS, 0 );
 
+            if( pHandles )
+            {
+               HB_SIZE handles_count = hb_arrayLen( pHandles );
+               HB_SIZE i;
+
+               for( i = 1; i <= handles_count; i++ )
+               {
+                  void ** ph = hb_arrayGetPtrGC( pHandles, i, &s_gcCURLFuncs );
+                  if( ph && *ph )
+                  {
+                     PHB_CURL hbcurl = ( PHB_CURL ) *ph;
+                     if( hbcurl->curl == msg->easy_handle )
+                     {
+                        hb_arraySetNL( pReturn, HB_CURLMSG_RESP_HPOS, ( long ) i );
+                        hb_arraySet( pReturn, HB_CURLMSG_RESP_HANDLE, hb_arrayGetItemPtr( pHandles, i ) );
+                     }
+                  }
+               }
+            }
          }
       }
 
-      if ( pReturn )
+      if( pReturn )
          hb_itemReturnRelease( pReturn );
       else
          hb_ret();
@@ -2712,12 +2743,10 @@ HB_FUNC( CURL_MULTI_INFO_READ )
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
+#endif
 }
 
-/* Harbour interface (session independent) */
-
-/* NOTE: Obsolete, superceded by curl_easy_escape() */
+/* NOTE: Obsolete, superseded by curl_easy_escape() */
 HB_FUNC( CURL_ESCAPE )
 {
    if( HB_ISCHAR( 1 ) )
@@ -2730,7 +2759,7 @@ HB_FUNC( CURL_ESCAPE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* NOTE: Obsolete, superceded by curl_easy_unescape() */
+/* NOTE: Obsolete, superseded by curl_easy_unescape() */
 HB_FUNC( CURL_UNESCAPE )
 {
    if( HB_ISCHAR( 1 ) )
