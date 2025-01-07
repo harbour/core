@@ -734,10 +734,10 @@ char * hb_verPlatform( void )
 
       if( hb_iswin10() && ! s_iWine )
       {
-            /* On Win10+ build number is more significant than Major Minor */
-            char szBuild[ 8 ];
-            hb_snprintf( szBuild, sizeof( szBuild ), ".%lu", ( DWORD ) s_iWinNT );
-            hb_strncat( pszPlatform, szBuild, PLATFORM_BUF_SIZE );
+         /* On Win10+ build number is more significant than Major Minor */
+         char szBuild[ 8 ];
+         hb_snprintf( szBuild, sizeof( szBuild ), ".%lu", ( DWORD ) s_iWinNT );
+         hb_strncat( pszPlatform, szBuild, PLATFORM_BUF_SIZE );
       }
       else if( hb_iswin2k() )
       {

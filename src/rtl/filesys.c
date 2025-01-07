@@ -1919,7 +1919,7 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
 
          memset( &attrex, 0, sizeof( attrex ) );
 
-         if( GetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) )
+         if( s_pGetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) )
          {
             FILETIME local_ft;
             SYSTEMTIME st;
