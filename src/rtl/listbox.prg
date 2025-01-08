@@ -397,7 +397,7 @@ METHOD getText( nPos ) CLASS ListBox
 METHOD hitTest( nMRow, nMCol ) CLASS ListBox
 
    LOCAL nRet
-   LOCAL nTop
+   LOCAL nTop := ::nTop
    LOCAL nHit := 0
 
    /* Check hit on the scrollbar */
@@ -411,7 +411,6 @@ METHOD hitTest( nMRow, nMCol ) CLASS ListBox
    IF ! ::lIsOpen .OR. Empty( ::cHotBox + ::cColdBox )
       nRet := 0
    ELSE
-      nTop := ::nTop
       IF ::lDropDown
          nTop++
       ENDIF
