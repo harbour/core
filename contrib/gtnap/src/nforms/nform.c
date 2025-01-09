@@ -7,6 +7,7 @@
 #include <gui/guicontrol.h>
 #include <gui/label.h>
 #include <gui/panel.h>
+#include <gui/textview.h>
 #include <gui/window.h>
 #include <core/heap.h>
 #include <core/stream.h>
@@ -91,13 +92,25 @@ void nform_set_control_str(NForm *form, const char_t *cell_name, const char_t *v
         Button *button = guicontrol_button(control);
         Label *label = guicontrol_label(control);
         Edit *edit = guicontrol_edit(control);
+        TextView *text = guicontrol_textview(control);
 
         if (button != NULL)
+        {
             button_text(button, value);
+        }
         else if (label != NULL)
+        {
             label_text(label, value);
+        }
         else if (edit != NULL)
+        {
             edit_text(edit, value);
+        }
+        else if (text != NULL)
+        {
+            textview_clear(text);
+            textview_writef(text, value);
+        }
     }
 }
 
@@ -129,9 +142,15 @@ bool_t nform_get_control_str(const NForm *form, const char_t *cell_name, const c
     if (control != NULL)
     {
         Edit *edit = guicontrol_edit(control);
+        TextView *text = guicontrol_textview(control);
         if (edit != NULL)
         {
             *value = edit_get_text(edit);
+            return TRUE;
+        }
+        else if (text != NULL)
+        {
+            *value = textview_get_text(text);
             return TRUE;
         }
     }
