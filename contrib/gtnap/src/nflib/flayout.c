@@ -629,7 +629,7 @@ void flayout_add_text(FLayout *layout, FText *text, const uint32_t col, const ui
     cassert(cell->type == ekCELL_TYPE_EMPTY);
     cell->type = ekCELL_TYPE_TEXT;
     cell->halign = ekHALIGN_JUSTIFY;
-    cell->valign = ekHALIGN_JUSTIFY;
+    cell->valign = ekVALIGN_JUSTIFY;
     cell->widget.text = text;
 }
 
