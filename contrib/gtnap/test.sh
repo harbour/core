@@ -21,6 +21,8 @@ else
     rm *.so
     cp ../../../../hboffice/build/Release/bin/libofficesdk.so .
     ../../../../../bin/linux/gcc/hbmk2 exemplo.hbp
+    export LIBREOFFICE_HOME=/usr/lib/libreoffice
+    export LD_LIBRARY_PATH=.:/usr/lib/libreoffice/program
 fi
 
 ./exemplo --hb:gtnap

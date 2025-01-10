@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -24,6 +24,8 @@ _osbs_api uint32_t bfile_dir_home(char_t *pathname, const uint32_t size);
 _osbs_api uint32_t bfile_dir_data(char_t *pathname, const uint32_t size);
 
 _osbs_api uint32_t bfile_dir_exec(char_t *pathname, const uint32_t size);
+
+_osbs_api uint32_t bfile_dir_tmp(char_t *pathname, const uint32_t size);
 
 _osbs_api bool_t bfile_dir_create(const char_t *pathname, ferror_t *error);
 
@@ -54,5 +56,7 @@ _osbs_api bool_t bfile_seek(File *file, const int64_t offset, const file_seek_t 
 _osbs_api uint64_t bfile_pos(const File *file);
 
 _osbs_api bool_t bfile_delete(const char_t *pathname, ferror_t *error);
+
+_osbs_api bool_t bfile_rename(const char_t *current_pathname, const char_t *new_pathname, ferror_t *error);
 
 __END_C

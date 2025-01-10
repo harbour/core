@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -46,10 +46,10 @@ __END_C
 
 #define _gui_add_transition(owner, listener, type) \
     ( \
-        (void)((type *)owner == owner), \
-        _gui_add_transition_imp((void *)owner, listener))
+        (void)(cast(owner, type) == owner), \
+        _gui_add_transition_imp(cast(owner, void), listener))
 
 #define _gui_delete_transition(owner, type) \
     ( \
-        (void)((type *)owner == owner), \
-        _gui_delete_transition_imp((void *)owner))
+        (void)(cast(owner, type) == owner), \
+        _gui_delete_transition_imp(cast(owner, void)))

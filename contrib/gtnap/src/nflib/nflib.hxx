@@ -10,6 +10,7 @@ typedef struct _flabel_t FLabel;
 typedef struct _fbutton_t FButton;
 typedef struct _fcheck_t FCheck;
 typedef struct _fedit_t FEdit;
+typedef struct _ftext_t FText;
 typedef struct _fcolumn_t FColumn;
 typedef struct _frow_t FRow;
 /* Must be a union (when dbind supports) */
@@ -17,6 +18,7 @@ typedef struct _fwidget_t FWidget;
 typedef struct _fcell_t FCell;
 typedef struct _flayout_t FLayout;
 
+/* Don't change the order. Add new values to end */
 typedef enum _celltype_t
 {
     ekCELL_TYPE_EMPTY,
@@ -24,9 +26,11 @@ typedef enum _celltype_t
     ekCELL_TYPE_BUTTON,
     ekCELL_TYPE_CHECK,
     ekCELL_TYPE_EDIT,
-    ekCELL_TYPE_LAYOUT
+    ekCELL_TYPE_LAYOUT,
+    ekCELL_TYPE_TEXT
 } celltype_t;
 
+/* Don't change the order. Add new values to end */
 typedef enum _halign_t
 {
     ekHALIGN_LEFT,
@@ -35,6 +39,7 @@ typedef enum _halign_t
     ekHALIGN_JUSTIFY
 } halign_t;
 
+/* Don't change the order. Add new values to end */
 typedef enum _valign_t
 {
     ekVALIGN_TOP,
@@ -51,6 +56,7 @@ struct _flabel_t
 struct _fbutton_t
 {
     String *text;
+    real32_t min_width;
 };
 
 struct _fcheck_t
@@ -63,6 +69,14 @@ struct _fedit_t
     bool_t passmode;
     bool_t autosel;
     halign_t text_align;
+    real32_t min_width;
+};
+
+struct _ftext_t
+{
+    bool_t read_only;
+    real32_t min_width;
+    real32_t min_height;
 };
 
 struct _fcolumn_t
@@ -83,6 +97,7 @@ struct _fwidget_t
     FButton *button;
     FCheck *check;
     FEdit *edit;
+    FText *text;
     FLayout *layout;
 };
 

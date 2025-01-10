@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,9 +10,10 @@
 
 /* Basic file system services */
 
-#include "bfile.h"
-#include "osbs.inl"
+#include "../bfile.h"
+#include "../osbs.inl"
 #include <sewer/bmem.h>
+#include <sewer/blib.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
 #include <sewer/unicode.h>
@@ -67,6 +68,57 @@ uint32_t bfile_dir_work(char_t *pathname, const uint32_t size)
 
 /*---------------------------------------------------------------------------*/
 
+bool_t bfile_dir_set_work(const char_t *pathname, ferror_t *error)
+{
+    cassert_no_null(pathname);
+    if (chdir(cast_const(pathname, char)) == 0)
+    {
+        ptr_assign(error, ekFOK);
+        return TRUE;
+    }
+    else
+    {
+        if (error != NULL)
+        {
+            switch (errno)
+            {
+            case EACCES:
+                *error = ekFNOACCESS;
+                break;
+            case EEXIST:
+                *error = ekFEXISTS;
+                break;
+            case ENAMETOOLONG:
+                *error = ekFBIGNAME;
+                break;
+            case ENOENT:
+                *error = ekFNOPATH;
+                break;
+            default:
+                cassert_msg(FALSE, "dir_set_work: undefined");
+                *error = ekFUNDEF;
+            }
+        }
+
+        return FALSE;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t bfile_dir_tmp(char_t *pathname, const uint32_t size)
+{
+    const char_t *temp = "/tmp";
+    uint32_t s = strlen(temp);
+    if (s > size - 1)
+        s = size - 1;
+    blib_strncpy(pathname, size, temp, s);
+    pathname[s] = '\0';
+    return s;
+}
+
+/*---------------------------------------------------------------------------*/
+
 bool_t bfile_dir_create(const char_t *pathname, ferror_t *error)
 {
     int res = mkdir(cast_const(pathname, char), (mode_t)(S_IRUSR | S_IWUSR | S_IXUSR));
@@ -105,7 +157,7 @@ bool_t bfile_dir_create(const char_t *pathname, ferror_t *error)
 
 /*---------------------------------------------------------------------------*/
 
-#define i_PATHNAME(dir) (char *)((char_t *)(dir) + sizeof(DIR *) + sizeof(uint32_t))
+#define i_PATHNAME(dir) (char *)(cast(dir, char_t) + sizeof(DIR *) + sizeof(uint32_t))
 
 /*---------------------------------------------------------------------------*/
 
@@ -524,7 +576,7 @@ bool_t bfile_read(File *file, byte_t *data, const uint32_t size, uint32_t *rsize
 {
     ssize_t lrsize;
     cassert_no_null(file);
-    lrsize = read((int)(intptr_t)file, (void *)data, (size_t)size);
+    lrsize = read((int)(intptr_t)file, cast(data, void), (size_t)size);
     if (lrsize > 0)
     {
         ptr_assign(rsize, (uint32_t)lrsize);

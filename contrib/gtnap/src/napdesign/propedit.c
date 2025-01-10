@@ -37,6 +37,7 @@ struct _propdata_t
     Layout *button_layout;
     Layout *check_layout;
     Layout *edit_layout;
+    Layout *text_layout;
     Cell *column_margin_cell;
     Cell *row_margin_cell;
     Label *layout_geom_label;
@@ -392,6 +393,12 @@ static void i_OnButtonNotify(PropData *data, Event *e)
         dform_compose(data->form);
         designer_canvas_update(data->app);
     }
+    else if (evbind_modify(e, FButton, real32_t, min_width) == TRUE)
+    {
+        dform_synchro_button(data->form, &data->sel);
+        dform_compose(data->form);
+        designer_canvas_update(data->app);
+    }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -399,22 +406,28 @@ static void i_OnButtonNotify(PropData *data, Event *e)
 static Layout *i_button_layout(PropData *data)
 {
     Layout *layout1 = layout_create(1, 3);
-    Layout *layout2 = layout_create(2, 1);
+    Layout *layout2 = layout_create(2, 2);
+    Layout *layout3 = i_value_updown_layout();
     Label *label1 = label_create();
     Label *label2 = label_create();
+    Label *label3 = label_create();
     Edit *edit = edit_create();
     cassert_no_null(data);
     label_text(label1, "Button properties");
     label_text(label2, "Text");
+    label_text(label3, "MWidth");
     layout_label(layout1, label1, 0, 0);
     layout_label(layout2, label2, 0, 0);
+    layout_label(layout2, label3, 0, 1);
     layout_edit(layout2, edit, 1, 0);
     layout_layout(layout1, layout2, 0, 1);
+    layout_layout(layout2, layout3, 1, 1);
     layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
     layout_hmargin(layout2, 0, i_GRID_HMARGIN);
     layout_hexpand(layout2, 1);
     layout_vexpand(layout1, 2);
     cell_dbind(layout_cell(layout2, 1, 0), FButton, String *, text);
+    cell_dbind(layout_cell(layout2, 1, 1), FButton, real32_t, min_width);
     layout_dbind(layout1, listener(data, i_OnButtonNotify, PropData), FButton);
     data->button_layout = layout1;
     return layout1;
@@ -466,9 +479,18 @@ static void i_OnEditNotify(PropData *data, Event *e)
 {
     cassert_no_null(data);
     cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
-    if (evbind_modify(e, FEdit, bool_t, passmode) == TRUE || evbind_modify(e, FEdit, bool_t, autosel) == TRUE || evbind_modify(e, FEdit, halign_t, text_align) == TRUE)
+    if (evbind_modify(e, FEdit, bool_t, passmode) == TRUE 
+        || evbind_modify(e, FEdit, bool_t, autosel) == TRUE 
+        || evbind_modify(e, FEdit, halign_t, text_align) == TRUE
+        || evbind_modify(e, FEdit, real32_t, min_width) == TRUE)
     {
         dform_synchro_edit(data->form, &data->sel);
+
+        if (evbind_modify(e, FEdit, real32_t, min_width) == TRUE)
+        {
+            dform_compose(data->form);
+            designer_canvas_update(data->app);
+        }
     }
 }
 
@@ -477,23 +499,28 @@ static void i_OnEditNotify(PropData *data, Event *e)
 static Layout *i_edit_layout(PropData *data)
 {
     Layout *layout1 = layout_create(1, 5);
-    Layout *layout2 = layout_create(2, 1);
+    Layout *layout2 = layout_create(2, 2);
+    Layout *layout3 = i_value_updown_layout();
     Label *label1 = label_create();
     Label *label2 = label_create();
+    Label *label3 = label_create();
     Button *button1 = button_check();
     Button *button2 = button_check();
     PopUp *popup = popup_create();
     cassert_no_null(data);
     label_text(label1, "EditBox properties");
     label_text(label2, "Text align");
+    label_text(label3, "MWidth");
     button_text(button1, "Passmode");
     button_text(button2, "Autosel");
     layout_label(layout1, label1, 0, 0);
     layout_button(layout1, button1, 0, 1);
     layout_button(layout1, button2, 0, 2);
     layout_label(layout2, label2, 0, 0);
+    layout_label(layout2, label3, 0, 1);
     layout_popup(layout2, popup, 1, 0);
     layout_layout(layout1, layout2, 0, 3);
+    layout_layout(layout2, layout3, 1, 1);
     layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
     layout_hmargin(layout2, 0, i_GRID_HMARGIN);
     layout_hexpand(layout2, 1);
@@ -501,8 +528,66 @@ static Layout *i_edit_layout(PropData *data)
     cell_dbind(layout_cell(layout1, 0, 1), FEdit, bool_t, passmode);
     cell_dbind(layout_cell(layout1, 0, 2), FEdit, bool_t, autosel);
     cell_dbind(layout_cell(layout2, 1, 0), FEdit, halign_t, text_align);
+    cell_dbind(layout_cell(layout2, 1, 1), FEdit, real32_t, min_width);
     layout_dbind(layout1, listener(data, i_OnEditNotify, PropData), FEdit);
     data->edit_layout = layout1;
+    return layout1;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_OnTextNotify(PropData *data, Event *e)
+{
+    cassert_no_null(data);
+    cassert(event_type(e) == ekGUI_EVENT_OBJCHANGE);
+    if (evbind_modify(e, FText, bool_t, read_only) == TRUE
+        || evbind_modify(e, FText, real32_t, min_width) == TRUE
+        || evbind_modify(e, FText, real32_t, min_height) == TRUE)
+    {
+        dform_synchro_text(data->form, &data->sel);
+
+        if (evbind_modify(e, FText, real32_t, min_width) == TRUE
+            || evbind_modify(e, FText, real32_t, min_height) == TRUE)
+        {
+            dform_compose(data->form);
+            designer_canvas_update(data->app);
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+static Layout *i_text_layout(PropData *data)
+{
+    Layout *layout1 = layout_create(1, 4);
+    Layout *layout2 = layout_create(2, 2);
+    Layout *layout3 = i_value_updown_layout();
+    Layout *layout4 = i_value_updown_layout();
+    Button *button1 = button_check();
+    Label *label1 = label_create();
+    Label *label2 = label_create();
+    Label *label3 = label_create();
+    cassert_no_null(data);
+    label_text(label1, "TextView properties");
+    label_text(label2, "MWidth");
+    label_text(label3, "MHeight");
+    button_text(button1, "Read only");
+    layout_label(layout1, label1, 0, 0);
+    layout_button(layout1, button1, 0, 1);
+    layout_label(layout2, label2, 0, 0);
+    layout_label(layout2, label3, 0, 1);
+    layout_layout(layout2, layout3, 1, 0);
+    layout_layout(layout2, layout4, 1, 1);
+    layout_layout(layout1, layout2, 0, 2);
+    layout_vmargin(layout1, 0, i_HEADER_VMARGIN);
+    layout_hmargin(layout2, 0, i_GRID_HMARGIN);
+    layout_hexpand(layout2, 1);
+    layout_vexpand(layout1, 3);
+    cell_dbind(layout_cell(layout1, 0, 1), FText, bool_t, read_only);
+    cell_dbind(layout_cell(layout2, 1, 0), FText, real32_t, min_width);
+    cell_dbind(layout_cell(layout2, 1, 1), FText, real32_t, min_height);
+    layout_dbind(layout1, listener(data, i_OnTextNotify, PropData), FText);
+    data->text_layout = layout1;
     return layout1;
 }
 
@@ -579,6 +664,7 @@ static Panel *i_cell_content_panel(PropData *data)
     Layout *layout4 = i_button_layout(data);
     Layout *layout5 = i_check_layout(data);
     Layout *layout6 = i_edit_layout(data);
+    Layout *layout7 = i_text_layout(data);
     Panel *panel = panel_create();
     cassert_no_null(data);
     panel_layout(panel, layout1);
@@ -587,6 +673,7 @@ static Panel *i_cell_content_panel(PropData *data)
     panel_layout(panel, layout4);
     panel_layout(panel, layout5);
     panel_layout(panel, layout6);
+    panel_layout(panel, layout7);
     panel_visible_layout(panel, 0);
     data->cell_panel = panel;
     return panel;
@@ -742,6 +829,11 @@ void propedit_set(Panel *panel, DForm *form, const DSelect *sel)
         {
             layout_dbind_obj(data->edit_layout, cell->widget.edit, FEdit);
             panel_visible_layout(data->cell_panel, 5);
+        }
+        else if (cell->type == ekCELL_TYPE_TEXT)
+        {
+            layout_dbind_obj(data->text_layout, cell->widget.text, FText);
+            panel_visible_layout(data->cell_panel, 6);
         }
         else
         {

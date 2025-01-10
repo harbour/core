@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -36,7 +36,7 @@ typedef struct _jsonopts_t JsonOpts;
 
 struct _jsonopts_t
 {
-    uint32_t not_used;
+    ArrPt(String) *log;
 };
 
 #endif

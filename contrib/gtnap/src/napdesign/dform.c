@@ -12,6 +12,7 @@
 #include <gui/button.h>
 #include <gui/edit.h>
 #include <gui/label.h>
+#include <gui/textview.h>
 #include <gui/layout.h>
 #include <gui/layouth.h>
 #include <gui/panel.h>
@@ -167,7 +168,7 @@ void dform_destroy(DForm **form)
 {
     cassert_no_null(form);
     cassert_no_null(*form);
-    dbind_destroy(&(*form)->flayout, FLayout);
+    flayout_destroy(&(*form)->flayout);
     arrst_destroy(&(*form)->temp_path, NULL, DSelect);
     arrst_destroy(&(*form)->sel_path, NULL, DSelect);
     if ((*form)->window != NULL)
@@ -489,6 +490,31 @@ bool_t dform_OnClick(DForm *form, Window *window, Panel *inspect, Panel *propedi
                 }
             }
 
+            case ekWIDGET_TEXTVIEW:
+            {
+                FText *ftext = dialog_new_text(window, &sel);
+                if (ftext != NULL)
+                {
+                    TextView *text = textview_create();
+                    textview_editable(text, !ftext->read_only);
+                    textview_size(text, s2df(ftext->min_width, ftext->min_height));
+                    i_sel_remove_cell(&sel);
+                    flayout_add_text(sel.flayout, ftext, sel.col, sel.row);
+                    layout_textview(sel.glayout, text, sel.col, sel.row);
+                    i_sel_synchro_cell(&sel);
+                    dform_compose(form);
+                    propedit_set(propedit, form, &sel);
+                    inspect_set(inspect, form);
+                    form->sel = sel;
+                    i_need_save(form);
+                    return TRUE;
+                }
+                else
+                {
+                    return FALSE;
+                }
+            }
+            
             case ekWIDGET_GRID_LAYOUT:
             {
                 FLayout *fsublayout = dialog_new_layout(window, &sel);
@@ -650,6 +676,21 @@ void dform_synchro_cell_text(DForm *form, const DSelect *sel)
 
 /*---------------------------------------------------------------------------*/
 
+void dform_synchro_button(DForm *form, const DSelect *sel)
+{
+    FCell *cell = i_sel_fcell(sel);
+    Button *button = NULL;
+    cassert_no_null(form);
+    cassert_no_null(sel);
+    cassert_no_null(cell);
+    cassert(cell->type == ekCELL_TYPE_BUTTON);
+    i_need_save(form);
+    button = layout_get_button(sel->glayout, sel->col, sel->row);
+    button_min_width(button, cell->widget.button->min_width);
+}
+
+/*---------------------------------------------------------------------------*/
+
 void dform_synchro_edit(DForm *form, const DSelect *sel)
 {
     FCell *cell = i_sel_fcell(sel);
@@ -663,6 +704,23 @@ void dform_synchro_edit(DForm *form, const DSelect *sel)
     edit_passmode(edit, cell->widget.edit->passmode);
     edit_autoselect(edit, cell->widget.edit->autosel);
     edit_align(edit, i_halign(cell->widget.edit->text_align));
+    edit_min_width(edit, cell->widget.edit->min_width);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void dform_synchro_text(DForm *form, const DSelect *sel)
+{
+    FCell *cell = i_sel_fcell(sel);
+    TextView *text = NULL;
+    cassert_no_null(form);
+    cassert_no_null(sel);
+    cassert_no_null(cell);
+    cassert(cell->type == ekCELL_TYPE_TEXT);
+    i_need_save(form);
+    text = layout_get_textview(sel->glayout, sel->col, sel->row);
+    textview_editable(text, !cell->widget.text->read_only);
+    textview_size(text, s2df(cell->widget.text->min_width, cell->widget.text->min_height));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -830,6 +888,8 @@ const char_t *dform_selpath_caption(const DForm *form, const uint32_t col, const
                 return "CheckBoxCell";
             case ekCELL_TYPE_EDIT:
                 return "EditBoxCell";
+            case ekCELL_TYPE_TEXT:
+                return "TextViewCell";
             case ekCELL_TYPE_LAYOUT:
                 return "LayoutCell";
             cassert_default();

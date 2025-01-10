@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -28,7 +28,7 @@
 /* C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winuser.h(6537,32): warning C4255: 'EnableMouseInPointerForThread': no function prototype given: converting '()' to '(void)' */
 #pragma warning(disable : 4255)
 
-#if _MSC_VER > 1700
+#if _MSC_VER > 1800
 /* C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\GdiplusHeaders.h(701,40): warning C4458: declaration of 'nativeCap' hides class member */
 #pragma warning(disable : 4458)
 #endif
@@ -51,6 +51,11 @@
 #if (__GNUC__ >= 5)
 #pragma GCC diagnostic ignored "-Wpedantic"
 #pragma GCC diagnostic ignored "-Wvariadic-macros"
+
+#ifndef __cplusplus
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
+
 #endif
 
 #if (__GNUC__ >= 9)

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -15,13 +15,13 @@
  * WebView2 Windows7 end support: https://blogs.windows.com/msedgedev/2022/12/09/microsoft-edge-and-webview2-ending-support-for-windows-7-and-windows-8-8-1/
  *
  */
-#include "osweb.h"
 #include "osweb_win.inl"
-#include "osgui.inl"
 #include "osgui_win.inl"
 #include "oscontrol_win.inl"
 #include "ospanel_win.inl"
 #include "oswindow_win.inl"
+#include "../osweb.h"
+#include "../osgui.inl"
 #include <core/event.h>
 #include <core/heap.h>
 #include <core/strings.h>
@@ -249,7 +249,7 @@ struct _osweb_t
 
 static LRESULT CALLBACK i_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    OSWeb *view = (OSWeb *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    OSWeb *view = cast(GetWindowLongPtr(hwnd, GWLP_USERDATA), OSWeb);
     cassert_no_null(view);
 
     switch (uMsg)
@@ -325,7 +325,7 @@ OSWeb *osweb_create(const uint32_t flags)
     if (flags & ekVIEW_BORDER)
         dwStyle |= WS_BORDER;
 
-    _oscontrol_init((OSControl *)view, PARAM(dwExStyle, WS_EX_NOPARENTNOTIFY), dwStyle, kWEBVIEW_CLASS, 0, 0, i_WndProc, kDEFAULT_PARENT_WINDOW);
+    _oscontrol_init(cast(view, OSControl), PARAM(dwExStyle, WS_EX_NOPARENTNOTIFY), dwStyle, kWEBVIEW_CLASS, 0, 0, i_WndProc, kDEFAULT_PARENT_WINDOW);
     view->launch_event = TRUE;
 
 #if defined(NAPPGUI_WEB_SUPPORT)
@@ -352,7 +352,7 @@ void osweb_destroy(OSWeb **view)
     i_remove_webimp(&(*view)->web);
 #endif
 
-    _oscontrol_destroy((OSControl *)*view);
+    _oscontrol_destroy(&(*view)->control);
     heap_delete(view, OSWeb);
 }
 
@@ -476,7 +476,7 @@ void osweb_origin(const OSWeb *view, real32_t *x, real32_t *y)
 
 void osweb_frame(OSWeb *view, const real32_t x, const real32_t y, const real32_t width, const real32_t height)
 {
-    _oscontrol_set_frame((OSControl *)view, x, y, width, height);
+    _oscontrol_set_frame(cast(view, OSControl), x, y, width, height);
 
 #if defined(NAPPGUI_WEB_SUPPORT)
     cassert_no_null(view);

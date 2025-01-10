@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -177,7 +177,7 @@ static ___INLINE color_t i_effective(color_t c)
     if (i_alpha(c) == 0)
     {
         cassert(c <= 0xFFFF);
-        return draw2d_get_indexed_color((uint16_t)c);
+        return _draw2d_get_indexed_color((uint16_t)c);
     }
     else
     {

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -68,7 +68,6 @@ typedef enum i_type_t
 typedef struct i_file_t i_File;
 typedef struct i_socket_t i_Socket;
 typedef struct i_buffer_t i_Buffer;
-
 struct i_buffer_t
 {
     byte_t *data;
@@ -1095,7 +1094,7 @@ uint32_t stm_printf(Stream *stm, const char_t *format, ...)
         cassert(data[length - 1] == '\0');
 
         if (BIT_TEST(stm->state, WRITE_UTF8_BIT) == TRUE)
-            i_write(stm, (const byte_t *)data, length - 1, FALSE);
+            i_write(stm, cast_const(data, byte_t), length - 1, FALSE);
         else if (BIT_TEST(stm->state, WRITE_UTF16_BIT) == TRUE)
             i_write_utf16(stm, data);
         else
@@ -1494,7 +1493,7 @@ void stm_skip_bom(Stream *stm)
         uint32_t size;
         size = unicode_to_char(code, data, ekUTF8);
         cassert(size >= 1 && size <= 4);
-        _stm_restore(stm, (const byte_t *)data, size);
+        _stm_restore(stm, cast_const(data, byte_t), size);
         _stm_restore_col(stm, pcol);
         _stm_restore_row(stm, prow);
     }

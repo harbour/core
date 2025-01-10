@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,9 +10,10 @@
 
 /* Basic file system services */
 
-#include "bfile.h"
-#include "osbs.inl"
+#include "../bfile.h"
+#include "../osbs.inl"
 #include <sewer/bmem.h>
+#include <sewer/blib.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
 #include <sewer/unicode.h>
@@ -67,9 +68,60 @@ uint32_t bfile_dir_work(char_t *pathname, const uint32_t size)
 
 /*---------------------------------------------------------------------------*/
 
+bool_t bfile_dir_set_work(const char_t *pathname, ferror_t *error)
+{
+    cassert_no_null(pathname);
+    if (chdir(cast_const(pathname, char)) == 0)
+    {
+        ptr_assign(error, ekFOK);
+        return TRUE;
+    }
+    else
+    {
+        if (error != NULL)
+        {
+            switch (errno)
+            {
+            case EACCES:
+                *error = ekFNOACCESS;
+                break;
+            case EEXIST:
+                *error = ekFEXISTS;
+                break;
+            case ENAMETOOLONG:
+                *error = ekFBIGNAME;
+                break;
+            case ENOENT:
+                *error = ekFNOPATH;
+                break;
+            default:
+                cassert_msg(FALSE, "dir_set_work: undefined");
+                *error = ekFUNDEF;
+            }
+        }
+
+        return FALSE;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t bfile_dir_tmp(char_t *pathname, const uint32_t size)
+{
+    const char_t *temp = "/tmp";
+    uint32_t s = strlen(temp);
+    if (s > size - 1)
+        s = size - 1;
+    blib_strncpy(pathname, size, temp, s);
+    pathname[s] = '\0';
+    return s;
+}
+
+/*---------------------------------------------------------------------------*/
+
 bool_t bfile_dir_create(const char_t *pathname, ferror_t *error)
 {
-    int res = mkdir((const char *)pathname, (mode_t)(S_IRUSR | S_IWUSR | S_IXUSR));
+    int res = mkdir(cast_const(pathname, char), (mode_t)(S_IRUSR | S_IWUSR | S_IXUSR));
     if (res == 0)
     {
         ptr_assign(error, ekFOK);
@@ -105,20 +157,20 @@ bool_t bfile_dir_create(const char_t *pathname, ferror_t *error)
 
 /*---------------------------------------------------------------------------*/
 
-#define i_PATHNAME(dir) (char *)((char_t *)(dir) + sizeof(DIR *) + sizeof(uint32_t))
+#define i_PATHNAME(dir) (char *)(cast(dir, char_t) + sizeof(DIR *) + sizeof(uint32_t))
 
 /*---------------------------------------------------------------------------*/
 
 Dir *bfile_dir_open(const char_t *pathname, ferror_t *error)
 {
-    DIR *dir = opendir((const char *)pathname);
+    DIR *dir = opendir(cast_const(pathname, char));
     if (dir != NULL)
     {
-        uint32_t pathsize = (uint32_t)strlen((const char *)pathname) + 2;
-        Dir *ldir = (Dir *)bmem_malloc(pathsize + sizeof32(uint32_t) + sizeof32(DIR *));
+        uint32_t pathsize = (uint32_t)strlen(cast_const(pathname, char)) + 2;
+        Dir *ldir = cast(bmem_malloc(pathsize + sizeof32(uint32_t) + sizeof32(DIR *)), Dir);
         ldir->dir = dir;
         ldir->pathsize = pathsize;
-        strcpy(i_PATHNAME(ldir), (const char *)pathname);
+        strcpy(i_PATHNAME(ldir), cast_const(pathname, char));
         strcat(i_PATHNAME(ldir), "/");
         _osbs_directory_alloc();
         ptr_assign(error, ekFOK);
@@ -167,7 +219,7 @@ void bfile_dir_close(Dir **dir)
 
     } while (res == -1);
 
-    bmem_free((byte_t *)*dir);
+    bmem_free(cast(*dir, byte_t));
     _osbs_directory_dealloc();
     *dir = NULL;
 }
@@ -244,7 +296,7 @@ bool_t bfile_dir_get(Dir *dir, char_t *name, const uint32_t size, file_type_t *f
     {
         if (name != NULL)
         {
-            uint32_t nb = unicode_convers((const char_t *)dirent->d_name, name, ekUTF8, ekUTF8, size);
+            uint32_t nb = unicode_convers(cast_const(dirent->d_name, char_t), name, ekUTF8, ekUTF8, size);
             if (nb == size)
             {
                 ptr_assign(error, ekFBIGNAME);
@@ -309,7 +361,7 @@ bool_t bfile_dir_get(Dir *dir, char_t *name, const uint32_t size, file_type_t *f
 
 bool_t bfile_dir_delete(const char_t *pathname, ferror_t *error)
 {
-    int result = rmdir((const char *)pathname);
+    int result = rmdir(cast_const(pathname, char));
     if (result == 0)
     {
         ptr_assign(error, ekFOK);
@@ -352,7 +404,7 @@ static File *i_after_open_file(int file_id, ferror_t *error)
     {
         _osbs_file_alloc();
         ptr_assign(error, ekFOK);
-        return (File *)(intptr_t)file_id;
+        return cast((intptr_t)file_id, File);
     }
     else
     {
@@ -393,7 +445,7 @@ static File *i_after_open_file(int file_id, ferror_t *error)
 
 File *bfile_create(const char_t *filepath, ferror_t *error)
 {
-    int file_id = creat((const char *)filepath, (mode_t)(0777) /*(S_IRUSR | S_IWUSR | S_IXUSR)*/);
+    int file_id = creat(cast_const(filepath, char), (mode_t)(0777) /*(S_IRUSR | S_IWUSR | S_IXUSR)*/);
     return i_after_open_file(file_id, error);
 }
 
@@ -401,7 +453,7 @@ File *bfile_create(const char_t *filepath, ferror_t *error)
 
 File *bfile_open(const char_t *filepath, const file_mode_t mode, ferror_t *error)
 {
-    int file_id = open((const char *)filepath, i_file_mode(mode), 0);
+    int file_id = open(cast_const(filepath, char), i_file_mode(mode), 0);
     File *file = i_after_open_file(file_id, error);
     if (file != NULL && mode == ekAPPEND)
         lseek(file_id, 0, SEEK_END);
@@ -496,8 +548,8 @@ bool_t bfile_lstat(const char_t *filepath, file_type_t *file_type, uint64_t *fil
 {
     int ret;
     struct stat info;
-    register uint32_t i = 0;
-    while ((ret = lstat((const char *)filepath, &info)) != 0)
+    uint32_t i = 0;
+    while ((ret = lstat(cast_const(filepath, char), &info)) != 0)
     {
         i++;
         if (i == i_NUM_RETRYS)
@@ -524,7 +576,7 @@ bool_t bfile_read(File *file, byte_t *data, const uint32_t size, uint32_t *rsize
 {
     ssize_t lrsize;
     cassert_no_null(file);
-    lrsize = read((int)(intptr_t)file, (void *)data, (size_t)size);
+    lrsize = read((int)(intptr_t)file, cast(data, void), (size_t)size);
     if (lrsize > 0)
     {
         ptr_assign(rsize, (uint32_t)lrsize);
@@ -552,7 +604,7 @@ bool_t bfile_write(File *file, const byte_t *data, const uint32_t size, uint32_t
     int fd = (int)(intptr_t)file;
     ssize_t lwsize = 0;
     cassert_no_null(file);
-    lwsize = write(fd, (const void *)data, (size_t)size);
+    lwsize = write(fd, cast_const(data, void), (size_t)size);
     if (lwsize >= 0)
     {
         ptr_assign(wsize, (uint32_t)lwsize);
@@ -622,7 +674,7 @@ uint64_t bfile_pos(const File *file)
 
 bool_t bfile_delete(const char_t *filepath, ferror_t *error)
 {
-    int res = unlink((const char *)filepath);
+    int res = unlink(cast_const(filepath, char));
     if (res == 0)
     {
         ptr_assign(error, ekFOK);
@@ -651,6 +703,63 @@ bool_t bfile_delete(const char_t *filepath, ferror_t *error)
                 break;
             default:
                 cassert_msg(FALSE, "file_delete: undefined");
+                *error = ekFUNDEF;
+            }
+        }
+
+        return FALSE;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t bfile_rename(const char_t *current_pathname, const char_t *new_pathname, ferror_t *error)
+{
+    int res = rename(cast_const(current_pathname, char), cast_const(new_pathname, char));
+    if (res == 0)
+    {
+        ptr_assign(error, ekFOK);
+        return TRUE;
+    }
+    else
+    {
+        if (error != NULL)
+        {
+            switch (errno)
+            {
+            case EACCES:
+            case EPERM:
+                *error = ekFNOACCESS;
+                break;
+            case EISDIR:
+                *error = ekFNOFILE;
+                break;
+            case ENAMETOOLONG:
+                *error = ekFBIGNAME;
+                break;
+            case ENOENT:
+                *error = ekFNOPATH;
+                break;
+            case ENOTDIR:
+                *error = ekFNOPATH;
+                break;
+            case EEXIST:
+            case ENOTEMPTY:
+                *error = ekFNOEMPTY;
+                break;
+
+            /* https://man7.org/linux/man-pages/man2/rename.2.html */
+            case EROFS:
+            case EXDEV:
+            case EBUSY:
+            case EFAULT:
+            case EINVAL:
+            case ELOOP:
+            case EMLINK:
+            case ENOMEM:
+            case ENOSPC:
+            default:
+                cassert_msg(FALSE, "file_rename: undefined");
                 *error = ekFUNDEF;
             }
         }

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -46,7 +46,7 @@ __END_C
 #define IListen(object, type, func_event_handler) \
     ( \
         (void)(cast(object, type) == object), \
-        listen(static_cast<IListener *>(object), static_cast<EventHandler>(&type::func_event_handler)))
+        listen(static_cast< IListener * >(object), static_cast< EventHandler >(&type::func_event_handler)))
 
 #endif
 

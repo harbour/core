@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -122,7 +122,7 @@ static void i_remove_transition(Transition *transition)
 static void i_remove_curicon(CurIcon *cursor)
 {
     cassert_no_null(cursor);
-    i_FUNC_DESTROY_CURSOR((void **)&cursor->cursor);
+    i_FUNC_DESTROY_CURSOR(dcast(&cursor->cursor, void));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -448,18 +448,17 @@ void gui_OnIdle(Listener *listener)
 void *evbind_object_imp(Event *e, const char_t *type)
 {
     const EvBind *p = event_params(e, EvBind);
-    cassert_unref(str_equ_c(p->objtype_notif, type) == TRUE, type);
-    return p->obj_notify;
+    cassert_unref(str_equ_c(p->objtype_main, type) == TRUE, type);
+    return p->obj_main;
 }
 
 /*---------------------------------------------------------------------------*/
 
 bool_t evbind_modify_imp(Event *e, const char_t *type, const uint16_t size, const char_t *mname, const char_t *mtype, const uint16_t moffset, const uint16_t msize)
 {
-    const EvBind *p = event_params(e, EvBind);
-    if (p->obj_notify != NULL)
-        return gbind_modify_data(p->obj_notify, type, size, mname, mtype, moffset, msize, p);
-
+    const EvBind *evbind = event_params(e, EvBind);
+    if (evbind->obj_main != NULL)
+        return _gbind_field_modify(evbind, type, size, mname, mtype, moffset, msize);
     return FALSE;
 }
 
@@ -615,7 +614,7 @@ const char_t *_gui_respack_text(const ResId id, ResId *store_id)
         return "";
     }
 
-    return (const char_t *)id;
+    return cast_const(id, char_t);
 }
 
 /*---------------------------------------------------------------------------*/

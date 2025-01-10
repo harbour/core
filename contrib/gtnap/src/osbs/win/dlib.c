@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,8 +10,8 @@
 
 /* Dynamic library loading */
 
-#include "osbs.inl"
-#include "dlib.h"
+#include "../osbs.inl"
+#include "../dlib.h"
 #include <sewer/blib.h>
 #include <sewer/bmem.h>
 #include <sewer/cassert.h>
@@ -84,7 +84,7 @@ FPtr_libproc dlib_proc_imp(DLib *dlib, const char_t *procname)
     cassert_no_null(dlib);
     cassert_no_null(procname);
     func = GetProcAddress((HMODULE)dlib, procname);
-    return cast_func_ptr(func, FPtr_libproc);
+    return cast_func(func, FPtr_libproc);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ void *dlib_var_imp(DLib *dlib, const char_t *varname)
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
-    return (void *)GetProcAddress((HMODULE)dlib, varname);
+    return cast(GetProcAddress((HMODULE)dlib, varname), void);
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #endif

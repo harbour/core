@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -216,6 +216,16 @@ typedef enum _token_t
     ekTRESERVED
 
 } ltoken_t;
+
+typedef enum _dbindst_t
+{
+    ekDBIND_OK,
+    ekDBIND_MEMBER_EXISTS,
+    ekDBIND_TYPE_EXISTS,
+    ekDBIND_TYPE_UNKNOWN,
+    ekDBIND_TYPE_USED,
+    ekDBIND_ALIAS_SIZE
+} dbindst_t;
 
 typedef struct _buffer_t Buffer;
 typedef struct _string_t String;

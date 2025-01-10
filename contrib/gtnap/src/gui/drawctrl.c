@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -21,7 +21,7 @@ static uint32_t kCHECK_HEIGHT = 0;
 Font *drawctrl_font(DCtx *ctx)
 {
     const GuiCtx *context = guictx_get_current();
-    return (Font *)context->func_drawctrl_font(ctx);
+    return cast(context->func_drawctrl_font(ctx), Font);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -84,7 +84,7 @@ static bool_t i_parse_png(Stream *stm_in, Stream *stm_out)
         if (stm_out)
             stm_write_u32(stm_out, crc);
 
-        if (str_equ_cn((const char_t *)type, "IEND", 4) == TRUE)
+        if (str_equ_cn(cast_const(type, char_t), "IEND", 4) == TRUE)
             break;
     }
 
@@ -515,7 +515,7 @@ static codec_t i_header(Stream *stm_in, Stream *stm_out)
         if (stm_out)
             stm_write(stm_out, header, 8);
 
-        if (str_equ_cn((const char_t *)rhead, (const char_t *)(header + 1), 7) == TRUE)
+        if (str_equ_cn(cast_const(rhead, char_t), cast_const(header + 1, char_t), 7) == TRUE)
             return ekPNG;
 
         return ENUM_MAX(codec_t);
@@ -547,10 +547,10 @@ static codec_t i_header(Stream *stm_in, Stream *stm_out)
             stm_write(stm_out, rhead, 5);
         }
 
-        if (str_equ_cn((const char_t *)rhead, header1 + 1, 5) == TRUE)
+        if (str_equ_cn(cast_const(rhead, char_t), header1 + 1, 5) == TRUE)
             return ekGIF;
 
-        if (str_equ_cn((const char_t *)rhead, header2 + 1, 5) == TRUE)
+        if (str_equ_cn(cast_const(rhead, char_t), header2 + 1, 5) == TRUE)
             return ekGIF;
 
         return ENUM_MAX(codec_t);
@@ -650,7 +650,7 @@ static bool_t i_parse_img(Stream *stm_in, Stream *stm_out, uint32_t *num_frames)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t imgutil_parse(Stream *stm_in, Stream *stm_out)
+bool_t _imgutil_parse(Stream *stm_in, Stream *stm_out)
 {
     uint32_t num_frames = 0;
     return i_parse_img(stm_in, stm_out, &num_frames);
@@ -658,7 +658,7 @@ bool_t imgutil_parse(Stream *stm_in, Stream *stm_out)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t imgutil_num_frames(const byte_t *data, const uint32_t size)
+uint32_t _imgutil_num_frames(const byte_t *data, const uint32_t size)
 {
     Stream *stm = stm_from_block(data, size);
     uint32_t num_frames = 0;
@@ -669,22 +669,18 @@ uint32_t imgutil_num_frames(const byte_t *data, const uint32_t size)
 
 /*---------------------------------------------------------------------------*/
 
-Palette *imgutil_def_palette(const pixformat_t format)
+Palette *_imgutil_def_palette(const pixformat_t format)
 {
     switch (format)
     {
     case ekINDEX1:
         return palette_binary(kCOLOR_WHITE, kCOLOR_BLACK);
-
     case ekINDEX2:
         return palette_cga2(FALSE, FALSE);
-
     case ekINDEX4:
         return palette_ega4();
-
     case ekINDEX8:
         return palette_rgb8();
-
     case ekRGB24:
     case ekRGBA32:
     case ekGRAY8:
@@ -697,7 +693,7 @@ Palette *imgutil_def_palette(const pixformat_t format)
 
 /*---------------------------------------------------------------------------*/
 
-Pixbuf *imgutil_rgba_to_rgb(const byte_t *data, const uint32_t width, const uint32_t height)
+Pixbuf *_imgutil_rgba_to_rgb(const byte_t *data, const uint32_t width, const uint32_t height)
 {
     uint32_t i, n = width * height;
     Pixbuf *pixbuf = pixbuf_create(width, height, ekRGB24);
@@ -714,7 +710,7 @@ Pixbuf *imgutil_rgba_to_rgb(const byte_t *data, const uint32_t width, const uint
 
 /*---------------------------------------------------------------------------*/
 
-Pixbuf *imgutil_rgb_to_rgba(const byte_t *data, const uint32_t width, const uint32_t height)
+Pixbuf *_imgutil_rgb_to_rgba(const byte_t *data, const uint32_t width, const uint32_t height)
 {
     uint32_t i, n = width * height;
     Pixbuf *pixbuf = pixbuf_create(width, height, ekRGBA32);
@@ -732,7 +728,7 @@ Pixbuf *imgutil_rgb_to_rgba(const byte_t *data, const uint32_t width, const uint
 
 /*---------------------------------------------------------------------------*/
 
-Pixbuf *imgutil_rgba_to_gray(const byte_t *data, const uint32_t width, const uint32_t height)
+Pixbuf *_imgutil_rgba_to_gray(const byte_t *data, const uint32_t width, const uint32_t height)
 {
     uint32_t i, n = width * height;
     Pixbuf *pixbuf = pixbuf_create(width, height, ekGRAY8);
@@ -744,7 +740,7 @@ Pixbuf *imgutil_rgba_to_gray(const byte_t *data, const uint32_t width, const uin
 
 /*---------------------------------------------------------------------------*/
 
-Pixbuf *imgutil_rgb_to_gray(const byte_t *data, const uint32_t width, const uint32_t height)
+Pixbuf *_imgutil_rgb_to_gray(const byte_t *data, const uint32_t width, const uint32_t height)
 {
     uint32_t i, n = width * height;
     Pixbuf *pixbuf = pixbuf_create(width, height, ekGRAY8);
@@ -756,7 +752,7 @@ Pixbuf *imgutil_rgb_to_gray(const byte_t *data, const uint32_t width, const uint
 
 /*---------------------------------------------------------------------------*/
 
-Buffer *imgutil_gray_to_rgba(const byte_t *data, const uint32_t width, const uint32_t height)
+Buffer *_imgutil_gray_to_rgba(const byte_t *data, const uint32_t width, const uint32_t height)
 {
     uint32_t i, n = width * height;
     Buffer *buffer = buffer_create(n * 4);
@@ -774,7 +770,7 @@ Buffer *imgutil_gray_to_rgba(const byte_t *data, const uint32_t width, const uin
 
 /*---------------------------------------------------------------------------*/
 
-Buffer *imgutil_gray_to_rgb(const byte_t *data, const uint32_t width, const uint32_t height)
+Buffer *_imgutil_gray_to_rgb(const byte_t *data, const uint32_t width, const uint32_t height)
 {
     uint32_t i, n = width * height;
     Buffer *buffer = buffer_create(n * 3);
@@ -820,7 +816,7 @@ static pixformat_t i_gray_to_rgb(const byte_t *data, const uint32_t width, const
 
 /*---------------------------------------------------------------------------*/
 
-Pixbuf *imgutil_indexed_to_gray(const uint32_t width, const uint32_t height, const byte_t *pixdata, const uint32_t stride, const uint32_t ibpp, const color_t *palette)
+Pixbuf *_imgutil_indexed_to_gray(const uint32_t width, const uint32_t height, const byte_t *pixdata, const uint32_t stride, const uint32_t ibpp, const color_t *palette)
 {
     Pixbuf *buffer = NULL;
     byte_t *data = NULL;
@@ -926,7 +922,7 @@ static Pixbuf *i_index_to_rgba(const byte_t *data, const uint32_t width, const u
 
 /*---------------------------------------------------------------------------*/
 
-Pixbuf *imgutil_indexed_to_rgba(const uint32_t width, const uint32_t height, const byte_t *pixdata, const uint32_t stride, const uint32_t ibpp, const color_t *palette)
+Pixbuf *_imgutil_indexed_to_rgba(const uint32_t width, const uint32_t height, const byte_t *pixdata, const uint32_t stride, const uint32_t ibpp, const color_t *palette)
 {
     Pixbuf *buffer = NULL;
     uint32_t *data = NULL;
@@ -943,7 +939,7 @@ Pixbuf *imgutil_indexed_to_rgba(const uint32_t width, const uint32_t height, con
     cassert_no_null(palette);
 
     buffer = pixbuf_create(width, height, ekRGBA32);
-    data = (uint32_t *)pixbuf_data(buffer);
+    data = cast(pixbuf_data(buffer), uint32_t);
 
     if (stride == 0)
     {
@@ -1027,7 +1023,7 @@ Pixbuf *imgutil_indexed_to_rgba(const uint32_t width, const uint32_t height, con
 
 /*---------------------------------------------------------------------------*/
 
-Pixbuf *imgutil_indexed_to_rgb(const uint32_t width, const uint32_t height, const byte_t *pixdata, const uint32_t stride, const uint32_t ibpp, const color_t *palette)
+Pixbuf *_imgutil_indexed_to_rgb(const uint32_t width, const uint32_t height, const byte_t *pixdata, const uint32_t stride, const uint32_t ibpp, const color_t *palette)
 {
     Pixbuf *buffer = NULL;
     byte_t *data = NULL;
@@ -1093,7 +1089,7 @@ Pixbuf *imgutil_indexed_to_rgb(const uint32_t width, const uint32_t height, cons
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t imgutil_effective_palette(const uint32_t *ipalette, const uint32_t isize, uint32_t *opalette, uint8_t *oindex)
+uint32_t _imgutil_effective_palette(const uint32_t *ipalette, const uint32_t isize, uint32_t *opalette, uint8_t *oindex)
 {
     uint32_t i, j;
     uint32_t n = 0;
@@ -1124,7 +1120,7 @@ uint32_t imgutil_effective_palette(const uint32_t *ipalette, const uint32_t isiz
 
 /*---------------------------------------------------------------------------*/
 
-Pixbuf *imgutil_indexed_to_indexed(const uint32_t width, const uint32_t height, const byte_t *pixdata, const uint32_t stride, const uint32_t ibpp, const pixformat_t oformat, const uint8_t *palette_index)
+Pixbuf *_imgutil_indexed_to_indexed(const uint32_t width, const uint32_t height, const byte_t *pixdata, const uint32_t stride, const uint32_t ibpp, const pixformat_t oformat, const uint8_t *palette_index)
 {
     Pixbuf *buffer = NULL;
     byte_t *data = NULL;
@@ -1270,7 +1266,7 @@ static Pixbuf *i_rgb_to_indexed(const byte_t *pixdata, const uint32_t width, con
 
 /*---------------------------------------------------------------------------*/
 
-Pixbuf *imgutil_to_indexed(const uint32_t width, const uint32_t height, const byte_t *pixdata, const uint32_t bytespp, Palette **palette)
+Pixbuf *_imgutil_to_indexed(const uint32_t width, const uint32_t height, const byte_t *pixdata, const uint32_t bytespp, Palette **palette)
 {
     uint32_t i, n = width * height;
     uint32_t j, pn = 0;

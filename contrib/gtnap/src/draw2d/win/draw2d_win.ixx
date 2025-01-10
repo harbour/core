@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -13,7 +13,6 @@
 #ifndef __OSDRAW_WIN_IXX__
 #define __OSDRAW_WIN_IXX__
 
-#include "draw2d.hxx"
 #include "draw2d_gdi.ixx"
 #include <sewer/nowarn.hxx>
 #include <gdiplus.h>

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -545,9 +545,9 @@ String *hfile_string(const char_t *pathname, ferror_t *error)
         if (file_size < 0xFFFFFFFF)
         {
             String *str = str_reserve((uint32_t)file_size);
-            if (i_read_entire_file(pathname, (byte_t *)tc(str), (uint32_t)file_size, error) == TRUE)
+            if (i_read_entire_file(pathname, cast(tc(str), byte_t), (uint32_t)file_size, error) == TRUE)
             {
-                ((char_t *)tc(str))[(uint32_t)file_size] = '\0';
+                tcc(str)[(uint32_t)file_size] = '\0';
                 return str;
             }
             else
@@ -605,7 +605,7 @@ bool_t hfile_from_string(const char_t *pathname, const String *str, ferror_t *er
     {
         const char_t *data = tc(str);
         uint32_t size = str_len(str);
-        bool_t ok = bfile_write(file, (const byte_t *)data, size, NULL, error);
+        bool_t ok = bfile_write(file, cast_const(data, byte_t), size, NULL, error);
         bfile_close(&file);
         return ok;
     }
@@ -777,4 +777,13 @@ String *hfile_home_dir(const char_t *path)
     char_t homedir[512];
     bfile_dir_home(homedir, 512);
     return str_cpath("%s/%s", homedir, path);
+}
+
+/*---------------------------------------------------------------------------*/
+
+String *hfile_tmp_path(const char_t *path)
+{
+    char_t tmpdir[512];
+    bfile_dir_tmp(tmpdir, 512);
+    return str_cpath("%s/%s", tmpdir, path);
 }

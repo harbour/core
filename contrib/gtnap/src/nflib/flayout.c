@@ -9,6 +9,8 @@
 #include <gui/layout.h>
 #include <gui/layouth.h>
 #include <gui/edit.h>
+#include <gui/textview.h>
+#include <geom2d/s2d.h>
 #include <core/arrst.h>
 #include <core/dbind.h>
 #include <core/heap.h>
@@ -18,7 +20,8 @@
 
 /*---------------------------------------------------------------------------*/
 
-static uint16_t i_VERSION = 0;
+static uint16_t i_VERSION = 2;
+static uint16_t i_STM_VERSION = 0;
 
 /*---------------------------------------------------------------------------*/
 
@@ -53,6 +56,9 @@ static void i_remove_cell(FCell *cell)
         break;
     case ekCELL_TYPE_EDIT:
         dbind_destroy(&cell->widget.edit, FEdit);
+        break;
+    case ekCELL_TYPE_TEXT:
+        dbind_destroy(&cell->widget.text, FText);
         break;
     case ekCELL_TYPE_LAYOUT:
         flayout_destroy(&cell->widget.layout);
@@ -138,6 +144,10 @@ static FButton *i_read_button(Stream *stm)
 {
     FButton *button = heap_new0(FButton);
     button->text = str_read(stm);
+    if (i_STM_VERSION >= 1)
+        button->min_width = stm_read_r32(stm);
+    else
+        button->min_width = 0;
     return button;
 }
 
@@ -158,7 +168,24 @@ static FEdit *i_read_edit(Stream *stm)
     edit->passmode = stm_read_bool(stm);
     edit->autosel = stm_read_bool(stm);
     edit->text_align = stm_read_enum(stm, halign_t);
+
+    if (i_STM_VERSION >= 2)
+        edit->min_width = stm_read_r32(stm);
+    else
+        edit->min_width = 100;
+
     return edit;
+}
+
+/*---------------------------------------------------------------------------*/
+
+static FText *i_read_text(Stream *stm)
+{
+    FText *text = heap_new0(FText);
+    text->read_only = stm_read_bool(stm);
+    text->min_width = stm_read_r32(stm);
+    text->min_height = stm_read_r32(stm);
+    return text;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -186,6 +213,9 @@ static void i_read_cell(Stream *stm, FCell *cell)
     case ekCELL_TYPE_EDIT:
         cell->widget.edit = i_read_edit(stm);
         break;
+    case ekCELL_TYPE_TEXT:
+        cell->widget.text = i_read_text(stm);
+        break;
     case ekCELL_TYPE_LAYOUT:
         cell->widget.layout = flayout_read(stm);
         break;
@@ -197,8 +227,8 @@ static void i_read_cell(Stream *stm, FCell *cell)
 
 FLayout *flayout_read(Stream *stm)
 {
-    uint16_t version = stm_read_u16(stm);
-    if (version <= i_VERSION)
+    i_STM_VERSION = stm_read_u16(stm);
+    if (i_STM_VERSION <= i_VERSION)
     {
         FLayout *layout = heap_new0(FLayout);
         layout->name = str_read(stm);
@@ -264,6 +294,7 @@ static void i_write_buttom(Stream *stm, const FButton *button)
 {
     cassert_no_null(button);
     str_write(stm, button->text);
+    stm_write_r32(stm, button->min_width);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -282,6 +313,17 @@ static void i_write_edit(Stream *stm, const FEdit *edit)
     stm_write_bool(stm, edit->passmode);
     stm_write_bool(stm, edit->autosel);
     stm_write_enum(stm, edit->text_align, halign_t);
+    stm_write_r32(stm, edit->min_width);
+}
+
+/*---------------------------------------------------------------------------*/
+
+static void i_write_text(Stream *stm, const FText *text)
+{
+    cassert_no_null(text);
+    stm_write_bool(stm, text->read_only);
+    stm_write_r32(stm, text->min_width);
+    stm_write_r32(stm, text->min_height);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -308,6 +350,9 @@ static void i_write_cell(Stream *stm, const FCell *cell)
         break;
     case ekCELL_TYPE_EDIT:
         i_write_edit(stm, cell->widget.edit);
+        break;
+    case ekCELL_TYPE_TEXT:
+        i_write_text(stm, cell->widget.text);
         break;
     case ekCELL_TYPE_LAYOUT:
         flayout_write(stm, cell->widget.layout);
@@ -499,7 +544,7 @@ void flayout_remove_cell(FLayout *layout, const uint32_t col, const uint32_t row
     cassert_no_null(cell);
     name = str_c(tc(cell->name));
     dbind_remove(cell, FCell);
-    dbind_init(cell, FCell);
+    cell->type = ekCELL_TYPE_EMPTY;
     str_upd(&cell->name, tc(name));
     str_destroy(&name);
 }
@@ -572,6 +617,20 @@ void flayout_add_edit(FLayout *layout, FEdit *edit, const uint32_t col, const ui
     cell->halign = ekHALIGN_JUSTIFY;
     cell->valign = ekVALIGN_CENTER;
     cell->widget.edit = edit;
+}
+
+/*---------------------------------------------------------------------------*/
+
+void flayout_add_text(FLayout *layout, FText *text, const uint32_t col, const uint32_t row)
+{
+    FCell *cell = i_cell(layout, col, row);
+    cassert_no_null(cell);
+    cassert_no_null(text);
+    cassert(cell->type == ekCELL_TYPE_EMPTY);
+    cell->type = ekCELL_TYPE_TEXT;
+    cell->halign = ekHALIGN_JUSTIFY;
+    cell->valign = ekVALIGN_JUSTIFY;
+    cell->widget.text = text;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -756,6 +815,16 @@ Layout *flayout_to_gui(const FLayout *layout, const real32_t empty_width, const 
                     break;
                 }
 
+                case ekCELL_TYPE_TEXT:
+                {
+                    FText *ftext = cells->widget.text;
+                    TextView *gtext = textview_create();
+                    textview_editable(gtext, !ftext->read_only);
+                    textview_size(gtext, s2df(ftext->min_width, ftext->min_height));
+                    layout_textview(glayout, gtext, i, j);
+                    break;
+                }
+
                 case ekCELL_TYPE_LAYOUT:
                 {
                     Layout *gsublayout = flayout_to_gui(cells->widget.layout, empty_width, empty_height);
@@ -795,6 +864,7 @@ GuiControl *flayout_search_gui_control(const FLayout *layout, Layout *gui_layout
                 case ekCELL_TYPE_BUTTON:
                 case ekCELL_TYPE_CHECK:
                 case ekCELL_TYPE_EDIT:
+                case ekCELL_TYPE_TEXT:
                 {
                     Cell *gcell = layout_cell(gui_layout, i, j);
                     return cell_control(gcell);

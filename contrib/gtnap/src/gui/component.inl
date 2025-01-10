@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -77,10 +77,10 @@ __END_C
     func_set_listener, \
     type) \
     ( \
-        (void)((type *)component == component), \
+        (void)(cast(component, type) == component), \
         FUNC_CHECK_EVENT_HANDLER(func_event_handler, type), \
         _component_update_listener_imp( \
-            (GuiComponent *)component, \
+            cast(component, GuiComponent), \
             listener, \
             new_listener, \
             (FPtr_event_handler)func_event_handler, \

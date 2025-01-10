@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -42,6 +42,8 @@ _sewer_api bool_t unicode_valid(const uint32_t codepoint);
 _sewer_api const char_t *unicode_next(const char_t *str, const unicode_t format);
 
 _sewer_api const char_t *unicode_back(const char_t *str, const unicode_t format);
+
+_sewer_api const char_t *unicode_move(const char_t *str, const uint32_t nchars, const unicode_t format);
 
 _sewer_api bool_t unicode_isascii(const uint32_t codepoint);
 

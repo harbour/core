@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -156,21 +156,21 @@ _gui_api void layout_dbind_update_imp(Layout *layout, const char_t *type, const 
 __END_C
 
 #define layout_dbind(layout, listener, type) \
-    layout_dbind_imp(layout, listener, (const char_t *)#type, (uint16_t)sizeof(type))
+    layout_dbind_imp(layout, listener, cast_const(#type, char_t), (uint16_t)sizeof(type))
 
 #define layout_dbind_obj(layout, obj, type) \
     ( \
-        (void)((type *)obj == obj), \
-        layout_dbind_obj_imp(layout, (void *)obj, (const char_t *)#type))
+        (void)(cast(obj, type) == obj), \
+        layout_dbind_obj_imp(layout, cast(obj, void), cast_const(#type, char_t)))
 
 #define layout_dbind_update(layout, type, mtype, mname) \
     ( \
         CHECK_STRUCT_MEMBER_TYPE(type, mname, mtype), \
         layout_dbind_update_imp( \
             layout, \
-            (const char_t *)#type, \
+            cast_const(#type, char_t), \
             (uint16_t)sizeof(type), \
-            (const char_t *)#mname, \
-            (const char_t *)#mtype, \
+            cast_const(#mname, char_t), \
+            cast_const(#mtype, char_t), \
             (uint16_t)STRUCT_MEMBER_OFFSET(type, mname), \
             (uint16_t)STRUCT_MEMBER_SIZE(type, mname)))

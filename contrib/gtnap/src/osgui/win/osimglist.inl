@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,9 +11,6 @@
 /* OSImage-HIMAGELIST binding */
 
 #include "osgui_win.ixx"
-#include <sewer/nowarn.hxx>
-#include <Commctrl.h>
-#include <sewer/warn.hxx>
 
 #define HIMAGELIST_CREATED 1
 #define HIMAGELIST_DELETED 2

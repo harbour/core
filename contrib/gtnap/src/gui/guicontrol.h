@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -53,4 +53,4 @@ _gui_api uint32_t guicontrol_get_tag(const GuiControl *control);
 
 __END_C
 
-#define guicontrol(control) ((GuiControl *)control)
+#define guicontrol(control) cast(control, GuiControl)

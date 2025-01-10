@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -366,8 +366,8 @@ void _heap_finish(void)
     {
         if (i_HEAP_STATS == TRUE)
         {
-            log_printf("[OK] Heap Memory Staticstics");
-            log_printf("============================");
+            log_printf("[OK] Heap Memory Statistics");
+            log_printf("===========================");
             log_printf("Total a/dellocations: %" PRIu64 ", %" PRIu64, i_MEMORY.num_allocs, i_MEMORY.num_deallocs);
             log_printf("Total bytes a/dellocated: %" PRIu64 ", %" PRIu64, i_MEMORY.total_bytes_allocated, i_MEMORY.total_bytes_deallocated);
             log_printf("Max bytes allocated: %" PRIu64, i_MEMORY.max_bytes_allocated);

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,11 +10,11 @@
 
 /* Operating System native menu */
 
-#include "osmenu.h"
 #include "osmenu_win.inl"
 #include "osgui_win.inl"
 #include "osmenuitem_win.inl"
 #include "oswindow_win.inl"
+#include "../osmenu.h"
 #include <core/arrpt.h>
 #include <core/heap.h>
 #include <sewer/cassert.h>
@@ -220,7 +220,7 @@ void _osmenu_recompute(OSMenu *menu)
     i_add_all_items(menu);
     if (menu->window != NULL)
     {
-        HWND hwnd = ((OSControl *)menu->window)->hwnd;
+        HWND hwnd = cast(menu->window, OSControl)->hwnd;
         BOOL ok = DrawMenuBar(hwnd);
         cassert_unref(ok != 0, ok);
     }

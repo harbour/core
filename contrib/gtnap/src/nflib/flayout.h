@@ -44,6 +44,8 @@ _nflib_api void flayout_add_check(FLayout *layout, FCheck *check, const uint32_t
 
 _nflib_api void flayout_add_edit(FLayout *layout, FEdit *edit, const uint32_t col, const uint32_t row);
 
+_nflib_api void flayout_add_text(FLayout *layout, FText *text, const uint32_t col, const uint32_t row);
+
 _nflib_api uint32_t flayout_ncols(const FLayout *layout);
 
 _nflib_api uint32_t flayout_nrows(const FLayout *layout);

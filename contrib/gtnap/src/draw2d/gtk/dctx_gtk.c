@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,13 +10,13 @@
 
 /* Draw context */
 
-#include "dctx.h"
-#include "dctxh.h"
-#include "dctx.inl"
 #include "dctx_gtk.inl"
 #include "draw2d_gtk.ixx"
-#include "color.h"
-#include "font.h"
+#include "../dctx.h"
+#include "../dctxh.h"
+#include "../dctx.inl"
+#include "../color.h"
+#include "../font.h"
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
 #include <core/heap.h>
@@ -79,13 +79,13 @@ void dctx_set_gcontext(DCtx *ctx, void *gcontext, const uint32_t width, const ui
     ctx->offset_y = (double)offset_y;
     ctx->width = width;
     ctx->height = height;
-    ctx->cairo = (cairo_t *)gcontext;
+    ctx->cairo = cast(gcontext, cairo_t);
     cairo_translate(ctx->cairo, -(double)offset_x, -(double)offset_y);
     cairo_get_matrix(ctx->cairo, &ctx->origin);
     ctx->raster_mode = FALSE;
 
     if (reset == TRUE)
-        dctx_init(ctx);
+        _dctx_init(ctx);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -214,7 +214,7 @@ ellipsis_t dctx_text_trim(const DCtx *ctx)
 void *dctx_native(DCtx *ctx)
 {
     cassert_no_null(ctx);
-    return (void *)ctx->cairo;
+    return cast(ctx->cairo, void);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -278,13 +278,13 @@ DCtx *dctx_bitmap(const uint32_t width, const uint32_t height, const pixformat_t
     cairo_matrix_init_identity(&ctx->origin);
     cairo_matrix_init_identity(&ctx->transform);
     cairo_matrix_init_identity(&ctx->pattern_matrix);
-    dctx_init(ctx);
+    _dctx_init(ctx);
     return ctx;
 }
 
 /*---------------------------------------------------------------------------*/
 
-void dctx_transform(DCtx *ctx, const T2Df *t2d, const bool_t cartesian)
+void _dctx_transform(DCtx *ctx, const T2Df *t2d, const bool_t cartesian)
 {
     cairo_matrix_t transform;
     cassert_no_null(ctx);

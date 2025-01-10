@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -32,6 +32,7 @@ struct _edit_t
 {
     GuiComponent component;
     uint32_t flags;
+    real32_t width;
     S2Df size;
     bool_t is_focused;
     bool_t is_placeholder_active;
@@ -91,7 +92,7 @@ static void i_OnFilter(Edit *edit, Event *e)
 
     /* Native edit doesn't known exactly the inserted or deleted text size */
     if (p->len == INT32_MAX)
-        ((EvText *)p)->len = i_text_diff(tc(edit->text), p->text);
+        cast(p, EvText)->len = i_text_diff(tc(edit->text), p->text);
 
     if (cell != NULL)
         res->apply = _cell_filter_str(cell, p->text, res->text, sizeof(res->text));
@@ -99,7 +100,7 @@ static void i_OnFilter(Edit *edit, Event *e)
     if (res->apply == FALSE)
     {
         if (cell != NULL)
-            _cell_upd_string(cell, p->text);
+            _cell_update_str(cell, p->text);
 
         if (edit->OnFilter != NULL)
             listener_pass_event(edit->OnFilter, e, edit, Edit);
@@ -125,7 +126,7 @@ static void i_OnChange(Edit *edit, Event *e)
     str_upd(&edit->text, p->text);
 
     if (cell != NULL)
-        _cell_upd_string(cell, p->text);
+        _cell_update_str(cell, p->text);
 
     if (edit->OnChange != NULL)
         listener_pass_event(edit->OnChange, e, edit, Edit);
@@ -214,6 +215,7 @@ static Edit *i_create(const align_t halign, const uint32_t flags)
     Edit *edit = obj_new0(Edit);
     void *ositem = NULL;
     edit->flags = flags;
+    edit->width = 100;
     edit->text = str_c("");
     edit->font = _gui_create_default_font();
     edit->color = kCOLOR_DEFAULT;
@@ -267,6 +269,15 @@ void edit_OnFocus(Edit *edit, Listener *listener)
 {
     cassert_no_null(edit);
     listener_update(&edit->OnFocus, listener);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void edit_min_width(Edit *edit, const real32_t width)
+{
+    cassert_no_null(edit);
+    cassert(width > 0);
+    edit->width = width;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -434,8 +445,8 @@ real32_t edit_get_height(const Edit *edit)
 {
     real32_t width, height;
     cassert_no_null(edit);
-    _edit_dimension((Edit *)edit, 0, &width, &height);
-    _edit_dimension((Edit *)edit, 1, &width, &height);
+    _edit_dimension(cast(edit, Edit), 0, &width, &height);
+    _edit_dimension(cast(edit, Edit), 1, &width, &height);
     return height;
 }
 
@@ -475,7 +486,7 @@ void _edit_dimension(Edit *edit, const uint32_t i, real32_t *dim0, real32_t *dim
     cassert_no_null(dim1);
     if (i == 0)
     {
-        edit->component.context->func_edit_bounds(edit->component.ositem, 100.f, 1, &edit->size.width, &edit->size.height);
+        edit->component.context->func_edit_bounds(edit->component.ositem, edit->width, 1, &edit->size.width, &edit->size.height);
         *dim0 = edit->size.width;
     }
     else

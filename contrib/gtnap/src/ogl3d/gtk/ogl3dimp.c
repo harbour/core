@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,8 +10,8 @@
 
 /* OpenGL Context */
 
-#include "ogl3d.h"
-#include "ogl3d.inl"
+#include "../ogl3d.h"
+#include "../ogl3d.inl"
 #include <sewer/bmem.h>
 #include <sewer/blib.h>
 #include <sewer/cassert.h>
@@ -21,7 +21,7 @@
 #include <EGL/egl.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
-#include "glew.h"
+#include "../glew.h"
 #include <sewer/warn.hxx>
 
 #if !defined(__GTK3__)

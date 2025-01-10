@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -9,7 +9,7 @@
  *
  */
 
-/* Arrays of pointers */
+/* Pointers arrays */
 
 #define arrpt_create(type) \
     arrpt_##type##_create((uint16_t)sizeof(type *))
@@ -59,17 +59,14 @@
 #define arrpt_all_const(array, type) \
     arrpt_##type##_all_const(array)
 
-#define arrpt_grow(array, n, type) \
-    arrpt_##type##_insert(array, UINT32_MAX, n)
-
 #define arrpt_append(array, value, type) \
-    (*(const type **)arrpt_##type##_insert(array, UINT32_MAX, 1)) = (value)
+    (*arrpt_##type##_insert(array, UINT32_MAX, 1)) = (value)
 
 #define arrpt_prepend(array, value, type) \
-    (*(const type **)arrpt_##type##_insert(array, 0, 1)) = (value)
+    (*arrpt_##type##_insert(array, 0, 1)) = (value)
 
 #define arrpt_insert(array, pos, value, type) \
-    (*(const type **)arrpt_##type##_insert(array, pos, 1)) = (value)
+    (*arrpt_##type##_insert(array, pos, 1)) = (value)
 
 #define arrpt_insert_n(array, pos, n, type) \
     arrpt_##type##_insert(array, pos, n)
@@ -87,32 +84,32 @@
     arrpt_##type##_sort(array, func_compare)
 
 #define arrpt_sort_ex(array, func_compare, data, type, dtype) \
-    ((void)((data) == (dtype *)(data)), \
+    ((void)((data) == cast(data, dtype)), \
      FUNC_CHECK_COMPARE_EX(func_compare, type, dtype), \
-     arrpt_##type##_sort_ex(array, (FPtr_compare_ex)func_compare, (void *)data))
+     arrpt_##type##_sort_ex(array, (FPtr_compare_ex)func_compare, cast(data, void)))
 
 #define arrpt_find(array, elem, type) \
     arrpt_##type##_find(array, elem)
 
 #define arrpt_search(array, func_compare, key, pos, type, ktype) \
-    ((void)((key) == (ktype *)(key)), \
+    ((void)((key) == cast_const(key, ktype)), \
      FUNC_CHECK_COMPARE_KEY(func_compare, type, ktype), \
-     arrpt_##type##_search(array, (FPtr_compare)func_compare, (const void *)key, pos))
+     arrpt_##type##_search(array, (FPtr_compare)func_compare, cast_const(key, void), pos))
 
 #define arrpt_search_const(array, func_compare, key, pos, type, ktype) \
-    ((void)((key) == (ktype *)(key)), \
+    ((void)((key) == cast_const(key, ktype)), \
      FUNC_CHECK_COMPARE_KEY(func_compare, type, ktype), \
-     arrpt_##type##_search_const(array, (FPtr_compare)func_compare, (const void *)key, pos))
+     arrpt_##type##_search_const(array, (FPtr_compare)func_compare, cast_const(key, void), pos))
 
 #define arrpt_bsearch(array, func_compare, key, pos, type, ktype) \
-    ((void)((key) == (ktype *)(key)), \
+    ((void)((key) == cast_const(key, ktype)), \
      FUNC_CHECK_COMPARE_KEY(func_compare, type, ktype), \
-     arrpt_##type##_bsearch(array, (FPtr_compare)func_compare, (const void *)key, pos))
+     arrpt_##type##_bsearch(array, (FPtr_compare)func_compare, cast_const(key, void), pos))
 
 #define arrpt_bsearch_const(array, func_compare, key, pos, type, ktype) \
-    ((void)((key) == (ktype *)(key)), \
+    ((void)((key) == cast_const(key, ktype)), \
      FUNC_CHECK_COMPARE_KEY(func_compare, type, ktype), \
-     arrpt_##type##_bsearch_const(array, (FPtr_compare)func_compare, (const void *)key, pos))
+     arrpt_##type##_bsearch_const(array, (FPtr_compare)func_compare, cast_const(key, void), pos))
 
 #define arrpt_foreach(elem, array, type) \
     { \

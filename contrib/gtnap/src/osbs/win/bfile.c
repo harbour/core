@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,8 +10,8 @@
 
 /* Basic file system access */
 
-#include "osbs.inl"
-#include "bfile.h"
+#include "../osbs.inl"
+#include "../bfile.h"
 #include <sewer/bmem.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
@@ -118,6 +118,15 @@ uint32_t bfile_dir_exec(char_t *pathname, const uint32_t size)
 {
     TCHAR wname[MAX_PATH + 1];
     GetModuleFileName(NULL, wname, MAX_PATH + 1);
+    return unicode_convers(cast_const(wname, char_t), pathname, ekUTF16, ekUTF8, size);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t bfile_dir_tmp(char_t *pathname, const uint32_t size)
+{
+    TCHAR wname[MAX_PATH + 1];
+    GetTempPathW(MAX_PATH + 1, wname);
     return unicode_convers(cast_const(wname, char_t), pathname, ekUTF16, ekUTF8, size);
 }
 

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -50,5 +50,7 @@ _core_api bool_t hfile_dir_loop(const char_t *pathname, Listener *listener, cons
 _core_api String *hfile_appdata(const char_t *filename);
 
 _core_api String *hfile_home_dir(const char_t *path);
+
+_core_api String *hfile_tmp_path(const char_t *path);
 
 __END_C

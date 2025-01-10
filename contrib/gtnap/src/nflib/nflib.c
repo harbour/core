@@ -27,6 +27,7 @@ static void i_dbind(void)
     dbind_enum(celltype_t, ekCELL_TYPE_BUTTON, "");
     dbind_enum(celltype_t, ekCELL_TYPE_CHECK, "");
     dbind_enum(celltype_t, ekCELL_TYPE_EDIT, "");
+    dbind_enum(celltype_t, ekCELL_TYPE_TEXT, "");
     dbind_enum(celltype_t, ekCELL_TYPE_LAYOUT, "");
     dbind_enum(halign_t, ekHALIGN_LEFT, "Left");
     dbind_enum(halign_t, ekHALIGN_CENTER, "Center");
@@ -38,10 +39,15 @@ static void i_dbind(void)
     dbind_enum(valign_t, ekVALIGN_JUSTIFY, "Justify");
     dbind(FLabel, String *, text);
     dbind(FButton, String *, text);
+    dbind(FButton, real32_t, min_width);
     dbind(FCheck, String *, text);
     dbind(FEdit, bool_t, passmode);
     dbind(FEdit, bool_t, autosel);
     dbind(FEdit, halign_t, text_align);
+    dbind(FEdit, real32_t, min_width);
+    dbind(FText, bool_t, read_only);
+    dbind(FText, real32_t, min_width);
+    dbind(FText, real32_t, min_height);
     dbind(FColumn, real32_t, margin_right);
     dbind(FColumn, real32_t, forced_width);
     dbind(FRow, real32_t, margin_bottom);
@@ -76,6 +82,26 @@ static void i_dbind(void)
     dbind_range(FRow, real32_t, forced_height, 0, 1000);
     dbind_precision(FRow, real32_t, margin_bottom, 1);
     dbind_precision(FRow, real32_t, forced_height, 1);
+
+    dbind_default(FButton, real32_t, min_width, 0);
+    dbind_increment(FButton, real32_t, min_width, 1);
+    dbind_precision(FButton, real32_t, min_width, 1);
+    dbind_range(FButton, real32_t, min_width, 10, 1000);
+
+    dbind_default(FEdit, real32_t, min_width, 100);
+    dbind_increment(FEdit, real32_t, min_width, 1);
+    dbind_precision(FEdit, real32_t, min_width, 1);
+    dbind_range(FEdit, real32_t, min_width, 10, 1000);
+
+    dbind_default(FText, bool_t, read_only, FALSE);
+    dbind_default(FText, real32_t, min_width, 100);
+    dbind_increment(FText, real32_t, min_width, 1);
+    dbind_precision(FText, real32_t, min_width, 1);
+    dbind_range(FText, real32_t, min_width, 10, 1000);
+    dbind_default(FText, real32_t, min_height, 100);
+    dbind_increment(FText, real32_t, min_height, 1);
+    dbind_precision(FText, real32_t, min_height, 1);
+    dbind_range(FText, real32_t, min_height, 10, 1000);
 
     dbind_default(FCell, celltype_t, type, ekCELL_TYPE_EMPTY);
     dbind_default(FCell, halign_t, halign, ekHALIGN_LEFT);

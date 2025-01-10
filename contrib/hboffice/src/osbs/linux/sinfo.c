@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,7 +10,7 @@
 
 /* Machine info */
 
-#include "bfile.h"
+#include "../bfile.h"
 
 #if !defined(__LINUX__)
 #error This file is only for Linux system
@@ -40,7 +40,7 @@ uint32_t bfile_dir_data(char_t *pathname, const uint32_t size)
 {
     struct passwd *pw = getpwuid(getuid());
     uint32_t s;
-    unicode_convers((const char_t *)pw->pw_dir, pathname, ekUTF8, ekUTF8, size);
+    unicode_convers(cast_const(pw->pw_dir, char_t), pathname, ekUTF8, ekUTF8, size);
     s = unicode_nbytes(pathname, ekUTF8);
     return unicode_convers("/.config", pathname + s - 1, ekUTF8, ekUTF8, size - s);
 }
@@ -50,5 +50,5 @@ uint32_t bfile_dir_data(char_t *pathname, const uint32_t size)
 uint32_t bfile_dir_home(char_t *pathname, const uint32_t size)
 {
     struct passwd *pw = getpwuid(getuid());
-    return unicode_convers((const char_t *)pw->pw_dir, pathname, ekUTF8, ekUTF8, size);
+    return unicode_convers(cast_const(pw->pw_dir, char_t), pathname, ekUTF8, ekUTF8, size);
 }

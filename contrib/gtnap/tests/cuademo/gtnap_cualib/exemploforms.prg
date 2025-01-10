@@ -14,6 +14,8 @@ CUA20 @ 15,20,25,70 JANELA V_JANELA ;
 ESPECIALIZE V_JANELA MENU
 ADDOPCAO V_JANELA TEXTO "Formulário #básico" ;
     ACAO TST_FORM_BASICO() AJUDA "P?????"
+ADDOPCAO V_JANELA TEXTO "Formulário com #TextView" ;
+    ACAO TST_FORM_TEXT() AJUDA "P?????"
 *
 ATIVE(V_JANELA)
 *
@@ -106,6 +108,60 @@ IF N_RES == NAP_MODAL_ENTER .OR. N_RES == 1000
                  "L_SECURE_PASS: " + hb_ValToStr(L_SECURE_PASS) + ";" + ;
                  "L_SHOW_ALERTS: " + hb_ValToStr(L_SHOW_ALERTS) + ";" + ;
                  "L_CONNECT_BANK: " + hb_ValToStr(L_CONNECT_BANK)
+
+    MOSTRAR("M?????",C_Message)
+
+ENDIF
+
+NAP_FORM_DESTROY(V_FORM)
+
+********************************
+STAT PROC TST_FORM_TEXT
+********************************
+LOCAL V_FORM := NAP_FORM_LOAD(DIRET_FORMS() + "TextView.nfm")
+LOCAL C_TEXT1 := "Lorem ipsum odor amet, consectetuer adipiscing elit. Fringilla luctus sagittis lacus praesent sagittis accumsan. Egestas ut ridiculus adipiscing et pretium efficitur. Venenatis curabitur tristique semper; cras cubilia iaculis."
+LOCAL C_TEXT2 := "Mi penatibus penatibus magnis tortor habitant commodo dapibus vitae tortor. Commodo elit nascetur fermentum primis proin augue mollis. Cubilia laoreet habitant ultricies; feugiat donec volutpat. Semper eleifend eget tempus aliquam in dis ornare felis."
+// Mapping between Harbour variables and form control names
+LOCAL V_BIND := { ;
+                    {"text1", @C_TEXT1 }, ;
+                    {"text2", @C_TEXT2 } ;
+                }
+
+LOCAL N_RES := 0
+LOCAL C_MESSAGE := ""
+
+// Window title
+NAP_FORM_TITLE(V_FORM, "Formulário com visualizações de texto")
+// Write the variable values into the form controls (Edit, Buttons, etc)
+NAP_FORM_DBIND(V_FORM, V_BIND)
+// Buttons callback
+NAP_FORM_ONCLICK(V_FORM, "button_ok", {|| NAP_FORM_STOP_MODAL(V_FORM, 1000) })
+NAP_FORM_ONCLICK(V_FORM, "button_cancel", {|| NAP_FORM_STOP_MODAL(V_FORM, 1001) })
+
+// Launch the form
+N_RES := NAP_FORM_MODAL(V_FORM)
+
+IF N_RES == NAP_MODAL_ENTER
+    MOSTRAR("M?????","Pressionado [Enter], dados aceitos.")
+ELSEIF N_RES == 1000
+    MOSTRAR("M?????","Botão [OK] pressionado, dados aceitos.")
+ELSEIF N_RES == NAP_MODAL_ESC
+    MOSTRAR("M?????","ESC pressionado, dados cancelados.")
+ELSEIF N_RES == NAP_MODAL_X_BUTTON
+    MOSTRAR("M?????","Formulário fechado com [X], dados cancelados.")
+ELSEIF N_RES == 1001
+    MOSTRAR("M?????","Botão [Cancelar] pressionado, dados cancelados.")
+ELSE
+    MOSTRAR("M?????","Valor de retorno desconhecido.")
+ENDIF
+
+IF N_RES == NAP_MODAL_ENTER .OR. N_RES == 1000
+
+    // Write the values from the GUI controls to Harbour variables
+    NAP_FORM_DBIND_STORE(V_FORM)
+
+    C_MESSAGE := "C_TEXT1: " + C_TEXT1 + ";" + ;
+                 "C_TEXT2: " + C_TEXT2
 
     MOSTRAR("M?????",C_Message)
 

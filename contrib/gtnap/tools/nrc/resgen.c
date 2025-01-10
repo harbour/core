@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -307,7 +307,7 @@ static void i_read_msgfile(ResourcePack *pack, const uint32_t local_index, const
     uint32_t num_errors = UINT32_MAX;
     cassert_no_null(pack);
     num_errors = arrpt_size(pack->errors, String);
-    msgparser_process(pathname, (const char_t *)file_data, file_size, &ids, &texts, pack->errors);
+    msgparser_process(pathname, cast_const(file_data, char_t), file_size, &ids, &texts, pack->errors);
     if (num_errors == arrpt_size(pack->errors, String))
     {
         uint32_t i, num_texts = arrpt_size(ids, String);
@@ -636,7 +636,7 @@ void resgen_write_h_file(const ResourcePack *pack, const char_t *dest_path, cons
         bool_t with_texts = FALSE;
         bool_t with_files = FALSE;
         i_stm_header(stream);
-        stm_writef(stream, "#include \"core.hxx\"\n\n");
+        stm_writef(stream, "#include <core/core.hxx>\n\n");
         stm_writef(stream, "__EXTERN_C\n\n");
 
         arrst_foreach(resource, pack->resources, i_Resource)
@@ -683,7 +683,7 @@ void resgen_write_h_file(const ResourcePack *pack, const char_t *dest_path, cons
 
 static void i_binary_to_ascii(Stream *stream, const byte_t *binary_code, const uint32_t size, const uint32_t num_bytes_per_row, const bool_t static_keyword, const char_t *variable_name)
 {
-    register uint32_t i, j;
+    uint32_t i, j;
 
     cassert(num_bytes_per_row > 0);
 
@@ -944,7 +944,7 @@ static void i_object_write(Stream *stream, const i_Object *object, const i_resou
     case i_ekRESOURCE_TYPE_MESSAGE:
     {
         uint32_t size = str_len(object->string);
-        const byte_t *data = (byte_t *)tc(object->string);
+        const byte_t *data = cast_const(tc(object->string), byte_t);
         const byte_t end = 0;
         stm_write_u32(stream, size);
         stm_write(stream, data, size);
@@ -974,8 +974,8 @@ void resgen_write_packed_file(const ResourcePack *pack, const char_t *dest_path,
     cassert_no_null(pack);
     if (stream != NULL)
     {
-        register uint32_t num_locals = arrpt_size(pack->local_codes, String);
-        register uint32_t num_res = arrst_size(pack->resources, i_Resource);
+        uint32_t num_locals = arrpt_size(pack->local_codes, String);
+        uint32_t num_res = arrst_size(pack->resources, i_Resource);
 
         /* Write localization codes */
         stm_write_u32(stream, num_locals);
@@ -986,7 +986,7 @@ void resgen_write_packed_file(const ResourcePack *pack, const char_t *dest_path,
         /* Write resources */
         stm_write_u32(stream, num_res);
         arrst_foreach(resource, pack->resources, i_Resource)
-            register uint32_t num_localized = arrst_size(resource->locals, i_Local);
+            uint32_t num_localized = arrst_size(resource->locals, i_Local);
             stm_write_u32(stream, resource->type);
             i_object_write(stream, &resource->global, resource->type);
             stm_write_u32(stream, num_localized);

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,12 +10,12 @@
 
 /* Images */
 
-#include "image.inl"
-#include "osimage.inl"
-#include "imgutil.inl"
-#include "dctxh.h"
-#include "pixbuf.h"
 #include "draw2d_gtk.ixx"
+#include "osimage.inl"
+#include "../image.inl"
+#include "../imgutil.inl"
+#include "../dctxh.h"
+#include "../pixbuf.h"
 #include <core/buffer.h>
 #include <core/heap.h>
 #include <core/strings.h>
@@ -182,7 +182,7 @@ static ___INLINE bool_t i_is_gif_buffer(const byte_t *data, const uint32_t size)
 {
     if (size >= 6)
     {
-        const char_t *str = (const char_t *)data;
+        const char_t *str = cast_const(data, char_t);
         if (str_equ_cn(str, "GIF87a", 6) == TRUE || str_equ_cn(str, "GIF89a", 6) == TRUE)
             return TRUE;
     }
@@ -195,7 +195,7 @@ static ___INLINE bool_t i_is_gif_buffer(const byte_t *data, const uint32_t size)
 static GdkPixbuf *i_pixbuf_from_data(const byte_t *data, const uint32_t size)
 {
 #if (GDK_PIXBUF_MAJOR > 2 || (GDK_PIXBUF_MAJOR == 2 && GDK_PIXBUF_MINOR >= 14))
-    GInputStream *stream = g_memory_input_stream_new_from_data((const void *)data, (gssize)size, NULL);
+    GInputStream *stream = g_memory_input_stream_new_from_data(cast_const(data, void), (gssize)size, NULL);
     GdkPixbuf *pixbuf = gdk_pixbuf_new_from_stream(stream, NULL, NULL);
     gboolean ok = g_input_stream_close(stream, NULL, NULL);
     cassert_unref(ok == TRUE, ok);
@@ -221,7 +221,7 @@ static GdkPixbuf *i_pixbuf_from_data(const byte_t *data, const uint32_t size)
 static GdkPixbufAnimation *i_animation_from_data(const byte_t *data, const uint32_t size)
 {
 #if (GDK_PIXBUF_MAJOR > 2 || (GDK_PIXBUF_MAJOR == 2 && GDK_PIXBUF_MINOR >= 28))
-    GInputStream *stream = g_memory_input_stream_new_from_data((const void *)data, (gssize)size, NULL);
+    GInputStream *stream = g_memory_input_stream_new_from_data(cast_const(data, void), (gssize)size, NULL);
     GdkPixbufAnimation *animation = gdk_pixbuf_animation_new_from_stream(stream, NULL, NULL);
     gboolean ok = g_input_stream_close(stream, NULL, NULL);
     cassert_unref(ok == TRUE, ok);
@@ -248,7 +248,7 @@ static GdkPixbufAnimation *i_animation_from_data(const byte_t *data, const uint3
 
 static gboolean i_encode(const gchar *data, gsize size, GError **error, gpointer stream)
 {
-    stm_write((Stream *)stream, (const byte_t *)data, (uint32_t)size);
+    stm_write(cast(stream, Stream), cast_const(data, byte_t), (uint32_t)size);
     unref(error);
     return TRUE;
 }
@@ -312,7 +312,7 @@ OSImage *osimage_create_from_data(const byte_t *data, const uint32_t size)
     }
     else
     {
-        uint32_t num_frames = imgutil_num_frames(data, size);
+        uint32_t num_frames = _imgutil_num_frames(data, size);
         if (num_frames == 1)
             image = i_single_osimage_from_data(data, size);
         else
@@ -358,10 +358,8 @@ OSImage *osimage_from_context(DCtx **ctx)
 {
     gint w, h;
     GdkPixbuf *pixbuf = NULL;
-
     cassert_no_null(ctx);
     cassert_no_null(*ctx);
-
     w = cairo_image_surface_get_width((*ctx)->surface);
     h = cairo_image_surface_get_height((*ctx)->surface);
     pixbuf = gdk_pixbuf_get_from_surface((*ctx)->surface, 0, 0, w, h);
@@ -388,7 +386,6 @@ OSImage *osimage_from_context(DCtx **ctx)
     }
 
     dctx_destroy(ctx);
-
     return i_osimage(pixbuf);
 }
 
@@ -668,7 +665,7 @@ void osimage_info(const OSImage *image, uint32_t *width, uint32_t *height, pixfo
     {
         pixformat_t lformat = ENUM_MAX(pixformat_t);
         const GdkPixbuf *pixbuf = i_image_pixbuf(image);
-        const byte_t *buffer = (const byte_t *)gdk_pixbuf_get_pixels(pixbuf);
+        const byte_t *buffer = cast_const(gdk_pixbuf_get_pixels(pixbuf), byte_t);
         uint32_t w = gdk_pixbuf_get_width(pixbuf);
         uint32_t h = gdk_pixbuf_get_height(pixbuf);
         uint32_t bits_per_pixel = gdk_pixbuf_get_n_channels(pixbuf) * 8;
@@ -815,12 +812,12 @@ void osimage_frame(const OSImage *image, const uint32_t frame_index, real32_t *f
 
 const void *osimage_native(const OSImage *image)
 {
-    return (const void *)osimage_pixbuf(image, 0);
+    return cast_const(_osimage_pixbuf(image, 0), void);
 }
 
 /*---------------------------------------------------------------------------*/
 
-const GdkPixbuf *osimage_pixbuf(const OSImage *image, const uint32_t frame_index)
+const GdkPixbuf *_osimage_pixbuf(const OSImage *image, const uint32_t frame_index)
 {
     cassert_no_null(image);
     if (image->pixbuf != NULL)

@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,10 +10,10 @@
 
 /* GTK System globals */
 
-#include "osglobals.h"
 #include "osglobals_gtk.inl"
-#include "osgui.inl"
 #include "oscontrol_gtk.inl"
+#include "../osglobals.h"
+#include "../osgui.inl"
 #include <draw2d/color.h>
 #include <draw2d/font.h>
 #include <draw2d/image.h>
@@ -398,7 +398,7 @@ static gboolean i_OnWindowDamage(GtkWidget *widget, GdkEventExpose *event, gpoin
     i_IMPOSTOR_MAPPED = TRUE;
 
     {
-        Font *font = osgui_create_default_font();
+        Font *font = _osgui_create_default_font();
         real32_t width, height;
         cassert(kENTRY_HEIGHT == 0);
         cassert(kPROGRESS_HEIGHT == 0);
@@ -1057,7 +1057,7 @@ static void i_null_writter(const gchar *log_domain, GLogLevelFlags log_level, co
 
 /*---------------------------------------------------------------------------*/
 
-void osglobals_init(void)
+void _osglobals_init(void)
 {
 #if !defined(__ASSERTS__)
     /* Disable unavoidable GLib/Gtk warnings when processing CSS */
@@ -1074,7 +1074,7 @@ void osglobals_init(void)
 
 /*---------------------------------------------------------------------------*/
 
-void osglobals_finish(void)
+void _osglobals_finish(void)
 {
     if (kWINDOW != NULL)
     {
@@ -1110,14 +1110,14 @@ void osglobals_finish(void)
 
 /*---------------------------------------------------------------------------*/
 
-bool_t osglobals_impostor_mapped(void)
+bool_t _osglobals_impostor_mapped(void)
 {
     return i_IMPOSTOR_MAPPED;
 }
 
 /*---------------------------------------------------------------------------*/
 
-GtkStyleContext *osglobals_entry_context(void)
+GtkStyleContext *_osglobals_entry_context(void)
 {
     cassert(kENTRY != NULL);
     return gtk_widget_get_style_context(kENTRY);
@@ -1133,7 +1133,7 @@ GtkStyleContext *_osglobals_button_context(void)
 
 /*---------------------------------------------------------------------------*/
 
-GtkStyleContext *osglobals_table_context(void)
+GtkStyleContext *_osglobals_table_context(void)
 {
     cassert(kTABLE != NULL);
     return gtk_widget_get_style_context(kTABLE);
@@ -1157,7 +1157,7 @@ const char_t *_osglobals_css_entry(void)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *osglobals_css_button(void)
+const char_t *_osglobals_css_button(void)
 {
     cassert(str_empty(kCSS_BUTTON) == FALSE);
     return tc(kCSS_BUTTON);
@@ -1165,7 +1165,7 @@ const char_t *osglobals_css_button(void)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *osglobals_css_radio(void)
+const char_t *_osglobals_css_radio(void)
 {
     cassert(str_empty(kCSS_RADIO) == FALSE);
     return tc(kCSS_RADIO);
@@ -1173,7 +1173,7 @@ const char_t *osglobals_css_radio(void)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *osglobals_css_check(void)
+const char_t *_osglobals_css_check(void)
 {
     cassert(str_empty(kCSS_CHECK) == FALSE);
     return tc(kCSS_CHECK);
@@ -1181,7 +1181,7 @@ const char_t *osglobals_css_check(void)
 
 /*---------------------------------------------------------------------------*/
 
-const char_t *osglobals_css_combobox(void)
+const char_t *_osglobals_css_combobox(void)
 {
     cassert(str_empty(kCSS_COMBOBOX) == FALSE);
     return tc(kCSS_COMBOBOX);
@@ -1203,7 +1203,7 @@ const char_t *_osglobals_css_textview_text(void)
 
 /*---------------------------------------------------------------------------*/
 
-color_t osglobals_text_color(void)
+color_t _osglobals_text_color(void)
 {
     cassert(kTEXT_COLOR != 0);
     return kTEXT_COLOR;
@@ -1211,7 +1211,7 @@ color_t osglobals_text_color(void)
 
 /*---------------------------------------------------------------------------*/
 
-color_t osglobals_seltext_color(void)
+color_t _osglobals_seltext_color(void)
 {
     cassert(kSELTX_COLOR != 0);
     return kSELTX_COLOR;
@@ -1219,7 +1219,7 @@ color_t osglobals_seltext_color(void)
 
 /*---------------------------------------------------------------------------*/
 
-color_t osglobals_hottext_color(void)
+color_t _osglobals_hottext_color(void)
 {
     cassert(kHOTTX_COLOR != 0);
     return kHOTTX_COLOR;
@@ -1227,7 +1227,7 @@ color_t osglobals_hottext_color(void)
 
 /*---------------------------------------------------------------------------*/
 
-color_t osglobals_textbackdrop_color(void)
+color_t _osglobals_textbackdrop_color(void)
 {
     cassert(kTEXTBACKDROP_COLOR != 0);
     return kTEXTBACKDROP_COLOR;
@@ -1235,7 +1235,7 @@ color_t osglobals_textbackdrop_color(void)
 
 /*---------------------------------------------------------------------------*/
 
-color_t osglobals_seltextbackdrop_color(void)
+color_t _osglobals_seltextbackdrop_color(void)
 {
     cassert(kSELTXBACKDROP_COLOR != 0);
     return kSELTXBACKDROP_COLOR;
@@ -1243,7 +1243,7 @@ color_t osglobals_seltextbackdrop_color(void)
 
 /*---------------------------------------------------------------------------*/
 
-color_t osglobals_hottextbackdrop_color(void)
+color_t _osglobals_hottextbackdrop_color(void)
 {
     cassert(kHOTTXBACKDROP_COLOR != 0);
     return kHOTTXBACKDROP_COLOR;
@@ -1251,14 +1251,14 @@ color_t osglobals_hottextbackdrop_color(void)
 
 /*---------------------------------------------------------------------------*/
 
-color_t osglobals_border_color(void)
+color_t _osglobals_border_color(void)
 {
     return kLINE_COLOR;
 }
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t osglobals_check_width(void)
+uint32_t _osglobals_check_width(void)
 {
     cassert(kCHECK_WIDTH != 0);
     return kCHECK_WIDTH;
@@ -1266,7 +1266,7 @@ uint32_t osglobals_check_width(void)
 
 /*---------------------------------------------------------------------------*/
 
-uint32_t osglobals_check_height(void)
+uint32_t _osglobals_check_height(void)
 {
     cassert(kCHECK_HEIGHT != 0);
     return kCHECK_HEIGHT;

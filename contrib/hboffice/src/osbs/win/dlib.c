@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,8 +10,8 @@
 
 /* Dynamic library loading */
 
-#include "osbs.inl"
-#include "dlib.h"
+#include "../osbs.inl"
+#include "../dlib.h"
 #include <sewer/blib.h>
 #include <sewer/bmem.h>
 #include <sewer/cassert.h>
@@ -43,14 +43,14 @@ DLib *dlib_open(const char_t *path, const char_t *libname)
 
     blib_strcat(pathname, sizeof(pathname), libname);
 
-    num_bytes = unicode_convers(pathname, (char_t *)pathnamew, ekUTF8, ekUTF16, sizeof(pathnamew));
+    num_bytes = unicode_convers(pathname, cast(pathnamew, char_t), ekUTF8, ekUTF16, sizeof(pathnamew));
     if (num_bytes < sizeof(pathnamew))
     {
         HMODULE lib = LoadLibrary(pathnamew);
         if (lib != NULL)
         {
             _osbs_dlib_alloc();
-            return (DLib *)lib;
+            return cast(lib, DLib);
         }
         else
         {
@@ -84,7 +84,7 @@ FPtr_libproc dlib_proc_imp(DLib *dlib, const char_t *procname)
     cassert_no_null(dlib);
     cassert_no_null(procname);
     func = GetProcAddress((HMODULE)dlib, procname);
-    return cast_func_ptr(func, FPtr_libproc);
+    return cast_func(func, FPtr_libproc);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ void *dlib_var_imp(DLib *dlib, const char_t *varname)
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
-    return (void *)GetProcAddress((HMODULE)dlib, varname);
+    return cast(GetProcAddress((HMODULE)dlib, varname), void);
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #endif

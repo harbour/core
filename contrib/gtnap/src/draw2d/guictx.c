@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -51,7 +51,7 @@ void guictx_release(GuiCtx **context)
     cassert_no_null(context);
     cassert_no_null(*context);
     cassert((*context)->retain_count > 0);
-    ((GuiCtx *)(*context))->retain_count -= 1;
+    (*context)->retain_count -= 1;
     *context = NULL;
 }
 

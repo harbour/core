@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,11 +10,11 @@
 
 /* Operating System native menu item */
 
-#include "osmenuitem.h"
 #include "osmenuitem_win.inl"
 #include "osmenu_win.inl"
 #include "osgui_win.inl"
 #include "osimg.inl"
+#include "../osmenuitem.h"
 #include <core/heap.h>
 #include <core/event.h>
 #include <core/strings.h>
@@ -335,7 +335,7 @@ static void i_item_text(const char_t *text, const vkey_t key, const uint32_t mod
         bstd_sprintf(item_text, sizeof(item_text), "%s", text);
     }
 
-    unicode_convers(item_text, (char_t *)item_wtext, ekUTF8, ekUTF16, sizeof(WCHAR) * max_chars);
+    unicode_convers(item_text, cast(item_wtext, char_t), ekUTF8, ekUTF16, sizeof(WCHAR) * max_chars);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -388,7 +388,7 @@ void osmenuitem_image(OSMenuItem *item, const Image *image)
     }
 
     if (image != NULL)
-        item->hbitmap = osimg_hbitmap(image, 0);
+        item->hbitmap = _osimg_hbitmap(image, 0);
 
     if (item->menu != NULL && item->visible == TRUE)
     {
@@ -437,7 +437,6 @@ void osmenuitem_key(OSMenuItem *item, const vkey_t key, const uint32_t modifiers
 
     item->key = key;
     item->modifiers = modifiers;
-
     if (item->menu != NULL && item->visible == TRUE)
     {
         WCHAR item_text[512];

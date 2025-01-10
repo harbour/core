@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -184,7 +184,7 @@ void keybuf_OnDown(KeyBuf *buffer, const vkey_t key)
 void keybuf_clear(KeyBuf *buffer)
 {
     cassert_no_null(buffer);
-    bmem_set1((byte_t *)buffer->pressed, sizeof(buffer->pressed), 0);
+    bmem_set1(cast(buffer->pressed, byte_t), sizeof(buffer->pressed), 0);
 }
 
 /*---------------------------------------------------------------------------*/

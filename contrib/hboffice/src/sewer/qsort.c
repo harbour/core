@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -22,11 +22,11 @@ typedef void (*i_SWAP)(char *a, char *b, uint32_t size);
 
 static ___INLINE void i_SWAP_ALIGN(char *a, char *b, uint32_t size)
 {
-    register uint32_t n1 = size / (uint32_t)sizeofptr;
-    register uint32_t i;
-    register void **_a = (void **)a;
-    register void **_b = (void **)b;
-    register void *swap;
+    uint32_t n1 = size / (uint32_t)sizeofptr;
+    uint32_t i;
+    void **_a = dcast(a, void);
+    void **_b = dcast(b, void);
+    void *swap;
     for (i = 0; i < n1; ++i, ++_a, ++_b)
     {
         swap = *_a;
@@ -39,9 +39,9 @@ static ___INLINE void i_SWAP_ALIGN(char *a, char *b, uint32_t size)
 
 static ___INLINE void i_SWAP_PTR(char *a, char *b, uint32_t size)
 {
-    register void *swap = *(void **)a;
-    *(void **)a = *(void **)b;
-    *(void **)b = swap;
+    void *swap = *dcast(a, void);
+    *dcast(a, void) = *dcast(b, void);
+    *dcast(b, void) = swap;
     unref(size);
 }
 
@@ -49,12 +49,12 @@ static ___INLINE void i_SWAP_PTR(char *a, char *b, uint32_t size)
 
 static ___INLINE void i_SWAP_GENERAL(char *a, char *b, uint32_t size)
 {
-    register uint32_t n1 = size / (uint32_t)sizeofptr;
-    register uint32_t i;
-    register void **_a = (void **)a;
-    register void **_b = (void **)b;
-    register void *swap;
-    register char swapc;
+    uint32_t n1 = size / (uint32_t)sizeofptr;
+    uint32_t i;
+    void **_a = dcast(a, void);
+    void **_b = dcast(b, void);
+    void *swap;
+    char swapc;
     for (i = 0; i < n1; ++i, ++_a, ++_b)
     {
         swap = *_a;
@@ -79,8 +79,8 @@ static ___INLINE void i_SWAP_GENERAL(char *a, char *b, uint32_t size)
 //#define SWAP(a, b, size)\
 //    do\
 //    {\
-//        register uint32_t __size = (size);\
-//        register char *__a = (a), *__b = (b);\
+//        uint32_t __size = (size);\
+//        char *__a = (a), *__b = (b);\
 //        do\
 //        {\
 //            char __tmp = *__a;\
@@ -150,8 +150,8 @@ typedef struct
  **/
 void _qsort_ex(const void *data, const uint32_t total_elems, const uint32_t sizeof_elem, FPtr_compare_ex func_compare, const void *user_data)
 {
-    register i_SWAP SWAP_FUNC;
-    register char *base_ptr = (char *)data;
+    i_SWAP SWAP_FUNC;
+    char *base_ptr = (char *)data;
     uint32_t max_thresh = MAX_THRESH * sizeof_elem;
 
     cassert_no_null(base_ptr);
@@ -191,15 +191,15 @@ void _qsort_ex(const void *data, const uint32_t total_elems, const uint32_t size
 
             char *mid = lo + sizeof_elem * ((uint32_t)(hi - lo) / sizeof_elem >> 1);
 
-            if (func_compare((void *)mid, (void *)lo, user_data) < 0)
+            if (func_compare(cast(mid, void), cast(lo, void), user_data) < 0)
                 SWAP_FUNC(mid, lo, sizeof_elem);
 
-            if ((func_compare)((void *)hi, (void *)mid, user_data) < 0)
+            if ((func_compare)(cast(hi, void), cast(mid, void), user_data) < 0)
                 SWAP_FUNC(mid, hi, sizeof_elem);
             else
                 goto jump_over;
 
-            if (func_compare((void *)mid, (void *)lo, user_data) < 0)
+            if (func_compare(cast(mid, void), cast(lo, void), user_data) < 0)
                 SWAP_FUNC(mid, lo, sizeof_elem);
 
         jump_over:;
@@ -212,10 +212,10 @@ void _qsort_ex(const void *data, const uint32_t total_elems, const uint32_t size
             that this algorithm runs much faster than others. */
             do
             {
-                while (func_compare((void *)left_ptr, (void *)mid, user_data) < 0)
+                while (func_compare(cast(left_ptr, void), cast(mid, void), user_data) < 0)
                     left_ptr += sizeof_elem;
 
-                while (func_compare((void *)mid, (void *)right_ptr, user_data) < 0)
+                while (func_compare(cast(mid, void), cast(right_ptr, void), user_data) < 0)
                     right_ptr -= sizeof_elem;
 
                 if (left_ptr < right_ptr)
@@ -282,14 +282,14 @@ void _qsort_ex(const void *data, const uint32_t total_elems, const uint32_t size
         char *const end_ptr = &base_ptr[sizeof_elem * (total_elems - 1)];
         char *tmp_ptr = base_ptr;
         char *thresh = min(end_ptr, base_ptr + max_thresh);
-        register char *run_ptr;
+        char *run_ptr;
 
         /* Find smallest element in first threshold and place it at the
         array's beginning.  This is the smallest array element,
         and the operation speeds up insertion sort's inner loop. */
 
         for (run_ptr = tmp_ptr + sizeof_elem; run_ptr <= thresh; run_ptr += sizeof_elem)
-            if (func_compare((void *)run_ptr, (void *)tmp_ptr, user_data) < 0)
+            if (func_compare(cast(run_ptr, void), cast(tmp_ptr, void), user_data) < 0)
                 tmp_ptr = run_ptr;
 
         if (tmp_ptr != base_ptr)
@@ -302,7 +302,7 @@ void _qsort_ex(const void *data, const uint32_t total_elems, const uint32_t size
         {
             tmp_ptr = run_ptr - sizeof_elem;
 
-            while (func_compare((void *)run_ptr, (void *)tmp_ptr, user_data) < 0)
+            while (func_compare(cast(run_ptr, void), cast(tmp_ptr, void), user_data) < 0)
                 tmp_ptr -= sizeof_elem;
 
             tmp_ptr += sizeof_elem;

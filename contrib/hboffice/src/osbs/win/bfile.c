@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,8 +10,8 @@
 
 /* Basic file system access */
 
-#include "osbs.inl"
-#include "bfile.h"
+#include "../osbs.inl"
+#include "../bfile.h"
 #include <sewer/bmem.h>
 #include <sewer/cassert.h>
 #include <sewer/ptr.h>
@@ -69,7 +69,7 @@ uint32_t bfile_dir_work(char_t *pathname, const uint32_t size)
 {
     WCHAR pathnamew[MAX_PATH + 1];
     GetCurrentDirectory(sizeof(pathnamew), pathnamew);
-    return unicode_convers((const char_t *)pathnamew, pathname, ekUTF16, ekUTF8, size);
+    return unicode_convers(cast_const(pathnamew, char_t), pathname, ekUTF16, ekUTF8, size);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -77,7 +77,7 @@ uint32_t bfile_dir_work(char_t *pathname, const uint32_t size)
 bool_t bfile_dir_set_work(const char_t *pathname, ferror_t *error)
 {
     WCHAR pathnamew[MAX_PATH + 1];
-    unicode_convers(pathname, (char_t *)pathnamew, ekUTF8, ekUTF16, sizeof(pathnamew));
+    unicode_convers(pathname, cast(pathnamew, char_t), ekUTF8, ekUTF16, sizeof(pathnamew));
     if (SetCurrentDirectory(pathnamew) != 0)
     {
         ptr_assign(error, ekFOK);
@@ -96,7 +96,7 @@ uint32_t bfile_dir_home(char_t *pathname, const uint32_t size)
 {
     WCHAR wname[MAX_PATH + 1];
     if (SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, wname) == S_OK)
-        return unicode_convers((const char_t *)wname, pathname, ekUTF16, ekUTF8, size);
+        return unicode_convers(cast_const(wname, char_t), pathname, ekUTF16, ekUTF8, size);
     pathname[0] = '\0';
     return 1;
 }
@@ -107,7 +107,7 @@ uint32_t bfile_dir_data(char_t *pathname, const uint32_t size)
 {
     WCHAR wname[MAX_PATH + 1];
     if (SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, wname) == S_OK)
-        return unicode_convers((const char_t *)wname, pathname, ekUTF16, ekUTF8, size);
+        return unicode_convers(cast_const(wname, char_t), pathname, ekUTF16, ekUTF8, size);
     pathname[0] = '\0';
     return 1;
 }
@@ -118,7 +118,16 @@ uint32_t bfile_dir_exec(char_t *pathname, const uint32_t size)
 {
     TCHAR wname[MAX_PATH + 1];
     GetModuleFileName(NULL, wname, MAX_PATH + 1);
-    return unicode_convers((const char_t *)wname, pathname, ekUTF16, ekUTF8, size);
+    return unicode_convers(cast_const(wname, char_t), pathname, ekUTF16, ekUTF8, size);
+}
+
+/*---------------------------------------------------------------------------*/
+
+uint32_t bfile_dir_tmp(char_t *pathname, const uint32_t size)
+{
+    TCHAR wname[MAX_PATH + 1];
+    GetTempPathW(MAX_PATH + 1, wname);
+    return unicode_convers(cast_const(wname, char_t), pathname, ekUTF16, ekUTF8, size);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -126,7 +135,7 @@ uint32_t bfile_dir_exec(char_t *pathname, const uint32_t size)
 bool_t bfile_dir_create(const char_t *pathname, ferror_t *error)
 {
     WCHAR pathnamew[MAX_PATH + 1];
-    uint32_t num_bytes = unicode_convers(pathname, (char_t *)pathnamew, ekUTF8, ekUTF16, sizeof(pathnamew));
+    uint32_t num_bytes = unicode_convers(pathname, cast(pathnamew, char_t), ekUTF8, ekUTF16, sizeof(pathnamew));
     if (num_bytes < sizeof(pathnamew))
     {
         if (CreateDirectory(pathnamew, NULL) != 0)
@@ -152,7 +161,7 @@ bool_t bfile_dir_create(const char_t *pathname, ferror_t *error)
 Dir *bfile_dir_open(const char_t *pathname, ferror_t *error)
 {
     WCHAR pathnamew[MAX_PATH + 10];
-    uint32_t num_bytes = unicode_convers(pathname, (char_t *)pathnamew, ekUTF8, ekUTF16, sizeof(pathnamew));
+    uint32_t num_bytes = unicode_convers(pathname, cast(pathnamew, char_t), ekUTF8, ekUTF16, sizeof(pathnamew));
     if (num_bytes < sizeof(pathnamew))
     {
         HANDLE handle;
@@ -161,7 +170,7 @@ Dir *bfile_dir_open(const char_t *pathname, ferror_t *error)
         handle = FindFirstFile(pathnamew, &find);
         if (handle != INVALID_HANDLE_VALUE)
         {
-            Dir *dir = (Dir *)bmem_malloc(sizeof(Dir));
+            Dir *dir = cast(bmem_malloc(sizeof(Dir)), Dir);
             _osbs_directory_alloc();
             dir->handle = handle;
             dir->find = find;
@@ -191,7 +200,7 @@ void bfile_dir_close(Dir **dir)
     cassert_no_null(*dir);
     ok = FindClose((*dir)->handle);
     cassert_unref(ok == TRUE, ok);
-    bmem_free((byte_t *)*dir);
+    bmem_free(*dcast(dir, byte_t));
     *dir = NULL;
     _osbs_directory_dealloc();
 }
@@ -245,7 +254,7 @@ bool_t bfile_dir_get(Dir *dir, char_t *name, const uint32_t size, file_type_t *t
     {
         if (name != NULL)
         {
-            uint32_t nb = unicode_convers((const char_t *)dir->find.cFileName, name, ekUTF16, ekUTF8, size);
+            uint32_t nb = unicode_convers(cast_const(dir->find.cFileName, char_t), name, ekUTF16, ekUTF8, size);
             if (nb == size)
             {
                 ptr_assign(error, ekFBIGNAME);
@@ -295,7 +304,7 @@ bool_t bfile_dir_get(Dir *dir, char_t *name, const uint32_t size, file_type_t *t
 bool_t bfile_dir_delete(const char_t *pathname, ferror_t *error)
 {
     WCHAR pathnamew[MAX_PATH + 1];
-    uint32_t num_bytes = unicode_convers(pathname, (char_t *)pathnamew, ekUTF8, ekUTF16, sizeof(pathnamew));
+    uint32_t num_bytes = unicode_convers(pathname, cast(pathnamew, char_t), ekUTF8, ekUTF16, sizeof(pathnamew));
     if (num_bytes < sizeof(pathnamew))
     {
         BOOL result = RemoveDirectory(pathnamew);
@@ -322,7 +331,7 @@ bool_t bfile_dir_delete(const char_t *pathname, ferror_t *error)
 File *bfile_create(const char_t *pathname, ferror_t *error)
 {
     WCHAR pathnamew[MAX_PATH + 1];
-    uint32_t num_bytes = unicode_convers(pathname, (char_t *)pathnamew, ekUTF8, ekUTF16, sizeof(pathnamew));
+    uint32_t num_bytes = unicode_convers(pathname, cast(pathnamew, char_t), ekUTF8, ekUTF16, sizeof(pathnamew));
     if (num_bytes < sizeof(pathnamew))
     {
         HANDLE file = CreateFile(pathnamew, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -349,9 +358,8 @@ File *bfile_create(const char_t *pathname, ferror_t *error)
 
 File *bfile_open(const char_t *pathname, const file_mode_t mode, ferror_t *error)
 {
-    /*#C.h2("OJO!!! comprobar bloqueo en archivos escritura")*/
     WCHAR pathnamew[MAX_PATH + 1];
-    uint32_t num_bytes = unicode_convers(pathname, (char_t *)pathnamew, ekUTF8, ekUTF16, sizeof(pathnamew));
+    uint32_t num_bytes = unicode_convers(pathname, cast(pathnamew, char_t), ekUTF8, ekUTF16, sizeof(pathnamew));
     if (num_bytes < sizeof(pathnamew))
     {
         DWORD access = 0;
@@ -382,7 +390,7 @@ File *bfile_open(const char_t *pathname, const file_mode_t mode, ferror_t *error
             /* Avoid warning C4306: 'type cast' : conversion from 'HFILE' to 'File *' of greater size */
             return (File *)(uint64_t)file;
 #else
-            return (File *)file;
+            return cast(file, File);
 #endif
         }
         else
@@ -406,7 +414,7 @@ void bfile_close(File **file)
     cassert_no_null(file);
     cassert_no_null(*file);
     ok = CloseHandle((HANDLE)*file);
-    cassert(ok != 0);
+    cassert_unref(ok != 0, ok);
     _osbs_file_dealloc();
     *file = NULL;
 }
@@ -458,12 +466,12 @@ static bool_t i_file_stat(HANDLE file, file_type_t *file_type, uint64_t *file_si
 bool_t bfile_lstat(const char_t *pathname, file_type_t *type, uint64_t *size, Date *updated, ferror_t *error)
 {
     WCHAR pathnamew[MAX_PATH + 1];
-    uint32_t num_bytes = unicode_convers(pathname, (char_t *)pathnamew, ekUTF8, ekUTF16, sizeof(pathnamew));
+    uint32_t num_bytes = unicode_convers(pathname, cast(pathnamew, char_t), ekUTF8, ekUTF16, sizeof(pathnamew));
     if (num_bytes < sizeof(pathnamew))
     {
         WIN32_FILE_ATTRIBUTE_DATA attribs;
-        register BOOL ok = 0;
-        register uint32_t i = 0;
+        BOOL ok = 0;
+        uint32_t i = 0;
         while ((ok = GetFileAttributesEx(pathnamew, GetFileExInfoStandard, &attribs)) == 0)
         {
             i++;
@@ -688,10 +696,38 @@ uint64_t bfile_pos(const File *file)
 bool_t bfile_delete(const char_t *pathname, ferror_t *error)
 {
     WCHAR pathnamew[MAX_PATH + 1];
-    uint32_t num_bytes = unicode_convers(pathname, (char_t *)pathnamew, ekUTF8, ekUTF16, sizeof(pathnamew));
+    uint32_t num_bytes = unicode_convers(pathname, cast(pathnamew, char_t), ekUTF8, ekUTF16, sizeof(pathnamew));
     if (num_bytes < sizeof(pathnamew))
     {
         if (DeleteFile(pathnamew) != 0)
+        {
+            ptr_assign(error, ekFOK);
+            return TRUE;
+        }
+        else
+        {
+            i_file_error(error);
+            return FALSE;
+        }
+    }
+    else
+    {
+        ptr_assign(error, ekFBIGNAME);
+        return FALSE;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+
+bool_t bfile_rename(const char_t *current_pathname, const char_t *new_pathname, ferror_t *error)
+{
+    WCHAR current_pathnamew[MAX_PATH + 1];
+    WCHAR new_pathnamew[MAX_PATH + 1];
+    uint32_t num_bytes1 = unicode_convers(current_pathname, cast(current_pathnamew, char_t), ekUTF8, ekUTF16, sizeof(current_pathnamew));
+    uint32_t num_bytes2 = unicode_convers(new_pathname, cast(new_pathnamew, char_t), ekUTF8, ekUTF16, sizeof(new_pathnamew));
+    if (num_bytes1 < sizeof(current_pathnamew) && num_bytes2 < sizeof(new_pathnamew))
+    {
+        if (MoveFile(current_pathnamew, new_pathnamew) != 0)
         {
             ptr_assign(error, ekFOK);
             return TRUE;

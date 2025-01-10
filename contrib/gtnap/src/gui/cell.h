@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -79,9 +79,9 @@ __END_C
         CHECK_STRUCT_MEMBER_TYPE(type, mname, mtype), \
         cell_dbind_imp( \
             cell, \
-            (const char_t *)#type, \
+            cast_const(#type, char_t), \
             (uint16_t)sizeof(type), \
-            (const char_t *)#mname, \
-            (const char_t *)#mtype, \
+            cast_const(#mname, char_t), \
+            cast_const(#mtype, char_t), \
             (uint16_t)STRUCT_MEMBER_OFFSET(type, mname), \
             (uint16_t)STRUCT_MEMBER_SIZE(type, mname)))

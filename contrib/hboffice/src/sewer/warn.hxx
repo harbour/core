@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -23,7 +23,7 @@
 #pragma warning(default : 4668)
 #pragma warning(default : 4255)
 
-#if _MSC_VER > 1700
+#if _MSC_VER > 1800
 #pragma warning(default : 4458)
 #endif
 

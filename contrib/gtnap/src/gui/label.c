@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -104,7 +104,7 @@ static void i_OnClick(Label *label, Event *event)
     EvText *params = NULL;
     cassert_no_null(label);
     cassert_no_null(label->OnClick);
-    params = (EvText *)event_params(event, EvText);
+    params = event_params(event, EvText);
     cassert(params->text == NULL);
     params->text = tc(label->text);
     params->cpos = 0;

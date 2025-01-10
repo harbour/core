@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -14,6 +14,6 @@
 
 __EXTERN_C
 
-gui_scroll_t osscroll_wheel_event(const GdkEventScroll *event);
+gui_scroll_t _osscroll_wheel_event(const GdkEventScroll *event);
 
 __END_C

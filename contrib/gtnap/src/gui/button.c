@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -11,6 +11,7 @@
 /* Button */
 
 #include "button.h"
+#include "buttonh.h"
 #include "button.inl"
 #include "component.inl"
 #include "cell.inl"
@@ -32,6 +33,7 @@ struct _button_t
 {
     GuiComponent component;
     uint32_t flags;
+    real32_t min_width;
     S2Df size;
     Font *font;
     ResId textid;
@@ -129,7 +131,7 @@ static void i_OnClick(Button *button, Event *event)
             params->index = _cell_radio_index(ccell);
 
             if (cell != NULL)
-                _cell_upd_uint32(cell, params->index);
+                _cell_update_u32(cell, params->index);
 
             if (button->OnClick == NULL)
                 sender = _cell_radio_listener(ccell);
@@ -142,7 +144,7 @@ static void i_OnClick(Button *button, Event *event)
     {
         Cell *cell = _component_cell(&button->component);
         if (cell != NULL)
-            _cell_upd_bool(cell, params->state == ekGUI_OFF ? FALSE : TRUE);
+            _cell_update_bool(cell, params->state == ekGUI_OFF ? FALSE : TRUE);
         break;
     }
 
@@ -166,7 +168,7 @@ static void i_OnClick(Button *button, Event *event)
                 cassert_default();
             }
 
-            _cell_upd_uint32(cell, v);
+            _cell_update_u32(cell, v);
         }
         break;
     }
@@ -176,9 +178,9 @@ static void i_OnClick(Button *button, Event *event)
     {
         cassert(params->text == NULL);
         if (button_get_type(button->flags) == ekBUTTON_FLATGLE && params->state == ekGUI_ON && button->talt != NULL)
-            ((EvButton *)params)->text = tc(button->talt);
+            params->text = tc(button->talt);
         else
-            ((EvButton *)params)->text = tc(button->text);
+            params->text = tc(button->text);
 
         listener_pass_event(sender->OnClick, event, sender, Button);
     }
@@ -194,6 +196,7 @@ static Button *i_create(const uint32_t flags, const align_t halign)
     _component_init(&button->component, context, PARAM(type, ekGUI_TYPE_BUTTON), &ositem);
     button->flags = flags;
     button->text = str_c("");
+    button->min_width = 0;
 
     if (button_get_type(flags) != ekBUTTON_FLAT && button_get_type(flags) != ekBUTTON_FLATGLE)
     {
@@ -254,6 +257,14 @@ void button_OnClick(Button *button, Listener *listener)
 {
     cassert_no_null(button);
     listener_update(&button->OnClick, listener);
+}
+
+/*---------------------------------------------------------------------------*/
+
+void button_min_width(Button *button, const real32_t width)
+{
+    cassert_no_null(button);
+    button->min_width = width;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -410,8 +421,8 @@ real32_t button_get_height(const Button *button)
 {
     real32_t width, height;
     cassert_no_null(button);
-    _button_dimension((Button *)button, 0, &width, &height);
-    _button_dimension((Button *)button, 1, &width, &height);
+    _button_dimension(cast(button, Button), 0, &width, &height);
+    _button_dimension(cast(button, Button), 1, &width, &height);
     return height;
 }
 
@@ -434,6 +445,12 @@ void _button_dimension(Button *button, const uint32_t i, real32_t *dim0, real32_
             }
 
             button->component.context->func_button_bounds(button->component.ositem, tc(button->text), width, height, &button->size.width, &button->size.height);
+
+            if (button_get_type(button->flags) == ekBUTTON_PUSH)
+            {
+                if (button->size.width < button->min_width)
+                    button->size.width = button->min_width;
+            }
         }
         else
         {
