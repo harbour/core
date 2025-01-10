@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -62,7 +62,7 @@ extern "C"
 
 /*---------------------------------------------------------------------------*/
 
-template <typename real>
+template < typename real >
 static bool_t i_equals(const real value1, const real value2, const real tolerance)
 {
     real diff = value1 - value2;
@@ -77,7 +77,7 @@ static bool_t i_equals(const real value1, const real value2, const real toleranc
 
 /*---------------------------------------------------------------------------*/
 
-template <typename real>
+template < typename real >
 static bool_t i_less(const real value1, const real value2, const real tolerance)
 {
     cassert(tolerance >= (real)0. /*CMath<real>::k0*/);
@@ -89,7 +89,7 @@ static bool_t i_less(const real value1, const real value2, const real tolerance)
 
 /*---------------------------------------------------------------------------*/
 
-template <typename real>
+template < typename real >
 static bool_t i_less_eq(const real value1, const real value2, const real tolerance)
 {
     cassert(tolerance >= (real)0. /*CMath<real>::k0*/);
@@ -104,7 +104,7 @@ static bool_t i_less_eq(const real value1, const real value2, const real toleran
 
 /*---------------------------------------------------------------------------*/
 
-template <typename real>
+template < typename real >
 static bool_t i_great(const real value1, const real value2, const real tolerance)
 {
     cassert(tolerance >= (real)0. /*CMath<real>::k0*/);
@@ -310,8 +310,8 @@ real64_t bmath_log10d(const real64_t value)
 // uint32_t bmath_log2u32(const uint32_t value);
 // uint32_t bmath_log2u32(const uint32_t value)
 //{
-//     register uint32_t valuep = value;
-//     register uint32_t log2p = 0;
+//     uint32_t valuep = value;
+//     uint32_t log2p = 0;
 //     cassert(valuep > 0);
 //     while (valuep > 0)
 //     {
@@ -327,7 +327,7 @@ real64_t bmath_log10d(const real64_t value)
 // uint32_t bmath_next_power_of_two(const uint32_t value);
 // uint32_t bmath_next_power_of_two(const uint32_t value)
 //{
-//     register uint32_t v = value;
+//     uint32_t v = value;
 //     v--;
 //     v |= v >> 1;
 //     v |= v >> 2;
@@ -371,9 +371,9 @@ real64_t bmath_powd(const real64_t base, const real64_t exponent)
 // uint32_t bmath_powu32(const uint32_t base, const uint32_t exp);
 // uint32_t bmath_powu32(const uint32_t base, const uint32_t exp)
 //{
-//     register uint32_t res = 1;
-//     register uint32_t ibase = base;
-//     register uint32_t iexp = exp;
+//     uint32_t res = 1;
+//     uint32_t ibase = base;
+//     uint32_t iexp = exp;
 //     while (iexp)
 //     {
 //         if (iexp & 1)
@@ -389,7 +389,7 @@ real64_t bmath_powd(const real64_t base, const real64_t exponent)
 // uint32_t bmath_bincoeffu32(const uint32_t upper, const uint32_t lower);
 // uint32_t bmath_bincoeffu32(const uint32_t upper, const uint32_t lower)
 //{
-//     register uint32_t offset;
+//     uint32_t offset;
 //     cassert(upper < i_PASCAL_TRIANGLE_LEVELS);
 //     cassert(lower <= upper);
 //     offset = upper * upper + upper;
@@ -606,20 +606,24 @@ real64_t bmath_modfd(const real64_t num, real64_t *intpart)
 
 /*---------------------------------------------------------------------------*/
 
-template <typename real>
+template < typename real >
 uint32_t i_precision(const real value)
 {
+    static const real i_PREC_EPSION = 0.00000001;
     real e = 1, v = value, frac, intpart;
     uint32_t p = 0;
 
     if (v < 0)
         v = -v;
 
-    frac = BMath<real>::modf(v, &intpart);
+    frac = BMath< real >::modf(v, &intpart);
 
     for (;;)
     {
-        if (frac + .000001 > e)
+        if (frac < i_PREC_EPSION)
+            return p;
+
+        if (frac + i_PREC_EPSION > e)
             return p;
 
         e /= 10;
@@ -631,14 +635,14 @@ uint32_t i_precision(const real value)
 
 uint32_t bmath_precf(const real32_t value)
 {
-    return i_precision<real32_t>(value);
+    return i_precision< real32_t >(value);
 }
 
 /*---------------------------------------------------------------------------*/
 
 uint32_t bmath_precd(const real64_t value)
 {
-    return i_precision<real64_t>(value);
+    return i_precision< real64_t >(value);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -853,7 +857,7 @@ real64_t bmath_ceild(const real64_t value)
 uint32_t bmath_uint32_from_fractionf(const real32_t value, const uint32_t max_iters);
 uint32_t bmath_uint32_from_fractionf(const real32_t value, const uint32_t max_iters)
 {
-    register uint32_t i;
+    uint32_t i;
     real32_t current_value = value;
     cassert(value >= CMath<real32_t>::k0);
     for (i = 0; i < max_iters; ++i)
@@ -984,7 +988,7 @@ uint32_t bmath_uint32_from_fractionf(const real32_t value, const uint32_t max_it
 // void bmath_convers_realfd(real32_t *dest, const real64_t *src, const uint32_t num_elems);
 // void bmath_convers_realfd(real32_t *dest, const real64_t *src, const uint32_t num_elems)
 //{
-//     register uint32_t i;
+//     uint32_t i;
 //     cassert_no_null(dest);
 //     cassert_no_null(src);
 //     for (i = 0; i < num_elems; ++i, ++dest, ++src)
@@ -1037,7 +1041,7 @@ static REnv *i_GLOBAL_RENV = NULL;
 void _bmath_finish(void)
 {
     if (i_GLOBAL_RENV != NULL)
-        bmem_free((byte_t *)i_GLOBAL_RENV);
+        bmem_free(cast(i_GLOBAL_RENV, byte_t));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1082,8 +1086,8 @@ static uint32_t i_next_random(REnv *env)
     /* Generate N words at one time */
     if (env->mti >= N)
     {
-        register uint32_t kk;
-        register uint32_t *mt = env->mt;
+        uint32_t kk;
+        uint32_t *mt = env->mt;
 
         for (kk = 0; kk < N - M; kk++)
         {
@@ -1189,7 +1193,7 @@ REnv *bmath_rand_env(const uint32_t seed)
 void bmath_rand_destroy(REnv **env)
 {
     cassert_no_null(env);
-    bmem_free((byte_t *)*env);
+    bmem_free(*dcast(env, byte_t));
     *env = NULL;
 }
 
@@ -1222,194 +1226,194 @@ uint32_t bmath_rand_mti(REnv *env, const uint32_t from, const uint32_t to)
 const real32_t kBMATH_Ef = 2.7182818284590452353602874713526624977572470937000f;
 const real64_t kBMATH_Ed = 2.7182818284590452353602874713526624977572470937000;
 template <>
-const real32_t BMath<real32_t>::kE = 2.7182818284590452353602874713526624977572470937000f;
+const real32_t BMath< real32_t >::kE = 2.7182818284590452353602874713526624977572470937000f;
 template <>
-const real64_t BMath<real64_t>::kE = 2.7182818284590452353602874713526624977572470937000;
+const real64_t BMath< real64_t >::kE = 2.7182818284590452353602874713526624977572470937000;
 const real32_t kBMATH_LN2f = 0.69314718055994530941723212145817656807550013436026f;
 const real64_t kBMATH_LN2d = 0.69314718055994530941723212145817656807550013436026;
 template <>
-const real32_t BMath<real32_t>::kLN2 = 0.69314718055994530941723212145817656807550013436026f;
+const real32_t BMath< real32_t >::kLN2 = 0.69314718055994530941723212145817656807550013436026f;
 template <>
-const real64_t BMath<real64_t>::kLN2 = 0.69314718055994530941723212145817656807550013436026;
+const real64_t BMath< real64_t >::kLN2 = 0.69314718055994530941723212145817656807550013436026;
 const real32_t kBMATH_LN10f = 2.3025850929940456840179914546843642076011014886288f;
 const real64_t kBMATH_LN10d = 2.3025850929940456840179914546843642076011014886288;
 template <>
-const real32_t BMath<real32_t>::kLN10 = 2.3025850929940456840179914546843642076011014886288f;
+const real32_t BMath< real32_t >::kLN10 = 2.3025850929940456840179914546843642076011014886288f;
 template <>
-const real64_t BMath<real64_t>::kLN10 = 2.3025850929940456840179914546843642076011014886288;
+const real64_t BMath< real64_t >::kLN10 = 2.3025850929940456840179914546843642076011014886288;
 const real32_t kBMATH_PIf = 3.1415926535897932384626433832795028841971693993751f;
 const real64_t kBMATH_PId = 3.1415926535897932384626433832795028841971693993751;
 template <>
-const real32_t BMath<real32_t>::kPI = 3.1415926535897932384626433832795028841971693993751f;
+const real32_t BMath< real32_t >::kPI = 3.1415926535897932384626433832795028841971693993751f;
 template <>
-const real64_t BMath<real64_t>::kPI = 3.1415926535897932384626433832795028841971693993751;
+const real64_t BMath< real64_t >::kPI = 3.1415926535897932384626433832795028841971693993751;
 const real32_t kBMATH_SQRT2f = 1.4142135623730950488016887242096980785696718753769f;
 const real64_t kBMATH_SQRT2d = 1.4142135623730950488016887242096980785696718753769;
 template <>
-const real32_t BMath<real32_t>::kSQRT2 = 1.4142135623730950488016887242096980785696718753769f;
+const real32_t BMath< real32_t >::kSQRT2 = 1.4142135623730950488016887242096980785696718753769f;
 template <>
-const real64_t BMath<real64_t>::kSQRT2 = 1.4142135623730950488016887242096980785696718753769;
+const real64_t BMath< real64_t >::kSQRT2 = 1.4142135623730950488016887242096980785696718753769;
 const real32_t kBMATH_SQRT3f = 1.732050807568877293527446f;
 const real64_t kBMATH_SQRT3d = 1.732050807568877293527446;
 template <>
-const real32_t BMath<real32_t>::kSQRT3 = 1.732050807568877293527446f;
+const real32_t BMath< real32_t >::kSQRT3 = 1.732050807568877293527446f;
 template <>
-const real64_t BMath<real64_t>::kSQRT3 = 1.732050807568877293527446;
+const real64_t BMath< real64_t >::kSQRT3 = 1.732050807568877293527446;
 const real32_t kBMATH_DEG2RADf = 0.017453292519943f;
 const real64_t kBMATH_DEG2RADd = 0.017453292519943;
 template <>
-const real32_t BMath<real32_t>::kDEG2RAD = 0.017453292519943f;
+const real32_t BMath< real32_t >::kDEG2RAD = 0.017453292519943f;
 template <>
-const real64_t BMath<real64_t>::kDEG2RAD = 0.017453292519943;
+const real64_t BMath< real64_t >::kDEG2RAD = 0.017453292519943;
 const real32_t kBMATH_RAD2DEGf = 57.29577951308232f;
 const real64_t kBMATH_RAD2DEGd = 57.29577951308232;
 template <>
-const real32_t BMath<real32_t>::kRAD2DEG = 57.29577951308232f;
+const real32_t BMath< real32_t >::kRAD2DEG = 57.29577951308232f;
 template <>
-const real64_t BMath<real64_t>::kRAD2DEG = 57.29577951308232;
+const real64_t BMath< real64_t >::kRAD2DEG = 57.29577951308232;
 const real32_t kBMATH_INFINITYf = REAL32_MAX;
 const real64_t kBMATH_INFINITYd = REAL64_MAX;
 template <>
-const real32_t BMath<real32_t>::kINFINITY = REAL32_MAX;
+const real32_t BMath< real32_t >::kINFINITY = REAL32_MAX;
 template <>
-const real64_t BMath<real64_t>::kINFINITY = REAL64_MAX;
+const real64_t BMath< real64_t >::kINFINITY = REAL64_MAX;
 
 /*---------------------------------------------------------------------------*/
 
 template <>
-real32_t (*BMath<real32_t>::cos)(const real32_t) = bmath_cosf;
+real32_t (*BMath< real32_t >::cos)(const real32_t) = bmath_cosf;
 
 template <>
-real64_t (*BMath<real64_t>::cos)(const real64_t) = bmath_cosd;
+real64_t (*BMath< real64_t >::cos)(const real64_t) = bmath_cosd;
 
 template <>
-real32_t (*BMath<real32_t>::sin)(const real32_t) = bmath_sinf;
+real32_t (*BMath< real32_t >::sin)(const real32_t) = bmath_sinf;
 
 template <>
-real64_t (*BMath<real64_t>::sin)(const real64_t) = bmath_sind;
+real64_t (*BMath< real64_t >::sin)(const real64_t) = bmath_sind;
 
 template <>
-real32_t (*BMath<real32_t>::tan)(const real32_t) = bmath_tanf;
+real32_t (*BMath< real32_t >::tan)(const real32_t) = bmath_tanf;
 
 template <>
-real64_t (*BMath<real64_t>::tan)(const real64_t) = bmath_tand;
+real64_t (*BMath< real64_t >::tan)(const real64_t) = bmath_tand;
 
 template <>
-real32_t (*BMath<real32_t>::acos)(const real32_t) = bmath_acosf;
+real32_t (*BMath< real32_t >::acos)(const real32_t) = bmath_acosf;
 
 template <>
-real64_t (*BMath<real64_t>::acos)(const real64_t) = bmath_acosd;
+real64_t (*BMath< real64_t >::acos)(const real64_t) = bmath_acosd;
 
 template <>
-real32_t (*BMath<real32_t>::asin)(const real32_t) = bmath_asinf;
+real32_t (*BMath< real32_t >::asin)(const real32_t) = bmath_asinf;
 
 template <>
-real64_t (*BMath<real64_t>::asin)(const real64_t) = bmath_asind;
+real64_t (*BMath< real64_t >::asin)(const real64_t) = bmath_asind;
 
 template <>
-real32_t (*BMath<real32_t>::atan2)(const real32_t, const real32_t) = bmath_atan2f;
+real32_t (*BMath< real32_t >::atan2)(const real32_t, const real32_t) = bmath_atan2f;
 
 template <>
-real64_t (*BMath<real64_t>::atan2)(const real64_t, const real64_t) = bmath_atan2d;
+real64_t (*BMath< real64_t >::atan2)(const real64_t, const real64_t) = bmath_atan2d;
 
 template <>
-real32_t (*BMath<real32_t>::norm_angle)(const real32_t) = bmath_norm_anglef;
+real32_t (*BMath< real32_t >::norm_angle)(const real32_t) = bmath_norm_anglef;
 
 template <>
-real64_t (*BMath<real64_t>::norm_angle)(const real64_t) = bmath_norm_angled;
+real64_t (*BMath< real64_t >::norm_angle)(const real64_t) = bmath_norm_angled;
 
 template <>
-real32_t (*BMath<real32_t>::sqrt)(const real32_t) = bmath_sqrtf;
+real32_t (*BMath< real32_t >::sqrt)(const real32_t) = bmath_sqrtf;
 
 template <>
-real64_t (*BMath<real64_t>::sqrt)(const real64_t) = bmath_sqrtd;
+real64_t (*BMath< real64_t >::sqrt)(const real64_t) = bmath_sqrtd;
 
 template <>
-real32_t (*BMath<real32_t>::isqrt)(const real32_t) = bmath_isqrtf;
+real32_t (*BMath< real32_t >::isqrt)(const real32_t) = bmath_isqrtf;
 
 template <>
-real64_t (*BMath<real64_t>::isqrt)(const real64_t) = bmath_isqrtd;
+real64_t (*BMath< real64_t >::isqrt)(const real64_t) = bmath_isqrtd;
 
 template <>
-real32_t (*BMath<real32_t>::log)(const real32_t) = bmath_logf;
+real32_t (*BMath< real32_t >::log)(const real32_t) = bmath_logf;
 
 template <>
-real64_t (*BMath<real64_t>::log)(const real64_t) = bmath_logd;
+real64_t (*BMath< real64_t >::log)(const real64_t) = bmath_logd;
 
 template <>
-real32_t (*BMath<real32_t>::log10)(const real32_t) = bmath_log10f;
+real32_t (*BMath< real32_t >::log10)(const real32_t) = bmath_log10f;
 
 template <>
-real64_t (*BMath<real64_t>::log10)(const real64_t) = bmath_log10d;
+real64_t (*BMath< real64_t >::log10)(const real64_t) = bmath_log10d;
 
 template <>
-real32_t (*BMath<real32_t>::exp)(const real32_t) = bmath_expf;
+real32_t (*BMath< real32_t >::exp)(const real32_t) = bmath_expf;
 
 template <>
-real64_t (*BMath<real64_t>::exp)(const real64_t) = bmath_expd;
+real64_t (*BMath< real64_t >::exp)(const real64_t) = bmath_expd;
 
 template <>
-real32_t (*BMath<real32_t>::abs)(const real32_t) = bmath_absf;
+real32_t (*BMath< real32_t >::abs)(const real32_t) = bmath_absf;
 
 template <>
-real64_t (*BMath<real64_t>::abs)(const real64_t) = bmath_absd;
+real64_t (*BMath< real64_t >::abs)(const real64_t) = bmath_absd;
 
 template <>
-real32_t (*BMath<real32_t>::max)(const real32_t, const real32_t) = bmath_maxf;
+real32_t (*BMath< real32_t >::max)(const real32_t, const real32_t) = bmath_maxf;
 
 template <>
-real64_t (*BMath<real64_t>::max)(const real64_t, const real64_t) = bmath_maxd;
+real64_t (*BMath< real64_t >::max)(const real64_t, const real64_t) = bmath_maxd;
 
 template <>
-real32_t (*BMath<real32_t>::min)(const real32_t, const real32_t) = bmath_minf;
+real32_t (*BMath< real32_t >::min)(const real32_t, const real32_t) = bmath_minf;
 
 template <>
-real64_t (*BMath<real64_t>::min)(const real64_t, const real64_t) = bmath_mind;
+real64_t (*BMath< real64_t >::min)(const real64_t, const real64_t) = bmath_mind;
 
 template <>
-real32_t (*BMath<real32_t>::clamp)(const real32_t, const real32_t, const real32_t) = bmath_clampf;
+real32_t (*BMath< real32_t >::clamp)(const real32_t, const real32_t, const real32_t) = bmath_clampf;
 
 template <>
-real64_t (*BMath<real64_t>::clamp)(const real64_t, const real64_t, const real64_t) = bmath_clampd;
+real64_t (*BMath< real64_t >::clamp)(const real64_t, const real64_t, const real64_t) = bmath_clampd;
 
 template <>
-real32_t (*BMath<real32_t>::mod)(const real32_t, const real32_t) = bmath_modf;
+real32_t (*BMath< real32_t >::mod)(const real32_t, const real32_t) = bmath_modf;
 
 template <>
-real64_t (*BMath<real64_t>::mod)(const real64_t, const real64_t) = bmath_modd;
+real64_t (*BMath< real64_t >::mod)(const real64_t, const real64_t) = bmath_modd;
 
 template <>
-real32_t (*BMath<real32_t>::modf)(const real32_t, real32_t *) = bmath_modff;
+real32_t (*BMath< real32_t >::modf)(const real32_t, real32_t *) = bmath_modff;
 
 template <>
-real64_t (*BMath<real64_t>::modf)(const real64_t, real64_t *) = bmath_modfd;
+real64_t (*BMath< real64_t >::modf)(const real64_t, real64_t *) = bmath_modfd;
 
 template <>
-uint32_t (*BMath<real32_t>::prec)(const real32_t) = bmath_precf;
+uint32_t (*BMath< real32_t >::prec)(const real32_t) = bmath_precf;
 
 template <>
-uint32_t (*BMath<real64_t>::prec)(const real64_t) = bmath_precd;
+uint32_t (*BMath< real64_t >::prec)(const real64_t) = bmath_precd;
 
 template <>
-real32_t (*BMath<real32_t>::round)(const real32_t) = bmath_roundf;
+real32_t (*BMath< real32_t >::round)(const real32_t) = bmath_roundf;
 
 template <>
-real64_t (*BMath<real64_t>::round)(const real64_t) = bmath_roundd;
+real64_t (*BMath< real64_t >::round)(const real64_t) = bmath_roundd;
 
 template <>
-real32_t (*BMath<real32_t>::round_step)(const real32_t, const real32_t) = bmath_round_stepf;
+real32_t (*BMath< real32_t >::round_step)(const real32_t, const real32_t) = bmath_round_stepf;
 
 template <>
-real64_t (*BMath<real64_t>::round_step)(const real64_t, const real64_t) = bmath_round_stepd;
+real64_t (*BMath< real64_t >::round_step)(const real64_t, const real64_t) = bmath_round_stepd;
 
 template <>
-real32_t (*BMath<real32_t>::floor)(const real32_t) = bmath_floorf;
+real32_t (*BMath< real32_t >::floor)(const real32_t) = bmath_floorf;
 
 template <>
-real64_t (*BMath<real64_t>::floor)(const real64_t) = bmath_floord;
+real64_t (*BMath< real64_t >::floor)(const real64_t) = bmath_floord;
 
 template <>
-real32_t (*BMath<real32_t>::ceil)(const real32_t) = bmath_ceilf;
+real32_t (*BMath< real32_t >::ceil)(const real32_t) = bmath_ceilf;
 
 template <>
-real64_t (*BMath<real64_t>::ceil)(const real64_t) = bmath_ceild;
+real64_t (*BMath< real64_t >::ceil)(const real64_t) = bmath_ceild;

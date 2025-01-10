@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -127,7 +127,7 @@ static void i_new_page(const uint32_t page_size, i_Page **current_page, uint32_t
     i_Page *new_page = NULL;
     cassert_no_null(current_page);
     cassert_no_null(num_pages);
-    new_page = (i_Page *)bmem_malloc(page_size);
+    new_page = cast(bmem_malloc(page_size), i_Page);
     *num_pages += 1;
     i_init_page(new_page);
     new_page->next = NULL;
@@ -155,7 +155,7 @@ static void i_init_memory(i_Memory *memory, const uint32_t page_size)
 
 #if defined(__MEMORY_AUDITOR__)
     memory->objects_alloc = OBJECTS_ARRAY_GROW_SIZE;
-    memory->objects = (i_Object *)bmem_malloc((uint32_t)(memory->objects_alloc * sizeof(i_Object)));
+    memory->objects = cast(bmem_malloc((uint32_t)(memory->objects_alloc * sizeof(i_Object))), i_Object);
     memory->num_objects = 0;
 #endif
 }
@@ -168,12 +168,12 @@ static void i_remove_memory(i_Memory *memory)
     cassert(bthread_current_id() == memory->main_thread_id);
     cassert(memory->mtcount == 0);
 
-    bmem_free((byte_t *)memory->current_page);
+    bmem_free(cast(memory->current_page, byte_t));
     memory->current_page = NULL;
     bmutex_close(&memory->mutex);
 
 #if defined(__MEMORY_AUDITOR__)
-    bmem_free((byte_t *)memory->objects);
+    bmem_free(cast(memory->objects, byte_t));
     memory->objects = NULL;
     memory->num_objects = 0;
     memory->objects_alloc = 0;
@@ -192,8 +192,8 @@ static byte_t *i_malloc(i_Memory *memory, const uint32_t size, const uint32_t al
     /* Block can be stored by paged allocator */
     if (__TRUE_EXPECTED(size + align + sizeof(i_Page) + sizeofptr < memory->page_size))
     {
-        register uint32_t mod = memory->current_page->offset % align;
-        register uint32_t offset = memory->current_page->offset;
+        uint32_t mod = memory->current_page->offset % align;
+        uint32_t offset = memory->current_page->offset;
 
         if (mod > 0)
             offset += align - mod;
@@ -209,8 +209,8 @@ static byte_t *i_malloc(i_Memory *memory, const uint32_t size, const uint32_t al
         memory->current_page->num_allocs += 1;
         memory->current_page->used_memory += size;
         memory->current_page->offset = offset + size + (uint32_t)sizeofptr;
-        mem = (byte_t *)memory->current_page + offset;
-        *((void **)(mem + size)) = (void *)memory->current_page;
+        mem = cast(memory->current_page, byte_t) + offset;
+        *dcast(mem + size, void) = cast(memory->current_page, void);
     }
     /* Block needs its own allocation */
     else
@@ -237,7 +237,7 @@ static void i_free(i_Memory *memory, byte_t *mem, const uint32_t size, const uin
     /* Block was stored by paged allocator */
     if (__TRUE_EXPECTED(size + align + sizeof(i_Page) + sizeofptr < memory->page_size))
     {
-        i_Page *page = (i_Page *)*((void **)(mem + size));
+        i_Page *page = cast(*dcast(mem + size, void), i_Page);
         cassert_no_null(page);
         cassert(page->mark == 0xA16F9B0C);
         cassert(page->num_allocs > 0);
@@ -258,7 +258,7 @@ static void i_free(i_Memory *memory, byte_t *mem, const uint32_t size, const uin
                 if (page->prev != NULL)
                     page->prev->next = page->next;
 
-                bmem_free((byte_t *)page);
+                bmem_free(cast(page, byte_t));
                 memory->std_pages_dealloc += 1;
             }
             /* Page for free is current page, we can reuse it. */
@@ -288,7 +288,7 @@ static byte_t *i_realloc(i_Memory *memory, byte_t *prev_mem, const uint32_t size
     /* Some of new/previous block can be/is stored in paged allocator */
     if (__TRUE_EXPECTED((prev_size + align + sizeof(i_Page) + sizeofptr < memory->page_size) || (size + align + sizeof(i_Page) + sizeofptr < memory->page_size)))
     {
-        register uint32_t min_size;
+        uint32_t min_size;
         mem = i_malloc(memory, size, align);
         min_size = prev_size < size ? prev_size : size;
         bmem_copy(mem, prev_mem, min_size);
@@ -320,7 +320,7 @@ void _heap_finish(void)
 #if defined(__MEMORY_AUDITOR__)
     {
         bool_t with_object_leaks = FALSE;
-        register uint32_t i;
+        uint32_t i;
         for (i = 0; i < i_MEMORY.num_objects; ++i)
         {
             if (i_MEMORY.objects[i].num_allocs != i_MEMORY.objects[i].num_deallocs)
@@ -366,8 +366,8 @@ void _heap_finish(void)
     {
         if (i_HEAP_STATS == TRUE)
         {
-            log_printf("[OK] Heap Memory Staticstics");
-            log_printf("============================");
+            log_printf("[OK] Heap Memory Statistics");
+            log_printf("===========================");
             log_printf("Total a/dellocations: %" PRIu64 ", %" PRIu64, i_MEMORY.num_allocs, i_MEMORY.num_deallocs);
             log_printf("Total bytes a/dellocated: %" PRIu64 ", %" PRIu64, i_MEMORY.total_bytes_allocated, i_MEMORY.total_bytes_deallocated);
             log_printf("Max bytes allocated: %" PRIu64, i_MEMORY.max_bytes_allocated);
@@ -380,7 +380,7 @@ void _heap_finish(void)
 #if defined(__MEMORY_AUDITOR__)
             if (i_HEAP_VERBOSE == TRUE)
             {
-                register uint32_t i;
+                uint32_t i;
                 for (i = 0; i < i_MEMORY.num_objects; ++i)
                     log_printf("'%s' a/deallocations: %u, %u (%" PRIu64 ") bytes", i_MEMORY.objects[i].name, i_MEMORY.objects[i].num_allocs, i_MEMORY.objects[i].num_deallocs, i_MEMORY.objects[i].bytes_alloc);
             }
@@ -409,7 +409,7 @@ void _heap_finish(void)
 
 static uint32_t i_next_pow2(const uint32_t value)
 {
-    register uint32_t v = value;
+    uint32_t v = value;
     v--;
     v |= v >> 1;
     v |= v >> 2;
@@ -437,7 +437,7 @@ void _heap_page_size(const uint32_t size)
 /*
 static void i_dump_objects(void)
 {
-   register uint32_t i;
+   uint32_t i;
    log_printf("Num objects: %d", i_MEMORY.num_objects);
    for (i = 0; i < i_MEMORY.num_objects; ++i)
        log_printf("%s %d %d", i_MEMORY.objects[i].name, i_MEMORY.objects[i].num_allocs, i_MEMORY.objects[i].num_deallocs);
@@ -456,7 +456,7 @@ static int i_object_key(const i_Object *object, const char_t *name)
 static i_Object *i_get_object(const char_t *name, const bool_t equal_sized, const uint32_t size)
 {
     uint32_t index = UINT32_MAX;
-    if (blib_bsearch((const byte_t *)i_MEMORY.objects, (const byte_t *)name, i_MEMORY.num_objects, sizeof(i_Object), (FPtr_compare)i_object_key, &index) == TRUE)
+    if (blib_bsearch(cast_const(i_MEMORY.objects, byte_t), cast_const(name, byte_t), i_MEMORY.num_objects, sizeof(i_Object), (FPtr_compare)i_object_key, &index) == TRUE)
     {
         i_Object *object = i_MEMORY.objects + index;
         cassert_msg(object->equal_sized == equal_sized, "heap auditor: Not 'equal_sized' property with same 'name'.");
@@ -468,15 +468,15 @@ static i_Object *i_get_object(const char_t *name, const bool_t equal_sized, cons
         i_Object *new_object = NULL;
         if (i_MEMORY.num_objects == i_MEMORY.objects_alloc)
         {
-            i_MEMORY.objects = (i_Object *)bmem_realloc((byte_t *)i_MEMORY.objects, i_MEMORY.objects_alloc * (uint32_t)sizeof(i_Object), (i_MEMORY.objects_alloc + OBJECTS_ARRAY_GROW_SIZE) * (uint32_t)sizeof(i_Object));
+            i_MEMORY.objects = cast(bmem_realloc(cast(i_MEMORY.objects, byte_t), i_MEMORY.objects_alloc * (uint32_t)sizeof(i_Object), (i_MEMORY.objects_alloc + OBJECTS_ARRAY_GROW_SIZE) * (uint32_t)sizeof(i_Object)), i_Object);
             i_MEMORY.objects_alloc += OBJECTS_ARRAY_GROW_SIZE;
         }
 
         /* Move all elems from index 1 postion right (keep the array sorted) */
         if ((i_MEMORY.num_objects - index) > 0)
         {
-            bmem_move((byte_t *)(i_MEMORY.objects + index + 1),
-                      (const byte_t *)(i_MEMORY.objects + index),
+            bmem_move(cast(i_MEMORY.objects + index + 1, byte_t),
+                      cast_const(i_MEMORY.objects + index, byte_t),
                       (i_MEMORY.num_objects - index) * (uint32_t)sizeof(i_Object));
         }
 
@@ -495,7 +495,7 @@ static i_Object *i_get_object(const char_t *name, const bool_t equal_sized, cons
 static i_Object *i_get_existing_object(const char_t *name)
 {
     uint32_t index = UINT32_MAX;
-    if (blib_bsearch((const byte_t *)i_MEMORY.objects, (const byte_t *)name, i_MEMORY.num_objects, sizeof(i_Object), (FPtr_compare)i_object_key, &index) == TRUE)
+    if (blib_bsearch(cast_const(i_MEMORY.objects, byte_t), cast_const(name, byte_t), i_MEMORY.num_objects, sizeof(i_Object), (FPtr_compare)i_object_key, &index) == TRUE)
     {
         return i_MEMORY.objects + index;
     }

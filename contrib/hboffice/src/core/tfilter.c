@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -26,7 +26,7 @@ typedef enum _state_t
 
 /*---------------------------------------------------------------------------*/
 
-void tfilter_number(const char_t *src, char_t *dest, const uint32_t size, const uint32_t num_decimals, const bool_t allow_negatives)
+void _tfilter_number(const char_t *src, char_t *dest, const uint32_t size, const uint32_t num_decimals, const bool_t allow_negatives)
 {
     uint32_t csize, i = 0;
     uint32_t codepoint = unicode_to_u32b(src, ekUTF8, &csize);

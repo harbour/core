@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,30 +10,32 @@
 
 /* Basic memory system */
 
-#include "bmem.h"
-#include "bmem.inl"
-#include "cassert.h"
+#include "../bmem.h"
+#include "../bmem.inl"
+#include "../cassert.h"
 
 #if !defined(__WINDOWS__)
 #error This file is for Windows
 #endif
 
-#include "nowarn.hxx"
+#include "../nowarn.hxx"
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
 
 #if defined(__MEMORY_AUDITOR__)
-#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 
 /* <crtdbg.h> is a Microsoft Visual C++ specific header */
 #if defined(_MSC_VER) && _MSC_VER > 1400
+#if !defined(NAPPGUI_NO_CRTDBG)
 #define _WITH_CRTDBG 1
 #include <crtdbg.h>
 #endif
 #endif
-#include "nowarn.hxx"
+#endif
+
+#include "../nowarn.hxx"
 
 #if defined(__MEMORY_SUBSYTEM_CHECKING__)
 
@@ -45,7 +47,7 @@ static uint32_t i_INDEX = 0;
 
 static void i_mem_append(void *ptr)
 {
-    register uint32_t i;
+    uint32_t i;
 
     for (i = 0; i < i_INDEX; ++i)
     {
@@ -65,7 +67,7 @@ static void i_mem_append(void *ptr)
 
 static void i_mem_remove(void *ptr)
 {
-    register uint32_t i;
+    uint32_t i;
 
     for (i = 0; i < i_INDEX; ++i)
     {
@@ -83,7 +85,7 @@ static void i_mem_remove(void *ptr)
 
 static bool_t i_mem_is_empty(void)
 {
-    register uint32_t i;
+    uint32_t i;
 
     for (i = 0; i < i_INDEX; ++i)
     {
@@ -104,7 +106,7 @@ static HANDLE i_HEAP = NULL;
 
 void _bmem_start(void)
 {
-    cassert(i_HEAP == NULL);
+    cassert_unref(i_HEAP == NULL, i_HEAP);
 #if defined(__MEMORY_AUDITOR__)
 #else
 /*i_HEAP = HeapCreate(0, 0, 0);*/
@@ -155,14 +157,14 @@ byte_t *bmem_aligned_malloc(const uint32_t size, const uint32_t align)
     i_mem_append(mem);
 #endif
     cassert((mem != NULL) && ((intptr_t)mem % align) == 0);
-    return (byte_t *)mem;
+    return cast(mem, byte_t);
 }
 
 /*---------------------------------------------------------------------------*/
 
 byte_t *bmem_aligned_realloc(byte_t *mem, const uint32_t size, const uint32_t new_size, const uint32_t align)
 {
-    void *new_mem;
+    void *new_mem = NULL;
 
     unref(size);
 
@@ -186,7 +188,7 @@ byte_t *bmem_aligned_realloc(byte_t *mem, const uint32_t size, const uint32_t ne
     i_mem_append(new_mem);
 #endif
     cassert((mem != NULL) && ((intptr_t)mem % align) == 0);
-    return (byte_t *)new_mem;
+    return cast(new_mem, byte_t);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -215,7 +217,7 @@ void bmem_set1(byte_t *dest, const uint32_t size, const byte_t mask)
 {
     cassert_no_null(dest);
     cassert(size > 0);
-    memset((void *)dest, (int)mask, (size_t)size);
+    memset(cast(dest, void), (int)mask, (size_t)size);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -224,5 +226,5 @@ void bmem_set_zero(byte_t *mem, const uint32_t size)
 {
     cassert_no_null(mem);
     cassert(size > 0);
-    ZeroMemory((void *)mem, (size_t)size);
+    ZeroMemory(cast(mem, void), (size_t)size);
 }

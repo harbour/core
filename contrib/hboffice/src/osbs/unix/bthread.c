@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -10,8 +10,8 @@
 
 /* Basic threading services */
 
-#include "bthread.h"
-#include "osbs.inl"
+#include "../bthread.h"
+#include "../osbs.inl"
 #include <sewer/cassert.h>
 
 #if !defined(__UNIX__)
@@ -33,28 +33,28 @@ int pthread_tryjoin_np(pthread_t thread, void **retval);
 
 Thread *bthread_create_imp(uint32_t(func_thread_main)(void *), void *data)
 {
-    pthread_t *thread = (pthread_t *)malloc(sizeof(pthread_t));
+    pthread_t *thread = cast(malloc(sizeof(pthread_t)), pthread_t);
 #if defined(__GNUC__)
-#if (__GNUC__ > 4)
+#if (__GNUC__ > 5)
 #pragma GCC diagnostic ignored "-Wcast-function-type"
 #endif
 #endif
-    int ret = pthread_create(thread, NULL, cast_func_ptr(func_thread_main, void *(*)(void *)), data);
+    int ret = pthread_create(thread, NULL, cast_func(func_thread_main, void *(*)(void *)), data);
 #if defined(__GNUC__)
-#if (__GNUC__ > 4)
+#if (__GNUC__ > 5)
 #pragma GCC diagnostic warning "-Wcast-function-type"
 #endif
 #endif
 
     if (ret != 0)
     {
-        free((void *)thread);
+        free(cast(thread, void));
         return NULL;
     }
     else
     {
         _osbs_thread_alloc();
-        return (Thread *)thread;
+        return cast(thread, Thread);
     }
 }
 
@@ -80,10 +80,10 @@ int bthread_current_id(void)
 
 void bthread_close(Thread **thread)
 {
-    void *mem;
+    void *mem = NULL;
     cassert_no_null(thread);
     cassert_no_null(*thread);
-    mem = *(void **)thread;
+    mem = *dcast(thread, void);
     free(mem);
     _osbs_thread_dealloc();
     *thread = NULL;
@@ -95,7 +95,7 @@ bool_t bthread_cancel(Thread *thread)
 {
     int result = 0;
     cassert_no_null(thread);
-    result = pthread_cancel(*(pthread_t *)thread);
+    result = pthread_cancel(*cast(thread, pthread_t));
     return result == 0 ? TRUE : FALSE;
 }
 
@@ -106,7 +106,7 @@ uint32_t bthread_wait(Thread *thread)
     void *value = NULL;
     int result = 0;
     cassert_no_null(thread);
-    result = pthread_join(*((pthread_t *)thread), &value);
+    result = pthread_join(*cast(thread, pthread_t), &value);
     if (result == 0)
         return (uint32_t)(intptr_t)value;
     else
@@ -121,7 +121,7 @@ bool_t bthread_finish(Thread *thread, uint32_t *code)
     void *value = NULL;
     int result = 0;
     cassert_no_null(thread);
-    result = pthread_tryjoin_np(*(pthread_t *)thread, &value);
+    result = pthread_tryjoin_np(*cast(thread, pthread_t), &value);
     if (result == 0)
     {
         if (code != NULL)

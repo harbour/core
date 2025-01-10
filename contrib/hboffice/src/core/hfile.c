@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -69,7 +69,7 @@ bool_t hfile_dir_create(const char_t *pathname, ferror_t *error)
             if (pathname[i] == '\\' || pathname[i] == '/')
             {
                 sep[dirs] = pathname[i];
-                ((char_t *)pathname)[i] = '\0';
+                cast(pathname, char_t)[i] = '\0';
                 dirs += 1;
                 if (hfile_dir(pathname) == TRUE)
                     break;
@@ -84,7 +84,7 @@ bool_t hfile_dir_create(const char_t *pathname, ferror_t *error)
             {
                 cassert(dirs > 0);
                 dirs -= 1;
-                ((char_t *)pathname)[i] = sep[dirs];
+                cast(pathname, char_t)[i] = sep[dirs];
                 if (err == ekFOK)
                     bfile_dir_create(pathname, &err);
             }
@@ -123,7 +123,6 @@ static void i_OnDeleteFile(void *empty, Event *e)
 
 bool_t hfile_dir_destroy(const char_t *pathname, ferror_t *error)
 {
-
     bool_t ok = hfile_dir_loop(pathname, listener(NULL, i_OnDeleteFile, void), TRUE, TRUE, error);
     if (ok == TRUE)
         ok = bfile_dir_delete(pathname, error);
@@ -220,7 +219,7 @@ Date hfile_date(const char_t *pathname, const bool_t recursive)
 
 static bool_t i_except(const char_t *name, const char_t **except, const uint32_t except_size)
 {
-    register uint32_t i;
+    uint32_t i;
     if (except == NULL)
         return FALSE;
 
@@ -237,8 +236,8 @@ static bool_t i_except(const char_t *name, const char_t **except, const uint32_t
 
 bool_t hfile_dir_sync(const char_t *src, const char_t *dest, const bool_t recursive, const bool_t remove_in_dest, const char_t **except, const uint32_t except_size, ferror_t *error)
 {
-    ArrSt(DirEntry) *dir1, *dir2;
-    const DirEntry *files1, *files2;
+    ArrSt(DirEntry) *dir1 = NULL, *dir2 = NULL;
+    const DirEntry *files1 = NULL, *files2 = NULL;
     uint32_t n1, n2, i1 = 0, i2 = 0;
     bool_t ok = TRUE;
     if (!hfile_dir(src))
@@ -546,9 +545,9 @@ String *hfile_string(const char_t *pathname, ferror_t *error)
         if (file_size < 0xFFFFFFFF)
         {
             String *str = str_reserve((uint32_t)file_size);
-            if (i_read_entire_file(pathname, (byte_t *)tc(str), (uint32_t)file_size, error) == TRUE)
+            if (i_read_entire_file(pathname, cast(tc(str), byte_t), (uint32_t)file_size, error) == TRUE)
             {
-                ((char_t *)tc(str))[(uint32_t)file_size] = '\0';
+                tcc(str)[(uint32_t)file_size] = '\0';
                 return str;
             }
             else
@@ -606,7 +605,7 @@ bool_t hfile_from_string(const char_t *pathname, const String *str, ferror_t *er
     {
         const char_t *data = tc(str);
         uint32_t size = str_len(str);
-        bool_t ok = bfile_write(file, (const byte_t *)data, size, NULL, error);
+        bool_t ok = bfile_write(file, cast_const(data, byte_t), size, NULL, error);
         bfile_close(&file);
         return ok;
     }
@@ -778,4 +777,13 @@ String *hfile_home_dir(const char_t *path)
     char_t homedir[512];
     bfile_dir_home(homedir, 512);
     return str_cpath("%s/%s", homedir, path);
+}
+
+/*---------------------------------------------------------------------------*/
+
+String *hfile_tmp_path(const char_t *path)
+{
+    char_t tmpdir[512];
+    bfile_dir_tmp(tmpdir, 512);
+    return str_cpath("%s/%s", tmpdir, path);
 }

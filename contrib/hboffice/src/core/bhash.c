@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -20,7 +20,7 @@
 
 static uint32_t i_incremental_hash(const byte_t *data, const uint32_t size, const uint32_t init_hash)
 {
-    register uint32_t hash;
+    uint32_t hash;
 
     cassert_no_null(data);
     cassert(size > 0);
@@ -28,7 +28,7 @@ static uint32_t i_incremental_hash(const byte_t *data, const uint32_t size, cons
     hash = init_hash;
 
     {
-        register uint32_t i;
+        uint32_t i;
         for (i = (size >> 2); i > 0; --i)
         {
             uint32_t tmp;
@@ -41,7 +41,7 @@ static uint32_t i_incremental_hash(const byte_t *data, const uint32_t size, cons
     }
 
     {
-        register uint32_t rem;
+        uint32_t rem;
         rem = size & 3;
         switch (rem)
         {
@@ -87,12 +87,12 @@ uint32_t bhash_from_block(const byte_t *data, const uint32_t size)
 
 uint32_t bhash_append_uint32(const uint32_t hash, const uint32_t value)
 {
-    return i_incremental_hash((const byte_t *)&value, sizeof(uint32_t), hash);
+    return i_incremental_hash(cast_const(&value, byte_t), sizeof(uint32_t), hash);
 }
 
 /*---------------------------------------------------------------------------*/
 
 uint32_t bhash_append_real32(const uint32_t hash, const real32_t value)
 {
-    return i_incremental_hash((const byte_t *)&value, sizeof(real32_t), hash);
+    return i_incremental_hash(cast_const(&value, byte_t), sizeof(real32_t), hash);
 }

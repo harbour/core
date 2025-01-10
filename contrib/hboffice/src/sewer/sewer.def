@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -9,6 +9,8 @@
  */
 
 /* Sewer library import/export */
+
+/* clang-format off */
 
 #if defined(NAPPGUI_SHARED)
     #if defined(NAPPGUI_BUILD_SEWER_LIB)
@@ -35,3 +37,5 @@
 #else
     #error Unknown compiler
 #endif
+
+/* clang-format off */

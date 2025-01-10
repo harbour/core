@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -40,10 +40,9 @@ static void i_atexit(void)
     ExitNode *node = i_ATEXIT;
     while (node != NULL)
     {
-        ExitNode *next;
-        next = node->next_node;
+        ExitNode *next = node->next_node;
         node->func_exit();
-        bmem_free((byte_t *)node);
+        bmem_free(cast(node, byte_t));
         node = next;
     }
 
@@ -65,7 +64,7 @@ void sewer_start(void)
     {
         _bmem_start();
         cassert(i_ATEXIT == NULL);
-        i_ATEXIT = (ExitNode *)bmem_malloc(sizeof(ExitNode));
+        i_ATEXIT = cast(bmem_malloc(sizeof(ExitNode)), ExitNode);
         i_ATEXIT->func_exit = i_sewer_atexit;
         i_ATEXIT->next_node = NULL;
         atexit(i_atexit);

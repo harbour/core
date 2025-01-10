@@ -1,6 +1,6 @@
 /*
  * NAppGUI Cross-platform C SDK
- * 2015-2024 Francisco Garcia Collado
+ * 2015-2025 Francisco Garcia Collado
  * MIT Licence
  * https://nappgui.com/en/legal/license.html
  *
@@ -9,10 +9,11 @@
  *
  */
 
-/* Sets of structures */
+/* Sets */
 
-#define setst_create(func_compare, type) \
-    setst_##type##_create(func_compare, (uint16_t)sizeof(type))
+#define setst_create(func_compare, type, ktype) \
+    (FUNC_CHECK_COMPARE_KEY(func_compare, type, ktype), \
+     setst_##type##_create((FPtr_compare)func_compare, (uint16_t)sizeof(type), cast_const(#ktype, char_t)))
 
 #define setst_destroy(set, func_remove, type) \
     setst_##type##_destroy(set, func_remove)
@@ -20,17 +21,21 @@
 #define setst_size(set, type) \
     setst_##type##_size(set)
 
-#define setst_get(set, key, type) \
-    setst_##type##_get(set, key)
+#define setst_get(set, key, type, ktype) \
+    ((void)((key) == cast_const(key, ktype)), \
+     setst_##type##_get(set, cast_const(key, void), cast_const(#ktype, char_t)))
 
-#define setst_get_const(set, key, type) \
-    setst_##type##_get_const(set, key)
+#define setst_get_const(set, key, type, ktype) \
+    ((void)((key) == cast_const(key, ktype)), \
+     setst_##type##_get_const(set, cast_const(key, void), cast_const(#ktype, char_t)))
 
-#define setst_insert(set, key, type) \
-    setst_##type##_insert(set, key)
+#define setst_insert(set, key, type, ktype) \
+    ((void)((key) == cast_const(key, ktype)), \
+     setst_##type##_insert(set, cast_const(key, void), cast_const(#ktype, char_t)))
 
-#define setst_delete(set, key, func_remove, type) \
-    setst_##type##_delete(set, key, func_remove)
+#define setst_delete(set, key, func_remove, type, ktype) \
+    ((void)((key) == cast_const(key, ktype)), \
+     setst_##type##_delete(set, cast_const(key, void), func_remove, cast_const(#ktype, char_t)))
 
 #define setst_first(set, type) \
     setst_##type##_first(set)
@@ -58,15 +63,15 @@
 
 #define setst_foreach(elem, set, type) \
     { \
-        register type *elem = setst_first(set, type); \
-        register uint32_t elem##_i = 0, elem##_total = setst_size(set, type); \
+        type *elem = setst_first(set, type); \
+        uint32_t elem##_i = 0, elem##_total = setst_size(set, type); \
         while (elem != NULL) \
         {
 
 #define setst_foreach_const(elem, set, type) \
     { \
-        register const type *elem = setst_first_const(set, type); \
-        register uint32_t elem##_i = 0, elem##_total = setst_size(set, type); \
+        const type *elem = setst_first_const(set, type); \
+        uint32_t elem##_i = 0, elem##_total = setst_size(set, type); \
         while (elem != NULL) \
         {
 
@@ -86,15 +91,15 @@
 
 #define setst_forback(elem, set, type) \
     { \
-        register type *elem = setst_last(set, type); \
-        register uint32_t elem##_total = setst_size(set, type), elem##_i = elem##_total - 1; \
+        type *elem = setst_last(set, type); \
+        uint32_t elem##_total = setst_size(set, type), elem##_i = elem##_total - 1; \
         while (elem != NULL) \
         {
 
 #define setst_forback_const(elem, set, type) \
     { \
-        register type *elem = setst_last_const(set, type); \
-        register uint32_t elem##_total = setst_size(set, type), elem##_i = elem##_total - 1; \
+        type *elem = setst_last_const(set, type); \
+        uint32_t elem##_total = setst_size(set, type), elem##_i = elem##_total - 1; \
         while (elem != NULL) \
         {
 
