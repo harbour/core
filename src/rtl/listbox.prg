@@ -412,7 +412,10 @@ METHOD hitTest( nMRow, nMCol ) CLASS ListBox
       nTop++
    ENDIF
 
-   IF ::lIsOpen .AND. .NOT. Empty( ::cHotBox + ::cColdBox )
+   /* NOTE: Harbour extension over Cl*pper abilities, CLP5.3
+            with mouse support will crash, RTE "Argument Error: +"
+            when a borderless listbox/dropdown is mouse-clicked */
+   IF ::lIsOpen .AND. ! Empty( ::cHotBox + ::cColdBox )
 
       nOffset := 1
       DO CASE
