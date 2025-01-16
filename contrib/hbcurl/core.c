@@ -118,6 +118,9 @@ typedef struct _HB_CURL
    size_t          dl_len;
    size_t          dl_pos;
 
+   unsigned char * er_ptr;
+   size_t          er_len;
+
    PHB_ITEM pProgressCallback;
    PHB_ITEM pDebugCallback;
 
@@ -446,6 +449,7 @@ static size_t hb_curl_write_fhandle_callback( void * buffer, size_t size, size_t
 
 #define HB_CURL_DL_BUFF_SIZE_INIT  ( CURL_MAX_WRITE_SIZE * 4 )
 #define HB_CURL_DL_BUFF_SIZE_INCR  ( CURL_MAX_WRITE_SIZE * 4 )
+#define HB_CURL_ER_BUFF_SIZE_INIT  ( CURL_ERROR_SIZE )
 
 static size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
@@ -589,6 +593,16 @@ static void hb_curl_buff_ul_free( PHB_CURL hb_curl )
    }
 }
 
+static void hb_curl_buff_er_free( PHB_CURL hb_curl )
+{
+   if( hb_curl && hb_curl->er_ptr )
+   {
+      hb_xfree( hb_curl->er_ptr );
+      hb_curl->er_ptr = NULL;
+      hb_curl->er_len = 0;
+   }
+}
+
 static void hb_curl_buff_dl_free( PHB_CURL hb_curl )
 {
    if( hb_curl && hb_curl->dl_ptr )
@@ -655,6 +669,7 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
 
    hb_curl_buff_ul_free( hb_curl );
    hb_curl_buff_dl_free( hb_curl );
+   hb_curl_buff_er_free( hb_curl );   
 
    if( hb_curl->pProgressCallback )
    {
@@ -960,8 +975,12 @@ HB_FUNC( CURL_EASY_SETOPT )
             /* HB_CURLOPT_CONV_FROM_UTF8_FUNCTION */
 
             /* Error */
-
-            /* HB_CURLOPT_ERRORBUFFER */
+            case HB_CURLOPT_ER_BUFF_SETUP:
+               hb_curl_buff_er_free( hb_curl );
+               hb_curl->er_len = hb_parnldef( 3, HB_CURL_ER_BUFF_SIZE_INIT );
+               hb_curl->er_ptr = ( unsigned char * ) hb_xgrab( hb_curl->er_len );
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_ERRORBUFFER, hb_curl->er_ptr );
+               break;
             /* HB_CURLOPT_STDERR */
 
             case HB_CURLOPT_FAILONERROR:
@@ -2023,6 +2042,21 @@ HB_FUNC( CURL_EASY_DL_BUFF_GET )
 
       if( hb_curl )
          hb_retclen( ( char * ) hb_curl->dl_ptr, hb_curl->dl_pos );
+      else
+         hb_retc_null();
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( CURL_EASY_ER_BUFF_GET )
+{
+   if( PHB_CURL_is( 1 ) )
+   {
+      PHB_CURL hb_curl = PHB_CURL_par( 1 );
+
+      if( hb_curl )
+         hb_retc( ( char * ) hb_curl->er_ptr );
       else
          hb_retc_null();
    }

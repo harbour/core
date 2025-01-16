@@ -273,6 +273,7 @@
 #define HB_CURLOPT_UL_FHANDLE_SETUP           1011
 #define HB_CURLOPT_DL_FHANDLE_SETUP           1012
 #define HB_CURLOPT_DEBUGBLOCK                 1013
+#define HB_CURLOPT_ER_BUFF_SETUP              1014
 /* Compatibility ones. Please don't use these. */
 #define HB_CURLOPT_SETUPLOADFILE              HB_CURLOPT_UL_FILE_SETUP
 #define HB_CURLOPT_CLOSEUPLOADFILE            HB_CURLOPT_UL_FILE_CLOSE
