@@ -579,10 +579,10 @@ static int hb_hsxCompile( const char * szExpr, PHB_ITEM * pExpr )
    }
    else
    {
-      PHB_MACRO pMacro = hb_macroCompile( szExpr );
-      if( ! pMacro )
+      PHB_ITEM pItem = hb_vmCompileMacro( szExpr, NULL );
+      if( ! pItem )
          return HSX_BADPARMS;
-      *pExpr = hb_itemPutPtr( NULL, ( void * ) pMacro );
+      *pExpr = pItem;
    }
    return HSX_SUCCESS;
 }

@@ -670,6 +670,9 @@
 #  define LZO_ARCH_I086             1
 #  define LZO_ARCH_IA16             1
 #  define LZO_INFO_ARCH             "i086"
+#elif defined(__aarch64__) || defined(_M_ARM64)
+#  define LZO_ARCH_ARM64            1
+#  define LZO_INFO_ARCH             "arm64"
 #elif defined(__alpha__) || defined(__alpha) || defined(_M_ALPHA)
 #  define LZO_ARCH_ALPHA            1
 #  define LZO_INFO_ARCH             "alpha"

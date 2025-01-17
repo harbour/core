@@ -533,6 +533,7 @@ static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
    errCode = HB_SUCCESS;
    pField  = pArea->area.lpFields + ( uiIndex - 1 );
 
+
    if( ( ( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) ) && ( pField->uiType == HB_FT_STRING || pField->uiType == HB_FT_MEMO ) ) ||
        ( HB_IS_DATE( pItem ) && pField->uiType == HB_FT_DATE ) ||
        ( HB_IS_TIMESTAMP( pItem ) && pField->uiType == HB_FT_TIMESTAMP ) ||
@@ -740,6 +741,10 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
          case HB_FT_DATE:
             pItem = hb_itemPutDS( NULL, NULL );
+            break;
+
+         case HB_FT_TIMESTAMP:
+            pItem = hb_itemPutTDT( NULL, 0, 0 );
             break;
 
          case HB_FT_LOGICAL:

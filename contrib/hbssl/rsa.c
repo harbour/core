@@ -114,7 +114,7 @@ HB_FUNC( RSA_PUBLIC_ENCRYPT )
 
       buffer = ( unsigned char * ) hb_xgrab( RSA_size( rsa ) + 1 );
 
-      ret = RSA_public_encrypt( flen, HB_UNCONST( from ), buffer, rsa, padding );
+      ret = RSA_public_encrypt( flen, HB_SSL_CONST_BYTE( from ), buffer, rsa, padding );
       if( ret > 0 )
       {
          if( ! hb_storclen_buffer( ( char * ) buffer, ret, 3 ) )
@@ -146,7 +146,7 @@ HB_FUNC( RSA_PRIVATE_DECRYPT )
 
       buffer = ( unsigned char * ) hb_xgrab( RSA_size( rsa ) + 1 );
 
-      ret = RSA_private_decrypt( flen, HB_UNCONST( from ), buffer, rsa, padding );
+      ret = RSA_private_decrypt( flen, HB_SSL_CONST_BYTE( from ), buffer, rsa, padding );
       if( ret > 0 )
       {
          buffer = ( unsigned char * ) hb_xrealloc( buffer, ret + 1 );
@@ -179,7 +179,7 @@ HB_FUNC( RSA_PRIVATE_ENCRYPT )
 
       buffer = ( unsigned char * ) hb_xgrab( RSA_size( rsa ) + 1 );
 
-      ret = RSA_private_encrypt( flen, HB_UNCONST( from ), buffer, rsa, padding );
+      ret = RSA_private_encrypt( flen, HB_SSL_CONST_BYTE( from ), buffer, rsa, padding );
       if( ret > 0 )
       {
          if( ! hb_storclen_buffer( ( char * ) buffer, ret, 3 ) )
@@ -211,7 +211,7 @@ HB_FUNC( RSA_PUBLIC_DECRYPT )
 
       buffer = ( unsigned char * ) hb_xgrab( RSA_size( rsa ) + 1 );
 
-      ret = RSA_public_decrypt( flen, HB_UNCONST( from ), buffer, rsa, padding );
+      ret = RSA_public_decrypt( flen, HB_SSL_CONST_BYTE( from ), buffer, rsa, padding );
       if( ret > 0 )
       {
          buffer = ( unsigned char * ) hb_xrealloc( buffer, ret + 1 );

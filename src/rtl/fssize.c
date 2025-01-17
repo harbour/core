@@ -105,7 +105,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
 
          lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
          memset( &attrex, 0, sizeof( attrex ) );
-         fResult = GetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) &&
+         fResult = s_pGetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) &&
                    ( attrex.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == 0;
          hb_fsSetIOError( fResult, 0 );
          if( lpFree )

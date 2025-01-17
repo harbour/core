@@ -35,7 +35,7 @@
 #if defined(UNICODE) && !defined(_UNICODE)
 #define _UNICODE
 #endif
-#include <windows.h>
+#include "winconfi.h"
 #include <tchar.h>
 
 
@@ -106,7 +106,7 @@ HMODULE _Expat_LoadLibrary(LPCTSTR filename)
   /* Detect if KB2533623 is installed, as LOAD_LIBARY_SEARCH_SYSTEM32 is only
      supported on Windows Vista, Windows Server 2008, Windows 7 and Windows
      Server 2008 R2 with this patch or natively on Windows 8 and above */
-  else if(pLoadLibraryEx && GetProcAddress(hKernel32, "AddDllDirectory")) {
+  else if(pLoadLibraryEx && HB_WINAPI_GETPROCADDRESS(hKernel32, "AddDllDirectory")) {
     /* Load the DLL from the Windows system directory */
     hModule = pLoadLibraryEx(filename, NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
   }

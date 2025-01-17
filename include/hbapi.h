@@ -1135,7 +1135,7 @@ typedef void * PHB_MACRO;
 extern HB_EXPORT void         hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags ); /* retrieve results of a macro expansion */
 extern           void         hb_macroSetValue( PHB_ITEM pItem, int flags ); /* assign a value to a macro-expression item */
 extern           void         hb_macroPushReference( PHB_ITEM pItem ); /* push reference to given expression */
-extern           void         hb_macroTextValue( PHB_ITEM pItem ); /* macro text substitution */
+extern HB_EXPORT void         hb_macroTextValue( PHB_ITEM pItem ); /* macro text substitution */
 extern           void         hb_macroPushSymbol( PHB_ITEM pItem ); /* handle a macro function calls, e.g. var := &macro() */
 extern           void         hb_macroRun( PHB_MACRO pMacro ); /* executes pcode compiled by macro compiler */
 extern           PHB_MACRO    hb_macroCompile( const char * szString ); /* compile a string and return a pcode buffer */
@@ -1213,9 +1213,11 @@ extern HB_EXPORT HB_BOOL hb_iswin7( void );     /* return HB_TRUE if OS == Windo
 extern HB_EXPORT HB_BOOL hb_iswin8( void );     /* return HB_TRUE if OS == Windows 8 or newer */
 extern HB_EXPORT HB_BOOL hb_iswin81( void );    /* return HB_TRUE if OS == Windows 8.1 or newer */
 extern HB_EXPORT HB_BOOL hb_iswin10( void );    /* return HB_TRUE if OS == Windows 10 or newer */
+extern HB_EXPORT HB_BOOL hb_iswin11( void );    /* return HB_TRUE if OS == Windows 11 or newer */
 extern HB_EXPORT HB_BOOL hb_iswince( void );    /* return HB_TRUE if OS is Windows CE or Windows Mobile */
 extern HB_EXPORT HB_BOOL hb_iswinver( int iMajor, int iMinor, int iType, HB_BOOL fOrUpper );
 extern HB_EXPORT HB_BOOL hb_iswinsp( int iServicePackMajor, HB_BOOL fOrUpper );
+extern HB_EXPORT HB_BOOL hb_iswinbuild( int iBuildNum, HB_BOOL fOrUpper );
 
 extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );
 

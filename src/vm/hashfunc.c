@@ -610,7 +610,7 @@ HB_FUNC( HB_HSCAN )
       }
       else if( HB_IS_LOGICAL( pValue ) )
       {
-         HB_BOOL fValue = hb_itemGetDL( pValue );
+         HB_BOOL fValue = hb_itemGetL( pValue );
          while( nCount-- )
          {
             PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );

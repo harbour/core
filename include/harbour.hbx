@@ -731,6 +731,7 @@ DYNAMIC hb_osDriveSeparator
 DYNAMIC hb_osError
 DYNAMIC hb_osFileMask
 DYNAMIC hb_osIs64bit
+DYNAMIC hb_osIsWin11
 DYNAMIC hb_osIsWin10
 DYNAMIC hb_osIsWin2K
 DYNAMIC hb_osIsWin7
@@ -945,6 +946,7 @@ DYNAMIC hb_vfClose
 DYNAMIC hb_vfCommit
 DYNAMIC hb_vfConfig
 DYNAMIC hb_vfCopyFile
+DYNAMIC hb_vfCopyFileEx
 DYNAMIC hb_vfDirectory
 DYNAMIC hb_vfDirBuild
 DYNAMIC hb_vfDirExists

@@ -50,6 +50,10 @@
 #include "hbdate.h"
 #include "harboury.h"
 
+#ifdef HB_COMP_YYSTYPE_IS_DECLARED
+#  define YYSTYPE HB_COMP_YYSTYPE
+#endif
+
 #define HB_PP_LEX_SELF(t)     ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_SEND && \
                                 (t)->pNext && (t)->pNext->spaces == 0 && \
                                 HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_SEND )

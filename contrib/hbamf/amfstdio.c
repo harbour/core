@@ -55,16 +55,23 @@
 
 static int s_nCount = 0;
 
-static void countCheck( int n )
+static void countCheck( int n, int nFlowCtrl )
 {
-   /* yes, this is flow-control */
+   /* implements flow control for interacting with ill-strange non-configurable
+      environments that lose data when writing too much into such STDIN pipe.
+      specify nFlowCtrl = 0 to disable */
+   if( ! nFlowCtrl )
+      return;
 
    s_nCount += n;
 
-   while( s_nCount >= SINGLEBUF )
+   while( s_nCount >= nFlowCtrl )
    {
+      /* this 32-bit uint 'zero' should be discarded from buffer every
+         nFlowCtrl bytes, when received on the other side - after such
+         notification other process is allowed to send more data */
       hb_conOutStd( "\0\0\0\0", 4 );
-      s_nCount -= SINGLEBUF;
+      s_nCount -= nFlowCtrl;
    }
 }
 
@@ -72,9 +79,6 @@ HB_FUNC( AMFSTDIO_READ )
 {
    char *     pszStrIn     = ( char * ) hb_xgrab( SINGLEBUF );
    char *     pszLenPrefix = ( char * ) hb_xgrab( 5 );
-   #if 0
-   char *     pszBuf;      = ( char * ) hb_xgrab( SINGLEBUF );
-   #endif
    char *     pszBuf;
    char *     pszTmp = pszLenPrefix;
    HB_USHORT  nBytes;
@@ -82,13 +86,21 @@ HB_FUNC( AMFSTDIO_READ )
    int        nLen;
    int        nToRead;
    HB_FHANDLE hStdIn = hb_fsGetOsHandle( HB_STDIN_HANDLE );
+   int        nFlowCtrl = hb_parnidef( 1, SINGLEBUF );
+   /* 0 - disable flow control, 32768 - by default */
 
    while( nTotal < 4 )
    {
       nToRead = ( s_nCount + 4 - nTotal > SINGLEBUF ? SINGLEBUF - s_nCount : 4 - nTotal );
       nBytes  = hb_fsRead( hStdIn, pszStrIn, ( HB_USHORT ) nToRead );
-
-      countCheck( nBytes );
+      if( ! nBytes )
+      {
+         hb_xfree( pszStrIn );
+         hb_xfree( pszLenPrefix );
+         hb_ret();
+         return;
+      }
+      countCheck( nBytes, nFlowCtrl );
 
       memcpy( pszTmp, pszStrIn, nBytes );
       nTotal += nBytes;
@@ -100,6 +112,8 @@ HB_FUNC( AMFSTDIO_READ )
 
    if( nLen >= MAXLEN )
    {
+      hb_xfree( pszStrIn );
+      hb_xfree( pszLenPrefix );
       hb_ret();
       return;
    }
@@ -122,7 +136,7 @@ HB_FUNC( AMFSTDIO_READ )
 
       nBytes = hb_fsRead( hStdIn, pszStrIn, ( HB_USHORT ) nToRead );
 
-      countCheck( nBytes );
+      countCheck( nBytes, nFlowCtrl );
 
       memcpy( pszTmp, pszStrIn, nBytes );
       nTotal += nBytes;

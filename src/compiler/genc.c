@@ -58,9 +58,15 @@ static void hb_compDumpFindCFunc( HB_COMP_DECL )
          {
             if( HB_ISFIRSTIDCHAR( ch ) )
             {
-               if( ch == 'H' && strncmp( pszCCode, "B_FUNC_STATIC", 13 ) == 0 )
+               if( ch == 'H' && strncmp( pszCCode, "B_FUNC", 6 ) == 0 )
                {
-                  pszCCode += 13;
+                  HB_SYMBOLSCOPE scope = HB_FS_LOCAL;
+                  pszCCode += 6;
+                  if( strncmp( pszCCode, "_STATIC", 7 ) == 0 )
+                  {
+                     pszCCode += 7;
+                     scope |= HB_FS_STATIC;
+                  }
                   while( HB_ISSPACE( *pszCCode ) )
                      ++pszCCode;
                   if( *pszCCode == '(' )
@@ -80,7 +86,7 @@ static void hb_compDumpFindCFunc( HB_COMP_DECL )
                         if( *pszCCode == ')' )
                         {
                            char * name = hb_strndup( pszName, len );
-                           hb_compFunctionMarkStatic( HB_COMP_PARAM, name );
+                           hb_compFunctionSetScope( HB_COMP_PARAM, name, scope );
                            hb_xfree( name );
                         }
                      }

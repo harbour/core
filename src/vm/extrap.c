@@ -84,7 +84,7 @@
    static HB_BYTE * s_signal_stack[ SIGSTKSZ ];
 #endif
 
-#if defined( HB_OS_WIN ) && ! defined( __TINYC__ )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) && ! defined( __TINYC__ )
 
 static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {

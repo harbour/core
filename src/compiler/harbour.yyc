@@ -58,7 +58,8 @@
 /* Pull parsers.  */
 #define YYPULL 1
 
-
+/* Substitute the type names.  */
+#define YYSTYPE         HB_COMP_YYSTYPE
 /* Substitute the variable and function names.  */
 #define yyparse         hb_comp_yyparse
 #define yylex           hb_comp_yylex
@@ -68,7 +69,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 5 "harbour.y" /* yacc.c:339  */
+#line 6 "harbour.y" /* yacc.c:339  */
 
 /*
  * Compiler YACC rules and actions
@@ -187,7 +188,7 @@ static void hb_compErrUnclosed( HB_COMP_DECL, const char * szStru );
 static void hb_compDebugStart( void ) { }
 
 
-#line 191 "harboury.c" /* yacc.c:339  */
+#line 192 "harboury.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -210,17 +211,25 @@ static void hb_compDebugStart( void ) { }
 #ifndef YY_HB_COMP_YY_HARBOURY_H_INCLUDED
 # define YY_HB_COMP_YY_HARBOURY_H_INCLUDED
 /* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
+#ifndef HB_COMP_YYDEBUG
+# if defined YYDEBUG
 #if YYDEBUG
+#   define HB_COMP_YYDEBUG 1
+#  else
+#   define HB_COMP_YYDEBUG 0
+#  endif
+# else /* ! defined YYDEBUG */
+#  define HB_COMP_YYDEBUG 0
+# endif /* ! defined YYDEBUG */
+#endif  /* ! defined HB_COMP_YYDEBUG */
+#if HB_COMP_YYDEBUG
 extern int hb_comp_yydebug;
 #endif
 
 /* Token type.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
+#ifndef HB_COMP_YYTOKENTYPE
+# define HB_COMP_YYTOKENTYPE
+  enum hb_comp_yytokentype
   {
     FUNCTION = 258,
     PROCEDURE = 259,
@@ -336,11 +345,11 @@ extern int hb_comp_yydebug;
 #endif
 
 /* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE YYSTYPE;
-union YYSTYPE
+#if ! defined HB_COMP_YYSTYPE && ! defined HB_COMP_YYSTYPE_IS_DECLARED
+typedef union HB_COMP_YYSTYPE HB_COMP_YYSTYPE;
+union HB_COMP_YYSTYPE
 {
-#line 125 "harbour.y" /* yacc.c:355  */
+#line 126 "harbour.y" /* yacc.c:355  */
 
    const char * string; /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
@@ -379,10 +388,10 @@ union YYSTYPE
    } asCodeblock;
    PHB_VARTYPE asVarType;
 
-#line 383 "harboury.c" /* yacc.c:355  */
+#line 392 "harboury.c" /* yacc.c:355  */
 };
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
+# define HB_COMP_YYSTYPE_IS_TRIVIAL 1
+# define HB_COMP_YYSTYPE_IS_DECLARED 1
 #endif
 
 
@@ -392,7 +401,7 @@ int hb_comp_yyparse (PHB_COMP pComp);
 #endif /* !YY_HB_COMP_YY_HARBOURY_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
-#line 164 "harbour.y" /* yacc.c:358  */
+#line 165 "harbour.y" /* yacc.c:358  */
 
 /* This must be placed after the above union - the union is
  * typedef-ined to YYSTYPE
@@ -400,7 +409,7 @@ int hb_comp_yyparse (PHB_COMP pComp);
 extern int  yylex( YYSTYPE *, HB_COMP_DECL );    /* main lex token function, called by yyparse() */
 extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error management function */
 
-#line 404 "harboury.c" /* yacc.c:358  */
+#line 413 "harboury.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -581,7 +590,7 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
-         || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
+         || (defined HB_COMP_YYSTYPE_IS_TRIVIAL && HB_COMP_YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
@@ -704,80 +713,80 @@ static const yytype_uint8 yytranslate[] =
      105,   106,   107,   108,   109,   110,   120,   121
 };
 
-#if YYDEBUG
+#if HB_COMP_YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   294,   294,   295,   298,   299,   300,   301,   302,   303,
-     304,   305,   306,   307,   308,   309,   312,   315,   320,   328,
-     328,   329,   329,   330,   330,   331,   331,   334,   335,   336,
-     337,   340,   341,   344,   345,   348,   349,   350,   351,   352,
-     353,   354,   355,   356,   359,   360,   361,   362,   363,   364,
-     365,   366,   367,   370,   371,   379,   380,   381,   382,   383,
-     384,   390,   391,   392,   393,   394,   395,   396,   397,   399,
-     399,   405,   406,   407,   420,   420,   441,   443,   441,   447,
-     449,   447,   453,   454,   455,   456,   457,   458,   458,   464,
-     467,   475,   494,   494,   497,   498,   499,   500,   502,   515,
-     516,   519,   520,   523,   524,   527,   528,   531,   532,   533,
-     534,   535,   536,   537,   538,   539,   540,   541,   542,   543,
-     544,   545,   546,   547,   548,   553,   554,   557,   560,   563,
-     564,   569,   572,   577,   583,   588,   593,   594,   597,   602,
-     605,   616,   619,   624,   627,   630,   631,   634,   637,   638,
-     643,   646,   651,   652,   655,   660,   663,   666,   667,   674,
-     675,   680,   681,   682,   683,   684,   685,   686,   687,   688,
-     689,   690,   691,   692,   693,   696,   697,   700,   701,   702,
-     703,   704,   705,   706,   707,   708,   709,   710,   711,   712,
-     713,   714,   715,   716,   717,   718,   719,   728,   729,   730,
-     731,   732,   733,   738,   739,   740,   741,   742,   743,   744,
-     745,   746,   747,   748,   749,   750,   751,   752,   753,   754,
-     755,   758,   762,   765,   766,   770,   773,   776,   777,   780,
-     781,   784,   785,   786,   787,   788,   791,   792,   797,   798,
-     799,   805,   806,   809,   812,   817,   820,   829,   830,   831,
-     832,   833,   834,   835,   836,   837,   838,   839,   840,   841,
-     842,   843,   844,   845,   846,   847,   848,   849,   850,   851,
-     852,   853,   854,   855,   856,   857,   858,   859,   860,   863,
-     864,   865,   866,   867,   868,   871,   872,   875,   876,   879,
-     880,   881,   882,   883,   884,   885,   892,   893,   894,   895,
-     896,   897,   898,   899,   900,   901,   902,   903,   904,   905,
-     906,   907,   908,   909,   910,   911,   912,   918,   919,   922,
-     925,   926,   929,   930,   931,   934,   937,   940,   943,   946,
-     949,   952,   955,   958,   959,   960,   961,   962,   963,   966,
-     967,   968,   969,   970,   971,   974,   975,   978,   979,   980,
-     981,   982,   983,   984,   985,   986,   989,   995,   996,   997,
-    1000,  1001,  1004,  1004,  1010,  1011,  1012,  1013,  1016,  1017,
-    1020,  1021,  1025,  1028,  1024,  1031,  1030,  1072,  1073,  1077,
-    1078,  1080,  1083,  1092,  1096,  1099,  1099,  1101,  1101,  1103,
-    1103,  1105,  1105,  1115,  1116,  1119,  1120,  1128,  1129,  1131,
-    1135,  1142,  1160,  1160,  1189,  1195,  1198,  1199,  1200,  1203,
-    1203,  1210,  1211,  1214,  1215,  1218,  1218,  1221,  1222,  1225,
-    1225,  1244,  1244,  1245,  1246,  1247,  1248,  1248,  1251,  1252,
-    1255,  1256,  1257,  1258,  1261,  1261,  1280,  1280,  1335,  1336,
-    1337,  1338,  1341,  1342,  1343,  1344,  1345,  1346,  1347,  1350,
-    1351,  1354,  1357,  1358,  1359,  1360,  1361,  1362,  1365,  1366,
-    1367,  1368,  1369,  1370,  1373,  1374,  1375,  1376,  1377,  1378,
-    1379,  1380,  1383,  1386,  1389,  1392,  1395,  1398,  1401,  1404,
-    1405,  1406,  1407,  1411,  1413,  1410,  1418,  1418,  1422,  1424,
-    1422,  1432,  1434,  1432,  1443,  1451,  1452,  1453,  1454,  1455,
-    1456,  1457,  1458,  1459,  1462,  1466,  1470,  1473,  1479,  1486,
-    1487,  1488,  1489,  1490,  1491,  1492,  1493,  1494,  1497,  1497,
-    1500,  1501,  1509,  1510,  1509,  1521,  1522,  1521,  1534,  1534,
-    1534,  1536,  1536,  1541,  1546,  1540,  1560,  1569,  1573,  1574,
-    1575,  1576,  1577,  1578,  1579,  1580,  1581,  1585,  1598,  1603,
-    1584,  1651,  1652,  1655,  1656,  1659,  1667,  1668,  1669,  1670,
-    1671,  1672,  1673,  1674,  1675,  1676,  1679,  1680,  1683,  1684,
-    1687,  1688,  1691,  1692,  1697,  1703,  1713,  1696,  1732,  1733,
-    1737,  1736,  1749,  1756,  1764,  1765,  1766,  1767,  1768,  1769,
-    1770,  1771,  1772,  1776,  1775,  1786,  1787,  1796,  1796,  1799,
-    1799,  1802,  1804,  1807,  1807,  1807,  1812,  1821,  1832,  1840,
-    1811,  1875,  1876,  1877,  1878,  1879,  1880,  1881,  1882,  1883,
-    1886,  1887,  1895,  1896,  1899,  1909,  1915,  1916,  1919,  1930,
-    1948,  1952,  1960,  1961,  1964,  1965,  1966,  1967,  1968,  1971,
-    1972,  1973,  1974,  1975,  1979,  1978,  2001,  2002,  2003,  2004,
-    2005,  2006,  2007,  2008,  2009,  2012,  2013
+       0,   295,   295,   296,   299,   300,   301,   302,   303,   304,
+     305,   306,   307,   308,   309,   310,   313,   316,   321,   329,
+     329,   330,   330,   331,   331,   332,   332,   335,   336,   337,
+     338,   341,   342,   345,   346,   349,   350,   351,   352,   353,
+     354,   355,   356,   357,   360,   361,   362,   363,   364,   365,
+     366,   367,   368,   371,   372,   380,   381,   382,   383,   384,
+     385,   391,   392,   393,   394,   395,   396,   397,   398,   400,
+     400,   406,   407,   408,   421,   421,   442,   444,   442,   448,
+     450,   448,   454,   455,   456,   457,   458,   459,   459,   465,
+     468,   476,   495,   495,   498,   499,   500,   501,   503,   516,
+     517,   520,   521,   524,   525,   528,   529,   532,   533,   534,
+     535,   536,   537,   538,   539,   540,   541,   542,   543,   544,
+     545,   546,   547,   548,   549,   554,   555,   558,   561,   564,
+     565,   570,   573,   578,   584,   589,   594,   595,   598,   603,
+     606,   617,   620,   625,   628,   631,   632,   635,   638,   639,
+     644,   647,   652,   653,   656,   661,   664,   667,   668,   675,
+     676,   681,   682,   683,   684,   685,   686,   687,   688,   689,
+     690,   691,   692,   693,   694,   697,   698,   701,   702,   703,
+     704,   705,   706,   707,   708,   709,   710,   711,   712,   713,
+     714,   715,   716,   717,   718,   719,   720,   729,   730,   731,
+     732,   733,   734,   739,   740,   741,   742,   743,   744,   745,
+     746,   747,   748,   749,   750,   751,   752,   753,   754,   755,
+     756,   759,   763,   766,   767,   771,   774,   777,   778,   781,
+     782,   785,   786,   787,   788,   789,   792,   793,   798,   799,
+     800,   806,   807,   810,   813,   818,   821,   830,   831,   832,
+     833,   834,   835,   836,   837,   838,   839,   840,   841,   842,
+     843,   844,   845,   846,   847,   848,   849,   850,   851,   852,
+     853,   854,   855,   856,   857,   858,   859,   860,   861,   864,
+     865,   866,   867,   868,   869,   872,   873,   876,   877,   880,
+     881,   882,   883,   884,   885,   886,   893,   894,   895,   896,
+     897,   898,   899,   900,   901,   902,   903,   904,   905,   906,
+     907,   908,   909,   910,   911,   912,   913,   919,   920,   923,
+     926,   927,   930,   931,   932,   935,   938,   941,   944,   947,
+     950,   953,   956,   959,   960,   961,   962,   963,   964,   967,
+     968,   969,   970,   971,   972,   975,   976,   979,   980,   981,
+     982,   983,   984,   985,   986,   987,   990,   996,   997,   998,
+    1001,  1002,  1005,  1005,  1011,  1012,  1013,  1014,  1017,  1018,
+    1021,  1022,  1026,  1029,  1025,  1032,  1031,  1073,  1074,  1078,
+    1079,  1081,  1084,  1093,  1097,  1100,  1100,  1102,  1102,  1104,
+    1104,  1106,  1106,  1116,  1117,  1120,  1121,  1129,  1130,  1132,
+    1136,  1143,  1161,  1161,  1190,  1196,  1199,  1200,  1201,  1204,
+    1204,  1211,  1212,  1215,  1216,  1219,  1219,  1222,  1223,  1226,
+    1226,  1245,  1245,  1246,  1247,  1248,  1249,  1249,  1252,  1253,
+    1256,  1257,  1258,  1259,  1262,  1262,  1281,  1281,  1336,  1337,
+    1338,  1339,  1342,  1343,  1344,  1345,  1346,  1347,  1348,  1351,
+    1352,  1355,  1358,  1359,  1360,  1361,  1362,  1363,  1366,  1367,
+    1368,  1369,  1370,  1371,  1374,  1375,  1376,  1377,  1378,  1379,
+    1380,  1381,  1384,  1387,  1390,  1393,  1396,  1399,  1402,  1405,
+    1406,  1407,  1408,  1412,  1414,  1411,  1419,  1419,  1423,  1425,
+    1423,  1433,  1435,  1433,  1444,  1452,  1453,  1454,  1455,  1456,
+    1457,  1458,  1459,  1460,  1463,  1467,  1471,  1474,  1480,  1487,
+    1488,  1489,  1490,  1491,  1492,  1493,  1494,  1495,  1498,  1498,
+    1501,  1502,  1510,  1511,  1510,  1522,  1523,  1522,  1535,  1535,
+    1535,  1537,  1537,  1542,  1547,  1541,  1561,  1570,  1574,  1575,
+    1576,  1577,  1578,  1579,  1580,  1581,  1582,  1586,  1599,  1604,
+    1585,  1652,  1653,  1656,  1657,  1660,  1668,  1669,  1670,  1671,
+    1672,  1673,  1674,  1675,  1676,  1677,  1680,  1681,  1684,  1685,
+    1688,  1689,  1692,  1693,  1698,  1704,  1714,  1697,  1733,  1734,
+    1738,  1737,  1750,  1757,  1765,  1766,  1767,  1768,  1769,  1770,
+    1771,  1772,  1773,  1777,  1776,  1787,  1788,  1797,  1797,  1800,
+    1800,  1803,  1805,  1808,  1808,  1808,  1813,  1822,  1833,  1841,
+    1812,  1876,  1877,  1878,  1879,  1880,  1881,  1882,  1883,  1884,
+    1887,  1888,  1896,  1897,  1900,  1910,  1916,  1917,  1920,  1931,
+    1949,  1953,  1961,  1962,  1965,  1966,  1967,  1968,  1969,  1972,
+    1973,  1974,  1975,  1976,  1980,  1979,  2002,  2003,  2004,  2005,
+    2006,  2007,  2008,  2009,  2010,  2013,  2014
 };
 #endif
 
-#if YYDEBUG || YYERROR_VERBOSE || 0
+#if HB_COMP_YYDEBUG || YYERROR_VERBOSE || 0
 /* YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
@@ -3095,7 +3104,7 @@ while (0)
 
 
 /* Enable debugging if requested.  */
-#if YYDEBUG
+#if HB_COMP_YYDEBUG
 
 # ifndef YYFPRINTF
 #  include <stdio.h> /* INFRINGES ON USER NAME SPACE */
@@ -3217,12 +3226,12 @@ do {                                    \
 /* Nonzero means print parse trace.  It is left uninitialized so that
    multiple parsers can coexist.  */
 int yydebug;
-#else /* !YYDEBUG */
+#else /* !HB_COMP_YYDEBUG */
 # define YYDPRINTF(Args)
 # define YY_SYMBOL_PRINT(Title, Type, Value, Location)
 # define YY_STACK_PRINT(Bottom, Top)
 # define YY_REDUCE_PRINT(Rule)
-#endif /* !YYDEBUG */
+#endif /* !HB_COMP_YYDEBUG */
 
 
 /* YYINITDEPTH -- initial size of the parser's stacks.  */
@@ -3481,15 +3490,15 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, PHB_COMP pComp)
   switch (yytype)
     {
           case 17: /* LITERAL  */
-#line 290 "harbour.y" /* yacc.c:1257  */
+#line 291 "harbour.y" /* yacc.c:1257  */
       { if( ((*yyvaluep).valChar).dealloc ) hb_xfree( ((*yyvaluep).valChar).string ); }
-#line 3487 "harboury.c" /* yacc.c:1257  */
+#line 3496 "harboury.c" /* yacc.c:1257  */
         break;
 
     case 97: /* CBSTART  */
-#line 289 "harbour.y" /* yacc.c:1257  */
+#line 290 "harbour.y" /* yacc.c:1257  */
       { if( ((*yyvaluep).asCodeblock).string )  hb_xfree( ((*yyvaluep).asCodeblock).string ); }
-#line 3493 "harboury.c" /* yacc.c:1257  */
+#line 3502 "harboury.c" /* yacc.c:1257  */
         break;
 
 
@@ -3758,325 +3767,325 @@ yyreduce:
   switch (yyn)
     {
         case 9:
-#line 303 "harbour.y" /* yacc.c:1646  */
+#line 304 "harbour.y" /* yacc.c:1646  */
     { yyclearin; yyerrok; }
-#line 3761 "harboury.c" /* yacc.c:1646  */
+#line 3770 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 309 "harbour.y" /* yacc.c:1646  */
+#line 310 "harbour.y" /* yacc.c:1646  */
     { yyclearin; yyerrok; }
-#line 3767 "harboury.c" /* yacc.c:1646  */
+#line 3776 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 313 "harbour.y" /* yacc.c:1646  */
+#line 314 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->currLine = ( int ) (yyvsp[-1].valLong).lNumber;
                     HB_COMP_PARAM->pLex->fEol = HB_FALSE; }
-#line 3774 "harboury.c" /* yacc.c:1646  */
+#line 3783 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 316 "harbour.y" /* yacc.c:1646  */
+#line 317 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, (yyvsp[-1].valChar).string, (yyvsp[-1].valChar).dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
                     HB_COMP_PARAM->currLine = ( int ) (yyvsp[-2].valLong).lNumber;
                     HB_COMP_PARAM->pLex->fEol = HB_FALSE;
                     (yyvsp[-1].valChar).dealloc = HB_FALSE; }
-#line 3783 "harboury.c" /* yacc.c:1646  */
+#line 3792 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 321 "harbour.y" /* yacc.c:1646  */
+#line 322 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, (yyvsp[-1].valChar).string, (yyvsp[-1].valChar).dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
                     HB_COMP_PARAM->currLine = ( int ) (yyvsp[-4].valLong).lNumber;
                     HB_COMP_PARAM->pLex->fEol = HB_FALSE;
                     if( (yyvsp[-3].valChar).dealloc ) { hb_xfree( (yyvsp[-3].valChar).string ); (yyvsp[-3].valChar).dealloc = HB_FALSE; }
                     (yyvsp[-1].valChar).dealloc = HB_FALSE; }
-#line 3793 "harboury.c" /* yacc.c:1646  */
+#line 3802 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 328 "harbour.y" /* yacc.c:1646  */
+#line 329 "harbour.y" /* yacc.c:1646  */
     { hb_compFunctionAdd( HB_COMP_PARAM, (yyvsp[0].string), ( HB_SYMBOLSCOPE ) (yyvsp[-1].iNumber), 0 ); }
-#line 3799 "harboury.c" /* yacc.c:1646  */
+#line 3808 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 329 "harbour.y" /* yacc.c:1646  */
+#line 330 "harbour.y" /* yacc.c:1646  */
     { hb_compFunctionAdd( HB_COMP_PARAM, (yyvsp[0].string), ( HB_SYMBOLSCOPE ) (yyvsp[-1].iNumber), HB_FUNF_PROCEDURE ); }
-#line 3805 "harboury.c" /* yacc.c:1646  */
+#line 3814 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 330 "harbour.y" /* yacc.c:1646  */
+#line 331 "harbour.y" /* yacc.c:1646  */
     { hb_compFunctionAdd( HB_COMP_PARAM, (yyvsp[0].string), ( HB_SYMBOLSCOPE ) (yyvsp[-1].iNumber), 0 ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PARAMETER; }
-#line 3811 "harboury.c" /* yacc.c:1646  */
+#line 3820 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 331 "harbour.y" /* yacc.c:1646  */
+#line 332 "harbour.y" /* yacc.c:1646  */
     { hb_compFunctionAdd( HB_COMP_PARAM, (yyvsp[0].string), ( HB_SYMBOLSCOPE ) (yyvsp[-1].iNumber), HB_FUNF_PROCEDURE ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PARAMETER;}
-#line 3817 "harboury.c" /* yacc.c:1646  */
+#line 3826 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 334 "harbour.y" /* yacc.c:1646  */
+#line 335 "harbour.y" /* yacc.c:1646  */
     { (yyval.iNumber) = 0; }
-#line 3823 "harboury.c" /* yacc.c:1646  */
+#line 3832 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 335 "harbour.y" /* yacc.c:1646  */
+#line 336 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->functions.pLast->fVParams = HB_TRUE; (yyval.iNumber) = 0; }
-#line 3829 "harboury.c" /* yacc.c:1646  */
+#line 3838 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 337 "harbour.y" /* yacc.c:1646  */
+#line 338 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->functions.pLast->fVParams = HB_TRUE; (yyval.iNumber) = (yyvsp[-2].iNumber); }
-#line 3835 "harboury.c" /* yacc.c:1646  */
+#line 3844 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 340 "harbour.y" /* yacc.c:1646  */
+#line 341 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, ' ', NULL ); }
-#line 3841 "harboury.c" /* yacc.c:1646  */
+#line 3850 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 344 "harbour.y" /* yacc.c:1646  */
+#line 345 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, ' ', NULL ); }
-#line 3847 "harboury.c" /* yacc.c:1646  */
+#line 3856 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 348 "harbour.y" /* yacc.c:1646  */
+#line 349 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'N', NULL ); }
-#line 3853 "harboury.c" /* yacc.c:1646  */
+#line 3862 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 349 "harbour.y" /* yacc.c:1646  */
+#line 350 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'C', NULL ); }
-#line 3859 "harboury.c" /* yacc.c:1646  */
+#line 3868 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 350 "harbour.y" /* yacc.c:1646  */
+#line 351 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'D', NULL ); }
-#line 3865 "harboury.c" /* yacc.c:1646  */
+#line 3874 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 351 "harbour.y" /* yacc.c:1646  */
+#line 352 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'L', NULL ); }
-#line 3871 "harboury.c" /* yacc.c:1646  */
+#line 3880 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 352 "harbour.y" /* yacc.c:1646  */
+#line 353 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'B', NULL ); }
-#line 3877 "harboury.c" /* yacc.c:1646  */
+#line 3886 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 353 "harbour.y" /* yacc.c:1646  */
+#line 354 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'O', NULL ); }
-#line 3883 "harboury.c" /* yacc.c:1646  */
+#line 3892 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 354 "harbour.y" /* yacc.c:1646  */
+#line 355 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'S', (yyvsp[0].string) );   }
-#line 3889 "harboury.c" /* yacc.c:1646  */
+#line 3898 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 355 "harbour.y" /* yacc.c:1646  */
+#line 356 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, ' ', NULL ); }
-#line 3895 "harboury.c" /* yacc.c:1646  */
+#line 3904 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 359 "harbour.y" /* yacc.c:1646  */
+#line 360 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'A', NULL ); }
-#line 3901 "harboury.c" /* yacc.c:1646  */
+#line 3910 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 360 "harbour.y" /* yacc.c:1646  */
+#line 361 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'n', NULL ); }
-#line 3907 "harboury.c" /* yacc.c:1646  */
+#line 3916 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 361 "harbour.y" /* yacc.c:1646  */
+#line 362 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'c', NULL ); }
-#line 3913 "harboury.c" /* yacc.c:1646  */
+#line 3922 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 362 "harbour.y" /* yacc.c:1646  */
+#line 363 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'd', NULL ); }
-#line 3919 "harboury.c" /* yacc.c:1646  */
+#line 3928 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 363 "harbour.y" /* yacc.c:1646  */
+#line 364 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'l', NULL ); }
-#line 3925 "harboury.c" /* yacc.c:1646  */
+#line 3934 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 364 "harbour.y" /* yacc.c:1646  */
+#line 365 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'a', NULL ); }
-#line 3931 "harboury.c" /* yacc.c:1646  */
+#line 3940 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 365 "harbour.y" /* yacc.c:1646  */
+#line 366 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'b', NULL ); }
-#line 3937 "harboury.c" /* yacc.c:1646  */
+#line 3946 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 366 "harbour.y" /* yacc.c:1646  */
+#line 367 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 'o', NULL ); }
-#line 3943 "harboury.c" /* yacc.c:1646  */
+#line 3952 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 367 "harbour.y" /* yacc.c:1646  */
+#line 368 "harbour.y" /* yacc.c:1646  */
     { (yyval.asVarType) = hb_compVarTypeNew( HB_COMP_PARAM, 's', (yyvsp[0].string) );   }
-#line 3949 "harboury.c" /* yacc.c:1646  */
+#line 3958 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 370 "harbour.y" /* yacc.c:1646  */
+#line 371 "harbour.y" /* yacc.c:1646  */
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[0].asVarType) ); (yyval.iNumber) = 1; }
-#line 3955 "harboury.c" /* yacc.c:1646  */
+#line 3964 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 371 "harbour.y" /* yacc.c:1646  */
+#line 372 "harbour.y" /* yacc.c:1646  */
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[0].asVarType) ); (yyval.iNumber)++; }
-#line 3961 "harboury.c" /* yacc.c:1646  */
+#line 3970 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 380 "harbour.y" /* yacc.c:1646  */
+#line 381 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 3967 "harboury.c" /* yacc.c:1646  */
+#line 3976 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 381 "harbour.y" /* yacc.c:1646  */
+#line 382 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 3973 "harboury.c" /* yacc.c:1646  */
+#line 3982 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 382 "harbour.y" /* yacc.c:1646  */
+#line 383 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 3979 "harboury.c" /* yacc.c:1646  */
+#line 3988 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 383 "harbour.y" /* yacc.c:1646  */
+#line 384 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 3985 "harboury.c" /* yacc.c:1646  */
+#line 3994 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 384 "harbour.y" /* yacc.c:1646  */
+#line 385 "harbour.y" /* yacc.c:1646  */
     { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
                                          HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) );
                                       else
                                          HB_COMP_EXPR_FREE( HB_COMP_ERROR_SYNTAX( (yyvsp[-1].asExpr) ) );
                                       HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN;
                                     }
-#line 3996 "harboury.c" /* yacc.c:1646  */
+#line 4005 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 390 "harbour.y" /* yacc.c:1646  */
+#line 391 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 4002 "harboury.c" /* yacc.c:1646  */
+#line 4011 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 391 "harbour.y" /* yacc.c:1646  */
+#line 392 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 4008 "harboury.c" /* yacc.c:1646  */
+#line 4017 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 392 "harbour.y" /* yacc.c:1646  */
+#line 393 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 4014 "harboury.c" /* yacc.c:1646  */
+#line 4023 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 393 "harbour.y" /* yacc.c:1646  */
+#line 394 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 4020 "harboury.c" /* yacc.c:1646  */
+#line 4029 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 394 "harbour.y" /* yacc.c:1646  */
+#line 395 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 4026 "harboury.c" /* yacc.c:1646  */
+#line 4035 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 395 "harbour.y" /* yacc.c:1646  */
+#line 396 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 4032 "harboury.c" /* yacc.c:1646  */
+#line 4041 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 396 "harbour.y" /* yacc.c:1646  */
+#line 397 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( (yyvsp[-1].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
-#line 4038 "harboury.c" /* yacc.c:1646  */
+#line 4047 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 397 "harbour.y" /* yacc.c:1646  */
+#line 398 "harbour.y" /* yacc.c:1646  */
     { hb_compGenBreak( HB_COMP_PARAM ); hb_compGenPCode2( HB_P_DOSHORT, 0, HB_COMP_PARAM );
                                       HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_BREAK_CODE; }
-#line 4045 "harboury.c" /* yacc.c:1646  */
+#line 4054 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 399 "harbour.y" /* yacc.c:1646  */
+#line 400 "harbour.y" /* yacc.c:1646  */
     { hb_compLinePushIfInside( HB_COMP_PARAM ); }
-#line 4051 "harboury.c" /* yacc.c:1646  */
+#line 4060 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 400 "harbour.y" /* yacc.c:1646  */
+#line 401 "harbour.y" /* yacc.c:1646  */
     {
                                        hb_compGenBreak( HB_COMP_PARAM ); HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[-1].asExpr), HB_COMP_PARAM ) );
                                        hb_compGenPCode2( HB_P_DOSHORT, 1, HB_COMP_PARAM );
                                        HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_BREAK_CODE;
                                     }
-#line 4061 "harboury.c" /* yacc.c:1646  */
+#line 4070 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 405 "harbour.y" /* yacc.c:1646  */
+#line 406 "harbour.y" /* yacc.c:1646  */
     { hb_compLoopExit( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_BREAK_CODE; }
-#line 4067 "harboury.c" /* yacc.c:1646  */
+#line 4076 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 406 "harbour.y" /* yacc.c:1646  */
+#line 407 "harbour.y" /* yacc.c:1646  */
     { hb_compLoopLoop( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_BREAK_CODE; }
-#line 4073 "harboury.c" /* yacc.c:1646  */
+#line 4082 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 407 "harbour.y" /* yacc.c:1646  */
+#line 408 "harbour.y" /* yacc.c:1646  */
     {
                         if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                         {
@@ -4090,17 +4099,17 @@ yyreduce:
                         }
                         HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE;
                      }
-#line 4091 "harboury.c" /* yacc.c:1646  */
+#line 4100 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 420 "harbour.y" /* yacc.c:1646  */
+#line 421 "harbour.y" /* yacc.c:1646  */
     {  hb_compLinePushIfInside( HB_COMP_PARAM ); }
-#line 4097 "harboury.c" /* yacc.c:1646  */
+#line 4106 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 422 "harbour.y" /* yacc.c:1646  */
+#line 423 "harbour.y" /* yacc.c:1646  */
     {
                         if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                         {
@@ -4120,52 +4129,52 @@ yyreduce:
                         }
                         HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE;
                      }
-#line 4121 "harboury.c" /* yacc.c:1646  */
+#line 4130 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 441 "harbour.y" /* yacc.c:1646  */
+#line 442 "harbour.y" /* yacc.c:1646  */
     {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PUBLIC; }
-#line 4127 "harboury.c" /* yacc.c:1646  */
+#line 4136 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 443 "harbour.y" /* yacc.c:1646  */
+#line 444 "harbour.y" /* yacc.c:1646  */
     {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPUBLIC" );
                         HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE;
                         HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN;
                      }
-#line 4136 "harboury.c" /* yacc.c:1646  */
+#line 4145 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 447 "harbour.y" /* yacc.c:1646  */
+#line 448 "harbour.y" /* yacc.c:1646  */
     {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PRIVATE; }
-#line 4142 "harboury.c" /* yacc.c:1646  */
+#line 4151 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 449 "harbour.y" /* yacc.c:1646  */
+#line 450 "harbour.y" /* yacc.c:1646  */
     {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPRIVATE" );
                         HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE;
                         HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN;
                      }
-#line 4151 "harboury.c" /* yacc.c:1646  */
+#line 4160 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 458 "harbour.y" /* yacc.c:1646  */
+#line 459 "harbour.y" /* yacc.c:1646  */
     {
                   if( HB_COMP_PARAM->szAnnounce == NULL )
                      HB_COMP_PARAM->szAnnounce = (yyvsp[0].string);
                   else
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUPL_ANNOUNCE, (yyvsp[0].string), NULL );
                }
-#line 4162 "harboury.c" /* yacc.c:1646  */
+#line 4171 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 467 "harbour.y" /* yacc.c:1646  */
+#line 468 "harbour.y" /* yacc.c:1646  */
     {
                if( (yyvsp[0].valChar).dealloc )
                {
@@ -4174,11 +4183,11 @@ yyreduce:
                }
                hb_compModuleAdd( HB_COMP_PARAM, (yyvsp[0].valChar).string, HB_FALSE );
             }
-#line 4175 "harboury.c" /* yacc.c:1646  */
+#line 4184 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 475 "harbour.y" /* yacc.c:1646  */
+#line 476 "harbour.y" /* yacc.c:1646  */
     {
                {
                   char szFileName[ HB_PATH_MAX ];
@@ -4196,41 +4205,41 @@ yyreduce:
                   }
                }
             }
-#line 4197 "harboury.c" /* yacc.c:1646  */
+#line 4206 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 494 "harbour.y" /* yacc.c:1646  */
+#line 495 "harbour.y" /* yacc.c:1646  */
     { hb_compLinePushIfInside( HB_COMP_PARAM ); }
-#line 4203 "harboury.c" /* yacc.c:1646  */
+#line 4212 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 497 "harbour.y" /* yacc.c:1646  */
+#line 498 "harbour.y" /* yacc.c:1646  */
     { (yyval.lNumber) = 0; }
-#line 4209 "harboury.c" /* yacc.c:1646  */
+#line 4218 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 498 "harbour.y" /* yacc.c:1646  */
+#line 499 "harbour.y" /* yacc.c:1646  */
     { (yyval.lNumber) = 1; }
-#line 4215 "harboury.c" /* yacc.c:1646  */
+#line 4224 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 499 "harbour.y" /* yacc.c:1646  */
+#line 500 "harbour.y" /* yacc.c:1646  */
     { (yyval.lNumber) = 1; }
-#line 4221 "harboury.c" /* yacc.c:1646  */
+#line 4230 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 500 "harbour.y" /* yacc.c:1646  */
+#line 501 "harbour.y" /* yacc.c:1646  */
     { (yyval.lNumber) = 0; }
-#line 4227 "harboury.c" /* yacc.c:1646  */
+#line 4236 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 502 "harbour.y" /* yacc.c:1646  */
+#line 503 "harbour.y" /* yacc.c:1646  */
     { if( HB_COMP_PARAM->ilastLineErr && HB_COMP_PARAM->ilastLineErr == HB_COMP_PARAM->currLine )
                              {
                                 yyclearin;
@@ -4242,1122 +4251,1122 @@ yyreduce:
                              }
                              (yyval.lNumber) = 0;
                            }
-#line 4243 "harboury.c" /* yacc.c:1646  */
+#line 4252 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 516 "harbour.y" /* yacc.c:1646  */
+#line 517 "harbour.y" /* yacc.c:1646  */
     { (yyval.lNumber) += (yyvsp[0].lNumber); }
-#line 4249 "harboury.c" /* yacc.c:1646  */
+#line 4258 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 519 "harbour.y" /* yacc.c:1646  */
+#line 520 "harbour.y" /* yacc.c:1646  */
     { (yyval.lNumber) = 0; }
-#line 4255 "harboury.c" /* yacc.c:1646  */
+#line 4264 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 103:
-#line 523 "harbour.y" /* yacc.c:1646  */
+#line 524 "harbour.y" /* yacc.c:1646  */
     { hb_compExternAdd( HB_COMP_PARAM, (yyvsp[0].string), 0 ); }
-#line 4261 "harboury.c" /* yacc.c:1646  */
+#line 4270 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 104:
-#line 524 "harbour.y" /* yacc.c:1646  */
+#line 525 "harbour.y" /* yacc.c:1646  */
     { hb_compExternAdd( HB_COMP_PARAM, (yyvsp[0].string), 0 ); }
-#line 4267 "harboury.c" /* yacc.c:1646  */
+#line 4276 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 105:
-#line 527 "harbour.y" /* yacc.c:1646  */
+#line 528 "harbour.y" /* yacc.c:1646  */
     { hb_compExternAdd( HB_COMP_PARAM, (yyvsp[0].string), HB_FS_DEFERRED ); }
-#line 4273 "harboury.c" /* yacc.c:1646  */
+#line 4282 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 106:
-#line 528 "harbour.y" /* yacc.c:1646  */
+#line 529 "harbour.y" /* yacc.c:1646  */
     { hb_compExternAdd( HB_COMP_PARAM, (yyvsp[0].string), HB_FS_DEFERRED ); }
-#line 4279 "harboury.c" /* yacc.c:1646  */
+#line 4288 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 108:
-#line 532 "harbour.y" /* yacc.c:1646  */
+#line 533 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = "STEP"; }
-#line 4285 "harboury.c" /* yacc.c:1646  */
+#line 4294 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 109:
-#line 533 "harbour.y" /* yacc.c:1646  */
+#line 534 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = "TO"; }
-#line 4291 "harboury.c" /* yacc.c:1646  */
+#line 4300 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 110:
-#line 534 "harbour.y" /* yacc.c:1646  */
+#line 535 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = "LOOP"; }
-#line 4297 "harboury.c" /* yacc.c:1646  */
+#line 4306 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 111:
-#line 535 "harbour.y" /* yacc.c:1646  */
+#line 536 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = "EXIT"; }
-#line 4303 "harboury.c" /* yacc.c:1646  */
+#line 4312 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 112:
-#line 536 "harbour.y" /* yacc.c:1646  */
+#line 537 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = "IN"; }
-#line 4309 "harboury.c" /* yacc.c:1646  */
+#line 4318 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 113:
-#line 537 "harbour.y" /* yacc.c:1646  */
+#line 538 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4315 "harboury.c" /* yacc.c:1646  */
+#line 4324 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 114:
-#line 538 "harbour.y" /* yacc.c:1646  */
+#line 539 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4321 "harboury.c" /* yacc.c:1646  */
+#line 4330 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 115:
-#line 539 "harbour.y" /* yacc.c:1646  */
+#line 540 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4327 "harboury.c" /* yacc.c:1646  */
+#line 4336 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 116:
-#line 540 "harbour.y" /* yacc.c:1646  */
+#line 541 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4333 "harboury.c" /* yacc.c:1646  */
+#line 4342 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 117:
-#line 541 "harbour.y" /* yacc.c:1646  */
+#line 542 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4339 "harboury.c" /* yacc.c:1646  */
+#line 4348 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 118:
-#line 542 "harbour.y" /* yacc.c:1646  */
+#line 543 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4345 "harboury.c" /* yacc.c:1646  */
+#line 4354 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 119:
-#line 543 "harbour.y" /* yacc.c:1646  */
+#line 544 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4351 "harboury.c" /* yacc.c:1646  */
+#line 4360 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 120:
-#line 544 "harbour.y" /* yacc.c:1646  */
+#line 545 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4357 "harboury.c" /* yacc.c:1646  */
+#line 4366 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 121:
-#line 545 "harbour.y" /* yacc.c:1646  */
+#line 546 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4363 "harboury.c" /* yacc.c:1646  */
+#line 4372 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 122:
-#line 546 "harbour.y" /* yacc.c:1646  */
+#line 547 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4369 "harboury.c" /* yacc.c:1646  */
+#line 4378 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 123:
-#line 547 "harbour.y" /* yacc.c:1646  */
+#line 548 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4375 "harboury.c" /* yacc.c:1646  */
+#line 4384 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 124:
-#line 548 "harbour.y" /* yacc.c:1646  */
+#line 549 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 4381 "harboury.c" /* yacc.c:1646  */
+#line 4390 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 125:
-#line 553 "harbour.y" /* yacc.c:1646  */
+#line 554 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewDouble( (yyvsp[0].valDouble).dNumber, (yyvsp[0].valDouble).bWidth, (yyvsp[0].valDouble).bDec, HB_COMP_PARAM ); }
-#line 4387 "harboury.c" /* yacc.c:1646  */
+#line 4396 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 126:
-#line 554 "harbour.y" /* yacc.c:1646  */
+#line 555 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewLong( (yyvsp[0].valLong).lNumber, HB_COMP_PARAM ); }
-#line 4393 "harboury.c" /* yacc.c:1646  */
+#line 4402 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 127:
-#line 557 "harbour.y" /* yacc.c:1646  */
+#line 558 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewDate( ( long ) (yyvsp[0].valLong).lNumber, HB_COMP_PARAM ); }
-#line 4399 "harboury.c" /* yacc.c:1646  */
+#line 4408 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 128:
-#line 560 "harbour.y" /* yacc.c:1646  */
+#line 561 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewTimeStamp( (yyvsp[0].valTimeStamp).date, (yyvsp[0].valTimeStamp).time, HB_COMP_PARAM ); }
-#line 4405 "harboury.c" /* yacc.c:1646  */
+#line 4414 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 129:
-#line 563 "harbour.y" /* yacc.c:1646  */
+#line 564 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewLong( (yyvsp[-1].valLong).lNumber, HB_COMP_PARAM ); }
-#line 4411 "harboury.c" /* yacc.c:1646  */
+#line 4420 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 130:
-#line 564 "harbour.y" /* yacc.c:1646  */
+#line 565 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, hb_compExprNewDouble( (yyvsp[-1].valDouble).dNumber, (yyvsp[-1].valDouble).bWidth, (yyvsp[-1].valDouble).bDec, HB_COMP_PARAM ) ); }
-#line 4417 "harboury.c" /* yacc.c:1646  */
+#line 4426 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 131:
-#line 569 "harbour.y" /* yacc.c:1646  */
+#line 570 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewNil( HB_COMP_PARAM ); }
-#line 4423 "harboury.c" /* yacc.c:1646  */
+#line 4432 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 133:
-#line 577 "harbour.y" /* yacc.c:1646  */
+#line 578 "harbour.y" /* yacc.c:1646  */
     {
                                  (yyval.asExpr) = hb_compExprNewString( (yyvsp[0].valChar).string, (yyvsp[0].valChar).length, (yyvsp[0].valChar).dealloc, HB_COMP_PARAM );
                                  (yyvsp[0].valChar).dealloc = HB_FALSE;
                               }
-#line 4432 "harboury.c" /* yacc.c:1646  */
+#line 4441 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 136:
-#line 593 "harbour.y" /* yacc.c:1646  */
+#line 594 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewLogical( HB_TRUE, HB_COMP_PARAM ); }
-#line 4438 "harboury.c" /* yacc.c:1646  */
+#line 4447 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 137:
-#line 594 "harbour.y" /* yacc.c:1646  */
+#line 595 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewLogical( HB_FALSE, HB_COMP_PARAM ); }
-#line 4444 "harboury.c" /* yacc.c:1646  */
+#line 4453 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 139:
-#line 602 "harbour.y" /* yacc.c:1646  */
+#line 603 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewSelf( HB_COMP_PARAM ); }
-#line 4450 "harboury.c" /* yacc.c:1646  */
+#line 4459 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 141:
-#line 616 "harbour.y" /* yacc.c:1646  */
+#line 617 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArray( (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 4456 "harboury.c" /* yacc.c:1646  */
+#line 4465 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 143:
-#line 624 "harbour.y" /* yacc.c:1646  */
+#line 625 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4462 "harboury.c" /* yacc.c:1646  */
+#line 4471 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 145:
-#line 630 "harbour.y" /* yacc.c:1646  */
+#line 631 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewHash( NULL, HB_COMP_PARAM ); }
-#line 4468 "harboury.c" /* yacc.c:1646  */
+#line 4477 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 146:
-#line 631 "harbour.y" /* yacc.c:1646  */
+#line 632 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewHash( (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 4474 "harboury.c" /* yacc.c:1646  */
+#line 4483 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 148:
-#line 637 "harbour.y" /* yacc.c:1646  */
+#line 638 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprNewList( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr) ); }
-#line 4480 "harboury.c" /* yacc.c:1646  */
+#line 4489 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 149:
-#line 638 "harbour.y" /* yacc.c:1646  */
+#line 639 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprAddListExpr( (yyvsp[-4].asExpr), (yyvsp[-2].asExpr) ), (yyvsp[0].asExpr) ); }
-#line 4486 "harboury.c" /* yacc.c:1646  */
+#line 4495 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 150:
-#line 643 "harbour.y" /* yacc.c:1646  */
+#line 644 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewVar( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 4492 "harboury.c" /* yacc.c:1646  */
+#line 4501 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 151:
-#line 646 "harbour.y" /* yacc.c:1646  */
+#line 647 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAlias( (yyvsp[-1].string), HB_COMP_PARAM ); }
-#line 4498 "harboury.c" /* yacc.c:1646  */
+#line 4507 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 152:
-#line 651 "harbour.y" /* yacc.c:1646  */
+#line 652 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMacro( NULL, '&', (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 4504 "harboury.c" /* yacc.c:1646  */
+#line 4513 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 153:
-#line 652 "harbour.y" /* yacc.c:1646  */
+#line 653 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMacro( NULL, 0, (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 4510 "harboury.c" /* yacc.c:1646  */
+#line 4519 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 155:
-#line 660 "harbour.y" /* yacc.c:1646  */
+#line 661 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMacro( (yyvsp[0].asExpr), 0, NULL, HB_COMP_PARAM ); }
-#line 4516 "harboury.c" /* yacc.c:1646  */
+#line 4525 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 159:
-#line 674 "harbour.y" /* yacc.c:1646  */
+#line 675 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAlias( "FIELD", HB_COMP_PARAM ); }
-#line 4522 "harboury.c" /* yacc.c:1646  */
+#line 4531 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 160:
-#line 675 "harbour.y" /* yacc.c:1646  */
+#line 676 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4528 "harboury.c" /* yacc.c:1646  */
+#line 4537 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 161:
-#line 680 "harbour.y" /* yacc.c:1646  */
+#line 681 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4534 "harboury.c" /* yacc.c:1646  */
+#line 4543 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 162:
-#line 681 "harbour.y" /* yacc.c:1646  */
+#line 682 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4540 "harboury.c" /* yacc.c:1646  */
+#line 4549 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 163:
-#line 682 "harbour.y" /* yacc.c:1646  */
+#line 683 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4546 "harboury.c" /* yacc.c:1646  */
+#line 4555 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 164:
-#line 683 "harbour.y" /* yacc.c:1646  */
+#line 684 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4552 "harboury.c" /* yacc.c:1646  */
+#line 4561 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 165:
-#line 684 "harbour.y" /* yacc.c:1646  */
+#line 685 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4558 "harboury.c" /* yacc.c:1646  */
+#line 4567 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 166:
-#line 685 "harbour.y" /* yacc.c:1646  */
+#line 686 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4564 "harboury.c" /* yacc.c:1646  */
+#line 4573 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 167:
-#line 686 "harbour.y" /* yacc.c:1646  */
+#line 687 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4570 "harboury.c" /* yacc.c:1646  */
+#line 4579 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 168:
-#line 687 "harbour.y" /* yacc.c:1646  */
+#line 688 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4576 "harboury.c" /* yacc.c:1646  */
+#line 4585 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 169:
-#line 688 "harbour.y" /* yacc.c:1646  */
+#line 689 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4582 "harboury.c" /* yacc.c:1646  */
+#line 4591 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 170:
-#line 689 "harbour.y" /* yacc.c:1646  */
+#line 690 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4588 "harboury.c" /* yacc.c:1646  */
+#line 4597 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 171:
-#line 690 "harbour.y" /* yacc.c:1646  */
+#line 691 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4594 "harboury.c" /* yacc.c:1646  */
+#line 4603 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 172:
-#line 691 "harbour.y" /* yacc.c:1646  */
+#line 692 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4600 "harboury.c" /* yacc.c:1646  */
+#line 4609 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 173:
-#line 692 "harbour.y" /* yacc.c:1646  */
+#line 693 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4606 "harboury.c" /* yacc.c:1646  */
+#line 4615 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 174:
-#line 693 "harbour.y" /* yacc.c:1646  */
+#line 694 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4612 "harboury.c" /* yacc.c:1646  */
+#line 4621 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 175:
-#line 696 "harbour.y" /* yacc.c:1646  */
+#line 697 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewVar( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 4618 "harboury.c" /* yacc.c:1646  */
+#line 4627 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 177:
-#line 700 "harbour.y" /* yacc.c:1646  */
+#line 701 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4624 "harboury.c" /* yacc.c:1646  */
+#line 4633 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 178:
-#line 701 "harbour.y" /* yacc.c:1646  */
+#line 702 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4630 "harboury.c" /* yacc.c:1646  */
+#line 4639 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 179:
-#line 702 "harbour.y" /* yacc.c:1646  */
+#line 703 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4636 "harboury.c" /* yacc.c:1646  */
+#line 4645 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 180:
-#line 703 "harbour.y" /* yacc.c:1646  */
+#line 704 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4642 "harboury.c" /* yacc.c:1646  */
+#line 4651 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 181:
-#line 704 "harbour.y" /* yacc.c:1646  */
+#line 705 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4648 "harboury.c" /* yacc.c:1646  */
+#line 4657 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 182:
-#line 705 "harbour.y" /* yacc.c:1646  */
+#line 706 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4654 "harboury.c" /* yacc.c:1646  */
+#line 4663 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 183:
-#line 706 "harbour.y" /* yacc.c:1646  */
+#line 707 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4660 "harboury.c" /* yacc.c:1646  */
+#line 4669 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 184:
-#line 707 "harbour.y" /* yacc.c:1646  */
+#line 708 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4666 "harboury.c" /* yacc.c:1646  */
+#line 4675 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 185:
-#line 708 "harbour.y" /* yacc.c:1646  */
+#line 709 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4672 "harboury.c" /* yacc.c:1646  */
+#line 4681 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 186:
-#line 709 "harbour.y" /* yacc.c:1646  */
+#line 710 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4678 "harboury.c" /* yacc.c:1646  */
+#line 4687 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 187:
-#line 710 "harbour.y" /* yacc.c:1646  */
+#line 711 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4684 "harboury.c" /* yacc.c:1646  */
+#line 4693 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 188:
-#line 711 "harbour.y" /* yacc.c:1646  */
+#line 712 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4690 "harboury.c" /* yacc.c:1646  */
+#line 4699 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 189:
-#line 712 "harbour.y" /* yacc.c:1646  */
+#line 713 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4696 "harboury.c" /* yacc.c:1646  */
+#line 4705 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 190:
-#line 713 "harbour.y" /* yacc.c:1646  */
+#line 714 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4702 "harboury.c" /* yacc.c:1646  */
+#line 4711 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 191:
-#line 714 "harbour.y" /* yacc.c:1646  */
+#line 715 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4708 "harboury.c" /* yacc.c:1646  */
+#line 4717 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 192:
-#line 715 "harbour.y" /* yacc.c:1646  */
+#line 716 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4714 "harboury.c" /* yacc.c:1646  */
+#line 4723 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 193:
-#line 716 "harbour.y" /* yacc.c:1646  */
+#line 717 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[-1].asExpr) ); }
-#line 4720 "harboury.c" /* yacc.c:1646  */
+#line 4729 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 194:
-#line 717 "harbour.y" /* yacc.c:1646  */
+#line 718 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4726 "harboury.c" /* yacc.c:1646  */
+#line 4735 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 195:
-#line 718 "harbour.y" /* yacc.c:1646  */
+#line 719 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4732 "harboury.c" /* yacc.c:1646  */
+#line 4741 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 196:
-#line 719 "harbour.y" /* yacc.c:1646  */
+#line 720 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4738 "harboury.c" /* yacc.c:1646  */
+#line 4747 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 197:
-#line 728 "harbour.y" /* yacc.c:1646  */
+#line 729 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4744 "harboury.c" /* yacc.c:1646  */
+#line 4753 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 198:
-#line 729 "harbour.y" /* yacc.c:1646  */
+#line 730 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4750 "harboury.c" /* yacc.c:1646  */
+#line 4759 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 199:
-#line 730 "harbour.y" /* yacc.c:1646  */
+#line 731 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4756 "harboury.c" /* yacc.c:1646  */
+#line 4765 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 200:
-#line 731 "harbour.y" /* yacc.c:1646  */
+#line 732 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4762 "harboury.c" /* yacc.c:1646  */
+#line 4771 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 201:
-#line 732 "harbour.y" /* yacc.c:1646  */
+#line 733 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4768 "harboury.c" /* yacc.c:1646  */
+#line 4777 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 202:
-#line 733 "harbour.y" /* yacc.c:1646  */
+#line 734 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4774 "harboury.c" /* yacc.c:1646  */
+#line 4783 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 203:
-#line 738 "harbour.y" /* yacc.c:1646  */
+#line 739 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4780 "harboury.c" /* yacc.c:1646  */
+#line 4789 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 204:
-#line 739 "harbour.y" /* yacc.c:1646  */
+#line 740 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4786 "harboury.c" /* yacc.c:1646  */
+#line 4795 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 205:
-#line 740 "harbour.y" /* yacc.c:1646  */
+#line 741 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4792 "harboury.c" /* yacc.c:1646  */
+#line 4801 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 206:
-#line 741 "harbour.y" /* yacc.c:1646  */
+#line 742 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4798 "harboury.c" /* yacc.c:1646  */
+#line 4807 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 207:
-#line 742 "harbour.y" /* yacc.c:1646  */
+#line 743 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4804 "harboury.c" /* yacc.c:1646  */
+#line 4813 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 208:
-#line 743 "harbour.y" /* yacc.c:1646  */
+#line 744 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4810 "harboury.c" /* yacc.c:1646  */
+#line 4819 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 209:
-#line 744 "harbour.y" /* yacc.c:1646  */
+#line 745 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4816 "harboury.c" /* yacc.c:1646  */
+#line 4825 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 210:
-#line 745 "harbour.y" /* yacc.c:1646  */
+#line 746 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4822 "harboury.c" /* yacc.c:1646  */
+#line 4831 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 211:
-#line 746 "harbour.y" /* yacc.c:1646  */
+#line 747 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4828 "harboury.c" /* yacc.c:1646  */
+#line 4837 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 212:
-#line 747 "harbour.y" /* yacc.c:1646  */
+#line 748 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4834 "harboury.c" /* yacc.c:1646  */
+#line 4843 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 213:
-#line 748 "harbour.y" /* yacc.c:1646  */
+#line 749 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4840 "harboury.c" /* yacc.c:1646  */
+#line 4849 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 214:
-#line 749 "harbour.y" /* yacc.c:1646  */
+#line 750 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4846 "harboury.c" /* yacc.c:1646  */
+#line 4855 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 215:
-#line 750 "harbour.y" /* yacc.c:1646  */
+#line 751 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4852 "harboury.c" /* yacc.c:1646  */
+#line 4861 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 216:
-#line 751 "harbour.y" /* yacc.c:1646  */
+#line 752 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4858 "harboury.c" /* yacc.c:1646  */
+#line 4867 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 217:
-#line 752 "harbour.y" /* yacc.c:1646  */
+#line 753 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4864 "harboury.c" /* yacc.c:1646  */
+#line 4873 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 218:
-#line 753 "harbour.y" /* yacc.c:1646  */
+#line 754 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4870 "harboury.c" /* yacc.c:1646  */
+#line 4879 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 219:
-#line 754 "harbour.y" /* yacc.c:1646  */
+#line 755 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4876 "harboury.c" /* yacc.c:1646  */
+#line 4885 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 220:
-#line 755 "harbour.y" /* yacc.c:1646  */
+#line 756 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 4882 "harboury.c" /* yacc.c:1646  */
+#line 4891 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 222:
-#line 762 "harbour.y" /* yacc.c:1646  */
+#line 763 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewFunCall( hb_compExprNewFunName( (yyvsp[-3].string), HB_COMP_PARAM ), (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 4888 "harboury.c" /* yacc.c:1646  */
+#line 4897 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 224:
-#line 766 "harbour.y" /* yacc.c:1646  */
+#line 767 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewFunCall( (yyvsp[-3].asExpr), (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 4894 "harboury.c" /* yacc.c:1646  */
+#line 4903 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 225:
-#line 770 "harbour.y" /* yacc.c:1646  */
+#line 771 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, (yyvsp[0].asExpr) ); }
-#line 4900 "harboury.c" /* yacc.c:1646  */
+#line 4909 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 227:
-#line 776 "harbour.y" /* yacc.c:1646  */
+#line 777 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4906 "harboury.c" /* yacc.c:1646  */
+#line 4915 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 228:
-#line 777 "harbour.y" /* yacc.c:1646  */
+#line 778 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 4912 "harboury.c" /* yacc.c:1646  */
+#line 4921 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 231:
-#line 784 "harbour.y" /* yacc.c:1646  */
+#line 785 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewVarRef( (yyvsp[0].string), HB_COMP_PARAM ) ); }
-#line 4918 "harboury.c" /* yacc.c:1646  */
+#line 4927 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 232:
-#line 785 "harbour.y" /* yacc.c:1646  */
+#line 786 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( (yyvsp[0].asExpr), HB_COMP_PARAM ) ); }
-#line 4924 "harboury.c" /* yacc.c:1646  */
+#line 4933 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 233:
-#line 786 "harbour.y" /* yacc.c:1646  */
+#line 787 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( (yyvsp[0].asExpr), HB_COMP_PARAM ) ); }
-#line 4930 "harboury.c" /* yacc.c:1646  */
+#line 4939 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 234:
-#line 787 "harbour.y" /* yacc.c:1646  */
+#line 788 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( (yyvsp[0].asExpr), HB_COMP_PARAM ) ); }
-#line 4936 "harboury.c" /* yacc.c:1646  */
+#line 4945 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 235:
-#line 788 "harbour.y" /* yacc.c:1646  */
+#line 789 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, (yyvsp[0].asExpr) ); (yyval.asExpr)->value.asList.reference = HB_TRUE; }
-#line 4942 "harboury.c" /* yacc.c:1646  */
+#line 4951 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 236:
-#line 791 "harbour.y" /* yacc.c:1646  */
+#line 792 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArgRef( HB_COMP_PARAM ); }
-#line 4948 "harboury.c" /* yacc.c:1646  */
+#line 4957 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 238:
-#line 797 "harbour.y" /* yacc.c:1646  */
+#line 798 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compCheckMethod( HB_COMP_PARAM, hb_compExprNewMethodObject( (yyvsp[0].asExpr), (yyvsp[-2].asExpr) ) ); }
-#line 4954 "harboury.c" /* yacc.c:1646  */
+#line 4963 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 239:
-#line 798 "harbour.y" /* yacc.c:1646  */
+#line 799 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMethodObject( (yyvsp[0].asExpr), (yyvsp[-2].asExpr) ); }
-#line 4960 "harboury.c" /* yacc.c:1646  */
+#line 4969 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 240:
-#line 799 "harbour.y" /* yacc.c:1646  */
+#line 800 "harbour.y" /* yacc.c:1646  */
     {  if( HB_COMP_PARAM->functions.pLast->wWithObjectCnt == 0 )
                                                 hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_WITHOBJECT, NULL, NULL );
                                              (yyval.asExpr) = (yyvsp[0].asExpr);
                                           }
-#line 4969 "harboury.c" /* yacc.c:1646  */
+#line 4978 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 241:
-#line 805 "harbour.y" /* yacc.c:1646  */
+#line 806 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 4975 "harboury.c" /* yacc.c:1646  */
+#line 4984 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 242:
-#line 806 "harbour.y" /* yacc.c:1646  */
+#line 807 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMacroSend( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 4981 "harboury.c" /* yacc.c:1646  */
+#line 4990 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 243:
-#line 809 "harbour.y" /* yacc.c:1646  */
+#line 810 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewVarRef( (yyvsp[-1].string), HB_COMP_PARAM ); }
-#line 4987 "harboury.c" /* yacc.c:1646  */
+#line 4996 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 245:
-#line 817 "harbour.y" /* yacc.c:1646  */
+#line 818 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMethodCall( (yyvsp[-3].asExpr), (yyvsp[-1].asExpr) ); }
-#line 4993 "harboury.c" /* yacc.c:1646  */
+#line 5002 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 255:
-#line 837 "harbour.y" /* yacc.c:1646  */
+#line 838 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-1].asExpr); }
-#line 4999 "harboury.c" /* yacc.c:1646  */
+#line 5008 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 265:
-#line 847 "harbour.y" /* yacc.c:1646  */
+#line 848 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-1].asExpr); }
-#line 5005 "harboury.c" /* yacc.c:1646  */
+#line 5014 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 268:
-#line 850 "harbour.y" /* yacc.c:1646  */
+#line 851 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-1].asExpr); }
-#line 5011 "harboury.c" /* yacc.c:1646  */
+#line 5020 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 270:
-#line 852 "harbour.y" /* yacc.c:1646  */
+#line 853 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-1].asExpr); }
-#line 5017 "harboury.c" /* yacc.c:1646  */
+#line 5026 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 282:
-#line 866 "harbour.y" /* yacc.c:1646  */
+#line 867 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-1].asExpr); }
-#line 5023 "harboury.c" /* yacc.c:1646  */
+#line 5032 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 283:
-#line 867 "harbour.y" /* yacc.c:1646  */
+#line 868 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-1].asExpr); }
-#line 5029 "harboury.c" /* yacc.c:1646  */
+#line 5038 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 285:
-#line 871 "harbour.y" /* yacc.c:1646  */
+#line 872 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArgRef( HB_COMP_PARAM ); }
-#line 5035 "harboury.c" /* yacc.c:1646  */
+#line 5044 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 287:
-#line 875 "harbour.y" /* yacc.c:1646  */
+#line 876 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewEmpty( HB_COMP_PARAM ); }
-#line 5041 "harboury.c" /* yacc.c:1646  */
+#line 5050 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 289:
-#line 879 "harbour.y" /* yacc.c:1646  */
+#line 880 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewVar( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 5047 "harboury.c" /* yacc.c:1646  */
+#line 5056 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 295:
-#line 885 "harbour.y" /* yacc.c:1646  */
+#line 886 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprListStrip( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5053 "harboury.c" /* yacc.c:1646  */
+#line 5062 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 317:
-#line 918 "harbour.y" /* yacc.c:1646  */
+#line 919 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewPostInc( (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 5059 "harboury.c" /* yacc.c:1646  */
+#line 5068 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 318:
-#line 919 "harbour.y" /* yacc.c:1646  */
+#line 920 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewPostDec( (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 5065 "harboury.c" /* yacc.c:1646  */
+#line 5074 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 319:
-#line 922 "harbour.y" /* yacc.c:1646  */
+#line 923 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 5071 "harboury.c" /* yacc.c:1646  */
+#line 5080 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 320:
-#line 925 "harbour.y" /* yacc.c:1646  */
+#line 926 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewPreInc( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5077 "harboury.c" /* yacc.c:1646  */
+#line 5086 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 321:
-#line 926 "harbour.y" /* yacc.c:1646  */
+#line 927 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewPreDec( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5083 "harboury.c" /* yacc.c:1646  */
+#line 5092 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 322:
-#line 929 "harbour.y" /* yacc.c:1646  */
+#line 930 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewNot( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5089 "harboury.c" /* yacc.c:1646  */
+#line 5098 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 323:
-#line 930 "harbour.y" /* yacc.c:1646  */
+#line 931 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewNegate( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5095 "harboury.c" /* yacc.c:1646  */
+#line 5104 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 324:
-#line 931 "harbour.y" /* yacc.c:1646  */
+#line 932 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 5101 "harboury.c" /* yacc.c:1646  */
+#line 5110 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 325:
-#line 934 "harbour.y" /* yacc.c:1646  */
+#line 935 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[-2].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5107 "harboury.c" /* yacc.c:1646  */
+#line 5116 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 326:
-#line 937 "harbour.y" /* yacc.c:1646  */
+#line 938 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[-2].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5113 "harboury.c" /* yacc.c:1646  */
+#line 5122 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 327:
-#line 940 "harbour.y" /* yacc.c:1646  */
+#line 941 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5119 "harboury.c" /* yacc.c:1646  */
+#line 5128 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 328:
-#line 943 "harbour.y" /* yacc.c:1646  */
+#line 944 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5125 "harboury.c" /* yacc.c:1646  */
+#line 5134 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 329:
-#line 946 "harbour.y" /* yacc.c:1646  */
+#line 947 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5131 "harboury.c" /* yacc.c:1646  */
+#line 5140 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 330:
-#line 949 "harbour.y" /* yacc.c:1646  */
+#line 950 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5137 "harboury.c" /* yacc.c:1646  */
+#line 5146 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 331:
-#line 952 "harbour.y" /* yacc.c:1646  */
+#line 953 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5143 "harboury.c" /* yacc.c:1646  */
+#line 5152 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 332:
-#line 955 "harbour.y" /* yacc.c:1646  */
+#line 956 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5149 "harboury.c" /* yacc.c:1646  */
+#line 5158 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 339:
-#line 966 "harbour.y" /* yacc.c:1646  */
+#line 967 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlus( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5155 "harboury.c" /* yacc.c:1646  */
+#line 5164 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 340:
-#line 967 "harbour.y" /* yacc.c:1646  */
+#line 968 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinus( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5161 "harboury.c" /* yacc.c:1646  */
+#line 5170 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 341:
-#line 968 "harbour.y" /* yacc.c:1646  */
+#line 969 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMult( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5167 "harboury.c" /* yacc.c:1646  */
+#line 5176 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 342:
-#line 969 "harbour.y" /* yacc.c:1646  */
+#line 970 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDiv( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5173 "harboury.c" /* yacc.c:1646  */
+#line 5182 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 343:
-#line 970 "harbour.y" /* yacc.c:1646  */
+#line 971 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMod( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5179 "harboury.c" /* yacc.c:1646  */
+#line 5188 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 344:
-#line 971 "harbour.y" /* yacc.c:1646  */
+#line 972 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPower( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5185 "harboury.c" /* yacc.c:1646  */
+#line 5194 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 345:
-#line 974 "harbour.y" /* yacc.c:1646  */
+#line 975 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewAnd( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5191 "harboury.c" /* yacc.c:1646  */
+#line 5200 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 346:
-#line 975 "harbour.y" /* yacc.c:1646  */
+#line 976 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewOr( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5197 "harboury.c" /* yacc.c:1646  */
+#line 5206 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 347:
-#line 978 "harbour.y" /* yacc.c:1646  */
+#line 979 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewEQ( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5203 "harboury.c" /* yacc.c:1646  */
+#line 5212 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 348:
-#line 979 "harbour.y" /* yacc.c:1646  */
+#line 980 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewLT( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5209 "harboury.c" /* yacc.c:1646  */
+#line 5218 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 349:
-#line 980 "harbour.y" /* yacc.c:1646  */
+#line 981 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewGT( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5215 "harboury.c" /* yacc.c:1646  */
+#line 5224 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 350:
-#line 981 "harbour.y" /* yacc.c:1646  */
+#line 982 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewLE( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5221 "harboury.c" /* yacc.c:1646  */
+#line 5230 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 351:
-#line 982 "harbour.y" /* yacc.c:1646  */
+#line 983 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewGE( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5227 "harboury.c" /* yacc.c:1646  */
+#line 5236 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 352:
-#line 983 "harbour.y" /* yacc.c:1646  */
+#line 984 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewNE( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5233 "harboury.c" /* yacc.c:1646  */
+#line 5242 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 353:
-#line 984 "harbour.y" /* yacc.c:1646  */
+#line 985 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewNE( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5239 "harboury.c" /* yacc.c:1646  */
+#line 5248 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 354:
-#line 985 "harbour.y" /* yacc.c:1646  */
+#line 986 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewIN( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5245 "harboury.c" /* yacc.c:1646  */
+#line 5254 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 355:
-#line 986 "harbour.y" /* yacc.c:1646  */
+#line 987 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewEqual( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5251 "harboury.c" /* yacc.c:1646  */
+#line 5260 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 357:
-#line 995 "harbour.y" /* yacc.c:1646  */
+#line 996 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[-2].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5257 "harboury.c" /* yacc.c:1646  */
+#line 5266 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 358:
-#line 996 "harbour.y" /* yacc.c:1646  */
+#line 997 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[-2].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5263 "harboury.c" /* yacc.c:1646  */
+#line 5272 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 359:
-#line 997 "harbour.y" /* yacc.c:1646  */
+#line 998 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[-3].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5269 "harboury.c" /* yacc.c:1646  */
+#line 5278 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 360:
-#line 1000 "harbour.y" /* yacc.c:1646  */
+#line 1001 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewList( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5275 "harboury.c" /* yacc.c:1646  */
+#line 5284 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 361:
-#line 1001 "harbour.y" /* yacc.c:1646  */
+#line 1002 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 5281 "harboury.c" /* yacc.c:1646  */
+#line 5290 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 362:
-#line 1004 "harbour.y" /* yacc.c:1646  */
+#line 1005 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewCodeBlock( (yyvsp[0].asCodeblock).string, (yyvsp[0].asCodeblock).length, (yyvsp[0].asCodeblock).flags, HB_COMP_PARAM ); (yyvsp[0].asCodeblock).string = NULL; }
-#line 5287 "harboury.c" /* yacc.c:1646  */
+#line 5296 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 363:
-#line 1005 "harbour.y" /* yacc.c:1646  */
+#line 1006 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-2].asExpr); }
-#line 5293 "harboury.c" /* yacc.c:1646  */
+#line 5302 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 364:
-#line 1010 "harbour.y" /* yacc.c:1646  */
+#line 1011 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = NULL; }
-#line 5299 "harboury.c" /* yacc.c:1646  */
+#line 5308 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 365:
-#line 1011 "harbour.y" /* yacc.c:1646  */
+#line 1012 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = NULL; (yyvsp[-1].asExpr)->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; }
-#line 5305 "harboury.c" /* yacc.c:1646  */
+#line 5314 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 366:
-#line 1012 "harbour.y" /* yacc.c:1646  */
+#line 1013 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr);   }
-#line 5311 "harboury.c" /* yacc.c:1646  */
+#line 5320 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 367:
-#line 1013 "harbour.y" /* yacc.c:1646  */
+#line 1014 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-2].asExpr);   (yyvsp[-3].asExpr)->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; }
-#line 5317 "harboury.c" /* yacc.c:1646  */
+#line 5326 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 368:
-#line 1016 "harbour.y" /* yacc.c:1646  */
+#line 1017 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->iVarScope = HB_VSCOMP_LOCAL; (yyval.asExpr) = hb_compExprCBVarAdd( (yyvsp[-2].asExpr), (yyvsp[-1].string), (yyvsp[0].asVarType)->cVarType, HB_COMP_PARAM ); }
-#line 5323 "harboury.c" /* yacc.c:1646  */
+#line 5332 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 369:
-#line 1017 "harbour.y" /* yacc.c:1646  */
+#line 1018 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->iVarScope = HB_VSCOMP_LOCAL; (yyval.asExpr) = hb_compExprCBVarAdd( (yyvsp[-4].asExpr), (yyvsp[-1].string), (yyvsp[0].asVarType)->cVarType, HB_COMP_PARAM ); }
-#line 5329 "harboury.c" /* yacc.c:1646  */
+#line 5338 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 370:
-#line 1020 "harbour.y" /* yacc.c:1646  */
+#line 1021 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddCodeblockExpr( (yyvsp[(-1) - (1)].asExpr), (yyvsp[0].asExpr) ); }
-#line 5335 "harboury.c" /* yacc.c:1646  */
+#line 5344 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 371:
-#line 1021 "harbour.y" /* yacc.c:1646  */
+#line 1022 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddCodeblockExpr( (yyvsp[(-1) - (3)].asExpr), (yyvsp[0].asExpr) ); }
-#line 5341 "harboury.c" /* yacc.c:1646  */
+#line 5350 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 372:
-#line 1025 "harbour.y" /* yacc.c:1646  */
+#line 1026 "harbour.y" /* yacc.c:1646  */
     { (yyval.bTrue) = HB_COMP_PARAM->functions.pLast->bBlock;
                 HB_COMP_PARAM->functions.pLast->bBlock = HB_TRUE; }
-#line 5348 "harboury.c" /* yacc.c:1646  */
+#line 5357 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 373:
-#line 1028 "harbour.y" /* yacc.c:1646  */
+#line 1029 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->functions.pLast->bBlock = (yyvsp[-1].bTrue); }
-#line 5354 "harboury.c" /* yacc.c:1646  */
+#line 5363 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 375:
-#line 1031 "harbour.y" /* yacc.c:1646  */
+#line 1032 "harbour.y" /* yacc.c:1646  */
     {  /* 3 */
                PHB_CBVAR pVar;
                (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
@@ -5383,11 +5392,11 @@ yyreduce:
                   pVar =pVar->pNext;
                }
             }
-#line 5384 "harboury.c" /* yacc.c:1646  */
+#line 5393 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 376:
-#line 1057 "harbour.y" /* yacc.c:1646  */
+#line 1058 "harbour.y" /* yacc.c:1646  */
     {  /* 6 */
                /* protection against nested function/procedure inside extended block */
                if( HB_COMP_PARAM->iErrorCount == 0 ||
@@ -5401,59 +5410,59 @@ yyreduce:
                   HB_COMP_PARAM->lastLine = (yyvsp[-3].sNumber);
                }
             }
-#line 5402 "harboury.c" /* yacc.c:1646  */
+#line 5411 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 378:
-#line 1073 "harbour.y" /* yacc.c:1646  */
-    { hb_compErrUnclosed( HB_COMP_PARAM, "{||...}*" ); }
-#line 5408 "harboury.c" /* yacc.c:1646  */
+#line 1074 "harbour.y" /* yacc.c:1646  */
+    { hb_compErrUnclosed( HB_COMP_PARAM, "{||...}" ); }
+#line 5417 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 379:
-#line 1077 "harbour.y" /* yacc.c:1646  */
+#line 1078 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewList( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5414 "harboury.c" /* yacc.c:1646  */
+#line 5423 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 380:
-#line 1078 "harbour.y" /* yacc.c:1646  */
+#line 1079 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 5420 "harboury.c" /* yacc.c:1646  */
+#line 5429 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 381:
-#line 1080 "harbour.y" /* yacc.c:1646  */
+#line 1081 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-1].asExpr); }
-#line 5426 "harboury.c" /* yacc.c:1646  */
+#line 5435 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 383:
-#line 1093 "harbour.y" /* yacc.c:1646  */
+#line 1094 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( (yyvsp[-5].asExpr), HB_COMP_PARAM ), (yyvsp[-3].asExpr) ), (yyvsp[-1].asExpr) ) ); }
-#line 5432 "harboury.c" /* yacc.c:1646  */
+#line 5441 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 385:
-#line 1099 "harbour.y" /* yacc.c:1646  */
+#line 1100 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->iVarScope = HB_VSCOMP_LOCAL; hb_compLinePush( HB_COMP_PARAM ); }
-#line 5438 "harboury.c" /* yacc.c:1646  */
+#line 5447 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 387:
-#line 1101 "harbour.y" /* yacc.c:1646  */
+#line 1102 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->iVarScope = HB_VSCOMP_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
-#line 5444 "harboury.c" /* yacc.c:1646  */
+#line 5453 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 389:
-#line 1103 "harbour.y" /* yacc.c:1646  */
+#line 1104 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->iVarScope = HB_VSCOMP_TH_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
-#line 5450 "harboury.c" /* yacc.c:1646  */
+#line 5459 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 391:
-#line 1105 "harbour.y" /* yacc.c:1646  */
+#line 1106 "harbour.y" /* yacc.c:1646  */
     { if( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_USES_LOCAL_PARAMS )
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                         else
@@ -5462,64 +5471,64 @@ yyreduce:
                            HB_COMP_PARAM->iVarScope = ( HB_VSCOMP_PRIVATE | HB_VSCOMP_PARAMETER );
                         }
                       }
-#line 5463 "harboury.c" /* yacc.c:1646  */
+#line 5472 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 392:
-#line 1112 "harbour.y" /* yacc.c:1646  */
+#line 1113 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
-#line 5469 "harboury.c" /* yacc.c:1646  */
+#line 5478 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 393:
-#line 1115 "harbour.y" /* yacc.c:1646  */
+#line 1116 "harbour.y" /* yacc.c:1646  */
     { (yyval.iNumber) = 1; }
-#line 5475 "harboury.c" /* yacc.c:1646  */
+#line 5484 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 394:
-#line 1116 "harbour.y" /* yacc.c:1646  */
+#line 1117 "harbour.y" /* yacc.c:1646  */
     { (yyval.iNumber)++; }
-#line 5481 "harboury.c" /* yacc.c:1646  */
+#line 5490 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 395:
-#line 1119 "harbour.y" /* yacc.c:1646  */
+#line 1120 "harbour.y" /* yacc.c:1646  */
     { (yyval.iNumber) = 1; }
-#line 5487 "harboury.c" /* yacc.c:1646  */
+#line 5496 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 396:
-#line 1120 "harbour.y" /* yacc.c:1646  */
+#line 1121 "harbour.y" /* yacc.c:1646  */
     { (yyval.iNumber)++; }
-#line 5493 "harboury.c" /* yacc.c:1646  */
+#line 5502 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 398:
-#line 1130 "harbour.y" /* yacc.c:1646  */
+#line 1131 "harbour.y" /* yacc.c:1646  */
     { hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, (yyvsp[-1].asExpr), HB_COMP_PARAM ), HB_FALSE ); }
-#line 5499 "harboury.c" /* yacc.c:1646  */
+#line 5508 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 399:
-#line 1132 "harbour.y" /* yacc.c:1646  */
+#line 1133 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[0].asExpr), HB_COMP_PARAM ) );
                  hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, (yyvsp[-3].asExpr), HB_COMP_PARAM ), HB_TRUE );
-               }
-#line 5507 "harboury.c" /* yacc.c:1646  */
-    break;
-
-  case 400:
-#line 1136 "harbour.y" /* yacc.c:1646  */
-    {
-                  HB_COMP_EXPR_FREE( hb_compArrayDimPush( (yyvsp[-1].asExpr), HB_COMP_PARAM ) );
-                  hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, (yyvsp[-2].asExpr), HB_COMP_PARAM ), HB_TRUE );
                }
 #line 5516 "harboury.c" /* yacc.c:1646  */
     break;
 
+  case 400:
+#line 1137 "harbour.y" /* yacc.c:1646  */
+    {
+                  HB_COMP_EXPR_FREE( hb_compArrayDimPush( (yyvsp[-1].asExpr), HB_COMP_PARAM ) );
+                  hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, (yyvsp[-2].asExpr), HB_COMP_PARAM ), HB_TRUE );
+               }
+#line 5525 "harboury.c" /* yacc.c:1646  */
+    break;
+
   case 401:
-#line 1143 "harbour.y" /* yacc.c:1646  */
+#line 1144 "harbour.y" /* yacc.c:1646  */
     {
                   hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[0].asVarType) );
                   if( HB_COMP_PARAM->iVarScope & HB_VSCOMP_STATIC )
@@ -5537,19 +5546,19 @@ yyreduce:
                      HB_COMP_EXPR_FREE( hb_compExprGenPush( hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM ) );
                   }
                }
-#line 5538 "harboury.c" /* yacc.c:1646  */
+#line 5547 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 402:
-#line 1160 "harbour.y" /* yacc.c:1646  */
+#line 1161 "harbour.y" /* yacc.c:1646  */
     { (yyval.iNumber) = HB_COMP_PARAM->iVarScope;
                                 hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[0].asVarType) );
                               }
-#line 5546 "harboury.c" /* yacc.c:1646  */
+#line 5555 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 403:
-#line 1164 "harbour.y" /* yacc.c:1646  */
+#line 1165 "harbour.y" /* yacc.c:1646  */
     {
                   HB_COMP_PARAM->iVarScope = (yyvsp[-2].iNumber);
                   if( HB_COMP_PARAM->iVarScope & HB_VSCOMP_STATIC )
@@ -5574,97 +5583,97 @@ yyreduce:
                   }
                   HB_COMP_PARAM->iVarScope = (yyvsp[-2].iNumber);
                }
-#line 5575 "harboury.c" /* yacc.c:1646  */
+#line 5584 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 404:
-#line 1189 "harbour.y" /* yacc.c:1646  */
+#line 1190 "harbour.y" /* yacc.c:1646  */
     { hb_compVariableDim( (yyvsp[-2].string), (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 5581 "harboury.c" /* yacc.c:1646  */
+#line 5590 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 406:
-#line 1198 "harbour.y" /* yacc.c:1646  */
+#line 1199 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 5587 "harboury.c" /* yacc.c:1646  */
+#line 5596 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 407:
-#line 1199 "harbour.y" /* yacc.c:1646  */
+#line 1200 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 5593 "harboury.c" /* yacc.c:1646  */
+#line 5602 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 408:
-#line 1200 "harbour.y" /* yacc.c:1646  */
+#line 1201 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-3].asExpr), (yyvsp[0].asExpr) ); }
-#line 5599 "harboury.c" /* yacc.c:1646  */
+#line 5608 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 409:
-#line 1203 "harbour.y" /* yacc.c:1646  */
+#line 1204 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->iVarScope = HB_VSCOMP_FIELD; }
-#line 5605 "harboury.c" /* yacc.c:1646  */
+#line 5614 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 410:
-#line 1205 "harbour.y" /* yacc.c:1646  */
+#line 1206 "harbour.y" /* yacc.c:1646  */
     {
                if( (yyvsp[-1].string) ) hb_compFieldSetAlias( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[-2].iNumber) );
              }
-#line 5613 "harboury.c" /* yacc.c:1646  */
+#line 5622 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 411:
-#line 1210 "harbour.y" /* yacc.c:1646  */
+#line 1211 "harbour.y" /* yacc.c:1646  */
     { (yyval.iNumber) = hb_compFieldsCount( HB_COMP_PARAM ); hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[0].asVarType) ); }
-#line 5619 "harboury.c" /* yacc.c:1646  */
+#line 5628 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 412:
-#line 1211 "harbour.y" /* yacc.c:1646  */
+#line 1212 "harbour.y" /* yacc.c:1646  */
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[0].asVarType) ); }
-#line 5625 "harboury.c" /* yacc.c:1646  */
+#line 5634 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 413:
-#line 1214 "harbour.y" /* yacc.c:1646  */
+#line 1215 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = NULL; }
-#line 5631 "harboury.c" /* yacc.c:1646  */
+#line 5640 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 414:
-#line 1215 "harbour.y" /* yacc.c:1646  */
+#line 1216 "harbour.y" /* yacc.c:1646  */
     { (yyval.string) = (yyvsp[0].string); }
-#line 5637 "harboury.c" /* yacc.c:1646  */
+#line 5646 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 415:
-#line 1218 "harbour.y" /* yacc.c:1646  */
+#line 1219 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->iVarScope = HB_VSCOMP_MEMVAR; }
-#line 5643 "harboury.c" /* yacc.c:1646  */
+#line 5652 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 417:
-#line 1221 "harbour.y" /* yacc.c:1646  */
+#line 1222 "harbour.y" /* yacc.c:1646  */
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[0].asVarType) ); }
-#line 5649 "harboury.c" /* yacc.c:1646  */
+#line 5658 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 418:
-#line 1222 "harbour.y" /* yacc.c:1646  */
+#line 1223 "harbour.y" /* yacc.c:1646  */
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[0].asVarType) ); }
-#line 5655 "harboury.c" /* yacc.c:1646  */
+#line 5664 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 419:
-#line 1225 "harbour.y" /* yacc.c:1646  */
+#line 1226 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredAdd( HB_COMP_PARAM, (yyvsp[-1].string) ); HB_COMP_PARAM->szDeclaredFun = (yyvsp[-1].string); }
-#line 5661 "harboury.c" /* yacc.c:1646  */
+#line 5670 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 420:
-#line 1226 "harbour.y" /* yacc.c:1646  */
+#line 1227 "harbour.y" /* yacc.c:1646  */
     {
                if( HB_COMP_PARAM->pLastDeclared )
                {
@@ -5683,59 +5692,59 @@ yyreduce:
                HB_COMP_PARAM->szDeclaredFun = NULL;
                HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE;
              }
-#line 5684 "harboury.c" /* yacc.c:1646  */
+#line 5693 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 421:
-#line 1244 "harbour.y" /* yacc.c:1646  */
+#line 1245 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, (yyvsp[0].string), NULL ); }
-#line 5690 "harboury.c" /* yacc.c:1646  */
+#line 5699 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 422:
-#line 1244 "harbour.y" /* yacc.c:1646  */
+#line 1245 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
-#line 5696 "harboury.c" /* yacc.c:1646  */
+#line 5705 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 423:
-#line 1245 "harbour.y" /* yacc.c:1646  */
+#line 1246 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, (yyvsp[-1].string), NULL ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
-#line 5702 "harboury.c" /* yacc.c:1646  */
+#line 5711 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 424:
-#line 1246 "harbour.y" /* yacc.c:1646  */
+#line 1247 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, (yyvsp[-2].string), (yyvsp[-1].string) ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
-#line 5708 "harboury.c" /* yacc.c:1646  */
+#line 5717 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 425:
-#line 1247 "harbour.y" /* yacc.c:1646  */
+#line 1248 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
-#line 5714 "harboury.c" /* yacc.c:1646  */
+#line 5723 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 426:
-#line 1248 "harbour.y" /* yacc.c:1646  */
+#line 1249 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->cDataListType = (yyvsp[0].asVarType)->cVarType; }
-#line 5720 "harboury.c" /* yacc.c:1646  */
+#line 5729 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 427:
-#line 1248 "harbour.y" /* yacc.c:1646  */
+#line 1249 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->cDataListType = 0; HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
-#line 5726 "harboury.c" /* yacc.c:1646  */
+#line 5735 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 434:
-#line 1261 "harbour.y" /* yacc.c:1646  */
+#line 1262 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass, (yyvsp[-1].string) ); }
-#line 5732 "harboury.c" /* yacc.c:1646  */
+#line 5741 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 435:
-#line 1262 "harbour.y" /* yacc.c:1646  */
+#line 1263 "harbour.y" /* yacc.c:1646  */
     {
                if( HB_COMP_PARAM->pLastMethod )
                {
@@ -5752,17 +5761,17 @@ yyreduce:
                }
                HB_COMP_PARAM->pLastMethod = NULL;
              }
-#line 5753 "harboury.c" /* yacc.c:1646  */
+#line 5762 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 436:
-#line 1280 "harbour.y" /* yacc.c:1646  */
+#line 1281 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass, (yyvsp[0].string) ); }
-#line 5759 "harboury.c" /* yacc.c:1646  */
+#line 5768 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 437:
-#line 1281 "harbour.y" /* yacc.c:1646  */
+#line 1282 "harbour.y" /* yacc.c:1646  */
     {
                if( HB_COMP_PARAM->pLastMethod )
                {
@@ -5815,369 +5824,369 @@ yyreduce:
 
                HB_COMP_PARAM->pLastMethod = NULL;
              }
-#line 5816 "harboury.c" /* yacc.c:1646  */
+#line 5825 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 451:
-#line 1354 "harbour.y" /* yacc.c:1646  */
+#line 1355 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( (yyvsp[0].asExpr) ); }
-#line 5822 "harboury.c" /* yacc.c:1646  */
+#line 5831 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 452:
-#line 1357 "harbour.y" /* yacc.c:1646  */
+#line 1358 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[0].asVarType) ); }
-#line 5828 "harboury.c" /* yacc.c:1646  */
+#line 5837 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 453:
-#line 1358 "harbour.y" /* yacc.c:1646  */
+#line 1359 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-1].string), hb_compVarTypeNew( HB_COMP_PARAM, (yyvsp[0].asVarType)->cVarType + HB_VT_OFFSET_BYREF, NULL ) ); }
-#line 5834 "harboury.c" /* yacc.c:1646  */
+#line 5843 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 454:
-#line 1359 "harbour.y" /* yacc.c:1646  */
+#line 1360 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-3].string), hb_compVarTypeNew( HB_COMP_PARAM, 'F', NULL ) ); }
-#line 5840 "harboury.c" /* yacc.c:1646  */
+#line 5849 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 455:
-#line 1360 "harbour.y" /* yacc.c:1646  */
+#line 1361 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-1].string), (yyvsp[0].asVarType) ); }
-#line 5846 "harboury.c" /* yacc.c:1646  */
+#line 5855 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 456:
-#line 1361 "harbour.y" /* yacc.c:1646  */
+#line 1362 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-1].string), hb_compVarTypeNew( HB_COMP_PARAM, (yyvsp[0].asVarType)->cVarType + HB_VT_OFFSET_BYREF, NULL ) ); }
-#line 5852 "harboury.c" /* yacc.c:1646  */
+#line 5861 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 457:
-#line 1362 "harbour.y" /* yacc.c:1646  */
+#line 1363 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-3].string), hb_compVarTypeNew( HB_COMP_PARAM, 'F', NULL ) ); }
-#line 5858 "harboury.c" /* yacc.c:1646  */
+#line 5867 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 458:
-#line 1365 "harbour.y" /* yacc.c:1646  */
+#line 1366 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-1].string), hb_compVarTypeNew( HB_COMP_PARAM, (yyvsp[0].asVarType)->cVarType + HB_VT_OFFSET_OPTIONAL, NULL ) ); }
-#line 5864 "harboury.c" /* yacc.c:1646  */
+#line 5873 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 459:
-#line 1366 "harbour.y" /* yacc.c:1646  */
+#line 1367 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-1].string), hb_compVarTypeNew( HB_COMP_PARAM, (yyvsp[0].asVarType)->cVarType + HB_VT_OFFSET_OPTIONAL + HB_VT_OFFSET_BYREF, NULL ) ); }
-#line 5870 "harboury.c" /* yacc.c:1646  */
+#line 5879 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 460:
-#line 1367 "harbour.y" /* yacc.c:1646  */
+#line 1368 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-3].string), hb_compVarTypeNew( HB_COMP_PARAM, 'F' + HB_VT_OFFSET_OPTIONAL + HB_VT_OFFSET_BYREF, NULL ) ); }
-#line 5876 "harboury.c" /* yacc.c:1646  */
+#line 5885 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 461:
-#line 1368 "harbour.y" /* yacc.c:1646  */
+#line 1369 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-1].string), hb_compVarTypeNew( HB_COMP_PARAM, (yyvsp[0].asVarType)->cVarType + HB_VT_OFFSET_OPTIONAL, NULL ) ); }
-#line 5882 "harboury.c" /* yacc.c:1646  */
+#line 5891 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 462:
-#line 1369 "harbour.y" /* yacc.c:1646  */
+#line 1370 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-1].string), hb_compVarTypeNew( HB_COMP_PARAM, (yyvsp[0].asVarType)->cVarType + HB_VT_OFFSET_OPTIONAL + HB_VT_OFFSET_BYREF, NULL ) ); }
-#line 5888 "harboury.c" /* yacc.c:1646  */
+#line 5897 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 463:
-#line 1370 "harbour.y" /* yacc.c:1646  */
+#line 1371 "harbour.y" /* yacc.c:1646  */
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[-3].string), hb_compVarTypeNew( HB_COMP_PARAM, 'F' + HB_VT_OFFSET_OPTIONAL + HB_VT_OFFSET_BYREF, NULL ) ); }
-#line 5894 "harboury.c" /* yacc.c:1646  */
+#line 5903 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 472:
-#line 1383 "harbour.y" /* yacc.c:1646  */
+#line 1384 "harbour.y" /* yacc.c:1646  */
     { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_NEXTFOR ); }
-#line 5900 "harboury.c" /* yacc.c:1646  */
+#line 5909 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 473:
-#line 1386 "harbour.y" /* yacc.c:1646  */
+#line 1387 "harbour.y" /* yacc.c:1646  */
     { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDCASE ); }
-#line 5906 "harboury.c" /* yacc.c:1646  */
+#line 5915 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 474:
-#line 1389 "harbour.y" /* yacc.c:1646  */
+#line 1390 "harbour.y" /* yacc.c:1646  */
     { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDIF ); }
-#line 5912 "harboury.c" /* yacc.c:1646  */
+#line 5921 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 475:
-#line 1392 "harbour.y" /* yacc.c:1646  */
+#line 1393 "harbour.y" /* yacc.c:1646  */
     { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDWITH ); }
-#line 5918 "harboury.c" /* yacc.c:1646  */
+#line 5927 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 476:
-#line 1395 "harbour.y" /* yacc.c:1646  */
+#line 1396 "harbour.y" /* yacc.c:1646  */
     { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDSEQ ); }
-#line 5924 "harboury.c" /* yacc.c:1646  */
+#line 5933 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 477:
-#line 1398 "harbour.y" /* yacc.c:1646  */
+#line 1399 "harbour.y" /* yacc.c:1646  */
     { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDDO ); }
-#line 5930 "harboury.c" /* yacc.c:1646  */
+#line 5939 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 478:
-#line 1401 "harbour.y" /* yacc.c:1646  */
+#line 1402 "harbour.y" /* yacc.c:1646  */
     { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDSWITCH ); }
-#line 5936 "harboury.c" /* yacc.c:1646  */
+#line 5945 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 479:
-#line 1404 "harbour.y" /* yacc.c:1646  */
+#line 1405 "harbour.y" /* yacc.c:1646  */
     { hb_compGenJumpHere( (yyvsp[-1].sNumber), HB_COMP_PARAM ); }
-#line 5942 "harboury.c" /* yacc.c:1646  */
+#line 5951 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 480:
-#line 1405 "harbour.y" /* yacc.c:1646  */
+#line 1406 "harbour.y" /* yacc.c:1646  */
     { hb_compGenJumpHere( (yyvsp[-2].sNumber), HB_COMP_PARAM ); }
-#line 5948 "harboury.c" /* yacc.c:1646  */
+#line 5957 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 481:
-#line 1406 "harbour.y" /* yacc.c:1646  */
+#line 1407 "harbour.y" /* yacc.c:1646  */
     { hb_compGenJumpHere( (yyvsp[-2].sNumber), HB_COMP_PARAM ); hb_compElseIfFix( HB_COMP_PARAM, (yyvsp[-1].pVoid) ); }
-#line 5954 "harboury.c" /* yacc.c:1646  */
+#line 5963 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 482:
-#line 1407 "harbour.y" /* yacc.c:1646  */
+#line 1408 "harbour.y" /* yacc.c:1646  */
     { hb_compGenJumpHere( (yyvsp[-3].sNumber), HB_COMP_PARAM ); hb_compElseIfFix( HB_COMP_PARAM, (yyvsp[-2].pVoid) ); }
-#line 5960 "harboury.c" /* yacc.c:1646  */
+#line 5969 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 483:
-#line 1411 "harbour.y" /* yacc.c:1646  */
+#line 1412 "harbour.y" /* yacc.c:1646  */
     { ++HB_COMP_PARAM->functions.pLast->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); }
-#line 5966 "harboury.c" /* yacc.c:1646  */
+#line 5975 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 484:
-#line 1413 "harbour.y" /* yacc.c:1646  */
+#line 1414 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[-2].asExpr), HB_COMP_PARAM ) ); (yyval.sNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
-#line 5972 "harboury.c" /* yacc.c:1646  */
+#line 5981 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 485:
-#line 1415 "harbour.y" /* yacc.c:1646  */
+#line 1416 "harbour.y" /* yacc.c:1646  */
     { (yyval.sNumber) = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( (yyvsp[-1].sNumber), HB_COMP_PARAM ); }
-#line 5978 "harboury.c" /* yacc.c:1646  */
+#line 5987 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 486:
-#line 1418 "harbour.y" /* yacc.c:1646  */
+#line 1419 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; }
-#line 5984 "harboury.c" /* yacc.c:1646  */
+#line 5993 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 488:
-#line 1422 "harbour.y" /* yacc.c:1646  */
+#line 1423 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); }
-#line 5990 "harboury.c" /* yacc.c:1646  */
+#line 5999 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 489:
-#line 1424 "harbour.y" /* yacc.c:1646  */
+#line 1425 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[-1].asExpr), HB_COMP_PARAM ) );
                   (yyval.sNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                }
-#line 5998 "harboury.c" /* yacc.c:1646  */
+#line 6007 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 490:
-#line 1428 "harbour.y" /* yacc.c:1646  */
+#line 1429 "harbour.y" /* yacc.c:1646  */
     { (yyval.pVoid) = hb_compElseIfGen( HB_COMP_PARAM, NULL, hb_compGenJump( 0, HB_COMP_PARAM ) );
                   hb_compGenJumpHere( (yyvsp[-1].sNumber), HB_COMP_PARAM );
                }
-#line 6006 "harboury.c" /* yacc.c:1646  */
+#line 6015 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 491:
-#line 1432 "harbour.y" /* yacc.c:1646  */
+#line 1433 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); }
-#line 6012 "harboury.c" /* yacc.c:1646  */
+#line 6021 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 492:
-#line 1434 "harbour.y" /* yacc.c:1646  */
+#line 1435 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[-1].asExpr), HB_COMP_PARAM ) );
                   (yyval.sNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                }
-#line 6020 "harboury.c" /* yacc.c:1646  */
+#line 6029 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 493:
-#line 1438 "harbour.y" /* yacc.c:1646  */
+#line 1439 "harbour.y" /* yacc.c:1646  */
     { (yyval.pVoid) = hb_compElseIfGen( HB_COMP_PARAM, (yyvsp[-6].pVoid), hb_compGenJump( 0, HB_COMP_PARAM ) );
                   hb_compGenJumpHere( (yyvsp[-1].sNumber), HB_COMP_PARAM );
                }
-#line 6028 "harboury.c" /* yacc.c:1646  */
+#line 6037 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 494:
-#line 1444 "harbour.y" /* yacc.c:1646  */
+#line 1445 "harbour.y" /* yacc.c:1646  */
     {
                   if( HB_COMP_PARAM->functions.pLast->wIfCounter )
                      --HB_COMP_PARAM->functions.pLast->wIfCounter;
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                }
-#line 6038 "harboury.c" /* yacc.c:1646  */
+#line 6047 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 497:
-#line 1453 "harbour.y" /* yacc.c:1646  */
-    { hb_compErrUnclosed( HB_COMP_PARAM, "IF*" ); }
-#line 6044 "harboury.c" /* yacc.c:1646  */
+#line 1454 "harbour.y" /* yacc.c:1646  */
+    { hb_compErrUnclosed( HB_COMP_PARAM, "IF" ); }
+#line 6053 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 504:
-#line 1464 "harbour.y" /* yacc.c:1646  */
+#line 1465 "harbour.y" /* yacc.c:1646  */
     { hb_compElseIfFix( HB_COMP_PARAM, (yyvsp[-1].pVoid) ); }
-#line 6050 "harboury.c" /* yacc.c:1646  */
+#line 6059 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 507:
-#line 1476 "harbour.y" /* yacc.c:1646  */
+#line 1477 "harbour.y" /* yacc.c:1646  */
     { hb_compElseIfFix( HB_COMP_PARAM, (yyvsp[-2].pVoid) ); }
-#line 6056 "harboury.c" /* yacc.c:1646  */
+#line 6065 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 508:
-#line 1480 "harbour.y" /* yacc.c:1646  */
+#line 1481 "harbour.y" /* yacc.c:1646  */
     {  if( HB_COMP_PARAM->functions.pLast->wCaseCounter )
                      --HB_COMP_PARAM->functions.pLast->wCaseCounter;
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                }
-#line 6065 "harboury.c" /* yacc.c:1646  */
+#line 6074 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 511:
-#line 1488 "harbour.y" /* yacc.c:1646  */
-    { hb_compErrUnclosed( HB_COMP_PARAM, "CASE*" ); }
-#line 6071 "harboury.c" /* yacc.c:1646  */
+#line 1489 "harbour.y" /* yacc.c:1646  */
+    { hb_compErrUnclosed( HB_COMP_PARAM, "CASE" ); }
+#line 6080 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 518:
-#line 1497 "harbour.y" /* yacc.c:1646  */
+#line 1498 "harbour.y" /* yacc.c:1646  */
     { ++HB_COMP_PARAM->functions.pLast->wCaseCounter; hb_compLinePushIfDebugger( HB_COMP_PARAM );}
-#line 6077 "harboury.c" /* yacc.c:1646  */
+#line 6086 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 521:
-#line 1501 "harbour.y" /* yacc.c:1646  */
+#line 1502 "harbour.y" /* yacc.c:1646  */
     {
                         if( (yyvsp[0].lNumber) > 0 )
                         {
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
                         }
                      }
-#line 6088 "harboury.c" /* yacc.c:1646  */
+#line 6097 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 522:
-#line 1509 "harbour.y" /* yacc.c:1646  */
+#line 1510 "harbour.y" /* yacc.c:1646  */
     { hb_compLinePushIfInside( HB_COMP_PARAM ); }
-#line 6094 "harboury.c" /* yacc.c:1646  */
+#line 6103 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 523:
-#line 1510 "harbour.y" /* yacc.c:1646  */
+#line 1511 "harbour.y" /* yacc.c:1646  */
     {
                   HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[-1].asExpr), HB_COMP_PARAM ) );
                   (yyval.sNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                }
-#line 6103 "harboury.c" /* yacc.c:1646  */
+#line 6112 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 524:
-#line 1515 "harbour.y" /* yacc.c:1646  */
+#line 1516 "harbour.y" /* yacc.c:1646  */
     {
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                   (yyval.pVoid) = hb_compElseIfGen( HB_COMP_PARAM, NULL, hb_compGenJump( 0, HB_COMP_PARAM ) );
                   hb_compGenJumpHere( (yyvsp[-1].sNumber), HB_COMP_PARAM );
                }
-#line 6113 "harboury.c" /* yacc.c:1646  */
+#line 6122 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 525:
-#line 1521 "harbour.y" /* yacc.c:1646  */
+#line 1522 "harbour.y" /* yacc.c:1646  */
     { hb_compLinePushIfInside( HB_COMP_PARAM ); }
-#line 6119 "harboury.c" /* yacc.c:1646  */
+#line 6128 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 526:
-#line 1522 "harbour.y" /* yacc.c:1646  */
+#line 1523 "harbour.y" /* yacc.c:1646  */
     {
                   HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[-1].asExpr), HB_COMP_PARAM ) );
                   (yyval.sNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                }
-#line 6128 "harboury.c" /* yacc.c:1646  */
+#line 6137 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 527:
-#line 1527 "harbour.y" /* yacc.c:1646  */
+#line 1528 "harbour.y" /* yacc.c:1646  */
     {
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                   (yyval.pVoid) = hb_compElseIfGen( HB_COMP_PARAM, (yyvsp[-6].pVoid), hb_compGenJump( 0, HB_COMP_PARAM ) );
                   hb_compGenJumpHere( (yyvsp[-1].sNumber), HB_COMP_PARAM );
                }
-#line 6138 "harboury.c" /* yacc.c:1646  */
+#line 6147 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 528:
-#line 1534 "harbour.y" /* yacc.c:1646  */
+#line 1535 "harbour.y" /* yacc.c:1646  */
     {hb_compLinePushIfDebugger( HB_COMP_PARAM ); }
-#line 6144 "harboury.c" /* yacc.c:1646  */
+#line 6153 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 529:
-#line 1534 "harbour.y" /* yacc.c:1646  */
+#line 1535 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; }
-#line 6150 "harboury.c" /* yacc.c:1646  */
+#line 6159 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 531:
-#line 1536 "harbour.y" /* yacc.c:1646  */
+#line 1537 "harbour.y" /* yacc.c:1646  */
     { hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); }
-#line 6156 "harboury.c" /* yacc.c:1646  */
+#line 6165 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 533:
-#line 1541 "harbour.y" /* yacc.c:1646  */
+#line 1542 "harbour.y" /* yacc.c:1646  */
     {
                   HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[-1].asExpr), HB_COMP_PARAM ) );
                   (yyval.sNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                }
-#line 6165 "harboury.c" /* yacc.c:1646  */
+#line 6174 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 534:
-#line 1546 "harbour.y" /* yacc.c:1646  */
+#line 1547 "harbour.y" /* yacc.c:1646  */
     {
                   hb_compLoopHere( HB_COMP_PARAM );
                   hb_compGenJump( (yyvsp[-4].sNumber) - HB_COMP_PARAM->functions.pLast->nPCodePos, HB_COMP_PARAM );
                }
-#line 6174 "harboury.c" /* yacc.c:1646  */
+#line 6183 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 535:
-#line 1551 "harbour.y" /* yacc.c:1646  */
+#line 1552 "harbour.y" /* yacc.c:1646  */
     {
                   hb_compGenJumpHere( (yyvsp[-3].sNumber), HB_COMP_PARAM );
                   if( HB_COMP_PARAM->functions.pLast->wWhileCounter )
@@ -6185,34 +6194,34 @@ yyreduce:
                   hb_compLoopEnd( HB_COMP_PARAM );
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN;
                }
-#line 6186 "harboury.c" /* yacc.c:1646  */
+#line 6195 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 536:
-#line 1561 "harbour.y" /* yacc.c:1646  */
+#line 1562 "harbour.y" /* yacc.c:1646  */
     {
                   (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   ++HB_COMP_PARAM->functions.pLast->wWhileCounter;
                   hb_compLoopStart( HB_COMP_PARAM, HB_TRUE );
                }
-#line 6197 "harboury.c" /* yacc.c:1646  */
+#line 6206 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 537:
-#line 1570 "harbour.y" /* yacc.c:1646  */
+#line 1571 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; }
-#line 6203 "harboury.c" /* yacc.c:1646  */
+#line 6212 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 540:
-#line 1575 "harbour.y" /* yacc.c:1646  */
-    { hb_compErrUnclosed( HB_COMP_PARAM, "WHILE*" ); }
-#line 6209 "harboury.c" /* yacc.c:1646  */
+#line 1576 "harbour.y" /* yacc.c:1646  */
+    { hb_compErrUnclosed( HB_COMP_PARAM, "WHILE" ); }
+#line 6218 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 547:
-#line 1585 "harbour.y" /* yacc.c:1646  */
+#line 1586 "harbour.y" /* yacc.c:1646  */
     {                                      /* 5 */
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   (yyvsp[-3].iNumber) = HB_COMP_PARAM->currLine;
@@ -6225,28 +6234,28 @@ yyreduce:
                      hb_compForStart( HB_COMP_PARAM, hb_compExprAsSymbol( (yyvsp[-2].asExpr) ), 0 );
                   }
                }
-#line 6226 "harboury.c" /* yacc.c:1646  */
+#line 6235 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 548:
-#line 1598 "harbour.y" /* yacc.c:1646  */
+#line 1599 "harbour.y" /* yacc.c:1646  */
     {                                      /* 9 */
                   hb_compLoopStart( HB_COMP_PARAM, HB_TRUE );
                   (yyval.sNumber) = hb_compGenJump( 0, HB_COMP_PARAM );
                }
-#line 6235 "harboury.c" /* yacc.c:1646  */
+#line 6244 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 549:
-#line 1603 "harbour.y" /* yacc.c:1646  */
+#line 1604 "harbour.y" /* yacc.c:1646  */
     {                                      /* 11 */
                   (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                }
-#line 6243 "harboury.c" /* yacc.c:1646  */
+#line 6252 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 550:
-#line 1607 "harbour.y" /* yacc.c:1646  */
+#line 1608 "harbour.y" /* yacc.c:1646  */
     {
                   int iSign, iLine;
 
@@ -6289,91 +6298,91 @@ yyreduce:
                   HB_COMP_EXPR_FREE( (yyvsp[-7].asExpr) );  /* deletes $5, $2, $4 */
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                }
-#line 6290 "harboury.c" /* yacc.c:1646  */
+#line 6299 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 553:
-#line 1655 "harbour.y" /* yacc.c:1646  */
+#line 1656 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = NULL; }
-#line 6296 "harboury.c" /* yacc.c:1646  */
+#line 6305 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 554:
-#line 1656 "harbour.y" /* yacc.c:1646  */
+#line 1657 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprReduce( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 6302 "harboury.c" /* yacc.c:1646  */
+#line 6311 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 555:
-#line 1660 "harbour.y" /* yacc.c:1646  */
+#line 1661 "harbour.y" /* yacc.c:1646  */
     {
                      hb_compLinePush( HB_COMP_PARAM );
                      if( HB_COMP_PARAM->functions.pLast->wForCounter )
                         --HB_COMP_PARAM->functions.pLast->wForCounter;
                   }
-#line 6312 "harboury.c" /* yacc.c:1646  */
+#line 6321 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 559:
-#line 1670 "harbour.y" /* yacc.c:1646  */
-    { hb_compErrUnclosed( HB_COMP_PARAM, "FOR*" ); }
-#line 6318 "harboury.c" /* yacc.c:1646  */
+#line 1671 "harbour.y" /* yacc.c:1646  */
+    { hb_compErrUnclosed( HB_COMP_PARAM, "FOR" ); }
+#line 6327 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 566:
-#line 1679 "harbour.y" /* yacc.c:1646  */
+#line 1680 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewVarRef( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 6324 "harboury.c" /* yacc.c:1646  */
+#line 6333 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 567:
-#line 1680 "harbour.y" /* yacc.c:1646  */
+#line 1681 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewRef( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 6330 "harboury.c" /* yacc.c:1646  */
+#line 6339 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 568:
-#line 1683 "harbour.y" /* yacc.c:1646  */
+#line 1684 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 6336 "harboury.c" /* yacc.c:1646  */
+#line 6345 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 569:
-#line 1684 "harbour.y" /* yacc.c:1646  */
+#line 1685 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 6342 "harboury.c" /* yacc.c:1646  */
+#line 6351 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 570:
-#line 1687 "harbour.y" /* yacc.c:1646  */
+#line 1688 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewVarRef( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 6348 "harboury.c" /* yacc.c:1646  */
+#line 6357 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 572:
-#line 1691 "harbour.y" /* yacc.c:1646  */
+#line 1692 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 6354 "harboury.c" /* yacc.c:1646  */
+#line 6363 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 573:
-#line 1692 "harbour.y" /* yacc.c:1646  */
+#line 1693 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 6360 "harboury.c" /* yacc.c:1646  */
+#line 6369 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 574:
-#line 1697 "harbour.y" /* yacc.c:1646  */
+#line 1698 "harbour.y" /* yacc.c:1646  */
     {
                 ++HB_COMP_PARAM->functions.pLast->wForCounter;    /* 5 */
                 hb_compLinePushIfInside( HB_COMP_PARAM );
                 hb_compDebugStart();
              }
-#line 6370 "harboury.c" /* yacc.c:1646  */
+#line 6379 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 575:
-#line 1703 "harbour.y" /* yacc.c:1646  */
+#line 1704 "harbour.y" /* yacc.c:1646  */
     {
                 /* 7 */
                 (yyvsp[-4].asExpr) = hb_compExprReduce( (yyvsp[-4].asExpr), HB_COMP_PARAM );
@@ -6383,20 +6392,20 @@ yyreduce:
                 hb_compLoopStart( HB_COMP_PARAM, HB_TRUE );
                 (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
              }
-#line 6384 "harboury.c" /* yacc.c:1646  */
+#line 6393 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 576:
-#line 1713 "harbour.y" /* yacc.c:1646  */
+#line 1714 "harbour.y" /* yacc.c:1646  */
     {
                 /* 9 */
                 (yyval.sNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
              }
-#line 6393 "harboury.c" /* yacc.c:1646  */
+#line 6402 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 577:
-#line 1718 "harbour.y" /* yacc.c:1646  */
+#line 1719 "harbour.y" /* yacc.c:1646  */
     {
                 hb_compLoopHere( HB_COMP_PARAM );
                 hb_compEnumNext( HB_COMP_PARAM, (yyvsp[-8].asExpr), (yyvsp[-4].iNumber) );
@@ -6409,129 +6418,129 @@ yyreduce:
                 HB_COMP_EXPR_FREE( (yyvsp[-8].asExpr) );
                 HB_COMP_EXPR_FREE( (yyvsp[-6].asExpr) );
              }
-#line 6410 "harboury.c" /* yacc.c:1646  */
+#line 6419 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 578:
-#line 1732 "harbour.y" /* yacc.c:1646  */
+#line 1733 "harbour.y" /* yacc.c:1646  */
     { (yyval.iNumber) =  1; }
-#line 6416 "harboury.c" /* yacc.c:1646  */
+#line 6425 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 579:
-#line 1733 "harbour.y" /* yacc.c:1646  */
+#line 1734 "harbour.y" /* yacc.c:1646  */
     { (yyval.iNumber) = -1; }
-#line 6422 "harboury.c" /* yacc.c:1646  */
+#line 6431 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 580:
-#line 1737 "harbour.y" /* yacc.c:1646  */
+#line 1738 "harbour.y" /* yacc.c:1646  */
     {
                   hb_compLoopStart( HB_COMP_PARAM, HB_FALSE );
                   hb_compSwitchStart( HB_COMP_PARAM, (yyvsp[0].asExpr) );
                   hb_compGenJump( 0, HB_COMP_PARAM );
                }
-#line 6432 "harboury.c" /* yacc.c:1646  */
+#line 6441 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 581:
-#line 1744 "harbour.y" /* yacc.c:1646  */
+#line 1745 "harbour.y" /* yacc.c:1646  */
     {
                   hb_compSwitchEnd( HB_COMP_PARAM );
                   hb_compLoopEnd( HB_COMP_PARAM );
                }
-#line 6441 "harboury.c" /* yacc.c:1646  */
+#line 6450 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 582:
-#line 1751 "harbour.y" /* yacc.c:1646  */
+#line 1752 "harbour.y" /* yacc.c:1646  */
     {
                   HB_COMP_EXPR_FREE( (yyvsp[-1].asExpr) );
                }
-#line 6449 "harboury.c" /* yacc.c:1646  */
+#line 6458 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 583:
-#line 1757 "harbour.y" /* yacc.c:1646  */
+#line 1758 "harbour.y" /* yacc.c:1646  */
     {
                   if( HB_COMP_PARAM->functions.pLast->wSwitchCounter )
                      --HB_COMP_PARAM->functions.pLast->wSwitchCounter;
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                }
-#line 6459 "harboury.c" /* yacc.c:1646  */
+#line 6468 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 586:
-#line 1766 "harbour.y" /* yacc.c:1646  */
-    { hb_compErrUnclosed( HB_COMP_PARAM, "SWITCH*" ); }
-#line 6465 "harboury.c" /* yacc.c:1646  */
+#line 1767 "harbour.y" /* yacc.c:1646  */
+    { hb_compErrUnclosed( HB_COMP_PARAM, "SWITCH" ); }
+#line 6474 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 593:
-#line 1776 "harbour.y" /* yacc.c:1646  */
+#line 1777 "harbour.y" /* yacc.c:1646  */
     {
                   ++HB_COMP_PARAM->functions.pLast->wSwitchCounter;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                }
-#line 6474 "harboury.c" /* yacc.c:1646  */
+#line 6483 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 594:
-#line 1781 "harbour.y" /* yacc.c:1646  */
+#line 1782 "harbour.y" /* yacc.c:1646  */
     {
                   (yyval.asExpr) = hb_compExprReduce( (yyvsp[-1].asExpr), HB_COMP_PARAM );
                }
-#line 6482 "harboury.c" /* yacc.c:1646  */
+#line 6491 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 596:
-#line 1788 "harbour.y" /* yacc.c:1646  */
+#line 1789 "harbour.y" /* yacc.c:1646  */
     {
                   if( (yyvsp[0].lNumber) > 0 )
                   {
                      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
                   }
                }
-#line 6493 "harboury.c" /* yacc.c:1646  */
+#line 6502 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 597:
-#line 1796 "harbour.y" /* yacc.c:1646  */
+#line 1797 "harbour.y" /* yacc.c:1646  */
     { hb_compSwitchAdd( HB_COMP_PARAM, (yyvsp[0].asExpr) ); hb_compLinePush( HB_COMP_PARAM ); }
-#line 6499 "harboury.c" /* yacc.c:1646  */
+#line 6508 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 599:
-#line 1799 "harbour.y" /* yacc.c:1646  */
+#line 1800 "harbour.y" /* yacc.c:1646  */
     { hb_compSwitchAdd( HB_COMP_PARAM, (yyvsp[0].asExpr) ); hb_compLinePush( HB_COMP_PARAM ); }
-#line 6505 "harboury.c" /* yacc.c:1646  */
+#line 6514 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 603:
-#line 1807 "harbour.y" /* yacc.c:1646  */
+#line 1808 "harbour.y" /* yacc.c:1646  */
     { hb_compSwitchAdd( HB_COMP_PARAM, NULL ); hb_compLinePush( HB_COMP_PARAM ); }
-#line 6511 "harboury.c" /* yacc.c:1646  */
+#line 6520 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 604:
-#line 1807 "harbour.y" /* yacc.c:1646  */
+#line 1808 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; }
-#line 6517 "harboury.c" /* yacc.c:1646  */
+#line 6526 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 606:
-#line 1812 "harbour.y" /* yacc.c:1646  */
+#line 1813 "harbour.y" /* yacc.c:1646  */
     {              /* 2 */
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   ++HB_COMP_PARAM->functions.pLast->wSeqCounter;
                   ++HB_COMP_PARAM->functions.pLast->wSeqBegCounter;
                   (yyval.sNumber) = hb_compSequenceBegin( HB_COMP_PARAM );
                }
-#line 6528 "harboury.c" /* yacc.c:1646  */
+#line 6537 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 607:
-#line 1821 "harbour.y" /* yacc.c:1646  */
+#line 1822 "harbour.y" /* yacc.c:1646  */
     {              /* 6 */
                   /* Set jump address for HB_P_SEQBEGIN opcode - this address
                    * will be used in BREAK code if there is no RECOVER clause
@@ -6542,11 +6551,11 @@ yyreduce:
                   (yyval.sNumber) = hb_compSequenceEnd( HB_COMP_PARAM );
                   (yyvsp[-1].lNumber) = hb_compLoopCount( HB_COMP_PARAM );
                }
-#line 6543 "harboury.c" /* yacc.c:1646  */
+#line 6552 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 608:
-#line 1832 "harbour.y" /* yacc.c:1646  */
+#line 1833 "harbour.y" /* yacc.c:1646  */
     {              /* 8 */
                   /* Replace END address with RECOVER address in
                    * HB_P_SEQBEGIN opcode if there is RECOVER clause
@@ -6554,11 +6563,11 @@ yyreduce:
                   if( (yyvsp[0].sNumber) )
                      hb_compGenJumpThere( (yyvsp[-5].sNumber), (yyvsp[0].sNumber), HB_COMP_PARAM );
                }
-#line 6555 "harboury.c" /* yacc.c:1646  */
+#line 6564 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 609:
-#line 1840 "harbour.y" /* yacc.c:1646  */
+#line 1841 "harbour.y" /* yacc.c:1646  */
     {              /* 10 */
                   long lLoopCount = hb_compLoopCount( HB_COMP_PARAM );
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
@@ -6587,70 +6596,70 @@ yyreduce:
                   hb_compSequenceFinish( HB_COMP_PARAM, (yyvsp[-7].sNumber), (yyvsp[-3].sNumber), (yyvsp[0].sNumber),
                                          (yyvsp[-4].lNumber) != 0, (yyvsp[-2].sNumber) != 0, (yyvsp[-5].lNumber) == lLoopCount );
                }
-#line 6588 "harboury.c" /* yacc.c:1646  */
+#line 6597 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 610:
-#line 1869 "harbour.y" /* yacc.c:1646  */
+#line 1870 "harbour.y" /* yacc.c:1646  */
     {
                   if( HB_COMP_PARAM->functions.pLast->wSeqBegCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqBegCounter;
                }
-#line 6597 "harboury.c" /* yacc.c:1646  */
+#line 6606 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 613:
-#line 1877 "harbour.y" /* yacc.c:1646  */
-    { hb_compErrUnclosed( HB_COMP_PARAM, "BEGIN SEQUENCE*" ); }
-#line 6603 "harboury.c" /* yacc.c:1646  */
+#line 1878 "harbour.y" /* yacc.c:1646  */
+    { hb_compErrUnclosed( HB_COMP_PARAM, "BEGIN SEQUENCE" ); }
+#line 6612 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 620:
-#line 1886 "harbour.y" /* yacc.c:1646  */
+#line 1887 "harbour.y" /* yacc.c:1646  */
     { (yyval.sNumber) = 0; }
-#line 6609 "harboury.c" /* yacc.c:1646  */
+#line 6618 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 621:
-#line 1888 "harbour.y" /* yacc.c:1646  */
+#line 1889 "harbour.y" /* yacc.c:1646  */
     {
                   HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[0].asExpr), HB_COMP_PARAM ) );
                   hb_compGenPCode1( HB_P_SEQBLOCK, HB_COMP_PARAM );
                   (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                }
-#line 6619 "harboury.c" /* yacc.c:1646  */
+#line 6628 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 622:
-#line 1895 "harbour.y" /* yacc.c:1646  */
+#line 1896 "harbour.y" /* yacc.c:1646  */
     { (yyval.sNumber) = 0; }
-#line 6625 "harboury.c" /* yacc.c:1646  */
+#line 6634 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 624:
-#line 1900 "harbour.y" /* yacc.c:1646  */
+#line 1901 "harbour.y" /* yacc.c:1646  */
     {
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                   (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   ++HB_COMP_PARAM->functions.pLast->wAlwaysCounter;
                   hb_compSequenceAlways( HB_COMP_PARAM );
                }
-#line 6636 "harboury.c" /* yacc.c:1646  */
+#line 6645 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 625:
-#line 1909 "harbour.y" /* yacc.c:1646  */
+#line 1910 "harbour.y" /* yacc.c:1646  */
     {
                   (yyval.sNumber) = 0;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqCounter;
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                }
-#line 6647 "harboury.c" /* yacc.c:1646  */
+#line 6656 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 628:
-#line 1920 "harbour.y" /* yacc.c:1646  */
+#line 1921 "harbour.y" /* yacc.c:1646  */
     {
                   (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
@@ -6659,11 +6668,11 @@ yyreduce:
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP, HB_COMP_PARAM );
                }
-#line 6660 "harboury.c" /* yacc.c:1646  */
+#line 6669 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 629:
-#line 1931 "harbour.y" /* yacc.c:1646  */
+#line 1932 "harbour.y" /* yacc.c:1646  */
     {
                   (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
@@ -6673,77 +6682,77 @@ yyreduce:
                   hb_compGenPCode1( HB_P_SEQRECOVER, HB_COMP_PARAM );
                   hb_compGenPopVar( (yyvsp[0].string), HB_COMP_PARAM );
                }
-#line 6674 "harboury.c" /* yacc.c:1646  */
+#line 6683 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 630:
-#line 1949 "harbour.y" /* yacc.c:1646  */
+#line 1950 "harbour.y" /* yacc.c:1646  */
     {
                   (yyval.asExpr) = hb_compExprNewFunCall( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM );
                }
-#line 6682 "harboury.c" /* yacc.c:1646  */
+#line 6691 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 631:
-#line 1953 "harbour.y" /* yacc.c:1646  */
+#line 1954 "harbour.y" /* yacc.c:1646  */
     {
                   hb_compModuleAdd( HB_COMP_PARAM, (yyvsp[-1].string), HB_FALSE );
                   /* DOIDENT is the only one identifier which can be returned in lower letters */
                   (yyval.asExpr) = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( (yyvsp[-1].string) ) ), HB_IDENT_FREE ), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM );
                }
-#line 6692 "harboury.c" /* yacc.c:1646  */
+#line 6701 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 632:
-#line 1960 "harbour.y" /* yacc.c:1646  */
+#line 1961 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = NULL; }
-#line 6698 "harboury.c" /* yacc.c:1646  */
+#line 6707 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 633:
-#line 1961 "harbour.y" /* yacc.c:1646  */
+#line 1962 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 6704 "harboury.c" /* yacc.c:1646  */
+#line 6713 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 634:
-#line 1964 "harbour.y" /* yacc.c:1646  */
+#line 1965 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM ), hb_compExprNewNil( HB_COMP_PARAM ) ); }
-#line 6710 "harboury.c" /* yacc.c:1646  */
+#line 6719 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 635:
-#line 1965 "harbour.y" /* yacc.c:1646  */
+#line 1966 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM ), (yyvsp[0].asExpr) ); }
-#line 6716 "harboury.c" /* yacc.c:1646  */
+#line 6725 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 636:
-#line 1966 "harbour.y" /* yacc.c:1646  */
+#line 1967 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 6722 "harboury.c" /* yacc.c:1646  */
+#line 6731 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 637:
-#line 1967 "harbour.y" /* yacc.c:1646  */
+#line 1968 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-1].asExpr), hb_compExprNewNil( HB_COMP_PARAM ) ); }
-#line 6728 "harboury.c" /* yacc.c:1646  */
+#line 6737 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 638:
-#line 1968 "harbour.y" /* yacc.c:1646  */
+#line 1969 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 6734 "harboury.c" /* yacc.c:1646  */
+#line 6743 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 639:
-#line 1971 "harbour.y" /* yacc.c:1646  */
+#line 1972 "harbour.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewVarRef( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 6740 "harboury.c" /* yacc.c:1646  */
+#line 6749 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 644:
-#line 1979 "harbour.y" /* yacc.c:1646  */
+#line 1980 "harbour.y" /* yacc.c:1646  */
     {
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[-1].asExpr), HB_COMP_PARAM ) );
@@ -6751,11 +6760,11 @@ yyreduce:
                   hb_compGenPCode1( HB_P_WITHOBJECTSTART, HB_COMP_PARAM );
                   HB_COMP_PARAM->functions.pLast->wWithObjectCnt++;
                }
-#line 6752 "harboury.c" /* yacc.c:1646  */
+#line 6761 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 645:
-#line 1988 "harbour.y" /* yacc.c:1646  */
+#line 1989 "harbour.y" /* yacc.c:1646  */
     {  if( HB_COMP_PARAM->functions.pLast->wWithObjectCnt )
                     --HB_COMP_PARAM->functions.pLast->wWithObjectCnt;
                   if( (yyvsp[-1].lNumber) )
@@ -6767,23 +6776,23 @@ yyreduce:
                      hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
                   }
                }
-#line 6768 "harboury.c" /* yacc.c:1646  */
+#line 6777 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 648:
-#line 2003 "harbour.y" /* yacc.c:1646  */
-    { hb_compErrUnclosed( HB_COMP_PARAM, "WITH OBJECT*" ); }
-#line 6774 "harboury.c" /* yacc.c:1646  */
+#line 2004 "harbour.y" /* yacc.c:1646  */
+    { hb_compErrUnclosed( HB_COMP_PARAM, "WITH OBJECT" ); }
+#line 6783 "harboury.c" /* yacc.c:1646  */
     break;
 
   case 655:
-#line 2012 "harbour.y" /* yacc.c:1646  */
+#line 2013 "harbour.y" /* yacc.c:1646  */
     { HB_COMP_PARAM->fError = HB_FALSE; }
-#line 6780 "harboury.c" /* yacc.c:1646  */
+#line 6789 "harboury.c" /* yacc.c:1646  */
     break;
 
 
-#line 6784 "harboury.c" /* yacc.c:1646  */
+#line 6793 "harboury.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -7011,7 +7020,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 2016 "harbour.y" /* yacc.c:1906  */
+#line 2017 "harbour.y" /* yacc.c:1906  */
 
 
 /*

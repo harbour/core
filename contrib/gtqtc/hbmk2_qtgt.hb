@@ -42,6 +42,16 @@ FUNCTION hbmk_plugin_qt( hbmk )
    LOCAL cCommand
    LOCAL nError
    LOCAL lBuildIt
+   LOCAL nQtVer
+
+   IF "dept" $ hbmk
+      nQtVer := iif( "HBMK_HAS_QT4" $ hbmk[ "dept" ], 4, ;
+                iif( "HBMK_HAS_QT5" $ hbmk[ "dept" ], 5, ;
+                iif( "HBMK_HAS_QT6" $ hbmk[ "dept" ], 6, 0 ) ) )
+      IF nQtVer > 0
+         hb_SetEnv( "QT_SELECT", hb_ntos( nQtVer ) )
+      ENDIF
+   ENDIF
 
    SWITCH hbmk[ "cSTATE" ]
    CASE "init"

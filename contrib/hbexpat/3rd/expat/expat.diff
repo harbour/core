@@ -1,16 +1,27 @@
 diff --strip-trailing-cr -urN expat.orig/loadlibr.c expat/loadlibr.c
---- expat.orig/loadlibr.c	2017-09-11 15:16:52.000000000 +0000
-+++ expat/loadlibr.c	2017-12-20 11:25:28.652000000 +0000
-@@ -32,6 +32,9 @@
+--- expat.orig/loadlibr.c	2024-02-13 06:16:03.142931679 +0100
++++ expat/loadlibr.c	2024-02-13 06:49:13.103221128 +0100
+@@ -32,7 +32,10 @@
  
  #if defined(_WIN32)
  
+-#include <windows.h>
 +#if defined(UNICODE) && !defined(_UNICODE)
 +#define _UNICODE
 +#endif
- #include <windows.h>
++#include "winconfi.h"
  #include <tchar.h>
  
+ 
+@@ -103,7 +106,7 @@
+   /* Detect if KB2533623 is installed, as LOAD_LIBARY_SEARCH_SYSTEM32 is only
+      supported on Windows Vista, Windows Server 2008, Windows 7 and Windows
+      Server 2008 R2 with this patch or natively on Windows 8 and above */
+-  else if(pLoadLibraryEx && GetProcAddress(hKernel32, "AddDllDirectory")) {
++  else if(pLoadLibraryEx && HB_WINAPI_GETPROCADDRESS(hKernel32, "AddDllDirectory")) {
+     /* Load the DLL from the Windows system directory */
+     hModule = pLoadLibraryEx(filename, NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
+   }
 @@ -114,7 +117,7 @@
        /* Allocate space for the full DLL path (Room for the null terminator
           is included in systemdirlen) */
@@ -21,8 +32,8 @@ diff --strip-trailing-cr -urN expat.orig/loadlibr.c expat/loadlibr.c
          /* Calculate the full DLL path */
          _tcscpy(path + _tcslen(path), TEXT("\\"));
 diff --strip-trailing-cr -urN expat.orig/winconfi.h expat/winconfi.h
---- expat.orig/winconfi.h	2017-09-03 14:47:40.000000000 +0000
-+++ expat/winconfi.h	2017-12-19 20:29:14.992000000 +0000
+--- expat.orig/winconfi.h	2024-02-13 06:16:03.142931679 +0100
++++ expat/winconfi.h	2017-12-20 11:37:33.337587069 +0100
 @@ -1,63 +1 @@
 -/*
 -                            __  __            _
@@ -89,8 +100,8 @@ diff --strip-trailing-cr -urN expat.orig/winconfi.h expat/winconfi.h
 -#endif /* ndef WINCONFIG_H */
 +#include "_hbconf.h"
 diff --strip-trailing-cr -urN expat.orig/xmlparse.c expat/xmlparse.c
---- expat.orig/xmlparse.c	2017-10-31 16:20:31.000000000 +0000
-+++ expat/xmlparse.c	2017-12-20 11:26:49.912000000 +0000
+--- expat.orig/xmlparse.c	2024-02-13 06:16:03.142931679 +0100
++++ expat/xmlparse.c	2017-12-20 12:31:54.994032713 +0100
 @@ -43,6 +43,12 @@
  
  #ifdef _WIN32
@@ -167,8 +178,8 @@ diff --strip-trailing-cr -urN expat.orig/xmlparse.c expat/xmlparse.c
          return NULL;
      /* Copy the original into place */
 diff --strip-trailing-cr -urN expat.orig/xmlrole.c expat/xmlrole.c
---- expat.orig/xmlrole.c	2017-09-03 14:47:40.000000000 +0000
-+++ expat/xmlrole.c	2017-12-19 20:29:15.000000000 +0000
+--- expat.orig/xmlrole.c	2024-02-13 06:16:03.142931679 +0100
++++ expat/xmlrole.c	2017-12-20 11:37:33.337587069 +0100
 @@ -36,7 +36,7 @@
  #include "winconfi.h"
  #else
@@ -179,8 +190,8 @@ diff --strip-trailing-cr -urN expat.orig/xmlrole.c expat/xmlrole.c
  #endif /* ndef _WIN32 */
  
 diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
---- expat.orig/xmltok.c	2017-09-11 17:31:49.000000000 +0000
-+++ expat/xmltok.c	2017-12-19 20:29:15.000000000 +0000
+--- expat.orig/xmltok.c	2024-02-13 06:16:03.142931679 +0100
++++ expat/xmltok.c	2018-09-20 12:45:24.874163719 +0200
 @@ -47,7 +47,7 @@
  #include "winconfi.h"
  #else

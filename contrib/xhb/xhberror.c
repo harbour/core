@@ -65,7 +65,10 @@ static HB_SIZE s_nErrProcLine = 0;
 static HB_SIZE s_nErrProcModule = 0;
 static HB_SIZE s_nErrCallStack = 0;
 
-static HB_SYMB s_symErrorNew = { "XHB_ERRORNEW", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( XHB_ERRORNEW ) }, NULL };
+static HB_SYMB s_symXhbErrorNew = { "XHB_ERRORNEW", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( XHB_ERRORNEW ) }, NULL };
+#ifdef XHB_ERROR_OVERLOAD_ERRORNEW
+   static HB_SYMB s_symErrorNew = { "ERRORNEW"    , { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( XHB_ERRORNEW ) }, NULL };
+#endif
 
 static void s_xhbErrorResize( PHB_ITEM pError )
 {
@@ -110,7 +113,7 @@ HB_UINT hb_errGetProcLine( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutProcLine( PHB_ITEM pError, HB_UINT uiProcLine )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_errPutProcLine(%p, %hu)", pError, uiProcLine ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_errPutProcLine(%p, %u)", pError, uiProcLine ) );
 
    if( hb_arrayLen( pError ) < s_nErrProcName )
       s_xhbErrorResize( pError );
@@ -342,6 +345,7 @@ static void xhb_errRedefineClass( void * cargo )
          PHB_DYNS pDynSym = hb_dynsymFind( "ERRORNEW" );
          if( pDynSym )
          {
+            s_symErrorNew.pDynSym = pDynSym;
             pDynSym->pSymbol = &s_symErrorNew;
             hb_vmSetDynFunc( pDynSym );
          }
@@ -353,7 +357,7 @@ static void xhb_errRedefineClass( void * cargo )
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _xhb_error_init_ )
-   hb_dynsymNew( &s_symErrorNew );
+   hb_dynsymNew( &s_symXhbErrorNew );
    hb_vmAtInit( xhb_errRedefineClass, NULL );
 HB_CALL_ON_STARTUP_END( _xhb_error_init_ )
 

@@ -95,7 +95,7 @@ STATIC s_lDBFAvail := .F.
    ANNOUNCE HB_GTSYS
    REQUEST HB_GT_CGI_DEFAULT
 
-   #define COPYRIGHT_YEAR  "2021"
+   #define COPYRIGHT_YEAR  "2024"
 #else
    #define COPYRIGHT_YEAR  "present"
 

@@ -217,6 +217,25 @@ HB_FUNC( HB_VFCOPYFILE )
    hb_retni( iResult );
 }
 
+/* hb_vfCopyFileEx( <cFileSrc>, <cFileDst>, [<nBufSize>], [<lTimePreserve>=.t.], [<bCallBack>] ) --> <nResult> */
+HB_FUNC( HB_VFCOPYFILEEX )
+{
+   const char * pszSource = hb_parc( 1 ),
+              * pszDestin = hb_parc( 2 );
+   HB_ERRCODE uiError = 2;
+   int iResult = F_ERROR;
+
+   if( pszSource && pszDestin )
+   {
+      if( hb_fileCopyEx( pszSource, pszDestin, hb_parns( 3 ), hb_parldef( 4, HB_TRUE ), hb_param( 5, HB_IT_EVALITEM ) ) )
+         iResult = 0;
+      uiError = hb_fsError();
+   }
+
+   hb_fsSetFError( uiError );
+   hb_retni( iResult );
+}
+
 /* hb_vfMoveFile( <cFileSrc>, <cFileDst> ) --> <nResult> */
 HB_FUNC( HB_VFMOVEFILE )
 {

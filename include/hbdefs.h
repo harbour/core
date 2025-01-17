@@ -82,7 +82,7 @@
       #undef INT32_MIN
       #define INT32_MIN ((int32_t) (-INT32_MAX-1))
       #undef INT64_MIN
-      #define INT64_MIN (9223372036854775807i64-1)
+      #define INT64_MIN (-9223372036854775807i64-1)
       #undef INT64_MAX
       #define INT64_MAX 9223372036854775807i64
    #endif

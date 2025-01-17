@@ -33,17 +33,25 @@
 #ifndef YY_HB_MACRO_YY_MACROY_H_INCLUDED
 # define YY_HB_MACRO_YY_MACROY_H_INCLUDED
 /* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
+#ifndef HB_MACRO_YYDEBUG
+# if defined YYDEBUG
 #if YYDEBUG
+#   define HB_MACRO_YYDEBUG 1
+#  else
+#   define HB_MACRO_YYDEBUG 0
+#  endif
+# else /* ! defined YYDEBUG */
+#  define HB_MACRO_YYDEBUG 0
+# endif /* ! defined YYDEBUG */
+#endif  /* ! defined HB_MACRO_YYDEBUG */
+#if HB_MACRO_YYDEBUG
 extern int hb_macro_yydebug;
 #endif
 
 /* Token type.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
+#ifndef HB_MACRO_YYTOKENTYPE
+# define HB_MACRO_YYTOKENTYPE
+  enum hb_macro_yytokentype
   {
     IDENTIFIER = 258,
     NIL = 259,
@@ -87,9 +95,9 @@ extern int hb_macro_yydebug;
 #endif
 
 /* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE YYSTYPE;
-union YYSTYPE
+#if ! defined HB_MACRO_YYSTYPE && ! defined HB_MACRO_YYSTYPE_IS_DECLARED
+typedef union HB_MACRO_YYSTYPE HB_MACRO_YYSTYPE;
+union HB_MACRO_YYSTYPE
 {
 #line 140 "macro.y" /* yacc.c:1909  */
 
@@ -120,14 +128,14 @@ union YYSTYPE
    } valDouble;
    struct
    {
-      long     date;    /* to hold julian date */
+      long     date;    /* to hold Julian date */
       long     time;    /* to hold milliseconds */
    } valTimeStamp;
 
-#line 128 "macroy.h" /* yacc.c:1909  */
+#line 136 "macroy.h" /* yacc.c:1909  */
 };
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
+# define HB_MACRO_YYSTYPE_IS_TRIVIAL 1
+# define HB_MACRO_YYSTYPE_IS_DECLARED 1
 #endif
 
 

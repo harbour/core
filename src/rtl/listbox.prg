@@ -396,8 +396,8 @@ METHOD getText( nPos ) CLASS ListBox
 
 METHOD hitTest( nMRow, nMCol ) CLASS ListBox
 
-   LOCAL nRet
-   LOCAL nTop
+   LOCAL nTop := ::nTop
+   LOCAL nOffset := 0
    LOCAL nHit := 0
 
    /* Check hit on the scrollbar */
@@ -408,14 +408,16 @@ METHOD hitTest( nMRow, nMCol ) CLASS ListBox
       RETURN nHit
    ENDIF
 
-   IF ! ::lIsOpen .OR. Empty( ::cHotBox + ::cColdBox )
-      nRet := 0
-   ELSE
-      nTop := ::nTop
-      IF ::lDropDown
-         nTop++
-      ENDIF
+   IF ::lIsOpen .AND. ::lDropDown
+      nTop++
+   ENDIF
 
+   /* NOTE: Harbour extension over Cl*pper abilities, CLP5.3
+            with mouse support will crash, RTE "Argument Error: +"
+            when a borderless listbox/dropdown is mouse-clicked */
+   IF ::lIsOpen .AND. ! Empty( ::cHotBox + ::cColdBox )
+
+      nOffset := 1
       DO CASE
       CASE nMRow == nTop
          DO CASE
@@ -436,35 +438,34 @@ METHOD hitTest( nMRow, nMCol ) CLASS ListBox
             RETURN HTBOTTOM
          ENDCASE
       CASE nMCol == ::nLeft
-         IF nMRow >= ::nTop .AND. ;
+         IF nMRow >= nTop .AND. ;
             nMRow <= ::nBottom
             RETURN HTLEFT
          ELSE
             RETURN HTNOWHERE
          ENDIF
       CASE nMCol == ::nRight
-         IF nMRow >= ::nTop .AND. ;
+         IF nMRow >= nTop .AND. ;
             nMRow <= ::nBottom
             RETURN HTRIGHT
          ELSE
             RETURN HTNOWHERE
          ENDIF
       ENDCASE
-      nRet := 1
    ENDIF
 
    DO CASE
    CASE ! ::lIsOpen
-   CASE nMRow < nTop + nRet
-   CASE nMRow > ::nBottom - nRet
-   CASE nMCol < ::nLeft + nRet
-   CASE nMCol <= ::nRight - nRet
-      RETURN ::nTopItem + nMRow - ( nTop + nRet )
+   CASE nMRow < nTop + nOffset
+   CASE nMRow > ::nBottom - nOffset
+   CASE nMCol < ::nLeft + nOffset
+   CASE nMCol <= ::nRight - nOffset
+      RETURN ::nTopItem + nMRow - ( nTop + nOffset )
    ENDCASE
 
    DO CASE
    CASE ! ::lDropDown
-   CASE nMRow != ::nTop
+   CASE nMRow != nTop
    CASE nMCol < ::nLeft
    CASE nMCol < ::nRight
       RETURN HTCLIENT
@@ -480,7 +481,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS ListBox
       RETURN HTCAPTION
    ENDCASE
 
-   RETURN 0
+   RETURN HTNOWHERE
 
 METHOD insItem( nPos, cText, xData ) CLASS ListBox
 

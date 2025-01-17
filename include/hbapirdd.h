@@ -64,12 +64,14 @@ HB_EXTERN_BEGIN
 #define EDBCMD_SEEK_BADPARAMETER          1001
 #define EDBCMD_NOALIAS                    1002
 #define EDBCMD_NOVAR                      1003
+#define EDBCMD_REL_BADPARAMETER           1004
 #define EDBCMD_USE_BADPARAMETER           1005
-#define EDBCMD_REL_BADPARAMETER           1006
+#define EDBCMD_ORD_BADPARAMETER           1006
 #define EDBCMD_ORDLSTADD_BADPARAMETER     1008
 #define EDBCMD_FIELDNAME_BADPARAMETER     1009
 #define EDBCMD_BADALIAS                   1010
 #define EDBCMD_DUPALIAS                   1011
+#define EDBCMD_REL_SAMEALIAS              1013
 #define EDBCMD_DBCMDBADPARAMETER          1014
 #define EDBCMD_BADPARAMETER               1015
 #define EDBCMD_INFOBADPARAMETER           1032

@@ -51,6 +51,10 @@
 #include "hbdate.h"
 #include "macroy.h"
 
+#ifdef HB_MACRO_YYSTYPE_IS_DECLARED
+#  define YYSTYPE HB_MACRO_YYSTYPE
+#endif
+
 typedef struct _HB_MACRO_LEX
 {
    const char * pString;

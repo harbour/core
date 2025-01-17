@@ -277,7 +277,7 @@ static int hb_dbfNextValueStep( DBFAREAP pArea, HB_USHORT uiField, int iStep )
    return iPrevStep;
 }
 
-void hb_dbfTransCheckCounters( LPDBTRANSINFO lpdbTransInfo )
+static void hb_dbfTransCheckCounters( LPDBTRANSINFO lpdbTransInfo )
 {
    HB_BOOL fCopyCtr = HB_TRUE;
    HB_USHORT uiCount, uiDest;
@@ -2193,12 +2193,16 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
                   nLen = pField->uiLen;
             }
             if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+            {
                pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                                     &nLen, pArea->area.cdPage, hb_vmCDP() );
+               hb_itemPutCLPtr( pItem, pszVal, nLen );
+            }
             else
+            {
                pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
-
-            hb_itemPutCLPtr( pItem, pszVal, nLen );
+               hb_itemPutCL( pItem, pszVal, nLen );
+            }
          }
          break;
 

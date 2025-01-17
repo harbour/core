@@ -2140,6 +2140,31 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   HB_GEN_FUNC3( PCode3, HB_P_ARRAYDIM, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
                   break;
                }
+               else if( pSelf->value.asFunCall.pFunName->value.asSymbol.funcid == HB_F_SELECT && usCount == 0 )
+               {
+                  HB_GEN_FUNC1( PCode1, HB_P_PUSHALIAS );
+                  break;
+               }
+#ifndef HB_MACRO_SUPPORT
+               else if( pSelf->value.asFunCall.pFunName->value.asSymbol.funcid == HB_F_PISBYREF && usCount == 1 &&
+                        pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_VARREF )
+               {
+                  PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
+                  int iVar, iScope;
+
+                  hb_compVariableFind( HB_COMP_PARAM, pSelf->value.asFunCall.pParms->value.asList.pExprList->value.asSymbol.name,
+                                       &iVar, &iScope );
+
+                  if( pFunc->wParamCount && ( pFunc->funFlags & HB_FUNF_USES_LOCAL_PARAMS ) != 0 &&
+                      iScope == HB_VS_LOCAL_VAR && ( HB_USHORT ) iVar <= pFunc->wParamCount )
+                  {
+                     HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pParms );
+                     pSelf->value.asFunCall.pParms = hb_compExprNewLong( iVar, HB_COMP_PARAM );
+                  }
+                  else
+                     hb_compErrorRefer( HB_COMP_PARAM, NULL, pSelf->value.asFunCall.pParms->value.asList.pExprList->value.asSymbol.name );
+               }
+#endif
             }
             HB_GEN_FUNC2( PushFunCall, pSelf->value.asFunCall.pFunName->value.asSymbol.name,
                                        pSelf->value.asFunCall.pFunName->value.asSymbol.flags );
@@ -2174,8 +2199,22 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
          HB_BOOL fArgsList = HB_FALSE;
          HB_USHORT usCount = 0;
 
+         if( pSelf->value.asFunCall.pParms )
+         {
+            usCount = ( HB_USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
+            fArgsList = pSelf->value.asFunCall.pParms->ExprType == HB_ET_MACROARGLIST;
+         }
+
          if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
          {
+            if( pSelf->value.asFunCall.pFunName->value.asSymbol.funcid == HB_F_DBSELECTAREA && usCount == 1 &&
+                ( pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_FUNREF ||
+                  hb_compExprIsInteger( pSelf->value.asFunCall.pParms->value.asList.pExprList ) ) )
+            {
+               HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+               HB_GEN_FUNC1( PCode1, HB_P_POPALIAS );
+               break;
+            }
             HB_GEN_FUNC2( PushFunCall, pSelf->value.asFunCall.pFunName->value.asSymbol.name,
                                        pSelf->value.asFunCall.pFunName->value.asSymbol.flags );
          }
@@ -2185,13 +2224,8 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             HB_GEN_FUNC1( PCode1, HB_P_PUSHNIL );
          }
 
-         if( pSelf->value.asFunCall.pParms )
-         {
-            usCount = ( HB_USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
-            fArgsList = pSelf->value.asFunCall.pParms->ExprType == HB_ET_MACROARGLIST;
-            if( usCount )
-               HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
-         }
+         if( usCount )
+            HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
 
          if( fArgsList )
          {

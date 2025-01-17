@@ -737,19 +737,17 @@ HB_FUNC( DBSELECTAREA )
    {
       int iNewArea = hb_parni( 1 );
 
-      /*
-       * NOTE: iNewArea >= HB_RDD_MAX_AREA_NUM used intentionally
-       * In Clipper area 65535 is reserved for "M" alias [druzus]
-       */
-      if( iNewArea < 1 || iNewArea >= HB_RDD_MAX_AREA_NUM )
+      if( iNewArea == 0 )
       {
-         if( hb_rddSelectFirstAvailable() != HB_SUCCESS )
-            hb_rddSelectWorkAreaNumber( 0 );
+         PHB_ITEM pItem = hb_param( 1, HB_IT_SYMBOL );
+         if( pItem )
+         {
+            PHB_SYMB pSymAlias = hb_itemGetSymbol( pItem );
+            if( pSymAlias->pDynSym )
+               iNewArea = ( int ) hb_dynsymAreaHandle( pSymAlias->pDynSym );
+         }
       }
-      else
-      {
-         hb_rddSelectWorkAreaNumber( iNewArea );
-      }
+      hb_rddSelectWorkAreaNumber( iNewArea );
    }
 }
 
@@ -1183,7 +1181,7 @@ HB_FUNC( ORDBAGNAME )
          }
          else
          {
-            hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+            hb_errRT_DBCMD( EG_ARG, EDBCMD_ORD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
             return;
          }
       }
@@ -1289,7 +1287,7 @@ HB_FUNC( ORDCREATE )
             ( dbOrderInfo.atomBagName == NULL || dbOrderInfo.atomBagName[ 0 ] == 0 ) ) ||
           ! dbOrderInfo.abExpr )
       {
-         hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_ORD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
          return;
       }
       dbOrderInfo.itmCobExpr = hb_param( 4, HB_IT_BLOCK );
@@ -1363,7 +1361,7 @@ HB_FUNC( ORDFOR )
          }
          else
          {
-            hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+            hb_errRT_DBCMD( EG_ARG, EDBCMD_ORD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
             return;
          }
       }
@@ -1399,7 +1397,7 @@ HB_FUNC( ORDKEY )
          }
          else
          {
-            hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+            hb_errRT_DBCMD( EG_ARG, EDBCMD_ORD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
             return;
          }
       }
@@ -1490,7 +1488,7 @@ HB_FUNC( ORDNAME )
          }
          else
          {
-            hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+            hb_errRT_DBCMD( EG_ARG, EDBCMD_ORD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
             return;
          }
       }
@@ -1517,7 +1515,7 @@ HB_FUNC( ORDNUMBER )
       if( ! ( pOrderInfo.itmOrder || HB_ISNIL( 1 ) ) ||
           ! ( pOrderInfo.atomBagName || HB_ISNIL( 2 ) ) )
       {
-         hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_ORD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
          return;
       }
       pOrderInfo.itmResult = hb_itemPutNI( NULL, 0 );
@@ -1660,6 +1658,16 @@ HB_FUNC( SELECT )
 #endif
             hb_rddGetAliasNumber( szAlias, &iArea );
       }
+      else
+      {
+         PHB_ITEM pItem = hb_param( 1, HB_IT_SYMBOL );
+         if( pItem )
+         {
+            PHB_SYMB pSymAlias = hb_itemGetSymbol( pItem );
+            if( pSymAlias->pDynSym )
+               iArea = ( int ) hb_dynsymAreaHandle( pSymAlias->pDynSym );
+         }
+      }
       hb_retni( iArea );
    }
 }
@@ -1775,50 +1783,45 @@ HB_FUNC( DBSETRELATION )
 
    if( pArea )
    {
-      DBRELINFO dbRelations;
-      AREAP pChildArea;
-      HB_AREANO uiChildArea;
+      int iArea = hb_rddGetCurrentWorkAreaNumber();
+      const char * szAlias = hb_parc( 1 );
+      PHB_ITEM pBlock = hb_param( 2, HB_IT_BLOCK ),
+               pText = hb_param( 3, HB_IT_STRING );
+      AREAP pChildArea = NULL;
 
-      if( hb_pcount() < 2 ||
-          hb_param( 1, HB_IT_NUMERIC | HB_IT_STRING ) == NULL ||
-          ! ( HB_ISNIL( 4 ) || HB_ISLOG( 4 ) ) )
+      if( szAlias )
       {
-         hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
-         return;
-      }
-
-      if( HB_ISNUM( 1 ) )
-      {
-         uiChildArea = ( HB_AREANO ) hb_parni( 1 );
-      }
-      else
-      {
-         int iArea = hb_rddGetCurrentWorkAreaNumber();
-
-         hb_rddSelectWorkAreaAlias( hb_parcx( 1 ) );
+         if( hb_rddSelectWorkAreaAlias( szAlias ) == HB_SUCCESS )
+            pChildArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
          if( hb_vmRequestQuery() )
             return;
-         uiChildArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
          hb_rddSelectWorkAreaNumber( iArea );
       }
+      else
+         pChildArea = ( AREAP ) hb_rddGetWorkAreaPointer( hb_parni( 1 ) );
 
-      pChildArea = uiChildArea ? ( AREAP ) hb_rddGetWorkAreaPointer( uiChildArea ) : NULL;
-
-      if( ! pChildArea )
+      if( pArea == pChildArea )
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_SAMEALIAS, NULL, HB_ERR_FUNCNAME );
+#ifdef HB_CLP_STRICT
+      else if( ! pChildArea || ! pBlock )
+#else
+      else if( ! pChildArea || ! ( pBlock || hb_itemGetCLen( pText ) > 0 ) )
+#endif
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+      else
       {
-         hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, NULL, 0 );
-         return;
+         DBRELINFO dbRelations;
+
+         dbRelations.itmCobExpr = hb_itemNew( pBlock );
+         dbRelations.abKey = hb_itemNew( pText );
+         dbRelations.isScoped = hb_parl( 4 );
+         dbRelations.isOptimized = HB_FALSE;
+         dbRelations.lpaChild = pChildArea;
+         dbRelations.lpaParent = pArea;
+         dbRelations.lpdbriNext = NULL;
+
+         SELF_SETREL( pArea, &dbRelations );
       }
-
-      dbRelations.itmCobExpr = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
-      dbRelations.abKey = hb_itemNew( hb_param( 3, HB_IT_STRING ) );
-      dbRelations.isScoped = hb_parl( 4 );
-      dbRelations.isOptimized = HB_FALSE;
-      dbRelations.lpaChild = pChildArea;
-      dbRelations.lpaParent = pArea;
-      dbRelations.lpdbriNext = NULL;
-
-      SELF_SETREL( pArea, &dbRelations );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );

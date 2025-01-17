@@ -108,7 +108,8 @@
 #define HB_CURLOPT_TRANSFERTEXT               53  /* transfer data in text/ASCII format */
 #define HB_CURLOPT_PUT                        54  /* HTTP PUT */
 #define HB_CURLOPT_PROGRESSFUNCTION           56
-#define HB_CURLOPT_PROGRESSDATA               57
+#define HB_CURLOPT_PROGRESSDATA               HB_CURLOPT_XFERINFODATA
+#define HB_CURLOPT_XFERINFODATA               57
 #define HB_CURLOPT_AUTOREFERER                58
 #define HB_CURLOPT_PROXYPORT                  59
 #define HB_CURLOPT_POSTFIELDSIZE              60
@@ -125,8 +126,8 @@
 #define HB_CURLOPT_CLOSEPOLICY                72
 #define HB_CURLOPT_FRESH_CONNECT              74
 #define HB_CURLOPT_FORBID_REUSE               75
-#define HB_CURLOPT_RANDOM_FILE                76
-#define HB_CURLOPT_EGDSOCKET                  77
+#define HB_CURLOPT_RANDOM_FILE                76  /* Deprecated in 7.84.0. It serves no purpose anymore. */
+#define HB_CURLOPT_EGDSOCKET                  77  /* Deprecated in 7.84.0. It serves no purpose anymore. */
 #define HB_CURLOPT_CONNECTTIMEOUT             78
 #define HB_CURLOPT_HEADERFUNCTION             79
 #define HB_CURLOPT_HTTPGET                    80
@@ -254,6 +255,11 @@
 #define HB_CURLOPT_TCP_KEEPINTVL              206
 #define HB_CURLOPT_MAIL_AUTH                  207
 #define HB_CURLOPT_MAXLIFETIME_CONN           208
+#define HB_CURLOPT_XFERINFOFUNCTION           219
+#define HB_CURLOPT_PROXY_SERVICE_NAME         235
+#define HB_CURLOPT_MIMEPOST                   269
+#define HB_CURLOPT_PROTOCOLS_STR              318
+#define HB_CURLOPT_REDIR_PROTOCOLS_STR        319
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_PROGRESSBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
@@ -267,6 +273,7 @@
 #define HB_CURLOPT_UL_FHANDLE_SETUP           1011
 #define HB_CURLOPT_DL_FHANDLE_SETUP           1012
 #define HB_CURLOPT_DEBUGBLOCK                 1013
+#define HB_CURLOPT_ER_BUFF_SETUP              1014
 /* Compatibility ones. Please don't use these. */
 #define HB_CURLOPT_SETUPLOADFILE              HB_CURLOPT_UL_FILE_SETUP
 #define HB_CURLOPT_CLOSEUPLOADFILE            HB_CURLOPT_UL_FILE_CLOSE
@@ -289,6 +296,11 @@
 
 /* HB_CURLOPT_SSL_OPTIONS values */
 #define HB_CURLSSLOPT_ALLOW_BEAST             hb_bitShift( 1, 0 )
+#define HB_CURLSSLOPT_NO_REVOKE               hb_bitShift( 1, 1 )
+#define HB_CURLSSLOPT_NO_PARTIALCHAIN         hb_bitShift( 1, 2 )
+#define HB_CURLSSLOPT_REVOKE_BEST_EFFORT      hb_bitShift( 1, 3 )
+#define HB_CURLSSLOPT_NATIVE_CA               hb_bitShift( 1, 4 )
+#define HB_CURLSSLOPT_AUTO_CLIENT_CERT        hb_bitShift( 1, 5 )
 
 /* HB_CURLOPT_HTTPAUTH option */
 #define HB_CURLAUTH_NONE                      0                    /* nothing */
@@ -401,6 +413,11 @@
 #define HB_CURLPROTO_RTMPTE                   hb_bitShift( 1, 22 )
 #define HB_CURLPROTO_RTMPS                    hb_bitShift( 1, 23 )
 #define HB_CURLPROTO_RTMPTS                   hb_bitShift( 1, 24 )
+#define HB_CURLPROTO_GOPHER                   hb_bitShift( 1, 25 )
+#define HB_CURLPROTO_SMB                      hb_bitShift( 1, 26 )
+#define HB_CURLPROTO_SMBS                     hb_bitShift( 1, 27 )
+#define HB_CURLPROTO_MQTT                     hb_bitShift( 1, 28 )
+#define HB_CURLPROTO_GOPHERS                  hb_bitShift( 1, 29 )
 #define HB_CURLPROTO_ALL                      hb_bitNot( 0 )
 
 /* curl_easy_pause() parameters. They can be combined with hb_bitOr(). */
@@ -463,6 +480,15 @@
 #define HB_CURLINFO_PRIMARY_PORT              40
 #define HB_CURLINFO_LOCAL_IP                  41
 #define HB_CURLINFO_LOCAL_PORT                42
+#define HB_CURLINFO_SOCKET                    0x500000
+#define HB_CURLINFO_ACTIVESOCKET              ( HB_CURLINFO_SOCKET + 44 )
+#define HB_CURLINFO_OFF_T                     0x600000
+#define HB_CURLINFO_SIZE_UPLOAD_T             ( HB_CURLINFO_OFF_T + 7 )
+#define HB_CURLINFO_SIZE_DOWNLOAD_T           ( HB_CURLINFO_OFF_T + 8 )
+#define HB_CURLINFO_SPEED_DOWNLOAD_T          ( HB_CURLINFO_OFF_T + 9 )
+#define HB_CURLINFO_SPEED_UPLOAD_T            ( HB_CURLINFO_OFF_T + 10 )
+#define HB_CURLINFO_CONTENT_LENGTH_DOWNLOAD_T ( HB_CURLINFO_OFF_T + 15 )
+#define HB_CURLINFO_CONTENT_LENGTH_UPLOAD_T   ( HB_CURLINFO_OFF_T + 16 )
 
 /* curl result codes. */
 
@@ -557,5 +583,35 @@
 #define HB_CURLE_RTSP_SESSION_ERROR           86 /* mismatch of RTSP Session Identifiers */
 #define HB_CURLE_FTP_BAD_FILE_LIST            87 /* unable to parse FTP file list */
 #define HB_CURLE_CHUNK_FAILED                 88 /* chunk callback reported error */
+
+/* curl multi result codes. */
+
+#define HB_CURLM_CALL_MULTI_PERFORM            -1 /* please call curl_multi_perform() or curl_multi_socket*() soon */
+#define HB_CURLM_OK                            0
+#define HB_CURLM_BAD_HANDLE                    1  /* the passed-in handle is not a valid CURLM handle */
+#define HB_CURLM_BAD_EASY_HANDLE               2  /* an easy handle was not good/valid */
+#define HB_CURLM_OUT_OF_MEMORY                 3  /* if you ever get this, you're in deep sh*t */
+#define HB_CURLM_INTERNAL_ERROR                4  /* this is a libcurl bug */
+#define HB_CURLM_BAD_SOCKET                    5  /* the passed in socket argument did not match */
+#define HB_CURLM_UNKNOWN_OPTION                6  /* curl_multi_setopt() with unsupported option */
+#define HB_CURLM_ADDED_ALREADY                 7  /* an easy handle already added to a multi handle was attempted to get added - again */
+#define HB_CURLM_RECURSIVE_API_CALL            8  /* an api function was called from inside a callback */
+#define HB_CURLM_WAKEUP_FAILURE                9  /* wakeup is unavailable or failed */
+#define HB_CURLM_BAD_FUNCTION_ARGUMENT         10 /* function called with a bad parameter */
+#define HB_CURLM_ABORTED_BY_CALLBACK           11
+#define HB_CURLM_UNRECOVERABLE_POLL            12
+
+/* curl_multi_info_read result codes. */
+
+#define HB_CURLMSG_NONE                         0 /* first, not used */
+#define HB_CURLMSG_DONE                         1 /* This easy handle has completed. 'result' contains the CURLcode of the transfer */
+
+#define HB_CURLMSG_RESP_LEN                     1 /* queue len */
+#define HB_CURLMSG_RESP_RESPONSE_CODE           2 /* curl_easy_getinfo( msg->easy_handle, CURLINFO_RESPONSE_CODE ) */
+#define HB_CURLMSG_RESP_MSG                     3 /* CURLMSG  */
+#define HB_CURLMSG_RESP_RESULT                  4 /* CURLcode */
+#define HB_CURLMSG_RESP_HANDLE                  5 /* handle to original curl_easy_init */
+#define HB_CURLMSG_RESP_HPOS                    6 /* position in handle <array> passed to curl_multi_info_read(, <array> ) */
+#define HB_CURLMSG_RESP_LAST                    HB_CURLMSG_RESP_HPOS
 
 #endif /* HBCURL_CH_ */

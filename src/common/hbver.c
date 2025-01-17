@@ -86,6 +86,9 @@
    #ifndef VER_MAJORVERSION
    #define VER_MAJORVERSION  0x0000002
    #endif
+   #ifndef VER_BUILDNUMBER
+   #define VER_BUILDNUMBER   0x0000004
+   #endif
    #ifndef VER_SERVICEPACKMINOR
    #define VER_SERVICEPACKMINOR  0x0000010
    #endif
@@ -279,6 +282,7 @@ const char * hb_verPlatformMacro( void )
 
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
+static HB_BOOL s_fWin11    = HB_FALSE;
 static HB_BOOL s_fWin10    = HB_FALSE;
 static HB_BOOL s_fWin81    = HB_FALSE;
 static HB_BOOL s_fWin8     = HB_FALSE;
@@ -340,12 +344,15 @@ static void s_hb_winVerInit( void )
 {
 #if ! defined( HB_OS_WIN_CE )
    s_fWin10    = hb_iswinver( 10, 0, 0, HB_TRUE );
+   if( s_fWin10 )
+      s_fWin11 = hb_iswinbuild( 22000, HB_TRUE );
    s_fWin81    = hb_iswinver( 6, 3, 0, HB_TRUE );
    s_fWin8     = hb_iswinver( 6, 2, 0, HB_TRUE );
    s_fWin7     = hb_iswinver( 6, 1, 0, HB_TRUE );
    s_fWinVista = hb_iswinver( 6, 0, 0, HB_TRUE );
    s_fWin2K3   = hb_iswinver( 5, 2, VER_NT_SERVER, HB_TRUE ) || hb_iswinver( 5, 2, VER_NT_DOMAIN_CONTROLLER, HB_TRUE );
    s_fWin2K    = hb_iswinver( 5, 0, 0, HB_TRUE );
+
 
 #if !( defined( HB_OS_WIN_64 ) || ( defined( _MSC_VER ) && _MSC_VER > 1310 ) )
    {
@@ -370,7 +377,7 @@ static void s_hb_winVerInit( void )
          else if( osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 )
             s_iWinNT = 4;  /* 4.0 */
          else
-            s_iWinNT = 5;  /* newer */
+            s_iWinNT = 5;  /* 2000/XP/2003 */
       }
    }
 #endif
@@ -383,7 +390,53 @@ static void s_hb_winVerInit( void )
          s_iWine = 1;
    }
 
-   if( s_fWin2K )
+   if( s_fWin10 && ! s_iWine )
+   {
+      /* reusing s_iWinNT to store build number on Win10+ */
+
+#if 0
+      typedef LONG NTSTATUS, * PNTSTATUS;
+      #define STATUS_SUCCESS (0x00000000)
+      typedef NTSTATUS ( WINAPI * _HB_RTLGETVERSION )( LPOSVERSIONINFOW );
+      HMODULE hntdll = GetModuleHandle( TEXT( "ntdll.dll" ) );
+
+      _HB_RTLGETVERSION pRtlGetVersion;
+      if( hntdll )
+      {
+         pRtlGetVersion := ( _HB_RTLGETVERSION ) HB_WINAPI_GETPROCADDRESS( hntdll, "RtlGetVersion" ) )
+         OSVERSIONINFOW ovi = { 0 };
+         ovi.dwOSVersionInfoSize = sizeof( ovi );
+         if( STATUS_SUCCESS == pRtlGetVersion( &ovi ) )
+         {
+            s_iWinNT = ( int ) ovi.dwBuildNumber;
+         }
+      }
+#endif
+
+      /* NOTE: NT system version is always mapped into process (user-mode)
+               memory, though build number is there only on Win10 and up.
+               https://www.geoffchappell.com/studies/windows/km/ntoskrnl/inc/api/ntexapi_x/kuser_shared_data/index.htm */
+
+      MEMORY_BASIC_INFORMATION minfo;
+      minfo.Protect = 0;
+      if( VirtualQuery( ( void * ) 0x7FFE0000, &minfo, sizeof( minfo ) ) &&
+          ( minfo.Protect & ( PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY |
+            PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY ) ) &&
+          ! ( minfo.Protect & ( PAGE_GUARD | PAGE_NOACCESS ) ) )
+         s_iWinNT = ( int ) * ( PULONG ) ( 0x7FFE0000 + 0x0260 );
+      else
+         s_iWinNT = 1; /* unknown NT emulator */
+
+      /* COMPAT: this seems much simpler than dyn-calling GetVersionEx
+                 or WDK RtlGetVersion (having in mind deprecation warnings,
+                 regressions from obscure compilers with conflicting headers)
+                 If this ever causes a GPF on memory read, please revert,
+                 or migrate to APIs. Mem-addr is correct for AMD64, ARM64 too.
+                 WINE is intentionally excluded for reason, where an unknown
+                 build may not support this. */
+
+   }
+   else if( s_fWin2K )
       s_iWinNT = 5;
 #endif
 
@@ -394,6 +447,7 @@ static void s_hb_winVerInit( void )
 
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
+static HB_BOOL s_fWin11    = HB_FALSE;
 static HB_BOOL s_fWin10    = HB_FALSE;
 static HB_BOOL s_fWin81    = HB_FALSE;
 static HB_BOOL s_fWin8     = HB_FALSE;
@@ -410,6 +464,7 @@ static void s_hb_winVerInit( void )
    union REGS regs;
 
    /* TODO */
+   s_fWin11    = HB_FALSE;
    s_fWin10    = HB_FALSE;
    s_fWin81    = HB_FALSE;
    s_fWin8     = HB_FALSE;
@@ -578,11 +633,16 @@ char * hb_verPlatform( void )
 #if defined( HB_OS_WIN_CE )
          pszName = " CE";
 #else
-         if( hb_iswinver( 11, 0, 0, HB_TRUE ) )
+         if( hb_iswin11() )
          {
-            osvi.dwMajorVersion = 11;
+            osvi.dwMajorVersion = 10;
             osvi.dwMinorVersion = 0;
-            pszName = " 11 or newer";
+            if( hb_iswinver( 10, 0, VER_NT_WORKSTATION, HB_FALSE ) )
+               pszName = " 11 or newer";
+            else if( hb_iswinbuild( 26040, HB_TRUE ) )
+               pszName = " Server 2025";
+            else
+               pszName = " Server 23H2";
          }
          else if( hb_iswin10() )
          {
@@ -590,6 +650,10 @@ char * hb_verPlatform( void )
             osvi.dwMinorVersion = 0;
             if( hb_iswinver( 10, 0, VER_NT_WORKSTATION, HB_FALSE ) )
                pszName = " 10";
+            else if( hb_iswinbuild( 20348, HB_TRUE ) )
+               pszName = " Server 2022";
+            else if( hb_iswinbuild( 17763, HB_TRUE ) )
+               pszName = " Server 2019";
             else
                pszName = " Server 2016";
          }
@@ -668,7 +732,14 @@ char * hb_verPlatform( void )
 
       /* Add service pack/other info */
 
-      if( hb_iswin2k() )
+      if( hb_iswin10() && ! s_iWine )
+      {
+         /* On Win10+ build number is more significant than Major Minor */
+         char szBuild[ 8 ];
+         hb_snprintf( szBuild, sizeof( szBuild ), ".%lu", ( DWORD ) s_iWinNT );
+         hb_strncat( pszPlatform, szBuild, PLATFORM_BUF_SIZE );
+      }
+      else if( hb_iswin2k() )
       {
          int tmp;
 
@@ -814,6 +885,29 @@ HB_BOOL hb_iswinsp( int iServicePackMajor, HB_BOOL fOrUpper )
    return HB_FALSE;
 }
 
+HB_BOOL hb_iswinbuild( int iBuildNum, HB_BOOL fOrUpper )
+{
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+   if( s_hb_winVerifyVersionInit() )
+   {
+      OSVERSIONINFOEXW ver;
+      DWORDLONG dwlConditionMask = 0;
+
+      memset( &ver, 0, sizeof( ver ) );
+      ver.dwOSVersionInfoSize = sizeof( ver );
+      ver.dwBuildNumber = ( DWORD ) iBuildNum;
+
+      dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_BUILDNUMBER, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
+
+      return ( HB_BOOL ) s_pVerifyVersionInfo( &ver, VER_BUILDNUMBER, dwlConditionMask );
+   }
+#else
+   HB_SYMBOL_UNUSED( iBuildNum );
+   HB_SYMBOL_UNUSED( fOrUpper );
+#endif
+   return HB_FALSE;
+}
+
 int hb_iswine( void )
 {
 #if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
@@ -822,6 +916,17 @@ int hb_iswine( void )
    return s_iWine;
 #else
    return 0;
+#endif
+}
+
+HB_BOOL hb_iswin11( void )
+{
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_fWin11;
+#else
+   return HB_FALSE;
 #endif
 }
 
@@ -1064,6 +1169,10 @@ char * hb_verCompiler( void )
    iVerMinor = __clang_minor__;
    iVerPatch = __clang_patchlevel__;
 
+   #if ! defined( HB_CPU_X86 ) && ! defined( HB_CPU_X86_64 )
+      #define __HB_ARCH_VERSION /* add string supplement for "non-classic" architectures */
+   #endif
+
 #elif defined( __clang__ )
 
    pszName = "LLVM/Clang C";
@@ -1102,6 +1211,10 @@ char * hb_verCompiler( void )
 
    #if defined( __cplusplus )
       hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
+   #endif
+
+   #if ! defined( HB_CPU_X86 ) && ! defined( HB_CPU_X86_64 )
+      #define __HB_ARCH_VERSION /* add string supplement for "non-classic" architectures */
    #endif
 
    iVerMajor = _MSC_VER / 100;
@@ -1300,20 +1413,33 @@ char * hb_verCompiler( void )
       hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE - 1 );
 
 #if defined( __clang_version__ )
-   if( strstr( __clang_version__, "(" ) )
-      /* "2.0 (trunk 103176)" -> "(trunk 103176)" */
-      hb_snprintf( szSub, sizeof( szSub ), " %s", strstr( __clang_version__, "(" ) );
-   else
-      hb_snprintf( szSub, sizeof( szSub ), " (%s)", __clang_version__ );
-   hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
+   #if defined( __clang_major__ )
+      /* prevent dups like "LLVM/Clang C 18.1.8 (18.1.8 )" */
+      hb_snprintf( szSub, sizeof( szSub ), "%d.%d.%d ", iVerMajor, iVerMinor, iVerPatch );
+      if( ! strstr( szSub, __clang_version__ ) )
+      {
+   #endif
+         if( strstr( __clang_version__, "(" ) )
+            /* "2.0 (trunk 103176)" -> "(trunk 103176)" */
+            hb_snprintf( szSub, sizeof( szSub ), " %s", strstr( __clang_version__, "(" ) );
+         else
+            hb_snprintf( szSub, sizeof( szSub ), " (%s)", __clang_version__ );
+         hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
+   #if defined( __clang_major__ )
+      }
+   #endif
 #endif
+
 
 #if defined( __DJGPP__ )
    hb_snprintf( szSub, sizeof( szSub ), " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
    hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
 #endif
 
-   #if defined( HB_ARCH_16BIT )
+   #if defined( __HB_ARCH_VERSION )
+      hb_strncat( pszCompiler, " ",         COMPILER_BUF_SIZE - 1 );
+      hb_strncat( pszCompiler, hb_verCPU(), COMPILER_BUF_SIZE - 1 );
+   #elif defined( HB_ARCH_16BIT )
       hb_strncat( pszCompiler, " (16-bit)", COMPILER_BUF_SIZE - 1 );
    #elif defined( HB_ARCH_32BIT )
       hb_strncat( pszCompiler, " (32-bit)", COMPILER_BUF_SIZE - 1 );
@@ -1338,9 +1464,9 @@ char * hb_verHarbour( void )
    HB_TRACE( HB_TR_DEBUG, ( "hb_verHarbour()" ) );
 
    pszVersion = ( char * ) hb_xgrab( 80 );
-   hb_snprintf( pszVersion, 80, "Harbour %d.%d.%d%s (r%" PFHL "u)",
+   hb_snprintf( pszVersion, 80, "Harbour %d.%d.%d%s (r%lu)",
                 HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS,
-                hb_verRevision() );
+                ( HB_ULONG ) hb_verRevision() );
 
    return pszVersion;
 }

@@ -125,6 +125,8 @@
 
    #xtranslate hb_argv( [<x,...>] )            => hb_CmdArgArgV( <x> )
 
+   #xtranslate hb_PIsByRef( @<!localVar!> )    => hb_IsByRef( @<localVar> )
+
    #xtranslate hb_iniSetComment( [<x,...>] )   => hb_SetIniComment( <x> )
    #xtranslate hb_iniRead( [<x,...>] )         => hb_ReadIni( <x> )
    #xtranslate hb_iniWrite( [<x,...>] )        => hb_WriteIni( <x> )
@@ -384,6 +386,8 @@
 
    #xtranslate hb_CmdArgArgV( [<x,...>] )      => hb_argv( <x> )
 
+   #xtranslate hb_IsByRef( @<!localVar!> )     => hb_PIsByRef( @<localVar> )
+
    #xtranslate RAScan( [<x,...>] )             => hb_RAScan( <x> )
 
    #xtranslate ASizeAlloc( <a> [, <n,...>] )   => AFill( <a> )
@@ -509,7 +513,7 @@
                                                 RETURN a ; }:eval( <x> )
    #xtranslate HGetAACompatibility( <x> )  => hb_HKeepOrder( <x> )
    #xtranslate HSetAACompatibility( [<x,...>] ) => {| h | ;;
-                                                   hb_HKeepOrder( h ) ;;
+                                                   hb_HKeepOrder( h, .T. ) ;;
                                                    RETURN .T. ; }:eval( <x> )
 
    /* inet*() functions */
