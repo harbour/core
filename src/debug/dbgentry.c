@@ -496,15 +496,6 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
    HB_DEBUGINFO * info = *infoPtr;
    HB_USHORT uiLine;
 
-//    {
-//     char prbuff[1024];
-//     FILE *f = hb_fopen( "C:\\Users\\Fran\\Desktop\\hb_dbgEntry.log", "a" );
-//     fprintf(f, "hb_dbgEntry: Mode: %d Line: %d SZName: %s INdex: %d\n", nMode, nLine, szName, nIndex);
-//     fclose( f );
-//    }
-
-   //snprintf(prbuff, sizeof(prbuff), "hb_dbgEntry: Mode: %d Line: %d SZName: %s INdex: %d\n", nMode, nLine, szName, nIndex);
-
    if( info == HB_DBGINFO_DISABLE )
       return;
    else if( nMode != HB_DBG_VMQUIT )

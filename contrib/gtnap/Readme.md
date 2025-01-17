@@ -150,11 +150,17 @@ Target: x86_64-apple-darwin20.6.0
 
 ## Build Harbour
 
+```
+:: Remove the /bin/win folder
+:: Remove the /lib/win folder
+```
+
 ### Build Harbour in Windows Visual Studio
 
 ```
-:: Set the Visual Studio 64bit compiler
-"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
+:: Important: Use cmd and not PowerShell
+:: Set Visual Studio 2017 64bit compiler for hbmk2 (msvc64)
+"%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 :: Go to main folder of harbour working copy
 cd harbour_nappgui
@@ -177,7 +183,7 @@ win-make HB_COMPILER=msvc64
 :: Go to main folder of harbour working copy
 cd harbour_nappgui
 
-win-make HB_COMPILER=mingw64
+mingw32-make.exe -j2 HB_CPU=x86_64 HB_BUILD_CONTRIBS=no HB_COMPILER=mingw64
 
 C:\harbour_nappgui>win-make HB_COMPILER=mingw64
 ! Building Harbour 3.2.0dev from source - https://harbour.github.io

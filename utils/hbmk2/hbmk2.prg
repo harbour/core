@@ -524,9 +524,8 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_lMarkdown         156
 #define _HBMK_lShellMode        157
 #define _HBMK_bOut              158
-#define _HBMK_bKeepCFiles       159
 
-#define _HBMK_MAX_              159
+#define _HBMK_MAX_              158
 
 #define _HBMK_DEP_CTRL_MARKER   ".control."  /* must be an invalid path */
 
@@ -1024,7 +1023,6 @@ STATIC FUNCTION hbmk_new( lShellMode )
    hbmk[ _HBMK_lDumpInfo ] := .F.
    hbmk[ _HBMK_lMarkdown ] := .F.
    hbmk[ _HBMK_bOut ] := @OutStd()
-   hbmk[ _HBMK_bKeepCFiles ] := .F.
 
    RETURN hbmk
 
@@ -2617,7 +2615,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE cParamL == "-fullstatic"      ; hbmk[ _HBMK_lSHARED ]    := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .T. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL
       CASE cParamL == "-pic"             ; hbmk[ _HBMK_lPIC ]       := .T.
       CASE cParamL == "-pic-"            ; hbmk[ _HBMK_lPIC ]       := .F.
-      CASE cParamL == "-keepc"           ; hbmk[ _HBMK_bKeepCFiles ] := .T.
       CASE cParamL == "-nohblib"         ; l_lNOHBLIB := .T.
       CASE cParamL == "-nohblib-"        ; l_lNOHBLIB := .F.
       CASE cParamL == "-nomiscsyslib"    ; l_lLIBSYSMISC := .F.
@@ -3823,13 +3820,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ENDIF
                   RETURN _EXIT_WORKDIRCREATE
                ENDIF
-
-               IF hbmk[ _HBMK_bKeepCFiles ]
-                  lDeleteWorkDir := .F.
-               ELSE
-                  lDeleteWorkDir := .T.
-               ENDIF
-
+               lDeleteWorkDir := .T.
             ENDIF
          ENDIF
       ENDIF
@@ -6374,11 +6365,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ELSE
                   _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .c program could not be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
-
-                    IF ! hbmk[ _HBMK_bKeepCFiles ]
-                        AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
-                    ENDIF
-
+                     AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
                   ENDIF
                   IF lDeleteWorkDir
                      hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
@@ -6487,10 +6474,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ELSE
                   _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .cpp program could not be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
-                    IF ! hbmk[ _HBMK_bKeepCFiles ]
-                        AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
-                    ENDIF
-
+                     AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
                   ENDIF
                   IF lDeleteWorkDir
                      hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
@@ -7462,10 +7446,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          FErase( FNameDirExtSet( l_cRESSTUB, hbmk[ _HBMK_cWorkDir ], cResExt ) )
       ENDIF
       IF ! hbmk[ _HBMK_lINC ] .OR. hbmk[ _HBMK_lCLEAN ]
-        IF ! hbmk[ _HBMK_bKeepCFiles ]
-            AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
-        ENDIF
-
+         AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
       ENDIF
       IF hbmk[ _HBMK_lCLEAN ]
          IF hbmk[ _HBMK_lINC ]
@@ -16017,8 +15998,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       , ;
       { "-plugin=<filename>" , I_( "add plugin. <filename> can be: .hb, .prg, .hrb" ) }, ;
       { "-pi=<filename>"     , I_( "pass input file to plugins" ) }, ;
-      { "-pflag=<f>"         , I_( "pass single flag to plugins" ) }, ;
-      { "-keepc"             , I_( "C files are not deleted after Harbour compiler" ) } }
+      { "-pflag=<f>"         , I_( "pass single flag to plugins" ) } }
 
    LOCAL aHdr_Opt_LongCmd := { ;
       "", ;

@@ -57,8 +57,6 @@
 
 {HB_QT_SOUND='yes'}-cflag+=-DHB_QT_SOUND
 
-{HB_QT_SOUND='yes'}-cflag+=-DHB_QT_SOUND
-
 ${hb_name}.hbx
 
 # Required for 5.7.0 or upper
