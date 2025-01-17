@@ -11,6 +11,10 @@ obj
 *.hbd
 *.hbr
 *.hrb
+*.ilk
+*.pdb
+*.log
+/build
 
 # 'install'-ed binaries
 *.exe
