@@ -2054,22 +2054,23 @@ HB_FUNC( CURL_EASY_DL_BUFF_GET )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-#if LIBCURL_VERSION_NUM >= 0x070100
+
 HB_FUNC( CURL_EASY_ER_BUFF_GET )
 {
    if( PHB_CURL_is( 1 ) )
    {
+#if LIBCURL_VERSION_NUM >= 0x070100
       PHB_CURL hb_curl = PHB_CURL_par( 1 );
 
       if( hb_curl )
          hb_retc( ( char * ) hb_curl->er_ptr );
       else
+#endif
          hb_retc_null();
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-#endif
 
 #define HB_CURL_INFO_TYPE_INVALID  0
 #define HB_CURL_INFO_TYPE_STR      1
