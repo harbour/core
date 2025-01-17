@@ -449,7 +449,9 @@ static size_t hb_curl_write_fhandle_callback( void * buffer, size_t size, size_t
 
 #define HB_CURL_DL_BUFF_SIZE_INIT  ( CURL_MAX_WRITE_SIZE * 4 )
 #define HB_CURL_DL_BUFF_SIZE_INCR  ( CURL_MAX_WRITE_SIZE * 4 )
+#if LIBCURL_VERSION_NUM >= 0x070100
 #define HB_CURL_ER_BUFF_SIZE_INIT  ( CURL_ERROR_SIZE )
+#endif
 
 static size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
@@ -592,7 +594,7 @@ static void hb_curl_buff_ul_free( PHB_CURL hb_curl )
       hb_curl->ul_pos = 0;
    }
 }
-
+#if LIBCURL_VERSION_NUM >= 0x070100
 static void hb_curl_buff_er_free( PHB_CURL hb_curl )
 {
    if( hb_curl && hb_curl->er_ptr )
@@ -602,7 +604,7 @@ static void hb_curl_buff_er_free( PHB_CURL hb_curl )
       hb_curl->er_len = 0;
    }
 }
-
+#endif
 static void hb_curl_buff_dl_free( PHB_CURL hb_curl )
 {
    if( hb_curl && hb_curl->dl_ptr )
@@ -669,7 +671,9 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
 
    hb_curl_buff_ul_free( hb_curl );
    hb_curl_buff_dl_free( hb_curl );
-   hb_curl_buff_er_free( hb_curl );   
+#if LIBCURL_VERSION_NUM >= 0x070100   
+   hb_curl_buff_er_free( hb_curl );
+#endif   
 
    if( hb_curl->pProgressCallback )
    {
@@ -975,12 +979,14 @@ HB_FUNC( CURL_EASY_SETOPT )
             /* HB_CURLOPT_CONV_FROM_UTF8_FUNCTION */
 
             /* Error */
+#if LIBCURL_VERSION_NUM >= 0x070100            
             case HB_CURLOPT_ER_BUFF_SETUP:
                hb_curl_buff_er_free( hb_curl );
                hb_curl->er_len = hb_parnldef( 3, HB_CURL_ER_BUFF_SIZE_INIT );
                hb_curl->er_ptr = ( unsigned char * ) hb_xgrab( hb_curl->er_len );
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_ERRORBUFFER, hb_curl->er_ptr );
                break;
+#endif
             /* HB_CURLOPT_STDERR */
 
             case HB_CURLOPT_FAILONERROR:
@@ -2048,7 +2054,7 @@ HB_FUNC( CURL_EASY_DL_BUFF_GET )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
+#if LIBCURL_VERSION_NUM >= 0x070100
 HB_FUNC( CURL_EASY_ER_BUFF_GET )
 {
    if( PHB_CURL_is( 1 ) )
@@ -2063,6 +2069,7 @@ HB_FUNC( CURL_EASY_ER_BUFF_GET )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+#endif
 
 #define HB_CURL_INFO_TYPE_INVALID  0
 #define HB_CURL_INFO_TYPE_STR      1
