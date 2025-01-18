@@ -68,6 +68,8 @@ static PHB_BIO PHB_BIO_create( BIO * bio, void * hStrRef )
 
 static void PHB_BIO_free( PHB_BIO hb_bio )
 {
+   if( hb_bio->bio )
+      BIO_free( hb_bio->bio );
    if( hb_bio->hStrRef )
       hb_itemFreeCRef( hb_bio->hStrRef );
 
@@ -614,13 +616,19 @@ HB_FUNC( BIO_PUTS )
 
 HB_FUNC( BIO_FREE )
 {
-   void ** ph = ( void ** ) hb_parptrGC( &s_gcBIOFuncs, 1 );
+   HB_BIO ** ptr = ( HB_BIO ** ) hb_parptrGC( &s_gcBIOFuncs, 1 );
 
-   if( ph )
+   if( ptr )
    {
-      BIO * bio = ( BIO * ) *ph;
-      *ph = NULL;
-      hb_retni( bio ? BIO_free( bio ) : 0 );
+      int result = 0;
+
+      if( *ptr )
+      {
+         PHB_BIO_free( *ptr );
+         *ptr = NULL;
+         result = 1;
+      }
+      hb_retni( result );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

@@ -1024,10 +1024,22 @@ HB_FUNC( EVP_SEALINIT )
          EVP_PKEY * pkey1  = NULL;
 
          if( HB_ISARRAY( 5 ) )
+         {
+            int tmp;
+
             npubk = ( int ) hb_arrayLen( pArray = hb_param( 5, HB_IT_ARRAY ) );
+            for( tmp = 1; tmp <= npubk; ++tmp )
+            {
+               if( hb_EVP_PKEY_get( hb_arrayGetItemPtr( pArray, tmp + 1 ) ) == NULL )
+               {
+                  npubk = 0;
+                  break;
+               }
+            }
+         }
          else if( HB_ISPOINTER( 5 ) )
          {
-            if( ( pkey1 = ( EVP_PKEY * ) hb_parptr( 5 ) ) != NULL )
+            if( ( pkey1 = hb_EVP_PKEY_par( 5 ) ) != NULL )
                npubk = 1;
          }
 
@@ -1042,9 +1054,9 @@ HB_FUNC( EVP_SEALINIT )
             PHB_ITEM    pPKEY;
             int         tmp;
 
-            for( tmp = 0; tmp < npubk; tmp++ )
+            for( tmp = 0; tmp < npubk; ++tmp )
             {
-               pubk[ tmp ] = pkey1 ? pkey1 : ( EVP_PKEY * ) hb_arrayGetPtr( pArray, tmp + 1 );
+               pubk[ tmp ] = pkey1 ? pkey1 : hb_EVP_PKEY_get( hb_arrayGetItemPtr( pArray, tmp + 1 ) );
                ek[ tmp ]   = ( unsigned char * ) hb_xgrab( EVP_PKEY_size( pubk[ tmp ] ) + 1 );
                ekl[ tmp ]  = 0;
             }
@@ -1157,7 +1169,7 @@ HB_FUNC( EVP_OPENINIT )
    if( hb_EVP_CIPHER_CTX_is( 1 ) && cipher )
    {
       EVP_CIPHER_CTX * ctx  = hb_EVP_CIPHER_CTX_par( 1 );
-      EVP_PKEY *       priv = ( EVP_PKEY * ) hb_parptr( 5 );
+      EVP_PKEY *       priv = hb_EVP_PKEY_par( 5 );
 
       if( ctx && priv )
          hb_retni( EVP_OpenInit( ctx,

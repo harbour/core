@@ -219,6 +219,7 @@ extern void               hb_X509_ret( X509 * x509, HB_BOOL fRelease );
 
 extern HB_BOOL            hb_RSA_is( int iParam );
 extern RSA *              hb_RSA_par( int iParam );
+extern void               hb_RSA_par_free( int iParam );
 extern void               hb_RSA_ret( RSA * rsa );
 
 extern HB_BOOL            hb_EVP_MD_is( int iParam );
@@ -229,6 +230,8 @@ extern const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam );
 
 extern HB_BOOL            hb_EVP_PKEY_is( int iParam );
 extern EVP_PKEY *         hb_EVP_PKEY_par( int iParam );
+extern EVP_PKEY *         hb_EVP_PKEY_get( PHB_ITEM pItem );
+extern void               hb_EVP_PKEY_free( PHB_ITEM pItem );
 extern void               hb_EVP_PKEY_ret( EVP_PKEY * pkey );
 
 extern char *             hb_openssl_strdup( const char * pszText );

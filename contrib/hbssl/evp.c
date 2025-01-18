@@ -78,10 +78,10 @@ HB_FUNC( ERR_LOAD_EVP_STRINGS )
 
 HB_FUNC( EVP_PKEY_FREE )
 {
-   EVP_PKEY * key = ( EVP_PKEY * ) hb_parptr( 1 );
+   PHB_ITEM pKey = hb_param( 1, HB_IT_POINTER );
 
-   if( key )
-      EVP_PKEY_free( key );
+   if( pKey )
+      hb_EVP_PKEY_free( pKey );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

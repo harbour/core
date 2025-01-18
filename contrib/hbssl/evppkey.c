@@ -84,6 +84,24 @@ EVP_PKEY * hb_EVP_PKEY_par( int iParam )
    return ph ? ( EVP_PKEY * ) *ph : NULL;
 }
 
+EVP_PKEY * hb_EVP_PKEY_get( PHB_ITEM pItem )
+{
+   void ** ph = ( void ** ) hb_itemGetPtrGC( pItem, &s_gcEVP_PKEY_funcs );
+
+   return ph ? ( EVP_PKEY * ) *ph : NULL;
+}
+
+void hb_EVP_PKEY_free( PHB_ITEM pItem )
+{
+   void ** ph = ( void ** ) hb_itemGetPtrGC( pItem, &s_gcEVP_PKEY_funcs );
+
+   if( ph && *ph )
+   {
+      EVP_PKEY_free( ( EVP_PKEY * ) *ph );
+      *ph = NULL;
+   }
+}
+
 void hb_EVP_PKEY_ret( EVP_PKEY * pkey )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_PKEY * ), &s_gcEVP_PKEY_funcs );
@@ -212,10 +230,16 @@ HB_FUNC( EVP_PKEY_ASSIGN_RSA )
    if( hb_EVP_PKEY_is( 1 ) && HB_ISPOINTER( 2 ) )
    {
       EVP_PKEY * pkey = hb_EVP_PKEY_par( 1 );
-      RSA *      key  = ( RSA * ) hb_parptr( 2 );
+      RSA *      key  = hb_RSA_par( 2 );
 
       if( pkey && key )
-         hb_retni( EVP_PKEY_assign_RSA( pkey, key ) );
+      {
+         int result = EVP_PKEY_assign_RSA( pkey, key );
+
+         if( result != 0 )
+            hb_RSA_par_free( 2 );
+         hb_retni( result );
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
