@@ -1030,7 +1030,7 @@ HB_FUNC( EVP_SEALINIT )
             npubk = ( int ) hb_arrayLen( pArray = hb_param( 5, HB_IT_ARRAY ) );
             for( tmp = 1; tmp <= npubk; ++tmp )
             {
-               if( hb_EVP_PKEY_get( hb_arrayGetItemPtr( pArray, tmp + 1 ) ) == NULL )
+               if( hb_EVP_PKEY_get( hb_arrayGetItemPtr( pArray, tmp ) ) == NULL )
                {
                   npubk = 0;
                   break;

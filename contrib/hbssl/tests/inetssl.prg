@@ -156,12 +156,12 @@ STATIC FUNCTION LoadCertificates( ssl_ctx, cCertFile, cKeyFile )
 
    /* Server using hb_inetSSL_ACCEPT() needs certificates,
       they can be generated using the following command:
-         openssl req -x509 -nodes -days 365 -newkey rsa:1024 \
+         openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
                  -out <cCertFile> -keyout <cKeyFile>
     */
    IF ! hb_FileExists( cCertFile ) .AND. ! hb_FileExists( cKeyFile )
       ? "SERVER: generating certificates..."
-      hb_run( "openssl req -x509 -nodes -days 365 -newkey rsa:1024 " + ;
+      hb_run( "openssl req -x509 -nodes -days 365 -newkey rsa:2048 " + ;
               "-out " + cCertFile + " -keyout " + cKeyFile )
    ENDIF
 

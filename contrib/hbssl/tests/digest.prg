@@ -17,7 +17,7 @@ PROCEDURE Main()
    OpenSSL_add_all_digests()
    OpenSSL_add_all_ciphers()
 
-   ? "Version built against:", hb_NumToHex( OPENSSL_VERSION() )
+   ? "Version built against:", hb_NumToHex( OPENSSL_VERSION_NUMBER() )
    ? "Version loaded:", hb_NumToHex( SSLeay() )
 
    ctx := EVP_MD_CTX_create()

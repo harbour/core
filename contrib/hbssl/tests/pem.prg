@@ -12,8 +12,8 @@ PROCEDURE Main()
 
    SSL_init()
 
-   ? ERR_load_PEM_strings()
-   ? OpenSSL_add_all_algorithms()
+   ERR_load_PEM_strings()
+   OpenSSL_add_all_algorithms()
 
    bioe := BIO_new_fd( 1, HB_BIO_NOCLOSE )
 
@@ -66,6 +66,7 @@ B0NDIZKbaPJHHPb9Ne7nQECzv0/kzmAley9UMTZ1M7fq6KYemR0LsA==
 STATIC FUNCTION cb_function( lWrite )
 
    ? "Callback (func)", lWrite
+   ?
 
    RETURN "test"
 

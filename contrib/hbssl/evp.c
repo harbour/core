@@ -96,6 +96,9 @@ HB_FUNC( EVP_BYTESTOKEY )
       unsigned char key[ EVP_MAX_KEY_LENGTH ];
       unsigned char iv[ EVP_MAX_IV_LENGTH ];
 
+      memset( key, 0, sizeof( key ) );
+      memset( iv, 0, sizeof( iv ) );
+
       hb_retni( EVP_BytesToKey( cipher,
                                 ( HB_SSL_CONST EVP_MD * ) md,
                                 ( HB_SSL_CONST unsigned char * ) hb_parc( 3 ) /* salt */,
