@@ -81,7 +81,7 @@ static HB_SIZE hb_tokenCount( const char * szLine, HB_SIZE nLen,
                ( ch == '\n' || ch == '\r' ) )
       {
          ++nTokens;
-         if( nPos + 1 < nLen && szLine[ nPos + 1 ] == ( ch == '\n' ? '\r' : '\n' ) )
+         if( nPos + 1 < nLen && szLine[ nPos + 1 ] == ( char ) ( ch == '\n' ? '\r' : '\n' ) )
             ++nPos;
       }
       else if( nDelim && ch == szDelim[ 0 ] &&
@@ -126,7 +126,7 @@ static const char * hb_tokenGet( const char * szLine, HB_SIZE nLen,
                ( ch == '\n' || ch == '\r' ) )
       {
          HB_SIZE nL = ( nPos + 1 < nLen &&
-                        szLine[ nPos + 1 ] == ( ch == '\n' ? '\r' : '\n' ) ) ? 1 : 0;
+                        szLine[ nPos + 1 ] == ( char ) ( ch == '\n' ? '\r' : '\n' ) ) ? 1 : 0;
          if( --nToken == 0 )
          {
             *pnDelim = nL + 1;
@@ -192,7 +192,7 @@ static PHB_ITEM hb_tokenArray( const char * szLine, HB_SIZE nLen,
                   ( ch == '\n' || ch == '\r' ) )
          {
             hb_arraySetCL( pArray, ++nToken, szLine + nStart, nPos - nStart );
-            if( nPos + 1 < nLen && szLine[ nPos + 1 ] == ( ch == '\n' ? '\r' : '\n' ) )
+            if( nPos + 1 < nLen && szLine[ nPos + 1 ] == ( char ) ( ch == '\n' ? '\r' : '\n' ) )
                ++nPos;
             nStart = nPos + 1;
          }

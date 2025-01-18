@@ -80,7 +80,7 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
          int digit = HB_TOUPPER( ( HB_UCHAR ) *szPtr );
          szPtr++;
          digit_count = 1;
-         while( HB_TOUPPER( ( HB_UCHAR ) *szPtr ) == digit && format_count < size )
+         while( ( int ) HB_TOUPPER( ( HB_UCHAR ) *szPtr ) == digit && format_count < size )
          {
             szPtr++;
             if( format_count + digit_count < size )
@@ -404,7 +404,7 @@ char * hb_timeFormat( char * szBuffer, const char * szTimeFormat, long lMilliSec
       int count = -i;
       int ch = HB_TOUPPER( szTimeFormat[ i ] );
       ++i;
-      while( ch == HB_TOUPPER( szTimeFormat[ i ] ) && i < size )
+      while( ch == ( int ) HB_TOUPPER( szTimeFormat[ i ] ) && i < size )
          ++i;
       count += i;
       switch( ch )

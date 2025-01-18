@@ -2095,7 +2095,7 @@ static HB_ERRCODE hb_nsxIndexHeaderRead( LPNSXINDEX pIndex )
       return HB_FAILURE;
 
    if( ( pIndex->FileSize ? pIndex->HeaderBuff.Signature[ 0 ] !=
-               ( pIndex->LargeFile ? NSX_SIGNATURE_LARGE : NSX_SIGNATURE ) :
+            ( HB_UCHAR ) ( pIndex->LargeFile ? NSX_SIGNATURE_LARGE : NSX_SIGNATURE ) :
          ( pIndex->HeaderBuff.Signature[ 0 ] != NSX_SIGNATURE &&
            pIndex->HeaderBuff.Signature[ 0 ] != NSX_SIGNATURE_LARGE ) ) ||
        pIndex->HeaderBuff.IndexFlags[ 0 ] != 0 )
