@@ -8,18 +8,22 @@ https://github.com/frang75/nappgui_src
 * [Installing MinGW GCC](#installing-mingw-gcc)
 * [Installing MinGW CLANG](#installing-mingw-clang)
 * [Installing GCC in Linux](#installing-gcc-in-linux)
+* [Installing CLANG in Linux](#installing-clang-in-linux)
+
 * [Installing Xcode in macOS](#installing-xcode-in-macos)
 * [Build Harbour](#build-harbour)
     - [Build Harbour in Windows Visual Studio](#build-harbour-in-windows-visual-studio)
     - [Build Harbour in Windows MinGW](#build-harbour-in-windows-mingw)
     - [Build Harbour in Windows Clang](#build-harbour-in-windows-clang)
-    - [Build Harbour in Linux](#build-harbour-in-linux)
+    - [Build Harbour in Linux GCC](#build-harbour-in-linux-gcc)
+    - [Build Harbour in Linux Clang](#build-harbour-in-linux-clang)
     - [Build Harbour in macOS](#build-harbour-in-macos)
 * [Build GTNap](#build-gtnap)
     - [In Windows with MinGW](#in-windows-with-mingw)
     - [In Windows with Clang](#in-windows-with-clang)
     - [In Windows with VisualStudio](#in-windows-with-visualstudio)
     - [In Linux with GCC](#in-linux-with-gcc)
+    - [In Linux with Clang](#in-linux-with-clang)
     - [In macOS with Xcode](#in-macos-with-xcode)
 * [Using GTNap](#using-gtnap)
 * [Compile and run CUADEMO example](#compile-and-run-cuademo-example)
@@ -147,6 +151,20 @@ gcc (Ubuntu 13.2.0-23ubuntu4) 13.2.0
 Copyright (C) 2023 Free Software Foundation, Inc.
 ```
 
+## Installing CLANG in Linux
+
+```
+# Install CLANG compiler and build tools
+:~$ sudo apt-get install clang
+
+# Check clang compiler is working
+:~$ clang --version
+clang version 10.0.0-4ubuntu1
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+```
+
 ## Installing Xcode in macOS
 
 Xcode provides the `AppleClang` compiler and build tools for macOS. Download and install it from Apple website [here](https://developer.apple.com/xcode/).
@@ -199,7 +217,7 @@ win-make HB_COMPILER=msvc64
 :: Go to main folder of harbour working copy
 cd harbour_nappgui
 
-mingw32-make.exe -j2 HB_CPU=x86_64 HB_BUILD_CONTRIBS=no HB_COMPILER=mingw64
+mingw32-make.exe -j2 HB_CPU=x86_64 HB_COMPILER=mingw64
 
 C:\harbour_nappgui>win-make HB_COMPILER=mingw64
 ! Building Harbour 3.2.0dev from source - https://harbour.github.io
@@ -218,7 +236,7 @@ C:\harbour_nappgui>win-make HB_COMPILER=mingw64
 :: Go to main folder of harbour working copy
 cd harbour_nappgui
 
-mingw32-make.exe -j2 HB_CPU=x86_64 HB_BUILD_CONTRIBS=no HB_COMPILER=clang
+mingw32-make.exe -j2 HB_CPU=x86_64 HB_COMPILER=clang
 
 C:\harbour_nappgui>mingw32-make.exe -j2 HB_CPU=x86_64 HB_BUILD_CONTRIBS=no HB_COMPILER=clang
 ! Building Harbour 3.2.0dev from source - https://harbour.github.io
@@ -231,13 +249,13 @@ C:\harbour_nappgui>mingw32-make.exe -j2 HB_CPU=x86_64 HB_BUILD_CONTRIBS=no HB_CO
 ...
 ```
 
-### Build Harbour in Linux
+### Build Harbour in Linux GCC
 
 ```
 # Go to main folder of harbour working copy
 cd harbour_nappgui
 
-make
+make -j4 HB_CPU=x86_64 HB_COMPILER=gcc
 
 ! Building Harbour 3.2.0dev from source - https://harbour.github.io
 ! MAKE: make 4.1 /bin/sh
@@ -245,6 +263,23 @@ make
 ! LD_LIBRARY_PATH: /home/fran/harbour_nappgui/lib/linux/gcc:
 ! HB_PLATFORM: linux (x86_64) (auto-detected)
 ! HB_COMPILER: gcc (auto-detected: /usr/bin/)
+...
+```
+
+### Build Harbour in Linux Clang
+
+```
+# Go to main folder of harbour working copy
+cd harbour_nappgui
+
+make -j4 HB_CPU=x86_64 HB_COMPILER=clang
+
+! Building Harbour 3.2.0dev from source - https://harbour.github.io
+! MAKE: make 4.2.1 /bin/sh
+! HB_HOST_PLAT: linux (x86_64)  HB_SHELL: sh
+! LD_LIBRARY_PATH: /home/fran/harbour_nappgui/lib/linux/clang::/usr/lib/libreoffice/program
+! HB_PLATFORM: linux (x86_64) (auto-detected)
+! HB_COMPILER: clang
 ...
 ```
 
@@ -393,7 +428,25 @@ Then, compile gtnap
 cd contrib/gtnap
 
 # Just build
-bash ./build.sh -b [Debug|Release]
+bash ./build.sh -comp gcc -b [Debug|Release]
+```
+
+This will generate several static libraries:
+
+* The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
+* The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Debugger lib: `deblib.lib` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Forms libs: `nflib.lib`, `nforms.lib` in `build/[Debug|Release]/lib` folder.
+* The GTNAP utilities executables: `gtnapdeb`, `napdesign` in `build/[Debug|Release]/bin` folder.
+
+### In Linux with CLANG
+
+```
+# Goto gtnap folder
+cd contrib/gtnap
+
+# Just build
+bash ./build.sh -comp clang -b [Debug|Release]
 ```
 
 This will generate several static libraries:
