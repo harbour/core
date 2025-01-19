@@ -53,7 +53,7 @@
 
 /* pacify OpenSSL 3.0 depreciated warnings until we update the code */
 #ifndef OPENSSL_API_COMPAT
-   #define OPENSSL_API_COMPAT 10200
+   #define OPENSSL_API_COMPAT 10100
 #endif
 
 #if defined( HB_OS_WIN )
