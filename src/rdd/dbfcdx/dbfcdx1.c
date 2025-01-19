@@ -3069,15 +3069,6 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
    iNeedKeys = ( iKeys + pPage->TagParent->MaxKeys - 1 )
                        / pPage->TagParent->MaxKeys;
 #if 1
-   if( iNeedKeys == 1 && iBlncKeys > 1 && childs[ 0 ]->Left != CDX_DUMMYNODE &&
-       childs[ iBlncKeys - 1 ]->Right != CDX_DUMMYNODE &&
-       iKeys >= ( CDX_BALANCE_INTPAGES << 1 ) &&
-       iKeys > ( ( pPage->TagParent->MaxKeys * 3 ) >> 1 ) )
-   {
-      iNeedKeys = 2;
-   }
-#endif
-#if 1
    iDiv = HB_MAX( iMax - iMin - ( pPage->TagParent->MaxKeys >> 1 ) + 1,
                   iBlncKeys - iNeedKeys );
 #else
