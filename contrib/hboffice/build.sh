@@ -4,11 +4,10 @@
 # HBOffice build script
 #
 # Will generate the libhboffice.so with the LibreOffice C-Wrapper.
-# build -dll -b [Debug|Release]
+# build -dll -comp [gcc|clang] -b [Debug|Release]
 #
-# Will generate the hboffice.lib with the Harbour wrapper and runtime dll loader.
-# Visual Studio (msvc64) or MinGW (mingw64) allowed
-# build -lib -b [Debug|Release] -comp [mingw64|msvc64]
+# Will generate the libhboffice.a with the Harbour wrapper and runtime dll loader.
+# build -lib -comp [gcc|clang] -b [Debug|Release]
 
 #
 # Input parameters
@@ -26,6 +25,11 @@ fi
 
 while [[ $# -gt 0 ]]; do
   case $1 in
+    -comp)
+      COMPILER="$2"
+      shift
+      shift
+      ;;
     -dll)
       OPERATION=dll
       shift

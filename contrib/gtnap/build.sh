@@ -2,19 +2,20 @@
 
 #
 # GTNAP build script
-# build -b [Debug/Release]
+# build -comp [gcc|clang] -b [Debug|Release]
 #
 
 #
 # Input parameters
 #
-HBMK_PATH=../../bin/linux/gcc
+COMPILER=gcc
+PLATFORM=linux
 BUILD=Release
 CWD=$(pwd)
 
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
-    HBMK_PATH=../../bin/darwin/clang
+    PLATFORM=darwin
     if [[ -z "${MACOSX_DEPLOYMENT_TARGET}" ]]; then
         echo "MACOSX_DEPLOYMENT_TARGET is not set. Please set this environment variable before build."
         exit 1
@@ -31,6 +32,11 @@ fi
 
 while [[ $# -gt 0 ]]; do
   case $1 in
+    -comp)
+      COMPILER="$2"
+      shift
+      shift
+      ;;
     -b)
       BUILD="$2"
       shift
@@ -48,8 +54,9 @@ done
 echo ---------------------------
 echo Generating GTNAP
 echo Main path: $CWD
+echo Compiler: $COMPILER
 echo Build type: $BUILD
-echo HBMK path: $HBMK_PATH
+echo Platform: $PLATFORM
 if [ "$(uname)" == "Darwin" ]; then
 echo MACOSX_DEPLOYMENT_TARGET: ${MACOSX_DEPLOYMENT_TARGET}
 fi
@@ -64,7 +71,15 @@ if [ "$(uname)" == "Darwin" ]; then
     cmake -G Xcode .. -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} || exit 1
     xcodebuild -configuration $BUILD || exit 1
 else
-    cmake  .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
+    if [ "$COMPILER" == "gcc" ]; then
+        set CMAKE_FLAGS=-DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
+    fi
+
+    if [ "$COMPILER" == "clang" ]; then
+        set CMAKE_FLAGS=-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+    fi
+
+    cmake  .. $CMAKE_FLAGS -DCMAKE_BUILD_TYPE=$BUILD || exit 1
     make -j 4 || exit 1
 fi
 
@@ -74,9 +89,9 @@ fi
 cd $CWD
 
 if [ $BUILD == "Debug" ]; then
-    $HBMK_PATH/hbmk2 -debug ./src/gtnap/gtnap.hbp || exit 1
+    ../../bin/$PLATFORM/$COMPILER/hbmk2 -debug ./src/gtnap/gtnap.hbp || exit 1
 else
-    $HBMK_PATH/hbmk2 ./src/gtnap/gtnap.hbp || exit 1
+    ../../bin/$PLATFORM/$COMPILER/hbmk2 ./src/gtnap/gtnap.hbp || exit 1
 fi
 
 echo ---------------------------

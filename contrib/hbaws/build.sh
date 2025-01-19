@@ -4,7 +4,7 @@
 # HBAWS build script
 #
 # Will generate the hbaws.a with the Harbour AWS wrapper.
-# build -b [Debug|Release]
+# build -comp [gcc|clang] -b [Debug|Release]
 #
 
 COMPILER=gcc
@@ -22,6 +22,11 @@ fi
 
 while [[ $# -gt 0 ]]; do
   case $1 in
+    -comp)
+      COMPILER="$2"
+      shift
+      shift
+      ;;
     -b)
       BUILD="$2"
       shift
