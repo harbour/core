@@ -227,19 +227,20 @@ HB_FUNC( EVP_PKEY_ASSIGN )
 HB_FUNC( EVP_PKEY_ASSIGN_RSA )
 {
 #ifndef OPENSSL_NO_RSA
-   if( hb_EVP_PKEY_is( 1 ) && HB_ISPOINTER( 2 ) )
+   if( hb_EVP_PKEY_is( 1 ) && hb_RSA_is( 2 ) )
    {
       EVP_PKEY * pkey = hb_EVP_PKEY_par( 1 );
       RSA *      key  = hb_RSA_par( 2 );
+      int        res  = 0;
 
       if( pkey && key )
       {
-         int result = EVP_PKEY_assign_RSA( pkey, key );
+         res = EVP_PKEY_assign_RSA( pkey, key );
 
-         if( result != 0 )
-            hb_RSA_par_free( 2 );
-         hb_retni( result );
+         if( res != 0 )
+            hb_RSA_par_remove( 2 );
       }
+      hb_retni( res );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
