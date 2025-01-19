@@ -68,6 +68,7 @@ IF exist %AWS_SDK_ROOT%\%COMPILER%\%BUILD% rmdir /s /q %AWS_SDK_ROOT%\%COMPILER%
 
 :build
 IF "%COMPILER%"=="mingw64" GOTO build_mingw
+IF "%COMPILER%"=="clang" GOTO build_clang
 IF "%COMPILER%"=="msvc64" GOTO build_msvc
 goto error_compiler
 
@@ -75,17 +76,21 @@ goto error_compiler
 :: IMPORTANT!! MinGW static link build is broken.
 :: At the moment MinGW based HBAWS apps must to redistribute AWS Dlls
 call cmake -G "MinGW Makefiles" -S %AWS_SDK_ROOT%\src -B %AWS_SDK_ROOT%\build -DCMAKE_INSTALL_PREFIX=%AWS_SDK_ROOT%\%COMPILER%\%BUILD% -DCMAKE_BUILD_TYPE=%BUILD% -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DBUILD_ONLY="s3" -DENABLE_TESTING=OFF -DENABLE_ZLIB_REQUEST_COMPRESSION=OFF -DAWS_SDK_WARNINGS_ARE_ERRORS=OFF -DBUILD_SHARED_LIBS=ON || goto error_cmake
-
 call cmake --build %AWS_SDK_ROOT%\build || goto error_build
+call cmake --install %AWS_SDK_ROOT%\build --config %BUILD% || goto error_install
+goto build_ok
 
+:build_clang
+:: IMPORTANT!! Clang static link build is broken.
+:: At the moment Clang based HBAWS apps must to redistribute AWS Dlls
+call cmake -G "MinGW Makefiles" -S %AWS_SDK_ROOT%\src -B %AWS_SDK_ROOT%\build -DCMAKE_INSTALL_PREFIX=%AWS_SDK_ROOT%\%COMPILER%\%BUILD% -DCMAKE_BUILD_TYPE=%BUILD% -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DBUILD_ONLY="s3" -DENABLE_TESTING=OFF -DENABLE_ZLIB_REQUEST_COMPRESSION=OFF -DAWS_SDK_WARNINGS_ARE_ERRORS=OFF -DBUILD_SHARED_LIBS=ON || goto error_cmake
+call cmake --build %AWS_SDK_ROOT%\build || goto error_build
 call cmake --install %AWS_SDK_ROOT%\build --config %BUILD% || goto error_install
 goto build_ok
 
 :build_msvc
 call cmake -S %AWS_SDK_ROOT%\src -B %AWS_SDK_ROOT%\build -DCMAKE_INSTALL_PREFIX=%AWS_SDK_ROOT%\%COMPILER%\%BUILD% -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DBUILD_ONLY="s3" -DENABLE_TESTING=OFF -DENABLE_ZLIB_REQUEST_COMPRESSION=OFF -DAWS_SDK_WARNINGS_ARE_ERRORS=OFF -DBUILD_SHARED_LIBS=ON -A x64 || goto error_cmake
-
 call cmake --build %AWS_SDK_ROOT%\build --config %BUILD% || goto error_build
-
 call cmake --install %AWS_SDK_ROOT%\build --config %BUILD% || goto error_install
 goto build_ok
 

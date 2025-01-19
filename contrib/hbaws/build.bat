@@ -2,8 +2,8 @@
 :: HBAWS build script
 ::
 :: Will generate the hbaws.lib with the Harbour AWS wrapper.
-:: Visual Studio (msvc64) or MinGW (mingw64) allowed
-:: build -b [Debug|Release] -comp [mingw64|msvc64]
+:: Visual Studio (msvc64) or MinGW (mingw64) or Clang allowed
+:: build -b [Debug|Release] -comp [msvc64|mingw64|clang]
 
 @echo off
 
@@ -43,10 +43,13 @@ echo Generating HBAWS
 echo Main path: %CWD%
 echo Build type: %BUILD%
 echo COMPILER: %COMPILER%
+echo AWS_SDK_ROOT: %AWS_SDK_ROOT%
 echo ---------------------------
 
 set HBMK_PATH=..\\..\\bin\\win\\%COMPILER%
 set HBMK_FLAGS=
+
+IF "%AWS_SDK_ROOT%"=="" GOTO error_no_aws_root
 
 IF "%BUILD%"=="Debug" GOTO hbmk2_debug
 goto hbmk2
@@ -66,6 +69,10 @@ goto end
 ::
 :: Errors
 ::
+
+:error_no_aws_root
+echo No 'AWS_SDK_ROOT' variable defined
+goto end
 
 :error_hbaws
 echo Error building HBAWS

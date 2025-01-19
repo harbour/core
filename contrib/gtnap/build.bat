@@ -1,7 +1,7 @@
 ::
 :: GTNAP build script
 ::
-:: build -b [Debug|Release] -comp [mingw64|msvc64]
+:: build -b [Debug|Release] -comp [msvc64|mingw64|clang]
 :: Release is default configuration
 :: mingw64 is default compiler
 ::
@@ -14,7 +14,6 @@
 set COMPILER=mingw64
 set BUILD=Release
 set "CWD=%cd%"
-set HBMK_PATH=..\\..\\bin\\win\\%COMPILER%
 
 :parse
 IF "%~1"=="" GOTO endparse
@@ -38,6 +37,7 @@ GOTO parse
 ::
 :: Beginning
 ::
+set HBMK_PATH=..\\..\\bin\\win\\%COMPILER%
 echo ---------------------------
 echo Generating GTNAP
 echo Main path: %CWD%
@@ -51,9 +51,16 @@ echo ---------------------------
 ::
 set CMAKE_ARGS=
 set CMAKE_BUILD=
-IF "%COMPILER%"=="mingw64" GOTO config_mingw64
 IF "%COMPILER%"=="msvc64" GOTO config_msvc64
+IF "%COMPILER%"=="mingw64" GOTO config_mingw64
+IF "%COMPILER%"=="clang" GOTO config_clang
 goto error_compiler
+
+:config_msvc64:
+:: Multi-configuration build system
+set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
+set CMAKE_BUILD=--config %BUILD%
+goto cmake
 
 :config_mingw64
 :: Mono-configuration build system
@@ -61,10 +68,10 @@ set CMAKE_ARGS=-G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=
 set CMAKE_BUILD=-j 4
 goto cmake
 
-:config_msvc64:
-:: Multi-configuration build system
-set CMAKE_ARGS=-Ax64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
-set CMAKE_BUILD=--config %BUILD%
+:config_clang
+:: Mono-configuration build system
+set CMAKE_ARGS=-G "MinGW Makefiles" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=%BUILD%
+set CMAKE_BUILD=-j 4
 goto cmake
 
 ::

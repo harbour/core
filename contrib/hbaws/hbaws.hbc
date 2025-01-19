@@ -3,6 +3,8 @@
 incpaths=.
 {allmingw&!debug}libpaths=build/Release/lib ${AWS_SDK_ROOT}/mingw64/Release/lib
 {allmingw&debug}libpaths=build/Debug/lib ${AWS_SDK_ROOT}/mingw64/Debug/lib
+{clang&!debug}libpaths=build/Release/lib ${AWS_SDK_ROOT}/clang/Release/lib
+{clang&debug}libpaths=build/Debug/lib ${AWS_SDK_ROOT}/clang/Debug/lib
 {allmsvc&!debug}libpaths=build/Release/lib ${AWS_SDK_ROOT}/msvc64/Release/bin
 {allmsvc&debug}libpaths=build/Debug/lib ${AWS_SDK_ROOT}/msvc64/Debug/bin
 {allgcc&!debug}libpaths=build/Release/lib ${AWS_SDK_ROOT}/gcc/Release/lib
