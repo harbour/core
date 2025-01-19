@@ -11,7 +11,7 @@
 :: build_all.bat -comp msvc64 -b Release
 ::
 @echo off
-set COMPILER=mingw64
+set ALL_BUILD_COMPILER=mingw64
 set BUILD=Release
 set HBMK_FLAGS=
 
@@ -30,7 +30,7 @@ GOTO parse
 
 :compiler
 SHIFT
-set COMPILER=%~1
+set ALL_BUILD_COMPILER=%~1
 SHIFT
 GOTO parse
 
@@ -45,9 +45,9 @@ win-make clean
 
 :build_harbour
 
-IF "%COMPILER%"=="msvc64" GOTO harbour_vs
-IF "%COMPILER%"=="mingw64" GOTO harbour_mingw
-IF "%COMPILER%"=="clang" GOTO harbour_clang
+IF "%ALL_BUILD_COMPILER%"=="msvc64" GOTO harbour_vs
+IF "%ALL_BUILD_COMPILER%"=="mingw64" GOTO harbour_mingw
+IF "%ALL_BUILD_COMPILER%"=="clang" GOTO harbour_clang
 goto error_unknown_compiler
 
 IF "%BUILD%"=="Debug" SET HBMK_FLAGS=-debug
@@ -68,7 +68,7 @@ goto hboffice
 
 :: Compile Harbour Mingw-64
 :harbour_mingw
-call mingw32-make.exe -j4 HB_CPU=x86_64 HB_COMPILER=mingw64 || goto error_harbour_gcc
+call mingw32-make.exe -j4 HB_CPU=x86_64 HB_COMPILER=mingw64
 echo -----------------------------------
 echo Harbour mingw64 build successfully
 echo -----------------------------------
@@ -88,13 +88,18 @@ cd contrib\hboffice
 rmdir /s /q build
 
 :: The LibreOffice dll MUST to be compiled with Visual Studio (no MinGW/Clang support from LibreOffice)
+:: Use of Visual Studio 2017. Change two next commands to use another version
+:: This command allow all MSVC tools available for Harbour compiler.
+call "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+:: Set generator for all CMake-based build scripts
+set CMAKE_GENERATOR=Visual Studio 15 2017
 call build.bat -dll -b %BUILD% || goto error_hboffice_dll
 echo --------------------------------
 echo hboffice dll build successfully
 echo --------------------------------
 
 :hboffice_lib_build
-call build.bat -lib -comp %COMPILER% -b %BUILD% || goto error_hboffice_lib
+call build.bat -lib -comp %ALL_BUILD_COMPILER% -b %BUILD% || goto error_hboffice_lib
 echo --------------------------------
 echo hboffice lib build successfully
 echo --------------------------------
@@ -106,7 +111,7 @@ cd ..
 :hbaws_build
 cd contrib\hbaws
 rmdir /s /q build
-call build.bat -comp %COMPILER% -b %BUILD% || goto error_hbaws
+call build.bat -comp %ALL_BUILD_COMPILER% -b %BUILD% || goto error_hbaws
 echo -------------------------
 echo hbaws build successfully
 echo -------------------------
@@ -118,7 +123,7 @@ cd ..
 :gtnap_build
 cd contrib\gtnap
 rmdir /s /q build
-call build.bat -comp %COMPILER% -b %BUILD% || goto error_gtnap
+call build.bat -comp %ALL_BUILD_COMPILER% -b %BUILD% || goto error_gtnap
 echo -------------------------
 echo gtnap build successfully
 echo -------------------------
@@ -128,7 +133,7 @@ cd tests/cuademo/gtnap_cualib
 del /q *.exe
 del /q *.dll
 copy ..\..\..\..\hboffice\build\%BUILD%\bin\officesdk.dll
-..\..\..\..\..\bin\win\%COMPILER%\hbmk2.exe %HBMK_FLAGS% -comp=%COMPILER% exemplo.hbp
+..\..\..\..\..\bin\win\%ALL_BUILD_COMPILER%\hbmk2.exe %HBMK_FLAGS% -comp=%ALL_BUILD_COMPILER% exemplo.hbp
 exemplo --hb:gtnap
 
 :: Return to gtnap path
@@ -152,7 +157,7 @@ goto end
 :: Errors
 ::
 :error_unknown_compiler
-echo Error Unknown compiler %COMPILER%
+echo Error Unknown compiler %ALL_BUILD_COMPILER%
 goto end
 
 :error_harbour_vs

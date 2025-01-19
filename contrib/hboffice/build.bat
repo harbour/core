@@ -99,7 +99,7 @@ set HBMK_FLAGS=-debug
 
 :hbmk2
 echo HBMK HOME: %HBMK_PATH%
-call %HBMK_PATH%\\hbmk2.exe -comp=%COMPILER% %HBMK_FLAGS% %CWD%\src\hboffice\hboffice.hbp || goto error_hboffice
+call %HBMK_PATH%\\hbmk2.exe %HBMK_FLAGS% -comp=%COMPILER% %CWD%\src\hboffice\hboffice.hbp || goto error_hboffice
 
 echo ---------------------------
 echo HBOFFICE LIB build succeed
