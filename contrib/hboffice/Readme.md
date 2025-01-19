@@ -164,11 +164,10 @@ Then, generate the **hboffice.lib**:
 build.bat -lib -comp mingw64 -b Release
 
 :: Full command
-build.bat -lib -comp [mingw64|msvc64] -b [Release|Debug]
+build.bat -lib -comp [mingw64|clang|msvc64] -b [Release|Debug]
 
 :: Required for VisualStudio
-"%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x64
-
+"%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 ```
 
 After these two steps, you will have:
@@ -179,10 +178,9 @@ After these two steps, you will have:
 
 > **Important:** To build the dynamic library `officesdk.dll` is **imperative to use Visual Studio**.
 
-To build `hboffice.lib` you can use Visual Studio or MinGW, depending on the compiler you use to generate the final executables.
+To build `hboffice.lib` you can use Visual Studio, MinGW or Clang, depending on the compiler you use to generate the final executables.
 
 If you have installed other Visual Studio version change the `CMAKE_GENERATOR` value:
-
 ```
 set CMAKE_GENERATOR=Visual Studio 17 2022
 set CMAKE_GENERATOR=Visual Studio 16 2019

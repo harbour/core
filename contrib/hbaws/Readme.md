@@ -3,12 +3,14 @@
 * [Introduction](#introduction)
 * [Installation of AWS-SDK-C++](#installation-of-aws-sdk-c++)
     - [AWS-SDK with MinGW](#aws-sdk-with-mingw)
+    - [AWS-SDK with Clang](#aws-sdk-with-clang)
     - [AWS-SDK with MSVC](#aws-sdk-with-msvc)
     - [AWS-SDK with GCC Linux](#aws-sdk-with-gcc-linux)
     - [AWS-SDK result](#aws-sdk-result)
 
 * [Build HBAWS](#build-hbaws)
     - [Build HBAWS with MinGW](#build-hbaws-with-mingw)
+    - [Build HBAWS with Clang](#build-hbaws-with-clang)
     - [Build HBAWS with MSVC](#build-hbaws-with-msvc)
     - [Build HBAWS with GCC Linux](#build-hbaws-with-gcc-linux)
 * [HBAWS examples](#hbaws-examples)
@@ -123,6 +125,16 @@ To build the `hbaws` library, just run the `build.bat` or `build.sh` scripts.
 cd contrib\hbaws
 set AWS_SDK_ROOT=C:\aws-sdk
 build -b [Debug|Release] -comp mingw64
+```
+
+The `libhbaws.a` will be generated in `hbaws\build\[Debug|Release]\lib`.
+
+### Build HBAWS with Clang
+
+```
+cd contrib\hbaws
+set AWS_SDK_ROOT=C:\aws-sdk
+build -b [Debug|Release] -comp clang
 ```
 
 The `libhbaws.a` will be generated in `hbaws\build\[Debug|Release]\lib`.

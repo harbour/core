@@ -6,15 +6,18 @@ https://github.com/frang75/nappgui_src
 * [Installing CMake](#installing-cmake)
 * [Installing Visual Studio](#installing-visual-studio)
 * [Installing MinGW GCC](#installing-mingw-gcc)
+* [Installing MinGW CLANG](#installing-mingw-clang)
 * [Installing GCC in Linux](#installing-gcc-in-linux)
 * [Installing Xcode in macOS](#installing-xcode-in-macos)
 * [Build Harbour](#build-harbour)
     - [Build Harbour in Windows Visual Studio](#build-harbour-in-windows-visual-studio)
     - [Build Harbour in Windows MinGW](#build-harbour-in-windows-mingw)
+    - [Build Harbour in Windows Clang](#build-harbour-in-windows-clang)
     - [Build Harbour in Linux](#build-harbour-in-linux)
     - [Build Harbour in macOS](#build-harbour-in-macos)
 * [Build GTNap](#build-gtnap)
     - [In Windows with MinGW](#in-windows-with-mingw)
+    - [In Windows with Clang](#in-windows-with-clang)
     - [In Windows with VisualStudio](#in-windows-with-visualstudio)
     - [In Linux with GCC](#in-linux-with-gcc)
     - [In macOS with Xcode](#in-macos-with-xcode)
@@ -114,6 +117,19 @@ MinGW is a project that provides a native Windows version of the GCC compiler. T
     warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.```
     ```
 
+## Installing MinGW CLANG
+
+Using MSYS2, you can also install the Clang compiler using `pacman -S mingw-w64-x86_64-clang`. If everything went well, open a `cmd` and check the compiler is working.
+
+    ```
+    :: Clang compiler is working in Windows
+    C:>clang --version
+    clang version 18.1.4
+    Target: x86_64-w64-windows-gnu
+    Thread model: posix
+    InstalledDir: C:/msys64/mingw64/bin
+    ```
+
 ## Installing GCC in Linux
 
 ```
@@ -196,6 +212,25 @@ C:\harbour_nappgui>win-make HB_COMPILER=mingw64
 ...
 ```
 
+### Build Harbour in Windows Clang
+
+```
+:: Go to main folder of harbour working copy
+cd harbour_nappgui
+
+mingw32-make.exe -j2 HB_CPU=x86_64 HB_BUILD_CONTRIBS=no HB_COMPILER=clang
+
+C:\harbour_nappgui>mingw32-make.exe -j2 HB_CPU=x86_64 HB_BUILD_CONTRIBS=no HB_COMPILER=clang
+! Building Harbour 3.2.0dev from source - https://harbour.github.io
+! MAKE: mingw32-make.exe 4.4.1 sh.exe   -j2 -- HB_COMPILER=clang HB_BUILD_CONTRIBS=no HB_CPU=x86_64
+! HB_HOST_PLAT: win (x86_64)  HB_SHELL: nt
+! HB_PLATFORM: win (x86_64) (auto-detected)
+! HB_COMPILER: clang
+! Component: 'zlib' found in C:/harbour_nappgui/src/3rd/zlib (local)
+! Component: 'pcre' found in C:/harbour_nappgui/src/3rd/pcre (local)
+...
+```
+
 ### Build Harbour in Linux
 
 ```
@@ -269,7 +304,7 @@ Readme.md           This documentation.
 
 ### In Windows with MinGW
 
-`build.bat` script allows to compile GTNAP using VisualStudio `msvc64` compiler or MinGW `mingw64` compiler.
+`build.bat` script allows to compile GTNAP using VisualStudio `msvc64` compiler, MinGW `mingw64` compiler or `clang` compiler.
 
 ```
 :: Goto gtnap folder
@@ -277,6 +312,24 @@ cd contrib\gtnap
 
 :: Just build
 build.bat -b [Debug|Release] -comp mingw64
+```
+
+This will generate several static libraries:
+
+* The GT library: `libgtnap.a` in `build/[Debug|Release]/lib` folder.
+* The NAppGUI libraries: `libsewer.a`, `libosbs.a`, `libcore.a`, `libgeom2d.a`, `libdraw2d.a`, `libosgui.a`, `libgui.a`, `libosapp.a`, `libinet.a` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Debugger lib: `libdeblib.a` in `build/[Debug|Release]/lib` folder.
+* The GTNAP Forms libs: `libnflib.a`, `libnforms.a` in `build/[Debug|Release]/lib` folder.
+* The GTNAP utilities executables: `gtnapdeb`, `napdesign` in `build/[Debug|Release]/bin` folder.
+
+### In Windows with Clang
+
+```
+:: Goto gtnap folder
+cd contrib\gtnap
+
+:: Just build
+build.bat -b [Debug|Release] -comp clang
 ```
 
 This will generate several static libraries:
