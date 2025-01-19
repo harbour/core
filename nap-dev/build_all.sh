@@ -95,7 +95,7 @@ cd tests/cuademo/gtnap_cualib
 rm exemplo
 rm *.so
 cp ../../../../hboffice/build/$BUILD/bin/libofficesdk.so .
-../../../../../bin/linux/$ALL_BUILD_COMPILER/hbmk2 exemplo.hbp
+../../../../../bin/linux/$ALL_BUILD_COMPILER/hbmk2 -comp=$ALL_BUILD_COMPILER exemplo.hbp
 export LIBREOFFICE_HOME=/usr/lib/libreoffice
 export LD_LIBRARY_PATH=.:/usr/lib/libreoffice/program
 

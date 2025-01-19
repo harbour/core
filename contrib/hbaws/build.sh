@@ -55,7 +55,7 @@ if [ $BUILD == "Debug" ]; then
     HBMK_FLAGS=-debug
 fi
 
-$HBMK_PATH/hbmk2 $HBMK_FLAGS $CWD/hbaws.hbp || exit 1
+$HBMK_PATH/hbmk2 $HBMK_FLAGS -comp=$COMPILER $CWD/hbaws.hbp || exit 1
 
 echo ------------------------
 echo HBAWS LIB build succeed

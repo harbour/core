@@ -86,12 +86,13 @@ fi
 # Build GTNAP
 #
 cd $CWD
+HBMK_FLAGS=
 
 if [ $BUILD == "Debug" ]; then
-    ../../bin/$PLATFORM/$COMPILER/hbmk2 -debug ./src/gtnap/gtnap.hbp || exit 1
-else
-    ../../bin/$PLATFORM/$COMPILER/hbmk2 ./src/gtnap/gtnap.hbp || exit 1
+    HBMK_FLAGS=-debug
 fi
+
+../../bin/$PLATFORM/$COMPILER/hbmk2 -comp=$COMPILER $HBMK_FLAGS ./src/gtnap/gtnap.hbp || exit 1
 
 echo ---------------------------
 echo GTNAP build succeed
