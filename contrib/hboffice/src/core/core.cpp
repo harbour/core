@@ -152,7 +152,7 @@ static void i_arrst_destroy(byte_t **arrst, const char_t *type)
 {
     char_t atype[128] = ARRST;
     str_cat_c(atype, sizeof(atype), type);
-    array_destroy_ptr(dcast(arrst, Array), NULL, atype);
+    array_destroy(dcast(arrst, Array), NULL, atype);
 }
 
 /*---------------------------------------------------------------------------*/

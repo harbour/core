@@ -61,6 +61,14 @@ set AWS_SDK_ROOT=C:\aws-sdk
 awssdk -b [Debug|Release] -comp mingw64
 ```
 
+### AWS-SDK with Clang
+
+```
+cd contrib\hbaws
+set AWS_SDK_ROOT=C:\aws-sdk
+awssdk -b [Debug|Release] -comp clang
+```
+
 ### AWS-SDK with MSVC
 
 At least Visual Studio 2015 is required. First, you need to set the `CMAKE_GENERATOR` environment variable to the version you plan to use.

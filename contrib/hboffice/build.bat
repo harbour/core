@@ -5,8 +5,8 @@
 :: build -dll -b [Debug|Release]
 ::
 :: Will generate the hboffice.lib with the Harbour wrapper and runtime dll loader.
-:: Visual Studio (msvc64) or MinGW (mingw64) allowed
-:: build -lib -b [Debug|Release] -comp [mingw64|msvc64]
+:: Visual Studio (msvc64) or MinGW (mingw64) or Clang allowed
+:: build -lib -b [Debug|Release] -comp [msvc64|mingw64|clang]
 
 @echo off
 
