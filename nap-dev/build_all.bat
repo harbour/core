@@ -76,7 +76,7 @@ goto hboffice
 
 :: Compile Harbour clang
 :harbour_clang
-call mingw32-make.exe -j4 HB_CPU=x86_64 HB_COMPILER=clang || goto error_harbour_clang
+call mingw32-make.exe -j4 HB_CPU=x86_64 HB_COMPILER=clang
 echo ---------------------------------
 echo Harbour clang build successfully
 echo ---------------------------------

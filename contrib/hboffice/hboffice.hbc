@@ -3,5 +3,6 @@
 incpaths=.
 {!debug}libpaths=build/Release/lib build/Release/bin
 {debug}libpaths=build/Debug/lib build/Debug/bin
-libs=officesdk hboffice
+{clang}libs=hboffice officesdk
+{!clang}libs=officesdk hboffice
 cpp=yes
