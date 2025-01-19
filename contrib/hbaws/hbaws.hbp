@@ -20,7 +20,7 @@
 
 # Flags
 -cflag={allgcc&debug}-g
--cflag={allgcc&!darwin}-std=c++11
+#-cflag={allgcc&!darwin}-std=c++11
 
 # Output
 {debug}-obuild/Debug/lib/${hb_name}

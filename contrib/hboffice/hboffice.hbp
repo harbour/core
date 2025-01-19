@@ -20,7 +20,7 @@
 -cflag={win&clang}-D_UNICODE
 -cflag={allgcc&debug}-g
 -cflag={clang&debug}-g
--cflag={allgcc&!darwin}-std=c++98
+#-cflag={allgcc&!darwin}-std=c++98
 -cflag={debug}-DCMAKE_DEBUG
 -cflag={nodebug}-DCMAKE_RELEASE
 

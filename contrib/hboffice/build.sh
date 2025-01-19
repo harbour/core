@@ -72,7 +72,14 @@ if [ $OPERATION == "dll" ]; then
     else
         mkdir -p build
         cd build
-        cmake .. -DCMAKE_BUILD_TYPE=$BUILD || exit 1
+        if [ "$COMPILER" == "gcc" ]; then
+            cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=$BUILD || exit 1
+        fi
+
+        if [ "$COMPILER" == "clang" ]; then
+            cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang -DCMAKE_BUILD_TYPE=$BUILD || exit 1
+        fi
+
         make -j 4 || exit 1
     fi
 

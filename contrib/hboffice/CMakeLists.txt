@@ -39,6 +39,7 @@ nap_build_opt("PackageID" "${CMAKE_PACKAGE_ID}")
 message (STATUS "---------------------------------------------")
 
 # Generate targets
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include(${NAPPGUI_ROOT_PATH}/prj/NAppTarget.cmake)
 add_subdirectory(src/sewer)
 add_subdirectory(src/osbs)

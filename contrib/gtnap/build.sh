@@ -72,14 +72,13 @@ if [ "$(uname)" == "Darwin" ]; then
     xcodebuild -configuration $BUILD || exit 1
 else
     if [ "$COMPILER" == "gcc" ]; then
-        set CMAKE_FLAGS=-DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
+        cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=$BUILD || exit 1
     fi
 
     if [ "$COMPILER" == "clang" ]; then
-        set CMAKE_FLAGS=-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+        cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=$BUILD || exit 1
     fi
 
-    cmake  .. $CMAKE_FLAGS -DCMAKE_BUILD_TYPE=$BUILD || exit 1
     make -j 4 || exit 1
 fi
 
