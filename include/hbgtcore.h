@@ -629,8 +629,8 @@ extern HB_EXPORT PHB_GT  hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FU
 
 /* low-level GT functions common to different GTs supported by RTL */
 extern int  hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC );
-extern HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE nLen );
-extern HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pnLen );
+extern HB_EXPORT HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE nLen );
+extern HB_EXPORT HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pnLen );
 #if defined( HB_OS_WIN )
 extern HB_EXPORT HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, PHB_ITEM pItem );
 extern HB_EXPORT HB_BOOL hb_gt_winapi_setClipboardRaw( HB_UINT uFormat, void * pData, HB_SIZE nSize );
@@ -640,7 +640,7 @@ extern HB_EXPORT void    hb_gt_winapi_setKbdState( int kbdShifts );
 extern HB_EXPORT void    hb_gt_winapi_tone( double dFrequency, double dDuration );
 #endif /* HB_OS_WIN */
 #if defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
-extern int hb_gt_dos_keyCodeTranslate( int iKey, int iFlags, PHB_CODEPAGE cdp );
+extern HB_EXPORT int hb_gt_dos_keyCodeTranslate( int iKey, int iFlags, PHB_CODEPAGE cdp );
 #endif /* HB_OS_DOS || HB_OS_WIN || HB_OS_OS2 */
 
 HB_EXTERN_END

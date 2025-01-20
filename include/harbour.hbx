@@ -731,8 +731,8 @@ DYNAMIC hb_osDriveSeparator
 DYNAMIC hb_osError
 DYNAMIC hb_osFileMask
 DYNAMIC hb_osIs64bit
-DYNAMIC hb_osIsWin11
 DYNAMIC hb_osIsWin10
+DYNAMIC hb_osIsWin11
 DYNAMIC hb_osIsWin2K
 DYNAMIC hb_osIsWin7
 DYNAMIC hb_osIsWin8

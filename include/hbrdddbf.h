@@ -268,8 +268,6 @@ extern HB_EXPORT HB_BOOL    hb_dbfLockIdxFile( DBFAREAP pArea, PHB_FILE pFile,
 extern HB_EXPORT HB_BOOL    hb_dbfLockIdxWrite( DBFAREAP pArea, PHB_FILE pFile,
                                                 PHB_DBFLOCKDATA pLockData );
 
-extern HB_EXPORT void hb_dbfTranslateRec( DBFAREAP pArea, HB_BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest );
-
 HB_EXTERN_END
 
 #endif /* HB_RDDDBF_H_ */
