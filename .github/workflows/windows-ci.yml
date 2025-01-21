@@ -113,15 +113,16 @@ jobs:
           case ${{matrix.strictness}} in
             normal) ;;
             strict) case ${{matrix.compiler}} in
-                      (mingw64) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror -Wno-error=deprecated-declarations -Wno-error=array-bounds" ;;
+                      (mingw64) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
                       (bcc) HB_USER_CFLAGS="$HB_USER_CFLAGS -w!" ;;
-                      (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror -Wno-error=deprecated-declarations" ;;
+                      (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
                     esac ;;
           esac
           tee -a ./.bashrc <<EOENV
           # These contribs do not build on any platform
           export HB_BUILD_CONTRIBS="no hbfimage"  # incompatible with freeimage 3.18+
 
+          export HB_BUILD_TEST="${{matrix.strictness}}"
           export HB_BUILD_VERBOSE="yes"
           export HBMK_WITH_SQLITE3="local"
           export HB_USER_CFLAGS="$HB_USER_CFLAGS"

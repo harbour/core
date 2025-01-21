@@ -23,3 +23,6 @@ msi.c
 pdf417.c
 datamtrx.c
 qrcode.c
+
+# GCC 13, 14 reports false warnings about array bounds for static constant data
+-cflag=-Wno-error=array-bounds{allgcc&HB_BUILD_TEST='strict'}
