@@ -85,4 +85,8 @@ LIBNAME := hbvmmt
 
 HB_CFLAGS += -DHB_MT_VM
 
+ifeq ($(HB_BUILD_TEST),strict)
+   HB_CFLAGS += -DHB_FM_STD_ALLOC
+endif
+
 include $(TOP)$(ROOT)config/lib.mk
