@@ -43,7 +43,8 @@
 -c=gnu90{allgcc&HB_COMP_VER='45'}
 
 # GCC 14 reports strlen reading 1 or more bytes from a region of size 0 warning
--cflag=-Wno-error=stringop-overread{allgcc&HB_BUILD_TEST='strict'&!(win&clang)}
+-cflag=-Wno-error=stringop-overread{allgcc&HB_BUILD_TEST='strict'}
+-cflag=-Wno-unknown-warning-option{allgcc&HB_BUILD_TEST='strict'}
 
 sqlite3.c
 
