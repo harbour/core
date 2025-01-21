@@ -59,13 +59,11 @@ jobs:
             mingw-w64-${{ env.msys_cpu }}-bzip2
             mingw-w64-${{ env.msys_cpu }}-cairo
             mingw-w64-${{ env.msys_cpu }}-curl
+            mingw-w64-${{ env.msys_cpu }}-freeimage
             mingw-w64-${{ env.msys_cpu }}-libgd
             mingw-w64-${{ env.msys_cpu }}-ghostscript
             mingw-w64-${{ env.msys_cpu }}-openssl
             mingw-w64-${{ env.msys_cpu }}-qt5-base
-
-          # Dependencies for disabled contribs:
-          #  mingw-w64-${{ env.msys_cpu }}-freeimage
 
       - name: 'Add packages available on 64-bit hosts only'
         if: matrix.cpu != 'x86'
@@ -119,8 +117,6 @@ jobs:
                     esac ;;
           esac
           tee -a ./.bashrc <<EOENV
-          # These contribs do not build on any platform
-          export HB_BUILD_CONTRIBS="no hbfimage"  # incompatible with freeimage 3.18+
 
           export HB_BUILD_TEST="${{matrix.strictness}}"
           export HB_BUILD_VERBOSE="yes"

@@ -72,12 +72,13 @@ jobs:
           case ${{matrix.strictness}} in
             normal) ;;
             strict) case ${{matrix.compiler}} in
-                      (gcc) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror -Wno-error=deprecated-declarations -Wno-error=array-bounds" ;;
-                      (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror -Wno-error=deprecated-declarations" ;;
+                      (gcc) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
+                      (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
                     esac ;;
           esac
           tee ./.bashrc <<EOENV
 
+          export HB_BUILD_TEST="${{matrix.strictness}}"
           export HB_BUILD_VERBOSE="yes"
           export HBMK_WITH_SQLITE3="local"
           export HB_USER_CFLAGS="$HB_USER_CFLAGS"
