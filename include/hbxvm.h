@@ -106,7 +106,6 @@ extern HB_EXPORT HB_BOOL hb_xvmPushVariable( PHB_SYMB pSymbol );
 extern HB_EXPORT HB_BOOL hb_xvmPopVariable( PHB_SYMB pSymbol );
 extern HB_EXPORT void    hb_xvmPushBlock( const HB_BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
 extern HB_EXPORT void    hb_xvmPushBlockShort( const HB_BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
-extern HB_EXPORT void    hb_xvmPushBlockLarge( const HB_BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
 extern HB_EXPORT void    hb_xvmPushSelf( void );
 extern HB_EXPORT void    hb_xvmPushVParams( void );
 extern HB_EXPORT void    hb_xvmPushAParams( void );
@@ -194,7 +193,6 @@ extern HB_EXPORT HB_BOOL hb_xvmMacroArrayGen( HB_USHORT uiArgSets );
 extern HB_EXPORT HB_BOOL hb_xvmMacroPush( int bFlags );
 extern HB_EXPORT HB_BOOL hb_xvmMacroPushRef( void );
 extern HB_EXPORT HB_BOOL hb_xvmMacroPushIndex( void );
-extern HB_EXPORT HB_BOOL hb_xvmMacroPushArg( PHB_SYMB pSymbol, int bFlags );
 extern HB_EXPORT HB_BOOL hb_xvmMacroPushList( int bFlags );
 extern HB_EXPORT HB_BOOL hb_xvmMacroPushAliased( int bFlags );
 extern HB_EXPORT HB_BOOL hb_xvmMacroPushPare( int bFlags );

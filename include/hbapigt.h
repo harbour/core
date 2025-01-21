@@ -291,7 +291,6 @@ extern HB_EXPORT void       hb_inkeyPoll( void );           /* Poll the console 
 extern HB_EXPORT void       hb_inkeyReset( void );          /* Reset the Harbour keyboard buffer */
 extern HB_EXPORT void       hb_inkeySetText( const char * szText, HB_SIZE nLen, HB_BOOL fEol ); /* Set text into inkey buffer */
 extern HB_EXPORT int        hb_inkeySetLast( int iKey );    /* Set new LastKey() value, return previous one */
-extern HB_EXPORT void       hb_inkeyExit( void );           /* reset inkey pool to default state and free any allocated resources */
 
 extern HB_EXPORT HB_SIZE    hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize ); /* convert key value to string */
 extern HB_EXPORT int        hb_inkeyKeyStd( int iKey );     /* convert Harbour extended key code to Cl*pper inkey code */

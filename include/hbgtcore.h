@@ -351,7 +351,6 @@ extern HB_EXPORT void hb_gt_BaseUnlock( PHB_GT pGT );
 extern HB_EXPORT void hb_gt_BaseLock( PHB_GT pGT );
 extern HB_EXPORT void hb_gtSleep( PHB_GT pGT, double dSeconds );
 extern HB_EXPORT PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
-extern HB_EXPORT void hb_gt_gcMark( void );
 
 #define HB_GTLOCAL(g)   (g)->pGTData[*HB_GTID_PTR]
 

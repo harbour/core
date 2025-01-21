@@ -97,7 +97,6 @@ extern HB_EXPORT_INT PHB_EXPR hb_compExprNewMult( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewDiv( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewMod( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewPower( PHB_EXPR, HB_COMP_DECL );
-extern HB_EXPORT_INT PHB_EXPR hb_compExprNewAssign( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewEqual( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewPlusEq( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewMinusEq( PHB_EXPR, HB_COMP_DECL );
@@ -115,9 +114,8 @@ extern HB_EXPORT_INT PHB_EXPR hb_compExprNewNot( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewNegate( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewVarRef( const char * szVarName, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewFunRef( const char * szFunName, HB_COMP_DECL );
-extern HB_EXPORT_INT PHB_EXPR hb_compExprNewFunCall( PHB_EXPR, PHB_EXPR, HB_COMP_DECL );
+extern HB_EXPORT_INT PHB_EXPR hb_compExprNewFunCall( PHB_EXPR, PHB_EXPR, HB_COMP_DECL ); /* compiler only */
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewRef( PHB_EXPR, HB_COMP_DECL );
-extern HB_EXPORT_INT PHB_EXPR hb_compExprNewCodeblockExpr( PHB_EXPR, PHB_EXPR );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewSend( const char *, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewMacroSend( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewMethodObject( PHB_EXPR, PHB_EXPR );
@@ -127,17 +125,16 @@ extern HB_EXPORT_INT PHB_EXPR hb_compExprNewArgList( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewArgRef( HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewArray( PHB_EXPR, HB_COMP_DECL );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewHash( PHB_EXPR, HB_COMP_DECL );
-extern HB_EXPORT_INT PHB_EXPR hb_compExprNewArrayAt( PHB_EXPR, PHB_EXPR, HB_COMP_DECL );
+extern HB_EXPORT_INT PHB_EXPR hb_compExprNewArrayAt( PHB_EXPR, PHB_EXPR, HB_COMP_DECL ); /* compiler only */
 extern HB_EXPORT_INT PHB_EXPR hb_compExprAddListExpr( PHB_EXPR, PHB_EXPR );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprCBVarAdd( PHB_EXPR, const char * szVarName, HB_BYTE bType, HB_COMP_DECL );
 extern HB_EXPORT_INT void hb_compExprCBVarDel( PHB_CBVAR );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprAddCodeblockExpr( PHB_EXPR, PHB_EXPR );
-extern HB_EXPORT_INT PHB_EXPR hb_compExprSetCodeblockBody( PHB_EXPR pExpr, HB_BYTE * pCode, HB_SIZE nLen );
+extern HB_EXPORT_INT PHB_EXPR hb_compExprSetCodeblockBody( PHB_EXPR pExpr, HB_BYTE * pCode, HB_SIZE nLen ); /* compiler only */
 extern HB_EXPORT_INT PHB_EXPR hb_compExprNewIIF( PHB_EXPR );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprMacroAsAlias( PHB_EXPR );
 extern HB_EXPORT_INT PHB_EXPR hb_compExprAssign( PHB_EXPR, PHB_EXPR, HB_COMP_DECL );
-extern HB_EXPORT_INT PHB_EXPR hb_compExprEqual( PHB_EXPR, PHB_EXPR );
-extern HB_EXPORT_INT PHB_EXPR hb_compExprAssignStatic( PHB_EXPR, PHB_EXPR, HB_COMP_DECL );
+extern HB_EXPORT_INT PHB_EXPR hb_compExprAssignStatic( PHB_EXPR, PHB_EXPR, HB_COMP_DECL ); /* compiler only */
 extern HB_EXPORT_INT HB_BOOL hb_compExprListTypeCheck( PHB_EXPR pExpr, HB_EXPRTYPE ExprType );
 extern HB_EXPORT_INT HB_ULONG hb_compExprListLen( PHB_EXPR );
 extern HB_EXPORT_INT HB_ULONG hb_compExprParamListLen( PHB_EXPR );
