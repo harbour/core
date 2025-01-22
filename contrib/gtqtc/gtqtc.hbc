@@ -3,8 +3,9 @@ description=Multi-platform QT based GUI console (QTC)
 gt=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
 deppkgname=qt6:qt6
-depcontrol=qt6:${HB_WITH_QT}
 depkeyhead=qt6:QtCore/QAdoptSharedDataTag
+depcontrol=qt6:${HB_WITH_QT}
+{QT_SELECT&QT_SELECT<'6'}depcontrol=qt6:no
 depoptional=qt6:yes
 depincpath=qt6:/usr/include/x86_64-linux-gnu/qt6{linux}
 depincpath=qt6:/usr/local/opt/qt6/include{darwin}
@@ -12,8 +13,9 @@ depincpath=qt6:/usr/local/include/qt6{bsd}
 depfinish=qt6
 
 {!HBMK_HAS_QT6}deppkgname=qt5:qt5
-{!HBMK_HAS_QT6}depcontrol=qt5:${HB_WITH_QT}
 {!HBMK_HAS_QT6}depkeyhead=qt5:QtCore/QJsonObject
+{!HBMK_HAS_QT6}depcontrol=qt5:${HB_WITH_QT}
+{!HBMK_HAS_QT6&QT_SELECT='4'}depcontrol=qt5:no
 {!HBMK_HAS_QT6}depoptional=qt5:yes
 {!HBMK_HAS_QT6&linux}depincpath=qt5:/usr/include/x86_64-linux-gnu/qt5
 {!HBMK_HAS_QT6&darwin}depincpath=qt5:/usr/local/opt/qt5/include
@@ -22,8 +24,12 @@ depfinish=qt6
 
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}deppkgname=qt:QtCore
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)}deppkgname=qt:qt4
-{!(HBMK_HAS_QT5|HBMK_HAS_QT6)}depcontrol=qt:${HB_WITH_QT}
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)}depkeyhead=qt:QtCore/qglobal.h
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)}depcontrol=qt:${HB_WITH_QT}
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&QT_SELECT>'4'}depcontrol=qt:no
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}depincpath=qt:/usr/include/qt4
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}depincpath=qt:/usr/lib/qt4/include
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}depincpath=qt:/usr/include
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)&bsd}depincpath=qt:/usr/local/include/qt4
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)&beos}depincpath=qt:/boot/common/include
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)&darwin}depincpath=qt:/Developer/qt/include

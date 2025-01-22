@@ -24,7 +24,7 @@
 -deppkgname=qt6:qt6
 -depkeyhead=qt6:QtCore/QAdoptSharedDataTag
 -depcontrol=qt6:${HB_WITH_QT}
-{HB_BUILD_3RDEXT='no'}-depoptional=qt6:no
+{HB_BUILD_3RDEXT='no'|(QT_SELECT&QT_SELECT<'6')}-depcontrol=qt6:no
 -depoptional=qt6:yes
 -depincpath=qt6:/usr/include/x86_64-linux-gnu/qt6{linux}
 -depincpath=qt6:/usr/local/opt/qt6/include{darwin}
@@ -34,7 +34,7 @@
 {!HBMK_HAS_QT6}-deppkgname=qt5:qt5
 {!HBMK_HAS_QT6}-depkeyhead=qt5:QtCore/QJsonObject
 {!HBMK_HAS_QT6}-depcontrol=qt5:${HB_WITH_QT}
-{!HBMK_HAS_QT6&HB_BUILD_3RDEXT='no'}-depoptional=qt5:no
+{!HBMK_HAS_QT6&(HB_BUILD_3RDEXT='no'|QT_SELECT='4')}-depcontrol=qt5:no
 {!HBMK_HAS_QT6}-depoptional=qt5:yes
 {!HBMK_HAS_QT6&linux}-depincpath=qt5:/usr/include/x86_64-linux-gnu/qt5
 {!HBMK_HAS_QT6&darwin}-depincpath=qt5:/usr/local/opt/qt5/include
@@ -45,7 +45,7 @@
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)}-deppkgname=qt:qt4
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)}-depkeyhead=qt:QtCore/qglobal.h
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)}-depcontrol=qt:${HB_WITH_QT}
-{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&HB_BUILD_3RDEXT='no'}-depcontrol=qt:no
+{!(HBMK_HAS_QT5|HBMK_HAS_QT6)&(HB_BUILD_3RDEXT='no'|QT_SELECT>'4')}-depcontrol=qt:no
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}-depincpath=qt:/usr/include/qt4
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}-depincpath=qt:/usr/lib/qt4/include
 {!(HBMK_HAS_QT5|HBMK_HAS_QT6)&!darwin&!android}-depincpath=qt:/usr/include

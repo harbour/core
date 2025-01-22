@@ -9120,7 +9120,9 @@ STATIC FUNCTION dep_evaluate( hbmk )
             IF hbmk[ _HBMK_lInfo ]
                _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Dependency '%1$s' forcibly disabled" ), dep[ _HBMKDEP_cName ] ) )
             ENDIF
-            lAnyForcedOut := .T.
+            IF ! dep[ _HBMKDEP_lOptional ]
+               lAnyForcedOut := .T.
+            ENDIF
             LOOP
          ELSE
             IF hbmk[ _HBMK_lDEBUGDEPD ]
