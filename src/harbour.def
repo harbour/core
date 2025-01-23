@@ -3514,6 +3514,7 @@ hb_timeStampPackDT
 hb_timeStampStr
 hb_timeStampStrGet
 hb_timeStampStrGetDT
+hb_timeStampStrGetUTC
 hb_timeStampStrRawGet
 hb_timeStampStrRawPut
 hb_timeStampUTCOffset
@@ -3523,6 +3524,7 @@ hb_timeStampUnpackD
 hb_timeStampUnpackDT
 hb_timeStr
 hb_timeStrGet
+hb_timeStrGetUTC
 hb_timeStrRawGet
 hb_timeUTCOffset
 hb_timeUnformat

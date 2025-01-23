@@ -594,27 +594,16 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
          if( strlen( szLog ) >= 16 )
          {
             long lJulian = 0, lMilliSec = 0;
-            int iUTC = 0;
+            int iLen = 16;
 
-            if( strlen( szLog ) >= 25 && szLog[ 17 ] == 'U' &&
+            if( szLog[ 16 ] == ' ' && szLog[ 17 ] == 'U' &&
                 szLog[ 18 ] == 'T' && szLog[ 19 ] == 'C' &&
                 ( szLog[ 20 ] == '+' || szLog[ 20 ] == '-' ) &&
                 HB_ISDIGIT( szLog[ 21 ] ) && HB_ISDIGIT( szLog[ 22 ] ) &&
                 HB_ISDIGIT( szLog[ 23 ] ) && HB_ISDIGIT( szLog[ 24 ] ) )
-            {
-               iUTC = ( ( int ) ( szLog[ 21 ] - '0' ) * 10 +
-                        ( int ) ( szLog[ 22 ] - '0' ) ) * 60 +
-                        ( int ) ( szLog[ 23 ] - '0' ) * 10 +
-                        ( int ) ( szLog[ 24 ] - '0' );
-            }
-            szLog[ 16 ] = '\0';
-            if( iUTC != 0 && hb_timeStampStrGetDT( szLog, &lJulian, &lMilliSec ) )
-            {
-               hb_timeStampUnpackDT( hb_timeStampPackDT( lJulian, lMilliSec ) -
-                                     ( double ) iUTC / ( 24 * 60 ),
-                                     &lJulian, &lMilliSec );
-            }
-            if( lJulian && lMilliSec )
+               iLen += 9;
+            szLog[ iLen ] = '\0';
+            if( hb_timeStampStrGetDT( szLog, &lJulian, &lMilliSec ) )
             {
                hb_timeStampStrRawPut( szRevID, lJulian, lMilliSec );
                memmove( szRevID, szRevID + 2, 10 );
@@ -633,7 +622,6 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
                szRevID[ 9 ] = szLog[ 15 ];
             }
             szRevID[ 10 ] = '\0';
-
          }
          else
             szRevID[ 0 ] = '\0';
