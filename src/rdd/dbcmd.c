@@ -264,13 +264,14 @@ HB_FUNC( DBAPPEND )
 
    if( pArea )
    {
+      /* NOTE: parameter is Clipper 5.3 extension, 5.2 always unlocks */
       HB_BOOL bUnLockAll = hb_parldef( 1, HB_TRUE );
       HB_ERRCODE errCode;
 
       /* Clipper clears NETERR flag before APPEND */
       hb_rddSetNetErr( HB_FALSE );
       errCode = SELF_APPEND( pArea, bUnLockAll );
-      hb_retl( errCode == HB_SUCCESS );
+      hb_retl( errCode == HB_SUCCESS );  /* HB_EXTENSION */
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );

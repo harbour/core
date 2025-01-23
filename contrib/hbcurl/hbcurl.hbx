@@ -50,6 +50,8 @@ DYNAMIC curl_multi_remove_handle
 DYNAMIC curl_unescape
 DYNAMIC curl_version
 DYNAMIC curl_version_info
+DYNAMIC curl_ws_recv
+DYNAMIC curl_ws_send
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCURL__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

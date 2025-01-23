@@ -137,8 +137,7 @@ typedef struct _HB_CURL
 typedef struct _HB_CURLM
 {
    CURLM * curlm;
-
-} HB_CURLM, * PHB_CURLM;
+} HB_CURLM, *PHB_CURLM;
 #endif
 
 /* functions to keep passed string values accessible even if HVM
@@ -594,6 +593,7 @@ static void hb_curl_buff_ul_free( PHB_CURL hb_curl )
       hb_curl->ul_pos = 0;
    }
 }
+
 #if LIBCURL_VERSION_NUM >= 0x070100
 static void hb_curl_buff_er_free( PHB_CURL hb_curl )
 {
@@ -605,6 +605,7 @@ static void hb_curl_buff_er_free( PHB_CURL hb_curl )
    }
 }
 #endif
+
 static void hb_curl_buff_dl_free( PHB_CURL hb_curl )
 {
    if( hb_curl && hb_curl->dl_ptr )
@@ -671,9 +672,9 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
 
    hb_curl_buff_ul_free( hb_curl );
    hb_curl_buff_dl_free( hb_curl );
-#if LIBCURL_VERSION_NUM >= 0x070100   
+#if LIBCURL_VERSION_NUM >= 0x070100
    hb_curl_buff_er_free( hb_curl );
-#endif   
+#endif
 
    if( hb_curl->pProgressCallback )
    {
@@ -979,7 +980,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             /* HB_CURLOPT_CONV_FROM_UTF8_FUNCTION */
 
             /* Error */
-#if LIBCURL_VERSION_NUM >= 0x070100            
+#if LIBCURL_VERSION_NUM >= 0x070100
             case HB_CURLOPT_ER_BUFF_SETUP:
                hb_curl_buff_er_free( hb_curl );
                hb_curl->er_len = hb_parnldef( 3, HB_CURL_ER_BUFF_SIZE_INIT );
@@ -2551,6 +2552,77 @@ HB_FUNC( CURL_GETDATE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* CURLcode curl_ws_send(struct Curl_easy *data,
+                         const void *buffer, size_t buflen,
+                         size_t *sent,
+                         curl_off_t framesize,
+                         unsigned int sendflags) */
+HB_FUNC( CURL_WS_SEND )
+{
+   if( PHB_CURL_is( 1 ) )
+   {
+      CURLcode res  = HB_CURLE_ERROR;
+      size_t   sent = 0;
+
+#if LIBCURL_VERSION_NUM >= 0x075600
+      PHB_CURL hb_curl = PHB_CURL_par( 1 );
+
+      if( hb_curl )
+         res = curl_ws_send( hb_curl->curl,
+                             ( const void * ) hb_parc( 2 ), ( size_t ) hb_parclen( 2 ),
+                             &sent,
+                             ( curl_off_t ) hb_parnint( 4 ),
+                             ( unsigned int ) hb_parnl( 5 ) );
+#endif
+
+      hb_storns( ( HB_SIZE ) sent, 3 );
+      hb_retnl( res );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* CURLcode curl_ws_recv(struct Curl_easy *data,
+                         void *buffer, size_t buflen,
+                         size_t *recv, struct curl_ws_frame **meta) */
+HB_FUNC( CURL_WS_RECV )
+{
+   if( PHB_CURL_is( 1 ) && HB_ISBYREF( 2 ) )
+   {
+      CURLcode res  = HB_CURLE_ERROR;
+      size_t   recv = 0;
+
+#if LIBCURL_VERSION_NUM >= 0x075600
+      PHB_CURL hb_curl = PHB_CURL_par( 1 );
+
+      const struct curl_ws_frame * meta = NULL;
+
+      PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
+      char *   buffer;
+      HB_SIZE  buflen;
+
+      if( hb_itemGetWriteCL( pBuffer, &buffer, &buflen ) )
+         res = curl_ws_recv( hb_curl->curl,
+                             ( void * ) buffer, ( size_t ) buflen,
+                             &recv,
+                             &meta );
+
+      hb_stornl( meta ? meta->flags : 0, 4 );
+      hb_stornint( meta ? meta->offset: 0, 5 );
+      hb_stornint( meta ? meta->bytesleft: 0, 6 );
+#else
+      hb_stornl( 0, 4 );
+      hb_stornint( 0, 5 );
+      hb_stornint( 0, 6 );
+#endif
+
+      hb_storns( ( HB_SIZE ) recv, 3 );
+      hb_retnl( res );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /* Multi interface Constructor/Destructor */
 /* -------------------------------------- */
 
@@ -2561,7 +2633,7 @@ static void PHB_CURLM_free( PHB_CURLM hb_curlm )
    hb_xfree( hb_curlm );
 }
 
-static PHB_CURLM PHB_CURLM_create( )
+static PHB_CURLM PHB_CURLM_create( void )
 {
    CURLM * curlm = curl_multi_init();
 
@@ -2601,7 +2673,7 @@ static void PHB_CURLM_ret()
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( PHB_CURLM ), &s_gcCURLMFuncs );
 
-   *ph = PHB_CURLM_create( );
+   *ph = PHB_CURLM_create();
 
    hb_retptrGC( ph );
 }
@@ -2625,7 +2697,7 @@ static PHB_CURLM PHB_CURLM_par( int iParam )
 HB_FUNC( CURL_MULTI_INIT )
 {
 #if LIBCURL_VERSION_NUM >= 0x070906
-   PHB_CURLM_ret( );
+   PHB_CURLM_ret();
 #endif
 }
 
@@ -2654,9 +2726,9 @@ HB_FUNC( CURL_MULTI_ADD_HANDLE )
    if( PHB_CURLM_is( 1 ) && PHB_CURL_is( 2 ) )
    {
       PHB_CURLM hb_curlm = PHB_CURLM_par( 1 );
-      PHB_CURL hb_curl = PHB_CURL_par( 2 );
+      PHB_CURL  hb_curl  = PHB_CURL_par( 2 );
 
-      hb_retnl( hb_curlm && hb_curl ? ( long ) curl_multi_add_handle( hb_curlm->curlm, hb_curl->curl) : HB_CURLM_INTERNAL_ERROR );
+      hb_retnl( hb_curlm && hb_curl ? ( long ) curl_multi_add_handle( hb_curlm->curlm, hb_curl->curl) : HB_CURLM_ERROR );
    }
    else
 #endif
@@ -2669,9 +2741,9 @@ HB_FUNC( CURL_MULTI_REMOVE_HANDLE )
    if( PHB_CURLM_is( 1 ) && PHB_CURL_is( 2 ) )
    {
       PHB_CURLM hb_curlm = PHB_CURLM_par( 1 );
-      PHB_CURL hb_curl = PHB_CURL_par( 2 );
+      PHB_CURL  hb_curl  = PHB_CURL_par( 2 );
 
-      hb_retnl( hb_curlm && hb_curl ? ( long ) curl_multi_remove_handle( hb_curlm->curlm, hb_curl->curl) : HB_CURLM_INTERNAL_ERROR );
+      hb_retnl( hb_curlm && hb_curl ? ( long ) curl_multi_remove_handle( hb_curlm->curlm, hb_curl->curl) : HB_CURLM_ERROR );
    }
    else
 #endif
@@ -2684,7 +2756,7 @@ HB_FUNC( CURL_MULTI_PERFORM )
    if( PHB_CURLM_is( 1 ) && HB_ISBYREF( 2 ) )
    {
 
-      CURLMcode res = ( CURLMcode ) HB_CURLM_INTERNAL_ERROR;
+      CURLMcode res = ( CURLMcode ) HB_CURLM_ERROR;
       PHB_CURLM hb_curlm = PHB_CURLM_par( 1 );
 
       if( hb_curlm )
@@ -2707,21 +2779,17 @@ HB_FUNC( CURL_MULTI_POLL )
 #if LIBCURL_VERSION_NUM >= 0x074200
    if( PHB_CURLM_is( 1 ) && HB_ISNUM( 2 ) )
    {
-
-      CURLMcode res = ( CURLMcode ) HB_CURLM_INTERNAL_ERROR;
+      CURLMcode res      = ( CURLMcode ) HB_CURLM_ERROR;
       PHB_CURLM hb_curlm = PHB_CURLM_par( 1 );
 
       if( hb_curlm )
-      {
-         res = curl_multi_poll(  hb_curlm->curlm,
-                          NULL,
-                          0,
-                          hb_parni(2),
-                          NULL );
-      }
+         res = curl_multi_poll( hb_curlm->curlm,
+                                NULL,
+                                0,
+                                hb_parni(2),
+                                NULL );
 
       hb_retnl( ( long ) res );
-
    }
    else
 #endif
@@ -2734,23 +2802,21 @@ HB_FUNC( CURL_MULTI_INFO_READ )
 #if LIBCURL_VERSION_NUM >= 0x070906
    if( PHB_CURLM_is( 1 ) )
    {
-
-      PHB_ITEM pReturn = NULL;
       PHB_CURLM hb_curlm = PHB_CURLM_par( 1 );
 
       if( hb_curlm )
       {
-         int msgs_in_queue = 0;
+         int msgs_in_queue    = 0;
          long response_code   = 0;
-         struct CURLMsg * msg = curl_multi_info_read(  hb_curlm->curlm, &msgs_in_queue );
+         struct CURLMsg * msg = curl_multi_info_read( hb_curlm->curlm, &msgs_in_queue );
 
          if( msg && curl_easy_getinfo( msg->easy_handle, CURLINFO_RESPONSE_CODE, &response_code ) == CURLE_OK )
          {
             PHB_ITEM pHandles = hb_param( 2, HB_IT_ARRAY );
-            pReturn = hb_itemArrayNew( HB_CURLMSG_RESP_LAST );
+            PHB_ITEM pReturn  = hb_itemArrayNew( HB_CURLMSG_RESP_LAST );
 
-            hb_arraySetNL( pReturn, HB_CURLMSG_RESP_LEN, ( long ) msgs_in_queue );
-            hb_arraySetNL( pReturn, HB_CURLMSG_RESP_RESPONSE_CODE, ( long ) response_code );
+            hb_arraySetNI( pReturn, HB_CURLMSG_RESP_LEN, msgs_in_queue );
+            hb_arraySetNL( pReturn, HB_CURLMSG_RESP_RESPONSE_CODE, response_code );
             hb_arraySetNL( pReturn, HB_CURLMSG_RESP_MSG, ( long ) msg->msg );
             hb_arraySetNL( pReturn, HB_CURLMSG_RESP_RESULT, ( long ) msg->data.result );
             hb_arraySetNI( pReturn, HB_CURLMSG_RESP_HPOS, 0 );
@@ -2766,6 +2832,7 @@ HB_FUNC( CURL_MULTI_INFO_READ )
                   if( ph && *ph )
                   {
                      PHB_CURL hbcurl = ( PHB_CURL ) *ph;
+
                      if( hbcurl->curl == msg->easy_handle )
                      {
                         hb_arraySetNL( pReturn, HB_CURLMSG_RESP_HPOS, ( long ) i );
@@ -2774,14 +2841,9 @@ HB_FUNC( CURL_MULTI_INFO_READ )
                   }
                }
             }
+            hb_itemReturnRelease( pReturn );
          }
       }
-
-      if( pReturn )
-         hb_itemReturnRelease( pReturn );
-      else
-         hb_ret();
-
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
