@@ -13,11 +13,11 @@ jobs:
       matrix:
         os:
           - name: freebsd
-            version: "13.2"
+            version: "14.2"
           - name: netbsd
-            version: "9.3"
+            version: "10.1"
           - name: openbsd
-            version: "7.4"
+            version: "7.6"
         compiler:
           - clang
           - gcc
@@ -78,7 +78,7 @@ jobs:
           chmod a+x ~/work/install_*_deps.sh
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.client_payload.branch }}
 
@@ -150,7 +150,7 @@ jobs:
 
       - name: Build Harbour and contribs
         timeout-minutes: 30
-        uses: cross-platform-actions/action@v0.21.1
+        uses: cross-platform-actions/action@v0.26.0
         with:
           operating_system: ${{ matrix.os.name }}
           architecture: x86_64
