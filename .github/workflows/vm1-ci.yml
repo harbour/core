@@ -15,7 +15,7 @@ jobs:
           - name: freebsd
             version: "14.2"
           - name: netbsd
-            version: "10.1"
+            version: "10.0"
           - name: openbsd
             version: "7.6"
         compiler:
