@@ -116,7 +116,7 @@ static void debugInit( void )
          if( iFifoResult != EEXIST )
          {
             s_iXtermPid = execlp( "xterm", "xterm", "-T", szDebugTitle, "-e",
-                                  "cat", szDebugName, NULL );
+                                  "cat", szDebugName, ( char * ) NULL );
 
             if( s_iXtermPid <= 0 )
             {

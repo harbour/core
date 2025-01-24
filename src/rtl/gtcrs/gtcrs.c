@@ -2163,7 +2163,7 @@ static InOutBase * create_newXterm( void )
       ( void ) setgid( getgid() );
       execlp( "xterm", "xterm", buf, "+sb",
               "-fg", "white",
-              "-bg", "black", "-fn", "fixed", "-T", "HB-XTERM Window", NULL );
+              "-bg", "black", "-fn", "fixed", "-T", "HB-XTERM Window", ( char * ) NULL );
       _exit( EXIT_FAILURE );
    }
    close( masterfd );

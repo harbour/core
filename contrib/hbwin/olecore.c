@@ -2230,6 +2230,8 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    if( ! pDisp )
       return;
 
+   dispid = ( DISPID ) 0; /* to pacify MSVC false warning */
+
    iPCount = hb_pcount();
 
    szMethod = hb_itemGetSymbol( hb_stackBaseItem() )->szName;

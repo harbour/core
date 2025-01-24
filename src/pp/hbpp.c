@@ -594,8 +594,8 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
          if( strlen( szLog ) >= 16 )
          {
             long lJulian = 0, lMilliSec = 0;
-            int iLen = 16;
 
+            iLen = 16;
             if( szLog[ 16 ] == ' ' && szLog[ 17 ] == 'U' &&
                 szLog[ 18 ] == 'T' && szLog[ 19 ] == 'C' &&
                 ( szLog[ 20 ] == '+' || szLog[ 20 ] == '-' ) &&
