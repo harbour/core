@@ -264,7 +264,11 @@ HB_FUNC( DBAPPEND )
 
    if( pArea )
    {
-      /* NOTE: parameter is Clipper 5.3 extension, 5.2 always unlocks */
+      /*
+       * NOTE: <lUnlockAll> parameter exists both in Clipper 5.3 and 5.2,
+       * though in 5.2 it is poorly documented, mentioned only in Drivers
+       * Guide manual - both printed (1992) and C52G07B.NG
+       */
       HB_BOOL bUnLockAll = hb_parldef( 1, HB_TRUE );
       HB_ERRCODE errCode;
 
