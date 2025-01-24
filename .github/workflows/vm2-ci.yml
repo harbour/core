@@ -27,8 +27,6 @@ jobs:
         exclude:
           - os: {name: omnios}
             compiler: clang
-          # vmactions/solaris-vm works but is very slow to install gcc. Disable it for now
-          - os: {name: solaris}
           - os: {name: solaris}
             compiler: clang
 
@@ -73,7 +71,6 @@ jobs:
           /opt/csw/bin/pkgutil -U
           /opt/csw/bin/pkgutil -y -i \
             ccache \
-            gcc5core \
             gmake \
             libcurl_dev \
             libssl_dev
@@ -185,6 +182,7 @@ jobs:
         if: matrix.os.name == 'solaris'
         uses: vmactions/solaris-vm@v1
         with:
+          release: "11.4-gcc"
           usesh: true
           mem: 4096
           prepare: |
