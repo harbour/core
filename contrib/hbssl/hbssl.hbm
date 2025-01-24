@@ -35,6 +35,11 @@
 # the complete OpenSSL API, starting with OS X Lion 10.7
 -cflag={allgcc&darwin}-Wno-deprecated
 
+# to suppress errors in Solaris strict builds compiled with -Werror
+# EVP_des_*() except EVP_des_ede3*()), EVP_desx_*(),
+# EVP_rc[24]*() and EVP_md[245]*() are deprecated
+-cflag=-Wno-error=deprecated-declarations{sunos&allgcc&HB_BUILD_TEST='strict'}
+
 # For _fileno() in openssl/applink.c
 -c=gnu90
 
