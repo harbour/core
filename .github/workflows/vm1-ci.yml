@@ -93,7 +93,7 @@ jobs:
         run: |
           set -ex
           case ${{matrix.os.name }} in
-            *bsd) _cpus="sudo sysctl -n hw.ncpu" ;;
+            *bsd) _cpus="/sbin/sysctl -n hw.ncpu" ;;
             *) _cpus="echo 3" ;;
           esac
           HB_USER_CFLAGS=""
