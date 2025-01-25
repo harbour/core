@@ -2073,6 +2073,24 @@ HB_FUNC( CURL_EASY_ER_BUFF_GET )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+static void hb_curl_slist_array( PHB_ITEM pArray, struct curl_slist * slist )
+{
+   struct curl_slist * walk_slist;
+   int nCount;
+
+   /* Count */
+   for( walk_slist = slist, nCount = 0; walk_slist->next; nCount++ )
+      walk_slist = walk_slist->next;
+
+   /* Fill */
+   hb_arrayNew( pArray, nCount );
+   for( walk_slist = slist, nCount = 1; walk_slist->next; )
+   {
+      hb_arraySetC( pArray, nCount++, walk_slist->data );
+      walk_slist = walk_slist->next;
+   }
+}
+
 #define HB_CURL_INFO_TYPE_INVALID  0
 #define HB_CURL_INFO_TYPE_STR      1
 #define HB_CURL_INFO_TYPE_PTR      2
@@ -2081,6 +2099,7 @@ HB_FUNC( CURL_EASY_ER_BUFF_GET )
 #define HB_CURL_INFO_TYPE_OFFSET   5
 #define HB_CURL_INFO_TYPE_SOCKET   6
 #define HB_CURL_INFO_TYPE_SLIST    7
+#define HB_CURL_INFO_TYPE_CERTINFO 8
 
 #define HB_CURL_EASY_GETINFO( hb_curl, n, p )  ( hb_curl ? curl_easy_getinfo( hb_curl->curl, n, p ) : ( CURLcode ) HB_CURLE_ERROR )
 
@@ -2098,6 +2117,7 @@ HB_FUNC( CURL_EASY_GETINFO )
       char * ret_ptr    = NULL;
       long   ret_long   = 0;
       struct curl_slist * ret_slist = NULL;
+      struct curl_certinfo * ret_certinfo = NULL;
       double ret_double = 0.0;
       curl_socket_t ret_socket = 0;
       curl_off_t ret_offset = 0;
@@ -2314,9 +2334,9 @@ HB_FUNC( CURL_EASY_GETINFO )
             break;
          case HB_CURLINFO_CERTINFO:
 #if LIBCURL_VERSION_NUM >= 0x071301
-            res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_CERTINFO, &ret_slist );
+            res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_CERTINFO, &ret_certinfo );
 #endif
-            type = HB_CURL_INFO_TYPE_SLIST;
+            type = HB_CURL_INFO_TYPE_CERTINFO;
             break;
          case HB_CURLINFO_CONDITION_UNMET:
 #if LIBCURL_VERSION_NUM >= 0x071304
@@ -2388,26 +2408,25 @@ HB_FUNC( CURL_EASY_GETINFO )
          case HB_CURL_INFO_TYPE_DOUBLE:
             hb_retnd( ret_double );
             break;
+         case HB_CURL_INFO_TYPE_CERTINFO:
+            if( ret_certinfo && ret_certinfo->num_of_certs > 0 )
+            {
+               PHB_ITEM pArray = hb_itemArrayNew( ret_certinfo->num_of_certs );
+               int num;
+
+               for( num = 1; num <= ret_certinfo->num_of_certs; num++, ret_certinfo->certinfo++ )
+                  hb_curl_slist_array( hb_arrayGetItemPtr( pArray, num ), *ret_certinfo->certinfo );
+               hb_itemReturnRelease( pArray );
+            }
+            else
+               hb_reta( 0 );
+            break;
          case HB_CURL_INFO_TYPE_SLIST:
             if( ret_slist )
             {
-               PHB_ITEM pArray;
-               int      nCount;
-               struct curl_slist * walk_ret_slist;
-
-               /* Count */
-               for( walk_ret_slist = ret_slist, nCount = 0; walk_ret_slist->next; nCount++ )
-                  walk_ret_slist = walk_ret_slist->next;
-
-               /* Fill */
-               pArray = hb_itemArrayNew( nCount );
-               for( walk_ret_slist = ret_slist, nCount = 1; walk_ret_slist->next; )
-               {
-                  hb_arraySetC( pArray, nCount++, walk_ret_slist->data );
-                  walk_ret_slist = walk_ret_slist->next;
-               }
+               PHB_ITEM pArray = hb_itemNew( NULL );
+               hb_curl_slist_array( pArray, ret_slist );
                hb_itemReturnRelease( pArray );
-
                curl_slist_free_all( ret_slist );
             }
             else
