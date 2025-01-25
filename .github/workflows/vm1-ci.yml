@@ -83,7 +83,6 @@ jobs:
           ref: ${{ github.event.client_payload.branch }}
 
       - run: pwd
-      - run: for f in /usr/include/openssl/*;do echo "=^$f";cat $f;done
       - run: ls
 
       - name: Prepare ccache using action
@@ -96,7 +95,8 @@ jobs:
         run: |
           set -ex
           case ${{matrix.os.name }} in
-            *bsd) _cpus="sysctl -n hw.ncpu" ;;
+            *bsd) _cpus="sudo sysctl -n hw.ncpu" ;;
+            *) _cpus="echo 3" ;;
           esac
           HB_USER_CFLAGS=""
           HB_USER_LDFLAGS=""

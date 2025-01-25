@@ -99,6 +99,7 @@ jobs:
           case ${{matrix.os.name }} in
             *bsd) _cpus="sysctl -n hw.ncpu" ;;
             omnios|solaris) _cpus="psrinfo -p" _add_path="/usr/sfw/bin" ;;
+            *) _cpus="echo 3" ;;
           esac
           HB_USER_CFLAGS=""
           HB_USER_LDFLAGS=""
