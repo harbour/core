@@ -118,8 +118,8 @@ typedef struct _HB_CURL
    size_t          dl_len;
    size_t          dl_pos;
 
-   unsigned char * er_ptr;
-   size_t          er_len;
+   char * er_ptr;
+   size_t er_len;
 
    PHB_ITEM pProgressCallback;
    PHB_ITEM pDebugCallback;
@@ -984,7 +984,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             case HB_CURLOPT_ER_BUFF_SETUP:
                hb_curl_buff_er_free( hb_curl );
                hb_curl->er_len = hb_parnldef( 3, HB_CURL_ER_BUFF_SIZE_INIT );
-               hb_curl->er_ptr = ( unsigned char * ) hb_xgrab( hb_curl->er_len );
+               hb_curl->er_ptr = ( char * ) hb_xgrab( hb_curl->er_len );
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_ERRORBUFFER, hb_curl->er_ptr );
                break;
 #endif
@@ -2064,7 +2064,7 @@ HB_FUNC( CURL_EASY_ER_BUFF_GET )
       PHB_CURL hb_curl = PHB_CURL_par( 1 );
 
       if( hb_curl )
-         hb_retc( ( char * ) hb_curl->er_ptr );
+         hb_retc( hb_curl->er_ptr );
       else
 #endif
          hb_retc_null();
