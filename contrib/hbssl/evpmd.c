@@ -68,7 +68,7 @@ static HB_GARBAGE_FUNC( EVP_MD_CTX_release )
    if( ph && *ph )
    {
       /* Destroy the object */
-#if defined( LIBRESSL_VERSION_NUMBER )
+#if defined( LIBRESSL_VERSION_NUMBER ) && LIBRESSL_VERSION_NUMBER < 0x20700000L
       EVP_MD_CTX_destroy( ( EVP_MD_CTX * ) *ph );
 #elif OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_MD_CTX_free( ( EVP_MD_CTX * ) *ph );
@@ -266,7 +266,7 @@ HB_FUNC( EVP_MD_CTX_NEW )
    EVP_MD_CTX * ctx;
 
 #if OPENSSL_VERSION_NUMBER >= 0x00907000L && \
-    ! defined( LIBRESSL_VERSION_NUMBER )
+    ( ! defined( LIBRESSL_VERSION_NUMBER ) || LIBRESSL_VERSION_NUMBER >= 0x20700000L )
    ctx = EVP_MD_CTX_new();
 #else
    ctx = ( EVP_MD_CTX * ) hb_xgrabz( sizeof( EVP_MD_CTX ) );
@@ -287,9 +287,8 @@ HB_FUNC( EVP_MD_CTX_RESET )
 
       if( ctx )
       {
-#if defined( LIBRESSL_VERSION_NUMBER )
-         hb_retni( EVP_MD_CTX_cleanup( ctx ) );
-#elif OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ( ! defined( LIBRESSL_VERSION_NUMBER ) || LIBRESSL_VERSION_NUMBER >= 0x20700000L )
          hb_retni( EVP_MD_CTX_reset( ctx ) );
 #elif OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_MD_CTX_cleanup( ctx ) );

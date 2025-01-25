@@ -58,7 +58,7 @@ static HB_GARBAGE_FUNC( EVP_ENCODE_CTX_release )
    if( ph && *ph )
    {
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
-    ! defined( LIBRESSL_VERSION_NUMBER )
+    ( ! defined( LIBRESSL_VERSION_NUMBER ) || LIBRESSL_VERSION_NUMBER >= 0x20900000L )
       EVP_ENCODE_CTX_free( ( EVP_ENCODE_CTX * ) *ph );
 #else
       /* Destroy the object */
@@ -94,7 +94,7 @@ HB_FUNC( EVP_ENCODE_CTX_NEW )
    EVP_ENCODE_CTX * ctx;
 
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
-    ! defined( LIBRESSL_VERSION_NUMBER )
+    ( ! defined( LIBRESSL_VERSION_NUMBER ) || LIBRESSL_VERSION_NUMBER >= 0x20900000L )
    ctx = EVP_ENCODE_CTX_new();
 #else
    ctx = ( EVP_ENCODE_CTX * ) hb_xgrabz( sizeof( EVP_ENCODE_CTX ) );
@@ -133,7 +133,7 @@ HB_FUNC( EVP_ENCODEUPDATE )
          int result;
 
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
-    ! defined( LIBRESSL_VERSION_NUMBER )
+    ( ! defined( LIBRESSL_VERSION_NUMBER ) || LIBRESSL_VERSION_NUMBER >= 0x20900000L )
          result = EVP_EncodeUpdate( ctx,
                            buffer,
                            &size,

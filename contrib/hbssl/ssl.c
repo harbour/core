@@ -134,7 +134,7 @@ HB_FUNC( OPENSSL_VERSION )
    int value = hb_parni( 1 );
 
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
-    ! defined( LIBRESSL_VERSION_NUMBER )
+    ( ! defined( LIBRESSL_VERSION_NUMBER ) || LIBRESSL_VERSION_NUMBER >= 0x30500000L )
    switch( value )
    {
       case HB_OPENSSL_VERSION:   value = OPENSSL_VERSION;  break;
@@ -165,7 +165,7 @@ HB_FUNC( OPENSSL_VERSION_NUMBER )
 HB_FUNC( OPENSSL_VERSION_NUM )
 {
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
-    ! defined( LIBRESSL_VERSION_NUMBER )
+    ( ! defined( LIBRESSL_VERSION_NUMBER ) || LIBRESSL_VERSION_NUMBER >= 0x30500000L )
    hb_retnint( OpenSSL_version_num() );
 #else
    hb_retnint( SSLeay() );

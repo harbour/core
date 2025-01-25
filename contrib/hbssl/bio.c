@@ -224,7 +224,7 @@ HB_FUNC( BIO_SET )
 
    if( bio && hb_BIO_METHOD_is( 2 ) )
 #if OPENSSL_VERSION_NUMBER < 0x10100000L || \
-    defined( LIBRESSL_VERSION_NUMBER )
+    ( defined( LIBRESSL_VERSION_NUMBER ) && LIBRESSL_VERSION_NUMBER < 0x30900000L )
       hb_retni( BIO_set( bio, hb_BIO_METHOD_par( 2 ) ) );
 #else
       hb_retni( 0 );
@@ -770,7 +770,8 @@ HB_FUNC( BIO_GET_CONN_INT_PORT )
     OPENSSL_VERSION_NUMBER == 0x1000112fL /* 1.0.1r */
       /* Fix for header regression */
       hb_retnl( BIO_ctrl( bio, BIO_C_GET_CONNECT, 3, NULL ) );
-#elif OPENSSL_VERSION_NUMBER >= 0x1010007fL
+#elif OPENSSL_VERSION_NUMBER >= 0x1010007fL && \
+      ! defined( LIBRESSL_VERSION_NUMBER )
       const BIO_ADDR * ba = BIO_get_conn_address( bio );
       hb_retnl( ba ? hb_socketNToHS( BIO_ADDR_rawport( ba ) ) : 0 );
 #else
