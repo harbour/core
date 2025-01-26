@@ -113,6 +113,7 @@ jobs:
           export HB_CCACHE=ccache
 
           export N_CPUS="\$($_cpus)"
+          [ -n "$N_CPUS" ] || export N_CPUS=3
           EOENV
 
       - name: Generate build script
@@ -125,11 +126,10 @@ jobs:
           ccache --set-config=compression=true
           ccache -p
 
-          ${{matrix.compiler}} --version
-
           echo ::group::Build Harbour
           set -ex
           . ./.bashrc
+          ${{matrix.compiler}} --version
           gmake -j$N_CPUS \
             HB_BUILD_CONTRIBS=no \
             HB_COMPILER=${{matrix.compiler}}
