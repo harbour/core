@@ -30,7 +30,7 @@ jobs:
           - os: {name: openbsd}
             compiler: gcc
           # cross-platform-actions/actions@v0.21.1 works for FreeBSD but hangs often
-          - os: {name: freebsd}
+          #- os: {name: freebsd}
 
     steps:
 
@@ -124,6 +124,8 @@ jobs:
           ccache --set-config=max_size=32M
           ccache --set-config=compression=true
           ccache -p
+
+          ${{matrix.compiler}} --version
 
           echo ::group::Build Harbour
           set -ex
