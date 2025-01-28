@@ -1125,11 +1125,20 @@ ifeq ($(HB_COMPILER),)
       ifneq ($(call find_in_path_prw,os2.h,$(INCLUDE)),)
          HB_PLATFORM := os2
       else
-      ifneq ($(call find_in_path_prw,dirent.h,$(INCLUDE)),)
+      ifneq ($(call find_in_path_prw,windows.h,$(INCLUDE)),)
+         HB_PLATFORM := win
+      else
+      ifneq ($(findstring $(subst \,/,$(WATCOM))/lh,$(subst \,/,$(INCLUDE))),)
          HB_PLATFORM := linux
       else
-      ifeq ($(call find_in_path_prw,windows.h,$(INCLUDE)),)
+      ifneq ($(findstring $(subst \,/,$(WATCOM))/LH,$(subst \,/,$(INCLUDE))),)
+         HB_PLATFORM := linux
+      else
+      ifneq ($(HB_PLAT_AUTO),)
+         # at least let's not override user-specified platform without strong reasons
          HB_PLATFORM := dos
+      endif
+      endif
       endif
       endif
       endif
