@@ -751,7 +751,8 @@ HB_FUNC( BIO_GET_CONN_IP )
 
    if( bio )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x1010000fL && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
       const BIO_ADDR * ba = BIO_get_conn_address( bio );
       char * pszAddr = ba ? BIO_ADDR_hostname_string( ba, 1 ) : NULL;
 
@@ -779,7 +780,7 @@ HB_FUNC( BIO_GET_CONN_INT_PORT )
     OPENSSL_VERSION_NUMBER == 0x1000112fL /* 1.0.1r */
       /* Fix for header regression */
       hb_retnl( BIO_ctrl( bio, BIO_C_GET_CONNECT, 3, NULL ) );
-#elif OPENSSL_VERSION_NUMBER >= 0x1010007fL && \
+#elif OPENSSL_VERSION_NUMBER >= 0x1010000fL && \
       ! defined( LIBRESSL_VERSION_NUMBER )
       const BIO_ADDR * ba = BIO_get_conn_address( bio );
       hb_retnl( ba ? hb_socketNToHS( BIO_ADDR_rawport( ba ) ) : 0 );
@@ -798,6 +799,8 @@ HB_FUNC( BIO_GET_CONN_ADDRESS )
 {
    BIO * bio = hb_BIO_par( 1 );
 
+#if OPENSSL_VERSION_NUMBER >= 0x1010000fL && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
    if( bio )
    {
       const BIO_ADDR * ba = BIO_get_conn_address( bio );
@@ -818,6 +821,9 @@ HB_FUNC( BIO_GET_CONN_ADDRESS )
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE( EG_UNSUPPORTED, 2001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 HB_FUNC( BIO_SET_NBIO )
