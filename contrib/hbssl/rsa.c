@@ -81,6 +81,14 @@ RSA * hb_RSA_par( int iParam )
    return ph ? ( RSA * ) *ph : NULL;
 }
 
+void hb_RSA_par_remove( int iParam )
+{
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcRSA_funcs, iParam );
+
+   if( ph && * ph )
+      *ph = NULL;
+}
+
 void hb_RSA_ret( RSA * rsa )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( RSA * ), &s_gcRSA_funcs );

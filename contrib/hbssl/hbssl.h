@@ -219,6 +219,7 @@ extern void               hb_X509_ret( X509 * x509 );
 
 extern HB_BOOL            hb_RSA_is( int iParam );
 extern RSA *              hb_RSA_par( int iParam );
+extern void               hb_RSA_par_remove( int iParam );
 extern void               hb_RSA_ret( RSA * rsa );
 
 extern HB_BOOL            hb_EVP_MD_is( int iParam );

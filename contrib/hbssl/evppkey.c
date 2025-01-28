@@ -238,7 +238,11 @@ HB_FUNC( EVP_PKEY_ASSIGN_RSA )
          res = EVP_PKEY_assign_RSA( pkey, key );
 
          if( res != 0 )
+#if OPENSSL_VERSION_NUMBER >= 0x0090700fL
             RSA_up_ref( key );
+#else
+            hb_RSA_par_remove( 2 );
+#endif
       }
       hb_retni( res );
    }

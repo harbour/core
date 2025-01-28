@@ -85,7 +85,9 @@ static const HB_GC_FUNCS s_gcX509_funcs =
 
 HB_BOOL hb_X509_is( int iParam )
 {
-   return hb_parptrGC( &s_gcX509_funcs, iParam ) != NULL;
+   PHB_X509 ph = ( PHB_X509 ) hb_parptrGC( &s_gcX509_funcs, iParam );
+
+   return ph && ph->pX509;
 }
 
 X509 * hb_X509_par( int iParam )
@@ -97,11 +99,16 @@ X509 * hb_X509_par( int iParam )
 
 void hb_X509_ret( X509 * x509 )
 {
-   PHB_X509 ph = ( PHB_X509 ) hb_gcAllocate( sizeof( HB_X509 ), &s_gcX509_funcs );
+   if( x509 )
+   {
+      PHB_X509 ph = ( PHB_X509 ) hb_gcAllocate( sizeof( HB_X509 ), &s_gcX509_funcs );
 
-   ph->pX509    = x509;
+      ph->pX509    = x509;
 
-   hb_retptrGC( ( void * ) ph );
+      hb_retptrGC( ( void * ) ph );
+   }
+   else
+      hb_ret();
 }
 
 HB_FUNC( X509_GET_SUBJECT_NAME )
