@@ -797,10 +797,10 @@ HB_FUNC( BIO_GET_CONN_INT_PORT )
 
 HB_FUNC( BIO_GET_CONN_ADDRESS )
 {
-   BIO * bio = hb_BIO_par( 1 );
-
 #if OPENSSL_VERSION_NUMBER >= 0x1010000fL && \
     ! defined( LIBRESSL_VERSION_NUMBER )
+   BIO * bio = hb_BIO_par( 1 );
+
    if( bio )
    {
       const BIO_ADDR * ba = BIO_get_conn_address( bio );
