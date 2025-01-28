@@ -290,7 +290,7 @@ PHB_SSLSTREAM hb_ssl_socketNew( HB_SOCKET sd, SSL * ssl, HB_BOOL fServer,
       pStream->blocking = ! pStream->blocking;
 
    SSL_set_mode( ssl, HB_SSL_MODE_AUTO_RETRY );
-   iResult = SSL_set_fd( ssl, sd );  /* Truncates `sd` on win64. OpenSSL bug: https://rt.openssl.org/Ticket/Display.html?id=1928&user=guest&pass=guest */
+   iResult = SSL_set_fd( ssl, ( int ) sd );  /* Truncates `sd` on win64. https://docs.openssl.org/3.0/man3/SSL_set_fd/#notes */
 
    timer = hb_timerInit( timeout );
 

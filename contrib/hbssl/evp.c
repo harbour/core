@@ -108,8 +108,8 @@ HB_FUNC( EVP_BYTESTOKEY )
                                 key,
                                 iv ) );
 
-      hb_storc( ( char * ) key, 6 );
-      hb_storc( ( char * ) iv, 7 );
+      hb_storclen( ( char * ) key, EVP_CIPHER_key_length( cipher ), 6 );
+      hb_storclen( ( char * ) iv, EVP_CIPHER_iv_length( cipher ), 7 );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

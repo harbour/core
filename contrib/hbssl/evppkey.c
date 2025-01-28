@@ -238,7 +238,7 @@ HB_FUNC( EVP_PKEY_ASSIGN_RSA )
          res = EVP_PKEY_assign_RSA( pkey, key );
 
          if( res != 0 )
-            hb_RSA_par_remove( 2 );
+            RSA_up_ref( key );
       }
       hb_retni( res );
    }

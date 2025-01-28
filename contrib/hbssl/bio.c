@@ -694,7 +694,12 @@ HB_FUNC( BIO_SET_CONN_INT_PORT )
    if( bio && HB_ISNUM( 2 ) )
    {
       int port = hb_parni( 2 );
-      hb_retnl( BIO_set_conn_port( bio, &port ) );
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      char szPort[ 12 ];
+      hb_retnl( BIO_set_conn_port( bio, hb_numToStr( szPort, sizeof( szPort ), port ) ) );
+#else
+      hb_retnl( BIO_set_conn_int_port( bio, &port ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -747,8 +752,12 @@ HB_FUNC( BIO_GET_CONN_IP )
    if( bio )
    {
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
-      HB_SYMBOL_UNUSED( bio );  /* TODO: reimplement using BIO_get_conn_address() */
-      hb_retc_null();
+      const BIO_ADDR * ba = BIO_get_conn_address( bio );
+      char * pszAddr = ba ? BIO_ADDR_hostname_string( ba, 1 ) : NULL;
+
+      hb_retc( pszAddr );
+      if( pszAddr )
+         OPENSSL_free( pszAddr );
 #elif OPENSSL_VERSION_NUMBER >= 0x00906040L
       hb_retc( BIO_get_conn_ip( bio ) );
 #else
@@ -783,6 +792,32 @@ HB_FUNC( BIO_GET_CONN_INT_PORT )
 #else
    hb_errRT_BASE( EG_UNSUPPORTED, 2001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #endif
+}
+
+HB_FUNC( BIO_GET_CONN_ADDRESS )
+{
+   BIO * bio = hb_BIO_par( 1 );
+
+   if( bio )
+   {
+      const BIO_ADDR * ba = BIO_get_conn_address( bio );
+
+      if( ba )
+      {
+         int family = BIO_ADDR_family( ba );
+         char * pszAddr = BIO_ADDR_hostname_string( ba, 1 );
+
+         hb_reta( family == HB_SOCKET_AF_LOCAL ? 2 : 3 );
+         hb_storvni( family, -1, 1 );
+         hb_storvc( pszAddr, -1, 2 );
+         if( family != HB_SOCKET_AF_LOCAL )
+            hb_storvni( hb_socketNToHS( BIO_ADDR_rawport( ba ) ), -1, 3 );
+         if( pszAddr )
+            OPENSSL_free( pszAddr );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( BIO_SET_NBIO )

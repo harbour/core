@@ -31,6 +31,7 @@ DYNAMIC BIO_free
 DYNAMIC BIO_free_all
 DYNAMIC BIO_gets
 DYNAMIC BIO_get_close
+DYNAMIC BIO_get_conn_address
 DYNAMIC BIO_get_conn_hostname
 DYNAMIC BIO_get_conn_int_port
 DYNAMIC BIO_get_conn_ip
@@ -292,6 +293,7 @@ DYNAMIC SSL_CTX_use_certificate_file
 DYNAMIC SSL_CTX_use_PrivateKey
 DYNAMIC SSL_CTX_use_PrivateKey_ASN1
 DYNAMIC SSL_CTX_use_PrivateKey_file
+DYNAMIC SSL_CTX_use_RSAPrivateKey
 DYNAMIC SSL_CTX_use_RSAPrivateKey_ASN1
 DYNAMIC SSL_CTX_use_RSAPrivateKey_file
 DYNAMIC SSL_do_handshake

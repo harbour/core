@@ -56,8 +56,9 @@
 #endif
 
 #include "hbssl.h"
-
 #include "hbapiitm.h"
+
+#include <openssl/rsa.h>
 
 static HB_GARBAGE_FUNC( SSL_CTX_release )
 {
@@ -697,8 +698,27 @@ HB_FUNC( SSL_CTX_USE_PRIVATEKEY_FILE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_CTX_USE_RSAPRIVATEKEY )
+{
+#ifndef OPENSSL_NO_RSA
+   if( hb_SSL_CTX_is( 1 ) && hb_RSA_is( 2 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+      RSA * rsa = hb_RSA_par( 2 );
+
+      if( ctx && rsa )
+         hb_retni( SSL_CTX_use_RSAPrivateKey( ctx, rsa ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE( EG_NOFUNC, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
+}
+
 HB_FUNC( SSL_CTX_USE_RSAPRIVATEKEY_FILE )
 {
+#ifndef OPENSSL_NO_RSA
    if( hb_SSL_CTX_is( 1 ) )
    {
       SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
@@ -708,10 +728,14 @@ HB_FUNC( SSL_CTX_USE_RSAPRIVATEKEY_FILE )
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE( EG_NOFUNC, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 HB_FUNC( SSL_CTX_USE_RSAPRIVATEKEY_ASN1 )
 {
+#ifndef OPENSSL_NO_RSA
    if( hb_SSL_CTX_is( 1 ) )
    {
       SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
@@ -721,6 +745,9 @@ HB_FUNC( SSL_CTX_USE_RSAPRIVATEKEY_ASN1 )
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE( EG_NOFUNC, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 HB_FUNC( SSL_CTX_USE_PRIVATEKEY_ASN1 )
@@ -808,7 +835,6 @@ HB_FUNC( SSL_CTX_SET_DEFAULT_VERIFY_PATHS )
 X509_STORE * SSL_CTX_get_cert_store( const SSL_CTX * );
 void SSL_CTX_set_cert_store( SSL_CTX *, X509_STORE * );
 void SSL_CTX_set_cert_store( SSL_CTX * ctx, X509_STORE * cs );
-int  SSL_CTX_use_RSAPrivateKey( SSL_CTX * ctx, RSA * rsa );
 long SSL_CTX_ctrl( SSL_CTX * ctx, int cmd, long larg, char * parg );
 
 void SSL_CTX_set_app_data( SSL_CTX * ctx, void * arg );

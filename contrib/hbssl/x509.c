@@ -60,7 +60,6 @@
 typedef struct
 {
    X509 *  pX509;
-   HB_BOOL fRelease;
 } HB_X509, * PHB_X509;
 
 static HB_GARBAGE_FUNC( X509_release )
@@ -71,8 +70,7 @@ static HB_GARBAGE_FUNC( X509_release )
    if( ph && ph->pX509 )
    {
       /* Destroy the object */
-      if( ph->fRelease )
-         X509_free( ( X509 * ) ph->pX509 );
+      X509_free( ( X509 * ) ph->pX509 );
 
       /* set pointer to NULL just in case */
       ph->pX509 = NULL;
@@ -97,12 +95,11 @@ X509 * hb_X509_par( int iParam )
    return ph ? ph->pX509 : NULL;
 }
 
-void hb_X509_ret( X509 * x509, HB_BOOL fRelease )
+void hb_X509_ret( X509 * x509 )
 {
    PHB_X509 ph = ( PHB_X509 ) hb_gcAllocate( sizeof( HB_X509 ), &s_gcX509_funcs );
 
    ph->pX509    = x509;
-   ph->fRelease = fRelease;
 
    hb_retptrGC( ( void * ) ph );
 }
