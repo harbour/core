@@ -91,7 +91,9 @@ static int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * user
 
 HB_FUNC( ERR_LOAD_PEM_STRINGS )
 {
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
    ERR_load_PEM_strings();
+#endif
 }
 
 typedef void * PEM_READ_BIO ( BIO * bp, void ** x, pem_password_cb * cb, void * u );

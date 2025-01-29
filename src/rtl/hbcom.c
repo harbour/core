@@ -110,7 +110,7 @@
 #  define INCL_DOSDEVICES
 #  define INCL_DOSDEVIOCTL
 #  include <os2.h>
-#elif defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && ( __WATCOMC__ <= 1290 )
+#elif defined( HB_OS_LINUX ) && defined( __WATCOMC__ )
 #  include <unistd.h>
 #endif
 
@@ -1368,7 +1368,10 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
       hb_comSetOsError( pCom, iResult == -1 );
       if( iResult == 0 )
       {
-#if defined( cfmakeraw ) || defined( HB_OS_LINUX )
+#if defined( __WATCOMC__ ) && __WATCOMC__ <= 1300
+         /* cfmakeraw is declared only in header files
+            but does not exist in CRTL in OpenWatcom 2.0 */
+#elif defined( cfmakeraw ) || defined( HB_OS_LINUX )
          /* Raw input from device */
          cfmakeraw( &tio );
 #endif

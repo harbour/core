@@ -67,12 +67,14 @@
    #if defined( __EMX__ ) && __GNUC__ * 1000 + __GNUC_MINOR__ < 3002
       #include <emx/syscalls.h>
    #endif
+   #define HB_HAS_PWD
 
 #elif defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS ) && ! defined( __WATCOMC__ )
 
    #include <pwd.h>
    #include <sys/types.h>
    #include <unistd.h>
+   #define HB_HAS_PWD
 
 #endif
 
@@ -92,8 +94,7 @@ char * hb_username( void )
    if( lpValue[ 0 ] )
       return HB_OSSTRDUP( lpValue );
 
-#elif ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) ) || \
-      ( defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS ) && ! defined( __WATCOMC__ ) )
+#elif defined( HB_HAS_PWD )
 
    struct passwd * pwd = getpwuid( getuid() );
    if( pwd && pwd->pw_name )

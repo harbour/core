@@ -60,6 +60,7 @@
    #include "hb_io.h"
    #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
       #include <sys/param.h>
+      #define HB_HAS_GETHOSTNAME
    #endif
 
 #elif defined( HB_OS_OS2 ) && defined( __GNUC__ )
@@ -73,19 +74,19 @@
       #include <emx/syscalls.h>
       #define gethostname __gethostname
    #endif
+   #define HB_HAS_GETHOSTNAME
 
-#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ )
+#elif defined( HB_OS_UNIX ) && ! ( defined( __WATCOMC__ ) && __WATCOMC__ <= 1290 )
 
    #if defined( HB_OS_VXWORKS )
       #include <hostLib.h>
    #endif
    #include <unistd.h>
+   #define HB_HAS_GETHOSTNAME
 
 #endif
 
-#if ! defined( MAXGETHOSTNAME ) && ( defined( HB_OS_UNIX ) || \
-      ( ( defined( HB_OS_OS2 ) || defined( HB_OS_DOS ) ) && \
-        defined( __GNUC__ ) ) )
+#if ! defined( MAXGETHOSTNAME ) && defined( HB_HAS_GETHOSTNAME )
    #define MAXGETHOSTNAME 256      /* should be enough for a host name */
 #endif
 
@@ -110,37 +111,28 @@ char * hb_netname( void )
    if( lpValue[ 0 ] )
       return HB_OSSTRDUP( lpValue );
 
-#elif defined( HB_OS_DOS )
-
-#  if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
-      char szValue[ MAXGETHOSTNAME + 1 ];
-      szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
-      gethostname( szValue, MAXGETHOSTNAME );
-      if( szValue[ 0 ] )
-         return hb_osStrDecode( szValue );
-#  else
-      union REGS regs;
-      struct SREGS sregs;
-      char szValue[ 16 ];
-      szValue[ 0 ] = szValue[ 15 ] = '\0';
-
-      regs.HB_XREGS.ax = 0x5E00;
-      regs.HB_XREGS.dx = FP_OFF( szValue );
-      sregs.ds = FP_SEG( szValue );
-
-      HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
-
-      if( regs.h.ch != 0 && szValue[ 0 ] )
-         return hb_osStrDecode( szValue );
-#  endif
-
-#elif ( defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) ) || \
-      ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
+#elif defined( HB_HAS_GETHOSTNAME )
 
    char szValue[ MAXGETHOSTNAME + 1 ];
    szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
    gethostname( szValue, MAXGETHOSTNAME );
    if( szValue[ 0 ] )
+      return hb_osStrDecode( szValue );
+
+#elif defined( HB_OS_DOS )
+
+   union REGS regs;
+   struct SREGS sregs;
+   char szValue[ 16 ];
+   szValue[ 0 ] = szValue[ 15 ] = '\0';
+
+   regs.HB_XREGS.ax = 0x5E00;
+   regs.HB_XREGS.dx = FP_OFF( szValue );
+   sregs.ds = FP_SEG( szValue );
+
+   HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
+
+   if( regs.h.ch != 0 && szValue[ 0 ] )
       return hb_osStrDecode( szValue );
 
 #endif

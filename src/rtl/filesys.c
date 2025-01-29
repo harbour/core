@@ -104,10 +104,11 @@
 #  include <errno.h>
 #endif
 
-#if ( defined( __DMC__ ) || defined( __BORLANDC__ ) || \
+#if ( ( defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) ) || \
+      defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) ) && \
+    ( defined( __DMC__ ) || defined( __BORLANDC__ ) || \
       defined( __IBMCPP__ ) || defined( _MSC_VER ) || \
-      defined( __MINGW32__ ) || defined( __WATCOMC__ ) ) && \
-      ! defined( HB_OS_UNIX ) && ! defined( HB_OS_WIN_CE )
+      defined( __MINGW32__ ) || defined( __WATCOMC__ ) )
    #include <sys/stat.h>
    #include <fcntl.h>
    #include <process.h>
@@ -205,7 +206,8 @@
        * functions on 32-bit machines.
        */
       #define HB_USE_LARGEFILE64
-   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE ) && ! defined( __WATCOMC__ )
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE ) && \
+         ! ( defined( __WATCOMC__ ) && __WATCOMC__ <= 1300 )
       #define HB_USE_LARGEFILE64
    #endif
 #endif
@@ -3113,7 +3115,8 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
     * As workaround we are using this trick to check non zero version
     * number but on some systems it may disable using fdatasync() [druzus]
     */
-#  if defined( _POSIX_SYNCHRONIZED_IO ) && _POSIX_SYNCHRONIZED_IO - 0 > 0
+#  if ( defined( _POSIX_SYNCHRONIZED_IO ) && _POSIX_SYNCHRONIZED_IO - 0 > 0 ) || \
+      ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1300 )
       /* faster - flushes data buffers only, without updating directory info
        */
       HB_FAILURE_RETRY( iResult, fdatasync( hFileHandle ) );
