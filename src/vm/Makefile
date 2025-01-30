@@ -132,10 +132,6 @@ ifneq ($(HB_MT),no)
    DIRS += vmmt
 endif
 
-ifeq ($(HB_BUILD_TEST),strict)
-   HB_CFLAGS += -DHB_FM_STD_ALLOC
-endif
-
 include $(TOP)$(ROOT)config/lib.mk
 ifneq ($(DIRS),)
    include $(TOP)$(ROOT)config/dir.mk

@@ -1460,6 +1460,11 @@ DLMALLOC_EXPORT int mspace_mallopt(int, int);
 #ifdef _MSC_VER
 #pragma warning( disable : 4146 ) /* no "unsigned" warnings */
 #endif /* _MSC_VER */
+#if defined(__GNUC__) && \
+      (__GNUC__ > 6 || (__GNUC__ == 6 && __GNUC_MINOR__ >= 1))
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-dereference"
+#endif
 #if !NO_MALLOC_STATS
 #include <stdio.h>       /* for printing in malloc_stats */
 #endif /* NO_MALLOC_STATS */
@@ -6058,6 +6063,10 @@ int mspace_mallopt(int param_number, int value) {
 
 #endif /* MSPACES */
 
+#if defined(__GNUC__) && \
+      (__GNUC__ > 6 || (__GNUC__ == 6 && __GNUC_MINOR__ >= 1))
+#pragma GCC diagnostic pop
+#endif
 
 /* -------------------- Alternative MORECORE functions ------------------- */
 
