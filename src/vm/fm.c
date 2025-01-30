@@ -188,7 +188,23 @@
 #     if defined( HB_OS_WIN_64 )
 #        pragma warning( disable : 4267 )
 #     endif
-#  elif defined( __MINGW32__ )
+#  elif defined( __clang__ )  && defined( __clang_major__ ) && __clang_major__ >= 13
+#     pragma clang diagnostic push
+#     pragma clang diagnostic ignored "-Wunused-but-set-variable"
+#     if __clang_major__ >= 15
+#        pragma clang diagnostic ignored "-Wgnu-null-pointer-arithmetic"
+#     endif
+#  elif defined( __GNUC__ ) && ( __GNUC__ > 6 || ( __GNUC__ == 6 && __GNUC_MINOR__ >= 1 ) )
+#     pragma GCC diagnostic push
+#     pragma GCC diagnostic ignored "-Warray-bounds"
+#     if __GNUC__ >= 11
+#        pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#     endif /* __GNUC__ >= 11 */
+#     if __GNUC__ >= 14
+#        pragma GCC diagnostic ignored "-Walloc-size"
+#     endif /* __GNUC__ >= 14 */
+#  endif
+#  if defined( __MINGW32__ )
 #     if ! defined( USE_DL_PREFIX ) && ! defined( HB_FM_DLMT_ALLOC )
 #        define USE_DL_PREFIX
 #     endif
@@ -224,6 +240,10 @@
 #     endif
 #  elif defined( _MSC_VER )
 #     pragma warning( pop )
+#  elif defined( __clang__ ) && defined( __clang_major__ ) && __clang_major__ >= 13
+#     pragma clang diagnostic pop
+#  elif defined( __GNUC__ ) && ( __GNUC__ > 6 || ( __GNUC__ == 6 && __GNUC_MINOR__ >= 1 ) )
+#     pragma GCC diagnostic pop
 #  endif
 #  if defined( HB_FM_DLMT_ALLOC )
 #     define malloc( n )         mspace_malloc( hb_mspace(), ( n ) )

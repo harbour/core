@@ -2580,7 +2580,7 @@ HB_FUNC( CURL_WS_SEND )
 {
    if( PHB_CURL_is( 1 ) )
    {
-      CURLcode res  = HB_CURLE_ERROR;
+      CURLcode res  = ( CURLcode ) HB_CURLE_ERROR;
       size_t   sent = 0;
 
 #if LIBCURL_VERSION_NUM >= 0x075600
@@ -2608,7 +2608,7 @@ HB_FUNC( CURL_WS_RECV )
 {
    if( PHB_CURL_is( 1 ) && HB_ISBYREF( 2 ) )
    {
-      CURLcode res  = HB_CURLE_ERROR;
+      CURLcode res  = ( CURLcode ) HB_CURLE_ERROR;
       size_t   recv = 0;
 
 #if LIBCURL_VERSION_NUM >= 0x075600
@@ -2847,7 +2847,7 @@ HB_FUNC( CURL_MULTI_INFO_READ )
 
                for( i = 1; i <= handles_count; i++ )
                {
-                  void ** ph = hb_arrayGetPtrGC( pHandles, i, &s_gcCURLFuncs );
+                  void ** ph = ( void ** ) hb_arrayGetPtrGC( pHandles, i, &s_gcCURLFuncs );
                   if( ph && *ph )
                   {
                      PHB_CURL hbcurl = ( PHB_CURL ) *ph;
