@@ -66,6 +66,10 @@
 
 #include "hbzebra.h"
 
+#if defined( __GNUC__ ) && __GNUC__ >= 12 && __GNUC__ <= 14
+   /* workaround for GCC bug */
+   #pragma GCC diagnostic ignored "-Warray-bounds"
+#endif
 
 /* Special CodeWords */
 #define PADDING               129
