@@ -1,11 +1,11 @@
 --- sqlite3.orig/sqlite3.c	2024-02-12 21:32:10.804005193 +0100
-+++ sqlite3/sqlite3.c	2024-02-12 21:26:49.931101008 +0100
++++ sqlite3/sqlite3.c	2025-01-30 17:42:00.624509041 +0100
 @@ -13915,7 +13915,7 @@
  ** Macros to hint to the compiler that a function should or should not be
  ** inlined.
  */
 -#if defined(__GNUC__)
-+#if defined(__GNUC__) && __GNUC__>=3
++#if defined(__GNUC__) && (__GNUC__>=4 || (__GNUC__==3 && __GNUC_MINOR__>=1))
  #  define SQLITE_NOINLINE  __attribute__((noinline))
  #  define SQLITE_INLINE    __attribute__((always_inline)) inline
  #elif defined(_MSC_VER) && _MSC_VER>=1310
@@ -126,7 +126,18 @@
      p->iReadOff += nAvail;
      nRem = nByte - nAvail;
  
-@@ -129191,7 +129207,7 @@
+@@ -120162,6 +120178,10 @@
+ */
+ /* #include "sqliteInt.h" */
+ 
++#if defined( __GNUC__ ) && __GNUC__ >= 14
++#  pragma GCC diagnostic ignored "-Wstringop-overread"
++#endif
++
+ #ifndef SQLITE_OMIT_SHARED_CACHE
+ /*
+ ** The TableLock structure is only used by the sqlite3TableLock() and
+@@ -129191,7 +129211,7 @@
  ** Add a (possibly large) integer to the running sum.
  */
  static void kahanBabuskaNeumaierStepInt64(volatile SumCtx *pSum, i64 iVal){
@@ -135,7 +146,7 @@
      i64 iBig, iSm;
      iSm = iVal % 16384;
      iBig = iVal - iSm;
-@@ -129209,7 +129225,7 @@
+@@ -129209,7 +129229,7 @@
    volatile SumCtx *p,
    i64 iVal
  ){
@@ -144,3 +155,12 @@
      i64 iSm = iVal % 16384;
      p->rSum = (double)(iVal - iSm);
      p->rErr = (double)iSm;
+@@ -203696,7 +203716,7 @@
+ ** A macro to hint to the compiler that a function should not be
+ ** inlined.
+ */
+-#if defined(__GNUC__)
++#if defined(__GNUC__) && (__GNUC__>=4 || (__GNUC__==3 && __GNUC_MINOR__>=1))
+ #  define JSON_NOINLINE  __attribute__((noinline))
+ #elif defined(_MSC_VER) && _MSC_VER>=1310
+ #  define JSON_NOINLINE  __declspec(noinline)
