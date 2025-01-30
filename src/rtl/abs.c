@@ -67,10 +67,10 @@ HB_FUNC( ABS )
             hb_retnilen( iNumber, iWidth );
 #if -HB_VMINT_MAX > HB_VMINT_MIN
          else if( iNumber < -INT_MAX )
-#if HB_VMLONG_MAX > HB_VMINT_MAX
-            hb_retnint( -( HB_MAXINT ) iNumber );
-#else
+#if HB_VMLONG_MAX == HB_VMINT_MAX
             hb_retndlen( -( double ) iNumber, 0, iDec );
+#else
+            hb_retnint( -( HB_MAXINT ) iNumber );
 #endif
 #endif
          else

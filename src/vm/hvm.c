@@ -3165,17 +3165,17 @@ static void hb_vmNegate( void )
 #if -HB_VMINT_MAX > HB_VMINT_MIN
       if( pItem->item.asInteger.value < -HB_VMINT_MAX )
       {
-#if HB_VMLONG_MAX > HB_VMINT_MAX
-         HB_MAXINT nValue = ( HB_MAXINT ) pItem->item.asInteger.value;
-         pItem->type = HB_IT_LONG;
-         pItem->item.asLong.value = -nValue;
-         pItem->item.asLong.length = HB_LONG_EXPLENGTH( -nValue );
-#else
+#if HB_VMLONG_MAX == HB_VMINT_MAX
          double dValue = ( double ) pItem->item.asInteger.value;
          pItem->type = HB_IT_DOUBLE;
          pItem->item.asDouble.value = -dValue;
          pItem->item.asDouble.length = HB_DBL_LENGTH( -dValue );
          pItem->item.asDouble.decimal = 0;
+#else
+         HB_MAXINT nValue = ( HB_MAXINT ) pItem->item.asInteger.value;
+         pItem->type = HB_IT_LONG;
+         pItem->item.asLong.value = -nValue;
+         pItem->item.asLong.length = HB_LONG_EXPLENGTH( -nValue );
 #endif
       }
       else

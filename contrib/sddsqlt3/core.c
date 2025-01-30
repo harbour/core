@@ -590,9 +590,11 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                break;
 
             case HB_FT_INTEGER:
-#if HB_VMLONG_MAX > INT32_MAX && ! defined( HB_LONG_LONG_OFF )
+#if HB_VMLONG_MAX != INT32_MAX && ! defined( HB_LONG_LONG_OFF )
                pItem = hb_itemPutNInt( NULL, sqlite3_column_int64( st, ui ) );
                break;
+#else
+               /* fallthrough */
 #endif
             case HB_FT_LONG:
                pItem = hb_itemPutNDDec( NULL, sqlite3_column_double( st, ui ), pField->uiDec );
