@@ -511,6 +511,9 @@ typedef HB_U32       HB_SYMCNT;
 #  define HB_ULL( num )          num##ULL
 #endif
 
+#if defined( __WATCOMC__ ) && LONGLONG_MAX < LONG_MAX
+   #define HB_WATCOM_64BUG
+#endif
 
 /* HB_*_EXPLENGTH() macros are used by HVM to set the size of
  * math operations, HB_*_LENGTH() macros are used when new
@@ -537,10 +540,10 @@ typedef HB_U32       HB_SYMCNT;
 #endif
 
 #if ! defined( HB_LONG_LONG_OFF )
-#  if HB_VMLONG_MAX > HB_LL( 9999999999 )
+#  if HB_VMLONG_MAX > HB_LL( 9999999999 ) || defined( HB_WATCOM_64BUG )
 #     define HB_LONG_LENGTH( l )    ( ( (l) < -999999999 || (l) > HB_LL( 9999999999 ) ) ? 20 : 10 )
 #  endif
-#  if HB_VMINT_MAX > HB_LL( 9999999999 )
+#  if HB_VMINT_MAX > HB_LL( 9999999999 ) && ! defined( HB_WATCOM_64BUG )
 #     define HB_INT_EXPLENGTH( i )  HB_LONG_LENGTH( i )
 #  endif
 #endif
