@@ -2150,11 +2150,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                            DO CASE
                            CASE FindInPath( "os2.h", GetEnv( "INCLUDE" ) ) != NIL
                               hbmk[ _HBMK_cPLAT ] := "os2"
-                           CASE FindInPath( "dirent.h", GetEnv( "INCLUDE" ) ) != NIL
-                              hbmk[ _HBMK_cPLAT ] := "linux"
                            CASE FindInPath( "windows.h", GetEnv( "INCLUDE" ) ) != NIL
                               hbmk[ _HBMK_cPLAT ] := "win"
-                           OTHERWISE
+                           CASE At( Lower( PathSepToForward( GetEnv( "WATCOM" ) ) ) + "/lh", Lower( PathSepToForward( GetEnv( "INCLUDE" ) ) ) ) > 0
+                              hbmk[ _HBMK_cPLAT ] := "linux"
+                           CASE hbmk[ _HBMK_cPLAT ] == Lower( hb_Version( HB_VERSION_PLATFORM ) )
                               hbmk[ _HBMK_cPLAT ] := "dos"
                            ENDCASE
                         ENDIF
