@@ -6776,9 +6776,9 @@ void hb_vmPushNumber( double dNumber, int iDec )
       hb_vmPushDouble( dNumber, hb_stackSetStruct()->HB_SET_DECIMALS );
 }
 
-static int hb_vmCalcIntWidth( HB_MAXINT nNumber )
+static HB_USHORT hb_vmCalcIntWidth( HB_MAXINT nNumber )
 {
-   int iWidth;
+   HB_USHORT iWidth;
 
    if( nNumber <= -1000000000L )
    {
@@ -6818,7 +6818,7 @@ static void hb_vmPushIntegerConst( int iNumber )
 
    pItem->type = HB_IT_INTEGER;
    pItem->item.asInteger.value = iNumber;
-   pItem->item.asInteger.length = ( HB_USHORT ) hb_vmCalcIntWidth( iNumber );
+   pItem->item.asInteger.length = hb_vmCalcIntWidth( iNumber );
 }
 #else
 static void hb_vmPushLongConst( long lNumber )
@@ -6830,7 +6830,7 @@ static void hb_vmPushLongConst( long lNumber )
 
    pItem->type = HB_IT_LONG;
    pItem->item.asLong.value = ( HB_MAXINT ) lNumber;
-   pItem->item.asLong.length = ( HB_USHORT ) hb_vmCalcIntWidth( lNumber );
+   pItem->item.asLong.length = hb_vmCalcIntWidth( lNumber );
 }
 #endif
 
@@ -6879,7 +6879,7 @@ static void hb_vmPushLongLongConst( HB_LONGLONG llNumber )
 
    pItem->type = HB_IT_LONG;
    pItem->item.asLong.value = ( HB_MAXINT ) llNumber;
-   pItem->item.asLong.length = ( HB_USHORT ) hb_vmCalcIntWidth( llNumber );
+   pItem->item.asLong.length = hb_vmCalcIntWidth( llNumber );
 }
 #endif
 
