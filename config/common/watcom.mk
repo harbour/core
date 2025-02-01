@@ -71,7 +71,11 @@ endif
 ifneq ($(findstring wcc386,$(CC)),)
    ifneq ($(HB_HOST_PLAT),linux)
       CC_DIRSEPFROM := /
-      CC_DIRSEPTO   := $(subst /,\,\)
+      ifeq ($(HB_SHELL),sh)
+         CC_DIRSEPTO   := $(subst /,\,\\)
+      else
+         CC_DIRSEPTO   := $(subst /,\,\)
+      endif
    endif
 endif
 
