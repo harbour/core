@@ -111,7 +111,6 @@ jobs:
           case ${{matrix.strictness}} in
             normal) ;;
             strict) case ${{matrix.compiler}} in
-                      (mingw64) HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
                       (bcc) HB_USER_CFLAGS="$HB_USER_CFLAGS -w!" ;;
                       (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
                     esac ;;
