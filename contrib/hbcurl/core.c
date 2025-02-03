@@ -531,7 +531,7 @@ static int hb_curl_debug_callback( CURL * handle, curl_infotype type, char * dat
    return 0;
 }
 
-static size_t hb_curl_writefunction_callback( void *buffer, size_t size, size_t nmemb, void *Cargo )
+static size_t hb_curl_writefunction_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
 
@@ -976,7 +976,7 @@ HB_FUNC( CURL_EASY_SETOPT )
 
             case HB_CURLOPT_WRITEFUNCTION:
             {
-               PHB_ITEM pWriteFunctionCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+               PHB_ITEM pWriteFunctionCallback = hb_param( 3, HB_IT_EVALITEM );
 
                if( hb_curl->pWriteFunctionCallback )
                {
