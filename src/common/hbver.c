@@ -1293,12 +1293,17 @@ char * hb_verCompiler( void )
       hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
    #endif
 
-   iVerMajor = __WATCOMC__ / 100;
-   iVerMinor = __WATCOMC__ % 100;
-
-   #if defined( __WATCOM_REVISION__ )
-      iVerPatch = __WATCOM_REVISION__;
+   #if __WATCOMC__ < 1200
+      iVerMajor = __WATCOMC__ / 100;
+      iVerMinor = __WATCOMC__ % 100;
+      #if defined( __WATCOM_REVISION__ )
+         iVerPatch = __WATCOM_REVISION__;
+      #else
+         iVerPatch = 0;
+      #endif
    #else
+      iVerMajor = ( __WATCOMC__ - 1100 ) / 100;
+      iVerMinor = ( __WATCOMC__ - 1100 ) % 100;
       iVerPatch = 0;
    #endif
 
@@ -1316,9 +1321,9 @@ char * hb_verCompiler( void )
 
    pszName = "Tiny C Compiler";
 
-   iVerMajor = __TINYC__ / 100;
-   iVerMinor = ( __TINYC__ % 100 ) / 10;
-   iVerPatch = ( __TINYC__ % 100 ) % 10;
+   iVerMajor = __TINYC__ / 10000;
+   iVerMinor = ( __TINYC__ % 10000) / 100;
+   iVerPatch = __TINYC__ % 100 ;
 
 #elif defined( __PCC__ )
 
