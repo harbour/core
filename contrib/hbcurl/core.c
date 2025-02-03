@@ -123,6 +123,7 @@ typedef struct _HB_CURL
 
    PHB_ITEM pProgressCallback;
    PHB_ITEM pDebugCallback;
+   PHB_ITEM pWriteFunctionCallback;
 
 #ifdef HB_CURL_HASH_STRINGS
    PHB_HASH_TABLE pHash;
@@ -530,6 +531,22 @@ static int hb_curl_debug_callback( CURL * handle, curl_infotype type, char * dat
    return 0;
 }
 
+size_t static hb_curl_writefunction_callback( void *buffer, size_t size, size_t nmemb, void *Cargo )
+{
+   PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
+
+   if( hb_curl->pWriteFunctionCallback && hb_vmRequestReenter() )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( hb_curl->pWriteFunctionCallback );
+      hb_vmPushString( buffer, size * nmemb );
+      hb_vmSend( 1 );
+      hb_vmRequestRestore();
+      return size * nmemb;
+   }
+   return 0;
+}
+
 /* Helpers */
 /* ------- */
 
@@ -688,6 +705,12 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
       hb_curl->pDebugCallback = NULL;
    }
 
+   if( hb_curl->pWriteFunctionCallback )
+   {
+      hb_itemRelease( hb_curl->pWriteFunctionCallback );
+      hb_curl->pWriteFunctionCallback = NULL;
+   }
+
 #ifdef HB_CURL_HASH_STRINGS
    if( hb_curl->pHash )
    {
@@ -753,6 +776,9 @@ static HB_GARBAGE_FUNC( PHB_CURL_mark )
 
       if( hb_curl->pDebugCallback )
          hb_gcMark( hb_curl->pDebugCallback );
+
+      if( hb_curl->pWriteFunctionCallback )
+         hb_gcMark( hb_curl->pWriteFunctionCallback );   
    }
 }
 
@@ -948,8 +974,31 @@ HB_FUNC( CURL_EASY_SETOPT )
 
             /* Callback */
 
+            case HB_CURLOPT_WRITEFUNCTION:
+            {
+               PHB_ITEM pWriteFunctionCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+
+               if( hb_curl->pWriteFunctionCallback )
+               {
+                  curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, NULL );
+
+                  hb_itemRelease( hb_curl->pWriteFunctionCallback );
+                  hb_curl->pWriteFunctionCallback = NULL;
+               }
+
+               if( pWriteFunctionCallback )
+               {
+                  hb_curl->pWriteFunctionCallback = hb_itemNew( pWriteFunctionCallback );
+                  /* unlock the item so GC will not mark them as used */
+                  hb_gcUnlock( hb_curl->pWriteFunctionCallback );
+
+                  curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_writefunction_callback );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, hb_curl );
+               }
+            }
+            break;
+
             /* These are hidden on the Harbour level: */
-            /* HB_CURLOPT_WRITEFUNCTION */
             /* HB_CURLOPT_WRITEDATA */
             /* HB_CURLOPT_READFUNCTION */
             /* HB_CURLOPT_READDATA */
