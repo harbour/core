@@ -531,7 +531,7 @@ static int hb_curl_debug_callback( CURL * handle, curl_infotype type, char * dat
    return 0;
 }
 
-size_t static hb_curl_writefunction_callback( void *buffer, size_t size, size_t nmemb, void *Cargo )
+static size_t hb_curl_writefunction_callback( void *buffer, size_t size, size_t nmemb, void *Cargo )
 {
    PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
 
