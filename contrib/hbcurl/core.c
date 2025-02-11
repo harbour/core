@@ -539,7 +539,7 @@ static size_t hb_curl_writefunction_callback( void * buffer, size_t size, size_t
    {
       hb_vmPushEvalSym();
       hb_vmPush( hb_curl->pWriteFunctionCallback );
-      hb_vmPushString( buffer, size * nmemb );
+      hb_vmPushString( ( const char * ) buffer, size * nmemb );
       hb_vmSend( 1 );
       hb_vmRequestRestore();
       return size * nmemb;
