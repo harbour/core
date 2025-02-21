@@ -4,6 +4,8 @@ hbcurl.hbm
 -depimplibs=curl:../bin/libcurl.dll
 -depimplibs=curl:../libcurl-4.dll
 -depimplibs=curl:../bin/libcurl-4.dll
+{x86_64}-depimplibs=curl:../bin/libcurl-x64.dll
+{arm64}-depimplibs=curl:../bin/libcurl-arm64.dll
 -depfinish=curl
 
 -iflag={bcc}-a
