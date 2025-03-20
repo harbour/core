@@ -3883,7 +3883,7 @@ void hb_gtRelease( void * hGT )
 
 void hb_gtAttach( void * hGT )
 {
-   if( hGT && hGT != hb_stackGetGT() )
+   if( hGT != hb_stackGetGT() )
    {
       hb_gtRelease( NULL );
       hb_stackSetGT( hGT );
