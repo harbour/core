@@ -528,7 +528,7 @@ HB_FUNC( SSL_CTX_GET_OPTIONS )
       SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
 
       if( ctx )
-         hb_retnl( SSL_CTX_get_options( ctx ) );
+         hb_retnint( SSL_CTX_get_options( ctx ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -541,7 +541,11 @@ HB_FUNC( SSL_CTX_SET_OPTIONS )
       SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
 
       if( ctx )
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+         SSL_CTX_set_options( ctx, ( uint64_t ) hb_parnint( 2 ) );
+#else
          SSL_CTX_set_options( ctx, ( unsigned long ) hb_parnl( 2 ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

@@ -1300,7 +1300,7 @@ HB_FUNC( SSL_GET_OPTIONS )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retnl( SSL_get_options( ssl ) );
+         hb_retnint( SSL_get_options( ssl ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1313,7 +1313,11 @@ HB_FUNC( SSL_SET_OPTIONS )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+         SSL_set_options( ssl, ( uint64_t ) hb_parnint( 2 ) );
+#else
          SSL_set_options( ssl, ( unsigned long ) hb_parnl( 2 ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
