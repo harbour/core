@@ -2,6 +2,8 @@
 
 -o${hb_name}
 
+-DHBMK_PROGNAME=hbrun{abstr}
+
 -DHBMK_WITH_BUILTIN_HEADERS_ALL
 
 -DHBMK_WITH_GTXWC{HBMK_WITH_GTXWC='yes'}

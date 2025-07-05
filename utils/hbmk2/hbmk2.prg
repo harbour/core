@@ -165,7 +165,7 @@ EXTERNAL HB_GT_CGI_DEFAULT
    EXTERNAL HB_GT_DOS
 #elif defined( __PLATFORM__OS2 )
    EXTERNAL HB_GT_OS2
-#elif defined( __PLATFORM__UNIX ) .AND. ! defined( __PLATFORM__VXWORKS ) .AND. ! defined( __PLATFORM__SYMBIAN )
+#elif defined( __PLATFORM__UNIX ) .AND. ! defined( __PLATFORM__WASM ) .AND. ! defined( __PLATFORM__VXWORKS ) .AND. ! defined( __PLATFORM__SYMBIAN )
    EXTERNAL HB_GT_TRM
    #if defined( HBMK_WITH_GTXWC )
       EXTERNAL HB_GT_XWC
@@ -180,6 +180,8 @@ EXTERNAL hbmk_KEYW
 #ifndef HB_SYMBOL_UNUSED
 #define HB_SYMBOL_UNUSED( symbol )  ( ( symbol ) )
 #endif
+
+#xtranslate _HBMK_STRINGIFY( <x> ) => <"x">
 
 #define _SELF_NAME_             "hbmk2"
 #define _SELF_NAME_LONG_        "Harbour Make"
@@ -1846,7 +1848,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    cBin_CompPRG := "harbour" + l_cHBSUFFIX
 
    DO CASE
-   CASE HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|android|vxworks|symbian|linux|cygwin|minix|aix" )
+   CASE HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|android|vxworks|symbian|linux|cygwin|minix|aix|wasm" )
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
          aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro", "open64", "pcc" }
@@ -1864,6 +1866,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          aCOMPSUP := { "gcc", "icc" }
       CASE hbmk[ _HBMK_cPLAT ] == "minix"
          aCOMPSUP := { "clang", "gcc" }
+      CASE hbmk[ _HBMK_cPLAT ] == "wasm"
+         aCOMPSUP := { "emcc" }
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE
@@ -1886,6 +1890,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          l_aLIBHBGT := {}
          hbmk[ _HBMK_cGTDEFAULT ] := "gtstd"
          cBinExt := ".exe"
+      CASE hbmk[ _HBMK_cPLAT ] == "wasm"
+         l_aLIBHBGT := { "gtcgi" }
+         hbmk[ _HBMK_cGTDEFAULT ] := "gtcgi"
+         DO CASE
+         CASE hbmk[ _HBMK_cCOMP ] == "emcc"
+            cBinExt := ".js"
+         OTHERWISE
+            cBinExt := ""
+         ENDCASE
       OTHERWISE
          l_aLIBHBGT := { "gttrm" }
          hbmk[ _HBMK_cGTDEFAULT ] := "gttrm"
@@ -4001,7 +4014,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
            ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "pcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "sunos"   .AND. hbmk[ _HBMK_cCOMP ] == "pcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "minix"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "aix"     .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
+           ( hbmk[ _HBMK_cPLAT ] == "aix"     .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "wasm"   .AND. hbmk[ _HBMK_cCOMP ] == "emcc" )
 
          #if defined( __PLATFORM__UNIX )
             hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
@@ -4028,6 +4042,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cOpt_Lib := "-static -no_warning_for_no_symbols {FA} -o {OL} {LO}"
          ELSE
             DO CASE
+            CASE hbmk[ _HBMK_cCOMP ] == "emcc"
+               cBin_Lib := GetEnv( "LLVM_ROOT" ) + hb_ps() + "llvm-ar"
             CASE hbmk[ _HBMK_cCOMP ] == "icc"
                cBin_Lib := "xiar"
             CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
@@ -4062,6 +4078,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
             cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCSUFFIX ]
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "cc" + hbmk[ _HBMK_cCCSUFFIX ] )
+         CASE hbmk[ _HBMK_cCOMP ] == "emcc"
+            cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "em++" + hbmk[ _HBMK_cCCSUFFIX ]
+            cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "emcc" + hbmk[ _HBMK_cCCSUFFIX ] )
          OTHERWISE
             cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCSUFFIX ]
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] )
@@ -4108,10 +4127,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF hbmk[ _HBMK_cPLAT ] == "minix"
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_NETBSD_SOURCE=1" )
          ENDIF
+         IF hbmk[ _HBMK_cPLAT ] == "wasm" .AND. hbmk[ _HBMK_cCOMP ] == "emcc"
+            AAdd( hbmk[ _HBMK_aOPTL ], "-sWASM=1" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-sWASM=1" )
+         ENDIF
          cOpt_CompC += " {FC}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
             /* Symbian gcc cross-compiler (on Windows) crashes if compiling multiple files at once */
-            IF ! hbmk[ _HBMK_cPLAT ] == "symbian"  /* EXPERIMENTAL */
+            IF ! hbmk[ _HBMK_cPLAT ] == "symbian" .AND. ;  /* EXPERIMENTAL */
+               ! hbmk[ _HBMK_cCOMP ] == "emcc"  /* It creates the output in the source directory if no -o option is passed */
                lCHD_Comp := .T.
                cOpt_CompC += " {LC}"
             ELSE
@@ -4150,7 +4174,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF hbmk[ _HBMK_cPLAT ] == "darwin"
             cLibHBX_Regex := R_( "[\s]T" ) + cLibHBX_Regex
          ENDIF
-         IF l_lLIBGROUPING .AND. HBMK_ISPLAT( "linux|beos|qnx|android|vxworks|cygwin|bsd" )
+         IF l_lLIBGROUPING .AND. HBMK_ISPLAT( "linux|beos|qnx|android|vxworks|cygwin|bsd|wasm" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} {LF} -Wl,--end-group" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} {LF} -Wl,--end-group" )
          ELSE
@@ -4212,14 +4236,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          IF lStopAfterCComp
             IF ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ] .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
-               IF HBMK_ISPLAT( "darwin|sunos" ) .OR. HBMK_ISCOMP( "pcc" )
+               IF HBMK_ISPLAT( "darwin|sunos" ) .OR. HBMK_ISCOMP( "pcc|emcc" )
                   AAdd( hbmk[ _HBMK_aOPTC ], "-o {OO}" )
                ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
                ENDIF
             ENDIF
          ELSE
-            IF HBMK_ISPLAT( "darwin|sunos" ) .OR. HBMK_ISCOMP( "pcc" )
+            IF HBMK_ISPLAT( "darwin|sunos" ) .OR. HBMK_ISCOMP( "pcc|emcc" )
                AAdd( hbmk[ _HBMK_aOPTL ], "-o {OE}" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )
@@ -10586,7 +10610,7 @@ STATIC FUNCTION EnvNotation( cEnvName )
    RETURN "$" + cEnvName
 #endif
 
-#define SELF_NAME() iif( hbmk[ _HBMK_lShellMode ], iif( hb_FNameName( hb_ProgName() ) == _SELF_NAME_, "hbrun", hb_FNameName( hb_ProgName() ) ), _SELF_NAME_ )
+#define SELF_NAME() iif( hbmk[ _HBMK_lShellMode ], iif( hb_FNameName( hbmk_hb_ProgName() ) == _SELF_NAME_, "hbrun", hb_FNameName( hbmk_hb_ProgName() ) ), _SELF_NAME_ )
 
 STATIC FUNCTION AutoConfPathList( hbmk, lCWD, lForDocOutput )
 
@@ -12063,6 +12087,10 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       CASE hbmk[ _HBMK_cPLAT ] == "aix"
          AAdd( aDf, "__PLATFORM__AIX" )
          AAdd( aDf, "__PLATFORM__UNIX" )
+      CASE hbmk[ _HBMK_cPLAT ] == "wasm"
+         AAdd( aDf, "__PLATFORM__UNIX" )
+         AAdd( aDf, "__PLATFORM__WASM" )
+         AAdd( aDf, "__PLATFORM__ABSTRACT" )
       ENDCASE
 
       /* Setup those CPU flags which we can be sure about.
@@ -12696,7 +12724,7 @@ STATIC FUNCTION win_implib_omf( hbmk, cSourceDLL, cTargetLib )
 
    LOCAL cSourceLib
 
-   /* Try to find COFF .lib with the same name */
+   /* Try to find OMF .lib with the same name */
    IF hb_FileExists( cSourceLib := hb_FNameExtSet( cSourceDLL, ".lib" ) )
       IF IsOMFLib( cSourceLib )
          IF ! hbmk[ _HBMK_lQuiet ]
@@ -13138,6 +13166,7 @@ FUNCTION hbmk_KEYW( hbmk, cFileName, cKeyword, cValue, cOperator )
    CASE "winuni"   ; RETURN hbmk[ _HBMK_lWINUNI ]
    CASE "winansi"  ; RETURN ! hbmk[ _HBMK_lWINUNI ]
    CASE "unix"     ; RETURN HBMK_ISPLAT( "bsd|hpux|sunos|beos|qnx|android|vxworks|symbian|linux|darwin|cygwin|minix|aix" )
+   CASE "abstr"    ; RETURN HBMK_ISPLAT( "wasm|wasi" )
    CASE "allwin"   ; RETURN HBMK_ISPLAT( "win|wce" )
    CASE "allgcc"   ; RETURN HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64|pcc" )
    CASE "allmingw" ; RETURN HBMK_ISCOMP( "mingw|mingw64|mingwarm" )
@@ -13903,7 +13932,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    /* Save originals */
 
    hbsh[ _HBSH_cDirBase ] := hb_DirBase()
-   hbsh[ _HBSH_cProgName ] := hb_ProgName()
+   hbsh[ _HBSH_cProgName ] := hbmk_hb_ProgName()
 
    /* Init */
 
@@ -14076,7 +14105,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          /* We can use this function as this is a GPL licenced application */
          cFile := hb_compileBuf( ;
             hbmk_CoreHeaderFiles(), ;
-            hb_ProgName(), ;
+            hbmk_hb_ProgName(), ;
             "-n2", "-w", "-es2", "-q0", ;
             hb_ArrayToParams( aOPTPRG ), ;
             "-D" + _HBMK_SHELL, ;
@@ -14449,7 +14478,7 @@ STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
 
       IF ! Lower( hb_FNameExt( cFile:__enumKey() ) ) == ".hrb"
          /* We can use this function as this is a GPL licensed application */
-         cFile := hb_compileFromBuf( cFile, hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0" )
+         cFile := hb_compileFromBuf( cFile, hbmk_CoreHeaderFiles(), hbmk_hb_ProgName(), "-n2", "-w", "-es2", "-q0" )
       ENDIF
 
       IF ! Empty( cFile )
@@ -14839,7 +14868,7 @@ STATIC PROCEDURE __hbshell_Exec( cCommand )
    BEGIN SEQUENCE WITH {| oError | __hbshell_Err( oError, cCommand ) }
 
       /* We can use this function as this is a GPL licensed application */
-      cHRB := hb_compileFromBuf( cFunc, hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-q2", hb_ArrayToParams( aOPTPRG ) )
+      cHRB := hb_compileFromBuf( cFunc, hbmk_CoreHeaderFiles(), hbmk_hb_ProgName(), "-n2", "-q2", hb_ArrayToParams( aOPTPRG ) )
       IF Empty( cHRB )
          Eval( ErrorBlock(), I_( "Syntax error." ) )
       ELSE
@@ -15084,7 +15113,7 @@ STATIC FUNCTION __hbshell_TryHeader( cName )
 
    BEGIN SEQUENCE WITH __BreakBlock()
 
-      IF ! Empty( hb_compileFromBuf( "", hbmk_CoreHeaderFiles(), hb_ProgName(), "-q2", ;
+      IF ! Empty( hb_compileFromBuf( "", hbmk_CoreHeaderFiles(), hbmk_hb_ProgName(), "-q2", ;
                                      "-i" + hbsh[ _HBSH_hbmk ][ _HBMK_cHB_INSTALL_INC ], ;
                                      "-u+" + cName ) )
          lRetVal := .T.
@@ -15188,7 +15217,7 @@ STATIC FUNCTION __hbshell_gtDefault()
    RETURN "GTDOS"
 #elif defined( __PLATFORM__OS2 )
    RETURN "GTOS2"
-#elif defined( __PLATFORM__UNIX ) .AND. ! defined( __PLATFORM__VXWORKS ) .AND. ! defined( __PLATFORM__SYMBIAN )
+#elif defined( __PLATFORM__UNIX ) .AND. ! defined( __PLATFORM__WASM ) .AND. ! defined( __PLATFORM__VXWORKS ) .AND. ! defined( __PLATFORM__SYMBIAN )
    RETURN "GTTRM"
 #else
    RETURN _HBMK_GT_DEF_
@@ -15847,7 +15876,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       "", ;
       "  " + hb_StrFormat( I_( "%1$s [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>" ), _SELF_NAME_ ) }
 
-   LOCAL cShell := iif( hb_FNameName( hb_ProgName() ) == _SELF_NAME_, "hbrun", hb_FNameName( hb_ProgName() ) )
+   LOCAL cShell := iif( hb_FNameName( hbmk_hb_ProgName() ) == _SELF_NAME_, "hbrun", hb_FNameName( hbmk_hb_ProgName() ) )
 
    LOCAL aHdr_Syntax_Shell := { ;
       I_( "Syntax:" ), ;
@@ -16934,6 +16963,13 @@ STATIC FUNCTION _hbmk_TargetName( hbmk )
    ENDIF
 
    RETURN cName
+
+STATIC FUNCTION hbmk_hb_ProgName()
+#if defined( HBMK_PROGNAME )
+   RETURN _HBMK_STRINGIFY( HBMK_PROGNAME )
+#else
+   RETURN hb_ProgName()
+#endif
 
 STATIC FUNCTION LicenseString()
 #pragma __cstream | RETURN %s

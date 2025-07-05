@@ -354,7 +354,7 @@
 #endif
 
 #ifndef HB_OS_LINUX
-   #if defined( linux ) || defined( __linux ) || defined( __linux__ ) || defined( __gnu_linux__ )
+   #if defined( linux ) || defined( __linux ) || defined( __linux__ ) || defined( __gnu_linux__ ) || defined( __EMSCRIPTEN__ )
       #define HB_OS_LINUX
    #endif
 #endif

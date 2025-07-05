@@ -49,7 +49,10 @@
 
 /* XXX: Check and possibly extend this to other Unix-like platforms */
 #if ( defined( HB_OS_BSD ) && ! defined( HB_OS_DARWIN ) ) || \
-   ( defined( HB_OS_LINUX ) && ! defined ( HB_OS_ANDROID ) && ! defined ( __WATCOMC__ ) )
+    ( defined( HB_OS_LINUX ) && \
+      ! defined( HB_OS_ANDROID ) && \
+      ! defined( __WATCOMC__ ) && \
+      ! defined( __EMSCRIPTEN__ ) )
    /*
     * sysctl() on Linux has fallen into depreciation. Not available in current
     * runtime C libraries, like musl and glibc >= 2.30.

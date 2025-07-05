@@ -57,6 +57,7 @@
 #  include <unistd.h>
 #  include <signal.h>
 #  if defined( SIGSTKSZ ) && \
+      ! defined( __EMSCRIPTEN__ ) && \
       ( ( defined( _BSD_SOURCE ) && _BSD_SOURCE ) || \
         ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
 #     define HB_SIGNAL_EXCEPTION_HANDLER

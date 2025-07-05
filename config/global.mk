@@ -1748,6 +1748,12 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       else
       ifeq ($(HB_PLATFORM),aix)
          HB_PRGFLAGS += -D__PLATFORM__AIX -D__PLATFORM__UNIX
+      else
+      ifeq ($(HB_PLATFORM),wasm)
+         HB_PRGFLAGS += -D__PLATFORM__LINUX -D__PLATFORM__UNIX -D__PLATFORM__WASM
+         # NOTE: __PLATFORM__LINUX here definitely is a hack, remove
+         # if WASM platform settles more (it's currently emscripten oriented)
+      endif
       endif
       endif
       endif
