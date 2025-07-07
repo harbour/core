@@ -50,11 +50,40 @@ LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
 LDFLAGS += $(LIBPATHS)
 
-AR := $(HB_CCPREFIX)llvm-ar
+HB_AR_PATH := $(call find_in_path,$(HB_CCPREFIX)llvm-ar)
+ifneq ($(HB_AR_PATH),)
+   AR := $(HB_CCPREFIX)llvm-ar
+else
+   AR := $(HB_CCPREFIX)ar
+endif
 
 AR_RULE = ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
 
-# TODO: add resource compiler detect chain in this stage: GNU windres, llvm-windres, llvm-rc
+# order of resource compiler detect chain in this stage (hbmk2 uses similar):
+# GNU windres, llvm-windres, llvm-rc
+# non-GNU shown resource file encoding issues
+
+RC_OUT := -o$(subst x,x, )
+RCFLAGS += -I. -I$(HB_HOST_INC) -O coff
+RES_EXT := .reso
+
+HB_RC_PATH := $(call find_in_path,$(HB_CCPREFIX)windres)
+ifneq ($(HB_RC_PATH),)
+   RC := $(HB_CCPREFIX)windres
+else
+   HB_RC_PATH := $(call find_in_path,$(HB_CCPREFIX)llvm-windres)
+   ifneq ($(HB_RC_PATH),)
+      RC := $(HB_CCPREFIX)llvm-windres
+   else
+      HB_RC_PATH := $(call find_in_path,$(HB_CCPREFIX)llvm-rc)
+      ifneq ($(HB_RC_PATH),)
+         RC := $(HB_CCPREFIX)llvm-rc
+         RCFLAGS := /I. /I$(HB_HOST_INC) /C 1252
+         RC_OUT := /FO$(subst x,x, )
+         RES_EXT := .res
+      endif
+   endif
+endif
 
 DY := $(CC)
 DFLAGS += -shared $(LIBPATHS)
