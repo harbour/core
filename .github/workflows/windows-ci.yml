@@ -59,16 +59,16 @@ jobs:
             mingw-w64-${{ env.msys_cpu }}-bzip2
             mingw-w64-${{ env.msys_cpu }}-cairo
             mingw-w64-${{ env.msys_cpu }}-curl
-            mingw-w64-${{ env.msys_cpu }}-libgd
             mingw-w64-${{ env.msys_cpu }}-ghostscript
             mingw-w64-${{ env.msys_cpu }}-openssl
-            mingw-w64-${{ env.msys_cpu }}-qt5-base
 
       - name: 'Add packages available on 64-bit hosts only'
         if: matrix.cpu != 'x86'
         shell: msys2 {0}
         run: |
           pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-postgresql
+          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-qt5-base
+          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-libgd
           pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-libmariadbclient
           pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-firebird
           pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-freeimage
