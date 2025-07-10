@@ -71,6 +71,7 @@
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.ch
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.txt
 -instfile=contrib_tests:${_HB_CONTRIB_SUBDIR}tests/*.*
+-instfile=contrib_tests_files:${_HB_CONTRIB_SUBDIR}tests/files/*.*
 
 # install (GNU Make)
 {_HB_BUILD_INSTALL&_HB_INSTALL_LIB&hblib}-instpath=${_HB_INSTALL_LIB}/
@@ -84,6 +85,7 @@
 {_HB_BUILD_INSTALL&_HB_INSTALL_LIB&!(HB_INSTALL_IMPLIB='no')}-instpath=depimplib:${_HB_INSTALL_LIB}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}
 {_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_tests:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}/tests/
+{_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_tests_files:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}/tests/files/
 {_HB_BUILD_INSTALL}-instforce
 
 # install (standalone)
