@@ -836,7 +836,7 @@ STATIC PROCEDURE HB_Logo()
    OutStd( ;
       "Harbour NETIO Server " + StrTran( Version(), "Harbour " ) + hb_eol() + ;
       "Copyright (c) 2009-" + ;
-         "2020" + ", " + ;
+         "2025" + ", " + ;
          "Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
       hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
       hb_eol() )

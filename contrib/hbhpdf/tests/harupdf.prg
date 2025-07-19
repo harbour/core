@@ -63,7 +63,6 @@ PROCEDURE Main( cFileToSave )
    RETURN
 
 //
-
 FUNCTION DesignHaruPDF( cFileToSave )
 
    LOCAL i, page, height, width, def_font, tw,  samp_text, font
@@ -103,6 +102,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
    */
 
    page := HPDF_AddPage( pdf )
+
    height := HPDF_Page_GetHeight( page )
    width  := HPDF_Page_GetWidth( page )
 
@@ -164,6 +164,11 @@ FUNCTION DesignHaruPDF( cFileToSave )
    IF HPDF_SaveToFile( pdf, cFileToSave ) != 0
       ? "0x" + hb_NumToHex( HPDF_GetError( pdf ), 4 ), hb_HPDF_GetErrorString( HPDF_GetError( pdf ) ), HPDF_GetErrorDetail( pdf )
    ENDIF
+
+#if 0
+   /* you should really count the pages while creating them */
+   ? "pdf page count:", lazy_pagecount( pdf )
+#endif
 
    HPDF_Free( pdf )
 
@@ -1416,3 +1421,18 @@ STATIC PROCEDURE show_description_1( page, x, y, text )
    HPDF_Page_EndText( page )
 
    RETURN
+
+#if 0
+STATIC FUNCTION lazy_pagecount( pdf )
+
+   LOCAL page_count := 0
+
+   DO WHILE hb_isPointer( HPDF_GetPageByIndex( pdf, page_count ) )
+      page_count++
+   ENDDO
+
+   /* getting page out of index bounds raises an error */
+   HPDF_ResetError( pdf )
+
+   RETURN page_count
+#endif

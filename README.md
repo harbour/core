@@ -1,4 +1,4 @@
-# Welcome to Harbour [![Build Status](https://travis-ci.org/harbour/core.png)](https://travis-ci.org/harbour/core)
+# Welcome to Harbour [![linux-ci](https://github.com/harbour/core/actions/workflows/linux-ci.yml/badge.svg)](https://github.com/harbour/core/actions/workflows/linux-ci.yml) [![windows-ci](https://github.com/harbour/core/actions/workflows/windows-ci.yml/badge.svg)](https://github.com/harbour/core/actions/workflows/windows-ci.yml) [![macos-ci](https://github.com/harbour/core/actions/workflows/macos-ci.yml/badge.svg)](https://github.com/harbour/core/actions/workflows/macos-ci.yml) [![vm1-ci](https://github.com/harbour/core/actions/workflows/vm1-ci.yml/badge.svg)](https://github.com/harbour/core/actions/workflows/vm1-ci.yml) [![vm2-ci](https://github.com/harbour/core/actions/workflows/vm2-ci.yml/badge.svg)](https://github.com/harbour/core/actions/workflows/vm2-ci.yml)
 
 Harbour is the free software implementation of a multi-platform,
 multi-threading, object-oriented, scriptable programming language,
@@ -834,7 +834,7 @@ sensitive.
 
    - `HB_CCPREFIX=[<prefix>]`
 
-     Used with gcc compiler family to specify
+     Used with gcc or clang compiler family to specify
      compiler/linker/archive tool name prefix.
 
    - `HB_CCSUFFIX=[<suffix>]`
@@ -1895,7 +1895,7 @@ Supported shells per host platforms:
         * Search for `w95ws2setup.exe`
             (required for Win95 support to run applications built with Harbour)
      * Windows UNICOWS .dll [win, free, closed-source]
-        * <https://go.microsoft.com/fwlink/?LinkId=14851>
+        * (via web.archive.org)[https://web.archive.org/web/20130305122340/http://download.microsoft.com/download/b/7/5/b75eace3-00e2-4aa0-9a6f-0b6882c71642/unicows.exe]
             (required for Win9x/ME support to run applications built with Harbour in UNICODE mode)
      * Windows UNICOWS runtime/import library [win, free, open-source]
         * <http://libunicows.sourceforge.net/>
@@ -1904,34 +1904,32 @@ Supported shells per host platforms:
 * Tools:
 
      * Git (1.7 or upper) [multiplatform, free, open-source]
-        * <http://git-scm.com/>
-        * <https://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git> (Windows binaries)
-     * GitHub Client [multiplatform, free]
-        * <http://windows.github.com/>
-        * <http://mac.github.com/>
+        * <https://git-scm.com/>
+     * GitHub Desktop Client [multiplatform, free]
+        * <https://github.com/apps/desktop>
      * GNU Bison (grammer paser generator) [multiplatform, free, open-source]
         * Windows binary:
-           * <http://gnuwin32.sourceforge.net/packages/bison.htm>
+           * <https://gnuwin32.sourceforge.net/packages/bison.htm>
                (not verified with current Harbour version)
      * Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
-        * <http://valgrind.org/>
+        * <https://valgrind.org/>
      * ack (programmer grep) [multiplatform, free, open-source]
-        * <http://beyondgrep.com/>
+        * <https://beyondgrep.com/>
      * Uncrustify (source formatter) [multiplatform, free, open-source]
-        * <http://uncrustify.sourceforge.net/>
+        * <https://uncrustify.sourceforge.net/>
      * UPX (executable compressor) [win, dos, *nix, free, open-source]
-        * <http://upx.sourceforge.net/>
+        * <https://upx.sourceforge.net/>
      * Nullsoft Installer [win, free, open-source]
-        * <http://nsis.sourceforge.net/>
+        * <https://nsis.sourceforge.net/>
      * 7-Zip [multiplatform, free, open-source]
-        * <http://www.7-zip.org/>
+        * <https://www.7-zip.org/>
      * Info-ZIP [multiplatform, free, open-source]
         * <http://www.info-zip.org/>
      * bzip2 [multiplatform, free, open-source]
          Windows binary:
-           * <http://www.bzip.org/downloads.html>
+           * <https://gnuwin32.sourceforge.net/packages/bzip2.htm>
      * Chocolatey (Windows package manager) [free, open-source]
-        * <http://chocolatey.org/>
+        * <https://chocolatey.org/>
      * GNU Make
 
         Windows binary + source:
@@ -1977,8 +1975,8 @@ Supported shells per host platforms:
 
      * [Netiquette Guidelines](http://tools.ietf.org/html/rfc1855)
      * [Setting up Git](https://help.github.com/articles/set-up-git)
-     * [Git book](http://git-scm.com/book) [free]
-     * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
+     * [Git book](https://git-scm.com/book/en/v2) [free]
+     * [Git crash course for Subversion users](https://web.archive.org/web/20220520212103/http://git.or.cz/course/svn.html)
      * Using gettext (.po files)
        * <http://help.transifex.com/features/formats.html#po-files>
        * <http://www.heiner-eichmann.de/autotools/using_gettext.html>
@@ -1998,7 +1996,7 @@ Supported shells per host platforms:
      * [ChangeLog](ChangeLog.txt?raw=true)
      * Comparing [Harbour to xHarbour](doc/xhb-diff.txt?raw=true)
      * CA-Cl*pper 5.3 [online documentation](http://x-hacker.org/ng/53guide/)
-     * Harbour [online documentation](http://harbour.github.io/doc/)
+     * Harbour [online documentation](https://harbour.github.io/doc/)
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
 
