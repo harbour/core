@@ -350,6 +350,7 @@ typedef struct
    HB_BOOL     fFullScreen;                  /* enable/disable fullscreen mode */
    HB_BOOL     fSelectCopy;                  /* allow marking texts by mouse left button with shift */
    HB_BOOL     fMsgAlert;                    /* redirect Alert() calls to QMessageBox */
+   HB_BOOL     fNoFrame;                     /* disable window title and frames */
    HB_BOOL     fRepaint;                     /* force internal image repainting */
 
    int         iResizeMode;                  /* Sets the resizing mode either to FONT or ROWS */

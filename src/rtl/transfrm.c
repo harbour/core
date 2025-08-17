@@ -947,7 +947,14 @@ HB_FUNC( TRANSFORM )
             }
          }
 
-         hb_retclen_buffer( szResult, ( nParamS && nResultPos > nParamS ) ? nParamS : nResultPos );
+         if( nParamS && nResultPos > nParamS )
+         {
+            if( HB_CDP_ISCHARIDX( cdp ) )
+               nParamS = hb_cdpTextPos( cdp, szResult, nResultPos, nParamS );
+            hb_retclen_buffer( szResult, nParamS );
+         }
+         else
+            hb_retclen_buffer( szResult, nResultPos );
       }
    }
    else if( pPic || HB_ISNIL( 2 ) )  /* Picture is an empty string or NIL */

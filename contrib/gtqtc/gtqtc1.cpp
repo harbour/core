@@ -2150,11 +2150,41 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_WINTITLE:
          pInfo->pResult = hb_gt_qtc_itemPutQString( pInfo->pResult, pQTC->wndTitle );
-         if( pInfo->pNewVal && HB_IS_STRING( pInfo->pNewVal ) )
+         if( pInfo->pNewVal )
          {
-            hb_gt_qtc_itemGetQString( pInfo->pNewVal, pQTC->wndTitle );
-            if( pQTC->qWnd )
-               pQTC->qWnd->setWindowTitle( *pQTC->wndTitle );
+            if( HB_IS_STRING( pInfo->pNewVal ) )
+            {
+               hb_gt_qtc_itemGetQString( pInfo->pNewVal, pQTC->wndTitle );
+               if( pQTC->qWnd )
+                  pQTC->qWnd->setWindowTitle( *pQTC->wndTitle );
+            }
+            else if( HB_IS_LOGICAL( pInfo->pNewVal ) )
+            {
+               pQTC->fNoFrame = hb_itemGetL( pInfo->pNewVal );
+               if( pQTC->qWnd )
+               {
+                  Qt::WindowFlags flags = Qt::CustomizeWindowHint;
+
+                  if( pQTC->fNoFrame )
+                  {
+                     hb_gt_qtc_setWindowFlags( pQTC, /*Qt::WindowTitleHint |
+                                                     Qt::WindowSystemMenuHint |*/
+                                                     Qt::WindowMinimizeButtonHint |
+                                                     Qt::WindowMaximizeButtonHint |
+                                                     Qt::WindowCloseButtonHint, HB_FALSE );
+                     flags |= Qt::FramelessWindowHint;
+                  }
+                  else
+                  {
+                     if( pQTC->iCloseMode < 2 )
+                        flags |= Qt::WindowCloseButtonHint;
+                     if( pQTC->fResizable )
+                        flags |= Qt::WindowMaximizeButtonHint;
+                     flags |= Qt::WindowMinimizeButtonHint;
+                  }
+                  hb_gt_qtc_setWindowFlags( pQTC, flags, pQTC->fNoFrame );
+               }
+            }
          }
          break;
 
@@ -3823,14 +3853,21 @@ QTCWindow::QTCWindow( PHB_GTQTC pQTC )
 {
    Qt::WindowFlags flags = ( windowFlags() & Qt::WindowType_Mask ) |
                            Qt::CustomizeWindowHint                 |
-                           Qt::WindowMinimizeButtonHint            |
-                           Qt::WindowSystemMenuHint                |
-                           Qt::WindowTitleHint                     |
                            Qt::Window;
-   if( pQTC->iCloseMode < 2 )
-      flags |= Qt::WindowCloseButtonHint;
-   if( pQTC->fResizable )
-      flags |= Qt::WindowMaximizeButtonHint;
+   if( pQTC->fNoFrame )
+   {
+      flags |= Qt::FramelessWindowHint;
+   }
+   else
+   {
+      if( pQTC->iCloseMode < 2 )
+         flags |= Qt::WindowCloseButtonHint;
+      if( pQTC->fResizable )
+         flags |= Qt::WindowMaximizeButtonHint;
+      flags |= Qt::WindowMinimizeButtonHint |
+               Qt::WindowSystemMenuHint |
+               Qt::WindowTitleHint;
+   }
 
    setWindowFlags( flags );
 
