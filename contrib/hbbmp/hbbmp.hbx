@@ -1,0 +1,46 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBBMP__
+#define __HBEXTERN_CH__HBBMP__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBBMP__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBBMP__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBBMP__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC hb_bmp_color
+DYNAMIC hb_bmp_color2rgb
+DYNAMIC hb_bmp_copy
+DYNAMIC hb_bmp_decode
+DYNAMIC hb_bmp_depth
+DYNAMIC hb_bmp_encode
+DYNAMIC HB_BMP_ERROR
+DYNAMIC hb_bmp_free
+DYNAMIC hb_bmp_getpixel
+DYNAMIC hb_bmp_height
+DYNAMIC hb_bmp_line
+DYNAMIC hb_bmp_load
+DYNAMIC hb_bmp_new
+DYNAMIC hb_bmp_putpixel
+DYNAMIC hb_bmp_rect
+DYNAMIC hb_bmp_save
+DYNAMIC hb_bmp_width
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBBMP__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

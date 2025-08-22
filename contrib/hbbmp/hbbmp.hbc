@@ -1,0 +1,5 @@
+description=BMP image library for Harbour
+
+incpaths=.
+
+libs=${hb_name}
