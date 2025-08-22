@@ -973,6 +973,7 @@ DYNAMIC hb_vfRead
 DYNAMIC hb_vfReadAt
 DYNAMIC hb_vfReadLen
 DYNAMIC hb_vfRename
+DYNAMIC hb_vfSave
 DYNAMIC hb_vfSeek
 DYNAMIC hb_vfSize
 DYNAMIC hb_vfTempFile

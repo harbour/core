@@ -134,3 +134,53 @@ HB_FUNC( HB_ZEBRA_DRAW )
          hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 }
+
+int hb_zebra_getsize( PHB_ZEBRA pZebra, int * piWidth, int * piHeight )
+{
+   HB_SIZE n, nLen;
+   int     iRow, iCol, iMaxCol = pZebra->iCol, iWidth, iHeight;
+
+   if( pZebra->iError != 0 )
+   {
+      *piWidth = *piHeight = 0;
+      return HB_ZEBRA_ERROR_INVALIDZEBRA;
+   }
+
+   nLen = hb_bitbuffer_len( pZebra->pBits );
+   iWidth = iHeight = 0;
+   iCol = iRow = 1;
+   for( n = 0; n < nLen; n++ )
+   {
+      if( hb_bitbuffer_get( pZebra->pBits, n ) )
+      {
+         if( iCol > iWidth )
+            iWidth = iCol;
+         if( iRow > iHeight )
+            iHeight = iRow;
+      }
+      if( iCol++ == iMaxCol )
+      {
+         ++iRow;
+         iCol = 1;
+      }
+   }
+
+   *piWidth = iWidth;
+   *piHeight = iHeight;
+
+   return 0;
+}
+
+HB_FUNC( HB_ZEBRA_GETSIZE )
+{
+   PHB_ZEBRA pZebra = hb_zebra_param( 1 );
+
+   if( pZebra )
+   {
+      int iWidth, iHeight;
+
+      hb_retni( hb_zebra_getsize( pZebra, &iWidth, &iHeight ) );
+      hb_storni( iWidth, 2 );
+      hb_storni( iHeight, 3 );
+   }
+}

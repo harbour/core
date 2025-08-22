@@ -1645,3 +1645,29 @@ HB_BYTE * hb_fileLoad( const char * pszFileName, HB_SIZE nMaxSize,
 
    return pFileBuf;
 }
+
+HB_BOOL hb_fileSave( const char * pszFileName, const void * buffer, HB_SIZE nSize )
+{
+   HB_BOOL fResult = HB_FALSE;
+   PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL,
+                                    FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                    FXO_TRUNCATE | FXO_SHARELOCK,
+                                    NULL, NULL );
+   if( pFile != NULL )
+   {
+      const HB_BYTE * pData = buffer;
+
+      while( nSize > 0 )
+      {
+         HB_SIZE nWritten = hb_fileWrite( pFile, pData, nSize, 0 );
+         if( nWritten == 0 || nWritten == ( HB_SIZE ) FS_ERROR )
+            break;
+         nSize -= nWritten;
+         pData += nWritten;
+      }
+      fResult = nSize == 0;
+
+      hb_fileClose( pFile );
+   }
+   return fResult;
+}

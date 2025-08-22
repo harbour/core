@@ -1166,6 +1166,7 @@ HB_FUN_HB_VFREAD
 HB_FUN_HB_VFREADAT
 HB_FUN_HB_VFREADLEN
 HB_FUN_HB_VFRENAME
+HB_FUN_HB_VFSAVE
 HB_FUN_HB_VFSEEK
 HB_FUN_HB_VFSIZE
 HB_FUN_HB_VFTEMPFILE
@@ -2517,6 +2518,7 @@ hb_fileRegisterFull
 hb_fileRegisterPart
 hb_fileRename
 hb_fileResult
+hb_fileSave
 hb_fileSeek
 hb_fileSize
 hb_fileSizeGet
