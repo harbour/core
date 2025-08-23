@@ -802,7 +802,7 @@ HB_FUNC( HB_BMP_PUTPIXEL )
    PHB_BMPINFO pBMP = hb_bmpParam( 1, HB_TRUE );
 
    if( pBMP )
-      hb_retl( hb_bmp_putpixel( pBMP, hb_parni( 2 ), hb_parni( hb_parni( 3 ) ), hb_parnint( 4 ) ) );
+      hb_retl( hb_bmp_putpixel( pBMP, hb_parni( 2 ), hb_parni( 3 ), hb_parnint( 4 ) ) );
 }
 
 HB_FUNC( HB_BMP_GETPIXEL )
@@ -810,7 +810,7 @@ HB_FUNC( HB_BMP_GETPIXEL )
    PHB_BMPINFO pBMP = hb_bmpParam( 1, HB_TRUE );
 
    if( pBMP )
-      hb_retnint( hb_bmp_getpixel( pBMP, hb_parni( 2 ), hb_parni( hb_parni( 3 ) ) ) );
+      hb_retnint( hb_bmp_getpixel( pBMP, hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
 HB_FUNC( HB_BMP_LINE )
