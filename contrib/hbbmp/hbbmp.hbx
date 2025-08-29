@@ -23,12 +23,14 @@
 
 DYNAMIC hb_bmp_color
 DYNAMIC hb_bmp_color2rgb
+DYNAMIC hb_bmp_colorreset
 DYNAMIC hb_bmp_copy
 DYNAMIC hb_bmp_decode
 DYNAMIC hb_bmp_depth
 DYNAMIC hb_bmp_encode
-DYNAMIC HB_BMP_ERROR
+DYNAMIC hb_bmp_error
 DYNAMIC hb_bmp_free
+DYNAMIC hb_bmp_frombitmap
 DYNAMIC hb_bmp_getpixel
 DYNAMIC hb_bmp_height
 DYNAMIC hb_bmp_line

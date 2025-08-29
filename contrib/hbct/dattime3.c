@@ -195,7 +195,7 @@ HB_FUNC( SETDATE )
          long lNewDate = lDate - hb_dateEncode( 1970, 1, 1 );
 #  if defined( __GLIBC__ ) && ( ( __GLIBC__ > 2 ) || ( ( __GLIBC__ == 2 ) && ( __GLIBC_MINOR__ >= 31 ) ) )
          /* stime() is deprecated in glibc 2.31+ */
-         struct timespec ts = { 0 };
+         struct timespec ts = { 0, 0 };
          clock_gettime( CLOCK_REALTIME, &ts );  /* keep tv_nsec */
          ts.tv_sec = lNewDate * 86400 + ( ts.tv_sec % 86400 );
          fResult   = clock_settime( CLOCK_REALTIME, &ts ) == 0;

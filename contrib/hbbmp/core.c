@@ -65,7 +65,11 @@ PHB_BMPINFO hb_bmp_new( int width, int height, int depth, int dpi, int * piError
       *piError = 0;
 
    if( fromtop )
+   {
       height = -height;
+      if( height == 1 )
+         fromtop = HB_FALSE;
+   }
    if( dpi == 0 )
       dpi = HB_BMP_DPI_DEFAULT;
 
@@ -114,6 +118,72 @@ PHB_BMPINFO hb_bmp_new( int width, int height, int depth, int dpi, int * piError
    return pBMP;
 }
 
+PHB_BMPINFO hb_bmp_frombitmap( const HB_BYTE * bitmap, int align,
+                               int width, int height, int depth, int dpi,
+                               const int * palette, int colors, int * piError )
+{
+   static const int mono_palette[ 2 ] = { 0x00FFFFFF, 0x00000000 };
+   PHB_BMPINFO pBMP = NULL;
+
+   if( bitmap && ( align >= 8 || align >= depth ) && ( align & ( align - 1 ) ) == 0 )
+      pBMP = hb_bmp_new( width, height, depth, dpi, piError );
+   else if ( piError )
+      *piError = HB_BMP_ERROR_CORRUPT;
+
+   if( pBMP )
+   {
+      if( bitmap )
+      {
+         int rowbits = ( ( pBMP->width * depth ) + align - 1 ) & ~( align - 1 );
+         int rowlen = ( rowbits + 0x07 ) >> 3, row, col;
+
+         if( align == 32 )
+            memcpy( pBMP->data, bitmap, pBMP->height * pBMP->rowlen );
+         else if( pBMP->height == 1 )
+            memcpy( pBMP->data, bitmap, HB_MIN( rowlen, pBMP->rowlen ) );
+         else if( align >= 8 )
+         {
+            for( row = 0; row < height; ++row )
+               memcpy( pBMP->data + pBMP->rowlen * row, bitmap + rowlen * row,
+                       HB_MIN( rowlen, pBMP->rowlen ) );
+         }
+         else
+         {
+            int maskb, shift;
+
+            shift = depth == 4 ? 1 : ( depth == 2 ? 2 : 3 );
+            maskb = ( 0x01 << shift ) - 1;
+            for( row = 0; row < height; ++row )
+            {
+               HB_BYTE * rowdst = pBMP->data + pBMP->rowlen * row;
+               int offset = row * rowbits;
+               for( col = 0; col < width; ++col, offset += depth )
+                  rowdst[ col >> shift ] |= ( ( bitmap[ offset >> shift ] >>
+                                  ( ( maskb - ( offset & maskb ) ) * depth ) ) &
+                                maskb ) << ( maskb - ( col & maskb ) ) * depth;
+            }
+         }
+      }
+      if( depth == 1 && ( palette == NULL || colors <= 0 ) )
+      {
+         palette = mono_palette;
+         colors = 2;
+      }
+      if( palette && colors > 0 && depth <= 8 )
+      {
+         int i;
+         if( colors > 256 )
+            colors = 256;
+         for( i = 0; i < colors; ++i )
+         {
+            int clr = palette[ i ];
+            hb_bmp_color( pBMP, ( clr >> 16 ) & 0xFF, ( clr >> 8 ) & 0xFF, clr & 0xFF, ( clr >> 24 ) & 0xFF );
+         }
+      }
+   }
+   return pBMP;
+}
+
 PHB_BMPINFO hb_bmp_copy( PHB_BMPINFO pBMP )
 {
    PHB_BMPINFO pBMPnew = ( PHB_BMPINFO ) hb_xgrab( sizeof( HB_BMPINFO ) );
@@ -157,6 +227,12 @@ int hb_bmp_height( PHB_BMPINFO pBMP )
 int hb_bmp_depth( PHB_BMPINFO pBMP )
 {
    return pBMP->depth;
+}
+
+void hb_bmp_colorreset( PHB_BMPINFO pBMP )
+{
+   memset( pBMP->palette, 0, sizeof( pBMP->palette ) );
+   pBMP->clrused = 0;
 }
 
 HB_MAXINT hb_bmp_color( PHB_BMPINFO pBMP, int r, int g, int b, int a )
@@ -460,7 +536,9 @@ PHB_BMPINFO hb_bmp_decode( const HB_BYTE * data, HB_SIZE size, int * piError )
    PHB_BMPINFO pBMP = NULL;
    int iError = 0;
 
-   if( ! data || size < HB_BMP_FILEHEADER_SIZE + HB_BMP_INFOHEADER_MINSIZE )
+   if( ! data || size > 0x10000000 )
+      iError = HB_BMP_ERROR_PARAM;
+   else if( size < HB_BMP_FILEHEADER_SIZE + HB_BMP_INFOHEADER_MINSIZE )
       iError = HB_BMP_ERROR_CORRUPT;
    else
    {
@@ -691,12 +769,55 @@ void hb_bmpReturn( PHB_BMPINFO pBMP )
 HB_FUNC( HB_BMP_NEW )
 {
    int iError = 0;
-
    PHB_BMPINFO pBMP = hb_bmp_new( hb_parni( 1 ), hb_parni( 2 ),
                                   hb_parnidef( 3, 1 ),
                                   hb_parnidef( 4, HB_BMP_DPI_DEFAULT ),
                                   &iError );
    hb_storni( iError, 5 );
+   hb_bmpReturn( pBMP );
+}
+
+/* hb_bmp_frombitmap( <cBitMap>, <nAlign>, <nWidth>, <nHeight>, [<nDepth>=1], [<nDPI>=72], [<aPalette>], [@<nError>] ) -> <pBMP> | NIL */
+HB_FUNC( HB_BMP_FROMBITMAP )
+{
+   const HB_BYTE * bitmap = ( const HB_BYTE * ) hb_parc( 1 );
+   int align = hb_parni( 2 ), width = hb_parni( 3 ), height = hb_parni( 4 ),
+       depth = hb_parni( 5 ), dpi = hb_parni( 6 ),
+       iError = 0;
+   PHB_ITEM pColors = hb_param( 7, HB_IT_ARRAY );
+   HB_BOOL fromtop = height < 0;
+   PHB_BMPINFO pBMP = NULL;
+
+   if( fromtop )
+   {
+      height = -height;
+      if( height == 1 )
+         fromtop = HB_FALSE;
+   }
+   if( ! bitmap || ( align & ( align - 1 ) ) != 0 ||
+       ( HB_SIZE ) ( ( ( width * depth + align - 1 ) & ~( align - 1 ) ) *
+                     height + 0x07 ) >> 3 > hb_parclen( 1 ) )
+      iError = HB_BMP_ERROR_PARAM;
+   else
+   {
+      pBMP = hb_bmp_frombitmap( bitmap, align, width, fromtop ? -height : height, depth, dpi,
+                                NULL, 0, &iError );
+      if( pBMP && pColors && depth <= 8 )
+      {
+         HB_SIZE nLen = hb_arrayLen( pColors ), nAt;
+
+         if( nLen > ( HB_SIZE ) ( 1 << depth ) )
+            nLen = ( HB_SIZE ) ( 1 << depth );
+         hb_bmp_colorreset( pBMP );
+         for( nAt = 1; nAt <= nLen; ++nAt )
+         {
+            int clr = hb_arrayGetNI( pColors, nAt );
+            hb_bmp_color( pBMP, ( clr >> 16 ) & 0xFF, ( clr >> 8 ) & 0xFF,
+                                clr * 0xFF, ( clr >> 24 ) & 0xFF );
+         }
+      }
+   }
+   hb_storni( iError, 8 );
    hb_bmpReturn( pBMP );
 }
 
@@ -772,6 +893,14 @@ HB_FUNC( HB_BMP_DEPTH )
 
    if( pBMP )
       hb_retni( hb_bmp_depth( pBMP ) );
+}
+
+HB_FUNC( HB_BMP_COLORRESET )
+{
+   PHB_BMPINFO pBMP = hb_bmpParam( 1, HB_TRUE );
+
+   if( pBMP )
+      hb_bmp_colorreset( pBMP );
 }
 
 HB_FUNC( HB_BMP_COLOR )

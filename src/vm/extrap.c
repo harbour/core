@@ -82,7 +82,7 @@
 #endif
 
 #if defined( HB_SIGNAL_EXCEPTION_HANDLER )
-   static HB_BYTE * s_signal_stack[ SIGSTKSZ ];
+   static void * s_signal_stack = NULL;
 #endif
 
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) && ! defined( __TINYC__ )
@@ -585,7 +585,9 @@ void hb_vmSetExceptionHandler( void )
 #elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
    {
       stack_t ss;
-      ss.ss_sp = ( void * ) s_signal_stack;
+      if( s_signal_stack == NULL )
+         s_signal_stack = hb_xgrab( SIGSTKSZ );
+      ss.ss_sp = s_signal_stack;
       ss.ss_size = SIGSTKSZ;
       ss.ss_flags = 0;
       /* set alternative stack for SIGSEGV executed on stack overflow */
@@ -620,10 +622,6 @@ void hb_vmUnsetExceptionHandler( void )
    }
 #elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
    {
-      /* we are using static buffer for alternative stack so we do not
-       * have to deallocate it to free the memory on application exit
-       */
-#if 0
       stack_t ss, oss;
       ss.ss_sp = NULL;
       ss.ss_size = SIGSTKSZ;
@@ -631,10 +629,12 @@ void hb_vmUnsetExceptionHandler( void )
       /* set alternative stack for SIGSEGV executed on stack overflow */
       if( sigaltstack( &ss, &oss ) == 0 )
       {
-         if( oss.ss_sp && SS_DISABLE )
-            free( oss.ss_sp );
+         if( s_signal_stack != NULL )
+         {
+            hb_xfree( s_signal_stack );
+            s_signal_stack = NULL;
+         }
       }
-#endif
    }
 #endif
 }

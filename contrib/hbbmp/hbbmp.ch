@@ -59,5 +59,6 @@
 #define HB_BMP_ERROR_UNSUPPORTED    8
 #define HB_BMP_ERROR_FILEREAD       9
 #define HB_BMP_ERROR_FILEWRITE      10
+#define HB_BMP_ERROR_PARAM          11
 
 #endif  /* _HBBMP_CH_ */

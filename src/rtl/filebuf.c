@@ -1655,7 +1655,7 @@ HB_BOOL hb_fileSave( const char * pszFileName, const void * buffer, HB_SIZE nSiz
                                     NULL, NULL );
    if( pFile != NULL )
    {
-      const HB_BYTE * pData = buffer;
+      const HB_BYTE * pData = ( const HB_BYTE * ) buffer;
 
       while( nSize > 0 )
       {

@@ -33,7 +33,8 @@ PROCEDURE Main()
 
 STATIC PROCEDURE DrawBarcode( nLineWidth, cType, cCode, nFlags )
 
-   LOCAL hZebra, pBMP, nLineHeight, nX, nY, nWidth, nHeight, nDepth, nColor, cFile
+   LOCAL hZebra, cFile, cBitMap, pBMP, ;
+         nLineHeight, nX, nY, nWidth, nHeight, nDepth, nAlign, nColor
 
    SWITCH cType
    CASE "EAN13"      ; hZebra := hb_zebra_create_ean13( cCode, nFlags )   ; EXIT
@@ -59,13 +60,13 @@ STATIC PROCEDURE DrawBarcode( nLineWidth, cType, cCode, nFlags )
             nLineHeight := nLineWidth * 36
          ENDIF
 
+         nAlign := 32
          nDepth := 1
+         nX := nY := 1
          /* get barcode size and add 1 pixel border over it */
          hb_zebra_getsize( hZebra, @nWidth, @nHeight )
-         nX := 1
-         nY := 1
-         nWidth :=  nWidth * nLineWidth + 2
-         nHeight := nHeight * nLineHeight + 2
+         nWidth :=  nWidth * nLineWidth + nY + nY
+         nHeight := nHeight * nLineHeight + nX + nX
 
          ? cType, "code width", hb_ntos( nWidth ), "height", hb_ntos( nHeight )
          IF Empty( pBMP := hb_bmp_new( nWidth, nHeight, nDepth ) )
@@ -86,6 +87,18 @@ STATIC PROCEDURE DrawBarcode( nLineWidth, cType, cCode, nFlags )
             /* destroy BMP file */
             pBMP := NIL
          ENDIF
+
+         /* and now much faster version */
+         cBitMap := hb_zebra_getbitmap( hZebra, nAlign, .T./*lBottomUp>*/, @nWidth, @nHeight, nLineWidth, nLineHeight, nX )
+         pBMP := hb_bmp_frombitmap( cBitMap, nAlign, nWidth, nHeight, nDepth, /*nDPI*/, /*aPalette*/, /*@nError*/ )
+         cFile := Lower( cType ) + "b.bmp"
+         ? "Creating BMP file:", cFile
+         IF ! hb_bmp_save( pBMP, cFile )
+            ? "Cannot save BMP to file:", cFile
+         ENDIF
+         /* destroy BMP file */
+         pBMP := NIL
+
       ELSE
          ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
       ENDIF

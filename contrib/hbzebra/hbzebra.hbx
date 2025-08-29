@@ -37,6 +37,7 @@ DYNAMIC hb_zebra_create_upca
 DYNAMIC hb_zebra_create_upce
 DYNAMIC hb_zebra_destroy
 DYNAMIC hb_zebra_draw
+DYNAMIC hb_zebra_getbitmap
 DYNAMIC hb_zebra_getcode
 DYNAMIC hb_zebra_geterror
 DYNAMIC hb_zebra_getsize

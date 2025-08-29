@@ -112,6 +112,7 @@ typedef struct _HB_BMPINFO
 } HB_BMPINFO, * PHB_BMPINFO;
 
 extern HB_EXPORT PHB_BMPINFO  hb_bmp_new( int width, int height, int depth, int dpi, int * piError );
+extern HB_EXPORT PHB_BMPINFO  hb_bmp_frombitmap( const HB_BYTE * bitmap, int align, int width, int height, int depth, int dpi, const int * palette, int colors, int * piError );
 extern HB_EXPORT PHB_BMPINFO  hb_bmp_copy( PHB_BMPINFO pBMP );
 extern HB_EXPORT PHB_BMPINFO  hb_bmp_decode( const HB_BYTE * data, HB_SIZE size, int * piError );
 extern HB_EXPORT HB_BYTE *    hb_bmp_encode( PHB_BMPINFO pBMP, HB_SIZE * pnSsize );
@@ -122,6 +123,7 @@ extern HB_EXPORT int          hb_bmp_error( PHB_BMPINFO pBMP );
 extern HB_EXPORT int          hb_bmp_width( PHB_BMPINFO pBMP );
 extern HB_EXPORT int          hb_bmp_height( PHB_BMPINFO pBMP );
 extern HB_EXPORT int          hb_bmp_depth( PHB_BMPINFO pBMP );
+extern HB_EXPORT void         hb_bmp_colorreset( PHB_BMPINFO pBMP );
 extern HB_EXPORT HB_MAXINT    hb_bmp_color( PHB_BMPINFO pBMP, int r, int g, int b, int a );
 extern HB_EXPORT HB_BOOL      hb_bmp_color2rgb( PHB_BMPINFO pBMP, HB_MAXINT clr, int * r, int * g, int * b, int * a );
 extern HB_EXPORT HB_BOOL      hb_bmp_putpixel( PHB_BMPINFO pBMP, int x, int y, HB_MAXINT clr );
