@@ -268,13 +268,13 @@ HB_MAXINT hb_bmp_color( PHB_BMPINFO pBMP, int r, int g, int b, int a )
       }
       if( iColor == -1 )
       {
-         if( pBMP->clrused < 1 << pBMP->depth )
+         if( pBMP->clrused < ( 1 << pBMP->depth ) )
          {
             iColor = pBMP->clrused++;
-            pBMP->palette[ iColor ].blue  = b;
-            pBMP->palette[ iColor ].green = g;
-            pBMP->palette[ iColor ].red   = r;
-            pBMP->palette[ iColor ].alpha = a;
+            pBMP->palette[ iColor ].blue  = ( HB_BYTE ) b;
+            pBMP->palette[ iColor ].green = ( HB_BYTE ) g;
+            pBMP->palette[ iColor ].red   = ( HB_BYTE ) r;
+            pBMP->palette[ iColor ].alpha = ( HB_BYTE ) a;
          }
          else
             pBMP->error = HB_BMP_ERROR_PALETTEFULL;
@@ -301,10 +301,10 @@ HB_BOOL hb_bmp_color2rgb( PHB_BMPINFO pBMP, HB_MAXINT clr, int * r, int * g, int
          case 8:
             if( clr < ( HB_MAXINT ) pBMP->clrused )
             {
-               * b = pBMP->palette[ clr ].blue;
-               * g = pBMP->palette[ clr ].green;
-               * r = pBMP->palette[ clr ].red;
-               * a = pBMP->palette[ clr ].alpha;
+               * b = ( int ) pBMP->palette[ clr ].blue;
+               * g = ( int ) pBMP->palette[ clr ].green;
+               * r = ( int ) pBMP->palette[ clr ].red;
+               * a = ( int ) pBMP->palette[ clr ].alpha;
                pBMP->error = 0;
             }
             break;
@@ -552,7 +552,7 @@ PHB_BMPINFO hb_bmp_decode( const HB_BYTE * data, HB_SIZE size, int * piError )
           */
          int bmpoffset = HB_GET_LE_INT32( header->bmpoffset ),
              headersize = HB_GET_LE_INT32( header->headersize ),
-             width = 0, height = 0, depth = 0, rowlen = 0, dpi = 0,
+             width = 0, height = 0, depth = 0, rowlen, dpi = 0,
              clrused = 0, palette_bytes = 0;
          HB_BOOL fromtop;
 
@@ -795,8 +795,8 @@ HB_FUNC( HB_BMP_FROMBITMAP )
          fromtop = HB_FALSE;
    }
    if( ! bitmap || ( align & ( align - 1 ) ) != 0 ||
-       ( HB_SIZE ) ( ( ( width * depth + align - 1 ) & ~( align - 1 ) ) *
-                     height + 0x07 ) >> 3 > hb_parclen( 1 ) )
+       ( HB_SIZE ) ( ( ( ( width * depth + align - 1 ) & ~( align - 1 ) ) *
+                       height + 0x07 ) >> 3 ) > hb_parclen( 1 ) )
       iError = HB_BMP_ERROR_PARAM;
    else
    {

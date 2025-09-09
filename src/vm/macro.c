@@ -745,8 +745,8 @@ char * hb_macroTextSymbol( const char * szString, HB_SIZE nLength, HB_BOOL * pfN
          {
             if( szResult == szString )
             {
-               szResult = ( char * ) hb_xgrab( nLength + 1 );
-               memcpy( szResult, szString, nLength );
+               szResult = ( char * ) memcpy( hb_xgrab( nLength + 1 ),
+                                             szString, nLength );
                szResult[ nLength ] = '\0';
             }
             szResult[ nLen ] = c - ( 'a' - 'A' );
