@@ -401,6 +401,19 @@ extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
  */
 #define HB_MAX_CHAR_LEN             8
 
+/* UCS maximal character value */
+#define HB_CDP_UNICODE_MAX          0x10FFFF
+
+/* UTF-16 surrogates for mapping U+010000 to U+10FFFF characters */
+#define HB_CDP_SURROGATE_FIRST      0xD800
+#define HB_CDP_SURROGATE_LAST       0xDFFF
+#define HB_CDP_SURROGATE_HIGH       0xD800
+#define HB_CDP_SURROGATE_LOW        0xDC00
+
+/* character codes to replace sequences with wrong encoding or translation */
+#define HB_CDP_ERROR_UNICHAR        0xFFFD      /* <?> */
+#define HB_CDP_ERROR_ASCCHAR        0x3F        /* ? */
+
 /* codepage uses simple binary sorting */
 #define HB_CDP_ISBINSORT( cdp )     ( ( ( cdp )->type & HB_CDP_TYPE_BINSORT ) != 0 )
 /* codepage uses custom string decoding */
@@ -473,7 +486,7 @@ extern HB_EXPORT HB_BOOL      hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, HB_UCHAR ch, 
 
 extern HB_EXPORT HB_SIZE      hb_cdpUTF8StringLength( const char * pSrc, HB_SIZE nLen );
 extern HB_EXPORT HB_SIZE      hb_cdpUTF8StringAt( const char * szNeedle, HB_SIZE nLenN, const char * szHaystack, HB_SIZE nLenH, HB_SIZE nStart, HB_SIZE nEnd, HB_BOOL fReverse );
-extern HB_EXPORT HB_WCHAR     hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos );
+extern HB_EXPORT HB_WCHAR32   hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos );
 extern HB_EXPORT char *       hb_cdpUTF8StringSubstr( const char * pSrc, HB_SIZE nLen, HB_SIZE nFrom, HB_SIZE nCount, HB_SIZE * pnDest );
 
 extern HB_EXPORT HB_SIZE      hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, const char * pSrc, HB_SIZE nSrc, HB_SIZE nMax );
@@ -491,10 +504,14 @@ extern HB_EXPORT HB_WCHAR *   hb_cdpnStrDupU16( PHB_CODEPAGE cdp, int iEndian, c
 
 extern HB_EXPORT HB_WCHAR     hb_cdpGetU16Ctrl( HB_WCHAR wc );
 
-extern HB_EXPORT int          hb_cdpUTF8CharSize( HB_WCHAR wc );
+extern HB_EXPORT int          hb_cdpUTF8CharSize( HB_WCHAR32 wc );
+extern HB_EXPORT int          hb_cdpU32CharToUTF8( char * szUTF8, HB_WCHAR32 wc );
 extern HB_EXPORT int          hb_cdpU16CharToUTF8( char * szUTF8, HB_WCHAR wc );
 extern HB_EXPORT HB_BOOL      hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n, HB_WCHAR * pwc );
-
+extern HB_EXPORT HB_BOOL      hb_cdpUTF8GetU32( const char * pSrc, HB_SIZE nLen, HB_SIZE * pnIndex, HB_WCHAR32 * pWC );
+extern HB_EXPORT HB_BOOL      hb_cdpUTF8GetUCS( const char * pSrc, HB_SIZE nLen, HB_SIZE * pnIndex, HB_WCHAR32 * pWC );
+extern HB_EXPORT HB_BOOL      hb_cdpUTF8GetU16( const char * pSrc, HB_SIZE nLen, HB_SIZE * pnIndex, HB_WCHAR16 * pWC );
+extern HB_EXPORT HB_BOOL      hb_cdpUTF8Validate( const char * pSrc, HB_SIZE nLen );
 
 extern HB_EXPORT PHB_ITEM     hb_itemDeserializeCP( const char ** pBufferPtr, HB_SIZE * pnSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
 extern HB_EXPORT char *       hb_itemSerializeCP( PHB_ITEM pItem, int iFlags, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, HB_SIZE * pnSize );

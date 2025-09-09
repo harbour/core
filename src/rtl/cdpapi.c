@@ -355,7 +355,7 @@ static HB_BOOL hb_cdpStd_put( PHB_CODEPAGE cdp,
           cdp->uniTable->uniTrans[ wc ] )
          pDst[ ( *pnIndex )++ ] = cdp->uniTable->uniTrans[ wc ];
       else
-         pDst[ ( *pnIndex )++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
+         pDst[ ( *pnIndex )++ ] = wc >= 0x100 ? HB_CDP_ERROR_ASCCHAR : ( HB_UCHAR ) wc;
 
       return HB_TRUE;
    }
@@ -519,27 +519,14 @@ static HB_BOOL hb_cdpUTF8_get( PHB_CODEPAGE cdp,
                                const char * pSrc, HB_SIZE nLen,
                                HB_SIZE * pnIndex, HB_WCHAR * wc )
 {
-   HB_SIZE nIndex = *pnIndex;
-   int n = 0;
-
    HB_SYMBOL_UNUSED( cdp );
 
-   *wc = 0;
-   while( nIndex < nLen )
+   if( *pnIndex < nLen )
    {
-      if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nIndex ], &n, wc ) )
-         ++nIndex;
-      if( n == 0 )
-      {
-         *pnIndex = nIndex;
-         return HB_TRUE;
-      }
-   }
-   if( n > 0 )
-   {
-      *pnIndex = nIndex;
+      hb_cdpUTF8GetU16( pSrc, nLen, pnIndex, wc );
       return HB_TRUE;
    }
+   *wc = 0;
    return HB_FALSE;
 }
 
@@ -650,7 +637,7 @@ static HB_BOOL hb_cdpMulti_put( PHB_CODEPAGE cdp,
                return HB_TRUE;
             }
          }
-         pDst[ ( *pnIndex )++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
+         pDst[ ( *pnIndex )++ ] = wc >= 0x100 ? HB_CDP_ERROR_ASCCHAR : ( HB_UCHAR ) wc;
       }
       return HB_TRUE;
    }
@@ -1156,14 +1143,78 @@ int hb_cdpicmp( const char * szFirst, HB_SIZE nLenFirst,
 /*
  * UTF-8 conversions
  */
-int hb_cdpUTF8CharSize( HB_WCHAR wc )
+int hb_cdpUTF8CharSize( HB_WCHAR32 wc )
 {
+   if ( ( HB_I32 ) wc < 0 )
+      wc = HB_CDP_ERROR_UNICHAR;
+
    if( wc < 0x0080 )
       return 1;
    else if( wc < 0x0800 )
       return 2;
-   else                         /* if( wc <= 0xffff ) */
+   else if( wc < 0xFFFF )
       return 3;
+   else if( wc < 0x1FFFFF )
+      return 4;
+   else if( wc < 0x3FFFFFF )
+      return 5;
+   else                         /* if( wc <= 0x7FFFFFFF ) */
+      return 6;
+}
+
+int hb_cdpU32CharToUTF8( char * szUTF8, HB_WCHAR32 wc )
+{
+   int n;
+
+   if( ( HB_I32 ) wc < 0 )
+      wc = HB_CDP_ERROR_UNICHAR;
+
+   if( wc < 0x0080 )
+   {
+      szUTF8[ 0 ] = wc & 0xFF;
+      n = 1;
+   }
+   else if( wc < 0x0800 )
+   {
+      szUTF8[ 0 ] = 0xc0 | ( ( wc >> 6 ) & 0x1F );
+      szUTF8[ 1 ] = 0x80 | ( wc & 0x3F );
+      n = 2;
+   }
+   else if( wc < 0xFFFF )
+   {
+      szUTF8[ 0 ] = 0xE0 | ( ( wc >> 12 ) & 0x0F );
+      szUTF8[ 1 ] = 0x80 | ( ( wc >> 6 ) & 0x3F );
+      szUTF8[ 2 ] = 0x80 | ( wc & 0x3F );
+      n = 3;
+   }
+   else if( wc < 0x1FFFFF )
+   {
+      szUTF8[ 0 ] = 0xF0 | ( ( wc >> 18 ) & 0x07 );
+      szUTF8[ 1 ] = 0x80 | ( ( wc >> 12 ) & 0x3F );
+      szUTF8[ 2 ] = 0x80 | ( ( wc >> 6 ) & 0x3F );
+      szUTF8[ 3 ] = 0x80 | ( wc & 0x3F );
+      n = 4;
+   }
+   else if( wc < 0x3FFFFFF )
+   {
+      szUTF8[ 0 ] = 0xF8 | ( ( wc >> 24 ) & 0x03 );
+      szUTF8[ 1 ] = 0x80 | ( ( wc >> 18 ) & 0x3F );
+      szUTF8[ 2 ] = 0x80 | ( ( wc >> 12 ) & 0x3F );
+      szUTF8[ 3 ] = 0x80 | ( ( wc >> 6 ) & 0x3F );
+      szUTF8[ 4 ] = 0x80 | ( wc & 0x3F );
+      n = 5;
+   }
+   else                         /* if( wc <= 0x7FFFFFFF ) */
+   {
+      szUTF8[ 0 ] = 0xFC | ( ( wc >> 30 ) & 0x01 );
+      szUTF8[ 1 ] = 0x80 | ( ( wc >> 24 ) & 0x3F );
+      szUTF8[ 2 ] = 0x80 | ( ( wc >> 18 ) & 0x3F );
+      szUTF8[ 3 ] = 0x80 | ( ( wc >> 12 ) & 0x3F );
+      szUTF8[ 4 ] = 0x80 | ( ( wc >> 6 ) & 0x3F );
+      szUTF8[ 5 ] = 0x80 | ( wc & 0x3F );
+      n = 6;
+   }
+   return n;
 }
 
 int hb_cdpU16CharToUTF8( char * szUTF8, HB_WCHAR wc )
@@ -1240,27 +1291,153 @@ HB_BOOL hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n, HB_WCHAR * pwc )
          *pwc &= 0x01;
          *n = 5;
       }
+      else
+      {
+         *n = 0;
+         return HB_FALSE;
+      }
+   }
+   return HB_TRUE;
+}
+
+HB_BOOL hb_cdpUTF8GetU32( const char * pSrc, HB_SIZE nLen,
+                          HB_SIZE * pnIndex, HB_WCHAR32 * pWC )
+{
+   HB_SIZE nIndex = *pnIndex;
+   HB_WCHAR32 wc = 0;
+   int n = -1;
+
+   if( nIndex < nLen )
+   {
+      HB_WCHAR32 wcMin = 0;   /* forbid overlong encodings */
+      HB_UCHAR uc = ( HB_UCHAR ) pSrc[ nIndex++ ];
+
+      if( uc < 0x80 )
+      {
+         wc = uc;
+         n = 0;
+      }
+      else if( uc >= 0xc0 )
+      {
+         if( uc < 0xe0 )
+         {
+            wc = uc & 0x1f;
+            n = 1;
+            wcMin = 0x80;
+         }
+         else if( uc < 0xf0 )
+         {
+            wc = uc & 0x0f;
+            n = 2;
+            wcMin = 0x800;
+         }
+         else if( uc < 0xf8 )
+         {
+            wc = uc & 0x07;
+            n = 3;
+            wcMin = 0x10000;
+         }
+         else if( uc < 0xfc )
+         {
+            wc = uc & 0x03;
+            n = 4;
+            wcMin = 0x200000;
+         }
+         else if( uc < 0xfe )
+         {
+            wc = uc & 0x01;
+            n = 5;
+            wcMin = 0x4000000;
+         }
+         while( n > 0 && nIndex < nLen )
+         {
+            uc = ( HB_UCHAR ) pSrc[ nIndex ];
+            if( ( uc & 0xc0 ) != 0x80 )
+               break;
+            wc = ( wc << 6 ) | ( uc & 0x3f );
+            ++nIndex;
+            --n;
+         }
+      }
+
+      if( n != 0 || wc < wcMin )
+      {
+         wc = HB_CDP_ERROR_UNICHAR;
+         while( n-- > 0 && nIndex < nLen )
+         {
+            uc = ( HB_UCHAR ) pSrc[ nIndex ];
+            if( uc < 0x80 || ( uc >= 0xc2 && uc <= 0xf4 ) )
+               break;
+            ++nIndex;
+         }
+         n = -1;
+      }
+   }
+
+   *pnIndex = nIndex;
+   *pWC = wc;
+
+   return n == 0;
+}
+
+HB_BOOL hb_cdpUTF8GetUCS( const char * pSrc, HB_SIZE nLen,
+                          HB_SIZE * pnIndex, HB_WCHAR32 * pWC )
+{
+   HB_BOOL fResult;
+
+   fResult = hb_cdpUTF8GetU32( pSrc, nLen, pnIndex, pWC );
+   if( fResult && ( *pWC > HB_CDP_UNICODE_MAX ||
+         ( *pWC >= HB_CDP_SURROGATE_FIRST && *pWC <= HB_CDP_SURROGATE_LAST ) ) )
+   {
+      *pWC = HB_CDP_ERROR_UNICHAR;
+      fResult = HB_FALSE;
+   }
+   return fResult;
+}
+
+HB_BOOL hb_cdpUTF8GetU16( const char * pSrc, HB_SIZE nLen,
+                          HB_SIZE * pnIndex, HB_WCHAR16 * pWC )
+{
+   HB_WCHAR32 wc;
+   HB_BOOL fResult;
+
+   fResult = hb_cdpUTF8GetU32( pSrc, nLen, pnIndex, &wc );
+
+   if( fResult && wc > 0xFFFF )
+   {
+      wc = HB_CDP_ERROR_UNICHAR;
+      fResult = HB_FALSE;
+   }
+   *pWC = ( HB_WCHAR16 ) wc;
+
+   return fResult;
+}
+
+HB_BOOL hb_cdpUTF8Validate( const char * pSrc, HB_SIZE nLen )
+{
+   HB_SIZE nIndex = 0;
+
+   while( nIndex < nLen )
+   {
+      HB_WCHAR32 wc;
+      if( ! hb_cdpUTF8GetUCS( pSrc, nLen, &nIndex, &wc ) )
+         return HB_FALSE;
    }
    return HB_TRUE;
 }
 
 HB_SIZE hb_cdpUTF8StringLength( const char * pSrc, HB_SIZE nLen )
 {
-   HB_SIZE nPos, nDst;
-   HB_WCHAR wc;
-   int n = 0;
+   HB_SIZE nIndex = 0, nChars = 0;
+   HB_WCHAR32 wc;
 
-   for( nPos = nDst = 0; nPos < nLen; )
+   while( nIndex < nLen )
    {
-      if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nPos ], &n, &wc ) )
-         ++nPos;
-      if( n == 0 )
-         ++nDst;
+       hb_cdpUTF8GetU32( pSrc, nLen, &nIndex, &wc );
+       ++nChars;
    }
-   if( n > 0 )
-      ++nDst;
 
-   return nDst;
+   return nChars;
 }
 
 HB_SIZE hb_cdpUTF8StringAt( const char * szNeedle, HB_SIZE nLenN,
@@ -1274,31 +1451,16 @@ HB_SIZE hb_cdpUTF8StringAt( const char * szNeedle, HB_SIZE nLenN,
    HB_SIZE nRAt = 0;
    HB_SIZE nAt = 0;
 
-   HB_WCHAR wcN = 0;
-   HB_WCHAR wcH = 0;
-   int nN = 0;
-   int nH = 0;
+   HB_WCHAR32 wcN = 0;
+   HB_WCHAR32 wcH = 0;
 
    while( nPosH < nLenH && nPosN < nLenN && nPos < nEnd )
    {
-      do
-      {
-         if( ! hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szHaystack[ nPosH ], &nH, &wcH ) )
-            break;
-         ++nPosH;
-      }
-      while( nH && nPosH < nLenH );
-
+      hb_cdpUTF8GetU32( szHaystack, nLenH, &nPosH, &wcH );
       if( ++nPos < nStart )
          continue;
 
-      do
-      {
-         if( ! hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szNeedle[ nPosN ], &nN, &wcN ) )
-            break;
-         ++nPosN;
-      }
-      while( nN && nPosN < nLenN );
+      hb_cdpUTF8GetU32( szNeedle, nLenN, &nPosN, &wcN );
 
       if( wcH == wcN )
       {
@@ -1339,36 +1501,17 @@ HB_SIZE hb_cdpUTF8StringAt( const char * szNeedle, HB_SIZE nLenN,
    return nRAt;
 }
 
-HB_WCHAR hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos )
+HB_WCHAR32 hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos )
 {
-   if( nLen )
+   HB_SIZE nIndex = 0;
+
+   while( nPos && nIndex < nLen )
    {
-      HB_SIZE nPos2;
-      HB_WCHAR wc = 0;
-      int n = 0;
-
-      for( nPos2 = 0; nPos2 < nLen && nPos; )
-      {
-         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nPos2 ], &n, &wc ) )
-            ++nPos2;
-         if( n == 0 )
-            --nPos;
-      }
-
-      if( nPos2 < nLen )
-      {
-         n = 0;
-         do
-         {
-            if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nPos2 ], &n, &wc ) )
-               ++nPos2;
-            if( n == 0 )
-               return wc;
-         }
-         while( nPos2 < nLen );
-      }
+      HB_WCHAR wc;
+      hb_cdpUTF8GetU16( pSrc, nLen, &nIndex, &wc );
+      if( --nPos == 0 )
+         return wc;
    }
-
    return 0;
 }
 
@@ -1377,36 +1520,29 @@ char * hb_cdpUTF8StringSubstr( const char * pSrc, HB_SIZE nLen,
                                HB_SIZE nFrom, HB_SIZE nCount, HB_SIZE * pulDest )
 {
    HB_SIZE nDst = 0;
-   HB_WCHAR wc;
-   int n;
    char * pDst = NULL;
 
    if( nCount && nLen )
    {
-      HB_SIZE nPos;
-      n = 0;
-      for( nPos = 0; nPos < nLen && nFrom; )
+      HB_WCHAR32 wc;
+      HB_SIZE nPos = 0;
+
+      while( nPos < nLen && nFrom )
       {
-         if( hb_cdpUTF8ToU16NextChar( pSrc[ nPos ], &n, &wc ) )
-            ++nPos;
-         if( n == 0 )
-            --nFrom;
+         hb_cdpUTF8GetU32( pSrc, nLen, &nPos, &wc );
+         --nFrom;
       }
 
       if( nPos < nLen )
       {
-         HB_SIZE nCnt;
+         HB_SIZE nCnt = nCount;
+
          nFrom = nPos;
-         nCnt = nCount;
-         n = 0;
          do
          {
-            if( hb_cdpUTF8ToU16NextChar( pSrc[ nPos ], &n, &wc ) )
-               ++nPos;
-            if( n == 0 )
-               --nCnt;
+            hb_cdpUTF8GetU32( pSrc, nLen, &nPos, &wc );
          }
-         while( nPos < nLen && nCnt );
+         while( nPos < nLen && --nCnt );
 
          nDst = nPos - nFrom;
          pDst = ( char * ) hb_xgrab( nDst + 1 );
@@ -1620,9 +1756,8 @@ HB_SIZE hb_cdpStrToUTF8Disp( PHB_CODEPAGE cdp,
 HB_SIZE hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, const char * pSrc, HB_SIZE nSrc,
                             HB_SIZE nMax )
 {
-   HB_WCHAR wc = 0;
+   HB_WCHAR wc;
    HB_SIZE nPosS, nPosD;
-   int n = 0, i;
 
    if( HB_CDP_ISUTF8( cdp ) )
       return ( nMax && nSrc > nMax ) ? nMax : nSrc;
@@ -1630,31 +1765,22 @@ HB_SIZE hb_cdpUTF8AsStrLen( PHB_CODEPAGE cdp, const char * pSrc, HB_SIZE nSrc,
    {
       for( nPosS = nPosD = 0; nPosS < nSrc; )
       {
-         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nPosS ], &n, &wc ) )
-            ++nPosS;
-
-         if( n == 0 )
-         {
-            i = HB_CDPCHAR_LEN( cdp, wc );
-            if( nMax && nPosD + i > nMax )
-               break;
-            nPosD += i;
-         }
+         int i;
+         hb_cdpUTF8GetU16( pSrc, nSrc, &nPosS, &wc );
+         i = HB_CDPCHAR_LEN( cdp, wc );
+         if( nMax && nPosD + i > nMax )
+            break;
+         nPosD += i;
       }
    }
    else
    {
       for( nPosS = nPosD = 0; nPosS < nSrc; )
       {
-         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nPosS ], &n, &wc ) )
-            ++nPosS;
-
-         if( n == 0 )
-         {
-            ++nPosD;
-            if( nMax && nPosD >= nMax )
-               break;
-         }
+         hb_cdpUTF8GetU16( pSrc, nSrc, &nPosS, &wc );
+         ++nPosD;
+         if( nMax && nPosD >= nMax )
+            break;
       }
    }
 
@@ -1665,10 +1791,8 @@ HB_SIZE hb_cdpUTF8ToStr( PHB_CODEPAGE cdp,
                          const char * pSrc, HB_SIZE nSrc,
                          char * pDst, HB_SIZE nDst )
 {
-   HB_UCHAR * uniTrans;
-   HB_WCHAR wcMax, wc = 0;
+   HB_WCHAR wcMax, wc;
    HB_SIZE nPosS, nPosD;
-   int n = 0;
 
    if( HB_CDP_ISUTF8( cdp ) )
    {
@@ -1683,18 +1807,15 @@ HB_SIZE hb_cdpUTF8ToStr( PHB_CODEPAGE cdp,
    {
       for( nPosS = nPosD = 0; nPosS < nSrc && nPosD < nDst; )
       {
-         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nPosS ], &n, &wc ) )
-            ++nPosS;
-
-         if( n == 0 )
-         {
-            if( ! HB_CDPCHAR_PUT( cdp, pDst, nDst, &nPosD, wc ) )
-               break;
-         }
+         hb_cdpUTF8GetU16( pSrc, nSrc, &nPosS, &wc );
+         if( ! HB_CDPCHAR_PUT( cdp, pDst, nDst, &nPosD, wc ) )
+            break;
       }
    }
    else
    {
+      HB_UCHAR * uniTrans;
+
       if( cdp->uniTable->uniTrans == NULL )
          hb_cdpBuildTransTable( cdp->uniTable );
       uniTrans = cdp->uniTable->uniTrans;
@@ -1702,16 +1823,11 @@ HB_SIZE hb_cdpUTF8ToStr( PHB_CODEPAGE cdp,
 
       for( nPosS = nPosD = 0; nPosS < nSrc && nPosD < nDst; )
       {
-         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nPosS ], &n, &wc ) )
-            ++nPosS;
-
-         if( n == 0 )
-         {
-            if( wc <= wcMax && uniTrans[ wc ] )
-               pDst[ nPosD++ ] = uniTrans[ wc ];
-            else
-               pDst[ nPosD++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
-         }
+         hb_cdpUTF8GetU16( pSrc, nSrc, &nPosS, &wc );
+         if( wc <= wcMax && uniTrans[ wc ] )
+            pDst[ nPosD++ ] = uniTrans[ wc ];
+         else
+            pDst[ nPosD++ ] = wc >= 0x100 ? HB_CDP_ERROR_ASCCHAR : ( HB_UCHAR ) wc;
       }
    }
 
@@ -1795,12 +1911,12 @@ HB_UCHAR hb_cdpGetChar( PHB_CODEPAGE cdp, HB_WCHAR wc )
             char c;
 
             if( ! HB_CDPCHAR_PUT( cdp, &c, 1, &n, wc ) )
-               wc = '?';
+               wc = HB_CDP_ERROR_ASCCHAR;
             else
                wc = ( HB_UCHAR ) c;
          }
          else
-            wc = '?';
+            wc = HB_CDP_ERROR_ASCCHAR;
       }
       else
       {
@@ -1815,7 +1931,7 @@ HB_UCHAR hb_cdpGetChar( PHB_CODEPAGE cdp, HB_WCHAR wc )
          }
       }
    }
-   return wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
+   return wc >= 0x100 ? HB_CDP_ERROR_ASCCHAR : ( HB_UCHAR ) wc;
 }
 
 HB_UCHAR hb_cdpGetUC( PHB_CODEPAGE cdp, HB_WCHAR wc, HB_UCHAR ucDef )
@@ -1903,30 +2019,24 @@ HB_SIZE hb_cdpStrToU16( PHB_CODEPAGE cdp, int iEndian,
 
    if( HB_CDP_ISUTF8( cdp ) )
    {
-      HB_WCHAR wc = 0;
-      int n = 0;
+      HB_WCHAR wc;
 
       for( nPosS = nPosD = 0; nPosS < nSrc && nPosD < nDst; )
       {
-         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nPosS ], &n, &wc ) )
-            ++nPosS;
-
-         if( n == 0 )
-         {
+         hb_cdpUTF8GetU16( pSrc, nSrc, &nPosS, &wc );
 #if defined( HB_CDP_ENDIAN_SWAP )
-            if( iEndian == HB_CDP_ENDIAN_SWAP )
-               wc = HB_SWAP_UINT16( wc );
-            pDst[ nPosD++ ] = wc;
+         if( iEndian == HB_CDP_ENDIAN_SWAP )
+            wc = HB_SWAP_UINT16( wc );
+         pDst[ nPosD++ ] = wc;
 #else
-            if( iEndian == HB_CDP_ENDIAN_LITTLE )
-               HB_PUT_LE_UINT16( &pDst[ nPosD ], wc );
-            else if( iEndian == HB_CDP_ENDIAN_BIG )
-               HB_PUT_BE_UINT16( &pDst[ nPosD ], wc );
-            else
-               pDst[ nPosD ] = wc;
-            ++nPosD;
+         if( iEndian == HB_CDP_ENDIAN_LITTLE )
+            HB_PUT_LE_UINT16( &pDst[ nPosD ], wc );
+         else if( iEndian == HB_CDP_ENDIAN_BIG )
+            HB_PUT_BE_UINT16( &pDst[ nPosD ], wc );
+         else
+            pDst[ nPosD ] = wc;
+         ++nPosD;
 #endif
-         }
       }
    }
    else if( HB_CDP_ISCUSTOM( cdp ) )
@@ -2117,7 +2227,7 @@ HB_SIZE hb_cdpU16ToStr( PHB_CODEPAGE cdp, int iEndian,
          if( wc <= wcMax && uniTrans[ wc ] )
             pDst[ nPosD++ ] = uniTrans[ wc ];
          else
-            pDst[ nPosD++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
+            pDst[ nPosD++ ] = wc >= 0x100 ? HB_CDP_ERROR_ASCCHAR : ( HB_UCHAR ) wc;
       }
    }
 
@@ -2240,7 +2350,7 @@ int hb_cdpTranslateChar( int iChar, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
          {
             if( HB_CDPCHAR_PUT( cdpOut, &c, 1, &n, wc ) )
             {
-               if( c != '?' )
+               if( c != HB_CDP_ERROR_ASCCHAR )
                   iChar = ( HB_UCHAR ) c;
             }
          }
@@ -2288,7 +2398,7 @@ int hb_cdpTranslateDispChar( int iChar, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut 
             wc = s_uniCtrls[ iChar ];
          if( HB_CDPCHAR_PUT( cdpOut, &c, 1, &n, wc ) )
          {
-            if( c != '?' )
+            if( c != HB_CDP_ERROR_ASCCHAR )
                iChar = ( HB_UCHAR ) c;
          }
       }
@@ -2751,19 +2861,19 @@ static HB_UCHAR hb_cdpUtf8Char( const char ** pStrPtr, PHB_UNITABLE uniTable )
 {
    const char * pszString = *pStrPtr;
    HB_UCHAR uc = 0;
-   HB_WCHAR wc = 0;
-   int n = 0;
 
-   while( *pszString )
+   if( *pszString )
    {
-      if( ! hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) *pszString++, &n, &wc ) )
-         break;
-      if( n == 0 )
+      HB_SIZE nIndex = 0;
+      HB_WCHAR wc;
+
+      if( hb_cdpUTF8GetU16( pszString, hb_strnlen( pszString, 6 ), &nIndex, &wc ) )
       {
          if( wc < 127 )
             uc = ( HB_UCHAR ) wc;
          else
          {
+            int n;
             for( n = 0; n < 256; ++n )
             {
                if( wc == uniTable->uniCodes[ n ] )
@@ -2773,8 +2883,8 @@ static HB_UCHAR hb_cdpUtf8Char( const char ** pStrPtr, PHB_UNITABLE uniTable )
                }
             }
          }
-         break;
       }
+      pszString += nIndex;
    }
    if( uc == 0 )
    {

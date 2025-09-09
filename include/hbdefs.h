@@ -639,10 +639,18 @@ typedef HB_U32 HB_FATTR;
 #  endif
 #endif
 
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
    typedef wchar_t         HB_WCHAR;
+   typedef wchar_t         HB_WCHAR16;
+   typedef HB_I32          HB_WCHAR32;
+#elif defined( __WATCOMC__ )
+   typedef unsigned short  HB_WCHAR;
+   typedef unsigned short  HB_WCHAR16;
+   typedef HB_I32          HB_WCHAR32;
 #else
    typedef unsigned short  HB_WCHAR;
+   typedef unsigned short  HB_WCHAR16;
+   typedef wchar_t         HB_WCHAR32;
 #endif
 
 /* maximum length of double number in decimal representation:
