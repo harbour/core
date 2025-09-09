@@ -968,8 +968,8 @@ png_handle_IHDR(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_set_IHDR(png_ptr, info_ptr, width, height, bit_depth,
        color_type, interlace_type, compression_type, filter_type);
 
-   return handled_ok;
    PNG_UNUSED(length)
+   return handled_ok;
 }
 
 /* Read and check the palette */
@@ -1106,8 +1106,8 @@ png_handle_IEND(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
    png_crc_finish_critical(png_ptr, length, 1/*handle as ancillary*/);
 
-   return handled_ok;
    PNG_UNUSED(info_ptr)
+   return handled_ok;
 }
 
 #ifdef PNG_READ_gAMA_SUPPORTED
@@ -1142,8 +1142,8 @@ png_handle_gAMA(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
          png_ptr->chunk_gamma = (png_fixed_point)/*SAFE*/ugamma;
 #endif /*READ_GAMMA*/
 
-   return handled_ok;
    PNG_UNUSED(length)
+   return handled_ok;
 }
 #else
 #  define png_handle_gAMA NULL
@@ -1283,8 +1283,8 @@ png_handle_cHRM(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       }
 #  endif /* READ_RGB_TO_GRAY */
 
-   return handled_ok;
    PNG_UNUSED(length)
+   return handled_ok;
 }
 #else
 #  define png_handle_cHRM NULL
@@ -1328,8 +1328,8 @@ png_handle_sRGB(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
          png_ptr->chunk_gamma = PNG_GAMMA_sRGB_INVERSE;
 #endif /*READ_GAMMA*/
 
-   return handled_ok;
    PNG_UNUSED(length)
+   return handled_ok;
 }
 #else
 #  define png_handle_sRGB NULL
@@ -1926,8 +1926,8 @@ png_handle_cICP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       /* TODO: set png_struct::chunk_gamma when possible */
 #endif /*READ_GAMMA*/
 
-   return handled_ok;
    PNG_UNUSED(length)
+   return handled_ok;
 }
 #else
 #  define png_handle_cICP NULL
@@ -1949,8 +1949,8 @@ png_handle_cLLI(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    /* The error checking happens here, this puts it in just one place: */
    png_set_cLLI_fixed(png_ptr, info_ptr, png_get_uint_32(buf),
          png_get_uint_32(buf+4));
-   return handled_ok;
    PNG_UNUSED(length)
+   return handled_ok;
 }
 #else
 #  define png_handle_cLLI NULL
@@ -2003,8 +2003,8 @@ png_handle_mDCV(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       png_ptr->chromaticities = chromaticities;
 #  endif /* READ_RGB_TO_GRAY */
 
-   return handled_ok;
    PNG_UNUSED(length)
+   return handled_ok;
 }
 #else
 #  define png_handle_mDCV NULL
@@ -2117,8 +2117,8 @@ png_handle_pHYs(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    res_y = png_get_uint_32(buf + 4);
    unit_type = buf[8];
    png_set_pHYs(png_ptr, info_ptr, res_x, res_y, unit_type);
-   return handled_ok;
    PNG_UNUSED(length)
+   return handled_ok;
 }
 #else
 #  define png_handle_pHYs NULL
@@ -2143,8 +2143,8 @@ png_handle_oFFs(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    offset_y = png_get_int_32(buf + 4);
    unit_type = buf[8];
    png_set_oFFs(png_ptr, info_ptr, offset_x, offset_y, unit_type);
-   return handled_ok;
    PNG_UNUSED(length)
+   return handled_ok;
 }
 #else
 #  define png_handle_oFFs NULL
@@ -2374,8 +2374,8 @@ png_handle_tIME(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    mod_time.year = png_get_uint_16(buf);
 
    png_set_tIME(png_ptr, info_ptr, &mod_time);
-   return handled_ok;
    PNG_UNUSED(length)
+   return handled_ok;
 }
 #else
 #  define png_handle_tIME NULL
