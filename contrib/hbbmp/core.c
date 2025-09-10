@@ -271,10 +271,10 @@ HB_MAXINT hb_bmp_color( PHB_BMPINFO pBMP, int r, int g, int b, int a )
          if( pBMP->clrused < ( 1 << pBMP->depth ) )
          {
             iColor = pBMP->clrused++;
-            pBMP->palette[ iColor ].blue  = ( HB_BYTE ) b;
-            pBMP->palette[ iColor ].green = ( HB_BYTE ) g;
-            pBMP->palette[ iColor ].red   = ( HB_BYTE ) r;
-            pBMP->palette[ iColor ].alpha = ( HB_BYTE ) a;
+            pBMP->palette[ ( unsigned int ) iColor ].blue  = ( HB_BYTE ) b;
+            pBMP->palette[ ( unsigned int ) iColor ].green = ( HB_BYTE ) g;
+            pBMP->palette[ ( unsigned int ) iColor ].red   = ( HB_BYTE ) r;
+            pBMP->palette[ ( unsigned int ) iColor ].alpha = ( HB_BYTE ) a;
          }
          else
             pBMP->error = HB_BMP_ERROR_PALETTEFULL;
@@ -301,10 +301,10 @@ HB_BOOL hb_bmp_color2rgb( PHB_BMPINFO pBMP, HB_MAXINT clr, int * r, int * g, int
          case 8:
             if( clr < ( HB_MAXINT ) pBMP->clrused )
             {
-               * b = ( int ) pBMP->palette[ clr ].blue;
-               * g = ( int ) pBMP->palette[ clr ].green;
-               * r = ( int ) pBMP->palette[ clr ].red;
-               * a = ( int ) pBMP->palette[ clr ].alpha;
+               * b = pBMP->palette[ ( unsigned int ) clr ].blue;
+               * g = pBMP->palette[ ( unsigned int ) clr ].green;
+               * r = pBMP->palette[ ( unsigned int ) clr ].red;
+               * a = pBMP->palette[ ( unsigned int ) clr ].alpha;
                pBMP->error = 0;
             }
             break;
