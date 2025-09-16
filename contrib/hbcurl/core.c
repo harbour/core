@@ -1646,7 +1646,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_UPLOAD, HB_CURL_OPT_BOOL( 3 ) );
                break;
             case HB_CURLOPT_DOWNLOAD: /* Harbour extension */
-               res = curl_easy_setopt( hb_curl->curl, CURLOPT_UPLOAD, ! HB_CURL_OPT_BOOL( 3 ) );
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_UPLOAD, ( long ) ( HB_CURL_OPT_BOOL( 3 ) ? 0 : 1 ) );
                break;
 #if LIBCURL_VERSION_NUM >= 0x070A08 /* Not documented. GUESS. */
             case HB_CURLOPT_MAXFILESIZE:
