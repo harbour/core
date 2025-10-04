@@ -1843,6 +1843,17 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       hbmk[ _HBMK_cCCEXT ] := ".exe"
    #endif
 
+   /* Apply platform-specific library fixes */
+   IF hbmk[ _HBMK_cPLAT ] == "darwin"
+      /* On macOS, remove duplicate 'hbrdd' since ld warns about duplicate libraries and doesn't support lib grouping */
+      IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
+         aLIB_BASE_RDD  := { "hbrdd", "hbusrrdd", "rddntx", "rddcdx", "rddfpt", "hbhsx", "hbsix" }
+      ELSE
+         aLIB_BASE_RDD  := { "hbrdd", "hbuddall", "hbusrrdd", "rddntx", "rddcdx", "rddnsx", "rddfpt", "hbhsx", "hbsix" }
+      ENDIF
+      aLIB_BASE_RDD_MT  := aLIB_BASE_RDD
+   ENDIF
+
    /* Setup platform dependent data */
 
    cBin_CompPRG := "harbour" + l_cHBSUFFIX
@@ -4180,7 +4191,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ELSE
             AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB} {LF}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB} {LF}" )
-            l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+            IF hbmk[ _HBMK_cPLAT ] == "darwin"
+               /* On macOS, ld can handle circular dependencies without duplicates and warns about duplicate libraries */
+               l_aLIBHBBASE_2 := {}
+            ELSE
+               l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+            ENDIF
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "darwin"
             /* Leave space for later modifying .dylib paths using `install_name_tool`.
@@ -4549,7 +4565,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ELSE
             AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB} {LF}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB} {LF}" )
-            l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+            IF hbmk[ _HBMK_cPLAT ] == "darwin"
+               /* On macOS, ld warns about duplicate libraries, so we skip the duplicate base libs
+                  since macOS ld can handle circular dependencies without explicit grouping */
+               l_aLIBHBBASE_2 := {}
+            ELSE
+               l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+            ENDIF
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
             IF hbmk[ _HBMK_lCreateLib ]

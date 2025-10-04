@@ -53,6 +53,22 @@ ifeq ($(BUILD_SHARED),yes)
    HB_LIBS_TPL :=
 else
    # (have to use '=' operator here)
+   ifeq ($(HB_PLATFORM),darwin)
+   # On macOS, ld warns about duplicate libraries and can handle circular deps without duplicates
+   HB_LIBS_TPL = \
+      hbextern \
+      hbdebug \
+      $(_HB_VM) \
+      hbrtl \
+      hblang \
+      hbcpage \
+      $(HB_GT_LIBS) \
+      $(_HB_RDD) \
+      hbmacro \
+      hbcplr \
+      hbpp \
+      hbcommon
+   else
    HB_LIBS_TPL = \
       hbextern \
       hbdebug \
@@ -68,6 +84,7 @@ else
       hbcplr \
       hbpp \
       hbcommon
+   endif
 
    ifneq ($(HB_HAS_PCRE_LOCAL),)
       HB_LIBS_TPL += hbpcre
