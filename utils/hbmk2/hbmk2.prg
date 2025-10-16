@@ -2376,6 +2376,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                hbmk[ _HBMK_nCOMPVer ] := 1600
             CASE "11.0" $ cPath_CompC /* Visual Studio 2012 */
                hbmk[ _HBMK_nCOMPVer ] := 1700
+            CASE "12.0" $ cPath_CompC /* Visual Studio 2013 */
+               hbmk[ _HBMK_nCOMPVer ] := 1800
+            CASE "14.0" $ cPath_CompC /* Visual Studio 2015 */
+               hbmk[ _HBMK_nCOMPVer ] := 1900
+            CASE "14.1" $ cPath_CompC /* Visual Studio 2017 */
+               hbmk[ _HBMK_nCOMPVer ] := 1910
+            CASE "14.2" $ cPath_CompC /* Visual Studio 2019 */
+               hbmk[ _HBMK_nCOMPVer ] := 1920
+            CASE "14.3" $ cPath_CompC /* Visual Studio 2022 */
+               hbmk[ _HBMK_nCOMPVer ] := 1930
             OTHERWISE
                hbmk[ _HBMK_nCOMPVer ] := 1400
             ENDCASE
@@ -12147,7 +12157,8 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
                   given platform + compiler settings. We could only guess.
                   Let us assume the most probable CPU platform (as of 2009). */
          AAdd( aDf, "__LITTLE_ENDIAN__" )
-         IF hb_RightEq( hbmk[ _HBMK_cCPU ], "64" )
+         IF hb_RightEq( hbmk[ _HBMK_cCPU ], "64" ) .OR. ;
+            hbmk[ _HBMK_cCPU ] == "alpha"
             AAdd( aDf, "__ARCH64BIT__" )
          ELSE
             AAdd( aDf, "__ARCH32BIT__" )

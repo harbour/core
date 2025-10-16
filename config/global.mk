@@ -1775,8 +1775,18 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
          ifneq ($(filter $(HB_CPU),x86 arm),)
             HB_PRGFLAGS += -D__ARCH32BIT__
          else
-         ifneq ($(filter $(HB_CPU),x86_64 ia64),)
+         ifneq ($(filter $(HB_CPU),x86_64 ia64 sparc64 ppc64 arm64),)
+            # NOTE: MIPS64 is not yet distinctly recognized by the build system
             HB_PRGFLAGS += -D__ARCH64BIT__
+         else
+         ifeq ($(HB_CPU),alpha))
+            # Alpha began as 64-bit CPU, only WinNT releases were limited to 32-bit
+            ifeq ($(HB_PLATFORM),win)
+               HB_PRGFLAGS += -D__ARCH32BIT__
+            else
+               HB_PRGFLAGS += -D__ARCH64BIT__
+            endif
+         endif
          endif
          endif
       endif
