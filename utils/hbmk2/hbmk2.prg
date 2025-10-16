@@ -324,6 +324,7 @@ EXTERNAL hbmk_KEYW
 #define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR( c ) .OR. hb_asciiIsDigit( c ) )
 
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
+#define hb_RightEq( s, c )      ( Right( s, Len( c ) ) == c )
 
 /* Logic (hack) to automatically add some libs to their
    right place in the liblist. In case of 'unicows' lib,
@@ -11990,6 +11991,9 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
    LOCAL cMacro
    LOCAL nPos
 
+   /* NOTE: hbmk2 mangles platform definitions here when cross-compiling,
+      otherwise and typically these are defined by hbpp, see ppcore.c */
+
    IF ! hbmk[ _HBMK_cPLAT ] == hb_Version( HB_VERSION_BUILD_PLAT ) .OR. ;
       ! hbmk[ _HBMK_cCOMP ] == hb_Version( HB_VERSION_BUILD_COMP )
 
@@ -12132,7 +12136,8 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
             hbmk[ _HBMK_cCOMP ] == "msvcarm64" .OR. ;
             hbmk[ _HBMK_cCOMP ] == "pocc64" .OR. ;
             hbmk[ _HBMK_cCOMP ] == "msvcia64" .OR. ;
-            hbmk[ _HBMK_cCOMP ] == "iccia64"
+            hbmk[ _HBMK_cCOMP ] == "iccia64" .OR. ;
+            hb_RightEq( hbmk[ _HBMK_cCPU ], "64" )
             AAdd( aDf, "__ARCH64BIT__" )
          ELSE
             AAdd( aDf, "__ARCH32BIT__" )
@@ -12142,7 +12147,11 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
                   given platform + compiler settings. We could only guess.
                   Let us assume the most probable CPU platform (as of 2009). */
          AAdd( aDf, "__LITTLE_ENDIAN__" )
-         AAdd( aDf, "__ARCH32BIT__" )
+         IF hb_RightEq( hbmk[ _HBMK_cCPU ], "64" )
+            AAdd( aDf, "__ARCH64BIT__" )
+         ELSE
+            AAdd( aDf, "__ARCH32BIT__" )
+         ENDIF
       ENDCASE
 
       /* Delete macros present in both lists */
