@@ -61,6 +61,7 @@ jobs:
             mingw-w64-${{ env.msys_cpu }}-curl
             mingw-w64-${{ env.msys_cpu }}-ghostscript
             mingw-w64-${{ env.msys_cpu }}-openssl
+            openssl-devel
 
       - name: 'Add packages available on 64-bit hosts only'
         if: matrix.cpu != 'x86'
