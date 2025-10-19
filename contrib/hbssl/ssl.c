@@ -82,6 +82,7 @@
 #if ! defined( HB_OPENSSL_NO_APPLINK ) && \
     defined( HB_OS_WIN ) && \
     defined( HB_CPU_X86 ) && \
+    ! defined( HB_OPENSSL_STATIC ) && \
     OPENSSL_VERSION_NUMBER >= 0x00908000L
    /* Enable this to add support for various scenarios when
       OpenSSL is build with OPENSSL_USE_APPLINK (the default).
@@ -93,7 +94,7 @@
 /* NOTE: See: http://www.openssl.org/support/faq.html#PROG2
          Application must call SSL_init(), so that this module gets linked.
          [vszakats] */
-#if defined( HB_OS_WIN ) && ! defined( HB_OPENSSL_STATIC ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
+#if defined( HB_OPENSSL_HAS_APPLINK )
    /* Pull a stub that returns a table with some selected
       C RTL function pointers. When linking to OpenSSL shared
       libraries, the function OPENSSL_Applink() exported from

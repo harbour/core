@@ -31,6 +31,9 @@
 # Patent expires in 2010/2011
 -cflag=-DOPENSSL_NO_IDEA
 
+# MSYS2 lacks applink.c and __int64
+{MSYSTEM}-cflag=-DHB_OPENSSL_MSYS
+
 # to suppress Apple's deprecation warnings that apply to
 # the complete OpenSSL API, starting with OS X Lion 10.7
 -cflag={allgcc&darwin}-Wno-deprecated

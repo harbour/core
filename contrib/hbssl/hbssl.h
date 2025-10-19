@@ -62,6 +62,18 @@
    #endif
 #endif
 
+/* following can be defined if MSYS/MinGW64 toolchain complains about lacking
+    '__int64' type inside OpenSSL project headers, also applink.c is not
+     needed on MinGW C runtime - therefore applink.c is not distributed there */
+#if defined( HB_OPENSSL_MSYS )
+   #ifdef __MINGW64__
+      #include <basetsd.h>
+   #endif
+   #if ! defined( HB_OPENSSL_NO_APPLINK )
+      #define HB_OPENSSL_NO_APPLINK
+   #endif
+#endif
+
 #include <openssl/ssl.h>
 
 #include "hbssl.ch"
