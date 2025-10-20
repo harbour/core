@@ -145,6 +145,7 @@ jobs:
           ccache --set-config=max_size=32M
           ccache --set-config=compression=true
           ccache -p
+          export HB_WITH_OPENSSL="/usr/include"
           EOCCACHE
               ;;
           esac
