@@ -2321,6 +2321,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    ENDIF
 
    /* Detect compiler version (where applicable) */
+
    IF hbmk[ _HBMK_nCOMPVer ] == 0 .AND. ! Empty( cPath_CompC )
 
       DO CASE
@@ -2375,33 +2376,33 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             DO CASE
             CASE "VC98" $ cPath_CompC
                hbmk[ _HBMK_nCOMPVer ] := 1200
-            CASE "2003" $ cPath_CompC
+            CASE " 2003" + hb_ps() $ cPath_CompC
                hbmk[ _HBMK_nCOMPVer ] := 1300
-            CASE "8" + hb_ps() $ cPath_CompC /* Visual Studio 2005 */
+            CASE "Studio 8" + hb_ps() $ cPath_CompC /* Visual Studio 2005 */
                hbmk[ _HBMK_nCOMPVer ] := 1400
-            CASE "9.0" $ cPath_CompC /* Visual Studio 2008 or Windows SDK 7.0 */
+            CASE hb_ps() + "9.0" $ cPath_CompC /* Visual Studio 2008 or Windows SDK 7.0 */
                hbmk[ _HBMK_nCOMPVer ] := 1500
-            CASE "10.0" $ cPath_CompC /* Visual Studio 2010 or Windows SDK 7.1 */
+            CASE hb_ps() + "10.0" $ cPath_CompC /* Visual Studio 2010 or Windows SDK 7.1 */
                hbmk[ _HBMK_nCOMPVer ] := 1600
-            CASE "11.0" $ cPath_CompC /* Visual Studio 2012 */
+            CASE hb_ps() + "11.0" $ cPath_CompC /* Visual Studio 2012 */
                hbmk[ _HBMK_nCOMPVer ] := 1700
-            CASE "12.0" $ cPath_CompC /* Visual Studio 2013 */
+            CASE hb_ps() + "12.0" $ cPath_CompC /* Visual Studio 2013 */
                hbmk[ _HBMK_nCOMPVer ] := 1800
-            CASE "14.0" $ cPath_CompC /* Visual Studio 2015 */
+            CASE hb_ps() + "14.0" $ cPath_CompC /* Visual Studio 2015 */
                hbmk[ _HBMK_nCOMPVer ] := 1900
-            CASE "14.1" $ cPath_CompC /* Visual Studio 2017 */
+            CASE hb_ps() + "14.1" $ cPath_CompC /* Visual Studio 2017 */
                hbmk[ _HBMK_nCOMPVer ] := 1910
-            CASE "14.2" $ cPath_CompC /* Visual Studio 2019 */
+            CASE hb_ps() + "14.2" $ cPath_CompC /* Visual Studio 2019 */
                hbmk[ _HBMK_nCOMPVer ] := 1920
-            CASE "14.3" $ cPath_CompC /* Visual Studio 2022 */
+            CASE hb_ps() + "14.3" $ cPath_CompC /* Visual Studio 2022 */
                hbmk[ _HBMK_nCOMPVer ] := 1930
-            CASE "14.4" $ cPath_CompC /* Visual Studio 2022 */
+            CASE hb_ps() + "14.4" $ cPath_CompC /* Visual Studio 2022 */
                hbmk[ _HBMK_nCOMPVer ] := 1940
             OTHERWISE
                /* trying to discover future versions of VS */
                IF Empty( tmp := GetEnv( "VCTOOLSVERSION" ) )
                   IF ! Empty( tmp := GetEnv( "VSINSTALLDIR" ) )
-                     tmp := hb_MemoRead( tmp + "Auxiliary\Build\Microsoft.VCToolsVersion.default.txt" )
+                     tmp := hb_MemoRead( tmp + "VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt" )
                   ENDIF
                ENDIF
                tmp := Int( Val( Left( tmp, At( ".", tmp ) ) + StrTran( SubStr( tmp, At( ".", tmp ) ), "." ) ) * 100 )
