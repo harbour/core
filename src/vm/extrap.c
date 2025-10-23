@@ -181,6 +181,66 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          pCtx->IntGp , pCtx->IntV0 , pCtx->IntSp , pCtx->IntTeb,
          pCtx->IntNats );
    }
+#elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_ARM_64 )
+   {
+      char buf[ 32 ];
+      PCONTEXT pCtx = pExceptionInfo->ContextRecord;
+      const char * szCode;
+
+      /* two most common codes */
+      switch( pExceptionInfo->ExceptionRecord->ExceptionCode )
+      {
+         case EXCEPTION_ACCESS_VIOLATION:
+            szCode = " " "ACCESS_VIOLATION";
+            break;
+         case EXCEPTION_IN_PAGE_ERROR:
+            szCode = " " "IN_PAGE_ERROR";
+            break;
+         default:
+            szCode = "";
+      }
+
+      hb_snprintf( errmsg, errmsglen,
+         "\n\n"
+         "    Exception Code:%08X%s\n"
+         "    Exception Address:%016" PFLL "X\n"
+         "    X0 :%016" PFLL "X  X1 :%016" PFLL "X  X2 :%016" PFLL "X  X3 :%016" PFLL "X\n"
+         "    X4 :%016" PFLL "X  X5 :%016" PFLL "X  X6 :%016" PFLL "X  X7 :%016" PFLL "X\n"
+         "    X8 :%016" PFLL "X  X9 :%016" PFLL "X  X10:%016" PFLL "X  X11:%016" PFLL "X\n"
+         "    X12:%016" PFLL "X  X13:%016" PFLL "X  X14:%016" PFLL "X  X15:%016" PFLL "X\n"
+         "    X16:%016" PFLL "X  X17:%016" PFLL "X  X18:%016" PFLL "X  X19:%016" PFLL "X\n"
+         "    X20:%016" PFLL "X  X21:%016" PFLL "X  X22:%016" PFLL "X  X23:%016" PFLL "X\n"
+         "    X24:%016" PFLL "X  X25:%016" PFLL "X  X26:%016" PFLL "X  X27:%016" PFLL "X\n"
+         "    X28:%016" PFLL "X\n"
+         "    SP :%016" PFLL "X  LR :%016" PFLL "X  PC :%016" PFLL "X\n"
+         "    CPSR:%08X\n",
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode, szCode,
+         ( HB_PTRUINT ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         pCtx->X0 , pCtx->X1 , pCtx->X2 , pCtx->X3 ,
+         pCtx->X4 , pCtx->X5 , pCtx->X6 , pCtx->X7 ,
+         pCtx->X8 , pCtx->X9 , pCtx->X10, pCtx->X11,
+         pCtx->X12, pCtx->X13, pCtx->X14, pCtx->X15,
+         pCtx->X16, pCtx->X17, pCtx->X18, pCtx->X19,
+         pCtx->X20, pCtx->X21, pCtx->X22, pCtx->X23,
+         pCtx->X24, pCtx->X25, pCtx->X26, pCtx->X27,
+         pCtx->X28,
+         pCtx->Sp , pCtx->Lr , pCtx->Pc,
+         ( HB_U32 ) pCtx->Cpsr );
+
+      if( pExceptionInfo->ExceptionRecord->NumberParameters &&
+          pExceptionInfo->ExceptionRecord->NumberParameters < ( DWORD ) EXCEPTION_MAXIMUM_PARAMETERS )
+      {
+         DWORD arg;
+
+         hb_strncat( errmsg, "    Exception Parameters:", errmsglen );
+         for( arg = 0; arg < pExceptionInfo->ExceptionRecord->NumberParameters; ++arg )
+         {
+            hb_snprintf( buf, sizeof( buf ), " %016" PFLL "X", ( HB_U64 ) pExceptionInfo->ExceptionRecord->ExceptionInformation[ arg ] );
+            hb_strncat( errmsg, buf, errmsglen );
+         }
+         hb_strncat( errmsg, "\n", errmsglen );
+      }
+   }
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_ARM )
    {
       PCONTEXT pCtx = pExceptionInfo->ContextRecord;
