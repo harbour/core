@@ -9,7 +9,7 @@
  * NO COPYRIGHT - THIS IS 100% IN THE PUBLIC DOMAIN
  *
  * The original unmodified version is available at:
- *    http://www.nic.funet.fi/pub/crypt/hash/sha/sha1.c
+ *    https://www.nic.funet.fi/pub/crypt/hash/sha/sha1.c
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -55,23 +55,23 @@ typedef unsigned char sha1_byte;        /* single byte type */
 #define SHA1_DIGEST_LENGTH      20
 
 /* The SHA1 structure: */
-typedef struct _SHA_CTX {
+typedef struct {
     sha1_quadbyte   state[5];
     sha1_quadbyte   count[2];
     sha1_byte       buffer[SHA1_BLOCK_LENGTH];
-} SHA_CTX;
+} HB_SHA_CTX;
 
 #ifndef NOPROTO
-void hb_SHA1_Init(SHA_CTX *context);
-void hb_SHA1_Update(SHA_CTX *context, const void *data, unsigned int len);
-void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX* context);
+void hb_SHA1_Init(HB_SHA_CTX *context);
+void hb_SHA1_Update(HB_SHA_CTX *context, const void *data, HB_SIZE len);
+void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], HB_SHA_CTX* context);
 #else
 void hb_SHA1_Init();
 void hb_SHA1_Update();
 void hb_SHA1_Final();
 #endif
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 
