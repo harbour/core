@@ -1501,17 +1501,36 @@ HB_SIZE hb_cdpUTF8StringAt( const char * szNeedle, HB_SIZE nLenN,
    return nRAt;
 }
 
-HB_WCHAR32 hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos )
+HB_WCHAR hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos )
 {
-   HB_SIZE nIndex = 0;
-
-   while( nPos && nIndex < nLen )
+   if( nLen )
    {
-      HB_WCHAR wc;
-      hb_cdpUTF8GetU16( pSrc, nLen, &nIndex, &wc );
-      if( --nPos == 0 )
-         return wc;
+      HB_SIZE nPos2;
+      HB_WCHAR wc = 0;
+      int n = 0;
+
+      for( nPos2 = 0; nPos2 < nLen && nPos; )
+      {
+         if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nPos2 ], &n, &wc ) )
+            ++nPos2;
+         if( n == 0 )
+            --nPos;
+      }
+
+      if( nPos2 < nLen )
+      {
+         n = 0;
+         do
+         {
+            if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) pSrc[ nPos2 ], &n, &wc ) )
+               ++nPos2;
+            if( n == 0 )
+               return wc;
+         }
+         while( nPos2 < nLen );
+      }
    }
+
    return 0;
 }
 
