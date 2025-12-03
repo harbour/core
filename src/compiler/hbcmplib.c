@@ -233,6 +233,22 @@ HB_FUNC( HB_COMPILEFROMBUF )
 
    if( szSource )
    {
+      const char * szModuleName = NULL;
+      int iFirstOpt = 2;
+
+      /* Optional 2nd parameter: pseudo source file name for debug info */
+      if( hb_pcount() >= 2 && HB_ISCHAR( 2 ) )
+      {
+         const char * sz = hb_parc( 2 );
+
+         /* treat as filename only if it doesn't look like an option */
+         if( sz && sz[ 0 ] != '-' && sz[ 0 ] != '/' )
+         {
+            szModuleName = sz;
+            iFirstOpt = 3;
+         }
+      }
+
       int iResult, argc;
       const char ** argv;
       PHB_ITEM pIncItem;
@@ -241,8 +257,28 @@ HB_FUNC( HB_COMPILEFROMBUF )
       HB_BYTE * pBuffer;
       HB_SIZE nLen;
 
-      hb_compGenArgList( 2, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
-      iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, szSource, 0, pIncItem, pOpenFunc, pMsgFunc );
+      /* Build argv from remaining parameters (compiler switches, etc.) */
+      hb_compGenArgList( iFirstOpt, hb_pcount(), &argc, &argv,
+                         &pIncItem, &pOpenFunc, &pMsgFunc );
+
+      if( szModuleName )
+      {
+         /* Prepend the pseudo module name as argv[0] */
+         const char ** argv2 = ( const char ** )
+                               hb_xgrab( sizeof( char * ) * ( argc + 2 ) );
+         int i;
+
+         argv2[ 0 ] = szModuleName;
+         for( i = 0; i <= argc; ++i )       /* copy args + NULL terminator */
+            argv2[ i + 1 ] = argv[ i ];
+
+         hb_xfree( ( void * ) argv );
+         argv  = argv2;
+         argc += 1;
+      }
+
+      iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen,
+                                szSource, 0, pIncItem, pOpenFunc, pMsgFunc );
       hb_xfree( ( void * ) argv );
 
       if( iResult == EXIT_SUCCESS && pBuffer )
