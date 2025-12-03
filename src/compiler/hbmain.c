@@ -117,8 +117,15 @@ int hb_compMainExt( int argc, const char * const argv[],
 
    if( szSource )
    {
+      const char * szPrgName = "{SOURCE}";
+
+      /* For HB_CompileFromBuf we allow argv[0] to carry a virtual filename */
+      if( argc > 0 && argv[ 0 ] && ! HB_ISOPTSEP( argv[ 0 ][ 0 ] ) )
+         szPrgName = argv[ 0 ];
+
       iFileCount++;
-      iStatus = hb_compCompile( HB_COMP_PARAM, "{SOURCE}", szSource, iStartLine );
+      iStatus = hb_compCompile( HB_COMP_PARAM, szPrgName, szSource, iStartLine );
+
    }
    else
    {
