@@ -417,14 +417,6 @@ HB_FUNC( HB_MD5 )  /* Considered insecure. Use SHA256 or higher instead. */
       }
       else
          hb_retclen( dststr, HB_SIZEOFARRAY( dststr ) );
-      if( ! hb_parl( 2 ) )
-      {
-         char digest[ ( sizeof( dststr ) * 2 ) + 1 ];
-         hb_strtohex( dststr, sizeof( dststr ), digest );
-         hb_retclen( digest, HB_SIZEOFARRAY( digest ) - 1 );
-      }
-      else
-         hb_retclen( dststr, HB_SIZEOFARRAY( dststr ) );
    }
    else
       hb_retc_null();  /* return empty string on wrong call */
