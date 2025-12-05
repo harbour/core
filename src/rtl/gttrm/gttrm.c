@@ -3486,6 +3486,8 @@ static void hb_gt_trm_Exit( PHB_GT pGT )
       if( pTerm->fRestTTY )
          tcsetattr( pTerm->hFilenoStdin, TCSANOW, &pTerm->saved_TIO );
 #endif
+      if( pTerm->szTitle )
+         hb_xfree( pTerm->szTitle );
       if( pTerm->nLineBufSize > 0 )
          hb_xfree( pTerm->pLineBuf );
       if( pTerm->iOutBufSize > 0 )
