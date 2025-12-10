@@ -394,6 +394,8 @@ You can fine-tune the build with these options:
     --with pgsql       - build components dependent on pgsql (hbpgsql, sddpg)
     --with localzlib   - build local copy of zlib library
     --with localpcre   - build local copy of pcre library
+    --with localpng    - build local copy of png library
+    --with localbz2    - build local copy of bz2 library
     --without x11      - do not build components dependent on x11 (gtxwc)
     --without curses   - do not build components dependent on curses (gtcrs)
     --without slang    - do not build components dependent on slang (gtsln)
