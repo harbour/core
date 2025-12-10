@@ -54,11 +54,10 @@
 
 HB_FUNC( D2I_PUBKEY )
 {
-   const unsigned char * pszKeyDer = ( const unsigned char * ) hb_parc( 1 );
+   HB_SSL_CONST unsigned char * pszKeyDer = ( HB_SSL_CONST unsigned char * ) hb_parc( 1 );
 
    if( pszKeyDer )
    {
-      // EVP_PKEY *d2i_PUBKEY(EVP_PKEY **a, const unsigned char **pp, long length);
       EVP_PKEY * pKey = d2i_PUBKEY( NULL, &pszKeyDer, ( long ) hb_parclen( 1 ) );
       if( pKey )
          hb_EVP_PKEY_ret( pKey );
@@ -71,11 +70,10 @@ HB_FUNC( D2I_PUBKEY )
 
 HB_FUNC( D2I_RSAPUBLICKEY )
 {
-   const unsigned char * pszKeyDer = ( const unsigned char * ) hb_parc( 1 );
+   HB_SSL_CONST unsigned char * pszKeyDer = ( HB_SSL_CONST unsigned char * ) hb_parc( 1 );
 
    if( pszKeyDer )
    {
-      // RSA * rsa = d2i_RSAPublicKey(RSA **k, &p, pklen)
       RSA * pKey = d2i_RSAPublicKey( NULL, &pszKeyDer, ( long ) hb_parclen( 1 ) );
       if( pKey )
          hb_RSA_ret( pKey );
@@ -88,11 +86,10 @@ HB_FUNC( D2I_RSAPUBLICKEY )
 
 HB_FUNC( D2I_X509 )
 {
-   const unsigned char * pszCrtDer = ( const unsigned char * ) hb_parc( 1 );
+   HB_SSL_CONST unsigned char * pszCrtDer = ( HB_SSL_CONST unsigned char * ) hb_parc( 1 );
 
    if( pszCrtDer )
    {
-      // RSA * rsa = d2i_RSAPublicKey(RSA **k, &p, pklen)
       X509 * x509 = d2i_X509( NULL, &pszCrtDer, ( long ) hb_parclen( 1 ) );
       if( x509 )
          hb_X509_ret( x509 );
