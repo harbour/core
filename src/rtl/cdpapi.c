@@ -268,7 +268,7 @@ void hb_cdpBuildTransTable( PHB_UNITABLE uniTable )
    if( uniTable->uniTrans == NULL )
    {
       HB_UCHAR * uniTrans;
-      HB_WCHAR wcMax;
+      HB_WCHAR wcMax = 0;
       HB_BOOL fLatinFallback = HB_TRUE;
       int i;
 
