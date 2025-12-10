@@ -117,8 +117,19 @@ int hb_compMainExt( int argc, const char * const argv[],
 
    if( szSource )
    {
+      const char * pszFileName = "{SOURCE}";
+      int i;
+      /* Look for file name if any */
+      for( i = 1; i < argc && ! HB_COMP_PARAM->fExit; i++ )
+      {
+         if( ! HB_ISOPTSEP( argv[ i ][ 0 ] ) )
+         {
+            pszFileName = argv[ i ];
+            break;
+         }
+      }
       iFileCount++;
-      iStatus = hb_compCompile( HB_COMP_PARAM, "{SOURCE}", szSource, iStartLine );
+      iStatus = hb_compCompile( HB_COMP_PARAM, pszFileName, szSource, iStartLine );
    }
    else
    {

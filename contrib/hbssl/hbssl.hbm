@@ -54,6 +54,7 @@ ssl_hb.c
 ssl_inet.c
 ssl_sock.c
 bio.c
+d2i.c
 err.c
 evp.c
 evpciph.c

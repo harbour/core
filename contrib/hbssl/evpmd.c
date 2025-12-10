@@ -157,7 +157,7 @@ const EVP_MD * hb_EVP_MD_par( int iParam )
    return p;
 }
 
-static int hb_EVP_MD_ptr_to_id( const EVP_MD * p )
+int hb_EVP_MD_ptr_to_id( const EVP_MD * p )
 {
    int n;
 

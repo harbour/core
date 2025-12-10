@@ -236,6 +236,7 @@ extern void               hb_RSA_ret( RSA * rsa );
 
 extern HB_BOOL            hb_EVP_MD_is( int iParam );
 extern const EVP_MD *     hb_EVP_MD_par( int iParam );
+extern int                hb_EVP_MD_ptr_to_id( const EVP_MD * p );
 
 extern HB_BOOL            hb_EVP_CIPHER_is( int iParam );
 extern const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam );

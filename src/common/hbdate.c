@@ -538,10 +538,13 @@ HB_BOOL hb_timeStrGetUTC( const char * szTime,
                   {
                      iMSec += ( *szTime++ - '0' ) * 10;
                      if( HB_ISDIGIT( *szTime ) )
+                     {
+                        int iFrac = 3;
                         iMSec += ( *szTime++ - '0' );
+                        while( HB_ISDIGIT( *szTime ) && ++iFrac <= 9 )
+                           ++szTime;
+                     }
                   }
-                  if( HB_ISDIGIT( *szTime ) )
-                     ++szTime;
                }
             }
          }
