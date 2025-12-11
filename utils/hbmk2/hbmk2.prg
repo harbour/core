@@ -5181,16 +5181,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cBin_CompC := "bcc32.exe"
          ENDIF
          cBin_CompCPP := cBin_CompC
-         cOpt_CompC := "-c -q -CP437"
+         cOpt_CompC := "-c -q" + iif( hbmk[ _HBMK_cCOMP ] == "bcc64", "", " -CP437" )
          IF hbmk[ _HBMK_lOPTIM ]
-            IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-               cOpt_CompC += " -d -O2 -OS -Ov -Oc"
-            ELSE
-               cOpt_CompC += " -d -O2 -OS -Ov -Oc -Oi -6"
-            ENDIF
+            cOpt_CompC += " -d -O2" + iif( hbmk[ _HBMK_cCOMP ] == "bcc64", "", " -OS -Ov -Oc -Oi -6" )
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-            cLibBCC_CRTL := "cw64mt.lib"
+            cLibBCC_CRTL := "cw64mt.a"
          ELSE
             cLibBCC_CRTL := "cw32mt.lib"
          ENDIF
@@ -5203,7 +5199,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                AAdd( hbmk[ _HBMK_aOPTC ], "-tWM" )
             ELSE
                IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-                  cLibBCC_CRTL := "cw64.lib"
+                  cLibBCC_CRTL := "cw64.a"
                ELSE
                   cLibBCC_CRTL := "cw32.lib"
                ENDIF
@@ -5211,13 +5207,21 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ELSE
             AAdd( hbmk[ _HBMK_aOPTC ], "-tWM" )
          ENDIF
-         SWITCH hbmk[ _HBMK_nWARN ]
-         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )         ; EXIT
-         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q -w-sig" ) ; EXIT
-         // The following line differs from the line in config/win/bcc.mk because Make needs to build core, and hbmk2 needs to build contrib
-         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-sig -w-aus -w-ccc -w-csu -w-ovf -w-par -w-rch -w-spa -w-sus -w-pia" ) ; EXIT
-         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )           ; EXIT
-         ENDSWITCH
+         IF hbmk[ _HBMK_cCOMP ] == "bcc64"
+            SWITCH hbmk[ _HBMK_nWARN ]
+            CASE _WARN_MAX
+            CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" ) ; EXIT
+            CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )   ; EXIT
+            ENDSWITCH
+         ELSE
+            SWITCH hbmk[ _HBMK_nWARN ]
+            CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )        ; EXIT
+            CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q -w-sig" ) ; EXIT
+            // The following line differs from the line in config/win/bcc.mk because Make needs to build core, and hbmk2 needs to build contrib
+            CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-sig -w-aus -w-ccc -w-csu -w-ovf -w-par -w-rch -w-spa -w-sus -w-pia" ) ; EXIT
+            CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )          ; EXIT
+            ENDSWITCH
+         ENDIF
          cOpt_CompC += " {FC} {LC}"
          cBin_Res := "brcc32.exe"
          cOpt_Res := "{FR} {IR} -fo{OS}"
@@ -5229,15 +5233,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          cBin_Dyn := cBin_Link
          IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-            cOpt_Link := "-Gn -Tpe -L{DL} {FL} " + iif( hbmk[ _HBMK_lGUI ], "c0w64.obj", "c0x64.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64.lib, {IM}, {LS}{SCRIPT}"
-            cOpt_Dyn  := "-Gn -Tpd -L{DL} {FD} " +                          "c0d64.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64.lib, {IM}, {LS}{SCRIPT}"
+            cOpt_Link := "-Gn -Tpe -L{DL} {FL} " + iif( hbmk[ _HBMK_lGUI ], "c0w64.o", "c0x64.o" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64.a, {IM}, {LS}{SCRIPT}"
+            cOpt_Dyn  := "-Gn -Tpd -L{DL} {FD} " +                          "c0d64.o"              + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64.a, {IM}, {LS}{SCRIPT}"
          ELSE
             cOpt_Link := "-Gn -Tpe -L{DL} {FL} " + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
             cOpt_Dyn  := "-Gn -Tpd -L{DL} {FD} " +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "bcc"
-            /* TODO: Add support for bcc64/mkexp */
             bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_bcc( hbmk, "implib.exe -c {FI} {OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
+         ELSEIF hbmk[ _HBMK_cCOMP ] == "bcc64"
+            bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_bcc( hbmk, "mkexp.exe {FI} {OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
          ENDIF
          cLibPathPrefix := ""
          cLibPathSep := ";"
@@ -5269,7 +5274,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDIF
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-n" + FNameEscape( hbmk[ _HBMK_cWorkDir ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
+            IF hbmk[ _HBMK_cCOMP ] == "bcc64"
+               AAdd( hbmk[ _HBMK_aOPTC ], "-output-dir " + FNameEscape( hbmk[ _HBMK_cWorkDir ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTC ], "-n" + FNameEscape( hbmk[ _HBMK_cWorkDir ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
+            ENDIF
          ELSE
             IF lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ]
                IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
@@ -5415,7 +5424,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          SWITCH hbmk[ _HBMK_cCOMP ]
          CASE "msvc"     ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x86"  ) ; EXIT
          CASE "msvc64"   ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x64"  ) ; EXIT
-         CASE "msvcarm"  ; AAdd( hbmk[ _HBMK_aOPTI ], IIF( hbmk[ _HBMK_cPLAT ] == "wce", "-machine:xarm", "-machine:arm" ) ) ; EXIT
+         CASE "msvcarm"  ; AAdd( hbmk[ _HBMK_aOPTI ], iif( hbmk[ _HBMK_cPLAT ] == "wce", "-machine:xarm", "-machine:arm" ) ) ; EXIT
          CASE "msvcarm64"; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:arm64"  ) ; EXIT
          CASE "msvcia64" ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:ia64" ) ; EXIT
          CASE "icc"      ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x86"  ) ; EXIT
