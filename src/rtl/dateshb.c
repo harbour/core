@@ -586,6 +586,7 @@ HB_FUNC( HB_WEEK )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* hb_UTCOffset( [ <tLocalTime> ] ) -> <nSeconds> */
 HB_FUNC( HB_UTCOFFSET )
 {
    if( HB_ISDATETIME( 1 ) )
@@ -599,10 +600,25 @@ HB_FUNC( HB_UTCOFFSET )
       hb_retnl( hb_timeUTCOffset() );
 }
 
+/* hb_TSToUTC( <tLocalTime> ) -> <tUTCTime> */
 HB_FUNC( HB_TSTOUTC )
 {
    if( HB_ISTIMESTAMP( 1 ) )
       hb_rettd( hb_timeLocalToUTC( hb_partd( 1 ) ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* hb_UTCToTS( <tUTCTime> [, @<lUTCOffset> ) -> <tLocalTime> */
+HB_FUNC( HB_UTCTOTS )
+{
+   if( HB_ISTIMESTAMP( 1 ) )
+   {
+      int iUTCOffset = 0;
+
+      hb_rettd( hb_timeUTCToLocal( hb_partd( 1 ), &iUTCOffset ) );
+      hb_storni( iUTCOffset, 2 );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

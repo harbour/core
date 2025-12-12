@@ -1115,6 +1115,7 @@ HB_FUN_HB_USERNAME
 HB_FUN_HB_USTUFF
 HB_FUN_HB_USUBSTR
 HB_FUN_HB_UTCOFFSET
+HB_FUN_HB_UTCTOTS
 HB_FUN_HB_UTF8ASC
 HB_FUN_HB_UTF8AT
 HB_FUN_HB_UTF8CHR
@@ -3534,6 +3535,7 @@ hb_timeStrGet
 hb_timeStrGetUTC
 hb_timeStrRawGet
 hb_timeUTCOffset
+hb_timeUTCToLocal
 hb_timeUnformat
 hb_timerGet
 hb_timerInit

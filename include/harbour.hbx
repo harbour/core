@@ -922,6 +922,7 @@ DYNAMIC hb_UserName
 DYNAMIC hb_UStuff
 DYNAMIC hb_USubStr
 DYNAMIC hb_UTCOffset
+DYNAMIC hb_UTCToTS
 DYNAMIC hb_utf8Asc
 DYNAMIC hb_utf8At
 DYNAMIC hb_utf8Chr

@@ -495,7 +495,7 @@ char * hb_timeStr( char * szTime, long lMilliSec )
 
 HB_BOOL hb_timeStrGetUTC( const char * szTime,
                           int * piHour, int * piMinutes,
-                          int * piSeconds, int * piMSec, int *piUTCOffset )
+                          int * piSeconds, int * piMSec, int * piUTCOffset )
 {
    int iHour, iMinutes, iSeconds, iMSec, iUTCOffset, iBlocks;
    HB_BOOL fValid;
@@ -1178,6 +1178,86 @@ double hb_timeLocalToUTC( double dTimeStamp )
    return dTimeStamp - ( double )
           hb_timeStampUTCOffset( iYear, iMonth, iDay,
                                  iHour, iMinutes, iSeconds ) / HB_SECONDS_PER_DAY;
+}
+
+double hb_timeUTCToLocal( double dTimeStamp, int * piUTCOffset )
+{
+   double dLocal;
+
+#if defined( HB_OS_WIN )
+   {
+      typedef BOOL ( WINAPI * P_SYSTEMTIMETOTZSPECIFICLOCALTIME )( LPTIME_ZONE_INFORMATION, LPSYSTEMTIME, LPSYSTEMTIME );
+
+      static HB_BOOL s_fInit = HB_TRUE;
+      static P_SYSTEMTIMETOTZSPECIFICLOCALTIME s_pSystemTimeToTzSpecificLocalTime = NULL;
+
+      int iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec;
+
+      hb_timeStampUnpack( dTimeStamp,
+                          &iYear, &iMonth, &iDay,
+                          &iHour, &iMinutes, &iSeconds, &iMSec );
+      if( s_fInit )
+      {
+         HMODULE hModule = GetModuleHandle( TEXT( "kernel32" ) );
+         if( hModule )
+            s_pSystemTimeToTzSpecificLocalTime = ( P_SYSTEMTIMETOTZSPECIFICLOCALTIME )
+               HB_WINAPI_GETPROCADDRESS( hModule, "SystemTimeToTzSpecificLocalTime" );
+         s_fInit = HB_FALSE;
+      }
+
+      if( s_pSystemTimeToTzSpecificLocalTime )
+      {
+         SYSTEMTIME lt, st;
+
+         st.wYear         = ( WORD ) iYear;
+         st.wMonth        = ( WORD ) iMonth;
+         st.wDay          = ( WORD ) iDay;
+         st.wHour         = ( WORD ) iHour;
+         st.wMinute       = ( WORD ) iMinutes;
+         st.wSecond       = ( WORD ) iSeconds;
+         st.wMilliseconds = ( WORD ) iMSec;
+         st.wDayOfWeek    = 0;
+
+         if( s_pSystemTimeToTzSpecificLocalTime( NULL, &st, &lt ) )
+         {
+            dLocal = hb_timeStampPack( lt.wYear, lt.wMonth, lt.wDay,
+                                       lt.wHour, lt.wMinute, lt.wSecond,
+                                       lt.wMilliseconds );
+         }
+         else
+            dLocal = dTimeStamp + ( double )
+                     hb_timeStampUTCOffset( iYear, iMonth, iDay,
+                              iHour, iMinutes, iSeconds ) / HB_SECONDS_PER_DAY;
+      }
+      else
+         dLocal = dTimeStamp + ( double )
+                  hb_timeStampUTCOffset( iYear, iMonth, iDay,
+                              iHour, iMinutes, iSeconds ) / HB_SECONDS_PER_DAY;
+   }
+#else
+   {
+      long lJulian, lMilliSec;
+      struct tm lt;
+      time_t utc;
+
+      hb_timeStampUnpackDT( dTimeStamp, &lJulian, &lMilliSec );
+      utc = ( time_t ) ( ( lJulian - HB_SYS_DATE_BASE ) * HB_SECONDS_PER_DAY + lMilliSec / 1000 );
+#if defined( HB_HAS_LOCALTIME_R )
+      localtime_r( &utc, &lt );
+#else
+      lt = *localtime( &utc );
+#endif
+      lJulian = hb_dateEncode( lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday );
+      lMilliSec = hb_timeEncode( lt.tm_hour, lt.tm_min, lt.tm_sec, lMilliSec % 1000 );
+      dLocal = hb_timeStampPackDT( lJulian, lMilliSec );
+   }
+#endif
+
+   if( piUTCOffset )
+      *piUTCOffset = ( int ) ( ( dLocal - dTimeStamp ) * HB_SECONDS_PER_DAY +
+                               ( dLocal < dTimeStamp ? -0.5 : 0.5 ) );
+
+   return dLocal;
 }
 
 HB_MAXUINT hb_timerGet( void )
