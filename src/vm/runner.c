@@ -743,7 +743,15 @@ HB_FUNC( HB_HRBLOAD )
       PHRB_BODY pHrbBody;
 
       if( hb_hrbCheckSig( fileOrBody, nLen ) != 0 )
-         pHrbBody = hb_hrbLoad( fileOrBody, nLen, usMode, NULL );
+      {
+        const char * szFileName = NULL;
+        if( hb_pcount() > nParam  && HB_ISCHAR( nParam + 1 ) )
+        {
+            szFileName = hb_parc( nParam + 1 );
+            nParam++;
+        }
+         pHrbBody = hb_hrbLoad( fileOrBody, nLen, usMode, szFileName );
+      }
       else
          pHrbBody = hb_hrbLoadFromFile( fileOrBody, usMode );
 
