@@ -71,6 +71,11 @@
                                           with unresolved or cross function
                                           references */
 
+#define HB_HRB_ARG_PRGNAME       0x10  /* first <xparams> argument of
+                                          is "virtual" script.prg filename
+                                          hb_hrbLoad( [ <nOptions>, ]
+                                                      <cHrb>
+                                                      [, <xparams,...> ] ) */
 
 #define HB_HRB_FUNC_PUBLIC       0x1   /* locally defined public functions */
 #define HB_HRB_FUNC_STATIC       0x2   /* locally defined static functions */

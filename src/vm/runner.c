@@ -732,6 +732,10 @@ HB_FUNC( HB_HRBLOAD )
    if( HB_ISNUM( 1 ) )
    {
       usMode = ( HB_USHORT ) hb_parni( 1 );
+
+      if( usMode == HB_HRB_ARG_PRGNAME )
+         usMode += HB_HRB_BIND_DEFAULT;
+
       nParam++;
    }
 
@@ -744,12 +748,13 @@ HB_FUNC( HB_HRBLOAD )
 
       if( hb_hrbCheckSig( fileOrBody, nLen ) != 0 )
       {
-        const char * szFileName = NULL;
-        if( hb_pcount() > nParam  && HB_ISCHAR( nParam + 1 ) )
-        {
+         const char * szFileName = NULL;
+         if( ( usMode & HB_HRB_ARG_PRGNAME ) &&
+             hb_pcount() > nParam && HB_ISCHAR( nParam + 1 ) )
+         {
             szFileName = hb_parc( nParam + 1 );
             nParam++;
-        }
+         }
          pHrbBody = hb_hrbLoad( fileOrBody, nLen, usMode, szFileName );
       }
       else
