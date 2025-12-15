@@ -721,20 +721,38 @@ HB_FUNC( HB_HRBRUN )
       hb_errRT_BASE( EG_ARG, 6103, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_hrbLoad( [ <nOptions>, ] <cHrb> [, <xparams,...> ] ) */
+/* hb_hrbLoad( [ <nOptions> | <aOptions>, ] <cHrb> [, <xparams,...> ] ) */
 
 HB_FUNC( HB_HRBLOAD )
 {
    HB_USHORT usMode = HB_HRB_BIND_DEFAULT;
+   const char * szFileName = NULL;
    HB_USHORT nParam = 1;
    HB_SIZE nLen;
 
    if( HB_ISNUM( 1 ) )
    {
       usMode = ( HB_USHORT ) hb_parni( 1 );
+      nParam++;
+   }
+   else if( HB_ISARRAY( 1 ) )
+   {
+      PHB_ITEM pOpts = hb_param( 1, HB_IT_ARRAY );
+      PHB_ITEM pItem;
 
-      if( usMode == HB_HRB_ARG_PRGNAME )
-         usMode += HB_HRB_BIND_DEFAULT;
+      if( hb_arrayLen( pOpts ) >= 1 )
+      {
+         pItem = hb_arrayGetItemPtr( pOpts, 1 );
+         if( pItem && HB_IS_NUMERIC( pItem ) )
+            usMode = ( HB_USHORT ) hb_itemGetNI( pItem );
+      }
+
+      if( hb_arrayLen( pOpts ) >= 2 )
+      {
+         pItem = hb_arrayGetItemPtr( pOpts, 2 );
+         if( pItem && HB_IS_STRING( pItem ) )
+            szFileName = hb_itemGetCPtr( pItem );
+      }
 
       nParam++;
    }
@@ -747,16 +765,7 @@ HB_FUNC( HB_HRBLOAD )
       PHRB_BODY pHrbBody;
 
       if( hb_hrbCheckSig( fileOrBody, nLen ) != 0 )
-      {
-         const char * szFileName = NULL;
-         if( ( usMode & HB_HRB_ARG_PRGNAME ) &&
-             hb_pcount() > nParam && HB_ISCHAR( nParam + 1 ) )
-         {
-            szFileName = hb_parc( nParam + 1 );
-            nParam++;
-         }
          pHrbBody = hb_hrbLoad( fileOrBody, nLen, usMode, szFileName );
-      }
       else
          pHrbBody = hb_hrbLoadFromFile( fileOrBody, usMode );
 
