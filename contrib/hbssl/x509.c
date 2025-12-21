@@ -162,12 +162,15 @@ HB_FUNC( X509_GET_SERIALNUMBER )
       if( x509 )
       {
          ASN1_INTEGER * a = X509_get_serialNumber( x509 );
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
          int64_t r = 0;
-
          if( ASN1_INTEGER_get_int64( &r, a ) > 0 )
             hb_retnint( r );
          else
             hb_retni( -1 );
+#else
+         hb_retnint( ASN1_INTEGER_get( a ) );
+#endif
       }
    }
    else
