@@ -99,3 +99,33 @@ HB_FUNC( D2I_X509 )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+HB_FUNC( D2I_ECDSA_SIG_RS )
+{
+   HB_SSL_CONST unsigned char * pszSigDer = ( HB_SSL_CONST unsigned char * ) hb_parc( 1 );
+
+   if( pszSigDer )
+   {
+      #define EC_P256_LEN 32
+      unsigned char rawsig[ EC_P256_LEN * 2 ];
+      HB_SIZE len = 0;
+
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      ECDSA_SIG * sig = d2i_ECDSA_SIG( NULL, &pszSigDer, ( long ) hb_parclen( 1 ) );
+
+      if( sig )
+      {
+         const BIGNUM *r, *s;
+
+         ECDSA_SIG_get0(sig, &r, &s);
+         if( BN_bn2binpad( r, rawsig, EC_P256_LEN ) == EC_P256_LEN &&
+             BN_bn2binpad( s, rawsig + EC_P256_LEN, EC_P256_LEN ) == EC_P256_LEN )
+            len = EC_P256_LEN * 2;
+         ECDSA_SIG_free( sig );
+      }
+#endif
+      hb_retclen( ( const char * ) rawsig, len );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
