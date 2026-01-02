@@ -87,6 +87,7 @@ static HB_CDP_LEN_FUNC( UTF8_len )
 {
    HB_SYMBOL_UNUSED( cdp );
 
+   /* Return byte length (1-6 bytes) for UTF-8 encoding */
    return hb_cdpUTF8CharSize( wc );
 }
 

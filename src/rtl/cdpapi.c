@@ -3555,3 +3555,106 @@ const char ** hb_cdpList( void )
 
    return list;
 }
+
+/* Calculate Unicode character display width (East Asian Width)
+ * Returns: 1 for narrow characters, 2 for wide characters
+ */
+int hb_cdpUTF8CharWidth( HB_WCHAR wc )
+{
+   /* Narrow characters (width 1) */
+   if( wc < 0x1100 )
+      return 1;
+
+   /* Hangul Jamo (width 2) */
+   if( wc >= 0x1100 && wc <= 0x115F )
+      return 2;
+
+   /* Hangul Compatibility Jamo (width 2) */
+   if( wc >= 0x3130 && wc <= 0x318F )
+      return 2;
+
+   /* CJK Radicals Supplement (width 2) */
+   if( wc >= 0x2E80 && wc <= 0x2EFF )
+      return 2;
+
+   /* Kangxi Radicals (width 2) */
+   if( wc >= 0x2F00 && wc <= 0x2FDF )
+      return 2;
+
+   /* CJK Strokes (width 2) */
+   if( wc >= 0x31C0 && wc <= 0x31EF )
+      return 2;
+
+   /* CJK Symbols and Punctuation (width 2) */
+   if( wc >= 0x3000 && wc <= 0x303F )
+      return 2;
+
+   /* Hiragana (width 2) */
+   if( wc >= 0x3040 && wc <= 0x309F )
+      return 2;
+
+   /* Katakana (width 2) */
+   if( wc >= 0x30A0 && wc <= 0x30FF )
+      return 2;
+
+   /* Bopomofo (width 2) */
+   if( wc >= 0x3100 && wc <= 0x312F )
+      return 2;
+
+   /* Bopomofo Extended (width 2) */
+   if( wc >= 0x31A0 && wc <= 0x31BF )
+      return 2;
+
+   /* Enclosed CJK Letters and Months (width 2) */
+   if( wc >= 0x3200 && wc <= 0x32FF )
+      return 2;
+
+   /* CJK Compatibility (width 2) */
+   if( wc >= 0x3300 && wc <= 0x33FF )
+      return 2;
+
+   /* CJK Unified Ideographs Extension A (width 2) */
+   if( wc >= 0x3400 && wc <= 0x4DBF )
+      return 2;
+
+   /* CJK Unified Ideographs (width 2) */
+   if( wc >= 0x4E00 && wc <= 0x9FFF )
+      return 2;
+
+   /* Yi Syllables (width 2) */
+   if( wc >= 0xA000 && wc <= 0xA48F )
+      return 2;
+
+   /* Yi Radicals (width 2) */
+   if( wc >= 0xA490 && wc <= 0xA4CF )
+      return 2;
+
+   /* Hangul Syllables (width 2) */
+   if( wc >= 0xAC00 && wc <= 0xD7AF )
+      return 2;
+
+   /* CJK Compatibility Ideographs (width 2) */
+   if( wc >= 0xF900 && wc <= 0xFAFF )
+      return 2;
+
+   /* Halfwidth and Fullwidth Forms (width 1 for halfwidth, 2 for fullwidth) */
+   if( wc >= 0xFF00 && wc <= 0xFFEF )
+   {
+      /* Halfwidth characters (width 1) */
+      if( wc >= 0xFF61 && wc <= 0xFF9F )
+         return 1;
+      /* Fullwidth characters (width 2) */
+      return 2;
+   }
+
+   /* Miscellaneous Symbols (width 2) */
+   if( wc >= 0x2600 && wc <= 0x26FF )
+      return 2;
+
+   /* Dingbats (width 2) */
+   if( wc >= 0x2700 && wc <= 0x27BF )
+      return 2;
+
+   /* Default: narrow character */
+   return 1;
+}

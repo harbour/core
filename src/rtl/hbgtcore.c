@@ -856,33 +856,44 @@ static int hb_gt_def_PutText( PHB_GT pGT, int iRow, int iCol, int iColor, const 
    PHB_CODEPAGE cdp = HB_GTSELF_HOSTCP( pGT );
    HB_SIZE nIndex = 0;
    HB_WCHAR wc;
+   int iDispCol = iCol;  /* Actual display column position */
 
    while( HB_CDPCHAR_GET( cdp, szText, nLen, &nIndex, &wc ) )
    {
-      if( ! HB_GTSELF_PUTCHAR( pGT, iRow, iCol++, iColor, 0, wc ) )
+      if( ! HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, 0, wc ) )
       {
          while( HB_CDPCHAR_GET( cdp, szText, nLen, &nIndex, &wc ) )
-            ++iCol;
+            iDispCol += hb_cdpUTF8CharWidth( wc );
          break;
       }
+      /* Add character display width to actual display position */
+      iDispCol += hb_cdpUTF8CharWidth( wc );
+      iCol++;  /* Cell index only increments by 1 */
    }
-   return iCol;
+   return iDispCol;
 }
 
 static int hb_gt_def_PutTextW( PHB_GT pGT, int iRow, int iCol, int iColor, const HB_WCHAR * szText, HB_SIZE nLen )
 {
+   int iDispCol = iCol;  /* Actual display column position */
+
    if( nLen )
    {
       do
       {
-         if( ! HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, 0, *szText++ ) )
+         if( ! HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, 0, *szText ) )
             break;
-         ++iCol;
+         
+         /* Add character display width to actual display position */
+         iDispCol += hb_cdpUTF8CharWidth( *szText );
+         
+         szText++;
+         ++iCol;  /* Cell index only increments by 1 */
       }
       while( --nLen );
    }
 
-   return iCol + ( int ) nLen;
+   return iDispCol;
 }
 
 static void hb_gt_def_Replicate( PHB_GT pGT, int iRow, int iCol, int iColor,
@@ -1027,7 +1038,7 @@ static void hb_gt_def_WriteCon( PHB_GT pGT, const char * szText, HB_SIZE nLength
             break;
 
          default:
-            ++iCol;
+            iCol += hb_cdpUTF8CharWidth(wc);
             if( iCol > iMaxCol || iCol <= 0 )
             {
                /* If the cursor position started off the left edge,
