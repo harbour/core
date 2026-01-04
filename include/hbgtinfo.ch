@@ -154,6 +154,7 @@
 #define HB_GTI_SYSMENUADD       77  /* Add item to window system menu with keycode to generate when selected (supported by: GTWVT) */
 #define HB_GTI_MSGBOX           78  /* Display native MessageBox (supported by: GTQTC) */
 #define HB_GTI_SOUND            79  /* play sound file (supported by: GTQTC) */
+#define HB_GTI_WIDECHARWIDTH    80  /* Enable/Disable Unicode wide character width calculation (for UTF-8) */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
