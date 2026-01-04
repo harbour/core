@@ -297,6 +297,7 @@ typedef struct _HB_GT_BASE
    HB_BOOL        fBlinking;
    HB_BOOL        fStdOutCon;
    HB_BOOL        fStdErrCon;
+   HB_BOOL        fWideCharWidth;  /* Enable Unicode wide character width calculation for UTF-8 */
    int            iCursorShape;
    int            iDispCount;
    int            iExtCount;

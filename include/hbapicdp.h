@@ -530,9 +530,6 @@ extern HB_EXPORT HB_BOOL      hb_cdpCharEq( PHB_CODEPAGE cdp, const char * szTex
 extern HB_EXPORT HB_BOOL      hb_cdpCharCaseEq( PHB_CODEPAGE cdp, const char * szText1, HB_SIZE nLen1, HB_SIZE * pnPos1,
                                                                   const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 );
 
-/* Calculate Unicode character display width (East Asian Width) */
-extern HB_EXPORT int          hb_cdpUTF8CharWidth( HB_WCHAR wc );
-
 HB_EXTERN_END
 
 #endif /* HB_APICDP_H_ */

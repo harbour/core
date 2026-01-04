@@ -1,22 +1,28 @@
 /*
  * mk_wcwidth.h
  *
- * Copyright (C) 2020 Markus Kuhn <http://www.cl.cam.ac.uk/~mgk25/>>
+ * Copyright (C) 2001 Markus Kuhn <http://www.cl.cam.ac.uk/~mgk25/>
  *
  * This software is placed in the public domain.
  *
- * This file is part of the mk_wcwidth() Unicode width calculation function.
+ * Historical reference: https://www.postgresql.org/message-id/attachment/8417/pg_mb_utf8.c
  *
- * Original source: https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
+ * Original source: http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
  *
  * Adapted for Harbour by Dongming Wang <wangdongming / at / gmail.com>
- * 
+ *
+ * ANSI C89 compatible version for Harbour
  */
 
 #ifndef MK_WCWIDTH_H
 #define MK_WCWIDTH_H
 
-#include <wchar.h>
+/* Include Harbour type definitions */
+#include "hbdefs.h"
+
+/* Type aliases: preserve original API */
+#define wchar_t  HB_WCHAR
+#define size_t   HB_SIZE
 
 /* Combining character width */
 #define COMBINING_WIDTH 0
