@@ -65,6 +65,11 @@ HB_FUNC( HB_SSL_READ_ALL )
          int    iAllocated = 0;
          char * retval     = NULL;
 
+         if( iBufferSize <= 15 )
+            iBufferSize = 15;
+         if( iMax < 1 )
+            iMax = 1;
+
          for( ;; )
          {
             char buffer[ 1 ];
@@ -95,7 +100,7 @@ HB_FUNC( HB_SSL_READ_ALL )
             if( iPos == iAllocated )
             {
                iAllocated += iBufferSize;
-               retval      = ( char * ) hb_xrealloc( retval, iAllocated );
+               retval      = ( char * ) hb_xrealloc( retval, iAllocated + 1 );
             }
 
             retval[ iPos++ ] = buffer[ 0 ];
@@ -135,6 +140,11 @@ HB_FUNC( HB_SSL_READ_LINE )
          int    iAllocated = 0;
          char * retval     = NULL;
 
+         if( iBufferSize <= 15 )
+            iBufferSize = 15;
+         if( iMax < 1 )
+            iMax = 1;
+
          for( ;; )
          {
             char buffer[ 1 ];
@@ -169,7 +179,7 @@ HB_FUNC( HB_SSL_READ_LINE )
             if( iPos == iAllocated )
             {
                iAllocated += iBufferSize;
-               retval      = ( char * ) hb_xrealloc( retval, iAllocated );
+               retval      = ( char * ) hb_xrealloc( retval, iAllocated + 1 );
             }
 
             retval[ iPos++ ] = buffer[ 0 ];
