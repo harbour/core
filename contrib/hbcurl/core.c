@@ -1811,6 +1811,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             case HB_CURLOPT_SSL_SESSIONID_CACHE:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_VERIFYHOST, HB_CURL_OPT_BOOL( 3 ) );
                break;
+#if LIBCURL_VERSION_NUM < 0x081100 /* CURLOPT_KRBLEVEL deprecated since 8.17.0 */
             case HB_CURLOPT_KRBLEVEL: /* HB_CURLOPT_KRB4LEVEL */
 #if LIBCURL_VERSION_NUM > 0x071003
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_KRBLEVEL, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
@@ -1818,6 +1819,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_KRB4LEVEL, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
 #endif
                break;
+#endif
 #if LIBCURL_VERSION_NUM >= 0x071300
             case HB_CURLOPT_CRLFILE:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_CRLFILE, hb_parc( 3 ) );
