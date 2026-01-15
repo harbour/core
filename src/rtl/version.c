@@ -244,6 +244,11 @@ HB_FUNC( HB_OSISWINCE )
    hb_retl( hb_iswince() );
 }
 
+HB_FUNC( HB_OSISWINE )
+{
+   hb_retl( hb_iswine() );
+}
+
 /* Legacy functions */
 
 HB_FUNC( HB_COMPILER )

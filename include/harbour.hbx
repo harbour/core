@@ -739,6 +739,7 @@ DYNAMIC hb_osIsWin8
 DYNAMIC hb_osIsWin81
 DYNAMIC hb_osIsWin9x
 DYNAMIC hb_osIsWinCE
+DYNAMIC hb_osIsWine
 DYNAMIC hb_osIsWinNT
 DYNAMIC hb_osIsWinVista
 DYNAMIC hb_osNewLine
