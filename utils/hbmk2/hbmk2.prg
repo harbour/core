@@ -12854,16 +12854,119 @@ STATIC FUNCTION win_implib_omf( hbmk, cSourceDLL, cTargetLib )
 
    RETURN _HBMK_IMPLIB_NOTFOUND
 
+/* Harden .def handling for import-lib generation.
+   Some .def generators may emit a malformed header like: 'LIBRARY (null)'
+   (or omit LIBRARY entirely). When fed to MinGW 'dlltool', it can embed
+   '(null)' as the DLL dependency name into the import library, which then
+   propagates to the final executable import table.
+
+   This function creates a temporary corrected .def file when needed.
+   Returns .T. when a temp file was created and sets cFixedDef to its name.
+   Otherwise returns .F. and cFixedDef remains equal to cSourceDef. */
+
+STATIC FUNCTION win_implib_def_fix( cSourceDef, cDllBaseName, /* @ */ cFixedDef )
+
+   LOCAL cTxt, cEOL := Chr( 10 )
+   LOCAL aLines, i
+   LOCAL lChanged := .F.
+   LOCAL cLine, cRest
+   LOCAL fhnd, cTmp
+   LOCAL cOut := ""
+
+   cFixedDef := cSourceDef
+
+   cTxt := hb_MemoRead( cSourceDef )
+   IF Empty( cTxt )
+      RETURN .F.
+   ENDIF
+
+   /* Normalize EOLs to simplify parsing */
+   cTxt := StrTran( cTxt, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+   cTxt := StrTran( cTxt, Chr( 13 ), Chr( 10 ) )
+
+   aLines := hb_ATokens( cTxt, Chr( 10 ) )
+
+   /* Find/repair LIBRARY line */
+   FOR i := 1 TO Len( aLines )
+      cLine := LTrim( aLines[ i ] )
+      IF Upper( Left( cLine, 7 ) ) == "LIBRARY"
+         cRest := AllTrim( SubStr( cLine, 8 ) )
+         IF Empty( cRest ) .OR. Upper( cRest ) == "(NULL)" .OR. "(NULL)" $ Upper( cRest )
+            aLines[ i ] := "LIBRARY " + '"' + cDllBaseName + '"'
+            lChanged := .T.
+         ENDIF
+         EXIT
+      ENDIF
+   NEXT
+
+   /* If no LIBRARY line was found, prepend one */
+   IF i > Len( aLines )
+      AIns( aLines, 1 )
+      aLines[ 1 ] := "LIBRARY " + '"' + cDllBaseName + '"'
+      lChanged := .T.
+   ENDIF
+
+   IF ! lChanged
+      RETURN .F.
+   ENDIF
+
+   fhnd := hb_FTempCreateEx( @cTmp, NIL, "hbmk_", ".def" )
+   IF fhnd == F_ERROR
+      RETURN .F.
+   ENDIF
+   FClose( fhnd )
+
+   FOR i := 1 TO Len( aLines )
+      cOut += aLines[ i ] + cEOL
+   NEXT
+   hb_MemoWrit( cTmp, cOut )
+
+   cFixedDef := cTmp
+
+   RETURN .T.
+
 STATIC FUNCTION win_implib_def( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
 
    LOCAL cSourceDef
+   LOCAL cFixedDef
+   LOCAL lTempDef
+   LOCAL cDllBase
+   LOCAL cFlags2
+   LOCAL tmp
+
+   /* For MinGW/dlltool, a malformed .def header like 'LIBRARY (null)' may
+      result in an import library embedding '(null)' as DLL name. That then
+      propagates to the final executable import table as a dependency named
+      '(null)'. Harden this path by (a) fixing the LIBRARY line if needed and
+      (b) forcing the intended DLL name via dlltool '-D'. */
 
    /* Try to find .def file with the same name */
    IF hb_FileExists( cSourceDef := hb_FNameExtSet( cSourceDLL, ".def" ) )
       IF ! hbmk[ _HBMK_lQuiet ]
          _hbmk_OutStd( hbmk, I_( "Found .def file with the same name, falling back to using it instead of the .dll." ) )
       ENDIF
-      RETURN win_implib_command( hbmk, cCommand, cSourceDef, cTargetLib, cFlags )
+
+      cDllBase := hb_FNameNameExt( cSourceDLL )
+      cFixedDef := cSourceDef
+      lTempDef := win_implib_def_fix( cSourceDef, cDllBase, @cFixedDef )
+
+      cFlags2 := cFlags
+      hb_default( @cFlags2, "" )
+
+      /* Force DLL name for MinGW 'dlltool' to avoid '(null)' dependencies */
+      IF "dlltool" $ Lower( cCommand )
+         IF ! ( " -D " $ Lower( " " + cFlags2 + " " ) )
+            cFlags2 := AllTrim( cFlags2 + " -D " + '"' + cDllBase + '"' )
+         ENDIF
+      ENDIF
+
+      tmp := win_implib_command( hbmk, cCommand, cFixedDef, cTargetLib, cFlags2 )
+
+      IF lTempDef
+         FErase( cFixedDef )
+      ENDIF
+
+      RETURN tmp
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
