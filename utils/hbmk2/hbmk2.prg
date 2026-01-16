@@ -12854,16 +12854,240 @@ STATIC FUNCTION win_implib_omf( hbmk, cSourceDLL, cTargetLib )
 
    RETURN _HBMK_IMPLIB_NOTFOUND
 
+/*
+   Optional override to enforce the DLL name embedded in the generated import library.
+
+   This is primarily useful with MinGW 'dlltool' when using a .def file that lacks a
+   LIBRARY directive (or contains a malformed one), which may otherwise yield an import
+   library embedding '(null)' as the dependent DLL name.
+
+   Set environment variable (Windows cmd.exe / .bat):
+      set HBMK_IMPLIBDLLMAP=libcurl.def:libcurl-4.dll
+
+   Multiple mappings may be separated by semicolons:
+      set HBMK_IMPLIBDLLMAP=libcurl.def:libcurl-4.dll;foo.def:foo.dll
+
+   Key matching:
+      - Match is done by full normalized path if provided, otherwise by basename.
+      - Comparison is case-insensitive on Windows.
+
+   Notes:
+      - The delimiter is ':' (use the LAST ':' in each mapping item, so drive letters are safe).
+      - This override is only applied when hbmk2 is invoking a dlltool-style implib command.
+*/
+
+STATIC FUNCTION win_implib_strip_quotes( cText )
+
+   hb_default( @cText, "" )
+   cText := AllTrim( cText )
+
+   IF Len( cText ) >= 2 .AND. Right( cText, 1 ) == Left( cText, 1 ) .AND. ( Left( cText, 1 ) == '"' .OR. Left( cText, 1 ) == "'" )
+      cText := SubStr( cText, 2, Len( cText ) - 2 )
+   ENDIF
+
+   RETURN AllTrim( cText )
+
+STATIC FUNCTION win_implib_dllmap_lookup( hbmk, cDefPath )
+
+   LOCAL cEnv, cItem, nPos, cKey, cVal
+   LOCAL cDefNorm, cKeyNorm
+
+   hb_default( @cDefPath, "" )
+
+   cEnv := GetEnv( "HBMK_IMPLIBDLLMAP" )
+   IF Empty( cEnv )
+      RETURN ""
+   ENDIF
+
+   cDefNorm := hb_FNameExtSetDef( hb_FNameNameExt( cDefPath ), ".def" )
+
+   /* Iterate ';' separated list */
+   FOR EACH cItem IN hb_ATokens( cEnv, ';' )
+      cItem := AllTrim( cItem )
+      IF Empty( cItem )
+         LOOP
+      ENDIF
+
+      /* Use LAST ':' so 'C:\path\x.def:y.dll' works */
+      nPos := RAt( ':', cItem )
+      IF nPos <= 0
+         LOOP
+      ENDIF
+
+      cKey := win_implib_strip_quotes( Left( cItem, nPos - 1 ) )
+      cVal := win_implib_strip_quotes( SubStr( cItem, nPos + 1 ) )
+
+      IF Empty( cKey ) .OR. Empty( cVal )
+         LOOP
+      ENDIF
+
+      /* Normalize key: allow full path or basename */
+      IF Empty( hb_FNameDir( cKey ) )
+         cKeyNorm := hb_FNameExtSetDef( hb_FNameNameExt( cKey ), ".def" )
+         IF HBMK_ISPLAT( "win" )
+            IF Lower( cKeyNorm ) == Lower( cDefNorm )
+               IF hbmk != NIL .AND. hbmk[ _HBMK_lTRACE ]
+                  OutStd( hb_StrFormat( "hbmk2: implib: HBMK_IMPLIBDLLMAP matched '%1$s' -> '%2$s'", cKey, cVal ) + _OUT_EOL )
+               ENDIF
+               RETURN cVal
+            ENDIF
+         ELSE
+            IF cKeyNorm == cDefNorm
+               IF hbmk != NIL .AND. hbmk[ _HBMK_lTRACE ]
+                  OutStd( hb_StrFormat( "hbmk2: implib: HBMK_IMPLIBDLLMAP matched '%1$s' -> '%2$s'", cKey, cVal ) + _OUT_EOL )
+               ENDIF
+               RETURN cVal
+            ENDIF
+         ENDIF
+      ELSE
+         cKeyNorm := hb_DirSepToOS( cKey )
+         IF HBMK_ISPLAT( "win" )
+            IF Lower( cKeyNorm ) == Lower( hb_DirSepToOS( cDefPath ) )
+               IF hbmk != NIL .AND. hbmk[ _HBMK_lTRACE ]
+                  OutStd( hb_StrFormat( "hbmk2: implib: HBMK_IMPLIBDLLMAP matched '%1$s' -> '%2$s'", cKey, cVal ) + _OUT_EOL )
+               ENDIF
+               RETURN cVal
+            ENDIF
+         ELSE
+            IF cKeyNorm == hb_DirSepToOS( cDefPath )
+               IF hbmk != NIL .AND. hbmk[ _HBMK_lTRACE ]
+                  OutStd( hb_StrFormat( "hbmk2: implib: HBMK_IMPLIBDLLMAP matched '%1$s' -> '%2$s'", cKey, cVal ) + _OUT_EOL )
+               ENDIF
+               RETURN cVal
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN ""
+
+STATIC FUNCTION win_implib_def_force_library( hbmk, cSourceDef, cDllName, /* @ */ cOutDef )
+
+   /*
+      Create a temporary .def where the LIBRARY directive is guaranteed to be
+      present and set to cDllName. This is used only in opt-in override mode.
+
+      Notes:
+      - Avoid FOR EACH element assignment ambiguity by using index-based loops.
+      - Avoid "+=" to prevent type edge-cases.
+   */
+
+   LOCAL cData
+   LOCAL cEol
+   LOCAL aLines
+   LOCAL cLine
+   LOCAL cTrim
+   LOCAL lFound := .F.
+   LOCAL n
+   LOCAL fhnd
+
+   hb_default( @cOutDef, "" )
+
+   cDllName := AllTrim( win_implib_strip_quotes( cDllName ) )
+
+   IF Empty( cSourceDef ) .OR. Empty( cDllName )
+      RETURN .F.
+   ENDIF
+
+   cData := hb_MemoRead( cSourceDef )
+   IF Empty( cData )
+      RETURN .F.
+   ENDIF
+
+   /* Detect EOL style */
+   cEol := hb_eol()
+   IF At( Chr( 13 ) + Chr( 10 ), cData ) > 0
+      cEol := Chr( 13 ) + Chr( 10 )
+   ELSEIF At( Chr( 10 ), cData ) > 0
+      cEol := Chr( 10 )
+   ENDIF
+
+   /* Normalize to 
+ for line parsing */
+   cData := StrTran( cData, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+   cData := StrTran( cData, Chr( 13 ), Chr( 10 ) )
+
+   aLines := hb_ATokens( cData, Chr( 10 ) )
+
+   /* Replace existing LIBRARY line if present */
+   FOR n := 1 TO Len( aLines )
+      cLine := aLines[ n ]
+      IF ValType( cLine ) != "C"
+         LOOP
+      ENDIF
+      cTrim := LTrim( cLine )
+      IF hb_AtI( "LIBRARY", cTrim ) == 1
+         aLines[ n ] := "LIBRARY " + Chr( 34 ) + cDllName + Chr( 34 )
+         lFound := .T.
+         EXIT
+      ENDIF
+   NEXT
+
+   /* If no LIBRARY line exists, prepend one */
+   IF ! lFound
+      AIns( aLines, 1 )
+      aLines[ 1 ] := "LIBRARY " + Chr( 34 ) + cDllName + Chr( 34 )
+   ENDIF
+
+   /* Rebuild text using original EOL */
+   cData := ""
+   FOR n := 1 TO Len( aLines )
+      cLine := aLines[ n ]
+      IF ValType( cLine ) != "C"
+         cLine := ""
+      ENDIF
+      cData := cData + cLine + cEol
+   NEXT
+
+   fhnd := hb_FTempCreateEx( @cOutDef )
+   IF fhnd == F_ERROR
+      RETURN .F.
+   ENDIF
+
+   FWrite( fhnd, cData )
+   FClose( fhnd )
+
+   IF hbmk != NIL .AND. hbmk[ _HBMK_lTRACE ]
+      OutStd( hb_StrFormat( "hbmk2: implib: using temporary .def with LIBRARY '%1$s': %2$s", cDllName, cOutDef ) + _OUT_EOL )
+   ENDIF
+
+   RETURN .T.
+
 STATIC FUNCTION win_implib_def( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
 
    LOCAL cSourceDef
+   LOCAL cDefUse
+   LOCAL cTmpDef
+   LOCAL lTempDef := .F.
+   LOCAL cDllName
+   LOCAL tmp
 
    /* Try to find .def file with the same name */
    IF hb_FileExists( cSourceDef := hb_FNameExtSet( cSourceDLL, ".def" ) )
       IF ! hbmk[ _HBMK_lQuiet ]
          _hbmk_OutStd( hbmk, I_( "Found .def file with the same name, falling back to using it instead of the .dll." ) )
       ENDIF
-      RETURN win_implib_command( hbmk, cCommand, cSourceDef, cTargetLib, cFlags )
+
+      cDefUse := cSourceDef
+
+      /* Apply optional DLL-name override when using dlltool-style command */
+      IF "dlltool" $ Lower( cCommand )
+         cDllName := win_implib_dllmap_lookup( hbmk, cSourceDef )
+         IF ! Empty( cDllName )
+            lTempDef := win_implib_def_force_library( hbmk, cSourceDef, cDllName, @cTmpDef )
+            IF lTempDef
+               cDefUse := cTmpDef
+            ENDIF
+         ENDIF
+      ENDIF
+
+      tmp := win_implib_command( hbmk, cCommand, cDefUse, cTargetLib, cFlags )
+
+      IF lTempDef
+         FErase( cTmpDef )
+      ENDIF
+
+      RETURN tmp
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
