@@ -58,7 +58,7 @@
 #include "hbapifs.h"
 #include "hbapierr.h"
 #include "hbapicdp.h"
-#include "../codepage/mk_wcwidth.h"
+#include "hbgtwide.h"
 #include "hbdate.h"
 #include "hbset.h"
 #include "hbvm.h"
@@ -92,7 +92,7 @@ void hb_gt_BaseUnlock( PHB_GT pGT )
  * This helper function checks the fWideCharWidth flag and returns
  * the appropriate display width for the character.
  *
- * When fWideCharWidth is enabled, uses mk_wcwidth() for accurate
+ * When fWideCharWidth is enabled, uses hb_wcwidth() for accurate
  * Unicode TR11 East Asian Width calculation. Otherwise returns 1
  * for backward compatibility.
  */
@@ -101,7 +101,7 @@ static int hb_gt_charDispWidth( PHB_GT pGT, HB_WCHAR wc )
    if( pGT->fWideCharWidth )
    {
       /* Use accurate Unicode TR11 width calculation */
-      return mk_wcwidth( (wchar_t)wc );
+      return hb_wcwidth( (HB_WCHAR32)wc );
    }
    /* Default: narrow character (width 1) for backward compatibility */
    return 1;

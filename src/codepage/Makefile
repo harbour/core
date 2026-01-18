@@ -5,7 +5,7 @@ C_SOURCES := \
    cp_big5.c \
    cp_gbk.c \
    cp_utf8.c \
-   mk_wcwidth.c \
+   hb_wcwidth.c \
    cp_u16le.c \
    cpbg866.c \
    cpbgiso.c \

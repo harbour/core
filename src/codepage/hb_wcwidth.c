@@ -1,11 +1,9 @@
 /*
- * mk_wcwidth.c
+ * hb_wcwidth.c - Graphic Terminal Wide Character Width Implementation
  *
  * Copyright (C) 2001 Markus Kuhn <http://www.cl.cam.ac.uk/~mgk25/>
  *
  * This software is placed in the public domain.
- *
- * Historical reference: https://www.postgresql.org/message-id/attachment/8417/pg_mb_utf8.c
  *
  * Original source: http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
  *
@@ -15,12 +13,11 @@
  *
  * This is a simplified implementation of Unicode TR11 (East Asian Width).
  * It covers the most common Unicode character ranges.
- *
  */
 
-#include "mk_wcwidth.h"
-#include <stddef.h>
+#include "hbgtwide.h"
 
+/* Interval structure for binary search in range tables */
 struct interval
 {
    unsigned int first;
@@ -28,7 +25,7 @@ struct interval
 };
 
 /* Binary search in range table */
-static int bisearch( wchar_t ucs, const struct interval *table, int max )
+static int bisearch( HB_WCHAR32 ucs, const struct interval *table, int max )
 {
    int min = 0;
    int mid;
@@ -113,12 +110,10 @@ static const struct interval wide[] =
 };
 
 /*
- * Function: mk_wcwidth
- * --------------------
  * Returns the width in screen columns of a Unicode code point.
  *
  * Parameters:
- *   ucs: Unicode code point (wchar_t)
+ *   ucs: Unicode code point (HB_WCHAR32)
  *
  * Returns:
  *   0: Control characters, non-printing characters, combining characters
@@ -131,7 +126,7 @@ static const struct interval wide[] =
  *   - Private use area characters are treated as narrow (width 1)
  *   - Unassigned characters are treated as narrow (width 1)
  */
-int mk_wcwidth( wchar_t ucs )
+int hb_wcwidth( HB_WCHAR32 ucs )
 {
    /* Test for 8-bit control characters */
    if( ucs == 0 )
@@ -144,8 +139,6 @@ int mk_wcwidth( wchar_t ucs )
    if( bisearch( ucs, combining, sizeof( combining ) / sizeof( struct interval ) - 1 ) )
       return 0;
 
-   /* If we arrive here, ucs is not a combining or C0/C1 control character */
-
    /* Binary search in table of wide characters */
    if( bisearch( ucs, wide, sizeof( wide ) / sizeof( struct interval ) - 1 ) )
       return 2;
@@ -154,12 +147,10 @@ int mk_wcwidth( wchar_t ucs )
 }
 
 /*
- * Function: mk_wcswidth
- * ---------------------
  * Returns the width in screen columns of a null-terminated Unicode string.
  *
  * Parameters:
- *   pwcs: Pointer to wide character string
+ *   pwcs: Pointer to wide character string (HB_WCHAR*)
  *
  * Returns:
  *   Total width of the string in screen columns
@@ -169,13 +160,13 @@ int mk_wcwidth( wchar_t ucs )
  *   - This function processes the entire string until null terminator
  *   - Returns -1 if any character has width 0 (non-printable)
  */
-int mk_wcswidth( const wchar_t *pwcs )
+int hb_wcswidth( const HB_WCHAR *pwcs )
 {
    int width = 0;
 
    while( *pwcs != L'\0' )
    {
-      int w = mk_wcwidth( *pwcs );
+      int w = hb_wcwidth( (HB_WCHAR32)*pwcs );
 
       if( w < 0 )
          return -1;
@@ -188,12 +179,10 @@ int mk_wcswidth( const wchar_t *pwcs )
 }
 
 /*
- * Function: mk_wcswidth_cjk
- * -------------------------
  * Returns the width in screen columns of a substring of a Unicode string.
  *
  * Parameters:
- *   pwcs: Pointer to wide character string
+ *   pwcs: Pointer to wide character string (HB_WCHAR*)
  *   n: Maximum number of characters to process
  *
  * Returns:
@@ -204,13 +193,13 @@ int mk_wcswidth( const wchar_t *pwcs )
  *   - This function processes at most n characters
  *   - Returns -1 if any character has width 0 (non-printable)
  */
-int mk_wcswidth_cjk( const wchar_t *pwcs, size_t n )
+int hb_wcswidth_cjk( const HB_WCHAR *pwcs, HB_SIZE n )
 {
    int width = 0;
 
    while( n-- > 0 && *pwcs != L'\0' )
    {
-      int w = mk_wcwidth( *pwcs );
+      int w = hb_wcwidth( (HB_WCHAR32)*pwcs );
 
       if( w < 0 )
          return -1;

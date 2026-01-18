@@ -1,60 +1,31 @@
 /*
- * mk_wcwidth.h
+ * hbgtwide.h - Graphic Terminal Wide Character Width Support
  *
  * Copyright (C) 2001 Markus Kuhn <http://www.cl.cam.ac.uk/~mgk25/>
  *
  * This software is placed in the public domain.
- *
- * Historical reference: https://www.postgresql.org/message-id/attachment/8417/pg_mb_utf8.c
  *
  * Original source: http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
  *
  * Adapted for Harbour by Dongming Wang <wangdongming / at / gmail.com>
  *
  * ANSI C89 compatible version for Harbour
+ *
+ * Unicode TR11 (East Asian Width) implementation
  */
 
-#ifndef MK_WCWIDTH_H
-#define MK_WCWIDTH_H
+#ifndef HBGTWIDE_H_
+#define HBGTWIDE_H_
 
-/* Include Harbour type definitions */
 #include "hbdefs.h"
 
-/* Type aliases: preserve original API */
-#define wchar_t  HB_WCHAR
-#define size_t   HB_SIZE
-
-/* Combining character width */
-#define COMBINING_WIDTH 0
-
-/* Zero width character */
-#define ZERO_WIDTH 0
-
-/* Full width character */
-#define FULL_WIDTH 2
-
-/* Half width character */
-#define HALF_WIDTH 1
-
-/* Wide character width */
-#define WIDE_WIDTH 2
-
-/* Narrow character width */
-#define NARROW_WIDTH 1
-
-/* Neutral character width */
-#define NEUTRAL_WIDTH 1
-
-/* Ambiguous character width */
-#define AMBIGUOUS_WIDTH 1
+HB_EXTERN_BEGIN
 
 /*
- * Function: mk_wcwidth
- * --------------------
  * Returns the width in screen columns of a Unicode code point.
  *
  * Parameters:
- *   ucs: Unicode code point (wchar_t)
+ *   ucs: Unicode code point (HB_WCHAR32)
  *
  * Returns:
  *   0: Control characters, non-printing characters, combining characters
@@ -67,15 +38,13 @@
  *   - Private use area characters are treated as narrow (width 1)
  *   - Unassigned characters are treated as narrow (width 1)
  */
-int mk_wcwidth( wchar_t ucs );
+HB_EXTERN int hb_wcwidth( HB_WCHAR32 ucs );
 
 /*
- * Function: mk_wcswidth
- * ---------------------
  * Returns the width in screen columns of a null-terminated Unicode string.
  *
  * Parameters:
- *   pwcs: Pointer to wide character string
+ *   pwcs: Pointer to wide character string (HB_WCHAR*)
  *
  * Returns:
  *   Total width of the string in screen columns
@@ -85,15 +54,13 @@ int mk_wcwidth( wchar_t ucs );
  *   - This function processes the entire string until null terminator
  *   - Returns -1 if any character has width 0 (non-printable)
  */
-int mk_wcswidth( const wchar_t *pwcs );
+HB_EXTERN int hb_wcswidth( const HB_WCHAR *pwcs );
 
 /*
- * Function: mk_wcswidth_cjk
- * -------------------------
  * Returns the width in screen columns of a substring of a Unicode string.
  *
  * Parameters:
- *   pwcs: Pointer to wide character string
+ *   pwcs: Pointer to wide character string (HB_WCHAR*)
  *   n: Maximum number of characters to process
  *
  * Returns:
@@ -104,6 +71,8 @@ int mk_wcswidth( const wchar_t *pwcs );
  *   - This function processes at most n characters
  *   - Returns -1 if any character has width 0 (non-printable)
  */
-int mk_wcswidth_cjk( const wchar_t *pwcs, size_t n );
+HB_EXTERN int hb_wcswidth_cjk( const HB_WCHAR *pwcs, HB_SIZE n );
 
-#endif /* MK_WCWIDTH_H */
+HB_EXTERN_END
+
+#endif /* HBGTWIDE_H_ */
