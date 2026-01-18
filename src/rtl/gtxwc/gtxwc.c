@@ -2959,8 +2959,17 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
       }
 #endif
    }
-
-   if( i > 0 )
+   if( i == 1 && buf[ 0 ] == 0 )
+   {
+      if( ikey == 0 && flags != 0 )
+      {
+         if( ( out >= 0x0020 && out <= 0x007e ) ||
+             ( out >= 0x00a0 && out <= 0x00ff ) )
+            hb_gt_xwc_AddCharToInputQueue( wnd, HB_INKEY_NEW_UNICODEF( ( int ) out, flags ) );
+         return;
+      }
+   }
+   else if( i > 0 )
    {
       PHB_CODEPAGE cdp = wnd->fUTF8key ? wnd->utf8CDP : HB_GTSELF_INCP( wnd->pGT );
       HB_WCHAR wc;

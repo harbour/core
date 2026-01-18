@@ -115,7 +115,7 @@
 #define HB_CURLOPT_POSTFIELDSIZE              60
 #define HB_CURLOPT_HTTPPROXYTUNNEL            61
 #define HB_CURLOPT_INTERFACE                  62
-#define HB_CURLOPT_KRBLEVEL                   63
+#define HB_CURLOPT_KRBLEVEL                   63  /* Deprecated since 8.17.0 */
 #define HB_CURLOPT_KRB4LEVEL                  HB_CURLOPT_KRBLEVEL
 #define HB_CURLOPT_SSL_VERIFYPEER             64
 #define HB_CURLOPT_CAINFO                     65
