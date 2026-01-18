@@ -611,7 +611,7 @@ HB_FUNC( HB_TSTOUTC )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_UTCToTS( <tUTCTime> [, @<lUTCOffset> ) -> <tLocalTime> */
+/* hb_UTCToTS( <tUTCTime> [, @<nUTCOffset> ] ) -> <tLocalTime> */
 HB_FUNC( HB_UTCTOTS )
 {
    if( HB_ISTIMESTAMP( 1 ) )
