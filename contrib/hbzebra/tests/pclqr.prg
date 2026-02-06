@@ -86,7 +86,7 @@ STATIC PROCEDURE DrawBarcodePCL( nLineWidth, cType, nFlags, nDpi, nX, nY, cCode,
 
          /* produce a file with PCL raster mode commands */
          PclWriteBitmap( cBitMap, nWidth, nHeight, nDpi, nX, nY, cLabel, cFile, .T. )
-         
+
       ELSE
          ? "Type", cType, "Code", cCode, "Error", hb_zebra_geterror( hZebra )
       ENDIF

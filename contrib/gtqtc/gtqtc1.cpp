@@ -1773,6 +1773,9 @@ static void hb_gt_qtc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    if( ! s_qtapp )
    {
+#if defined( HB_QTC_NO_HIGHDPI_SCALING ) && QT_VERSION >= 0x060000
+      qputenv( "QT_ENABLE_HIGHDPI_SCALING", "0" );
+#endif
       hb_gt_qtc_InitMT();
 
       s_qtapp = qApp;
@@ -2768,28 +2771,19 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    return HB_TRUE;
 }
 
-/* --- */
+#include "hbgtreg.h"
 
-static const HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
-                                   hb_gt_FuncInit,
-                                   HB_GTSUPER,
-                                   HB_GTID_PTR };
-
-HB_GT_ANNOUNCE( HB_GT_NAME )
-
-HB_CALL_ON_STARTUP_BEGIN( _hb_startup_gt_Init_ )
-   hb_gtRegister( &gtInit );
-HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_startup_gt_Init_
-#elif defined( HB_MSC_STARTUP )
-   #if defined( HB_OS_WIN_64 )
-      #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif
-   #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
-   #pragma data_seg()
+/* small hack to easy detect QT version used to compile this GT driver */
+#if   QT_VERSION >= 0x070000
+   HB_FUNC( HB_GT_QTC7 ) {}
+#elif QT_VERSION >= 0x060000
+   HB_FUNC( HB_GT_QTC6 ) {}
+#elif QT_VERSION >= 0x050000
+   HB_FUNC( HB_GT_QTC5 ) {}
+#elif QT_VERSION >= 0x040000
+   HB_FUNC( HB_GT_QTC4 ) {}
+#elif QT_VERSION >= 0x030000
+   HB_FUNC( HB_GT_QTC3 ) {}
 #endif
 
 /* --- */
@@ -3453,7 +3447,6 @@ bool QTConsole::event( QEvent * evt )
          case QEvent::MouseMove:
          case QEvent::FocusIn:
          case QEvent::FocusOut:
-         case QEvent::ChildRemoved:
          case QEvent::UpdateRequest:
             resizeMode = false;
             update();
