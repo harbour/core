@@ -1775,6 +1775,8 @@ static void hb_gt_qtc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    {
 #if defined( HB_QTC_NO_HIGHDPI_SCALING ) && QT_VERSION >= 0x060000
       qputenv( "QT_ENABLE_HIGHDPI_SCALING", "0" );
+#elif QT_VERSION >= 0x050E00 && ! defined( HB_OS_ANDROID )
+      QGuiApplication::setHighDpiScaleFactorRoundingPolicy( Qt::HighDpiScaleFactorRoundingPolicy::Round );
 #endif
       hb_gt_qtc_InitMT();
 
