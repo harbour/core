@@ -1311,6 +1311,41 @@ static void hb_gt_qtc_resetBoxCharBitmaps( PHB_GTQTC pQTC )
       pQTC->boxIndex[ i ] = HB_BOXCH_TRANS_MAX;
 }
 
+static const char * hb_gt_qtc_findFont( void )
+{
+   const char * pszFontNames[] = { "Consolas",              /* MS-Windows */
+                                   "Lucida Console",        /* MS-Windows */
+                                   "Menlo",                 /* Darwin */
+                                   "Monaco",                /* Darwin */
+                                   "Droid Sans Mono",       /* Android */
+                                   "Monospace",             /* Linux */
+                                   "Inconsolata",           /* Linux */
+                                   "Liberation Mono",       /* Linux */
+                                   "Roboto Mono",           /* Google */
+                                   "Ubuntu Mono",           /* Linux */
+                                   "Ubuntu Sans Mono",      /* Linux */
+                                   "DejaVu Sans Mono",      /* Linux */
+                                   "Noto Mono",             /* Linux */
+                                   "Nimbus Mono PS",        /* Linux */
+                                   "Source Code Pro",       /* Adobe */
+                                   "FreeMono",
+                                   "Flexi IBM VGA True",
+                                   "Flexi IBM VGA False",
+                                   "Courier",
+                                   "Courier New",
+                                   "Courier 10 Pitch",
+                                   NULL }, ** pszFont;
+
+   for( pszFont = pszFontNames; *pszFont; ++pszFont )
+   {
+      QFontDatabase qFData;
+      if( qFData.isScalable( *pszFont ) && qFData.isFixedPitch( *pszFont ) )
+         return *pszFont;
+   }
+
+   return QTC_DEFAULT_FONT_NAME;
+}
+
 /* --- */
 
 static void hb_gt_qtc_free( PHB_GTQTC pQTC )
@@ -1378,7 +1413,7 @@ static PHB_GTQTC hb_gt_qtc_new( PHB_GT pGT )
    pQTC->fontWeight    = QTC_DEFAULT_FONT_WEIGHT;
    pQTC->fontAttribute = QTC_DEFAULT_FONT_ATTRIBUTE;
    pQTC->fontAscent    = 0;
-   pQTC->fontName      = new QString( QTC_DEFAULT_FONT_NAME );
+   pQTC->fontName      = new QString( hb_gt_qtc_findFont() );
    pQTC->cellY         = pQTC->fontHeight;
    pQTC->cellX         = pQTC->fontWidth == 0 ? pQTC->cellY / 2: pQTC->fontWidth;
    pQTC->iCloseMode    = 0;

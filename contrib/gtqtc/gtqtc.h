@@ -67,6 +67,7 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QFontDatabase>
 #include <QtCore/QTimer>
 
 #if QT_VERSION >= 0x050000
@@ -113,7 +114,7 @@
 #define QTC_DEFAULT_COLS           80
 #define QTC_DEFAULT_FONT_HEIGHT    20
 #define QTC_DEFAULT_FONT_WIDTH     0
-#define QTC_DEFAULT_FONT_WEIGHT    HB_GTI_FONTW_BOLD
+#define QTC_DEFAULT_FONT_WEIGHT    HB_GTI_FONTW_NORMAL
 #define QTC_DEFAULT_FONT_ATTRIBUTE 0
 #define QTC_DEFAULT_FONT_NAME      "Courier New"
 
