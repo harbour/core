@@ -316,6 +316,7 @@ HB_FUNC( WVG_LOADIMAGE )
 {
    HANDLE  hImage = 0;
    void *  hBuffer;
+   void *  hString = NULL;
    LPCTSTR lpBuffer = HB_PARSTR( 1, &hBuffer, NULL );
    int     iSource  = hb_parni( 2 );
 
@@ -323,16 +324,16 @@ HB_FUNC( WVG_LOADIMAGE )
    {
       case 0:   /* Image from resource by numeric id */
          if( HB_ISNUM( 3 ) && hb_parni( 3 ) == IMAGE_ICON )
-            hImage = LoadIcon( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+            hImage = ( HICON ) LoadImage( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ), IMAGE_ICON, hb_parni( 4 ), hb_parni( 5 ), LR_DEFAULTSIZE );
          else
-            hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+            hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ), IMAGE_BITMAP, hb_parni( 4 ), hb_parni( 5 ), LR_DEFAULTSIZE );
          break;
 
       case 1:   /* image from resource by name */
          if( HB_ISNUM( 3 ) && hb_parni( 3 ) == IMAGE_ICON )
-            hImage = LoadIcon( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
+            hImage = ( HICON ) LoadImage( ( HINSTANCE ) wvg_hInstance(), HB_PARSTR( 1, &hString, NULL ), IMAGE_ICON, hb_parni( 4 ), hb_parni( 5 ), LR_DEFAULTSIZE );
          else
-            hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
+            hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) wvg_hInstance(), HB_PARSTR( 1, &hString, NULL ), IMAGE_BITMAP, hb_parni( 4 ), hb_parni( 5 ), LR_DEFAULTSIZE );
          break;
 
       case 2:   /* Image from disk file */
