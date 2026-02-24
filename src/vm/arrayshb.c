@@ -1,6 +1,7 @@
 /*
  * The Array API (Harbour level)
  *
+ * Copyright 2021 Eric Lendvai <eric@lendvai.us>   hb_AUnpack()
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -412,4 +413,40 @@ HB_FUNC( ACLONE )
 HB_FUNC( HB_APARAMS )
 {
    hb_itemReturnRelease( hb_arrayFromParams( hb_parni( 1 ) + 1 ) );
+}
+
+// hb_AUnpack will assign all the element of the first parameter if is an array, to following parameters passed by reference.
+// This provides the concept of "unpacking" an array as used in the Python language.
+// This function is very useful when the first parameter is a function returning an array.
+// For example you could return {<lResult>,<cErrorMessage>}
+//    if !hb_AUnpack(FunctionReturningAnArray(),,@cLastError)
+//        ?"Error Occurred calling FunctionReturningAnArray:",cLastError
+//    endif
+// Will return the first element of the array as well as placing it in 2nd parameter, if specified by reference.
+HB_FUNC( HB_AUNPACK )
+{
+    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+    if( pArray )
+    {
+        HB_USHORT uiLen = ( HB_USHORT ) hb_arrayLen(pArray);
+        HB_USHORT uiIter;
+        HB_USHORT uiArgCount = ( HB_USHORT ) hb_pcount();
+
+        for( uiIter = 1; uiIter <= HB_MIN(uiLen,uiArgCount-1); uiIter++ )
+        {
+            if ( HB_ISBYREF( uiIter+1 ) )
+            {
+                PHB_ITEM pArrayElement = hb_itemNew( NULL );
+                hb_arrayGet( pArray, (HB_ULONG) uiIter, pArrayElement ) ;
+                hb_itemParamStore( uiIter+1, pArrayElement );
+                hb_itemRelease( pArrayElement );
+            }
+            if ( uiIter == 1 )
+            {
+                PHB_ITEM pFirstArrayElement = hb_itemNew( NULL );
+                hb_arrayGet( pArray, (HB_ULONG) uiIter, pFirstArrayElement ) ;
+                hb_itemReturn( pFirstArrayElement );
+            }
+        }
+    }
 }
