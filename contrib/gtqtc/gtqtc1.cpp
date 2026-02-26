@@ -1338,9 +1338,15 @@ static const char * hb_gt_qtc_findFont( void )
 
    for( pszFont = pszFontNames; *pszFont; ++pszFont )
    {
+#if QT_VERSION >= 0x060000
+      if( QFontDatabase::isScalable( *pszFont ) &&
+          QFontDatabase::isFixedPitch( *pszFont ) )
+         return *pszFont;
+#else
       QFontDatabase qFData;
       if( qFData.isScalable( *pszFont ) && qFData.isFixedPitch( *pszFont ) )
          return *pszFont;
+#endif
    }
 
    return QTC_DEFAULT_FONT_NAME;
