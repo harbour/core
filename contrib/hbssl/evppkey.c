@@ -210,6 +210,31 @@ HB_FUNC( EVP_PKEY_BITS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( EVP_PKEY_GET_ENCODED_PUBLIC_KEY )
+{
+   if( hb_EVP_PKEY_is( 1 ) )
+   {
+      EVP_PKEY * pkey = hb_EVP_PKEY_par( 1 );
+
+      if( pkey )
+      {
+         unsigned char * pubkey_val;
+         size_t pubkey_len;
+
+         pubkey_len = EVP_PKEY_get1_encoded_public_key( pkey, &pubkey_val );
+         if( pubkey_len != 0 )
+         {
+            hb_retclen( ( char * ) pubkey_val, pubkey_len );
+            OPENSSL_free( pubkey_val );
+         }
+         else
+            hb_retc_null();
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( EVP_PKEY_ASSIGN )
 {
    if( hb_EVP_PKEY_is( 1 ) )

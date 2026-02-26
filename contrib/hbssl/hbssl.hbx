@@ -182,6 +182,7 @@ DYNAMIC EVP_PKEY_decrypt_init
 DYNAMIC EVP_PKEY_encrypt
 DYNAMIC EVP_PKEY_encrypt_init
 DYNAMIC EVP_PKEY_free
+DYNAMIC EVP_PKEY_get_encoded_public_key
 DYNAMIC EVP_PKEY_new
 DYNAMIC EVP_PKEY_sign
 DYNAMIC EVP_PKEY_sign_init
