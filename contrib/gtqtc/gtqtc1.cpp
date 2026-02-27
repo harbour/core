@@ -3453,7 +3453,7 @@ void QTConsole::mouseReleaseEvent( QMouseEvent * evt )
          iKey = K_RBUTTONUP;
          break;
 
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= 0x050000
       case Qt::MiddleButton:
 #else
       case Qt::MidButton:

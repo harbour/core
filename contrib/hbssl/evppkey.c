@@ -218,11 +218,15 @@ HB_FUNC( EVP_PKEY_GET_ENCODED_PUBLIC_KEY )
 
       if( pkey )
       {
-#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
          unsigned char * pubkey_val;
          size_t pubkey_len;
 
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
          pubkey_len = EVP_PKEY_get1_encoded_public_key( pkey, &pubkey_val );
+#else
+         pubkey_len = EVP_PKEY_get1_tls_encodedpoint( pkey, &pubkey_val );
+#endif
          if( pubkey_len != 0 )
          {
             hb_retclen( ( char * ) pubkey_val, pubkey_len );
