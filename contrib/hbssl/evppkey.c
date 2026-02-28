@@ -218,7 +218,7 @@ HB_FUNC( EVP_PKEY_GET_ENCODED_PUBLIC_KEY )
 
       if( pkey )
       {
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && ! defined( LIBRESSL_VERSION_NUMBER )
          unsigned char * pubkey_val;
          size_t pubkey_len;
 
