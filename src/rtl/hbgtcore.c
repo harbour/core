@@ -58,6 +58,7 @@
 #include "hbapifs.h"
 #include "hbapierr.h"
 #include "hbapicdp.h"
+#include "hbgtwide.h"
 #include "hbdate.h"
 #include "hbset.h"
 #include "hbvm.h"
@@ -87,6 +88,25 @@ void hb_gt_BaseUnlock( PHB_GT pGT )
    HB_GTSELF_UNLOCK( pGT );
 }
 
+/* Calculate Unicode character display width based on GT driver setting
+ * This helper function checks the fWideCharWidth flag and returns
+ * the appropriate display width for the character.
+ *
+ * When fWideCharWidth is enabled, uses hb_wcwidth() for accurate
+ * Unicode TR11 East Asian Width calculation. Otherwise returns 1
+ * for backward compatibility.
+ */
+static int hb_gt_charDispWidth( PHB_GT pGT, HB_WCHAR wc )
+{
+   if( pGT->fWideCharWidth )
+   {
+      /* Use accurate Unicode TR11 width calculation */
+      return hb_wcwidth( (HB_WCHAR32)wc );
+   }
+   /* Default: narrow character (width 1) for backward compatibility */
+   return 1;
+}
+
 void hb_gt_BaseLock( PHB_GT pGT )
 {
    HB_GTSELF_LOCK( pGT );
@@ -107,6 +127,7 @@ static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
    pGT->fBlinking    = HB_TRUE;
    pGT->fStdOutCon   = HB_FALSE;
    pGT->fStdErrCon   = HB_FALSE;
+   pGT->fWideCharWidth = HB_FALSE;  /* Default: disable Unicode wide char width calc */
    pGT->iCursorShape = SC_NORMAL;
    pGT->iDispCount   = 0;
    pGT->iExtCount    = 0;
@@ -856,33 +877,44 @@ static int hb_gt_def_PutText( PHB_GT pGT, int iRow, int iCol, int iColor, const 
    PHB_CODEPAGE cdp = HB_GTSELF_HOSTCP( pGT );
    HB_SIZE nIndex = 0;
    HB_WCHAR wc;
+   int iDispCol = iCol;  /* Actual display column position */
 
    while( HB_CDPCHAR_GET( cdp, szText, nLen, &nIndex, &wc ) )
    {
-      if( ! HB_GTSELF_PUTCHAR( pGT, iRow, iCol++, iColor, 0, wc ) )
+      if( ! HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, 0, wc ) )
       {
          while( HB_CDPCHAR_GET( cdp, szText, nLen, &nIndex, &wc ) )
-            ++iCol;
+            iDispCol += hb_gt_charDispWidth( pGT, wc );
          break;
       }
+      /* Add character display width to actual display position */
+      iDispCol += hb_gt_charDispWidth( pGT, wc );
+      iCol++;  /* Cell index only increments by 1 */
    }
-   return iCol;
+   return iDispCol;
 }
 
 static int hb_gt_def_PutTextW( PHB_GT pGT, int iRow, int iCol, int iColor, const HB_WCHAR * szText, HB_SIZE nLen )
 {
+   int iDispCol = iCol;  /* Actual display column position */
+
    if( nLen )
    {
       do
       {
-         if( ! HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, 0, *szText++ ) )
+         if( ! HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, 0, *szText ) )
             break;
-         ++iCol;
+         
+         /* Add character display width to actual display position */
+         iDispCol += hb_gt_charDispWidth( pGT, *szText );
+         
+         szText++;
+         ++iCol;  /* Cell index only increments by 1 */
       }
       while( --nLen );
    }
 
-   return iCol + ( int ) nLen;
+   return iDispCol;
 }
 
 static void hb_gt_def_Replicate( PHB_GT pGT, int iRow, int iCol, int iColor,
@@ -1027,7 +1059,7 @@ static void hb_gt_def_WriteCon( PHB_GT pGT, const char * szText, HB_SIZE nLength
             break;
 
          default:
-            ++iCol;
+            iCol += hb_gt_charDispWidth( pGT, wc );
             if( iCol > iMaxCol || iCol <= 0 )
             {
                /* If the cursor position started off the left edge,
@@ -2004,6 +2036,13 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_VERSION:
          pInfo->pResult = hb_itemPutC( pInfo->pResult,
                   HB_GTSELF_VERSION( pGT, hb_itemGetNI( pInfo->pNewVal ) ) );
+         break;
+
+      case HB_GTI_WIDECHARWIDTH:
+         /* Enable/Disable Unicode wide character width calculation */
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pGT->fWideCharWidth );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+            pGT->fWideCharWidth = hb_itemGetL( pInfo->pNewVal );
          break;
 
       default:
