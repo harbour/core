@@ -336,10 +336,10 @@ static HB_ERRCODE sqlite3Execute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
    char **    pResult   = NULL;
    char *     pszErrMsg = NULL;
 
-   if( sqlite3_get_table( pDb, S_HB_ITEMGETSTR( pItem, &hStatement, NULL ), &pResult, &iRow, &iCol, &pszErrMsg ) != SQLITE_OK )
+   if( sqlite3_get_table( pDb, S_HB_ITEMGETSTR( pItem, &hStatement, NULL ), &pResult, &iRow, &iCol, NULL ) != SQLITE_OK )
    {
       hb_strfree( hStatement );
-      hb_xfree( sqlite3GetError( pDb, &errCode ) );
+      pszErrMsg = sqlite3GetError( pDb, &errCode );
       hb_errRT_SQLT3DD( EG_OPEN, ESQLDD_STMTALLOC, pszErrMsg, hb_itemGetCPtr( pItem ), errCode );
       hb_xfree( pszErrMsg );
       return HB_FAILURE;
