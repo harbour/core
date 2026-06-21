@@ -1,0 +1,5 @@
+# Smoke: Clipper Limbo / soft-seek flags via contrib/rddads (ADSCDX).
+# Build: hbmk2 contrib/rddads/tests/semantics_smoke.hbp -comp=<toolchain>
+# Requires HB_WITH_ADS (ACE SDK) and local Advantage server.
+semantics_smoke.prg
+-w3

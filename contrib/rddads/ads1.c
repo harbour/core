@@ -1112,14 +1112,23 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
                                pszKey, u16KeyLen, u16KeyType, &u16Found );
       if( u32RetVal == AE_SUCCESS && bSoftSeek && ! u16Found )
       {
-         /* in such case ADS set record at EOF position so we
-            should make normal soft seek and then skip -1 to emulate
-            Clipper behavior, Druzus */
-         u32RetVal = AdsSeek( pArea->hOrdCurrent, pszKey, u16KeyLen,
-                              u16KeyType, u16SeekType, &u16Found );
+         /* DBFCDX / rddtst: bFindLast soft-seeks that miss every key
+            must stay at EOF.  The retry-then-Skip(-1) path is only
+            valid on ascending orders where SeekLast parked past the
+            last duplicate.  On descending tags keep EOF from
+            SeekLast.  Skip(-1) after a failed retry can walk to the
+            last physical record (Brian-Hays GOBOTTOM) — DBFCDX does
+            not do that. */
+         UNSIGNED16 u16Desc = 0;
+         AdsIsIndexDescending( pArea->hOrdCurrent, &u16Desc );
+         if( ! u16Desc )
+         {
+            u32RetVal = AdsSeek( pArea->hOrdCurrent, pszKey, u16KeyLen,
+                                 u16KeyType, u16SeekType, &u16Found );
 
-         if( u32RetVal == AE_SUCCESS )
-            u32RetVal = AdsSkip( pArea->hOrdCurrent, -1 );
+            if( u32RetVal == AE_SUCCESS && u16Found )
+               u32RetVal = AdsSkip( pArea->hOrdCurrent, -1 );
+         }
       }
    }
    else
@@ -1142,7 +1151,10 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
       #if 0
       HB_ERRCODE errCode = SELF_GOTOP( &pArea->area );
       #endif
-      pArea->area.fBof = HB_FALSE;
+      /* Clipper Limbo on empty / filtered table: BOF and EOF both set.
+         Do not clear fBof when fEof is also true. */
+      if( ! pArea->area.fEof )
+         pArea->area.fBof = HB_FALSE;
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
       if( pszKeyFree )
          hb_adsOemAnsiFree( ( char * ) pszKeyFree );
@@ -1250,7 +1262,9 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
     * when it doesn't but only sometimes. I've not been able to detect
     * the rule yet. Any how it's much safer to clear it, Druzus.
     */
-   pArea->area.fBof = HB_FALSE;
+   /* Preserve Limbo (BOF+EOF) — same rule as dbf1.c / rddtst.prg */
+   if( ! pArea->area.fEof )
+      pArea->area.fBof = HB_FALSE;
 
    if( pucSavedKey )
       hb_xfree( pucSavedKey );
@@ -1323,6 +1337,7 @@ static HB_ERRCODE adsSkip( ADSAREAP pArea, HB_LONG lToSkip )
    {
       HB_ERRCODE errCode = HB_SUCCESS;
       HB_LONG lSkipper;
+      HB_LONG lToSkipOrig = lToSkip;
 
       if( ! pArea->fPositioned && lToSkip < 0 )
       {
@@ -1332,10 +1347,18 @@ static HB_ERRCODE adsSkip( ADSAREAP pArea, HB_LONG lToSkip )
 
       if( ! pArea->fPositioned )
       {
-         if( lToSkip > 0 )
+         /* Match hb_dbfSkip(): distinguish Limbo, Bof-only, Eof-only.
+            Use original direction — GOBOTTOM-then-++ may zero lToSkip. */
+         if( lToSkipOrig > 0 )
+         {
             pArea->area.fEof = HB_TRUE;
-         else
+            pArea->area.fBof = HB_FALSE;
+         }
+         else if( lToSkipOrig < 0 )
+         {
             pArea->area.fBof = HB_TRUE;
+            pArea->area.fEof = HB_FALSE;
+         }
       }
       else if( lToSkip )
       {

@@ -67,6 +67,27 @@
 
 #include "ace.h"
 
+/* ads1.c / adsfunc.c use ADSFIELD( n ) for the n-th field name as
+   UNSIGNED8* in the current workarea; define it when ACE headers do
+   not supply the macro. */
+extern HB_EXPORT void * hb_rddGetCurrentWorkAreaPointer( void );
+
+static __inline UNSIGNED8 * ADSFIELD( UNSIGNED16 n )
+{
+   AREAP pCurArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+   if( pCurArea == NULL || n == 0 ||
+       n > pCurArea->uiFieldCount )
+      return NULL;
+   return ( UNSIGNED8 * ) hb_dynsymName(
+      ( PHB_DYNS ) pCurArea->lpFields[ n - 1 ].sym );
+}
+
+/* adsfunc.c sets ADS_MAX_PARAMDEF_LEN to 2048 after this include;
+   pre-define so ace.h's #ifndef guard accepts it without
+   -Wmacro-redefined. */
+#undef  ADS_MAX_PARAMDEF_LEN
+#define ADS_MAX_PARAMDEF_LEN 2048
+
 /* Auto-detect ACE version. */
 #if   defined( ADS_ROOT_DD_ALIAS )
    #define _ADS_LIB_VERSION  1110 /* or upper */
