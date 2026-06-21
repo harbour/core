@@ -1,0 +1,5 @@
+# Linux OEM raw-field smoke (issue #354).  No-op SKIP on other OS.
+# Build: hbmk2 contrib/rddads/tests/oem_linux_smoke.hbp -comp=gcc
+# Needs HB_WITH_ADS, ACE >= 6.0, Linux ADS local/remote.
+oem_linux_smoke.prg
+-w3

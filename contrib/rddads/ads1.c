@@ -2231,6 +2231,28 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_LITTLE, ( const HB_WCHAR * ) pBuffer, u32Length );
                break;
             }
+            }
+#endif
+#if defined( HB_ADS_RAW_OEM_UNIX )
+         else if( HB_ADS_IS_OEM_TABLE() && ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+         {
+            u32RetVal = AdsGetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length );
+            if( u32RetVal == AE_INSUFFICIENT_BUFFER && pField->uiType == HB_FT_VARLENGTH )
+            {
+               UNSIGNED8 * pucBuf = ( UNSIGNED8 * ) hb_xgrab( u32Length );
+               u32RetVal = AdsGetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), pucBuf, &u32Length );
+               if( u32RetVal == AE_SUCCESS )
+               {
+                  hb_itemPutCLPtr( pItem, ( char * ) pucBuf, u32Length );
+                  break;
+               }
+               hb_xfree( pucBuf );
+            }
+            else if( u32RetVal == AE_SUCCESS )
+            {
+               hb_itemPutCL( pItem, ( char * ) pBuffer, u32Length );
+               break;
+            }
          }
 #endif
 #ifdef ADS_USE_OEM_TRANSLATION
@@ -2738,6 +2760,15 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                      /* maximum VarChar field size is 64000 */
                      nLen = 64000;
                }
+#if defined( HB_ADS_RAW_OEM_UNIX )
+               if( HB_ADS_IS_OEM_TABLE() )
+               {
+                  u32RetVal = AdsSetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ),
+                                              ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pItem ) ),
+                                              ( UNSIGNED32 ) nLen );
+               }
+               else
+#endif
 #ifdef ADS_USE_OEM_TRANSLATION
                if( hb_ads_bOEM )
                {

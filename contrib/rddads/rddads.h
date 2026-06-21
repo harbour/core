@@ -191,6 +191,17 @@ typedef ADSAREA * ADSAREAP;
 #  undef ADS_USE_OEM_TRANSLATION
 #endif
 
+/* OEM tables on disk: set via AdsSetCharType() / hb_ads_bOEM (all platforms). */
+extern HB_BOOL hb_ads_bOEM;
+extern int     hb_ads_iCharType;
+
+#if ADS_LIB_VERSION >= 600 && defined( HB_OS_UNIX )
+/* Linux ACE: bypass broken ANSI<->OEM conversion with raw field I/O (#354). */
+#  define HB_ADS_RAW_OEM_UNIX
+#endif
+
+#define HB_ADS_IS_OEM_TABLE()  ( hb_ads_bOEM || hb_ads_iCharType == ( int ) ADS_OEM )
+
 #define HB_ADS_PARCONNECTION( n )     ( ( ADSHANDLE ) hb_parnintdef( n, hb_ads_getConnection() ) )
 #define HB_ADS_RETCONNECTION( h )     hb_retnint( h )
 #define HB_ADS_GETCONNECTION( p )     ( ( hb_itemType( p ) & HB_IT_NUMERIC ) ? ( ADSHANDLE ) hb_itemGetNInt( p ) : hb_ads_getConnection() )
@@ -214,7 +225,6 @@ extern HB_ERRCODE hb_adsCloseCursor( ADSAREAP pArea );
 extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
 
 #ifdef ADS_USE_OEM_TRANSLATION
-   extern HB_BOOL hb_ads_bOEM;
    extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE nLen );
    extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE nLen );
    extern void    hb_adsOemAnsiFree( char * pcString );
@@ -226,6 +236,18 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
                                          UNSIGNED32  ulLen );
 
    /* NOTE: Undocumented ACE function. */
+   UNSIGNED32 ENTRYPOINT AdsGetFieldRaw( ADSHANDLE    hTbl,
+                                         UNSIGNED8 *  pucFldName,
+                                         UNSIGNED8 *  pucBuf,
+                                         UNSIGNED32 * pulLen );
+
+#elif defined( HB_ADS_RAW_OEM_UNIX )
+   /* Same undocumented ACE entry points — not wrapped by Win32 OEM helpers. */
+   UNSIGNED32 ENTRYPOINT AdsSetFieldRaw( ADSHANDLE   hObj,
+                                         UNSIGNED8 * pucFldName,
+                                         UNSIGNED8 * pucBuf,
+                                         UNSIGNED32  ulLen );
+
    UNSIGNED32 ENTRYPOINT AdsGetFieldRaw( ADSHANDLE    hTbl,
                                          UNSIGNED8 *  pucFldName,
                                          UNSIGNED8 *  pucBuf,

@@ -65,9 +65,9 @@ int     hb_ads_iCheckRights  = ADS_CHECKRIGHTS;
 int     hb_ads_iCharType     = ADS_ANSI;
 HB_BOOL hb_ads_bTestRecLocks = HB_FALSE;               /* Debug Implicit locks */
 
-#ifdef ADS_USE_OEM_TRANSLATION
-
 HB_BOOL hb_ads_bOEM = HB_FALSE;
+
+#ifdef ADS_USE_OEM_TRANSLATION
 
 char * hb_adsOemToAnsi( const char * pszSrc, HB_SIZE nLen )
 {
@@ -482,10 +482,12 @@ HB_FUNC( ADSSETCHARTYPE )
 #endif
          hb_ads_iCharType = charType;
 
-#ifdef ADS_USE_OEM_TRANSLATION
-      if( HB_ISLOG( 2 ) )
+      if( hb_pcount() >= 2 && HB_ISLOG( 2 ) )
          hb_ads_bOEM = hb_parl( 2 );
-#endif
+      else if( charType == ( int ) ADS_OEM )
+         hb_ads_bOEM = HB_TRUE;
+      else if( charType == ( int ) ADS_ANSI )
+         hb_ads_bOEM = HB_FALSE;
    }
 }
 
