@@ -1,0 +1,109 @@
+Building Harbour Windows binaries for stable release
+====================================================
+
+This guide covers a practical Windows binary build for release 3.2.0.
+It produces a self-contained MinGW-w64 x64 package, which is the most
+common target for modern Windows hosts.
+
+
+Quick start (local build machine)
+---------------------------------
+
+1. Checkout the release tag:
+
+    git clone https://github.com/harbour/core.git harbour-core
+    cd harbour-core
+    git checkout v3.2.0
+
+2. Open "MSYS2 MinGW 64-bit" (or add mingw64 bin to PATH).
+
+3. From the Harbour root:
+
+    package\build_win_release.bat
+
+4. Create the distributable archive:
+
+    package\archive_win_pkg.bat
+
+5. Upload the resulting file to GitHub Releases:
+
+    harbour-3.2.0-win-mingw64.7z
+
+   Example with GitHub CLI:
+
+    gh release upload v3.2.0 harbour-3.2.0-win-mingw64.7z --repo harbour/core
+
+
+Prerequisites
+-------------
+
+* Windows 10/11 x64
+* MSYS2 with MinGW-w64 toolchain:
+
+      pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-make
+
+* 7-Zip (for archive_win_pkg.bat), or set HB_DIR_7Z to its folder
+* ~4 GB free disk space
+* Optional for unified installer (full 3.0.0-style bundle):
+  - NSIS (set HB_DIR_NSIS)
+  - Borland C++ (for BCC import libs in winuni script)
+  - Pre-built libs for other platforms in pkg\ (see mpkg_win_uni.bat)
+
+
+Output layout
+-------------
+
+After build_win_release.bat:
+
+    pkg\win\mingw64\harbour-3.2.0-win-mingw64\
+        bin\      harbour.exe, hbmk2.exe, hbtest.exe, *.dll
+        include\
+        lib\
+        LICENSE.txt
+        README.md
+        ...
+
+After archive_win_pkg.bat:
+
+    harbour-3.2.0-win-mingw64.7z   (in repo root)
+
+
+Automated build (GitHub Actions)
+--------------------------------
+
+Workflow: .github/workflows/release-windows.yml
+
+Triggers:
+  - push tag v*
+  - manual dispatch (workflow_dispatch) with tag name input
+
+To build binaries for the existing v3.2.0 release:
+
+1. Merge release-windows.yml to master
+2. GitHub → Actions → "release-windows" → Run workflow
+3. Enter tag: v3.2.0
+4. The .7z asset is uploaded to the existing GitHub Release
+
+
+Unified installer (optional, advanced)
+--------------------------------------
+
+The historical all-in-one installer (exe + 7z with MinGW bundled,
+multi-compiler libs) uses package\winuni\mpkg_win_uni.bat.
+
+Before running it you must:
+
+1. Build per-target packages into pkg\ (mingw, mingw64, msvc, etc.)
+2. Set HB_VF=3.2.0, HB_RT, HB_DIR_NSIS, HB_DIR_7Z, HB_DIR_MINGW, etc.
+3. Read comments at the top of mpkg_win_uni.bat
+
+This is significantly more work than the single mingw64 package above.
+
+
+Publishing checklist
+--------------------
+
+[ ] harbour-3.2.0-win-mingw64.7z on GitHub Releases (v3.2.0)
+[ ] Optional: upload to SourceForge under binaries-windows/
+[ ] Update harbour-users announcement with Windows download link
+[ ] Verify: hbmk2 tests\hello.prg works on a clean Windows VM

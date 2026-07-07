@@ -1,0 +1,84 @@
+name: release-windows
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v3.2.0)'
+        required: true
+        default: 'v3.2.0'
+
+jobs:
+  windows-binary:
+    runs-on: windows-latest
+
+    steps:
+      - name: Resolve tag
+        id: tag
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "ref=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install MSYS2 packages
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-make
+            mingw-w64-x86_64-p7zip
+            mingw-w64-x86_64-curl
+            mingw-w64-x86_64-openssl
+
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.tag.outputs.ref }}
+
+      - name: Build Harbour package
+        shell: msys2 {0}
+        run: |
+          set -ex
+          export HB_BUILD_PKG=yes
+          export HB_BUILD_VERBOSE=yes
+          export HBMK_WITH_SQLITE3=local
+          export HB_COMPILER=mingw64
+          export HB_CPU=x86_64
+          mingw32-make.exe -j2 clean install HB_BUILD_CONTRIBS=no
+          mingw32-make.exe -j2 -C contrib
+
+      - name: Run tests
+        shell: msys2 {0}
+        run: |
+          set -ex
+          bin/win/mingw64/hbtest.exe
+
+      - name: Create 7z archive
+        shell: msys2 {0}
+        run: |
+          set -ex
+          VER=$(sed -n 's/.*HB_VER_MAJOR[[:space:]]*\([0-9]*\).*/\1/p' include/hbver.h)
+          VER=${VER}.$(sed -n 's/.*HB_VER_MINOR[[:space:]]*\([0-9]*\).*/\1/p' include/hbver.h)
+          VER=${VER}.$(sed -n 's/.*HB_VER_RELEASE[[:space:]]*\([0-9]*\).*/\1/p' include/hbver.h)
+          STAT=$(sed -n 's/.*HB_VER_STATUS[[:space:]]*"\([^"]*\)".*/\1/p' include/hbver.h)
+          PKG=harbour-${VER}${STAT}-win-mingw64
+          test -d "pkg/win/mingw64/${PKG}"
+          7z a -r "${PKG}.7z" "pkg/win/mingw64/${PKG}/"
+          ls -la "${PKG}.7z"
+          echo "ARCHIVE=${PKG}.7z" >> "$GITHUB_ENV"
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.ref }}
+          files: ${{ env.ARCHIVE }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

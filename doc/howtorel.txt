@@ -66,12 +66,22 @@ From the Harbour root directory:
     make clean install
     package/mpkg_rpm.sh
 
-*Windows:*
+*Windows (MinGW-w64 x64, recommended):*
+
+    git checkout v3.2.0
+    package\build_win_release.bat
+    package\archive_win_pkg.bat
+    gh release upload v3.2.0 harbour-3.2.0-win-mingw64.7z --repo harbour/core
+
+See package\BUILD-WIN-RELEASE.txt for prerequisites and details.
+
+*Windows (unified installer, all compilers):*
 
     set HB_BUILD_PKG=yes
+    set HB_VF=3.2.0
     win-make clean install
+    package\winuni\mpkg_win_uni.bat
 
-Or use package\winuni\mpkg_win_uni.bat for the unified installer.
 See README.md section "How to Create Distributable Packages".
 
 
