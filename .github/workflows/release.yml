@@ -25,10 +25,9 @@ jobs:
       - name: Build Harbour
         run: |
           set -ex
-          export HB_BUILD_PKG=yes
           export HB_BUILD_VERBOSE=yes
           export HBMK_WITH_SQLITE3=local
-          make -j$(nproc) clean install HB_COMPILER=gcc
+          make -j$(nproc) HB_BUILD_CONTRIBS=no HB_COMPILER=gcc
 
       - name: Run tests
         run: |
