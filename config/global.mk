@@ -30,9 +30,9 @@ HB_VER_MAJOR     := 3
 HB_VER_MINOR     := 2
 HB_VER_RELEASE   := 0
 # Status (dev, alpha1, alpha2, beta1, beta2, rc1, rc2, empty for final)
-HB_VER_STATUS    := dev
+HB_VER_STATUS    :=
 # Short status (d, a1, a2, b1, b2, r1, r2, empty for final)
-HB_VER_STATUS_SH := d
+HB_VER_STATUS_SH :=
 
 ifeq ($(HB_VER_STATUS_SH),)
    HB_VER_STATUS_SH := $(HB_VER_MINOR)$(HB_VER_RELEASE)

@@ -84,9 +84,9 @@ There are several ways to help making Harbour better:
 
 ## Stable versions
 
-The latest official stable release is **3.0.0** (2011-07-17).
-The development tree is at **3.2.0dev**; a **3.2.0** stable release is in
-preparation. See the [homepage](https://harbour.github.io/) for project status.
+The latest official stable release is **3.2.0** (2026-07-07).
+See the [homepage](https://harbour.github.io/) for project status and
+[GitHub Releases](https://github.com/harbour/core/releases) for downloads.
 
 ### Harbour stable binary download
 

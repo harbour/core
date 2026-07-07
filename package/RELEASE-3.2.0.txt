@@ -1,0 +1,40 @@
+Harbour 3.2.0
+=============
+
+Release date: 2026-07-07
+
+Harbour 3.2.0 is the first official stable release since 3.0.0 (2011).
+This release captures fifteen years of development on the master branch,
+including Unicode support, the FOR EACH construct, modern TLS/SSL and
+networking libraries, Qt5/Qt6 GTQTC updates, and continuous integration
+on Linux, Windows and macOS.
+
+Downloads
+---------
+
+* Source: harbour-3.2.0.src.tar.gz (GitHub Releases)
+* Windows nightly builds remain on SourceForge for development snapshots
+
+Highlights since 3.0.0
+----------------------
+
+* Unicode and wide-character support throughout the RTL
+* FOR EACH iteration over arrays, strings and objects
+* hbssl, hbcurl, hbzebra and many contrib library updates
+* GitHub Actions CI across multiple compilers and platforms
+* Numerous RDD, GT and cross-platform fixes
+
+Upgrade notes
+-------------
+
+Users migrating from Harbour 3.0.0 should review ChangeLog.txt for
+compatibility notes, especially around Unicode string handling and
+legacy C type removals.
+
+Community
+---------
+
+* Homepage: https://harbour.github.io/
+* Users list: https://groups.google.com/group/harbour-users/
+* Development list: https://groups.google.com/group/harbour-devel/
+* Source: https://github.com/harbour/core
