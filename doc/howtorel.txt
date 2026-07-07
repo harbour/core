@@ -1,38 +1,110 @@
 How to create and tag a new release
 ===================================
-By Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+Updated for Git workflow (2026).
 
 
-1. Make full update of your local CVS copy with:
-    cvs -z3 update -A -P -d -R harbour
-   with the above unused empty directories will be removed
-   from your repository copy.
-   Please check if all your files are unmodified. You can redirect
-   STDOUT output from cvs command to a file to see if all files are
-   exactly the same.
-2. Update files which contain Harbour release number. Now these are:
-    harbour.spec
+Prerequisites
+-------------
+
+* Clean working tree on the release commit
+* All CI workflows green (linux, windows, macos, vm1, vm2)
+* Agreement on harbour-devel about version number and release date
+
+
+1. Prepare version files
+------------------------
+
+Update the Harbour version in these files (search for the current values):
+
     include/hbver.h
-3. Set proper release date in NEWS (found as doc/oldnews.txt) and
-   if necessary update release information. Also add the exact
-   tag name to this file, for example "tag: build46".
-4. Update ChangeLog.txt and commit your modifications.
-5. Update hbver.h with ChangeLog.txt file ID and your last entry ID.
-6. Tag the CVS tree with the new release tag:
-    cvs tag -t -F -D <local_daytime_or_other_with_TZ_info> <newtag>
-   for example:
-    cvs tag -t -F -D "2006-05-29 16:00" build46
-   With the above you can also "re-tag" already set tag so be careful
-   and use re-tag repository _only_ if it's really necessary.
+    config/global.mk
+    package/harbour.spec
+    package/harbour-win.spec.in
+    package/harbour-wce.spec.in
+    debian/changelog
+    package/winuni/RELNOTES.txt
+
+For a release candidate, set HB_VER_STATUS to "rc1" or "rc2".
+For the final release, set HB_VER_STATUS to "" (empty string).
 
 
-With properly tagged CVS any one who wants to create Harbour release
-binaries should make:
-    cvs -z3 co -r <reltag> harbour
-for example:
-    cvs -z3 co -r "build46" harbour
-to be sure that local repository copy is exactly the same as the one
-tagged as new release. The first commit after cvs tagging should also
-change the version number and ChangeLog IDs in harbour.spec and
-include/hbver.h for easier locating possible mistakes when release
-binaries are created.
+2. Update ChangeLog and commit
+------------------------------
+
+    hbrun bin/commit
+    git commit -am "Release 3.2.0"
+
+Use the standard ChangeLog entry format. The commit hook enforces this.
+
+
+3. Tag the release
+------------------
+
+    git tag -a v3.2.0 -m "Harbour 3.2.0"
+    git push origin master
+    git push origin v3.2.0
+
+For release candidates use tags like v3.2.0rc1.
+
+
+4. Build source package
+-----------------------
+
+    package/mpkg_src.sh
+
+Produces harbour-<version>.src.tar.gz in the package directory.
+
+
+5. Build binary packages
+------------------------
+
+From the Harbour root directory:
+
+*nix:*
+
+    export HB_BUILD_PKG=yes
+    make clean install
+    package/mpkg_rpm.sh
+
+*Windows:*
+
+    set HB_BUILD_PKG=yes
+    win-make clean install
+
+Or use package\winuni\mpkg_win_uni.bat for the unified installer.
+See README.md section "How to Create Distributable Packages".
+
+
+6. Publish
+----------
+
+Upload artefacts to:
+
+    https://github.com/harbour/core/releases
+    https://sourceforge.net/projects/harbour-project/files/
+
+Attach source archive, Windows binaries, and release notes summarizing
+changes since the previous stable release (derive from ChangeLog.txt).
+
+
+7. Bump development version
+---------------------------
+
+After publishing, on master:
+
+* Increment HB_VER_RELEASE or HB_VER_MINOR in hbver.h / global.mk
+* Set HB_VER_STATUS back to "dev"
+* Add a ChangeLog entry for the version bump
+* Commit and push
+
+
+8. Update the website
+---------------------
+
+In harbour/harbour.github.io:
+
+* _config.yml: stable_version, stable_date
+* _data/news.yml: release announcement
+* index.html picks up config automatically
+
+See https://github.com/harbour/harbour.github.io

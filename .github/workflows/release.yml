@@ -1,0 +1,52 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install packages
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt-get update
+          sudo apt-get install -qq \
+            libncurses-dev \
+            libcurl4-openssl-dev \
+            unixodbc-dev
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Harbour
+        run: |
+          set -ex
+          export HB_BUILD_PKG=yes
+          export HB_BUILD_VERBOSE=yes
+          export HBMK_WITH_SQLITE3=local
+          make -j$(nproc) clean install HB_COMPILER=gcc
+
+      - name: Run tests
+        run: |
+          set -ex
+          bin/linux/gcc/hbtest
+
+      - name: Build source archive
+        run: |
+          set -ex
+          cd package
+          ./mpkg_src.sh
+          ls -la harbour-*.tar.gz
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            package/harbour-*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
