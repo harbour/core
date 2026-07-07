@@ -52,7 +52,8 @@ jobs:
           export HBMK_WITH_SQLITE3=local
           export HB_COMPILER=mingw64
           export HB_CPU=x86_64
-          mingw32-make.exe -j2 clean install HB_BUILD_CONTRIBS=no
+          # Sequential install avoids parallel install races (libhbzlib.a, macroy.h)
+          mingw32-make.exe -j1 clean install HB_BUILD_CONTRIBS=no
           mingw32-make.exe -j2 -C contrib
 
       - name: Run tests
