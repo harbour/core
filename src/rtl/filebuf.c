@@ -491,7 +491,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
 #if ! defined( HB_OS_UNIX )
    fResult = HB_TRUE;
 #else
-#  if defined( HB_USE_SHARELOCKS ) && ! defined( HB_USE_BSDLOCKS )
+#  if defined( HB_USE_SHARELOCKS )
    if( nExFlags & FXO_SHARELOCK )
    {
       if( iMode == FO_WRITE && fShared )
@@ -610,7 +610,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
 
             if( pFile->uiLocks == 0 )
             {
-#if ! defined( HB_USE_SHARELOCKS ) || defined( HB_USE_BSDLOCKS )
+#if ! defined( HB_USE_SHARELOCKS )
                if( pFile->hFileRO != FS_ERROR )
                {
                   hb_fsClose( pFile->hFileRO );
@@ -621,7 +621,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
                {
                   hb_fsClose( hFile );
                   hFile = FS_ERROR;
-#if defined( HB_USE_SHARELOCKS ) && ! defined( HB_USE_BSDLOCKS )
+#if defined( HB_USE_SHARELOCKS )
                   /* FIXME: possible race condition */
                   hb_fsLockLarge( pFile->hFile, HB_SHARELOCK_POS, HB_SHARELOCK_SIZE,
                                   FL_LOCK | FLX_SHARED );

@@ -227,19 +227,6 @@ extern HB_EXPORT int        hb_fsCanWrite    ( HB_FHANDLE hFileHandle, HB_MAXINT
 #  define HB_USE_SHARELOCKS
 #  define HB_SHARELOCK_POS          0x7fffffffUL
 #  define HB_SHARELOCK_SIZE         0x1UL
-#  if defined( HB_USE_BSDLOCKS_OFF )
-#     undef HB_USE_BSDLOCKS
-#  elif defined( HB_OS_LINUX ) && \
-        ! defined( __WATCOMC__ ) && ! defined( HB_USE_BSDLOCKS )
-      /* default usage of BSD locks in *BSD systems for emulating
-       * MS-DOS/Windows DENY_* flags has been disabled because tests
-       * on FreeBSD 6.2 and macOS shows that this implementation
-       * can create self deadlock when used simultaneously with
-       * POSIX locks - thanks to Phil and Lorenzo for locating the
-       * problem and tests [druzus]
-       */
-#     define HB_USE_BSDLOCKS
-#  endif
 #endif
 
 #define HB_MAX_DRIVE_LENGTH   10
