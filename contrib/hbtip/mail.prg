@@ -255,7 +255,7 @@ METHOD HeadersToString() CLASS TIPMail
    NEXT
 
    IF ! Empty( ::aAttachments )
-      cRet += "Mime-Version: " + ::hHeaders[ "Mime-Version" ] + e"\r\n"
+      cRet += "MIME-Version: " + ::hHeaders[ "Mime-Version" ] + e"\r\n"
    ENDIF
 
    FOR EACH i IN ::hHeaders
