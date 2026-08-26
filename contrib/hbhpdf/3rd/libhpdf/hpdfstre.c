@@ -566,7 +566,7 @@ HPDF_Stream_WriteToStreamWithDeflate  (HPDF_Stream  src,
 {
 #ifndef LIBHPDF_HAVE_NOZLIB
 
-#define DEFLATE_BUF_SIZ  ((HPDF_INT)(HPDF_STREAM_BUF_SIZ * 1.1) + 13)
+#define DEFLATE_BUF_SIZ  (HPDF_STREAM_BUF_SIZ * 11 / 10 + 13)
 
     HPDF_STATUS ret;
     HPDF_BOOL flg;

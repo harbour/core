@@ -330,14 +330,15 @@ static HB_ERRCODE sqlite3Disconnect( SQLDDCONNECTION * pConnection )
 static HB_ERRCODE sqlite3Execute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    sqlite3 *  pDb = ( ( SDDCONN * ) pConnection->pSDDConn )->pDb;
-   HB_ERRCODE errCode;
    int        iRow, iCol;
    void *     hStatement;
    char **    pResult   = NULL;
-   char *     pszErrMsg = NULL;
 
    if( sqlite3_get_table( pDb, S_HB_ITEMGETSTR( pItem, &hStatement, NULL ), &pResult, &iRow, &iCol, NULL ) != SQLITE_OK )
    {
+      HB_ERRCODE errCode;
+      char *     pszErrMsg;
+
       hb_strfree( hStatement );
       pszErrMsg = sqlite3GetError( pDb, &errCode );
       hb_errRT_SQLT3DD( EG_OPEN, ESQLDD_STMTALLOC, pszErrMsg, hb_itemGetCPtr( pItem ), errCode );

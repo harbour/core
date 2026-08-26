@@ -66,7 +66,7 @@
 
 #include "hbzebra.h"
 
-#if defined( __GNUC__ ) && __GNUC__ >= 12 && __GNUC__ <= 15
+#if defined( __GNUC__ ) && __GNUC__ >= 12 && __GNUC__ <= 16
    /* workaround for GCC bug */
    #pragma GCC diagnostic ignored "-Warray-bounds"
 #endif

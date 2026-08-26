@@ -7,6 +7,31 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-08-26 19:55 UTC+0100 Phil Krylov (phil a t krylov.eu)
+  * .github/workflows/vm2-ci.yml
+    ! Fixed OmniOS release number to match VM.
+
+  * .github/workflows/windows-ci.yml
+    ! MSYS2 no longer ships 32-bit allegro, cairo, and ghostscript.
+
+  * contrib/hbhpdf/3rd/libhpdf/hpdfstre.c
+    ! Fix accidental usage of variable-length arrays extension.
+
+  * contrib/hbzebra/datamtrx.c
+    ! Extend -Warray-bounds warning pacification to GCC 16.
+
+  * contrib/sddsqlt3/core.c
+    ! Fix an unused assignment warning.
+
+  * src/rtl/gtcrs/gtcrs.h
+    ! Fix building on Oracle Solaris with GCC 15 and native curses.h.
+
+  * src/vm/dlmalloc.c
+    ! Silence an unused variable warning when assertions are off.
+
+  * src/vm/macro.c
+    ! Extend GCC 15+ -Wstringop-overflow warning pacification to Solaris.
+
 2026-08-26 13:17 UTC+0100 Phil Krylov (phil a t krylov.eu)
   * doc/en/hashfunc.txt
     ! Fixed return value documentation for hb_HPairAt()

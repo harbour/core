@@ -62,7 +62,15 @@
 #if defined( HB_OS_HPUX )
 #  define _XOPEN_SOURCE_EXTENDED
 #endif
+
+#if defined( HB_OS_SUNOS ) && defined( __GNUC__ ) && __GNUC__ == 15
+#define bool curses_bool  /* work around /usr/gcc/15/lib/gcc/x86_64-pc-solaris2.11/15.2.0/include-fixed/curses.h:89:14: error: ‘bool’ cannot be defined via ‘typedef’ */
 #include <curses.h>
+#undef bool
+#else
+#include <curses.h>
+#endif
+
 #if defined( HB_OS_SUNOS ) || \
     defined( __PDCURSES__ ) || \
     defined( HB_OS_MINIX )
