@@ -7,6 +7,23 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-08-26 22:48 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/rddsql/sqlbase.c
+    ! compatibility fix for DBInfo( DBI_ISREADONLY ) to return logical
+      .F. instead of NIL as suggested by Itamar Lins. HWGUI browser
+      queries it.
+
+  * contrib/sddsqlt3/core.c
+    ! fix non-default code, guarded with HB_SQLT3_MAP_DECLARED_EMULATED
+      logical bug in parsing decimals from SQL table structure
+      and prevent a theoretical NULL deref
+
+  + contrib/sddsqlt3/tests/struct.prg
+    + demonstrating the effects of enabling HB_SQLT3_MAP_DECLARED_EMULATED
+
+    ; TODO for someone interested, to also implement LOGICAL/BOOLEAN column.
+      Inserting "false, true" to SQLite, will come up later as "0, 1".
+
 2026-08-26 19:55 UTC+0100 Phil Krylov (phil a t krylov.eu)
   * .github/workflows/vm2-ci.yml
     ! Fixed OmniOS release number to match VM.

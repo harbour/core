@@ -253,7 +253,7 @@ static void sqlite3DeclStru( sqlite3_stmt * st, HB_USHORT uiIndex, HB_USHORT * p
    if( szDeclType != NULL )
    {
       HB_SIZE nLen = strlen( szDeclType );
-      HB_SIZE nAt;
+      HB_SIZE nAt, nAtComma;
       int iOverflow;
       HB_MAXINT iRetLen = 0;
 
@@ -274,12 +274,12 @@ static void sqlite3DeclStru( sqlite3_stmt * st, HB_USHORT uiIndex, HB_USHORT * p
          if( ! puiDec )
             return;
 
-         if( * puiLen < 2 )
+         if( ! puiLen || * puiLen < 2 )
             * puiDec = 0;
          else if( puiLen &&
-                  ( nAt = hb_strAt( ",", 1, szDeclType + nAt, nLen - nAt - 1 ) ) > 0 )
+                  ( nAtComma = hb_strAt( ",", 1, szDeclType + nAt, nLen - nAt - 1 ) ) > 0 )
          {
-            if( ( iRetLen = hb_strValInt( szDeclType + nAt, &iOverflow ) ) > 0 )
+            if( ( iRetLen = hb_strValInt( szDeclType + nAt + nAtComma , &iOverflow ) ) > 0 )
             {
                * puiDec = ( HB_USHORT ) HB_MIN( * puiLen - 1, iRetLen );
 
@@ -287,7 +287,8 @@ static void sqlite3DeclStru( sqlite3_stmt * st, HB_USHORT uiIndex, HB_USHORT * p
                 * decimal separator, while xBase stores it.
                 */
 
-               * puiLen = ( HB_USHORT ) ++iRetLen;
+               ( * puiLen )++;
+
             }
             else if( iRetLen == 0 )
                * puiDec = 0;

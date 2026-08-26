@@ -801,6 +801,10 @@ static HB_ERRCODE sqlbaseInfo( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM p
          hb_itemPutC( pItem, pArea->szQuery );
          break;
 
+      case DBI_ISREADONLY:
+         hb_itemPutL( pItem, HB_FALSE );
+         break;
+
       default:
          return SUPER_INFO( &pArea->area, uiIndex, pItem );
    }
