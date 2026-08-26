@@ -7,6 +7,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-08-26 13:17 UTC+0100 Phil Krylov (phil a t krylov.eu)
+  * doc/en/hashfunc.txt
+    ! Fixed return value documentation for hb_HPairAt()
+
 2026-08-16 17:31 UTC+0200 Damian Szlage (damian szlage.pl)
   * contrib/hbtip/mail.prg
     ! MIME-Version header capitalization
