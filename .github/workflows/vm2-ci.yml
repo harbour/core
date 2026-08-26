@@ -15,7 +15,7 @@ jobs:
           - name: freebsd
             version: "14.0"
           - name: omnios
-            version: "r151046"
+            version: "r151058"
           - name: solaris
             version: "11.4"
         compiler:

@@ -55,24 +55,25 @@ jobs:
             mingw-w64-${{ env.msys_cpu }}-ccache
             mingw-w64-${{ env.msys_cpu }}-gcc
             mingw-w64-${{ env.msys_cpu }}-make
-            mingw-w64-${{ env.msys_cpu }}-allegro
             mingw-w64-${{ env.msys_cpu }}-bzip2
-            mingw-w64-${{ env.msys_cpu }}-cairo
             mingw-w64-${{ env.msys_cpu }}-curl
-            mingw-w64-${{ env.msys_cpu }}-ghostscript
             mingw-w64-${{ env.msys_cpu }}-openssl
             openssl-devel
 
       - name: 'Add packages available on 64-bit hosts only'
         if: matrix.cpu != 'x86'
         shell: msys2 {0}
-        run: |
-          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-postgresql
-          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-qt5-base
-          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-libgd
-          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-libmariadbclient
-          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-firebird
-          pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-freeimage
+        run: >
+            pacman -S --noconfirm
+            mingw-w64-${{ env.msys_cpu }}-allegro
+            mingw-w64-${{ env.msys_cpu }}-cairo
+            mingw-w64-${{ env.msys_cpu }}-firebird
+            mingw-w64-${{ env.msys_cpu }}-freeimage
+            mingw-w64-${{ env.msys_cpu }}-ghostscript
+            mingw-w64-${{ env.msys_cpu }}-libgd
+            mingw-w64-${{ env.msys_cpu }}-libmariadbclient
+            mingw-w64-${{ env.msys_cpu }}-postgresql
+            mingw-w64-${{ env.msys_cpu }}-qt5-base
 
       - name: Checkout code
         uses: actions/checkout@v3

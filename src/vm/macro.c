@@ -745,7 +745,7 @@ char * hb_macroTextSymbol( const char * szString, HB_SIZE nLength, HB_BOOL * pfN
          {
             if( szResult == szString )
             {
-#if defined( HB_OS_WIN ) && defined( HB_GCC_HAS_DIAG ) && ( HB_GCC_VER >= 1500 )
+#if ( defined( HB_OS_SUNOS ) || defined( HB_OS_WIN ) ) && defined( HB_GCC_HAS_DIAG ) && ( HB_GCC_VER >= 1500 )
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wstringop-overflow"
 #  pragma GCC diagnostic ignored "-Wrestrict"
@@ -753,7 +753,7 @@ char * hb_macroTextSymbol( const char * szString, HB_SIZE nLength, HB_BOOL * pfN
                szResult = ( char * ) memcpy( hb_xgrab( nLength + 1 ),
                                              szString, nLength );
                szResult[ nLength ] = '\0';
-#if defined( HB_OS_WIN ) && defined( HB_GCC_HAS_DIAG ) && ( HB_GCC_VER >= 1500 )
+#if ( defined( HB_OS_SUNOS ) || defined( HB_OS_WIN ) ) && defined( HB_GCC_HAS_DIAG ) && ( HB_GCC_VER >= 1500 )
 #  pragma GCC diagnostic push
 #endif
             }
