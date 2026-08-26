@@ -381,7 +381,7 @@
    $SUBCATEGORY$
       Hash table
    $ONELINER$
-      Returns a two-dimensional array of a hash table entry key/value pair
+      Returns a two-element array of a hash table entry key/value pair
    $SYNTAX$
       hb_HPairAt( <hTable>, <nPosition> ) -> <aKeyValue>
    $ARGUMENTS$
@@ -390,7 +390,7 @@
       <nPosition> the position of an entry within the hash table that will
       be returned
    $RETURNS$
-      A two-dimensional array of the key/value pair entry of the hash table
+      A two-element array of the key/value pair entry of the hash table
    $DESCRIPTION$
 
    $EXAMPLES$
