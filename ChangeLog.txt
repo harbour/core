@@ -12,6 +12,15 @@
     ! set FIO error code (FError()) in hb_fsNameExists(), hb_fsFileExists()
       and hb_fsDirExists()
 
+2026-08-26 23:35 UTC+0100 Phil Krylov (phil a t krylov.eu)
+  * contrib/3rd/sqlite3/sqlite3.c
+  * contrib/3rd/sqlite3/sqlite3.diff
+  * contrib/3rd/sqlite3/sqlite3.h
+  * contrib/3rd/sqlite3/sqlite3.hbp
+  * contrib/3rd/sqlite3/sqlite3x.h
+  * contrib/hbsqlit3/hbsqlit3.ch
+    * Updated SQLite to latest version 3.53.4.
+
 2026-08-26 22:48 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/rddsql/sqlbase.c
     ! compatibility fix for DBInfo( DBI_ISREADONLY ) to return logical
