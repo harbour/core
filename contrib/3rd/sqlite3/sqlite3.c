@@ -14990,7 +14990,21 @@ struct fts5_api {
 /*
 ** Include standard header files as necessary
 */
-#if !defined(__BORLANDC__)
+#include "hbsetup.h"
+#if defined( __XCC__ ) || defined( __POCC__ ) || defined( __LCC__ ) || \
+    defined( __MINGW32__ ) || defined( __DMC__ ) || defined( __TINYC__ ) || \
+    ( defined( _MSC_VER ) && _MSC_VER >= 1600 ) || \
+    ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 ) || \
+    ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \
+    ( ( defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) ) && \
+      ( defined( _ISOC99_SOURCE ) || defined( _STDC_C99 ) || \
+        ( defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L ) || \
+        ( defined( __DJGPP__ ) && \
+          ( __DJGPP__ > 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ >= 4 ) ) ) || \
+        defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) || \
+        defined( HB_OS_BSD ) || defined( HB_OS_SUNOS ) || \
+        defined( HB_OS_BEOS ) || defined( HB_OS_QNX ) || \
+        defined( HB_OS_VXWORKS ) || defined( HB_OS_MINIX ) ) )
 #include <stdint.h>
 #endif
 #ifdef HAVE_INTTYPES_H
@@ -15695,9 +15709,9 @@ SQLITE_PRIVATE void sqlite3HashClear(Hash*);
 #     define _LL( num )           num
 #     define UINT64_C( num )      num
 #  endif
-#  define INFINITY                (1.0e308 * 10.0)
 #elif defined( _MSC_VER )
-#  define _LL( num )   num
+#  define _LL( num )           num
+#  define UINT64_C( num )      num
 #else
 #  define _LL( num )   num##LL
 #endif
@@ -36424,8 +36438,10 @@ SQLITE_PRIVATE void sqlite3UtfSelfTest(void){
 /* #include <stdarg.h> */
 #ifndef SQLITE_OMIT_FLOATING_POINT
 #include <math.h>
+#ifndef INFINITY
+#  define INFINITY                (1.0e308 * 10.0)
 #endif
-
+#endif
 /*
 ** Calls to sqlite3FaultSim() are used to simulate a failure during testing,
 ** or to bypass normal error detection during testing in order to let
