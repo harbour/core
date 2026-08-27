@@ -292,6 +292,8 @@
 
    #xtranslate AScan(<a>,<b>,[<c>],[<d>],<e>)  => hb_AScan( <a>, <b>, <c>, <d>, <e> )
    #xtranslate At( <a>, <b>, [<x,...>] )       => hb_At( <a>, <b>, <x> )
+   #xtranslate AllTrim( <a>, <b>, [<x,...>] )  => xhb_AllTrim( <a>, <b>, <x> )
+   #xtranslate RTrim( <a>, <b>, [<x,...>] )    => xhb_RTrim( <a>, <b>, <x> )
 
    #xtranslate GetEnv( [<x,...>] )             => hb_GetEnv( <x> )
    #xtranslate SetKey( [<x,...>] )             => hb_SetKey( <x> )

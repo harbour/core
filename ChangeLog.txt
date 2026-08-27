@@ -7,6 +7,17 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-08-27 20:22 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/3rd/sqlite3/sqlite3.c
+  * contrib/3rd/sqlite3/sqlite3.diff
+    ! disable threads in old MSVC (exact method copied from older SQLite)
+
+  * contrib/xhb/hbcompat.ch
+    + translate second parameter extensions, trimming any kind of space
+      (TAB, EOL) on the right side to xHarbour extended versions
+      AllTrim( x, .T. ) -> xhb_AllTrim()
+      RTrim( x, .T. )   -> xhb_RTrim()
+
 2026-08-27 18:15 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/3rd/sqlite3/sqlite3.c
   * contrib/3rd/sqlite3/sqlite3.diff

@@ -1,5 +1,5 @@
 --- sqlite3.orig/sqlite3.c	Thu Aug 27 15:53:02 2026
-+++ sqlite3/sqlite3.c	Thu Aug 27 16:12:18 2026
++++ sqlite3/sqlite3.c	Thu Aug 27 17:45:57 2026
 @@ -20,7 +20,7 @@
  ** The content in this amalgamation comes from Fossil check-in
  ** bf7c7f30031888f4e796e429ab3978879485 with changes in files:
@@ -73,7 +73,17 @@
  # ifndef SQLITE_BIG_DBL
  #   define SQLITE_BIG_DBL (((sqlite3_int64)1)<<50)
  # endif
-@@ -36407,8 +36438,10 @@
+@@ -31096,7 +31127,8 @@
+ ** functions are not available (e.g. those not using MSVC, Cygwin, etc).
+ */
+ #if SQLITE_OS_WIN && !SQLITE_OS_WINCE && \
+-    SQLITE_THREADSAFE>0 && !defined(__CYGWIN__)
++    SQLITE_THREADSAFE>0 && !defined(__CYGWIN__) && \
++    (!defined(_MSC_VER) || _MSC_VER>1310)
+ # define SQLITE_OS_WIN_THREADS 1
+ #else
+ # define SQLITE_OS_WIN_THREADS 0
+@@ -36407,8 +36439,10 @@
  /* #include <stdarg.h> */
  #ifndef SQLITE_OMIT_FLOATING_POINT
  #include <math.h>
@@ -85,7 +95,7 @@
  /*
  ** Calls to sqlite3FaultSim() are used to simulate a failure during testing,
  ** or to bypass normal error detection during testing in order to let
-@@ -37123,12 +37156,12 @@
+@@ -37123,12 +37157,12 @@
    return __builtin_clzll(m);
  #else
    int n = 0;
@@ -104,7 +114,7 @@
    return n;
  #endif
  }
-@@ -37798,13 +37831,13 @@
+@@ -37798,13 +37832,13 @@
    memcpy(&v,&r,8);
    e = (v>>52)&0x7ff;
    if( e==0x7ff ){
@@ -120,7 +130,7 @@
    if( e==0 ){
      int nn = countLeadingZeros(v);
      v <<= nn;
-@@ -37928,7 +37961,7 @@
+@@ -37928,7 +37962,7 @@
    int i;
    for(i=0; sqlite3Isdigit(z[i]); i++){
      v = v*10 + z[i] - '0';
@@ -129,7 +139,7 @@
    }
    if( i==0 || z[i]!=0 ){ *pI = 0; return 0; }
    *pI = (u32)v;
-@@ -44272,7 +44305,11 @@
+@@ -44272,7 +44306,11 @@
        ** This is a similar technique to that used by glibc on systems
        ** that do not have a real fallocate() call.
        */
@@ -141,7 +151,7 @@
        int nWrite = 0;             /* Number of bytes written by seekAndWrite */
        i64 iWrite;                 /* Next offset to write to */
  
-@@ -50955,7 +50992,7 @@
+@@ -50955,7 +50993,7 @@
    SYSTEMTIME pTm;
    sqlite3_int64 t64;
    t64 = *t;
@@ -150,7 +160,7 @@
    uTm.dwLowDateTime = (DWORD)(t64 & 0xFFFFFFFF);
    uTm.dwHighDateTime= (DWORD)(t64 >> 32);
    osFileTimeToLocalFileTime(&uTm,&lTm);
-@@ -86483,7 +86520,7 @@
+@@ -86483,7 +86521,7 @@
    double r2 = (double)i;
    return r1==0.0
        || (memcmp(&r1, &r2, sizeof(r1))==0
@@ -159,7 +169,7 @@
  }
  
  /* Convert a floating point value to its closest integer.  Do so in
-@@ -92043,7 +92080,7 @@
+@@ -92043,7 +92081,7 @@
        pMem->u.i = FOUR_BYTE_INT(buf);
  #ifdef __HP_cc
        /* Work around a sign-extension bug in the HP compiler for HP/UX */
@@ -168,7 +178,7 @@
  #endif
        pMem->flags = MEM_Int;
        testcase( pMem->u.i<0 );
-@@ -99961,11 +99998,11 @@
+@@ -99961,11 +99999,11 @@
              ** that will fit in 6 bytes, then change the type to MEM_IntReal
              ** so that we keep the high-resolution integer value but know that
              ** the type really wants to be REAL. */
@@ -185,7 +195,7 @@
                pIn1->flags |= MEM_IntReal;
                pIn1->flags &= ~MEM_Int;
              }else{
-@@ -100024,11 +100061,11 @@
+@@ -100024,11 +100062,11 @@
        ** that will fit in 6 bytes, then change the type to MEM_IntReal
        ** so that we keep the high-resolution integer value but know that
        ** the type really wants to be REAL. */
@@ -202,7 +212,7 @@
          pIn1->flags |= MEM_IntReal;
          pIn1->flags &= ~MEM_Int;
        }else{
-@@ -100210,8 +100247,8 @@
+@@ -100210,8 +100248,8 @@
        testcase( uu==127 );               testcase( uu==128 );
        testcase( uu==32767 );             testcase( uu==32768 );
        testcase( uu==8388607 );           testcase( uu==8388608 );
@@ -213,7 +223,7 @@
        if( uu<=127 ){
          if( (i&1)==i && p->minWriteFileFormat>=4 ){
            pRec->uTemp = 8+(u32)uu;
-@@ -100228,7 +100265,7 @@
+@@ -100228,7 +100266,7 @@
        }else if( uu<=2147483647 ){
          nData += 4;
          pRec->uTemp = 4;
@@ -222,7 +232,7 @@
          nData += 6;
          pRec->uTemp = 5;
        }else{
-@@ -107080,7 +107117,8 @@
+@@ -107080,7 +107118,8 @@
  
      /* Copy as much data as is available in the buffer into the start of
      ** p->aAlloc[].  */
@@ -232,7 +242,7 @@
      p->iReadOff += nAvail;
      nRem = nByte - nAvail;
  
-@@ -126566,6 +126604,10 @@
+@@ -126566,6 +126605,10 @@
  */
  /* #include "sqliteInt.h" */
  
@@ -243,7 +253,7 @@
  #ifndef SQLITE_OMIT_SHARED_CACHE
  /*
  ** The TableLock structure is only used by the sqlite3TableLock() and
-@@ -135828,7 +135870,7 @@
+@@ -135828,7 +135871,7 @@
  ** Add a (possibly large) integer to the running sum.
  */
  static void kahanBabuskaNeumaierStepInt64(volatile SumCtx *pSum, i64 iVal){
@@ -252,7 +262,7 @@
      i64 iBig, iSm;
      iSm = iVal % 16384;
      iBig = iVal - iSm;
-@@ -135846,7 +135888,7 @@
+@@ -135846,7 +135889,7 @@
    volatile SumCtx *p,
    i64 iVal
  ){
@@ -261,7 +271,7 @@
      i64 iSm = iVal % 16384;
      p->rSum = (double)(iVal - iSm);
      p->rErr = (double)iSm;
-@@ -225215,9 +225257,9 @@
+@@ -225215,9 +225258,9 @@
      zOutput = zNew;
      status = U_ZERO_ERROR;
      if( bToUpper ){

@@ -31127,7 +31127,8 @@ SQLITE_PRIVATE sqlite3_mutex_methods const *sqlite3DefaultMutex(void){
 ** functions are not available (e.g. those not using MSVC, Cygwin, etc).
 */
 #if SQLITE_OS_WIN && !SQLITE_OS_WINCE && \
-    SQLITE_THREADSAFE>0 && !defined(__CYGWIN__)
+    SQLITE_THREADSAFE>0 && !defined(__CYGWIN__) && \
+    (!defined(_MSC_VER) || _MSC_VER>1310)
 # define SQLITE_OS_WIN_THREADS 1
 #else
 # define SQLITE_OS_WIN_THREADS 0
