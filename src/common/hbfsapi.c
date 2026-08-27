@@ -578,6 +578,7 @@ HB_BOOL hb_fsNameExists( const char * pszFileName )
       LPCTSTR lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
 
       fExist = ( GetFileAttributes( lpFileName ) != INVALID_FILE_ATTRIBUTES );
+      hb_fsSetIOError( fExist, 0 );
 
       if( lpFree )
          hb_xfree( lpFree );
@@ -592,9 +593,11 @@ HB_BOOL hb_fsNameExists( const char * pszFileName )
 #  if defined( HB_OS_DOS )
 #     if defined( __DJGPP__ ) || defined( __BORLANDC__ )
          fExist = _chmod( pszFileName, 0, 0 ) != -1;
+         hb_fsSetIOError( fExist, 0 );
 #     else
-         unsigned int iAttr = 0;
-         fExist = _dos_getfileattr( pszFileName, &iAttr ) == 0;
+         unsigned int uiAttr = 0;
+         fExist = _dos_getfileattr( pszFileName, &uiAttr ) == 0;
+         hb_fsSetIOError( fExist, 0 );
 #     endif
 #  elif defined( HB_OS_UNIX )
 #     if defined( HB_USE_LARGEFILE64 )
@@ -604,6 +607,7 @@ HB_BOOL hb_fsNameExists( const char * pszFileName )
          struct stat statbuf;
          fExist = stat( pszFileName, &statbuf ) == 0;
 #     endif
+      hb_fsSetIOError( fExist, 0 );
 #  else
          int iTODO; /* To force warning */
 #  endif
@@ -631,6 +635,7 @@ HB_BOOL hb_fsFileExists( const char * pszFileName )
       DWORD dwAttr;
 
       dwAttr = GetFileAttributes( lpFileName );
+      hb_fsSetIOError( dwAttr != INVALID_FILE_ATTRIBUTES, 0 );
       fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
                ( dwAttr & ( FILE_ATTRIBUTE_DIRECTORY |
                             FILE_ATTRIBUTE_DEVICE ) ) == 0;
@@ -650,21 +655,25 @@ HB_BOOL hb_fsFileExists( const char * pszFileName )
 #  if defined( HB_OS_DOS )
 #     if defined( __DJGPP__ ) || defined( __BORLANDC__ )
          int iAttr = _chmod( pszFileName, 0, 0 );
+         hb_fsSetIOError( iAttr != -1, 0 );
          fExist = iAttr != -1 && ( iAttr & 0x10 ) == 0;
 #     else
-         unsigned int iAttr = 0;
-         fExist = _dos_getfileattr( pszFileName, &iAttr ) == 0 &&
-                  ( iAttr & 0x10 ) == 0;
+         unsigned int uiAttr = 0, uiResult;
+         uiResult = _dos_getfileattr( pszFileName, &uiAttr );
+         hb_fsSetIOError( uiResult == 0, 0 );
+         fExist = uiResult == 0 && ( uiAttr & 0x10 ) == 0;
 #     endif
 #  elif defined( HB_OS_UNIX )
 #     if defined( HB_USE_LARGEFILE64 )
          struct stat64 statbuf;
-         fExist = stat64( pszFileName, &statbuf ) == 0 &&
-                  S_ISREG( statbuf.st_mode );
+         int iResult = stat64( pszFileName, &statbuf );
+         hb_fsSetIOError( iResult == 0, 0 );
+         fExist = iResult == 0 && S_ISREG( statbuf.st_mode );
 #     else
          struct stat statbuf;
-         fExist = stat( pszFileName, &statbuf ) == 0 &&
-                  S_ISREG( statbuf.st_mode );
+         int iResult = stat( pszFileName, &statbuf );
+         hb_fsSetIOError( iResult == 0, 0 );
+         fExist = iResult == 0 && S_ISREG( statbuf.st_mode );
 #     endif
 #  else
          int iTODO; /* To force warning */
@@ -693,6 +702,7 @@ HB_BOOL hb_fsDirExists( const char * pszDirName )
       DWORD dwAttr;
 
       dwAttr = GetFileAttributes( lpDirName );
+      hb_fsSetIOError( dwAttr != INVALID_FILE_ATTRIBUTES, 0 );
       fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
                ( dwAttr & FILE_ATTRIBUTE_DIRECTORY );
 
@@ -711,21 +721,25 @@ HB_BOOL hb_fsDirExists( const char * pszDirName )
 #  if defined( HB_OS_DOS )
 #     if defined( __DJGPP__ ) || defined( __BORLANDC__ )
          int iAttr = _chmod( pszDirName, 0, 0 );
+         hb_fsSetIOError( iAttr != -1, 0 );
          fExist = iAttr != -1 && ( iAttr & 0x10 ) != 0;
 #     else
-         unsigned int iAttr = 0;
-         fExist = _dos_getfileattr( pszDirName, &iAttr ) == 0 &&
-                  ( iAttr & 0x10 ) != 0;
+         unsigned int uiAttr = 0, uiResult;
+         uiResult = _dos_getfileattr( pszDirName, &uiAttr );
+         hb_fsSetIOError( uiResult == 0, 0 );
+         fExist = uiResult == 0 && ( uiAttr & 0x10 ) != 0;
 #     endif
 #  elif defined( HB_OS_UNIX )
 #     if defined( HB_USE_LARGEFILE64 )
          struct stat64 statbuf;
-         fExist = stat64( pszDirName, &statbuf ) == 0 &&
-                  S_ISDIR( statbuf.st_mode );
+         int iResult = stat64( pszDirName, &statbuf );
+         hb_fsSetIOError( iResult == 0, 0 );
+         fExist = iResult == 0 && S_ISDIR( statbuf.st_mode );
 #     else
          struct stat statbuf;
-         fExist = stat( pszDirName, &statbuf ) == 0 &&
-                  S_ISDIR( statbuf.st_mode );
+         int iResult = stat( pszDirName, &statbuf );
+         hb_fsSetIOError( iResult == 0, 0 );
+         fExist = iResult == 0 && S_ISDIR( statbuf.st_mode );
 #     endif
 #  else
          int iTODO; /* To force warning */

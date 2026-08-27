@@ -7,6 +7,11 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-08-27 12:23 UTC+0200 Przemyslaw Czerpak (druzus/at/sen.waw.pl)
+  * src/common/hbfsapi.c
+    ! set FIO error code (FError()) in hb_fsNameExists(), hb_fsFileExists()
+      and hb_fsDirExists()
+
 2026-08-26 22:48 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/rddsql/sqlbase.c
     ! compatibility fix for DBInfo( DBI_ISREADONLY ) to return logical
