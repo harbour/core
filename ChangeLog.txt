@@ -7,10 +7,28 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-08-27 18:15 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/3rd/sqlite3/sqlite3.c
+  * contrib/3rd/sqlite3/sqlite3.diff
+    * SQLite now includes <stdint.h>, applied more checks the same
+      way hbdefs.h does
+
+    ! this and some more defs to fix older MSVC, please retest other
+      ANSI C compilers if possible
+
 2026-08-27 12:23 UTC+0200 Przemyslaw Czerpak (druzus/at/sen.waw.pl)
   * src/common/hbfsapi.c
     ! set FIO error code (FError()) in hb_fsNameExists(), hb_fsFileExists()
       and hb_fsDirExists()
+
+2026-08-26 23:35 UTC+0100 Phil Krylov (phil a t krylov.eu)
+  * contrib/3rd/sqlite3/sqlite3.c
+  * contrib/3rd/sqlite3/sqlite3.diff
+  * contrib/3rd/sqlite3/sqlite3.h
+  * contrib/3rd/sqlite3/sqlite3.hbp
+  * contrib/3rd/sqlite3/sqlite3x.h
+  * contrib/hbsqlit3/hbsqlit3.ch
+    * Updated SQLite to latest version 3.53.4.
 
 2026-08-26 22:48 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/rddsql/sqlbase.c

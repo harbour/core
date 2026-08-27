@@ -1,6 +1,39 @@
---- sqlite3.orig/sqlite3.c	2024-02-12 21:32:10.804005193 +0100
-+++ sqlite3/sqlite3.c	2025-01-30 17:42:00.624509041 +0100
-@@ -13915,7 +13915,7 @@
+--- sqlite3.orig/sqlite3.c	Thu Aug 27 15:53:02 2026
++++ sqlite3/sqlite3.c	Thu Aug 27 16:12:18 2026
+@@ -20,7 +20,7 @@
+ ** The content in this amalgamation comes from Fossil check-in
+ ** bf7c7f30031888f4e796e429ab3978879485 with changes in files:
+ **
+-**    
++**
+ */
+ #ifndef SQLITE_AMALGAMATION
+ #define SQLITE_CORE 1
+@@ -14990,7 +14990,23 @@
+ /*
+ ** Include standard header files as necessary
+ */
++#include "hbsetup.h"
++#if defined( __XCC__ ) || defined( __POCC__ ) || defined( __LCC__ ) || \
++    defined( __MINGW32__ ) || defined( __DMC__ ) || defined( __TINYC__ ) || \
++    ( defined( _MSC_VER ) && _MSC_VER >= 1600 ) || \
++    ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 ) || \
++    ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \
++    ( ( defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) ) && \
++      ( defined( _ISOC99_SOURCE ) || defined( _STDC_C99 ) || \
++        ( defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L ) || \
++        ( defined( __DJGPP__ ) && \
++          ( __DJGPP__ > 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ >= 4 ) ) ) || \
++        defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) || \
++        defined( HB_OS_BSD ) || defined( HB_OS_SUNOS ) || \
++        defined( HB_OS_BEOS ) || defined( HB_OS_QNX ) || \
++        defined( HB_OS_VXWORKS ) || defined( HB_OS_MINIX ) ) )
+ #include <stdint.h>
++#endif
+ #ifdef HAVE_INTTYPES_H
+ #include <inttypes.h>
+ #endif
+@@ -15029,7 +15045,7 @@
  ** Macros to hint to the compiler that a function should or should not be
  ** inlined.
  */
@@ -9,48 +42,85 @@
  #  define SQLITE_NOINLINE  __attribute__((noinline))
  #  define SQLITE_INLINE    __attribute__((always_inline)) inline
  #elif defined(_MSC_VER) && _MSC_VER>=1310
-@@ -34853,6 +34853,17 @@
-   return h;
- }
+@@ -15685,6 +15701,21 @@
+                         int xxn=(N);while(xxn-->0)*(xxd++)=*(xxs++);}
+ #endif
  
 +#if defined( __BORLANDC__ )
 +#  if __BORLANDC__ >= 0x530
 +#     define _LL( num )           num##i64
++#     define UINT64_C( num )      num##ui64
 +#  else
 +#     define _LL( num )           num
++#     define UINT64_C( num )      num
 +#  endif
 +#elif defined( _MSC_VER )
-+#  define _LL( num )   num
++#  define _LL( num )           num
++#  define UINT64_C( num )      num
 +#else
 +#  define _LL( num )   num##LL
 +#endif
- /* Double-Double multiplication.  (x[0],x[1]) *= (y,yy)
- **
- ** Reference:
-@@ -34872,11 +34883,11 @@
-   double hx, hy;
-   u64 m;
-   memcpy(&m, (void*)&x[0], 8);
--  m &= 0xfffffffffc000000LL;
-+  m &= _LL(0xfffffffffc000000);
-   memcpy(&hx, &m, 8);
-   tx = x[0] - hx;
-   memcpy(&m, &y, 8);
--  m &= 0xfffffffffc000000LL;
-+  m &= _LL(0xfffffffffc000000);
-   memcpy(&hy, &m, 8);
-   ty = y - hy;
-   p = hx*hy;
-@@ -35441,7 +35452,7 @@
++
+ /*
+ ** If compiling for a processor that lacks floating point support,
+ ** substitute integer for floating-point
+@@ -15694,7 +15725,7 @@
+ # define float sqlite_int64
+ # define fabs(X) ((X)<0?-(X):(X))
+ # define sqlite3IsOverflow(X) 0
+-# define INFINITY (9223372036854775807LL)
++# define INFINITY (_LL(9223372036854775807))
+ # ifndef SQLITE_BIG_DBL
+ #   define SQLITE_BIG_DBL (((sqlite3_int64)1)<<50)
+ # endif
+@@ -36407,8 +36438,10 @@
+ /* #include <stdarg.h> */
+ #ifndef SQLITE_OMIT_FLOATING_POINT
+ #include <math.h>
++#ifndef INFINITY
++#  define INFINITY                (1.0e308 * 10.0)
++#endif
+ #endif
+-
+ /*
+ ** Calls to sqlite3FaultSim() are used to simulate a failure during testing,
+ ** or to bypass normal error detection during testing in order to let
+@@ -37123,12 +37156,12 @@
+   return __builtin_clzll(m);
+ #else
+   int n = 0;
+-  if( m <= 0x00000000ffffffffULL) { n += 32; m <<= 32; }
+-  if( m <= 0x0000ffffffffffffULL) { n += 16; m <<= 16; }
+-  if( m <= 0x00ffffffffffffffULL) { n += 8;  m <<= 8;  }
+-  if( m <= 0x0fffffffffffffffULL) { n += 4;  m <<= 4;  }
+-  if( m <= 0x3fffffffffffffffULL) { n += 2;  m <<= 2;  }
+-  if( m <= 0x7fffffffffffffffULL) { n += 1;            }
++  if( m <= UINT64_C(0x00000000ffffffff)) { n += 32; m <<= 32; }
++  if( m <= UINT64_C(0x0000ffffffffffff)) { n += 16; m <<= 16; }
++  if( m <= UINT64_C(0x00ffffffffffffff)) { n += 8;  m <<= 8;  }
++  if( m <= UINT64_C(0x0fffffffffffffff)) { n += 4;  m <<= 4;  }
++  if( m <= UINT64_C(0x3fffffffffffffff)) { n += 2;  m <<= 2;  }
++  if( m <= UINT64_C(0x7fffffffffffffff)) { n += 1;            }
+   return n;
+ #endif
+ }
+@@ -37798,13 +37831,13 @@
    memcpy(&v,&r,8);
-   e = v>>52;
-   if( (e&0x7ff)==0x7ff ){
+   e = (v>>52)&0x7ff;
+   if( e==0x7ff ){
 -    p->isSpecial = 1 + (v!=0x7ff0000000000000LL);
 +    p->isSpecial = 1 + (v!=_LL(0x7ff0000000000000));
      p->n = 0;
      p->iDP = 0;
+     p->z = p->zBuf;
      return;
-@@ -35561,7 +35572,7 @@
+   }
+-  v &= 0x000fffffffffffffULL;
++  v &= UINT64_C(0x000fffffffffffff);
+   if( e==0 ){
+     int nn = countLeadingZeros(v);
+     v <<= nn;
+@@ -37928,7 +37961,7 @@
    int i;
    for(i=0; sqlite3Isdigit(z[i]); i++){
      v = v*10 + z[i] - '0';
@@ -59,7 +129,7 @@
    }
    if( i==0 || z[i]!=0 ){ *pI = 0; return 0; }
    *pI = (u32)v;
-@@ -41770,7 +41781,11 @@
+@@ -44272,7 +44305,11 @@
        ** This is a similar technique to that used by glibc on systems
        ** that do not have a real fallocate() call.
        */
@@ -71,7 +141,7 @@
        int nWrite = 0;             /* Number of bytes written by seekAndWrite */
        i64 iWrite;                 /* Next offset to write to */
  
-@@ -48194,7 +48209,7 @@
+@@ -50955,7 +50992,7 @@
    SYSTEMTIME pTm;
    sqlite3_int64 t64;
    t64 = *t;
@@ -80,7 +150,7 @@
    uTm.dwLowDateTime = (DWORD)(t64 & 0xFFFFFFFF);
    uTm.dwHighDateTime= (DWORD)(t64 >> 32);
    osFileTimeToLocalFileTime(&uTm,&lTm);
-@@ -82701,7 +82716,7 @@
+@@ -86483,7 +86520,7 @@
    double r2 = (double)i;
    return r1==0.0
        || (memcmp(&r1, &r2, sizeof(r1))==0
@@ -89,25 +159,61 @@
  }
  
  /* Convert a floating point value to its closest integer.  Do so in
-@@ -95469,7 +95484,7 @@
-             testcase( pIn1->u.i==140737488355327LL );
-             testcase( pIn1->u.i==-140737488355328LL );
-             testcase( pIn1->u.i==-140737488355329LL );
+@@ -92043,7 +92080,7 @@
+       pMem->u.i = FOUR_BYTE_INT(buf);
+ #ifdef __HP_cc
+       /* Work around a sign-extension bug in the HP compiler for HP/UX */
+-      if( buf[0]&0x80 ) pMem->u.i |= 0xffffffff80000000LL;
++      if( buf[0]&0x80 ) pMem->u.i |= _LL(0xffffffff80000000);
+ #endif
+       pMem->flags = MEM_Int;
+       testcase( pMem->u.i<0 );
+@@ -99961,11 +99998,11 @@
+             ** that will fit in 6 bytes, then change the type to MEM_IntReal
+             ** so that we keep the high-resolution integer value but know that
+             ** the type really wants to be REAL. */
+-            testcase( pIn1->u.i==140737488355328LL );
+-            testcase( pIn1->u.i==140737488355327LL );
+-            testcase( pIn1->u.i==-140737488355328LL );
+-            testcase( pIn1->u.i==-140737488355329LL );
 -            if( pIn1->u.i<=140737488355327LL && pIn1->u.i>=-140737488355328LL){
++            testcase( pIn1->u.i==_LL(140737488355328) );
++            testcase( pIn1->u.i==_LL(140737488355327) );
++            testcase( pIn1->u.i==_LL(-140737488355328) );
++            testcase( pIn1->u.i==_LL(-140737488355329) );
 +            if( pIn1->u.i<=_LL(140737488355327) && pIn1->u.i>=_LL(-140737488355328)){
                pIn1->flags |= MEM_IntReal;
                pIn1->flags &= ~MEM_Int;
              }else{
-@@ -95532,7 +95547,7 @@
-       testcase( pIn1->u.i==140737488355327LL );
-       testcase( pIn1->u.i==-140737488355328LL );
-       testcase( pIn1->u.i==-140737488355329LL );
+@@ -100024,11 +100061,11 @@
+       ** that will fit in 6 bytes, then change the type to MEM_IntReal
+       ** so that we keep the high-resolution integer value but know that
+       ** the type really wants to be REAL. */
+-      testcase( pIn1->u.i==140737488355328LL );
+-      testcase( pIn1->u.i==140737488355327LL );
+-      testcase( pIn1->u.i==-140737488355328LL );
+-      testcase( pIn1->u.i==-140737488355329LL );
 -      if( pIn1->u.i<=140737488355327LL && pIn1->u.i>=-140737488355328LL ){
++      testcase( pIn1->u.i==_LL(140737488355328) );
++      testcase( pIn1->u.i==_LL(140737488355327) );
++      testcase( pIn1->u.i==_LL(-140737488355328) );
++      testcase( pIn1->u.i==_LL(-140737488355329) );
 +      if( pIn1->u.i<=_LL(140737488355327) && pIn1->u.i>=_LL(-140737488355328) ){
          pIn1->flags |= MEM_IntReal;
          pIn1->flags &= ~MEM_Int;
        }else{
-@@ -95732,7 +95747,7 @@
+@@ -100210,8 +100247,8 @@
+       testcase( uu==127 );               testcase( uu==128 );
+       testcase( uu==32767 );             testcase( uu==32768 );
+       testcase( uu==8388607 );           testcase( uu==8388608 );
+-      testcase( uu==2147483647 );        testcase( uu==2147483648LL );
+-      testcase( uu==140737488355327LL ); testcase( uu==140737488355328LL );
++      testcase( uu==2147483647 );        testcase( uu==_LL(2147483648) );
++      testcase( uu==_LL(140737488355327) ); testcase( uu==_LL(140737488355328) );
+       if( uu<=127 ){
+         if( (i&1)==i && p->minWriteFileFormat>=4 ){
+           pRec->uTemp = 8+(u32)uu;
+@@ -100228,7 +100265,7 @@
        }else if( uu<=2147483647 ){
          nData += 4;
          pRec->uTemp = 4;
@@ -116,7 +222,7 @@
          nData += 6;
          pRec->uTemp = 5;
        }else{
-@@ -102360,7 +102375,8 @@
+@@ -107080,7 +107117,8 @@
  
      /* Copy as much data as is available in the buffer into the start of
      ** p->aAlloc[].  */
@@ -126,7 +232,7 @@
      p->iReadOff += nAvail;
      nRem = nByte - nAvail;
  
-@@ -120162,6 +120178,10 @@
+@@ -126566,6 +126604,10 @@
  */
  /* #include "sqliteInt.h" */
  
@@ -137,7 +243,7 @@
  #ifndef SQLITE_OMIT_SHARED_CACHE
  /*
  ** The TableLock structure is only used by the sqlite3TableLock() and
-@@ -129191,7 +129211,7 @@
+@@ -135828,7 +135870,7 @@
  ** Add a (possibly large) integer to the running sum.
  */
  static void kahanBabuskaNeumaierStepInt64(volatile SumCtx *pSum, i64 iVal){
@@ -146,7 +252,7 @@
      i64 iBig, iSm;
      iSm = iVal % 16384;
      iBig = iVal - iSm;
-@@ -129209,7 +129229,7 @@
+@@ -135846,7 +135888,7 @@
    volatile SumCtx *p,
    i64 iVal
  ){
@@ -155,12 +261,15 @@
      i64 iSm = iVal % 16384;
      p->rSum = (double)(iVal - iSm);
      p->rErr = (double)iSm;
-@@ -203696,7 +203716,7 @@
- ** A macro to hint to the compiler that a function should not be
- ** inlined.
- */
--#if defined(__GNUC__)
-+#if defined(__GNUC__) && (__GNUC__>=4 || (__GNUC__==3 && __GNUC_MINOR__>=1))
- #  define JSON_NOINLINE  __attribute__((noinline))
- #elif defined(_MSC_VER) && _MSC_VER>=1310
- #  define JSON_NOINLINE  __declspec(noinline)
+@@ -225215,9 +225257,9 @@
+     zOutput = zNew;
+     status = U_ZERO_ERROR;
+     if( bToUpper ){
+-      nOut = 2LL*u_strToUpper(zOutput,nOut/2,zInput,nInput/2,zLocale,&status);
++      nOut = _LL(2)*u_strToUpper(zOutput,nOut/2,zInput,nInput/2,zLocale,&status);
+     }else{
+-      nOut = 2LL*u_strToLower(zOutput,nOut/2,zInput,nInput/2,zLocale,&status);
++      nOut = _LL(2)*u_strToLower(zOutput,nOut/2,zInput,nInput/2,zLocale,&status);
+     }
+ 
+     if( U_SUCCESS(status) ){

@@ -50,6 +50,9 @@
 #xtranslate DB_IS_OPEN( <db> )         => ( ! Empty( <db> ) )
 #xtranslate STMT_IS_PREPARED( <stmt> ) => ( ! Empty( <stmt> ) )
 
+/*
+** CAPI3REF: Result Codes
+*/
 #define SQLITE_OK           0   /* Successful result */
 /* beginning-of-error-codes */
 #define SQLITE_ERROR        1   /* Generic error */
@@ -84,10 +87,16 @@
 #define SQLITE_DONE        101  /* sqlite3_step() has finished executing */
 /* end-of-error-codes */
 
-/* Extended Result Codes (sqlite 3.3.8+) */
+/*
+** CAPI3REF: Extended Result Codes
+** (sqlite 3.3.8+)
+*/
 #define SQLITE_ERROR_MISSING_COLLSEQ   (SQLITE_ERROR | (1<<8))
 #define SQLITE_ERROR_RETRY             (SQLITE_ERROR | (2<<8))
 #define SQLITE_ERROR_SNAPSHOT          (SQLITE_ERROR | (3<<8))
+#define SQLITE_ERROR_RESERVESIZE       (SQLITE_ERROR | (4<<8))
+#define SQLITE_ERROR_KEY               (SQLITE_ERROR | (5<<8))
+#define SQLITE_ERROR_UNABLE            (SQLITE_ERROR | (6<<8))
 #define SQLITE_IOERR_READ              (SQLITE_IOERR | (1<<8))
 #define SQLITE_IOERR_SHORT_READ        (SQLITE_IOERR | (2<<8))
 #define SQLITE_IOERR_WRITE             (SQLITE_IOERR | (3<<8))
@@ -122,6 +131,8 @@
 #define SQLITE_IOERR_DATA              (SQLITE_IOERR | (32<<8))
 #define SQLITE_IOERR_CORRUPTFS         (SQLITE_IOERR | (33<<8))
 #define SQLITE_IOERR_IN_PAGE           (SQLITE_IOERR | (34<<8))
+#define SQLITE_IOERR_BADKEY            (SQLITE_IOERR | (35<<8))
+#define SQLITE_IOERR_CODEC             (SQLITE_IOERR | (36<<8))
 #define SQLITE_LOCKED_SHAREDCACHE      (SQLITE_LOCKED |  (1<<8))
 #define SQLITE_LOCKED_VTAB             (SQLITE_LOCKED |  (2<<8))
 #define SQLITE_BUSY_RECOVERY           (SQLITE_BUSY   |  (1<<8))
@@ -161,26 +172,10 @@
 #define SQLITE_WARNING_AUTOINDEX       (SQLITE_WARNING | (1<<8))
 #define SQLITE_AUTH_USER               (SQLITE_AUTH | (1<<8))
 #define SQLITE_OK_LOAD_PERMANENTLY     (SQLITE_OK | (1<<8))
-#define SQLITE_OK_SYMLINK              (SQLITE_OK | (2<<8)) /* internal use only */
+#define SQLITE_OK_SYMLINK              (SQLITE_OK | (2<<8)) /* internal only */
 
-
-/* CAPI3REF: Flags For File Open Operations
-   Combination of the following bit values are used
-   as the third argument to the sqlite3_open_v2() interface
-   and in the 4th parameter to the [sqlite3_vfs.xOpen] method.
-**
-** Only those flags marked as "Ok for sqlite3_open_v2()" may be
-** used as the third argument to the [sqlite3_open_v2()] interface.
-** The other flags have historically been ignored by sqlite3_open_v2(),
-** though future versions of SQLite might change so that an error is
-** raised if any of the disallowed bits are passed into sqlite3_open_v2().
-** Applications should not depend on the historical behavior.
-**
-** Note in particular that passing the SQLITE_OPEN_EXCLUSIVE flag into
-** [sqlite3_open_v2()] does *not* cause the underlying database file
-** to be opened using O_EXCL.  Passing SQLITE_OPEN_EXCLUSIVE into
-** [sqlite3_open_v2()] has historically be a no-op and might become an
-** error in future versions of SQLite.
+/*
+** CAPI3REF: Flags For File Open Operations
 */
 #define SQLITE_OPEN_READONLY         0x00000001  /* Ok for sqlite3_open_v2() */
 #define SQLITE_OPEN_READWRITE        0x00000002  /* Ok for sqlite3_open_v2() */
@@ -209,11 +204,16 @@
 /* Legacy compatibility: */
 #define SQLITE_OPEN_MASTER_JOURNAL   0x00004000  /* VFS only */
 
-/* Authorizer Return Codes */
+/*
+** CAPI3REF: Authorizer Return Codes
+*/
 #define SQLITE_DENY   1   /* Abort the SQL statement with an error */
 #define SQLITE_IGNORE 2   /* Don't allow access, but don't generate an error */
 
-/* Authorizer Action Codes */
+/*
+** CAPI3REF: Authorizer Action Codes
+*/
+/******************************************* 3rd ************ 4th ***********/
 #define SQLITE_CREATE_INDEX          1   /* Index Name      Table Name      */
 #define SQLITE_CREATE_TABLE          2   /* Table Name      NULL            */
 #define SQLITE_CREATE_TEMP_INDEX     3   /* Index Name      Table Name      */
@@ -249,15 +249,20 @@
 #define SQLITE_COPY                  0   /* No longer used */
 #define SQLITE_RECURSIVE            33   /* NULL            NULL            */
 
-/* Trace Event Codes (require sqlite 3.14.0+) */
-/* These constants identify classes of events that can be monitored
-** using the [sqlite3_trace_v2()] tracing logic. */
+/*
+** CAPI3REF: SQL Trace Event Codes
+** (require sqlite 3.14.0+)
+** These constants identify classes of events that can be monitored
+** using the [sqlite3_trace_v2()] tracing logic.
+*/
 #define SQLITE_TRACE_STMT       0x01
 #define SQLITE_TRACE_PROFILE    0x02
 #define SQLITE_TRACE_ROW        0x04
 #define SQLITE_TRACE_CLOSE      0x08
 
-/* Run-Time Limit Categories */
+/*
+** CAPI3REF: Run-Time Limit Categories
+*/
 #define SQLITE_LIMIT_LENGTH                    0
 #define SQLITE_LIMIT_SQL_LENGTH                1
 #define SQLITE_LIMIT_COLUMN                    2
@@ -270,13 +275,22 @@
 #define SQLITE_LIMIT_VARIABLE_NUMBER           9
 #define SQLITE_LIMIT_TRIGGER_DEPTH            10
 #define SQLITE_LIMIT_WORKER_THREADS           11
+#define SQLITE_LIMIT_PARSER_DEPTH             12
 
-/* sqlite3_prepare() options (require sqlite 3.20.0+) */
+/*
+** CAPI3REF: Prepare Flags
+** (require sqlite 3.20.0+)
+*/
 #define SQLITE_PREPARE_PERSISTENT              0x01
 #define SQLITE_PREPARE_NORMALIZE               0x02
 #define SQLITE_PREPARE_NO_VTAB                 0x04
+#define SQLITE_PREPARE_DONT_LOG                0x10
+#define SQLITE_PREPARE_FROM_DDL                0x20
 
 /* Fundamental Datatypes */
+/*
+** CAPI3REF: Fundamental Datatypes
+*/
 #define SQLITE_INTEGER  1
 #define SQLITE_FLOAT    2
 #define SQLITE_BLOB     4
@@ -288,14 +302,30 @@
 #endif
 #define SQLITE3_TEXT     3
 
-/* Function Flags */
+/*
+** CAPI3REF: Text Encodings
+*/
+#define SQLITE_UTF8           1    /* IMP: R-37514-35566 */
+#define SQLITE_UTF16LE        2    /* IMP: R-03371-37637 */
+#define SQLITE_UTF16BE        3    /* IMP: R-51971-34154 */
+#define SQLITE_UTF16          4    /* Use native byte order */
+#define SQLITE_ANY            5    /* Deprecated */
+#define SQLITE_UTF16_ALIGNED  8    /* sqlite3_create_collation only */
+#define SQLITE_UTF8_ZT       16    /* Zero-terminated UTF8 */
+
+/*
+** CAPI3REF: Function Flags
+*/
 #define SQLITE_DETERMINISTIC    0x000000800
 #define SQLITE_DIRECTONLY       0x000080000
 #define SQLITE_SUBTYPE          0x000100000
 #define SQLITE_INNOCUOUS        0x000200000
 #define SQLITE_RESULT_SUBTYPE   0x001000000
+#define SQLITE_SELFORDER1       0x002000000
 
-/* Status Parameters */
+/*
+** CAPI3REF: Status Parameters
+*/
 #define SQLITE_STATUS_MEMORY_USED          0
 #define SQLITE_STATUS_PAGECACHE_USED       1
 #define SQLITE_STATUS_PAGECACHE_OVERFLOW   2
@@ -307,7 +337,9 @@
 #define SQLITE_STATUS_SCRATCH_SIZE         8  /* NOT USED */
 #define SQLITE_STATUS_MALLOC_COUNT         9
 
-/* Status Parameters for database connections */
+/*
+** CAPI3REF: Database Connection Status
+*/
 #define SQLITE_DBSTATUS_LOOKASIDE_USED       0
 #define SQLITE_DBSTATUS_CACHE_USED           1
 #define SQLITE_DBSTATUS_SCHEMA_USED          2
@@ -321,9 +353,12 @@
 #define SQLITE_DBSTATUS_DEFERRED_FKS        10
 #define SQLITE_DBSTATUS_CACHE_USED_SHARED   11
 #define SQLITE_DBSTATUS_CACHE_SPILL         12
-#define SQLITE_DBSTATUS_MAX                 12   /* Largest defined DBSTATUS */
+#define SQLITE_DBSTATUS_TEMPBUF_SPILL       13
+#define SQLITE_DBSTATUS_MAX                 13   /* Largest defined DBSTATUS */
 
-/* Status Parameters for prepared statements */
+/*
+** CAPI3REF: Prepared Statement Status
+*/
 #define SQLITE_STMTSTATUS_FULLSCAN_STEP     1
 #define SQLITE_STMTSTATUS_SORT              2
 #define SQLITE_STMTSTATUS_AUTOINDEX         3
