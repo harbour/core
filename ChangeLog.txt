@@ -7,6 +7,14 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-09-01 14:29 UTC+0200 Kamil Przybylski (kprzybylski quay.pl)
+  * contrib/hbfbird/tfirebrd.prg
+    ! fixed TFbQuery:FieldGet() returning an empty date for every DATE
+      column in SQL dialect 3. FBGetData() formats SQL_TYPE_DATE as
+      "YYYY-MM-DD ", so the positional slicing picked up the separators
+      and hb_SToD() rejected the result. Strip them instead, which does
+      not depend on where they sit
+
 2026-08-27 20:22 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/3rd/sqlite3/sqlite3.c
   * contrib/3rd/sqlite3/sqlite3.diff

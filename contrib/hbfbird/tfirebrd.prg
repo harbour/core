@@ -702,7 +702,10 @@ METHOD FieldGet( nField ) CLASS TFbQuery
 
       ELSEIF cType == "D"
          IF result != NIL
-            result := hb_SToD( Left( result, 4 ) + SubStr( result, 5, 2 ) + SubStr( result, 7, 2 ) )
+            /* FBGetData() formats SQL_TYPE_DATE as "YYYY-MM-DD ", so the
+               separators have to go before hb_SToD(), which is strictly
+               positional and expects a bare "YYYYMMDD" */
+            result := hb_SToD( StrTran( AllTrim( result ), "-" ) )
          ELSE
             result := hb_SToD()
          ENDIF
