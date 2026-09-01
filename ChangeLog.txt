@@ -7,6 +7,12 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-09-01 16:11 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * src/lang/l_pl.c
+    * PL language rules normalize that the first letter of a month name
+      and day of the week is not capital. Comparing also to l_cs.c, l_sk.c
+      so it's not a standard in Harbour to keep it Upper.
+
 2026-09-01 15:52 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/hbfbird/firebird.c
   * contrib/hbfbird/tfirebrd.prg
