@@ -570,7 +570,7 @@ HB_FUNC( FBGETDATA )
             case SQL_TYPE_DATE:
                isc_decode_sql_date( ( ISC_DATE * ) var->sqldata, &times );
                hb_snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d", times.tm_year + 1900, times.tm_mon + 1, times.tm_mday );
-               hb_snprintf( data, sizeof( data ), "%*s ", 8, date_s );
+               hb_snprintf( data, sizeof( data ), "%*s ", 10, date_s );
 
                hb_retc( data );
                break;

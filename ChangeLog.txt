@@ -7,6 +7,14 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-09-01 15:52 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbfbird/firebird.c
+  * contrib/hbfbird/tfirebrd.prg
+    ! fix desync between C and .prg source codes when parsing the date.
+      I'm keeping ISO 8601 date format in case someone uses "raw"
+      FBGetData() function to dump or pass-trough data to another SQL server.
+      Reported by Kamil Przybylski in #413 with slightly different fix.
+
 2026-08-27 20:22 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/3rd/sqlite3/sqlite3.c
   * contrib/3rd/sqlite3/sqlite3.diff
