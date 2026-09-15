@@ -6,7 +6,9 @@ DYN_PREF := lib
 
 HB_GT_LIBS += gttrm
 
-MAKE := gmake
+ifeq ($(HB_HOST_PLAT),bsd)
+   MAKE := gmake
+endif
 
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
    ARSTRIP = && strip -S $(LIB_DIR)/$@

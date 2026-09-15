@@ -614,11 +614,13 @@ STATIC FUNCTION ProcessConnection( oServer )
                UAddHeader( "Connection", "close" )
             ELSEIF ! SubStr( server[ "SERVER_PROTOCOL" ], 6 ) $ "1.0 1.1"
                USetStatusCode( 505 ) /* HTTP version not supported */
+               UAddHeader( "Connection", "close" )
             ELSEIF ! server[ "REQUEST_METHOD" ] $ "GET POST"
                USetStatusCode( 501 ) /* Not implemented */
+               UAddHeader( "Connection", "close" )
             ELSE
                IF server[ "SERVER_PROTOCOL" ] == "HTTP/1.1"
-                  IF Lower( server[ "HTTP_CONNECTION" ] ) == "close"
+                  IF Lower( hb_HGetDef( server, "HTTP_CONNECTION", "" ) ) == "close"
                      UAddHeader( "Connection", "close" )
                   ELSE
                      UAddHeader( "Connection", "keep-alive" )
@@ -658,7 +660,7 @@ STATIC FUNCTION ProcessConnection( oServer )
 
          oServer:LogAccess()
 
-         IF Lower( UGetHeader( "Connection" ) ) == "close" .OR. server[ "SERVER_PROTOCOL" ] == "HTTP/1.0"
+         IF Lower( UGetHeader( "Connection", "" ) ) == "close" .OR. server[ "SERVER_PROTOCOL" ] == "HTTP/1.0"
             EXIT
          ENDIF
       ENDDO
@@ -1133,7 +1135,7 @@ PROCEDURE USetStatusCode( nStatusCode )
 
    RETURN
 
-FUNCTION UGetHeader( cType )
+FUNCTION UGetHeader( cType, cDefault )
 
    LOCAL nI
 
@@ -1141,7 +1143,7 @@ FUNCTION UGetHeader( cType )
       RETURN t_aHeader[ nI ][ 2 ]
    ENDIF
 
-   RETURN NIL
+   RETURN cDefault
 
 PROCEDURE UAddHeader( cType, cValue )
 

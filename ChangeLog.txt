@@ -7,6 +7,17 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-09-15 18:27 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbhttpd/core.prg
+    ! fix runtime error on unsupported HTTP protocol
+      due to missing Connection header. Reported by
+      Marco Boeri with fix, though the fix was reshaped
+      a bit.
+
+  * config/bsd/global.mk
+    ! don't hardcode "gmake" if Harbour is cross-compiled
+      to this platform from another one
+
 2026-09-01 15:52 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/hbfbird/firebird.c
   * contrib/hbfbird/tfirebrd.prg
