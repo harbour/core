@@ -274,6 +274,7 @@
        English               437            EN
        French                850            FR850
        German                850            DE850
+       German (euro sign)    858            DE858
        German                ISO-8859-1     DEWIN
        Greek                 737            EL737
        Greek                 Windows-1253   ELWIN
