@@ -56,14 +56,19 @@
 
 /* SQLBASE */
 
-#define MAX_FIELD_NAME       64
+#define MAX_FIELD_NAME          64
 
-#define SQLDD_ROWSET_INIT    256
-#define SQLDD_ROWSET_RESIZE  64
+#define SQLDD_ROWSET_INIT       256
+#define SQLDD_ROWSET_RESIZE     64
 
-#define SQLDD_FLAG_DELETED   1
-#define SQLDD_FLAG_CACHED    2
+#define SQLDD_FLAG_DELETED      1
+#define SQLDD_FLAG_CACHED       2
 
+#define SQLDD_EFLAG_NONE        0
+#define SQLDD_EFLAG_CAN_CREATE  1
+#define SQLDD_EFLAG_MT_AWARE    4
+
+#define NULL_MUTEX_PLACEHOLDER  NULL
 
 typedef struct _SQLBASEAREA
 {
@@ -102,6 +107,7 @@ typedef struct _SQLDDCONNECTION
 {
    struct _SDDNODE * pSDD;
    unsigned int      uiAreaCount;
+   HB_BOOL           fThreadScope;           /* flags a thread-owned connection */
 
    void * pSDDConn;                          /* SDD specific data */
 } SQLDDCONNECTION;
@@ -197,7 +203,6 @@ typedef HB_ERRCODE ( *SDDFUNC_GOTO )( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 typedef HB_ERRCODE ( *SDDFUNC_GETVALUE )( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 typedef HB_ERRCODE ( *SDDFUNC_GETVARLEN )( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength );
 
-
 typedef struct _SDDNODE
 {
    struct _SDDNODE * pNext;
@@ -211,6 +216,8 @@ typedef struct _SDDNODE
    SDDFUNC_GOTO       GoTo;
    SDDFUNC_GETVALUE   GetValue;
    SDDFUNC_GETVARLEN  GetVarLen;
+   unsigned int       EngineFlags;
+   PHB_ITEM           Mutex;
 } SDDNODE, * PSDDNODE;
 
 

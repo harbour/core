@@ -90,7 +90,9 @@ static SDDNODE s_sqlt3dd =
    ( SDDFUNC_CLOSE ) sqlite3Close,
    ( SDDFUNC_GOTO ) sqlite3GoTo,
    ( SDDFUNC_GETVALUE ) NULL,
-   ( SDDFUNC_GETVARLEN ) NULL
+   ( SDDFUNC_GETVARLEN ) NULL,
+   SQLDD_EFLAG_CAN_CREATE,
+   ( PHB_ITEM ) NULL_MUTEX_PLACEHOLDER
 };
 
 static void hb_sqlt3dd_init( void * cargo )
@@ -100,6 +102,15 @@ static void hb_sqlt3dd_init( void * cargo )
 #if SQLITE_VERSION_NUMBER >= 3006000
    sqlite3_initialize();
 #endif
+
+#if SQLITE_VERSION_NUMBER >= 3006004
+   if( sqlite3_threadsafe() )
+      s_sqlt3dd.EngineFlags |= SQLDD_EFLAG_MT_AWARE;
+   else
+#endif
+   {
+      s_sqlt3dd.EngineFlags &= ~SQLDD_EFLAG_MT_AWARE;
+   }
 
    if( ! hb_sddRegister( &s_sqlt3dd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
@@ -299,6 +310,31 @@ static void sqlite3DeclStru( sqlite3_stmt * st, HB_USHORT uiIndex, HB_USHORT * p
 #endif
 
 /* --- SDD METHODS --- */
+#if SQLITE_VERSION_NUMBER >= 3006004
+static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
+{
+   sqlite3 * db = NULL;
+   void *    hConn;
+   int       iFlags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE |
+                      ( pConnection->fThreadScope ? SQLITE_OPEN_NOMUTEX
+                                                  : SQLITE_OPEN_FULLMUTEX );
+   int       iRet   = sqlite3_open_v2( S_HB_ARRAYGETSTR( pItem, 2, &hConn, NULL ), &db, iFlags, NULL );
+
+   hb_strfree( hConn );
+
+   if( iRet == SQLITE_OK )
+   {
+      pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
+      ( ( SDDCONN * ) pConnection->pSDDConn )->pDb = db;
+      return HB_SUCCESS;
+   }
+
+   if( db )
+      sqlite3_close( db );
+
+   return HB_FAILURE;
+}
+#else
 static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    sqlite3 * db;
@@ -316,6 +352,7 @@ static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
 
    return db ? HB_SUCCESS : HB_FAILURE;
 }
+#endif
 
 static HB_ERRCODE sqlite3Disconnect( SQLDDCONNECTION * pConnection )
 {
@@ -334,7 +371,12 @@ static HB_ERRCODE sqlite3Execute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
    int        iRow, iCol;
    void *     hStatement;
    char **    pResult   = NULL;
+   PHB_ITEM   pNewID    = NULL;
+#if SQLITE_VERSION_NUMBER >= 3006004
+   sqlite3_mutex * pMtx = sqlite3_db_mutex( pDb );
 
+   sqlite3_mutex_enter( pMtx );
+#endif
    if( sqlite3_get_table( pDb, S_HB_ITEMGETSTR( pItem, &hStatement, NULL ), &pResult, &iRow, &iCol, NULL ) != SQLITE_OK )
    {
       HB_ERRCODE errCode;
@@ -344,6 +386,9 @@ static HB_ERRCODE sqlite3Execute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
       pszErrMsg = sqlite3GetError( pDb, &errCode );
       hb_errRT_SQLT3DD( EG_OPEN, ESQLDD_STMTALLOC, pszErrMsg, hb_itemGetCPtr( pItem ), errCode );
       hb_xfree( pszErrMsg );
+#if SQLITE_VERSION_NUMBER >= 3006004
+      sqlite3_mutex_leave( pMtx );
+#endif
       return HB_FAILURE;
    }
    else
@@ -351,31 +396,48 @@ static HB_ERRCODE sqlite3Execute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
 
    sqlite3_free_table( pResult );
 
-   /* TODO: new id */
-   hb_rddsqlSetError( 0, NULL, hb_itemGetCPtr( pItem ), NULL, ( unsigned long ) iRow );
+   if( sqlite3_last_insert_rowid( pDb ) )
+      pNewID = hb_itemPutNInt( NULL, sqlite3_last_insert_rowid( pDb ) );
+
+#if SQLITE_VERSION_NUMBER >= 3006004
+   sqlite3_mutex_leave( pMtx );
+#endif
+   hb_rddsqlSetError( 0, NULL, hb_itemGetCPtr( pItem ), pNewID, ( unsigned long ) iRow );
+
+   if( pNewID )
+      hb_itemRelease( pNewID );
+
    return HB_SUCCESS;
 }
 
 static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
 {
-   sqlite3 *      pDb = ( ( SDDCONN * ) pArea->pConnection->pSDDConn )->pDb;
-   sqlite3_stmt * st  = NULL;
-   SDDDATA *      pSDDData;
-   const char *   pszQuery;
-   HB_SIZE        nQueryLen;
-   void *         hQuery;
-   HB_USHORT      uiFields, uiIndex;
-   PHB_ITEM       pItemEof, pItem, pName = NULL;
-   HB_ERRCODE     errCode;
-   char *         szError;
-   HB_BOOL        bError;
-   int            iStatus, result;
+   sqlite3 *       pDb = ( ( SDDCONN * ) pArea->pConnection->pSDDConn )->pDb;
+   sqlite3_stmt *  st  = NULL;
+   SDDDATA *       pSDDData;
+   const char *    pszQuery;
+   HB_SIZE         nQueryLen;
+   void *          hQuery;
+   HB_USHORT       uiFields, uiIndex;
+   PHB_ITEM        pItemEof, pItem, pName = NULL;
+   HB_ERRCODE      errCode;
+   char *          szError;
+   HB_BOOL         bError;
+   int             iStatus, result;
+#if SQLITE_VERSION_NUMBER >= 3006004
+   sqlite3_mutex * pMtx;
+#endif
 
    pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
    pSDDData        = ( SDDDATA * ) pArea->pSDDData;
 
    pItem    = hb_itemPutC( NULL, pArea->szQuery );
    pszQuery = S_HB_ITEMGETSTR( pItem, &hQuery, &nQueryLen );
+
+#if SQLITE_VERSION_NUMBER >= 3006004
+   pMtx = sqlite3_db_mutex( pDb );
+   sqlite3_mutex_enter( pMtx );
+#endif
 
 #if SQLITE_VERSION_NUMBER >= 3020000
    result = sqlite3_prepare_v3( pDb, pszQuery, ( int ) nQueryLen, 0, &st, NULL );
@@ -390,6 +452,9 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       szError = sqlite3GetError( pDb, &errCode );
       hb_errRT_SQLT3DD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
       sqlite3_finalize( st );
+#if SQLITE_VERSION_NUMBER >= 3006004
+      sqlite3_mutex_leave( pMtx );
+#endif
       hb_xfree( szError );
       return HB_FAILURE;
    }
@@ -407,8 +472,15 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       hb_errRT_SQLT3DD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
       sqlite3_finalize( st );
       hb_xfree( szError );
+#if SQLITE_VERSION_NUMBER >= 3006004
+      sqlite3_mutex_leave( pMtx );
+#endif
       return HB_FAILURE;
    }
+
+#if SQLITE_VERSION_NUMBER >= 3006004
+   sqlite3_mutex_leave( pMtx );
+#endif
 
    uiFields = ( HB_USHORT ) sqlite3_column_count( st );
    SELF_SETFIELDEXTENT( &pArea->area, uiFields );
@@ -551,7 +623,13 @@ static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
 
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
-   sqlite3_stmt * st = ( ( SDDDATA * ) pArea->pSDDData )->pStmt;
+   sqlite3_stmt * st = NULL;
+
+   /* pSDDData not guaranteed to be allocated for DBCreate()'d areas,
+      rest is guarded by fFetched = TRUE */
+
+   if( pArea->pSDDData )
+      st = ( ( SDDDATA * ) pArea->pSDDData )->pStmt;
 
    while( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {

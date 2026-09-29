@@ -94,7 +94,9 @@ static SDDNODE s_mysqldd =
    ( SDDFUNC_CLOSE ) mysqlClose,
    ( SDDFUNC_GOTO ) mysqlGoTo,
    ( SDDFUNC_GETVALUE ) mysqlGetValue,
-   ( SDDFUNC_GETVARLEN ) NULL
+   ( SDDFUNC_GETVARLEN ) NULL,
+   SQLDD_EFLAG_NONE,
+   ( PHB_ITEM ) NULL_MUTEX_PLACEHOLDER
 };
 
 

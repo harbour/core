@@ -7,6 +7,76 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-09-29 21:37 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/rddsql/hbrddsql.h
+  * contrib/rddsql/sqlbase.c
+    * reshaped SQLBASE RDD for multi-threading. There are
+      now separate connection tables for each thread and also
+      a global one (either for compatibility with old SQLBASE
+      or scenarios that fit for serialized RDBMS access).
+      SQLMIX should inherit these features, as it didn't have
+      non MT-safe elements.
+
+    + RDDI_CONNECT method now supports "THREAD:" and "GLOBAL:"
+      prefixes in the driver specifier, for example:
+      RDDINFO( RDDI_CONNECT, {"THREAD:SQLITE3", "..."} )
+
+      NOTE: "GLOBAL:" mode is the current default when prefix is
+            not specified, still that may change in the future.
+            If you want to keep connections in global state please
+            add explicit "GLOBAL:" prefix.
+
+    * RDDIINFO( RDDI_CONNECTION, <nConnection> ) is now per-thread
+      isolated value. Also after spawning a new thread, to access
+      already established global connection, the value has to be
+      assigned again.
+      [INCOMPATIBLE]
+
+    + added pSDD->EngineFlags bit-flags (SDDNODE struct):
+      SQLDD_EFLAG_CAN_CREATE - driver supports creating (temp)table
+      SQLDD_EFLAG_MT_AWARE   - driver is optimized/safe for MT mode
+
+  * contrib/sddfb/core.c
+  * contrib/sddmy/core.c
+  * contrib/sddoci/core.c
+    * marked as non-MT aware, per driver Mutex will
+      be used for such connections in global scope.
+      To protect SQL Transactions retain .prg mutexes,
+      which you should already have in place if been
+      using SDD in MT.
+
+    ! dbCreate()/dbGoto() GPF is fixed by _not_ declaring
+      SQLDD_EFLAG_CAN_CREATE. DBCreate() now falls back
+      to SDDNULL as parent driver when MYSQL, OCILIB,
+      FIREBIRD are in focus.
+
+  * contrib/sddodbc/core.c
+  * contrib/sddpg/core.c
+    * marked as non-MT aware, can be used in global
+      scope as they have always been. These are the next
+      candidates for MT conversion.
+
+  * contrib/sddsqlt3/core.c
+    * multi-threading is now enabled in SQLite SDD.
+      That is as long as it is version 3.6.4+ and was compiled
+      with SQLITE_THREADSAFE=[1 or 2]. Any other builds are
+      detected as unsafe using runtime sqlite3_threadsafe()
+      call.
+
+    + implemented RDDI_INSERTID: it is mapped to SQLite
+      ROWID of last inserted row, that should also
+      transparently map to PRIMARY KEY if it's defined
+      as single integer column.
+
+    + with SQLite >= 3.6.4 SDD now uses sqlite_open_v2()
+      call to open a connection
+
+  + contrib/sddsqlt3/tests/mttest.prg
+    + small stress-test for SQLite multi-threading, testing
+      both THREAD: and GLOBAL: spaces. On-file multi-threading
+      is quite slow, but the tests can also run in-memory.
+      Specify any parameter to switch this mode: ./mttest mem
+
 2026-09-18 11:37 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * doc/en/langall.txt
     + list missing codepage DE858 in hb_cdpSelect() doc entry

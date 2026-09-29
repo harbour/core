@@ -49,6 +49,8 @@
 #include "hbvm.h"
 #include "hbset.h"
 #include "hbrddsql.h"
+#include "hbstack.h"
+#include "hbthread.h"
 #include "rddsys.ch"
 
 #include "hbtrace.h"
@@ -56,49 +58,151 @@
 #define SUPERTABLE              ( &sqlbaseSuper )
 
 #define CONNECTION_LIST_EXPAND  4
+#define CONNECTION_MAX          65535
+#define FLAG_CONN_THREAD_LOCAL  ( CONNECTION_MAX + 1 )
 
 static HB_USHORT s_rddidSQLBASE = 0;
 
+/* globally scoped connections */
 static SQLDDCONNECTION ** s_pConnection = NULL;
 static HB_ULONG s_ulConnectionCount     = 0;
-static HB_ULONG s_ulConnectionCurrent   = 0;
 
+/* active connection (RDDI_CONNECTION) is now per-thread parameter */
+#if 0
+static HB_ULONG s_ulConnectionCurrent   = 0;
+#endif
+
+/*
+ * SDD operations for non-MT aware drivers are using
+ * per driver allocated Mutex.
+ *
+ * Such mutex is not used for MT aware drivers,
+ * the ->Mutex holds NULL.
+ *
+ * ISSUE: hb_dbDetach() shouldn't be allowed on thread-owned-connection
+ *        workareas, at least the driver should flag if the area is
+ *        wholly fetched and safe for detaching (remap to NULL SDD?)
+ *
+ * Another case is that, you can't open a thread-owned connection
+ * with non-MT aware driver in thread local connection space.
+ *
+ * Though it seem possible to reuse pSDD->Mutex for that too,
+ * it only IMHO create an illusion as if such driver is optimized
+ * for threads.
+ *
+ */
+
+/* thread scoped connections */
+typedef struct
+{
+   HB_ULONG ulConnectionCount;
+   HB_ULONG ulConnectionCurrent;
+   SQLDDCONNECTION ** pConnection;
+
+   char *         szError;
+   HB_ERRCODE     errCode;
+
+   char *         szQuery;
+   PHB_ITEM       pItemNewID;
+   unsigned long  ulAffectedRows;
+
+} HB_SDDCONNTH, * PHB_SDDCONNTH;
+
+static void sddConnDataInit( void * cargo )
+{
+   PHB_SDDCONNTH pConnData = ( PHB_SDDCONNTH ) cargo;
+
+   pConnData->szError          = NULL;
+   pConnData->errCode          = 0;
+   pConnData->szQuery          = NULL;
+   pConnData->pItemNewID       = hb_itemNew( NULL );
+   pConnData->ulAffectedRows   = 0;
+}
+
+/* thread release */
+static void sddConnDataRelease( void * cargo )
+{
+   PHB_SDDCONNTH pConnData = ( PHB_SDDCONNTH ) cargo;
+
+   if( pConnData->pConnection )
+   {
+      HB_ULONG ul;
+
+      for( ul = 0; ul < pConnData->ulConnectionCount; ul++ )
+      {
+         if( pConnData->pConnection[ ul ] )
+         {
+            SQLDDCONNECTION * pConn = pConnData->pConnection[ ul ];
+            pConn->pSDD->Disconnect( pConn );
+            hb_xfree( pConn );
+         }
+      }
+      hb_xfree( pConnData->pConnection );
+      pConnData->pConnection = NULL;
+      pConnData->ulConnectionCount = 0;
+   }
+
+   pConnData->ulConnectionCurrent = 0;
+   if( pConnData->szError )
+   {
+      hb_xfree( pConnData->szError );
+      pConnData->szError = NULL;
+   }
+   if( pConnData->szQuery )
+   {
+      hb_xfree( pConnData->szQuery );
+      pConnData->szQuery = NULL;
+   }
+   hb_itemRelease( pConnData->pItemNewID );
+   pConnData->pItemNewID = NULL;
+}
+
+static HB_TSD_NEW( s_thConnData, sizeof( HB_SDDCONNTH ), sddConnDataInit, sddConnDataRelease );
+
+#define HB_GET_SDDCONNTH()  ( ( PHB_SDDCONNTH ) hb_stackGetTSD( &s_thConnData ) )
+
+static PHB_ITEM s_mtxConnList = NULL;
+
+#if 0
 static char *     s_szError = NULL;
 static HB_ERRCODE s_errCode = 0;
 
 static char *        s_szQuery        = NULL;
 static PHB_ITEM      s_pItemNewID     = NULL;
 static unsigned long s_ulAffectedRows = 0;
+#endif
 
 static RDDFUNCS sqlbaseSuper;
 
 
 void hb_rddsqlSetError( HB_ERRCODE errCode, const char * szError, const char * szQuery, PHB_ITEM pItem, unsigned long ulAffectedRows )
 {
-   s_errCode = errCode;
+   PHB_SDDCONNTH pConnData = HB_GET_SDDCONNTH();
 
-   if( s_szError )
+   pConnData->errCode = errCode;
+
+   if( pConnData->szError )
    {
-      hb_xfree( s_szError );
-      s_szError = NULL;
+      hb_xfree( pConnData->szError );
+      pConnData->szError = NULL;
    }
    if( szError )
-      s_szError = hb_strdup( szError );
+      pConnData->szError = hb_strdup( szError );
 
-   if( s_szQuery )
+   if( pConnData->szQuery )
    {
-      hb_xfree( s_szQuery );
-      s_szQuery = NULL;
+      hb_xfree( pConnData->szQuery );
+      pConnData->szQuery = NULL;
    }
    if( szQuery )
-      s_szQuery = hb_strdup( szQuery );
+      pConnData->szQuery = hb_strdup( szQuery );
 
    if( pItem )
-      hb_itemCopy( s_pItemNewID, pItem );
+      hb_itemCopy( pConnData->pItemNewID, pItem );
    else
-      hb_itemClear( s_pItemNewID );
+      hb_itemClear( pConnData->pItemNewID );
 
-   s_ulAffectedRows = ulAffectedRows;
+   pConnData->ulAffectedRows = ulAffectedRows;
 }
 
 
@@ -139,7 +243,9 @@ static const SDDNODE s_sddNull = {
    ( SDDFUNC_CLOSE ) sddClose,
    ( SDDFUNC_GOTO ) sddGoTo,
    ( SDDFUNC_GETVALUE ) sddGetValue,
-   ( SDDFUNC_GETVARLEN ) sddGetVarLen
+   ( SDDFUNC_GETVARLEN ) sddGetVarLen,
+   SQLDD_EFLAG_CAN_CREATE | SQLDD_EFLAG_MT_AWARE,
+   ( PHB_ITEM ) NULL_MUTEX_PLACEHOLDER
 };
 
 
@@ -180,6 +286,7 @@ static HB_ERRCODE sddOpen( SQLBASEAREAP pArea )
 static HB_ERRCODE sddClose( SQLBASEAREAP pArea )
 {
    HB_SYMBOL_UNUSED( pArea );
+
    return HB_SUCCESS;
 }
 
@@ -257,8 +364,15 @@ int hb_sddRegister( PSDDNODE pSdd )
          return 0;
       pNode = pNode->pNext;
    }
+
+   if( ! hb_vmIsMt() )
+      pSdd->EngineFlags &= ~SQLDD_EFLAG_MT_AWARE;
+   else if( ! ( pSdd->EngineFlags & SQLDD_EFLAG_MT_AWARE ) )
+      pSdd->Mutex = hb_threadMutexCreate();
+
    pSdd->pNext = s_pSdd;
    s_pSdd      = pSdd;
+
    return 1;
 }
 
@@ -271,8 +385,21 @@ static HB_ERRCODE sqlbaseGoBottom( SQLBASEAREAP pArea )
       return HB_FAILURE;
 
 
-   if( ! pArea->fFetched && pArea->pSDD->GoTo( pArea, ( HB_ULONG ) -1 ) == HB_FAILURE )
-      return HB_FAILURE;
+   if( ! pArea->fFetched )
+   {
+      if( pArea->pSDD->Mutex )
+      {
+         hb_threadMutexLock( pArea->pSDD->Mutex );
+         if( pArea->pSDD->GoTo( pArea, ( HB_ULONG ) -1 ) == HB_FAILURE )
+         {
+            hb_threadMutexUnlock( pArea->pSDD->Mutex );
+            return HB_FAILURE;
+         }
+      hb_threadMutexUnlock( pArea->pSDD->Mutex );
+      }
+      else if( pArea->pSDD->GoTo( pArea, ( HB_ULONG ) -1 ) == HB_FAILURE )
+         return HB_FAILURE;
+   }
 
    pArea->area.fTop    = HB_FALSE;
    pArea->area.fBottom = HB_TRUE;
@@ -289,7 +416,17 @@ static HB_ERRCODE sqlbaseGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
    if( SELF_GOCOLD( &pArea->area ) == HB_FAILURE )
       return HB_FAILURE;
 
-   if( pArea->pSDD->GoTo( pArea, ulRecNo ) == HB_FAILURE )
+   if( pArea->pSDD->Mutex )
+   {
+      hb_threadMutexLock( pArea->pSDD->Mutex );
+      if( pArea->pSDD->GoTo( pArea, ulRecNo ) == HB_FAILURE )
+      {
+         hb_threadMutexUnlock( pArea->pSDD->Mutex );
+         return HB_FAILURE;
+      }
+      hb_threadMutexUnlock( pArea->pSDD->Mutex );
+   }
+   else if( pArea->pSDD->GoTo( pArea, ulRecNo ) == HB_FAILURE )
       return HB_FAILURE;
 
    if( pArea->fPositioned )
@@ -464,6 +601,16 @@ static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
       hb_arrayGet( ( PHB_ITEM ) pArea->pRecord, uiIndex, pItem );
       return HB_SUCCESS;
    }
+
+   /* IMHO: ideally move op-specific mutex locking into the SDD drivers, i.e. make all drivers MT-aware [alcz] */
+   if( pArea->pSDD->Mutex )
+   {
+      HB_ERRCODE retCode;
+      hb_threadMutexLock( pArea->pSDD->Mutex );
+      retCode = pArea->pSDD->GetValue( pArea, uiIndex, pItem );
+      hb_threadMutexUnlock( pArea->pSDD->Mutex );
+      return retCode;
+   }
    return pArea->pSDD->GetValue( pArea, uiIndex, pItem );
 }
 
@@ -635,7 +782,16 @@ static HB_ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
       return HB_FAILURE;
 
    if( pArea->pSDD )
-      pArea->pSDD->Close( pArea );
+   {
+      if( pArea->pSDD->Mutex )
+      {
+         hb_threadMutexLock( pArea->pSDD->Mutex );
+         pArea->pSDD->Close( pArea );
+         hb_threadMutexUnlock( pArea->pSDD->Mutex );
+      }
+      else
+         pArea->pSDD->Close( pArea );
+   }
 
    if( pArea->pRow )
    {
@@ -660,7 +816,16 @@ static HB_ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
    if( pArea->pConnection )
    {
       /* It is possible to have areas without connection and SDD driver. Ex., arrayrdd. [Mindaugas] */
-      pArea->pConnection->uiAreaCount--;
+
+      if( ! ( pArea->ulConnection & FLAG_CONN_THREAD_LOCAL ) && s_mtxConnList )
+      {
+         hb_threadMutexLock( s_mtxConnList );
+         pArea->pConnection->uiAreaCount--;
+         hb_threadMutexUnlock( s_mtxConnList );
+      }
+      else
+         pArea->pConnection->uiAreaCount--;
+
       pArea->pConnection = NULL;
    }
    return HB_SUCCESS;
@@ -672,24 +837,74 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
    PHB_ITEM  pItemEof, pItem;
    HB_USHORT uiCount;
    HB_BOOL   bError;
+   PHB_SDDCONNTH pConnData = HB_GET_SDDCONNTH();
 
-   pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : s_ulConnectionCurrent;
+   pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : pConnData->ulConnectionCurrent;
 
-   if( pArea->ulConnection > s_ulConnectionCount ||
-       ( pArea->ulConnection && ! s_pConnection[ pArea->ulConnection - 1 ] ) )
+   if( pArea->ulConnection & FLAG_CONN_THREAD_LOCAL )
    {
-      hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED, "Not connected", NULL );
-      return HB_FAILURE;
-   }
+      HB_ULONG ul = pArea->ulConnection & ~FLAG_CONN_THREAD_LOCAL;
+      if( ul > pConnData->ulConnectionCount ||
+         ( ul && ! pConnData->pConnection[ ul - 1 ] ) )
+      {
+         hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED, "Not connected", NULL );
 
-   if( pArea->ulConnection )
-   {
-      pArea->pConnection = s_pConnection[ pArea->ulConnection - 1 ];
-      pArea->pConnection->uiAreaCount++;
-      pArea->pSDD = pArea->pConnection->pSDD;
+         return HB_FAILURE;
+      }
+
+      if( pArea->ulConnection )
+      {
+         pArea->pConnection = pConnData->pConnection[ ( pArea->ulConnection & ~FLAG_CONN_THREAD_LOCAL ) - 1 ];
+         if( pArea->pConnection->pSDD->EngineFlags & SQLDD_EFLAG_CAN_CREATE )
+         {
+            pArea->pConnection->uiAreaCount++;
+            pArea->pSDD = pArea->pConnection->pSDD;
+         }
+         else
+         {
+            pArea->pConnection = NULL;
+            pArea->pSDD = &s_sddNull;
+         }
+      }
+      else
+         pArea->pSDD = &s_sddNull;
    }
    else
-      pArea->pSDD = &s_sddNull;
+   {
+      if( s_mtxConnList )
+          hb_threadMutexLock( s_mtxConnList );
+
+      if( pArea->ulConnection > s_ulConnectionCount ||
+          ( pArea->ulConnection && ! s_pConnection[ pArea->ulConnection - 1 ] ) )
+      {
+         if( s_mtxConnList )
+             hb_threadMutexUnlock( s_mtxConnList );
+
+         hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED, "Not connected", NULL );
+
+         return HB_FAILURE;
+      }
+
+      if( pArea->ulConnection )
+      {
+         pArea->pConnection = s_pConnection[ pArea->ulConnection - 1 ];
+         if( pArea->pConnection->pSDD->EngineFlags & SQLDD_EFLAG_CAN_CREATE )
+         {
+            pArea->pConnection->uiAreaCount++;
+            pArea->pSDD = pArea->pConnection->pSDD;
+         }
+         else
+         {
+            pArea->pConnection = NULL;
+            pArea->pSDD = &s_sddNull;
+         }
+      }
+      else
+         pArea->pSDD = &s_sddNull;
+
+      if( s_mtxConnList )
+          hb_threadMutexUnlock( s_mtxConnList );
+   }
 
    pItemEof = hb_itemArrayNew( pArea->area.uiFieldCount );
 
@@ -816,28 +1031,76 @@ static HB_ERRCODE sqlbaseInfo( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM p
 static HB_ERRCODE sqlbaseOpen( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    HB_ERRCODE errCode;
+   PHB_SDDCONNTH pConnData = HB_GET_SDDCONNTH();
 
-   pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : s_ulConnectionCurrent;
+   pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : pConnData->ulConnectionCurrent;
 
-   if( pArea->ulConnection == 0 || pArea->ulConnection > s_ulConnectionCount ||
-       ! s_pConnection[ pArea->ulConnection - 1 ] )
+   if( pArea->ulConnection & FLAG_CONN_THREAD_LOCAL )
    {
-      hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED, "Not connected", NULL );
-      return HB_FAILURE;
+      HB_ULONG ul = pArea->ulConnection & ~FLAG_CONN_THREAD_LOCAL;
+      if( ul == 0 || ul > pConnData->ulConnectionCount ||
+          ! pConnData->pConnection[ ul - 1 ] )
+      {
+         hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED, "Not connected", NULL );
+
+         return HB_FAILURE;
+      }
+
+      if( pArea->area.uiFieldCount )
+         /* This should not happen (in __dbTrans()), because RDD is registered with RDT_FULL */
+         return HB_FAILURE;
+
+      pArea->pConnection = pConnData->pConnection[ ( pArea->ulConnection & ~FLAG_CONN_THREAD_LOCAL ) - 1 ];
+      pArea->pConnection->uiAreaCount++;
+      pArea->pSDD = pArea->pConnection->pSDD;
    }
+   else
+   {
+      if( s_mtxConnList )
+          hb_threadMutexLock( s_mtxConnList );
 
-   if( pArea->area.uiFieldCount )
-      /* This should not happen (in __dbTrans()), because RDD is registered with RDT_FULL */
-      return HB_FAILURE;
+      if( pArea->ulConnection == 0 || pArea->ulConnection > s_ulConnectionCount ||
+          ! s_pConnection[ pArea->ulConnection - 1 ] )
+      {
+         if( s_mtxConnList )
+             hb_threadMutexUnlock( s_mtxConnList );
 
-   pArea->pConnection = s_pConnection[ pArea->ulConnection - 1 ];
-   pArea->pConnection->uiAreaCount++;
-   pArea->pSDD = pArea->pConnection->pSDD;
+         hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED, "Not connected", NULL );
+
+         return HB_FAILURE;
+      }
+
+      if( pArea->area.uiFieldCount )
+      {
+         /* This should not happen (in __dbTrans()), because RDD is registered with RDT_FULL */
+
+         if( s_mtxConnList )
+             hb_threadMutexUnlock( s_mtxConnList );
+
+         return HB_FAILURE;
+      }
+
+      pArea->pConnection = s_pConnection[ pArea->ulConnection - 1 ];
+      pArea->pConnection->uiAreaCount++;
+      pArea->pSDD = pArea->pConnection->pSDD;
+
+      if( s_mtxConnList )
+         hb_threadMutexUnlock( s_mtxConnList );
+
+   }
 
    /* filename is a query */
    pArea->szQuery = hb_strdup( pOpenInfo->abName );
 
-   errCode = pArea->pSDD->Open( pArea );
+   /* IMHO: ideally move op-specific mutex locking into the SDD drivers, i.e. make all drivers MT-aware [alcz] */
+   if( pArea->pSDD->Mutex )
+   {
+      hb_threadMutexLock( pArea->pSDD->Mutex );
+      errCode = pArea->pSDD->Open( pArea );
+      hb_threadMutexUnlock( pArea->pSDD->Mutex );
+   }
+   else
+      errCode = pArea->pSDD->Open( pArea );
 
    if( errCode == HB_SUCCESS )
       errCode = SUPER_OPEN( &pArea->area, pOpenInfo );
@@ -926,7 +1189,6 @@ static HB_ERRCODE sqlbaseInit( LPRDDNODE pRDD )
 {
    HB_SYMBOL_UNUSED( pRDD );
 
-   s_pItemNewID = hb_itemNew( NULL );
    return HB_SUCCESS;
 }
 
@@ -939,11 +1201,15 @@ static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
    {
       HB_ULONG ul;
 
+      if( s_mtxConnList )
+         hb_threadMutexLock( s_mtxConnList );
+
       /* Disconnect all connections */
       for( ul = 0; ul < s_ulConnectionCount; ul++ )
       {
          if( s_pConnection[ ul ] )
          {
+            /* Assuming RDD cleanup is after other threads stopped user-mode operations */
             s_pConnection[ ul ]->pSDD->Disconnect( s_pConnection[ ul ] );
             hb_xfree( s_pConnection[ ul ] );
          }
@@ -951,6 +1217,11 @@ static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
       hb_xfree( s_pConnection );
       s_pConnection         = NULL;
       s_ulConnectionCount   = 0;
+
+      if( s_mtxConnList )
+         hb_threadMutexUnlock( s_mtxConnList );
+
+#if 0
       s_ulConnectionCurrent = 0;
       if( s_szError )
       {
@@ -964,6 +1235,7 @@ static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
       }
       hb_itemRelease( s_pItemNewID );
       s_pItemNewID = NULL;
+#endif
    }
 
    return HB_SUCCESS;
@@ -974,14 +1246,43 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
 {
    HB_ULONG ulConn;
    SQLDDCONNECTION * pConn;
+   PHB_SDDCONNTH pConnData = HB_GET_SDDCONNTH();
+   HB_BOOL bInThreadConn = HB_FALSE;
 
    HB_SYMBOL_UNUSED( pRDD );
 
-   ulConn = ulConnect ? ulConnect : s_ulConnectionCurrent;
-   if( ulConn > 0 && ulConn <= s_ulConnectionCount )
-      pConn = s_pConnection[ ulConn - 1 ];
+   ulConn = ulConnect ? ulConnect : pConnData->ulConnectionCurrent;
+
+   if( ulConn & FLAG_CONN_THREAD_LOCAL )
+   {
+      ulConn &= ~FLAG_CONN_THREAD_LOCAL;
+
+      if( ulConn > 0 && ulConn <= pConnData->ulConnectionCount )
+      {
+         pConn = pConnData->pConnection[ ulConn - 1 ];
+         bInThreadConn = HB_TRUE;
+      }
+      else
+         pConn = NULL;
+   }
    else
-      pConn = NULL;
+   {
+      if( s_mtxConnList )
+         hb_threadMutexLock( s_mtxConnList );
+
+      if( ulConn > 0 && ulConn <= s_ulConnectionCount )
+         pConn = s_pConnection[ ulConn - 1 ];
+      else
+         pConn = NULL;
+
+      if( s_mtxConnList )
+      {
+         if( pConn && uiIndex == RDDI_EXECUTE ) /* prevents disconnect of acquired pConn while we process */
+            pConn->uiAreaCount++;
+
+         hb_threadMutexUnlock( s_mtxConnList );
+      }
+   }
 
    switch( uiIndex )
    {
@@ -996,10 +1297,10 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
          if( hb_itemType( pItem ) & HB_IT_NUMERIC )
             ulNewConnection = hb_itemGetNL( pItem );
 
-         hb_itemPutNL( pItem, ulConnect ? ulConnect : s_ulConnectionCurrent );
+         hb_itemPutNL( pItem, ulConnect ? ulConnect : pConnData->ulConnectionCurrent );
 
          if( ulNewConnection )
-            s_ulConnectionCurrent = ulNewConnection;
+            pConnData->ulConnectionCurrent = ulNewConnection;
          break;
       }
 
@@ -1015,11 +1316,34 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
       {
          PSDDNODE     pNode = NULL;
          HB_ULONG     ul;
+         HB_BOOL      bNewInThread = HB_FALSE;   /* scope of the connection being created */
          const char * pStr;
+
+         hb_rddsqlSetError( 0, NULL, NULL, NULL, 0 );
 
          pStr = hb_arrayGetCPtr( pItem, 1 );
          if( pStr )
          {
+            const char * pSep = strchr( pStr, ':' );
+
+            if( pSep )
+            {
+#if 0
+               /* GLOBAL is the default, reserved to change in future Harbour releases */
+               if( ( pSep - pStr ) == 6 && hb_strnicmp( pStr, "GLOBAL", 6 ) == 0 )
+                  iScope = 0;
+#endif
+               if( ( pSep - pStr ) == 6 && hb_strnicmp( pStr, "THREAD", 6 ) == 0 )
+               {
+                  bNewInThread = hb_vmIsMt(); /* fallback in non-MT HVM */
+                  pStr = pSep + 1;
+               }
+               else if( ! ( ( pSep - pStr ) == 6 && hb_strnicmp( pStr, "GLOBAL", 6 ) == 0 ) )
+                  pStr = NULL;
+               else
+                  pStr = pSep + 1;
+            }
+
             pNode = s_pSdd;
             while( pNode )
             {
@@ -1029,19 +1353,100 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
             }
          }
 
-         hb_rddsqlSetError( 0, NULL, NULL, NULL, 0 );
-         pConn = ( SQLDDCONNECTION * ) hb_xgrabz( sizeof( SQLDDCONNECTION ) );
-         if( pNode && pNode->Connect( pConn, pItem ) == HB_SUCCESS )
+         if( pNode )
          {
-            pConn->pSDD = pNode;
-
-            /* Find free connection handle */
-            for( ul = 0; ul < s_ulConnectionCount; ul++ )
+            if( ( pNode->EngineFlags & SQLDD_EFLAG_MT_AWARE ) == 0
+                && bNewInThread )
             {
-               if( ! s_pConnection[ ul ] )
-                  break;
+               /* non-MT aware drivers are not supported in thread scope */
+               hb_rddsqlSetError( 1, "THREAD scope not supported by this SDD", NULL, NULL, 0 );
+#if 0
+               hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED,
+                        "THREAD scope not supported by this SDD", NULL );
+#endif
+               hb_itemPutNI( pItem, 0 );
+               break;
             }
-            if( ul >= s_ulConnectionCount )
+
+            if( pNode->Mutex )
+               hb_threadMutexLock( pNode->Mutex );
+         }
+         else
+         {
+            hb_itemPutNI( pItem, 0 );
+            break;
+         }
+
+         pConn = ( SQLDDCONNECTION * ) hb_xgrabz( sizeof( SQLDDCONNECTION ) );
+         pConn->pSDD         = pNode;
+         pConn->fThreadScope = bNewInThread;
+
+         if( pNode->Connect( pConn, pItem ) == HB_SUCCESS )
+         {
+            if( pNode->Mutex )
+               hb_threadMutexUnlock( pNode->Mutex );
+
+            if( bNewInThread )
+            {
+               /* Find free connection handle (thread scope SDD) */
+               for( ul = 0; ul < pConnData->ulConnectionCount; ul++ )
+               {
+                  if( ! pConnData->pConnection[ ul ] )
+                     break;
+               }
+            }
+            else
+            {
+               if( s_mtxConnList )
+                  hb_threadMutexLock( s_mtxConnList );
+
+               /* Find free connection handle (global scope SDD) */
+               for( ul = 0; ul < s_ulConnectionCount; ul++ )
+               {
+                  if( ! s_pConnection[ ul ] )
+                     break;
+               }
+            }
+            if( ul > CONNECTION_MAX - 1 )
+            {
+               if( ! bNewInThread )
+               {
+                  if( s_mtxConnList )
+                     hb_threadMutexUnlock( s_mtxConnList );
+
+                  if( pNode->Mutex )
+                     hb_threadMutexLock( pNode->Mutex );
+                  pConn->pSDD->Disconnect( pConn );
+                  if( pNode->Mutex )
+                     hb_threadMutexUnlock( pNode->Mutex );
+
+                  hb_rddsqlSetError( 1, "maximum number of global SDD connections reached", NULL, NULL, 0 );
+               }
+               else
+                  hb_rddsqlSetError( 1, "maximum number of in-thread SDD connections reached", NULL, NULL, 0 );
+
+               hb_xfree( pConn );
+               hb_itemPutNI( pItem, 0 );
+               break;
+            }
+            else if( bNewInThread )
+            {
+               if( ul >= pConnData->ulConnectionCount )
+               {
+                  /* Realloc connection table */
+                  if( pConnData->pConnection )
+                     pConnData->pConnection = ( SQLDDCONNECTION ** ) hb_xrealloc( pConnData->pConnection, sizeof( SQLDDCONNECTION * ) * ( pConnData->ulConnectionCount + CONNECTION_LIST_EXPAND ) );
+                  else
+                     pConnData->pConnection = ( SQLDDCONNECTION ** ) hb_xgrab( sizeof( SQLDDCONNECTION * ) * CONNECTION_LIST_EXPAND );
+
+                  memset( pConnData->pConnection + pConnData->ulConnectionCount, 0, sizeof( SQLDDCONNECTION * ) * CONNECTION_LIST_EXPAND );
+                  ul = pConnData->ulConnectionCount;
+                  pConnData->ulConnectionCount += CONNECTION_LIST_EXPAND;
+               }
+               pConnData->pConnection[ ul ] = pConn;
+               ul |= FLAG_CONN_THREAD_LOCAL;
+            }
+            else if( ul >= s_ulConnectionCount )
             {
                /* Realloc connection table */
                if( s_pConnection )
@@ -1052,13 +1457,22 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
                memset( s_pConnection + s_ulConnectionCount, 0, sizeof( SQLDDCONNECTION * ) * CONNECTION_LIST_EXPAND );
                ul = s_ulConnectionCount;
                s_ulConnectionCount += CONNECTION_LIST_EXPAND;
+               s_pConnection[ ul ] = pConn;
             }
-            s_pConnection[ ul ] = pConn;
+            else
+               s_pConnection[ ul ] = pConn;
+
+            if( ! bNewInThread && s_mtxConnList )
+               hb_threadMutexUnlock( s_mtxConnList );
+
             ul++;
-            s_ulConnectionCurrent = ul;
+            pConnData->ulConnectionCurrent = ul;
          }
          else
          {
+            if( pNode->Mutex )
+               hb_threadMutexUnlock( pNode->Mutex );
+
             hb_xfree( pConn );
             ul = 0;
          }
@@ -1069,46 +1483,121 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
 
       case RDDI_DISCONNECT:
          hb_rddsqlSetError( 0, NULL, NULL, NULL, 0 );
-         if( pConn && ! pConn->uiAreaCount && pConn->pSDD->Disconnect( pConn ) == HB_SUCCESS )
+         if( ! pConn )
          {
+            hb_itemPutL( pItem, HB_FALSE );
+            return HB_SUCCESS;
+         }
+
+         if( ! bInThreadConn )
+         {
+            if( s_mtxConnList )
+               hb_threadMutexLock( s_mtxConnList );
+            /*
+             * NOTE: this is the only operation that lock these two mutexes
+             *       in line, but please keep the order if you extend:
+             *       1. s_mtxConnList 2. per-SDD mutex
+             *       when locking, to avoid any deadlocks!!!
+             */
+
+            /* re-test: the pConn captured earlier may already be invalidated
+               by a concurrent RDDI_DISCONNECT on the same handle */
+            pConn = ( ulConn > 0 && ulConn <= s_ulConnectionCount ) ? s_pConnection[ ulConn - 1 ] : NULL;
+            if( pConn && pConn->pSDD->Mutex )
+               hb_threadMutexLock( pConn->pSDD->Mutex );
+         }
+
+         if( ! pConn )
+         {
+            if( ! bInThreadConn && s_mtxConnList )
+               hb_threadMutexUnlock( s_mtxConnList );
+            hb_itemPutL( pItem, HB_FALSE );
+            return HB_SUCCESS;
+         }
+
+         if( ! pConn->uiAreaCount && pConn->pSDD->Disconnect( pConn ) == HB_SUCCESS )
+         {
+            HB_BOOL bCurrentIsThread = ( pConnData->ulConnectionCurrent & FLAG_CONN_THREAD_LOCAL ) != 0;
+            HB_ULONG ulCurrentIndex  = pConnData->ulConnectionCurrent & ~FLAG_CONN_THREAD_LOCAL;
+            PHB_ITEM pMutex = pConn->pSDD->Mutex; /* pConn is destroyed in this branch */
+
             hb_xfree( pConn );
-            s_pConnection[ ulConn - 1 ] = NULL;
-            if( s_ulConnectionCurrent == ulConn )
-               s_ulConnectionCurrent = 0;
+            if( bInThreadConn )
+               pConnData->pConnection[ ulConn - 1 ] = NULL;
+            else
+               s_pConnection[ ulConn - 1 ] = NULL;
+
+            /* connection handle can stale in other threads, MT-app should be aware of that in .prg code */
+            if( bCurrentIsThread == bInThreadConn && ulCurrentIndex == ulConn )
+               pConnData->ulConnectionCurrent = 0;
+
+            if( ! bInThreadConn )
+            {
+               if( pMutex )
+                  hb_threadMutexUnlock( pMutex );
+               if( s_mtxConnList )
+                  hb_threadMutexUnlock( s_mtxConnList );
+            }
 
             hb_itemPutL( pItem, HB_TRUE );
             return HB_SUCCESS;
          }
+
+         if( ! bInThreadConn )
+         {
+            if( pConn->pSDD->Mutex )
+               hb_threadMutexUnlock( pConn->pSDD->Mutex );
+            if( s_mtxConnList )
+               hb_threadMutexUnlock( s_mtxConnList );
+         }
+
          hb_itemPutL( pItem, HB_FALSE );
          return HB_SUCCESS;
 
       case RDDI_EXECUTE:
          hb_rddsqlSetError( 0, NULL, NULL, NULL, 0 );
          if( pConn )
-            hb_itemPutL( pItem, pConn->pSDD->Execute( pConn, pItem ) == HB_SUCCESS );
+         {
+            /* IMHO: ideally move op-specific mutex locking into the SDD drivers, i.e. make all drivers MT-aware [alcz] */
+            if( pConn->pSDD->Mutex )
+            {
+               hb_threadMutexLock( pConn->pSDD->Mutex );
+               hb_itemPutL( pItem, pConn->pSDD->Execute( pConn, pItem ) == HB_SUCCESS );
+               hb_threadMutexUnlock( pConn->pSDD->Mutex );
+            }
+            else
+               hb_itemPutL( pItem, pConn->pSDD->Execute( pConn, pItem ) == HB_SUCCESS );
+
+            if( ! bInThreadConn && s_mtxConnList )
+            {
+               hb_threadMutexLock( s_mtxConnList );
+               pConn->uiAreaCount--;
+               hb_threadMutexUnlock( s_mtxConnList );
+            }
+         }
          else
             hb_itemPutL( pItem, HB_FALSE );
 
          return HB_SUCCESS;
 
       case RDDI_ERROR:
-         hb_itemPutC( pItem, s_szError );
+         hb_itemPutC( pItem, pConnData->szError );
          return HB_SUCCESS;
 
       case RDDI_ERRORNO:
-         hb_itemPutNI( pItem, s_errCode );
+         hb_itemPutNI( pItem, pConnData->errCode );
          return HB_SUCCESS;
 
       case RDDI_QUERY:
-         hb_itemPutC( pItem, s_szQuery );
+         hb_itemPutC( pItem, pConnData->szQuery );
          return HB_SUCCESS;
 
       case RDDI_INSERTID:
-         hb_itemCopy( pItem, s_pItemNewID );
+         hb_itemCopy( pItem, pConnData->pItemNewID );
          return HB_SUCCESS;
 
       case RDDI_AFFECTEDROWS:
-         hb_itemPutNInt( pItem, s_ulAffectedRows );
+         hb_itemPutNInt( pItem, pConnData->ulAffectedRows );
          return HB_SUCCESS;
 
 #if 0
@@ -1267,6 +1756,9 @@ static void hb_sqlbaseInit( void * cargo )
 
    if( hb_rddRegister( "SQLBASE", RDT_FULL ) > 1 )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+
+   if( hb_vmIsMt() )
+      s_mtxConnList = hb_threadMutexCreate();
 }
 
 HB_INIT_SYMBOLS_BEGIN( sqlbase__InitSymbols )
