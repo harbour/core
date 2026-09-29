@@ -1,5 +1,5 @@
 /*
- * Header file for the Internal Terminal API
+ * Header file for the Virtual Machine API
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  *

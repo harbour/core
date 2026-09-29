@@ -7,6 +7,14 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-09-29 21:51 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbssl/hbssl.hbp
+    * added OpenSSL 4 .dll names, platform filtered others
+      that were arch specific.
+
+  * include/hbxvm.h
+    ! c&p typo
+
 2026-09-29 21:37 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/rddsql/hbrddsql.h
   * contrib/rddsql/sqlbase.c
