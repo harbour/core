@@ -159,13 +159,13 @@ static void hb_compGenArgList( int iFirst, int iLast,
             {
                do
                {
-                  if( hb_arrayGetType( pParam, nPos ) & HB_IT_STRING )
+                  if( hb_arrayGetCLen( pParam, nPos ) )
                      ++argc;
                }
                while( --nPos );
             }
          }
-         else if( HB_IS_STRING( pParam ) )
+         else if( hb_itemGetCLen( pParam ) )
             ++argc;
       }
    }
@@ -182,11 +182,11 @@ static void hb_compGenArgList( int iFirst, int iLast,
             HB_SIZE nPos, nLen = hb_arrayLen( pParam );
             for( nPos = 1; nPos <= nLen; ++nPos )
             {
-               if( hb_arrayGetType( pParam, nPos ) & HB_IT_STRING )
+               if( hb_arrayGetCLen( pParam, nPos ) )
                   argv[ argc++ ] = hb_arrayGetCPtr( pParam, nPos );
             }
          }
-         else if( HB_IS_STRING( pParam ) )
+         else if( hb_itemGetCLen( pParam ) )
             argv[ argc++ ] = hb_itemGetCPtr( pParam );
       }
    }

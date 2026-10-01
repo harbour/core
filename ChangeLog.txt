@@ -7,6 +7,16 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-09-29 22:08 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * src/compiler/hbcmplib.c
+    ! fix to not create zero-len argv entries from such invocations:
+      hb_compileFromBuf( "harbour", "-n", "-q", "", "test.prg")
+      Before the fix this resulted in "Error F0036  Invalid filename ''".
+      It doesn't mean you should let go with extra empty parameters, but
+      the code either shouldn't pass absolutely non-standard argv array
+      element to hb_compMainExt().
+      #418 - issue reported by Giuliano Puppis - thanks!
+
 2026-09-29 21:51 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/hbssl/hbssl.hbp
     * added OpenSSL 4 .dll names, platform filtered others
