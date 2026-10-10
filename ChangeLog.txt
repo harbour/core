@@ -7,6 +7,49 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-10-10 14:38 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbtip/hbtip.hbc
+  * contrib/hbtip/hbtip.hbp
+  * contrib/hbtip/client.prg
+    ! fix order of SSL_shutdown() call, use ERR_clear_error()
+
+    * on Linux, in SSL mode check current state of SIGPIPE handler,
+      toggle to ignore if necessary (hbtip now depends on hbunix contrib
+      when building on Linux)
+
+    * on other Unix systems call hb_socketSetNoSigPipe() before passing
+      socket to OpenSSL
+
+  * contrib/hbssl/err.c
+  * contrib/hbssl/hbssl.hbx
+    + ERR_clear_error() wrapper
+
+  * contrib/hbunix/hbposix.h
+  * contrib/hbunix/hbunix.hbp
+  * contrib/hbunix/hbunix.hbx
+  + contrib/hbunix/sigkill.c
+    + attempt to implement portable interface to reach basic signal
+      handler setup. Many signal numbers vary between UNIX implementations,
+      functions are currently tied to signal name:
+      "SIGINT", "sigint" or "INT" - are accepted forms to <cSignal>
+
+      Added functions:
+      posix_kill( <nPid>[, <cSignal> = "SIGNULL" ] ) -> 0 (success), -1
+      posix_signal( <cSignal>, .T. (ignore signal) / .F. (default action)
+        -> <lWasIgnored> / NIL ( error or custom handler set previously )
+      unix_signalToNum( <cSignal> ) -> <iSignal>
+      unix_numToSignal( <iSignal>[, <lShort> = .F. ] ) -> <cSignal>
+
+      Currently enabled on Linux only:
+      unix_sigactionGet( <cSignal> )
+       -> <lIsIgnored> / NIL ( error or custom handler )
+
+      Function prototypes may not be final. Use posix_errno() in case
+      of failure.
+
+  + contrib/hbunix/tests/sigpipe.prg
+    + self-test SIGPIPE kill attempt
+
 2026-09-29 22:08 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * src/compiler/hbcmplib.c
     ! fix to not create zero-len argv entries from such invocations:

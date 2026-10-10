@@ -63,6 +63,12 @@ HB_FUNC( ERR_PRINT_ERRORS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( ERR_CLEAR_ERROR )
+{
+   ERR_clear_error();
+   hb_ret();
+}
+
 HB_FUNC( ERR_GET_ERROR )
 {
    hb_retnint( ERR_get_error() );

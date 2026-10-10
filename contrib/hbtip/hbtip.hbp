@@ -31,5 +31,7 @@ smtpcli.prg
 thtml.prg
 url.prg
 
+{linux}hbunix.hbc
+
 -env:HB_DYNBIND_OPENSSL=yes
 hbssl.hbc

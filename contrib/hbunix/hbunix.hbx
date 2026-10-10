@@ -28,13 +28,18 @@ DYNAMIC posix_geteuid
 DYNAMIC posix_getgid
 DYNAMIC posix_getpid
 DYNAMIC posix_getuid
+DYNAMIC posix_kill
 DYNAMIC posix_setegid
 DYNAMIC posix_seteuid
 DYNAMIC posix_setgid
 DYNAMIC posix_setuid
+DYNAMIC posix_signal
 DYNAMIC posix_sleep
 DYNAMIC unix_chroot
 DYNAMIC unix_daemon
+DYNAMIC unix_numToSignal
+DYNAMIC unix_sigactionGet
+DYNAMIC unix_signalToNum
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBUNIX__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

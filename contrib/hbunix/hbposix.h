@@ -54,6 +54,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <signal.h>
 
 
 #define hb_par_uid( n )   ( ( uid_t ) hb_parnl( n ) )

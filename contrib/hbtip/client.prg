@@ -267,6 +267,7 @@ METHOD EnableSSL( lEnable ) CLASS TIPClient
 
    IF lEnable
       IF ::lHasSSL
+         ::nSSLError := 0
          ::ssl_ctx := SSL_CTX_new()
          ::ssl := SSL_new( ::ssl_ctx )
          ::lSSL := .T.
@@ -351,13 +352,14 @@ METHOD Close() CLASS TIPClient
    IF Empty( ::SocketCon )
       nRet := -1
    ELSE
-      nRet := hb_inetClose( ::SocketCon )
-
       IF ::lSSL .AND. ::lHasSSL
          SSL_shutdown( ::ssl )
+         ERR_clear_error()
          ::ssl := NIL
          ::ssl_ctx := NIL
       ENDIF
+
+      nRet := hb_inetClose( ::SocketCon )
 
       ::SocketCon := NIL
       ::isOpen := .F.
@@ -842,6 +844,24 @@ FUNCTION tip_SSL()
    RETURN hb_IsFunction( "__HBEXTERN__HBSSL__" )
 
 FUNCTION __tip_SSLConnectFD( ssl, SocketCon )
+
+#if   defined( __PLATFORM__UNIX ) .AND. ! defined( __PLATFORM__LINUX )
+   hb_socketSetNoSigPipe( hb_inetFD( SocketCon ), .T. )
+#elif defined( __PLATFORM__LINUX )
+   /* Linux only: when sockets are passed to external code (here OpenSSL)
+      that does not use MSG_NOSIGNAL, SIGPIPE must be verified and
+      controlled, otherwise a write to a closed socket kills the process.
+      Only a command line utility may want that; interactive programs and
+      daemons should not. A custom handler (Harbour's own, see
+      HB_SIGNAL_EXCEPTION_HANDLER in src/vm/extrap.c) is reported as NIL
+      and is left untouched. */
+   IF ! hb_defaultValue( unix_sigactionGet( "SIGPIPE" ), .T. )
+      posix_signal( "SIGPIPE", .T. /* ignore */ )
+   ENDIF
+
+   // IF posix_errno() > 0
+   // ENDIF
+#endif
 
    SSL_set_mode( ssl, HB_SSL_MODE_AUTO_RETRY )
    SSL_set_fd( ssl, hb_inetFD( SocketCon ) )
