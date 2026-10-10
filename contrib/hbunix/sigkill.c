@@ -272,7 +272,7 @@ HB_FUNC( UNIX_SIGACTIONGET )
    else
       hb_posix_set_errno( ENOSYS );
 #else
-   hb_posix_set_errno( ENOSYS )
+   hb_posix_set_errno( ENOSYS );
    hb_ret();
 #endif
 }
