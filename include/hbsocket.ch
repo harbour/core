@@ -183,6 +183,12 @@
 #define HB_SOCKET_MSG_PEEK                0x02  /* peek at incoming messages */
 #define HB_SOCKET_MSG_DONTROUTE           0x04  /* don't use local routing */
 #define HB_SOCKET_MSG_WAITALL             0x08  /* wait for a full request or error */
+#define HB_SOCKET_MSG_TRUNC               0x10  /* data discarded before delivery */
+#define HB_SOCKET_MSG_CTRUNC              0x20  /* control data lost before delivery */
+#define HB_SOCKET_MSG_DONTWAIT            0x80  /* non blocking IO */
+#define HB_SOCKET_MSG_BCAST               0x100 /* this message rec'd as broadcast */
+#define HB_SOCKET_MSG_MCAST               0x200 /* this message rec'd as multicast */
+#define HB_SOCKET_MSG_NOSIGNAL            0x400 /* SIGPIPE suppression */
 
 /* shutdown actions */
 #define HB_SOCKET_SHUT_RD                 0

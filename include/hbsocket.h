@@ -116,6 +116,7 @@ extern HB_EXPORT int          hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD
                                                PHB_ITEM pArrayWR, HB_BOOL fSetWR,
                                                PHB_ITEM pArrayEX, HB_BOOL fSetEX,
                                                HB_MAXINT timeout, HB_SOCKET_FUNC pFunc );
+extern HB_EXPORT int          hb_socketTransFlags( int flags );
 
 /* Harbour level socket item API functions */
 extern HB_EXPORT HB_SOCKET hb_socketParam( int iParam );

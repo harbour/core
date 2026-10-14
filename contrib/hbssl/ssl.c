@@ -372,32 +372,6 @@ HB_FUNC( SSL_SET_BIO )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SSL_GET_RBIO )
-{
-   if( hb_SSL_is( 1 ) )
-   {
-      SSL * ssl = hb_SSL_par( 1 );
-
-      if( ssl )
-         hb_retptr( SSL_get_rbio( ssl ) );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( SSL_GET_WBIO )
-{
-   if( hb_SSL_is( 1 ) )
-   {
-      SSL * ssl = hb_SSL_par( 1 );
-
-      if( ssl )
-         hb_retptr( SSL_get_wbio( ssl ) );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( SSL_CONNECT )
 {
    if( hb_SSL_is( 1 ) )

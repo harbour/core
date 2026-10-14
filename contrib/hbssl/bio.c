@@ -840,6 +840,58 @@ HB_FUNC( BIO_SET_NBIO )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* NOTE: belongs to SSL_*() namespace, but returns BIO GC-ptr */
+HB_FUNC( SSL_GET_RBIO )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+      {
+         BIO * rbio = SSL_get_rbio( ssl );
+
+         if( rbio && BIO_up_ref( rbio ) )
+            hb_BIO_ret( rbio, NULL );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* NOTE: belongs to SSL_*() namespace, but returns BIO GC-ptr */
+HB_FUNC( SSL_GET_WBIO )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+      {
+         BIO * wbio = SSL_get_wbio( ssl );
+
+         if( wbio && BIO_up_ref( wbio ) )
+            hb_BIO_ret( wbio, NULL );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( BIO_SET_SOCK_WRITE_FLAGS )
+{
+   BIO * bio = hb_BIO_par( 1 );
+
+   if( bio )
+#if OPENSSL_VERSION_NUMBER >= 0x40000000L
+      hb_retnl( BIO_set_sock_write_flags( bio, hb_socketTransFlags( hb_parni( 2 ) ) ) );
+#else
+      hb_retnl( 0 );
+#endif
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( BIO_DO_CONNECT )
 {
    BIO * bio = hb_BIO_par( 1 );

@@ -3334,6 +3334,7 @@ hb_socketRecv
 hb_socketRecvFrom
 hb_socketResolveAddr
 hb_socketResolveInetAddr
+hb_socketTransFlags
 hb_socketSelect
 hb_socketSelectRead
 hb_socketSelectWrite

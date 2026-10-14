@@ -7,6 +7,34 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-10-14 10:48 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbssl/ssl.c
+  * contrib/hbssl/bio.c
+    * SSL_get_rbio(), SSL_get_wbio() modified to return GC
+      collected BIO pointer for read and write paths respectievly.
+      Their result can be now passed to other functions expecting
+      BIO pointer. Implementations moved from ssl.c to bio.c.
+
+    + added BIO_set_sock_write_flags( <pBIO>, <nFlags> ) that
+      is available in OpenSSL 4.0.0+ - together with
+      SSL_get_wbio( <pSSL> ) -> <pBIO> it can be used to pass
+      additional HB_SOCKET_MSG_* flags to stick to backend
+
+  * src/harbour.def
+  * include/hbsocket.h
+    * C exported hb_socketTransFlags()
+
+  * include/hbsocket.ch
+    + listed more socket message modifiers for translation,
+      up to MSG_NOSIGNAL -> HB_SOCKET_MSG_NOSIGNAL
+
+  * src/rtl/hbsocket.c
+    * updated hb_socketTransFlags() to support additional flags,
+      function is now also used by hbssl contrib
+
+  * src/rtl/gtpca/gtpca.c
+    % unused static variables wrapped with #if 0
+
 2026-10-10 15:24 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/hbunix/sigkill.c
     ! typo in non Linux branch...

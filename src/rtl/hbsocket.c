@@ -1621,7 +1621,7 @@ static int hb_socketTransType( int type, int *err )
 }
 #endif
 
-static int hb_socketTransFlags( int flags )
+int hb_socketTransFlags( int flags )
 {
    int iResult = 0;
 
@@ -1642,6 +1642,30 @@ static int hb_socketTransFlags( int flags )
 #ifdef MSG_WAITALL
       if( flags & HB_SOCKET_MSG_WAITALL )
          iResult |= MSG_WAITALL;
+#endif
+#ifdef MSG_NOSIGNAL
+      if( flags & HB_SOCKET_MSG_NOSIGNAL )
+         iResult |= MSG_NOSIGNAL;
+#endif
+#ifdef MSG_DONTWAIT
+      if( flags & HB_SOCKET_MSG_DONTWAIT )
+         iResult |= MSG_DONTWAIT;
+#endif
+#ifdef MSG_TRUNC
+      if( flags & HB_SOCKET_MSG_TRUNC )
+         iResult |= MSG_TRUNC;
+#endif
+#ifdef MSG_CTRUNC
+      if( flags & HB_SOCKET_MSG_CTRUNC )
+         iResult |= MSG_CTRUNC;
+#endif
+#ifdef MSG_BCAST
+      if( flags & HB_SOCKET_MSG_BCAST )
+         iResult |= MSG_BCAST;
+#endif
+#ifdef MSG_MCAST
+      if( flags & HB_SOCKET_MSG_MCAST )
+         iResult |= MSG_MCAST;
 #endif
    }
    return iResult;
