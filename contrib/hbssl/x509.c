@@ -118,7 +118,12 @@ HB_FUNC( X509_GET_SUBJECT_NAME )
       X509 * x509 = hb_X509_par( 1 );
 
       if( x509 )
+#if OPENSSL_VERSION_NUMBER >= 0x40000000L
+         hb_retptr( HB_UNCONST( X509_get_subject_name( x509 ) ) );
+#else
          hb_retptr( X509_get_subject_name( x509 ) );
+#endif
+
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -131,7 +136,11 @@ HB_FUNC( X509_GET_ISSUER_NAME )
       X509 * x509 = hb_X509_par( 1 );
 
       if( x509 )
+#if OPENSSL_VERSION_NUMBER >= 0x40000000L
+         hb_retptr( HB_UNCONST( X509_get_issuer_name( x509 ) ) );
+#else
          hb_retptr( X509_get_issuer_name( x509 ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

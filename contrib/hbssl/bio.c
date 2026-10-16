@@ -878,13 +878,13 @@ HB_FUNC( SSL_GET_WBIO )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( BIO_SET_SOCK_WRITE_FLAGS )
+HB_FUNC( BIO_SET_SEND_FLAGS )
 {
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
 #if OPENSSL_VERSION_NUMBER >= 0x40000000L
-      hb_retnl( BIO_set_sock_write_flags( bio, hb_socketTransFlags( hb_parni( 2 ) ) ) );
+      hb_retnl( BIO_set_send_flags( bio, hb_socketTransFlags( hb_parni( 2 ) ) ) );
 #else
       hb_retnl( 0 );
 #endif

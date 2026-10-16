@@ -7,6 +7,16 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-10-16 12:50 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbssl/bio.c
+  * ChangeLog.txt
+    ! fix to use correct (final) BIO_set*() function name
+      in previous commit
+
+  * contrib/hbssl/x509.c
+    * unconst X509_get_subject_name(), X509_get_issuer_name()
+      in OpenSSL 4.0.0+
+
 2026-10-14 10:48 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/hbssl/ssl.c
   * contrib/hbssl/bio.c
@@ -15,7 +25,7 @@
       Their result can be now passed to other functions expecting
       BIO pointer. Implementations moved from ssl.c to bio.c.
 
-    + added BIO_set_sock_write_flags( <pBIO>, <nFlags> ) that
+    + added BIO_set_send_flags( <pBIO>, <nFlags> ) that
       is available in OpenSSL 4.0.0+ - together with
       SSL_get_wbio( <pSSL> ) -> <pBIO> it can be used to pass
       additional HB_SOCKET_MSG_* flags to stick to backend
