@@ -65,7 +65,6 @@ jobs:
         shell: msys2 {0}
         run: >
             pacman -S --noconfirm
-            mingw-w64-${{ env.msys_cpu }}-allegro
             mingw-w64-${{ env.msys_cpu }}-cairo
             mingw-w64-${{ env.msys_cpu }}-firebird
             mingw-w64-${{ env.msys_cpu }}-freeimage
