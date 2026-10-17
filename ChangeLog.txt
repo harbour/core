@@ -7,6 +7,13 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-10-17 21:56 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * .github/workflows/windows-ci.yml
+    + added MSYS2 UCRT64 to platform matrix
+
+    + readded x64 allegro package under UCRT64,
+      thanks Itamar Lins for notifying about these details
+
 2026-10-16 13:17 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * .github/workflows/windows-ci.yml
     - MSYS has removed x64 allegro package

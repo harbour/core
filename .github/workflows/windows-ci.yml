@@ -12,16 +12,29 @@ jobs:
       fail-fast: false
       matrix:
         compiler:
-          - bcc
-          - mingw64
-          - clang
+          - name: bcc
+            base: bcc
+          - name: mingw64
+            base: mingw64
+          - name: mingw64-ucrt
+            base: mingw64
+          - name: clang
+            base: clang
         cpu:
           - x86
           - x86_64
         exclude:
-          - compiler: bcc
+          - compiler:
+              name: bcc
+              base: bcc
             cpu: x86_64
-          - compiler: clang
+          - compiler:
+              name: clang
+              base: clang
+            cpu: x86
+          - compiler:
+              name: mingw64-ucrt
+              base: mingw64
             cpu: x86
         strictness:
           - "normal"
@@ -40,8 +53,10 @@ jobs:
               (x86_64) echo MINGWxx="MINGW64"
                        echo "msys_cpu=${{matrix.cpu}}" ;;
             esac
-            case ${{matrix.compiler}} in
-              (clang)  echo MINGWxx="CLANG64" ;;
+            case ${{matrix.compiler.name}} in
+              (clang)         echo MINGWxx="CLANG64" ;;
+              (mingw64-ucrt)  echo MINGWxx="UCRT64"
+                              echo "msys_cpu=ucrt-${{matrix.cpu}}" ;;
             esac
           } >> $GITHUB_ENV
 
@@ -74,6 +89,13 @@ jobs:
             mingw-w64-${{ env.msys_cpu }}-postgresql
             mingw-w64-${{ env.msys_cpu }}-qt5-base
 
+      - name: 'Add packages available with UCRT only'
+        if: matrix.compiler.name == 'mingw64-ucrt'
+        shell: msys2 {0}
+        run: >
+            pacman -S --noconfirm
+            mingw-w64-${{ env.msys_cpu }}-allegro
+
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -86,10 +108,10 @@ jobs:
         shell: msys2 {0}
 
       - name: Prepare ccache using action
-        if: matrix.compiler != 'bcc'
+        if: matrix.compiler.name != 'bcc'
         uses: hendrikmuhs/ccache-action@v1.2.10
         with:
-          key: windows-${{ matrix.cpu }}-${{ matrix.compiler }}-${{ matrix.strictness }}-ci
+          key: windows-${{ matrix.cpu }}-${{ matrix.compiler.name }}-${{ matrix.strictness }}-ci
           max-size: "32M"
 
       - name: Configure build shell
@@ -99,7 +121,7 @@ jobs:
           HB_USER_CFLAGS=""
           HB_USER_LDFLAGS=""
 
-          case ${{matrix.compiler}} in
+          case ${{matrix.compiler.name}} in
             (clang)
                pacman -S --noconfirm mingw-w64-${{ env.msys_cpu }}-clang
                PATH="$PATH:/mingw64/bin/"
@@ -111,7 +133,7 @@ jobs:
 
           case ${{matrix.strictness}} in
             normal) ;;
-            strict) case ${{matrix.compiler}} in
+            strict) case ${{matrix.compiler.name}} in
                       (bcc) HB_USER_CFLAGS="$HB_USER_CFLAGS -w!" ;;
                       (*)   HB_USER_CFLAGS="$HB_USER_CFLAGS -Werror" ;;
                     esac ;;
@@ -127,7 +149,7 @@ jobs:
           export mingwxx="$(echo "$MINGWxx" | tr A-Z a-z)"
           EOENV
 
-          case ${{matrix.compiler}} in
+          case ${{matrix.compiler.name}} in
             bcc)
               curl -LO "http://altd.embarcadero.com/download/bcppbuilder/freecommandLinetools.exe"
               ./freecommandLinetools.exe -s -verbose
@@ -160,7 +182,7 @@ jobs:
           mingw32-make.exe -j2 \
             HB_CPU=${{matrix.cpu}} \
             HB_BUILD_CONTRIBS=no \
-            HB_COMPILER=${{matrix.compiler}}
+            HB_COMPILER=${{matrix.compiler.base}}
 
       - name: Build contribs
         shell: msys2 {0}
@@ -171,11 +193,11 @@ jobs:
           mingw32-make.exe -j2 \
             -C contrib \
             HB_CPU=${{matrix.cpu}} \
-            HB_COMPILER=${{matrix.compiler}}
+            HB_COMPILER=${{matrix.compiler.base}}
 
       - name: Run tests
         shell: msys2 {0}
         run: |
           echo ::group::Run tests
           set -ex
-          bin/win/${{matrix.compiler}}/hbtest.exe
+          bin/win/${{matrix.compiler.base}}/hbtest.exe
