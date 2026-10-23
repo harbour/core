@@ -1,0 +1,18 @@
+-hbhrb
+-inc+
+-mt
+
+-D_DEBUG_
+
+-w3 -es2
+
+${hb_name}.hbx
+
+-cpp 
+-gui
+-compr=max
+
+../tHtml.ch
+../tHtml.prg
+
+-o${hb_name}
