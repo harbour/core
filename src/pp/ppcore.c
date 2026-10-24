@@ -1389,6 +1389,17 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                /* (LEX: mark token as hex?) */
                hb_pp_tokenAddNext( pState, pBuffer, n, HB_PP_TOKEN_NUMBER );
             }
+            else if ( nLen >= 3 && pBuffer[0] == '0' &&
+                      ( pBuffer[ 1 ] == 'b' || pBuffer[ 1 ] == 'B' ) &&
+                      ( pBuffer[ 2 ] == '0' || pBuffer[ 2 ] == '1' ) )
+            {
+               n = 2;
+               while ( ++n < nLen && ( pBuffer[ n ] == '0' || pBuffer[ n ] == '1' ) )
+                  ;
+
+               /* (LEX: mark token as binary?) */
+               hb_pp_tokenAddNext( pState, pBuffer, n, HB_PP_TOKEN_NUMBER );
+            }
             else if( nLen >= 3 && pBuffer[ 0 ] == '0' &&
                      ( pBuffer[ 1 ] == 'd' || pBuffer[ 1 ] == 'D' ) &&
                      HB_PP_ISDIGIT( pBuffer[ 2 ] ) )

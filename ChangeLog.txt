@@ -7,6 +7,13 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-10-24 23:03 UTC+0200 Marcos Antonio Gambeta
+  * src/common/hbstr.c
+  * src/pp/ppcore.c
+  + tests/base2.prg
+    + implement binary numbers (literal prefix 0b...) with the same behaviour
+      of the hexadecimals numbers (0x...)
+
 2026-10-24 10:56 UTC+0200 Przemyslaw Czerpak (druzus/at/sen.waw.pl)
   * contrib/hbssl/hbssl.hbx
     * added BIO_set_send_flags to function list

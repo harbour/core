@@ -558,7 +558,7 @@ double hb_numExpConv( double dNum, int iExp )
 
 static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, HB_MAXINT * lVal, double * dVal, int * piDec, int * piWidth )
 {
-   HB_BOOL fDbl = HB_FALSE, fDec = HB_FALSE, fNeg, fHex = HB_FALSE;
+   HB_BOOL fDbl = HB_FALSE, fDec = HB_FALSE, fNeg, fHex = HB_FALSE, fBin = HB_FALSE;
    int iLen, iPos = 0;
    int c, iWidth, iDec = 0, iDecR = 0;
 
@@ -607,6 +607,19 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, 
          else
             break;
          *lVal = ( *lVal << 4 ) + c;
+      }
+   } /* Binary Number */
+   else if( fPCode && iPos + 1 < iLen && szNum[ iPos ] == '0' &&
+            ( szNum[ iPos + 1 ] == 'B' || szNum[ iPos + 1 ] == 'b' ) )
+   {
+      iPos += 2;
+      iWidth = HB_DEFAULT_WIDTH;
+      fBin = HB_TRUE;
+      for ( ; iPos < iLen; iPos++ )
+      {
+         c = szNum[ iPos ];
+         if( c == '0' || c == '1' )
+            *lVal = ( *lVal << 1 ) | ( c - '0' );
       }
    }
    else
@@ -671,7 +684,7 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, 
    }
    if( ! fDbl && (
 #if defined( PCODE_LONG_LIM )
-        ( fPCode && ! fHex && ! PCODE_LONG_LIM( *lVal ) ) ||
+        ( fPCode && ! fHex && ! fBin && ! PCODE_LONG_LIM( *lVal ) ) ||
 #endif
         fDec ) )
    {
@@ -692,7 +705,7 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, 
       *piDec = iDec + iDecR;
    if( piWidth )
    {
-      if( fHex )
+      if( fHex || fBin )
          *piWidth = iWidth;
       else
       {
