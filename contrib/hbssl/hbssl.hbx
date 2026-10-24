@@ -64,6 +64,7 @@ DYNAMIC BIO_set_nbio
 DYNAMIC BIO_set_retry_read
 DYNAMIC BIO_set_retry_special
 DYNAMIC BIO_set_retry_write
+DYNAMIC BIO_set_send_flags
 DYNAMIC BIO_should_io_special
 DYNAMIC BIO_should_read
 DYNAMIC BIO_should_retry

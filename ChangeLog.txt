@@ -7,6 +7,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-10-24 10:56 UTC+0200 Przemyslaw Czerpak (druzus/at/sen.waw.pl)
+  * contrib/hbssl/hbssl.hbx
+    * added BIO_set_send_flags to function list
+
 2026-10-22 15:36 UTC+0200 Przemyslaw Czerpak (druzus/at/sen.waw.pl)
   * src/compiler/hbmain.c
     ! fixed PCODE optimization when HB_P_LARGEFRAME is used, many
