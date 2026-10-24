@@ -7,6 +7,11 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-10-24 23:11 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * src/macro/macrolex.c
+  * tests/base2.prg
+    + recognize binary (0b...) in macro compiler expressions
+
 2026-10-24 23:03 UTC+0200 Marcos Antonio Gambeta
   * src/common/hbstr.c
   * src/pp/ppcore.c

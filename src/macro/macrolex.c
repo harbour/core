@@ -610,6 +610,14 @@ int hb_macro_yylex( YYSTYPE * yylval_ptr, PHB_MACRO pMacro )
                      if( n == pLex->nSrc + 1 )
                         --n;
                   }
+                  else if( pLex->pString[ n ] == 'b' ||
+                           pLex->pString[ n ] == 'B' )
+                  {
+                     while( ++n < pLex->nLen &&
+                            ( pLex->pString[ n ] == '0' || pLex->pString[ n ] == '1' ) ) {};
+                     if( n == pLex->nSrc + 1 )
+                        --n;
+                  }
                   else
                   {
                      while( n < pLex->nLen &&

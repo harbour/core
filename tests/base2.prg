@@ -1,10 +1,14 @@
 // test with base 2
 
 PROCEDURE Main()
-
+   LOCAL c := "0b01"
    //? 0b // syntax error
    //? 0B // syntax error
    //? 0b2 // syntax error
+
+   ? &( c )
+
+   ?
 
    ? 0b1
    ? 0b11
