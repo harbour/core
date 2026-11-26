@@ -3626,9 +3626,10 @@ static void hb_vmModulus( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 )
       else
       {
          /* NOTE: Clipper always returns the result of modulus
-                  with the SET number of decimal places. */
-         /* NOTE: modulus of division by -1 is always 0 but it's not
-                  calculated because HB_VMLONG_MIN % -1 overflows */
+                  with the SET number of decimal places.
+
+            NOTE: modulus of division by -1 is always 0 but it
+                  also could overflow on HB_VMLONG_MIN % -1 */
          hb_itemPutND( pResult, nDivisor == -1 ? 0.0 :
                        ( double ) ( HB_ITEM_GET_NUMINTRAW( pItem1 ) % nDivisor ) );
       }
@@ -11304,8 +11305,8 @@ HB_BOOL hb_xvmModulusByInt( HB_LONG lDivisor )
       }
       else if( HB_IS_NUMINT( pValue ) )
       {
-         /* NOTE: modulus of division by -1 is always 0 but it's not
-                  calculated because HB_VMLONG_MIN % -1 overflows */
+         /* NOTE: modulus of division by -1 is always 0 but it
+                  also could overflow on HB_VMLONG_MIN % -1 */
          hb_itemPutND( pValue, lDivisor == -1 ? 0.0 :
                        ( double ) ( HB_ITEM_GET_NUMINTRAW( pValue ) % lDivisor ) );
       }

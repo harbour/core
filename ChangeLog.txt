@@ -7,6 +7,13 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-11-26 20:53 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * src/vm/hvm.c
+    ; comment block joined after merging, slightly reworded too
+
+  * src/common/expropt2.c
+    % don't compile < -HB_VMLONG_MAX code if it can never be true
+
 2026-11-25 14:00 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * include/hbdefs.h
     ! fix the coverage of HB_LONG_LONG_OFF to restore pure 32-bit
