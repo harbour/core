@@ -4911,15 +4911,23 @@ static HB_MAXINT hb_pp_calcOperation( HB_MAXINT lValueLeft, HB_MAXINT lValueRigh
       case HB_PP_TOKEN_MULT:
          lValueLeft *= lValueRight;
          break;
+      /* NOTE: division by -1 is calculated as negation using unsigned
+       *       arithmetic and modulus of division by -1 is always 0 because
+       *       HB_VMLONG_MIN / -1 and HB_VMLONG_MIN % -1 overflow
+       */
       case HB_PP_TOKEN_DIV:
          if( lValueRight == 0 )
             *pfError = HB_TRUE;
+         else if( lValueRight == -1 )
+            lValueLeft = ( HB_MAXINT ) ( ( HB_MAXUINT ) 0 - ( HB_MAXUINT ) lValueLeft );
          else
             lValueLeft /= lValueRight;
          break;
       case HB_PP_TOKEN_MOD:
          if( lValueRight == 0 )
             *pfError = HB_TRUE;
+         else if( lValueRight == -1 )
+            lValueLeft = 0;
          else
             lValueLeft %= lValueRight;
          break;

@@ -17,6 +17,7 @@
     https://github.com/bencz/harbour/commit/7d3d6d734cd321dcc28249873add83690c08b190
     https://github.com/bencz/harbour/commit/afef8026c087b7a5fb7fe4eaa9e39ed2903bd954
     https://github.com/bencz/harbour/commit/8f05ed8879d91035e53187b0bcc52c13c8e1da82
+    https://github.com/bencz/harbour/commit/1e0a833e71decce1f596aed612db3eb9a0edc57a
     with src/rtl/itemseri.c file skipped, xHarbour deserialization will
     be revalidated separately
 
@@ -51,6 +52,28 @@
     * HB_LONG_LONG_OFF is disabled on platforms where long is 64-bit,
       it means that 64-bit integer type is not supported and such type
       always exists there
+
+2026-11-23 21:00 UTC-0300 Alexandre Bencz
+  * src/vm/hvm.c
+    ! fixed crash (SIGFPE) in modulus of minimal integer value by -1,
+      e.g. n := -9223372036854775807 - 1; ? n % -1
+      Modulus of division by -1 is always 0 and it's not calculated now.
+      Fixed in hb_vmModulus() and in hb_xvmModulusByInt() used by -gc3.
+
+  * src/common/expropt2.c
+    ! fixed compiler and macro compiler crash (SIGFPE) in compile time
+      optimization of minimal integer value divided by -1 or modulus of such
+      division, e.g. ( -9223372036854775807 - 1 ) % -1. Division by -1 is
+      not checked using modulus now and the result which does not fit in
+      HB_MAXINT is returned as double.
+
+  * src/pp/ppcore.c
+    ! fixed compiler and __pp_Process() crash (SIGFPE) in #if expressions
+      with minimal integer value divided by -1 or modulus of such division.
+      Division by -1 is calculated as negation using unsigned arithmetic.
+
+  ; these were also reported by Antonio Linares in automatic analysis
+    https://groups.google.com/g/harbour-devel/c/cK6MZy9KsN0/m/8gksWbGFAAAJ
 
 2026-11-23 20:50 UTC-0300 Alexandre Bencz
   * include/hbdefs.h

@@ -144,7 +144,11 @@ PHB_EXPR hb_compExprReduceMod( PHB_EXPR pSelf, HB_COMP_DECL )
          case HB_ET_LONG:
             if( pRight->value.asNum.val.l )
             {
-               pSelf->value.asNum.val.l = pLeft->value.asNum.val.l % pRight->value.asNum.val.l;
+               /* NOTE: modulus of division by -1 is always 0 but it's not
+                *       calculated because HB_VMLONG_MIN % -1 overflows
+                */
+               pSelf->value.asNum.val.l = pRight->value.asNum.val.l == -1 ? 0 :
+                                          pLeft->value.asNum.val.l % pRight->value.asNum.val.l;
                pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->value.asNum.NumType = HB_ET_LONG;
@@ -203,7 +207,20 @@ PHB_EXPR hb_compExprReduceDiv( PHB_EXPR pSelf, HB_COMP_DECL )
 
             if( pRight->value.asNum.val.l )
             {
-               if( pLeft->value.asNum.val.l % pRight->value.asNum.val.l == 0 )
+               /* NOTE: HB_VMLONG_MIN / -1 and HB_VMLONG_MIN % -1 overflow
+                *       so division by -1 is not calculated using modulus
+                *       and the result which does not fit in HB_MAXINT is
+                *       returned as double
+                */
+               if( pRight->value.asNum.val.l == -1 &&
+                   pLeft->value.asNum.val.l < -HB_VMLONG_MAX )
+               {
+                  pSelf->value.asNum.val.d = -( double ) pLeft->value.asNum.val.l;
+                  pSelf->value.asNum.bDec = 0;
+                  pSelf->value.asNum.NumType = HB_ET_DOUBLE;
+               }
+               else if( pRight->value.asNum.val.l == -1 ||
+                        pLeft->value.asNum.val.l % pRight->value.asNum.val.l == 0 )
                {
                   /* Return integer results as long */
                   pSelf->value.asNum.val.l = pLeft->value.asNum.val.l / pRight->value.asNum.val.l;
