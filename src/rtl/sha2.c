@@ -134,6 +134,7 @@ static const HB_U32 sha256_h0[8] =
             {0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
              0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19};
 
+#if defined( HB_I64_MAX )
 static const HB_U64 sha384_h0[8] =
             {HB_ULL( 0xcbbb9d5dc1059ed8 ), HB_ULL( 0x629a292a367cd507 ),
              HB_ULL( 0x9159015a3070dd17 ), HB_ULL( 0x152fecd8f70e5939 ),
@@ -145,6 +146,19 @@ static const HB_U64 sha512_h0[8] =
              HB_ULL( 0x3c6ef372fe94f82b ), HB_ULL( 0xa54ff53a5f1d36f1 ),
              HB_ULL( 0x510e527fade682d1 ), HB_ULL( 0x9b05688c2b3e6c1f ),
              HB_ULL( 0x1f83d9abfb41bd6b ), HB_ULL( 0x5be0cd19137e2179 )};
+#else
+static const HB_U32 sha384_h0[16] =
+            {0xcbbb9d5d, 0xc1059ed8, 0x629a292a, 0x367cd507,
+             0x9159015a, 0x3070dd17, 0x152fecd8, 0xf70e5939,
+             0x67332667, 0xffc00b31, 0x8eb44a87, 0x68581511,
+             0xdb0c2e0d, 0x64f98fa7, 0x47b5481d, 0xbefa4fa4};
+
+static const HB_U32 sha512_h0[16] =
+            {0x6a09e667, 0xf3bcc908, 0xbb67ae85, 0x84caa73b,
+             0x3c6ef372, 0xfe94f82b, 0xa54ff53a, 0x5f1d36f1,
+             0x510e527f, 0xade682d1, 0x9b05688c, 0x2b3e6c1f,
+             0x1f83d9ab, 0xfb41bd6b, 0x5be0cd19, 0x137e2179};
+#endif
 
 static const HB_U32 sha256_k[64] =
             {0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -164,6 +178,7 @@ static const HB_U32 sha256_k[64] =
              0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
              0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2};
 
+#if defined( HB_I64_MAX )
 static const HB_U64 sha512_k[80] =
             {HB_ULL( 0x428a2f98d728ae22 ), HB_ULL( 0x7137449123ef65cd ),
              HB_ULL( 0xb5c0fbcfec4d3b2f ), HB_ULL( 0xe9b5dba58189dbbc ),
@@ -205,6 +220,49 @@ static const HB_U64 sha512_k[80] =
              HB_ULL( 0x3c9ebe0a15c9bebc ), HB_ULL( 0x431d67c49c100d4c ),
              HB_ULL( 0x4cc5d4becb3e42b6 ), HB_ULL( 0x597f299cfc657e2a ),
              HB_ULL( 0x5fcb6fab3ad6faec ), HB_ULL( 0x6c44198c4a475817 )};
+#else
+static const HB_U32 sha512_k[160] =
+            {0x428a2f98, 0xd728ae22, 0x71374491, 0x23ef65cd,
+             0xb5c0fbcf, 0xec4d3b2f, 0xe9b5dba5, 0x8189dbbc,
+             0x3956c25b, 0xf348b538, 0x59f111f1, 0xb605d019,
+             0x923f82a4, 0xaf194f9b, 0xab1c5ed5, 0xda6d8118,
+             0xd807aa98, 0xa3030242, 0x12835b01, 0x45706fbe,
+             0x243185be, 0x4ee4b28c, 0x550c7dc3, 0xd5ffb4e2,
+             0x72be5d74, 0xf27b896f, 0x80deb1fe, 0x3b1696b1,
+             0x9bdc06a7, 0x25c71235, 0xc19bf174, 0xcf692694,
+             0xe49b69c1, 0x9ef14ad2, 0xefbe4786, 0x384f25e3,
+             0x0fc19dc6, 0x8b8cd5b5, 0x240ca1cc, 0x77ac9c65,
+             0x2de92c6f, 0x592b0275, 0x4a7484aa, 0x6ea6e483,
+             0x5cb0a9dc, 0xbd41fbd4, 0x76f988da, 0x831153b5,
+             0x983e5152, 0xee66dfab, 0xa831c66d, 0x2db43210,
+             0xb00327c8, 0x98fb213f, 0xbf597fc7, 0xbeef0ee4,
+             0xc6e00bf3, 0x3da88fc2, 0xd5a79147, 0x930aa725,
+             0x06ca6351, 0xe003826f, 0x14292967, 0x0a0e6e70,
+             0x27b70a85, 0x46d22ffc, 0x2e1b2138, 0x5c26c926,
+             0x4d2c6dfc, 0x5ac42aed, 0x53380d13, 0x9d95b3df,
+             0x650a7354, 0x8baf63de, 0x766a0abb, 0x3c77b2a8,
+             0x81c2c92e, 0x47edaee6, 0x92722c85, 0x1482353b,
+             0xa2bfe8a1, 0x4cf10364, 0xa81a664b, 0xbc423001,
+             0xc24b8b70, 0xd0f89791, 0xc76c51a3, 0x0654be30,
+             0xd192e819, 0xd6ef5218, 0xd6990624, 0x5565a910,
+             0xf40e3585, 0x5771202a, 0x106aa070, 0x32bbd1b8,
+             0x19a4c116, 0xb8d2d0c8, 0x1e376c08, 0x5141ab53,
+             0x2748774c, 0xdf8eeb99, 0x34b0bcb5, 0xe19b48a8,
+             0x391c0cb3, 0xc5c95a63, 0x4ed8aa4a, 0xe3418acb,
+             0x5b9cca4f, 0x7763e373, 0x682e6ff3, 0xd6b2b8a3,
+             0x748f82ee, 0x5defb2fc, 0x78a5636f, 0x43172f60,
+             0x84c87814, 0xa1f0ab72, 0x8cc70208, 0x1a6439ec,
+             0x90befffa, 0x23631e28, 0xa4506ceb, 0xde82bde9,
+             0xbef9a3f7, 0xb2c67915, 0xc67178f2, 0xe372532b,
+             0xca273ece, 0xea26619c, 0xd186b8c7, 0x21c0c207,
+             0xeada7dd6, 0xcde0eb1e, 0xf57d4f7f, 0xee6ed178,
+             0x06f067aa, 0x72176fba, 0x0a637dc5, 0xa2c898a6,
+             0x113f9804, 0xbef90dae, 0x1b710b35, 0x131c471b,
+             0x28db77f5, 0x23047d84, 0x32caab7b, 0x40c72493,
+             0x3c9ebe0a, 0x15c9bebc, 0x431d67c4, 0x9c100d4c,
+             0x4cc5d4be, 0xcb3e42b6, 0x597f299c, 0xfc657e2a,
+             0x5fcb6fab, 0x3ad6faec, 0x6c44198c, 0x4a475817};
+#endif
 
 /* SHA-256 functions */
 
@@ -385,11 +443,28 @@ void hb_sha256_update(hb_sha256_ctx *ctx, const void *messagev,
     ctx->tot_len += (block_nb + 1) << 6;
 }
 
+/* Store the message length in bits as big-endian number in the last
+   8 (SHA-224/256) or 16 (SHA-384/512) bytes of the padding block.
+   HB_SIZE is never shifted by its width so it works for 32-bit and
+   64-bit sizes. Higher bits of SHA-384/512 length are always zero. */
+static void sha2_put_len(HB_SIZE nSize, unsigned char *str, int fLong)
+{
+    HB_U32 len;
+
+    len = ((HB_U32) nSize) << 3;
+    UNPACK32(len, str - 4);
+    len = (HB_U32) (nSize >> 29);
+    UNPACK32(len, str - 8);
+    if (fLong) {
+        len = (HB_U32) (((nSize >> 29) >> 16) >> 16);
+        UNPACK32(len, str - 12);
+    }
+}
+
 void hb_sha256_final(hb_sha256_ctx *ctx, unsigned char *digest)
 {
     HB_SIZE block_nb;
     HB_SIZE pm_len;
-    HB_SIZE len_b;
 
 #ifndef UNROLL_LOOPS
     int i;
@@ -398,12 +473,11 @@ void hb_sha256_final(hb_sha256_ctx *ctx, unsigned char *digest)
     block_nb = (1 + ((HB_SHA256_BLOCK_SIZE - 9)
                      < (ctx->len % HB_SHA256_BLOCK_SIZE)));
 
-    len_b = (ctx->tot_len + ctx->len) << 3;
     pm_len = block_nb << 6;
 
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x80;
-    UNPACK32(len_b, ctx->block + pm_len - 4);
+    sha2_put_len(ctx->tot_len + ctx->len, ctx->block + pm_len, 0);
 
     sha256_transf(ctx, ctx->block, block_nb);
 
@@ -425,6 +499,7 @@ void hb_sha256_final(hb_sha256_ctx *ctx, unsigned char *digest)
 
 /* SHA-512 functions */
 
+#if defined( HB_I64_MAX )
 static void sha512_transf(hb_sha512_ctx *ctx, const unsigned char *message,
                           HB_SIZE block_nb)
 {
@@ -523,6 +598,132 @@ static void sha512_transf(hb_sha512_ctx *ctx, const unsigned char *message,
 #endif /* !UNROLL_LOOPS */
     }
 }
+#else
+/* SHA-512 for builds without 64-bit integer type, 64-bit values are
+   emulated by pairs of 32-bit values */
+typedef struct
+{
+   HB_U32 hi;
+   HB_U32 lo;
+} sha2_u64;
+
+static sha2_u64 u64_add( sha2_u64 a, sha2_u64 b )
+{
+   sha2_u64 r;
+
+   r.lo = a.lo + b.lo;
+   r.hi = a.hi + b.hi + ( r.lo < a.lo ? 1 : 0 );
+   return r;
+}
+
+static sha2_u64 u64_xor( sha2_u64 a, sha2_u64 b )
+{
+   a.hi ^= b.hi;
+   a.lo ^= b.lo;
+   return a;
+}
+
+/* 0 < n < 64 */
+static sha2_u64 u64_rotr( sha2_u64 x, int n )
+{
+   sha2_u64 r;
+
+   if( n >= 32 )
+   {
+      HB_U32 t = x.hi;
+      x.hi = x.lo;
+      x.lo = t;
+      n -= 32;
+   }
+   if( n == 0 )
+      return x;
+   r.hi = ( x.hi >> n ) | ( x.lo << ( 32 - n ) );
+   r.lo = ( x.lo >> n ) | ( x.hi << ( 32 - n ) );
+   return r;
+}
+
+/* 0 < n < 32 */
+static sha2_u64 u64_shr( sha2_u64 x, int n )
+{
+   x.lo = ( x.lo >> n ) | ( x.hi << ( 32 - n ) );
+   x.hi >>= n;
+   return x;
+}
+
+static sha2_u64 u64_ch( sha2_u64 x, sha2_u64 y, sha2_u64 z )
+{
+   sha2_u64 r;
+
+   r.hi = ( x.hi & y.hi ) ^ ( ~x.hi & z.hi );
+   r.lo = ( x.lo & y.lo ) ^ ( ~x.lo & z.lo );
+   return r;
+}
+
+static sha2_u64 u64_maj( sha2_u64 x, sha2_u64 y, sha2_u64 z )
+{
+   sha2_u64 r;
+
+   r.hi = ( x.hi & y.hi ) ^ ( x.hi & z.hi ) ^ ( y.hi & z.hi );
+   r.lo = ( x.lo & y.lo ) ^ ( x.lo & z.lo ) ^ ( y.lo & z.lo );
+   return r;
+}
+
+#define SHA512_E_F1( x ) u64_xor( u64_xor( u64_rotr( x, 28 ), u64_rotr( x, 34 ) ), u64_rotr( x, 39 ) )
+#define SHA512_E_F2( x ) u64_xor( u64_xor( u64_rotr( x, 14 ), u64_rotr( x, 18 ) ), u64_rotr( x, 41 ) )
+#define SHA512_E_F3( x ) u64_xor( u64_xor( u64_rotr( x,  1 ), u64_rotr( x,  8 ) ), u64_shr( x, 7 ) )
+#define SHA512_E_F4( x ) u64_xor( u64_xor( u64_rotr( x, 19 ), u64_rotr( x, 61 ) ), u64_shr( x, 6 ) )
+
+static void sha512_transf(hb_sha512_ctx *ctx, const unsigned char *message,
+                          HB_SIZE block_nb)
+{
+    sha2_u64 w[80];
+    sha2_u64 wv[8];
+    sha2_u64 t1, t2, k;
+    const unsigned char *sub_block;
+    HB_ISIZ i;
+    int j;
+
+    for (i = 0; i < ( HB_ISIZ ) block_nb; i++) {
+        sub_block = message + (i << 7);
+
+        for (j = 0; j < 16; j++) {
+            PACK32(&sub_block[j << 3], &w[j].hi);
+            PACK32(&sub_block[(j << 3) + 4], &w[j].lo);
+        }
+        for (j = 16; j < 80; j++) {
+            w[j] = u64_add(u64_add(SHA512_E_F4(w[j - 2]), w[j - 7]),
+                           u64_add(SHA512_E_F3(w[j - 15]), w[j - 16]));
+        }
+        for (j = 0; j < 8; j++) {
+            wv[j].hi = ctx->h[j << 1];
+            wv[j].lo = ctx->h[(j << 1) + 1];
+        }
+        for (j = 0; j < 80; j++) {
+            k.hi = sha512_k[j << 1];
+            k.lo = sha512_k[(j << 1) + 1];
+            t1 = u64_add(u64_add(u64_add(wv[7], SHA512_E_F2(wv[4])),
+                                 u64_add(u64_ch(wv[4], wv[5], wv[6]), k)),
+                         w[j]);
+            t2 = u64_add(SHA512_E_F1(wv[0]), u64_maj(wv[0], wv[1], wv[2]));
+            wv[7] = wv[6];
+            wv[6] = wv[5];
+            wv[5] = wv[4];
+            wv[4] = u64_add(wv[3], t1);
+            wv[3] = wv[2];
+            wv[2] = wv[1];
+            wv[1] = wv[0];
+            wv[0] = u64_add(t1, t2);
+        }
+        for (j = 0; j < 8; j++) {
+            t1.hi = ctx->h[j << 1];
+            t1.lo = ctx->h[(j << 1) + 1];
+            t1 = u64_add(t1, wv[j]);
+            ctx->h[j << 1] = t1.hi;
+            ctx->h[(j << 1) + 1] = t1.lo;
+        }
+    }
+}
+#endif
 
 void hb_sha512(const void *message, HB_SIZE len,
             unsigned char *digest)
@@ -534,6 +735,7 @@ void hb_sha512(const void *message, HB_SIZE len,
     hb_sha512_final(&ctx, digest);
 }
 
+#if defined( HB_I64_MAX )
 void hb_sha512_init(hb_sha512_ctx *ctx)
 {
 #ifndef UNROLL_LOOPS
@@ -551,6 +753,18 @@ void hb_sha512_init(hb_sha512_ctx *ctx)
     ctx->len = 0;
     ctx->tot_len = 0;
 }
+#else
+void hb_sha512_init(hb_sha512_ctx *ctx)
+{
+    int i;
+
+    for (i = 0; i < 16; i++) {
+        ctx->h[i] = sha512_h0[i];
+    }
+    ctx->len = 0;
+    ctx->tot_len = 0;
+}
+#endif
 
 void hb_sha512_update(hb_sha512_ctx *ctx, const void *messagev,
                    HB_SIZE len)
@@ -587,11 +801,11 @@ void hb_sha512_update(hb_sha512_ctx *ctx, const void *messagev,
     ctx->tot_len += (block_nb + 1) << 7;
 }
 
+#if defined( HB_I64_MAX )
 void hb_sha512_final(hb_sha512_ctx *ctx, unsigned char *digest)
 {
     HB_SIZE block_nb;
     HB_SIZE pm_len;
-    HB_SIZE len_b;
 
 #ifndef UNROLL_LOOPS
     int i;
@@ -600,12 +814,11 @@ void hb_sha512_final(hb_sha512_ctx *ctx, unsigned char *digest)
     block_nb = 1 + ((HB_SHA512_BLOCK_SIZE - 17)
                      < (ctx->len % HB_SHA512_BLOCK_SIZE));
 
-    len_b = (ctx->tot_len + ctx->len) << 3;
     pm_len = block_nb << 7;
 
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x80;
-    UNPACK32(len_b, ctx->block + pm_len - 4);
+    sha2_put_len(ctx->tot_len + ctx->len, ctx->block + pm_len, 1);
 
     sha512_transf(ctx, ctx->block, block_nb);
 
@@ -624,6 +837,30 @@ void hb_sha512_final(hb_sha512_ctx *ctx, unsigned char *digest)
     UNPACK64(ctx->h[7], &digest[56]);
 #endif /* !UNROLL_LOOPS */
 }
+#else
+void hb_sha512_final(hb_sha512_ctx *ctx, unsigned char *digest)
+{
+    HB_SIZE block_nb;
+    HB_SIZE pm_len;
+    int i;
+
+    block_nb = 1 + ((HB_SHA512_BLOCK_SIZE - 17)
+                     < (ctx->len % HB_SHA512_BLOCK_SIZE));
+
+    pm_len = block_nb << 7;
+
+    memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
+    ctx->block[ctx->len] = 0x80;
+    sha2_put_len(ctx->tot_len + ctx->len, ctx->block + pm_len, 1);
+
+    sha512_transf(ctx, ctx->block, block_nb);
+
+    for (i = 0 ; i < 8; i++) {
+        UNPACK32(ctx->h[i << 1], &digest[i << 3]);
+        UNPACK32(ctx->h[(i << 1) + 1], &digest[(i << 3) + 4]);
+    }
+}
+#endif
 
 /* SHA-384 functions */
 
@@ -637,6 +874,7 @@ void hb_sha384(const void *message, HB_SIZE len,
     hb_sha384_final(&ctx, digest);
 }
 
+#if defined( HB_I64_MAX )
 void hb_sha384_init(hb_sha384_ctx *ctx)
 {
 #ifndef UNROLL_LOOPS
@@ -654,6 +892,18 @@ void hb_sha384_init(hb_sha384_ctx *ctx)
     ctx->len = 0;
     ctx->tot_len = 0;
 }
+#else
+void hb_sha384_init(hb_sha384_ctx *ctx)
+{
+    int i;
+
+    for (i = 0; i < 16; i++) {
+        ctx->h[i] = sha384_h0[i];
+    }
+    ctx->len = 0;
+    ctx->tot_len = 0;
+}
+#endif
 
 void hb_sha384_update(hb_sha384_ctx *ctx, const void *messagev,
                       HB_SIZE len)
@@ -690,11 +940,11 @@ void hb_sha384_update(hb_sha384_ctx *ctx, const void *messagev,
     ctx->tot_len += (block_nb + 1) << 7;
 }
 
+#if defined( HB_I64_MAX )
 void hb_sha384_final(hb_sha384_ctx *ctx, unsigned char *digest)
 {
     HB_SIZE block_nb;
     HB_SIZE pm_len;
-    HB_SIZE len_b;
 
 #ifndef UNROLL_LOOPS
     int i;
@@ -703,12 +953,11 @@ void hb_sha384_final(hb_sha384_ctx *ctx, unsigned char *digest)
     block_nb = (1 + ((HB_SHA384_BLOCK_SIZE - 17)
                      < (ctx->len % HB_SHA384_BLOCK_SIZE)));
 
-    len_b = (ctx->tot_len + ctx->len) << 3;
     pm_len = block_nb << 7;
 
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x80;
-    UNPACK32(len_b, ctx->block + pm_len - 4);
+    sha2_put_len(ctx->tot_len + ctx->len, ctx->block + pm_len, 1);
 
     sha512_transf(ctx, ctx->block, block_nb);
 
@@ -725,6 +974,30 @@ void hb_sha384_final(hb_sha384_ctx *ctx, unsigned char *digest)
     UNPACK64(ctx->h[5], &digest[40]);
 #endif /* !UNROLL_LOOPS */
 }
+#else
+void hb_sha384_final(hb_sha384_ctx *ctx, unsigned char *digest)
+{
+    HB_SIZE block_nb;
+    HB_SIZE pm_len;
+    int i;
+
+    block_nb = 1 + ((HB_SHA384_BLOCK_SIZE - 17)
+                     < (ctx->len % HB_SHA384_BLOCK_SIZE));
+
+    pm_len = block_nb << 7;
+
+    memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
+    ctx->block[ctx->len] = 0x80;
+    sha2_put_len(ctx->tot_len + ctx->len, ctx->block + pm_len, 1);
+
+    sha512_transf(ctx, ctx->block, block_nb);
+
+    for (i = 0 ; i < 6; i++) {
+        UNPACK32(ctx->h[i << 1], &digest[i << 3]);
+        UNPACK32(ctx->h[(i << 1) + 1], &digest[(i << 3) + 4]);
+    }
+}
+#endif
 
 /* SHA-224 functions */
 
@@ -795,7 +1068,6 @@ void hb_sha224_final(hb_sha224_ctx *ctx, unsigned char *digest)
 {
     HB_SIZE block_nb;
     HB_SIZE pm_len;
-    HB_SIZE len_b;
 
 #ifndef UNROLL_LOOPS
     int i;
@@ -804,12 +1076,11 @@ void hb_sha224_final(hb_sha224_ctx *ctx, unsigned char *digest)
     block_nb = (1 + ((HB_SHA224_BLOCK_SIZE - 9)
                      < (ctx->len % HB_SHA224_BLOCK_SIZE)));
 
-    len_b = (ctx->tot_len + ctx->len) << 3;
     pm_len = block_nb << 6;
 
     memset(ctx->block + ctx->len, 0, pm_len - ctx->len);
     ctx->block[ctx->len] = 0x80;
-    UNPACK32(len_b, ctx->block + pm_len - 4);
+    sha2_put_len(ctx->tot_len + ctx->len, ctx->block + pm_len, 0);
 
     sha256_transf(ctx, ctx->block, block_nb);
 

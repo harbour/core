@@ -231,20 +231,30 @@ void hb_dateDecode( long lJulian, int * piYear, int * piMonth, int * piDay )
 
    if( lJulian >= HB_STR_DATE_BASE )
    {
-      HB_LONGLONG U, V, W, X, J;
+      /* intermediate values do not fit in 32-bit integers, without 64-bit
+       * integers doubles are used, all values fit in their mantissa and
+       * divided values are positive so integer division is floor() */
+#if defined( HB_I64_MAX )
+#  define HB_DATE_DIV( a, b )    ( ( a ) / ( b ) )
+      HB_I64 U, V, W, X, J;
+#else
+#  define HB_DATE_DIV( a, b )    floor( ( a ) / ( b ) )
+      double U, V, W, X, J;
+#endif
 
       J = lJulian;
       J += 68569;
-      W = ( J * 4 ) / 146097;
-      J -= ( ( 146097 * W ) + 3 ) / 4;
-      X = 4000 * ( J + 1 ) / 1461001;
-      J -= ( ( 1461 * X ) / 4 ) - 31;
-      V = 80 * J / 2447;
-      U = V / 11;
+      W = HB_DATE_DIV( J * 4, 146097 );
+      J -= HB_DATE_DIV( ( 146097 * W ) + 3, 4 );
+      X = HB_DATE_DIV( 4000 * ( J + 1 ), 1461001 );
+      J -= HB_DATE_DIV( 1461 * X, 4 ) - 31;
+      V = HB_DATE_DIV( 80 * J, 2447 );
+      U = HB_DATE_DIV( V, 11 );
 
       *piYear  = ( int ) ( X + U + ( W - 49 ) * 100 );
       *piMonth = ( int ) ( V + 2 - ( U * 12 ) );
-      *piDay   = ( int ) ( J - ( 2447 * V / 80 ) );
+      *piDay   = ( int ) ( J - HB_DATE_DIV( 2447 * V, 80 ) );
+#undef HB_DATE_DIV
    }
    else
    {
@@ -1325,6 +1335,7 @@ HB_MAXUINT hb_timerGet( void )
    }
 #elif defined( HB_OS_WIN )
    {
+#if defined( HB_I64_MAX )
       static DWORD s_dwCounter = 0, s_dwLast = 0;
       DWORD dwTime = timeGetTime();
 
@@ -1332,6 +1343,11 @@ HB_MAXUINT hb_timerGet( void )
          ++s_dwCounter;
       s_dwLast = dwTime;
       return ( ( HB_MAXUINT ) s_dwCounter << 32 ) + dwTime;
+#else
+      /* without 64-bit integers the time wraps around like on other
+         platforms */
+      return ( HB_MAXUINT ) timeGetTime();
+#endif
    }
 #else
    {

@@ -309,11 +309,19 @@ double hb_get_le_int64( const HB_BYTE * ptr )
 void hb_put_le_uint64( const HB_BYTE * ptr, double d )
 {
    HB_U32 l1, l2;
+   double dHi;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_put_le_uint64(%p)", ( const void * ) ptr ) );
 
-   l1 = ( HB_U32 ) ( d );
-   l2 = ( HB_U32 ) ( d / 4294967296.0 );
+   /* fractional part is truncated like in conversion to integer type,
+    * conversion of double values out of HB_U32 range is undefined in C,
+    * negative values are stored in two's complement */
+   d = d < 0 ? ceil( d ) : floor( d );
+   dHi = floor( d / 4294967296.0 );
+   l1 = ( HB_U32 ) ( d - dHi * 4294967296.0 );
+   if( dHi < 0 )
+      dHi += 4294967296.0;
+   l2 = ( HB_U32 ) dHi;
    HB_PUT_LE_UINT32( ptr, l1 );
    HB_PUT_LE_UINT32( ptr + 4, l2 );
 }

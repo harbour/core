@@ -2751,11 +2751,16 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
                                           pField->uiType == HB_FT_ROWVER ) ) )
          {
             HB_MAXINT lVal;
+#ifdef HB_LONG_LONG_OFF
+            double dVal;
+#endif
             int iSize;
 
             if( pField->uiDec || HB_IS_DOUBLE( pItem ) )
             {
+#ifndef HB_LONG_LONG_OFF
                double dVal;
+#endif
 #if 0    /* this version rounds double values to nearest integer */
                dVal = hb_numDecConv( hb_itemGetND( pItem ), -( int ) pField->uiDec );
 #else    /* this one truncates double value to integer dropping fractional part */

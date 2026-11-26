@@ -12,6 +12,58 @@
     ! fix the coverage of HB_LONG_LONG_OFF to restore pure 32-bit
       compilers
 
+  ; Alexandre Bencz works below merged from
+    https://github.com/bencz/harbour/commit/a406d584f1a6602da988382c222542db7920cceb
+    https://github.com/bencz/harbour/commit/7d3d6d734cd321dcc28249873add83690c08b190
+    https://github.com/bencz/harbour/commit/afef8026c087b7a5fb7fe4eaa9e39ed2903bd954
+    https://github.com/bencz/harbour/commit/8f05ed8879d91035e53187b0bcc52c13c8e1da82
+    with src/rtl/itemseri.c file skipped, xHarbour deserialization will
+    be revalidated separately
+
+2026-11-24 13:24 UTC-0300 Alexandre Bencz
+  * src/rtl/sha2.c
+    ! fixed SHA-224, SHA-256, SHA-384 and SHA-512 digests of messages
+      longer than 512 MiB. Only the low 32 bits of the message length in
+      bits were stored in the padding block. Now the whole length is
+      stored also in builds with 32-bit HB_SIZE.
+
+2026-11-24 12:20 UTC-0300 Alexandre Bencz
+  * include/hbcrypto.h
+  * src/rtl/sha2.c
+    + added SHA-384 and SHA-512 implementation for builds without 64-bit
+      integer type, 64-bit values are emulated by pairs of 32-bit values.
+      Such builds could not be compiled before. Builds with 64-bit integer
+      type use unchanged code.
+
+2026-11-24 11:57 UTC-0300 Alexandre Bencz
+  * include/hbdefs.h
+  * src/common/hbarch.c
+  * src/common/hbdate.c
+  * src/rdd/dbf1.c
+    ! fixed builds without 64-bit integer type (HB_LONG_LONG_OFF on 32-bit
+      platforms). They could not be compiled at all: check for wrongly
+      preprocessed 64-bit constants always failed because LONGLONG_MAX is
+      not defined in such builds, hb_dateDecode() used HB_LONGLONG,
+      hb_dbfPutValue() used variable out of its scope.
+      hb_dateDecode() uses doubles when there is no 64-bit integer type,
+      hb_put_le_uint64() stores negative values correctly and
+      Windows hb_timerGet() does not shift 32-bit value by 32 bits.
+    * HB_LONG_LONG_OFF is disabled on platforms where long is 64-bit,
+      it means that 64-bit integer type is not supported and such type
+      always exists there
+
+2026-11-23 20:50 UTC-0300 Alexandre Bencz
+  * include/hbdefs.h
+    ! fixed upper limit in HB_DBL_LIM_LONG() and HB_DBL_LIM_INT64() macros.
+      When HB_MAXDBL is double (e.g. MSVC, ARM or HB_LONG_DOUBLE_OFF builds)
+      then maximal 64-bit integer value is converted to 2^63 and such value
+      passed the check and was converted to 64-bit integer (undefined
+      behavior, -2^63 on x86), e.g. (-9223372036854775807 - 1) * -1 gave
+      -9223372036854775808 and 2^63 was stored in DBF integer fields as
+      -2^63. Now upper limit is checked using negated minimal value which
+      is always exactly representable. HB_DBL_LIM_LONG() fix was proposed
+      by Aleksander Czajczynski in harbour/core issue #404.
+
 2026-10-24 23:11 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * src/macro/macrolex.c
   * tests/base2.prg

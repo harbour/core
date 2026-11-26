@@ -62,7 +62,11 @@ typedef struct {
    HB_SIZE tot_len;
    HB_SIZE len;
    unsigned char block[ 2 * HB_SHA512_BLOCK_SIZE ];
+#if defined( HB_I64_MAX )
    HB_U64 h[ 8 ];
+#else
+   HB_U32 h[ 16 ];   /* 64-bit values emulated by pairs of 32-bit values */
+#endif
 } hb_sha512_ctx;
 
 typedef hb_sha512_ctx hb_sha384_ctx;
