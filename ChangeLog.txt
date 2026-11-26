@@ -7,6 +7,15 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-11-26 21:21 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+   * utils/hbtest/rt_array.prg
+   * utils/hbtest/rt_hvma.prg
+   * utils/hbtest/rt_math.prg
+     + new tests contributed by Alexandre Bencz, related to 64-bit maths,
+       also in SWITCH. Plus linked-list like array exercise for GC.
+       Fixes for the issues will follow after they are reviewed.
+       The test will be also modified to do less in HB_LONG_LONG_OFF mode.
+
 2026-11-26 20:53 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * src/vm/hvm.c
     ; comment block joined after merging, slightly reworded too

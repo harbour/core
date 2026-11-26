@@ -631,10 +631,54 @@ PROCEDURE Main_HVMA()
    HBTEST ( nA := -500000000000000000000000     , RTSTR( -nA ) ) IS " 20 ********************"
    HBTEST ( nA := -5000000000000000000000000    , RTSTR( -nA ) ) IS " 20 ********************"
 
+#ifdef __HARBOUR__
+   /* SWITCH with CASE values which do not fit in 32-bit integer */
+   HBTEST THVMSwitch( 1 )                         IS "one"
+   HBTEST THVMSwitch( 7 )                         IS "seven"
+   HBTEST THVMSwitch( 5000000000 )                IS "big"
+   HBTEST THVMSwitch( -5000000000 )               IS "negbig"
+   HBTEST THVMSwitch( 9223372036854775807 )       IS "max"
+   HBTEST THVMSwitch( 4294967297 )                IS "other"
+   HBTEST THVMSwitch( 4294967303 )                IS "other"
+   HBTEST THVMSwitch( 0 )                         IS "other"
+   HBTEST THVMSwitch( "a" )                       IS "str"
+   HBTEST THVMSwitch( "b" )                       IS "other"
+   HBTEST THVMSwitch( -2147483648 )               IS "int32min"
+   HBTEST THVMSwitch( 2147483648 )                IS "other"
+   HBTEST THVMSwitch( -9223372036854775807 - 1 )  IS "min"
+#endif
+
    RETURN
 
 STATIC FUNCTION RTSTR( nValue )
    RETURN Str( Len( Str( nValue ) ), 3 ) + " " + Str( nValue )
+
+#ifdef __HARBOUR__
+
+STATIC FUNCTION THVMSwitch( xValue )
+
+   SWITCH xValue
+   CASE 1
+      RETURN "one"
+   CASE 7
+      RETURN "seven"
+   CASE 5000000000
+      RETURN "big"
+   CASE -5000000000
+      RETURN "negbig"
+   CASE 9223372036854775807
+      RETURN "max"
+   CASE -2147483648
+      RETURN "int32min"
+   CASE -9223372036854775807 - 1
+      RETURN "min"
+   CASE "a"
+      RETURN "str"
+   ENDSWITCH
+
+   RETURN "other"
+
+#endif
 
 /* Don't change the position of this #include. */
 #include "rt_init.ch"

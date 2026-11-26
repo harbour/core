@@ -397,6 +397,11 @@ PROCEDURE Main_ARRAY()
    HBTEST TASOSM1()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0NN 0NN 0         0{  }"      , "NN 5NN 4         3{ 2, 1, 3 }"
    HBTEST TASOSM2()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }"              , "NN 5NN 4         3{ 2, 1, 3 }"
 
+#if 0
+   /* deeply nested arrays should not exhaust C stack in GC and release code */
+   HBTEST TADeep( 500000 )                IS "500000/1/2"
+#endif
+
    RETURN
 
 STATIC FUNCTION TAEVSM()
@@ -426,6 +431,37 @@ STATIC FUNCTION TASOSM2()
    ASort( aArray, NIL, NIL, {| x, y | cString += ValType( x ) + ValType( y ) + Str( Len( aArray ), 2 ), ASize( aArray, Len( aArray ) - 1 ) } )
 
    RETURN cString + Str( Len( aArray ) ) + XToStrX( aArray )
+
+#ifdef __HARBOUR__
+
+STATIC FUNCTION TADeep( nDepth )
+
+   LOCAL aShared := { 1, 2 }
+   LOCAL aList := { NIL, aShared }
+   LOCAL aNode := aList
+   LOCAL nCount := 0
+   LOCAL tmp
+
+   /* linked list created with arrays: { <next>, <shared> } */
+   FOR tmp := 1 TO nDepth
+      aNode[ 1 ] := { NIL, aShared }
+      aNode := aNode[ 1 ]
+   NEXT
+   aNode := aList[ 1 ]
+   DO WHILE aNode != NIL
+      ++nCount
+      aNode := aNode[ 1 ]
+   ENDDO
+
+   /* scan the list by GC */
+   hb_gcAll( .T. )
+   /* release the list, shared item should not be released */
+   aList := NIL
+   hb_gcAll( .T. )
+
+   RETURN hb_ntos( nCount ) + "/" + hb_ntos( aShared[ 1 ] ) + "/" + hb_ntos( Len( aShared ) )
+
+#endif
 
 STATIC FUNCTION TANew( cChar, nLen )
 
