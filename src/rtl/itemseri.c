@@ -185,6 +185,48 @@ complex ones:
 
 #define HB_SERIAL_REFLSTINIT  16
 
+/* 64-bit big endian sizes and integer numbers used in xHarbour format
+ * and little endian 64-bit integers. Without 64-bit integer type sizes
+ * are taken from low 32 bits (HB_SIZE is 32-bit) and numbers which do not
+ * fit in HB_MAXINT are stored as doubles, converting such doubles to
+ * integer types is undefined in C. */
+#if defined( HB_I64_MAX )
+#  define HB_SER_GET_BE_SIZE( p )   ( ( HB_SIZE ) HB_GET_BE_UINT64( p ) )
+#  define HB_SER_GET_BE_INT( p )    ( ( int ) HB_GET_BE_UINT64( p ) )
+#  define HB_SER_GET_BE_LONG( p )   ( ( long ) HB_GET_BE_UINT64( p ) )
+#  define HB_SER_PUT_BE_INT64( i, p ) \
+            hb_itemPutNInt( i, ( HB_MAXINT ) HB_GET_BE_UINT64( p ) )
+#  define HB_SER_PUT_LE_INT64( i, p ) \
+            hb_itemPutNInt( i, HB_GET_LE_INT64( p ) )
+#  define HB_SER_PUT_LE_INT64LEN( i, p, n ) \
+            hb_itemPutNIntLen( i, HB_GET_LE_INT64( p ), n )
+#else
+#  define HB_SER_GET_BE_SIZE( p )   ( ( HB_SIZE ) HB_GET_BE_UINT32( ( const HB_BYTE * ) ( p ) + 4 ) )
+#  define HB_SER_GET_BE_INT( p )    ( ( int ) ( HB_I32 ) HB_GET_BE_UINT32( ( const HB_BYTE * ) ( p ) + 4 ) )
+#  define HB_SER_GET_BE_LONG( p )   ( ( long ) ( HB_I32 ) HB_GET_BE_UINT32( ( const HB_BYTE * ) ( p ) + 4 ) )
+#  define HB_SER_PUT_BE_INT64( i, p ) \
+            hb_serPutInt64( i, ( double ) ( HB_I32 ) HB_GET_BE_UINT32( p ) * 4294967296.0 + \
+                               ( double ) HB_GET_BE_UINT32( ( const HB_BYTE * ) ( p ) + 4 ), -1 )
+#  define HB_SER_PUT_LE_INT64( i, p ) \
+            hb_serPutInt64( i, HB_GET_LE_INT64( p ), -1 )
+#  define HB_SER_PUT_LE_INT64LEN( i, p, n ) \
+            hb_serPutInt64( i, HB_GET_LE_INT64( p ), n )
+
+/* iWidth < 0 means that the width is not given */
+static void hb_serPutInt64( PHB_ITEM pItem, double dValue, int iWidth )
+{
+   if( HB_DBL_LIM_LONG( dValue ) )
+   {
+      if( iWidth >= 0 )
+         hb_itemPutNIntLen( pItem, ( HB_MAXINT ) dValue, iWidth );
+      else
+         hb_itemPutNInt( pItem, ( HB_MAXINT ) dValue );
+   }
+   else
+      hb_itemPutNDLen( pItem, dValue, iWidth, 0 );
+}
+#endif
+
 typedef struct
 {
    void *   value;
@@ -1155,7 +1197,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
 
       /* xHarbour types */
       case HB_SERIAL_XHB_C:
-         nSize = 9 + ( nSize >= 9 ? ( HB_SIZE ) HB_GET_BE_UINT64( pBuffer ) : nSize );
+         nSize = 9 + ( nSize >= 9 ? HB_SER_GET_BE_SIZE( pBuffer ) : nSize );
          break;
       case HB_SERIAL_XHB_L:
          nSize = 2;
@@ -1178,7 +1220,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
          if( nSize >= 9 )
          {
             nSize = 9;
-            nLen = ( HB_SIZE ) HB_GET_BE_UINT64( pBuffer );
+            nLen = HB_SER_GET_BE_SIZE( pBuffer );
          }
          else
             nSize++;
@@ -1191,7 +1233,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
          if( nSize >= 9 )
          {
             nSize = 9;
-            nLen = ( HB_SIZE ) HB_GET_BE_UINT64( pBuffer ) << 1;
+            nLen = HB_SER_GET_BE_SIZE( pBuffer ) << 1;
          }
          else
             nSize++;
@@ -1200,7 +1242,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
          if( nSize >= 9 )
          {
             nSize = 9;
-            nLen = ( ( HB_SIZE ) HB_GET_BE_UINT64( pBuffer ) << 1 ) + 1;
+            nLen = ( HB_SER_GET_BE_SIZE( pBuffer ) << 1 ) + 1;
          }
          else
             nSize++;
@@ -1208,16 +1250,16 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
       case HB_SERIAL_XHB_Q:
          if( nSize >= 18 && pBuffer[ 8 ] == HB_SERIAL_XHB_C )
          {
-            HB_SIZE nData = ( HB_SIZE ) HB_GET_BE_UINT64( pBuffer );
+            HB_SIZE nData = HB_SER_GET_BE_SIZE( pBuffer );
             if( nData >= 9 && nData - 9 >=
-                ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ 9 ] ) )
+                HB_SER_GET_BE_SIZE( &pBuffer[ 9 ] ) )
                nSize = 9 + nData;
             else
                nSize++;
          }
          else
             nSize++;
-         nSize = 9 + ( nSize >= 9 ? ( HB_SIZE ) HB_GET_BE_UINT64( pBuffer ) : nSize );
+         nSize = 9 + ( nSize >= 9 ? HB_SER_GET_BE_SIZE( pBuffer ) : nSize );
          break;
       case HB_SERIAL_XHB_R:
          if( nSize++ >= 10 )
@@ -1228,7 +1270,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
                case HB_SERIAL_XHB_H:
                case HB_SERIAL_XHB_O:
                   hb_itemSerialTypedRef( pRefList, pBuffer[ 0 ],
-                              ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ 1 ] ) );
+                              HB_SER_GET_BE_SIZE( &pBuffer[ 1 ] ) );
                   /* fallthrough */
                case HB_SERIAL_XHB_B:
                   /* we do not support xHarbour codeblock deserialization: HB_RestoreBlock( pItem ) */
@@ -1365,7 +1407,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          break;
 
       case HB_SERIAL_INT64:
-         hb_itemPutNInt( pItem, HB_GET_LE_INT64( &pBuffer[ nOffset ] ) );
+         HB_SER_PUT_LE_INT64( pItem, &pBuffer[ nOffset ] );
          nOffset += 8;
          break;
 
@@ -1394,8 +1436,8 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          break;
 
       case HB_SERIAL_INT64NUM:
-         hb_itemPutNIntLen( pItem, HB_GET_LE_INT64( &pBuffer[ nOffset ] ),
-                            pBuffer[ nOffset + 8 ] );
+         HB_SER_PUT_LE_INT64LEN( pItem, &pBuffer[ nOffset ],
+                                 pBuffer[ nOffset + 8 ] );
          nOffset += 9;
          break;
 
@@ -1624,7 +1666,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
 
       /* xHarbour types */
       case HB_SERIAL_XHB_C:
-         nSize = nLen = ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] );
+         nSize = nLen = HB_SER_GET_BE_SIZE( &pBuffer[ nOffset ] );
          nOffset += 8;
          szVal = hb_cdpnDup( ( const char * ) &pBuffer[ nOffset ], &nLen,
                              cdpIn, cdpOut );
@@ -1638,13 +1680,13 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          switch( pBuffer[ nOffset++ ] )
          {
             case 'I':
-               hb_itemPutNI( pItem, ( int ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] ) );
+               hb_itemPutNI( pItem, HB_SER_GET_BE_INT( &pBuffer[ nOffset ] ) );
                break;
             case 'L':
-               hb_itemPutNL( pItem, ( long ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] ) );
+               hb_itemPutNL( pItem, HB_SER_GET_BE_LONG( &pBuffer[ nOffset ] ) );
                break;
             case 'X':
-               hb_itemPutNInt( pItem, ( HB_MAXINT ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] ) );
+               HB_SER_PUT_BE_INT64( pItem, &pBuffer[ nOffset ] );
                /* this is workaround for bug in xHarbour serialization code */
                nOffset += 10;
                break;
@@ -1658,7 +1700,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          nOffset += 8;
          break;
       case HB_SERIAL_XHB_D:
-         hb_itemPutDL( pItem, ( long ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] ) );
+         hb_itemPutDL( pItem, HB_SER_GET_BE_LONG( &pBuffer[ nOffset ] ) );
          nOffset += 8;
          break;
       case HB_SERIAL_XHB_T:
@@ -1669,7 +1711,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          hb_itemClear( pItem );
          break;
       case HB_SERIAL_XHB_A:
-         nLen = ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] );
+         nLen = HB_SER_GET_BE_SIZE( &pBuffer[ nOffset ] );
          hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_A );
          nOffset = hb_deserializeArray( pItem, cdpIn, cdpOut, pBuffer, nOffset + 8, nLen, pRefList );
          break;
@@ -1683,7 +1725,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          hb_itemClear( pItem );
          break;
       case HB_SERIAL_XHB_H:
-         nLen = ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] );
+         nLen = HB_SER_GET_BE_SIZE( &pBuffer[ nOffset ] );
          hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_H );
          nOffset = hb_deserializeHash( pItem, cdpIn, cdpOut, pBuffer, nOffset + 8, nLen, pRefList );
          hb_hashSetFlags( pItem, HB_HASH_KEEPORDER | HB_HASH_RESORT );
@@ -1692,7 +1734,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
       {
          HB_USHORT uiClass;
 
-         nLen = ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] );
+         nLen = HB_SER_GET_BE_SIZE( &pBuffer[ nOffset ] );
          /* deserialize :className */
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
                                        nOffset + 8, pRefList );
@@ -1742,7 +1784,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
       {
          HB_USHORT uiClass;
 
-         nPad = ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] ) + nOffset + 8;
+         nPad = HB_SER_GET_BE_SIZE( &pBuffer[ nOffset ] ) + nOffset + 8;
          /* deserialize :className */
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
                                        nOffset + 8, pRefList );
@@ -1772,7 +1814,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
       }
       case HB_SERIAL_XHB_R:
          hb_itemSerialTypedGet( pRefList, pItem, pBuffer[ nOffset ],
-                     ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset + 1 ] ) );
+                     HB_SER_GET_BE_SIZE( &pBuffer[ nOffset + 1 ] ) );
          nOffset += 9;
          break;
 
