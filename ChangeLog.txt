@@ -34,6 +34,9 @@
     https://github.com/bencz/harbour/commit/afef8026c087b7a5fb7fe4eaa9e39ed2903bd954
     https://github.com/bencz/harbour/commit/8f05ed8879d91035e53187b0bcc52c13c8e1da82
     https://github.com/bencz/harbour/commit/1e0a833e71decce1f596aed612db3eb9a0edc57a
+    https://github.com/bencz/harbour/commit/86cd361134636bb3e691d0d7ad67ba0be1576d05
+    https://github.com/bencz/harbour/commit/3feeeff9fbde55d515c53a3c11acfdc416d216bf
+    https://github.com/bencz/harbour/commit/e16112da0741aa953d5ab38bf8ead46fa2a9dbf2
     with src/rtl/itemseri.c file skipped, xHarbour deserialization will
     be revalidated separately
 
@@ -69,6 +72,15 @@
       it means that 64-bit integer type is not supported and such type
       always exists there
 
+2026-11-24 11:34 UTC-0300 Alexandre Bencz
+  * src/vm/hvm.c
+    * use hb_vmMultInt() also in builds with HB_LONG_LONG_OFF macro.
+      It works with any size of HB_MAXINT and HB_LONG_LONG_OFF does not
+      mean that 64-bit integers are not supported, e.g. on 64-bit *nixes
+      HB_MAXINT is long, so exact integer multiplication was disabled
+      there. The old code which multiplied 32-bit integers in HB_MAXINT
+      when it was bigger is covered by hb_vmMultInt().
+
 2026-11-23 21:00 UTC-0300 Alexandre Bencz
   * src/vm/hvm.c
     ! fixed crash (SIGFPE) in modulus of minimal integer value by -1,
@@ -102,6 +114,47 @@
       -2^63. Now upper limit is checked using negated minimal value which
       is always exactly representable. HB_DBL_LIM_LONG() fix was proposed
       by Aleksander Czajczynski in harbour/core issue #404.
+
+2026-11-23 20:31 UTC-0300 Alexandre Bencz
+  * src/vm/hvm.c
+    ! fixed precision loss in multiplication of integer numbers. The exact
+      integer result was calculated only when both operands were 32-bit
+      integers, other products were calculated using double numbers and
+      rounded above 2^53, e.g. 18368730161825351 * -1 gave
+      -18368730161825352, and -gc3 code always used double numbers for
+      multiplication by integer constant (hb_xvmMultByInt()) so results
+      were different than in pcode, e.g. 99999999 * 100000001 gave
+      10000000000000000. Now the exact result is used when the product
+      fits in HB_MAXINT, in other case double number is used as before.
+      Based on the fix proposed by Aleksander Czajczynski in harbour/core
+      issue #404 with the same function and macro names: hb_vmMultInt()
+      uses __builtin_mul_overflow() when it's detected by __has_builtin()
+      or GCC >= 5 and portable C89 code otherwise, HB_MUL_OVERFLOW_BUILTIN_OFF
+      macro disables the builtin for all compilers, detection is done at
+      file scope and HB_TRACE() message is fixed.
+
+2026-11-23 20:18 UTC-0300 Alexandre Bencz
+  * src/vm/hvm.c
+    ! fixed SWITCH statement with CASE values which do not fit in 32-bit
+      integer. HB_P_PUSHLONGLONG in SWITCH table was not recognized, pcode
+      pointer was not moved and following case values and jumps were
+      executed as normal pcode, so wrong CASE branch was selected, e.g.
+      SWITCH 7 with CASE 5000000000 entered CASE 5000000000 branch
+
+  * src/compiler/gencc.c
+    ! fixed -gc3 C code generated for SWITCH statement with CASE values
+      which do not fit in 32-bit integer. HB_P_PUSHLONGLONG in SWITCH table
+      was not recognized and harbour generated wrong labels or failed with
+      internal error 9100 (invalid opcode)
+    ! use HB_MAXINT instead of long for SWITCH value in generated code,
+      it was truncated on platforms with 32-bit long, e.g. Win64
+    + added hb_gencc_switchConst() which generates CASE constants as
+      expressions which are safe for C90 rules and compilers without LL
+      suffix support, e.g. -2147483648L is unsigned in C90 when long is
+      32-bit and minimal HB_MAXINT value cannot be negated.
+      For such code it fixes build problems as spurious as:
+      rt_hvma.c:4856:30: warning: missing terminating ' character
+      hb_xvmPushLongLong( HB_LL( -'..--).0-*(+,))+(0( ) );
 
 2026-10-24 23:11 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * src/macro/macrolex.c

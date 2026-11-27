@@ -1804,6 +1804,36 @@ static HB_GENC_FUNC( hb_p_enumend )
    return 1;
 }
 
+/* Generate integer constant for SWITCH case which is compared with
+ * HB_MAXINT value. With C90 rules or without LL suffix support
+ * (e.g. MSVC) negative decimal constants may be unsigned and change
+ * their value after conversion to HB_MAXINT, e.g. -2147483648L when
+ * long is 32-bit. Such constants are generated as expressions and
+ * constants which do not fit in 32-bit long are generated as positive
+ * HB_LL() constants cast to HB_MAXINT before negation.
+ */
+static void hb_gencc_switchConst( FILE * yyc, HB_MAXINT nValue )
+{
+   if( nValue >= -2147483647L && nValue <= 2147483647L )
+      fprintf( yyc, "%ldL", ( long ) nValue );
+   else if( nValue == -2147483647L - 1 )
+      fprintf( yyc, "( -2147483647L - 1 )" );
+   else
+   {
+      char szBuf[ 24 ];
+
+      if( nValue >= 0 )
+         fprintf( yyc, "( ( HB_MAXINT ) HB_LL( %s ) )",
+                  hb_numToStr( szBuf, sizeof( szBuf ), nValue ) );
+      else if( nValue >= -HB_VMLONG_MAX )
+         fprintf( yyc, "( -( HB_MAXINT ) HB_LL( %s ) )",
+                  hb_numToStr( szBuf, sizeof( szBuf ), -nValue ) );
+      else  /* minimal HB_MAXINT value cannot be negated */
+         fprintf( yyc, "( -( HB_MAXINT ) HB_LL( %s ) - 1 )",
+                  hb_numToStr( szBuf, sizeof( szBuf ), HB_VMLONG_MAX ) );
+   }
+}
+
 static HB_GENC_FUNC( hb_p_switch )
 {
    HB_USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 1 ] ), us;
@@ -1820,6 +1850,10 @@ static HB_GENC_FUNC( hb_p_switch )
          case HB_P_PUSHLONG:
             fNum = HB_TRUE;
             nPCodePos += 5;
+            break;
+         case HB_P_PUSHLONGLONG:
+            fNum = HB_TRUE;
+            nPCodePos += 9;
             break;
          case HB_P_PUSHSTRSHORT:
             fStr = HB_TRUE;
@@ -1855,7 +1889,7 @@ static HB_GENC_FUNC( hb_p_switch )
       if( fStr )
          fprintf( cargo->yyc, "\t\tconst char * pszText;\n\t\tHB_SIZE nLen;\n" );
       if( fNum )
-         fprintf( cargo->yyc, "\t\tlong lVal;\n" );
+         fprintf( cargo->yyc, "\t\tHB_MAXINT nVal;\n" );
       fprintf( cargo->yyc,
                "\t\tif( hb_xvmSwitchGet( &pSwitch ) ) break;\n"
                "\t\ttype = hb_itemType( pSwitch );\n" );
@@ -1865,7 +1899,7 @@ static HB_GENC_FUNC( hb_p_switch )
          fprintf( cargo->yyc, "\t\tnLen = pszText ? hb_itemGetCLen( pSwitch ) : 0;\n" );
       }
       if( fNum )
-         fprintf( cargo->yyc, "\t\tlVal = ( type & HB_IT_NUMINT ) ? hb_itemGetNL( pSwitch ) : 0;\n\n" );
+         fprintf( cargo->yyc, "\t\tnVal = ( type & HB_IT_NUMINT ) ? hb_itemGetNInt( pSwitch ) : 0;\n\n" );
    }
 
    nPCodePos = nStart + 3;
@@ -1874,9 +1908,22 @@ static HB_GENC_FUNC( hb_p_switch )
       switch( pFunc->pCode[ nPCodePos ] )
       {
          case HB_P_PUSHLONG:
-            fprintf( cargo->yyc, "\t\tif( ( type & HB_IT_NUMINT ) != 0 && lVal == %ldL )\n",
-                     HB_PCODE_MKLONG( &pFunc->pCode[ nPCodePos + 1 ] ) );
+            fprintf( cargo->yyc, "\t\tif( ( type & HB_IT_NUMINT ) != 0 && nVal == " );
+            hb_gencc_switchConst( cargo->yyc, HB_PCODE_MKLONG( &pFunc->pCode[ nPCodePos + 1 ] ) );
+            fprintf( cargo->yyc, " )\n" );
             nPCodePos += 5;
+            break;
+         case HB_P_PUSHLONGLONG:
+            /* CASE values which do not fit in 32-bit integer */
+#ifdef HB_LONG_LONG_OFF
+            fprintf( cargo->yyc, "\t\tif( ( type & HB_IT_NUMINT ) != 0 && ( double ) nVal == %.1f )\n",
+                     HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] ) );
+#else
+            fprintf( cargo->yyc, "\t\tif( ( type & HB_IT_NUMINT ) != 0 && nVal == " );
+            hb_gencc_switchConst( cargo->yyc, HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] ) );
+            fprintf( cargo->yyc, " )\n" );
+#endif
+            nPCodePos += 9;
             break;
          case HB_P_PUSHSTRSHORT:
             fprintf( cargo->yyc, "\t\tif( pszText && nLen == %d && ! memcmp( pszText, ",
