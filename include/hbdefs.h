@@ -517,8 +517,13 @@ typedef HB_U32       HB_SYMCNT;
 #     define HB_ULL( num )          num
 #  endif
 #elif defined( _MSC_VER )
-#  define HB_LL( num )           num
-#  define HB_ULL( num )          num
+#  if _MSC_VER >= 1200
+#     define HB_LL( num )           num##i64
+#     define HB_ULL( num )          num##ui64
+#  else
+#     define HB_LL( num )           num
+#     define HB_ULL( num )          num
+#  endif
 #else
 #  define HB_LL( num )           num##LL
 #  define HB_ULL( num )          num##ULL
