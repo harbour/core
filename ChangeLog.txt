@@ -37,6 +37,7 @@
     https://github.com/bencz/harbour/commit/86cd361134636bb3e691d0d7ad67ba0be1576d05
     https://github.com/bencz/harbour/commit/3feeeff9fbde55d515c53a3c11acfdc416d216bf
     https://github.com/bencz/harbour/commit/e16112da0741aa953d5ab38bf8ead46fa2a9dbf2
+    https://github.com/bencz/harbour/commit/5f07adb158cb8d0779b2c6cdd127b82734f1b685
     with src/rtl/itemseri.c file skipped, xHarbour deserialization will
     be revalidated separately
 
@@ -114,6 +115,17 @@
       -2^63. Now upper limit is checked using negated minimal value which
       is always exactly representable. HB_DBL_LIM_LONG() fix was proposed
       by Aleksander Czajczynski in harbour/core issue #404.
+
+2026-11-23 20:48 UTC-0300 Alexandre Bencz
+  * src/common/expropt2.c
+    ! fixed integer overflow detection in compile time optimization of
+      +, - and * operators used by compiler and macro compiler. It was
+      detected using floating point numbers which cannot represent exactly
+      all HB_MAXINT values, so when HB_MAXDBL is double (e.g. MSVC or
+      HB_LONG_DOUBLE_OFF builds) results exceeding the limits were
+      calculated with signed integer overflow (undefined behavior) and
+      wrapped, e.g. -9223372036854775807 - 2 gave 9223372036854775807.
+      Now overflow is detected using integer arithmetic.
 
 2026-11-23 20:31 UTC-0300 Alexandre Bencz
   * src/vm/hvm.c

@@ -71,6 +71,56 @@ static HB_BOOL hb_compExprHasMacro( const char * szText, HB_SIZE nLen, HB_COMP_D
    return HB_FALSE;
 }
 
+/* Integer operations with overflow detection used by constant folding.
+ * They return HB_FALSE when the result does not fit in HB_MAXINT.
+ * Overflow is detected using integer arithmetic because floating point
+ * numbers cannot represent exactly all HB_MAXINT values.
+ */
+static HB_BOOL hb_compExprAddLong( HB_MAXINT n1, HB_MAXINT n2, HB_MAXINT * pnResult )
+{
+   if( n2 > 0 ? n1 > HB_VMLONG_MAX - n2 : n1 < HB_VMLONG_MIN - n2 )
+      return HB_FALSE;
+   *pnResult = n1 + n2;
+   return HB_TRUE;
+}
+
+static HB_BOOL hb_compExprSubLong( HB_MAXINT n1, HB_MAXINT n2, HB_MAXINT * pnResult )
+{
+   if( n2 < 0 ? n1 > HB_VMLONG_MAX + n2 : n1 < HB_VMLONG_MIN + n2 )
+      return HB_FALSE;
+   *pnResult = n1 - n2;
+   return HB_TRUE;
+}
+
+static HB_BOOL hb_compExprMultLong( HB_MAXINT n1, HB_MAXINT n2, HB_MAXINT * pnResult )
+{
+   HB_BOOL fNeg = ( n1 < 0 ) != ( n2 < 0 );
+   /* magnitudes calculated using unsigned arithmetic which is defined
+    * modulo 2^N so it's safe for minimal value
+    */
+   HB_MAXUINT u1 = n1 < 0 ? ( HB_MAXUINT ) 0 - ( HB_MAXUINT ) n1 : ( HB_MAXUINT ) n1;
+   HB_MAXUINT u2 = n2 < 0 ? ( HB_MAXUINT ) 0 - ( HB_MAXUINT ) n2 : ( HB_MAXUINT ) n2;
+
+   if( u1 != 0 && u2 != 0 )
+   {
+      HB_MAXUINT uLimit = ( HB_MAXUINT ) HB_VMLONG_MAX + ( fNeg ? 1 : 0 );
+
+      if( u1 > uLimit / u2 )
+         return HB_FALSE;
+      u1 *= u2;
+   }
+   else
+      u1 = 0;
+
+   if( ! fNeg )
+      *pnResult = ( HB_MAXINT ) u1;
+   else if( u1 > ( HB_MAXUINT ) HB_VMLONG_MAX )
+      *pnResult = HB_VMLONG_MIN;
+   else
+      *pnResult = -( HB_MAXINT ) u1;
+   return HB_TRUE;
+}
+
 static PHB_EXPR hb_compExprReducePlusStrings( PHB_EXPR pLeft, PHB_EXPR pRight, HB_COMP_DECL )
 {
    if( pLeft->value.asString.dealloc )
@@ -212,7 +262,6 @@ PHB_EXPR hb_compExprReduceDiv( PHB_EXPR pSelf, HB_COMP_DECL )
                 *       and the result which does not fit in HB_MAXINT is
                 *       returned as double
                 */
-#if -HB_VMLONG_MAX > HB_VMLONG_MIN
                if( pRight->value.asNum.val.l == -1 &&
                    pLeft->value.asNum.val.l < -HB_VMLONG_MAX )
                {
@@ -220,9 +269,7 @@ PHB_EXPR hb_compExprReduceDiv( PHB_EXPR pSelf, HB_COMP_DECL )
                   pSelf->value.asNum.bDec = 0;
                   pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                }
-               else
-#endif
-               if( pRight->value.asNum.val.l == -1 ||
+               else if( pRight->value.asNum.val.l == -1 ||
                         pLeft->value.asNum.val.l % pRight->value.asNum.val.l == 0 )
                {
                   /* Return integer results as long */
@@ -312,16 +359,16 @@ PHB_EXPR hb_compExprReduceMult( PHB_EXPR pSelf, HB_COMP_DECL )
       {
          case HB_ET_LONG:
          {
-            HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.val.l * ( HB_MAXDBL ) pRight->value.asNum.val.l;
+            HB_MAXINT lVal;
 
-            if( HB_DBL_LIM_LONG( dVal ) )
+            if( hb_compExprMultLong( pLeft->value.asNum.val.l, pRight->value.asNum.val.l, &lVal ) )
             {
-               pSelf->value.asNum.val.l = pLeft->value.asNum.val.l * pRight->value.asNum.val.l;
+               pSelf->value.asNum.val.l = lVal;
                pSelf->value.asNum.NumType = HB_ET_LONG;
             }
             else
             {
-               pSelf->value.asNum.val.d = ( double ) dVal;
+               pSelf->value.asNum.val.d = ( double ) ( ( HB_MAXDBL ) pLeft->value.asNum.val.l * ( HB_MAXDBL ) pRight->value.asNum.val.l );
                pSelf->value.asNum.NumType = HB_ET_DOUBLE;
             }
             pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
@@ -486,16 +533,16 @@ PHB_EXPR hb_compExprReduceMinus( PHB_EXPR pSelf, HB_COMP_DECL )
       {
          case HB_ET_LONG:
          {
-            HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.val.l - ( HB_MAXDBL ) pRight->value.asNum.val.l;
+            HB_MAXINT lVal;
 
-            if( HB_DBL_LIM_LONG( dVal ) )
+            if( hb_compExprSubLong( pLeft->value.asNum.val.l, pRight->value.asNum.val.l, &lVal ) )
             {
-               pSelf->value.asNum.val.l = pLeft->value.asNum.val.l - pRight->value.asNum.val.l;
+               pSelf->value.asNum.val.l = lVal;
                pSelf->value.asNum.NumType = HB_ET_LONG;
             }
             else
             {
-               pSelf->value.asNum.val.d = ( double ) dVal;
+               pSelf->value.asNum.val.d = ( double ) ( ( HB_MAXDBL ) pLeft->value.asNum.val.l - ( HB_MAXDBL ) pRight->value.asNum.val.l );
                pSelf->value.asNum.NumType = HB_ET_DOUBLE;
             }
             pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
@@ -663,12 +710,13 @@ static HB_BOOL hb_compExprReducePlusNums( PHB_EXPR pSelf, PHB_EXPR pAdd )
    {
       case HB_ET_LONG:
       {
-         HB_MAXDBL dVal = ( HB_MAXDBL ) pNum->value.asNum.val.l + ( HB_MAXDBL ) pAdd->value.asNum.val.l;
-         if( HB_DBL_LIM_LONG( dVal ) )
-            pNum->value.asNum.val.l += pAdd->value.asNum.val.l;
+         HB_MAXINT lVal;
+
+         if( hb_compExprAddLong( pNum->value.asNum.val.l, pAdd->value.asNum.val.l, &lVal ) )
+            pNum->value.asNum.val.l = lVal;
          else
          {
-            pNum->value.asNum.val.d = ( double ) dVal;
+            pNum->value.asNum.val.d = ( double ) ( ( HB_MAXDBL ) pNum->value.asNum.val.l + ( HB_MAXDBL ) pAdd->value.asNum.val.l );
             pNum->value.asNum.NumType = HB_ET_DOUBLE;
          }
          pNum->value.asNum.bWidth = HB_DEFAULT_WIDTH;
@@ -716,16 +764,16 @@ PHB_EXPR hb_compExprReducePlus( PHB_EXPR pSelf, HB_COMP_DECL )
          {
             case HB_ET_LONG:
             {
-               HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.val.l + ( HB_MAXDBL ) pRight->value.asNum.val.l;
+               HB_MAXINT lVal;
 
-               if( HB_DBL_LIM_LONG( dVal ) )
+               if( hb_compExprAddLong( pLeft->value.asNum.val.l, pRight->value.asNum.val.l, &lVal ) )
                {
-                  pSelf->value.asNum.val.l = pLeft->value.asNum.val.l + pRight->value.asNum.val.l;
+                  pSelf->value.asNum.val.l = lVal;
                   pSelf->value.asNum.NumType = HB_ET_LONG;
                }
                else
                {
-                  pSelf->value.asNum.val.d = ( double ) dVal;
+                  pSelf->value.asNum.val.d = ( double ) ( ( HB_MAXDBL ) pLeft->value.asNum.val.l + ( HB_MAXDBL ) pRight->value.asNum.val.l );
                   pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                }
                pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
