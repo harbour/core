@@ -7,6 +7,11 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-11-27 23:10 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  + contrib/hbmisc/ntp.prg
+  + contrib/hbmisc/tests/ntp.prg
+    + actual files missing from the commit
+
 2026-11-27 22:58 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * src/common/expropt2.c
     ! readded recent #if lost in merge
