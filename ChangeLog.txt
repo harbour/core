@@ -7,6 +7,13 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-11-27 18:53 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * src/vm/hvm.c
+    ! final fix of type
+
+  * src/rtl/gtwin.c
+    % unused static variables wrapped with #if 0
+
 2026-11-27 18:32 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * src/vm/hvm.c
     ! fix hopefully a final typo in the same code

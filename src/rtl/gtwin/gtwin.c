@@ -200,7 +200,9 @@ static int         s_iUpdtRight;
 static CHAR_INFO * s_pCharInfoScreen = NULL;
 static HB_SIZE     s_nScreenBuffSize = 0;
 
+#if 0
 static HB_FHANDLE  s_hStdIn, s_hStdOut, s_hStdErr;
+#endif
 
 static HANDLE      s_HInput  = INVALID_HANDLE_VALUE;
 static HANDLE      s_HOutput = INVALID_HANDLE_VALUE;
@@ -730,9 +732,11 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_fWin9x = hb_iswin9x();
 
    /* stdin && stdout && stderr */
+#if 0
    s_hStdIn  = hFilenoStdin;
    s_hStdOut = hFilenoStdout;
    s_hStdErr = hFilenoStderr;
+#endif
 
    s_fMouseEnable = HB_TRUE;
    s_fBreak = s_fSuspend =
