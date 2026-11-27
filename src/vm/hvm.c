@@ -3552,7 +3552,7 @@ static HB_BOOL hb_vmMultInt( PHB_ITEM pResult, HB_MAXINT n1, HB_MAXINT n2 )
    if( ( ( ( ( HB_MAXUINT ) n1 + HB_MUL_BIAS ) |
            ( ( HB_MAXUINT ) n2 + HB_MUL_BIAS ) ) >> 32 ) == 0 )
    {
-      *pRes = n1 * n2;
+      *pResult = n1 * n2;
       return HB_TRUE;
    }
    else

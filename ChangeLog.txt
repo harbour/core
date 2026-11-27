@@ -7,6 +7,10 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-11-27 18:32 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * src/vm/hvm.c
+    ! fix hopefully a final typo in the same code
+
 2026-11-27 18:19 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * src/vm/hvm.c
     ! correction to previous commit to use portable macro instead,
