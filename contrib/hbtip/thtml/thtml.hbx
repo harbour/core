@@ -1,0 +1,62 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__THTML__
+#define __HBEXTERN_CH__THTML__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__THTML__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__THTML__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__THTML__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC THtmlCleanup
+DYNAMIC THtmlDocument
+DYNAMIC THtmlInit
+DYNAMIC THtmlIsValid
+DYNAMIC THtmlIterator
+DYNAMIC THtmlIteratorRegex
+DYNAMIC THtmlIteratorScan
+DYNAMIC THtmlNode
+DYNAMIC THtmlTagType
+DYNAMIC TIPCgi
+DYNAMIC TIPClient
+DYNAMIC TIPClientFTP
+DYNAMIC TIPClientHTTP
+DYNAMIC TIPClientPOP
+DYNAMIC TIPClientSMTP
+DYNAMIC TIPEncoder
+DYNAMIC TIPEncoderBase64
+DYNAMIC TIPEncoderQP
+DYNAMIC TIPEncoderUrl
+DYNAMIC TIPLog
+DYNAMIC TIPMail
+DYNAMIC tip_base64DecodeUrl
+DYNAMIC tip_base64EncodeUrl
+DYNAMIC tip_CheckSID
+DYNAMIC tip_CRLF
+DYNAMIC tip_DateToGMT
+DYNAMIC tip_GenerateSID
+DYNAMIC tip_GetEncoder
+DYNAMIC tip_GetNameEmail
+DYNAMIC tip_GetRawEmail
+DYNAMIC tip_HtmlSpecialChars
+DYNAMIC tip_HtmlToStr
+DYNAMIC tip_StrToHtml
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__THTML__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif
