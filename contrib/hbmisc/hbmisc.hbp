@@ -22,6 +22,7 @@ fcomma.prg
 fileread.prg
 hbedit.prg
 nconvert.prg
+ntp.prg
 numtxthu.prg
 numtxten.prg
 numtxtru.prg

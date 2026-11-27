@@ -1,7 +1,7 @@
 /*
  * Regression tests for the runtime library (strings)
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2017 Viktor Szakats
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -182,6 +182,7 @@ PROCEDURE Main_STR()
    HBTEST Chr( "A" )                      IS "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:C:A F:S"
    HBTEST Chr( "ADDDDDD" )                IS "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:C:ADDDDDD F:S"
    HBTEST Chr( -10000000.0 )              IS Chr( 128 )
+   HBTEST Chr( -10000000 )                IS Chr( 128 )
    HBTEST Chr( -100000 )                  IS Chr( 96 )
    HBTEST Chr( -65 )                      IS Chr( 191 )
    HBTEST Chr( snIntP1 )                  IS "A"

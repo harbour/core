@@ -7,6 +7,29 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-11-27 22:58 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * src/common/expropt2.c
+    ! readded recent #if lost in merge
+
+  * utils/hbtest/rt_hvm.prg
+  * utils/hbtest/rt_misc.prg
+  * utils/hbtest/rt_str.prg
+  * utils/hbtest/rt_stra.prg
+    * added more tests from Viktor's forked Harbour 3.4 (all passing)
+      sources:
+      https://github.com/vszakats/hb/blob/main/utils/hbtest/rt_hvm.prg
+      https://github.com/vszakats/hb/blob/main/utils/hbtest/rt_misc.prg
+      https://github.com/vszakats/hb/blob/main/utils/hbtest/rt_str.prg
+      https://github.com/vszakats/hb/blob/main/utils/hbtest/rt_stra.prg
+
+  * contrib/hbmisc/hbmisc.hbp
+  + contrib/hbmisc/ntp.prg
+  + contrib/hbmisc/tests/ntp.prg
+    + from Viktor's fork, added function to query to time from an NTP time server:
+      hb_ntp_GetTimeUTC( <cServer>, [<nPort>=123], [<nTimeOut>=10000] ) -> <tTime>
+
+      original commit: 2013-12-24 00:32 UTC+0100 Viktor Szakats
+
 2026-11-27 18:53 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * src/vm/hvm.c
     ! final fix of type

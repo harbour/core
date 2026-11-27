@@ -262,6 +262,7 @@ PHB_EXPR hb_compExprReduceDiv( PHB_EXPR pSelf, HB_COMP_DECL )
                 *       and the result which does not fit in HB_MAXINT is
                 *       returned as double
                 */
+#if -HB_VMLONG_MAX > HB_VMLONG_MIN
                if( pRight->value.asNum.val.l == -1 &&
                    pLeft->value.asNum.val.l < -HB_VMLONG_MAX )
                {
@@ -269,7 +270,9 @@ PHB_EXPR hb_compExprReduceDiv( PHB_EXPR pSelf, HB_COMP_DECL )
                   pSelf->value.asNum.bDec = 0;
                   pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                }
-               else if( pRight->value.asNum.val.l == -1 ||
+               else
+#endif
+               if( pRight->value.asNum.val.l == -1 ||
                         pLeft->value.asNum.val.l % pRight->value.asNum.val.l == 0 )
                {
                   /* Return integer results as long */
