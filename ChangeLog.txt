@@ -7,6 +7,11 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-11-27 18:19 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * src/vm/hvm.c
+    ! correction to previous commit to use portable macro instead,
+      sizeof() usage was not portable
+
 2026-11-27 17:10 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * src/vm/hvm.c
     * fast-path supplement in C89 branch of new hb_vmIntMult()

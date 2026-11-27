@@ -3546,7 +3546,7 @@ static HB_BOOL hb_vmMultInt( PHB_ITEM pResult, HB_MAXINT n1, HB_MAXINT n2 )
       return HB_TRUE;
    }
 #else /* portable C89 code */
-#  if defined( HB_MAXINT ) && ( sizeof( HB_MAXINT ) >= 8 ) && ! defined( HB_LONG_LONG_OFF )
+#  if defined( HB_U64_MAX )
 #    define HB_MUL_BIAS ( ( HB_MAXUINT ) 0x80000000UL )
    /* fastpath for small inputs */
    if( ( ( ( ( HB_MAXUINT ) n1 + HB_MUL_BIAS ) |
